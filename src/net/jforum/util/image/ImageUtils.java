@@ -41,6 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
+ * $Id
  */
 package net.jforum.util.image;
 
