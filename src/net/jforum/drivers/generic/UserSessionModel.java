@@ -52,7 +52,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserSessionModel.java,v 1.4 2004/11/05 03:29:45 rafaelsteil Exp $
+ * @version $Id: UserSessionModel.java,v 1.5 2005/03/03 19:02:22 rafaelsteil Exp $
  */
 public class UserSessionModel implements net.jforum.model.UserSessionModel
 {
@@ -91,7 +91,7 @@ public class UserSessionModel implements net.jforum.model.UserSessionModel
 		
 		PreparedStatement p = conn.prepareStatement(SystemGlobals.getSql("UserSessionModel.update"));
 		p.setTimestamp(1, new Timestamp(us.getStartTime().getTime()));
-		p.setString(2, Long.toString(us.getSessionTime()));
+		p.setLong(2, us.getSessionTime());
 		p.setString(3, us.getSessionId());
 		p.setInt(4, us.getUserId());
 		
