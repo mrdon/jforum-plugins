@@ -95,8 +95,13 @@ function confirmDelete()
 							<#assign watchMessage = I18n.getMessage("PostShow.unwatch")/>
 						</#if>
 						
-						<a href="${JForumContext.encodeURL("/posts/${watch}/${start}/${topicId}")}"><img src="${contextPath}/templates/${templateName}/images/watch.gif" align="top" border="0"></a>
+						<a href="${JForumContext.encodeURL("/posts/${watch}/${start}/${topicId}")}"><img src="${contextPath}/templates/${templateName}/images/watch.gif" align="middle" border="0"></a>
 						<a href="${JForumContext.encodeURL("/posts/${watch}/${start}/${topicId}")}">${watchMessage}</a>
+						
+						<#if bookmarksEnabled>
+							&nbsp;
+							<a href="javascript:addBookmark(2, ${topic.id});"><img src="${contextPath}/templates/${templateName}/images/icon_bookmark.gif" align="middle">&nbsp;${I18n.getMessage("Bookmarks.addTo")}</a>
+						</#if>
 						</span>
 					</td>
 					</#if>

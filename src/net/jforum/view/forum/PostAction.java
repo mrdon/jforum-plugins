@@ -90,7 +90,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.52 2005/01/24 21:49:29 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.53 2005/01/25 15:18:13 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -148,6 +148,7 @@ public class PostAction extends Command {
 		this.context.put("am", new AttachmentCommon(this.request));
 		this.context.put("karmaVotes", DataAccessDriver.getInstance().newKarmaModel().getUserVotes(topic.getId(), userId));
 		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
+		this.context.put("bookmarksEnabled", SecurityRepository.canAccess(SecurityConstants.PERM_BOOKMARKS_ENABLED));
 		this.context.put("canRemove",
 				SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE));
 		this.context.put("canEdit", canEdit);
