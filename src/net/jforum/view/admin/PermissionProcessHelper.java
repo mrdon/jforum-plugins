@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: PermissionProcessHelper.java,v 1.2 2004/04/21 23:57:29 rafaelsteil Exp $
+ * $Id: PermissionProcessHelper.java,v 1.3 2004/09/14 01:49:15 jamesyong Exp $
  */
 package net.jforum.view.admin;
 
@@ -139,7 +139,7 @@ class PermissionProcessHelper
 						this.addRoleValues(roleValues, allowList.toArray(), PermissionControl.ROLE_ALLOW);
 					}
 					else {
-						this.addRoleValues(roleValues, this.getSplitedValues("all"+ paramName), PermissionControl.ROLE_ALLOW);
+						this.addRoleValues(roleValues, new String[]{"0"}, PermissionControl.ROLE_ALLOW);
 					}
 					
 					Role role = new Role();
@@ -155,12 +155,14 @@ class PermissionProcessHelper
 		String[] allValues = JForum.getRequest().getParameter(paramName).split(";");
 		String[] returnValues = new String[allValues.length];
 		
+		int counter = 0;
 		for (int i = 0; i < allValues.length; i++) {
 			if (allValues[i].trim().equals("")) {
 				continue;
 			}
 			
-			returnValues[i] = allValues[i];
+			returnValues[counter] = allValues[i];
+			counter++;
 		}
 		
 		return returnValues;
