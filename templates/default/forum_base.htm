@@ -33,6 +33,9 @@
 								<td vAlign="top" nowrap="nowrap" align="middle">&nbsp;
 									<img src="${contextPath}/templates/${templateName}/images/icon_mini_search.gif" width="12" height="13" />
 									<span class="mainmenu"><a id="search" class="mainmenu" href="${JForumContext.encodeURL("/search/filters")}"><b>${I18n.getMessage("ForumBase.search")}</b></a> &nbsp;
+									
+									<img src="${contextPath}/templates/${templateName}/images/icon_mini_recentTopics.gif" width="12" height="13" />
+									<a id="latest" class="mainmenu" href="${JForumContext.encodeURL("/recentTopics/list")}">${I18n.getMessage("ForumBase.recentTopics")}</a> &nbsp;
 			
 									<#if logged?default(false)>
 									<a id="myprofile" class="mainmenu" href="${JForumContext.encodeURL("/user/edit/${session.userId}")}"><img src="${contextPath}/templates/${templateName}/images/icon_mini_profile.gif" width="12" height="13" border="0" /> ${I18n.getMessage("ForumBase.profile")}</a>&nbsp; 
