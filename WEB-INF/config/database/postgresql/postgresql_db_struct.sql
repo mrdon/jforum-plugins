@@ -304,7 +304,7 @@ CREATE TABLE jforum_users (
   deleted INTEGER DEFAULT NULL,
   user_viewonline INTEGER DEFAULT 1,
   security_hash VARCHAR(32),
-  user_karma DECIMAL
+  user_karma DECIMAL,
   PRIMARY KEY  (user_id)
 );
 
