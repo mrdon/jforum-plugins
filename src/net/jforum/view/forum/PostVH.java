@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: PostVH.java,v 1.12 2004/05/04 01:06:38 rafaelsteil Exp $
+ * $Id: PostVH.java,v 1.13 2004/05/04 22:01:58 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 
@@ -114,7 +114,11 @@ public class PostVH extends Command
 		
 		int start = 0;
 		if (JForum.getRequest().getParameter("start") != null) {
-			start = Integer.parseInt(JForum.getRequest().getParameter("start"));
+			String s = JForum.getRequest().getParameter("start");
+			
+			if (s != "") {
+				start = Integer.parseInt(s);
+			}
 		}
 		
 		int count = Integer.parseInt(SystemGlobals.getValue("postsPerPage").toString());
