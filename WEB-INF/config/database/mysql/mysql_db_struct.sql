@@ -276,7 +276,7 @@ CREATE TABLE jforum_users (
   user_password varchar(32) NOT NULL default '',
   user_session_time datetime NOT NULL default '0',
   user_session_page smallint(5) NOT NULL default '0',
-  user_lastvisit int(11) NOT NULL default '0',
+  user_lastvisit datetime NOT NULL default '0',
   user_regdate datetime NOT NULL default '0',
   user_level tinyint(4) default NULL,
   user_posts mediumint(8) NOT NULL default '0',
