@@ -78,54 +78,97 @@
 			<b>For more help and support, please access the <i>Community</i> forum. <a href="community.htm">Click here</a></b>
 			</p>
 
+			<a name="top"></a>
+
+			<!-- Installation -->
+			<img src="dot.gif"> <font style="font-family: verdana; font-size: 18px;"><b>Installation</b></font><br/>
+			<li><a href="#install_store_files">Where do JForum store my personall settings?</a><br/>
+			<li><a href="#install_write_error">I'm getting an error that says that I need write access to some directories</a><br/>
+
+			<br/>
+			<!-- Board Settings -->
+			<img src="dot.gif"> <font style="font-family: verdana; font-size: 18px;"><b>Board / Forum Settings</b></font><br/>
 			<li><a href="#admin_config">How do I configure the Forum settings?</a><br/>
+			<li><a href="#email_notification">How do I configure email notifications?</a><br/>
+			<li><a href="#encoding">How to I set a different Character Encoding?</a><br/>
+
+			<br/>
+			<!-- Funcionalities -->
+			<img src="dot.gif"> <font style="font-family: verdana; font-size: 18px;"><b>JForum Funcionalities</b></font><br/>
 			<li><a href="#databases">What database does JForum support? <br/></a>
 			<li><a href="#languages">Which are the languages currently supported in JForum<br/>
 			<li><a href="#sticky">what does "Announce" and "Sticky" mean, other than a special icon? </a><br/>
 			<li><a href="#license">Which open source license is JForum under?</a><br/>
-			<li><a href="#email_notification">How do I configure email notifications?</a><br/>
+			
+
+			<br/>
+			<!-- Users -->
+			<img src="dot.gif"> <font style="font-family: verdana; font-size: 18px;"><b>Users</b></font><br/>
 			<li><a href="#linux_no_x">Avatar uploading is not working. What's wrong?</a><br/>
-			<li><a href="#encoding">How to I set a different Character Encoding?</a><br/>
 
 			<p>&nbsp</p>
 
+			<!-- Installation Anwsers -->
+			<p>
+			<a name="install_store_files"></a><b>How do I configure the Forum settings?</b><br/>
+			All dinamically manipulled settings are stored in a special configuration file in the <i>WEB-INF/config</i> directory.
+			The filename is system dependant, according to the user which is running the webserver, in the form 
+			<b>&lt;user.name&gt;.conf</b>. So, if the system' user is "Webserver", all custom settings will be written to the file
+			<i>WEB-INF/config/Webserver.conf</i>.<br/> 
+			Obviously, it should have write access to this directory. <a href="#top">Top</a>
+			</p>
+
+			<p>
+			<a name="install_write_error"></a><b>I'm getting an error that says that I need write access to some directories</b><br/>
+			The error "<i>Please give write access for the user who is running the webserver to the file 'index.htm' 
+			and for the directory 'WEB-INF/config' and its subdirectories before continuing</i>" means that, in order to JForum be able
+			to store its configurations, it needs write access to these directories / files. <br/>
+			It occurs generally in shared environments, like ISPs for example, where the user who owns the webserver process is different
+			from your ftp user. To solve this issue, simply give write access to the respective user. For more information, please contact
+			your System Administrator / Support. <a href="#top">Top</a>
+			</p>
+
+			<!-- Board Settings Anwsers -->
 			<p>
 			<a name="admin_config"></a><b>How do I configure the Forum settings?</b><br/>
 			All administrative settings are done in the "Admin Panel", that can be accessed through the link "Admin Panel" available
 			in the end of the page. You must be logged as administrator, either by using the <i>Admin</i> account or any other 
-			user who has administrative privileges.
+			user who has administrative privileges. <a href="#top">Top</a>
 			</p>
 
 			<p>
 			<a name="languages"></a><b>Which are the languages currently supported in JForum?</b><br/>
-			As of version 2.0, the languages supported are English, Chinese Simplified, French, German, Dutch, Portugu&ecirc;s do Brasil, and Russian.
+			As of version 2.0, the languages supported are English, Chinese Simplified, French, German, Dutch, Portugu&ecirc;s do Brasil, and Russian. 
+			<a href="#top">Top</a>
 			</p>
 
 			<p>
 			<a name="#sticky"></a><b>What does "Announce" and "Sticky" mean, other than a special icon? </b><br/>
-			Announces are always shown first. Sticky are shown first of other topics as well, but after Announces.
+			Announces are always shown first. Sticky are shown first of other topics as well, but after Announces. <a href="#top">Top</a>
 			</p>
 
 			<p>
 			<a name="#license"></a> <b>Which open source license is JForum under?</b><br/>
-			JForum is licensed under the BSD License 
+			JForum is licensed under the BSD License.  <a href="#top">Top</a>
 			</p>
 
 			<p>
 			<a name="email_notification"></a> <b>How do I configure email notifications?</b><br/>
-			You can change this option in the admin panel, Configurations section.
+			You can change this option in the admin panel, Configurations section. <a href="#top">Top</a>
 			</p>
 
+			<p>
+			<a name="encoding"></a><b>How to I set a different Character Encoding?</b><br/>
+			Go to the Admin Panel, section "Configurations". Set the character encoding you want in the "Character Encoding" field. <a href="#top">Top</a>
+			</p>
+
+			<!-- User Anwsers -->
 			<p>
 			<a name="linux_no_x"></a><b>Avatar uploading is not working. What's wrong?</b><br/>
 			If you are using Linux, or other Unix like machine, it is necessary that you have installed the X server libraries. 
 			Another solution is to run the Servlet Container setting up JAVA_OPTS's parameter <i>java.awt.headless</i> to "true". 
 			For more information, see <a href="http://www.jforum.net/posts/list/219.page">http://www.jforum.net/posts/list/219.page</a>
-			</p>
-
-			<p>
-			<a name="encoding"></a><b>How to I set a different Character Encoding?</b><br/>
-			Go to the Admin Panel, section "Configurations". Set the character encoding you want in the "Character Encoding" field.
+			 <a href="#top">Top</a>
 			</p>
 		</td>
 	</tr>
