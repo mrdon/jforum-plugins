@@ -73,7 +73,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.27 2005/01/26 12:57:14 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.28 2005/01/31 12:34:23 franklin_samir Exp $
  */
 public class UserAction extends Command 
 {
@@ -518,4 +518,28 @@ public class UserAction extends Command
 	{
 		this.login();
 	}
+		
+	public void listAll() throws Exception
+	{
+		int start = this.preparePagination(DataAccessDriver.getInstance().newUserModel().getTotalUsers());
+		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
+
+		this.context.put("users", DataAccessDriver.getInstance().newUserModel().selectAll(start ,usersPerPage));
+		this.context.put("moduleAction", "user_list.htm");
+	}
+	
+	private int preparePagination(int totalUsers)
+	{
+		String s = this.request.getParameter("start");
+		int start = ViewCommon.getStartPage();
+		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
+		
+		this.context.put("totalPages", new Double(Math.ceil( (double)totalUsers / usersPerPage )));
+		this.context.put("recordsPerPage", new Integer(usersPerPage));
+		this.context.put("totalRecords", new Integer(totalUsers));
+		this.context.put("thisPage", new Double(Math.ceil( (double)(start + 1) / usersPerPage )));
+		this.context.put("start", new Integer(start));
+		
+		return start;
+	}	
 }
