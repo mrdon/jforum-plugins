@@ -55,6 +55,7 @@ import net.jforum.entities.Forum;
 import net.jforum.entities.LastPostInfo;
 import net.jforum.exceptions.CategoryNotFoundException;
 import net.jforum.model.CategoryModel;
+import net.jforum.model.DataAccessDriver;
 import net.jforum.model.ForumModel;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.SecurityConstants;
@@ -67,7 +68,7 @@ import net.jforum.security.SecurityConstants;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.14 2004/11/13 20:12:27 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.15 2004/11/13 23:12:34 rafaelsteil Exp $
  */
 public class ForumRepository 
 {
@@ -75,9 +76,6 @@ public class ForumRepository
 	private static Map categoriesMap = new LinkedHashMap();
 	private static int totalTopics = -1;
 	private static int totalMessages = 0;
-	
-	private ForumModel forumModel;
-	private CategoryModel categoryModel;
 	
 	private static ForumRepository instance;
 	
@@ -93,11 +91,9 @@ public class ForumRepository
 	public static void start(ForumModel fm, CategoryModel cm) throws Exception
 	{
 		instance = new ForumRepository();
-		instance.forumModel = fm;
-		instance.categoryModel = cm;
 		
-		instance.loadCategories();
-		instance.loadForums();
+		instance.loadCategories(cm);
+		instance.loadForums(fm);
 	}
 	
 	/**
@@ -342,7 +338,7 @@ public class ForumRepository
 	 */
 	public static synchronized void reloadForum(int forumId) throws Exception
 	{
-		Forum f = instance.forumModel.selectById(forumId);
+		Forum f = DataAccessDriver.getInstance().newForumModel().selectById(forumId);
 		if (forumCategoryRelation.containsKey(new Integer(forumId))) {
 			Category c = getCategory(f.getCategoryId());
 			c.addForum(f);
@@ -367,7 +363,7 @@ public class ForumRepository
 		LastPostInfo lpi = forum.getLastPostInfo();
 		
 		if (lpi == null || !forum.getLastPostInfo().hasInfo()) {
-			lpi = instance.forumModel.getLastPostInfo(forumId);
+			lpi = DataAccessDriver.getInstance().newForumModel().getLastPostInfo(forumId);
 			forum.setLastPostInfo(lpi);
 		}
 		
@@ -388,7 +384,7 @@ public class ForumRepository
 	public static int getTotalTopics(int forumId, boolean fromDb) throws Exception
 	{
 		if (fromDb || ForumRepository.totalTopics == -1) {
-			ForumRepository.totalTopics = instance.forumModel.getTotalTopics(forumId);
+			ForumRepository.totalTopics = DataAccessDriver.getInstance().newForumModel().getTotalTopics(forumId);
 		}
 		
 		return ForumRepository.totalTopics;
@@ -430,7 +426,7 @@ public class ForumRepository
 	public static int getTotalMessages(boolean fromDb) throws Exception
 	{
 		if (fromDb || ForumRepository.totalMessages == 0) {
-			ForumRepository.totalMessages = instance.forumModel.getTotalMessages();
+			ForumRepository.totalMessages = DataAccessDriver.getInstance().newForumModel().getTotalMessages();
 		}
 		
 		return ForumRepository.totalMessages;
@@ -440,10 +436,10 @@ public class ForumRepository
 	 * Loads all forums.
 	 * @throws Exception
 	 */
-	private void loadForums() throws Exception
+	private void loadForums(ForumModel fm) throws Exception
 	{
 		forumCategoryRelation = new HashMap();
-		List l = this.forumModel.selectAll();
+		List l = fm.selectAll();
 
 		for (Iterator iter = l.iterator(); iter.hasNext(); ) {
 			Forum f = (Forum)iter.next();
@@ -462,9 +458,9 @@ public class ForumRepository
 	 * Loads all categories.
 	 * @throws Exception 
 	 */
-	private void loadCategories() throws Exception
+	private void loadCategories(CategoryModel cm) throws Exception
 	{
-		List categories = this.categoryModel.selectAll();
+		List categories = cm.selectAll();
 		categoriesMap = new LinkedHashMap();
 		for (Iterator iter = categories.iterator(); iter.hasNext(); ) {
 			Category c = (Category)iter.next();

@@ -122,16 +122,19 @@ public class ForumCommon
 
 		List returnCategories = new ArrayList();
 		List categories = ForumRepository.getAllCategories(userId, false);
+		
+		if (!checkUnreadPosts) {
+			return categories;
+		}
+
 		for (Iterator iter = categories.iterator(); iter.hasNext(); ) {
 			Category c = (Category)iter.next();
 			
-			if (checkUnreadPosts) {
-				for (Iterator tmpIterator = c.getForums().iterator(); tmpIterator.hasNext(); ) {
-					Forum f = new Forum((Forum)tmpIterator.next());
+			for (Iterator tmpIterator = c.getForums().iterator(); tmpIterator.hasNext(); ) {
+				Forum f = new Forum((Forum)tmpIterator.next());
 
-					f = ForumCommon.checkUnreadPosts(f, ForumRepository.getLastPostInfo(f.getId()), 
-							tracking, lastVisit);
-				}
+				f = ForumCommon.checkUnreadPosts(f, ForumRepository.getLastPostInfo(f.getId()), 
+						tracking, lastVisit);
 			}
 			
 			returnCategories.add(c);
