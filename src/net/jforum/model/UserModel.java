@@ -57,7 +57,7 @@ import net.jforum.entities.User;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.8 2004/08/07 09:48:30 pieter2 Exp $
+ * @version $Id: UserModel.java,v 1.9 2004/09/08 08:55:22 jamesyong Exp $
  */
 public interface UserModel 
 {
@@ -296,4 +296,22 @@ public interface UserModel
 	 * @throws Exception
 	 */
 	public String getUsernameByEmail(String email) throws Exception;
+	
+	/**
+	 * Validate if the activated key matches the one in the database
+	 * 
+	 * @param userId Which user to validate the activation key?
+	 * @param hash The activation key
+	 * @return <code>true</code> if the data matches ok, of <code>false</code> if it is invalid
+	 * @throws Exception
+	 */
+	public boolean validateActivationKeyHash(int userId , String hash) throws Exception;
+
+	/**
+	 * Set user account to active
+	 * 
+	 * @param userId Which user account to set active?
+	 * @throws Exception
+	 */	
+	public void writeUserActive(int userId) throws Exception;
 }

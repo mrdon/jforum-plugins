@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.9 2004/08/28 03:29:45 jamesyong Exp $
+ * @version $Id: UserModel.java,v 1.10 2004/09/08 08:53:52 jamesyong Exp $
  */
 public class UserModel extends AutoKeys implements net.jforum.model.UserModel 
 {
@@ -149,6 +149,8 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		u.setAttachSignatureEnabled(rs.getInt("user_attachsig") == 1);
 		u.setMsnm(rs.getString("user_msnm"));
 		u.setLang(rs.getString("user_lang"));
+		u.setActive(rs.getInt("user_active"));
+		u.setActivationKey(rs.getString("user_actkey"));
 	}
 
 	/** 
@@ -224,6 +226,7 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		p.setString(2, user.getPassword());
 		p.setString(3, user.getEmail());
 		p.setString(4, Long.toString(System.currentTimeMillis()));
+		p.setString(5, user.getActivationKey());
 	}
 
 	/** 
@@ -426,7 +429,14 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		rs.close();
 		p.close();
 		
-		return user;
+		//James Yong: If adminstrator requires email authentication, the following code will check 
+		//whether the user has authenticated email or not.
+		if ((user != null) && ( ((user.isActive() == 1)&(user.getActivationKey() != null)) | ((user.isActive() != 1)&(user.getActivationKey() == null)) )) 
+		{
+			return user;
+		}else{
+			return user=null;
+		}
 	}
 
 	/** 
@@ -561,5 +571,38 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		p.close();
 		
 		return namesList;
+	}
+
+	/** 
+	 * @see net.jforum.model.UserModel#validateActivationKeyHash(int, java.lang.String)
+	 */
+	public boolean validateActivationKeyHash(int userId , String hash) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.validateActivationKeyHash"));
+		p.setString(1, hash);
+		p.setInt(2, userId);
+
+		boolean status = false;
+
+		ResultSet rs = p.executeQuery();
+		if (rs.next() && rs.getInt("valid") == 1) {
+			status = true;
+		}
+
+		rs.close();
+		p.close();
+
+		return status;
+	}
+
+	/** 
+	 * @see net.jforum.model.UserModel#writeUserActive(int)
+	 */
+	public void writeUserActive(int userId) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.writeUserActive"));
+		p.setInt(1, userId);
+		p.executeUpdate();
+		p.close();
 	}
 }

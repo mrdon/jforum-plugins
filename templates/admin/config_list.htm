@@ -181,7 +181,15 @@
 		</select>
 	</td>
 </tr>
-
+<tr>
+	<td class='row1' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.UserEmailAuth")}</span></td>
+	<td class='row1' width="38%">
+		<select name="p_mail.user.email.auth">
+			<option value="false" <#if config.getProperty("mail.user.email.auth") == "false">selected</#if>>False</option>
+			<option value="true" <#if config.getProperty("mail.user.email.auth") == "true">selected</#if>>True</option>
+		</select>
+	</td>
+</tr>
 
 
 <tr>

@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author pieter
-* @version $Id: ConfigKeys.java,v 1.16 2004/09/03 04:04:41 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.17 2004/09/08 08:56:25 jamesyong Exp $
 */
 
 public class ConfigKeys {
@@ -139,6 +139,8 @@ public class ConfigKeys {
 	public static final String MAIL_SMTP_HOST = "mail.smtp.host";
 	public static final String MAIL_SMTP_USERNAME = "mail.smtp.username";
 	public static final String MAIL_SMTP_PASSWORD = "mail.smtp.password";
+	public static final String MAIL_USER_EMAIL_AUTH = "mail.user.email.auth";
+	public static final String MAIL_ACTIVATION_KEY_MESSAGE_FILE = "mail.activationKey.messageFile";
 
 	public static final String SMILIE_IMAGE_DIR = "smilie.image.dir";
 	public static final String SMILIE_IMAGE_PATTERN = "smilie.image.pattern";

@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net 
  * 
- * $Id: User.java,v 1.4 2004/06/10 22:00:03 rafaelsteil Exp $
+ * $Id: User.java,v 1.5 2004/09/08 08:54:48 jamesyong Exp $
  */
 package net.jforum.entities;
 
@@ -237,6 +237,15 @@ public class User
 	
 	private int privateMessagesCount;
 	
+	/**
+	 * Once the user activate the account from his email, active = 1 
+	 */
+	private int active;
+	
+	/**
+	 * Key that the user uses to activate account, by email
+	 */
+	private String activationKey;	
 	
 	/**
 	 * Default Constructor
@@ -521,6 +530,24 @@ public class User
 		return this.yim;
 	}
 
+	/**
+	 * Is the user's email authenticated?
+	 * 
+	 * @return integer 1 if true
+	 */	
+	public int isActive(){
+		return this.active;
+	}
+	
+	/**
+	 * Gets the Yahoo messenger ID
+	 * 
+	 * @return String with the activation key that is created during user registration
+	 */	
+	public String getActivationKey(){
+		return this.activationKey;
+	}
+	
 	/**
 	 * Sets the aim.
 	 * 
@@ -873,5 +900,16 @@ public class User
 	public boolean hasPrivateMessages()
 	{
 		return this.privateMessagesCount > 0;
+	}
+	
+	/**
+	 * Set when user authenticates his email after user registration
+	*/
+	public void setActive(int active){
+		this.active = active;
+	}
+	
+	public void setActivationKey(String activationKey){
+		this.activationKey = activationKey;
 	}
 }

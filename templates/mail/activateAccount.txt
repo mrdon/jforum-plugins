@@ -1,0 +1,12 @@
+Hi ${username}
+
+Someone, probably you, register at JForum.net. 
+Please use the following URL to complete the registration.
+
+${url}
+
+Remember: your username is: ${username}
+
+---
+Best regards,
+The JForum.net Team
