@@ -64,7 +64,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author Pieter
- * @version $Id: SystemGlobals.java,v 1.6 2004/07/22 15:21:04 rafaelsteil Exp $
+ * @version $Id: SystemGlobals.java,v 1.7 2004/09/14 02:16:48 rafaelsteil Exp $
  */
 public class SystemGlobals implements VariableStore
 {
@@ -181,7 +181,7 @@ public class SystemGlobals implements VariableStore
 	private void loadAdditionalDefaultsImpl(String file) throws IOException
 	{
 		FileInputStream input = new FileInputStream(file);
-		defaults.load(input);
+		installation.load(input);
 		input.close();
 	}
 

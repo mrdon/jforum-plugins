@@ -63,7 +63,7 @@ import org.apache.commons.fileupload.FileUploadException;
 
 /**
  * @author Rafael Steil
- * @version $Id: ActionServletRequest.java,v 1.7 2004/09/11 02:43:17 rafaelsteil Exp $
+ * @version $Id: ActionServletRequest.java,v 1.8 2004/09/14 02:16:45 rafaelsteil Exp $
  */
 public class ActionServletRequest extends HttpServletRequestWrapper 
 {
@@ -257,7 +257,7 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 			if (url == null) {
 				throw new IOException("The request '"+ superRequest.getRequestURI() +"' is not valid. A correspondent URL Pattern was not found");
 			}
-
+			
 			this.addParameter("module", urlModel[moduleIndex]);
 			this.addParameter("action", urlModel[actionIndex]);
 			

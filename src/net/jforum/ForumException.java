@@ -46,15 +46,19 @@ import java.io.StringWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 
+import org.apache.log4j.Logger;
+
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumException.java,v 1.3 2004/06/03 02:34:37 rafaelsteil Exp $
+ * @version $Id: ForumException.java,v 1.4 2004/09/14 02:16:44 rafaelsteil Exp $
  */
 public class ForumException 
 {
+	private static Logger logger = Logger.getLogger(ForumException.class);
+	
 	public ForumException(Throwable t, Writer w)
 	{
 		StringWriter strWriter = new StringWriter();
@@ -80,7 +84,12 @@ public class ForumException
 			Template template = Configuration.getDefaultConfiguration().getTemplate("exception.html");
 			template.process(JForum.getContext(), w);
 		}
-		catch (Exception e) {}
+		catch (Exception e) {
+			strWriter = new StringWriter();
+			writer = new PrintWriter(strWriter);
+			t.printStackTrace(writer);
+			writer.close();
+		}
 	}
 	
 	public ForumException(Throwable t)

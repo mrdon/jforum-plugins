@@ -28,7 +28,7 @@ function checkGroups()
 
 	<tr>
 		<td class="row1" width="38%"><span class="gen">${I18n.getMessage("Category.Form.CategoryName")}</span></td>
-		<td class="row2"><input class="post" style="WIDTH: 200px" maxlength="25" size="25" name="category_name" value="<#if category?exists>${category.name}</#if>" /></td>
+		<td class="row2"><input class="post" style="WIDTH: 200px" maxlength="100" size="25" name="category_name" value="<#if category?exists>${category.name}</#if>" /></td>
 	</tr>
 	
 	<#if !category?exists>

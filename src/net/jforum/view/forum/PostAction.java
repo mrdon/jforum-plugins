@@ -76,7 +76,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.5 2004/09/13 00:53:30 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.6 2004/09/14 02:16:48 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	public void list() throws Exception {
@@ -341,6 +341,7 @@ public class PostAction extends Command {
 		JForum.getContext().put("quoteUser", u.getUsername());
 		JForum.getContext().put("moduleAction", "post_form.htm");
 		JForum.getContext().put("setType", false);
+		JForum.getContext().put("start", JForum.getRequest().getParameter("start"));
 
 		int userId = SessionFacade.getUserSession().getUserId();
 		JForum.getContext().put("user", DataAccessDriver.getInstance().newUserModel().selectById(userId));
@@ -509,15 +510,7 @@ public class PostAction extends Command {
 
 			String start = JForum.getRequest().getParameter("start");
 			if (start != null && !start.equals("") && !start.equals("0")) {
-				int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
-
-				int newStart = ((t.getTotalReplies() / postsPerPage) * postsPerPage);
-				if (newStart > Integer.parseInt(start)) {
-					path += newStart + "/";
-				}
-				else {
-					path += start + "/";
-				}
+				path += this.startPage(t, Integer.parseInt(start)) + "/";
 			}
 
 			path += topicId + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#" + postId;
@@ -539,6 +532,19 @@ public class PostAction extends Command {
 			JForum.getContext().put("postPreview", PostCommon.preparePostForDisplay(postPreview));
 
 			this.insert();
+		}
+	}
+	
+	private int startPage(Topic t, int currentStart)
+	{
+		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
+
+		int newStart = (((t.getTotalReplies() + 1) / postsPerPage) * postsPerPage);
+		if (newStart > currentStart) {
+			return newStart;
+		}
+		else {
+			return currentStart;
 		}
 	}
 

@@ -46,19 +46,17 @@ package net.jforum;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.apache.log4j.Logger;
-
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+
+import org.apache.log4j.Logger;
 
 /** 
  * Every query and connection come from here.
@@ -81,7 +79,7 @@ import net.jforum.util.preferences.SystemGlobals;
  *
  * @author Paulo Silveira
  * @author Rafael Steil
- * @version $Id: PooledConnection.java,v 1.7 2004/08/30 15:32:23 rafaelsteil Exp $
+ * @version $Id: PooledConnection.java,v 1.8 2004/09/14 02:16:44 rafaelsteil Exp $
  * */
 
 public class PooledConnection extends DBConnection
@@ -280,6 +278,16 @@ public class PooledConnection extends DBConnection
 	}
 	
 	private void pingConnections() {
+		try {
+			this.realReleaseAllConnections();
+		} catch (Exception e) { e.printStackTrace(); }
+		
+		try {
+			this.init();
+		}
+		catch (Exception e) { e.printStackTrace(); }
+
+		/*
 		synchronized(allConnections) {
 			try {
 				for (Iterator iter = allConnections.iterator(); iter.hasNext(); ) {
@@ -299,6 +307,7 @@ public class PooledConnection extends DBConnection
 				e.printStackTrace();
 			}
 		}
+		*/
 	} 
 	
 	public void enableConnectionPinging() {
@@ -382,10 +391,6 @@ public class PooledConnection extends DBConnection
 			}
 			
 			this.releaseSignal.notify();
-		}
-		
-		if (debug) {
-			logger.warn("Releasing connection...");
 		}
 	}
 

@@ -68,7 +68,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.33 2004/09/11 02:43:17 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.34 2004/09/14 02:16:44 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -177,7 +177,7 @@ public class JForum extends JForumCommonServlet
 	public void service(HttpServletRequest req, HttpServletResponse response) throws IOException, ServletException
 	{
 		BufferedWriter out = null;
-
+		
 		try {
 			// Initializes thread local data
 			DataHolder dataHolder = new DataHolder();
@@ -216,7 +216,7 @@ public class JForum extends JForumCommonServlet
 			if (!isDatabaseUp) {
 				this.startDatabase();
 			}
-
+			
 			// Verify cookies
 			this.checkCookies();
 			
@@ -224,7 +224,7 @@ public class JForum extends JForumCommonServlet
 			if (SessionFacade.getAttribute("logged") != null && SessionFacade.getAttribute("logged").equals("1")) {
 				logged = true;
 			}
-
+			
 			JForum.getContext().put("logged", logged);
 			
 			// Process security data
@@ -272,6 +272,7 @@ public class JForum extends JForumCommonServlet
 				}
 			}
 			catch (Exception e) {
+				new ForumException(e);
 				e.printStackTrace();
 			}
 		}
