@@ -85,7 +85,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.19 2004/06/17 00:12:25 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.20 2004/07/08 04:37:33 rafaelsteil Exp $
  */
 public class JForum extends HttpServlet 
 {
@@ -441,6 +441,8 @@ public class JForum extends HttpServlet
 	
 	public void service(HttpServletRequest req, HttpServletResponse response) throws IOException, ServletException
 	{
+		BufferedWriter out = null;
+
 		try {
 			// Initializes thread local data
 			DataHolder dataHolder = new DataHolder();
@@ -505,6 +507,7 @@ public class JForum extends HttpServlet
 			JForum.getContext().put("securityHash", MD5.crypt(JForum.getRequest().getSession().getId()));
 			JForum.getContext().put("session", SessionFacade.getUserSession());
 			
+			out = new BufferedWriter(new OutputStreamWriter(response.getOutputStream(), encoding));
 			if (moduleClass != null) {
 				// Here we go, baby
 				Command c = (Command)Class.forName(moduleClass).newInstance();
@@ -513,15 +516,18 @@ public class JForum extends HttpServlet
 				if (((DataHolder)localData.get()).getRedirectTo() == null) {
 					response.setContentType("text/html; charset="+ encoding);
 
-					BufferedWriter out = new BufferedWriter(new OutputStreamWriter(response.getOutputStream(), encoding));
-					
 					template.process(JForum.getContext(), out);
 					out.flush();
 				}
 			}
 		}
 		catch (Exception e) {
-				new ForumException(e, response.getWriter());
+				if (out != null) {
+					new ForumException(e, out);
+				}
+				else {
+					new ForumException(e, new BufferedWriter(new OutputStreamWriter(response.getOutputStream())));
+				}
 		}
 		finally {
 			try {
