@@ -51,7 +51,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: LostPasswordSpammer.java,v 1.4 2004/06/03 02:22:53 rafaelsteil Exp $
+ * @version $Id: LostPasswordSpammer.java,v 1.5 2004/07/04 19:31:14 rafaelsteil Exp $
  */
 public class LostPasswordSpammer extends Spammer
 {
@@ -62,7 +62,7 @@ public class LostPasswordSpammer extends Spammer
 			forumLink += "/";
 		}
 		
-		String url =  forumLink + "user/recoverPassword/"+ hash + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
+		String url =  forumLink + "user/recoverPassword/"+ hash + "."+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
 		SimpleHash params = new SimpleHash();
 		params.put("url", url);
 		params.put("username", username);

@@ -116,7 +116,7 @@ function confirmDelete()
 								
 								<td valign="top" width="20%" nowrap="nowrap" align="right">
 								<#if topic.status != STATUS_LOCKED>
-									<a href="${contextPath}/jforum.page?module=${moduleName}&amp;action=quote&amp;post_id=${post.id}"><img src="${contextPath}/templates/${templateName}/images/icon_quote.gif" width="59" height="18" border="0" /></a>
+									<a href="${contextPath}/jforum.page?module=${moduleName}&amp;action=quote&amp;post_id=${post.id}&start=${thisPage}"><img src="${contextPath}/templates/${templateName}/images/icon_quote.gif" width="59" height="18" border="0" /></a>
 								</#if>
 
 								<#if ((post.canEdit && topic.status != STATUS_LOCKED) || canEdit)>

@@ -42,6 +42,8 @@
  */
 package net.jforum.view.forum;
 
+import java.util.List;
+
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
@@ -62,7 +64,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserVH.java,v 1.12 2004/06/21 03:48:09 rafaelsteil Exp $
+ * @version $Id: UserVH.java,v 1.13 2004/07/04 19:31:14 rafaelsteil Exp $
  */
 public class UserVH extends Command 
 {
@@ -258,9 +260,29 @@ public class UserVH extends Command
 	public void lostPasswordSend() throws Exception
 	{
 		String email = JForum.getRequest().getParameter("email");
-		String hash = MD5.crypt(email + System.currentTimeMillis());
+		String username = JForum.getRequest().getParameter("username");
 		
+		boolean exists = false;
 		UserModel um = DataAccessDriver.getInstance().newUserModel();
+		
+		if (email != null && !email.equals("")) {
+			exists = (!um.getUsernameByEmail(email).equals(""));
+		}
+		else if (username != null && !username.equals("")) {
+			List l = um.findByName(username, true);
+			if (l.size() > 0) {
+				exists = true;
+				email = ((User)l.get(0)).getEmail();
+			}
+		}
+		
+		if (!exists) {
+			JForum.getContext().put("message", I18n.getMessage("PasswordRecovery.invalidUserEmail"));
+			this.lostPassword();
+			return;
+		}
+		
+		String hash = MD5.crypt(email + System.currentTimeMillis());
 		um.writeLostPasswordHash(email, hash);
 		
 		try {
@@ -269,12 +291,11 @@ public class UserVH extends Command
 		}
 		catch (EmailException e) {
 			// I don't care about this error
-			System.out.println(e);
 		}
 		
 		JForum.getContext().put("moduleAction", "message.htm");
 		JForum.getContext().put("message", I18n.getMessage("PasswordRecovery.emailSent", 
-			new String[] { "/user/login.page" }));
+			new String[] { JForum.getRequest().getContextPath() + "/user/login.page" }));
 	}
 	
 	// Recover user password ( aka, ask him a new one )
