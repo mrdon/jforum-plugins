@@ -53,7 +53,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * General utilities for the test cases.
  * 
  * @author Rafael Steil
- * @version $Id: TestCaseUtils.java,v 1.4 2004/10/10 16:50:37 rafaelsteil Exp $
+ * @version $Id: TestCaseUtils.java,v 1.5 2004/10/11 14:24:43 rafaelsteil Exp $
  */
 public class TestCaseUtils
 {
@@ -65,6 +65,22 @@ public class TestCaseUtils
 	public static void loadEnvironment() throws Exception
 	{
 		utils.init();
+	}
+	
+	/**
+	 * Inits the database stuff. 
+	 * Must be called <b>after</b> #loadEnvironment
+	 * 
+	 * @throws Exception
+	 */
+	public static void initDatabaseImplementation() throws Exception
+	{
+		SystemGlobals.loadAdditionalDefaults(
+				SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
+		
+		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
+        SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
+        
 		DBConnection.getImplementation().init();
 	}
 	
@@ -89,12 +105,6 @@ public class TestCaseUtils
         	SystemGlobals.loadAdditionalDefaults(
         					SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG));
         }
-		
-		SystemGlobals.loadAdditionalDefaults(
-				SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
-		
-		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
-        SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
 
 		I18n.load();
 	}
