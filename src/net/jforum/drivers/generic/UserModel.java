@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.11 2004/09/11 02:43:21 rafaelsteil Exp $
+ * @version $Id: UserModel.java,v 1.12 2004/09/19 05:13:17 rafaelsteil Exp $
  */
 public class UserModel extends AutoKeys implements net.jforum.model.UserModel 
 {
@@ -429,9 +429,7 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		rs.close();
 		p.close();
 		
-		// James Yong: If adminstrator requires email authentication, the following code will check 
-		// whether the user has authenticated email or not.
-		if (user.getActivationKey() == null || user.isActive()) {
+		if (user != null && (user.getActivationKey() == null || user.isActive())) {
 			return user;
 		}
 		

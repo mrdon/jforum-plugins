@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) 2003, 2004 Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,16 +37,17 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 19/03/2004 - 18:56:49
- * net.jforum.security.UserSecurityHelper.java
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: UserSecurityHelper.java,v 1.2 2004/04/21 23:57:35 rafaelsteil Exp $
+ * $Id: UserSecurityHelper.java,v 1.3 2004/09/19 05:13:16 rafaelsteil Exp $
  */
 package net.jforum.security;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @author Rafael Steil
@@ -55,18 +56,25 @@ public class UserSecurityHelper
 {
 	public static void mergeUserGroupRoles(RoleCollection userRoles, ArrayList groupsRolesList)
 	{
+		Map newRolesMap = new HashMap();
+		
 		for (Iterator iter = groupsRolesList.iterator(); iter.hasNext(); ) {
 			RoleCollection rc = (RoleCollection)iter.next();
 			
 			for (Iterator rcIter = rc.iterator(); rcIter.hasNext(); ) {
-				Role role = (Role)rcIter.next();
+				final Role role = (Role)rcIter.next();
 				Role userRole = userRoles.get(role.getName());
 				
 				if (userRole == null) {
-					userRoles.add(role);
+					if (newRolesMap.containsKey(role.getName())) {
+						((ArrayList)newRolesMap.get(role.getName())).add(role);
+					}
+					else {
+						newRolesMap.put(role.getName(), new ArrayList() {{ add(role); }});
+					}
 				}
 				else {
-					// Merge them
+					// Merge the little bastards
 					for (Iterator vIter = role.getValues().iterator(); vIter.hasNext(); ) {
 						RoleValue gRv = (RoleValue)vIter.next();
 						RoleValue uRv = userRole.getValues().get(gRv.getValue()); 
@@ -77,6 +85,55 @@ public class UserSecurityHelper
 					}
 				}
 			}
+		}
+		
+		for (Iterator iter = newRolesMap.entrySet().iterator(); iter.hasNext(); ) {
+			Map.Entry entry = (Map.Entry)iter.next();
+
+			Role newRole = new Role();
+			newRole.setName((String)entry.getKey());
+			newRole.setType(PermissionControl.ROLE_DENY);
+			
+			ArrayList roles = (ArrayList)entry.getValue();
+			for (Iterator rolesIter = roles.iterator(); rolesIter.hasNext(); ) {
+				Role role = (Role)rolesIter.next();
+				newRole.setId(role.getId());
+				
+				// Check if is a single permission ( eg, no children values )
+				// We're assuming here that if the call to getValue() of the current 
+				// role object returns 0, all other related roles will also return 0
+				if (role.getValues().size() == 0) {
+					if (role.getType() == PermissionControl.ROLE_ALLOW) {
+						newRole.setType(PermissionControl.ROLE_ALLOW);
+						break;
+					}
+				}
+				else {
+					// Ok, we have some children ( like forums or categories ids )
+					// Iterate for all values of the current role, checking the 
+					// access rights of each one
+					for (Iterator valuesIter = role.getValues().iterator(); valuesIter.hasNext(); ) {
+						RoleValue rv = (RoleValue)valuesIter.next();
+						RoleValue currentValue = newRole.getValues().get(rv.getValue());
+						
+						if (currentValue == null) {
+							newRole.getValues().add(rv);
+						}
+						else {
+							// We already have some value with this name in the collection
+							// Time to check for its rights
+							if (rv.getType() != currentValue.getType() 
+								&& rv.getType() == PermissionControl.ROLE_ALLOW) {
+								newRole.getValues().remove(currentValue);
+								currentValue.setType(PermissionControl.ROLE_ALLOW);
+								newRole.getValues().add(currentValue);
+							}
+						}
+					}
+				}
+			}
+			
+			userRoles.add(newRole);
 		}
 	}
 }

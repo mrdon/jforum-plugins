@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: RoleValue.java,v 1.2 2004/04/21 23:57:36 rafaelsteil Exp $
+ * $Id: RoleValue.java,v 1.3 2004/09/19 05:13:16 rafaelsteil Exp $
  */
 package net.jforum.security;
 
@@ -103,6 +103,14 @@ public class RoleValue
 	public int hashCode() 
 	{
 		return (this.value + this.type).hashCode();
+	}
+	
+	/** 
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() 
+	{
+		return "[" + this.value + ", type=" + this.type + "]"; 
 	}
 
 }

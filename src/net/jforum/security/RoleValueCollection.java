@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: RoleValueCollection.java,v 1.2 2004/04/21 23:57:34 rafaelsteil Exp $
+ * $Id: RoleValueCollection.java,v 1.3 2004/09/19 05:13:16 rafaelsteil Exp $
  */
 package net.jforum.security;
 
@@ -71,6 +71,15 @@ public class RoleValueCollection extends LinkedHashSet
 		}
 		
 		return null;
+	}
+	
+	/** 
+	 * @see java.util.HashSet#contains(java.lang.Object)
+	 */
+	public boolean contains(Object o) 
+	{
+		boolean c = super.contains(o);
+		return c;
 	}
 	
 	/* 

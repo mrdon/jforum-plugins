@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: RoleCollection.java,v 1.2 2004/04/21 23:57:35 rafaelsteil Exp $
+ * $Id: RoleCollection.java,v 1.3 2004/09/19 05:13:16 rafaelsteil Exp $
  */
 package net.jforum.security;
 
@@ -97,6 +97,20 @@ public class RoleCollection extends LinkedHashSet
 		}
 		
 		return null;
+	}
+	
+	/** 
+	 * @see java.util.AbstractCollection#toString()
+	 */
+	public String toString() 
+	{
+		StringBuffer sb = new StringBuffer(512);
+		
+		for (Iterator iter = this.iterator(); iter.hasNext(); ) {
+			sb.append(iter.next()).append(", ");
+		}
+		
+		return sb.toString();
 	}
 
 }

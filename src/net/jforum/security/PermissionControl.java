@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) 2003, 2004 Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,11 +37,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: Oct 10, 2003 / 21:46:35 PM
- * net.jforum.security.PermissionControl.java
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: PermissionControl.java,v 1.4 2004/09/14 02:20:12 jamesyong Exp $
+ * $Id: PermissionControl.java,v 1.5 2004/09/19 05:13:16 rafaelsteil Exp $
  */
 package net.jforum.security;
 
@@ -103,11 +102,7 @@ public class PermissionControl
 	public boolean canAccess(String roleName) 
 	{
 		Role role = this.roles.get(roleName);
-		if (role == null || role.getType() == PermissionControl.ROLE_DENY) {
-			return false;
-		}
-		
-		return true;
+		return (role != null && role.getType() == PermissionControl.ROLE_ALLOW);
 	}
 	
 	/* 
@@ -123,9 +118,11 @@ public class PermissionControl
 		RoleValue rv = new RoleValue();
 		rv.setType(PermissionControl.ROLE_ALLOW);
 		rv.setValue("0");
+		
 		if (role.getValues().contains(rv)){
 			return true;
-		} else {
+		} 
+		else {
 			rv.setValue(roleValue);
 			return role.getValues().contains(rv);
 		}
