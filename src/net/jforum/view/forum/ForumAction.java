@@ -59,7 +59,6 @@ import net.jforum.dao.UserDAO;
 import net.jforum.entities.Forum;
 import net.jforum.entities.MostUsersEverOnline;
 import net.jforum.entities.Topic;
-import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.SecurityRepository;
@@ -73,7 +72,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.34 2005/03/26 04:11:15 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.35 2005/04/03 03:12:12 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -82,19 +81,18 @@ public class ForumAction extends Command
 		ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		
+		this.setTemplateName(TemplateKeys.FORUMS_LIST);
+		
 		this.context.put("allCategories", ForumCommon.getAllCategoriesAndForums(true));
 		this.context.put("topicsPerPage",  new Integer(SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE)));
-		this.setTemplateName(TemplateKeys.FORUMS_LIST);
 		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
 		
 		this.context.put("totalMessages", I18n.getMessage("ForumListing.totalMessagesInfo", 
 						new Object[] {new Integer( ForumRepository.getTotalMessages() )}));
 		
-		this.context.put("totalUsers", I18n.getMessage("ForumListing.registeredUsers", new Object[] {new Integer(um.getTotalUsers())}));
-
-		User lastUser = um.getLastUserInfo();		
-		this.context.put("lastUserId", new Integer(lastUser.getId()));
-		this.context.put("lastUserName", lastUser.getUsername());
+		this.context.put("totalUsers", I18n.getMessage("ForumListing.registeredUsers", 
+				new Object[] { ForumRepository.totalUsers() }));
+		this.context.put("lastUser", ForumRepository.lastRegisteredUser());
 		
 		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
 		GregorianCalendar gc = new GregorianCalendar();

@@ -57,11 +57,13 @@ import net.jforum.dao.CategoryDAO;
 import net.jforum.dao.ConfigDAO;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
+import net.jforum.dao.UserDAO;
 import net.jforum.entities.Category;
 import net.jforum.entities.Config;
 import net.jforum.entities.Forum;
 import net.jforum.entities.LastPostInfo;
 import net.jforum.entities.MostUsersEverOnline;
+import net.jforum.entities.User;
 import net.jforum.exceptions.CategoryNotFoundException;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.SecurityConstants;
@@ -75,7 +77,7 @@ import net.jforum.util.preferences.ConfigKeys;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.33 2005/03/26 04:10:58 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.34 2005/04/03 03:12:13 rafaelsteil Exp $
  */
 public class ForumRepository implements Cacheable
 {
@@ -87,6 +89,8 @@ public class ForumRepository implements Cacheable
 	private static final String TOTAL_MESSAGES = "totalMessages";
 	private static final String MOST_USERS_ONLINE = "mostUsersEverOnline";
 	private static final String LOADED = "loaded";
+	private static final String LAST_USER = "lastUser";
+	private static final String TOTAL_USERS = "totalUsers";
 	
 	private static ForumRepository instance;
 	
@@ -117,6 +121,7 @@ public class ForumRepository implements Cacheable
 			instance.loadCategories(cm);
 			instance.loadForums(fm);
 			instance.loadMostUsersEverOnline(configModel);
+			instance.loadUsersInfo();
 			
 			Integer i = (Integer)cache.get(FQN, TOTAL_MESSAGES);
 			if (i == null) {
@@ -485,6 +490,27 @@ public class ForumRepository implements Cacheable
 		return getLastPostInfo(getForum(forumId));
 	}
 	
+	public static User lastRegisteredUser()
+	{
+		return (User)cache.get(FQN, LAST_USER);
+	}
+	
+	public static void setLastRegisteredUser(User user)
+	{
+		cache.add(FQN, LAST_USER, user);
+	}
+	
+	public static Integer totalUsers()
+	{
+		return (Integer)cache.get(FQN, TOTAL_USERS);
+	}
+	
+	public static void incrementTotalUsers()
+	{
+		Integer i = (Integer)cache.get(FQN, TOTAL_USERS);
+		cache.add(FQN,TOTAL_USERS, new Integer(i.intValue() + 1));
+	}
+	
 	/**
 	 * Gets the number of topics in some forum.
 	 * 
@@ -646,6 +672,13 @@ public class ForumRepository implements Cacheable
 		}
 		
 		cache.add(FQN, RELATION, m);
+	}
+	
+	private void loadUsersInfo() throws Exception
+	{
+		UserDAO udao = DataAccessDriver.getInstance().newUserDAO();
+		cache.add(FQN, LAST_USER, udao.getLastUserInfo());
+		cache.add(FQN, TOTAL_USERS, new Integer(udao.getTotalUsers()));
 	}
 
 	/**

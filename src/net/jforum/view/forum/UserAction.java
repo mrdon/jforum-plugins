@@ -56,6 +56,7 @@ import net.jforum.entities.UserSession;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.UserDAO;
 import net.jforum.dao.UserSessionDAO;
+import net.jforum.repository.ForumRepository;
 import net.jforum.repository.RankingRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.SecurityConstants;
@@ -74,7 +75,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.37 2005/03/26 04:11:15 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.38 2005/04/03 03:12:12 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -201,6 +202,9 @@ public class UserAction extends Command
 		}
 
 		int userId = um.addNew(u);
+		
+		ForumRepository.incrementTotalUsers();
+		ForumRepository.setLastRegisteredUser(u);
 
 		if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_USER_EMAIL_AUTH)) {
 			try {
