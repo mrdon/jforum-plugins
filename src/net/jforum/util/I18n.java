@@ -64,7 +64,7 @@ import net.jforum.util.preferences.SystemGlobals;
  *  
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: I18n.java,v 1.15 2004/09/28 02:57:19 rafaelsteil Exp $
+ * @version $Id: I18n.java,v 1.16 2004/09/28 14:34:19 rafaelsteil Exp $
  */
 public class I18n 
 {
@@ -99,32 +99,38 @@ public class I18n
 	 */
 	public static synchronized void load() throws IOException
 	{
-		baseDir = SystemGlobals.getApplicationResourceDir() +"/config/languages/";
+		baseDir = SystemGlobals.getApplicationResourceDir() + "/config/languages/";
 		localeNames.load(new FileInputStream(baseDir + "locales.properties"));
 		defaultName = SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT_ADMIN);
-		load(defaultName);
+		load(defaultName, null);
+		
+		String custom = SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT);
+		if (!custom.equals(defaultName)) {
+			load(custom, defaultName);
+		}
 	}
 	
-	/**
-	 * Loads ConfigKeys.I18N_USER_DEFAULT, where ConfigKeys.I18N_DEFAULT is the default
-	 */
-	public static void load(final String localeName) throws IOException
+	private static void load(String localeName, String mergeWith) throws IOException
 	{
-		String defaultLocaleName = SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT);
-		Properties defaultI18n = new Properties();
-		defaultI18n.load(new FileInputStream(baseDir + localeNames.getProperty(defaultLocaleName)));
-		
-		if (defaultLocaleName.equals(localeName)) {
-			messagesMap.put(localeName, defaultI18n);
+		Properties p = new Properties();
+
+		if (mergeWith != null) {
+			p.putAll((Properties)messagesMap.get(mergeWith));
 		}
-		else {
-			Properties p = new Properties();
-			p.putAll(defaultI18n);
-			p.load(new FileInputStream(baseDir + localeNames.getProperty(localeName)));
-			messagesMap.put(localeName, p);			
-		}
+
+		p.load(new FileInputStream(baseDir + localeNames.getProperty(localeName)));
+		messagesMap.put(localeName, p);
 		
-		// Watch for changes
+		watchForChanges(localeName);
+	}
+	
+	public static void load(String localeName) throws IOException
+	{
+		load(localeName, SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT));
+	}
+	
+	private static void watchForChanges(final String localeName) throws IOException
+	{
 		if (!watching.contains(localeName)) {
 			watching.add(localeName);
 			
