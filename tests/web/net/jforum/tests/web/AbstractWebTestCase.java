@@ -84,7 +84,7 @@ public abstract class AbstractWebTestCase extends WebTestCase {
 		super(name);
 
 		this.rootDir = this.getClass().getResource("/").getPath();
-		this.rootDir = this.rootDir.substring(0, this.rootDir.length() + 1
+		this.rootDir = this.rootDir.substring(0, this.rootDir.length() 
 				- "/WEB-INF/classes".length());
 
 		init();
