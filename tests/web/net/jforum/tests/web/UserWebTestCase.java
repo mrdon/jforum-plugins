@@ -52,38 +52,32 @@ import com.dumbster.smtp.SmtpMessage;
 
 /**
  * @author Marc Wick
- * @version $Id: UserWebTestCase.java,v 1.2 2004/09/22 13:43:23 marcwick Exp $
+ * @version $Id: UserWebTestCase.java,v 1.3 2004/09/24 12:54:37 rafaelsteil Exp $
  */
 public class UserWebTestCase extends AbstractWebTestCase {
 
 	private static String lastTestuser;
-
 	public static String defaultTestuser = "defaultTestuser";
-
 	public static String password = "testpassword";
-
 
 	public UserWebTestCase(String name) throws IOException {
 		super(name);
 	}
 
 	public void testRegisterDefaultUser() {
-		beginAt("/list.page");
-		clickLinkWithText(I18n.getMessage(language, "ForumBase.register"));
+		beginAt("/forums/list.page");
+		assertLinkPresent("register");
+		clickLink("register");
+		assertFormPresent("formregister");
 		setFormElement("username", defaultTestuser);
 		setFormElement("email", defaultTestuser);
 		setFormElement("password", password);
 		setFormElement("password_confirm", password);
 		submit();
-
-		String logoutMenu = I18n.getMessage(language, "ForumBase.logout");
-		if (getDialog().isLinkPresentWithText(logoutMenu)) {
-			clickLinkWithText(logoutMenu);
-		}
 	}
 
 	public void testRegisterNewUser() {
-		beginAt("/list.page");
+		beginAt("/forums/list.page");
 		clickLinkWithText(I18n.getMessage(language, "ForumBase.register"));
 		lastTestuser = "testuser" + new Random().nextInt(1000000);
 		setFormElement("username", lastTestuser);
@@ -95,7 +89,9 @@ public class UserWebTestCase extends AbstractWebTestCase {
 	}
 
 	public void testChangePassword() {
-		login(lastTestuser, "testpassword1");
+		beginAt("/forums/list.page");
+		assertLinkPresent("logout");
+		//login(lastTestuser, "testpassword1");
 		clickLinkWithText(I18n.getMessage(language, "ForumBase.profile"));
 		setFormElement("current_password", "testpassword1");
 		setFormElement("new_password", password);
@@ -119,7 +115,7 @@ public class UserWebTestCase extends AbstractWebTestCase {
 
 	public void testPasswordForgottenUserName() throws Exception {
 		smtpServer = SimpleSmtpServer.start();
-		beginAt("/list.page");
+		beginAt("/forums/list.page");
 		clickLinkWithText(I18n.getMessage(language, "ForumBase.login"));
 		clickLinkWithText(I18n.getMessage(language, "Login.lostPassword"));
 
