@@ -70,6 +70,7 @@ public class SearchModel implements net.jforum.model.SearchModel
 		ArrayList l = new ArrayList();
 		ArrayList topics = new ArrayList();
 		
+		// Check for the search cache
 		if (!sd.getSearchStarted()) {
 			if (sd.getTime() == null) {
 				this.topicsByKeyword(sd);
@@ -112,6 +113,7 @@ public class SearchModel implements net.jforum.model.SearchModel
 		return l;
 	}
 	
+	// Find topics by time
 	private void topicsByTime(SearchData sd) throws Exception
 	{
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.searchByTime"));
@@ -120,14 +122,14 @@ public class SearchModel implements net.jforum.model.SearchModel
 		p.close();
 	}
 	
+	// Given a set of keywords, find the topics
 	private void topicsByKeyword(SearchData sd) throws Exception
 	{
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.searchByWord"));
 
 		HashMap eachWordMap = new HashMap();
 
-		// Pega o post id com os quais as palavras da busca
-		// estao relacionados
+		// Get the post ids to which the words are associated to
 		for (int i = 0; i < sd.getKeywords().length; i++) {
 			p.setString(1, sd.getKeywords()[i]);
 			
@@ -142,10 +144,11 @@ public class SearchModel implements net.jforum.model.SearchModel
 			}
 		}
 		
-		// [nomeDaWord] = { cada, post, id }
+		// [wordName] = { each, post, id }
 		
-		// Se for OR, procura por todas as palavras
-		// Se for AND, pega somente os post_ids comuns
+		// If seach type is OR, then get all words
+		// If it is AND, then we want only the ids common to all words
+		// ( oooohhh.. really? that's soooo unlogic )
 		HashSet postsIds = null;
 		
 		if (sd.getUseAllWords()) {
@@ -160,24 +163,28 @@ public class SearchModel implements net.jforum.model.SearchModel
 			}
 		}
 		else {
-			postsIds = new HashSet(eachWordMap.values());
+			for (Iterator iter = eachWordMap.values().iterator(); iter.hasNext(); ) {
+				postsIds.addAll((HashSet)iter.next());
+			}
 		}
 		
-		// Prepara para fazer a busca pelos ids dos topicos
+		// Time to get ready to search for the topics ids 
 		StringBuffer sb = new StringBuffer(1024);
 		for (Iterator iter = postsIds.iterator(); iter.hasNext(); ) {
 			sb.append(iter.next()).append(",");
 		}
 		sb.delete(sb.length() - 1, sb.length());
 
-		// Busca pelos ids, inserindo na tabela auxiliar de busca
+		// Search for the ids, inserting them in the helper table 
 		String sql = SystemGlobals.getSql("SearchModel.insertTopicsIds");
 		sql = sql.replaceAll(":posts:", sb.toString());
 		p = JForum.getConnection().prepareStatement(sql);
 		p.setString(1, SessionFacade.getUserSession().getSessionId());
 		p.executeUpdate();
 		
-		// Copia os topicos para a tabela temporaria
+		// Now that we have the topics ids, it's time to make a copy from the 
+		// topics table, to make the search faster ( damn, next version I'll 
+		// remove the search functionality. Look for this code's size )
 		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.selectTopicData"));
 		p.setString(1, SessionFacade.getUserSession().getSessionId());
 		p.setString(2, SessionFacade.getUserSession().getSessionId());
@@ -197,6 +204,7 @@ public class SearchModel implements net.jforum.model.SearchModel
 		wordToPost.setInt(1, post.getId());
 		
 		for (int i = 0; i < words.length; i++) {
+			// Skip words less than 3 chars
 			if (words[i].length() < 3) {
 				continue;
 			}
