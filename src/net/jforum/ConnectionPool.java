@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ConnectionPool.java,v 1.2 2004/04/21 23:57:40 rafaelsteil Exp $
+ * 
  */
 
 package net.jforum;
@@ -50,12 +50,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Properties;
+
+import net.jforum.util.SystemGlobals;
 
 /** 
  * Every query and connection come from here.
@@ -77,6 +78,7 @@ import java.util.Properties;
  * <code>ConnectionPool</code> is for now a singleton.
  *
  * @author Paulo Silveira
+ * @version $Id: ConnectionPool.java,v 1.3 2004/05/23 02:58:16 rafaelsteil Exp $
  * */
 
 public class ConnectionPool 
@@ -86,7 +88,6 @@ public class ConnectionPool
 	
 	private int minConnections, maxConnections, timeout;
 	private String connectionString;
-	private String dbType;
 
 	/**
 	* It is the connection pool
@@ -114,16 +115,21 @@ public class ConnectionPool
 	*/
 	private ConnectionPool(String dbConfigFile) throws IOException, SQLException
 	{
-		Properties config = new Properties();        
-		config.load(new FileInputStream(dbConfigFile));
+		Properties driverProps = new Properties();        
+		driverProps.load(new FileInputStream(dbConfigFile));
 
 		try {
+			String driverName = driverProps.getProperty("driver.name");
+
+			Properties config = new Properties();
+			config.load(new FileInputStream(SystemGlobals.getApplicationResourceDir()
+					+"config/database/"+ driverName +"/"+ driverName +".properties"));
+			
 			Class.forName(config.getProperty("database.connection.driver"));
 			
 			this.minConnections = Integer.parseInt(config.getProperty("database.connection.pool.min"));
 			this.maxConnections = Integer.parseInt(config.getProperty("database.connection.pool.max"));
 			this.timeout = Integer.parseInt(config.getProperty("database.connection.pool.timeout"));
-			this.dbType = config.getProperty("database.type");
 
 			this.connectionString = config.getProperty("database.connection.string");
 			
@@ -152,7 +158,7 @@ public class ConnectionPool
 			isDatabaseUp = true;
 		}
 		catch (ClassNotFoundException e) {
-			System.err.println("Ouch... Cannot find database driver: "+ config.getProperty("database.connection.driver"));
+			System.err.println("Ouch... Cannot find database driver: "+ driverProps.getProperty("driver.name"));
 		}
     }
 
@@ -405,23 +411,5 @@ public class ConnectionPool
 		}
         
 		return status.toString();
-	}
-	
-	/**
-	 * Pega o total de registors retornados por uma instrucao SELECT.
-	 * 
-	 * @param rs Referencia para um objeto <code>ResultSet</code> que contem o sql executado
-	 * @return Numero total de registros
-	 * @throws Exception
-	 * */
-	public static int getRowCount(ResultSet rs) throws SQLException
-	{
-		int total = 0;
-		
-		rs.last();
-		total = rs.getRow();
-		rs.beforeFirst();
-		
-		return total;
 	}
 }

@@ -176,7 +176,7 @@ CREATE TABLE jforum_ranks (
 --
 
 DROP TABLE IF EXISTS jforum_sessions;
-CREATE TABLE sessions (
+CREATE TABLE jforum_sessions (
   session_id varchar(50) NOT NULL default '',
   session_user_id mediumint(8) NOT NULL default '0',
   session_start varchar(13) NOT NULL default '0',

@@ -40,8 +40,6 @@
  * net.jforum.JForum.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: JForum.java,v 1.7 2004/05/04 22:26:56 rafaelsteil Exp $
  */
 package net.jforum;
 
@@ -84,6 +82,7 @@ import net.jforum.util.SystemGlobals;
  * Front Controller.
  * 
  * @author Rafael Steil
+ * @version $Id: JForum.java,v 1.8 2004/05/23 02:58:16 rafaelsteil Exp $
  */
 public class JForum extends HttpServlet 
 {
