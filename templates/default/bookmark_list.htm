@@ -23,6 +23,14 @@
 							<tr>
 								<td>&nbsp;</td>
 							</tr>
+
+							<#if bookmarks.size() == 0>
+								<tr>
+									<td align="center">
+										<span class="gen">${I18n.getMessage("Bookmarks.empty")}</span>
+									</td>
+								</tr>
+							</#if>
 	  
 							<#assign owner = loggedUserId == user.id/>
 							<tr>

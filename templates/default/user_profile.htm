@@ -74,6 +74,13 @@
 					<td><b><span class="gen">${u.interests}</span></b></td>
 				</tr>
 				</#if>
+
+				<#if bookmarksEnabled>
+				<tr>
+					<td valign="top" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("Bookmarks.myBag")}:</span></td>
+					<td><b><a class="gen" href="${JForumContext.encodeURL("/bookmarks/list/${u.id}")}">${I18n.getMessage("Bookmarks.for")} ${u.username}</a></b></td>
+				</tr>
+				</#if>
 			</table>
 		</td>
 	</tr>
