@@ -44,6 +44,7 @@ package net.jforum.view.forum;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import net.jforum.JForum;
 import net.jforum.entities.Topic;
@@ -59,7 +60,7 @@ import net.jforum.view.forum.common.ForumCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationHelper.java,v 1.11 2005/01/04 03:25:36 rafaelsteil Exp $
+ * @version $Id: ModerationHelper.java,v 1.12 2005/02/11 00:56:45 rafaelsteil Exp $
  */
 public class ModerationHelper 
 {
@@ -122,7 +123,7 @@ public class ModerationHelper
 	{
 		String[] topics = JForum.getRequest().getParameterValues("topic_id");
 		
-		ArrayList forumsList = new ArrayList();
+		List forumsList = new ArrayList();
 		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
 		
 		if (topics != null && topics.length > 0) {
@@ -142,14 +143,15 @@ public class ModerationHelper
 			// Reload changed forums
 			for (Iterator iter = forumsList.iterator(); iter.hasNext(); ) {
 				int forumId = ((Integer)iter.next()).intValue();
-				
-				ForumRepository.reloadForum(forumId);
+
 				TopicRepository.clearCache(forumId);
 				
 				int postId = fm.getMaxPostId(forumId);
 				if (postId > -1) {
 					fm.setLastPost(forumId, postId);
 				}
+				
+				ForumRepository.reloadForum(forumId);
 			}
 		}
 	}

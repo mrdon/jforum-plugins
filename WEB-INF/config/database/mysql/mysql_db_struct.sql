@@ -503,7 +503,7 @@ CREATE TABLE jforum_extensions (
 	upload_icon VARCHAR(100),
 	extension VARCHAR(10),
 	allow TINYINT(1) DEFAULT '1',
-	KEY(extension_group_id),
+	KEY(extension_group_id)
 ) TYPE=InnoDB;
 
 --
