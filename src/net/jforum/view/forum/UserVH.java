@@ -64,7 +64,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserVH.java,v 1.13 2004/07/04 19:31:14 rafaelsteil Exp $
+ * @version $Id: UserVH.java,v 1.14 2004/07/22 15:21:04 rafaelsteil Exp $
  */
 public class UserVH extends Command 
 {
@@ -194,6 +194,8 @@ public class UserVH extends Command
 				SessionFacade.add(userSession);
 				
 				JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA), Integer.toString(user.getId()));
+				JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_USER_HASH), 
+								MD5.crypt(SystemGlobals.getValue(ConfigKeys.USER_HASH_SEQUENCE) + user.getId()));
 				
 				SecurityRepository.load(user.getId(), true);
 				validInfo = true;

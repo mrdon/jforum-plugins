@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author pieter
-* @version $Id: ConfigKeys.java,v 1.7 2004/06/21 03:48:13 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.8 2004/07/22 15:21:04 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -80,8 +80,11 @@ public class ConfigKeys {
 	public static final String COOKIE_NAME_DATA = "cookie.name.data";
 	public static final String COOKIE_NAME_USER = "cookie.name.user";
 	public static final String COOKIE_AUTO_LOGIN = "cookie.name.autologin";
+	public static final String COOKIE_USER_HASH = "cookie.name.userHash";
+		
 	public static final String ANONYMOUS_USER_ID = "anonymous.userId";
 	public static final String DEFAULT_USER_GROUP = "defaultUserGroup";
+	public static final String USER_HASH_SEQUENCE = "user.hash.sequence";
 
 	public static final String VERSION = "version";
 

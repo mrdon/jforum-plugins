@@ -54,7 +54,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.7 2004/06/10 21:59:58 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.8 2004/07/22 15:21:05 rafaelsteil Exp $
  */
 public class SessionFacade 
 {
@@ -69,11 +69,16 @@ public class SessionFacade
 	 */
 	public static void add(UserSession us)
 	{
+		add(us, JForum.getRequest().getSession().getId());
+	}
+
+	public static void add(UserSession us, String sessionId)
+	{
 		if (us.getSessionId() == null || us.getSessionId().equals("")) {
-			us.setSessionId(JForum.getRequest().getSession().getId());
+			us.setSessionId(sessionId);
 		}
 		
-		String sessionId = isUserInSession(us.getUsername());
+		sessionId = isUserInSession(us.getUsername());
 		if (sessionId != null) {
 			remove(sessionId);
 		}

@@ -85,7 +85,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.20 2004/07/08 04:37:33 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.21 2004/07/22 15:21:05 rafaelsteil Exp $
  */
 public class JForum extends HttpServlet 
 {
@@ -374,15 +374,23 @@ public class JForum extends HttpServlet
 			userSession.setSessionId(JForum.getRequest().getSession().getId());
 
 			String cookieName = SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA);
+			
 			Cookie cookie = JForum.getCookie(cookieName);
+			Cookie hashCookie = JForum.getCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_USER_HASH));
 			
 			// If we don't have any cookie yet, then we should set it with the default values
-			if (cookie == null || cookie.getValue().equals(SystemGlobals.getValue(ConfigKeys.ANONYMOUS_USER_ID))) {
+			if (hashCookie == null || cookie == null || cookie.getValue().equals(SystemGlobals.getValue(ConfigKeys.ANONYMOUS_USER_ID))) {
 				this.setAnonymousUserSession(userSession);
 			}
 			else {
 				String uid = cookie.getValue();
-				if (uid != null && !uid.equals("")) {
+				String uidHash = hashCookie.getValue();
+				
+				String securityHash = SystemGlobals.getValue(ConfigKeys.USER_HASH_SEQUENCE);
+				
+				if ((uid != null && !uid.equals(""))
+						&& (securityHash != null && !securityHash.equals(""))
+						&& (MD5.crypt(securityHash + uid).equals(uidHash))) {
 					int userId = Integer.parseInt(uid);
 					userSession.setUserId(userId);
 

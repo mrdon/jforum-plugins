@@ -64,7 +64,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author Pieter
- * @version $Id: SystemGlobals.java,v 1.5 2004/06/10 22:00:05 rafaelsteil Exp $
+ * @version $Id: SystemGlobals.java,v 1.6 2004/07/22 15:21:04 rafaelsteil Exp $
  */
 public class SystemGlobals implements VariableStore
 {
@@ -212,7 +212,7 @@ public class SystemGlobals implements VariableStore
 			expander.clearCache();
 		}
 		catch (IOException e) {
-			System.err.println("*WARNING* cannot load installation specific properties: "+ installationConfig);
+			// no problem
 		}
 	}
 
