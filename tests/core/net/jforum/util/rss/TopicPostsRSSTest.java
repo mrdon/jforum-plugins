@@ -36,70 +36,32 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * This file creation date: 31/01/2004 - 19:22:42
+ * Created on 22/10/2004 01:17:23
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.util.rss;
 
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import net.jforum.entities.Category;
-import net.jforum.entities.Forum;
-import net.jforum.util.preferences.ConfigKeys;
-import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.view.forum.ViewCommon;
+import net.jforum.TestCaseUtils;
+import junit.framework.TestCase;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumRSS.java,v 1.9 2004/10/22 04:23:48 rafaelsteil Exp $
+ * @version $Id: TopicPostsRSSTest.java,v 1.1 2004/10/22 04:23:47 rafaelsteil Exp $
  */
-public class ForumRSS extends GenericRSS 
+public class TopicPostsRSSTest extends TestCase 
 {
-	private LinkedHashMap forums;
-	private RSS rss;
-	private String forumLink;
-	
-	public ForumRSS(String title, String description, LinkedHashMap forums)
+	private static boolean isUp;
+
+	/**
+	 * @see TestCase#setUp()
+	 */
+	protected void setUp() throws Exception 
 	{
-		this.forums = forums;
-		
-		this.forumLink = ViewCommon.getForumLink();
-		
-		this.rss = new RSS(title, description, 
-				SystemGlobals.getValue(ConfigKeys.ENCODING ),
-				this.forumLink);
-		
-		this.prepareRSS();
+		if (!isUp) {
+			TestCaseUtils.loadEnvironment();
+			isUp = true;
+		}
 	}
 
-	private void prepareRSS()
-	{
-		for (Iterator iter = this.forums.entrySet().iterator(); iter.hasNext(); ) {
-			Map.Entry entry = (Map.Entry)iter.next();
-			Category category = (Category)entry.getKey();
-			
-			ArrayList forumsList = (ArrayList)entry.getValue();
-			for (Iterator fIter = forumsList.iterator(); fIter.hasNext(); ) {
-				Forum forum = (Forum)fIter.next();
-				
-				RSSItem item = new RSSItem();
-				item.addCategory(category.getName());
-				item.setTitle(forum.getName());
-				item.setDescription(forum.getDescription());
-				item.setContentType(RSSAware.CONTENT_HTML);
-				item.setLink(this.forumLink
-						+ "forums/list/" + forum.getId()
-						+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
-				
-				this.rss.addItem(item);
-			}
-		}
-		
-		super.setRSS(this.rss);
-	}
 }

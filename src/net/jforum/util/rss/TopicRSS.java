@@ -48,10 +48,11 @@ import java.util.List;
 import net.jforum.entities.Topic;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.view.forum.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicRSS.java,v 1.7 2004/10/21 03:26:04 rafaelsteil Exp $
+ * @version $Id: TopicRSS.java,v 1.8 2004/10/22 04:23:48 rafaelsteil Exp $
  */
 public class TopicRSS extends GenericRSS 
 {
@@ -63,10 +64,7 @@ public class TopicRSS extends GenericRSS
 	{
 		this.topics = topics;
 		
-		this.forumLink = SystemGlobals.getValue(ConfigKeys.FORUM_LINK);
-		if (!this.forumLink.endsWith("/")) {
-			this.forumLink += "/";
-		}
+		this.forumLink = ViewCommon.getForumLink();
 		
 		this.rss = new RSS(title, description, 
 				SystemGlobals.getValue(ConfigKeys.ENCODING), 

@@ -36,68 +36,61 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * This file creation date: 31/01/2004 - 19:22:42
+ * Created on 22/10/2004 00:51:36
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.util.rss;
 
-
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 
-import net.jforum.entities.Category;
-import net.jforum.entities.Forum;
+import net.jforum.entities.Post;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.view.forum.PostCommon;
 import net.jforum.view.forum.ViewCommon;
 
 /**
+ * RSS for the messages of some topic
+ * 
  * @author Rafael Steil
- * @version $Id: ForumRSS.java,v 1.9 2004/10/22 04:23:48 rafaelsteil Exp $
+ * @version $Id: TopicPostsRSS.java,v 1.1 2004/10/22 04:23:48 rafaelsteil Exp $
  */
-public class ForumRSS extends GenericRSS 
+public class TopicPostsRSS extends GenericRSS 
 {
-	private LinkedHashMap forums;
 	private RSS rss;
+	private List posts;
 	private String forumLink;
 	
-	public ForumRSS(String title, String description, LinkedHashMap forums)
+	public TopicPostsRSS(String title, String description, int topicId, List posts)
 	{
-		this.forums = forums;
-		
 		this.forumLink = ViewCommon.getForumLink();
 		
+		this.posts = posts;
 		this.rss = new RSS(title, description, 
-				SystemGlobals.getValue(ConfigKeys.ENCODING ),
-				this.forumLink);
-		
+				SystemGlobals.getValue(ConfigKeys.ENCODING),
+				this.forumLink + "posts/" + topicId 
+				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		this.prepareRSS();
 	}
-
+	
 	private void prepareRSS()
 	{
-		for (Iterator iter = this.forums.entrySet().iterator(); iter.hasNext(); ) {
-			Map.Entry entry = (Map.Entry)iter.next();
-			Category category = (Category)entry.getKey();
+		for (Iterator iter = this.posts.iterator(); iter.hasNext(); ) {
+			Post p = (Post)iter.next();
 			
-			ArrayList forumsList = (ArrayList)entry.getValue();
-			for (Iterator fIter = forumsList.iterator(); fIter.hasNext(); ) {
-				Forum forum = (Forum)fIter.next();
-				
-				RSSItem item = new RSSItem();
-				item.addCategory(category.getName());
-				item.setTitle(forum.getName());
-				item.setDescription(forum.getDescription());
-				item.setContentType(RSSAware.CONTENT_HTML);
-				item.setLink(this.forumLink
-						+ "forums/list/" + forum.getId()
-						+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
-				
-				this.rss.addItem(item);
-			}
+			RSSItem item = new RSSItem();
+			item.setAuthor(p.getPostUsername());
+			item.setContentType(RSSAware.CONTENT_HTML);
+			item.setDescription(PostCommon.processText(p.getText()));
+			item.setPublishDate(p.getTime());
+			item.setTitle(p.getSubject());
+			item.setLink(this.forumLink + "posts/" + p.getTopicId()
+					+ "#" + p.getId()
+					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+			
+			this.rss.addItem(item);
 		}
 		
 		super.setRSS(this.rss);

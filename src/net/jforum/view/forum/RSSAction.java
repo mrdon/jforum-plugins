@@ -59,12 +59,13 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.rss.ForumRSS;
 import net.jforum.util.rss.RSSAware;
+import net.jforum.util.rss.TopicPostsRSS;
 import net.jforum.util.rss.TopicRSS;
 import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: RSSAction.java,v 1.3 2004/10/21 03:26:05 rafaelsteil Exp $
+ * @version $Id: RSSAction.java,v 1.4 2004/10/22 04:23:47 rafaelsteil Exp $
  */
 public class RSSAction extends Command 
 {
@@ -126,16 +127,14 @@ public class RSSAction extends Command
 		
 		tm.incrementTotalViews(topic.getId());
 		
-		int count = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
-		ArrayList posts = pm.selectAllByTopicByLimit(topicId, 0, count);
+		ArrayList posts = pm.selectAllByTopic(topicId);
 		
 		String[] p = { topic.getTitle() };
 		
 		String title = I18n.getMessage("RSS.TopicPosts.title", p);
 		String description = I18n.getMessage("RSS.TopicPosts.description", p);
 
-		// TODO: it should be "TopicPostsRSS".. but am gonna sleep now
-		RSSAware rss = new TopicRSS(title, description, topic.getForumId(), posts);
+		RSSAware rss = new TopicPostsRSS(title, description, topic.getForumId(), posts);
 		JForum.getContext().put("rssContents", rss.createRSS());
 	}
 	

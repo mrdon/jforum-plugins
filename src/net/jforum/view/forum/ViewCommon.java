@@ -69,7 +69,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.17 2004/10/20 03:19:45 rafaelsteil Exp $
+ * @version $Id: ViewCommon.java,v 1.18 2004/10/22 04:23:47 rafaelsteil Exp $
  */
 public final class ViewCommon
 {
@@ -250,5 +250,20 @@ public final class ViewCommon
 		}
 		
 		return start;
+	}
+	
+	/**
+	 * Gets the forum base link.
+	 * The returned link has a trailing slash
+	 * @return The forum link, with the trailing slash
+	 */
+	public static String getForumLink()
+	{
+		String forumLink = SystemGlobals.getValue(ConfigKeys.FORUM_LINK);
+		if (!forumLink.endsWith("/")) {
+			forumLink += "/";
+		}
+		
+		return forumLink;
 	}
 }
