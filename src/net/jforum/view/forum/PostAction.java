@@ -48,6 +48,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
@@ -76,10 +78,14 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.10 2004/10/04 16:00:55 marcwick Exp $
+ * @version $Id: PostAction.java,v 1.11 2004/10/10 00:20:55 rafaelsteil Exp $
  */
-public class PostAction extends Command {
-    public void list() throws Exception {
+public class PostAction extends Command 
+{
+	private static final Logger logger = Logger.getLogger(PostAction.class);
+	
+    public void list() throws Exception 
+	{
         PostModel pm = DataAccessDriver.getInstance().newPostModel();
         UserModel um = DataAccessDriver.getInstance().newUserModel();
         TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
@@ -138,8 +144,8 @@ public class PostAction extends Command {
             if (!usersMap.containsKey(posterId)) {
                 User u = um.selectById(p.getUserId());
                 u.setSignature(PostCommon.processText(u.getSignature()));
-                u.setSignature(PostCommon.processSmilies(u.getSignature(), SmiliesRepository
-                        .getSmilies()));
+                u.setSignature(PostCommon.processSmilies(u.getSignature(), 
+                		SmiliesRepository.getSmilies()));
 
                 usersMap.put(posterId, u);
             }
@@ -235,7 +241,8 @@ public class PostAction extends Command {
 
             JForum.getContext().put("topicId", JForum.getRequest().getParameter("topic_id"));
             JForum.getContext().put("setType", false);
-        } else {
+        } 
+        else {
             JForum.getContext().put("setType", true);
         }
 
@@ -244,14 +251,11 @@ public class PostAction extends Command {
         JForum.getContext().put("moduleAction", "post_form.htm");
         JForum.getContext().put("start", JForum.getRequest().getParameter("start"));
         JForum.getContext().put("isNewPost", true);
-        JForum.getContext().put(
-                "canCreateStickyOrAnnouncementTopics",
-                SecurityRepository
-                        .canAccess(SecurityConstants.PERM_CREATE_STICKY_ANNOUNCEMENT_TOPICS));
+        JForum.getContext().put("canCreateStickyOrAnnouncementTopics",
+                SecurityRepository.canAccess(SecurityConstants.PERM_CREATE_STICKY_ANNOUNCEMENT_TOPICS));
 
         int userId = SessionFacade.getUserSession().getUserId();
-        JForum.getContext().put("user",
-                DataAccessDriver.getInstance().newUserModel().selectById(userId));
+        JForum.getContext().put("user", DataAccessDriver.getInstance().newUserModel().selectById(userId));
     }
 
     public void edit() throws Exception {
@@ -302,17 +306,18 @@ public class PostAction extends Command {
             JForum.getContext().put("topic", topic);
             JForum.getContext().put("moduleAction", "post_form.htm");
             JForum.getContext().put("start", JForum.getRequest().getParameter("start"));
-            JForum.getContext().put(
-                    "canCreateStickyOrAnnouncementTopics",
-                    SecurityRepository
-                            .canAccess(SecurityConstants.PERM_CREATE_STICKY_ANNOUNCEMENT_TOPICS));
-        } else {
+            JForum.getContext().put("canCreateStickyOrAnnouncementTopics",
+                    SecurityRepository.canAccess(SecurityConstants.PERM_CREATE_STICKY_ANNOUNCEMENT_TOPICS));
+        } 
+        else {
             JForum.getContext().put("moduleAction", "message.htm");
             JForum.getContext().put("message", I18n.getMessage("CannotEditPost"));
         }
 
-        JForum.getContext().put("user",
-                DataAccessDriver.getInstance().newUserModel().selectById(sUserId));
+        User u = DataAccessDriver.getInstance().newUserModel().selectById(sUserId);
+        u.setSignature(PostCommon.processText(u.getSignature()));
+        u.setSignature(PostCommon.processSmilies(u.getSignature(), SmiliesRepository.getSmilies()));
+        JForum.getContext().put("user", u);
     }
 
     public void quote() throws Exception {
@@ -425,8 +430,8 @@ public class PostAction extends Command {
         t.setForumId(Integer.parseInt(JForum.getRequest().getParameter("forum_id")));
 
         if (!this.shallProceed(t.getForumId())
-                || this.isForumReadonly(t.getForumId(), JForum.getRequest()
-                        .getParameter("topic_id") != null)) {
+                || this.isForumReadonly(t.getForumId(), 
+                		JForum.getRequest().getParameter("topic_id") != null)) {
             return;
         }
 
@@ -487,7 +492,7 @@ public class PostAction extends Command {
                                     new EmailSenderTask(new TopicSpammer(t, usersToNotify)));
                         }
                     } catch (Exception e) {
-                        // Shall we log the error?
+                        logger.warn("Error while sending notification emails: " + e);
                     }
                 }
             }
