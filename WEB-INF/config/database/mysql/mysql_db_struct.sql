@@ -194,7 +194,7 @@ CREATE TABLE jforum_sessions (
   session_id varchar(50) NOT NULL default '',
   session_user_id mediumint(8) NOT NULL default '0',
   session_start datetime default null,
-  session_time datetime default null,
+  session_time bigint default '0',
   session_ip varchar(8) NOT NULL default '',
   session_page int(11) NOT NULL default '0',
   session_logged_int tinyint(1) default NULL
