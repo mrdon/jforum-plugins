@@ -61,7 +61,7 @@ import net.jforum.util.bbcode.BBCode;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.9 2004/10/24 20:38:33 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.10 2004/11/07 16:32:21 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -175,6 +175,11 @@ public class PostCommon
 				for (int i = 0; i < openQuotes; i++) {
 					text = text + closeQuote.getReplace();
 				}
+			}
+			
+			// Removes all remaining [/quote]
+			if (text.indexOf("[/quote]") > -1) {
+				text = text.replaceAll("\\[/quote\\]", "");
 			}
 		}
 		
