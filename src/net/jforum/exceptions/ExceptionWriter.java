@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) 2003, 2004 Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -35,21 +35,58 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
- * 
- * Created on Feb 3, 2005 5:26:07 PM
- * The JForum Project
+ * /*
+ * Created on Feb 3, 2005 5:15:34 PM
+  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.exceptions;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+
+import org.apache.log4j.Logger;
+
+import net.jforum.JForum;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+
 /**
  * @author Rafael Steil
- * @version $Id: ForumException.java,v 1.3 2005/02/04 12:55:32 rafaelsteil Exp $
+ * @version $Id: ExceptionWriter.java,v 1.1 2005/02/04 12:55:32 rafaelsteil Exp $
  */
-public class ForumException extends RuntimeException
+public class ExceptionWriter
 {
-	public ForumException(String message)
+	private static Logger logger = Logger.getLogger(ExceptionWriter.class);
+	
+	public void handleExceptionData(Throwable t, Writer w)
 	{
-		super(message);
+		StringWriter strWriter = new StringWriter();
+		PrintWriter writer = new PrintWriter(strWriter);
+		t.printStackTrace(writer);		
+		writer.close();
+		
+		try {
+			logger.error(strWriter);
+			
+			String message = t.getMessage();
+			if (message == null) {
+				message = t.toString();
+			}
+
+			JForum.getContext().put("stackTrace", strWriter.toString());
+			JForum.getContext().put("message", t.getClass().getName() +": "+  message);
+
+			Template template = Configuration.getDefaultConfiguration().getTemplate("exception.html");
+			template.process(JForum.getContext(), w);
+		}
+		catch (Exception e) {
+			strWriter = new StringWriter();
+			writer = new PrintWriter(strWriter);
+			t.printStackTrace(writer);
+			writer.close();
+			logger.error(strWriter);
+		}
 	}
 }

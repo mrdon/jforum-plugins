@@ -75,7 +75,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.9 2005/01/31 20:10:44 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.10 2005/02/04 12:55:33 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {
@@ -286,7 +286,8 @@ public class AttachmentCommon
 	
 	public List getAttachments(int postId) throws Exception
 	{
-		if (!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD)) {
+		if (!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD)
+				&& !SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED)) {
 			return new ArrayList();
 		}
 		

@@ -37,7 +37,6 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: Mar 29, 2003 / 1:15:50 AM
- * net.jforum.util.MD5.java
  * The JForum Project
  * http://www.jforum.net
  */
@@ -52,7 +51,7 @@ import net.jforum.exceptions.ForumException;
  * Encodes a string using MD5 hashing 
  * 
  * @author Rafael Steil
- * @version $Id: MD5.java,v 1.3 2005/01/18 20:59:47 rafaelsteil Exp $
+ * @version $Id: MD5.java,v 1.4 2005/02/04 12:55:34 rafaelsteil Exp $
  */
 public class MD5 
 {
@@ -86,7 +85,7 @@ public class MD5
 			}
 		}
 		catch (NoSuchAlgorithmException e) {
-			throw new ForumException(e);
+			throw new ForumException("" + e);
 		}
 		
 		return hexString.toString();

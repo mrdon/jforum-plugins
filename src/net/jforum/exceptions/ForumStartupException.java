@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) 2003, 2004 Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -36,7 +36,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Feb 3, 2005 5:26:07 PM
+ * Created on Feb 3, 2005 5:17:36 PM
  * The JForum Project
  * http://www.jforum.net
  */
@@ -44,11 +44,11 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumException.java,v 1.3 2005/02/04 12:55:32 rafaelsteil Exp $
+ * @version $Id: ForumStartupException.java,v 1.1 2005/02/04 12:55:32 rafaelsteil Exp $
  */
-public class ForumException extends RuntimeException
+public class ForumStartupException extends RuntimeException
 {
-	public ForumException(String message)
+	public ForumStartupException(String message)
 	{
 		super(message);
 	}

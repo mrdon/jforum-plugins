@@ -51,7 +51,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.jforum.exceptions.ForumException;
+import net.jforum.exceptions.ExceptionWriter;
 import net.jforum.repository.ModulesRepository;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
@@ -60,7 +60,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallServlet.java,v 1.10 2004/12/26 02:31:50 rafaelsteil Exp $
+ * @version $Id: InstallServlet.java,v 1.11 2005/02/04 12:55:31 rafaelsteil Exp $
  */
 public class InstallServlet extends JForumCommonServlet
 {
@@ -132,10 +132,10 @@ public class InstallServlet extends JForumCommonServlet
 			catch (Exception e) {
 				response.setContentType("text/html");
 				if (out != null) {
-					throw new ForumException(e, out);
+					new ExceptionWriter().handleExceptionData(e, out);
 				}
 				else {
-					throw new ForumException(e, new BufferedWriter(new OutputStreamWriter(response.getOutputStream())));
+					new ExceptionWriter().handleExceptionData(e, new BufferedWriter(new OutputStreamWriter(response.getOutputStream())));
 				}
 			}
 			

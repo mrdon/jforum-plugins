@@ -72,7 +72,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.27 2005/01/14 13:50:29 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.28 2005/02/04 12:55:33 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -186,7 +186,7 @@ public class ForumAction extends Command
 		List tmpTopics = TopicsCommon.topicsByForum(forumId, start);
 		
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
-		int totalTopics = ForumRepository.getTotalTopics(forumId, true);
+		int totalTopics = ForumRepository.getTotalTopics(forumId);
 		
 		this.context.put("topics", TopicsCommon.prepareTopics(tmpTopics));
 		this.context.put("allCategories", ForumCommon.getAllCategoriesAndForums(false));

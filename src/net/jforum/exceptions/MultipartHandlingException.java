@@ -36,7 +36,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Feb 3, 2005 5:26:07 PM
+ * Created on Feb 3, 2005 5:12:39 PM
  * The JForum Project
  * http://www.jforum.net
  */
@@ -44,11 +44,11 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumException.java,v 1.3 2005/02/04 12:55:32 rafaelsteil Exp $
+ * @version $Id: MultipartHandlingException.java,v 1.1 2005/02/04 12:55:32 rafaelsteil Exp $
  */
-public class ForumException extends RuntimeException
+public class MultipartHandlingException extends RuntimeException
 {
-	public ForumException(String message)
+	public MultipartHandlingException(String message)
 	{
 		super(message);
 	}

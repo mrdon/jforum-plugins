@@ -226,7 +226,7 @@ function confirmDelete()
 					<td class="${rowColor}" valign="top">
 						<span class="postbody">${post.text}</span>
 
-						<#if post.hasAttachments() && canDownloadAttachments>
+						<#if post.hasAttachments() && (canDownloadAttachments || attachmentsEnabled)>
 							<#assign attachments = am.getAttachments(post.id)/>
 
 							<#list attachments as a>

@@ -58,7 +58,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
-import net.jforum.exceptions.ForumException;
+import net.jforum.exceptions.ExceptionWriter;
+import net.jforum.exceptions.ForumStartupException;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.UserSessionModel;
 import net.jforum.repository.ModulesRepository;
@@ -70,17 +71,21 @@ import net.jforum.util.I18n;
 import net.jforum.util.MD5;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+
+import org.apache.log4j.Logger;
+
 import freemarker.template.Template;
 
 /**
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.63 2005/02/01 21:41:53 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.64 2005/02/04 12:55:31 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
 	private static boolean isDatabaseUp;
+	private static Logger logger = Logger.getLogger(JForum.class);
 	
 	public void init(ServletConfig config) throws ServletException
 	{
@@ -97,7 +102,7 @@ public class JForum extends JForumCommonServlet
 			conn = DBConnection.getImplementation().getConnection();
 		}
 		catch (Exception e) {
-			throw new ForumException(e);
+			throw new ForumStartupException("" + e);
 		}
 		
 		dh.setConnection(conn);
@@ -334,10 +339,10 @@ public class JForum extends JForumCommonServlet
 			if (e.toString().indexOf("ClientAbortException") == -1) {
 				response.setContentType("text/html");
 				if (out != null) {
-					throw new ForumException(e, out);
+					new ExceptionWriter().handleExceptionData(e, out);
 				}
 				else {
-					throw new ForumException(e, new BufferedWriter(new OutputStreamWriter(response.getOutputStream())));
+					new ExceptionWriter().handleExceptionData(e, new BufferedWriter(new OutputStreamWriter(response.getOutputStream())));
 				}
 			}
 		}

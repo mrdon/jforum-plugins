@@ -86,7 +86,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.55 2005/01/31 20:10:45 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.56 2005/02/04 12:55:33 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -146,6 +146,8 @@ public class PostAction extends Command {
 					new Long(topic.getLastPostTimeInMillis().getTime()));
 		}
 		
+		this.context.put("attachmentsEnabled", SecurityRepository.canAccess(
+				SecurityConstants.PERM_ATTACHMENTS_ENABLED));
 		this.context.put("canDownloadAttachments", SecurityRepository.canAccess(
 				SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD));
 		this.context.put("am", new AttachmentCommon(this.request));
@@ -559,6 +561,7 @@ public class PostAction extends Command {
 		}
 
 		boolean preview = (this.request.getParameter("preview") != null);
+		boolean moderate = false;
 		if (!preview) {
 			// If topic_id is -1, then is the first post
 			if (t.getId() == -1) {
@@ -569,6 +572,11 @@ public class PostAction extends Command {
 				t.setId(tm.addNew(t));
 				firstPost = true;
 			}
+			
+			// Moderators and admins don't need to have their messages moderated
+			moderate = (t.isModerated() 
+					&& !SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION)
+					&& !SecurityRepository.canAccess(SecurityConstants.PERM_ADMINISTRATION));
 
 			// Topic watch
 			if (this.request.getParameter("notify") != null) {
@@ -578,7 +586,7 @@ public class PostAction extends Command {
 			p.setTopicId(t.getId());
 
 			// Save the remaining stuff
-			p.setModerate(t.isModerated());
+			p.setModerate(moderate);
 			int postId = pm.addNew(p);
 
 			if (this.request.getParameter("topic_id") == null) {
@@ -601,7 +609,7 @@ public class PostAction extends Command {
 				return;
 			}
 
-			if (!t.isModerated()) {
+			if (!moderate) {
 				DataAccessDriver.getInstance().newUserModel().incrementPosts(p.getUserId());
 				TopicsCommon.updateBoardStatus(t, postId, firstPost, tm, fm);
 				TopicsCommon.notifyUsers(t, tm);
@@ -616,7 +624,7 @@ public class PostAction extends Command {
 	
 				int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 				if (u.getId() != anonymousUser) {
-					((HashMap) SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(t.getId()),
+					((Map) SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(t.getId()),
 							new Long(System.currentTimeMillis()));
 				}
 			}

@@ -75,7 +75,7 @@ import net.jforum.util.preferences.ConfigKeys;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.27 2005/02/03 12:37:41 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.28 2005/02/04 12:55:33 rafaelsteil Exp $
  */
 public class ForumRepository implements Cacheable
 {
@@ -83,7 +83,7 @@ public class ForumRepository implements Cacheable
 	private static final String FQN = "categories";
 	private static final String CATEGORIES_SET = "categoriesSet";
 	private static final String RELATION = "relationForums";
-	private static final String TOTAL_TOPICS = "totalTopcis";
+	private static final String FQN_TOTAL_TOPICS = FQN + "/totalTopics";
 	private static final String TOTAL_MESSAGES = "totalMessages";
 	private static final String MOST_USERS_ONLINE = "mostUsersEverOnline";
 	private static final String LOADED = "loaded";
@@ -118,12 +118,7 @@ public class ForumRepository implements Cacheable
 			instance.loadForums(fm);
 			instance.loadMostUsersEverOnline(configModel);
 			
-			Integer i = (Integer)cache.get(FQN, TOTAL_TOPICS);
-			if (i == null) {
-				cache.add(FQN, TOTAL_TOPICS, new Integer(-1));
-			}
-			
-			i = (Integer)cache.get(FQN, TOTAL_MESSAGES);
+			Integer i = (Integer)cache.get(FQN, TOTAL_MESSAGES);
 			if (i == null) {
 				cache.add(FQN, TOTAL_MESSAGES, new Integer(0));
 			}
@@ -491,10 +486,10 @@ public class ForumRepository implements Cacheable
 	 */
 	public static int getTotalTopics(int forumId, boolean fromDb) throws Exception
 	{
-		int total = ((Integer)cache.get(FQN, TOTAL_TOPICS)).intValue();
+		int total = ((Integer)cache.get(FQN_TOTAL_TOPICS, Integer.toString(forumId))).intValue();
 		if (fromDb || total == -1) {
 			total = DataAccessDriver.getInstance().newForumModel().getTotalTopics(forumId);
-			cache.add(FQN, TOTAL_TOPICS, new Integer(total));
+			cache.add(FQN_TOTAL_TOPICS, Integer.toString(forumId), new Integer(total));
 		}
 		
 		return total;
@@ -626,8 +621,10 @@ public class ForumRepository implements Cacheable
 				throw new CategoryNotFoundException("Category for forum #" + f.getId() + " not found");
 			}
 			
+			String forumId = Integer.toString(f.getId());
 			c.addForum(f);
-			m.put(Integer.toString(f.getId()), catId);
+			m.put(forumId, catId);
+			cache.add(FQN_TOTAL_TOPICS, forumId, new Integer(-1));
 		}
 		
 		if (c != null) {

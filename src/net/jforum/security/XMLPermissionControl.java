@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,16 +37,13 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 21/09/2003 / 16:36:44
- * net.jforum.XMLPermissionControl.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: XMLPermissionControl.java,v 1.5 2004/11/21 17:13:45 rafaelsteil Exp $
  */
 package net.jforum.security;
 
-import java.sql.ResultSet;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +51,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import net.jforum.JForum;
-import net.jforum.exceptions.ForumException;
+import net.jforum.exceptions.XMLException;
 import net.jforum.util.FormSelectedData;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -68,6 +65,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * Manipulates XML permission control file definition 
  * 
  * @author Rafael Steil
+ * @version $Id: XMLPermissionControl.java,v 1.6 2005/02/04 12:55:31 rafaelsteil Exp $
  */
 public class XMLPermissionControl extends DefaultHandler 
 {
@@ -188,7 +186,7 @@ public class XMLPermissionControl extends DefaultHandler
 				}
 			}
 			catch (Exception e) {
-				throw new ForumException(e);
+				throw new XMLException("" + e);
 			}
 			finally {
 				try {
@@ -198,7 +196,7 @@ public class XMLPermissionControl extends DefaultHandler
 					}
 				}
 				catch (Exception e) {
-					throw new ForumException(e);
+					throw new XMLException("" + e);
 				}
 			}
 		}

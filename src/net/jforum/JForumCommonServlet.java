@@ -51,7 +51,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
 
-import net.jforum.exceptions.ForumException;
+import net.jforum.exceptions.ForumStartupException;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.repository.BBCodeRepository;
 import net.jforum.repository.ModulesRepository;
@@ -60,6 +60,7 @@ import net.jforum.util.bbcode.BBCodeHandler;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
+import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
 import freemarker.template.Configuration;
@@ -68,10 +69,11 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumCommonServlet.java,v 1.22 2005/02/01 21:41:53 rafaelsteil Exp $
+ * @version $Id: JForumCommonServlet.java,v 1.23 2005/02/04 12:55:31 rafaelsteil Exp $
  */
 public class JForumCommonServlet extends HttpServlet {
     protected boolean debug;
+    private static Logger logger = Logger.getLogger(DataHolder.class);
 
     // Thread local implementation
     protected static ThreadLocal localData = new ThreadLocal() {
@@ -119,7 +121,7 @@ public class JForumCommonServlet extends HttpServlet {
 
             Configuration.setDefaultConfiguration(templateCfg);
         } catch (Exception e) {
-            throw new ForumException(e);
+            throw new ForumStartupException("" + e);
         }
     }
 
@@ -186,29 +188,10 @@ public class JForumCommonServlet extends HttpServlet {
      * his database connection and any other kind of data needed.
      */
     public static class DataHolder {
-        /**
-         * Database connection
-         */
-        private Connection conn;
-
-        /**
-         * The request
-         */
+    	private Connection conn;
         private ActionServletRequest request;
-
-        /**
-         * The response
-         */
         private HttpServletResponse response;
-
-        /**
-         * The template engine context. All is put here.
-         */
         private SimpleHash context = new SimpleHash(ObjectWrapper.BEANS_WRAPPER);
-
-        /**
-         * If some redirect is needed, the url is here
-         */
         private String redirectTo;
         private String contentType;
         private boolean isBinaryContent;
