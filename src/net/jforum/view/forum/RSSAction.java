@@ -70,7 +70,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: RSSAction.java,v 1.12 2005/01/04 03:25:36 rafaelsteil Exp $
+ * @version $Id: RSSAction.java,v 1.13 2005/01/04 03:31:18 rafaelsteil Exp $
  */
 public class RSSAction extends Command 
 {
@@ -95,7 +95,7 @@ public class RSSAction extends Command
 	 */
 	public void forumTopics() throws Exception
 	{
-		int forumId = Integer.parseInt(this.request.getParameter("forum_id")); 
+		int forumId = this.request.getIntParameter("forum_id"); 
 		if (!TopicsCommon.isTopicAccessible(forumId)) {
 			return;
 		}
@@ -118,7 +118,7 @@ public class RSSAction extends Command
 	 */
 	public void topicPosts() throws Exception
 	{
-		int topicId = Integer.parseInt(this.request.getParameter("topic_id"));
+		int topicId = this.request.getIntParameter("topic_id");
 
 		PostModel pm = DataAccessDriver.getInstance().newPostModel();
 		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();

@@ -63,7 +63,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: SmiliesAction.java,v 1.4 2004/12/27 00:30:51 rafaelsteil Exp $
+ * @version $Id: SmiliesAction.java,v 1.5 2005/01/04 03:31:19 rafaelsteil Exp $
  */
 public class SmiliesAction extends Command 
 {
@@ -123,7 +123,7 @@ public class SmiliesAction extends Command
 		int id = 1;
 		
 		if (this.request.getParameter("id") != null) {
-			id = Integer.parseInt(this.request.getParameter("id"));
+			id = this.request.getIntParameter("id");
 		}
 		
 		this.context.put("moduleAction", "smilie_form.htm");
@@ -133,7 +133,7 @@ public class SmiliesAction extends Command
 	
 	public void editSave() throws Exception
 	{
-		Smilie s = DataAccessDriver.getInstance().newSmilieModel().selectById(Integer.parseInt(this.request.getParameter("id")));
+		Smilie s = DataAccessDriver.getInstance().newSmilieModel().selectById(this.request.getIntParameter("id"));
 		s.setCode(this.request.getParameter("code"));
 		
 		if (this.request.getObjectParameter("smilie_img") != null) {
@@ -151,7 +151,7 @@ public class SmiliesAction extends Command
 	public void delete() throws Exception
 	{
 		if (this.request.getParameter("id") != null) {
-			int id = Integer.parseInt(this.request.getParameter("id"));
+			int id = this.request.getIntParameter("id");
 			Smilie s = DataAccessDriver.getInstance().newSmilieModel().selectById(id);
 			
 			DataAccessDriver.getInstance().newSmilieModel().delete(id);
@@ -166,7 +166,7 @@ public class SmiliesAction extends Command
 		this.list();
 	}
 
-	/* 
+	/** 
 	 * @see net.jforum.Command#list()
 	 */
 	public void list() throws Exception 
@@ -175,7 +175,7 @@ public class SmiliesAction extends Command
 		this.context.put("moduleAction", "smilie_list.htm");
 	}
 
-	/*
+	/**
 	 * @see net.jforum.Command#process()
 	 */
 	public Template process(ActionServletRequest request, 

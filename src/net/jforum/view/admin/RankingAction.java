@@ -39,8 +39,6 @@
  * This file creation date: Mar 28, 2003 / 8:09:08 PM
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: RankingAction.java,v 1.4 2004/12/27 00:30:51 rafaelsteil Exp $
  */
 package net.jforum.view.admin;
 
@@ -60,6 +58,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
+ * @version $Id: RankingAction.java,v 1.5 2005/01/04 03:31:19 rafaelsteil Exp $
  */
 public class RankingAction extends Command 
 {
@@ -80,7 +79,8 @@ public class RankingAction extends Command
 	// Edit
 	public void edit() throws Exception
 	{
-		this.context.put("rank", DataAccessDriver.getInstance().newRankingModel().selectById(Integer.parseInt(this.request.getParameter("ranking_id"))));
+		this.context.put("rank", DataAccessDriver.getInstance().newRankingModel().selectById(
+				this.request.getIntParameter("ranking_id")));
 		this.context.put("moduleAction", "ranking_form.htm");
 		this.context.put("action", "editSave");
 	}
@@ -90,8 +90,8 @@ public class RankingAction extends Command
 	{
 		Ranking r = new Ranking();
 		r.setTitle(this.request.getParameter("rank_title"));
-		r.setMin(Integer.parseInt(this.request.getParameter("rank_min")));
-		r.setId(Integer.parseInt(this.request.getParameter("rank_id")));
+		r.setMin(this.request.getIntParameter("rank_min"));
+		r.setId(this.request.getIntParameter("rank_id"));
 		
 		// TODO: needs to add support to images 
 		
@@ -121,14 +121,14 @@ public class RankingAction extends Command
 	{
 		Ranking r = new Ranking();
 		r.setTitle(this.request.getParameter("rank_title"));
-		r.setMin(Integer.parseInt(this.request.getParameter("rank_min")));
+		r.setMin(this.request.getIntParameter("rank_min"));
 		
 		// TODO: need to add support to images
 		DataAccessDriver.getInstance().newRankingModel().addNew(r);
 		this.list();
 	}
 	
-	/*
+	/**
 	 * @see net.jforum.Command#process()
 	 */
 	public Template process(ActionServletRequest request, 

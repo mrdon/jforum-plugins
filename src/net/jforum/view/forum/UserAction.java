@@ -72,7 +72,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.21 2004/12/27 00:30:51 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.22 2005/01/04 03:31:18 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -82,8 +82,8 @@ public class UserAction extends Command
 	{
 		int tmpId = SessionFacade.getUserSession().getUserId();
 		if (SessionFacade.isLogged() 
-				&& tmpId == Integer.parseInt(this.request.getParameter("user_id"))) {
-			int userId = Integer.parseInt(this.request.getParameter("user_id"));
+				&& tmpId == this.request.getIntParameter("user_id")) {
+			int userId = this.request.getIntParameter("user_id");
 			UserModel um = DataAccessDriver.getInstance().newUserModel();
 			User u = um.selectById(userId);
 
@@ -104,7 +104,7 @@ public class UserAction extends Command
 
 	public void editSave() throws Exception 
 	{
-		int userId = Integer.parseInt(this.request.getParameter("user_id"));
+		int userId = this.request.getIntParameter("user_id");
 		List warns = UserCommon.saveUser(userId);
 
 		if (warns.size() > 0) {
@@ -340,7 +340,7 @@ public class UserAction extends Command
 	{
 		UserModel um = DataAccessDriver.getInstance().newUserModel();
 
-		User u = um.selectById(Integer.parseInt(this.request.getParameter("user_id")));
+		User u = um.selectById(this.request.getIntParameter("user_id"));
 
 		this.context.put("moduleAction", "user_profile.htm");
 		this.context.put("rank", new RankingRepository());

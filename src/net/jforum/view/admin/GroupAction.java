@@ -68,7 +68,7 @@ import freemarker.template.Template;
  * ViewHelper class for group administration.
  * 
  * @author Rafael Steil
- * @version $Id: GroupAction.java,v 1.7 2005/01/02 19:58:02 rafaelsteil Exp $
+ * @version $Id: GroupAction.java,v 1.8 2005/01/04 03:31:19 rafaelsteil Exp $
  */
 public class GroupAction extends Command 
 {
@@ -91,12 +91,12 @@ public class GroupAction extends Command
 	// Save information for an existing group
 	public void editSave() throws Exception
 	{
-		int groupId = Integer.parseInt(this.request.getParameter("group_id"));
+		int groupId = this.request.getIntParameter("group_id");
 			
 		Group g = new Group();
 		g.setDescription(this.request.getParameter("group_description"));
 		g.setId(groupId);
-		g.setParentId(Integer.parseInt(this.request.getParameter("parent_id")));
+		g.setParentId(this.request.getIntParameter("parent_id"));
 		g.setName(this.request.getParameter("group_name"));
 
 		DataAccessDriver.getInstance().newGroupModel().update(g);
@@ -107,7 +107,7 @@ public class GroupAction extends Command
 	// Edit a group
 	public void edit() throws Exception
 	{
-		int groupId = Integer.parseInt(this.request.getParameter("group_id"));
+		int groupId = this.request.getIntParameter("group_id");
 		GroupModel gm = DataAccessDriver.getInstance().newGroupModel();
 					
 		this.context.put("group", gm.selectById(groupId));
@@ -154,7 +154,7 @@ public class GroupAction extends Command
 		
 		Group g = new Group();
 		g.setDescription(this.request.getParameter("group_description"));
-		g.setParentId(Integer.parseInt(this.request.getParameter("parent_id")));
+		g.setParentId(this.request.getIntParameter("parent_id"));
 		g.setName(this.request.getParameter("group_name"));
 			
 		gm.addNew(g);			
@@ -165,7 +165,7 @@ public class GroupAction extends Command
 	// Permissions
 	public void permissions() throws Exception
 	{
-		int id = Integer.parseInt(this.request.getParameter("group_id"));
+		int id = this.request.getIntParameter("group_id");
 		
 		GroupSecurityModel gmodel = DataAccessDriver.getInstance().newGroupSecurityModel();
 

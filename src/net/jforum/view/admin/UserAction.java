@@ -71,7 +71,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.14 2004/12/31 16:28:13 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.15 2005/01/04 03:31:19 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -120,7 +120,7 @@ public class UserAction extends Command
 	// Permissions
 	public void permissions() throws Exception
 	{
-		int id = Integer.parseInt(this.request.getParameter("id"));
+		int id = this.request.getIntParameter("id");
 		
 		User user = DataAccessDriver.getInstance().newUserModel().selectById(id);
 		
@@ -139,7 +139,7 @@ public class UserAction extends Command
 	// Permissions Save
 	public void permissionsSave() throws Exception
 	{
-		int id = Integer.parseInt(this.request.getParameter("id"));
+		int id = this.request.getIntParameter("id");
 		User user = DataAccessDriver.getInstance().newUserModel().selectById(id);
 		
 		UserSecurityModel umodel = DataAccessDriver.getInstance().newUserSecurityModel();
@@ -160,7 +160,7 @@ public class UserAction extends Command
 	
 	public void edit() throws Exception
 	{
-		int userId = Integer.parseInt(this.request.getParameter("id"));	
+		int userId = this.request.getIntParameter("id");	
 		UserModel um = DataAccessDriver.getInstance().newUserModel();
 		User u = um.selectById(userId);
 		
@@ -172,7 +172,7 @@ public class UserAction extends Command
 	
 	public void editSave() throws Exception
 	{
-		int userId = Integer.parseInt(this.request.getParameter("user_id"));
+		int userId = this.request.getIntParameter("user_id");
 		UserCommon.saveUser(userId);
 
 		this.list();
@@ -226,7 +226,7 @@ public class UserAction extends Command
 	// Groups Save
 	public void groupsSave() throws Exception
 	{
-		int userId = Integer.parseInt(this.request.getParameter("user_id"));
+		int userId = this.request.getIntParameter("user_id");
 		
 		UserModel um = DataAccessDriver.getInstance().newUserModel();
 		GroupModel gm = DataAccessDriver.getInstance().newGroupModel();

@@ -64,7 +64,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.9 2004/12/27 00:30:51 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.10 2005/01/04 03:31:18 rafaelsteil Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -139,7 +139,7 @@ public class PrivateMessageAction extends Command
 		User user = DataAccessDriver.getInstance().newUserModel().selectById(
 				SessionFacade.getUserSession().getUserId());
 
-		int userId = Integer.parseInt(this.request.getParameter("user_id"));
+		int userId = this.request.getIntParameter("user_id");
 		if (userId > 0){
 			User user1 = DataAccessDriver.getInstance().newUserModel().selectById(userId);
 			this.context.put("pmRecipient", user1);
@@ -263,7 +263,7 @@ public class PrivateMessageAction extends Command
 			return;
 		}
 		
-		int id = Integer.parseInt(this.request.getParameter("id"));
+		int id = this.request.getIntParameter("id");
 		
 		PrivateMessage pm = new PrivateMessage();
 		pm.setId(id);
@@ -334,7 +334,7 @@ public class PrivateMessageAction extends Command
 			return;
 		}
 		
-		int id = Integer.parseInt(this.request.getParameter("id"));
+		int id = this.request.getIntParameter("id");
 		
 		PrivateMessage pm = new PrivateMessage();
 		pm.setId(id);
@@ -358,7 +358,7 @@ public class PrivateMessageAction extends Command
 			return;
 		}
 		
-		int id = Integer.parseInt(this.request.getParameter("id"));
+		int id = this.request.getIntParameter("id");
 		
 		PrivateMessage pm = new PrivateMessage();
 		pm.setId(id);
