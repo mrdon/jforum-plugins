@@ -37,13 +37,13 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 12/03/2004 - 18:47:26
- * net.jforum.SessionFacade.java
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -54,7 +54,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.9 2004/08/01 04:47:02 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.10 2004/11/06 18:03:48 rafaelsteil Exp $
  */
 public class SessionFacade 
 {
@@ -124,7 +124,7 @@ public class SessionFacade
 	 * @return <code>ArrayList</code> with the sessions. Each entry
 	 * is an <code>UserSession</code> object.
 	 */
-	public static ArrayList getAllSessions()
+	public static List getAllSessions()
 	{
 		return new ArrayList(sessionMap.values());
 	}

@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
@@ -63,7 +64,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.2 2004/10/24 22:30:02 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.3 2004/11/06 18:03:48 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
@@ -84,7 +85,7 @@ public class TopicsCommon
 		List topics = null;
 		
 		// Try to get the first's page of topics from the cache
-		if (start == 0) {
+		if (start == 0 && SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
 			topics = TopicRepository.getTopics(forumId);
 
 			if (topics.size() == 0) {
@@ -114,7 +115,7 @@ public class TopicsCommon
 		int hotBegin = SystemGlobals.getIntValue(ConfigKeys.HOT_TOPIC_BEGIN);
 
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
-		HashMap topicsTracking = (HashMap)SessionFacade.getAttribute("topics_tracking");
+		Map topicsTracking = (HashMap)SessionFacade.getAttribute("topics_tracking");
 		ArrayList newTopics = new ArrayList(topics.size());
 		
 		Iterator iter = topics.iterator();

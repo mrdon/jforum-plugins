@@ -1,4 +1,4 @@
-<link rel="alternate" type="application/rss+xml" title="RSS" href="${contextPath}/rss/forums.page" />
+<link rel="alternate" type="application/rss+xml" title="RSS" href="${contextPath}/rss/forums${extension}" />
 
 <table width="100%" align="center">
 	<tr>
@@ -9,7 +9,7 @@
 						<#if logged><span class="gensmall">${I18n.getMessage("ForumListing.lastVisit")}: ${lastVisit}</span><br/></#if>
 						<span class="gensmall">${I18n.getMessage("ForumListing.date")}: ${now}</span><br />
 						<span class="forumLink"><a class="forumLink" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a></span>
-						<a href="${contextPath}/rss/forums.page"><img src="${contextPath}/templates/${templateName}/images/xml_button.gif" border="0" align="middle"></a>
+						<a href="${contextPath}/rss/forums${extension}"><img src="${contextPath}/templates/${templateName}/images/xml_button.gif" border="0" align="middle"></a>
 					</td>
 					<td class="gensmall" valign="bottom" align="right">&nbsp;
 					<#if logged>

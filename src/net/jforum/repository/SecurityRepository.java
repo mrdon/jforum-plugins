@@ -55,11 +55,11 @@ import net.jforum.security.PermissionControl;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityRepository.java,v 1.3 2004/06/03 04:13:28 rafaelsteil Exp $
+ * @version $Id: SecurityRepository.java,v 1.4 2004/11/06 18:03:48 rafaelsteil Exp $
  */
 public class SecurityRepository 
 {
-	private static int MAX_USERS = 50;
+	private static int MAX_USERS = 20;
 	
 	private static Map securityInfoMap = new LinkedHashMap(MAX_USERS) {
 		protected boolean removeEldestEntry(Entry eldest) {

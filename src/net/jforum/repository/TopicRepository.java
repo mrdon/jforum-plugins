@@ -60,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: TopicRepository.java,v 1.7 2004/11/02 19:02:51 rafaelsteil Exp $
+ * @version $Id: TopicRepository.java,v 1.8 2004/11/06 18:03:48 rafaelsteil Exp $
  */
 public class TopicRepository
 {
@@ -69,11 +69,13 @@ public class TopicRepository
 	private static LinkedList recentTopicsList = new LinkedList();
 	
 	static {
-		try {
-			TopicRepository.loadMostRecentTopics();
-		}
-		catch (Exception e) {
-			new ForumException(e);
+		if (SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
+			try {
+				TopicRepository.loadMostRecentTopics();
+			}
+			catch (Exception e) {
+				new ForumException(e);
+			}
 		}
 	}
 
@@ -84,16 +86,17 @@ public class TopicRepository
 	 */
 	public synchronized static void pushTopic(Topic topic)
 	{
-		int limit = SystemGlobals.getIntValue(ConfigKeys.RECENT_TOPICS);
-
-		recentTopicsList.remove(topic);
-		recentTopicsList.addFirst(topic);
-		
-		while (recentTopicsList.size() > limit)
-		{
-			recentTopicsList.removeLast();
+		if (SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
+			int limit = SystemGlobals.getIntValue(ConfigKeys.RECENT_TOPICS);
+	
+			recentTopicsList.remove(topic);
+			recentTopicsList.addFirst(topic);
+			
+			while (recentTopicsList.size() > limit)
+			{
+				recentTopicsList.removeLast();
+			}
 		}
-
 	}
 
 	/**
@@ -103,17 +106,20 @@ public class TopicRepository
 	 */
 	public synchronized static void popTopic(Topic topic)
 	{
-		recentTopicsList.remove(topic);
+		if (SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
+			recentTopicsList.remove(topic);
+		}
 	}	
 
 	/**
 	 * Get all cached recent topics. 
 	 * 
 	 */	
-	public static ArrayList getRecentTopics()
+	public static List getRecentTopics() throws Exception
 	{
-		if (recentTopicsList == null) {
-			return new ArrayList();
+		if (recentTopicsList == null || recentTopicsList.size() == 0
+				|| !SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
+			loadMostRecentTopics();
 		}
 		
 		return new ArrayList(recentTopicsList);
@@ -163,20 +169,22 @@ public class TopicRepository
 	 */
 	public synchronized static void addTopic(Topic topic)
 	{
-		Integer forumId = new Integer(topic.getForumId());
-		LinkedList list = (LinkedList)allTopicsMap.get(forumId);
-		
-		if (list == null) {
-			list = new LinkedList();
-			list.add(topic);
-			allTopicsMap.put(forumId, list);
-		}
-		else {
-			if (list.size() + 1 > maxItems) {
-				list.removeLast();
-			}
+		if (SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
+			Integer forumId = new Integer(topic.getForumId());
+			LinkedList list = (LinkedList)allTopicsMap.get(forumId);
 			
-			list.addFirst(topic);
+			if (list == null) {
+				list = new LinkedList();
+				list.add(topic);
+				allTopicsMap.put(forumId, list);
+			}
+			else {
+				if (list.size() + 1 > maxItems) {
+					list.removeLast();
+				}
+				
+				list.addFirst(topic);
+			}
 		}
 	}
 	
@@ -210,13 +218,17 @@ public class TopicRepository
 	 * @param forumid The forum id 
 	 * @return <code>ArrayList</code> with the topics.
 	 */
-	public static ArrayList getTopics(int forumid)
+	public static List getTopics(int forumid)
 	{
-		LinkedList returnList = (LinkedList)allTopicsMap.get(new Integer(forumid));
-		if (returnList == null) {
-			return new ArrayList();
+		if (SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
+			LinkedList returnList = (LinkedList)allTopicsMap.get(new Integer(forumid));
+			if (returnList == null) {
+				return new ArrayList();
+			}
+			
+			return new ArrayList(returnList);
 		}
 		
-		return new ArrayList(returnList);
+		return new ArrayList();
 	}
 }

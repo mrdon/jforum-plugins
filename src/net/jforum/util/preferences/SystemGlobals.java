@@ -42,6 +42,7 @@
  */
 package net.jforum.util.preferences;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -66,7 +67,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author Pieter
- * @version $Id: SystemGlobals.java,v 1.15 2004/11/04 02:46:53 rafaelsteil Exp $
+ * @version $Id: SystemGlobals.java,v 1.16 2004/11/06 18:03:47 rafaelsteil Exp $
  */
 public class SystemGlobals implements VariableStore
 {
@@ -126,6 +127,10 @@ public class SystemGlobals implements VariableStore
 
 		for (Iterator iter = additionalDefaultsList.iterator(); iter.hasNext(); ) {
 			loadAdditionalDefaults((String)iter.next());
+		}
+		
+		if (new File(this.installationConfig).exists()) {
+			loadAdditionalDefaults(this.installationConfig);
 		}
 	}
 	
@@ -253,7 +258,7 @@ public class SystemGlobals implements VariableStore
 
 	public String getVariableValue(String field)
 	{
-		String preExpansion = this.installation.getProperty(field);
+		String preExpansion = globals.installation.getProperty(field);
 		if (preExpansion == null) {
 			preExpansion = this.defaults.getProperty(field);
 

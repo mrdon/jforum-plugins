@@ -72,7 +72,7 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.11 2004/11/05 03:29:41 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.12 2004/11/06 18:03:48 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -180,7 +180,6 @@ public class ForumAction extends Command
 		JForum.getContext().put("now", df.format(gc.getTime()));
 		
 		JForum.getContext().put("lastVisit", df.format(SessionFacade.getUserSession().getLastVisit()));
-		
 		JForum.getContext().put("fir", new ForumRepository());
 		
 		// Online Users
@@ -189,7 +188,7 @@ public class ForumAction extends Command
 		int registered = 0;
 		int aid = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 	
-		ArrayList userSessions = SessionFacade.getAllSessions();
+		List userSessions = SessionFacade.getAllSessions();
 		ArrayList onlineUsersList = new ArrayList();
 		for (Iterator iter = userSessions.iterator(); iter.hasNext(); ) {
 			UserSession us = (UserSession)iter.next();
