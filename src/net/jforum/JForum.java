@@ -69,7 +69,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.38 2004/10/04 10:08:16 marcwick Exp $
+ * @version $Id: JForum.java,v 1.39 2004/10/06 15:15:18 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -187,6 +187,7 @@ public class JForum extends JForumCommonServlet
 		JForum.getContext().put("serverPort", Integer.toString(JForum.getRequest().getServerPort()));
 		JForum.getContext().put("I18n", I18n.getInstance());
 		JForum.getContext().put("version", SystemGlobals.getValue(ConfigKeys.VERSION));
+		JForum.getContext().put("forumTitle", SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_TITLE));
 		JForum.getContext().put("pageTitle", SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_TITLE));
 		JForum.getContext().put("metaKeywords", SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_METATAG_KEYWORDS));
 		JForum.getContext().put("metaDescription", SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_METATAG_DESCRIPTION));
@@ -213,8 +214,10 @@ public class JForum extends JForumCommonServlet
 			dataHolder.setResponse(response);
 			dataHolder.setRequest(request);
 			
-			// Context
-			this.setupTemplateContext();
+			if (!isDatabaseUp) {
+				this.startDatabase();
+			}
+			
 			
 			if (isDatabaseUp) {
 				dataHolder.setConnection(DBConnection.getImplementation().getConnection());
@@ -222,9 +225,8 @@ public class JForum extends JForumCommonServlet
 			
 			localData.set(dataHolder);
 			
-			if (!isDatabaseUp) {
-				this.startDatabase();
-			}
+			// Context
+			this.setupTemplateContext();
 			
 			// Verify cookies
 			this.checkCookies();
