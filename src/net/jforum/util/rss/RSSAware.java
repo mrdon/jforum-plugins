@@ -46,13 +46,15 @@ package net.jforum.util.rss;
  * A RSS representation of some content.
  * 
  * @author Rafael Steil
- * @version $Id: RSSAware.java,v 1.3 2004/10/21 03:26:04 rafaelsteil Exp $
+ * @version $Id: RSSAware.java,v 1.4 2004/10/24 17:59:56 rafaelsteil Exp $
  */
 public interface RSSAware
 {
 	public static final String RSS_VERSION = "rss_2.0";
 	public static final String CONTENT_HTML = "text/html";
 	public static final String CONTENT_TEXT = "text/plain";
+	
+	public static final String DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss";
 	
 	public String createRSS() throws Exception;
 }

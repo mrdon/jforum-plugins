@@ -43,23 +43,16 @@
 package net.jforum.util.rss;
 
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
-import com.sun.syndication.feed.synd.SyndCategory;
-import com.sun.syndication.feed.synd.SyndCategoryImpl;
-import com.sun.syndication.feed.synd.SyndContent;
-import com.sun.syndication.feed.synd.SyndContentImpl;
-import com.sun.syndication.feed.synd.SyndEntry;
-import com.sun.syndication.feed.synd.SyndEntryImpl;
-import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.feed.synd.SyndFeedImpl;
-import com.sun.syndication.io.SyndFeedOutput;
+import net.jforum.JForum;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericRSS.java,v 1.1 2004/10/21 03:26:04 rafaelsteil Exp $
+ * @version $Id: GenericRSS.java,v 1.2 2004/10/24 17:59:56 rafaelsteil Exp $
  */
 public class GenericRSS implements RSSAware 
 {
@@ -69,60 +62,17 @@ public class GenericRSS implements RSSAware
 	{
 		this.rss = rss;
 	}
-
-	/**
-	 * @see net.jforum.util.rss.RSSAware#createRSS()
-	 */
-	public String createRSS() throws Exception 
+	
+	public String createRSS() throws Exception
 	{
-		SyndFeed feed = new SyndFeedImpl();
-		feed.setFeedType(RSSAware.RSS_VERSION);
-		feed.setDescription(rss.getDescription());
-		feed.setTitle(rss.getTitle());
-		feed.setEncoding(rss.getEncoding());
-		feed.setLink(rss.getLink());
-
-		List entries = new ArrayList();
-		for (Iterator iter = rss.getItens().iterator(); iter.hasNext(); ) {
-			RSSItem item = (RSSItem)iter.next();
+		Template t = Configuration.getDefaultConfiguration().getTemplate(SystemGlobals.getValue(ConfigKeys.TEMPLATE_NAME) 
+				+ "/rss_template.htm");
+		StringWriter sw = new StringWriter();
 		
-			SyndEntry entry = new SyndEntryImpl();
-			entry.setAuthor(item.getAuthor());
-			
-			entry.setPublishedDate(item.getPublishDate());
-
-			entry.setLink(item.getLink());
-			entry.setTitle(item.getTitle());
-			
-			SyndContent content = new SyndContentImpl();
-			content.setType(item.getContentType());
-			content.setValue(item.getDescription());
-			
-			entry.setDescription(content);
-			
-			// Check for categories related to this item
-			if (item.getCategories().size() > 0) {
-				List categories = new ArrayList();
-				
-				for (Iterator catIter = item.getCategories().iterator(); catIter.hasNext(); ) {
-					SyndCategory category = new SyndCategoryImpl();
-					category.setName((String)catIter.next());
-					
-					categories.add(category);
-				}
-				
-				entry.setCategories(categories);				
-			}
-			
-			entries.add(entry);
-		}
+		JForum.getContext().put("encoding", SystemGlobals.getValue(ConfigKeys.ENCODING));
+		JForum.getContext().put("rss", this.rss);
+		t.process(JForum.getContext(), sw);
 		
-		feed.setEntries(entries);
-		
-		StringWriter writer = new StringWriter();
-		SyndFeedOutput out = new SyndFeedOutput();
-		out.output(feed, writer);
-		
-		return writer.toString();
+		return sw.toString();
 	}
 }

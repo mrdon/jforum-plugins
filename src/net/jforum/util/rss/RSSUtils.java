@@ -36,32 +36,31 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on 22/10/2004 01:17:23
+ * Created on 24/10/2004 14:37:26
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.util.rss;
 
-import net.jforum.TestCaseUtils;
-import junit.framework.TestCase;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
+ * General utilities for RSS manipulation.
+ * 
  * @author Rafael Steil
- * @version $Id: TopicPostsRSSTest.java,v 1.1 2004/10/22 04:23:47 rafaelsteil Exp $
+ * @version $Id: RSSUtils.java,v 1.1 2004/10/24 17:59:56 rafaelsteil Exp $
  */
-public class TopicPostsRSSTest extends TestCase 
+public class RSSUtils 
 {
-	private static boolean isUp;
-
 	/**
-	 * @see TestCase#setUp()
+	 * Formats a given date to the expected RSS format
+	 * @param date The date to format
+	 * @return The formated date
 	 */
-	protected void setUp() throws Exception 
+	public static String formatDate(Date date)
 	{
-		if (!isUp) {
-			TestCaseUtils.loadEnvironment();
-			isUp = true;
-		}
+		SimpleDateFormat df = new SimpleDateFormat(RSSAware.DATE_FORMAT);
+		return df.format(date);
 	}
-
 }

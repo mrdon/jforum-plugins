@@ -43,14 +43,13 @@
 package net.jforum.util.rss;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
  * Represents a single RSS piece of content.
  * 
  * @author Rafael Steil
- * @version $Id: RSSItem.java,v 1.5 2004/10/21 03:26:04 rafaelsteil Exp $
+ * @version $Id: RSSItem.java,v 1.6 2004/10/24 17:59:55 rafaelsteil Exp $
  */
 public class RSSItem 
 {
@@ -59,7 +58,7 @@ public class RSSItem
 	private String title;
 	private String description;
 	private String contentType;
-	private Date publishDate;
+	private String publishDate;
 	private List categories;
 	
 	public RSSItem() 
@@ -162,7 +161,7 @@ public class RSSItem
 	 * Sets the content publication date and time
 	 * @param date
 	 */
-	public void setPublishDate(Date date)
+	public void setPublishDate(String date)
 	{
 		this.publishDate = date;
 	}
@@ -171,7 +170,7 @@ public class RSSItem
 	 * Gets the document publication date
 	 * @return
 	 */
-	public Date getPublishDate()
+	public String getPublishDate()
 	{
 		return this.publishDate;
 	}

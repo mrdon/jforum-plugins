@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="${encoding}"?>
+<rss version="2.0">
+	<channel>
+		<title><![CDATA[${rss.title}]]></title>
+		<link>${rss.link}</link>
+		<description><![CDATA[${rss.description?default("")}]]></description>
+		<generator>JForum - http://www.jforum.net</generator>
+		<#list rss.itens as item>
+			<item>
+				<title><![CDATA[${item.title}]]></title>
+				<description><![CDATA[ ${item.description}]]></description>
+				<#if (item.categories.size() > 0)>
+					<category><#list item.categories as cat>${cat.name}, </#list></category>
+				</#if>
+				<guid isPermalink="true">${item.link}</guid>
+				<pubDate><![CDATA[${item.publishDate}]]></pubDate>
+				<author><![CDATA[ ${item.author}]]></author>
+			</item>
+		</#list>
+	</channel>
+</rss>
