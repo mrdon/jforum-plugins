@@ -44,7 +44,7 @@ package net.jforum.cache;
 
 /**
  * @author Rafael Steil
- * @version $Id: CacheEngine.java,v 1.2 2005/01/14 13:50:31 rafaelsteil Exp $
+ * @version $Id: CacheEngine.java,v 1.3 2005/02/01 14:20:24 rafaelsteil Exp $
  */
 public interface CacheEngine
 {
@@ -80,11 +80,9 @@ public interface CacheEngine
 	 * @param cacheable The caller cacheable instance
 	 * @param fqn The fully qualified name associated with the key
 	 * @param key The key to get
-	 * @throws InexistentCacheEntryException May throw this exception 
-	 * if the key is not found or is in an invalid state
 	 * @return The cached object, or <code>null</code> if no entry was found
 	 */
-	public Object get(Cacheable cacheable, String fqn, String key) throws InexistentCacheEntryException;
+	public Object get(Cacheable cacheable, String fqn, String key);
 	
 	/**
 	 * Gets some object from the cache.
@@ -92,11 +90,9 @@ public interface CacheEngine
 	 * 
 	 * @param cacheable The caller cacheable instance
 	 * @param key The key to get
-	 * @throws InexistentCacheEntryException May throw this exception 
-	 * if the key is not found or is in an invalid state
 	 * @return The cached object, or <code>null</code> if no entry was found
 	 */
-	public Object get(Cacheable cacheable, String key) throws InexistentCacheEntryException;
+	public Object get(Cacheable cacheable, String key);
 	
 	/**
 	 * Removes an entry from the cache.

@@ -53,7 +53,7 @@ import org.jboss.cache.TreeCache;
 
 /**
  * @author Rafael Steil
- * @version $Id: JBossCacheEngine.java,v 1.1 2005/01/14 13:50:30 rafaelsteil Exp $
+ * @version $Id: JBossCacheEngine.java,v 1.2 2005/02/01 14:20:23 rafaelsteil Exp $
  */
 public class JBossCacheEngine implements CacheEngine
 {
@@ -102,7 +102,7 @@ public class JBossCacheEngine implements CacheEngine
 	/**
 	 * @see net.jforum.cache.CacheEngine#get(net.jforum.cache.Cacheable, java.lang.String, java.lang.String)
 	 */
-	public Object get(Cacheable cacheable, String fqn, String key) throws InexistentCacheEntryException
+	public Object get(Cacheable cacheable, String fqn, String key)
 	{
 		try {
 			return this.cache.get(Fqn.fromString(fqn), key);
@@ -116,7 +116,7 @@ public class JBossCacheEngine implements CacheEngine
 	/**
 	 * @see net.jforum.cache.CacheEngine#get(net.jforum.cache.Cacheable, java.lang.String)
 	 */
-	public Object get(Cacheable cacheable, String key) throws InexistentCacheEntryException
+	public Object get(Cacheable cacheable, String key)
 	{
 		return this.get(cacheable, CacheEngine.DUMMY_FQN, key);
 	}

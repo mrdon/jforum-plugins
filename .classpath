@@ -18,7 +18,6 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/commons-fileupload-1.1-dev.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/ojdbc14.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/jgroups-2.2.7.jar"/>
-	<classpathentry sourcepath="/OSCache" kind="lib" path="WEB-INF/lib/oscache-2.1-13Jan05.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/jboss-cache.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/jboss-common.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/jboss-jmx.jar"/>
