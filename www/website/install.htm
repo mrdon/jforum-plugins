@@ -93,13 +93,13 @@ This is a basic explanation of JForum installation and configuration. It is assu
 <!-- Downloadig -->
 <p><img src="info.jpg" align="middle" border="0"> <a name="downloading"></a><span class="install_subtitle">Downloading JForum</span>
 <p>
-To get JForum, access the <a href="download.htm">download</a> page. <a href="download.htm">Click here</a> to go there and get the latest version.
+To get JForum, go to the <a href="download.htm">download page</a> and get the latest version.
 </p>
 
 <!-- Installing -->
 <br><img src="info.jpg" align="middle" align="middle"> <a name="installing"></a><span class="install_subtitle">Installing</span>
 <p>
-After the download, unpack the .ZIP file into your webapp's directory ( or anyplace you want to put it ). A directory named
+After the download, unpack the .ZIP file into your webapp's directory (or anyplace you want to put it). A directory named
 <br>
 <br><i>JForum-&lt;release&gt;</i>
 <br>
@@ -109,7 +109,7 @@ After the download, unpack the .ZIP file into your webapp's directory ( or anypl
 <!-- Configuring -->
 <br><a name="configuring"></a><img src="info.jpg" align="middle" border="0"> <span class="install_subtitle">Configuring</span>
 <p>
-There are some things you must configure before trying to use JForum. The steps are described bellow:
+There are some things you must configure before trying to use JForum. The steps are described below:
 </p>
 
 <!-- Database Configuration -->
@@ -120,7 +120,7 @@ First of all, you must have <a href="http://www.mysql.com" target="_new">MySQL</
 Then, open the file <i>WEB-INF/config/SystemGlobals.properties</i>. Now search for a key named <i>database.driver.name</i>. The default value is <i>mysql</i>, which means JForum will try to use MySQL. If you want to use PostgreSQL, change the value to <i>postgresql</i>. 
 
 <br>
-<br>Secondly, you can tell JForum whether to use a Connection Pool or not. A connection pool will increase the performance of your application, but there are some situations where the use of a connection pool is not recommended or even possible. 
+<br>Next, you can tell JForum whether to use a Connection Pool or not. A connection pool will increase the performance of your application, but there are some situations where the use of a connection pool is not recommended or even possible. 
 <br>The first thing is more specific to MySQL: mysql has a environment variable named "wait_timeout", which you can see by typing
 <br>
 <br>
@@ -148,16 +148,16 @@ Then, open the file <i>WEB-INF/config/SystemGlobals.properties</i>. Now search f
 <br><b><i>database.connection.host</i></b>: set the host where the database is located. Generally it will be <i>localhost</i> - the default value -, but if not, just change this property to the right host. 
 <br>
 
-<br><b><i>dbname</i></b>: is the database name you'll be using. The default value is <i>jforum</i>. All JForum tables are preceded by "jforum_", so you don't need to worry about table names conflict. 
+<br><b><i>dbname</i></b>: is the database name you will be using. The default value is <i>jforum</i>. All JForum tables are preceded by "jforum_", so you don't need to worry about conflicting table names. 
 <br>
-<br>The other properties you may leave with the defaults, if you don't know what to put. 
+<br>The other properties you may leave with the default values if you don't know what to put. 
 </p>
 
 
 <!-- Creating Database Tables -->
 <br><a name="createTables"></a><img src="info.jpg" align="middle" align="middle"> <span class="install_subtitle">Creating the database tables</span>
-<p>Next step is to create the tables. To do that, use the import script named "&lt;<b>DBNAME</b>&gt;_db_struct.sql", placed at <i>WEB-INF/config/database/&lt;<b>DBNAME</b>&gt;</i>. This script will create all necessary tables to run JForum. The script were tested and should work with no problem at all. 
-<br>Also, please keep in mind that, if you are upgrading JForum, don't forget to take a look in the migration script that may exist. Search for a file named "Readme.txt" in the root directory. 
+<p>The next step is to create the tables. To do that, use the import script named "&lt;<b>DBNAME</b>&gt;_db_struct.sql", placed at <i>WEB-INF/config/database/&lt;<b>DBNAME</b>&gt;</i>. This script will create all necessary tables to run JForum. The script were tested and should work with no problem at all. 
+<br>Also, please keep in mind that if you are upgrading JForum you need to take a look to see if a migration script exists. Look in the file named "Readme.txt" in the root directory to see.
 </p>
 
 <p>
@@ -165,7 +165,7 @@ Then, open the file <i>WEB-INF/config/SystemGlobals.properties</i>. Now search f
  Now it is time to run the script to populate the database tables. To do that, use the script named "&lt;<b>DBNAME</b>&gt;_data_dump.sql", also located at <i>WEB-INF/config/database/&lt;<b>DBNAME</b>&gt;</i>. One more time, you should have no problems with this step. If you do, please remember to inform the error message, as well the database name and version you're using. 
 <br>
 <br><a name="misc"></a><span style="font-size: 16px; line-height: normal"><b>General Information and Considerations</b></span>
-<br><img src="info.jpg" align="middle" border="0"> JForum uses a servlet mapping to invoke the pages. This mapping is <b>*.page</b>, and is already properly configured at WEB-INF/web.xml. If you are running JForum on some ISP, sometimes you'll need to contact their Technical Support and ask them to explicity enable these mapping for you.
+<br><img src="info.jpg" align="middle" border="0"> JForum uses a servlet mapping to invoke the pages. This mapping is <b>*.page</b>, and is already properly configured at WEB-INF/web.xml. If you are running JForum on certain ISPs, you may need to contact their Technical Support and ask them to explicity enable these mapping for you.
 
 <br>
 <br><img src="info.jpg" align="middle" border="0"> The directory "images" and "tmp" should have write permission to the user who runs the web server. You'll got nasty exceptions when uploading things if there is no write permission.
@@ -178,11 +178,11 @@ Then, open the file <i>WEB-INF/config/SystemGlobals.properties</i>. Now search f
 
 <br>
 <br><a name="permissions"></a><span style="font-size: 16px; line-height: normal"><b>Setting permissions for Forums and Categories</b></span>
-<br><img src="info.jpg" align="middle" border="0"> By default, JForum will create the Forums with some permissions set to "not allowed" for the users / groups. <b>This is incorrect jforum's behaviour and will be fixed in the next release</b>. So, in order to allow users to insert / reply / edit posts, you should first give the right permissions for the group - by default, "General" "Administrators" and "Moderators". 
+<br><img src="info.jpg" align="middle" border="0"> By default, JForum will create the forums with some permissions set to "not allowed" for the users / groups. <b>This is incorrect jforum's behaviour and will be fixed in the next release</b>. So, in order to allow users to insert / reply / edit posts, you should first give the right permissions for the group - by default, "General" "Administrators" and "Moderators". 
 <br>
-<br>The steps are easy, but must be done to every new Category and / or Forum: After creating the category / forum, go to the "Groups" administration, using the link in the left menu and then click on the "Permissions" link. A page with the current existing roles will show up. Now, check if everthing is according to your needs, and the click "Save". <b>You must click save even if you don't change anything</b>, so the roles can be written to the database. 
+<br>The steps are easy, but must be done to every new category and/or forum: After creating the category/forum, go to the "Groups" administration, using the link in the left menu and then click on the "Permissions" link. A page with the current existing roles will show up. Now, check if everthing is according to your needs, and the click "Save". <b>You must click save even if you don't change anything</b>, so the roles can be written to the database. 
 <br>
-<br>That's all you should know for now to start using JForum. Don't forget to read the other sections, and don't be shy to ask something if you have doubts or problems. 
+<br>That's all you should know for now to start using JForum. Don't forget to read the other sections, and don't be shy to ask something if you have questions or problems. 
 </p>
 		</td>
 	</tr>
