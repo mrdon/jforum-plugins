@@ -81,7 +81,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.20 2005/02/16 20:33:36 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.21 2005/02/17 19:05:49 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -296,9 +296,16 @@ public class InstallAction extends Command
 		
 		String dbType = this.getFromSession("database");
 		
+		if (dbType.startsWith("mysql")) {
+			dbType = "mysql";
+		}
+		
 		List statements = this.readFromDat(SystemGlobals.getApplicationPath() + "/install/" + dbType + "_dump.dat");
 		for (Iterator iter = statements.iterator(); iter.hasNext();) {
 			String query = (String)iter.next();
+			if (query == null || "".equals(query.trim())) {
+				continue;
+			}
 			
 			Statement s = conn.createStatement();
 			
@@ -339,11 +346,17 @@ public class InstallAction extends Command
 		if ("postgresql".equals(dbType)) {
 			this.dropPostgresqlTables(conn);
 		}
+		else if (dbType.startsWith("mysql")) {
+			dbType = "mysql";
+		}
 		
 		boolean status = true;
 		List statements = this.readFromDat(SystemGlobals.getApplicationPath() + "/install/" + dbType + "_structure.dat");
 		for (Iterator iter = statements.iterator(); iter.hasNext(); ) {
 			String query = (String)iter.next();
+			if (query == null || "".equals(query.trim())) {
+				continue;
+			}
 			
 			Statement s = conn.createStatement();
 			
@@ -402,6 +415,12 @@ public class InstallAction extends Command
 		String type = this.getFromSession("database");
 		String encoding = this.getFromSession("dbEncoding");
 		
+		boolean isMysql = type.startsWith("mysql");
+		
+		if (isMysql) {
+			type = "mysql";
+		}
+		
 		Properties p = new Properties();
 		p.load(new FileInputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) 
 				+ "/database/" + type + "/" + type + ".properties"));
@@ -413,13 +432,11 @@ public class InstallAction extends Command
 		p.setProperty(ConfigKeys.DATABASE_CONNECTION_DBNAME, dbName);
 		p.setProperty(ConfigKeys.DATABASE_CONNECTION_ENCODING, encoding);
 		
-		if (type.startsWith("mysql")) {
+		if (isMysql) {
 			if ("mysql41".equals(type)) {
 				p.setProperty(ConfigKeys.DATABASE_MYSQL_ENCODING, "");
 				p.setProperty(ConfigKeys.DATABASE_MYSQL_UNICODE, "");
 			}
-			
-			type = "mysql";
 		}
 		
 		try {
@@ -446,7 +463,7 @@ public class InstallAction extends Command
 	private Connection configureDatabase() throws Exception
 	{
 		String database = this.getFromSession("database");
-		String connectionType = this.request.getParameter("db_connection_type");
+		String connectionType = this.getFromSession("db_connection_type");
 		String implementation;
 		
 		if ("native".equals(connectionType)) {

@@ -60,7 +60,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallServlet.java,v 1.11 2005/02/04 12:55:31 rafaelsteil Exp $
+ * @version $Id: InstallServlet.java,v 1.12 2005/02/17 19:05:50 rafaelsteil Exp $
  */
 public class InstallServlet extends JForumCommonServlet
 {
@@ -138,13 +138,13 @@ public class InstallServlet extends JForumCommonServlet
 					new ExceptionWriter().handleExceptionData(e, new BufferedWriter(new OutputStreamWriter(response.getOutputStream())));
 				}
 			}
-			
-			String redirectTo = ((DataHolder)localData.get()).getRedirectTo();
-			if (redirectTo != null) {
-				InstallServlet.getResponse().sendRedirect(redirectTo);
-			}
-			
-			localData.set(null);
 		}
+		
+		String redirectTo = ((DataHolder)localData.get()).getRedirectTo();
+		if (redirectTo != null) {
+			InstallServlet.getResponse().sendRedirect(redirectTo);
+		}
+		
+		localData.set(null);
 	}
 }
