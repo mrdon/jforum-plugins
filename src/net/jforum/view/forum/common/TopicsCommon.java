@@ -74,7 +74,7 @@ import net.jforum.view.forum.ModerationHelper;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.5 2005/01/31 20:10:44 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.6 2005/02/07 10:58:58 andowson Exp $
  */
 public class TopicsCommon 
 {
@@ -274,7 +274,7 @@ public class TopicsCommon
 	 * @param topicId The topic id to remove
 	 * @throws Exception
 	 */
-	public static void deleteTopic(int topicId) throws Exception
+	public static void deleteTopic(int topicId, int forumId) throws Exception
 	{
 		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
 		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
@@ -288,6 +288,6 @@ public class TopicsCommon
 		TopicRepository.loadMostRecentTopics();
 
 		tm.removeSubscriptionByTopic(topicId);
-		fm.decrementTotalTopics(topicId, 1);
+		fm.decrementTotalTopics(forumId, 1);
 	}
 }
