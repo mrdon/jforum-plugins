@@ -15,31 +15,28 @@ function activateAdvancedQuery(){
 	}
 }
 </script>
-<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
-    <tr>
-      <td align="left"><span class="nav"><a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a></span></td>
-    </tr>
-</table>
 <table cellspacing="0" cellpadding="0" width="100%" border="0">
 	<tr>
 		<td colspan="3">
 			<table width="100%">
 				<tr>
+					<td align="left"><span class="nav"><a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a></span></td>
 					<td align="right">
 						<img src="${contextPath}/templates/${templateName}/images/icon_mini_message.gif" align="middle">
 						<span class="nav"><a href="javascript:activateAdvancedQuery()">${I18n.getMessage("Karma.advancedQuery")}</a></span>
 					</td>
 				</td>
 				<tr style="display: none;" id="trQuickBody">
-					<td align="center">
-						This is not implemented yet
+					<td align="center" colspan="2"><span class="gen">
+						This feature is not yet implemented
 						<!--
 						CODE HERE
 						-->
+						</span>
 					</td>
 				</tr>
 				<tr style="display: none;" id="trQuickSubmit">
-					<td align="center">
+					<td align="center" colspan="2">
 						<input type="submit" value="${I18n.getMessage("PostForm.submit")}" class="mainoption">
 					</td>
 				</tr>
@@ -51,12 +48,11 @@ function activateAdvancedQuery(){
 	<tr>
 	  <th class="thCornerL" nowrap="nowrap">#</th>
 	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("User.username")}&nbsp;</th>
-	  <th class="thTop" nowrap="nowrap" width="59px">&nbsp;${I18n.getMessage("UserProfile.privateMessage")}&nbsp;</th>	  
-	  <th class="thTop" nowrap="nowrap" width="59px">&nbsp;${I18n.getMessage("email")}&nbsp;</th>
+	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("UserProfile.privateMessage")}&nbsp;</th>	  
+	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("email")}&nbsp;</th>
 	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("UserProfile.from")}&nbsp;</th>
 	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("UserProfile.registrationDate")}&nbsp;</th>
 	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("User.numMessages")}&nbsp;</th>
-	  <th class="thTop" nowrap="nowrap">&nbsp;www &nbsp;</th>
 	  <th class="thCornerR" nowrap="nowrap">&nbsp;${I18n.getMessage("Karma.karma")}&nbsp;</th>
 	</tr>
 
@@ -67,13 +63,12 @@ function activateAdvancedQuery(){
 			<td class="row2"><span class="gen"><#if user.id != 1><a href="${JForumContext.encodeURL("/pm/sendTo/${user.id}")}"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/icon_pm.gif" border="0" /></a><#else>&nbsp;</#if></span></td>
 			<td class="row2"><span class="gen"><#if (user.isViewEmailEnabled() && user.email?exists && user.email?length > 0)>
 			<#assign e = user.email.split("@")/>
-			<a href="#" onclick="document.location = 'mailto:' + showEmail('${e[0]?default("")}', ' ${e[1]?default("")}');"><img src="${contextPath}/templates/${templateName}/images/icon_email.gif" border="0" /></a></span></td>
+			<a href="#" onclick="document.location = 'mailto:' + showEmail('${e[0]?default("")}', '${e[1]?default("")}');"><img src="${contextPath}/templates/${templateName}/images/icon_email.gif" border="0" /></a></span></td>
 			<#else>&nbsp;
 			</#if>
 			<td class="row2"><span class="gen">${user.from?default("&nbsp;")}</span></td>
 			<td class="row2"><span class="gen">${user.registrationDate?date("dd/MM/yyyy")}</span></td>
 			<td class="row2"><span class="gen">${user.totalPosts}</span></td>
-			<td class="row2"><span class="gen">${user.webSite?default("&nbsp;")}</span></td>
 			<td class="row2"><span class="gen">${user.karma.karmaPoints}</span></td>
 		</tr>
 	</#list>
