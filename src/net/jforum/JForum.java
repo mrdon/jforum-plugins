@@ -68,7 +68,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.45 2004/11/12 18:57:44 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.46 2004/11/12 19:27:57 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -76,7 +76,9 @@ public class JForum extends JForumCommonServlet
 	
 	private void startDatabase() throws Exception
 	{
-		DBConnection.getImplementation().init();
+		if (DBConnection.createInstance()) {
+			DBConnection.getImplementation().init();
+		}
 		
 		// If init() fails, the above code will not
 		// be executed, soh is safe to have it this way

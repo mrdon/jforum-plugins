@@ -57,7 +57,7 @@ import org.apache.log4j.Logger;
  * which opens a new connection on every request.  
  * 
  * @author Rafael Steil
- * @version $Id: DBConnection.java,v 1.3 2004/08/28 16:03:40 rafaelsteil Exp $
+ * @version $Id: DBConnection.java,v 1.4 2004/11/12 19:27:57 rafaelsteil Exp $
  */
 public abstract class DBConnection 
 {
@@ -65,21 +65,43 @@ public abstract class DBConnection
 	protected boolean isDatabaseUp;
 	
 	private static DBConnection instance;
-	
-	static {
+
+	/**
+	 * Creates an instance of some <code>DBConnection </code>implementation. 
+	 * 
+	 * @return <code>true</code> if the instance was successfully created, 
+	 * or <code>false</code> if some exception was thrown.
+	 */
+	public static final boolean createInstance()
+	{
 		try {
 			instance = (DBConnection)Class.forName(SystemGlobals.getValue(ConfigKeys.DATABASE_CONNECTION_IMPLEMENTATION)).newInstance();
 		}
 		catch (Exception e) {
-			 logger.warn("Error creating the database connection implementation instance. " + e.getMessage());
+			 logger.warn("Error creating the database connection implementation instance. " + e);
+			 e.printStackTrace();
+			 return false;
 		}
+		
+		return true;
 	}
 	
+	/**
+	 * Gets the current <code>DBConnection</code> implementation's instance
+	 * 
+	 * @return
+	 */
 	public static DBConnection getImplementation()
 	{
 		return instance;
 	}
 	
+	/**
+	 * Checks if database connection is up.
+	 *  
+	 * @return <code>true</code> if a connection to the database
+	 * was successfully created, or <code>false</code> if not.
+	 */
 	public boolean isDatabaseUp()
 	{
 		return this.isDatabaseUp;
