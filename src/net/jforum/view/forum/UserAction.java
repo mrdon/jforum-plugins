@@ -56,6 +56,7 @@ import net.jforum.repository.SecurityRepository;
 import net.jforum.util.I18n;
 import net.jforum.util.MD5;
 import net.jforum.util.concurrent.executor.QueuedExecutor;
+import net.jforum.util.mail.ActivationKeySpammer;
 import net.jforum.util.mail.EmailException;
 import net.jforum.util.mail.EmailSenderTask;
 import net.jforum.util.mail.LostPasswordSpammer;
@@ -64,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.2 2004/09/04 15:43:33 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.3 2004/09/08 09:28:09 jamesyong Exp $
  */
 public class UserAction extends Command 
 {
@@ -120,6 +121,7 @@ public class UserAction extends Command
 		
 		String username = JForum.getRequest().getParameter("username");
 		String password = JForum.getRequest().getParameter("password");
+		String message = "";
 		
 		boolean error = false;
 		
@@ -142,22 +144,67 @@ public class UserAction extends Command
 		u.setUsername(username);
 		u.setPassword(MD5.crypt(password));
 		u.setEmail(JForum.getRequest().getParameter("email"));
+		u.setActivationKey(MD5.crypt(username + System.currentTimeMillis()));
 		
 		int userId = um.addNew(u);
 		
-		SessionFacade.setAttribute("logged", "1");
+		if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_USER_EMAIL_AUTH)) {
+
+			try {
+				//Send an email to new user
+				QueuedExecutor.getInstance().execute(new EmailSenderTask(new ActivationKeySpammer(userId, u.getUsername(), u.getEmail(), u.getActivationKey())));
+			}
+			catch (Exception e) {
+				// Shall we log the error?
+			}
+			message = I18n.getMessage("User.GoActivateAccountMessage");
+			JForum.getContext().put("moduleAction", "message.htm");
+			JForum.getContext().put("message", message);			
+		}			
+		else {
+			logRegisteredUserIn(userId, u);
+		}
+	}
+
+	public void activateAccount() throws Exception
+	{
+		String hash = JForum.getRequest().getParameter("hash");
+		int userId = (new Integer(JForum.getRequest().getParameter("user_id"))).intValue();
+
+		String message= "";
+
+		UserModel um = DataAccessDriver.getInstance().newUserModel();
+		User u = um.selectById(userId);
+
+		boolean isOk = um.validateActivationKeyHash(userId, hash);
 		
+		if (isOk){
+			//make account active
+			um.writeUserActive(userId);
+			logRegisteredUserIn(userId, u);
+		}
+		else {
+			message = I18n.getMessage("User.invalidActivationKey");
+			JForum.getContext().put("moduleAction", "message.htm");
+			JForum.getContext().put("message", message);
+		}
+
+	}
+	
+	private void logRegisteredUserIn(int userId, User u){
+		SessionFacade.setAttribute("logged", "1");
+
 		UserSession userSession = new UserSession();
 		userSession.setAutoLogin(true);
 		userSession.setUserId(userId);
 		userSession.setUsername(u.getUsername());
 		userSession.setLastVisit(System.currentTimeMillis());
 		userSession.setStartTime(System.currentTimeMillis());
-		
+
 		SessionFacade.add(userSession);
-		
+
 		// Finalizing.. show to user the congrats page
-		JForum.setRedirect(JForum.getRequest().getContextPath() +"/user/registrationComplete.page");
+		JForum.setRedirect(JForum.getRequest().getContextPath() +"/user/registrationComplete.page");				
 	}
 	
 	public void registrationComplete() throws Exception
