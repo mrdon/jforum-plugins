@@ -368,7 +368,7 @@ CREATE TABLE jforum_search_words (
   word_hash INT,
   KEY(word),
   KEY(word_hash)
-);
+) TYPE=InnoDB;
 
 -- 
 -- Table structure for table 'jforum_search_wordmatch'
@@ -381,7 +381,7 @@ CREATE TABLE jforum_search_wordmatch (
   KEY(post_id),
   KEY(word_id),
   KEY(title_match)
-);
+) TYPE=InnoDB;
 
 --
 -- Table structure for table 'jforum_search_results'
@@ -392,7 +392,7 @@ CREATE TABLE jforum_search_results (
   session VARCHAR(50),
   time DATETIME,
   KEY (topic_id)
-);
+) TYPE=InnoDB;
 
 
 DROP TABLE IF EXISTS jforum_search_topics;
