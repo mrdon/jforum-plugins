@@ -94,6 +94,7 @@ older versions, which are no longer supported.</p>
 <br><a href="#databaseConfig">Database Configuration</a>
 <br><a href="#createTables">Creating the database tables</a>
 <br><a href="#populating">Populating the tables</a>
+<br><br><a href="#misc">Security Information and Considerations</a>
 
 
 <!-- Downloadig -->
@@ -256,9 +257,13 @@ In this file there are some options you should change, according to the table be
  Now it is time to run the script to populate the database tables. To do that, use the script named "&lt;<b>DBNAME</b>&gt;_data_dump.sql", also located at <i>WEB-INF/config/database/&lt;<b>DBNAME</b>&gt;</i>. One more time, you should have no problems with this step. If you do, please remember to inform the error message, as well the database name and version you're using. 
 <br>
 <br>
+
+<!-- Misc -->
 <a name="misc"></a>
 <img src="info.jpg" align="middle" border="0"> 
-<span style="font-size: 16px; line-height: normal"><b><u>General Information and Considerations</u></b></span>
+<span style="font-size: 16px; line-height: normal"><b><u>Security Information and Considerations</u></b></span>
+<br><li><b><font color="#ff0000">Remove the line <font color="#006699"><i>"install = net.jforum.view.InstallAction"</i></font> from the file
+<i>WEB-INF/config/modulesMapping.properties</i></font></b><br>
 
 <br><li> JForum uses a servlet mapping to invoke the pages. This mapping is <b>*.page</b>, and is already properly configured at WEB-INF/web.xml. If you are running JForum on certain ISPs, you may need to contact their Technical Support and ask them to explicity enable these mapping for you.
 
