@@ -1,5 +1,0 @@
-- changed lostPassword mail template to use user.username, to make it consistent with newPrivateMessage'
-- added user pagination for admin user list
-- hsqldb (Release 1.7.2) is now among the supported databases
-- improved german translation
-- first version of web regression tests for jforum

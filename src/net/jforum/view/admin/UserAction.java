@@ -71,7 +71,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.13 2004/12/29 17:18:43 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.14 2004/12/31 16:28:13 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -203,14 +203,14 @@ public class UserAction extends Command
 	// Groups
 	public void groups() throws Exception
 	{
-		int userId = Integer.parseInt(this.request.getParameter("id"));
+		int userId = this.request.getIntParameter("id");
 		
 		UserModel um = DataAccessDriver.getInstance().newUserModel();
 		GroupModel gm = DataAccessDriver.getInstance().newGroupModel();
 		
 		User u = um.selectById(userId);
 		
-		ArrayList selectedList = new ArrayList();
+		List selectedList = new ArrayList();
 		for (Iterator iter = u.getGroupsList().iterator(); iter.hasNext(); ) {
 			selectedList.add(new Integer(((Group)iter.next()).getId()));
 		}
