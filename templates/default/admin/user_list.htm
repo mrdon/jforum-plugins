@@ -57,7 +57,9 @@
 
 	<tr align="center">
 		<td class="catBottom" colspan="5" height="28">
-			<input class="mainoption" type="button" value="${I18n.getMessage("Insert")}" onClick="document.location = '${contextPath}?module=adminUsers&action=insert';" />&nbsp;&nbsp;	
+		<!--
+			<input class="mainoption" type="button" value="${I18n.getMessage("Insert")}" onClick="document.location = '${contextPath}/jforum${extension}?module=adminUsers&action=insert';" />&nbsp;&nbsp;	
+		-->
 		</td>
 		<td class="catBottom" colspan="2">
 			<input class="mainoption" type="submit" value="${I18n.getMessage("Lock")} / ${I18n.getMessage("Unlock")}" name="submit" />&nbsp;&nbsp;
@@ -67,7 +69,7 @@
 </form>
 <table width="100%">
 	<tr>
-		<td align="right"><#if thisPage?exists><@pagination.doPagination "list", -1, "fp" /></#if></td>
+		<td align="right"><#if thisPage?exists><@pagination.doPagination "list", -1/></#if></td>
 	</tr>
 </table>
 

@@ -59,7 +59,9 @@ import java.util.Properties;
 import net.jforum.Command;
 import net.jforum.DBConnection;
 import net.jforum.InstallServlet;
+import net.jforum.SessionFacade;
 import net.jforum.SimpleConnection;
+import net.jforum.entities.UserSession;
 import net.jforum.util.I18n;
 import net.jforum.util.MD5;
 import net.jforum.util.preferences.ConfigKeys;
@@ -71,7 +73,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.8 2004/10/31 21:30:53 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.9 2004/11/01 14:50:52 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -79,6 +81,8 @@ public class InstallAction extends Command
 	
 	public void welcome() throws Exception
 	{
+		this.checkLanguage();
+		
 		InstallServlet.getContext().put("language", this.getFromSession("language"));
 		InstallServlet.getContext().put("database", this.getFromSession("database"));
 		InstallServlet.getContext().put("dbhost", this.getFromSession("dbHost"));
@@ -90,6 +94,22 @@ public class InstallAction extends Command
 		InstallServlet.getContext().put("forum_link", this.getFromSession("forumLink"));
 		
 		InstallServlet.getContext().put("moduleAction", "install.htm");
+	}
+	
+	private void checkLanguage() throws IOException
+	{
+		String lang = InstallServlet.getRequest().getParameter("l");
+		if (lang == null || !I18n.languageExists(lang)) {
+			return;
+		}
+		
+		I18n.load(lang);
+		
+		UserSession us = new UserSession();
+		us.setLang(lang);
+		
+		SessionFacade.add(us);
+		this.addToSessionAndContext("language", lang);
 	}
 	
 	private String getFromSession(String key)
@@ -173,6 +193,8 @@ public class InstallAction extends Command
 
 		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
         SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
+        
+        SessionFacade.remove(InstallServlet.getRequest().getSession().getId());
 	}
 	
 	private void configureSystemGlobals() throws Exception

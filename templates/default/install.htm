@@ -129,7 +129,7 @@ function checkDatabase()
 					<tr>
 						<td class="row1" align="right" width="40%"><span class="gen"><b>${I18n.getMessage("Install.boardLanguage")}:</b> </span></td>
 						<td class="row2">
-							<select name="language">
+							<select name="language" onChange="document.location = '${contextPath}/install/install${extension}?module=install&action=welcome&l=' + this.value;">
 								<option value="en_US" <#if language?default("") == "en_US">selected</#if>>English American (en_US)</option>
 								<option value="zh_CN" <#if language?default("") == "zh_CN">selected</#if>>Chinese Simplifed (zh_CN)</option>
 								<option value="fr_FR" <#if language?default("") == "fr_FR">selected</#if>>French (fr_FR)</option>
@@ -183,7 +183,10 @@ function checkDatabase()
 
 					<tr>
 						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbName")}: </b></span></td>
-						<td class="row2"><input type="text" name="dbname" value="${dbname?default("jforum")}" /></td>
+						<td class="row2">
+						<input type="text" name="dbname" value="${dbname?default("jforum")}" /><br/>
+						<span class="gensmall">${I18n.getMessage("Install.dbNameTip")}</span>
+						</td>
 					</tr>
 					<tr>
 						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbUsername")}: </b></span></td>
