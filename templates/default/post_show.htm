@@ -19,7 +19,7 @@ function confirmDelete()
 			<table cellspacing="2" cellpadding="2" width="100%" border="0">
 				<tr>
 					<td valign="middle" align="left" colspan="2">
-						<span class="maintitle"><a href="${contextPath}/posts/list/${topic.id}${extension}" name="top" class="maintitle" id="top">${topic.title?html}</a></span>
+						<span class="maintitle"><a href="${JForumContext.encodeURL("/posts/list/${topic.id}")}" name="top" class="maintitle" id="top">${topic.title?html}</a></span>
 					</td>
 				</tr>
 			</table>
@@ -34,8 +34,8 @@ function confirmDelete()
 						<#else>
 							<#if !readonly>
 								<span class="nav">&nbsp;
-								<a href="${contextPath}/jforum${extension}?module=posts&amp;action=insert&amp;forum_id=${topic.forumId}"><img src="${contextPath}/templates/${templateName}/images/post.gif" border="0" /></a>
-								<a href="${contextPath}/jforum${extension}?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}&start=${start}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" border="0" /></a>
+								<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&amp;action=insert&amp;forum_id=${topic.forumId}","")}"><img src="${contextPath}/templates/${templateName}/images/post.gif" border="0" /></a>
+								<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}&start=${start}")}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" border="0" /></a>
 								</span>
 							<#else>
 								<#assign colspan = "2"/>
@@ -45,8 +45,8 @@ function confirmDelete()
 
 					<td valign="center" align="left" colspan="${colspan?default("0")}">
 						<span class="nav">&nbsp;&nbsp;&nbsp;
-						<a class="nav" href="${contextPath}/forums/list${extension}">${I18n.getMessage("ForumListing.forumIndex")} </a> 
-            			-&gt; <a class="nav" href="${contextPath}/forums/show/${forum.id}${extension}">${forum.name} </a>
+						<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")} </a> 
+            			-&gt; <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name} </a>
 						</span>
 					</td>
 					
@@ -60,8 +60,8 @@ function confirmDelete()
 							<#assign watchMessage = I18n.getMessage("PostShow.unwatch")/>
 						</#if>
 						
-						<a href="${contextPath}/posts/${watch}/${start}/${topicId}${extension}"><img src="${contextPath}/templates/${templateName}/images/watch.gif" align="top" border="0"></a>
-						<a href="${contextPath}/posts/${watch}/${start}/${topicId}${extension}">${watchMessage}</a>
+						<a href="${JForumContext.encodeURL("/posts/${watch}/${start}/${topicId}")}"><img src="${contextPath}/templates/${templateName}/images/watch.gif" align="top" border="0"></a>
+						<a href="${JForumContext.encodeURL("/posts/${watch}/${start}/${topicId}")}">${watchMessage}</a>
 						</span>
 					</td>
 					</#if>
@@ -135,15 +135,15 @@ function confirmDelete()
 								
 								<td valign="top" width="20%" nowrap="nowrap" align="right">
 								<#if topic.status != STATUS_LOCKED>
-									<a href="${contextPath}/jforum${extension}?module=${moduleName}&amp;action=quote&amp;post_id=${post.id}&start=${start}"><img src="${contextPath}/templates/${templateName}/images/icon_quote.gif" border="0" /></a>
+									<a href="${JForumContext.encodeURL("/jforum${extension}?module=${moduleName}&amp;action=quote&amp;post_id=${post.id}&start=${start}","")}"><img src="${contextPath}/templates/${templateName}/images/icon_quote.gif" border="0" /></a>
 								</#if>
 
 								<#if ((post.canEdit && topic.status != STATUS_LOCKED) || canEdit)>
-									<a href="${contextPath}/jforum${extension}?module=${moduleName}&amp;action=edit&amp;post_id=${post.id}&start=${start}"><img src="${contextPath}/templates/${templateName}/images/icon_edit.gif" border="0" /></a>  
+									<a href="${JForumContext.encodeURL("/jforum${extension}?module=${moduleName}&amp;action=edit&amp;post_id=${post.id}&start=${start}","")}"><img src="${contextPath}/templates/${templateName}/images/icon_edit.gif" border="0" /></a>  
 								</#if>
 		
 								<#if canRemove>
-									<a href="${contextPath}/jforum${extension}?module=${moduleName}&amp;action=delete&amp;post_id=${post.id}&start=${start}" onClick="return confirmDelete();"><img src="${contextPath}/templates/${templateName}/images/icon_delete.gif" border="0" /></a>  
+									<a href="${JForumContext.encodeURL("/jforum${extension}?module=${moduleName}&amp;action=delete&amp;post_id=${post.id}&start=${start}","")}" onClick="return confirmDelete();"><img src="${contextPath}/templates/${templateName}/images/icon_delete.gif" border="0" /></a>  
 								</#if>
 								</td>
 							</tr>
@@ -179,7 +179,7 @@ function confirmDelete()
 						<table height="18" cellspacing="0" cellpadding="0" width="469" border="0">
 							<tr>
 								<td valign="center" nowrap="nowrap"> 
-									<a href="${contextPath}/user/profile/${user.id}${extension}"><img src="${contextPath}/templates/${templateName}/images/icon_profile.gif" border="0" /></a>
+									<a href="${JForumContext.encodeURL("/user/profile/${user.id}")}"><img src="${contextPath}/templates/${templateName}/images/icon_profile.gif" border="0" /></a>
 
 									<#if (user.isViewEmailEnabled() && user.email?exists && user.email?length > 0)>
 										<#assign e = user.email.split("@")/>
@@ -195,7 +195,7 @@ function confirmDelete()
 									</#if>
 									
 									<#if (user.msnm?exists && user.msnm?length > 0)>
-										<a href="${contextPath}/user/profile/${user.id}${extension}"><img src="${contextPath}/templates/${templateName}/images/icon_msnm.gif" border="0" /></a>
+										<a href="${JForumContext.encodeURL("/user/profile/${user.id}")}"><img src="${contextPath}/templates/${templateName}/images/icon_msnm.gif" border="0" /></a>
 									</#if>
 									
 									<#if (user.icq?exists && user.icq?length > 0)>
@@ -234,8 +234,8 @@ function confirmDelete()
 					<#else>
 						<#if !readonly>
 							<span class="nav">
-							&nbsp;<a href="${contextPath}/jforum${extension}?module=posts&amp;action=insert&amp;forum_id=${topic.forumId}"><img src="${contextPath}/templates/${templateName}/images/post.gif" border="0" /></a>
-							&nbsp;<a href="${contextPath}/jforum${extension}?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}&start=${start}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" border="0" /></a>
+							&nbsp;<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&amp;action=insert&amp;forum_id=${topic.forumId}","")}"><img src="${contextPath}/templates/${templateName}/images/post.gif" border="0" /></a>
+							&nbsp;<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}&start=${start}","")}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" border="0" /></a>
 							</span>
 						<#else>
 							<#assign colspan = "2"/>
@@ -245,8 +245,8 @@ function confirmDelete()
 					
 					<td valign="center" align="left" colspan="${colspan?default("0")}">
 						<span class="nav">&nbsp;&nbsp;&nbsp;
-						<a class="nav" href="${contextPath}/forums/list${extension}">${I18n.getMessage("ForumListing.forumIndex")} </a> 
-            			-&gt; <a class="nav" href="${contextPath}/forums/show/${forum.id}${extension}">${forum.name} </a>
+						<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")} </a> 
+            			-&gt; <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name} </a>
 						</span>
 					</td>
 
@@ -263,7 +263,7 @@ function confirmDelete()
 		        <tr>
 					<td align="left" colspan="3">
 					<span class="gensmall">
-					<a href="${contextPath}/posts/unwatch/${topic.id}${extension}">${I18n.getMessage("PostShow.unwatch")}</a>
+					<a href="${JForumContext.encodeURL("/posts/unwatch/${topic.id}")}">${I18n.getMessage("PostShow.unwatch")}</a>
 					</span>
 					</td>
 				</tr>
