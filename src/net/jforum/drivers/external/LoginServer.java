@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -36,53 +36,17 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * This file creation date: Jan 28, 2004
- * net.jforum.util.concurrent.executor.DirectExecutor.java
+ * Created on Aug 2, 2004 by pieter
+ *
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: DirectExecutor.java,v 1.3 2004/08/03 14:30:40 pieter2 Exp $
  */
-package net.jforum.util.concurrent.executor;
+package net.jforum.drivers.external;
 
-import net.jforum.util.concurrent.Executor;
-import net.jforum.util.concurrent.Result;
-import net.jforum.util.concurrent.Task;
+import java.sql.SQLException;
 
-/** 
- * Implements a direct executor
- * 
- * @author Rodrigo Kumpera
- */
-public class DirectExecutor implements Executor 
-{
-	public DirectExecutor() 
-	{
-		super();
-	}
-
-	public void execute(Task task) 
-	{
-		try {
-			task.execute();
-		} 
-		catch(Exception e) {
-			//if they don't care, why should I?
-		}
-	}
-
-	public Result executeWithResult(Task task) 
-	{
-		Object result = null;
-		Exception ex = null;
-		
-		try {
-			result = task.execute();
-		} catch(Exception e) {
-			ex = e;
-		}
-		
-		return new ReadyResult(result, ex);
-	}
-
+public interface LoginServer {
+	public int validateLogin(String name, String password) throws SQLException;
+	public String getName(int userId) throws SQLException;
+	public int[] getGroups(int userId) throws SQLException;
 }

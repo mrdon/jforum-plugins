@@ -54,6 +54,8 @@ UserModel.decrementPosts = UPDATE jforum_users SET user_posts = user_posts - 1 W
 UserModel.rankingId = UPDATE jforum_users SET rank_id = ? WHERE user_id = ?
 UserModel.activeStatus = UPDATE jforum_users SET user_active = ? WHERE user_id = ?
 UserModel.addNew = INSERT INTO jforum_users (username, user_password, user_email, user_regdate) VALUES (?, ?, ?, ?)
+# Added by Pieter for external login support:
+UserModel.addNewWithId = INSERT INTO jforum_users (user_id,username, user_password, user_email, user_regdate) VALUES (?, ?, ?, ?, ?)
 UserModel.findByName = SELECT user_id, username, user_email FROM jforum_users WHERE username LIKE ?
 
 UserModel.update = UPDATE jforum_users SET user_aim = ?, \

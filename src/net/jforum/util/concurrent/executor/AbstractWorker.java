@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: AbstractWorker.java,v 1.3 2004/04/21 23:57:34 rafaelsteil Exp $
+ * $Id: AbstractWorker.java,v 1.4 2004/08/03 14:30:40 pieter2 Exp $
  */
  package net.jforum.util.concurrent.executor;
 
@@ -70,7 +70,7 @@ public abstract class AbstractWorker implements Runnable
 					try {
 						((Task)task).execute();
 					} catch(Exception e ) {
-						;// I don't care
+						// I don't care
 					}
 				} 
 				else {
@@ -87,7 +87,7 @@ public abstract class AbstractWorker implements Runnable
 			}
 		} 
 		catch (InterruptedException e) {
-			;
+			// I don't care
 		} 
 		finally {
 			cleanup();	

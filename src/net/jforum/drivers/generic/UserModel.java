@@ -58,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.6 2004/06/21 03:48:07 rafaelsteil Exp $
+ * @version $Id: UserModel.java,v 1.7 2004/08/03 14:30:42 pieter2 Exp $
  */
 public class UserModel extends AutoKeys implements net.jforum.model.UserModel 
 {
@@ -188,12 +188,31 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		p.setString(3, user.getEmail());
 		p.setString(4, Long.toString(System.currentTimeMillis()));
 		
+		// <PO:external> When id already set, use that instead! 
 		int id = this.executeAutoKeysQuery(p);
 		p.close();
 		
 		this.addToGroup(id, new int[] { SystemGlobals.getIntValue(ConfigKeys.DEFAULT_USER_GROUP) });
 				
 		return id;
+	}
+
+	/** 
+	 * @see net.jforum.model.UserModel#addNewWithId(net.jforum.User)
+	 * (added by Pieter for external login support)
+	 */
+	public void addNewWithId(User user) throws Exception 
+	{
+		PreparedStatement p = this.getStatementForAutoKeys("UserModel.addNewWithId");
+		
+		p.setInt(1, user.getId());
+		p.setString(2, user.getUsername());
+		p.setString(3, user.getPassword());
+		p.setString(4, user.getEmail());
+		p.setString(5, Long.toString(System.currentTimeMillis()));
+		
+		int id = this.executeAutoKeysQuery(p);
+		p.close();
 	}
 
 	/** 

@@ -64,7 +64,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserVH.java,v 1.14 2004/07/22 15:21:04 rafaelsteil Exp $
+ * @version $Id: UserVH.java,v 1.15 2004/08/03 14:30:42 pieter2 Exp $
  */
 public class UserVH extends Command 
 {
@@ -168,12 +168,11 @@ public class UserVH extends Command
 	
 	public void validateLogin() throws Exception
 	{
-		UserModel um = DataAccessDriver.getInstance().newUserModel();
-		
 		boolean validInfo = false;
 
-		if (JForum.getRequest().getParameter("password").length() > 0) { 
-			User user = um.validateLogin(JForum.getRequest().getParameter("username"), JForum.getRequest().getParameter("password"));
+		String password = JForum.getRequest().getParameter("password");
+		if (password.length() > 0) {
+			User user = validateLogin(JForum.getRequest().getParameter("username"), password);
 			
 			if (user != null) {
 				JForum.setRedirect(JForum.getRequest().getContextPath() +"/forums/list.page");
@@ -214,6 +213,12 @@ public class UserVH extends Command
 		else if (JForum.getRequest().getParameter("returnPath") != null) {
 			JForum.setRedirect(JForum.getRequest().getParameter("returnPath"));
 		}
+	}
+	
+	private User validateLogin(String name, String password) throws Exception {
+		UserModel um = DataAccessDriver.getInstance().newUserModel();
+		User user = um.validateLogin(name, password);
+		return user;
 	}
 	
 	public void profile() throws Exception

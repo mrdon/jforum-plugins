@@ -57,7 +57,7 @@ import net.jforum.entities.User;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.6 2004/06/21 03:48:13 rafaelsteil Exp $
+ * @version $Id: UserModel.java,v 1.7 2004/08/03 14:30:41 pieter2 Exp $
  */
 public interface UserModel 
 {
@@ -145,6 +145,15 @@ public interface UserModel
 	 * @throws Exception
 	 */
 	public int addNew(User user) throws Exception;
+
+	/**
+	 * Adds a new user with a predefined user id
+	 * 
+	 * (added by Pieter for external login support)
+	 * @param user Reference to a valid and configured <code>User</code> object, with the user id already set
+	 * @throws Exception
+	 */
+	public void addNewWithId(User user) throws Exception ;
 	
 	/**
 	 * Set the active status.
