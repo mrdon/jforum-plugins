@@ -257,6 +257,16 @@ function changeValue(field, value)
 	<td class='row2' width="38%"><span class='gen'><input type="text" size="30"name="p_mail.newPm.subject" value="${config.getProperty("mail.activationKey.subject")}" /></span></td>
 </tr>
 
+<!-- Lost Password -->
+<tr>
+	<td class='row1' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.LostPasswordFile")}</span></td>
+	<td class='row1' width="38%"><span class='gen'><input type="text" size="30"name="p_mail.lostPassword.messageFile" value="${config.getProperty("mail.lostPassword.messageFile")}" /></span></td>
+</tr>
+<tr>
+	<td class='row2' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.LostPasswordSubject")}</span></td>
+	<td class='row2' width="38%"><span class='gen'><input type="text" size="30"name="p_mail.lostPassword.subject" value="${config.getProperty("mail.lostPassword.subject")}" /></span></td>
+</tr>
+
 <tr>
 	<td class='row1' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.MessageFormat")}</span></td>
 	<td class='row1' width="38%">
