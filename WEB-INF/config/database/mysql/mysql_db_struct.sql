@@ -541,7 +541,7 @@ CREATE TABLE jforum_attach_desc (
 --
 -- Table structure for table 'jforum_attach_quota'
 --
-DROP TABLE IF EXISTS jforum_attch_quota;
+DROP TABLE IF EXISTS jforum_attach_quota;
 CREATE TABLE jforum_attach_quota (
 	attach_quota_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	group_id INT NOT NULL,

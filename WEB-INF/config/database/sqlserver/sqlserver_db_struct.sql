@@ -126,9 +126,8 @@ DROP TABLE [jforum_attach]
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'[jforum_attach_desc]') AND OBJECTPROPERTY(id, N'IsUserTable') = 1)
 DROP TABLE [jforum_attach_desc]
 
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'[jforum_attch_quota]') AND OBJECTPROPERTY(id, N'IsUserTable') = 1)
-DROP TABLE [jforum_attch_quota]
-
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'[jforum_attach_quota]') AND OBJECTPROPERTY(id, N'IsUserTable') = 1)
+DROP TABLE [jforum_attach_quota]
 
 CREATE TABLE [jforum_banlist] (
 	[banlist_id] [bigint] IDENTITY (1, 1) PRIMARY KEY CLUSTERED NOT NULL ,
