@@ -42,6 +42,8 @@
  */
 package net.jforum.view.forum;
 
+import java.io.FileInputStream;
+import java.io.OutputStream;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -51,6 +53,7 @@ import java.util.Map;
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
+import net.jforum.entities.Attachment;
 import net.jforum.entities.Post;
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
@@ -83,7 +86,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.43 2005/01/19 19:25:56 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.44 2005/01/19 20:32:03 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -727,6 +730,32 @@ public class PostAction extends Command {
 		}
 	}
 
+	public void downloadAttach() throws Exception
+	{
+		int id = this.request.getIntParameter("attach_id");
+		Attachment a = DataAccessDriver.getInstance().newAttachmentModel().selectAttachmentById(id);
+		
+		FileInputStream fis = new FileInputStream(SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR)
+				+ "/"
+				+ a.getInfo().getPhysicalFilename());
+		OutputStream os = response.getOutputStream();
+
+		this.response.setContentType("application/octet-stream");
+		this.response.setHeader("Content-Disposition", "attachment; filename=" + a.getInfo().getRealFilename());
+		this.response.setContentLength((int)a.getInfo().getFilesize());
+		
+		byte[] b = new byte[4096];
+		int c = 0;
+		while ((c = fis.read(b)) != -1) {
+			os.write(b);
+		}
+		
+		fis.close();
+		os.close();
+		
+		JForum.enableBinaryContent(true);
+	}
+	
 	private boolean isUserLogged() {
 		return (SessionFacade.getAttribute("logged") != null && SessionFacade.getAttribute("logged").equals("1"));
 	}

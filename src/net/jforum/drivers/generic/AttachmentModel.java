@@ -58,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentModel.java,v 1.5 2005/01/19 19:25:53 rafaelsteil Exp $
+ * @version $Id: AttachmentModel.java,v 1.6 2005/01/19 20:32:03 rafaelsteil Exp $
  */
 public class AttachmentModel extends AutoKeys implements net.jforum.model.AttachmentModel
 {
@@ -442,5 +442,27 @@ public class AttachmentModel extends AutoKeys implements net.jforum.model.Attach
 		a.setInfo(ai);
 		
 		return a;
+	}
+	
+	/**
+	 * @see net.jforum.model.AttachmentModel#selectAttachmentById(int)
+	 */
+	public Attachment selectAttachmentById(int attachId) throws Exception
+	{
+		Attachment e = null;
+		
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("AttachmentModel.selectAttachmentById"));
+		p.setInt(1, attachId);
+		
+		ResultSet rs = p.executeQuery();
+		if (rs.next()) {
+			e = this.getAttachment(rs);
+		}
+		
+		rs.close();
+		p.close();
+		
+		return e;
 	}
 }

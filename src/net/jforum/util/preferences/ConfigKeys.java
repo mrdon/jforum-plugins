@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.38 2005/01/19 19:25:56 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.39 2005/01/19 20:32:20 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -175,6 +175,7 @@ public class ConfigKeys {
 	public static final String ATTACHMENTS_ICON = "attachments.icon";
 	public static final String ATTACHMENTS_DOWNLOAD_MODE = "attachments.download.mode";
 	public static final String ATTACHMENTS_STORE_DIR = "attachments.store.dir";
+	public static final String ATTACHMENTS_UPLOAD_DIR = "attachments.upload.dir";
 	
 	private ConfigKeys() {}
 }

@@ -507,3 +507,9 @@ AttachmentModel.selectAttachments = SELECT a.attach_id, a.user_id, a.post_id, a.
 	FROM jforum_attach a, jforum_attach_desc d \
 	WHERE a.post_id = ? \
 	AND a.attach_id = d.attach_id
+	
+AttachmentModel.selectAttachmentById = SELECT a.attach_id, a.user_id, a.post_id, a.privmsgs_id, d.mimetype, d.physical_filename, d.real_filename, \
+	d.download_count, d.comment, d.filesize, d.upload_time, d.extension_id \
+	FROM jforum_attach a, jforum_attach_desc d \
+	WHERE a.attach_id = ? \
+	AND a.attach_id = d.attach_id

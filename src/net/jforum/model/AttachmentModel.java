@@ -51,7 +51,7 @@ import net.jforum.entities.QuotaLimit;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentModel.java,v 1.5 2005/01/19 19:25:52 rafaelsteil Exp $
+ * @version $Id: AttachmentModel.java,v 1.6 2005/01/19 20:32:02 rafaelsteil Exp $
  */
 public interface AttachmentModel
 {
@@ -89,6 +89,15 @@ public interface AttachmentModel
 	 * @throws Exception
 	 */
 	public List selectAttachments(int postId) throws Exception;
+	
+	/**
+	 * Gets an attachment by its id
+	 * 
+	 * @param attachId The attachment id
+	 * @return The attachment, or <code>null</code> if no record was found
+	 * @throws Exception
+	 */
+	public Attachment selectAttachmentById(int attachId) throws Exception;
 	
 	/**
 	 * Inserts a new quota limit.
