@@ -57,7 +57,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumSessionListener.java,v 1.8 2004/08/26 02:43:16 rafaelsteil Exp $
+ * @version $Id: ForumSessionListener.java,v 1.9 2004/08/26 20:06:41 rafaelsteil Exp $
  */
 public class ForumSessionListener implements HttpSessionListener 
 {
@@ -81,7 +81,7 @@ public class ForumSessionListener implements HttpSessionListener
 			
 			try {
 				if (us.getUserId() != SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
-					conn = net.jforum.Connection.getImplementation().getConnection();
+					conn = DBConnection.getImplementation().getConnection();
 					DataAccessDriver.getInstance().newUserSessionModel().update(us, conn);
 				}
 				
@@ -93,7 +93,7 @@ public class ForumSessionListener implements HttpSessionListener
 			finally  {
 				if (conn != null) {
 					try {
-						net.jforum.Connection.getImplementation().releaseConnection(conn);
+						DBConnection.getImplementation().releaseConnection(conn);
 					}
 					catch (Exception e) {
 						e.printStackTrace();

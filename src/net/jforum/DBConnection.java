@@ -42,10 +42,12 @@
  */
 package net.jforum;
 
-import org.apache.log4j.Logger;
+import java.sql.Connection;
 
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+
+import org.apache.log4j.Logger;
 
 /**
  * Base class for all database connection implementations that
@@ -55,24 +57,24 @@ import net.jforum.util.preferences.SystemGlobals;
  * which opens a new connection on every request.  
  * 
  * @author Rafael Steil
- * @version $Id: Connection.java,v 1.1 2004/08/26 02:43:16 rafaelsteil Exp $
+ * @version $Id: DBConnection.java,v 1.1 2004/08/26 20:06:42 rafaelsteil Exp $
  */
-public abstract class Connection 
+public abstract class DBConnection 
 {
-	private static final Logger logger = Logger.getLogger(Connection.class);
+	private static final Logger logger = Logger.getLogger(DBConnection.class);
 	
-	private static Connection instance;
+	private static DBConnection instance;
 	
 	static {
 		try {
-			instance = (Connection)Class.forName(SystemGlobals.getValue(ConfigKeys.DATABASE_CONNECTION_IMPLEMENTATION)).newInstance();
+			instance = (DBConnection)Class.forName(SystemGlobals.getValue(ConfigKeys.DATABASE_CONNECTION_IMPLEMENTATION)).newInstance();
 		}
 		catch (Exception e) {
 			 logger.warn("Error creating the database connection implementation instance. " + e.getMessage());
 		}
 	}
 	
-	public static Connection getImplementation()
+	public static DBConnection getImplementation()
 	{
 		return instance;
 	}
@@ -99,7 +101,7 @@ public abstract class Connection
 	 * @return
 	 * @throws Exception
 	 */
-	public abstract java.sql.Connection getConnection() throws Exception;
+	public abstract Connection getConnection() throws Exception;
 	
 	/**
 	 * Releases a connection.
@@ -110,5 +112,5 @@ public abstract class Connection
 	 * @param conn The connection to release
 	 * @throws Exception
 	 */
-	public abstract void releaseConnection(java.sql.Connection conn) throws Exception;
+	public abstract void releaseConnection(Connection conn) throws Exception;
 }

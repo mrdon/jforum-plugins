@@ -81,10 +81,10 @@ import net.jforum.util.preferences.SystemGlobals;
  *
  * @author Paulo Silveira
  * @author Rafael Steil
- * @version $Id: PooledConnection.java,v 1.1 2004/08/26 02:43:15 rafaelsteil Exp $
+ * @version $Id: PooledConnection.java,v 1.2 2004/08/26 20:06:41 rafaelsteil Exp $
  * */
 
-public class PooledConnection extends net.jforum.Connection
+public class PooledConnection extends DBConnection
 {
 	private static PooledConnection pool;
 	private static boolean isDatabaseUp;

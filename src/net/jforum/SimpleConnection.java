@@ -56,9 +56,9 @@ import net.jforum.util.preferences.SystemGlobals;
  * a connection pool.
  * 
  * @author Rafael Steil
- * @version $Id: SimpleConnection.java,v 1.1 2004/08/26 02:43:15 rafaelsteil Exp $
+ * @version $Id: SimpleConnection.java,v 1.2 2004/08/26 20:06:42 rafaelsteil Exp $
  */
-public class SimpleConnection extends net.jforum.Connection 
+public class SimpleConnection extends DBConnection 
 {
 	/** 
 	 * @see net.jforum.Connection#init()
