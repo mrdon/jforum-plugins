@@ -49,8 +49,9 @@ PRE {
 P {
 	FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif
 }
+
 A:link {
-	COLOR: #01336b
+	COLOR: #01336b; text-decoration: none;
 }
 A:active {
 	COLOR: #01336b

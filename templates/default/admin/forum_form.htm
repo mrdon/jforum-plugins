@@ -2,7 +2,7 @@
 <#import "macros/group_macros.ftl" as lib>
 <STYLE type=text/css>@import url( ${contextPath}/templates/${templateName}/admin/style.css );</STYLE>
 
-<form action="${contextPath}/jforum${extension}" method="post" name="form" id="form" accept-charset="${encoding}" onSubmit="return checkGroups()">
+<form action="${contextPath}/jforum${extension}" method="post" name="form" id="form" accept-charset="${encoding}" onSubmit="return checkInput()">
 <input type="hidden" name="action" value="${action}" />
 <input type="hidden" name="module" value="${moduleName}" />
 <input type="hidden" name="securityHash" value="${securityHash}" />
@@ -16,6 +16,21 @@ function checkGroups()
 	}
 
 	return true;
+}
+
+function checkCategory()
+{
+	if (document.form.categories_id.selectedIndex < 0) {
+		alert("${I18n.getMessage("Forums.Form.ChooseCategory")}");
+		return false;
+	}
+
+	return true;
+}
+
+function checkInput()
+{
+	return checkGroups() && checkCategory();
 }
 </script>
 

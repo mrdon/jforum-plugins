@@ -61,7 +61,7 @@ import net.jforum.util.bbcode.BBCode;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.10 2004/11/07 16:32:21 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.11 2004/11/10 01:30:28 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -148,6 +148,9 @@ public class PostCommon
 							
 							// Do not allow other bb tags inside "code"
 							contents = contents.replaceAll("\\[", "&#91;").replaceAll("\\]", "&#93;");
+							
+							// Try to bypass smilies interpretation
+							contents = contents.replaceAll("\\(", "&#40;").replaceAll("\\)", "&#41;");
 							
 							StringBuffer replace = new StringBuffer(bb.getReplace());
 							int index = replace.indexOf("$1");

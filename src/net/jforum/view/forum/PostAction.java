@@ -79,7 +79,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.24 2004/11/08 01:03:21 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.25 2004/11/10 01:30:28 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -167,17 +167,13 @@ public class PostAction extends Command
         JForum.getContext().put("topicId", new Integer(topicId));
         JForum.getContext().put("watching",
                 tm.isUserSubscribed(topicId, SessionFacade.getUserSession().getUserId()));
-        JForum.getContext().put("pageTitle",
-                SystemGlobals.getValue(ConfigKeys.FORUM_NAME) + " - " + topic.getTitle());
-        JForum.getContext().put("isAdmin",
-                SecurityRepository.canAccess(SecurityConstants.PERM_ADMINISTRATION));
-        JForum.getContext().put(
-                "readonly",
-                !SecurityRepository.canAccess(SecurityConstants.PERM_READ_ONLY_FORUMS, Integer
-                        .toString(topic.getForumId())));
+        JForum.getContext().put("pageTitle", SystemGlobals.getValue(ConfigKeys.FORUM_NAME) + " - " + topic.getTitle());
+        JForum.getContext().put("isAdmin", SecurityRepository.canAccess(SecurityConstants.PERM_ADMINISTRATION));
+        JForum.getContext().put("readonly",
+                !SecurityRepository.canAccess(SecurityConstants.PERM_READ_ONLY_FORUMS,
+                		Integer.toString(topic.getForumId())));
 
-        JForum.getContext().put(
-                "isModerator",
+        JForum.getContext().put("isModerator",
                 SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION)
                         && SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_FORUMS,
                                 Integer.toString(topic.getForumId())));

@@ -72,7 +72,7 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.13 2004/11/07 14:01:43 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.14 2004/11/10 01:30:28 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -255,12 +255,15 @@ public class ForumAction extends Command
 		
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 		int totalTopics = ForumRepository.getTotalTopics(forumId, true);
+		
+		Forum forum = ForumRepository.getForum(forumId);
 
 		JForum.getContext().put("topics", TopicsCommon.prepareTopics(tmpTopics));
 		JForum.getContext().put("allForums", ForumAction.getAllForums());
-		JForum.getContext().put("forum", ForumRepository.getForum(forumId));
+		JForum.getContext().put("forum", forum);
 		JForum.getContext().put("moduleAction", "forum_show.htm");
 		JForum.getContext().put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
+		JForum.getContext().put("pageTitle", SystemGlobals.getValue(ConfigKeys.FORUM_NAME) + " - " + forum.getName());
 		
 		// Pagination
 		JForum.getContext().put("totalPages", new Double(Math.ceil( (double)totalTopics / (double)topicsPerPage )));
@@ -343,6 +346,8 @@ public class ForumAction extends Command
 	{
 		JForum.getRequest().addParameter("post_time", Long.toString(SessionFacade.getUserSession().getLastVisit().getTime()));
 		JForum.getRequest().addParameter("clean", "true");
+		JForum.getRequest().addParameter("sort_by", "t.topic_time");
+		JForum.getRequest().addParameter("sort_dir", "DESC");
 		new SearchAction().search();
 	}
 }

@@ -69,7 +69,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.18 2004/10/22 04:23:47 rafaelsteil Exp $
+ * @version $Id: ViewCommon.java,v 1.19 2004/11/10 01:30:28 rafaelsteil Exp $
  */
 public final class ViewCommon
 {
@@ -121,7 +121,7 @@ public final class ViewCommon
 		}
 		
 		if (JForum.getRequest().getParameter("avatardel") != null) {
-			File f = new File(SystemGlobals.getApplicationPath() +"images/avatar/"+ u.getAvatar());
+			File f = new File(SystemGlobals.getApplicationPath() + "/images/avatar/"+ u.getAvatar());
 			f.delete();
 			
 			u.setAvatar(null);
