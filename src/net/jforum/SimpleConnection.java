@@ -45,6 +45,7 @@ package net.jforum;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
@@ -56,7 +57,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * a connection pool.
  * 
  * @author Rafael Steil
- * @version $Id: SimpleConnection.java,v 1.5 2004/08/28 16:03:40 rafaelsteil Exp $
+ * @version $Id: SimpleConnection.java,v 1.6 2004/08/29 23:46:59 rafaelsteil Exp $
  */
 public class SimpleConnection extends DBConnection 
 {
@@ -65,10 +66,10 @@ public class SimpleConnection extends DBConnection
 	 */
 	public void init() throws Exception 
 	{
-		SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue("database.driver.config"));
+		SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
 		
 		try {
-			Class.forName(SystemGlobals.getValue("database.connection.driver"));
+			Class.forName(SystemGlobals.getValue(ConfigKeys.DATABASE_CONNECTION_DRIVER));
 			
 			// Try to validate the connection url
 			Connection conn = this.getConnection();
@@ -89,7 +90,7 @@ public class SimpleConnection extends DBConnection
 	 */
 	public Connection getConnection() throws Exception 
 	{
-		return DriverManager.getConnection(SystemGlobals.getValue("database.connection.string"));
+		return DriverManager.getConnection(SystemGlobals.getValue(ConfigKeys.DATABASE_CONNECTION_STRING));
 	}
 
 	/** 

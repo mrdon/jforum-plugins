@@ -81,7 +81,7 @@ import net.jforum.util.preferences.SystemGlobals;
  *
  * @author Paulo Silveira
  * @author Rafael Steil
- * @version $Id: PooledConnection.java,v 1.5 2004/08/28 16:03:40 rafaelsteil Exp $
+ * @version $Id: PooledConnection.java,v 1.6 2004/08/29 23:46:59 rafaelsteil Exp $
  * */
 
 public class PooledConnection extends DBConnection
@@ -127,8 +127,8 @@ public class PooledConnection extends DBConnection
      */
     public void init() throws Exception
     {
-    	SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue("database.driver.config"));
-		String driver = SystemGlobals.getValue("database.connection.driver");
+    	SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
+		String driver = SystemGlobals.getValue(ConfigKeys.DATABASE_CONNECTION_DRIVER);
 		
 		try {
 			Class.forName(driver);
@@ -137,7 +137,7 @@ public class PooledConnection extends DBConnection
 			this.maxConnections = SystemGlobals.getIntValue("database.connection.pool.max");
 			this.timeout = SystemGlobals.getIntValue("database.connection.pool.timeout");
 
-			this.connectionString = SystemGlobals.getValue("database.connection.string");
+			this.connectionString = SystemGlobals.getValue(ConfigKeys.DATABASE_CONNECTION_STRING);
 			
 			if (debug) {
 				logger.info("*********************************************");

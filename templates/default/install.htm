@@ -1,15 +1,15 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=${encoding}">
 <meta http-equiv="Content-Style-Type" content="text/css">
 <title>Welcome to JForum 2 Installation</title>
-<link rel="stylesheet" href="../templates/default/style.css" type="text/css">
+<link rel="stylesheet" href="${contextPath}/templates/default/style.css" type="text/css">
 <style type="text/css">
-th			{ background-image: url('../templates/default/images/cellpic3.gif') }
-td.cat		{ background-image: url('../templates/default/images/cellpic1.gif') }
-td.rowpic	{ background-image: url('../templates/default/images/cellpic2.jpg'); background-repeat: repeat-y }
-td.catHead,td.catSides,td.catLeft,td.catRight,td.catBottom { background-image: url('../templates/default/images/cellpic1.gif') }
+th			{ background-image: url('${contextPath}/templates/default/images/cellpic3.gif') }
+td.cat		{ background-image: url('${contextPath}/templates/default/images/cellpic1.gif') }
+td.rowpic	{ background-image: url('${contextPath}/templates/default/images/cellpic2.jpg'); background-repeat: repeat-y }
+td.catHead,td.catSides,td.catLeft,td.catRight,td.catBottom { background-image: url('${contextPath}/templates/default/images/cellpic1.gif') }
 </style>
 </head>
 <body bgcolor="#E5E5E5" text="#000000" link="#006699" vlink="#5584AA">
@@ -21,7 +21,7 @@ td.catHead,td.catSides,td.catLeft,td.catRight,td.catBottom { background-image: u
 			<tr>
 				<td><table width="100%" border="0" cellspacing="0" cellpadding="0">
 					<tr>
-						<td><img src="../templates/default/images/logo.jpg" border="0" alt="JForum" vspace="1" /></td>
+						<td><img src="${contextPath}/templates/default/images/logo.jpg" border="0" alt="JForum" vspace="1" /></td>
 						<td align="center" width="100%" valign="middle"><span class="maintitle">Welcome to JForum Installation</span></td>
 					</tr>
 				</table></td>
@@ -42,7 +42,10 @@ td.catHead,td.catSides,td.catLeft,td.catRight,td.catBottom { background-image: u
 				<td><br /><br /></td>
 			</tr>
 			<tr>
-				<td width="100%"><table width="100%" cellpadding="2" cellspacing="1" border="0" class="forumline"><form action="install.php" name="install" method="post">
+				<td width="100%"><table width="100%" cellpadding="2" cellspacing="1" border="0" class="forumline">
+				<form action="${contextPath}/install/install.page" name="install" method="post">
+				<input type="hidden" name="module" value="install">
+				<input type="hidden" name="action" value="doInstall">
 					<tr>
 						<th colspan="2">Basic Configuration</th>
 
@@ -50,8 +53,11 @@ td.catHead,td.catSides,td.catLeft,td.catRight,td.catBottom { background-image: u
 					<tr>
 						<td class="row1" align="right" width="30%"><span class="gen">Default board language: </span></td>
 						<td class="row2">
-							<select name="lang" onchange="this.form.submit()">
+							<select name="language" onchange="this.form.submit()">
 								<option value="en_US" selected="selected">English</option>
+								<option value="pt_BR" selected="selected">Brazilian Portuguese</option>
+								<option value="nl_NL" selected="selected">Netherlands</option>
+								<option value="fr_FR" selected="selected">French</option>
 							</select>
 						</td>
 					</tr>
@@ -59,16 +65,17 @@ td.catHead,td.catSides,td.catLeft,td.catRight,td.catBottom { background-image: u
 						<td class="row1" align="right"><span class="gen">Database Type: </span></td>
 
 						<td class="row2">
-							<select name="dbms" onchange="if (this.form.upgrade.options[this.form.upgrade.selectedIndex].value == 1) { this.selectedIndex = 0;}">
-								<option value="mysql4">MySQL 4.x</option>
-								<option value="postgres">PostgreSQL 7.x</option>
+							<select name="database">
+								<option value="mysql4">MySQL</option>
+								<option value="postgresql">PostgreSQL</option>
 							</select>
 						</td>
 					</tr>
+
 					<tr>
 						<td class="row1" align="right"><span class="gen">Choose your installation method:</span></td>
 						<td class="row2">
-							<select name="upgrade"onchange="if (this.options[this.selectedIndex].value == 1) { this.form.dbms.selectedIndex = 0; }">
+							<select name="install_type">
 								<option value="0">Install</option>
 								<option value="1">Upgrade</option>
 							</select>
@@ -79,7 +86,7 @@ td.catHead,td.catSides,td.catLeft,td.catRight,td.catBottom { background-image: u
 						<th colspan="2">Database Configuration</th>
 					</tr>
 					<tr>
-						<td class="row1" align="right"><span class="gen">Database Server Hostname / DSN: </span></td>
+						<td class="row1" align="right"><span class="gen">Database Server Hostname</span></td>
 						<td class="row2"><input type="text" name="dbhost" value="localhost" /></td>
 					</tr>
 
@@ -98,25 +105,41 @@ td.catHead,td.catSides,td.catLeft,td.catRight,td.catBottom { background-image: u
 					</tr>
 
 					<tr>
+						<td class="row1" align="right"><span class="gen">Database Encoding: </span></td>
+						<td class="row2">
+							<select name="dbencoding">
+								<option value="utf-8">UTF-8</option>
+								<option value="iso-8859-1">ISO-8859-1</option>
+							</select>
+						</td>
+					</tr>
+
+					<tr>
+						<td class="row1" align="right"><span class="gen">Use Connection Pool: </span></td>
+						<td class="row2">
+							<select name="use_pool">
+								<option value="yes">Yes</option>
+								<option value="no">No</option>
+							</select>
+						</td>
+					</tr>
+
+					<tr>
 						<th colspan="2">Admin Configuration</th>
 					</tr>
 					<tr>
-						<td class="row1" align="right"><span class="gen">Admin Email Address: </span></td>
-						<td class="row2"><input type="text" name="board_email" value="" /></td>
-					</tr> 
-					<tr>
 
 						<td class="row1" align="right"><span class="gen">Domain Name: </span></td>
-						<td class="row2"><input type="text" name="server_name" value="http://localhost" /></td>
+						<td class="row2"><input type="text" name="server_name" value="http://${serverName}" /></td>
 					</tr> 
 					<tr>
 						<td class="row1" align="right"><span class="gen">Server Port: </span></td>
-						<td class="row2"><input type="text" name="server_port" value="8080" /></td>
+						<td class="row2"><input type="text" name="server_port" value="${serverPort}" /></td>
 					</tr>
 					<tr>
 
 						<td class="row1" align="right"><span class="gen">Context path: </span></td>
-						<td class="row2"><input type="text" name="script_path" value="/jforum/" /></td>
+						<td class="row2"><input type="text" name="context_path" value="/jforum/" /></td>
 					</tr>
 					<tr>
 						<td class="row1" align="right"><span class="gen">Administrator Username: </span></td>
@@ -134,7 +157,6 @@ td.catHead,td.catSides,td.catLeft,td.catRight,td.catBottom { background-image: u
 					<tr> 
 					  <td class="catBottom" align="center" colspan="2">
 						<input type="hidden" name="install_step" value="1" />
-						<input type="hidden" name="cur_lang" value="english" />
 						<input class="mainoption" type="submit" value="Start Install" />
 					</td>
 					</tr>

@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author pieter
-* @version $Id: ConfigKeys.java,v 1.14 2004/08/26 02:43:20 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.15 2004/08/29 23:47:02 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -57,6 +57,7 @@ public class ConfigKeys {
 	// Configuration values for the keys in this section are set by the web-application itself
 	public static final String APPLICATION_PATH = "application.path";
 	public static final String INSTALLATION = "installation";
+	public static final String INSTALLED = "installed";
 
 	// The installation config file contains keys that are installation specific and differ from
 	// the default config.
@@ -65,6 +66,16 @@ public class ConfigKeys {
 	public static final String FILECHANGES_DELAY = "file.changes.delay";
 	public static final String DATABASE_PING_DELAY = "database.ping.delay";
 	public static final String DATABASE_CONNECTION_IMPLEMENTATION = "database.connection.implementation";
+	public static final String DATABASE_DRIVER_NAME = "database.driver.name";
+	public static final String DATABASE_DRIVER_CONFIG = "database.driver.config";
+	public static final String DATABASE_CONNECTION_HOST = "database.connection.host";
+	public static final String DATABASE_CONNECTION_USERNAME = "database.connection.username";
+	public static final String DATABASE_CONNECTION_PASSWORD = "database.connection.password";
+	public static final String DATABASE_CONNECTION_DBNAME = "dbname";
+	public static final String DATABASE_CONNECTION_ENCODING = "dbencoding";
+	public static final String DATABASE_CONNECTION_DRIVER = "database.connection.driver";
+	public static final String DATABASE_CONNECTION_STRING = "database.connection.string";
+	
 
 	// The remaining keys are set in default.config and can be overriden in the installation config 
 	public static final String RESOURCE_DIR = "resource.dir";
