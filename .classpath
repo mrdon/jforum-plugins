@@ -15,11 +15,13 @@
 	<classpathentry kind="lib" path="lib/nekohtml-0.8.1.jar"/>
 	<classpathentry kind="lib" path="lib/xercesImpl-2.6.2.jar"/>
 	<classpathentry kind="lib" path="lib/xml-apis-1.0.b2.jar"/>
-	<classpathentry sourcepath="D:/Downloads/jwebunit-1.2/jwebunit-1.2/src" kind="lib" path="lib/jwebunit-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/jwebunit-1.2.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/htmlparser-1.5.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/pgsql_driver74.213.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/commons-fileupload-1.0-cvs.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/hsqldb-1.7.2.6.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/mysql-connector-java-3.1.4-beta-bin.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/jcaptcha-core-1.0-RC1.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/jcaptcha-engine-1.0-RC1.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>
