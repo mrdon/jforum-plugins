@@ -61,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.28 2005/02/01 18:23:58 franklin_samir Exp $
+ * @version $Id: UserModel.java,v 1.29 2005/02/07 10:56:29 andowson Exp $
  */
 public class UserModel extends AutoKeys implements net.jforum.model.UserModel 
 {
@@ -396,6 +396,7 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 			karma.setKarmaPoints(rs.getInt("user_karma"));
 			u.setKarma( karma );
 			u.setFrom(rs.getString("user_from"));
+			u.setWebSite(rs.getString("user_website"));
 			
 			list.add(u);
 		}
