@@ -49,7 +49,7 @@ import net.jforum.model.security.SecurityModel;
  * actions.  
  * 
  * @author Rafael Steil
- * @version $Id: PermissionControl.java,v 1.9 2005/01/10 00:03:56 rafaelsteil Exp $
+ * @version $Id: PermissionControl.java,v 1.10 2005/01/28 14:46:19 rafaelsteil Exp $
  */
 public class PermissionControl 
 {
@@ -77,6 +77,11 @@ public class PermissionControl
 	public void addRole(int id, Role role, RoleValueCollection roleValues) throws Exception
 	{
 		this.smodel.addRole(id, role, roleValues);
+	}
+	
+	public void addRoleValue(int id, Role role, RoleValueCollection roleValues) throws Exception
+	{
+		this.smodel.addRoleValue(id, role, roleValues);
 	}
 	
 	public void deleteAllRoles(int id) throws Exception

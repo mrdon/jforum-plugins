@@ -44,7 +44,6 @@ package net.jforum.view.admin;
 
 import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -72,7 +71,7 @@ import freemarker.template.Template;
  * ViewHelper for category administration.
  * 
  * @author Rafael Steil
- * @version $Id: CategoryAction.java,v 1.13 2005/01/13 23:30:08 rafaelsteil Exp $
+ * @version $Id: CategoryAction.java,v 1.14 2005/01/28 14:46:18 rafaelsteil Exp $
  */
 public class CategoryAction extends Command 
 {
@@ -175,13 +174,10 @@ public class CategoryAction extends Command
 				
 				roleValues.add(rv);
 				
-				pc.addRole(groupId, role, roleValues);
-				
-				Iterator iter = gm.selectUsersIds(groupId).iterator();
-				while (iter.hasNext()) {
-					SecurityRepository.remove(Integer.parseInt(iter.next().toString()));
-				}
+				pc.addRoleValue(groupId, role, roleValues);
 			}
+			
+			SecurityRepository.clean();
 		}
 			
 		this.list();

@@ -60,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * $Id: UserSecurityModel.java,v 1.6 2005/01/14 21:11:53 rafaelsteil Exp $
+ * $Id: UserSecurityModel.java,v 1.7 2005/01/28 14:46:20 rafaelsteil Exp $
  */
 public class UserSecurityModel extends AutoKeys implements net.jforum.model.security.UserSecurityModel 
 {
@@ -183,15 +183,15 @@ public class UserSecurityModel extends AutoKeys implements net.jforum.model.secu
 	{
 		RoleCollection roles = SecurityCommon.processLoadRoles(SystemGlobals.getSql("PermissionControl.loadUserRoles"), user.getId());
 		
-		ArrayList groupRolesList = this.loadGroupRoles(user.getGroupsList());
+		List groupRolesList = this.loadGroupRoles(user.getGroupsList());
 		UserSecurityHelper.mergeUserGroupRoles(roles, groupRolesList);
 
 		return roles;
 	}
 	
-	private ArrayList loadGroupRoles(List groups) throws Exception
+	private List loadGroupRoles(List groups) throws Exception
 	{
-		ArrayList groupRolesList = new ArrayList();
+		List groupRolesList = new ArrayList();
 		GroupSecurityModel gmodel = new GroupSecurityModel();
 		
 		for (Iterator iter = groups.iterator(); iter.hasNext(); ) {
@@ -203,4 +203,11 @@ public class UserSecurityModel extends AutoKeys implements net.jforum.model.secu
 		return groupRolesList;
 	}
 
+	/**
+	 * @see net.jforum.model.security.SecurityModel#addRoleValue(int, Role, RoleValueCollection)
+	 */
+	public void addRoleValue(int id, Role role, RoleValueCollection rvc) throws Exception
+	{
+		throw new UnsupportedOperationException("feature not implemented");
+	}
 }

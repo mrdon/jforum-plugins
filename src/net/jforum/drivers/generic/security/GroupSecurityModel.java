@@ -43,17 +43,20 @@
 package net.jforum.drivers.generic.security;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Iterator;
 
 import net.jforum.JForum;
 import net.jforum.drivers.generic.AutoKeys;
 import net.jforum.security.Role;
 import net.jforum.security.RoleCollection;
+import net.jforum.security.RoleValue;
 import net.jforum.security.RoleValueCollection;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GroupSecurityModel.java,v 1.5 2004/11/05 03:29:51 rafaelsteil Exp $
+ * @version $Id: GroupSecurityModel.java,v 1.6 2005/01/28 14:46:20 rafaelsteil Exp $
  */
 public class GroupSecurityModel extends AutoKeys implements net.jforum.model.security.GroupSecurityModel 
 {
@@ -105,4 +108,40 @@ public class GroupSecurityModel extends AutoKeys implements net.jforum.model.sec
 		return SecurityCommon.processLoadRoles(SystemGlobals.getSql("PermissionControl.loadGroupRoles"), id);
 	}
 
+	/**
+	 * @see net.jforum.model.security.SecurityModel#addRoleValue(int, Role, RoleValueCollection)
+	 */
+	public void addRoleValue(int id, Role role, RoleValueCollection rvc) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PermissionControl.getRoleIdByName"));
+		p.setString(1, role.getName());
+		p.setInt(2, id);
+		
+		int roleId = -1;
+		
+		ResultSet rs = p.executeQuery();
+		if (rs.next()) {
+			roleId = rs.getInt("role_id");
+		}
+		
+		rs.close();
+		p.close();
+		
+		if (roleId == -1) {
+			this.addRole(id, role, rvc);
+		}
+		else {
+			p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PermissionControl.addRoleValues"));
+			p.setInt(1, roleId);
+			
+			for (Iterator iter = rvc.iterator(); iter.hasNext(); ) {
+				RoleValue rv = (RoleValue)iter.next();
+				p.setString(2, rv.getValue());
+				p.setInt(3, rv.getType());
+				p.executeUpdate();
+			}
+			
+			p.close();
+		}
+	}
 }

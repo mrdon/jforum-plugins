@@ -48,7 +48,7 @@ import java.util.LinkedHashMap;
 
 /**
  * @author Rafael Steil
- * @version $Id: RoleCollection.java,v 1.4 2005/01/02 19:58:00 rafaelsteil Exp $
+ * @version $Id: RoleCollection.java,v 1.5 2005/01/28 14:46:19 rafaelsteil Exp $
  */
 public class RoleCollection extends LinkedHashMap
 {
@@ -77,7 +77,7 @@ public class RoleCollection extends LinkedHashMap
 		StringBuffer sb = new StringBuffer(512);
 		
 		for (Iterator iter = this.values().iterator(); iter.hasNext(); ) {
-			sb.append(iter.next()).append(", ");
+			sb.append(iter.next()).append("\n");
 		}
 		
 		return sb.toString();

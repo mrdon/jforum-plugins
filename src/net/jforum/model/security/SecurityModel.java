@@ -53,7 +53,7 @@ import net.jforum.security.RoleValueCollection;
  * extend this interface.
  * 
  * @author Rafael Steil
- * @version $Id: SecurityModel.java,v 1.3 2004/11/05 03:29:44 rafaelsteil Exp $
+ * @version $Id: SecurityModel.java,v 1.4 2005/01/28 14:46:20 rafaelsteil Exp $
  */
 public interface SecurityModel 
 {
@@ -65,7 +65,7 @@ public interface SecurityModel
 	 * @see #adduserPermission(int, String, String, String)
 	 * @throws Exception
 	 **/
-	public abstract void deleteAllRoles(int id) throws Exception;
+	public void deleteAllRoles(int id) throws Exception;
 
 	/**
 	 * Delete do banco as permissoes de algum usuario em especifico.
@@ -76,7 +76,7 @@ public interface SecurityModel
 	 * @see #adduserPermission(int, String, String, String)
 	 * @throws Exception
 	 **/
-	public abstract void deleteRole(int id, String roleName) throws Exception;
+	public void deleteRole(int id, String roleName) throws Exception;
 
 	/**
 	 * Adiciona uma nova permissao/restricao ao usuario.
@@ -86,23 +86,22 @@ public interface SecurityModel
 	 * @param field Nome ( ID ) da permissao 
 	 * @see #addUserPermission(int, int, String, String, String)
 	 * */
-	public abstract void addRole(int id, Role role) throws Exception;
+	public void addRole(int id, Role role) throws Exception;
+	
+	public void addRoleValue(int id, Role role, RoleValueCollection rvc) throws Exception;
 	
 	/**
-	 * 
-	 * 
 	 * @param id
 	 * @param roleName
 	 * @param roleValues
 	 * @throws Exception
 	 */
-	public abstract void addRole(int id, Role role, RoleValueCollection roleValues) throws Exception;
+	public void addRole(int id, Role role, RoleValueCollection roleValues) throws Exception;
 
 	/**
-	 * x
 	 * @param id
 	 * @return
 	 * @throws Exception
 	 */
-	public abstract RoleCollection loadRoles(int id) throws Exception;
+	public RoleCollection loadRoles(int id) throws Exception;
 }
