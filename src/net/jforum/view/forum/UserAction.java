@@ -65,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.3 2004/09/08 09:28:09 jamesyong Exp $
+ * @version $Id: UserAction.java,v 1.4 2004/09/09 06:49:25 jamesyong Exp $
  */
 public class UserAction extends Command 
 {
@@ -162,7 +162,7 @@ public class UserAction extends Command
 			JForum.getContext().put("message", message);			
 		}			
 		else {
-			logRegisteredUserIn(userId, u);
+			logNewRegisteredUserIn(userId, u);
 		}
 	}
 
@@ -181,7 +181,7 @@ public class UserAction extends Command
 		if (isOk){
 			//make account active
 			um.writeUserActive(userId);
-			logRegisteredUserIn(userId, u);
+			logNewRegisteredUserIn(userId, u);
 		}
 		else {
 			message = I18n.getMessage("User.invalidActivationKey");
@@ -191,7 +191,7 @@ public class UserAction extends Command
 
 	}
 	
-	private void logRegisteredUserIn(int userId, User u){
+	private void logNewRegisteredUserIn(int userId, User u){
 		SessionFacade.setAttribute("logged", "1");
 
 		UserSession userSession = new UserSession();
