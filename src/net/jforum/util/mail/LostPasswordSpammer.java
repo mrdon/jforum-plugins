@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 19/04/2004 - 21:11:42
- * net.jforum.util.mail.LostPasswordSpammer.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: LostPasswordSpammer.java,v 1.3 2004/06/01 19:47:26 pieter2 Exp $
  */
 package net.jforum.util.mail;
 
@@ -54,12 +51,18 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
+ * @version $Id: LostPasswordSpammer.java,v 1.4 2004/06/03 02:22:53 rafaelsteil Exp $
  */
 public class LostPasswordSpammer extends Spammer
 {
 	public LostPasswordSpammer(String username, String email, String hash)
 	{
-		String url = SystemGlobals.getValue(ConfigKeys.FORUM_LINK) + "/user/recoverPassword/"+ hash + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
+		String forumLink = SystemGlobals.getValue(ConfigKeys.FORUM_LINK);
+		if (!forumLink.endsWith("/")) {
+			forumLink += "/";
+		}
+		
+		String url =  forumLink + "user/recoverPassword/"+ hash + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
 		SimpleHash params = new SimpleHash();
 		params.put("url", url);
 		params.put("username", username);

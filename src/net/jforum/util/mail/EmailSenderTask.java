@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 03/03/2004 - 21:25:09
- * net.jforum.util.mail.EmailTask.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: EmailSenderTask.java,v 1.2 2004/04/21 23:57:38 rafaelsteil Exp $
  */
 package net.jforum.util.mail;
 
@@ -49,6 +46,7 @@ import net.jforum.util.concurrent.Task;
 
 /**
  * @author Rafael Steil
+ * @version $Id: EmailSenderTask.java,v 1.3 2004/06/03 02:22:53 rafaelsteil Exp $
  */
 public class EmailSenderTask implements Task 
 {
@@ -59,7 +57,7 @@ public class EmailSenderTask implements Task
 		this.spammer = spammer;
 	}
 	
-	/* 
+	/** 
 	 * @see net.jforum.util.concurrent.Task#execute()
 	 */
 	public Object execute() throws Exception 

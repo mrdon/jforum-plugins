@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 03/03/2004 - 20:29:45
- * net.jforum.util.mail.Spammer.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: Spammer.java,v 1.4 2004/06/01 19:47:26 pieter2 Exp $
  */
 package net.jforum.util.mail;
 
@@ -72,6 +69,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * TODO: should do some refactoring to send a personalized email to each user. 
  * 
  * @author Rafael Steil
+ * @version $Id: Spammer.java,v 1.5 2004/06/03 02:22:53 rafaelsteil Exp $
  */
 public class Spammer 
 {

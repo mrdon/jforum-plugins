@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 04/03/2004 - 20:32:13
- * net.jforum.util.mail.TopicSpammer.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: TopicSpammer.java,v 1.4 2004/06/01 19:47:26 pieter2 Exp $
  */
 package net.jforum.util.mail;
 
@@ -58,13 +55,14 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
+ * @version $Id: TopicSpammer.java,v 1.5 2004/06/03 02:22:53 rafaelsteil Exp $
  */
 public class TopicSpammer extends Spammer 
 {
 	public TopicSpammer(Topic topic, ArrayList users)
 	{
 		// Prepare the users. In this current version, the email
-		// is not so personalized, so then we'll just use his address
+		// is not personalized, so then we'll just use his address
 		ArrayList recipients = new ArrayList();
 		for (Iterator iter = users.iterator(); iter.hasNext(); ) {
 			User u = (User)iter.next();
@@ -79,7 +77,12 @@ public class TopicSpammer extends Spammer
 			page += ((((int)topic.getTotalReplies() / postsPerPage)) * postsPerPage) +"/";
 		}
 		
-		String path = SystemGlobals.getValue(ConfigKeys.FORUM_LINK) +"/posts/list/"+ page + topic.getId() +".page#"+ topic.getLastPostId();
+		String forumLink = SystemGlobals.getValue(ConfigKeys.FORUM_LINK);
+		if (!forumLink.endsWith("/")) {
+			forumLink += "/";
+		}
+
+		String path = forumLink +"posts/list/"+ page + topic.getId() +".page#"+ topic.getLastPostId();
 		
 		SimpleHash params = new SimpleHash();
 		params.put("topic", topic);

@@ -37,16 +37,14 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 03/03/2004 - 20:28:30
- * net.jforum.util.mail.EmailException.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: EmailException.java,v 1.2 2004/04/21 23:57:38 rafaelsteil Exp $
  */
 package net.jforum.util.mail;
 
 /**
  * @author Rafael Steil
+ * @version $Id: EmailException.java,v 1.3 2004/06/03 02:22:53 rafaelsteil Exp $
  */
 public class EmailException extends RuntimeException 
 {
