@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -42,6 +42,8 @@
  */
 package net.jforum.drivers.hsqldb;
 
+import net.jforum.drivers.generic.UserModel;
+
 /**
  * @author Marc Wick
  */
@@ -49,7 +51,7 @@ public class DataAccessDriver extends
 		net.jforum.drivers.postgresql.DataAccessDriver {
 
 	private static PostModel postModel = new PostModel();
-
+	private static UserModel userModel = new UserModel();
 	private static TopicModel topicModel = new TopicModel();
 
 	/**
@@ -64,5 +66,12 @@ public class DataAccessDriver extends
 	 */
 	public net.jforum.model.TopicModel newTopicModel() {
 		return topicModel;
+	}
+	
+	/**
+	 * @see net.jforum.model.DataAccessDriver#newUserModel()
+	 */
+	public net.jforum.model.UserModel newUserModel() {
+		return userModel;
 	}
 }

@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobalsListener;
  * General utilities methods for loading configurations for JForum.
  * 
  * @author Rafael Steil
- * @version $Id: ConfigLoader.java,v 1.1 2004/11/02 18:06:00 rafaelsteil Exp $
+ * @version $Id: ConfigLoader.java,v 1.2 2004/11/05 16:23:37 rafaelsteil Exp $
  */
 public class ConfigLoader 
 {
@@ -75,11 +75,12 @@ public class ConfigLoader
 	public static void startSystemglobals(String appPath) throws Exception
 	{
 		SystemGlobals.initGlobals(appPath, appPath + "/WEB-INF/config/SystemGlobals.properties", null);
-		SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
-
+		
 		if (new File(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG)).exists()) {
 			SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG));
 		}
+		
+		SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
 	}
 
 	/**
