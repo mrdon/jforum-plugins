@@ -3,16 +3,17 @@
 	<channel>
 		<title><![CDATA[${rss.title}]]></title>
 		<link>${rss.link}</link>
-		<description><![CDATA[${rss.description?default("")}]]></description>
+		<description><![CDATA[${rss.description?default("No Description Given")}]]></description>
 		<generator>JForum - http://www.jforum.net</generator>
 		<#list rss.itens as item>
 			<item>
-				<title><![CDATA[${item.title}]]></title>
+				<title>${item.title.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("&", "&amp;")}</title>
 				<description><![CDATA[ ${item.description}]]></description>
 				<#if (item.categories.size() > 0)>
 					<category><#list item.categories as cat>${cat.name}, </#list></category>
 				</#if>
-				<guid isPermalink="true">${item.link}</guid>
+				<guid isPermaLink="true">${item.link}</guid>
+				<link>${item.link}</link>
 				<pubDate><![CDATA[${item.publishDate}]]></pubDate>
 				<author><![CDATA[ ${item.author}]]></author>
 			</item>
