@@ -10,14 +10,6 @@
 <table cellspacing="0" cellpadding="10" width="100%" align="center" border="0">
 	<tr>
 		<td class="bodyline" valign="top">
-			<#if moderator>
-				<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="form1" id="form1" accept-charset="${encoding}">
-				<input type="hidden" name="action" value="doModeration" />
-				<input type="hidden" name="module" value="${moduleName}" />
-				<input type="hidden" name="securityHash" value="${securityHash}" />
-				<input type="hidden" name="persistData" value="${forum.id}" />
-			</#if>
-
 			<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
 				<tr>
 					<td valign="bottom" align="left" colspan="2">
@@ -29,8 +21,16 @@
 						<span class="gensmall"><!-- forum moderators --> </span>
 					</td>
 
-					<td valign="center" nowrap="nowrap" align="right"><@pagination.doPagination action, forum.id/></td>
+					<td valign="center" nowrap="nowrap" align="right"><@pagination.doPagination action, forum.id, "fp1"/></td>
 				</tr>
+
+				<#if moderator>
+				<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="form1" id="form1" accept-charset="${encoding}">
+				<input type="hidden" name="action" value="doModeration" />
+				<input type="hidden" name="module" value="${moduleName}" />
+				<input type="hidden" name="securityHash" value="${securityHash}" />
+				<input type="hidden" name="persistData" value="${forum.id}" />
+				</#if>
 
 				<tr>
 					<#if !readonly>
@@ -147,15 +147,15 @@
 						<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a> -&gt;  <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name}</a></span>
 					</td>
 
-					<td valign="center" nowrap="nowrap" align="right"><@pagination.doPagination action, forum.id/></td>
+					<#if moderator></form></#if>
+
+					<td valign="center" nowrap="nowrap" align="right"><@pagination.doPagination action, forum.id, "fp2"/></td>
 				</tr>
 
 				<tr>
 					<td align="left" colspan="3"><span class="nav"></span></td>
 				</tr>
 			</table>
-		
-			<#if moderator></form></#if>
 		  
 			<table cellspacing="0" cellpadding="0" width="100%" border="0">
 				<tr>

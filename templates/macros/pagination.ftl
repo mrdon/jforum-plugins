@@ -16,73 +16,17 @@
 	]
 </#macro>
 
-<#macro doPagination action id=-1>
+<#macro doPagination action id formName="fp">
 	<#if (totalRecords > recordsPerPage)>
-		<span class="nav"><b>
-		${I18n.getMessage("goToPage")}:
-		
-		<#assign NumberOfActiveLinks = 7>
-		<#assign NumberOfSideLinks = 3>
-		
-		<#if (thisPage > 1)>
-			<#assign start = (thisPage - 2)* recordsPerPage>
-			<a href="${contextPath}/${moduleName}/${action}/0<#if (id > -1)>/${id}</#if>${extension}">(&lt;&lt;)</a>
-			<a href="${contextPath}/${moduleName}/${action}/${start}<#if (id > -1)>/${id}</#if>${extension}">(&lt;)</a>
-		</#if>
-
-		<#if (totalPages > NumberOfActiveLinks)>
-		
-			<#if (thisPage <= NumberOfSideLinks)>
-				<#assign startPageAt = 1>
-				<#assign stopPageAt = NumberOfActiveLinks>
-			<#else>
-				<#assign startPageAt = (thisPage - NumberOfSideLinks) >
-				<#if (thisPage >= (totalPages - NumberOfSideLinks)) >
-					<#assign startPageAt = (totalPages-(NumberOfActiveLinks - 1)) >
-				</#if>
-				
-				<#assign stopPageAt = startPageAt + (NumberOfActiveLinks - 1) >
-			</#if>
-
-			<#if (startPageAt > 1) >
-				...
-			</#if>
-						
-			<#list startPageAt .. stopPageAt as page >
-				<#assign start = recordsPerPage * (page-1) >
-
-				<#if thisPage == page >
-					${page}
-				<#else>
-					<a href="${contextPath}/${moduleName}/${action}/${start}<#if (id > -1)>/${id}</#if>${extension}">${page}</a>
-				</#if>
-				<#if (page < totalPages) >,</#if>
-			</#list>
-			
-			<#if (stopPageAt < totalPages) >
-				...
-			</#if>
-
-		<#else>
+		<form name="${formName}">
+		<span class="gensmall">${I18n.getMessage("goToPage")}:</span> 
+		<select name="p">
 			<#list 1 .. totalPages as page >
-				<#assign start = recordsPerPage * (page-1) >
-				
-				<#if thisPage == page>
-					${page}
-				<#else>
-					<a href="${contextPath}/${moduleName}/${action}/${start}<#if (id > -1)>/${id}</#if>${extension}">${page}</a>
-				</#if>
-				<#if (page < totalPages) >,</#if>
+				<#assign start = recordsPerPage * (page - 1)/>
+				<option value="${start}" <#if thisPage == page>selected</#if>>${page}</option>
 			</#list>
-		</#if>
-
-		<#if thisPage < totalPages >
-			<#assign start = thisPage * recordsPerPage/>
-			<a href="${contextPath}/${moduleName}/${action}/${start}<#if (id > -1)>/${id}</#if>${extension}">(&gt;)</a>
-			<a href="${contextPath}/${moduleName}/${action}/${(totalPages-1)*recordsPerPage}<#if (id > -1)>/${id}</#if>${extension}">(&gt;&gt;)</a>
-		</#if>
-
-		</b>
-	</span>
+		</select>
+		&nbsp;<input type="button" value="${I18n.getMessage("ForumIndex.goToGo")}" class="mainoption" onClick="document.location = '${JForumContext.encodeURL("/${moduleName}/${action}/' + document.${formName}.p[document.${formName}.p.selectedIndex].value + '/${id}")}';">
+		</form>
 	</#if>
 </#macro>
