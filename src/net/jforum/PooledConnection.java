@@ -81,13 +81,12 @@ import net.jforum.util.preferences.SystemGlobals;
  *
  * @author Paulo Silveira
  * @author Rafael Steil
- * @version $Id: PooledConnection.java,v 1.2 2004/08/26 20:06:41 rafaelsteil Exp $
+ * @version $Id: PooledConnection.java,v 1.3 2004/08/27 20:49:25 rafaelsteil Exp $
  * */
 
 public class PooledConnection extends DBConnection
 {
 	private static PooledConnection pool;
-	private static boolean isDatabaseUp;
 	
 	private int minConnections, maxConnections, timeout;
 	private String connectionString;
@@ -154,9 +153,11 @@ public class PooledConnection extends DBConnection
 				}
 			}
 			
-			isDatabaseUp = true;
+			this.isDatabaseUp = true;
 		}
 		catch (ClassNotFoundException e) {
+			this.isDatabaseUp = false;
+			
 			logger.error("Ouch... Cannot find database driver: "+ driver);
 			throw new IOException("Ouch... Cannot find database driver: "+ driver);
 		}
@@ -174,11 +175,6 @@ public class PooledConnection extends DBConnection
             pool = new PooledConnection();
             this.enableConnectionPinging();
         }
-    }
-    
-    public static boolean isDatabaseUp()
-    {
-    	return isDatabaseUp;
     }
 
 	/**
