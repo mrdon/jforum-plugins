@@ -1,10 +1,22 @@
 <#import "macros/group_macros.ftl" as lib>
 <style type="text/css">@import url( style.css );</style>
 
-<form action="${contextPath}/jforum.page" method="post" name="form" id="form" accept-charset="${encoding}">
+<form action="${contextPath}/jforum.page" method="post" name="form" id="form" accept-charset="${encoding}" onSubmit="return checkGroups()">
 <input type="hidden" name="action" value="${action}" />
 <input type="hidden" name="module" value="${moduleName}" />
 <input type="hidden" name="securityHash" value="${securityHash}" />
+
+<script language="javascript">
+function checkGroups() 
+{
+	if (document.form.groups.selectedIndex == -1) {
+		alert("${I18n.getMessage("PermissionControl.atLeastOne")}");
+		return false;
+	}
+
+	return true;
+}
+</script>
 
 <#if forum?exists>
 <input type="hidden" name="forum_id" value="${forum.id}" />

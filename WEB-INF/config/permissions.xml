@@ -40,6 +40,13 @@
 			<option value="allow" description="Yes"/>
 		</permission>
 	</section>
+
+	<!-- Read-only forums -->
+	<section id="read_only_forum" title="Read-Only Forums">
+		<permission id="perm_read_only_forums" title="Read-Only forums. Choosing 'Allow All' will &lt;b&gt;disable&lt;/b&gt; the read-only flag" type="multiple">
+			<sql queryName="ForumModel.selectAll" valueField="forum_id" captionField="forum_name"/>
+		</permission>
+	</section>
 	
 	<!-- Moderation -->
 	<section id="moderation_section" title="Moderation">

@@ -25,18 +25,24 @@ function confirmDelete()
 			
 			<table cellspacing="2" cellpadding="2" width="100%" border="0">
 				<tr>
+					<#if !readonly>
 					<td width="15%" align="left" valign="bottom" nowrap="nowrap">
+					</#if>
 						<#if topic.status == STATUS_LOCKED>
 							<img src="${contextPath}/templates/${templateName}/images/reply_locked.gif" />
 						<#else>
-							<span class="nav">&nbsp;
-							<a href="${contextPath}/jforum.page?module=posts&amp;action=insert&amp;forum_id=${topic.forumId}"><img src="${contextPath}/templates/${templateName}/images/post.gif" width="82" height="25" border="0" /></a>
-							<a href="${contextPath}/jforum.page?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}&start=${thisPage}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" width="82" height="25" border="0" /></a>
-							</span>
+							<#if !readonly>
+								<span class="nav">&nbsp;
+								<a href="${contextPath}/jforum.page?module=posts&amp;action=insert&amp;forum_id=${topic.forumId}"><img src="${contextPath}/templates/${templateName}/images/post.gif" width="82" height="25" border="0" /></a>
+								<a href="${contextPath}/jforum.page?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}&start=${thisPage}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" width="82" height="25" border="0" /></a>
+								</span>
+							<#else>
+								<#assign colspan = "2"/>
+							</#if>
 						</#if>
 					</td>
 
-					<td valign="center" align="left">
+					<td valign="center" align="left" colspan="${colspan?default("0")}">
 						<span class="nav">&nbsp;&nbsp;&nbsp;
 						<a class="nav" href="${contextPath}/forums/list.page">${I18n.getMessage("ForumListing.forumIndex")} </a> 
             			-&gt; <a class="nav" href="${contextPath}/forums/show/${forum.id}.page">${forum.name} </a>
@@ -218,18 +224,24 @@ function confirmDelete()
 		
 			<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
 				<tr>
+					<#if !readonly>
 					<td width="15%" align="left" valign="bottom" nowrap="nowrap">
+					</#if>
 					<#if topic.status == STATUS_LOCKED>
 						<img src="${contextPath}/templates/${templateName}/images/reply_locked.gif" />
 					<#else>
-						<span class="nav">
+						<#if !readonly>
+							<span class="nav">
 							&nbsp;<a href="${contextPath}/jforum.page?module=posts&amp;action=insert&amp;forum_id=${topic.forumId}"><img src="${contextPath}/templates/${templateName}/images/post.gif" width="82" height="25" border="0" /></a>
 							&nbsp;<a href="${contextPath}/jforum.page?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}&start=${thisPage}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" width="82" height="25" border="0" /></a>
 							</span>
+						<#else>
+							<#assign colspan = "2"/>
+						</#if>
 		  			</#if>
 					</td>
 					
-					<td valign="center" align="left">
+					<td valign="center" align="left" colspan="${colspan?default("0")}">
 						<span class="nav">&nbsp;&nbsp;&nbsp;
 						<a class="nav" href="${contextPath}/forums/list.page">${I18n.getMessage("ForumListing.forumIndex")} </a> 
             			-&gt; <a class="nav" href="${contextPath}/forums/show/${forum.id}.page">${forum.name} </a>

@@ -76,7 +76,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.1 2004/08/30 23:51:19 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.2 2004/09/04 17:29:36 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -144,12 +144,6 @@ public class PostAction extends Command
 				usersMap.put(posterId, u);
 			}
 			
-			/*
-			UserSecurityModel umodel = DataAccessDriver.getInstance().newUserSecurityModel();
-			pc = new PermissionControl();
-			pc.setRoles(umodel.loadRoles(p.getUserId()));
-			*/
-			
 			helperList.add(PostCommon.preparePostForDisplay(p));
 		}
 		
@@ -171,6 +165,8 @@ public class PostAction extends Command
 		JForum.getContext().put("watching", tm.isUserSubscribed(topicId, SessionFacade.getUserSession().getUserId()));
 		JForum.getContext().put("pageTitle", SystemGlobals.getValue(ConfigKeys.FORUM_NAME) +" - "+ topic.getTitle());
 		JForum.getContext().put("isAdmin", SecurityRepository.canAccess(SecurityConstants.PERM_ADMINISTRATION));
+		JForum.getContext().put("readonly", !SecurityRepository.canAccess(SecurityConstants.PERM_READ_ONLY_FORUMS, 
+				Integer.toString(topic.getForumId())));
 		
 		JForum.getContext().put("isModerator", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION) 
 				&& SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_FORUMS, Integer.toString(topic.getForumId())));
@@ -187,7 +183,7 @@ public class PostAction extends Command
 		JForum.getContext().put("thisPage", new Integer(start));
 	}
 	
-	private boolean shallProceed(int forumId)
+	private boolean shallProceed(int forumId) throws Exception
 	{
 		if (!SecurityRepository.canAccess(SecurityConstants.PERM_FORUM, Integer.toString(forumId))) {
 			new ModerationHelper().denied(I18n.getMessage("PostShow.denied"));
@@ -213,7 +209,8 @@ public class PostAction extends Command
 	{
 		int forumId = Integer.parseInt(JForum.getRequest().getParameter("forum_id"));
 		
-		if (!this.anonymousPost(forumId)) {
+		if (!this.anonymousPost(forumId) 
+				|| this.isForumReadonly(forumId, JForum.getRequest().getParameter("topic_id") != null)) {
 			return;
 		}
 		
@@ -420,10 +417,11 @@ public class PostAction extends Command
 		Topic t = new Topic();
 		t.setForumId(Integer.parseInt(JForum.getRequest().getParameter("forum_id")));
 		
-		if (!this.shallProceed(t.getForumId())) {
+		if (!this.shallProceed(t.getForumId())
+				|| this.isForumReadonly(t.getForumId(), JForum.getRequest().getParameter("topic_id") != null)) {
 			return;
 		}
-
+		
 		int topicId = -1;
 		
 		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
@@ -687,6 +685,23 @@ public class PostAction extends Command
 	{
 		JForum.getContext().put("moduleAction", "message.htm");
 		JForum.getContext().put("message", I18n.getMessage("PostShow.topicLocked"));
+	}
+	
+	private boolean isForumReadonly(int forumId, boolean isReply) throws Exception
+	{
+		if (!SecurityRepository.canAccess(SecurityConstants.PERM_READ_ONLY_FORUMS, 
+				Integer.toString(forumId))) {
+			if (isReply) {
+				this.list();
+			}
+			else {
+				JForum.setRedirect(JForum.getRequest().getContextPath() + "/forums/show/" + forumId + ".page");
+			}
+			
+			return true;
+		}
+		
+		return false;
 	}
 	
 	private boolean anonymousPost(int forumId)

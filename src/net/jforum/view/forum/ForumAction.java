@@ -74,7 +74,7 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.2 2004/09/02 06:19:33 jamesyong Exp $
+ * @version $Id: ForumAction.java,v 1.3 2004/09/04 17:29:36 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -281,6 +281,8 @@ public class ForumAction extends Command
 		JForum.getContext().put("totalRecords", new Integer(totalTopics));
 		JForum.getContext().put("thisPage", new Integer(start));
 		JForum.getContext().put("postsPerPage", new Integer(postsPerPage));
+		JForum.getContext().put("readonly", !SecurityRepository.canAccess(SecurityConstants.PERM_READ_ONLY_FORUMS, 
+				Integer.toString(forumId)));
 
 		ViewCommon.topicListingBase();
 	}

@@ -29,11 +29,18 @@
 		  </TD>
 		</TR>
         <TR>
-          <TD vAlign=center align=left width=50>
-		  <A href="${contextPath}/jforum.page?module=posts&action=insert&forum_id=${forum.id}"><img src="${contextPath}/templates/${templateName}/images/post.gif" width="82" height="25" border="0"></A></TD>
-          <TD class=nav valign=center align=left width="100%">
-		  <SPAN class=nav>&nbsp;&nbsp;&nbsp;<A class=nav href="${contextPath}/forums/list.page">${I18n.getMessage("ForumListing.forumIndex")}</A> -&gt; <a class="nav" href="${contextPath}/forums/show/${forum.id}.page">${forum.name}</a></SPAN>
-		  </TD>
+			<#if !readonly>
+				<TD vAlign=center align=left width="50">
+					<A href="${contextPath}/jforum.page?module=posts&action=insert&forum_id=${forum.id}"><img src="${contextPath}/templates/${templateName}/images/post.gif" width="82" height="25" border="0"></A>
+				</TD>
+			<#else>
+				<#assign colspan = "2"/>
+			</#if>
+
+			<TD class=nav valign=center align=left width="100%" colspan="${colspan?default("")}">
+				<SPAN class=nav>&nbsp;&nbsp;&nbsp;<A class=nav href="${contextPath}/forums/list.page">${I18n.getMessage("ForumListing.forumIndex")}</A> -&gt; <a class="nav" href="${contextPath}/forums/show/${forum.id}.page">${forum.name}</a></SPAN>
+			</TD>
+
           <TD class=nav vAlign=bottom noWrap align=right>
 		  	<SPAN class=gensmall>
 			<A href="${contextPath}/forums/readAll/${forum.id}.page">${I18n.getMessage("ForumIndex.setAllTopicsAsRead")}</A>
@@ -117,10 +124,17 @@
       <TABLE cellSpacing=2 cellPadding=2 width="100%" align=center border=0>
         <TBODY>
         <TR>
-          <TD vAlign=center align=left width=50>
-		  <A href="${contextPath}/jforum.page?module=posts&action=insert&forum_id=${forum.id}"><img src="${contextPath}/templates/${templateName}/images/post.gif" width="82" height="25" border="0"></A></TD>
-          <TD vAlign=center align=left width="100%"><SPAN class=nav>&nbsp;&nbsp;&nbsp;
-		  	<A class=nav href="${contextPath}/forums/list.page">${I18n.getMessage("ForumListing.forumIndex")}</A> -&gt;  <a class="nav" href="${contextPath}/forums/show/${forum.id}.page">${forum.name}</a></SPAN>
+			<#if !readonly>
+				<TD vAlign=center align=left width="50">
+					<A href="${contextPath}/jforum.page?module=posts&action=insert&forum_id=${forum.id}"><img src="${contextPath}/templates/${templateName}/images/post.gif" width="82" height="25" border="0"></A>
+				</TD>
+			<#else>
+				<#assign colspan = "2"/>
+			</#if>
+
+			<TD vAlign=center align=left width="100%" colspan="${colspan?default("0")}">
+				<SPAN class=nav>&nbsp;&nbsp;&nbsp;
+		  		<A class=nav href="${contextPath}/forums/list.page">${I18n.getMessage("ForumListing.forumIndex")}</A> -&gt;  <a class="nav" href="${contextPath}/forums/show/${forum.id}.page">${forum.name}</a></SPAN>
 			</TD>
           <TD vAlign=center noWrap align=right>   
 		           

@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) 2003, 2004 Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,7 +37,6 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 18/03/2004 - 20:00:56
- * net.jforum.security.SecurityConstants.java
  * The JForum Project
  * http://www.jforum.net
  */
@@ -45,7 +44,7 @@ package net.jforum.security;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityConstants.java,v 1.4 2004/08/07 04:22:16 jamesyong Exp $
+ * @version $Id: SecurityConstants.java,v 1.5 2004/09/04 17:29:36 rafaelsteil Exp $
  */
 public class SecurityConstants 
 {
@@ -62,4 +61,5 @@ public class SecurityConstants
 	public static final String PERM_MODERATION_TOPIC_MOVE = "perm_moderation_topic_move";
 	public static final String PERM_MODERATION_TOPIC_LOCK_UNLOCK = "perm_moderation_topic_lockUnlock";
 	public static final String PERM_CREATE_STICKY_ANNOUNCEMENT_TOPICS = "perm_create_sticky_announcement_topics";
+	public static final String PERM_READ_ONLY_FORUMS = "perm_read_only_forums";
 }
