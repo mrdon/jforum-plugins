@@ -12,12 +12,12 @@
 <table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
 	<tr>
 		<th class="thCornerL" nowrap="nowrap">#</th>
-	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("UserProfile.privateMessage")}&nbsp;</th>
+	  <th class="thTop" nowrap="nowrap" width="59px">&nbsp;${I18n.getMessage("UserProfile.privateMessage")}&nbsp;</th>
 	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("User.username")}&nbsp;</th>
-	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("UserProfile.emailAddress")}&nbsp;</th>
+	  <th class="thTop" nowrap="nowrap" width="59px">&nbsp;${I18n.getMessage("email")}&nbsp;</th>
 	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("UserProfile.from")}&nbsp;</th>
 	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("UserProfile.registrationDate")}&nbsp;</th>
-	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("UserProfile.totalMessages")}&nbsp;</th>
+	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("User.numMessages")}&nbsp;</th>
 	  <th class="thCornerR" nowrap="nowrap">&nbsp;${I18n.getMessage("UserProfile.webSite")}&nbsp;</th>
 	</tr>
   <#assign id = start+1/>
@@ -28,7 +28,7 @@
 			<td class="row2"><span class="gen"><a href="${JForumContext.encodeURL("/user/profile/${user.id}")}">${user.username}</a></span></td>
 			<td class="row2"><span class="gen"><#if (user.isViewEmailEnabled() && user.email?exists && user.email?length > 0)>
 			<#assign e = user.email.split("@")/>
-			<a href="#" onclick="document.location = 'mailto:' + showEmail('${e[0]}', '${e[1]}');"><img src="${contextPath}/templates/${templateName}/images/icon_email.gif" border="0" /></a></span></td>
+			<a href="#" onclick="document.location = 'mailto:' + showEmail('${e[0]?default("")}', ' ${e[1]?default("")}');"><img src="${contextPath}/templates/${templateName}/images/icon_email.gif" border="0" /></a></span></td>
 			<#else>&nbsp;
 			</#if>
 			<td class="row2"><span class="gen"><#if (user.location?exists && user.location?length > 0)>${user.location}<#else>&nbsp;</#if></span></td>
