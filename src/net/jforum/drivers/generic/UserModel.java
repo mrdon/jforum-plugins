@@ -58,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.22 2005/01/03 16:13:25 rafaelsteil Exp $
+ * @version $Id: UserModel.java,v 1.23 2005/01/09 19:34:53 rafaelsteil Exp $
  */
 public class UserModel extends AutoKeys implements net.jforum.model.UserModel 
 {
@@ -138,16 +138,16 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		u.setGender(rs.getString("gender"));
 		u.setRankId(rs.getInt("rank_id"));
 		u.setThemeId(rs.getInt("themes_id"));
-		u.setPrivateMessagesEnabled(rs.getString("user_allow_pm").equals("1"));
-		u.setNotifyOnMessagesEnabled(rs.getString("user_notify").equals("1"));
-		u.setViewOnlineEnabled(rs.getString("user_viewonline").equals("1"));
+		u.setPrivateMessagesEnabled("1".equals(rs.getString("user_allow_pm")));
+		u.setNotifyOnMessagesEnabled("1".equals(rs.getString("user_notify")));
+		u.setViewOnlineEnabled("1".equals(rs.getString("user_viewonline")));
 		u.setPassword(rs.getString("user_password"));
-		u.setViewEmailEnabled(rs.getString("user_viewemail").equals("1"));
-		u.setViewOnlineEnabled(rs.getString("user_allow_viewonline").equals("1"));
-		u.setAvatarEnabled(rs.getString("user_allowavatar").equals("1"));
-		u.setBbCodeEnabled(rs.getString("user_allowbbcode").equals("1"));
-		u.setHtmlEnabled(rs.getString("user_allowhtml").equals("1"));
-		u.setSmiliesEnabled(rs.getString("user_allowsmilies").equals("1"));
+		u.setViewEmailEnabled("1".equals(rs.getString("user_viewemail")));
+		u.setViewOnlineEnabled("1".equals(rs.getString("user_allow_viewonline")));
+		u.setAvatarEnabled("1".equals(rs.getString("user_allowavatar")));
+		u.setBbCodeEnabled("1".equals(rs.getString("user_allowbbcode")));
+		u.setHtmlEnabled("1".equals(rs.getString("user_allowhtml")));
+		u.setSmiliesEnabled("1".equals(rs.getString("user_allowsmilies")));
 		u.setEmail(rs.getString("user_email"));
 		u.setFrom(rs.getString("user_from"));
 		u.setIcq(rs.getString("user_icq"));
