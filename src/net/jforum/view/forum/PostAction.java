@@ -79,7 +79,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.28 2004/11/17 00:02:13 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.27 2004/11/16 23:58:50 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -563,7 +563,7 @@ public class PostAction extends Command
 			return newStart;
 		} 
 		else {
-			return currentStart;
+		return currentStart;
 		}
 	}
 
