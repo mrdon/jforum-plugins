@@ -11,6 +11,12 @@
 		<th class="thHead" valign="center" colspan="35 height="25">${I18n.getMessage("Category.List.Title")}</th>
 	</tr>
 
+	<#if errorMessage?exists>
+		<tr>
+			<td align="center" colspan="5"><span class="gensmall">${errorMessage}</span></td>
+		</tr>
+	</#if>
+
 	<#assign counter = 1/>
 	<#assign categories = repository.getAllCategories()/>
 	<#list categories as category>

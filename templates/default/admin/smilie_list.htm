@@ -13,9 +13,7 @@
 
 <#list smilies as smilie>
 	<TR>
-	<TD class=row1 width="38%">
-		${smilie.url}
-	</td>
+	<TD class=row1 width="38%">${smilie.url.replaceAll("\\\\", "")}</td>
 	<td class="row2">
 		<span class="gen">${smilie.code}</span>
 	</td>

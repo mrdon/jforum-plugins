@@ -432,6 +432,7 @@ CREATE TABLE jforum_karma (
 	post_user_id INTEGER NOT NULL,
 	from_user_id INTEGER NOT NULL,
 	points INTEGER NOT NULL,
+	rate_date TIMESTAMP DEFAULT NULL,
 	PRIMARY KEY(karma_id)
 );
 
