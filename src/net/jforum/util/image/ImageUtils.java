@@ -96,18 +96,13 @@ public class ImageUtils
 	 */
 	public static BufferedImage resizeImage(Image image, int maxWidth, int maxHeight)
 	{
-		// Zoom
 		float zoom = 1.0F;
-		
-		// Max dimension
 		Dimension largestDimension = new Dimension(maxWidth, maxHeight);
-		
-		// Image size
-		int imageWidth = image.getWidth(null);
 
+		// Original size
+		int imageWidth = image.getWidth(null);
 		int imageHeight = image.getHeight(null);
 		
-		// Original image aspect ration
 		float aspectRation = (float)imageWidth / imageHeight;
 		
 		if (imageWidth > maxWidth || imageHeight > maxHeight) {
