@@ -69,7 +69,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.41 2004/10/24 16:29:48 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.42 2004/10/25 20:52:07 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -104,6 +104,7 @@ public class JForum extends JForumCommonServlet
 		userSession.setLastVisit(new Date(System.currentTimeMillis()));
 		userSession.setUserId(SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID));
 		userSession.setSessionId(JForum.getRequest().getSession().getId());
+		
 		SessionFacade.setAttribute("logged", "0");
 	}
 	

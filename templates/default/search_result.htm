@@ -6,15 +6,6 @@
 <#import "../macros/search_pagination.ftl" as pagination>
 <#import "../macros/presentation.ftl" as presentation/>
 
-<#if moderator>
-	<form accept-charset="${encoding}" action="${contextPath}/jforum${extension}" method="post" name="form1">
-	<input type="hidden" name="action" value="doModeration">
-	<input type="hidden" name="module" value="${moduleName}">
-	<input type="hidden" name="securityHash" value="${securityHash}">
-	<input type="hidden" name="start" value="${thisPage}">
-	<#assign mp = pagination.moderationParams("")/>
-	<input type="hidden" name="persistData" value="${mp}">
-</#if>
 <TABLE cellSpacing=0 cellPadding=10 width="100%" align=center border=0>
   <TR>
     <TD class="bodyline" valign="top">
@@ -28,7 +19,7 @@
             </TD>
           <TD vAlign=bottom noWrap align=right>
 		  
-		  <@pagination.searchPagination kw?default(""), terms?default(""), forum?default(""), category?default(""), orderField?default(""), orderBy?default(""), author?default(""), postTime?default("")/>
+		  <@pagination.searchPagination kw?default(""), terms?default(""), forum?default(""), category?default(""), orderField?default(""), orderBy?default(""), author?default(""), postTime?default(""), "fp1"/>
 		  </TD></TR>
         <TR>
           <TD align=left vAlign=center>		  
@@ -39,15 +30,24 @@
 		  <#if (moderator && totalRecords > 0)>
 				<#if openModeration?default(false)>
 					<#assign mp = pagination.moderationParams("0")/>
-					<a href="${contextPath}/jforum${extension}?module=search&action=search&${mp}">${I18n.getMessage("Moderation.CloseModeration")}</a>
+					<a href="${contextPath}/jforum${extension}?module=search&action=search&${mp}&start=${thisPage}">${I18n.getMessage("Moderation.CloseModeration")}</a>
 				<#else>
 					<#assign mp = pagination.moderationParams("1")/>
-					<a href="${contextPath}/jforum${extension}?module=search&action=search&${mp}">${I18n.getMessage("Moderation.OpenModeration")}</a>
+					<a href="${contextPath}/jforum${extension}?module=search&action=search&${mp}&start=${thisPage}">${I18n.getMessage("Moderation.OpenModeration")}</a>
 				</#if>
 			</#if>
 		  </SPAN></TD>
         </TR></TABLE>
 
+<#if moderator>
+	<form accept-charset="${encoding}" action="${contextPath}/jforum${extension}" method="post" name="form1">
+	<input type="hidden" name="action" value="doModeration">
+	<input type="hidden" name="module" value="${moduleName}">
+	<input type="hidden" name="securityHash" value="${securityHash}">
+	<input type="hidden" name="start" value="${thisPage}">
+	<#assign mp = pagination.moderationParams("")/>
+	<input type="hidden" name="persistData" value="${mp}">
+</#if>
 		
    <TABLE class=forumline cellSpacing=1 cellPadding=4 width="100%" border=0>
         <TR>
@@ -121,6 +121,7 @@
 		  </TD>
         </TR></TABLE>
 		
+		<#if moderator></FORM></#if>
 		
       <TABLE cellSpacing=2 cellPadding=2 width="100%" align=center border=0>
         
@@ -129,13 +130,13 @@
 		  	<A class=nav href="${contextPath}/forums/list${extension}">${I18n.getMessage("ForumListing.forumIndex")}</A></SPAN></TD>
           <TD vAlign=center noWrap align=right>
 		  
-		  <@pagination.searchPagination kw?default(""), terms?default(""), forum?default(""), category?default(""), orderField?default(""), orderBy?default(""), author?default(""), postTime?default("")/>
+		  <@pagination.searchPagination kw?default(""), terms?default(""), forum?default(""), category?default(""), orderField?default(""), orderBy?default(""), author?default(""), postTime?default(""), "fp2"/>
 		  
 		  </TD>
         </TR>
         <TR>
           <TD align=left colSpan=2></TD></TR></TABLE>
-		  <#if moderator></FORM></#if>
+		 
       <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
        
         <TR>
@@ -158,31 +159,44 @@
                 <INPUT class=liteoption type=button value="${I18n.getMessage("ForumIndex.goToGo")}" onClick="if(document.f.select.options[document.f.select.selectedIndex].value != -1){ document.location = '${contextPath}/forums/show/'+ document.f.select.options[document.f.select.selectedIndex].value +'${extension}'; }">
 				</form>
 				</TD></TR></TABLE></TD></TR></TABLE>
-      <TABLE cellSpacing=0 cellPadding=0 width="100%" align=center border=0>
-      
-        <TR>
-        <TD vAlign=top align=left>
-            <TABLE cellSpacing=3 cellPadding=0 border=0>
-             
-              <TR>
-                <TD align=left width=20><img src="${contextPath}/templates/${templateName}/images/folder_new.gif" width="19" height="18"></TD>
-                <TD class=gensmall>${I18n.getMessage("ForumIndex.newMessages")}</TD>
-                <TD>&nbsp;&nbsp;</TD>
-                <TD align=middle width=20><img src="${contextPath}/templates/${templateName}/images/folder.gif" width="19" height="18"></TD>
-                <TD class=gensmall>${I18n.getMessage("ForumIndex.noNewMessages")}</TD>
-                <TD>&nbsp;&nbsp;</TD>
-                <TD align=middle width=20><img src="${contextPath}/templates/${templateName}/images/folder_announce.gif" width="19" height="18"></TD>
-                <TD class=gensmall>${I18n.getMessage("ForumIndex.announce")}</TD></TR>
-              <TR>
-                <TD align=middle width=20><img src="${contextPath}/templates/${templateName}/images/folder_lock_new.gif" width="19" height="18"></TD>
-                <TD class=gensmall>${I18n.getMessage("ForumIndex.newMessagesBlocked")}</TD>
-                <TD>&nbsp;&nbsp;</TD>
-                <TD align=middle width=20><img src="${contextPath}/templates/${templateName}/images/folder_lock.gif" width="19" height="18"></TD>
-                <TD class=gensmall>${I18n.getMessage("ForumIndex.noNewMessagesBlocked")}</TD>
-                <TD>&nbsp;&nbsp;</TD>
-                <TD align=middle width=20><img src="${contextPath}/templates/${templateName}/images/folder_sticky.gif" width="19" height="18"></TD>
-                <TD class=gensmall>${I18n.getMessage("ForumIndex.sticky")}</TD></TR>
-              </TABLE></TD>
-          <TD align=right><SPAN class=gensmall></SPAN></TD>
-        </TR></TABLE>
+      <table cellspacing="0" cellpadding="0" width="100%" align="center" border="0">
+				<tr>
+					<td valign="top" align="left">
+						<table cellspacing="3" cellpadding="0" border="0">
+							<tr>
+								<td align="left" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_new.gif" width="19" height="18" /></td>
+								<td class="gensmall">${I18n.getMessage("ForumIndex.newMessages")}</td>
+								<td>&nbsp;&nbsp;</td>
+								<td align="middle" width="20"><img src="${contextPath}/templates/${templateName}/images/folder.gif" width="19" height="18" /></td>
+								<td class="gensmall">${I18n.getMessage("ForumIndex.noNewMessages")}</td>
+								<td>&nbsp;&nbsp;</td>
+								<td align="middle" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_announce.gif" width="19" height="18" /></td>
+								<td class="gensmall">${I18n.getMessage("ForumIndex.announce")}</td>
+							</tr>
+							
+							<tr>
+								<td align="middle" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_new_hot.gif" width="19" height="18" /></td>
+								<td class="gensmall">${I18n.getMessage("ForumIndex.newMessagesHot")}</td>
+								<td>&nbsp;&nbsp;</td>
+								<td align="middle" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_hot.gif" width="19" height="18" /></td>
+								<td class="gensmall">${I18n.getMessage("ForumIndex.noNewMessagesHot")}</td>
+								<td>&nbsp;&nbsp;</td>
+								<td align="middle" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_sticky.gif" width="19" height="18" /></td>
+								<td class="gensmall">${I18n.getMessage("ForumIndex.sticky")}</td>
+							</tr>
+
+							<tr>
+								<td align="middle" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_lock_new.gif" width="19" height="18" /></td>
+								<td class="gensmall">${I18n.getMessage("ForumIndex.newMessagesBlocked")}</td>
+								<td>&nbsp;&nbsp;</td>
+								<td align="middle" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_lock.gif" width="19" height="18" /></td>
+								<td class="gensmall">${I18n.getMessage("ForumIndex.noNewMessagesBlocked")}</td>
+								<td>&nbsp;&nbsp;</td>
+								<td colspan="2"></td>
+							</t>
+						</table>
+					</td>
+					<td align="right"><span class="gensmall"></span></td>
+				</tr>
+			</table>
     </TD></TR></TABLE>

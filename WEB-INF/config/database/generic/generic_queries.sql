@@ -260,31 +260,30 @@ SearchModel.searchByWord = SELECT post_id FROM jforum_search_wordmatch wm, jforu
 	WHERE wm.word_id = w.word_id \
 	AND w.word LIKE ?
 	
-SearchModel.insertTopicsIds = INSERT INTO jforum_search_results ( topic_id, session, time ) SELECT DISTINCT t.topic_id, ?, NOW() FROM jforum_topics t, jforum_posts p \
+SearchModel.insertTopicsIds = INSERT INTO jforum_search_results ( topic_id, session, search_time ) SELECT DISTINCT t.topic_id, ?, NOW() FROM jforum_topics t, jforum_posts p \
 	WHERE t.topic_id = p.topic_id \
 	AND p.post_id IN (:posts:)
 	
 SearchModel.selectTopicData = INSERT INTO jforum_search_topics (topic_id, forum_id, topic_title, user_id, topic_time, \
-	topic_views, topic_status, topic_replies, topic_vote, topic_type, topic_first_post_id, topic_last_post_id, moderated, session, time) \
+	topic_views, topic_status, topic_replies, topic_vote, topic_type, topic_first_post_id, topic_last_post_id, moderated, session, search_time) \
 	SELECT t.topic_id, t.forum_id, t.topic_title, t.user_id, t.topic_time, \
 	t.topic_views, t.topic_status, t.topic_replies, t.topic_vote, t.topic_type, t.topic_first_post_id, t.topic_last_post_id, t.moderated, ?, NOW() \
 	FROM jforum_topics t, jforum_search_results s \
 	WHERE t.topic_id = s.topic_id \
 	AND s.session = ?
 	
-SearchModel.cleanSearchResults = DELETE FROM jforum_search_results WHERE session = ? OR time < DATE_SUB(NOW(), INTERVAL 1 HOUR)
-SearchModel.cleanSearchTopics = DELETE FROM jforum_search_topics WHERE session = ? OR time < DATE_SUB(NOW(), INTERVAL 1 HOUR)
+SearchModel.cleanSearchResults = DELETE FROM jforum_search_results WHERE session = ? OR search_time < DATE_SUB(NOW(), INTERVAL 1 HOUR)
+SearchModel.cleanSearchTopics = DELETE FROM jforum_search_topics WHERE session = ? OR search_time < DATE_SUB(NOW(), INTERVAL 1 HOUR)
 	
-SearchModel.searchByTime = INSERT INTO jforum_search_results (topic_id, session, time) SELECT DISTINCT t.topic_id, ?, NOW() FROM jforum_topics t, jforum_posts p \
+SearchModel.searchByTime = INSERT INTO jforum_search_results (topic_id, session, search_time) SELECT DISTINCT t.topic_id, ?, NOW() FROM jforum_topics t, jforum_posts p \
 	WHERE t.topic_id = p.topic_id \
 	AND p.post_time > ?
 
 SearchModel.associateWordToPost = INSERT INTO jforum_search_wordmatch (post_id, word_id, title_match) VALUES (?, ?, ?)
 
-SearchModel.searchExistingWord = SELECT w.word_id, wm.post_id \
-	FROM jforum_search_words w \
-	LEFT JOIN jforum_search_wordmatch wm ON wm.word_id = w.word_id \
-	WHERE w.word_hash = ?
+SearchModel.searchExistingWord = SELECT w.word_id FROM jforum_search_words w WHERE w.word_hash = ?
+	
+SearchModel.searchExistingAssociation = SELECT post_id FROM jforum_search_wordmatch WHERE word_id = ? AND post_id = ?
 
 # ##########
 # TreeGroup

@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) 2003, 2004 Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -58,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchModel.java,v 1.10 2004/10/04 10:08:17 marcwick Exp $
+ * @version $Id: SearchModel.java,v 1.11 2004/10/25 20:52:08 rafaelsteil Exp $
  */
 public class SearchModel extends AutoKeys implements net.jforum.model.SearchModel	
 {
@@ -212,18 +212,24 @@ public class SearchModel extends AutoKeys implements net.jforum.model.SearchMode
 	public void insertSearchWords(Post post) throws Exception
 	{
 		PreparedStatement insert = this.getStatementForAutoKeys("SearchModel.insertWords");
-		PreparedStatement existing = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.searchExistingWord"));
-
-		PreparedStatement wordToPost = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.associateWordToPost"));
+		PreparedStatement existing = JForum.getConnection().prepareStatement(
+						SystemGlobals.getSql("SearchModel.searchExistingWord"));
+		
+		PreparedStatement existingAssociation = JForum.getConnection().prepareStatement(
+						SystemGlobals.getSql("SearchModel.searchExistingAssociation"));
+		existingAssociation.setInt(2, post.getId());
+		
+		PreparedStatement wordToPost = JForum.getConnection().prepareStatement(
+						SystemGlobals.getSql("SearchModel.associateWordToPost"));
 		wordToPost.setInt(1, post.getId());
 		
 		String str = post.getText() +" "+ post.getSubject();
-		
-		String[] words = str.split(" ");
+		String[] words = str.toLowerCase().replaceAll("[\\.\\\\\\/~^&\\(\\)-_+=!@#$%\"\'\\[\\]\\{\\}?<:>,*]", " ").split(" ");
 						
 		for (int i = 0; i < words.length; i++) {
+			words[i] = words[i].trim();
 			// Skip words less than 3 chars
-			if (words[i].trim().length() < 3) {
+			if (words[i].length() < 3) {
 				continue;
 			}
 			
@@ -231,31 +237,28 @@ public class SearchModel extends AutoKeys implements net.jforum.model.SearchMode
 			int hash = words[i].hashCode();
 			existing.setInt(1, hash);
 			ResultSet rs = existing.executeQuery();
-			
-			if (!rs.next()) {
-				insert.setInt(1, hash);
-				
-				String[] splitedWord = words[i].toLowerCase().replaceAll("[\\.\\\\\\/~^&\\(\\)-_+=!@#$%\"\'\\[\\]\\{\\}?<:>,*]", " ").split(" ");
-				
-				for (int j = 0; j < splitedWord.length; j++) {
-					if (splitedWord[j].trim().length() < 3) {
-						continue;
-					}
-					
-					insert.setString(2, splitedWord[j]);
 
-					int tmpId = this.executeAutoKeysQuery(insert);
-					
-					this.associateWordToPost(wordToPost, splitedWord[j], tmpId, post);
-				}
+			if (!rs.next()) {
+				// The word is not in the database. Insert it now
+				insert.setInt(1, hash);
+				insert.setString(2, words[i]);
+				int wordId = this.executeAutoKeysQuery(insert);
+
+				// Associate the current word to the post
+				this.associateWordToPost(wordToPost, words[i], wordId, post);
 			}
 			else {
-				int postId = rs.getInt("post_id");
-				if (postId == 0) {
-					insert.setInt(1, post.getId());
-					insert.setInt(2, hash);
-					insert.executeUpdate();
+				// The word is already in the database ( jforum_search_words )
+				// Check then if the current post is not already associated to the word
+				int wordId = rs.getInt("word_id");
+				existingAssociation.setInt(1, wordId);
+				
+				ResultSet rsa = existingAssociation.executeQuery();
+				if (!rsa.next()) {
+					// Assoacite the post to the word
+					this.associateWordToPost(wordToPost, words[i], wordId, post);
 				}
+				rsa.close();
 			}
 			
 			rs.close();
@@ -266,9 +269,9 @@ public class SearchModel extends AutoKeys implements net.jforum.model.SearchMode
 		wordToPost.close();
 	}
 	
-	private void associateWordToPost(PreparedStatement p, String word, int hash, Post post) throws Exception
+	private void associateWordToPost(PreparedStatement p, String word, int wordId, Post post) throws Exception
 	{
-		p.setInt(2, hash);
+		p.setInt(2, wordId);
 		
 		String subject = post.getSubject();
 		int inSubject = 0;

@@ -64,7 +64,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.4 2004/10/20 03:19:46 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.5 2004/10/25 20:52:09 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -176,7 +176,7 @@ public class SearchAction extends Command
 		JForum.getContext().put("author", author);
 		JForum.getContext().put("postTime", postTime);
 		
-		JForum.getContext().put("totalPages", new Double(Math.floor(totalTopics / recordsPerPage)));
+		JForum.getContext().put("totalPages", new Double(Math.ceil((float)totalTopics / recordsPerPage)));
 		JForum.getContext().put("recordsPerPage", new Integer(recordsPerPage));
 		JForum.getContext().put("postsPerPage", new Integer(SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE)));
 		JForum.getContext().put("totalRecords", new Integer(totalTopics));

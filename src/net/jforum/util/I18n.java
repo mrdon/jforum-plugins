@@ -63,7 +63,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: I18n.java,v 1.19 2004/10/05 12:32:53 marcwick Exp $
+ * @version $Id: I18n.java,v 1.20 2004/10/25 20:52:09 rafaelsteil Exp $
  */
 public class I18n {
     private static I18n classInstance = new I18n();
@@ -256,5 +256,16 @@ public class I18n {
      */
     public static boolean contains(String language) {
         return messagesMap.containsKey(language);
+    }
+    
+    /**
+     * Check if the given language exist.
+     * 
+     * @param language The language to check
+     * @return <code>true</code> if the language is a valid and registered
+     * translation.
+     */
+    public static boolean languageExists(String language) {
+    	return (localeNames.getProperty(language) != null);
     }
 }

@@ -71,7 +71,7 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.9 2004/10/24 21:59:24 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.10 2004/10/25 20:52:09 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -199,6 +199,15 @@ public class ForumAction extends Command
 			else {
 				registered++;
 				onlineUsersList.add(us);
+			}
+		}
+		
+		// Check for an optional language parameter
+		UserSession currentUser = SessionFacade.getUserSession();
+		if (currentUser.getUserId() == aid) {
+			String lang = JForum.getRequest().getParameter("lang");
+			if (lang != null && I18n.languageExists(lang)) {
+				currentUser.setLang(lang);
 			}
 		}
 
