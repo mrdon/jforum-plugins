@@ -37,13 +37,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: Apr 5, 2003 / 11:43:46 PM
- * net.jforum.drivers.mysql.UserModel.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: UserModel.java,v 1.4 2004/05/21 22:10:52 rafaelsteil Exp $
  */
-package net.jforum.drivers.mysql;
+package net.jforum.drivers.generic;
 
 import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
@@ -61,6 +58,7 @@ import net.jforum.util.SystemGlobals;
 
 /**
  * @author Rafael Steil
+ * @version $Id: UserModel.java,v 1.1 2004/05/23 15:39:57 rafaelsteil Exp $
  */
 public class UserModel implements net.jforum.model.UserModel 
 {

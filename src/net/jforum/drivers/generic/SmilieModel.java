@@ -37,13 +37,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 13/01/2004 / 12:02:54
- * net.jforum.drivers.mysql.SmilieModel.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: SmilieModel.java,v 1.2 2004/04/21 23:57:21 rafaelsteil Exp $
  */
-package net.jforum.drivers.mysql;
+package net.jforum.drivers.generic;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -57,6 +54,7 @@ import net.jforum.util.SystemGlobals;
 
 /**
  * @author Rafael Steil
+ * @version $Id: SmilieModel.java,v 1.1 2004/05/23 15:40:00 rafaelsteil Exp $
  */
 public class SmilieModel implements net.jforum.model.SmilieModel {
 

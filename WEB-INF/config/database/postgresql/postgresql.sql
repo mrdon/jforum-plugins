@@ -17,7 +17,7 @@ CategoryModel.selectAll = SELECT * FROM jforum_categories ORDER BY display_order
 CategoryModel.canDelete = SELECT COUNT(1) AS total FROM jforum_forums WHERE categories_id = ?
 CategoryModel.delete = DELETE FROM jforum_categories WHERE categories_id = ?
 CategoryModel.update = UPDATE jforum_categories SET title = ? WHERE categories_id = ?
-CategoryModel.addNew = INSERT INTO jforum_categories (title, display_order) VALUES (?, display_order + 1)
+CategoryModel.addNew = INSERT INTO jforum_categories (title, display_order) VALUES (?, NEXTVAL('jforum_categories_order_seq'))
 
 # #############
 # RankingModel
@@ -112,7 +112,7 @@ PostModel.selectAllByTopicByLimit = SELECT post_id, topic_id, forum_id, jforum_p
 	WHERE topic_id = ? \
 	AND jforum_posts.user_id = jforum_users.user_id \
 	ORDER BY post_time ASC \
-	LIMIT ?, ?
+	LIMIT ? OFFSET ?
 	
 PostModel.setForumByTopic = UPDATE jforum_posts SET forum_id = ? WHERE topic_id = ?
 
@@ -124,18 +124,22 @@ ForumModel.selectById = SELECT f.*, COUNT(p.post_id) AS total_posts \
 	LEFT JOIN jforum_topics t ON t.forum_id = f.forum_id \
 	LEFT JOIN jforum_posts p ON p.topic_id = t.topic_id \
 	WHERE f.forum_id = ? \
-	GROUP BY f.forum_id
+	GROUP BY f.categories_id, f.forum_id, \
+	      f.forum_name, f.forum_desc, f.forum_order, \
+	      f.forum_topics, f.forum_last_post_id, f.moderated
 
 ForumModel.selectAll = SELECT f.*, COUNT(p.post_id) AS total_posts \
 	FROM jforum_forums f \
 	LEFT JOIN jforum_topics t ON t.forum_id = f.forum_id \
 	LEFT JOIN jforum_posts p ON p.topic_id = t.topic_id \
-	GROUP BY f.forum_id
+	GROUP BY f.categories_id, f.forum_id, \
+	      f.forum_name, f.forum_desc, f.forum_order, \
+	      f.forum_topics, f.forum_last_post_id, f.moderated
 
 ForumModel.delete = DELETE FROM jforum_forums WHERE forum_id = ?
 ForumModel.update = UPDATE jforum_forums SET categories_id = ?, forum_name = ?, forum_desc = ?, moderated = ? WHERE forum_id = ?
 ForumModel.addNew = INSERT INTO jforum_forums (categories_id, forum_name, forum_desc, forum_order, moderated) VALUES (?, ?, ?, ?, ?)
-ForumModel.getMaxOrder = SELECT max(forum_order) as max FROM jforum_forums
+ForumModel.getMaxOrder = SELECT MAX(forum_order) as max FROM jforum_forums
 ForumModel.updateLastPost = UPDATE jforum_forums SET forum_last_post_id = ? WHERE forum_id = ?
 ForumModel.incrementTotalTopics = UPDATE jforum_forums SET forum_topics = forum_topics + ? WHERE forum_id = ?
 ForumModel.decrementTotalTopics = UPDATE jforum_forums SET forum_topics = forum_topics - ? WHERE forum_id = ?
@@ -181,7 +185,7 @@ TopicModel.selectAllByForumByLimit = SELECT t.*, u.username AS posted_by_usernam
 	AND p2.post_id = t.topic_last_post_id \
 	AND u2.user_id = p2.user_id \
 	ORDER BY t.topic_type DESC, t.topic_time DESC, t.topic_last_post_id DESC \
-	LIMIT ?, ?
+	LIMIT ? OFFSET ?
 	
 TopicModel.selectLastN = SELECT topic_title, topic_time, topic_id, topic_type FROM jforum_topics ORDER BY topic_time DESC LIMIT ?
 

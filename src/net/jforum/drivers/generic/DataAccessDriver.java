@@ -37,18 +37,17 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: Mar 3, 2003 / 2:19:47 PM
- * net.jforum.drivers.mysql.DataAccessDriver.java
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.drivers.mysql;
+package net.jforum.drivers.generic;
 
-import net.jforum.drivers.mysql.security.GroupSecurityModel;
-import net.jforum.drivers.mysql.security.UserSecurityModel;
+import net.jforum.drivers.generic.security.GroupSecurityModel;
+import net.jforum.drivers.generic.security.UserSecurityModel;
 
 /**
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.3 2004/05/21 00:24:09 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.1 2004/05/23 15:39:58 rafaelsteil Exp $
  */
 public class DataAccessDriver extends net.jforum.model.DataAccessDriver 
 {

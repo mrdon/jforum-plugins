@@ -37,13 +37,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: Mar 6, 2003 / 11:09:34 PM
- * net.jforum.drivers.mysql.CategoryModel.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: CategoryModel.java,v 1.2 2004/04/21 23:57:20 rafaelsteil Exp $
  */
-package net.jforum.drivers.mysql;
+package net.jforum.drivers.generic;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -55,6 +52,7 @@ import net.jforum.util.SystemGlobals;
 
 /**
  * @author Rafael Steil
+ * @version $Id: CategoryModel.java,v 1.1 2004/05/23 15:39:59 rafaelsteil Exp $
  */
 public class CategoryModel implements net.jforum.model.CategoryModel 
 {

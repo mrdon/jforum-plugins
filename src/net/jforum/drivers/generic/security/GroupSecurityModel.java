@@ -37,13 +37,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 19/03/2004 - 18:44:56
- * net.jforum.drivers.mysql.security.GroupSecurityModel.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: GroupSecurityModel.java,v 1.2 2004/04/21 23:57:39 rafaelsteil Exp $
  */
-package net.jforum.drivers.mysql.security;
+package net.jforum.drivers.generic.security;
 
 import java.sql.PreparedStatement;
 
@@ -55,6 +52,7 @@ import net.jforum.util.SystemGlobals;
 
 /**
  * @author Rafael Steil
+ * @version $Id: GroupSecurityModel.java,v 1.1 2004/05/23 15:40:05 rafaelsteil Exp $
  */
 public class GroupSecurityModel implements net.jforum.model.security.GroupSecurityModel 
 {

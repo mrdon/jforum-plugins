@@ -37,13 +37,12 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 19/03/2004 - 18:45:54
- * net.jforum.drivers.mysql.security.SecurityCommon.java
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: SecurityCommon.java,v 1.2 2004/04/21 23:57:39 rafaelsteil Exp $
+ * 
  */
-package net.jforum.drivers.mysql.security;
+package net.jforum.drivers.generic.security;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -59,6 +58,7 @@ import net.jforum.util.SystemGlobals;
 
 /**
  * @author Rafael Steil
+ * @version $Id: SecurityCommon.java,v 1.1 2004/05/23 15:40:04 rafaelsteil Exp $
  */
 class SecurityCommon 
 {

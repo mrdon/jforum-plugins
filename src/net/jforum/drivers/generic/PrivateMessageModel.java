@@ -37,11 +37,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 20/05/2004 - 15:51:10
- * net.jforum.drivers.mysql.PrivateMessageModel.java
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.drivers.mysql;
+package net.jforum.drivers.generic;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -59,7 +58,7 @@ import net.jforum.util.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageModel.java,v 1.2 2004/05/21 22:10:53 rafaelsteil Exp $
+ * @version $Id: PrivateMessageModel.java,v 1.1 2004/05/23 15:39:59 rafaelsteil Exp $
  */
 public class PrivateMessageModel implements net.jforum.model.PrivateMessageModel
 {

@@ -37,11 +37,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: Mar 28, 2003 / 22:57:43 PM
- * net.jforum.drivers.mysql.PostModel.java
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.drivers.mysql;
+package net.jforum.drivers.generic;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -57,7 +56,7 @@ import net.jforum.util.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: PostModel.java,v 1.5 2004/05/21 22:10:52 rafaelsteil Exp $
+ * @version $Id: PostModel.java,v 1.1 2004/05/23 15:39:57 rafaelsteil Exp $
  */
 public class PostModel implements net.jforum.model.PostModel 
 {
@@ -74,30 +73,39 @@ public class PostModel implements net.jforum.model.PostModel
 		Post post = new Post();
 		
 		if (rs.next()) {
-			post.setId(rs.getInt("post_id"));
-			post.setTopicId(rs.getInt("topic_id"));
-			post.setForumId(rs.getInt("forum_id"));
-			post.setUserId(rs.getInt("user_id"));
-			post.setTime(rs.getLong("post_time"));
-			post.setUserIp(rs.getString("poster_ip"));
-			post.setBbCodeEnabled(rs.getInt("enable_bbcode")>0);
-			post.setHtmlEnabled(rs.getInt("enable_html")>0);
-			post.setSmiliesEnabled(rs.getInt("enable_smilies")>0);
-			post.setSignatureEnabled(rs.getInt("enable_sig")>0);
-			post.setEditTime(rs.getLong("post_edit_time"));
-			post.setEditCount(rs.getInt("post_edit_count"));
-			post.setSubject(rs.getString("post_subject"));
-			post.setText(rs.getString("post_text"));
-			post.setPostUsername(rs.getString("username"));
-			
-			SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue("dateTimeFormat").toString());
-			GregorianCalendar gc = new GregorianCalendar();
-			gc.setTimeInMillis(rs.getLong("post_time"));
-			post.setFormatedTime(df.format(gc.getTime()));
+			post = this.makePost(rs);
 		}
 		
 		rs.close();
 		p.close();
+		
+		return post;
+	}
+	
+	protected Post makePost(ResultSet rs) throws Exception
+	{
+		Post post = new Post();
+		post.setId(rs.getInt("post_id"));
+		post.setTopicId(rs.getInt("topic_id"));
+		post.setForumId(rs.getInt("forum_id"));
+		post.setUserId(rs.getInt("user_id"));
+		post.setTime(rs.getLong("post_time"));
+		post.setUserIp(rs.getString("poster_ip"));
+		post.setBbCodeEnabled(rs.getInt("enable_bbcode") > 0);
+		post.setHtmlEnabled(rs.getInt("enable_html") > 0);
+		post.setSmiliesEnabled(rs.getInt("enable_smilies") > 0);
+		post.setSignatureEnabled(rs.getInt("enable_sig") > 0);
+		post.setEditTime(rs.getLong("post_edit_time"));
+		post.setEditCount(rs.getInt("post_edit_count"));
+		post.setSubject(rs.getString("post_subject"));
+		post.setText(rs.getString("post_text"));
+		post.setPostUsername(rs.getString("username"));
+		
+		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue("dateTimeFormat").toString());
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTimeInMillis(rs.getLong("post_time"));
+
+		post.setFormatedTime(df.format(gc.getTime()));
 		
 		return post;
 	}
@@ -230,30 +238,7 @@ public class PostModel implements net.jforum.model.PostModel
 		ResultSet rs = p.executeQuery();
 						
 		while (rs.next()) {
-			Post post = new Post();
-			
-			post.setId(rs.getInt("post_id"));
-			post.setTopicId(rs.getInt("topic_id"));
-			post.setForumId(rs.getInt("forum_id"));
-			post.setUserId(rs.getInt("user_id"));
-			post.setTime(rs.getLong("post_time"));
-			post.setUserIp(rs.getString("poster_ip"));
-			post.setBbCodeEnabled(rs.getInt("enable_bbcode")>0);
-			post.setHtmlEnabled(rs.getInt("enable_html")>0);
-			post.setSmiliesEnabled(rs.getInt("enable_smilies")>0);
-			post.setSignatureEnabled(rs.getInt("enable_sig")>0);
-			post.setEditTime(rs.getLong("post_edit_time"));
-			post.setEditCount(rs.getInt("post_edit_count"));
-			post.setSubject(rs.getString("post_subject"));
-			post.setText(rs.getString("post_text"));
-			
-			SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue("dateTimeFormat").toString());			
-			GregorianCalendar gc = new GregorianCalendar();
-			gc.setTimeInMillis(rs.getLong("post_time"));
-		
-			post.setFormatedTime(df.format(gc.getTime()));
-			
-			l.add(post);			
+			l.add(this.makePost(rs));			
 		}
 		
 		rs.close();

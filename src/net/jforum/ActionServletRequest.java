@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: Mar 16, 2003 / 1:31:30 AM
- * net.jforum.ActionServletRequest.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: ActionServletRequest.java,v 1.2 2004/04/21 23:57:40 rafaelsteil Exp $
  */
 package net.jforum;
 
@@ -65,6 +62,7 @@ import org.apache.commons.fileupload.FileUploadException;
 
 /**
  * @author Rafael Steil
+ * @version $Id: ActionServletRequest.java,v 1.3 2004/05/23 15:40:02 rafaelsteil Exp $
  */
 public class ActionServletRequest extends HttpServletRequestWrapper 
 {

@@ -36,47 +36,42 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * This file creation date: May 3, 2003 / 2:39:52 PM
- * net.jforum.drivers.mysql.TreeGroupModel.java
+ * Created on 24/05/2004 12:25:35
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: TreeGroupModel.java,v 1.2 2004/04/21 23:57:20 rafaelsteil Exp $
  */
-package net.jforum.drivers.mysql;
+package net.jforum.drivers.postgresql;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import net.jforum.JForum;
-import net.jforum.util.GroupNode;
 import net.jforum.util.SystemGlobals;
 
 /**
  * @author Rafael Steil
+ * @version $Id: TopicModel.java,v 1.1 2004/05/23 15:40:02 rafaelsteil Exp $
  */
-public class TreeGroupModel implements net.jforum.model.TreeGroupModel 
+public class TopicModel extends net.jforum.drivers.generic.TopicModel
 {
-	/* 
-	 * @see net.jforum.model.TreeGroupModel#selectGroups(int)
+	/** 
+	 * @see net.jforum.model.TopicModel#selectAllByForumByLimit(int, int, int)
 	 */
-	public ArrayList selectGroups(int parentId) throws Exception 
+	public ArrayList selectAllByForumByLimit(int forumId, int startFrom, int count) throws Exception
 	{
-		ArrayList list = new ArrayList();
-		
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("TreeGroup.selectGroup"));
-		p.setInt(1, parentId);
+		ArrayList l = new ArrayList();
+
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("TopicModel.selectAllByForumByLimit"));
+		p.setInt(1, forumId);
+		p.setInt(2, count);
+		p.setInt(3, startFrom);
 		
 		ResultSet rs = p.executeQuery();
-		while (rs.next()) {
-			GroupNode n = new GroupNode();
-			n.setName(rs.getString("group_name"));
-			n.setId(rs.getInt("group_id"));
-			
-			list.add(n);		
-		}
 		
-		return list;
+		l = super.fillTopicsData(rs);
+		
+		rs.close();
+		return l;	
 	}
 }

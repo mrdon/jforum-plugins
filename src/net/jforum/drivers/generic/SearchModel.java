@@ -37,13 +37,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 25/02/2004 - 19:32:42
- * net.jforum.drivers.mysql.SearchModel.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: SearchModel.java,v 1.8 2004/04/25 19:26:46 rafaelsteil Exp $
  */
-package net.jforum.drivers.mysql;
+package net.jforum.drivers.generic;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -61,6 +58,7 @@ import net.jforum.util.SystemGlobals;
 
 /**
  * @author Rafael Steil
+ * @version $Id: SearchModel.java,v 1.1 2004/05/23 15:39:59 rafaelsteil Exp $
  */
 public class SearchModel implements net.jforum.model.SearchModel 
 {

@@ -37,13 +37,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  *
  * This file creation date: 30/03/2003 / 02:37:20
- * net.jforum.drivers.mysql.ForumModel.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: ForumModel.java,v 1.3 2004/04/21 23:57:20 rafaelsteil Exp $
  */
-package net.jforum.drivers.mysql;
+package net.jforum.drivers.generic;
 
 import net.jforum.JForum;
 import net.jforum.entities.Forum;
@@ -62,6 +59,7 @@ import java.util.HashMap;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
+ * @version $Id: ForumModel.java,v 1.1 2004/05/23 15:39:57 rafaelsteil Exp $
  */
 public class ForumModel implements net.jforum.model.ForumModel 
 {
