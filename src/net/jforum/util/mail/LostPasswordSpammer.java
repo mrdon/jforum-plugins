@@ -52,8 +52,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: LostPasswordSpammer.java,v 1.5 2004/07/04 19:31:14 rafaelsteil
- *          Exp $
+ * @version $Id: LostPasswordSpammer.java,v 1.7 2004/09/30 19:09:32 rafaelsteil Exp $
  */
 public class LostPasswordSpammer extends Spammer {
 	public LostPasswordSpammer(User user, String hash) {
@@ -62,7 +61,8 @@ public class LostPasswordSpammer extends Spammer {
 			forumLink += "/";
 		}
 
-		String url = forumLink + "user/recoverPassword/" + hash + "."
+		String url = forumLink + "user/recoverPassword/" 
+				+ hash 
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
 		SimpleHash params = new SimpleHash();
 		params.put("url", url);

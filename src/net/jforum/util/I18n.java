@@ -64,7 +64,7 @@ import net.jforum.util.preferences.SystemGlobals;
  *  
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: I18n.java,v 1.16 2004/09/28 14:34:19 rafaelsteil Exp $
+ * @version $Id: I18n.java,v 1.17 2004/09/30 19:09:32 rafaelsteil Exp $
  */
 public class I18n 
 {
@@ -99,8 +99,12 @@ public class I18n
 	 */
 	public static synchronized void load() throws IOException
 	{
-		baseDir = SystemGlobals.getApplicationResourceDir() + "/config/languages/";
-		localeNames.load(new FileInputStream(baseDir + "locales.properties"));
+		baseDir = SystemGlobals.getApplicationResourceDir() 
+			+ "/" 
+			+ SystemGlobals.getValue(ConfigKeys.LOCALES_DIR);
+
+		loadLocales();
+
 		defaultName = SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT_ADMIN);
 		load(defaultName, null);
 		
@@ -110,11 +114,25 @@ public class I18n
 		}
 	}
 	
-	private static void load(String localeName, String mergeWith) throws IOException
+	private static void loadLocales() throws IOException
 	{
+		localeNames.load(new FileInputStream(baseDir 
+						+ SystemGlobals.getValue(ConfigKeys.LOCALES_NAMES)));
+	}
+	
+	static void load(String localeName, String mergeWith) throws IOException
+	{
+		if (localeNames.size() == 0) {
+			loadLocales();
+		}
+		
 		Properties p = new Properties();
 
 		if (mergeWith != null) {
+			if (!I18n.contains(mergeWith)) {
+				load(mergeWith, null);
+			}
+			
 			p.putAll((Properties)messagesMap.get(mergeWith));
 		}
 
@@ -127,6 +145,13 @@ public class I18n
 	public static void load(String localeName) throws IOException
 	{
 		load(localeName, SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT));
+	}
+	
+	public static void reset()
+	{
+		messagesMap = new HashMap();
+		localeNames = new Properties();
+		defaultName = null;
 	}
 	
 	private static void watchForChanges(final String localeName) throws IOException
@@ -212,8 +237,11 @@ public class I18n
 	
 	public static String getMessage(String m)
 	{
-		UserSession us = SessionFacade.getUserSession();
-
+		return getMessage(m, SessionFacade.getUserSession());
+	}
+	
+	public static String getMessage(String m, UserSession us)
+	{
 		if (us == null || us.getLang() == null || us.getLang().equals("")) {
 			return getMessage(defaultName, m);
 		}

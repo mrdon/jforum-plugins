@@ -53,8 +53,7 @@ import net.sourceforge.jwebunit.WebTestCase;
 
 /**
  * @author Marc Wick
- * @version $Id: AbstractWebTestCase.java,v 1.3 2004/09/24 12:54:37 rafaelsteil
- *          Exp $
+ * @version $Id: AbstractWebTestCase.java,v 1.6 2004/09/30 19:09:31 rafaelsteil Exp $
  */
 public abstract class AbstractWebTestCase extends WebTestCase {
 	public static class SimpleHTMLParserListener implements

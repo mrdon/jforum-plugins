@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.19 2004/09/29 21:36:30 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.20 2004/09/30 19:09:33 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -86,9 +86,9 @@ public class ConfigKeys {
 	public static final String SQL_QUERIES_DRIVER = "sql.queries.driver";
 
 	public static final String ENCODING = "encoding";
-	public static final String SERVLET_NAME = "servlet.name";	// transient!
-	public static final String DEFAULT_CONFIG = "default.config"; // transient
-	public static final String CONTEXT_NAME = "context.name"; // transient
+	public static final String SERVLET_NAME = "servlet.name";
+	public static final String DEFAULT_CONFIG = "default.config";
+	public static final String CONTEXT_NAME = "context.name";
 	public static final String SERVLET_EXTENSION = "servlet.extension";
 	public static final String COOKIE_NAME_DATA = "cookie.name.data";
 	public static final String COOKIE_NAME_USER = "cookie.name.user";
@@ -124,6 +124,8 @@ public class ConfigKeys {
 
 	public static final String I18N_DEFAULT = "i18n.default";
 	public static final String I18N_DEFAULT_ADMIN = "i18n.default.admin";
+	public static final String LOCALES_DIR = "locales.dir";
+	public static final String LOCALES_NAMES = "locales.names";
 
 	public static final String MAIL_LOST_PASSWORD_MESSAGE_FILE = "mail.lostPassword.messageFile";
 	public static final String MAIL_NOTIFY_ANSWERS = "mail.notify.answers";
