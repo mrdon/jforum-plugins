@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ImageUtils.java,v 1.5 2004/04/21 23:31:16 rafaelsteil Exp $
+ * $Id: ImageUtils.java,v 1.6 2004/04/21 23:32:18 rafaelsteil Exp $
  */
 package net.jforum.util.image;
 
