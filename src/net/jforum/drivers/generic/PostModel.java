@@ -51,12 +51,13 @@ import java.util.GregorianCalendar;
 
 import net.jforum.JForum;
 import net.jforum.entities.Post;
+import net.jforum.model.DataAccessDriver;
 import net.jforum.util.SystemGlobals;
 
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: PostModel.java,v 1.2 2004/05/24 02:25:16 rafaelsteil Exp $
+ * @version $Id: PostModel.java,v 1.3 2004/05/24 02:43:09 rafaelsteil Exp $
  */
 public class PostModel extends CommonDBTask implements net.jforum.model.PostModel 
 {
@@ -204,7 +205,7 @@ public class PostModel extends CommonDBTask implements net.jforum.model.PostMode
 		p.close();
 		
 		// Tokenize the words for search
-		new SearchModel().insertSearchWords(post);
+		DataAccessDriver.getInstance().newSearchModel().insertSearchWords(post);
 		
 		return postId;
 	}

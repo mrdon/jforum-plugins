@@ -42,13 +42,12 @@
  */
 package net.jforum.drivers.postgresql;
 
-import net.jforum.drivers.generic.PostModel;
 import net.jforum.drivers.postgresql.security.GroupSecurityModel;
 import net.jforum.drivers.postgresql.security.UserSecurityModel;
 
 /**
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.2 2004/05/24 02:25:19 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.3 2004/05/24 02:43:09 rafaelsteil Exp $
  */
 public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDriver
 {

@@ -41,11 +41,13 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: SearchModel.java,v 1.3 2004/04/21 23:57:25 rafaelsteil Exp $
+ * $Id: SearchModel.java,v 1.4 2004/05/24 02:43:07 rafaelsteil Exp $
  */
 package net.jforum.model;
 
 import java.util.ArrayList;
+
+import net.jforum.entities.Post;
 
 /**
  * @author Rafael Steil
@@ -67,4 +69,6 @@ public interface SearchModel
 	 * @throws Exception
 	 */
 	public void cleanSearch() throws Exception;
+	
+	public void insertSearchWords(Post post) throws Exception;
 }

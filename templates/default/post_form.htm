@@ -352,7 +352,7 @@ function validatePostForm(f)
 			<#elseif pmReply?default(false)>
 				<#assign subject = pm.post.subject?html/>
 			</#if>
-          <TD class=row2 width="78%"><SPAN class=gen><INPUT class=post style="WIDTH: 450px" tabIndex=2 maxLength=60 size=45 name=subject value="${subject}"> </SPAN></TD>
+          <TD class=row2 width="78%"><SPAN class=gen><INPUT class=post style="WIDTH: 450px" tabIndex=2 maxLength=60 size=45 name=subject value="${subject?default("")}"> </SPAN></TD>
 		  </TR>
         <TR>
           <TD class=row1 vAlign=top>
