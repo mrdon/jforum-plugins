@@ -37,7 +37,6 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 20/05/2004 - 21:05:45
- * net.jforum.view.forum.PrivateMessageVH.java
  * The JForum Project
  * http://www.jforum.net
  */
@@ -58,7 +57,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageVH.java,v 1.3 2004/05/21 22:52:44 rafaelsteil Exp $
+ * @version $Id: PrivateMessageVH.java,v 1.4 2004/05/23 17:08:06 rafaelsteil Exp $
  */
 public class PrivateMessageVH extends Command
 {
@@ -187,16 +186,26 @@ public class PrivateMessageVH extends Command
 		pm.setId(id);
 		
 		pm = DataAccessDriver.getInstance().newPrivateMessageModel().selectById(pm);
-		pm.getPost().setText(PostCommon.preparePostText(pm.getPost()).getText());
 		
-		// Update the message status, if needed
-		if (pm.getType() == PrivateMessageType.NEW) {
-			pm.setType(PrivateMessageType.READ);
-			DataAccessDriver.getInstance().newPrivateMessageModel().updateType(pm);
+		// Don't allow the read of messages that don't belongs
+		// to the current user
+		int userId = SessionFacade.getUserSession().getUserId();
+		if (pm.getToUser().getId() == userId || pm.getFromUser().getId() == userId) {
+			pm.getPost().setText(PostCommon.preparePostText(pm.getPost()).getText());
+			
+			// Update the message status, if needed
+			if (pm.getType() == PrivateMessageType.NEW) {
+				pm.setType(PrivateMessageType.READ);
+				DataAccessDriver.getInstance().newPrivateMessageModel().updateType(pm);
+			}
+			
+			JForum.getContext().put("pm", pm);
+			JForum.getContext().put("moduleAction", "pm_read_message.htm");
 		}
-		
-		JForum.getContext().put("pm", pm);
-		JForum.getContext().put("moduleAction", "pm_read_message.htm");
+		else {
+			JForum.getContext().put("moduleAction", "message.htm");
+			JForum.getContext().put("message", I18n.getMessage("PrivateMessage.readDenied"));
+		}
 	}
 	
 	public void delete() throws Exception
