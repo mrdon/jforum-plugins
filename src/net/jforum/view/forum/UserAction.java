@@ -72,7 +72,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.22 2005/01/04 03:31:18 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.23 2005/01/05 00:24:56 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -122,6 +122,8 @@ public class UserAction extends Command
 	{
 		this.context.put("action", "insertSave");
 		this.context.put("moduleAction", "user_new.htm");
+		this.context.put("username", this.request.getParameter("username"));
+		this.context.put("email", this.request.getParameter("email"));
 		
 		if (SystemGlobals.getBoolValue(ConfigKeys.CAPTCHA_REGISTRATION)){
 			//create a new image captcha

@@ -61,12 +61,12 @@ function validateRegistrationForm(f)
         
 	<tr>
 		<td class="row1" width="38%"><span class="gen">${I18n.getMessage("User.user")}: *</span></td>
-		<td class="row2"><input class="post" style="WIDTH: 200px" maxlength="25" size="25" name="username" /></td>
+		<td class="row2"><input class="post" type="text" style="WIDTH: 200px" maxlength="25" size="25" name="username" value="${username?default("")}"/></td>
 	</tr>
         
 	<tr>
 		<td class="row1"><span class="gen">${I18n.getMessage("User.emailAddress")}: *</span></td>
-		<td class="row2"><input class="post" style="WIDTH: 200px" maxlength="255" size="25" name="email" /></td>
+		<td class="row2"><input class="post" type="text" style="WIDTH: 200px" maxlength="255" size="25" name="email" value="${email?default("")}"/></td>
 	</tr>
         
 	<tr>
@@ -100,10 +100,6 @@ function validateRegistrationForm(f)
 			<input class="mainoption" type="submit" value="${I18n.getMessage("User.submit")}" name=submit />&nbsp;&nbsp;
 			<input class="liteoption" type="reset" value="${I18n.getMessage("User.reset")}" name=reset />
 		</td>
-	</tr>
-
-	<tr>
-		<td>&nbsp;</td>
 	</tr>
 </table>
 </form>

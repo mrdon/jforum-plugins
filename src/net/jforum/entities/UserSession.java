@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * Stores information about user's session.
  * 
  * @author Rafael Steil
- * @version $Id: UserSession.java,v 1.14 2004/12/30 00:08:00 rafaelsteil Exp $
+ * @version $Id: UserSession.java,v 1.15 2005/01/05 00:24:57 rafaelsteil Exp $
  */
 public class UserSession implements Serializable
 {
@@ -328,11 +328,12 @@ public class UserSession implements Serializable
 	 */
 	public boolean validateCaptchaResponse(String userResponse)
 	{
-		if (this.imageCaptcha != null) {
-			return (this.imageCaptcha.validateResponse(userResponse.toUpperCase())).booleanValue();
+		if (SystemGlobals.getBoolValue(ConfigKeys.CAPTCHA_REGISTRATION)
+				&& this.imageCaptcha != null) {
+			return this.imageCaptcha.validateResponse(userResponse.toUpperCase()).booleanValue();
 		}
 		
-		return false;
+		return true;
 	}
 
 	/**

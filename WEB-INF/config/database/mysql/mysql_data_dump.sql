@@ -13,7 +13,7 @@ SET @ADMIN_GROUP_ID = LAST_INSERT_ID();
 INSERT INTO jforum_users ( username, user_password, user_regdate ) VALUES ('Anonymous', 'nopass', NOW());
 SET @ANONYMOUS_ID = LAST_INSERT_ID();
 
-INSERT INTO jforum_users ( username, user_password, user_regdate ) VALUES ('Admin', '21232f297a57a5a743894a0e4a801fc3', NOW());
+INSERT INTO jforum_users ( username, user_password, user_regdate, user_posts ) VALUES ('Admin', '21232f297a57a5a743894a0e4a801fc3', NOW(), 1);
 SET @ADMIN_ID = LAST_INSERT_ID();
 
 #
@@ -106,3 +106,12 @@ INSERT INTO jforum_smilies VALUES (24,':?','<img src=\"#CONTEXT#/images/smilies/
 INSERT INTO jforum_smilies VALUES (25,':idea:','<img src=\"#CONTEXT#/images/smilies/8f7fb9dd46fb8ef86f81154a4feaada9.gif\" border=\"0\">','8f7fb9dd46fb8ef86f81154a4feaada9.gif');
 INSERT INTO jforum_smilies VALUES (26,':arrow:','<img src=\"#CONTEXT#/images/smilies/d6741711aa045b812616853b5507fd2a.gif\" border=\"0\">','d6741711aa045b812616853b5507fd2a.gif');
 INSERT INTO jforum_smilies VALUES (31,':mrgreen:','<img src=\"#CONTEXT#/images/smilies/ed515dbff23a0ee3241dcc0a601c9ed6.gif\" border=\"0\">','ed515dbff23a0ee3241dcc0a601c9ed6.gif');
+
+#
+# Demonstration Forum
+#
+INSERT INTO jforum_categories VALUES (1,'Category Test',1);
+INSERT INTO jforum_forums VALUES (1,1,'Test Forum','This is a test forum',1,1,1,0);
+INSERT INTO jforum_topics VALUES (1,1,'Welcome to JForum',2,'2005-01-04 16:59:54',1,0,0,0,0,1,1,0);
+INSERT INTO jforum_posts VALUES (1,1,1,2,'2005-01-04 16:59:54','127.0.0.1',1,0,1,1,'2005-01-04 17:01:45',2,1);
+INSERT INTO jforum_posts_text VALUES (1,'[b]Congratulations![/b]. You have completed the installation of JForum. \r\n\r\nTo start administering the board, login as [i]Admin / <the password you supplied in the installer>[/i] and access the [b]Admin Control Panel[/b] using the link that shows up in the bottom of the page. \r\n\r\nThere you will be able to create Categories, Forums and much more. \r\n\r\nFor more information and support, please access [url]http://www.jforum.net/community.htm[/url] and [url]http://www.jforum.net/help.htm[/url]\r\n\r\nThank you for choosing JForum.\r\n\r\nThe JForum Team.','Welcome to JForum');
