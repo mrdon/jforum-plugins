@@ -428,7 +428,7 @@ UserSessionModel.selectById = SELECT session_time, session_start, session_id FRO
 # ###########
 # KarmaModel
 # ###########
-KarmaModel.add = INSERT INTO jforum_karma (post_id, post_user_id, from_user_id, points, topic_id) VALUES (?, ?, ?, ?, ?)
+KarmaModel.add = INSERT INTO jforum_karma (post_id, post_user_id, from_user_id, points, topic_id, rate_date) VALUES (?, ?, ?, ?, ?, ?)
 KarmaModel.update = UPDATE jforum_karma SET points = ? WHERE karma_id = ?
 KarmaModel.getUserKarma = SELECT user_karma FROM jforum_users WHERE user_id = ?
 KarmaModel.updateUserKarma = UPDATE jforum_users SET user_karma = ? WHERE user_id = ?
