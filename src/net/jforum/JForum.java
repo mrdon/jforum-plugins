@@ -46,6 +46,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Date;
+import java.util.HashMap;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -68,7 +69,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.48 2004/11/14 16:28:45 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.49 2004/11/15 01:57:55 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -153,6 +154,7 @@ public class JForum extends JForumCommonServlet
 			}
 			
 			SessionFacade.add(userSession);
+			SessionFacade.setAttribute(ConfigKeys.TOPICS_TRACKING, new HashMap());
 		}
 		else {
 			SessionFacade.getUserSession().updateSessionTime();

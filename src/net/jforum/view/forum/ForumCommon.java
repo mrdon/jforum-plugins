@@ -78,7 +78,7 @@ public class ForumCommon
 		if (lpi.getPostTimeMillis() > 0) {
 			Integer topicId = new Integer(lpi.getTopicId());
 			
-			if (tracking.containsKey(topicId)) {
+			if (tracking != null && tracking.containsKey(topicId)) {
 				long readTime = ((Long)tracking.get(topicId)).longValue();
 				
 				if (lpi.getPostTimeMillis() > readTime) {
