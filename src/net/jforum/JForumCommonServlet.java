@@ -73,7 +73,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumCommonServlet.java,v 1.5 2004/09/22 23:18:23 rafaelsteil Exp $
+ * @version $Id: JForumCommonServlet.java,v 1.6 2004/09/23 14:11:47 rafaelsteil Exp $
  */
 public class JForumCommonServlet extends HttpServlet
 {
@@ -101,11 +101,14 @@ public class JForumCommonServlet extends HttpServlet
 			String appPath = config.getServletContext().getRealPath("");
             SystemGlobals.initGlobals(appPath, appPath + "/WEB-INF/config/SystemGlobals.properties", null);
             SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
-            SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG));
+            
+            if (new File(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG)).exists()) {
+            	SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG));
+            }
             
 			// Configure the template engine
 			Configuration templateCfg = new Configuration();
-			templateCfg.setDirectoryForTemplateLoading(new File(SystemGlobals.getApplicationPath() +"/templates"));
+			templateCfg.setDirectoryForTemplateLoading(new File(SystemGlobals.getApplicationPath() + "/templates"));
 			templateCfg.setTemplateUpdateDelay(0);
 			
 			this.loadModulesMapping(SystemGlobals.getApplicationResourceDir());

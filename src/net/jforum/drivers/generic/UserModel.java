@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.12 2004/09/19 05:13:17 rafaelsteil Exp $
+ * @version $Id: UserModel.java,v 1.13 2004/09/23 14:12:17 rafaelsteil Exp $
  */
 public class UserModel extends AutoKeys implements net.jforum.model.UserModel 
 {
@@ -226,7 +226,7 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		p.setString(2, user.getPassword());
 		p.setString(3, user.getEmail());
 		p.setString(4, Long.toString(System.currentTimeMillis()));
-		p.setString(5, user.getActivationKey());
+		p.setString(5, user.getActivationKey() == null ? "" : user.getActivationKey());
 	}
 
 	/** 

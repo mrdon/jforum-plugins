@@ -47,6 +47,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -66,7 +67,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author Pieter
- * @version $Id: SystemGlobals.java,v 1.8 2004/09/22 23:18:22 rafaelsteil Exp $
+ * @version $Id: SystemGlobals.java,v 1.9 2004/09/23 14:12:16 rafaelsteil Exp $
  */
 public class SystemGlobals implements VariableStore
 {
@@ -121,6 +122,11 @@ public class SystemGlobals implements VariableStore
 		
 		for (Iterator iter = additionalDefaultsList.iterator(); iter.hasNext(); ) {
 			this.loadAdditionalDefaultsImpl((String)iter.next());
+		}
+		
+		for (Enumeration e = defaults.keys(); e.hasMoreElements(); ) {
+			String key = (String)e.nextElement();
+			logger.info("defaults [" + key + "] = " + defaults.getProperty(key));
 		}
 	}
 	
