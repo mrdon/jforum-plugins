@@ -66,7 +66,7 @@ import net.jforum.view.forum.ModerationHelper;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.2 2004/12/19 15:17:14 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.3 2005/01/04 03:25:35 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
@@ -125,8 +125,7 @@ public class TopicsCommon
 		boolean checkUnread = (userSession.getUserId() 
 			!= SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID));
 		
-		Iterator iter = topics.iterator();
-		while (iter.hasNext()) {
+		for (Iterator iter = topics.iterator(); iter.hasNext(); ) {
 			boolean read = false;
 			Topic t = (Topic)iter.next();
 

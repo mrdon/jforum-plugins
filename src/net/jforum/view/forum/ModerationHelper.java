@@ -59,7 +59,7 @@ import net.jforum.view.forum.common.ForumCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationHelper.java,v 1.10 2004/11/30 01:18:50 rafaelsteil Exp $
+ * @version $Id: ModerationHelper.java,v 1.11 2005/01/04 03:25:36 rafaelsteil Exp $
  */
 public class ModerationHelper 
 {
@@ -177,7 +177,7 @@ public class ModerationHelper
 	{
 		JForum.getContext().put("moduleAction", "post_move.htm");
 		JForum.getContext().put("persistData", JForum.getRequest().getParameter("persistData"));
-		JForum.getContext().put("allCategories", ForumCommon.getAllCategoriesAndForums());
+		JForum.getContext().put("allCategories", ForumCommon.getAllCategoriesAndForums(false));
 		
 		String[] topics = JForum.getRequest().getParameterValues("topic_id");
 		if (topics.length > 0) {

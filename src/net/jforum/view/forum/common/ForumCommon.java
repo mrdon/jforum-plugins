@@ -43,6 +43,7 @@
 package net.jforum.view.forum.common;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -51,8 +52,9 @@ import java.util.Map;
 import net.jforum.SessionFacade;
 import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
-import net.jforum.entities.LastPostInfo;
+import net.jforum.entities.Topic;
 import net.jforum.entities.UserSession;
+import net.jforum.model.DataAccessDriver;
 import net.jforum.repository.ForumRepository;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -64,29 +66,39 @@ public class ForumCommon
 {
 	/**
 	 * Check if some forum has unread messages.
-	 * 
 	 * @param forum The forum to search for unread messages 
-	 * @param lpi <code>LastPostInfo</code> instance of the forum
 	 * @param tracking Tracking of the topics read by the user
 	 * @param lastVisit The last visit time of the current usre
+	 * 
 	 * @return The same <code>Forum</code> instance passed as argument, 
 	 * which then a call to "getUnread()" will return the "read" status
 	 * for this forum
 	 */
-	public static Forum checkUnreadPosts(Forum forum, LastPostInfo lpi, Map tracking, long lastVisit)
+	public static Forum checkUnreadPosts(Forum forum, Map tracking, long lastVisit) throws Exception
 	{
-		if (lpi.getPostTimeMillis() > 0) {
-			Integer topicId = new Integer(lpi.getTopicId());
+		List unreadTopics = DataAccessDriver.getInstance().newForumModel().checkUnreadTopics(
+				forum.getId(), lastVisit);
+		
+		if (unreadTopics.size() == 0) {
+			return forum;
+		}
+		
+		for (Iterator iter = unreadTopics.iterator(); iter.hasNext(); ) {
+			Topic t = (Topic)iter.next();
 			
+			Integer topicId = new Integer(t.getId());
 			if (tracking != null && tracking.containsKey(topicId)) {
 				long readTime = ((Long)tracking.get(topicId)).longValue();
-				
-				if (lpi.getPostTimeMillis() > readTime) {
+				if (t.getTime().compareTo(new Date(readTime)) > 0) {
 					forum.setUnread(true);
 				}
 			}
-			else if (lpi.getPostTimeMillis() > lastVisit) {
+			else {
 				forum.setUnread(true);
+			}
+			
+			if (forum.getUnread()) {
+				break;
 			}
 		}
 		
@@ -133,8 +145,7 @@ public class ForumCommon
 			for (Iterator tmpIterator = c.getForums().iterator(); tmpIterator.hasNext(); ) {
 				Forum f = (Forum)tmpIterator.next();
 
-				f = ForumCommon.checkUnreadPosts(f, ForumRepository.getLastPostInfo(f.getId()), 
-						tracking, lastVisit);
+				f = ForumCommon.checkUnreadPosts(f, tracking, lastVisit);
 			}
 			
 			returnCategories.add(c);

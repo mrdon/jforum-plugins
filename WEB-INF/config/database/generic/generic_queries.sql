@@ -179,6 +179,7 @@ ForumModel.lastPostInfo = SELECT post_time, p.topic_id, t.topic_replies, post_id
 ForumModel.totalMessages = SELECT COUNT(1) as total_messages FROM jforum_posts
 ForumModel.getMaxPostId = SELECT MAX(post_id) AS post_id FROM jforum_posts WHERE forum_id = ?
 ForumModel.moveTopics = UPDATE jforum_topics SET forum_id = ? WHERE topic_id = ?
+ForumModel.checkUnreadTopics = SELECT MAX(post_time), topic_id FROM jforum_posts WHERE forum_id = ? AND post_time > ? GROUP BY topic_id
 
 ForumModel.getUnreadForums = SELECT t.forum_id, t.topic_id, p.post_time \
 	FROM jforum_topics t, jforum_posts p \

@@ -50,7 +50,7 @@ import net.jforum.model.ForumModel;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumModelDummy.java,v 1.3 2004/12/19 22:14:40 rafaelsteil Exp $
+ * @version $Id: ForumModelDummy.java,v 1.4 2005/01/04 03:25:38 rafaelsteil Exp $
  */
 class ForumModelDummy implements ForumModel {
 
@@ -174,4 +174,12 @@ class ForumModelDummy implements ForumModel {
 
 	}
 
+	/**
+	 * @see net.jforum.model.ForumModel#checkUnreadTopics(int, long)
+	 */
+	public List checkUnreadTopics(int forumId, long lastVisit) throws Exception
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

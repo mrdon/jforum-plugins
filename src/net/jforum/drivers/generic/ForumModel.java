@@ -45,6 +45,7 @@ package net.jforum.drivers.generic;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,13 +53,14 @@ import java.util.List;
 import net.jforum.JForum;
 import net.jforum.entities.Forum;
 import net.jforum.entities.LastPostInfo;
+import net.jforum.entities.Topic;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: ForumModel.java,v 1.14 2004/12/27 19:59:06 rafaelsteil Exp $
+ * @version $Id: ForumModel.java,v 1.15 2005/01/04 03:25:36 rafaelsteil Exp $
  */
 public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel {
 	private Connection conn;
@@ -378,5 +380,31 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel 
 		this.incrementTotalTopics(toForumId, topics.length);
 
 		p.close();
+	}
+	
+	/**
+	 * @see net.jforum.model.ForumModel#hasUnreadTopics(int, long)
+	 */
+	public List checkUnreadTopics(int forumId, long lastVisit) throws Exception
+	{
+		List l = new ArrayList();
+		
+		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.checkUnreadTopics"));
+		p.setInt(1, forumId);
+		p.setTimestamp(2, new Timestamp(lastVisit));
+		
+		ResultSet rs = p.executeQuery();
+		while (rs.next()) {
+			Topic t = new Topic();
+			t.setId(rs.getInt("topic_id"));
+			t.setTime(rs.getTimestamp(1));
+			
+			l.add(t);
+		}
+		
+		rs.close();
+		p.close();
+		
+		return l;
 	}
 }

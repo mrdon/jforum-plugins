@@ -55,7 +55,7 @@ import net.jforum.entities.LastPostInfo;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: ForumModel.java,v 1.6 2004/12/19 22:14:40 rafaelsteil Exp $
+ * @version $Id: ForumModel.java,v 1.7 2005/01/04 03:25:37 rafaelsteil Exp $
  */
 public interface ForumModel 
 {
@@ -195,4 +195,15 @@ public interface ForumModel
 	 * @throws Exception
 	 */
 	public void moveTopics(String[] topics, int fromForumId, int toForumId) throws Exception;
+	
+	/**
+	 * Check if the forum has unread topics.
+	 * 
+	 * @param forumId The forum's id to check
+	 * @param lastVisit The last visit time the user has seen the forum
+	 * @return An <code>java.util.List</code> instance, where each entry is a
+	 * <code>net.jforum.entities.Topic</code> instance. 
+	 * @throws Exception
+	 */
+	public List checkUnreadTopics(int forumId, long lastVisit) throws Exception;
 }

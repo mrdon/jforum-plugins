@@ -72,7 +72,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.24 2004/12/29 17:18:41 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.25 2005/01/04 03:25:35 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -171,7 +171,7 @@ public class ForumAction extends Command
 
 	public void show() throws Exception
 	{
-		int forumId = Integer.parseInt(this.request.getParameter("forum_id"));
+		int forumId = this.request.getIntParameter("forum_id");
 		
 		// The user can access this forum?
 		if (!SecurityRepository.canAccess(SecurityConstants.PERM_FORUM, Integer.toString(forumId))) {
@@ -190,7 +190,7 @@ public class ForumAction extends Command
 		Forum forum = ForumRepository.getForum(forumId);
 
 		this.context.put("topics", TopicsCommon.prepareTopics(tmpTopics));
-		this.context.put("allCategories", ForumCommon.getAllCategoriesAndForums());
+		this.context.put("allCategories", ForumCommon.getAllCategoriesAndForums(false));
 		this.context.put("forum", forum);
 		this.context.put("moduleAction", "forum_show.htm");
 		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
@@ -200,7 +200,7 @@ public class ForumAction extends Command
 		this.context.put("totalPages", new Double(Math.ceil( (double)totalTopics / (double)topicsPerPage )));
 		this.context.put("recordsPerPage", new Integer(topicsPerPage));
 		this.context.put("totalRecords", new Integer(totalTopics));
-		this.context.put("thisPage", new Double(Math.ceil( (double)(start+1) / (double)topicsPerPage )));
+		this.context.put("thisPage", new Double(Math.ceil( (double)(start + 1) / (double)topicsPerPage )));
 		this.context.put("start", new Integer(start));
 		this.context.put("postsPerPage", new Integer(postsPerPage));
 		this.context.put("readonly", !SecurityRepository.canAccess(SecurityConstants.PERM_READ_ONLY_FORUMS, 

@@ -44,6 +44,7 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
+ * @version $Id: LastPostInfo.java,v 1.2 2005/01/04 03:25:37 rafaelsteil Exp $
  */
 public class LastPostInfo 
 {

@@ -81,7 +81,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.35 2004/12/29 04:43:49 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.36 2005/01/04 03:25:36 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -94,7 +94,7 @@ public class PostAction extends Command {
 		int userId = SessionFacade.getUserSession().getUserId();
 		int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 
-		int topicId = Integer.parseInt(this.request.getParameter("topic_id"));
+		int topicId = this.request.getIntParameter("topic_id");
 		Topic topic = tm.selectById(topicId);
 
 		// The topic exists?
@@ -174,7 +174,7 @@ public class PostAction extends Command {
 		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
 
 		int userId = SessionFacade.getUserSession().getUserId();
-		int topicId = Integer.parseInt(this.request.getParameter("topic_id"));
+		int topicId = this.request.getIntParameter("topic_id");
 		Topic topic = tm.selectById(topicId);
 
 		if (!TopicsCommon.isTopicAccessible(topic.getForumId())) {
@@ -206,7 +206,7 @@ public class PostAction extends Command {
 	}
 
 	public void insert() throws Exception {
-		int forumId = Integer.parseInt(this.request.getParameter("forum_id"));
+		int forumId = this.request.getIntParameter("forum_id");
 
 		if (!this.anonymousPost(forumId)
 				|| this.isForumReadonly(forumId, this.request.getParameter("topic_id") != null)) {
@@ -216,7 +216,7 @@ public class PostAction extends Command {
 		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
 
 		if (this.request.getParameter("topic_id") != null) {
-			int topicId = Integer.parseInt(this.request.getParameter("topic_id"));
+			int topicId = this.request.getIntParameter("topic_id");
 			Topic t = DataAccessDriver.getInstance().newTopicModel().selectById(topicId);
 
 			if (t.getStatus() == Topic.STATUS_LOCKED) {
@@ -264,7 +264,7 @@ public class PostAction extends Command {
 
 		if (!preview) {
 			PostModel pm = DataAccessDriver.getInstance().newPostModel();
-			p = pm.selectById(Integer.parseInt(this.request.getParameter("post_id")));
+			p = pm.selectById(this.request.getIntParameter("post_id"));
 
 			// The post exist?
 			if (p.getId() == 0) {
@@ -289,7 +289,7 @@ public class PostAction extends Command {
 			}
 
 			if (preview && this.request.getParameter("topic_type") != null) {
-				topic.setType(Integer.parseInt(this.request.getParameter("topic_type")));
+				topic.setType(this.request.getIntParameter("topic_type"));
 			}
 
 			this.context.put("forum", ForumRepository.getForum(p.getForumId()));
@@ -323,7 +323,7 @@ public class PostAction extends Command {
 
 	public void quote() throws Exception {
 		PostModel pm = DataAccessDriver.getInstance().newPostModel();
-		Post p = pm.selectById(Integer.parseInt(this.request.getParameter("post_id")));
+		Post p = pm.selectById(this.request.getIntParameter("post_id"));
 
 		if (!this.anonymousPost(p.getForumId())) {
 			return;
@@ -371,7 +371,7 @@ public class PostAction extends Command {
 		PostModel pm = DataAccessDriver.getInstance().newPostModel();
 		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
 
-		Post p = pm.selectById(Integer.parseInt(this.request.getParameter("post_id")));
+		Post p = pm.selectById(this.request.getIntParameter("post_id"));
 		p = PostCommon.fillPostFromRequest(p);
 
 		// The user wants to preview the message before posting it?
@@ -401,7 +401,7 @@ public class PostAction extends Command {
 			// Updates the topic title
 			if (t.getFirstPostId() == p.getId()) {
 				t.setTitle(p.getSubject());
-				t.setType(Integer.parseInt(this.request.getParameter("topic_type")));
+				t.setType(this.request.getIntParameter("topic_type"));
 				tm.update(t);
 				ForumRepository.reloadForum(t.getForumId());
 				TopicRepository.clearCache(t.getForumId());
@@ -427,7 +427,7 @@ public class PostAction extends Command {
 
 	public void insertSave() throws Exception 
 	{
-		int forumId = Integer.parseInt(this.request.getParameter("forum_id"));
+		int forumId = this.request.getIntParameter("forum_id");
 
 		if (!this.anonymousPost(forumId)) {
 			SessionFacade.setAttribute(ConfigKeys.REQUEST_DUMP, this.request.dumpRequest());
@@ -448,7 +448,7 @@ public class PostAction extends Command {
 		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
 
 		if (this.request.getParameter("topic_id") != null) {
-			t = tm.selectById(Integer.parseInt(this.request.getParameter("topic_id")));
+			t = tm.selectById(this.request.getIntParameter("topic_id"));
 
 			// Cannot insert new messages on locked topics
 			if (t.getStatus() == Topic.STATUS_LOCKED) {
@@ -458,7 +458,7 @@ public class PostAction extends Command {
 		}
 
 		if (this.request.getParameter("topic_type") != null) {
-			t.setType(Integer.parseInt(this.request.getParameter("topic_type")));
+			t.setType(this.request.getIntParameter("topic_type"));
 		}
 
 		UserSession us = SessionFacade.getUserSession();
@@ -470,7 +470,7 @@ public class PostAction extends Command {
 
 		// Set the Post
 		Post p = PostCommon.fillPostFromRequest();
-		p.setForumId(Integer.parseInt(this.request.getParameter("forum_id")));
+		p.setForumId(this.request.getIntParameter("forum_id"));
 		
 		if (p.getSubject() == null || p.getSubject() == "") {
 			p.setSubject(t.getTitle());
@@ -589,7 +589,7 @@ public class PostAction extends Command {
 
 		// Post
 		PostModel pm = DataAccessDriver.getInstance().newPostModel();
-		Post p = pm.selectById(Integer.parseInt(this.request.getParameter("post_id")));
+		Post p = pm.selectById(this.request.getIntParameter("post_id"));
 
 		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
 		Topic t = tm.selectById(p.getTopicId());
@@ -669,7 +669,7 @@ public class PostAction extends Command {
 	}
 
 	public void watch() throws Exception {
-		int topicId = Integer.parseInt(this.request.getParameter("topic_id"));
+		int topicId = this.request.getIntParameter("topic_id");
 		int userId = SessionFacade.getUserSession().getUserId();
 
 		this.watch(DataAccessDriver.getInstance().newTopicModel(), topicId, userId);
@@ -678,7 +678,7 @@ public class PostAction extends Command {
 
 	public void unwatch() throws Exception {
 		if (this.isUserLogged()) {
-			int topicId = Integer.parseInt(this.request.getParameter("topic_id"));
+			int topicId = this.request.getIntParameter("topic_id");
 			int userId = SessionFacade.getUserSession().getUserId();
 			String start = this.request.getParameter("start");
 

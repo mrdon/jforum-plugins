@@ -70,7 +70,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: RSSAction.java,v 1.11 2004/12/27 00:30:52 rafaelsteil Exp $
+ * @version $Id: RSSAction.java,v 1.12 2005/01/04 03:25:36 rafaelsteil Exp $
  */
 public class RSSAction extends Command 
 {
@@ -85,7 +85,7 @@ public class RSSAction extends Command
 		String title = I18n.getMessage("RSS.Forums.title");
 		String description = I18n.getMessage("RSS.Forums.description");
 		
-		RSSAware rss = new ForumRSS(title, description, ForumCommon.getAllCategoriesAndForums());
+		RSSAware rss = new ForumRSS(title, description, ForumCommon.getAllCategoriesAndForums(false));
 		this.context.put("rssContents", rss.createRSS());
 	}
 	
