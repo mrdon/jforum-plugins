@@ -64,7 +64,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserVH.java,v 1.15 2004/08/03 14:30:42 pieter2 Exp $
+ * @version $Id: UserVH.java,v 1.16 2004/08/20 13:13:41 jamesyong Exp $
  */
 public class UserVH extends Command 
 {
@@ -117,12 +117,12 @@ public class UserVH extends Command
 		
 		boolean error = false;
 		
-		if (username == null || username.equals("") || password == null || password.equals("")) {
+		if (username == null || username.trim().equals("") || password == null || password.trim().equals("")) {
 			JForum.getContext().put("error", I18n.getMessage("UsernamePasswordCannotBeNull"));
 			error = true;
 		}
 		
-		if (um.isUsernameRegistered(JForum.getRequest().getParameter("username"))) {
+		if ((error == false)&&(um.isUsernameRegistered(JForum.getRequest().getParameter("username")))) {
 			JForum.getContext().put("error", I18n.getMessage("UsernameExists"));
 			error = true;
 		}
