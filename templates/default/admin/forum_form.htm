@@ -8,6 +8,10 @@
 <input type="hidden" name="module" value="${moduleName}" />
 <input type="hidden" name="securityHash" value="${securityHash}" />
 
+<#list groups as g>
+	<input type="hidden" name="groups" value="${g.id}">
+</#list>
+
 <script language="javascript">
 function checkGroups() 
 {

@@ -62,7 +62,7 @@ import org.htmlparser.nodes.TextNode;
  * malicious tags and attributes.
  * 
  * @author Rafael Steil
- * @version $Id: SafeHtml.java,v 1.4 2004/10/11 14:24:31 rafaelsteil Exp $
+ * @version $Id: SafeHtml.java,v 1.5 2005/02/22 23:39:24 rafaelsteil Exp $
  */
 public class SafeHtml 
 {
@@ -121,9 +121,14 @@ public class SafeHtml
 			String name = a.getName();
 			if (name != null) {
 				name = name.toLowerCase();
-				if (("href".equals(name) || "src".equals(name)) && a.getValue() != null 
-						&& a.getValue().toLowerCase().indexOf("javascript:") > -1) {
-					a.setValue("#");
+				if (("href".equals(name) || "src".equals(name)) && a.getValue() != null) {
+					if (a.getValue().toLowerCase().indexOf("javascript:") > -1) {
+						a.setValue("#");
+					}
+					else if (a.getValue().indexOf("&#") > -1) {
+						a.setValue(a.getValue().replaceAll("&#", "&amp;#"));
+					}
+					
 					newAttributes.add(a);
 				}
 				else if (!name.startsWith("on") && !name.startsWith("style")) {

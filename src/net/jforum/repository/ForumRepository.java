@@ -75,7 +75,7 @@ import net.jforum.util.preferences.ConfigKeys;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.31 2005/02/21 14:31:04 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.32 2005/02/22 23:39:22 rafaelsteil Exp $
  */
 public class ForumRepository implements Cacheable
 {
@@ -498,7 +498,9 @@ public class ForumRepository implements Cacheable
 	 */
 	public static int getTotalTopics(int forumId, boolean fromDb) throws Exception
 	{
-		int total = ((Integer)cache.get(FQN_TOTAL_TOPICS, Integer.toString(forumId))).intValue();
+		Integer i = (Integer)cache.get(FQN_TOTAL_TOPICS, Integer.toString(forumId));
+		int total = (i != null ? i.intValue() : 0);
+		
 		if (fromDb || total == -1) {
 			total = DataAccessDriver.getInstance().newForumModel().getTotalTopics(forumId);
 			cache.add(FQN_TOTAL_TOPICS, Integer.toString(forumId), new Integer(total));

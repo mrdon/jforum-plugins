@@ -49,7 +49,7 @@ import junit.framework.TestCase;
 
 /**
  * @author Rafael Steil
- * @version $Id: SafeHtmlTest.java,v 1.3 2004/10/11 14:24:43 rafaelsteil Exp $
+ * @version $Id: SafeHtmlTest.java,v 1.4 2005/02/22 23:39:21 rafaelsteil Exp $
  */
 public class SafeHtmlTest extends TestCase
 {
@@ -71,6 +71,7 @@ public class SafeHtmlTest extends TestCase
 		sb.append("<img src='imgPath' onLoad='window.close();'>");
 		sb.append("<a href='javascript:alert(bleh)'>xxxx</a>");
 		sb.append("<img src='javascript:alert(bloh)'>");
+		sb.append("<img src=\"&#106ava&#115cript&#58aler&#116&#40&#39Oops&#39&#41&#59\">");
 		this.input = sb.toString();
 		
 		sb = new StringBuffer(512);
@@ -80,6 +81,7 @@ public class SafeHtmlTest extends TestCase
 		sb.append("<img src='imgPath' >");
 		sb.append("<a href='#'>xxxx</a>");
 		sb.append("<img src='#'>");
+		sb.append("<img src=\"&amp;#106ava&amp;#115cript&amp;#58aler&amp;#116&amp;#40&amp;#39Oops&amp;#39&amp;#41&amp;#59\">");
 		this.expected = sb.toString();
 	}
 	

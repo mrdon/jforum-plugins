@@ -72,7 +72,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.14 2005/02/03 12:37:45 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.15 2005/02/22 23:39:23 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -226,10 +226,15 @@ public class ForumAction extends Command
 		PermissionControl pc = new PermissionControl();
 		pc.setSecurityModel(gmodel);
 		
+		String[] allGroups = this.request.getParameterValues("groups");
+		
 		// Access
 		String[] groups = this.request.getParameterValues("groupsAccess");
 		if (groups != null) {
 			this.addRole(pc, SecurityConstants.PERM_FORUM, f.getId(), groups, false);
+		}
+		else {
+			this.addRole(pc, SecurityConstants.PERM_FORUM, f.getId(), allGroups, true);
 		}
 		
 		// Anonymous posts
@@ -237,17 +242,26 @@ public class ForumAction extends Command
 		if (groups != null) {
 			this.addRole(pc, SecurityConstants.PERM_ANONYMOUS_POST, f.getId(), groups, false);
 		}
+		else {
+			this.addRole(pc, SecurityConstants.PERM_ANONYMOUS_POST, f.getId(), allGroups, true);
+		}
 		
 		// Read-only
 		groups = this.request.getParameterValues("groupsReadOnly");
 		if (groups != null) {
 			this.addRole(pc, SecurityConstants.PERM_READ_ONLY_FORUMS, f.getId(), groups, false);
 		}
+		else {
+			this.addRole(pc, SecurityConstants.PERM_READ_ONLY_FORUMS, f.getId(), allGroups, true);
+		}
 		
 		// HTML
 		groups = this.request.getParameterValues("groupsHtml");
 		if (groups != null) {
 			this.addRole(pc, SecurityConstants.PERM_HTML_DISABLED, f.getId(), groups, false);
+		}
+		else {
+			this.addRole(pc, SecurityConstants.PERM_HTML_DISABLED, f.getId(), allGroups, true);
 		}
 		
 		SecurityRepository.clean();
@@ -269,7 +283,7 @@ public class ForumAction extends Command
 			rv.setValue(Integer.toString(forumId));
 			roleValues.add(rv);
 			
-			pc.addRole(groupId, role, roleValues);
+			pc.addRoleValue(groupId, role, roleValues);
 		}
 	}
 	
