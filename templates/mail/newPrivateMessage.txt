@@ -1,3 +1,4 @@
+<#setting number_format = "#"/>
 Hi ${user.username}, 
 
 You have a new Private Message on JForum.net site. You can read it using the following link:

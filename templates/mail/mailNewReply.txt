@@ -1,3 +1,4 @@
+<#setting number_format = "#"/>
 Hi, 
 
 You received this email because the topic "${topic.title}" at JForum.net had got an answer since your last visit. 
