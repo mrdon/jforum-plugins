@@ -79,7 +79,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.17 2004/10/26 18:07:16 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.18 2004/11/02 12:58:57 jamesyong Exp $
  */
 public class PostAction extends Command 
 {
@@ -398,6 +398,9 @@ public class PostAction extends Command
             if (JForum.getRequest().getParameter("notify") == null) {
                 tm.removeSubscription(p.getTopicId(), SessionFacade.getUserSession().getUserId());
             }
+            
+            // Updates cache for latest topic
+            TopicRepository.pushTopic(tm.selectById(t.getId()));
 
             String path = JForum.getRequest().getContextPath() + "/posts/list/";
             String start = JForum.getRequest().getParameter("start");
@@ -499,11 +502,13 @@ public class PostAction extends Command
 
             t.setLastPostId(postId);
             tm.update(t);
-
+            
             fm.setLastPost(t.getForumId(), postId);
 
             ForumRepository.reloadForum(t.getForumId());
             TopicRepository.clearCache(t.getForumId());
+            // Updates cache for latest topic
+            TopicRepository.pushTopic(tm.selectById(t.getId()));
 
             String path = JForum.getRequest().getContextPath() + "/posts/list/";
 
@@ -608,6 +613,9 @@ public class PostAction extends Command
             Topic topic = new Topic();
             topic.setId(p.getTopicId());
             tm.delete(topic);
+            
+            //Updates the Recent Topics if it contains this topic
+            TopicRepository.popTopic(topic);
 
             tm.removeSubscriptionByTopic(p.getTopicId());
 
