@@ -52,7 +52,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumSessionListener.java,v 1.12 2004/12/19 22:14:41 rafaelsteil Exp $
+ * @version $Id: ForumSessionListener.java,v 1.13 2005/02/27 19:03:08 rafaelsteil Exp $
  */
 public class ForumSessionListener implements HttpSessionListener 
 {
@@ -63,6 +63,7 @@ public class ForumSessionListener implements HttpSessionListener
 	 */
 	public void sessionCreated(HttpSessionEvent event) 
 	{
+		logger.info("Creating a session: " + event.getSession().getId());
 	} 
 
 	/** 
