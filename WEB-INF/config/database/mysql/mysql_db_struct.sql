@@ -282,7 +282,7 @@ CREATE TABLE jforum_users (
   user_posts mediumint(8) NOT NULL default '0',
   user_timezone varchar(5) NOT NULL default '',
   user_style tinyint(4) default NULL,
-  user_lang varchar(255) default NULL,
+  user_lang varchar(255) NOT NULL default '',
   user_dateformat varchar(20) NOT NULL default '%d/%M/%Y %H:%i',
   user_new_privmsg smallint(5) NOT NULL default '0',
   user_unread_privmsg smallint(5) NOT NULL default '0',

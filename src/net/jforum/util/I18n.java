@@ -50,6 +50,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+import net.jforum.SessionFacade;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -59,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * memory and provides a static method to acess them.
  *  
  * @author Rafael Steil
- * @version $Id: I18n.java,v 1.8 2004/08/21 03:26:14 rafaelsteil Exp $
+ * @version $Id: I18n.java,v 1.9 2004/08/28 03:29:02 jamesyong Exp $
  */
 public class I18n 
 {
@@ -139,7 +140,11 @@ public class I18n
 	 */
 	public static String getMessage(String messageName, Object params[])
 	{
-		return getMessage(defaultName, messageName, params);
+		if (SessionFacade.getUserSession().getLang().equals("")){
+			return getMessage(defaultName, messageName, params);
+		}else{
+			return getMessage(SessionFacade.getUserSession().getLang(), messageName, params);
+		}
 	}
 	
 	/**
@@ -166,6 +171,21 @@ public class I18n
 	
 	public static String getMessage(String m)
 	{
-		return getMessage(defaultName, m);
+		if (SessionFacade.getUserSession().getLang().equals("")){
+			return getMessage(defaultName, m);
+		}else{
+			return getMessage(SessionFacade.getUserSession().getLang(), m);
+		}
+	}
+	
+	/**
+	 * Check whether the language is loaded in i18n.
+	 * 
+	 * @param language 
+	 * @return boolean
+	 */
+	public static boolean contains(String language)
+	{
+		return messagesMap.containsKey(language);
 	}
 }

@@ -167,6 +167,18 @@
             name=allowsmilies> <SPAN class=gen>Não</SPAN></TD></TR>
             -->
         <TR>
+            <TD class=row1><SPAN class=gen>${I18n.getMessage("User.langPreference")}:</SPAN></TD>
+          	<TD class=row2>
+     	   		<select name="language">
+     	   			<option value=""<#if u.getLang() == "">selected</#if> >
+					<option value="en_US" <#if u.getLang() == "en_US">selected</#if>>English
+					<option value="nl_NL" <#if u.getLang() == "nl_NL">selected</#if>>Netherlands
+					<option value="pt_BR" <#if u.getLang() == "pt_BR">selected</#if>>Brazilian Portuguese
+					<option value="fr_FR" <#if u.getLang() == "fr_FR">selected</#if>>French
+		    	</select>
+		   </TD>
+		</TR>
+        <TR>
           <TD class=catSides colSpan=2 height=28>&nbsp;</TD></TR>
         <TR>
           <TH class=thSides vAlign=center colSpan=2 height=12>${I18n.getMessage("User.avatarControlPanel")}</TH></TR>

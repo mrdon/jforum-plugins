@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.8 2004/08/07 09:48:31 pieter2 Exp $
+ * @version $Id: UserModel.java,v 1.9 2004/08/28 03:29:45 jamesyong Exp $
  */
 public class UserModel extends AutoKeys implements net.jforum.model.UserModel 
 {
@@ -148,6 +148,7 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		u.setUsername(rs.getString("username"));
 		u.setAttachSignatureEnabled(rs.getInt("user_attachsig") == 1);
 		u.setMsnm(rs.getString("user_msnm"));
+		u.setLang(rs.getString("user_lang"));
 	}
 
 	/** 
@@ -194,7 +195,8 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		p.setInt(22, user.isNotifyOnMessagesEnabled() ? 1 : 0);
 		p.setInt(23, user.getAttachSignatureEnabled() ? 1 : 0);
 		p.setString(24, user.getUsername());
-		p.setInt(25, user.getId());
+		p.setString(25, user.getLang());
+		p.setInt(26, user.getId());
 		
 		p.executeUpdate();
 		p.close();

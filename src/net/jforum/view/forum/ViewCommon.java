@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ViewCommon.java,v 1.7 2004/06/01 19:47:24 pieter2 Exp $
+ * $Id: ViewCommon.java,v 1.8 2004/08/28 03:27:11 jamesyong Exp $
  */
 package net.jforum.view.forum;
 
@@ -52,6 +52,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 
 import net.jforum.JForum;
+import net.jforum.SessionFacade;
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.model.DataAccessDriver;
@@ -122,6 +123,7 @@ public final class ViewCommon
 		u.setNotifyOnMessagesEnabled(JForum.getRequest().getParameter("notifyreply").equals("1"));
 		u.setAttachSignatureEnabled(JForum.getRequest().getParameter("attachsig").equals("1"));
 		u.setHtmlEnabled(JForum.getRequest().getParameter("allowhtml").equals("1"));
+		u.setLang(JForum.getRequest().getParameter("language"));
 		
 		if (JForum.getRequest().getParameter("new_password") != null && JForum.getRequest().getParameter("new_password").length() > 0) {
 			u.setPassword(MD5.crypt(JForum.getRequest().getParameter("new_password")));
@@ -187,6 +189,8 @@ public final class ViewCommon
 			}
 		}
 		
-		um.update(u); 
+		um.update(u);
+		
+		SessionFacade.getUserSession().setLang(u.getLang());
 	}
 }
