@@ -44,15 +44,14 @@ package net.jforum.util.mail;
 import java.util.ArrayList;
 import java.util.List;
 
-import freemarker.template.SimpleHash;
 import net.jforum.entities.User;
-import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import freemarker.template.SimpleHash;
 
 /**
  * @author James Young
- * @version $Id: ActivationKeySpammer.java,v 1.3 2004/12/19 22:32:12 rafaelsteil Exp $
+ * @version $Id: ActivationKeySpammer.java,v 1.4 2005/02/28 13:24:03 rafaelsteil Exp $
  */
 public class ActivationKeySpammer extends Spammer
 {
@@ -75,7 +74,7 @@ public class ActivationKeySpammer extends Spammer
 		List recipients = new ArrayList();
 		recipients.add(u.getEmail());
 
-		super.prepareMessage(recipients, params, I18n.getMessage("User.ActivateAccount.mailTitle"), 
+		super.prepareMessage(recipients, params, SystemGlobals.getValue(ConfigKeys.MAIL_ACTIVATION_KEY_SUBJECT), 
 				SystemGlobals.getValue(ConfigKeys.MAIL_ACTIVATION_KEY_MESSAGE_FILE));
 	}
 }

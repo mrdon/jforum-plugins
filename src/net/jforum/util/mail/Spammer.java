@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -69,7 +69,7 @@ import freemarker.template.Template;
  * TODO: should do some refactoring to send a personalized email to each user. 
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.8 2004/10/10 16:48:08 rafaelsteil Exp $
+ * @version $Id: Spammer.java,v 1.9 2005/02/28 13:24:03 rafaelsteil Exp $
  */
 public class Spammer 
 {
