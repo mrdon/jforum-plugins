@@ -42,24 +42,24 @@
  */
 package net.jforum.drivers.postgresql;
 
+import java.sql.Connection;
+
 import net.jforum.drivers.postgresql.security.GroupSecurityModel;
 import net.jforum.drivers.postgresql.security.UserSecurityModel;
 
 /**
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.5 2004/09/06 00:03:37 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.6 2005/01/04 14:51:33 rafaelsteil Exp $
  */
 public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDriver
 {
 	private static PostModel postModel = new PostModel();
 	private static TopicModel topicModel = new TopicModel();
-	private static ForumModel forumModel = new ForumModel();
 	private static SearchModel searchModel = new SearchModel();
 	private static SmilieModel smilieModel = new SmilieModel();
 	private static UserModel userModel = new UserModel();
 	private static GroupSecurityModel groupSecurityModel = new GroupSecurityModel();
 	private static UserSecurityModel userSecurityModel = new UserSecurityModel();
-	private static CategoryModel categoryModel = new CategoryModel();
 	private static PrivateMessageModel pmModel = new PrivateMessageModel();
 
 	/** 
@@ -83,7 +83,15 @@ public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDrive
 	 */
 	public net.jforum.model.ForumModel newForumModel()
 	{
-		return forumModel;
+		return new ForumModel();
+	}
+	
+	/**
+	 * @see net.jforum.model.DataAccessDriver#getForumModel(Connection)
+	 */
+	public net.jforum.model.ForumModel newForumModel(Connection conn) 
+	{
+		return new ForumModel(conn);	
 	}
 	
 	/** 
@@ -131,7 +139,15 @@ public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDrive
 	 */
 	public net.jforum.model.CategoryModel newCategoryModel()
 	{
-		return categoryModel;
+		return new CategoryModel();
+	}
+	
+	/**
+	 * @see net.jforum.model.DataAccessDriver#newCategoryModel(Connection)
+	 */
+	public net.jforum.model.CategoryModel newCategoryModel(Connection conn) 
+	{
+		return new CategoryModel(conn);
 	}
 	
 	public net.jforum.model.PrivateMessageModel newPrivateMessageModel()

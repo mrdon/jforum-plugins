@@ -42,15 +42,27 @@
  */
 package net.jforum.drivers.postgresql;
 
+import java.sql.Connection;
+
 import net.jforum.entities.Category;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: CategoryModel.java,v 1.1 2004/06/02 03:56:10 rafaelsteil Exp $
+ * @version $Id: CategoryModel.java,v 1.2 2005/01/04 14:51:33 rafaelsteil Exp $
  */
 public class CategoryModel extends net.jforum.drivers.generic.CategoryModel
 {
+	public CategoryModel()
+	{
+		super();
+	}
+	
+	public CategoryModel(Connection conn)
+	{
+		super(conn);
+	}
+
 	/** 
 	 * @see net.jforum.model.CategoryModel#addNew(net.jforum.entities.Category)
 	 */

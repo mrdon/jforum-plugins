@@ -45,6 +45,7 @@ package net.jforum.drivers.hsqldb;
 
 /**
  * @author Marc Wick
+ * @version $Id: DataAccessDriver.java,v 1.4 2005/01/04 14:51:33 rafaelsteil Exp $
  */
 public class DataAccessDriver extends
 		net.jforum.drivers.postgresql.DataAccessDriver {

@@ -92,7 +92,7 @@ function checkDatabase()
 				<td><table width="100%" border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td><img src="${contextPath}/templates/default/images/logo.jpg" border="0" alt="JForum" vspace="1" /></td>
-						<td align="center" width="100%" valign="middle"><span class="maintitle">${I18n.getMessage("Install.welcome")} JForum 2.0 ${I18n.getMessage("Install.installation")}</span></td>
+						<td align="center" width="100%" valign="middle"><span class="maintitle">${I18n.getMessage("Install.welcome")} JForum 2.1 ${I18n.getMessage("Install.installation")}</span></td>
 					</tr>
 				</table></td>
 			</tr>
@@ -107,7 +107,8 @@ function checkDatabase()
 							<span class="gen">
 							${I18n.getMessage("Install.welcomeMessage")}
 							<br/></br>
-							<font color="#ff0000"><b>${I18n.getMessage("Install.forHelpAccess")} <a href="http://www.jforum.net/install.htm">http://www.jforum.net/install.htm</a></b></font>
+							${I18n.getMessage("Install.forHelpAccess")} <a href="http://www.jforum.net/install.htm">http://www.jforum.net/install.htm</a>
+							<p align="center">${I18n.getMessage("Install.notPerfect")}</p>
 							</span>
 						</td>
 					</tr>
@@ -152,6 +153,8 @@ function checkDatabase()
 							<br>
 							<span class="gensmall">
 							${I18n.getMessage("Install.dbTip")}
+							<br/>
+							<font color="#ff0000"><b>${I18n.getMessage("Install.mysql41Problems")}</b></font>
 							</span>
 						</td>
 					</tr>

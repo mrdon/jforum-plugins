@@ -81,7 +81,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.17 2004/12/27 00:30:52 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.18 2005/01/04 14:51:32 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -230,36 +230,47 @@ public class InstallAction extends Command
         SessionFacade.remove(this.request.getSession().getId());
 	}
 	
-	private void doFinalSteps() throws Exception
+	private void doFinalSteps()
 	{
-		// Modules Mapping
-		String modulesMapping = SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/modulesMapping.properties";
-		if (new File(modulesMapping).canWrite()) {
-			Properties p = new Properties();
-			p.load(new FileInputStream(modulesMapping));
-			
-			if (p.containsKey("install")) {
-				p.remove("install");
+		try {
+			// Modules Mapping
+			String modulesMapping = SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/modulesMapping.properties";
+			if (new File(modulesMapping).canWrite()) {
+				Properties p = new Properties();
+				p.load(new FileInputStream(modulesMapping));
 				
-				p.store(new FileOutputStream(modulesMapping), "Modified by JForum Installer");
-				
-				this.addToSessionAndContext("mappingFixed", "true");
-				ConfigLoader.loadModulesMapping(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR));
+				if (p.containsKey("install")) {
+					p.remove("install");
+					
+					p.store(new FileOutputStream(modulesMapping), "Modified by JForum Installer");
+					
+					this.addToSessionAndContext("mappingFixed", "true");
+					ConfigLoader.loadModulesMapping(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR));
+				}
 			}
 		}
+		catch (Exception e) {
+			logger.warn("Error while working on modulesMapping.properties: " + e);
+		}
 		
-		// Index renaming
-		String index = SystemGlobals.getApplicationPath() + "/index.htm";
-		File indexFile = new File(index);
-		if (indexFile.canWrite()) {
-			String newIndex = SystemGlobals.getApplicationPath() + "/new_rename.htm";
-			File newIndexFile = new File(newIndex);
-			if (newIndexFile.exists()) {
-				indexFile.delete();
-				newIndexFile.renameTo(indexFile);
-				
-				this.addToSessionAndContext("indexFixed", "true");
+		
+		try {
+			// Index renaming
+			String index = SystemGlobals.getApplicationPath() + "/index.htm";
+			File indexFile = new File(index);
+			if (indexFile.canWrite()) {
+				String newIndex = SystemGlobals.getApplicationPath() + "/new_rename.htm";
+				File newIndexFile = new File(newIndex);
+				if (newIndexFile.exists()) {
+					indexFile.delete();
+					newIndexFile.renameTo(indexFile);
+					
+					this.addToSessionAndContext("indexFixed", "true");
+				}
 			}
+		}
+		catch (Exception e) {
+			logger.warn("Error while renaming index.htm: " + e);
 		}
 	}
 	
@@ -399,6 +410,22 @@ public class InstallAction extends Command
 		p.load(new FileInputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) 
 				+ "/database/" + type + "/" + type + ".properties"));
 		
+		// Write database information to the respective file
+		p.setProperty(ConfigKeys.DATABASE_CONNECTION_HOST, host);
+		p.setProperty(ConfigKeys.DATABASE_CONNECTION_USERNAME, username);
+		p.setProperty(ConfigKeys.DATABASE_CONNECTION_PASSWORD, password);
+		p.setProperty(ConfigKeys.DATABASE_CONNECTION_DBNAME, dbName);
+		p.setProperty(ConfigKeys.DATABASE_CONNECTION_ENCODING, encoding);
+		
+		try {
+			p.store(new FileOutputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) 
+					+ "/database/" + type + "/" + type + ".properties"), null);
+		}
+		catch (Exception e) {
+			logger.warn("Error while trying to write to " + type + ".properties: " + e);
+		}
+		
+		// Proceed to SystemGlobals / <user>.conf configuration
 		for (Enumeration e = p.keys(); e.hasMoreElements(); ) {
 			String key = (String)e.nextElement();
 			SystemGlobals.setValue(key, p.getProperty(key));
