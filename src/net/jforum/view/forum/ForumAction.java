@@ -47,15 +47,14 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
-import net.jforum.entities.LastPostInfo;
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
@@ -63,7 +62,6 @@ import net.jforum.model.DataAccessDriver;
 import net.jforum.model.ForumModel;
 import net.jforum.model.SearchData;
 import net.jforum.model.UserModel;
-import net.jforum.repository.CategoryRepository;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.SecurityConstants;
@@ -72,7 +70,7 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.16 2004/11/12 20:46:40 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.17 2004/11/13 03:14:02 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -86,9 +84,9 @@ public class ForumAction extends Command
 	 * @see #getAllForums(boolean)
 	 * @throws Exception
 	 */
-	public static LinkedHashMap getAllForums() throws Exception
+	public static List getAllCategoriesAndForums() throws Exception
 	{
-		return ForumAction.getAllForums(false);
+		return ForumAction.getAllCategoriesAndForums(false);
 	}
 
 	/**
@@ -103,11 +101,8 @@ public class ForumAction extends Command
 	 * @see #getAllForums()
 	 * @throws Exception
 	 */
-	public static LinkedHashMap getAllForums(boolean checkUnreadPosts) throws Exception
+	public static List getAllCategoriesAndForums(boolean checkUnreadPosts) throws Exception
 	{
-		LinkedHashMap allForumsMap = new LinkedHashMap();
-		List forums = ForumRepository.getAllForums();
-		
 		long lastVisit = 0;
 		
 		UserSession us = SessionFacade.getUserSession();
@@ -118,44 +113,36 @@ public class ForumAction extends Command
 		// Do not check for unread posts if the user is not logged in
 		checkUnreadPosts = checkUnreadPosts 
 			&& (us.getUserId() != SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID));
+
+		Map tracking = null;
+		if (checkUnreadPosts) {
+			tracking = (HashMap)SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING);
+		}
 		
-		Iterator iter = CategoryRepository.getAllCategories().iterator();
-		while (iter.hasNext()) {
+		List returnCategories = new ArrayList();
+		List categories = ForumRepository.getAllCategories();
+		for (Iterator iter = categories.iterator(); iter.hasNext(); ) {
 			Category c = (Category)iter.next();
-			List tmpList = new ArrayList();
 			
-			for (Iterator tmpIterator = forums.iterator(); tmpIterator.hasNext();) {
-				Forum f = new Forum((Forum)tmpIterator.next());
+			for (Iterator tmpIterator = c.getForums(); tmpIterator.hasNext(); ) {
+				Forum f = (Forum)tmpIterator.next();
+				if (!ForumRepository.isForumAccessible(c.getId(), c.getId())) {
+					c.removeForum(f.getId());
+					continue;
+				}
+				
+				f = new Forum(f);
 				
 				if (checkUnreadPosts) {
-					LastPostInfo lpi = ForumRepository.getLastPostInfo(f.getId());
-					if (lpi.getPostTimeMillis() > 0) {
-						Integer topicId = new Integer(lpi.getTopicId());
-
-						boolean contains = ((HashMap)SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).containsKey(topicId);
-						
-						if (contains) {
-							long readTime = ((Long)((HashMap)SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).get(topicId)).longValue();
-							
-							if (lpi.getPostTimeMillis() > readTime) {
-								f.setUnread(true);
-							}
-						}
-						else if (lpi.getPostTimeMillis() > lastVisit) {
-							f.setUnread(true);
-						}
-					}
-				}
-
-				if (f.getCategoryId() == c.getId()) {
-					tmpList.add(f);				
+					f = ForumCommon.checkUnreadPosts(f, ForumRepository.getLastPostInfo(f.getId()), 
+							tracking, lastVisit);
 				}
 			}
 			
-			allForumsMap.put(c, tmpList);
+			returnCategories.add(c);
 		}
 		
-		return allForumsMap;
+		return returnCategories;
 	}
 	
 	public void list() throws Exception
@@ -163,7 +150,7 @@ public class ForumAction extends Command
 		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
 		UserModel um = DataAccessDriver.getInstance().newUserModel();
 		
-		JForum.getContext().put("allForums", ForumAction.getAllForums(true));
+		JForum.getContext().put("allCategories", ForumAction.getAllCategoriesAndForums(true));
 		JForum.getContext().put("topicsPerPage",  new Integer(SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE)));
 		JForum.getContext().put("moduleAction", "forum_list.htm");
 		JForum.getContext().put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
@@ -261,7 +248,7 @@ public class ForumAction extends Command
 		Forum forum = ForumRepository.getForum(forumId);
 
 		JForum.getContext().put("topics", TopicsCommon.prepareTopics(tmpTopics));
-		JForum.getContext().put("allForums", ForumAction.getAllForums());
+		JForum.getContext().put("allCategories", ForumAction.getAllCategoriesAndForums());
 		JForum.getContext().put("forum", forum);
 		JForum.getContext().put("moduleAction", "forum_show.htm");
 		JForum.getContext().put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));

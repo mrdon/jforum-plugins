@@ -42,7 +42,6 @@
  */
 package net.jforum.view.forum;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import net.jforum.Command;
@@ -64,7 +63,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: RSSAction.java,v 1.6 2004/11/05 03:29:42 rafaelsteil Exp $
+ * @version $Id: RSSAction.java,v 1.7 2004/11/13 03:14:02 rafaelsteil Exp $
  */
 public class RSSAction extends Command 
 {
@@ -76,11 +75,10 @@ public class RSSAction extends Command
 	 */
 	public void forums() throws Exception
 	{
-		LinkedHashMap forums = ForumAction.getAllForums();
 		String title = I18n.getMessage("RSS.Forums.title");
 		String description = I18n.getMessage("RSS.Forums.description");
 		
-		RSSAware rss = new ForumRSS(title, description, forums);
+		RSSAware rss = new ForumRSS(title, description, ForumAction.getAllCategoriesAndForums());
 		JForum.getContext().put("rssContents", rss.createRSS());
 	}
 	

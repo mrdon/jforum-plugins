@@ -44,6 +44,7 @@ package net.jforum.view.admin;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import net.jforum.Command;
 import net.jforum.JForum;
@@ -52,7 +53,7 @@ import net.jforum.model.CategoryModel;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.GroupModel;
 import net.jforum.model.security.GroupSecurityModel;
-import net.jforum.repository.CategoryRepository;
+import net.jforum.repository.ForumRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.Role;
@@ -67,7 +68,7 @@ import freemarker.template.Template;
  * ViewHelper for category administration.
  * 
  * @author Rafael Steil
- * @version $Id: CategoryAction.java,v 1.2 2004/10/03 16:53:45 rafaelsteil Exp $
+ * @version $Id: CategoryAction.java,v 1.3 2004/11/13 03:14:01 rafaelsteil Exp $
  */
 public class CategoryAction extends Command 
 {
@@ -105,7 +106,7 @@ public class CategoryAction extends Command
 		c.setId(Integer.parseInt(JForum.getRequest().getParameter("categories_id")));
 			
 		this.cm.update(c);
-		CategoryRepository.loadCategories();
+		ForumRepository.reloadCategory(c);
 			
 		this.list();
 	}
@@ -114,13 +115,18 @@ public class CategoryAction extends Command
 	public void delete() throws Exception
 	{
 		String ids[] = JForum.getRequest().getParameterValues("categories_id");
-		ArrayList errors = new ArrayList();
+		List errors = new ArrayList();
 		
 		if (ids != null) {						
 			for (int i = 0; i < ids.length; i++){
 				if (this.cm.canDelete(Integer.parseInt(ids[i]))) {
-					this.cm.delete(Integer.parseInt(ids[i]));
+					int categoryId = Integer.parseInt(ids[i]);
+					this.cm.delete(categoryId);
 					
+					Category c = new Category();
+					c.setId(categoryId);
+					
+					ForumRepository.removeCategory(c);
 				}
 				else {
 					errors.add(I18n.getMessage(I18n.CANNOT_DELETE_CATEGORY, new Object[] {new Integer(ids[i])}));
@@ -132,7 +138,6 @@ public class CategoryAction extends Command
 			JForum.getContext().put("errorMessage", errors);
 		}
 		
-		CategoryRepository.loadCategories();	
 		this.list();
 	}
 	
@@ -143,7 +148,9 @@ public class CategoryAction extends Command
 		c.setName(JForum.getRequest().getParameter("category_name"));
 			
 		int categoryId = this.cm.addNew(c);
-		CategoryRepository.loadCategories();
+		c.setId(categoryId);
+
+		ForumRepository.addCategory(c);
 		
 		String[] groups = JForum.getRequest().getParameterValues("groups");
 		if (groups != null) {

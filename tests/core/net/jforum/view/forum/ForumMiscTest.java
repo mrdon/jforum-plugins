@@ -36,50 +36,54 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on 12/11/2004 18:04:12
+ * Created on 12/11/2004 21:38:51
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.view.forum;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import net.jforum.entities.Forum;
 import net.jforum.entities.LastPostInfo;
+import junit.framework.TestCase;
 
 /**
  * @author Rafael Steil
+ * @version $Id: ForumMiscTest.java,v 1.1 2004/11/13 03:14:04 rafaelsteil Exp $
  */
-public class ForumCommon 
-{ 
-	/**
-	 * Check if some forum has unread messages.
-	 * 
-	 * @param forum The forum to search for unread messages 
-	 * @param lpi <code>LastPostInfo</code> instance of the forum
-	 * @param tracking Tracking of the topics read by the user
-	 * @param lastVisit The last visit time of the current usre
-	 * @return The same <code>Forum</code> instance passed as argument, 
-	 * which then a call to "getUnread()" will return the "read" status
-	 * for this forum
-	 */
-	public static Forum checkUnreadPosts(Forum forum, LastPostInfo lpi, Map tracking, long lastVisit)
+public class ForumMiscTest extends TestCase 
+{
+	public void testUnreadForums()
 	{
-		if (lpi.getPostTimeMillis() > 0) {
-			Integer topicId = new Integer(lpi.getTopicId());
-
-			if (tracking.containsKey(topicId)) {
-				long readTime = ((Long)tracking.get(topicId)).longValue();
-				
-				if (lpi.getPostTimeMillis() > readTime) {
-					forum.setUnread(true);
-				}
-			}
-			else if (lpi.getPostTimeMillis() > lastVisit) {
-				forum.setUnread(true);
-			}
+		// Tracking time
+		Map tracking = new HashMap();
+		tracking.put(new Integer(0), new Long(100)); // unread
+		tracking.put(new Integer(1), new Long(200)); // unread
+		tracking.put(new Integer(2), new Long(300)); // unread
+		tracking.put(new Integer(3), new Long(400)); // unread
+		tracking.put(new Integer(4), new Long(900)); // read
+		
+		long lastVisit = 1000;
+		int[] lpiTimes = { 501, 510, 600, 700, 500, 1200 };
+		boolean[] unreadStatus = { true, true, true, true, false, true };
+		
+		Map data = new HashMap();
+		for (int i = 0; i < lpiTimes.length; i++) {
+			LastPostInfo lpi = new LastPostInfo();
+			lpi.setPostTimeMillis(lpiTimes[i]);
+			lpi.setTopicId(i);
+			data.put("lpi" + i, lpi);
+			
+			data.put("forum" + i, new Forum());
 		}
 		
-		return forum;
+		for (int i = 0; i < lpiTimes.length; i++) {
+			Forum f = (Forum)data.get("forum" + i);
+			f = ForumCommon.checkUnreadPosts(f, (LastPostInfo)data.get("lpi" + i), tracking, lastVisit);
+			
+			assertEquals("Wrong read status for forum" + i , unreadStatus[i], f.getUnread());
+		}
 	}
 }

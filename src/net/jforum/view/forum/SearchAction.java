@@ -55,7 +55,6 @@ import net.jforum.entities.Topic;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.SearchData;
 import net.jforum.model.SearchModel;
-import net.jforum.repository.CategoryRepository;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.SecurityConstants;
@@ -64,7 +63,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.6 2004/11/05 03:29:41 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.7 2004/11/13 03:14:02 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -95,8 +94,7 @@ public class SearchAction extends Command
 	public void filters() throws Exception
 	{
 		JForum.getContext().put("moduleAction", "search.htm");
-		JForum.getContext().put("categories", CategoryRepository.getAllCategories());
-		JForum.getContext().put("forums", ForumRepository.getAllForums());
+		JForum.getContext().put("categories", ForumRepository.getAllCategories());
 	}
 	
 	private void getSearchFields()
@@ -163,7 +161,7 @@ public class SearchAction extends Command
 		JForum.getContext().put("fr", new ForumRepository());
 		
 		JForum.getContext().put("topics", topics);
-		JForum.getContext().put("allForums", ForumAction.getAllForums());
+		JForum.getContext().put("allCategories", ForumAction.getAllCategoriesAndForums());
 		JForum.getContext().put("moduleAction", "search_result.htm");
 		
 		// Pagination
@@ -191,9 +189,9 @@ public class SearchAction extends Command
 		TopicsCommon.topicListingBase();
 	}
 	
-	private ArrayList onlyAllowedData(List topics)
+	private List onlyAllowedData(List topics)
 	{
-		ArrayList l = new ArrayList();
+		List l = new ArrayList();
 		
 		for (Iterator iter = topics.iterator(); iter.hasNext(); ) {
 			Topic t = (Topic)iter.next();

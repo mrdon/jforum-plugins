@@ -42,19 +42,34 @@
  */
 package net.jforum.entities;
 
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  * Represents a category in the System.
  * 
  * @author Rafael Steil
- * @version $Id: Category.java,v 1.3 2004/11/07 14:01:42 rafaelsteil Exp $
+ * @version $Id: Category.java,v 1.4 2004/11/13 03:14:01 rafaelsteil Exp $
  */
 public class Category 
 {
 	private int id;
 	private int order;
 	private String name;
+	private Map forums = new LinkedHashMap();
 		
 	public Category() {}
+	
+	public Category(Category c) {
+		this.name = c.getName();
+		this.id = c.getId();
+		this.order = c.getOrder();
+		
+		for (Iterator iter = c.getForums(); iter.hasNext(); ) {
+			this.addForum(new Forum((Forum)iter.next()));
+		}
+	}
 	
 	/**
 	 * @return int
@@ -100,7 +115,43 @@ public class Category
 	public void setOrder(int order) {
 		this.order = order;
 	}
-	 
+	
+	/**
+	 * Adds a forum to this category
+	 * 
+	 * @param forum
+	 */
+	public void addForum(Forum forum) {
+		this.forums.put(new Integer(forum.getId()), forum);
+	}
+	
+	/**
+	 * Removes a forum from the list.
+	 * @param forumId
+	 */
+	public void removeForum(int forumId) {
+		this.forums.remove(new Integer(forumId));
+	}
+	
+	/**
+	 * Gets a forum.
+	 * 
+	 * @param forumId The id of the forum to retrieve
+	 * @return The <code>Forum</code> instance if found, or <code>null</code>
+	 * otherwhise.
+	 */
+	public Forum getForum(int forumId)
+	{
+		return (Forum)this.forums.get(new Integer(forumId));
+	}
+	
+	/**
+	 * Gets all forums from this category
+	 * @return 
+	 */
+	public Iterator getForums() {
+		return this.forums.values().iterator();
+	}
 
 	/** 
 	 * @see java.lang.Object#hashCode()

@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creating date: Feb 23, 2003 / 12:25:04 PM
- * net.jforum.entities.Forum.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: Forum.java,v 1.2 2004/04/21 23:57:30 rafaelsteil Exp $
  */
 package net.jforum.entities;
 
@@ -49,6 +46,7 @@ package net.jforum.entities;
  * Represents a specific forum.
  * 
  * @author Rafael Steil
+ * @version $Id: Forum.java,v 1.3 2004/11/13 03:14:01 rafaelsteil Exp $
  */
 public class Forum 
 {
@@ -99,6 +97,8 @@ public class Forum
 	
 	private boolean unread;
 	
+	private LastPostInfo lpi;
+	
 	/**
 	 * Default Constructor
 	 */
@@ -116,6 +116,15 @@ public class Forum
 		this.totalPosts = f.getTotalPosts();
 		this.totalTopics = f.getTotalTopics();
 		this.unread = f.getUnread();
+		this.lpi = f.getLastPostInfo();
+	}
+	
+	public void setLastPostInfo(LastPostInfo lpi) {
+		this.lpi = lpi;
+	}
+	
+	public LastPostInfo getLastPostInfo() {
+		return this.lpi;
 	}
 	
 	/**
@@ -278,7 +287,7 @@ public class Forum
 		this.totalPosts = totalPosts;
 	}
 	
-	/* 
+	/** 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object o) 
@@ -286,7 +295,7 @@ public class Forum
 		return ((o instanceof Forum) && (((Forum)o).getId() == this.id));
 	}
 
-	/* 
+	/** 
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode() 

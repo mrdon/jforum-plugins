@@ -52,7 +52,7 @@ import net.jforum.view.forum.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicRSS.java,v 1.9 2004/10/24 17:59:56 rafaelsteil Exp $
+ * @version $Id: TopicRSS.java,v 1.10 2004/11/13 03:14:05 rafaelsteil Exp $
  */
 public class TopicRSS extends GenericRSS 
 {
@@ -63,7 +63,6 @@ public class TopicRSS extends GenericRSS
 	public TopicRSS(String title, String description, int forumId, List topics)
 	{
 		this.topics = topics;
-		
 		this.forumLink = ViewCommon.getForumLink();
 		
 		this.rss = new RSS(title, description, 

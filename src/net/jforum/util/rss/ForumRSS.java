@@ -43,10 +43,8 @@
 package net.jforum.util.rss;
 
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 
 import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
@@ -61,20 +59,19 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumRSS.java,v 1.12 2004/11/12 20:46:41 rafaelsteil Exp $
+ * @version $Id: ForumRSS.java,v 1.13 2004/11/13 03:14:05 rafaelsteil Exp $
  */
 public class ForumRSS extends GenericRSS 
 {
 	private static final Logger logger = Logger.getLogger(ForumRSS.class);
 	
-	private LinkedHashMap forums;
+	private List categories;
 	private RSS rss;
 	private String forumLink;
 	
-	public ForumRSS(String title, String description, LinkedHashMap forums)
+	public ForumRSS(String title, String description, List categories)
 	{
-		this.forums = forums;
-		
+		this.categories = categories;
 		this.forumLink = ViewCommon.getForumLink();
 		
 		this.rss = new RSS(title, description, 
@@ -87,12 +84,10 @@ public class ForumRSS extends GenericRSS
 	private void prepareRSS()
 	{
 		try {
-			for (Iterator iter = this.forums.entrySet().iterator(); iter.hasNext(); ) {
-				Map.Entry entry = (Map.Entry)iter.next();
-				Category category = (Category)entry.getKey();
+			for (Iterator iter = this.categories.iterator(); iter.hasNext(); ) {
+				Category category = (Category)iter.next();
 				
-				ArrayList forumsList = (ArrayList)entry.getValue();
-				for (Iterator fIter = forumsList.iterator(); fIter.hasNext(); ) {
+				for (Iterator fIter = category.getForums(); fIter.hasNext(); ) {
 					Forum forum = (Forum)fIter.next();
 					
 					LastPostInfo info = ForumRepository.getLastPostInfo(forum.getId());

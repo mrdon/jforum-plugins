@@ -36,50 +36,18 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on 12/11/2004 18:04:12
+ * Created on 12/11/2004 23:54:16
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.view.forum;
-
-import java.util.Map;
-
-import net.jforum.entities.Forum;
-import net.jforum.entities.LastPostInfo;
+package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
+ * @version $Id: LoadForumException.java,v 1.1 2004/11/13 03:14:04 rafaelsteil Exp $
  */
-public class ForumCommon 
-{ 
-	/**
-	 * Check if some forum has unread messages.
-	 * 
-	 * @param forum The forum to search for unread messages 
-	 * @param lpi <code>LastPostInfo</code> instance of the forum
-	 * @param tracking Tracking of the topics read by the user
-	 * @param lastVisit The last visit time of the current usre
-	 * @return The same <code>Forum</code> instance passed as argument, 
-	 * which then a call to "getUnread()" will return the "read" status
-	 * for this forum
-	 */
-	public static Forum checkUnreadPosts(Forum forum, LastPostInfo lpi, Map tracking, long lastVisit)
-	{
-		if (lpi.getPostTimeMillis() > 0) {
-			Integer topicId = new Integer(lpi.getTopicId());
-
-			if (tracking.containsKey(topicId)) {
-				long readTime = ((Long)tracking.get(topicId)).longValue();
-				
-				if (lpi.getPostTimeMillis() > readTime) {
-					forum.setUnread(true);
-				}
-			}
-			else if (lpi.getPostTimeMillis() > lastVisit) {
-				forum.setUnread(true);
-			}
-		}
-		
-		return forum;
+public class LoadForumException extends RuntimeException {
+	public LoadForumException(String message) {
+		super(message);
 	}
 }
