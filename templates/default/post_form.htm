@@ -8,6 +8,11 @@
 
 <#assign preview = preview?exists && preview/>
 <#assign isNewPost = isNewPost?exists && isNewPost/>
+<#assign attachmentsEnabled = attachmentsEnabled?exists && attachmentsEnabled/>
+
+<#if !maxAttachments?exists>
+	<#assign maxAttachments = 0/>
+</#if>
 
 <#assign htmlChecked = "checked"/>
 <#assign bbChecked = ""/>
