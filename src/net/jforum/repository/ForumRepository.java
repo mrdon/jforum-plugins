@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ForumRepository.java,v 1.4 2004/10/05 13:42:36 jamesyong Exp $
+ * $Id: ForumRepository.java,v 1.5 2004/10/05 13:54:33 jamesyong Exp $
  */
 package net.jforum.repository;
 
@@ -95,7 +95,7 @@ public class ForumRepository
 		ArrayList l = new ArrayList();
 		Iterator iter = ForumRepository.forumsMap.values().iterator();
 		
-		if (!(ignoreSecurity)) {
+		if (!ignoreSecurity) {
 			int userId = SessionFacade.getUserSession().getUserId();
 			PermissionControl pc = SecurityRepository.get(userId);
 
