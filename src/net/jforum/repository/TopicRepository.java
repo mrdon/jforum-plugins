@@ -41,10 +41,11 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: TopicRepository.java,v 1.4 2004/06/01 19:47:23 pieter2 Exp $
+ * $Id: TopicRepository.java,v 1.5 2004/10/20 03:19:48 rafaelsteil Exp $
  */
 package net.jforum.repository;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -71,7 +72,7 @@ public class TopicRepository
 	 * @param forumId The forum id to which the topics are related
 	 * @param topics The topics to add
 	 */
-	public synchronized static void addAll(int forumId, ArrayList topics)
+	public synchronized static void addAll(int forumId, List topics)
 	{
 		allTopicsMap.put(new Integer(forumId), new LinkedList(topics));
 	}

@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -78,7 +79,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.12 2004/10/13 10:22:26 jamesyong Exp $
+ * @version $Id: PostAction.java,v 1.13 2004/10/20 03:19:46 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -92,16 +93,16 @@ public class PostAction extends Command
 
         int topicId = Integer.parseInt(JForum.getRequest().getParameter("topic_id"));
         Topic topic = tm.selectById(topicId);
-
-        // Shall we proceed?
-        if (!this.shallProceed(topic.getForumId())) {
-            return;
-        }
-
+        
         // The topic exists?
         if (topic.getId() == 0) {
             this.topicNotFound();
             return;
+        }
+
+        // Shall we proceed?
+        if (!TopicsCommon.isTopicAccessible(topic.getForumId())) {
+        	return;
         }
 
         tm.incrementTotalViews(topic.getId());
@@ -109,19 +110,11 @@ public class PostAction extends Command
         ((HashMap) SessionFacade.getAttribute("topics_tracking")).put(new Integer(topic.getId()),
                 new Long(topic.getLastPostTimeInMillis().getTime()));
 
-        int start = 0;
-        if (JForum.getRequest().getParameter("start") != null) {
-            String s = JForum.getRequest().getParameter("start");
-
-            if (!s.equals("")) {
-                start = Integer.parseInt(s);
-            }
-        }
-
         int count = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
+        int start = ViewCommon.getStartPage();
 
         ArrayList posts = pm.selectAllByTopicByLimit(topicId, start, count);
-        ArrayList helperList = new ArrayList();
+        List helperList = new ArrayList();
         Map usersMap = new HashMap();
 
         int userId = SessionFacade.getUserSession().getUserId();
@@ -201,15 +194,6 @@ public class PostAction extends Command
         JForum.getContext().put("start", new Integer(start));
     }
 
-    private boolean shallProceed(int forumId) throws Exception {
-        if (!SecurityRepository.canAccess(SecurityConstants.PERM_FORUM, Integer.toString(forumId))) {
-            new ModerationHelper().denied(I18n.getMessage("PostShow.denied"));
-            return false;
-        }
-
-        return true;
-    }
-
     private void topicNotFound() {
         JForum.getContext().put("moduleAction", "message.htm");
         JForum.getContext().put("message", I18n.getMessage("PostShow.TopicNotFound"));
@@ -286,7 +270,7 @@ public class PostAction extends Command
         if ((sUserId != aId) && canAccess) {
             Topic topic = DataAccessDriver.getInstance().newTopicModel().selectById(p.getTopicId());
 
-            if (!this.shallProceed(topic.getForumId())) {
+            if (!TopicsCommon.isTopicAccessible(topic.getForumId())) {
                 return;
             }
 
@@ -331,7 +315,7 @@ public class PostAction extends Command
 
         Topic t = DataAccessDriver.getInstance().newTopicModel().selectById(p.getTopicId());
 
-        if (!this.shallProceed(t.getForumId())) {
+        if (!TopicsCommon.isTopicAccessible(t.getForumId())) {
             return;
         }
 
@@ -383,7 +367,7 @@ public class PostAction extends Command
         } else {
             Topic t = tm.selectById(p.getTopicId());
 
-            if (!this.shallProceed(t.getForumId())) {
+            if (!TopicsCommon.isTopicAccessible(t.getForumId())) {
                 return;
             }
 
@@ -430,7 +414,7 @@ public class PostAction extends Command
         Topic t = new Topic();
         t.setForumId(Integer.parseInt(JForum.getRequest().getParameter("forum_id")));
 
-        if (!this.shallProceed(t.getForumId())
+        if (!TopicsCommon.isTopicAccessible(t.getForumId())
                 || this.isForumReadonly(t.getForumId(), 
                 		JForum.getRequest().getParameter("topic_id") != null)) {
             return;
@@ -575,7 +559,7 @@ public class PostAction extends Command
         TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
         Topic t = tm.selectById(p.getTopicId());
 
-        if (!this.shallProceed(t.getForumId())) {
+        if (!TopicsCommon.isTopicAccessible(t.getForumId())) {
             return;
         }
 

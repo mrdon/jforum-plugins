@@ -8,10 +8,13 @@
 						<span class="gensmall">${I18n.getMessage("ForumListing.date")}: ${now}</span><br />
 						<span class="forumLink"><a class="forumLink" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a></span>
 					</td>
-					<td class="gensmall" valign="middle" align="right">&nbsp;
+					<td class="gensmall" valign="bottom" align="right">&nbsp;
 					<#if logged>
 						<a class="gensmall" href="${JForumContext.encodeURL("/forums/newMessages")}">${I18n.getMessage("ForumListing.readLastVisitMessages")}</a>
 					</#if>
+					<a href="${contextPath}/rss/forums.page">
+					<img src="${contextPath}/templates/${templateName}/images/xml_button.gif" border="0" align="middle">
+					</a>
 					</td>
 				</tr>
 			</table>

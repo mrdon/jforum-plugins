@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import net.jforum.Command;
 import net.jforum.JForum;
@@ -63,7 +64,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.3 2004/10/04 10:08:19 marcwick Exp $
+ * @version $Id: SearchAction.java,v 1.4 2004/10/20 03:19:46 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -157,7 +158,7 @@ public class SearchAction extends Command
 		int totalTopics = allTopics.size();
 		int sublistLimit = recordsPerPage + start > totalTopics ? totalTopics : recordsPerPage + start;
 		
-		ArrayList topics = new ForumAction().prepareTopics(allTopics.subList(start, sublistLimit));
+		List topics = TopicsCommon.prepareTopics(allTopics.subList(start, sublistLimit));
 		
 		JForum.getContext().put("fr", new ForumRepository());
 		
@@ -187,7 +188,7 @@ public class SearchAction extends Command
 		}
 		
 		JForum.getContext().put("openModeration", openModeration.equals("1"));
-		ViewCommon.topicListingBase();
+		TopicsCommon.topicListingBase();
 	}
 	
 	private ArrayList onlyAllowedData(ArrayList topics)
@@ -291,7 +292,7 @@ public class SearchAction extends Command
 		return s;
 	}
 	
-	/* 
+	/** 
 	 * @see net.jforum.Command#list()
 	 */
 	public void list() throws Exception 

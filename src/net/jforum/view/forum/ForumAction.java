@@ -43,7 +43,6 @@
 package net.jforum.view.forum;
 
 import java.text.SimpleDateFormat;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.GregorianCalendar;
@@ -62,19 +61,17 @@ import net.jforum.entities.UserSession;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.ForumModel;
 import net.jforum.model.SearchData;
-import net.jforum.model.TopicModel;
 import net.jforum.model.UserModel;
 import net.jforum.repository.CategoryRepository;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.SecurityRepository;
-import net.jforum.repository.TopicRepository;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.7 2004/10/14 02:22:57 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.8 2004/10/20 03:19:45 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -229,6 +226,7 @@ public class ForumAction extends Command
 		JForum.getContext().put("openModeration", true);
 		this.show();
 	}
+
 	
 	public void show() throws Exception
 	{
@@ -240,41 +238,15 @@ public class ForumAction extends Command
 			return;
 		}
 		
-		String s = JForum.getRequest().getParameter("start");
-		int start = 0;
+		int start = ViewCommon.getStartPage();
 		
-		if (s == null || s.equals("")) {
-			start = 0;
-		}
-		else {
-			start = Integer.parseInt(s);
-			
-			if (start < 0) {
-				start = 0;
-			}
-		}
-		
-		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
 		int topicsPerPage = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
-		ArrayList tmpTopics = null;
-		
-		// Try to get the first's page topics from the cache
-		if (start == 0) {
-			tmpTopics = TopicRepository.getTopics(forumId);
-
-			if (tmpTopics.size() == 0) {
-				tmpTopics = tm.selectAllByForumByLimit(forumId, start, topicsPerPage);
-				TopicRepository.addAll(forumId, tmpTopics);
-			}
-		}
-		else {
-			tmpTopics = tm.selectAllByForumByLimit(forumId, start, topicsPerPage);
-		}
+		List tmpTopics = TopicsCommon.topicsByForum(forumId, start);
 		
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 		int totalTopics = ForumRepository.getTotalTopics(forumId, true);
 
-		JForum.getContext().put("topics", this.prepareTopics(tmpTopics));
+		JForum.getContext().put("topics", TopicsCommon.prepareTopics(tmpTopics));
 		JForum.getContext().put("allForums", ForumAction.getAllForums());
 		JForum.getContext().put("forum", ForumRepository.getForum(forumId));
 		JForum.getContext().put("moduleAction", "forum_show.htm");
@@ -289,45 +261,7 @@ public class ForumAction extends Command
 		JForum.getContext().put("readonly", !SecurityRepository.canAccess(SecurityConstants.PERM_READ_ONLY_FORUMS, 
 				Integer.toString(forumId)));
 
-		ViewCommon.topicListingBase();
-	}
-	
-	public ArrayList prepareTopics(List topics)
-	{
-		long lastVisit = SessionFacade.getUserSession().getLastVisit().getTime();
-
-		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
-		HashMap topicsTracking = (HashMap)SessionFacade.getAttribute("topics_tracking");
-		ArrayList newTopics = new ArrayList(topics.size());
-		
-		Iterator iter = topics.iterator();
-		while (iter.hasNext()) {
-			boolean read = false;
-			Topic t = (Topic)iter.next();
-
-			if (t.getLastPostTimeInMillis().getTime() > lastVisit) {
-				if (topicsTracking.containsKey(new Integer(t.getId()))) {
-					read = (t.getLastPostTimeInMillis().getTime() == ((Long)topicsTracking.get(new Integer(t.getId()))).longValue());
-				}
-			}
-			else {
-				read = true;
-			}
-			
-			if (t.getTotalReplies() + 1 > postsPerPage) {
-				t.setPaginate(true);
-				t.setTotalPages(new Double(Math.floor(t.getTotalReplies() / postsPerPage)));
-			}
-			else {
-				t.setPaginate(false);
-				t.setTotalPages(new Double(0));
-			}
-			
-			t.setRead(read);
-			newTopics.add(t);
-		}
-		
-		return newTopics;
+		TopicsCommon.topicListingBase();
 	}
 	
 	public void doModeration() throws Exception

@@ -57,12 +57,9 @@ import org.apache.log4j.Logger;
 
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
-import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.UserModel;
-import net.jforum.repository.SecurityRepository;
-import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.MD5;
 import net.jforum.util.SafeHtml;
@@ -72,32 +69,11 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.16 2004/10/10 00:20:08 rafaelsteil Exp $
+ * @version $Id: ViewCommon.java,v 1.17 2004/10/20 03:19:45 rafaelsteil Exp $
  */
 public final class ViewCommon
 {
 	private static final Logger logger = Logger.getLogger(ViewCommon.class);
-	
-	/**
-	 * Common properties to be used when showing topic data
-	 */
-	public static void topicListingBase()
-	{
-		// Topic Types
-		JForum.getContext().put("TOPIC_ANNOUNCE", new Integer(Topic.TYPE_ANNOUNCE));
-		JForum.getContext().put("TOPIC_STICKY", new Integer(Topic.TYPE_STICKY));
-		JForum.getContext().put("TOPIC_NORMAL", new Integer(Topic.TYPE_NORMAL));
-
-		// Topic Status
-		JForum.getContext().put("STATUS_LOCKED", new Integer(Topic.STATUS_LOCKED));
-		JForum.getContext().put("STATUS_UNLOCKED", new Integer(Topic.STATUS_UNLOCKED));
-		
-		// Moderation
-		JForum.getContext().put("moderator", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION));
-		JForum.getContext().put("can_remove_posts", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE));
-		JForum.getContext().put("can_move_topics", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_TOPIC_MOVE));
-		JForum.getContext().put("can_lockUnlock_topics", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_TOPIC_LOCK_UNLOCK));
-	}
 	
 	/**
 	 * Updates the user information
@@ -250,5 +226,29 @@ public final class ViewCommon
 		String path = query == null ? uri : uri + "?" + query;
 
 		JForum.getContext().put("returnPath", path);
+	}
+	
+	/**
+	 * Returns the initial page to start fetching records from.
+	 *   
+	 * @return The initial page number
+	 */
+	public static int getStartPage()
+	{
+		String s = JForum.getRequest().getParameter("start");
+		int start = 0;
+		
+		if (s == null || s.trim().equals("")) {
+			start = 0;
+		}
+		else {
+			start = Integer.parseInt(s);
+			
+			if (start < 0) {
+				start = 0;
+			}
+		}
+		
+		return start;
 	}
 }
