@@ -31,7 +31,7 @@ UserModel.selectById = SELECT COUNT(pm.privmsgs_to_userid) AS private_messages, 
 								
 UserModel.lastUserRegistered = SELECT TOP 1 user_id, username FROM jforum_users ORDER BY user_regdate DESC
 UserModel.lastGeneratedUserId = SELECT IDENT_CURRENT('jforum_users') AS user_id
-UserModel.selectAllByLimit = user_email, user_id, user_posts, user_regdate, username, deleted, user_karma FROM jforum_users ORDER BY username
+UserModel.selectAllByLimit = user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from FROM jforum_users ORDER BY username
 
 # #############
 # GroupModel
