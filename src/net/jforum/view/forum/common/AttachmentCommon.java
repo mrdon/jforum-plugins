@@ -46,6 +46,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -75,7 +76,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.11 2005/02/15 18:16:06 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.12 2005/02/21 14:31:09 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {
@@ -271,8 +272,11 @@ public class AttachmentCommon
 	
 	private String makeStoreFilename(AttachmentInfo a)
 	{
+		Calendar c = new GregorianCalendar();
+		c.setTimeInMillis(System.currentTimeMillis());
+		c.get(Calendar.YEAR);
 		int year = Calendar.getInstance().get(Calendar.YEAR);
-		int month = Calendar.getInstance().get(Calendar.MONTH + 1);
+		int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
 		int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 		
 		String dir = "" + year + "/" + month + "/" + day + "/";

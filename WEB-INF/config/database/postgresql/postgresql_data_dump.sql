@@ -68,8 +68,59 @@ INSERT INTO jforum_smilies VALUES (31,':mrgreen:','<img src=\"#CONTEXT#/images/s
 --
 -- Demonstration Forum
 --
-INSERT INTO jforum_categories VALUES (1,'Category Test',1);
+INSERT INTO jforum_categories VALUES (1,'Category Test',1,0);
 INSERT INTO jforum_forums VALUES (1,1,'Test Forum','This is a test forum',1,1,1,0);
 INSERT INTO jforum_topics VALUES (1,1,'Welcome to JForum',2,'2005-01-04 16:59:54',1,0,0,0,0,1,1,0);
-INSERT INTO jforum_posts VALUES (1,1,1,2,'2005-01-04 16:59:54','127.0.0.1',1,0,1,1,'2005-01-04 17:01:45',2,1,0);
+INSERT INTO jforum_posts VALUES (1,1,1,2,'2005-01-04 16:59:54','127.0.0.1',1,0,1,1,'2005-01-04 17:01:45',2,1,0,0);
 INSERT INTO jforum_posts_text VALUES (1,'[b]Congratulations![/b]. You have completed the installation of JForum. \r\n\r\nTo start administering the board, login as [i]Admin / <the password you supplied in the installer>[/i] and access the [b]Admin Control Panel[/b] using the link that shows up in the bottom of the page. \r\n\r\nThere you will be able to create Categories, Forums and much more. \r\n\r\nFor more information and support, please access [url]http://www.jforum.net/community.htm[/url] and [url]http://www.jforum.net/help.htm[/url]\r\n\r\nThank you for choosing JForum.\r\n\r\nThe JForum Team.','Welcome to JForum');
+
+#
+# View Forum
+#
+INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (@ROLE_ID + 1, 'perm_forum', @GENERAL_GROUP_ID, 0);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (@ROLE_ID + 2, 'perm_forum', @ADMIN_GROUP_ID, 0);
+
+INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (@ROLE_ID + 1, '1', 1);
+INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (@ROLE_ID + 2, '1', 1);
+
+#
+# Anonymous posts
+#
+INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (@ROLE_ID + 3, 'perm_anonymous_post', @GENERAL_GROUP_ID, 0);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (@ROLE_ID + 4, 'perm_anonymous_post', @ADMIN_GROUP_ID, 0);
+
+INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (@ROLE_ID + 3, '1', 1);
+INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (@ROLE_ID + 4, '1', 1);
+
+#
+# View Category
+#
+INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (@ROLE_ID + 5, 'perm_category', @GENERAL_GROUP_ID, 0);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (@ROLE_ID + 6, 'perm_category', @ADMIN_GROUP_ID, 0);
+
+INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (@ROLE_ID + 5, '1', 1);
+INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (@ROLE_ID + 6, '1', 1);
+
+#
+# Sticky / Announcements
+#
+INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (@ROLE_ID + 7, 'perm_create_sticky_announcement_topics', @GENERAL_GROUP_ID, 1);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (@ROLE_ID + 8, 'perm_create_sticky_announcement_topics', @ADMIN_GROUP_ID, 1);
+
+#
+# Create / Reply to topics
+#
+INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (@ROLE_ID + 9, 'perm_read_only_forums', @GENERAL_GROUP_ID, 0);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (@ROLE_ID + 10, 'perm_read_only_forums', @ADMIN_GROUP_ID, 0);
+
+INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (@ROLE_ID + 9, '1', 1);
+INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (@ROLE_ID + 10, '1', 1);
+
+# 
+# Enable HTML
+#
+INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (@ROLE_ID + 11, 'perm_html_disabled', @GENERAL_GROUP_ID, 0);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (@ROLE_ID + 12, 'perm_html_disabled', @ADMIN_GROUP_ID, 0);
+
+INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (@ROLE_ID + 11, '1', 1);
+INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (@ROLE_ID + 12, '1', 1);

@@ -44,6 +44,9 @@ package net.jforum.entities;
 
 import java.util.Iterator;
 
+import net.jforum.ConfigLoader;
+import net.jforum.TestCaseUtils;
+
 import junit.framework.TestCase;
 
 /**
@@ -53,7 +56,7 @@ import junit.framework.TestCase;
  * to test :)
  * 
  * @author Rafael Steil
- * @version $Id: CategoryTest.java,v 1.1 2004/12/09 02:41:42 rafaelsteil Exp $
+ * @version $Id: CategoryTest.java,v 1.2 2005/02/21 14:31:05 rafaelsteil Exp $
  */
 public class CategoryTest extends TestCase 
 {
@@ -65,6 +68,9 @@ public class CategoryTest extends TestCase
 	 */
 	protected void setUp() throws Exception 
 	{
+		TestCaseUtils.loadEnvironment();
+		ConfigLoader.startCacheEngine();
+		
 		this.category = new CategoryTestCommon().createCategoryAndForums();
 	}
 	

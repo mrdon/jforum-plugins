@@ -49,6 +49,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import net.jforum.ConfigLoader;
+import net.jforum.TestCaseUtils;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.PermissionControl;
@@ -62,7 +64,7 @@ import junit.framework.TestCase;
 
 /**
  * @author Rafael Steil
- * @version $Id: CategoryOrderTest.java,v 1.2 2004/12/19 22:14:40 rafaelsteil Exp $
+ * @version $Id: CategoryOrderTest.java,v 1.3 2005/02/21 14:31:05 rafaelsteil Exp $
  */
 public class CategoryOrderTest extends TestCase 
 {
@@ -84,6 +86,9 @@ public class CategoryOrderTest extends TestCase
 			
 			this.unorderedCategories.add(c);
 		}
+		
+		TestCaseUtils.loadEnvironment();
+		ConfigLoader.startCacheEngine();
 	}
 
 	public void testOrder()

@@ -51,7 +51,7 @@ import net.jforum.cache.Cacheable;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModulesRepository.java,v 1.2 2005/02/01 21:41:52 rafaelsteil Exp $
+ * @version $Id: ModulesRepository.java,v 1.3 2005/02/21 14:31:04 rafaelsteil Exp $
  */
 public class ModulesRepository implements Cacheable
 {
@@ -77,6 +77,11 @@ public class ModulesRepository implements Cacheable
 	public static void init(String baseDir) throws IOException
 	{
 		cache.add(FQN, ENTRIES, ConfigLoader.loadModulesMapping(baseDir));
+	}
+	
+	public static int size()
+	{
+		return ((Properties)cache.get(FQN, ENTRIES)).size();
 	}
 	
 	/**

@@ -55,7 +55,7 @@ import net.jforum.entities.User;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.15 2005/01/31 19:14:31 franklin_samir Exp $
+ * @version $Id: UserModel.java,v 1.16 2005/02/21 14:31:06 rafaelsteil Exp $
  */
 public interface UserModel 
 {
@@ -90,11 +90,22 @@ public interface UserModel
 	/**
 	 * Gets all users with your Karma.
 	 * 
-	 * @return <code>ArrayList</code> with the users. Each entry is an <code>User</code> object
+	 * @return <code>List</code> with the users. Each entry is an <code>User</code> object
 	 * (with the KarmaStatus populated).
 	 * @throws Exception
 	 */
 	public List selectAllWithKarma() throws Exception;
+	
+	/**
+	 * Gets all users from a specific group.
+	 * 
+	 * @param groupId The group id
+	 * @param start The index position to start fetching
+	 * @param count The total number of records to fetch
+	 * @return <code>List</code> with the users. Each entry is an <code>User</code> object
+	 * @throws Exception
+	 */
+	public List selectAllByGroup(int groupId, int start, int count) throws Exception; 
 	
 	/**
 	 * Gets all users
@@ -238,6 +249,15 @@ public interface UserModel
 	 * @throws Exception
 	 */
 	public int getTotalUsers() throws Exception;
+	
+	/**
+	 * Gets the total number of users of some group.
+	 * 
+	 * @param groupId The group id
+	 * @return The total number of users
+	 * @throws Exception
+	 */
+	public int getTotalUsersByGroup(int groupId) throws Exception;
 	
 	/**
 	 * whether the user is locked or not.

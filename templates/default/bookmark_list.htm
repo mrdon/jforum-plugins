@@ -38,17 +38,28 @@ function confirmDelete(id)
 		</tr>
 	</#if>
 
+	<#assign color = "row1"/>
 	<#list bookmarks as b> 
 		<#if b.relationType == topicType>
-		  <#if b.isPublicVisible() || owner>
-		<tr align="center">	
-			<td class="row2" align="left"><span class="gen"><img src="${contextPath}/templates/${templateName}/images/icon_minipost.gif" align="middle"><a href="${JForumContext.encodeURL("/posts/list/${b.relationId}")}" class="gen">${b.title}</a></span></td>
-			<td class="row2"><span class="gen"><#if (b.description?default("")?length > 0)>${b.description}</#if></span></td>
-			<#if owner><td class="row2"><span class="gen"><a href="javascript:addBookmark(2, ${b.relationId});">${I18n.getMessage("Edit")}</a></span></td></#if>
-			<#if owner><td class="row2"><span class="gen"><a href="javascript:confirmDelete(${b.id})">${I18n.getMessage("Delete")}</a></span></td></#if>
-		</tr>
-		  </#if>
-     </#if>
+			<#if b.isPublicVisible() || owner>
+				<tr align="center">	
+					<td class="${color}" align="left">
+						<span class="gen">
+						<img src="${contextPath}/templates/${templateName}/images/icon_minipost.gif" align="middle"><a href="${JForumContext.encodeURL("/posts/list/${b.relationId}")}" class="gen">${b.title}</a>
+						</span>
+					</td>
+					<td class="${color}"><span class="gen"><#if (b.description?default("")?length > 0)>${b.description}</#if></span></td>
+					<#if owner><td class="${color}"><span class="gen"><a href="javascript:addBookmark(2, ${b.relationId});">${I18n.getMessage("Edit")}</a></span></td></#if>
+					<#if owner><td class="${color}"><span class="gen"><a href="javascript:confirmDelete(${b.id})">${I18n.getMessage("Delete")}</a></span></td></#if>
+				</tr>
+
+				<#if color == "row1">
+					<#assign color = "row2"/>
+				<#else>
+					<#assign color = "row1"/>
+				</#if>
+			</#if>
+		</#if>
 	</#list>
 
 	<tr align="center">

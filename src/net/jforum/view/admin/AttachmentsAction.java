@@ -64,7 +64,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentsAction.java,v 1.4 2005/01/23 21:51:08 rafaelsteil Exp $
+ * @version $Id: AttachmentsAction.java,v 1.5 2005/02/21 14:31:09 rafaelsteil Exp $
  */
 public class AttachmentsAction extends Command
 {
@@ -207,6 +207,10 @@ public class AttachmentsAction extends Command
 		e.setExtension(this.request.getParameter("extension"));
 		e.setUploadIcon(this.request.getParameter("upload_icon"));
 		e.setExtensionGroupId(this.request.getIntParameter("extension_group"));
+		
+		if (e.getExtension().startsWith(".")) {
+			e.setExtension(e.getExtension().substring(1));
+		}
 		
 		DataAccessDriver.getInstance().newAttachmentModel().addExtension(e);
 		this.extensions();

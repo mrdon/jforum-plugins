@@ -44,6 +44,8 @@ package net.jforum.entities;
 
 import java.util.Iterator;
 
+import net.jforum.ConfigLoader;
+import net.jforum.TestCaseUtils;
 import net.jforum.repository.ForumRepository;
 import net.jforum.security.PermissionControl;
 
@@ -51,7 +53,7 @@ import junit.framework.TestCase;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumOrderTest.java,v 1.3 2004/12/19 22:14:39 rafaelsteil Exp $
+ * @version $Id: ForumOrderTest.java,v 1.4 2005/02/21 14:31:05 rafaelsteil Exp $
  */
 public class ForumOrderTest extends TestCase 
 {
@@ -62,6 +64,9 @@ public class ForumOrderTest extends TestCase
 	 */
 	protected void setUp() throws Exception 
 	{
+		TestCaseUtils.loadEnvironment();
+		ConfigLoader.startCacheEngine();
+		
 		this.category = new CategoryTestCommon().createCategoryAndForums();
 	}
 	

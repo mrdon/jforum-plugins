@@ -42,17 +42,14 @@
  */
 package net.jforum.drivers.postgresql;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.List;
 
-import net.jforum.JForum;
 import net.jforum.entities.User;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.5 2004/11/05 03:29:42 rafaelsteil Exp $
+ * @version $Id: UserModel.java,v 1.6 2005/02/21 14:31:00 rafaelsteil Exp $
  */
 public class UserModel extends net.jforum.drivers.generic.UserModel
 {
@@ -72,22 +69,11 @@ public class UserModel extends net.jforum.drivers.generic.UserModel
 	 */
 	public List selectAll(int startFrom, int count) throws Exception
 	{
-		PreparedStatement p;
-
 		if (count > 0) {
-			p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectAllByLimit"));
-			p.setInt(1, count);
-			p.setInt(2, startFrom);
+			return super.selectAll(count, startFrom);
 		}
 		else {
-			p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectAll"));
+			return super.selectAll(0, 0);
 		}
-		
-		ResultSet rs = p.executeQuery();
-		List list = super.processSelectAll(rs);
-		rs.close();
-		p.close();
-		
-		return list;
 	}
 }

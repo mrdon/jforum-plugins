@@ -8,7 +8,21 @@
 
 <table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
 	<tr>
-		<th class="thHead" valign="center" colspan="3" height="25">${I18n.getMessage("PermissionControl.userTitle")}</th>
+		<th class="thHead" valign="center" colspan="3" height="25">${I18n.getMessage("PermissionControl.userTitle")} - "<i>${user.username}</i>"</th>
+	</tr>
+
+	<tr>
+		<td colspan="3">
+			<span class="gen">
+			<font color="#ff0000"><b><center>${I18n.getMessage("PermissionControl.howTo")}:</center></b></font> <br/>
+			</span>
+			<span class="gensmall">
+			<li><b>${I18n.getMessage("PermissionControl.userPriority")}. </b>
+			<li>${I18n.getMessage("PermissionControl.areRestrictive")}. 
+			<li>${I18n.getMessage("PermissionControl.allowAllDescrption")}.
+			<li>${I18n.getMessage("PermissionControl.notTrivial")}. 
+			</span>
+		</td>
 	</tr>
 
 	<#list sections as section>
@@ -21,7 +35,7 @@
 		<#list permissions as p>
 			<tr>
 				<td class="row2">&nbsp;</td>
-				<td class="row2" valign="middle" width="33%"><span class="gen">${p.name}</span></td>
+				<td class="row2" valign="middle" width="33%"><span class="gensmall">${p.name}</span></td>
 				<td class="row2" valign="top" align="left">
 					<#if p.type == "single">
 						<select name="${p.id}$single">

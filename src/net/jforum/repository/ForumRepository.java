@@ -75,7 +75,7 @@ import net.jforum.util.preferences.ConfigKeys;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.30 2005/02/19 16:53:48 andowson Exp $
+ * @version  $Id: ForumRepository.java,v 1.31 2005/02/21 14:31:04 rafaelsteil Exp $
  */
 public class ForumRepository implements Cacheable
 {
@@ -331,11 +331,21 @@ public class ForumRepository implements Cacheable
 	{
 		String categoryId = Integer.toString(c.getId());
 		cache.add(FQN, categoryId, c);
+		
 		Set s = (Set)cache.get(FQN, CATEGORIES_SET);
+		
+		if (s == null) {
+			s = new TreeSet(new CategoryOrderComparator());
+		}
+		
 		s.add(c);
 		cache.add(FQN, CATEGORIES_SET, s);
 		
 		Map relation = (Map)cache.get(FQN, RELATION);
+		if (relation == null) {
+			relation = new HashMap();
+		}
+		
 		for (Iterator iter = c.getForums().iterator(); iter.hasNext(); ) {
 			Forum f = (Forum)iter.next();
 			relation.put(Integer.toString(f.getId()), categoryId);

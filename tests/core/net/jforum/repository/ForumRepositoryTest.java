@@ -48,6 +48,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import junit.framework.TestCase;
+import net.jforum.ConfigLoader;
 import net.jforum.JForumCommonServlet;
 import net.jforum.SessionFacade;
 import net.jforum.TestCaseUtils;
@@ -60,7 +61,7 @@ import net.jforum.view.forum.common.ForumCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumRepositoryTest.java,v 1.8 2004/12/29 17:18:42 rafaelsteil Exp $
+ * @version $Id: ForumRepositoryTest.java,v 1.9 2005/02/21 14:31:05 rafaelsteil Exp $
  */
 public class ForumRepositoryTest extends TestCase 
 {
@@ -140,13 +141,14 @@ public class ForumRepositoryTest extends TestCase
 			cm = this.createCategoryModel();
 			fm = this.createForumModel();
 			
+			TestCaseUtils.loadEnvironment();
+			ConfigLoader.startCacheEngine();
+			
 			SecurityRepository.add(SUPER_USER, TestCaseUtils.createForumCategoryPermissionControl(categoryIds, superUserCategoryRights, 
 					forumIds, superUserForumRights));
 			
 			SecurityRepository.add(GENERAL_USER, TestCaseUtils.createForumCategoryPermissionControl(categoryIds, generalUserCategoryRights, 
 					forumIds, generalUserForumRights));
-			
-			TestCaseUtils.loadEnvironment();
 			
 			loaded = true;
 		}

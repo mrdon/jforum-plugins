@@ -61,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.29 2005/02/07 10:56:29 andowson Exp $
+ * @version $Id: UserModel.java,v 1.30 2005/02/21 14:31:00 rafaelsteil Exp $
  */
 public class UserModel extends AutoKeys implements net.jforum.model.UserModel 
 {
@@ -368,7 +368,7 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 	 */
 	public List selectAllWithKarma() throws Exception 
 	{
-		return selectAllWithKarma(0, 0);
+		return this.selectAllWithKarma(0, 0);
 	}	
 	
 	/** 
@@ -403,6 +403,31 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		
 		return list;
 	}
+	
+	/**
+	 * @see net.jforum.model.UserModel#selectAllByGroup(int, int, int)
+	 */
+	public List selectAllByGroup(int groupId, int start, int count) throws Exception
+	{
+		List l = new ArrayList();
+		
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectAllByGroup"));
+		p.setInt(1, groupId);
+		p.setInt(2, start);
+		p.setInt(3, count);
+		
+		ResultSet rs = p.executeQuery();
+		while (rs.next()) {
+			User u = new User();
+			u.setUsername(rs.getString("username"));
+			u.setId(rs.getInt("user_id"));
+			u.setRegistrationDate(rs.getTimestamp("user_regdate"));
+			
+			l.add(u);
+		}
+		
+		return l;
+	}
 
 	/** 
 	 * @see net.jforum.model.UserModel#getLastUserInfo()
@@ -429,17 +454,33 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 	 */
 	public int getTotalUsers() throws Exception 
 	{	
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.totalUsers"));
+		return this.getTotalUsersCommon(JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.totalUsers")));
+	}
+	
+	/**
+	 * @see net.jforum.model.UserModel#getTotalUsersByGroup(int)
+	 */
+	public int getTotalUsersByGroup(int groupId) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.totalUsersByGroup"));
+		p.setInt(1, groupId);
+		
+		return this.getTotalUsersCommon(p);
+	}
+	
+	protected int getTotalUsersCommon(PreparedStatement p) throws Exception
+	{
 		ResultSet rs = p.executeQuery();
 		rs.next();
 		
-		int total = rs.getInt("total_users");
+		int total = rs.getInt(1);
 		
 		rs.close();
 		p.close();
 		
 		return total;
-
 	}
 
 	/** 

@@ -1,5 +1,6 @@
 <#setting number_format = "#"/>
 <#import "../../macros/pagination.ftl" as pagination/>
+<#import "macros/group_macros.ftl" as lib>
 
 <style type="text/css">@import url( ${contextPath}/templates/${templateName}/admin/style.css );</style>
 <table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
@@ -10,13 +11,20 @@
 	<tr>
 		<td class="gen" align="center" colspan="7">
 			<form id="formusersearch" action="${JForumContext.encodeURL("/jforum")}" accept-charset="${encoding}" method="post">
+			<span class="gensmall">
+			${I18n.getMessage("User.searchByUsername")}: 
 			<input type="hidden" name="action" value="search" />
 			<input type="hidden" name="module" value="${moduleName}" />
 			<input type="hidden" name="securityHash" value="${securityHash}" />
 
 			<input type="text" name="username" value="${search?default("")}" />&nbsp;
-			<input type="submit" value="${I18n.getMessage("ForumBase.search")}" class="mainoption"/>
 
+			or
+
+			${I18n.getMessage("User.searchByGroup")}: 
+			<@lib.selectFieldGroups "group_id", groups, 0, false, selectedList/>
+
+			<input type="submit" value="${I18n.getMessage("ForumBase.search")}" class="mainoption"/>
 			</form>
 		</td>
 	</tr>
@@ -69,7 +77,7 @@
 </form>
 <table width="100%">
 	<tr>
-		<td align="right"><#if thisPage?exists><@pagination.doPagination "list", -1/></#if></td>
+		<td align="right"><#if thisPage?exists><@pagination.doPagination searchAction, searchId/></#if></td>
 	</tr>
 </table>
 

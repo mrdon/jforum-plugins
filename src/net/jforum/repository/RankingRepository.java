@@ -54,7 +54,7 @@ import net.jforum.model.RankingModel;
 
 /**
  * @author Rafael Steil
- * @version $Id: RankingRepository.java,v 1.6 2005/02/01 21:41:52 rafaelsteil Exp $
+ * @version $Id: RankingRepository.java,v 1.7 2005/02/21 14:31:04 rafaelsteil Exp $
  */
 public class RankingRepository implements Cacheable
 {
@@ -79,6 +79,11 @@ public class RankingRepository implements Cacheable
 		catch (Exception e) {
 			throw new RankingLoadException("Error while loading the rankings: " + e);
 		}
+	}
+	
+	public static int size()
+	{
+		return ((List)cache.get(FQN, ENTRIES)).size();
 	}
 	
 	/**

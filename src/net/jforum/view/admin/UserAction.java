@@ -71,7 +71,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.16 2005/01/06 02:36:05 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.17 2005/02/21 14:31:09 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -80,14 +80,13 @@ public class UserAction extends Command
 	{
 		int start = this.preparePagination(DataAccessDriver.getInstance().newUserModel().getTotalUsers());
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
-
+		
 		this.context.put("users", DataAccessDriver.getInstance().newUserModel().selectAll(start ,usersPerPage));
-		this.context.put("moduleAction", "user_list.htm");
+		this.commonData();
 	}
 	
 	private int preparePagination(int totalUsers)
 	{
-		String s = this.request.getParameter("start");
 		int start = ViewCommon.getStartPage();
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
 		
@@ -100,21 +99,59 @@ public class UserAction extends Command
 		return start;
 	}
 	
+	private void commonData() throws Exception
+	{
+		this.context.put("selectedList", new ArrayList());
+		this.context.put("groups", new TreeGroup().getNodes());
+		this.context.put("moduleAction", "user_list.htm");
+		this.context.put("searchAction", "list");
+		this.context.put("searchId", new Integer(-1));
+	}
+	
+	public void groupSearch() throws Exception
+	{
+		final int groupId = this.request.getIntParameter("group_id");
+		if (groupId == 0) {
+			this.list();
+			return;
+		}
+		
+		UserModel um = DataAccessDriver.getInstance().newUserModel();
+		
+		int start = this.preparePagination(um.getTotalUsersByGroup(groupId));
+		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
+		
+		this.commonData();
+		
+		this.context.put("selectedList", new ArrayList() {{ add(new Integer(groupId)); }});
+		this.context.put("searchAction", "groupSearch");
+		this.context.put("users", um.selectAllByGroup(groupId, start, usersPerPage));
+		this.context.put("searchId", new Integer(groupId));
+	}
+	
 	public void search() throws Exception
 	{
 		List users = new ArrayList();
 		String search = this.request.getParameter("username");
+		String group = this.request.getParameter("group");
 		
-		if (search != null) {
+		if (search != null && !"".equals(search)) {
 			users = DataAccessDriver.getInstance().newUserModel().findByName(search, false);
+			
+			this.commonData();
+			
+			this.context.put("users", users);
+			this.context.put("search", search);
+			this.context.put("start", new Integer(1));
 		}
-		
-		this.context.put("moduleAction", "user_list.htm");
-		this.context.put("users", users);
-		this.context.put("search", search);
-		
-		// "start" is added to avoid search error. "start" may be in use when pagination is introduced for search 
-		this.context.put("start", new Integer(1));
+		else if (!"0".equals(group)) {
+			this.groupSearch();
+			return;
+		}
+		else {
+			this.list();
+			return;
+		}
 	}
 	
 	// Permissions

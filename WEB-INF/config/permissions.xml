@@ -63,7 +63,7 @@
 	</section>
 
 	<!-- Karma -->
-	<section id="html_disabled" title="Karma">
+	<section id="karma_disabled" title="Karma">
 		<permission id="perm_karma_enabled" title="Enable Karma" type="single">
 			<option value="deny" description="No"/>
 			<option value="allow" description="Yes"/>
@@ -80,9 +80,8 @@
 
 	<!-- Attachments -->
 	<section id="attachments_disabled" title="Attachments">
-		<permission id="perm_attachments_enabled" title="Enable Attachments" type="single">
-			<option value="deny" description="No"/>
-			<option value="allow" description="Yes"/>
+		<permission id="perm_attachments_enabled" title="Enable Attachments" type="multiple">
+			<sql queryName="ForumModel.selectAll" valueField="forum_id" captionField="forum_name"/>
 		</permission>
 
 		<permission id="perm_attachments_download" title="Allow download of existing Attachments" type="single">

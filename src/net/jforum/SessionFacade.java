@@ -44,6 +44,7 @@ package net.jforum;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -59,7 +60,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.16 2005/02/16 12:23:43 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.17 2005/02/21 14:31:04 rafaelsteil Exp $
  */
 public class SessionFacade implements Cacheable
 {
@@ -151,6 +152,12 @@ public class SessionFacade implements Cacheable
 	public static List getAllSessions()
 	{
 		return new ArrayList(cache.getValues(FQN));
+	}
+	
+	public static void clear()
+	{
+		cache.remove(FQN);
+		cache.add(FQN, new HashMap());
 	}
 	
 	/**

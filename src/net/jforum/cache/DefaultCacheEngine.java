@@ -49,7 +49,7 @@ import java.util.Map;
 
 /**
  * @author Rafael Steil
- * @version $Id: DefaultCacheEngine.java,v 1.4 2005/02/16 12:43:06 rafaelsteil Exp $
+ * @version $Id: DefaultCacheEngine.java,v 1.5 2005/02/21 14:31:10 rafaelsteil Exp $
  */
 public class DefaultCacheEngine implements CacheEngine
 {
@@ -60,7 +60,7 @@ public class DefaultCacheEngine implements CacheEngine
 	 */
 	public void add(String key, Object value)
 	{
-		throw new UnsupportedOperationException("Use the add(String, String, Object) method");
+		this.cache.put(key, value);
 	}
 	
 	/**

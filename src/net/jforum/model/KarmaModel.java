@@ -52,7 +52,7 @@ import net.jforum.entities.User;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaModel.java,v 1.5 2005/02/17 19:11:33 franklin_samir Exp $
+ * @version $Id: KarmaModel.java,v 1.6 2005/02/21 14:31:07 rafaelsteil Exp $
  */
 public interface KarmaModel
 {
@@ -127,7 +127,6 @@ public interface KarmaModel
 	public Map getUserVotes(int topicId, int userId) throws Exception;
 	
 	/**
-	 * @deprecated maybe it will be removed.
 	 * @param user
 	 * @throws Exception
 	 */
