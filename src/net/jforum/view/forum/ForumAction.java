@@ -45,6 +45,7 @@ package net.jforum.view.forum;
 import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -73,7 +74,7 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.1 2004/08/30 23:51:18 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.2 2004/09/02 06:19:33 jamesyong Exp $
  */
 public class ForumAction extends Command 
 {
@@ -109,6 +110,8 @@ public class ForumAction extends Command
 		LinkedHashMap allForumsMap = new LinkedHashMap();
 		ArrayList forums = ForumRepository.getAllForums();
 		long lastVisit = SessionFacade.getUserSession().getLastVisit();
+		
+		Collections.sort(forums, new ForumOrderComparator());
 		
 		Iterator iter = CategoryRepository.getAllCategories().iterator();
 		while (iter.hasNext()) {
