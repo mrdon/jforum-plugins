@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: SearchModel.java,v 1.7 2004/04/24 20:51:00 rafaelsteil Exp $
+ * $Id: SearchModel.java,v 1.8 2004/04/25 19:26:46 rafaelsteil Exp $
  */
 package net.jforum.drivers.mysql;
 
@@ -123,6 +123,8 @@ public class SearchModel implements net.jforum.model.SearchModel
 		p.setString(2, sd.getTime());
 		p.executeUpdate();
 		p.close();
+		
+		this.selectTopicData();
 	}
 	
 	// Given a set of keywords, find the topics
@@ -194,7 +196,14 @@ public class SearchModel implements net.jforum.model.SearchModel
 		// Now that we have the topics ids, it's time to make a copy from the 
 		// topics table, to make the search faster ( damn, next version I'll 
 		// remove the search functionality. Look for this code's size )
-		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.selectTopicData"));
+		this.selectTopicData();
+		
+		p.close();
+	}
+	
+	private void selectTopicData() throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.selectTopicData"));
 		p.setString(1, SessionFacade.getUserSession().getSessionId());
 		p.setString(2, SessionFacade.getUserSession().getSessionId());
 		p.executeUpdate();

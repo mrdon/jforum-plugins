@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ForumVH.java,v 1.3 2004/04/21 23:57:21 rafaelsteil Exp $
+ * $Id: ForumVH.java,v 1.4 2004/04/25 19:26:45 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 
@@ -380,6 +380,7 @@ public class ForumVH extends Command
 	public void newMessages() throws Exception
 	{
 		JForum.getRequest().addParameter("post_time", Long.toString(SessionFacade.getUserSession().getLastVisit()));
+		JForum.getRequest().addParameter("clean", "true");
 		new SearchVH().search();
 	}
 }

@@ -53,13 +53,13 @@
 		
    <TABLE class=forumline cellSpacing=1 cellPadding=4 width="100%" border=0>
         <TR>
-          <th class=thCornerL noWrap align=middle height=25 width="4%">&nbsp;</th>
+          <th class=thCornerL noWrap align=middle height=25 width="20">&nbsp;</th>
           <TH class=thCornerL noWrap align=middle height=25>&nbsp;${I18n.getMessage("Forums.Form.ForumName")}&nbsp;</TH>
           <TH class=thCornerL noWrap align=middle height=25>&nbsp;${I18n.getMessage("ForumIndex.topics")}&nbsp;</TH>
           <TH class=thTop noWrap align=middle width=50>&nbsp;${I18n.getMessage("ForumIndex.anwsers")}&nbsp;</TH>
           <TH class=thTop noWrap align=middle width=100>&nbsp;${I18n.getMessage("ForumIndex.author")}&nbsp;</TH>
           <TH class=thTop noWrap align=middle width=50>&nbsp;${I18n.getMessage("ForumIndex.views")}&nbsp;</TH>
-          <TH class=thCornerR noWrap align=middle>&nbsp;${I18n.getMessage("ForumIndex.lastMessage")}&nbsp;</TH>
+          <TH class=thCornerR noWrap align=middle width="150">&nbsp;${I18n.getMessage("ForumIndex.lastMessage")}&nbsp;</TH>
 		  <#if moderator && openModeration?default(false)>
 		  	<TH class=thCornerR noWrap align=middle>&nbsp;Moderation&nbsp;</TH>
 		  </#if>
@@ -69,16 +69,16 @@
 		<#assign forum = fr.getForum(topic.forumId)/>
 
 		<TR>
-          <TD class=row1 vAlign=center align=middle width="4%">
+          <TD class=row1 vAlign=center align=middle width="20">
 		 <@presentation.folderImage topic/>
 		</TD>
 		<td class="row1">
-			<span class="topicTitle">
+			<span class="topictitle">
 				<a href="${contextPath}/forums/show/${forum.id}.page">${forum.name}</a>
 			</span>
 		</td>
-          <TD class=row1>
-		  	<SPAN class=topictitle>
+          <TD class="row1">
+		  	<SPAN class="topictitle">
 				<a href="${contextPath}/posts/list/${topic.id}.page"><#if (topic.title?length == 0)>No Subject<#else>${topic.title}</#if></a>
 			</SPAN>
 
@@ -89,14 +89,14 @@
 				</span>
 			</#if>
 		</TD>
-          <TD class=row2 vAlign=center align=middle><SPAN 
+          <TD class=row2 vAlign=center align="center"><SPAN 
             class=postdetails>${topic.totalReplies}</SPAN></TD>
-          <TD class=row3 vAlign=center align=middle>
+          <TD class=row3 vAlign=center align="center">
 		  	<SPAN class=name><a href="${contextPath}/user/profile/${topic.postedBy.id}.page">${topic.postedBy.username}</a></SPAN>
 		</TD>
-          <TD class=row2 vAlign=center align=middle>
+          <TD class=row2 vAlign=center align="center">
 		  <SPAN class=postdetails>${topic.totalViews}</SPAN></TD>
-          <TD class=row3Right vAlign=center noWrap align=middle>
+          <TD class=row3 vAlign=center noWrap align="center">
 		  <#if (topic.lastPostTime?length > 0)>
 			  <SPAN class=postdetails>${topic.lastPostTime}<BR>
 			  <a href="${contextPath}/user/profile/${topic.postedBy.id}.page">${topic.lastPostBy.username}</a>
