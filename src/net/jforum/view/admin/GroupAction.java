@@ -66,7 +66,7 @@ import freemarker.template.Template;
  * ViewHelper class for group administration.
  * 
  * @author Rafael Steil
- * @version $Id: GroupAction.java,v 1.1 2004/08/30 23:51:17 rafaelsteil Exp $
+ * @version $Id: GroupAction.java,v 1.2 2004/09/10 13:27:56 jamesyong Exp $
  */
 public class GroupAction extends Command 
 {
@@ -189,7 +189,7 @@ public class GroupAction extends Command
 		PermissionControl pc = new PermissionControl();
 		pc.setSecurityModel(gmodel);
 		
-		new PermissionProcessHelper(pc, id).processData();
+		new PermissionProcessHelper(pc, id, true).processData();
 		
 		GroupModel gm = DataAccessDriver.getInstance().newGroupModel();
 
