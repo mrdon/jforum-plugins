@@ -54,18 +54,19 @@ import net.jforum.entities.Post;
 import net.jforum.entities.Smilie;
 import net.jforum.repository.BBCodeRepository;
 import net.jforum.repository.SmiliesRepository;
+import net.jforum.util.SafeHtml;
 import net.jforum.util.bbcode.BBCode;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.4 2004/08/28 14:21:23 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.5 2004/09/28 04:03:27 rafaelsteil Exp $
  */
 public class PostCommon
 {
 	public static Post preparePostForDisplay(Post p)
 	{
 		if (!p.isHtmlEnabled()) {
-			p.setText(p.getText().replaceAll("<", "&lt;"));
+			p.setText(p.getText().replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
 		}
 		
 		// Then, search for bb codes
@@ -194,15 +195,27 @@ public class PostCommon
 	public static Post fillPostFromRequest()
 	{
 		Post p = new Post();
-		p.setText(JForum.getRequest().getParameter("message"));
+		p.setTime(new GregorianCalendar().getTimeInMillis());
+
+		return fillPostFromRequest(p);
+	}
+	
+	public static Post fillPostFromRequest(Post p)
+	{
 		p.setSubject(JForum.getRequest().getParameter("subject"));
 		p.setBbCodeEnabled(JForum.getRequest().getParameter("disable_bbcode") != null ?  false : true);
 		p.setHtmlEnabled(JForum.getRequest().getParameter("disable_html") != null ?  false : true);
 		p.setSmiliesEnabled(JForum.getRequest().getParameter("disable_smilies") != null ?  false : true);
 		p.setSignatureEnabled(JForum.getRequest().getParameter("attach_sig") != null ? true : false);
-		p.setTime(new GregorianCalendar().getTimeInMillis());
 		p.setUserId(SessionFacade.getUserSession().getUserId());
 		p.setUserIp(JForum.getRequest().getRemoteAddr());
+		
+		if (p.isHtmlEnabled()) {
+			p.setText(SafeHtml.makeSafe(JForum.getRequest().getParameter("message")));
+		}
+		else {
+			p.setText(JForum.getRequest().getParameter("message"));
+		}
 		
 		return p;
 	}

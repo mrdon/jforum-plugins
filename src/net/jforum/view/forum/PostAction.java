@@ -76,7 +76,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.7 2004/09/22 01:36:12 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.8 2004/09/28 04:03:27 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	public void list() throws Exception {
@@ -352,13 +352,7 @@ public class PostAction extends Command {
 		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
 
 		Post p = pm.selectById(Integer.parseInt(JForum.getRequest().getParameter("post_id")));
-		p.setText(JForum.getRequest().getParameter("message"));
-		p.setSubject(JForum.getRequest().getParameter("subject"));
-		p.setBbCodeEnabled(JForum.getRequest().getParameter("disable_bbcode") != null ? false : true);
-		p.setHtmlEnabled(JForum.getRequest().getParameter("disable_html") != null ? false : true);
-		p.setSmiliesEnabled(JForum.getRequest().getParameter("disable_smilies") != null ? false : true);
-		p.setSignatureEnabled(JForum.getRequest().getParameter("attach_sig") != null ? true : false);
-		p.setEditTime(new GregorianCalendar().getTimeInMillis());
+		p = PostCommon.fillPostFromRequest(p);
 
 		// The user wants to preview the message before posting it?
 		if (JForum.getRequest().getParameter("preview") != null) {

@@ -78,7 +78,7 @@ function checkForm() {
 
 	formErrors = false;
 
-	if (document.post.message.value.length < 2) {
+	if (document.post.message.value.tirm().length < 2) {
 		formErrors = "Deve ser escrita a mensagem";
 	}
 
@@ -209,7 +209,7 @@ function validatePostForm(f)
 	}
 	</#if>
 	
-	if (f.message.value == "") {
+	if (f.message.value.trim().length == 0) {
 		alert("${I18n.getMessage("PostForm.textEmpty")}");
 		f.message.focus();
 		

@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ViewCommon.java,v 1.11 2004/09/22 23:21:55 rafaelsteil Exp $
+ * $Id: ViewCommon.java,v 1.12 2004/09/28 04:03:27 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 
@@ -66,6 +66,7 @@ import net.jforum.repository.SecurityRepository;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.MD5;
+import net.jforum.util.SafeHtml;
 import net.jforum.util.image.ImageUtils;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -121,7 +122,7 @@ public final class ViewCommon
 		u.setFrom(JForum.getRequest().getParameter("location"));
 		u.setOccupation(JForum.getRequest().getParameter("occupation"));
 		u.setInterests(JForum.getRequest().getParameter("interests"));
-		u.setSignature(JForum.getRequest().getParameter("signature"));
+		u.setSignature(SafeHtml.makeSafe(JForum.getRequest().getParameter("signature")));
 		u.setViewEmailEnabled(JForum.getRequest().getParameter("viewemail").equals("1"));
 		u.setViewOnlineEnabled(JForum.getRequest().getParameter("hideonline").equals("0"));
 		u.setNotifyPrivateMessagesEnabled(JForum.getRequest().getParameter("notifypm").equals("1"));
