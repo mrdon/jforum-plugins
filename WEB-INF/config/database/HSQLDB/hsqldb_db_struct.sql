@@ -93,7 +93,7 @@ CREATE TABLE jforum_roles (
   group_id int default '0',
   user_id int default '0',
   name varchar(255) NOT NULL,
-  type int DEFAULT 1,
+  role_type int DEFAULT 1,
   PRIMARY KEY (role_id)
 ) ;
 CREATE INDEX idx_roles_group ON jforum_roles(group_id);
@@ -106,8 +106,8 @@ CREATE INDEX idx_roles_name ON jforum_roles(name);
 DROP TABLE IF EXISTS jforum_role_values;
 CREATE TABLE jforum_role_values (
   role_id INT NOT NULL,
-  value VARCHAR(255),
-  type int DEFAULT 1
+  role_value VARCHAR(255),
+  role_type int DEFAULT 1
 ) ;
 CREATE INDEX idx_rv_role ON jforum_role_values(role_id);
 
@@ -407,7 +407,7 @@ DROP TABLE IF EXISTS jforum_search_results;
 CREATE TABLE jforum_search_results (
   topic_id INT NOT NULL,
   session VARCHAR(50),
-  time DATETIME
+  search_time TIMESTAMP
 ) ;
 CREATE INDEX idx_sr_topic ON jforum_search_results(topic_id);
 
@@ -428,7 +428,7 @@ CREATE TABLE jforum_search_topics (
   topic_last_post_id int default '0' NOT NULL,
   moderated int default '0',
   session varchar(50),
-  time datetime
+  search_time TIMESTAMP
 ) ;
 CREATE INDEX idx_st_topic ON jforum_search_topics(topic_id);
 CREATE INDEX idx_st_forum ON jforum_search_topics(forum_id);
