@@ -1,0 +1,2 @@
+- changed lostPassword mail template to use user.username, to make it consistent with newPrivateMessage'
+- added user pagination for admin user list
