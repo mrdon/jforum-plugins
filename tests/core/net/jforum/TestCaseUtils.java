@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * General utilities for the test cases.
  * 
  * @author Rafael Steil
- * @version $Id: TestCaseUtils.java,v 1.8 2005/02/15 18:16:09 rafaelsteil Exp $
+ * @version $Id: TestCaseUtils.java,v 1.9 2005/02/16 21:04:44 franklin_samir Exp $
  */
 public class TestCaseUtils
 {
@@ -90,6 +90,7 @@ public class TestCaseUtils
 		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
         SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
         
+        DBConnection.createInstance();
 		DBConnection.getImplementation().init();
 	}
 	
