@@ -166,7 +166,7 @@ function confirmDelete()
 									<span class="postbody">
 									${post.text}
 									
-									<#if (user.attachSignatureEnabled && user.signature?exists &user.signature?length > 0)>
+									<#if (user.attachSignatureEnabled && user.signature?exists && user.signature?length > 0 && post.isSignatureEnabled())>
 									<hr />
 									${user.signature}
 									</#if>

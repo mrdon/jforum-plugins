@@ -255,7 +255,7 @@ function validatePostForm(f)
 								<span class="postbody">
 								${postPreview.text}<br />
 								
-								<#if (user?exists && user.attachSignatureEnabled && user.signature?exists &user.signature?length > 0)>
+								<#if (user?exists && user.attachSignatureEnabled && user.signature?exists && user.signature?length > 0 && post.isSignatureEnabled())>
 								<hr />
 								${user.signature}
 								</#if>

@@ -53,6 +53,7 @@ import net.jforum.entities.PrivateMessageType;
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
 import net.jforum.model.DataAccessDriver;
+import net.jforum.repository.SmiliesRepository;
 import net.jforum.util.I18n;
 import net.jforum.util.concurrent.executor.QueuedExecutor;
 import net.jforum.util.mail.EmailSenderTask;
@@ -62,7 +63,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.5 2004/11/02 18:16:32 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.7 2004/11/11 19:41:15 rafaelsteil Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -282,6 +283,11 @@ public class PrivateMessageAction extends Command
 				us.setPrivateMessages(us.getPrivateMessages() - 1);
 			}
 			
+			User u = pm.getFromUser();
+			u.setSignature(PostCommon.processText(u.getSignature()));
+            u.setSignature(PostCommon.processSmilies(u.getSignature(), 
+            		SmiliesRepository.getSmilies()));
+            
 			JForum.getContext().put("pm", pm);
 			JForum.getContext().put("moduleAction", "pm_read_message.htm");
 		}
@@ -336,6 +342,7 @@ public class PrivateMessageAction extends Command
 		pm.getPost().setSubject(I18n.getMessage("PrivateMessage.replyPrefix") + pm.getPost().getSubject());
 		
 		JForum.getContext().put("moduleAction", "post_form.htm");
+		JForum.getContext().put("htmlAllowed", true);
 		JForum.getContext().put("action", "sendSave");
 		JForum.getContext().put("pm", pm);
 		JForum.getContext().put("pmReply", true);
@@ -364,6 +371,7 @@ public class PrivateMessageAction extends Command
 		JForum.getContext().put("moduleAction", "post_form.htm");
 		JForum.getContext().put("post", pm.getPost());
 		JForum.getContext().put("pm", pm);
+		JForum.getContext().put("htmlAllowed", true);
 		JForum.getContext().put("user", DataAccessDriver.getInstance().newUserModel().selectById(
 						SessionFacade.getUserSession().getUserId()));
 	}

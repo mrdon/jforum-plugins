@@ -10,7 +10,7 @@
 				<title>${item.title.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("&", "&amp;")}</title>
 				<description><![CDATA[ ${item.description}]]></description>
 				<#if (item.categories.size() > 0)>
-					<category><#list item.categories as cat>${cat}, </#list></category>
+					<category><![CDATA[<#list item.categories as cat>${cat}, </#list>]]></category>
 				</#if>
 				<guid isPermaLink="true">${item.link}</guid>
 				<link>${item.link}</link>
