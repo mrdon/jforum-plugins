@@ -37,7 +37,7 @@
 	<img src="${contextPath}/templates/${templateName}/images/icon_mini_recentTopics.gif" width="12" height="13" />
 	<a id="latest" class="mainmenu" href="${JForumContext.encodeURL("/recentTopics/list")}">${I18n.getMessage("ForumBase.recentTopics")}</a> &nbsp;
 
-	<span class="mainmenu"> <img src="${contextPath}/templates/${templateName}/images/icon_mini_groups.gif" width="12" height="13" />&nbsp;<a id="backtosite" class="mainmenu" href="/index.htm">${I18n.getMessage("ForumBase.backToSite")}</a>&nbsp;
+	<span class="mainmenu"> <img src="${contextPath}/templates/${templateName}/images/icon_mini_groups.gif" width="12" height="13" />&nbsp;<a id="backtosite" class="mainmenu" href="${forumLink}">${I18n.getMessage("ForumBase.backToSite")}</a>&nbsp;
 
 	<#if logged?default(false)>
 		<br/>

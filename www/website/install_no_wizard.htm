@@ -39,7 +39,7 @@
 		<td width="90" align="right"><a href="screenshots.htm" class="menu_link">Screenshots</a></td>
 
 		<td width="40">&nbsp;</td>
-		<td width="80" align="center"><a href="community.htm" class="menu_link">Community</a></td>
+		<td width="80" align="center"><a href="community.htm" class="menu_link">Forum</a></td>
 
 		<td width="40">&nbsp;</td>
 		<td width="100" align="center"><a href="help.htm" class="menu_link">Help</a></td>
@@ -262,7 +262,7 @@ In this file there are some options you should change, according to the table be
 <a name="misc"></a>
 <img src="info.jpg" align="middle" border="0"> 
 <span style="font-size: 16px; line-height: normal"><b><u>Security Information and Considerations</u></b></span>
-<br><li><b><font color="#ff0000">Remove the line <font color="#006699"><i>"install = net.jforum.view.InstallAction"</i></font> from the file
+<br><li><b><font color="#ff0000">Remove the line <font color="#006699"><i>"install = net.jforum.view.install.InstallAction"</i></font> from the file
 <i>WEB-INF/config/modulesMapping.properties</i></font></b><br>
 
 <br><li> JForum uses a servlet mapping to invoke the pages. This mapping is <b>*.page</b>, and is already properly configured at WEB-INF/web.xml. If you are running JForum on certain ISPs, you may need to contact their Technical Support and ask them to explicity enable these mapping for you.

@@ -1,4 +1,18 @@
-<form action="${JForumContext.encodeURL("/jforum")}" method="post" enctype="multipart/form-data" name="post" id="post" accept-charset="${encoding}">
+<script language="javascript">
+function validateForm()
+{
+	var f = document.post;
+
+	if (f.new_password.value != f.password_confirm.value) {
+		alert("${I18n.getMessage("User.passwordNotMatch")}");
+		return false;
+	}
+
+	return true;
+}
+</script>
+
+<form action="${JForumContext.encodeURL("/jforum")}" method="post" enctype="multipart/form-data" name="post" id="post" accept-charset="${encoding}" onSubmit="return validateForm();">
 <input type="hidden" name="action" value="${action}" />
 <input type="hidden" name="module" value="${moduleName}" />
 <input type="hidden" name="securityHash" value="${securityHash}" />
