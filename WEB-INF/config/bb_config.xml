@@ -115,7 +115,7 @@
 		<regex>([\t\r\n ])([a-z0-9]+?){1}://([\w\-]+\.([\w\-]+\.)*[\w]+(:[0-9]+)?(/[^ \"\n\r\t&lt;]*)?)</regex>
 		<replace>
 		<![CDATA[
-		$1<a href="$2://$3" target="_blank">$2://$3</a>
+		$1<a href="$2://$3" target="_blank" rel="nofollow">$2://$3</a>
 		]]>
 		</replace>
 	</match>
@@ -124,7 +124,7 @@
 		<regex>([\t\r\n ])(www|ftp)\.(([\w\-]+\.)*[\w]+(:[0-9]+)?(/[^ \"\n\r\t&lt;]*)?)</regex>
 		<replace>
 		<![CDATA[
-		$1<a href="http://$2.$3" target="_blank">$2.$3</a>
+		$1<a href="http://$2.$3" target="_blank" rel="nofollow">$2.$3</a>
 		]]>
 		</replace>
 	</match>
@@ -134,7 +134,7 @@
 		<regex>\[url\](.*?)\[/url\]</regex>
 		<replace>
 		<![CDATA[
-		<a href='$1' target='_new'>$1</a>
+		<a href='$1' target='_new' rel="nofollow">$1</a>
 		]]>
 		</replace>
 	</match>
@@ -144,7 +144,7 @@
 		<regex>\[url=['"]?(.*?[^'"])['"]?\](.*?)\[/url\]</regex>
 		<replace>
 		<![CDATA[
-		<a href="$1" target="_new">$2</a>
+		<a href="$1" target="_new" rel="nofollow">$2</a>
 		]]>
 		</replace>
 	</match>
