@@ -56,6 +56,7 @@ import net.jforum.entities.AttachmentExtensionGroup;
 import net.jforum.entities.QuotaLimit;
 import net.jforum.model.AttachmentModel;
 import net.jforum.model.DataAccessDriver;
+import net.jforum.util.TreeGroup;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import freemarker.template.SimpleHash;
@@ -63,7 +64,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentsAction.java,v 1.3 2005/01/17 23:19:03 rafaelsteil Exp $
+ * @version $Id: AttachmentsAction.java,v 1.4 2005/01/23 21:51:08 rafaelsteil Exp $
  */
 public class AttachmentsAction extends Command
 {
@@ -88,8 +89,13 @@ public class AttachmentsAction extends Command
 	
 	public void quotaLimit() throws Exception
 	{
-		this.context.put("quotas", DataAccessDriver.getInstance().newAttachmentModel().selectQuotaLimit());
+		AttachmentModel am = DataAccessDriver.getInstance().newAttachmentModel();
+		
+		this.context.put("quotas", am.selectQuotaLimit());
 		this.context.put("moduleAction", "quota_limit.htm");
+		this.context.put("groups", new TreeGroup().getNodes());
+		this.context.put("selectedList", new ArrayList());
+		this.context.put("groupQuotas", am.selectGroupsQuotaLimits());
 	}
 	
 	public void quotaLimitSave() throws Exception
@@ -237,6 +243,30 @@ public class AttachmentsAction extends Command
 		
 		this.extensions();
 	}
+	
+	public void quotaGroupsSave() throws Exception
+	{
+		int total = this.request.getIntParameter("total_groups");
+		AttachmentModel am = DataAccessDriver.getInstance().newAttachmentModel();
+		am.cleanGroupQuota();
+		
+		for (int i = 0; i < total; i++) {
+			String l = this.request.getParameter("limit_" + (i - 1));
+			if (l == null || l.equals("")) {
+				continue;
+			}
+			
+			int limitId = Integer.parseInt(l);
+			int groupId = this.request.getIntParameter("group_" + (i - 1));
+			
+			if (groupId > 0) {
+				am.setGroupQuota(groupId, limitId);
+			}
+		}
+		
+		this.quotaLimit();
+	}
+	
 	
 	/**
 	 * @see net.jforum.Command#list()

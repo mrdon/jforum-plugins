@@ -518,3 +518,6 @@ AttachmentModel.updateAttachment = UPDATE jforum_attach_desc SET comment = ?, do
 AttachmentModel.removeAttachment = DELETE FROM jforum_attach WHERE attach_id = ?
 AttachmentModel.removeAttachmentInfo = DELETE FROM jforum_attach_desc WHERE attach_id = ?
 AttachmentModel.countPostAttachments = SELECT COUNT(1) FROM jforum_attach WHERE post_id = ?
+AttachmentModel.deleteGroupQuota = DELETE FROM jforum_attach_quota;
+AttachmentModel.setGroupQuota = INSERT INTO jforum_attach_quota (group_id, quota_limit_id) VALUES (?, ?)
+AttachmentModel.selectGroupsQuotaLImits = SELECT group_id, quota_limit_id FROM jforum_attach_quota

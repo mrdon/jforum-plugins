@@ -531,3 +531,13 @@ CREATE TABLE jforum_attach_desc (
 	INDEX idx_att_d_att(attach_id),
 	INDEX idx_att_d_ext(extension_id)
 ) TYPE=InnoDB;
+
+--
+-- Table structure for table 'jforum_attach_quota'
+--
+DROP TABLE IF EXISTS jforum_attch_quota;
+CREATE TABLE jforum_attach_quota (
+	attach_quota_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	group_id INT NOT NULL,
+	quota_limit_id INT NOT NULL
+) TYPE=InnoDB;

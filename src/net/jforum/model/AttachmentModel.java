@@ -43,6 +43,7 @@
 package net.jforum.model;
 
 import java.util.List;
+import java.util.Map;
 
 import net.jforum.entities.Attachment;
 import net.jforum.entities.AttachmentExtension;
@@ -51,7 +52,7 @@ import net.jforum.entities.QuotaLimit;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentModel.java,v 1.7 2005/01/19 23:45:07 rafaelsteil Exp $
+ * @version $Id: AttachmentModel.java,v 1.8 2005/01/23 21:51:08 rafaelsteil Exp $
  */
 public interface AttachmentModel
 {
@@ -133,6 +134,22 @@ public interface AttachmentModel
 	public void removeQuotaLimit(String[] ids) throws Exception;
 	
 	/**
+	 * Associates a quota limmit to some group.
+	 * 
+	 * @param groupId The group id
+	 * @param quotaId The quota id
+	 * @throws Exception
+	 */
+	public void setGroupQuota(int groupId, int quotaId) throws Exception;
+	
+	/**
+	 * Removes all quotas limits from all groups.
+	 *  
+	 * @throws Exception
+	 */
+	public void cleanGroupQuota() throws Exception;
+	
+	/**
 	 * Gets all registered quota limits
 	 * 
 	 * @return A list instance where each entry is a
@@ -140,6 +157,24 @@ public interface AttachmentModel
 	 * @throws Exception
 	 */
 	public List selectQuotaLimit() throws Exception;
+	
+	/**
+	 * Gets the quota associated to some group.
+	 * 
+	 * @param groupId The group id
+	 * @return A <code>QuotaLimit</code> instance, or <code>null</code> if
+	 * no records were found. 
+	 * @throws Exception
+	 */
+	public QuotaLimit selectQuotaLimitByGroup(int groupId) throws Exception;
+	
+	/**
+	 * Gets the quota limits of registered groups.
+	 * 
+	 * @return A map instance where each key is the group id
+	 * and the value is the quota limit id.
+	 */
+	public Map selectGroupsQuotaLimits() throws Exception;
 	
 	/**
 	 * Adds a new extension group.

@@ -46,7 +46,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.jforum.JForum;
 import net.jforum.entities.Attachment;
@@ -58,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentModel.java,v 1.9 2005/01/21 12:12:28 rafaelsteil Exp $
+ * @version $Id: AttachmentModel.java,v 1.10 2005/01/23 21:51:08 rafaelsteil Exp $
  */
 public class AttachmentModel extends AutoKeys implements net.jforum.model.AttachmentModel
 {
@@ -87,6 +89,30 @@ public class AttachmentModel extends AutoKeys implements net.jforum.model.Attach
 		p.setInt(2, limit.getSize());
 		p.setInt(3, limit.getType());
 		p.setInt(4, limit.getId());
+		p.executeUpdate();
+		p.close();
+	}
+	
+	/**
+	 * @see net.jforum.model.AttachmentModel#cleanGroupQuota()
+	 */
+	public void cleanGroupQuota() throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("AttachmentModel.deleteGroupQuota"));
+		p.executeUpdate();
+		p.close();
+	}
+	
+	/**
+	 * @see net.jforum.model.AttachmentModel#setGroupQuota(int, int)
+	 */
+	public void setGroupQuota(int groupId, int quotaId) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("AttachmentModel.setGroupQuota"));
+		p.setInt(1, groupId);
+		p.setInt(2, quotaId);
 		p.executeUpdate();
 		p.close();
 	}
@@ -133,6 +159,45 @@ public class AttachmentModel extends AutoKeys implements net.jforum.model.Attach
 		p.close();
 		
 		return l;
+	}
+	
+	/**
+	 * @see net.jforum.model.AttachmentModel#selectQuotaLimit()
+	 */
+	public QuotaLimit selectQuotaLimitByGroup(int groupId) throws Exception
+	{
+		QuotaLimit ql = null;
+		
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("AttachmentModel.selectQuotaLimitByGroup"));
+		p.setInt(1, groupId);
+		
+		ResultSet rs = p.executeQuery();
+		if (rs.next()) {
+			ql = this.getQuotaLimit(rs);
+		}
+		
+		rs.close();
+		p.close();
+		
+		return ql;
+	}
+	
+	/**
+	 * @see net.jforum.model.AttachmentModel#selectGroupsQuotaLimits()
+	 */
+	public Map selectGroupsQuotaLimits() throws Exception
+	{
+		Map m = new HashMap();
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("AttachmentModel.selectGroupsQuotaLImits"));
+		
+		ResultSet rs = p.executeQuery();
+		while (rs.next()) {
+			m.put(new Integer(rs.getInt("group_id")), new Integer(rs.getInt("quota_limit_id")));
+		}
+		
+		return m;
 	}
 	
 	protected QuotaLimit getQuotaLimit(ResultSet rs) throws Exception
