@@ -37,18 +37,18 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 08/01/2004 / 21:34:57
- * net.jforum.security.Role.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: Role.java,v 1.3 2004/09/19 05:13:16 rafaelsteil Exp $
  */
 package net.jforum.security;
 
+import java.io.Serializable;
+
 /**
  * @author Rafael Steil
+ * @version $Id: Role.java,v 1.4 2005/02/03 12:37:40 rafaelsteil Exp $
  */
-public class Role 
+public class Role implements Serializable
 {
 	private int id;
 	private int groupId;
@@ -112,7 +112,7 @@ public class Role
 		return this.roleValues;
 	}
 	
-	/* 
+	/** 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object o) 
@@ -124,7 +124,7 @@ public class Role
 		return (((Role)o).getId() == this.id);
 	}
 
-	/* 
+	/** 
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode() 

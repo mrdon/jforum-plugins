@@ -42,25 +42,15 @@
  */
 package net.jforum.drivers.postgresql;
 
-import java.sql.Connection;
-
 import net.jforum.entities.Forum;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumModel.java,v 1.4 2005/01/04 14:51:33 rafaelsteil Exp $
+ * @version $Id: ForumModel.java,v 1.5 2005/02/03 12:37:43 rafaelsteil Exp $
  */
 public class ForumModel extends net.jforum.drivers.generic.ForumModel
 {
-	public ForumModel() {
-		super();
-	}
-	
-	public ForumModel(Connection conn) {
-		super(conn);
-	}
-
 	/** 
 	 * @see net.jforum.model.ForumModel#addNew(net.jforum.entities.Forum)
 	 */

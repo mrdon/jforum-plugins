@@ -47,14 +47,10 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: ForumModel.java,v 1.1 2005/01/26 19:39:36 franklin_samir Exp $
+ * @version $Id: ForumModel.java,v 1.2 2005/02/03 12:37:45 rafaelsteil Exp $
  */
 public class ForumModel extends net.jforum.drivers.generic.ForumModel
 {
-    public ForumModel(){
-        super();
-    }
-    
 	/** 
 	 * @see net.jforum.model.ForumModel#addNew(net.jforum.entities.Forum)
 	 */

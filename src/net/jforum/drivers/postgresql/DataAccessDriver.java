@@ -42,14 +42,12 @@
  */
 package net.jforum.drivers.postgresql;
 
-import java.sql.Connection;
-
 import net.jforum.drivers.postgresql.security.GroupSecurityModel;
 import net.jforum.drivers.postgresql.security.UserSecurityModel;
 
 /**
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.7 2005/02/01 17:16:23 andowson Exp $
+ * @version $Id: DataAccessDriver.java,v 1.8 2005/02/03 12:37:43 rafaelsteil Exp $
  */
 public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDriver
 {
@@ -62,6 +60,8 @@ public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDrive
 	private static UserSecurityModel userSecurityModel = new UserSecurityModel();
 	private static PrivateMessageModel pmModel = new PrivateMessageModel();
 	private static AttachmentModel attachModel = new AttachmentModel();
+	private static ForumModel forumModel = new ForumModel();
+	private static CategoryModel categoryModel = new CategoryModel();
 
 	/** 
 	 * @see net.jforum.model.DataAccessDriver#newPostModel()
@@ -84,15 +84,7 @@ public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDrive
 	 */
 	public net.jforum.model.ForumModel newForumModel()
 	{
-		return new ForumModel();
-	}
-	
-	/**
-	 * @see net.jforum.model.DataAccessDriver#getForumModel(Connection)
-	 */
-	public net.jforum.model.ForumModel newForumModel(Connection conn) 
-	{
-		return new ForumModel(conn);	
+		return forumModel;
 	}
 	
 	/** 
@@ -140,15 +132,7 @@ public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDrive
 	 */
 	public net.jforum.model.CategoryModel newCategoryModel()
 	{
-		return new CategoryModel();
-	}
-	
-	/**
-	 * @see net.jforum.model.DataAccessDriver#newCategoryModel(Connection)
-	 */
-	public net.jforum.model.CategoryModel newCategoryModel(Connection conn) 
-	{
-		return new CategoryModel(conn);
+		return categoryModel;
 	}
 	
 	public net.jforum.model.PrivateMessageModel newPrivateMessageModel()

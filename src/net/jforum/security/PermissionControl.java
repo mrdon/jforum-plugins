@@ -42,6 +42,8 @@
  */
 package net.jforum.security;
 
+import java.io.Serializable;
+
 import net.jforum.model.security.SecurityModel;
 
 /**
@@ -49,9 +51,9 @@ import net.jforum.model.security.SecurityModel;
  * actions.  
  * 
  * @author Rafael Steil
- * @version $Id: PermissionControl.java,v 1.10 2005/01/28 14:46:19 rafaelsteil Exp $
+ * @version $Id: PermissionControl.java,v 1.11 2005/02/03 12:37:40 rafaelsteil Exp $
  */
-public class PermissionControl 
+public class PermissionControl implements Serializable
 {
 	public static final int ROLE_DENY = 0;
 	public static final int ROLE_ALLOW = 1;

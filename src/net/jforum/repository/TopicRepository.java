@@ -43,13 +43,12 @@
 package net.jforum.repository;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
 
+import net.jforum.cache.CacheEngine;
+import net.jforum.cache.Cacheable;
 import net.jforum.entities.Topic;
-import net.jforum.exceptions.ForumException;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.TopicModel;
 import net.jforum.util.preferences.ConfigKeys;
@@ -60,23 +59,22 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: TopicRepository.java,v 1.10 2004/11/21 17:13:47 rafaelsteil Exp $
+ * @version $Id: TopicRepository.java,v 1.11 2005/02/03 12:37:41 rafaelsteil Exp $
  */
-public class TopicRepository
+public class TopicRepository implements Cacheable
 {
-	private static LinkedHashMap allTopicsMap = new LinkedHashMap();
 	private static int maxItems = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
-	private static LinkedList recentTopicsList = new LinkedList();
+	private static final String FQN = "topics";
+	private static final String RECENT = "recent";
+	private static final String FQN_FORUM = FQN + "/byforum";
+	private static CacheEngine cache;
 	
-	static {
-		if (SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
-			try {
-				TopicRepository.loadMostRecentTopics();
-			}
-			catch (Exception e) {
-				throw new ForumException(e);
-			}
-		}
+	/**
+	 * @see net.jforum.cache.Cacheable#setCacheEngine(net.jforum.cache.CacheEngine)
+	 */
+	public void setCacheEngine(CacheEngine engine)
+	{
+		cache = engine;
 	}
 
 	/**
@@ -84,18 +82,25 @@ public class TopicRepository
 	 * 
 	 * @param topic The topic to add to stack
 	 */
-	public synchronized static void pushTopic(Topic topic)
+	public synchronized static void pushTopic(Topic topic) throws Exception
 	{
 		if (SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
 			int limit = SystemGlobals.getIntValue(ConfigKeys.RECENT_TOPICS);
-	
-			recentTopicsList.remove(topic);
-			recentTopicsList.addFirst(topic);
 			
-			while (recentTopicsList.size() > limit)
-			{
-				recentTopicsList.removeLast();
+			LinkedList l = (LinkedList)cache.get(FQN, RECENT);
+			if (l == null || l.size() == 0) {
+				l = new LinkedList(loadMostRecentTopics());
 			}
+			
+			l.remove(topic);
+			l.addFirst(topic);
+			
+			while (l.size() > limit)
+			{
+				l.removeLast();
+			}
+			
+			cache.add(FQN, RECENT, l);
 		}
 	}
 
@@ -104,10 +109,16 @@ public class TopicRepository
 	 * 
 	 * @param topic The topic to remove from stack
 	 */
-	public synchronized static void popTopic(Topic topic)
+	public synchronized static void popTopic(Topic topic) throws Exception
 	{
 		if (SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
-			recentTopicsList.remove(topic);
+			List l = (List)cache.get(FQN, RECENT);
+			if (l == null || l.size() == 0) {
+				l = new LinkedList(loadMostRecentTopics());
+			}
+			
+			l.remove(topic);
+			cache.add(FQN, RECENT, l);
 		}
 	}	
 
@@ -117,29 +128,27 @@ public class TopicRepository
 	 */	
 	public static List getRecentTopics() throws Exception
 	{
-		if (recentTopicsList == null || recentTopicsList.size() == 0
+		List l = (List)cache.get(FQN, RECENT);
+		if (l == null || l.size() == 0
 				|| !SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
 			loadMostRecentTopics();
 		}
 		
-		return new ArrayList(recentTopicsList);
+		return new ArrayList(l);
 	}	
 
 	/**
 	 * Add recent topics to the cache
 	 */
-	public static void loadMostRecentTopics() throws Exception
+	public static List loadMostRecentTopics() throws Exception
 	{
 		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
-		recentTopicsList = new LinkedList();
-		
 		int limit = SystemGlobals.getIntValue(ConfigKeys.RECENT_TOPICS);
+		
 		List l = tm.selectRecentTopics(limit);
-		for (Iterator iter = l.iterator(); iter.hasNext(); ) {
-			Topic t = (Topic)iter.next();
-			
-			recentTopicsList.addLast(t);
-		}		
+		cache.add(FQN, RECENT, new LinkedList(l));
+		
+		return l;
 	}
 	/**
 	 * Add topics to the cache
@@ -149,7 +158,7 @@ public class TopicRepository
 	 */
 	public synchronized static void addAll(int forumId, List topics)
 	{
-		allTopicsMap.put(new Integer(forumId), new LinkedList(topics));
+		cache.add(FQN_FORUM, Integer.toString(forumId), new LinkedList(topics));
 	}
 	
 	/**
@@ -159,7 +168,7 @@ public class TopicRepository
 	 */
 	public synchronized static void clearCache(int forumId) throws Exception
 	{
-		allTopicsMap.put(new Integer(forumId), new LinkedList());
+		cache.add(FQN_FORUM, Integer.toString(forumId), new LinkedList());
 	}
 	
 	/**
@@ -170,13 +179,12 @@ public class TopicRepository
 	public synchronized static void addTopic(Topic topic)
 	{
 		if (SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
-			Integer forumId = new Integer(topic.getForumId());
-			LinkedList list = (LinkedList)allTopicsMap.get(forumId);
+			String forumId = Integer.toString(topic.getForumId());
+			LinkedList list = (LinkedList)cache.get(FQN_FORUM, forumId);
 			
 			if (list == null) {
 				list = new LinkedList();
 				list.add(topic);
-				allTopicsMap.put(forumId, list);
 			}
 			else {
 				if (list.size() + 1 > maxItems) {
@@ -185,6 +193,8 @@ public class TopicRepository
 				
 				list.addFirst(topic);
 			}
+			
+			cache.add(FQN_FORUM, forumId, list);
 		}
 	}
 	
@@ -195,9 +205,12 @@ public class TopicRepository
 	 */
 	public synchronized static void updateTopic(Topic topic)
 	{
-		int index = ((LinkedList)allTopicsMap.get(new Integer(topic.getForumId()))).indexOf(topic);
+		String forumId = Integer.toString(topic.getForumId());
+		List l = (List)cache.get(FQN_FORUM, forumId);
+		int index = l.indexOf(topic);
 		if (index > -1) {
-			((LinkedList)allTopicsMap.get(new Integer(topic.getForumId()))).set(index, topic);
+			l.set(index, topic);
+			cache.add(FQN_FORUM, forumId, l);
 		}
 	}
 	
@@ -209,7 +222,7 @@ public class TopicRepository
 	 */
 	public static boolean isTopicCached(Topic topic)
 	{
-		return ((LinkedList)allTopicsMap.get(new Integer(topic.getForumId()))).contains(topic);
+		return ((List)cache.get(FQN_FORUM, Integer.toString(topic.getForumId()))).contains(topic);
 	}
 	
 	/**
@@ -221,7 +234,7 @@ public class TopicRepository
 	public static List getTopics(int forumid)
 	{
 		if (SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
-			LinkedList returnList = (LinkedList)allTopicsMap.get(new Integer(forumid));
+			List returnList = (List)cache.get(FQN_FORUM, Integer.toString(forumid));
 			if (returnList == null) {
 				return new ArrayList();
 			}

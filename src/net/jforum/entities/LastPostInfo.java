@@ -42,11 +42,13 @@
  */
 package net.jforum.entities;
 
+import java.io.Serializable;
+
 /**
  * @author Rafael Steil
- * @version $Id: LastPostInfo.java,v 1.2 2005/01/04 03:25:37 rafaelsteil Exp $
+ * @version $Id: LastPostInfo.java,v 1.3 2005/02/03 12:37:41 rafaelsteil Exp $
  */
-public class LastPostInfo 
+public class LastPostInfo implements Serializable
 {
 	private long postTimeMillis;
 	private int topicId;

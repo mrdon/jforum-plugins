@@ -12,8 +12,8 @@ GroupModel.selectUsersIds = SELECT user_id FROM jforum_user_groups WHERE group_i
 # #############
 # CategoryModel
 # #############
-CategoryModel.selectById = SELECT * FROM jforum_categories WHERE categories_id = ? ORDER BY title 
-CategoryModel.selectAll = SELECT * FROM jforum_categories ORDER BY display_order
+CategoryModel.selectById = SELECT categories_id, title, display_order, moderated FROM jforum_categories WHERE categories_id = ? ORDER BY title 
+CategoryModel.selectAll = SELECT categories_id, title, display_order, moderated FROM jforum_categories ORDER BY display_order
 CategoryModel.canDelete = SELECT COUNT(1) AS total FROM jforum_forums WHERE categories_id = ?
 CategoryModel.delete = DELETE FROM jforum_categories WHERE categories_id = ?
 CategoryModel.update = UPDATE jforum_categories SET title = ?, moderated = ? WHERE categories_id = ?

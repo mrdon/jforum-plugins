@@ -52,10 +52,12 @@ import java.util.Properties;
 import net.jforum.cache.CacheEngine;
 import net.jforum.exceptions.CacheEngineStartupException;
 import net.jforum.repository.BBCodeRepository;
+import net.jforum.repository.ForumRepository;
 import net.jforum.repository.ModulesRepository;
 import net.jforum.repository.RankingRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.repository.SmiliesRepository;
+import net.jforum.repository.TopicRepository;
 import net.jforum.util.FileMonitor;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.QueriesFileListener;
@@ -68,7 +70,7 @@ import org.apache.log4j.Logger;
  * General utilities methods for loading configurations for JForum.
  * 
  * @author Rafael Steil
- * @version $Id: ConfigLoader.java,v 1.6 2005/02/01 21:41:54 rafaelsteil Exp $
+ * @version $Id: ConfigLoader.java,v 1.7 2005/02/03 12:37:39 rafaelsteil Exp $
  */
 public class ConfigLoader 
 {
@@ -181,6 +183,9 @@ public class ConfigLoader
 			new RankingRepository().setCacheEngine(cache);
 			new SmiliesRepository().setCacheEngine(cache);
 			new SecurityRepository().setCacheEngine(cache);
+			new ForumRepository().setCacheEngine(cache);
+			new TopicRepository().setCacheEngine(cache);
+			new SessionFacade().setCacheEngine(cache);
 		}
 		catch (Exception e) {
 			throw new CacheEngineStartupException("Error while starting the cache engine: " + e);

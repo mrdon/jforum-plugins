@@ -56,7 +56,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumStartup.java,v 1.3 2005/01/08 15:21:56 rafaelsteil Exp $
+ * @version $Id: ForumStartup.java,v 1.4 2005/02/03 12:37:38 rafaelsteil Exp $
  */
 public class ForumStartup 
 {
@@ -92,15 +92,11 @@ public class ForumStartup
 	public static void startForumRepository()
 	{
 		try {
-			Connection conn = DBConnection.getImplementation().getConnection();
-			
-			ForumModel fm = DataAccessDriver.getInstance().newForumModel(conn);
-			CategoryModel cm = DataAccessDriver.getInstance().newCategoryModel(conn);
-			ConfigModel configModel = DataAccessDriver.getInstance().newConfigModel(conn);
+			ForumModel fm = DataAccessDriver.getInstance().newForumModel();
+			CategoryModel cm = DataAccessDriver.getInstance().newCategoryModel();
+			ConfigModel configModel = DataAccessDriver.getInstance().newConfigModel();
 
 			ForumRepository.start(fm, cm, configModel);
-			
-			DBConnection.getImplementation().releaseConnection(conn);
 		}
 		catch (Exception e) {
 			throw new RepositoryStartupException("Error while trying to start ForumRepository: " + e);

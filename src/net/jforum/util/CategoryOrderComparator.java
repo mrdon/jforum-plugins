@@ -42,15 +42,16 @@
  */
 package net.jforum.util;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 import net.jforum.entities.Category;
 
 /**
  * @author Rafael Steil
- * @version $Id: CategoryOrderComparator.java,v 1.1 2004/12/05 21:51:25 rafaelsteil Exp $
+ * @version $Id: CategoryOrderComparator.java,v 1.2 2005/02/03 12:37:40 rafaelsteil Exp $
  */
-public class CategoryOrderComparator implements Comparator 
+public class CategoryOrderComparator implements Comparator, Serializable
 {
 	/** 
 	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)

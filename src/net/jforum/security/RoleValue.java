@@ -42,11 +42,13 @@
  */
 package net.jforum.security;
 
+import java.io.Serializable;
+
 /**
  * @author Rafael Steil
- * @version $Id: RoleValue.java,v 1.4 2004/12/27 00:06:10 rafaelsteil Exp $
+ * @version $Id: RoleValue.java,v 1.5 2005/02/03 12:37:40 rafaelsteil Exp $
  */
-public class RoleValue 
+public class RoleValue implements Serializable
 {
 	private int roleId;
 	private String value;

@@ -42,6 +42,7 @@
  */
 package net.jforum.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -71,9 +72,9 @@ import net.jforum.util.ForumOrderComparator;
  * to the user who make the call tho the method. 
  * 
  * @author Rafael Steil
- * @version $Id: Category.java,v 1.16 2005/02/01 21:42:00 rafaelsteil Exp $
+ * @version $Id: Category.java,v 1.17 2005/02/03 12:37:41 rafaelsteil Exp $
  */
-public class Category 
+public class Category  implements Serializable
 {
 	private int id;
 	private int order;

@@ -42,7 +42,6 @@
  */
 package net.jforum.drivers.generic;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -54,28 +53,16 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: ConfigModel.java,v 1.1 2004/12/29 17:18:40 rafaelsteil Exp $
+ * @version $Id: ConfigModel.java,v 1.2 2005/02/03 12:37:39 rafaelsteil Exp $
  */
 public class ConfigModel implements net.jforum.model.ConfigModel
 {
-	private Connection conn;
-	
-	public ConfigModel()
-	{
-		this.conn = JForum.getConnection();
-	}
-	
-	public ConfigModel(Connection conn)
-	{
-		this.conn = conn;
-	}
-	
 	/**
 	 * @see net.jforum.model.ConfigModel#insert(net.jforum.entities.Config)
 	 */
 	public void insert(Config config) throws Exception
 	{
-		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ConfigModel.insert"));
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ConfigModel.insert"));
 		p.setString(1, config.getName());
 		p.setString(2, config.getValue());
 		p.executeUpdate();
@@ -87,7 +74,7 @@ public class ConfigModel implements net.jforum.model.ConfigModel
 	 */
 	public void update(Config config) throws Exception
 	{
-		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ConfigModel.update"));
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ConfigModel.update"));
 		p.setString(1, config.getValue());
 		p.setString(2, config.getName());
 		p.executeUpdate();
@@ -99,7 +86,7 @@ public class ConfigModel implements net.jforum.model.ConfigModel
 	 */
 	public void delete(Config config) throws Exception
 	{
-		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ConfigModel.delete"));
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ConfigModel.delete"));
 		p.setInt(1, config.getId());
 		p.executeUpdate();
 		p.close();
@@ -112,7 +99,7 @@ public class ConfigModel implements net.jforum.model.ConfigModel
 	{
 		List l = new ArrayList();
 		
-		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ConfigModel.selectAll"));
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ConfigModel.selectAll"));
 		ResultSet rs = p.executeQuery();
 		while (rs.next()) {
 			l.add(this.makeConfig(rs));
@@ -129,7 +116,7 @@ public class ConfigModel implements net.jforum.model.ConfigModel
 	 */
 	public Config selectByName(String name) throws Exception
 	{
-		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ConfigModel.selectByName"));
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ConfigModel.selectByName"));
 		p.setString(1, name);
 		ResultSet rs = p.executeQuery();
 		Config c = null;

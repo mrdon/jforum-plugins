@@ -45,13 +45,14 @@ package net.jforum.repository;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
 import net.jforum.SessionFacade;
+import net.jforum.cache.CacheEngine;
+import net.jforum.cache.Cacheable;
 import net.jforum.entities.Category;
 import net.jforum.entities.Config;
 import net.jforum.entities.Forum;
@@ -74,18 +75,28 @@ import net.jforum.util.preferences.ConfigKeys;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.26 2005/01/04 21:28:51 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.27 2005/02/03 12:37:41 rafaelsteil Exp $
  */
-public class ForumRepository 
+public class ForumRepository implements Cacheable
 {
-	private static Map forumCategoryRelation = new HashMap();
-	private static Map categoriesMap = new HashMap();
-	private static Set categoriesSet = new TreeSet(new CategoryOrderComparator());
-	private static int totalTopics = -1;
-	private static int totalMessages = 0;
-	private static MostUsersEverOnline mostUsersEverOnline;
-
+	private static CacheEngine cache;
+	private static final String FQN = "categories";
+	private static final String CATEGORIES_SET = "categoriesSet";
+	private static final String RELATION = "relationForums";
+	private static final String TOTAL_TOPICS = "totalTopcis";
+	private static final String TOTAL_MESSAGES = "totalMessages";
+	private static final String MOST_USERS_ONLINE = "mostUsersEverOnline";
+	private static final String LOADED = "loaded";
+	
 	private static ForumRepository instance;
+	
+	/**
+	 * @see net.jforum.cache.Cacheable#setCacheEngine(net.jforum.cache.CacheEngine)
+	 */
+	public void setCacheEngine(CacheEngine engine)
+	{
+		cache = engine;
+	}
 	
 	/**
 	 * Starts the repository.
@@ -100,11 +111,25 @@ public class ForumRepository
 			CategoryModel cm,
 			ConfigModel configModel) throws Exception
 	{
-		instance = new ForumRepository();
-		
-		instance.loadCategories(cm);
-		instance.loadForums(fm);
-		instance.loadMostUsersEverOnline(configModel);
+		if (cache.get(FQN, LOADED) == null) {
+			instance = new ForumRepository();
+			
+			instance.loadCategories(cm);
+			instance.loadForums(fm);
+			instance.loadMostUsersEverOnline(configModel);
+			
+			Integer i = (Integer)cache.get(FQN, TOTAL_TOPICS);
+			if (i == null) {
+				cache.add(FQN, TOTAL_TOPICS, new Integer(-1));
+			}
+			
+			i = (Integer)cache.get(FQN, TOTAL_MESSAGES);
+			if (i == null) {
+				cache.add(FQN, TOTAL_MESSAGES, new Integer(0));
+			}
+			
+			cache.add(FQN, LOADED, "1");
+		}
 	}
 	
 	/**
@@ -138,7 +163,7 @@ public class ForumRepository
 			return null;
 		}
 		
-		return (Category)categoriesMap.get(new Integer(categoryId));
+		return (Category)cache.get(FQN, Integer.toString(categoryId));
 	}
 	
 	public static Category getCategory(PermissionControl pc, int categoryId)
@@ -147,7 +172,7 @@ public class ForumRepository
 			return null;
 		}
 		
-		return (Category)categoriesMap.get(new Integer(categoryId)); 
+		return (Category)cache.get(FQN, Integer.toString(categoryId)); 
 	}
 	
 	/**
@@ -196,7 +221,7 @@ public class ForumRepository
 		PermissionControl pc = SecurityRepository.get(userId);
 		List l = new ArrayList();
 		
-		Iterator iter = categoriesSet.iterator();
+		Iterator iter = ((Set)cache.get(FQN, CATEGORIES_SET)).iterator();
 		while (iter.hasNext()) {
 			Category c = (Category)iter.next();
 			
@@ -224,7 +249,7 @@ public class ForumRepository
 	
 	private static Category findCategoryByOrder(int order)
 	{
-		for (Iterator iter = categoriesSet.iterator(); iter.hasNext(); ) {
+		for (Iterator iter = ((Set)cache.get(FQN, CATEGORIES_SET)).iterator(); iter.hasNext(); ) {
 			Category c = (Category)iter.next();
 			if (c.getOrder() == order) {
 				return c;
@@ -243,28 +268,40 @@ public class ForumRepository
 	 */
 	public synchronized static void reloadCategory(Category c)
 	{
-		Category current = (Category)categoriesMap.get(new Integer(c.getId()));
+		Category current = (Category)cache.get(FQN, Integer.toString(c.getId()));
 		Category currentAtOrder = findCategoryByOrder(c.getOrder());
 		
 		Set tmpSet = new TreeSet(new CategoryOrderComparator());
-		tmpSet.addAll(categoriesSet);
+		tmpSet.addAll((Set)cache.get(FQN, CATEGORIES_SET));
 		
 		if (currentAtOrder != null) {
 			tmpSet.remove(currentAtOrder);
 		}
 		
 		tmpSet.add(c);
-		categoriesMap.put(new Integer(c.getId()), c);
+		cache.add(FQN, Integer.toString(c.getId()), c);
 		
 		if (currentAtOrder != null) {
 			tmpSet.remove(current);
 			currentAtOrder.setOrder(current.getOrder());
 			tmpSet.add(currentAtOrder);
 			
-			categoriesMap.put(new Integer(currentAtOrder.getId()), currentAtOrder);
+			cache.add(FQN, Integer.toString(currentAtOrder.getId()), currentAtOrder);
 		}
 		
-		categoriesSet = tmpSet;
+		cache.add(FQN, CATEGORIES_SET, tmpSet);
+	}
+	
+	/**
+	 * Refreshes a category entry in the cache.
+	 * 
+	 * @param c The category to refresh
+	 */
+	public static void refreshCategory(Category c)
+	{
+		cache.add(FQN, Integer.toString(c.getId()), c);
+		Set s = (Set)cache.get(FQN, CATEGORIES_SET);
+		cache.add(FQN, CATEGORIES_SET, s);
 	}
 	
 	/**
@@ -274,15 +311,21 @@ public class ForumRepository
 	 */
 	public synchronized static void removeCategory(Category c)
 	{
-		categoriesMap.remove(new Integer(c.getId()));
-		categoriesSet.remove(c);
+		cache.remove(FQN, Integer.toString(c.getId()));
 		
-		for (Iterator iter = forumCategoryRelation.values().iterator(); iter.hasNext(); ) {
+		Set s = (Set)cache.get(FQN, CATEGORIES_SET);
+		s.remove(c);
+		cache.add(FQN, CATEGORIES_SET, s);
+		
+		Map m = (Map)cache.get(FQN, RELATION);
+		for (Iterator iter = m.values().iterator(); iter.hasNext(); ) {
 			int id = ((Integer)iter.next()).intValue();
 			if (id == c.getId()) {
 				iter.remove();
 			}
 		}
+		
+		cache.add(FQN, RELATION, m);
 	}
 	
 	/**
@@ -291,13 +334,17 @@ public class ForumRepository
 	 */
 	public synchronized static void addCategory(Category c)
 	{
-		categoriesMap.put(new Integer(c.getId()), c);
-		categoriesSet.add(c);
+		String categoryId = Integer.toString(c.getId());
+		cache.add(FQN, categoryId, c);
+		cache.add(FQN, CATEGORIES_SET, c);
 		
+		Map relation = (Map)cache.get(FQN, RELATION);
 		for (Iterator iter = c.getForums().iterator(); iter.hasNext(); ) {
 			Forum f = (Forum)iter.next();
-			forumCategoryRelation.put(new Integer(f.getId()), new Integer(f.getCategoryId()));
+			relation.put(Integer.toString(f.getId()), categoryId);
 		}
+		
+		cache.add(FQN, RELATION, relation);
 	}
 	
 	/**
@@ -309,8 +356,8 @@ public class ForumRepository
 	 */
 	public static Forum getForum(int forumId)
 	{
-		int categoryId = ((Integer)forumCategoryRelation.get(new Integer(forumId))).intValue();
-		return ((Category)categoriesMap.get(new Integer(categoryId))).getForum(forumId);
+		String categoryId = (String)((Map)cache.get(FQN, RELATION)).get(Integer.toString(forumId));
+		return ((Category)cache.get(FQN, categoryId)).getForum(forumId);
 	}
 	
 	public static boolean isForumAccessible(int forumId)
@@ -320,13 +367,13 @@ public class ForumRepository
 	
 	public static boolean isForumAccessible(int userId, int forumId)
 	{
-		int categoryId = ((Integer)forumCategoryRelation.get(new Integer(forumId))).intValue();
+		int categoryId = Integer.parseInt((String)((Map)cache.get(FQN, RELATION)).get(Integer.toString(forumId)));
 		return isForumAccessible(userId, categoryId, forumId);
 	}
 	
 	public static boolean isForumAccessible(int userId, int categoryId, int forumId)
 	{
-		return ((Category)categoriesMap.get(new Integer(categoryId))).getForum(userId, forumId) != null;
+		return ((Category)cache.get(FQN, Integer.toString(categoryId))).getForum(userId, forumId) != null;
 	}
 	
 	/**
@@ -336,9 +383,18 @@ public class ForumRepository
 	 */
 	public synchronized static void addForum(Forum forum)
 	{
-		Integer categoryId = new Integer(forum.getCategoryId());
-		((Category)categoriesMap.get(categoryId)).addForum(forum);
-		forumCategoryRelation.put(new Integer(forum.getId()), categoryId);
+		String categoryId = Integer.toString(forum.getCategoryId());
+
+		Category c = (Category)cache.get(FQN, categoryId);
+		c.addForum(forum);
+		cache.add(FQN, categoryId, c);
+		
+		Map m = (Map)cache.get(FQN, RELATION);
+		m.put(Integer.toString(forum.getId()), categoryId);
+		cache.add(FQN, RELATION, m);
+		
+		Set s = (Set)cache.get(FQN, CATEGORIES_SET);
+		cache.add(FQN, CATEGORIES_SET, s);
 	}
 	
 	/**
@@ -348,9 +404,19 @@ public class ForumRepository
 	 */
 	public synchronized static void removeForum(Forum forum)
 	{
-		Integer id = new Integer(forum.getId());
-		forumCategoryRelation.remove(id);
-		getCategory(forum.getCategoryId()).removeForum(forum.getId());
+		String id = Integer.toString(forum.getId());
+		Map m = (Map)cache.get(FQN, RELATION);
+		m.remove(id);
+		cache.add(FQN, RELATION, m);
+
+		id = Integer.toString(forum.getCategoryId());
+		
+		Category c = (Category)cache.get(FQN, id);
+		c.removeForum(forum.getId());
+		cache.add(FQN, id, c);
+		
+		Set s = (Set)cache.get(FQN, CATEGORIES_SET);
+		cache.add(FQN, CATEGORIES_SET, s);
 	}
 	
 	/**
@@ -367,12 +433,17 @@ public class ForumRepository
 	{
 		Forum f = DataAccessDriver.getInstance().newForumModel().selectById(forumId);
 		
-		if (forumCategoryRelation.containsKey(new Integer(f.getId()))) {
-			Category c = (Category)categoriesMap.get(new Integer(f.getCategoryId()));
+		if (((Map)cache.get(FQN, RELATION)).containsKey(Integer.toString(forumId))) {
+			String id = Integer.toString(f.getCategoryId());
+			Category c = (Category)cache.get(FQN, id);
 			
 			f.setLastPostInfo(null);
 			f.setLastPostInfo(ForumRepository.getLastPostInfo(f));
 			c.reloadForum(f);
+			
+			cache.add(FQN, id, c);
+			Set s = (Set)cache.get(FQN, CATEGORIES_SET);
+			cache.add(FQN, CATEGORIES_SET, s);
 		}
 		
 		getTotalMessages(true);
@@ -420,11 +491,13 @@ public class ForumRepository
 	 */
 	public static int getTotalTopics(int forumId, boolean fromDb) throws Exception
 	{
-		if (fromDb || ForumRepository.totalTopics == -1) {
-			ForumRepository.totalTopics = DataAccessDriver.getInstance().newForumModel().getTotalTopics(forumId);
+		int total = ((Integer)cache.get(FQN, TOTAL_TOPICS)).intValue();
+		if (fromDb || total == -1) {
+			total = DataAccessDriver.getInstance().newForumModel().getTotalTopics(forumId);
+			cache.add(FQN, TOTAL_TOPICS, new Integer(total));
 		}
 		
-		return ForumRepository.totalTopics;
+		return total;
 	}
 	
 	/**
@@ -462,11 +535,13 @@ public class ForumRepository
 	 */
 	public static int getTotalMessages(boolean fromDb) throws Exception
 	{
-		if (fromDb || ForumRepository.totalMessages == 0) {
-			ForumRepository.totalMessages = DataAccessDriver.getInstance().newForumModel().getTotalMessages();
+		int total = ((Integer)cache.get(FQN, TOTAL_MESSAGES)).intValue();
+		if (fromDb || total == 0) {
+			total = DataAccessDriver.getInstance().newForumModel().getTotalMessages();
+			cache.add(FQN, TOTAL_MESSAGES, new Integer(total));
 		}
 		
-		return ForumRepository.totalMessages;
+		return total;
 	}
 	
 	/**
@@ -475,7 +550,7 @@ public class ForumRepository
 	 */
 	public static MostUsersEverOnline getMostUsersEverOnline()
 	{
-		return mostUsersEverOnline;
+		return (MostUsersEverOnline)cache.get(FQN, MOST_USERS_ONLINE);
 	}
 	
 	/**
@@ -514,7 +589,7 @@ public class ForumRepository
 			cm.update(config);
 		}
 		
-		mostUsersEverOnline = m;
+		cache.add(FQN, MOST_USERS_ONLINE, m);
 	}
 	
 	/**
@@ -523,20 +598,43 @@ public class ForumRepository
 	 */
 	private void loadForums(ForumModel fm) throws Exception
 	{
-		forumCategoryRelation = new HashMap();
 		List l = fm.selectAll();
+		
+		Map m = (Map)cache.get(FQN, RELATION);
+		if (m == null) {
+			m = new HashMap();
+		}
+		
+		int lastId = 0;
+		Category c = null;
+		String catId = null;
 
 		for (Iterator iter = l.iterator(); iter.hasNext(); ) {
 			Forum f = (Forum)iter.next();
-			Category c = (Category)categoriesMap.get(new Integer(f.getCategoryId()));
+			
+			if (f.getCategoryId() != lastId) {
+				if (c != null) {
+					cache.add(FQN, catId, c);
+				}
+				
+				lastId = f.getCategoryId();
+				catId = Integer.toString(f.getCategoryId());
+				c = (Category)cache.get(FQN, catId);
+			}
 			
 			if (c == null) {
 				throw new CategoryNotFoundException("Category for forum #" + f.getId() + " not found");
 			}
 			
 			c.addForum(f);
-			forumCategoryRelation.put(new Integer(f.getId()), new Integer(c.getId()));
+			m.put(Integer.toString(f.getId()), catId);
 		}
+		
+		if (c != null) {
+			cache.add(FQN, catId, c);
+		}
+		
+		cache.add(FQN, RELATION, m);
 	}
 
 	/**
@@ -546,19 +644,22 @@ public class ForumRepository
 	private void loadCategories(CategoryModel cm) throws Exception
 	{
 		List categories = cm.selectAll();
-		categoriesMap = new LinkedHashMap();
-		categoriesSet = new TreeSet(new CategoryOrderComparator());
+		Set categoriesSet = new TreeSet(new CategoryOrderComparator());
+		
 		for (Iterator iter = categories.iterator(); iter.hasNext(); ) {
 			Category c = (Category)iter.next();
-			categoriesMap.put(new Integer(c.getId()), c);
+			
+			cache.add(FQN, Integer.toString(c.getId()), c);
 			categoriesSet.add(c);
 		}
+		
+		cache.add(FQN, CATEGORIES_SET, categoriesSet);
 	}
 	
 	private void loadMostUsersEverOnline(ConfigModel cm) throws Exception
 	{
 		Config config = cm.selectByName(ConfigKeys.MOST_USERS_EVER_ONLINE);
-		mostUsersEverOnline = new MostUsersEverOnline();
+		MostUsersEverOnline mostUsersEverOnline = new MostUsersEverOnline();
 		
 		if (config != null) {
 			mostUsersEverOnline.setTotal(Integer.parseInt(config.getValue()));
@@ -568,5 +669,7 @@ public class ForumRepository
 			config = cm.selectByName(ConfigKeys.MOST_USER_EVER_ONLINE_DATE);
 			mostUsersEverOnline.setTimeInMillis(Long.parseLong(config.getValue()));
 		}
+		
+		cache.add(FQN, MOST_USERS_ONLINE, mostUsersEverOnline);
 	}
 }

@@ -42,13 +42,15 @@
  */
 package net.jforum.util.bbcode;
 
+import java.io.Serializable;
+
 /**
  * Represents each bbcode.
  * 
  * @author Rafael Steil
- * @version $Id: BBCode.java,v 1.6 2004/11/21 17:13:49 rafaelsteil Exp $
+ * @version $Id: BBCode.java,v 1.7 2005/02/03 12:37:42 rafaelsteil Exp $
  */
-public class BBCode 
+public class BBCode implements Serializable
 {
 	private String tagName = "";
 	private String regex;

@@ -42,7 +42,8 @@
  */
 package net.jforum.util.bbcode;
 
- import java.util.Collection;
+ import java.io.Serializable;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -60,9 +61,9 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * @author Rafael Steil
- * @version $Id: BBCodeHandler.java,v 1.8 2004/12/29 17:18:44 rafaelsteil Exp $
+ * @version $Id: BBCodeHandler.java,v 1.9 2005/02/03 12:37:42 rafaelsteil Exp $
  */
-public class BBCodeHandler extends DefaultHandler
+public class BBCodeHandler extends DefaultHandler implements Serializable
 {
 	private Map bbMap = new LinkedHashMap();
 	private boolean matchOpen = false;

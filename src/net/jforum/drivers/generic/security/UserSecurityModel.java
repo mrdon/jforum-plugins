@@ -42,6 +42,7 @@
  */
 package net.jforum.drivers.generic.security;
 
+import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -60,9 +61,9 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * $Id: UserSecurityModel.java,v 1.7 2005/01/28 14:46:20 rafaelsteil Exp $
+ * $Id: UserSecurityModel.java,v 1.8 2005/02/03 12:37:44 rafaelsteil Exp $
  */
-public class UserSecurityModel extends AutoKeys implements net.jforum.model.security.UserSecurityModel 
+public class UserSecurityModel extends AutoKeys implements net.jforum.model.security.UserSecurityModel, Serializable 
 {
 	/** 
 	 * @see net.jforum.model.security.SecurityModel#deleteAllRoles(int)

@@ -42,7 +42,6 @@
  */
 package net.jforum.drivers.generic;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -54,37 +53,23 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: CategoryModel.java,v 1.9 2005/01/31 20:10:41 rafaelsteil Exp $
+ * @version $Id: CategoryModel.java,v 1.10 2005/02/03 12:37:39 rafaelsteil Exp $
  */
 public class CategoryModel extends AutoKeys implements net.jforum.model.CategoryModel 
 {
-	private Connection conn;
-	
-	public CategoryModel()
-	{
-		this.conn = JForum.getConnection();
-	}
-	
-	public CategoryModel(Connection conn)
-	{
-		this.conn = conn;
-	}
-	
 	/**
 	 * @see net.jforum.model.CategoryModel#selectById(int)
 	 */
 	public Category selectById(int categoryId) throws Exception 
 	{
-		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("CategoryModel.selectById"));
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.selectById"));
 		p.setInt(1, categoryId);
 		
 		ResultSet rs = p.executeQuery();
 		
 		Category c = new Category();
 		if (rs.next()) {
-			c.setId(categoryId);
-			c.setName(rs.getString("title"));
-			c.setOrder(rs.getInt("display_order"));
+			c = this.getCategory(rs);
 		}
 		
 		rs.close();
@@ -98,18 +83,12 @@ public class CategoryModel extends AutoKeys implements net.jforum.model.Category
 	 */
 	public List selectAll() throws Exception 
 	{
-		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("CategoryModel.selectAll"));
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.selectAll"));
 		List l = new ArrayList();
 		
 		ResultSet rs = p.executeQuery();		
 		while (rs.next()) {
-			Category c = new Category();
-			
-			c.setId(rs.getInt("categories_id"));
-			c.setName(rs.getString("title"));
-			c.setOrder(rs.getInt("display_order"));	
-			
-			l.add(c);		
+			l.add(this.getCategory(rs));		
 		}
 		
 		rs.close();
@@ -117,13 +96,25 @@ public class CategoryModel extends AutoKeys implements net.jforum.model.Category
 			
 		return l;
 	}
+	
+	protected Category getCategory(ResultSet rs) throws Exception
+	{
+		Category c = new Category();
+		
+		c.setId(rs.getInt("categories_id"));
+		c.setName(rs.getString("title"));
+		c.setOrder(rs.getInt("display_order"));	
+		c.setModerated(rs.getInt("moderated") == 1);
+		
+		return c;
+	}
 
 	/** 
 	 * @see net.jforum.model.CategoryModel#canDelete(int)
 	 */
 	public boolean canDelete(int categoryId) throws Exception
 	{
-		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("CategoryModel.canDelete"));
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.canDelete"));
 		p.setInt(1, categoryId);
 		
 		ResultSet rs = p.executeQuery();
@@ -142,7 +133,7 @@ public class CategoryModel extends AutoKeys implements net.jforum.model.Category
 	 */
 	public void delete(int categoryId) throws Exception 
 	{
-		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("CategoryModel.delete"));
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.delete"));
 		p.setInt(1, categoryId);
 		p.executeUpdate();
 		
@@ -154,7 +145,7 @@ public class CategoryModel extends AutoKeys implements net.jforum.model.Category
 	 */
 	public void update(Category category) throws Exception 
 	{
-		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("CategoryModel.update"));		
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.update"));		
 		p.setString(1, category.getName());
 		p.setInt(2, category.isModerated() ? 1 : 0);
 		p.setInt(3, category.getId());
@@ -168,7 +159,7 @@ public class CategoryModel extends AutoKeys implements net.jforum.model.Category
 	public int addNew(Category category) throws Exception 
 	{
 		int order = 1;
-		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("CategoryModel.getMaxOrder"));
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.getMaxOrder"));
 		
 		ResultSet rs = p.executeQuery();
 		if (rs.next()) {
@@ -213,14 +204,14 @@ public class CategoryModel extends AutoKeys implements net.jforum.model.Category
 		category.setOrder(tmpOrder);
 
 		// *********
-		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("CategoryModel.setOrderById"));
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.setOrderById"));
 		p.setInt(1, otherCategory.getOrder());
 		p.setInt(2, otherCategory.getId());
 		p.executeUpdate();
 		p.close();
 
 		// *********
-		p = this.conn.prepareStatement(SystemGlobals.getSql("CategoryModel.setOrderById"));
+		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.setOrderById"));
 		p.setInt(1, category.getOrder());
 		p.setInt(2, category.getId());
 		p.executeUpdate();

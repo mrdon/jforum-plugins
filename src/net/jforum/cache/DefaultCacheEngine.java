@@ -42,16 +42,18 @@
  */
 package net.jforum.cache;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author Rafael Steil
- * @version $Id: DefaultCacheEngine.java,v 1.1 2005/02/01 21:42:01 rafaelsteil Exp $
+ * @version $Id: DefaultCacheEngine.java,v 1.2 2005/02/03 12:37:42 rafaelsteil Exp $
  */
 public class DefaultCacheEngine implements CacheEngine
 {
-	private static Map cache;
+	private Map cache;
 	
 	/**
 	 * @see net.jforum.cache.CacheEngine#add(java.lang.String, java.lang.Object)
@@ -66,7 +68,13 @@ public class DefaultCacheEngine implements CacheEngine
 	 */
 	public void add(String fqn, String key, Object value)
 	{
-		cache.put(fqn + key, value);
+		Map m = (Map)this.cache.get(fqn);
+		if (m == null) {
+			m = new HashMap();
+		}
+
+		m.put(key, value);
+		this.cache.put(fqn, m);
 	}
 	
 	/**
@@ -74,15 +82,33 @@ public class DefaultCacheEngine implements CacheEngine
 	 */
 	public Object get(String fqn, String key)
 	{
-		return cache.get(fqn + key);
+		Map m = (Map)this.cache.get(fqn);
+		if (m == null) {
+			return null;
+		}
+		
+		return m.get(key);
 	}
 	
 	/**
 	 * @see net.jforum.cache.CacheEngine#get(java.lang.String)
 	 */
-	public Object get(String key)
+	public Object get(String fqn)
 	{
-		throw new UnsupportedOperationException("Use the get(String, String) method");
+		return this.cache.get(fqn);
+	}
+	
+	/**
+	 * @see net.jforum.cache.CacheEngine#getValues(java.lang.String)
+	 */
+	public Collection getValues(String fqn)
+	{
+		Map m = (Map)this.cache.get(fqn);
+		if (m == null) {
+			return new ArrayList();
+		}
+		
+		return m.values();
 	}
 	
 	/**
@@ -90,7 +116,7 @@ public class DefaultCacheEngine implements CacheEngine
 	 */
 	public void init()
 	{
-		cache = new HashMap();
+		this.cache = new HashMap();
 	}
 	
 	/**
@@ -98,7 +124,7 @@ public class DefaultCacheEngine implements CacheEngine
 	 */
 	public void remove(String fqn, String key)
 	{
-		cache.remove(fqn + key);
+		((Map)this.cache.remove(fqn)).remove(key);
 	}
 	
 	/**
@@ -106,6 +132,6 @@ public class DefaultCacheEngine implements CacheEngine
 	 */
 	public void remove(String fqn)
 	{
-		throw new UnsupportedOperationException("Use the remove(String, String) method");
+		this.cache.remove(fqn);
 	}
 }

@@ -42,7 +42,6 @@
  */
 package net.jforum.model;
 
-import java.sql.Connection;
 
 /**
  * The class that every driver class must implement.
@@ -58,7 +57,7 @@ import java.sql.Connection;
  * analise, look at <code>net.jforum.drivers.generic</code> package.
  * 
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.14 2005/01/31 20:10:35 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.15 2005/02/03 12:37:38 rafaelsteil Exp $
  */
 public abstract class DataAccessDriver 
 {
@@ -90,14 +89,6 @@ public abstract class DataAccessDriver
 	{
 		return driver;
 	}
-	 
-	/**
-	 * Gets a {@link net.jforum.model.ForumModel} instance. 
-	 * 
-	 * @param conn The connection instance to pass to the class
-	 * @return <code>net.jforum.model.ForumModel</code> instance
-	 */
-	public abstract net.jforum.model.ForumModel newForumModel(Connection conn);
 	
 	/**
 	 * Gets a {@link net.jforum.model.ForumModel} instance. 
@@ -147,14 +138,6 @@ public abstract class DataAccessDriver
 	 * @return <code>net.jforum.model.CategoryModel</code> instance.
 	 */
 	public abstract  net.jforum.model.CategoryModel newCategoryModel();
-	
-	/**
-	 * Gets an {@link net.jforum.model.CategoryModel} instance.
-	 * 
-	 * @param conn The connection instance to pass to the class
-	 * @return <code>net.jforum.model.CategoryModel</code> instance.
-	 */
-	public abstract  net.jforum.model.CategoryModel newCategoryModel(Connection conn);
 	
 	/**
 	 * Gets an {@link net.jforum.model.TreeGroupModel} instance
@@ -211,14 +194,6 @@ public abstract class DataAccessDriver
 	 * @return <code>link net.jforum.model.ConfigModel</code> instance
 	 */
 	public abstract net.jforum.model.ConfigModel newConfigModel();
-	
-	/**
-	 * Gets a {@link net.jforum.model.ConfigModel} instance
-	 * 
-	 * @return <code>link net.jforum.model.ConfigModel</code> instance
-	 */
-	public abstract net.jforum.model.ConfigModel newConfigModel(Connection conn);
-	
 	/**
 	 * Gets a {@link net.jforum.model.KarmaModel} instance
 	 * 

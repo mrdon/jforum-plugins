@@ -42,13 +42,15 @@
  */
 package net.jforum.entities;
 
+import java.io.Serializable;
+
 /**
  * Represents a specific forum.
  * 
  * @author Rafael Steil
- * @version $Id: Forum.java,v 1.5 2005/01/31 20:10:40 rafaelsteil Exp $
+ * @version $Id: Forum.java,v 1.6 2005/02/03 12:37:41 rafaelsteil Exp $
  */
-public class Forum 
+public class Forum implements Serializable
 {
 	private int id;
 	private int idCategories;

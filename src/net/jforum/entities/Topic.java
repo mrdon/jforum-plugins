@@ -42,15 +42,16 @@
  */
 package net.jforum.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Represents every topic in the forum.
  * 
  * @author Rafael Steil
- * @version $Id: Topic.java,v 1.8 2005/01/31 20:10:40 rafaelsteil Exp $
+ * @version $Id: Topic.java,v 1.9 2005/02/03 12:37:41 rafaelsteil Exp $
  */
-public class Topic 
+public class Topic implements Serializable
 {
 	public static final int TYPE_NORMAL = 0;
 	public static final int TYPE_STICKY = 1;

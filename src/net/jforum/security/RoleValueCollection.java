@@ -37,22 +37,21 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 08/01/2004 / 21:41:11
- * net.jforum.security.RoleValueColection.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: RoleValueCollection.java,v 1.3 2004/09/19 05:13:16 rafaelsteil Exp $
  */
 package net.jforum.security;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
 /**
  * @author Rafael Steil
+ * @version $Id: RoleValueCollection.java,v 1.4 2005/02/03 12:37:40 rafaelsteil Exp $
  */
-public class RoleValueCollection extends LinkedHashSet 
+public class RoleValueCollection extends LinkedHashSet implements Serializable 
 {
 	/**
 	 * Gets a <code>RoleValue</code> by its name.

@@ -37,20 +37,20 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 08/01/2004 / 22:11:13
- * net.jforum.security.RoleCollection.java
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.security;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 /**
  * @author Rafael Steil
- * @version $Id: RoleCollection.java,v 1.5 2005/01/28 14:46:19 rafaelsteil Exp $
+ * @version $Id: RoleCollection.java,v 1.6 2005/02/03 12:37:40 rafaelsteil Exp $
  */
-public class RoleCollection extends LinkedHashMap
+public class RoleCollection extends LinkedHashMap implements Serializable
 {
 	public void add(Role role) 
 	{

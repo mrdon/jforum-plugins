@@ -44,29 +44,36 @@ package net.jforum;
 
 import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 
-import org.apache.log4j.Logger;
-
+import net.jforum.cache.CacheEngine;
+import net.jforum.cache.Cacheable;
 import net.jforum.entities.UserSession;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.13 2005/01/14 14:17:13 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.14 2005/02/03 12:37:38 rafaelsteil Exp $
  */
-public class SessionFacade 
+public class SessionFacade implements Cacheable
 {
 	private static final Logger logger = Logger.getLogger(SessionFacade.class);
-	private static final Map sessionMap = new LinkedHashMap();
-	
-	private SessionFacade() {}
+	private static final String FQN = "sessions";
+	private static CacheEngine cache;
+
+	/**
+	 * @see net.jforum.cache.Cacheable#setCacheEngine(net.jforum.cache.CacheEngine)
+	 */
+	public void setCacheEngine(CacheEngine engine)
+	{
+		cache = engine;
+	}
 	
 	/**
 	 * Add a new <code>UserSession</code> entry to the session
@@ -89,7 +96,7 @@ public class SessionFacade
 			remove(sessionId);
 		}
 
-		sessionMap.put(us.getSessionId(), us);
+		cache.add(FQN, us.getSessionId(), us);
 	}
 	
 	/**
@@ -131,7 +138,7 @@ public class SessionFacade
 	 */
 	public static void remove(String sessionId)
 	{
-		sessionMap.remove(sessionId); 
+		cache.remove(FQN, sessionId);
 	}
 	
 	/**
@@ -142,7 +149,7 @@ public class SessionFacade
 	 */
 	public static List getAllSessions()
 	{
-		return new ArrayList(sessionMap.values());
+		return new ArrayList(cache.getValues(FQN));
 	}
 	
 	/**
@@ -157,7 +164,7 @@ public class SessionFacade
 	
 	public static UserSession getUserSession(String sessionId)
 	{
-		return (UserSession)sessionMap.get(sessionId);
+		return (UserSession)cache.get(FQN, sessionId);
 	}
 
 	/**
@@ -167,7 +174,7 @@ public class SessionFacade
 	 */
 	public static int size()
 	{
-		return sessionMap.size();
+		return cache.getValues(FQN).size();
 	}
 	
 	/**
@@ -181,7 +188,7 @@ public class SessionFacade
 	{
 		int aid = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 		
-		for (Iterator iter = sessionMap.values().iterator(); iter.hasNext(); ) {
+		for (Iterator iter = cache.getValues(FQN).iterator(); iter.hasNext(); ) {
 			UserSession us = (UserSession)iter.next();
 			String thisUsername = us.getUsername();
 			
@@ -209,7 +216,7 @@ public class SessionFacade
 	{
 		int aid = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 		
-		for (Iterator iter = sessionMap.values().iterator(); iter.hasNext(); ) {
+		for (Iterator iter = cache.getValues(FQN).iterator(); iter.hasNext(); ) {
 			UserSession us = (UserSession)iter.next();
 			
 			if (us.getUserId() != aid && us.getUserId() == userId) {

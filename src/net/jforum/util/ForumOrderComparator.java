@@ -42,15 +42,16 @@
  */
 package net.jforum.util;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 import net.jforum.entities.Forum;
 /**
  * @author James Yong Boon Leong
  * @author Rafael Steil
- * @version $Id: ForumOrderComparator.java,v 1.2 2004/12/05 21:51:25 rafaelsteil Exp $
+ * @version $Id: ForumOrderComparator.java,v 1.3 2005/02/03 12:37:40 rafaelsteil Exp $
  */
-public class ForumOrderComparator implements Comparator {
+public class ForumOrderComparator implements Comparator, Serializable {
 	
 	public final int compare (Object a, Object b)
 	{

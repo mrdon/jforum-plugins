@@ -42,14 +42,12 @@
  */
 package net.jforum.drivers.generic;
 
-import java.sql.Connection;
-
 import net.jforum.drivers.generic.security.GroupSecurityModel;
 import net.jforum.drivers.generic.security.UserSecurityModel;
 
 /**
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.8 2005/01/31 20:10:41 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.9 2005/02/03 12:37:39 rafaelsteil Exp $
  */
 public class DataAccessDriver extends net.jforum.model.DataAccessDriver 
 {
@@ -69,21 +67,16 @@ public class DataAccessDriver extends net.jforum.model.DataAccessDriver
 	private static BookmarkModel bookmarkModel = new BookmarkModel();
 	private static AttachmentModel attachmentModel = new AttachmentModel();
 	private static ModerationModel moderationModel = new ModerationModel();
+	private static ForumModel forumModel = new ForumModel();
+	private static CategoryModel categoryModel = new CategoryModel();
+	private static ConfigModel configModel = new ConfigModel();
 	
 	/**
 	 * @see net.jforum.model.DataAccessDriver#getForumModel()
 	 */
 	public net.jforum.model.ForumModel newForumModel() 
 	{
-		return new ForumModel();	
-	}
-	
-	/**
-	 * @see net.jforum.model.DataAccessDriver#getForumModel(Connection)
-	 */
-	public net.jforum.model.ForumModel newForumModel(Connection conn) 
-	{
-		return new ForumModel(conn);	
+		return forumModel;	
 	}
 
 	/**
@@ -131,15 +124,7 @@ public class DataAccessDriver extends net.jforum.model.DataAccessDriver
 	 */
 	public net.jforum.model.CategoryModel newCategoryModel() 
 	{
-		return new CategoryModel();
-	}
-	
-	/**
-	 * @see net.jforum.model.DataAccessDriver#newCategoryModel(Connection)
-	 */
-	public net.jforum.model.CategoryModel newCategoryModel(Connection conn) 
-	{
-		return new CategoryModel(conn);
+		return categoryModel;
 	}
 
 	/**
@@ -202,15 +187,7 @@ public class DataAccessDriver extends net.jforum.model.DataAccessDriver
 	 */
 	public net.jforum.model.ConfigModel newConfigModel()
 	{
-		return new ConfigModel();
-	}
-	
-	/** 
-	 * @see net.jforum.model.DataAccessDriver#newConfigModel(Connection)
-	 */
-	public net.jforum.model.ConfigModel newConfigModel(Connection conn)
-	{
-		return new ConfigModel(conn);
+		return configModel;
 	}
 	
 	/** 

@@ -42,6 +42,7 @@
  */
 package net.jforum.entities;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 
@@ -50,9 +51,9 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: MostUsersEverOnline.java,v 1.1 2004/12/29 17:18:42 rafaelsteil Exp $
+ * @version $Id: MostUsersEverOnline.java,v 1.2 2005/02/03 12:37:41 rafaelsteil Exp $
  */
-public class MostUsersEverOnline
+public class MostUsersEverOnline implements Serializable
 {
 	private int total;
 	private String date;

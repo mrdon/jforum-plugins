@@ -42,14 +42,16 @@
  */
 package net.jforum.cache;
 
+import java.util.Collection;
+
 /**
  * @author Rafael Steil
- * @version $Id: CacheEngine.java,v 1.4 2005/02/01 21:42:02 rafaelsteil Exp $
+ * @version $Id: CacheEngine.java,v 1.5 2005/02/03 12:37:42 rafaelsteil Exp $
  */
 public interface CacheEngine
 {
 	public static final String DUMMY_FQN = "";
-
+	
 	/**
 	 * Inits the cache engine. 
 	 */
@@ -85,12 +87,19 @@ public interface CacheEngine
 	
 	/**
 	 * Gets some object from the cache.
-	 * The fqn used will be the value of {@link #DUMMY_FQN}
 	 * 
-	 * @param key The key to get
+	 * @param key The fqn tree to get
 	 * @return The cached object, or <code>null</code> if no entry was found
 	 */
-	public Object get(String key);
+	public Object get(String fqn);
+	
+	/**
+	 * Gets all values from some given FQN.
+	 * 
+	 * @param fqn
+	 * @return
+	 */
+	public Collection getValues(String fqn);
 	
 	/**
 	 * Removes an entry from the cache.

@@ -72,7 +72,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.13 2005/02/01 13:14:16 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.14 2005/02/03 12:37:45 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -178,6 +178,8 @@ public class ForumAction extends Command
 		}
 		
 		category.changeForumOrder(toChange);
+		ForumRepository.refreshCategory(category);
+		
 		this.list();
 	}
 	

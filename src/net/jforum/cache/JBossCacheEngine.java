@@ -42,18 +42,22 @@
  */
 package net.jforum.cache;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import net.jforum.exceptions.CacheException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 import org.apache.log4j.Logger;
 import org.jboss.cache.Fqn;
+import org.jboss.cache.Node;
 import org.jboss.cache.PropertyConfigurator;
 import org.jboss.cache.TreeCache;
 
 /**
  * @author Rafael Steil
- * @version $Id: JBossCacheEngine.java,v 1.3 2005/02/01 21:42:01 rafaelsteil Exp $
+ * @version $Id: JBossCacheEngine.java,v 1.4 2005/02/03 12:37:42 rafaelsteil Exp $
  */
 public class JBossCacheEngine implements CacheEngine
 {
@@ -114,9 +118,27 @@ public class JBossCacheEngine implements CacheEngine
 	/**
 	 * @see net.jforum.cache.CacheEngine#get(java.lang.String)
 	 */
-	public Object get(String key)
+	public Object get(String fqn)
 	{
-		return this.get(CacheEngine.DUMMY_FQN, key);
+		try {
+			return this.cache.get(Fqn.fromString(fqn));
+		}
+		catch (Exception e) {
+			throw new CacheException("Error while trying to get an entry from the cache: " + e);
+		}
+	}
+	
+	/**
+	 * @see net.jforum.cache.CacheEngine#getValues(java.lang.String)
+	 */
+	public Collection getValues(String fqn)
+	{
+		Node node = (Node)this.get(fqn);
+		if (node == null) {
+			return new ArrayList();
+		}
+		
+		return node.getData().values();
 	}
 
 	/**
@@ -133,7 +155,7 @@ public class JBossCacheEngine implements CacheEngine
 			}
 		}
 		catch (Exception e) {
-			throw new CacheException("Error while removing a FQN from the cache: " + e);
+			logger.warn("Error while removing a FQN from the cache: " + e);
 		}
 	}
 
@@ -146,7 +168,7 @@ public class JBossCacheEngine implements CacheEngine
 			this.cache.remove(Fqn.fromString(fqn));
 		}
 		catch (Exception e) {
-			throw new CacheException("Error while removing a FQN from the cache: " + e);
+			logger.warn("Error while removing a FQN from the cache: " + e);
 		}
 	}
 

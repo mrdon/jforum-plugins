@@ -55,13 +55,11 @@ import net.jforum.drivers.sqlserver.security.UserSecurityModel;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: DataAccessDriver.java,v 1.1 2005/01/26 19:39:35 franklin_samir Exp $
+ * @version $Id: DataAccessDriver.java,v 1.2 2005/02/03 12:37:45 rafaelsteil Exp $
  */
 public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDriver
 {
-    
-      
-     private static PostModel postModel = new PostModel();
+	private static PostModel postModel = new PostModel();
 	private static TopicModel topicModel = new TopicModel();
 	private static ForumModel forumModel = new ForumModel();
 	private static SearchModel searchModel = new SearchModel();
@@ -69,8 +67,8 @@ public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDrive
 	private static UserModel userModel = new UserModel();
 	private static GroupSecurityModel groupSecurityModel = new GroupSecurityModel();
 	private static UserSecurityModel userSecurityModel = new UserSecurityModel();
-	private static CategoryModel categoryModel = new CategoryModel();
 	private static PrivateMessageModel pmModel = new PrivateMessageModel();
+	private static CategoryModel categoryModel = new CategoryModel();
 
 	/** 
 	 * @see net.jforum.model.DataAccessDriver#newPostModel()
@@ -93,8 +91,7 @@ public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDrive
 	 */
 	public net.jforum.model.ForumModel newForumModel()
 	{
-		return new ForumModel();
-	    //return forumModel;
+	    return forumModel;
 	}
 	
 	/** 
@@ -142,9 +139,7 @@ public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDrive
 	 */
 	public net.jforum.model.CategoryModel newCategoryModel()
 	{
-		//return categoryModel;
-	    return new CategoryModel();
-		
+		return categoryModel;
 	}
 	
 	public net.jforum.model.PrivateMessageModel newPrivateMessageModel()
