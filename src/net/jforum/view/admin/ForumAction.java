@@ -65,14 +65,14 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.2 2004/10/03 16:53:45 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.3 2004/11/17 02:16:24 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
 	// Listing
 	public void list() throws Exception
 	{
-		JForum.getContext().put("forums", DataAccessDriver.getInstance().newForumModel().selectAll());
+		JForum.getContext().put("categories", ForumRepository.getAllCategories(true));
 		JForum.getContext().put("moduleAction", "forum_list.htm");
 	}
 	
@@ -113,9 +113,26 @@ public class ForumAction extends Command
 		
 		ForumRepository.reloadForum(f.getId());
 		
-		// RSS
-		//new ForumRSS().createRSS();
-			
+		this.list();
+	}
+	
+	public void up() throws Exception
+	{
+		int forumId = Integer.parseInt(JForum.getRequest().getParameter("forum_id"));
+		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
+		fm.setOrderUp(Integer.parseInt(JForum.getRequest().getParameter("forum_id")));
+
+		ForumRepository.reloadForum(forumId);
+		this.list();
+	}
+	
+	public void down() throws Exception
+	{
+		int forumId = Integer.parseInt(JForum.getRequest().getParameter("forum_id"));
+		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
+		fm.setOrderDown(forumId);
+		
+		ForumRepository.reloadForum(forumId);
 		this.list();
 	}
 	
@@ -136,9 +153,6 @@ public class ForumAction extends Command
 			}
 		}
 		
-		// RSS
-		//new ForumRSS().createRSS();
-
 		this.list();
 	}
 	
@@ -184,9 +198,6 @@ public class ForumAction extends Command
 				}
 			}
 		}
-		
-		// RSS
-		//new ForumRSS().createRSS();
 		
 		this.list();
 	}

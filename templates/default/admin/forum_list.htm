@@ -8,19 +8,49 @@
 
 <table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
 	<tr>
-		<th class="thHead" valign="center" colspan="3" height="25">${I18n.getMessage("Forums.List.Title")}</th>
+		<th class="thHead" valign="center" colspan="6" height="25">${I18n.getMessage("Forums.List.Title")}</th>
 	</tr>
 	
-	<#list forums as forum>
+	<#list categories as category>
 		<tr>
-			<td class="row1" width="38%"><span class="gen">${forum.name}</span></td>
-			<td class="row2"><span class="gen"><a id="forumEdit" href="${contextPath}/${moduleName}/edit/${forum.id}${extension}">${I18n.getMessage("Forums.List.Edit")}</a></span></td>
-			<td class="row2"><input type="checkbox" name="forum_id" value="${forum.id}" /></td>
+			<td colspan="6" class="catleft"><span class="catTitle">${category.name}</span></td>
 		</tr>
+
+		<#assign counter = 1/>
+		<#list category.forums as forum>
+			<tr>
+				<td width="10" class="row1">&nbsp;</td>
+				<td class="row1"><span class="forumLink">${forum.name}</span></td>
+				<td class="row1">
+					<span class="gen">
+						<a id="forumEdit" href="${contextPath}/${moduleName}/edit/${forum.id}${extension}">${I18n.getMessage("Forums.List.Edit")}</a>
+					</span>
+				</td>
+				<td class="row2"><input type="checkbox" name="forum_id" value="${forum.id}" /></td>
+
+				<td class="row2" align="right" width="8%">
+					<#if (counter > 1)>
+						<input type="button" value="Up" class="mainoption" onClick="${contextPath}/${moduleName}/up/${forum.id}${extension}">&nbsp;
+					<#else>	
+						&nbsp;
+					</#if>
+				</td>
+
+				<td class="row2" align="right" width="10%">
+					<#if (counter < category.forums.size())>
+						<input type="button" value="Down" class="mainoption" onClick="${contextPath}/${moduleName}/down/${forum.id}${extension}">&nbsp;
+					<#else>	
+						&nbsp;
+					</#if>					
+				</td>
+			</tr>
+
+			<#assign counter = counter + 1/>
+		</#list>
 	</#list>
 
 	<tr align="center">
-		<td class="catBottom" colspan="3" height="28">
+		<td class="catBottom" colspan="6" height="28">
 			<input class="mainoption" type="button" value="${I18n.getMessage("Forums.List.ClickToNew")}" id="btn_insert" name="button" onclick="document.location = '${contextPath}/${moduleName}/insert${extension}';" />
 			&nbsp;&nbsp;
 			<input class="mainoption" type="submit" value="${I18n.getMessage("Forums.List.ClickToDelete")}" name="submit" />

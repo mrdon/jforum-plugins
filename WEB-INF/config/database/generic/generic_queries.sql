@@ -151,20 +151,21 @@ ForumModel.selectAll = SELECT f.*, COUNT(p.post_id) AS total_posts \
 	FROM jforum_forums f \
 	LEFT JOIN jforum_topics t ON t.forum_id = f.forum_id \
 	LEFT JOIN jforum_posts p ON p.topic_id = t.topic_id \
-	GROUP BY f.forum_id
+	GROUP BY f.categories_id, f.forum_order
 
 ForumModel.delete = DELETE FROM jforum_forums WHERE forum_id = ?
 ForumModel.update = UPDATE jforum_forums SET categories_id = ?, forum_name = ?, forum_desc = ?, moderated = ? WHERE forum_id = ?
 ForumModel.addNew = INSERT INTO jforum_forums (categories_id, forum_name, forum_desc, forum_order, moderated) VALUES (?, ?, ?, ?, ?)
-ForumModel.getMaxOrder = SELECT max(forum_order) as maxOrder FROM jforum_forums
 ForumModel.updateLastPost = UPDATE jforum_forums SET forum_last_post_id = ? WHERE forum_id = ?
 ForumModel.incrementTotalTopics = UPDATE jforum_forums SET forum_topics = forum_topics + ? WHERE forum_id = ?
 ForumModel.decrementTotalTopics = UPDATE jforum_forums SET forum_topics = forum_topics - ? WHERE forum_id = ?
 ForumModel.decrementTotalPosts = UPDATE jforum_forums SET total_posts = total_posts - ? WHERE forum_id = ?
 ForumModel.getTotalTopics = SELECT COUNT(topic_id) as total FROM jforum_topics WHERE forum_id = ?
+
 ForumModel.getOrder = SELECT forum_order FROM jforum_forums WHERE forum_id = ?
+ForumModel.getMaxOrder = SELECT max(forum_order) as maxOrder FROM jforum_forums
 ForumModel.setOrderByOrder = UPDATE jforum_forums SET forum_order = ? WHERE forum_order = ?
-ForumModel.setOrderById = UPDATE jforum_forums SET forum_order = ? WHERE forum_id = ?
+ForumModel.setOrderById = UPDATE jforum_forums SET forum_order = ? WHERE forum_id = ? 
 
 ForumModel.lastPostInfo = SELECT post_time, p.topic_id, t.topic_replies, post_id, u.user_id, username \
 	FROM jforum_posts p, jforum_users u, jforum_topics t , jforum_forums f \

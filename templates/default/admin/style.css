@@ -40,13 +40,13 @@ P {
 	FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif
 }
 A:link {
-	COLOR: #01336b
+	COLOR: #01336b; text-decoration: none;
 }
 A:active {
 	COLOR: #01336b
 }
 A:visited {
-	COLOR: #01336b
+	COLOR: #01336b; text-decoration: none;
 }
 A:hover {
 	COLOR: #01336b; TEXT-DECORATION: underline
@@ -213,6 +213,12 @@ A.gen:hover {
 A.genmed:hover {
 	COLOR: #01336b; TEXT-DECORATION: underline
 }
+A.gen:visited {
+	text-decoration: none;
+}
+A.gensmall:visited {
+	text-decoration: none;
+}
 A.gensmall:hover {
 	COLOR: #01336b; TEXT-DECORATION: underline
 }
@@ -231,6 +237,9 @@ A.mainmenu:hover {
 A.cattitle {
 	COLOR: #01336b; TEXT-DECORATION: none
 }
+a.cattitle:visited {
+	text-decoration: none;
+}
 A.cattitle:hover {
 	TEXT-DECORATION: underline
 }
@@ -240,6 +249,9 @@ A.cattitle:hover {
 A.forumlink {
 	COLOR: #01336b; TEXT-DECORATION: none
 }
+a.forumlink:visited {
+	text-decoration: none;
+}
 A.forumlink:hover {
 	COLOR: #01336b; TEXT-DECORATION: underline
 }
@@ -248,6 +260,9 @@ A.forumlink:hover {
 }
 A.nav {
 	COLOR: #01336b; TEXT-DECORATION: none
+}
+A.nav:visited {
+	text-decoration: none;
 }
 A.nav:hover {
 	TEXT-DECORATION: underline

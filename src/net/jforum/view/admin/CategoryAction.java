@@ -68,7 +68,7 @@ import freemarker.template.Template;
  * ViewHelper for category administration.
  * 
  * @author Rafael Steil
- * @version $Id: CategoryAction.java,v 1.3 2004/11/13 03:14:01 rafaelsteil Exp $
+ * @version $Id: CategoryAction.java,v 1.4 2004/11/17 02:16:24 rafaelsteil Exp $
  */
 public class CategoryAction extends Command 
 {
@@ -77,7 +77,7 @@ public class CategoryAction extends Command
 	// Listing
 	public void list() throws Exception
 	{
-		JForum.getContext().put("categories", this.cm.selectAll());
+		JForum.getContext().put("categories", ForumRepository.getAllCategories(true));
 		JForum.getContext().put("moduleAction", "category_list.htm");
 	}
 	
@@ -184,7 +184,7 @@ public class CategoryAction extends Command
 		this.list();
 	}
 	
-	/* 
+	/** 
 	 * @see net.jforum.Command#process()
 	 */
 	public Template process() throws Exception 

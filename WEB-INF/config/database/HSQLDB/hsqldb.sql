@@ -47,8 +47,8 @@ ForumModel.selectAll = SELECT f.*, COUNT(p.post_id) AS total_posts \
 	FROM jforum_forums f \
 	LEFT JOIN jforum_topics t ON t.forum_id = f.forum_id \
 	LEFT JOIN jforum_posts p ON p.topic_id = t.topic_id \
-	GROUP BY f.categories_id, f.forum_id, \
-	      f.forum_name, f.forum_desc, f.forum_order, \
+	GROUP BY f.categories_id, f.forum_order, f.forum_id, \
+	      f.forum_name, f.forum_desc, \
 	      f.forum_topics, f.forum_last_post_id, f.moderated
 
 ForumModel.generatedForumId = SELECT max(forum_id) from jforum_forums

@@ -44,21 +44,23 @@ package net.jforum.entities;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
+
+import net.jforum.view.forum.ForumOrderComparator;
 
 /**
  * Represents a category in the System.
  * 
  * @author Rafael Steil
- * @version $Id: Category.java,v 1.5 2004/11/13 20:12:27 rafaelsteil Exp $
+ * @version $Id: Category.java,v 1.6 2004/11/17 02:16:26 rafaelsteil Exp $
  */
 public class Category 
 {
 	private int id;
 	private int order;
 	private String name;
-	private Map forums = new LinkedHashMap();
+	private Map forums = new TreeMap(new ForumOrderComparator());
 		
 	public Category() {}
 	
