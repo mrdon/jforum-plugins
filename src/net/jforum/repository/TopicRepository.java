@@ -41,16 +41,20 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: TopicRepository.java,v 1.5 2004/10/20 03:19:48 rafaelsteil Exp $
+ * $Id: TopicRepository.java,v 1.6 2004/11/02 12:56:48 jamesyong Exp $
  */
 package net.jforum.repository;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
+import net.jforum.ForumException;
 import net.jforum.entities.Topic;
+import net.jforum.model.DataAccessDriver;
+import net.jforum.model.TopicModel;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -63,9 +67,104 @@ public class TopicRepository
 {
 	private static LinkedHashMap allTopicsMap = new LinkedHashMap();
 	private static int maxItems = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
+	private static LinkedList recentTopicsList = new LinkedList();
 	
-	private TopicRepository() {}
+	static {
+		try {
+			TopicRepository.loadTopics();
+		}
+		catch (Exception e) {
+			new ForumException(e);
+		}
+	}
 
+	/**
+	 * Add topic to the FIFO stack
+	 * 
+	 * @param topic The topic to add to stack
+	 */
+	public synchronized static void pushTopic(Topic topic)
+	{
+		int limit = SystemGlobals.getIntValue(ConfigKeys.RECENT_TOPICS);
+		int size = recentTopicsList.size();
+		Topic tempTopic;
+		
+		if (size > 0)
+		{
+			for (int i = 0; i < size; i++)
+			{
+				tempTopic = (Topic)recentTopicsList.get(i);
+				if (tempTopic.getId() == topic.getId())
+				{
+					recentTopicsList.remove(i);
+					break;
+				}
+			}
+		}
+		
+		recentTopicsList.addFirst(topic);
+		
+		while (recentTopicsList.size() > limit)
+		{
+			recentTopicsList.removeLast();
+		}
+
+	}
+
+	/**
+	 * Remove topic to the FIFO stack
+	 * 
+	 * @param topic The topic to remove from stack
+	 */
+	public synchronized static void popTopic(Topic topic)
+	{
+		int size = recentTopicsList.size();
+		Topic tempTopic;
+		
+		if (size > 0){
+			
+			for (int i = 0; i < size; i++)
+			{
+				tempTopic = (Topic)recentTopicsList.get(i);
+				
+				if (tempTopic.getId() == topic.getId())
+				{
+					recentTopicsList.remove(i);
+					break;
+				}
+			}
+		}
+	}	
+
+	/**
+	 * Get all cached recent topics. 
+	 * 
+	 */	
+	public static ArrayList getRecentTopics()
+	{
+		if (recentTopicsList == null) {
+			return new ArrayList();
+		}
+		
+		return new ArrayList(recentTopicsList);
+	}	
+
+	/**
+	 * Add recent topics to the cache
+	 * 
+	 */
+	private static void loadTopics() throws Exception
+	{
+		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
+		
+		int limit = SystemGlobals.getIntValue(ConfigKeys.RECENT_TOPICS);
+		List l = tm.selectRecentTopics(limit);
+		for (Iterator iter = l.iterator(); iter.hasNext(); ) {
+			Topic t = (Topic)iter.next();
+			
+			recentTopicsList.addLast(t);
+		}		
+	}
 	/**
 	 * Add topics to the cache
 	 * 
