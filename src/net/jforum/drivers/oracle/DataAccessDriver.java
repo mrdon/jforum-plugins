@@ -47,7 +47,7 @@ import net.jforum.drivers.oracle.security.UserSecurityModel;
 
 /**
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.2 2005/01/26 20:15:10 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.3 2005/01/27 17:59:46 rafaelsteil Exp $
  */
 public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDriver
 {
@@ -59,6 +59,15 @@ public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDrive
 	private static GroupSecurityModel groupSecurityModel = new GroupSecurityModel();
 	private static UserSecurityModel userSecurityModel = new UserSecurityModel();
 	private static PrivateMessageModel pmModel = new PrivateMessageModel();
+	private static AttachmentModel attachModel = new AttachmentModel();
+	
+	/**
+	 * @see net.jforum.model.DataAccessDriver#newAttachmentModel()
+	 */
+	public net.jforum.model.AttachmentModel newAttachmentModel()
+	{
+		return attachModel;
+	}
 
 	/**
 	 * @see net.jforum.model.DataAccessDriver#newPostModel()

@@ -64,7 +64,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.12 2005/01/21 12:12:27 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.13 2005/01/27 17:59:45 rafaelsteil Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -123,7 +123,7 @@ public class PrivateMessageAction extends Command
 		User user = DataAccessDriver.getInstance().newUserModel().selectById(
 						SessionFacade.getUserSession().getUserId());
 
-		this.sendFormCommont(user);
+		this.sendFormCommon(user);
 	}
 	public void sendTo() throws Exception
 	{
@@ -144,10 +144,10 @@ public class PrivateMessageAction extends Command
 			this.context.put("toUserEmail", user1.getEmail());
 		}
 
-		this.sendFormCommont(user);
+		this.sendFormCommon(user);
 	}
 	
-	private void sendFormCommont(User user)
+	private void sendFormCommon(User user)
 	{
 		this.context.put("user", user);
 		this.context.put("moduleName", "pm");
@@ -155,6 +155,7 @@ public class PrivateMessageAction extends Command
 		this.context.put("moduleAction", "post_form.htm");
 		this.context.put("htmlAllowed", true);
 		this.context.put("attachmentsEnabled", false);
+		this.context.put("maxAttachments", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
 	}
 	
 	public void sendSave() throws Exception
@@ -368,15 +369,13 @@ public class PrivateMessageAction extends Command
 		
 		pm.getPost().setSubject(I18n.getMessage("PrivateMessage.replyPrefix") + pm.getPost().getSubject());
 		
+		this.sendFormCommon(DataAccessDriver.getInstance().newUserModel().selectById(
+						SessionFacade.getUserSession().getUserId()));
+		
 		this.context.put("quote", "true");
-		this.context.put("action", "sendSave");
 		this.context.put("quoteUser", pm.getFromUser().getUsername());
-		this.context.put("moduleAction", "post_form.htm");
 		this.context.put("post", pm.getPost());
 		this.context.put("pm", pm);
-		this.context.put("htmlAllowed", true);
-		this.context.put("user", DataAccessDriver.getInstance().newUserModel().selectById(
-						SessionFacade.getUserSession().getUserId()));
 	}
 	
 	/** 

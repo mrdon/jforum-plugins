@@ -157,10 +157,7 @@ PrivateMessageModel.add = INSERT INTO jforum_privmsgs (privmsgs_id, privmsgs_typ
 	VALUES (jforum_privmsgs_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ? )
 
 PrivateMessagesModel.addText = INSERT INTO jforum_privmsgs_text ( privmsgs_text, privmsgs_id ) VALUES (EMPTY_BLOB(), ? )
-
-
 PrivateMessagesModel.addTextField = SELECT privmsgs_text from jforum_privmsgs_text WHERE privmsgs_id = ? FOR UPDATE
-
 PrivateMessagesModel.lastGeneratedPmId = SELECT jforum_privmsgs_seq.currval FROM DUAL
 
 # ############
@@ -249,15 +246,15 @@ BookmarkModel.add = INSERT INTO jforum_bookmarks (bookmark_id, user_id, relation
 # AttachmentModel
 # ################
 AttachmentModel.addQuotaLimit = INSERT INTO jforum_quota_limit (quota_limit_id, quota_desc, quota_limit, quota_type) VALUES (jforum_quota_limit_seq.nextval, ?, ?, ?)
+AttachmentModel.lastGeneratedAttachmentId = SELECT jforum_attach_seq.currval FROM dual
 
 AttachmentModel.addExtensionGroup = INSERT INTO jforum_extension_groups (extension_group_id, name, allow, upload_icon, download_mode) \
 	VALUES (jforum_extension_group_seq.nextval, ?, ?, ?, ?)
 
-AttachmentModel.addExtension = INSERT INTO jforum_extensions (extension_id, extension_group_id, comment, upload_icon, extension, allow) \
+AttachmentModel.addExtension = INSERT INTO jforum_extensions (extension_id, extension_group_id, description, upload_icon, extension, allow) \
 	VALUES (jforum_extensions_seq.nextval, ?, ?, ?, ?, ?)
 
 AttachmentModel.addAttachment = INSERT INTO jforum_attach (attach_id, post_id, privmsgs_id, user_id) VALUES (jforum_attach_seq.nextval, ?, ?, ?)
 
-AttachmentModel.addAttachmentInfo = INSERT INTO jforum_attach_desc (attach_desc_id, attach_id, physical_filename, real_filename, comment, \
+AttachmentModel.addAttachmentInfo = INSERT INTO jforum_attach_desc (attach_desc_id, attach_id, physical_filename, real_filename, description, \
 	mimetype, filesize, upload_time, thumb, extension_id ) VALUES (jforum_attach_desc_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-

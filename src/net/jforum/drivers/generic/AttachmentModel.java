@@ -60,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentModel.java,v 1.12 2005/01/24 21:49:28 rafaelsteil Exp $
+ * @version $Id: AttachmentModel.java,v 1.13 2005/01/27 17:59:48 rafaelsteil Exp $
  */
 public class AttachmentModel extends AutoKeys implements net.jforum.model.AttachmentModel
 {
@@ -426,7 +426,7 @@ public class AttachmentModel extends AutoKeys implements net.jforum.model.Attach
 	{
 		AttachmentExtension e = new AttachmentExtension();
 		e.setAllow(rs.getInt("allow") == 1);
-		e.setComment(rs.getString("comment"));
+		e.setComment(rs.getString("description"));
 		e.setExtension(rs.getString("extension"));
 		e.setExtensionGroupId(rs.getInt("extension_group_id"));
 		e.setId(rs.getInt("extension_id"));
@@ -552,7 +552,7 @@ public class AttachmentModel extends AutoKeys implements net.jforum.model.Attach
 		a.setPrivmsgsId(rs.getInt("privmsgs_id"));
 		
 		AttachmentInfo ai = new AttachmentInfo();
-		ai.setComment(rs.getString("comment"));
+		ai.setComment(rs.getString("description"));
 		ai.setDownloadCount(rs.getInt("download_count"));
 		ai.setFilesize(rs.getLong("filesize"));
 		ai.setMimetype(rs.getString("mimetype"));

@@ -492,7 +492,7 @@ DROP TABLE IF EXISTS jforum_extensions;
 CREATE TABLE jforum_extensions (
 	extension_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	extension_group_id INT NOT NULL,
-	comment VARCHAR(100),
+	description VARCHAR(100),
 	upload_icon VARCHAR(100),
 	extension VARCHAR(10),
 	allow TINYINT(1) DEFAULT '1'
@@ -522,7 +522,7 @@ CREATE TABLE jforum_attach_desc (
 	physical_filename VARCHAR(255) NOT NULL,
 	real_filename VARCHAR(255) NOT NULL,
 	download_count INT,
-	comment VARCHAR(255),
+	description VARCHAR(255),
 	mimetype VARCHAR(50),
 	filesize INT,
 	upload_time DATETIME,

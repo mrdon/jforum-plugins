@@ -113,7 +113,7 @@ function confirmDelete()
 
 			<table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
 				<tr>
-					<th class="thLeft" nowrap="nowrap" width="103" height="26">${I18n.getMessage("PostShow.author")}</th>
+					<th class="thLeft" nowrap="nowrap" width="150" height="26">${I18n.getMessage("PostShow.author")}</th>
 					<th class="thRight" nowrap="nowrap" width="100%">${I18n.getMessage("PostShow.messageTitle")}</th>
 				</tr>
 
@@ -128,10 +128,7 @@ function confirmDelete()
 	
 					<#assign user = users.get(post.userId)/>
 				<tr>
-				<td colspan="2">
-				<table width="100%">
-
-				<tr>
+				
 					<td colspan="2">
 						<table width="100%" cellspacing="0">
 							<tr>
@@ -171,7 +168,8 @@ function confirmDelete()
 					</td>
 				</tr>
 				<tr>
-					<td width="150" class="${rowColor}" valign="top" align="left">
+					<!-- Username -->
+					<td class="${rowColor}" valign="top" align="left" rowspan="3">
 					
 						<span class="name"><b>${user.username}</b></span>
 						<br />
@@ -212,70 +210,63 @@ function confirmDelete()
 						<br />
 					</td>
 	
-					<td class="${rowColor}" valign="top" height="100%" width="100%">
-						<table cellspacing="0" cellpadding="0" width="100%" border="0" height="100%">
-							<tr>
-								<td colspan="2" valign="top" height="100%">
-									<span class="postbody">
-									${post.text}
-									</span>
+					<!-- Message -->
+					<td class="${rowColor}" valign="top">
+						<span class="postbody">${post.text}</span>
 
-									<#if post.hasAttachments() && canDownloadAttachments>
-										<#assign attachments = am.getAttachments(post.id)/>
+						<#if post.hasAttachments() && canDownloadAttachments>
+							<#assign attachments = am.getAttachments(post.id)/>
 
-										<#list attachments as a>
-											<p>
-											<table width="70%" border="1" cellpadding="2" cellspacing="0" class="attachtable" align="center">
-												<tr>
-													<td width="100%" colspan="3" class="attachheader" align="center"><b><span class="gen">${a.info.realFilename}</span></b></td>
-												</tr>
-												<tr>
-													<td width="15%" class="attachrow"><span class="genmed">&nbsp;${I18n.getMessage("Attachments.description")}</span></td>
-													<td width="75%" class="attachrow"><span class="genmed">${a.info.comment?default(I18n.getMessage("Attachments.noDescription"))}</span></td>
-													<td rowspan="3" align="center">
-														<img src="${contextPath}/templates/${templateName}/images/icon_disk.gif">
-														<a href="${JForumContext.encodeURL("/posts/downloadAttach/${a.id}")}" class="gensmall"><b>${I18n.getMessage("Attachments.download")}</a></a>
-													</td>
-												</tr>
-												<tr>
-													<td class="attachrow"><span class="genmed">&nbsp;${I18n.getMessage("Attachments.filesize")}</span></td>
-													<td class="attachrow">
-														<span class="genmed">
-														<#if (a.info.filesize < 1024)>
-															${a.info.filesize} bytes
-														<#else>
-															${a.info.filesize / 1024} kb
-														</#if>
-														</span>
-													</td>
+							<#list attachments as a>
+								<p>
+								<table width="70%" border="1" cellpadding="2" cellspacing="0" class="attachtable" align="center">
+									<tr>
+										<td width="100%" colspan="3" class="attachheader" align="center"><b><span class="gen">${a.info.realFilename}</span></b></td>
+									</tr>
+									<tr>
+										<td width="15%" class="attachrow"><span class="genmed">&nbsp;${I18n.getMessage("Attachments.description")}</span></td>
+										<td width="75%" class="attachrow"><span class="genmed">${a.info.comment?default(I18n.getMessage("Attachments.noDescription"))}</span></td>
+										<td rowspan="3" align="center">
+											<img src="${contextPath}/templates/${templateName}/images/icon_disk.gif">
+											<a href="${JForumContext.encodeURL("/posts/downloadAttach/${a.id}")}" class="gensmall"><b>${I18n.getMessage("Attachments.download")}</a></a>
+										</td>
+									</tr>
+									<tr>
+										<td class="attachrow"><span class="genmed">&nbsp;${I18n.getMessage("Attachments.filesize")}</span></td>
+										<td class="attachrow">
+											<span class="genmed">
+											<#if (a.info.filesize < 1024)>
+												${a.info.filesize} bytes
+											<#else>
+												${a.info.filesize / 1024} kb
+											</#if>
+											</span>
+										</td>
 
-												</tr>
-												<tr>
-													<td class="attachrow"><span class="genmed">&nbsp;${I18n.getMessage("Attachments.totalDownload")}:</span></td>
-													<td class="attachrow"><span class="genmed">&nbsp;${a.info.downloadCount} ${I18n.getMessage("Attachments.time")}</span></td>
-												</tr>
-											</table>
-											</p>
-										</#list>
-									</#if>
-								</td>
-							</tr>
-									
-							<#if (user.attachSignatureEnabled && user.signature?exists && user.signature?length > 0 && post.isSignatureEnabled())>
-								<tr>
-									<td><hr/><span class="gensmall">${user.signature}</span></td>
-								</tr>
-							</#if>
-						</table>
+									</tr>
+									<tr>
+										<td class="attachrow"><span class="genmed">&nbsp;${I18n.getMessage("Attachments.totalDownload")}:</span></td>
+										<td class="attachrow"><span class="genmed">&nbsp;${a.info.downloadCount} ${I18n.getMessage("Attachments.time")}</span></td>
+									</tr>
+								</table>
+								</p>
+							</#list>
+						</#if>
 					</td>
 				</tr>
+
+				<#if (user.attachSignatureEnabled && user.signature?exists && user.signature?length > 0 && post.isSignatureEnabled())>
+					<tr>
+							<td colspan="2" width="100%" height="28"><hr/><span class="gensmall">${user.signature}</span></td>
+					</tr>
+				</#if>
 	
-				<tr>
-					<td class="${rowColor}" valign="center" align="left" width="103">
+				<tr> <!--
+					<td class="${rowColor}" valign="center" align="left">
 						<span class="nav"><a class="nav" href="#top">${I18n.getMessage("PostShow.top")}</a></span>
-					</td>
+					</td>-->
 					
-					<td class="${rowColor}" valign="top" nowrap="nowrap" height="28">
+					<td class="${rowColor}" valign="bottom" nowrap="nowrap" height="28" width="100%">
 						<table height="18" cellspacing="0" cellpadding="0" border="0" width="100%">
 							<tr>
 								<td valign="center" nowrap="nowrap"> 
@@ -315,10 +306,7 @@ function confirmDelete()
 								</#if>
 							</tr>
 						</table>
-					</td>
-				</tr>
-
-				</table>
+					
 				</td>
 				</tr>
 	
