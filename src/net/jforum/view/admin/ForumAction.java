@@ -66,12 +66,13 @@ import net.jforum.security.RoleValue;
 import net.jforum.security.RoleValueCollection;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.TreeGroup;
+import net.jforum.view.admin.common.ModerationCommon;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.11 2005/01/02 19:58:02 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.12 2005/01/31 20:10:43 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -114,10 +115,16 @@ public class ForumAction extends Command
 		f.setDescription(this.request.getParameter("description"));
 		f.setIdCategories(this.request.getIntParameter("categories_id"));
 		f.setName(this.request.getParameter("forum_name"));
-			
+
+		boolean moderated = f.isModerated();
+		f.setModerated("1".equals(this.request.getParameter("moderate")));
+
 		DataAccessDriver.getInstance().newForumModel().update(f);
-		
 		ForumRepository.reloadForum(f.getId());
+
+		if (moderated != f.isModerated()) {
+			new ModerationCommon().setTopicModerationStatus(f.getId(), f.isModerated());
+		}
 		
 		this.list();
 	}
@@ -193,6 +200,7 @@ public class ForumAction extends Command
 		f.setDescription(this.request.getParameter("description"));
 		f.setIdCategories(this.request.getIntParameter("categories_id"));
 		f.setName(this.request.getParameter("forum_name"));	
+		f.setModerated("1".equals(this.request.getParameter("moderate")));
 			
 		int forumId = DataAccessDriver.getInstance().newForumModel().addNew(f);
 		f.setId(forumId);

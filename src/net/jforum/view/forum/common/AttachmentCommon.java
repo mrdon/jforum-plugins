@@ -75,7 +75,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.8 2005/01/27 20:02:55 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.9 2005/01/31 20:10:44 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {
@@ -291,5 +291,19 @@ public class AttachmentCommon
 		}
 		
 		return this.am.selectAttachments(postId);
+	}
+	
+	public void deleteAttachments(int postId) throws Exception
+	{
+		// Attachments
+		List attachments = DataAccessDriver.getInstance().newAttachmentModel().selectAttachments(postId);
+		String attachIds = "";
+		for (Iterator iter = attachments.iterator(); iter.hasNext(); ) {
+			Attachment a = (Attachment)iter.next();
+			attachIds += a.getId() + ",";
+		}
+		
+		this.request.addParameter("delete_attach", attachIds);
+		this.editAttachments(postId);
 	}
 }

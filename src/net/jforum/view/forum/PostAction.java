@@ -48,7 +48,6 @@ import java.io.OutputStream;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -75,9 +74,6 @@ import net.jforum.repository.TopicRepository;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
-import net.jforum.util.concurrent.executor.QueuedExecutor;
-import net.jforum.util.mail.EmailSenderTask;
-import net.jforum.util.mail.TopicSpammer;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.view.forum.common.AttachmentCommon;
@@ -90,7 +86,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.54 2005/01/26 20:15:14 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.55 2005/01/31 20:10:45 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -117,13 +113,6 @@ public class PostAction extends Command {
 			return;
 		}
 
-		tm.incrementTotalViews(topic.getId());
-
-		if (userId != anonymousUser) {
-			((HashMap) SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(topic.getId()),
-					new Long(topic.getLastPostTimeInMillis().getTime()));
-		}
-
 		int count = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 		int start = ViewCommon.getStartPage();
 
@@ -136,6 +125,13 @@ public class PostAction extends Command {
 
 		Map usersMap = new HashMap();
 		List helperList = PostCommon.topicPosts(pm, um, usersMap, canEdit, userId, topic.getId(), start, count);
+		
+		// Ugly assumption:
+		// Is moderation pending for the topic?
+		if (topic.isModerated() && helperList.size() == 0) {
+			this.notModeratedYet();
+			return;
+		}
 
 		boolean isModerator = (pc.canAccess(SecurityConstants.PERM_MODERATION))
 				&& (pc.canAccess(SecurityConstants.PERM_MODERATION_FORUMS, Integer.toString(topic.getForumId())));
@@ -143,12 +139,18 @@ public class PostAction extends Command {
 		// Set the topic status as read
 		tm.updateReadStatus(topic.getId(), userId, true);
 		
+		tm.incrementTotalViews(topic.getId());
+
+		if (userId != anonymousUser) {
+			((HashMap) SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(topic.getId()),
+					new Long(topic.getLastPostTimeInMillis().getTime()));
+		}
+		
 		this.context.put("canDownloadAttachments", SecurityRepository.canAccess(
 				SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD));
 		this.context.put("am", new AttachmentCommon(this.request));
 		this.context.put("karmaVotes", DataAccessDriver.getInstance().newKarmaModel().getUserVotes(topic.getId(), userId));
 		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
-		this.context.put("bookmarksEnabled", SecurityRepository.canAccess(SecurityConstants.PERM_BOOKMARKS_ENABLED));
 		this.context.put("canRemove",
 				SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE));
 		this.context.put("canEdit", canEdit);
@@ -455,7 +457,9 @@ public class PostAction extends Command {
 			if (t.getFirstPostId() == p.getId()) {
 				t.setTitle(p.getSubject());
 				t.setType(this.request.getIntParameter("topic_type"));
+				
 				tm.update(t);
+				
 				ForumRepository.reloadForum(t.getForumId());
 				TopicRepository.clearCache(t.getForumId());
 			}
@@ -477,10 +481,35 @@ public class PostAction extends Command {
 			JForum.setRedirect(path);
 		}
 	}
+	
+	public void waitingModeration()
+	{
+		this.context.put("moduleAction", "message.htm");
+		
+		int topicId = this.request.getIntParameter("topic_id");
+		String path = this.request.getContextPath();
+		
+		if (topicId == 0) {
+			path += "/forums/show/" + this.request.getParameter("forum_id");
+		}
+		else {
+			path += "/posts/list/" + topicId;
+		}
+		
+		this.context.put("message", I18n.getMessage("PostShow.waitingModeration", 
+				new String[] { path + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) }));
+	}
+	
+	private void notModeratedYet()
+	{
+		this.context.put("moduleAction", "message.htm");
+		this.context.put("message", I18n.getMessage("PostShow.notModeratedYet"));
+	}
 
 	public void insertSave() throws Exception 
 	{
 		int forumId = this.request.getIntParameter("forum_id");
+		boolean firstPost = false;
 
 		if (!this.anonymousPost(forumId)) {
 			SessionFacade.setAttribute(ConfigKeys.REQUEST_DUMP, this.request.dumpRequest());
@@ -535,33 +564,10 @@ public class PostAction extends Command {
 			if (t.getId() == -1) {
 				t.setTime(new Date());
 				t.setTitle(this.request.getParameter("subject"));
+				t.setModerated(ForumRepository.getForum(forumId).isModerated());
 
-				int topicId = tm.addNew(t);
-				t.setId(topicId);
-				fm.incrementTotalTopics(t.getForumId(), 1);
-			}
-			else {
-				tm.incrementTotalReplies(t.getId());
-				tm.incrementTotalViews(t.getId());
-
-				t.setTotalReplies(t.getTotalReplies() + 1);
-
-				// Ok, we have an answer. Time to notify the subscribed users
-				if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_NOTIFY_ANSWERS)) {
-					try {
-						List usersToNotify = tm.notifyUsers(t);
-
-						// we only have to send an email if there are users
-						// subscribed to the topic
-						if (usersToNotify != null && usersToNotify.size() > 0) {
-							QueuedExecutor.getInstance().execute(
-									new EmailSenderTask(new TopicSpammer(t, usersToNotify)));
-						}
-					}
-					catch (Exception e) {
-						logger.warn("Error while sending notification emails: " + e);
-					}
-				}
+				t.setId(tm.addNew(t));
+				firstPost = true;
 			}
 
 			// Topic watch
@@ -572,13 +578,13 @@ public class PostAction extends Command {
 			p.setTopicId(t.getId());
 
 			// Save the remaining stuff
+			p.setModerate(t.isModerated());
 			int postId = pm.addNew(p);
 
 			if (this.request.getParameter("topic_id") == null) {
 				t.setFirstPostId(postId);
 			}
-
-			t.setLastPostId(postId);
+			
 			tm.update(t);
 			
 			// Attachments
@@ -595,27 +601,29 @@ public class PostAction extends Command {
 				return;
 			}
 
-			fm.setLastPost(t.getForumId(), postId);
-
-			ForumRepository.reloadForum(t.getForumId());
-			TopicRepository.clearCache(t.getForumId());
-
-			// Updates cache for latest topic
-			TopicRepository.pushTopic(tm.selectById(t.getId()));
-
-			String path = this.request.getContextPath() + "/posts/list/";
-
-			int start = ViewCommon.getStartPage();
-
-			path += this.startPage(t, start) + "/";
-			path += t.getId() + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#" + postId;
-
-			JForum.setRedirect(path);
-
-			int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
-			if (u.getId() != anonymousUser) {
-				((HashMap) SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(t.getId()),
-						new Long(System.currentTimeMillis()));
+			if (!t.isModerated()) {
+				DataAccessDriver.getInstance().newUserModel().incrementPosts(p.getUserId());
+				TopicsCommon.updateBoardStatus(t, postId, firstPost, tm, fm);
+				TopicsCommon.notifyUsers(t, tm);
+	
+				String path = this.request.getContextPath() + "/posts/list/";
+				int start = ViewCommon.getStartPage();
+	
+				path += this.startPage(t, start) + "/";
+				path += t.getId() + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#" + postId;
+	
+				JForum.setRedirect(path);
+	
+				int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
+				if (u.getId() != anonymousUser) {
+					((HashMap) SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(t.getId()),
+							new Long(System.currentTimeMillis()));
+				}
+			}
+			else {
+				JForum.setRedirect(this.request.getContextPath() + "/posts/waitingModeration/" + (firstPost ? 0 : t.getId())
+						+ "/" + t.getForumId()
+						+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 			}
 		}
 		else {
@@ -668,17 +676,10 @@ public class PostAction extends Command {
 		}
 
 		pm.delete(p);
+		DataAccessDriver.getInstance().newUserModel().decrementPosts(p.getUserId());
 		
 		// Attachments
-		List attachments = DataAccessDriver.getInstance().newAttachmentModel().selectAttachments(p.getId());
-		String attachIds = "";
-		for (Iterator iter = attachments.iterator(); iter.hasNext(); ) {
-			Attachment a = (Attachment)iter.next();
-			attachIds += a.getId() + ",";
-		}
-		
-		this.request.addParameter("delete_attach", attachIds);
-		new AttachmentCommon(this.request).editAttachments(p.getId());
+		new AttachmentCommon(this.request).deleteAttachments(p.getId());
 
 		// Topic
 		tm.decrementTotalReplies(p.getTopicId());
@@ -722,17 +723,7 @@ public class PostAction extends Command {
 		}
 		else {
 			// Ok, all posts were removed. Time to say goodbye
-			Topic topic = new Topic();
-			topic.setId(p.getTopicId());
-			tm.delete(topic);
-
-			// Updates the Recent Topics if it contains this topic
-			TopicRepository.popTopic(topic);
-			TopicRepository.loadMostRecentTopics();
-
-			tm.removeSubscriptionByTopic(p.getTopicId());
-
-			fm.decrementTotalTopics(p.getForumId(), 1);
+			TopicsCommon.deleteTopic(p.getTopicId());
 
 			JForum.setRedirect(this.request.getContextPath() + "/forums/show/" + p.getForumId()
 					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));

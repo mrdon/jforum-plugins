@@ -1,8 +1,3 @@
-# #############
-# CategoryModel
-# #############
-CategoryModel.addNew = INSERT INTO jforum_categories (title) VALUES (?, ?)
-
 # ##########
 # UserModel
 # ##########
@@ -28,6 +23,7 @@ PostModel.selectAllByTopicByLimit = SELECT LIMIT ? ? p.post_id, topic_id, forum_
 	WHERE p.post_id = pt.post_id \
 	AND topic_id = ? \
 	AND p.user_id = u.user_id \
+	AND p.need_moderate = 0 \
 	ORDER BY post_time ASC 
 	
 	

@@ -31,6 +31,14 @@ function checkGroups()
 		<td class="row1" width="38%"><span class="gen">${I18n.getMessage("Category.Form.CategoryName")}</span></td>
 		<td class="row2"><input class="post" style="WIDTH: 200px" maxlength="100" size="25" name="category_name" value="<#if category?exists>${category.name}</#if>" /></td>
 	</tr>
+
+	<tr>
+		<td class="row1" width="38%"><span class="gen">${I18n.getMessage("Category.Form.Moderate")}</span></td>
+		<td class="row2">
+			<input class="post" type="radio" name="moderate" value="0" <#if category?exists><#if !category.isModerated()>checked</#if><#else>checked</#if>/>&nbsp;${I18n.getMessage("User.no")}&nbsp;&nbsp;
+			<input class="post" type="radio" name="moderate" value="1" <#if category?exists && category.isModerated()>checked</#if>/>&nbsp;${I18n.getMessage("User.yes")}
+		</td>
+	</tr>
 	
 	<#if !category?exists>
 	<tr>

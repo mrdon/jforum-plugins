@@ -49,7 +49,7 @@ import net.jforum.drivers.generic.security.UserSecurityModel;
 
 /**
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.7 2005/01/17 18:52:33 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.8 2005/01/31 20:10:41 rafaelsteil Exp $
  */
 public class DataAccessDriver extends net.jforum.model.DataAccessDriver 
 {
@@ -68,6 +68,7 @@ public class DataAccessDriver extends net.jforum.model.DataAccessDriver
 	private static KarmaModel karmaModel = new KarmaModel();
 	private static BookmarkModel bookmarkModel = new BookmarkModel();
 	private static AttachmentModel attachmentModel = new AttachmentModel();
+	private static ModerationModel moderationModel = new ModerationModel();
 	
 	/**
 	 * @see net.jforum.model.DataAccessDriver#getForumModel()
@@ -234,5 +235,13 @@ public class DataAccessDriver extends net.jforum.model.DataAccessDriver
 	public net.jforum.model.AttachmentModel newAttachmentModel()
 	{
 		return attachmentModel;
+	}
+	
+	/** 
+	 * @see net.jforum.model.DataAccessDriver#newModerationModel()
+	 */
+	public net.jforum.model.ModerationModel newModerationModel()
+	{
+		return moderationModel;
 	}
 }

@@ -48,18 +48,24 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.entities.Forum;
 import net.jforum.entities.Topic;
 import net.jforum.entities.UserSession;
 import net.jforum.model.DataAccessDriver;
+import net.jforum.model.ForumModel;
 import net.jforum.model.TopicModel;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.repository.TopicRepository;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
+import net.jforum.util.concurrent.executor.QueuedExecutor;
+import net.jforum.util.mail.EmailSenderTask;
+import net.jforum.util.mail.TopicSpammer;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.view.forum.ModerationHelper;
@@ -68,10 +74,12 @@ import net.jforum.view.forum.ModerationHelper;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.4 2005/01/04 21:36:25 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.5 2005/01/31 20:10:44 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
+	private static Logger logger = Logger.getLogger(TopicsCommon.class);
+	
 	/**
 	 * List all first 'n' topics of a given forum.
 	 * This method returns no more than <code>ConfigKeys.TOPICS_PER_PAGE</code>
@@ -196,5 +204,90 @@ public class TopicsCommon
 		}
 
 		return true;
+	}
+	
+	/**
+	 * Sends a "new post" notification message to all users watching the topic.
+	 * 
+	 * @param t The changed topic
+	 * @param tm A TopicModel instance
+	 * @throws Exception
+	 */
+	public static void notifyUsers(Topic t, TopicModel tm) throws Exception
+	{
+		if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_NOTIFY_ANSWERS)) {
+			try {
+				List usersToNotify = tm.notifyUsers(t);
+
+				// we only have to send an email if there are users
+				// subscribed to the topic
+				if (usersToNotify != null && usersToNotify.size() > 0) {
+					QueuedExecutor.getInstance().execute(
+							new EmailSenderTask(new TopicSpammer(t, usersToNotify)));
+				}
+			}
+			catch (Exception e) {
+				logger.warn("Error while sending notification emails: " + e);
+			}
+		}
+	}
+	
+	/**
+	 * Updates the board status after a new post is inserted.
+	 * This method is used in conjunct with moderation manipulation. 
+	 * It will increase by 1 the number of replies of the tpoic, set the
+	 * last post id for the topic and the forum and refresh the cache. 
+	 * 
+	 * @param t The topic to update
+	 * @param lastPostId The id of the last post
+	 * @param tm A TopicModel instance
+	 * @param fm A ForumModel instance
+	 * @throws Exception
+	 */
+	public static void updateBoardStatus(Topic t, int lastPostId, boolean firstPost, TopicModel tm, ForumModel fm) throws Exception
+	{
+		t.setLastPostId(lastPostId);
+		tm.update(t);
+		
+		fm.incrementTotalTopics(t.getForumId(), 1);
+		fm.setLastPost(t.getForumId(), lastPostId);
+		
+		if (!firstPost) {
+			tm.incrementTotalReplies(t.getId());
+		}
+		
+		tm.incrementTotalViews(t.getId());
+		
+		ForumRepository.reloadForum(t.getForumId());
+		TopicRepository.clearCache(t.getForumId());
+
+		// Updates cache for latest topic
+		TopicRepository.pushTopic(tm.selectById(t.getId()));
+	}
+	
+	/**
+	 * Deletes a topic.
+	 * This method will remove the topic from the database,
+	 * clear the entry frm the cache and update the last 
+	 * post info for the associated forum.
+	 * 
+	 * @param topicId The topic id to remove
+	 * @throws Exception
+	 */
+	public static void deleteTopic(int topicId) throws Exception
+	{
+		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
+		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
+		
+		Topic topic = new Topic();
+		topic.setId(topicId);
+		tm.delete(topic);
+
+		// Updates the Recent Topics if it contains this topic
+		TopicRepository.popTopic(topic);
+		TopicRepository.loadMostRecentTopics();
+
+		tm.removeSubscriptionByTopic(topicId);
+		fm.decrementTotalTopics(topicId, 1);
 	}
 }

@@ -48,7 +48,7 @@ import java.util.Date;
  * Represents every topic in the forum.
  * 
  * @author Rafael Steil
- * @version $Id: Topic.java,v 1.7 2005/01/21 14:00:48 rafaelsteil Exp $
+ * @version $Id: Topic.java,v 1.8 2005/01/31 20:10:40 rafaelsteil Exp $
  */
 public class Topic 
 {
@@ -59,96 +59,30 @@ public class Topic
 	public static final int STATUS_UNLOCKED = 0;
 	public static final int STATUS_LOCKED = 1;
 	
-	/**
-	 * The topic ID
-	 */
 	private int id;
-	
-	/**
-	 * The id of the forum which the topic is associated
-	 */
 	private int forumId;
-	
 	private boolean read = true;
-	
-	/**
-	 * The topic title
-	 */
 	private String title;
-	
-	/**
-	 * The time which the topic was posted
-	 */
 	private Date time;
-	
 	private Date lastPostTimeInMillis;
-	
-	/**
-	 * Total vews of the topcis
-	 */
 	private int totalViews;
-	
-	/**
-	 * Total number of answers
-	 */
 	private int totalReplies;
-	
-	/**
-	 * 
-	 */
 	private int status;
-	
-	/**
-	 * 
-	 */
 	private boolean vote;
-	
-	/**
-	 * 
-	 */
 	private int type;
-	
-	/**
-	 * The id of the first post
-	 */
 	private int firstPostId;
-	
 	private String firstPostTime;
-	
-	/**
-	 * The id of the last post
-	 */
 	private int lastPostId;	
-	
 	private String lastPostTime;
-	
-	/**
-	 * Indicate if the is a moderated topic or not
-	 */
 	private boolean moderated;
-	
 	private boolean paginate;
-	
 	private Double totalPages;
-
-	/**
-	 * User who created the topic
-	 */
 	private User postedBy;
-	
-	/**
-	 * User who posted the last message in the topic 
-	 */
 	private User lastPostBy;
-	
 	private boolean isHot;
 	private boolean hasAttach;
 	
-	/**
-	 * Default Constructor
-	 */
 	public Topic() {}
-	
 		
 	/**
 	 * Returns the ID of the firts topic

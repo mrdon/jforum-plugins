@@ -196,6 +196,7 @@ function confirmDelete()
 						<br /> 
 						
 						<#if post.userId != 1>
+							${I18n.getMessage("PostShow.userRegistrationDate")}: ${user.registrationDate?date('dd/MM/yyyy')}<br />
 							${I18n.getMessage("PostShow.userTotalMessages")}: ${user.totalPosts}
 						</#if>
 						<br />
@@ -208,6 +209,14 @@ function confirmDelete()
 						<#if post.userIp?exists && isModerator>
 							${I18n.getMessage("PostShow.userIP")}: ${post.userIp}
 							<br />
+						</#if>
+
+						<#if post.userId != 1>
+							<#if user.isOnline()>
+								<span class="online">${I18n.getMessage("PostShow.userOnline")}</span>
+							<#else>
+								<span class="offline">${I18n.getMessage("PostShow.userOffline")} </span>
+							</#if>
 						</#if>
 						</span>
 						<br />

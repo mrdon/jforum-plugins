@@ -71,12 +71,13 @@ import net.jforum.util.ForumOrderComparator;
  * to the user who make the call tho the method. 
  * 
  * @author Rafael Steil
- * @version $Id: Category.java,v 1.14 2004/12/19 22:14:41 rafaelsteil Exp $
+ * @version $Id: Category.java,v 1.15 2005/01/31 20:10:40 rafaelsteil Exp $
  */
 public class Category 
 {
 	private int id;
 	private int order;
+	private boolean moderated;
 	private String name;
 	private Map forumsIdMap = new HashMap();
 	private Set forums = new TreeSet(new ForumOrderComparator());
@@ -96,10 +97,21 @@ public class Category
 		this.name = c.getName();
 		this.id = c.getId();
 		this.order = c.getOrder();
+		this.moderated = c.isModerated();
 		
 		for (Iterator iter = c.getForums().iterator(); iter.hasNext(); ) {
 			this.addForum(new Forum((Forum)iter.next()));
 		}
+	}
+	
+	public void setModerated(boolean status)
+	{
+		this.moderated = status;
+	}
+	
+	public boolean isModerated() 
+	{
+		return this.moderated;
 	}
 	
 	/**

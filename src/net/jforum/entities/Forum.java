@@ -46,62 +46,22 @@ package net.jforum.entities;
  * Represents a specific forum.
  * 
  * @author Rafael Steil
- * @version $Id: Forum.java,v 1.4 2004/11/18 01:31:45 rafaelsteil Exp $
+ * @version $Id: Forum.java,v 1.5 2005/01/31 20:10:40 rafaelsteil Exp $
  */
 public class Forum 
 {
-	/**
-	 * The Forum ID
-	 */
 	private int id;
-	
-	/**
-	 * Category which the forum belongs to
-	 */
 	private int idCategories;
-	
-	/**
-	 * The forum name 
-	 */
 	private String name;
-	
-	/**
-	 * The forum description
-	 */
 	private String description;
-	
-	/**
-	 * The order position which the forum is listed 
-	 */
 	private int order;
-	
-	/**
-	 * The total topics posted in the forum
-	 */
 	private int totalTopics;
-	
-	/**
-	 * The total number os posts
-	 */
 	private int totalPosts;
-	
-	/**
-	 * The ID of the last post in the forum
-	 */
 	private int lastPostId;
-	
-	/**
-	 * Is the forum moderated?
-	 */
 	private boolean moderated;
-	
 	private boolean unread;
-	
 	private LastPostInfo lpi;
 	
-	/**
-	 * Default Constructor
-	 */
 	public Forum() { }
 	
 	public Forum(int forumId) {

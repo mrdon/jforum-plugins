@@ -54,7 +54,7 @@ import net.jforum.entities.Topic;
  * select some specific data.
  *
  * @author Rafael Steil
- * @version $Id: TopicModel.java,v 1.7 2005/01/17 12:46:36 rafaelsteil Exp $
+ * @version $Id: TopicModel.java,v 1.8 2005/01/31 20:10:36 rafaelsteil Exp $
  */
 public interface TopicModel 
 {
@@ -67,6 +67,16 @@ public interface TopicModel
 	 * @see #selectAll
 	 */
 	public Topic selectById(int topicId) throws Exception;
+	
+	/**
+	 * Gets a topic's information from the topics table only.
+	 * No other information, like usernames, are fetched. 
+	 * 
+	 * @param topicId The topic id to get
+	 * @return A topic instance
+	 * @throws Exception
+	 */
+	public Topic selectRaw(int topicId) throws Exception;
 	
 	/**
 	 * Selects all topics associated to a specific forum
@@ -266,4 +276,13 @@ public interface TopicModel
 	 * @throws Exception
 	 */
 	public int getMinPostId(int topicId) throws Exception;
+	
+	/**
+	 * Sets the moderatation flag for all topics of a given forum.
+	 * 
+	 * @param forumId The forum id
+	 * @param status
+	 * @throws Exception
+	 */
+	public void setModerationStatus(int forumId, boolean status) throws Exception;
 }

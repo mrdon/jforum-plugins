@@ -185,7 +185,8 @@ CREATE TABLE [jforum_posts] (
 	[post_edit_time] [datetime] NULL ,
 	[post_edit_count] [int] DEFAULT (0) NOT NULL ,
 	[status] [tinyint] DEFAULT (1) NULL, 
-	[attach] [tinyint] DEFAULT (0) not null
+	[attach] [tinyint] DEFAULT (0) not null,
+	[need_moderate] [tinyint] DEFAULT (0)
 ) ON [PRIMARY]
 
 

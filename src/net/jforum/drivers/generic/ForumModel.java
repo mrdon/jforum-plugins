@@ -60,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: ForumModel.java,v 1.15 2005/01/04 03:25:36 rafaelsteil Exp $
+ * @version $Id: ForumModel.java,v 1.16 2005/01/31 20:10:41 rafaelsteil Exp $
  */
 public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel {
 	private Connection conn;
@@ -406,5 +406,17 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel 
 		p.close();
 		
 		return l;
+	}
+	
+	/**
+	 * @see net.jforum.model.ForumModel#setModerated(int, boolean)
+	 */
+	public void setModerated(int categoryId, boolean status) throws Exception
+	{
+		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.setModerated"));
+		p.setInt(1, status ? 1 : 0);
+		p.setInt(2, categoryId);
+		p.executeUpdate();
+		p.close();
 	}
 }

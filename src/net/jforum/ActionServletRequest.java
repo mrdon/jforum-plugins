@@ -66,7 +66,7 @@ import org.apache.commons.fileupload.servlet.ServletRequestContext;
 
 /**
  * @author Rafael Steil
- * @version $Id: ActionServletRequest.java,v 1.15 2005/01/18 20:59:46 rafaelsteil Exp $
+ * @version $Id: ActionServletRequest.java,v 1.16 2005/01/31 20:10:35 rafaelsteil Exp $
  */
 public class ActionServletRequest extends HttpServletRequestWrapper 
 {
@@ -135,10 +135,10 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 			String[] p = this.value.split(",");
 			
 			this.vars = new String[p.length];
-			this.size = p[0].trim().equals("") ? 0 : p.length;
+			this.size = ((((p[0]).trim()).equals("")) ? 0 : p.length);
 			
 			for (int i = 0; i < this.size; i++) {
-				this.vars[i] = p[i].trim();
+				this.vars[i] = (p[i]).trim();
 			}
 		}
 
@@ -224,13 +224,10 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 		this.query = new HashMap();
 		boolean isMultipart = false;
 		
-		String requestType = superRequest.getMethod().toUpperCase();
+		String requestType = (superRequest.getMethod()).toUpperCase();
 		
-		if ("GET".equals(requestType) 
-				&& superRequest.getQueryString() == null
-				&& superRequest.getRequestURI().endsWith(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION))) {
-			superRequest.setCharacterEncoding(SystemGlobals.getValue(ConfigKeys.ENCODING));
-			String urlModel[] = superRequest.getRequestURI().split("/");
+		if ((("GET").equals(requestType) && (superRequest.getQueryString() == null)) && (superRequest.getRequestURI()).endsWith(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION))) {
+			superRequest.setCharacterEncoding(SystemGlobals.getValue(ConfigKeys.ENCODING));  String[] urlModel=(superRequest.getRequestURI()).split("/");
 			
 			// If (context name is not null) {
 				// 0: empty
@@ -250,14 +247,13 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 			int baseLen = 4;
 			
 			String contextName = superRequest.getContextPath();
-			if (contextName == null || contextName.equals("")) {
+			if ((contextName == null) || contextName.equals("")) {
 				moduleIndex = 1;
 				actionIndex = 2;
 				baseLen = 3;
 			}
 			
-			urlModel[urlModel.length - 1] = urlModel[urlModel.length - 1].substring(0, urlModel[urlModel.length - 1]
-				.indexOf(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)));
+			urlModel[urlModel.length - 1] = (urlModel[urlModel.length - 1]).substring(0, (urlModel[urlModel.length - 1]).indexOf(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)));
 			
 			// <moduleName>.<actionName>.<numberOfParameters>
 			UrlPattern url = UrlPatternCollection.findPattern(urlModel[moduleIndex] 
@@ -281,7 +277,7 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 				}
 			}
 		}
-		else if ("POST".equals(requestType)) {
+		else if (("POST").equals(requestType)) {
 			isMultipart = ServletFileUpload.isMultipartContent(new ServletRequestContext(superRequest));
 			if (isMultipart) {
 			    String tmpDir = SystemGlobals.getApplicationPath() + "/" + SystemGlobals.getValue(ConfigKeys.TMP_DIR);

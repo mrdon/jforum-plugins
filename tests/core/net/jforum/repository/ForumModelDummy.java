@@ -50,7 +50,7 @@ import net.jforum.model.ForumModel;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumModelDummy.java,v 1.4 2005/01/04 03:25:38 rafaelsteil Exp $
+ * @version $Id: ForumModelDummy.java,v 1.5 2005/01/31 20:10:45 rafaelsteil Exp $
  */
 class ForumModelDummy implements ForumModel {
 
@@ -181,5 +181,14 @@ class ForumModelDummy implements ForumModel {
 	{
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	/**
+	 * @see net.jforum.model.ForumModel#setModerated(int, boolean)
+	 */
+	public void setModerated(int categoryId, boolean status) throws Exception
+	{
+		// TODO Auto-generated method stub
+
 	}
 }

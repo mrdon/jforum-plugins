@@ -121,6 +121,7 @@ CREATE TABLE jforum_posts (
   post_edit_count int default '0' NOT NULL,
   status int default '1',
   attach int default 0,
+  need_moderate int default '0',
   PRIMARY KEY  (post_id)
 ) ;
 CREATE INDEX idx_posts_user ON jforum_posts(user_id);

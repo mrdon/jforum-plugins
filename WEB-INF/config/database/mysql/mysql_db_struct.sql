@@ -27,6 +27,7 @@ CREATE TABLE jforum_categories (
   categories_id mediumint(8) NOT NULL auto_increment,
   title varchar(100) NOT NULL default '',
   display_order mediumint(8) NOT NULL default '0',
+  moderated TINYINT(1) DEFAULT '0',
   PRIMARY KEY  (categories_id)
 ) TYPE=InnoDB;
 
@@ -55,7 +56,7 @@ CREATE TABLE jforum_forums (
   forum_order mediumint(8) default '1',
   forum_topics mediumint(8) NOT NULL default '0',
   forum_last_post_id mediumint(8) NOT NULL default '0',
-  moderated smallint(6) default '0',
+  moderated TINYINT(1) DEFAULT '0',
   PRIMARY KEY  (forum_id),
   KEY (categories_id)
 ) TYPE=InnoDB;
@@ -130,6 +131,7 @@ CREATE TABLE jforum_posts (
   status tinyint(1) default '1',
   PRIMARY KEY  (post_id),
   attach TINYINT(1) DEFAULT '0',
+  need_moderate TINYINT(1) DEFAULT '0',
   KEY (user_id),
   KEY (topic_id),
   KEY (forum_id)
@@ -244,7 +246,7 @@ CREATE TABLE jforum_topics (
   topic_type tinyint(3) default '0',
   topic_first_post_id mediumint(8) default '0',
   topic_last_post_id mediumint(8) NOT NULL default '0',
-  moderated smallint(1) default '0',
+  moderated TINYINT(1) DEFAULT '0',
   PRIMARY KEY  (topic_id),
   KEY (forum_id),
   KEY(user_id),

@@ -93,7 +93,7 @@
 					<td class="row1" valign="center" align="middle" rowspan="2"><img src="${contextPath}/templates/${templateName}/images/whosonline.gif" width="46" height="25" /></td>
 					<td class="row1" align="left" width="100%">
 						<span class="gensmall">${totalMessages}<br />${totalUsers}<br />
-						<a href="${JForumContext.encodeURL("/user/profile/${lastUserId}")}">${I18n.getMessage("ForumListing.newestUser")} ${lastUserName}</a></span>
+						${I18n.getMessage("ForumListing.newestUser")} <a href="${JForumContext.encodeURL("/user/profile/${lastUserId}")}">${lastUserName}</a></span>
 					</td>
 				</tr>
 

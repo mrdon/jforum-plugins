@@ -1,4 +1,3 @@
-# #############
 # GenericModel
 # #############
 
@@ -57,28 +56,16 @@ ForumModel.selectAll =  SELECT f.forum_id, f.categories_id, f.forum_name, f.foru
 						
 # #############
 # CategoryModel
-# #############		
-
-#NOT NCESSARY - Use same as generic.sql
-#CategoryModel.addNew = INSERT INTO jforum_categories (title, display_order) \
-#									SELECT ? as title, \
-#									case WHEN (SELECT count(*) from jforum_categories) > 0 THEN (select MAX(display_order) + 1 from jforum_categories) \
-#										ELSE 1 \
-#									end \
-#									as display_order
-									
+# #############
 CategoryModel.lastGeneratedCategoryId = SELECT IDENT_CURRENT('jforum_categories') AS categories_id 
-
-
-
 
 # #############
 # PostModel
 # #############
-
 PostModel.lastGeneratedPostId = SELECT IDENT_CURRENT('jforum_posts') AS post_id
 
-PostModel.addNewPost = INSERT INTO jforum_posts (topic_id, forum_id, user_id, post_time, poster_ip, enable_bbcode, enable_html, enable_smilies, enable_sig, post_edit_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, GETDATE())
+PostModel.addNewPost = INSERT INTO jforum_posts (topic_id, forum_id, user_id, post_time, poster_ip, enable_bbcode, enable_html, enable_smilies, enable_sig, post_edit_time, need_moderate) \
+	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, GETDATE(), ?)
 
 PostModel.selectAllByTopicByLimit = p.post_id, topic_id, forum_id, p.user_id, post_time, poster_ip, enable_bbcode, \
 	enable_html, enable_smilies, enable_sig, post_edit_time, post_edit_count, status, user_karma, pt.post_subject, pt.post_text, username, attach \
@@ -86,6 +73,7 @@ PostModel.selectAllByTopicByLimit = p.post_id, topic_id, forum_id, p.user_id, po
 	WHERE p.post_id = pt.post_id \
 	AND topic_id = ? \
 	AND p.user_id = u.user_id \
+	AND p.need_moderate = 0 \
 	ORDER BY post_time ASC
 	
 # #############

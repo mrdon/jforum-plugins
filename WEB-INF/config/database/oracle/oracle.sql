@@ -6,7 +6,7 @@ GroupModel.addNew = INSERT INTO jforum_groups (group_id, group_name, group_descr
 # #############
 # CategoryModel
 # #############
-CategoryModel.addNew = INSERT INTO jforum_categories (categories_id, title, display_order) VALUES (jforum_categories_seq.nextval, ?, ?)
+CategoryModel.addNew = INSERT INTO jforum_categories (categories_id, title, display_order, moderated) VALUES (jforum_categories_seq.nextval, ?, ?, ?)
 
 # #############
 # RankingModel
@@ -53,7 +53,8 @@ PermissionControl.addUserRole = INSERT INTO jforum_roles (role_id, user_id, name
 # #############
 # PostModel
 # #############
-PostModel.addNewPost = INSERT INTO jforum_posts (post_id, topic_id, forum_id, user_id, post_time, poster_ip, enable_bbcode, enable_html, enable_smilies, enable_sig, post_edit_time) VALUES (jforum_posts_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?, SYSDATE)
+PostModel.addNewPost = INSERT INTO jforum_posts (post_id, topic_id, forum_id, user_id, post_time, poster_ip, enable_bbcode, enable_html, enable_smilies, enable_sig, post_edit_time, need_moderate) \
+	VALUES (jforum_posts_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?, SYSDATE, ?)
 PostModel.addNewPostText = INSERT INTO jforum_posts_text ( post_text, post_id, post_subject ) VALUES (EMPTY_BLOB(), ?, ?)
 PostModel.addNewPostTextField = SELECT post_text from jforum_posts_text WHERE post_id = ? FOR UPDATE
 PostModel.updatePostText = UPDATE jforum_posts_text SET post_subject = ? WHERE post_id = ?
@@ -69,6 +70,7 @@ PostModel.selectAllByTopicByLimit = SELECT * FROM ( \
 	WHERE p.post_id = pt.post_id  \
 	AND topic_id = ? \
 	AND p.user_id = u.user_id \
+	AND p.need_moderate = 0 \
 	ORDER BY post_time ASC \
 ) \
 WHERE LINENUM BETWEEN ? AND ?

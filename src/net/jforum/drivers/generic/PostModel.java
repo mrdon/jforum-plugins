@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: PostModel.java,v 1.17 2005/01/26 20:15:11 rafaelsteil Exp $
+ * @version $Id: PostModel.java,v 1.18 2005/01/31 20:10:42 rafaelsteil Exp $
  */
 public class PostModel extends AutoKeys implements net.jforum.model.PostModel 
 {
@@ -140,23 +140,19 @@ public class PostModel extends AutoKeys implements net.jforum.model.PostModel
 	{
 		PreparedStatement post = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.deletePost"));
 		PreparedStatement text = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.deletePostText"));
-		PreparedStatement decrement = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.decrementPosts"));
 		
 		for (Iterator iter = posts.iterator(); iter.hasNext(); ) {
 			Post p = (Post)iter.next();
 
 			post.setInt(1, p.getId());
 			text.setInt(1, p.getId());
-			decrement.setInt(1, p.getUserId());
 			
 			post.executeUpdate();
 			text.executeUpdate();
-			decrement.executeUpdate();
 		}
 		
 		post.close();
 		text.close();
-		decrement.close();
 	}
 	
 	/**
@@ -227,7 +223,6 @@ public class PostModel extends AutoKeys implements net.jforum.model.PostModel
 	{
 		this.addNewPost(post);
 		this.addNewPostText(post);
-		new UserModel().incrementPosts(post.getUserId());
 		
 		// Tokenize the words for search
 		DataAccessDriver.getInstance().newSearchModel().insertSearchWords(post);
@@ -258,6 +253,7 @@ public class PostModel extends AutoKeys implements net.jforum.model.PostModel
 		p.setInt(7, post.isHtmlEnabled() ? 1 : 0);
 		p.setInt(8, post.isSmiliesEnabled() ? 1 : 0);
 		p.setInt(9, post.isSignatureEnabled() ? 1 : 0);
+		p.setInt(10, post.isModerationNeeded() ? 1 : 0);
 		
 		int postId = this.executeAutoKeysQuery(p);
 		post.setId(postId);

@@ -116,6 +116,7 @@ CREATE TABLE jforum_posts (
   post_edit_count INTEGER NOT NULL DEFAULT 0,
   status INTEGER DEFAULT 1,
   attach INTEGER DEFAULT 0,
+  need_moderate INTEGER DEFAULT 0,
   PRIMARY KEY  (post_id)
 );
 CREATE INDEX idx_posts_user ON jforum_posts(user_id);
@@ -522,7 +523,7 @@ CREATE TABLE jforum_attach_desc (
 	download_count INTEGER,
 	description VARCHAR(255),
 	mimetype VARCHAR(50),
-	filesize NUMBER(20),
+	filesize NUMERIC(20),
 	upload_time DATE,
 	thumb INTEGER DEFAULT 0,
 	extension_id INTEGER

@@ -55,7 +55,7 @@ import net.jforum.entities.LastPostInfo;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: ForumModel.java,v 1.7 2005/01/04 03:25:37 rafaelsteil Exp $
+ * @version $Id: ForumModel.java,v 1.8 2005/01/31 20:10:36 rafaelsteil Exp $
  */
 public interface ForumModel 
 {
@@ -206,4 +206,13 @@ public interface ForumModel
 	 * @throws Exception
 	 */
 	public List checkUnreadTopics(int forumId, long lastVisit) throws Exception;
+	
+	/**
+	 * Enable or disabled moderation for the forum.
+	 * 
+	 * @param categoryId The main category for the forum
+	 * @param status a boolean value representing the desired status
+	 * @throws Exception
+	 */
+	public void setModerated(int categoryId, boolean status) throws Exception;
 }

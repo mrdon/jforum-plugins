@@ -64,6 +64,7 @@ import net.jforum.security.RoleValueCollection;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.TreeGroup;
+import net.jforum.view.admin.common.ModerationCommon;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
@@ -71,7 +72,7 @@ import freemarker.template.Template;
  * ViewHelper for category administration.
  * 
  * @author Rafael Steil
- * @version $Id: CategoryAction.java,v 1.14 2005/01/28 14:46:18 rafaelsteil Exp $
+ * @version $Id: CategoryAction.java,v 1.15 2005/01/31 20:10:43 rafaelsteil Exp $
  */
 public class CategoryAction extends Command 
 {
@@ -108,10 +109,13 @@ public class CategoryAction extends Command
 		Category c = new Category(ForumRepository.getCategory(
 				this.request.getIntParameter("categories_id")));
 		c.setName(this.request.getParameter("category_name"));
+		c.setModerated("1".equals(this.request.getParameter("moderate")));
 			
 		this.cm.update(c);
 		ForumRepository.reloadCategory(c);
-			
+		
+		new ModerationCommon().setForumsModerationStatus(c, c.isModerated());
+		
 		this.list();
 	}
 	
@@ -131,7 +135,7 @@ public class CategoryAction extends Command
 					ForumRepository.removeCategory(c);
 				}
 				else {
-					errors.add(I18n.getMessage(I18n.CANNOT_DELETE_CATEGORY, new Object[] {new Integer(ids[i])}));
+					errors.add(I18n.getMessage(I18n.CANNOT_DELETE_CATEGORY, new Object[] { new Integer(ids[i]) }));
 				}
 			}
 		}
@@ -148,6 +152,7 @@ public class CategoryAction extends Command
 	{
 		Category c = new Category();
 		c.setName(this.request.getParameter("category_name"));
+		c.setModerated("1".equals(this.request.getParameter("moderated")));
 			
 		int categoryId = this.cm.addNew(c);
 		c.setId(categoryId);

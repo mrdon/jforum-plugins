@@ -48,101 +48,31 @@ import java.util.Date;
  * Represents every message post in the system.
  * 
  * @author Rafael Steil
- * @version $Id: Post.java,v 1.6 2005/01/19 19:25:52 rafaelsteil Exp $
+ * @version $Id: Post.java,v 1.7 2005/01/31 20:10:40 rafaelsteil Exp $
  */
 public class Post 
 {
-	/**
-	 * The post id
-	 */
 	private int id;
-	
-	/**
-	 * The id of the topic this post belongs to
-	 */
 	private int topicId;
-	
-	/**
-	 * The id of the forum this post belongs to
-	 */
 	private int forumId;
-	
 	private String formatedTime;
-	
-	/**
-	 * The ID of the user that have posted this post
-	 */
 	private int userId;
-	
-	/**
-	 * The time that the message was posted
-	 */
 	private Date time;
-	
-	/**
-	 * The post message
-	 */
 	private String text;
-	
-	/**
-	 * The subject for the post
-	 */
 	private String subject;
-	
-	/**
-	 * The name of the user that have sent the message. Used to anoymouns users
-	 */
 	private String postUsername;
-	
-	/**
-	 * Is BB code enabled ?
-	 */
 	private boolean bbCodeEnabled = true;
-	
-	/**
-	 * Is HTML code enabled?
-	 */
 	private boolean htmlEnabled = true;
-	
-	/**
-	 * Is smilies enabled?
-	 */
 	private boolean smiliesEnabled = true;
-	
-	/**
-	 * Is signatures enabled?
-	 */
 	private boolean signatureEnabled = true;
-	
-	/**
-	 * The time of the ( a possible ) edition of the message
-	 */
 	private Date editTime;
-	
-	/**
-	 * The total number of times which the message was edited
-	 */
 	private int editCount;
-	
-	/**
-	 * The IP address of the user who have posted this post
-	 */
 	private String userIp;
-	
 	private boolean canEdit;
-	
-	/**
-	 * The BBCodeUID
-	 */
-	private String bbCodeUid;
-	
 	private KarmaStatus karma;
-	
 	private boolean hasAttachments;
-	
-	/**
-	 * Default constructor
-	 */
+	private boolean moderate;
+
 	public Post() { }
 	
 	/**
@@ -153,7 +83,6 @@ public class Post
 	public Post(Post p)
 	{
 		this.setBbCodeEnabled(p.isBbCodeEnabled());
-		this.setBbCodeUid(p.getBbCodeUid());
 		this.setCanEdit(p.getCanEdit());
 		this.setEditCount(p.getEditCount());
 		this.setEditTime(p.getEditTime());
@@ -171,6 +100,17 @@ public class Post
 		this.setUserId(p.getUserId());
 		this.setUserIp(p.getUserIp());
 		this.setKarma(new KarmaStatus(p.getKarma()));
+		this.setModerate(p.isModerationNeeded());
+	}
+	
+	public void setModerate(boolean status)
+	{
+		this.moderate = status;
+	}
+	
+	public boolean isModerationNeeded()
+	{
+		return this.moderate;
 	}
 	
 	public KarmaStatus getKarma()
@@ -299,16 +239,6 @@ public class Post
 	public String getUserIp() {
 		return this.userIp;
 	}
-	
-	/**
-	 * Gets the BBCodeUID of the post
-	 * 
-	 * @return String BBCodeUID
-	 */
-	public String getBbCodeUid() {
-		return this.bbCodeUid;
-	}
-	
 	/**
 	 * Sets the status for BB code in the message
 	 * 
@@ -471,16 +401,6 @@ public class Post
 	public void setUserIp(String userIp) {
 		this.userIp = userIp;
 	}
-
-	/**
-	 * Sets the BBCodeUID
-	 * 
-	 * @param bbCodeUid The BBCodeUID of the post
-	 */
-	public void setBbCodeUid(String bbCodeUid) {
-		this.bbCodeUid = bbCodeUid;
-	}
-	
 	public boolean getCanEdit() {
 		return this.canEdit;
 	}

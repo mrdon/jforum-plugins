@@ -40,7 +40,7 @@
  * The JForum Project
  * http://www.jforum.net 
  * 
- * $Id: User.java,v 1.10 2005/01/14 21:11:49 rafaelsteil Exp $
+ * $Id: User.java,v 1.11 2005/01/31 20:10:40 rafaelsteil Exp $
  */
 package net.jforum.entities;
 
@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import net.jforum.SessionFacade;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -948,5 +949,15 @@ public class User
 	public KarmaStatus getKarma()
 	{
 		return this.karma;
+	}
+	
+	/**
+	 * Is the user online?
+	 * 
+	 * @return true if user is in Session
+	 */	
+	public boolean isOnline()
+	{
+		return (SessionFacade.isUserInSession(this.id) != null);
 	}
 }

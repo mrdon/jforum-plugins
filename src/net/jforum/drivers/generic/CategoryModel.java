@@ -54,7 +54,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: CategoryModel.java,v 1.8 2004/12/30 02:31:48 rafaelsteil Exp $
+ * @version $Id: CategoryModel.java,v 1.9 2005/01/31 20:10:41 rafaelsteil Exp $
  */
 public class CategoryModel extends AutoKeys implements net.jforum.model.CategoryModel 
 {
@@ -156,7 +156,8 @@ public class CategoryModel extends AutoKeys implements net.jforum.model.Category
 	{
 		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("CategoryModel.update"));		
 		p.setString(1, category.getName());
-		p.setInt(2, category.getId());
+		p.setInt(2, category.isModerated() ? 1 : 0);
+		p.setInt(3, category.getId());
 		p.executeUpdate();
 		p.close();
 	}
@@ -179,6 +180,7 @@ public class CategoryModel extends AutoKeys implements net.jforum.model.Category
 		p = this.getStatementForAutoKeys("CategoryModel.addNew");
 		p.setString(1, category.getName());
 		p.setInt(2, order);
+		p.setInt(3, category.isModerated() ? 1 : 0);
 		int id = this.executeAutoKeysQuery(p);
 		
 		p.close();

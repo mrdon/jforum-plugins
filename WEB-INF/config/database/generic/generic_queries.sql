@@ -16,8 +16,8 @@ CategoryModel.selectById = SELECT * FROM jforum_categories WHERE categories_id =
 CategoryModel.selectAll = SELECT * FROM jforum_categories ORDER BY display_order
 CategoryModel.canDelete = SELECT COUNT(1) AS total FROM jforum_forums WHERE categories_id = ?
 CategoryModel.delete = DELETE FROM jforum_categories WHERE categories_id = ?
-CategoryModel.update = UPDATE jforum_categories SET title = ? WHERE categories_id = ?
-CategoryModel.addNew = INSERT INTO jforum_categories (title, display_order) VALUES (?, ?)
+CategoryModel.update = UPDATE jforum_categories SET title = ?, moderated = ? WHERE categories_id = ?
+CategoryModel.addNew = INSERT INTO jforum_categories (title, display_order, moderated) VALUES (?, ?, ?)
 CategoryModel.setOrderById = UPDATE jforum_categories SET display_order = ? WHERE categories_id = ?
 CategoryModel.getMaxOrder = SELECT MAX(display_order) FROM jforum_categories
 
@@ -125,7 +125,8 @@ PostModel.deletePostText = DELETE FROM jforum_posts_text WHERE post_id = ?
 PostModel.updatePost = UPDATE jforum_posts SET topic_id = ?, forum_id = ?, enable_bbcode = ?, enable_html = ?, enable_smilies = ?, enable_sig = ?, post_edit_time = ?, post_edit_count = post_edit_count + 1, poster_ip = ? WHERE post_id = ?
 PostModel.updatePostText = UPDATE jforum_posts_text SET post_text = ?, post_subject = ? WHERE post_id = ?
 
-PostModel.addNewPost = INSERT INTO jforum_posts (topic_id, forum_id, user_id, post_time, poster_ip, enable_bbcode, enable_html, enable_smilies, enable_sig, post_edit_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
+PostModel.addNewPost = INSERT INTO jforum_posts (topic_id, forum_id, user_id, post_time, poster_ip, enable_bbcode, enable_html, enable_smilies, enable_sig, post_edit_time, need_moderate) \
+	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)
 PostModel.addNewPostText = INSERT INTO jforum_posts_text ( post_id, post_text, post_subject ) VALUES (?, ?, ?)
 
 PostModel.selectAllByTopicByLimit = SELECT p.post_id, topic_id, forum_id, p.user_id, post_time, poster_ip, enable_bbcode, p.attach, \
@@ -134,6 +135,7 @@ PostModel.selectAllByTopicByLimit = SELECT p.post_id, topic_id, forum_id, p.user
 	WHERE p.post_id = pt.post_id \
 	AND topic_id = ? \
 	AND p.user_id = u.user_id \
+	AND p.need_moderate = 0 \
 	ORDER BY post_time ASC \
 	LIMIT ?, ?
 	
@@ -156,6 +158,7 @@ ForumModel.selectAll = SELECT f.*, COUNT(p.post_id) AS total_posts \
 	LEFT JOIN jforum_posts p ON p.topic_id = t.topic_id \
 	GROUP BY f.categories_id, f.forum_order
 
+ForumModel.setModerated = UPDATE jforum_forums SET moderated = ? WHERE categories_id = ?
 ForumModel.delete = DELETE FROM jforum_forums WHERE forum_id = ?
 ForumModel.update = UPDATE jforum_forums SET categories_id = ?, forum_name = ?, forum_desc = ?, moderated = ? WHERE forum_id = ?
 ForumModel.addNew = INSERT INTO jforum_forums (categories_id, forum_name, forum_desc, forum_order, moderated) VALUES (?, ?, ?, ?, ?)
@@ -196,6 +199,10 @@ TopicModel.selectById = SELECT t.*, u.username AS posted_by_username, u.user_id 
 	AND p.post_id = t.topic_first_post_id \
 	AND p2.post_id = t.topic_last_post_id \
 	AND u2.user_id = p2.user_id
+	
+TopicModel.selectRaw = SELECT topic_id, forum_id, topic_title, user_id, topic_views, topic_replies, topic_status, topic_vote, topic_type, \
+	topic_first_post_id, topic_last_post_id, moderated, topic_time \
+	FROM jforum_topics WHERE topic_id = ?
 
 TopicModel.selectAllByForumByLimit = SELECT t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time, p.attach \
 	FROM jforum_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2 \
@@ -208,7 +215,7 @@ TopicModel.selectAllByForumByLimit = SELECT t.*, u.username AS posted_by_usernam
 	LIMIT ?, ?
 	
 TopicModel.selectLastN = SELECT topic_title, topic_time, topic_id, topic_type FROM jforum_topics ORDER BY topic_time DESC LIMIT ?
-
+TopicModel.setModerationStatus = UPDATE jforum_topics SET moderated = ? WHERE forum_id = ?
 TopicModel.deleteByForum = SELECT topic_id FROM jforum_topics where forum_id = ?
 
 TopicModel.delete = DELETE FROM jforum_topics WHERE topic_id = ?
@@ -220,10 +227,10 @@ TopicModel.setLastPostId = UPDATE jforum_topics SET topic_last_post_id = ? WHERE
 TopicModel.setFirstPostId = UPDATE jforum_topics SET topic_first_post_id = ? WHERE topic_id = ?
 TopicModel.getMinPostId = SELECT MIN(post_id) AS post_id FROM jforum_posts WHERE topic_id = ?
 
-TopicModel.addNew = INSERT INTO jforum_topics (forum_id, topic_title, user_id, topic_time, topic_first_post_id, topic_last_post_id, topic_type) \
-	VALUES (?, ?, ?, ?, ?, ?, ?)
+TopicModel.addNew = INSERT INTO jforum_topics (forum_id, topic_title, user_id, topic_time, topic_first_post_id, topic_last_post_id, topic_type, moderated) \
+	VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 
-TopicModel.update = UPDATE jforum_topics SET topic_title = ?, topic_last_post_id = ?, topic_first_post_id = ?, topic_type = ? WHERE topic_id = ?
+TopicModel.update = UPDATE jforum_topics SET topic_title = ?, topic_last_post_id = ?, topic_first_post_id = ?, topic_type = ?, moderated =? WHERE topic_id = ?
 TopicModel.getMaxPostId = SELECT MAX(post_id) AS post_id FROM jforum_posts WHERE topic_id = ?
 TopicModel.getTotalPosts = SELECT COUNT(1) AS total FROM jforum_posts WHERE topic_id = ?
 
@@ -506,9 +513,9 @@ AttachmentModel.addAttachmentInfo = INSERT INTO jforum_attach_desc (attach_id, p
 	
 AttachmentModel.updatePost = UPDATE jforum_posts SET attach = ? WHERE post_id = ?
 
-AttachmentModel.selectExtensions = SELECT extension_id, extension_group_id, extension, description, upload_icon, allow, '' group_icon FROM jforum_extensions ORDER BY extension
+AttachmentModel.selectExtensions = SELECT extension_id, extension_group_id, extension, description, upload_icon, allow, '' AS group_icon FROM jforum_extensions ORDER BY extension
 
-AttachmentModel.selectExtension = SELECT e.extension_id, e.extension_group_id, e.extension, e.description, e.upload_icon, e.allow, g.upload_icon group_icon \
+AttachmentModel.selectExtension = SELECT e.extension_id, e.extension_group_id, e.extension, e.description, e.upload_icon, e.allow, g.upload_icon AS group_icon \
 	FROM jforum_extensions e, jforum_extension_groups g \
 	WHERE e.$field = ? \
 	AND e.extension_group_id = g.extension_group_id
@@ -541,3 +548,25 @@ AttachmentModel.selectQuotaLimitByGroup = SELECT ql.quota_limit_id, ql.quota_des
 	FROM jforum_quota_limit ql, jforum_attach_quota at \
 	WHERE ql.quota_limit_id = at.quota_limit_id \
 	AND at.group_id = ?
+	
+# ################
+# ModerationModel
+# ################
+ModerationModel.aprovePost = UPDATE jforum_posts SET need_moderate = 0, post_time = ? WHERE post_id = ?
+ModerationModel.categoryPendingModeration = SELECT c.categories_id, c.title, f.forum_id, f.forum_name, COUNT(p.post_id) AS total \
+	FROM jforum_categories c, jforum_forums f, jforum_posts p \
+	WHERE p.need_moderate = 1 \
+	AND p.forum_id = f.forum_id \
+	AND f.categories_id = c.categories_id \
+	GROUP BY c.categories_id, c.title, f.forum_id, f.forum_name
+	
+ModerationModel.topicsByForum = SELECT p.post_id, t.topic_id, t.topic_title, p.user_id, enable_bbcode, p.attach, \
+	enable_html, enable_smilies, pt.post_subject, pt.post_text, username \
+	FROM jforum_posts p, jforum_posts_text pt, jforum_users u, jforum_topics t \
+	WHERE p.post_id = pt.post_id \
+	AND p.topic_id = t.topic_id \
+	AND t.forum_id = ? \
+	AND p.user_id = u.user_id \
+	AND p.need_moderate = 1 \
+	ORDER BY t.topic_id, post_time ASC \
+	LIMIT ?, ?

@@ -50,6 +50,16 @@ function checkInput()
 	</tr>
 
 	<tr>
+		<td class="row1" width="38%"><span class="gen">${I18n.getMessage("Forums.Form.Moderate")}</span></td>
+		<td class="row2">
+			<span class="gensmall">
+			<input class="post" type="radio" name="moderate" value="0" <#if forum?exists><#if !forum.isModerated()>checked</#if><#else>checked</#if>/>&nbsp;${I18n.getMessage("User.no")}&nbsp;&nbsp;
+			<input class="post" type="radio" name="moderate" value="1" <#if forum?exists && forum.isModerated()>checked</#if>/>&nbsp;${I18n.getMessage("User.yes")}
+			</span>
+		</td>
+	</tr>
+
+	<tr>
 		<td class="row1"><span class="gen">${I18n.getMessage("Forums.Form.Category")}</span></td>
 		<td class="row2">
 			<select name="categories_id">

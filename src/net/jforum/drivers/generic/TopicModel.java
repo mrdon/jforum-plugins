@@ -61,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicModel.java,v 1.12 2005/01/21 14:00:48 rafaelsteil Exp $
+ * @version $Id: TopicModel.java,v 1.13 2005/01/31 20:10:41 rafaelsteil Exp $
  */
 public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel 
 {
@@ -80,6 +80,25 @@ public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel
 		List l = this.fillTopicsData(rs);
 		if (l.size() > 0) {
 			t = (Topic)l.get(0);
+		}
+		
+		rs.close();
+		p.close();
+		return t;
+	}
+	
+	/**
+	 * @see net.jforum.model.TopicModel#selectRaw(int)
+	 */
+	public Topic selectRaw(int topicId) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("TopicModel.selectRaw"));
+		p.setInt(1, topicId);
+		
+		Topic t = new Topic();
+		ResultSet rs = p.executeQuery();
+		if (rs.next()) {
+			t = this.getBaseTopicData(rs);
 		}
 		
 		rs.close();
@@ -150,7 +169,8 @@ public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel
 		p.setInt(2, topic.getLastPostId());
 		p.setInt(3, topic.getFirstPostId());
 		p.setInt(4, topic.getType());
-		p.setInt(5, topic.getId());			
+		p.setInt(5, topic.isModerated() ? 1 : 0);
+		p.setInt(6, topic.getId());
 		p.executeUpdate();
 		
 		p.close();
@@ -170,6 +190,7 @@ public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel
 		p.setInt(5, topic.getFirstPostId());
 		p.setInt(6, topic.getLastPostId());
 		p.setInt(7, topic.getType());
+		p.setInt(8, topic.isModerated() ? 1 : 0);
 		
 		int topicId = this.executeAutoKeysQuery(p);
 			
@@ -255,24 +276,32 @@ public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel
 		return l;
 	}
 	
-	public List fillTopicsData(ResultSet rs) throws SQLException
+	protected Topic getBaseTopicData(ResultSet rs) throws Exception
+	{
+		Topic t = new Topic();
+		
+		t.setTitle(rs.getString("topic_title"));
+		t.setId(rs.getInt("topic_id"));
+		t.setTime(rs.getTimestamp("topic_time"));
+		t.setStatus(rs.getInt("topic_status"));
+		t.setTotalViews(rs.getInt("topic_views"));
+		t.setTotalReplies(rs.getInt("topic_replies"));
+		t.setFirstPostId(rs.getInt("topic_first_post_id"));
+		t.setLastPostId(rs.getInt("topic_last_post_id"));
+		t.setType(rs.getInt("topic_type"));
+		t.setForumId(rs.getInt("forum_id"));
+		t.setModerated(rs.getInt("moderated") == 1);
+		
+		return t;
+	}
+	
+	public List fillTopicsData(ResultSet rs) throws Exception
 	{
 		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
 		List l = new ArrayList();
 		
 		while (rs.next()) {
-			Topic t = new Topic();
-			
-			t.setTitle(rs.getString("topic_title"));
-			t.setId(rs.getInt("topic_id"));
-			t.setTime(rs.getTimestamp("topic_time"));
-			t.setStatus(rs.getInt("topic_status"));
-			t.setTotalViews(rs.getInt("topic_views"));
-			t.setTotalReplies(rs.getInt("topic_replies"));
-			t.setFirstPostId(rs.getInt("topic_first_post_id"));
-			t.setLastPostId(rs.getInt("topic_last_post_id"));
-			t.setType(rs.getInt("topic_type"));
-			t.setForumId(rs.getInt("forum_id"));
+			Topic t = this.getBaseTopicData(rs);
 			t.setHasAttach(rs.getInt("attach") > 0);
 
 			// First Post Time
@@ -567,5 +596,17 @@ public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel
 		p.close();
 		
 		return id;
+	}
+	
+	/**
+	 * @see net.jforum.model.TopicModel#setModerationStatus(int, boolean)
+	 */
+	public void setModerationStatus(int forumId, boolean status) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("TopicModel.setModerationStatus"));
+		p.setInt(1, status ? 1 : 0);
+		p.setInt(2, forumId);
+		p.executeUpdate();
+		p.close();
 	}
 }

@@ -63,6 +63,7 @@ import net.jforum.model.DataAccessDriver;
 import net.jforum.model.UserSessionModel;
 import net.jforum.repository.ModulesRepository;
 import net.jforum.repository.SecurityRepository;
+import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.MD5;
 import net.jforum.util.preferences.ConfigKeys;
@@ -73,7 +74,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.61 2005/01/27 22:03:32 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.62 2005/01/31 20:10:35 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -187,6 +188,7 @@ public class JForum extends JForumCommonServlet
 		JForum.getContext().put("forumLink", SystemGlobals.getValue(ConfigKeys.FORUM_LINK));
 		JForum.getContext().put("homepageLink", SystemGlobals.getValue(ConfigKeys.HOMEPAGE_LINK));
 		JForum.getContext().put("encoding", SystemGlobals.getValue(ConfigKeys.ENCODING));
+		JForum.getContext().put("bookmarksEnabled", SecurityRepository.canAccess(SecurityConstants.PERM_BOOKMARKS_ENABLED));
 		JForum.getContext().put("JForumContext", new JForumContext(JForum.getRequest().getContextPath(), 
 				SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION), JForum.getRequest(),JForum.getResponse()));
 	}
@@ -227,11 +229,11 @@ public class JForum extends JForumCommonServlet
 			
 			localData.set(dataHolder);
 			
-			// Context
-			this.setupTemplateContext();
-			
 			// Verify cookies
 			this.checkCookies();
+			
+			// Context
+			this.setupTemplateContext();
 			
 			boolean logged = false;
 			if ("1".equals(SessionFacade.getAttribute("logged"))) {
@@ -297,13 +299,15 @@ public class JForum extends JForumCommonServlet
 					dbe.printStackTrace();
 				}
 			}
-
-			response.setContentType("text/html");
-			if (out != null) {
-				throw new ForumException(e, out);
-			}
-			else {
-				throw new ForumException(e, new BufferedWriter(new OutputStreamWriter(response.getOutputStream())));
+			
+			if (e.toString().indexOf("ClientAbortException") == -1) {
+				response.setContentType("text/html");
+				if (out != null) {
+					throw new ForumException(e, out);
+				}
+				else {
+					throw new ForumException(e, new BufferedWriter(new OutputStreamWriter(response.getOutputStream())));
+				}
 			}
 		}
 		finally {
