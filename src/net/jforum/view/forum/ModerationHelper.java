@@ -61,13 +61,13 @@ import net.jforum.view.forum.common.ForumCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationHelper.java,v 1.13 2005/02/25 20:00:29 rafaelsteil Exp $
+ * @version $Id: ModerationHelper.java,v 1.14 2005/03/07 22:05:00 rafaelsteil Exp $
  */
 public class ModerationHelper 
 {
-	public static int SUCCESS = 1;
-	public static int FAILURE = 2;
-	public static int IGNORE = 3;
+	public static final int SUCCESS = 1;
+	public static final int FAILURE = 2;
+	public static final int IGNORE = 3;
 	
 	public int doModeration(String successUrl) throws Exception
 	{

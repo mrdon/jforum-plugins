@@ -59,12 +59,13 @@ import net.jforum.SessionFacade;
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.model.DataAccessDriver;
+import net.jforum.model.ForumModel;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicModel.java,v 1.14 2005/02/21 20:32:11 rafaelsteil Exp $
+ * @version $Id: TopicModel.java,v 1.15 2005/03/07 22:05:01 rafaelsteil Exp $
  */
 public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel 
 {
@@ -121,6 +122,7 @@ public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel
 	{
 		// Topic
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("TopicModel.delete"));
+		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
 		
 		for (Iterator iter = topics.iterator(); iter.hasNext(); ) {
 			Topic topic = (Topic)iter.next();
@@ -132,7 +134,7 @@ public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel
 			DataAccessDriver.getInstance().newPostModel().deleteByTopic(topic.getId());
 			
 			// Update forum stats
-			DataAccessDriver.getInstance().newForumModel().decrementTotalTopics(topic.getForumId(), 1);
+			fm.decrementTotalTopics(topic.getForumId(), 1);
 		}
 		
 		p.close();

@@ -74,7 +74,7 @@ import net.jforum.view.forum.ModerationHelper;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.7 2005/03/03 02:45:22 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.8 2005/03/07 22:05:01 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
@@ -250,11 +250,13 @@ public class TopicsCommon
 		t.setLastPostId(lastPostId);
 		tm.update(t);
 		
-		fm.incrementTotalTopics(t.getForumId(), 1);
 		fm.setLastPost(t.getForumId(), lastPostId);
 		
 		if (!firstPost) {
 			tm.incrementTotalReplies(t.getId());
+		}
+		else {
+			fm.incrementTotalTopics(t.getForumId(), 1);
 		}
 		
 		tm.incrementTotalViews(t.getId());
