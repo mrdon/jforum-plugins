@@ -79,7 +79,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.22 2004/11/07 04:09:29 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.23 2004/11/07 14:32:33 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -541,16 +541,17 @@ public class PostAction extends Command
         }
     }
 
-    private int startPage(Topic t, int currentStart) {
-        int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
-
-        int newStart = (((t.getTotalReplies() + 1) / postsPerPage) * postsPerPage);
-        if (newStart > currentStart) {
-            return newStart;
-        } else {
-            return currentStart;
-        }
-    }
+	private int startPage(Topic t, int currentStart) {
+		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
+	
+		int newStart = ((t.getTotalReplies() / postsPerPage) * postsPerPage);
+		if (newStart > currentStart) {
+			return newStart;
+		} 
+		else {
+		return currentStart;
+		}
+	}
 
     public void delete() throws Exception {
         if (!SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE)) {

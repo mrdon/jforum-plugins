@@ -103,7 +103,11 @@ function confirmDelete()
 						</#if>
 
 						<#if (user.avatar?exists && user.avatar?length > 0)>
-							<img src="${contextPath}/images/avatar/${user.avatar}" border="0" />
+							<#if user.isExternalAvatar() || user.avatar.startsWith("http://")>
+								<img src="${user.avatar}" border="0">
+							<#else>
+								<img src="${contextPath}/images/avatar/${user.avatar}" border="0" /><br />
+							</#if>
 						</#if>
 						<br /> 
 						
