@@ -44,12 +44,12 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumStartupException.java,v 1.1 2005/02/04 12:55:32 rafaelsteil Exp $
+ * @version $Id: ForumStartupException.java,v 1.2 2005/02/16 20:33:49 rafaelsteil Exp $
  */
-public class ForumStartupException extends RuntimeException
+public class ForumStartupException extends ForumException
 {
-	public ForumStartupException(String message)
+	public ForumStartupException(String message, Throwable t)
 	{
-		super(message);
+		super(message, t);
 	}
 }

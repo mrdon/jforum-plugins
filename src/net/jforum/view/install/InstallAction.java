@@ -81,7 +81,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.19 2005/02/15 18:16:08 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.20 2005/02/16 20:33:36 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -197,7 +197,7 @@ public class InstallAction extends Command
 	
 	private void removeUserConfig()
 	{
-		File f = new File(SystemGlobals.getSql(ConfigKeys.CONFIG_DIR) + "/" + System.getProperty("user.name") + ".properties");
+		File f = new File(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG));
 		if (f.exists() && f.canWrite()) {
 			try {
 				f.delete();
@@ -296,7 +296,7 @@ public class InstallAction extends Command
 		
 		String dbType = this.getFromSession("database");
 		
-		List statements = this.readFromDat(SystemGlobals.getApplicationPath() + "/install/" + dbType +"_dump.dat");
+		List statements = this.readFromDat(SystemGlobals.getApplicationPath() + "/install/" + dbType + "_dump.dat");
 		for (Iterator iter = statements.iterator(); iter.hasNext();) {
 			String query = (String)iter.next();
 			
@@ -393,7 +393,7 @@ public class InstallAction extends Command
 		return new File(SystemGlobals.getApplicationPath() + "/index.htm").canWrite();
 	}
 	
-	private Connection configureDatabase() throws Exception
+	private void configureNativeConnection() throws Exception
 	{
 		String username = this.getFromSession("dbUser");
 		String password = this.getFromSession("dbPassword");
@@ -401,10 +401,6 @@ public class InstallAction extends Command
 		String host = this.getFromSession("dbHost");
 		String type = this.getFromSession("database");
 		String encoding = this.getFromSession("dbEncoding");
-
-		String implementation = "yes".equals(this.getFromSession("usePool")) 
-			? "net.jforum.PooledConnection"
-			: "net.jforum.SimpleConnection";
 		
 		Properties p = new Properties();
 		p.load(new FileInputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) 
@@ -417,6 +413,15 @@ public class InstallAction extends Command
 		p.setProperty(ConfigKeys.DATABASE_CONNECTION_DBNAME, dbName);
 		p.setProperty(ConfigKeys.DATABASE_CONNECTION_ENCODING, encoding);
 		
+		if (type.startsWith("mysql")) {
+			if ("mysql41".equals(type)) {
+				p.setProperty(ConfigKeys.DATABASE_MYSQL_ENCODING, "");
+				p.setProperty(ConfigKeys.DATABASE_MYSQL_UNICODE, "");
+			}
+			
+			type = "mysql";
+		}
+		
 		try {
 			p.store(new FileOutputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) 
 					+ "/database/" + type + "/" + type + ".properties"), null);
@@ -425,20 +430,43 @@ public class InstallAction extends Command
 			logger.warn("Error while trying to write to " + type + ".properties: " + e);
 		}
 		
-		// Proceed to SystemGlobals / <user>.conf configuration
+		// Proceed to SystemGlobals / jforum-custom.conf configuration
 		for (Enumeration e = p.keys(); e.hasMoreElements(); ) {
 			String key = (String)e.nextElement();
 			SystemGlobals.setValue(key, p.getProperty(key));
 		}
-		
-		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_IMPLEMENTATION, implementation);
-		SystemGlobals.setValue(ConfigKeys.DATABASE_DRIVER_NAME, type);
 		
 		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_HOST, host);
 		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_USERNAME, username);
 		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_PASSWORD, password);
 		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_DBNAME, dbName);
 		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_ENCODING, encoding);
+	}
+	
+	private Connection configureDatabase() throws Exception
+	{
+		String database = this.getFromSession("database");
+		String connectionType = this.request.getParameter("db_connection_type");
+		String implementation;
+		
+		if ("native".equals(connectionType)) {
+			implementation = "yes".equals(this.getFromSession("usePool")) 
+				? "net.jforum.PooledConnection"
+				: "net.jforum.SimpleConnection";
+			
+			this.configureNativeConnection();
+		}
+		else {
+			implementation = "net.jforum.DataSourceConnection";
+			SystemGlobals.setValue(ConfigKeys.DATABASE_DATASOURCE_NAME, this.request.getParameter("dbdatasource"));
+		}
+		
+		if (database.startsWith("mysql")) {
+			database = "mysql";
+		}
+		
+		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_IMPLEMENTATION, implementation);
+		SystemGlobals.setValue(ConfigKeys.DATABASE_DRIVER_NAME, database);
 		
 		SystemGlobals.saveInstallation();
 		this.restartSystemGlobals();
@@ -532,7 +560,10 @@ public class InstallAction extends Command
 		this.addToSessionAndContext("dbEncoding", dbEncoding);
 		this.addToSessionAndContext("usePool", usePool);
 		this.addToSessionAndContext("forumLink", forumLink);
+		this.addToSessionAndContext("siteLink", this.request.getParameter("site_link"));
 		this.addToSessionAndContext("adminPassword", adminPassword);
+		this.addToSessionAndContext("dbdatasource", this.request.getParameter("dbdatasource"));
+		this.addToSessionAndContext("db_connection_type", this.request.getParameter("db_connection_type"));
 		
 		this.addToSessionAndContext("configureDatabase", null);
 		this.addToSessionAndContext("createTables", null);
@@ -569,7 +600,12 @@ public class InstallAction extends Command
 				"jforum_smilies", "jforum_smilies_seq", "jforum_themes", "jforum_themes_seq",
 				"jforum_topics", "jforum_topics_seq", "jforum_topics_watch", "jforum_user_groups",
 				"jforum_users", "jforum_users_seq", "jforum_vote_desc", "jforum_vote_desc_seq",
-				"jforum_vote_results", "jforum_vote_voters", "jforum_words", "jforum_words_seq" };
+				"jforum_vote_results", "jforum_vote_voters", "jforum_words", "jforum_words_seq",
+				"jforum_karma_seq", "jforum_karma", "jforum_bookmarks_seq", "jforum_bookmarks", 
+				"jforum_quota_limit", "jforum_quota_limit_seq", "jforum_extension_groups_seq", 
+				"jforum_extension_groups", "jforum_extensions_seq", "jforum_extensions", 
+				"jforum_attach_seq", "jforum_attach", "jforum_attach_desc_seq", "jforum_attach_desc",
+				"jforum_attach_quota_seq", "jforum_attach_quota" };
 
 		for (int i = 0; i < tables.length; i++) {
 			Statement s = conn.createStatement();

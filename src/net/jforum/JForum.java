@@ -80,7 +80,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.64 2005/02/04 12:55:31 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.65 2005/02/16 20:33:49 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -102,7 +102,7 @@ public class JForum extends JForumCommonServlet
 			conn = DBConnection.getImplementation().getConnection();
 		}
 		catch (Exception e) {
-			throw new ForumStartupException("" + e);
+			throw new ForumStartupException("Error while starting jforum", e);
 		}
 		
 		dh.setConnection(conn);

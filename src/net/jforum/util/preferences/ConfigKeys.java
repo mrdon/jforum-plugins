@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.45 2005/02/15 18:16:00 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.46 2005/02/16 20:33:37 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -80,6 +80,8 @@ public class ConfigKeys {
 	public static final String DATABASE_USE_TRANSACTIONS = "database.use.transactions";
 	public static final String DATABASE_DATASOURCE_NAME = "database.datasource.name";
 	public static final String DATABASE_ERROR_PAGE = "database.error.page";
+	public static final String DATABASE_MYSQL_UNICODE = "mysql.unicode";
+	public static final String DATABASE_MYSQL_ENCODING = "mysql.encoding";
 	
 	public static final String LOGIN_AUTHENTICATOR = "login.authenticator";
 

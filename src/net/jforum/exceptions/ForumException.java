@@ -42,14 +42,32 @@
  */
 package net.jforum.exceptions;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 /**
  * @author Rafael Steil
- * @version $Id: ForumException.java,v 1.3 2005/02/04 12:55:32 rafaelsteil Exp $
+ * @version $Id: ForumException.java,v 1.4 2005/02/16 20:33:49 rafaelsteil Exp $
  */
 public class ForumException extends RuntimeException
 {
 	public ForumException(String message)
 	{
 		super(message);
+	}
+	
+	public ForumException(String message, Throwable t)
+	{
+		this(message + " - " + buildStackTrace(t));
+	}
+	
+	protected static String buildStackTrace(Throwable t)
+	{
+		StringWriter strWriter = new StringWriter();
+		PrintWriter writer = new PrintWriter(strWriter);
+		t.printStackTrace(writer);		
+		writer.close();
+		
+		return strWriter.toString();
 	}
 }
