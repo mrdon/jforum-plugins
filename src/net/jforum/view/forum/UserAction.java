@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.11 2004/10/10 16:49:51 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.12 2004/10/11 14:08:02 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -368,8 +368,8 @@ public class UserAction extends Command
 			return null;
 		}
 		
-		String hash = MD5.crypt(email + System.currentTimeMillis());
-		um.writeLostPasswordHash(email, hash);
+		String hash = MD5.crypt(user.getEmail() + System.currentTimeMillis());
+		um.writeLostPasswordHash(user.getEmail(), hash);
 		
 		user.setActivationKey(hash);
 		
