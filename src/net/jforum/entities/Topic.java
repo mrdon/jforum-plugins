@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: Topic.java,v 1.2 2004/04/21 23:57:31 rafaelsteil Exp $
+ * $Id: Topic.java,v 1.3 2004/04/24 21:25:43 rafaelsteil Exp $
  */
 package net.jforum.entities;
 
@@ -420,5 +420,24 @@ public class Topic
 	
 	public Double getTotalPages() {
 		return this.totalPages;
+	}
+	
+	/* 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object o)
+	{
+		if (!(o instanceof Topic)) {
+			return false;
+		}
+		
+		return (((Topic)o).getId() == this.id);
+	}
+	/* 
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode()
+	{
+		return this.id;
 	}
 }
