@@ -63,6 +63,7 @@ import net.jforum.ActionServletRequest;
 import net.jforum.Command;
 import net.jforum.ConfigLoader;
 import net.jforum.DBConnection;
+import net.jforum.DataSourceConnection;
 import net.jforum.InstallServlet;
 import net.jforum.SessionFacade;
 import net.jforum.SimpleConnection;
@@ -81,7 +82,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.23 2005/02/22 23:39:21 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.24 2005/02/23 21:03:32 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -365,7 +366,6 @@ public class InstallAction extends Command
 			}
 			catch (SQLException ex) {
 				status = false;
-				conn.rollback();
 
 				logger.error("Error executing query: " + query + ": " + ex);
 				this.context.put("exceptionMessage", ex.getMessage() + "\n" + query);
@@ -465,6 +465,7 @@ public class InstallAction extends Command
 		String database = this.getFromSession("database");
 		String connectionType = this.getFromSession("db_connection_type");
 		String implementation;
+		boolean isDs = false;
 		
 		if ("native".equals(connectionType)) {
 			implementation = "yes".equals(this.getFromSession("usePool")) 
@@ -474,8 +475,9 @@ public class InstallAction extends Command
 			this.configureNativeConnection();
 		}
 		else {
+			isDs = true;
 			implementation = "net.jforum.DataSourceConnection";
-			SystemGlobals.setValue(ConfigKeys.DATABASE_DATASOURCE_NAME, this.request.getParameter("dbdatasource"));
+			SystemGlobals.setValue(ConfigKeys.DATABASE_DATASOURCE_NAME, this.getFromSession("dbdatasource"));
 		}
 		
 		if (database.startsWith("mysql")) {
@@ -503,7 +505,15 @@ public class InstallAction extends Command
 		Connection conn = null;
 		
 		try {
-			DBConnection s = new SimpleConnection();
+			DBConnection s;
+			
+			if (!isDs) { 
+				s = new SimpleConnection();
+			}
+			else {
+				s =  new DataSourceConnection();
+			}
+			
 			s.init();
 			
 			conn = s.getConnection();
