@@ -53,7 +53,7 @@ import com.dumbster.smtp.SmtpMessage;
 
 /**
  * @author Marc Wick
- * @version $Id: UserWebTestCase.java,v 1.14 2004/10/10 16:51:23 rafaelsteil Exp $
+ * @version $Id: UserWebTestCase.java,v 1.15 2004/10/11 05:14:32 marcwick Exp $
  */
 public class UserWebTestCase extends AbstractWebTestCase {
 
@@ -114,7 +114,15 @@ public class UserWebTestCase extends AbstractWebTestCase {
         logout();
     }
 
+    public void testPasswordForgottenEmail() throws Exception {
+        passwordRecovery("email");
+    }
+
     public void testPasswordForgottenUserName() throws Exception {
+        passwordRecovery("username");
+    }
+
+    private void passwordRecovery(String pParam) throws Exception {
         SystemGlobals.setValue(ConfigKeys.MAIL_SMTP_HOST, "localhost");
         SystemGlobals.setValue(ConfigKeys.BACKGROUND_TASKS, "false");
         SystemGlobals.saveInstallation();
@@ -124,32 +132,29 @@ public class UserWebTestCase extends AbstractWebTestCase {
         String link = "";
 
         try {
-	        beginAt(FORUMS_LIST);
-	        assertLinkPresent("login");
-	        clickLink("login");
-	        assertLinkPresent("lostpassword");
-	        clickLink("lostpassword");
-	
-	        assertFormPresent("formlostpassword");
-	        setFormElement("username", lastTestuser);
-	        submit();
-	        
-	        // give the jforum servlet time to deliver the email to the smtp server
-        	waitForEmail();
-	        
-	        // test if an email has been received by localhost
-	        assertEquals("password lost email received", 1, smtpServer.getReceievedEmailSize());
-	
-	        // now test the email
-	        SmtpMessage mail = (SmtpMessage)smtpServer.getReceivedEmail().next();
-	        String body = mail.getBody();
-	        link = body.substring(body.indexOf("http:"), body.indexOf(".page") + 5).trim();
-        }
-        finally {
-        	smtpServer.stop();
-        }
+            beginAt(FORUMS_LIST);
+            assertLinkPresent("login");
+            clickLink("login");
+            assertLinkPresent("lostpassword");
+            clickLink("lostpassword");
 
-        System.out.println(link);
+            assertFormPresent("formlostpassword");
+            setFormElement(pParam, lastTestuser);
+            submit();
+
+            // give the jforum servlet time to deliver the email to the smtp server
+            waitForEmail();
+
+            // test if an email has been received by localhost
+            assertEquals("password lost email received", 1, smtpServer.getReceievedEmailSize());
+
+            // now test the email
+            SmtpMessage mail = (SmtpMessage) smtpServer.getReceivedEmail().next();
+            String body = mail.getBody();
+            link = body.substring(body.indexOf("http:"), body.indexOf(".page") + 5).trim();
+        } finally {
+            smtpServer.stop();
+        }
 
         getTestContext().setBaseUrl(link.substring(0, link.lastIndexOf('/')));
         gotoPage(link.substring(link.lastIndexOf('/')));
@@ -158,6 +163,7 @@ public class UserWebTestCase extends AbstractWebTestCase {
         setFormElement("confirmPassword", password);
         submit();
 
-        clickLinkWithText(I18n.getMessage(language, "ForumBase.logout"));
+        assertTextNotPresent(I18n.getMessage(language, "PasswordRecovery.invalidData"));
+        assertTextPresent(I18n.getMessage(language, "PasswordRecovery.ok").substring(0, 20));
     }
 }
