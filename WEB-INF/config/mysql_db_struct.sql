@@ -315,6 +315,7 @@ CREATE TABLE jforum_users (
   themes_id mediumint(8) default NULL,
   deleted tinyint(1) default NULL,
   user_viewonline tinyint(1) default '1',
+  security_hash varchar(30),
   PRIMARY KEY  (user_id)
 ) TYPE=InnoDB;
 

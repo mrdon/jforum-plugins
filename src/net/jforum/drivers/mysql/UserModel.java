@@ -420,4 +420,72 @@ public class UserModel implements net.jforum.model.UserModel
 		p.close();
 	}
 
+	/* 
+	 * @see net.jforum.model.UserModel#saveNewPassword(java.lang.String, java.lang.String)
+	 */
+	public void saveNewPassword(String password, String email) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.saveNewPassword"));
+		p.setString(1, password);
+		p.setString(2, email);
+		p.executeUpdate();
+		p.close();
+	}
+	
+	/* 
+	 * @see net.jforum.model.UserModel#validateLostPasswordHash(java.lang.String, java.lang.String)
+	 */
+	public boolean validateLostPasswordHash(String email, String hash) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.validateLostPasswordHash"));
+		p.setString(1, hash);
+		p.setString(2, email);
+		
+		boolean status = false;
+		
+		ResultSet rs = p.executeQuery();
+		if (rs.next() && rs.getInt("valid") == 1) {
+			status = true;
+			
+			this.writeLostPasswordHash(email, "");
+		}
+		
+		rs.close();
+		p.close();
+		
+		return status;		
+	}
+	
+	/* 
+	 * @see net.jforum.model.UserModel#writeLostPasswordHash(java.lang.String, java.lang.String)
+	 */
+	public void writeLostPasswordHash(String email, String hash) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.writeLostPasswordHash"));
+		p.setString(1, hash);
+		p.setString(2, email);
+		p.executeUpdate();
+		p.close();
+	}
+	
+	/* 
+	 * @see net.jforum.model.UserModel#getUsernameByEmail(java.lang.String)
+	 */
+	public String getUsernameByEmail(String email) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.getUsernameByEmail"));
+		p.setString(1, email);
+		
+		String username = "";
+		
+		ResultSet rs = p.executeQuery();
+		if (rs.next()) {
+			username = rs.getString("username");
+		}
+		
+		rs.close();
+		p.close();
+		
+		return username;
+	}
 }

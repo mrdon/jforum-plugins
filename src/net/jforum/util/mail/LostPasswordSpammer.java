@@ -36,36 +36,35 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * This file creation date: 09/04/2004 - 17:45:01
- * net.jforum.drivers.mysql.SearchWordsTask.java
+ * This file creation date: 19/04/2004 - 21:11:42
+ * net.jforum.util.mail.LostPasswordSpammer.java
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.drivers.mysql;
+package net.jforum.util.mail;
 
-import net.jforum.entities.Post;
-import net.jforum.util.concurrent.Task;
+import java.util.ArrayList;
+
+import freemarker.template.SimpleHash;
+import net.jforum.util.I18n;
+import net.jforum.util.SystemGlobals;
 
 /**
  * @author Rafael Steil
  */
-public class SearchWordsTask implements Task
+public class LostPasswordSpammer extends Spammer
 {
-	private Post post;
-	
-	public SearchWordsTask(Post post)
+	public LostPasswordSpammer(String username, String email, String hash)
 	{
-		this.post = post;
-	}
-
-	/* 
-	 * @see net.jforum.util.concurrent.Task#execute()
-	 */
-	public Object execute() throws Exception
-	{
-		new SearchModel().insertSearchWords(this.post);
+		String url = SystemGlobals.getValue("forumLink") +"/user/recoverPassword/"+ hash +".page";
+		SimpleHash params = new SimpleHash();
+		params.put("url", url);
+		params.put("username", username);
 		
-		return "SUCCESS";
+		ArrayList recipients = new ArrayList();
+		recipients.add(email);
+		
+		super.prepareMessage(recipients, params, I18n.getMessage("PasswordRecovery.mailTitle"), 
+			(String)SystemGlobals.getValue("mail.lostPassword.messageFile"));
 	}
-
 }

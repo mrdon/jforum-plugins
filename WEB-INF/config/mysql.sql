@@ -87,6 +87,11 @@ UserModel.selectGroups = SELECT ug.group_id, g.group_name FROM jforum_user_group
 	WHERE ug.group_id = g.group_id \
 	AND ug.user_id = ?
 
+UserModel.saveNewPassword = UPDATE jforum_users SET user_password = ? WHERE user_email = ?
+UserModel.validateLostPasswordHash = SELECT COUNT(1) AS valid FROM jforum_users WHERE security_hash = ? AND user_email = ?
+UserModel.writeLostPasswordHash = UPDATE jforum_users SET security_hash = ? WHERE user_email = ?
+UserModel.getUsernameByEmail = SELECT username FROM jforum_users WHERE user_email = ?
+
 # #############
 # PostModel
 # #############

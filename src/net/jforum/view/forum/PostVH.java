@@ -443,11 +443,13 @@ public class PostVH extends Command
 				tm.incrementTotalViews(topicId);
 				
 				// Ok, we have an answer. Time to notify the subscribed users
-				try {
-					QueuedExecutor.getInstance().execute(new EmailSenderTask(new TopicSpammer(t, tm.notifyUsers(t))));
-				}
-				catch (Exception e) {
-					// Shall we log the error?
+				if (Boolean.valueOf((String)SystemGlobals.getValue("mail.notify.anwsers")) == Boolean.TRUE) {
+					try {
+						QueuedExecutor.getInstance().execute(new EmailSenderTask(new TopicSpammer(t, tm.notifyUsers(t))));
+					}
+					catch (Exception e) {
+						// Shall we log the error?
+					}
 				}
 			}
 			

@@ -175,7 +175,7 @@
                 <TD align=middle>
 					<#if (u.avatar?exists && u.avatar?length > 0)>
 						<SPAN class=gensmall>${I18n.getMessage("User.currentAvatar")}</SPAN><BR><BR>
-						<img src="images/${u.avatar}" border="0"><br>
+						<img src="images/avatar/${u.avatar}" border="0"><br>
 						<INPUT type=checkbox name=avatardel>&nbsp;
 						<SPAN class=gensmall>${I18n.getMessage("User.removeAvatar")}</SPAN>
 					</#if>

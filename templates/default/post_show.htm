@@ -54,7 +54,7 @@
 	<SPAN class=name><B>${user.username}</B></SPAN><BR>
 	<SPAN class=postdetails>${rank.getRankTitle(user.totalPosts)}<BR>
 	<#if (user.avatar?exists && user.avatar?length > 0)>
-	<img src="images/${user.avatar}" border="0">
+	<img src="images/avatar/${user.avatar}" border="0">
 	</#if>
 	<BR> 
 	${I18n.getMessage("PostShow.userTotalMessages")}: ${user.totalPosts}<BR>

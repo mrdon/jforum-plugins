@@ -54,6 +54,10 @@ import net.jforum.repository.SecurityRepository;
 import net.jforum.util.I18n;
 import net.jforum.util.MD5;
 import net.jforum.util.SystemGlobals;
+import net.jforum.util.concurrent.executor.QueuedExecutor;
+import net.jforum.util.mail.EmailException;
+import net.jforum.util.mail.EmailSenderTask;
+import net.jforum.util.mail.LostPasswordSpammer;
 
 /**
  * @author Rafael Steil
@@ -231,6 +235,66 @@ public class UserVH extends Command
 		}
 
 		JForum.getContext().put("moduleAction", "forum_login.htm");
+	}
+	
+	// Lost password form
+	public void lostPassword()
+	{
+		JForum.getContext().put("moduleAction", "lost_password.htm");
+	}
+	
+	// Send lost password email
+	public void lostPasswordSend() throws Exception
+	{
+		String email = JForum.getRequest().getParameter("email");
+		String hash = MD5.crypt(email + System.currentTimeMillis());
+		
+		UserModel um = DataAccessDriver.getInstance().newUserModel();
+		um.writeLostPasswordHash(email, hash);
+		
+		try {
+			QueuedExecutor.getInstance().execute(new EmailSenderTask(
+				new LostPasswordSpammer(um.getUsernameByEmail(email), email, hash)));
+		}
+		catch (EmailException e) {
+			// I don't care about this error
+			System.out.println(e);
+		}
+		
+		JForum.getContext().put("moduleAction", "message.htm");
+		JForum.getContext().put("message", I18n.getMessage("PasswordRecovery.emailSent", 
+			new String[] { "/user/login.page" }));
+	}
+	
+	// Recover user password ( aka, ask him a new one )
+	public void recoverPassword() throws Exception
+	{
+		String hash = JForum.getRequest().getParameter("hash");
+		
+		JForum.getContext().put("moduleAction", "recover_password.htm");
+		JForum.getContext().put("recoverHash", hash);
+	}
+	
+	public void recoverPasswordValidate() throws Exception
+	{
+		String hash = JForum.getRequest().getParameter("recoverHash");
+		String email = JForum.getRequest().getParameter("email");
+		
+		String message= "";
+		
+		boolean isOk = DataAccessDriver.getInstance().newUserModel().validateLostPasswordHash(email, hash);
+		if (isOk) {
+			String password = JForum.getRequest().getParameter("newPassword");
+			DataAccessDriver.getInstance().newUserModel().saveNewPassword(MD5.crypt(password), email);
+			
+			message = I18n.getMessage("PasswordRecovery.ok", new String[] { "/user/login.page" });
+		}
+		else {
+			message = I18n.getMessage("PasswordRecovery.invalidData");
+		}
+		
+		JForum.getContext().put("moduleAction", "message.htm");
+		JForum.getContext().put("message", message);
 	}
 	
 	public void list() throws Exception

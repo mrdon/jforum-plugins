@@ -123,7 +123,7 @@ public final class ViewCommon
 		}
 		
 		if (JForum.getRequest().getParameter("avatardel") != null) {
-			File f = new File(SystemGlobals.getApplicationPath() +"images/"+ u.getAvatar());
+			File f = new File(SystemGlobals.getApplicationPath() +"images/avatar/"+ u.getAvatar());
 			f.delete();
 			
 			u.setAvatar(null);
@@ -138,7 +138,7 @@ public final class ViewCommon
 		
 			// Gets the content and write it to disk
 			BufferedInputStream inputStream = new BufferedInputStream((InputStream)JForum.getRequest().getObjectParameter("avatar"));
-			FileOutputStream outputStream = new FileOutputStream(SystemGlobals.getApplicationPath() +"/images/"+ fileName + extension);
+			FileOutputStream outputStream = new FileOutputStream(SystemGlobals.getApplicationPath() +"/images/avatar/"+ fileName + extension);
 			
 			int c = 0;
 			byte[] b = new byte[1024];

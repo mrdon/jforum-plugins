@@ -221,4 +221,43 @@ public interface UserModel
 	 * @param groupId The group id to remove the user from
 	 */
 	public void removeFromGroup(int userId, int[] groupId) throws Exception;
+	
+	/**
+	 * Stores the "lost password" security hash, that was generated
+	 * when the user asked the system to get a reminder of his password. 
+	 * This hash is used to ensure the information supplied.  
+	 * 
+	 * @param email The user email
+	 * @param hash The hash to store.
+	 * @throws Exception
+	 */
+	public void writeLostPasswordHash(String email, String hash) throws Exception;
+	
+	/**
+	 * Validate the proviced security hash against the data stored in our system.
+	 * 
+	 * @param email The user email
+	 * @param hash The supplied security hash
+	 * @return <code>true</code> if the data matches ok, of <code>false</code> if it is invalid
+	 * @throws Exception
+	 */
+	public boolean validateLostPasswordHash(String email, String hash) throws Exception;
+	
+	/**
+	 * Writes a new password for the user. 
+	 * 
+	 * @param password The new password
+	 * @param email The user email
+	 * @throws Exception
+	 */
+	public void saveNewPassword(String password, String email) throws Exception;
+	
+	/**
+	 * Gets the username related to the email
+	 * 
+	 * @param email The email to search for the username
+	 * @return The username, if found, or an empty <code>String</code>
+	 * @throws Exception
+	 */
+	public String getUsernameByEmail(String email) throws Exception;
 }
