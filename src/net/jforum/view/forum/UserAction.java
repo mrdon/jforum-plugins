@@ -65,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.6 2004/09/22 01:36:12 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.7 2004/09/29 03:29:15 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -143,7 +143,10 @@ public class UserAction extends Command
 		u.setUsername(username);
 		u.setPassword(MD5.crypt(password));
 		u.setEmail(JForum.getRequest().getParameter("email"));
-		u.setActivationKey(MD5.crypt(username + System.currentTimeMillis()));
+		
+		if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_USER_EMAIL_AUTH)) {
+			u.setActivationKey(MD5.crypt(username + System.currentTimeMillis()));
+		}
 		
 		int userId = um.addNew(u);
 		

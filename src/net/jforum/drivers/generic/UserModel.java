@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.16 2004/09/25 04:42:56 rafaelsteil Exp $
+ * @version $Id: UserModel.java,v 1.17 2004/09/29 03:29:15 rafaelsteil Exp $
  */
 public class UserModel extends AutoKeys implements net.jforum.model.UserModel 
 {
@@ -150,7 +150,9 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		u.setMsnm(rs.getString("user_msnm"));
 		u.setLang(rs.getString("user_lang"));
 		u.setActive(rs.getInt("user_active"));
-		u.setActivationKey(rs.getString("user_actkey"));
+		
+		String actkey = rs.getString("user_actkey");
+		u.setActivationKey(actkey == null || "".equals(actkey)? null : actkey);
 		u.setDeleted(rs.getInt("deleted"));
 	}
 
