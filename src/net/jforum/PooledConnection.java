@@ -79,7 +79,7 @@ import org.apache.log4j.Logger;
  *
  * @author Paulo Silveira
  * @author Rafael Steil
- * @version $Id: PooledConnection.java,v 1.11 2005/02/11 14:43:56 rafaelsteil Exp $
+ * @version $Id: PooledConnection.java,v 1.12 2005/02/24 23:00:50 rafaelsteil Exp $
  * */
 
 public class PooledConnection extends DBConnection
@@ -210,27 +210,26 @@ public class PooledConnection extends DBConnection
 
 			return conn;
 		}
+		
         // Otherwise, create a new one if the Pool is now full
-		else {
-			if (allConnections.size() < this.maxConnections) {
-				try {
-					conn = DriverManager.getConnection(this.connectionString);
-				}
-				catch (SQLException e) {
-					if (debug) {
-						logger.warn("Cannot stabilish a NEW connection to the database:" + this.connectionString + e);
-					}
-					
-                    throw e;
-				}
-				
-				// registering the new connection
-				synchronized (allConnections) {
-					allConnections.add(conn);
-				}
-				
-				return conn;
+		if (allConnections.size() < this.maxConnections) {
+			try {
+				conn = DriverManager.getConnection(this.connectionString);
 			}
+			catch (SQLException e) {
+				if (debug) {
+					logger.warn("Cannot stabilish a NEW connection to the database:" + this.connectionString + e);
+				}
+				
+                throw e;
+			}
+			
+			// registering the new connection
+			synchronized (allConnections) {
+				allConnections.add(conn);
+			}
+			
+			return conn;
 		}
 
         /*

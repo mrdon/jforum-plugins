@@ -63,7 +63,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: I18n.java,v 1.22 2004/12/29 19:17:27 rafaelsteil Exp $
+ * @version $Id: I18n.java,v 1.23 2005/02/24 23:00:51 rafaelsteil Exp $
  */
 public class I18n {
     private static I18n classInstance = new I18n();
@@ -171,7 +171,7 @@ public class I18n {
         defaultName = null;
     }
 
-    private static void watchForChanges(final String localeName) throws IOException {
+    private static void watchForChanges(final String localeName) {
         if (!watching.contains(localeName)) {
             watching.add(localeName);
 
@@ -227,9 +227,9 @@ public class I18n {
 
         if ("".equals(lang)) {
             return getMessage(defaultName, messageName, params);
-        } else {
-            return getMessage(lang, messageName, params);
         }
+		
+		return getMessage(lang, messageName, params);
     }
 
     /**
@@ -260,9 +260,9 @@ public class I18n {
     public static String getMessage(String m, UserSession us) {
         if (us == null || us.getLang() == null || us.getLang().equals("")) {
             return getMessage(defaultName, m);
-        } else {
-            return getMessage(us.getLang(), m);
         }
+		
+		return getMessage(us.getLang(), m);
     }
 
     /**

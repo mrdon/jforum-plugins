@@ -88,7 +88,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.65 2005/02/23 20:38:37 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.66 2005/02/24 23:00:53 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -695,9 +695,8 @@ public class PostAction extends Command {
 		if (newStart > currentStart) {
 			return newStart;
 		}
-		else {
-			return currentStart;
-		}
+		
+		return currentStart;
 	}
 
 	public void delete() throws Exception {

@@ -60,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaModel.java,v 1.7 2005/02/18 19:01:18 rafaelsteil Exp $
+ * @version $Id: KarmaModel.java,v 1.8 2005/02/24 23:00:51 rafaelsteil Exp $
  */
 public class KarmaModel implements net.jforum.model.KarmaModel
 {
@@ -127,7 +127,7 @@ public class KarmaModel implements net.jforum.model.KarmaModel
 		p.close();
 
 		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("KarmaModel.updateUserKarma"));
-		p.setDouble(1, (double) totalPoints / totalRecords);
+		p.setDouble(1, (double)totalPoints / totalRecords);
 		p.setInt(2, userId);
 		p.executeUpdate();
 		p.close();

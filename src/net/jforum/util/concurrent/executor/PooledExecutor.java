@@ -40,7 +40,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: PooledExecutor.java,v 1.4 2004/10/03 08:52:54 marcwick Exp $
+ * $Id: PooledExecutor.java,v 1.5 2005/02/24 23:00:52 rafaelsteil Exp $
  */
 package net.jforum.util.concurrent.executor;
 
@@ -110,9 +110,8 @@ public class PooledExecutor implements Executor
 				if(keepAlive >= 0) {
 					return queue.pool(keepAlive);
 				}
-				else {
-					return queue.get();
-				}
+				
+				return queue.get();
 			} finally { 
 				synchronized(lock) {
 					--waiting;

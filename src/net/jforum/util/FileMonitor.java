@@ -43,7 +43,6 @@
 package net.jforum.util;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -55,7 +54,7 @@ import org.apache.log4j.Logger;
  * Monitor class for file changes.
  * 
  * @author Rafael Steil
- * @version $Id: FileMonitor.java,v 1.5 2005/01/02 19:58:02 rafaelsteil Exp $
+ * @version $Id: FileMonitor.java,v 1.6 2005/02/24 23:00:51 rafaelsteil Exp $
  */
 public class FileMonitor
 {
@@ -79,10 +78,9 @@ public class FileMonitor
 	 * @param listener The file listener
 	 * @param filename The filename to watch
 	 * @param period The watch interval.
-	 * @throws IOException
 	 */
 	public void addFileChangeListener(FileChangeListener listener, 
-		String filename, long period) throws IOException {
+		String filename, long period) {
 		this.removeFileChangeListener(filename);
 		
 		logger.info("Watching " + filename);
@@ -113,7 +111,7 @@ public class FileMonitor
 		private File monitoredFile;
 		private long lastModified;
 		
-		public FileMonitorTask(FileChangeListener listener, String filename) throws IOException {
+		public FileMonitorTask(FileChangeListener listener, String filename) {
 			this.listener = listener;
 			this.filename = filename;
 			

@@ -44,7 +44,7 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
- * @version $Id: QuotaLimit.java,v 1.2 2005/01/24 20:22:24 rafaelsteil Exp $
+ * @version $Id: QuotaLimit.java,v 1.3 2005/02/24 23:00:53 rafaelsteil Exp $
  */
 public class QuotaLimit
 {
@@ -69,19 +69,17 @@ public class QuotaLimit
 		if (this.type == QuotaLimit.KB) {
 			return (size > this.size * 1024);
 		}
-		else {
-			return (size > this.size * 1024 * 1024);
-		}
+		
+		return (size > this.size * 1024 * 1024);
 	}
 	
 	public int getSizeInBytes()
 	{
 		if (this.type == QuotaLimit.KB) {
-			return (int)(this.size * 1024);
+			return (this.size * 1024);
 		}
-		else {
-			return (int)(this.size * 1024 * 1024);
-		}
+		
+		return (this.size * 1024 * 1024);
 	}
 	
 	/**

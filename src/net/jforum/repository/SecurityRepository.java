@@ -58,7 +58,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityRepository.java,v 1.10 2005/02/15 18:16:04 rafaelsteil Exp $
+ * @version $Id: SecurityRepository.java,v 1.11 2005/02/24 23:00:51 rafaelsteil Exp $
  */
 public class SecurityRepository implements Cacheable
 {
@@ -93,9 +93,8 @@ public class SecurityRepository implements Cacheable
 			
 			return SecurityRepository.load(um.selectById(userId), force);
 		}
-		else {
-			return SecurityRepository.get(userId);
-		}
+		
+		return SecurityRepository.get(userId);
 	}
 
 	/**
@@ -154,9 +153,8 @@ public class SecurityRepository implements Cacheable
 			
 			return pc;
 		}
-		else {
-			return SecurityRepository.get(user.getId());
-		}
+		
+		return SecurityRepository.get(user.getId());
 	}
 	
 	/**

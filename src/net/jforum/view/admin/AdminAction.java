@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: AdminAction.java,v 1.5 2004/12/27 00:30:51 rafaelsteil Exp $
+ * @version $Id: AdminAction.java,v 1.6 2005/02/24 23:00:50 rafaelsteil Exp $
  */
 public class AdminAction extends Command {
 
@@ -113,12 +113,11 @@ public class AdminAction extends Command {
 		if (SecurityRepository.get(userId).canAccess(SecurityConstants.PERM_ADMINISTRATION)) {
 			return true;
 		}
-		else {
-			JForum.setRedirect(JForum.getRequest().getContextPath() + "/admBase/login"
-				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+		
+		JForum.setRedirect(JForum.getRequest().getContextPath() + "/admBase/login"
+			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 
-			return false;
-		}
+		return false;
 	}
 	
 	public static Template adminBaseTemplate() throws Exception

@@ -71,7 +71,7 @@ import org.apache.log4j.Logger;
  * General utilities methods for loading configurations for JForum.
  * 
  * @author Rafael Steil
- * @version $Id: ConfigLoader.java,v 1.9 2005/02/21 20:32:12 rafaelsteil Exp $
+ * @version $Id: ConfigLoader.java,v 1.10 2005/02/24 23:00:50 rafaelsteil Exp $
  */
 public class ConfigLoader 
 {
@@ -135,10 +135,8 @@ public class ConfigLoader
 	 * The watched files are: <i>generic_queries.sql</i>, 
 	 * <i>&lt;database_name&gt;.sql</i>, <i>SystemGlobals.properties</i>
 	 * and <i>&lt;user.name&gt;.properties</i>
-	 * 
-	 * @throws IOException
 	 */
-	public static void listenForChanges() throws IOException
+	public static void listenForChanges()
 	{
 		int fileChangesDelay = SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY);
 		
@@ -158,7 +156,7 @@ public class ConfigLoader
         }
 	}
 	
-	public static void listenInstallationConfig() throws IOException
+	public static void listenInstallationConfig()
 	{
 		int fileChangesDelay = SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY);
 		

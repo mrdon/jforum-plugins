@@ -49,7 +49,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.8 2005/02/24 15:32:01 rafaelsteil Exp $
+ * @version $Id: UserModel.java,v 1.9 2005/02/24 23:00:52 rafaelsteil Exp $
  */
 public class UserModel extends net.jforum.drivers.generic.UserModel
 {
@@ -72,9 +72,8 @@ public class UserModel extends net.jforum.drivers.generic.UserModel
 		if (count > 0) {
 			return super.selectAll(count, startFrom);
 		}
-		else {
-			return super.selectAll(0, 0);
-		}
+		
+		return super.selectAll(0, 0);
 	}
 	
 	/**
