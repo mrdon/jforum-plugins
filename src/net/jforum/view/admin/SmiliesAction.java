@@ -40,7 +40,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: SmiliesAction.java,v 1.2 2004/10/03 16:53:45 rafaelsteil Exp $
+ * $Id: SmiliesAction.java,v 1.3 2004/12/26 02:31:49 rafaelsteil Exp $
  */
 package net.jforum.view.admin;
 
@@ -48,7 +48,11 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.sql.Connection;
 
+import javax.servlet.http.HttpServletResponse;
+
+import net.jforum.ActionServletRequest;
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.entities.Smilie;
@@ -57,6 +61,7 @@ import net.jforum.repository.SmiliesRepository;
 import net.jforum.util.MD5;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
 /**
@@ -175,10 +180,12 @@ public class SmiliesAction extends Command
 	/*
 	 * @see net.jforum.Command#process()
 	 */
-	public Template process() throws Exception 
+	public Template process(ActionServletRequest request, 
+			HttpServletResponse response, 
+			Connection conn, SimpleHash context) throws Exception 
 	{
 		if (AdminAction.isAdmin()) {
-			super.process();
+			super.process(request, response, conn, context);
 		}
 		
 		return AdminAction.adminBaseTemplate();

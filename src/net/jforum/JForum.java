@@ -45,6 +45,7 @@ package net.jforum;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.sql.Connection;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -71,7 +72,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.52 2004/12/20 00:16:42 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.53 2004/12/26 02:31:49 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -185,6 +186,7 @@ public class JForum extends JForumCommonServlet
 	public void service(HttpServletRequest req, HttpServletResponse response) throws IOException, ServletException
 	{
 		BufferedWriter out = null;
+		Connection conn = null;
 		
 		try {
 			// Initializes thread local data
@@ -204,7 +206,8 @@ public class JForum extends JForumCommonServlet
 			}
 			
 			if (isDatabaseUp) {
-				dataHolder.setConnection(DBConnection.getImplementation().getConnection());
+				conn = DBConnection.getImplementation().getConnection();
+				dataHolder.setConnection(conn);
 			}
 			
 			localData.set(dataHolder);
@@ -231,16 +234,16 @@ public class JForum extends JForumCommonServlet
 			String moduleClass = ModulesRepository.getModuleClass(module);
 			
 			JForum.getContext().put("moduleName", module);
-			JForum.getContext().put("action", JForum.getRequest().getAction());
+			JForum.getContext().put("action", request.getAction());
 			
-			JForum.getContext().put("securityHash", MD5.crypt(JForum.getRequest().getSession().getId()));
+			JForum.getContext().put("securityHash", MD5.crypt(request.getSession().getId()));
 			JForum.getContext().put("session", SessionFacade.getUserSession());
 			
 			out = new BufferedWriter(new OutputStreamWriter(response.getOutputStream(), encoding));
 			if (moduleClass != null) {
 				// Here we go, baby
 				Command c = (Command)Class.forName(moduleClass).newInstance();
-				Template template = c.process();
+				Template template = c.process(request, response, conn, JForum.getContext());
 
 				DataHolder dh = (DataHolder)localData.get();
 				if (dh.getRedirectTo() == null) {
@@ -267,21 +270,21 @@ public class JForum extends JForumCommonServlet
 		}
 		finally {
 			try {
-				if (JForum.getConnection() != null) {
-					DBConnection.getImplementation().releaseConnection(JForum.getConnection());
+				if (conn != null) {
+					DBConnection.getImplementation().releaseConnection(conn);
 				}
 			}
 			catch (Exception e) {
-				throw new ForumException(e);
+				e.printStackTrace();
 			}
-		}
-		
-		String redirectTo = ((DataHolder)localData.get()).getRedirectTo();
-		if (redirectTo != null) {
-			JForum.getResponse().sendRedirect(redirectTo);
-		}
-		
-		localData.set(null);
+			
+			String redirectTo = ((DataHolder)localData.get()).getRedirectTo();
+			if (redirectTo != null) {
+				response.sendRedirect(redirectTo);
+			}
+			
+			localData.set(null);
+		}		
 	}
 	
 	/** 

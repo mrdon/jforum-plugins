@@ -60,7 +60,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallServlet.java,v 1.9 2004/11/30 01:18:45 rafaelsteil Exp $
+ * @version $Id: InstallServlet.java,v 1.10 2004/12/26 02:31:50 rafaelsteil Exp $
  */
 public class InstallServlet extends JForumCommonServlet
 {
@@ -119,7 +119,7 @@ public class InstallServlet extends JForumCommonServlet
 				if (moduleClass != null) {
 					// Here we go, baby
 					Command c = (Command)Class.forName(moduleClass).newInstance();
-					Template template = c.process();
+					Template template = c.process(request, response, null, InstallServlet.getContext());
 		
 					if (((DataHolder)localData.get()).getRedirectTo() == null) {
 						response.setContentType("text/html; charset=" + encoding);
@@ -138,13 +138,13 @@ public class InstallServlet extends JForumCommonServlet
 					throw new ForumException(e, new BufferedWriter(new OutputStreamWriter(response.getOutputStream())));
 				}
 			}
+			
+			String redirectTo = ((DataHolder)localData.get()).getRedirectTo();
+			if (redirectTo != null) {
+				InstallServlet.getResponse().sendRedirect(redirectTo);
+			}
+			
+			localData.set(null);
 		}
-		
-		String redirectTo = ((DataHolder)localData.get()).getRedirectTo();
-		if (redirectTo != null) {
-			InstallServlet.getResponse().sendRedirect(redirectTo);
-		}
-		
-		localData.set(null);
 	}
 }

@@ -42,8 +42,12 @@
  */
 package net.jforum.view.forum;
 
+import java.sql.Connection;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
+import net.jforum.ActionServletRequest;
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.entities.Forum;
@@ -61,11 +65,12 @@ import net.jforum.util.rss.TopicPostsRSS;
 import net.jforum.util.rss.TopicRSS;
 import net.jforum.view.forum.common.ForumCommon;
 import net.jforum.view.forum.common.TopicsCommon;
+import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: RSSAction.java,v 1.9 2004/11/30 01:18:50 rafaelsteil Exp $
+ * @version $Id: RSSAction.java,v 1.10 2004/12/26 02:31:52 rafaelsteil Exp $
  */
 public class RSSAction extends Command 
 {
@@ -148,11 +153,13 @@ public class RSSAction extends Command
 	/** 
 	 * @see net.jforum.Command#process()
 	 */
-	public Template process() throws Exception 
+	public Template process(ActionServletRequest request, 
+			HttpServletResponse response, 
+			Connection conn, SimpleHash context) throws Exception 
 	{
 		JForum.setContentType("text/xml");
 		super.setTemplateName(SystemGlobals.getValue(ConfigKeys.TEMPLATE_NAME) + "/rss.htm");
-		return super.process();
+		return super.process(request, response, conn, context);
 	}
 
 }

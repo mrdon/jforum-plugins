@@ -49,12 +49,12 @@ import net.jforum.model.security.SecurityModel;
  * actions.  
  * 
  * @author Rafael Steil
- * @version $Id: PermissionControl.java,v 1.6 2004/11/13 20:12:26 rafaelsteil Exp $
+ * @version $Id: PermissionControl.java,v 1.7 2004/12/26 02:31:51 rafaelsteil Exp $
  */
 public class PermissionControl 
 {
-	public static int ROLE_DENY = 0;
-	public static int ROLE_ALLOW = 1;
+	public static final int ROLE_DENY = 0;
+	public static final int ROLE_ALLOW = 1;
 
 	private RoleCollection roles;
 	private SecurityModel smodel;

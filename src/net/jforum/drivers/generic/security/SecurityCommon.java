@@ -58,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityCommon.java,v 1.5 2004/10/24 14:41:12 rafaelsteil Exp $
+ * @version $Id: SecurityCommon.java,v 1.6 2004/12/26 02:31:51 rafaelsteil Exp $
  */
 public class SecurityCommon 
 {
@@ -162,6 +162,7 @@ public class SecurityCommon
 				if (r != null) {
 					rc.add(r);
 				}
+
 				r = new Role();
 				
 				r.setGroupId(id);

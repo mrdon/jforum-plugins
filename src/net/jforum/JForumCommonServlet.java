@@ -52,6 +52,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.exceptions.ForumException;
+import net.jforum.model.DataAccessDriver;
 import net.jforum.repository.BBCodeRepository;
 import net.jforum.repository.ModulesRepository;
 import net.jforum.util.I18n;
@@ -67,7 +68,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumCommonServlet.java,v 1.17 2004/11/30 01:18:44 rafaelsteil Exp $
+ * @version $Id: JForumCommonServlet.java,v 1.18 2004/12/26 02:31:49 rafaelsteil Exp $
  */
 public class JForumCommonServlet extends HttpServlet {
     protected boolean debug;
@@ -95,12 +96,16 @@ public class JForumCommonServlet extends HttpServlet {
             Configuration templateCfg = new Configuration();
             templateCfg.setDirectoryForTemplateLoading(new File(SystemGlobals.getApplicationPath()
                     + "/templates"));
-            templateCfg.setTemplateUpdateDelay(0);
+            templateCfg.setTemplateUpdateDelay(2);
 
             ModulesRepository.init(SystemGlobals.getApplicationResourceDir() + "/config");
 
             SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
             SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
+            
+            // Start the dao.driver implementation
+            DataAccessDriver.init((DataAccessDriver)Class.forName(
+            		SystemGlobals.getValue(ConfigKeys.DAO_DRIVER)).newInstance());
 
             this.loadConfigStuff();
 

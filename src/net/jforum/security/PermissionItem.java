@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,15 +37,12 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 21/09/2003 / 16:39:49
- * net.jforum.PermissionItem.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: PermissionItem.java,v 1.2 2004/04/21 23:57:35 rafaelsteil Exp $
  */
 package net.jforum.security;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Guarda os itens e os dados de um determinado campo de permissao.
@@ -53,6 +50,7 @@ import java.util.ArrayList;
  * esta classe encapsula o nome, id e os itens do campo de permissao.
  * 
  * @author Rafael Steil
+ * @version $Id: PermissionItem.java,v 1.3 2004/12/26 02:31:51 rafaelsteil Exp $
  */
 public class PermissionItem 
 {
@@ -74,7 +72,7 @@ public class PermissionItem
 	/**
 	 * Itens do campo ( id=valor)
 	 * */
-	private ArrayList data;
+	private List data;
 	
 	public static final int SINGLE = 1;
 	public static final int MULTIPLE = 2;	
@@ -87,7 +85,7 @@ public class PermissionItem
 	 * @param type Tipo da permissao. <code>SINGLE</code> ou <code>MULTIPLE</code>
 	 * @param data ArrayList com itens do campo ( contendo objetos do tipo <code>FormSelectedData</code>
 	 * */
-	public PermissionItem(String name, String id, String type, ArrayList data)
+	public PermissionItem(String name, String id, String type, List data)
 	{
 		this.name = name;
 		this.id = id;
@@ -133,7 +131,7 @@ public class PermissionItem
 	 * @param ArrayList contendo os itens da permissao. Cada posicao
 	 * do ArrayList eh um objeto do tipo <code>FormSelectedData</code>
 	 * */
-	public ArrayList getData()
+	public List getData()
 	{
 		return this.data;
 	}

@@ -57,6 +57,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import javax.servlet.http.HttpServletResponse;
+
+import net.jforum.ActionServletRequest;
 import net.jforum.Command;
 import net.jforum.ConfigLoader;
 import net.jforum.DBConnection;
@@ -73,11 +76,12 @@ import net.jforum.util.preferences.SystemGlobalsListener;
 
 import org.apache.log4j.Logger;
 
+import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.15 2004/11/16 23:05:58 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.16 2004/12/26 02:31:52 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -582,9 +586,11 @@ public class InstallAction extends Command
 	/** 
 	 * @see net.jforum.Command#process()
 	 */
-	public Template process() throws Exception 
+	public Template process(ActionServletRequest request, 
+			HttpServletResponse response, 
+			Connection conn, SimpleHash context) throws Exception 
 	{
 		this.setTemplateName("default/empty.htm");
-		return super.process();
+		return super.process(request, response, conn, context);
 	}
 }

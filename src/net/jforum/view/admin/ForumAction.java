@@ -42,9 +42,13 @@
  */
 package net.jforum.view.admin;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
+import net.jforum.ActionServletRequest;
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.entities.Category;
@@ -63,11 +67,12 @@ import net.jforum.security.RoleValue;
 import net.jforum.security.RoleValueCollection;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.TreeGroup;
+import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.7 2004/12/19 22:14:39 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.8 2004/12/26 02:31:49 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -229,10 +234,12 @@ public class ForumAction extends Command
 	/** 
 	 * @see net.jforum.Command#process()
 	 */
-	public Template process() throws Exception 
+	public Template process(ActionServletRequest request, 
+			HttpServletResponse response, 
+			Connection conn, SimpleHash context) throws Exception 
 	{	
 		if (AdminAction.isAdmin()) {
-			super.process();
+			super.process(request, response, conn, context);
 		}
 
 		return AdminAction.adminBaseTemplate();

@@ -42,9 +42,14 @@
  */
 package net.jforum;
 
+import java.sql.Connection;
+
+import javax.servlet.http.HttpServletResponse;
+
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import freemarker.template.Configuration;
+import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
 /**
@@ -53,11 +58,15 @@ import freemarker.template.Template;
  * presentation actions must extend this class. 
  * 
  * @author Rafael Steil
- * @version $Id: Command.java,v 1.5 2004/10/03 16:53:46 rafaelsteil Exp $
+ * @version $Id: Command.java,v 1.6 2004/12/26 02:31:50 rafaelsteil Exp $
  */
 public abstract class Command 
 {
 	private String templateName;
+	private Connection conn;
+	private ActionServletRequest request;
+	private HttpServletResponse response;
+	private SimpleHash context;
 	
 	protected void setTemplateName(String templateName)
 	{
@@ -78,17 +87,26 @@ public abstract class Command
 	
 	/**
 	 * Process and manipulate a requisition.
+	 * @param context TODO
 	 * 
 	 * @throws Exception
 	 * @return <code>Template</code> reference
 	 */
-	public Template process() throws Exception 
+	public Template process(ActionServletRequest request, 
+			HttpServletResponse response,
+			Connection conn, 
+			SimpleHash context) throws Exception 
 	{
+		this.request = request;
+		this.response = response;
+		this.conn = conn;
+		this.context = context;
+
 		try {
 			Class.forName(this.getClass().getName()).getMethod(JForum.getRequest().getAction(), null).invoke(this, null);
 		}
 		catch (NoSuchMethodException e) {		
-			list();		
+			this.list();		
 		}
 		catch (Exception e) {
 			throw e;

@@ -40,12 +40,18 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: AdminAction.java,v 1.3 2004/10/03 16:53:44 rafaelsteil Exp $
+ * $Id: AdminAction.java,v 1.4 2004/12/26 02:31:48 rafaelsteil Exp $
  */
 package net.jforum.view.admin;
 
+import java.sql.Connection;
+
+import javax.servlet.http.HttpServletResponse;
+
 import freemarker.template.Configuration;
+import freemarker.template.SimpleHash;
 import freemarker.template.Template;
+import net.jforum.ActionServletRequest;
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
@@ -122,12 +128,11 @@ public class AdminAction extends Command {
 				SystemGlobals.getValue(ConfigKeys.TEMPLATE_NAME) + "/admin/empty.htm");
 	}
 
-	/*
-	 * @see net.jforum.Command#process()
-	 */
-	public Template process() throws Exception 
+	public Template process(ActionServletRequest request, 
+			HttpServletResponse response, 
+			Connection conn, SimpleHash context) throws Exception 
 	{
-		super.process();
+		super.process(request, response, conn, context);
 		
 		return AdminAction.adminBaseTemplate();
 	}

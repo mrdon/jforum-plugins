@@ -43,21 +43,26 @@
 package net.jforum.view.admin;
 
 import java.io.FileInputStream;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import javax.servlet.http.HttpServletResponse;
+
+import net.jforum.ActionServletRequest;
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.model.ConfigModel;
 import net.jforum.util.preferences.SystemGlobals;
+import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ConfigAction.java,v 1.3 2004/11/12 19:07:14 rafaelsteil Exp $
+ * @version $Id: ConfigAction.java,v 1.4 2004/12/26 02:31:48 rafaelsteil Exp $
  */
 public class ConfigAction extends Command {
 	public void list() throws Exception {
@@ -103,9 +108,11 @@ public class ConfigAction extends Command {
 	/**
 	 * @see net.jforum.Command#process()
 	 */
-	public Template process() throws Exception {
+	public Template process(ActionServletRequest request, 
+			HttpServletResponse response, 
+			Connection conn, SimpleHash context) throws Exception {
 		if (AdminAction.isAdmin()) {
-			super.process();
+			super.process(request, response, conn, context);
 		}
 
 		return AdminAction.adminBaseTemplate();

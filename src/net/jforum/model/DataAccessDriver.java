@@ -44,10 +44,6 @@ package net.jforum.model;
 
 import java.sql.Connection;
 
-import net.jforum.exceptions.ForumException;
-import net.jforum.util.preferences.ConfigKeys;
-import net.jforum.util.preferences.SystemGlobals;
-
 /**
  * The class that every driver class must implement.
  * JForum implementation provides a simple and extremely
@@ -62,13 +58,25 @@ import net.jforum.util.preferences.SystemGlobals;
  * analise, look at <code>net.jforum.drivers.generic</code> package.
  * 
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.8 2004/11/21 17:13:46 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.9 2004/12/26 02:31:50 rafaelsteil Exp $
  */
 public abstract class DataAccessDriver 
 {
 	private static DataAccessDriver driver;
 	
 	protected DataAccessDriver() {}
+	
+	/**
+	 * Starts the engine.
+	 * This method should be called when the system
+	 * is starting. 
+	 * 
+	 * @param implementation The dao.driver implementation
+	 */
+	public static final void init(DataAccessDriver implementation)
+	{
+		driver = implementation;
+	}
 	
 	/**
 	 * Gets a driver implementation instance. 
@@ -80,15 +88,6 @@ public abstract class DataAccessDriver
 	 */
 	public final static DataAccessDriver getInstance()
 	{
-		if (driver == null) {
-			try {
-				driver = (DataAccessDriver)Class.forName(SystemGlobals.getValue(ConfigKeys.DAO_DRIVER)).newInstance();
-			}
-			catch (Exception e) {
-				throw new ForumException(e);
-			}			
-		}
-		
 		return driver;
 	}
 	 
