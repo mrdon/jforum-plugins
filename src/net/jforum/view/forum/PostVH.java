@@ -75,7 +75,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostVH.java,v 1.25 2004/07/25 08:17:06 jamesyong Exp $
+ * @version $Id: PostVH.java,v 1.26 2004/08/01 09:59:47 jamesyong Exp $
  */
 public class PostVH extends Command 
 {
@@ -134,10 +134,8 @@ public class PostVH extends Command
 				p.setCanEdit(true);
 			}
 			
-			UserSecurityModel umodel = DataAccessDriver.getInstance().newUserSecurityModel();
-			pc = new PermissionControl();
-			pc.setSecurityModel(umodel);
-			pc.setRoles(umodel.loadRoles(p.getUserId()));
+			pc = SecurityRepository.get(SessionFacade.getUserSession().getUserId());
+			
 			if 	((pc.canAccess(SecurityConstants.PERM_MODERATION)) &&
 				(pc.canAccess(SecurityConstants.PERM_MODERATION_FORUMS, Integer.toString(topic.getForumId())))){
 				isModeratorList.add("true");
