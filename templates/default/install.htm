@@ -92,7 +92,7 @@ function checkDatabase()
 				<td><table width="100%" border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td><img src="${contextPath}/templates/default/images/logo.jpg" border="0" alt="JForum" vspace="1" /></td>
-						<td align="center" width="100%" valign="middle"><span class="maintitle">${I18n.getMessage("Install.welcome")}<br/>${I18n.getMessage("version")} 2.0</span></td>
+						<td align="center" width="100%" valign="middle"><span class="maintitle">${I18n.getMessage("Install.welcome")} JForum 2.0 ${I18n.getMessage("Install.installation")}</span></td>
 					</tr>
 				</table></td>
 			</tr>
@@ -130,13 +130,13 @@ function checkDatabase()
 						<td class="row1" align="right" width="40%"><span class="gen"><b>${I18n.getMessage("Install.boardLanguage")}:</b> </span></td>
 						<td class="row2">
 							<select name="language">
-								<option value="en_US">English American (en_US)</option>
-								<option value="zh_CN">Chinese Simplifed (zh_CN)</option>
-								<option value="fr_FR">French (fr_FR)</option>
-								<option value="de_DE">German (de_DE)</option>
-								<option value="nl_NL">Dutch (nl_NL)</option>
-								<option value="pt_BR">Portugu&ecirc;s do Brasil (pt_BR)</option>
-								<option value="ru_RU">Russian (ru_RU)</option>
+								<option value="en_US" <#if language?default("") == "en_US">selected</#if>>English American (en_US)</option>
+								<option value="zh_CN" <#if language?default("") == "zh_CN">selected</#if>>Chinese Simplifed (zh_CN)</option>
+								<option value="fr_FR" <#if language?default("") == "fr_FR">selected</#if>>French (fr_FR)</option>
+								<option value="de_DE" <#if language?default("") == "de_DE">selected</#if>>German (de_DE)</option>
+								<option value="nl_NL" <#if language?default("") == "nl_NL">selected</#if>>Dutch (nl_NL)</option>
+								<option value="pt_BR" <#if language?default("") == "pt_BR">selected</#if>>Portugu&ecirc;s do Brasil (pt_BR)</option>
+								<option value="ru_RU" <#if language?default("") == "ru_RU">selected</#if>>Russian (ru_RU)</option>
 							</select>
 						</td>
 					</tr>
@@ -145,9 +145,9 @@ function checkDatabase()
 
 						<td class="row2">
 							<select name="database">
-								<option value="mysql">MySQL</option>
-								<option value="postgresql">PostgreSQL</option>
-								<option value="hsqldb">HSQLDB</option>
+								<option value="mysql" <#if database?default("") == "mysql">selected</#if>>MySQL</option>
+								<option value="postgresql" <#if database?default("") == "postgresql">selected</#if>>PostgreSQL</option>
+								<option value="hsqldb" <#if database?default("") == "hsqldb">selected</#if>>HSQLDB</option>
 							</select>
 							<br>
 							<span class="gensmall">
@@ -178,21 +178,21 @@ function checkDatabase()
 					</tr>
 					<tr>
 						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbHost")}</b></span></td>
-						<td class="row2"><input type="text" name="dbhost" value="localhost" /></td>
+						<td class="row2"><input type="text" name="dbhost" value="${dbhost?default("localhost")}" /></td>
 					</tr>
 
 					<tr>
 						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbName")}: </b></span></td>
-						<td class="row2"><input type="text" name="dbname" value="jforum" /></td>
+						<td class="row2"><input type="text" name="dbname" value="${dbname?default("jforum")}" /></td>
 					</tr>
 					<tr>
 						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbUsername")}: </b></span></td>
-						<td class="row2"><input type="text" name="dbuser" value="" /></td>
+						<td class="row2"><input type="text" name="dbuser" value="${dbuser?default("")}" /></td>
 					</tr>
 
 					<tr>
 						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbPassword")}: </b></span></td>
-						<td class="row2"><input type="password" name="dbpasswd" value="" /></td>
+						<td class="row2"><input type="password" name="dbpasswd" value="${dbpasswd?default("")}" /></td>
 					</tr>
 
 					<tr>
@@ -205,11 +205,11 @@ function checkDatabase()
 						<td class="row2">
 							<select name="dbencoding">
 								<option value="">${I18n.getMessage("Install.selectEncodig")}</option>
-								<option value="utf-8">UTF-8</option>
-								<option value="iso-8859-1">ISO-8859-1</option>
+								<option value="utf-8" <#if dbencoding?default("") == "utf-8">selected</#if>>UTF-8</option>
+								<option value="iso-8859-1" <#if dbencoding?default("") == "iso-8859-1">selected</#if>>ISO-8859-1</option>
 							</select>
 							&nbsp;
-							<span class="gen"><b>${I18n.getMessage("Install.other")} </b></span><input type="text" name="dbencoding_other">
+							<span class="gen"><b>${I18n.getMessage("Install.other")} </b></span><input type="text" name="dbencoding_other" value="${dbencoding?default("")}">
 							<br/>
 							<span class="gensmall">
 							${I18n.getMessage("Install.encodingTip")}
@@ -221,8 +221,8 @@ function checkDatabase()
 						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.pool")}: </b></span></td>
 						<td class="row2">
 							<select name="use_pool">
-								<option value="yes">${I18n.getMessage("User.yes")}</option>
-								<option value="no">${I18n.getMessage("User.no")}</option>
+								<option value="yes" <#if use_pool?default("") == "yes">selected</#if>>${I18n.getMessage("User.yes")}</option>
+								<option value="no" <#if use_pool?default("") == "no">selected</#if>>${I18n.getMessage("User.no")}</option>
 							</select>
 						</td>
 					</tr>
@@ -234,7 +234,7 @@ function checkDatabase()
 						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.forumLink")}: </b></span></td>
 						<#if serverPort != "80"><#assign serverName = serverName + ":" + serverPort/></#if>
 						<#assign serverName = serverName + contextPath?default("") + "/"/>
-						<td class="row2"><input type="text" name="forum_link" value="http://${serverName}" size="40"/></td>
+						<td class="row2"><input type="text" name="forum_link" value="${forum_link?default("http://${serverName}")}" size="40"/></td>
 					</tr> 
 					<tr>
 						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.adminUser")}: </b></span></td>

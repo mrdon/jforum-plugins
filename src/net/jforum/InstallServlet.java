@@ -58,7 +58,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallServlet.java,v 1.4 2004/10/27 03:12:33 rafaelsteil Exp $
+ * @version $Id: InstallServlet.java,v 1.5 2004/10/30 03:30:09 rafaelsteil Exp $
  */
 public class InstallServlet extends JForumCommonServlet
 {
@@ -132,5 +132,12 @@ public class InstallServlet extends JForumCommonServlet
 				new ForumException(e, new BufferedWriter(new OutputStreamWriter(response.getOutputStream())));
 			}
 		}
+		
+		String redirectTo = ((DataHolder)localData.get()).getRedirectTo();
+		if (redirectTo != null) {
+			InstallServlet.getResponse().sendRedirect(redirectTo);
+		}
+		
+		localData.set(null);
 	}
 }

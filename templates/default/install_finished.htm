@@ -29,11 +29,7 @@ td.catHead,td.catSides,td.catLeft,td.catRight,td.catBottom { background-image: u
 						<td><img src="${contextPath}/templates/default/images/logo.jpg" border="0" alt="JForum" vspace="1" /></td>
 						<td align="center" width="100%" valign="middle">
 							<span class="maintitle">JForum 2.0 ${I18n.getMessage("Install.installation")}<br/>
-							<font color="#ff0000">${I18n.getMessage("Install.stepError")}</font>
-							</span>
-							<br/><br/>
-							<span class="gen">
-							<font color="#ff0000"><b>${I18n.getMessage("Install.forHelpAccess")} <a href="http://www.jforum.net/install.htm">http://www.jforum.net/install.htm</a></b></font>
+							<font color="#ff0000">${I18n.getMessage("Install.finished")}</font>
 							</span>
 						</td>
 					</tr>
@@ -41,36 +37,23 @@ td.catHead,td.catSides,td.catLeft,td.catRight,td.catBottom { background-image: u
 			</tr>
 
 			<tr>
-				<td align="center"><br /><br /></td>
-			</tr>
-
-			<tr>
 				<td width="100%"><table width="100%" cellpadding="2" cellspacing="1" border="0" class="forumline">
 					<tr>
-						<th colspan="2">${I18n.getMessage("Install.stepError")}</th>
+						<th colspan="2">${I18n.getMessage("Install.congratulations")}</th>
 					</tr>
 
 					<tr>
-						<td class="row2">
-							<p>
-							<img src="${contextPath}/images/smilies/d6741711aa045b812616853b5507fd2a.gif" border="0" align="middle"> 
-							<span class="gen">${message}</span><br/>
-							</p>
-
-							<#if exceptionMessage?exists>
-							<p align="center">
-							<span class="gensmall">
-							<b>Error raised: </b><br>
-							<textarea readonly rows="6" cols="100" wrap="virtual">${exceptionMessage}</textarea>
-							</span>
-							</p>
-							</#if>
+						<td class="row2" align="center">
+						<span class="gen">
+						<p>
+						${I18n.getMessage("Install.congratsMessage")}
+						</p>
+						<br/>
+						<p><b>${clickHere}</b></p>
+						<br/>
+						</span>
 						</td>
 					</tr>
-					<tr> 
-					  <td class="catBottom" align="center" colspan="2">
-						<input type="button" class="mainoption" value="${I18n.getMessage("Install.modifyConfiguration")}" onClick="document.location = '${contextPath}/install/install${extension}?module=install&action=welcome';">
-					</td>
 				</table>
 			</form>
 		</td>

@@ -48,6 +48,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -70,7 +71,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.6 2004/10/29 03:53:08 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.7 2004/10/30 03:30:09 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -78,6 +79,16 @@ public class InstallAction extends Command
 	
 	public void welcome() throws Exception
 	{
+		InstallServlet.getContext().put("language", this.getFromSession("language"));
+		InstallServlet.getContext().put("database", this.getFromSession("database"));
+		InstallServlet.getContext().put("dbhost", this.getFromSession("dbHost"));
+		InstallServlet.getContext().put("dbuser", this.getFromSession("dbUser"));
+		InstallServlet.getContext().put("dbname", this.getFromSession("dbName"));
+		InstallServlet.getContext().put("dbpasswd", this.getFromSession("dbPassword"));
+		InstallServlet.getContext().put("dbencoding", this.getFromSession("dbEncoding"));
+		InstallServlet.getContext().put("use_pool", this.getFromSession("usePool"));
+		InstallServlet.getContext().put("forum_link", this.getFromSession("forumLink"));
+		
 		InstallServlet.getContext().put("moduleAction", "install.htm");
 	}
 	
@@ -141,6 +152,13 @@ public class InstallAction extends Command
 		this.addToSessionAndContext("importTablesData", "passed");
 		
 		this.configureSystemGlobals();
+		
+		if (!this.updateAdminPassword()) {
+			InstallServlet.getContext().put("message", I18n.getMessage("Install.updateAdminError"));
+			simpleConnection.releaseConnection(conn);
+			this.error();
+			return;
+		}
 
 		InstallServlet.setRedirect(InstallServlet.getRequest().getContextPath() + "/install/install"
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)
@@ -149,6 +167,8 @@ public class InstallAction extends Command
 	
 	public void finished() throws Exception
 	{
+		InstallServlet.getContext().put("clickHere", I18n.getMessage("Install.clickHere", 
+				new String[] { this.getFromSession("forumLink") }));
 		InstallServlet.getContext().put("moduleAction", "install_finished.htm");
 	}
 	
@@ -185,6 +205,7 @@ public class InstallAction extends Command
 				status = false;
 				conn.rollback();
 				logger.error("Error importing data for " + query + ": " + ex);
+				InstallServlet.getContext().put("exceptionMessage", ex.getMessage() + "\n" + query);
 				break;
 			}
 			finally {
@@ -230,6 +251,7 @@ public class InstallAction extends Command
 				conn.rollback();
 				
 				logger.error("Error executing query: " + query + ": " + ex);
+				InstallServlet.getContext().put("exceptionMessage", ex.getMessage() + "\n" + query);
 				
 				break;
 			}
@@ -290,10 +312,42 @@ public class InstallAction extends Command
 		}
 		catch (Exception e) {
 			logger.warn("Error while trying to get a connection: " + e);
+			InstallServlet.getContext().put("exceptionMessage", e.getMessage());
 			return null;
 		}
 		
 		return conn;
+	}
+	
+	private boolean updateAdminPassword() throws Exception
+	{
+		logger.info("Going to update the administrator's password");
+		
+		boolean status = false;
+		
+		Connection conn  = null;
+		try {
+			conn = DBConnection.getImplementation().getConnection();
+			PreparedStatement p = conn.prepareStatement("UPDATE jforum_users SET user_password = ? WHERE username = 'Admin'");
+			p.setString(1, MD5.crypt(this.getFromSession("adminPassword")));
+			p.executeUpdate();
+			p.close();
+			DBConnection.getImplementation().releaseConnection(conn);
+			
+			status = true;
+		}
+		catch (Exception e) {
+			logger.warn("Error while trying to update the administrator's password: " + e);
+			InstallServlet.getContext().put("exceptionMessage", e.getMessage());
+		}
+		finally {
+			if (conn != null) {
+				try { DBConnection.getImplementation().releaseConnection(conn); }
+				catch (Exception ex) {};
+			}
+		}
+		
+		return status;
 	}
 	
 	private void restartSystemGlobals() throws Exception
