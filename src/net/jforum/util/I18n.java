@@ -48,6 +48,8 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -57,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * memory and provides a static method to acess them.
  *  
  * @author Rafael Steil
- * @version $Id: I18n.java,v 1.7 2004/08/19 04:43:31 jamesyong Exp $
+ * @version $Id: I18n.java,v 1.8 2004/08/21 03:26:14 rafaelsteil Exp $
  */
 public class I18n 
 {
@@ -69,6 +71,8 @@ public class I18n
 	
 	public static final String CANNOT_DELETE_GROUP = "CannotDeleteGroup";
 	public static final String CANNOT_DELETE_CATEGORY = "CannotDeleteCategory";
+	
+	private static final Logger logger = Logger.getLogger(I18n.class);
 	
 	private I18n() {} 
 	
@@ -90,7 +94,7 @@ public class I18n
 	public static synchronized void load() throws IOException
 	{
 		baseDir = SystemGlobals.getApplicationResourceDir() +"/config/languages/";
-		localeNames.load(new FileInputStream(baseDir +"locales.properties"));
+		localeNames.load(new FileInputStream(baseDir + "locales.properties"));
 		defaultName = SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT_ADMIN);
 		load(defaultName);
 	}
@@ -104,9 +108,11 @@ public class I18n
 		String defaultLocaleName = SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT);
 		Properties p1 = new Properties();
 		p1.load(new FileInputStream(baseDir + localeNames.getProperty(defaultLocaleName.toString())));
-		if  (defaultLocaleName.toString().equals(localeName)){
+		
+		if (defaultLocaleName.toString().equals(localeName)) {
 			messagesMap.put(localeName, p1);
-		}else{
+		}
+		else {
 			Properties p = new Properties(p1);
 			p.load(new FileInputStream(baseDir + localeNames.getProperty(localeName)));
 			messagesMap.put(localeName, p);			
@@ -145,6 +151,16 @@ public class I18n
 	 */
 	public static String getMessage(String localeName, String m)
 	{
+		if (!messagesMap.containsKey(localeName)) {
+			try {
+				load(localeName);
+			}
+			catch (IOException e) {
+				logger.warn("Error loading locale " + localeName +". " + e.getMessage());
+				return null;
+			}
+		}
+		
 		return (((Properties)messagesMap.get(localeName)).getProperty(m));
 	}	
 	
