@@ -38,6 +38,11 @@ function validateForm()
 					<td class="row2" align="center" colspan="2"><span class="gens"><b><font color="red">${message}</font></b></span></td>
 				</tr>
 				</#if>
+
+				<tr>
+					<td colspan="2"><span class="forumLink"><a class="forumLink" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a></span></td>
+				</tr>
+
 				<tr>
 					<th class="thHead" valign="center" align="center" colspan="2" height="25">${I18n.getMessage("User.registerInformation")}</th>
 				</tr>

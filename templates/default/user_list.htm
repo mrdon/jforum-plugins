@@ -4,24 +4,17 @@
 <#include "utils.js"/>
 </script>
 
-<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
-    <tr>
-      <td align="left"><span class="nav"><a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a></span></td>
-    </tr>
-</table>
-
 <#include "karma_search.inc.htm"> 
 
 <table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
 	<tr>
 	  <th class="thCornerL" nowrap="nowrap">#</th>
 	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("User.username")}&nbsp;</th>
-	  <th class="thTop" nowrap="nowrap" width="59px">&nbsp;${I18n.getMessage("UserProfile.privateMessage")}&nbsp;</th>	  
-	  <th class="thTop" nowrap="nowrap" width="59px">&nbsp;${I18n.getMessage("email")}&nbsp;</th>
+	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("UserProfile.privateMessage")}&nbsp;</th>	  
+	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("email")}&nbsp;</th>
 	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("UserProfile.from")}&nbsp;</th>
 	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("UserProfile.registrationDate")}&nbsp;</th>
 	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("User.numMessages")}&nbsp;</th>
-	  <th class="thTop" nowrap="nowrap">&nbsp;www &nbsp;</th>
 	  <th class="thCornerR" nowrap="nowrap">&nbsp;${I18n.getMessage("Karma.karma")}&nbsp;</th>
 	</tr>
 
@@ -38,7 +31,6 @@
 			<td class="row2"><span class="gen">${user.from?default("&nbsp;")}</span></td>
 			<td class="row2"><span class="gen">${user.registrationDate?date("dd/MM/yyyy")}</span></td>
 			<td class="row2"><span class="gen">${user.totalPosts}</span></td>
-			<td class="row2"><span class="gen">${user.webSite?default("&nbsp;")}</span></td>
 			<td class="row2"><span class="gen">${user.karma.karmaPoints}</span></td>
 		</tr>
 	</#list>
