@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * $Id: UserSecurityModel.java,v 1.4 2004/06/02 03:56:13 rafaelsteil Exp $
+ * $Id: UserSecurityModel.java,v 1.5 2004/09/11 01:15:10 jamesyong Exp $
  */
 public class UserSecurityModel extends AutoKeys implements net.jforum.model.security.UserSecurityModel 
 {
@@ -80,8 +80,8 @@ public class UserSecurityModel extends AutoKeys implements net.jforum.model.secu
 	public void deleteRole(int id, String roleName) throws Exception 
 	{
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PermissionControl.deleteUserRole"));
-		p.setString(1, roleName);
-		p.setInt(2, id);
+		p.setInt(1, id);
+		p.setString(2, roleName);
 		p.executeUpdate();
 		p.close();
 	}
