@@ -43,6 +43,7 @@
 package net.jforum.util.mail;
 
 import java.io.StringWriter;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -69,7 +70,7 @@ import freemarker.template.Template;
  * TODO: should do some refactoring to send a personalized email to each user. 
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.9 2005/02/28 13:24:03 rafaelsteil Exp $
+ * @version $Id: Spammer.java,v 1.10 2005/03/24 03:40:44 rafaelsteil Exp $
  */
 public class Spammer 
 {
@@ -84,7 +85,7 @@ public class Spammer
 	private static String username;
 	private static String password;
 	
-	private Message message;
+	private MimeMessage message;
 	private String messageText;
 	
 	protected Spammer() throws EmailException
@@ -152,9 +153,12 @@ public class Spammer
 		
 		try {
 			InternetAddress[] recipients = new InternetAddress[addresses.size()];
+			
+			String charset = SystemGlobals.getValue(ConfigKeys.MAIL_CHARSET);
 
+			this.message.setSentDate(new Date());
 			this.message.setFrom(new InternetAddress(SystemGlobals.getValue(ConfigKeys.MAIL_SENDER)));
-			this.message.setSubject(subject);
+			this.message.setSubject(subject, charset);
 			
 			StringWriter sWriter = new StringWriter();
 			Template template = Configuration.getDefaultConfiguration().getTemplate(messageFile);
@@ -163,10 +167,10 @@ public class Spammer
 			this.messageText = sWriter.toString();
 			
 			if (messageFormat == MESSAGE_HTML) {
-				this.message.setContent(this.messageText, "text/html");
+				this.message.setContent(this.messageText, "text/html; charset=" + charset);
 			}
 			else {
-				this.message.setText(this.messageText);
+				this.message.setText(this.messageText, charset);
 			}
 			
 			int i = 0;

@@ -45,6 +45,7 @@ package net.jforum.util.rss;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -53,7 +54,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * General utilities for RSS manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: RSSUtils.java,v 1.2 2004/10/27 01:47:55 rafaelsteil Exp $
+ * @version $Id: RSSUtils.java,v 1.3 2005/03/24 03:40:43 rafaelsteil Exp $
  */
 public class RSSUtils 
 {
@@ -64,7 +65,9 @@ public class RSSUtils
 	 */
 	public static String formatDate(Date date)
 	{
-		SimpleDateFormat df = new SimpleDateFormat(RSSAware.DATE_FORMAT);
+		SimpleDateFormat df = new SimpleDateFormat(
+				SystemGlobals.getValue(ConfigKeys.RSS_DATE_TIME_FORMAT),
+				Locale.ENGLISH);
 		return df.format(date);
 	}
 	

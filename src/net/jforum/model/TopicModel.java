@@ -55,7 +55,7 @@ import net.jforum.entities.Topic;
  * select some specific data.
  *
  * @author Rafael Steil
- * @version $Id: TopicModel.java,v 1.10 2005/03/15 20:42:39 rafaelsteil Exp $
+ * @version $Id: TopicModel.java,v 1.11 2005/03/24 03:40:42 rafaelsteil Exp $
  */
 public interface TopicModel 
 {
@@ -128,6 +128,19 @@ public interface TopicModel
 	 */
 	public void delete(Topic topic) throws Exception;
 	
+	/**
+	 * Deletes a set of topics
+	 * @param topics The topics to delete. Each entry must be
+	 * an instance of net.jforum.entities.Topic
+	 * @throws Exception
+	 */
+	public void deleteTopics(List topics) throws Exception;
+	
+	/**
+	 * Deletes all topics from a forum
+	 * @param forumId
+	 * @throws Exception
+	 */
 	public void deleteByForum(int forumId) throws Exception;
 	
 	/**

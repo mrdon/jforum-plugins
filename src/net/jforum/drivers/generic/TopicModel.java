@@ -60,12 +60,13 @@ import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.ForumModel;
+import net.jforum.model.PostModel;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicModel.java,v 1.16 2005/03/15 20:42:38 rafaelsteil Exp $
+ * @version $Id: TopicModel.java,v 1.17 2005/03/24 03:40:41 rafaelsteil Exp $
  */
 public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel 
 {
@@ -145,20 +146,25 @@ public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel
 		this.deleteTopics(new ArrayList() {{ add(topic); }});
 	}
 	
-	protected void deleteTopics(List topics) throws Exception
+	public void deleteTopics(List topics) throws Exception
 	{
 		// Topic
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("TopicModel.delete"));
 		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
 		
+		PostModel pm = DataAccessDriver.getInstance().newPostModel();
+		
 		for (Iterator iter = topics.iterator(); iter.hasNext(); ) {
 			Topic topic = (Topic)iter.next();
 
+			// Remove watches
+			this.removeSubscriptionByTopic(topic.getId());
+
+			// Remove the messages
+			pm.deleteByTopic(topic.getId());
+			
 			p.setInt(1, topic.getId());
 			p.executeUpdate();
-			
-			// Remove the related posts
-			DataAccessDriver.getInstance().newPostModel().deleteByTopic(topic.getId());
 			
 			// Update forum stats
 			fm.decrementTotalTopics(topic.getForumId(), 1);

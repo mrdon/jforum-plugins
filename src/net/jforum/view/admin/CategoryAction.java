@@ -66,11 +66,11 @@ import net.jforum.view.admin.common.ModerationCommon;
  * ViewHelper for category administration.
  * 
  * @author Rafael Steil
- * @version $Id: CategoryAction.java,v 1.16 2005/03/15 18:24:11 rafaelsteil Exp $
+ * @version $Id: CategoryAction.java,v 1.17 2005/03/24 03:40:41 rafaelsteil Exp $
  */
 public class CategoryAction extends AdminCommand 
 {
-	private CategoryModel cm;
+	private CategoryModel cm = DataAccessDriver.getInstance().newCategoryModel();
 	
 	// Listing
 	public void list() throws Exception

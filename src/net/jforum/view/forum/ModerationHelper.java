@@ -64,7 +64,7 @@ import net.jforum.view.forum.common.ForumCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationHelper.java,v 1.16 2005/03/15 20:42:37 rafaelsteil Exp $
+ * @version $Id: ModerationHelper.java,v 1.17 2005/03/24 03:40:44 rafaelsteil Exp $
  */
 public class ModerationHelper 
 {
@@ -132,6 +132,8 @@ public class ModerationHelper
 		List forumsList = new ArrayList();
 		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
 		
+		List topicsToDelete = new ArrayList();
+		
 		if (topics != null && topics.length > 0) {
 			for (int i = 0; i < topics.length; i++) {
 				Topic t = tm.selectById(Integer.parseInt(topics[i]));
@@ -140,9 +142,11 @@ public class ModerationHelper
 					forumsList.add(new Integer(t.getForumId()));
 				}
 				
-				tm.delete(t);
+				topicsToDelete.add(t);
 				PostRepository.clearCache(t.getId());
 			}
+			
+			tm.deleteTopics(topicsToDelete);
 			
 			ForumModel fm = DataAccessDriver.getInstance().newForumModel();
 			TopicRepository.loadMostRecentTopics();

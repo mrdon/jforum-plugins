@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.52 2005/03/15 18:24:19 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.53 2005/03/24 03:40:47 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -130,6 +130,7 @@ public class ConfigKeys {
 	public static final String DAO_DRIVER = "dao.driver";
 
 	public static final String DATE_TIME_FORMAT = "dateTime.format";
+	public static final String RSS_DATE_TIME_FORMAT = "rss.datetime.format";
 	public static final String RSS_ENABLED = "rss.enabled";
 	public static final String HOT_TOPIC_BEGIN = "hot.topic.begin";
 
