@@ -54,7 +54,7 @@ INSERT INTO jforum_roles (group_id, name, role_type) VALUES (@ADMIN_GROUP_ID, 'p
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES (@ADMIN_GROUP_ID, 'perm_moderation_topic_move', 1);
 
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES (@ADMIN_GROUP_ID, 'perm_category', 0);
-INSERT INTO jforum_role_values (role_id, role_type, type) VALUES (LAST_INSERT_ID(), 0, 1);
+INSERT INTO jforum_role_values (role_id, role_type, role_type) VALUES (LAST_INSERT_ID(), 0, 1);
 
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES (@ADMIN_GROUP_ID, 'perm_moderation_topic_lockUnlock', 1);
 

@@ -46,10 +46,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Enumeration;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 
 import net.jforum.Command;
@@ -67,7 +70,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.5 2004/10/28 02:49:03 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.6 2004/10/29 03:53:08 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -117,8 +120,7 @@ public class InstallAction extends Command
 		}
 		
 		if (!"passed".equals(this.getFromSession("createTables")) && !this.createTables(conn)) {
-			logger.info("Going to create tables...");
-			InstallServlet.getContext().put("error", I18n.getMessage("Install.createTablesError"));
+			InstallServlet.getContext().put("message", I18n.getMessage("Install.createTablesError"));
 			simpleConnection.releaseConnection(conn);
 			this.error();
 			return;
@@ -129,7 +131,7 @@ public class InstallAction extends Command
 		logger.info("Table creation is ok");
 		
 		if (!"passed".equals(this.getFromSession("importTablesData")) && !this.importTablesData(conn)) {
-			InstallServlet.getContext().put("error", I18n.getMessage("Install.importTablesDataError"));
+			InstallServlet.getContext().put("message", I18n.getMessage("Install.importTablesDataError"));
 			simpleConnection.releaseConnection(conn);
 			this.error();
 			return;
@@ -152,15 +154,12 @@ public class InstallAction extends Command
 	
 	private void configureSystemGlobals() throws Exception
 	{
-		SystemGlobals.setValue(ConfigKeys.USER_HASH_SEQUENCE, MD5.crypt(InstallServlet.getRequest().getParameter("dbpasswd")
+		SystemGlobals.setValue(ConfigKeys.USER_HASH_SEQUENCE, MD5.crypt(this.getFromSession("dbPassword")
 				+ System.currentTimeMillis()));
 
-		SystemGlobals.setValue(ConfigKeys.FORUM_LINK, InstallServlet.getRequest().getParameter("server_name")
-				+ ":"
-				+ InstallServlet.getRequest().getParameter("server_port")
-				+ InstallServlet.getRequest().getParameter("context_path"));
+		SystemGlobals.setValue(ConfigKeys.FORUM_LINK, this.getFromSession("forumLink"));
 		
-		SystemGlobals.setValue(ConfigKeys.I18N_DEFAULT, InstallServlet.getRequest().getParameter("language"));
+		SystemGlobals.setValue(ConfigKeys.I18N_DEFAULT, this.getFromSession("language"));
 		SystemGlobals.setValue(ConfigKeys.INSTALLED, "true");
 		SystemGlobals.saveInstallation();
 	}
@@ -171,12 +170,11 @@ public class InstallAction extends Command
 		boolean autoCommit = conn.getAutoCommit();
 		conn.setAutoCommit(false);
 		
-		String dbType = InstallServlet.getRequest().getParameter("database");
+		String dbType = this.getFromSession("database");
 		
-		Properties queries = this.loadProperties(SystemGlobals.getApplicationPath() + "install/" + dbType +"_dump.dat");
-		for (Enumeration e = queries.keys(); e.hasMoreElements(); ) {
-			String key = (String)e.nextElement();
-			String query = queries.getProperty(key);
+		List statements = this.readFromDat(SystemGlobals.getApplicationPath() + "/install/" + dbType +"_dump.dat");
+		for (Iterator iter = statements.iterator(); iter.hasNext();) {
+			String query = (String)iter.next();
 			
 			Statement s = conn.createStatement();
 			
@@ -186,7 +184,7 @@ public class InstallAction extends Command
 			catch (SQLException ex) {
 				status = false;
 				conn.rollback();
-				logger.error("Error importing data for " + key + ": " + ex);
+				logger.error("Error importing data for " + query + ": " + ex);
 				break;
 			}
 			finally {
@@ -210,16 +208,17 @@ public class InstallAction extends Command
 	
 	private boolean createTables(Connection conn) throws Exception
 	{
+		logger.info("Going to create tables...");
+
 		String dbType = this.getFromSession("database");
 		boolean status = true;
 		boolean autoCommit = conn.getAutoCommit();
 		
-		Properties statements = this.loadProperties(SystemGlobals.getApplicationPath() + "install/" + dbType + "_structure.dat");
+		List statements = this.readFromDat(SystemGlobals.getApplicationPath() + "/install/" + dbType + "_structure.dat");
 		
 		conn.setAutoCommit(false);
-		for (Enumeration e = statements.keys(); e.hasMoreElements(); ) {
-			String key = (String)e.nextElement();
-			String query = statements.getProperty(key);
+		for (Iterator iter = statements.iterator(); iter.hasNext(); ) {
+			String query = (String)iter.next();
 			
 			Statement s = conn.createStatement();
 			
@@ -230,7 +229,7 @@ public class InstallAction extends Command
 				status = false;
 				conn.rollback();
 				
-				logger.error("Error creating table " + key + ": " + ex);
+				logger.error("Error executing query: " + query + ": " + ex);
 				
 				break;
 			}
@@ -339,7 +338,23 @@ public class InstallAction extends Command
 		this.addToSessionAndContext("forumLink", forumLink);
 		this.addToSessionAndContext("adminPassword", adminPassword);
 		
+		this.addToSessionAndContext("configureDatabase", null);
+		this.addToSessionAndContext("createTables", null);
+		this.addToSessionAndContext("importTablesData", null);
+		
 		InstallServlet.getContext().put("moduleAction", "install_check_info.htm");
+	}
+	
+	private List readFromDat(String filename) throws Exception
+	{
+		List l = new ArrayList();
+		
+		FileInputStream fis = new FileInputStream(filename);
+		ObjectInputStream in = new ObjectInputStream(fis);
+		l = (ArrayList)in.readObject();
+		in.close();
+		
+		return l;
 	}
 	
 	private void addToSessionAndContext(String key, String value)
