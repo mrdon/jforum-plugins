@@ -111,16 +111,23 @@
 	</match>
 
 	<!-- Automatic URL matching -->
-	<!--
 	<match name="auto-url" removeQuotes="true">
-		<regex>[^(?:\[url\])|(?:\[url=)]((http://|www|ftp://|ftp\.)([-a-z\.0-9/#])*)</regex>
+		<regex>([\t\r\n ])([a-z0-9]+?){1}://([\w\-]+\.([\w\-]+\.)*[\w]+(:[0-9]+)?(/[^ \"\n\r\t&lt;]*)?)</regex>
 		<replace>
 		<![CDATA[
-		[url]$1[/url]
+		$1<a href="$2://$3" target="_blank">$2://$3</a>
 		]]>
 		</replace>
 	</match>
-	-->
+
+	<match name="auto-url-simple" removeQuotes="true">
+		<regex>([\t\r\n ])(www|ftp)\.(([\w\-]+\.)*[\w]+(:[0-9]+)?(/[^ \"\n\r\t&lt;]*)?)</regex>
+		<replace>
+		<![CDATA[
+		$1<a href="http://$2.$3" target="_blank">$2.$3</a>
+		]]>
+		</replace>
+	</match>
 	
 	<!-- URL -->
 	<match name="simple-url" removeQuotes="true">
