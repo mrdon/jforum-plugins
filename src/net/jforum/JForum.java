@@ -85,7 +85,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.16 2004/06/05 22:10:01 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.17 2004/06/07 03:05:04 rafaelsteil Exp $
  */
 public class JForum extends HttpServlet 
 {
@@ -354,6 +354,7 @@ public class JForum extends HttpServlet
 	{
 		Cookie cookie = new Cookie(name, value);
 		cookie.setMaxAge(3600 * 24 * 365);
+		cookie.setPath("/");
 
 		JForum.getResponse().addCookie(cookie);
 	}
@@ -372,7 +373,7 @@ public class JForum extends HttpServlet
 			UserSession userSession = new UserSession();
 			userSession.setSessionId(JForum.getRequest().getSession().getId());
 
-			String cookieName = SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_USER);
+			String cookieName = SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA);
 			Cookie cookie = JForum.getCookie(cookieName);
 			
 			// If we don't have any cookie yet, then we should set it with the default values
