@@ -45,6 +45,8 @@ package net.jforum;
 import java.io.File;
 import java.io.IOException;
 
+import freemarker.template.Configuration;
+
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -53,7 +55,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * General utilities for the test cases.
  * 
  * @author Rafael Steil
- * @version $Id: TestCaseUtils.java,v 1.5 2004/10/11 14:24:43 rafaelsteil Exp $
+ * @version $Id: TestCaseUtils.java,v 1.6 2004/10/14 02:22:10 rafaelsteil Exp $
  */
 public class TestCaseUtils
 {
@@ -105,6 +107,13 @@ public class TestCaseUtils
         	SystemGlobals.loadAdditionalDefaults(
         					SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG));
         }
+		
+		// Configure the template engine
+        Configuration templateCfg = new Configuration();
+        templateCfg.setDirectoryForTemplateLoading(new File(SystemGlobals.getApplicationPath()
+                + "/templates"));
+        templateCfg.setTemplateUpdateDelay(0);
+        Configuration.setDefaultConfiguration(templateCfg);
 
 		I18n.load();
 	}

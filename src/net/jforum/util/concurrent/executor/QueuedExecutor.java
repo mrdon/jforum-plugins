@@ -54,7 +54,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rodrigo Kumpera
- * @version $Id: QueuedExecutor.java,v 1.7 2004/10/10 16:47:42 rafaelsteil Exp $
+ * @version $Id: QueuedExecutor.java,v 1.8 2004/10/14 02:23:17 rafaelsteil Exp $
  */
 public class QueuedExecutor implements Executor 
 {
@@ -94,8 +94,6 @@ public class QueuedExecutor implements Executor
 
 	public void execute(Task task) throws InterruptedException 
 	{
-		logger.info("Executing a task: "+ task.getClass().getName());
-		
 		if (SystemGlobals.getBoolValue(ConfigKeys.BACKGROUND_TASKS)) {
 			queue.put(task);
 			synchronized(lock) {
@@ -110,7 +108,6 @@ public class QueuedExecutor implements Executor
 		}
 		else {
 			try {
-				logger.info("Task is in non-background mode");
 				task.execute();
 			}
 			catch (Exception e) {

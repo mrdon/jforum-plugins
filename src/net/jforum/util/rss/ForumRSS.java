@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 31/01/2004 - 19:22:42
- * net.jforum.util.rss.ForumRSS.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: ForumRSS.java,v 1.5 2004/09/11 02:43:22 rafaelsteil Exp $
  */
 package net.jforum.util.rss;
 
@@ -64,8 +61,9 @@ import net.jforum.view.forum.ForumAction;
 
 /**
  * @author Rafael Steil
+ * @version $Id: ForumRSS.java,v 1.6 2004/10/14 02:23:37 rafaelsteil Exp $
  */
-public class ForumRSS extends RSSable 
+public class ForumRSS extends RSSAware 
 {
 	private static Collection queueElementsList = Collections.synchronizedCollection(new LinkedList());
 	
@@ -97,10 +95,12 @@ public class ForumRSS extends RSSable
 				item.setTitle(forum.getName());
 				item.setDescription(forum.getDescription());
 
-				item.setLink("http://"+ JForum.getRequest().getServerName() +":"
-						+ JForum.getRequest().getServerPort()
-						+ (ctx.equals("") ? "" : "/"+ ctx)
-						+ "/forums/list/"+ forum.getId()
+				item.setLink("http://" + JForum.getRequest().getServerName()
+						+ (JForum.getRequest().getServerPort() != 80 
+								? ":" + JForum.getRequest().getServerPort() 
+								: "")
+						+ (ctx.equals("") ? "" : "/" + ctx)
+						+ "/forums/list/" + forum.getId()
 						+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 				
 				tmpList.add(Integer.toString(forum.getId()));

@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 31/01/2004 - 19:07:55
- * net.jforum.util.rss.RSSable.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: RSSable.java,v 1.3 2004/06/01 19:47:28 pieter2 Exp $
  */
 package net.jforum.util.rss;
 
@@ -63,11 +60,12 @@ import org.w3c.dom.Element;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
- * @author Rafael Steil
+ * A RSS representation of some content.
  * 
- * A RSS representation of some content. 
+ * @author Rafael Steil
+ * @version $Id: RSSAware.java,v 1.1 2004/10/14 02:23:38 rafaelsteil Exp $
  */
-public abstract class RSSable
+public abstract class RSSAware
 {
 	protected static final String RSS_VERSION = "2.0";
 	

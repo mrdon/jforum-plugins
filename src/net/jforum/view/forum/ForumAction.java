@@ -74,7 +74,7 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.6 2004/10/13 10:21:47 jamesyong Exp $
+ * @version $Id: ForumAction.java,v 1.7 2004/10/14 02:22:57 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -109,7 +109,13 @@ public class ForumAction extends Command
 	{
 		LinkedHashMap allForumsMap = new LinkedHashMap();
 		ArrayList forums = ForumRepository.getAllForums();
-		long lastVisit = SessionFacade.getUserSession().getLastVisit().getTime();
+		
+		long lastVisit = 0;
+		
+		UserSession us = SessionFacade.getUserSession();
+		if (us != null) {
+			lastVisit = us.getLastVisit().getTime();
+		}
 		
 		Collections.sort(forums, new ForumOrderComparator());
 		

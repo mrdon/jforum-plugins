@@ -10,7 +10,7 @@
   <TR>
     <TD class=bodyline valign="top">
 		<#if moderator>
-      	<form accept-charset="${encoding}" action="${JForumContext.encodeURL("jforum")}" method="post" name="form1">
+      	<form accept-charset="${encoding}" action="${JForumContext.encodeURL("/jforum")}" method="post" name="form1">
 	  	<input type="hidden" name="action" value="doModeration">
 		<input type="hidden" name="module" value="${moduleName}">
 		<input type="hidden" name="securityHash" value="${securityHash}">

@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,20 +37,18 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 31/01/2004 - 20:24:12
- * net.jforum.util.rss.RSSChannel.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: RSSChannel.java,v 1.2 2004/04/21 23:57:37 rafaelsteil Exp $
  */
 package net.jforum.util.rss;
 
 import java.util.ArrayList;
 
 /**
- * @author Rafael Steil
- * 
  * Represents a &lt;channel&gt; in the RSS Document
+ * 
+ * @author Rafael Steil
+ * @version $Id: RSSChannel.java,v 1.3 2004/10/14 02:23:35 rafaelsteil Exp $
  */
 public class RSSChannel 
 {

@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: Apr 23, 2003 / 10:46:05 PM
- * net.jforum.repository.ForumInfoRepository.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: ForumRepository.java,v 1.5 2004/10/05 13:54:33 jamesyong Exp $
  */
 package net.jforum.repository;
 
@@ -65,6 +62,7 @@ import net.jforum.security.SecurityConstants;
  * needed just once, and then use the cache when data is requested.<br> 
  * 
  * @author Rafael Steil
+ * @version  $Id: ForumRepository.java,v 1.6 2004/10/14 02:23:38 rafaelsteil Exp $
  */
 public class ForumRepository 
 {
@@ -177,9 +175,9 @@ public class ForumRepository
 		
 		Forum f = fm.selectById(forumId);
 		if (forumsMap.containsKey(new Integer(forumId))) {
-			
 			ForumRepository.forumsMap.put(new Integer(forumId), f);
 			ForumRepository.lastPostInfoMap.remove(Integer.toString(forumId));
+			ForumRepository.getLastPostInfo(forumId);
 		}
 		
 		getTotalMessages(true);

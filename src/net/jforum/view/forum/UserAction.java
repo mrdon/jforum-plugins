@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.12 2004/10/11 14:08:02 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.13 2004/10/14 02:22:26 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -393,7 +393,8 @@ public class UserAction extends Command
 
 		try {
 			QueuedExecutor.getInstance().execute(
-					new EmailSenderTask(new LostPasswordSpammer(user)));
+					new EmailSenderTask(new LostPasswordSpammer(user, 
+							I18n.getMessage("PasswordRecovery.mailTitle"))));
 		} 
 		catch (EmailException e) {
 			logger.warn("Error while senting email: " + e);
