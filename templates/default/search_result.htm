@@ -97,7 +97,7 @@
           <TD class=row3 vAlign=center noWrap align="center">
 		  <#if (topic.lastPostTime?length > 0)>
 			  <SPAN class=postdetails>${topic.lastPostTime}<BR>
-			  <a href="${contextPath}/user/profile/${topic.postedBy.id}${extension}">${topic.lastPostBy.username}</a>
+			  <a href="${contextPath}/user/profile/${topic.lastPostBy.id}${extension}">${topic.lastPostBy.username}</a>
 			  
 			<#assign startPage = ""/>
 			<#if (topic.totalReplies + 1 > postsPerPage)>
