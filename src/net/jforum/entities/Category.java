@@ -70,7 +70,7 @@ import net.jforum.util.ForumOrderComparator;
  * to the user who make the call tho the method. 
  * 
  * @author Rafael Steil
- * @version $Id: Category.java,v 1.9 2004/12/04 20:28:04 rafaelsteil Exp $
+ * @version $Id: Category.java,v 1.10 2004/12/05 21:51:26 rafaelsteil Exp $
  */
 public class Category 
 {
@@ -81,6 +81,10 @@ public class Category
 	private Set forums = new TreeSet(new ForumOrderComparator());
 		
 	public Category() {}
+	
+	public Category(int id) {
+		this.id = id;
+	}
 	
 	public Category(String name, int id) {
 		this.name = name;
@@ -239,6 +243,13 @@ public class Category
 	public boolean equals(Object o) 
 	{
 		return ((o instanceof Category) && (((Category)o).getId() == this.id));
+	}
+	
+	/** 
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return "[" + this.name + ", id=" + this.id + ", order=" + this.order + "]"; 
 	}
 
 }

@@ -55,7 +55,7 @@ import net.jforum.entities.LastPostInfo;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: ForumModel.java,v 1.4 2004/11/12 20:46:39 rafaelsteil Exp $
+ * @version $Id: ForumModel.java,v 1.5 2004/12/05 21:51:25 rafaelsteil Exp $
  */
 public interface ForumModel 
 {
@@ -85,21 +85,27 @@ public interface ForumModel
 	 * you are sending up wil take the order position of the forum which
 	 * was sent down.
 	 * 
-	 * @param forumId
+	 * @param forum The forum to change its order
 	 * @throws Exception
+	 * @return an integer containing the id of the related forum which 
+	 * had its forum_order changed due to the change of the forum 
+	 * passed as argument.
 	 */
-	public void setOrderUp(int forumId) throws Exception;
+	public int setOrderUp(Forum forum) throws Exception;
 	
 	/**
 	 * Sets the forum's order one level down.
-	 * For more information, take a look at {@link #setOrderUp} method. 
+	 * For more information, take a look at @link #setOrderUp method. 
 	 * The only different between both is that this method sends the 
 	 * forum order down.
 	 * 
-	 * @param forumId
+	 * @param forum The forum to change its order
 	 * @throws Exception
+	 * @return an integer containing the id of the related forum which 
+	 * had its forum_order changed due to the change of the forum 
+	 * passed as argument.
 	 */
-	public void setOrderDown(int forumId) throws Exception;
+	public int setOrderDown(Forum forum) throws Exception;
 	
 	/**
 	 * Delete a forum.

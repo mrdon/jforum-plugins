@@ -48,6 +48,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import net.jforum.SessionFacade;
 import net.jforum.entities.Category;
@@ -59,6 +61,7 @@ import net.jforum.model.DataAccessDriver;
 import net.jforum.model.ForumModel;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.SecurityConstants;
+import net.jforum.util.CategoryOrderComparator;
 
 /**
  * Repository for the forums of the System.
@@ -67,12 +70,13 @@ import net.jforum.security.SecurityConstants;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.19 2004/12/04 20:28:05 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.20 2004/12/05 21:51:26 rafaelsteil Exp $
  */
 public class ForumRepository 
 {
 	private static Map forumCategoryRelation = new HashMap();
-	private static Map categoriesMap = new LinkedHashMap();
+	private static Map categoriesMap = new HashMap();
+	private static Set categoriesSet;// = new TreeSet(new CategoryOrderComparator());
 	private static int totalTopics = -1;
 	private static int totalMessages = 0;
 
@@ -164,7 +168,7 @@ public class ForumRepository
 		PermissionControl pc = SecurityRepository.get(userId);
 		List l = new ArrayList();
 		
-		Iterator iter = categoriesMap.values().iterator();
+		Iterator iter = categoriesSet.iterator();
 		while (iter.hasNext()) {
 			Category c = (Category)iter.next();
 			
@@ -201,14 +205,22 @@ public class ForumRepository
 	public synchronized static void reloadCategory(Category c)
 	{
 		Category currentCategory = (Category)categoriesMap.get(new Integer(c.getId()));
-		
+
 		if (currentCategory == null) {
 			throw new CategoryNotFoundException("Category #" + c.getId() + " was not found in the cache");
 		}
+		
+		Set tmpSet = new TreeSet(new CategoryOrderComparator());
+		tmpSet.addAll(categoriesSet);
+		tmpSet.remove(currentCategory);
 
 		currentCategory.setName(c.getName());
 		currentCategory.setOrder(c.getOrder());
-		currentCategory.setOrder(c.getOrder());
+		
+		tmpSet.add(currentCategory);
+		
+		// Force reordering
+		categoriesSet = tmpSet;
 	}
 	
 	/**
@@ -219,6 +231,7 @@ public class ForumRepository
 	public synchronized static void removeCategory(Category c)
 	{
 		categoriesMap.remove(new Integer(c.getId()));
+		categoriesSet.remove(c);
 		
 		for (Iterator iter = forumCategoryRelation.values().iterator(); iter.hasNext(); ) {
 			int id = ((Integer)iter.next()).intValue();
@@ -235,6 +248,7 @@ public class ForumRepository
 	public synchronized static void addCategory(Category c)
 	{
 		categoriesMap.put(new Integer(c.getId()), c);
+		categoriesSet.add(c);
 	}
 	
 	/**
@@ -430,9 +444,11 @@ public class ForumRepository
 	{
 		List categories = cm.selectAll();
 		categoriesMap = new LinkedHashMap();
+		categoriesSet = new TreeSet(new CategoryOrderComparator());
 		for (Iterator iter = categories.iterator(); iter.hasNext(); ) {
 			Category c = (Category)iter.next();
 			categoriesMap.put(new Integer(c.getId()), c);
+			categoriesSet.add(c);
 		}
 	}
 }

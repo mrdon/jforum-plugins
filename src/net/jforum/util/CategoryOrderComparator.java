@@ -36,7 +36,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Sep 2, 2004
+ * Created on 05/12/2004 16:28:43
  * The JForum Project
  * http://www.jforum.net
  */
@@ -44,28 +44,31 @@ package net.jforum.util;
 
 import java.util.Comparator;
 
-import net.jforum.entities.Forum;
+import net.jforum.entities.Category;
+
 /**
- * @author James Yong Boon Leong
  * @author Rafael Steil
- * @version $Id: ForumOrderComparator.java,v 1.2 2004/12/05 21:51:25 rafaelsteil Exp $
+ * @version $Id: CategoryOrderComparator.java,v 1.1 2004/12/05 21:51:25 rafaelsteil Exp $
  */
-public class ForumOrderComparator implements Comparator {
-	
-	public final int compare (Object a, Object b)
+public class CategoryOrderComparator implements Comparator 
+{
+	/** 
+	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+	 */
+	public int compare(Object o1, Object o2) 
 	{
-		Forum f1 = (Forum)a;
-		Forum f2 = (Forum)b;
+		Category c1 = (Category)o1;
+		Category c2 = (Category)o2;
 		
-		if (f1.getOrder() > f2.getOrder()) {
+		if (c1.getOrder() > c2.getOrder()) {
 			return 1;
 		}
-		else if (f1.getOrder() < f2.getOrder() ) {
+		else if (c1.getOrder() < c2.getOrder() ) {
 			return -1;
 		}
 		else {
-			return f1.getName().compareTo(f2.getName());
+			return c1.getName().compareTo(c2.getName());
 		}
 	}
-}
 
+}

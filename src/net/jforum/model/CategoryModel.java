@@ -54,7 +54,7 @@ import net.jforum.entities.Category;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: CategoryModel.java,v 1.5 2004/12/04 20:28:01 rafaelsteil Exp $
+ * @version $Id: CategoryModel.java,v 1.6 2004/12/05 21:51:25 rafaelsteil Exp $
  */
 public interface CategoryModel 
 {	
@@ -112,8 +112,30 @@ public interface CategoryModel
 	 * @throws Exception
 	 */
 	public int addNew(Category category) throws Exception;
+
+	/**
+	 * Changes the display order of some category.
+	 *  
+	 * @param category The <code>Category</code> instance to change its order
+	 * @return An <code>int</code> containing the id of the category which 
+	 * held the display order now represented by the category passed as
+	 * argument to the method.
+	 * 
+	 * @throws Exception
+	 * @see #setOrderDown(Category)
+	 */
+	public void setOrderUp(Category category, Category otherCategory) throws Exception;
 	
-	public void setOrderUp(Category category) throws Exception;
-	
-	public void setOrderDown(Category category) throws Exception;
+	/**
+	 * Changes the display order of some category.
+	 *  
+	 * @param category The <code>Category</code> instance to change its order
+	 * @return An <code>int</code> containing the id of the category which 
+	 * held the display order now represented by the category passed as
+	 * argument to the method.
+	 * 
+	 * @throws Exception
+	 * @see #setOrderUp(Category)
+	 */
+	public void setOrderDown(Category category, Category otherCategory) throws Exception;
 }

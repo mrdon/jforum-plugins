@@ -54,7 +54,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: CategoryModel.java,v 1.6 2004/12/04 20:28:01 rafaelsteil Exp $
+ * @version $Id: CategoryModel.java,v 1.7 2004/12/05 21:51:24 rafaelsteil Exp $
  */
 public class CategoryModel extends AutoKeys implements net.jforum.model.CategoryModel 
 {
@@ -177,40 +177,38 @@ public class CategoryModel extends AutoKeys implements net.jforum.model.Category
 	}
 	
 	/**
-	 * @see net.jforum.model.CategoryModel#setOrderUp(net.jforum.entities.Category)
+	 * @see net.jforum.model.CategoryModel#setOrderUp(Category, Category)
 	 */
-	public void setOrderUp(Category category) throws Exception 
+	public void setOrderUp(Category category, Category relatedCategory) throws Exception 
 	{
-		if (category.getOrder() == 0) {
-			category = this.selectById(category.getId());
-		}
-		
-		this.setOrder(category.getOrder(), true, category.getId());
+		this.setOrder(category, relatedCategory, true);
 	}
 	
 	/**
-	 * @see net.jforum.model.CategoryModel#setOrderDown(net.jforum.entities.Category)
+	 * @see net.jforum.model.CategoryModel#setOrderDown(Category, Category)
 	 */
-	public void setOrderDown(Category category) throws Exception 
+	public void setOrderDown(Category category, Category relatedCategory) throws Exception 
 	{
-		if (category.getOrder() == 0) {
-			category = this.selectById(category.getId());
-		}
-		
-		this.setOrder(category.getOrder(), false, category.getId());
+		this.setOrder(category, relatedCategory, false);
 	}
 	
-	private void setOrder(int currentOrder, boolean up, int categoryId) throws Exception
+	private void setOrder(Category category, Category otherCategory, boolean up) throws Exception
 	{
-		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("CategoryModel.setOrderByOrder"));
-		p.setInt(1, currentOrder);
-		p.setInt(2, up ? currentOrder - 1 : currentOrder + 1);
+		int tmpOrder = otherCategory.getOrder();
+		otherCategory.setOrder(category.getOrder());
+		category.setOrder(tmpOrder);
+
+		// *********
+		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("CategoryModel.setOrderById"));
+		p.setInt(1, otherCategory.getOrder());
+		p.setInt(2, otherCategory.getId());
 		p.executeUpdate();
 		p.close();
 
+		// *********
 		p = this.conn.prepareStatement(SystemGlobals.getSql("CategoryModel.setOrderById"));
-		p.setInt(1, up ? currentOrder - 1 : currentOrder + 1);
-		p.setInt(2, categoryId);
+		p.setInt(1, category.getOrder());
+		p.setInt(2, category.getId());
 		p.executeUpdate();
 		p.close();
 	}

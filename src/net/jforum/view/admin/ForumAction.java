@@ -66,14 +66,15 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.4 2004/12/04 20:28:00 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.5 2004/12/05 21:51:24 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
 	// Listing
 	public void list() throws Exception
 	{
-		JForum.getContext().put("categories", ForumRepository.getAllCategories());
+		JForum.getContext().put("categories", DataAccessDriver.getInstance().newCategoryModel().selectAll());
+		JForum.getContext().put("repository", new ForumRepository());
 		JForum.getContext().put("moduleAction", "forum_list.htm");
 	}
 	
@@ -121,9 +122,11 @@ public class ForumAction extends Command
 	{
 		int forumId = Integer.parseInt(JForum.getRequest().getParameter("forum_id"));
 		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
-		fm.setOrderUp(Integer.parseInt(JForum.getRequest().getParameter("forum_id")));
+		int relatedForumId = fm.setOrderUp(ForumRepository.getForum(forumId));
 
 		ForumRepository.reloadForum(forumId);
+		ForumRepository.reloadForum(relatedForumId);
+
 		this.list();
 	}
 	
@@ -131,9 +134,11 @@ public class ForumAction extends Command
 	{
 		int forumId = Integer.parseInt(JForum.getRequest().getParameter("forum_id"));
 		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
-		fm.setOrderDown(forumId);
+		int relatedForumId = fm.setOrderDown(ForumRepository.getForum(forumId));
 		
 		ForumRepository.reloadForum(forumId);
+		ForumRepository.reloadForum(relatedForumId);
+		
 		this.list();
 	}
 	

@@ -17,7 +17,8 @@
 		</tr>
 
 		<#assign counter = 1/>
-		<#list category.getForums() as forum>
+		<#assign forums = repository.getCategory(category.id).getForums()/>
+		<#list forums as forum>
 			<tr>
 				<td width="10" class="row1">&nbsp;</td>
 				<td class="row1"><span class="forumLink">${forum.name}</span></td>
@@ -30,15 +31,15 @@
 
 				<td class="row2" align="right" width="8%">
 					<#if (counter > 1)>
-						<input type="button" value="Up" class="mainoption" onClick="${contextPath}/${moduleName}/up/${forum.id}${extension}">&nbsp;
+						<input type="button" value="Up" class="mainoption" onClick="document.location = '${contextPath}/${moduleName}/up/${forum.id}${extension}';">&nbsp;
 					<#else>	
 						&nbsp;
 					</#if>
 				</td>
 
 				<td class="row2" align="right" width="10%">
-					<#if (counter < category.getForums().size())>
-						<input type="button" value="Down" class="mainoption" onClick="${contextPath}/${moduleName}/down/${forum.id}${extension}">&nbsp;
+					<#if (counter < forums.size())>
+						<input type="button" value="Down" class="mainoption" onClick="document.location = '${contextPath}/${moduleName}/down/${forum.id}${extension}';">&nbsp;
 					<#else>	
 						&nbsp;
 					</#if>					

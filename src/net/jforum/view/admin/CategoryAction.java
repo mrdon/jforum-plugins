@@ -68,7 +68,7 @@ import freemarker.template.Template;
  * ViewHelper for category administration.
  * 
  * @author Rafael Steil
- * @version $Id: CategoryAction.java,v 1.5 2004/12/04 20:28:00 rafaelsteil Exp $
+ * @version $Id: CategoryAction.java,v 1.6 2004/12/05 21:51:24 rafaelsteil Exp $
  */
 public class CategoryAction extends Command 
 {
@@ -78,6 +78,7 @@ public class CategoryAction extends Command
 	public void list() throws Exception
 	{
 		JForum.getContext().put("categories", DataAccessDriver.getInstance().newCategoryModel().selectAll());
+		JForum.getContext().put("repository", new ForumRepository());
 		JForum.getContext().put("moduleAction", "category_list.htm");
 	}
 	
@@ -196,14 +197,26 @@ public class CategoryAction extends Command
 	
 	private void processOrdering(boolean up) throws Exception
 	{
-		Category c = new Category();
-		c.setId(Integer.parseInt(JForum.getRequest().getParameter("category_id")));
+		Category toChange = ForumRepository.getCategory(Integer.parseInt(
+				JForum.getRequest().getParameter("category_id")));
 		
-		if (up) {
-			DataAccessDriver.getInstance().newCategoryModel().setOrderUp(c);
-		}
-		else {
-			DataAccessDriver.getInstance().newCategoryModel().setOrderDown(c);
+		List categories = ForumRepository.getAllCategories();
+		
+		int index = categories.indexOf(toChange);
+		if (index > -1 
+			&& ((up && index - 1 < categories.size() && index > 0)
+				|| (!up))) {
+			Category otherCategory = (Category)categories.get(up ? index - 1 : index + 1);
+			
+			if (up) {
+				this.cm.setOrderUp(toChange, otherCategory);
+			}
+			else {
+				this.cm.setOrderDown(toChange, otherCategory);
+			}
+		
+			ForumRepository.reloadCategory(toChange);
+			ForumRepository.reloadCategory(otherCategory);
 		}
 		
 		this.list();

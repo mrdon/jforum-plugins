@@ -58,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: ForumModel.java,v 1.10 2004/12/04 20:28:00 rafaelsteil Exp $
+ * @version $Id: ForumModel.java,v 1.11 2004/12/05 21:51:24 rafaelsteil Exp $
  */
 public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel {
 	private Connection conn;
@@ -128,92 +128,53 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel 
 	}
 
 	/**
-	 * @see net.jforum.model.ForumModel#setOrderUp(int)
+	 * @see net.jforum.model.ForumModel#setOrderUp(Forum)
 	 */
-	public void setOrderUp(int forumId) throws Exception {
-		int order = 0;
-		int categoryId = 0;
-
-		// Retrieves the current value of forum_order
-		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.getOrder"));
-		p.setInt(1, forumId);
-
-		ResultSet rs = p.executeQuery();
-
-		if (rs.next()) {
-			order = rs.getInt("forum_order");
-			categoryId = rs.getInt("categories_id");
-		}
-
-		rs.close();
-		p.close();
-
-		rs.close();
-		p.close();
-
-		if (order > 0) {
-			// Sets the forum that is in the higher order to the current order
-			p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.setOrderByOrder"));
-			p.setInt(1, order);
-			p.setInt(2, ++order);
-			p.setInt(3, categoryId);
-
-			p.executeUpdate();
-
-			p.close();
-
-			// Sets the forum to the higher order
-			p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.setOrderById"));
-			p.setInt(1, order);
-			p.setInt(2, forumId);
-
-			p.executeUpdate();
-
-			p.close();
-		}
+	public int setOrderUp(Forum forum) throws Exception 
+	{
+		return this.changeForumOrder(forum, true);
 	}
-
+	
 	/**
-	 * @see net.jforum.model.ForumModel#setOrderDown(int)
+	 * @see net.jforum.model.ForumModel#setOrderDown(Forum)
 	 */
-	public void setOrderDown(int forumId) throws Exception {
-		int order = 0;
-		int categoryId = 0;
+	public int setOrderDown(Forum forum) throws Exception {
+		return this.changeForumOrder(forum, false);
+	}
+	
+	private int changeForumOrder(Forum forum, boolean up) throws Exception
+	{
+		int newOrder = up ? forum.getOrder() + 1 : forum.getOrder() - 1;
+		int relatedForumId = 0;
 
-		// Retireves the current value of of forum_order
-		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.getOrder"));
-		p.setInt(1, forumId);
+		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.getForumIdByOrder"));
+		p.setInt(1, newOrder);
+		p.setInt(2, forum.getCategoryId());
 
 		ResultSet rs = p.executeQuery();
-
-		if (rs.next()) {
-			order = rs.getInt("forum_order");
-			categoryId = rs.getInt("categories_id");
-		}
+		rs.next();
+		relatedForumId = rs.getInt(1);
 
 		rs.close();
 		p.close();
 
-		if (order > 1) {
-			// Sets the forum that is in the lower order to the current order
-			p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.setOrderByOrder"));
-			p.setInt(1, order);
-			p.setInt(2, --order);
-			p.setInt(3, categoryId);
+		// Change the forum's order
+		p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.setOrderById"));
+		p.setInt(1, forum.getOrder());
+		p.setInt(2, relatedForumId);
+		p.executeUpdate();
+		p.close();
 
-			p.executeUpdate();
+		// Sets the forum to the higher order
+		p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.setOrderById"));
+		p.setInt(1, newOrder);
+		p.setInt(2, forum.getId());
 
-			p.close();
+		p.executeUpdate();
 
-			// Sets the forum to the lower order
-			p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.setOrderById"));
-			p.setInt(1, order);
-			p.setInt(2, forumId);
-
-			p.executeUpdate();
-
-			p.close();
-		}
+		p.close();
+		
+		return relatedForumId;		
 	}
 
 	/**
