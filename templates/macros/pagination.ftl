@@ -30,28 +30,32 @@
 				<#assign start = recordsPerPage * page>
 				<#assign nextPage = page + 1>
 				
-				<a href="${contextPath}/${moduleName}/${action}/${start}/${id}.page">${nextPage}</a>, 
+				<#if start == thisPage>
+					${nextPage}
+				<#else>
+					<a href="${contextPath}/${moduleName}/${action}/${start}/${id}.page">${nextPage}</a>, 
+				</#if>
 			</#list>
 			
 			 ... 
 
 			<#assign startLastFrom = totalPages - 2>
-			<#list startLastFrom .. totalPages as page>
+			<#list startLastFrom .. totalPages - 1 as page>
 				<#assign start = recordsPerPage * page >
 				<#assign nextPage = page + 1>
 				
-				<#if page != thisPage>
-					<a href="${contextPath}/${moduleName}/${action}/${start}/${id}.page">${nextPage}</a>,
+				<#if start == thisPage>
+					${nextPage}, 
 				<#else>
-					${nextPage}
+					 <a href="${contextPath}/${moduleName}/${action}/${start}/${id}.page">${nextPage}</a>,
 				</#if>
 			</#list>
 
 			<#assign start = recordsPerPage * totalPages>
 			<#if start != thisPage>
-				<a href="${contextPath}/${moduleName}/${action}/${start}/${id}.page">${totalPages}</a>
+				<a href="${contextPath}/${moduleName}/${action}/${start}/${id}.page">${totalPages + 1}</a>
 			<#else>
-				${totalPages}
+				${totalPages + 1}
 			</#if>
 		<#else>
 			<#list 0 .. totalPages - 1 as page>

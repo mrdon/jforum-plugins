@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<!-- ********************************************************************* -->
+<!-- Ant build script for JForum -->
+<!-- Author: Cloves Carneiro Jr - ccarneiroj AT yahoo.ca -->
+<!-- ********************************************************************* -->
+
+<project name="JForum" default="all" basedir=".">
+
+	<!-- project properties -->
+	<property file="build.properties" />
+
+	<property name="projectname" value="JForum" />
+	<property name="author" value="Rafael Steil" />
+	<property name="copyright" value="Copyright JForum Team 2004" />
+	<property name="version" value="1.0RC3" />
+	<property name="jarname" value="jforum" />
+	<property name="webappname" value="jforum" />
+
+	<property name="build" location="build" />
+	<property name="dist" location="build" />
+	<property name="doc" location="doc" />
+	<property name="lib" location="WEB-INF/lib" />
+	<property name="src" value="src" />
+	<property name="classes" value="/WEB-INF/classes" />
+	<property name="jarFile" value="${dist}/${jarname}_${version}.jar" />
+
+	<path id="base.path">
+		<fileset dir="${lib}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<target name="usage" description="Print usage for key targets">
+		<echo>
+  Key Targets:
+             all - Build all: compile and create JAR
+         compile - Guess what happens here!?
+           clean - Blow away all code and all byte code - TO DO
+         rebuild - Clean and build all
+         javadoc - Run javadoc against code - TO DO
+           usage - Print this help text...
+    </echo>
+	</target>
+
+	<!-- Main target -->
+	<target name="all" depends="compile, createJAR" />
+	
+	<!-- Compiles the source code -->
+	<target name="compile" description="Compiles the source code">
+
+		<!-- Create the distribution directory -->
+		<mkdir dir="${build}" />
+
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac srcdir="${src}" destdir="${build}">
+			<classpath>
+				<path refid="base.path"/>
+			</classpath>
+		</javac>
+	</target>
+
+	<!-- Create the JAR File -->
+	<target name="createJAR" description="Creates a JAR containing all source code" depends="compile">
+		<delete file="${jarFile}" />
+		<!-- Create JAR file -->
+		<jar jarfile="${jarFile}" basedir="${build}" />
+	</target>
+
+	<!-- Create the War File -->
+	<target name="createWAR" description="Creates a WAR file with the whole web app" depends="compile">
+		<!-- Create war file -->
+		<echo message="to be done - move files to a temp folder and JAR'em up" />
+		<!--
+		<jar jarfile="${warFile}" basedir="${build}" />
+		-->
+	</target>
+
+	<!-- Clean build/doc folders -->
+	<target name="clean" description="Clean build/doc folders">
+		<!-- Clean up folders -->
+		<echo message="to be done - just delete all files in build and doc folder" />
+		<!--
+		<jar jarfile="${warFile}" basedir="${build}" />
+		-->
+	</target>	
+	
+	<!-- Generate Javadoc -->	
+	<target name="javadoc" description="Runs javadoc on the source">
+		<mkdir dir="${doc}" />
+		<echo message="I am getting an error on my machine here .. why?!!?" />
+		
+		<javadoc bottom="${projectname} by ${author} - ${copyright}" destdir="${doc}" doctitle="Javadocs: ${projectname} ${version}" private="false" version="false" windowtitle="Javadocs: ${projectname} ${version}" classpathref="base.path">
+			<sourcepath>
+				<pathelement path="${src}" />
+			</sourcepath>
+			<packageset dir="src">
+				<include name="net/jforum" />
+			</packageset>
+			<link href="http://java.sun.com/j2se/1.4/docs/api/" />
+			<link href="http://java.sun.com/products/servlet/2.3/javadoc/" />
+		</javadoc>
+	</target>
+
+</project>

@@ -57,7 +57,7 @@ CREATE TABLE jforum_forums (
   forum_last_post_id mediumint(8) NOT NULL default '0',
   moderated smallint(6) default '0',
   PRIMARY KEY  (forum_id),
-  INDEX idx_category (categories_id)
+  KEY (categories_id)
 ) TYPE=InnoDB;
 
 --
@@ -131,9 +131,9 @@ CREATE TABLE jforum_posts (
   post_subject varchar(100) default NULL,
   post_text text,
   PRIMARY KEY  (post_id),
-  INDEX idx_user (user_id),
-  INDEX idx_topic (topic_id),
-  INDEX idx_forum (forum_id)
+  KEY (user_id),
+  KEY (topic_id),
+  KEY (forum_id)
 ) TYPE=InnoDB;
 
 --
@@ -242,7 +242,10 @@ CREATE TABLE jforum_topics (
   topic_last_post_id mediumint(8) NOT NULL default '0',
   moderated smallint(1) default '0',
   PRIMARY KEY  (topic_id),
-  INDEX idx_forum (forum_id)
+  KEY (forum_id),
+  KEY(user_id),
+  KEY(topic_first_post_id),
+  KEY(topic_last_post_id)
 ) TYPE=InnoDB;
 
 --
@@ -331,7 +334,7 @@ CREATE TABLE jforum_vote_desc (
 ) TYPE=InnoDB;
 
 --
--- Table structure for table 'jforum_vote_resutls'
+-- Table structure for table 'jforum_vote_results'
 --
 
 DROP TABLE IF EXISTS jforum_vote_results;
@@ -389,3 +392,39 @@ CREATE TABLE jforum_search_wordmatch (
   KEY(word_id),
   KEY(title_match)
 );
+
+--
+-- Table structure for table 'jforum_search_results'
+--
+DROP TABLE IF EXISTS jforum_search_results;
+CREATE TABLE jforum_search_results (
+  topic_id INT NOT NULL,
+  session VARCHAR(50),
+  time DATETIME,
+  KEY (topic_id)
+);
+
+
+DROP TABLE IF EXISTS jforum_search_topics;
+CREATE TABLE jforum_search_topics (
+  topic_id mediumint(8) NOT NULL,
+  forum_id smallint(8) NOT NULL default '0',
+  topic_title varchar(60) NOT NULL default '',
+  user_id mediumint(8) NOT NULL default '0',
+  topic_time varchar(13) NOT NULL default '0',
+  topic_views mediumint(8) default '1',
+  topic_replies mediumint(8) default '0',
+  topic_status tinyint(3) default '0',
+  topic_vote tinyint(1) default '0',
+  topic_type tinyint(3) default '0',
+  topic_first_post_id mediumint(8) default '0',
+  topic_last_post_id mediumint(8) NOT NULL default '0',
+  moderated smallint(1) default '0',
+  session varchar(50),
+  time datetime,
+  KEY  (topic_id),
+  KEY (forum_id),
+  KEY(user_id),
+  KEY(topic_first_post_id),
+  KEY(topic_last_post_id)
+) TYPE=InnoDB;

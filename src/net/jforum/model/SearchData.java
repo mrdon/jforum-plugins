@@ -59,6 +59,7 @@ public class SearchData
 	private String orderBy = "ASC";
 	private String orderByField;
 	private String time;
+	private boolean searchStarted;
 	
 	public void setKeywords(String keywords)
 	{
@@ -83,6 +84,11 @@ public class SearchData
 	public void setOrderByField(String f)
 	{
 		this.orderByField = f;
+	}
+	
+	public void setSearchStarted(boolean started)
+	{
+		this.searchStarted = started;
 	}
 	
 	public void setCategoryId(int categoryId)
@@ -142,5 +148,10 @@ public class SearchData
 	public String getTime()
 	{
 		return this.time;
+	}
+	
+	public boolean getSearchStarted()
+	{
+		return this.searchStarted;
 	}
 }

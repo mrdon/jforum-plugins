@@ -44,13 +44,18 @@ package net.jforum.view.forum;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import net.jforum.Command;
 import net.jforum.JForum;
+import net.jforum.entities.Topic;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.SearchData;
+import net.jforum.model.SearchModel;
 import net.jforum.repository.CategoryRepository;
 import net.jforum.repository.ForumRepository;
+import net.jforum.repository.SecurityRepository;
+import net.jforum.security.SecurityConstants;
 import net.jforum.util.SystemGlobals;
 
 /**
@@ -132,7 +137,17 @@ public class SearchVH extends Command
 			start = Integer.parseInt(s);
 		}
 		
-		ArrayList allTopics = DataAccessDriver.getInstance().newSearchModel().search(sd);
+		SearchModel sm = DataAccessDriver.getInstance().newSearchModel();
+
+		// Clean the search
+		if (JForum.getRequest().getParameter("clean") != null) {
+			sm.cleanSearch();
+		}
+		else {
+			sd.setSearchStarted(true);
+		}
+		
+		ArrayList allTopics = this.onlyAllowedData(sm.search(sd));
 		int totalTopics = allTopics.size();
 		int sublistLimit = recordsPerPage + start > totalTopics ? totalTopics : recordsPerPage + start;
 		
@@ -166,6 +181,20 @@ public class SearchVH extends Command
 		
 		JForum.getContext().put("openModeration", openModeration.equals("1"));
 		ViewCommon.topicListingBase();
+	}
+	
+	private ArrayList onlyAllowedData(ArrayList topics)
+	{
+		ArrayList l = new ArrayList();
+		
+		for (Iterator iter = topics.iterator(); iter.hasNext(); ) {
+			Topic t = (Topic)iter.next();
+			if (SecurityRepository.canAccess(SecurityConstants.PERM_FORUM, Integer.toString(t.getForumId()))) {
+				l.add(t);
+			}
+		}
+		
+		return l;
 	}
 	
 	public void doModeration() throws Exception

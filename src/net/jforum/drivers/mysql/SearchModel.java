@@ -52,6 +52,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import net.jforum.JForum;
+import net.jforum.SessionFacade;
 import net.jforum.entities.Post;
 import net.jforum.model.SearchData;
 import net.jforum.util.SystemGlobals;
@@ -69,11 +70,13 @@ public class SearchModel implements net.jforum.model.SearchModel
 		ArrayList l = new ArrayList();
 		ArrayList topics = new ArrayList();
 		
-		if (sd.getTime() == null) {
-			topics = this.topicsByKeyword(sd);
-		}
-		else {
-			topics = this.topicsByTime(sd);
+		if (!sd.getSearchStarted()) {
+			if (sd.getTime() == null) {
+				this.topicsByKeyword(sd);
+			}
+			else {
+				this.topicsByTime(sd);
+			}
 		}
 		
 		StringBuffer criterias = new StringBuffer(256);
@@ -89,21 +92,16 @@ public class SearchModel implements net.jforum.model.SearchModel
 			sd.setOrderByField("p.post_time");
 		}
 		
-		StringBuffer ids = new StringBuffer(128);
-		for (Iterator iter = topics.iterator(); iter.hasNext(); ) {
-			ids.append(iter.next()).append(",");
-		}
-		
-		ids.delete(ids.length() - 1, ids.length());
-		
 		String sql = SystemGlobals.getSql("SearchModel.searchBase");
 		// Prepare the query
 		sql = sql.replaceAll(":orderByField:", sd.getOrderByField());
 		sql = sql.replaceAll(":orderBy:", sd.getOrderBy());
 		sql = sql.replaceAll(":criterias:", criterias.toString());
-		sql = sql.replaceAll(":topics:", ids.toString());
 		
 		PreparedStatement p = JForum.getConnection().prepareStatement(sql);
+		p.setString(1, SessionFacade.getUserSession().getSessionId());
+		p.setString(2, SessionFacade.getUserSession().getSessionId());
+
 		ResultSet rs = p.executeQuery();
 		
 		l = new TopicModel().fillTopicsData(rs);
@@ -114,32 +112,27 @@ public class SearchModel implements net.jforum.model.SearchModel
 		return l;
 	}
 	
-	private ArrayList topicsByTime(SearchData sd) throws Exception
+	private void topicsByTime(SearchData sd) throws Exception
 	{
-		PreparedStatement search = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.searchByTime"));
-		search.setString(1, sd.getTime());
-
-		ArrayList topics = new ArrayList();
-		ResultSet rs = search.executeQuery();
-		while (rs.next()) {
-			topics.add(new Integer(rs.getInt("topic_id")));
-		}
-		
-		return topics;
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.searchByTime"));
+		p.setString(1, sd.getTime());
+		p.executeUpdate();
+		p.close();
 	}
 	
-	private ArrayList topicsByKeyword(SearchData sd) throws Exception
+	private void topicsByKeyword(SearchData sd) throws Exception
 	{
-		PreparedStatement searchWord = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.searchByWord"));
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.searchByWord"));
 
 		HashMap eachWordMap = new HashMap();
 
-		// posts ids
+		// Pega o post id com os quais as palavras da busca
+		// estao relacionados
 		for (int i = 0; i < sd.getKeywords().length; i++) {
-			searchWord.setString(1, sd.getKeywords()[i]);
+			p.setString(1, sd.getKeywords()[i]);
 			
 			HashSet postsIds = new HashSet();
-			ResultSet rs = searchWord.executeQuery();
+			ResultSet rs = p.executeQuery();
 			while (rs.next()) {
 				postsIds.add(new Integer(rs.getInt("post_id")));
 			}
@@ -149,52 +142,48 @@ public class SearchModel implements net.jforum.model.SearchModel
 			}
 		}
 		
-		String sql = SystemGlobals.getSql("SearchModel.selectTopicsIds");
-		StringBuffer sb = new StringBuffer(512);
-		for (Iterator iter = eachWordMap.values().iterator(); iter.hasNext(); ) {
+		// [nomeDaWord] = { cada, post, id }
+		
+		// Se for OR, procura por todas as palavras
+		// Se for AND, pega somente os post_ids comuns
+		HashSet postsIds = null;
+		
+		if (sd.getUseAllWords()) {
+			for (Iterator iter = eachWordMap.values().iterator(); iter.hasNext(); ) {
+				if (postsIds == null) {
+					postsIds = new HashSet(eachWordMap.values().size());
+					postsIds.addAll((HashSet)iter.next());
+				}
+				else {
+					postsIds.retainAll((HashSet)iter.next());
+				}
+			}
+		}
+		else {
+			postsIds = new HashSet(eachWordMap.values());
+		}
+		
+		// Prepara para fazer a busca pelos ids dos topicos
+		StringBuffer sb = new StringBuffer(1024);
+		for (Iterator iter = postsIds.iterator(); iter.hasNext(); ) {
 			sb.append(iter.next()).append(",");
 		}
 		sb.delete(sb.length() - 1, sb.length());
-		
-		sql = sql.replaceAll(":topics:", sb.toString());
-		searchWord = JForum.getConnection().prepareStatement(sql);
-		
-		// topics ids
-		eachWordMap = new HashMap();
 
-		searchWord = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.searchByWord"));
-		for (int i = 0; i < sd.getKeywords().length; i++) {
-			searchWord.setString(1, sd.getKeywords()[i]);
-			
-			HashSet postsIds = new HashSet();
-			ResultSet rs = searchWord.executeQuery();
-			while (rs.next()) {
-				postsIds.add(new Integer(rs.getInt("post_id")));
-			}
-			
-			if (postsIds.size() > 0) {
-				eachWordMap.put(sd.getKeywords()[i], postsIds);
-			}
-		}
+		// Busca pelos ids, inserindo na tabela auxiliar de busca
+		String sql = SystemGlobals.getSql("SearchModel.insertTopicsIds");
+		sql = sql.replaceAll(":posts:", sb.toString());
+		p = JForum.getConnection().prepareStatement(sql);
+		p.setString(1, SessionFacade.getUserSession().getSessionId());
+		p.executeUpdate();
 		
-		HashSet topicsToSearch = new HashSet();
-		for (Iterator iter = eachWordMap.values().iterator(); iter.hasNext(); ) {
-			HashSet s = (HashSet)iter.next();
-			
-			if (topicsToSearch.size() == 0) {
-				topicsToSearch.addAll(s);
-				continue;
-			}
-			
-			if (sd.getUseAllWords()) {
-				topicsToSearch.retainAll(s);
-			}
-			else {
-				topicsToSearch.addAll(s);
-			}
-		}
+		// Copia os topicos para a tabela temporaria
+		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.selectTopicData"));
+		p.setString(1, SessionFacade.getUserSession().getSessionId());
+		p.setString(2, SessionFacade.getUserSession().getSessionId());
+		p.executeUpdate();
 		
-		return new ArrayList(topicsToSearch);
+		p.close();
 	}
 	
 	public void insertSearchWords(Post post, String[] words) throws Exception
@@ -252,4 +241,18 @@ public class SearchModel implements net.jforum.model.SearchModel
 		p.executeUpdate();
 	}
 
+	/* 
+	 * @see net.jforum.model.SearchModel#cleanSearch()
+	 */
+	public void cleanSearch() throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.cleanSearchTopics"));
+		p.setString(1, SessionFacade.getUserSession().getSessionId());
+		p.executeUpdate();
+		
+		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.cleanSearchResults"));
+		p.setString(1, SessionFacade.getUserSession().getSessionId());
+		p.executeUpdate();
+		p.close();
+	}
 }

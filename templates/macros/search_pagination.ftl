@@ -8,7 +8,7 @@
 		</#if>
 	</#if>
 	
-	<#assign baseUrl = "start="+ thisPage +"&openModeration="+ open/>
+	<#assign baseUrl = "openModeration="+ open/>
 	
 	<#if (forum?default("")?length > 0)><#assign baseUrl = baseUrl +"&search_forum="+ forum/></#if>
 	<#if (category?default("")?length > 0)><#assign baseUrl = baseUrl +"&search_cat="+ category/></#if>
@@ -32,7 +32,7 @@
 		  
 		<#if (thisPage > 0)>
 			<#assign start = thisPage - recordsPerPage>
-		  	 <a href="${baseUrl}&start=${start}">${I18n.getMessage("previous")}</a> simultaniously
+		  	 <a href="${baseUrl}&start=${start}">${I18n.getMessage("previous")}</a>
 		</#if>
 		  
 		<#if (totalPages > 6)>
@@ -40,7 +40,11 @@
 				<#assign start = recordsPerPage * page>
 				<#assign nextPage = page + 1>
 				
-				<a href="${baseUrl}&start=${start}">${nextPage}</a>, 
+				<#if start == thisPage>
+					${nextPage}
+				<#else>
+					<a href="${baseUrl}&start=${start}">${nextPage}</a>, 
+				</#if>
 			</#list>
 			
 			 ... 
@@ -50,10 +54,10 @@
 				<#assign start = recordsPerPage * page >
 				<#assign nextPage = page + 1>
 				
-				<#if page != thisPage>
-					<a href="${baseUrl}&start=${start}">${nextPage}</a>,
-				<#else>
+				<#if start == thisPage>
 					${nextPage}
+				<#else>
+					<a href="${baseUrl}&start=${start}">${nextPage}</a>,
 				</#if>
 			</#list>
 

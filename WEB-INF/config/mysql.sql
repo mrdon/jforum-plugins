@@ -204,35 +204,40 @@ TopicModel.lockUnlock = UPDATE jforum_topics SET topic_status = ? WHERE topic_id
 # SearchModel
 # ############
 SearchModel.searchBase = SELECT t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time \
-	FROM jforum_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2, jforum_forums f \
+	FROM jforum_search_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2, jforum_forums f, jforum_search_results sr \
 	WHERE t.user_id = u.user_id \
 	AND p.post_id = t.topic_first_post_id \
 	AND p2.post_id = t.topic_last_post_id \
 	AND u2.user_id = p2.user_id \
 	AND f.forum_id = t.forum_id \
-	AND t.topic_id IN(:topics:) \
+	AND t.topic_id = sr.topic_id \
+	AND sr.session = ? \
+	AND t.session = ? \
 	:criterias: \
 	ORDER BY :orderByField: :orderBy:
 	
 SearchModel.insertWords = INSERT INTO jforum_search_words ( word_hash, word ) VALUES (?, ?)
 
-#SearchModel.searchByWord = SELECT DISTINCT t.topic_id \
-#	FROM jforum_topics t, jforum_posts p, jforum_search_words wl, jforum_search_wordmatch wm, jforum_forums f \
-#	WHERE t.topic_id = p.topic_id \
-#	AND f.forum_id = t.forum_id \
-#	AND wm.post_id = p.post_id \
-#	AND wm.word_id = wl.word_id \
-#	AND wl.word = ?
-
 SearchModel.searchByWord = SELECT post_id FROM jforum_search_wordmatch wm, jforum_search_words w \
 	WHERE wm.word_id = w.word_id \
 	AND w.word = ?
 	
-SearchModel.selectTopicsIds = SELECT DISTINCT topic_id FROM jforum_topics t, jforum_posts p \
+SearchModel.insertTopicsIds = INSERT INTO jforum_search_results ( topic_id, session, time ) SELECT DISTINCT t.topic_id, ?, NOW() FROM jforum_topics t, jforum_posts p \
 	WHERE t.topic_id = p.topic_id \
-	AND p.post_id IN (:topics:)
+	AND p.post_id IN (:posts:)
 	
-SearchModel.searchByTime = SELECT DISTINCT t.topic_id FROM jforum_topics t, jforum_posts p \
+SearchModel.selectTopicData = INSERT INTO jforum_search_topics (topic_id, forum_id, topic_title, user_id, topic_time, \
+	topic_views, topic_status, topic_replies, topic_vote, topic_type, topic_first_post_id, topic_last_post_id, moderated, session, time) \
+	SELECT t.topic_id, t.forum_id, t.topic_title, t.user_id, t.topic_time, \
+	t.topic_views, t.topic_status, t.topic_replies, t.topic_vote, t.topic_type, t.topic_first_post_id, t.topic_last_post_id, t.moderated, ?, NOW() \
+	FROM jforum_topics t, jforum_search_results s \
+	WHERE t.topic_id = s.topic_id \
+	AND s.session = ?
+	
+SearchModel.cleanSearchResults = DELETE FROM jforum_search_results WHERE session = ? OR time < DATE_SUB(NOW(), INTERVAL 1 HOUR)
+SearchModel.cleanSearchTopics = DELETE FROM jforum_search_topics WHERE session = ? OR time < DATE_SUB(NOW(), INTERVAL 1 HOUR)
+	
+SearchModel.searchByTime = INSERT INTO jforum_search_results (topic_id, session, time) SELECT DISTINCT t.topic_id, ?, NOW() FROM jforum_topics t, jforum_posts p \
 	WHERE t.topic_id = p.topic_id \
 	AND p.post_time > ?
 

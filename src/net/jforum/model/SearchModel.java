@@ -59,4 +59,10 @@ public interface SearchModel
 	 * @throws Exception
 	 */
 	public ArrayList search(SearchData sd) throws Exception;
+	
+	/**
+	 * Clean  user search data or older searches
+	 * @throws Exception
+	 */
+	public void cleanSearch() throws Exception;
 }
