@@ -62,7 +62,7 @@ import net.jforum.view.forum.ForumCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumRepositoryTest.java,v 1.1 2004/11/13 20:12:26 rafaelsteil Exp $
+ * @version $Id: ForumRepositoryTest.java,v 1.2 2004/11/18 01:31:45 rafaelsteil Exp $
  */
 public class ForumRepositoryTest extends TestCase 
 {
@@ -206,6 +206,17 @@ public class ForumRepositoryTest extends TestCase
 		}
 	}
 	
+	public void testCategoryImmutability()
+	{
+		List categories = ForumRepository.getAllCategories(0, true);
+		for (Iterator iter = categories.iterator(); iter.hasNext(); ) {
+			Category c = (Category)iter.next();
+			c.setName("bleh");
+
+			assertNotSame("Category #" + c.getId() + " is not immuatble", c, ForumRepository.getCategory(true, c.getId()));
+		}
+	}
+	
 	/*
 	 * Check access rights for an user with full access to the categories
 	 */
@@ -242,7 +253,7 @@ public class ForumRepositoryTest extends TestCase
 				Forum f = new Forum();
 				f.setId(forumIds[i]);
 				
-				assertNotNull("Cache category #" + c.getId() + " does not contain forum #" + f.getId(), c.getForum(f.getId()));
+				assertNotNull("Category #" + c.getId() + " does not contain forum #" + f.getId(), c.getForum(f.getId()));
 			}
 		}
 	}
@@ -417,6 +428,7 @@ public class ForumRepositoryTest extends TestCase
 					f.setId(forumIds[i]);
 					f.setName(forumNames[i]);
 					f.setIdCategories(forumCatIds[i]);
+					f.setOrder(i);
 					
 					this.forums.add(f);
 				}

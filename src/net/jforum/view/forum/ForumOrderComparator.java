@@ -47,9 +47,9 @@ import java.util.Comparator;
 import net.jforum.entities.Forum;
 /**
  * @author James Yong Boon Leong
- * @version $Id: ForumOrderComparator.java,v 1.2 2004/11/17 02:16:25 rafaelsteil Exp $
+ * @version $Id: ForumOrderComparator.java,v 1.3 2004/11/18 01:31:46 rafaelsteil Exp $
  */
-public class ForumOrderComparator implements Comparator{
+public class ForumOrderComparator implements Comparator {
 	
 	public final int compare (Object a, Object b)
 	{
