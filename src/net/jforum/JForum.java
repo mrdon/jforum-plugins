@@ -85,7 +85,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.21 2004/07/22 15:21:05 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.22 2004/07/22 15:56:00 rafaelsteil Exp $
  */
 public class JForum extends HttpServlet 
 {
@@ -411,19 +411,16 @@ public class JForum extends HttpServlet
 					
 					userSession.setPrivateMessages(user.getPrivateMessagesCount());
 					userSession.setUsername(user.getUsername());
+					
+					cookie = JForum.getCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN));
+					if (cookie != null && cookie.getValue().equals("1")) {
+						userSession.setAutoLogin(true);
+						SessionFacade.setAttribute("logged", "1");
+					}
 				}
 				else {
 					this.setAnonymousUserSession(userSession);
 				}
-			}
-			
-			cookie = JForum.getCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN));
-			if (cookie != null && cookie.getValue().equals("1")) {
-				userSession.setAutoLogin(true);
-				SessionFacade.setAttribute("logged", "1");
-			}
-			else {
-				userSession.setUserId(SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID));
 			}
 			
 			SessionFacade.add(userSession);
