@@ -48,7 +48,7 @@ import java.util.Date;
  * Represents every topic in the forum.
  * 
  * @author Rafael Steil
- * @version $Id: Topic.java,v 1.5 2004/10/24 22:30:01 rafaelsteil Exp $
+ * @version $Id: Topic.java,v 1.6 2004/11/11 11:58:23 rafaelsteil Exp $
  */
 public class Topic 
 {
@@ -217,7 +217,7 @@ public class Topic
 	 * @return String with the topic title
 	 */
 	public String getTitle() {
-		return this.title;
+		return (this.title == null ? "" : this.title);
 	}
 
 	/**
