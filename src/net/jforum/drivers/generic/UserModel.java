@@ -46,6 +46,7 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.17 2004/09/29 03:29:15 rafaelsteil Exp $
+ * @version $Id: UserModel.java,v 1.18 2004/10/04 10:08:17 marcwick Exp $
  */
 public class UserModel extends AutoKeys implements net.jforum.model.UserModel 
 {
@@ -138,10 +139,10 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		u.setIcq(rs.getString("user_icq"));
 		u.setId(rs.getInt("user_id"));
 		u.setInterests(rs.getString("user_interests"));
-		u.setLastVisit(rs.getInt("user_lastvisit"));
+		u.setLastVisit(rs.getTimestamp("user_lastvisit"));
 		u.setOccupation(rs.getString("user_occ"));
 		u.setTotalPosts(rs.getInt("user_posts"));
-		u.setRegistrationDate(rs.getString("user_regdate"));
+		u.setRegistrationDate(rs.getTimestamp("user_regdate"));
 		u.setSignature(rs.getString("user_sig"));
 		u.setWebSite(rs.getString("user_website"));
 		u.setYim(rs.getString("user_yim"));
@@ -228,7 +229,7 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		p.setString(1, user.getUsername());
 		p.setString(2, user.getPassword());
 		p.setString(3, user.getEmail());
-		p.setString(4, Long.toString(System.currentTimeMillis()));
+		p.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
 		p.setString(5, user.getActivationKey() == null ? "" : user.getActivationKey());
 	}
 
@@ -342,7 +343,7 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 			u.setEmail(rs.getString("user_email"));
 			u.setId(rs.getInt("user_id"));
 			u.setTotalPosts(rs.getInt("user_posts"));
-			u.setRegistrationDate(rs.getString("user_regdate"));
+			u.setRegistrationDate(rs.getTimestamp("user_regdate"));
 			u.setUsername(rs.getString("username"));
 			u.setDeleted(rs.getInt("deleted"));
 			

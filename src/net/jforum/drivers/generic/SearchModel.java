@@ -44,6 +44,7 @@ package net.jforum.drivers.generic;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -57,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchModel.java,v 1.9 2004/08/30 23:51:20 rafaelsteil Exp $
+ * @version $Id: SearchModel.java,v 1.10 2004/10/04 10:08:17 marcwick Exp $
  */
 public class SearchModel extends AutoKeys implements net.jforum.model.SearchModel	
 {
@@ -117,7 +118,7 @@ public class SearchModel extends AutoKeys implements net.jforum.model.SearchMode
 	{
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.searchByTime"));
 		p.setString(1, SessionFacade.getUserSession().getSessionId());
-		p.setString(2, sd.getTime());
+		p.setTimestamp(2, new Timestamp(sd.getTime().getTime()));
 		p.executeUpdate();
 		p.close();
 		

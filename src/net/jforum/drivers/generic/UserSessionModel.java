@@ -45,13 +45,14 @@ package net.jforum.drivers.generic;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 
 import net.jforum.entities.UserSession;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserSessionModel.java,v 1.2 2004/06/01 19:47:17 pieter2 Exp $
+ * @version $Id: UserSessionModel.java,v 1.3 2004/10/04 10:08:17 marcwick Exp $
  */
 public class UserSessionModel implements net.jforum.model.UserSessionModel
 {
@@ -72,7 +73,7 @@ public class UserSessionModel implements net.jforum.model.UserSessionModel
 		PreparedStatement p = conn.prepareStatement(SystemGlobals.getSql("UserSessionModel.add"));
 		p.setString(1, us.getSessionId());
 		p.setInt(2, us.getUserId());
-		p.setString(3, Long.toString(us.getStartTime()));
+		p.setTimestamp(3, new Timestamp(us.getStartTime().getTime()));
 		
 		p.executeUpdate();
 		p.close();
@@ -89,7 +90,7 @@ public class UserSessionModel implements net.jforum.model.UserSessionModel
 		}
 		
 		PreparedStatement p = conn.prepareStatement(SystemGlobals.getSql("UserSessionModel.update"));
-		p.setString(1, Long.toString(us.getStartTime()));
+		p.setTimestamp(1, new Timestamp(us.getStartTime().getTime()));
 		p.setString(2, Long.toString(us.getSessionTime()));
 		p.setString(3, us.getSessionId());
 		p.setInt(4, us.getUserId());
@@ -113,7 +114,7 @@ public class UserSessionModel implements net.jforum.model.UserSessionModel
 		
 		if (rs.next()) {
 			returnUs.setSessionTime(rs.getLong("session_time"));
-			returnUs.setStartTime(rs.getLong("session_start"));
+			returnUs.setStartTime(rs.getTimestamp("session_start"));
 			found = true;
 		}
 		

@@ -46,7 +46,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 import net.jforum.JForum;
@@ -57,7 +56,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: ForumModel.java,v 1.5 2004/09/21 13:32:03 marcwick Exp $
+ * @version $Id: ForumModel.java,v 1.6 2004/10/04 10:08:17 marcwick Exp $
  */
 public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel 
 {
@@ -337,12 +336,10 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
 			m.put("userId", new Integer(rs.getInt("user_id")));
 			
 			SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
-			GregorianCalendar gc = new GregorianCalendar();
-			gc.setTimeInMillis(rs.getLong("post_time"));
-			m.put("postTime", df.format(gc.getTime()));
+			m.put("postTime", df.format(rs.getTimestamp("post_time")));
 			m.put("postId", new Integer(rs.getInt("post_id")));
 			m.put("topicId", new Integer(rs.getInt("topic_id")));
-			m.put("postTimeMillis", new Long(rs.getLong("post_time")));
+			m.put("postTimeMillis", new Long(rs.getTimestamp("post_time").getTime()));
 			m.put("topic_replies", new Integer(rs.getInt("topic_replies")));
 		}
 		

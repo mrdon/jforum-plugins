@@ -52,7 +52,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.3 2004/06/01 19:47:18 pieter2 Exp $
+ * @version $Id: UserModel.java,v 1.4 2004/10/04 10:08:17 marcwick Exp $
  */
 public class UserModel extends net.jforum.drivers.generic.UserModel
 {
@@ -91,7 +91,7 @@ public class UserModel extends net.jforum.drivers.generic.UserModel
 			u.setEmail(rs.getString("user_email"));
 			u.setId(rs.getInt("user_id"));
 			u.setTotalPosts(rs.getInt("user_posts"));
-			u.setRegistrationDate(rs.getString("user_regdate"));
+			u.setRegistrationDate(rs.getTimestamp("user_regdate"));
 			u.setUsername(rs.getString("username"));
 			
 			list.add(u);

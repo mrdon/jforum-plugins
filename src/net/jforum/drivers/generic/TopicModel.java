@@ -45,9 +45,9 @@ package net.jforum.drivers.generic;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicModel.java,v 1.6 2004/09/06 01:54:18 rafaelsteil Exp $
+ * @version $Id: TopicModel.java,v 1.7 2004/10/04 10:08:17 marcwick Exp $
  */
 public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel 
 {
@@ -130,7 +130,7 @@ public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel
 		p.setInt(1, topic.getForumId());
 		p.setString(2, topic.getTitle());
 		p.setInt(3, topic.getPostedBy().getId());
-		p.setLong(4, topic.getTime());
+		p.setTimestamp(4, new Timestamp(topic.getTime().getTime()));
 		p.setInt(5, topic.getFirstPostId());
 		p.setInt(6, topic.getLastPostId());
 		p.setInt(7, topic.getType());
@@ -229,7 +229,7 @@ public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel
 			
 			t.setTitle(rs.getString("topic_title"));
 			t.setId(rs.getInt("topic_id"));
-			t.setTime(rs.getLong("topic_time"));
+			t.setTime(rs.getTimestamp("topic_time"));
 			t.setStatus(rs.getInt("topic_status"));
 			t.setTotalViews(rs.getInt("topic_views"));
 			t.setTotalReplies(rs.getInt("topic_replies"));
@@ -239,14 +239,11 @@ public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel
 			t.setForumId(rs.getInt("forum_id"));
 
 			// First Post Time
-			GregorianCalendar gc = new GregorianCalendar();
-			gc.setTimeInMillis(rs.getLong("topic_time"));
-			t.setFirstPostTime(df.format(gc.getTime()));
+			t.setFirstPostTime(df.format(rs.getTimestamp("topic_time")));
 			
 			// Last Post Time
-			gc.setTimeInMillis(rs.getLong("post_time"));
-			t.setLastPostTime(df.format(gc.getTime()));
-			t.setLastPostTimeInMillis(rs.getLong("post_time"));
+			t.setLastPostTime(df.format(rs.getTimestamp("post_time")));
+			t.setLastPostTimeInMillis(rs.getTimestamp("post_time"));
 
 			// Created by
 			User u = new User();
@@ -329,7 +326,7 @@ public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel
 			
 			t.setTitle(rs.getString("topic_title"));
 			t.setId(rs.getInt("topic_id"));
-			t.setTime(rs.getLong("topic_time"));
+			t.setTime(rs.getTimestamp("topic_time"));
 			t.setType(rs.getInt("topic_type"));
 			
 			topics.add(t);

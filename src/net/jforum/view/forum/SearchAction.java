@@ -44,6 +44,7 @@ package net.jforum.view.forum;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -62,7 +63,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.2 2004/09/11 02:43:20 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.3 2004/10/04 10:08:19 marcwick Exp $
  */
 public class SearchAction extends Command 
 {
@@ -119,7 +120,9 @@ public class SearchAction extends Command
 		sd.setAuthor(author);
 		sd.setOrderByField(sortBy);
 		sd.setOrderBy(sortDir);
-		sd.setTime(postTime);
+		if (postTime != null) {
+			sd.setTime(new Date(Long.parseLong(postTime)));		    
+		}
 		
 		if (searchTerms != null) {
 			sd.setUseAllWords(searchTerms.equals("any") ? false : true);

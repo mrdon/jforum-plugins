@@ -41,9 +41,11 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: Topic.java,v 1.3 2004/04/24 21:25:43 rafaelsteil Exp $
+ * $Id: Topic.java,v 1.4 2004/10/04 10:08:18 marcwick Exp $
  */
 package net.jforum.entities;
+
+import java.util.Date;
 
 /**
  * Represents every topic in the forum.
@@ -79,9 +81,9 @@ public class Topic
 	/**
 	 * The time which the topic was posted
 	 */
-	private long time;
+	private Date time;
 	
-	private long lastPostTimeInMillis;
+	private Date lastPostTimeInMillis;
 	
 	/**
 	 * Total vews of the topcis
@@ -197,7 +199,7 @@ public class Topic
 	 * 
 	 * @return int value representing the time
 	 */
-	public long getTime() {
+	public Date getTime() {
 		return this.time;
 	}
 	
@@ -312,7 +314,7 @@ public class Topic
 	 * 
 	 * @param time The time to set
 	 */
-	public void setTime(long time) {
+	public void setTime(Date time) {
 		this.time = time;
 	}
 
@@ -398,11 +400,11 @@ public class Topic
 		return this.read;
 	}
 	
-	public void setLastPostTimeInMillis(long t) {
+	public void setLastPostTimeInMillis(Date t) {
 		this.lastPostTimeInMillis = t;
 	}
 	
-	public long getLastPostTimeInMillis() {
+	public Date getLastPostTimeInMillis() {
 		return this.lastPostTimeInMillis;
 	}
 	

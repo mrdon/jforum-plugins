@@ -43,7 +43,7 @@
 package net.jforum.view.forum;
 
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -59,7 +59,7 @@ import net.jforum.util.bbcode.BBCode;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.6 2004/10/01 21:34:02 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.7 2004/10/04 10:08:19 marcwick Exp $
  */
 public class PostCommon
 {
@@ -197,7 +197,7 @@ public class PostCommon
 	public static Post fillPostFromRequest()
 	{
 		Post p = new Post();
-		p.setTime(new GregorianCalendar().getTimeInMillis());
+		p.setTime(new Date());
 
 		return fillPostFromRequest(p);
 	}

@@ -43,7 +43,7 @@
 package net.jforum.view.forum;
 
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -76,7 +76,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.8 2004/09/28 04:03:27 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.9 2004/10/04 10:08:19 marcwick Exp $
  */
 public class PostAction extends Command {
 	public void list() throws Exception {
@@ -103,7 +103,7 @@ public class PostAction extends Command {
 
 		((HashMap) SessionFacade.getAttribute("topics_tracking")).put(
 				new Integer(topic.getId()), new Long(topic
-						.getLastPostTimeInMillis()));
+						.getLastPostTimeInMillis().getTime()));
 
 		int start = 0;
 		if (JForum.getRequest().getParameter("start") != null) {
@@ -456,7 +456,7 @@ public class PostAction extends Command {
 		if (!preview) {
 			// If topic_id is -1, then is the first post
 			if (topicId == -1) {
-				t.setTime(new GregorianCalendar().getTimeInMillis());
+				t.setTime(new Date());
 				t.setTitle(JForum.getRequest().getParameter("subject"));
 
 				topicId = tm.addNew(t);
@@ -510,7 +510,7 @@ public class PostAction extends Command {
 			path += topicId + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#" + postId;
 
 			JForum.setRedirect(path);
-			((HashMap) SessionFacade.getAttribute("topics_tracking")).put(new Integer(t.getId()), new Long(p.getTime()));
+			((HashMap) SessionFacade.getAttribute("topics_tracking")).put(new Integer(t.getId()), new Long(p.getTime().getTime()));
 
 			// RSS
 			//QueuedExecutor.getInstance().execute(new RSSTask(new

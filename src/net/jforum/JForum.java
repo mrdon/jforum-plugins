@@ -45,6 +45,7 @@ package net.jforum;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.servlet.ServletConfig;
@@ -68,7 +69,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.37 2004/10/03 16:53:46 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.38 2004/10/04 10:08:16 marcwick Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -99,8 +100,8 @@ public class JForum extends JForumCommonServlet
 	
 	private void setAnonymousUserSession(UserSession userSession)
 	{
-		userSession.setStartTime(System.currentTimeMillis());
-		userSession.setLastVisit(System.currentTimeMillis());
+		userSession.setStartTime(new Date(System.currentTimeMillis()));
+		userSession.setLastVisit(new Date(System.currentTimeMillis()));
 		userSession.setUserId(SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID));
 		userSession.setSessionId(JForum.getRequest().getSession().getId());
 		SessionFacade.setAttribute("logged", "0");
@@ -141,14 +142,14 @@ public class JForum extends JForumCommonServlet
 
 					UserSession tmpUs = sm.selectById(userSession, JForum.getConnection());
 					if (tmpUs == null) {
-						userSession.setStartTime(System.currentTimeMillis());
-						userSession.setLastVisit(System.currentTimeMillis());
+						userSession.setStartTime(new Date(System.currentTimeMillis()));
+						userSession.setLastVisit(new Date(System.currentTimeMillis()));
 						sm.add(userSession, JForum.getConnection());
 					}
 					else {
 						// Update last visit and session start time
-						userSession.setLastVisit(tmpUs.getStartTime() + tmpUs.getSessionTime());
-						userSession.setStartTime(System.currentTimeMillis());
+						userSession.setLastVisit(new Date(tmpUs.getStartTime().getTime() + tmpUs.getSessionTime()));
+						userSession.setStartTime(new Date(System.currentTimeMillis()));
 					}
 					
 					userSession.setPrivateMessages(user.getPrivateMessagesCount());

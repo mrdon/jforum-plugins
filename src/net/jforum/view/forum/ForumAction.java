@@ -74,7 +74,7 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.4 2004/09/11 02:43:20 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.5 2004/10/04 10:08:19 marcwick Exp $
  */
 public class ForumAction extends Command 
 {
@@ -109,7 +109,7 @@ public class ForumAction extends Command
 	{
 		LinkedHashMap allForumsMap = new LinkedHashMap();
 		ArrayList forums = ForumRepository.getAllForums();
-		long lastVisit = SessionFacade.getUserSession().getLastVisit();
+		long lastVisit = SessionFacade.getUserSession().getLastVisit().getTime();
 		
 		Collections.sort(forums, new ForumOrderComparator());
 		
@@ -174,9 +174,7 @@ public class ForumAction extends Command
 		GregorianCalendar gc = new GregorianCalendar();
 		JForum.getContext().put("now", df.format(gc.getTime()));
 		
-		gc = new GregorianCalendar();
-		gc.setTimeInMillis(SessionFacade.getUserSession().getLastVisit());
-		JForum.getContext().put("lastVisit", df.format(gc.getTime()));
+		JForum.getContext().put("lastVisit", df.format(SessionFacade.getUserSession().getLastVisit()));
 		
 		JForum.getContext().put("fir", new ForumRepository());
 		
@@ -289,7 +287,7 @@ public class ForumAction extends Command
 	
 	public ArrayList prepareTopics(List topics)
 	{
-		long lastVisit = SessionFacade.getUserSession().getLastVisit();
+		long lastVisit = SessionFacade.getUserSession().getLastVisit().getTime();
 
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 		HashMap topicsTracking = (HashMap)SessionFacade.getAttribute("topics_tracking");
@@ -300,9 +298,9 @@ public class ForumAction extends Command
 			boolean read = false;
 			Topic t = (Topic)iter.next();
 
-			if (t.getLastPostTimeInMillis() > lastVisit) {
+			if (t.getLastPostTimeInMillis().getTime() > lastVisit) {
 				if (topicsTracking.containsKey(new Integer(t.getId()))) {
-					read = (t.getLastPostTimeInMillis() == ((Long)topicsTracking.get(new Integer(t.getId()))).longValue());
+					read = (t.getLastPostTimeInMillis().getTime() == ((Long)topicsTracking.get(new Integer(t.getId()))).longValue());
 				}
 			}
 			else {
@@ -364,7 +362,7 @@ public class ForumAction extends Command
 	public void readAll() throws Exception
 	{
 		SearchData sd = new SearchData();
-		sd.setTime(Long.toString(SessionFacade.getUserSession().getLastVisit()));
+		sd.setTime(SessionFacade.getUserSession().getLastVisit());
 		
 		String forumId = JForum.getRequest().getParameter("forum_id");
 		if (forumId != null) {
@@ -375,7 +373,7 @@ public class ForumAction extends Command
 		for (Iterator iter = allTopics.iterator(); iter.hasNext(); ) {
 			Topic t = (Topic)iter.next();
 			
-			((HashMap)SessionFacade.getAttribute("topics_tracking")).put(new Integer(t.getId()), new Long(t.getLastPostTimeInMillis()));
+			((HashMap)SessionFacade.getAttribute("topics_tracking")).put(new Integer(t.getId()), new Long(t.getLastPostTimeInMillis().getTime()));
 		}
 		
 		if (forumId != null) {
@@ -390,7 +388,7 @@ public class ForumAction extends Command
 	// Messages since last visit
 	public void newMessages() throws Exception
 	{
-		JForum.getRequest().addParameter("post_time", Long.toString(SessionFacade.getUserSession().getLastVisit()));
+		JForum.getRequest().addParameter("post_time", Long.toString(SessionFacade.getUserSession().getLastVisit().getTime()));
 		JForum.getRequest().addParameter("clean", "true");
 		new SearchAction().search();
 	}

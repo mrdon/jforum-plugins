@@ -43,6 +43,7 @@
 package net.jforum.entities;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.SecurityConstants;
@@ -51,12 +52,12 @@ import net.jforum.security.SecurityConstants;
  * Stores information about user's session.
  * 
  * @author Rafael Steil
- * @version $Id: UserSession.java,v 1.8 2004/10/01 19:25:50 rafaelsteil Exp $
+ * @version $Id: UserSession.java,v 1.9 2004/10/04 10:08:18 marcwick Exp $
  */
 public class UserSession implements Serializable
 {
-	private long startTime;
-	private long lastVisit;
+	private Date startTime;
+	private Date lastVisit;
 	private long sessionTime;
 	private int userId;
 	private transient String sessionId;
@@ -87,7 +88,7 @@ public class UserSession implements Serializable
 	 * 
 	 * @param startTime Start time in miliseconds
 	 */
-	public void setStartTime(long startTime)
+	public void setStartTime(Date startTime)
 	{
 		this.startTime = startTime;
 	}
@@ -112,7 +113,7 @@ public class UserSession implements Serializable
 	 * 
 	 * @param lastVisit Time in miliseconds
 	 */
-	public void setLastVisit(long lastVisit)
+	public void setLastVisit(Date lastVisit)
 	{
 		this.lastVisit = lastVisit;
 	}
@@ -157,7 +158,7 @@ public class UserSession implements Serializable
 	 */
 	public void updateSessionTime()
 	{
-		this.sessionTime = System.currentTimeMillis() - this.startTime;
+		this.sessionTime = System.currentTimeMillis() - this.startTime.getTime();
 	}
 	
 	/**
@@ -175,7 +176,7 @@ public class UserSession implements Serializable
 	 * 
 	 * @return Start time in miliseconds
 	 */
-	public long getStartTime()
+	public Date getStartTime()
 	{
 		return this.startTime;
 	}
@@ -190,7 +191,7 @@ public class UserSession implements Serializable
 	 * 
 	 * @return Time in miliseconds
 	 */
-	public long getLastVisit()
+	public Date getLastVisit()
 	{
 		return this.lastVisit;
 	}

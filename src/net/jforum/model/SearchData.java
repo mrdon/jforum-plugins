@@ -41,9 +41,11 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: SearchData.java,v 1.3 2004/04/21 23:57:24 rafaelsteil Exp $
+ * $Id: SearchData.java,v 1.4 2004/10/04 10:08:18 marcwick Exp $
  */
 package net.jforum.model;
+
+import java.util.Date;
 
 /**
  * @author Rafael Steil
@@ -60,7 +62,7 @@ public class SearchData
 	private int categoryId;
 	private String orderBy = "ASC";
 	private String orderByField;
-	private String time;
+	private Date time;
 	private boolean searchStarted;
 	
 	public void setKeywords(String keywords)
@@ -103,7 +105,7 @@ public class SearchData
 		this.orderBy = (orderBy == null ? "ASC" : orderBy);
 	}
 	
-	public void setTime(String time) 
+	public void setTime(Date time) 
 	{
 		this.time = time;
 	}
@@ -147,7 +149,7 @@ public class SearchData
 		return this.orderByField;
 	}
 	
-	public String getTime()
+	public Date getTime()
 	{
 		return this.time;
 	}

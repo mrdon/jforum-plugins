@@ -41,13 +41,13 @@
  * The JForum Project
  * http://www.jforum.net 
  * 
- * $Id: User.java,v 1.7 2004/09/25 01:57:23 jamesyong Exp $
+ * $Id: User.java,v 1.8 2004/10/04 10:08:18 marcwick Exp $
  */
 package net.jforum.entities;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
+import java.util.Date;
 
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -143,12 +143,12 @@ public class User
 	/**
 	 * The last visit time, represented as a long value
 	 */
-	private long lastVisit;
+	private Date lastVisit;
 	
 	/**
 	 * Registration date and time
 	 */
-	private String registrationDate;
+	private Date registrationDate;
 	
 	/**
 	 * User avatar
@@ -390,7 +390,7 @@ public class User
 	 * 
 	 * @return long value representing the time
 	 */
-	public long getLastVisit() {
+	public Date getLastVisit() {
 		return this.lastVisit;
 	}
 
@@ -456,10 +456,8 @@ public class User
 	public String getRegistrationDate() 
 	{
 		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
-		GregorianCalendar gc = new GregorianCalendar();
-		gc.setTimeInMillis(Long.parseLong(this.registrationDate));
 
-		return df.format(gc.getTime());
+		return df.format(this.registrationDate);
 	}
 
 	/**
@@ -683,7 +681,7 @@ public class User
 	 * 
 	 * @param lastVisit Last visit time, represented as a long value
 	 */
-	public void setLastVisit(long lastVisit) {
+	public void setLastVisit(Date lastVisit) {
 		this.lastVisit = lastVisit;
 	}
 
@@ -746,7 +744,7 @@ public class User
 	 * 
 	 * @param registrationDate The registration date to set
 	 */
-	public void setRegistrationDate(String registrationDate) {
+	public void setRegistrationDate(Date registrationDate) {
 		this.registrationDate = registrationDate;
 	}
 

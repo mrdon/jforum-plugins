@@ -44,9 +44,9 @@ package net.jforum.drivers.generic;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: PostModel.java,v 1.11 2004/09/14 02:16:45 rafaelsteil Exp $
+ * @version $Id: PostModel.java,v 1.12 2004/10/04 10:08:17 marcwick Exp $
  */
 public class PostModel extends AutoKeys implements net.jforum.model.PostModel 
 {
@@ -92,23 +92,20 @@ public class PostModel extends AutoKeys implements net.jforum.model.PostModel
 		post.setTopicId(rs.getInt("topic_id"));
 		post.setForumId(rs.getInt("forum_id"));
 		post.setUserId(rs.getInt("user_id"));
-		post.setTime(rs.getLong("post_time"));
+		post.setTime(rs.getTimestamp("post_time"));
 		post.setUserIp(rs.getString("poster_ip"));
 		post.setBbCodeEnabled(rs.getInt("enable_bbcode") > 0);
 		post.setHtmlEnabled(rs.getInt("enable_html") > 0);
 		post.setSmiliesEnabled(rs.getInt("enable_smilies") > 0);
 		post.setSignatureEnabled(rs.getInt("enable_sig") > 0);
-		post.setEditTime(rs.getLong("post_edit_time"));
+		post.setEditTime(rs.getTimestamp("post_edit_time"));
 		post.setEditCount(rs.getInt("post_edit_count"));
 		post.setSubject(rs.getString("post_subject"));
 		post.setText(rs.getString("post_text"));
 		post.setPostUsername(rs.getString("username"));
 		
 		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
-		GregorianCalendar gc = new GregorianCalendar();
-		gc.setTimeInMillis(rs.getLong("post_time"));
-
-		post.setFormatedTime(df.format(gc.getTime()));
+		post.setFormatedTime(df.format(rs.getTimestamp("post_time")));
 		
 		return post;
 	}
@@ -181,7 +178,7 @@ public class PostModel extends AutoKeys implements net.jforum.model.PostModel
 		p.setInt(4, post.isHtmlEnabled() ? 1 : 0);
 		p.setInt(5, post.isSmiliesEnabled() ? 1 : 0);
 		p.setInt(6, post.isSignatureEnabled() ? 1 : 0);
-		p.setLong(7, post.getEditTime());
+		p.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
 		p.setString(8, post.getUserIp());
 		p.setInt(9, post.getId());
 		
@@ -208,7 +205,7 @@ public class PostModel extends AutoKeys implements net.jforum.model.PostModel
 		p.setInt(1, post.getTopicId());
 		p.setInt(2, post.getForumId());
 		p.setLong(3, post.getUserId());
-		p.setLong(4, post.getTime());
+		p.setTimestamp(4, new Timestamp(post.getTime().getTime()));
 		p.setString(5, post.getUserIp());
 		p.setInt(6, post.isBbCodeEnabled() ? 1 : 0);
 		p.setInt(7, post.isHtmlEnabled() ? 1 : 0);

@@ -43,11 +43,13 @@
  */
 package net.jforum.entities;
 
+import java.util.Date;
+
 /**
  * Represents every message post in the system.
  * 
  * @author Rafael Steil
- * @version $Id: Post.java,v 1.2 2004/05/21 00:24:10 rafaelsteil Exp $
+ * @version $Id: Post.java,v 1.3 2004/10/04 10:08:18 marcwick Exp $
  */
 public class Post 
 {
@@ -76,7 +78,7 @@ public class Post
 	/**
 	 * The time that the message was posted
 	 */
-	private long time;
+	private Date time;
 	
 	/**
 	 * The post message
@@ -116,7 +118,7 @@ public class Post
 	/**
 	 * The time of the ( a possible ) edition of the message
 	 */
-	private long editTime;
+	private Date editTime;
 	
 	/**
 	 * The total number of times which the message was edited
@@ -190,7 +192,7 @@ public class Post
 	 * 
 	 * @return long value representing the time
 	 */
-	public long getEditTime() {
+	public Date getEditTime() {
 		return this.editTime;
 	}
 
@@ -253,7 +255,7 @@ public class Post
 	 * 
 	 * @return long representing the post time
 	 */
-	public long getTime() {
+	public Date getTime() {
 		return this.time;
 	}
 
@@ -316,7 +318,7 @@ public class Post
 	 * 
 	 * @param editTime long value representing the time
 	 */
-	public void setEditTime(long editTime) {
+	public void setEditTime(Date editTime) {
 		this.editTime = editTime;
 	}
 
@@ -379,7 +381,7 @@ public class Post
 	 * 
 	 * @param time The time 
 	 */
-	public void setTime(long time) {
+	public void setTime(Date time) {
 		this.time = time;
 	}
 	

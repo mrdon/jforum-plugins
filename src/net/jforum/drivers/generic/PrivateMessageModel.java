@@ -44,6 +44,7 @@ package net.jforum.drivers.generic;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -59,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageModel.java,v 1.4 2004/09/04 15:44:43 rafaelsteil Exp $
+ * @version $Id: PrivateMessageModel.java,v 1.5 2004/10/04 10:08:17 marcwick Exp $
  */
 public class PrivateMessageModel extends AutoKeys implements net.jforum.model.PrivateMessageModel
 {
@@ -79,7 +80,7 @@ public class PrivateMessageModel extends AutoKeys implements net.jforum.model.Pr
 		p.setString(2, pm.getPost().getSubject());
 		p.setInt(3, pm.getFromUser().getId());
 		p.setInt(4, pm.getToUser().getId());
-		p.setLong(5, pm.getPost().getTime());
+		p.setTimestamp(5, new Timestamp(pm.getPost().getTime().getTime()));
 		p.setString(6, pm.getPost().isBbCodeEnabled() ? "1" : "0");
 		p.setString(7, pm.getPost().isHtmlEnabled() ? "1" : "0");
 		p.setString(8, pm.getPost().isSmiliesEnabled() ? "1" : "0");
@@ -200,7 +201,7 @@ public class PrivateMessageModel extends AutoKeys implements net.jforum.model.Pr
 
 		pm.setId(rs.getInt("privmsgs_id"));
 		pm.setType(rs.getInt("privmsgs_type"));
-		p.setTime(rs.getLong("privmsgs_date"));
+		p.setTime(rs.getTimestamp("privmsgs_date"));
 		p.setSubject(rs.getString("privmsgs_subject"));
 		
 		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));

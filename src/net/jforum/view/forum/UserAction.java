@@ -42,6 +42,7 @@
  */
 package net.jforum.view.forum;
 
+import java.util.Date;
 import java.util.List;
 
 import net.jforum.Command;
@@ -65,7 +66,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.9 2004/10/02 03:01:58 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.10 2004/10/04 10:08:19 marcwick Exp $
  */
 public class UserAction extends Command 
 {
@@ -203,8 +204,8 @@ public class UserAction extends Command
 		userSession.setAutoLogin(true);
 		userSession.setUserId(userId);
 		userSession.setUsername(u.getUsername());
-		userSession.setLastVisit(System.currentTimeMillis());
-		userSession.setStartTime(System.currentTimeMillis());
+		userSession.setLastVisit(new Date(System.currentTimeMillis()));
+		userSession.setStartTime(new Date(System.currentTimeMillis()));
 
 		SessionFacade.add(userSession);
 
