@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: JForum.java,v 1.6 2004/05/04 00:59:36 rafaelsteil Exp $
+ * $Id: JForum.java,v 1.7 2004/05/04 22:26:56 rafaelsteil Exp $
  */
 package net.jforum;
 
@@ -428,14 +428,14 @@ public class JForum extends HttpServlet
 			JForum.getContext().put("serverPort", Integer.toString(req.getServerPort()));
 			JForum.getContext().put("I18n", I18n.getInstance());
 			JForum.getContext().put("version", SystemGlobals.getValue("version"));
-            JForum.getContext().put("homeLink",SystemGlobals.getValue("forumLink"));
-            JForum.getContext().put("pageTitle",SystemGlobals.getValue("forum.page.title"));
-            JForum.getContext().put("metaKeywords",SystemGlobals.getValue("forum.page.metatag.keywords"));
-            JForum.getContext().put("metaDescription",SystemGlobals.getValue("forum.page.metatag.description"));
-            JForum.getContext().put("encoding", encoding);
+			JForum.getContext().put("homeLink",SystemGlobals.getValue("forumLink"));
+			JForum.getContext().put("pageTitle",SystemGlobals.getValue("forum.page.title"));
+			JForum.getContext().put("metaKeywords",SystemGlobals.getValue("forum.page.metatag.keywords"));
+			JForum.getContext().put("metaDescription",SystemGlobals.getValue("forum.page.metatag.description"));
+			JForum.getContext().put("encoding", encoding);
 
-            // Request
-            req.setCharacterEncoding(encoding);
+			// Request
+			req.setCharacterEncoding(encoding);
 			ActionServletRequest request = new ActionServletRequest(req);
 			request.setCharacterEncoding(encoding);
 
