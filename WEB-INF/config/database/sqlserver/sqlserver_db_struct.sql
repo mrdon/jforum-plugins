@@ -108,6 +108,8 @@ DROP TABLE [jforum_words]
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'[jforum_karma]') AND OBJECTPROPERTY(id, N'IsUserTable') = 1)
 DROP TABLE [jforum_karma]
 
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'[jforum_bookmarks]') AND OBJECTPROPERTY(id, N'IsUserTable') = 1)
+DROP TABLE [jforum_bookmarks]
 
 CREATE TABLE [jforum_banlist] (
 	[banlist_id] [bigint] IDENTITY (1, 1) PRIMARY KEY CLUSTERED NOT NULL ,
@@ -408,88 +410,43 @@ CREATE TABLE [jforum_karma] (
 	[points] [INT]NOT NULL
 ) ON [PRIMARY]
 
+CREATE TABLE [jforum_bookmarks] (
+	[bookmark_id] [INT] IDENTITY (1, 1) PRIMARY KEY CLUSTERED NOT NULL,
+	[user_id] [INT] NOT NULL,
+	[relation_id] [INT] NOT NULL,
+	[relation_type] [INT] NOT NULL,
+	[public_visible] [INT] DEFAULT (1),
+	[title] varchar(255),
+	[description] [varchar] (255)
+) ON [PRIMARY]
 
  CREATE  INDEX [forum_id] ON [jforum_posts]([forum_id]) ON [PRIMARY]
-
-
  CREATE  INDEX [idx_role] ON [jforum_role_values]([role_id]) ON [PRIMARY]
-
-
  CREATE  INDEX [idx_group] ON [jforum_roles]([group_id]) ON [PRIMARY]
-
-
  CREATE  INDEX [idx_user] ON [jforum_roles]([user_id]) ON [PRIMARY]
-
-
  CREATE  INDEX [idx_name] ON [jforum_roles]([name]) ON [PRIMARY]
-
-
  CREATE  INDEX [topic_id] ON [jforum_search_results]([topic_id]) ON [PRIMARY]
-
-
  CREATE  INDEX [topic_id] ON [jforum_search_topics]([topic_id]) ON [PRIMARY]
-
-
  CREATE  INDEX [forum_id] ON [jforum_search_topics]([forum_id]) ON [PRIMARY]
-
-
  CREATE  INDEX [user_id] ON [jforum_search_topics]([user_id]) ON [PRIMARY]
-
-
  CREATE  INDEX [topic_first_post_id] ON [jforum_search_topics]([topic_first_post_id]) ON [PRIMARY]
-
-
  CREATE  INDEX [topic_last_post_id] ON [jforum_search_topics]([topic_last_post_id]) ON [PRIMARY]
-
-
  CREATE  INDEX [post_id] ON [jforum_search_wordmatch]([post_id]) ON [PRIMARY]
-
-
  CREATE  INDEX [word_id] ON [jforum_search_wordmatch]([word_id]) ON [PRIMARY]
-
-
  CREATE  INDEX [title_match] ON [jforum_search_wordmatch]([title_match]) ON [PRIMARY]
-
-
  CREATE  INDEX [word] ON [jforum_search_words]([word]) ON [PRIMARY]
-
-
  CREATE  INDEX [word_hash] ON [jforum_search_words]([word_hash]) ON [PRIMARY]
-
-
  CREATE  INDEX [forum_id] ON [jforum_topics]([forum_id]) ON [PRIMARY]
-
-
  CREATE  INDEX [user_id] ON [jforum_topics]([user_id]) ON [PRIMARY]
-
-
  CREATE  INDEX [topic_first_post_id] ON [jforum_topics]([topic_first_post_id]) ON [PRIMARY]
-
-
  CREATE  INDEX [topic_last_post_id] ON [jforum_topics]([topic_last_post_id]) ON [PRIMARY]
-
-
  CREATE  INDEX [idx_topic] ON [jforum_topics_watch]([topic_id]) ON [PRIMARY]
-
-
  CREATE  INDEX [idx_user] ON [jforum_topics_watch]([user_id]) ON [PRIMARY]
-
-
  CREATE  INDEX [idx_group] ON [jforum_user_groups]([group_id]) ON [PRIMARY]
-
-
  CREATE  INDEX [idx_user] ON [jforum_user_groups]([user_id]) ON [PRIMARY]
- 
- 
- CREATE  INDEX [idx_user] ON [jforum_banlist]([user_id]) ON [PRIMARY]
- 
- 
+ CREATE  INDEX [idx_user] ON [jforum_banlist]([user_id]) ON [PRIMARY] 
  CREATE  INDEX [categories_id] ON [jforum_forums]([categories_id]) ON [PRIMARY]
- 
-
  CREATE  INDEX [user_id] ON [jforum_posts]([user_id]) ON [PRIMARY]
- 
-
  CREATE  INDEX [topic_id] ON [jforum_posts]([topic_id]) ON [PRIMARY]
- 
  CREATE  INDEX [karma_id] ON [jforum_karma]([karma_id]) ON [PRIMARY]
+ CREATE  INDEX [bookmarks_relation_id] ON [jforum_bookmarks]([relation_id]) ON [PRIMARY]
