@@ -73,7 +73,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.28 2005/01/31 12:34:23 franklin_samir Exp $
+ * @version $Id: UserAction.java,v 1.29 2005/01/31 13:31:27 franklin_samir Exp $
  */
 public class UserAction extends Command 
 {
@@ -514,12 +514,8 @@ public class UserAction extends Command
 		this.context.put("message", message);
 	}
 
-	public void list() throws Exception 
-	{
-		this.login();
-	}
 		
-	public void listAll() throws Exception
+	public void list() throws Exception
 	{
 		int start = this.preparePagination(DataAccessDriver.getInstance().newUserModel().getTotalUsers());
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
