@@ -57,7 +57,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * memory and provides a static method to acess them.
  *  
  * @author Rafael Steil
- * @version $Id: I18n.java,v 1.5 2004/06/29 03:29:41 rafaelsteil Exp $
+ * @version $Id: I18n.java,v 1.6 2004/08/19 04:03:02 jamesyong Exp $
  */
 public class I18n 
 {
@@ -91,16 +91,26 @@ public class I18n
 	{
 		baseDir = SystemGlobals.getApplicationResourceDir() +"/config/languages/";
 		localeNames.load(new FileInputStream(baseDir +"locales.properties"));
-		defaultName = SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT);
+		defaultName = SystemGlobals.getValue(ConfigKeys.I18N_USER_DEFAULT);
 		load(defaultName);
 	}
 	
+	/**
+	 * Loads ConfigKeys.I18N_USER_DEFAULT, where ConfigKeys.I18N_DEFAULT is the default
+	 * @author Rafael Steil, James Yong
+	 */
 	public static void load(String localeName) throws IOException
 	{
-		Properties p = new Properties();
-		p.load(new FileInputStream(baseDir + localeNames.getProperty(localeName)));
-		
-		messagesMap.put(localeName, p);
+		String defaultLocaleName = SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT);
+		Properties p1 = new Properties();
+		p1.load(new FileInputStream(baseDir + localeNames.getProperty(defaultLocaleName.toString())));
+		if  (defaultLocaleName.toString().equals(localeName)){
+			messagesMap.put(localeName, p1);
+		}else{
+			Properties p = new Properties(p1);
+			p.load(new FileInputStream(baseDir + localeNames.getProperty(localeName)));
+			messagesMap.put(localeName, p);			
+		}
 	}
 	
 	/**
