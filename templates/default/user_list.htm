@@ -3,117 +3,14 @@
 <script language="javascript">
 <#include "utils.js"/>
 </script>
-<script language="javascript">
-var quick = false;
 
-function activateAdvancedQuery(){
-	quick = !quick;
-	document.getElementById("trQuickBody").style.display = (quick ? "" : "none");
-	document.getElementById("trQuickSubmit").style.display = (quick ? "" : "none");
-	if (quick) {
-		document.location = "#quick";
-	}
-}
-</script>
 <table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
     <tr>
       <td align="left"><span class="nav"><a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a></span></td>
     </tr>
 </table>
-<table cellspacing="0" cellpadding="0" width="100%" border="0">
-	<tr>
-		<td colspan="3">
-			<table width="100%">
-				<tr>
-					<td align="right">
-						<img src="${contextPath}/templates/${templateName}/images/icon_mini_message.gif" align="middle">
-						<span class="nav"><a href="javascript:activateAdvancedQuery()">${I18n.getMessage("Karma.advancedQuery")}</a></span>
-					</td>
-				</td>
-			</table>
-		</td>
-	</tr>
-</table>
-<form action="${JForumContext.encodeURL("/user/searchKarma")}" method="post" name="post" id="post">
-<table align="center" cellspacing="1" cellpadding="3" bgcolor="FFFFFF" width="100%" border="0" >
-	<tr>
-<!--		<td width="100">
-		</td >
-		-->
-		<td >
-			<table class="forumline" width="100%" align="center">				
-				<!-- User information
-				<tr id="trQuickBody">
-					<th class="thTop" align="left">
-						<b>User:</b><BR>
-						<font size="-3">Search for user data.</font>
-					</th>
-				</tr>				
-				<tr id="trQuickBody">
-					<td class="row2" align="left" >
-						${I18n.getMessage("User.username")}:
-						<input class="post" type="text" style="WIDTH: 200px" maxlength="255" size="25" name="username" value=""/>
-					</td>
-				</tr>
-				<tr  id="trQuickSubmit">
-					<td align="center">
-						<input type="submit" value="${I18n.getMessage("PostForm.submit")}" class="mainoption">
-					</td>
-				</tr>
-				-->
-				<tr id="trQuickBody">
-					<th class="thTop" align="left">
-						<b>Karma:</b>
-						<BR>
-						<font size="-3">Search for votes between dates.</font>
-					</th>
-				</tr>
-				<tr id="trQuickBody">
-					<td class="row2" align="left" >
-						Mouth:
-						<select name="mouths">
-							<option value="January">January</option>
-							<option value="February">February</option>
-							<option value="january">January</option>
-							<option value="january">January</option>
-							<option value="january">January</option>
-							<option value="january">January</option>
-							<option value="january">January</option>
-							<option value="january">January</option>
-							<option value="january">January</option>
-							<option value="january">January</option>
-							<option value="january">January</option>
-							<option value="january">January</option>
-						</select>
-						<BR>					
-						Period mode:
-						<BR>
-						Year:<input class="post" type="text" maxlength="10" size="15" name="first_date" value="2005"/>
-						<BR>
-						Fisrt Date: <input class="post" type="text" maxlength="10" size="15" name="first_date" value=""/>
-						<BR>
-						Last Date: <input class="post" type="text"  maxlength="10" size="15" name="last_date" value=""/>
-						<BR>
-						Order by:
-						<BR>
-						<input type="radio" name="order_by" value="total_points_orderby"/> Total Points
-						&nbsp;<input type="radio" name="order_by" value="votes_received_orderby"/> Votes Received						
-						&nbsp;<input type="radio" name="order_by" value="votes_given_orderby"/> Votes Given						
-						&nbsp;<input type="radio" name="order_by" value="karma_orderby"/> Karma
-					</td>
-				</tr>
-				
-				<!--<tr style="display: none;" id="trQuickBody">-->
-				<tr  id="trQuickSubmit">
-					<td align="center">
-						<input type="submit" value="${I18n.getMessage("PostForm.submit")}" class="mainoption">
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-</table>
-</form>
+
+<#include "karma_search.inc.htm"> 
 
 <table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
 	<tr>
@@ -151,7 +48,7 @@ function activateAdvancedQuery(){
 		</td>
 	</tr>
 </table>
-</form>
+
 <table width="100%">
 	<tr>
 		<td align="right"><#if thisPage?exists><@pagination.doPagination "list", -1/></#if></td>

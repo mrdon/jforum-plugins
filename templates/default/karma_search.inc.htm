@@ -1,0 +1,96 @@
+<script language="javascript">
+var quick = false;
+
+function activateAdvancedQuery(){
+	quick = !quick;
+	document.getElementById("trQuickBody").style.display = (quick ? "" : "none");
+	document.getElementById("trQuickBody2").style.display = (quick ? "" : "none");
+	document.getElementById("trQuickBody3").style.display = (quick ? "" : "none");
+	document.getElementById("trQuickSubmit1").style.display = (quick ? "" : "none");
+	document.getElementById("trQuickSubmit2").style.display = (quick ? "" : "none");
+	if (quick) {
+		document.location = "#quick";
+	}
+}
+</script>
+<table cellspacing="0" cellpadding="0" width="100%" border="0">
+	<tr>
+		<td colspan="3">
+			<table width="100%">
+				<tr>
+					<td align="right">
+						<img src="${contextPath}/templates/${templateName}/images/icon_mini_message.gif" align="middle">
+						<span class="nav"><a href="javascript:activateAdvancedQuery()">${I18n.getMessage("Karma.advancedQuery")}</a></span>
+					</td>
+				</td>
+			</table>
+		</td>
+	</tr>
+</table>
+<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="post" id="post">
+<input type="hidden" name="action" value="searchByPeriod" />
+<input type="hidden" name="module" value="karma" />
+<table align="center" cellspacing="1" cellpadding="3" bgcolor="FFFFFF" width="100%" border="0" >
+	<tr>
+		<td >
+			<table class="forumline" width="100%" align="center">				
+				<tr style="display: none;" id="trQuickBody">
+					<th class="thTop" align="left">
+						<b>User's ratings:</b>
+					</th>
+				</tr>
+				<tr style="display: none;" id="trQuickBody2">
+					<td class="row2" align="left" >
+						<b>Query by Month:</b>						
+						<BR>
+						Mouth:
+						<select name="mouths">
+							<option value="January">January</option>
+							<option value="February">February</option>
+							<option value="january">January</option>
+							<option value="january">January</option>
+							<option value="january">January</option>
+							<option value="january">January</option>
+							<option value="january">January</option>
+							<option value="january">January</option>
+							<option value="january">January</option>
+							<option value="january">January</option>
+							<option value="january">January</option>
+							<option value="january">January</option>
+						</select> &nbsp;
+						Year:<input class="post" type="text" maxlength="10" size="15" name="year" value="2005"/>
+						<BR>
+					</td>
+				</tr>
+				<tr style="display: none;" id="trQuickSubmit1">
+							<td align="center">
+						<input type="submit" value="${I18n.getMessage("PostForm.submit")}" class="mainoption">
+					</td>
+				</tr>					
+				<tr style="display: none;" id="trQuickBody3">
+					<td>
+						<BR>
+						<b>Query by period:</b>						
+						<BR>
+						Fisrt Date: <input class="post" type="text" maxlength="10" size="15" name="first_date" value="01/02/2005"/>
+						<BR>
+						Last Date: <input class="post" type="text"  maxlength="10" size="15" name="last_date" value="20/02/2005"/>
+						<BR>
+						Order by:
+						<BR>
+						<input type="radio" name="order_by" value="total" checked/> Total Points
+						&nbsp;<input type="radio" name="order_by" value="votes_received"/> Votes Received						
+						&nbsp;<input type="radio" name="order_by" value=""/> Votes Given						
+						&nbsp;<input type="radio" name="order_by" value="user_karma"/> Karma
+					</td>
+				</tr>			
+				<tr style="display: none;" id="trQuickSubmit2">
+					<td align="center">
+						<input type="submit" value="${I18n.getMessage("PostForm.submit")}" class="mainoption">
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+</form>
