@@ -49,7 +49,7 @@ import java.util.Map;
 
 /**
  * @author Rafael Steil
- * @version $Id: DefaultCacheEngine.java,v 1.3 2005/02/16 12:23:43 rafaelsteil Exp $
+ * @version $Id: DefaultCacheEngine.java,v 1.4 2005/02/16 12:43:06 rafaelsteil Exp $
  */
 public class DefaultCacheEngine implements CacheEngine
 {
@@ -124,7 +124,7 @@ public class DefaultCacheEngine implements CacheEngine
 	 */
 	public void remove(String fqn, String key)
 	{
-		Map m = (Map)this.cache.remove(fqn);
+		Map m = (Map)this.cache.get(fqn);
 		if (m != null) {
 			m.remove(key);
 		}
