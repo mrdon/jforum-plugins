@@ -52,12 +52,14 @@ import com.dumbster.smtp.SmtpMessage;
 
 /**
  * @author Marc Wick
- * @version $Id: UserWebTestCase.java,v 1.9 2004/10/01 20:50:38 rafaelsteil Exp $
+ * @version $Id: UserWebTestCase.java,v 1.10 2004/10/03 11:51:19 marcwick Exp $
  */
 public class UserWebTestCase extends AbstractWebTestCase {
 
 	private static String lastTestuser;
+
 	public static String defaultTestuser = "defaultTestuser";
+
 	public static String password = "testpassword";
 
 	public UserWebTestCase(String name) throws IOException {
@@ -112,7 +114,9 @@ public class UserWebTestCase extends AbstractWebTestCase {
 	}
 
 	public void testPasswordForgottenUserName() throws Exception {
+		// start smtp server on localhost to receive and verify test emails
 		smtpServer = SimpleSmtpServer.start();
+
 		beginAt(FORUMS_LIST);
 		assertLinkPresent("login");
 		clickLink("login");
@@ -122,9 +126,15 @@ public class UserWebTestCase extends AbstractWebTestCase {
 		assertFormPresent("formlostpassword");
 		setFormElement("username", lastTestuser);
 		submit();
+
+		// give the jforum servlet time to deliver the email to the smtp server
 		Thread.sleep(1000);
-		assertEquals("password lost email received", 1, 
-						smtpServer.getReceievedEmailSize());
+
+		// test if an email has been received by localhost
+		assertEquals("password lost email received", 1, smtpServer
+				.getReceievedEmailSize());
+
+		// now test the email
 		SmtpMessage mail = (SmtpMessage) smtpServer.getReceivedEmail().next();
 		String body = mail.getBody();
 		String link = body.substring(body.indexOf("http:"),
@@ -132,12 +142,17 @@ public class UserWebTestCase extends AbstractWebTestCase {
 
 		smtpServer.stop();
 
+		System.out.println(link);
+
 		getTestContext().setBaseUrl(link.substring(0, link.lastIndexOf('/')));
 		gotoPage(link.substring(link.lastIndexOf('/')));
 		setFormElement("email", lastTestuser);
 		setFormElement("newPassword", password);
 		setFormElement("confirmPassword", password);
 		submit();
+
+		dumpResponse(System.out);
+
 		clickLinkWithText(I18n.getMessage(language, "ForumBase.logout"));
 	}
 }

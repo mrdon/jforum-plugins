@@ -53,7 +53,8 @@ import com.dumbster.smtp.SimpleSmtpServer;
 
 /**
  * @author Marc Wick
- * @version $Id: AbstractWebTestCase.java,v 1.7 2004/10/01 20:50:38 rafaelsteil Exp $
+ * @version $Id: AbstractWebTestCase.java,v 1.7 2004/10/01 20:50:38 rafaelsteil
+ *          Exp $
  */
 public abstract class AbstractWebTestCase extends WebTestCase {
 	public static class SimpleHTMLParserListener implements
@@ -75,15 +76,37 @@ public abstract class AbstractWebTestCase extends WebTestCase {
 	protected String language;
 
 	protected String rootDir;
+
 	protected String FORUMS_LIST = "/forums/list.page";
 
+	/**
+	 * for testing emails we use the smtp server dumpster( see :
+	 * http://quintanasoft.com/dumbster/)
+	 * 
+	 * The Dumbster is a very simple fake SMTP server designed for unit and
+	 * system testing applications that send email messages. It responds to all
+	 * standard SMTP commands but does not deliver messages to the user. The
+	 * messages are stored within the Dumbster for later extraction and
+	 * verification.
+	 * 
+	 * usage :
+	 * 
+	 * start the test smtp server on localhost in the testcase with
+	 * smtpServer.start();
+	 * 
+	 * ... run the tests that are sending the email
+	 * 
+	 * get the emails <br>
+	 * smtpServer.getReceivedEmail()
+	 *  
+	 */
 	protected SimpleSmtpServer smtpServer;
 
 	public AbstractWebTestCase(String name) throws IOException {
 		super(name);
 
 		this.rootDir = this.getClass().getResource("/").getPath();
-		this.rootDir = this.rootDir.substring(0, this.rootDir.length() 
+		this.rootDir = this.rootDir.substring(0, this.rootDir.length()
 				- "/WEB-INF/classes".length());
 
 		init();
@@ -110,7 +133,7 @@ public abstract class AbstractWebTestCase extends WebTestCase {
 		submit();
 		assertElementNotPresent("invalidlogin");
 	}
-	
+
 	protected void logout() {
 		assertLinkPresent("logout");
 		clickLink("logout");

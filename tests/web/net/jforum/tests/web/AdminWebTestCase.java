@@ -49,7 +49,7 @@ import net.jforum.util.I18n;
 
 /**
  * @author Marc Wick
- * @version $Id: AdminWebTestCase.java,v 1.5 2004/10/02 14:23:55 marcwick Exp $
+ * @version $Id: AdminWebTestCase.java,v 1.6 2004/10/03 11:51:19 marcwick Exp $
  */
 public class AdminWebTestCase extends AbstractWebTestCase {
 
@@ -95,7 +95,10 @@ public class AdminWebTestCase extends AbstractWebTestCase {
 		// configure localhost as our mock smtp server (dumpster) is listening
 		// on localhost
 		setFormElement("p_mail.sender", "regressiontest@jforum.net");
+		// we set the smtp server to localhost to be able to test the emails
+		// afterwards
 		setFormElement("p_mail.smtp.host", "localhost");
+		// we don't use authentication as dumpster does not support it
 		setFormElement("p_mail.smtp.auth", "false");
 		submit();
 
