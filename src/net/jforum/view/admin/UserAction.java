@@ -66,7 +66,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.6 2004/10/13 10:21:06 jamesyong Exp $
+ * @version $Id: UserAction.java,v 1.7 2004/10/23 02:56:29 jamesyong Exp $
  */
 public class UserAction extends Command 
 {
@@ -119,6 +119,8 @@ public class UserAction extends Command
 		JForum.getContext().put("moduleAction", "user_list.htm");
 		JForum.getContext().put("users", users);
 		JForum.getContext().put("search", search);
+		//"start" is added to avoid search error. "start" may be in use when pagination is introduced for search 
+		JForum.getContext().put("start", new Integer(1));
 	}
 	
 	// Permissions
