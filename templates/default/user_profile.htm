@@ -18,7 +18,7 @@
       <TD class=catRight align=center width="60%"><B><SPAN class=gen>${I18n.getMessage("UserProfile.allAbout")} ${u.username}</SPAN></B></TD>
     </TR>
     <TR>
-      <TD class=row1 vAlign=top align=middle height=6><#if (u.avatar?exists && u.avatar?length > 0)><img src="images/${u.avatar}" border=0><BR></#if>
+      <TD class=row1 vAlign=top align=middle height=6><#if (u.avatar?exists && u.avatar?length > 0)><img src="images/avatar/${u.avatar}" border=0><BR></#if>
           <SPAN class=postdetails>Ranking: ${rank.getRankTitle(u.totalPosts)}</SPAN></TD>
       <TD class=row1 vAlign=top rowSpan=3>
         <TABLE cellSpacing=1 cellPadding=3 width="100%" border=0>

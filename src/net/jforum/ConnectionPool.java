@@ -74,7 +74,7 @@ import net.jforum.util.preferences.SystemGlobals;
  *
  * @author Paulo Silveira
  * @author Rafael Steil
- * @version $Id: ConnectionPool.java,v 1.6 2004/06/02 15:17:33 pieter2 Exp $
+ * @version $Id: ConnectionPool.java,v 1.7 2004/06/02 15:46:39 pieter2 Exp $
  * */
 
 public class ConnectionPool 
@@ -122,8 +122,6 @@ public class ConnectionPool
 			this.timeout = SystemGlobals.getIntValue("database.connection.pool.timeout");
 
 			this.connectionString = SystemGlobals.getValue("database.connection.string");
-			
-			System.err.println("database.connection.string=" + this.connectionString);
 			
 			if (debug) {
 				System.err.println("*********************************************");
