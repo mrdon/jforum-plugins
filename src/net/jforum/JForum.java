@@ -85,7 +85,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.22 2004/07/22 15:56:00 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.23 2004/08/21 02:56:06 rafaelsteil Exp $
  */
 public class JForum extends HttpServlet 
 {
@@ -247,6 +247,7 @@ public class JForum extends HttpServlet
 	private void startDatabase() throws Exception
 	{
 		ConnectionPool.init();
+		ConnectionPool.getPool().enableConnectionPinging();
 	}
 	
 	public void init(ServletConfig config) throws ServletException
@@ -460,12 +461,6 @@ public class JForum extends HttpServlet
 			String encoding = SystemGlobals.getValue(ConfigKeys.ENCODING);
 			req.setCharacterEncoding(encoding);
 			
-			// Ensure the database is up and running
-			if (!ConnectionPool.isDatabaseUp()) {
-				System.out.println("Database not loaded. Trying again...");
-				this.startDatabase();
-			}
-			
 			// Context
 			JForum.getContext().put("contextPath", req.getContextPath());
 			JForum.getContext().put("serverName", req.getServerName());
@@ -519,7 +514,7 @@ public class JForum extends HttpServlet
 				Template template = c.process();
 
 				if (((DataHolder)localData.get()).getRedirectTo() == null) {
-					response.setContentType("text/html; charset="+ encoding);
+					response.setContentType("text/html; charset=" + encoding);
 
 					template.process(JForum.getContext(), out);
 					out.flush();
@@ -527,12 +522,14 @@ public class JForum extends HttpServlet
 			}
 		}
 		catch (Exception e) {
-				if (out != null) {
-					new ForumException(e, out);
-				}
-				else {
-					new ForumException(e, new BufferedWriter(new OutputStreamWriter(response.getOutputStream())));
-				}
+			response.setContentType("text/html");
+			if (out != null) {
+				new ForumException(e, out);
+				out.flush();
+			}
+			else {
+				new ForumException(e, new BufferedWriter(new OutputStreamWriter(response.getOutputStream())));
+			}
 		}
 		finally {
 			try {
@@ -550,7 +547,6 @@ public class JForum extends HttpServlet
 			JForum.getResponse().sendRedirect(redirectTo);
 		}
 		
-		// hhmmm.. is it enough to clear the thread local object?  
 		localData.set(null);
 	}	
 }

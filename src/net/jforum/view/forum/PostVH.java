@@ -75,7 +75,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostVH.java,v 1.29 2004/08/07 04:23:02 jamesyong Exp $
+ * @version $Id: PostVH.java,v 1.30 2004/08/21 02:56:09 rafaelsteil Exp $
  */
 public class PostVH extends Command 
 {
@@ -116,7 +116,6 @@ public class PostVH extends Command
 		
 		ArrayList posts = pm.selectAllByTopicByLimit(topicId, start, count);
 		ArrayList helperList = new ArrayList();
-		ArrayList isModeratorList = new ArrayList();
 
 		int userId = SessionFacade.getUserSession().getUserId();
 		int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
@@ -138,15 +137,11 @@ public class PostVH extends Command
 			pc = new PermissionControl();
 			pc.setRoles(umodel.loadRoles(p.getUserId()));
 			
-			if 	((pc.canAccess(SecurityConstants.PERM_MODERATION)) &&
-				(pc.canAccess(SecurityConstants.PERM_MODERATION_FORUMS, Integer.toString(topic.getForumId())))){
-				isModeratorList.add("true");
-			}
-			else{
-				isModeratorList.add("false");
-			}
 			helperList.add(PostCommon.preparePostText(p));
 		}
+		
+		boolean isModerator = (pc.canAccess(SecurityConstants.PERM_MODERATION)) &&
+		(pc.canAccess(SecurityConstants.PERM_MODERATION_FORUMS, Integer.toString(topic.getForumId())));
 		
 		// Set the topic status as read
 		tm.updateReadStatus(topic.getId(), userId, true);
@@ -157,13 +152,15 @@ public class PostVH extends Command
 		JForum.getContext().put("topic", topic);
 		JForum.getContext().put("rank", new RankingRepository());
 		JForum.getContext().put("posts",  helperList);
-		JForum.getContext().put("postsIsModerator",  isModeratorList);
 		JForum.getContext().put("forum", ForumRepository.getForum(topic.getForumId()));
 		JForum.getContext().put("um", um);
 		JForum.getContext().put("topicId", new Integer(topicId));
 		JForum.getContext().put("watching", tm.isUserSubscribed(topicId, SessionFacade.getUserSession().getUserId()));
 		JForum.getContext().put("pageTitle", SystemGlobals.getValue(ConfigKeys.FORUM_NAME) +" - "+ topic.getTitle());
-		JForum.getContext().put("isModerator", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION)& SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_FORUMS, Integer.toString(topic.getForumId())));
+		JForum.getContext().put("isAdmin", SecurityRepository.canAccess(SecurityConstants.PERM_ADMINISTRATION));
+		
+		JForum.getContext().put("isModerator", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION) 
+				&& SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_FORUMS, Integer.toString(topic.getForumId())));
 		
 		// Topic Status
 		JForum.getContext().put("STATUS_LOCKED", new Integer(Topic.STATUS_LOCKED));
@@ -497,7 +494,7 @@ public class PostVH extends Command
 			String path = JForum.getRequest().getContextPath() +"/posts/list/";
 
 			String start = JForum.getRequest().getParameter("start");
-			if (start != null && !start.equals("")) {
+			if (start != null && !start.equals("") && !start.equals("0")) {
 				int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 				
 				int newStart = ((t.getTotalReplies() / postsPerPage) * postsPerPage);

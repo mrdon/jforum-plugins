@@ -1,4 +1,3 @@
-<style type="text/css">@import url( style.css );</style>
 <#import "../macros/pagination.ftl" as pagination/>
 <#import "../macros/utils.ftl" as utils/>
 
@@ -86,22 +85,20 @@ function confirmDelete()
 				<tr>
 					<td class="${rowColor}" valign="top" align="left" width="103">
 					
-						<#if postsIsModerator.get(post_index).equals("true")>
-							<span class="moderatortitle">${I18n.getMessage("Moderator")}:</span>
-							<br />
-						</#if>
-						
 						<span class="name"><b>${user.username}</b></span>
 						<br />
-						<span class="postdetails">${rank.getRankTitle(user.totalPosts)}
-						<br />
 						
+						<#if post.userId != 1>
+							<span class="postdetails">${rank.getRankTitle(user.totalPosts)}
+							<br />
+						</#if>
+
 						<#if (user.avatar?exists && user.avatar?length > 0)>
 							<img src="${contextPath}/images/avatar/${user.avatar}" border="0" />
 						</#if>
 						<br /> 
 						
-						<#if post.userId!=1>
+						<#if post.userId != 1>
 							${I18n.getMessage("PostShow.userTotalMessages")}: ${user.totalPosts}
 						</#if>
 						<br />

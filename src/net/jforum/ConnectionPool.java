@@ -46,11 +46,18 @@ package net.jforum;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import org.apache.log4j.Logger;
+
+import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /** 
@@ -74,7 +81,7 @@ import net.jforum.util.preferences.SystemGlobals;
  *
  * @author Paulo Silveira
  * @author Rafael Steil
- * @version $Id: ConnectionPool.java,v 1.7 2004/06/02 15:46:39 pieter2 Exp $
+ * @version $Id: ConnectionPool.java,v 1.8 2004/08/21 02:56:06 rafaelsteil Exp $
  * */
 
 public class ConnectionPool 
@@ -84,6 +91,8 @@ public class ConnectionPool
 	
 	private int minConnections, maxConnections, timeout;
 	private String connectionString;
+	
+	private static final Logger logger = Logger.getLogger(ConnectionPool.class);
 
 	/**
 	* It is the connection pool
@@ -124,14 +133,14 @@ public class ConnectionPool
 			this.connectionString = SystemGlobals.getValue("database.connection.string");
 			
 			if (debug) {
-				System.err.println("*********************************************");
-				System.err.println("******** STARTING CONNECTION POOL ***********");
-				System.err.println("*********************************************");
-				System.err.println("database.connection.driver = "+ driver);
-				System.err.println("minConnections = "+ this.minConnections);
-				System.err.println("maxConnections = "+ this.maxConnections);
-				System.err.println("timeout = "+ this.timeout);
-				System.err.println("*********************************************");
+				logger.info("*********************************************");
+				logger.info("******** STARTING CONNECTION POOL ***********");
+				logger.info("*********************************************");
+				logger.info("database.connection.driver = "+ driver);
+				logger.info("minConnections = "+ this.minConnections);
+				logger.info("maxConnections = "+ this.maxConnections);
+				logger.info("timeout = "+ this.timeout);
+				logger.info("*********************************************");
 			}
 
 			for (int i = 0; i < this.minConnections; i++) {
@@ -141,14 +150,15 @@ public class ConnectionPool
 				
 				if (debug) {
 					Date now = new Date();
-					System.err.println(now.toString() + " opening connection "+ (i + 1));
+					logger.info(now.toString() + " opening connection "+ (i + 1));
 				}
 			}
 			
 			isDatabaseUp = true;
 		}
 		catch (ClassNotFoundException e) {
-			System.err.println("Ouch... Cannot find database driver: "+ driver);
+			logger.error("Ouch... Cannot find database driver: "+ driver);
+			throw new IOException("Ouch... Cannot find database driver: "+ driver);
 		}
     }
 
@@ -218,7 +228,7 @@ public class ConnectionPool
 			}
 			catch (SQLException e) {
 				if (debug) {
-					System.err.println("Cannot reconnect a closed connection:" + this.connectionString + e);
+					logger.warn("Cannot reconnect a closed connection:" + this.connectionString + e);
 				}
 				
 				throw e;
@@ -234,7 +244,7 @@ public class ConnectionPool
 				}
 				catch (SQLException e) {
 					if (debug) {
-						System.err.println("Cannot stabilish a NEW connection to the database:" + this.connectionString + e);
+						logger.warn("Cannot stabilish a NEW connection to the database:" + this.connectionString + e);
 					}
 					
                     throw e;
@@ -268,14 +278,14 @@ public class ConnectionPool
 				}
 				catch (InterruptedException e) {
 					if (debug)
-						System.err.println("Problems while waiting for connection. "+ e);
+						logger.warn("Problems while waiting for connection. "+ e);
 				}
 			}
 
 			if (this.connections.size() == 0) {
 				// TIMED OUT!!!!
 				if (debug) {
-					System.err.println( "Pool is empty, and th waiting for one timed out!"
+					logger.warn( "Pool is empty, and th waiting for one timed out!"
 						+ "If this is happening too much, your code is probably not releasing the Connections."
 						+ "If you cant solve this, set your 'database.connection.pool.timeout' to a bigger number.");
 				}
@@ -291,6 +301,36 @@ public class ConnectionPool
 		
 		return conn;
 	}
+	
+	private void pingConnections() {
+		synchronized(this.allConnections) {
+			try {
+				for (Iterator iter = this.allConnections.iterator(); iter.hasNext(); ) {
+					logger.info("pinging connection....");
+
+					Connection c = (Connection)iter.next();
+					Statement s = c.createStatement();
+					ResultSet rs = s.executeQuery("select 1 from jforum_sessions");
+					rs.next();
+					rs.close();
+					s.close();
+				}
+
+				logger.info("Connection ping finished. Waiting for next iteration");
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	} 
+	
+	public void enableConnectionPinging() {
+		new Timer(true).schedule(new TimerTask() {
+			public void run() {
+				pingConnections();
+			}
+		}, Long.parseLong(SystemGlobals.getValue(ConfigKeys.DATABASE_PING_DELAY)));
+	} 
 
 	/**
 	 * Releases a connection, making it available to the pool once more.
@@ -301,8 +341,9 @@ public class ConnectionPool
 	public void releaseConnection(Connection conn) throws SQLException 
 	{
 		if (conn == null) {
-			if (debug)
-			System.err.println("Cannot release a NULL connection!");
+			if (debug) {
+				logger.warn("Cannot release a NULL connection!");
+			}
 				
 			return;
 		}
@@ -312,7 +353,7 @@ public class ConnectionPool
 		 */
 		synchronized (this.allConnections) {
 			if (!this.allConnections.contains(conn) && debug) {
-				System.err.println("Cannot release a connection that is not from this pool!");
+				logger.warn("Cannot release a connection that is not from this pool!");
 				
 				return;
 			}
@@ -326,7 +367,7 @@ public class ConnectionPool
 			}
 			catch (SQLException e) {
 				if (debug) {
-					System.err.println("Cannot get info about the conn: "+ e);
+					logger.warn("Cannot get info about the conn: "+ e);
 				}
 			}
 		}
@@ -340,7 +381,7 @@ public class ConnectionPool
 		}
 		
 		if (debug) {
-			System.err.println("Releasing connection...");
+			logger.warn("Releasing connection...");
 		}
 	}
 

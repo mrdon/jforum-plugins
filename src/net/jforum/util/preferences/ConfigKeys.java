@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author pieter
-* @version $Id: ConfigKeys.java,v 1.12 2004/08/19 04:43:52 jamesyong Exp $
+* @version $Id: ConfigKeys.java,v 1.13 2004/08/21 02:56:08 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -63,6 +63,7 @@ public class ConfigKeys {
 	public static final String INSTALLATION_CONFIG = "installation.config";
 	
 	public static final String FILECHANGES_DELAY = "file.changes.delay";
+	public static final String DATABASE_PING_DELAY = "database.ping.delay";
 
 	// The remaining keys are set in default.config and can be overriden in the installation config 
 	public static final String RESOURCE_DIR = "resource.dir";
@@ -140,7 +141,5 @@ public class ConfigKeys {
 	public static final String EXTERNAL_QUERY_SELECT_GROUPS = "external.database.query.selectGroups";
 	public static final String EXTERNAL_UNIQUE_NAMES = "external.uniqueNames";
 	
-
-	private ConfigKeys() {
-	}
+	private ConfigKeys() {}
 }

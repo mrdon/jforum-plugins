@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchModel.java,v 1.7 2004/08/01 04:47:02 rafaelsteil Exp $
+ * @version $Id: SearchModel.java,v 1.8 2004/08/21 02:56:09 rafaelsteil Exp $
  */
 public class SearchModel extends AutoKeys implements net.jforum.model.SearchModel	
 {
@@ -137,7 +137,7 @@ public class SearchModel extends AutoKeys implements net.jforum.model.SearchMode
 
 		// Get the post ids to which the words are associated to
 		for (int i = 0; i < sd.getKeywords().length; i++) {
-			p.setString(1, sd.getKeywords()[i]);
+			p.setString(1, "%" + sd.getKeywords()[i] + "%");
 			
 			HashSet postsIds = new HashSet();
 			ResultSet rs = p.executeQuery();

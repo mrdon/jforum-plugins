@@ -1,4 +1,3 @@
-<STYLE type=text/css>@import url( style.css );</STYLE>
 <#import "../macros/pagination.ftl" as pagination>
 <#import "../macros/presentation.ftl" as presentation/>
 
@@ -91,7 +90,7 @@
           <TD class=row3Right vAlign=center noWrap align=middle>
 		  <#if (topic.lastPostTime?length > 0)>
 			  <SPAN class=postdetails>${topic.lastPostTime}<BR>
-			  <a href="${contextPath}/user/profile/${topic.postedBy.id}.page">${topic.lastPostBy.username}</a>
+			  <a href="${contextPath}/user/profile/${topic.lastPostBy.id}.page">${topic.lastPostBy.username}</a>
 
 				<#assign startPage = ""/>
 				<#if (topic.totalReplies + 1 > postsPerPage?number)>
