@@ -78,7 +78,7 @@ function checkForm() {
 
 	formErrors = false;
 
-	if (document.post.message.value.tirm().length < 2) {
+	if (document.post.message.value.replace(/^\s*|\s*$/g,"").length < 2) {
 		formErrors = "Deve ser escrita a mensagem";
 	}
 
