@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: SearchModel.java,v 1.6 2004/04/24 01:22:44 rafaelsteil Exp $
+ * $Id: SearchModel.java,v 1.7 2004/04/24 20:51:00 rafaelsteil Exp $
  */
 package net.jforum.drivers.mysql;
 
@@ -119,7 +119,8 @@ public class SearchModel implements net.jforum.model.SearchModel
 	private void topicsByTime(SearchData sd) throws Exception
 	{
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.searchByTime"));
-		p.setString(1, sd.getTime());
+		p.setString(1, SessionFacade.getUserSession().getSessionId());
+		p.setString(2, sd.getTime());
 		p.executeUpdate();
 		p.close();
 	}
