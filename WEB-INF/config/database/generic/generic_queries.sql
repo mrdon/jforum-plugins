@@ -464,3 +464,12 @@ BookmarkModel.selectForUpdate = SELECT bookmark_id, relation_id, public_visible,
 	
 BookmarkModel.selectById = SELECT bookmark_id, relation_id, public_visible, title, description, user_id, relation_type \
 	FROM jforum_bookmarks WHERE bookmark_id = ?
+	
+# ################
+# AttachmentModel
+# ################
+AttachmentModel.addQuotaLimit = INSERT INTO jforum_quota_limit (quota_desc, quota_limit, quota_type) VALUES (?, ?, ?)
+AttachmentModel.addQuotaLimit = UPDATE jforum_quota_limit SET quota_desc = ?, quota_limit = ?, quota_type = ? WHERE quota_limit_id = ?
+AttachmentModel.removeQuotaLimit = DELETE FROM jforum_quota_limit WHERE quota_limit_id = ?
+AttachmentModel.selectQuotaLimit = SELECT quota_limit_id, quota_desc, quota_limit, quota_type \
+	FROM jforum_quota_limit ORDER BY quota_type, quota_limit

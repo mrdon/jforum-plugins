@@ -63,9 +63,22 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ConfigAction.java,v 1.6 2004/12/29 17:18:43 rafaelsteil Exp $
+ * @version $Id: ConfigAction.java,v 1.7 2005/01/17 18:52:32 rafaelsteil Exp $
  */
-public class ConfigAction extends Command {
+public class ConfigAction extends Command 
+{
+	public ConfigAction() {}
+	
+	public ConfigAction(ActionServletRequest request, 
+			HttpServletResponse response, 
+			Connection conn, SimpleHash context)
+	{
+		this.request = request;
+		this.response = response;
+		this.conn = conn;
+		this.context = context;
+	}
+	
 	public void list() throws Exception {
 		Properties p = new Properties();
 		Iterator iter = SystemGlobals.fetchConfigKeyIterator();
@@ -90,7 +103,14 @@ public class ConfigAction extends Command {
 		this.context.put("moduleAction", "config_list.htm");
 	}
 
-	public void editSave() throws Exception {
+	public void editSave() throws Exception 
+	{
+		this.updateData(this.getConfig());
+		this.list();
+	}
+	
+	Properties getConfig()
+	{
 		Properties p = new Properties();
 
 		Enumeration e = this.request.getParameterNames();
@@ -101,12 +121,11 @@ public class ConfigAction extends Command {
 				p.setProperty(name.substring(name.indexOf('_') + 1), this.request.getParameter(name));
 			}
 		}
-
-		this.updateData(p);
-		this.list();
+		
+		return p;
 	}
 	
-	private void updateData(Properties p) throws IOException
+	void updateData(Properties p) throws IOException
 	{
 		for (Iterator iter = p.entrySet().iterator(); iter.hasNext(); ) {
 			Map.Entry entry = (Map.Entry)iter.next();

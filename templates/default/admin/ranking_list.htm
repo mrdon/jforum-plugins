@@ -21,7 +21,7 @@
 <#list ranks as rank>
 	<TR>
 	<TD class=row1 width="38%"><SPAN class=gen>${rank.title}</SPAN></TD>
-	<TD width="9%" class=row1>${rank.min}</TD>
+	<TD width="9%" class=row1><span class="gen">${rank.min}</span></TD>
 	<TD width="46%" class=row1><span class="gen"><a href="${contextPath}/${moduleName}/edit/${rank.id}${extension}">${I18n.getMessage("Rank.List.Edit")}</a></span></TD>
 	<TD width="7%" class=row1><input type="checkbox" name="rank_id" value="${rank.id}"></TD>
 	</TR>

@@ -1,0 +1,77 @@
+<#setting number_format = "#"/>
+<STYLE type=text/css>@import url( ${contextPath}/templates/${templateName}/admin/style.css );</STYLE>
+
+<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum${extension}" method="post">
+<input type="hidden" name="action" value="quotaSave" />
+<input type="hidden" name="module" value="${moduleName}" />
+<input type="hidden" name="securityHash" value="${securityHash}" />
+
+<table width="99%" align="center" cellpadding="4" cellspacing="1" border="0" class="forumline">
+	<tr>
+	  <th class="tHead" colspan="5" align="center" height="28">${I18n.getMessage("AdminAttachments.quotaTitle")}</th>
+	</tr>
+
+	<!-- Enter a new quota -->
+	<tr>
+		<th class="thCornerL">${I18n.getMessage("AdminAttachments.quotaDescription")}</th>
+
+		<th class="thTop">${I18n.getMessage("AdminAttachments.quotaFilesize")}</th>
+		<th class="thCornerR">${I18n.getMessage("AdminAttachments.quotaAdd")}</th>
+	</tr>
+
+	<tr>
+		<td class="row1" align="center" valign="middle"><input type="text" size="20" maxlength="25" name="quota_description" value=""/></td>
+		<td class="row2" align="center" valign="middle">
+			<input type="text" size="8" maxlength="15" name="add_max_filesize" value="2" /> 
+			<select name="add_size_select">
+				<option value="b">Bytes</option>
+				<option value="kb">KB</option>
+				<option value="mb" selected>MB</option>
+			</select>
+		</td>
+
+		<td class="row1" align="center" valign="middle"><input type="checkbox" name="add_quota_check" /></td>
+	</tr>
+
+	<tr align="right">
+	  <td class="catBottom" colspan="5" height="29">  <input type="submit" name="submit" class="liteoption" value="Submit" /></td>
+	</tr>
+
+	<!-- List existing entries -->
+	<tr>
+		<th class="thCornerL">${I18n.getMessage("AdminAttachments.quotaDescription")}</th>
+		<th class="thTop">${I18n.getMessage("AdminAttachments.quotaFilesize")}</th>
+
+		<th class="thCornerR">${I18n.getMessage("AdminAttachments.quotaDelete")}</th>
+	</tr>
+
+	<tr>
+		<td class="row1" align="center" valign="middle">
+			<input type="hidden" name="quota_change_list[]" value="3" />
+			<table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td class="row1" align="center" valign="middle" width="10%" wrap="nowrap">&nbsp;</td>
+
+					<td class="row1" align="left" valign="middle"><input type="text" size="20" maxlength="25" name="quota_desc_list[]" value="High" /></td>
+				</tr>
+			</table>
+		</td>
+
+		<td class="row2" align="center" valign="middle">
+			<input type="text" size="8" maxlength="15" name="max_filesize_list[]" value="5" /> 
+			<select name="size_select_list[]">
+				<option value="b">Bytes</option>
+				<option value="kb">KB</option>
+				<option value="mb" selected>MB</option>
+			</select>
+		</td>
+		<td class="row1" align="center" valign="middle"><input type="checkbox" name="quota_id_list[]" value="3" /></td>
+	</tr>
+
+	<tr align="right">
+	  <td class="catBottom" colspan="5" height="29"> <input type="submit" name="submit" class="liteoption" value="Submit" /></td>
+	</tr>
+
+</table>
+
+</form>
