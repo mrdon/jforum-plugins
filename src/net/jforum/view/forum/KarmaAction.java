@@ -64,7 +64,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaAction.java,v 1.4 2005/02/17 21:52:20 franklin_samir Exp $
+ * @version $Id: KarmaAction.java,v 1.5 2005/02/28 14:10:03 rafaelsteil Exp $
  */
 public class KarmaAction extends Command
 {
@@ -77,20 +77,20 @@ public class KarmaAction extends Command
 
 		int postId = this.request.getIntParameter("post_id");
 		int fromUserId = SessionFacade.getUserSession().getUserId();
-		
+
 		PostModel pm = DataAccessDriver.getInstance().newPostModel();
 		Post p = pm.selectById(postId);
-		
+
 		if (fromUserId == SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
 			this.error("Karma.anonymousIsDenied", p);
 			return;
 		}
-		
+
 		if (p.getUserId() == fromUserId) {
 			this.error("Karma.cannotSelfVote", p);
 			return;
 		}
-		
+
 		KarmaModel km = DataAccessDriver.getInstance().newKarmaModel();
 		if (!km.userCanAddKarma(fromUserId, postId)) {
 			this.error("Karma.alreadyVoted", p);
@@ -103,30 +103,31 @@ public class KarmaAction extends Command
 		karma.setPostId(postId);
 		karma.setTopicId(p.getTopicId());
 		karma.setPoints(this.request.getIntParameter("points"));
-		
+
 		km.addKarma(karma);
-		
+
 		JForum.setRedirect(this.urlToTopic(p));
 	}
-	
+
 	private void error(String message, Post p)
 	{
 		this.context.put("moduleAction", "message.htm");
-		
+
 		if (p != null) {
-			this.context.put("message", I18n.getMessage(message, 
-					new String[] { this.urlToTopic(p) }));
+			this.context.put("message", I18n.getMessage(message, new String[] { this.urlToTopic(p) }));
 		}
 		else {
 			this.context.put("message", I18n.getMessage(message));
 		}
 	}
-	
+
 	private String urlToTopic(Post p)
 	{
-		return JForum.getRequest().getContextPath()
-			+ "/posts/list/" + p.getTopicId()
-			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
+		return JForum.getRequest().getContextPath() + "/posts/list/" 
+			+ ViewCommon.getStartPage()
+			+ "/" + p.getTopicId()
+			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)
+			+ "#" + p.getId();
 	}
 
 	/**
@@ -137,93 +138,97 @@ public class KarmaAction extends Command
 		this.context.put("moduleAction", "message.htm");
 		this.context.put("message", I18n.getMessage("invalidAction"));
 	}
-	
+
 	/**
-	 * TODO: Make dynamic data format
-	 * TODO: refactoring here to remove the duplicated code with the method above.
-	 * Performs a search over the users votes between two dates.
+	 * TODO: Make dynamic data format TODO: refactoring here to remove the duplicated code with the
+	 * method above. Performs a search over the users votes between two dates.
 	 * 
 	 * @throws Exception
 	 */
 	public void searchByPeriod() throws Exception
 	{
-	    SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy");
-	    Date firstPeriod, lastPeriod;
-	    if("".equals(this.request.getParameter("first_date"))  ){	        
-	        firstPeriod = formater.parse("01/01/1970");//extreme date
-	    }else{
-	        firstPeriod = formater.parse(this.request.getParameter("first_date"));
-	    }
-	    if("".equals(this.request.getParameter("last_date"))){
-	        lastPeriod = new Date();//now
-	    }else{
-	        lastPeriod = formater.parse(this.request.getParameter("last_date"));	        
-	    }	   
-	    
-	    String orderField;
-	    if("".equals(this.request.getParameter("order_by"))){
-	        orderField = "total";
-	    }else{
-	        orderField = this.request.getParameter("order_by");	        
-	    }
-	    
+		SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy");
+		Date firstPeriod, lastPeriod;
+		if ("".equals(this.request.getParameter("first_date"))) {
+			firstPeriod = formater.parse("01/01/1970");// extreme date
+		}
+		else {
+			firstPeriod = formater.parse(this.request.getParameter("first_date"));
+		}
+		if ("".equals(this.request.getParameter("last_date"))) {
+			lastPeriod = new Date();// now
+		}
+		else {
+			lastPeriod = formater.parse(this.request.getParameter("last_date"));
+		}
+
+		String orderField;
+		if ("".equals(this.request.getParameter("order_by"))) {
+			orderField = "total";
+		}
+		else {
+			orderField = this.request.getParameter("order_by");
+		}
+
 		int start = this.preparePagination(DataAccessDriver.getInstance().newUserModel().getTotalUsers());
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
-		//Load all users with your karma
-		List users = DataAccessDriver.getInstance().newKarmaModel().getMostRatedUserByPeriod(usersPerPage, firstPeriod, lastPeriod, orderField);
+		// Load all users with your karma
+		List users = DataAccessDriver.getInstance().newKarmaModel().getMostRatedUserByPeriod(usersPerPage, firstPeriod,
+				lastPeriod, orderField);
 		this.context.put("users", users);
 		this.context.put("moduleAction", "user_list_karma.htm");
 	}
-	
+
 	/**
-	 * TODO: Make dynamic data format
+	 * TODO: Make dynamic date format
 	 * 
 	 * Performs a search over the users votes in a specific month.
-	 * @throws Exception
 	 * 
 	 * @throws Exception
 	 */
-	public void searchByMonth() throws Exception{
-	    SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy");
-	    int month = Integer.parseInt(request.getParameter("month"));
-	    int year = Integer.parseInt(request.getParameter("year"));
-	    	    	   
-	    
-	    Calendar c = Calendar.getInstance();	    
-	    Date firstPeriod, lastPeriod;	           
-	    firstPeriod = formater.parse("01/"+month+"/"+year);
-	    //set the Calendar with the first day of the month
-	    c.setTime(firstPeriod);
-	    //Now get the last day of this month.
-	    lastPeriod = formater.parse(c.getActualMaximum(Calendar.DAY_OF_MONTH)+"/"+month+"/"+year);	    
-	    
-	    String orderField;
-	    if("".equals(request.getParameter("order_by")) || request.getParameter("order_by") == null){
-	        orderField = "total";
-	    }else{
-	        orderField = this.request.getParameter("order_by");	        
-	    }
-	    
+	public void searchByMonth() throws Exception
+	{
+		SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy");
+		int month = Integer.parseInt(request.getParameter("month"));
+		int year = Integer.parseInt(request.getParameter("year"));
+
+		Calendar c = Calendar.getInstance();
+		Date firstPeriod, lastPeriod;
+		firstPeriod = formater.parse("01/" + month + "/" + year);
+		// set the Calendar with the first day of the month
+		c.setTime(firstPeriod);
+		// Now get the last day of this month.
+		lastPeriod = formater.parse(c.getActualMaximum(Calendar.DAY_OF_MONTH) + "/" + month + "/" + year);
+
+		String orderField;
+		if ("".equals(request.getParameter("order_by")) || request.getParameter("order_by") == null) {
+			orderField = "total";
+		}
+		else {
+			orderField = this.request.getParameter("order_by");
+		}
+
 		int start = this.preparePagination(DataAccessDriver.getInstance().newUserModel().getTotalUsers());
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
-		//Load all users with your karma
-		List users = DataAccessDriver.getInstance().newKarmaModel().getMostRatedUserByPeriod(usersPerPage, firstPeriod, lastPeriod, orderField);
+		// Load all users with your karma
+		List users = DataAccessDriver.getInstance().newKarmaModel().getMostRatedUserByPeriod(usersPerPage, firstPeriod,
+				lastPeriod, orderField);
 		this.context.put("users", users);
 		this.context.put("moduleAction", "user_list_karma.htm");
-	    
+
 	}
-	
+
 	private int preparePagination(int totalUsers)
 	{
 		int start = ViewCommon.getStartPage();
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
-		
-		this.context.put("totalPages", new Double(Math.ceil( (double)totalUsers / usersPerPage )));
+
+		this.context.put("totalPages", new Double(Math.ceil((double) totalUsers / usersPerPage)));
 		this.context.put("recordsPerPage", new Integer(usersPerPage));
 		this.context.put("totalRecords", new Integer(totalUsers));
-		this.context.put("thisPage", new Double(Math.ceil( (double)(start + 1) / usersPerPage )));
+		this.context.put("thisPage", new Double(Math.ceil((double) (start + 1) / usersPerPage)));
 		this.context.put("start", new Integer(start));
-		
+
 		return start;
-	}	
+	}
 }
