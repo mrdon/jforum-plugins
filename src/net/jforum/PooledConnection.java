@@ -79,7 +79,7 @@ import org.apache.log4j.Logger;
  *
  * @author Paulo Silveira
  * @author Rafael Steil
- * @version $Id: PooledConnection.java,v 1.12 2005/02/24 23:00:50 rafaelsteil Exp $
+ * @version $Id: PooledConnection.java,v 1.13 2005/03/12 20:10:44 rafaelsteil Exp $
  * */
 
 public class PooledConnection extends DBConnection
@@ -329,7 +329,7 @@ public class PooledConnection extends DBConnection
 	 * @param conn <code>Connection</code> object to release
 	 * @throws java.sql.SQLException
 	 */
-	public void releaseConnection(Connection conn) throws SQLException 
+	public void releaseConnection(Connection conn)
 	{
 		if (conn == null) {
 			if (debug) {

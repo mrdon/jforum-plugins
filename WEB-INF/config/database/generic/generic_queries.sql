@@ -315,10 +315,16 @@ SearchModel.searchByTime = INSERT INTO jforum_search_results (topic_id, session,
 	AND p.post_time > ?
 
 SearchModel.associateWordToPost = INSERT INTO jforum_search_wordmatch (post_id, word_id, title_match) VALUES (?, ?, ?)
-
 SearchModel.searchExistingWord = SELECT w.word_id FROM jforum_search_words w WHERE w.word_hash = ?
-	
 SearchModel.searchExistingAssociation = SELECT post_id FROM jforum_search_wordmatch WHERE word_id = ? AND post_id = ?
+SearchModel.maxPostIdUntilNow = SELECT MAX(post_id) FROM jforum_posts WHERE post_time < ?
+SearchModel.howManyToIndex = SELECT COUNT(1) FROM jforum_posts WHERE post_time < ?
+
+SearchModel.getPostsToIndex = SELECT p.post_id, pt.post_text, pt.post_subject \
+	FROM jforum_posts p, jforum_posts_text pt \
+	WHERE p.post_id = pt.post_id \
+	AND p.post_id BETWEEN ? AND ? \
+	LIMIT ?, ?
 
 # ##########
 # TreeGroup

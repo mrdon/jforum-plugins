@@ -57,7 +57,7 @@ package net.jforum.model;
  * analise, look at <code>net.jforum.drivers.generic</code> package.
  * 
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.16 2005/02/22 20:32:36 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.17 2005/03/12 20:10:46 rafaelsteil Exp $
  */
 public abstract class DataAccessDriver 
 {
@@ -228,4 +228,11 @@ public abstract class DataAccessDriver
 	 * @return <code>link net.jforum.model.ModerationModel</code> instance
 	 */
 	public abstract net.jforum.model.ModerationModel newModerationModel();
+	
+	/**
+	 * Gets a {@link net.jforum.model.ScheduledSearchIndexerModel} instance
+	 * 
+	 * @return <code>link net.jforum.model.ScheduledSearchIndexerModel</code> instance
+	 */
+	public abstract net.jforum.model.ScheduledSearchIndexerModel newScheduledSearchIndexerModel();
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -36,62 +36,64 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Feb 22, 2005 4:54:31 PM
+ * Created on Mar 11, 2005 3:22:23 PM
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.util.search;
+package net.jforum.util.search.quartz;
 
-import java.sql.Connection;
-
-import net.jforum.DBConnection;
-import net.jforum.entities.Post;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.model.SearchIndexerModel;
-import net.jforum.util.concurrent.Task;
+import java.util.Date;
 
 import org.apache.log4j.Logger;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.quartz.JobListener;
 
 /**
  * @author Rafael Steil
- * @version $Id: MessageIndexerTask.java,v 1.1 2005/02/22 20:32:39 rafaelsteil Exp $
+ * @version $Id: SimpleListener.java,v 1.2 2005/03/12 20:10:46 rafaelsteil Exp $
  */
-public class MessageIndexerTask implements Task
+public class SimpleListener implements JobListener
 {
-	private static Logger logger = Logger.getLogger(MessageIndexerTask.class);
-	private Connection conn;
-	private Post post;
+	private static Logger logger = Logger.getLogger(SimpleListener.class);
+	private String name;
 	
-	public MessageIndexerTask(Post post) throws Exception
+	public void setName(String name)
 	{
-		this.post = post;
-		this.conn = DBConnection.getImplementation().getConnection();
+		this.name = name;
+	}
+	
+	/**
+	 * @see org.quartz.JobListener#getName()
+	 */
+	public String getName()
+	{
+		return this.name;
 	}
 
 	/**
-	 * @see net.jforum.util.concurrent.Task#execute()
+	 * @see org.quartz.JobListener#jobToBeExecuted(org.quartz.JobExecutionContext)
 	 */
-	public Object execute() throws Exception
+	public void jobToBeExecuted(JobExecutionContext context)
 	{
-		try {
-			SearchIndexerModel indexer = DataAccessDriver.getInstance().newSearchIndexerModel();
-			indexer.setConnection(this.conn);
-			indexer.insertSearchWords(this.post);
-		}
-		catch (Exception e) {
-			logger.warn("Error while indexing a post: " + e);
-			e.printStackTrace();
-		}
-		finally {
-			if (this.conn != null) {
-				try {
-					DBConnection.getImplementation().releaseConnection(this.conn);
-				}
-				catch (Exception e) {}
-			}
-		}
-		
-		return null;
+		logger.info("Job going to be executed: " + context.getJobDetail().getName() 
+				+ ", " + context.getJobDetail().getDescription()
+				+ "[" + new Date() + "]");
+	}
+
+	/**
+	 * @see org.quartz.JobListener#jobExecutionVetoed(org.quartz.JobExecutionContext)
+	 */
+	public void jobExecutionVetoed(JobExecutionContext context) {}
+
+	/**
+	 * @see org.quartz.JobListener#jobWasExecuted(org.quartz.JobExecutionContext, org.quartz.JobExecutionException)
+	 */
+	public void jobWasExecuted(JobExecutionContext context, JobExecutionException jobException)
+	{
+		logger.info("Job execution ended: " + context.getJobDetail().getName() 
+				+ ", " + context.getJobDetail().getDescription()
+				+ "[" + new Date() + "]");
 	}
 
 }

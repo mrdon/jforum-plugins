@@ -43,12 +43,13 @@
 package net.jforum.model;
 
 import java.sql.Connection;
+import java.util.List;
 
 import net.jforum.entities.Post;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchIndexerModel.java,v 1.1 2005/02/22 20:32:36 rafaelsteil Exp $
+ * @version $Id: SearchIndexerModel.java,v 1.2 2005/03/12 20:10:46 rafaelsteil Exp $
  */
 public interface SearchIndexerModel
 {
@@ -58,6 +59,14 @@ public interface SearchIndexerModel
 	 * @param conn The connection the class will use
 	 */
 	public void setConnection(Connection conn);
+	
+	/**
+	 * Indexes a set of posts.
+	 * 
+	 * @param posts The posts to index
+	 * @throws Exception
+	 */
+	public void insertSearchWords(List posts) throws Exception;
 	
 	/**
 	 * Indexes a post

@@ -69,7 +69,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumCommonServlet.java,v 1.24 2005/02/16 20:33:35 rafaelsteil Exp $
+ * @version $Id: JForumCommonServlet.java,v 1.25 2005/03/12 20:10:44 rafaelsteil Exp $
  */
 public class JForumCommonServlet extends HttpServlet {
     protected boolean debug;
@@ -118,6 +118,7 @@ public class JForumCommonServlet extends HttpServlet {
             }
 
             ConfigLoader.listenForChanges();
+			ConfigLoader.startSearchIndexer();
 
             Configuration.setDefaultConfiguration(templateCfg);
         } catch (Exception e) {

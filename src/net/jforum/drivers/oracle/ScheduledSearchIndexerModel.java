@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -36,65 +36,25 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Jan 7, 2005 7:44:40 PM
- *
+ * Created on Mar 12, 2005 4:42:31 PM
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum;
+package net.jforum.drivers.oracle;
 
-import java.sql.Connection;
-
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.sql.DataSource;
-
-import net.jforum.util.preferences.ConfigKeys;
-import net.jforum.util.preferences.SystemGlobals;
+import java.sql.ResultSet;
 
 /**
- * DataSource connection implementation for JForum.
- * The datasourcename should be set in the key 
- * <code>database.datasource.name</code> at 
- * SystemGlobals.properties.
- * 
  * @author Rafael Steil
- * @version $Id: DataSourceConnection.java,v 1.3 2005/03/12 20:10:44 rafaelsteil Exp $
+ * @version $Id: ScheduledSearchIndexerModel.java,v 1.2 2005/03/12 20:10:50 rafaelsteil Exp $
  */
-public class DataSourceConnection extends DBConnection
+public class ScheduledSearchIndexerModel extends net.jforum.drivers.generic.ScheduledSearchIndexerModel
 {
-	private DataSource ds;
-	
 	/**
-	 * @see net.jforum.DBConnection#init()
+	 * @see net.jforum.drivers.generic.ScheduledSearchIndexerModel#getPostTextFromResultSet(java.sql.ResultSet)
 	 */
-	public void init() throws Exception 
+	protected String getPostTextFromResultSet(ResultSet rs) throws Exception
 	{
-		Context context = new InitialContext();
-		this.ds = (DataSource)context.lookup(SystemGlobals.getValue(
-				ConfigKeys.DATABASE_DATASOURCE_NAME));
+		return OracleUtils.readBlobUTF16BinaryStream(rs, "post_text");
 	}
-	/**
-	 * @see net.jforum.DBConnection#getConnection()
-	 */
-	public Connection getConnection() throws Exception
-	{
-		return this.ds.getConnection();
-	}
-
-	/**
-	 * @see net.jforum.DBConnection#releaseConnection(java.sql.Connection)
-	 */
-	public void releaseConnection(Connection conn)
-	{
-		try {
-			conn.close();
-		}
-		catch (Exception e) {}
-	}
-
-	/**
-	 * @see net.jforum.DBConnection#realReleaseAllConnections()
-	 */
-	public void realReleaseAllConnections() throws Exception {}
 }

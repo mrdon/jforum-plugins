@@ -23,5 +23,6 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/jboss-system.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/mysql-connector-java-3.1.4-beta-bin.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/postgresql-8.0.309.jdbc3.jar"/>
+	<classpathentry sourcepath="C:/java/quartz-1.4.4/src" kind="lib" path="WEB-INF/lib/quartz-1.4.4.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>

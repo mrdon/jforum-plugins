@@ -69,7 +69,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author Pieter Olivier
- * @version $Id: SystemGlobals.java,v 1.19 2005/02/15 18:16:00 rafaelsteil Exp $
+ * @version $Id: SystemGlobals.java,v 1.20 2005/03/12 20:10:49 rafaelsteil Exp $
  */
 public class SystemGlobals implements VariableStore
 {
@@ -174,6 +174,11 @@ public class SystemGlobals implements VariableStore
 	 */
 	public static void loadAdditionalDefaults(String file) throws IOException
 	{
+		if (!new File(file).exists()) {
+			logger.info("Cannot find file " + file + ". Will ignore it");
+			return;
+		}
+		
 		FileInputStream input = new FileInputStream(file);
 		globals.installation.load(input);
 		input.close();

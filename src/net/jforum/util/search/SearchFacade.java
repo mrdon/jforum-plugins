@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -36,65 +36,57 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Jan 7, 2005 7:44:40 PM
- *
+ * Created on Mar 11, 2005 12:01:47 PM
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum;
+package net.jforum.util.search;
 
-import java.sql.Connection;
+import org.apache.log4j.Logger;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.sql.DataSource;
-
+import net.jforum.entities.Post;
+import net.jforum.exceptions.SearchInstantiationException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
- * DataSource connection implementation for JForum.
- * The datasourcename should be set in the key 
- * <code>database.datasource.name</code> at 
- * SystemGlobals.properties.
- * 
  * @author Rafael Steil
- * @version $Id: DataSourceConnection.java,v 1.3 2005/03/12 20:10:44 rafaelsteil Exp $
+ * @version $Id: SearchFacade.java,v 1.2 2005/03/12 20:10:45 rafaelsteil Exp $
  */
-public class DataSourceConnection extends DBConnection
+public class SearchFacade
 {
-	private DataSource ds;
+	private static SearchManager searchManager;
+	private static Logger logger = Logger.getLogger(SearchFacade.class);
 	
-	/**
-	 * @see net.jforum.DBConnection#init()
-	 */
-	public void init() throws Exception 
+	public static void init()
 	{
-		Context context = new InitialContext();
-		this.ds = (DataSource)context.lookup(SystemGlobals.getValue(
-				ConfigKeys.DATABASE_DATASOURCE_NAME));
-	}
-	/**
-	 * @see net.jforum.DBConnection#getConnection()
-	 */
-	public Connection getConnection() throws Exception
-	{
-		return this.ds.getConnection();
-	}
-
-	/**
-	 * @see net.jforum.DBConnection#releaseConnection(java.sql.Connection)
-	 */
-	public void releaseConnection(Connection conn)
-	{
-		try {
-			conn.close();
+		if (!SystemGlobals.getBoolValue(ConfigKeys.SEARCH_INDEXING_ENABLED)) {
+			logger.info("Search indexation is disabled. 'Will try to create a SearchManager "
+					+ "instance for runtime configuration changes");
 		}
-		catch (Exception e) {}
+		
+		String clazz = SystemGlobals.getValue(ConfigKeys.SEARCH_INDEXER_IMPLEMENTATION);
+		
+		if (clazz != null && !"".equals(clazz)) {
+			try {
+				searchManager = (SearchManager)Class.forName(clazz).newInstance();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				throw new SearchInstantiationException("Error while tring to start the search manager: " + e);
+			}
+			
+			searchManager.init();
+		}
+		else {
+			logger.info(ConfigKeys.SEARCH_INDEXER_IMPLEMENTATION + " is not defined. Skipping.");
+		}
 	}
-
-	/**
-	 * @see net.jforum.DBConnection#realReleaseAllConnections()
-	 */
-	public void realReleaseAllConnections() throws Exception {}
+	
+	public static void index(Post post)
+	{
+		if (SystemGlobals.getBoolValue(ConfigKeys.SEARCH_INDEXING_ENABLED)) {
+			searchManager.index(post);
+		}
+	}
 }

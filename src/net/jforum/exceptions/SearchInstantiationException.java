@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -36,65 +36,20 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Jan 7, 2005 7:44:40 PM
- *
+ * Created on Mar 11, 2005 12:06:39 PM
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum;
-
-import java.sql.Connection;
-
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.sql.DataSource;
-
-import net.jforum.util.preferences.ConfigKeys;
-import net.jforum.util.preferences.SystemGlobals;
+package net.jforum.exceptions;
 
 /**
- * DataSource connection implementation for JForum.
- * The datasourcename should be set in the key 
- * <code>database.datasource.name</code> at 
- * SystemGlobals.properties.
- * 
  * @author Rafael Steil
- * @version $Id: DataSourceConnection.java,v 1.3 2005/03/12 20:10:44 rafaelsteil Exp $
+ * @version $Id: SearchInstantiationException.java,v 1.2 2005/03/12 20:10:51 rafaelsteil Exp $
  */
-public class DataSourceConnection extends DBConnection
+public class SearchInstantiationException extends RuntimeException
 {
-	private DataSource ds;
-	
-	/**
-	 * @see net.jforum.DBConnection#init()
-	 */
-	public void init() throws Exception 
+	public SearchInstantiationException(String message)
 	{
-		Context context = new InitialContext();
-		this.ds = (DataSource)context.lookup(SystemGlobals.getValue(
-				ConfigKeys.DATABASE_DATASOURCE_NAME));
+		super(message);
 	}
-	/**
-	 * @see net.jforum.DBConnection#getConnection()
-	 */
-	public Connection getConnection() throws Exception
-	{
-		return this.ds.getConnection();
-	}
-
-	/**
-	 * @see net.jforum.DBConnection#releaseConnection(java.sql.Connection)
-	 */
-	public void releaseConnection(Connection conn)
-	{
-		try {
-			conn.close();
-		}
-		catch (Exception e) {}
-	}
-
-	/**
-	 * @see net.jforum.DBConnection#realReleaseAllConnections()
-	 */
-	public void realReleaseAllConnections() throws Exception {}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -36,65 +36,59 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Jan 7, 2005 7:44:40 PM
- *
+ * Created on Mar 11, 2005 11:45:30 AM
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum;
+package net.jforum.util.search.simple;
 
-import java.sql.Connection;
+import org.apache.log4j.Logger;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.sql.DataSource;
-
+import net.jforum.JForum;
+import net.jforum.entities.Post;
+import net.jforum.exceptions.SearchException;
+import net.jforum.model.DataAccessDriver;
+import net.jforum.model.SearchIndexerModel;
+import net.jforum.util.concurrent.executor.QueuedExecutor;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.search.SearchManager;
 
 /**
- * DataSource connection implementation for JForum.
- * The datasourcename should be set in the key 
- * <code>database.datasource.name</code> at 
- * SystemGlobals.properties.
- * 
  * @author Rafael Steil
- * @version $Id: DataSourceConnection.java,v 1.3 2005/03/12 20:10:44 rafaelsteil Exp $
+ * @version $Id: SimpleSearchManager.java,v 1.2 2005/03/12 20:10:47 rafaelsteil Exp $
  */
-public class DataSourceConnection extends DBConnection
+public class SimpleSearchManager implements SearchManager
 {
-	private DataSource ds;
+	private static Logger logger = Logger.getLogger(SimpleSearchManager.class);
 	
 	/**
-	 * @see net.jforum.DBConnection#init()
+	 * @see net.jforum.util.search.SearchManager#init()
 	 */
-	public void init() throws Exception 
-	{
-		Context context = new InitialContext();
-		this.ds = (DataSource)context.lookup(SystemGlobals.getValue(
-				ConfigKeys.DATABASE_DATASOURCE_NAME));
-	}
-	/**
-	 * @see net.jforum.DBConnection#getConnection()
-	 */
-	public Connection getConnection() throws Exception
-	{
-		return this.ds.getConnection();
-	}
+	public void init() {}
 
 	/**
-	 * @see net.jforum.DBConnection#releaseConnection(java.sql.Connection)
+	 * @see net.jforum.util.search.SearchManager#index(net.jforum.entities.Post)
 	 */
-	public void releaseConnection(Connection conn)
+	public void index(Post post)
 	{
-		try {
-			conn.close();
+		if (SystemGlobals.getBoolValue(ConfigKeys.BACKGROUND_TASKS)) {
+			try {
+				QueuedExecutor.getInstance().execute(new MessageIndexerTask(post));
+			}
+			catch (Exception e) {
+				logger.error("Error while running the search task", e);
+			}
 		}
-		catch (Exception e) {}
+		else {
+			try {
+				SearchIndexerModel indexer = DataAccessDriver.getInstance().newSearchIndexerModel();
+				indexer.setConnection(JForum.getConnection());
+				indexer.insertSearchWords(post);
+			}
+			catch (Exception e) {
+				throw new SearchException("Error while indexing a message", e);
+			}
+		}
 	}
-
-	/**
-	 * @see net.jforum.DBConnection#realReleaseAllConnections()
-	 */
-	public void realReleaseAllConnections() throws Exception {}
 }

@@ -47,7 +47,7 @@ import net.jforum.drivers.generic.security.UserSecurityModel;
 
 /**
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.10 2005/02/22 20:32:38 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.11 2005/03/12 20:10:48 rafaelsteil Exp $
  */
 public class DataAccessDriver extends net.jforum.model.DataAccessDriver 
 {
@@ -70,6 +70,7 @@ public class DataAccessDriver extends net.jforum.model.DataAccessDriver
 	private static ForumModel forumModel = new ForumModel();
 	private static CategoryModel categoryModel = new CategoryModel();
 	private static ConfigModel configModel = new ConfigModel();
+	private static ScheduledSearchIndexerModel ssim = new ScheduledSearchIndexerModel();
 	
 	/**
 	 * @see net.jforum.model.DataAccessDriver#getForumModel()
@@ -229,5 +230,13 @@ public class DataAccessDriver extends net.jforum.model.DataAccessDriver
 	public net.jforum.model.ModerationModel newModerationModel()
 	{
 		return moderationModel;
+	}
+	
+	/**
+	 * @see net.jforum.model.DataAccessDriver#newScheduledSearchIndexerModel()
+	 */
+	public net.jforum.model.ScheduledSearchIndexerModel newScheduledSearchIndexerModel()
+	{
+		return ssim;
 	}
 }

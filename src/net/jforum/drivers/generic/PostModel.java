@@ -53,16 +53,14 @@ import java.util.List;
 import net.jforum.JForum;
 import net.jforum.entities.Post;
 import net.jforum.model.DataAccessDriver;
-import net.jforum.model.SearchIndexerModel;
-import net.jforum.util.concurrent.executor.QueuedExecutor;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.util.search.MessageIndexerTask;
+import net.jforum.util.search.SearchFacade;
 
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: PostModel.java,v 1.20 2005/03/08 23:04:04 rafaelsteil Exp $
+ * @version $Id: PostModel.java,v 1.21 2005/03/12 20:10:48 rafaelsteil Exp $
  */
 public class PostModel extends AutoKeys implements net.jforum.model.PostModel 
 {
@@ -230,15 +228,8 @@ public class PostModel extends AutoKeys implements net.jforum.model.PostModel
 		this.addNewPost(post);
 		this.addNewPostText(post);
 		
-		// Tokenize the words for search
-		if (SystemGlobals.getBoolValue(ConfigKeys.BACKGROUND_TASKS)) {
-			QueuedExecutor.getInstance().execute(new MessageIndexerTask(post));
-		}
-		else {
-			SearchIndexerModel indexer = DataAccessDriver.getInstance().newSearchIndexerModel();
-			indexer.setConnection(JForum.getConnection());
-			indexer.insertSearchWords(post);
-		}
+		// Search
+		SearchFacade.index(post);
 		
 		return post.getId();
 	}

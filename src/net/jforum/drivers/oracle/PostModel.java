@@ -53,7 +53,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostModel.java,v 1.2 2005/01/26 20:15:09 rafaelsteil Exp $
+ * @version $Id: PostModel.java,v 1.3 2005/03/12 20:10:50 rafaelsteil Exp $
  */
 public class PostModel extends net.jforum.drivers.generic.PostModel
 {
@@ -126,7 +126,7 @@ public class PostModel extends net.jforum.drivers.generic.PostModel
 		ResultSet rs = p.executeQuery();
 						
 		while (rs.next()) {
-			l.add(makePost(rs));
+			l.add(super.makePost(rs));
 		}
 		
 		rs.close();

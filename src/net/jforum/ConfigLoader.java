@@ -64,6 +64,8 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.QueriesFileListener;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.SystemGlobalsListener;
+import net.jforum.util.search.SearchFacade;
+import net.jforum.util.search.quartz.QuartzSearchIndexerJob;
 
 import org.apache.log4j.Logger;
 
@@ -71,7 +73,7 @@ import org.apache.log4j.Logger;
  * General utilities methods for loading configurations for JForum.
  * 
  * @author Rafael Steil
- * @version $Id: ConfigLoader.java,v 1.10 2005/02/24 23:00:50 rafaelsteil Exp $
+ * @version $Id: ConfigLoader.java,v 1.11 2005/03/12 20:10:44 rafaelsteil Exp $
  */
 public class ConfigLoader 
 {
@@ -186,9 +188,15 @@ public class ConfigLoader
 			new TopicRepository().setCacheEngine(cache);
 			new SessionFacade().setCacheEngine(cache);
 			new PostRepository().setCacheEngine(cache);
+			new QuartzSearchIndexerJob().setCacheEngine(cache);
 		}
 		catch (Exception e) {
 			throw new CacheEngineStartupException("Error while starting the cache engine: " + e);
 		}
+	}
+	
+	public static void startSearchIndexer()
+	{
+		SearchFacade.init();
 	}
 }

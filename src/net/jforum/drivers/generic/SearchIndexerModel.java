@@ -45,13 +45,18 @@ package net.jforum.drivers.generic;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 import net.jforum.entities.Post;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchIndexerModel.java,v 1.1 2005/02/22 20:32:38 rafaelsteil Exp $
+ * @version $Id: SearchIndexerModel.java,v 1.2 2005/03/12 20:10:48 rafaelsteil Exp $
  */
 public class SearchIndexerModel extends AutoKeys implements net.jforum.model.SearchIndexerModel
 {
@@ -66,71 +71,91 @@ public class SearchIndexerModel extends AutoKeys implements net.jforum.model.Sea
 	}
 	
 	/**
-	 * @see net.jforum.model.SearchIndexerModel#insertSearchWords(net.jforum.entities.Post)
+	 * @see net.jforum.model.SearchIndexerModel#indexSearchWords(java.util.List)
 	 */
-	public void insertSearchWords(Post post) throws Exception
+	public void insertSearchWords(List posts) throws Exception
 	{
+		// Prepare statements
 		PreparedStatement insert = this.getStatementForAutoKeys("SearchModel.insertWords", this.conn);
 		PreparedStatement existing = this.conn.prepareStatement(
 						SystemGlobals.getSql("SearchModel.searchExistingWord"));
 		
 		PreparedStatement existingAssociation = this.conn.prepareStatement(
 						SystemGlobals.getSql("SearchModel.searchExistingAssociation"));
-		existingAssociation.setInt(2, post.getId());
 		
 		PreparedStatement wordToPost = this.conn.prepareStatement(
 						SystemGlobals.getSql("SearchModel.associateWordToPost"));
-		wordToPost.setInt(1, post.getId());
 		
-		String str = post.getText() +" "+ post.getSubject();
-		String[] words = str.toLowerCase().replaceAll("[\\.\\\\\\/~^&\\(\\)-_+=!@#$%\"\'\\[\\]\\{\\}?<:>,*¡A¡B¡C¡D¡E¡F¡G¡H¡I¡J¡K¡L¡U¡Z¡]¡^¡a¡b¡e¡f¡i¡j¡m¡n¡q¡r¡u¡v¡y¡z¡£¡¤¡¥¡¦¡§¡¨¡©¡ª¡«¡¬\n\r\t]", " ").split(" ");
-						
-		for (int i = 0; i < words.length; i++) {
-			words[i] = words[i].trim();
-			// Skip words less than 3 chars
-			if (words[i].length() < 3) {
-				continue;
-			}
+		Pattern pattern = Pattern.compile("[\\.\\\\\\/~^&\\(\\)-_+=!@#$%\"\'\\[\\]\\{\\}?<:>,*¡"
+				+ "A¡B¡C¡D¡E¡F¡G¡H¡I¡J¡K¡L¡U¡Z¡]¡^¡a¡b¡e¡f¡i¡j¡m¡n¡q¡r¡u¡v¡y¡z¡£¡¤¡¥¡¦¡§¡¨¡©¡ª¡«¡¬\n\r\t]");
+		
+		// Process all posts
+		for (Iterator iter = posts.iterator(); iter.hasNext(); ) {
+			Post post = (Post)iter.next();
 			
-			// Trucate words longer than 100 chars
-			if (words[i].length() > 100) {
-				words[i] = words[i].substring(0, 100); 
-			}
+			existingAssociation.setInt(2, post.getId());
+			wordToPost.setInt(1, post.getId());
 			
-			// Verify if the current word is not in the database before proceeding
-			int hash = words[i].hashCode();
-			existing.setInt(1, hash);
-			ResultSet rs = existing.executeQuery();
-
-			if (!rs.next()) {
-				// The word is not in the database. Insert it now
-				insert.setInt(1, hash);
-				insert.setString(2, words[i]);
-				int wordId = this.executeAutoKeysQuery(insert, this.conn);
-
-				// Associate the current word to the post
-				this.associateWordToPost(wordToPost, words[i], wordId, post);
-			}
-			else {
-				// The word is already in the database ( jforum_search_words )
-				// Check then if the current post is not already associated to the word
-				int wordId = rs.getInt("word_id");
-				existingAssociation.setInt(1, wordId);
+			String str = post.getText() +" "+ post.getSubject();
+			str = pattern.matcher(str).replaceAll(" ");
+			
+			StringTokenizer tok = new StringTokenizer(str, " ");
+			while (tok.hasMoreTokens()) {
+				String word = tok.nextToken().trim();
 				
-				ResultSet rsa = existingAssociation.executeQuery();
-				if (!rsa.next()) {
-					// Assoacite the post to the word
-					this.associateWordToPost(wordToPost, words[i], wordId, post);
+				// Skip words less than 3 chars
+				if (word.length() < 3) {
+					continue;
 				}
-				rsa.close();
+				
+				// Trucate words longer than 100 chars
+				if (word.length() > 100) {
+					word = word.substring(0, 100); 
+				}
+				
+				// Verify if the current word is not in the database before proceeding
+				int hash = word.hashCode();
+				existing.setInt(1, hash);
+				ResultSet rs = existing.executeQuery();
+
+				if (!rs.next()) {
+					// The word is not in the database. Insert it now
+					insert.setInt(1, hash);
+					insert.setString(2, word);
+					int wordId = this.executeAutoKeysQuery(insert, this.conn);
+
+					// Associate the current word to the post
+					this.associateWordToPost(wordToPost, word, wordId, post);
+				}
+				else {
+					// The word is already in the database ( jforum_search_words )
+					// Check then if the current post is not already associated to the word
+					int wordId = rs.getInt("word_id");
+					existingAssociation.setInt(1, wordId);
+					
+					ResultSet rsa = existingAssociation.executeQuery();
+					if (!rsa.next()) {
+						// Assoacite the post to the word
+						this.associateWordToPost(wordToPost, word, wordId, post);
+					}
+					rsa.close();
+				}
+				
+				rs.close();
 			}
-			
-			rs.close();
 		}
 		
 		insert.close();
 		existing.close();
 		wordToPost.close();
+	}
+	
+	/**
+	 * @see net.jforum.model.SearchIndexerModel#insertSearchWords(net.jforum.entities.Post)
+	 */
+	public void insertSearchWords(final Post post) throws Exception
+	{
+		this.insertSearchWords(new ArrayList() {{ add(post); }});
 	}
 	
 	private void associateWordToPost(PreparedStatement p, String word, int wordId, Post post) throws Exception

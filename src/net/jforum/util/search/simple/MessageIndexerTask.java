@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -36,65 +36,61 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Jan 7, 2005 7:44:40 PM
- *
+ * Created on Feb 22, 2005 4:54:31 PM
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum;
+package net.jforum.util.search.simple;
 
 import java.sql.Connection;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.sql.DataSource;
+import net.jforum.DBConnection;
+import net.jforum.entities.Post;
+import net.jforum.model.DataAccessDriver;
+import net.jforum.model.SearchIndexerModel;
+import net.jforum.util.concurrent.Task;
 
-import net.jforum.util.preferences.ConfigKeys;
-import net.jforum.util.preferences.SystemGlobals;
+import org.apache.log4j.Logger;
 
 /**
- * DataSource connection implementation for JForum.
- * The datasourcename should be set in the key 
- * <code>database.datasource.name</code> at 
- * SystemGlobals.properties.
- * 
  * @author Rafael Steil
- * @version $Id: DataSourceConnection.java,v 1.3 2005/03/12 20:10:44 rafaelsteil Exp $
+ * @version $Id: MessageIndexerTask.java,v 1.2 2005/03/12 20:10:47 rafaelsteil Exp $
  */
-public class DataSourceConnection extends DBConnection
+public class MessageIndexerTask implements Task
 {
-	private DataSource ds;
+	private static Logger logger = Logger.getLogger(MessageIndexerTask.class);
+	private Connection conn;
+	private Post post;
 	
-	/**
-	 * @see net.jforum.DBConnection#init()
-	 */
-	public void init() throws Exception 
+	public MessageIndexerTask(Post post) throws Exception
 	{
-		Context context = new InitialContext();
-		this.ds = (DataSource)context.lookup(SystemGlobals.getValue(
-				ConfigKeys.DATABASE_DATASOURCE_NAME));
-	}
-	/**
-	 * @see net.jforum.DBConnection#getConnection()
-	 */
-	public Connection getConnection() throws Exception
-	{
-		return this.ds.getConnection();
+		this.post = post;
+		this.conn = DBConnection.getImplementation().getConnection();
 	}
 
 	/**
-	 * @see net.jforum.DBConnection#releaseConnection(java.sql.Connection)
+	 * @see net.jforum.util.concurrent.Task#execute()
 	 */
-	public void releaseConnection(Connection conn)
+	public Object execute() throws Exception
 	{
 		try {
-			conn.close();
+			SearchIndexerModel indexer = DataAccessDriver.getInstance().newSearchIndexerModel();
+			indexer.setConnection(this.conn);
+			indexer.insertSearchWords(this.post);
 		}
-		catch (Exception e) {}
+		catch (Exception e) {
+			logger.warn("Error while indexing a post: " + e);
+			e.printStackTrace();
+		}
+		finally {
+			if (this.conn != null) {
+				try {
+					DBConnection.getImplementation().releaseConnection(this.conn);
+				}
+				catch (Exception e) {}
+			}
+		}
+		
+		return null;
 	}
-
-	/**
-	 * @see net.jforum.DBConnection#realReleaseAllConnections()
-	 */
-	public void realReleaseAllConnections() throws Exception {}
 }

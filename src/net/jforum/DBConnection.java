@@ -57,7 +57,7 @@ import org.apache.log4j.Logger;
  * which opens a new connection on every request.  
  * 
  * @author Rafael Steil
- * @version $Id: DBConnection.java,v 1.6 2005/01/13 23:30:18 rafaelsteil Exp $
+ * @version $Id: DBConnection.java,v 1.7 2005/03/12 20:10:45 rafaelsteil Exp $
  */
 public abstract class DBConnection 
 {
@@ -142,7 +142,7 @@ public abstract class DBConnection
 	 * @param conn The connection to release
 	 * @throws Exception
 	 */
-	public abstract void releaseConnection(Connection conn) throws Exception;
+	public abstract void releaseConnection(Connection conn);
 	
 	/**
 	 * Close all open connections.
