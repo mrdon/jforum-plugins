@@ -68,7 +68,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.34 2004/09/14 02:16:44 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.35 2004/09/23 02:23:22 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -174,6 +174,22 @@ public class JForum extends JForumCommonServlet
 		}
 	}
 	
+	protected void setupTemplateContext()
+	{
+		JForum.getContext().put("contextPath", JForum.getRequest().getContextPath());
+		JForum.getContext().put("serverName", JForum.getRequest().getServerName());
+		JForum.getContext().put("templateName", "default");
+		JForum.getContext().put("extension", SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+		JForum.getContext().put("serverPort", Integer.toString(JForum.getRequest().getServerPort()));
+		JForum.getContext().put("I18n", I18n.getInstance());
+		JForum.getContext().put("version", SystemGlobals.getValue(ConfigKeys.VERSION));
+		JForum.getContext().put("pageTitle", SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_TITLE));
+		JForum.getContext().put("metaKeywords", SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_METATAG_KEYWORDS));
+		JForum.getContext().put("metaDescription", SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_METATAG_DESCRIPTION));
+		JForum.getContext().put("forumLink", SystemGlobals.getValue(ConfigKeys.FORUM_LINK));
+		JForum.getContext().put("encoding", SystemGlobals.getValue(ConfigKeys.ENCODING));
+	}
+	
 	public void service(HttpServletRequest req, HttpServletResponse response) throws IOException, ServletException
 	{
 		BufferedWriter out = null;
@@ -186,26 +202,15 @@ public class JForum extends JForumCommonServlet
 			String encoding = SystemGlobals.getValue(ConfigKeys.ENCODING);
 			req.setCharacterEncoding(encoding);
 			
-			// Context
-			JForum.getContext().put("contextPath", req.getContextPath());
-			JForum.getContext().put("serverName", req.getServerName());
-			JForum.getContext().put("templateName", "default");
-			JForum.getContext().put("extension", SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
-			JForum.getContext().put("serverPort", Integer.toString(req.getServerPort()));
-			JForum.getContext().put("I18n", I18n.getInstance());
-			JForum.getContext().put("version", SystemGlobals.getValue(ConfigKeys.VERSION));
-			JForum.getContext().put("pageTitle", SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_TITLE));
-			JForum.getContext().put("metaKeywords", SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_METATAG_KEYWORDS));
-			JForum.getContext().put("metaDescription", SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_METATAG_DESCRIPTION));
-			JForum.getContext().put("forumLink", SystemGlobals.getValue(ConfigKeys.FORUM_LINK));
-			JForum.getContext().put("encoding", encoding);
-			
 			// Request
 			ActionServletRequest request = new ActionServletRequest(req);
 			request.setCharacterEncoding(encoding);
 
 			dataHolder.setResponse(response);
 			dataHolder.setRequest(request);
+			
+			// Context
+			this.setupTemplateContext();
 			
 			if (isDatabaseUp) {
 				dataHolder.setConnection(DBConnection.getImplementation().getConnection());
