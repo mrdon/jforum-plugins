@@ -25,7 +25,7 @@
 			<td class="row2"><span class="gen"><#if user.id != 1><a href="${JForumContext.encodeURL("/pm/sendTo/${user.id}")}"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/icon_pm.gif" border="0" /></a><#else>&nbsp;</#if></span></td>
 			<td class="row2"><span class="gen"><#if (user.isViewEmailEnabled() && user.email?exists && user.email?length > 0)>
 			<#assign e = user.email.split("@")/>
-			<a href="#" onclick="document.location = 'mailto:' + showEmail('${e[0]?default("")}', ' ${e[1]?default("")}');"><img src="${contextPath}/templates/${templateName}/images/icon_email.gif" border="0" /></a></span></td>
+			<a href="#" onclick="document.location = 'mailto:' + showEmail('${e[0]?default("")}', '${e[1]?default("")}');"><img src="${contextPath}/templates/${templateName}/images/icon_email.gif" border="0" /></a></span></td>
 			<#else>&nbsp;
 			</#if>
 			<td class="row2"><span class="gen">${user.from?default("&nbsp;")}</span></td>

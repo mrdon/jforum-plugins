@@ -1,7 +1,7 @@
 # ##########
 # UserModel
 # ##########
-UserModel.selectAllByLimit = SELECT user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website \
+UserModel.selectAllByLimit = SELECT user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail \
 	FROM jforum_users ORDER BY username LIMIT ? OFFSET ?
 
 UserModel.lastGeneratedUserId = SELECT CURRVAL('jforum_users_seq')
