@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.20 2004/09/30 19:09:33 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.21 2004/10/01 14:10:42 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -122,8 +122,8 @@ public class ConfigKeys {
 	public static final String RSS_FILENAME_TOPIC = "rss.filename.topic";
 	public static final String RSS_TOPICS = "rss.topics";
 
-	public static final String I18N_DEFAULT = "i18n.default";
-	public static final String I18N_DEFAULT_ADMIN = "i18n.default.admin";
+	public static final String I18N_DEFAULT = "i18n.board.default";
+	public static final String I18N_DEFAULT_ADMIN = "i18n.internal";
 	public static final String LOCALES_DIR = "locales.dir";
 	public static final String LOCALES_NAMES = "locales.names";
 

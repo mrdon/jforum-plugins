@@ -1,55 +1,68 @@
-  <form name="loginform" accept-charset="${encoding}" action="${contextPath}/jforum${extension}" method=post target=_top>
-  <input type="hidden" name="module" value="user">
-  <input type="hidden" name="securityHash" value="${securityHash}">
-  <input type="hidden" name="action" value="validateLogin">
+<form action="${contextPath}/jforum${extension}" method="post" name="loginform" target="_top" id="loginform" accept-charset="${encoding}">
+  <input type="hidden" name="module" value="user" />
+  <input type="hidden" name="securityHash" value="${securityHash}" />
+  <input type="hidden" name="action" value="validateLogin" />
   
   <#if returnPath?exists>
-  	<input type="hidden" name="returnPath" value="${returnPath}">
+  	<input type="hidden" name="returnPath" value="${returnPath}" />
   </#if>
   
-  <TABLE cellSpacing=2 cellPadding=2 width="100%" align=center border=0>
-<TBODY>
-<TR>
-  <TD class=nav align=left><A class=nav href="${contextPath}/forums/list${extension}">${I18n.getMessage("ForumListing.forumIndex")}</A></TD></TR></TBODY></TABLE>
-  <TABLE class=forumline cellSpacing=1 cellPadding=4 width="100%" align=center border=0>
-<TBODY>
-<TR>
-  <TH class=thHead noWrap height=25>${I18n.getMessage("Login.enterUsername")}
-  </TH></TR>
-<TR>
-  <TD class=row1>
-<TABLE cellSpacing=1 cellPadding=3 width="100%" border=0>
-  <TBODY>
-  <TR>
-<TD align=middle colSpan=2>&nbsp;</TD></TR>
-  <TR>
-    <#if invalidLogin?exists>
-    <td align="center" width="100%" colspan="2">
-    <span class="gen" id="invalidlogin">
-  	<font color=red>${I18n.getMessage("Login.invalidLogin")}</font>
-  	</span>
-  	</td>
-  	</tr>
-  </#if>
-<TD align=right width="45%"><SPAN class=gen>
-${I18n.getMessage("Login.user")}:</SPAN></TD>
-<TD><INPUT maxLength=40 size=25 name=username> </TD></TR>
-  <TR>
-<TD align=right><SPAN class=gen>${I18n.getMessage("Login.password")}:</SPAN></TD>
-<TD><INPUT type=password maxLength=25 size=25 name=password> 
-</TD></TR>
-  <TR align=middle>
-<TD colSpan=2><SPAN class=gen>${I18n.getMessage("Login.autoLogon")}: <INPUT type=checkbox name=autologin></SPAN></TD></TR>
-  <TR align=middle>
-<TD colSpan=2><INPUT type=hidden name=redirect><INPUT class=mainoption type=submit value="${I18n.getMessage("Login.enter")}" name=login></TD></TR>
-  <TR align=middle>
-<TD colSpan=2><SPAN class=gensmall>
-<A class=gensmall href="${contextPath}/user/lostPassword${extension}">${I18n.getMessage("Login.lostPassword")}</A></SPAN>
-  </TD>
-  </TR>
-  </TABLE>
-  </TD>
-  </TR>
-  </TBODY>
-  </TABLE>
-  </FORM>
+<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
+	<tr>
+		<td class="nav" align="left"><a class="nav" href="${contextPath}/forums/list${extension}">${I18n.getMessage("ForumListing.forumIndex")}</a></td>
+	</tr>
+</table>
+
+<table class="forumline" cellspacing="1" cellpadding="4" width="100%" align="center" border="0">
+	<tr>
+		<th class="thHead" nowrap="nowrap" height="25">${I18n.getMessage("Login.enterUsername")}</th>
+	</tr>
+
+	<tr>
+		<td class="row1">
+			<table cellspacing="1" cellpadding="3" width="100%" border="0">
+				<tr>
+					<td align="middle" colspan="2">&nbsp;</td>
+				</tr>
+				
+				<#if invalidLogin?exists>
+				<tr>
+					<td align="center" width="100%" colspan="2">
+						<span class="gen" id="invalidlogin">
+  							<font color="red">${I18n.getMessage("Login.invalidLogin")}</font>
+  						</span>
+  					</td>
+  				</tr>
+				</#if>
+				
+				<tr>
+					<td align="right" width="45%"><span class="gen">${I18n.getMessage("Login.user")}:</span></td>
+					<td><input maxlength="40" size="25" name="username" /> </td>
+				</tr>
+				
+				<tr>
+					<td align="right"><span class="gen">${I18n.getMessage("Login.password")}:</span></td>
+					<td><input type="password" maxlength="25" size="25" name="password" /> </td>
+				</tr>
+
+				<tr align="middle">
+					<td colspan="2"><span class="gen">${I18n.getMessage("Login.autoLogon")}: <input type="checkbox" name="autologin" /></span></td>
+				</tr>
+
+				<tr align="middle">
+					<td colspan="2">
+						<input type="hidden" name="redirect" />
+						<input class="mainoption" type="submit" value="${I18n.getMessage("Login.enter")}" name=login />
+					</td>
+				</tr>
+
+				<tr align="middle">
+					<td colspan="2">
+						<span class="gensmall"><a class="gensmall" href="${contextPath}/user/lostPassword${extension}">${I18n.getMessage("Login.lostPassword")}</a></span>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+</form>
