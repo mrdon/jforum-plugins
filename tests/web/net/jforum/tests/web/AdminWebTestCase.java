@@ -44,47 +44,74 @@ package net.jforum.tests.web;
 
 import java.util.Date;
 
-import net.jforum.util.I18n;
-
 /**
  * @author Marc Wick
- * @version $Id: AdminWebTestCase.java,v 1.8 2004/10/10 16:51:23 rafaelsteil Exp $
+ * @author Rafael Steil
+ * @version $Id: AdminWebTestCase.java,v 1.9 2004/11/12 18:57:43 rafaelsteil Exp $
  */
 public class AdminWebTestCase extends AbstractWebTestCase {
-
     public AdminWebTestCase(String name) throws Exception {
-        super(name);
+   		super(name);
     }
-
-    public void testSetupCategoriesAndForums() {
-        beginAt(FORUMS_LIST);
-        login("Admin", "admin");
-        clickLinkWithText("Admin Control Panel");
-
+    
+    /**
+	 * @see junit.framework.TestCase#setUp()
+	 */
+	protected void setUp() throws Exception {
+		this.adminLogin();
+	}
+    
+    public void testCreateCategory() {
         // add category
         gotoFrame("leftFrame");
-        clickLinkWithText("Categories");
+        
+        assertLinkPresent("categories");
+        clickLink("categories");
         gotoFrame("main");
+        
+        assertButtonPresent("btn_insert");
         clickButton("btn_insert");
         gotoFrame("main");
+        
+        assertFormPresent("form");
         setFormElement("category_name", "a test category");
         setFormElement("groups", "1");
         submit();
-
+        
+        // The createForum test is here because
+        // we first need a category before adding
+        // a forum
+        this.createForum();
+    }
+    
+    private void createForum() {
         // add forum
+    	assertFramePresent("leftFrame");
         gotoFrame("leftFrame");
-        clickLinkWithText("Forums");
+        
+        assertLinkPresent("forums");
+        clickLink("forums");
         gotoFrame("main");
+        
+        assertButtonPresent("btn_insert");
         clickButton("btn_insert");
         gotoFrame("main");
+        
+        assertFormPresent("form");
+        
         setFormElement("forum_name", "a test forum");
         setFormElement("categories_id", "1");
         setFormElement("groups", "1");
         setFormElement("description", "a forum automatically generated for regression tests");
         submit();
-
+        
+        assertElementNotPresent("error");
+    }
+    
+    public void testConfigurations() {
+    	assertFramePresent("leftFrame");
         gotoFrame("leftFrame");
-        clickLinkWithText("Configurations");
+        clickLink("configurations");
         gotoFrame("main");
         setFormElement("p_forum.page.title", "jforum last run regression test " + new Date());
         setFormElement("p_i18n.board.default", language);
@@ -100,41 +127,23 @@ public class AdminWebTestCase extends AbstractWebTestCase {
         submit();
 
         gotoFrame("leftFrame");
-        clickLinkWithText("Configurations");
+        clickLink("configurations");
         gotoFrame("main");
 
         assertFormElementEquals("p_mail.smtp.auth", "false");
-
-        adminLogout();
     }
-
-    public void testPermissions() {
-        beginAt(FORUMS_LIST);
-        login("Admin", "admin");
-        clickLinkWithText("Admin Control Panel");
-        gotoFrame("leftFrame");
-        clickLinkWithText("Groups");
-        gotoFrame("main");
-        clickLinkWithText(I18n.getMessage(language, "Permissions"), 0);
-        gotoFrame("main");
-        submit();
-
-        gotoFrame("leftFrame");
-        clickLinkWithText("Users");
-        gotoFrame("main");
-        assertFormPresent("formusersearch");
-        submit();
-        clickLinkWithText(I18n.getMessage(language, "Permissions"), 0);
-        gotoFrame("main");
-        submit();
-
-        adminLogout();
+    
+    private void adminLogin() {
+    	beginAt(FORUMS_LIST);
+        login("Admin", "admin", true);
+    	clickLink("adminpanel");
     }
 
     private void adminLogout() {
         gotoFrame("leftFrame");
-        clickLinkWithText("Forum Index");
-        gotoFrame("main");
-        clickLinkWithText(I18n.getMessage(language, "ForumBase.logout"));
+        assertLinkPresent("forumIndex");
+        clickLink("forumIndex");
+        assertLinkPresent("logout");
+        clickLink("logout");
     }
 }

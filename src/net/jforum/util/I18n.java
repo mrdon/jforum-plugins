@@ -63,7 +63,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: I18n.java,v 1.20 2004/10/25 20:52:09 rafaelsteil Exp $
+ * @version $Id: I18n.java,v 1.21 2004/11/12 18:57:45 rafaelsteil Exp $
  */
 public class I18n {
     private static I18n classInstance = new I18n();
@@ -123,6 +123,11 @@ public class I18n {
     }
 
     static void load(String localeName, String mergeWith) throws IOException {
+    	if (localeName == null || localeName.trim().equals("")
+    		|| I18n.contains(localeName)) {
+    		return;
+    	}
+
         if (localeNames.size() == 0) {
             loadLocales();
         }
@@ -143,6 +148,14 @@ public class I18n {
         watchForChanges(localeName);
     }
 
+    /**
+     * Loads a new locale. 
+     * If <code>localeName</code> is either null or empty, or if
+     * the locale is already loaded, the method will return
+     * without executing any code. 
+     * @param localeName The locale name to load
+     * @throws IOException
+     */
     public static void load(String localeName) throws IOException {
         load(localeName, SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT));
     }

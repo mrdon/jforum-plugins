@@ -1,35 +1,36 @@
 <#setting number_format = "#"/>
-<STYLE type=text/css>@import url( ${contextPath}/templates/${templateName}/admin/style.css );</STYLE>
+<style type="text/css">@import url( ${contextPath}/templates/${templateName}/admin/style.css );</style>
 
-<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum${extension}" method="post">
-<input type="hidden" name="action" value="delete">
-<input type="hidden" name="module" value="${moduleName}">
-<input type="hidden" name="securityHash" value="${securityHash}">
+<form action="${contextPath}/jforum${extension}" method="post" name="form" id="form" accept-charset="${encoding}">
+<input type="hidden" name="action" value="delete" />
+<input type="hidden" name="module" value="${moduleName}" />
+<input type="hidden" name="securityHash" value="${securityHash}" />
 
-<TABLE class=forumline cellSpacing=1 cellPadding=3 width="100%" border=0><TBODY>
-<TR>
-<TH class=thHead vAlign=center colSpan=3 height=25>${I18n.getMessage("Category.List.Title")}</TH>
-</TR>
+<table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
+	<tr>
+		<th class="thHead" valign="center" colspan="3" height="25">${I18n.getMessage("Category.List.Title")}</th>
+	</tr>
 
-<tr>
-<td class="row1"><span class='gen'><b>Category Name</b></span></td>
-<tD class=row1><span class='gen'><b>Action</b></span></td>
-<tD class=row1><span class='gen'><b>Delete</b></span></td>
-</tr>
+	<tr>
+		<td class="row1"><span class='gen'><b>Category Name</b></span></td>
+		<td class="row1"><span class='gen'><b>Action</b></span></td>
+		<td class="row1"><span class='gen'><b>Delete</b></span></td>
+	</tr>
        
-<#list categories as category>
-	<TR>
-	<TD class=row1 width="38%"><SPAN class=gen>${category.name}</SPAN></TD>
-	<TD class=row2><span class="gen"><a href="${contextPath}/${moduleName}/edit/${category.id}${extension}">${I18n.getMessage("Category.List.Edit")}</a></span></TD>
-	<TD class=row2><input type="checkbox" name="categories_id" value="${category.id}"></TD>
-	</TR>
-</#list>
-<TR align="center">
-<TD class=catBottom colSpan=3 height=28>
-<INPUT class=mainoption type=button value="${I18n.getMessage("Category.List.ClickToNew")}" id="btn_insert" name=button onClick="document.location = '${contextPath}/${moduleName}/insert${extension}';">
-&nbsp;&nbsp;
-<INPUT class=mainoption type=submit value="${I18n.getMessage("Category.List.ClickToDelete")}" name=submit></TD>
-</TR>
-</TABLE>
-</FORM>
-   
+	<#list categories as category>
+		<tr>
+			<td class="row1" width="38%"><span class="gen">${category.name}</span></td>
+			<td class="row2"><span class="gen"><a id="categoryEdit" href="${contextPath}/${moduleName}/edit/${category.id}${extension}">${I18n.getMessage("Category.List.Edit")}</a></span></td>
+			<td class="row2"><input type="checkbox" name="categories_id" value="${category.id}" /></td>
+		</tr>
+	</#list>
+
+	<tr align="center">
+		<td class="catBottom" colspan="3" height="28">
+			<input class="mainoption" type="button" value="${I18n.getMessage("Category.List.ClickToNew")}" id="btn_insert" name="button" onclick="document.location = '${contextPath}/${moduleName}/insert${extension}';" />
+			&nbsp;&nbsp;
+			<input class="mainoption" type="submit" value="${I18n.getMessage("Category.List.ClickToDelete")}" name="submit" />
+		</td>
+	</tr>
+</table>
+</form>

@@ -69,7 +69,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.15 2004/11/12 03:08:10 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.16 2004/11/12 18:57:43 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -249,16 +249,9 @@ public class UserAction extends Command
 				SessionFacade.setAttribute("logged", "1");
 
 				UserSession userSession = SessionFacade.getUserSession();
-				userSession.setUserId(user.getId());
-				userSession.setUsername(JForum.getRequest().getParameter("username"));
-				userSession.setPrivateMessages(user.getPrivateMessagesCount());
-				userSession.setStartTime(new Date(System.currentTimeMillis()));
+				userSession.dataToUser(user);
 
-				userSession.setLang(user.getLang());
-				if (user.getLang() != null && !user.getLang().equals("")
-						&& !I18n.contains(user.getLang())) {
-					I18n.load(user.getLang());
-				}
+				I18n.load(user.getLang());
 
 				// Autologin
 				if (JForum.getRequest().getParameter("autologin") != null) {

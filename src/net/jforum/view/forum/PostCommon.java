@@ -61,7 +61,7 @@ import net.jforum.util.bbcode.BBCode;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.11 2004/11/10 01:30:28 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.12 2004/11/12 18:57:44 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -144,7 +144,7 @@ public class PostCommon
 							
 							// Firefox seems to interpret <br> inside <pre>, 
 							// so we need this bizarre workaround
-							contents = contents.replaceAll("<br>", "");
+							contents = contents.replaceAll("<br>", "\n");
 							
 							// Do not allow other bb tags inside "code"
 							contents = contents.replaceAll("\\[", "&#91;").replaceAll("\\]", "&#93;");

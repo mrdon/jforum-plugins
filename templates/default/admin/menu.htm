@@ -1,70 +1,54 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
-<STYLE type=text/css>@import url( templates/${templateName}/admin/style.css );</STYLE>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<style type="text/css">
+@import url( templates/${templateName}/admin/style.css );
+</style>
 
-</HEAD>
-<BODY text=#000000 vLink=#5493b4 link=#006699 bgColor=#e5e5e5>
-<TABLE cellSpacing=0 cellPadding=4 width="100%" align=center border=0>
-  <TBODY>
-  <TR>
-    <TD align=middle>
-      <TABLE class=forumline cellSpacing=1 cellPadding=4 width="100%" 
-        border=0><TBODY>
-        <TR>
-          <TH class=thHead height=25><B>Administration</B></TH></TR>
-        <TR>
-          <TD class=row1><SPAN class=genmed><A class=genmed 
-            href="" 
-            target=main>Admin Index</A></SPAN></TD></TR>
-        <TR>
-          <TD class=row1><SPAN class=genmed><A class=genmed target='main' href='${contextPath}/forums/list${extension}'>Forum Index</A></SPAN></TD></TR>
-        <TR>
-          <TD class=catSides height=28><SPAN class=cattitle>Forum 
-          Admin</SPAN></TD></TR>
-        <TR>
-          <TD class=row1><SPAN class=genmed><A class=genmed 
-            href="${contextPath}/adminGroups/list${extension}" 
-            target=main>Groups</A></SPAN> </TD>
-        </TR>
-        <TR>
-          <TD class=row1><SPAN class=genmed><A class=genmed 
-            href="${contextPath}/adminUsers/list${extension}" 
-            target=main>Users</A></SPAN></TD>
-        </TR>
-        <TR>
-          <TD class=row1><SPAN class=genmed><A class=genmed 
-            href="${contextPath}/adminCategories/list${extension}" 
-            target=main>Categories</A></SPAN></TD>
-        </TR>
-        <TR>
-          <TD class=row1><SPAN class=genmed><A class=genmed 
-            href="${contextPath}/adminForums/list${extension}" 
-            target=main>Forums</A></SPAN></TD>
-        </TR>
-        <TR>
-          <TD class=row1>
-            <p><SPAN class=genmed><A class=genmed 
-            href="${contextPath}/adminRankings/list${extension}" 
-            target=main>Rankings</A></SPAN></p>
-          </TD>
-        </TR>
-        
-        <TR>
-          <TD class=row1>
-            <p><SPAN class=genmed><A class=genmed 
-            href="${contextPath}/adminConfig/list${extension}" 
-            target=main>Configurations</A></SPAN></p>
-          </TD>
-        </TR>
-		
-   <TR>
-          <TD class=row1>
-            <p><SPAN class=genmed><A class=genmed 
-            href="${contextPath}/adminSmilies/list${extension}" 
-            target=main>Smilies</A></SPAN></p>
-          </TD>
-        </TR>
-</TBODY></TABLE></TD></TR></TBODY></TABLE>
-<DIV align=center><SPAN class=copyright>Powered by JForum<BR>
-</SPAN></DIV></BODY></HTML>
+</head>
+<body text="#000000" vlink="#5493b4" link="#006699" bgcolor="#e5e5e5">
+<table cellspacing="0" cellpadding="4" width="100%" align="center" border="0">
+	<tr>
+		<td align="middle">
+			<table class="forumline" cellspacing="1" cellpadding="4" width="100%" border="0">
+				<tr>
+					<th class="thHead" height="25"><b>Administration</b></th>
+				</tr>
+
+				<tr>
+					<td class="row1"><span class="genmed"><a id="forumIndex" class="genmed" target='_top' href='${contextPath}/forums/list${extension}'>Forum Index</a></span></td>
+				</tr>
+				<tr>
+					<td class="catSides" height="28"><span class="cattitle">Forum Admin</span></td>
+				</tr>
+				<tr>
+					<td class="row1"><span class="genmed"><a id="groups" class="genmed" href="${contextPath}/adminGroups/list${extension}" target="main">Groups</a></span> </td>
+				</tr>
+				<tr>
+					<td class="row1"><span class="genmed"><a id="users" class="genmed" href="${contextPath}/adminUsers/list${extension}" target="main">Users</a></span></td>
+				</tr>
+				<tr>
+					<td class="row1"><span class="genmed"><a id="categories" class="genmed" href="${contextPath}/adminCategories/list${extension}" target="main">Categories</a></span></td>
+				</tr>
+				<tr>
+					<td class="row1"><span class="genmed"><a id="forums" class="genmed" href="${contextPath}/adminForums/list${extension}" target="main">Forums</a></span></td>
+				</tr>
+				<tr>
+					<td class="row1">
+						<p><span class="genmed"><a id="rankings" class="genmed" href="${contextPath}/adminRankings/list${extension}" target="main">Rankings</a></span></p>
+					</td>
+				</tr>
+			
+				<tr>
+					<td class="row1"><p><span class="genmed"><a id="configurations" class="genmed" href="${contextPath}/adminConfig/list${extension}" target="main">Configurations</a></span></p></td>
+				</tr>
+			
+				<tr>
+					<td class="row1"><p><span class="genmed"><a id="smilies" class="genmed" href="${contextPath}/adminSmilies/list${extension}" target="main">Smilies</a></span></p></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<div align="center"><span class="copyright">Powered by JForum<br />
+</span></div></body></html>

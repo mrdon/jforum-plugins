@@ -51,6 +51,7 @@ import java.util.Map;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.entities.Topic;
+import net.jforum.entities.UserSession;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.TopicModel;
 import net.jforum.repository.SecurityRepository;
@@ -64,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.4 2004/11/06 19:04:41 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.5 2004/11/12 18:57:44 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
@@ -111,19 +112,24 @@ public class TopicsCommon
 	 */
 	public static List prepareTopics(List topics)
 	{
-		long lastVisit = SessionFacade.getUserSession().getLastVisit().getTime();
+		UserSession userSession = SessionFacade.getUserSession();
+
+		long lastVisit = userSession.getLastVisit().getTime();
 		int hotBegin = SystemGlobals.getIntValue(ConfigKeys.HOT_TOPIC_BEGIN);
 
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 		Map topicsTracking = (HashMap)SessionFacade.getAttribute("topics_tracking");
 		List newTopics = new ArrayList(topics.size());
 		
+		boolean checkUnread = (userSession.getUserId() 
+			!= SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID));
+		
 		Iterator iter = topics.iterator();
 		while (iter.hasNext()) {
 			boolean read = false;
 			Topic t = (Topic)iter.next();
 
-			if (t.getLastPostTimeInMillis().getTime() > lastVisit) {
+			if (checkUnread && t.getLastPostTimeInMillis().getTime() > lastVisit) {
 				if (topicsTracking.containsKey(new Integer(t.getId()))) {
 					read = (t.getLastPostTimeInMillis().getTime() == ((Long)topicsTracking.get(new Integer(t.getId()))).longValue());
 				}

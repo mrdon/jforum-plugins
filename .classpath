@@ -15,8 +15,7 @@
 	<classpathentry kind="lib" path="lib/nekohtml-0.8.1.jar"/>
 	<classpathentry kind="lib" path="lib/xercesImpl-2.6.2.jar"/>
 	<classpathentry kind="lib" path="lib/xml-apis-1.0.b2.jar"/>
-	<classpathentry kind="lib" path="lib/jwebunit-1.2.jar"/>
-	<classpathentry kind="lib" path="lib/dumpster.jar"/>
+	<classpathentry sourcepath="D:/Downloads/jwebunit-1.2/jwebunit-1.2/src" kind="lib" path="lib/jwebunit-1.2.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/htmlparser-1.5.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/pgsql_driver74.213.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/commons-fileupload-1.0-cvs.jar"/>

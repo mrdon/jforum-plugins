@@ -72,7 +72,7 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.14 2004/11/10 01:30:28 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.15 2004/11/12 18:57:44 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -117,10 +117,14 @@ public class ForumAction extends Command
 		
 		Collections.sort(forums, new ForumOrderComparator());
 		
+		// Do not check for unread posts if the user is not logged in
+		checkUnreadPosts = checkUnreadPosts 
+			&& (us.getUserId() != SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID));
+		
 		Iterator iter = CategoryRepository.getAllCategories().iterator();
 		while (iter.hasNext()) {
 			Category c = (Category)iter.next();
-			ArrayList tmpList = new ArrayList();
+			List tmpList = new ArrayList();
 			
 			for (Iterator tmpIterator = forums.iterator(); tmpIterator.hasNext();) {
 				Forum f = new Forum((Forum)tmpIterator.next());
@@ -189,7 +193,7 @@ public class ForumAction extends Command
 		int aid = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 	
 		List userSessions = SessionFacade.getAllSessions();
-		ArrayList onlineUsersList = new ArrayList();
+		List onlineUsersList = new ArrayList();
 		for (Iterator iter = userSessions.iterator(); iter.hasNext(); ) {
 			UserSession us = (UserSession)iter.next();
 			

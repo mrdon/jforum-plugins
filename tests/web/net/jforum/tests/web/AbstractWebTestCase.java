@@ -42,85 +42,75 @@
  */
 package net.jforum.tests.web;
 
+import java.net.URL;
+
+import org.apache.log4j.xml.DOMConfigurator;
+
 import net.jforum.TestCaseUtils;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.sourceforge.jwebunit.WebTestCase;
 
-import com.dumbster.smtp.SimpleSmtpServer;
-
 /**
  * @author Marc Wick
- * @version $Id: AbstractWebTestCase.java,v 1.13 2004/10/14 02:21:18 rafaelsteil Exp $
+ * @version $Id: AbstractWebTestCase.java,v 1.14 2004/11/12 18:57:42 rafaelsteil Exp $
  */
 public abstract class AbstractWebTestCase extends WebTestCase {
     public static class SimpleHTMLParserListener implements
             com.meterware.httpunit.parsing.HTMLParserListener {
 
-        public void error(java.net.URL url, java.lang.String msg, int line, int column) {
+        public void error(URL url, String msg, int line, int column) {
             System.err.println("error : " + url + " " + msg + " " + line + " " + column);
         }
 
-        public void warning(java.net.URL url, java.lang.String msg, int line, int column) {
+        public void warning(URL url, String msg, int line, int column) {
             System.err.println("warning : " + url + " " + msg + " " + line + " " + column);
         }
     }
 
     protected String language;
-
     protected String rootDir;
-
-    protected String FORUMS_LIST = "/forums/list.page";
-
-    /**
-     * for testing emails we use the smtp server dumpster( see : http://quintanasoft.com/dumbster/)
-     * 
-     * The Dumbster is a very simple fake SMTP server designed for unit and system testing
-     * applications that send email messages. It responds to all standard SMTP commands but does not
-     * deliver messages to the user. The messages are stored within the Dumbster for later
-     * extraction and verification.
-     * 
-     * usage :
-     * 
-     * start the test smtp server on localhost in the testcase with smtpServer.start();
-     * 
-     * ... run the tests that are sending the email
-     * 
-     * get the emails <br>
-     * smtpServer.getReceivedEmail()
-     *  
-     */
-    protected SimpleSmtpServer smtpServer;
+    protected String FORUMS_LIST = "forums/list.page";
 
     public AbstractWebTestCase(String name) throws Exception {
         super(name);
+        
+       	this.init();
 
-        this.rootDir = this.getClass().getResource("/").getPath();
+       	//HTMLParserFactory.setParserWarningsEnabled(true);
+        //HTMLParserFactory.addHTMLParserListener(new SimpleHTMLParserListener());
+    }
+
+    protected void init() throws Exception {
+    	this.rootDir = this.getClass().getResource("/").getPath();
         this.rootDir = this.rootDir.substring(0, this.rootDir.length()
                 - "/WEB-INF/classes".length());
-
-        init();
-        getTestContext().setBaseUrl(SystemGlobals.getValue(ConfigKeys.FORUM_LINK));
-
-        //HTMLParserFactory.setParserWarningsEnabled(true);
-        //HTMLParserFactory.addHTMLParserListener(new
-        // SimpleHTMLParserListener());
-    }
-
-    private void init() throws Exception {
+        
+    	DOMConfigurator.configure(this.rootDir + "/WEB-INF/log4j.xml");
         TestCaseUtils.loadEnvironment();
         this.language = SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT);
+        
+        getTestContext().setBaseUrl(SystemGlobals.getValue(ConfigKeys.FORUM_LINK));
     }
-
-    protected void login(String username, String password) {
-        beginAt(FORUMS_LIST);
+    
+    protected void login(String username, String password, boolean autoLogin) {
+    	beginAt(FORUMS_LIST);
         assertLinkPresent("login");
         clickLink("login");
         assertFormPresent("loginform");
         setFormElement("username", username);
         setFormElement("password", password);
+        
+        if (autoLogin) {
+        	setFormElement("autologin", "on");
+        }
+        
         submit();
         assertElementNotPresent("invalidlogin");
+    }
+
+    protected void login(String username, String password) {
+        this.login(username, password, false);
     }
 
     protected void logout() {

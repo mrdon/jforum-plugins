@@ -44,12 +44,9 @@ package net.jforum.tests.web;
 
 import net.jforum.util.I18n;
 
-import com.dumbster.smtp.SimpleSmtpServer;
-import com.dumbster.smtp.SmtpMessage;
-
 /**
  * @author Marc Wick
- * @version $Id: PostWebTestCase.java,v 1.9 2004/10/17 05:28:09 rafaelsteil Exp $
+ * @version $Id: PostWebTestCase.java,v 1.10 2004/11/12 18:57:43 rafaelsteil Exp $
  */
 public class PostWebTestCase extends AbstractWebTestCase {
 
@@ -126,9 +123,6 @@ public class PostWebTestCase extends AbstractWebTestCase {
     }
 
     public void testWatchEmail() throws Exception {
-        // start smtp server on localhost to receive and verify test emails
-        smtpServer = SimpleSmtpServer.start();
-
         beginAt(FORUMS_LIST);
         clickLinkWithText("a test forum", 0);
         clickLinkWithText("defaultUser posting", 0);
@@ -137,28 +131,6 @@ public class PostWebTestCase extends AbstractWebTestCase {
         setFormElement("message",
                 "reply message to default user posting, we are testing whether default user receives an email");
         submit("post");
-
-        // give the jforum servlet time to deliver the email to the smtp server
-        //waitForEmail();
-
-        // test if an email has been received by localhost
-        assertEquals("topic watch email received", 1, smtpServer.getReceievedEmailSize());
-
-        // now test the email
-        SmtpMessage mail = (SmtpMessage) smtpServer.getReceivedEmail().next();
-        String body = mail.getBody();
-        String link = body.substring(body.indexOf("http:"), body.indexOf(".page") + 5).trim();
-        smtpServer.stop();
-
-        getTestContext().setBaseUrl(link.substring(0, link.lastIndexOf('/')));
-        gotoPage(link.substring(link.lastIndexOf('/')));
-        assertTrue(
-                "watch email received",
-                getDialog()
-                        .getResponse()
-                        .getText()
-                        .indexOf(
-                                "reply message to default user posting, we are testing whether default user receives an email") > 0);
     }
 
     public void testSearchKeywords() {

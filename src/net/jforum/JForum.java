@@ -68,7 +68,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.44 2004/11/12 03:08:08 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.45 2004/11/12 18:57:44 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -97,16 +97,6 @@ public class JForum extends JForumCommonServlet
 		}
 	}
 	
-	private void setAnonymousUserSession(UserSession userSession)
-	{
-		userSession.setStartTime(new Date(System.currentTimeMillis()));
-		userSession.setLastVisit(new Date(System.currentTimeMillis()));
-		userSession.setUserId(SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID));
-		userSession.setSessionId(JForum.getRequest().getSession().getId());
-		
-		SessionFacade.setAttribute("logged", "0");
-	}
-	
 	private void checkCookies() throws Exception
 	{
 		if (SessionFacade.getUserSession() == null) {
@@ -123,7 +113,7 @@ public class JForum extends JForumCommonServlet
 			if (hashCookie == null || cookie == null 
 					|| cookie.getValue().equals(SystemGlobals.getValue(ConfigKeys.ANONYMOUS_USER_ID))
 					|| (autoLoginCookie == null || !"1".equals(autoLoginCookie.getValue()))) {
-				this.setAnonymousUserSession(userSession);
+				userSession.makeAnonymous();
 			}
 			else {
 				String uid = cookie.getValue();
@@ -149,34 +139,28 @@ public class JForum extends JForumCommonServlet
 
 					User user = DataAccessDriver.getInstance().newUserModel().selectById(userId);
 					UserSessionModel sm = DataAccessDriver.getInstance().newUserSessionModel();
+					
+					userSession.dataToUser(user);
 
 					UserSession tmpUs = sm.selectById(userSession, JForum.getConnection());
 					if (tmpUs == null) {
-						userSession.setStartTime(new Date(System.currentTimeMillis()));
 						userSession.setLastVisit(new Date(System.currentTimeMillis()));
 						sm.add(userSession, JForum.getConnection());
 					}
 					else {
 						// Update last visit and session start time
 						userSession.setLastVisit(new Date(tmpUs.getStartTime().getTime() + tmpUs.getSessionTime()));
-						userSession.setStartTime(new Date(System.currentTimeMillis()));
 					}
 					
-					userSession.setPrivateMessages(user.getPrivateMessagesCount());
-					userSession.setUsername(user.getUsername());
-
 					// If the execution point gets here, then the user
 					// has chosen "autoLogin"
 					userSession.setAutoLogin(true);
 					SessionFacade.setAttribute("logged", "1");
-					
-					userSession.setLang(user.getLang());
-					if (user.getLang() != null && !user.getLang().equals("") && !I18n.contains(user.getLang())) {
-						I18n.load(user.getLang());
-					}
+
+					I18n.load(user.getLang());
 				}
 				else {
-					this.setAnonymousUserSession(userSession);
+					userSession.makeAnonymous();
 				}
 			}
 			

@@ -45,14 +45,17 @@ package net.jforum.entities;
 import java.io.Serializable;
 import java.util.Date;
 
+import net.jforum.SessionFacade;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.SecurityConstants;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * Stores information about user's session.
  * 
  * @author Rafael Steil
- * @version $Id: UserSession.java,v 1.9 2004/10/04 10:08:18 marcwick Exp $
+ * @version $Id: UserSession.java,v 1.10 2004/11/12 18:57:45 rafaelsteil Exp $
  */
 public class UserSession implements Serializable
 {
@@ -236,18 +239,64 @@ public class UserSession implements Serializable
 		return this.autoLogin;
 	}
 	
+	/**
+	 * Gets the session id related to this user session
+	 * @return A string with the session id
+	 */
 	public String getSessionId()
 	{
 		return this.sessionId;
 	}
 	
+	/**
+	 * Checks if the user is an administrator
+	 * @return <code>true</code> if the user is an administrator
+	 */
 	public boolean isAdmin()
 	{
 		return SecurityRepository.canAccess(this.userId, SecurityConstants.PERM_ADMINISTRATION);
 	}
 	
+	/**
+	 * Checks if the user is a moderator
+	 * @return <code>true</code> if the user has moderations rights
+	 */
 	public boolean isModerator()
 	{
 		return SecurityRepository.canAccess(this.userId, SecurityConstants.PERM_MODERATION);
+	}
+	
+	/**
+	 * Makes the user's session "anoymous" - eg, the user. 
+	 * This method sets the session's start and last visit time
+	 * to the current datetime, the user id to the return of a call
+	 * to <code>SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)</code> and
+	 * finally sets session attribute named "logged" to "0"
+	 * will be considered a non-authenticated / anonymous user
+	 */
+	public void makeAnonymous()
+	{
+		this.setStartTime(new Date(System.currentTimeMillis()));
+		this.setLastVisit(new Date(System.currentTimeMillis()));
+		this.setUserId(SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID));
+
+		SessionFacade.setAttribute("logged", "0");
+	}
+	
+	/**
+	 * Sets a new user session information using information
+	 * from an <code>User</code> instance. This method sets
+	 * the user id, username, the number of private messages,
+	 * the session's start time ( set to the current date and time )
+	 * and the language.
+	 * @param user The <code>User</code> instance to get data from
+	 */
+	public void dataToUser(User user)
+	{
+		this.setUserId(user.getId());
+		this.setUsername(user.getUsername());
+		this.setPrivateMessages(user.getPrivateMessagesCount());
+		this.setStartTime(new Date(System.currentTimeMillis()));
+		this.setLang(user.getLang());
 	}
 }
