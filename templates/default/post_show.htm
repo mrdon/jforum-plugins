@@ -154,7 +154,7 @@ function confirmDelete()
 						</#if>
 						<br />
 						
-						<#if user.from?exists>
+						<#if (user.from?exists && user.from?length > 0)>
 							${I18n.getMessage("PostShow.userFrom")}: ${user.from}
 							<br />
 						</#if>
@@ -195,6 +195,7 @@ function confirmDelete()
 							<tr>
 								<td valign="center" nowrap="nowrap"> 
 									<a href="${JForumContext.encodeURL("/user/profile/${user.id}")}"><img src="${contextPath}/templates/${templateName}/images/icon_profile.gif" border="0" /></a>
+									<a href="${JForumContext.encodeURL("/pm/sendTo/${user.id}")}"><img src="${contextPath}/templates/${templateName}/images/icon_pm.gif" border="0" /></a>
 
 									<#if (user.isViewEmailEnabled() && user.email?exists && user.email?length > 0)>
 										<#assign e = user.email.split("@")/>
