@@ -52,7 +52,7 @@ import net.jforum.entities.QuotaLimit;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentModel.java,v 1.8 2005/01/23 21:51:08 rafaelsteil Exp $
+ * @version $Id: AttachmentModel.java,v 1.9 2005/01/24 21:49:28 rafaelsteil Exp $
  */
 public interface AttachmentModel
 {
@@ -208,6 +208,18 @@ public interface AttachmentModel
 	 * @throws Exception
 	 */
 	public List selectExtensionGroups() throws Exception;
+	
+	/**
+	 * Gets all extensions and its security options, 
+	 * as well from the groups. 
+	 * 
+	 * @return A map instance where the key is the extension name
+	 * and the value is a Boolean, indicating if the extension can
+	 * be used in the uploaded files. If there is no entry for
+	 * a given extension, then it means that it is allowed. 
+	 * @throws Exception
+	 */
+	public Map extensionsForSecurity() throws Exception;
 	
 	/**
 	 * Adds a new extension

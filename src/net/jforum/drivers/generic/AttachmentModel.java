@@ -60,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentModel.java,v 1.11 2005/01/24 20:22:22 rafaelsteil Exp $
+ * @version $Id: AttachmentModel.java,v 1.12 2005/01/24 21:49:28 rafaelsteil Exp $
  */
 public class AttachmentModel extends AutoKeys implements net.jforum.model.AttachmentModel
 {
@@ -261,6 +261,32 @@ public class AttachmentModel extends AutoKeys implements net.jforum.model.Attach
 		p.close();
 		
 		return l;
+	}
+	
+	/**
+	 * @see net.jforum.model.AttachmentModel#extensionsForSecurity()
+	 */
+	public Map extensionsForSecurity() throws Exception
+	{
+		Map m = new HashMap();
+		
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("AttachmentModel.extensionsForSecurity"));
+		
+		ResultSet rs = p.executeQuery();
+		while (rs.next()) {
+			int allow = rs.getInt("group_allow");
+			if (allow == 1) {
+				allow = rs.getInt("allow");
+			}
+			
+			m.put(rs.getString("extension"), new Boolean(allow == 1));
+		}
+		
+		rs.close();
+		p.close();
+		
+		return m;
 	}
 	
 	/**

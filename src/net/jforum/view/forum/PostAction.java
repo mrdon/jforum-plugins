@@ -60,7 +60,7 @@ import net.jforum.entities.Post;
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
-import net.jforum.exceptions.AttachmentSizeTooBigException;
+import net.jforum.exceptions.AttachmentException;
 import net.jforum.model.AttachmentModel;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.ForumModel;
@@ -90,7 +90,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.51 2005/01/24 20:22:28 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.52 2005/01/24 21:49:29 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -438,7 +438,7 @@ public class PostAction extends Command {
 			try {
 				ac.insertAttachments(p.getId());
 			}
-			catch (AttachmentSizeTooBigException e) {
+			catch (AttachmentException e) {
 				JForum.enableCancelCommit();
 				p.setText(this.request.getParameter("message"));
 				this.context.put("errorMessage", e.getMessage());
@@ -581,7 +581,7 @@ public class PostAction extends Command {
 			try {
 				new AttachmentCommon(this.request).insertAttachments(postId);
 			}
-			catch (AttachmentSizeTooBigException e) {
+			catch (AttachmentException e) {
 				JForum.enableCancelCommit();
 				p.setText(this.request.getParameter("message"));
 				p.setId(0);

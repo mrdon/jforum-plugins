@@ -489,7 +489,6 @@ AttachmentModel.updateExtension = UPDATE jforum_extensions SET extension_group_i
 	WHERE extension_id = ?
 
 AttachmentModel.removeExtension = DELETE FROM jforum_extensions WHERE extension_id = ?
-AttachmentModel.selectExtensions = SELECT extension_id, extension_group_id, extension, comment, upload_icon, allow, '' group_icon FROM jforum_extensions ORDER BY extension
 AttachmentModel.addAttachment = INSERT INTO jforum_attach (post_id, privmsgs_id, user_id) VALUES (?, ?, ?)
 
 AttachmentModel.addAttachmentInfo = INSERT INTO jforum_attach_desc (attach_id, physical_filename, real_filename, comment, \
@@ -497,10 +496,16 @@ AttachmentModel.addAttachmentInfo = INSERT INTO jforum_attach_desc (attach_id, p
 	
 AttachmentModel.updatePost = UPDATE jforum_posts SET attach = ? WHERE post_id = ?
 
+AttachmentModel.selectExtensions = SELECT extension_id, extension_group_id, extension, comment, upload_icon, allow, '' group_icon FROM jforum_extensions ORDER BY extension
+
 AttachmentModel.selectExtension = SELECT e.extension_id, e.extension_group_id, e.extension, e.comment, e.upload_icon, e.allow, g.upload_icon group_icon \
 	FROM jforum_extensions e, jforum_extension_groups g \
 	WHERE e.$field = ? \
 	AND e.extension_group_id = g.extension_group_id
+
+AttachmentModel.extensionsForSecurity = SELECT e.extension, e.allow, eg.allow group_allow \
+	FROM jforum_extensions e, jforum_extension_groups eg \
+	WHERE e.extension_group_id = eg.extension_group_id
 
 AttachmentModel.selectAttachments = SELECT a.attach_id, a.user_id, a.post_id, a.privmsgs_id, d.mimetype, d.physical_filename, d.real_filename, \
 	d.download_count, d.comment, d.filesize, d.upload_time, d.extension_id \

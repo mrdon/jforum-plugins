@@ -36,7 +36,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Jan 24, 2005 1:56:30 PM
+ * Created on Jan 24, 2005 6:29:32 PM
  * The JForum Project
  * http://www.jforum.net
  */
@@ -44,11 +44,11 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentSizeTooBigException.java,v 1.2 2005/01/24 21:49:27 rafaelsteil Exp $
+ * @version $Id: BadExtensionException.java,v 1.1 2005/01/24 21:49:27 rafaelsteil Exp $
  */
-public class AttachmentSizeTooBigException extends AttachmentException
+public class BadExtensionException extends AttachmentException
 {
-	public AttachmentSizeTooBigException(String message)
+	public BadExtensionException(String message) 
 	{
 		super(message);
 	}

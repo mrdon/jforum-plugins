@@ -60,6 +60,7 @@ import net.jforum.entities.Group;
 import net.jforum.entities.QuotaLimit;
 import net.jforum.entities.User;
 import net.jforum.exceptions.AttachmentSizeTooBigException;
+import net.jforum.exceptions.BadExtensionException;
 import net.jforum.model.AttachmentModel;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.repository.SecurityRepository;
@@ -74,7 +75,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.6 2005/01/24 20:22:25 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.7 2005/01/24 21:49:26 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {
@@ -112,6 +113,7 @@ public class AttachmentCommon
 		Map filesToSave = new HashMap();
 		long totalSize = 0;
 		int userId = SessionFacade.getUserSession().getUserId();
+		Map extensions = this.am.extensionsForSecurity();
 		
 		for (int i = 0; i < total; i++) {
 			FileItem item = (FileItem)this.request.getObjectParameter("file_" + i);
@@ -126,6 +128,14 @@ public class AttachmentCommon
 			}
 			
 			UploadUtils uploadUtils = new UploadUtils(item, this.request);
+			
+			// Check if the extension is allowed
+			if (extensions.containsKey(uploadUtils.getExtension())) {
+				if (!((Boolean)extensions.get(uploadUtils.getExtension())).booleanValue()) {
+					throw new BadExtensionException(I18n.getMessage("Attachments.badExtension", 
+							new String[] { uploadUtils.getExtension() }));
+				}
+			}
 			
 			Attachment a = new Attachment();
 			a.setPostId(postId);
@@ -175,7 +185,7 @@ public class AttachmentCommon
 		}
 	}
 	
-	public QuotaLimit getQuotaLimit(int userId) throws Exception
+	private QuotaLimit getQuotaLimit(int userId) throws Exception
 	{
 		QuotaLimit ql = new QuotaLimit();
 		User u = DataAccessDriver.getInstance().newUserModel().selectById(userId);
