@@ -1,0 +1,100 @@
+<#setting datetime_format = "dd/MM/yyyy"/>
+<#import "../macros/pagination.ftl" as pagination/>
+<script language="javascript">
+<#include "utils.js"/>
+</script>
+<script language="javascript">
+var quick = false;
+
+function activateAdvancedQuery(){
+	quick = !quick;
+	document.getElementById("trQuickBody").style.display = (quick ? "" : "none");
+	document.getElementById("trQuickSubmit").style.display = (quick ? "" : "none");
+	if (quick) {
+		document.location = "#quick";
+	}
+}
+</script>
+<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
+    <tr>
+      <td align="left"><span class="nav"><a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a></span></td>
+    </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="100%" border="0">
+	<tr>
+		<td colspan="3">
+			<table width="100%">
+				<tr>
+					<td align="right">
+						<img src="${contextPath}/templates/${templateName}/images/icon_mini_message.gif" align="middle">
+						<span class="nav"><a href="javascript:activateAdvancedQuery()">${I18n.getMessage("Karma.advancedQuery")}</a></span>
+					</td>
+				</td>
+				<tr style="display: none;" id="trQuickBody">
+					<td align="center">
+						This is not implemented yet
+						<!--
+						CODE HERE
+						-->
+					</td>
+				</tr>
+				<tr style="display: none;" id="trQuickSubmit">
+					<td align="center">
+						<input type="submit" value="${I18n.getMessage("PostForm.submit")}" class="mainoption">
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
+	<tr>
+	  <th class="thCornerL" nowrap="nowrap">#</th>
+	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("User.username")}&nbsp;</th>
+	  <th class="thTop" nowrap="nowrap" width="59px">&nbsp;${I18n.getMessage("UserProfile.privateMessage")}&nbsp;</th>	  
+	  <th class="thTop" nowrap="nowrap" width="59px">&nbsp;${I18n.getMessage("email")}&nbsp;</th>
+	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("UserProfile.from")}&nbsp;</th>
+	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("UserProfile.registrationDate")}&nbsp;</th>
+	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("User.numMessages")}&nbsp;</th>
+	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("Karma.totalReceived")}&nbsp;</th>
+	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("Karma.votesReceived")}&nbsp;</th>
+	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("Karma.votesGiven")}&nbsp;</th>
+	  <th class="thCornerR" nowrap="nowrap">&nbsp;${I18n.getMessage("Karma.karma")}&nbsp;</th>
+	</tr>
+  <#assign id = start+1/>
+	<#list users as user>
+		<tr align="center">		  
+			<td class="row2"><span class="gen">${id}</span></td>			
+			<td class="row2"><span class="gen"><a href="${JForumContext.encodeURL("/user/profile/${user.id}")}">${user.username}</a></span></td>
+			<td class="row2"><span class="gen"><#if user.id != 1><a href="${JForumContext.encodeURL("/pm/sendTo/${user.id}")}"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/icon_pm.gif" border="0" /></a><#else>&nbsp;</#if></span></td>
+			<td class="row2"><span class="gen"><#if (user.isViewEmailEnabled() && user.email?exists && user.email?length > 0)>
+			<#assign e = user.email.split("@")/>
+			<a href="#" onclick="document.location = 'mailto:' + showEmail('${e[0]?default("")}', ' ${e[1]?default("")}');"><img src="${contextPath}/templates/${templateName}/images/icon_email.gif" border="0" /></a></span></td>
+			<#else>&nbsp;
+			</#if>
+			<td class="row2"><span class="gen"><#if (user.location?exists && user.location?length > 0)>${user.location}<#else>&nbsp;</#if></span></td>
+			<td class="row2"><span class="gen">${user.registrationDate?date("dd/MM/yyyy")}</span></td>
+			<td class="row2"><span class="gen">${user.totalPosts}</span></td>
+			<td class="row2"><span class="gen">${user.karma.totalPoints}</span></td>
+			<td class="row2"><span class="gen">${user.karma.votesReceived}</span></td>
+			<td class="row2"><span class="gen">${user.karma.votesGiven}</span></td>
+			<td class="row2"><span class="gen">Média: ${user.karma.karmaPoints}
+			  <BR>Received:  23
+			  <BR>Given: 45
+			  <BR>Total: 45</span></td>
+		</tr>
+		<#assign id = id+1/>
+	</#list>
+
+	<tr align="center">
+		<td class="catBottom" colspan="11" height="28">&nbsp;
+		</td>
+	</tr>
+</table>
+</form>
+<table width="100%">
+	<tr>
+		<td align="right"><#if thisPage?exists><@pagination.doPagination "list", -1/></#if></td>
+	</tr>
+</table>
+

@@ -73,7 +73,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.31 2005/01/31 19:13:45 franklin_samir Exp $
+ * @version $Id: UserAction.java,v 1.32 2005/02/01 18:05:08 franklin_samir Exp $
  */
 public class UserAction extends Command 
 {
@@ -519,13 +519,22 @@ public class UserAction extends Command
 	{
 		int start = this.preparePagination(DataAccessDriver.getInstance().newUserModel().getTotalUsers());
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
-		
-		//Load all users with your karma
-		List users = DataAccessDriver.getInstance().newUserModel().selectAllWithKarma(start ,usersPerPage);				
-		//List users = DataAccessDriver.getInstance().newUserModel().selectAll(start ,usersPerPage);
+							
+		List users = DataAccessDriver.getInstance().newUserModel().selectAll(start ,usersPerPage);
 		this.context.put("users", users);
 		this.context.put("moduleAction", "user_list.htm");
 	}
+	
+	public void listKarma() throws Exception
+	{
+		int start = this.preparePagination(DataAccessDriver.getInstance().newUserModel().getTotalUsers());
+		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
+		//Load all users with your karma
+		List users = DataAccessDriver.getInstance().newUserModel().selectAllWithKarma(start ,usersPerPage);
+		this.context.put("users", users);
+		this.context.put("moduleAction", "user_list_karma.htm");
+	}
+	
 	
 	private int preparePagination(int totalUsers)
 	{

@@ -61,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.26 2005/01/31 19:15:38 franklin_samir Exp $
+ * @version $Id: UserModel.java,v 1.27 2005/02/01 18:05:09 franklin_samir Exp $
  */
 public class UserModel extends AutoKeys implements net.jforum.model.UserModel 
 {
@@ -392,6 +392,7 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 			u.setRegistrationDate(rs.getTimestamp("user_regdate"));
 			u.setUsername(rs.getString("username"));
 			u.setDeleted(rs.getInt("deleted"));
+			u.setFrom(rs.getString("user_from"));
 			
 			list.add(u);
 		}
