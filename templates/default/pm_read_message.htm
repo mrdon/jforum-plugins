@@ -9,10 +9,10 @@
                         <table height="40" cellspacing="2" cellpadding="2" border="0">
                           <tbody>
                             <tr valign="center">
-                              <td> <a href="${contextPath}/pm/inbox${extension}"> <img src="${contextPath}/templates/${templateName}/images/msg_inbox.gif" border="0" /> </a></td>
-                              <td><a href="${contextPath}/pm/inbox${extension}"> <span class="cattitle">${I18n.getMessage("PrivateMessage.inbox")} &nbsp;</span> </a> </td>
-                              <td> <a href="${contextPath}/pm/sentbox${extension}"> <img src="${contextPath}/templates/${templateName}/images/msg_sentbox.gif" border="0" />  </a></td>
-                              <td> <a href="${contextPath}/pm/sentbox${extension}"> <span class="cattitle">${I18n.getMessage("PrivateMessage.sentbox")}</span></a><span class="cattitle"> &nbsp;</span></td>
+                              <td> <a href="${JForumContext.encodeURL("/pm/inbox")}"> <img src="${contextPath}/templates/${templateName}/images/msg_inbox.gif" border="0" /> </a></td>
+                              <td> <a href="${JForumContext.encodeURL("/pm/inbox")}"> <span class="cattitle">${I18n.getMessage("PrivateMessage.inbox")} &nbsp;</span> </a> </td>
+                              <td> <a href="${JForumContext.encodeURL("/pm/sentbox")}"> <img src="${contextPath}/templates/${templateName}/images/msg_sentbox.gif" border="0" />  </a></td>
+                              <td> <a href="${JForumContext.encodeURL("/pm/sentbox")}"> <span class="cattitle">${I18n.getMessage("PrivateMessage.sentbox")}</span></a><span class="cattitle"> &nbsp;</span></td>
                             </tr>
                           </tbody>
                         </table>
@@ -21,16 +21,16 @@
                   </tbody>
                 </table>
 				<br clear="all" />
-				<form action="${contextPath}/jforum${extension}" method="post">
+				<form action="${JForumContext.encodeURL("/jforum")}" method="post">
 				<input type="hidden" name="module" value="${moduleName}">
 				<input type="hidden" name="action" value="delete">
 					<table cellspacing="2" cellpadding="2" width="100%" border="0">
 						<tbody>
 							<tr>
-								<td valign="center"><a href="${contextPath}/pm/reply/${pm.id}${extension}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" border="0" /></a>
+								<td valign="center"><a href="${JForumContext.encodeURL("/pm/reply/${pm.id}")}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" border="0" /></a>
 								</td>
 								<td width="100%">
-									<span class="nav">&nbsp;<A class=nav href="${contextPath}/forums/list${extension}">${I18n.getMessage("ForumListing.forumIndex")}</a></span>
+									<span class="nav">&nbsp;<A class=nav href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a></span>
 								</td>
 							</tr>
 						</tbody>
@@ -42,11 +42,11 @@
 							</tr>
 							<tr>
 								<td class="row2"><span class="genmed">${I18n.getMessage("PrivateMessage.from")}:</span></td>
-								<td class="row2" width="100%" colspan="2"><span class="genmed"><a class="nav" href="${contextPath}/user/profile/${pm.fromUser.id}${extension}">${pm.fromUser.username}</a></span></td>
+								<td class="row2" width="100%" colspan="2"><span class="genmed"><a class="nav" href="${JForumContext.encodeURL("/user/profile/${pm.fromUser.id}")}">${pm.fromUser.username}</a></span></td>
 							</tr>
 							<tr>
 								<td class="row2"><span class="genmed">${I18n.getMessage("PrivateMessage.to")}:</span></td>
-								<td class="row2" width="100%" colspan="2"><span class="genmed"><a class="nav" href="${contextPath}/user/profile/${pm.toUser.id}${extension}">${pm.toUser.username}</a></span></td>
+								<td class="row2" width="100%" colspan="2"><span class="genmed"><a class="nav" href="${JForumContext.encodeURL("/user/profile/${pm.toUser.id}")}">${pm.toUser.username}</a></span></td>
 							</tr>
 							<tr>
 								<td class="row2"><span class="genmed">${I18n.getMessage("PrivateMessage.date")}:</span></td>
@@ -56,7 +56,7 @@
 								<td class="row2"><span class="genmed">${I18n.getMessage("PrivateMessage.subject")}:</span></td>
 								<td class="row2" width="100%"><span class="genmed">${pm.post.subject}</span></td>
 								<td class="row2" nowrap="nowrap" align="right">
-									<a href="${contextPath}/pm/quote/${pm.id}${extension}"><img src="${contextPath}/templates/${templateName}/images/icon_quote.gif" border="0" /></a>
+									<a href="${JForumContext.encodeURL("/pm/quote/${pm.id}")}"><img src="${contextPath}/templates/${templateName}/images/icon_quote.gif" border="0" /></a>
 								</td>
 							</tr>
 							<tr>
@@ -81,7 +81,7 @@
 					<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
 						<tbody>
 							<tr>
-								<td><a href="${contextPath}/pm/reply/${pm.id}${extension}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" border="0" /></a></td>
+								<td><a href="${JForumContext.encodeURL("/pm/reply/${pm.id}")}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" border="0" /></a></td>
 							</tr>
 						</tbody>
 					</table>
