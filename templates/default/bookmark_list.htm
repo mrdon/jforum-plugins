@@ -1,4 +1,7 @@
 <a name="top" id="top"></a>
+<script language="javascript">
+<#include "utils.js"/>
+</script>
 <table width="100%" cellspacing="0" cellpadding="10" border="0" align="center">
 	<tr>
 		<td class="bodyline">
@@ -21,19 +24,29 @@
 								<td>&nbsp;</td>
 							</tr>
 	  
-							<#list bookmarks as b>
-								<#if b.relationType == topicType>
-									<#if b.isPublicVisible() || loggedUserId == user.id>
-										<tr>
-											<td>
-												<img src="${contextPath}/templates/${templateName}/images/icon_minipost.gif" align="middle"><a href="${JForumContext.encodeURL("/posts/list/${b.relationId}")}" class="gen">${b.title}</a>
-												
-												<#if (b.description?default("")?length > 0)><br/><span class="gensmall">&nbsp;&nbsp;&nbsp;&nbsp;${b.description}</span></#if>
-											</td>
-										</tr>
-									</#if>
-								</#if>
-							</#list>
+							<#assign owner = loggedUserId == user.id/>
+							<tr>
+								<td>
+									<#list bookmarks as b>
+												<#if b.relationType == topicType>
+													<#if b.isPublicVisible() || owner>
+														<p>
+														<img src="${contextPath}/templates/${templateName}/images/icon_minipost.gif" align="middle"><a href="${JForumContext.encodeURL("/posts/list/${b.relationId}")}" class="gen">${b.title}</a>
+														
+														<span class="gensmall">
+														<#if owner>
+															[ <a href="javascript:addBookmark(2, ${b.relationId});">${I18n.getMessage("Edit")}</a> ]
+														</#if>
+														
+														<#if (b.description?default("")?length > 0)><br/>&nbsp;&nbsp;&nbsp;&nbsp;${b.description}</#if>
+														</span>
+														</p>
+													</#if>
+												</#if>
+											
+									</#list>
+								</td>
+							</tr>
 				  
 							<tr>
 								<td>&nbsp;</td>
