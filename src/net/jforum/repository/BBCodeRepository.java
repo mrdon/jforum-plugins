@@ -41,10 +41,13 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: BBCodeRepository.java,v 1.2 2004/04/21 23:57:33 rafaelsteil Exp $
+ * $Id: BBCodeRepository.java,v 1.3 2004/04/24 19:54:24 rafaelsteil Exp $
  */
 package net.jforum.repository;
 
+import java.util.Iterator;
+
+import net.jforum.util.bbcode.BBCode;
 import net.jforum.util.bbcode.BBCodeHandler;
 
 /**
@@ -64,5 +67,18 @@ public class BBCodeRepository
 	public static BBCodeHandler getBBCollection()
 	{
 		return BBCodeRepository.bbCollection;
+	}
+	
+	public static BBCode findByName(String name)
+	{
+		for (Iterator iter = BBCodeRepository.bbCollection.getBbList().iterator(); iter.hasNext(); ) {
+			BBCode bb = (BBCode)iter.next();
+			
+			if (bb.getTagName().equals(name)) {
+				return bb;
+			}
+		}
+		
+		return null;
 	}
 }

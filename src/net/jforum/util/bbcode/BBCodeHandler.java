@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: BBCodeHandler.java,v 1.3 2004/04/23 00:47:12 rafaelsteil Exp $
+ * $Id: BBCodeHandler.java,v 1.4 2004/04/24 19:54:27 rafaelsteil Exp $
  */
 package net.jforum.util.bbcode;
 
@@ -97,6 +97,11 @@ public class BBCodeHandler extends DefaultHandler
 			this.matchOpen = true;
 			this.sb = new StringBuffer();
 			this.bb = new BBCode();
+			
+			String tagName = attrs.getValue("name");
+			if (tagName != null) {
+				this.bb.setTagName(tagName);
+			}
 			
 			// Shall we remove the infamous quotes?
 			String removeQuotes = attrs.getValue("removeQuotes");

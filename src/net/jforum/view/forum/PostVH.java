@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: PostVH.java,v 1.6 2004/04/24 01:22:44 rafaelsteil Exp $
+ * $Id: PostVH.java,v 1.7 2004/04/24 19:54:27 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 
@@ -644,6 +644,7 @@ public class PostVH extends Command
 		// Then, search for bb codes
 		if (p.isBbCodeEnabled()) {
 			if (p.getText().indexOf('[') > -1 && p.getText().indexOf(']') > -1) {
+				int openQuotes = 0;
 				Iterator tmpIter = BBCodeRepository.getBBCollection().getBbList().iterator();
 				
 				while (tmpIter.hasNext()) {
@@ -684,9 +685,39 @@ public class PostVH extends Command
 							}
 						}
 						else {
-							p.setText(p.getText().replaceAll(bb.getRegex(), bb.getReplace()));
+							// Another hack for the quotes
+							if (bb.getTagName().equals("openQuote")) {
+								Matcher matcher = Pattern.compile(bb.getRegex()).matcher(p.getText());								
+								
+								while (matcher.find()) {
+									openQuotes++;
+									
+									p.setText(p.getText().replaceFirst(bb.getRegex(), bb.getReplace()));
+								}
+							}
+							else if (bb.getTagName().equals("closeQuote")) {
+								Matcher matcher = Pattern.compile(bb.getRegex()).matcher(p.getText());
+								
+								while (matcher.find()) {
+									openQuotes--;
+									
+									p.setText(p.getText().replaceFirst(bb.getRegex(), bb.getReplace()));
+								}
+							}
+							else {
+								p.setText(p.getText().replaceAll(bb.getRegex(), bb.getReplace()));
+							}
 						}
 						
+					}
+				}
+				
+				if (openQuotes > 0) {
+					BBCode closeQuote = BBCodeRepository.findByName("closeQuote");
+					
+					// I'll not check for nulls ( but I should )
+					for (int i = 0; i < openQuotes; i++) {
+						p.setText(p.getText() + closeQuote.getReplace());
 					}
 				}
 			}

@@ -1,168 +1,244 @@
-<STYLE type=text/css>@import url( style.css );</STYLE>
-<#import "../macros/pagination.ftl" as pagination>
-<TABLE cellSpacing=0 cellPadding=10 width="100%" align=center border=0>
-  <TBODY>
-  <TR>
-    <TD class=bodyline>
-      <TABLE cellSpacing=2 cellPadding=2 width="100%" border=0>
-        <TR>
-          <TD vAlign=middle align=left colSpan=2><span class=maintitle><a name="top" class="maintitle" href="${contextPath}/posts/list/${topic.id}.page">${topic.title}</a></span></TD></TR></TABLE>
-      <TABLE cellSpacing=2 cellPadding=2 width="100%" border=0>
-        <TBODY>
-        <TR>
-          <TD width="15%" align=left vAlign=bottom noWrap>
-		  <#if topic.status == STATUS_LOCKED>
-		  	<img src="templates/${templateName}/images/reply_locked.gif">
-		  <#else>
-			  <SPAN class=nav>&nbsp;<A href="${contextPath}/jforum.page?module=posts&action=insert&forum_id=${topic.forumId}"><img  src="templates/${templateName}/images/post.gif" width="82" height="25" border="0"> </A>
-			  <a href="${contextPath}/jforum.page?module=posts&action=insert&topic_id=${topic.id}&forum_id=${topic.forumId}"><img src="templates/${templateName}/images/reply.gif" width="82" height="25" border="0"></a></SPAN>
-		  </#if>
-		  </TD>
-		  
-          <TD vAlign=center align=left><SPAN 
-            class=nav>&nbsp;&nbsp;&nbsp;<A class=nav 
-            href="${contextPath}/forums/list.page">${I18n.getMessage("ForumListing.forumIndex")} </A> 
-            -&gt; <A class=nav href="${contextPath}/forums/show/${forum.id}.page">${forum.name} </A>
-			</SPAN>
-			</TD>
-			
-			<td valign="middle" align="right">
-			  <@pagination.doPagination "list", postId/>
-			</td>
-			
-        </TR></TBODY></TABLE>
-      <TABLE class=forumline cellSpacing=1 cellPadding=3 width="100%" 
-        border=0>
-        <TBODY>
-       
-        <TR>
-          <TH class=thLeft noWrap width=103 height=26>${I18n.getMessage("PostShow.author")}</TH>
-          <TH class=thRight noWrap>${I18n.getMessage("PostShow.messageTitle")}</TH></TR>
+<style type="text/css">@import url( style.css );</style>
+<#import "../macros/pagination.ftl" as pagination/>
 
-<!-- POSTS --> 
-<#assign rowColor = "">
-<#list posts as post>
-	<#if post_index % 2 == 0>
-		<#assign rowColor = "row1">
-	<#else>
-		<#assign rowColor = "row2">
-	</#if>
+<script language="JavaScript">
+function confirmDelete()
+{
+	if (confirm("${I18n.getMessage("Moderation.ConfirmDelete")}")) {
+		return true;
+	}
 	
-	<#assign user = um.selectById(post.userId)>
-	<TR>
-	<TD class=${rowColor} vAlign=top align=left width=103>
-	<SPAN class=name><B>${user.username}</B></SPAN><BR>
-	<SPAN class=postdetails>${rank.getRankTitle(user.totalPosts)}<BR>
-	<#if (user.avatar?exists && user.avatar?length > 0)>
-	<img src="images/avatar/${user.avatar}" border="0">
-	</#if>
-	<BR> 
-	${I18n.getMessage("PostShow.userTotalMessages")}: ${user.totalPosts}<BR>
-	<#if user.from?exists>${I18n.getMessage("PostShow.userFrom")}: ${user.from}</#if></SPAN><BR>
-	</TD>
-	
-	<TD class=${rowColor} vAlign=top height=28>
-	<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
-	<TBODY>
-	<TR>
-	<TD width="80%">
-	<SPAN class=postdetails><img src="templates/${templateName}/images/icon_minipost.gif" width="12" height="9">${post.formatedTime}<SPAN class=gen>&nbsp;</SPAN>&nbsp; &nbsp;${I18n.getMessage("PostShow.subject")}: <a name="${post.id}">${post.subject?html}</a></SPAN>
-	</TD>
-	<TD vAlign=top width="20%" noWrap align=right>
-	<#if topic.status != STATUS_LOCKED>
-		<a href="${contextPath}/jforum.page?module=${moduleName}&action=quote&post_id=${post.id}"><img src="templates/${templateName}/images/icon_quote.gif" width="59" height="18" border="0"></a>
-	</#if>
+	return false;
+}
+</script>
 
-	<#if ((post.canEdit && topic.status != STATUS_LOCKED) || canEdit)>
-		<a href="${contextPath}/jforum.page?module=${moduleName}&action=edit&post_id=${post.id}"><img src="templates/${templateName}/images/icon_edit.gif" width="59" height="18" border="0"></a>  
-	</#if>
-		
-	<#if canRemove>
-		<a href="${contextPath}/jforum.page?module=${moduleName}&action=delete&post_id=${post.id}"><img src="templates/${templateName}/images/icon_delete.gif" width="16" height="18" border="0"></a>  
-	</#if>
-	</TD>
-	</TR>
-	
-	<TR>
-	<TD colSpan=2><HR></TD>
-	</TR>
-	
-	<TR>
-	<TD colSpan=2 valign="top">
-	<span class=postbody>
-	${post.text?replace("<script", "&lt;script")}
-	<#if (user.attachSignatureEnabled && user.signature?exists &user.signature?length > 0)>
-	<hr>
-	${user.signature?replace("<script", "&lt;script")}
-	</#if>
-	</span>
-	</TD>
-	</TR>
-	</TBODY>
-	</TABLE>
-	</TD>
-	</TR>
-	
-	<TR>
-	<TD class=${rowColor} vAlign=center align=left width=103><SPAN class=nav><A class=nav href="#top">${I18n.getMessage("PostShow.top")}</A></SPAN></TD>
-	<TD class=${rowColor} vAlign=top noWrap height=28>
-	
-	<TABLE height=18 cellSpacing=0 cellPadding=0 width=469 border=0>
-	<TR>
-	<TD vAlign=center nowrap="noWrap"> 
-	<a href="${contextPath}/user/profile/${user.id}.page"><img src="templates/${templateName}/images/icon_profile.gif" width="59" height="18" border="0"></a>
-	<#if (user.isViewEmailEnabled() && user.email?exists && user.email?length > 0)>
-	<a href="mailto:${user.email}"><img src="templates/${templateName}/images/icon_email.gif" width="59" height="18" border="0"></a>
-	</#if>
-	<#if (user.webSite?exists && user.webSite?length > 0)>
-	<a href="${user.webSite}" target=_new><img src="templates/${templateName}/images/icon_www.gif" width="59" height="18" border="0"></a>
-	</#if>
-	<#if (user.yim?exists && user.yim?length > 0)>
-	<a href="http://edit.yahoo.com/config/send_webmesg?.target=${user.yim}&.src=pg"><img src="templates/${templateName}/images/icon_yim.gif" width="59" height="18" border="0"></a>
-	</#if>
-	<#if (user.msnm?exists && user.msnm?length > 0)>
-	<a href="${contextPath}/user/profile/${user.id}.page"><img src="templates/${templateName}/images/icon_msnm.gif" width="59" height="18" border="0"></a>
-	</#if>
-	<#if (user.icq?exists && user.icq?length > 0)>
-	<A href="http://wwp.icq.com/scripts/search.dll?to=${user.icq}"><IMG src="templates/${templateName}/images/icon_icq_add.gif" border=0></A>
-	</#if>
-	</TD>
-	</TR>
-	</TABLE>
-	</TD>
-	</TR>
-	
+<table cellspacing="0" cellpadding="10" width="100%" align="center" border="0">
 	<tr>
-	<td class="spaceRow" colspan="2" height="1"><img src="templates/subSilver/images/spacer.gif" alt="" width="1" height="1" /></td>
-	</tr>
-</#list>			  
-<!-- END OF POSTS -->			  
-			  
+		<td class="bodyline">
+			<table cellspacing="2" cellpadding="2" width="100%" border="0">
+				<tr>
+					<td valign="middle" align="left" colspan="2">
+						<span class="maintitle"><a href="${contextPath}/posts/list/${topic.id}.page" name="top" class="maintitle" id="top">${topic.title}</a></span>
+					</td>
+				</tr>
+			</table>
+			
+			<table cellspacing="2" cellpadding="2" width="100%" border="0">
+				<tr>
+					<td width="15%" align="left" valign="bottom" nowrap="nowrap">
+						<#if topic.status == STATUS_LOCKED>
+							<img src="templates/${templateName}/images/reply_locked.gif" />
+						<#else>
+							<span class="nav">&nbsp;
+							<a href="${contextPath}/jforum.page?module=posts&amp;action=insert&amp;forum_id=${topic.forumId}"><img  src="templates/${templateName}/images/post.gif" width="82" height="25" border="0" /> </a>
+							<a href="${contextPath}/jforum.page?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}"><img src="templates/${templateName}/images/reply.gif" width="82" height="25" border="0" /></a>
+							</span>
+						</#if>
+					</td>
 
-    </TABLE>
-      <TABLE cellSpacing=2 cellPadding=2 width="100%" align=center border=0>
-        <TBODY>
-        <TR>
-          <TD width="15%" align=left vAlign=bottom noWrap>
-		  <#if topic.status == STATUS_LOCKED>
-		  	<img src="templates/${templateName}/images/reply_locked.gif">
-		  <#else>
-			  <SPAN class=nav>&nbsp;<A href="${contextPath}/jforum.page?module=posts&action=insert&forum_id=${topic.forumId}"><img  src="templates/${templateName}/images/post.gif" width="82" height="25" border="0"> </A>
-			  <a href="${contextPath}/jforum.page?module=posts&action=insert&topic_id=${topic.id}&forum_id=${topic.forumId}"><img src="templates/${templateName}/images/reply.gif" width="82" height="25" border="0"></a></SPAN>
-		  </#if>
-		  </TD>
-          <TD vAlign=center align=left><SPAN 
-            class=nav>&nbsp;&nbsp;&nbsp;<A class=nav 
-            href="${contextPath}/forums/list.page">${I18n.getMessage("ForumListing.forumIndex")} </A> 
-            -&gt; <A class=nav href="${contextPath}/forums/show/${forum.id}.page">${forum.name} </A>
-			</SPAN></TD>
+					<td valign="center" align="left">
+						<span class="nav">&nbsp;&nbsp;&nbsp;
+						<a class="nav" href="${contextPath}/forums/list.page">${I18n.getMessage("ForumListing.forumIndex")} </a> 
+            			-&gt; <a class="nav" href="${contextPath}/forums/show/${forum.id}.page">${forum.name} </a>
+						</span>
+					</td>
+
+					<td valign="middle" align="right">
+						<@pagination.doPagination "list", postId/>
+					</td>
 			
-			<td valign="middle" align="right">
-			<@pagination.doPagination "list", postId/>
-			</td>
+				</tr>
+			</table>
+
+			<table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
+				<tr>
+					<th class="thLeft" nowrap="nowrap" width="103" height="26">${I18n.getMessage("PostShow.author")}</th>
+					<th class="thRight" nowrap="nowrap">${I18n.getMessage("PostShow.messageTitle")}</th>
+				</tr>
+
+			<!-- POSTS --> 
+			<#assign rowColor = ""/>
+			<#list posts as post>
+				<#if post_index % 2 == 0>
+					<#assign rowColor = "row1">
+				<#else>
+					<#assign rowColor = "row2">
+				</#if>
+	
+				<#assign user = um.selectById(post.userId)/>
+				<tr>
+					<td class="${rowColor}" valign="top" align="left" width="103">
+						<span class="name"><b>${user.username}</b></span>
+						<br />
+						<span class="postdetails">${rank.getRankTitle(user.totalPosts)}
+						<br />
+						
+						<#if (user.avatar?exists && user.avatar?length > 0)>
+							<img src="images/avatar/${user.avatar}" border="0" />
+						</#if>
+						<br /> 
+						
+						${I18n.getMessage("PostShow.userTotalMessages")}: ${user.totalPosts}
+						<br />
+						
+						<#if user.from?exists>
+							${I18n.getMessage("PostShow.userFrom")}: ${user.from}
+						</#if>
+						</span>
+						<br />
+					</td>
+	
+					<td class="${rowColor}" valign="top" height="28">
+						<table cellspacing="0" cellpadding="0" width="100%" border="0">
+							<tr>
+								<td width="80%">
+									<span class="postdetails">
+									<img src="templates/${templateName}/images/icon_minipost.gif" width="12" height="9" />${post.formatedTime}<span class="gen">&nbsp;</span>&nbsp; &nbsp;${I18n.getMessage("PostShow.subject")}: <a name="${post.id}" id="${post.id}">${post.subject?html}</a>
+									</span>
+								</td>
+								
+								<td valign="top" width="20%" nowrap="nowrap" align="right">
+								<#if topic.status != STATUS_LOCKED>
+									<a href="${contextPath}/jforum.page?module=${moduleName}&amp;action=quote&amp;post_id=${post.id}"><img src="templates/${templateName}/images/icon_quote.gif" width="59" height="18" border="0" /></a>
+								</#if>
+
+								<#if ((post.canEdit && topic.status != STATUS_LOCKED) || canEdit)>
+									<a href="${contextPath}/jforum.page?module=${moduleName}&amp;action=edit&amp;post_id=${post.id}"><img src="templates/${templateName}/images/icon_edit.gif" width="59" height="18" border="0" /></a>  
+								</#if>
+		
+								<#if canRemove>
+									<a href="${contextPath}/jforum.page?module=${moduleName}&amp;action=delete&amp;post_id=${post.id}" onClick="return confirmDelete();"><img src="templates/${templateName}/images/icon_delete.gif" width="16" height="18" border="0" /></a>  
+								</#if>
+								</td>
+							</tr>
+							
+							<tr>
+								<td colspan="2">
+									<hr />
+								</td>
+							</tr>
+
+							<tr>
+								<td colspan="2" valign="top">
+									<span class="postbody">
+									${post.text?replace("<script", "&lt;script")}
+									
+									<#if (user.attachSignatureEnabled && user.signature?exists &user.signature?length > 0)>
+									<hr />
+									${user.signature?replace("<script", "&lt;script")}
+									</#if>
+									</span>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+	
+				<tr>
+					<td class="${rowColor}" valign="center" align="left" width="103">
+						<span class="nav"><a class="nav" href="#top">${I18n.getMessage("PostShow.top")}</a></span>
+					</td>
+					
+					<td class="${rowColor}" valign="top" nowrap="nowrap" height="28">
+						<table height="18" cellspacing="0" cellpadding="0" width="469" border="0">
+							<tr>
+								<td valign="center" nowrap="nowrap"> 
+									<a href="${contextPath}/user/profile/${user.id}.page"><img src="templates/${templateName}/images/icon_profile.gif" width="59" height="18" border="0" /></a>
+
+									<#if (user.isViewEmailEnabled() && user.email?exists && user.email?length > 0)>
+										<a href="mailto:${user.email}"><img src="templates/${templateName}/images/icon_email.gif" width="59" height="18" border="0" /></a>
+									</#if>
+									
+									<#if (user.webSite?exists && user.webSite?length > 0)>
+										<a href="${user.webSite}" target="_new"><img src="templates/${templateName}/images/icon_www.gif" width="59" height="18" border="0" /></a>
+									</#if>
+									
+									<#if (user.yim?exists && user.yim?length > 0)>
+										<a href="http://edit.yahoo.com/config/send_webmesg?.target=${user.yim}&amp;.src=pg"><img src="templates/${templateName}/images/icon_yim.gif" width="59" height="18" border="0" /></a>
+									</#if>
+									
+									<#if (user.msnm?exists && user.msnm?length > 0)>
+										<a href="${contextPath}/user/profile/${user.id}.page"><img src="templates/${templateName}/images/icon_msnm.gif" width="59" height="18" border="0" /></a>
+									</#if>
+									
+									<#if (user.icq?exists && user.icq?length > 0)>
+										<a href="http://wwp.icq.com/scripts/search.dll?to=${user.icq}"><img src="templates/${templateName}/images/icon_icq_add.gif" border="0" /></a>
+									</#if>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+	
+				<tr>
+					<td class="spaceRow" colspan="2" height="1"><img src="templates/subSilver/images/spacer.gif" alt="" width="1" height="1" /></td>
+				</tr>
+			</#list>
 			
-</TR>
-        <TR>
-          <TD align=left colSpan=3>&nbsp;</TD></TR></TBODY></TABLE>
-  </TD>
-  </TR></TBODY></TABLE></BODY></HTML>
+			<tr align="center">
+				<td class="catBottom" colspan="2" height="28">
+					<table cellspacing="0" cellpadding="0" border="0">
+						<tr>
+							<td align="center"><span class="gensmall">&nbsp;</span></td>
+						</tr>
+					</table>
+				</td>
+			</tr>			  
+			<!-- END OF POSTS -->			  
+			</table>
+		
+			<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
+				<tr>
+					<td width="15%" align="left" valign="bottom" nowrap="nowrap">
+					<#if topic.status == STATUS_LOCKED>
+						<img src="templates/${templateName}/images/reply_locked.gif" />
+					<#else>
+						<span class="nav">
+							&nbsp;<a href="${contextPath}/jforum.page?module=posts&amp;action=insert&amp;forum_id=${topic.forumId}"><img  src="templates/${templateName}/images/post.gif" width="82" height="25" border="0" /> </a>
+							&nbsp;<a href="${contextPath}/jforum.page?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}"><img src="templates/${templateName}/images/reply.gif" width="82" height="25" border="0" /></a>
+							</span>
+		  			</#if>
+					</td>
+					
+					<td valign="center" align="left">
+						<span class="nav">&nbsp;&nbsp;&nbsp;
+						<a class="nav" href="${contextPath}/forums/list.page">${I18n.getMessage("ForumListing.forumIndex")} </a> 
+            			-&gt; <a class="nav" href="${contextPath}/forums/show/${forum.id}.page">${forum.name} </a>
+						</span>
+					</td>
+
+					<td valign="middle" align="right">
+						<@pagination.doPagination "list", postId/>
+					</td>
+				</tr>
+				
+				<tr>
+					<td colspan="3"><img src="templates/subSilver/images/spacer.gif" alt="" width="1" height="1" /></td>
+				</tr>
+				
+				<!--
+		        <tr>
+					<td align="left" colspan="3">
+					<span class="gensmall">
+					<a href="${contextPath}/posts/unwatch/${topic.id}.page">${I18n.getMessage("PostShow.unwatch")}</a>
+					</span>
+					</td>
+				</tr>
+				
+				<tr>
+					<td colspan="3"><img src="templates/subSilver/images/spacer.gif" alt="" width="1" height="1" /></td>
+				</tr>
+				
+				<tr>
+					<td align="left" colspan="2">
+					<img src="templates/${templateName}/images/topic_delete.gif" border="0"/>
+					<img src="templates/${templateName}/images/topic_move.gif" border="0"/>
+					<img src="templates/${templateName}/images/topic_lock.gif" border="0"/>
+					</td>
+					<td align="right">eee</td>
+				</tr>
+				-->
+			</table>
+		</td>
+	</tr>
+</table>

@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: JForum.java,v 1.3 2004/04/24 02:02:56 kencochrane Exp $
+ * $Id: JForum.java,v 1.4 2004/04/24 19:54:25 rafaelsteil Exp $
  */
 package net.jforum;
 
@@ -428,7 +428,8 @@ public class JForum extends HttpServlet
             JForum.getContext().put("pageTitle",SystemGlobals.getValue("forum.page.title"));
             JForum.getContext().put("metaKeywords",SystemGlobals.getValue("forum.page.metatag.keywords"));
             JForum.getContext().put("metaDescription",SystemGlobals.getValue("forum.page.metatag.description"));
-			// Request
+
+            // Request
 			ActionServletRequest request = new ActionServletRequest(req);
 
 			dataHolder.setResponse(response);

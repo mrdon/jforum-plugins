@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: BBCode.java,v 1.3 2004/04/23 00:47:12 rafaelsteil Exp $
+ * $Id: BBCode.java,v 1.4 2004/04/24 19:54:27 rafaelsteil Exp $
  */
 package net.jforum.util.bbcode;
 
@@ -52,7 +52,7 @@ package net.jforum.util.bbcode;
  */
 public class BBCode 
 {
-	private String tagName;
+	private String tagName = "";
 	private String regex;
 	private String replace;
 	private String beforeReplace;

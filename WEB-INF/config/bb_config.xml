@@ -27,25 +27,19 @@
 		</replace>
 	</match>
 
-	<match>
-		<regex>(?s)\[quote\](.*?)\[/quote\]</regex>
+	<match name="openQuote">
+		<regex>\[quote\]</regex>
 		<replace>
 		<![CDATA[
 		<table width="90%" cellspacing="1" cellpadding="1" border="0" align="center" bgcolor="#2943D4" >
 		<tr>
 		<td class="quote" bgcolor="#F3F5FF">
-		$1
-		&nbsp;
-		</td>
-		</tr>
-		</table>
-		
 		]]>
 		</replace>
 	</match>
 	
-	<match>
-		<regex>(?s)\[quote=['"]?(.*?[^'"])['"]?\](.*?)\[/quote\]</regex>
+	<match name="openQuote">
+		<regex>\[quote=['"]?(.*?[^'"])['"]?\]</regex>
 		<replace>
 		<![CDATA[
 		<table width="90%" cellspacing="1" cellpadding="1" border="0" align="center">
@@ -57,12 +51,18 @@
 		<table width="90%" cellspacing="1" cellpadding="1" border="0" align="center" bgcolor="#2943D4" >
 		<tr>
 		<td class="quote" bgcolor="#F3F5FF">
-		$2
+		]]>
+		</replace>
+	</match>
+	
+	<match name="closeQuote">
+		<regex>\[/quote\]</regex>
+		<replace>
+		<![CDATA[
 		&nbsp;
 		</td>
 		</tr>
 		</table>
-		
 		]]>
 		</replace>
 	</match>
