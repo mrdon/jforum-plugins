@@ -85,7 +85,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.18 2004/06/10 21:59:58 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.19 2004/06/17 00:12:25 rafaelsteil Exp $
  */
 public class JForum extends HttpServlet 
 {
@@ -410,7 +410,7 @@ public class JForum extends HttpServlet
 			}
 			
 			cookie = JForum.getCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN));
-			if ("1".equals(cookie.getValue())) {
+			if (cookie != null && cookie.getValue().equals("1")) {
 				userSession.setAutoLogin(true);
 				SessionFacade.setAttribute("logged", "1");
 			}
