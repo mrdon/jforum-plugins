@@ -59,7 +59,7 @@ import net.jforum.util.bbcode.BBCode;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.5 2004/09/28 04:03:27 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.6 2004/10/01 21:34:02 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -140,6 +140,9 @@ public class PostCommon
 						while (matcher.find()) {
 							String contents = matcher.group(1);
 							
+							// Do not allow other bb tags inside "code"
+							contents = contents.replaceAll("\\[", "&#91;").replaceAll("\\]", "&#93;");
+							
 							StringBuffer replace = new StringBuffer(bb.getReplace());
 							int index = replace.indexOf("$1");
 							if (index > -1) {
@@ -157,7 +160,6 @@ public class PostCommon
 						text = text.replaceAll(bb.getRegex(), bb.getReplace());
 					}
 				}
-				
 			}
 			
 			if (openQuotes > 0) {
