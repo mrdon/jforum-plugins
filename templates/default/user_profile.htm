@@ -1,4 +1,3 @@
-<#import "../macros/utils.ftl" as utils/>
 <TABLE cellSpacing=2 cellPadding=2 width="100%" align=center border=0>
   <TBODY>
     <TR>
@@ -89,7 +88,9 @@
               <TD vAlign=center noWrap align=right><SPAN class=gen>${I18n.getMessage("UserProfile.emailAddress")}:</SPAN></TD>
               <TD class=row1 vAlign=center width="100%"><B>
               	<SPAN class=gen>
-              	<@utils.convertEmail u.email/>
+				<script language="javascript" src="${contextPath}/templates/default/utils.js"></script>
+				<#assign e = u.email.split("@")/>
+				<a href="#" onClick="document.location = 'mailto:' + showEmail('${e[0]}', '${e[1]}');"><img src="${contextPath}/templates/${templateName}/images/icon_email.gif" border=0></a>
                   </SPAN></B>
                   </TD>
             </TR>

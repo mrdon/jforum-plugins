@@ -1,5 +1,4 @@
 <#import "../macros/pagination.ftl" as pagination/>
-<#import "../macros/utils.ftl" as utils/>
 
 <script language="JavaScript">
 function confirmDelete()
@@ -11,6 +10,8 @@ function confirmDelete()
 	return false;
 }
 </script>
+
+<script language="javascript" src="${contextPath}/templates/${templateName}/utils.js"></script>
 
 <table cellspacing="0" cellpadding="10" width="100%" align="center" border="0">
 	<tr>
@@ -181,7 +182,8 @@ function confirmDelete()
 									<a href="${contextPath}/user/profile/${user.id}${extension}"><img src="${contextPath}/templates/${templateName}/images/icon_profile.gif" border="0" /></a>
 
 									<#if (user.isViewEmailEnabled() && user.email?exists && user.email?length > 0)>
-										<@utils.convertEmail user.email/>
+										<#assign e = user.email.split("@")/>
+										<a href="#" onClick="document.location = 'mailto:' + showEmail('${e[0]}', '${e[1]}');"><img src="${contextPath}/templates/${templateName}/images/icon_email.gif" border=0></a>
 									</#if>
 									
 									<#if (user.webSite?exists && user.webSite?length > 0)>
