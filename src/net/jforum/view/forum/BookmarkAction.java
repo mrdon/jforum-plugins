@@ -50,6 +50,7 @@ import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 import net.jforum.ActionServletRequest;
 import net.jforum.Command;
+import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.entities.Bookmark;
 import net.jforum.entities.BookmarkType;
@@ -67,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: BookmarkAction.java,v 1.3 2005/01/27 22:31:48 rafaelsteil Exp $
+ * @version $Id: BookmarkAction.java,v 1.4 2005/02/18 19:43:36 rafaelsteil Exp $
  */
 public class BookmarkAction extends Command
 {
@@ -207,6 +208,22 @@ public class BookmarkAction extends Command
 		
 		this.context.put("moduleAction", "bookmark_insert.htm");
 		this.context.put("bookmark", b);
+	}
+	
+	public void delete() throws Exception
+	{
+		int id = this.request.getIntParameter("bookmark_id");
+		BookmarkModel bm = DataAccessDriver.getInstance().newBookmarkModel();
+		Bookmark b = bm.selectById(id);
+		
+		if (!this.sanityCheck(b)) {
+			return;
+		}
+		
+		bm.remove(id);
+		
+		JForum.setRedirect(this.request.getContextPath() + "/bookmarks/list/" + b.getUserId()
+				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 	}
 	
 	private boolean sanityCheck(Bookmark b)

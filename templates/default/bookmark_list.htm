@@ -11,7 +11,14 @@ function confirmDelete(id)
 </script>
 <table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
     <tr>
-      <td align="left"><span class="nav"><a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a></span></td>
+      <td align="left">
+		<td>
+			<span class="nav">
+				<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a>
+				->
+				<a href="${JForumContext.encodeURL("/bookmarks/list/${user.id}")}">${I18n.getMessage("Bookmarks.for")} ${user.username}</a>
+			</span>
+		</td>
     </tr>
 </table>
 
