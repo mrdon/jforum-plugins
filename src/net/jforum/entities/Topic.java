@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creating date: Feb 23, 2003 / 12:40:13 PM
- * net.jforum.entities.Topic.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: Topic.java,v 1.4 2004/10/04 10:08:18 marcwick Exp $
  */
 package net.jforum.entities;
 
@@ -51,15 +48,16 @@ import java.util.Date;
  * Represents every topic in the forum.
  * 
  * @author Rafael Steil
+ * @version $Id: Topic.java,v 1.5 2004/10/24 22:30:01 rafaelsteil Exp $
  */
 public class Topic 
 {
-	public static int TYPE_NORMAL = 0;
-	public static int TYPE_STICKY = 1;
-	public static int TYPE_ANNOUNCE = 2;
+	public static final int TYPE_NORMAL = 0;
+	public static final int TYPE_STICKY = 1;
+	public static final int TYPE_ANNOUNCE = 2;
 
-	public static int STATUS_UNLOCKED = 0;
-	public static int STATUS_LOCKED = 1;
+	public static final int STATUS_UNLOCKED = 0;
+	public static final int STATUS_LOCKED = 1;
 	
 	/**
 	 * The topic ID
@@ -142,6 +140,8 @@ public class Topic
 	 * User who posted the last message in the topic 
 	 */
 	private User lastPostBy;
+	
+	private boolean isHot;
 	
 	/**
 	 * Default Constructor
@@ -424,7 +424,15 @@ public class Topic
 		return this.totalPages;
 	}
 	
-	/* 
+	public void setHot(boolean hot) {
+		this.isHot = hot;
+	}
+	
+	public boolean isHot() {
+		return this.isHot;
+	}
+	
+	/** 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object o)
@@ -435,7 +443,7 @@ public class Topic
 		
 		return (((Topic)o).getId() == this.id);
 	}
-	/* 
+	/** 
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode()

@@ -63,7 +63,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.1 2004/10/20 03:19:45 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.2 2004/10/24 22:30:02 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
@@ -111,6 +111,7 @@ public class TopicsCommon
 	public static List prepareTopics(List topics)
 	{
 		long lastVisit = SessionFacade.getUserSession().getLastVisit().getTime();
+		int hotBegin = SystemGlobals.getIntValue(ConfigKeys.HOT_TOPIC_BEGIN);
 
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 		HashMap topicsTracking = (HashMap)SessionFacade.getAttribute("topics_tracking");
@@ -138,6 +139,9 @@ public class TopicsCommon
 				t.setPaginate(false);
 				t.setTotalPages(new Double(0));
 			}
+			
+			// Check if this is a hot topic
+			t.setHot(t.getTotalReplies() >= hotBegin);
 			
 			t.setRead(read);
 			newTopics.add(t);

@@ -11,6 +11,7 @@
 <th class='thhead' valign='center' colspan='2' height='25'>${I18n.getMessage("AdminConfig.Title")}</th>
 </tr>
 
+<!-- Forum -->
 <tr>
 	<td class='catSides' colspan="2"><span class='gen'><b>${I18n.getMessage("Config.Form.Forum")}</b></span></td>
 </tr>
@@ -65,6 +66,11 @@
 <tr>
 	<td class='row1' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.ForumPageTitle")}</span></td>
 	<td class='row1' width="38%"><span class='gen'><input type="text" size="30"name="p_forum.page.title" value="${config.getProperty("forum.page.title")}" /></span></td>
+</tr>
+
+<tr>
+	<td class='row1' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.HotTopicStart")}</span></td>
+	<td class='row1' width="38%"><span class='gen'><input type="text" size="30"name="p_hot.topic.begin" value="${config.getProperty("hot.topic.begin")}" /></span></td>
 </tr>
 
 
