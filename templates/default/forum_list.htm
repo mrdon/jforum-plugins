@@ -118,7 +118,7 @@
 								<#assign color = ""/>
 							</#if>
 
-								<a href="${JForumContext.encodeURL("/user/profile/${us.userId}")}" ${color}>${us.username}</a>&nbsp;
+								<a href="${JForumContext.encodeURL("/user/profile/${us.userId}")}"><span ${color}>${us.username}</span></a>&nbsp;
 						</#list>			
 						</span>		  
 					</td>

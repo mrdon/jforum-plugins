@@ -330,21 +330,23 @@ A.postlink:hover {
 }
 .code {
 	FONT-SIZE: 11px; COLOR: #444444; FONT-FAMILY: Courier, 'Courier New', sans-serif; background-color: #F3F5FF;
+	BORDER-RIGHT: #01336b 1px solid; BORDER-TOP: #01336b 1px solid; BORDER-LEFT: #01336b 1px solid; BORDER-BOTTOM: #01336b 1px solid;
 }
 .code-table {
-	 width: 90%; border-spacing: 1px; border: 0; align: center; background-color: #DEE3E7;
+	 width: 90%; 
 }
 .code-table-simple {
-	width: 90%; border-spacing: 1px; border: 0; align: center; 
+	width: 90%; 
 }
 .quote {
 	FONT-SIZE: 11px; COLOR: #444444; LINE-HEIGHT: 125%; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; background-color: #F3F5FF;
+	BORDER-RIGHT: #01336b 1px solid; BORDER-TOP: #01336b 1px solid; BORDER-LEFT: #01336b 1px solid; BORDER-BOTTOM: #01336b 1px solid;
 }
 .quote-table {
-	width: 90%; border-spacing: 1px; border: 0; align: center; background-color: #DEE3E7;
+	width: 90%;
 }
 .quote-table-simple {
-	width: 90%; border-spacing: 1px; border: 0; align: center; 
+	width: 90%; 
 }
 .copyright {
 	FONT-SIZE: 10px; COLOR: #444444; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; LETTER-SPACING: -1px
