@@ -67,7 +67,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserVH.java,v 1.4 2004/06/03 03:21:41 rafaelsteil Exp $
+ * @version $Id: UserVH.java,v 1.5 2004/07/06 21:48:38 rafaelsteil Exp $
  */
 public class UserVH extends Command 
 {
@@ -90,7 +90,7 @@ public class UserVH extends Command
 		pc.setSecurityModel(umodel);
 		pc.setRoles(umodel.loadRoles(user));
 		
-		List sections = new XMLPermissionControl(pc).loadConfigurations(SystemGlobals.getApplicationResourceDir() +"config/permissions.xml");
+		List sections = new XMLPermissionControl(pc).loadConfigurations(SystemGlobals.getApplicationResourceDir() +"/config/permissions.xml");
 		
 		JForum.getContext().put("sections", sections);
 		JForum.getContext().put("user", user);
