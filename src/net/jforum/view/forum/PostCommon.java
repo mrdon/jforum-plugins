@@ -59,7 +59,7 @@ import net.jforum.util.bbcode.BBCode;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.1 2004/05/21 22:10:53 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.2 2004/07/24 15:47:53 jamesyong Exp $
  */
 public class PostCommon
 {
@@ -189,6 +189,7 @@ public class PostCommon
 		p.setSignatureEnabled(JForum.getRequest().getParameter("attach_sig") != null ? true : false);
 		p.setTime(new GregorianCalendar().getTimeInMillis());
 		p.setUserId(SessionFacade.getUserSession().getUserId());
+		p.setUserIp(JForum.getRequest().getRemoteAddr());
 		
 		return p;
 	}
