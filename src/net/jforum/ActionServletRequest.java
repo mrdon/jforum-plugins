@@ -54,7 +54,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
 import net.jforum.exceptions.ForumException;
-import net.jforum.exceptions.InvalidURLPattern;
+import net.jforum.exceptions.InvalidURLPatternException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -66,7 +66,7 @@ import org.apache.commons.fileupload.servlet.ServletRequestContext;
 
 /**
  * @author Rafael Steil
- * @version $Id: ActionServletRequest.java,v 1.16 2005/01/31 20:10:35 rafaelsteil Exp $
+ * @version $Id: ActionServletRequest.java,v 1.17 2005/02/01 21:41:53 rafaelsteil Exp $
  */
 public class ActionServletRequest extends HttpServletRequestWrapper 
 {
@@ -263,7 +263,7 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 					+ (urlModel.length - baseLen));
 
 			if (url == null) {
-				throw new InvalidURLPattern("The request '" + superRequest.getRequestURI() 
+				throw new InvalidURLPatternException("The request '" + superRequest.getRequestURI() 
 						+ "' is not valid. A correspondent URL Pattern was not found");
 			}
 			

@@ -42,31 +42,41 @@
  */
 package net.jforum.repository;
 
+import net.jforum.cache.CacheEngine;
+import net.jforum.cache.Cacheable;
 import net.jforum.util.bbcode.BBCode;
 import net.jforum.util.bbcode.BBCodeHandler;
 
 /**
  * @author Rafael Steil
- * @version $Id: BBCodeRepository.java,v 1.4 2004/11/21 17:13:47 rafaelsteil Exp $
+ * @version $Id: BBCodeRepository.java,v 1.5 2005/02/01 21:41:51 rafaelsteil Exp $
  */
-public class BBCodeRepository 
+public class BBCodeRepository implements Cacheable
 {
-	private static BBCodeHandler bbCollection;
+	private static CacheEngine cache;
+	private static final String FQN = "bbcode";
+	private static final String BBCOLLECTION = "bbCollection";
 	
-	private BBCodeRepository() {}
+	/**
+	 * @see net.jforum.cache.Cacheable#setCacheEngine(net.jforum.cache.CacheEngine)
+	 */
+	public void setCacheEngine(CacheEngine cacheEngine)
+	{
+		cache = cacheEngine;
+	}
 	
 	public static void setBBCollection(BBCodeHandler bbCollection)
 	{
-		BBCodeRepository.bbCollection = bbCollection;
+		cache.add(FQN, BBCOLLECTION, bbCollection);
 	}
 	
 	public static BBCodeHandler getBBCollection()
 	{
-		return BBCodeRepository.bbCollection;
+		return (BBCodeHandler)cache.get(FQN, BBCOLLECTION);
 	}
 	
 	public static BBCode findByName(String tagName)
 	{
-		return bbCollection.findByName(tagName);
+		return getBBCollection().findByName(tagName);
 	}
 }

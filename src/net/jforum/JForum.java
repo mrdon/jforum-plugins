@@ -62,7 +62,9 @@ import net.jforum.exceptions.ForumException;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.UserSessionModel;
 import net.jforum.repository.ModulesRepository;
+import net.jforum.repository.RankingRepository;
 import net.jforum.repository.SecurityRepository;
+import net.jforum.repository.SmiliesRepository;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.MD5;
@@ -74,7 +76,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.62 2005/01/31 20:10:35 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.63 2005/02/01 21:41:53 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -84,8 +86,37 @@ public class JForum extends JForumCommonServlet
 	{
 		super.init(config);
 		
+		// Start database
 		isDatabaseUp = ForumStartup.startDatabase();
+		
+		// Configure ThreadLocal
+		DataHolder dh = new DataHolder();
+		Connection conn;
+		
+		try {
+			conn = DBConnection.getImplementation().getConnection();
+		}
+		catch (Exception e) {
+			throw new ForumException(e);
+		}
+		
+		dh.setConnection(conn);
+		JForum.setThreadLocalData(dh);
+		
+		// Init general forum stuff
 		ForumStartup.startForumRepository();
+		RankingRepository.loadRanks();
+		SmiliesRepository.loadSmilies();
+		
+		// Finalize
+		if (conn != null) {
+			try {
+				DBConnection.getImplementation().releaseConnection(conn);
+			}
+			catch (Exception e) {}
+		}
+		
+		JForum.setThreadLocalData(null);
 	}
 	
 	private void checkCookies() throws Exception

@@ -40,10 +40,11 @@
  * The JForum Project
  * http://www.jforum.net 
  * 
- * $Id: User.java,v 1.11 2005/01/31 20:10:40 rafaelsteil Exp $
+ * $Id: User.java,v 1.12 2005/02/01 21:44:41 rafaelsteil Exp $
  */
 package net.jforum.entities;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,208 +63,49 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  */
-public class User 
+public class User implements Serializable
 {
-	/**
-	 * The user id
-	 */
 	private int id;
-	
-	/**
-	 * The theme id the user chosen
-	 */
 	private int themeId;
-	
-	/**
-	 * TODO level???
-	 */	
 	private int level;
-	
-	/**
-	 * The number of messagens sent by the user
-	 */
 	private int totalPosts;
-	
 	private boolean attachSignatureEnabled = true;
-	
-	/**
-	 * The ranking of the user
-	 */
 	private int rankId = 1;
-	
-	/**
-	 * Is HTML code enabled in user preferences? 
-	 */
 	private boolean htmlEnabled = true;
-	
-	/**
-	 * Is BB code enabled in user preferences?
-	 */
 	private boolean bbCodeEnabled = true;
-	
-	/**
-	 * Is smilies in user preferecens?
-	 */
 	private boolean smiliesEnabled = true;
-	
-	/**
-	 * Is avatars enabled?
-	 */
 	private boolean avatarEnabled = true;
-	
-	/**
-	 * The user permits private messages to him?
-	 */
 	private boolean privateMessagesEnabled = true;
-	
-	/**
-	 * The user permits anybody to se he online?
-	 */
 	private boolean viewOnlineEnabled = true;
-	
-	/**
-	 * Is to send notifications about new private messages?
-	 */
 	private boolean notifyPrivateMessagesEnabled = true;
-	
-	/**
-	 * Send a message to the user when some post is answered
-	 */
 	private boolean notifyOnMessagesEnabled = true;
-	
-	/**
-	 * The username of the user
-	 */
 	private String username;
-	
-	/**
-	 * His password ( duh )
-	 */
 	private String password;
-	
-	/**
-	 * The last visit time, represented as a long value
-	 */
 	private Date lastVisit;
-	
-	/**
-	 * Registration date and time
-	 */
 	private Date registrationDate;
-	
-	/**
-	 * User avatar
-	 */
 	private String avatar;
-	
 	private boolean isExternalAvatar;
-	
-	/**
-	 * User email
-	 */
 	private String email;
-	
-	/**
-	 * ICQ UIN
-	 */
 	private String icq;
-	
-	/**
-	 * The website URL
-	 */
 	private String webSite;
-	
-	/**
-	 * Where the user lives
-	 */
 	private String from;
-	
-	/**
-	 * Signature, attached to his messages
-	 */
 	private String signature;
-	
-	/**
-	 * AIM identification
-	 */
 	private String aim;
-	
-	/**
-	 * Yahoo messenger ID
-	 */
 	private String yim;
-	
-	/**
-	 * Microsoft Messenger
-	 */
 	private String msnm; 
-	
-	/**
-	 * Occupation
-	 */
 	private String occupation;
-	
-	/**
-	 * Some text describing user interests
-	 */
 	private String interests;
-	
-	/**
-	 * Male or female? 
-	 */
 	private String gender;
-	
-	/**
-	 * Timezone
-	 */
 	private String timeZone;
-	
-	/**
-	 * User language
-	 */
 	private String lang;
-	
-	/**
-	 * Format to show date and time
-	 */
 	private String dateFormat;
-
-	/**
-	 * Is to show user's email? 
-	 */
 	private boolean viewEmailEnabled = true;
-
-	/**
-	 * User groups
-	 */	
 	private List groupsList;
-	
 	private int privateMessagesCount;
-	
 	private KarmaStatus karma;
-	
-	/**
-	 * Once the user activate the account from his email, active = 1 
-	 */
 	private int active;
-	
-	/**
-	 * Key that the user uses to activate account, by email
-	 */
-	private String activationKey;	
-
-	/**
-	 * For locking & unlocking users
-	 */	
+	private String activationKey;
 	private int deleted;
-	
-	public boolean isDeleted() {
-		return this.deleted == 1;
-	}	
-	
-	public void setDeleted(int deleted){
-		this.deleted = deleted;
-	}	
 	
 	/**
 	 * Default Constructor
@@ -272,6 +114,14 @@ public class User
 	{
 		this.groupsList = new ArrayList(); 
 	}
+	
+	public boolean isDeleted() {
+		return this.deleted == 1;
+	}	
+	
+	public void setDeleted(int deleted){
+		this.deleted = deleted;
+	}	
 	
 	/**
 	 * Gets the AIM identification

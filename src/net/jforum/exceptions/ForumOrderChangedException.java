@@ -36,73 +36,21 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Jan 13, 2005 5:58:36 PM
+ * Created on 08/12/2004 23:42:20
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.cache;
+package net.jforum.exceptions;
 
 /**
+ * Thrown when someone tries to reload some cached
+ * forum instance which had its order changed.
+ * 
  * @author Rafael Steil
- * @version $Id: CacheEngine.java,v 1.4 2005/02/01 21:42:02 rafaelsteil Exp $
+ * @version $Id: ForumOrderChangedException.java,v 1.1 2005/02/01 21:41:56 rafaelsteil Exp $
  */
-public interface CacheEngine
-{
-	public static final String DUMMY_FQN = "";
-
-	/**
-	 * Inits the cache engine. 
-	 */
-	public void init();
-	
-	/**
-	 * Adds a new object to the cache. 
-	 * The fqn will be set as the value of {@link #DUMMY_FQN}
-	 * 
-	 * @param key The key to associate with the object. 
-	 * @param value The object to cache
-	 */
-	public void add(String key, Object value);
-	
-	/**
-	 * 
-	 * Adds a new object to the cache.
-	 * 
-	 * @param fqn The fully qualified name of the cache. 
-	 * @param key The key to associate with the object
-	 * @param value The object to cache
-	 */
-	public void add(String fqn, String key, Object value);
-	
-	/**
-	 * Gets some object from the cache.
-	 * 
-	 * @param fqn The fully qualified name associated with the key
-	 * @param key The key to get
-	 * @return The cached object, or <code>null</code> if no entry was found
-	 */
-	public Object get(String fqn, String key);
-	
-	/**
-	 * Gets some object from the cache.
-	 * The fqn used will be the value of {@link #DUMMY_FQN}
-	 * 
-	 * @param key The key to get
-	 * @return The cached object, or <code>null</code> if no entry was found
-	 */
-	public Object get(String key);
-	
-	/**
-	 * Removes an entry from the cache.
-	 * 
-	 * @param fqn The fully qualified name associated with the key
-	 * @param key The key to remove
-	 */
-	public void remove(String fqn, String key);
-	
-	/**
-	 * Removes a complete note from the cache
-	 * @param key The fqn to remove
-	 */
-	public void remove(String fqn);
+public class ForumOrderChangedException extends RuntimeException {
+	public ForumOrderChangedException(String message) {
+		super(message);
+	}
 }

@@ -41,14 +41,16 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: Smilie.java,v 1.2 2004/04/21 23:57:31 rafaelsteil Exp $
+ * $Id: Smilie.java,v 1.3 2005/02/01 21:42:00 rafaelsteil Exp $
  */
 package net.jforum.entities;
+
+import java.io.Serializable;
 
 /**
  * @author Rafael Steil
  */
-public class Smilie 
+public class Smilie implements Serializable
 {
 	private int id;
 	private String code;

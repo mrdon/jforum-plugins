@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -36,118 +36,76 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Jan 13, 2005 11:42:54 PM
+ * Created on Feb 1, 2005 7:30:35 PM
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.cache;
 
-import net.jforum.exceptions.CacheException;
-import net.jforum.util.preferences.ConfigKeys;
-import net.jforum.util.preferences.SystemGlobals;
-
-import org.apache.log4j.Logger;
-import org.jboss.cache.Fqn;
-import org.jboss.cache.PropertyConfigurator;
-import org.jboss.cache.TreeCache;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Rafael Steil
- * @version $Id: JBossCacheEngine.java,v 1.3 2005/02/01 21:42:01 rafaelsteil Exp $
+ * @version $Id: DefaultCacheEngine.java,v 1.1 2005/02/01 21:42:01 rafaelsteil Exp $
  */
-public class JBossCacheEngine implements CacheEngine
+public class DefaultCacheEngine implements CacheEngine
 {
-	private Logger logger = Logger.getLogger(JBossCacheEngine.class);
-	private TreeCache cache;
-
-	/**
-	 * @see net.jforum.cache.CacheEngine#init()
-	 */
-	public void init()
-	{
-		try {
-			this.cache = new TreeCache();
-			PropertyConfigurator config = new PropertyConfigurator();
-			config.configure(this.cache, SystemGlobals.getValue(ConfigKeys.JBOSS_CACHE_PROPERTIES));
-			
-			this.cache.startService();
-		}
-		catch (Exception e) {
-			throw new CacheException("Error while trying to configure jboss-cache: " + e);
-		}
-	}
-
+	private static Map cache;
+	
 	/**
 	 * @see net.jforum.cache.CacheEngine#add(java.lang.String, java.lang.Object)
 	 */
 	public void add(String key, Object value)
 	{
-		this.add(CacheEngine.DUMMY_FQN, key, value);
+		throw new UnsupportedOperationException("Use the add(String, String, Object) method");
 	}
-
+	
 	/**
 	 * @see net.jforum.cache.CacheEngine#add(java.lang.String, java.lang.String, java.lang.Object)
 	 */
 	public void add(String fqn, String key, Object value)
 	{
-		try {
-			this.cache.put(Fqn.fromString(fqn), key, value);
-		}
-		catch (Exception e) {
-			throw new CacheException("Error adding a new entry to the cache: " + e);
-		}
+		cache.put(fqn + key, value);
 	}
-
+	
 	/**
 	 * @see net.jforum.cache.CacheEngine#get(java.lang.String, java.lang.String)
 	 */
 	public Object get(String fqn, String key)
 	{
-		try {
-			return this.cache.get(Fqn.fromString(fqn), key);
-		}
-		catch (Exception e) {
-			throw new CacheException("Error while trying to get an entry from the cache: " + e);
-		}
+		return cache.get(fqn + key);
 	}
-
+	
 	/**
 	 * @see net.jforum.cache.CacheEngine#get(java.lang.String)
 	 */
 	public Object get(String key)
 	{
-		return this.get(CacheEngine.DUMMY_FQN, key);
+		throw new UnsupportedOperationException("Use the get(String, String) method");
 	}
-
+	
+	/**
+	 * @see net.jforum.cache.CacheEngine#init()
+	 */
+	public void init()
+	{
+		cache = new HashMap();
+	}
+	
 	/**
 	 * @see net.jforum.cache.CacheEngine#remove(java.lang.String, java.lang.String)
 	 */
 	public void remove(String fqn, String key)
 	{
-		try {
-			if (key == null) {
-				this.cache.remove(Fqn.fromString(fqn));
-			}
-			else {
-				this.cache.remove(Fqn.fromString(fqn), key);
-			}
-		}
-		catch (Exception e) {
-			throw new CacheException("Error while removing a FQN from the cache: " + e);
-		}
+		cache.remove(fqn + key);
 	}
-
+	
 	/**
 	 * @see net.jforum.cache.CacheEngine#remove(java.lang.String)
 	 */
 	public void remove(String fqn)
 	{
-		try {
-			this.cache.remove(Fqn.fromString(fqn));
-		}
-		catch (Exception e) {
-			throw new CacheException("Error while removing a FQN from the cache: " + e);
-		}
+		throw new UnsupportedOperationException("Use the remove(String, String) method");
 	}
-
 }

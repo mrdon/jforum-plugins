@@ -49,20 +49,31 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
+import net.jforum.cache.CacheEngine;
+import net.jforum.exceptions.CacheEngineStartupException;
+import net.jforum.repository.BBCodeRepository;
+import net.jforum.repository.ModulesRepository;
+import net.jforum.repository.RankingRepository;
+import net.jforum.repository.SecurityRepository;
+import net.jforum.repository.SmiliesRepository;
 import net.jforum.util.FileMonitor;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.QueriesFileListener;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.SystemGlobalsListener;
 
+import org.apache.log4j.Logger;
+
 /**
  * General utilities methods for loading configurations for JForum.
  * 
  * @author Rafael Steil
- * @version $Id: ConfigLoader.java,v 1.5 2005/01/02 19:57:59 rafaelsteil Exp $
+ * @version $Id: ConfigLoader.java,v 1.6 2005/02/01 21:41:54 rafaelsteil Exp $
  */
 public class ConfigLoader 
 {
+	private static final Logger logger = Logger.getLogger(ConfigLoader.class);
+	
 	/**
 	 * Start ( or restart ) <code>SystemGlobals</code>.
 	 * This method loads all configuration keys set at
@@ -153,6 +164,26 @@ public class ConfigLoader
 				FileMonitor.getInstance().addFileChangeListener(new SystemGlobalsListener(),
 						SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG), fileChangesDelay);
 			}
+		}
+	}
+	
+	public static void startCacheEngine()
+	{
+		try {
+			String cacheImplementation = SystemGlobals.getValue(ConfigKeys.CACHE_IMPLEMENTATION);
+			logger.info("Using cache engine: " + cacheImplementation);
+			
+			CacheEngine cache = (CacheEngine)Class.forName(cacheImplementation).newInstance();
+			cache.init();
+			
+			new BBCodeRepository().setCacheEngine(cache);
+			new ModulesRepository().setCacheEngine(cache);
+			new RankingRepository().setCacheEngine(cache);
+			new SmiliesRepository().setCacheEngine(cache);
+			new SecurityRepository().setCacheEngine(cache);
+		}
+		catch (Exception e) {
+			throw new CacheEngineStartupException("Error while starting the cache engine: " + e);
 		}
 	}
 }

@@ -42,50 +42,60 @@
  */
 package net.jforum.repository;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import net.jforum.JForum;
+import net.jforum.cache.CacheEngine;
+import net.jforum.cache.Cacheable;
 import net.jforum.entities.Smilie;
+import net.jforum.exceptions.SmiliesLoadException;
 import net.jforum.model.DataAccessDriver;
 
 /**
  * @author Rafael Steil
- * @version $Id: SmiliesRepository.java,v 1.5 2004/12/29 01:04:38 rafaelsteil Exp $
+ * @version $Id: SmiliesRepository.java,v 1.6 2005/02/01 21:41:51 rafaelsteil Exp $
  */
-public class SmiliesRepository 
+public class SmiliesRepository implements Cacheable
 {
-	private static List smiliesList = new ArrayList();
-	
-	static {
-		try {
-			SmiliesRepository.loadSmilies();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+	private static CacheEngine cache;
+	private static final String FQN = "smilies";
+	private static final String ENTRIES = "entries";
+	private static boolean contexted = false;
+
+	/**
+	 * @see net.jforum.cache.Cacheable#setCacheEngine(net.jforum.cache.CacheEngine)
+	 */
+	public void setCacheEngine(CacheEngine engine)
+	{
+		cache = engine;
 	}
 	
-	private SmiliesRepository() {}
-	
-	public static void loadSmilies() throws Exception
+	public static void loadSmilies()
 	{
-		SmiliesRepository.smiliesList.clear();
-		List list = DataAccessDriver.getInstance().newSmilieModel().selectAll();
-		
-		String context = JForum.getRequest().getContextPath();
-		
-		for (Iterator iter = list.iterator(); iter.hasNext(); ) {
-			Smilie s = (Smilie)iter.next();
-			s.setUrl(s.getUrl().replaceAll("#CONTEXT#", context));
-			
-			smiliesList.add(s);
+		try {
+			cache.add(FQN, ENTRIES, DataAccessDriver.getInstance().newSmilieModel().selectAll());
+		}
+		catch (Exception e) {
+			throw new SmiliesLoadException("Error while loading smilies: " + e);
 		}
 	}
 	
 	public static List getSmilies()
 	{
-		return SmiliesRepository.smiliesList;
+		List list = (List)cache.get(FQN, ENTRIES);
+		if (!contexted) {
+			String context = JForum.getRequest().getContextPath();
+			
+			for (Iterator iter = list.iterator(); iter.hasNext(); ) {
+				Smilie s = (Smilie)iter.next();
+				s.setUrl(s.getUrl().replaceAll("#CONTEXT#", context));
+			}
+			
+			cache.add(FQN, ENTRIES, list);
+			contexted = true;
+		}
+		
+		return list;
 	}
 }

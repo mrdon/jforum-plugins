@@ -52,7 +52,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import net.jforum.SessionFacade;
-import net.jforum.exceptions.ForumOrderChanged;
+import net.jforum.exceptions.ForumOrderChangedException;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.SecurityConstants;
@@ -71,7 +71,7 @@ import net.jforum.util.ForumOrderComparator;
  * to the user who make the call tho the method. 
  * 
  * @author Rafael Steil
- * @version $Id: Category.java,v 1.15 2005/01/31 20:10:40 rafaelsteil Exp $
+ * @version $Id: Category.java,v 1.16 2005/02/01 21:42:00 rafaelsteil Exp $
  */
 public class Category 
 {
@@ -186,7 +186,7 @@ public class Category
 		Forum currentForum = this.getForum(forum.getId());
 		
 		if (forum.getOrder() != currentForum.getOrder()) {
-			throw new ForumOrderChanged("Forum #" + forum.getId() + " cannot be reloaded, since its "
+			throw new ForumOrderChangedException("Forum #" + forum.getId() + " cannot be reloaded, since its "
 					+ "display order was changed. You must call Category#changeForumOrder(Forum)"
 					+ "first");
 		}

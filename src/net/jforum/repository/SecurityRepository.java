@@ -35,18 +35,16 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
- * 
+ *
  * This file creation date: 18/11/2003 / 23:09:15
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.repository;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import net.jforum.SessionFacade;
+import net.jforum.cache.CacheEngine;
+import net.jforum.cache.Cacheable;
 import net.jforum.entities.User;
 import net.jforum.exceptions.SecurityLoadException;
 import net.jforum.model.DataAccessDriver;
@@ -56,25 +54,21 @@ import net.jforum.security.PermissionControl;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityRepository.java,v 1.8 2004/12/27 19:59:06 rafaelsteil Exp $
+ * @version $Id: SecurityRepository.java,v 1.9 2005/02/01 21:41:51 rafaelsteil Exp $
  */
-public class SecurityRepository 
+public class SecurityRepository implements Cacheable
 {
-	private static int MAX_USERS = 500;
-	
-	private static Map securityInfoMap = createNewRepository();
-	
-	private static Map createNewRepository()
+	private static CacheEngine cache;
+	private static final String FQN = "security";
+
+	/**
+	 * @see net.jforum.cache.Cacheable#setCacheEngine(net.jforum.cache.CacheEngine)
+	 */
+	public void setCacheEngine(CacheEngine engine)
 	{
-		return new LinkedHashMap(MAX_USERS) {
-			protected boolean removeEldestEntry(Entry eldest) {
-				return this.size() > MAX_USERS;
-			}
-		};
+		cache = engine;
 	}
-	
-	private SecurityRepository() { }
-	
+
 	/***
 	 * Load user's roles. 
 	 * 
@@ -89,7 +83,8 @@ public class SecurityRepository
 	 */
 	public static PermissionControl load(int userId, boolean force) throws Exception
 	{
-		if (force || !SecurityRepository.securityInfoMap.containsKey(new Integer(userId))) {
+		
+		if (force || cache.get(FQN, Integer.toString(userId)) == null) {
 			UserModel um = DataAccessDriver.getInstance().newUserModel();
 			
 			return SecurityRepository.load(um.selectById(userId), force);
@@ -143,14 +138,15 @@ public class SecurityRepository
 	 */
 	public static PermissionControl load(User user, boolean force) throws Exception
 	{
-		if (force || !SecurityRepository.securityInfoMap.containsKey(new Integer(user.getId()))) {
+		String userId = Integer.toString(user.getId());
+		if (force || cache.get(FQN, userId) == null) {
 			UserSecurityModel umodel = DataAccessDriver.getInstance().newUserSecurityModel();
 			PermissionControl pc = new PermissionControl();
 			
 			pc.setSecurityModel(umodel);
 			pc.setRoles(umodel.loadRoles(user));
 			
-			SecurityRepository.add(user.getId(), pc);
+			cache.add(FQN, userId, pc);
 			
 			return pc;
 		}
@@ -221,7 +217,7 @@ public class SecurityRepository
 	 */
 	public static PermissionControl get(int userId)
 	{
-		PermissionControl pc = (PermissionControl)SecurityRepository.securityInfoMap.get(new Integer(userId));
+		PermissionControl pc = (PermissionControl)cache.get(FQN, Integer.toString(userId));
 		if (pc == null) {
 			try {
 				pc = load(userId);
@@ -242,7 +238,7 @@ public class SecurityRepository
 	 */
 	public static synchronized void add(int userId, PermissionControl pc)
 	{
-		SecurityRepository.securityInfoMap.put(new Integer(userId), pc);
+		cache.add(FQN, Integer.toString(userId), pc);
 	}
 	
 	/**
@@ -252,7 +248,7 @@ public class SecurityRepository
 	 */
 	public static synchronized void remove(int userId)
 	{
-		SecurityRepository.securityInfoMap.remove(new Integer(userId));
+		cache.remove(FQN, Integer.toString(userId));
 	}
 	
 	/**
@@ -260,6 +256,6 @@ public class SecurityRepository
 	 */
 	public static synchronized void clean()
 	{
-		SecurityRepository.securityInfoMap = createNewRepository();
+		cache.remove(FQN);
 	}
 }

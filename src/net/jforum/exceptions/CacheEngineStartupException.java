@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) 2003, 2004 Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -36,73 +36,20 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Jan 13, 2005 5:58:36 PM
+ * Created on Feb 1, 2005 5:31:54 PM
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.cache;
+package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: CacheEngine.java,v 1.4 2005/02/01 21:42:02 rafaelsteil Exp $
+ * @version $Id: CacheEngineStartupException.java,v 1.1 2005/02/01 21:41:56 rafaelsteil Exp $
  */
-public interface CacheEngine
+public class CacheEngineStartupException extends RuntimeException
 {
-	public static final String DUMMY_FQN = "";
-
-	/**
-	 * Inits the cache engine. 
-	 */
-	public void init();
-	
-	/**
-	 * Adds a new object to the cache. 
-	 * The fqn will be set as the value of {@link #DUMMY_FQN}
-	 * 
-	 * @param key The key to associate with the object. 
-	 * @param value The object to cache
-	 */
-	public void add(String key, Object value);
-	
-	/**
-	 * 
-	 * Adds a new object to the cache.
-	 * 
-	 * @param fqn The fully qualified name of the cache. 
-	 * @param key The key to associate with the object
-	 * @param value The object to cache
-	 */
-	public void add(String fqn, String key, Object value);
-	
-	/**
-	 * Gets some object from the cache.
-	 * 
-	 * @param fqn The fully qualified name associated with the key
-	 * @param key The key to get
-	 * @return The cached object, or <code>null</code> if no entry was found
-	 */
-	public Object get(String fqn, String key);
-	
-	/**
-	 * Gets some object from the cache.
-	 * The fqn used will be the value of {@link #DUMMY_FQN}
-	 * 
-	 * @param key The key to get
-	 * @return The cached object, or <code>null</code> if no entry was found
-	 */
-	public Object get(String key);
-	
-	/**
-	 * Removes an entry from the cache.
-	 * 
-	 * @param fqn The fully qualified name associated with the key
-	 * @param key The key to remove
-	 */
-	public void remove(String fqn, String key);
-	
-	/**
-	 * Removes a complete note from the cache
-	 * @param key The fqn to remove
-	 */
-	public void remove(String fqn);
+	public CacheEngineStartupException(String message)
+	{
+		super(message);
+	}
 }

@@ -68,7 +68,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumCommonServlet.java,v 1.21 2005/01/24 20:22:21 rafaelsteil Exp $
+ * @version $Id: JForumCommonServlet.java,v 1.22 2005/02/01 21:41:53 rafaelsteil Exp $
  */
 public class JForumCommonServlet extends HttpServlet {
     protected boolean debug;
@@ -91,6 +91,8 @@ public class JForumCommonServlet extends HttpServlet {
 
             // Load system default values
             ConfigLoader.startSystemglobals(appPath);
+            
+            ConfigLoader.startCacheEngine();
 
             // Configure the template engine
             Configuration templateCfg = new Configuration();

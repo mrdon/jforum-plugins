@@ -36,21 +36,20 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on 08/12/2004 23:42:20
+ * Created on Feb 1, 2005 7:23:13 PM
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.exceptions;
 
 /**
- * Thrown when someone tries to reload some cached
- * forum instance which had its order changed.
- * 
  * @author Rafael Steil
- * @version $Id: ForumOrderChanged.java,v 1.1 2004/12/09 02:41:43 rafaelsteil Exp $
+ * @version $Id: CacheException.java,v 1.1 2005/02/01 21:41:57 rafaelsteil Exp $
  */
-public class ForumOrderChanged extends RuntimeException {
-	public ForumOrderChanged(String message) {
+public class CacheException extends RuntimeException
+{
+	public CacheException(String message)
+	{
 		super(message);
 	}
 }

@@ -46,14 +46,26 @@ import java.io.IOException;
 import java.util.Properties;
 
 import net.jforum.ConfigLoader;
+import net.jforum.cache.CacheEngine;
+import net.jforum.cache.Cacheable;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModulesRepository.java,v 1.1 2004/11/30 01:18:55 rafaelsteil Exp $
+ * @version $Id: ModulesRepository.java,v 1.2 2005/02/01 21:41:52 rafaelsteil Exp $
  */
-public class ModulesRepository 
+public class ModulesRepository implements Cacheable
 {
-	private static Properties modulesMapping;
+	private static CacheEngine cache;
+	private static final String FQN = "modulesMapping";
+	private static final String ENTRIES = "entries";
+
+	/**
+	 * @see net.jforum.cache.Cacheable#setCacheEngine(net.jforum.cache.CacheEngine)
+	 */
+	public void setCacheEngine(CacheEngine engine)
+	{
+		cache = engine;
+	}
 	
 	/**
 	 * Loads all modules mapping.
@@ -64,7 +76,7 @@ public class ModulesRepository
 	 */
 	public static void init(String baseDir) throws IOException
 	{
-		modulesMapping = ConfigLoader.loadModulesMapping(baseDir);
+		cache.add(FQN, ENTRIES, ConfigLoader.loadModulesMapping(baseDir));
 	}
 	
 	/**
@@ -75,6 +87,6 @@ public class ModulesRepository
 	 * as argument, or <code>null</code> if not found.
 	 */
 	public static String getModuleClass(String moduleName) {
-		return modulesMapping.getProperty(moduleName);
+		return ((Properties)cache.get(FQN, ENTRIES)).getProperty(moduleName);
 	}
 }

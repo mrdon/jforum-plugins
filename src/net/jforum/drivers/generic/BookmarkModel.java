@@ -49,12 +49,12 @@ import java.util.List;
 import net.jforum.JForum;
 import net.jforum.entities.Bookmark;
 import net.jforum.entities.BookmarkType;
-import net.jforum.exceptions.InvalidBookmarkType;
+import net.jforum.exceptions.InvalidBookmarkTypeException;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: BookmarkModel.java,v 1.2 2005/01/26 12:57:15 rafaelsteil Exp $
+ * @version $Id: BookmarkModel.java,v 1.3 2005/02/01 21:41:58 rafaelsteil Exp $
  */
 public class BookmarkModel implements net.jforum.model.BookmarkModel
 {
@@ -117,7 +117,7 @@ public class BookmarkModel implements net.jforum.model.BookmarkModel
 			return this.getUsers(userId);
 		}
 		else {
-			throw new InvalidBookmarkType("The type " + relationType 
+			throw new InvalidBookmarkTypeException("The type " + relationType 
 					+ " is not a valid bookmark type");
 		}
 	}

@@ -37,52 +37,47 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 03/09/2003 / 23:42:55
- * net.jforum.repository.RankingRepository.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: RankingRepository.java,v 1.5 2004/11/21 17:13:48 rafaelsteil Exp $
  */
 package net.jforum.repository;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.jforum.cache.CacheEngine;
+import net.jforum.cache.Cacheable;
 import net.jforum.entities.Ranking;
-import net.jforum.exceptions.ForumException;
+import net.jforum.exceptions.RankingLoadException;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.RankingModel;
 
 /**
- * Repository for the ranks.
- * 
  * @author Rafael Steil
+ * @version $Id: RankingRepository.java,v 1.6 2005/02/01 21:41:52 rafaelsteil Exp $
  */
-public class RankingRepository 
+public class RankingRepository implements Cacheable
 {
-	private static ArrayList ranksList = new ArrayList();
-	
-	static {
-		try {
-			loadRanks();
-		}
-		catch (Exception e) {
-			throw new ForumException(e);
-		}
+	private static CacheEngine cache;
+	private static final String FQN = "ranking";
+	private static final String ENTRIES = "entries";
+
+	/**
+	 * @see net.jforum.cache.Cacheable#setCacheEngine(net.jforum.cache.CacheEngine)
+	 */
+	public void setCacheEngine(CacheEngine engine)
+	{
+		cache = engine;
 	}
 	
-	public static void loadRanks() throws Exception
+	public static void loadRanks()
 	{
-		RankingModel rm = DataAccessDriver.getInstance().newRankingModel();
-		RankingRepository.ranksList.clear();
-		
-		List l = rm.selectAll();
-		int total = l.size();
-		for (Iterator iter = l.iterator(); iter.hasNext(); ) {
-			Ranking r = (Ranking)iter.next();
-	
-			RankingRepository.ranksList.add(r);
+		try {
+			RankingModel rm = DataAccessDriver.getInstance().newRankingModel();
+			cache.add(FQN, ENTRIES, rm.selectAll());
+		}
+		catch (Exception e) {
+			throw new RankingLoadException("Error while loading the rankings: " + e);
 		}
 	}
 	
@@ -96,7 +91,8 @@ public class RankingRepository
 	{
 		Ranking lastRank = new Ranking();
 
-		for (Iterator iter = RankingRepository.ranksList.iterator(); iter.hasNext(); ) {
+		List entries = (List)cache.get(FQN, ENTRIES);
+		for (Iterator iter = entries.iterator(); iter.hasNext(); ) {
 			Ranking r = (Ranking)iter.next();
 			
 			if (total == r.getMin()) {
@@ -111,4 +107,5 @@ public class RankingRepository
 		
 		return lastRank.getTitle();
 	}
+
 }

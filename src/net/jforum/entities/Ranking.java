@@ -37,12 +37,12 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creating date: Feb 17, 2003 / 10:45:42 PM
- * net.jforum.entities.Ranking.java
  * The JForum Project 
- * 
- * $Id: Ranking.java,v 1.2 2004/04/21 23:57:31 rafaelsteil Exp $
+ * http://www.jforum.net
  */
 package net.jforum.entities;
+
+import java.io.Serializable;
 
 /**
  * Represents an user ranking in the System.
@@ -50,8 +50,9 @@ package net.jforum.entities;
  * basead on the number of messages posted by them.  
  *  
  * @author Rafael Steil
+ * @version $Id: Ranking.java,v 1.3 2005/02/01 21:42:00 rafaelsteil Exp $
  */
-public class Ranking 
+public class Ranking implements Serializable
 {
 	private int id;
 	private String title;

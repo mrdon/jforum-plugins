@@ -44,25 +44,10 @@ package net.jforum.cache;
 
 /**
  * @author Rafael Steil
- * @version $Id: Cacheable.java,v 1.1 2005/01/13 23:30:12 rafaelsteil Exp $
+ * @version $Id: Cacheable.java,v 1.2 2005/02/01 21:42:01 rafaelsteil Exp $
  */
 public interface Cacheable
 {
-	/**
-	 * Reloads some object. 
-	 * This method may be used when the cache engine used
-	 * throws some exception regarding key in an invalid state
-	 * or missing, so you have a change to try to fetch the 
-	 * data from somewhere.
-	 * 
-	 * @param fqn The fully qualified name used in the cache engine. 
-	 * This value may be <code>null</code> if not used by some engines,
-	 * although is highly recommended its use.
-	 * @param key The wanted key
-	 * @return The object instance, if found, or <code>null</code> otherwise
-	 */
-	public Object reload(String fqn, String key);
-	
 	/**
 	 * Sets the cache engine instance.
 	 * @param engine The instance of the cache engine
