@@ -12,8 +12,8 @@
 
 	<property name="projectname" value="JForum" />
 	<property name="author" value="Rafael Steil" />
-	<property name="copyright" value="JForum Team 2003,2004" />
-	<property name="version" value="1.0-RC4" />
+	<property name="copyright" value="JForum Team 2003,2004,2005" />
+	<property name="version" value="2.1" />
 	<property name="jarname" value="jforum" />
 
 	<property name="build" location="build" />
