@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -74,7 +74,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostVH.java,v 1.18 2004/06/02 04:13:31 rafaelsteil Exp $
+ * @version $Id: PostVH.java,v 1.19 2004/06/05 22:10:00 rafaelsteil Exp $
  */
 public class PostVH extends Command 
 {
@@ -483,7 +483,15 @@ public class PostVH extends Command
 
 			String start = JForum.getRequest().getParameter("start");
 			if (start != null && !start.equals("0")) {
-				path += start +"/";
+				int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
+				
+				int newStart = ((t.getTotalReplies() / postsPerPage) * postsPerPage);
+				if (newStart > Integer.parseInt(start)) {
+					path += newStart +"/";
+				}
+				else {
+					path += start +"/";
+				}
 			}
 
 			path += topicId +".page#"+ postId;

@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
- * Redistribution and use in source and binary forms, 
+ * 
+ *  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -49,14 +49,17 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.log4j.Logger;
+
 /**
  * Monitor class for file changes.
  * 
  * @author Rafael Steil
- * @version $Id: FileMonitor.java,v 1.1 2004/06/03 02:34:36 rafaelsteil Exp $
+ * @version $Id: FileMonitor.java,v 1.2 2004/06/05 22:10:05 rafaelsteil Exp $
  */
 public class FileMonitor
 {
+	private static Logger logger = Logger.getLogger(FileMonitor.class);
 	private static final FileMonitor instance = new FileMonitor();
 	private Timer timer;
 	private Map timerEntries;
@@ -73,26 +76,33 @@ public class FileMonitor
 	/**
 	 * Add a file to the monitor
 	 * 
-	 * @param listener The file listener
-	 * @param filename The filename to watch
-	 * @param period The watch interval. 
+	 * @param listener
+	 *            The file listener
+	 * @param filename
+	 *            The filename to watch
+	 * @param period
+	 *            The watch interval.
 	 * @throws IOException
 	 */
 	public void addFileChangeListener(FileChangeListener listener, 
 		String filename, long period) throws IOException {
 		this.removeFileChangeListener(listener, filename);
 		
+		logger.info("Watching "+ filename);
+		
 		FileMonitorTask task = new FileMonitorTask(listener, filename);
 		
 		this.timerEntries.put(filename + listener.hashCode(), task);
-		this.timer.schedule(task, (long)period, (long)period);
+		this.timer.schedule(task, period, period);
 	}
 	
 	/**
 	 * Stop watching a file
 	 * 
-	 * @param listener The file listener
-	 * @param filename The filename to keep watch
+	 * @param listener
+	 *            The file listener
+	 * @param filename
+	 *            The filename to keep watch
 	 */
 	public void removeFileChangeListener(FileChangeListener listener, String filename) {
 		String key = filename + listener.hashCode();

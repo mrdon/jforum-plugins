@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: Mar 10, 2003 / 9:28:40 PM
- * net.jforum.util.I18n.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: I18n.java,v 1.3 2004/06/01 19:47:27 pieter2 Exp $
  */
 package net.jforum.util;
 
@@ -60,6 +57,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * memory and provides a static method to acess them.
  *  
  * @author Rafael Steil
+ * @version $Id: I18n.java,v 1.4 2004/06/05 22:10:05 rafaelsteil Exp $
  */
 public class I18n 
 {

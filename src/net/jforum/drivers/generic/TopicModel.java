@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -58,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicModel.java,v 1.4 2004/06/02 03:56:03 rafaelsteil Exp $
+ * @version $Id: TopicModel.java,v 1.5 2004/06/05 22:09:58 rafaelsteil Exp $
  */
 public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel 
 {

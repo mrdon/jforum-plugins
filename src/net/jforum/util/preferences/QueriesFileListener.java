@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
+ * 
  * All rights reserved.
-
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -36,60 +36,38 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * This file creation date: 04/03/2004 - 20:32:13
+ * Created on 05/06/2004 14:49:22
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.util.mail;
+package net.jforum.util.preferences;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.io.IOException;
 
-import net.jforum.entities.Topic;
-import net.jforum.entities.User;
-import net.jforum.util.preferences.ConfigKeys;
-import net.jforum.util.preferences.SystemGlobals;
+import org.apache.log4j.Logger;
 
-import freemarker.template.SimpleHash;
+import net.jforum.util.FileChangeListener;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicSpammer.java,v 1.6 2004/06/05 22:10:04 rafaelsteil Exp $
+ * @version $Id: QueriesFileListener.java,v 1.1 2004/06/05 22:09:57 rafaelsteil Exp $
  */
-public class TopicSpammer extends Spammer 
+public class QueriesFileListener implements FileChangeListener
 {
-	public TopicSpammer(Topic topic, ArrayList users)
+	private static final Logger logger = Logger.getLogger(QueriesFileListener.class);
+	
+	/** 
+	 * @see net.jforum.util.FileChangeListener#fileChanged(java.lang.String)
+	 */
+	public void fileChanged(String filename)
 	{
-		// Prepare the users. In this current version, the email
-		// is not personalized, so then we'll just use his address
-		ArrayList recipients = new ArrayList();
-		for (Iterator iter = users.iterator(); iter.hasNext(); ) {
-			User u = (User)iter.next();
-			
-			recipients.add(u.getEmail());
+		try {
+			logger.info("Reloading "+ filename);
+			SystemGlobals.loadQueries(filename);
 		}
-		
-		// Make the topic url
-		String page = "";
-		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
-		if (topic.getTotalReplies() + 1 > postsPerPage) {
-			page += (((topic.getTotalReplies() / postsPerPage)) * postsPerPage) +"/";
+		catch (IOException e) {
+			logger.info(e);
 		}
-		
-		String forumLink = SystemGlobals.getValue(ConfigKeys.FORUM_LINK);
-		if (!forumLink.endsWith("/")) {
-			forumLink += "/";
-		}
-
-		String path = forumLink +"posts/list/"+ page + topic.getId() +".page#"+ topic.getLastPostId();
-		
-		SimpleHash params = new SimpleHash();
-		params.put("topic", topic);
-		params.put("path", path);
-		
-		super.prepareMessage(recipients, params,
-			MessageFormat.format(SystemGlobals.getValue(ConfigKeys.MAIL_NEW_ANSWER_SUBJECT), new String[] { topic.getTitle() }),
-			SystemGlobals.getValue(ConfigKeys.MAIL_NEW_ANSWER_MESSAGE_FILE));
 	}
+
 }

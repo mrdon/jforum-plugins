@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -47,6 +47,8 @@ import java.sql.Connection;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
+import org.apache.log4j.Logger;
+
 import net.jforum.entities.UserSession;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.repository.SecurityRepository;
@@ -55,16 +57,18 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumSessionListener.java,v 1.5 2004/06/02 00:02:25 rafaelsteil Exp $
+ * @version $Id: ForumSessionListener.java,v 1.6 2004/06/05 22:10:01 rafaelsteil Exp $
  */
 public class ForumSessionListener implements HttpSessionListener 
 {
+	private static final Logger logger = Logger.getLogger(ForumSessionListener.class);
+	
 	/** 
 	 * @see javax.servlet.http.HttpSessionListener#sessionCreated(javax.servlet.http.HttpSessionEvent)
 	 */
 	public void sessionCreated(HttpSessionEvent event) 
 	{
-		System.out.println("Creating a session: "+ event.getSession().getId());
+		logger.info("Creating a session: "+ event.getSession().getId());
 	} 
 
 	/** 

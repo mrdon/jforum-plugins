@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author pieter
-* @version $Id: ConfigKeys.java,v 1.4 2004/06/02 15:17:34 pieter2 Exp $
+* @version $Id: ConfigKeys.java,v 1.5 2004/06/05 22:09:57 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -61,6 +61,8 @@ public class ConfigKeys {
 	// The installation config file contains keys that are installation specific and differ from
 	// the default config.
 	public static final String INSTALLATION_CONFIG = "installation.config";
+	
+	public static final String FILECHANGES_DELAY = "file.changes.delay";
 
 	// The remaining keys are set in default.config and can be overriden in the installation config 
 	public static final String RESOURCE_DIR = "resource.dir";
@@ -72,6 +74,7 @@ public class ConfigKeys {
 
 	public static final String ENCODING = "encoding";
 	public static final String SERVLET_NAME = "servlet.name";	// transient!
+	public static final String DEFAULT_CONFIG = "default.config"; // transient
 	public static final String SERVLET_EXTENSION = "servlet.extension";
 	public static final String COOKIE_NAME_DATA = "cookie.name.data";
 	public static final String COOKIE_NAME_USER = "cookie.name.user";

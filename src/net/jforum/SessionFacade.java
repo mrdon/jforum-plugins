@@ -54,7 +54,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.5 2004/06/01 19:47:22 pieter2 Exp $
+ * @version $Id: SessionFacade.java,v 1.6 2004/06/05 22:10:01 rafaelsteil Exp $
  */
 public class SessionFacade 
 {
@@ -131,7 +131,7 @@ public class SessionFacade
 	 */
 	public static UserSession getUserSession()
 	{
-		return getUserSession((String)JForum.getRequest().getSession().getId());
+		return getUserSession(JForum.getRequest().getSession().getId());
 	}
 	
 	public static UserSession getUserSession(String sessionId)

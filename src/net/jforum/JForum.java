@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -60,17 +60,22 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.xml.DOMConfigurator;
+
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.UserSessionModel;
 import net.jforum.repository.BBCodeRepository;
 import net.jforum.repository.SecurityRepository;
+import net.jforum.util.FileMonitor;
 import net.jforum.util.I18n;
 import net.jforum.util.MD5;
 import net.jforum.util.bbcode.BBCodeHandler;
 import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.QueriesFileListener;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.preferences.SystemGlobalsListener;
 import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleHash;
@@ -80,7 +85,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.15 2004/06/02 15:17:34 pieter2 Exp $
+ * @version $Id: JForum.java,v 1.16 2004/06/05 22:10:01 rafaelsteil Exp $
  */
 public class JForum extends HttpServlet 
 {
@@ -249,13 +254,15 @@ public class JForum extends HttpServlet
 		super.init(config);
 				
 		try {
-			JForum.debug = config.getInitParameter("development").equals("true"); 
+			JForum.debug = config.getInitParameter("development").equals("true");
+			
+			DOMConfigurator.configure(config.getServletContext().getRealPath("") +"/WEB-INF/log4j.xml");
 			
 			// Load system default values
             // TODO: allow defaultsFile and installation to be overridden by the init parameters
-            SystemGlobals.initGlobals(config.getServletContext().getRealPath(""), null, null);
-            SystemGlobals.setTransientValue(ConfigKeys.SERVLET_NAME, config.getServletName());
-						
+			String appPath = config.getServletContext().getRealPath("");
+            SystemGlobals.initGlobals(appPath, appPath + "/WEB-INF/config/SystemGlobals.properties", null);
+            
 			// Start the connection pool
 			this.startDatabase();
 			
@@ -266,9 +273,31 @@ public class JForum extends HttpServlet
 			
 			JForum.loadModulesMapping(SystemGlobals.getApplicationResourceDir());
 			
+			SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
+			SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
+			
 			if (!JForum.debug) {
 				this.loadConfigStuff();
 				templateCfg.setTemplateUpdateDelay(3600);
+			}
+			else {
+				// Queries
+				FileMonitor.getInstance().addFileChangeListener(new QueriesFileListener(), 
+						SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC),
+						SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY));
+				
+				FileMonitor.getInstance().addFileChangeListener(new QueriesFileListener(), 
+						SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER),
+						SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY));
+				
+				// System Properties
+				FileMonitor.getInstance().addFileChangeListener(new SystemGlobalsListener(), 
+            			SystemGlobals.getValue(ConfigKeys.DEFAULT_CONFIG), 
+						SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY));
+				
+				FileMonitor.getInstance().addFileChangeListener(new SystemGlobalsListener(), 
+            			SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG), 
+						SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY));
 			}
 			
 			Configuration.setDefaultConfiguration(templateCfg);
@@ -280,14 +309,16 @@ public class JForum extends HttpServlet
 	
 	private void loadConfigStuff() throws Exception
 	{
-		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
-		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
-		
-		I18n.load();
 		this.loadUrlPatterns();
+		I18n.load();
 		
 		// BB Code
 		BBCodeRepository.setBBCollection(new BBCodeHandler().parse());
+	}
+	
+	public static boolean debugMode()
+	{
+		return debug;
 	}
 
 	/**
@@ -427,7 +458,6 @@ public class JForum extends HttpServlet
 			}
 			
 			// Context
-			JForum.getContext().put("servletName", SystemGlobals.getValue(ConfigKeys.SERVLET_NAME));
 			JForum.getContext().put("contextPath", req.getContextPath());
 			JForum.getContext().put("serverName", req.getServerName());
 			JForum.getContext().put("templateName", "default");

@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
+ * 
  * All rights reserved.
-
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -36,59 +36,42 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * This file creating date: Feb 23, 2003 / 9:30:13 PM
- * net.jforum.model.CriteriaConstans.java
+ * Created on 05/06/2004 13:48:34
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: CriteriaConstants.java,v 1.2 2004/04/21 23:57:24 rafaelsteil Exp $
  */
-package net.jforum.model;
+package net.jforum.util.preferences;
+
+import java.io.IOException;
+
+import org.apache.log4j.Logger;
+
+import net.jforum.util.FileChangeListener;
 
 /**
- * Constans for Criteria* classes.
- * 
  * @author Rafael Steil
+ * @version $Id: SystemGlobalsListener.java,v 1.1 2004/06/05 22:09:56 rafaelsteil Exp $
  */
-public class CriteriaConstants 
+public class SystemGlobalsListener implements FileChangeListener
 {
-	/**
-	 * Represents an empty String
-	 */
-	public static final int NULL = 0;
+	private static final Logger logger = Logger.getLogger(SystemGlobalsListener.class);
 	
-	/**
-	 * Represents the SQL "equal" operator
+	/** 
+	 * @see net.jforum.util.FileChangeListener#fileChanged(java.lang.String)
 	 */
-	public static final int EQUAL = 1;
-	
-	/**
-	 * Represents the "not equal" SQL operator
-	 */
-	public static final int NOT_EQUAL = 2;
-	
-	/**
-	 * Represents the SQL "and" operator
-	 */
-	public static final int AND = 3;
-	
-	/**
-	 * Represents the SQL "or" operator
-	 */
-	public static final int OR = 4;
-	
-	/**
-	 * Represents the SQL "like" operator
-	 */
-	public static final int LIKE = 5;
-	
-	/**
-	 * Represents the SQL "not like" operator
-	 */
-	public static final int NOT_LIKE = 6;
+	public void fileChanged(String filename)
+	{
+		try {
+			logger.info("Reloading "+ filename);
 
-	/**
-	 * Represents the strings represented by the above integer constans. 
-	 */
-	public static final String symbol[] = {"", "=", "<>", "AND", "OR", "LIKE", "NOT LIKE"};
+			SystemGlobals.initGlobals(SystemGlobals.getApplicationPath(), 
+					SystemGlobals.getValue(ConfigKeys.DEFAULT_CONFIG), 
+					SystemGlobals.getValue(ConfigKeys.INSTALLATION));
+		}
+		catch (IOException e) {
+			logger.info(e);
+			e.printStackTrace();
+		}
+	}
+
 }

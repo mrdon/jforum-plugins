@@ -45,8 +45,11 @@ package net.jforum.util.preferences;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.Iterator;
 import java.util.Properties;
+
+import org.apache.log4j.Logger;
 
 /**
  * Store global configurations used in the system.
@@ -56,7 +59,7 @@ import java.util.Properties;
  * 
  * @author Rafael Steil
  * @author Pieter
- * @version $Id: SystemGlobals.java,v 1.3 2004/06/02 15:17:34 pieter2 Exp $
+ * @version $Id: SystemGlobals.java,v 1.4 2004/06/05 22:09:57 rafaelsteil Exp $
  */
 public class SystemGlobals implements VariableStore
 {
@@ -67,9 +70,11 @@ public class SystemGlobals implements VariableStore
 
 	private Properties defaults;
 	private Properties installation;
-	private Properties queries;
+	private static Properties queries = new Properties();
 
 	private VariableExpander expander;
+	
+	private static final Logger logger = Logger.getLogger(SystemGlobals.class);
 
 	/**
 	 * Initialize the global configuration
@@ -85,29 +90,29 @@ public class SystemGlobals implements VariableStore
 
 	private SystemGlobals(String appPath, String defaultConfig, String installKey) throws IOException
 	{
-		expander = new VariableExpander(this, "${", "}");
-
 		if (defaultConfig == null) {
-			defaultConfig = appPath +"/WEB-INF/config/SystemGlobals.properties";
+			throw new InvalidParameterException("defaultConfig could not be null");
 		}
+		
+		expander = new VariableExpander(this, "${", "}");
+		
 		if (installKey == null) {
 			installKey = System.getProperty("user.name");
 		}
-
+		
 		this.defaultConfig = defaultConfig;
 		defaults = new Properties();
 
 		defaults.put(ConfigKeys.APPLICATION_PATH, appPath);
 		defaults.put(ConfigKeys.INSTALLATION, installKey);
+		defaults.put(ConfigKeys.DEFAULT_CONFIG, defaultConfig);
 		loadDefaultsImpl();
 
 		installation = new Properties(defaults);
 		this.installationConfig = getVariableValue(ConfigKeys.INSTALLATION_CONFIG);
 		loadInstallationImpl();
-
-		queries = new Properties();
 	}
-
+	
 	/**
 	 * Sets a value for some property
 	 * 
@@ -226,7 +231,7 @@ public class SystemGlobals implements VariableStore
 	{
 		FileOutputStream out = new FileOutputStream(installationConfig);
 		installation.store(out, "Installation specific configuration options\n"
-							+ "# Please restart the JForum webapplication after editing this file.");
+							+ "# Please restart the application after editing this file.");
 		out.close();
 	}
 

@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -73,7 +73,7 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
- * @version $Id: ForumVH.java,v 1.7 2004/06/01 19:47:24 pieter2 Exp $
+ * @version $Id: ForumVH.java,v 1.8 2004/06/05 22:10:00 rafaelsteil Exp $
  */
 public class ForumVH extends Command 
 {
@@ -252,7 +252,7 @@ public class ForumVH extends Command
 		ArrayList tmpTopics = null;
 		
 		// Try to get the first's page topics from the cache
-		if (start == 0) {
+		if (start == 0 && JForum.debugMode()) {
 			tmpTopics = TopicRepository.getTopics(forumId);
 
 			if (tmpTopics.size() == 0) {
@@ -307,6 +307,10 @@ public class ForumVH extends Command
 			if (t.getTotalReplies() + 1 > postsPerPage) {
 				t.setPaginate(true);
 				t.setTotalPages(new Double(Math.floor(t.getTotalReplies() / postsPerPage)));
+			}
+			else {
+				t.setPaginate(false);
+				t.setTotalPages(new Double(0));
 			}
 			
 			t.setRead(read);
