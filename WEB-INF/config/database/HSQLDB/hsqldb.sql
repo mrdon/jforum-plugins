@@ -1,7 +1,7 @@
 # #############
 # CategoryModel
 # #############
-CategoryModel.addNew = INSERT INTO jforum_categories (title) VALUES (?)
+CategoryModel.addNew = INSERT INTO jforum_categories (title) VALUES (?, ?)
 
 # ##########
 # UserModel

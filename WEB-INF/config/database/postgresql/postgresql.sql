@@ -1,7 +1,7 @@
 # #############
 # CategoryModel
 # #############
-CategoryModel.addNew = INSERT INTO jforum_categories (title, display_order) VALUES (?, NEXTVAL('jforum_categories_order_seq'))
+CategoryModel.addNew = INSERT INTO jforum_categories (title, display_order) VALUES (?, ?)
 
 # ##########
 # UserModel
