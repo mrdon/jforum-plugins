@@ -53,7 +53,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * General utilities for the test cases.
  * 
  * @author Rafael Steil
- * @version $Id: TestCaseUtils.java,v 1.3 2004/10/01 20:50:39 rafaelsteil Exp $
+ * @version $Id: TestCaseUtils.java,v 1.4 2004/10/10 16:50:37 rafaelsteil Exp $
  */
 public class TestCaseUtils
 {
@@ -62,9 +62,10 @@ public class TestCaseUtils
 	
 	private TestCaseUtils() {}
 	
-	public static void loadEnvironment() throws IOException
+	public static void loadEnvironment() throws Exception
 	{
 		utils.init();
+		DBConnection.getImplementation().init();
 	}
 	
 	public static String getRootDir()
@@ -88,6 +89,13 @@ public class TestCaseUtils
         	SystemGlobals.loadAdditionalDefaults(
         					SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG));
         }
+		
+		SystemGlobals.loadAdditionalDefaults(
+				SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
+		
+		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
+        SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
+
 		I18n.load();
 	}
 }
