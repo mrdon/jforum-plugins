@@ -3,12 +3,12 @@
 -- 
 INSERT INTO jforum_groups ( group_name, group_description ) VALUES ('General', 'General Users');
 
-INSERT INTO jforum_roles (group_id, name, type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_administration', 0);
-INSERT INTO jforum_roles (group_id, name, type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_moderation', 0);
-INSERT INTO jforum_roles (group_id, name, type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_moderation_post_remove', 0);
-INSERT INTO jforum_roles (group_id, name, type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_moderation_post_edit', 0);
-INSERT INTO jforum_roles (group_id, name, type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_moderation_topic_move', 0);
-INSERT INTO jforum_roles (group_id, name, type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_moderation_topic_lockUnlock', 0);
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_administration', 0);
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_moderation', 0);
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_moderation_post_remove', 0);
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_moderation_post_edit', 0);
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_moderation_topic_move', 0);
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_moderation_topic_lockUnlock', 0);
 
 -- 
 --  Users from General Group
@@ -20,12 +20,12 @@ INSERT INTO jforum_user_groups (group_id, user_id) VALUES ((SELECT CURRVAL('jfor
 --  Admin Group
 -- 
 INSERT INTO jforum_groups ( group_name, group_description ) VALUES ('Administration', 'Admin Users');
-INSERT INTO jforum_roles (group_id, name, type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_administration', 1);
-INSERT INTO jforum_roles (group_id, name, type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_moderation', 1);
-INSERT INTO jforum_roles (group_id, name, type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_moderation_post_remove', 1);
-INSERT INTO jforum_roles (group_id, name, type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_moderation_post_edit', 1);
-INSERT INTO jforum_roles (group_id, name, type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_moderation_topic_move', 1);
-INSERT INTO jforum_roles (group_id, name, type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_moderation_topic_lockUnlock', 1);
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_administration', 1);
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_moderation', 1);
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_moderation_post_remove', 1);
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_moderation_post_edit', 1);
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_moderation_topic_move', 1);
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_moderation_topic_lockUnlock', 1);
 
 -- 
 --  Users from Admin Group
