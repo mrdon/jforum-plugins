@@ -63,7 +63,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: I18n.java,v 1.21 2004/11/12 18:57:45 rafaelsteil Exp $
+ * @version $Id: I18n.java,v 1.22 2004/12/29 19:17:27 rafaelsteil Exp $
  */
 public class I18n {
     private static I18n classInstance = new I18n();
@@ -121,10 +121,15 @@ public class I18n {
         localeNames.load(new FileInputStream(baseDir
                 + SystemGlobals.getValue(ConfigKeys.LOCALES_NAMES)));
     }
+    
+    static void load(String localeName, String mergeWith) throws IOException
+    {
+    	load(localeName, mergeWith, false);
+    }
 
-    static void load(String localeName, String mergeWith) throws IOException {
-    	if (localeName == null || localeName.trim().equals("")
-    		|| I18n.contains(localeName)) {
+    static void load(String localeName, String mergeWith, boolean force) throws IOException {
+    	if (!force && (localeName == null || localeName.trim().equals("")
+    		|| I18n.contains(localeName))) {
     		return;
     	}
 
@@ -173,7 +178,6 @@ public class I18n {
             int fileChangesDelay = SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY);
 
             if (fileChangesDelay > 0) {
-
                 FileMonitor.getInstance().addFileChangeListener(new FileChangeListener() {
                     /**
                      * @see net.jforum.util.FileChangeListener#fileChanged(java.lang.String)
@@ -182,7 +186,7 @@ public class I18n {
                         logger.info("Reloading i18n for " + localeName);
 
                         try {
-                            I18n.load(localeName);
+                            I18n.load(localeName, SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT), true);
                         } catch (IOException e) {
                             logger.warn(e);
                             e.printStackTrace();

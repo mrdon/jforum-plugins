@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobalsListener;
  * General utilities methods for loading configurations for JForum.
  * 
  * @author Rafael Steil
- * @version $Id: ConfigLoader.java,v 1.3 2004/11/16 23:05:58 rafaelsteil Exp $
+ * @version $Id: ConfigLoader.java,v 1.4 2004/12/29 19:17:27 rafaelsteil Exp $
  */
 public class ConfigLoader 
 {
@@ -105,8 +105,8 @@ public class ConfigLoader
 	 */
 	public static void loadUrlPatterns() throws IOException {
 		Properties p = new Properties();
-		p.load(new FileInputStream(SystemGlobals.getApplicationResourceDir()
-			+ "/config/urlPattern.properties"));
+		p.load(new FileInputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
+			+ "/urlPattern.properties"));
 
 		Iterator iter = p.entrySet().iterator();
 		while (iter.hasNext()) {
