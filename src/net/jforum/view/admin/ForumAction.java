@@ -72,7 +72,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.17 2005/02/27 01:40:23 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.18 2005/02/27 11:48:19 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -103,7 +103,6 @@ public class ForumAction extends Command
 		
 		this.context.put("forum", DataAccessDriver.getInstance().newForumModel().selectById(
 				this.request.getIntParameter("forum_id")));
-		this.context.put("groups", new TreeGroup().getNodes());
 		this.context.put("categories", cm.selectAll());
 		this.context.put("moduleAction", "forum_form.htm");
 		this.context.put("action", "editSave");
