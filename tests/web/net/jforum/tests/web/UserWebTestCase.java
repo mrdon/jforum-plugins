@@ -44,16 +44,19 @@ package net.jforum.tests.web;
 
 import java.util.Random;
 
+import net.jforum.DBConnection;
+import net.jforum.JForumCommonServlet;
+import net.jforum.TestCaseUtils;
 import net.jforum.util.I18n;
+import net.jforum.util.mail.LostPasswordSpammer;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-
-import com.dumbster.smtp.SimpleSmtpServer;
-import com.dumbster.smtp.SmtpMessage;
+import net.jforum.view.forum.UserAction;
 
 /**
  * @author Marc Wick
- * @version $Id: UserWebTestCase.java,v 1.16 2004/10/11 05:24:52 marcwick Exp $
+ * @author Rafael Steil
+ * @version $Id: UserWebTestCase.java,v 1.17 2004/10/14 02:21:55 rafaelsteil Exp $
  */
 public class UserWebTestCase extends AbstractWebTestCase {
 
@@ -121,44 +124,69 @@ public class UserWebTestCase extends AbstractWebTestCase {
     public void testPasswordForgottenUserName() throws Exception {
         passwordRecovery("username", lastTestuser);
     }
+    
+    private void toLostPasswordForm(String field, String value)
+    {
+    	beginAt(FORUMS_LIST);
+        assertLinkPresent("login");
+        clickLink("login");
+        assertLinkPresent("lostpassword");
+        clickLink("lostpassword");
 
-    private void passwordRecovery(String pParam, String pValue) throws Exception {
+        assertFormPresent("formlostpassword");
+        setFormElement(field, value);
+        submit();
+    }
+    
+    public void testPasswordForgottenInvalidEmail()
+    {
+    	this.toLostPasswordForm("email", "IDontLikeEmails");
+    	assertTextPresent(I18n.getMessage(language, "PasswordRecovery.invalidUserEmail"));
+    }
+    
+    public void testPasswordForgottenInvalidUser()
+    {
+    	this.toLostPasswordForm("username", "johndoe");
+    	assertTextPresent(I18n.getMessage(language, "PasswordRecovery.invalidUserEmail"));
+    }
+    
+    public void testPasswordForgottenRecoverFormWithInvalidData()
+    {
+    	beginAt("/user/recoverPassword/abcdef123.page");
+    	setFormElement("email", lastTestuser);
+    	setFormElement("newPassword", "blah");
+    	setFormElement("confirmPassword", "blah");
+    	submit();
+
+    	assertTextPresent(I18n.getMessage(language, "PasswordRecovery.invalidData"));
+    }
+
+    private void passwordRecovery(String field, String value) throws Exception {
         SystemGlobals.setValue(ConfigKeys.MAIL_SMTP_HOST, "localhost");
         SystemGlobals.setValue(ConfigKeys.BACKGROUND_TASKS, "false");
         SystemGlobals.saveInstallation();
+        
+        TestCaseUtils.initDatabaseImplementation();
 
-        // start smtp server on localhost to receive and verify test emails
-        smtpServer = SimpleSmtpServer.start();
-        String link = "";
+        this.toLostPasswordForm(field, value);
 
-        try {
-            beginAt(FORUMS_LIST);
-            assertLinkPresent("login");
-            clickLink("login");
-            assertLinkPresent("lostpassword");
-            clickLink("lostpassword");
-
-            assertFormPresent("formlostpassword");
-            setFormElement(pParam, pValue);
-            submit();
-            dumpResponse(System.out);
-
-            assertTextNotPresent(I18n.getMessage(language, "PasswordRecovery.invalidUserEmail"));
-            assertTextPresent(I18n.getMessage(language, "PasswordRecovery.emailSent").substring(0, 20));
-
-            // give the jforum servlet time to deliver the email to the smtp server
-            waitForEmail();
-
-            // test if an email has been received by localhost
-            assertEquals("password lost email received", 1, smtpServer.getReceievedEmailSize());
-
-            // now test the email
-            SmtpMessage mail = (SmtpMessage) smtpServer.getReceivedEmail().next();
-            String body = mail.getBody();
-            link = body.substring(body.indexOf("http:"), body.indexOf(".page") + 5).trim();
-        } finally {
-            smtpServer.stop();
+        assertTextNotPresent(I18n.getMessage(language, "PasswordRecovery.invalidUserEmail"));
+        assertTextPresent(I18n.getMessage(language, "PasswordRecovery.emailSent").substring(0, 20));
+        
+        // Check the message body
+        JForumCommonServlet.DataHolder dh = new JForumCommonServlet.DataHolder();
+        dh.setConnection(DBConnection.getImplementation().getConnection());
+        JForumCommonServlet.setThreadLocalData(dh);
+        
+        String body;
+        if ("email".equals(field)) {
+        	body = new LostPasswordSpammer(new UserAction().prepareLostPassword(null, value), "").getMessageBody();
         }
+        else {
+        	body = new LostPasswordSpammer(new UserAction().prepareLostPassword(value, null), "").getMessageBody();
+        }
+
+        String link = body.substring(body.indexOf("http:"), body.indexOf(".page") + 5).trim();
 
         getTestContext().setBaseUrl(link.substring(0, link.lastIndexOf('/')));
         gotoPage(link.substring(link.lastIndexOf('/')));
