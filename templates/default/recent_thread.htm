@@ -8,7 +8,10 @@
 			<table cellspacing="0" cellpadding="2" width="100%" align="center" border="0">
 				<tr>
 					<td valign="bottom" align="left">
-						<span class="forumLink"><a class="forumLink" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a></span>
+						<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a>
+						<span class="nav">&nbsp;->&nbsp;</span>
+						<a id="latest" class="nav" href="${JForumContext.encodeURL("/recentTopics/list")}">${I18n.getMessage("ForumBase.recentTopics")}</a>
+						
 					</td>
 					<td>&nbsp;
 					</td>

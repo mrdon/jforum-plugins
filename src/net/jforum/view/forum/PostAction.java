@@ -88,7 +88,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.63 2005/02/22 20:32:37 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.64 2005/02/23 15:48:52 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -483,9 +483,6 @@ public class PostAction extends Command {
 			if (this.request.getParameter("notify") == null) {
 				tm.removeSubscription(p.getTopicId(), SessionFacade.getUserSession().getUserId());
 			}
-
-			// Updates cache for latest topic
-			TopicRepository.pushTopic(tm.selectById(t.getId()));
 
 			String path = this.request.getContextPath() + "/posts/list/";
 			String start = this.request.getParameter("start");

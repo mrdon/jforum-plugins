@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: TopicRepository.java,v 1.12 2005/02/16 17:53:33 andowson Exp $
+ * @version $Id: TopicRepository.java,v 1.13 2005/02/23 15:48:52 rafaelsteil Exp $
  */
 public class TopicRepository implements Cacheable
 {
@@ -207,10 +207,13 @@ public class TopicRepository implements Cacheable
 	{
 		String forumId = Integer.toString(topic.getForumId());
 		List l = (List)cache.get(FQN_FORUM, forumId);
-		int index = l.indexOf(topic);
-		if (index > -1) {
-			l.set(index, topic);
-			cache.add(FQN_FORUM, forumId, l);
+		
+		if (l != null) {
+			int index = l.indexOf(topic);
+			if (index > -1) {
+				l.set(index, topic);
+				cache.add(FQN_FORUM, forumId, l);
+			}
 		}
 	}
 	

@@ -64,7 +64,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.14 2005/02/18 19:01:18 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.15 2005/02/23 15:48:52 rafaelsteil Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -122,6 +122,8 @@ public class PrivateMessageAction extends Command
 		
 		User user = DataAccessDriver.getInstance().newUserModel().selectById(
 						SessionFacade.getUserSession().getUserId());
+		user.setSignature(PostCommon.processText(user.getSignature()));
+		user.setSignature(PostCommon.processSmilies(user.getSignature(), SmiliesRepository.getSmilies()));
 
 		this.sendFormCommon(user);
 	}
