@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.12 2004/11/14 16:28:45 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.13 2005/01/14 14:17:13 rafaelsteil Exp $
  */
 public class SessionFacade 
 {
@@ -101,6 +101,16 @@ public class SessionFacade
 	public static void setAttribute(String name, Object value)
 	{
 		JForum.getRequest().getSession().setAttribute(name, value);
+	}
+	
+	/**
+	 * Removes an attribute from the session
+	 * 
+	 * @param name The key associated to the the attribute to remove
+	 */
+	public static void removeAttribute(String name)
+	{
+		JForum.getRequest().getSession().removeAttribute(name);
 	}
 	
 	/**

@@ -1,4 +1,5 @@
 <#import "../macros/pagination.ftl" as pagination/>
+<#import "../macros/presentation.ftl" as presentation/>
 
 <script language="JavaScript">
 function confirmDelete()
@@ -280,7 +281,7 @@ function confirmDelete()
 				</tr>
 
 
-				<#if logged>
+				<#if logged || anonymousPosts>
 				<script language="javascript">
 				var quick = false;
 
@@ -372,7 +373,8 @@ function confirmDelete()
 				</tr>
 				-->
 			</table>
-		</td>
+
+			<@presentation.forumsComboTable/>
 	</tr>
 </table>
 <a name="quick"></a>

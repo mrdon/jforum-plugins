@@ -56,7 +56,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.2 2004/12/26 02:31:47 rafaelsteil Exp $
+ * @version $Id: ViewCommon.java,v 1.3 2005/01/14 14:17:13 rafaelsteil Exp $
  */
 public final class ViewCommon
 {
@@ -147,6 +147,7 @@ public final class ViewCommon
 		}
 		
 		JForum.getRequest().restoreDump(data);
+		SessionFacade.removeAttribute(ConfigKeys.REQUEST_DUMP);
 		
 		String moduleClass = ModulesRepository.getModuleClass(module);
 		((Command)Class.forName(moduleClass).newInstance()).process(JForum.getRequest(),

@@ -156,38 +156,9 @@
 					<td align="left" colspan="3"><span class="nav"></span></td>
 				</tr>
 			</table>
-		  
-			<table cellspacing="0" cellpadding="0" width="100%" border="0">
-				<tr>
-					<td align="right">
-						<table cellspacing="0" cellpadding="0" border="0">
-							<tr>			  
-								<td nowrap="nowrap">
-									<form name="f" id="f" accept-charset="${encoding}">
-										<span class="gensmall">${I18n.getMessage("ForumIndex.goTo")}:&nbsp;
-										<select onchange="if(this.options[this.selectedIndex].value != -1){ document.location = '${contextPath}/forums/show/'+ this.options[this.selectedIndex].value +'${extension}'; }" name="select">
-											<option value="-1" selected="selected">${I18n.getMessage("ForumIndex.goToSelectAForum")}</option>				
-											
-											<#list allCategories as category>
-												<option value="-1">&nbsp;</option>
-												<option value="-1">${category.name}</option>
-												<option value="-1">-------------</option>
-												
-												<#list category.getForums() as forum>
-													<option value="${forum.id}">${forum.name}</option>
-												</#list>
-											</#list>
-										</select>
-										&nbsp;
-										<input class="liteoption" type="button" value="${I18n.getMessage("ForumIndex.goToGo")}" onClick="if(document.f.select.options[document.f.select.selectedIndex].value != -1){ document.location = '${contextPath}/forums/show/'+ document.f.select.options[document.f.select.selectedIndex].value +'${extension}'; }" />
-									</form>
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-      
+
+			<@presentation.forumsComboTable/>
+
 			<table cellspacing="0" cellpadding="0" width="100%" align="center" border="0">
 				<tr>
 					<td valign="top" align="left">
