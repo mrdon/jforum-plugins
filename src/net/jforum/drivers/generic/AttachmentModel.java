@@ -48,12 +48,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.jforum.JForum;
+import net.jforum.entities.AttachmentExtensionGroup;
 import net.jforum.entities.QuotaLimit;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentModel.java,v 1.1 2005/01/17 18:59:14 rafaelsteil Exp $
+ * @version $Id: AttachmentModel.java,v 1.2 2005/01/17 22:17:18 rafaelsteil Exp $
  */
 public class AttachmentModel implements net.jforum.model.AttachmentModel
 {
@@ -91,10 +92,22 @@ public class AttachmentModel implements net.jforum.model.AttachmentModel
 	 */
 	public void removeQuotaLimit(int id) throws Exception
 	{
+		this.removeQuotaLimit(new String[] { Integer.toString(id) });
+	}
+	
+	/**
+	 * @see net.jforum.model.AttachmentModel#removeQuotaLimit(java.lang.String[])
+	 */
+	public void removeQuotaLimit(String[] ids) throws Exception
+	{
 		PreparedStatement p = JForum.getConnection().prepareStatement(
 				SystemGlobals.getSql("AttachmentModel.removeQuotaLimit"));
-		p.setInt(1, id);
-		p.executeUpdate();
+		
+		for (int i = 0; i < ids.length; i++) {
+			p.setInt(1, Integer.parseInt(ids[i]));
+			p.executeUpdate();
+		}
+		
 		p.close();
 	}
 	
@@ -127,5 +140,85 @@ public class AttachmentModel implements net.jforum.model.AttachmentModel
 		ql.setType(rs.getInt("quota_type"));
 		
 		return ql;
+	}
+	
+	/**
+	 * @see net.jforum.model.AttachmentModel#addExtensionGroup(net.jforum.entities.AttachmentExtensionGroup)
+	 */
+	public void addExtensionGroup(AttachmentExtensionGroup g) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("AttachmentModel.addExtensionGroup"));
+		p.setString(1, g.getName());
+		p.setInt(2, g.isAllow() ? 1 : 0);
+		p.setString(3, g.getUploadIcon());
+		p.setInt(4, g.getDownloadMode());
+		p.executeUpdate();
+		p.close();
+	}
+	
+	/**
+	 * @see net.jforum.model.AttachmentModel#removeExtensionGroups(java.lang.String[])
+	 */
+	public void removeExtensionGroups(String[] ids) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("AttachmentModel.removeExtensionGroups"));
+		
+		for (int i = 0; i < ids.length; i++) {
+			p.setInt(1, Integer.parseInt(ids[i]));
+			p.executeUpdate();
+		}
+		
+		p.close();
+	}
+	
+	/**
+	 * @see net.jforum.model.AttachmentModel#selectExtensionGroups()
+	 */
+	public List selectExtensionGroups() throws Exception
+	{
+		List l = new ArrayList();
+		
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("AttachmentModel.selectExtensionGroups"));
+		
+		ResultSet rs = p.executeQuery();
+		while (rs.next()) {
+			l.add(this.getExtensionGroup(rs));
+		}
+		
+		rs.close();
+		p.close();
+		
+		return l;
+	}
+	
+	/**
+	 * @see net.jforum.model.AttachmentModel#updateExtensionGroup(net.jforum.entities.AttachmentExtensionGroup)
+	 */
+	public void updateExtensionGroup(AttachmentExtensionGroup g) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("AttachmentModel.updateExtensionGroups"));
+		p.setString(1, g.getName());
+		p.setInt(2, g.isAllow() ? 1 : 0);
+		p.setString(3, g.getUploadIcon());
+		p.setInt(4, g.getDownloadMode());
+		p.setInt(5, g.getId());
+		p.executeUpdate();
+		p.close();
+	}
+	
+	protected AttachmentExtensionGroup getExtensionGroup(ResultSet rs) throws Exception
+	{
+		AttachmentExtensionGroup g = new AttachmentExtensionGroup();
+		g.setId(rs.getInt("extension_group_id"));
+		g.setName(rs.getString("name"));
+		g.setUploadIcon(rs.getString("upload_icon"));
+		g.setAllow(rs.getInt("allow") == 1);
+		g.setDownloadMode(rs.getInt("download_mode"));
+		
+		return g;
 	}
 }

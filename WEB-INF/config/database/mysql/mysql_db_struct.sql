@@ -462,12 +462,24 @@ CREATE TABLE jforum_bookmarks (
 	INDEX book_idx_relation (relation_id)
 ) TYPE=InnoDB;
 -- 
--- Table structure for table 'jforum_quota_limits'
+-- Table structure for table 'jforum_quota_limit'
 --
-DROP TABLE IF EXISTS jforum_quota_limits;
-CREATE TABLE jforum_quota_limits (
+DROP TABLE IF EXISTS jforum_quota_limit;
+CREATE TABLE jforum_quota_limit (
 	quota_limit_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	quota_desc VARCHAR(50) NOT NULL,
 	quota_limit INT NOT NULL,
 	quota_type TINYINT(1) DEFAULT '1'
+) TYPE=InnoDB;
+
+--
+-- Table structure for table 'jforum_extension_groups'
+--
+DROP TABLE IF EXISTS jforum_extension_groups;
+CREATE TABLE jforum_extension_groups (
+	extension_group_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	name VARCHAR(100) NOT NULL,
+	allow TINYINT(1) DEFAULT '1', 
+	upload_icon VARCHAR(100),
+	download_mode TINYINT(1) DEFAULT '1'
 ) TYPE=InnoDB;

@@ -2,7 +2,7 @@
 <STYLE type=text/css>@import url( ${contextPath}/templates/${templateName}/admin/style.css );</STYLE>
 
 <form accept-charset="${encoding}" name="form" action="${contextPath}/jforum${extension}" method="post">
-<input type="hidden" name="action" value="quotaSave" />
+<input type="hidden" name="action" value="quotaLimitSave" />
 <input type="hidden" name="module" value="${moduleName}" />
 <input type="hidden" name="securityHash" value="${securityHash}" />
 
@@ -14,31 +14,32 @@
 	<!-- Enter a new quota -->
 	<tr>
 		<th class="thCornerL">${I18n.getMessage("AdminAttachments.quotaDescription")}</th>
-
-		<th class="thTop">${I18n.getMessage("AdminAttachments.quotaFilesize")}</th>
-		<th class="thCornerR">${I18n.getMessage("AdminAttachments.quotaAdd")}</th>
+		<th class="thTop" colspan="2">${I18n.getMessage("AdminAttachments.quotaFilesize")}</th>
 	</tr>
 
 	<tr>
 		<td class="row1" align="center" valign="middle"><input type="text" size="20" maxlength="25" name="quota_description" value=""/></td>
-		<td class="row2" align="center" valign="middle">
-			<input type="text" size="8" maxlength="15" name="add_max_filesize" value="2" /> 
-			<select name="add_size_select">
-				<option value="b">Bytes</option>
-				<option value="kb">KB</option>
-				<option value="mb" selected>MB</option>
+		<td class="row2" align="center" valign="middle" colspan="2">
+			<input type="text" size="8" maxlength="15" name="max_filesize"/> 
+			<select name="type">
+				<option value="1">KB</option>
+				<option value="2" selected>MB</option>
 			</select>
 		</td>
-
-		<td class="row1" align="center" valign="middle"><input type="checkbox" name="add_quota_check" /></td>
 	</tr>
 
 	<tr align="right">
 	  <td class="catBottom" colspan="5" height="29">  <input type="submit" name="submit" class="liteoption" value="Submit" /></td>
 	</tr>
+</form>
 
 	<!-- List existing entries -->
 	<#if (quotas.size() > 0)>
+	<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum${extension}" method="post">
+	<input type="hidden" name="action" value="quotaLimitUpdate" />
+	<input type="hidden" name="module" value="${moduleName}" />
+	<input type="hidden" name="securityHash" value="${securityHash}" />
+	<input type="hidden" name="total_records" value="${quotas.size()}"/>
 		<tr>
 			<th class="thCornerL">${I18n.getMessage("AdminAttachments.quotaDescription")}</th>
 			<th class="thTop">${I18n.getMessage("AdminAttachments.quotaFilesize")}</th>
@@ -46,7 +47,9 @@
 			<th class="thCornerR">${I18n.getMessage("AdminAttachments.quotaDelete")}</th>
 		</tr>
 
+		<#assign count = 0/>
 		<#list quotas as q>
+			<input type="hidden" name="id_${count}" value="${q.id}">
 			<tr>
 				<td class="row1" align="center" valign="middle">
 					<table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
@@ -54,27 +57,28 @@
 							<td class="row1" align="center" valign="middle" width="10%" wrap="nowrap">&nbsp;</td>
 
 							<td class="row1" align="left" valign="middle">
-								<input type="text" size="20" maxlength="25" name="quota_desc_${q.id}" value="${q.desc}" />
+								<input type="text" size="20" maxlength="25" name="quota_desc_${count}" value="${q.description}" />
 							</td>
 						</tr>
 					</table>
 				</td>
 
 				<td class="row2" align="center" valign="middle">
-					<select name="type_${q.id}">
-						<option value="kb">KB</option>
-						<option value="mb" selected>MB</option>
+					<input type="text" size="8" maxlength="15" name="max_filesize_${count}" value="${q.size}"/> 
+					<select name="type_${count}">
+						<option value="1" <#if q.type == 1>selected</#if>>KB</option>
+						<option value="2" <#if q.type == 2>selected</#if>>MB</option>
 					</select>
 				</td>
-				<td class="row1" align="center" valign="middle"><input type="checkbox" name="remove" value="${q.id}" /></td>
+				<td class="row1" align="center" valign="middle"><input type="checkbox" name="delete" value="${q.id}" /></td>
 			</tr>
+			<#assign count = count + 1/>
 		</#list>
 
 		<tr align="right">
 		  <td class="catBottom" colspan="5" height="29"> <input type="submit" name="submit" class="liteoption" value="Submit" /></td>
 		</tr>
+	</form>
 	</#if>
 
 </table>
-
-</form>

@@ -43,11 +43,17 @@
 package net.jforum.view.admin;
 
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.ActionServletRequest;
 import net.jforum.Command;
+import net.jforum.entities.AttachmentExtensionGroup;
+import net.jforum.entities.QuotaLimit;
+import net.jforum.model.AttachmentModel;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -56,7 +62,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentsAction.java,v 1.1 2005/01/17 18:52:32 rafaelsteil Exp $
+ * @version $Id: AttachmentsAction.java,v 1.2 2005/01/17 22:17:17 rafaelsteil Exp $
  */
 public class AttachmentsAction extends Command
 {
@@ -79,15 +85,102 @@ public class AttachmentsAction extends Command
 		this.configurations();
 	}
 	
-	public void quota() throws Exception
+	public void quotaLimit() throws Exception
 	{
 		this.context.put("quotas", DataAccessDriver.getInstance().newAttachmentModel().selectQuotaLimit());
-		this.context.put("moduleAction", "quota.htm");
+		this.context.put("moduleAction", "quota_limit.htm");
 	}
 	
-	public void quotaSave() throws Exception
+	public void quotaLimitSave() throws Exception
 	{
+		QuotaLimit ql = new QuotaLimit();
+		ql.setDescription(this.request.getParameter("quota_description"));
+		ql.setSize(this.request.getIntParameter("max_filesize"));
+		ql.setType(this.request.getIntParameter("type"));
 		
+		DataAccessDriver.getInstance().newAttachmentModel().addQuotaLimit(ql);
+		this.quotaLimit();
+	}
+	
+	public void quotaLimitUpdate() throws Exception
+	{
+		AttachmentModel am = DataAccessDriver.getInstance().newAttachmentModel();
+		
+		// First check if we should delete some entry
+		String[] delete = this.request.getParameterValues("delete");
+		List deleteList = new ArrayList();
+		if (delete != null) {
+			deleteList = Arrays.asList(delete);
+			am.removeQuotaLimit(delete);
+		}
+		
+		// Now update the remaining
+		int total = this.request.getIntParameter("total_records");
+		for (int i = 0; i < total; i++) {
+			if (deleteList.contains(this.request.getParameter("id_" + i))) {
+				continue;
+			}
+			
+			QuotaLimit ql = new QuotaLimit();
+			ql.setId(this.request.getIntParameter("id_" + i));
+			ql.setDescription(this.request.getParameter("quota_desc_" + i));
+			ql.setSize(this.request.getIntParameter("max_filesize_" + i));
+			ql.setType(this.request.getIntParameter("type_" + i));
+			
+			am.updateQuotaLimit(ql);
+		}
+		
+		this.quotaLimit();
+	}
+	
+	public void extensionGroups() throws Exception
+	{
+		this.context.put("moduleAction", "extension_groups.htm");
+		this.context.put("groups", DataAccessDriver.getInstance().newAttachmentModel().selectExtensionGroups());
+	}
+	
+	public void extensionGroupsSave() throws Exception
+	{
+		AttachmentExtensionGroup g = new AttachmentExtensionGroup();		
+		g.setAllow(this.request.getParameter("allow") != null);
+		g.setDownloadMode(this.request.getIntParameter("download_mode"));
+		g.setName(this.request.getParameter("name"));
+		g.setUploadIcon(this.request.getParameter("upload_icon"));
+		
+		DataAccessDriver.getInstance().newAttachmentModel().addExtensionGroup(g);
+		this.extensionGroups();
+	}
+	
+	public void extensionGroupsUpdate() throws Exception
+	{
+		AttachmentModel am = DataAccessDriver.getInstance().newAttachmentModel();
+		
+		// Check if there are records to remove
+		String[] delete = this.request.getParameterValues("delete");
+		List deleteList = new ArrayList();
+		if (delete != null) {
+			deleteList = Arrays.asList(delete);
+			am.removeExtensionGroups(delete);
+		}
+		
+		// Update
+		int total = this.request.getIntParameter("total_records");
+		for (int i = 0; i < total; i++) {
+			if (deleteList.contains(this.request.getParameter("id_" + i))) {
+				continue;
+			}
+			
+			AttachmentExtensionGroup g = new AttachmentExtensionGroup();
+			g.setId(this.request.getIntParameter("id_" + i));
+			g.setAllow(this.request.getParameter("allow_" + i) != null);
+			g.setDownloadMode(this.request.getIntParameter("download_mode_" + i));
+			g.setName(this.request.getParameter("name_" + i));
+			g.setUploadIcon(this.request.getParameter("upload_icon_" + i));
+			
+			am.updateExtensionGroup(g);
+		}
+		
+		this.extensionGroups();
 	}
 	
 	/**

@@ -44,11 +44,12 @@ package net.jforum.model;
 
 import java.util.List;
 
+import net.jforum.entities.AttachmentExtensionGroup;
 import net.jforum.entities.QuotaLimit;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentModel.java,v 1.1 2005/01/17 18:52:31 rafaelsteil Exp $
+ * @version $Id: AttachmentModel.java,v 1.2 2005/01/17 22:17:18 rafaelsteil Exp $
  */
 public interface AttachmentModel
 {
@@ -77,10 +78,52 @@ public interface AttachmentModel
 	public void removeQuotaLimit(int id) throws Exception;
 	
 	/**
+	 * Removes a set of quota limit.
+	 * 
+	 * @param ids The ids to remove.
+	 * @throws Exception
+	 */
+	public void removeQuotaLimit(String[] ids) throws Exception;
+	
+	/**
 	 * Gets all registered quota limits
+	 * 
 	 * @return A list instance where each entry is a
 	 * {@link net.jforum.entities.QuotaLimit} instance.
 	 * @throws Exception
 	 */
 	public List selectQuotaLimit() throws Exception;
+	
+	/**
+	 * Adds a new extension group.
+	 * 
+	 * @param g The data to insert
+	 * @throws Exception
+	 */
+	public void addExtensionGroup(AttachmentExtensionGroup g) throws Exception;
+	
+	/**
+	 * Updates some extensin group.
+	 * 
+	 * @param g The data to update
+	 * @throws Exception
+	 */
+	public void updateExtensionGroup(AttachmentExtensionGroup g) throws Exception;
+	
+	/**
+	 * Removes a set of extension groups.
+	 * 
+	 * @param ids The ids to remove.
+	 * @throws Exception
+	 */
+	public void removeExtensionGroups(String[] ids) throws Exception;
+	
+	/**
+	 * Gets all extension groups.
+	 * 
+	 * @return A list instance where each entry is an 
+	 * {@link net.jforum.entities.AttachmentExtensionGroup} instance.
+	 * @throws Exception
+	 */
+	public List selectExtensionGroups() throws Exception;
 }
