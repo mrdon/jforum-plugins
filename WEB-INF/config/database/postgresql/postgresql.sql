@@ -50,6 +50,7 @@ UserModel.rankingId = UPDATE jforum_users SET rank_id = ? WHERE user_id = ?
 UserModel.activeStatus = UPDATE jforum_users SET user_active = ? WHERE user_id = ?
 UserModel.addNew = INSERT INTO jforum_users (username, user_password, user_email, user_regdate) VALUES (?, ?, ?, ?)
 UserModel.findByName = SELECT user_id, username FROM jforum_users WHERE username LIKE ?
+UserModel.lastGeneratedUserId = SELECT CURRVAL('jforum_users_seq')
 
 UserModel.update = UPDATE jforum_users SET user_aim = ?, \
 	user_avatar = ?,\
@@ -105,6 +106,7 @@ PostModel.selectById = SELECT post_id, topic_id, forum_id, jforum_posts.user_id,
 PostModel.deletePost = DELETE FROM jforum_posts WHERE post_id = ?
 PostModel.updatePost = UPDATE jforum_posts SET topic_id = ?, forum_id = ?, enable_bbcode = ?, enable_html = ?, enable_smilies = ?, enable_sig = ?, post_edit_time = ?, post_edit_count = post_edit_count + 1, post_subject = ?, post_text = ? WHERE post_id = ?
 PostModel.addNewPost = INSERT INTO jforum_posts (topic_id, forum_id, user_id, post_time, poster_ip, enable_bbcode, enable_html, enable_smilies, enable_sig, post_subject, post_text) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+PostModel.lastGeneratedPostId = SELECT CURRVAL('jforum_posts_seq')
 
 PostModel.selectAllByTopicByLimit = SELECT post_id, topic_id, forum_id, jforum_posts.user_id, post_time, poster_ip, enable_bbcode, \
 	enable_html, enable_smilies, enable_sig, post_edit_time, post_edit_count, status, post_subject, post_text, username \
@@ -149,6 +151,7 @@ ForumModel.getOrder = SELECT forum_order FROM jforum_forums WHERE forum_id = ?
 ForumModel.getMaxOrder = SELECT max(forum_order) as max FROM jforum_forums
 ForumModel.setOrderByOrder = UPDATE jforum_forums SET forum_order = ? WHERE forum_order = ?
 ForumModel.setOrderById = UPDATE jforum_forums SET forum_order = ? WHERE forum_id = ?
+ForumModel.generatedForumId = SELECT CURRVAL('jforum_forums_seq');
 
 ForumModel.lastPostInfo = SELECT post_time, p.topic_id, t.topic_replies, post_id, u.user_id, username \
 	FROM jforum_posts p, jforum_users u, jforum_topics t \
@@ -199,6 +202,7 @@ TopicModel.addNew = INSERT INTO jforum_topics SET forum_id = ?, topic_title = ?,
 TopicModel.update = UPDATE jforum_topics SET topic_title = ?, topic_last_post_id = ?, topic_first_post_id = ?, topic_type = ? WHERE topic_id = ?
 TopicModel.getMaxPostId = SELECT MAX(post_id) AS post_id FROM jforum_posts WHERE topic_id = ?
 TopicModel.getTotalPosts = SELECT COUNT(1) AS total FROM jforum_posts WHERE topic_id = ?
+TopicModel.lastGeneratedTopicId = SELECT CURRVAL('jforum_topics_seq')
 
 TopicModel.subscribeUser = INSERT INTO jforum_topics_watch(topic_id, user_id, is_read) VALUES (?, ?, '1')
 TopicModel.isUserSubscribed = SELECT user_id FROM jforum_topics_watch WHERE topic_id = ? AND user_id = ?
@@ -234,6 +238,7 @@ SearchModel.searchBase = SELECT t.*, u.username AS posted_by_username, u.user_id
 	ORDER BY :orderByField: :orderBy:
 	
 SearchModel.insertWords = INSERT INTO jforum_search_words ( word_hash, word ) VALUES (?, ?)
+SearchModel.lastGeneratedWordId = SELECT CURRVAL('jforum_search_words_seq')
 
 SearchModel.searchByWord = SELECT post_id FROM jforum_search_wordmatch wm, jforum_search_words w \
 	WHERE wm.word_id = w.word_id \
@@ -280,6 +285,7 @@ PermissionControl.deleteGroupRole = DELETE FROM jforum_roles WHERE group_id = ? 
 PermissionControl.addGroupRole = INSERT INTO jforum_roles ( group_id, name, type ) VALUES (?, ?, ?)
 PermissionControl.addUserRole = INSERT INTO jforum_roles ( user_id, name, type ) VALUES (?, ?, ?)
 PermissionControl.addRoleValues = INSERT INTO jforum_role_values (role_id, value, type ) VALUES (?, ?, ?)
+PermissionControl.lastGeneratedRoleId = SELECT CURRVAL('jforum_roles_seq')
 
 PermissionControl.loadGroupRoles = SELECT r.role_id, r.name, rv.value, rv.type AS rv_type, r.type \
 	FROM jforum_roles r \
@@ -335,6 +341,7 @@ SmiliesModel.delete = DELETE FROM jforum_smilies WHERE smilie_id = ?
 SmiliesModel.update = UPDATE jforum_smilies SET code = ?, url = ?, disk_name =? WHERE smilie_id = ?
 SmiliesModel.selectAll = SELECT * FROM jforum_smilies
 SmiliesModel.selectById = SELECT * FROM jforum_smilies WHERE smilie_id = ?
+SmiliesModel.lastGeneratedSmilieId = SELECT CURRVAL('jforum_smilies_seq')
 
 # ####################
 # PrivateMessageModel

@@ -43,15 +43,23 @@
 package net.jforum.drivers.postgresql;
 
 import net.jforum.drivers.generic.PostModel;
+import net.jforum.drivers.postgresql.security.GroupSecurityModel;
+import net.jforum.drivers.postgresql.security.UserSecurityModel;
 
 /**
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.1 2004/05/23 15:40:03 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.2 2004/05/24 02:25:19 rafaelsteil Exp $
  */
 public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDriver
 {
 	private static PostModel postModel = new PostModel();
 	private static TopicModel topicModel = new TopicModel();
+	private static ForumModel forumModel = new ForumModel();
+	private static SearchModel searchModel = new SearchModel();
+	private static SmilieModel smilieModel = new SmilieModel();
+	private static UserModel userModel = new UserModel();
+	private static GroupSecurityModel groupSecurityModel = new GroupSecurityModel();
+	private static UserSecurityModel userSecurityModel = new UserSecurityModel();
 
 	/** 
 	 * @see net.jforum.model.DataAccessDriver#newPostModel()
@@ -67,5 +75,53 @@ public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDrive
 	public net.jforum.model.TopicModel newTopicModel()
 	{
 		return topicModel;
+	}
+	
+	/** 
+	 * @see net.jforum.model.DataAccessDriver#newForumModel()
+	 */
+	public net.jforum.model.ForumModel newForumModel()
+	{
+		return forumModel;
+	}
+	
+	/** 
+	 * @see net.jforum.model.DataAccessDriver#newSearchModel()
+	 */
+	public net.jforum.model.SearchModel newSearchModel()
+	{
+		return searchModel;
+	}
+	
+	/** 
+	 * @see net.jforum.model.DataAccessDriver#newSmilieModel()
+	 */
+	public net.jforum.model.SmilieModel newSmilieModel()
+	{
+		return smilieModel;
+	}
+	
+	/** 
+	 * @see net.jforum.model.DataAccessDriver#newUserModel()
+	 */
+	public net.jforum.model.UserModel newUserModel()
+	{
+		return userModel;
+	}
+	
+	/** 
+	 * @see net.jforum.model.DataAccessDriver#newGroupSecurityModel()
+	 */
+	public net.jforum.model.security.GroupSecurityModel newGroupSecurityModel()
+	{
+		return groupSecurityModel;
+	}
+	
+	/** 
+	 * @see net.jforum.model.DataAccessDriver#newUserSecurityModel()
+	 */
+	public net.jforum.model.security.UserSecurityModel newUserSecurityModel()
+	{
+		return userSecurityModel;
 	}
 }
