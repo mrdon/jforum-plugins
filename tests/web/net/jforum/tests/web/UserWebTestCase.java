@@ -53,7 +53,7 @@ import com.dumbster.smtp.SmtpMessage;
 
 /**
  * @author Marc Wick
- * @version $Id: UserWebTestCase.java,v 1.15 2004/10/11 05:14:32 marcwick Exp $
+ * @version $Id: UserWebTestCase.java,v 1.16 2004/10/11 05:24:52 marcwick Exp $
  */
 public class UserWebTestCase extends AbstractWebTestCase {
 
@@ -115,14 +115,14 @@ public class UserWebTestCase extends AbstractWebTestCase {
     }
 
     public void testPasswordForgottenEmail() throws Exception {
-        passwordRecovery("email");
+        passwordRecovery("email", lastTestuser.toUpperCase());
     }
 
     public void testPasswordForgottenUserName() throws Exception {
-        passwordRecovery("username");
+        passwordRecovery("username", lastTestuser);
     }
 
-    private void passwordRecovery(String pParam) throws Exception {
+    private void passwordRecovery(String pParam, String pValue) throws Exception {
         SystemGlobals.setValue(ConfigKeys.MAIL_SMTP_HOST, "localhost");
         SystemGlobals.setValue(ConfigKeys.BACKGROUND_TASKS, "false");
         SystemGlobals.saveInstallation();
@@ -139,8 +139,12 @@ public class UserWebTestCase extends AbstractWebTestCase {
             clickLink("lostpassword");
 
             assertFormPresent("formlostpassword");
-            setFormElement(pParam, lastTestuser);
+            setFormElement(pParam, pValue);
             submit();
+            dumpResponse(System.out);
+
+            assertTextNotPresent(I18n.getMessage(language, "PasswordRecovery.invalidUserEmail"));
+            assertTextPresent(I18n.getMessage(language, "PasswordRecovery.emailSent").substring(0, 20));
 
             // give the jforum servlet time to deliver the email to the smtp server
             waitForEmail();
