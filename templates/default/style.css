@@ -105,6 +105,10 @@ td.row3Sticky {
 	background-color: #D1D7DC;
 }
 
+td.postInfo {
+	background-color: #DEE3E7;
+}
+
 TD.rowpic {
 	BACKGROUND-IMAGE:  url(images/cellpic2.jpg); BACKGROUND-REPEAT: repeat-y; BACKGROUND-COLOR: #ffffff
 }

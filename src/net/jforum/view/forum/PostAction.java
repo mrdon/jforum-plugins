@@ -81,7 +81,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.34 2004/12/29 01:04:39 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.35 2004/12/29 04:43:49 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -471,6 +471,10 @@ public class PostAction extends Command {
 		// Set the Post
 		Post p = PostCommon.fillPostFromRequest();
 		p.setForumId(Integer.parseInt(this.request.getParameter("forum_id")));
+		
+		if (p.getSubject() == null || p.getSubject() == "") {
+			p.setSubject(t.getTitle());
+		}
 
 		boolean preview = (this.request.getParameter("preview") != null);
 		if (!preview) {

@@ -91,6 +91,39 @@ function confirmDelete()
 	
 				<#assign user = users.get(post.userId)/>
 				<tr>
+					<td colspan="2">
+						<table width="100%" cellspacing="0">
+							<tr>
+								<td width="160" class="postInfo" height="22">
+									<span class="postdetails">
+									<a href="${JForumContext.encodeURL("/posts/list/${start}/${post.topicId}")}#${post.id}">
+									<img src="${contextPath}/templates/${templateName}/images/icon_minipost_new.gif" /></a>${post.formatedTime}
+									</span>
+								</td>
+
+								<td class="postInfo" height="22">
+									<span class="postdetails">&nbsp;&nbsp; &nbsp;<b>${I18n.getMessage("PostShow.subject")}:</b> <a name="${post.id}" id="${post.id}">${post.subject?default("")?html}</a>
+									</span>
+								</td>
+								
+								<td valign="top" nowrap="nowrap" align="right" class="postInfo">
+									<#if topic.status != STATUS_LOCKED>
+										<a href="${JForumContext.encodeURL("/jforum${extension}?module=${moduleName}&amp;action=quote&amp;post_id=${post.id}&start=${start}","")}"><img src="${contextPath}/templates/${templateName}/images/icon_quote.gif" border="0" /></a>
+									</#if>
+
+									<#if ((post.canEdit && topic.status != STATUS_LOCKED) || canEdit)>
+										<a href="${JForumContext.encodeURL("/jforum${extension}?module=${moduleName}&amp;action=edit&amp;post_id=${post.id}&start=${start}","")}"><img src="${contextPath}/templates/${templateName}/images/icon_edit.gif" border="0" /></a>  
+									</#if>
+
+									<#if canRemove>
+										<a href="${JForumContext.encodeURL("/jforum${extension}?module=${moduleName}&amp;action=delete&amp;post_id=${post.id}&start=${start}","")}" onClick="return confirmDelete();"><img src="${contextPath}/templates/${templateName}/images/icon_delete.gif" border="0" /></a>  
+									</#if>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
 					<td width="150" class="${rowColor}" valign="top" align="left">
 					
 						<span class="name"><b>${user.username}</b></span>
@@ -131,36 +164,6 @@ function confirmDelete()
 	
 					<td class="${rowColor}" valign="top" height="28" width="100%">
 						<table cellspacing="0" cellpadding="0" width="100%" border="0">
-							<tr>
-								<td width="80%">
-									<span class="postdetails">
-									<a href="${JForumContext.encodeURL("/posts/list/${start}/${post.topicId}")}#${post.id}">
-									<img src="${contextPath}/templates/${templateName}/images/icon_minipost_new.gif" /></a>${post.formatedTime}
-									<span class="gen">&nbsp;</span>&nbsp; &nbsp;${I18n.getMessage("PostShow.subject")}: <a name="${post.id}" id="${post.id}">${post.subject?default("")?html}</a>
-									</span>
-								</td>
-								
-								<td valign="top" width="20%" nowrap="nowrap" align="right">
-								<#if topic.status != STATUS_LOCKED>
-									<a href="${JForumContext.encodeURL("/jforum${extension}?module=${moduleName}&amp;action=quote&amp;post_id=${post.id}&start=${start}","")}"><img src="${contextPath}/templates/${templateName}/images/icon_quote.gif" border="0" /></a>
-								</#if>
-
-								<#if ((post.canEdit && topic.status != STATUS_LOCKED) || canEdit)>
-									<a href="${JForumContext.encodeURL("/jforum${extension}?module=${moduleName}&amp;action=edit&amp;post_id=${post.id}&start=${start}","")}"><img src="${contextPath}/templates/${templateName}/images/icon_edit.gif" border="0" /></a>  
-								</#if>
-		
-								<#if canRemove>
-									<a href="${JForumContext.encodeURL("/jforum${extension}?module=${moduleName}&amp;action=delete&amp;post_id=${post.id}&start=${start}","")}" onClick="return confirmDelete();"><img src="${contextPath}/templates/${templateName}/images/icon_delete.gif" border="0" /></a>  
-								</#if>
-								</td>
-							</tr>
-							
-							<tr>
-								<td colspan="2">
-									<hr />
-								</td>
-							</tr>
-
 							<tr>
 								<td colspan="2" valign="top">
 									<span class="postbody">
@@ -263,6 +266,72 @@ function confirmDelete()
 				<tr>
 					<td colspan="3"><img src="${contextPath}/templates/${templateName}/images/spacer.gif" alt="" width="1" height="1" /></td>
 				</tr>
+
+
+				<#if logged>
+				<script language="javascript">
+				var quick = false;
+
+				function activateQuickReply()
+				{
+					quick = !quick;
+
+					document.getElementById("trQuickBody").style.display = (quick ? "" : "none");
+					document.getElementById("trQuickSubmit").style.display = (quick ? "" : "none");
+
+					if (quick) {
+						document.location = "#quick";
+					}
+				}
+
+				function validatePostForm(f)
+				{
+					if (f.message.value.replace(/^\s*|\s*$/g, "").length == 0) {
+						alert("${I18n.getMessage("PostForm.textEmpty")}");
+						f.message.focus();
+						
+						return false;
+					}
+					
+					return true;
+				}
+				</script>
+
+				<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="post" id="post" onsubmit="return validatePostForm(this);" accept-charset="${encoding}">
+					<input type="hidden" name="action" value="insertSave" />
+					<input type="hidden" name="module" value="posts" />
+					<input type="hidden" name="securityHash" value="${securityHash}" />
+					<input type="hidden" name="forum_id" value="${forum.id}" />
+					<input type="hidden" name="start" value="${start?default("")}" />
+					<input type="hidden" name="topic_id" value="${topic.id}" />
+
+				<tr>
+					<td colspan="3">
+						<table width="100%">
+							<tr>
+								<td align="center">
+									<span class="nav"><a href="javascript:activateQuickReply()">${I18n.getMessage("PostForm.quickReply")}</a></span>
+								</td>
+							</td>
+							<tr style="display: none;" id="trQuickBody">
+								<td align="center">
+									<textarea class="post" style="WIDTH: 350px" name="message" rows="10" wrap="virtual" cols="35""></textarea>
+								</td>
+							</tr>
+
+							<tr style="display: none;" id="trQuickSubmit">
+								<td align="center">
+									<input type="submit" value="${I18n.getMessage("PostForm.submit")}" class="mainoption">
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				</form>
+
+				
+				</#if>
 				
 				<!--
 		        <tr>
@@ -290,3 +359,4 @@ function confirmDelete()
 		</td>
 	</tr>
 </table>
+<a name="quick"></a>
