@@ -9,7 +9,7 @@ import java.util.List;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
- * @author Franklin S. Dattein (<a href="mailto:franklin@hp.com">franklin@hp.com</a>)
+ * @author Franklin S. Dattein (<a href="mailto:franklin@portaljava.com">franklin@portaljava.com</a>)
  *
  */
 public class KarmaModel extends net.jforum.drivers.generic.KarmaModel {
