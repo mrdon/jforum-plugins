@@ -70,7 +70,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.10 2005/02/21 20:32:15 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.11 2005/03/04 14:14:47 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -232,18 +232,21 @@ public class PostCommon
 		Post p = new Post();
 		p.setTime(new Date());
 
-		return fillPostFromRequest(p);
+		return fillPostFromRequest(p, false);
 	}
 
-	public static Post fillPostFromRequest(Post p) throws Exception
+	public static Post fillPostFromRequest(Post p, boolean isEdit) throws Exception
 	{
 		p.setSubject(JForum.getRequest().getParameter("subject"));
 		p.setBbCodeEnabled(JForum.getRequest().getParameter("disable_bbcode") != null ? false : true);
 		p.setSmiliesEnabled(JForum.getRequest().getParameter("disable_smilies") != null ? false : true);
 		p.setSignatureEnabled(JForum.getRequest().getParameter("attach_sig") != null ? true : false);
-		p.setUserId(SessionFacade.getUserSession().getUserId());
 		p.setUserIp(JForum.getRequest().getRemoteAddr());
 
+		if (!isEdit) {
+			p.setUserId(SessionFacade.getUserSession().getUserId());
+		}
+		
 		boolean htmlEnabled = SecurityRepository.canAccess(SecurityConstants.PERM_HTML_DISABLED, JForum.getRequest()
 				.getParameter("forum_id"));
 		p.setHtmlEnabled(htmlEnabled && JForum.getRequest().getParameter("disable_html") == null);
