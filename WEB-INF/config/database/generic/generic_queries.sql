@@ -520,4 +520,9 @@ AttachmentModel.removeAttachmentInfo = DELETE FROM jforum_attach_desc WHERE atta
 AttachmentModel.countPostAttachments = SELECT COUNT(1) FROM jforum_attach WHERE post_id = ?
 AttachmentModel.deleteGroupQuota = DELETE FROM jforum_attach_quota;
 AttachmentModel.setGroupQuota = INSERT INTO jforum_attach_quota (group_id, quota_limit_id) VALUES (?, ?)
-AttachmentModel.selectGroupsQuotaLImits = SELECT group_id, quota_limit_id FROM jforum_attach_quota
+AttachmentModel.selectGroupsQuotaLimits = SELECT group_id, quota_limit_id FROM jforum_attach_quota
+
+AttachmentModel.selectQuotaLimitByGroup = SELECT ql.quota_limit_id, ql.quota_desc, ql.quota_limit, ql.quota_type \
+	FROM jforum_quota_limit ql, jforum_attach_quota at \
+	WHERE ql.quota_limit_id = at.quota_limit_id \
+	AND at.group_id = ?

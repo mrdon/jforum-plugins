@@ -1,4 +1,5 @@
 <#setting number_format = "#"/>
+<#import "macros/group_macros.ftl" as lib>
 <STYLE type=text/css>@import url( ${contextPath}/templates/${templateName}/admin/style.css );</STYLE>
 
 <form accept-charset="${encoding}" name="form" action="${contextPath}/jforum${extension}" method="post">
@@ -78,7 +79,55 @@
 		<tr align="right">
 		  <td class="catBottom" colspan="5" height="29"> <input type="submit" name="submit" class="liteoption" value="Submit" /></td>
 		</tr>
-	</form>
 	</#if>
-
 </table>
+</form>
+<br/>
+
+<#macro quotaCombo n quotaId>
+	<select name="limit_${n}"/>
+	<option value="">-- Choose limit --</option>
+	<#list quotas as q>
+		<option value="${q.id}" <#if q.id == quotaId>selected</#if>>${q.description}</option>
+	</#list>
+	</select>
+</#macro>
+
+<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum${extension}" method="post">
+<input type="hidden" name="action" value="quotaGroupsSave" />
+<input type="hidden" name="module" value="${moduleName}" />
+<input type="hidden" name="securityHash" value="${securityHash}" />
+<input type="hidden" name="total_groups" value="${groups.size()}">
+<table width="60%" align="center" cellpadding="4" cellspacing="1" border="0" class="forumline">
+	<tr>
+	  <th class="tHead" colspan="5" align="center" height="28">Group Permission</th>
+	</tr>
+
+	<tr>
+		<th class="thCornerL" width="50%">Group name</th>
+		<th class="thTop">Quota Type</th>
+	</tr>
+
+	<#assign row = 1/>
+	<#assign counter = 0/>
+	<#list groups as g>
+		<tr>
+			<#assign x = selectedList.clear()/>
+			<#if groupQuotas.get(g.id)?exists>
+				<#assign x = selectedList.add(g.id)/>
+			</#if>
+
+			<td class="row${row}" align="center"><@lib.selectFieldGroups "group_" + counter, groups, 0, false, selectedList/></td>
+			<td class="row${row}" align="center"><@quotaCombo counter, groupQuotas.get(g.id)?default(0)/></td>
+		</tr>
+
+		<#if row == 2><#assign row = 1/></#if>
+		<#assign row = row + 1/>
+		<#assign counter = counter + 1/>
+	</#list>
+
+	<tr align="right">
+	  <td class="catBottom" colspan="5" height="29" align="center"> <input type="submit" name="submit" class="liteoption" value="Submit" /></td>
+	</tr>
+</table>
+</form>

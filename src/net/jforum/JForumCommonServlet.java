@@ -68,7 +68,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumCommonServlet.java,v 1.20 2004/12/29 17:18:40 rafaelsteil Exp $
+ * @version $Id: JForumCommonServlet.java,v 1.21 2005/01/24 20:22:21 rafaelsteil Exp $
  */
 public class JForumCommonServlet extends HttpServlet {
     protected boolean debug;
@@ -208,11 +208,20 @@ public class JForumCommonServlet extends HttpServlet {
          * If some redirect is needed, the url is here
          */
         private String redirectTo;
-        
         private String contentType;
-        
         private boolean isBinaryContent;
-
+        private boolean cancelCommit;
+        
+        public boolean cancelCommit()
+        {
+        	return this.cancelCommit;
+        }
+        
+        public void enableCancelcommit()
+        {
+        	this.cancelCommit = true;
+        }
+        
         // Setters
         public void setConnection(Connection conn) {
             this.conn = conn;
@@ -328,6 +337,14 @@ public class JForumCommonServlet extends HttpServlet {
     
     public static void enableBinaryContent(boolean enable) {
     	((DataHolder)localData.get()).enableBinaryContent(enable);
+    }
+    
+    public static void enableCancelCommit() {
+    	((DataHolder)localData.get()).enableCancelcommit();
+    }
+    
+    public static boolean cancelCommit() {
+    	return ((DataHolder)localData.get()).cancelCommit();
     }
 
     /**

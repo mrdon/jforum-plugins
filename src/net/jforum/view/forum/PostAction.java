@@ -60,6 +60,7 @@ import net.jforum.entities.Post;
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
+import net.jforum.exceptions.AttachmentSizeTooBigException;
 import net.jforum.model.AttachmentModel;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.ForumModel;
@@ -89,7 +90,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.50 2005/01/21 15:51:22 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.51 2005/01/24 20:22:28 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -433,7 +434,18 @@ public class PostAction extends Command {
 			// Attachments
 			AttachmentCommon ac = new AttachmentCommon(this.request);
 			ac.editAttachments(p.getId());
-			ac.insertAttachments(p.getId());
+			
+			try {
+				ac.insertAttachments(p.getId());
+			}
+			catch (AttachmentSizeTooBigException e) {
+				JForum.enableCancelCommit();
+				p.setText(this.request.getParameter("message"));
+				this.context.put("errorMessage", e.getMessage());
+				this.context.put("post", p);
+				this.edit(false, p);
+				return;
+			}
 
 			// Updates the topic title
 			if (t.getFirstPostId() == p.getId()) {
@@ -566,7 +578,18 @@ public class PostAction extends Command {
 			tm.update(t);
 			
 			// Attachments
-			new AttachmentCommon(this.request).insertAttachments(postId);
+			try {
+				new AttachmentCommon(this.request).insertAttachments(postId);
+			}
+			catch (AttachmentSizeTooBigException e) {
+				JForum.enableCancelCommit();
+				p.setText(this.request.getParameter("message"));
+				p.setId(0);
+				this.context.put("errorMessage", e.getMessage());
+				this.context.put("post", p);
+				this.insert();
+				return;
+			}
 
 			fm.setLastPost(t.getForumId(), postId);
 

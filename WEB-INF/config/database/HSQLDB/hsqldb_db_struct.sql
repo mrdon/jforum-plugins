@@ -312,6 +312,7 @@ CREATE TABLE jforum_users (
   deleted int default NULL,
   user_viewonline int default '1',
   security_hash varchar(32),
+  attach int default '0',
   PRIMARY KEY  (user_id)
 ) ;
 

@@ -231,7 +231,7 @@ function validatePostForm(f)
 <input type="hidden" name="securityHash" value="${securityHash}" />
 <#if forum?exists><input type="hidden" name="forum_id" value="${forum.id}" /></#if>
 <input type="hidden" name="start" value="${start?default("")}" />
-<#if post?exists && !isNewPost?default(true)><input type="hidden" name="post_id" value="${post.id}" /></#if>
+<#if post?exists && !isNewPost><input type="hidden" name="post_id" value="${post.id}" /></#if>
 <#if (topic?exists && topic.id > -1)><input type="hidden" name="topic_id" value="${topic.id}" /></#if>
 
 <table cellspacing="0" cellpadding="10" width="100%" align="center" border="0">
@@ -331,6 +331,12 @@ function validatePostForm(f)
 							<input type="hidden" name="toUserId" value="${toUserId}" />
 							<input type="hidden" name="toUserEmail" value="${toUserEmail}"/>
 						</td>
+					</tr>
+				</#if>
+
+				<#if errorMessage?exists>
+					<tr>
+						<td colspan="2" align="center"><span class="gen"><font color="#ff0000"><b>${errorMessage}</b></font></span></td>
 					</tr>
 				</#if>
 
@@ -485,7 +491,7 @@ function validatePostForm(f)
 								<tr>
 									<td colspan="9">
 										<span class="gen">
-											<textarea class="post" onkeyup="storeCaret(this);" style="WIDTH: 450px" onclick="storeCaret(this);" tabindex="3" name="message" rows="15" wrap="virtual" cols="35" onselect="storeCaret(this);"><#if post?exists><#if quote?exists>[quote=${quoteUser}]${post.text?html}[/quote]<#else>${post.text?html}</#if></#if></textarea> 
+											<textarea class="post" onkeyup="storeCaret(this);" style="WIDTH: 450px" onclick="storeCaret(this);" tabindex="3" name="message" rows="15" wrap="virtual" cols="35" onselect="storeCaret(this);"><#if post?exists><#if quote?exists>[quote=${quoteUser}]${post.text}[/quote]<#else>${post.text}</#if></#if></textarea> 
 										</span>
 									</td>
 								</tr>

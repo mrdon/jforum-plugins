@@ -60,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentModel.java,v 1.10 2005/01/23 21:51:08 rafaelsteil Exp $
+ * @version $Id: AttachmentModel.java,v 1.11 2005/01/24 20:22:22 rafaelsteil Exp $
  */
 public class AttachmentModel extends AutoKeys implements net.jforum.model.AttachmentModel
 {
@@ -190,7 +190,7 @@ public class AttachmentModel extends AutoKeys implements net.jforum.model.Attach
 	{
 		Map m = new HashMap();
 		PreparedStatement p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("AttachmentModel.selectGroupsQuotaLImits"));
+				SystemGlobals.getSql("AttachmentModel.selectGroupsQuotaLimits"));
 		
 		ResultSet rs = p.executeQuery();
 		while (rs.next()) {

@@ -73,7 +73,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.57 2005/01/21 15:18:06 marcwick Exp $
+ * @version $Id: JForum.java,v 1.58 2005/01/24 20:22:21 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -273,7 +273,12 @@ public class JForum extends JForumCommonServlet
 			}
 			
 			if (useTransactions) {
-				conn.commit();
+				if (!JForum.cancelCommit()) {
+					conn.commit();
+				}
+				else {
+					conn.rollback();
+				}
 			}
 		}
 		catch (Exception e) {
@@ -300,7 +305,7 @@ public class JForum extends JForumCommonServlet
 					if (useTransactions) {
 						conn.setAutoCommit(autoCommitStatus);
 					}
-					
+				
 					DBConnection.getImplementation().releaseConnection(conn);
 				}
 				

@@ -44,7 +44,7 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
- * @version $Id: QuotaLimit.java,v 1.1 2005/01/17 18:59:15 rafaelsteil Exp $
+ * @version $Id: QuotaLimit.java,v 1.2 2005/01/24 20:22:24 rafaelsteil Exp $
  */
 public class QuotaLimit
 {
@@ -55,6 +55,34 @@ public class QuotaLimit
 	private String description;
 	private int size;
 	private int type;
+	
+	/**
+	 * Checks if the size passed as argument
+	 * is greater than the quota's limit.
+	 * 
+	 * @param size The size to check
+	 * @return <code>true</code> if the size is greater than
+	 * quota's limit. 
+	 */
+	public boolean exceedsQuota(long size)
+	{
+		if (this.type == QuotaLimit.KB) {
+			return (size > this.size * 1024);
+		}
+		else {
+			return (size > this.size * 1024 * 1024);
+		}
+	}
+	
+	public int getSizeInBytes()
+	{
+		if (this.type == QuotaLimit.KB) {
+			return (int)(this.size * 1024);
+		}
+		else {
+			return (int)(this.size * 1024 * 1024);
+		}
+	}
 	
 	/**
 	 * @return Returns the description.

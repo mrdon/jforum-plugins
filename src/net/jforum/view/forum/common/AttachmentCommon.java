@@ -56,10 +56,15 @@ import net.jforum.SessionFacade;
 import net.jforum.entities.Attachment;
 import net.jforum.entities.AttachmentExtension;
 import net.jforum.entities.AttachmentInfo;
+import net.jforum.entities.Group;
+import net.jforum.entities.QuotaLimit;
+import net.jforum.entities.User;
+import net.jforum.exceptions.AttachmentSizeTooBigException;
 import net.jforum.model.AttachmentModel;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.SecurityConstants;
+import net.jforum.util.I18n;
 import net.jforum.util.MD5;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -69,7 +74,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.5 2005/01/21 15:51:21 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.6 2005/01/24 20:22:25 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {
@@ -105,6 +110,9 @@ public class AttachmentCommon
 		}
 
 		Map filesToSave = new HashMap();
+		long totalSize = 0;
+		int userId = SessionFacade.getUserSession().getUserId();
+		
 		for (int i = 0; i < total; i++) {
 			FileItem item = (FileItem)this.request.getObjectParameter("file_" + i);
 			if (item == null) {
@@ -121,7 +129,7 @@ public class AttachmentCommon
 			
 			Attachment a = new Attachment();
 			a.setPostId(postId);
-			a.setUserId(SessionFacade.getUserSession().getUserId());
+			a.setUserId(userId);
 			
 			AttachmentInfo info = new AttachmentInfo();
 			info.setFilesize(item.getSize());
@@ -140,16 +148,54 @@ public class AttachmentCommon
 			info.setPhysicalFilename(savePath);
 			
 			a.setInfo(info);
-			filesToSave.put(uploadUtils, SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR)
-					+ "/" + savePath);
+			filesToSave.put(uploadUtils, a);
 			
-			this.am.addAttachment(a);
+			totalSize += item.getSize();
+		}
+		
+		// Check upload limits
+		QuotaLimit ql = this.getQuotaLimit(userId);
+		if (ql != null) {
+			if (ql.exceedsQuota(totalSize)) {
+				throw new AttachmentSizeTooBigException(I18n.getMessage("Attachments.tooBig", 
+						new Integer[] { new Integer(ql.getSizeInBytes() / 1024), 
+							new Integer((int)totalSize / 1024) }));
+			}
 		}
 		
 		for (Iterator iter = filesToSave.entrySet().iterator(); iter.hasNext(); ) {
 			Map.Entry entry = (Map.Entry)iter.next();
-			((UploadUtils)entry.getKey()).saveUploadedFile((String)entry.getValue());
+			Attachment a = (Attachment)entry.getValue();
+			String path = SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR) 
+				+ "/" 
+				+ a.getInfo().getPhysicalFilename();
+			
+			this.am.addAttachment(a);
+			((UploadUtils)entry.getKey()).saveUploadedFile(path);
 		}
+	}
+	
+	public QuotaLimit getQuotaLimit(int userId) throws Exception
+	{
+		QuotaLimit ql = new QuotaLimit();
+		User u = DataAccessDriver.getInstance().newUserModel().selectById(userId);
+		
+		for (Iterator iter = u.getGroupsList().iterator(); iter.hasNext();) {
+			QuotaLimit l = this.am.selectQuotaLimitByGroup(((Group)iter.next()).getId());
+			if (l == null) {
+				continue;
+			}
+			
+			if (l.getSizeInBytes() > ql.getSizeInBytes()) {
+				ql = l;
+			}
+		}
+		
+		if (ql.getSize() == 0) {
+			return null;
+		}
+		
+		return ql;
 	}
 	
 	public void editAttachments(int postId) throws Exception
