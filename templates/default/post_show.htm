@@ -169,7 +169,7 @@ function confirmDelete()
 						<span class="name"><b>${user.username}</b></span>
 						<br />
 						<#if karmaEnabled && post.userId != 1>
-							<script language="javascript">writeStars(${user.karma.karmaPoints}, ${user.id});</script>
+							<script language="javascript">writeStars(${user.karma.karmaPoints}, "${user.id}${post.id}");</script>
 						</#if>
 						
 						<span class="postdetails">
