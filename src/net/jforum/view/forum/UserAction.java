@@ -72,7 +72,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.23 2005/01/05 00:24:56 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.24 2005/01/05 00:42:46 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -289,6 +289,13 @@ public class UserAction extends Command
 				if (this.request.getParameter("autologin") != null) {
 					userSession.setAutoLogin(true);
 					JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN), "1");
+					JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_USER_HASH), 
+							MD5.crypt(SystemGlobals.getValue(ConfigKeys.USER_HASH_SEQUENCE) + user.getId()));
+				}
+				else {
+					// Remove cookies for safety
+					JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_USER_HASH), null);
+					JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN), null);
 				}
 				
 				// TODO: copy'n paste from JForum.java. Move all to an helper class
@@ -305,8 +312,6 @@ public class UserAction extends Command
 
 				JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA), 
 						Integer.toString(user.getId()));
-				JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_USER_HASH), 
-						MD5.crypt(SystemGlobals.getValue(ConfigKeys.USER_HASH_SEQUENCE) + user.getId()));
 
 				SecurityRepository.load(user.getId(), true);
 				validInfo = true;
