@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.22 2004/10/03 16:53:53 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.23 2004/10/10 16:49:05 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -101,6 +101,7 @@ public class ConfigKeys {
 	public static final String USER_HASH_SEQUENCE = "user.hash.sequence";
 
 	public static final String VERSION = "version";
+	public static final String BACKGROUND_TASKS = "background.tasks";
 
 	public static final String FORUM_LINK = "forum.link";
 	public static final String FORUM_NAME = "forum.name";

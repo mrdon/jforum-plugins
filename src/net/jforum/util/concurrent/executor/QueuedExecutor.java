@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: Jan 28, 2004
- * net.jforum.util.concurrent.executor.QueuedExecutor.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: QueuedExecutor.java,v 1.6 2004/10/03 08:52:53 marcwick Exp $
  */
 package net.jforum.util.concurrent.executor;
 
@@ -52,9 +49,12 @@ import net.jforum.util.concurrent.Queue;
 import net.jforum.util.concurrent.Result;
 import net.jforum.util.concurrent.Task;
 import net.jforum.util.concurrent.queue.UnboundedFifoQueue;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rodrigo Kumpera
+ * @version $Id: QueuedExecutor.java,v 1.7 2004/10/10 16:47:42 rafaelsteil Exp $
  */
 public class QueuedExecutor implements Executor 
 {
@@ -96,14 +96,25 @@ public class QueuedExecutor implements Executor
 	{
 		logger.info("Executing a task: "+ task.getClass().getName());
 		
-		queue.put(task);
-		synchronized(lock) {
-			if(currentThread == null) {
-				logger.info("Creating a new thread...");
-				
-				currentThread = new Thread(new WorkerThread(),"jforum");
-				currentThread.setDaemon(true);
-				currentThread.start();	
+		if (SystemGlobals.getBoolValue(ConfigKeys.BACKGROUND_TASKS)) {
+			queue.put(task);
+			synchronized(lock) {
+				if(currentThread == null) {
+					logger.info("Creating a new thread...");
+					
+					currentThread = new Thread(new WorkerThread(), "jforum");
+					currentThread.setDaemon(true);
+					currentThread.start();	
+				}
+			}
+		}
+		else {
+			try {
+				logger.info("Task is in non-background mode");
+				task.execute();
+			}
+			catch (Exception e) {
+				logger.warn("Error while executing a task: " + e);
 			}
 		}
 	}
@@ -115,9 +126,9 @@ public class QueuedExecutor implements Executor
 		
 		synchronized(lock) {
 			if(currentThread == null) {
-				currentThread = new Thread(new WorkerThread(),"jforum");
+				currentThread = new Thread(new WorkerThread(), "jforum");
 				currentThread.setDaemon(true);
-				currentThread.setName(this.getClass().getName() +"Thread");
+				currentThread.setName(this.getClass().getName() + "Thread");
 
 				currentThread.start();	
 			}
