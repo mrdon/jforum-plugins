@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <bbConfig>
 	<!-- CODE -->
-	<match>
-		<!--
-		Ok, this is a very very very very very ugly and big dirty 
-		crapy hack. The situation is that bb tags inside of a "code" tag
-		shouldn't be parsed, so before the "real" match, we need to get
-		only the code portion inside the tag and do some replaces... 
-		-->
-		<before useRegex="(?s).*?\[code\](.*?)\[/code\].*?" replace="\[" with="#91;"/>
-		
+	<match name="code">
 		<regex>(?s)\[code\](.*?)\[/code\]</regex>
 		<replace>
 		<![CDATA[

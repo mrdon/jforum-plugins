@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: PostVH.java,v 1.9 2004/04/25 19:26:45 rafaelsteil Exp $
+ * $Id: PostVH.java,v 1.10 2004/04/28 00:05:01 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 
@@ -271,6 +271,7 @@ public class PostVH extends Command
 			JForum.getContext().put("setType", p.getId() == topic.getFirstPostId());
 			JForum.getContext().put("topic", topic);
 			JForum.getContext().put("moduleAction", "post_form.htm");
+			JForum.getContext().put("start", JForum.getRequest().getParameter("start"));
 		}
 		else {
 			JForum.getContext().put("moduleAction", "message.htm");
@@ -378,7 +379,14 @@ public class PostVH extends Command
 				tm.removeSubscription(p.getTopicId(), SessionFacade.getUserSession().getUserId());
 			}
 			
-			JForum.setRedirect(JForum.getRequest().getContextPath() +"/posts/list/"+ p.getTopicId() +".page#"+ p.getId());
+			String path = JForum.getRequest().getContextPath() +"/posts/list/";
+			String start = JForum.getRequest().getParameter("start");
+			if (start != null) {
+				path += start +"/";
+			}
+			
+			path += p.getTopicId() +".page#"+ p.getId();
+			JForum.setRedirect(path);
 		}
 	}
 
@@ -481,7 +489,16 @@ public class PostVH extends Command
 			ForumRepository.reloadForum(t.getForumId());
 			TopicRepository.clearCache(t.getForumId());
 
-			JForum.setRedirect(JForum.getRequest().getContextPath() +"/posts/list/"+ topicId +".page#"+ postId);
+			String path = JForum.getRequest().getContextPath() +"/posts/list/";
+
+			String start = JForum.getRequest().getParameter("start");
+			if (start != null) {
+				path += start +"/";
+			}
+
+			path += topicId +".page#"+ postId;
+			
+			JForum.setRedirect(path);
 			((HashMap)SessionFacade.getAttribute("topics_tracking")).put(new Integer(t.getId()), new Long(p.getTime()));
 
 			// RSS
@@ -491,6 +508,7 @@ public class PostVH extends Command
 			JForum.getContext().put("preview", true);
 			JForum.getContext().put("post", p);
 			JForum.getContext().put("topic", t);
+			JForum.getContext().put("start", JForum.getRequest().getParameter("start"));
 			
 			Post postPreview = new Post(p);
 			JForum.getContext().put("postPreview", this.preparePostText(postPreview));
@@ -640,8 +658,8 @@ public class PostVH extends Command
 		}
 		
 		// First of all, convert new lines to <br>'s
-		p.setText(p.getText().replaceAll("\n", "<br>"));			
-
+		p.setText(p.getText().replaceAll("\n", "<br>"));
+		
 		// Then, search for bb codes
 		if (p.isBbCodeEnabled()) {
 			if (p.getText().indexOf('[') > -1 && p.getText().indexOf(']') > -1) {
@@ -652,67 +670,66 @@ public class PostVH extends Command
 					BBCode bb = (BBCode)tmpIter.next();
 					
 					// little hacks
-					if (bb.getBeforeReplace() != null) {
-						boolean keepGoing = true;
+					if (bb.removeQuotes()) {
+						Matcher matcher = Pattern.compile(bb.getRegex()).matcher(p.getText());
 						
-						while (keepGoing) {
-							Matcher matcher = Pattern.compile(bb.getBeforeUseRegexp()).matcher(p.getText());
-							keepGoing = matcher.matches();
-							
-							if (!keepGoing) {
-								break;
-							}
-
+						while (matcher.find()) {
 							String contents = matcher.group(1);
-							contents = contents.replaceAll(bb.getBeforeReplace(), "&"+ bb.getBeforeReplaceWith());
+							contents = contents.replaceAll("'", "");
+							contents = contents.replaceAll("\"", "");
 							
-							p.setText(p.getText().replaceFirst("\\Q"+ matcher.group(1) +"\\E", contents));
-							p.setText(p.getText().replaceFirst(bb.getRegex(), bb.getReplace()));
+							String replace = bb.getReplace().replaceAll("\\$1", contents);
+							
+							p.setText(p.getText().replaceFirst(bb.getRegex(), replace));
 						}
 					}
 					else {
-						// More hacks
-						if (bb.removeQuotes()) {
-							Matcher matcher = Pattern.compile(bb.getRegex()).matcher(p.getText());
+						// Another hack for the quotes
+						if (bb.getTagName().equals("openQuote")) {
+							Matcher matcher = Pattern.compile(bb.getRegex()).matcher(p.getText());								
 							
 							while (matcher.find()) {
-								String contents = matcher.group(1);
-								contents = contents.replaceAll("'", "");
-								contents = contents.replaceAll("\"", "");
+								openQuotes++;
 								
-								String replace = bb.getReplace().replaceAll("\\$1", contents);
-
-								p.setText(p.getText().replaceFirst(bb.getRegex(), replace));
+								p.setText(p.getText().replaceFirst(bb.getRegex(), bb.getReplace()));
 							}
 						}
-						else {
-							// Another hack for the quotes
-							if (bb.getTagName().equals("openQuote")) {
-								Matcher matcher = Pattern.compile(bb.getRegex()).matcher(p.getText());								
+						else if (bb.getTagName().equals("closeQuote")) {
+							if (openQuotes > 0) {
+								Matcher matcher = Pattern.compile(bb.getRegex()).matcher(p.getText());
 								
 								while (matcher.find()) {
-									openQuotes++;
+									openQuotes--;
 									
 									p.setText(p.getText().replaceFirst(bb.getRegex(), bb.getReplace()));
 								}
 							}
-							else if (bb.getTagName().equals("closeQuote")) {
-								if (openQuotes > 0) {
-									Matcher matcher = Pattern.compile(bb.getRegex()).matcher(p.getText());
-									
-									while (matcher.find()) {
-										openQuotes--;
-										
-										p.setText(p.getText().replaceFirst(bb.getRegex(), bb.getReplace()));
-									}
+						}
+						else if (bb.getTagName().equals("code")) {
+							Matcher matcher = Pattern.compile(bb.getRegex()).matcher(p.getText());
+							StringBuffer sb = new StringBuffer(p.getText());
+							
+							while (matcher.find()) {
+								String contents = matcher.group(1);
+								
+								StringBuffer replace = new StringBuffer(bb.getReplace());
+								int index = replace.indexOf("$1");
+								if (index > -1) {
+									replace.replace(index, index + 2, contents);
 								}
-							}
-							else {
-								p.setText(p.getText().replaceAll(bb.getRegex(), bb.getReplace()));
+								
+								index = sb.indexOf("[code]");
+								int lastIndex = sb.indexOf("[/code]") + 7;
+								
+								sb.replace(index, lastIndex, replace.toString());
+								p.setText(sb.toString());
 							}
 						}
-						
+						else {
+							p.setText(p.getText().replaceAll(bb.getRegex(), bb.getReplace()));
+						}
 					}
+					
 				}
 				
 				if (openQuotes > 0) {

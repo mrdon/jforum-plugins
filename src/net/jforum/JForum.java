@@ -41,17 +41,19 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: JForum.java,v 1.4 2004/04/24 19:54:25 rafaelsteil Exp $
+ * $Id: JForum.java,v 1.5 2004/04/28 00:04:57 rafaelsteil Exp $
  */
 package net.jforum;
 
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -416,6 +418,8 @@ public class JForum extends HttpServlet
 				this.startDatabase();
 			}
 			
+			String encoding = (String)SystemGlobals.getValue("encoding");
+			
 			// Context
 			JForum.getContext().put("servletName", SystemGlobals.getValue("servletName"));
 			JForum.getContext().put("contextPath", req.getContextPath());
@@ -428,9 +432,11 @@ public class JForum extends HttpServlet
             JForum.getContext().put("pageTitle",SystemGlobals.getValue("forum.page.title"));
             JForum.getContext().put("metaKeywords",SystemGlobals.getValue("forum.page.metatag.keywords"));
             JForum.getContext().put("metaDescription",SystemGlobals.getValue("forum.page.metatag.description"));
+            JForum.getContext().put("encoding", encoding);
 
             // Request
 			ActionServletRequest request = new ActionServletRequest(req);
+			request.setCharacterEncoding(encoding);
 
 			dataHolder.setResponse(response);
 			dataHolder.setConnection(ConnectionPool.getPool().getConnection());
@@ -469,7 +475,12 @@ public class JForum extends HttpServlet
 				if (((DataHolder)localData.get()).getRedirectTo() == null) {
 					// TODO: Add support to gzip content				
 					response.setContentType("text/html");
-					template.process(JForum.getContext(), response.getWriter());
+					
+
+					BufferedWriter out = new BufferedWriter(new OutputStreamWriter(response.getOutputStream(), encoding));
+					
+					template.process(JForum.getContext(), out);
+					out.flush();
 				}
 			}
 		}

@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ImageUtils.java,v 1.9 2004/04/23 22:42:43 rafaelsteil Exp $
+ * $Id: ImageUtils.java,v 1.10 2004/04/28 00:05:02 rafaelsteil Exp $
  */
 package net.jforum.util.image;
 
@@ -195,22 +195,23 @@ public class ImageUtils
 	public static BufferedImage createBufferedImage(Image image, int w, int h)
 	{
 		BufferedImage bi = null;
+		/*
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice gv = ge.getDefaultScreenDevice();
 		GraphicsConfiguration gc = gv.getDefaultConfiguration();
+		*/
 		
 		//try {
 			/*
 			bi = gc.createCompatibleImage(w, h, 
 				hasAlpha(image) ? Transparency.BITMASK : Transparency.OPAQUE);
 			*/
-			bi = gc.createCompatibleImage(w, h, Transparency.OPAQUE);
+			//bi = gc.createCompatibleImage(w, h, Transparency.OPAQUE);
 		//}
 		//catch (InterruptedException e) {}
 		
 		if (bi == null) {
-			bi = new BufferedImage(image.getWidth(null), image.getHeight(null), 
-				BufferedImage.TYPE_INT_RGB);
+			bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
 		}
 
 		Graphics g = bi.createGraphics();

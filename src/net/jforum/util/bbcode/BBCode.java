@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: BBCode.java,v 1.4 2004/04/24 19:54:27 rafaelsteil Exp $
+ * $Id: BBCode.java,v 1.5 2004/04/28 00:05:00 rafaelsteil Exp $
  */
 package net.jforum.util.bbcode;
 
@@ -55,9 +55,6 @@ public class BBCode
 	private String tagName = "";
 	private String regex;
 	private String replace;
-	private String beforeReplace;
-	private String beforeReplaceWith;
-	private String beforeUseRegex;
 	private boolean removQuotes;
 	
 	public BBCode() {}
@@ -102,21 +99,6 @@ public class BBCode
 		return this.tagName;
 	}
 	
-	public String getBeforeReplace()
-	{
-		return this.beforeReplace;
-	}
-	
-	public String getBeforeUseRegexp()
-	{
-		return this.beforeUseRegex;
-	}
-	
-	public String getBeforeReplaceWith()
-	{
-		return this.beforeReplaceWith;
-	}
-	
 	public boolean removeQuotes()
 	{
 		return this.removQuotes;
@@ -147,21 +129,6 @@ public class BBCode
 	public void setTagName(String tagName) 
 	{
 		this.tagName = tagName;
-	}
-	
-	public void setBeforeReplace(String s)
-	{
-		this.beforeReplace = s;
-	}
-	
-	public void setBeforeReplaceWith(String s)
-	{
-		this.beforeReplaceWith = s;
-	}
-	
-	public void setBeforeUseRegex(String r)
-	{
-		this.beforeUseRegex = r;
 	}
 	
 	public void enableRemoveQuotes()

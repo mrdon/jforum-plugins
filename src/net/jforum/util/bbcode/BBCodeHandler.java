@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: BBCodeHandler.java,v 1.4 2004/04/24 19:54:27 rafaelsteil Exp $
+ * $Id: BBCodeHandler.java,v 1.5 2004/04/28 00:05:00 rafaelsteil Exp $
  */
 package net.jforum.util.bbcode;
 
@@ -108,11 +108,6 @@ public class BBCodeHandler extends DefaultHandler
 			if (removeQuotes != null && removeQuotes.equals("true")) {
 				this.bb.enableRemoveQuotes();
 			}
-		}
-		else if (tag.equals("before")) {
-			this.bb.setBeforeReplace(attrs.getValue("replace"));
-			this.bb.setBeforeReplaceWith(attrs.getValue("with"));
-			this.bb.setBeforeUseRegex(attrs.getValue("useRegex"));
 		}
 	
 		this.tagName = tag;

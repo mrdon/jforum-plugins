@@ -31,7 +31,7 @@ function confirmDelete()
 						<#else>
 							<span class="nav">&nbsp;
 							<a href="${contextPath}/jforum.page?module=posts&amp;action=insert&amp;forum_id=${topic.forumId}"><img  src="templates/${templateName}/images/post.gif" width="82" height="25" border="0" /> </a>
-							<a href="${contextPath}/jforum.page?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}"><img src="templates/${templateName}/images/reply.gif" width="82" height="25" border="0" /></a>
+							<a href="${contextPath}/jforum.page?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}&start=${thisPage}"><img src="templates/${templateName}/images/reply.gif" width="82" height="25" border="0" /></a>
 							</span>
 						</#if>
 					</td>
@@ -103,7 +103,7 @@ function confirmDelete()
 								</#if>
 
 								<#if ((post.canEdit && topic.status != STATUS_LOCKED) || canEdit)>
-									<a href="${contextPath}/jforum.page?module=${moduleName}&amp;action=edit&amp;post_id=${post.id}"><img src="templates/${templateName}/images/icon_edit.gif" width="59" height="18" border="0" /></a>  
+									<a href="${contextPath}/jforum.page?module=${moduleName}&amp;action=edit&amp;post_id=${post.id}&start=${thisPage}"><img src="templates/${templateName}/images/icon_edit.gif" width="59" height="18" border="0" /></a>  
 								</#if>
 		
 								<#if canRemove>
@@ -195,7 +195,7 @@ function confirmDelete()
 					<#else>
 						<span class="nav">
 							&nbsp;<a href="${contextPath}/jforum.page?module=posts&amp;action=insert&amp;forum_id=${topic.forumId}"><img  src="templates/${templateName}/images/post.gif" width="82" height="25" border="0" /> </a>
-							&nbsp;<a href="${contextPath}/jforum.page?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}"><img src="templates/${templateName}/images/reply.gif" width="82" height="25" border="0" /></a>
+							&nbsp;<a href="${contextPath}/jforum.page?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}&start=${thisPage}"><img src="templates/${templateName}/images/reply.gif" width="82" height="25" border="0" /></a>
 							</span>
 		  			</#if>
 					</td>

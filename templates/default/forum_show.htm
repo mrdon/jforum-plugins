@@ -95,8 +95,8 @@
 			  <a href="${contextPath}/user/profile/${topic.postedBy.id}.page">${topic.lastPostBy.username}</a>
 
 				<#assign startPage = ""/>
-				<#if (topic.totalReplies + 1 > recordsPerPage?number)>
-					<#assign startPage = ((topic.totalReplies / recordsPerPage?number)?int * recordsPerPage?number) +"/"/>
+				<#if (topic.totalReplies + 1 > postsPerPage?number)>
+					<#assign startPage = ((topic.totalReplies / postsPerPage?number)?int * postsPerPage?number) +"/"/>
 				</#if>
 			  
 			  <a href="${contextPath}/posts/list/${startPage}${topic.id}.page#${topic.lastPostId}"><img src="templates/${templateName}/images/icon_latest_reply.gif" width="18" height="9" border="0"></a></SPAN>
