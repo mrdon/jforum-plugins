@@ -3,12 +3,50 @@
 <script language="javascript">
 <#include "utils.js"/>
 </script>
+<script language="javascript">
+var quick = false;
+
+function activateAdvancedQuery(){
+	quick = !quick;
+	document.getElementById("trQuickBody").style.display = (quick ? "" : "none");
+	document.getElementById("trQuickSubmit").style.display = (quick ? "" : "none");
+	if (quick) {
+		document.location = "#quick";
+	}
+}
+</script>
 <table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
     <tr>
       <td align="left"><span class="nav"><a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a></span></td>
     </tr>
 </table>
-
+<table cellspacing="0" cellpadding="0" width="100%" border="0">
+	<tr>
+		<td colspan="3">
+			<table width="100%">
+				<tr>
+					<td align="right">
+						<img src="${contextPath}/templates/${templateName}/images/icon_mini_message.gif" align="middle">
+						<span class="nav"><a href="javascript:activateAdvancedQuery()">${I18n.getMessage("Karma.advancedQuery")}</a></span>
+					</td>
+				</td>
+				<tr style="display: none;" id="trQuickBody">
+					<td align="center">
+						This is not implemented yet
+						<!--
+						CODE HERE
+						-->
+					</td>
+				</tr>
+				<tr style="display: none;" id="trQuickSubmit">
+					<td align="center">
+						<input type="submit" value="${I18n.getMessage("PostForm.submit")}" class="mainoption">
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
 <table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
 	<tr>
 		<th class="thCornerL" nowrap="nowrap">#</th>
@@ -19,7 +57,8 @@
 	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("UserProfile.registrationDate")}&nbsp;</th>
 	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("User.numMessages")}&nbsp;</th>
 	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("Karma.totalReceived")}&nbsp;</th>
-	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("Karma.totalGiven")}&nbsp;</th>
+	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("Karma.votesReceived")}&nbsp;</th>
+	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("Karma.votesGiven")}&nbsp;</th>
 	  <th class="thCornerR" nowrap="nowrap">&nbsp;${I18n.getMessage("Karma.karma")}&nbsp;</th>
 	</tr>
   <#assign id = start+1/>
@@ -36,15 +75,16 @@
 			<td class="row2"><span class="gen"><#if (user.location?exists && user.location?length > 0)>${user.location}<#else>&nbsp;</#if></span></td>
 			<td class="row2"><span class="gen">${user.registrationDate?date("dd/MM/yyyy")}</span></td>
 			<td class="row2"><span class="gen">${user.totalPosts}</span></td>
-			<td class="row2"><span class="gen">?</span></td>
-			<td class="row2"><span class="gen">?</span></td>
+			<td class="row2"><span class="gen">${user.karma.totalPoints}</span></td>
+			<td class="row2"><span class="gen">${user.karma.votesReceived}</span></td>
+			<td class="row2"><span class="gen">${user.karma.votesGiven}</span></td>
 			<td class="row2"><span class="gen">${user.karma.karmaPoints}</span></td>
 		</tr>
 		<#assign id = id+1/>
 	</#list>
 
 	<tr align="center">
-		<td class="catBottom" colspan="10" height="28">&nbsp;
+		<td class="catBottom" colspan="11" height="28">&nbsp;
 		</td>
 	</tr>
 </table>

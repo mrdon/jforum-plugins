@@ -44,12 +44,32 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaStatus.java,v 1.3 2005/01/21 12:12:27 rafaelsteil Exp $
+ * @version $Id: KarmaStatus.java,v 1.4 2005/01/31 19:14:53 franklin_samir Exp $
  */
 public class KarmaStatus
 {
 	private int id;
+	
+	/**
+	 * Karma average. Total points receveid / number of votes.
+	 */
 	private double karmaPoints;
+	
+	/**
+	 * Sum of all votes received.
+	 */
+	private int totalPoints;
+	
+	/**
+	 * Number of votes received.
+	 */
+	private int votesReceived;
+	
+	/**
+	 * Number of votes given to other users.
+	 */
+	private int votesGiven;
+	
 	
 	public KarmaStatus() {}
 	
@@ -95,4 +115,33 @@ public class KarmaStatus
 	{
 		this.id = userId;
 	}
+	
+    public int getVotesReceived()
+    {
+        return votesReceived;
+    }
+    
+    public void setVotesReceived(int votesReceived)
+    {
+        this.votesReceived = votesReceived;
+    }
+    
+    public int getTotalPoints()
+    {
+        return totalPoints;
+    }
+    
+    public void setTotalPoints(int totalPoints)
+    {
+        this.totalPoints = totalPoints;
+    }
+    
+    public int getVotesGiven()
+    {
+        return votesGiven;
+    }
+    public void setVotesGiven(int votesGiven)
+    {
+        this.votesGiven = votesGiven;
+    }
 }

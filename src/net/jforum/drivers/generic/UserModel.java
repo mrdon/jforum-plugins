@@ -61,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.25 2005/01/31 16:56:56 franklin_samir Exp $
+ * @version $Id: UserModel.java,v 1.26 2005/01/31 19:15:38 franklin_samir Exp $
  */
 public class UserModel extends AutoKeys implements net.jforum.model.UserModel 
 {
@@ -700,7 +700,8 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		Iterator iter = users.iterator(); 
 		while (iter.hasNext()) {		    
 		    user = (User) iter.next();
-		    user.setKarma(DataAccessDriver.getInstance().newKarmaModel().getUserKarma(user.getId()));
+		    //load Karma
+		    DataAccessDriver.getInstance().newKarmaModel().getUserTotalKarma(user);
 		    result.add(user);
         }		
 		return result;

@@ -44,17 +44,19 @@ package net.jforum.drivers.generic;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
 import net.jforum.JForum;
 import net.jforum.entities.Karma;
 import net.jforum.entities.KarmaStatus;
+import net.jforum.entities.User;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaModel.java,v 1.3 2005/01/21 15:51:21 rafaelsteil Exp $
+ * @version $Id: KarmaModel.java,v 1.4 2005/01/31 19:15:16 franklin_samir Exp $
  */
 public class KarmaModel implements net.jforum.model.KarmaModel
 {
@@ -208,5 +210,44 @@ public class KarmaModel implements net.jforum.model.KarmaModel
 		p.close();
 		
 		return m;
+	}
+	
+	public void getUserTotalKarma(User user) throws SQLException{	    
+	    PreparedStatement p = JForum.getConnection().prepareStatement(
+						SystemGlobals.getSql("KarmaModel.getUserTotalVotes"));
+		p.setInt(1, user.getId());		
+		
+		ResultSet rs = p.executeQuery();
+		
+		user.setKarma(new KarmaStatus());
+		
+		if(rs.next()) {		   		    		   
+		    user.getKarma().setTotalPoints( rs.getInt("points") );
+			user.getKarma().setVotesReceived( rs.getInt("votes") );
+		}
+		
+		if( user.getKarma().getVotesReceived() != 0)//prevetns division by zero.	        
+		    user.getKarma().setKarmaPoints(user.getKarma().getTotalPoints() / user.getKarma().getVotesReceived() );
+		
+		
+		this.getVotesGiven(user);
+		
+		rs.close();
+		p.close();
+	}
+	
+	private void getVotesGiven(User user) throws SQLException{
+	    PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("KarmaModel.getUserGivenVotes"));
+	    p.setInt(1, user.getId());		
+
+	    ResultSet rs = p.executeQuery();
+
+	    if(rs.next()) {		   		    		   
+	        user.getKarma().setVotesGiven( rs.getInt("votes") );	    
+	    }	    
+	    	    
+	    rs.close();
+	    p.close();	    
 	}
 }

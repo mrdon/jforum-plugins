@@ -55,7 +55,7 @@ import net.jforum.entities.User;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.14 2005/01/03 16:13:23 rafaelsteil Exp $
+ * @version $Id: UserModel.java,v 1.15 2005/01/31 19:14:31 franklin_samir Exp $
  */
 public interface UserModel 
 {
@@ -86,6 +86,26 @@ public interface UserModel
 	 * @throws Exception
 	 */
 	public List selectAll() throws Exception;
+	
+	/**
+	 * Gets all users with your Karma.
+	 * 
+	 * @return <code>ArrayList</code> with the users. Each entry is an <code>User</code> object
+	 * (with the KarmaStatus populated).
+	 * @throws Exception
+	 */
+	public List selectAllWithKarma() throws Exception;
+	
+	/**
+	 * Gets all users
+	 *
+	 * @param startFrom Index to start fetching from
+	 * @param count Number of records to retrieve
+	 * @return <code>ArrayList</code> with the users. Each entry is an <code>User</code> object
+	 * (with the KarmaStatus populated).
+	 * @throws Exception
+	 */
+	public List selectAllWithKarma(int startFrom, int count) throws Exception;
 	
 	/**
 	 * Finds an user by matching an input string. 
@@ -345,4 +365,5 @@ public interface UserModel
 	 * @throws Exception
 	 */
 	public boolean hasUsernameChanged(int userId, String usernameToCheck) throws Exception;
+	
 }

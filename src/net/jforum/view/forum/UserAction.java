@@ -73,7 +73,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.30 2005/01/31 13:33:56 franklin_samir Exp $
+ * @version $Id: UserAction.java,v 1.31 2005/01/31 19:13:45 franklin_samir Exp $
  */
 public class UserAction extends Command 
 {
@@ -519,8 +519,11 @@ public class UserAction extends Command
 	{
 		int start = this.preparePagination(DataAccessDriver.getInstance().newUserModel().getTotalUsers());
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
-
-		this.context.put("users", DataAccessDriver.getInstance().newUserModel().selectAll(start ,usersPerPage));
+		
+		//Load all users with your karma
+		List users = DataAccessDriver.getInstance().newUserModel().selectAllWithKarma(start ,usersPerPage);				
+		//List users = DataAccessDriver.getInstance().newUserModel().selectAll(start ,usersPerPage);
+		this.context.put("users", users);
 		this.context.put("moduleAction", "user_list.htm");
 	}
 	

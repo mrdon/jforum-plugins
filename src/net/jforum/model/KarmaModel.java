@@ -46,10 +46,11 @@ import java.util.Map;
 
 import net.jforum.entities.Karma;
 import net.jforum.entities.KarmaStatus;
+import net.jforum.entities.User;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaModel.java,v 1.3 2005/01/21 15:51:22 rafaelsteil Exp $
+ * @version $Id: KarmaModel.java,v 1.4 2005/01/31 19:14:20 franklin_samir Exp $
  */
 public interface KarmaModel
 {
@@ -122,4 +123,6 @@ public interface KarmaModel
 	 * @throws Exception
 	 */
 	public Map getUserVotes(int topicId, int userId) throws Exception;
+	
+	public void getUserTotalKarma(User user) throws Exception;
 }
