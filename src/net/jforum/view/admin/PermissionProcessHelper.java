@@ -57,7 +57,7 @@ import net.jforum.security.RoleValueCollection;
 
 /**
  * @author Rafael Steil
- * @version $Id: PermissionProcessHelper.java,v 1.6 2004/12/27 00:06:09 rafaelsteil Exp $
+ * @version $Id: PermissionProcessHelper.java,v 1.7 2005/01/10 00:03:55 rafaelsteil Exp $
  */
 class PermissionProcessHelper 
 {
@@ -97,7 +97,7 @@ class PermissionProcessHelper
 					paramName = paramName.substring(0, paramName.indexOf('$'));
 					
 					if (isGroup) {
-						if (JForum.getRequest().getParameter("OverrideUser"+ paramName) != null) {
+						if (JForum.getRequest().getParameter("OverrideUser" + paramName) != null) {
 							this.umodel.deleteUserRoleByGroup(id, paramName);
 						}
 					}
@@ -131,13 +131,14 @@ class PermissionProcessHelper
 						}
 						
 						// Allow
-						List allowList = new ArrayList(Arrays.asList(this.getSplitedValues("all"+ paramName))); 
+						List allowList = new ArrayList(Arrays.asList(this.getSplitedValues("all" + paramName))); 
 						allowList.removeAll(Arrays.asList(paramValues));
 						
 						this.addRoleValues(roleValues, allowList.toArray(), PermissionControl.ROLE_ALLOW);
 					}
 					else {
-						this.addRoleValues(roleValues, new String[]{"0"}, PermissionControl.ROLE_ALLOW);
+						this.addRoleValues(roleValues, this.getSplitedValues("all" + paramName), 
+								PermissionControl.ROLE_ALLOW);
 					}
 					
 					Role role = new Role();
@@ -153,14 +154,12 @@ class PermissionProcessHelper
 		String[] allValues = JForum.getRequest().getParameter(paramName).split(";");
 		String[] returnValues = new String[allValues.length];
 		
-		int counter = 0;
-		for (int i = 0; i < allValues.length; i++) {
+		for (int i = 0, counter = 0; i < allValues.length; i++) {
 			if (allValues[i].trim().equals("")) {
 				continue;
 			}
 			
-			returnValues[counter] = allValues[i];
-			counter++;
+			returnValues[counter++] = allValues[i];
 		}
 		
 		return returnValues;
@@ -169,6 +168,11 @@ class PermissionProcessHelper
 	private void addRoleValues(RoleValueCollection roleValues, Object[] allValues, int permissionType)
 	{
 		for (int i = 0; i < allValues.length; i++) {
+			String value = (String)allValues[i];
+			if (value == null || value.equals("")) {
+				continue;
+			}
+
 			roleValues.add(this.createRoleValue((String)allValues[i], permissionType));
 		}
 	}

@@ -59,23 +59,27 @@ import net.jforum.util.preferences.SystemGlobals;
  * SystemGlobals.properties.
  * 
  * @author Rafael Steil
- * @version $Id: DataSourceConnection.java,v 1.1 2005/01/08 15:21:57 rafaelsteil Exp $
+ * @version $Id: DataSourceConnection.java,v 1.2 2005/01/10 00:03:56 rafaelsteil Exp $
  */
 public class DataSourceConnection extends DBConnection
 {
+	private DataSource ds;
+	
 	/**
 	 * @see net.jforum.DBConnection#init()
 	 */
-	public void init() throws Exception {}
+	public void init() throws Exception 
+	{
+		Context context = new InitialContext();
+		this.ds = (DataSource)context.lookup(SystemGlobals.getValue(
+				ConfigKeys.DATABASE_DATASOURCE_NAME));
+	}
 	/**
 	 * @see net.jforum.DBConnection#getConnection()
 	 */
 	public Connection getConnection() throws Exception
 	{
-		Context context = new InitialContext();
-		DataSource ds = (DataSource)context.lookup(SystemGlobals.getValue(
-				ConfigKeys.DATABASE_DATASOURCE_NAME));
-		return ds.getConnection();
+		return this.ds.getConnection();
 	}
 
 	/**
