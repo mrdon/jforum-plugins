@@ -79,7 +79,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.26 2004/11/14 16:28:45 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.28 2004/11/17 00:02:13 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -190,7 +190,7 @@ public class PostAction extends Command
         JForum.getContext().put("totalPages", new Double(Math.ceil( (double)totalPosts / (double)count )));
         JForum.getContext().put("recordsPerPage", new Integer(count));
         JForum.getContext().put("totalRecords", new Integer(totalPosts));
-        JForum.getContext().put("thisPage", new Double(Math.ceil( (double)(start+1) / (double)count )));
+        JForum.getContext().put("thisPage", new Double(Math.ceil( (double)(start + 1) / (double)count)));
         JForum.getContext().put("start", new Integer(start));
     }
 
@@ -563,7 +563,7 @@ public class PostAction extends Command
 			return newStart;
 		} 
 		else {
-		return currentStart;
+			return currentStart;
 		}
 	}
 

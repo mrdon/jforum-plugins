@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -56,7 +56,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicSpammer.java,v 1.8 2004/11/05 03:29:52 rafaelsteil Exp $
+ * @version $Id: TopicSpammer.java,v 1.9 2004/11/17 00:02:13 rafaelsteil Exp $
  */
 public class TopicSpammer extends Spammer 
 {
@@ -74,7 +74,7 @@ public class TopicSpammer extends Spammer
 		// Make the topic url
 		String page = "";
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
-		if (topic.getTotalReplies() + 1 > postsPerPage) {
+		if (topic.getTotalReplies() > postsPerPage) {
 			page += (((topic.getTotalReplies() / postsPerPage)) * postsPerPage) +"/";
 		}
 		

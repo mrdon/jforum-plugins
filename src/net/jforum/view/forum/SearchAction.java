@@ -63,7 +63,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.9 2004/11/15 12:05:34 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.10 2004/11/16 23:58:50 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -178,7 +178,8 @@ public class SearchAction extends Command
 		JForum.getContext().put("recordsPerPage", new Integer(recordsPerPage));
 		JForum.getContext().put("postsPerPage", new Integer(SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE)));
 		JForum.getContext().put("totalRecords", new Integer(totalTopics));
-		JForum.getContext().put("thisPage", new Integer(start));
+		JForum.getContext().put("thisPage", new Double(Math.ceil( (double)(start + 1) / (double)recordsPerPage)));
+		JForum.getContext().put("start", new Integer(start));
 		
 		String openModeration = JForum.getRequest().getParameter("openModeration");
 		if (openModeration == null) {

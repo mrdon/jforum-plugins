@@ -358,7 +358,7 @@ TopicListing.selectTopicData = SELECT topic_id, topic_title, topic_views, topic_
 SmiliesModel.addNew = INSERT INTO jforum_smilies ( code, url, disk_name) VALUES (?, ?, ?)
 SmiliesModel.delete = DELETE FROM jforum_smilies WHERE smilie_id = ?
 SmiliesModel.update = UPDATE jforum_smilies SET code = ?, url = ?, disk_name =? WHERE smilie_id = ?
-SmiliesModel.selectAll = SELECT * FROM jforum_smilies
+SmiliesModel.selectAll = SELECT * FROM jforum_smilies ORDER BY smilie_id
 SmiliesModel.selectById = SELECT * FROM jforum_smilies WHERE smilie_id = ?
 
 # ####################
