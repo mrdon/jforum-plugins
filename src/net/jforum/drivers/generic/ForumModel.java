@@ -48,6 +48,7 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import net.jforum.JForum;
@@ -60,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: ForumModel.java,v 1.16 2005/01/31 20:10:41 rafaelsteil Exp $
+ * @version $Id: ForumModel.java,v 1.17 2005/02/01 13:14:15 rafaelsteil Exp $
  */
 public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel {
 	private Connection conn;
@@ -397,7 +398,7 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel 
 		while (rs.next()) {
 			Topic t = new Topic();
 			t.setId(rs.getInt("topic_id"));
-			t.setTime(rs.getTimestamp(1));
+			t.setTime(new Date(rs.getTimestamp(1).getTime()));
 			
 			l.add(t);
 		}

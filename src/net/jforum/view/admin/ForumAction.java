@@ -72,7 +72,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.12 2005/01/31 20:10:43 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.13 2005/02/01 13:14:16 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -112,18 +112,29 @@ public class ForumAction extends Command
 	public void editSave() throws Exception
 	{
 		Forum f = new Forum(ForumRepository.getForum(this.request.getIntParameter("forum_id")));
+		boolean moderated = f.isModerated();
+		int categoryId = f.getCategoryId();
+		
 		f.setDescription(this.request.getParameter("description"));
 		f.setIdCategories(this.request.getIntParameter("categories_id"));
 		f.setName(this.request.getParameter("forum_name"));
-
-		boolean moderated = f.isModerated();
 		f.setModerated("1".equals(this.request.getParameter("moderate")));
 
 		DataAccessDriver.getInstance().newForumModel().update(f);
-		ForumRepository.reloadForum(f.getId());
 
 		if (moderated != f.isModerated()) {
 			new ModerationCommon().setTopicModerationStatus(f.getId(), f.isModerated());
+		}
+		
+		if (categoryId != f.getCategoryId()) {
+			f.setIdCategories(categoryId);
+			ForumRepository.removeForum(f);
+			
+			f.setIdCategories(this.request.getIntParameter("categories_id"));
+			ForumRepository.addForum(f);
+		}
+		else {
+			ForumRepository.reloadForum(f.getId());
 		}
 		
 		this.list();
