@@ -63,7 +63,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.8 2004/11/13 20:12:25 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.9 2004/11/15 12:05:34 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -161,7 +161,7 @@ public class SearchAction extends Command
 		JForum.getContext().put("fr", new ForumRepository());
 		
 		JForum.getContext().put("topics", topics);
-		JForum.getContext().put("allCategories", ForumCommon.getAllCategoriesAndForums());
+		JForum.getContext().put("categories", ForumRepository.getAllCategories());
 		JForum.getContext().put("moduleAction", "search_result.htm");
 		
 		// Pagination
