@@ -57,7 +57,7 @@ import net.jforum.entities.User;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.7 2004/08/03 14:30:41 pieter2 Exp $
+ * @version $Id: UserModel.java,v 1.8 2004/08/07 09:48:30 pieter2 Exp $
  */
 public interface UserModel 
 {
@@ -70,6 +70,16 @@ public interface UserModel
 	 * @see #selectAll
 	 */
 	public User selectById(int userId) throws Exception;
+	
+	/**
+	 * Gets a specific <code>User</code>.
+	 * 
+	 * @param username The User name to search
+	 * @return <code>User</code>object containing all the information
+	 * @throws Exception
+	 * @see #selectAll
+	 */
+	public User selectByName(String username) throws Exception;
 	
 	/**
 	 * Gets all users

@@ -51,15 +51,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 public class JdbcLoginServer implements LoginServer {
-	private static final String CONF_CONNECTION = "loginServer.database.connection.string";
-	
-	private static final String CONF_QUERY_VALIDATE_LOGIN = "loginServer.database.query.validateLogin";
-	private static final String CONF_QUERY_SELECT_NAME = "loginServer.database.query.selectName";
-	private static final String CONF_QUERY_SELECT_GROUPS = "loginServer.database.query.selectGroups";
-
 	// Because we do not expect hundreds of logins each second, we only need
 	// a single connection instead of a full-fledged connection pool
 	private Connection connection;
@@ -69,11 +64,11 @@ public class JdbcLoginServer implements LoginServer {
 	private PreparedStatement selectGroupsStatement;
 	
 	public JdbcLoginServer() throws SQLException {
-		connection = DriverManager.getConnection(SystemGlobals.getValue(CONF_CONNECTION));
+		connection = DriverManager.getConnection(SystemGlobals.getValue(ConfigKeys.EXTERNAL_CONNECTION));
 		
-		validateLoginStatement = connection.prepareStatement(SystemGlobals.getValue(CONF_QUERY_VALIDATE_LOGIN));
-		selectNameStatement = connection.prepareStatement(SystemGlobals.getValue(CONF_QUERY_SELECT_NAME));
-		selectGroupsStatement = connection.prepareStatement(SystemGlobals.getValue(CONF_QUERY_SELECT_GROUPS));
+		validateLoginStatement = connection.prepareStatement(SystemGlobals.getValue(ConfigKeys.EXTERNAL_QUERY_VALIDATE_LOGIN));
+		selectNameStatement = connection.prepareStatement(SystemGlobals.getValue(ConfigKeys.EXTERNAL_QUERY_SELECT_NAME));
+		selectGroupsStatement = connection.prepareStatement(SystemGlobals.getValue(ConfigKeys.EXTERNAL_QUERY_SELECT_GROUPS));
 	}
 	
 	synchronized public int validateLogin(String name, String password) throws SQLException {

@@ -45,6 +45,7 @@ package net.jforum.drivers.generic;
 import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.7 2004/08/03 14:30:42 pieter2 Exp $
+ * @version $Id: UserModel.java,v 1.8 2004/08/07 09:48:31 pieter2 Exp $
  */
 public class UserModel extends AutoKeys implements net.jforum.model.UserModel 
 {
@@ -74,38 +75,9 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		User u = new User();
 		
 		if (rs.next()) {
-			u.setAim(rs.getString("user_aim"));
-			u.setAvatar(rs.getString("user_avatar"));
-			u.setGender(rs.getString("gender"));
-			u.setRankId(rs.getInt("rank_id"));
-			u.setThemeId(rs.getInt("themes_id"));
-			u.setPrivateMessagesEnabled(rs.getString("user_allow_pm").equals("1"));
-			u.setNotifyOnMessagesEnabled(rs.getString("user_notify").equals("1"));
-			u.setViewOnlineEnabled(rs.getString("user_viewonline").equals("1"));
-			u.setPassword(rs.getString("user_password"));
-			u.setViewEmailEnabled(rs.getString("user_viewemail").equals("1"));
-			u.setViewOnlineEnabled(rs.getString("user_allow_viewonline").equals("1"));
-			u.setAvatarEnabled(rs.getString("user_allowavatar").equals("1"));
-			u.setBbCodeEnabled(rs.getString("user_allowbbcode").equals("1"));
-			u.setHtmlEnabled(rs.getString("user_allowhtml").equals("1"));
-			u.setSmiliesEnabled(rs.getString("user_allowsmilies").equals("1"));
-			u.setEmail(rs.getString("user_email"));
-			u.setFrom(rs.getString("user_from"));
-			u.setIcq(rs.getString("user_icq"));
-			u.setId(userId);
-			u.setInterests(rs.getString("user_interests"));
-			u.setLastVisit(rs.getInt("user_lastvisit"));
-			u.setOccupation(rs.getString("user_occ"));
-			u.setTotalPosts(rs.getInt("user_posts"));
-			u.setRegistrationDate(rs.getString("user_regdate"));
-			u.setSignature(rs.getString("user_sig"));
-			u.setWebSite(rs.getString("user_website"));
-			u.setYim(rs.getString("user_yim"));
-			u.setUsername(rs.getString("username"));
-			u.setAttachSignatureEnabled(rs.getInt("user_attachsig") == 1);
-			u.setMsnm(rs.getString("user_msnm"));
+			fillUserFromResultSet(u, rs);
 			u.setPrivateMessagesCount(rs.getInt("private_messages"));
-			
+
 			// User groups
 			p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectGroups"));
 			p.setInt(1, userId);
@@ -124,6 +96,58 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		p.close();
 
 		return u;
+	}
+
+	public User selectByName(String username) throws Exception 
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectByName"));
+		p.setString(1, username);
+		
+		ResultSet rs = p.executeQuery();
+		User u = null;
+		
+		if (rs.next()) {
+			u = new User();
+			fillUserFromResultSet(u, rs);
+		}
+		
+		rs.close();
+		p.close();
+
+		return u;
+	}
+
+	private void fillUserFromResultSet(User u, ResultSet rs) throws SQLException {
+		u.setAim(rs.getString("user_aim"));
+		u.setAvatar(rs.getString("user_avatar"));
+		u.setGender(rs.getString("gender"));
+		u.setRankId(rs.getInt("rank_id"));
+		u.setThemeId(rs.getInt("themes_id"));
+		u.setPrivateMessagesEnabled(rs.getString("user_allow_pm").equals("1"));
+		u.setNotifyOnMessagesEnabled(rs.getString("user_notify").equals("1"));
+		u.setViewOnlineEnabled(rs.getString("user_viewonline").equals("1"));
+		u.setPassword(rs.getString("user_password"));
+		u.setViewEmailEnabled(rs.getString("user_viewemail").equals("1"));
+		u.setViewOnlineEnabled(rs.getString("user_allow_viewonline").equals("1"));
+		u.setAvatarEnabled(rs.getString("user_allowavatar").equals("1"));
+		u.setBbCodeEnabled(rs.getString("user_allowbbcode").equals("1"));
+		u.setHtmlEnabled(rs.getString("user_allowhtml").equals("1"));
+		u.setSmiliesEnabled(rs.getString("user_allowsmilies").equals("1"));
+		u.setEmail(rs.getString("user_email"));
+		u.setFrom(rs.getString("user_from"));
+		u.setIcq(rs.getString("user_icq"));
+		u.setId(rs.getInt("user_id"));
+		u.setInterests(rs.getString("user_interests"));
+		u.setLastVisit(rs.getInt("user_lastvisit"));
+		u.setOccupation(rs.getString("user_occ"));
+		u.setTotalPosts(rs.getInt("user_posts"));
+		u.setRegistrationDate(rs.getString("user_regdate"));
+		u.setSignature(rs.getString("user_sig"));
+		u.setWebSite(rs.getString("user_website"));
+		u.setYim(rs.getString("user_yim"));
+		u.setUsername(rs.getString("username"));
+		u.setAttachSignatureEnabled(rs.getInt("user_attachsig") == 1);
+		u.setMsnm(rs.getString("user_msnm"));
 	}
 
 	/** 
@@ -183,18 +207,21 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 	{
 		PreparedStatement p = this.getStatementForAutoKeys("UserModel.addNew");
 		
-		p.setString(1, user.getUsername());
-		p.setString(2, user.getPassword());
-		p.setString(3, user.getEmail());
-		p.setString(4, Long.toString(System.currentTimeMillis()));
+		initNewUser(user, p);
 		
-		// <PO:external> When id already set, use that instead! 
 		int id = this.executeAutoKeysQuery(p);
 		p.close();
 		
 		this.addToGroup(id, new int[] { SystemGlobals.getIntValue(ConfigKeys.DEFAULT_USER_GROUP) });
 				
 		return id;
+	}
+
+	private void initNewUser(User user, PreparedStatement p) throws SQLException {
+		p.setString(1, user.getUsername());
+		p.setString(2, user.getPassword());
+		p.setString(3, user.getEmail());
+		p.setString(4, Long.toString(System.currentTimeMillis()));
 	}
 
 	/** 
@@ -205,13 +232,10 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 	{
 		PreparedStatement p = this.getStatementForAutoKeys("UserModel.addNewWithId");
 		
-		p.setInt(1, user.getId());
-		p.setString(2, user.getUsername());
-		p.setString(3, user.getPassword());
-		p.setString(4, user.getEmail());
-		p.setString(5, Long.toString(System.currentTimeMillis()));
+		initNewUser(user, p);
+		p.setInt(5, user.getId());
 		
-		int id = this.executeAutoKeysQuery(p);
+		p.executeUpdate();
 		p.close();
 	}
 

@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author pieter
-* @version $Id: ConfigKeys.java,v 1.9 2004/08/03 14:30:42 pieter2 Exp $
+* @version $Id: ConfigKeys.java,v 1.10 2004/08/07 09:48:30 pieter2 Exp $
 */
 
 public class ConfigKeys {
@@ -132,6 +132,13 @@ public class ConfigKeys {
 
 	public static final String LOGIN_MODE = "loginMode";
 	public static final String LOGIN_SERVER_CLASS = "loginServer.class";
+
+	public static final String EXTERNAL_CONNECTION = "external.database.connection.string";
+	public static final String EXTERNAL_QUERY_VALIDATE_LOGIN = "external.database.query.validateLogin";
+	public static final String EXTERNAL_QUERY_SELECT_NAME = "external.database.query.selectName";
+	public static final String EXTERNAL_QUERY_SELECT_GROUPS = "external.database.query.selectGroups";
+	public static final String EXTERNAL_UNIQUE_NAMES = "external.uniqueNames";
+	
 
 	private ConfigKeys() {
 	}

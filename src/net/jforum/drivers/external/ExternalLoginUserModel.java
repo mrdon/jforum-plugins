@@ -45,13 +45,17 @@ package net.jforum.drivers.external;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import net.jforum.entities.Group;
 import net.jforum.entities.User;
 import net.jforum.model.UserModel;
 import net.jforum.util.MD5;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 public class ExternalLoginUserModel implements UserModel {
 	private UserModel delegateUserModel;
@@ -122,6 +126,10 @@ public class ExternalLoginUserModel implements UserModel {
 		return delegateUserModel.selectById(userId);
 	}
 	
+	public User selectByName(String username) throws Exception {
+		return delegateUserModel.selectByName(username);
+	}
+	
 	public void setActive(int userId, boolean active) throws Exception {
 		delegateUserModel.setActive(userId, active);
 	}
@@ -154,8 +162,6 @@ public class ExternalLoginUserModel implements UserModel {
 			System.err.print(groups[i] + ",");
 		}
 		System.err.println();
-		
-		// TODO: check for duplicate usernames
 		
 		String cryptedPassword = MD5.crypt(password);
 		
@@ -202,9 +208,41 @@ public class ExternalLoginUserModel implements UserModel {
 	private void checkNamePasswordChange(User user, String username, String cryptedPassword) throws Exception {
 		String oldName = user.getUsername();
 		String oldPassword = user.getPassword();
-		if (!username.equals(oldName) || !cryptedPassword.equals(oldPassword)) {
+		
+		boolean userChanged = false;
+		
+		if (!username.equals(oldName)) {
+			if (SystemGlobals.getBoolValue(ConfigKeys.EXTERNAL_UNIQUE_NAMES)) {
+				updateName(username, new HashSet());
+			}
 			user.setUsername(username);
+			userChanged = true;
+		}
+
+		if (!cryptedPassword.equals(oldPassword)) {
 			user.setPassword(cryptedPassword);
+			userChanged = true;
+		}
+		
+		if (userChanged) {
+			update(user);
+		}
+	}
+	
+	private void updateName(String username, Set names) throws Exception {
+		User user = selectByName(username);
+		if (user != null) {
+			String newName = loginServer.getName(user.getId());
+			if (newName.equals(username)) {
+				throw new RuntimeException("duplicate username in external login server: " + username);
+			}
+			if (names.contains(newName)) {
+				throw new RuntimeException("cyclic duplicate username in external login server: " + newName);
+			}
+			names.add(newName);
+			updateName(newName, names);
+			user.setUsername(newName);
+			System.err.println("**** " + username + " has been changed into " + newName);
 			update(user);
 		}
 	}
