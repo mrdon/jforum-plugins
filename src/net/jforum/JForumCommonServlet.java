@@ -73,7 +73,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumCommonServlet.java,v 1.8 2004/10/10 16:46:26 rafaelsteil Exp $
+ * @version $Id: JForumCommonServlet.java,v 1.9 2004/10/12 06:51:43 marcwick Exp $
  */
 public class JForumCommonServlet extends HttpServlet {
     private static Properties modulesMapping;
@@ -341,6 +341,6 @@ public class JForumCommonServlet extends HttpServlet {
      * @return
      */
     public static void setRedirect(String redirect) {
-        ((DataHolder) localData.get()).setRedirectTo(redirect);
+        ((DataHolder) localData.get()).setRedirectTo(getResponse().encodeRedirectURL(redirect));
     }
 }

@@ -23,7 +23,7 @@
 			<table cellspacing="0" cellpadding="0" width="100%" border="0">
 				<tr>
 					<td>
-						<a href="${contextPath}/forums/list${extension}"><img src="${contextPath}/templates/${templateName}/images/logo.jpg" width="180" height="129" vspace="1" border="0"></a>
+						<a href="${JForumContext.encodeURL("/forums/list")}"><img src="${contextPath}/templates/${templateName}/images/logo.jpg" width="180" height="129" vspace="1" border="0"></a>
 					</td>
 					 
 					<td width="100%" align="center" valign="center">
@@ -32,11 +32,11 @@
 							<tr>
 								<td vAlign="top" nowrap="nowrap" align="middle">&nbsp;
 									<img src="${contextPath}/templates/${templateName}/images/icon_mini_search.gif" width="12" height="13" />
-									<span class="mainmenu"><a id="search" class="mainmenu" href="${contextPath}/search/filters${extension}"><b>${I18n.getMessage("ForumBase.search")}</b></a> &nbsp;
+									<span class="mainmenu"><a id="search" class="mainmenu" href="${JForumContext.encodeURL("/search/filters")}"><b>${I18n.getMessage("ForumBase.search")}</b></a> &nbsp;
 			
 									<#if logged?default(false)>
-									<a id="myprofile" class="mainmenu" href="${contextPath}/user/edit/${session.userId}${extension}"><img src="${contextPath}/templates/${templateName}/images/icon_mini_profile.gif" width="12" height="13" border="0" /> ${I18n.getMessage("ForumBase.profile")}</a>&nbsp; 
-									<a id="privatemessages" class="mainmenu" href="${contextPath}/pm/inbox${extension}"><img src="${contextPath}/templates/${templateName}/images/icon_mini_message.gif" width="12" height="13" border="0"/>
+									<a id="myprofile" class="mainmenu" href="${JForumContext.encodeURL("/user/edit/${session.userId}")}"><img src="${contextPath}/templates/${templateName}/images/icon_mini_profile.gif" width="12" height="13" border="0" /> ${I18n.getMessage("ForumBase.profile")}</a>&nbsp; 
+									<a id="privatemessages" class="mainmenu" href="${JForumContext.encodeURL("/pm/inbox")}"><img src="${contextPath}/templates/${templateName}/images/icon_mini_message.gif" width="12" height="13" border="0"/>
 										<#if (session.privateMessages > 0)>
 											${I18n.getMessage("ForumBase.newPm")}: (${session.privateMessages})
 										<#else>
@@ -46,13 +46,13 @@
 									</span>
 									</#if>
 			
-									<span class="mainmenu"> <img src="${contextPath}/templates/${templateName}/images/icon_mini_groups.gif" width="12" height="13" />&nbsp;<a id="backtosite" class="mainmenu" href="${contextPath}/index.htm">${I18n.getMessage("ForumBase.backToSite")}</a>&nbsp;
+									<span class="mainmenu"> <img src="${contextPath}/templates/${templateName}/images/icon_mini_groups.gif" width="12" height="13" />&nbsp;<a id="backtosite" class="mainmenu" href="${JForumContext.encodeURL("/index.htm","")}">${I18n.getMessage("ForumBase.backToSite")}</a>&nbsp;
 									
 									<#if logged?default(false)>
-									<a id="logout" class="mainmenu" href="${contextPath}/user/logout${extension}"><img src="${contextPath}/templates/${templateName}/images/icon_mini_login.gif" width="12" height="13" border="0" /> ${I18n.getMessage("ForumBase.logout")} [${session.username}] </a></span></td>
+									<a id="logout" class="mainmenu" href="${JForumContext.encodeURL("/user/logout")}"><img src="${contextPath}/templates/${templateName}/images/icon_mini_login.gif" width="12" height="13" border="0" /> ${I18n.getMessage("ForumBase.logout")} [${session.username}] </a></span></td>
 									<#else>
-									<a id="register" class="mainmenu" href="${contextPath}/user/insert${extension}"><img src="${contextPath}/templates/${templateName}/images/icon_mini_register.gif" width="12" height="13" border="0" /> ${I18n.getMessage("ForumBase.register")}</a>&nbsp/&nbsp;</span>
-									<a id="login" class="mainmenu" href="${contextPath}/user/login${extension}"><img src="${contextPath}/templates/${templateName}/images/icon_mini_login.gif" width="12" height="13" border="0" /> ${I18n.getMessage("ForumBase.login")}</a>&nbsp; </span>
+									<a id="register" class="mainmenu" href="${JForumContext.encodeURL("/user/insert")}"><img src="${contextPath}/templates/${templateName}/images/icon_mini_register.gif" width="12" height="13" border="0" /> ${I18n.getMessage("ForumBase.register")}</a>&nbsp/&nbsp;</span>
+									<a id="login" class="mainmenu" href="${JForumContext.encodeURL("/user/login")}"><img src="${contextPath}/templates/${templateName}/images/icon_mini_login.gif" width="12" height="13" border="0" /> ${I18n.getMessage("ForumBase.login")}</a>&nbsp; </span>
 									</#if>
 								</td>
 							</tr>
@@ -68,7 +68,7 @@
 	
 	<tr>
 		<td align='center'>
-			<#if session?exists && session.isAdmin()><span class="gen"><a id="adminpanel" href='${contextPath}/admBase/login${extension}'>Admin Control Panel</a></span></#if>
+			<#if session?exists && session.isAdmin()><span class="gen"><a id="adminpanel" href='${JForumContext.encodeURL("/admBase/login")}'>Admin Control Panel</a></span></#if>
 		</td>
 	</tr>
 

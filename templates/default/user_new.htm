@@ -37,7 +37,7 @@ function validateRegistrationForm(f)
 	return true;
 }
 </script>
-<form id="formregister" accept-charset="${encoding}" name="formregister" action="${contextPath}/jforum${extension}" method="post" onsubmit="return validateRegistrationForm(this);">
+<form id="formregister" accept-charset="${encoding}" name="formregister" action="${JForumContext.encodeURL("/jforum")}" method="post" onsubmit="return validateRegistrationForm(this);">
 <input type="hidden" name="action" value="${action}" />
 <input type="hidden" name="module" value="${moduleName}" />
 <input type="hidden" name="securityHash" value="${securityHash}" />
@@ -45,7 +45,7 @@ function validateRegistrationForm(f)
 <table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
 	<tr>
 		<td align="left">
-			<span class="nav"><a class="nav" href="${contextPath}/forums/list${extension}">${I18n.getMessage("ForumListing.forumIndex")}</a></span>
+			<span class="nav"><a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a></span>
 		</td>
 	</tr>
 </table>

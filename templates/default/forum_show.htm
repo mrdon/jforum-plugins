@@ -10,7 +10,7 @@
   <TR>
     <TD class=bodyline valign="top">
 		<#if moderator>
-      	<form accept-charset="${encoding}" action="${contextPath}/jforum${extension}" method="post" name="form1">
+      	<form accept-charset="${encoding}" action="${JForumContext.encodeURL("jforum")}" method="post" name="form1">
 	  	<input type="hidden" name="action" value="doModeration">
 		<input type="hidden" name="module" value="${moduleName}">
 		<input type="hidden" name="securityHash" value="${securityHash}">
@@ -20,7 +20,7 @@
       <TABLE cellSpacing=2 cellPadding=2 width="100%" align=center border=0>
         <TBODY>
         <TR>
-          <TD vAlign=bottom align=left colSpan=2><a class="maintitle" href="${contextPath}/forums/show/${forum.id}${extension}">${forum.name}</a><BR>
+          <TD vAlign=bottom align=left colSpan=2><a class="maintitle" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name}</a><BR>
             <SPAN class=gensmall><!--<B><A href="">${I18n.getMessage("ForumIndex.moderators")}</A></B>--></SPAN></TD>
           <TD vAlign=bottom noWrap align=right>
 		  
@@ -31,14 +31,14 @@
         <TR>
 			<#if !readonly>
 				<TD vAlign=center align=left width="50">
-					<A href="${contextPath}/jforum${extension}?module=posts&action=insert&forum_id=${forum.id}"><img src="${contextPath}/templates/${templateName}/images/post.gif" border="0"></A>
+					<A href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&forum_id=${forum.id}","")}"><img src="${contextPath}/templates/${templateName}/images/post.gif" border="0"></A>
 				</TD>
 			<#else>
 				<#assign colspan = "2"/>
 			</#if>
 
 			<TD class=nav valign=center align=left width="100%" colspan="${colspan?default("")}">
-				<SPAN class=nav>&nbsp;&nbsp;&nbsp;<A class=nav href="${contextPath}/forums/list${extension}">${I18n.getMessage("ForumListing.forumIndex")}</A> -&gt; <a class="nav" href="${contextPath}/forums/show/${forum.id}${extension}">${forum.name}</a></SPAN>
+				<SPAN class=nav>&nbsp;&nbsp;&nbsp;<A class=nav href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</A> -&gt; <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name}</a></SPAN>
 			</TD>
 
           <TD class=nav vAlign=bottom noWrap align=right>
@@ -90,21 +90,21 @@
           <TD class=row2 vAlign=center align=middle><SPAN 
             class=postdetails>${topic.totalReplies}</SPAN></TD>
           <TD class=row3 vAlign=center align=middle>
-		  	<SPAN class=name><a href="${contextPath}/user/profile/${topic.postedBy.id}${extension}">${topic.postedBy.username}</a></SPAN>
+		  	<SPAN class=name><a href="${JForumContext.encodeURL("/user/profile/${topic.postedBy.id}")}">${topic.postedBy.username}</a></SPAN>
 		</TD>
           <TD class=row2 vAlign=center align=middle>
 		  <SPAN class=postdetails>${topic.totalViews}</SPAN></TD>
           <TD class=row3Right vAlign=center noWrap align=middle>
 		  <#if (topic.lastPostTime?length > 0)>
 			  <SPAN class=postdetails>${topic.lastPostTime}<BR>
-			  <a href="${contextPath}/user/profile/${topic.lastPostBy.id}${extension}">${topic.lastPostBy.username}</a>
+			  <a href="${JForumContext.encodeURL("/user/profile/${topic.lastPostBy.id}")}">${topic.lastPostBy.username}</a>
 
 				<#assign startPage = ""/>
 				<#if (topic.totalReplies + 1 > postsPerPage?number)>
 					<#assign startPage = ((topic.totalReplies / postsPerPage?number)?int * postsPerPage?number) +"/"/>
 				</#if>
 			  
-			  <a href="${contextPath}/posts/list/${startPage}${topic.id}${extension}#${topic.lastPostId}"><img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif" width="18" height="9" border="0"></a></SPAN>
+			  <a href="${JForumContext.encodeURL("/posts/list/${startPage}${topic.id}")}#${topic.lastPostId}"><img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif" width="18" height="9" border="0"></a></SPAN>
 			</#if>
 		 </TD>
 		 <#if moderator && openModeration?default(false)>
@@ -134,7 +134,7 @@
 
 			<TD vAlign=center align=left width="100%" colspan="${colspan?default("0")}">
 				<SPAN class=nav>&nbsp;&nbsp;&nbsp;
-		  		<A class=nav href="${contextPath}/forums/list${extension}">${I18n.getMessage("ForumListing.forumIndex")}</A> -&gt;  <a class="nav" href="${contextPath}/forums/show/${forum.id}${extension}">${forum.name}</a></SPAN>
+		  		<A class=nav href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</A> -&gt;  <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name}</a></SPAN>
 			</TD>
           <TD vAlign=center noWrap align=right>   
 		           
