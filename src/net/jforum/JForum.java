@@ -71,6 +71,7 @@ import net.jforum.util.I18n;
 import net.jforum.util.MD5;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.view.forum.common.BannerCommon;
 
 import org.apache.log4j.Logger;
 
@@ -80,7 +81,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.67 2005/03/26 04:10:37 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.68 2005/04/04 18:39:15 samuelyung Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -227,6 +228,7 @@ public class JForum extends JForumCommonServlet
 		JForum.getContext().put("bookmarksEnabled", SecurityRepository.canAccess(SecurityConstants.PERM_BOOKMARKS_ENABLED));
 		JForum.getContext().put("JForumContext", new JForumContext(JForum.getRequest().getContextPath(), 
 				SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION), JForum.getRequest(),JForum.getResponse()));
+		JForum.getContext().put("bannerCommon", new BannerCommon());
 	}
 	
 	public void service(HttpServletRequest req, HttpServletResponse response) throws IOException, ServletException

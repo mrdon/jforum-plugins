@@ -53,7 +53,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Samuel Yung
- * @version $Id: GenericBannerDAO.java,v 1.1 2005/04/01 14:35:32 samuelyung Exp $
+ * @version $Id: GenericBannerDAO.java,v 1.2 2005/04/04 18:32:49 samuelyung Exp $
  */
 public class GenericBannerDAO extends AutoKeys implements net.jforum.dao.
 	BannerDAO
@@ -187,5 +187,27 @@ public class GenericBannerDAO extends AutoKeys implements net.jforum.dao.
 		p.setInt(10, b.getType());
 		p.setInt(11, b.getWidth());
 		p.setInt(12, b.getHeight());
+	}
+
+	public List selectActiveBannerByPlacement(int placement) throws
+		Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				      SystemGlobals.getSql(
+				      "BannerDAO.selectActiveBannerByPlacement"));
+		p.setInt(1, placement);
+
+		List l = new ArrayList();
+
+		ResultSet rs = p.executeQuery();
+		while(rs.next())
+		{
+			l.add(this.getBanner(rs));
+		}
+
+		rs.close();
+		p.close();
+
+		return l;
 	}
 }

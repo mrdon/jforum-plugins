@@ -52,7 +52,7 @@ import net.jforum.util.preferences.TemplateKeys;
  * ViewHelper class for banner administration.
  *
  * @author Samuel Yung
- * @version $Id: BannerAction.java,v 1.1 2005/04/01 14:42:41 samuelyung Exp $
+ * @version $Id: BannerAction.java,v 1.2 2005/04/04 18:40:20 samuelyung Exp $
  */
 public class BannerAction extends AdminCommand
 {
@@ -145,6 +145,8 @@ public class BannerAction extends AdminCommand
 		b.setPlacement(Integer.parseInt(request.getParameter(
 			"placement")));
 		b.setWeight(Integer.parseInt(request.getParameter("weight")));
+		b.setViews(Integer.parseInt(request.getParameter("views")));
+		b.setClicks(Integer.parseInt(request.getParameter("clicks")));
 
 		return b;
 	}

@@ -54,7 +54,7 @@ import net.jforum.entities.Banner;
  * select some specific data.
  *
  * @author Samuel Yung
- * @version $Id: BannerDAO.java,v 1.1 2005/04/01 14:34:07 samuelyung Exp $
+ * @version $Id: BannerDAO.java,v 1.2 2005/04/04 18:33:20 samuelyung Exp $
  */
 public interface BannerDAO
 {
@@ -110,4 +110,13 @@ public interface BannerDAO
 	 * @throws Exception
 	 */
 	public void delete(int bannerId) throws Exception;
+
+	/**
+	 * Select a list of active banners by its placement.
+	 *
+	 * @param placement The placement number
+	 * @throws Exception
+	 */
+	public List selectActiveBannerByPlacement(int placement) throws
+		Exception;
 }

@@ -626,3 +626,10 @@ BannerDAO.update = UPDATE jforum_banner SET name = ?, placement = ?, description
 
 BannerDAO.addNew = INSERT INTO jforum_banner (name, placement, description, clicks, views, url, weight, \
 	active, comment, type, width, height) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+
+BannerDAO.selectActiveBannerByPlacement = SELECT banner_id, name, placement, description, clicks, views, url, \
+	weight, active, comment, type, width, height \
+	FROM jforum_banner \
+	WHERE placement = ? \
+	AND active = 1 \
+	ORDER BY weight ASC
