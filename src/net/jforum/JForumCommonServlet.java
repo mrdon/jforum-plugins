@@ -70,7 +70,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumCommonServlet.java,v 1.26 2005/03/15 18:24:11 rafaelsteil Exp $
+ * @version $Id: JForumCommonServlet.java,v 1.27 2005/03/24 17:45:31 rafaelsteil Exp $
  */
 public class JForumCommonServlet extends HttpServlet {
     protected boolean debug;
@@ -335,6 +335,10 @@ public class JForumCommonServlet extends HttpServlet {
     public static void enableCancelCommit() {
     	((DataHolder)localData.get()).enableCancelcommit();
     }
+	
+	public static boolean isBinaryContent() {
+		return ((DataHolder)localData.get()).isBinaryContent();
+	}
     
     public static boolean cancelCommit() {
     	return ((DataHolder)localData.get()).cancelCommit();
