@@ -31,7 +31,7 @@ UserModel.selectById = SELECT COUNT(pm.privmsgs_to_userid) AS private_messages, 
 								
 UserModel.lastUserRegistered = SELECT TOP 1 user_id, username FROM jforum_users ORDER BY user_regdate DESC
 UserModel.lastGeneratedUserId = SELECT IDENT_CURRENT('jforum_users') AS user_id
-UserModel.selectAllByLimit = user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from FROM jforum_users ORDER BY username
+UserModel.selectAllByLimit = user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website FROM jforum_users ORDER BY username
 
 # #############
 # GroupModel
@@ -176,4 +176,20 @@ PublishUserModel.deleteFromId = DELETE FROM jforum_mmpublish_users WHERE jforum_
 PublishUserModel.deleteFromUuid = DELETE FROM jforum_mmpublish_users WHERE mmpublish_user_uuid = ?
 PublishUserModel.update = UPDATE jforum_mmpublish_users SET mmpublish_user_uuid = ? WHERE jforum_user_id = ?
 PublishUserModel.addNew = INSERT INTO jforum_mmpublish_users (jforum_user_id, mmpublish_user_uuid) VALUES(?,?)
+
+# #############
+# KarmaModel
+# #############
+
+KarmaModel.getMostRatedUserByPeriod = u.user_id, u.username, SUM(post_user_id) AS total, \
+									  COUNT(post_user_id) AS votes_received, user_karma, \
+									  	(SELECT COUNT(from_user_id) AS votes_given \
+										FROM jforum_karma as k2 \
+										WHERE k2.from_user_id = u.user_id) AS votes_given \
+									  FROM jforum_users u, jforum_karma k \
+									  WHERE u.user_id = k.post_user_id \
+									  AND k.rate_date between ? AND ? \
+									  GROUP BY u.user_id, u.username, user_karma
+									  
+KarmaModel.getMostRaterUserByPeriod = NO
 
