@@ -47,6 +47,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.nio.channels.FileChannel;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -82,7 +83,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.25 2005/02/24 15:32:01 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.26 2005/02/24 18:19:12 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -101,6 +102,8 @@ public class InstallAction extends Command
 		this.context.put("dbencoding", this.getFromSession("dbEncoding"));
 		this.context.put("use_pool", this.getFromSession("usePool"));
 		this.context.put("forum_link", this.getFromSession("forumLink"));
+		this.context.put("siteLink", this.getFromSession("siteLink"));
+		this.context.put("dbdatasource", this.getFromSession("dbdatasource"));
 		
 		this.context.put("moduleAction", "install.htm");
 	}
@@ -313,7 +316,8 @@ public class InstallAction extends Command
 			Statement s = conn.createStatement();
 			
 			try {
-				if (query.startsWith("UPDATE") || query.startsWith("INSERT")) {
+				if (query.startsWith("UPDATE") || query.startsWith("INSERT")
+						|| query.startsWith("SET")) {
 					s.executeUpdate(query);
 				}
 				else if (query.startsWith("SELECT")) {
@@ -470,6 +474,16 @@ public class InstallAction extends Command
 		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_ENCODING, encoding);
 	}
 	
+	private void copyFile(String from, String to) throws Exception
+	{
+		FileChannel source = new FileInputStream(new File(from)).getChannel();
+		FileChannel dest =  new FileOutputStream(new File(to)).getChannel();
+		
+		source.transferTo(0, source.size(), dest);
+		source.close();
+		dest.close();
+	}
+	
 	private Connection configureDatabase() throws Exception
 	{
 		String database = this.getFromSession("database");
@@ -493,8 +507,13 @@ public class InstallAction extends Command
 		if (database.startsWith("mysql")) {
 			if ("mysql41".equals(database)) {
 				String path = SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/database/mysql";
+				
+				this.copyFile(path + "/mysql_41.sql", path + "/mysql_41-bkp.sql");
+				
 				new File(path + "/mysql.sql").delete();
 				new File(path + "/mysql_41.sql").renameTo(new File(path + "/mysql.sql"));
+				
+				this.copyFile(path + "/mysql_41-bkp.sql", path + "/mysql_41.sql");
 			}
 			
 			database = "mysql";
