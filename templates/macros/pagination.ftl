@@ -1,24 +1,23 @@
-<#macro littlePostPagination topicId postsPerPage totalPages totalReplies>
+<#macro littlePostPagination topicId postsPerPage totalReplies>
 	[ <img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif"> ${I18n.getMessage("goToPage")}: 
 
+	<#assign totalPages = (totalReplies+1)/postsPerPage />
+	<#if (((totalReplies+1)%postsPerPage) != 0)>
+		<#assign totalPages = totalPages +1/>
+	</#if>
+	
 	<#list 0 .. totalPages - 1 as page>
 		<#assign start = postsPerPage * page/>
 		<#assign nextPage = page + 1/>
-
-		<#assign coma = ","/>
-		<#if (totalPages == 1)>
-			<#if page == totalPages>
+		
+		<#if ( totalPages?string != nextPage?string )>
+				<#assign coma = ","/>
+		<#else>
 				<#assign coma = ""/>
-			</#if>
 		</#if>
 
 		<a href="${contextPath}/posts/list/${start}/${topicId}.page">${nextPage}</a>${coma}
 	</#list>
-
-	<#if (postsPerPage * totalPages  != totalReplies)>
-		<#assign start = postsPerPage * totalPages>
-		<a href="${contextPath}/posts/list/${start}/${topicId}.page">${totalPages + 1}</a>
-	</#if>
 
 	]
 </#macro>
