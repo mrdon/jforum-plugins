@@ -251,7 +251,7 @@ function validatePostForm(f)
 <input type="hidden" name="module" value="${moduleName}">
 <input type="hidden" name="securityHash" value="${securityHash}">
 <input type="hidden" name="forum_id" value="${forum.id}">
-<input type="hidden" name="start" value="${start?default(0)}">
+<input type="hidden" name="start" value="${start?default("")}">
 
 <#if post?exists && !isNewPost>
 <input type="hidden" name="post_id" value="${post.id}">

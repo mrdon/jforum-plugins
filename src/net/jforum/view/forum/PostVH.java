@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: PostVH.java,v 1.11 2004/05/04 00:59:36 rafaelsteil Exp $
+ * $Id: PostVH.java,v 1.12 2004/05/04 01:06:38 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 
@@ -383,7 +383,7 @@ public class PostVH extends Command
 			
 			String path = JForum.getRequest().getContextPath() +"/posts/list/";
 			String start = JForum.getRequest().getParameter("start");
-			if (start != null) {
+			if (start != null && !start.equals("0")) {
 				path += start +"/";
 			}
 			
@@ -494,7 +494,7 @@ public class PostVH extends Command
 			String path = JForum.getRequest().getContextPath() +"/posts/list/";
 
 			String start = JForum.getRequest().getParameter("start");
-			if (start != null) {
+			if (start != null && !start.equals("0")) {
 				path += start +"/";
 			}
 
