@@ -89,7 +89,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.67 2005/03/03 16:49:06 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.68 2005/03/04 14:14:48 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -444,7 +444,7 @@ public class PostAction extends Command {
 		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
 
 		Post p = pm.selectById(this.request.getIntParameter("post_id"));
-		p = PostCommon.fillPostFromRequest(p);
+		p = PostCommon.fillPostFromRequest(p, true);
 
 		// The user wants to preview the message before posting it?
 		if (this.request.getParameter("preview") != null) {

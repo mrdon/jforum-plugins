@@ -70,7 +70,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.11 2005/03/04 14:14:47 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.12 2005/03/04 14:15:22 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -241,9 +241,9 @@ public class PostCommon
 		p.setBbCodeEnabled(JForum.getRequest().getParameter("disable_bbcode") != null ? false : true);
 		p.setSmiliesEnabled(JForum.getRequest().getParameter("disable_smilies") != null ? false : true);
 		p.setSignatureEnabled(JForum.getRequest().getParameter("attach_sig") != null ? true : false);
-		p.setUserIp(JForum.getRequest().getRemoteAddr());
 
 		if (!isEdit) {
+			p.setUserIp(JForum.getRequest().getRemoteAddr());
 			p.setUserId(SessionFacade.getUserSession().getUserId());
 		}
 		
