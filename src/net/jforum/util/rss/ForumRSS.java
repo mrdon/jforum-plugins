@@ -48,18 +48,24 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
+import net.jforum.repository.ForumRepository;
+import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.view.forum.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumRSS.java,v 1.9 2004/10/22 04:23:48 rafaelsteil Exp $
+ * @version $Id: ForumRSS.java,v 1.10 2004/10/27 01:47:56 rafaelsteil Exp $
  */
 public class ForumRSS extends GenericRSS 
 {
+	private static final Logger logger = Logger.getLogger(ForumRSS.class);
+	
 	private LinkedHashMap forums;
 	private RSS rss;
 	private String forumLink;
@@ -76,28 +82,41 @@ public class ForumRSS extends GenericRSS
 		
 		this.prepareRSS();
 	}
-
+	
 	private void prepareRSS()
 	{
-		for (Iterator iter = this.forums.entrySet().iterator(); iter.hasNext(); ) {
-			Map.Entry entry = (Map.Entry)iter.next();
-			Category category = (Category)entry.getKey();
-			
-			ArrayList forumsList = (ArrayList)entry.getValue();
-			for (Iterator fIter = forumsList.iterator(); fIter.hasNext(); ) {
-				Forum forum = (Forum)fIter.next();
+		try {
+			for (Iterator iter = this.forums.entrySet().iterator(); iter.hasNext(); ) {
+				Map.Entry entry = (Map.Entry)iter.next();
+				Category category = (Category)entry.getKey();
 				
-				RSSItem item = new RSSItem();
-				item.addCategory(category.getName());
-				item.setTitle(forum.getName());
-				item.setDescription(forum.getDescription());
-				item.setContentType(RSSAware.CONTENT_HTML);
-				item.setLink(this.forumLink
-						+ "forums/list/" + forum.getId()
-						+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
-				
-				this.rss.addItem(item);
+				ArrayList forumsList = (ArrayList)entry.getValue();
+				for (Iterator fIter = forumsList.iterator(); fIter.hasNext(); ) {
+					Forum forum = (Forum)fIter.next();
+					
+					Map info = ForumRepository.getLastPostInfo(forum.getId());
+					
+					RSSItem item = new RSSItem();
+					item.addCategory(category.getName());
+					item.setTitle(forum.getName());
+					item.setDescription(forum.getDescription());
+					item.setContentType(RSSAware.CONTENT_HTML);
+					item.setLink(this.forumLink
+							+ "forums/show/" + forum.getId()
+							+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+					
+					String author = (String)info.get("userName");
+					
+					item.setAuthor(author != null ? author : I18n.getMessage("Guest"));
+					item.setPublishDate(RSSUtils.formatDate((String)info.get("postTime")));
+					
+					this.rss.addItem(item);
+				}
 			}
+		}
+		catch (Exception e) {
+			logger.warn("Error while generating rss for forums: " + e);
+			e.printStackTrace();
 		}
 		
 		super.setRSS(this.rss);

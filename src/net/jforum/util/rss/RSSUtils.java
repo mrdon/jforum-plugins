@@ -42,14 +42,18 @@
  */
 package net.jforum.util.rss;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * General utilities for RSS manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: RSSUtils.java,v 1.1 2004/10/24 17:59:56 rafaelsteil Exp $
+ * @version $Id: RSSUtils.java,v 1.2 2004/10/27 01:47:55 rafaelsteil Exp $
  */
 public class RSSUtils 
 {
@@ -62,5 +66,21 @@ public class RSSUtils
 	{
 		SimpleDateFormat df = new SimpleDateFormat(RSSAware.DATE_FORMAT);
 		return df.format(date);
+	}
+	
+	/**
+	 * Formats a given date to the expected RSS format
+	 * @param date The date to format
+	 * @return The formated date, or the original input if some parsing exception occurs
+	 */
+	public static String formatDate(String date)
+	{
+		try {
+			SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
+			return formatDate(df.parse(date));
+		}
+		catch (ParseException e) {
+			return date;
+		}
 	}
 }
