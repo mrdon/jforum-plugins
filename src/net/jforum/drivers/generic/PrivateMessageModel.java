@@ -47,7 +47,6 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import net.jforum.JForum;
@@ -60,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageModel.java,v 1.5 2004/10/04 10:08:17 marcwick Exp $
+ * @version $Id: PrivateMessageModel.java,v 1.6 2004/10/19 14:32:13 marcwick Exp $
  */
 public class PrivateMessageModel extends AutoKeys implements net.jforum.model.PrivateMessageModel
 {
@@ -205,9 +204,7 @@ public class PrivateMessageModel extends AutoKeys implements net.jforum.model.Pr
 		p.setSubject(rs.getString("privmsgs_subject"));
 		
 		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
-		GregorianCalendar gc = new GregorianCalendar();
-		gc.setTimeInMillis(rs.getLong("privmsgs_date"));
-		pm.setFormatedDate(df.format(gc.getTime()));
+		pm.setFormatedDate(df.format(p.getTime()));
 		
 		if (full) {
 			UserModel um = new UserModel();
