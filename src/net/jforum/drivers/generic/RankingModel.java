@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -52,7 +52,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: RankingModel.java,v 1.2 2004/06/01 19:47:16 pieter2 Exp $
+ * @version $Id: RankingModel.java,v 1.3 2004/09/22 23:28:54 rafaelsteil Exp $
  */
 public class RankingModel implements net.jforum.model.RankingModel 
 {
@@ -74,6 +74,9 @@ public class RankingModel implements net.jforum.model.RankingModel
 				ranking.setMin(rs.getInt("rank_min"));
 				ranking.setSpecial(rs.getString("rank_special"));
 		}
+		
+		rs.close();
+		p.close();
 		
 		return ranking;
 	}
@@ -99,6 +102,9 @@ public class RankingModel implements net.jforum.model.RankingModel
 			l.add(ranking);			
 		}
 		
+		rs.close();
+		p.close();
+		
 		return l;
 	}
 
@@ -111,6 +117,7 @@ public class RankingModel implements net.jforum.model.RankingModel
 		p.setInt(1, rankingId);
 		
 		p.executeUpdate();
+		p.close();
 	}
 
 	/* 
@@ -127,6 +134,7 @@ public class RankingModel implements net.jforum.model.RankingModel
 		p.setInt(5, ranking.getId());
 		
 		p.executeUpdate();
+		p.close();
 	}
 
 	/* 
@@ -139,7 +147,8 @@ public class RankingModel implements net.jforum.model.RankingModel
 		p.setString(1, ranking.getTitle());
 		p.setInt(2, ranking.getMin());
 		
-		p.executeUpdate();		
+		p.executeUpdate();
+		p.close();
 	}
 
 }

@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -52,7 +52,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: TreeGroupModel.java,v 1.2 2004/06/01 19:47:16 pieter2 Exp $
+ * @version $Id: TreeGroupModel.java,v 1.3 2004/09/22 23:28:54 rafaelsteil Exp $
  */
 public class TreeGroupModel implements net.jforum.model.TreeGroupModel 
 {
@@ -74,6 +74,9 @@ public class TreeGroupModel implements net.jforum.model.TreeGroupModel
 			
 			list.add(n);		
 		}
+		
+		rs.close();
+		p.close();
 		
 		return list;
 	}
