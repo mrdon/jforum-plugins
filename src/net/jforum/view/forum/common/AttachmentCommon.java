@@ -46,7 +46,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import net.jforum.ActionServletRequest;
 import net.jforum.SessionFacade;
@@ -66,7 +69,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.4 2005/01/21 14:00:47 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.5 2005/01/21 15:51:21 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {
@@ -100,7 +103,8 @@ public class AttachmentCommon
 		if (total > SystemGlobals.getIntValue(ConfigKeys.ATTACHMENTS_MAX_POST)) {
 			total = SystemGlobals.getIntValue(ConfigKeys.ATTACHMENTS_MAX_POST);
 		}
-		
+
+		Map filesToSave = new HashMap();
 		for (int i = 0; i < total; i++) {
 			FileItem item = (FileItem)this.request.getObjectParameter("file_" + i);
 			if (item == null) {
@@ -136,11 +140,15 @@ public class AttachmentCommon
 			info.setPhysicalFilename(savePath);
 			
 			a.setInfo(info);
-			
-			uploadUtils.saveUploadedFile(SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR)
+			filesToSave.put(uploadUtils, SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR)
 					+ "/" + savePath);
 			
 			this.am.addAttachment(a);
+		}
+		
+		for (Iterator iter = filesToSave.entrySet().iterator(); iter.hasNext(); ) {
+			Map.Entry entry = (Map.Entry)iter.next();
+			((UploadUtils)entry.getKey()).saveUploadedFile((String)entry.getValue());
 		}
 	}
 	

@@ -49,7 +49,7 @@ import net.jforum.entities.KarmaStatus;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaModel.java,v 1.2 2005/01/14 21:11:52 rafaelsteil Exp $
+ * @version $Id: KarmaModel.java,v 1.3 2005/01/21 15:51:22 rafaelsteil Exp $
  */
 public interface KarmaModel
 {
@@ -114,11 +114,12 @@ public interface KarmaModel
 	
 	/**
 	 * Gets the votes the user made on some topic.
-	 * 
 	 * @param topicId The topic id.
+	 * @param userId TODO
+	 * 
 	 * @return A <code>java.util.Map</code>, where the key is the post id and the
 	 * value id the rate made by the user.
 	 * @throws Exception
 	 */
-	public Map getUserVotes(int topicId) throws Exception;
+	public Map getUserVotes(int topicId, int userId) throws Exception;
 }

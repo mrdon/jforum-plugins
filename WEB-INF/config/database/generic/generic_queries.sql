@@ -429,7 +429,7 @@ KarmaModel.userCanAddKarma = SELECT COUNT(1) FROM jforum_karma WHERE post_id = ?
 KarmaModel.getUserKarmaPoints = SELECT SUM(points) points, COUNT(1) votes, from_user_id \
 	FROM jforum_karma WHERE post_user_id = ? GROUP BY from_user_id
 	
-KarmaModel.getUserVotes = SELECT points, post_id FROM jforum_karma WHERE topic_id = ?
+KarmaModel.getUserVotes = SELECT points, post_id FROM jforum_karma WHERE topic_id = ? AND from_user_id = ?
 
 # ##############
 # BookmarkModel

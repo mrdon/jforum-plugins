@@ -54,7 +54,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaModel.java,v 1.2 2005/01/14 21:11:50 rafaelsteil Exp $
+ * @version $Id: KarmaModel.java,v 1.3 2005/01/21 15:51:21 rafaelsteil Exp $
  */
 public class KarmaModel implements net.jforum.model.KarmaModel
 {
@@ -188,15 +188,16 @@ public class KarmaModel implements net.jforum.model.KarmaModel
 	}
 	
 	/**
-	 * @see net.jforum.model.KarmaModel#getUserVotes(int)
+	 * @see net.jforum.model.KarmaModel#getUserVotes(int, int)
 	 */
-	public Map getUserVotes(int topicId) throws Exception
+	public Map getUserVotes(int topicId, int userId) throws Exception
 	{
 		Map m = new HashMap();
 		
 		PreparedStatement p = JForum.getConnection().prepareStatement(
 				SystemGlobals.getSql("KarmaModel.getUserVotes"));
 		p.setInt(1, topicId);
+		p.setInt(2, userId);
 		
 		ResultSet rs = p.executeQuery();
 		while (rs.next()) {
