@@ -74,7 +74,7 @@ import net.jforum.view.forum.ModerationHelper;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.6 2005/02/07 10:58:58 andowson Exp $
+ * @version $Id: TopicsCommon.java,v 1.7 2005/03/03 02:45:22 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
@@ -186,6 +186,7 @@ public class TopicsCommon
 		JForum.getContext().put("can_remove_posts", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE));
 		JForum.getContext().put("can_move_topics", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_TOPIC_MOVE));
 		JForum.getContext().put("can_lockUnlock_topics", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_TOPIC_LOCK_UNLOCK));
+		JForum.getContext().put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
 	}
 	
 	/**

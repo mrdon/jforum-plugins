@@ -162,7 +162,7 @@ function leaveText()
 					<th class="thRight" nowrap="nowrap" width="100%">${I18n.getMessage("PostShow.messageTitle")}</th>
 				</tr>
 
-				<!-- POSTS --> 
+				<!-- POST LISTING --> 
 				<#assign rowColor = ""/>
 				<#list posts as post>
 					<#if post_index % 2 == 0>
@@ -172,212 +172,67 @@ function leaveText()
 					</#if>
 	
 					<#assign user = users.get(post.userId)/>
-				<tr>
-				
-					<td colspan="2">
-						<table width="100%" cellspacing="0">
-							<tr>
-								<td width="160" class="postInfo" height="22">
-									<span class="postdetails">
-									
-									<a href="${JForumContext.encodeURL("/posts/list/${start}/${post.topicId}")}#${post.id}">
-									<img src="${contextPath}/templates/${templateName}/images/icon_minipost_new.gif" /></a>${post.formatedTime}
-									</span>
-								</td>
-
-								<td class="postInfo" height="22">
-									<span class="postdetails">&nbsp;&nbsp; &nbsp;<b>${I18n.getMessage("PostShow.subject")}:</b> <a name="${post.id}" id="${post.id}">${post.subject?default("")?html}</a>
-									</span>
-								</td>
-								
-								<td valign="top" nowrap="nowrap" align="right" class="postInfo">
-									<#if karmaEnabled>
-										<script language="javascript">writeStars(${post.karma.karmaPoints}, ${post.id});</script>
-									</#if>
-
-									<!-- Icons -->
-									<#if topic.status != STATUS_LOCKED>
-										<a href="${JForumContext.encodeURL("/jforum${extension}?module=${moduleName}&amp;action=quote&amp;post_id=${post.id}&start=${start}","")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/icon_quote.gif" border="0" /></a>
-									</#if>
-
-									<#if ((post.canEdit && topic.status != STATUS_LOCKED) || canEdit)>
-										<a href="${JForumContext.encodeURL("/jforum${extension}?module=${moduleName}&amp;action=edit&amp;post_id=${post.id}&start=${start}","")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/icon_edit.gif" border="0" /></a>  
-									</#if>
-
-									<#if canRemove>
-										<a href="${JForumContext.encodeURL("/jforum${extension}?module=${moduleName}&amp;action=delete&amp;post_id=${post.id}&start=${start}","")}" onClick="return confirmDelete();"><img src="${contextPath}/templates/${templateName}/images/icon_delete.gif" border="0"/></a>  
-									</#if>
-
-									<a class="nav" href="#top"><img src="${contextPath}/templates/${templateName}/images/icon_up.gif" border="0"/></a>
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				<tr>
-					<!-- Username -->
-					<td class="${rowColor}" valign="top" align="left" rowspan="3">
-					
-						<span class="name"><b>${user.username}</b></span>
-						<br />
-						<#if karmaEnabled && post.userId != 1>
-							<script language="javascript">writeStars(${user.karma.karmaPoints}, "${user.id}${post.id}");</script>
-							<br/>
-						</#if>
-						
-						<span class="postdetails">
-						<#if post.userId != 1>
-							${rank.getRankTitle(user.totalPosts)}
-							<br />
-						</#if>
-
-						<#if (user.avatar?exists && user.avatar?length > 0)>
-							<#if user.isExternalAvatar() || user.avatar.startsWith("http://")>
-								<img src="${user.avatar}" border="0">
-							<#else>
-								<img src="${contextPath}/images/avatar/${user.avatar}" border="0" /><br />
-							</#if>
-						</#if>
-						<br /> 
-						
-						<#if post.userId != 1>
-							${I18n.getMessage("PostShow.userRegistrationDate")}: ${user.registrationDate?date('dd/MM/yyyy')}<br />
-							${I18n.getMessage("PostShow.userTotalMessages")}: ${user.totalPosts}
-						</#if>
-						<br />
-						
-						<#if (user.from?exists && user.from?length > 0)>
-							${I18n.getMessage("PostShow.userFrom")}: ${user.from}
-							<br />
-						</#if>
-
-						<#if post.userIp?exists && isModerator>
-							${I18n.getMessage("PostShow.userIP")}: ${post.userIp}
-							<br />
-						</#if>
-
-						<#if post.userId != 1>
-							<#if user.isOnline()>
-								<span class="online">${I18n.getMessage("PostShow.userOnline")}</span>
-							<#else>
-								<span class="offline">${I18n.getMessage("PostShow.userOffline")} </span>
-							</#if>
-						</#if>
-						</span>
-						<br />
-					</td>
-	
-					<!-- Message -->
-					<td class="${rowColor}" valign="top">
-						<span class="postbody">${post.text}</span>
-
-						<#if post.hasAttachments() && (canDownloadAttachments || attachmentsEnabled)>
-							<#assign attachments = am.getAttachments(post.id, post.forumId)/>
-
-							<#list attachments as a>
-								<p>
-								<table width="70%" border="1" cellpadding="2" cellspacing="0" class="attachtable" align="center">
-									<tr>
-										<td width="100%" colspan="3" class="attachheader" align="center"><b><span class="gen">${a.info.realFilename}</span></b></td>
-									</tr>
-									<tr>
-										<td width="15%" class="attachrow"><span class="genmed">&nbsp;${I18n.getMessage("Attachments.description")}</span></td>
-										<td width="75%" class="attachrow"><span class="genmed">${a.info.comment?default(I18n.getMessage("Attachments.noDescription"))}</span></td>
-										<td rowspan="3" align="center">
-											<img src="${contextPath}/templates/${templateName}/images/icon_disk.gif">
-											<a href="${JForumContext.encodeURL("/posts/downloadAttach/${a.id}")}" class="gensmall"><b>${I18n.getMessage("Attachments.download")}</a></a>
-										</td>
-									</tr>
-									<tr>
-										<td class="attachrow"><span class="genmed">&nbsp;${I18n.getMessage("Attachments.filesize")}</span></td>
-										<td class="attachrow">
-											<span class="genmed">
-											<#if (a.info.filesize < 1024)>
-												${a.info.filesize} bytes
-											<#else>
-												${a.info.filesize / 1024} kb
-											</#if>
-											</span>
-										</td>
-
-									</tr>
-									<tr>
-										<td class="attachrow"><span class="genmed">&nbsp;${I18n.getMessage("Attachments.totalDownload")}:</span></td>
-										<td class="attachrow"><span class="genmed">&nbsp;${a.info.downloadCount} ${I18n.getMessage("Attachments.time")}</span></td>
-									</tr>
-								</table>
-								</p>
-							</#list>
-						</#if>
-					</td>
-				</tr>
-
-				<#if (user.attachSignatureEnabled && user.signature?exists && user.signature?length > 0 && post.isSignatureEnabled())>
 					<tr>
-						<td colspan="2" class="${rowColor}" width="100%" height="28"><hr/><span class="gensmall">${user.signature}</span></td>
+						<td colspan="2">
+							<#include "post_show_action_buttons_inc.htm"/>
+						</td>
 					</tr>
-				</#if>
-	
-				<tr> 
-					<td class="${rowColor}" valign="bottom" nowrap="nowrap" height="28" width="100%">
-						<table height="18" cellspacing="0" cellpadding="0" border="0" width="100%">
+
+					<tr>
+						<!-- Username -->
+						<#assign rowspan = "3"/>
+						<#assign useSignature = (user.attachSignatureEnabled && user.signature?exists && user.signature?length > 0 && post.isSignatureEnabled())/>
+
+						<#if useSignature>
+							<#assign rowspan = "3"/>
+						<#else>
+							<#assign rowspan = "2"/>
+						</#if>
+
+						<td class="${rowColor}" valign="top" align="left" rowspan="${rowspan}">
+							<#include "post_show_user_inc.htm"/>
+						</td>
+		
+						<!-- Message -->
+						<td class="${rowColor}" valign="top">
+							<span class="postbody">${post.text}</span>
+
+							<!-- Attachments -->
+							<#if post.hasAttachments() && (canDownloadAttachments || attachmentsEnabled)>
+								<#assign attachments = am.getAttachments(post.id, post.forumId)/>
+
+								<#include "post_show_attachments_inc.htm"/>
+							</#if>
+						</td>
+					</tr>
+
+					<#if useSignature>
+						<tr>
+							<td colspan="2" class="${rowColor}" width="100%" height="28"><hr/><span class="gensmall">${user.signature}</span></td>
+						</tr>
+					</#if>
+		
+					<tr> 
+						<td class="${rowColor}" valign="bottom" nowrap="nowrap" height="28" width="100%">
+							<#include "post_show_user_profile_inc.htm"/>					
+						</td>
+					</tr>
+		
+					<tr>
+						<td class="spaceRow" colspan="2" height="1"><img src="${contextPath}/templates/${templateName}/images/spacer.gif" alt="" width="1" height="1" /></td>
+					</tr>
+				</#list>
+				<!-- END OF POST LISTING -->	
+			
+				<tr align="center">
+					<td class="catBottom" colspan="2" height="28">
+						<table cellspacing="0" cellpadding="0" border="0">
 							<tr>
-								<td valign="center" nowrap="nowrap"> 
-									<a href="${JForumContext.encodeURL("/user/profile/${user.id}")}"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/icon_profile.gif" border="0" /></a>
-									<a href="${JForumContext.encodeURL("/pm/sendTo/${user.id}")}"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/icon_pm.gif" border="0" /></a>
-
-									<#if (user.isViewEmailEnabled() && user.email?exists && user.email?length > 0)>
-										<#assign e = user.email.split("@")/>
-										<a href="#" onClick="document.location = 'mailto:' + showEmail('${e[0]}', '${e[1]}');"><img src="${contextPath}/templates/${templateName}/images/icon_email.gif" border=0></a>
-									</#if>
-									
-									<#if (user.webSite?exists && user.webSite?length > 0)>
-										<a href="${user.webSite}" target="_new"><img src="${contextPath}/templates/${templateName}/images/icon_www.gif" border="0" /></a>
-									</#if>
-									
-									<#if (user.yim?exists && user.yim?length > 0)>
-										<a href="http://edit.yahoo.com/config/send_webmesg?.target=${user.yim}&amp;.src=pg"><img src="${contextPath}/templates/${templateName}/images/icon_yim.gif" border="0" /></a>
-									</#if>
-									
-									<#if (user.msnm?exists && user.msnm?length > 0)>
-										<a href="${JForumContext.encodeURL("/user/profile/${user.id}")}"><img src="${contextPath}/templates/${templateName}/images/icon_msnm.gif" border="0" /></a>
-									</#if>
-									
-									<#if (user.icq?exists && user.icq?length > 0)>
-										<a href="http://wwp.icq.com/scripts/search.dll?to=${user.icq}"><img src="${contextPath}/templates/${templateName}/images/icon_icq_add.gif" border="0" /></a>
-									</#if>
-								</td>
-
-								<#if karmaEnabled && post.userId != session.userId && logged>
-									<td align="right">
-									<#if !karmaVotes.containsKey(post.id)>
-										<script language="javascript">karmaPointsCombo(${post.id})</script>
-									<#else>
-										<span class="gensmall">${I18n.getMessage("Karma.yourRate")}: ${karmaVotes.get(post.id)}</span>
-									</#if>
-									</td>
-								</#if>
+								<td align="center"><span class="gensmall">&nbsp;</span></td>
 							</tr>
 						</table>
-					
-				</td>
+					</td>
 				</tr>
-	
-				<tr>
-					<td class="spaceRow" colspan="2" height="1"><img src="${contextPath}/templates/${templateName}/images/spacer.gif" alt="" width="1" height="1" /></td>
-				</tr>
-			</#list>
-			<!-- END OF POSTS -->	
-			
-			<tr align="center">
-				<td class="catBottom" colspan="2" height="28">
-					<table cellspacing="0" cellpadding="0" border="0">
-						<tr>
-							<td align="center"><span class="gensmall">&nbsp;</span></td>
-						</tr>
-					</table>
-				</td>
-			</tr>  
 			</table>
 		
 			<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">

@@ -28,7 +28,7 @@
 		</td>
 		<td width="50%" align="right">
 			<img src="ss_main.jpg"><br/>
-			<a href="download.htm"><img src="download_now.jpg"></a>
+			<a href="download.jsp"><img src="download_now.jpg"></a>
 		</td>
 	</tr>
 </table>
@@ -43,22 +43,22 @@
 
 	<tr>
 		<td width="50%" valign="jpg">
-		<p><img src="speed.jpg" align="middle">&nbsp;<a href="features.htm">Ultra fast</a></p>
-		<p><img src="graphics.jpg" align="middle">&nbsp;<a href="features.htm">Fully customizable user interface</a></p>
-		<p><img src="padlock.jpg" align="middle">&nbsp;<a href="features.htm">Secure and highly customizable permission control</a></p>
+		<p><img src="speed.jpg" align="middle">&nbsp;<a href="features.jsp">Ultra fast</a></p>
+		<p><img src="graphics.jpg" align="middle">&nbsp;<a href="features.jsp">Fully customizable user interface</a></p>
+		<p><img src="padlock.jpg" align="middle">&nbsp;<a href="features.jsp">Secure and highly customizable permission control</a></p>
 		</td>
 
 		<td width="50%" valign="top">
-		<p><img src="language.jpg" align="middle">&nbsp;<a href="features.htm">Multi-language support</a></p>
-		<p><img src="db.jpg" align="middle">&nbsp;<a href="features.htm">Multi-database support</a></p>
-		<p><img src="opensource.jpg" align="middle">&nbsp;<a href="features.htm">Open Source</a></p>
+		<p><img src="language.jpg" align="middle">&nbsp;<a href="features.jsp">Multi-language support</a></p>
+		<p><img src="db.jpg" align="middle">&nbsp;<a href="features.jsp">Multi-database support</a></p>
+		<p><img src="opensource.jpg" align="middle">&nbsp;<a href="features.jsp">Open Source</a></p>
 		<td>
 	</tr>
 
 	<tr>
 		<td colspan="2" align="center" style="font-family: verdana; font-size: 12px;">
 		<br/>
-		<img src="box_open.jpg" align="middle">&nbsp; <a href="features.htm">Full feature list</a>
+		<img src="box_open.jpg" align="middle">&nbsp; <a href="features.jsp">Full feature list</a>
 		</td>
 	</tr>
 </table>

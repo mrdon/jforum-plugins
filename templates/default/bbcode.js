@@ -205,6 +205,15 @@ function validatePostForm(f)
 		
 		return false;
 	}
+
+	<#if !forum?exists>
+	if (f.toUsername.value == "") {
+		alert("${I18n.getMessage("PrivateMessage.toUserIsEmpy")}");
+		f.toUsername.focus();
+
+		return false;
+	}
+	</#if>
 	
 	return true;
 }

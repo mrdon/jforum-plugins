@@ -36,62 +36,29 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on 21/10/2004 00:10:00
+ * Created on Mar 2, 2005 10:50:55 PM
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.util.rss;
 
-import java.util.Iterator;
 import java.util.List;
 
-import net.jforum.entities.Topic;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.view.forum.common.ViewCommon;
 
-/**
- * @author Rafael Steil
- * @version $Id: TopicRSS.java,v 1.12 2005/03/03 02:45:18 rafaelsteil Exp $
- */
-public class TopicRSS extends GenericRSS 
+public class RecentTopicsRSS extends TopicRSS
 {
-	protected List topics;
-	protected RSS rss;
-	protected String forumLink;
-	
-	TopicRSS() {}
-	
-	public TopicRSS(String title, String description, int forumId, List topics)
+	public RecentTopicsRSS(String title, String description, List topics)
 	{
-		this.topics = topics;
+		super.topics = topics;
 		this.forumLink = ViewCommon.getForumLink();
 		
-		this.rss = new RSS(title, description, 
-				SystemGlobals.getValue(ConfigKeys.ENCODING), 
-				this.forumLink + "forums/show/" + forumId 
+		this.rss = new RSS(title, description, SystemGlobals.getValue(ConfigKeys.ENCODING), 
+				this.forumLink + "/recentTopics/"
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		
-		this.prepareRSS();
-	}
-	
-	protected void prepareRSS()
-	{
-		for (Iterator iter = topics.iterator(); iter.hasNext(); ) {
-			Topic t = (Topic)iter.next();
-			
-			RSSItem item = new RSSItem();
-			item.setAuthor(t.getPostedBy().getUsername());
-			item.setPublishDate(RSSUtils.formatDate(t.getTime()));
-			item.setLink(this.forumLink + "posts/list/" + t.getId()
-					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
-			item.setTitle(t.getTitle());
-			item.setContentType(RSSAware.CONTENT_HTML);
-			item.setDescription(item.getTitle());
-			
-			this.rss.addItem(item);
-		}
-		
-		super.setRSS(this.rss);
+		super.prepareRSS();
 	}
 }

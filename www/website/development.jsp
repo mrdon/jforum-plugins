@@ -43,7 +43,7 @@
 			<p>
 			<img src="info.jpg" align="middle"> <b>Contributors</b><br/>
 			A project only evolves with feedback of users and contribution - be it programming, documenting, making graphics and
-			so other many areas - of so many valuable people. 
+			so other many areas - of so many valuable people. Here are some of who have helped to improve JForum:
 
 			<p>&nbsp</p>
 
@@ -52,38 +52,18 @@
 					<td>
 						<table width="100%" bgcolor="#ffffff">
 							<tr>
-								<td><b>Rafael Steil</b></td>
-								<td><i>project leader</i></td>
-							</tr>
-
-							<tr>
 								<td><b>James Yong</b></td>
-								<td><i>developer</i></td>
-							</tr>
-
-							<tr>
-								<td><b>Marc Wick</b></td>
-								<td><i>developer</i></td>
+								<td><b>Marc Wick<b></td>
 							</tr>
 
 							<tr>
 								<td><b>Sean Mitchell</b></td>
-								<td><i>ideas, ideas, ideas</i></td>
-							</tr>
-
-							<tr>
 								<td><b>Pieter Olivier</b></td>
-								<td><i>developer</i></td>
 							</tr>
 
 							<tr>
 								<td><b>Sérgio Umlauf</b></td>
-								<td><i>Layout</i></td>
-							</tr>
-
-							<tr>
 								<td><b>Pablo Marutto</b></td>
-								<td><i>logo</i></td>
 							</tr>
 						</table>
 					</td>
@@ -149,20 +129,13 @@
 
 			<p>
 			<img src="info.jpg" align="middle"> <b>Setting up your development environment</b><br>
-			First of all, create an empty file named <i>&lt;your_username&gt;.conf</i> in the directory <i>WEB-INF/config</i>, where
-			&lt;your_username&gt; is the username you login in your computer. For the sake of information, is the return of a call to
-
-			<br/><br/>
-			<i>System.getProperty("user.name")</i>
-			<br/><br/>
-
-			so, if your account is "johndoe", you should create a file named <i>johndoe.conf</i>. This file is necessary when working on
+			First of all, create an empty file named <i>jforum-custon.conf</i> in the directory <i>WEB-INF/config</i> .This file is necessary when working on
 			teams, since you should not change <i>SystemGlobals.properties</i> to put your own configuration data, like passwords and 
 			forum address. After creating the file, just add it to <i>.cvsignore</i>. 
 			</p>
 
 			<p>
-			You can follow the install instructions <a href="install.htm">clicking here</a>
+			You can follow the install instructions <a href="install.jsp">clicking here</a>
 			</p>
 
 			<p>

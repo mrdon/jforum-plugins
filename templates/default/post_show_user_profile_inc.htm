@@ -1,0 +1,39 @@
+<table height="18" cellspacing="0" cellpadding="0" border="0" width="100%">
+<tr>
+	<td valign="center" nowrap="nowrap"> 
+		<a href="${JForumContext.encodeURL("/user/profile/${user.id}")}"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/icon_profile.gif" border="0" /></a>
+		<a href="${JForumContext.encodeURL("/pm/sendTo/${user.id}")}"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/icon_pm.gif" border="0" /></a>
+
+		<#if (user.isViewEmailEnabled() && user.email?exists && user.email?length > 0)>
+			<#assign e = user.email.split("@")/>
+			<a href="#" onClick="document.location = 'mailto:' + showEmail('${e[0]}', '${e[1]}');"><img src="${contextPath}/templates/${templateName}/images/icon_email.gif" border=0></a>
+		</#if>
+		
+		<#if (user.webSite?exists && user.webSite?length > 0)>
+			<a href="${user.webSite}" target="_new"><img src="${contextPath}/templates/${templateName}/images/icon_www.gif" border="0" /></a>
+		</#if>
+		
+		<#if (user.yim?exists && user.yim?length > 0)>
+			<a href="http://edit.yahoo.com/config/send_webmesg?.target=${user.yim}&amp;.src=pg"><img src="${contextPath}/templates/${templateName}/images/icon_yim.gif" border="0" /></a>
+		</#if>
+		
+		<#if (user.msnm?exists && user.msnm?length > 0)>
+			<a href="${JForumContext.encodeURL("/user/profile/${user.id}")}"><img src="${contextPath}/templates/${templateName}/images/icon_msnm.gif" border="0" /></a>
+		</#if>
+		
+		<#if (user.icq?exists && user.icq?length > 0)>
+			<a href="http://wwp.icq.com/scripts/search.dll?to=${user.icq}"><img src="${contextPath}/templates/${templateName}/images/icon_icq_add.gif" border="0" /></a>
+		</#if>
+	</td>
+
+	<#if karmaEnabled && post.userId != session.userId && logged>
+		<td align="right">
+		<#if !karmaVotes.containsKey(post.id)>
+			<script language="javascript">karmaPointsCombo(${post.id})</script>
+		<#else>
+			<span class="gensmall">${I18n.getMessage("Karma.yourRate")}: ${karmaVotes.get(post.id)}</span>
+		</#if>
+		</td>
+	</#if>
+</tr>
+</table>

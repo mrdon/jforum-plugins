@@ -59,16 +59,31 @@ import net.jforum.view.forum.common.TopicsCommon;
  * Display a list of recent Topics
  * 
  * @author James Yong
- * @version $Id: RecentTopicsAction.java,v 1.5 2004/12/27 00:30:52 rafaelsteil Exp $
+ * @author Rafael Steil
+ * @version $Id: RecentTopicsAction.java,v 1.6 2005/03/03 02:45:21 rafaelsteil Exp $
  */
 public class RecentTopicsAction extends Command 
 {
+	private List forums;
+
 	public void list() throws Exception
+	{
+		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
+		
+		this.context.put("postsPerPage", new Integer(postsPerPage));
+		this.context.put("topics", this.topics());
+		this.context.put("forums", this.forums);
+		this.context.put("moduleAction", "recent_thread.htm");
+		
+		TopicsCommon.topicListingBase();
+	}
+	
+	List topics() throws Exception
 	{
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 		List tmpTopics = TopicRepository.getRecentTopics();
 		
-		List forums = new ArrayList(postsPerPage);
+		this.forums = new ArrayList(postsPerPage);
 		Iterator iter = tmpTopics.iterator();
 		while (iter.hasNext()) 
 		{
@@ -83,11 +98,6 @@ public class RecentTopicsAction extends Command
 			}
 		}
 		
-		this.context.put("postsPerPage", new Integer(postsPerPage));
-		this.context.put("topics", TopicsCommon.prepareTopics(tmpTopics));
-		this.context.put("forums", forums);
-		this.context.put("moduleAction", "recent_thread.htm");
-		
-		TopicsCommon.topicListingBase();
+		return TopicsCommon.prepareTopics(tmpTopics);
 	}
 }

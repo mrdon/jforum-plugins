@@ -1,6 +1,8 @@
 <#import "../macros/pagination.ftl" as pagination>
 <#import "../macros/presentation.ftl" as presentation/>
 
+<link rel="alternate" type="application/rss+xml" title="RSS" href="${contextPath}/rss/recentTopics${extension}" />
+
 <table cellspacing="0" cellpadding="10" width="100%" align="center" border="0">
 	<tr>
 		<td class="bodyline" valign="top">
@@ -11,7 +13,9 @@
 						<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a>
 						<span class="nav">&nbsp;->&nbsp;</span>
 						<a id="latest" class="nav" href="${JForumContext.encodeURL("/recentTopics/list")}">${I18n.getMessage("ForumBase.recentTopics")}</a>
-						
+						<#if rssEnabled>
+							<a href="${contextPath}/rss/recentTopics${extension}"><img src="${contextPath}/templates/${templateName}/images/xml_button.gif" border="0" align="middle"></a>
+						</#if>
 					</td>
 					<td>&nbsp;
 					</td>

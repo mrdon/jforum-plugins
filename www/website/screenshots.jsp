@@ -53,7 +53,7 @@ function show_big(image)
 					</td>
 					<td width="33%" valign="top">
 						<a href="#" onClick="show_big('posting_messages_b.jpg');"><img src="screenshots/posting_messages_s.jpg"></a><br/>
-						Posting a new message. Note all possible text formating options
+						Posting a new message. Note the text formating options and the "Attach Files" button
 					</td>
 				</tr>
 
@@ -71,6 +71,23 @@ function show_big(image)
 					<td valign="top">
 						<a href="#" onClick="show_big('online_users_b.jpg');"><img src="screenshots/online_users_s.jpg"></a><br/>
 						Information about current online users
+					</td>
+				</tr>
+
+				<tr><td colspan="3">&nbsp;</td></tr>
+
+				<tr>
+					<td valign="top">
+						<a href="#" onClick="show_big('attaching_files_b.jpg');"><img src="screenshots/attaching_files_s.jpg"></a><br/>
+						Attaching files to the message
+					</td>
+					<td valign="top">
+						<a href="#" onClick="show_big('post_attach_b.jpg');"><img src="screenshots/post_attach_s.jpg"></a><br/>
+						Message displaying the File Download box of an attached file
+					</td>
+					<td valign="top">
+						<a href="#" onClick="show_big('member_listing_b.jpg');"><img src="screenshots/member_listing_s.jpg"></a><br/>
+						Listing of registered members
 					</td>
 				</tr>
 			</table>

@@ -29,7 +29,7 @@
 
 <#if !user.isNotifyOnMessagesEnabled()><#assign repliesChecked = ""/></#if>
 
-<form action="${JForumContext.encodeURL("/jforum")}" method="post" enctype="multipart/form-data" name="post" id="post">
+<form action="${JForumContext.encodeURL("/jforum")}" method="post" enctype="multipart/form-data" name="post" id="post" onSubmit="return validatePostForm(this)">
 <input type="hidden" name="action" value="${action}" />
 <input type="hidden" name="module" value="${moduleName}" />
 <input type="hidden" name="securityHash" value="${securityHash}" />

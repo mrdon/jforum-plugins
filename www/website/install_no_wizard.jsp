@@ -40,7 +40,7 @@ knowledge on how to install / configure a Java servlet Container ( or already ha
 <br/></br>
 </p>
 
-<p class="note">Note: These instructions are for the installation of JForum, release version 2.0 Some of the steps here may not be valid for 
+<p class="note">Note: These instructions are for the installation of JForum, release version 2.1 Some of the steps here may not be valid for 
 older versions, which are no longer supported.</p>
 </p>
 
@@ -74,7 +74,7 @@ After the download, unpack the .ZIP file into your webapp's directory (or anypla
 <p>
 First of all, you must have <a href="http://www.mysql.com" target="_new">MySQL</a> or <a href="http://www.postgresql.org" target="_new">PostgreSQL</a>
 installed and properly configured. <a href="http://hsqldb.sourceforge.net/">HSQLDB</a> is supported as well, and has built-in support, so you don't
-need to download it.
+need to download it (eg, it is an embedded database).
 <br/><br/>
 Open the file <i>WEB-INF/config/SystemGlobals.properties</i>. Now search for a key named <i>database.driver.name</i> and configure it according
 to the following table: 
@@ -113,7 +113,7 @@ to the following table:
 </table>
 <br/>
 
-The default value is <i><b>mysql</b></i>, which means JForum will try to use MySQL. 
+The default value is <i><b>mysql</b></i>, which means JForum will try to use MySQL. Note that the value should be in lowercase.
 
 <br>
 <br>Next, you can tell JForum whether to use a Connection Pool or not. A connection pool will increase the performance of your application, 
@@ -144,6 +144,11 @@ The following table shows the possible values for this key:
 					<td><b>Simple Connections</b></td>
 					<td><i>net.jforum.SimpleConnection</i></td>
 				</tr>
+
+				<tr class="fields">
+					<td><b>DataSource Connections</b></td>
+					<td><i>net.jforum.DataSourceConnection</i></td>
+				</tr>
 			</table>
 		</td>
 	</tr>
@@ -154,7 +159,8 @@ The following table shows the possible values for this key:
 </table>
 <br/>
 
-<br> <img src="info.jpg" align="middle" border="0"> Edit the file <i>WEB-INF/config/database/&lt;<b>DBNAME</b>&gt;/&lt;<b>DBNAME</b>&gt;.properties</i>, 
+<br> <img src="info.jpg" align="middle" border="0"> If you have chosen <i><b>net.jforum.DataSourceConnection</b></i>, then set the name of the datasource in key <i>database.datasource.name</i>, and ignore the table below. Otherwise, do the following steps:<br><br>
+Edit the file <i>WEB-INF/config/database/&lt;<b>DBNAME</b>&gt;/&lt;<b>DBNAME</b>&gt;.properties</i>, 
 where &lt;<b>DBNAME</b>&gt; is the database name you are using - for instance, <i>mysql</i>, <i>postgresql</i> or <i>hsqldb</i>. 
 In this file there are some options you should change, according to the table below:
 
@@ -199,8 +205,12 @@ In this file there are some options you should change, according to the table be
 <br/>
 
 <br>The other properties you may leave with the default values if you don't know what to put. 
-</p>
 
+<!-- Note for mysql -->
+<br><br></a><img src="info.jpg" align="middle" align="middle"> <font color="#ff0000"><b>Note for MySQL users</b></font><br>
+If you're going to use MySQL 4.1 or newer, please pay attention to the fact that starting from this version (the mysql version, not JForum) many architectural changes were made. By default, now the system runs using the UTF-8 character set (previous versions lack support for it), and it may result in some problems depending the way you configured JForum to connect to MySQL. Regular installations will opt to use unicode and UTF-8 as character encoding, but, when using MySQL 4.1+, you <b>shoudl avoid id</b>. <br>
+To do that, open the file <i>mysql.properties</i> and change the value of the keys <i>"mysql.encoding"</i> and <i>"mysql.unicode"</i> to empty (eg, <i>mysql.unicode=</i> ).
+</p>
 
 <!-- Creating Database Tables -->
 <br><a name="createTables"></a><img src="info.jpg" align="middle" align="middle"> <span class="install_subtitle">Creating the database tables</span>
@@ -211,7 +221,13 @@ In this file there are some options you should change, according to the table be
 <p>
 <a name="populating"></a><img src="info.jpg" align="middle" border="0"> <span class="install_subtitle"><b>Populating the tables</b></span><br>
  Now it is time to run the script to populate the database tables. To do that, use the script named "&lt;<b>DBNAME</b>&gt;_data_dump.sql", also located at <i>WEB-INF/config/database/&lt;<b>DBNAME</b>&gt;</i>. One more time, you should have no problems with this step. If you do, please remember to inform the error message, as well the database name and version you're using. 
-<br>
+</p>
+
+<p>
+<a name="populating"></a><img src="info.jpg" align="middle" border="0"> <span class="install_subtitle"><b>Renaming files</b></span><br>
+Now, look for a file named <i>new_rename.htm</i> in the root directoy. If it exists, rename it to <i>index.htm</i> (delete the existing index.htm first). This will make browsers to be redirected to the forum when acessing the context path's root. 
+</p>
+
 <br>
 
 <!-- Misc -->
@@ -221,11 +237,12 @@ In this file there are some options you should change, according to the table be
 <br><li><b><font color="#ff0000">Remove the line <font color="#006699"><i>"install = net.jforum.view.install.InstallAction"</i></font> from the file
 <i>WEB-INF/config/modulesMapping.properties</i></font></b><br>
 
-<br><li> JForum uses a servlet mapping to invoke the pages. This mapping is <b>*.page</b>, and is already properly configured at WEB-INF/web.xml. If you are running JForum on certain ISPs, you may need to contact their Technical Support and ask them to explicity enable these mapping for you.
+<br><li> JForum uses a servlet mapping to invoke the pages. This mapping is <b>*.page</b>, and is already properly configured at WEB-INF/web.xml. If you are running JForum on a ISPs which have Apache HTTPD in front of Tomcat, you may need to contact their Technical Support and ask them to explicity enable the mapping for you.
 
 <br>
 <br><li> The directory "images", "tmp" and "WEB-INF" ( e its sub-directories ) should have write permission 
-to the user who runs the web server. You'll get nasty exceptions if there is no write permission.
+to the user who runs the web server. You'll get nasty exceptions if there is no write permission. In the same way, if you're going to use the file attachments support, the directoy you'd chosen to store the files ("uploads" by default) should also be writable. 
+
 <br>
 <br><li> The administration interface is accessible via the link <i>Admin Control Panel</i>, located in the bottom of the main page. You will only see this link if you are logged as Administrator. See above the default password for the admin user: 
 <br>

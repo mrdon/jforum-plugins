@@ -1,0 +1,34 @@
+<#list attachments as a>
+	<p>
+	<table width="70%" border="1" cellpadding="2" cellspacing="0" class="attachtable" align="center">
+		<tr>
+			<td width="100%" colspan="3" class="attachheader" align="center"><b><span class="gen">${a.info.realFilename}</span></b></td>
+		</tr>
+		<tr>
+			<td width="15%" class="attachrow"><span class="genmed">&nbsp;${I18n.getMessage("Attachments.description")}</span></td>
+			<td width="75%" class="attachrow"><span class="genmed">${a.info.comment?default(I18n.getMessage("Attachments.noDescription"))}</span></td>
+			<td rowspan="3" align="center">
+				<img src="${contextPath}/templates/${templateName}/images/icon_disk.gif">
+				<a href="${JForumContext.encodeURL("/posts/downloadAttach/${a.id}")}" class="gensmall"><b>${I18n.getMessage("Attachments.download")}</a></a>
+			</td>
+		</tr>
+		<tr>
+			<td class="attachrow"><span class="genmed">&nbsp;${I18n.getMessage("Attachments.filesize")}</span></td>
+			<td class="attachrow">
+				<span class="genmed">
+				<#if (a.info.filesize < 1024)>
+					${a.info.filesize} bytes
+				<#else>
+					${a.info.filesize / 1024} kb
+				</#if>
+				</span>
+			</td>
+
+		</tr>
+		<tr>
+			<td class="attachrow"><span class="genmed">&nbsp;${I18n.getMessage("Attachments.totalDownload")}:</span></td>
+			<td class="attachrow"><span class="genmed">&nbsp;${a.info.downloadCount} ${I18n.getMessage("Attachments.time")}</span></td>
+		</tr>
+	</table>
+	</p>
+</#list>

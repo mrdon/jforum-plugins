@@ -61,6 +61,7 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.rss.ForumRSS;
 import net.jforum.util.rss.RSSAware;
+import net.jforum.util.rss.RecentTopicsRSS;
 import net.jforum.util.rss.TopicPostsRSS;
 import net.jforum.util.rss.TopicRSS;
 import net.jforum.view.forum.common.ForumCommon;
@@ -70,7 +71,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: RSSAction.java,v 1.13 2005/01/04 03:31:18 rafaelsteil Exp $
+ * @version $Id: RSSAction.java,v 1.14 2005/03/03 02:45:21 rafaelsteil Exp $
  */
 public class RSSAction extends Command 
 {
@@ -139,6 +140,16 @@ public class RSSAction extends Command
 		String description = I18n.getMessage("RSS.TopicPosts.description", p);
 
 		RSSAware rss = new TopicPostsRSS(title, description, topic.getForumId(), posts);
+		this.context.put("rssContents", rss.createRSS());
+	}
+	
+	public void recentTopics() throws Exception
+	{
+		String title = I18n.getMessage("RSS.RecentTopics.title");
+		String description = I18n.getMessage("RSS.RecentTopics.description");
+
+		RSSAware rss = new RecentTopicsRSS(title, description, 
+				new RecentTopicsAction().topics());
 		this.context.put("rssContents", rss.createRSS());
 	}
 	

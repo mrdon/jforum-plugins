@@ -64,7 +64,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.16 2005/02/28 12:18:28 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.17 2005/03/03 02:45:21 rafaelsteil Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -174,7 +174,7 @@ public class PrivateMessageAction extends Command
 		String userEmail = this.request.getParameter("toUserEmail");
 		
 		int toUserId = -1;
-		if (sId == null || sId.equals("")) {
+		if (sId == null || sId.trim().equals("")) {
 			List l = DataAccessDriver.getInstance().newUserModel().findByName(toUsername, true);
 			
 			if (l.size() > 0) {

@@ -40,7 +40,7 @@ knowledge on how to install/configure a Java servlet container (or already have 
 <br/></br>
 </p>
 
-<p class="note">Note: These instructions are for the installation of JForum, release version 2.0. Some of the steps here described may not be valid for 
+<p class="note">Note: These instructions are for the installation of JForum, release version 2.1. Some of the steps here described may not be valid for 
 older versions, which are no longer supported.</p>
 </p>
 
@@ -119,6 +119,19 @@ Please read carefully the fields' tips, since they contain valuable information.
 				</tr>
 
 				<tr class="fields">
+					<td>Connection type</td>
+					<td align="center">Yes</td>
+					<td>Which method to use to connect to database. <i>Native</i> will use regular connections, while <i>DataSource</i> will try
+					to connect using the specified datasource name</td>
+				</tr>
+
+				<tr class="fields">
+					<td>DataSource name</td>
+					<td align="center">no</td>
+					<td>If you chosen <i>DataSource</i> as Connection Type, then inform the name of the datasource</td>
+				</tr>
+
+				<tr class="fields">
 					<td>Database Server Hostname</td>
 					<td align="center">Yes</td>
 					<td>The host where the database is located</td>
@@ -161,6 +174,12 @@ Please read carefully the fields' tips, since they contain valuable information.
 					<td>The link to the forum context. If you are hosting it under some "real" domain and the context path is "/", 
 						the "Forum Link" will be the address of your site, in most cases. 
 					</td>
+				</tr>
+
+				<tr class="fields">
+					<td>Website Link</td>
+					<td align="center">Yes</td>
+					<td>The link to your website.</td>
 				</tr>
 
 				<tr class="fields">

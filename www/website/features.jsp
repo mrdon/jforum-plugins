@@ -25,10 +25,18 @@
 			<font style="font-family: verdana; font-size: 22px;"><b>Features</b></font><br/>
 			<img src="h_bar.gif"><br>
 			<p>
-			Here's what JForum has to offer:
+			Here are some of the main features of JForum:
 			</p>
 
+			<p><img src="dot.gif"> Easy installation through graphical web interface </p>
 			<p><img src="dot.gif"> Fast and scalable, perfect for busy sites - unlike most message board systems, JForum caches frequently accessed data to avoid excessive querying of the database</p>
+			<p><img src="dot.gif"> Karma - Rate messages and users </p>
+			<p><img src="dot.gif"> File Attachments, with fully customizable options </p>
+			<p><img src="dot.gif"> Bookmarks - save your favourite threads and share with other users </p>
+			<p><img src="dot.gif"> Member Listing </p>
+			<p><img src="dot.gif"> Moderated Categories and Forums - Administrators may allow new messages be posted only after the approval of some moderator or administraor </p>
+			<p><img src="dot.gif"> Read-only forums - Forums where is not possible to post new messages, just read </p>
+			<p><img src="dot.gif"> Reply-only forums - Forums where only reply to existing posts are allowed </p>
 			<p><img src="dot.gif"> Easy migration from phpBB </p>
 			<p><img src="dot.gif"> Support for several popular databases, including MySQL, PostgreSQL and HSQLDB</p>
 			<p><img src="dot.gif"> Easy and fast development for any other data source</p>
@@ -36,6 +44,7 @@
 			<p><img src="dot.gif"> Familiar and attractive layout</p>			
 			<p><img src="dot.gif"> Robust security system</p>			
 			<p><img src="dot.gif"> Friendly URLs (no more long and hard-to-remember links!)</p>
+			<p><img src="dot.gif"> Automatic parsing of links in the messages </p>
 			<p><img src="dot.gif"> Integrated private message system</p>		
 			<p><img src="dot.gif"> User defined avatars</p>
 			<p><img src="dot.gif"> User banning</p>					
@@ -62,7 +71,7 @@
 			<p><img src="dot.gif"> Sticky topics and announcements</p>
 			<p><img src="dot.gif"> Listing of the Most Recent topics from the whole forum</p>
 			<p><img src="dot.gif"> Post preview</p>
-			<p><img src="dot.gif"> Advanced HTML filter</p>
+			<p><img src="dot.gif"> Advanced HTML filter, for increased security</p>
 		</td>
 	</tr>
 	

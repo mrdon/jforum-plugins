@@ -36,10 +36,12 @@
 			<br>
 			<img src="download.jpg" align="middle"> <a href="http://www.jforum.net/download-latest.htm">Click here to download JForum</a>
 			<br>
+			<br>
+			<font color="#ff0000"><b>Requirements:</b> Java 1.4 or more recent, and any Servlet Container (Tomcat, Jetty, JBoss etc)</font>
 			<br><br>
 			<font style="font-family: verdana; font-size: 16px;"><b>Developer / CVS Access</b></font><br/>
 			If you're a developer or wants to get the latest development version, you can download the source code from CVS. Please see the 
-			<a href="development.htm">development</a> page for more information.
+			<a href="development.jsp">development</a> page for more information.
 			</p>
 		</td>
 	</tr>
