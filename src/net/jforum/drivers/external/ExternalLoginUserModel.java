@@ -82,6 +82,13 @@ public class ExternalLoginUserModel implements UserModel {
 		delegateUserModel.delete(userId);
 	}
 	
+	/** 
+	 * @see net.jforum.model.UserModel#isDeleted(int)
+	 */
+	public boolean isDeleted(int userId) throws Exception {
+		return delegateUserModel.isDeleted(userId);
+	}
+	
 	public List findByName(String input, boolean exactMath) throws Exception {
 		return delegateUserModel.findByName(input, exactMath);
 	}

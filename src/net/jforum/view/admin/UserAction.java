@@ -68,12 +68,21 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.3 2004/09/25 02:00:26 jamesyong Exp $
+ * @version $Id: UserAction.java,v 1.4 2004/09/25 04:38:05 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
 	// Listing
 	public void list() throws Exception
+	{
+		int start = this.preparePagination(DataAccessDriver.getInstance().newUserModel().getTotalUsers());
+		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
+
+		JForum.getContext().put("users", DataAccessDriver.getInstance().newUserModel().selectAll(start ,usersPerPage));
+		JForum.getContext().put("moduleAction", "user_list.htm");
+	}
+	
+	private int preparePagination(int totalUsers)
 	{
 		String s = JForum.getRequest().getParameter("start");
 		int start = 0;
@@ -90,16 +99,27 @@ public class UserAction extends Command
 		}
 		
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
-		int totalUsers = DataAccessDriver.getInstance().newUserModel().getTotalUsers();
-
-		JForum.getContext().put("users", DataAccessDriver.getInstance().newUserModel().selectAll(start ,usersPerPage));
-		JForum.getContext().put("moduleAction", "user_list.htm");
 		
-		// Pagination
 		JForum.getContext().put("totalPages", new Double(Math.floor(totalUsers / usersPerPage)));
 		JForum.getContext().put("recordsPerPage", new Integer(usersPerPage));
 		JForum.getContext().put("totalRecords", new Integer(totalUsers));
 		JForum.getContext().put("thisPage", new Integer(start));
+		
+		return start;
+	}
+	
+	public void search() throws Exception
+	{
+		List users = new ArrayList();
+		String search = JForum.getRequest().getParameter("username");
+		
+		if (search != null) {
+			users = DataAccessDriver.getInstance().newUserModel().findByName(search, false);
+		}
+		
+		JForum.getContext().put("moduleAction", "user_list.htm");
+		JForum.getContext().put("users", users);
+		JForum.getContext().put("search", search);
 	}
 	
 	// Permissions

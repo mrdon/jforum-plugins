@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.15 2004/09/25 02:10:11 jamesyong Exp $
+ * @version $Id: UserModel.java,v 1.16 2004/09/25 04:42:56 rafaelsteil Exp $
  */
 public class UserModel extends AutoKeys implements net.jforum.model.UserModel 
 {
@@ -394,20 +394,22 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 	/** 
 	 * @see net.jforum.model.UserModel#isDeleted(int user_id)
 	 */
-	public boolean isDeleted(int user_id) throws Exception 
+	public boolean isDeleted(int userId) throws Exception 
 	{	
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.isDeleted"));
-		p.setInt(1, user_id);
-		ResultSet rs = p.executeQuery();
-		rs.next();
+		p.setInt(1, userId);
 		
-		int deleted = rs.getInt("deleted");
+		int deleted = 0;
+		
+		ResultSet rs = p.executeQuery();
+		if (rs.next()) {	
+			deleted = rs.getInt("deleted");
+		}
 		
 		rs.close();
 		p.close();
 		
-		return deleted==1;
-
+		return deleted == 1;
 	}
 	
 	/** 

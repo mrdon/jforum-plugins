@@ -57,7 +57,7 @@ import net.jforum.entities.User;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.10 2004/09/25 01:58:42 jamesyong Exp $
+ * @version $Id: UserModel.java,v 1.11 2004/09/25 04:38:04 rafaelsteil Exp $
  */
 public interface UserModel 
 {
@@ -107,7 +107,7 @@ public interface UserModel
 	
 	/**
 	 * Gets all users
-	 * 
+	 *
 	 * @param startFrom Index to start fetching from
 	 * @param count Number of records to retrieve
 	 * @return <code>ArrayList</code> with the users. Each entry is an <code>User</code> object
