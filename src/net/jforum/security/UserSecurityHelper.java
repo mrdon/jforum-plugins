@@ -40,7 +40,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: UserSecurityHelper.java,v 1.3 2004/09/19 05:13:16 rafaelsteil Exp $
+ * $Id: UserSecurityHelper.java,v 1.4 2004/09/28 06:39:30 jamesyong Exp $
  */
 package net.jforum.security;
 
@@ -80,7 +80,7 @@ public class UserSecurityHelper
 						RoleValue uRv = userRole.getValues().get(gRv.getValue()); 
 						
 						if (uRv == null) {
-							userRole.getValues().add(gRv);
+						//	userRole.getValues().add(gRv);
 						} 
 					}
 				}
