@@ -285,7 +285,7 @@ CREATE TABLE jforum_users (
   user_unread_privmsg smallint(5) NOT NULL default '0',
   user_last_privmsg int(11) NOT NULL default '0',
   user_emailtime int(11) default NULL,
-  user_viewemail tinyint(1) default '1',
+  user_viewemail tinyint(1) default '0',
   user_attachsig tinyint(1) default '1',
   user_allowhtml tinyint(1) default '0',
   user_allowbbcode tinyint(1) default '1',

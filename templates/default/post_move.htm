@@ -16,7 +16,7 @@ function validateSelectedForum()
 }
 </script>
 
-<form name="form1" method="post" action="${contextPath}/jforum.page" onSubmit="return validateSelectedForum();">
+<form accept-charset="${encoding}" name="form1" method="post" action="${contextPath}/jforum.page" onSubmit="return validateSelectedForum();">
 <input type="hidden" name="action" value="moveTopic">
 <input type="hidden" name="securityHash" value="${securityHash}">
 <input type="hidden" name="module" value="${moduleName}">

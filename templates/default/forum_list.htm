@@ -7,7 +7,7 @@
           <TD vAlign=bottom align=left>
 		  <span class="gensmall">${I18n.getMessage("ForumListing.lastVisit")}: ${lastVisit}</span><br>
 		  <SPAN class=gensmall>${I18n.getMessage("ForumListing.date")}: ${now}</SPAN><BR>
-		  <SPAN class=cattitle>${I18n.getMessage("ForumListing.forumIndex")}</SPAN>
+		  <SPAN class=forumLink><a class="forumLink" href="${homeLink}">${I18n.getMessage("ForumListing.forumIndex")}</a></SPAN>
 		  </TD>
           <TD class=gensmall vAlign=middle align=right>
 		  	<A class=gensmall href="${contextPath}/forums/newMessages.page">${I18n.getMessage("ForumListing.readLastVisitMessages")}</A>
@@ -114,7 +114,7 @@
         </TR></TBODY></TABLE>
         
         <#if !logged>
-			<FORM action="${contextPath}/jforum.page" method="POST">
+			<form accept-charset="${encoding}" action="${contextPath}/jforum.page" method="POST">
 			<input type="hidden" name="module" value="user">
 			<input type="hidden" name="action" value="validateLogin">
 			<input type="hidden" name="securityHash" value="${securityHash}">

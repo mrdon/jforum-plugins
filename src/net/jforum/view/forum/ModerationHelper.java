@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ModerationHelper.java,v 1.2 2004/04/21 23:57:22 rafaelsteil Exp $
+ * $Id: ModerationHelper.java,v 1.3 2004/05/04 00:59:36 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 
@@ -158,6 +158,10 @@ public class ModerationHelper
 			}
 			
 			DataAccessDriver.getInstance().newTopicModel().lockUnlock(ids, status);
+			
+			// Clear the cache
+			Topic t = DataAccessDriver.getInstance().newTopicModel().selectById(ids[0]);
+			TopicRepository.clearCache(t.getForumId());
 		}
 	}
 	

@@ -41,9 +41,11 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: QueuedExecutor.java,v 1.3 2004/04/21 23:57:34 rafaelsteil Exp $
+ * $Id: QueuedExecutor.java,v 1.4 2004/05/04 00:59:42 rafaelsteil Exp $
  */
 package net.jforum.util.concurrent.executor;
+
+import org.apache.log4j.Logger;
 
 import net.jforum.util.concurrent.Executor;
 import net.jforum.util.concurrent.Queue;
@@ -56,14 +58,16 @@ import net.jforum.util.concurrent.queue.UnboundedFifoQueue;
  */
 public class QueuedExecutor implements Executor 
 {
-	Thread currentThread;
-	final Queue queue;
-	final Object lock = new Object();
+	private Thread currentThread;
+	private final Queue queue;
+	private final Object lock = new Object();
+	private static final Logger logger = Logger.getLogger(QueuedExecutor.class);
 	
 	private static QueuedExecutor instance = new QueuedExecutor(new UnboundedFifoQueue());
 	
 	private QueuedExecutor(Queue queue) 
 	{
+		logger.info("Setting queue...");
 		this.queue = queue;
 	}
 	
@@ -83,15 +87,20 @@ public class QueuedExecutor implements Executor
 		{
 			synchronized(lock) {
 				currentThread = null;
+				logger.info("Cleaning up the thread...");
 			}
 		}
 	}
 
 	public void execute(Task task) throws InterruptedException 
 	{
+		logger.info("Executing a task: "+ task.getClass().getName());
+		
 		queue.put(task);
 		synchronized(lock) {
 			if(currentThread == null) {
+				logger.info("Creating a new thread...");
+				
 				currentThread = new Thread(new WorkerThread());
 				currentThread.start();	
 			}
@@ -106,6 +115,9 @@ public class QueuedExecutor implements Executor
 		synchronized(lock) {
 			if(currentThread == null) {
 				currentThread = new Thread(new WorkerThread());
+				currentThread.setDaemon(true);
+				currentThread.setName(this.getClass().getName() +"Thread");
+
 				currentThread.start();	
 			}
 		}

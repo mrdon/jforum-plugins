@@ -41,17 +41,13 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ImageUtils.java,v 1.10 2004/04/28 00:05:02 rafaelsteil Exp $
+ * $Id: ImageUtils.java,v 1.11 2004/05/04 00:59:44 rafaelsteil Exp $
  */
 package net.jforum.util.image;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.Image;
-import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
 import java.io.File;
@@ -87,9 +83,9 @@ public class ImageUtils
 	 * @return A resized <code>BufferedImage</code>
 	 * @throws IOException If the file is not found
 	 */
-	public static BufferedImage resizeImage(String imgName, int maxWidth, int maxHeight) throws IOException
+	public static BufferedImage resizeImage(String imgName, int type, int maxWidth, int maxHeight) throws IOException
 	{
-		return resizeImage(ImageIO.read(new File(imgName)), maxWidth, maxHeight);
+		return resizeImage(ImageIO.read(new File(imgName)), type, maxWidth, maxHeight);
 	}
 	
 	/**
@@ -100,7 +96,7 @@ public class ImageUtils
 	 * @param maxHeight The image's max height
 	 * @return A resized <code>BufferedImage</code>
 	 */
-	public static BufferedImage resizeImage(Image image, int maxWidth, int maxHeight)
+	public static BufferedImage resizeImage(Image image, int type, int maxWidth, int maxHeight)
 	{
 		float zoom = 1.0F;
 		Dimension largestDimension = new Dimension(maxWidth, maxHeight);
@@ -128,7 +124,7 @@ public class ImageUtils
 			imageHeight = largestDimension.height;
 		}
 		
-		return createBufferedImage(image, imageWidth, imageHeight);
+		return createBufferedImage(image, type, imageWidth, imageHeight);
 	}
 	
 	/**
@@ -192,27 +188,16 @@ public class ImageUtils
 	 * @param h The desired image height
 	 * @return The converted image
 	 */
-	public static BufferedImage createBufferedImage(Image image, int w, int h)
+	public static BufferedImage createBufferedImage(Image image, int type, int w, int h)
 	{
-		BufferedImage bi = null;
-		/*
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		GraphicsDevice gv = ge.getDefaultScreenDevice();
-		GraphicsConfiguration gc = gv.getDefaultConfiguration();
-		*/
-		
-		//try {
-			/*
-			bi = gc.createCompatibleImage(w, h, 
-				hasAlpha(image) ? Transparency.BITMASK : Transparency.OPAQUE);
-			*/
-			//bi = gc.createCompatibleImage(w, h, Transparency.OPAQUE);
-		//}
-		//catch (InterruptedException e) {}
-		
-		if (bi == null) {
-			bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+		if (type == ImageUtils.IMAGE_PNG && hasAlpha(image)) {
+			type = BufferedImage.TYPE_INT_ARGB;
 		}
+		else {
+			type = BufferedImage.TYPE_INT_RGB;
+		}
+
+		BufferedImage bi = new BufferedImage(w, h, type);
 
 		Graphics g = bi.createGraphics();
 		g.drawImage(image, 0, 0, w, h, null);
@@ -228,11 +213,16 @@ public class ImageUtils
 	 * @return <code>true</code> of <code>false</code>, according to the result 
 	 * @throws InterruptedException
 	 */
-	public static boolean hasAlpha(Image image) throws InterruptedException
+	public static boolean hasAlpha(Image image)
 	{
-		PixelGrabber pg = new PixelGrabber(image, 0, 0, 1, 1, false);
-		pg.grabPixels();
-		
-		return pg.getColorModel().hasAlpha();
+		try {
+			PixelGrabber pg = new PixelGrabber(image, 0, 0, 1, 1, false);
+			pg.grabPixels();
+			
+			return pg.getColorModel().hasAlpha();
+		}
+		catch (InterruptedException e) {
+			return false;
+		}
 	}
 }

@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ForumVH.java,v 1.4 2004/04/25 19:26:45 rafaelsteil Exp $
+ * $Id: ForumVH.java,v 1.5 2004/05/04 00:59:35 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 
@@ -158,7 +158,10 @@ public class ForumVH extends Command
 		JForum.getContext().put("allForums", ForumVH.getAllForums(true));
 		JForum.getContext().put("topicsPerPage",  new Integer((String)SystemGlobals.getValue("topicsPerPage")));
 		JForum.getContext().put("moduleAction", "forum_list.htm");
-		JForum.getContext().put("totalMessages", I18n.getMessage("ForumListing.totalMessagesInfo", new Object[] {new Integer(fm.getTotalMessages())}));
+		
+		JForum.getContext().put("totalMessages", I18n.getMessage("ForumListing.totalMessagesInfo", 
+						new Object[] {new Integer( ForumRepository.getTotalMessages() )}));
+		
 		JForum.getContext().put("totalUsers", I18n.getMessage("ForumListing.registeredUsers", new Object[] {new Integer(um.getTotalUsers())}));
 
 		HashMap m = um.getLastUserInfo();		

@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ForumRepository.java,v 1.2 2004/04/21 23:57:32 rafaelsteil Exp $
+ * $Id: ForumRepository.java,v 1.3 2004/05/04 00:59:41 rafaelsteil Exp $
  */
 package net.jforum.repository;
 
@@ -71,6 +71,7 @@ public class ForumRepository
 	private static HashMap forumsMap = new HashMap();
 	private static HashMap lastPostInfoMap = new HashMap();
 	private static int totalTopics = -1;
+	private static int totalMessages = 0;
 	
 	static {
 		try {
@@ -172,6 +173,8 @@ public class ForumRepository
 			ForumRepository.forumsMap.put(new Integer(forumId), f);
 			ForumRepository.lastPostInfoMap.remove(Integer.toString(forumId));
 		}
+		
+		getTotalMessages(true);
 	}
 	
 	public static HashMap getLastPostInfo(int forumId) throws Exception
@@ -190,6 +193,20 @@ public class ForumRepository
 		}
 		
 		return ForumRepository.totalTopics;
+	}
+	
+	public static int getTotalMessages() throws Exception
+	{
+		return getTotalMessages(false);
+	}
+	
+	public static int getTotalMessages(boolean fromDb) throws Exception
+	{
+		if (fromDb || ForumRepository.totalMessages == 0) {
+			ForumRepository.totalMessages = DataAccessDriver.getInstance().newForumModel().getTotalMessages();
+		}
+		
+		return ForumRepository.totalMessages;
 	}
 	
 	public static int getTotalTopics(int forumId) throws Exception

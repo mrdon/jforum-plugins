@@ -11,7 +11,7 @@
   <TR>
     <TD class=bodyline valign="top">
 		<#if moderator>
-      	<FORM action="${contextPath}/jforum.page" method="post" name="form1">
+      	<form accept-charset="${encoding}" action="${contextPath}/jforum.page" method="post" name="form1">
 	  	<input type="hidden" name="action" value="doModeration">
 		<input type="hidden" name="module" value="${moduleName}">
 		<input type="hidden" name="securityHash" value="${securityHash}">
@@ -140,7 +140,7 @@
             <TABLE cellSpacing=0 cellPadding=0 border=0>
               <TBODY>
               <TR>			  
-                <TD noWrap><form name="f"><SPAN class=gensmall>${I18n.getMessage("ForumIndex.goTo")}:&nbsp;<SELECT onchange="if(this.options[this.selectedIndex].value != -1){ document.location = '${contextPath}/forums/show/'+ this.options[this.selectedIndex].value +'.page'; }" name=select>
+                <TD noWrap><form accept-charset="${encoding}" name="f"><SPAN class=gensmall>${I18n.getMessage("ForumIndex.goTo")}:&nbsp;<SELECT onchange="if(this.options[this.selectedIndex].value != -1){ document.location = '${contextPath}/forums/show/'+ this.options[this.selectedIndex].value +'.page'; }" name=select>
 				<OPTION value=-1 selected>${I18n.getMessage("ForumIndex.goToSelectAForum")}</OPTION>				
 				<#list allForums.keySet() as category>
 					<OPTION value=-1>&nbsp;</OPTION>

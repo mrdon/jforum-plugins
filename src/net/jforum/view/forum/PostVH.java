@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: PostVH.java,v 1.10 2004/04/28 00:05:01 rafaelsteil Exp $
+ * $Id: PostVH.java,v 1.11 2004/05/04 00:59:36 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 
@@ -369,10 +369,12 @@ public class PostVH extends Command
 				TopicRepository.clearCache(t.getForumId());
 				
 				// RSS
+				/*
 				TopicRSS rss = new TopicRSS();
 				if (rss.objectExists(Integer.toString(t.getId()))) {
 					QueuedExecutor.getInstance().execute(new RSSTask(rss));
 				}
+				*/
 			}
 			
 			if (JForum.getRequest().getParameter("notify") == null) {
@@ -502,7 +504,7 @@ public class PostVH extends Command
 			((HashMap)SessionFacade.getAttribute("topics_tracking")).put(new Integer(t.getId()), new Long(p.getTime()));
 
 			// RSS
-			QueuedExecutor.getInstance().execute(new RSSTask(new TopicRSS()));
+			//QueuedExecutor.getInstance().execute(new RSSTask(new TopicRSS()));
 		}
 		else {
 			JForum.getContext().put("preview", true);
@@ -579,12 +581,15 @@ public class PostVH extends Command
 		}
 		
 		ForumRepository.reloadForum(p.getForumId());
+		TopicRepository.clearCache(p.getForumId());
 		
 		// RSS
+		/*
 		TopicRSS rss = new TopicRSS();
 		if (rss.objectExists(Integer.toString(p.getTopicId()))) {
 			QueuedExecutor.getInstance().execute(new RSSTask(rss));
 		}
+		*/
 	}
 	
 	public void unwatch() throws Exception

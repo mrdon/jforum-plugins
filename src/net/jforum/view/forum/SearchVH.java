@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: SearchVH.java,v 1.3 2004/04/21 23:57:22 rafaelsteil Exp $
+ * $Id: SearchVH.java,v 1.4 2004/05/04 00:59:35 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 
@@ -175,6 +175,7 @@ public class SearchVH extends Command
 		
 		JForum.getContext().put("totalPages", new Double(Math.floor(totalTopics / recordsPerPage)));
 		JForum.getContext().put("recordsPerPage", new Integer(recordsPerPage));
+		JForum.getContext().put("postsPerPage", new Integer(Integer.parseInt((String)SystemGlobals.getValue("postsPerPage"))));
 		JForum.getContext().put("totalRecords", new Integer(totalTopics));
 		JForum.getContext().put("thisPage", new Integer(start));
 		

@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: JForum.java,v 1.5 2004/04/28 00:04:57 rafaelsteil Exp $
+ * $Id: JForum.java,v 1.6 2004/05/04 00:59:36 rafaelsteil Exp $
  */
 package net.jforum;
 
@@ -308,7 +308,7 @@ public class JForum extends HttpServlet
 				}
 			}
 		}
-		
+
 		return null;
 	}
 	
@@ -435,6 +435,7 @@ public class JForum extends HttpServlet
             JForum.getContext().put("encoding", encoding);
 
             // Request
+            req.setCharacterEncoding(encoding);
 			ActionServletRequest request = new ActionServletRequest(req);
 			request.setCharacterEncoding(encoding);
 
@@ -474,8 +475,7 @@ public class JForum extends HttpServlet
 
 				if (((DataHolder)localData.get()).getRedirectTo() == null) {
 					// TODO: Add support to gzip content				
-					response.setContentType("text/html");
-					
+					response.setContentType("text/html; charset="+ encoding);
 
 					BufferedWriter out = new BufferedWriter(new OutputStreamWriter(response.getOutputStream(), encoding));
 					

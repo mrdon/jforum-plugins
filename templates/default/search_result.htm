@@ -9,7 +9,7 @@
 <#import "../macros/presentation.ftl" as presentation/>
 
 <#if moderator>
-	<FORM action="${contextPath}/jforum.page" method="post" name="form1">
+	<form accept-charset="${encoding}" action="${contextPath}/jforum.page" method="post" name="form1">
 	<input type="hidden" name="action" value="doModeration">
 	<input type="hidden" name="module" value="${moduleName}">
 	<input type="hidden" name="securityHash" value="${securityHash}">
@@ -100,7 +100,12 @@
 		  <#if (topic.lastPostTime?length > 0)>
 			  <SPAN class=postdetails>${topic.lastPostTime}<BR>
 			  <a href="${contextPath}/user/profile/${topic.postedBy.id}.page">${topic.lastPostBy.username}</a>
-			  <a href="${contextPath}/posts/list/${topic.id}.page#${topic.lastPostId}"><img src="templates/${templateName}/images/icon_latest_reply.gif" width="18" height="9" border="0"></a></SPAN>
+			  
+			<#assign startPage = ""/>
+			<#if (topic.totalReplies + 1 > postsPerPage)>
+				<#assign startPage = ((topic.totalReplies / postsPerPage)?int * postsPerPage) +"/"/>
+			</#if>
+			<a href="${contextPath}/posts/list/${start}${topic.id}.page#${topic.lastPostId}"><img src="templates/${templateName}/images/icon_latest_reply.gif" width="18" height="9" border="0"></a></SPAN>
 			</#if>
 		 </TD>
 		  <#if moderator && openModeration?default(false)>
@@ -140,7 +145,7 @@
             <TABLE cellSpacing=0 cellPadding=0 border=0>
               
               <TR>			  
-                <TD noWrap><form name="f"><SPAN class=gensmall>${I18n.getMessage("ForumIndex.goTo")}:&nbsp;<SELECT onchange="if(this.options[this.selectedIndex].value != -1){ document.location = '${contextPath}/forums/show/'+ this.options[this.selectedIndex].value +'.page'; }" name=select>
+                <TD noWrap><form accept-charset="${encoding}" name="f"><SPAN class=gensmall>${I18n.getMessage("ForumIndex.goTo")}:&nbsp;<SELECT onchange="if(this.options[this.selectedIndex].value != -1){ document.location = '${contextPath}/forums/show/'+ this.options[this.selectedIndex].value +'.page'; }" name=select>
 				<OPTION value=-1 selected>${I18n.getMessage("ForumIndex.goToSelectAForum")}</OPTION>				
 				<#list allForums.keySet() as category>
 					<OPTION value=-1>&nbsp;</OPTION>

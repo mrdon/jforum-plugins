@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: Spammer.java,v 1.2 2004/04/21 23:57:38 rafaelsteil Exp $
+ * $Id: Spammer.java,v 1.3 2004/05/04 00:59:44 rafaelsteil Exp $
  */
 package net.jforum.util.mail;
 
@@ -57,6 +57,8 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+
+import org.apache.log4j.Logger;
 
 import freemarker.template.Configuration;
 import freemarker.template.SimpleHash;
@@ -81,6 +83,8 @@ public class Spammer
 	private static Session session;
 	private static String username;
 	private static String password;
+	
+	private static final Logger logger = Logger.getLogger(Spammer.class);
 	
 	private Message message;
 	
@@ -175,6 +179,7 @@ public class Spammer
 			this.message.setRecipients(Message.RecipientType.TO, recipients);
 		}
 		catch (Exception e) {
+			logger.warn("EmailException: "+ e);
 			throw new EmailException(e);
 		}
 	}

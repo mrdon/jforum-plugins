@@ -40,7 +40,7 @@ function validateRegistrationForm(f)
 }
 </script>
 
-<form name="post" action="${contextPath}/jforum.page" method="post" onSubmit="return validateRegistrationForm(this);">
+<form accept-charset="${encoding}" name="post" action="${contextPath}/jforum.page" method="post" onSubmit="return validateRegistrationForm(this);">
 <input type="hidden" name="action" value="${action}">
 <input type="hidden" name="module" value="${moduleName}">
 <input type="hidden" name="securityHash" value="${securityHash}">
