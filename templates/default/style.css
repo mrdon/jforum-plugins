@@ -300,10 +300,22 @@ A.postlink:hover {
 	COLOR: #01336b; TEXT-DECORATION: underline
 }
 .code {
-	FONT-SIZE: 11px; COLOR: #444444; FONT-FAMILY: Courier, 'Courier New', sans-serif
+	FONT-SIZE: 11px; COLOR: #444444; FONT-FAMILY: Courier, 'Courier New', sans-serif; background-color: #F3F5FF;
+}
+.code-table {
+	 width: 90%; border-spacing: 1px; border: 0; align: center; background-color: #2943D4;
+}
+.code-table-simple {
+	width: 90%; border-spacing: 1px; border: 0; align: center; 
 }
 .quote {
-	FONT-SIZE: 11px; COLOR: #444444; LINE-HEIGHT: 125%; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif
+	FONT-SIZE: 11px; COLOR: #444444; LINE-HEIGHT: 125%; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; background-color: #F3F5FF;
+}
+.quote-table {
+	width: 90%; border-spacing: 1px; border: 0; align: center; background-color: #2943D4;
+}
+.quote-table-simple {
+	width: 90%; border-spacing: 1px; border: 0; align: center; 
 }
 .copyright {
 	FONT-SIZE: 10px; COLOR: #444444; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; LETTER-SPACING: -1px

@@ -40,11 +40,13 @@
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum;
+package net.jforum.exceptions;
 
 import java.io.StringWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
+
+import net.jforum.JForum;
 
 import org.apache.log4j.Logger;
 
@@ -53,7 +55,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumException.java,v 1.6 2004/11/12 03:08:09 rafaelsteil Exp $
+ * @version $Id: ForumException.java,v 1.1 2004/11/21 17:13:46 rafaelsteil Exp $
  */
 public class ForumException  extends RuntimeException
 {

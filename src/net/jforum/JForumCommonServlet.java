@@ -53,6 +53,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
 
+import net.jforum.exceptions.ForumException;
 import net.jforum.repository.BBCodeRepository;
 import net.jforum.util.I18n;
 import net.jforum.util.bbcode.BBCodeHandler;
@@ -67,7 +68,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumCommonServlet.java,v 1.15 2004/11/12 03:08:08 rafaelsteil Exp $
+ * @version $Id: JForumCommonServlet.java,v 1.16 2004/11/21 17:13:44 rafaelsteil Exp $
  */
 public class JForumCommonServlet extends HttpServlet {
     private static Properties modulesMapping;

@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,15 +37,14 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 03/08/2003 / 05:28:03
- * net.jforum.util.bbcode.BBCollection.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: BBCodeHandler.java,v 1.6 2004/06/01 19:47:31 pieter2 Exp $
  */
 package net.jforum.util.bbcode;
 
- import java.util.ArrayList;
+ import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -60,10 +59,11 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * @author Rafael Steil
+ * @version $Id: BBCodeHandler.java,v 1.7 2004/11/21 17:13:49 rafaelsteil Exp $
  */
 public class BBCodeHandler extends DefaultHandler
 {
-	private ArrayList bbList = new ArrayList();
+	private Map bbMap = new LinkedHashMap();
 	private boolean matchOpen = false;
 	private String tagName = "";
 	private StringBuffer sb;	
@@ -74,7 +74,7 @@ public class BBCodeHandler extends DefaultHandler
 	public BBCodeHandler parse() throws Exception
 	{
 		SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-		InputSource input = new InputSource(SystemGlobals.getApplicationResourceDir() +"/config/bb_config.xml");
+		InputSource input = new InputSource(SystemGlobals.getApplicationResourceDir() + "/config/bb_config.xml");
 		BBCodeHandler bbParser = new BBCodeHandler();
 		parser.parse(input, bbParser);
 		
@@ -83,12 +83,17 @@ public class BBCodeHandler extends DefaultHandler
 	
 	public void addBb(BBCode bb)
 	{
-		this.bbList.add(bb);
+		this.bbMap.put(bb.getTagName(), bb);
 	}
 	
-	public ArrayList getBbList()
+	public Collection getBbList()
 	{
-		return this.bbList;
+		return this.bbMap.values();
+	}
+	
+	public BBCode findByName(String tagName)
+	{
+		return (BBCode)this.bbMap.get(tagName);
 	}
 	
 	public void startElement(String uri, String localName, String tag, Attributes attrs)
@@ -117,7 +122,7 @@ public class BBCodeHandler extends DefaultHandler
 	{	
 		if (tag.equals("match")) {
 			this.matchOpen = false;
-			this.bbList.add(this.bb);
+			this.addBb(this.bb);
 		}
 		else if (this.tagName.equals("replace")) {
 			this.bb.setReplace(this.sb.toString().trim());

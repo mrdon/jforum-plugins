@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 02/08/2003 / 02:23:50
- * net.jforum.util.bbcode.BBCode.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: BBCode.java,v 1.5 2004/04/28 00:05:00 rafaelsteil Exp $
  */
 package net.jforum.util.bbcode;
 
@@ -49,6 +46,7 @@ package net.jforum.util.bbcode;
  * Represents each bbcode.
  * 
  * @author Rafael Steil
+ * @version $Id: BBCode.java,v 1.6 2004/11/21 17:13:49 rafaelsteil Exp $
  */
 public class BBCode 
 {

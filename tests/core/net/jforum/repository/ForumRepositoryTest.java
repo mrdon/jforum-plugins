@@ -62,7 +62,7 @@ import net.jforum.view.forum.ForumCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumRepositoryTest.java,v 1.3 2004/11/18 01:36:09 rafaelsteil Exp $
+ * @version $Id: ForumRepositoryTest.java,v 1.4 2004/11/21 17:13:49 rafaelsteil Exp $
  */
 public class ForumRepositoryTest extends TestCase 
 {
@@ -337,9 +337,12 @@ public class ForumRepositoryTest extends TestCase
 		assertTrue(index > -1);
 		c = (Category)categories.get(index);
 		
-		assertNull(c.getForum(MIXED_PRIVATE_FORUM_ID));
-		
 		Forum f = new Forum();
+		f.setName("");
+		f.setId(MIXED_PRIVATE_FORUM_ID);
+		assertFalse(c.getForums().contains(f));
+		
+		f = new Forum();
 		f.setId(MIXED_OPEN_FORUM_ID);
 		assertEquals(f, c.getForum(MIXED_OPEN_FORUM_ID));
 	}

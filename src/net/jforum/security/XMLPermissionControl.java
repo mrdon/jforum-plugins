@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: XMLPermissionControl.java,v 1.4 2004/11/12 03:08:10 rafaelsteil Exp $
+ * $Id: XMLPermissionControl.java,v 1.5 2004/11/21 17:13:45 rafaelsteil Exp $
  */
 package net.jforum.security;
 
@@ -53,8 +53,8 @@ import java.util.List;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import net.jforum.ForumException;
 import net.jforum.JForum;
+import net.jforum.exceptions.ForumException;
 import net.jforum.util.FormSelectedData;
 import net.jforum.util.preferences.SystemGlobals;
 

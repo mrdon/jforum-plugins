@@ -45,6 +45,8 @@ package net.jforum.view.forum;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,16 +54,21 @@ import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.entities.Post;
 import net.jforum.entities.Smilie;
+import net.jforum.entities.User;
+import net.jforum.model.PostModel;
+import net.jforum.model.UserModel;
 import net.jforum.repository.BBCodeRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.repository.SmiliesRepository;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.SafeHtml;
 import net.jforum.util.bbcode.BBCode;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.13 2004/11/14 16:28:44 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.14 2004/11/21 17:13:48 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -150,6 +157,9 @@ public class PostCommon
 							// Try to bypass smilies interpretation
 							contents = contents.replaceAll("\\(", "&#40;").replaceAll("\\)", "&#41;");
 							
+							// XML-like tags
+							contents = contents.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+							
 							StringBuffer replace = new StringBuffer(bb.getReplace());
 							int index = replace.indexOf("$1");
 							if (index > -1) {
@@ -231,5 +241,41 @@ public class PostCommon
 		}
 		
 		return p;
+	}
+	
+	public static void addToTopicPosters(int userId, Map usersMap, UserModel um) throws Exception
+	{
+		Integer posterId = new Integer(userId);
+		if (!usersMap.containsKey(posterId)) {
+            User u = um.selectById(userId);
+            u.setSignature(PostCommon.processText(u.getSignature()));
+            u.setSignature(PostCommon.processSmilies(u.getSignature(), 
+            		SmiliesRepository.getSmilies()));
+
+            usersMap.put(posterId, u);
+        }
+	}
+	
+	public static List topicPosts(PostModel pm, UserModel um, Map usersMap, boolean canEdit, int userId, 
+			int topicId, int start, int count) throws Exception
+	{
+		List posts = pm.selectAllByTopicByLimit(topicId, start, count);
+        List helperList = new ArrayList();
+        
+        int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
+        
+        Iterator iter = posts.iterator();
+        while (iter.hasNext()) {
+            Post p = (Post) iter.next();
+            if (canEdit || (p.getUserId() != anonymousUser && p.getUserId() == userId)) {
+                p.setCanEdit(true);
+            }
+            
+            PostCommon.addToTopicPosters(p.getUserId(), usersMap, um);
+
+            helperList.add(PostCommon.preparePostForDisplay(p));
+        }
+        
+        return helperList;
 	}
 }

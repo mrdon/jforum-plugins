@@ -56,6 +56,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
+import net.jforum.exceptions.ForumException;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.UserSessionModel;
 import net.jforum.repository.SecurityRepository;
@@ -69,7 +70,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.49 2004/11/15 01:57:55 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.50 2004/11/21 17:13:44 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -202,7 +203,6 @@ public class JForum extends JForumCommonServlet
 			if (!isDatabaseUp) {
 				ForumStartup.startDatabase();
 			}
-			
 			
 			if (isDatabaseUp) {
 				dataHolder.setConnection(DBConnection.getImplementation().getConnection());

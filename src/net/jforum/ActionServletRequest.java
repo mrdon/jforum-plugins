@@ -52,6 +52,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
+import net.jforum.exceptions.ForumException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -63,7 +64,7 @@ import org.apache.commons.fileupload.FileUploadException;
 
 /**
  * @author Rafael Steil
- * @version $Id: ActionServletRequest.java,v 1.9 2004/11/12 03:08:09 rafaelsteil Exp $
+ * @version $Id: ActionServletRequest.java,v 1.10 2004/11/21 17:13:45 rafaelsteil Exp $
  */
 public class ActionServletRequest extends HttpServletRequestWrapper 
 {

@@ -44,7 +44,7 @@ package net.jforum.model;
 
 import java.sql.Connection;
 
-import net.jforum.ForumException;
+import net.jforum.exceptions.ForumException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * analise, look at <code>net.jforum.drivers.generic</code> package.
  * 
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.7 2004/11/13 13:41:16 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.8 2004/11/21 17:13:46 rafaelsteil Exp $
  */
 public abstract class DataAccessDriver 
 {

@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: RankingRepository.java,v 1.4 2004/11/12 03:08:11 rafaelsteil Exp $
+ * $Id: RankingRepository.java,v 1.5 2004/11/21 17:13:48 rafaelsteil Exp $
  */
 package net.jforum.repository;
 
@@ -49,8 +49,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.jforum.ForumException;
 import net.jforum.entities.Ranking;
+import net.jforum.exceptions.ForumException;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.RankingModel;
 

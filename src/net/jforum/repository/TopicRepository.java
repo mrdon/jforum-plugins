@@ -48,8 +48,8 @@ import java.util.List;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
-import net.jforum.ForumException;
 import net.jforum.entities.Topic;
+import net.jforum.exceptions.ForumException;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.TopicModel;
 import net.jforum.util.preferences.ConfigKeys;
@@ -60,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: TopicRepository.java,v 1.9 2004/11/12 03:08:11 rafaelsteil Exp $
+ * @version $Id: TopicRepository.java,v 1.10 2004/11/21 17:13:47 rafaelsteil Exp $
  */
 public class TopicRepository
 {
