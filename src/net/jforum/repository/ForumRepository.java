@@ -62,7 +62,7 @@ import net.jforum.security.SecurityConstants;
  * needed just once, and then use the cache when data is requested.<br> 
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.6 2004/10/14 02:23:38 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.7 2004/11/01 00:23:38 rafaelsteil Exp $
  */
 public class ForumRepository 
 {
@@ -185,11 +185,14 @@ public class ForumRepository
 	
 	public static HashMap getLastPostInfo(int forumId) throws Exception
 	{
-		if (ForumRepository.lastPostInfoMap.containsKey(Integer.toString(forumId)) == false) {
-			ForumRepository.lastPostInfoMap.put(Integer.toString(forumId), DataAccessDriver.getInstance().newForumModel().getLastPostInfo(forumId));
+		HashMap lpi = ((HashMap)ForumRepository.lastPostInfoMap.get(Integer.toString(forumId)));
+		
+		if (!ForumRepository.lastPostInfoMap.containsKey(Integer.toString(forumId)) || lpi == null || lpi.size() == 0) {
+			lpi = DataAccessDriver.getInstance().newForumModel().getLastPostInfo(forumId);
+			ForumRepository.lastPostInfoMap.put(Integer.toString(forumId), lpi);
 		}
 		
-		return ((HashMap)ForumRepository.lastPostInfoMap.get(Integer.toString(forumId)));
+		return lpi;
 	}
 	
 	public static int getTotalTopics(int forumId, boolean fromDb) throws Exception
