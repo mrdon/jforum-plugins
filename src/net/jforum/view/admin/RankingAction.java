@@ -43,36 +43,29 @@
 package net.jforum.view.admin;
 
 
-import java.sql.Connection;
-
-import javax.servlet.http.HttpServletResponse;
-
-import net.jforum.ActionServletRequest;
-import net.jforum.Command;
 import net.jforum.entities.Ranking;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.RankingModel;
 import net.jforum.repository.RankingRepository;
-import freemarker.template.SimpleHash;
-import freemarker.template.Template;
+import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: RankingAction.java,v 1.5 2005/01/04 03:31:19 rafaelsteil Exp $
+ * @version $Id: RankingAction.java,v 1.6 2005/03/15 18:24:10 rafaelsteil Exp $
  */
-public class RankingAction extends Command 
+public class RankingAction extends AdminCommand 
 {
 	// List
 	public void list() throws Exception
 	{
 		this.context.put("ranks", DataAccessDriver.getInstance().newRankingModel().selectAll());
-		this.context.put("moduleAction", "ranking_list.htm");
+		this.setTemplateName(TemplateKeys.RANKING_LIST);
 	}
 	
 	// One more, one more
 	public void insert() throws Exception
 	{
-		this.context.put("moduleAction", "ranking_form.htm");
+		this.setTemplateName(TemplateKeys.RANKING_INSERT);
 		this.context.put("action", "insertSave");
 	}
 	
@@ -81,7 +74,7 @@ public class RankingAction extends Command
 	{
 		this.context.put("rank", DataAccessDriver.getInstance().newRankingModel().selectById(
 				this.request.getIntParameter("ranking_id")));
-		this.context.put("moduleAction", "ranking_form.htm");
+		this.setTemplateName(TemplateKeys.RANKING_EDIT);
 		this.context.put("action", "editSave");
 	}
 	
@@ -127,19 +120,4 @@ public class RankingAction extends Command
 		DataAccessDriver.getInstance().newRankingModel().addNew(r);
 		this.list();
 	}
-	
-	/**
-	 * @see net.jforum.Command#process()
-	 */
-	public Template process(ActionServletRequest request, 
-			HttpServletResponse response, 
-			Connection conn, SimpleHash context) throws Exception 
-	{
-		if (AdminAction.isAdmin()) {
-			super.process(request, response, conn, context);
-		}
-		
-		return AdminAction.adminBaseTemplate();
-	}
-
 }

@@ -55,6 +55,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.ActionServletRequest;
 import net.jforum.Command;
+import net.jforum.JForum;
 import net.jforum.entities.Forum;
 import net.jforum.entities.Topic;
 import net.jforum.model.DataAccessDriver;
@@ -63,12 +64,13 @@ import net.jforum.model.SearchModel;
 import net.jforum.repository.ForumRepository;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.preferences.TemplateKeys;
 import net.jforum.view.forum.common.TopicsCommon;
 import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.16 2005/01/05 01:28:16 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.17 2005/03/15 18:24:17 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -108,7 +110,7 @@ public class SearchAction extends Command
 	
 	public void filters() throws Exception
 	{
-		this.context.put("moduleAction", "search.htm");
+		this.setTemplateName(TemplateKeys.SEARCH_FILTERS);
 		this.context.put("categories", ForumRepository.getAllCategories());
 	}
 	
@@ -177,7 +179,7 @@ public class SearchAction extends Command
 		
 		this.context.put("topics", topics);
 		this.context.put("categories", ForumRepository.getAllCategories());
-		this.context.put("moduleAction", "search_result.htm");
+		this.setTemplateName(TemplateKeys.SEARCH_SEARCH);
 		
 		// Pagination
 		this.context.put("kw", kw);
@@ -229,6 +231,10 @@ public class SearchAction extends Command
 	public void moveTopic() throws Exception
 	{
 		new ModerationHelper().moveTopicsSave(this.makeRedirect());
+		
+		if (JForum.getRequest().getParameter("topicMove") != null) {
+			this.setTemplateName(TemplateKeys.MODERATION_MOVE_TOPICS);
+		}
 	}
 	
 	public void moderationDone() throws Exception

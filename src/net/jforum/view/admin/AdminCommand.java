@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -36,69 +36,31 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Oct 19, 2004
+ * Created on Mar 14, 2005 7:33:43 PM
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.view.forum;
+package net.jforum.view.admin;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.sql.Connection;
 
+import javax.servlet.http.HttpServletResponse;
+
+import freemarker.template.SimpleHash;
+import freemarker.template.Template;
+import net.jforum.ActionServletRequest;
 import net.jforum.Command;
-import net.jforum.entities.Forum;
-import net.jforum.entities.Topic;
-import net.jforum.repository.ForumRepository;
-import net.jforum.repository.TopicRepository;
-import net.jforum.util.preferences.ConfigKeys;
-import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.util.preferences.TemplateKeys;
-import net.jforum.view.forum.common.TopicsCommon;
 
 /**
- * Display a list of recent Topics
- * 
- * @author James Yong
  * @author Rafael Steil
- * @version $Id: RecentTopicsAction.java,v 1.7 2005/03/15 18:24:17 rafaelsteil Exp $
+ * @version $Id: AdminCommand.java,v 1.2 2005/03/15 18:24:11 rafaelsteil Exp $
  */
-public class RecentTopicsAction extends Command 
+public abstract class AdminCommand extends Command
 {
-	private List forums;
-
-	public void list() throws Exception
+	public Template process(ActionServletRequest request, HttpServletResponse response, 
+			Connection conn, SimpleHash context) throws Exception
 	{
-		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
-		
-		this.context.put("postsPerPage", new Integer(postsPerPage));
-		this.context.put("topics", this.topics());
-		this.context.put("forums", this.forums);
-		this.setTemplateName(TemplateKeys.RECENT_LIST);
-		
-		TopicsCommon.topicListingBase();
-	}
-	
-	List topics() throws Exception
-	{
-		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
-		List tmpTopics = TopicRepository.getRecentTopics();
-		
-		this.forums = new ArrayList(postsPerPage);
-		Iterator iter = tmpTopics.iterator();
-		while (iter.hasNext()) 
-		{
-			Topic t = (Topic)iter.next();
-			if (TopicsCommon.isTopicAccessible(t.getForumId())) {
-				// Get name of forum that the topic refers to
-				Forum f = ForumRepository.getForum(t.getForumId());
-				forums.add(f);
-			}
-			else {
-				iter.remove();
-			}
-		}
-		
-		return TopicsCommon.prepareTopics(tmpTopics);
+		new AdminAction().checkAdmin();
+		return super.process(request, response, conn, context);
 	}
 }

@@ -46,8 +46,12 @@ import java.sql.Connection;
 
 import javax.servlet.http.HttpServletResponse;
 
+import net.jforum.exceptions.TemplateNotFoundException;
+import net.jforum.repository.Tpl;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.preferences.TemplateKeys;
+
 import freemarker.template.Configuration;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
@@ -58,11 +62,13 @@ import freemarker.template.Template;
  * presentation actions must extend this class. 
  * 
  * @author Rafael Steil
- * @version $Id: Command.java,v 1.7 2004/12/27 00:30:52 rafaelsteil Exp $
+ * @version $Id: Command.java,v 1.8 2005/03/15 18:24:12 rafaelsteil Exp $
  */
 public abstract class Command 
 {
 	private String templateName;
+	private boolean ignoreAction;
+	
 	protected Connection conn;
 	protected ActionServletRequest request;
 	protected HttpServletResponse response;
@@ -70,7 +76,12 @@ public abstract class Command
 	
 	protected void setTemplateName(String templateName)
 	{
-		this.templateName = templateName;
+		this.templateName = Tpl.name(templateName);
+	}
+	
+	protected void ignoreAction()
+	{
+		this.ignoreAction = true;
 	}
 	
 	/**
@@ -101,21 +112,30 @@ public abstract class Command
 		this.response = response;
 		this.conn = conn;
 		this.context = context;
+		
+		String action = JForum.getRequest().getAction();
 
-		try {
-			Class.forName(this.getClass().getName()).getMethod(JForum.getRequest().getAction(), null).invoke(this, null);
-		}
-		catch (NoSuchMethodException e) {		
-			this.list();		
-		}
-		catch (Exception e) {
-			throw e;
-		}
-		
-		if (this.templateName == null) {
-			this.templateName =  SystemGlobals.getValue(ConfigKeys.TEMPLATE_NAME) + "/forum_base.htm";
+		if (!this.ignoreAction) {
+			try {
+				Class.forName(this.getClass().getName()).getMethod(action, null).invoke(this, null);
+			}
+			catch (NoSuchMethodException e) {		
+				this.list();		
+			}
+			catch (Exception e) {
+				throw e;
+			}
 		}
 		
-		return Configuration.getDefaultConfiguration().getTemplate(this.templateName);
+		if (JForum.getRedirect() != null) {
+			this.setTemplateName(TemplateKeys.EMPTY);
+		}
+		else if (this.templateName == null) {
+			throw new TemplateNotFoundException("Template for action " + action + " is not defined");
+		}
+		
+		return Configuration.getDefaultConfiguration().getTemplate(SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR)
+				+ "/" 
+				+ this.templateName);
 	}
 }

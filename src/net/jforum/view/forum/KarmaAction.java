@@ -60,11 +60,12 @@ import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.preferences.TemplateKeys;
 import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaAction.java,v 1.6 2005/03/03 13:31:49 franklin_samir Exp $
+ * @version $Id: KarmaAction.java,v 1.7 2005/03/15 18:24:17 rafaelsteil Exp $
  */
 public class KarmaAction extends Command
 {
@@ -111,7 +112,7 @@ public class KarmaAction extends Command
 
 	private void error(String message, Post p)
 	{
-		this.context.put("moduleAction", "message.htm");
+		this.setTemplateName(TemplateKeys.KARMA_ERROR);
 
 		if (p != null) {
 			this.context.put("message", I18n.getMessage(message, new String[] { this.urlToTopic(p) }));
@@ -135,7 +136,7 @@ public class KarmaAction extends Command
 	 */
 	public void list() throws Exception
 	{
-		this.context.put("moduleAction", "message.htm");
+		this.setTemplateName(TemplateKeys.KARMA_LIST);
 		this.context.put("message", I18n.getMessage("invalidAction"));
 	}
 
@@ -176,7 +177,7 @@ public class KarmaAction extends Command
 		List users = DataAccessDriver.getInstance().newKarmaModel().getMostRatedUserByPeriod(usersPerPage, firstPeriod,
 				lastPeriod, orderField);
 		this.context.put("users", users);
-		this.context.put("moduleAction", "user_list_karma.htm");
+		this.setTemplateName(TemplateKeys.KARMA_SEARCH_BYPERIOD);
 	}
 
 	/**
@@ -214,8 +215,7 @@ public class KarmaAction extends Command
 		List users = DataAccessDriver.getInstance().newKarmaModel().getMostRatedUserByPeriod(usersPerPage, firstPeriod,
 				lastPeriod, orderField);
 		this.context.put("users", users);
-		this.context.put("moduleAction", "user_list_karma.htm");
-
+		this.setTemplateName(TemplateKeys.KARMA_SEARCH_BYMONTH);
 	}
 
 	private int preparePagination(int totalUsers)

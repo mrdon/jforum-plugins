@@ -61,7 +61,7 @@ import net.jforum.view.forum.common.ForumCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationHelper.java,v 1.14 2005/03/07 22:05:00 rafaelsteil Exp $
+ * @version $Id: ModerationHelper.java,v 1.15 2005/03/15 18:24:17 rafaelsteil Exp $
  */
 public class ModerationHelper 
 {
@@ -179,7 +179,6 @@ public class ModerationHelper
 	
 	private void moveTopics() throws Exception
 	{
-		JForum.getContext().put("moduleAction", "post_move.htm");
 		JForum.getContext().put("persistData", JForum.getRequest().getParameter("persistData"));
 		JForum.getContext().put("allCategories", ForumCommon.getAllCategoriesAndForums(false));
 		

@@ -42,15 +42,10 @@
  */
 package net.jforum.view.admin;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
-
-import net.jforum.ActionServletRequest;
-import net.jforum.Command;
 import net.jforum.entities.AttachmentExtension;
 import net.jforum.entities.AttachmentExtensionGroup;
 import net.jforum.entities.QuotaLimit;
@@ -59,14 +54,13 @@ import net.jforum.model.DataAccessDriver;
 import net.jforum.util.TreeGroup;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import freemarker.template.SimpleHash;
-import freemarker.template.Template;
+import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentsAction.java,v 1.6 2005/03/12 19:04:18 rafaelsteil Exp $
+ * @version $Id: AttachmentsAction.java,v 1.7 2005/03/15 18:24:10 rafaelsteil Exp $
  */
-public class AttachmentsAction extends Command
+public class AttachmentsAction extends AdminCommand
 {
 	public void configurations() throws Exception
 	{
@@ -76,7 +70,7 @@ public class AttachmentsAction extends Command
 		this.context.put("thumbW", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_IMAGES_MIN_THUMB_W));
 		this.context.put("maxPost", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
 
-		this.context.put("moduleAction", "attachments_config.htm");
+		this.setTemplateName(TemplateKeys.ATTACHMENTS_CONFIG);
 	}
 	
 	public void configurationsSave() throws Exception
@@ -92,7 +86,7 @@ public class AttachmentsAction extends Command
 		AttachmentModel am = DataAccessDriver.getInstance().newAttachmentModel();
 		
 		this.context.put("quotas", am.selectQuotaLimit());
-		this.context.put("moduleAction", "quota_limit.htm");
+		this.setTemplateName(TemplateKeys.ATTACHMENTS_QUOTA_LIMIT);
 		this.context.put("groups", new TreeGroup().getNodes());
 		this.context.put("selectedList", new ArrayList());
 		this.context.put("groupQuotas", am.selectGroupsQuotaLimits());
@@ -142,7 +136,7 @@ public class AttachmentsAction extends Command
 	
 	public void extensionGroups() throws Exception
 	{
-		this.context.put("moduleAction", "extension_groups.htm");
+		this.setTemplateName(TemplateKeys.ATTACHMENTS_EXTENSION_GROUPS);
 		this.context.put("groups", DataAccessDriver.getInstance().newAttachmentModel().selectExtensionGroups());
 	}
 	
@@ -194,7 +188,7 @@ public class AttachmentsAction extends Command
 	{
 		AttachmentModel am = DataAccessDriver.getInstance().newAttachmentModel();
 		
-		this.context.put("moduleAction", "extensions.htm");
+		this.setTemplateName(TemplateKeys.ATTACHMENTS_EXTENSIONS);
 		this.context.put("extensions", am.selectExtensions());
 		this.context.put("groups", am.selectExtensionGroups());
 	}
@@ -271,25 +265,11 @@ public class AttachmentsAction extends Command
 		this.quotaLimit();
 	}
 	
-	
 	/**
 	 * @see net.jforum.Command#list()
 	 */
 	public void list() throws Exception
 	{
 		this.configurations();
-	}
-
-	/**
-	 * @see net.jforum.Command#process(net.jforum.ActionServletRequest, javax.servlet.http.HttpServletResponse, java.sql.Connection, freemarker.template.SimpleHash)
-	 */
-	public Template process(ActionServletRequest request, HttpServletResponse response, Connection conn,
-			SimpleHash context) throws Exception
-	{
-		if (AdminAction.isAdmin()) {
-			super.process(request, response, conn, context);
-		}
-
-		return AdminAction.adminBaseTemplate();
 	}
 }

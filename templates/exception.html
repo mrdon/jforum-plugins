@@ -3,6 +3,5 @@ ${stackTrace}
 END ERROR STACK TRACE-->
 <div id="exception"></div>
 <#assign message = "An error has ocurred. For detailed stack trace, please see the page's source code.<pre>" + message + "</pre>"/>
-<#assign moduleAction = "message.htm">
-<#include "default/forum_base.htm">
+<#include "${templateName}/message.htm"/>
 

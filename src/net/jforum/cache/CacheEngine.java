@@ -46,11 +46,12 @@ import java.util.Collection;
 
 /**
  * @author Rafael Steil
- * @version $Id: CacheEngine.java,v 1.5 2005/02/03 12:37:42 rafaelsteil Exp $
+ * @version $Id: CacheEngine.java,v 1.6 2005/03/15 18:24:19 rafaelsteil Exp $
  */
 public interface CacheEngine
 {
 	public static final String DUMMY_FQN = "";
+	public static final String NOTIFICATION = "notification";
 	
 	/**
 	 * Inits the cache engine. 

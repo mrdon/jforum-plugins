@@ -55,6 +55,7 @@ import net.jforum.exceptions.ForumStartupException;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.repository.BBCodeRepository;
 import net.jforum.repository.ModulesRepository;
+import net.jforum.repository.Tpl;
 import net.jforum.util.I18n;
 import net.jforum.util.bbcode.BBCodeHandler;
 import net.jforum.util.preferences.ConfigKeys;
@@ -69,7 +70,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumCommonServlet.java,v 1.25 2005/03/12 20:10:44 rafaelsteil Exp $
+ * @version $Id: JForumCommonServlet.java,v 1.26 2005/03/15 18:24:11 rafaelsteil Exp $
  */
 public class JForumCommonServlet extends HttpServlet {
     protected boolean debug;
@@ -129,6 +130,7 @@ public class JForumCommonServlet extends HttpServlet {
     protected void loadConfigStuff() throws Exception {
         ConfigLoader.loadUrlPatterns();
         I18n.load();
+		Tpl.load(SystemGlobals.getValue(ConfigKeys.TEMPLATES_MAPPING));
 
         // BB Code
         BBCodeRepository.setBBCollection(new BBCodeHandler().parse());
@@ -311,6 +313,11 @@ public class JForumCommonServlet extends HttpServlet {
     public static void setRedirect(String redirect) {
         ((DataHolder) localData.get()).setRedirectTo(getResponse().encodeRedirectURL(redirect));
     }
+	
+	public static String getRedirect()
+	{
+		return ((DataHolder)localData.get()).getRedirectTo();
+	}
 
     /**
      * Sets the content type for the current http response.

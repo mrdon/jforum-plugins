@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -36,43 +36,20 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * This file creation date: 31/01/2004 - 20:53:44
+ * Created on Mar 14, 2005 4:12:58 PM
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.util.rss;
-
-import java.io.StringWriter;
-
-import net.jforum.JForum;
-import net.jforum.util.preferences.ConfigKeys;
-import net.jforum.util.preferences.SystemGlobals;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
+package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericRSS.java,v 1.3 2005/03/15 18:24:21 rafaelsteil Exp $
+ * @version $Id: TemplateNotFoundException.java,v 1.2 2005/03/15 18:24:12 rafaelsteil Exp $
  */
-public class GenericRSS implements RSSAware 
+public class TemplateNotFoundException extends RuntimeException
 {
-	private RSS rss;
-	
-	protected void setRSS(RSS rss) 
+	public TemplateNotFoundException(String message)
 	{
-		this.rss = rss;
-	}
-	
-	public String createRSS() throws Exception
-	{
-		Template t = Configuration.getDefaultConfiguration().getTemplate(SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR) 
-				+ "/rss_template.htm");
-		StringWriter sw = new StringWriter();
-		
-		JForum.getContext().put("encoding", SystemGlobals.getValue(ConfigKeys.ENCODING));
-		JForum.getContext().put("rss", this.rss);
-		t.process(JForum.getContext(), sw);
-		
-		return sw.toString();
+		super(message);
 	}
 }

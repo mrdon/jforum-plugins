@@ -67,12 +67,13 @@ import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.preferences.TemplateKeys;
 import net.jforum.view.forum.common.ForumCommon;
 import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.31 2005/03/12 20:05:10 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.32 2005/03/15 18:24:16 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -83,7 +84,7 @@ public class ForumAction extends Command
 		
 		this.context.put("allCategories", ForumCommon.getAllCategoriesAndForums(true));
 		this.context.put("topicsPerPage",  new Integer(SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE)));
-		this.context.put("moduleAction", "forum_list.htm");
+		this.setTemplateName(TemplateKeys.FORUMS_LIST);
 		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
 		
 		this.context.put("totalMessages", I18n.getMessage("ForumListing.totalMessagesInfo", 
@@ -195,7 +196,7 @@ public class ForumAction extends Command
 		this.context.put("topics", TopicsCommon.prepareTopics(tmpTopics));
 		this.context.put("allCategories", ForumCommon.getAllCategoriesAndForums(false));
 		this.context.put("forum", forum);
-		this.context.put("moduleAction", "forum_show.htm");
+		this.setTemplateName(TemplateKeys.FORUMS_SHOW);
 		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
 		this.context.put("pageTitle", SystemGlobals.getValue(ConfigKeys.FORUM_NAME) + " - " + forum.getName());
 		
@@ -219,6 +220,10 @@ public class ForumAction extends Command
 	public void doModeration() throws Exception
 	{
 		new ModerationHelper().doModeration(this.makeRedirect("moderationDone"));
+		
+		if (JForum.getRequest().getParameter("topicMove") != null) {
+			this.setTemplateName(TemplateKeys.MODERATION_MOVE_TOPICS);
+		}
 	}
 	
 	public void moveTopic() throws Exception
@@ -291,6 +296,6 @@ public class ForumAction extends Command
 	
 	public void pingSession()
 	{
-		this.setTemplateName("pingSession.htm");
+		this.setTemplateName(TemplateKeys.FORUMS_PING);
 	}
 }

@@ -59,12 +59,13 @@ import net.jforum.util.mail.EmailSenderTask;
 import net.jforum.util.mail.PrivateMessageSpammer;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.preferences.TemplateKeys;
 import net.jforum.view.forum.common.PostCommon;
 import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.18 2005/03/04 17:18:13 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.19 2005/03/15 18:24:17 rafaelsteil Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -73,7 +74,7 @@ public class PrivateMessageAction extends Command
 	public void inbox() throws Exception
 	{
 		if (!SessionFacade.isLogged()) {
-			ViewCommon.contextToLogin();
+			this.setTemplateName(ViewCommon.contextToLogin());
 			return;
 		}
 		
@@ -84,14 +85,14 @@ public class PrivateMessageAction extends Command
 
 		this.context.put("inbox", true);
 		this.context.put("pmList", pmList);
-		this.context.put("moduleAction", "pm_list.htm");
+		this.setTemplateName(TemplateKeys.PM_INBOX);
 		this.putTypes();		
 	}
 	
 	public void sentbox() throws Exception
 	{
 		if (!SessionFacade.isLogged()) {
-			ViewCommon.contextToLogin();
+			this.setTemplateName(ViewCommon.contextToLogin());
 			return;
 		}
 		
@@ -102,7 +103,7 @@ public class PrivateMessageAction extends Command
 
 		this.context.put("sentbox", true);
 		this.context.put("pmList", pmList);
-		this.context.put("moduleAction", "pm_list.htm");
+		this.setTemplateName(TemplateKeys.PM_SENTBOX);
 		this.putTypes();
 	}
 	
@@ -116,7 +117,7 @@ public class PrivateMessageAction extends Command
 	public void send() throws Exception
 	{
 		if (!SessionFacade.isLogged()) {
-			ViewCommon.contextToLogin();
+			this.setTemplateName(ViewCommon.contextToLogin());
 			return;
 		}
 		
@@ -130,7 +131,7 @@ public class PrivateMessageAction extends Command
 	public void sendTo() throws Exception
 	{
 		if (!SessionFacade.isLogged()) {
-			ViewCommon.contextToLogin();
+			this.setTemplateName(ViewCommon.contextToLogin());
 			return;
 		}
 		
@@ -154,7 +155,7 @@ public class PrivateMessageAction extends Command
 		this.context.put("user", user);
 		this.context.put("moduleName", "pm");
 		this.context.put("action", "sendSave");
-		this.context.put("moduleAction", "post_form.htm");
+		this.setTemplateName(TemplateKeys.PM_SENDFORM);
 		this.context.put("htmlAllowed", true);
 		this.context.put("attachmentsEnabled", false);
 		this.context.put("maxAttachments", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
@@ -165,7 +166,7 @@ public class PrivateMessageAction extends Command
 	public void sendSave() throws Exception
 	{
 		if (!SessionFacade.isLogged()) {
-			ViewCommon.contextToLogin();
+			this.setTemplateName(ViewCommon.contextToLogin());
 			return;
 		}
 		
@@ -189,7 +190,7 @@ public class PrivateMessageAction extends Command
 		
 		// We failed to get the user id?
 		if (toUserId == -1) {
-			this.context.put("moduleAction", "message.htm");
+			this.setTemplateName(TemplateKeys.PM_SENDSAVE_USER_NOTFOUND);
 			this.context.put("message", I18n.getMessage("PrivateMessage.userIdNotFound"));
 			return;
 		}
@@ -211,7 +212,7 @@ public class PrivateMessageAction extends Command
 		if (!preview) {
 			DataAccessDriver.getInstance().newPrivateMessageModel().send(pm);
 			
-			this.context.put("moduleAction", "message.htm");
+			this.setTemplateName(TemplateKeys.PM_SENDSAVE);
 			this.context.put("message", I18n.getMessage("PrivateMessage.messageSent", 
 							new String[] { this.request.getContextPath() +"/pm/inbox"
 											+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)}));
@@ -260,13 +261,13 @@ public class PrivateMessageAction extends Command
 		
 		this.context.put("username", username);
 		this.context.put("showResult", showResult);
-		this.setTemplateName(SystemGlobals.getValue(ConfigKeys.TEMPLATE_NAME) + "/pm_finduser.htm");
+		this.setTemplateName(SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR) + "/pm_finduser.htm");
 	}
 	
 	public void read() throws Exception
 	{
 		if (!SessionFacade.isLogged()) {
-			ViewCommon.contextToLogin();
+			this.setTemplateName(ViewCommon.contextToLogin());
 			return;
 		}
 		
@@ -297,10 +298,10 @@ public class PrivateMessageAction extends Command
             		SmiliesRepository.getSmilies()));
             
 			this.context.put("pm", pm);
-			this.context.put("moduleAction", "pm_read_message.htm");
+			this.setTemplateName(TemplateKeys.PM_READ);
 		}
 		else {
-			this.context.put("moduleAction", "message.htm");
+			this.setTemplateName(TemplateKeys.PM_READ_DENIED);
 			this.context.put("message", I18n.getMessage("PrivateMessage.readDenied"));
 		}
 	}
@@ -308,7 +309,7 @@ public class PrivateMessageAction extends Command
 	public void delete() throws Exception
 	{
 		if (!SessionFacade.isLogged()) {
-			ViewCommon.contextToLogin();
+			this.setTemplateName(ViewCommon.contextToLogin());
 			return;
 		}
 		
@@ -328,7 +329,7 @@ public class PrivateMessageAction extends Command
 			DataAccessDriver.getInstance().newPrivateMessageModel().delete(pm);
 		}
 		
-		this.context.put("moduleAction", "message.htm");
+		this.setTemplateName(TemplateKeys.PM_DELETE);
 		this.context.put("message", I18n.getMessage("PrivateMessage.deleteDone", 
 						new String[] { this.request.getContextPath() + "/pm/inbox"
 										+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) }));
@@ -337,7 +338,7 @@ public class PrivateMessageAction extends Command
 	public void reply() throws Exception
 	{
 		if (!SessionFacade.isLogged()) {
-			ViewCommon.contextToLogin();
+			this.setTemplateName(ViewCommon.contextToLogin());
 			return;
 		}
 		
@@ -359,7 +360,7 @@ public class PrivateMessageAction extends Command
 	public void quote() throws Exception
 	{
 		if (!SessionFacade.isLogged()) {
-			ViewCommon.contextToLogin();
+			this.setTemplateName(ViewCommon.contextToLogin());
 			return;
 		}
 		

@@ -42,14 +42,9 @@
  */
 package net.jforum.view.admin;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
-
-import net.jforum.ActionServletRequest;
-import net.jforum.Command;
 import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
 import net.jforum.model.CategoryModel;
@@ -66,22 +61,21 @@ import net.jforum.security.RoleValue;
 import net.jforum.security.RoleValueCollection;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.TreeGroup;
+import net.jforum.util.preferences.TemplateKeys;
 import net.jforum.view.admin.common.ModerationCommon;
-import freemarker.template.SimpleHash;
-import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.18 2005/02/27 11:48:19 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.19 2005/03/15 18:24:10 rafaelsteil Exp $
  */
-public class ForumAction extends Command 
+public class ForumAction extends AdminCommand 
 {
 	// Listing
 	public void list() throws Exception
 	{
 		this.context.put("categories", DataAccessDriver.getInstance().newCategoryModel().selectAll());
 		this.context.put("repository", new ForumRepository());
-		this.context.put("moduleAction", "forum_list.htm");
+		this.setTemplateName(TemplateKeys.FORUM_ADMIN_LIST);
 	}
 	
 	// One more, one more
@@ -91,7 +85,7 @@ public class ForumAction extends Command
 		
 		this.context.put("groups", new TreeGroup().getNodes());
 		this.context.put("selectedList", new ArrayList());
-		this.context.put("moduleAction", "forum_form.htm");
+		this.setTemplateName(TemplateKeys.FORUM_ADMIN_INSERT);
 		this.context.put("categories",cm.selectAll());
 		this.context.put("action", "insertSave");		
 	}
@@ -104,7 +98,7 @@ public class ForumAction extends Command
 		this.context.put("forum", DataAccessDriver.getInstance().newForumModel().selectById(
 				this.request.getIntParameter("forum_id")));
 		this.context.put("categories", cm.selectAll());
-		this.context.put("moduleAction", "forum_form.htm");
+		this.setTemplateName(TemplateKeys.FORUM_ADMIN_EDIT);
 		this.context.put("action", "editSave");
 	}
 	
@@ -289,19 +283,4 @@ public class ForumAction extends Command
 			pc.addRoleValue(groupId, role, roleValues);
 		}
 	}
-	
-	/** 
-	 * @see net.jforum.Command#process()
-	 */
-	public Template process(ActionServletRequest request, 
-			HttpServletResponse response, 
-			Connection conn, SimpleHash context) throws Exception 
-	{	
-		if (AdminAction.isAdmin()) {
-			super.process(request, response, conn, context);
-		}
-
-		return AdminAction.adminBaseTemplate();
-	}
-
 }

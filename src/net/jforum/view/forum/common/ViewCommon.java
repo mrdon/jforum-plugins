@@ -51,25 +51,27 @@ import net.jforum.exceptions.RequestEmptyException;
 import net.jforum.repository.ModulesRepository;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.preferences.TemplateKeys;
 
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.4 2005/01/18 20:59:43 rafaelsteil Exp $
+ * @version $Id: ViewCommon.java,v 1.5 2005/03/15 18:24:21 rafaelsteil Exp $
  */
 public final class ViewCommon
 {
 	private static final Logger logger = Logger.getLogger(ViewCommon.class);
 	
-	public static void contextToLogin() 
+	public static String contextToLogin() 
 	{
-		JForum.getContext().put("moduleAction", "forum_login.htm");
 		String uri = JForum.getRequest().getRequestURI();
 		String query = JForum.getRequest().getQueryString();
 		String path = query == null ? uri : uri + "?" + query;
 
 		JForum.getContext().put("returnPath", path);
+		
+		return TemplateKeys.USER_LOGIN;
 	}
 	
 	/**

@@ -65,10 +65,11 @@ import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: BookmarkAction.java,v 1.4 2005/02/18 19:43:36 rafaelsteil Exp $
+ * @version $Id: BookmarkAction.java,v 1.5 2005/03/15 18:24:17 rafaelsteil Exp $
  */
 public class BookmarkAction extends Command
 {
@@ -109,7 +110,7 @@ public class BookmarkAction extends Command
 			this.context.put("bookmark", b);
 		}
 		
-		this.context.put("moduleAction", "bookmark_insert.htm");
+		this.setTemplateName(TemplateKeys.BOOKMARKS_ADD_FORUM);
 		this.context.put("title", title);
 		this.context.put("description", description);
 		this.context.put("relationType", new Integer(BookmarkType.FORUM));
@@ -133,7 +134,7 @@ public class BookmarkAction extends Command
 			this.context.put("bookmark", b);
 		}
 		
-		this.context.put("moduleAction", "bookmark_insert.htm");
+		this.setTemplateName(TemplateKeys.BOOKMARS_ADD_TOPIC);
 		this.context.put("title", title);
 		this.context.put("relationType", new Integer(BookmarkType.TOPIC));
 		this.context.put("relationId", new Integer(t.getId()));
@@ -156,7 +157,7 @@ public class BookmarkAction extends Command
 			this.context.put("bookmark", b);
 		}
 		
-		this.context.put("moduleAction", "bookmarks_insert.htm");
+		this.setTemplateName(TemplateKeys.BOOKMARKS_ADD_USER);
 		this.context.put("title", title);
 		this.context.put("relationType", new Integer(BookmarkType.USER));
 		this.context.put("relationId", new Integer(u.getId()));
@@ -173,7 +174,7 @@ public class BookmarkAction extends Command
 		b.setUserId(SessionFacade.getUserSession().getUserId());
 		
 		DataAccessDriver.getInstance().newBookmarkModel().add(b);
-		this.context.put("moduleAction", "bookmark_done.htm");
+		this.setTemplateName(TemplateKeys.BOOKMARKS_INSERT_SAVE);
 	}
 	
 	public void updateSave() throws Exception
@@ -193,7 +194,7 @@ public class BookmarkAction extends Command
 		b.setPublicVisible(visible != null && !"".equals(visible) ? true : false);
 		
 		bm.update(b);
-		this.context.put("moduleAction", "bookmark_done.htm");
+		this.setTemplateName(TemplateKeys.BOOKMARKS_UPDATE_SAVE);
 	}
 	
 	public void edit() throws Exception
@@ -206,7 +207,7 @@ public class BookmarkAction extends Command
 			return;
 		}
 		
-		this.context.put("moduleAction", "bookmark_insert.htm");
+		this.setTemplateName(TemplateKeys.BOOKMARKS_EDIT);
 		this.context.put("bookmark", b);
 	}
 	
@@ -243,7 +244,7 @@ public class BookmarkAction extends Command
 	
 	private void error(String message)
 	{
-		this.context.put("moduleAction", "message.htm");
+		this.setTemplateName(TemplateKeys.BOOKMARKS_ERROR);
 		this.context.put("message", I18n.getMessage(message));
 	}
 	
@@ -264,15 +265,13 @@ public class BookmarkAction extends Command
 	{
 		int userId = this.request.getIntParameter("user_id");
 		
-		this.context.put("moduleAction", "bookmark_list.htm");
+		this.setTemplateName(TemplateKeys.BOOKMARKS_LIST);
 		this.context.put("bookmarks", DataAccessDriver.getInstance().newBookmarkModel().selectByUser(userId));
 		this.context.put("forumType", new Integer(BookmarkType.FORUM));
 		this.context.put("userType", new Integer(BookmarkType.USER));
 		this.context.put("topicType", new Integer(BookmarkType.TOPIC));
 		this.context.put("user", DataAccessDriver.getInstance().newUserModel().selectById(userId));
 		this.context.put("loggedUserId", new Integer(SessionFacade.getUserSession().getUserId()));
-		
-		this.setTemplateName(null);
 	}
 	
 	/**
@@ -287,9 +286,6 @@ public class BookmarkAction extends Command
 		}
 		else if (!SecurityRepository.canAccess(SecurityConstants.PERM_BOOKMARKS_ENABLED)) {
 			request.addParameter("action", "disabled");
-		}
-		else {
-			this.setTemplateName(SystemGlobals.getValue(ConfigKeys.TEMPLATE_NAME) + "/empty.htm");
 		}
 
 		return super.process(request, response, conn, context);

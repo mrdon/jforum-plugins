@@ -59,6 +59,7 @@ import net.jforum.repository.RankingRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.repository.SmiliesRepository;
 import net.jforum.repository.TopicRepository;
+import net.jforum.repository.Tpl;
 import net.jforum.util.FileMonitor;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.QueriesFileListener;
@@ -73,7 +74,7 @@ import org.apache.log4j.Logger;
  * General utilities methods for loading configurations for JForum.
  * 
  * @author Rafael Steil
- * @version $Id: ConfigLoader.java,v 1.11 2005/03/12 20:10:44 rafaelsteil Exp $
+ * @version $Id: ConfigLoader.java,v 1.12 2005/03/15 18:24:12 rafaelsteil Exp $
  */
 public class ConfigLoader 
 {
@@ -189,6 +190,7 @@ public class ConfigLoader
 			new SessionFacade().setCacheEngine(cache);
 			new PostRepository().setCacheEngine(cache);
 			new QuartzSearchIndexerJob().setCacheEngine(cache);
+			new Tpl().setCacheEngine(cache);
 		}
 		catch (Exception e) {
 			throw new CacheEngineStartupException("Error while starting the cache engine: " + e);

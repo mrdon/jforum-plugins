@@ -55,17 +55,16 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.ActionServletRequest;
-import net.jforum.Command;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.preferences.TemplateKeys;
 import freemarker.template.SimpleHash;
-import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ConfigAction.java,v 1.7 2005/01/17 18:52:32 rafaelsteil Exp $
+ * @version $Id: ConfigAction.java,v 1.8 2005/03/15 18:24:10 rafaelsteil Exp $
  */
-public class ConfigAction extends Command 
+public class ConfigAction extends AdminCommand 
 {
 	public ConfigAction() {}
 	
@@ -100,7 +99,7 @@ public class ConfigAction extends Command
 
 		this.context.put("config", p);
 		this.context.put("locales", localesList);
-		this.context.put("moduleAction", "config_list.htm");
+		this.setTemplateName(TemplateKeys.CONFIG_LIST);
 	}
 
 	public void editSave() throws Exception 
@@ -135,18 +134,4 @@ public class ConfigAction extends Command
 		
 		SystemGlobals.saveInstallation();
 	}
-
-	/**
-	 * @see net.jforum.Command#process()
-	 */
-	public Template process(ActionServletRequest request, 
-			HttpServletResponse response, 
-			Connection conn, SimpleHash context) throws Exception {
-		if (AdminAction.isAdmin()) {
-			super.process(request, response, conn, context);
-		}
-
-		return AdminAction.adminBaseTemplate();
-	}
-
 }

@@ -43,30 +43,23 @@
 package net.jforum.view.admin;
 
 import java.io.File;
-import java.sql.Connection;
 
-import javax.servlet.http.HttpServletResponse;
-
-import net.jforum.ActionServletRequest;
-import net.jforum.Command;
 import net.jforum.entities.Smilie;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.repository.SmiliesRepository;
 import net.jforum.util.MD5;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.preferences.TemplateKeys;
 import net.jforum.view.forum.common.UploadUtils;
 
 import org.apache.commons.fileupload.FileItem;
 
-import freemarker.template.SimpleHash;
-import freemarker.template.Template;
-
 /**
  * @author Rafael Steil
- * @version $Id: SmiliesAction.java,v 1.6 2005/01/18 20:59:47 rafaelsteil Exp $
+ * @version $Id: SmiliesAction.java,v 1.7 2005/03/15 18:24:11 rafaelsteil Exp $
  */
-public class SmiliesAction extends Command 
+public class SmiliesAction extends AdminCommand 
 {
 	private String processUpload() throws Exception
 	{
@@ -92,7 +85,7 @@ public class SmiliesAction extends Command
 	
 	public void insert()
 	{
-		this.context.put("moduleAction", "smilie_form.htm");
+		this.setTemplateName(TemplateKeys.SMILIES_INSERT);
 		this.context.put("action", "insertSave");
 	}
 		
@@ -120,7 +113,7 @@ public class SmiliesAction extends Command
 			id = this.request.getIntParameter("id");
 		}
 		
-		this.context.put("moduleAction", "smilie_form.htm");
+		this.setTemplateName(TemplateKeys.SMILIES_EDIT);
 		this.context.put("smilie", DataAccessDriver.getInstance().newSmilieModel().selectById(id));
 		this.context.put("action", "editSave");
 	}
@@ -166,20 +159,6 @@ public class SmiliesAction extends Command
 	public void list() throws Exception 
 	{
 		this.context.put("smilies", SmiliesRepository.getSmilies());
-		this.context.put("moduleAction", "smilie_list.htm");
-	}
-
-	/**
-	 * @see net.jforum.Command#process()
-	 */
-	public Template process(ActionServletRequest request, 
-			HttpServletResponse response, 
-			Connection conn, SimpleHash context) throws Exception 
-	{
-		if (AdminAction.isAdmin()) {
-			super.process(request, response, conn, context);
-		}
-		
-		return AdminAction.adminBaseTemplate();
+		this.setTemplateName(TemplateKeys.SMILIES_LIST);
 	}
 }

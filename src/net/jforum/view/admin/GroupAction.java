@@ -42,14 +42,9 @@
  */
 package net.jforum.view.admin;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
-
-import net.jforum.ActionServletRequest;
-import net.jforum.Command;
 import net.jforum.entities.Group;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.GroupModel;
@@ -61,22 +56,21 @@ import net.jforum.util.I18n;
 import net.jforum.util.TreeGroup;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import freemarker.template.SimpleHash;
-import freemarker.template.Template;
+import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * ViewHelper class for group administration.
  * 
  * @author Rafael Steil
- * @version $Id: GroupAction.java,v 1.9 2005/02/22 20:32:41 rafaelsteil Exp $
+ * @version $Id: GroupAction.java,v 1.10 2005/03/15 18:24:11 rafaelsteil Exp $
  */
-public class GroupAction extends Command 
+public class GroupAction extends AdminCommand 
 {
 	// Listing
 	public void list() throws Exception
 	{
 		this.context.put("groups", new TreeGroup().getNodes());
-		this.context.put("moduleAction", "group_list.htm");	
+		this.setTemplateName(TemplateKeys.GROUP_LIST);
 	}
 	
 	// Insert
@@ -85,7 +79,7 @@ public class GroupAction extends Command
 		this.context.put("groups", new TreeGroup().getNodes());
 		this.context.put("action", "insertSave");
 		this.context.put("selectedList", new ArrayList());
-		this.context.put("moduleAction", "group_form.htm");
+		this.setTemplateName(TemplateKeys.GROUP_INSERT);
 	}
 	
 	// Save information for an existing group
@@ -113,7 +107,7 @@ public class GroupAction extends Command
 		this.context.put("group", gm.selectById(groupId));
 		this.context.put("groups", new TreeGroup().getNodes());
 		this.context.put("selectedList", new ArrayList());
-		this.context.put("moduleAction", "group_form.htm");
+		this.setTemplateName(TemplateKeys.GROUP_EDIT);
 		this.context.put("action", "editSave");	
 	}
 	
@@ -180,7 +174,7 @@ public class GroupAction extends Command
 
 		this.context.put("sections", sections);
 		this.context.put("group", gm.selectById(id));
-		this.context.put("moduleAction", "group_security_form.htm");
+		this.setTemplateName(TemplateKeys.GROUP_PERMISSIONS);
 	}
 	
 	public void permissionsSave() throws Exception
@@ -197,19 +191,4 @@ public class GroupAction extends Command
 		SecurityRepository.clean();
 		this.list();
 	}
-	
-	/**
-	 * @see net.jforum.Command#process()
-	 */
-	public Template process(ActionServletRequest request, 
-			HttpServletResponse response, 
-			Connection conn, SimpleHash context) throws Exception 
-	{
-		if (AdminAction.isAdmin()) {
-			super.process(request, response, conn, context);
-		}
-		
-		return AdminAction.adminBaseTemplate();
-	}
-
 }

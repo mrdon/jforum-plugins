@@ -1,0 +1,22 @@
+</td>
+	</tr>
+	
+	<tr>
+		<td align="center">
+			<#if session?exists && session.isAdmin()><span class="gen"><a id="adminpanel" href='${JForumContext.encodeURL("/admBase/login")}'>${I18n.getMessage("ForumBase.admin")}</a></span></#if>
+		</td>
+	</tr>
+
+	<tr>
+		<td align="center">
+			<span class="copyright">Powered by <a class="copyright" href="http://www.jforum.net/" target="_blank">JForum ${version} </a>&copy; 2005 - Rafael Steil</span>
+		</td>
+	</tr>
+</table>
+<iframe src="${contextPath}/jforum${extension}?module=forums&action=pingSession" height="0" width="0" frameborder="0" scrolling="no"></iframe>
+</body>
+<head>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="-1"/>
+</head>
+</html>

@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2003, Rafael Steil
- * All rights reserved.
+ * Copyright (c) Rafael Steil
  * 
+ * All rights reserved.
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
@@ -36,43 +36,71 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * This file creation date: 31/01/2004 - 20:53:44
+ * Created on Mar 14, 2005 3:27:33 PM
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.util.rss;
+package net.jforum.repository;
 
-import java.io.StringWriter;
+import java.io.FileInputStream;
+import java.util.Iterator;
+import java.util.Properties;
 
-import net.jforum.JForum;
-import net.jforum.util.preferences.ConfigKeys;
-import net.jforum.util.preferences.SystemGlobals;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
+import net.jforum.cache.CacheEngine;
+import net.jforum.cache.Cacheable;
+import net.jforum.exceptions.ConfigLoadException;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericRSS.java,v 1.3 2005/03/15 18:24:21 rafaelsteil Exp $
+ * @version $Id: Tpl.java,v 1.2 2005/03/15 18:24:20 rafaelsteil Exp $
  */
-public class GenericRSS implements RSSAware 
+public class Tpl implements Cacheable
 {
-	private RSS rss;
+	private static final String FQN = "templates";
 	
-	protected void setRSS(RSS rss) 
+	private static CacheEngine cache;
+	
+	/**
+	 * @see net.jforum.cache.Cacheable#setCacheEngine(net.jforum.cache.CacheEngine)
+	 */
+	public void setCacheEngine(CacheEngine engine)
 	{
-		this.rss = rss;
+		cache = engine;
+	}
+
+	/**
+	 * Loads the HTML mappings file. 
+	 * 
+	 * @param filename The complete path to the file to load
+	 * @throws ConfigLoadException if the file is not found or
+	 * some other error occurs when loading the file.
+	 */
+	public static void load(String filename)
+	{
+		try {
+			Properties p = new Properties();
+			p.load(new FileInputStream(filename));
+			
+			for (Iterator iter = p.keySet().iterator(); iter.hasNext(); ) {
+				String key = (String)iter.next();
+				
+				cache.add(FQN, key, p.getProperty(key));
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			throw new ConfigLoadException("Error while trying to load " + filename + ": " + e);
+		}
 	}
 	
-	public String createRSS() throws Exception
+	/**
+	 * Gets a temlate filename by its configuration's key
+	 * 
+	 * @param key The Key to load.
+	 * @return The html template filename
+	 */
+	public static String name(String key)
 	{
-		Template t = Configuration.getDefaultConfiguration().getTemplate(SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR) 
-				+ "/rss_template.htm");
-		StringWriter sw = new StringWriter();
-		
-		JForum.getContext().put("encoding", SystemGlobals.getValue(ConfigKeys.ENCODING));
-		JForum.getContext().put("rss", this.rss);
-		t.process(JForum.getContext(), sw);
-		
-		return sw.toString();
+		return (String)cache.get(FQN, key);
 	}
 }

@@ -1,3 +1,4 @@
+<#include "header.htm"/>
 <#setting datetime_format = "dd/MM/yyyy"/>
 <#import "../macros/pagination.ftl" as pagination/>
 <script language="javascript">
@@ -54,4 +55,4 @@
 		<td align="right"><#if thisPage?exists><@pagination.doPagination "list", -1/></#if></td>
 	</tr>
 </table>
-
+<#include "bottom.htm"/>

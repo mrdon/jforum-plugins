@@ -42,15 +42,10 @@
  */
 package net.jforum.view.admin;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
-
-import net.jforum.ActionServletRequest;
-import net.jforum.Command;
 import net.jforum.entities.Group;
 import net.jforum.entities.User;
 import net.jforum.model.DataAccessDriver;
@@ -64,16 +59,15 @@ import net.jforum.util.I18n;
 import net.jforum.util.TreeGroup;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.preferences.TemplateKeys;
 import net.jforum.view.forum.common.UserCommon;
 import net.jforum.view.forum.common.ViewCommon;
-import freemarker.template.SimpleHash;
-import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.17 2005/02/21 14:31:09 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.18 2005/03/15 18:24:10 rafaelsteil Exp $
  */
-public class UserAction extends Command 
+public class UserAction extends AdminCommand 
 {
 	// Listing
 	public void list() throws Exception
@@ -103,7 +97,7 @@ public class UserAction extends Command
 	{
 		this.context.put("selectedList", new ArrayList());
 		this.context.put("groups", new TreeGroup().getNodes());
-		this.context.put("moduleAction", "user_list.htm");
+		this.setTemplateName(TemplateKeys.USER_ADMIN_COMMON);
 		this.context.put("searchAction", "list");
 		this.context.put("searchId", new Integer(-1));
 	}
@@ -170,7 +164,7 @@ public class UserAction extends Command
 				SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/permissions.xml");
 		this.context.put("sections", sections);
 		this.context.put("user", user);
-		this.context.put("moduleAction", "user_security_form.htm");
+		this.setTemplateName(TemplateKeys.USER_ADMIN_PERMISSIONS);
 	}
 	
 	// Permissions Save
@@ -203,7 +197,7 @@ public class UserAction extends Command
 		
 		this.context.put("u", u);
 		this.context.put("action", "editSave");		
-		this.context.put("moduleAction", "user_form.htm");
+		this.setTemplateName(TemplateKeys.USER_ADMIN_EDIT);
 		this.context.put("admin", true);
 	}
 	
@@ -256,7 +250,7 @@ public class UserAction extends Command
 		this.context.put("groups", new TreeGroup().getNodes());
 		this.context.put("user", u);
 		this.context.put("userId", new Integer(userId));
-		this.context.put("moduleAction", "user_groups.htm");
+		this.setTemplateName(TemplateKeys.USER_ADMIN_GROUPS);
 		this.context.put("groupFor", I18n.getMessage("User.GroupsFor", new String[] { u.getUsername() }));
 	}
 	
@@ -294,19 +288,4 @@ public class UserAction extends Command
 		
 		this.list();
 	}
-	
-	/** 
-	 * @see net.jforum.Command#process()
-	 */
-	public Template process(ActionServletRequest request, 
-			HttpServletResponse response, 
-			Connection conn, SimpleHash context) throws Exception 
-	{
-		if (AdminAction.isAdmin()) {
-			super.process(request, response, conn, context);
-		}
-		
-		return AdminAction.adminBaseTemplate();
-	}
-
 }

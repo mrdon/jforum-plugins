@@ -42,12 +42,6 @@
  */
 package net.jforum.view.admin;
 
-import java.sql.Connection;
-
-import javax.servlet.http.HttpServletResponse;
-
-import net.jforum.ActionServletRequest;
-import net.jforum.Command;
 import net.jforum.entities.Post;
 import net.jforum.entities.Topic;
 import net.jforum.model.DataAccessDriver;
@@ -57,25 +51,24 @@ import net.jforum.repository.ForumRepository;
 import net.jforum.repository.PostRepository;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.preferences.TemplateKeys;
 import net.jforum.view.forum.common.AttachmentCommon;
 import net.jforum.view.forum.common.PostCommon;
 import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
-import freemarker.template.SimpleHash;
-import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationAction.java,v 1.4 2005/02/22 20:32:41 rafaelsteil Exp $
+ * @version $Id: ModerationAction.java,v 1.5 2005/03/15 18:24:10 rafaelsteil Exp $
  */
-public class ModerationAction extends Command
+public class ModerationAction extends AdminCommand
 {
 	/**
 	 * @see net.jforum.Command#list()
 	 */
 	public void list() throws Exception
 	{
-		this.context.put("moduleAction", "moderation_list.htm");
+		this.setTemplateName(TemplateKeys.MODERATION_ADMIN_LIST);
 		this.context.put("infoList", DataAccessDriver.getInstance().newModerationModel().categoryPendingModeration());
 	}
 	
@@ -86,7 +79,7 @@ public class ModerationAction extends Command
 		int start = ViewCommon.getStartPage();
 		int count = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 		
-		this.context.put("moduleAction", "moderation_list_posts.htm");
+		this.setTemplateName(TemplateKeys.MODERATION_ADMIN_VIEW);
 		this.context.put("forum", ForumRepository.getForum(forumId));
 		this.context.put("topics", DataAccessDriver.getInstance().newModerationModel().topicsByForum(
 				forumId, start, count));
@@ -137,18 +130,5 @@ public class ModerationAction extends Command
 		}
 		
 		this.view();
-	}
-
-	/**
-	 * @see net.jforum.Command#process(net.jforum.ActionServletRequest, javax.servlet.http.HttpServletResponse, java.sql.Connection, freemarker.template.SimpleHash)
-	 */
-	public Template process(ActionServletRequest request, HttpServletResponse response, Connection conn,
-			SimpleHash context) throws Exception
-	{
-		if (AdminAction.isAdmin()) {
-			super.process(request, response, conn, context);
-		}
-		
-		return AdminAction.adminBaseTemplate();
 	}
 }

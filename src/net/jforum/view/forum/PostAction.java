@@ -79,6 +79,7 @@ import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.preferences.TemplateKeys;
 import net.jforum.view.forum.common.AttachmentCommon;
 import net.jforum.view.forum.common.ForumCommon;
 import net.jforum.view.forum.common.PostCommon;
@@ -89,7 +90,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.68 2005/03/04 14:14:48 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.69 2005/03/15 18:24:17 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -159,7 +160,7 @@ public class PostAction extends Command {
 		this.context.put("canRemove",
 				SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE));
 		this.context.put("canEdit", canEdit);
-		this.context.put("moduleAction", "post_show.htm");
+		this.setTemplateName(TemplateKeys.POSTS_LIST);
 		this.context.put("allCategories", ForumCommon.getAllCategoriesAndForums(false));
 		this.context.put("topic", topic);
 		this.context.put("rank", new RankingRepository());
@@ -215,26 +216,26 @@ public class PostAction extends Command {
 		List helperList = PostCommon.topicPosts(pm, um, usersMap, false, userId, topic.getId(), start, count);
 		Collections.reverse(helperList);
 
-		this.setTemplateName(SystemGlobals.getValue(ConfigKeys.TEMPLATE_NAME) + "/empty.htm");
+		this.setTemplateName(SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR) + "/empty.htm");
 
-		this.context.put("moduleAction", "topic_review.htm");
+		this.setTemplateName(TemplateKeys.POSTS_REVIEW);
 		this.context.put("posts", helperList);
 		this.context.put("users", usersMap);
 	}
 
 	private void topicNotFound() {
-		this.context.put("moduleAction", "message.htm");
+		this.setTemplateName(TemplateKeys.POSTS_TOPIC_NOT_FOUND);
 		this.context.put("message", I18n.getMessage("PostShow.TopicNotFound"));
 	}
 
 	private void postNotFound() {
-		this.context.put("moduleAction", "message.htm");
+		this.setTemplateName(TemplateKeys.POSTS_POST_NOT_FOUND);
 		this.context.put("message", I18n.getMessage("PostShow.PostNotFound"));
 	}
 	
 	private void replyOnly()
 	{
-		this.context.put("moduleAction", "message.htm");
+		this.setTemplateName(TemplateKeys.POSTS_REPLY_ONLY);
 		this.context.put("message", I18n.getMessage("PostShow.replyOnly"));
 	}
 	
@@ -285,7 +286,7 @@ public class PostAction extends Command {
 		this.context.put("maxAttachments", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
 		this.context.put("forum", ForumRepository.getForum(forumId));
 		this.context.put("action", "insertSave");
-		this.context.put("moduleAction", "post_form.htm");
+		this.setTemplateName(TemplateKeys.POSTS_INSERT);
 		this.context.put("start", this.request.getParameter("start"));
 		this.context.put("isNewPost", true);
 		this.context.put("htmlAllowed",
@@ -360,7 +361,7 @@ public class PostAction extends Command {
 			this.context.put("post", p);
 			this.context.put("setType", p.getId() == topic.getFirstPostId());
 			this.context.put("topic", topic);
-			this.context.put("moduleAction", "post_form.htm");
+			this.setTemplateName(TemplateKeys.POSTS_EDIT);
 			this.context.put("start", this.request.getParameter("start"));
 			this.context.put("htmlAllowed", SecurityRepository.canAccess(SecurityConstants.PERM_HTML_DISABLED, 
 					Integer.toString(topic.getForumId())));
@@ -368,7 +369,7 @@ public class PostAction extends Command {
 					SecurityRepository.canAccess(SecurityConstants.PERM_CREATE_STICKY_ANNOUNCEMENT_TOPICS));
 		}
 		else {
-			this.context.put("moduleAction", "message.htm");
+			this.setTemplateName(TemplateKeys.POSTS_EDIT_CANNOTEDIT);
 			this.context.put("message", I18n.getMessage("CannotEditPost"));
 		}
 
@@ -431,7 +432,7 @@ public class PostAction extends Command {
 		this.context.put("topic", topic);
 		this.context.put("quote", "true");
 		this.context.put("quoteUser", u.getUsername());
-		this.context.put("moduleAction", "post_form.htm");
+		this.setTemplateName(TemplateKeys.POSTS_QUOTE);
 		this.context.put("setType", false);
 		this.context.put("htmlAllowed", SecurityRepository.canAccess(SecurityConstants.PERM_HTML_DISABLED, 
 				Integer.toString(topic.getForumId())));
@@ -518,7 +519,7 @@ public class PostAction extends Command {
 	
 	public void waitingModeration()
 	{
-		this.context.put("moduleAction", "message.htm");
+		this.setTemplateName(TemplateKeys.POSTS_WAITING);
 		
 		int topicId = this.request.getIntParameter("topic_id");
 		String path = this.request.getContextPath();
@@ -536,7 +537,7 @@ public class PostAction extends Command {
 	
 	private void notModeratedYet()
 	{
-		this.context.put("moduleAction", "message.htm");
+		this.setTemplateName(TemplateKeys.POSTS_NOT_MODERATED);
 		this.context.put("message", I18n.getMessage("PostShow.notModeratedYet"));
 	}
 
@@ -705,7 +706,7 @@ public class PostAction extends Command {
 
 	public void delete() throws Exception {
 		if (!SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE)) {
-			this.context.put("moduleAction", "message.htm");
+			this.setTemplateName(TemplateKeys.POSTS_CANNOT_DELETE);
 			this.context.put("message", I18n.getMessage("CannotRemovePost"));
 
 			return;
@@ -815,18 +816,18 @@ public class PostAction extends Command {
 
 			returnPath += topicId + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
 
-			this.context.put("moduleAction", "message.htm");
+			this.setTemplateName(TemplateKeys.POSTS_UNWATCH);
 			this.context.put("message", I18n.getMessage("ForumBase.unwatched", new String[] { returnPath }));
 		}
 		else {
-			ViewCommon.contextToLogin();
+			this.setTemplateName(ViewCommon.contextToLogin());
 		}
 	}
 
 	public void downloadAttach() throws Exception
 	{
 		if (!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD)) {
-			this.context.put("moduleAction", "message.htm");
+			this.setTemplateName(TemplateKeys.POSTS_CANNOT_DOWNLOAD);
 			this.context.put("message", I18n.getMessage("Attachments.featureDisabled"));
 			return;
 		}
@@ -841,7 +842,7 @@ public class PostAction extends Command {
 			+ a.getInfo().getPhysicalFilename();
 		
 		if (!new File(filename).exists()) {
-			this.context.put("moduleAction", "message.htm");
+			this.setTemplateName(TemplateKeys.POSTS_ATTACH_NOTFOUND);
 			this.context.put("message", I18n.getMessage("Attachments.notFound"));
 			return;
 		}
@@ -873,14 +874,14 @@ public class PostAction extends Command {
 	}
 
 	private void topicLocked() {
-		this.context.put("moduleAction", "message.htm");
+		this.setTemplateName(TemplateKeys.POSTS_TOPIC_LOCKED);
 		this.context.put("message", I18n.getMessage("PostShow.topicLocked"));
 	}
 	
 	public void listSmilies()
 	{
-		this.setTemplateName(SystemGlobals.getValue(ConfigKeys.TEMPLATE_NAME) + "/empty.htm");
-		this.context.put("moduleAction", "list_smilies.htm");
+		this.setTemplateName(SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR) + "/empty.htm");
+		this.setTemplateName(TemplateKeys.POSTS_LIST_SMILIES);
 		this.context.put("smilies", SmiliesRepository.getSmilies());
 	}
 
@@ -904,7 +905,7 @@ public class PostAction extends Command {
 		// Check if anonymous posts are allowed
 		if (!this.isUserLogged()
 				&& !SecurityRepository.canAccess(SecurityConstants.PERM_ANONYMOUS_POST, Integer.toString(forumId))) {
-			ViewCommon.contextToLogin();
+			this.setTemplateName(ViewCommon.contextToLogin());
 
 			return false;
 		}

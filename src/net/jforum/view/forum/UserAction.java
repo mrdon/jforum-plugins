@@ -68,12 +68,13 @@ import net.jforum.util.mail.EmailSenderTask;
 import net.jforum.util.mail.LostPasswordSpammer;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.preferences.TemplateKeys;
 import net.jforum.view.forum.common.UserCommon;
 import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.34 2005/03/07 23:12:53 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.35 2005/03/15 18:24:17 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -90,7 +91,7 @@ public class UserAction extends Command
 
 			this.context.put("u", u);
 			this.context.put("action", "editSave");
-			this.context.put("moduleAction", "user_form.htm");
+			this.setTemplateName(TemplateKeys.USER_EDIT);
 		} 
 		else {
 			this.profile();
@@ -121,7 +122,7 @@ public class UserAction extends Command
 	
 	private void registrationDisabled()
 	{
-		this.context.put("moduleAction", "message.htm");
+		this.setTemplateName(TemplateKeys.USER_REGISTRATION_DISABLED);
 		this.context.put("message", I18n.getMessage("User.registrationDisabled"));
 	}
 
@@ -133,7 +134,7 @@ public class UserAction extends Command
 		}
 		
 		this.context.put("action", "insertSave");
-		this.context.put("moduleAction", "user_new.htm");
+		this.setTemplateName(TemplateKeys.USER_INSERT);
 		this.context.put("username", this.request.getParameter("username"));
 		this.context.put("email", this.request.getParameter("email"));
 		
@@ -212,7 +213,7 @@ public class UserAction extends Command
 				e.printStackTrace();
 			}
 
-			this.context.put("moduleAction", "message.htm");
+			this.setTemplateName(TemplateKeys.USER_INSERT_ACTIVATE_MAIL);
 			this.context.put("message", I18n.getMessage("User.GoActivateAccountMessage"));
 		} 
 		else {
@@ -238,7 +239,7 @@ public class UserAction extends Command
 		} 
 		else {
 			message = I18n.getMessage("User.invalidActivationKey");
-			this.context.put("moduleAction", "message.htm");
+			this.setTemplateName(TemplateKeys.USER_INVALID_ACTIVATION);
 			this.context.put("message", message);
 		}
 
@@ -273,7 +274,7 @@ public class UserAction extends Command
 		String message = I18n.getMessage("User.RegistrationCompleteMessage", 
 				new Object[] { profilePage, homePage });
 		this.context.put("message", message);
-		this.context.put("moduleAction", "registration_complete.htm");
+		this.setTemplateName(TemplateKeys.USER_REGISTRATION_COMPLETE);
 	}
 
 	public void validateLogin() throws Exception 
@@ -348,7 +349,7 @@ public class UserAction extends Command
 		// Invalid login
 		if (validInfo == false) {
 			this.context.put("invalidLogin", "1");
-			this.context.put("moduleAction", "forum_login.htm");
+			this.setTemplateName(TemplateKeys.USER_VALIDATE_LOGIN);
 
 			if (this.request.getParameter("returnPath") != null) {
 				this.context.put("returnPath",
@@ -376,7 +377,7 @@ public class UserAction extends Command
 
 		User u = um.selectById(this.request.getIntParameter("user_id"));
 
-		this.context.put("moduleAction", "user_profile.htm");
+		this.setTemplateName(TemplateKeys.USER_PROFILE);
 		this.context.put("karmaEnabled", SecurityRepository.canAccess(SecurityConstants.PERM_KARMA_ENABLED));
 		this.context.put("rank", new RankingRepository());
 		this.context.put("u", u);
@@ -409,13 +410,13 @@ public class UserAction extends Command
 			this.context.put("returnPath", this.request.getParameter("returnPath"));
 		}
 
-		this.context.put("moduleAction", "forum_login.htm");
+		this.setTemplateName(TemplateKeys.USER_LOGIN);
 	}
 
 	// Lost password form
 	public void lostPassword() 
 	{
-		this.context.put("moduleAction", "lost_password.htm");
+		this.setTemplateName(TemplateKeys.USER_LOSTPASSWORD);
 	}
 	
 	public User prepareLostPassword(String username, String email) throws Exception
@@ -470,7 +471,7 @@ public class UserAction extends Command
 			logger.warn("Error while sending email: " + e);
 		}
 
-		this.context.put("moduleAction", "message.htm");
+		this.setTemplateName(TemplateKeys.USER_LOSTPASSWORD_SEND);
 		this.context.put("message", I18n.getMessage(
 										"PasswordRecovery.emailSent",
 										new String[] { 
@@ -485,7 +486,7 @@ public class UserAction extends Command
 	{
 		String hash = this.request.getParameter("hash");
 
-		this.context.put("moduleAction", "recover_password.htm");
+		this.setTemplateName(TemplateKeys.USER_RECOVERPASSWORD);
 		this.context.put("recoverHash", hash);
 	}
 
@@ -510,7 +511,7 @@ public class UserAction extends Command
 			message = I18n.getMessage("PasswordRecovery.invalidData");
 		}
 
-		this.context.put("moduleAction", "message.htm");
+		this.setTemplateName(TemplateKeys.USER_RECOVERPASSWORD_VALIDATE);
 		this.context.put("message", message);
 	}
 
@@ -522,7 +523,7 @@ public class UserAction extends Command
 							
 		List users = DataAccessDriver.getInstance().newUserModel().selectAll(start ,usersPerPage);
 		this.context.put("users", users);
-		this.context.put("moduleAction", "user_list.htm");
+		this.setTemplateName(TemplateKeys.USER_LIST);
 	}
 	
 	/**
@@ -533,10 +534,11 @@ public class UserAction extends Command
 	{
 		int start = this.preparePagination(DataAccessDriver.getInstance().newUserModel().getTotalUsers());
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
+		
 		//Load all users with your karma
 		List users = DataAccessDriver.getInstance().newUserModel().selectAllWithKarma(start ,usersPerPage);
 		this.context.put("users", users);
-		this.context.put("moduleAction", "user_list_karma.htm");
+		this.setTemplateName(TemplateKeys.USER_SEARCH_KARMA);
 	}
 	
 	

@@ -42,14 +42,9 @@
  */
 package net.jforum.view.admin;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
-
-import net.jforum.ActionServletRequest;
-import net.jforum.Command;
 import net.jforum.entities.Category;
 import net.jforum.model.CategoryModel;
 import net.jforum.model.DataAccessDriver;
@@ -64,17 +59,16 @@ import net.jforum.security.RoleValueCollection;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.TreeGroup;
+import net.jforum.util.preferences.TemplateKeys;
 import net.jforum.view.admin.common.ModerationCommon;
-import freemarker.template.SimpleHash;
-import freemarker.template.Template;
 
 /**
  * ViewHelper for category administration.
  * 
  * @author Rafael Steil
- * @version $Id: CategoryAction.java,v 1.15 2005/01/31 20:10:43 rafaelsteil Exp $
+ * @version $Id: CategoryAction.java,v 1.16 2005/03/15 18:24:11 rafaelsteil Exp $
  */
-public class CategoryAction extends Command 
+public class CategoryAction extends AdminCommand 
 {
 	private CategoryModel cm;
 	
@@ -83,7 +77,7 @@ public class CategoryAction extends Command
 	{
 		this.context.put("categories", DataAccessDriver.getInstance().newCategoryModel().selectAll());
 		this.context.put("repository", new ForumRepository());
-		this.context.put("moduleAction", "category_list.htm");
+		this.setTemplateName(TemplateKeys.CATEGORY_LIST);
 	}
 	
 	// One more, one more
@@ -91,7 +85,7 @@ public class CategoryAction extends Command
 	{
 		this.context.put("groups", new TreeGroup().getNodes());
 		this.context.put("selectedList", new ArrayList());
-		this.context.put("moduleAction", "category_form.htm");
+		this.setTemplateName(TemplateKeys.CATEGORY_INSERT);
 		this.context.put("action", "insertSave");
 	}
 	
@@ -99,7 +93,7 @@ public class CategoryAction extends Command
 	public void edit() throws Exception
 	{
 		this.context.put("category", this.cm.selectById(this.request.getIntParameter("category_id")));
-		this.context.put("moduleAction", "category_form.htm");
+		this.setTemplateName(TemplateKeys.CATEGORY_EDIT);
 		this.context.put("action", "editSave");
 	}
 	
@@ -225,20 +219,4 @@ public class CategoryAction extends Command
 		ForumRepository.reloadCategory(toChange);
 		this.list();
 	}
-	
-	/** 
-	 * @see net.jforum.Command#process()
-	 */
-	public Template process(ActionServletRequest request, 
-			HttpServletResponse response, 
-			Connection conn, SimpleHash context) throws Exception 
-	{
-		if (AdminAction.isAdmin()) {
-			this.cm = DataAccessDriver.getInstance().newCategoryModel();
-			super.process(request, response, conn, context);
-		}
-
-		return AdminAction.adminBaseTemplate();
-	}
-
 }

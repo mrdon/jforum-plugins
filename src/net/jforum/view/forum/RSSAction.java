@@ -57,8 +57,7 @@ import net.jforum.model.PostModel;
 import net.jforum.model.TopicModel;
 import net.jforum.repository.ForumRepository;
 import net.jforum.util.I18n;
-import net.jforum.util.preferences.ConfigKeys;
-import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.preferences.TemplateKeys;
 import net.jforum.util.rss.ForumRSS;
 import net.jforum.util.rss.RSSAware;
 import net.jforum.util.rss.RecentTopicsRSS;
@@ -71,7 +70,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: RSSAction.java,v 1.14 2005/03/03 02:45:21 rafaelsteil Exp $
+ * @version $Id: RSSAction.java,v 1.15 2005/03/15 18:24:17 rafaelsteil Exp $
  */
 public class RSSAction extends Command 
 {
@@ -169,7 +168,8 @@ public class RSSAction extends Command
 			Connection conn, SimpleHash context) throws Exception 
 	{
 		JForum.setContentType("text/xml");
-		super.setTemplateName(SystemGlobals.getValue(ConfigKeys.TEMPLATE_NAME) + "/rss.htm");
+		super.setTemplateName(TemplateKeys.RSS);
+
 		return super.process(request, response, conn, context);
 	}
 

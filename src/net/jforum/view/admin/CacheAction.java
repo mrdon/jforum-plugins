@@ -42,13 +42,8 @@
  */
 package net.jforum.view.admin;
 
-import java.sql.Connection;
 import java.util.Collection;
 
-import javax.servlet.http.HttpServletResponse;
-
-import net.jforum.ActionServletRequest;
-import net.jforum.Command;
 import net.jforum.SessionFacade;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.repository.BBCodeRepository;
@@ -62,21 +57,20 @@ import net.jforum.repository.TopicRepository;
 import net.jforum.util.bbcode.BBCodeHandler;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import freemarker.template.SimpleHash;
-import freemarker.template.Template;
+import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: CacheAction.java,v 1.2 2005/02/21 20:32:13 rafaelsteil Exp $
+ * @version $Id: CacheAction.java,v 1.3 2005/03/15 18:24:10 rafaelsteil Exp $
  */
-public class CacheAction extends Command
+public class CacheAction extends AdminCommand
 {
 	/**
 	 * @see net.jforum.Command#list()
 	 */
 	public void list() throws Exception
 	{
-		this.context.put("moduleAction", "cache_list.htm");
+		this.setTemplateName(TemplateKeys.CACHE_LIST);
 		
 		this.context.put("bb", new BBCodeRepository());
 		this.context.put("modules", new ModulesRepository());
@@ -130,7 +124,7 @@ public class CacheAction extends Command
 		
 		this.context.put("topics", DataAccessDriver.getInstance().newTopicModel().selectTopicTitlesByIds(topics));
 		this.context.put("repository", new PostRepository());
-		this.context.put("moduleAction", "post_repository_info.htm");
+		this.setTemplateName(TemplateKeys.CACHE_POST_MOREINFO);
 	}
 	
 	public void postsClear() throws Exception
@@ -138,19 +132,5 @@ public class CacheAction extends Command
 		int topicId = this.request.getIntParameter("topic_id");
 		PostRepository.clearCache(topicId);
 		this.postsMoreInfo();
-	}
-
-	/**
-	 * @see net.jforum.Command#process()
-	 */
-	public Template process(ActionServletRequest request, 
-			HttpServletResponse response, 
-			Connection conn, SimpleHash context) throws Exception 
-	{
-		if (AdminAction.isAdmin()) {
-			super.process(request, response, conn, context);
-		}
-		
-		return AdminAction.adminBaseTemplate();
 	}
 }

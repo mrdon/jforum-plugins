@@ -1,3 +1,4 @@
+<#include "header.htm"/>
 <#import "../macros/pagination.ftl" as pagination/>
 <script language="javascript">
 <#include "utils.js"/>
@@ -73,5 +74,4 @@ function confirmDelete(id)
 		<td align="right"><#if thisPage?exists><@pagination.doPagination "list", -1/></#if></td>
 	</tr>
 </table>
-
-
+<#include "bottom.htm"/>
