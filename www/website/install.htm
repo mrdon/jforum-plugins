@@ -92,13 +92,13 @@
 
 <!-- Downloadig -->
 <br>
-<br><img src="info.jpg" border="0"> <a name="downloading"></a><span class="install_subtitle">Downloading JForum</span>
+<br><img src="info.jpg" align="middle" border="0"> <a name="downloading"></a><span class="install_subtitle">Downloading JForum</span>
 <p>
 To get JForum, access the <a href="download.htm">download</a> page. <a href="download.htm">Click here</a> to go there and get the latest version.
 </p>
 
 <!-- Installing -->
-<br><img src="info.jpg"> <a name="installing"></a><span class="install_subtitle">Installing</span>
+<br><img src="info.jpg" align="middle" align="middle"> <a name="installing"></a><span class="install_subtitle">Installing</span>
 <p>
 After the download, unpack the .ZIP file into your webapp's directory ( or anyplace you want to put it ). A directory named
 <br>
@@ -108,13 +108,13 @@ After the download, unpack the .ZIP file into your webapp's directory ( or anypl
 </p>
 
 <!-- Configuring -->
-<br><a name="configuring"></a><img src="info.jpg" border="0"> <span class="install_subtitle">Configuring</span>
+<br><a name="configuring"></a><img src="info.jpg" align="middle" border="0"> <span class="install_subtitle">Configuring</span>
 <p>
 There are some things you must configure before trying to use JForum. The steps are described bellow:
 </p>
 
 <!-- Database Configuration -->
-<br><a name="databaseConfig"></a><img src="info.jpg" border="0"> <span class="install_subtitle">Database Configuration</span>
+<br><a name="databaseConfig"></a><img src="info.jpg" align="middle" border="0"> <span class="install_subtitle">Database Configuration</span>
 <p>
 First of all, you must have <a href="http://www.mysql.com" target="_new">MySQL</a> or <a href="http://www.postgresql.org" target="_new">PostgreSQL</a> installed and properly configured. 
 <br>
@@ -141,7 +141,7 @@ Then, open the file <i>WEB-INF/config/SystemGlobals.properties</i>. Now search f
 
 <br>By default JForum uses a connection pool, option which is specified by the key <i>database.connection.implementation</i> - default value set to <i>net.jforum.PooledConnection</i>. If you want to use single connections - eg, a connection to the database will the opened and closed on every request -, then set the value to <i>net.jforum.SimpleConnection</i>. 
 <br>
-<br> <img src="info.jpg" border="0"> Edit the file <i>WEB-INF/config/database/&lt;<b>DBNAME</b>&gt;/&lt;<b>DBNAME</b>&gt;.properties</i>, where &lt;<b>DBNAME</b>&gt; is the database name you are using - for instance, <i>mysql</i> or <i>postgresql</i>. In this file there are some options you should change:
+<br> <img src="info.jpg" align="middle" border="0"> Edit the file <i>WEB-INF/config/database/&lt;<b>DBNAME</b>&gt;/&lt;<b>DBNAME</b>&gt;.properties</i>, where &lt;<b>DBNAME</b>&gt; is the database name you are using - for instance, <i>mysql</i> or <i>postgresql</i>. In this file there are some options you should change:
 
 <br> <br> <br> <b><i>database.connection.username</i></b>:  specify the username to use when connection to the database. Default value is <i>root</i>
 <br> <br><b><i>database.connection.password</i></b>: set the password. 
@@ -156,30 +156,30 @@ Then, open the file <i>WEB-INF/config/SystemGlobals.properties</i>. Now search f
 
 
 <!-- Creating Database Tables -->
-<br><a name="createTables"></a><img src="info.jpg"> <span class="install_subtitle">Creating the database tables</span>
+<br><a name="createTables"></a><img src="info.jpg" align="middle" align="middle"> <span class="install_subtitle">Creating the database tables</span>
 <p>Next step is to create the tables. To do that, use the import script named "&lt;<b>DBNAME</b>&gt;_db_struct.sql", placed at <i>WEB-INF/config/database/&lt;<b>DBNAME</b>&gt;</i>. This script will create all necessary tables to run JForum. The script were tested and should work with no problem at all. 
 <br>Also, please keep in mind that, if you are upgrading JForum, don't forget to take a look in the migration script that may exist. Search for a file named "Readme.txt" in the root directory. 
 </p>
 
 <p>
-<a name="populating"></a><img src="info.jpg" border="0"> <span class="install_subtitle"><b>Populating the tables</b></span><br>
+<a name="populating"></a><img src="info.jpg" align="middle" border="0"> <span class="install_subtitle"><b>Populating the tables</b></span><br>
  Now it is time to run the script to populate the database tables. To do that, use the script named "&lt;<b>DBNAME</b>&gt;_data_dump.sql", also located at <i>WEB-INF/config/database/&lt;<b>DBNAME</b>&gt;</i>. One more time, you should have no problems with this step. If you do, please remember to inform the error message, as well the database name and version you're using. 
 <br>
 <br><a name="misc"></a><span style="font-size: 16px; line-height: normal"><b>General Information and Considerations</b></span>
-<br><img src="info.jpg" border="0"> JForum uses a servlet mapping to invoke the pages. This mapping is <b>*.page</b>, and is already properly configured at WEB-INF/web.xml. If you are running JForum on some ISP, sometimes you'll need to contact their Technical Support and ask them to explicity enable these mapping for you.
+<br><img src="info.jpg" align="middle" border="0"> JForum uses a servlet mapping to invoke the pages. This mapping is <b>*.page</b>, and is already properly configured at WEB-INF/web.xml. If you are running JForum on some ISP, sometimes you'll need to contact their Technical Support and ask them to explicity enable these mapping for you.
 
 <br>
-<br><img src="info.jpg" border="0"> The directory "images" and "tmp" should have write permission to the user who runs the web server. You'll got nasty exceptions when uploading things if there is no write permission.
+<br><img src="info.jpg" align="middle" border="0"> The directory "images" and "tmp" should have write permission to the user who runs the web server. You'll got nasty exceptions when uploading things if there is no write permission.
 <br>
-<br><img src="info.jpg" border="0"> The administration interface is accessible via the link <i>Admin Control Panel</i>, located in the bottom of the main page. You will only see this link if you are logged as Administrator. See above the default password for the admin user: 
+<br><img src="info.jpg" align="middle" border="0"> The administration interface is accessible via the link <i>Admin Control Panel</i>, located in the bottom of the main page. You will only see this link if you are logged as Administrator. See above the default password for the admin user: 
 <br>
 <br>The username is <i>Admin</i> and the password is <i>admin</i>
 <br>
-<br><img src="info.jpg" border="0"> This step is <b>HIGHLY</b> recommended: Open the file <i>WEB-INF/config/SystemGlobals.properties</i> and search for a key named <i>user.hash.sequence</i>. There is already a default value to the key, but is <b>VERY RECOMMENDED</b> that you change the value. It may be anything, and you won't need to remember the value. You can just change one or other char, insert some more... just type there some numbers and random characters, and then save the file. This value will be used to enhance the security of your JForum installation, and you will just need to do this step once.
+<br><img src="info.jpg" align="middle" border="0"> This step is <b>HIGHLY</b> recommended: Open the file <i>WEB-INF/config/SystemGlobals.properties</i> and search for a key named <i>user.hash.sequence</i>. There is already a default value to the key, but is <b>VERY RECOMMENDED</b> that you change the value. It may be anything, and you won't need to remember the value. You can just change one or other char, insert some more... just type there some numbers and random characters, and then save the file. This value will be used to enhance the security of your JForum installation, and you will just need to do this step once.
 
 <br>
 <br><a name="permissions"></a><span style="font-size: 16px; line-height: normal"><b>Setting permissions for Forums and Categories</b></span>
-<br><img src="info.jpg" border="0"> By default, JForum will create the Forums with some permissions set to "not allowed" for the users / groups. <b>This is incorrect jforum's behaviour and will be fixed in the next release</b>. So, in order to allow users to insert / reply / edit posts, you should first give the right permissions for the group - by default, "General" "Administrators" and "Moderators". 
+<br><img src="info.jpg" align="middle" border="0"> By default, JForum will create the Forums with some permissions set to "not allowed" for the users / groups. <b>This is incorrect jforum's behaviour and will be fixed in the next release</b>. So, in order to allow users to insert / reply / edit posts, you should first give the right permissions for the group - by default, "General" "Administrators" and "Moderators". 
 <br>
 <br>The steps are easy, but must be done to every new Category and / or Forum: After creating the category / forum, go to the "Groups" administration, using the link in the left menu and then click on the "Permissions" link. A page with the current existing roles will show up. Now, check if everthing is according to your needs, and the click "Save". <b>You must click save even if you don't change anything</b>, so the roles can be written to the database. 
 <br>
