@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageModel.java,v 1.8 2005/01/26 20:15:11 rafaelsteil Exp $
+ * @version $Id: PrivateMessageModel.java,v 1.9 2005/03/03 14:44:50 rafaelsteil Exp $
  */
 public class PrivateMessageModel extends AutoKeys implements net.jforum.model.PrivateMessageModel
 {
@@ -104,10 +104,10 @@ public class PrivateMessageModel extends AutoKeys implements net.jforum.model.Pr
 		p.setInt(3, pm.getFromUser().getId());
 		p.setInt(4, pm.getToUser().getId());
 		p.setTimestamp(5, new Timestamp(pm.getPost().getTime().getTime()));
-		p.setString(6, pm.getPost().isBbCodeEnabled() ? "1" : "0");
-		p.setString(7, pm.getPost().isHtmlEnabled() ? "1" : "0");
-		p.setString(8, pm.getPost().isSmiliesEnabled() ? "1" : "0");
-		p.setString(9, pm.getPost().isSignatureEnabled() ? "1" : "0");
+		p.setInt(6, pm.getPost().isBbCodeEnabled() ? 1 : 0);
+		p.setInt(7, pm.getPost().isHtmlEnabled() ? 1 : 0);
+		p.setInt(8, pm.getPost().isSmiliesEnabled() ? 1 : 0);
+		p.setInt(9, pm.getPost().isSignatureEnabled() ? 1 : 0);
 		
 		pm.setId(this.executeAutoKeysQuery(p));
 	}

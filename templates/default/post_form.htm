@@ -506,8 +506,12 @@
 			<tr>
 				<td align="center">
 					<span class="gensmall">
-					<b>${I18n.getMessage("Attachments.maxToAttach")}:</b> <font color="red">${maxAttachments}</font> / 
-					<b>${I18n.getMessage("Attachments.maxSize")}:</b> <font color="red">${maxAttachmentsSize / 1024} kb</font>
+					<b>${I18n.getMessage("Attachments.maxToAttach")}:</b> <font color="red">${maxAttachments}</font> 
+					<#assign maxSize = maxAttachmentsSize / 1024>
+					<#if (maxSize > 1)>
+						/ 
+						<b>${I18n.getMessage("Attachments.maxSize")}:</b> <font color="red">${maxSize} kb</font>
+					</#if>
 					</span>
 				</td>
 			</tr>

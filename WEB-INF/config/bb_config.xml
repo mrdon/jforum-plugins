@@ -62,7 +62,7 @@
 
 	<!-- B -->
 	<match name="b">
-		<regex>\[b\](.*?)\[/b\]</regex>
+		<regex>(?s)\[b\](.*?)\[/b\]</regex>
 		<replace>
 		<![CDATA[
 		<b>$1</b>
@@ -72,7 +72,7 @@
 	
 	<!-- I -->
 	<match name="i">
-		<regex>\[i\](.*?)\[/i\]</regex>
+		<regex>(?s)\[i\](.*?)\[/i\]</regex>
 		<replace>
 		<![CDATA[
 		<i>$1</i>
@@ -82,7 +82,7 @@
 	
 	<!-- U -->
 	<match name="u">
-		<regex>\[u\](.*?)\[/u\]</regex>
+		<regex>(?s)\[u\](.*?)\[/u\]</regex>
 		<replace>
 		<![CDATA[
 		<u>$1</u>

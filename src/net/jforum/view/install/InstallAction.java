@@ -83,7 +83,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.26 2005/02/24 18:19:12 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.27 2005/03/03 14:44:54 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -430,6 +430,7 @@ public class InstallAction extends Command
 		String encoding = this.getFromSession("dbEncoding");
 		
 		boolean isMysql = type.startsWith("mysql");
+		boolean isMysql41 = "mysql41".equals(type);
 		
 		if (isMysql) {
 			type = "mysql";
@@ -446,11 +447,9 @@ public class InstallAction extends Command
 		p.setProperty(ConfigKeys.DATABASE_CONNECTION_DBNAME, dbName);
 		p.setProperty(ConfigKeys.DATABASE_CONNECTION_ENCODING, encoding);
 		
-		if (isMysql) {
-			if ("mysql41".equals(type)) {
-				p.setProperty(ConfigKeys.DATABASE_MYSQL_ENCODING, "");
-				p.setProperty(ConfigKeys.DATABASE_MYSQL_UNICODE, "");
-			}
+		if (isMysql41) {
+			p.setProperty(ConfigKeys.DATABASE_MYSQL_ENCODING, "");
+			p.setProperty(ConfigKeys.DATABASE_MYSQL_UNICODE, "");
 		}
 		
 		try {
