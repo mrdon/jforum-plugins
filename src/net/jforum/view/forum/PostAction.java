@@ -87,7 +87,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.60 2005/02/16 19:59:43 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.61 2005/02/18 19:01:18 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -711,9 +711,9 @@ public class PostAction extends Command {
 		}
 
 		int minPostId = tm.getMinPostId(p.getTopicId());
-    if (minPostId > -1) {
-      tm.setFirstPostId(p.getTopicId(), minPostId);
-    }
+		if (minPostId > -1) {
+		  tm.setFirstPostId(p.getTopicId(), minPostId);
+		}
         
 		// Forum
 		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
@@ -847,7 +847,7 @@ public class PostAction extends Command {
 	
 	public void listSmilies()
 	{
-		this.setTemplateName("default/empty.htm");
+		this.setTemplateName(SystemGlobals.getValue(ConfigKeys.TEMPLATE_NAME) + "/empty.htm");
 		this.context.put("moduleAction", "list_smilies.htm");
 		this.context.put("smilies", SmiliesRepository.getSmilies());
 	}

@@ -61,11 +61,12 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * @author Rafael Steil
- * @version $Id: BBCodeHandler.java,v 1.9 2005/02/03 12:37:42 rafaelsteil Exp $
+ * @version $Id: BBCodeHandler.java,v 1.10 2005/02/18 19:01:19 rafaelsteil Exp $
  */
 public class BBCodeHandler extends DefaultHandler implements Serializable
 {
 	private Map bbMap = new LinkedHashMap();
+	private Map alwaysProcessMap = new LinkedHashMap();
 	private boolean matchOpen = false;
 	private String tagName = "";
 	private StringBuffer sb;	
@@ -86,12 +87,22 @@ public class BBCodeHandler extends DefaultHandler implements Serializable
 	
 	public void addBb(BBCode bb)
 	{
-		this.bbMap.put(bb.getTagName(), bb);
+		if (bb.alwaysProcess()) {
+			this.alwaysProcessMap.put(bb.getTagName(), bb);
+		}
+		else {
+			this.bbMap.put(bb.getTagName(), bb);
+		}
 	}
 	
 	public Collection getBbList()
 	{
 		return this.bbMap.values();
+	}
+	
+	public Collection getAlwaysProcessList()
+	{
+		return this.alwaysProcessMap.values();
 	}
 	
 	public BBCode findByName(String tagName)
@@ -115,6 +126,11 @@ public class BBCodeHandler extends DefaultHandler implements Serializable
 			String removeQuotes = attrs.getValue("removeQuotes");
 			if (removeQuotes != null && removeQuotes.equals("true")) {
 				this.bb.enableRemoveQuotes();
+			}
+			
+			String alwaysProcess = attrs.getValue("alwaysProcess");
+			if (alwaysProcess != null && "true".equals(alwaysProcess)) {
+				this.bb.enableAlwaysProcess();
 			}
 		}
 	

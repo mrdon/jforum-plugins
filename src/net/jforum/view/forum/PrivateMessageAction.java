@@ -64,7 +64,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.13 2005/01/27 17:59:45 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.14 2005/02/18 19:01:18 rafaelsteil Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -256,7 +256,7 @@ public class PrivateMessageAction extends Command
 		
 		this.context.put("username", username);
 		this.context.put("showResult", showResult);
-		this.setTemplateName("default/pm_finduser.htm");
+		this.setTemplateName(SystemGlobals.getValue(ConfigKeys.TEMPLATE_NAME) + "/pm_finduser.htm");
 	}
 	
 	public void read() throws Exception

@@ -48,7 +48,7 @@ import java.io.Serializable;
  * Represents each bbcode.
  * 
  * @author Rafael Steil
- * @version $Id: BBCode.java,v 1.7 2005/02/03 12:37:42 rafaelsteil Exp $
+ * @version $Id: BBCode.java,v 1.8 2005/02/18 19:01:19 rafaelsteil Exp $
  */
 public class BBCode implements Serializable
 {
@@ -56,6 +56,7 @@ public class BBCode implements Serializable
 	private String regex;
 	private String replace;
 	private boolean removQuotes;
+	private boolean alwaysProcess;
 	
 	public BBCode() {}
 
@@ -129,6 +130,16 @@ public class BBCode implements Serializable
 	public void setTagName(String tagName) 
 	{
 		this.tagName = tagName;
+	}
+	
+	public void enableAlwaysProcess()
+	{
+		this.alwaysProcess = true;
+	}
+	
+	public boolean alwaysProcess()
+	{
+		return this.alwaysProcess;
 	}
 	
 	public void enableRemoveQuotes()

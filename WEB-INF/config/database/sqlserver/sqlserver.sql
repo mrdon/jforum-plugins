@@ -182,14 +182,14 @@ PublishUserModel.addNew = INSERT INTO jforum_mmpublish_users (jforum_user_id, mm
 # #############
 
 KarmaModel.getMostRatedUserByPeriod = u.user_id, u.username, SUM(post_user_id) AS total, \
-									  COUNT(post_user_id) AS votes_received, user_karma, \
-									  	(SELECT COUNT(from_user_id) AS votes_given \
-										FROM jforum_karma as k2 \
-										WHERE k2.from_user_id = u.user_id) AS votes_given \
-									  FROM jforum_users u, jforum_karma k \
-									  WHERE u.user_id = k.post_user_id \
-									  AND k.rate_date between ? AND ? \
-									  GROUP BY u.user_id, u.username, user_karma
+	COUNT(post_user_id) AS votes_received, user_karma, \
+	(SELECT COUNT(from_user_id) AS votes_given \
+		FROM jforum_karma as k2 \
+		WHERE k2.from_user_id = u.user_id) AS votes_given \
+	FROM jforum_users u, jforum_karma k \
+	WHERE u.user_id = k.post_user_id \
+	AND k.rate_date BETWEEN ? AND ? \
+	GROUP BY u.user_id, u.username, user_karma
 									  
 KarmaModel.getMostRaterUserByPeriod = NO
 

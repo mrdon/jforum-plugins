@@ -69,7 +69,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.8 2005/02/15 19:03:19 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.9 2005/02/18 19:01:20 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -91,6 +91,23 @@ public class PostCommon
 
 		return p;
 	}
+	
+	private static String matchQuotedBB(BBCode bb, String text)
+	{
+		Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
+
+		while (matcher.find()) {
+			String contents = matcher.group(1);
+			contents = contents.replaceAll("'", "");
+			contents = contents.replaceAll("\"", "");
+
+			String replace = bb.getReplace().replaceAll("\\$1", contents);
+
+			text = text.replaceFirst(bb.getRegex(), replace);
+		}
+		
+		return text;
+	}
 
 	public static String processText(String text)
 	{
@@ -100,6 +117,11 @@ public class PostCommon
 
 		// DO NOT remove the trailing blank space
 		text = text.replaceAll("\n", "<br> ");
+		
+		Iterator iter = BBCodeRepository.getBBCollection().getAlwaysProcessList().iterator();
+		while (iter.hasNext()) {
+			text = PostCommon.matchQuotedBB((BBCode)iter.next(), text);
+		}
 
 		if (text.indexOf('[') > -1 && text.indexOf(']') > -1) {
 			int openQuotes = 0;
@@ -110,17 +132,7 @@ public class PostCommon
 
 				// little hacks
 				if (bb.removeQuotes()) {
-					Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
-
-					while (matcher.find()) {
-						String contents = matcher.group(1);
-						contents = contents.replaceAll("'", "");
-						contents = contents.replaceAll("\"", "");
-
-						String replace = bb.getReplace().replaceAll("\\$1", contents);
-
-						text = text.replaceFirst(bb.getRegex(), replace);
-					}
+					text = PostCommon.matchQuotedBB(bb, text);
 				}
 				else {
 					// Another hack for the quotes
