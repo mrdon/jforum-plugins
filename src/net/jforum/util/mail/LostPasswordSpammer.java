@@ -44,32 +44,35 @@ package net.jforum.util.mail;
 
 import java.util.ArrayList;
 
-import freemarker.template.SimpleHash;
+import net.jforum.entities.User;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: LostPasswordSpammer.java,v 1.5 2004/07/04 19:31:14 rafaelsteil Exp $
+ * @version $Id: LostPasswordSpammer.java,v 1.5 2004/07/04 19:31:14 rafaelsteil
+ *          Exp $
  */
-public class LostPasswordSpammer extends Spammer
-{
-	public LostPasswordSpammer(String username, String email, String hash)
-	{
+public class LostPasswordSpammer extends Spammer {
+	public LostPasswordSpammer(User user, String hash) {
 		String forumLink = SystemGlobals.getValue(ConfigKeys.FORUM_LINK);
 		if (!forumLink.endsWith("/")) {
 			forumLink += "/";
 		}
-		
-		String url =  forumLink + "user/recoverPassword/"+ hash + "."+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
+
+		String url = forumLink + "user/recoverPassword/" + hash + "."
+				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
 		SimpleHash params = new SimpleHash();
 		params.put("url", url);
-		params.put("username", username);
-		
+		params.put("user", user);
+
 		ArrayList recipients = new ArrayList();
-		recipients.add(email);
-		
-		super.prepareMessage(recipients, params, I18n.getMessage("PasswordRecovery.mailTitle"), SystemGlobals.getValue(ConfigKeys.MAIL_LOST_PASSWORD_MESSAGE_FILE));
+		recipients.add(user.getEmail());
+
+		super.prepareMessage(recipients, params, I18n
+				.getMessage("PasswordRecovery.mailTitle"), SystemGlobals
+				.getValue(ConfigKeys.MAIL_LOST_PASSWORD_MESSAGE_FILE));
 	}
 }
