@@ -82,7 +82,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.40 2005/01/14 21:11:50 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.41 2005/01/17 12:46:36 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -629,6 +629,11 @@ public class PostAction extends Command {
 		if (maxPostId > -1) {
 			fm.setLastPost(p.getForumId(), maxPostId);
 		}
+		
+		int minPostId = tm.getMinPostId(p.getTopicId());
+        if (minPostId > -1) {
+        	  tm.setFirstPostId(p.getTopicId(), minPostId);
+        }
 
 		// It was the last remaining post in the topic?
 		int totalPosts = tm.getTotalPosts(p.getTopicId());

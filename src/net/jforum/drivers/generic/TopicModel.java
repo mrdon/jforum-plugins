@@ -61,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicModel.java,v 1.10 2004/12/04 20:28:00 rafaelsteil Exp $
+ * @version $Id: TopicModel.java,v 1.11 2005/01/17 12:46:35 rafaelsteil Exp $
  */
 public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel 
 {
@@ -533,5 +533,38 @@ public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel
 		rs.close();
 		p.close();
 		return l;		
+	}
+	
+	/** 
+	 * @see net.jforum.model.TopicModel#setFirstPostId(int, int)
+	 */
+	public void setFirstPostId(int topicId, int postId) throws Exception 
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("TopicModel.setFirstPostId"));
+		p.setInt(1, postId);
+		p.setInt(2, topicId);
+		p.executeUpdate();
+		p.close();
+	}
+
+	/** 
+	 * @see net.jforum.model.TopicModel#getMinPostId(int)
+	 */
+	public int getMinPostId(int topicId) throws Exception 
+	{
+		int id = -1;
+		
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("TopicModel.getMinPostId"));
+		p.setInt(1, topicId);
+		
+		ResultSet rs = p.executeQuery();
+		if (rs.next()) {
+			id = rs.getInt("post_id");
+		}
+		
+		rs.close();
+		p.close();
+		
+		return id;
 	}
 }

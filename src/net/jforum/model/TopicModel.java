@@ -54,7 +54,7 @@ import net.jforum.entities.Topic;
  * select some specific data.
  *
  * @author Rafael Steil
- * @version $Id: TopicModel.java,v 1.6 2004/12/04 20:28:01 rafaelsteil Exp $
+ * @version $Id: TopicModel.java,v 1.7 2005/01/17 12:46:36 rafaelsteil Exp $
  */
 public interface TopicModel 
 {
@@ -249,4 +249,21 @@ public interface TopicModel
 	 * @throws Exception
 	 */	
 	public List selectRecentTopics (int limit) throws Exception;
+	
+	/**
+	 * Sets the ID of the first post of the topic
+	 * 
+	 * @param topicId Topic ID
+	 * @param postId Post ID
+	 * @throws Exception
+	 */
+	public void setFirstPostId(int topicId, int postId) throws Exception;
+
+	/**
+	 * Gets the first post id associated to the topic
+	 * 
+	 * @param topicId The topic id
+	 * @throws Exception
+	 */
+	public int getMinPostId(int topicId) throws Exception;
 }
