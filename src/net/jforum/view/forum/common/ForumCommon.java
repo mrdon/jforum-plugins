@@ -159,6 +159,9 @@ public class ForumCommon
 	 */
 	public static List getAllCategoriesAndForums() throws Exception
 	{
-		return getAllCategoriesAndForums(false);
+		UserSession us = SessionFacade.getUserSession();
+		boolean checkUnread = (us != null && us.getUserId() 
+				!= SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID));
+		return getAllCategoriesAndForums(checkUnread);
 	}
 }
