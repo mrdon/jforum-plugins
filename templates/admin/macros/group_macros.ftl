@@ -11,8 +11,9 @@
 			
 			<tr bgcolor="#f4f4f4">
 			<td><span class="gen"><#list 0..level as j>&nbsp;</#list>${node.name}</span></td>
-			<td><span class="gen"><a href="${contextPath}/${servletName}/${moduleName}/edit/${node.id}.html">${I18n.getMessage("Groups.List.Edit")}</a></span></td>
+			<td><span class="gen"><a href="${contextPath}/${moduleName}/edit/${node.id}.html">${I18n.getMessage("Groups.List.Edit")}</a></span></td>
 			<td><input type="checkbox" name="group_id" value="${node.id}"></td>
+			<td class="row2"><span class="gen"><a href="${contextPath}/${moduleName}/permissions/${node.id}.page">${I18n.getMessage("Permissions")}</a></span></td>
 			</tr>
 
 			<@listGroups node/>
