@@ -43,9 +43,11 @@
 package net.jforum.entities;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.Set;
+import java.util.TreeSet;
 
 import net.jforum.view.forum.ForumOrderComparator;
 
@@ -53,14 +55,15 @@ import net.jforum.view.forum.ForumOrderComparator;
  * Represents a category in the System.
  * 
  * @author Rafael Steil
- * @version $Id: Category.java,v 1.6 2004/11/17 02:16:26 rafaelsteil Exp $
+ * @version $Id: Category.java,v 1.7 2004/11/18 01:31:45 rafaelsteil Exp $
  */
 public class Category 
 {
 	private int id;
 	private int order;
 	private String name;
-	private Map forums = new TreeMap(new ForumOrderComparator());
+	private Map forumsIdMap = new HashMap();
+	private Set forums = new TreeSet(new ForumOrderComparator());
 		
 	public Category() {}
 	
@@ -130,7 +133,8 @@ public class Category
 	 * @param forum
 	 */
 	public void addForum(Forum forum) {
-		this.forums.put(new Integer(forum.getId()), forum);
+		this.forumsIdMap.put(new Integer(forum.getId()), forum);
+		this.forums.add(forum);
 	}
 	
 	/**
@@ -138,7 +142,8 @@ public class Category
 	 * @param forumId
 	 */
 	public void removeForum(int forumId) {
-		this.forums.remove(new Integer(forumId));
+		this.forums.remove(new Forum(forumId));
+		this.forumsIdMap.remove(new Integer(forumId));
 	}
 	
 	/**
@@ -150,7 +155,7 @@ public class Category
 	 */
 	public Forum getForum(int forumId)
 	{
-		return (Forum)this.forums.get(new Integer(forumId));
+		return (Forum)this.forumsIdMap.get(new Integer(forumId));
 	}
 	
 	/**
@@ -158,7 +163,7 @@ public class Category
 	 * @return 
 	 */
 	public Collection getForums() {
-		return this.forums.values();
+		return this.forums;
 	}
 
 	/** 

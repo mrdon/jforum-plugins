@@ -68,7 +68,7 @@ import net.jforum.security.SecurityConstants;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.16 2004/11/14 16:28:46 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.17 2004/11/18 01:31:45 rafaelsteil Exp $
  */
 public class ForumRepository 
 {
@@ -160,8 +160,12 @@ public class ForumRepository
 	public static Category getCategory(int userId, boolean ignorePermissions, int categoryId)
 	{
 		Category c = (Category)categoriesMap.get(new Integer(categoryId));
-		if (ignorePermissions || c == null) {
-			return c;
+		if (c == null) {
+			return null;
+		}
+		
+		if (ignorePermissions) {
+			return new Category(c);
 		}
 		
 		if (!isCategoryAccessible(userId, categoryId)) {
@@ -451,7 +455,7 @@ public class ForumRepository
 
 		for (Iterator iter = l.iterator(); iter.hasNext(); ) {
 			Forum f = (Forum)iter.next();
-			Category c = getCategory(true, f.getCategoryId());
+			Category c = (Category)categoriesMap.get(new Integer(f.getCategoryId()));
 			
 			if (c == null) {
 				throw new CategoryNotFoundException("Category for forum #" + f.getId() + " not found");

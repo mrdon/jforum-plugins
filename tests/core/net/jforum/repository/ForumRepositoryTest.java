@@ -62,7 +62,7 @@ import net.jforum.view.forum.ForumCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumRepositoryTest.java,v 1.2 2004/11/18 01:31:45 rafaelsteil Exp $
+ * @version $Id: ForumRepositoryTest.java,v 1.3 2004/11/18 01:36:09 rafaelsteil Exp $
  */
 public class ForumRepositoryTest extends TestCase 
 {
@@ -428,7 +428,6 @@ public class ForumRepositoryTest extends TestCase
 					f.setId(forumIds[i]);
 					f.setName(forumNames[i]);
 					f.setIdCategories(forumCatIds[i]);
-					f.setOrder(i);
 					
 					this.forums.add(f);
 				}

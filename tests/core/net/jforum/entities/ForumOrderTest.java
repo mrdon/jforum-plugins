@@ -36,37 +36,65 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Sep 2, 2004
+ * Created on 17/11/2004 22:03:01
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.view.forum;
+package net.jforum.entities;
 
-import java.util.Comparator;
+import java.util.Iterator;
 
-import net.jforum.entities.Forum;
+import junit.framework.TestCase;
+
 /**
- * @author James Yong Boon Leong
  * @author Rafael Steil
- * @version $Id: ForumOrderComparator.java,v 1.4 2004/11/18 01:36:09 rafaelsteil Exp $
+ * @version $Id: ForumOrderTest.java,v 1.1 2004/11/18 01:31:46 rafaelsteil Exp $
  */
-public class ForumOrderComparator implements Comparator {
-	
-	public final int compare (Object a, Object b)
+public class ForumOrderTest extends TestCase 
+{
+	private Category category;
+
+	/**
+	 * @see TestCase#setUp()
+	 */
+	protected void setUp() throws Exception 
 	{
-		Forum f1 = (Forum)a;
-		Forum f2 = (Forum)b;
+		this.category = new Category();
 		
-		if (f1.getOrder() > f2.getOrder()) {
-			return 1;
-		}
-		else if (f1.getOrder() < f2.getOrder() ) {
-			return -1;
-		}
-		else {
-			return f1.getName().compareTo(f2.getName());
-		}
-
+		Forum f = new Forum();
+		f.setName("Forum 2");
+		f.setOrder(2);
+		this.category.addForum(f);
+		
+		f = new Forum();
+		f.setName("Forum 5");
+		f.setOrder(5);
+		this.category.addForum(f);
+		
+		f = new Forum();
+		f.setName("Forum 1");
+		f.setOrder(1);
+		this.category.addForum(f);
+		
+		f = new Forum();
+		f.setName("Forum 3");
+		f.setOrder(3);
+		this.category.addForum(f);
+		
+		f = new Forum();
+		f.setName("Forum 4");
+		f.setOrder(4);
+		this.category.addForum(f);
 	}
-}
+	
+	public void testForumOrder()
+	{
+		String[] expectedNames = { "Forum 1", "Forum 2", "Forum 3", "Forum 4", "Forum 5" };
+		int i = 0; 
+		for (Iterator iter = this.category.getForums().iterator(); iter.hasNext(); ) {
+			Forum f = (Forum)iter.next();
+			assertEquals(expectedNames[i++], f.getName());
+		}
+	}
 
+}

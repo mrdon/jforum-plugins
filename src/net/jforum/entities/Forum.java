@@ -46,7 +46,7 @@ package net.jforum.entities;
  * Represents a specific forum.
  * 
  * @author Rafael Steil
- * @version $Id: Forum.java,v 1.3 2004/11/13 03:14:01 rafaelsteil Exp $
+ * @version $Id: Forum.java,v 1.4 2004/11/18 01:31:45 rafaelsteil Exp $
  */
 public class Forum 
 {
@@ -103,6 +103,10 @@ public class Forum
 	 * Default Constructor
 	 */
 	public Forum() { }
+	
+	public Forum(int forumId) {
+		this.id = forumId;
+	}
 	
 	public Forum(Forum f)
 	{
@@ -301,6 +305,13 @@ public class Forum
 	public int hashCode() 
 	{
 		return this.id;
+	}
+	
+	/** 
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return "[" + this.name + ", id=" + this.id + ", order=" + this.order + "]";
 	}
 
 }
