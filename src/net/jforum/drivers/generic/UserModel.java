@@ -61,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.32 2005/03/07 20:40:28 rafaelsteil Exp $
+ * @version $Id: UserModel.java,v 1.33 2005/03/16 16:13:14 rafaelsteil Exp $
  */
 public class UserModel extends AutoKeys implements net.jforum.model.UserModel 
 {
@@ -532,7 +532,7 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 	 */
 	public User validateLogin(String username, String password) throws NoSuchAlgorithmException, Exception
 	{
-		return loginAuthenticator.validateLogin(username, password);
+		return loginAuthenticator.validateLogin(username, password, null);
 	}
 
 	/** 

@@ -43,6 +43,8 @@
  */
 package net.jforum.drivers.external;
 
+import java.util.Map;
+
 import net.jforum.entities.User;
 import net.jforum.model.UserModel;
 
@@ -50,10 +52,25 @@ import net.jforum.model.UserModel;
 /**
  * @author Rafael Steil
  * @author Pieter Olivier
- * @version $Id: LoginAuthenticator.java,v 1.1 2005/01/03 16:13:24 rafaelsteil Exp $
+ * @version $Id: LoginAuthenticator.java,v 1.2 2005/03/16 16:13:14 rafaelsteil Exp $
  */
 public interface LoginAuthenticator 
 {
-	public User validateLogin(String username, String password) throws Exception;
+	/**
+	 * Authenticates an user.
+	 * 
+	 * @param username Username
+	 * @param password Password
+	 * @param extraParams Extra parameters, if any. 
+	 * @return An instance of a {@link net.jforum.entities.User} or <code>null</code>
+	 * @throws Exception
+	 */
+	public User validateLogin(String username, String password, Map extraParams) throws Exception;
+	
+	/**
+	 * Sets the user model for the instance
+	 * 
+	 * @param userModel The user model to set
+	 */
 	public void setUserModel(UserModel userModel);
 }

@@ -40,7 +40,7 @@
  * The JForum Project
  * http://www.jforum.net 
  * 
- * $Id: User.java,v 1.12 2005/02/01 21:44:41 rafaelsteil Exp $
+ * $Id: User.java,v 1.13 2005/03/16 16:13:13 rafaelsteil Exp $
  */
 package net.jforum.entities;
 
@@ -48,7 +48,9 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.jforum.SessionFacade;
 import net.jforum.util.preferences.ConfigKeys;
@@ -106,6 +108,9 @@ public class User implements Serializable
 	private int active;
 	private String activationKey;
 	private int deleted;
+	private String firstName;
+	private String lastName;
+	private Map extra = new HashMap();
 	
 	/**
 	 * Default Constructor
@@ -113,6 +118,41 @@ public class User implements Serializable
 	public User() 
 	{
 		this.groupsList = new ArrayList(); 
+	}
+	
+	public void addExtra(String name, Object value)
+	{
+		this.extra.put(name, value);
+	}
+	
+	public Object getExtra(String name)
+	{
+		return this.extra.get(name);
+	}
+	
+	public void setFirstName(String name)
+	{
+		this.firstName = name;
+	}
+	
+	public String getFirstName()
+	{
+		return this.firstName;
+	}
+	
+	public void setLastName(String name)
+	{
+		this.lastName = name;
+	}
+	
+	public String getLastNmame()
+	{
+		return this.lastName;
+	}
+	
+	public String getName()
+	{
+		return this.firstName + " " + this.lastName;
 	}
 	
 	public boolean isDeleted() {

@@ -44,6 +44,7 @@ package net.jforum.drivers.external;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Map;
 
 import net.jforum.JForum;
 import net.jforum.entities.User;
@@ -57,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * <i>jforum_users</i>. 
  * 
  * @author Rafael Steil
- * @version $Id: DefaultLoginAuthenticator.java,v 1.1 2005/01/03 16:13:23 rafaelsteil Exp $
+ * @version $Id: DefaultLoginAuthenticator.java,v 1.2 2005/03/16 16:13:14 rafaelsteil Exp $
  */
 public class DefaultLoginAuthenticator implements LoginAuthenticator
 {
@@ -72,9 +73,9 @@ public class DefaultLoginAuthenticator implements LoginAuthenticator
 	}
 
 	/**
-	 * @see net.jforum.drivers.external.LoginAuthenticator#validateLogin(java.lang.String, java.lang.String)
+	 * @see net.jforum.drivers.external.LoginAuthenticator#validateLogin(java.lang.String, java.lang.String, Object[])
 	 */
-	public User validateLogin(String username, String password) throws Exception
+	public User validateLogin(String username, String password, Map extraParams) throws Exception
 	{
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.login"));
 		p.setString(1, username);
