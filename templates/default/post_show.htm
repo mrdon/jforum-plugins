@@ -129,7 +129,7 @@ function confirmDelete()
 							<tr>
 								<td width="80%">
 									<span class="postdetails">
-									<img src="${contextPath}/templates/${templateName}/images/icon_minipost.gif" />${post.formatedTime}<span class="gen">&nbsp;</span>&nbsp; &nbsp;${I18n.getMessage("PostShow.subject")}: <a name="${post.id}" id="${post.id}">${post.subject?html}</a>
+									<img src="${contextPath}/templates/${templateName}/images/icon_minipost.gif" />${post.formatedTime}<span class="gen">&nbsp;</span>&nbsp; &nbsp;${I18n.getMessage("PostShow.subject")}: <a name="${post.id}" id="${post.id}">${post.subject?default("")?html}</a>
 									</span>
 								</td>
 								
