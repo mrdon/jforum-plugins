@@ -537,16 +537,19 @@ function validatePostForm(f)
 		</td>
 	</tr>
 
+	<#if (topic?exists && topic.id > 0)>
 	<td colspan="2">
 		<table border="0" cellpadding="3" cellspacing="0" width="100%" class="forumline">
 			<tr>
 				<td class="catHead" height="28" align="center"><b><span class="cattitle">${I18n.getMessage("PostShow.topicReview")}</span></b></th>
 			</tr>
-
+	
 			<tr>
 				<td class="row1"><iframe width="100%" height="300" src="${JForumContext.encodeURL("/posts/review/${topic.id}")}" ></iframe>
 			</tr>
+			
 		</table>
 	</td>
+	</#if>
 </table>
 

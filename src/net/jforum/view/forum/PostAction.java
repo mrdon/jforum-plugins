@@ -81,7 +81,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.31 2004/12/19 15:17:12 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.32 2004/12/20 00:16:44 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -243,6 +243,8 @@ public class PostAction extends Command {
 
 		int userId = SessionFacade.getUserSession().getUserId();
 		User user = DataAccessDriver.getInstance().newUserModel().selectById(userId);
+		user.setSignature(PostCommon.processText(user.getSignature()));
+		user.setSignature(PostCommon.processSmilies(user.getSignature(), SmiliesRepository.getSmilies()));
 
 		if (JForum.getRequest().getParameter("preview") != null) {
 			user.setNotifyOnMessagesEnabled(JForum.getRequest().getParameter("notify") != null);

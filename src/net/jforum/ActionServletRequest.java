@@ -57,15 +57,15 @@ import net.jforum.exceptions.ForumException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
-import org.apache.commons.fileupload.DefaultFileItemFactory;
-import org.apache.commons.fileupload.DiskFileUpload;
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload.servlet.ServletRequestContext;
 
 /**
  * @author Rafael Steil
- * @version $Id: ActionServletRequest.java,v 1.12 2004/12/04 20:28:04 rafaelsteil Exp $
+ * @version $Id: ActionServletRequest.java,v 1.13 2004/12/20 00:16:42 rafaelsteil Exp $
  */
 public class ActionServletRequest extends HttpServletRequestWrapper 
 {
@@ -228,6 +228,7 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 		if ("GET".equals(requestType) 
 				&& superRequest.getQueryString() == null
 				&& superRequest.getRequestURI().endsWith(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION))) {
+			superRequest.setCharacterEncoding(SystemGlobals.getValue(ConfigKeys.ENCODING));
 			String urlModel[] = superRequest.getRequestURI().split("/");
 			
 			// If (context name is not null) {
@@ -254,12 +255,19 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 				baseLen = 3;
 			}
 			
-			urlModel[urlModel.length - 1] = urlModel[urlModel.length - 1].substring(0, urlModel[urlModel.length - 1].indexOf(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)));
+			urlModel[urlModel.length - 1] = urlModel[urlModel.length - 1].substring(0, urlModel[urlModel.length - 1]
+				.indexOf(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)));
 			
 			// <moduleName>.<actionName>.<numberOfParameters>
-			UrlPattern url = UrlPatternCollection.findPattern(urlModel[moduleIndex] +"."+ urlModel[actionIndex] +"."+ (urlModel.length - baseLen));
+			UrlPattern url = UrlPatternCollection.findPattern(urlModel[moduleIndex] 
+					+ "." 
+					+ urlModel[actionIndex] 
+					+ "." 
+					+ (urlModel.length - baseLen));
+
 			if (url == null) {
-				throw new IOException("The request '"+ superRequest.getRequestURI() +"' is not valid. A correspondent URL Pattern was not found");
+				throw new IOException("The request '" + superRequest.getRequestURI() 
+						+ "' is not valid. A correspondent URL Pattern was not found");
 			}
 			
 			this.addParameter("module", urlModel[moduleIndex]);
@@ -273,10 +281,10 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 			}
 		}
 		else if ("POST".equals(requestType)) {
-			isMultipart = FileUploadBase.isMultipartContent(superRequest);
+			isMultipart = ServletFileUpload.isMultipartContent(new ServletRequestContext(superRequest));
 			if (isMultipart) {
 			    String tmpDir = SystemGlobals.getApplicationPath() + "/" + SystemGlobals.getValue(ConfigKeys.TMP_DIR);
-				DiskFileUpload upload = new DiskFileUpload(new DefaultFileItemFactory(20 * 1024, new File(tmpDir)));
+				ServletFileUpload upload = new ServletFileUpload(new DiskFileItemFactory(100 * 1024, new File(tmpDir)));
 
 				try {
 					List items = upload.parseRequest(superRequest);
@@ -289,8 +297,8 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 							if (item.getSize() > 0) {
 								this.query.put(item.getFieldName(), item.getInputStream());
 								
-								// Keeps the original file name ( pattern: <fieldName>Name 
-								this.query.put(item.getFieldName() +"Name", item.getName());
+								// Keeps the original file name ( pattern: <fieldName>Name )
+								this.query.put(item.getFieldName() + "Name", item.getName());
 							}
 						}
 					}
@@ -302,6 +310,8 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 		}
 		
 		if (isMultipart == false) {
+			superRequest.setCharacterEncoding(SystemGlobals.getValue(ConfigKeys.ENCODING));
+
 			Enumeration e = superRequest.getParameterNames();
 			String name;
 			while (e.hasMoreElements()) {
@@ -317,6 +327,18 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 	public String getParameter(String parameter) 
 	{
 		return (String)this.query.get(parameter);
+	}
+
+	/**
+	 * Gets an parameter that is a number.
+	 * A call to <code>Integer#parseInt(String)</code> is made
+	 * to do the conversion
+	 * @param parameter The parameter name to get the value
+	 * @return
+	 */
+	public int getIntParameter(String parameter)
+	{
+		return Integer.parseInt(this.getParameter(parameter));
 	}
 	
 	/**
