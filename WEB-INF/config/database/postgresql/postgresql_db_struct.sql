@@ -190,7 +190,7 @@ CREATE TABLE jforum_smilies (
 --
 
 CREATE SEQUENCE jforum_themes_seq;
-CREATE TABLE themes (
+CREATE TABLE jforum_themes (
   themes_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_themes_seq'),
   template_name VARCHAR(30) NOT NULL DEFAULT '',
   style_name VARCHAR(30) NOT NULL DEFAULT '',

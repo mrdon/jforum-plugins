@@ -37,7 +37,6 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: Mar 3, 2003 / 1:37:05 PM
- * net.jforum.model.DataAccessDriver.java
  * The JForum Project
  * http://www.jforum.net
  */
@@ -56,11 +55,11 @@ import net.jforum.util.SystemGlobals;
  * backend, all you need to do is to implement <code>DataAccessDriver</code>,
  * all *Model classes and a specific file with the SQL queries. 
  * <br>
- * The default implemenation uses MySQL, so if you want a base code to
- * analise, look at <code>net.jforum.drivers.mysql</code> package.
+ * The default implementation was written to support MySQL, so if you want a base code to
+ * analise, look at <code>net.jforum.drivers.generic</code> package.
  * 
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.3 2004/05/21 00:24:17 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.4 2004/05/31 01:58:47 rafaelsteil Exp $
  */
 public abstract class DataAccessDriver 
 {
@@ -180,4 +179,11 @@ public abstract class DataAccessDriver
 	 * @return <code>link net.jforum.model.security.PrivateMessageModel</code> instance
 	 */
 	public abstract net.jforum.model.PrivateMessageModel newPrivateMessageModel();
+	
+	/**
+	 * Gets a {@link net.jforum.model.UserSessionModel} instance
+	 * 
+	 * @return <code>link net.jforum.model.UserSessionModel</code> instance
+	 */
+	public abstract net.jforum.model.UserSessionModel newUserSessionModel();
 }

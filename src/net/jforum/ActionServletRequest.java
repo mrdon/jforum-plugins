@@ -62,7 +62,7 @@ import org.apache.commons.fileupload.FileUploadException;
 
 /**
  * @author Rafael Steil
- * @version $Id: ActionServletRequest.java,v 1.4 2004/05/25 03:29:51 rafaelsteil Exp $
+ * @version $Id: ActionServletRequest.java,v 1.5 2004/05/31 01:58:46 rafaelsteil Exp $
  */
 public class ActionServletRequest extends HttpServletRequestWrapper 
 {
@@ -216,7 +216,6 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 	public ActionServletRequest(HttpServletRequest superRequest) throws IOException
 	{
 		super(superRequest);
-		superRequest.setCharacterEncoding((String)SystemGlobals.getValue("encoding"));
 
 		this.query = new HashMap();
 		boolean isMultipart = false;

@@ -40,24 +40,25 @@
  * net.jforum.security.SecurityConstants.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: SecurityConstants.java,v 1.2 2004/04/21 23:57:35 rafaelsteil Exp $
  */
 package net.jforum.security;
 
 /**
  * @author Rafael Steil
+ * @version $Id: SecurityConstants.java,v 1.3 2004/05/31 01:58:51 rafaelsteil Exp $
  */
-public interface SecurityConstants 
+public class SecurityConstants 
 {
-	public String PERM_ADMINISTRATION = "perm_administration";
-	public String PERM_CATEGORY = "perm_category";
-	public String PERM_FORUM = "perm_forum";
-	public String PERM_ANONYMOUS_POST = "perm_anonymous_post";
-	public String PERM_MODERATION = "perm_moderation";
-	public String PERM_MODERATION_FORUMS = "perm_moderation_forums";
-	public String PERM_MODERATION_POST_REMOVE = "perm_moderation_post_remove";
-	public String PERM_MODERATION_POST_EDIT = "perm_moderation_post_edit";
-	public String PERM_MODERATION_TOPIC_MOVE = "perm_moderation_topic_move";
-	public String PERM_MODERATION_TOPIC_LOCK_UNLOCK = "perm_moderation_topic_lockUnlock";
+	private SecurityConstants() {}
+	
+	public static final String PERM_ADMINISTRATION = "perm_administration";
+	public static final String PERM_CATEGORY = "perm_category";
+	public static final String PERM_FORUM = "perm_forum";
+	public static final String PERM_ANONYMOUS_POST = "perm_anonymous_post";
+	public static final String PERM_MODERATION = "perm_moderation";
+	public static final String PERM_MODERATION_FORUMS = "perm_moderation_forums";
+	public static final String PERM_MODERATION_POST_REMOVE = "perm_moderation_post_remove";
+	public static final String PERM_MODERATION_POST_EDIT = "perm_moderation_post_edit";
+	public static final String PERM_MODERATION_TOPIC_MOVE = "perm_moderation_topic_move";
+	public static final String PERM_MODERATION_TOPIC_LOCK_UNLOCK = "perm_moderation_topic_lockUnlock";
 }

@@ -18,7 +18,7 @@
 		]]>
 		</replace>
 	</match>
-
+	
 	<match name="openQuote">
 		<regex>\[quote\]</regex>
 		<replace>

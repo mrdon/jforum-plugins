@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 30/12/2003 / 21:40:54
- * net.jforum.entities.UserSession.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: UserSession.java,v 1.2 2004/04/21 23:57:31 rafaelsteil Exp $
  */
 package net.jforum.entities;
 
@@ -55,6 +52,7 @@ import net.jforum.util.SystemGlobals;
  * Stores information about user's session.
  * 
  * @author Rafael Steil
+ * @version $Id: UserSession.java,v 1.3 2004/05/31 01:58:49 rafaelsteil Exp $
  */
 public class UserSession implements Serializable
 {
@@ -66,6 +64,20 @@ public class UserSession implements Serializable
 	private String username;
 	private boolean autoLogin;
 	private String lang;
+	
+	public UserSession() {}
+	
+	public UserSession(UserSession us)
+	{
+		this.startTime = us.getStartTime();
+		this.lastVisit = us.getLastVisit();
+		this.sessionTime = us.getSessionTime();
+		this.userId = us.getUserId();
+		this.sessionId = us.getSessionId();
+		this.username = us.getUsername();
+		this.autoLogin = us.getAutoLogin();
+		this.lang = us.getLang();
+	}
 	
 	/**
 	 * Set session's start time.

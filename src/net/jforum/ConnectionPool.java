@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: Mar 3, 2003 / 14:43:35 AM
- * net.jforum.ConnectionPool.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * 
  */
 
 package net.jforum;
@@ -78,7 +75,8 @@ import net.jforum.util.SystemGlobals;
  * <code>ConnectionPool</code> is for now a singleton.
  *
  * @author Paulo Silveira
- * @version $Id: ConnectionPool.java,v 1.3 2004/05/23 02:58:16 rafaelsteil Exp $
+ * @author Rafael Steil
+ * @version $Id: ConnectionPool.java,v 1.4 2004/05/31 01:58:47 rafaelsteil Exp $
  * */
 
 public class ConnectionPool 
@@ -124,6 +122,9 @@ public class ConnectionPool
 			Properties config = new Properties();
 			config.load(new FileInputStream(SystemGlobals.getApplicationResourceDir()
 					+"config/database/"+ driverName +"/"+ driverName +".properties"));
+			
+			SystemGlobals.setValue("sql.file", config.getProperty("sql.file"));
+			SystemGlobals.setValue("dao.driver", config.getProperty("dao.driver"));
 			
 			Class.forName(config.getProperty("database.connection.driver"));
 			

@@ -53,7 +53,7 @@ import net.jforum.util.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.3 2004/05/21 22:10:54 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.4 2004/05/31 01:58:46 rafaelsteil Exp $
  */
 public class SessionFacade 
 {
@@ -155,7 +155,7 @@ public class SessionFacade
 	 * @return The session id if the user is already registered into the session, 
 	 * or <code>null</code> if it is not.
 	 */
-	private static String isUserInSession(String username)
+	static String isUserInSession(String username)
 	{
 		int aid = Integer.parseInt((String)SystemGlobals.getValue("anonymousUserId"));
 		

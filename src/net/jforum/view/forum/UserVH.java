@@ -37,7 +37,6 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: May 12, 2003 / 8:31:25 PM
- * net.jforum.view.forum.UserVH.java
  * The JForum Project
  * http://www.jforum.net
  */
@@ -62,7 +61,7 @@ import net.jforum.util.mail.LostPasswordSpammer;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserVH.java,v 1.5 2004/05/21 22:10:53 rafaelsteil Exp $
+ * @version $Id: UserVH.java,v 1.6 2004/05/31 01:58:45 rafaelsteil Exp $
  */
 public class UserVH extends Command 
 {
@@ -141,7 +140,6 @@ public class UserVH extends Command
 		userSession.setStartTime(System.currentTimeMillis());
 		
 		SessionFacade.add(userSession);
-		JForum.addSerializedCookie(SystemGlobals.getValue("cookieName").toString(), userSession);
 		
 		// Finalizing.. show to user the congrats page
 		JForum.setRedirect(JForum.getRequest().getContextPath() +"/user/registrationComplete.page");
@@ -183,7 +181,8 @@ public class UserVH extends Command
 				}
 				
 				SessionFacade.add(userSession);
-				JForum.addSerializedCookie(SystemGlobals.getValue("cookieName").toString(), userSession);
+				
+				JForum.addCookie((String)SystemGlobals.getValue("userCookieName"), Integer.toString(userId));
 				
 				SecurityRepository.load(userId, true);
 				validInfo = true;
@@ -224,10 +223,9 @@ public class UserVH extends Command
 		userSession.setAutoLogin(false);
 		userSession.setUserId(Integer.parseInt(SystemGlobals.getValue("anonymousUserId").toString()));
 
-		JForum.addSerializedCookie(SystemGlobals.getValue("cookieName").toString(), userSession);
-		
 		SessionFacade.setAttribute("logged", "0");
 		SessionFacade.add(userSession);
+		JForum.addCookie((String)SystemGlobals.getValue("userCookieName"), (String)SystemGlobals.getValue("anonymousUserId"));
 	}
 	
 	public void login() throws Exception

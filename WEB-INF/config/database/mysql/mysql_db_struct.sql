@@ -204,7 +204,7 @@ CREATE TABLE jforum_smilies (
 --
 
 DROP TABLE IF EXISTS jforum_themes;
-CREATE TABLE themes (
+CREATE TABLE jforum_themes (
   themes_id mediumint(8) NOT NULL auto_increment,
   template_name varchar(30) NOT NULL default '',
   style_name varchar(30) NOT NULL default '',

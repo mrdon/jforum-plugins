@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: SystemGlobals.java,v 1.2 2004/04/21 23:57:27 rafaelsteil Exp $
+ * $Id: SystemGlobals.java,v 1.3 2004/05/31 01:58:50 rafaelsteil Exp $
  */
 package net.jforum.util;
 
@@ -86,7 +86,7 @@ import java.io.FileInputStream;
 public class SystemGlobals 
 {
 	private static HashMap map;
-	private static Properties queries;
+	private static Properties queries = new Properties();
 	private static Properties i18n;
 		
 	static {
@@ -199,7 +199,6 @@ public class SystemGlobals
 	**/	
 	public static void loadQueries(String queryFile) throws IOException
 	{
-		queries = new Properties();
 		queries.load(new FileInputStream(queryFile));
 	}
 

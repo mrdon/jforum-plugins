@@ -5,12 +5,14 @@
       <TABLE cellSpacing=0 cellPadding=2 width="100%" align=center border=0>
         <TR>
           <TD vAlign=bottom align=left>
-		  <span class="gensmall">${I18n.getMessage("ForumListing.lastVisit")}: ${lastVisit}</span><br>
+		  <#if logged><span class="gensmall">${I18n.getMessage("ForumListing.lastVisit")}: ${lastVisit}</span><br/></#if>
 		  <SPAN class=gensmall>${I18n.getMessage("ForumListing.date")}: ${now}</SPAN><BR>
 		  <SPAN class=forumLink><a class="forumLink" href="${homeLink}">${I18n.getMessage("ForumListing.forumIndex")}</a></SPAN>
 		  </TD>
-          <TD class=gensmall vAlign=middle align=right>
+          <TD class=gensmall vAlign=middle align=right>&nbsp;
+			<#if logged>
 		  	<A class=gensmall href="${contextPath}/forums/newMessages.page">${I18n.getMessage("ForumListing.readLastVisitMessages")}</A>
+			</#if>
 		</TD>
         </TR>
 		</TABLE>

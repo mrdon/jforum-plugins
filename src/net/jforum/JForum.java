@@ -37,17 +37,12 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: Mar 3, 2003 / 11:43:35 AM
- * net.jforum.JForum.java
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum;
 
-import java.beans.XMLDecoder;
-import java.beans.XMLEncoder;
 import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -65,24 +60,26 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.jforum.entities.User;
+import net.jforum.entities.UserSession;
+import net.jforum.model.DataAccessDriver;
+import net.jforum.model.UserSessionModel;
+import net.jforum.repository.BBCodeRepository;
+import net.jforum.repository.SecurityRepository;
+import net.jforum.util.I18n;
+import net.jforum.util.MD5;
+import net.jforum.util.SystemGlobals;
+import net.jforum.util.bbcode.BBCodeHandler;
 import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
-import net.jforum.entities.UserSession;
-import net.jforum.repository.BBCodeRepository;
-import net.jforum.repository.SecurityRepository;
-import net.jforum.util.bbcode.BBCodeHandler;
-import net.jforum.util.MD5;
-import net.jforum.util.I18n;
-import net.jforum.util.SystemGlobals;
-
 /**
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.10 2004/05/28 03:37:15 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.11 2004/05/31 01:58:46 rafaelsteil Exp $
  */
 public class JForum extends HttpServlet 
 {
@@ -268,17 +265,9 @@ public class JForum extends HttpServlet
 			templateCfg.setTemplateUpdateDelay(0);
 			
 			JForum.loadModulesMapping(SystemGlobals.getApplicationResourceDir());
-			this.loadUrlPatterns();
 			
 			if (!JForum.debug) {
-				SystemGlobals.loadDefaults(SystemGlobals.getApplicationResourceDir() +"config/SystemGlobals.properties");
-				SystemGlobals.loadQueries(SystemGlobals.getApplicationResourceDir() +"config/"+ SystemGlobals.getValue("sql.file"));
-				
-				I18n.load();
-				
-				// BB Code
-				BBCodeRepository.setBBCollection(new BBCodeHandler().parse());
-				
+				this.loadConfigStuff();
 				templateCfg.setTemplateUpdateDelay(3600);
 			}
 			
@@ -287,6 +276,20 @@ public class JForum extends HttpServlet
 		catch (Exception e) {
 			new ForumException(e);	
 		}
+	}
+	
+	private void loadConfigStuff() throws Exception
+	{
+		SystemGlobals.loadDefaults(SystemGlobals.getApplicationResourceDir() +"config/SystemGlobals.properties");
+		
+		SystemGlobals.loadQueries(SystemGlobals.getApplicationResourceDir() +"config/"+ SystemGlobals.getValue("generic.sql.queries"));
+		SystemGlobals.loadQueries(SystemGlobals.getApplicationResourceDir() +"config/"+ SystemGlobals.getValue("sql.file"));
+		
+		I18n.load();
+		this.loadUrlPatterns();
+		
+		// BB Code
+		BBCodeRepository.setBBCollection(new BBCodeHandler().parse());
 	}
 
 	/**
@@ -318,68 +321,75 @@ public class JForum extends HttpServlet
 	 * @param name The cookie name.
 	 * @param value The cookie value
 	 */
-	public static void addSerializedCookie(String name, Object value)
+	public static void addCookie(String name, String value)
 	{
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		XMLEncoder encoder = new XMLEncoder(out);
-		encoder.writeObject(value);
-		encoder.close();
-		
-		String s = out.toString().replaceAll("\r", "").replaceAll("\n", "");
-		Cookie cookie = new Cookie(SystemGlobals.getValue("cookieName").toString(), s);
+		Cookie cookie = new Cookie(name, value);
 		cookie.setMaxAge(3600 * 24 * 365);
-		
+
 		JForum.getResponse().addCookie(cookie);
 	}
 	
-	private void checkCookies() throws IOException
+	private void setAnonymousUserSession(UserSession userSession)
 	{
-		// If userData is not, then must probably the user is entering right
-		// now in the website
+		userSession.setStartTime(System.currentTimeMillis());
+		userSession.setLastVisit(System.currentTimeMillis());
+		userSession.setUserId(Integer.parseInt((String)SystemGlobals.getValue("anonymousUserId")));
+		userSession.setSessionId(JForum.getRequest().getSession().getId());
+	}
+	
+	private void checkCookies() throws Exception
+	{
 		if (SessionFacade.getUserSession() == null) {
 			UserSession userSession = new UserSession();
+			userSession.setSessionId(JForum.getRequest().getSession().getId());
 
-			Cookie cookie = JForum.getCookie(SystemGlobals.getValue("cookieName").toString());
+			String cookieName = (String)SystemGlobals.getValue("userCookieName");
+			Cookie cookie = JForum.getCookie(cookieName);
 			
 			// If we don't have any cookie yet, then we should set it with the default values
-			if (cookie == null) {
-				userSession.setStartTime(System.currentTimeMillis());
-				userSession.setLastVisit(System.currentTimeMillis());
-				userSession.setUserId(Integer.parseInt(SystemGlobals.getValue("anonymousUserId").toString()));
-				userSession.setSessionId(JForum.getRequest().getSession().getId());
-				
-				JForum.addSerializedCookie(SystemGlobals.getValue("cookieName").toString(), userSession);
+			if (cookie == null || cookie.getValue().equals((String)SystemGlobals.getValue("anonymousUserId"))) {
+				this.setAnonymousUserSession(userSession);
 			}
 			else {
-				// Ok, we have a cookie. Time to get it from the oven
-				ByteArrayInputStream in = new ByteArrayInputStream(cookie.getValue().getBytes());
-				XMLDecoder decoder = new XMLDecoder(in);
-				
-				userSession = (UserSession)decoder.readObject();
-				
-				// Update last visit and session start time
-				userSession.setLastVisit(userSession.getStartTime() + userSession.getSessionTime());
-				userSession.setStartTime(System.currentTimeMillis());
-				
-				decoder.close();
+				String uid = cookie.getValue();
+				if (uid != null && !uid.equals("")) {
+					int userId = Integer.parseInt(uid);
+					userSession.setUserId(userId);
+
+					User user = DataAccessDriver.getInstance().newUserModel().selectById(userId);
+					UserSessionModel sm = DataAccessDriver.getInstance().newUserSessionModel();
+
+					UserSession tmpUs = sm.selectById(userSession, JForum.getConnection());
+					if (tmpUs == null) {
+						userSession.setStartTime(System.currentTimeMillis());
+						userSession.setLastVisit(System.currentTimeMillis());
+						sm.add(userSession, JForum.getConnection());
+					}
+					else {
+						// Update last visit and session start time
+						userSession.setLastVisit(tmpUs.getStartTime() + tmpUs.getSessionTime());
+						userSession.setStartTime(System.currentTimeMillis());
+					}
+					
+					userSession.setUsername(user.getUsername());
+				}
+				else {
+					this.setAnonymousUserSession(userSession);
+				}
 			}
 			
 			if (userSession.getAutoLogin()) {
 				SessionFacade.setAttribute("logged", "1");
 			}
 			else {
-				userSession.setUserId(Integer.parseInt(SystemGlobals.getValue("anonymousUserId").toString()));
+				userSession.setUserId(Integer.parseInt((String)SystemGlobals.getValue("anonymousUserId")));
 			}
 			
-			userSession.setSessionId(JForum.getRequest().getSession().getId());
 			SessionFacade.add(userSession);
 			SessionFacade.setAttribute("topics_tracking", new HashMap());
 		}
 		else {
-			UserSession userSession = SessionFacade.getUserSession();
-			userSession.updateSessionTime();
-
-			JForum.addSerializedCookie(SystemGlobals.getValue("cookieName").toString(), userSession);
+			SessionFacade.getUserSession().updateSessionTime();
 		}
 	}
 	
@@ -404,11 +414,7 @@ public class JForum extends HttpServlet
 			localData.set(dataHolder);
 
 			if (JForum.debug) {
-				SystemGlobals.loadDefaults(SystemGlobals.getApplicationResourceDir() +"config/SystemGlobals.properties");
-				SystemGlobals.loadQueries(SystemGlobals.getApplicationResourceDir() +"config/"+ SystemGlobals.getValue("sql.file"));
-				this.loadUrlPatterns();
-				I18n.load();
-				BBCodeRepository.setBBCollection(new BBCodeHandler().parse());
+				this.loadConfigStuff();
 			}
 			
 			String encoding = (String)SystemGlobals.getValue("encoding");
@@ -473,7 +479,6 @@ public class JForum extends HttpServlet
 				Template template = c.process();
 
 				if (((DataHolder)localData.get()).getRedirectTo() == null) {
-					// TODO: Add support to gzip content				
 					response.setContentType("text/html; charset="+ encoding);
 
 					BufferedWriter out = new BufferedWriter(new OutputStreamWriter(response.getOutputStream(), encoding));
@@ -497,8 +502,9 @@ public class JForum extends HttpServlet
 			}
 		}
 		
-		if (((DataHolder)localData.get()).getRedirectTo() != null) {
-			JForum.getResponse().sendRedirect(((DataHolder)localData.get()).getRedirectTo());
+		String redirectTo = ((DataHolder)localData.get()).getRedirectTo();
+		if (redirectTo != null) {
+			JForum.getResponse().sendRedirect(redirectTo);
 		}
 		
 		// hhmmm.. is it enough to clear the thread local object?  

@@ -37,7 +37,6 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * Created on 29/05/2004 00:12:37
- * net.jforum.JForum.java
  * The JForum Project
  * http://www.jforum.net
  */
@@ -45,7 +44,7 @@ package net.jforum.drivers.mysql;
 
 /**
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.5 2004/05/28 03:37:14 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.6 2004/05/31 01:58:43 rafaelsteil Exp $
  */
 public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDriver
 {

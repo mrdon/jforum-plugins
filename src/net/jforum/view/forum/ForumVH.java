@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: Apr 24, 2003 / 10:15:07 PM
- * net.jforum.view.ForumListingVH.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: ForumVH.java,v 1.5 2004/05/04 00:59:35 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 
@@ -75,6 +72,7 @@ import net.jforum.util.I18n;
 import net.jforum.util.SystemGlobals;
 /**
  * @author Rafael Steil
+ * @version $Id: ForumVH.java,v 1.6 2004/05/31 01:58:45 rafaelsteil Exp $
  */
 public class ForumVH extends Command 
 {

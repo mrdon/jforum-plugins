@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creating date: Feb 19, 2003 / 8:56:56 PM
- * net.jforum.model.UserModel.java
  * The JForum Project
  * http://www.jforum.net 
- * 
- * $Id: UserModel.java,v 1.4 2004/05/21 22:10:51 rafaelsteil Exp $
  */
 package net.jforum.model;
 
@@ -60,6 +57,7 @@ import net.jforum.entities.User;
  * select some specific data.
  * 
  * @author Rafael Steil
+ * @version $Id: UserModel.java,v 1.5 2004/05/31 01:58:48 rafaelsteil Exp $
  */
 public interface UserModel 
 {
@@ -253,7 +251,7 @@ public interface UserModel
 	public void writeLostPasswordHash(String email, String hash) throws Exception;
 	
 	/**
-	 * Validate the proviced security hash against the data stored in our system.
+	 * Validate the provided security hash against the data stored in our system.
 	 * 
 	 * @param email The user email
 	 * @param hash The supplied security hash
