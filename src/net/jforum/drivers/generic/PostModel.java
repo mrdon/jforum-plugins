@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: PostModel.java,v 1.15 2005/01/19 19:25:53 rafaelsteil Exp $
+ * @version $Id: PostModel.java,v 1.16 2005/01/26 19:22:31 franklin_samir Exp $
  */
 public class PostModel extends AutoKeys implements net.jforum.model.PostModel 
 {
@@ -92,7 +92,8 @@ public class PostModel extends AutoKeys implements net.jforum.model.PostModel
 		post.setTopicId(rs.getInt("topic_id"));
 		post.setForumId(rs.getInt("forum_id"));
 		post.setUserId(rs.getInt("user_id"));
-		post.setTime(rs.getTimestamp("post_time"));
+		Timestamp postTime = rs.getTimestamp("post_time");
+		post.setTime(postTime);
 		post.setUserIp(rs.getString("poster_ip"));
 		post.setBbCodeEnabled(rs.getInt("enable_bbcode") > 0);
 		post.setHtmlEnabled(rs.getInt("enable_html") > 0);
@@ -106,7 +107,7 @@ public class PostModel extends AutoKeys implements net.jforum.model.PostModel
 		post.hasAttachments(rs.getInt("attach") > 0);
 		
 		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
-		post.setFormatedTime(df.format(rs.getTimestamp("post_time")));
+		post.setFormatedTime(df.format(postTime));
 		
 		post.setKarma(DataAccessDriver.getInstance().newKarmaModel().getPostKarma(post.getId()));
 		
