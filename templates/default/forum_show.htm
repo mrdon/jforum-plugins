@@ -15,14 +15,13 @@
 		<input type="hidden" name="module" value="${moduleName}">
 		<input type="hidden" name="securityHash" value="${securityHash}">
 		<input type="hidden" name="persistData" value="${forum.id}">
-		<input type="hidden" name="start" value="${thisPage}">
 		</#if>
       <TABLE cellSpacing=2 cellPadding=2 width="100%" align=center border=0>
         <TBODY>
         <TR>
           <TD vAlign=bottom align=left colSpan=2><a class="maintitle" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name}</a><BR>
             <SPAN class=gensmall><!--<B><A href="">${I18n.getMessage("ForumIndex.moderators")}</A></B>--></SPAN></TD>
-          <TD vAlign=bottom noWrap align=right>
+          <TD vAlign=center noWrap align=right>
 		  
 		  <@pagination.doPagination action, forum.id/>
 		  
@@ -48,9 +47,9 @@
 			<#if moderator>
 				<br>
 				<#if openModeration?default(false)>
-					<a href="${contextPath}/forums/show/<#if (thisPage > 0)>${thisPage}/</#if>${forum.id}${extension}">${I18n.getMessage("Moderation.CloseModeration")}</a>
+					<a href="${contextPath}/forums/show/<#if (start > 0)>${start}/</#if>${forum.id}${extension}">${I18n.getMessage("Moderation.CloseModeration")}</a>
 				<#else>
-					<a href="${contextPath}/forums/moderation/<#if (thisPage > 0)>${thisPage}/</#if>${forum.id}${extension}">${I18n.getMessage("Moderation.OpenModeration")}</a>
+					<a href="${contextPath}/forums/moderation/<#if (start > 0)>${start}/</#if>${forum.id}${extension}">${I18n.getMessage("Moderation.OpenModeration")}</a>
 				</#if>
 			</#if>
 			</SPAN>

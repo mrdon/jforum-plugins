@@ -66,7 +66,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.5 2004/10/03 16:53:45 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.6 2004/10/13 10:21:06 jamesyong Exp $
  */
 public class UserAction extends Command 
 {
@@ -98,10 +98,11 @@ public class UserAction extends Command
 		
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
 		
-		JForum.getContext().put("totalPages", new Double(Math.floor(totalUsers / usersPerPage)));
+		JForum.getContext().put("totalPages", new Double(Math.ceil( (double)totalUsers / (double)usersPerPage )));
 		JForum.getContext().put("recordsPerPage", new Integer(usersPerPage));
 		JForum.getContext().put("totalRecords", new Integer(totalUsers));
-		JForum.getContext().put("thisPage", new Integer(start));
+		JForum.getContext().put("thisPage", new Double(Math.ceil( (double)(start+1) / (double)usersPerPage )));
+		JForum.getContext().put("start", new Integer(start));
 		
 		return start;
 	}

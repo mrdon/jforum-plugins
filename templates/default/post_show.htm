@@ -35,7 +35,7 @@ function confirmDelete()
 							<#if !readonly>
 								<span class="nav">&nbsp;
 								<a href="${contextPath}/jforum${extension}?module=posts&amp;action=insert&amp;forum_id=${topic.forumId}"><img src="${contextPath}/templates/${templateName}/images/post.gif" border="0" /></a>
-								<a href="${contextPath}/jforum${extension}?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}&start=${thisPage}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" border="0" /></a>
+								<a href="${contextPath}/jforum${extension}?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}&start=${start}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" border="0" /></a>
 								</span>
 							<#else>
 								<#assign colspan = "2"/>
@@ -60,8 +60,8 @@ function confirmDelete()
 							<#assign watchMessage = I18n.getMessage("PostShow.unwatch")/>
 						</#if>
 						
-						<a href="${contextPath}/posts/${watch}/${thisPage}/${topicId}${extension}"><img src="${contextPath}/templates/${templateName}/images/watch.gif" align="top" border="0"></a>
-						<a href="${contextPath}/posts/${watch}/${thisPage}/${topicId}${extension}">${watchMessage}</a>
+						<a href="${contextPath}/posts/${watch}/${start}/${topicId}${extension}"><img src="${contextPath}/templates/${templateName}/images/watch.gif" align="top" border="0"></a>
+						<a href="${contextPath}/posts/${watch}/${start}/${topicId}${extension}">${watchMessage}</a>
 						</span>
 					</td>
 					</#if>
@@ -135,15 +135,15 @@ function confirmDelete()
 								
 								<td valign="top" width="20%" nowrap="nowrap" align="right">
 								<#if topic.status != STATUS_LOCKED>
-									<a href="${contextPath}/jforum${extension}?module=${moduleName}&amp;action=quote&amp;post_id=${post.id}&start=${thisPage}"><img src="${contextPath}/templates/${templateName}/images/icon_quote.gif" border="0" /></a>
+									<a href="${contextPath}/jforum${extension}?module=${moduleName}&amp;action=quote&amp;post_id=${post.id}&start=${start}"><img src="${contextPath}/templates/${templateName}/images/icon_quote.gif" border="0" /></a>
 								</#if>
 
 								<#if ((post.canEdit && topic.status != STATUS_LOCKED) || canEdit)>
-									<a href="${contextPath}/jforum${extension}?module=${moduleName}&amp;action=edit&amp;post_id=${post.id}&start=${thisPage}"><img src="${contextPath}/templates/${templateName}/images/icon_edit.gif" border="0" /></a>  
+									<a href="${contextPath}/jforum${extension}?module=${moduleName}&amp;action=edit&amp;post_id=${post.id}&start=${start}"><img src="${contextPath}/templates/${templateName}/images/icon_edit.gif" border="0" /></a>  
 								</#if>
 		
 								<#if canRemove>
-									<a href="${contextPath}/jforum${extension}?module=${moduleName}&amp;action=delete&amp;post_id=${post.id}&start=${thisPage}" onClick="return confirmDelete();"><img src="${contextPath}/templates/${templateName}/images/icon_delete.gif" border="0" /></a>  
+									<a href="${contextPath}/jforum${extension}?module=${moduleName}&amp;action=delete&amp;post_id=${post.id}&start=${start}" onClick="return confirmDelete();"><img src="${contextPath}/templates/${templateName}/images/icon_delete.gif" border="0" /></a>  
 								</#if>
 								</td>
 							</tr>
@@ -235,7 +235,7 @@ function confirmDelete()
 						<#if !readonly>
 							<span class="nav">
 							&nbsp;<a href="${contextPath}/jforum${extension}?module=posts&amp;action=insert&amp;forum_id=${topic.forumId}"><img src="${contextPath}/templates/${templateName}/images/post.gif" border="0" /></a>
-							&nbsp;<a href="${contextPath}/jforum${extension}?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}&start=${thisPage}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" border="0" /></a>
+							&nbsp;<a href="${contextPath}/jforum${extension}?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}&start=${start}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" border="0" /></a>
 							</span>
 						<#else>
 							<#assign colspan = "2"/>

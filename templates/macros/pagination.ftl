@@ -1,95 +1,85 @@
 <#macro littlePostPagination topicId postsPerPage totalReplies>
 	[ <img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif"> ${I18n.getMessage("goToPage")}: 
 
-	<#assign totalPages = (totalReplies+1)/postsPerPage />
-	<#if (((totalReplies+1)%postsPerPage) != 0)>
-		<#assign totalPages = totalPages +1/>
+	<#assign totalPostPages = ((totalReplies+1)/postsPerPage)?int />
+	<#if (((totalReplies+1)%postsPerPage) > 0)>
+		<#assign totalPostPages = (totalPostPages +1)/>
 	</#if>
-	
-	<#list 0 .. totalPages - 1 as page>
-		<#assign start = postsPerPage * page/>
-		<#assign nextPage = page + 1/>
-		
-		<#if ( totalPages?string != nextPage?string )>
-				<#assign coma = ","/>
-		<#else>
-				<#assign coma = ""/>
-		</#if>
 
-		<a href="${contextPath}/posts/list/${start}/${topicId}${extension}">${nextPage}</a>${coma}
+	<#list 1 .. totalPostPages as page>
+		<#assign start = postsPerPage * (page - 1)/>
+
+		<a href="${contextPath}/posts/list/${start}/${topicId}${extension}">${page}</a>	
+		<#if (page < totalPostPages) >,</#if>
 	</#list>
 
 	]
 </#macro>
 
-<#macro doPagination action id=0>
+<#macro doPagination action id=-1>
 	<#if (totalRecords > recordsPerPage)>
 		<span class="nav"><b>
-		${I18n.getMessage("goToPage")}
-
-		<#if (thisPage > 0)>
-			<#assign start = thisPage - recordsPerPage>
-			<a href="${contextPath}/${moduleName}/${action}/${start}<#if (id>0)>/${id}</#if>${extension}">${I18n.getMessage("previous")}</a>
+		${I18n.getMessage("goToPage")}:
+		
+		<#assign NumberOfActiveLinks = 7>
+		<#assign NumberOfSideLinks = 3>
+		
+		<#if (thisPage > 1)>
+			<#assign start = (thisPage - 2)* recordsPerPage>
+			<a href="${contextPath}/${moduleName}/${action}/0<#if (id > -1)>/${id}</#if>${extension}">(&lt;&lt;)</a>
+			<a href="${contextPath}/${moduleName}/${action}/${start}<#if (id > -1)>/${id}</#if>${extension}">(&lt;)</a>
 		</#if>
 
-		<#if (totalPages > 6)>
-			<#list 0 .. 3 as page>
-				<#assign start = recordsPerPage * page>
-				<#assign nextPage = page + 1>
-
-				<#if start == thisPage>
-					${nextPage}
-				<#else>
-					<a href="${contextPath}/${moduleName}/${action}/${start}<#if (id>0)>/${id}</#if>${extension}">${nextPage}</a>, 
-				</#if>
-			</#list>
-
-			 ... 
-
-			<#assign startLastFrom = totalPages - 2>
-			<#list startLastFrom .. totalPages - 1 as page>
-				<#assign start = recordsPerPage * page >
-				<#assign nextPage = page + 1>
-				
-				<#if start == thisPage>
-					${nextPage}, 
-				<#else>
-					<a href="${contextPath}/${moduleName}/${action}<#if (id>0)>/${start}/${id}</#if>${extension}">${nextPage}</a>,
-				</#if>
-			</#list>
-
-			<#assign start = recordsPerPage * totalPages>
-			<#if start != thisPage>
-				<a href="${contextPath}/${moduleName}/${action}/${start}<#if (id>0)>/${id}</#if>${extension}">${totalPages + 1}</a>
+		<#if (totalPages > NumberOfActiveLinks)>
+		
+			<#if (thisPage <= NumberOfSideLinks)>
+				<#assign startPageAt = 1>
+				<#assign stopPageAt = NumberOfActiveLinks>
 			<#else>
-				${totalPages + 1}
-			</#if>
-		<#else>
-			<#list 0 .. totalPages - 1 as page>
-				<#assign start = recordsPerPage * page>
-				<#assign nextPage = page + 1>
-				
-				<#if (start != thisPage)>
-					<a href="${contextPath}/${moduleName}/${action}/${start}<#if (id>0)>/${id}</#if>${extension}">${nextPage}</a>, 
-				<#else>
-					${nextPage}
+				<#assign startPageAt = (thisPage - NumberOfSideLinks) >
+				<#if (thisPage >= (totalPages - NumberOfSideLinks)) >
+					<#assign startPageAt = (totalPages-(NumberOfActiveLinks - 1)) >
 				</#if>
-			</#list>
+				
+				<#assign stopPageAt = startPageAt + (NumberOfActiveLinks - 1) >
+			</#if>
 
-			<#if (totalPages * recordsPerPage != totalRecords)>
-				<#assign start = recordsPerPage * totalPages>
-				
-				<#if start != thisPage>
-					<a href="${contextPath}/${moduleName}/${action}/${start}<#if (id>0)>/${id}</#if>${extension}">${totalPages + 1}</a> 
-				<#else>
-					${totalPages + 1}
-				</#if>
+			<#if (startPageAt > 1) >
+				...
 			</#if>
+						
+			<#list startPageAt .. stopPageAt as page >
+				<#assign start = recordsPerPage * (page-1) >
+
+				<#if thisPage == page >
+					${page}
+				<#else>
+					<a href="${contextPath}/${moduleName}/${action}/${start}<#if (id > -1)>/${id}</#if>${extension}">${page}</a>
+				</#if>
+				<#if (page < totalPages) >,</#if>
+			</#list>
+			
+			<#if (stopPageAt < totalPages) >
+				...
+			</#if>
+
+		<#else>
+			<#list 1 .. totalPages as page >
+				<#assign start = recordsPerPage * (page-1) >
+				
+				<#if thisPage == page>
+					${page}
+				<#else>
+					<a href="${contextPath}/${moduleName}/${action}/${start}<#if (id > -1)>/${id}</#if>${extension}">${page}</a>
+				</#if>
+				<#if (page < totalPages) >,</#if>
+			</#list>
 		</#if>
 
-		<#if thisPage != start>
-			<#assign start = thisPage + recordsPerPage/>
-			<a href="${contextPath}/${moduleName}/${action}/${start}<#if (id>0)>/${id}</#if>${extension}">${I18n.getMessage("next")}</a>
+		<#if thisPage < totalPages >
+			<#assign start = thisPage * recordsPerPage/>
+			<a href="${contextPath}/${moduleName}/${action}/${start}<#if (id > -1)>/${id}</#if>${extension}">(&gt;)</a>
+			<a href="${contextPath}/${moduleName}/${action}/${(totalPages-1)*recordsPerPage}<#if (id > -1)>/${id}</#if>${extension}">(&gt;&gt;)</a>
 		</#if>
 
 		</b>

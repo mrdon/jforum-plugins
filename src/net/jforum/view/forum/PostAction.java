@@ -78,7 +78,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.11 2004/10/10 00:20:55 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.12 2004/10/13 10:22:26 jamesyong Exp $
  */
 public class PostAction extends Command 
 {
@@ -194,10 +194,11 @@ public class PostAction extends Command
 
         // Pagination
         int totalPosts = tm.getTotalPosts(topic.getId());
-        JForum.getContext().put("totalPages", new Double(Math.floor(totalPosts / count)));
+        JForum.getContext().put("totalPages", new Double(Math.ceil( (double)totalPosts / (double)count )));
         JForum.getContext().put("recordsPerPage", new Integer(count));
         JForum.getContext().put("totalRecords", new Integer(totalPosts));
-        JForum.getContext().put("thisPage", new Integer(start));
+        JForum.getContext().put("thisPage", new Double(Math.ceil( (double)(start+1) / (double)count )));
+        JForum.getContext().put("start", new Integer(start));
     }
 
     private boolean shallProceed(int forumId) throws Exception {
