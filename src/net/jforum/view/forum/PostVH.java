@@ -40,23 +40,18 @@
  * net.jforum.view.forum.PostVH.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: PostVH.java,v 1.14 2004/05/04 22:26:33 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 
-import java.util.GregorianCalendar;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.entities.Post;
-import net.jforum.entities.Smilie;
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
@@ -65,25 +60,21 @@ import net.jforum.model.ForumModel;
 import net.jforum.model.PostModel;
 import net.jforum.model.TopicModel;
 import net.jforum.model.UserModel;
-import net.jforum.repository.BBCodeRepository;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.RankingRepository;
 import net.jforum.repository.SecurityRepository;
-import net.jforum.repository.SmiliesRepository;
 import net.jforum.repository.TopicRepository;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.SecurityConstants;
-import net.jforum.util.bbcode.BBCode;
-import net.jforum.util.concurrent.executor.QueuedExecutor;
 import net.jforum.util.I18n;
 import net.jforum.util.SystemGlobals;
+import net.jforum.util.concurrent.executor.QueuedExecutor;
 import net.jforum.util.mail.EmailSenderTask;
 import net.jforum.util.mail.TopicSpammer;
-import net.jforum.util.rss.RSSTask;
-import net.jforum.util.rss.TopicRSS;
 
 /**
  * @author Rafael Steil
+ * @version $Id: PostVH.java,v 1.15 2004/05/21 22:10:54 rafaelsteil Exp $
  */
 public class PostVH extends Command 
 {
@@ -142,7 +133,7 @@ public class PostVH extends Command
 				p.setCanEdit(true);
 			}
 			
-			helperList.add(this.preparePostText(p));
+			helperList.add(PostCommon.preparePostText(p));
 		}
 		
 		// Set the topic status as read
@@ -346,7 +337,7 @@ public class PostVH extends Command
 		if (JForum.getRequest().getParameter("preview") != null) {
 			JForum.getContext().put("preview", true);
 			Post postPreview = new Post(p);
-			JForum.getContext().put("postPreview", this.preparePostText(postPreview));
+			JForum.getContext().put("postPreview", PostCommon.preparePostText(postPreview));
 			
 			this.edit(true, p);
 		}
@@ -434,15 +425,7 @@ public class PostVH extends Command
 		t.setPostedBy(u);
 		
 		// Set the Post
-		Post p = new Post();
-		p.setText(JForum.getRequest().getParameter("message"));
-		p.setSubject(JForum.getRequest().getParameter("subject"));
-		p.setBbCodeEnabled(JForum.getRequest().getParameter("disable_bbcode") != null ?  false : true);
-		p.setHtmlEnabled(JForum.getRequest().getParameter("disable_html") != null ?  false : true);
-		p.setSmiliesEnabled(JForum.getRequest().getParameter("disable_smilies") != null ?  false : true);
-		p.setSignatureEnabled(JForum.getRequest().getParameter("attach_sig") != null ? true : false);
-		p.setTime(new GregorianCalendar().getTimeInMillis());
-		p.setUserId(us.getUserId());
+		Post p = PostCommon.fillPostFromRequest();
 		p.setForumId(Integer.parseInt(JForum.getRequest().getParameter("forum_id")));
 		
 		boolean preview = (JForum.getRequest().getParameter("preview") != null);
@@ -517,7 +500,7 @@ public class PostVH extends Command
 			JForum.getContext().put("start", JForum.getRequest().getParameter("start"));
 			
 			Post postPreview = new Post(p);
-			JForum.getContext().put("postPreview", this.preparePostText(postPreview));
+			JForum.getContext().put("postPreview", PostCommon.preparePostText(postPreview));
 			
 			this.insert();
 		}
@@ -643,120 +626,5 @@ public class PostVH extends Command
 		}
 		
 		return true;
-	}
-	
-	private String processSmilies(String text, ArrayList smilies)
-	{
-		Iterator iter = smilies.iterator();
-		while (iter.hasNext()) {
-			Smilie s = (Smilie)iter.next();
-			
-			int index = text.indexOf(s.getCode());
-			if (index > -1) {
-				text = text.replaceAll("\\Q"+ s.getCode() +"\\E", s.getUrl());
-			}
-		}
-		
-		return text;
-	}
-	
-	private Post preparePostText(Post p)
-	{
-		if (!p.isHtmlEnabled()) {
-			p.setText(p.getText().replaceAll("<", "&lt;"));
-		}
-		
-		// First of all, convert new lines to <br>'s
-		p.setText(p.getText().replaceAll("\n", "<br>"));
-		
-		// Then, search for bb codes
-		if (p.isBbCodeEnabled()) {
-			if (p.getText().indexOf('[') > -1 && p.getText().indexOf(']') > -1) {
-				int openQuotes = 0;
-				Iterator tmpIter = BBCodeRepository.getBBCollection().getBbList().iterator();
-				
-				while (tmpIter.hasNext()) {
-					BBCode bb = (BBCode)tmpIter.next();
-					
-					// little hacks
-					if (bb.removeQuotes()) {
-						Matcher matcher = Pattern.compile(bb.getRegex()).matcher(p.getText());
-						
-						while (matcher.find()) {
-							String contents = matcher.group(1);
-							contents = contents.replaceAll("'", "");
-							contents = contents.replaceAll("\"", "");
-							
-							String replace = bb.getReplace().replaceAll("\\$1", contents);
-							
-							p.setText(p.getText().replaceFirst(bb.getRegex(), replace));
-						}
-					}
-					else {
-						// Another hack for the quotes
-						if (bb.getTagName().equals("openQuote")) {
-							Matcher matcher = Pattern.compile(bb.getRegex()).matcher(p.getText());								
-							
-							while (matcher.find()) {
-								openQuotes++;
-								
-								p.setText(p.getText().replaceFirst(bb.getRegex(), bb.getReplace()));
-							}
-						}
-						else if (bb.getTagName().equals("closeQuote")) {
-							if (openQuotes > 0) {
-								Matcher matcher = Pattern.compile(bb.getRegex()).matcher(p.getText());
-								
-								while (matcher.find()) {
-									openQuotes--;
-									
-									p.setText(p.getText().replaceFirst(bb.getRegex(), bb.getReplace()));
-								}
-							}
-						}
-						else if (bb.getTagName().equals("code")) {
-							Matcher matcher = Pattern.compile(bb.getRegex()).matcher(p.getText());
-							StringBuffer sb = new StringBuffer(p.getText());
-							
-							while (matcher.find()) {
-								String contents = matcher.group(1);
-								
-								StringBuffer replace = new StringBuffer(bb.getReplace());
-								int index = replace.indexOf("$1");
-								if (index > -1) {
-									replace.replace(index, index + 2, contents);
-								}
-								
-								index = sb.indexOf("[code]");
-								int lastIndex = sb.indexOf("[/code]") + 7;
-								
-								sb.replace(index, lastIndex, replace.toString());
-								p.setText(sb.toString());
-							}
-						}
-						else {
-							p.setText(p.getText().replaceAll(bb.getRegex(), bb.getReplace()));
-						}
-					}
-					
-				}
-				
-				if (openQuotes > 0) {
-					BBCode closeQuote = BBCodeRepository.findByName("closeQuote");
-					
-					// I'll not check for nulls ( but I should )
-					for (int i = 0; i < openQuotes; i++) {
-						p.setText(p.getText() + closeQuote.getReplace());
-					}
-				}
-			}
-		}
-		
-		// Smilies...
-		if (p.isSmiliesEnabled()) {
-			p.setText(this.processSmilies(p.getText(), SmiliesRepository.getSmilies()));
-		}
-		
-		return p;
 	}
 }

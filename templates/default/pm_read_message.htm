@@ -2,34 +2,35 @@
 	<tbody>
 		<tr>
 			<td class="bodyline">
-				<table cellspacing="2" cellpadding="2" align="center" border="0">
-					<tbody>
-						<tr>
-							<td valign="center"><a href="http://www.guj.com.br/forum/privmsg.php?folder=inbox">
-								<img alt="Caixa de Entrada" src="GUJ  Ler mensagem_arquivos/msg_inbox.gif" border="0" /></a>
-							</td>
-							<td valign="center"><span class="cattitle">
-								<a href="http://www.guj.com.br/forum/privmsg.php?folder=inbox">Caixa de Entrada</a> &nbsp;</span>
-							</td>
-							<td valign="center"><a href="http://www.guj.com.br/forum/privmsg.php?folder=sentbox">
-								<img alt="Caixa de Enviados" src="GUJ  Ler mensagem_arquivos/msg_sentbox.gif" border="0" /></a>
-							</td>
-							<td valign="center"><span class="cattitle">
-								<a href="http://www.guj.com.br/forum/privmsg.php?folder=sentbox">Caixa de Enviados</a> &nbsp;</span>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+				<table cellspacing="0" cellpadding="0" width="100%" align="center" border="0">
+                  <tbody>
+                    <tr>
+                      <td valign="top" align="middle" width="100%">
+                        <table height="40" cellspacing="2" cellpadding="2" border="0">
+                          <tbody>
+                            <tr valign="center">
+                              <td> <a href="${contextPath}/pm/inbox.page"> <img src="templates/${templateName}/images/msg_inbox.gif" border="0" /> </a></td>
+                              <td><a href="${contextPath}/pm/inbox.page"> <span class="cattitle">${I18n.getMessage("PrivateMessage.inbox")} &nbsp;</span> </a> </td>
+                              <td> <a href="${contextPath}/pm/sentbox.page"> <img src="templates/${templateName}/images/msg_sentbox.gif" border="0" />  </a></td>
+                              <td> <a href="${contextPath}/pm/sentbox.page"> <span class="cattitle">${I18n.getMessage("PrivateMessage.sentbox")}</span></a><span class="cattitle"> &nbsp;</span></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
 				<br clear="all" />
-				<form action="privmsg.php?folder=inbox" method="post">
+				<form action="${contextPath}/jforum.page" method="post">
+				<input type="hidden" name="module" value="${moduleName}">
+				<input type="hidden" name="action" value="delete">
 					<table cellspacing="2" cellpadding="2" width="100%" border="0">
 						<tbody>
 							<tr>
-								<td valign="center"><a href="http://www.guj.com.br/forum/privmsg.php?mode=reply&amp;p=20364">
-									<img alt="Responder à mensagem" src="GUJ  Ler mensagem_arquivos/reply.gif" border="0" /></a>
+								<td valign="center"><a href="${contextPath}/pm/reply/${pm.id}.page"><img src="templates/${templateName}/images/reply.gif" border="0" /></a>
 								</td>
 								<td width="100%">
-									<span class="nav">&nbsp;<a class="nav" href="http://www.guj.com.br/forum/index.php">Índice do Fórum GUJ</a></span>
+									<span class="nav">&nbsp;<A class=nav href="${contextPath}/forums/list.page">${I18n.getMessage("ForumListing.forumIndex")}</a></span>
 								</td>
 							</tr>
 						</tbody>
@@ -37,60 +38,42 @@
 					<table class="forumline" cellspacing="1" cellpadding="4" width="100%" border="0">
 						<tbody>
 							<tr>
-								<th class="thHead" nowrap="nowrap" colspan="3">Caixa de Entrada :: Mensagem</th>
+								<th class="thHead" nowrap="nowrap" colspan="3">${I18n.getMessage("PrivateMessage.inboxMessage")}</th>
 							</tr>
 							<tr>
-								<td class="row2"><span class="genmed">De:</span></td>
-								<td class="row2" width="100%" colspan="2"><span class="genmed">n10</span></td>
+								<td class="row2"><span class="genmed">${I18n.getMessage("PrivateMessage.from")}:</span></td>
+								<td class="row2" width="100%" colspan="2"><span class="genmed"><a class="nav" href="${contextPath}/user/profile/${pm.fromUser.id}.page">${pm.fromUser.username}</a></span></td>
 							</tr>
 							<tr>
-								<td class="row2"><span class="genmed">Para:</span></td>
-								<td class="row2" width="100%" colspan="2"><span class="genmed">Rafael  Steil</span></td>
+								<td class="row2"><span class="genmed">${I18n.getMessage("PrivateMessage.to")}:</span></td>
+								<td class="row2" width="100%" colspan="2"><span class="genmed"><a class="nav" href="${contextPath}/user/profile/${pm.toUser.id}.page">${pm.toUser.username}</a></span></td>
 							</tr>
 							<tr>
-								<td class="row2"><span class="genmed">Colocada:</span></td>
-								<td class="row2" width="100%" colspan="2"><span class="genmed">13/05/2004, 5:21 pm</span></td>
+								<td class="row2"><span class="genmed">${I18n.getMessage("PrivateMessage.date")}:</span></td>
+								<td class="row2" width="100%" colspan="2"><span class="genmed">${pm.formatedDate}</span></td>
 							</tr>
 							<tr>
-								<td class="row2"><span class="genmed">Assunto:</span></td>
-								<td class="row2" width="100%"><span class="genmed">sugestão</span></td>
+								<td class="row2"><span class="genmed">${I18n.getMessage("PrivateMessage.subject")}:</span></td>
+								<td class="row2" width="100%"><span class="genmed">${pm.post.subject}</span></td>
 								<td class="row2" nowrap="nowrap" align="right">
-									<a href="http://www.guj.com.br/forum/privmsg.php?mode=quote&amp;p=20364"><img alt="Citar mensagem" src="GUJ  Ler mensagem_arquivos/icon_quote.gif" border="0" /></a>
+									<a href="${contextPath}/pm/quote/${pm.id}.page"><img src="templates/${templateName}/images/icon_quote.gif" border="0" /></a>
 								</td>
 							</tr>
 							<tr>
-								<td class="row1" valign="top" colspan="3"><span class="postbody">texto texto texto</span></td>
-							</tr>
-							<tr>
-								<td class="row1" valign="bottom" width="78%" colspan="3" height="28">
-									<table height="18" cellspacing="0" cellpadding="0" border="0">
-										<tbody>
-											<tr>
-												<td valign="center" nowrap="nowrap">
-													<a href="http://www.guj.com.br/forum/profile.php?mode=viewprofile&amp;u=2851"><img title="Ver o perfil de usuários" alt="Ver o perfil de usuários" src="GUJ  Ler mensagem_arquivos/icon_profile.gif" border="0" /></a>
-												</td>
-												<td>&nbsp;</td>
-												<td valign="top" nowrap="nowrap">
-													<script language="JavaScript" type="text/javascript">
-													<!--
-													if ( navigator.userAgent.toLowerCase().indexOf('mozilla') != -1 && navigator.userAgent.indexOf('5.') == -1 ) {
-														document.write('');
-													}
-													else {
-														document.write('<div style="position:relative"><div style="position:absolute"></div><div style="position:absolute;left:3px"></div></div>');
-													}
-		  											//-->
-													</script>
-												</td>
-											</tr>
-										</tbody>
-									</table>
+								<td class="row1" valign="top" colspan="3">
+									<span class="postbody">${pm.post.text}
+									<#if (pm.fromUser.attachSignatureEnabled && pm.fromUser.signature?exists)>
+									<hr>
+									${pm.fromUser.signature}
+									</#if>
+									</span>
 								</td>
 							</tr>
+							
 							<tr>
 								<td class="catBottom" align="right" colspan="3" height="28">
-									<input type="hidden" value="20364" name="mark[]" />
-									&nbsp; <input class="liteoption" type="submit" value="Remover a Mensagem" name="delete" />
+									<input type="hidden" value="${pm.id}" name="id" />
+									&nbsp; <input class="liteoption" type="submit" value="${I18n.getMessage("PrivateMessage.removeMessage")}" name="delete" />
 								</td>
 							</tr>
 						</tbody>
@@ -98,13 +81,13 @@
 					<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
 						<tbody>
 							<tr>
-								<td><a href="http://www.guj.com.br/forum/privmsg.php?mode=reply&amp;p=20364"><img alt="Responder à mensagem" src="GUJ  Ler mensagem_arquivos/reply.gif" border="0" /></a></td>
+								<td><a href="${contextPath}/pm/${pm.id}.page"><img src="templates/${templateName}/images/reply.gif" border="0" /></a></td>
 							</tr>
 						</tbody>
 					</table>
 				</form>
 				<div align="center"></div>
-			</td>
+		  </td>
 		</tr>
 	</tbody>
 </table>

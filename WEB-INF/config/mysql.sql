@@ -1,5 +1,5 @@
 #
-# $Id: $
+# Version: $Id: $
 #
 
 # ############
@@ -53,6 +53,7 @@ UserModel.decrementPosts = UPDATE jforum_users SET user_posts = user_posts - 1 W
 UserModel.rankingId = UPDATE jforum_users SET rank_id = ? WHERE user_id = ?
 UserModel.activeStatus = UPDATE jforum_users SET user_active = ? WHERE user_id = ?
 UserModel.addNew = INSERT INTO jforum_users (username, user_password, user_email, user_regdate) VALUES (?, ?, ?, ?)
+UserModel.findByName = SELECT user_id, username FROM jforum_users WHERE username LIKE ?
 
 UserModel.update = UPDATE jforum_users SET user_aim = ?, \
 	user_avatar = ?,\
@@ -343,7 +344,11 @@ PrivateMessageModel.add = INSERT INTO jforum_privmsgs ( privmsgs_type, privmsgs_
 	privmsgs_attach_sig, privmsgs_text ) \
 	VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )
 	
-PrivateMessageModel.delete = DELETE FROM jforum_privmsgs WHERE privmsgs_id = ?
+PrivateMessageModel.delete = DELETE FROM jforum_privmsgs WHERE privmsgs_id = ? \
+	AND ( \
+	    (privmsgs_from_userid = ? AND privmsgs_type = 2) \
+	    OR (privmsgs_to_userid = ? AND (privmsgs_type = 0 OR privmsgs_type = 1 OR privmsgs_type = 5)) \
+	)
 
 PrivateMessageModel.baseListing = SELECT pm.privmsgs_type, pm.privmsgs_id, pm.privmsgs_date, pm.privmsgs_subject, u.user_id, u.username \
 	FROM jforum_privmsgs pm, jforum_users u \
@@ -359,3 +364,6 @@ PrivateMessageModel.inbox = WHERE privmsgs_to_userid = ? \
 PrivateMessageModel.sent = WHERE privmsgs_from_userid = ? \
 	AND u.user_id = pm.privmsgs_to_userid \
 	AND pm.privmsgs_type = 2
+	
+PrivateMessageModel.selectById = SELECT * FROM jforum_privmsgs WHERE privmsgs_id = ?
+PrivateMessageModel.updateType = UPDATE jforum_privmsgs SET privmsgs_type = ? WHERE privmsgs_id = ?

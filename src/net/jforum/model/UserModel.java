@@ -41,13 +41,14 @@
  * The JForum Project
  * http://www.jforum.net 
  * 
- * $Id: UserModel.java,v 1.3 2004/04/21 23:57:23 rafaelsteil Exp $
+ * $Id: UserModel.java,v 1.4 2004/05/21 22:10:51 rafaelsteil Exp $
  */
 package net.jforum.model;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import net.jforum.entities.User;
 
@@ -79,6 +80,22 @@ public interface UserModel
 	 * @throws Exception
 	 */
 	public ArrayList selectAll() throws Exception;
+	
+	/**
+	 * Finds an user by matching an input string. 
+	 * 
+	 * @param input The username to search. May be part of the username. 
+	 * The method will match all users who have the input string as 
+	 * part of their usernames.
+	 * @param exactMath Set to <code>true</code> to get the user data related to 
+	 * the username passed as argument, and set it to <code>false</code> to 
+	 * search all users who match the criteria. 
+	 * @return <code>List</code> with the found users. Each entry is an 
+	 * <code>User</code> object, where only the <i>id</i> and <i>username</i>
+	 * members are filled.
+	 * @throws Exception exact
+	 */
+	public List findByName(String input, boolean exactMath) throws Exception;
 	
 	/**
 	 * Gets all users

@@ -40,8 +40,6 @@
  * net.jforum.drivers.mysql.PostModel.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: PostModel.java,v 1.4 2004/04/21 23:57:20 rafaelsteil Exp $
  */
 package net.jforum.drivers.mysql;
 
@@ -57,7 +55,9 @@ import net.jforum.entities.Post;
 import net.jforum.util.SystemGlobals;
 
 /**
- * @author Vanessa Sabino, Rafael Steil
+ * @author Rafael Steil
+ * @author Vanessa Sabino
+ * @version $Id: PostModel.java,v 1.5 2004/05/21 22:10:52 rafaelsteil Exp $
  */
 public class PostModel implements net.jforum.model.PostModel 
 {

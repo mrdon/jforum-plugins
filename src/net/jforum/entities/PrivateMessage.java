@@ -45,101 +45,16 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessage.java,v 1.1 2004/05/21 00:24:11 rafaelsteil Exp $
+ * @version $Id: PrivateMessage.java,v 1.2 2004/05/21 22:10:55 rafaelsteil Exp $
  */
 public class PrivateMessage 
 {
 	private int id;
 	private int type;
-	private String subject;
 	private User fromUser;
 	private User toUser;
-	private long date;
-	private boolean enableBbCode;
-	private boolean enableHtml;
-	private boolean enableSmilies;
-	private boolean attachSignature;
-	private String text;
-	
-	/**
-	 * @return Returns the attachSignature.
-	 */
-	public boolean isAttachSignature()
-	{
-		return attachSignature;
-	}
-	
-	/**
-	 * @param attachSignature The attachSignature to set.
-	 */
-	public void setAttachSignature(boolean attachSignature)
-	{
-		this.attachSignature = attachSignature;
-	}
-	
-	/**
-	 * @return Returns the date.
-	 */
-	public long getDate()
-	{
-		return date;
-	}
-	
-	/**
-	 * @param date The date to set.
-	 */
-	public void setDate(long date)
-	{
-		this.date = date;
-	}
-	
-	/**
-	 * @return Returns the enableBbCode.
-	 */
-	public boolean isEnableBbCode()
-	{
-		return enableBbCode;
-	}
-	
-	/**
-	 * @param enableBbCode The enableBbCode to set.
-	 */
-	public void setEnableBbCode(boolean enableBbCode)
-	{
-		this.enableBbCode = enableBbCode;
-	}
-	
-	/**
-	 * @return Returns the enableHtml.
-	 */
-	public boolean isEnableHtml()
-	{
-		return enableHtml;
-	}
-	
-	/**
-	 * @param enableHtml The enableHtml to set.
-	 */
-	public void setEnableHtml(boolean enableHtml)
-	{
-		this.enableHtml = enableHtml;
-	}
-	
-	/**
-	 * @return Returns the enableSmilies.
-	 */
-	public boolean isEnableSmilies()
-	{
-		return enableSmilies;
-	}
-	
-	/**
-	 * @param enableSmilies The enableSmilies to set.
-	 */
-	public void setEnableSmilies(boolean enableSmilies)
-	{
-		this.enableSmilies = enableSmilies;
-	}
+	private Post post;
+	private String formatedDate;
 	
 	/**
 	 * @return Returns the fromUser.
@@ -155,38 +70,6 @@ public class PrivateMessage
 	public void setFromUser(User fromUser)
 	{
 		this.fromUser = fromUser;
-	}
-	
-	/**
-	 * @return Returns the subject.
-	 */
-	public String getSubject()
-	{
-		return subject;
-	}
-	
-	/**
-	 * @param subject The subject to set.
-	 */
-	public void setSubject(String subject)
-	{
-		this.subject = subject;
-	}
-	
-	/**
-	 * @return Returns the text.
-	 */
-	public String getText()
-	{
-		return text;
-	}
-	
-	/**
-	 * @param text The text to set.
-	 */
-	public void setText(String text)
-	{
-		this.text = text;
 	}
 	
 	/**
@@ -235,5 +118,37 @@ public class PrivateMessage
 	public void setId(int id)
 	{
 		this.id = id;
+	}
+	
+	/**
+	 * @return Returns the post.
+	 */
+	public Post getPost()
+	{
+		return post;
+	}
+	
+	/**
+	 * @param post The post to set.
+	 */
+	public void setPost(Post post)
+	{
+		this.post = post;
+	}
+	
+	/**
+	 * @return Returns the formatedDate.
+	 */
+	public String getFormatedDate()
+	{
+		return formatedDate;
+	}
+	
+	/**
+	 * @param formatedDate The formatedDate to set.
+	 */
+	public void setFormatedDate(String formatedDate)
+	{
+		this.formatedDate = formatedDate;
 	}
 }

@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: UserModel.java,v 1.3 2004/04/21 23:57:20 rafaelsteil Exp $
+ * $Id: UserModel.java,v 1.4 2004/05/21 22:10:52 rafaelsteil Exp $
  */
 package net.jforum.drivers.mysql;
 
@@ -51,6 +51,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import net.jforum.JForum;
 import net.jforum.entities.Group;
@@ -489,5 +490,37 @@ public class UserModel implements net.jforum.model.UserModel
 		p.close();
 		
 		return username;
+	}
+
+	/** 
+	 * @see net.jforum.model.UserModel#findByName(java.lang.String, boolean)
+	 */
+	public List findByName(String input, boolean exactMatch) throws Exception
+	{
+		List namesList = new ArrayList();
+		
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.findByName"));
+		
+		if (exactMatch) {
+			p.setString(1, input);
+		}
+		else {
+			p.setString(1, "%"+ input +"%");
+		}
+			
+		
+		ResultSet rs = p.executeQuery();
+		while (rs.next()) {
+			User u = new User();
+			u.setId(rs.getInt("user_id"));
+			u.setUsername(rs.getString("username"));
+
+			namesList.add(u);
+		}
+		
+		rs.close();
+		p.close();
+		
+		return namesList;
 	}
 }

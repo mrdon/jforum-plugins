@@ -1,4 +1,28 @@
-<form action="search.php?mode=searchuser" method="post" name="search" id="search">
+<html>
+<head>
+<title>JForum - ${I18n.getMessage("PrivateMessage.findUser")}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=${encoding}" />
+<meta name="description" content="${metaDescription}" />
+<meta name="keywords" content="${metaKeywords}, jforum, jforum java, java jforum, java forum, forum, rafael steil, bulletin board, java bb, javabb" />
+<base href="${homeLink}" />
+<style type="text/css">@import url( templates/${templateName}/style.css );</style>
+</head>
+
+<body>
+
+<script language="javascript" type="text/javascript">
+function refreshUsername()
+{
+	opener.document.forms['post'].toUserId.value = document.search.selectedUsername.value;
+	opener.document.forms['post'].toUsername.value = document.search.selectedUsername[document.search.selectedUsername.selectedIndex].text;
+	opener.focus();
+	window.close();
+}
+</script>
+
+<form action="${contextPath}/jforum.page" method="post" name="search" id="search">
+<input type="hidden" name="action" value="${action}">
+<input type="hidden" name="module" value="${moduleName}">
 	<table cellspacing="0" cellpadding="10" width="100%" border="0">
 		<tbody>
 			<tr>
@@ -6,23 +30,40 @@
 					<table class="forumline" cellspacing="1" cellpadding="4" width="100%" border="0">
 						<tbody>
 							<tr>
-								<th class="thHead" height="25">Encontrar um usuário</th>
+								<th class="thHead" height="25">${I18n.getMessage("PrivateMessage.findingUser")}</th>
 							</tr>
 							<tr>
 								<td class="row1" valign="top">
 									<span class="genmed"><br />
-									<input class="post" name="search_username" />&nbsp; 
-									<input class="liteoption" type="submit" value="Pesquisar" name="search" />
+									<input class="post" name="username" value="${username?default("")}"/>&nbsp; 
+									<input class="liteoption" type="submit" value="${I18n.getMessage("ForumBase.search")}" name="search" />
           							</span><br />
-									<span class="gensmall">Pode usar asteriscos * para obter palavras por  aproximação</span><br />
+									<span class="gensmall">${I18n.getMessage("PrivateMessage.searchTip")}</span><br />
 									<br />
-									<span class="genmed"><a class="genmed" href="javascript:window.close();">Fechar a janela</a></span>
+									<#if showResult>
+									<select name="selectedUsername">
+									<#list namesList as user>
+									<option value="${user.id}">${user.username}</option>
+									</#list>
+									</select>
+									&nbsp;<input type="button" value="${I18n.getMessage("PrivateMessage.select")}" class="liteoption" onClick="refreshUsername();">
+									</#if>
+									<center><span class="genmed"><a class="genmed" href="javascript:window.close();">${I18n.getMessage("closeWindow")}</a></span></center>
 								</td>
 							</tr>
 						</tbody>
 					</table>
 				</td>
 			</tr>
+				<tr>
+		<td align="center">
+			<span class="copyright">Powered by <a class="copyright" href="http://www.jforum.net/" target="_blank">JForum ${version} </a>© 2004 - Rafael Steil</span>
+			<br/>
+			<a href="http://sourceforge.net" target="_new"><img src="https://sourceforge.net/sflogo.php?group_id=15940&type=1" border="0" /></a>
+		</td>
+	</tr>
 		</tbody>
 	</table>
 </form>
+</body>
+</html>

@@ -48,15 +48,22 @@ import java.util.List;
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
+import net.jforum.entities.Post;
+import net.jforum.entities.PrivateMessage;
+import net.jforum.entities.PrivateMessageType;
 import net.jforum.entities.User;
 import net.jforum.model.DataAccessDriver;
+import net.jforum.util.I18n;
+import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageVH.java,v 1.1 2004/05/21 00:24:21 rafaelsteil Exp $
+ * @version $Id: PrivateMessageVH.java,v 1.2 2004/05/21 22:10:53 rafaelsteil Exp $
  */
 public class PrivateMessageVH extends Command
 {
+	private String templateName;
+	
 	public void inbox() throws Exception
 	{
 		User user = new User();
@@ -64,7 +71,10 @@ public class PrivateMessageVH extends Command
 		
 		List pmList = DataAccessDriver.getInstance().newPrivateMessageModel().selectFromInbox(user);
 
+		JForum.getContext().put("inbox", true);
 		JForum.getContext().put("pmList", pmList);
+		JForum.getContext().put("moduleAction", "pm_list.htm");
+		this.putTypes();		
 	}
 	
 	public void sentbox() throws Exception
@@ -74,20 +84,150 @@ public class PrivateMessageVH extends Command
 		
 		List pmList = DataAccessDriver.getInstance().newPrivateMessageModel().selectFromSent(user);
 
+		JForum.getContext().put("sentbox", true);
 		JForum.getContext().put("pmList", pmList);
+		JForum.getContext().put("moduleAction", "pm_list.htm");
+		this.putTypes();
+	}
+	
+	private void putTypes()
+	{
+		JForum.getContext().put("NEW", new Integer(PrivateMessageType.NEW));
+		JForum.getContext().put("READ", new Integer(PrivateMessageType.READ));
+		JForum.getContext().put("UNREAD", new Integer(PrivateMessageType.UNREAD));
 	}
 	
 	public void send() throws Exception
 	{
+		User user = DataAccessDriver.getInstance().newUserModel().selectById(
+						SessionFacade.getUserSession().getUserId());
 		
+		JForum.getContext().put("user", user);
+		JForum.getContext().put("moduleName", "pm");
+		JForum.getContext().put("action", "sendSave");
+		JForum.getContext().put("moduleAction", "post_form.htm");
+	}
+	
+	public void sendSave() throws Exception
+	{
+		String sId = JForum.getRequest().getParameter("toUserId");
+		String toUsername = JForum.getRequest().getParameter("toUsername");
+		int toUserId = -1;
+		if (sId == null || sId.equals("")) {
+			List l = DataAccessDriver.getInstance().newUserModel().findByName(toUsername, true);
+			
+			if (l.size() > 0) {
+				toUserId = ((User)l.get(0)).getId();
+			}
+		}
+		else {
+			toUserId = Integer.parseInt(sId);
+		}
+		
+		// We failed to get the user id?
+		if (toUserId == -1) {
+			JForum.getContext().put("moduleAction", "message.htm");
+			JForum.getContext().put("message", I18n.getMessage("PrivateMessage.userIdNotFound"));
+			return;
+		}
+		
+		PrivateMessage pm = new PrivateMessage();
+		pm.setPost(PostCommon.fillPostFromRequest());
+		
+		User fromUser = new User();
+		fromUser.setId(SessionFacade.getUserSession().getUserId());
+		pm.setFromUser(fromUser);
+		
+		User toUser = new User();
+		toUser.setId(toUserId);
+		toUser.setUsername(toUsername);
+		pm.setToUser(toUser);
+		
+		boolean preview = (JForum.getRequest().getParameter("preview") != null);
+		if (!preview) {
+			DataAccessDriver.getInstance().newPrivateMessageModel().send(pm);
+			
+			JForum.getContext().put("moduleAction", "message.htm");
+			JForum.getContext().put("message", I18n.getMessage("PrivateMessage.messageSent", 
+							new String[] { "/pm/inbox.page" }));
+		}
+		else {
+			JForum.getContext().put("preview", true);
+			JForum.getContext().put("post", pm.getPost());
+			
+			Post postPreview = new Post(pm.getPost());
+			JForum.getContext().put("postPreview", PostCommon.preparePostText(postPreview));
+			JForum.getContext().put("pm", pm);
+
+			this.send();
+		}
+	}
+	
+	public void findUser() throws Exception
+	{
+		boolean showResult = false;
+		String username = JForum.getRequest().getParameter("username");
+
+		if (username != null && !username.equals("")) {
+			List namesList = DataAccessDriver.getInstance().newUserModel().findByName(username, false);
+			JForum.getContext().put("namesList", namesList);
+			showResult = true;
+		}
+		
+		JForum.getContext().put("username", username);
+		JForum.getContext().put("showResult", showResult);
+		this.setTemplateName("default/pm_finduser.htm");
 	}
 	
 	public void read() throws Exception
 	{
+		int id = Integer.parseInt(JForum.getRequest().getParameter("id"));
 		
+		PrivateMessage pm = new PrivateMessage();
+		pm.setId(id);
+		
+		pm = DataAccessDriver.getInstance().newPrivateMessageModel().selectById(pm);
+		pm.getPost().setText(PostCommon.preparePostText(pm.getPost()).getText());
+		
+		// Update the message status, if needed
+		if (pm.getType() == PrivateMessageType.NEW) {
+			pm.setType(PrivateMessageType.READ);
+			DataAccessDriver.getInstance().newPrivateMessageModel().updateType(pm);
+		}
+		
+		JForum.getContext().put("pm", pm);
+		JForum.getContext().put("moduleAction", "pm_read_message.htm");
 	}
 	
 	public void delete() throws Exception
+	{
+		String ids[] = JForum.getRequest().getParameterValues("id");
+		
+		if (ids.length > 0) {
+			PrivateMessage[] pm = new PrivateMessage[ids.length];
+			User u = new User();
+			u.setId(SessionFacade.getUserSession().getUserId());
+	
+			for (int i = 0; i < ids.length; i++) {
+				pm[i] = new PrivateMessage();
+				pm[i].setFromUser(u);
+				pm[i].setId(Integer.parseInt(ids[i]));
+			}
+			
+			DataAccessDriver.getInstance().newPrivateMessageModel().delete(pm);
+		}
+		
+		JForum.getContext().put("moduleAction", "message.htm");
+		JForum.getContext().put("message", I18n.getMessage("PrivateMessage.deleteDone", 
+						new String[] { "/pm/inbox.page" }));
+	}
+	
+	public void reply() throws Exception
+	{
+		
+	}
+	
+	public void quote() throws Exception
 	{
 		
 	}
@@ -97,5 +237,19 @@ public class PrivateMessageVH extends Command
 	 */
 	public void list() throws Exception
 	{
+		this.inbox();
+	}
+
+	/** 
+	 * @see net.jforum.Command#process()
+	 */
+	public Template process() throws Exception
+	{
+		if (!SessionFacade.isLogged()) {
+			JForum.setRedirect("/forums/list.page");
+			return null;
+		}
+
+		return super.process();
 	}
 }

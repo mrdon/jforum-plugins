@@ -40,8 +40,6 @@
  * net.jforum.Command.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: Command.java,v 1.2 2004/04/21 23:57:40 rafaelsteil Exp $
  */
 package net.jforum;
 
@@ -54,9 +52,17 @@ import freemarker.template.Template;
  * presentation actions must extend this class. 
  * 
  * @author Rafael Steil
+ * @version $Id: Command.java,v 1.3 2004/05/21 22:10:54 rafaelsteil Exp $
  */
 public abstract class Command 
 {
+	private String templateName;
+	
+	protected void setTemplateName(String templateName)
+	{
+		this.templateName = templateName;
+	}
+	
 	/**
 	 * Base method for listings. 
 	 * May be used as general listing or as helper
@@ -87,6 +93,10 @@ public abstract class Command
 			throw e;
 		}
 		
-		return Configuration.getDefaultConfiguration().getTemplate("default/forum_base.htm");
+		if (this.templateName == null) {
+			this.templateName = "default/forum_base.htm";
+		}
+		
+		return Configuration.getDefaultConfiguration().getTemplate(this.templateName);
 	}
 }

@@ -45,10 +45,13 @@ package net.jforum.drivers.mysql;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import net.jforum.JForum;
+import net.jforum.entities.Post;
 import net.jforum.entities.PrivateMessage;
 import net.jforum.entities.PrivateMessageType;
 import net.jforum.entities.User;
@@ -56,7 +59,7 @@ import net.jforum.util.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageModel.java,v 1.1 2004/05/21 00:24:09 rafaelsteil Exp $
+ * @version $Id: PrivateMessageModel.java,v 1.2 2004/05/21 22:10:53 rafaelsteil Exp $
  */
 public class PrivateMessageModel implements net.jforum.model.PrivateMessageModel
 {
@@ -71,15 +74,15 @@ public class PrivateMessageModel implements net.jforum.model.PrivateMessageModel
 		// Sendee's sent box
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessageModel.add"));
 		p.setInt(1, PrivateMessageType.SENT);
-		p.setString(2, pm.getSubject());
+		p.setString(2, pm.getPost().getSubject());
 		p.setInt(3, pm.getFromUser().getId());
 		p.setInt(4, pm.getToUser().getId());
-		p.setLong(5, pm.getDate());
-		p.setString(6, pm.isEnableBbCode() ? "1" : "0");
-		p.setString(7, pm.isEnableHtml() ? "1" : "0");
-		p.setString(8, pm.isEnableSmilies() ? "1" : "0");
-		p.setString(9, pm.isAttachSignature() ? "1" : "0");
-		p.setString(10, pm.getText());
+		p.setLong(5, pm.getPost().getTime());
+		p.setString(6, pm.getPost().isBbCodeEnabled() ? "1" : "0");
+		p.setString(7, pm.getPost().isHtmlEnabled() ? "1" : "0");
+		p.setString(8, pm.getPost().isSmiliesEnabled() ? "1" : "0");
+		p.setString(9, pm.getPost().isSignatureEnabled() ? "1" : "0");
+		p.setString(10, pm.getPost().getText());
 		
 		p.executeUpdate();
 		
@@ -96,6 +99,8 @@ public class PrivateMessageModel implements net.jforum.model.PrivateMessageModel
 	public void delete(PrivateMessage[] pm) throws Exception
 	{
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessageModel.delete"));
+		p.setInt(2, pm[0].getFromUser().getId());
+		p.setInt(3, pm[0].getFromUser().getId());
 		
 		for (int i = 0; i < pm.length; i++) {
 			p.setInt(1, pm[i].getId());
@@ -177,23 +182,63 @@ public class PrivateMessageModel implements net.jforum.model.PrivateMessageModel
 	private PrivateMessage getPm(ResultSet rs, boolean full) throws Exception
 	{
 		PrivateMessage pm = new PrivateMessage();
+		Post p = new Post();
+
 		pm.setId(rs.getInt("privmsgs_id"));
 		pm.setType(rs.getInt("privmsgs_type"));
-		pm.setDate(rs.getLong("privmsgs_date"));
-		pm.setSubject(rs.getString("privmsgs_subject"));
+		p.setTime(rs.getLong("privmsgs_date"));
+		p.setSubject(rs.getString("privmsgs_subject"));
+		
+		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue("dateTimeFormat").toString());
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTimeInMillis(rs.getLong("privmsgs_date"));
+		pm.setFormatedDate(df.format(gc.getTime()));
 		
 		if (full) {
 			UserModel um = new UserModel();
 			pm.setFromUser(um.selectById(rs.getInt("privmsgs_from_userid")));
 			pm.setToUser(um.selectById(rs.getInt("privmsgs_to_userid")));
 			
-			pm.setEnableBbCode(rs.getInt("privmsgs_enable_bbcode") == 1);
-			pm.setAttachSignature(rs.getInt("privmsgs_attach_sig") == 1);
-			pm.setEnableHtml(rs.getInt("privmsgs_enable_html") == 1);
-			pm.setEnableSmilies(rs.getInt("privmsgs_enable_smilies") == 1);
-			pm.setText(rs.getString("privmsgs_text"));
+			p.setBbCodeEnabled(rs.getInt("privmsgs_enable_bbcode") == 1);
+			p.setSignatureEnabled(rs.getInt("privmsgs_attach_sig") == 1);
+			p.setHtmlEnabled(rs.getInt("privmsgs_enable_html") == 1);
+			p.setSmiliesEnabled(rs.getInt("privmsgs_enable_smilies") == 1);
+			p.setText(rs.getString("privmsgs_text"));
 		}
 		
+		pm.setPost(p);
+		
 		return pm;
+	}
+
+	/** 
+	 * @see net.jforum.model.PrivateMessageModel#selectById(net.jforum.entities.PrivateMessage)
+	 */
+	public PrivateMessage selectById(PrivateMessage pm) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessageModel.selectById"));
+		p.setInt(1, pm.getId());
+		
+		ResultSet rs = p.executeQuery();
+		if (rs.next()) {
+			pm = this.getPm(rs);
+		}
+		
+		rs.close();
+		p.close();
+		
+		return pm;
+	}
+
+	/** 
+	 * @see net.jforum.model.PrivateMessageModel#updateType(net.jforum.entities.PrivateMessage)
+	 */
+	public void updateType(PrivateMessage pm) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessageModel.updateType"));
+		p.setInt(1,pm.getType());
+		p.setInt(2, pm.getId());
+		p.executeUpdate();
+		p.close();
 	}
 }

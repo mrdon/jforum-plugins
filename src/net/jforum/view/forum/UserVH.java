@@ -40,8 +40,6 @@
  * net.jforum.view.forum.UserVH.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: UserVH.java,v 1.4 2004/05/04 01:21:21 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 
@@ -64,14 +62,14 @@ import net.jforum.util.mail.LostPasswordSpammer;
 
 /**
  * @author Rafael Steil
+ * @version $Id: UserVH.java,v 1.5 2004/05/21 22:10:53 rafaelsteil Exp $
  */
 public class UserVH extends Command 
 {
 	public void edit() throws Exception
 	{
 		int tmpId = SessionFacade.getUserSession().getUserId();
-		if (SessionFacade.getAttribute("logged") != null
-			&& SessionFacade.getAttribute("logged").equals("1")
+		if (SessionFacade.isLogged()
 			&& tmpId == Integer.parseInt(JForum.getRequest().getParameter("user_id"))) {
 
 			int userId = Integer.parseInt(JForum.getRequest().getParameter("user_id"));	

@@ -40,8 +40,6 @@
  * net.jforum.SessionFacade.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: SessionFacade.java,v 1.2 2004/04/21 23:57:40 rafaelsteil Exp $
  */
 package net.jforum;
 
@@ -55,6 +53,7 @@ import net.jforum.util.SystemGlobals;
 
 /**
  * @author Rafael Steil
+ * @version $Id: SessionFacade.java,v 1.3 2004/05/21 22:10:54 rafaelsteil Exp $
  */
 public class SessionFacade 
 {
@@ -169,5 +168,17 @@ public class SessionFacade
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * Verify is the user is logged in.
+	 * 
+	 * @return <code>true</code> if the user is logged, or <code>false</code> if is 
+	 * an anonymous user.
+	 */
+	public static boolean isLogged()
+	{
+		return SessionFacade.getAttribute("logged") != null
+			&& SessionFacade.getAttribute("logged").equals("1");
 	}
 }

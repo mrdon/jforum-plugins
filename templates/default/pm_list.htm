@@ -23,18 +23,40 @@
 									<tbody>
 										<tr valign="center">
 											<td>
+												<#if !inbox?default(false)>
+												<a href="${contextPath}/pm/inbox.page">
+												</#if>
 												<img src="templates/${templateName}/images/msg_inbox.gif" border="0" />
+												<#if !inbox?default(false)>
+												</a>
+												</#if>
 											</td>
 											<td>
+												<#if !inbox?default(false)>
+												<a href="${contextPath}/pm/inbox.page">
+												</#if>
 												<span class="cattitle">${I18n.getMessage("PrivateMessage.inbox")} &nbsp;</span>
+												<#if !inbox?default(false)>
+												</a>
+												</#if>
 											</td>
 											<td>
-												<a href="http://www.guj.com.br/forum/privmsg.php?folder=sentbox"><img src="templates/${templateName}/images/msg_sentbox.gif" border="0" /></a>
+												<#if !sentbox?default(false)>
+												<a href="${contextPath}/pm/sentbox.page">
+												</#if>
+												<img src="templates/${templateName}/images/msg_sentbox.gif" border="0" />
+												<#if !sentbox?default(false)>
+												</a>
+												</#if>
 											</td>
 											<td>
-												<span class="cattitle">
-												<a href="http://www.guj.com.br/forum/privmsg.php?folder=sentbox">${I18n.getMessage("PrivateMessage.sentbox")}</a> &nbsp;
-												</span>
+												<#if !sentbox?default(false)>
+												<a href="${contextPath}/pm/sentbox.page">
+												</#if>
+												<span class="cattitle">${I18n.getMessage("PrivateMessage.sentbox")}</a> &nbsp;</span>
+												<#if !sentbox?default(false)>
+												</a>
+												</#if>
 											</td>
 										</tr>
 									</tbody>
@@ -44,12 +66,14 @@
 					</tbody>
 				</table>
 				<br clear="all" />
-				<form action="privmsg.php?folder=inbox" method="post" name="privmsg_list" id="privmsg_list">
+				<form action="${contextPath}/jforum.page" method="post" name="privmsg_list" id="privmsg_list">
+				<input type="hidden" name="module" value="${moduleName}">
+				<input type="hidden" name="action" value="delete">
 					<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
 						<tbody>
 							<tr>
 								<td valign="center" align="left">
-									<a href="http://www.guj.com.br/forum/privmsg.php?mode=post"><img src="templates/${templateName}/images/msg_newpost.gif" border="0" /></a>
+									<a href="${contextPath}/pm/send.page"><img src="templates/${templateName}/images/msg_newpost.gif" border="0" /></a>
 								</td>
 								<td align="left" width="100%">
 									&nbsp;<span class="nav">
@@ -69,7 +93,11 @@
 									&nbsp;${I18n.getMessage("PrivateMessage.subject")}&nbsp;
 								</th>
 								<th class="thTop" nowrap="nowrap" width="20%">
+									<#if inbox?default(false)>
 									&nbsp;${I18n.getMessage("PrivateMessage.from")}&nbsp;
+									<#else>
+									&nbsp;${I18n.getMessage("PrivateMessage.to")}&nbsp;
+									</#if>
 								</th>
 								<th class="thTop" nowrap="nowrap" width="15%">
 									&nbsp;${I18n.getMessage("PrivateMessage.date")}&nbsp;
@@ -78,14 +106,27 @@
 									&nbsp;&nbsp;
 								</th>
 							</tr>
+							<#list pmList as pm>
 							<tr>
-								<td class="row1" valign="center" align="middle" width="5%"><img height="18" src="templates/${templateName}/images/folder.gif" width="19" /></td>
-								<td class="row1" valign="center" width="55%"><span class="topictitle">&nbsp;<a class="topictitle" href="http://www.guj.com.br/forum/privmsg.php?folder=inbox&amp;mode=read&amp;p=20364">sugestão</a></span></td>
-								<td class="row1" valign="center" align="middle" width="20%"><span class="name">&nbsp;<a class="name" href="http://www.guj.com.br/forum/profile.php?mode=viewprofile&amp;u=2851">n10</a></span></td>
-								<td class="row1" valign="center" align="middle" width="15%"><span class="postdetails">13/05/2004, 5:21 pm</span></td>
-								<td class="row1" valign="center" align="middle" width="5%"><span class="postdetails"><input type="checkbox" value="20364" name="id" />
-									</span></td>
+								<td class="row1" valign="center" align="middle" width="5%">
+									<#if pm.type == NEW>
+										<img height="18" src="templates/${templateName}/images/folder_new.gif" width="19" />
+									<#else>
+										<img height="18" src="templates/${templateName}/images/folder.gif" width="19" />
+									</#if>
+								</td>
+								<td class="row1" valign="center" width="55%"><span class="topictitle">&nbsp;<a class="topictitle" href="${contextPath}/pm/read/${pm.id}.page">${pm.post.subject}</a></span></td>
+								<td class="row1" valign="center" align="middle" width="20%">
+									<#if inbox?default(false)>
+									<span class="name">&nbsp;<a class="name" href="${contextPath}/user/profile/${pm.fromUser.id}.page">${pm.fromUser.username}</a></span>
+									<#else>
+									<span class="name">&nbsp;<a class="name" href="${contextPath}/user/profile/${pm.toUser.id}.page">${pm.toUser.username}</a></span>
+									</#if>
+								</td>
+								<td class="row1" valign="center" align="middle" width="15%"><span class="postdetails">${pm.formatedDate}</span></td>
+								<td class="row1" valign="center" align="middle" width="5%"><span class="postdetails"><input type="checkbox" value="${pm.id}" name="id" /></span></td>
 							</tr>
+							</#list>
 							<tr>
 								<td class="catBottom" align="right" colspan="5" height="28">
 									&nbsp; <input class="liteoption" type="submit" value="${I18n.getMessage("PrivateMessage.deleteSelected")}" name="delete" />
@@ -97,7 +138,7 @@
 						<tbody>
 							<tr>
 								<td valign="center" align="left"><span class="nav">
-									<a href="http://www.guj.com.br/forum/privmsg.php?mode=post"><img src="templates/${templateName}/images/msg_newpost.gif" border="0" /></a></span>
+									<a href="${contextPath}/pm/send.page"><img src="templates/${templateName}/images/msg_newpost.gif" border="0" /></a></span>
 								</td>
 								<td valign="center" align="left" width="100%"><span class="nav"></span></td>
 								<td valign="top" nowrap="nowrap" align="right">

@@ -1,3 +1,6 @@
+<#if !preview?exists>
+	<#assign preview = false/>
+</#if>
 <STYLE type=text/css>@import url( style.css );</STYLE>
 
 <script language="JavaScript" type="text/javascript">
@@ -198,7 +201,7 @@ function storeCaret(textEl) {
 
 function validatePostForm(f)
 {
-	<#if setType>
+	<#if setType?default(true)>
 	if (f.subject.value == "") {
 		alert("${I18n.getMessage("PostForm.subjectEmpty")}");
 		f.subject.focus();
@@ -250,10 +253,14 @@ function validatePostForm(f)
 <input type="hidden" name="action" value="${action}">
 <input type="hidden" name="module" value="${moduleName}">
 <input type="hidden" name="securityHash" value="${securityHash}">
+
+<#if forum?exists>
 <input type="hidden" name="forum_id" value="${forum.id}">
+</#if>
+
 <input type="hidden" name="start" value="${start?default("")}">
 
-<#if post?exists && !isNewPost>
+<#if post?exists && !isNewPost?default(true)>
 <input type="hidden" name="post_id" value="${post.id}">
 </#if>
 
@@ -298,7 +305,10 @@ function validatePostForm(f)
         <TR>
          <TD align=left><SPAN class=nav>
 		 <A class=nav href="${contextPath}/forums/list.page">${I18n.getMessage("ForumListing.forumIndex")}</a>
+		 
+		 <#if forum?exists>
            -&gt; <A class=nav href="${contextPath}/forums/show/${forum.id}.page">${forum.name}</A></SPAN>
+		 </#if>
 		</TD>
 		</TR>
 		</TBODY>
@@ -306,7 +316,25 @@ function validatePostForm(f)
 		
       <TABLE class=forumline cellSpacing=1 cellPadding=3 width="100%" border=0><TBODY>
         <TR>
-          <TH class=thHead colSpan=2 height=25><B>${I18n.getMessage("PostForm.title")}</B></TH></TR>
+          <TH class=thHead colSpan=2 height=25>
+		  <B>
+		  <#if forum?exists>
+		  ${I18n.getMessage("PostForm.title")}
+		  <#else>
+		  ${I18n.getMessage("PrivateMessage.title")}
+		  </#if>
+		  </B>
+		  </TH></TR>
+		  
+		  <#if !forum?exists>
+		  <tr>
+			  <td class="row1" width="22%"><span class="gen"><b>${I18n.getMessage("PrivateMessage.user")}</b></span></td>
+			  <td class="row2" width="78%">
+			  	<input class="post" size="25" name="toUsername" <#if preview>value="${pm.toUser.username}"</#if>/>&nbsp;<input type="button" value="${I18n.getMessage("PrivateMessage.findUser")}" name="findUser" class="liteoption" onClick="window.open('${contextPath}/pm/findUser.page', '_findUser', 'HEIGHT=250,resizable=yes,WIDTH=400');return false;">
+				<input type="hidden" name="toUserId" <#if preview>value="${pm.toUser.id}"</#if>>
+			  </td>
+		  </tr>
+		  </#if>
         <TR>
           <TD class=row1 width="22%"><SPAN class=gen><B>${I18n.getMessage("PostForm.subject")}</B></SPAN></TD>
           <TD class=row2 width="78%"><SPAN class=gen><INPUT class=post style="WIDTH: 450px" tabIndex=2 maxLength=60 size=45 name=subject <#if post?exists>value="${post.subject?html}"</#if>> </SPAN></TD>
@@ -438,11 +466,15 @@ function validatePostForm(f)
               <TR>
                 <TD><INPUT type=checkbox name=attach_sig ${signatureChecked}> </TD>
                 <TD><SPAN class=gen>${I18n.getMessage("PostForm.appendSignature")}</SPAN></TD></TR>
-              <TR>
+            
+			<#if forum?exists>
+			  <TR>
                 <TD><INPUT type=checkbox name=notify ${repliesChecked}> </TD>
-                <TD><SPAN class=gen>${I18n.getMessage("PostForm.notifyReplies")}</SPAN></TD></TR>
+                <TD><SPAN class=gen>${I18n.getMessage("PostForm.notifyReplies")}</SPAN></TD>
+			</TR>
+			</#if>
 
-				<#if setType>
+				<#if setType?default(true) && forum?exists>
               	<TR>
                 <TD></TD>
                 <TD>
@@ -463,4 +495,4 @@ function validatePostForm(f)
 		</TD></TR></TABLE>
 		</FORM>
   </TD>
-  </TR></TBODY></TABLE></BODY></HTML>
+  </TR></TBODY></TABLE>

@@ -50,7 +50,7 @@ import net.jforum.entities.User;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageModel.java,v 1.1 2004/05/21 00:24:17 rafaelsteil Exp $
+ * @version $Id: PrivateMessageModel.java,v 1.2 2004/05/21 22:10:51 rafaelsteil Exp $
  */
 public interface PrivateMessageModel
 {
@@ -65,12 +65,23 @@ public interface PrivateMessageModel
 	/**
 	 * Deletes a collection of private messages.
 	 * Each instance should at least have the private message
-	 * id to delete.
+	 * id and the owner user id.
 	 * 
 	 * @param pm
 	 * @throws Exception
 	 */
 	public void delete(PrivateMessage[] pm) throws Exception;
+	
+	/**
+	 * Update the type of some private message.
+	 * You should pass as argument a <code>PrivateMessage</code> instance
+	 * with the pm's id and the new message status. There is no need to
+	 * fill the other members.
+	 * 
+	 * @param pm The instance to update 
+	 * @throws Exception
+	 */
+	public void updateType(PrivateMessage pm) throws Exception;
 	
 	/**
 	 * Selects all messages from the user's inbox. 
@@ -90,6 +101,15 @@ public interface PrivateMessageModel
 	 * entry is a <code>PrivateMessage</code> entry.
 	 * @throws Exception
 	 */
-
 	public List selectFromSent(User user) throws Exception;
+	
+	/**
+	 * Gets a <code>PrivateMessage</code> by its id.
+	 * 
+	 * @param pm A <code>PrivateMessage</code> instance containing the pm's id
+	 * to retrieve
+	 * @return The pm contents
+	 * @throws Exception
+	 */
+	public PrivateMessage selectById(PrivateMessage pm) throws Exception;
 }
