@@ -181,7 +181,7 @@ PublishUserModel.addNew = INSERT INTO jforum_mmpublish_users (jforum_user_id, mm
 # KarmaModel
 # #############
 
-KarmaModel.getMostRatedUserByPeriod = u.user_id, u.username, SUM(post_user_id) AS total, \
+KarmaModel.getMostRatedUserByPeriod = u.user_id, u.username, SUM(points) AS total, \
 	COUNT(post_user_id) AS votes_received, user_karma, \
 	(SELECT COUNT(from_user_id) AS votes_given \
 		FROM jforum_karma as k2 \
