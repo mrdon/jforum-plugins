@@ -22,5 +22,7 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/hsqldb.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/mysql-connector-java-3.1.4-beta-bin.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/pgsql_driver74.213.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/rome-0.4.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/jdom.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>

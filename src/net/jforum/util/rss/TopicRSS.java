@@ -42,85 +42,90 @@
  */
 package net.jforum.util.rss;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.List;
 
-import net.jforum.JForum;
 import net.jforum.entities.Topic;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
+import com.sun.syndication.feed.synd.SyndContent;
+import com.sun.syndication.feed.synd.SyndContentImpl;
+import com.sun.syndication.feed.synd.SyndEntry;
+import com.sun.syndication.feed.synd.SyndEntryImpl;
+import com.sun.syndication.feed.synd.SyndFeed;
+import com.sun.syndication.feed.synd.SyndFeedImpl;
+import com.sun.syndication.io.SyndFeedOutput;
+
 /**
  * @author Rafael Steil
- * @version $Id: TopicRSS.java,v 1.5 2004/10/14 02:23:37 rafaelsteil Exp $
+ * @version $Id: TopicRSS.java,v 1.6 2004/10/17 05:26:55 rafaelsteil Exp $
  */
-public class TopicRSS extends RSSAware 
-{
-	private static Collection queueElementsList = Collections.synchronizedCollection(new LinkedList());
+public class TopicRSS implements RSSAware {
+	private List topics;
 
-	/* 
-	 * @see net.jforum.util.rss.RSSable#prepareRSSDocument()
+	private String title;
+
+	private String description;
+
+	private int forumId;
+
+	public TopicRSS(String title, String description, int forumId, List topics) {
+		this.topics = topics;
+		this.title = title;
+		this.description = description;
+		this.forumId = forumId;
+	}
+
+	/**
+	 * @see net.jforum.util.rss.RSSAware#createRSS()
 	 */
-	protected RSSDocument prepareRSSDocument() throws Exception 
+	public String createRSS() throws Exception 
 	{
-		ArrayList topics = DataAccessDriver.getInstance().newTopicModel().selectLastN(SystemGlobals.getIntValue(ConfigKeys.RSS_TOPICS));
-		String ctx = JForum.getRequest().getContextPath();
+		SyndFeed feed = new SyndFeedImpl();
+		feed.setFeedType(RSSAware.RSS_VERSION);
+		feed.setDescription(this.description);
+		feed.setTitle(this.title);
+		feed.setEncoding(SystemGlobals.getValue(ConfigKeys.ENCODING));
 		
-		RSSDocument rssDocumnet = new RSSDocument();
+		String forumLink = SystemGlobals.getValue(ConfigKeys.FORUM_LINK);
+		if (!forumLink.endsWith("/")) {
+			forumLink += "/";
+		}
 		
-		RSSChannel channel = new RSSChannel();
-		channel.setChannelDescription(I18n.getMessage("TopicRSS.description"));
-		channel.setChannelTitle(I18n.getMessage("TopicRSS.title"));
-		channel.setChannelLink(SystemGlobals.getValue(ConfigKeys.FORUM_LINK));
-		
-		queueElementsList.clear();
-		
+		feed.setLink(forumLink + "forums/show/" + forumId 
+				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+
+		List entries = new ArrayList();
 		for (Iterator iter = topics.iterator(); iter.hasNext(); ) {
 			Topic t = (Topic)iter.next();
+		
+			SyndEntry entry = new SyndEntryImpl();
+			entry.setAuthor(t.getPostedBy().getUsername());
 			
-			RSSItem item = new RSSItem();
-			item.setDescription(t.getTitle());
-			item.setTitle(t.getTitle());
-			
-			item.setLink("http://" + JForum.getRequest().getServerName()
-					+ (JForum.getRequest().getServerPort() != 80
-							? ":" + JForum.getRequest().getServerPort()
-							: "")
-					+ (ctx.equals("") ? "" : "/" + ctx)
-					+ "/posts/list/" + t.getId()
+			entry.setPublishedDate(t.getTime());
+
+			entry.setLink(forumLink + "posts/list/" + t.getId()
 					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+			entry.setTitle(t.getTitle());
 			
-			queueElementsList.add(Integer.toString(t.getId()));
-			channel.addItem(item);
+			SyndContent content = new SyndContentImpl();
+			content.setType("text/html");
+			content.setValue(t.getTitle());
+			
+			entry.setDescription(content);
+			
+			entries.add(entry);
 		}
 		
-		rssDocumnet.addChannel(channel);
-
-		return rssDocumnet;
-	}
-	
-	/* 
-	 * @see net.jforum.util.rss.RSSable#getFilename()
-	 */
-	public String getFilename() throws Exception 
-	{
-		return SystemGlobals.getValue(ConfigKeys.RSS_FILENAME_TOPIC);
-	}
-
-	/* 
-	 * @see net.jforum.util.rss.RSSElementQueue#objectExists(java.lang.Object)
-	 */
-	public boolean objectExists(Object o) 
-	{
-		if (o instanceof Topic) {
-			return (TopicRSS.queueElementsList.contains(Integer.toString(((Topic)o).getId())));
-		}
+		feed.setEntries(entries);
 		
-		return false;
+		StringWriter writer = new StringWriter();
+		SyndFeedOutput out = new SyndFeedOutput();
+		out.output(feed, writer);
+		
+		return writer.toString();
 	}
 }

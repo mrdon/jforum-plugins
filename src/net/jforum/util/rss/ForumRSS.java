@@ -43,98 +43,99 @@
 package net.jforum.util.rss;
 
 
+import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
-import net.jforum.JForum;
 import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
-import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.view.forum.ForumAction;
+
+import com.sun.syndication.feed.synd.SyndCategory;
+import com.sun.syndication.feed.synd.SyndCategoryImpl;
+import com.sun.syndication.feed.synd.SyndContent;
+import com.sun.syndication.feed.synd.SyndContentImpl;
+import com.sun.syndication.feed.synd.SyndEntry;
+import com.sun.syndication.feed.synd.SyndEntryImpl;
+import com.sun.syndication.feed.synd.SyndFeed;
+import com.sun.syndication.feed.synd.SyndFeedImpl;
+import com.sun.syndication.io.SyndFeedOutput;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumRSS.java,v 1.6 2004/10/14 02:23:37 rafaelsteil Exp $
+ * @version $Id: ForumRSS.java,v 1.7 2004/10/17 05:26:55 rafaelsteil Exp $
  */
-public class ForumRSS extends RSSAware 
+public class ForumRSS implements RSSAware 
 {
-	private static Collection queueElementsList = Collections.synchronizedCollection(new LinkedList());
+	private LinkedHashMap forums;
+	private String description;
+	private String title;
 	
-	/* 
-	 * @see net.jforum.util.rss.RSSable#prepareRSSDocument()
-	 */
-	protected RSSDocument prepareRSSDocument() throws Exception 
+	public ForumRSS(String title, String description, LinkedHashMap forums)
 	{
-		LinkedHashMap forums = ForumAction.getAllForums();
-		RSSDocument rssDocumnet = new RSSDocument();
+		this.description = description;
+		this.forums = forums;
+		this.title = title;
+	}
+
+	/** 
+	 * @see net.jforum.util.rss.RSSAware#createRSS()
+	 */
+	public String createRSS() throws Exception
+	{
+		SyndFeed feed = new SyndFeedImpl();
+		feed.setFeedType(RSSAware.RSS_VERSION);
+		feed.setTitle(this.title);
+		feed.setDescription(this.description);
+		feed.setEncoding(SystemGlobals.getValue(ConfigKeys.ENCODING));
 		
-		String ctx = JForum.getRequest().getContextPath();
-		ArrayList tmpList = new ArrayList();
+		String forumLink = SystemGlobals.getValue(ConfigKeys.FORUM_LINK);
+		if (!forumLink.endsWith("/")) {
+			forumLink += "/";
+		}
 		
-		for (Iterator iter = forums.entrySet().iterator(); iter.hasNext(); ) {
+		feed.setLink(forumLink);
+		
+		List entries = new ArrayList();		
+		for (Iterator iter = this.forums.entrySet().iterator(); iter.hasNext(); ) {
 			Map.Entry entry = (Map.Entry)iter.next();
 			Category category = (Category)entry.getKey();
-						
-			RSSChannel channel = new RSSChannel();
-			channel.setChannelTitle(category.getName());
-			channel.setChannelDescription(I18n.getMessage("ForumRSS.description"));
-			channel.setChannelLink(SystemGlobals.getValue(ConfigKeys.FORUM_LINK));
 			
 			ArrayList forumsList = (ArrayList)entry.getValue();
 			for (Iterator fIter = forumsList.iterator(); fIter.hasNext(); ) {
-				Forum forum = (Forum)iter.next();
+				Forum forum = (Forum)fIter.next();
 				
-				RSSItem item = new RSSItem();
-				item.setTitle(forum.getName());
-				item.setDescription(forum.getDescription());
+				SyndEntry syndEntry = new SyndEntryImpl();
+				
+				final SyndCategory syndCat = new SyndCategoryImpl();
+				syndCat.setName(category.getName());
+				syndEntry.setCategories(new ArrayList() {{ add(syndCat); }});
+				syndEntry.setTitle(forum.getName());
+				
+				SyndContent syndContent = new SyndContentImpl();
+				syndContent.setType("text/html");
+				syndContent.setValue(forum.getDescription());
+				
+				syndEntry.setDescription(syndContent);
 
-				item.setLink("http://" + JForum.getRequest().getServerName()
-						+ (JForum.getRequest().getServerPort() != 80 
-								? ":" + JForum.getRequest().getServerPort() 
-								: "")
-						+ (ctx.equals("") ? "" : "/" + ctx)
-						+ "/forums/list/" + forum.getId()
+				syndEntry.setLink(forumLink
+						+ "forums/list/" + forum.getId()
 						+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 				
-				tmpList.add(Integer.toString(forum.getId()));
-				channel.addItem(item);
+				entries.add(syndEntry);
 			}
-			
-			rssDocumnet.addChannel(channel);
 		}
 		
-		synchronized (queueElementsList) {
-			queueElementsList.clear();
-			queueElementsList = new ArrayList(tmpList);
-		}
+		feed.setEntries(entries);
 		
-		return rssDocumnet;
-	}
-
-	/* 
-	 * @see net.jforum.util.rss.RSSable#getFilename()
-	 */
-	public String getFilename() throws Exception 
-	{
-		return SystemGlobals.getValue(ConfigKeys.RSS_FILENAME_FORUM);
-	}
-
-	/* 
-	 * @see net.jforum.util.rss.RSSElementQueue#objectExists(java.lang.Object)
-	 */
-	public boolean objectExists(Object o) 
-	{
-		if (o instanceof Forum) {
-			return (ForumRSS.queueElementsList.contains(Integer.toString(((Forum)o).getId())));
-		}
+		StringWriter writer = new StringWriter();
+		SyndFeedOutput out = new SyndFeedOutput();
+		out.output(feed, writer);
 		
-		return false;
+		return writer.toString();
 	}
 }

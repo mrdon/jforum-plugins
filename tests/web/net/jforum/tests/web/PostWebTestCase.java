@@ -49,7 +49,7 @@ import com.dumbster.smtp.SmtpMessage;
 
 /**
  * @author Marc Wick
- * @version $Id: PostWebTestCase.java,v 1.8 2004/10/10 16:51:23 rafaelsteil Exp $
+ * @version $Id: PostWebTestCase.java,v 1.9 2004/10/17 05:28:09 rafaelsteil Exp $
  */
 public class PostWebTestCase extends AbstractWebTestCase {
 
@@ -139,7 +139,7 @@ public class PostWebTestCase extends AbstractWebTestCase {
         submit("post");
 
         // give the jforum servlet time to deliver the email to the smtp server
-        waitForEmail();
+        //waitForEmail();
 
         // test if an email has been received by localhost
         assertEquals("topic watch email received", 1, smtpServer.getReceievedEmailSize());

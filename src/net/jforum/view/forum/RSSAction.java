@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) 2003, 2004 Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -36,34 +36,72 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * This file creation date: 02/04/2004 - 20:52:31
+ * Created on 13/10/2004 23:47:06
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.util.rss;
+package net.jforum.view.forum;
 
-import net.jforum.util.concurrent.Task;
+import freemarker.template.Template;
+import net.jforum.Command;
+import net.jforum.JForum;
 
 /**
  * @author Rafael Steil
- * @version $Id: RSSTask.java,v 1.3 2004/10/14 02:23:37 rafaelsteil Exp $
+ * @version $Id: RSSAction.java,v 1.1 2004/10/17 05:26:56 rafaelsteil Exp $
  */
-public class RSSTask implements Task
+public class RSSAction extends Command 
 {
-	private RSSAware rss;
-	
-	public RSSTask(RSSAware rss)
-	{
-		this.rss = rss;
-	}
-
-	/* 
-	 * @see net.jforum.util.concurrent.Task#execute()
+	/**
+	 * RSS for a specific forum
+	 * @throws Exception
 	 */
-	public Object execute() throws Exception
+	public void forum() throws Exception
 	{
-		this.rss.createRSS();
-		return "SUCCESS";
+		int forumId = Integer.parseInt(JForum.getRequest().getParameter("forum_id"));
+	}
+	
+	/**
+	 * RSS for all forums.
+	 * Show rss syndication containing information about
+	 * all available forums
+	 * @throws Exception
+	 */
+	public void forums() throws Exception
+	{
+		
+	}
+	
+	/**
+	 * RSS for all N first topics for some given forum
+	 * @throws Exception
+	 */
+	public void topics() throws Exception
+	{
+		int forumId = Integer.parseInt(JForum.getRequest().getParameter("forum_id")); 
+	}
+	
+	/**
+	 * RSS for all N first posts for some given topic
+	 * @throws Exception
+	 */
+	public void topic() throws Exception
+	{
+		int topicId = Integer.parseInt(JForum.getRequest().getParameter("topic_id")); 
+	}
+	
+	/** 
+	 * @see net.jforum.Command#list()
+	 */
+	public void list() throws Exception {
+		this.forums();
+	}
+	
+	/** 
+	 * @see net.jforum.Command#process()
+	 */
+	public Template process() throws Exception {
+		return super.process();
 	}
 
 }
