@@ -392,7 +392,7 @@ PrivateMessageModel.updateType = UPDATE jforum_privmsgs SET privmsgs_type = ? WH
 PrivateMessageModel.selectById = SELECT p.*, pt.privmsgs_text \
 	FROM jforum_privmsgs p, jforum_privmsgs_text pt \
 	WHERE p.privmsgs_id = pt.privmsgs_id \
-	AND privmsgs_id = ?
+	AND p.privmsgs_id = ?
 
 
 # #################
