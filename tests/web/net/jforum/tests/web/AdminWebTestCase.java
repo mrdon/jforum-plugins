@@ -49,136 +49,93 @@ import net.jforum.util.I18n;
 
 /**
  * @author Marc Wick
- * @version $Id: AdminWebTestCase.java,v 1.6 2004/10/03 11:51:19 marcwick Exp $
+ * @version $Id: AdminWebTestCase.java,v 1.7 2004/10/10 05:55:34 marcwick Exp $
  */
 public class AdminWebTestCase extends AbstractWebTestCase {
 
-	public AdminWebTestCase(String name) throws IOException {
-		super(name);
-	}
+    public AdminWebTestCase(String name) throws IOException {
+        super(name);
+    }
 
-	public void testSetupCategoriesAndForums() {
-		beginAt(FORUMS_LIST);
-		login("Admin", "admin");
-		clickLinkWithText("Admin Control Panel");
+    public void testSetupCategoriesAndForums() {
+        beginAt(FORUMS_LIST);
+        login("Admin", "admin");
+        clickLinkWithText("Admin Control Panel");
 
-		// add category
-		gotoFrame("leftFrame");
-		clickLinkWithText("Categories");
-		gotoFrame("main");
-		clickButton("btn_insert");
-		gotoFrame("main");
-		setFormElement("category_name", "a test category");
-		setFormElement("groups", "1");
-		submit();
+        // add category
+        gotoFrame("leftFrame");
+        clickLinkWithText("Categories");
+        gotoFrame("main");
+        clickButton("btn_insert");
+        gotoFrame("main");
+        setFormElement("category_name", "a test category");
+        setFormElement("groups", "1");
+        submit();
 
-		// add forum
-		gotoFrame("leftFrame");
-		clickLinkWithText("Forums");
-		gotoFrame("main");
-		clickButton("btn_insert");
-		gotoFrame("main");
-		setFormElement("forum_name", "a test forum");
-		setFormElement("categories_id", "1");
-		setFormElement("groups", "1");
-		setFormElement("description",
-				"a forum automatically generated for regression tests");
-		submit();
+        // add forum
+        gotoFrame("leftFrame");
+        clickLinkWithText("Forums");
+        gotoFrame("main");
+        clickButton("btn_insert");
+        gotoFrame("main");
+        setFormElement("forum_name", "a test forum");
+        setFormElement("categories_id", "1");
+        setFormElement("groups", "1");
+        setFormElement("description", "a forum automatically generated for regression tests");
+        submit();
 
-		gotoFrame("leftFrame");
-		clickLinkWithText("Configurations");
-		gotoFrame("main");
-		setFormElement("p_forum.page.title", "jforum last run regression test "
-				+ new Date());
-		setFormElement("p_i18n.board.default", language);
+        gotoFrame("leftFrame");
+        clickLinkWithText("Configurations");
+        gotoFrame("main");
+        setFormElement("p_forum.page.title", "jforum last run regression test " + new Date());
+        setFormElement("p_i18n.board.default", language);
 
-		// configure localhost as our mock smtp server (dumpster) is listening
-		// on localhost
-		setFormElement("p_mail.sender", "regressiontest@jforum.net");
-		// we set the smtp server to localhost to be able to test the emails
-		// afterwards
-		setFormElement("p_mail.smtp.host", "localhost");
-		// we don't use authentication as dumpster does not support it
-		setFormElement("p_mail.smtp.auth", "false");
-		submit();
+        // configure localhost as our mock smtp server (dumpster) is listening
+        // on localhost
+        setFormElement("p_mail.sender", "regressiontest@jforum.net");
+        // we set the smtp server to localhost to be able to test the emails
+        // afterwards
+        setFormElement("p_mail.smtp.host", "localhost");
+        // we don't use authentication as dumpster does not support it
+        setFormElement("p_mail.smtp.auth", "false");
+        submit();
 
-		gotoFrame("leftFrame");
-		clickLinkWithText("Configurations");
-		gotoFrame("main");
+        gotoFrame("leftFrame");
+        clickLinkWithText("Configurations");
+        gotoFrame("main");
 
-		assertFormElementEquals("p_mail.smtp.auth", "false");
+        assertFormElementEquals("p_mail.smtp.auth", "false");
 
-		adminLogout();
-	}
+        adminLogout();
+    }
 
-	/**
-	 * bug in rc5 requires to save permission of all groups and users The
-	 * workaround does not solve the problem.
-	 *  
-	 */
-	public void nottestWorkaround() {
-		beginAt(FORUMS_LIST);
-		login("Admin", "admin");
-		clickLinkWithText("Admin Control Panel");
-		gotoFrame("leftFrame");
-		clickLinkWithText("Groups");
-		gotoFrame("main");
-		clickLinkWithText(I18n.getMessage(language, "Permissions"), 0);
-		gotoFrame("main");
-		submit();
-		clickLinkWithText(I18n.getMessage(language, "Permissions"), 1);
-		gotoFrame("main");
-		submit();
-		clickLinkWithText(I18n.getMessage(language, "Permissions"), 2);
-		gotoFrame("main");
-		submit();
+    public void testPermissions() {
+        beginAt(FORUMS_LIST);
+        login("Admin", "admin");
+        clickLinkWithText("Admin Control Panel");
+        gotoFrame("leftFrame");
+        clickLinkWithText("Groups");
+        gotoFrame("main");
+        clickLinkWithText(I18n.getMessage(language, "Permissions"), 0);
+        gotoFrame("main");
+        submit();
 
-		gotoFrame("leftFrame");
-		clickLinkWithText("Users");
-		gotoFrame("main");
-		assertFormPresent("formusersearch");
-		submit();
-		clickLinkWithText(I18n.getMessage(language, "Permissions"), 0);
-		gotoFrame("main");
-		setFormElement("perm_administration$single", "allow");
-		setFormElement("perm_forum", "all");
-		setFormElement("perm_anonymous_post", "all");
-		setFormElement("perm_create_sticky_announcement_topics$single", "allow");
-		setFormElement("perm_read_only_forums", "all");
-		setFormElement("perm_moderation$single", "allow");
-		setFormElement("perm_moderation_forums", "all");
-		setFormElement("perm_moderation_post_remove$single", "allow");
-		setFormElement("perm_moderation_post_edit$single", "allow");
-		setFormElement("perm_moderation_topic_move$single", "allow");
-		setFormElement("perm_moderation_topic_lockUnlock$single", "allow");
-		setFormElement("perm_read_only_forums", "all");
-		submit();
+        gotoFrame("leftFrame");
+        clickLinkWithText("Users");
+        gotoFrame("main");
+        assertFormPresent("formusersearch");
+        submit();
+        clickLinkWithText(I18n.getMessage(language, "Permissions"), 0);
+        gotoFrame("main");
+        submit();
 
-		assertFormPresent("formusersearch");
-		submit();
-		clickLinkWithText(I18n.getMessage(language, "Permissions"), 1);
-		gotoFrame("main");
-		setFormElement("perm_administration$single", "deny");
-		setFormElement("perm_forum", "all");
-		setFormElement("perm_anonymous_post", "all");
-		setFormElement("perm_create_sticky_announcement_topics$single", "allow");
-		setFormElement("perm_read_only_forums", "all");
-		setFormElement("perm_moderation$single", "allow");
-		setFormElement("perm_moderation_forums", "all");
-		setFormElement("perm_moderation_post_remove$single", "allow");
-		setFormElement("perm_moderation_post_edit$single", "allow");
-		setFormElement("perm_moderation_topic_move$single", "allow");
-		setFormElement("perm_moderation_topic_lockUnlock$single", "allow");
-		setFormElement("perm_read_only_forums", "all");
-		submit();
+        adminLogout();
+    }
 
-		adminLogout();
-	}
-
-	private void adminLogout() {
-		gotoFrame("leftFrame");
-		clickLinkWithText("Forum Index");
-		gotoFrame("main");
-		clickLinkWithText(I18n.getMessage(language, "ForumBase.logout"));
-	}
+    private void adminLogout() {
+        gotoFrame("leftFrame");
+        clickLinkWithText("Forum Index");
+        gotoFrame("main");
+        clickLinkWithText(I18n.getMessage(language, "ForumBase.logout"));
+    }
 }
