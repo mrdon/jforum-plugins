@@ -36,59 +36,22 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * This file creation date: Mar 3, 2003 / 11:52:30 AM
+ * Creation date: Jun 2, 2004 / 23:32:45
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum;
-
-import java.io.StringWriter;
-import java.io.PrintWriter;
-import java.io.Writer;
-
-import freemarker.template.Configuration;
-import freemarker.template.Template;
+package net.jforum.util;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumException.java,v 1.3 2004/06/03 02:34:37 rafaelsteil Exp $
+ * @version $Id: FileChangeListener.java,v 1.1 2004/06/03 02:34:37 rafaelsteil Exp $
  */
-public class ForumException 
+public interface FileChangeListener
 {
-	public ForumException(Throwable t, Writer w)
-	{
-		StringWriter strWriter = new StringWriter();
-		PrintWriter writer = new PrintWriter(strWriter);
-		t.printStackTrace(writer);		
-		writer.close();
-		
-		try {
-			System.err.println(strWriter);
-			
-			String message = t.getMessage();
-			if (message == null) {
-				message = t.getCause().getMessage();
-				
-				if (message == null) {
-					message = t.getCause().toString();
-				}
-			}
-
-			JForum.getContext().put("stackTrace", strWriter.toString());
-			JForum.getContext().put("message", t.getClass().getName() +": "+  message);
-
-			Template template = Configuration.getDefaultConfiguration().getTemplate("exception.html");
-			template.process(JForum.getContext(), w);
-		}
-		catch (Exception e) {}
-	}
-	
-	public ForumException(Throwable t)
-	{
-		StringWriter strWriter = new StringWriter();
-		PrintWriter writer = new PrintWriter(strWriter);
-		t.printStackTrace(writer);
-		writer.close();
-		System.err.println(strWriter);
-	}	
+	/**
+	 * Invoked when a file changes
+	 * 
+	 * @param filename Name of the changed file
+	 */
+	public void fileChanged(String filename);
 }
