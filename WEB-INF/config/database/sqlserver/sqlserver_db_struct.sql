@@ -140,7 +140,8 @@ CREATE TABLE [jforum_banlist] (
 CREATE TABLE [jforum_categories] (
 	[categories_id] [bigint] IDENTITY (1, 1) PRIMARY KEY CLUSTERED NOT NULL ,
 	[title] [varchar] (100) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL ,
-	[display_order] [bigint] DEFAULT (0) NOT NULL 
+	[display_order] [bigint] DEFAULT (0) NOT NULL,
+	[moderated] [tinyint] DEFAULT (0) 
 ) ON [PRIMARY]
 
 
