@@ -49,7 +49,7 @@ import net.jforum.util.I18n;
 
 /**
  * @author Marc Wick
- * @version $Id: AdminWebTestCase.java,v 1.4 2004/10/02 06:27:19 marcwick Exp $
+ * @version $Id: AdminWebTestCase.java,v 1.5 2004/10/02 14:23:55 marcwick Exp $
  */
 public class AdminWebTestCase extends AbstractWebTestCase {
 
@@ -91,8 +91,19 @@ public class AdminWebTestCase extends AbstractWebTestCase {
 		setFormElement("p_forum.page.title", "jforum last run regression test "
 				+ new Date());
 		setFormElement("p_i18n.board.default", language);
+
+		// configure localhost as our mock smtp server (dumpster) is listening
+		// on localhost
+		setFormElement("p_mail.sender", "regressiontest@jforum.net");
+		setFormElement("p_mail.smtp.host", "localhost");
 		setFormElement("p_mail.smtp.auth", "false");
 		submit();
+
+		gotoFrame("leftFrame");
+		clickLinkWithText("Configurations");
+		gotoFrame("main");
+
+		assertFormElementEquals("p_mail.smtp.auth", "false");
 
 		adminLogout();
 	}
@@ -139,7 +150,7 @@ public class AdminWebTestCase extends AbstractWebTestCase {
 		setFormElement("perm_moderation_topic_lockUnlock$single", "allow");
 		setFormElement("perm_read_only_forums", "all");
 		submit();
-		
+
 		assertFormPresent("formusersearch");
 		submit();
 		clickLinkWithText(I18n.getMessage(language, "Permissions"), 1);
