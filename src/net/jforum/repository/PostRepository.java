@@ -65,7 +65,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Sean Mitchell
  * @author Rafael Steil
- * @version $Id: PostRepository.java,v 1.3 2005/02/21 20:32:13 rafaelsteil Exp $
+ * @version $Id: PostRepository.java,v 1.4 2005/03/03 16:49:05 rafaelsteil Exp $
  */
 public class PostRepository implements Cacheable
 {
@@ -151,7 +151,7 @@ public class PostRepository implements Cacheable
 	public static void append(int topicId, Post p)
 	{
 		String tid = Integer.toString(topicId);
-		List posts = (List)cache.get(tid);
+		List posts = (List)cache.get(FQN, tid);
 		if (posts != null && !posts.contains(p)) {
 			posts.add(p);
 			cache.add(FQN, tid, posts);

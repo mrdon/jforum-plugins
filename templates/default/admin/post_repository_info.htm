@@ -18,7 +18,7 @@
 
 	<#list topics as t>
 		<tr>
-			<td class="row2"><span class="gen">${t.get("title")}</span></td>
+			<td class="row2"><a class="gen" href="${contextPath}/posts/list/${t.get("id")}${extension}" target="_new">${t.get("title")}</a></td>
 			<td class="row2"><span class="gen">${repository.size(t.get("id"))}</span></td>
 			<td class="row2">
 				<a class="gen" href="${contextPath}/jforum${extension}?module=adminCache&action=postsClear&topic_id=${t.get("id")}">${I18n.getMessage("Cache.clear")}</a>

@@ -45,6 +45,7 @@ package net.jforum.view.forum;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -88,7 +89,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.66 2005/02/24 23:00:53 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.67 2005/03/03 16:49:06 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -666,6 +667,9 @@ public class PostAction extends Command {
 				}
 				
 				if (SystemGlobals.getBoolValue(ConfigKeys.POSTS_CACHE_ENABLED)) {
+					SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
+					p.setFormatedTime(df.format(p.getTime()));
+					
 					PostRepository.append(p.getTopicId(), PostCommon.preparePostForDisplay(p));
 				}
 			}
@@ -691,7 +695,7 @@ public class PostAction extends Command {
 	private int startPage(Topic t, int currentStart) {
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 
-		int newStart = ((t.getTotalReplies() / postsPerPage) * postsPerPage);
+		int newStart = (t.getTotalReplies() + 1) / postsPerPage * postsPerPage;
 		if (newStart > currentStart) {
 			return newStart;
 		}
