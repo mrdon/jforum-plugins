@@ -36,14 +36,12 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * This file creation date: 31/01/2004 - 20:53:44
+ * Created on 21/10/2004 00:10:00
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.util.rss;
 
-import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -51,81 +49,50 @@ import net.jforum.entities.Topic;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
-import com.sun.syndication.feed.synd.SyndContent;
-import com.sun.syndication.feed.synd.SyndContentImpl;
-import com.sun.syndication.feed.synd.SyndEntry;
-import com.sun.syndication.feed.synd.SyndEntryImpl;
-import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.feed.synd.SyndFeedImpl;
-import com.sun.syndication.io.SyndFeedOutput;
-
 /**
  * @author Rafael Steil
- * @version $Id: TopicRSS.java,v 1.6 2004/10/17 05:26:55 rafaelsteil Exp $
+ * @version $Id: TopicRSS.java,v 1.7 2004/10/21 03:26:04 rafaelsteil Exp $
  */
-public class TopicRSS implements RSSAware {
+public class TopicRSS extends GenericRSS 
+{
 	private List topics;
-
-	private String title;
-
-	private String description;
-
-	private int forumId;
-
-	public TopicRSS(String title, String description, int forumId, List topics) {
-		this.topics = topics;
-		this.title = title;
-		this.description = description;
-		this.forumId = forumId;
-	}
-
-	/**
-	 * @see net.jforum.util.rss.RSSAware#createRSS()
-	 */
-	public String createRSS() throws Exception 
+	private RSS rss;
+	private String forumLink;
+	
+	public TopicRSS(String title, String description, int forumId, List topics)
 	{
-		SyndFeed feed = new SyndFeedImpl();
-		feed.setFeedType(RSSAware.RSS_VERSION);
-		feed.setDescription(this.description);
-		feed.setTitle(this.title);
-		feed.setEncoding(SystemGlobals.getValue(ConfigKeys.ENCODING));
+		this.topics = topics;
 		
-		String forumLink = SystemGlobals.getValue(ConfigKeys.FORUM_LINK);
-		if (!forumLink.endsWith("/")) {
-			forumLink += "/";
+		this.forumLink = SystemGlobals.getValue(ConfigKeys.FORUM_LINK);
+		if (!this.forumLink.endsWith("/")) {
+			this.forumLink += "/";
 		}
 		
-		feed.setLink(forumLink + "forums/show/" + forumId 
+		this.rss = new RSS(title, description, 
+				SystemGlobals.getValue(ConfigKeys.ENCODING), 
+				this.forumLink + "forums/show/" + forumId 
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
-
-		List entries = new ArrayList();
+		
+		this.prepareRSS();
+	}
+	
+	private void prepareRSS()
+	{
 		for (Iterator iter = topics.iterator(); iter.hasNext(); ) {
 			Topic t = (Topic)iter.next();
-		
-			SyndEntry entry = new SyndEntryImpl();
-			entry.setAuthor(t.getPostedBy().getUsername());
 			
-			entry.setPublishedDate(t.getTime());
-
-			entry.setLink(forumLink + "posts/list/" + t.getId()
+			RSSItem item = new RSSItem();
+			item.setAuthor(t.getPostedBy().getUsername());
+			item.setPublishDate(t.getTime());
+			item.setLink(this.forumLink + "posts/list/" + t.getId()
 					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
-			entry.setTitle(t.getTitle());
+			item.setTitle(t.getTitle());
+			item.setContentType(RSSAware.CONTENT_HTML);
+			item.setDescription(item.getTitle());
 			
-			SyndContent content = new SyndContentImpl();
-			content.setType("text/html");
-			content.setValue(t.getTitle());
-			
-			entry.setDescription(content);
-			
-			entries.add(entry);
+			this.rss.addItem(item);
 		}
 		
-		feed.setEntries(entries);
-		
-		StringWriter writer = new StringWriter();
-		SyndFeedOutput out = new SyndFeedOutput();
-		out.output(feed, writer);
-		
-		return writer.toString();
+		super.setRSS(this.rss);
 	}
 }

@@ -1,5 +1,7 @@
-<body><#import "../macros/pagination.ftl" as pagination>
+<#import "../macros/pagination.ftl" as pagination>
 <#import "../macros/presentation.ftl" as presentation/>
+
+<link rel="alternate" type="application/rss+xml" title="RSS" href="${JForumContext.encodeURL("/rss/forumTopics/${forum.id}")}" />
 
 <script language="JavaScript" type="text/JavaScript">
 <#include "moderation.js"/>
@@ -19,7 +21,9 @@
 			<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
 				<tr>
 					<td valign="bottom" align="left" colspan="2">
-						<a class="maintitle" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name}</a><br />
+						<a class="maintitle" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name}</a>
+						<a href="${JForumContext.encodeURL("/rss/forumTopics/${forum.id}")}"><img src="${contextPath}/templates/${templateName}/images/xml_button.gif" border="0"></a>
+						<br />
 						<span class="gensmall"><!-- forum moderators --> </span>
 					</td>
 
@@ -48,16 +52,16 @@
 							<#if openModeration?default(false)>
 								<#assign link = ""/>
 								<#if (start > 0)>
-									<#assign link = JForum.encodeURL("/forums/show/" + start + "/" + forum.id)/>
+									<#assign link = JForumContext.encodeURL("/forums/show/" + start + "/" + forum.id)/>
 								<#else>
-									<#assign link = JForum.encodeURL("/forums/show/" + forum.id)/>
+									<#assign link = JForumContext.encodeURL("/forums/show/" + forum.id)/>
 								</#if>
 								<a href="${link}">${I18n.getMessage("Moderation.CloseModeration")}</a>
 							<#else>
 								<a href="${contextPath}/forums/moderation/<#if (start > 0)>${start}/</#if>${forum.id}${extension}">${I18n.getMessage("Moderation.OpenModeration")}</a>
 							</#if>
-						</#if>			
-						</span>		   
+						</#if>
+						</span>
 					</td>
 				</tr>
 			</table>

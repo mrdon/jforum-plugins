@@ -48,10 +48,12 @@ import java.util.List;
 
 import net.jforum.Command;
 import net.jforum.JForum;
+import net.jforum.entities.Forum;
 import net.jforum.entities.Topic;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.PostModel;
 import net.jforum.model.TopicModel;
+import net.jforum.repository.ForumRepository;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -62,7 +64,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: RSSAction.java,v 1.2 2004/10/20 03:19:46 rafaelsteil Exp $
+ * @version $Id: RSSAction.java,v 1.3 2004/10/21 03:26:05 rafaelsteil Exp $
  */
 public class RSSAction extends Command 
 {
@@ -86,7 +88,7 @@ public class RSSAction extends Command
 	 * RSS for all N first topics for some given forum
 	 * @throws Exception
 	 */
-	public void topics() throws Exception
+	public void forumTopics() throws Exception
 	{
 		int forumId = Integer.parseInt(JForum.getRequest().getParameter("forum_id")); 
 		if (!TopicsCommon.isTopicAccessible(forumId)) {
@@ -94,8 +96,12 @@ public class RSSAction extends Command
 		}
 		
 		List topics = TopicsCommon.topicsByForum(forumId, 0);
-		RSSAware rss = new TopicRSS(I18n.getMessage("RSS.ForumTopics.title"),
-				I18n.getMessage("RSS.ForumTopics.descripton"),
+		Forum forum = ForumRepository.getForum(forumId);
+		
+		String[] p = { forum.getName() };
+		
+		RSSAware rss = new TopicRSS(I18n.getMessage("RSS.ForumTopics.title", p),
+				I18n.getMessage("RSS.ForumTopics.description", p),
 				forumId, 
 				topics);
 		JForum.getContext().put("rssContents", rss.createRSS());
@@ -105,7 +111,7 @@ public class RSSAction extends Command
 	 * RSS for all N first posts for some given topic
 	 * @throws Exception
 	 */
-	public void topic() throws Exception
+	public void topicPosts() throws Exception
 	{
 		int topicId = Integer.parseInt(JForum.getRequest().getParameter("topic_id"));
 
@@ -123,9 +129,12 @@ public class RSSAction extends Command
 		int count = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 		ArrayList posts = pm.selectAllByTopicByLimit(topicId, 0, count);
 		
-		String title = I18n.getMessage("RSS.Topic.title");
-		String description = I18n.getMessage("RSS.Topic.description");
+		String[] p = { topic.getTitle() };
+		
+		String title = I18n.getMessage("RSS.TopicPosts.title", p);
+		String description = I18n.getMessage("RSS.TopicPosts.description", p);
 
+		// TODO: it should be "TopicPostsRSS".. but am gonna sleep now
 		RSSAware rss = new TopicRSS(title, description, topic.getForumId(), posts);
 		JForum.getContext().put("rssContents", rss.createRSS());
 	}

@@ -12,16 +12,13 @@
 					<#if logged>
 						<a class="gensmall" href="${JForumContext.encodeURL("/forums/newMessages")}">${I18n.getMessage("ForumListing.readLastVisitMessages")}</a>
 					</#if>
-					<a href="${contextPath}/rss/forums.page">
-					<img src="${contextPath}/templates/${templateName}/images/xml_button.gif" border="0" align="middle">
-					</a>
 					</td>
 				</tr>
 			</table>
 		
 			<table class="forumline" cellspacing="1" cellpadding="2" width="100%" border="0">
 				<tr>
-					<th class="thCornerL" nowrap="nowrap" colspan="2" height="25">&nbsp;${I18n.getMessage("ForumListing.forums")}&nbsp;</th>
+					<th class="thCornerL" nowrap="nowrap" colspan="2" height="25" align="center" valign="center">&nbsp;${I18n.getMessage("ForumListing.forums")}&nbsp;</th>
 					<th class="thTop" nowrap="nowrap" width="50">&nbsp;${I18n.getMessage("ForumListing.totalTopics")}&nbsp;</th>
 					<th class="thTop" nowrap="nowrap" width="50">&nbsp;${I18n.getMessage("ForumListing.totalMessages")}&nbsp;</th>
 					<th class="thCornerR" nowrap="nowrap">&nbsp;${I18n.getMessage("ForumListing.lastMessage")}&nbsp;</th>
@@ -123,6 +120,8 @@
 					</td>
 				</tr>
 			</table>
+			
+			<br/>
         
 			<#if !logged>
 			<form name="formlogin" accept-charset="${encoding}" action="${JForumContext.encodeURL("/jforum")}" method="post">

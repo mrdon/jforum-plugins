@@ -36,23 +36,100 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * This file creation date: 10/10/2004 - 19:07:55
+ * Created on 20/10/2004 22:59:58
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.util.rss;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * A RSS representation of some content.
+ * Represents a RSS document
  * 
  * @author Rafael Steil
- * @version $Id: RSSAware.java,v 1.3 2004/10/21 03:26:04 rafaelsteil Exp $
+ * @version $Id: RSS.java,v 1.1 2004/10/21 03:26:03 rafaelsteil Exp $
  */
-public interface RSSAware
+public class RSS 
 {
-	public static final String RSS_VERSION = "rss_2.0";
-	public static final String CONTENT_HTML = "text/html";
-	public static final String CONTENT_TEXT = "text/plain";
+	private List itens;
+	private String title;
+	private String description;
+	private String encoding;
+	private String link;
 	
-	public String createRSS() throws Exception;
+	/**
+	 * Creates a new RSS document.
+	 * 
+	 * @param title The document title
+	 * @param description The document description
+	 * @param encoding The character encoding
+	 * @param link The main document link
+	 */
+	public RSS(String title, String description, String encoding, String link)
+	{
+		this.itens = new ArrayList();
+		this.title = title;
+		this.description = description;
+		this.encoding = encoding;
+		this.link = link;
+	}
+	
+	/**
+	 * Gets the main document link
+	 * @return The document link
+	 */
+	public String getLink()
+	{
+		return this.link;
+	}
+	
+	/**
+	 * Gets he document title 
+	 * @return The document title
+	 */
+	public String getTitle()
+	{
+		return this.title;
+	}
+	
+	/**
+	 * Gets the document description
+	 * @return The document description
+	 */
+	public String getDescription()
+	{
+		return this.description;
+	}
+	
+	/**
+	 * Gets the document character encoding
+	 * @return The encoding
+	 */
+	public String getEncoding()
+	{
+		return this.encoding;
+	}
+	
+	/**
+	 * Gets all <code>RSSItem</code> instances related
+	 * to this RSS document.
+	 * 
+	 * @return <code>java.util.List</code> with the entries
+	 */
+	public List getItens()
+	{
+		return this.itens;
+	}
+	
+	/**
+	 * Add a new item to the RSS document
+	 * 
+	 * @param entry <code>RSSItem</code> object containing the item information 
+	 */
+	public void addItem(RSSItem item)
+	{
+		this.itens.add(item);
+	}
 }
