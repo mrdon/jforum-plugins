@@ -36,7 +36,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on 24/05/2004 22:36:07
+ * Created on 09/11/2004 22:36:07
  * The JForum Project
  * http://www.jforum.net
  */
@@ -50,8 +50,8 @@ import net.jforum.JForum;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
- * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.1 2004/11/09 15:33:28 marcwick Exp $
+ * @author Marc Wick
+ * @version $Id: UserModel.java,v 1.2 2004/11/09 16:52:01 rafaelsteil Exp $
  */
 public class UserModel extends net.jforum.drivers.postgresql.UserModel {
 
