@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: PermissionControl.java,v 1.3 2004/09/14 01:48:34 jamesyong Exp $
+ * $Id: PermissionControl.java,v 1.4 2004/09/14 02:20:12 jamesyong Exp $
  */
 package net.jforum.security;
 
@@ -125,7 +125,7 @@ public class PermissionControl
 		rv.setValue("0");
 		if (role.getValues().contains(rv)){
 			return true;
-		}else{
+		} else {
 			rv.setValue(roleValue);
 			return role.getValues().contains(rv);
 		}
