@@ -44,6 +44,8 @@ package net.jforum.view.forum;
 
 import java.io.FileInputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -87,7 +89,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.45 2005/01/19 20:43:46 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.46 2005/01/19 22:41:42 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -305,10 +307,14 @@ public class PostAction extends Command {
 			if (preview && this.request.getParameter("topic_type") != null) {
 				topic.setType(this.request.getIntParameter("topic_type"));
 			}
+			
+			if (p.hasAttachments()) {
+				this.context.put("attachments", 
+						DataAccessDriver.getInstance().newAttachmentModel().selectAttachments(p.getId()));
+			}
 
 			this.context.put("forum", ForumRepository.getForum(p.getForumId()));
 			this.context.put("action", "editSave");
-
 			this.context.put("post", p);
 			this.context.put("setType", p.getId() == topic.getFirstPostId());
 			this.context.put("topic", topic);
@@ -324,29 +330,20 @@ public class PostAction extends Command {
 			this.context.put("message", I18n.getMessage("CannotEditPost"));
 		}
 
-		User u = this.getUserForDisplay(sUserId);
+		User u = PostCommon.getUserForDisplay(sUserId);
 
 		if (preview) {
 			u.setNotifyOnMessagesEnabled(this.request.getParameter("notify") != null);
 			
 			if (u.getId() != p.getUserId()) {
 				// Probably a moderator is editing the message
-				this.context.put("previewUser", this.getUserForDisplay(p.getUserId()));
+				this.context.put("previewUser", PostCommon.getUserForDisplay(p.getUserId()));
 			}
 		}
 
 		this.context.put("user", u);
 	}
 	
-	private User getUserForDisplay(int userId) throws Exception
-	{
-		User u = DataAccessDriver.getInstance().newUserModel().selectById(userId);
-		u.setSignature(PostCommon.processText(u.getSignature()));
-		u.setSignature(PostCommon.processSmilies(u.getSignature(), SmiliesRepository.getSmilies()));
-		
-		return u;
-	}
-
 	public void quote() throws Exception {
 		PostModel pm = DataAccessDriver.getInstance().newPostModel();
 		Post p = pm.selectById(this.request.getIntParameter("post_id"));
@@ -424,6 +421,44 @@ public class PostAction extends Command {
 			}
 
 			pm.update(p);
+			
+			// Attachments
+			String[] attachIds = this.request.getParameterValues("attach_ids");
+			if (attachIds == null) {
+				String s = this.request.getParameter("attach_ids");
+				if (s != null) {
+					attachIds = new String[] { s };
+				}
+			}
+			
+			if (attachIds != null) {
+				AttachmentModel am = DataAccessDriver.getInstance().newAttachmentModel();
+				
+				// Check for attachments to remove
+				List deleteList = new ArrayList();
+				String[] delete = this.request.getParameterValues("deleteAttach");
+				
+				if (delete != null) {
+					for (int i = 0; i < delete.length; i++) {
+						am.removeAttachment(Integer.parseInt(delete[i]));
+					}
+					
+					deleteList = Arrays.asList(delete);
+				}
+				
+				// Now update
+				for (int i = 0; i < attachIds.length; i++) {
+					if (deleteList.contains(attachIds[i])) {
+						continue;
+					}
+					
+					int id = Integer.parseInt(attachIds[i]);
+					Attachment a = am.selectAttachmentById(id);
+					a.getInfo().setComment(this.request.getParameter("comment_" + id));
+
+					am.updateAttachment(a);
+				}
+			}
 
 			// Updates the topic title
 			if (t.getFirstPostId() == p.getId()) {

@@ -225,7 +225,7 @@ function validatePostForm(f)
 
 <#if !user.isNotifyOnMessagesEnabled()><#assign repliesChecked = ""/></#if>
 
-<form action="${JForumContext.encodeURL("/jforum")}" method="post" enctype="multipart/form-data">
+<form action="${JForumContext.encodeURL("/jforum")}" method="post" enctype="multipart/form-data" name="post" id="post">
 <input type="hidden" name="action" value="${action}" />
 <input type="hidden" name="module" value="${moduleName}" />
 <input type="hidden" name="securityHash" value="${securityHash}" />
@@ -249,19 +249,27 @@ function validatePostForm(f)
 					</td>
 				</tr>
 				<tr>
-					<td class="row1"><table width="100%" border="0" cellspacing="0" cellpadding="0">
-						<tr>
-							<td>
-								<span class="postbody">
-								${postPreview.text}<br />
-								
-								<#if (user?exists && user.attachSignatureEnabled && user.signature?exists && user.signature?length > 0 && post.isSignatureEnabled())>
-								<hr />
-								${user.signature}
-								</#if>
-								</span>
-							</td>
-						</tr>
+					<td class="row1" height="100%">
+						<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+							<tr>
+								<td><span class="postbody">${postPreview.text}</span></td>
+							</tr>
+
+							<#if (user?exists && user.attachSignatureEnabled && user.signature?exists && user.signature?length > 0 && post.isSignatureEnabled())>
+								<tr>
+									<td>
+										<hr />
+										<span class="gensmall">
+											<#if previewUser?exists>
+												${previewUser.signature}
+											<#else>
+												${user.signature}
+											</#if>
+										</span>
+									</td>
+								</tr>
+							</#if>
+						</table>
 					</td>
 				</tr>
 				<tr>
@@ -550,17 +558,18 @@ function validatePostForm(f)
 	<script language="javascript">
 	var panelOpen = false;
 	var total = 0;
+	var ignoreStart = false;
 
-	var template = "<tr><td><span class='gen'><b>Filename</b></span></td>";
+	var template = "<table width='100%'><tr><td><span class='gen'><b>${I18n.getMessage("Attachments.filename")}</b></span></td>";
 	template += "<td><input type='file' size='50' name='file_#counter#'></td></tr>";
-	template += "<tr><td><span class='gen'><b>Description</b></span></td>";
+	template += "<tr><td><span class='gen'><b>${I18n.getMessage("Attachments.description")}</b></span></td>";
 	template += "<td><textarea rows='4' cols='40' name='comment_#counter#'></textarea>";
-	template += "&nbsp;&nbsp;<a href='javascript:removeAttach(#counter#)' class='gensmall'>Remove</a></td></tr>";
-	template += "<tr><td colspan='2' width='100%' class='row3'></td></tr>";
+	template += "&nbsp;&nbsp;<a href='javascript:removeAttach(#counter#)' class='gensmall'>${I18n.getMessage("Attachments.remove")}</a></td></tr>";
+	template += "<tr><td colspan='2' width='100%' class='row3'></td></tr></table>";
 
 	function openAttachmentPanel() 
 	{
-		if (total == 0) {
+		if (total == 0 && !ignoreStart) {
 			addAttachmentFields();
 		}
 
@@ -574,6 +583,7 @@ function validatePostForm(f)
 		s += "<div id='attach_#counter#'></div>";
 		s = s.replace(/#counter#/, total + 1);
 
+		
 		document.getElementById("attach_" + total).innerHTML = s;
 		document.getElementById("total_files").value = ++total;
 	}
@@ -582,6 +592,39 @@ function validatePostForm(f)
 	{
 		document.getElementById("attach_" + index).innerHTML = "<div id='attach_" + total + "'></div>";
 	}
+
+	<#if attachments?exists>
+	var templateEdit = "<table width='100%'><tr><td class='row2'><span class='gen'><b>${I18n.getMessage("Attachments.filename")}</b></span></td>";
+	templateEdit += "<td class='row2'><span class='gen'>#name#</td></tr>";
+	templateEdit += "<tr><td class='row2'><span class='gen'><b>${I18n.getMessage("Attachments.description")}</b></span></td>";
+	templateEdit += "<td class='row2'><textarea rows='4' cols='40' name='comment_#id#'>#value#</textarea>";
+	templateEdit += "&nbsp;&nbsp;<span class='gensmall'><input type='checkbox' name='deleteAttach' value='#id#'>${I18n.getMessage("Attachments.remove")}</span></td></tr>";
+	templateEdit += "<tr><td colspan='2' width='100%' class='row3'></td></tr><input type='hidden' name='attach_ids' value='#id#'></table>";
+
+	function editAttachments()
+	{
+		var data = new Array();
+		<#list attachments as a>
+			var attach_${a.id} = new Array();
+			attach_${a.id}["filename"] = "${a.info.realFilename}";
+			attach_${a.id}["description"] = "${a.info.comment}";
+			attach_${a.id}["id"] = "${a.id}";
+
+			data.push(attach_${a.id});
+		</#list>
+
+		for (var i = 0; i < data.length; i++) {
+			var a = data[i];
+			var s = templateEdit.replace(/#value#/, a["description"]);
+			s = s.replace(/#name#/, a["filename"]);
+			s = s.replace(/#id#/g, a["id"]);
+
+			var v = document.getElementById("edit_attach").innerHTML;
+			v += s;
+			document.getElementById("edit_attach").innerHTML = v;
+		}
+	}
+	</#if>
 	</script>
 
 	<input type="hidden" name="total_files" id="total_files">
@@ -593,13 +636,16 @@ function validatePostForm(f)
 				<td class="catHead" height="28" colspan="3" align="center"><b><span class="cattitle">File Attachment Panel</span></b></td>
 			</tr>
 			<tr>
-				<td colspan="3" class="row3" align="center"><input type="button" value="Add antoher file" class="mainoption" onClick="addAttachmentFields()"></td>
-			</tr>
-			<tr>
-				<td>
+				<td align="center">
+					<div id="edit_attach"></div>
+
 					<!-- Attachments -->
 				   <div id="attach_0"></div>
+				   
 				</td>
+			</tr>
+			<tr>
+				<td align="center" class="row3"><input type="button" value="Add antoher file" class="mainoption" onClick="addAttachmentFields()"></td>
 			</tr>
 		</table>
 	</td>
@@ -622,4 +668,13 @@ function validatePostForm(f)
 	</tr>
 	</#if>
 </table>
+
+<#if attachments?exists>
+<script language="javascript">
+ignoreStart = true;
+openAttachmentPanel();
+editAttachments();
+</script>
+</#if>
+
 </form>

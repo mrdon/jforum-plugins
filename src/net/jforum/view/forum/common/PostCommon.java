@@ -55,6 +55,7 @@ import net.jforum.SessionFacade;
 import net.jforum.entities.Post;
 import net.jforum.entities.Smilie;
 import net.jforum.entities.User;
+import net.jforum.model.DataAccessDriver;
 import net.jforum.model.PostModel;
 import net.jforum.model.UserModel;
 import net.jforum.repository.BBCodeRepository;
@@ -68,7 +69,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.4 2004/12/29 14:48:13 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.5 2005/01/19 22:41:42 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -247,13 +248,17 @@ public class PostCommon
 	{
 		Integer posterId = new Integer(userId);
 		if (!usersMap.containsKey(posterId)) {
-            User u = um.selectById(userId);
-            u.setSignature(PostCommon.processText(u.getSignature()));
-            u.setSignature(PostCommon.processSmilies(u.getSignature(), 
-            		SmiliesRepository.getSmilies()));
-
-            usersMap.put(posterId, u);
+            usersMap.put(posterId, PostCommon.getUserForDisplay(userId));
         }
+	}
+	
+	public static User getUserForDisplay(int userId) throws Exception
+	{
+		User u = DataAccessDriver.getInstance().newUserModel().selectById(userId);
+		u.setSignature(PostCommon.processText(u.getSignature()));
+		u.setSignature(PostCommon.processSmilies(u.getSignature(), SmiliesRepository.getSmilies()));
+		
+		return u;
 	}
 	
 	public static List topicPosts(PostModel pm, UserModel um, Map usersMap, boolean canEdit, int userId, 
