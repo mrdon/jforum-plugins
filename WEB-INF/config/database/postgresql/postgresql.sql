@@ -71,3 +71,8 @@ SearchModel.cleanSearchTopics = DELETE FROM jforum_search_topics WHERE session =
 # SmiliesModel
 # #############
 SmiliesModel.lastGeneratedSmilieId = SELECT CURRVAL('jforum_smilies_seq')
+
+# ##################
+# PermissionControl
+# ##################
+PermissionControl.lastGeneratedRoleId = SELECT CURRVAL('jforum_roles_seq')
