@@ -55,7 +55,7 @@ import net.jforum.drivers.sqlserver.security.UserSecurityModel;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: DataAccessDriver.java,v 1.2 2005/02/03 12:37:45 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.3 2005/02/17 19:14:08 franklin_samir Exp $
  */
 public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDriver
 {
@@ -69,6 +69,7 @@ public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDrive
 	private static UserSecurityModel userSecurityModel = new UserSecurityModel();
 	private static PrivateMessageModel pmModel = new PrivateMessageModel();
 	private static CategoryModel categoryModel = new CategoryModel();
+	private static KarmaModel karmaModel = new KarmaModel();
 
 	/** 
 	 * @see net.jforum.model.DataAccessDriver#newPostModel()
@@ -142,8 +143,20 @@ public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDrive
 		return categoryModel;
 	}
 	
+	/** 
+	 * @see net.jforum.model.DataAccessDriver#newPrivateMessageModel()
+	 */
 	public net.jforum.model.PrivateMessageModel newPrivateMessageModel()
 	{
 		return pmModel;
 	}
+	
+	/** 
+	 * @see net.jforum.model.DataAccessDriver#newKarmaModel()
+	 */
+	public net.jforum.model.KarmaModel newKarmaModel()
+	{
+		return karmaModel;
+	}
+
 }
