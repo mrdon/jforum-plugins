@@ -16,7 +16,13 @@
 
 	<tr>
 		<td class="row1" valign="top" align="middle" height="6">
-			<#if (u.avatar?exists && u.avatar?length > 0)><img src="${contextPath}/images/avatar/${u.avatar}" border="0" /><br /></#if>
+			<#if (u.avatar?exists && u.avatar?length > 0)>
+				<#if u.isExternalAvatar()>
+					<img src="${u.avatar}" border="0">
+				<#else>
+					<img src="${contextPath}/images/avatar/${u.avatar}" border="0" /><br />
+				</#if>
+			</#if>
 			<span class="postdetails">Ranking: ${rank.getRankTitle(u.totalPosts)}</span>
 		</td>
 
@@ -83,6 +89,7 @@
 			</tr>
 			</#if>
 
+			<#if u.id != 1>
 			<tr>
 				<td valign="center" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("UserProfile.privateMessage")}:</span></td>
 				<td class="row1" valign="center">
@@ -91,6 +98,7 @@
 					</span></b>
 				</td>
 			</tr>
+			</#if>
             
 			<#if (u.msnm?exists && u.msnm?length > 0)>
 			<tr>
