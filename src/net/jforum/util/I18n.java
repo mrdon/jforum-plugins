@@ -57,7 +57,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * memory and provides a static method to acess them.
  *  
  * @author Rafael Steil
- * @version $Id: I18n.java,v 1.6 2004/08/19 04:03:02 jamesyong Exp $
+ * @version $Id: I18n.java,v 1.7 2004/08/19 04:43:31 jamesyong Exp $
  */
 public class I18n 
 {
@@ -91,7 +91,7 @@ public class I18n
 	{
 		baseDir = SystemGlobals.getApplicationResourceDir() +"/config/languages/";
 		localeNames.load(new FileInputStream(baseDir +"locales.properties"));
-		defaultName = SystemGlobals.getValue(ConfigKeys.I18N_USER_DEFAULT);
+		defaultName = SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT_ADMIN);
 		load(defaultName);
 	}
 	

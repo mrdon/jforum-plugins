@@ -83,10 +83,10 @@
 	<td class='row1' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.I18n")}</span></td>
 	<td class='row1' width="38%">
 		<span class='gen'>
-		<select name="p_i18n.user.default">
+		<select name="p_i18n.default.admin">
 		<#list locales as l>
 			<#assign selected = ""/>
-			<#if l == config.getProperty("i18n.user.default")>
+			<#if l == config.getProperty("i18n.default.admin")>
 				<#assign selected = "selected"/>
 			</#if>
 

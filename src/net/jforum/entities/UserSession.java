@@ -53,7 +53,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * Stores information about user's session.
  * 
  * @author Rafael Steil
- * @version $Id: UserSession.java,v 1.6 2004/08/19 04:01:42 jamesyong Exp $
+ * @version $Id: UserSession.java,v 1.7 2004/08/19 04:43:06 jamesyong Exp $
  */
 public class UserSession implements Serializable
 {
@@ -186,7 +186,7 @@ public class UserSession implements Serializable
 	public String getLang()
 	{
 		if (this.lang == null || this.lang.equals("")) {
-			this.lang = SystemGlobals.getValue(ConfigKeys.I18N_USER_DEFAULT);
+			this.lang = SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT_ADMIN);
 		}
 		
 		return this.lang;
