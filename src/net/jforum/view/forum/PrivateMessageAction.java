@@ -64,7 +64,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.17 2005/03/03 02:45:21 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.18 2005/03/04 17:18:13 rafaelsteil Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -349,13 +349,11 @@ public class PrivateMessageAction extends Command
 		
 		pm.getPost().setSubject(I18n.getMessage("PrivateMessage.replyPrefix") + pm.getPost().getSubject());
 		
-		this.context.put("moduleAction", "post_form.htm");
-		this.context.put("htmlAllowed", true);
-		this.context.put("action", "sendSave");
 		this.context.put("pm", pm);
 		this.context.put("pmReply", true);
-		this.context.put("user", DataAccessDriver.getInstance().newUserModel().selectById(
-						SessionFacade.getUserSession().getUserId()));
+		
+		this.sendFormCommon(DataAccessDriver.getInstance().newUserModel().selectById(
+				SessionFacade.getUserSession().getUserId()));
 	}
 	
 	public void quote() throws Exception
