@@ -261,7 +261,7 @@ SearchModel.selectTopicData = INSERT INTO jforum_search_topics (topic_id, forum_
 	
 SearchModel.cleanSearchResults = DELETE FROM jforum_search_results WHERE session = ? OR time < (NOW() - INTERVAL '1 HOUR')
 SearchModel.cleanSearchTopics = DELETE FROM jforum_search_topics WHERE session = ? OR time < (NOW() - INTERVAL '1 HOUR')
-	
+
 SearchModel.searchByTime = INSERT INTO jforum_search_results (topic_id, session, time) SELECT DISTINCT t.topic_id, ?, NOW() FROM jforum_topics t, jforum_posts p \
 	WHERE t.topic_id = p.topic_id \
 	AND p.post_time > ?
