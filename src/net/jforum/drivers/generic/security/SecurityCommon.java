@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -58,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityCommon.java,v 1.4 2004/06/01 19:47:25 pieter2 Exp $
+ * @version $Id: SecurityCommon.java,v 1.5 2004/10/24 14:41:12 rafaelsteil Exp $
  */
 public class SecurityCommon 
 {
@@ -166,17 +166,17 @@ public class SecurityCommon
 				
 				r.setGroupId(id);
 				r.setName(rs.getString("name"));
-				r.setType(rs.getInt("type"));
+				r.setType(rs.getInt("role_type"));
 				r.setId(rs.getInt("role_id"));
 				
 				lastId = r.getId();
 			}
 			
-			if (rs.getString("value") != null) {
+			if (rs.getString("role_value") != null) {
 				RoleValue rv = new RoleValue();
 				rv.setRoleId(r.getId());
 				rv.setType(rs.getInt("rv_type"));
-				rv.setValue(rs.getString("value"));
+				rv.setValue(rs.getString("role_value"));
 				
 				r.getValues().add(rv);
 			}

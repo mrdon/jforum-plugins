@@ -80,7 +80,7 @@ CREATE TABLE jforum_roles (
   group_id INTEGER DEFAULT 0,
   user_id INTEGER DEFAULT 0,
   name VARCHAR(255) NOT NULL,
-  type INTEGER DEFAULT 1
+  role_type INTEGER DEFAULT 1
 );
 CREATE INDEX idx_roles_group ON jforum_roles(group_id);
 CREATE INDEX idx_roles_user ON jforum_roles(user_id);
@@ -91,8 +91,8 @@ CREATE INDEX idx_roles_name ON jforum_roles(name);
 --
 CREATE TABLE jforum_role_values (
   role_id INT NOT NULL,
-  value VARCHAR(255),
-  type INTEGER DEFAULT 1
+  role_value VARCHAR(255),
+  role_type INTEGER DEFAULT 1
 );
 CREATE INDEX idx_rv_role ON jforum_role_values(role_id);
 
@@ -384,7 +384,7 @@ CREATE INDEX idx_swm_title ON jforum_search_wordmatch(title_match);
 CREATE TABLE jforum_search_results (
   topic_id INT NOT NULL,
   session VARCHAR(50),
-  time TIMESTAMP
+  search_time TIMESTAMP
 );
 CREATE INDEX idx_sr_topic ON jforum_search_results(topic_id);
 
@@ -404,7 +404,7 @@ CREATE TABLE jforum_search_topics (
   topic_last_post_id INTEGER NOT NULL DEFAULT 0,
   moderated INTEGER DEFAULT 0,
   session VARCHAR(50),
-  time TIMESTAMP
+  search_time TIMESTAMP
 );
 CREATE INDEX idx_st_topic ON jforum_search_topics(topic_id);
 CREATE INDEX idx_st_forum ON jforum_search_topics(forum_id);

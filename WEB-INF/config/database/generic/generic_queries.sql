@@ -298,17 +298,17 @@ PermissionControl.deleteAllUserRoles = DELETE FROM jforum_roles WHERE user_id = 
 PermissionControl.deleteAllGroupRoles = DELETE FROM jforum_roles WHERE group_id = ?
 PermissionControl.deleteUserRole = DELETE from jforum_roles WHERE user_id = ? AND name = ?
 PermissionControl.deleteGroupRole = DELETE FROM jforum_roles WHERE group_id = ? AND name = ?
-PermissionControl.addGroupRole = INSERT INTO jforum_roles ( group_id, name, type ) VALUES (?, ?, ?)
-PermissionControl.addUserRole = INSERT INTO jforum_roles ( user_id, name, type ) VALUES (?, ?, ?)
-PermissionControl.addRoleValues = INSERT INTO jforum_role_values (role_id, value, type ) VALUES (?, ?, ?)
+PermissionControl.addGroupRole = INSERT INTO jforum_roles ( group_id, name, role_type ) VALUES (?, ?, ?)
+PermissionControl.addUserRole = INSERT INTO jforum_roles ( user_id, name, role_type ) VALUES (?, ?, ?)
+PermissionControl.addRoleValues = INSERT INTO jforum_role_values (role_id, role_value, role_type ) VALUES (?, ?, ?)
 
-PermissionControl.loadGroupRoles = SELECT r.role_id, r.name, rv.value, rv.type AS rv_type, r.type \
+PermissionControl.loadGroupRoles = SELECT r.role_id, r.name, rv.role_value, rv.role_type AS rv_type, r.role_type \
 	FROM jforum_roles r \
 	LEFT JOIN jforum_role_values rv ON rv.role_id = r.role_id \
 	WHERE r.group_id = ? \
 	AND user_id = 0
 
-PermissionControl.loadUserRoles = SELECT r.role_id, r.name, rv.value, rv.type AS rv_type, r.type \
+PermissionControl.loadUserRoles = SELECT r.role_id, r.name, rv.role_value, rv.role_type AS rv_type, r.role_type \
 	FROM jforum_roles r \
 	LEFT JOIN jforum_role_values rv ON rv.role_id = r.role_id \
 	WHERE r.user_id = ? \

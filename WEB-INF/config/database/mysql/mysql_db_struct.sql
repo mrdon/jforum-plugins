@@ -92,7 +92,7 @@ CREATE TABLE jforum_roles (
   group_id mediumint(8) default '0',
   user_id mediumint(8) default '0',
   name varchar(255) NOT NULL,
-  type TINYINT(1) DEFAULT 1,
+  role_type TINYINT(1) DEFAULT 1,
   INDEX idx_group (group_id),
   INDEX idx_user (user_id),
   INDEX idx_name (name)
@@ -104,8 +104,8 @@ CREATE TABLE jforum_roles (
 DROP TABLE IF EXISTS jforum_role_values;
 CREATE TABLE jforum_role_values (
   role_id INT NOT NULL,
-  value VARCHAR(255),
-  type TINYINT(1) DEFAULT 1,
+  role_value VARCHAR(255),
+  role_type TINYINT(1) DEFAULT 1,
   INDEX idx_role(role_id)
 ) TYPE=InnoDB;
 
@@ -404,7 +404,7 @@ DROP TABLE IF EXISTS jforum_search_results;
 CREATE TABLE jforum_search_results (
   topic_id INT NOT NULL,
   session VARCHAR(50),
-  time DATETIME,
+  search_time DATETIME,
   KEY (topic_id)
 ) TYPE=InnoDB;
 
@@ -425,7 +425,7 @@ CREATE TABLE jforum_search_topics (
   topic_last_post_id mediumint(8) NOT NULL default '0',
   moderated smallint(1) default '0',
   session varchar(50),
-  time datetime,
+  search_time datetime,
   KEY  (topic_id),
   KEY (forum_id),
   KEY(user_id),
