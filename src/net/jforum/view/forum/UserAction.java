@@ -73,7 +73,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.29 2005/01/31 13:31:27 franklin_samir Exp $
+ * @version $Id: UserAction.java,v 1.30 2005/01/31 13:33:56 franklin_samir Exp $
  */
 public class UserAction extends Command 
 {
@@ -526,7 +526,6 @@ public class UserAction extends Command
 	
 	private int preparePagination(int totalUsers)
 	{
-		String s = this.request.getParameter("start");
 		int start = ViewCommon.getStartPage();
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
 		
