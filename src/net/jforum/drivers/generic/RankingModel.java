@@ -53,7 +53,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: RankingModel.java,v 1.4 2004/11/05 03:29:44 rafaelsteil Exp $
+ * @version $Id: RankingModel.java,v 1.5 2005/03/10 17:55:42 rafaelsteil Exp $
  */
 public class RankingModel implements net.jforum.model.RankingModel 
 {
@@ -73,7 +73,7 @@ public class RankingModel implements net.jforum.model.RankingModel
 				ranking.setTitle(rs.getString("rank_title"));
 				ranking.setImage(rs.getString("rank_image"));
 				ranking.setMin(rs.getInt("rank_min"));
-				ranking.setSpecial(rs.getString("rank_special"));
+				ranking.setSpecial(rs.getInt("rank_special"));
 		}
 		
 		rs.close();
@@ -98,7 +98,7 @@ public class RankingModel implements net.jforum.model.RankingModel
 			ranking.setTitle(rs.getString("rank_title"));
 			ranking.setImage(rs.getString("rank_image"));
 			ranking.setMin(rs.getInt("rank_min"));
-			ranking.setSpecial(rs.getString("rank_special"));
+			ranking.setSpecial(rs.getInt("rank_special"));
 			
 			l.add(ranking);			
 		}
@@ -130,7 +130,7 @@ public class RankingModel implements net.jforum.model.RankingModel
 		
 		p.setString(1, ranking.getTitle());
 		p.setString(2, ranking.getImage());
-		p.setString(3, ranking.getSpecial());
+		p.setInt(3, ranking.getSpecial());
 		p.setInt(4, ranking.getMin());
 		p.setInt(5, ranking.getId());
 		

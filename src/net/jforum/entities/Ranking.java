@@ -50,13 +50,13 @@ import java.io.Serializable;
  * basead on the number of messages posted by them.  
  *  
  * @author Rafael Steil
- * @version $Id: Ranking.java,v 1.3 2005/02/01 21:42:00 rafaelsteil Exp $
+ * @version $Id: Ranking.java,v 1.4 2005/03/10 17:55:43 rafaelsteil Exp $
  */
 public class Ranking implements Serializable
 {
 	private int id;
 	private String title;
-	private String special;
+	private int special;
 	private String image;
 	private int min;
 	
@@ -78,7 +78,7 @@ public class Ranking implements Serializable
 	/**
 	 * @return String
 	 */
-	public String getSpecial() {
+	public int getSpecial() {
 		return this.special;
 	}
 
@@ -110,7 +110,7 @@ public class Ranking implements Serializable
 	 * Sets the special.
 	 * @param special The special to set
 	 */
-	public void setSpecial(String special) {
+	public void setSpecial(int special) {
 		this.special = special;
 	}
 
