@@ -91,6 +91,10 @@ SearchModel.lastGeneratedWordId = select MAX(word_id) from jforum_search_words
 SearchModel.cleanSearchResults = DELETE FROM jforum_search_results WHERE session = ? OR datediff('hh',search_time,current_timestamp) < 1 
 SearchModel.cleanSearchTopics = DELETE FROM jforum_search_topics WHERE session = ? OR datediff('hh',search_time,current_timestamp) < 1 
 
+SearchModel.searchByWord = SELECT post_id FROM jforum_search_wordmatch wm, jforum_search_words w \
+	WHERE wm.word_id = w.word_id \
+	AND LCASE(w.word) = LCASE(?)
+
 # #############
 # SmiliesModel
 # #############

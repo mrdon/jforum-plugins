@@ -58,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchModel.java,v 1.16 2005/02/22 20:32:38 rafaelsteil Exp $
+ * @version $Id: SearchModel.java,v 1.17 2005/03/24 17:06:17 rafaelsteil Exp $
  */
 public class SearchModel implements net.jforum.model.SearchModel	
 {
@@ -150,8 +150,6 @@ public class SearchModel implements net.jforum.model.SearchModel
 		// [wordName] = { each, post, id }
 		
 		// If seach type is OR, then get all words
-		// If it is AND, then we want only the ids common to all words
-		// ( oooohhh.. really? that's soooo unlogic )
 		HashSet postsIds = null;
 		
 		if (sd.getUseAllWords()) {
