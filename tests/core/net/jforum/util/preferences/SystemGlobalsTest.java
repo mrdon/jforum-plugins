@@ -47,7 +47,7 @@ import junit.framework.TestCase;
 
 /**
  * @author Rafael Steil
- * @version $Id: SystemGlobalsTest.java,v 1.1 2004/10/01 19:25:50 rafaelsteil Exp $
+ * @version $Id: SystemGlobalsTest.java,v 1.2 2005/02/15 18:16:04 rafaelsteil Exp $
  */
 public class SystemGlobalsTest extends TestCase
 {
@@ -60,8 +60,7 @@ public class SystemGlobalsTest extends TestCase
 	public void setUp() throws Exception
 	{
 		SystemGlobals.initGlobals(TestCaseUtils.getRootDir(), 
-						TestCaseUtils.getRootDir() + GLOBALS, 
-						USER_DEFAULTS);
+						TestCaseUtils.getRootDir() + GLOBALS);
 	}
 	
 	public void testLoad()

@@ -59,7 +59,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.14 2005/02/03 12:37:38 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.15 2005/02/15 18:16:01 rafaelsteil Exp $
  */
 public class SessionFacade implements Cacheable
 {
@@ -138,6 +138,7 @@ public class SessionFacade implements Cacheable
 	 */
 	public static void remove(String sessionId)
 	{
+		logger.debug("Removing session " + sessionId);
 		cache.remove(FQN, sessionId);
 	}
 	

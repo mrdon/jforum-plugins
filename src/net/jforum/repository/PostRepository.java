@@ -36,67 +36,68 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Feb 13, 2005 11:32:30 PM
+ * This file creation date: 07/02/2005 - 10:29:14
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.drivers.postgresql;
+package net.jforum.repository;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
-import net.jforum.JForum;
-import net.jforum.entities.TopicModerationInfo;
+import net.jforum.model.DataAccessDriver;
+import net.jforum.model.PostModel;
+import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
+import org.apache.log4j.Logger;
+
 /**
- * @author Andowson Chang
- * @version $Id: ModerationModel.java,v 1.2 2005/02/15 18:16:09 rafaelsteil Exp $
+ * Repository for the post in the top n topics for each forum.
+ * 
+ * @author Sean Mitchell
+ * @author Rafael Steil
+ * @version $Id: PostRepository.java,v 1.1 2005/02/15 18:16:04 rafaelsteil Exp $
  */
-public class ModerationModel extends net.jforum.drivers.generic.ModerationModel
-{	
-	/**
-	 * @see net.jforum.model.ModerationModel#topicsByForum(int, int, int)
-	 */
-	public List topicsByForum(int forumId, int start, int count) throws Exception
+public class PostRepository
+{
+	private static Logger logger = Logger.getLogger(PostRepository.class);
+	private static final int CACHE_SIZE = SystemGlobals.getIntValue(ConfigKeys.POSTS_CACHE_SIZE);
+  
+	private static Map cache = new LinkedHashMap(CACHE_SIZE + 1) {
+		protected boolean removeEldestEntry(Map.Entry eldest) {
+			return this.size() > CACHE_SIZE;
+		}
+	};
+		
+	public static List selectAllByTopicByLimit(int topicId, int start, int count) throws Exception 
 	{
-		List l = new ArrayList();
-		PreparedStatement p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("ModerationModel.topicsByForum"));
-		p.setInt(1, forumId);
-		p.setInt(2, count);
-		p.setInt(3, start);
-				
-		int lastId = 0;
-		TopicModerationInfo info = null;
+		Integer tid = new Integer(topicId);
 		
-		ResultSet rs = p.executeQuery();
-		while (rs.next()) {
-			int id = rs.getInt("topic_id");
-			if (id != lastId) {
-				lastId = id;
-				
-				if (info != null) {
-					l.add(info);
-				}
-				
-				info = new TopicModerationInfo();
-				info.setTopicId(id);
-				info.setTopicTitle(rs.getString("topic_title"));
-			}
+		List topics = (List)cache.get(tid);
+		if (topics == null || topics.size() == 0) {
+			PostModel pm = DataAccessDriver.getInstance().newPostModel();
+			topics = pm.selectAllByTopic(topicId);
 			
-			info.addPost(this.getPost(rs));
+			synchronized (cache) {
+				if (!cache.containsKey(tid)) {
+					cache.put(tid, topics);
+				}
+			}
 		}
 		
-		if (info != null) {
-			l.add(info);
+		return topics.subList(start, start + count);
+   }
+	
+	public static void clearCache(int topicId)
+	{
+		Integer tid = new Integer(topicId);
+		if (cache.containsKey(tid)) {
+			synchronized (cache) {
+				cache.remove(tid);
+			}
 		}
-		
-		rs.close();
-		p.close();
-		
-		return l;
-	}	
+	}
 }
+

@@ -69,8 +69,6 @@ CREATE TABLE jforum_forums (
   PRIMARY KEY (forum_id)
 );
 
-CREATE INDEX idx_forums_categories_id ON jforum_forums(categories_id);
-
 --
 -- Table structure for table 'jforum_groups'
 --
@@ -84,9 +82,13 @@ CREATE TABLE jforum_groups (
   group_id NUMBER(10) NOT NULL,
   group_name VARCHAR2(40) DEFAULT '' NOT NULL,
   group_description VARCHAR2(255) DEFAULT NULL,
+  categories_id,
   parent_id NUMBER(10) DEFAULT 0,
   PRIMARY KEY (group_id)
 );
+
+ALTER TABLE jforum_forums ADD CONSTRAINT fk_jforum_categories FOREIGN KEY(categories_id)
+	REFERENCES jforum_categories(categories_id);
 
 
 CREATE TABLE jforum_user_groups (

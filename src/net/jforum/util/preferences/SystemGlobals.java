@@ -68,8 +68,8 @@ import org.apache.log4j.Logger;
  * </p>
  * 
  * @author Rafael Steil
- * @author Pieter
- * @version $Id: SystemGlobals.java,v 1.18 2005/01/17 18:59:13 rafaelsteil Exp $
+ * @author Pieter Olivier
+ * @version $Id: SystemGlobals.java,v 1.19 2005/02/15 18:16:00 rafaelsteil Exp $
  */
 public class SystemGlobals implements VariableStore
 {
@@ -92,18 +92,17 @@ public class SystemGlobals implements VariableStore
 
 	/**
 	 * Initialize the global configuration
-	 * 
 	 * @param appPath The application path (normally the path to the webapp base dir
 	 * @param defaults The file containing system defaults (when null, defaults to <appPath>/WEB-INF/config/default.conf)
 	 * @param installation The specific installation realm (when null, defaults to System.getProperty("user"))
 	 */
-	public static void initGlobals(String appPath, String defaults, String installKey) throws IOException
+	public static void initGlobals(String appPath, String defaults) throws IOException
 	{
 		globals = new SystemGlobals();
-		globals.buildSystem(appPath, defaults, installKey);
+		globals.buildSystem(appPath, defaults);
 	}
 	
-	private void buildSystem(String appPath, String defaultConfig, String installKey) throws IOException
+	private void buildSystem(String appPath, String defaultConfig) throws IOException
 	{
 		if (defaultConfig == null) {
 			throw new InvalidParameterException("defaultConfig could not be null");
@@ -111,19 +110,14 @@ public class SystemGlobals implements VariableStore
 
 		this.expander = new VariableExpander(this, "${", "}");
 		
-		if (installKey == null) {
-			installKey = System.getProperty("user.name");
-		}
-
 		this.defaultConfig = defaultConfig;
 		this.defaults = new Properties();
 
 		this.defaults.put(ConfigKeys.APPLICATION_PATH, appPath);
-		this.defaults.put(ConfigKeys.INSTALLATION, installKey);
 		this.defaults.put(ConfigKeys.DEFAULT_CONFIG, defaultConfig);
 		
-		loadDefaults();
-
+		SystemGlobals.loadDefaults();
+	
 		this.installation = new Properties();
 		this.installationConfig = getVariableValue(ConfigKeys.INSTALLATION_CONFIG);
 

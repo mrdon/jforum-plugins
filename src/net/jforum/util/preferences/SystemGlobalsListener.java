@@ -50,7 +50,7 @@ import net.jforum.util.FileChangeListener;
 
 /**
  * @author Rafael Steil
- * @version $Id: SystemGlobalsListener.java,v 1.1 2004/06/05 22:09:56 rafaelsteil Exp $
+ * @version $Id: SystemGlobalsListener.java,v 1.2 2005/02/15 18:15:59 rafaelsteil Exp $
  */
 public class SystemGlobalsListener implements FileChangeListener
 {
@@ -65,8 +65,7 @@ public class SystemGlobalsListener implements FileChangeListener
 			logger.info("Reloading "+ filename);
 
 			SystemGlobals.initGlobals(SystemGlobals.getApplicationPath(), 
-					SystemGlobals.getValue(ConfigKeys.DEFAULT_CONFIG), 
-					SystemGlobals.getValue(ConfigKeys.INSTALLATION));
+					SystemGlobals.getValue(ConfigKeys.DEFAULT_CONFIG));
 		}
 		catch (IOException e) {
 			logger.info(e);

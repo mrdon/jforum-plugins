@@ -701,6 +701,14 @@ function validatePostForm(f)
 			</tr>
 			<tr>
 				<td align="center">
+					<span class="gensmall">
+					<b>${I18n.getMessage("Attachments.maxToAttach")}:</b> <font color="red">${maxAttachments}</font> / 
+					<b>${I18n.getMessage("Attachments.maxSize")}:</b> <font color="red">${maxAttachmentsSize / 1024} kb</font>
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td align="center">
 					<div id="edit_attach"></div>
 
 					<!-- Attachments -->

@@ -42,22 +42,27 @@
  */
 package net.jforum.repository;
 
+import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
 import net.jforum.entities.User;
+import net.jforum.entities.UserSession;
 import net.jforum.exceptions.SecurityLoadException;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.UserModel;
 import net.jforum.model.security.UserSecurityModel;
 import net.jforum.security.PermissionControl;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author Rafael Steil
- * @version $Id: SecurityRepository.java,v 1.9 2005/02/01 21:41:51 rafaelsteil Exp $
+ * @version $Id: SecurityRepository.java,v 1.10 2005/02/15 18:16:04 rafaelsteil Exp $
  */
 public class SecurityRepository implements Cacheable
 {
+	private static final Logger logger = Logger.getLogger(SecurityRepository.class);
 	private static CacheEngine cache;
 	private static final String FQN = "security";
 
@@ -83,7 +88,6 @@ public class SecurityRepository implements Cacheable
 	 */
 	public static PermissionControl load(int userId, boolean force) throws Exception
 	{
-		
 		if (force || cache.get(FQN, Integer.toString(userId)) == null) {
 			UserModel um = DataAccessDriver.getInstance().newUserModel();
 			
@@ -168,7 +172,7 @@ public class SecurityRepository implements Cacheable
 	 */
 	public static boolean canAccess(String roleName)
 	{
-		return canAccess(SessionFacade.getUserSession().getUserId(), roleName);
+		return canAccess(roleName, null);
 	}
 	
 	public static boolean canAccess(int userId, String roleName)
@@ -186,19 +190,22 @@ public class SecurityRepository implements Cacheable
 	 */
 	public static boolean canAccess(String roleName, String value)
 	{
-		return canAccess(SessionFacade.getUserSession().getUserId(), roleName, value);
+		UserSession us = SessionFacade.getUserSession();
+		if (us == null) {
+			logger.warn("Found null userSession. Going anonymous. Session id #" + JForum.getRequest().getSession().getId());
+			us = new UserSession();
+			us.makeAnonymous();
+		}
+		
+		return canAccess(us.getUserId(), roleName, value);
 	}
 	
 	public static boolean canAccess(int userId, String roleName, String value)
 	{
 		PermissionControl pc = SecurityRepository.get(userId);
 		if (pc == null) {
-			try {
-				load(userId);
-			}
-			catch (Exception e) {
-				throw new SecurityLoadException(e);
-			}
+			throw new SecurityLoadException("Failed to load security roles for userId " + userId + " (null PermissionControl returned). "
+				+ "roleName=" + roleName + ", roleValue=" + value);
 		}
 		
 		return (value != null ? pc.canAccess(roleName, value) : pc.canAccess(roleName));

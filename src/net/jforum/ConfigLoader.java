@@ -70,7 +70,7 @@ import org.apache.log4j.Logger;
  * General utilities methods for loading configurations for JForum.
  * 
  * @author Rafael Steil
- * @version $Id: ConfigLoader.java,v 1.7 2005/02/03 12:37:39 rafaelsteil Exp $
+ * @version $Id: ConfigLoader.java,v 1.8 2005/02/15 18:16:01 rafaelsteil Exp $
  */
 public class ConfigLoader 
 {
@@ -87,7 +87,7 @@ public class ConfigLoader
 	 */
 	public static void startSystemglobals(String appPath) throws Exception
 	{
-		SystemGlobals.initGlobals(appPath, appPath + "/WEB-INF/config/SystemGlobals.properties", null);
+		SystemGlobals.initGlobals(appPath, appPath + "/WEB-INF/config/SystemGlobals.properties");
 		SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
 		
 		if (new File(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG)).exists()) {

@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * General utilities for the test cases.
  * 
  * @author Rafael Steil
- * @version $Id: TestCaseUtils.java,v 1.7 2004/12/09 02:41:43 rafaelsteil Exp $
+ * @version $Id: TestCaseUtils.java,v 1.8 2005/02/15 18:16:09 rafaelsteil Exp $
  */
 public class TestCaseUtils
 {
@@ -108,7 +108,7 @@ public class TestCaseUtils
 	{
 		getRootDir();
 		SystemGlobals.initGlobals(this.rootDir, this.rootDir
-				+ "/WEB-INF/config/SystemGlobals.properties", null);
+				+ "/WEB-INF/config/SystemGlobals.properties");
 		
 		if (new File(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG)).exists()) {
         	SystemGlobals.loadAdditionalDefaults(

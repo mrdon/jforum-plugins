@@ -81,7 +81,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.18 2005/01/04 14:51:32 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.19 2005/02/15 18:16:08 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -469,7 +469,7 @@ public class InstallAction extends Command
 	private void restartSystemGlobals() throws Exception
 	{
 		String appPath = SystemGlobals.getApplicationPath();
-		SystemGlobals.initGlobals(appPath, appPath + "/WEB-INF/config/SystemGlobals.properties", null);
+		SystemGlobals.initGlobals(appPath, appPath + "/WEB-INF/config/SystemGlobals.properties");
         SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
         
         if (new File(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG)).exists()) {

@@ -86,7 +86,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.57 2005/02/07 10:59:28 andowson Exp $
+ * @version $Id: PostAction.java,v 1.58 2005/02/15 18:16:03 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -254,9 +254,15 @@ public class PostAction extends Command {
 		else {
 			this.context.put("setType", true);
 		}
+		
+		int userId = SessionFacade.getUserSession().getUserId();
 
 		this.context.put("attachmentsEnabled", SecurityRepository.canAccess(
 				SecurityConstants.PERM_ATTACHMENTS_ENABLED));
+		
+		this.context.put("maxAttachmentsSize", new Long(new AttachmentCommon(
+				this.request).getQuotaLimit(userId).getSizeInBytes()));
+		
 		this.context.put("maxAttachments", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
 		this.context.put("forum", ForumRepository.getForum(forumId));
 		this.context.put("action", "insertSave");
@@ -268,7 +274,6 @@ public class PostAction extends Command {
 		this.context.put("canCreateStickyOrAnnouncementTopics",
 				SecurityRepository.canAccess(SecurityConstants.PERM_CREATE_STICKY_ANNOUNCEMENT_TOPICS));
 
-		int userId = SessionFacade.getUserSession().getUserId();
 		User user = DataAccessDriver.getInstance().newUserModel().selectById(userId);
 		user.setSignature(PostCommon.processText(user.getSignature()));
 		user.setSignature(PostCommon.processSmilies(user.getSignature(), SmiliesRepository.getSmilies()));

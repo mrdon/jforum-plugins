@@ -75,7 +75,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.10 2005/02/04 12:55:33 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.11 2005/02/15 18:16:06 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {
@@ -185,7 +185,7 @@ public class AttachmentCommon
 		}
 	}
 	
-	private QuotaLimit getQuotaLimit(int userId) throws Exception
+	public QuotaLimit getQuotaLimit(int userId) throws Exception
 	{
 		QuotaLimit ql = new QuotaLimit();
 		User u = DataAccessDriver.getInstance().newUserModel().selectById(userId);

@@ -25,6 +25,7 @@
 	<property name="src" value="src" />
 	<property name="classes" value="WEB-INF/classes" />
 	<property name="jarFile" value="${dist}/${jarname}_${version}.jar" />
+	<property name="debug" value="true"/>
 
 	<path id="base.path">
 		<fileset dir="${project.libs}">
