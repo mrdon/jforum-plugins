@@ -60,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * memory and provides a static method to acess them.
  *  
  * @author Rafael Steil
- * @version $Id: I18n.java,v 1.9 2004/08/28 03:29:02 jamesyong Exp $
+ * @version $Id: I18n.java,v 1.10 2004/08/28 13:50:57 rafaelsteil Exp $
  */
 public class I18n 
 {
@@ -140,10 +140,13 @@ public class I18n
 	 */
 	public static String getMessage(String messageName, Object params[])
 	{
-		if (SessionFacade.getUserSession().getLang().equals("")){
+		String lang = SessionFacade.getUserSession().getLang();
+		
+		if ("".equals(lang)){
 			return getMessage(defaultName, messageName, params);
-		}else{
-			return getMessage(SessionFacade.getUserSession().getLang(), messageName, params);
+		}
+		else {
+			return getMessage(lang, messageName, params);
 		}
 	}
 	

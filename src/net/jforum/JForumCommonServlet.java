@@ -73,7 +73,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumCommonServlet.java,v 1.1 2004/08/27 21:37:41 rafaelsteil Exp $
+ * @version $Id: JForumCommonServlet.java,v 1.2 2004/08/28 13:50:56 rafaelsteil Exp $
  */
 public class JForumCommonServlet extends HttpServlet
 {
@@ -92,7 +92,7 @@ public class JForumCommonServlet extends HttpServlet
 		super.init(config);
 				
 		try {
-			debug = config.getInitParameter("development").equals("true");
+			debug = "true".equals(config.getInitParameter("development"));
 			
 			DOMConfigurator.configure(config.getServletContext().getRealPath("") +"/WEB-INF/log4j.xml");
 			

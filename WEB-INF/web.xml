@@ -17,13 +17,13 @@
 			<param-value>true</param-value>
 		</init-param>
     </servlet>
-   
+    
     <!-- SERVLETS -->
-    <servlet-mapping>
+	<servlet-mapping>
     	<servlet-name>jforum</servlet-name>
     	<url-pattern>*.page</url-pattern>
     </servlet-mapping>
-    
+
     <!-- SESSION -->
     <session-config>
     	<session-timeout>10</session-timeout>
