@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 18/11/2003 / 23:09:15
- * net.jforum.repository.SecurityRepository.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: SecurityRepository.java,v 1.2 2004/04/21 23:57:33 rafaelsteil Exp $
  */
 package net.jforum.repository;
 
@@ -58,6 +55,7 @@ import net.jforum.security.PermissionControl;
 
 /**
  * @author Rafael Steil
+ * @version $Id: SecurityRepository.java,v 1.3 2004/06/03 04:13:28 rafaelsteil Exp $
  */
 public class SecurityRepository 
 {
@@ -161,7 +159,8 @@ public class SecurityRepository
 	
 	public static boolean canAccess(int userId, String roleName)
 	{
-		if (SecurityRepository.get(userId).canAccess(roleName)) {
+		PermissionControl pc = SecurityRepository.get(userId);
+		if (pc != null && pc.canAccess(roleName)) {
 			return true;
 		}
 		

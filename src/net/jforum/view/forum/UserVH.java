@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserVH.java,v 1.10 2004/06/03 03:19:20 rafaelsteil Exp $
+ * @version $Id: UserVH.java,v 1.11 2004/06/03 04:18:02 rafaelsteil Exp $
  */
 public class UserVH extends Command 
 {
@@ -234,7 +234,7 @@ public class UserVH extends Command
 		SessionFacade.setAttribute("logged", "0");
 		SessionFacade.add(userSession);
 
-		JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN), "0");
+		JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN), null);
 		JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA), SystemGlobals.getValue(ConfigKeys.ANONYMOUS_USER_ID));
 	}
 	
