@@ -29,3 +29,7 @@ img {
 .install_subtitle {
 	font-size: 16px; line-height: normal; text-decoration: underline; font-weight: bold;
 }
+
+td {
+	font-size: 12px; font-family: verdana;
+}

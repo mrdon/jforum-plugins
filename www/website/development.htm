@@ -1,0 +1,182 @@
+<html>
+<head>
+<title>JForum - Strong Caffeine for your Forum</title>
+<link href="jforum.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<table background="top_bar.jpg" width="792" height="140" align="center" border="0">
+	<tr>
+		<td width="40">&nbsp;</td>
+		<td class="menu_image"><a href="install.htm"><img src="install.gif"></a></td>
+
+		<td width="40">&nbsp;</td>
+		<td class="menu_image"><a href="screenshots.htm"><img src="ss.gif"></a></td>
+
+		<td width="40">&nbsp;</td>
+		<td valign="bottom" align="center" width="80"><a href="community.htm"><img src="community.gif"></a></td>
+
+		<td width="40">&nbsp;</td>
+		<td class="menu_image"><a href="help.htm"><img src="help.gif"></td>
+
+		<td width="40">&nbsp;</td>
+		<td class="menu_image"><a href="development.htm"><img src="development.gif"></td>
+
+		<td width="200" valign="bottom" align="right">
+		<font style="color: #006699; font-family: verdana; font-size: 11px;">
+		<b>Latest Version: 1.0rc5</b>
+		</font>
+		</td>
+	</tr>
+</table>
+
+<table width="792" align="center" border="0" background="menu_bar.gif">
+	<tr>
+		<td width="40">&nbsp;</td>
+		<td width="100" align="center"><a href="install.htm" class="menu_link">Installation & Configuration</a></td>
+
+		<td width="20">&nbsp;</td>
+		<td width="90" align="right"><a href="screenshots.htm" class="menu_link">Screenshots</a></td>
+
+		<td width="40">&nbsp;</td>
+		<td width="80" align="center"><a href="community.htm" class="menu_link">Community</a></td>
+
+		<td width="40">&nbsp;</td>
+		<td width="100" align="center"><a href="help.htm" class="menu_link">Help</a></td>
+
+		<td width="40">&nbsp;</td>
+		<td width="100" align="center"><a href="development.htm" class="menu_link">Development</a></td>
+
+		<td width="200" valign="top">&nbsp;</td>
+	</tr>
+</table>
+
+<table width="792" align="center" border="0">
+	<tr height="10">
+		<td colspan="2">&nbsp;</td>
+	</tr>
+
+	<tr>
+		<td valign="top" rowspan="2">
+			<font style="font-family: verdana; font-size: 22px;"><b>Development</b></font><br/>
+			<img src="h_bar.gif"><br>
+			<p>
+			As an Open-Source software, you are invited to contribute to JForum. There are many areas where you can help, like
+			making documentation, new styles, buttons, mods and even helping to develop the core source-code. <br/>We'll have more
+			information in this page soon, but a good start point is the forums. You can also send an email to JForum's project
+			leader, Rafael Steil, at <b>rafael _[at]_ insanecorp.com</b>.
+			</p>
+
+			<p>
+			JForum does not uses JSP for content display, but a template engine, which offer much more ease of development and
+			maintaince. The template engine used is <a href="http://freemarker.sourceforge.net/">FreeMarker</a>.
+			</p>
+
+			<br/>
+
+			<p>
+			<img src="info.jpg" align="middle"> <b>Bug and Issue Tracker</b><br/>
+			JForum issues are tracked by <a href="http://www.atlassian.com/c/NPOS/10160" target="_new">JIRA</a>, by Atlassian. 
+			</p>
+
+			<br/>
+
+			<p>
+				<img src="info.jpg" align="middle"> <b>Getting the source code from CVS</b> <br/>
+				The CVS repository is hosted by <a href="http://java.net" target="_new">Java.net</a>. Below is listed the host access options:
+			</p>
+
+			<table cellspacing="0" width="50%" align="center" bgcolor="#ff9900">
+				<tr>
+					<td>
+						<table width="100%" bgcolor="#ffffff">
+							<tr>
+								<td><b>Host</b></td>
+								<td><i>cvs.dev.java.net</i></td>
+							</tr>
+
+							<tr>
+								<td><b>Path</b></td>
+								<td><i>/cvs</i></td>
+							</tr>
+
+							<tr>
+								<td><b>Server Type</b></td>
+								<td><i>pserver</i></td>
+							</tr>
+
+							<tr>
+								<td><b>Username</b></td>
+								<td><i>guest</i></td>
+							</tr>
+
+							<tr>
+								<td><b>Module</b></td>
+								<td><i>jforum</i></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+
+			<br/>
+
+			<p>
+			<img src="info.jpg" align="middle"> <b>Setting up your development environment</b><br>
+			First of all, create an empty file named <i>&lt;your_username&gt;.conf</i> in the directory <i>WEB-INF/config</i>, where
+			&lt;your_username&gt; is the username you login in your computer. For the sake of information, is the return of a call to
+
+			<br/><br/>
+			<i>System.getProperty("user.name")</i>
+			<br/><br/>
+
+			so, if your account is "johndoe", you should create a file named <i>johndoe.conf</i>. This file is necessary when working on
+			teams, since you should not change <i>SystemGlobals.properties</i> to put your own configuration data, like passwords and 
+			forum address. After creating the file, just add it to <i>.cvsignore</i>. 
+			</p>
+
+			<p>
+			You can follow the install instructions <a href="install.htm">clicking here</a>
+			</p>
+
+			<p>
+			The best start point is <i>src/net/jforum/JForum.java</i>, which is the Front Controller implementation. 
+			<i>src/net/jforum/entities</i> contains all entities used in the system, <i>src/net/jforum/model</i> have the
+			interfaces used to persist and retrieve data and <i>src/net/jforum/view</i> contains all view related actions. 
+			</p>
+
+			<br/>
+
+			<p>
+			<img src="info.jpg" align="middle"> <b>Getting help</b><br/>
+			Currently, the best place to ask for help is in the forums / Community section. <a href="community.htm">Click here</a> to go there. 
+			</p>
+		</td>
+	</tr>
+
+	<tr>
+		<td valign="top" align="center">
+		<br/>
+		<a href="http://www.atlassian.com/c/NPOS/10160"><img src="jira_tile_150wx300h.gif"></a>
+		<br/><br/><br/>
+		<a href="http://freemarker.sourceforge.net"><img src="poweredby_by_freemarker.jpg"></b>
+		</td>
+	</tr>
+
+</table>
+
+<br/>
+
+<table width="792" align="center" border="0">
+	<tr>
+		<td align="center">
+		<img src="h_bar.gif" width="792" height="2"><br/>
+		<font style="font-family: verdana; font-size: 10px;">
+		Copyright &copy; 2004 - Rafael Steil / The JForum Team
+		</font>
+		</td>
+	</tr>
+</table>
+
+</body>
+</html>
