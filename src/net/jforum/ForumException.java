@@ -53,7 +53,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumException.java,v 1.4 2004/09/14 02:16:44 rafaelsteil Exp $
+ * @version $Id: ForumException.java,v 1.5 2004/11/07 14:01:42 rafaelsteil Exp $
  */
 public class ForumException 
 {
@@ -67,7 +67,7 @@ public class ForumException
 		writer.close();
 		
 		try {
-			System.err.println(strWriter);
+			logger.error(strWriter);
 			
 			String message = t.getMessage();
 			if (message == null) {
@@ -89,6 +89,7 @@ public class ForumException
 			writer = new PrintWriter(strWriter);
 			t.printStackTrace(writer);
 			writer.close();
+			logger.error(strWriter);
 		}
 	}
 	
@@ -98,6 +99,6 @@ public class ForumException
 		PrintWriter writer = new PrintWriter(strWriter);
 		t.printStackTrace(writer);
 		writer.close();
-		System.err.println(strWriter);
+		logger.error(strWriter);
 	}	
 }

@@ -58,7 +58,7 @@ import net.jforum.security.SecurityConstants;
  * Yes, it's just a cache.
  * 
  * @author Rafael Steil
- * @version $Id: CategoryRepository.java,v 1.3 2004/11/05 03:29:48 rafaelsteil Exp $
+ * @version $Id: CategoryRepository.java,v 1.4 2004/11/07 14:01:42 rafaelsteil Exp $
  */
 public class CategoryRepository 
 {
@@ -121,7 +121,7 @@ public class CategoryRepository
 			return CategoryRepository.categoriesList;
 		}
 		
-		ArrayList l = new ArrayList();
+		List l = new ArrayList();
 		int userId = SessionFacade.getUserSession().getUserId();
 		PermissionControl pc = SecurityRepository.get(userId);
 		

@@ -72,7 +72,7 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.12 2004/11/06 18:03:48 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.13 2004/11/07 14:01:43 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -106,7 +106,7 @@ public class ForumAction extends Command
 	public static LinkedHashMap getAllForums(boolean checkUnreadPosts) throws Exception
 	{
 		LinkedHashMap allForumsMap = new LinkedHashMap();
-		ArrayList forums = ForumRepository.getAllForums();
+		List forums = ForumRepository.getAllForums();
 		
 		long lastVisit = 0;
 		
@@ -325,7 +325,8 @@ public class ForumAction extends Command
 		for (Iterator iter = allTopics.iterator(); iter.hasNext(); ) {
 			Topic t = (Topic)iter.next();
 			
-			((HashMap)SessionFacade.getAttribute("topics_tracking")).put(new Integer(t.getId()), new Long(t.getLastPostTimeInMillis().getTime()));
+			((HashMap)SessionFacade.getAttribute("topics_tracking")).put(new Integer(t.getId()), 
+					new Long(t.getLastPostTimeInMillis().getTime()));
 		}
 		
 		if (forumId != null) {

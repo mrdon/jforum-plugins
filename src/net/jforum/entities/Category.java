@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creating date: Feb 17, 2003 / 10:47:29 PM
- * net.jforum.entities.Categories.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: Category.java,v 1.2 2004/04/21 23:57:31 rafaelsteil Exp $
  */
 package net.jforum.entities;
 
@@ -49,6 +46,7 @@ package net.jforum.entities;
  * Represents a category in the System.
  * 
  * @author Rafael Steil
+ * @version $Id: Category.java,v 1.3 2004/11/07 14:01:42 rafaelsteil Exp $
  */
 public class Category 
 {
@@ -56,10 +54,6 @@ public class Category
 	private int order;
 	private String name;
 		
-	/**
-	 * 
-	 * @see java.lang.Object#Object()
-	 */
 	public Category() {}
 	
 	/**
@@ -108,7 +102,7 @@ public class Category
 	}
 	 
 
-	/* 
+	/** 
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode() 
@@ -116,12 +110,12 @@ public class Category
 		return this.id;
 	}
 
-	/* 
+	/** 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	public boolean equals(Object obj) 
+	public boolean equals(Object o) 
 	{
-		return ((obj instanceof Category) && (((Category)obj).getId() == this.id));
+		return ((o instanceof Category) && (((Category)o).getId() == this.id));
 	}
 
 }

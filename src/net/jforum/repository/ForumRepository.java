@@ -63,12 +63,12 @@ import net.jforum.security.SecurityConstants;
  * needed just once, and then use the cache when data is requested.<br> 
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.8 2004/11/05 03:29:47 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.9 2004/11/07 14:01:41 rafaelsteil Exp $
  */
 public class ForumRepository 
 {
-	private static HashMap forumsMap = new HashMap();
-	private static HashMap lastPostInfoMap = new HashMap();
+	private static Map forumsMap = new HashMap();
+	private static Map lastPostInfoMap = new HashMap();
 	private static int totalTopics = -1;
 	private static int totalMessages = 0;
 	
@@ -89,9 +89,9 @@ public class ForumRepository
 	 * @return <code>ArrayList</code> containing all forums. Each entry is a <code>net.jforum.Forum</code> object
 	 * @see #getForum(int)
 	 */
-	public static ArrayList getAllForums(boolean ignoreSecurity)
+	public static List getAllForums(boolean ignoreSecurity)
 	{
-		ArrayList l = new ArrayList();
+		List l = new ArrayList();
 		Iterator iter = ForumRepository.forumsMap.values().iterator();
 		
 		if (!ignoreSecurity) {
@@ -105,7 +105,8 @@ public class ForumRepository
 					l.add(f);
 				}
 			}
-		} else {
+		} 
+		else {
 			while (iter.hasNext()) {
 				Forum f = (Forum)iter.next();
 			    l.add(f);
@@ -121,7 +122,7 @@ public class ForumRepository
 	 * @return <code>ArrayList</code> containing all forums. Each entry is a <code>net.jforum.Forum</code> object
 	 * @see #getForum(int)
 	 */
-	public static ArrayList getAllForums()
+	public static List getAllForums()
 	{
 		return ForumRepository.getAllForums(false);
 	}
