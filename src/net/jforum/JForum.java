@@ -82,7 +82,7 @@ import net.jforum.util.SystemGlobals;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.8 2004/05/23 02:58:16 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.9 2004/05/25 03:29:51 rafaelsteil Exp $
  */
 public class JForum extends HttpServlet 
 {
@@ -399,6 +399,9 @@ public class JForum extends HttpServlet
 	public void service(HttpServletRequest req, HttpServletResponse response) throws IOException, ServletException
 	{
 		try {
+			String encoding = (String)SystemGlobals.getValue("encoding");
+			req.setCharacterEncoding(encoding);
+
 			// Initializes thread local data
 			DataHolder dataHolder = new DataHolder();
 			localData.set(dataHolder);
@@ -417,8 +420,6 @@ public class JForum extends HttpServlet
 				this.startDatabase();
 			}
 			
-			String encoding = (String)SystemGlobals.getValue("encoding");
-			
 			// Context
 			JForum.getContext().put("servletName", SystemGlobals.getValue("servletName"));
 			JForum.getContext().put("contextPath", req.getContextPath());
@@ -434,7 +435,6 @@ public class JForum extends HttpServlet
 			JForum.getContext().put("encoding", encoding);
 
 			// Request
-			req.setCharacterEncoding(encoding);
 			ActionServletRequest request = new ActionServletRequest(req);
 			request.setCharacterEncoding(encoding);
 
