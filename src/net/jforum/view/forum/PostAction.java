@@ -79,7 +79,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.16 2004/10/24 21:59:24 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.17 2004/10/26 18:07:16 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -340,13 +340,16 @@ public class PostAction extends Command
 
         UserModel um = DataAccessDriver.getInstance().newUserModel();
         User u = um.selectById(p.getUserId());
+        
+        Topic topic = DataAccessDriver.getInstance().newTopicModel().selectById(p.getTopicId());
 
-        JForum.getContext().put("topic",
-                DataAccessDriver.getInstance().newTopicModel().selectById(p.getTopicId()));
+        JForum.getContext().put("topic", topic);
         JForum.getContext().put("quote", "true");
         JForum.getContext().put("quoteUser", u.getUsername());
         JForum.getContext().put("moduleAction", "post_form.htm");
         JForum.getContext().put("setType", false);
+        JForum.getContext().put("htmlAllowed", SecurityRepository.canAccess(
+                		SecurityConstants.PERM_HTML_DISABLED, Integer.toString(topic.getForumId())));
         JForum.getContext().put("start", JForum.getRequest().getParameter("start"));
 
         int userId = SessionFacade.getUserSession().getUserId();
