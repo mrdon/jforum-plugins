@@ -72,7 +72,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.30 2005/02/22 20:32:37 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.31 2005/03/12 20:05:10 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -284,7 +284,7 @@ public class ForumAction extends Command
 	{
 		this.request.addParameter("post_time", Long.toString(SessionFacade.getUserSession().getLastVisit().getTime()));
 		this.request.addParameter("clean", "true");
-		this.request.addParameter("sort_by", "t.topic_time");
+		this.request.addParameter("sort_by", "t." + SystemGlobals.getValue(ConfigKeys.TOPIC_TIME_FIELD));
 		this.request.addParameter("sort_dir", "DESC");
 		new SearchAction(this.request, this.response, this.conn, this.context).search();
 	}

@@ -56,11 +56,12 @@ import net.jforum.entities.AttachmentExtension;
 import net.jforum.entities.AttachmentExtensionGroup;
 import net.jforum.entities.AttachmentInfo;
 import net.jforum.entities.QuotaLimit;
+import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentModel.java,v 1.13 2005/01/27 17:59:48 rafaelsteil Exp $
+ * @version $Id: AttachmentModel.java,v 1.14 2005/03/12 20:05:10 rafaelsteil Exp $
  */
 public class AttachmentModel extends AutoKeys implements net.jforum.model.AttachmentModel
 {
@@ -390,7 +391,8 @@ public class AttachmentModel extends AutoKeys implements net.jforum.model.Attach
 	 */
 	public AttachmentExtension selectExtension(String extension) throws Exception
 	{
-		return this.searchExtension("extension", extension);
+		return this.searchExtension(SystemGlobals.getValue(ConfigKeys.EXTENSION_FIELD), 
+				extension);
 	}
 	
 	private AttachmentExtension selectExtension(int extensionId) throws Exception

@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.49 2005/03/07 23:12:54 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.50 2005/03/12 20:05:11 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -189,6 +189,9 @@ public class ConfigKeys {
 	
 	public static final String REGISTRATION_ENABLED = "registration.enabled";
 	public static final String USERNAME_MAX_LENGTH = "username.max.length";
+	
+	public static final String TOPIC_TIME_FIELD = "topic.time.field";
+	public static final String EXTENSION_FIELD = "extension.field";
 	
 	private ConfigKeys() {}
 }
