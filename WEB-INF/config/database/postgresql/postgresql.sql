@@ -126,3 +126,9 @@ ModerationModel.topicsByForum = SELECT p.post_id, t.topic_id, t.topic_title, p.u
 	AND p.need_moderate = 1 \
 	ORDER BY t.topic_id, post_time ASC \
 	LIMIT ? OFFSET ?
+
+# ##########
+# UserModel
+# ##########
+UserModel.login = SELECT user_id FROM jforum_users WHERE lower(username) = lower(?) AND user_password = ?
+
