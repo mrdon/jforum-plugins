@@ -51,10 +51,9 @@ import com.dumbster.smtp.SmtpMessage;
 
 /**
  * @author Marc Wick
- * @version $Id: PostWebTestCase.java,v 1.3 2004/09/28 14:59:22 marcwick Exp $
+ * @version $Id: PostWebTestCase.java,v 1.4 2004/09/29 08:59:00 marcwick Exp $
  */
 public class PostWebTestCase extends AbstractWebTestCase {
-
 
 	public PostWebTestCase(String name) throws IOException {
 		super(name);
@@ -64,7 +63,6 @@ public class PostWebTestCase extends AbstractWebTestCase {
 		beginAt(FORUMS_LIST);
 		clickLinkWithText("a test forum", 0);
 		clickLinkWithImage("post.gif");
-		dumpResponse(System.out);
 		setFormElement("subject", "subject of test posting");
 		setFormElement("message", "message of test posting");
 		submit("post");
@@ -74,10 +72,34 @@ public class PostWebTestCase extends AbstractWebTestCase {
 		beginAt(FORUMS_LIST);
 		clickLinkWithText("a test forum", 0);
 		clickLinkWithText("subject of test posting", 0);
+
+		assertLinkNotPresentWithImage("icon_edit.gif");
+		assertLinkNotPresentWithImage("icon_delete.gif");
+
 		clickLinkWithImage("reply.gif");
 		setFormElement("subject", "reply to test posting");
 		setFormElement("message", "reply message to test posting");
 		submit("post");
+	}
+
+	public void testAdminAnonymousPosting() {
+		beginAt(FORUMS_LIST);
+		login("Admin", "admin");
+		clickLinkWithText("a test forum", 0);
+		clickLinkWithText("subject of test posting", 0);
+
+		assertLinkPresentWithImage("icon_edit.gif");
+		assertLinkPresentWithImage("icon_delete.gif");
+
+		clickLinkWithImage("icon_edit.gif");
+		setFormElement("message", "postingEditedByAdmin");
+		submit("post");
+		assertTextPresent("postingEditedByAdmin");
+
+		clickLinkWithImage("icon_delete.gif");
+		assertTextNotPresent("postingEditedByAdmin");
+
+		clickLinkWithText(I18n.getMessage(language, "ForumBase.logout"));
 	}
 
 	public void testNewDefaultUserPosting() {
@@ -96,6 +118,9 @@ public class PostWebTestCase extends AbstractWebTestCase {
 		login(UserWebTestCase.defaultTestuser, UserWebTestCase.password);
 		clickLinkWithText("a test forum", 0);
 		clickLinkWithText("defaultUser posting", 0);
+
+		assertLinkNotPresentWithImage("icon_delete.gif");
+
 		clickLinkWithImage("icon_edit.gif");
 		setFormElement("message", "edited message of test posting");
 		submit("post");
@@ -137,11 +162,29 @@ public class PostWebTestCase extends AbstractWebTestCase {
 	public void testSearchKeywords() {
 		beginAt(FORUMS_LIST);
 		clickLinkWithText(I18n.getMessage(language, "ForumBase.search"));
+		setFormElement("search_keywords",
+				"thisKeywordDoesNotExistAndShouldReturnZeroRows");
+		submit();
+		// we make sure no posting has been found
+		assertTextPresent("0 "
+				+ I18n.getMessage(language, "Search.recordsFound"));
+
+		beginAt(FORUMS_LIST);
+		clickLinkWithText(I18n.getMessage(language, "ForumBase.search"));
 		setFormElement("search_keywords", "defaultUser");
 		submit();
 	}
 
 	public void testSearchAuthor() {
+		beginAt(FORUMS_LIST);
+		clickLinkWithText(I18n.getMessage(language, "ForumBase.search"));
+		setFormElement("search_author",
+				"thisAuthorDoesNotExistAndShouldReturnZeroRows");
+		submit();
+		// we make sure no posting has been found
+		assertTextPresent("0 "
+				+ I18n.getMessage(language, "Search.recordsFound"));
+
 		beginAt(FORUMS_LIST);
 		clickLinkWithText(I18n.getMessage(language, "ForumBase.search"));
 		setFormElement("search_author", "defaultUser");
