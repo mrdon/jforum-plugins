@@ -73,7 +73,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumCommonServlet.java,v 1.11 2004/10/24 16:29:48 rafaelsteil Exp $
+ * @version $Id: JForumCommonServlet.java,v 1.12 2004/10/27 03:12:33 rafaelsteil Exp $
  */
 public class JForumCommonServlet extends HttpServlet {
     private static Properties modulesMapping;
@@ -377,7 +377,7 @@ public class JForumCommonServlet extends HttpServlet {
     public static String encodeUrlWithPathAndExtension(String url) {
         DataHolder dataHolder = (DataHolder) localData.get();
         return dataHolder.getResponse().encodeURL(
-                JForum.getRequest().getContextPath() + url
+                getRequest().getContextPath() + url
                         + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
-    }
+       	}
 }

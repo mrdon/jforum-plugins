@@ -25,19 +25,16 @@ function checkBoard()
 	var f = document.install;
 	var s = "";
 
-	if (f.server_name.value == "") {
+	if (f.forum_link.value == "") {
 		s += "${I18n.getMessage("Install.domainName")} ${I18n.getMessage("Install.isEmpty")}\n";
-	}
-	else if (f.server_name.value.indexOf("http://") == -1) {
-		s += "${I18n.getMessage("Install.domainName")} ${I18n.getMessage("Install.doesNotStart")} 'http://'\n";
 	}
 
 	if (f.admin_pass1.value == "") {
-		s += "${I18n.getMssage("Administrator")} ${I18n.getMessage("User.password")} ${I18n.getMessage("Install.isEmpty")}\n";
+		s += "${I18n.getMessage("Administrator")} ${I18n.getMessage("User.password")} ${I18n.getMessage("Install.isEmpty")}\n";
 	}
 
 	if (f.admin_pass1.value != f.admin_pass2.value) {
-		s += "${I18n.getMssage("Administrator")} ${I18n.getMessage("User.password") ${I18n.getMessage("Install.confirmationNotMatch")}h\n";
+		s += "${I18n.getMessage("Administrator")} ${I18n.getMessage("User.password")} ${I18n.getMessage("Install.confirmationNotMatch")}\n";
 	}
 
 	if (s != "") {
@@ -189,7 +186,7 @@ function checkDatabase()
 						<td class="row2"><input type="text" name="dbname" value="jforum" /></td>
 					</tr>
 					<tr>
-						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbUsermame")}: </b></span></td>
+						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbUsername")}: </b></span></td>
 						<td class="row2"><input type="text" name="dbuser" value="" /></td>
 					</tr>
 
@@ -235,12 +232,12 @@ function checkDatabase()
 					</tr>
 					<tr>
 						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.forumLink")}: </b></span></td>
-						<#if serverPort != 80><#assign serverName = serverName + ":" + serverPort/></#if>
-						<#assign serverName = serverName + contextPath?default("/")>
-						<td class="row2"><input type="text" name="forum_link" value="http://${serverName}" /></td>
+						<#if serverPort != "80"><#assign serverName = serverName + ":" + serverPort/></#if>
+						<#assign serverName = serverName + contextPath?default("") + "/"/>
+						<td class="row2"><input type="text" name="forum_link" value="http://${serverName}" size="40"/></td>
 					</tr> 
 					<tr>
-						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.adminUsername")}: </b></span></td>
+						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.adminUser")}: </b></span></td>
 						<td class="row2"><span class="gen">Admin</span></td>
 					</tr>
 					<tr>
@@ -249,7 +246,7 @@ function checkDatabase()
 						<td class="row2"><input type="password" name="admin_pass1" value="" /></td>
 					</tr>
 					<tr>
-						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.adminPasswrod")} [ ${I18n.getMessage("Install.confirm")} ]: </b></span></td>
+						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.adminPassword")} [ ${I18n.getMessage("Install.confirm")} ]: </b></span></td>
 						<td class="row2"><input type="password" name="admin_pass2" value="" /></td>
 					</tr>
 					<tr> 

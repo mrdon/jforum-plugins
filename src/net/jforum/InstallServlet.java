@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, 2004 Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -58,7 +58,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallServlet.java,v 1.3 2004/10/26 03:56:23 rafaelsteil Exp $
+ * @version $Id: InstallServlet.java,v 1.4 2004/10/27 03:12:33 rafaelsteil Exp $
  */
 public class InstallServlet extends JForumCommonServlet
 {
@@ -82,13 +82,13 @@ public class InstallServlet extends JForumCommonServlet
 		req.setCharacterEncoding(encoding);
 		
 		// Context
-		JForum.getContext().put("contextPath", req.getContextPath());
-		JForum.getContext().put("serverName", req.getServerName());
-		JForum.getContext().put("templateName", "default");
-		JForum.getContext().put("serverPort", Integer.toString(req.getServerPort()));
-		JForum.getContext().put("I18n", I18n.getInstance());
-		JForum.getContext().put("encoding", encoding);
-		JForum.getContext().put("extension", SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+		InstallServlet.getContext().put("contextPath", req.getContextPath());
+		InstallServlet.getContext().put("serverName", req.getServerName());
+		InstallServlet.getContext().put("templateName", "default");
+		InstallServlet.getContext().put("serverPort", Integer.toString(req.getServerPort()));
+		InstallServlet.getContext().put("I18n", I18n.getInstance());
+		InstallServlet.getContext().put("encoding", encoding);
+		InstallServlet.getContext().put("extension", SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		
 		// Request
 		ActionServletRequest request = new ActionServletRequest(req);
@@ -103,8 +103,8 @@ public class InstallServlet extends JForumCommonServlet
 		// Module and Action
 		String moduleClass = this.getModuleClass(request.getModule());
 		
-		JForum.getContext().put("moduleName", request.getModule());
-		JForum.getContext().put("action", JForum.getRequest().getAction());
+		InstallServlet.getContext().put("moduleName", request.getModule());
+		InstallServlet.getContext().put("action", InstallServlet.getRequest().getAction());
 		
 		BufferedWriter out = new BufferedWriter(new OutputStreamWriter(response.getOutputStream(), encoding));
 		
@@ -117,7 +117,7 @@ public class InstallServlet extends JForumCommonServlet
 				if (((DataHolder)localData.get()).getRedirectTo() == null) {
 					response.setContentType("text/html; charset=" + encoding);
 	
-					template.process(JForum.getContext(), out);
+					template.process(InstallServlet.getContext(), out);
 					out.flush();
 				}
 			}
