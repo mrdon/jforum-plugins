@@ -2,3 +2,4 @@ work
 build
 dist
 .tomcatplugin
+.settings

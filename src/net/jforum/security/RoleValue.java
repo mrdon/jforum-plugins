@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,16 +37,14 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 08/01/2004 / 21:38:57
- * net.jforum.security.RoleValue.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: RoleValue.java,v 1.3 2004/09/19 05:13:16 rafaelsteil Exp $
  */
 package net.jforum.security;
 
 /**
  * @author Rafael Steil
+ * @version $Id: RoleValue.java,v 1.4 2004/12/27 00:06:10 rafaelsteil Exp $
  */
 public class RoleValue 
 {
@@ -84,7 +82,7 @@ public class RoleValue
 		return this.type;
 	}
 	
-	/* 
+	/** 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object o) 
@@ -97,7 +95,7 @@ public class RoleValue
 		return (rv.getValue().equals(this.value) && rv.getType() == this.type);
 	}
 
-	/* 
+	/** 
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode() 

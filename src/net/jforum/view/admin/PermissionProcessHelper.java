@@ -39,8 +39,6 @@
  * This file creation date: 17/03/2004 - 21:19:29
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: PermissionProcessHelper.java,v 1.5 2004/11/07 04:09:28 rafaelsteil Exp $
  */
 package net.jforum.view.admin;
 
@@ -59,6 +57,7 @@ import net.jforum.security.RoleValueCollection;
 
 /**
  * @author Rafael Steil
+ * @version $Id: PermissionProcessHelper.java,v 1.6 2004/12/27 00:06:09 rafaelsteil Exp $
  */
 class PermissionProcessHelper 
 {

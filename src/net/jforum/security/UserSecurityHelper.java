@@ -39,25 +39,26 @@
  * This file creation date: 19/03/2004 - 18:56:49
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: UserSecurityHelper.java,v 1.4 2004/09/28 06:39:30 jamesyong Exp $
  */
 package net.jforum.security;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
  * @author Rafael Steil
+ * @version $Id: UserSecurityHelper.java,v 1.5 2004/12/27 00:06:10 rafaelsteil Exp $
  */
 public class UserSecurityHelper 
 {
-	public static void mergeUserGroupRoles(RoleCollection userRoles, ArrayList groupsRolesList)
+	public static void mergeUserGroupRoles(RoleCollection userRoles, List groupsRolesList)
 	{
 		Map newRolesMap = new HashMap();
 		
+		// First, iterate over all group roles and merge them with user roles
 		for (Iterator iter = groupsRolesList.iterator(); iter.hasNext(); ) {
 			RoleCollection rc = (RoleCollection)iter.next();
 			
@@ -67,7 +68,7 @@ public class UserSecurityHelper
 				
 				if (userRole == null) {
 					if (newRolesMap.containsKey(role.getName())) {
-						((ArrayList)newRolesMap.get(role.getName())).add(role);
+						((List)newRolesMap.get(role.getName())).add(role);
 					}
 					else {
 						newRolesMap.put(role.getName(), new ArrayList() {{ add(role); }});
@@ -79,8 +80,10 @@ public class UserSecurityHelper
 						RoleValue gRv = (RoleValue)vIter.next();
 						RoleValue uRv = userRole.getValues().get(gRv.getValue()); 
 						
+						// We only check for nulls because the user role always
+						// has preference over the group role. 
 						if (uRv == null) {
-						//	userRole.getValues().add(gRv);
+							userRole.getValues().add(gRv);
 						} 
 					}
 				}
@@ -94,12 +97,12 @@ public class UserSecurityHelper
 			newRole.setName((String)entry.getKey());
 			newRole.setType(PermissionControl.ROLE_DENY);
 			
-			ArrayList roles = (ArrayList)entry.getValue();
+			List roles = (List)entry.getValue();
 			for (Iterator rolesIter = roles.iterator(); rolesIter.hasNext(); ) {
 				Role role = (Role)rolesIter.next();
 				newRole.setId(role.getId());
 				
-				// Check if is a single permission ( eg, no children values )
+				// Check if it's a single permission ( eg, no children values )
 				// We're assuming here that if the call to getValue() of the current 
 				// role object returns 0, all other related roles will also return 0
 				if (role.getValues().size() == 0) {
