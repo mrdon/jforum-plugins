@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: Apr 19, 2003 / 9:13:16 PM
- * net.jforum.view.admin.UserVH.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: UserVH.java,v 1.3 2004/06/01 19:47:21 pieter2 Exp $
  */
 package net.jforum.view.admin;
 
@@ -70,6 +67,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
+ * @version $Id: UserVH.java,v 1.4 2004/06/03 03:21:41 rafaelsteil Exp $
  */
 public class UserVH extends Command 
 {

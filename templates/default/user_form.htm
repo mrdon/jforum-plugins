@@ -22,6 +22,11 @@
 
       <TABLE class=forumline cellSpacing=1 cellPadding=3 width="100%" border=0>
       <TBODY>
+	  	<#if editDone?default(false)>
+	  	<tr>
+			<td class="row2" align="center" colspan="2"><span class="gens"><b><font color="red">${I18n.getMessage("User.editDone")}</font></b></span></td>
+		</tr>
+		</#if>
         <TR>
           <TH class=thHead vAlign=center align=center colSpan=2 height=25>${I18n.getMessage("User.registerInformation")}</TH></TR>
         <TR>

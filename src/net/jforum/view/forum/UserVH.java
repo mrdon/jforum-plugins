@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserVH.java,v 1.9 2004/06/02 04:13:31 rafaelsteil Exp $
+ * @version $Id: UserVH.java,v 1.10 2004/06/03 03:19:20 rafaelsteil Exp $
  */
 public class UserVH extends Command 
 {
@@ -85,12 +85,18 @@ public class UserVH extends Command
 		}
 	}
 	
+	public void editDone() throws Exception
+	{
+		JForum.getContext().put("editDone", true);
+		this.edit();
+	}
+	
 	public void editSave() throws Exception
 	{	
 		int userId = Integer.parseInt(JForum.getRequest().getParameter("user_id"));
 		ViewCommon.saveUser(userId);
 
-		JForum.setRedirect(JForum.getRequest().getContextPath() +"/user/edit/"+ userId +".page");
+		JForum.setRedirect(JForum.getRequest().getContextPath() +"/user/editDone/"+ userId +".page");
 	}
 	
 	public void insert()
