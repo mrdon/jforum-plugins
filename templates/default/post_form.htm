@@ -209,7 +209,7 @@ function validatePostForm(f)
 	}
 	</#if>
 	
-	if (f.message.value.trim().length == 0) {
+	if (f.message.value.replace(/^\s*|\s*$/g,"").length == 0) {
 		alert("${I18n.getMessage("PostForm.textEmpty")}");
 		f.message.focus();
 		
