@@ -86,7 +86,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.58 2005/02/15 18:16:03 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.59 2005/02/15 19:03:19 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -290,7 +290,7 @@ public class PostAction extends Command {
 	}
 
 	private void edit(boolean preview, Post p) throws Exception {
-		int sUserId = SessionFacade.getUserSession().getUserId();
+		int userId = SessionFacade.getUserSession().getUserId();
 		int aId = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 		boolean canAccess = false;
 
@@ -306,9 +306,9 @@ public class PostAction extends Command {
 		}
 
 		boolean isModerator = SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_EDIT);
-		canAccess = (isModerator || p.getUserId() == sUserId);
+		canAccess = (isModerator || p.getUserId() == userId);
 
-		if ((sUserId != aId) && canAccess) {
+		if ((userId != aId) && canAccess) {
 			Topic topic = DataAccessDriver.getInstance().newTopicModel().selectById(p.getTopicId());
 
 			if (!TopicsCommon.isTopicAccessible(topic.getForumId())) {
@@ -331,6 +331,10 @@ public class PostAction extends Command {
 
 			this.context.put("attachmentsEnabled", SecurityRepository.canAccess(
 					SecurityConstants.PERM_ATTACHMENTS_ENABLED));
+			
+			this.context.put("maxAttachmentsSize", new Long(new AttachmentCommon(
+					this.request).getQuotaLimit(userId).getSizeInBytes()));
+			
 			this.context.put("maxAttachments", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
 			this.context.put("forum", ForumRepository.getForum(p.getForumId()));
 			this.context.put("action", "editSave");
@@ -349,7 +353,7 @@ public class PostAction extends Command {
 			this.context.put("message", I18n.getMessage("CannotEditPost"));
 		}
 
-		User u = PostCommon.getUserForDisplay(sUserId);
+		User u = PostCommon.getUserForDisplay(userId);
 
 		if (preview) {
 			u.setNotifyOnMessagesEnabled(this.request.getParameter("notify") != null);
@@ -395,9 +399,14 @@ public class PostAction extends Command {
 		User u = um.selectById(p.getUserId());
 
 		Topic topic = DataAccessDriver.getInstance().newTopicModel().selectById(p.getTopicId());
-
+		int userId = SessionFacade.getUserSession().getUserId();
+		
 		this.context.put("attachmentsEnabled", SecurityRepository.canAccess(
 				SecurityConstants.PERM_ATTACHMENTS_ENABLED));
+		
+		this.context.put("maxAttachmentsSize", new Long(new AttachmentCommon(
+				this.request).getQuotaLimit(userId).getSizeInBytes()));
+		
 		this.context.put("maxAttachments", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
 		this.context.put("isNewPost", true);
 		this.context.put("topic", topic);
@@ -408,8 +417,6 @@ public class PostAction extends Command {
 		this.context.put("htmlAllowed", SecurityRepository.canAccess(SecurityConstants.PERM_HTML_DISABLED, 
 				Integer.toString(topic.getForumId())));
 		this.context.put("start", this.request.getParameter("start"));
-
-		int userId = SessionFacade.getUserSession().getUserId();
 		this.context.put("user", DataAccessDriver.getInstance().newUserModel().selectById(userId));
 	}
 

@@ -69,7 +69,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.7 2005/01/31 22:30:30 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.8 2005/02/15 19:03:19 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -171,8 +171,10 @@ public class PostCommon
 							index = sb.indexOf("[code]");
 							int lastIndex = sb.indexOf("[/code]") + "[/code]".length();
 
-							sb.replace(index, lastIndex, replace.toString());
-							text = sb.toString();
+							if (lastIndex > index) {
+								sb.replace(index, lastIndex, replace.toString());
+								text = sb.toString();
+							}
 						}
 					}
 					else {
@@ -184,7 +186,6 @@ public class PostCommon
 			if (openQuotes > 0) {
 				BBCode closeQuote = BBCodeRepository.findByName("closeQuote");
 
-				// I'll not check for nulls ( but I should )
 				for (int i = 0; i < openQuotes; i++) {
 					text = text + closeQuote.getReplace();
 				}
