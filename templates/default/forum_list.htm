@@ -33,8 +33,8 @@
 						<td class="catLeft" colspan="2" height="28"><span class="cattitle">${category.name}</span></td>
 						<td class="rowpic" align="right" colspan="3">&nbsp;</td>
 					</tr>
-					
-					<#list category.forums as forum>
+
+					<#list category.getForums() as forum>
 					<#assign lpi = fir.getLastPostInfo(forum.id)/>
 					<tr>
 						<td class="row1" valign="center" align="middle" height="50">

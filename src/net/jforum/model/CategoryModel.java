@@ -54,7 +54,7 @@ import net.jforum.entities.Category;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: CategoryModel.java,v 1.4 2004/11/05 03:29:50 rafaelsteil Exp $
+ * @version $Id: CategoryModel.java,v 1.5 2004/12/04 20:28:01 rafaelsteil Exp $
  */
 public interface CategoryModel 
 {	
@@ -112,4 +112,8 @@ public interface CategoryModel
 	 * @throws Exception
 	 */
 	public int addNew(Category category) throws Exception;
+	
+	public void setOrderUp(Category category) throws Exception;
+	
+	public void setOrderDown(Category category) throws Exception;
 }

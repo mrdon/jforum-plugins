@@ -17,7 +17,7 @@
 		</tr>
 
 		<#assign counter = 1/>
-		<#list category.forums as forum>
+		<#list category.getForums() as forum>
 			<tr>
 				<td width="10" class="row1">&nbsp;</td>
 				<td class="row1"><span class="forumLink">${forum.name}</span></td>
@@ -37,7 +37,7 @@
 				</td>
 
 				<td class="row2" align="right" width="10%">
-					<#if (counter < category.forums.size())>
+					<#if (counter < category.getForums().size())>
 						<input type="button" value="Down" class="mainoption" onClick="${contextPath}/${moduleName}/down/${forum.id}${extension}">&nbsp;
 					<#else>	
 						&nbsp;

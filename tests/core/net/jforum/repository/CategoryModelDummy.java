@@ -49,7 +49,7 @@ import net.jforum.model.CategoryModel;
 
 /**
  * @author Rafael Steil
- * @version $Id: CategoryModelDummy.java,v 1.1 2004/11/13 20:12:26 rafaelsteil Exp $
+ * @version $Id: CategoryModelDummy.java,v 1.2 2004/12/04 20:28:02 rafaelsteil Exp $
  */
 class CategoryModelDummy implements CategoryModel 
 {
@@ -102,5 +102,21 @@ class CategoryModelDummy implements CategoryModel
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	
+	/** 
+	 * @see net.jforum.model.CategoryModel#setOrderDown(net.jforum.entities.Category)
+	 */
+	public void setOrderDown(Category category) throws Exception {
+		// TODO Auto-generated method stub
 
+	}
+	
+	/** 
+	 * @see net.jforum.model.CategoryModel#setOrderUp(net.jforum.entities.Category)
+	 */
+	public void setOrderUp(Category category) throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+	
 }

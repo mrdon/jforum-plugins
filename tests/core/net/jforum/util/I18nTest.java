@@ -42,16 +42,16 @@
  */
 package net.jforum.util;
 
+import junit.framework.TestCase;
 import net.jforum.SessionFacade;
 import net.jforum.TestCaseUtils;
 import net.jforum.entities.UserSession;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import junit.framework.TestCase;
 
 /**
  * @author Rafael Steil
- * @version $Id: I18nTest.java,v 1.1 2004/09/30 19:09:32 rafaelsteil Exp $
+ * @version $Id: I18nTest.java,v 1.2 2004/12/04 20:28:02 rafaelsteil Exp $
  */
 public class I18nTest extends TestCase
 {
@@ -70,7 +70,7 @@ public class I18nTest extends TestCase
 							SystemGlobals.getApplicationResourceDir() + "/tests");
 			loaded = true;
 		}
-
+		
 		SystemGlobals.setValue(ConfigKeys.I18N_DEFAULT_ADMIN, "default");
 		SystemGlobals.setValue(ConfigKeys.I18N_DEFAULT, "default");
 		
@@ -80,7 +80,6 @@ public class I18nTest extends TestCase
 		
 		I18n.reset();
 		I18n.load();
-
 	}
 	
 	public void testLoad() throws Exception

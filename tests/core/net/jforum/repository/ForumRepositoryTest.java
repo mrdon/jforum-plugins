@@ -42,15 +42,20 @@
  */
 package net.jforum.repository;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import junit.framework.TestCase;
+import net.jforum.JForumCommonServlet;
+import net.jforum.SessionFacade;
+import net.jforum.TestCaseUtils;
 import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
 import net.jforum.entities.UserSession;
+import net.jforum.http.FakeActionServletRequest;
 import net.jforum.model.CategoryModel;
 import net.jforum.model.ForumModel;
 import net.jforum.security.PermissionControl;
@@ -62,7 +67,7 @@ import net.jforum.view.forum.common.ForumCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumRepositoryTest.java,v 1.5 2004/11/30 01:18:57 rafaelsteil Exp $
+ * @version $Id: ForumRepositoryTest.java,v 1.6 2004/12/04 20:28:02 rafaelsteil Exp $
  */
 public class ForumRepositoryTest extends TestCase 
 {
@@ -147,8 +152,33 @@ public class ForumRepositoryTest extends TestCase
 			SecurityRepository.add(GENERAL_USER, this.createPermissionControl(generalUserCategoryRights, 
 					generalUserForumRights));
 			
+			TestCaseUtils.loadEnvironment();
+			
 			loaded = true;
 		}
+		
+		this.createThreadLocalData();
+	}
+	
+	/** 
+	 * @see junit.framework.TestCase#tearDown()
+	 */
+	protected void tearDown() throws Exception 
+	{
+		JForumCommonServlet.setThreadLocalData(null);
+	}
+	
+	private void createThreadLocalData() throws IOException
+	{
+		JForumCommonServlet.DataHolder dh = new JForumCommonServlet.DataHolder();
+		dh.setRequest(new FakeActionServletRequest());
+		
+		JForumCommonServlet.setThreadLocalData(dh);
+		
+		UserSession us = new UserSession();
+		us.setUserId(SUPER_USER);
+		
+		SessionFacade.add(us);
 	}
 	
 	/*
@@ -159,12 +189,9 @@ public class ForumRepositoryTest extends TestCase
 		ForumRepository.start(fm, cm);
 		
 		// Categories
-		List categories = ForumRepository.getAllCategories(0, true);
-		assertEquals(categoryNames.length, categories.size());
-		
-		for (int i = 0; i < categoryNames.length; i++) {
-			Category c = new Category(categoryNames[i], categoryIds[i]);
-			assertTrue("Category cache does not contains #" + c.getId(), categories.contains(c));
+		for (int i = 0; i < categoryIds.length; i++) {
+			assertNotNull("Cache does not contains category #" + categoryIds[i], 
+					ForumRepository.getCategory(categoryIds[i]));
 		}
 		
 		// Forums
@@ -176,22 +203,12 @@ public class ForumRepositoryTest extends TestCase
 	}
 	
 	/*
-	 * Check for the categories
-	 */
-	public void testGetCategory()
-	{
-		for (int i = 0; i < categoryNames.length; i++) {
-			assertNotNull("Category #" + categoryIds[i] + " was not found", ForumRepository.getCategory(true, categoryIds[i]));
-		}
-	}
-	
-	/*
 	 * Check if the forums are associated to the 
 	 * right categories
 	 */
 	public void testCategoryForums() 
 	{
-		List categories = ForumRepository.getAllCategories(0, true);
+		List categories = ForumRepository.getAllCategories(SUPER_USER);
 		for (Iterator iter = categories.iterator(); iter.hasNext(); ) {
 			Category c = (Category)iter.next();
 			
@@ -211,7 +228,7 @@ public class ForumRepositoryTest extends TestCase
 	 */
 	public void testSuperCategoryUserRights()
 	{
-		List categories = ForumRepository.getAllCategories(SUPER_USER, false);
+		List categories = ForumRepository.getAllCategories(SUPER_USER);
 		assertEquals(categoryNames.length, categories.size());
 		
 		for (int i = 0; i < categoryNames.length; i++) {
@@ -225,7 +242,7 @@ public class ForumRepositoryTest extends TestCase
 	 */
 	public void testSuperUserForumRights()
 	{
-		List categories = ForumRepository.getAllCategories(SUPER_USER, false);
+		List categories = ForumRepository.getAllCategories(SUPER_USER);
 		
 		for (Iterator iter = categories.iterator(); iter.hasNext(); ) {
 			Category c = (Category)iter.next();
@@ -252,7 +269,7 @@ public class ForumRepositoryTest extends TestCase
 	 */
 	public void testGeneralUserCategoryRights()
 	{
-		List categories = ForumRepository.getAllCategories(GENERAL_USER, false);
+		List categories = ForumRepository.getAllCategories(GENERAL_USER);
 		
 		for (int i = 0; i < generalUserCategoryRights.length; i++) {
 			if (generalUserCategoryRights[i] == PermissionControl.ROLE_ALLOW) {
@@ -267,7 +284,7 @@ public class ForumRepositoryTest extends TestCase
 	 */
 	public void testGeneralUserForumRights()
 	{
-		List categories = ForumRepository.getAllCategories(GENERAL_USER, false);
+		List categories = ForumRepository.getAllCategories(GENERAL_USER);
 		assertEquals(2, categories.size());
 		
 		Category c = new Category(null, PRIVATE_CATEGORY_ID);
@@ -280,7 +297,7 @@ public class ForumRepositoryTest extends TestCase
 		assertTrue(categories.contains(c));
 		
 		// Open Category
-		c = ForumRepository.getCategory(GENERAL_USER, false, OPEN_CATEGORY_ID);
+		c = ForumRepository.getCategory(GENERAL_USER, OPEN_CATEGORY_ID);
 		assertEquals(2, c.getForums().size());
 		
 		assertNotNull(c.getForum(OPEN_FORUM_1_ID));
@@ -288,7 +305,7 @@ public class ForumRepositoryTest extends TestCase
 		
 		// Mixed Category
 		assertTrue(ForumRepository.isCategoryAccessible(GENERAL_USER, MIXED_CATEGORY_ID));
-		c = ForumRepository.getCategory(GENERAL_USER, false, MIXED_CATEGORY_ID);
+		c = ForumRepository.getCategory(GENERAL_USER, MIXED_CATEGORY_ID);
 		assertEquals(1, c.getForums(GENERAL_USER).size());
 		
 		assertNotNull(c.getForum(MIXED_OPEN_FORUM_ID));
@@ -296,7 +313,7 @@ public class ForumRepositoryTest extends TestCase
 		
 		// Private category
 		assertFalse(ForumRepository.isCategoryAccessible(GENERAL_USER, PRIVATE_CATEGORY_ID));
-		c = ForumRepository.getCategory(GENERAL_USER, false, PRIVATE_CATEGORY_ID);
+		c = ForumRepository.getCategory(GENERAL_USER, PRIVATE_CATEGORY_ID);
 		assertNull(c);
 	}
 	
@@ -307,16 +324,15 @@ public class ForumRepositoryTest extends TestCase
 	 */
 	public void testCategoriesAndForumsForListing() throws Exception
 	{
-		UserSession us = new UserSession();
-		us.setUserId(GENERAL_USER);
-		us.setLastVisit(new Date());
+		SessionFacade.getUserSession().setUserId(GENERAL_USER);
+		SessionFacade.getUserSession().setLastVisit(new Date());
 
-		List categories = ForumCommon.getAllCategoriesAndForums(us, -1, null, false);
+		List categories = ForumCommon.getAllCategoriesAndForums(SessionFacade.getUserSession(), -1, null, false);
 		assertEquals(2, categories.size());
 		
-		assertEquals(categoryIds.length, ForumRepository.getAllCategories(GENERAL_USER, true).size());
-		Category c = ForumRepository.getCategory(GENERAL_USER, true, MIXED_CATEGORY_ID);
-		assertEquals(2, c.getForums().size());
+		assertEquals(2, ForumRepository.getAllCategories(GENERAL_USER).size());
+		Category c = ForumRepository.getCategory(GENERAL_USER, MIXED_CATEGORY_ID);
+		assertEquals(1, c.getForums().size());
 		
 		c = new Category(null, PRIVATE_CATEGORY_ID);
 		assertFalse(categories.contains(c));

@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -65,7 +65,7 @@ import org.apache.commons.fileupload.FileUploadException;
 
 /**
  * @author Rafael Steil
- * @version $Id: ActionServletRequest.java,v 1.11 2004/11/30 01:18:44 rafaelsteil Exp $
+ * @version $Id: ActionServletRequest.java,v 1.12 2004/12/04 20:28:04 rafaelsteil Exp $
  */
 public class ActionServletRequest extends HttpServletRequestWrapper 
 {
@@ -223,7 +223,9 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 		this.query = new HashMap();
 		boolean isMultipart = false;
 		
-		if (superRequest.getMethod().equalsIgnoreCase("GET") 
+		String requestType = superRequest.getMethod().toUpperCase();
+		
+		if ("GET".equals(requestType) 
 				&& superRequest.getQueryString() == null
 				&& superRequest.getRequestURI().endsWith(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION))) {
 			String urlModel[] = superRequest.getRequestURI().split("/");
@@ -270,7 +272,7 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 				}
 			}
 		}
-		else {
+		else if ("POST".equals(requestType)) {
 			isMultipart = FileUploadBase.isMultipartContent(superRequest);
 			if (isMultipart) {
 			    String tmpDir = SystemGlobals.getApplicationPath() + "/" + SystemGlobals.getValue(ConfigKeys.TMP_DIR);

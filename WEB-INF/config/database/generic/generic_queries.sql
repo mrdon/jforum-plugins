@@ -18,6 +18,8 @@ CategoryModel.canDelete = SELECT COUNT(1) AS total FROM jforum_forums WHERE cate
 CategoryModel.delete = DELETE FROM jforum_categories WHERE categories_id = ?
 CategoryModel.update = UPDATE jforum_categories SET title = ? WHERE categories_id = ?
 CategoryModel.addNew = INSERT INTO jforum_categories (title, display_order) VALUES (?, display_order + 1)
+CategoryModel.setOrderById = UPDATE jforum_categories SET display_order = ? WHERE categories_id = ?
+CategoryModel.setOrderByOrder = UPDATE jforum_categories SET display_order = ? WHERE display_order = ?
 
 # #############
 # RankingModel
@@ -162,10 +164,12 @@ ForumModel.decrementTotalTopics = UPDATE jforum_forums SET forum_topics = forum_
 ForumModel.decrementTotalPosts = UPDATE jforum_forums SET total_posts = total_posts - ? WHERE forum_id = ?
 ForumModel.getTotalTopics = SELECT COUNT(topic_id) as total FROM jforum_topics WHERE forum_id = ?
 
-ForumModel.getOrder = SELECT forum_order FROM jforum_forums WHERE forum_id = ?
-ForumModel.getMaxOrder = SELECT max(forum_order) as maxOrder FROM jforum_forums
-ForumModel.setOrderByOrder = UPDATE jforum_forums SET forum_order = ? WHERE forum_order = ?
+ForumModel.setOrderByOrder = UPDATE jforum_forums SET forum_order = ? \
+	WHERE forum_order = ? \
+	AND categories_id = ?
+
 ForumModel.setOrderById = UPDATE jforum_forums SET forum_order = ? WHERE forum_id = ? 
+ForumModel.getOrder = SELECT forum_order, categories_id FROM jforum_forums WHERE forum_id = ?
 
 ForumModel.lastPostInfo = SELECT post_time, p.topic_id, t.topic_replies, post_id, u.user_id, username \
 	FROM jforum_posts p, jforum_users u, jforum_topics t , jforum_forums f \
@@ -207,6 +211,8 @@ TopicModel.selectAllByForumByLimit = SELECT t.*, u.username AS posted_by_usernam
 	LIMIT ?, ?
 	
 TopicModel.selectLastN = SELECT topic_title, topic_time, topic_id, topic_type FROM jforum_topics ORDER BY topic_time DESC LIMIT ?
+
+TopicModel.deleteByForum = SELECT topic_id FROM jforum_topics where forum_id = ?
 
 TopicModel.delete = DELETE FROM jforum_topics WHERE topic_id = ?
 TopicModel.deletePosts = DELETE FROM jforum_posts WHERE topic_id = ?

@@ -63,12 +63,11 @@ import net.jforum.security.SecurityConstants;
 /**
  * Repository for the forums of the System.
  * This repository acts like a cache system, to avoid repetitive and unnecessary SQL queries
- * every time we need some info about the forums. Using the repository, we put process information
- * needed just once, and then use the cache when data is requested. 
+ * every time we need some info about the forums. 
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.18 2004/11/30 01:18:54 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.19 2004/12/04 20:28:05 rafaelsteil Exp $
  */
 public class ForumRepository 
 {
@@ -76,7 +75,7 @@ public class ForumRepository
 	private static Map categoriesMap = new LinkedHashMap();
 	private static int totalTopics = -1;
 	private static int totalMessages = 0;
-	
+
 	private static ForumRepository instance;
 	
 	/**
@@ -88,64 +87,46 @@ public class ForumRepository
 	 * be used to retrieve information about the categories.
 	 * @throws Exception
 	 */
-	public static void start(ForumModel fm, CategoryModel cm) throws Exception
+	public synchronized static void start(ForumModel fm, CategoryModel cm) throws Exception
 	{
 		instance = new ForumRepository();
 		
 		instance.loadCategories(cm);
 		instance.loadForums(fm);
 	}
-
+	
 	/**
-	 * @see #getCategory(boolean, int)
+	 * Gets a category by its id.
+	 * A call to @link #getCategory(int, int) is made, using the
+	 * return of <code>SessionFacade.getUserSession().getUserId()</code>
+	 * as argument for the "userId" parameter.
+	 * 
+	 * @param categoryId The id of the category to check
+	 * @return <code>null</code> if the category is either not
+	 * found or access is denied.
+	 * @see #getCategory(int, int)
 	 */
 	public static Category getCategory(int categoryId)
 	{
-		return getCategory(false, categoryId);
+		return getCategory(SessionFacade.getUserSession().getUserId(), categoryId);
 	}
-	
-	/**
-	 * @see #getCategory(int, boolean, int)
-	 */
-	public static Category getCategory(boolean ignorePermissions, int categoryId)
-	{
-		int userId = 0;
-		if (!ignorePermissions) {
-			userId = SessionFacade.getUserSession().getUserId();
-		}
 
-		return getCategory(userId, ignorePermissions, categoryId);
-	}
-	
 	/**
-	 * Gets a category by is id.
-	 * If <code>ignorePermissions</code> is not <code>true</code>, then 
-	 * the all forums related to the category will be validated for
-	 * access rights.
-	 * 
-	 * @param userId The user's id who is trying to access the category
-	 * @param ignorePermissions Bypass the permission control or not
-	 * @param categoryId The id of the category to check
-	 * @return <code>null</code> if the category was either not found or
-	 * access to it is denied, or the <code>Category</code> instance 
-	 * otherwise.
+	 * Gets a category by its id.
+	 *  
+	 * @param userId The user id who is requesting the category
+	 * @param categoryId The id of the category to get
+	 * @return <code>null</code> if the category is either not
+	 * found or access is denied.
+	 * @see #getCategory(int)
 	 */
-	public static Category getCategory(int userId, boolean ignorePermissions, int categoryId)
+	public static Category getCategory(int userId, int categoryId)
 	{
-		Category c = (Category)categoriesMap.get(new Integer(categoryId));
-		if (c == null) {
-			return null;
-		}
-		
-		if (ignorePermissions) {
-			return c;
-		}
-		
 		if (!isCategoryAccessible(userId, categoryId)) {
 			return null;
 		}
 		
-		return c;
+		return (Category)categoriesMap.get(new Integer(categoryId));
 	}
 	
 	/**
@@ -176,17 +157,10 @@ public class ForumRepository
 	/**
 	 * Gets all categories from the cache. 
 	 * 
-	 * @param ignorePermissions If <code>true</code>, all categories are returned, even if the
-	 * user doesn't have access to someone. If <code>false</code>, the permission control is applied.
-	 * 
 	 * @return <code>List</code> with the categories. Each entry is a <code>Category</code> object.
 	 */
-	public static List getAllCategories(int userId, boolean ignorePermissions)
+	public static List getAllCategories(int userId)
 	{
-		if (ignorePermissions) {
-			return new ArrayList(categoriesMap.values());
-		}
-		
 		PermissionControl pc = SecurityRepository.get(userId);
 		List l = new ArrayList();
 		
@@ -204,29 +178,16 @@ public class ForumRepository
 
 	/**
 	 * Get all categories.
+	 * A call to @link #getAllCategories(int) is made, passing
+	 * the return of <code>SessionFacade.getUserSession().getUserId()</code> 
+	 * as the value for the "userId" argument.
 	 * 
-	 * @param ignorePermissions Set to <code>true</code> if the permission
-	 * control should be bypassed. This method will make a call to
-	 * <code>SessionFacade.getUserSession().getUserId()</code> to access
-	 * the id of the user who is requesting the categories. 
-	 * 
-	 * @see #getAllCategories(int, boolean)
-	 */
-	public static List getAllCategories(boolean ignorePermissions)
-	{
-		return getAllCategories(SessionFacade.getUserSession().getUserId(), ignorePermissions);
-	}
-	
-	/**
-	 * Get all available categories to the user. 
-	 * Calling this method has the same result of a call
-	 * to @link #getAllCategories(boolean)
-	 * 
-	 * @see #getAllCategories(boolean)
+	 * @return <code>List</code> with the categories. Each entry is a <code>Category</code> object.
+	 * @see #getAllCategories(int)
 	 */
 	public static List getAllCategories()
 	{
-		return getAllCategories(false);
+		return getAllCategories(SessionFacade.getUserSession().getUserId());
 	}
 
 	/**
@@ -237,15 +198,16 @@ public class ForumRepository
 	 * with the same id and update its data.
 	 * @throws <code>CategoryNotFoundException</code> if the category is not found in the cache. 
 	 */
-	public static void reloadCategory(Category c)
+	public synchronized static void reloadCategory(Category c)
 	{
 		Category currentCategory = (Category)categoriesMap.get(new Integer(c.getId()));
 		
 		if (currentCategory == null) {
 			throw new CategoryNotFoundException("Category #" + c.getId() + " was not found in the cache");
 		}
-		
+
 		currentCategory.setName(c.getName());
+		currentCategory.setOrder(c.getOrder());
 		currentCategory.setOrder(c.getOrder());
 	}
 	
@@ -254,7 +216,7 @@ public class ForumRepository
 	 * @param c The category to remove. The instance should have the 
 	 * category id at least
 	 */
-	public static void removeCategory(Category c)
+	public synchronized static void removeCategory(Category c)
 	{
 		categoriesMap.remove(new Integer(c.getId()));
 		
@@ -270,7 +232,7 @@ public class ForumRepository
 	 * Adds a new category to the cache.
 	 * @param c The category instance to insert in the cache.
 	 */
-	public static void addCategory(Category c)
+	public synchronized static void addCategory(Category c)
 	{
 		categoriesMap.put(new Integer(c.getId()), c);
 	}
@@ -309,7 +271,7 @@ public class ForumRepository
 	 * 
 	 * @param forum The forum to add
 	 */
-	public static void addForum(Forum forum)
+	public synchronized static void addForum(Forum forum)
 	{
 		Integer categoryId = new Integer(forum.getCategoryId());
 		((Category)categoriesMap.get(categoryId)).addForum(forum);
@@ -321,7 +283,7 @@ public class ForumRepository
 	 * 
 	 * @param forum The forum instance to remove.
 	 */
-	public static synchronized void removeForum(Forum forum)
+	public synchronized static void removeForum(Forum forum)
 	{
 		Integer id = new Integer(forum.getId());
 		forumCategoryRelation.remove(id);

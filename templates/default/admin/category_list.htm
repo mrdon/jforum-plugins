@@ -8,32 +8,52 @@
 
 <table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
 	<tr>
-		<th class="thHead" valign="center" colspan="3" height="25">${I18n.getMessage("Category.List.Title")}</th>
+		<th class="thHead" valign="center" colspan="35 height="25">${I18n.getMessage("Category.List.Title")}</th>
 	</tr>
+
+	<#assign counter = 1/>
 	<#list categories as category>
 		<tr>
 			<td class="catLeft" width="38%"><span class="cattitle">${category.name}</span></td>
 			<td class="catLeft"><span class="gen"><a id="categoryEdit" href="${contextPath}/${moduleName}/edit/${category.id}${extension}">${I18n.getMessage("Category.List.Edit")}</a></span></td>
-			<td class="rowpic"><input type="checkbox" name="categories_id" value="${category.id}" /></td>
+			<td class="catLeft"><input type="checkbox" name="categories_id" value="${category.id}" /></td>
+			
+			<td class="catLeft" align="right" width="8%">
+				<#if (counter > 1)>
+					<input type="button" value="Up" class="mainoption" onClick="document.location = '${contextPath}/${moduleName}/up/${category.id}${extension}';">&nbsp;
+				<#else>	
+					&nbsp;
+				</#if>
+			</td>
+
+			<td class="rowPic" align="right" width="10%">
+				<#if (counter < categories.size())>
+					<input type="button" value="Down" class="mainoption" onClick="document.location = '${contextPath}/${moduleName}/down/${category.id}${extension}';">&nbsp;
+				<#else>
+					&nbsp;
+				</#if>
+			</td>
 		</tr>
 
 		<tr>
-			<td colspan="3" class="row1">
+			<td colspan="5" class="row1">
 				<table width="100%">
-				<#list category.forums as forum>
+				<#list category.getForums() as forum>
 					<tr>
 						<td>&nbsp;</td>
-						<td class="row1" width="100%"><span class="forumlink">${forum.name}</td>
+						<td class="row1" width="100%"><span class="gen">${forum.name}</td>
 						<td>&nbsp;</td>
 					</tr>
 				</#list>
 				</table>
-			</td>				
+			</td>
 		</tr>
+
+		<#assign counter = counter + 1/>
 	</#list>
 
 	<tr align="center">
-		<td class="catBottom" colspan="3" height="28">
+		<td class="catBottom" colspan="5" height="28">
 			<input class="mainoption" type="button" value="${I18n.getMessage("Category.List.ClickToNew")}" id="btn_insert" name="button" onclick="document.location = '${contextPath}/${moduleName}/insert${extension}';" />
 			&nbsp;&nbsp;
 			<input class="mainoption" type="submit" value="${I18n.getMessage("Category.List.ClickToDelete")}" name="submit" />

@@ -58,389 +58,376 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: ForumModel.java,v 1.9 2004/11/13 13:41:19 rafaelsteil Exp $
+ * @version $Id: ForumModel.java,v 1.10 2004/12/04 20:28:00 rafaelsteil Exp $
  */
-public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel 
-{
+public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel {
 	private Connection conn;
-	
-	public ForumModel()
-	{
+
+	public ForumModel() {
 		this.conn = JForum.getConnection();
 	}
-	
-	public ForumModel(Connection conn)
-	{
+
+	public ForumModel(Connection conn) {
 		this.conn = conn;
 	}
-	
-    /**
-     * @see net.jforum.model.ForumModel#selectById(int)
-     */
-    public Forum selectById(int forumId) throws Exception {
-        PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.selectById"));
-        p.setInt(1, forumId);
 
-        ResultSet rs = p.executeQuery();
+	/**
+	 * @see net.jforum.model.ForumModel#selectById(int)
+	 */
+	public Forum selectById(int forumId) throws Exception {
+		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.selectById"));
+		p.setInt(1, forumId);
 
-        Forum f = new Forum();
+		ResultSet rs = p.executeQuery();
 
-        if (rs.next()) {
-            f = this.fillForum(rs);
-        }
+		Forum f = new Forum();
 
-        rs.close();
-        p.close();
+		if (rs.next()) {
+			f = this.fillForum(rs);
+		}
 
-        return f;
-    }
-    
-    protected Forum fillForum(ResultSet rs) throws Exception
-    {
-    	Forum f = new Forum();
-    	
-    	f.setId(rs.getInt("forum_id"));
-        f.setIdCategories(rs.getInt("categories_id"));
-        f.setName(rs.getString("forum_name"));
-        f.setDescription(rs.getString("forum_desc"));
-        f.setOrder(rs.getInt("forum_order"));
-        f.setTotalTopics(rs.getInt("forum_topics"));
-        f.setLastPostId(rs.getInt("forum_last_post_id"));
-        f.setModerated(rs.getInt("moderated") > 0);
-        f.setTotalPosts(rs.getInt("total_posts"));
-        
-        return f;
-    }
+		rs.close();
+		p.close();
 
-    /**
-     * @see net.jforum.model.ForumModel#selectAll()
-     */
-    public List selectAll() throws Exception {
-        PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.selectAll"));
-        List l = new ArrayList();
+		return f;
+	}
 
-        ResultSet rs = p.executeQuery();
+	protected Forum fillForum(ResultSet rs) throws Exception {
+		Forum f = new Forum();
 
-        while (rs.next()) {
-            l.add(this.fillForum(rs));
-        }
+		f.setId(rs.getInt("forum_id"));
+		f.setIdCategories(rs.getInt("categories_id"));
+		f.setName(rs.getString("forum_name"));
+		f.setDescription(rs.getString("forum_desc"));
+		f.setOrder(rs.getInt("forum_order"));
+		f.setTotalTopics(rs.getInt("forum_topics"));
+		f.setLastPostId(rs.getInt("forum_last_post_id"));
+		f.setModerated(rs.getInt("moderated") > 0);
+		f.setTotalPosts(rs.getInt("total_posts"));
 
-        rs.close();
-        p.close();
+		return f;
+	}
 
-        return l;
-    }
+	/**
+	 * @see net.jforum.model.ForumModel#selectAll()
+	 */
+	public List selectAll() throws Exception {
+		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.selectAll"));
+		List l = new ArrayList();
 
-    /**
-     * @see net.jforum.model.ForumModel#setOrderUp(int)
-     */
-    public void setOrderUp(int forumId) throws Exception {
-        int order = 0;
-        int maxOrder = 0;
+		ResultSet rs = p.executeQuery();
 
-        // Retrieves the current value of of forum_order
-        PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.getOrder"));
-        p.setInt(1, forumId);
+		while (rs.next()) {
+			l.add(this.fillForum(rs));
+		}
 
-        ResultSet rs = p.executeQuery();
+		rs.close();
+		p.close();
 
-        if (rs.next()) {
-            order = rs.getInt("forum_order");
-        }
+		return l;
+	}
 
-        rs.close();
-        p.close();
+	/**
+	 * @see net.jforum.model.ForumModel#setOrderUp(int)
+	 */
+	public void setOrderUp(int forumId) throws Exception {
+		int order = 0;
+		int categoryId = 0;
 
-        // Retireves the max value of forum_order
-        p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.getMaxOrder"));
-        rs = p.executeQuery();
+		// Retrieves the current value of forum_order
+		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.getOrder"));
+		p.setInt(1, forumId);
 
-        if (rs.next()) {
-            maxOrder = rs.getInt("maxOrder");
-        }
+		ResultSet rs = p.executeQuery();
 
-        rs.close();
-        p.close();
+		if (rs.next()) {
+			order = rs.getInt("forum_order");
+			categoryId = rs.getInt("categories_id");
+		}
 
-        if (order < maxOrder) {
-            // Sets the forum that is in the higher order to the current order
-            p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.setOrderByOrder"));
-            p.setInt(1, order);
-            p.setInt(2, ++order);
+		rs.close();
+		p.close();
 
-            p.executeUpdate();
+		rs.close();
+		p.close();
 
-            p.close();
+		if (order > 0) {
+			// Sets the forum that is in the higher order to the current order
+			p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.setOrderByOrder"));
+			p.setInt(1, order);
+			p.setInt(2, ++order);
+			p.setInt(3, categoryId);
 
-            // Sets the forum to the higher order
-            p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.setOrderById"));
-            p.setInt(1, order);
-            p.setInt(2, forumId);
+			p.executeUpdate();
 
-            p.executeUpdate();
+			p.close();
 
-            p.close();
-        }
-    }
+			// Sets the forum to the higher order
+			p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.setOrderById"));
+			p.setInt(1, order);
+			p.setInt(2, forumId);
 
-    /**
-     * @see net.jforum.model.ForumModel#setOrderDown(int)
-     */
-    public void setOrderDown(int forumId) throws Exception {
-        int order = 0;
+			p.executeUpdate();
 
-        // Retireves the current value of of forum_order
-        PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.getOrder"));
-        p.setInt(1, forumId);
+			p.close();
+		}
+	}
 
-        ResultSet rs = p.executeQuery();
+	/**
+	 * @see net.jforum.model.ForumModel#setOrderDown(int)
+	 */
+	public void setOrderDown(int forumId) throws Exception {
+		int order = 0;
+		int categoryId = 0;
 
-        if (rs.next()) {
-            order = rs.getInt("forum_order");
-        }
+		// Retireves the current value of of forum_order
+		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.getOrder"));
+		p.setInt(1, forumId);
 
-        rs.close();
-        p.close();
+		ResultSet rs = p.executeQuery();
 
-        if (order > 1) {
-            // Sets the forum that is in the lower order to the current order
-            p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.setOrderByOrder"));
-            p.setInt(1, order);
-            p.setInt(2, --order);
+		if (rs.next()) {
+			order = rs.getInt("forum_order");
+			categoryId = rs.getInt("categories_id");
+		}
 
-            p.executeUpdate();
+		rs.close();
+		p.close();
 
-            p.close();
+		if (order > 1) {
+			// Sets the forum that is in the lower order to the current order
+			p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.setOrderByOrder"));
+			p.setInt(1, order);
+			p.setInt(2, --order);
+			p.setInt(3, categoryId);
 
-            // Sets the forum to the lower order
-            p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.setOrderById"));
-            p.setInt(1, order);
-            p.setInt(2, forumId);
+			p.executeUpdate();
 
-            p.executeUpdate();
+			p.close();
 
-            p.close();
-        }
-    }
+			// Sets the forum to the lower order
+			p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.setOrderById"));
+			p.setInt(1, order);
+			p.setInt(2, forumId);
 
-    /**
-     * @see net.jforum.model.ForumModel#delete(int)
-     */
-    public void delete(int forumId) throws Exception {
-        PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.delete"));
-        p.setInt(1, forumId);
+			p.executeUpdate();
 
-        p.executeUpdate();
+			p.close();
+		}
+	}
 
-        p.close();
-    }
+	/**
+	 * @see net.jforum.model.ForumModel#delete(int)
+	 */
+	public void delete(int forumId) throws Exception {
+		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.delete"));
+		p.setInt(1, forumId);
 
-    /**
-     * @see net.jforum.model.ForumModel#update(net.jforum.Forum)
-     */
-    public void update(Forum forum) throws Exception {
-        PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.update"));
+		p.executeUpdate();
 
-        p.setInt(1, forum.getCategoryId());
-        p.setString(2, forum.getName());
-        p.setString(3, forum.getDescription());
-        p.setInt(4, forum.isModerated() ? 1 : 0);
-        p.setInt(5, forum.getId());
+		p.close();
+	}
 
-        // Order, TotalTopics and LastPostId must be updated using the respective methods
-        p.executeUpdate();
-        p.close();
-    }
+	/**
+	 * @see net.jforum.model.ForumModel#update(net.jforum.Forum)
+	 */
+	public void update(Forum forum) throws Exception {
+		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.update"));
 
-    /**
-     * @see net.jforum.model.ForumModel#addNew(net.jforum.Forum)
-     */
-    public int addNew(Forum forum) throws Exception {
-        // Gets the higher order
-        int maxOrder = 0;
-        PreparedStatement pOrder = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.getMaxOrder"));
-        ResultSet rs = pOrder.executeQuery();
+		p.setInt(1, forum.getCategoryId());
+		p.setString(2, forum.getName());
+		p.setString(3, forum.getDescription());
+		p.setInt(4, forum.isModerated() ? 1 : 0);
+		p.setInt(5, forum.getId());
 
-        if (rs.next()) {
-            maxOrder = rs.getInt("maxOrder");
-        }
+		// Order, TotalTopics and LastPostId must be updated using the
+		// respective methods
+		p.executeUpdate();
+		p.close();
+	}
 
-        rs.close();
-        pOrder.close();
+	/**
+	 * @see net.jforum.model.ForumModel#addNew(net.jforum.Forum)
+	 */
+	public int addNew(Forum forum) throws Exception {
+		// Gets the higher order
+		int maxOrder = 0;
+		PreparedStatement pOrder = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.getMaxOrder"));
+		ResultSet rs = pOrder.executeQuery();
 
-        // Updates the order
-        PreparedStatement p = this.getStatementForAutoKeys("ForumModel.addNew");
-        
-        p.setInt(1, forum.getCategoryId());
-        p.setString(2, forum.getName());
-        p.setString(3, forum.getDescription());
-        p.setInt(4, ++maxOrder);
-        p.setInt(5, forum.isModerated() ? 1 : 0);
+		if (rs.next()) {
+			maxOrder = rs.getInt("maxOrder");
+		}
 
-        int forumId = this.executeAutoKeysQuery(p);
-        
-        p.close();
-        
-        return forumId;
-    }
+		rs.close();
+		pOrder.close();
 
-    /**
-     * @see net.jforum.model.ForumModel#setLastPost(int, int)
-     */
-    public void setLastPost(int forumId, int postId) throws Exception {
-        PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.updateLastPost"));
+		// Updates the order
+		PreparedStatement p = this.getStatementForAutoKeys("ForumModel.addNew");
 
-        p.setInt(1, postId);
-        p.setInt(2, forumId);
+		p.setInt(1, forum.getCategoryId());
+		p.setString(2, forum.getName());
+		p.setString(3, forum.getDescription());
+		p.setInt(4, ++maxOrder);
+		p.setInt(5, forum.isModerated() ? 1 : 0);
 
-        p.executeUpdate();
+		int forumId = this.executeAutoKeysQuery(p);
 
-        p.close();
-    }
+		p.close();
 
-    /**
-     * @see net.jforum.model.ForumModel#setTotalTopics(int)
-     */
-    public void incrementTotalTopics(int forumId, int count) throws Exception 
-    {
-        PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.incrementTotalTopics"));        
-        p.setInt(1, count);
-        p.setInt(2, forumId);
-        p.executeUpdate();
-        p.close();
-    }
-    
+		return forumId;
+	}
+
+	/**
+	 * @see net.jforum.model.ForumModel#setLastPost(int, int)
+	 */
+	public void setLastPost(int forumId, int postId) throws Exception {
+		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.updateLastPost"));
+
+		p.setInt(1, postId);
+		p.setInt(2, forumId);
+
+		p.executeUpdate();
+
+		p.close();
+	}
+
 	/**
 	 * @see net.jforum.model.ForumModel#setTotalTopics(int)
 	 */
-	public void decrementTotalTopics(int forumId, int count) throws Exception 
-	{
+	public void incrementTotalTopics(int forumId, int count) throws Exception {
+		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.incrementTotalTopics"));
+		p.setInt(1, count);
+		p.setInt(2, forumId);
+		p.executeUpdate();
+		p.close();
+	}
+
+	/**
+	 * @see net.jforum.model.ForumModel#setTotalTopics(int)
+	 */
+	public void decrementTotalTopics(int forumId, int count) throws Exception {
 		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.decrementTotalTopics"));
 		p.setInt(1, count);
 		p.setInt(2, forumId);
 		p.executeUpdate();
 		p.close();
-		
+
 		// If there are no more topics, then clean the
-		// last post id information 
+		// last post id information
 		int totalTopics = this.getTotalTopics(forumId);
 		if (totalTopics < 1) {
 			this.setLastPost(forumId, 0);
 		}
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.model.ForumModel#getLastPostInfo(int)
 	 */
-	public LastPostInfo getLastPostInfo(int forumId) throws Exception 
-	{
+	public LastPostInfo getLastPostInfo(int forumId) throws Exception {
 		LastPostInfo lpi = new LastPostInfo();
 
 		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.lastPostInfo"));
 		p.setInt(1, forumId);
 
 		ResultSet rs = p.executeQuery();
-		
+
 		if (rs.next()) {
 			lpi.setUsername(rs.getString("username"));
 			lpi.setUserId(rs.getInt("user_id"));
-			
+
 			SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
 			lpi.setPostDate(df.format(rs.getTimestamp("post_time")));
 			lpi.setPostId(rs.getInt("post_id"));
 			lpi.setTopicId(rs.getInt("topic_id"));
 			lpi.setPostTimeMillis(rs.getTimestamp("post_time").getTime());
 			lpi.setTopicReplies(rs.getInt("topic_replies"));
-			
+
 			lpi.setHasInfo(true);
 		}
-		
+
 		p.close();
 		rs.close();
-		
+
 		return lpi;
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.model.ForumModel#getTotalMessages()
 	 */
-	public int getTotalMessages() throws Exception 
-	{
+	public int getTotalMessages() throws Exception {
 		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.totalMessages"));
 		ResultSet rs = p.executeQuery();
 		rs.next();
-		
+
 		int total = rs.getInt("total_messages");
 		p.close();
 		rs.close();
-		
+
 		return total;
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.model.ForumModel#getTotalTopics(int)
 	 */
-	public int getTotalTopics(int forumId) throws Exception 
-	{
+	public int getTotalTopics(int forumId) throws Exception {
 		int total = 0;
 		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.getTotalTopics"));
 		p.setInt(1, forumId);
 		ResultSet rs = p.executeQuery();
-		
+
 		if (rs.next()) {
 			total = rs.getInt(1);
 		}
-		
+
 		p.close();
 		rs.close();
-		
+
 		return total;
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.model.ForumModel#getMaxPostId(int)
 	 */
-	public int getMaxPostId(int forumId) throws Exception 
-	{
+	public int getMaxPostId(int forumId) throws Exception {
 		int id = -1;
-		
+
 		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.getMaxPostId"));
 		p.setInt(1, forumId);
-		
+
 		ResultSet rs = p.executeQuery();
 		if (rs.next()) {
 			id = rs.getInt("post_id");
 		}
-		
+
 		rs.close();
 		p.close();
-		
+
 		return id;
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.model.ForumModel#moveTopics(java.lang.String[], int, int)
 	 */
-	public void moveTopics(String[] topics, int fromForumId, int toForumId) throws Exception 
-	{
+	public void moveTopics(String[] topics, int fromForumId, int toForumId) throws Exception {
 		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.moveTopics"));
 		PreparedStatement t = this.conn.prepareStatement(SystemGlobals.getSql("PostModel.setForumByTopic"));
-		
+
 		p.setInt(1, toForumId);
 		t.setInt(1, toForumId);
-		
+
 		for (int i = 0; i < topics.length; i++) {
 			int topicId = Integer.parseInt(topics[i]);
 			p.setInt(2, topicId);
 			t.setInt(2, topicId);
-			
+
 			p.executeUpdate();
 			t.executeUpdate();
 		}
-		
+
 		this.decrementTotalTopics(fromForumId, topics.length);
 		this.incrementTotalTopics(toForumId, topics.length);
-		
+
 		p.close();
 	}
 }

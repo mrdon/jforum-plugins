@@ -52,6 +52,7 @@ import net.jforum.model.CategoryModel;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.ForumModel;
 import net.jforum.model.GroupModel;
+import net.jforum.model.TopicModel;
 import net.jforum.model.security.GroupSecurityModel;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.SecurityRepository;
@@ -65,14 +66,14 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.3 2004/11/17 02:16:24 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.4 2004/12/04 20:28:00 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
 	// Listing
 	public void list() throws Exception
 	{
-		JForum.getContext().put("categories", ForumRepository.getAllCategories(true));
+		JForum.getContext().put("categories", ForumRepository.getAllCategories());
 		JForum.getContext().put("moduleAction", "forum_list.htm");
 	}
 	
@@ -142,13 +143,17 @@ public class ForumAction extends Command
 		String ids[] = JForum.getRequest().getParameterValues("forum_id");
 		
 		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
+		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
 		
 		if (ids != null) {
 			for (int i = 0; i < ids.length; i++) {
-				fm.delete(Integer.parseInt(ids[i]));
+				int forumId = Integer.parseInt(ids[i]);
+
+				tm.deleteByForum(forumId);
+				fm.delete(forumId);
 				
 				Forum f = new Forum();
-				f.setId(Integer.parseInt(ids[i]));
+				f.setId(forumId);
 				ForumRepository.removeForum(f);
 			}
 		}

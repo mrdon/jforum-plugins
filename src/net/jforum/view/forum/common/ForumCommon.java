@@ -120,13 +120,13 @@ public class ForumCommon
 		// Do not check for unread posts if the user is not logged in
 		checkUnreadPosts = checkUnreadPosts && (us.getUserId() != anonymousUserId);
 
-		List returnCategories = new ArrayList();
-		List categories = ForumRepository.getAllCategories(userId, false);
+		List categories = ForumRepository.getAllCategories(userId);
 		
 		if (!checkUnreadPosts) {
 			return categories;
 		}
 
+		List returnCategories = new ArrayList();
 		for (Iterator iter = categories.iterator(); iter.hasNext(); ) {
 			Category c = new Category((Category)iter.next());
 			

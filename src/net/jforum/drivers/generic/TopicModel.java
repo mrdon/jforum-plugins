@@ -48,6 +48,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import net.jforum.JForum;
@@ -60,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicModel.java,v 1.9 2004/11/05 03:29:45 rafaelsteil Exp $
+ * @version $Id: TopicModel.java,v 1.10 2004/12/04 20:28:00 rafaelsteil Exp $
  */
 public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel 
 {
@@ -89,19 +90,53 @@ public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel
 	/** 
 	 * @see net.jforum.model.TopicModel#delete(int)
 	 */
-	public void delete(Topic topic) throws Exception 
+	public void delete(final Topic topic) throws Exception 
+	{
+		this.deleteTopics(new ArrayList() {{ add(topic); }});
+	}
+	
+	protected void deleteTopics(List topics) throws Exception
 	{
 		// Topic
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("TopicModel.delete"));
-		p.setInt(1, topic.getId());
-		p.executeUpdate();
+		
+		for (Iterator iter = topics.iterator(); iter.hasNext(); ) {
+			Topic topic = (Topic)iter.next();
+
+			p.setInt(1, topic.getId());
+			p.executeUpdate();
+			
+			// Remove the related posts
+			DataAccessDriver.getInstance().newPostModel().deleteByTopic(topic.getId());
+			
+			// Update forum stats
+			DataAccessDriver.getInstance().newForumModel().decrementTotalTopics(topic.getForumId(), 1);
+		}
+		
+		p.close();
+	}
+	
+	/** 
+	 * @see net.jforum.model.TopicModel#deleteByForum(int)
+	 */
+	public void deleteByForum(int forumId) throws Exception 
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("TopicModel.deleteByForum"));
+		p.setInt(1, forumId);
+		
+		ResultSet rs = p.executeQuery();
+		List topics = new ArrayList();
+		while (rs.next()) {
+			Topic t = new Topic();
+			t.setId(rs.getInt("topic_id"));
+			
+			topics.add(t);
+		}
+		
+		rs.close();
 		p.close();
 		
-		// Remove the related posts
-		DataAccessDriver.getInstance().newPostModel().deleteByTopic(topic.getId());
-		
-		// Update forum stats
-		DataAccessDriver.getInstance().newForumModel().decrementTotalTopics(topic.getForumId(), 1);
+		this.deleteTopics(topics);
 	}
 
 	/** 

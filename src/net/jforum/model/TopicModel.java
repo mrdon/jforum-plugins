@@ -54,7 +54,7 @@ import net.jforum.entities.Topic;
  * select some specific data.
  *
  * @author Rafael Steil
- * @version $Id: TopicModel.java,v 1.5 2004/11/05 03:29:49 rafaelsteil Exp $
+ * @version $Id: TopicModel.java,v 1.6 2004/12/04 20:28:01 rafaelsteil Exp $
  */
 public interface TopicModel 
 {
@@ -105,6 +105,8 @@ public interface TopicModel
 	 * @see #canDelete(int)
 	 */
 	public void delete(Topic topic) throws Exception;
+	
+	public void deleteByForum(int forumId) throws Exception;
 	
 	/**
 	 * Updates a Topic.

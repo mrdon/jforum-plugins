@@ -51,6 +51,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import net.jforum.SessionFacade;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.SecurityConstants;
@@ -69,7 +70,7 @@ import net.jforum.util.ForumOrderComparator;
  * to the user who make the call tho the method. 
  * 
  * @author Rafael Steil
- * @version $Id: Category.java,v 1.8 2004/11/30 01:18:56 rafaelsteil Exp $
+ * @version $Id: Category.java,v 1.9 2004/12/04 20:28:04 rafaelsteil Exp $
  */
 public class Category 
 {
@@ -183,13 +184,13 @@ public class Category
 	 * Gets a forum.
 	 * 
 	 * @param forumId The forum's id 
-	 * @return The requested forum, if found, regardless it is 
-	 * accessible to the user or not, or <code>null</code> if
-	 * the forum does not exists.
+	 * @return The requested forum, if found, or <code>null</code> if
+	 * the forum does not exists or access to it is denied.
+	 * @see #getForum(int, int)
 	 */
 	public Forum getForum(int forumId)
 	{
-		return (Forum)this.forumsIdMap.get(new Integer(forumId));
+		return this.getForum(SessionFacade.getUserSession().getUserId(), forumId);
 	}
 
 	/**
@@ -200,7 +201,7 @@ public class Category
 	 */
 	public Collection getForums()
 	{
-		return this.forums;
+		return this.getForums(SessionFacade.getUserSession().getUserId());
 	}
 
 	/**
