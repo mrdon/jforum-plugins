@@ -75,7 +75,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostVH.java,v 1.27 2004/08/01 12:34:22 jamesyong Exp $
+ * @version $Id: PostVH.java,v 1.28 2004/08/06 16:18:34 jamesyong Exp $
  */
 public class PostVH extends Command 
 {
@@ -230,6 +230,7 @@ public class PostVH extends Command
 		JForum.getContext().put("moduleAction", "post_form.htm");
 		JForum.getContext().put("start", JForum.getRequest().getParameter("start"));
 		JForum.getContext().put("isNewPost", true);
+		JForum.getContext().put("isModerator", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION));
 		
 		int userId = SessionFacade.getUserSession().getUserId();
 		JForum.getContext().put("user", DataAccessDriver.getInstance().newUserModel().selectById(userId));

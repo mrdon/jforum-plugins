@@ -493,7 +493,7 @@ function validatePostForm(f)
 			</TR>
 			</#if>
 
-				<#if setType?default(true) && forum?exists>
+				<#if setType?default(true) && forum?exists && isModerator?if_exists>
               	<TR>
                 <TD></TD>
                 <TD>
