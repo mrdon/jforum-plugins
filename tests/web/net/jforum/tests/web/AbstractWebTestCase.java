@@ -53,8 +53,7 @@ import com.dumbster.smtp.SimpleSmtpServer;
 
 /**
  * @author Marc Wick
- * @version $Id: AbstractWebTestCase.java,v 1.7 2004/10/01 20:50:38 rafaelsteil
- *          Exp $
+ * @version $Id: AbstractWebTestCase.java,v 1.9 2004/10/03 13:03:58 marcwick Exp $
  */
 public abstract class AbstractWebTestCase extends WebTestCase {
 	public static class SimpleHTMLParserListener implements
