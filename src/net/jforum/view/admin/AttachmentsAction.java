@@ -64,7 +64,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentsAction.java,v 1.5 2005/02/21 14:31:09 rafaelsteil Exp $
+ * @version $Id: AttachmentsAction.java,v 1.6 2005/03/12 19:04:18 rafaelsteil Exp $
  */
 public class AttachmentsAction extends Command
 {
@@ -255,13 +255,13 @@ public class AttachmentsAction extends Command
 		am.cleanGroupQuota();
 		
 		for (int i = 0; i < total; i++) {
-			String l = this.request.getParameter("limit_" + (i - 1));
+			String l = this.request.getParameter("limit_" + i);
 			if (l == null || l.equals("")) {
 				continue;
 			}
 			
 			int limitId = Integer.parseInt(l);
-			int groupId = this.request.getIntParameter("group_" + (i - 1));
+			int groupId = this.request.getIntParameter("group_" + i);
 			
 			if (groupId > 0) {
 				am.setGroupQuota(groupId, limitId);

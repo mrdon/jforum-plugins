@@ -175,11 +175,13 @@ function changeValue(field, value)
 	<td class='row2' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.Images.I18n")}</span></td>
 	<td class='row2' width="38%">
 		<span class='gensmall'>templates/${templateName}/images/</span>
+
+		<#assign v = config.getProperty("i18n.images.dir")/>
 		<select name="p_i18n.images.dir">
-			<option value="en_US">en_US</option>
-			<option value="pt_BR">pt_BR</option>
-			<option value="de_DE">de_DE</option>
-			<option value="zh_TW">zh_TW</option>
+			<option value="en_US" <#if v == "en_US">selected</#if>>en_US</option>
+			<option value="pt_BR" <#if v == "pt_BR">selected</#if>>pt_BR</option>
+			<option value="de_DE" <#if v == "de_DE">selected</#if>>de_DE</option>
+			<option value="zh_TW" <#if v == "zh_TW">selected</#if>>zh_TW</option>
 		</select>
 	</td>
 </tr>

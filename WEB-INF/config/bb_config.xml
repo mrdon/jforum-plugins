@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: bb_config.xml,v 1.16 2005/03/12 19:04:18 rafaelsteil Exp $ -->
 <bbConfig>
 	<!-- CODE -->
 	<match name="code">
@@ -112,7 +113,7 @@
 
 	<!-- Automatic URL matching -->
 	<match name="auto-url" removeQuotes="true" alwaysProcess="true">
-		<regex>(^|[\n ]|\()([\w]+?://[^ \"\n\r\t&lt;\)]*)</regex>
+		<regex>(^|[\n ]|\()([\w]+?://[^ \"\n\r\t&lt;\)\[]*)</regex>
 		<replace>
 		<![CDATA[
 		$1<a href="$2" target="_blank" rel="nofollow">$2</a>
@@ -121,7 +122,7 @@
 	</match>
 
 	<match name="auto-url-simple" removeQuotes="true" alwaysProcess="true">
-		<regex>(^|[\n ]\()(www\.[^ \"\t\n\r&lt;\)]*)</regex>
+		<regex>(^|[\n ]\()(www\.[^ \"\t\n\r&lt;\)\[]*)</regex>
 		<replace>
 		<![CDATA[
 		$1<a href="http://$2" target="_blank" rel="nofollow">$2</a>
@@ -130,7 +131,7 @@
 	</match>
 
 	<match name="auto-ftp-simple" removeQuotes="true" alwaysProcess="true">
-		<regex>(^|[\n ]\()(ftp\.[^ \"\t\n\r&lt;\)]*)</regex>
+		<regex>(^|[\n ]\()(ftp\.[^ \"\t\n\r&lt;\)\[]*)</regex>
 		<replace>
 		<![CDATA[
 		$1<a href="ftp://$2" target="_blank" rel="nofollow">$2</a>
