@@ -90,8 +90,8 @@
               <TD vAlign=center noWrap align=right><SPAN class=gen>${I18n.getMessage("UserProfile.emailAddress")}:</SPAN></TD>
               <TD class=row1 vAlign=center width="100%"><B>
               	<SPAN class=gen>
-              	<A href="mailto:<@utils.convertEmail u.email/>">
-                  <img src="${contextPath}/templates/${templateName}/images/icon_email.gif" border=0></A></SPAN></B>
+              	<@utils.convertEmail u.email/>
+                  </SPAN></B>
                   </TD>
             </TR>
 			</#if>
