@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: TopicModel.java,v 1.3 2004/04/21 23:57:24 rafaelsteil Exp $
+ * $Id: TopicModel.java,v 1.4 2004/11/02 12:48:42 jamesyong Exp $
  */
 package net.jforum.model;
 
@@ -241,4 +241,12 @@ public interface TopicModel
 	 * @throws Exception
 	 */
 	public void lockUnlock(int[] topicId, int status) throws Exception;
+
+	/**
+	 * Selects recent topics 
+	 *
+	 * @param limit The number of topics to retrieve
+	 * @throws Exception
+	 */	
+	public ArrayList selectRecentTopics (int limit) throws Exception;
 }

@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicModel.java,v 1.7 2004/10/04 10:08:17 marcwick Exp $
+ * @version $Id: TopicModel.java,v 1.8 2004/11/02 12:45:13 jamesyong Exp $
  */
 public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel 
 {
@@ -478,5 +478,24 @@ public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel
 			p.executeUpdate();
 		}
 		p.close();
+	}
+	
+	/** 
+	 * @see net.jforum.model.TopicModel#selectRecentTopics(int)
+	 */	
+	public ArrayList selectRecentTopics (int limit) throws Exception
+	{
+		ArrayList l = new ArrayList();
+
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("TopicModel.selectRecentTopicsByLimit"));
+		p.setInt(1, limit);
+		
+		ResultSet rs = p.executeQuery();
+		
+		l = this.fillTopicsData(rs);
+		
+		rs.close();
+		p.close();
+		return l;		
 	}
 }
