@@ -54,7 +54,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: BookmarkModel.java,v 1.1 2005/01/17 12:22:32 rafaelsteil Exp $
+ * @version $Id: BookmarkModel.java,v 1.2 2005/01/26 12:57:15 rafaelsteil Exp $
  */
 public class BookmarkModel implements net.jforum.model.BookmarkModel
 {
@@ -120,6 +120,28 @@ public class BookmarkModel implements net.jforum.model.BookmarkModel
 			throw new InvalidBookmarkType("The type " + relationType 
 					+ " is not a valid bookmark type");
 		}
+	}
+	
+	/**
+	 * @see net.jforum.model.BookmarkModel#selectByUser(int)
+	 */
+	public List selectByUser(int userId) throws Exception
+	{
+		List l = new ArrayList();
+		
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("BookmarkModel.selectAllFromUser"));
+		p.setInt(1, userId);
+		
+		ResultSet rs = p.executeQuery();
+		while (rs.next()) {
+			l.add(this.getBookmark(rs));
+		}
+		
+		rs.close();
+		p.close();
+		
+		return l;
 	}
 	
 	/**

@@ -47,7 +47,7 @@ import net.jforum.entities.Bookmark;
 
 /**
  * @author Rafael Steil
- * @version $Id: BookmarkModel.java,v 1.1 2005/01/17 12:22:30 rafaelsteil Exp $
+ * @version $Id: BookmarkModel.java,v 1.2 2005/01/26 12:57:13 rafaelsteil Exp $
  */
 public interface BookmarkModel
 {
@@ -89,6 +89,17 @@ public interface BookmarkModel
 	 * @throws Exception
 	 */
 	public List selectByUser(int userId, int relationType) throws Exception;
+	
+	/**
+	 * Gets all bookmarks from some user.
+	 * 
+	 * @param userId The bookmark's owner
+	 * <code>net.jforum.entities.BookmarkType</code>
+	 * @return A list with all results found. Each entry is
+	 * a {@link net.jforum.entities.Bookmark} instance.
+	 * @throws Exception
+	 */
+	public List selectByUser(int userId) throws Exception;
 	
 	/**
 	 * Gets a bookmark.

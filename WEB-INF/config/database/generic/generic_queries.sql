@@ -458,6 +458,11 @@ BookmarkModel.selectUserBookmarks = SELECT b.bookmark_id, b.user_id, b.relation_
 	AND b.relation_id = u.user_id \
 	AND b.user_id = ? \
 	ORDER BY u.username
+	
+BookmarkModel.selectAllFromUser = SELECT b.bookmark_id, b.user_id, b.relation_type, b.relation_id, b.public_visible, b.title, b.description \
+	FROM jforum_bookmarks b \
+	WHERE b.user_id = ? \
+	ORDER BY b.title
 
 BookmarkModel.selectForUpdate = SELECT bookmark_id, relation_id, public_visible, relation_type, title, description, user_id \
 	FROM jforum_bookmarks WHERE relation_id = ? AND relation_type = ? AND user_id = ?

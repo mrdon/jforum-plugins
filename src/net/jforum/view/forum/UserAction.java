@@ -73,7 +73,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.26 2005/01/25 13:53:38 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.27 2005/01/26 12:57:14 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -162,6 +162,16 @@ public class UserAction extends Command
 		if (username == null || username.trim().equals("") 
 				|| password == null || password.trim().equals("")) {
 			this.context.put("error", I18n.getMessage("UsernamePasswordCannotBeNull"));
+			error = true;
+		}
+		
+		if (!error && username.length() > SystemGlobals.getIntValue(ConfigKeys.USERNAME_MAX_LENGTH)) {
+			this.context.put("error", I18n.getMessage("User.usernameTooBig"));
+			error = true;
+		}
+		
+		if (!error && username.indexOf('<') > -1 || username.indexOf('>') > -1) {
+			this.context.put("error", I18n.getMessage("User.usernameInvalidChars"));
 			error = true;
 		}
 

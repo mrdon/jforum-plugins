@@ -67,7 +67,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: BookmarkAction.java,v 1.1 2005/01/17 12:22:30 rafaelsteil Exp $
+ * @version $Id: BookmarkAction.java,v 1.2 2005/01/26 12:57:14 rafaelsteil Exp $
  */
 public class BookmarkAction extends Command
 {
@@ -245,7 +245,15 @@ public class BookmarkAction extends Command
 	 */
 	public void list() throws Exception
 	{
-		this.error("invalidAction");
+		int userId = this.request.getIntParameter("user_id");
+		
+		this.context.put("moduleAction", "bookmark_list.htm");
+		this.context.put("bookmarks", DataAccessDriver.getInstance().newBookmarkModel().selectByUser(userId));
+		this.context.put("forumType", new Integer(BookmarkType.FORUM));
+		this.context.put("userType", new Integer(BookmarkType.USER));
+		this.context.put("topicType", new Integer(BookmarkType.TOPIC));
+		
+		this.setTemplateName(null);
 	}
 	
 	/**
