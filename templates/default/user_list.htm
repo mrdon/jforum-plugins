@@ -18,7 +18,9 @@
 	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("UserProfile.from")}&nbsp;</th>
 	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("UserProfile.registrationDate")}&nbsp;</th>
 	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("User.numMessages")}&nbsp;</th>
-	  <th class="thCornerR" nowrap="nowrap">&nbsp;${I18n.getMessage("UserProfile.webSite")}&nbsp;</th>
+	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("Karma.totalReceived")}&nbsp;</th>
+	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("Karma.totalGiven")}&nbsp;</th>
+	  <th class="thCornerR" nowrap="nowrap">&nbsp;${I18n.getMessage("Karma.karma")}&nbsp;</th>
 	</tr>
   <#assign id = start+1/>
 	<#list users as user>
@@ -34,13 +36,15 @@
 			<td class="row2"><span class="gen"><#if (user.location?exists && user.location?length > 0)>${user.location}<#else>&nbsp;</#if></span></td>
 			<td class="row2"><span class="gen">${user.registrationDate?date("dd/MM/yyyy")}</span></td>
 			<td class="row2"><span class="gen">${user.totalPosts}</span></td>
-			<td class="row2"><span class="gen"><#if (user.webSite?exists && user.webSite?length > 0)><a href="${user.webSite}" target="_new"><img src="${contextPath}/templates/${templateName}/images/icon_www.gif" border="0" /></a><#else>&nbsp;</#if></span></td>
+			<td class="row2"><span class="gen">?</span></td>
+			<td class="row2"><span class="gen">?</span></td>
+			<td class="row2"><span class="gen">${user.karma.karmaPoints}</span></td>
 		</tr>
 		<#assign id = id+1/>
 	</#list>
 
 	<tr align="center">
-		<td class="catBottom" colspan="8" height="28">&nbsp;
+		<td class="catBottom" colspan="10" height="28">&nbsp;
 		</td>
 	</tr>
 </table>

@@ -47,6 +47,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import net.jforum.JForum;
@@ -54,12 +55,13 @@ import net.jforum.drivers.external.LoginAuthenticator;
 import net.jforum.entities.Group;
 import net.jforum.entities.KarmaStatus;
 import net.jforum.entities.User;
+import net.jforum.model.DataAccessDriver;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.24 2005/01/14 21:11:50 rafaelsteil Exp $
+ * @version $Id: UserModel.java,v 1.25 2005/01/31 16:56:56 franklin_samir Exp $
  */
 public class UserModel extends AutoKeys implements net.jforum.model.UserModel 
 {
@@ -84,7 +86,8 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 	 */
 	public User selectById(int userId) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectById"));
+	    String q = SystemGlobals.getSql("UserModel.selectById");
+		PreparedStatement p = JForum.getConnection().prepareStatement(q);
 		p.setInt(1, userId);
 		
 		ResultSet rs = p.executeQuery();
@@ -359,6 +362,23 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		
 		return list;
 	}
+	
+	/** 
+	 * @see net.jforum.model.UserModel#selectAllWithKarma()
+	 */
+	public List selectAllWithKarma() throws Exception 
+	{
+		return selectAllWithKarma(0, 0);
+	}	
+	
+	/** 
+	 * @see net.jforum.model.UserModel#selectAllWithKarma(int, int)
+	 */
+	public List selectAllWithKarma(int startFrom, int count) throws Exception 
+	{
+	    return this.loadKarma( this.selectAll(startFrom, count) );
+	}
+
 	
 	protected List processSelectAll(ResultSet rs) throws Exception
 	{
@@ -665,5 +685,24 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		p.close();
 		
 		return status;
+	}
+	
+	/**
+	 * Load KarmaStatus from a list of users.
+	 * @param users 
+	 * @return
+	 * @throws Exception
+	 */
+	protected List loadKarma(List users) throws Exception{
+	    List result = new ArrayList(users.size());
+	    
+	    User user = null;
+		Iterator iter = users.iterator(); 
+		while (iter.hasNext()) {		    
+		    user = (User) iter.next();
+		    user.setKarma(DataAccessDriver.getInstance().newKarmaModel().getUserKarma(user.getId()));
+		    result.add(user);
+        }		
+		return result;
 	}
 }

@@ -52,7 +52,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: UserModel.java,v 1.1 2005/01/26 19:39:37 franklin_samir Exp $
+ * @version $Id: UserModel.java,v 1.2 2005/01/31 16:56:56 franklin_samir Exp $
  */
 public class UserModel extends net.jforum.drivers.generic.UserModel
 {
@@ -88,4 +88,13 @@ public class UserModel extends net.jforum.drivers.generic.UserModel
 		
 		return list;
 	}
+	
+	/** 
+	 * @see net.jforum.model.UserModel#selectAllWithKarma(int, int)
+	 */
+	public List selectAllWithKarma(int startFrom, int count) throws Exception 
+	{
+	    return super.loadKarma( this.selectAll(startFrom, count) );
+	}
+	
 }
