@@ -52,6 +52,7 @@ import net.jforum.model.DataAccessDriver;
 import net.jforum.model.ForumModel;
 import net.jforum.model.TopicModel;
 import net.jforum.repository.ForumRepository;
+import net.jforum.repository.PostRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.repository.TopicRepository;
 import net.jforum.security.SecurityConstants;
@@ -60,7 +61,7 @@ import net.jforum.view.forum.common.ForumCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationHelper.java,v 1.12 2005/02/11 00:56:45 rafaelsteil Exp $
+ * @version $Id: ModerationHelper.java,v 1.13 2005/02/25 20:00:29 rafaelsteil Exp $
  */
 public class ModerationHelper 
 {
@@ -135,6 +136,7 @@ public class ModerationHelper
 				}
 				
 				tm.delete(t);
+				PostRepository.clearCache(t.getId());
 			}
 			
 			ForumModel fm = DataAccessDriver.getInstance().newForumModel();
