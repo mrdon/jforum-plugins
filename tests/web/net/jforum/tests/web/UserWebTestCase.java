@@ -47,12 +47,9 @@ import java.util.Random;
 
 import net.jforum.util.I18n;
 
-import com.dumbster.smtp.SimpleSmtpServer;
-import com.dumbster.smtp.SmtpMessage;
-
 /**
  * @author Marc Wick
- * @version $Id: UserWebTestCase.java,v 1.4 2004/09/24 12:59:17 rafaelsteil Exp $
+ * @version $Id: UserWebTestCase.java,v 1.5 2004/09/24 20:56:36 rafaelsteil Exp $
  */
 public class UserWebTestCase extends AbstractWebTestCase {
 
@@ -104,7 +101,4 @@ public class UserWebTestCase extends AbstractWebTestCase {
 		submit();
 		clickLinkWithText(I18n.getMessage(language, "ForumBase.logout"));
 	}
-
-	public void testEditUserProfile() {
-		login(lastTestuser, password);
-		click
+}

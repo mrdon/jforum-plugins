@@ -64,7 +64,7 @@ import net.jforum.util.preferences.SystemGlobals;
  *  
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: I18n.java,v 1.13 2004/09/14 02:16:48 rafaelsteil Exp $
+ * @version $Id: I18n.java,v 1.14 2004/09/24 20:52:12 rafaelsteil Exp $
  */
 public class I18n 
 {
@@ -114,7 +114,7 @@ public class I18n
 		Properties defaultI18n = new Properties();
 		defaultI18n.load(new FileInputStream(baseDir + localeNames.getProperty(defaultLocaleName)));
 		
-		if (defaultLocaleName.toString().equals(localeName)) {
+		if (defaultLocaleName.equals(localeName)) {
 			messagesMap.put(localeName, defaultI18n);
 		}
 		else {
@@ -208,11 +208,11 @@ public class I18n
 	{
 		UserSession us = SessionFacade.getUserSession();
 
-		if (us == null || us.getLang().equals("")){
+		if (us == null || us.getLang() == null || us.getLang().equals("")) {
 			return getMessage(defaultName, m);
 		}
 		else {
-			return getMessage(SessionFacade.getUserSession().getLang(), m);
+			return getMessage(us.getLang(), m);
 		}
 	}
 	
