@@ -72,7 +72,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.19 2004/11/30 01:18:48 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.20 2004/12/19 22:32:12 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -176,8 +176,7 @@ public class UserAction extends Command
 			try {
 				//Send an email to new user
 				QueuedExecutor.getInstance().execute(
-						new EmailSenderTask(new ActivationKeySpammer(
-								userId, u.getUsername(), u.getEmail(), u.getActivationKey())));
+						new EmailSenderTask(new ActivationKeySpammer(u)));
 			} 
 			catch (Exception e) {
 				logger.warn("Error while trying to send an email: " + e);
