@@ -56,7 +56,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicSpammer.java,v 1.9 2004/11/17 00:02:13 rafaelsteil Exp $
+ * @version $Id: TopicSpammer.java,v 1.10 2005/02/18 12:52:47 franklin_samir Exp $
  */
 public class TopicSpammer extends Spammer 
 {
@@ -89,6 +89,8 @@ public class TopicSpammer extends Spammer
 		SimpleHash params = new SimpleHash();
 		params.put("topic", topic);
 		params.put("path", path);
+		params.put("forumLink", forumLink);
+		
 		
 		super.prepareMessage(recipients, params,
 			MessageFormat.format(SystemGlobals.getValue(ConfigKeys.MAIL_NEW_ANSWER_SUBJECT), new String[] { topic.getTitle() }),
