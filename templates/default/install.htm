@@ -48,7 +48,7 @@ function checkBoard()
 function checkDatabase()
 {
 	var f = document.install;
-  var s = "";
+	var s = "";
   
 	if (f.db_connection_type.selectedIndex == 0) {  // native selected
 		if (f.dbpasswd.value != f.dbpasswd_confirm.value) {
@@ -74,13 +74,19 @@ function checkDatabase()
 				return false;
 			}
 		}
-  } else {
-    if (f.dbdatasource == "") {
-      s += "${I18n.getMessage("Install.dbDataSource")} ${I18n.getMessage("Install.isEmpty")}\n";
-    }
-  }
-	if (s != "" && confirm("${I18n.getMessage("Install.dbIssues")}: \n\n" + s + "\n${I18n.getMessage("Install.dbMayResultError")}")) {
-		return true;
+	} 
+	else {
+		if (f.dbdatasource.value == "") {
+			s += "${I18n.getMessage("Install.dbDataSource")} ${I18n.getMessage("Install.isEmpty")}\n";
+		}
+	}
+	
+	if (s != "") {
+		if (confirm("${I18n.getMessage("Install.dbIssues")}: \n\n" + s + "\n${I18n.getMessage("Install.dbMayResultError")}")) {
+			return true;
+		}
+		
+		return false;
 	}
 
 	return true;

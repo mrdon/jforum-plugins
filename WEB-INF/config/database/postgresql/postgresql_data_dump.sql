@@ -157,3 +157,16 @@ INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (35, 'perm_
 
 INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (34, '1', 1);
 INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (35, '1', 1);
+
+
+--
+-- Update sequences
+--
+SELECT SETVAL('jforum_posts_seq', MAX(post_id) + 1) FROM jforum_posts;
+SELECT SETVAL('jforum_categories_seq', MAX(categories_id) + 1) FROM jforum_categories;
+SELECT SETVAL('jforum_forums_seq', MAX(forum_id) + 1) FROM jforum_forums;
+SELECT SETVAL('jforum_topics_seq', MAX(topic_id) + 1) FROM jforum_topics;
+SELECT SETVAL('jforum_roles_seq', MAX(role_id) + 1) FROM jforum_roles;
+SELECT SETVAL('jforum_users_seq', MAX(user_id) + 1) FROM jforum_users;
+SELECT SETVAL('jforum_groups_seq', MAX(group_id) + 1) FROM jforum_groups;
+SELECT SETVAL('jforum_smilies_seq', MAX(smilie_id) + 1) FROM jforum_smilies;

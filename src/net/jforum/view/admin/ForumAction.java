@@ -72,7 +72,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.15 2005/02/22 23:39:23 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.16 2005/02/24 15:32:03 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -254,6 +254,9 @@ public class ForumAction extends Command
 		else {
 			this.addRole(pc, SecurityConstants.PERM_READ_ONLY_FORUMS, f.getId(), allGroups, true);
 		}
+		
+		// Reply-only
+		this.addRole(pc, SecurityConstants.PERM_REPLY_ONLY, f.getId(), allGroups, true);
 		
 		// HTML
 		groups = this.request.getParameterValues("groupsHtml");

@@ -49,7 +49,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.7 2005/02/23 20:38:35 rafaelsteil Exp $
+ * @version $Id: UserModel.java,v 1.8 2005/02/24 15:32:01 rafaelsteil Exp $
  */
 public class UserModel extends net.jforum.drivers.generic.UserModel
 {
@@ -82,6 +82,6 @@ public class UserModel extends net.jforum.drivers.generic.UserModel
 	 */
 	public List selectAllByGroup(int groupId, int start, int count) throws Exception
 	{
-		return super.selectAllByGroup(groupId, count, start + count);
+		return super.selectAllByGroup(groupId, count, (start > 0 ? start + count : 0));
 	}
 }

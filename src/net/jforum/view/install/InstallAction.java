@@ -82,7 +82,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.24 2005/02/23 21:03:32 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.25 2005/02/24 15:32:01 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -308,10 +308,20 @@ public class InstallAction extends Command
 				continue;
 			}
 			
+			query = query.trim();
+			
 			Statement s = conn.createStatement();
 			
 			try {
-				s.executeUpdate(query);
+				if (query.startsWith("UPDATE") || query.startsWith("INSERT")) {
+					s.executeUpdate(query);
+				}
+				else if (query.startsWith("SELECT")) {
+					s.executeQuery(query);
+				}
+				else {
+					throw new Exception("Invalid query: " + query);
+				}
 			}
 			catch (SQLException ex) {
 				status = false;

@@ -76,7 +76,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.13 2005/02/22 20:32:42 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.14 2005/02/24 15:32:00 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {
@@ -159,11 +159,15 @@ public class AttachmentCommon
 			}
 			
 			if (index > -1) {
+				if (separator.equals("\\")) {
+					separator = "\\\\";
+				}
+				
 				String[] p = realName.split(separator);
 				realName = p[p.length - 1];
 			}
 			
-			info.setRealFilename(item.getName());
+			info.setRealFilename(realName);
 			info.setUploadTimeInMillis(System.currentTimeMillis());
 			
 			AttachmentExtension ext = this.am.selectExtension(uploadUtils.getExtension().toLowerCase());
