@@ -111,6 +111,25 @@ DROP TABLE [jforum_karma]
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'[jforum_bookmarks]') AND OBJECTPROPERTY(id, N'IsUserTable') = 1)
 DROP TABLE [jforum_bookmarks]
 
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'[jforum_quota_limit]') AND OBJECTPROPERTY(id, N'IsUserTable') = 1)
+DROP TABLE [jforum_quota_limit]
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'[jforum_extension_groups]') AND OBJECTPROPERTY(id, N'IsUserTable') = 1)
+DROP TABLE [jforum_extension_groups]
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'[jforum_extensions]') AND OBJECTPROPERTY(id, N'IsUserTable') = 1)
+DROP TABLE [jforum_extensions]
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'[jforum_attach]') AND OBJECTPROPERTY(id, N'IsUserTable') = 1)
+DROP TABLE [jforum_attach]
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'[jforum_attach_desc]') AND OBJECTPROPERTY(id, N'IsUserTable') = 1)
+DROP TABLE [jforum_attach_desc]
+
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'[jforum_attch_quota]') AND OBJECTPROPERTY(id, N'IsUserTable') = 1)
+DROP TABLE [jforum_attch_quota]
+
+
 CREATE TABLE [jforum_banlist] (
 	[banlist_id] [bigint] IDENTITY (1, 1) PRIMARY KEY CLUSTERED NOT NULL ,
 	[user_id] [bigint] DEFAULT (0) NOT NULL ,
@@ -420,6 +439,58 @@ CREATE TABLE [jforum_bookmarks] (
 	[description] [varchar] (255)
 ) ON [PRIMARY]
 
+CREATE TABLE [jforum_quota_limit] (
+	[quota_limit_id] [INT] IDENTITY (1, 1) PRIMARY KEY CLUSTERED NOT NULL,
+	[quota_desc] [VARCHAR](50) NOT NULL,
+	[quota_limit] [INT] NOT NULL,
+	[quota_type] [TINYINT] DEFAULT (1)
+) ON [PRIMARY]
+
+CREATE TABLE [jforum_extension_groups] (
+	[extension_group_id] [INT] IDENTITY (1, 1) PRIMARY KEY CLUSTERED NOT NULL,
+	[name] [VARCHAR](100) NOT NULL,
+	[allow] [TINYINT] DEFAULT (1), 
+	[upload_icon] [VARCHAR](100),
+	[download_mode] [TINYINT] DEFAULT (1)
+) ON [PRIMARY]
+
+CREATE TABLE [jforum_extensions] (
+	[extension_id] [INT] IDENTITY (1, 1) PRIMARY KEY CLUSTERED NOT NULL,
+	[extension_group_id] [INT] NOT NULL,
+	[description][VARCHAR](100),
+	[upload_icon] [VARCHAR](100),
+	[extension] [VARCHAR](10),
+	[allow] [TINYINT] DEFAULT (1)
+) ON [PRIMARY]
+
+CREATE TABLE [jforum_attach] (
+	[attach_id] [INT] IDENTITY (1, 1) PRIMARY KEY CLUSTERED NOT NULL,
+	[post_id] [INT],
+	[privmsgs_id] [INT],
+	[user_id] [INT] NOT NULL
+) ON [PRIMARY]
+
+CREATE TABLE [jforum_attach_desc] (
+	[attach_desc_id] [INT] IDENTITY (1, 1) PRIMARY KEY CLUSTERED NOT NULL,
+	[attach_id] [INT] NOT NULL,
+	[physical_filename] [VARCHAR](255) NOT NULL,
+	[real_filename] [VARCHAR](255) NOT NULL,
+	[download_count] [INT],
+	[description ][VARCHAR](255),
+	[mimetype] [VARCHAR](50),
+	[filesize] [INT],
+	[upload_time] [DATETIME],
+	[thumb] [TINYINT] DEFAULT (0),
+	[extension_id] [INT]
+) ON [PRIMARY]
+
+CREATE TABLE [jforum_attach_quota] (
+	[attach_quota_id] [INT] IDENTITY (1, 1) PRIMARY KEY CLUSTERED NOT NULL,
+	[group_id] [INT] NOT NULL,
+	[quota_limit_id] [INT] NOT NULL
+) ON [PRIMARY]
+
+
  CREATE  INDEX [forum_id] ON [jforum_posts]([forum_id]) ON [PRIMARY]
  CREATE  INDEX [idx_role] ON [jforum_role_values]([role_id]) ON [PRIMARY]
  CREATE  INDEX [idx_group] ON [jforum_roles]([group_id]) ON [PRIMARY]
@@ -450,3 +521,9 @@ CREATE TABLE [jforum_bookmarks] (
  CREATE  INDEX [topic_id] ON [jforum_posts]([topic_id]) ON [PRIMARY]
  CREATE  INDEX [karma_id] ON [jforum_karma]([karma_id]) ON [PRIMARY]
  CREATE  INDEX [bookmarks_relation_id] ON [jforum_bookmarks]([relation_id]) ON [PRIMARY]
+
+ CREATE  INDEX [idx_att_post] ON [jforum_attach]([post_id]) ON [PRIMARY]
+ CREATE  INDEX [idx_att_priv] ON [jforum_attach]([privmsgs_id]) ON [PRIMARY]
+ CREATE  INDEX [idx_att_user] ON [jforum_attach]([user_id]) ON [PRIMARY]
+ CREATE  INDEX [idx_att_d_att] ON [jforum_attach_desc]([attach_id]) ON [PRIMARY]
+ CREATE  INDEX [idx_att_d_ext] ON [jforum_attach_desc]([extension_id]) ON [PRIMARY]
