@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) 2003, 2004 Rafael Steil
  * All rights reserved.
  * 
- *  * Redistribution and use in source and binary forms, 
+ * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
  * 
@@ -55,7 +55,7 @@ import org.apache.log4j.Logger;
  * Monitor class for file changes.
  * 
  * @author Rafael Steil
- * @version $Id: FileMonitor.java,v 1.2 2004/06/05 22:10:05 rafaelsteil Exp $
+ * @version $Id: FileMonitor.java,v 1.3 2004/09/22 01:36:13 rafaelsteil Exp $
  */
 public class FileMonitor
 {
@@ -92,7 +92,7 @@ public class FileMonitor
 		
 		FileMonitorTask task = new FileMonitorTask(listener, filename);
 		
-		this.timerEntries.put(filename + listener.hashCode(), task);
+		this.timerEntries.put(filename, task);
 		this.timer.schedule(task, period, period);
 	}
 	
@@ -105,8 +105,7 @@ public class FileMonitor
 	 *            The filename to keep watch
 	 */
 	public void removeFileChangeListener(FileChangeListener listener, String filename) {
-		String key = filename + listener.hashCode();
-		FileMonitorTask task = (FileMonitorTask)this.timerEntries.remove(key);
+		FileMonitorTask task = (FileMonitorTask)this.timerEntries.remove(filename);
 		
 		if (task != null) {
 			task.cancel();

@@ -65,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.5 2004/09/11 02:43:20 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.6 2004/09/22 01:36:12 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -389,7 +389,8 @@ public class UserAction extends Command
 			String password = JForum.getRequest().getParameter("newPassword");
 			DataAccessDriver.getInstance().newUserModel().saveNewPassword(MD5.crypt(password), email);
 			
-			message = I18n.getMessage("PasswordRecovery.ok", new String[] { "/user/login"
+			message = I18n.getMessage("PasswordRecovery.ok", new String[] { JForum.getRequest().getContextPath()
+					+ "/user/login"
 					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)});
 		}
 		else {

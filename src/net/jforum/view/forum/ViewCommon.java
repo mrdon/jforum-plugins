@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ViewCommon.java,v 1.9 2004/08/28 16:03:39 rafaelsteil Exp $
+ * $Id: ViewCommon.java,v 1.10 2004/09/22 01:36:12 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 
@@ -216,5 +216,15 @@ public final class ViewCommon
 			// Delete de temporary file
 			new File(avatarTmpFileName).delete();
 		}
+	}
+	
+	public static void contextToLogin() 
+	{
+		JForum.getContext().put("moduleAction", "forum_login.htm");
+		String uri = JForum.getRequest().getRequestURI();
+		String query = JForum.getRequest().getQueryString();
+		String path = query == null ? uri : uri + "?" + query;
+
+		JForum.getContext().put("returnPath", path);
 	}
 }

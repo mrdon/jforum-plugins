@@ -80,6 +80,10 @@ SearchModel.lastGeneratedWordId = SELECT CURRVAL('jforum_search_words_seq')
 SearchModel.cleanSearchResults = DELETE FROM jforum_search_results WHERE session = ? OR time < (NOW() - INTERVAL '1 HOUR')
 SearchModel.cleanSearchTopics = DELETE FROM jforum_search_topics WHERE session = ? OR time < (NOW() - INTERVAL '1 HOUR')
 
+SearchModel.insertTopicsIds = INSERT INTO jforum_search_results ( topic_id, session, time ) SELECT DISTINCT t.topic_id, ?::varchar, NOW() FROM jforum_topics t, jforum_posts p \
+	WHERE t.topic_id = p.topic_id \
+	AND p.post_id IN (:posts:)
+
 # #############
 # SmiliesModel
 # #############

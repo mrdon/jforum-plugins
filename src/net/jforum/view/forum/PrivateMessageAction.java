@@ -59,11 +59,10 @@ import net.jforum.util.mail.EmailSenderTask;
 import net.jforum.util.mail.PrivateMessageSpammer;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.3 2004/09/11 02:43:20 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.4 2004/09/22 01:36:12 rafaelsteil Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -71,6 +70,11 @@ public class PrivateMessageAction extends Command
 	
 	public void inbox() throws Exception
 	{
+		if (!SessionFacade.isLogged()) {
+			ViewCommon.contextToLogin();
+			return;
+		}
+		
 		User user = new User();
 		user.setId(SessionFacade.getUserSession().getUserId());
 		
@@ -84,6 +88,11 @@ public class PrivateMessageAction extends Command
 	
 	public void sentbox() throws Exception
 	{
+		if (!SessionFacade.isLogged()) {
+			ViewCommon.contextToLogin();
+			return;
+		}
+		
 		User user = new User();
 		user.setId(SessionFacade.getUserSession().getUserId());
 		
@@ -104,6 +113,11 @@ public class PrivateMessageAction extends Command
 	
 	public void send() throws Exception
 	{
+		if (!SessionFacade.isLogged()) {
+			ViewCommon.contextToLogin();
+			return;
+		}
+		
 		User user = DataAccessDriver.getInstance().newUserModel().selectById(
 						SessionFacade.getUserSession().getUserId());
 		
@@ -114,6 +128,11 @@ public class PrivateMessageAction extends Command
 	}
 	public void sendTo() throws Exception
 	{
+		if (!SessionFacade.isLogged()) {
+			ViewCommon.contextToLogin();
+			return;
+		}
+		
 		User user = DataAccessDriver.getInstance().newUserModel().selectById(
 				SessionFacade.getUserSession().getUserId());
 
@@ -134,6 +153,11 @@ public class PrivateMessageAction extends Command
 	
 	public void sendSave() throws Exception
 	{
+		if (!SessionFacade.isLogged()) {
+			ViewCommon.contextToLogin();
+			return;
+		}
+		
 		String sId = JForum.getRequest().getParameter("toUserId");
 		String toUsername = JForum.getRequest().getParameter("toUsername");
 		String userEmail = JForum.getRequest().getParameter("toUserEmail");
@@ -230,6 +254,11 @@ public class PrivateMessageAction extends Command
 	
 	public void read() throws Exception
 	{
+		if (!SessionFacade.isLogged()) {
+			ViewCommon.contextToLogin();
+			return;
+		}
+		
 		int id = Integer.parseInt(JForum.getRequest().getParameter("id"));
 		
 		PrivateMessage pm = new PrivateMessage();
@@ -262,6 +291,11 @@ public class PrivateMessageAction extends Command
 	
 	public void delete() throws Exception
 	{
+		if (!SessionFacade.isLogged()) {
+			ViewCommon.contextToLogin();
+			return;
+		}
+		
 		String ids[] = JForum.getRequest().getParameterValues("id");
 		
 		if (ids != null && ids.length > 0) {
@@ -286,6 +320,11 @@ public class PrivateMessageAction extends Command
 	
 	public void reply() throws Exception
 	{
+		if (!SessionFacade.isLogged()) {
+			ViewCommon.contextToLogin();
+			return;
+		}
+		
 		int id = Integer.parseInt(JForum.getRequest().getParameter("id"));
 		
 		PrivateMessage pm = new PrivateMessage();
@@ -304,6 +343,11 @@ public class PrivateMessageAction extends Command
 	
 	public void quote() throws Exception
 	{
+		if (!SessionFacade.isLogged()) {
+			ViewCommon.contextToLogin();
+			return;
+		}
+		
 		int id = Integer.parseInt(JForum.getRequest().getParameter("id"));
 		
 		PrivateMessage pm = new PrivateMessage();
@@ -328,20 +372,5 @@ public class PrivateMessageAction extends Command
 	public void list() throws Exception
 	{
 		this.inbox();
-	}
-
-	/** 
-	 * @see net.jforum.Command#process()
-	 */
-	public Template process() throws Exception
-	{
-		if (!SessionFacade.isLogged()) {
-			JForum.setRedirect(JForum.getRequest().getContextPath() +"/forums/list"
-					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
-
-			return null;
-		}
-
-		return super.process();
 	}
 }

@@ -76,7 +76,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.6 2004/09/14 02:16:48 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.7 2004/09/22 01:36:12 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	public void list() throws Exception {
@@ -669,21 +669,12 @@ public class PostAction extends Command {
 					new String[] { returnPath }));
 		}
 		else {
-			this.contextToLogin();
+			ViewCommon.contextToLogin();
 		}
 	}
 
 	private boolean isUserLogged() {
 		return (SessionFacade.getAttribute("logged") != null && SessionFacade.getAttribute("logged").equals("1"));
-	}
-
-	private void contextToLogin() {
-		JForum.getContext().put("moduleAction", "forum_login.htm");
-		String uri = JForum.getRequest().getRequestURI();
-		String query = JForum.getRequest().getQueryString();
-		String path = query == null ? uri : uri + "?" + query;
-
-		JForum.getContext().put("returnPath", path);
 	}
 
 	private void topicLocked() {
@@ -712,7 +703,7 @@ public class PostAction extends Command {
 		// Check if anonymous posts are allowed
 		if (!this.isUserLogged() && !SecurityRepository.canAccess(
 				SecurityConstants.PERM_ANONYMOUS_POST, Integer.toString(forumId))) {
-			this.contextToLogin();
+			ViewCommon.contextToLogin();
 
 			return false;
 		}
