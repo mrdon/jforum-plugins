@@ -28,6 +28,16 @@
 		</init-param>
     </servlet>
     
+    <servlet>
+		<servlet-name>captcha</servlet-name>
+		<servlet-class>net.jforum.CaptchaServlet</servlet-class>
+		
+		<init-param>
+			<param-name>development</param-name>
+			<param-value>true</param-value>
+		</init-param>
+    </servlet>
+    
     <!-- SERVLETS -->
     <servlet-mapping>
     	<servlet-name>install</servlet-name>
@@ -37,6 +47,11 @@
 	<servlet-mapping>
     	<servlet-name>jforum</servlet-name>
     	<url-pattern>*.page</url-pattern>
+    </servlet-mapping>
+    
+	<servlet-mapping>
+    	<servlet-name>captcha</servlet-name>
+    	<url-pattern>*.captcha</url-pattern>
     </servlet-mapping>
 
     <!-- SESSION -->

@@ -42,12 +42,16 @@
  */
 package net.jforum.entities;
 
+import com.octo.captcha.image.ImageCaptcha;
+
+import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.Date;
 
 import net.jforum.SessionFacade;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.SecurityConstants;
+import net.jforum.util.Captcha;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -55,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * Stores information about user's session.
  * 
  * @author Rafael Steil
- * @version $Id: UserSession.java,v 1.10 2004/11/12 18:57:45 rafaelsteil Exp $
+ * @version $Id: UserSession.java,v 1.11 2004/11/23 12:45:33 jamesyong Exp $
  */
 public class UserSession implements Serializable
 {
@@ -68,6 +72,7 @@ public class UserSession implements Serializable
 	private boolean autoLogin;
 	private String lang;
 	private int privateMessages;
+	private ImageCaptcha imageCaptcha = null;
 	
 	static final long serialVersionUID = 0;
 	
@@ -299,4 +304,54 @@ public class UserSession implements Serializable
 		this.setStartTime(new Date(System.currentTimeMillis()));
 		this.setLang(user.getLang());
 	}
+
+    /**
+     * Get the captcha image to challenge the user
+     *
+     * @return BufferedImage the captcha image to challenge the user
+     */
+    public BufferedImage getCaptchaImage()
+    {
+        if (imageCaptcha == null)
+            return null;
+        return (BufferedImage)(imageCaptcha.getChallenge());
+    }
+    
+    /**
+     * Validate the captcha response of user
+     *
+     * @param anwser String the captcha response from user
+     * @return boolean true if the answer is valid, otherwise return false
+     */
+    public boolean validateCaptchaResponse(String userResponse)
+    {
+        if (imageCaptcha != null)
+        {
+        	userResponse = userResponse.toUpperCase();
+        	return (imageCaptcha.validateResponse(userResponse)).booleanValue();
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * create a new image captcha
+     * 
+     * @return void
+     */
+    public void createNewCaptcha() 
+    {
+    	destroyCaptcha();
+        imageCaptcha = Captcha.getInstance().getNextImageCaptcha();
+    }
+
+    /**
+     * Destroy the current captcha validation is done
+     * 
+     * @return void
+     */
+    public void destroyCaptcha() 
+    {
+        imageCaptcha = null;
+    }
 }

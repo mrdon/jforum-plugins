@@ -70,7 +70,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.17 2004/11/14 16:28:45 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.18 2004/11/23 12:48:03 jamesyong Exp $
  */
 public class UserAction extends Command 
 {
@@ -120,6 +120,12 @@ public class UserAction extends Command
 	{
 		JForum.getContext().put("action", "insertSave");
 		JForum.getContext().put("moduleAction", "user_new.htm");
+		
+		if (SystemGlobals.getBoolValue(ConfigKeys.CAPTCHA_REGISTRATION)){
+			//create a new image captcha
+			SessionFacade.getUserSession().createNewCaptcha();
+			JForum.getContext().put("captcha_reg", true);
+		}
 	}
 
 	public void insertSave() throws Exception 
@@ -129,6 +135,7 @@ public class UserAction extends Command
 
 		String username = JForum.getRequest().getParameter("username");
 		String password = JForum.getRequest().getParameter("password");
+		String captchaResponse = JForum.getRequest().getParameter("captchaResponse");
 
 		boolean error = false;
 		if (username == null || username.trim().equals("") 
@@ -139,6 +146,11 @@ public class UserAction extends Command
 
 		if (!error && um.isUsernameRegistered(JForum.getRequest().getParameter("username"))) {
 			JForum.getContext().put("error", I18n.getMessage("UsernameExists"));
+			error = true;
+		}
+		
+		if (!error && !SessionFacade.getUserSession().validateCaptchaResponse(captchaResponse)){
+			JForum.getContext().put("error", I18n.getMessage("CaptchaResponseFails"));
 			error = true;
 		}
 

@@ -78,7 +78,19 @@ function validateRegistrationForm(f)
 		<td class="row1"><span class="gen">${I18n.getMessage("User.confirmPassword")}: * </span></td>
 		<td class="row2"><input class="post" style="WIDTH: 200px" type="password" maxlength="100" size="25" name="password_confirm" /> </td>
 	</tr>
+
+	<#if captcha_reg?exists>
+		<tr>
+			<td class="row1"><span class="gen">${I18n.getMessage("User.captchaChallenge")}: </span></td>
+			<td class="row2"><img src="${contextPath}/imagecaptcha.captcha" border="0"></td>
+		</tr>
 		
+		<tr>
+			<td class="row1" width="38%"><span class="gen">${I18n.getMessage("User.captchaResponse")}: *</span></td>
+			<td class="row2"><input class="post" style="WIDTH: 200px" maxlength="25" size="25" name="captchaResponse" /></td>
+		</tr>
+	</#if>
+						
 	<#if error?exists>
 	<tr>
 		<td class="row2" colspan="2" align="center"><span class="gen"><font color="#ff0000"><b>${error}</b></font></span></td>

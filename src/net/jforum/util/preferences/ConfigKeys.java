@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.28 2004/11/12 20:46:41 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.29 2004/11/23 12:46:54 jamesyong Exp $
 */
 
 public class ConfigKeys {
@@ -127,6 +127,7 @@ public class ConfigKeys {
 	public static final String POST_PER_PAGE = "postsPerPage";
 	public static final String USERS_PER_PAGE = "usersPerPage";
 	public static final String RECENT_TOPICS = "topic.recent";
+	public static final String CAPTCHA_REGISTRATION = "captcha.registration";
 
 	public static final String I18N_DEFAULT = "i18n.board.default";
 	public static final String I18N_DEFAULT_ADMIN = "i18n.internal";
