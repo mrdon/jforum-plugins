@@ -11,10 +11,83 @@ td.cat		{ background-image: url('${contextPath}/templates/default/images/cellpic
 td.rowpic	{ background-image: url('${contextPath}/templates/default/images/cellpic2.jpg'); background-repeat: repeat-y }
 td.catHead,td.catSides,td.catLeft,td.catRight,td.catBottom { background-image: url('${contextPath}/templates/default/images/cellpic1.gif') }
 </style>
-</head>
-<body bgcolor="#E5E5E5" text="#000000" link="#006699" vlink="#5584AA">
 
-<table width="100%" border="0" cellspacing="0" cellpadding="10" align="center"> 
+<script language="javascript">
+function validateForm()
+{
+	var status = checkDatabase();
+	status = status && checkBoard();
+	return status;
+}
+
+function checkBoard()
+{
+	var f = document.install;
+	var s = "";
+
+	if (f.server_name.value == "") {
+		s += "Domain Name is empty\n";
+	}
+	else if (f.server_name.value.indexOf("http://") == -1) {
+		s += "Domain Name does not start with 'http://'\n";
+	}
+
+	if (f.admin_pass1.value == "") {
+		s += "Administrator Password is empty\n";
+	}
+
+	if (f.admin_pass1.value != f.admin_pass2.value) {
+		s += "Administrator Password confirmation does not match\n";
+	}
+
+	if (s != "") {
+		alert("The following issues were found: \n\n" + s + "\nPlease correct it before continuing");
+		return false;
+	}
+
+	return true;
+}
+
+function checkDatabase()
+{
+	var f = document.install;
+
+	if (f.dbpasswd.value != f.dbpasswd_confirm.value) {
+		alert("Database password confirmation does not match");
+		return false;
+	}
+
+	var s = "";
+	if (f.database.value != "hsqldb") {
+		if (f.dbuser.value == "") {
+			s += "Database Username is empty\n";
+		}
+
+		if (f.dbpasswd.value == "") {
+			s += "Database Password is empty\n";
+		}
+	}
+	else {
+		if (f.dbpasswd.value == "" || f.dbuser.value == "") {
+			if (confirm("HSQLDB was choosen and no Database Username or Password were set. \nJForum will use the default values. Continue?")) {
+				return true;
+			}
+
+			return false;
+		}
+	}
+
+	if (s != "" && confirm("The following issues were found regard to Database Configuration: \n\n" + s + "\nNote that not specifying an username or password may result in errors")) {
+		return true;
+	}
+
+	return true;
+}
+</script>
+</head>
+<body text="#000000" link="#006699" vlink="#5584AA">
+
+<table width="70%" border="0" cellspacing="0" cellpadding="10" align="center"> 
 	<tr>
 		<td class="bodyline" width="100%"><table width="100%" border="0" cellspacing="0" cellpadding="0">
 
@@ -22,100 +95,140 @@ td.catHead,td.catSides,td.catLeft,td.catRight,td.catBottom { background-image: u
 				<td><table width="100%" border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td><img src="${contextPath}/templates/default/images/logo.jpg" border="0" alt="JForum" vspace="1" /></td>
-						<td align="center" width="100%" valign="middle"><span class="maintitle">Welcome to JForum Installation</span></td>
+						<td align="center" width="100%" valign="middle"><span class="maintitle">Welcome to JForum Installation<br/>Version 2.0</span></td>
 					</tr>
 				</table></td>
 			</tr>
 
 			<tr>
-				<td><br /><br /></td>
+				<td align="center"><br /><br /></td>
 			</tr>
 			<tr>
 				<td colspan="2"><table width="90%" border="0" align="center" cellspacing="0" cellpadding="0">
 					<tr>
-						<td><span class="gen">Thank you for choosing JForum. In order to complete this install please fill out the details requested below. Please note that the database you install into should already exist.</span></td>
+						<td>
+							<span class="gen">
+							Thank you for choosing JForum. In order to complete this install please fill out the details requested below. 
+							Please note that the database you install into should already exist.<br/><br/>
+							This wizard will help you to set the most important configurations for JForum, and, after the installation,
+							you will be able to configure other settings for the board, as well customize it to best fit your needs.
+							<br/></br>
+							<font color="#ff0000"><b>For help and support, please access <a href="http://www.jforum.net/install.htm">http://www.jforum.net/install.htm</a></b></font>
+							</span>
+						</td>
 					</tr>
 
 				</table></td>
 			</tr>
 			<tr>
-				<td><br /><br /></td>
+				<td align="center" valign="middle"><br/><span class="maintitle">Step 1</span></td>
 			</tr>
 			<tr>
 				<td width="100%"><table width="100%" cellpadding="2" cellspacing="1" border="0" class="forumline">
-				<form action="${contextPath}/install/install${extension}" name="install" method="post">
+				<form action="${contextPath}/install/install${extension}" name="install" method="post" onSubmit="return validateForm();">
 				<input type="hidden" name="module" value="install">
-				<input type="hidden" name="action" value="doInstall">
+				<input type="hidden" name="action" value="checkInformation">
 					<tr>
-						<th colspan="2">Basic Configuration</th>
+						<th colspan="2">1) General Configuration</th>
 
 					</tr>
 					<tr>
-						<td class="row1" align="right" width="30%"><span class="gen">Default board language: </span></td>
+						<td class="row1" align="right" width="40%"><span class="gen"><b>Default board language:</b> </span></td>
 						<td class="row2">
 							<select name="language" onchange="this.form.submit()">
-								<option value="en_US" selected="selected">English</option>
-								<option value="pt_BR" selected="selected">Brazilian Portuguese</option>
-								<option value="nl_NL" selected="selected">Netherlands</option>
-								<option value="fr_FR" selected="selected">French</option>
+								<option value="en_US">English American (en_US)</option>
+								<option value="zh_CN">Chinese Simplifed (zh_CN)</option>
+								<option value="fr_FR">French (fr_FR)</option>
+								<option value="de_DE">German (de_DE)</option>
+								<option value="nl_NL">Dutch (nl_NL)</option>
+								<option value="pt_BR">Portugu&ecirc;s do Brasil (pt_BR)</option>
+								<option value="ru_RU">Russian (ru_RU)</option>
 							</select>
 						</td>
 					</tr>
 					<tr>
-						<td class="row1" align="right"><span class="gen">Database Type: </span></td>
+						<td class="row1" align="right"><span class="gen"><b>Database Type: </b></span></td>
 
 						<td class="row2">
 							<select name="database">
 								<option value="mysql4">MySQL</option>
 								<option value="postgresql">PostgreSQL</option>
+								<option value="hsqldb">HSQLDB</option>
 							</select>
+							<br>
+							<span class="gensmall">
+							Choose the database you want to have JForum running. If you don't know that it means
+							or what option to choose, please select <b>HSQLDB</b>, which is a builtin database.
+							</span>
 						</td>
 					</tr>
 
 					<tr>
-						<td class="row1" align="right"><span class="gen">Choose your installation method:</span></td>
+						<td class="row1" align="right"><span class="gen"><b>Choose your installation type:</b></span></td>
 						<td class="row2">
 							<select name="install_type">
-								<option value="0">Install</option>
-								<option value="1">Upgrade</option>
+								<option value="0">New installation</option>
+								<!-- <option value="1">Upgrade</option> -->
 							</select>
 						</td>
 
 					</tr>
 					<tr>
-						<th colspan="2">Database Configuration</th>
+						<th colspan="2">2) Database Configuration</th>
 					</tr>
 					<tr>
-						<td class="row1" align="right"><span class="gen">Database Server Hostname</span></td>
+						<td class="row2" colspan="2">
+						<span class="gensmall">
+						General database options. If you had choosen "MySQL" or "PostgreSQL" as Database Type, it is necessary that 
+						you inform at least the <i>hostname</i>, <i>database name</i>, <i>username</i> and <i>password</i>. This is also
+						valid for "HSQLDB", but if you don't know what to put here, just leave with the defaults.
+						</span>
+						</td>
+					</tr>
+					<tr>
+						<td class="row1" align="right"><span class="gen"><b>Database Server Hostname</b></span></td>
 						<td class="row2"><input type="text" name="dbhost" value="localhost" /></td>
 					</tr>
 
 					<tr>
-						<td class="row1" align="right"><span class="gen">Your Database Name: </span></td>
+						<td class="row1" align="right"><span class="gen"><b>Your Database Name: </b></span></td>
 						<td class="row2"><input type="text" name="dbname" value="jforum" /></td>
 					</tr>
 					<tr>
-						<td class="row1" align="right"><span class="gen">Database Username: </span></td>
+						<td class="row1" align="right"><span class="gen"><b>Database Username: </b></span></td>
 						<td class="row2"><input type="text" name="dbuser" value="" /></td>
 					</tr>
 
 					<tr>
-						<td class="row1" align="right"><span class="gen">Database Password: </span></td>
+						<td class="row1" align="right"><span class="gen"><b>Database Password: </b></span></td>
 						<td class="row2"><input type="password" name="dbpasswd" value="" /></td>
 					</tr>
 
 					<tr>
-						<td class="row1" align="right"><span class="gen">Database Encoding: </span></td>
+						<td class="row1" align="right"><span class="gen"><b>Database Password [ Confirm ]: </b></span></td>
+						<td class="row2"><input type="password" name="dbpasswd_confirm" value="" /></td>
+					</tr>
+
+					<tr>
+						<td class="row1" align="right"><span class="gen"><b>Database Encoding: </b></span></td>
 						<td class="row2">
 							<select name="dbencoding">
+								<option value="">Select Encoding</option>
 								<option value="utf-8">UTF-8</option>
 								<option value="iso-8859-1">ISO-8859-1</option>
 							</select>
+							&nbsp;
+							<span class="gen"><b>Other: </b></span><input type="text" name="dbencoding_other">
+							<br/>
+							<span class="gensmall">
+							In most cases you will like to choose "UTF-8" as encoding. If you know what encoding your region, you can
+							specify it in the "Other" field.
+							</span>
 						</td>
 					</tr>
 
 					<tr>
-						<td class="row1" align="right"><span class="gen">Use Connection Pool: </span></td>
+						<td class="row1" align="right"><span class="gen"><b>Use Connection Pool: </b></span></td>
 						<td class="row2">
 							<select name="use_pool">
 								<option value="yes">Yes</option>
@@ -125,39 +238,45 @@ td.catHead,td.catSides,td.catLeft,td.catRight,td.catBottom { background-image: u
 					</tr>
 
 					<tr>
-						<th colspan="2">Admin Configuration</th>
+						<th colspan="2">3) Board Configuration</th>
 					</tr>
 					<tr>
 
-						<td class="row1" align="right"><span class="gen">Domain Name: </span></td>
+						<td class="row1" align="right"><span class="gen"><b>Domain Name: </b></span></td>
 						<td class="row2"><input type="text" name="server_name" value="http://${serverName}" /></td>
 					</tr> 
 					<tr>
-						<td class="row1" align="right"><span class="gen">Server Port: </span></td>
+						<td class="row1" align="right"><span class="gen"><b>Server Port: </b></span></td>
 						<td class="row2"><input type="text" name="server_port" value="${serverPort}" /></td>
 					</tr>
 					<tr>
 
-						<td class="row1" align="right"><span class="gen">Context path: </span></td>
-						<td class="row2"><input type="text" name="context_path" value="/jforum/" /></td>
+						<td class="row1" align="right"><span class="gen"><b>Context path: <b/></span></td>
+						<td class="row2">
+							<input type="text" name="context_path" value="/jforum/" />
+							<br/>
+							<span class="gensmall">
+							If you are going to install JForum in the root context, leave this field empty.
+							</span>
+						</td>
 					</tr>
 					<tr>
-						<td class="row1" align="right"><span class="gen">Administrator Username: </span></td>
+						<td class="row1" align="right"><span class="gen"><b>Administrator Username: </b></span></td>
 						<td class="row2"><span class="gen">Admin</span></td>
 					</tr>
 					<tr>
 
-						<td class="row1" align="right"><span class="gen">Administrator Password: </span></td>
+						<td class="row1" align="right"><span class="gen"><b>Administrator Password: </b></span></td>
 						<td class="row2"><input type="password" name="admin_pass1" value="" /></td>
 					</tr>
 					<tr>
-						<td class="row1" align="right"><span class="gen">Administrator Password [ Confirm ]: </span></td>
+						<td class="row1" align="right"><span class="gen"><b>Administrator Password [ Confirm ]: </b></span></td>
 						<td class="row2"><input type="password" name="admin_pass2" value="" /></td>
 					</tr>
 					<tr> 
 					  <td class="catBottom" align="center" colspan="2">
 						<input type="hidden" name="install_step" value="1" />
-						<input class="mainoption" type="submit" value="Start Install" />
+						<input class="mainoption" type="submit" value="Next Step" />
 					</td>
 					</tr>
 				</table>

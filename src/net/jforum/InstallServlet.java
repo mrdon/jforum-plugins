@@ -58,7 +58,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallServlet.java,v 1.2 2004/08/29 23:46:59 rafaelsteil Exp $
+ * @version $Id: InstallServlet.java,v 1.3 2004/10/26 03:56:23 rafaelsteil Exp $
  */
 public class InstallServlet extends JForumCommonServlet
 {
@@ -88,6 +88,7 @@ public class InstallServlet extends JForumCommonServlet
 		JForum.getContext().put("serverPort", Integer.toString(req.getServerPort()));
 		JForum.getContext().put("I18n", I18n.getInstance());
 		JForum.getContext().put("encoding", encoding);
+		JForum.getContext().put("extension", SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		
 		// Request
 		ActionServletRequest request = new ActionServletRequest(req);

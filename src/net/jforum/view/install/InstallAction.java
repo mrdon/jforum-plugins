@@ -52,6 +52,7 @@ import java.util.Enumeration;
 import java.util.Properties;
 
 import net.jforum.Command;
+import net.jforum.DBConnection;
 import net.jforum.InstallServlet;
 import net.jforum.SimpleConnection;
 import net.jforum.util.I18n;
@@ -65,7 +66,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.3 2004/09/11 02:43:21 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.4 2004/10/26 03:56:22 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -73,7 +74,7 @@ public class InstallAction extends Command
 	
 	public void welcome() throws Exception
 	{
-		InstallServlet.getContext().put("moduleAction", "default/install.htm");
+		InstallServlet.getContext().put("moduleAction", "install.htm");
 	}
 	
 	public void doInstall() throws Exception
@@ -123,7 +124,7 @@ public class InstallAction extends Command
 	
 	public void finished() throws Exception
 	{
-		InstallServlet.getContext().put("moduleAction", "default/install_finished.htm");
+		InstallServlet.getContext().put("moduleAction", "install_finished.htm");
 	}
 	
 	private void configureSystemGlobals() throws Exception
@@ -249,7 +250,7 @@ public class InstallAction extends Command
 		Connection conn = null;
 		
 		try {
-			SimpleConnection s = new SimpleConnection();
+			DBConnection s = new SimpleConnection();
 			s.init();
 			
 			conn = s.getConnection();
@@ -259,6 +260,63 @@ public class InstallAction extends Command
 		}
 		
 		return conn;
+	}
+	
+	public void checkInformation() throws Exception
+	{
+		String language = InstallServlet.getRequest().getParameter("language");
+		String database = InstallServlet.getRequest().getParameter("database");
+		String dbHost = InstallServlet.getRequest().getParameter("dbhost");
+		String dbUser = InstallServlet.getRequest().getParameter("dbuser");
+		String dbName = InstallServlet.getRequest().getParameter("dbname");
+		String dbPassword = InstallServlet.getRequest().getParameter("dbpasswd");
+		String dbEncoding = InstallServlet.getRequest().getParameter("dbencoding");
+		String dbEncodingOther = InstallServlet.getRequest().getParameter("dbencoding_other");
+		String usePool = InstallServlet.getRequest().getParameter("use_pool");
+		String serverName = InstallServlet.getRequest().getParameter("server_name");
+		String serverPort = InstallServlet.getRequest().getParameter("server_port");
+		String contextPath = InstallServlet.getRequest().getParameter("context_path");
+		String adminPassword = InstallServlet.getRequest().getParameter("admin_pass1");
+		
+		dbHost = this.notNullDefault(dbHost, "localhost");
+		dbEncodingOther = this.notNullDefault(dbEncodingOther, "UTF-8");
+		dbEncoding = this.notNullDefault(dbEncoding, dbEncodingOther);
+		serverName = this.notNullDefault(serverName, "http://localhost");
+		dbName = this.notNullDefault(dbName, "jforum");
+		
+		if ("hsqldb".equals(database)) {
+			dbUser = this.notNullDefault(dbUser, "sa");
+		}
+		
+		this.addToSessionAndContext("language", language);
+		this.addToSessionAndContext("database", database);
+		this.addToSessionAndContext("dbHost", dbHost);
+		this.addToSessionAndContext("dbUser", dbUser);
+		this.addToSessionAndContext("dbName", dbName);
+		this.addToSessionAndContext("dbPassword", dbPassword);
+		this.addToSessionAndContext("dbEncoding", dbEncoding);
+		this.addToSessionAndContext("usePool", usePool);
+		this.addToSessionAndContext("serverName", serverName);
+		this.addToSessionAndContext("serverPort", serverPort);
+		this.addToSessionAndContext("contextPath", contextPath);
+		this.addToSessionAndContext("adminPassword", adminPassword);
+		
+		InstallServlet.getContext().put("moduleAction", "install_check_info.htm");
+	}
+	
+	private void addToSessionAndContext(String key, String value)
+	{
+		InstallServlet.getRequest().getSession().setAttribute(key, value);
+		InstallServlet.getContext().put(key, value);
+	}
+	
+	private String notNullDefault(String value, String useDefault)
+	{
+		if (value == null || value.trim().equals("")) {
+			return useDefault;
+		}
+		
+		return value;
 	}
 	
 	/** 
