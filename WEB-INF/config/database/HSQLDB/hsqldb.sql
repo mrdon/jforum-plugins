@@ -1,0 +1,1 @@
+# All HSQLDB queries are taken from "generic_queries.sql"
