@@ -43,207 +43,35 @@
 package net.jforum;
 
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.sql.Connection;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.xml.DOMConfigurator;
 
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.UserSessionModel;
-import net.jforum.repository.BBCodeRepository;
 import net.jforum.repository.SecurityRepository;
-import net.jforum.util.FileMonitor;
 import net.jforum.util.I18n;
 import net.jforum.util.MD5;
-import net.jforum.util.bbcode.BBCodeHandler;
 import net.jforum.util.preferences.ConfigKeys;
-import net.jforum.util.preferences.QueriesFileListener;
 import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.util.preferences.SystemGlobalsListener;
-import freemarker.template.Configuration;
-import freemarker.template.ObjectWrapper;
-import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
 /**
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.25 2004/08/26 20:06:41 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.26 2004/08/27 21:37:41 rafaelsteil Exp $
  */
-public class JForum extends HttpServlet 
+public class JForum extends JForumCommonServlet 
 {
-	/**
-	 * Request information data holder.
-	 * Stores information/data like the user request and
-	 * response, his database connection and any other
-	 * kind of data needed.
-	 */
-	private static class DataHolder
-	{
-		/**
-		 * Database connection
-		 */
-		private Connection conn;
-		
-		/**
-		 * The request
-		 */
-		private ActionServletRequest request;
-		
-		/**
-		 * The response
-		 */
-		private HttpServletResponse response;
-		
-		/**
-		 * The template engine context. All is put here.
-		 */
-		private SimpleHash context = new SimpleHash(ObjectWrapper.BEANS_WRAPPER);
-		
-		/**
-		 * If some redirect is needed, the url is here
-		 */
-		private String redirectTo;
-		
-		// Setters
-		public void setConnection(Connection conn)
-		{
-			this.conn = conn;
-		}
-		
-		public void setRequest(ActionServletRequest request)
-		{
-			this.request = request;
-		}
-		
-		public void setResponse(HttpServletResponse response)
-		{
-			this.response = response;
-		}
-		
-		public void setContext(SimpleHash context)
-		{
-			this.context = context;
-		}
-		
-		public void setRedirectTo(String redirectTo)
-		{
-			this.redirectTo = redirectTo;
-		}
-		
-		// Getters
-		public Connection getConnection()
-		{
-			return this.conn;
-		}
-		
-		public ActionServletRequest getRequest()
-		{
-			return this.request;
-		}
-		
-		public HttpServletResponse getResponse()
-		{
-			return this.response;
-		}
-		
-		public SimpleHash getContext()
-		{
-			return this.context;
-		}
-		
-		public String getRedirectTo()
-		{
-			return this.redirectTo;
-		}
-	}
-	
-	// Thread local implementation
-	private static ThreadLocal localData = new ThreadLocal() {
-		public Object initialValue() {
-			return new DataHolder();
-		}
-	};
-	
-	/**
-	 * Gets the current thread's connection  
-	 * 
-	 * @return
-	 */	
-	public static Connection getConnection()
-	{
-		return ((DataHolder)localData.get()).getConnection();
-	}
-	
-	/**
-	 * Gets the current thread's request
-	 * 
-	 * @return
-	 */
-	public static ActionServletRequest getRequest()
-	{
-		return ((DataHolder)localData.get()).getRequest();
-	}
-	
-	/**
-	 * Gets the current thread's response
-	 * 
-	 * @return
-	 */
-	public static HttpServletResponse getResponse()
-	{
-		return ((DataHolder)localData.get()).getResponse();
-	}
-	
-	/**
-	 * Gets the current thread's template context
-	 * 
-	 * @return
-	 */
-	public static SimpleHash getContext()
-	{
-		return ((DataHolder)localData.get()).getContext();
-	}
-	
-	/**
-	 * Gets the current thread's <code>DataHolder</code> instance
-	 * 
-	 * @return
-	 */
-	public static void setRedirect(String redirect)
-	{
-		((DataHolder)localData.get()).setRedirectTo(redirect);
-	}
-	
-	private static Properties modulesMapping;
-	private static boolean debug;
-	
-	/**
-	 * Loads modules mapping file
-	 * */
-	private static void loadModulesMapping(String baseDir) throws IOException
-	{
-		modulesMapping = new Properties();
-		modulesMapping.load(new FileInputStream(baseDir +"/config/modulesMapping.properties"));
-	}
-	
 	private void startDatabase() throws Exception
 	{
 		DBConnection.getImplementation().init();
@@ -252,111 +80,13 @@ public class JForum extends HttpServlet
 	public void init(ServletConfig config) throws ServletException
 	{
 		super.init(config);
-				
+		
 		try {
-			JForum.debug = config.getInitParameter("development").equals("true");
-			
-			DOMConfigurator.configure(config.getServletContext().getRealPath("") +"/WEB-INF/log4j.xml");
-			
-			// Load system default values
-            // TODO: allow defaultsFile and installation to be overridden by the init parameters
-			String appPath = config.getServletContext().getRealPath("");
-            SystemGlobals.initGlobals(appPath, appPath + "/WEB-INF/config/SystemGlobals.properties", null);
-            
-			// Start the connection pool
 			this.startDatabase();
-			
-			// Configure the template engine
-			Configuration templateCfg = new Configuration();
-			templateCfg.setDirectoryForTemplateLoading(new File(SystemGlobals.getApplicationPath() +"/templates"));
-			templateCfg.setTemplateUpdateDelay(0);
-			
-			JForum.loadModulesMapping(SystemGlobals.getApplicationResourceDir());
-			
-			SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
-			SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
-			
-			if (!JForum.debug) {
-				this.loadConfigStuff();
-				templateCfg.setTemplateUpdateDelay(3600);
-			}
-			else {
-				// Queries
-				FileMonitor.getInstance().addFileChangeListener(new QueriesFileListener(), 
-						SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC),
-						SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY));
-				
-				FileMonitor.getInstance().addFileChangeListener(new QueriesFileListener(), 
-						SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER),
-						SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY));
-				
-				// System Properties
-				FileMonitor.getInstance().addFileChangeListener(new SystemGlobalsListener(), 
-            			SystemGlobals.getValue(ConfigKeys.DEFAULT_CONFIG), 
-						SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY));
-				
-				FileMonitor.getInstance().addFileChangeListener(new SystemGlobalsListener(), 
-            			SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG), 
-						SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY));
-			}
-			
-			Configuration.setDefaultConfiguration(templateCfg);
 		}
 		catch (Exception e) {
 			new ForumException(e);	
 		}
-	}
-	
-	private void loadConfigStuff() throws Exception
-	{
-		this.loadUrlPatterns();
-		I18n.load();
-		
-		// BB Code
-		BBCodeRepository.setBBCollection(new BBCodeHandler().parse());
-	}
-	
-	public static boolean debugMode()
-	{
-		return debug;
-	}
-
-	/**
-	 * Gets a cookie by its name.
-	 * 
-	 * @param name The cookie name to retrieve
-	 * @return The <code>Cookie</code> object if found, or <code>null</code> oterwhise
-	 */
-	public static Cookie getCookie(String name)
-	{
-		Cookie[] cookies = JForum.getRequest().getCookies();
-		if (cookies != null) {
-			for (int i = 0; i < cookies.length; i++) {
-				Cookie c = cookies[i];
-				
-				if (c.getName().equals(name)) {
-					return c;
-				}
-			}
-		}
-
-		return null;
-	}
-	
-	/**
-	 * Add or update a cookie.
-	 * This method adds a cookie, serializing its value using XML.
-	 * 
-	 * @param name The cookie name.
-	 * @param value The cookie value
-	 */
-	public static void addCookie(String name, String value)
-	{
-		Cookie cookie = new Cookie(name, value);
-		cookie.setMaxAge(3600 * 24 * 365);
-		cookie.setPath("/");
-
-		JForum.getResponse().addCookie(cookie);
 	}
 	
 	private void setAnonymousUserSession(UserSession userSession)
@@ -431,19 +161,6 @@ public class JForum extends HttpServlet
 		}
 	}
 	
-	private void loadUrlPatterns() throws IOException
-	{
-		Properties p = new Properties();
-		p.load(new FileInputStream(SystemGlobals.getApplicationResourceDir() + "/config/urlPattern.properties"));
-		
-		Iterator iter = p.entrySet().iterator();
-		while (iter.hasNext()) {
-			Map.Entry entry = (Map.Entry)iter.next();
-			
-			ActionServletRequest.addUrlPattern(entry.getKey().toString(), entry.getValue().toString());
-		}
-	}
-	
 	public void service(HttpServletRequest req, HttpServletResponse response) throws IOException, ServletException
 	{
 		BufferedWriter out = null;
@@ -453,7 +170,7 @@ public class JForum extends HttpServlet
 			DataHolder dataHolder = new DataHolder();
 			localData.set(dataHolder);
 
-			if (JForum.debug) {
+			if (this.debug) {
 				this.loadConfigStuff();
 			}
 			
@@ -498,7 +215,7 @@ public class JForum extends HttpServlet
 			SecurityRepository.load(SessionFacade.getUserSession().getUserId());
 			
 			// Gets the module class name
-			String moduleClass = JForum.modulesMapping.getProperty(request.getModule());
+			String moduleClass = this.getModuleClass(request.getModule());
 			
 			JForum.getContext().put("moduleName", request.getModule());
 			JForum.getContext().put("action", JForum.getRequest().getAction());

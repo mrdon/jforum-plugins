@@ -73,7 +73,7 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
- * @version $Id: ForumVH.java,v 1.8 2004/06/05 22:10:00 rafaelsteil Exp $
+ * @version $Id: ForumVH.java,v 1.9 2004/08/27 21:37:41 rafaelsteil Exp $
  */
 public class ForumVH extends Command 
 {
@@ -252,7 +252,7 @@ public class ForumVH extends Command
 		ArrayList tmpTopics = null;
 		
 		// Try to get the first's page topics from the cache
-		if (start == 0 && JForum.debugMode()) {
+		if (start == 0) {
 			tmpTopics = TopicRepository.getTopics(forumId);
 
 			if (tmpTopics.size() == 0) {
