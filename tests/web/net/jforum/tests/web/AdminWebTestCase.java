@@ -49,7 +49,7 @@ import net.jforum.util.I18n;
 
 /**
  * @author Marc Wick
- * @version $Id: AdminWebTestCase.java,v 1.1 2004/09/21 16:00:13 rafaelsteil Exp $
+ * @version $Id: AdminWebTestCase.java,v 1.2 2004/09/22 13:43:23 marcwick Exp $
  */
 public class AdminWebTestCase extends AbstractWebTestCase {
 
@@ -88,15 +88,18 @@ public class AdminWebTestCase extends AbstractWebTestCase {
 		gotoFrame("leftFrame");
 		clickLinkWithText("Configurations");
 		gotoFrame("main");
-		setFormElement("p_forum.page.title", "jforum last run regression test " + new Date());
+		setFormElement("p_forum.page.title", "jforum last run regression test "
+				+ new Date());
+		setFormElement("p_i18n.default.admin", language);
+		setFormElement("p_mail.smtp.auth", "false");
 		submit();
 
 		adminLogout();
 	}
 
 	/**
-	 * bug in rc5 requires to save permission of all groups and users
-	 * The workaround does not solve the problem.
+	 * bug in rc5 requires to save permission of all groups and users The
+	 * workaround does not solve the problem.
 	 *  
 	 */
 	public void testWorkaround() {

@@ -46,9 +46,12 @@ import java.io.IOException;
 
 import net.jforum.util.I18n;
 
+import com.dumbster.smtp.SimpleSmtpServer;
+import com.dumbster.smtp.SmtpMessage;
+
 /**
  * @author Marc Wick
- * @version $Id: PostWebTestCase.java,v 1.1 2004/09/21 16:00:13 rafaelsteil Exp $
+ * @version $Id: PostWebTestCase.java,v 1.2 2004/09/22 13:43:23 marcwick Exp $
  */
 public class PostWebTestCase extends AbstractWebTestCase {
 
@@ -97,13 +100,45 @@ public class PostWebTestCase extends AbstractWebTestCase {
 		clickLinkWithText(I18n.getMessage(language, "ForumBase.logout"));
 	}
 
+	public void testWatchEmail() throws Exception {
+		smtpServer = SimpleSmtpServer.start();
+		beginAt("/list.page");
+		clickLinkWithText("a test forum", 0);
+		clickLinkWithText("defaultUser posting", 0);
+		clickLinkWithImage("reply.gif");
+		setFormElement("subject", "reply to default user posting");
+		setFormElement(
+				"message",
+				"reply message to default user posting, we are testing whether default user receives an email");
+		submit("post");
+
+		Thread.sleep(1000);
+		assertEquals("topic watch email received", 1, smtpServer
+				.getReceievedEmailSize());
+		SmtpMessage mail = (SmtpMessage) smtpServer.getReceivedEmail().next();
+		String body = mail.getBody();
+		String link = body.substring(body.indexOf("http:"),
+				body.indexOf(".page") + 5).trim();
+		smtpServer.stop();
+
+		getTestContext().setBaseUrl(link.substring(0, link.lastIndexOf('/')));
+		gotoPage(link.substring(link.lastIndexOf('/')));
+		assertTrue(
+				"watch email received",
+				getDialog()
+						.getResponse()
+						.getText()
+						.indexOf(
+								"reply message to default user posting, we are testing whether default user receives an email") > 0);
+	}
+
 	public void testSearchKeywords() {
 		beginAt("/list.page");
 		clickLinkWithText(I18n.getMessage(language, "ForumBase.search"));
 		setFormElement("search_keywords", "defaultUser");
 		submit();
-	}	
-	
+	}
+
 	public void testSearchAuthor() {
 		beginAt("/list.page");
 		clickLinkWithText(I18n.getMessage(language, "ForumBase.search"));

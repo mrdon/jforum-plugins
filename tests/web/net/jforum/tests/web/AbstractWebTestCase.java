@@ -44,13 +44,16 @@ package net.jforum.tests.web;
 
 import java.io.IOException;
 
+import com.dumbster.smtp.SimpleSmtpServer;
+
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.SystemGlobals;
 import net.sourceforge.jwebunit.WebTestCase;
 
 /**
  * @author Marc Wick
- *  @version $Id: AbstractWebTestCase.java,v 1.1 2004/09/21 16:00:13 rafaelsteil Exp $
+ * @version $Id: AbstractWebTestCase.java,v 1.1 2004/09/21 16:00:13 rafaelsteil
+ *          Exp $
  */
 public abstract class AbstractWebTestCase extends WebTestCase {
 	public static class SimpleHTMLParserListener implements
@@ -70,6 +73,8 @@ public abstract class AbstractWebTestCase extends WebTestCase {
 	}
 
 	protected String language = "de_DE";
+
+	protected SimpleSmtpServer smtpServer;
 
 	public AbstractWebTestCase(String name) throws IOException {
 		super(name);

@@ -47,9 +47,12 @@ import java.util.Random;
 
 import net.jforum.util.I18n;
 
+import com.dumbster.smtp.SimpleSmtpServer;
+import com.dumbster.smtp.SmtpMessage;
+
 /**
  * @author Marc Wick
- *  @version $Id: UserWebTestCase.java,v 1.1 2004/09/21 16:00:13 rafaelsteil Exp $
+ * @version $Id: UserWebTestCase.java,v 1.2 2004/09/22 13:43:23 marcwick Exp $
  */
 public class UserWebTestCase extends AbstractWebTestCase {
 
@@ -58,6 +61,7 @@ public class UserWebTestCase extends AbstractWebTestCase {
 	public static String defaultTestuser = "defaultTestuser";
 
 	public static String password = "testpassword";
+
 
 	public UserWebTestCase(String name) throws IOException {
 		super(name);
@@ -113,8 +117,30 @@ public class UserWebTestCase extends AbstractWebTestCase {
 		clickLinkWithText(I18n.getMessage(language, "ForumBase.logout"));
 	}
 
-	public void testPasswordForgotten() {
-		//TODO
+	public void testPasswordForgottenUserName() throws Exception {
+		smtpServer = SimpleSmtpServer.start();
+		beginAt("/list.page");
+		clickLinkWithText(I18n.getMessage(language, "ForumBase.login"));
+		clickLinkWithText(I18n.getMessage(language, "Login.lostPassword"));
+
+		setFormElement("username", lastTestuser);
+		submit();
+		Thread.sleep(1000);
+		assertEquals("password lost email received", 1, smtpServer
+				.getReceievedEmailSize());
+		SmtpMessage mail = (SmtpMessage) smtpServer.getReceivedEmail().next();
+		String body = mail.getBody();
+		String link = body.substring(body.indexOf("http:"),
+				body.indexOf(".page") + 5).trim();
+		smtpServer.stop();
+
+		getTestContext().setBaseUrl(link.substring(0, link.lastIndexOf('/')));
+		gotoPage(link.substring(link.lastIndexOf('/')));
+		setFormElement("email", lastTestuser);
+		setFormElement("newPassword", password);
+		setFormElement("confirmPassword", password);
+		submit();
+		clickLinkWithText(I18n.getMessage(language, "ForumBase.logout"));
 	}
 
 }
