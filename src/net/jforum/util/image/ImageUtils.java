@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ImageUtils.java,v 1.7 2004/04/21 23:33:44 rafaelsteil Exp $
+ * $Id: ImageUtils.java,v 1.8 2004/04/23 00:47:15 rafaelsteil Exp $
  */
 package net.jforum.util.image;
 
@@ -56,8 +56,15 @@ import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.Locale;
 
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
+import javax.imageio.stream.ImageOutputStream;
 
 /**
  * Utilities methods for image manipulation. 
@@ -140,6 +147,44 @@ public class ImageUtils
 	}
 	
 	/**
+	 * Compress and save an image to the disk.
+	 * Currently this method only supports JPEG images.
+	 * 
+	 * @param image The image to save
+	 * @param toFileName The filename to use
+	 * @param type The image type. Use <code>ImageUtils.IMAGE_JPEG</code> to save as JPEG
+	 * images, or <code>ImageUtils.IMAGE_PNG</code> to save as PNG.
+	 * @param compress Set to <code>true</code> if you want to compress the image.  
+	 * @return <code>false</code> if no appropriate writer is found
+	 * @throws IOException
+	 */
+	public static void saveCompressedImage(BufferedImage image, String toFileName, int type) throws IOException
+	{
+		if (type == IMAGE_PNG) {
+			throw new UnsupportedOperationException("PNG compression not implemented");
+		}
+		
+		ImageWriter writer = null;
+		
+		Iterator iter = ImageIO.getImageWritersByFormatName("jpg");
+		writer = (ImageWriter)iter.next();
+		
+		ImageOutputStream ios = ImageIO.createImageOutputStream(new File(toFileName));
+		writer.setOutput(ios);
+		
+		ImageWriteParam iwparam = new JPEGImageWriteParam(Locale.getDefault());
+		
+		iwparam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+		iwparam.setCompressionQuality(0.2F);
+		
+		writer.write(null, new IIOImage(image, null, null), iwparam);
+		
+		ios.flush();
+		writer.dispose();
+		ios.close();
+	}
+	
+	/**
 	 * Creates a <code>BufferedImage</code> from an <code>Image</code>. 
 	 * 
 	 * @param image The image to convert 
@@ -149,10 +194,6 @@ public class ImageUtils
 	 */
 	public static BufferedImage createBufferedImage(Image image, int w, int h)
 	{
-		if (image instanceof BufferedImage) {
-			return (BufferedImage)image;
-		}
-		
 		BufferedImage bi = null;
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice gv = ge.getDefaultScreenDevice();

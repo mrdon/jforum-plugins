@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: BBCode.java,v 1.2 2004/04/21 23:57:41 rafaelsteil Exp $
+ * $Id: BBCode.java,v 1.3 2004/04/23 00:47:12 rafaelsteil Exp $
  */
 package net.jforum.util.bbcode;
 
@@ -58,6 +58,7 @@ public class BBCode
 	private String beforeReplace;
 	private String beforeReplaceWith;
 	private String beforeUseRegex;
+	private boolean removQuotes;
 	
 	public BBCode() {}
 
@@ -115,6 +116,11 @@ public class BBCode
 	{
 		return this.beforeReplaceWith;
 	}
+	
+	public boolean removeQuotes()
+	{
+		return this.removQuotes;
+	}
 
 	/**
 	 * Sets the regular expression associated to the tag
@@ -156,5 +162,10 @@ public class BBCode
 	public void setBeforeUseRegex(String r)
 	{
 		this.beforeUseRegex = r;
+	}
+	
+	public void enableRemoveQuotes()
+	{
+		this.removQuotes = true;
 	}
 }

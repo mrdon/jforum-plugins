@@ -108,17 +108,17 @@
 	</match>
 	
 	<!-- IMG -->
-	<match>
+	<match removeQuotes="true">
 		<regex>\[img\](.*?)\[/img\]</regex>
 		<replace>
 		<![CDATA[
-		<img src='$1'>
+		<img src="$1">
 		]]>
 		</replace>
 	</match>
 	
 	<!-- URL -->
-	<match>
+	<match removeQuotes="true">
 		<regex>\[url\](.*?)\[/url\]</regex>
 		<replace>
 		<![CDATA[
@@ -128,7 +128,7 @@
 	</match>
 	
 	<!-- URL=?? -->
-	<match>
+	<match removeQuotes="true">
 		<regex>\[url=['"]?(.*?[^'"])['"]?\](.*?)\[/url\]</regex>
 		<replace>
 		<![CDATA[
@@ -138,7 +138,7 @@
 	</match>
 	
 	<!-- COLOR -->
-	<match>
+	<match removeQuotes="true">
 		<regex>(?s)\[color=['"]?(.*?[^'"])['"]?\](.*?)\[/color\]</regex>
 		<replace>
 		<![CDATA[
@@ -148,7 +148,7 @@
 	</match>
 
 	<!-- SIZE -->
-	<match>
+	<match removeQuotes="true">
 		<regex>(?s)\[size=['"]?(.*?[^'"])['"]?\](.*?)\[/size\]</regex>
 		<replace>
 		<![CDATA[

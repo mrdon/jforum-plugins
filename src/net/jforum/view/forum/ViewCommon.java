@@ -41,10 +41,11 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ViewCommon.java,v 1.3 2004/04/21 23:57:22 rafaelsteil Exp $
+ * $Id: ViewCommon.java,v 1.4 2004/04/23 00:47:14 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -59,6 +60,7 @@ import net.jforum.repository.SecurityRepository;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.MD5;
 import net.jforum.util.SystemGlobals;
+import net.jforum.util.image.ImageUtils;
 
 /**
  * @author Rafael Steil
@@ -138,9 +140,18 @@ public final class ViewCommon
 			String extension = JForum.getRequest().getParameter("avatarName");
 			extension = extension.substring(extension.lastIndexOf('.'));
 		
-			// Gets the content and write it to disk
+			String avatarTmpFileName = SystemGlobals.getApplicationPath() +"/images/avatar/"+ fileName +"_tmp" + extension;
+			
+			// We cannot handle gifs
+			if (extension.toLowerCase().equals("gif")) {
+				extension = "png";
+			}
+
+			String avatarFinalFileName = SystemGlobals.getApplicationPath() +"/images/avatar/"+ fileName + extension;
+
+			// Read the avatar and stores it into a temporary file
 			BufferedInputStream inputStream = new BufferedInputStream((InputStream)JForum.getRequest().getObjectParameter("avatar"));
-			FileOutputStream outputStream = new FileOutputStream(SystemGlobals.getApplicationPath() +"/images/avatar/"+ fileName + extension);
+			FileOutputStream outputStream = new FileOutputStream(avatarTmpFileName);
 			
 			int c = 0;
 			byte[] b = new byte[1024];
@@ -151,8 +162,26 @@ public final class ViewCommon
 			outputStream.flush();
 			outputStream.close();
 			inputStream.close();
+			
+			// OK, time to check and process the avatar size
+			int maxWidth = Integer.parseInt((String)SystemGlobals.getValue("avatar.maxWidth"));
+			int maxHeight = Integer.parseInt((String)SystemGlobals.getValue("avatar.maxHeight"));
+			
+			int type = extension.toLowerCase().equals("jpg") ? ImageUtils.IMAGE_JPEG : ImageUtils.IMAGE_PNG;
+
+			BufferedImage image = ImageUtils.resizeImage(avatarTmpFileName, maxWidth, maxHeight);
+			
+			if (type == ImageUtils.IMAGE_PNG) {
+				ImageUtils.saveImage(image, avatarFinalFileName, type);
+			}
+			else {
+				ImageUtils.saveCompressedImage(image, avatarFinalFileName, type);
+			}
 
 			u.setAvatar(fileName + extension);
+			
+			// Delete de temporary file
+			new File(avatarTmpFileName).delete();
 		}
 		
 		um.update(u); 

@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: PostVH.java,v 1.4 2004/04/21 23:57:22 rafaelsteil Exp $
+ * $Id: PostVH.java,v 1.5 2004/04/23 00:47:14 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 
@@ -667,7 +667,24 @@ public class PostVH extends Command
 						}
 					}
 					else {
-						p.setText(p.getText().replaceAll(bb.getRegex(), bb.getReplace()));
+						// More hacks
+						if (bb.removeQuotes()) {
+							Matcher matcher = Pattern.compile(bb.getRegex()).matcher(p.getText());
+							
+							while (matcher.find()) {
+								String contents = matcher.group(1);
+								contents = contents.replaceAll("'", "");
+								contents = contents.replaceAll("\"", "");
+								
+								String replace = bb.getReplace().replaceAll("\\$1", contents);
+
+								p.setText(p.getText().replaceFirst(bb.getRegex(), replace));
+							}
+						}
+						else {
+							p.setText(p.getText().replaceAll(bb.getRegex(), bb.getReplace()));
+						}
+						
 					}
 				}
 			}
