@@ -30,10 +30,10 @@
 		  <#if (moderator && totalRecords > 0)>
 				<#if openModeration?default(false)>
 					<#assign mp = pagination.moderationParams("0")/>
-					<a href="${contextPath}/jforum${extension}?module=search&action=search&${mp}&start=${thisPage}">${I18n.getMessage("Moderation.CloseModeration")}</a>
+					<a href="${contextPath}/jforum${extension}?module=search&action=search&${mp}&start=${start}">${I18n.getMessage("Moderation.CloseModeration")}</a>
 				<#else>
 					<#assign mp = pagination.moderationParams("1")/>
-					<a href="${contextPath}/jforum${extension}?module=search&action=search&${mp}&start=${thisPage}">${I18n.getMessage("Moderation.OpenModeration")}</a>
+					<a href="${contextPath}/jforum${extension}?module=search&action=search&${mp}&start=${start}">${I18n.getMessage("Moderation.OpenModeration")}</a>
 				</#if>
 			</#if>
 		  </SPAN></TD>

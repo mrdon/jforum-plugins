@@ -68,7 +68,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.15 2005/01/04 21:28:51 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.16 2005/01/05 01:28:16 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -261,7 +261,7 @@ public class SearchAction extends Command
 		StringBuffer path = new StringBuffer(512);
 		path.append(this.request.getContextPath()).append("/jforum" 
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)
-				+ "?module=search&action=search");
+				+ "?module=search&action=search&clean=1");
 		
 		if (this.forum != null) { 
 			path.append("&search_forum=").append(this.forum); 
