@@ -56,7 +56,7 @@ import java.util.Properties;
  * 
  * @author Rafael Steil
  * @author Pieter
- * @version $Id: SystemGlobals.java,v 1.2 2004/06/02 03:56:12 rafaelsteil Exp $
+ * @version $Id: SystemGlobals.java,v 1.3 2004/06/02 15:17:34 pieter2 Exp $
  */
 public class SystemGlobals implements VariableStore
 {
@@ -136,6 +136,11 @@ public class SystemGlobals implements VariableStore
 		expander.clearCache();
 	}
 
+	/**
+	 * Set a transient configuration value (a value that will not be saved) 
+	 * @param field The name of the configuration option
+	 * @param value The value of the configuration option
+	 */
 	public static void setTransientValue(String field, String value)
 	{
 		globals.setTransientValueImpl(field, value);
@@ -156,6 +161,24 @@ public class SystemGlobals implements VariableStore
 	public static void loadDefaults() throws IOException
 	{
 		globals.loadDefaultsImpl();
+	}
+	
+	/**
+	 * Merge additional configuration defaults
+	 * 
+	 * @param file File from which to load the additional defaults
+	 * @throws IOException
+	 */
+	public static void loadAdditionalDefaults(String file) throws IOException
+	{
+		globals.loadAdditionalDefaultsImpl(file);
+	}
+	
+	private void loadAdditionalDefaultsImpl(String file) throws IOException
+	{
+		FileInputStream input = new FileInputStream(file);
+		defaults.load(input);
+		input.close();
 	}
 
 	/**
@@ -180,7 +203,7 @@ public class SystemGlobals implements VariableStore
 	{
 		try {
 			FileInputStream input = new FileInputStream(installationConfig);
-			defaults.load(input);
+			installation.load(input);
 			input.close();
 			expander.clearCache();
 		}

@@ -43,7 +43,6 @@
 
 package net.jforum;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -51,9 +50,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Properties;
 
-import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /** 
@@ -77,7 +74,7 @@ import net.jforum.util.preferences.SystemGlobals;
  *
  * @author Paulo Silveira
  * @author Rafael Steil
- * @version $Id: ConnectionPool.java,v 1.5 2004/06/01 19:47:22 pieter2 Exp $
+ * @version $Id: ConnectionPool.java,v 1.6 2004/06/02 15:17:33 pieter2 Exp $
  * */
 
 public class ConnectionPool 
@@ -112,33 +109,27 @@ public class ConnectionPool
 	 * @throws IOException
 	 * @throws Exception
 	*/
-	private ConnectionPool(String dbConfigFile) throws IOException, SQLException
+	private ConnectionPool() throws IOException, SQLException
 	{
-		Properties driverProps = new Properties();        
-		driverProps.load(new FileInputStream(dbConfigFile));
-
+		SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue("database.driver.config"));
+		String driver = SystemGlobals.getValue("database.connection.driver");
+		
 		try {
-			String driverName = driverProps.getProperty("driver.name");
+			Class.forName(driver);
+			
+			this.minConnections = SystemGlobals.getIntValue("database.connection.pool.min");
+			this.maxConnections = SystemGlobals.getIntValue("database.connection.pool.max");
+			this.timeout = SystemGlobals.getIntValue("database.connection.pool.timeout");
 
-			Properties config = new Properties();
-			config.load(new FileInputStream(SystemGlobals.getApplicationResourceDir() + "/config/database/"+ driverName +"/"+ driverName +".properties"));
+			this.connectionString = SystemGlobals.getValue("database.connection.string");
 			
-			SystemGlobals.setTransientValue(ConfigKeys.SQL_FILE, config.getProperty(ConfigKeys.SQL_FILE));
-			SystemGlobals.setTransientValue(ConfigKeys.DAO_DRIVER, config.getProperty(ConfigKeys.DAO_DRIVER));
-			
-			Class.forName(config.getProperty("database.connection.driver"));
-			
-			this.minConnections = Integer.parseInt(config.getProperty("database.connection.pool.min"));
-			this.maxConnections = Integer.parseInt(config.getProperty("database.connection.pool.max"));
-			this.timeout = Integer.parseInt(config.getProperty("database.connection.pool.timeout"));
-
-			this.connectionString = config.getProperty("database.connection.string");
+			System.err.println("database.connection.string=" + this.connectionString);
 			
 			if (debug) {
 				System.err.println("*********************************************");
 				System.err.println("******** STARTING CONNECTION POOL ***********");
 				System.err.println("*********************************************");
-				System.err.println("database.connection.driver = "+ config.getProperty("database.connection.driver"));
+				System.err.println("database.connection.driver = "+ driver);
 				System.err.println("minConnections = "+ this.minConnections);
 				System.err.println("maxConnections = "+ this.maxConnections);
 				System.err.println("timeout = "+ this.timeout);
@@ -152,31 +143,28 @@ public class ConnectionPool
 				
 				if (debug) {
 					Date now = new Date();
-					System.err.println(now.toString() + " openning connection "+ (i + 1));
+					System.err.println(now.toString() + " opening connection "+ (i + 1));
 				}
 			}
 			
 			isDatabaseUp = true;
 		}
 		catch (ClassNotFoundException e) {
-			System.err.println("Ouch... Cannot find database driver: "+ driverProps.getProperty("driver.name"));
+			System.err.println("Ouch... Cannot find database driver: "+ driver);
 		}
     }
 
     /**
      * Inits ConnectionPool. 
-	 * Init Conenction pool with a config file that will be used to load the driver 
-     * configuration and queries.<p>
      * If the pool was already initialized, this action will take no effect.
 	 *
-	 * @param configFile The configuration file filename, including full PATH
-	 * @throws Exception
+	 * @throws SQLException
 	 * @throws IOException
      */
-    public static void init(String configFile) throws SQLException, IOException
+    public static void init() throws SQLException, IOException
     {
         if (pool == null || !isDatabaseUp) {
-            pool = new ConnectionPool(configFile);
+            pool = new ConnectionPool();
         }
     }
     
@@ -193,8 +181,9 @@ public class ConnectionPool
 	 **/
 	public static ConnectionPool getPool() throws SQLException
 	{
-		if (pool == null)
+		if (pool == null) {
 			throw new SQLException("ConnectionPool was not initialized yet. You need to call init() first.");
+		}
 		
 		return pool;
 	}

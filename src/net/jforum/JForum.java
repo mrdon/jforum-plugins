@@ -80,7 +80,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.14 2004/06/02 03:56:07 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.15 2004/06/02 15:17:34 pieter2 Exp $
  */
 public class JForum extends HttpServlet 
 {
@@ -241,7 +241,7 @@ public class JForum extends HttpServlet
 	
 	private void startDatabase() throws Exception
 	{
-		ConnectionPool.init(SystemGlobals.getApplicationResourceDir() +"/config/database.properties");
+		ConnectionPool.init();
 	}
 	
 	public void init(ServletConfig config) throws ServletException
@@ -280,8 +280,8 @@ public class JForum extends HttpServlet
 	
 	private void loadConfigStuff() throws Exception
 	{
-		SystemGlobals.loadQueries(SystemGlobals.getApplicationResourceDir() +"/config/"+ SystemGlobals.getValue(ConfigKeys.GENERIC_SQL_QUERIES));
-		SystemGlobals.loadQueries(SystemGlobals.getApplicationResourceDir() +"/config/"+ SystemGlobals.getValue(ConfigKeys.SQL_FILE));
+		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
+		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
 		
 		I18n.load();
 		this.loadUrlPatterns();
