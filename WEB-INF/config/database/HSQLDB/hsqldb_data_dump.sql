@@ -1,46 +1,42 @@
--- 
---  General Group - OK
--- 
-INSERT INTO jforum_groups ( group_name, group_description ) VALUES ('General', 'General Users');
-
-INSERT INTO jforum_roles (group_id, name, type) VALUES ((SELECT MAX(group_id) from jforum_groups), 'perm_administration', 0);
-INSERT INTO jforum_roles (group_id, name, type) VALUES ((SELECT MAX(group_id) from jforum_groups), 'perm_moderation', 0);
-INSERT INTO jforum_roles (group_id, name, type) VALUES ((SELECT MAX(group_id) from jforum_groups), 'perm_moderation_post_remove', 0);
-INSERT INTO jforum_roles (group_id, name, type) VALUES ((SELECT MAX(group_id) from jforum_groups), 'perm_moderation_post_edit', 0);
-INSERT INTO jforum_roles (group_id, name, type) VALUES ((SELECT MAX(group_id) from jforum_groups), 'perm_moderation_topic_move', 0);
-INSERT INTO jforum_roles (group_id, name, type) VALUES ((SELECT MAX(group_id) from jforum_groups), 'perm_moderation_topic_lockUnlock', 0);
+--
+-- Groups
+--
+INSERT INTO jforum_groups (group_id, group_name, group_description ) VALUES (1,'General', 'General Users');
+INSERT INTO jforum_groups (group_id, group_name, group_description ) VALUES (2,'Administration', 'Admin Users');
+INSERT INTO jforum_groups (group_id, group_name, group_description ) VALUES (3,'Moderation', 'Moderation Users');
 
 -- 
---  Users from General Group - OK
--- 
-INSERT INTO jforum_users ( username, user_password ) VALUES ('Anonymous', 'nopass');
-INSERT INTO jforum_user_groups (group_id, user_id) VALUES ((SELECT MAX(group_id) from jforum_groups), (SELECT MAX(user_id) from jforum_users));
+-- Users
+--
+INSERT INTO jforum_users (user_id, username, user_password ) VALUES (1,'Anonymous', 'nopass');
+INSERT INTO jforum_users (user_id, username, user_password ) VALUES (2,'Admin', '21232f297a57a5a743894a0e4a801fc3');
 
--- 
---  Admin Group - OK
--- 
-INSERT INTO jforum_groups ( group_name, group_description ) VALUES ('Administration', 'Admin Users');
-INSERT INTO jforum_roles (group_id, name, type) VALUES ((SELECT MAX(group_id) from jforum_groups), 'perm_administration', 1);
-INSERT INTO jforum_roles (group_id, name, type) VALUES ((SELECT MAX(group_id) from jforum_groups), 'perm_moderation', 1);
-INSERT INTO jforum_roles (group_id, name, type) VALUES ((SELECT MAX(group_id) from jforum_groups), 'perm_moderation_post_remove', 1);
-INSERT INTO jforum_roles (group_id, name, type) VALUES ((SELECT MAX(group_id) from jforum_groups), 'perm_moderation_post_edit', 1);
-INSERT INTO jforum_roles (group_id, name, type) VALUES ((SELECT MAX(group_id) from jforum_groups), 'perm_moderation_topic_move', 1);
-INSERT INTO jforum_roles (group_id, name, type) VALUES ((SELECT MAX(group_id) from jforum_groups), 'perm_moderation_topic_lockUnlock', 1);
+--
+-- User Groups
+--
+INSERT INTO jforum_user_groups (group_id, user_id) VALUES (1, 1);
+INSERT INTO jforum_user_groups (group_id, user_id) VALUES (2, 2);
 
--- 
---  Users from Admin Group - OK
--- 
-INSERT INTO jforum_users ( username, user_password ) VALUES ('Admin', '21232f297a57a5a743894a0e4a801fc3');
-INSERT INTO jforum_user_groups (group_id, user_id) VALUES ((SELECT MAX(group_id) from jforum_groups), (SELECT MAX(user_id) from jforum_users));
+--
+-- Roles
+--
+INSERT INTO jforum_roles (group_id, name, type) VALUES (1, 'perm_administration', 0);
+INSERT INTO jforum_roles (group_id, name, type) VALUES (1, 'perm_moderation', 0);
+INSERT INTO jforum_roles (group_id, name, type) VALUES (1, 'perm_moderation_post_remove', 0);
+INSERT INTO jforum_roles (group_id, name, type) VALUES (1, 'perm_moderation_post_edit', 0);
+INSERT INTO jforum_roles (group_id, name, type) VALUES (1, 'perm_moderation_topic_move', 0);
+INSERT INTO jforum_roles (group_id, name, type) VALUES (1, 'perm_moderation_topic_lockUnlock', 0);
 
--- 
---  Moderation Group - OK
--- 
-INSERT INTO jforum_groups ( group_name, group_description ) VALUES ('Moderation', 'Moderation Users');
+INSERT INTO jforum_roles (group_id, name, type) VALUES (2, 'perm_administration', 1);
+INSERT INTO jforum_roles (group_id, name, type) VALUES (2, 'perm_moderation', 1);
+INSERT INTO jforum_roles (group_id, name, type) VALUES (2, 'perm_moderation_post_remove', 1);
+INSERT INTO jforum_roles (group_id, name, type) VALUES (2, 'perm_moderation_post_edit', 1);
+INSERT INTO jforum_roles (group_id, name, type) VALUES (2, 'perm_moderation_topic_move', 1);
+INSERT INTO jforum_roles (group_id, name, type) VALUES (2, 'perm_moderation_topic_lockUnlock', 1);
 
--- 
---  Smilies - OK
--- 
+--
+-- Smilies
+--
 INSERT INTO jforum_smilies VALUES (1,':)','<img src=\"#CONTEXT#/images/smilies/3b63d1616c5dfcf29f8a7a031aaa7cad.gif\" border=\"0\">','3b63d1616c5dfcf29f8a7a031aaa7cad.gif');
 INSERT INTO jforum_smilies VALUES (2,':-)','<img src=\"#CONTEXT#/images/smilies/3b63d1616c5dfcf29f8a7a031aaa7cad.gif\" border=\"0\">','3b63d1616c5dfcf29f8a7a031aaa7cad.gif');
 INSERT INTO jforum_smilies VALUES (3,':D','<img src=\"#CONTEXT#/images/smilies/283a16da79f3aa23fe1025c96295f04f.gif\" border=\"0\">','283a16da79f3aa23fe1025c96295f04f.gif');
