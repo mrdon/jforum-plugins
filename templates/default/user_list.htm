@@ -59,10 +59,10 @@ function activateAdvancedQuery(){
 	  <th class="thTop" nowrap="nowrap">&nbsp;www &nbsp;</th>
 	  <th class="thCornerR" nowrap="nowrap">&nbsp;${I18n.getMessage("Karma.karma")}&nbsp;</th>
 	</tr>
-  <#assign id = start+1/>
+
 	<#list users as user>
 		<tr align="center">		  
-			<td class="row2"><span class="gen">${id}</span></td>			
+			<td class="row2"><span class="gen">${user.id}</span></td>			
 			<td class="row2"><span class="gen"><a href="${JForumContext.encodeURL("/user/profile/${user.id}")}">${user.username}</a></span></td>
 			<td class="row2"><span class="gen"><#if user.id != 1><a href="${JForumContext.encodeURL("/pm/sendTo/${user.id}")}"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/icon_pm.gif" border="0" /></a><#else>&nbsp;</#if></span></td>
 			<td class="row2"><span class="gen"><#if (user.isViewEmailEnabled() && user.email?exists && user.email?length > 0)>
@@ -76,7 +76,6 @@ function activateAdvancedQuery(){
 			<td class="row2"><span class="gen">${user.webSite?default("&nbsp;")}</span></td>
 			<td class="row2"><span class="gen">${user.karma.karmaPoints}</span></td>
 		</tr>
-		<#assign id = id+1/>
 	</#list>
 
 	<tr align="center">
