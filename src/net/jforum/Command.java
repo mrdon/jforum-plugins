@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,12 +37,13 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: Mar 3, 2003 / 10:55:19 AM
- * net.jforum.Command.java
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum;
 
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -52,7 +53,7 @@ import freemarker.template.Template;
  * presentation actions must extend this class. 
  * 
  * @author Rafael Steil
- * @version $Id: Command.java,v 1.4 2004/08/30 23:51:20 rafaelsteil Exp $
+ * @version $Id: Command.java,v 1.5 2004/10/03 16:53:46 rafaelsteil Exp $
  */
 public abstract class Command 
 {
@@ -94,7 +95,7 @@ public abstract class Command
 		}
 		
 		if (this.templateName == null) {
-			this.templateName = "default/forum_base.htm";
+			this.templateName =  SystemGlobals.getValue(ConfigKeys.TEMPLATE_NAME) + "/forum_base.htm";
 		}
 		
 		return Configuration.getDefaultConfiguration().getTemplate(this.templateName);

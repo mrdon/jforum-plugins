@@ -37,11 +37,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: Mar 28, 2003 / 8:09:08 PM
- * net.jforum.view.admin.RankingVH.java
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: RankingAction.java,v 1.1 2004/08/30 23:51:16 rafaelsteil Exp $
+ * $Id: RankingAction.java,v 1.2 2004/10/03 16:53:44 rafaelsteil Exp $
  */
 package net.jforum.view.admin;
 
@@ -52,7 +51,6 @@ import net.jforum.entities.Ranking;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.RankingModel;
 import net.jforum.repository.RankingRepository;
-import freemarker.template.Configuration;
 import freemarker.template.Template;
 
 /**
@@ -134,7 +132,7 @@ public class RankingAction extends Command
 			super.process();
 		}
 		
-		return Configuration.getDefaultConfiguration().getTemplate("admin/index_main.htm");
+		return AdminAction.adminBaseTemplate();
 	}
 
 }

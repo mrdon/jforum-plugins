@@ -68,7 +68,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.36 2004/09/25 05:37:12 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.37 2004/10/03 16:53:46 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -103,6 +103,7 @@ public class JForum extends JForumCommonServlet
 		userSession.setLastVisit(System.currentTimeMillis());
 		userSession.setUserId(SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID));
 		userSession.setSessionId(JForum.getRequest().getSession().getId());
+		SessionFacade.setAttribute("logged", "0");
 	}
 	
 	private void checkCookies() throws Exception
@@ -180,7 +181,7 @@ public class JForum extends JForumCommonServlet
 	{
 		JForum.getContext().put("contextPath", JForum.getRequest().getContextPath());
 		JForum.getContext().put("serverName", JForum.getRequest().getServerName());
-		JForum.getContext().put("templateName", "default");
+		JForum.getContext().put("templateName", SystemGlobals.getValue(ConfigKeys.TEMPLATE_NAME));
 		JForum.getContext().put("extension", SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		JForum.getContext().put("serverPort", Integer.toString(JForum.getRequest().getServerPort()));
 		JForum.getContext().put("I18n", I18n.getInstance());

@@ -55,7 +55,7 @@ import org.apache.log4j.Logger;
  * Monitor class for file changes.
  * 
  * @author Rafael Steil
- * @version $Id: FileMonitor.java,v 1.3 2004/09/22 01:36:13 rafaelsteil Exp $
+ * @version $Id: FileMonitor.java,v 1.4 2004/10/03 16:53:56 rafaelsteil Exp $
  */
 public class FileMonitor
 {
@@ -76,17 +76,14 @@ public class FileMonitor
 	/**
 	 * Add a file to the monitor
 	 * 
-	 * @param listener
-	 *            The file listener
-	 * @param filename
-	 *            The filename to watch
-	 * @param period
-	 *            The watch interval.
+	 * @param listener The file listener
+	 * @param filename The filename to watch
+	 * @param period The watch interval.
 	 * @throws IOException
 	 */
 	public void addFileChangeListener(FileChangeListener listener, 
 		String filename, long period) throws IOException {
-		this.removeFileChangeListener(listener, filename);
+		this.removeFileChangeListener(filename);
 		
 		logger.info("Watching "+ filename);
 		
@@ -99,12 +96,10 @@ public class FileMonitor
 	/**
 	 * Stop watching a file
 	 * 
-	 * @param listener
-	 *            The file listener
-	 * @param filename
-	 *            The filename to keep watch
+	 * @param listener The file listener
+	 * @param filename The filename to keep watch
 	 */
-	public void removeFileChangeListener(FileChangeListener listener, String filename) {
+	public void removeFileChangeListener(String filename) {
 		FileMonitorTask task = (FileMonitorTask)this.timerEntries.remove(filename);
 		
 		if (task != null) {

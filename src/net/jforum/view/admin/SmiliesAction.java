@@ -37,11 +37,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 13/01/2004 / 18:45:31
- * net.jforum.view.admin.SmiliesVH.java
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: SmiliesAction.java,v 1.1 2004/08/30 23:51:17 rafaelsteil Exp $
+ * $Id: SmiliesAction.java,v 1.2 2004/10/03 16:53:45 rafaelsteil Exp $
  */
 package net.jforum.view.admin;
 
@@ -58,7 +57,6 @@ import net.jforum.repository.SmiliesRepository;
 import net.jforum.util.MD5;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import freemarker.template.Configuration;
 import freemarker.template.Template;
 
 /**
@@ -183,6 +181,6 @@ public class SmiliesAction extends Command
 			super.process();
 		}
 		
-		return Configuration.getDefaultConfiguration().getTemplate("admin/index_main.htm");
+		return AdminAction.adminBaseTemplate();
 	}
 }

@@ -37,11 +37,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 02/04/2004 - 20:31:35
- * net.jforum.view.forum.ViewCommon.java
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ViewCommon.java,v 1.13 2004/09/28 13:39:08 marcwick Exp $
+ * $Id: ViewCommon.java,v 1.14 2004/10/03 16:53:56 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 
@@ -114,14 +113,14 @@ public final class ViewCommon
 		}
 		
 		u.setId(userId);
-		u.setEmail(JForum.getRequest().getParameter("email"));
-		u.setIcq(JForum.getRequest().getParameter("icq"));
-		u.setAim(JForum.getRequest().getParameter("aim"));
-		u.setMsnm(JForum.getRequest().getParameter("msn"));
-		u.setYim(JForum.getRequest().getParameter("yim"));
-		u.setFrom(JForum.getRequest().getParameter("location"));
-		u.setOccupation(JForum.getRequest().getParameter("occupation"));
-		u.setInterests(JForum.getRequest().getParameter("interests"));
+		u.setEmail(SafeHtml.makeSafe(JForum.getRequest().getParameter("email")));
+		u.setIcq(SafeHtml.makeSafe(JForum.getRequest().getParameter("icq")));
+		u.setAim(SafeHtml.makeSafe(JForum.getRequest().getParameter("aim")));
+		u.setMsnm(SafeHtml.makeSafe(JForum.getRequest().getParameter("msn")));
+		u.setYim(SafeHtml.makeSafe(JForum.getRequest().getParameter("yim")));
+		u.setFrom(SafeHtml.makeSafe(JForum.getRequest().getParameter("location")));
+		u.setOccupation(SafeHtml.makeSafe(JForum.getRequest().getParameter("occupation")));
+		u.setInterests(SafeHtml.makeSafe(JForum.getRequest().getParameter("interests")));
 		u.setSignature(SafeHtml.makeSafe(JForum.getRequest().getParameter("signature")));
 		u.setViewEmailEnabled(JForum.getRequest().getParameter("viewemail").equals("1"));
 		u.setViewOnlineEnabled(JForum.getRequest().getParameter("hideonline").equals("0"));
@@ -131,7 +130,7 @@ public final class ViewCommon
 		u.setHtmlEnabled(JForum.getRequest().getParameter("allowhtml").equals("1"));
 		u.setLang(JForum.getRequest().getParameter("language"));
 		
-		String website = JForum.getRequest().getParameter("website");
+		String website = SafeHtml.makeSafe(JForum.getRequest().getParameter("website"));
 		if (website != null && !"".equals(website) && !website.toLowerCase().startsWith("http://")) {
 			website = "http://" + website;
 		}

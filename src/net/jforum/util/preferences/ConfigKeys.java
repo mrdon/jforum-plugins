@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.21 2004/10/01 14:10:42 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.22 2004/10/03 16:53:53 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -85,6 +85,7 @@ public class ConfigKeys {
 	public static final String SQL_QUERIES_GENERIC = "sql.queries.generic";
 	public static final String SQL_QUERIES_DRIVER = "sql.queries.driver";
 
+	public static final String TEMPLATE_NAME = "templateName";
 	public static final String ENCODING = "encoding";
 	public static final String SERVLET_NAME = "servlet.name";
 	public static final String DEFAULT_CONFIG = "default.config";

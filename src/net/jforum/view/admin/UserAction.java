@@ -62,13 +62,11 @@ import net.jforum.util.TreeGroup;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.view.forum.ViewCommon;
-
-import freemarker.template.Configuration;
 import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.4 2004/09/25 04:38:05 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.5 2004/10/03 16:53:45 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -271,7 +269,7 @@ public class UserAction extends Command
 			super.process();
 		}
 		
-		return Configuration.getDefaultConfiguration().getTemplate("admin/index_main.htm");
+		return AdminAction.adminBaseTemplate();
 	}
 
 }

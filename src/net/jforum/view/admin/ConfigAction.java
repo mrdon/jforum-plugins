@@ -37,11 +37,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 15/08/2003 / 20:56:33
- * net.jforum.view.admin.ConfigVH.java
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ConfigAction.java,v 1.1 2004/08/30 23:51:16 rafaelsteil Exp $
+ * $Id: ConfigAction.java,v 1.2 2004/10/03 16:53:45 rafaelsteil Exp $
  */
 package net.jforum.view.admin;
 
@@ -55,7 +54,6 @@ import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.model.ConfigModel;
 import net.jforum.util.preferences.SystemGlobals;
-import freemarker.template.Configuration;
 import freemarker.template.Template;
 
 /**
@@ -113,7 +111,7 @@ public class ConfigAction extends Command
 			super.process();
 		}
 
-		return Configuration.getDefaultConfiguration().getTemplate("admin/index_main.htm");
+		return AdminAction.adminBaseTemplate();
 	}
 
 }

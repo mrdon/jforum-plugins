@@ -1,5 +1,6 @@
+<#setting number_format = "#"/>
 <#import "macros/group_macros.ftl" as lib>
-<style type="text/css">@import url( style.css );</style>
+<STYLE type=text/css>@import url( ${contextPath}/templates/${templateName}/admin/style.css );</STYLE>
 
 <form action="${contextPath}/jforum${extension}" method="post" name="form" id="form" accept-charset="${encoding}" onSubmit="return checkGroups()">
 <input type="hidden" name="action" value="${action}" />

@@ -1,19 +1,18 @@
 <STYLE type=text/css>@import url( style.css );</STYLE>
 
-<!-- <script language="JavaScript" src="templates/admin/js/permission_control.js"></script> -->
 <script language="JavaScript">
-<#include "js/permission_control.js"/>
+<#include "${contextPath}/templates/${templateName}/admin/js/permission_control.js"/>
 </script>
 
 <form accept-charset="${encoding}" name="form1" action="${contextPath}/jforum${extension}" method="post">
 <input type="hidden" name="action" value="permissionsSave">
 <input type="hidden" name="module" value="${moduleName}">
 <input type="hidden" name="securityHash" value="${securityHash}">
-<input type="hidden" name="id" value="${group.id}">
+<input type="hidden" name="id" value="${user.id}">
 
 <TABLE class=forumline cellSpacing=1 cellPadding=3 width="100%" border=0>
 <TR>
-<TH class=thHead vAlign=center colSpan=3 height=25>${I18n.getMessage("PermissionControl.groupTitle")}</TH>
+<TH class=thHead vAlign=center colSpan=3 height=25>${I18n.getMessage("PermissionControl.userTitle")}</TH>
 </TR>
 
 <#list sections as section>
@@ -27,8 +26,7 @@
 	<tr>
 	<td class="row2">&nbsp;</td>
 	<td class="row2" valign="middle" width="33%"><span class="gen">${p.name}</span></td>
-	<td class="row2" valign="middle" align="left">
-	<span class="gen">
+	<td class="row2" valign="top" align="left">
 	<#if p.type == "single">
 		<select name="${p.id}$single">
 	<#else>
@@ -43,24 +41,15 @@
 		<option value="${pd.id}" <#if pd.selected == true> selected</#if>>${pd.name}</option>
 		<#assign allValues = allValues +";"+ pd.id/>
 	</#list>
+	
 	</select>
-	
 	<input type="hidden" name="all${p.id}" value="${allValues}">
-	
-	&nbsp;&nbsp;<input type="checkbox" name="OverrideUser${p.id}">&nbsp;Set Users' Role to follow the Group *
-	</span>
 	</td>
 	</tr>
 </#list>
 
 </#list>
 
-<TR>
-	<TD class=row1 colspan=3 align=center>
-		<SPAN class=gensmall><font color=red>* Note: This action will overwrite current existing user roles.</font>
-		</SPAN>
-	</TD>
-</TR>
 
 <TR align="center">
 <TD class=catBottom colSpan=3 height=28><INPUT class=mainoption type=submit value="${I18n.getMessage("PermissionControl.save")}" name=submit></TD>

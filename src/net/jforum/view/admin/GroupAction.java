@@ -48,25 +48,23 @@ import java.util.List;
 
 import net.jforum.Command;
 import net.jforum.JForum;
-import net.jforum.repository.SecurityRepository;
-import net.jforum.security.PermissionControl;
-import net.jforum.security.XMLPermissionControl;
-import net.jforum.util.TreeGroup;
 import net.jforum.entities.Group;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.GroupModel;
 import net.jforum.model.security.GroupSecurityModel;
+import net.jforum.repository.SecurityRepository;
+import net.jforum.security.PermissionControl;
+import net.jforum.security.XMLPermissionControl;
 import net.jforum.util.I18n;
+import net.jforum.util.TreeGroup;
 import net.jforum.util.preferences.SystemGlobals;
-
-import freemarker.template.Configuration;
 import freemarker.template.Template;
 
 /**
  * ViewHelper class for group administration.
  * 
  * @author Rafael Steil
- * @version $Id: GroupAction.java,v 1.2 2004/09/10 13:27:56 jamesyong Exp $
+ * @version $Id: GroupAction.java,v 1.3 2004/10/03 16:53:45 rafaelsteil Exp $
  */
 public class GroupAction extends Command 
 {
@@ -210,7 +208,7 @@ public class GroupAction extends Command
 			super.process();
 		}
 		
-		return Configuration.getDefaultConfiguration().getTemplate("admin/index_main.htm");
+		return AdminAction.adminBaseTemplate();
 	}
 
 }

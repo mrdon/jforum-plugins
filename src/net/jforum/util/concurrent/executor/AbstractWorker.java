@@ -41,9 +41,11 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: AbstractWorker.java,v 1.4 2004/08/03 14:30:40 pieter2 Exp $
+ * $Id: AbstractWorker.java,v 1.5 2004/10/03 16:53:54 rafaelsteil Exp $
  */
  package net.jforum.util.concurrent.executor;
+
+import org.apache.log4j.Logger;
 
 import net.jforum.util.concurrent.Task;
 
@@ -52,6 +54,7 @@ import net.jforum.util.concurrent.Task;
  */
 public abstract class AbstractWorker implements Runnable 
 {
+	private static final Logger logger = Logger.getLogger(AbstractWorker.class);
 	protected abstract Object take() throws InterruptedException;
 	
 	protected void cleanup() { }
@@ -70,7 +73,7 @@ public abstract class AbstractWorker implements Runnable
 					try {
 						((Task)task).execute();
 					} catch(Exception e ) {
-						// I don't care
+						logger.warn("Exception while executing a task: " + e);
 					}
 				} 
 				else {

@@ -46,13 +46,15 @@ import java.io.IOException;
 import java.util.Random;
 
 import net.jforum.util.I18n;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 import com.dumbster.smtp.SimpleSmtpServer;
 import com.dumbster.smtp.SmtpMessage;
 
 /**
  * @author Marc Wick
- * @version $Id: UserWebTestCase.java,v 1.10 2004/10/03 11:51:19 marcwick Exp $
+ * @version $Id: UserWebTestCase.java,v 1.11 2004/10/03 16:53:55 rafaelsteil Exp $
  */
 public class UserWebTestCase extends AbstractWebTestCase {
 
@@ -114,9 +116,12 @@ public class UserWebTestCase extends AbstractWebTestCase {
 	}
 
 	public void testPasswordForgottenUserName() throws Exception {
+		SystemGlobals.setValue(ConfigKeys.MAIL_SMTP_HOST, "localhost");
+		SystemGlobals.saveInstallation();
+		
 		// start smtp server on localhost to receive and verify test emails
 		smtpServer = SimpleSmtpServer.start();
-
+		
 		beginAt(FORUMS_LIST);
 		assertLinkPresent("login");
 		clickLink("login");
@@ -131,8 +136,8 @@ public class UserWebTestCase extends AbstractWebTestCase {
 		Thread.sleep(1000);
 
 		// test if an email has been received by localhost
-		assertEquals("password lost email received", 1, smtpServer
-				.getReceievedEmailSize());
+		assertEquals("password lost email received", 1, 
+				smtpServer.getReceievedEmailSize());
 
 		// now test the email
 		SmtpMessage mail = (SmtpMessage) smtpServer.getReceivedEmail().next();

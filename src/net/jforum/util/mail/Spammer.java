@@ -69,7 +69,7 @@ import freemarker.template.Template;
  * TODO: should do some refactoring to send a personalized email to each user. 
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.6 2004/06/21 03:48:07 rafaelsteil Exp $
+ * @version $Id: Spammer.java,v 1.7 2004/10/03 16:53:53 rafaelsteil Exp $
  */
 public class Spammer 
 {
@@ -77,7 +77,6 @@ public class Spammer
 	private static int MESSAGE_TEXT = 1;
 	
 	private Properties mailProps = new Properties();
-	private static Spammer instance = new Spammer(true);
 	private static int messageFormat;
 	private static Session session;
 	private static String username;
@@ -87,10 +86,7 @@ public class Spammer
 	
 	private Message message;
 	
-	public Spammer() {}
-
-	// Trick ;)
-	private Spammer(boolean init) throws EmailException
+	protected Spammer() throws EmailException
 	{
 		mailProps.put("mail.smtp.host", SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_HOST));
 		mailProps.put("mail.mime.address.strict", "false");

@@ -61,12 +61,11 @@ import net.jforum.security.RoleValue;
 import net.jforum.security.RoleValueCollection;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.TreeGroup;
-import freemarker.template.Configuration;
 import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.1 2004/08/30 23:51:17 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.2 2004/10/03 16:53:45 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -201,7 +200,7 @@ public class ForumAction extends Command
 			super.process();
 		}
 
-		return Configuration.getDefaultConfiguration().getTemplate("admin/index_main.htm");
+		return AdminAction.adminBaseTemplate();
 	}
 
 }

@@ -37,11 +37,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 17/01/2004 / 19:34:01
- * net.jforum.view.admin.AdminVH.java
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: AdminAction.java,v 1.2 2004/09/11 02:43:17 rafaelsteil Exp $
+ * $Id: AdminAction.java,v 1.3 2004/10/03 16:53:44 rafaelsteil Exp $
  */
 package net.jforum.view.admin;
 
@@ -117,6 +116,12 @@ public class AdminAction extends Command {
 		}
 	}
 	
+	public static Template adminBaseTemplate() throws Exception
+	{
+		return Configuration.getDefaultConfiguration().getTemplate(
+				SystemGlobals.getValue(ConfigKeys.TEMPLATE_NAME) + "/admin/empty.htm");
+	}
+
 	/*
 	 * @see net.jforum.Command#process()
 	 */
@@ -124,6 +129,6 @@ public class AdminAction extends Command {
 	{
 		super.process();
 		
-		return Configuration.getDefaultConfiguration().getTemplate("admin/empty.htm");
+		return AdminAction.adminBaseTemplate();
 	}
 }

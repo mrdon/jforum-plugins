@@ -45,9 +45,9 @@ package net.jforum.view.admin;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import net.jforum.entities.Category;
 import net.jforum.Command;
 import net.jforum.JForum;
+import net.jforum.entities.Category;
 import net.jforum.model.CategoryModel;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.GroupModel;
@@ -61,15 +61,13 @@ import net.jforum.security.RoleValueCollection;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.TreeGroup;
-
-import freemarker.template.Configuration;
 import freemarker.template.Template;
 
 /**
  * ViewHelper for category administration.
  * 
  * @author Rafael Steil
- * @version $Id: CategoryAction.java,v 1.1 2004/08/30 23:51:15 rafaelsteil Exp $
+ * @version $Id: CategoryAction.java,v 1.2 2004/10/03 16:53:45 rafaelsteil Exp $
  */
 public class CategoryAction extends Command 
 {
@@ -189,7 +187,7 @@ public class CategoryAction extends Command
 			super.process();
 		}
 
-		return Configuration.getDefaultConfiguration().getTemplate("admin/index_main.htm");
+		return AdminAction.adminBaseTemplate();
 	}
 
 }
