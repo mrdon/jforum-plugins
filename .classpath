@@ -9,13 +9,7 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/freemarker-2.3-rc3.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/mail.jar"/>
 	<classpathentry kind="lib" path="lib/servlet-api.jar"/>
-	<classpathentry kind="lib" path="lib/httpunit-1.5.4.jar"/>
-	<classpathentry kind="lib" path="lib/js-1.5R4.1.jar"/>
 	<classpathentry kind="lib" path="lib/junit.jar"/>
-	<classpathentry kind="lib" path="lib/nekohtml-0.8.1.jar"/>
-	<classpathentry kind="lib" path="lib/xercesImpl-2.6.2.jar"/>
-	<classpathentry kind="lib" path="lib/xml-apis-1.0.b2.jar"/>
-	<classpathentry kind="lib" path="lib/jwebunit-1.2.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/htmlparser-1.5.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/pgsql_driver74.213.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/mysql-connector-java-3.1.4-beta-bin.jar"/>
