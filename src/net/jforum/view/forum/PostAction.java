@@ -86,7 +86,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.56 2005/02/04 12:55:33 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.57 2005/02/07 10:59:28 andowson Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -697,6 +697,11 @@ public class PostAction extends Command {
 			tm.setLastPostId(p.getTopicId(), maxPostId);
 		}
 
+		int minPostId = tm.getMinPostId(p.getTopicId());
+    if (minPostId > -1) {
+      tm.setFirstPostId(p.getTopicId(), minPostId);
+    }
+        
 		// Forum
 		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
 
@@ -704,11 +709,6 @@ public class PostAction extends Command {
 		if (maxPostId > -1) {
 			fm.setLastPost(p.getForumId(), maxPostId);
 		}
-		
-		int minPostId = tm.getMinPostId(p.getTopicId());
-        if (minPostId > -1) {
-        	  tm.setFirstPostId(p.getTopicId(), minPostId);
-        }
 
 		// It was the last remaining post in the topic?
 		int totalPosts = tm.getTotalPosts(p.getTopicId());
@@ -731,7 +731,7 @@ public class PostAction extends Command {
 		}
 		else {
 			// Ok, all posts were removed. Time to say goodbye
-			TopicsCommon.deleteTopic(p.getTopicId());
+			TopicsCommon.deleteTopic(p.getTopicId(), p.getForumId());
 
 			JForum.setRedirect(this.request.getContextPath() + "/forums/show/" + p.getForumId()
 					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
