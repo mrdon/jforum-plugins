@@ -29,3 +29,8 @@ PermissionControl.deleteUserRoleValueByGroup =  DELETE jforum_role_values \
 	AND ug.user_id = r.user_id \
 	AND ug.group_id = ? \
 	AND r.name = ?
+	
+PermissionControl.deleteAllRoleValues = DELETE jforum_role_values \
+	FROM jforum_role_values rv, jforum_roles r \
+	WHERE r.role_id = rv.role_id \
+	AND r.group_id = ?

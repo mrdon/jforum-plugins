@@ -334,6 +334,8 @@ TreeGroup.selectGroup = SELECT group_id, group_name FROM jforum_groups WHERE par
 # ################
 # PermissionControl
 # ################
+PermissionControl.deleteAllRoleValues = DELETE FROM jforum_role_values WHERE role_id IN (SELECT role_id FROM jforum_roles WHERE group_id = ?)
+
 PermissionControl.deleteAllUserRoles = DELETE FROM jforum_roles WHERE user_id = ?
 PermissionControl.deleteAllGroupRoles = DELETE FROM jforum_roles WHERE group_id = ?
 PermissionControl.deleteUserRole = DELETE from jforum_roles WHERE user_id = ? AND name = ?
