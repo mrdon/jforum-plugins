@@ -520,7 +520,7 @@ AttachmentModel.selectExtension = SELECT e.extension_id, e.extension_group_id, e
 	WHERE e.$field = ? \
 	AND e.extension_group_id = g.extension_group_id
 
-AttachmentModel.extensionsForSecurity = SELECT e.extension, e.allow, eg.allow group_allow \
+AttachmentModel.extensionsForSecurity = SELECT e.extension, e.allow, eg.allow AS group_allow \
 	FROM jforum_extensions e, jforum_extension_groups eg \
 	WHERE e.extension_group_id = eg.extension_group_id
 
