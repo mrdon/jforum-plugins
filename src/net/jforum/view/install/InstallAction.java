@@ -81,7 +81,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.21 2005/02/17 19:05:49 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.22 2005/02/21 15:37:24 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -479,6 +479,11 @@ public class InstallAction extends Command
 		}
 		
 		if (database.startsWith("mysql")) {
+			if ("mysql41".equals(database)) {
+				String path = SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/database/mysql";
+				new File(path + "/mysql_41.properties").renameTo(new File(path + "/mysql.sql"));
+			}
+			
 			database = "mysql";
 		}
 		
