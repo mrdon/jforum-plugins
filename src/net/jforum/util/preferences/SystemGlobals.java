@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creating date: Feb 24, 2003 / 8:25:35 PM
- * net.jforum.util.SystemGlobals.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: SystemGlobals.java,v 1.1 2004/06/01 19:47:20 pieter2 Exp $
  */
 package net.jforum.util.preferences;
 
@@ -51,132 +48,114 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Properties;
 
-
 /**
-  * Guarda variaveis globais do sistema. 
- * Nesta classe estao definidos alguns valores defaults
- * para todo o sistema, como localizacao de arquivos de configuracoes
- * de logs, por exemplo. Note que esta classe nao deve ser usada para
- * propriedades gerais, genericas, de configuracao, mas sim 
- * como um meio de pegar e setar valores para certas coisas
- * que mudam dinamicamente de lugar conforme o sistema onde
- * o programa esta rodando.
- * <br>
- * Por exemplo, arquivos de configuracao de logs podem ser estaticamente
- * programados para serem encontrados em /usr/local/seila, mas e se
- * quando o sistema for enviado para outra maquina este diretorio nao 
- * existir? Um outro exepmlo: os arquivos podem estar em um diretorio X
- * se a aplicacao esta rodando como Desktop, e em um diretorio Y se 
- * estiver rodando como Servlet. 
- * <br>
- * Deixar tais configucoes em um arquivo Properties ( ou XML ) em disco, com 
- * a localizacao de cada um, torna-se de manutencao dificil, uma vez que
- * uma alteracao em tais arquivos seria necessaria ao enviar o programa
- * para outro servidor ou maquina. 
- * Logicamente da para automatizar a terefa com Ant, o que nao eh uma saida
- * ruim, mas por enquanto fica assim.
- * <br>
- * Porem, fica claro que ao usar esta classe torna-se o sistema propicio
- * a erros, uma vez que a diretiva pode ser definica com um nome mas
- * usada com outro, o que ira acarretar em bugs muitas vezes complicados
- * de serem identificados. Use com cuidado, e se possivel, nao use esta classe, 
- * caso uma solucao melhor seja encontrada. 
+ * Store global configurations used in the system.
+ * This is an helper class used to access the values
+ * defined at SystemGlobals.properties and related
+ * config files. 
  * 
  * @author Rafael Steil
+ * @author Pieter
+ * @version $Id: SystemGlobals.java,v 1.2 2004/06/02 03:56:12 rafaelsteil Exp $
  */
 public class SystemGlobals implements VariableStore
 {
-    private static SystemGlobals globals;
-    
-    private String defaultConfig;
-    private String installationConfig;
-    
-    private Properties defaults;
-    private Properties installation;
-    private Properties queries;
-    
-    private VariableExpander expander;
-    
-    /**
-     * Initialize the global configuration
-     * 
-     * @param appPath The application path (normally the path to the webapp base dir
-     * @param defaults The file containing system defaults (when null, defaults to <appPath>/WEB-INF/config/default.conf)
-     * @param installation The specific installation realm (when null, defaults to System.getProperty("user"))
-     */
-	static public void initGlobals(String appPath, String defaults, String installKey) throws IOException {
-	    globals = new SystemGlobals(appPath, defaults, installKey);
+	private static SystemGlobals globals;
+
+	private String defaultConfig;
+	private String installationConfig;
+
+	private Properties defaults;
+	private Properties installation;
+	private Properties queries;
+
+	private VariableExpander expander;
+
+	/**
+	 * Initialize the global configuration
+	 * 
+	 * @param appPath The application path (normally the path to the webapp base dir
+	 * @param defaults The file containing system defaults (when null, defaults to <appPath>/WEB-INF/config/default.conf)
+	 * @param installation The specific installation realm (when null, defaults to System.getProperty("user"))
+	 */
+	static public void initGlobals(String appPath, String defaults, String installKey) throws IOException
+	{
+		globals = new SystemGlobals(appPath, defaults, installKey);
 	}
-	
-	private SystemGlobals(String appPath, String defaultConfig, String installKey) throws IOException {
-	    expander = new VariableExpander(this, "${", "}");
 
-	    if (defaultConfig == null) {
-	        defaultConfig = appPath + "/WEB-INF/config/SystemGlobals.properties";
-	    }
-	    if (installKey == null) {
-	        installKey = System.getProperty("user.name");
-	    }
+	private SystemGlobals(String appPath, String defaultConfig, String installKey) throws IOException
+	{
+		expander = new VariableExpander(this, "${", "}");
 
-	    this.defaultConfig = defaultConfig;
-	    defaults = new Properties();
-	    
-	    defaults.put(ConfigKeys.APPLICATION_PATH, appPath);
-	    defaults.put(ConfigKeys.INSTALLATION, installKey);
-	    loadDefaultsImpl();
-	    
-	    
-	    installation = new Properties(defaults);
-	    this.installationConfig = getVariableValue(ConfigKeys.INSTALLATION_CONFIG); 
-	    loadInstallationImpl();
+		if (defaultConfig == null) {
+			defaultConfig = appPath +"/WEB-INF/config/SystemGlobals.properties";
+		}
+		if (installKey == null) {
+			installKey = System.getProperty("user.name");
+		}
+
+		this.defaultConfig = defaultConfig;
+		defaults = new Properties();
+
+		defaults.put(ConfigKeys.APPLICATION_PATH, appPath);
+		defaults.put(ConfigKeys.INSTALLATION, installKey);
+		loadDefaultsImpl();
+
+		installation = new Properties(defaults);
+		this.installationConfig = getVariableValue(ConfigKeys.INSTALLATION_CONFIG);
+		loadInstallationImpl();
 
 		queries = new Properties();
 	}
-	
+
 	/**
-	 * Seta um valor para determinada propriedade
+	 * Sets a value for some property
 	 * 
-	 * @param field Nome da propriedade
-	 * @param value Valor da propriedade
+	 * @param field The property name
+	 * @param value The property value 
 	 * @see #getVariableValue(String)
 	 * */
 	public static void setValue(String field, String value)
 	{
-	    globals.setValueImpl(field, value);
+		globals.setValueImpl(field, value);
 	}
-	
-	private void setValueImpl(String field, Object value) {
-	    String defaultValue = (String) defaults.get(field);
-	    if (defaultValue == null) {
-	        throw new RuntimeException("unknown property: " + field);
-	    }
-	    
-	    if (defaultValue.equals(value)) {
-	        installation.remove(field);
-	    } else {
-	        installation.put(field, value);
-	    }
-	    expander.clearCache();
+
+	private void setValueImpl(String field, Object value)
+	{
+		String defaultValue = (String) defaults.get(field);
+		if (defaultValue == null) {
+			throw new RuntimeException("unknown property: " + field);
+		}
+
+		if (defaultValue.equals(value)) {
+			installation.remove(field);
+		}
+		else {
+			installation.put(field, value);
+		}
+		expander.clearCache();
 	}
-	
-	public static void setTransientValue(String field, String value) {
-	    globals.setTransientValueImpl(field, value);
+
+	public static void setTransientValue(String field, String value)
+	{
+		globals.setTransientValueImpl(field, value);
 	}
-	
-	private void setTransientValueImpl(String field, String value) {
-	    defaults.put(field, value);
-	    installation.remove(field);
-	    expander.clearCache();
+
+	private void setTransientValueImpl(String field, String value)
+	{
+		defaults.put(field, value);
+		installation.remove(field);
+		expander.clearCache();
 	}
-	
+
 	/**
 	 * Load system defaults
 	 * 
 	 * @throws IOException
 	 */
-	public static void  loadDefaults() throws IOException
+	public static void loadDefaults() throws IOException
 	{
-	    globals.loadDefaultsImpl();
+		globals.loadDefaultsImpl();
 	}
 
 	/**
@@ -186,29 +165,30 @@ public class SystemGlobals implements VariableStore
 	 */
 	public static void loadInstallation() throws IOException
 	{
-	    globals.loadInstallationImpl();
+		globals.loadInstallationImpl();
 	}
-	
+
 	private void loadDefaultsImpl() throws IOException
 	{
-	    FileInputStream input = new FileInputStream(defaultConfig);
-	    defaults.load(input);
-	    input.close();
-	    expander.clearCache();
+		FileInputStream input = new FileInputStream(defaultConfig);
+		defaults.load(input);
+		input.close();
+		expander.clearCache();
 	}
 
 	private void loadInstallationImpl() throws IOException
 	{
-	    try {
-	        FileInputStream input = new FileInputStream(installationConfig);
-		    defaults.load(input);
-		    input.close();
-		    expander.clearCache();
-	    } catch (IOException e) {
-	        System.err.println("*WARNING* cannot load installation specific properties: " + installationConfig);
-	    }
+		try {
+			FileInputStream input = new FileInputStream(installationConfig);
+			defaults.load(input);
+			input.close();
+			expander.clearCache();
+		}
+		catch (IOException e) {
+			System.err.println("*WARNING* cannot load installation specific properties: "+ installationConfig);
+		}
 	}
-	
+
 	/**
 	 * Save installation defaults
 	 * 
@@ -216,30 +196,29 @@ public class SystemGlobals implements VariableStore
 	 */
 	public static void saveInstallation() throws IOException
 	{
-	    globals.saveInstallationImpl();
+		globals.saveInstallationImpl();
 	}
-	
+
 	private void saveInstallationImpl() throws IOException
 	{
-	    FileOutputStream out = new FileOutputStream(installationConfig);
-	    installation.store(out, "Installation specific configuration options\n" +
-	            "# Please restart the JForum webapplication after editing this file.");
-	    out.close();
+		FileOutputStream out = new FileOutputStream(installationConfig);
+		installation.store(out, "Installation specific configuration options\n"
+							+ "# Please restart the JForum webapplication after editing this file.");
+		out.close();
 	}
-	
 
 	/**
-	 * Pega o valor de alguma propriedade
+	 * Gets the value of some property
 	 * 
-	 * @param field Nome da propriedade a pegar o valor
-	 * @return String contendo o valor da propriedade, ou null caso nao seja encontrada
+	 * @param field The property name to retrieve the value
+	 * @return String with the value, or <code>null</code> if not found
 	 * @see #setValue(String, String)
 	 * */
 	public static String getValue(String field)
 	{
-	    return globals.getVariableValue(field);
+		return globals.getVariableValue(field);
 	}
-	
+
 	/**
 	 * Retrieve an integer-valued configuration field
 	 * 
@@ -247,10 +226,11 @@ public class SystemGlobals implements VariableStore
 	 * @return The value of the configuration option
 	 * @exception NullPointerException when the field does not exists
 	 */
-	public static int getIntValue(String field) {
-	    return Integer.parseInt(getValue(field));
+	public static int getIntValue(String field)
+	{
+		return Integer.parseInt(getValue(field));
 	}
-	
+
 	/**
 	 * Retrieve an boolean-values configuration field
 	 * 
@@ -258,11 +238,11 @@ public class SystemGlobals implements VariableStore
 	 * @return The value of the configuration option
 	 * @exception NullPointerException when the field does not exists
 	 */
-	public static boolean getBoolValue(String field) {
-	    return getValue(field).equals("true");
+	public static boolean getBoolValue(String field)
+	{
+		return getValue(field).equals("true");
 	}
-	
-	
+
 	/**
 	 * Return the value of a configuration value as a variable. Variable expansion is performe
 	 * on the result.
@@ -270,49 +250,51 @@ public class SystemGlobals implements VariableStore
 	 * @param field The field name to retrieve
 	 * @return The value of the field if present  
 	 */
-	
+
 	public String getVariableValue(String field)
 	{
-	    String preExpansion = installation.getProperty(field);
-	    if (preExpansion == null) {
-	        throw new RuntimeException("unknown property: " + field);
-	    }
-	    return expander.expandVariables(preExpansion);
+		String preExpansion = installation.getProperty(field);
+		if (preExpansion == null) {
+			throw new RuntimeException("unknown property: " + field);
+		}
+
+		return expander.expandVariables(preExpansion);
 	}
-	
+
 	/**
-	 * Seta o diretorio raiz da aplicacao.
-	 * <b>Eh necessario incuir a barra no final do nome do diretorio.</b>
+	 * Sets the application's root directory 
 	 * 
-	 * @param ap String contendo o nome do diretorio onde a aplicacao esta instalada
+	 * @param ap String containing the complete path to the root dir
 	 * @see #getApplicationPath
 	 * */
 	public static void setApplicationPath(String ap)
 	{
 		setValue(ConfigKeys.APPLICATION_PATH, ap);
 	}
-	
+
 	/**
-	 * Pega o diretorio raiz onde a aplicacao esta instalada
+	 * Getst the complete path to the application's root dir
 	 * 
-	 * @return String contendo o path completo para a raiz da aplicacao
+	 * @return String with the path
 	 * @see #setApplicationPath
 	 * */
 	public static String getApplicationPath()
 	{
 		return getValue(ConfigKeys.APPLICATION_PATH);
 	}
-	
+
 	/**
-	 * Pega o nome do diretorio de recursos do sistema.
-	 * Este metodo retorna o nome do diretorio onde estao os arquivos
-	 * de configuracao do sistema, sempre relativo ao retorno de 
-	 * <code>getApplicationPath</code>. 
-	 * Caso queira saber o caminho absoluto do diretorio, voce precisa
+	 * Gets the path to the resource's directory.
+	 * This method returns the directory name where the config
+	 * files are stored. 
+	 *  Caso queira saber o caminho absoluto do diretorio, voce precisa
 	 * usar
+	 * Note that this method does not return the complete path. If you 
+	 * want the full path, you must use 
 	 * <blockquote><pre>SystemGlobals.getApplicationPath() + SystemGlobals.getApplicationResourcedir()</pre></blockquote>
 	 * 
-	 * @return String contendo o nome do diretorio
+	 * @return String with the name of the resource dir, relative 
+	 * to application's root dir.
 	 * @see #setApplicationResourceDir
 	 * @see #getApplicationPath
 	 * */
@@ -320,39 +302,40 @@ public class SystemGlobals implements VariableStore
 	{
 		return getValue(ConfigKeys.RESOURCE_DIR);
 	}
-	
+
 	/**
-	* Carrega o arquivo contendo as strings SQL do sistema.
-	*
-	* @param queryFile Nome do arquivo contendo os SQL	. Precisa ser o caminho completo
-	* @throws java.io.IOException
-	**/	
+	 * Load the SQL queries
+	 *
+	 * @param queryFile Complete path to the SQL queries file.
+	 * @throws java.io.IOException
+	 **/
 	public static void loadQueries(String queryFile) throws IOException
 	{
-	    globals.loadQueriesImpl(queryFile);
+		globals.loadQueriesImpl(queryFile);
 	}
 
 	private void loadQueriesImpl(String queryFile) throws IOException
 	{
-		queries.load(new FileInputStream(queryFile));	    
+		queries.load(new FileInputStream(queryFile));
 	}
-	
+
 	/**
-	 * Pega alguma instrucao SQL com base no nome passado como paramentro
+	 * Gets some SQL statement.
 	 * 
-	 * @param sql String contendo o nome do SQL no arquivo de configuracoes
-	 * @return String SQL, no formato de um <code>PreparedStatement</code>
+	 * @param sql The query's name, as defined in the file loaded by
+	 * {@link #loadQueries(String)}
+	 * @return The SQL statement, or <code>null</code> if not found.
 	 * */
 	public static String getSql(String sql)
 	{
 		return globals.getSqlImpl(sql);
 	}
-	
+
 	private String getSqlImpl(String sql)
 	{
-	    return queries.getProperty(sql);
+		return queries.getProperty(sql);
 	}
-	
+
 	/**
 	 * Retrieve an iterator that iterates over all known configuration keys
 	 * 
@@ -360,11 +343,11 @@ public class SystemGlobals implements VariableStore
 	 */
 	public static Iterator fetchConfigKeyIterator()
 	{
-	    return globals.fetchConfigKeyIteratorImpl();
+		return globals.fetchConfigKeyIteratorImpl();
 	}
-	
-	private Iterator fetchConfigKeyIteratorImpl() {
-	    return defaults.keySet().iterator();
+
+	private Iterator fetchConfigKeyIteratorImpl()
+	{
+		return defaults.keySet().iterator();
 	}
-	
 }

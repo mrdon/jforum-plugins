@@ -47,7 +47,7 @@ import net.jforum.drivers.postgresql.security.UserSecurityModel;
 
 /**
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.3 2004/05/24 02:43:09 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.4 2004/06/02 03:56:10 rafaelsteil Exp $
  */
 public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDriver
 {
@@ -59,6 +59,7 @@ public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDrive
 	private static UserModel userModel = new UserModel();
 	private static GroupSecurityModel groupSecurityModel = new GroupSecurityModel();
 	private static UserSecurityModel userSecurityModel = new UserSecurityModel();
+	private static CategoryModel categoryModel = new CategoryModel();
 
 	/** 
 	 * @see net.jforum.model.DataAccessDriver#newPostModel()
@@ -122,5 +123,13 @@ public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDrive
 	public net.jforum.model.security.UserSecurityModel newUserSecurityModel()
 	{
 		return userSecurityModel;
+	}
+	
+	/** 
+	 * @see net.jforum.model.DataAccessDriver#newCategoryModel()
+	 */
+	public net.jforum.model.CategoryModel newCategoryModel()
+	{
+		return categoryModel;
 	}
 }

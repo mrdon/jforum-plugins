@@ -52,9 +52,9 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: CategoryModel.java,v 1.2 2004/06/01 19:47:17 pieter2 Exp $
+ * @version $Id: CategoryModel.java,v 1.3 2004/06/02 03:56:05 rafaelsteil Exp $
  */
-public class CategoryModel implements net.jforum.model.CategoryModel 
+public class CategoryModel extends AutoKeys implements net.jforum.model.CategoryModel 
 {
 	/*
 	 * @see net.jforum.model.CategoryModel#selectById(int)
@@ -72,6 +72,9 @@ public class CategoryModel implements net.jforum.model.CategoryModel
 			c.setName(rs.getString("title"));
 			c.setOrder(rs.getInt("display_order"));
 		}
+		
+		rs.close();
+		p.close();
 		
 		return c;
 	}
@@ -94,6 +97,9 @@ public class CategoryModel implements net.jforum.model.CategoryModel
 			
 			l.add(c);		
 		}
+		
+		rs.close();
+		p.close();
 			
 		return l;
 	}
@@ -111,6 +117,9 @@ public class CategoryModel implements net.jforum.model.CategoryModel
 			return true;
 		}
 		
+		rs.close();
+		p.close();
+		
 		return false;
 	}
 
@@ -121,8 +130,9 @@ public class CategoryModel implements net.jforum.model.CategoryModel
 	{
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.delete"));
 		p.setInt(1, categoryId);
-		
 		p.executeUpdate();
+		
+		p.close();
 	}
 
 	/*
@@ -133,19 +143,23 @@ public class CategoryModel implements net.jforum.model.CategoryModel
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.update"));		
 		p.setString(1, category.getName());
 		p.setInt(2, category.getId());
-		
 		p.executeUpdate();
+		p.close();
 	}
 
 	/* 
 	 * @see net.jforum.model.CategoryModel#addNew(net.jforum.Category)
 	 */
-	public void addNew(Category category) throws Exception 
+	public int addNew(Category category) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.addNew"));		
+		PreparedStatement p = this.getStatementForAutoKeys("CategoryModel.addNew");
 		p.setString(1, category.getName());
 		
-		p.executeUpdate();		
+		int id = this.executeAutoKeysQuery(p);
+		
+		p.close();
+		
+		return id;
 	}
 
 }

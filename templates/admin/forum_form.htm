@@ -1,41 +1,49 @@
-<STYLE type=text/css>@import url( style.css );</STYLE>
+<#import "macros/group_macros.ftl" as lib>
+<style type="text/css">@import url( style.css );</style>
 
-<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum.page" method="post">
-<input type="hidden" name="action" value="${action}">
-<input type="hidden" name="module" value="${moduleName}">
-<input type="hidden" name="securityHash" value="${securityHash}">
+<form action="${contextPath}/jforum.page" method="post" name="form" id="form" accept-charset="${encoding}">
+<input type="hidden" name="action" value="${action}" />
+<input type="hidden" name="module" value="${moduleName}" />
+<input type="hidden" name="securityHash" value="${securityHash}" />
 
 <#if forum?exists>
-<input type="hidden" name="forum_id" value="${forum.id}">
+<input type="hidden" name="forum_id" value="${forum.id}" />
 </#if>
 
-<TABLE class=forumline cellSpacing=1 cellPadding=3 width="100%" border=0>
-<TR>
-<TH class=thHead vAlign=center colSpan=2 height=25>${I18n.getMessage("Forums.Form.Title")}</TH>
-</TR>
+<table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
+	<tr>
+		<th class="thHead" valign="center" colspan="2" height="25">${I18n.getMessage("Forums.Form.Title")}</th>
+	</tr>
         
-<TR>
-<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Forums.Form.ForumName")}</SPAN></TD>
-<TD class=row2><INPUT class=post style="WIDTH: 200px" maxLength=25 size=25 name="forum_name" value="<#if forum?exists>${forum.name}</#if>"></TD>
-</TR>
+	<tr>
+		<td class="row1" width="38%"><span class="gen">${I18n.getMessage("Forums.Form.ForumName")}</span></td>
+		<td class="row2"><input class="post" style="WIDTH: 200px" maxlength="25" size="25" name="forum_name" value="<#if forum?exists>${forum.name}</#if>" /></td>
+	</tr>
 
-<TR>
-<TD class=row1><SPAN class=gen>${I18n.getMessage("Forums.Form.Category")}</SPAN></TD>
-<TD class=row2>
-<select name="categories_id">
-<#list categories as c><option value="${c.id}" <#if forum?exists><#if forum.categoryId == c.id>selected</#if></#if>>${c.name}</option></#list>
-</select></TD>
-</TR>
+	<tr>
+		<td class="row1"><span class="gen">${I18n.getMessage("Forums.Form.Category")}</span></td>
+		<td class="row2">
+			<select name="categories_id">
+			<#list categories as c><option value="${c.id}" <#if forum?exists><#if forum.categoryId == c.id>selected</#if></#if>>${c.name}</option></#list>
+			</select>
+		</td>
+	</tr>
+	
+	<#if !forum?exists>
+	<tr>
+		<td class="row1"><span class="gen">${I18n.getMessage("Forums.Form.ChooseGroup")}</span></td>
+		<td><@lib.selectFieldGroups "groups", groups, 0, true, selectedList/></td>
+	</tr>
+	</#if>
 
-<TR>
-<TD class=row1><SPAN class=gen>${I18n.getMessage("Forums.Form.Description")}</SPAN></TD>
-<TD class=row2><textarea name="description" cols="40" rows="6" class="post" style="WIDTH: 200px"><#if forum?exists>${forum.description?default("")}</#if></textarea></TD>
-</TR>
+	<tr>
+		<td class="row1"><span class="gen">${I18n.getMessage("Forums.Form.Description")}</span></td>
+		<td class="row2"><textarea name="description" cols="40" rows="6" class="post" style="WIDTH: 200px"><#if forum?exists>${forum.description?default("")}</#if></textarea></td>
+	</tr>
 
-<TR align="center">
-<TD class=catBottom colSpan=2 height=28><INPUT class=mainoption type=submit value="${I18n.getMessage("Forums.Form.ClickToUpdate")}" name=submit></TD>
-</TR>
+	<tr align="center">
+		<td class="catBottom" colspan="2" height="28"><input class="mainoption" type="submit" value="${I18n.getMessage("Forums.Form.ClickToUpdate")}" name="submit" /></td>
+	</tr>
 
-</TABLE>
-</FORM>
-   
+</table>
+</form>

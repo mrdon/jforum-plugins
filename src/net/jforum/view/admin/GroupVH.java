@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: Mar 3, 2003 / 11:07:02 AM
- * net.jforum.view.admin.GroupVH.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: GroupVH.java,v 1.3 2004/06/01 19:47:21 pieter2 Exp $
  */
 package net.jforum.view.admin;
 
@@ -69,6 +66,7 @@ import freemarker.template.Template;
  * ViewHelper class for group administration.
  * 
  * @author Rafael Steil
+ * @version $Id: GroupVH.java,v 1.4 2004/06/02 03:56:08 rafaelsteil Exp $
  */
 public class GroupVH extends Command 
 {
@@ -173,7 +171,7 @@ public class GroupVH extends Command
 		pc.setSecurityModel(gmodel);
 		pc.setRoles(gmodel.loadRoles(id));
 		
-		List sections = new XMLPermissionControl(pc).loadConfigurations(SystemGlobals.getApplicationResourceDir() +"config/permissions.xml");
+		List sections = new XMLPermissionControl(pc).loadConfigurations(SystemGlobals.getApplicationResourceDir() +"/config/permissions.xml");
 		
 		GroupModel gm = DataAccessDriver.getInstance().newGroupModel();
 

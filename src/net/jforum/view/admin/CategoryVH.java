@@ -37,23 +37,30 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: Mar 10, 2003 / 8:49:51 PM
- * net.jforum.view.admin.CategoryVH.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: CategoryVH.java,v 1.2 2004/04/21 23:57:28 rafaelsteil Exp $
  */
 package net.jforum.view.admin;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import net.jforum.entities.Category;
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.model.CategoryModel;
 import net.jforum.model.DataAccessDriver;
+import net.jforum.model.GroupModel;
+import net.jforum.model.security.GroupSecurityModel;
 import net.jforum.repository.CategoryRepository;
+import net.jforum.repository.SecurityRepository;
+import net.jforum.security.PermissionControl;
+import net.jforum.security.Role;
+import net.jforum.security.RoleValue;
+import net.jforum.security.RoleValueCollection;
+import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
+import net.jforum.util.TreeGroup;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -62,6 +69,7 @@ import freemarker.template.Template;
  * ViewHelper for category administration.
  * 
  * @author Rafael Steil
+ * @version $Id: CategoryVH.java,v 1.3 2004/06/02 03:56:08 rafaelsteil Exp $
  */
 public class CategoryVH extends Command 
 {
@@ -77,6 +85,8 @@ public class CategoryVH extends Command
 	// One more, one more
 	public void insert() throws Exception
 	{
+		JForum.getContext().put("groups", new TreeGroup().getNodes());
+		JForum.getContext().put("selectedList", new ArrayList());
 		JForum.getContext().put("moduleAction", "category_form.htm");
 		JForum.getContext().put("action", "insertSave");
 	}
@@ -134,8 +144,37 @@ public class CategoryVH extends Command
 		Category c = new Category();
 		c.setName(JForum.getRequest().getParameter("category_name"));
 			
-		this.cm.addNew(c);
+		int categoryId = this.cm.addNew(c);
 		CategoryRepository.loadCategories();
+		
+		String[] groups = JForum.getRequest().getParameterValues("groups");
+		if (groups != null) {
+			GroupModel gm = DataAccessDriver.getInstance().newGroupModel();
+			GroupSecurityModel gmodel = DataAccessDriver.getInstance().newGroupSecurityModel();
+			PermissionControl pc = new PermissionControl();
+			pc.setSecurityModel(gmodel);
+
+			Role role = new Role();
+			role.setName(SecurityConstants.PERM_CATEGORY);
+
+			for (int i = 0; i < groups.length; i++) {
+				int groupId = Integer.parseInt(groups[i]);
+				RoleValueCollection roleValues = new RoleValueCollection();
+				
+				RoleValue rv = new RoleValue();
+				rv.setType(PermissionControl.ROLE_ALLOW);
+				rv.setValue(Integer.toString(categoryId));
+				
+				roleValues.add(rv);
+				
+				pc.addRole(groupId, role, roleValues);
+				
+				Iterator iter = gm.selectUsersIds(groupId).iterator();
+				while (iter.hasNext()) {
+					SecurityRepository.remove(Integer.parseInt(iter.next().toString()));
+				}
+			}
+		}
 			
 		this.list();
 	}

@@ -1,24 +1,35 @@
-<STYLE type=text/css>@import url( style.css );</STYLE>
-
-<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum.page" method="post">
-<input type="hidden" name="action" value="${action}">
-<input type="hidden" name="module" value="${moduleName}">
-<input type="hidden" name="securityHash" value="${securityHash}">
+<#import "macros/group_macros.ftl" as lib>
+<style type="text/css">@import url( style.css );</style>
+<form action="${contextPath}/jforum.page" method="post" name="form" id="form" accept-charset="${encoding}">
+<input type="hidden" name="action" value="${action}" />
+<input type="hidden" name="module" value="${moduleName}" />
+<input type="hidden" name="securityHash" value="${securityHash}" />
 
 <#if category?exists>
-	<input type="hidden" name="categories_id" value="${category.id}">
+	<input type="hidden" name="categories_id" value="${category.id}" />
 </#if>
 
-<TABLE class=forumline cellSpacing=1 cellPadding=3 width="100%" border=0><TBODY>
-<TR>
-<TH class=thHead vAlign=center colSpan=2 height=25>${I18n.getMessage("Category.Form.Title")}</TH></TR>
+<table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
+	<tr>
+		<th class="thHead" valign="center" colspan="2" height="25">${I18n.getMessage("Category.Form.Title")}</th>
+	</tr>
 
-<TR>
-<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Category.Form.CategoryName")}</SPAN></TD>
-<TD class=row2><INPUT class=post style="WIDTH: 200px" maxLength=25 size=25 name=category_name value="<#if category?exists>${category.name}</#if>"></TD></TR>
-<TR align="center">
-<TD class=catBottom colSpan=2 height=28>
-<INPUT class=mainoption type=submit value="${I18n.getMessage("Category.Form.ClickToUpdate")}" name=submit>
-</TD>
-</TR></TBODY></TABLE>
-</FORM>
+	<tr>
+		<td class="row1" width="38%"><span class="gen">${I18n.getMessage("Category.Form.CategoryName")}</span></td>
+		<td class="row2"><input class="post" style="WIDTH: 200px" maxlength="25" size="25" name="category_name" value="<#if category?exists>${category.name}</#if>" /></td>
+	</tr>
+	
+	<#if !category?exists>
+	<tr>
+		<td class="row1"><span class="gen">${I18n.getMessage("Category.Form.ChooseGroup")}</span></td>
+		<td><@lib.selectFieldGroups "groups", groups, 0, true, selectedList/></td>
+	</tr>
+	</#if>
+	
+	<tr align="center">
+		<td class="catBottom" colspan="2" height="28">
+			<input class="mainoption" type="submit" value="${I18n.getMessage("Category.Form.ClickToUpdate")}" name="submit" />
+		</td>
+	</tr>
+</table>
+</form>

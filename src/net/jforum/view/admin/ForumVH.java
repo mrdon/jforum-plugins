@@ -37,13 +37,13 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: Mar 28, 2003 / 8:21:56 PM
- * net.jforum.view.admin.ForumVH.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: ForumVH.java,v 1.2 2004/04/21 23:57:29 rafaelsteil Exp $
  */
 package net.jforum.view.admin;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import net.jforum.Command;
 import net.jforum.JForum;
@@ -51,12 +51,22 @@ import net.jforum.entities.Forum;
 import net.jforum.model.CategoryModel;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.ForumModel;
+import net.jforum.model.GroupModel;
+import net.jforum.model.security.GroupSecurityModel;
 import net.jforum.repository.ForumRepository;
+import net.jforum.repository.SecurityRepository;
+import net.jforum.security.PermissionControl;
+import net.jforum.security.Role;
+import net.jforum.security.RoleValue;
+import net.jforum.security.RoleValueCollection;
+import net.jforum.security.SecurityConstants;
+import net.jforum.util.TreeGroup;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
+ * @version $Id: ForumVH.java,v 1.3 2004/06/02 03:56:08 rafaelsteil Exp $
  */
 public class ForumVH extends Command 
 {
@@ -72,6 +82,8 @@ public class ForumVH extends Command
 	{
 		CategoryModel cm = DataAccessDriver.getInstance().newCategoryModel();
 		
+		JForum.getContext().put("groups", new TreeGroup().getNodes());
+		JForum.getContext().put("selectedList", new ArrayList());
 		JForum.getContext().put("moduleAction", "forum_form.htm");
 		JForum.getContext().put("categories",cm.selectAll());
 		JForum.getContext().put("action", "insertSave");		
@@ -145,13 +157,42 @@ public class ForumVH extends Command
 		
 		ForumRepository.addForum(f);
 		
+		String[] groups = JForum.getRequest().getParameterValues("groups");
+		if (groups != null) {
+			GroupModel gm = DataAccessDriver.getInstance().newGroupModel();
+			GroupSecurityModel gmodel = DataAccessDriver.getInstance().newGroupSecurityModel();
+			PermissionControl pc = new PermissionControl();
+			pc.setSecurityModel(gmodel);
+
+			Role role = new Role();
+			role.setName(SecurityConstants.PERM_FORUM);
+
+			for (int i = 0; i < groups.length; i++) {
+				int groupId = Integer.parseInt(groups[i]);
+				RoleValueCollection roleValues = new RoleValueCollection();
+				
+				RoleValue rv = new RoleValue();
+				rv.setType(PermissionControl.ROLE_ALLOW);
+				rv.setValue(Integer.toString(forumId));
+				
+				roleValues.add(rv);
+				
+				pc.addRole(groupId, role, roleValues);
+				
+				Iterator iter = gm.selectUsersIds(groupId).iterator();
+				while (iter.hasNext()) {
+					SecurityRepository.remove(Integer.parseInt(iter.next().toString()));
+				}
+			}
+		}
+		
 		// RSS
 		//new ForumRSS().createRSS();
 		
 		this.list();
 	}
 	
-	/* 
+	/** 
 	 * @see net.jforum.Command#process()
 	 */
 	public Template process() throws Exception 

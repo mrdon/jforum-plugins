@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserVH.java,v 1.7 2004/06/01 19:47:24 pieter2 Exp $
+ * @version $Id: UserVH.java,v 1.8 2004/06/02 03:56:09 rafaelsteil Exp $
  */
 public class UserVH extends Command 
 {
@@ -179,11 +179,12 @@ public class UserVH extends Command
 				// Autologin
 				if (JForum.getRequest().getParameter("autologin") != null) {
 					userSession.setAutoLogin(true);
+					JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN), "1");
 				}
 				
 				SessionFacade.add(userSession);
 				
-				JForum.addCookie((String)SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA), Integer.toString(userId));
+				JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA), Integer.toString(userId));
 				
 				SecurityRepository.load(userId, true);
 				validInfo = true;
@@ -227,7 +228,8 @@ public class UserVH extends Command
 		SessionFacade.setAttribute("logged", "0");
 		SessionFacade.add(userSession);
 
-		JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA), SystemGlobals.getValue(ConfigKeys.ANONYMOUS_USER_ID));		
+		JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA), SystemGlobals.getValue(ConfigKeys.ANONYMOUS_USER_ID));
+		JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN), "0");
 	}
 	
 	public void login() throws Exception

@@ -80,7 +80,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.13 2004/06/02 00:03:43 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.14 2004/06/02 03:56:07 rafaelsteil Exp $
  */
 public class JForum extends HttpServlet 
 {
@@ -376,7 +376,9 @@ public class JForum extends HttpServlet
 				}
 			}
 			
-			if (userSession.getAutoLogin()) {
+			cookie = JForum.getCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN));
+			if (cookie != null && cookie.getValue().equals("1")) {
+				userSession.setAutoLogin(true);
 				SessionFacade.setAttribute("logged", "1");
 			}
 			else {
@@ -403,7 +405,7 @@ public class JForum extends HttpServlet
 			ActionServletRequest.addUrlPattern(entry.getKey().toString(), entry.getValue().toString());
 		}
 	}
-	
+
 	public void service(HttpServletRequest req, HttpServletResponse response) throws IOException, ServletException
 	{
 		try {

@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: Feb 19, 2003 / 8:56:14 PM
- * net.jforum.model.CategoriesModel.java
  * The JForum Project
  * http://www.jforum.net 
- * 
- * $Id: CategoryModel.java,v 1.2 2004/04/21 23:57:24 rafaelsteil Exp $
  */
 package net.jforum.model;
 
@@ -57,6 +54,7 @@ import net.jforum.entities.Category;
  * select some specific data.
  * 
  * @author Rafael Steil
+ * @version $Id: CategoryModel.java,v 1.3 2004/06/02 03:56:14 rafaelsteil Exp $
  */
 public interface CategoryModel 
 {	
@@ -113,5 +111,5 @@ public interface CategoryModel
 	 * @param category Reference to a valid and configured <code>Category</code> object
 	 * @throws Exception
 	 */
-	public void addNew(Category category) throws Exception;
+	public int addNew(Category category) throws Exception;
 }

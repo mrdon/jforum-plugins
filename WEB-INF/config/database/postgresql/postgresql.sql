@@ -76,3 +76,8 @@ SmiliesModel.lastGeneratedSmilieId = SELECT CURRVAL('jforum_smilies_seq')
 # PermissionControl
 # ##################
 PermissionControl.lastGeneratedRoleId = SELECT CURRVAL('jforum_roles_seq')
+
+# ##############
+# CategoryModel
+# ##############
+CategoryModel.lastGeneratedCategoryId = SELECT CURRVAL('jforum_categories_seq')
