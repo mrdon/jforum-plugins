@@ -64,7 +64,7 @@ import net.jforum.util.preferences.SystemGlobals;
  *  
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: I18n.java,v 1.14 2004/09/24 20:52:12 rafaelsteil Exp $
+ * @version $Id: I18n.java,v 1.15 2004/09/28 02:57:19 rafaelsteil Exp $
  */
 public class I18n 
 {
@@ -119,8 +119,8 @@ public class I18n
 		}
 		else {
 			Properties p = new Properties();
-			p.load(new FileInputStream(baseDir + localeNames.getProperty(localeName)));
 			p.putAll(defaultI18n);
+			p.load(new FileInputStream(baseDir + localeNames.getProperty(localeName)));
 			messagesMap.put(localeName, p);			
 		}
 		
