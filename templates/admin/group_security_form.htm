@@ -47,7 +47,7 @@
 	
 	<input type="hidden" name="all${p.id}" value="${allValues}">
 	
-	&nbsp;&nbsp;<input type="checkbox" name="OverrideUser${p.id}">&nbsp;Override User Values
+	&nbsp;&nbsp;<input type="checkbox" name="OverrideUser${p.id}">&nbsp;Set Users' Role to follow the Group *
 	</span>
 	</td>
 	</tr>
@@ -55,6 +55,12 @@
 
 </#list>
 
+<TR>
+	<TD class=row1 colspan=3 align=center>
+		<SPAN class=gensmall><font color=red>* Note: This action will overwrite current existing user roles.</font>
+		</SPAN>
+	</TD>
+</TR>
 
 <TR align="center">
 <TD class=catBottom colSpan=3 height=28><INPUT class=mainoption type=submit value="${I18n.getMessage("PermissionControl.save")}" name=submit></TD>
