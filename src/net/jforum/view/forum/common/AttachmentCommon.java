@@ -75,7 +75,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.7 2005/01/24 21:49:26 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.8 2005/01/27 20:02:55 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {
@@ -210,11 +210,7 @@ public class AttachmentCommon
 	
 	public void editAttachments(int postId) throws Exception
 	{
-		if (!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED)
-				&& !SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD)) {
-			return;
-		}
-		
+		// Allow removing the attachments at least
 		AttachmentModel am = DataAccessDriver.getInstance().newAttachmentModel();
 		
 		// Check for attachments to remove
@@ -243,6 +239,11 @@ public class AttachmentCommon
 			}
 			
 			deleteList = Arrays.asList(delete);
+		}
+		
+		if (!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED)
+				&& !SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD)) {
+			return;
 		}
 		
 		// Update
