@@ -41,19 +41,20 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ConfigVH.java,v 1.2 2004/04/21 23:57:29 rafaelsteil Exp $
+ * $Id: ConfigVH.java,v 1.3 2004/06/01 19:47:21 pieter2 Exp $
  */
 package net.jforum.view.admin;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Properties;
 
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.model.ConfigModel;
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.SystemGlobals;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -66,10 +67,15 @@ public class ConfigVH extends Command
 	 public void list() throws Exception
 	 {
 	 	Properties p = new Properties();
-	 	p.load(new FileInputStream(SystemGlobals.getApplicationResourceDir() +"config/SystemGlobals.properties"));
+	 	Iterator iter = SystemGlobals.fetchConfigKeyIterator();
+	 	while (iter.hasNext()) {
+	 	    String key = (String) iter.next();
+	 	    String value = SystemGlobals.getValue(key);
+	 	    p.put(key, value);
+	 	}
 	 	
 	 	Properties locales = new Properties();
-	 	locales.load(new FileInputStream(SystemGlobals.getApplicationResourceDir() +"config/languages/locales.properties"));
+	 	locales.load(new FileInputStream(SystemGlobals.getApplicationResourceDir() +"/config/languages/locales.properties"));
 	 	ArrayList localesList = new ArrayList();
 	 	
 	 	for (Enumeration e = locales.keys(); e.hasMoreElements(); ) {

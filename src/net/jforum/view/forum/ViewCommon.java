@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ViewCommon.java,v 1.6 2004/05/04 00:59:35 rafaelsteil Exp $
+ * $Id: ViewCommon.java,v 1.7 2004/06/01 19:47:24 pieter2 Exp $
  */
 package net.jforum.view.forum;
 
@@ -59,8 +59,9 @@ import net.jforum.model.UserModel;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.MD5;
-import net.jforum.util.SystemGlobals;
 import net.jforum.util.image.ImageUtils;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
@@ -173,8 +174,8 @@ public final class ViewCommon
 				inputStream.close();
 				
 				// OK, time to check and process the avatar size
-				int maxWidth = Integer.parseInt((String)SystemGlobals.getValue("avatar.maxWidth"));
-				int maxHeight = Integer.parseInt((String)SystemGlobals.getValue("avatar.maxHeight"));
+				int maxWidth = SystemGlobals.getIntValue(ConfigKeys.AVATAR_MAX_WIDTH);
+				int maxHeight = SystemGlobals.getIntValue(ConfigKeys.AVATAR_MAX_HEIGHT);
 	
 				BufferedImage image = ImageUtils.resizeImage(avatarTmpFileName, type, maxWidth, maxHeight);
 				ImageUtils.saveImage(image, avatarFinalFileName, type);

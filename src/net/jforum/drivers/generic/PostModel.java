@@ -52,12 +52,13 @@ import java.util.GregorianCalendar;
 import net.jforum.JForum;
 import net.jforum.entities.Post;
 import net.jforum.model.DataAccessDriver;
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: PostModel.java,v 1.3 2004/05/24 02:43:09 rafaelsteil Exp $
+ * @version $Id: PostModel.java,v 1.4 2004/06/01 19:47:17 pieter2 Exp $
  */
 public class PostModel extends CommonDBTask implements net.jforum.model.PostModel 
 {
@@ -102,7 +103,7 @@ public class PostModel extends CommonDBTask implements net.jforum.model.PostMode
 		post.setText(rs.getString("post_text"));
 		post.setPostUsername(rs.getString("username"));
 		
-		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue("dateTimeFormat").toString());
+		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
 		GregorianCalendar gc = new GregorianCalendar();
 		gc.setTimeInMillis(rs.getLong("post_time"));
 

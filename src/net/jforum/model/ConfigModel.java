@@ -41,20 +41,18 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ConfigModel.java,v 1.2 2004/04/21 23:57:24 rafaelsteil Exp $
+ * $Id: ConfigModel.java,v 1.3 2004/06/01 19:47:29 pieter2 Exp $
  */
 package net.jforum.model;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 import net.jforum.entities.Config;
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * Model interface for the {@link net.jforum.Config} class. 
@@ -63,61 +61,55 @@ import net.jforum.util.SystemGlobals;
  */
 public class ConfigModel 
 {
-	
 	/**
-	 *Gets all entries in the database.
+	 * Gets all entries in the database.
 	 *  
 	 * @return <code>ArrayList</code> with all entries configured
 	 */
 	public ArrayList getAllEntries()  throws IOException
 	{
-		Properties p = new Properties();
-		p.load(new FileInputStream(SystemGlobals.getApplicationResourceDir() +"config/SystemGlobals.properties"));
-
+	    Iterator iter = SystemGlobals.fetchConfigKeyIterator();
 		ArrayList l = new ArrayList();
-		for (Iterator iter = p.entrySet().iterator(); iter.hasNext();) {
-			Map.Entry entry = (Map.Entry)iter.next();
-			
+	    while (iter.hasNext()) {
+	        String key = (String) iter.next();
 			Config config = new Config();
-			config.setName(entry.getKey().toString());
-			config.setValue(entry.getValue().toString());
-			
+			config.setName(key);
+			config.setValue(SystemGlobals.getValue(key));
 			l.add(config);
-		}
-		
-		return l;
+	    }
+	    
+	    return l;
 	}
 	
 	/**
-	 *Updates some config entry
+	 * Updates some config entry
 	 *  	 
 	 * @param name The entry name
 	 * @param value The entry value
-	 * @throws Exception
+	 * @throws IOException When the installation options cannot be written
 	 */
 	public void update(String name, String value) throws IOException
 	{
-		Properties p = new Properties();
-		p.load(new FileInputStream(SystemGlobals.getApplicationResourceDir() +"config/SystemGlobals.properties"));
-		
-		if (p.get(name) != null) {
-			p.setProperty(name, value);
-			
-			p.store(new FileOutputStream(SystemGlobals.getApplicationResourceDir() +"config/SystemGlobals.properties", false), null);
-		}		
+	   if (SystemGlobals.getValue(name) != null) {
+		   SystemGlobals.setValue(name, value);
+		   SystemGlobals.saveInstallation();
+	   }
 	}
 	
+	/**
+	 * Update a list of config entries
+	 *  	 
+	 * @param newValues The configuration entries to update and their new values
+	 * @throws IOException When the installation options cannot be written
+	 */
 	public void update(Properties newValues) throws IOException
 	{
-		Properties p = new Properties();
-		p.load(new FileInputStream(SystemGlobals.getApplicationResourceDir() +"config/SystemGlobals.properties"));
-		
 		for (Iterator iter = newValues.entrySet().iterator(); iter.hasNext(); ) {
 			Map.Entry entry = (Map.Entry)iter.next();
 			
-			p.setProperty((String)entry.getKey(), (String)entry.getValue());
+			SystemGlobals.setValue((String)entry.getKey(), (String)entry.getValue());
 		}
 		
-		p.store(new FileOutputStream(SystemGlobals.getApplicationResourceDir() +"config/SystemGlobals.properties", false), null);
+		SystemGlobals.saveInstallation();
 	}
 }

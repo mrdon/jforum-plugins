@@ -49,11 +49,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import net.jforum.entities.UserSession;
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.4 2004/05/31 01:58:46 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.5 2004/06/01 19:47:22 pieter2 Exp $
  */
 public class SessionFacade 
 {
@@ -157,7 +158,7 @@ public class SessionFacade
 	 */
 	static String isUserInSession(String username)
 	{
-		int aid = Integer.parseInt((String)SystemGlobals.getValue("anonymousUserId"));
+		int aid = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 		
 		for (Iterator iter = sessionMap.values().iterator(); iter.hasNext(); ) {
 			UserSession us = (UserSession)iter.next();

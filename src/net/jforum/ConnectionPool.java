@@ -53,7 +53,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Properties;
 
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 /** 
  * Every query and connection come from here.
@@ -76,7 +77,7 @@ import net.jforum.util.SystemGlobals;
  *
  * @author Paulo Silveira
  * @author Rafael Steil
- * @version $Id: ConnectionPool.java,v 1.4 2004/05/31 01:58:47 rafaelsteil Exp $
+ * @version $Id: ConnectionPool.java,v 1.5 2004/06/01 19:47:22 pieter2 Exp $
  * */
 
 public class ConnectionPool 
@@ -120,11 +121,10 @@ public class ConnectionPool
 			String driverName = driverProps.getProperty("driver.name");
 
 			Properties config = new Properties();
-			config.load(new FileInputStream(SystemGlobals.getApplicationResourceDir()
-					+"config/database/"+ driverName +"/"+ driverName +".properties"));
+			config.load(new FileInputStream(SystemGlobals.getApplicationResourceDir() + "/config/database/"+ driverName +"/"+ driverName +".properties"));
 			
-			SystemGlobals.setValue("sql.file", config.getProperty("sql.file"));
-			SystemGlobals.setValue("dao.driver", config.getProperty("dao.driver"));
+			SystemGlobals.setTransientValue(ConfigKeys.SQL_FILE, config.getProperty(ConfigKeys.SQL_FILE));
+			SystemGlobals.setTransientValue(ConfigKeys.DAO_DRIVER, config.getProperty(ConfigKeys.DAO_DRIVER));
 			
 			Class.forName(config.getProperty("database.connection.driver"));
 			

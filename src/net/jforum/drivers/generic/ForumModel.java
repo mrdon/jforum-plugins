@@ -45,7 +45,8 @@ package net.jforum.drivers.generic;
 import net.jforum.JForum;
 import net.jforum.entities.Forum;
 
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -60,7 +61,7 @@ import java.util.HashMap;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: ForumModel.java,v 1.2 2004/05/24 02:25:16 rafaelsteil Exp $
+ * @version $Id: ForumModel.java,v 1.3 2004/06/01 19:47:16 pieter2 Exp $
  */
 public class ForumModel extends CommonDBTask implements net.jforum.model.ForumModel 
 {
@@ -366,7 +367,7 @@ public class ForumModel extends CommonDBTask implements net.jforum.model.ForumMo
 			m.put("userName", rs.getString("username"));
 			m.put("userId", new Integer(rs.getInt("user_id")));
 			
-			SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue("dateTimeFormat").toString());
+			SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
 			GregorianCalendar gc = new GregorianCalendar();
 			gc.setTimeInMillis(rs.getLong("post_time"));
 			m.put("postTime", df.format(gc.getTime()));

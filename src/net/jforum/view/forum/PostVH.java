@@ -67,14 +67,15 @@ import net.jforum.repository.TopicRepository;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
-import net.jforum.util.SystemGlobals;
 import net.jforum.util.concurrent.executor.QueuedExecutor;
 import net.jforum.util.mail.EmailSenderTask;
 import net.jforum.util.mail.TopicSpammer;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostVH.java,v 1.16 2004/05/21 22:52:44 rafaelsteil Exp $
+ * @version $Id: PostVH.java,v 1.17 2004/06/01 19:47:24 pieter2 Exp $
  */
 public class PostVH extends Command 
 {
@@ -112,13 +113,13 @@ public class PostVH extends Command
 			}
 		}
 		
-		int count = Integer.parseInt(SystemGlobals.getValue("postsPerPage").toString());
+		int count = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 		
 		ArrayList posts = pm.selectAllByTopicByLimit(postId, start, count);
 		ArrayList helperList = new ArrayList();
 
 		int userId = SessionFacade.getUserSession().getUserId();
-		int anonymousUser = Integer.parseInt(SystemGlobals.getValue("anonymousUserId").toString());
+		int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 		PermissionControl pc = SecurityRepository.get(userId);
 		
 		boolean canEdit = false;
@@ -226,7 +227,7 @@ public class PostVH extends Command
 	private void edit(boolean preview, Post p) throws Exception
 	{
 		int sUserId = SessionFacade.getUserSession().getUserId();
-		int aId = Integer.parseInt(SystemGlobals.getValue("anonymousUserId").toString());
+		int aId = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 		boolean canAccess = false;
 		
 		if (!preview) { 
@@ -444,7 +445,7 @@ public class PostVH extends Command
 				tm.incrementTotalViews(topicId);
 				
 				// Ok, we have an answer. Time to notify the subscribed users
-				if (Boolean.valueOf((String)SystemGlobals.getValue("mail.notify.anwsers")) == Boolean.TRUE) {
+				if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_NOTIFY_ANSWERS)) {
 					try {
 						QueuedExecutor.getInstance().execute(new EmailSenderTask(new TopicSpammer(t, tm.notifyUsers(t))));
 					}

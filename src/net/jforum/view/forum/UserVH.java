@@ -53,15 +53,16 @@ import net.jforum.repository.RankingRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.util.I18n;
 import net.jforum.util.MD5;
-import net.jforum.util.SystemGlobals;
 import net.jforum.util.concurrent.executor.QueuedExecutor;
 import net.jforum.util.mail.EmailException;
 import net.jforum.util.mail.EmailSenderTask;
 import net.jforum.util.mail.LostPasswordSpammer;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserVH.java,v 1.6 2004/05/31 01:58:45 rafaelsteil Exp $
+ * @version $Id: UserVH.java,v 1.7 2004/06/01 19:47:24 pieter2 Exp $
  */
 public class UserVH extends Command 
 {
@@ -182,7 +183,7 @@ public class UserVH extends Command
 				
 				SessionFacade.add(userSession);
 				
-				JForum.addCookie((String)SystemGlobals.getValue("userCookieName"), Integer.toString(userId));
+				JForum.addCookie((String)SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA), Integer.toString(userId));
 				
 				SecurityRepository.load(userId, true);
 				validInfo = true;
@@ -221,11 +222,12 @@ public class UserVH extends Command
 		// Disable auto login
 		UserSession userSession = SessionFacade.getUserSession();
 		userSession.setAutoLogin(false);
-		userSession.setUserId(Integer.parseInt(SystemGlobals.getValue("anonymousUserId").toString()));
+		userSession.setUserId(SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID));
 
 		SessionFacade.setAttribute("logged", "0");
 		SessionFacade.add(userSession);
-		JForum.addCookie((String)SystemGlobals.getValue("userCookieName"), (String)SystemGlobals.getValue("anonymousUserId"));
+
+		JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA), SystemGlobals.getValue(ConfigKeys.ANONYMOUS_USER_ID));		
 	}
 	
 	public void login() throws Exception

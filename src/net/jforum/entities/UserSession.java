@@ -46,13 +46,14 @@ import java.io.Serializable;
 
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.SecurityConstants;
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * Stores information about user's session.
  * 
  * @author Rafael Steil
- * @version $Id: UserSession.java,v 1.3 2004/05/31 01:58:49 rafaelsteil Exp $
+ * @version $Id: UserSession.java,v 1.4 2004/06/01 19:47:31 pieter2 Exp $
  */
 public class UserSession implements Serializable
 {
@@ -166,7 +167,7 @@ public class UserSession implements Serializable
 	public String getLang()
 	{
 		if (this.lang == null || this.lang.equals("")) {
-			this.lang = (String)SystemGlobals.getValue("i18n.default");
+			this.lang = SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT);
 		}
 		
 		return this.lang;

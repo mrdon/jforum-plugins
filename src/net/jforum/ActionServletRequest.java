@@ -52,7 +52,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 import org.apache.commons.fileupload.DefaultFileItemFactory;
 import org.apache.commons.fileupload.DiskFileUpload;
@@ -62,7 +63,7 @@ import org.apache.commons.fileupload.FileUploadException;
 
 /**
  * @author Rafael Steil
- * @version $Id: ActionServletRequest.java,v 1.5 2004/05/31 01:58:46 rafaelsteil Exp $
+ * @version $Id: ActionServletRequest.java,v 1.6 2004/06/01 19:47:22 pieter2 Exp $
  */
 public class ActionServletRequest extends HttpServletRequestWrapper 
 {
@@ -222,7 +223,7 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 		
 		if (superRequest.getMethod().equalsIgnoreCase("GET") 
 				&& superRequest.getQueryString() == null
-				&& superRequest.getRequestURI().endsWith("."+ SystemGlobals.getValue("servletExtension"))) {
+				&& superRequest.getRequestURI().endsWith("."+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION))) {
 			String urlModel[] = superRequest.getRequestURI().split("/");
 			
 			// If (context name is not null) {
@@ -249,7 +250,7 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 				baseLen = 3;
 			}
 			
-			urlModel[urlModel.length - 1] = urlModel[urlModel.length - 1].substring(0, urlModel[urlModel.length - 1].indexOf("."+ SystemGlobals.getValue("servletExtension")));
+			urlModel[urlModel.length - 1] = urlModel[urlModel.length - 1].substring(0, urlModel[urlModel.length - 1].indexOf("."+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)));
 			
 			// <moduleName>.<actionName>.<numberOfParameters>
 			UrlPattern url = UrlPatternCollection.findPattern(urlModel[moduleIndex] +"."+ urlModel[actionIndex] +"."+ (urlModel.length - baseLen));
@@ -270,7 +271,8 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 		else {
 			isMultipart = FileUploadBase.isMultipartContent(superRequest);
 			if (isMultipart) {
-				DiskFileUpload upload = new DiskFileUpload(new DefaultFileItemFactory(20 * 1024, new File(SystemGlobals.getApplicationPath() + SystemGlobals.getValue("tmpDir"))));
+			    String tmpDir = SystemGlobals.getApplicationPath() + "/" + SystemGlobals.getValue(ConfigKeys.TMP_DIR);
+				DiskFileUpload upload = new DiskFileUpload(new DefaultFileItemFactory(20 * 1024, new File(tmpDir)));
 
 				try {
 					List items = upload.parseRequest(superRequest);

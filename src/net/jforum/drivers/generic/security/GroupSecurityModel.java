@@ -49,11 +49,11 @@ import net.jforum.drivers.generic.CommonDBTask;
 import net.jforum.security.Role;
 import net.jforum.security.RoleCollection;
 import net.jforum.security.RoleValueCollection;
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GroupSecurityModel.java,v 1.2 2004/05/24 02:25:20 rafaelsteil Exp $
+ * @version $Id: GroupSecurityModel.java,v 1.3 2004/06/01 19:47:25 pieter2 Exp $
  */
 public class GroupSecurityModel extends CommonDBTask implements net.jforum.model.security.GroupSecurityModel 
 {

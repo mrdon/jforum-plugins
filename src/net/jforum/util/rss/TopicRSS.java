@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: TopicRSS.java,v 1.2 2004/04/21 23:57:37 rafaelsteil Exp $
+ * $Id: TopicRSS.java,v 1.3 2004/06/01 19:47:28 pieter2 Exp $
  */
 package net.jforum.util.rss;
 
@@ -55,7 +55,8 @@ import net.jforum.JForum;
 import net.jforum.entities.Topic;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.util.I18n;
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
@@ -69,7 +70,7 @@ public class TopicRSS extends RSSable
 	 */
 	protected RSSDocument prepareRSSDocument() throws Exception 
 	{
-		ArrayList topics = DataAccessDriver.getInstance().newTopicModel().selectLastN(Integer.parseInt(SystemGlobals.getValue("rssTopics").toString()));
+		ArrayList topics = DataAccessDriver.getInstance().newTopicModel().selectLastN(SystemGlobals.getIntValue(ConfigKeys.RSS_TOPICS));
 		String ctx = JForum.getRequest().getContextPath();
 		
 		RSSDocument rssDocumnet = new RSSDocument();
@@ -77,7 +78,7 @@ public class TopicRSS extends RSSable
 		RSSChannel channel = new RSSChannel();
 		channel.setChannelDescription(I18n.getMessage("TopicRSS.description"));
 		channel.setChannelTitle(I18n.getMessage("TopicRSS.title"));
-		channel.setChannelLink(SystemGlobals.getValue("forumLink").toString());
+		channel.setChannelLink(SystemGlobals.getValue(ConfigKeys.FORUM_LINK));
 		
 		queueElementsList.clear();
 		
@@ -92,7 +93,7 @@ public class TopicRSS extends RSSable
 					+ JForum.getRequest().getServerPort()
 					+ (ctx.equals("") ? "" : "/"+ ctx)
 					+ "/posts/list/"+ t.getId() +"."
-					+ SystemGlobals.getValue("servletExtension"));
+					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 			
 			queueElementsList.add(Integer.toString(t.getId()));
 			channel.addItem(item);
@@ -108,7 +109,7 @@ public class TopicRSS extends RSSable
 	 */
 	public String getFilename() throws Exception 
 	{
-		return SystemGlobals.getValue("topicRSSFilename").toString();
+		return SystemGlobals.getValue(ConfigKeys.RSS_FILENAME_TOPIC);
 	}
 
 	/* 

@@ -54,11 +54,11 @@ import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.entities.Post;
 import net.jforum.model.SearchData;
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchModel.java,v 1.3 2004/05/24 03:10:57 rafaelsteil Exp $
+ * @version $Id: SearchModel.java,v 1.4 2004/06/01 19:47:17 pieter2 Exp $
  */
 public class SearchModel extends CommonDBTask implements net.jforum.model.SearchModel 
 {

@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: GroupVH.java,v 1.2 2004/04/21 23:57:30 rafaelsteil Exp $
+ * $Id: GroupVH.java,v 1.3 2004/06/01 19:47:21 pieter2 Exp $
  */
 package net.jforum.view.admin;
 
@@ -54,13 +54,13 @@ import net.jforum.JForum;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.XMLPermissionControl;
-import net.jforum.util.SystemGlobals;
 import net.jforum.util.TreeGroup;
 import net.jforum.entities.Group;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.GroupModel;
 import net.jforum.model.security.GroupSecurityModel;
 import net.jforum.util.I18n;
+import net.jforum.util.preferences.SystemGlobals;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;

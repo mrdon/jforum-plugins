@@ -68,8 +68,9 @@ import net.jforum.repository.BBCodeRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.util.I18n;
 import net.jforum.util.MD5;
-import net.jforum.util.SystemGlobals;
 import net.jforum.util.bbcode.BBCodeHandler;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleHash;
@@ -79,7 +80,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.11 2004/05/31 01:58:46 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.12 2004/06/01 19:47:23 pieter2 Exp $
  */
 public class JForum extends HttpServlet 
 {
@@ -235,12 +236,12 @@ public class JForum extends HttpServlet
 	private static void loadModulesMapping(String baseDir) throws IOException
 	{
 		modulesMapping = new Properties();
-		modulesMapping.load(new FileInputStream(baseDir +"config/modulesMapping.properties"));
+		modulesMapping.load(new FileInputStream(baseDir +"/config/modulesMapping.properties"));
 	}
 	
 	private void startDatabase() throws Exception
 	{
-		ConnectionPool.init(SystemGlobals.getApplicationResourceDir() +"config/database.properties");
+		ConnectionPool.init(SystemGlobals.getApplicationResourceDir() +"/config/database.properties");
 	}
 	
 	public void init(ServletConfig config) throws ServletException
@@ -251,17 +252,16 @@ public class JForum extends HttpServlet
 			JForum.debug = config.getInitParameter("development").equals("true"); 
 			
 			// Load system default values
-			SystemGlobals.setApplicationPath(config.getServletContext().getRealPath("") +"/");
-			SystemGlobals.setApplicationResourceDir(SystemGlobals.getApplicationPath() +"WEB-INF/");						
+            // TODO: allow defaultsFile and installation to be overridden by the init parameters
+            SystemGlobals.initGlobals(config.getServletContext().getRealPath(""), null, null);
+            SystemGlobals.setTransientValue(ConfigKeys.SERVLET_NAME, config.getServletName());
 						
-			SystemGlobals.setValue("servletName", config.getServletName());
-		
 			// Start the connection pool
 			this.startDatabase();
 			
 			// Configure the template engine
 			Configuration templateCfg = new Configuration();
-			templateCfg.setDirectoryForTemplateLoading(new File(SystemGlobals.getApplicationPath() +"templates"));
+			templateCfg.setDirectoryForTemplateLoading(new File(SystemGlobals.getApplicationPath() +"/templates"));
 			templateCfg.setTemplateUpdateDelay(0);
 			
 			JForum.loadModulesMapping(SystemGlobals.getApplicationResourceDir());
@@ -280,10 +280,8 @@ public class JForum extends HttpServlet
 	
 	private void loadConfigStuff() throws Exception
 	{
-		SystemGlobals.loadDefaults(SystemGlobals.getApplicationResourceDir() +"config/SystemGlobals.properties");
-		
-		SystemGlobals.loadQueries(SystemGlobals.getApplicationResourceDir() +"config/"+ SystemGlobals.getValue("generic.sql.queries"));
-		SystemGlobals.loadQueries(SystemGlobals.getApplicationResourceDir() +"config/"+ SystemGlobals.getValue("sql.file"));
+		SystemGlobals.loadQueries(SystemGlobals.getApplicationResourceDir() +"/config/"+ SystemGlobals.getValue(ConfigKeys.GENERIC_SQL_QUERIES));
+		SystemGlobals.loadQueries(SystemGlobals.getApplicationResourceDir() +"/config/"+ SystemGlobals.getValue(ConfigKeys.SQL_FILE));
 		
 		I18n.load();
 		this.loadUrlPatterns();
@@ -333,7 +331,7 @@ public class JForum extends HttpServlet
 	{
 		userSession.setStartTime(System.currentTimeMillis());
 		userSession.setLastVisit(System.currentTimeMillis());
-		userSession.setUserId(Integer.parseInt((String)SystemGlobals.getValue("anonymousUserId")));
+		userSession.setUserId(Integer.parseInt(SystemGlobals.getValue(ConfigKeys.ANONYMOUS_USER_ID)));
 		userSession.setSessionId(JForum.getRequest().getSession().getId());
 	}
 	
@@ -343,11 +341,11 @@ public class JForum extends HttpServlet
 			UserSession userSession = new UserSession();
 			userSession.setSessionId(JForum.getRequest().getSession().getId());
 
-			String cookieName = (String)SystemGlobals.getValue("userCookieName");
+			String cookieName = SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_USER);
 			Cookie cookie = JForum.getCookie(cookieName);
 			
 			// If we don't have any cookie yet, then we should set it with the default values
-			if (cookie == null || cookie.getValue().equals((String)SystemGlobals.getValue("anonymousUserId"))) {
+			if (cookie == null || cookie.getValue().equals(SystemGlobals.getValue(ConfigKeys.ANONYMOUS_USER_ID))) {
 				this.setAnonymousUserSession(userSession);
 			}
 			else {
@@ -382,7 +380,7 @@ public class JForum extends HttpServlet
 				SessionFacade.setAttribute("logged", "1");
 			}
 			else {
-				userSession.setUserId(Integer.parseInt((String)SystemGlobals.getValue("anonymousUserId")));
+				userSession.setUserId(Integer.parseInt(SystemGlobals.getValue(ConfigKeys.ANONYMOUS_USER_ID)));
 			}
 			
 			SessionFacade.add(userSession);
@@ -396,7 +394,7 @@ public class JForum extends HttpServlet
 	private void loadUrlPatterns() throws IOException
 	{
 		Properties p = new Properties();
-		p.load(new FileInputStream(SystemGlobals.getApplicationResourceDir() + "config/urlPattern.properties"));
+		p.load(new FileInputStream(SystemGlobals.getApplicationResourceDir() + "/config/urlPattern.properties"));
 		
 		Iterator iter = p.entrySet().iterator();
 		while (iter.hasNext()) {
@@ -417,7 +415,7 @@ public class JForum extends HttpServlet
 				this.loadConfigStuff();
 			}
 			
-			String encoding = (String)SystemGlobals.getValue("encoding");
+			String encoding = SystemGlobals.getValue(ConfigKeys.ENCODING);
 			req.setCharacterEncoding(encoding);
 			
 			// Ensure the database is up and running
@@ -427,17 +425,17 @@ public class JForum extends HttpServlet
 			}
 			
 			// Context
-			JForum.getContext().put("servletName", SystemGlobals.getValue("servletName"));
+			JForum.getContext().put("servletName", SystemGlobals.getValue(ConfigKeys.SERVLET_NAME));
 			JForum.getContext().put("contextPath", req.getContextPath());
 			JForum.getContext().put("serverName", req.getServerName());
 			JForum.getContext().put("templateName", "default");
 			JForum.getContext().put("serverPort", Integer.toString(req.getServerPort()));
 			JForum.getContext().put("I18n", I18n.getInstance());
-			JForum.getContext().put("version", SystemGlobals.getValue("version"));
-			JForum.getContext().put("homeLink",SystemGlobals.getValue("forumLink"));
-			JForum.getContext().put("pageTitle",SystemGlobals.getValue("forum.page.title"));
-			JForum.getContext().put("metaKeywords",SystemGlobals.getValue("forum.page.metatag.keywords"));
-			JForum.getContext().put("metaDescription",SystemGlobals.getValue("forum.page.metatag.description"));
+			JForum.getContext().put("version", SystemGlobals.getValue(ConfigKeys.VERSION));
+			JForum.getContext().put("homeLink",SystemGlobals.getValue(ConfigKeys.FORUM_LINK));
+			JForum.getContext().put("pageTitle",SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_TITLE));
+			JForum.getContext().put("metaKeywords",SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_METATAG_KEYWORDS));
+			JForum.getContext().put("metaDescription",SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_METATAG_DESCRIPTION));
 			JForum.getContext().put("encoding", encoding);
 
 			// Request

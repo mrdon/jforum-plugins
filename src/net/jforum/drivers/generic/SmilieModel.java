@@ -50,11 +50,11 @@ import java.util.ArrayList;
 
 import net.jforum.JForum;
 import net.jforum.entities.Smilie;
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SmilieModel.java,v 1.2 2004/05/24 02:25:16 rafaelsteil Exp $
+ * @version $Id: SmilieModel.java,v 1.3 2004/06/01 19:47:17 pieter2 Exp $
  */
 public class SmilieModel extends CommonDBTask implements net.jforum.model.SmilieModel {
 

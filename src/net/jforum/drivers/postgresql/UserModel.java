@@ -48,11 +48,11 @@ import java.util.ArrayList;
 
 import net.jforum.JForum;
 import net.jforum.entities.User;
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.2 2004/05/31 01:58:48 rafaelsteil Exp $
+ * @version $Id: UserModel.java,v 1.3 2004/06/01 19:47:18 pieter2 Exp $
  */
 public class UserModel extends net.jforum.drivers.generic.UserModel
 {

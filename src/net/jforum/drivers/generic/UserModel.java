@@ -55,11 +55,12 @@ import net.jforum.JForum;
 import net.jforum.entities.Group;
 import net.jforum.entities.User;
 import net.jforum.util.MD5;
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.2 2004/05/24 02:25:15 rafaelsteil Exp $
+ * @version $Id: UserModel.java,v 1.3 2004/06/01 19:47:17 pieter2 Exp $
  */
 public class UserModel extends CommonDBTask implements net.jforum.model.UserModel 
 {
@@ -220,7 +221,7 @@ public class UserModel extends CommonDBTask implements net.jforum.model.UserMode
 		
 		p.close();
 		
-		this.addToGroup(id, new int[] { Integer.parseInt(SystemGlobals.getValue("defaultUserGroup").toString()) });
+		this.addToGroup(id, new int[] { SystemGlobals.getIntValue(ConfigKeys.DEFAULT_USER_GROUP) });
 				
 		return id;
 	}

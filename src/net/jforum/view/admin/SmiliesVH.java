@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: SmiliesVH.java,v 1.2 2004/04/21 23:57:29 rafaelsteil Exp $
+ * $Id: SmiliesVH.java,v 1.3 2004/06/01 19:47:21 pieter2 Exp $
  */
 package net.jforum.view.admin;
 
@@ -50,15 +50,16 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.entities.Smilie;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.repository.SmiliesRepository;
 import net.jforum.util.MD5;
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
@@ -76,7 +77,7 @@ public class SmiliesVH extends Command
 			imgName = MD5.crypt(JForum.getRequest().getParameter("smilie_imgName"));
 			
 			BufferedInputStream inputStream = new BufferedInputStream((InputStream)JForum.getRequest().getObjectParameter("smilie_img"));
-			FileOutputStream outputStream = new FileOutputStream(SystemGlobals.getApplicationPath() +"/"+ SystemGlobals.getValue("smilieImgDir") +"/"+ imgName + extension);
+			FileOutputStream outputStream = new FileOutputStream(SystemGlobals.getApplicationPath() +"/"+ SystemGlobals.getValue(ConfigKeys.SMILIE_IMAGE_DIR) +"/"+ imgName + extension);
 			
 			int c = 0;
 			byte[] b = new byte[1024];
@@ -106,7 +107,7 @@ public class SmiliesVH extends Command
 		s.setCode(JForum.getRequest().getParameter("code"));
 		
 		String imgName = this.processUpload();
-		s.setUrl(SystemGlobals.getValue("smilieImgPattern").toString().replaceAll("#IMAGE#", imgName));
+		s.setUrl(SystemGlobals.getValue(ConfigKeys.SMILIE_IMAGE_PATTERN).replaceAll("#IMAGE#", imgName));
 		
 		s.setDiskName(imgName);
 		
@@ -136,7 +137,7 @@ public class SmiliesVH extends Command
 		
 		if (JForum.getRequest().getObjectParameter("smilie_img") != null) {
 			String imgName = this.processUpload();
-			s.setUrl(SystemGlobals.getValue("smilieImgPattern").toString().replaceAll("#IMAGE#", imgName));
+			s.setUrl(SystemGlobals.getValue(ConfigKeys.SMILIE_IMAGE_PATTERN).replaceAll("#IMAGE#", imgName));
 			s.setDiskName(imgName);
 		}
 
@@ -154,7 +155,7 @@ public class SmiliesVH extends Command
 			
 			DataAccessDriver.getInstance().newSmilieModel().delete(id);
 			
-			File f = new File(SystemGlobals.getApplicationPath() +"/"+ SystemGlobals.getValue("smilieImgDir") +"/"+ s.getDiskName());
+			File f = new File(SystemGlobals.getApplicationPath() +"/"+ SystemGlobals.getValue(ConfigKeys.SMILIE_IMAGE_DIR) +"/"+ s.getDiskName());
 			if (f.exists()) {
 				f.delete();
 			}

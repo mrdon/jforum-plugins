@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ForumRSS.java,v 1.2 2004/04/21 23:57:37 rafaelsteil Exp $
+ * $Id: ForumRSS.java,v 1.3 2004/06/01 19:47:28 pieter2 Exp $
  */
 package net.jforum.util.rss;
 
@@ -58,7 +58,8 @@ import net.jforum.JForum;
 import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
 import net.jforum.util.I18n;
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.view.forum.ForumVH;
 
 /**
@@ -86,7 +87,7 @@ public class ForumRSS extends RSSable
 			RSSChannel channel = new RSSChannel();
 			channel.setChannelTitle(category.getName());
 			channel.setChannelDescription(I18n.getMessage("ForumRSS.description"));
-			channel.setChannelLink(SystemGlobals.getValue("forumLink").toString());
+			channel.setChannelLink(SystemGlobals.getValue(ConfigKeys.FORUM_LINK));
 			
 			ArrayList forumsList = (ArrayList)entry.getValue();
 			for (Iterator fIter = forumsList.iterator(); fIter.hasNext(); ) {
@@ -100,7 +101,7 @@ public class ForumRSS extends RSSable
 						+ JForum.getRequest().getServerPort()
 						+ (ctx.equals("") ? "" : "/"+ ctx)
 						+ "/forums/list/"+ forum.getId() +"."
-						+ SystemGlobals.getValue("servletExtension"));
+						+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 				
 				tmpList.add(Integer.toString(forum.getId()));
 				channel.addItem(item);
@@ -122,7 +123,7 @@ public class ForumRSS extends RSSable
 	 */
 	public String getFilename() throws Exception 
 	{
-		return SystemGlobals.getValue("forumRSSFilename").toString();
+		return SystemGlobals.getValue(ConfigKeys.RSS_FILENAME_FORUM);
 	}
 
 	/* 

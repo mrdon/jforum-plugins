@@ -48,11 +48,11 @@ import java.util.ArrayList;
 
 import net.jforum.JForum;
 import net.jforum.entities.Ranking;
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: RankingModel.java,v 1.1 2004/05/23 15:39:58 rafaelsteil Exp $
+ * @version $Id: RankingModel.java,v 1.2 2004/06/01 19:47:16 pieter2 Exp $
  */
 public class RankingModel implements net.jforum.model.RankingModel 
 {

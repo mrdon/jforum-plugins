@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: BBCodeHandler.java,v 1.5 2004/04/28 00:05:00 rafaelsteil Exp $
+ * $Id: BBCodeHandler.java,v 1.6 2004/06/01 19:47:31 pieter2 Exp $
  */
 package net.jforum.util.bbcode;
 
@@ -50,7 +50,7 @@ package net.jforum.util.bbcode;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.SystemGlobals;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;

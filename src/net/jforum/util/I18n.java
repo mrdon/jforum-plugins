@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: I18n.java,v 1.2 2004/04/21 23:57:27 rafaelsteil Exp $
+ * $Id: I18n.java,v 1.3 2004/06/01 19:47:27 pieter2 Exp $
  */
 package net.jforum.util;
 
@@ -50,6 +50,9 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Properties;
+
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * I18n (Internacionalization) class implementation. 
@@ -88,9 +91,9 @@ public class I18n
 	 */
 	public static synchronized void load() throws IOException
 	{
-		baseDir = SystemGlobals.getApplicationResourceDir() +"config/languages/";
+		baseDir = SystemGlobals.getApplicationResourceDir() +"/config/languages/";
 		localeNames.load(new FileInputStream(baseDir +"locales.properties"));
-		defaultName = (String)SystemGlobals.getValue("i18n.default");
+		defaultName = SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT);
 		load(defaultName);
 	}
 	

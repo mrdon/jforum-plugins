@@ -44,11 +44,11 @@ package net.jforum.drivers.postgresql.security;
 
 import net.jforum.security.Role;
 import net.jforum.security.RoleValueCollection;
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserSecurityModel.java,v 1.1 2004/05/24 02:25:17 rafaelsteil Exp $
+ * @version $Id: UserSecurityModel.java,v 1.2 2004/06/01 19:47:33 pieter2 Exp $
  */
 public class UserSecurityModel extends net.jforum.drivers.generic.security.UserSecurityModel
 {

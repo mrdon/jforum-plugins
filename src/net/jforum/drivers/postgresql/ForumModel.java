@@ -43,11 +43,11 @@
 package net.jforum.drivers.postgresql;
 
 import net.jforum.entities.Forum;
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumModel.java,v 1.1 2004/05/24 02:25:20 rafaelsteil Exp $
+ * @version $Id: ForumModel.java,v 1.2 2004/06/01 19:47:19 pieter2 Exp $
  */
 public class ForumModel extends net.jforum.drivers.generic.ForumModel
 {

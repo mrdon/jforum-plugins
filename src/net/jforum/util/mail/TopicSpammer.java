@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: TopicSpammer.java,v 1.3 2004/04/21 23:57:38 rafaelsteil Exp $
+ * $Id: TopicSpammer.java,v 1.4 2004/06/01 19:47:26 pieter2 Exp $
  */
 package net.jforum.util.mail;
 
@@ -51,7 +51,8 @@ import java.util.Iterator;
 
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 import freemarker.template.SimpleHash;
 
@@ -73,19 +74,19 @@ public class TopicSpammer extends Spammer
 		
 		// Make the topic url
 		String page = "";
-		int postsPerPage = Integer.parseInt((String)SystemGlobals.getValue("postsPerPage"));
+		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 		if (topic.getTotalReplies() + 1 > postsPerPage) {
 			page += ((((int)topic.getTotalReplies() / postsPerPage)) * postsPerPage) +"/";
 		}
 		
-		String path = SystemGlobals.getValue("forumLink") +"/posts/list/"+ page + topic.getId() +".page#"+ topic.getLastPostId();
+		String path = SystemGlobals.getValue(ConfigKeys.FORUM_LINK) +"/posts/list/"+ page + topic.getId() +".page#"+ topic.getLastPostId();
 		
 		SimpleHash params = new SimpleHash();
 		params.put("topic", topic);
 		params.put("path", path);
 		
 		super.prepareMessage(recipients, params,
-			MessageFormat.format((String)SystemGlobals.getValue("mail.newAnswer.subject"), new String[] { topic.getTitle() }),
-			(String)SystemGlobals.getValue("mail.newAnswer.messageFile"));
+			MessageFormat.format(SystemGlobals.getValue(ConfigKeys.MAIL_NEW_ANSWER_SUBJECT), new String[] { topic.getTitle() }),
+			SystemGlobals.getValue(ConfigKeys.MAIL_NEW_ANSWER_MESSAGE_FILE));
 	}
 }

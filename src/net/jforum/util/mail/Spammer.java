@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: Spammer.java,v 1.3 2004/05/04 00:59:44 rafaelsteil Exp $
+ * $Id: Spammer.java,v 1.4 2004/06/01 19:47:26 pieter2 Exp $
  */
 package net.jforum.util.mail;
 
@@ -64,7 +64,8 @@ import freemarker.template.Configuration;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * Dispatch emails to the world. 
@@ -93,15 +94,15 @@ public class Spammer
 	// Trick ;)
 	private Spammer(boolean init) throws EmailException
 	{
-		mailProps.put("mail.smtp.host", (String)SystemGlobals.getValue("mail.smtp.host"));
+		mailProps.put("mail.smtp.host", SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_HOST));
 		mailProps.put("mail.mime.address.strict", "false");
-		mailProps.put("mail.mime.charset", (String)SystemGlobals.getValue("mail.charset"));
-		mailProps.put("mail.smtp.auth", (String)SystemGlobals.getValue("mail.smtp.auth"));
+		mailProps.put("mail.mime.charset", SystemGlobals.getValue(ConfigKeys.MAIL_CHARSET));
+		mailProps.put("mail.smtp.auth", SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_AUTH));
 		
-		username = (String)SystemGlobals.getValue("mail.smtp.username");
-		password = (String)SystemGlobals.getValue("mail.smtp.password");
+		username = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_USERNAME);
+		password = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_PASSWORD);
 		
-		messageFormat = SystemGlobals.getValue("mail.messageFormat").toString().equals("html") ? MESSAGE_HTML : MESSAGE_TEXT;
+		messageFormat = SystemGlobals.getValue(ConfigKeys.MAIL_MESSSAGE_FORMAT).equals("html") ? MESSAGE_HTML : MESSAGE_TEXT;
 
 		session = Session.getDefaultInstance(mailProps);
 	}
@@ -118,12 +119,12 @@ public class Spammer
 	
 	public boolean dispatchMessages() throws Exception
 	{
-		if (SystemGlobals.getValue("mail.smtp.auth").toString().equals("true")) {
+		if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_SMTP_AUTH)) {
 			if (username != null && !username.equals("") && password != null && !password.equals("")) {
 				Transport transport = Spammer.getSession().getTransport("smtp");
 				
 				try {
-					transport.connect((String)SystemGlobals.getValue("mail.smtp.host"), username, password);
+					transport.connect(SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_HOST), username, password);
 				}
 				catch (MessagingException e) {
 					throw new EmailException("Could not connect to the mail server", e);
@@ -157,7 +158,7 @@ public class Spammer
 		try {
 			InternetAddress[] recipients = new InternetAddress[addresses.size()];
 
-			this.message.setFrom(new InternetAddress((String)SystemGlobals.getValue("mail.sender")));
+			this.message.setFrom(new InternetAddress(SystemGlobals.getValue(ConfigKeys.MAIL_SENDER)));
 			this.message.setSubject(subject);
 			
 			StringWriter sWriter = new StringWriter();

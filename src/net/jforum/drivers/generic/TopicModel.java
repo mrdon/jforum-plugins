@@ -54,11 +54,12 @@ import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicModel.java,v 1.2 2004/05/24 02:25:15 rafaelsteil Exp $
+ * @version $Id: TopicModel.java,v 1.3 2004/06/01 19:47:17 pieter2 Exp $
  */
 public class TopicModel extends CommonDBTask implements net.jforum.model.TopicModel 
 {
@@ -249,7 +250,7 @@ public class TopicModel extends CommonDBTask implements net.jforum.model.TopicMo
 	
 	public ArrayList fillTopicsData(ResultSet rs) throws SQLException
 	{
-		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue("dateTimeFormat").toString());
+		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
 		ArrayList l = new ArrayList();
 		
 		while (rs.next()) {
@@ -375,7 +376,7 @@ public class TopicModel extends CommonDBTask implements net.jforum.model.TopicMo
 	public ArrayList notifyUsers(Topic topic) throws Exception 
 	{ 
 		int posterId = SessionFacade.getUserSession().getUserId();
-		int anonUser = Integer.parseInt((String)SystemGlobals.getValue("anonymousUserId"));
+		int anonUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 		
 		PreparedStatement stmt = JForum.getConnection().prepareStatement(SystemGlobals.getSql("TopicModel.notifyUsers"));		
 		ResultSet rs = null;

@@ -47,11 +47,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import net.jforum.entities.UserSession;
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserSessionModel.java,v 1.1 2004/05/31 01:58:51 rafaelsteil Exp $
+ * @version $Id: UserSessionModel.java,v 1.2 2004/06/01 19:47:17 pieter2 Exp $
  */
 public class UserSessionModel implements net.jforum.model.UserSessionModel
 {

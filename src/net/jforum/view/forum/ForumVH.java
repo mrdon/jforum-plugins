@@ -69,10 +69,11 @@ import net.jforum.repository.SecurityRepository;
 import net.jforum.repository.TopicRepository;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
- * @version $Id: ForumVH.java,v 1.6 2004/05/31 01:58:45 rafaelsteil Exp $
+ * @version $Id: ForumVH.java,v 1.7 2004/06/01 19:47:24 pieter2 Exp $
  */
 public class ForumVH extends Command 
 {
@@ -154,7 +155,7 @@ public class ForumVH extends Command
 		UserModel um = DataAccessDriver.getInstance().newUserModel();
 		
 		JForum.getContext().put("allForums", ForumVH.getAllForums(true));
-		JForum.getContext().put("topicsPerPage",  new Integer((String)SystemGlobals.getValue("topicsPerPage")));
+		JForum.getContext().put("topicsPerPage",  new Integer(SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE)));
 		JForum.getContext().put("moduleAction", "forum_list.htm");
 		
 		JForum.getContext().put("totalMessages", I18n.getMessage("ForumListing.totalMessagesInfo", 
@@ -166,7 +167,7 @@ public class ForumVH extends Command
 		JForum.getContext().put("lastUserId", m.get("userId"));
 		JForum.getContext().put("lastUserName", m.get("userName"));		
 		
-		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue("dateTimeFormat").toString());
+		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
 		GregorianCalendar gc = new GregorianCalendar();
 		JForum.getContext().put("now", df.format(gc.getTime()));
 		
@@ -180,7 +181,7 @@ public class ForumVH extends Command
 		JForum.getContext().put("totalOnlineUsers", new Integer(SessionFacade.size()));
 		int guest = 0;
 		int registered = 0;
-		int aid = Integer.parseInt((String)SystemGlobals.getValue("anonymousUserId"));
+		int aid = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 	
 		ArrayList userSessions = SessionFacade.getAllSessions();
 		ArrayList onlineUsersList = new ArrayList();
@@ -247,7 +248,7 @@ public class ForumVH extends Command
 		}
 		
 		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
-		String count = SystemGlobals.getValue("topicsPerPage").toString();
+		int topicsPerPage = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
 		ArrayList tmpTopics = null;
 		
 		// Try to get the first's page topics from the cache
@@ -255,17 +256,16 @@ public class ForumVH extends Command
 			tmpTopics = TopicRepository.getTopics(forumId);
 
 			if (tmpTopics.size() == 0) {
-				tmpTopics = tm.selectAllByForumByLimit(forumId, start, Integer.parseInt(count));
+				tmpTopics = tm.selectAllByForumByLimit(forumId, start, topicsPerPage);
 				TopicRepository.addAll(forumId, tmpTopics);
 			}
 		}
 		else {
-			tmpTopics = tm.selectAllByForumByLimit(forumId, start, Integer.parseInt(count));
+			tmpTopics = tm.selectAllByForumByLimit(forumId, start, topicsPerPage);
 		}
 		
-		int postsPerPage = Integer.parseInt(SystemGlobals.getValue("postsPerPage").toString());
+		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 		int totalTopics = ForumRepository.getTotalTopics(forumId, true);
-		int topicsPerPage = Integer.parseInt(SystemGlobals.getValue("topicsPerPage").toString());
 
 		JForum.getContext().put("topics", this.prepareTopics(tmpTopics));
 		JForum.getContext().put("allForums", ForumVH.getAllForums());
@@ -286,7 +286,7 @@ public class ForumVH extends Command
 	{
 		long lastVisit = SessionFacade.getUserSession().getLastVisit();
 
-		int postsPerPage = Integer.parseInt(SystemGlobals.getValue("postsPerPage").toString());
+		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 		HashMap topicsTracking = (HashMap)SessionFacade.getAttribute("topics_tracking");
 		ArrayList newTopics = new ArrayList(topics.size());
 		

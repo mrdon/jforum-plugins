@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: SearchVH.java,v 1.4 2004/05/04 00:59:35 rafaelsteil Exp $
+ * $Id: SearchVH.java,v 1.5 2004/06/01 19:47:24 pieter2 Exp $
  */
 package net.jforum.view.forum;
 
@@ -60,7 +60,8 @@ import net.jforum.repository.CategoryRepository;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.SecurityConstants;
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
@@ -135,7 +136,7 @@ public class SearchVH extends Command
 		}
 		
 		int start = 0;
-		int recordsPerPage = Integer.parseInt(SystemGlobals.getValue("topicsPerPage").toString());
+		int recordsPerPage = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
 		
 		if (s != null) {
 			start = Integer.parseInt(s);
@@ -175,7 +176,7 @@ public class SearchVH extends Command
 		
 		JForum.getContext().put("totalPages", new Double(Math.floor(totalTopics / recordsPerPage)));
 		JForum.getContext().put("recordsPerPage", new Integer(recordsPerPage));
-		JForum.getContext().put("postsPerPage", new Integer(Integer.parseInt((String)SystemGlobals.getValue("postsPerPage"))));
+		JForum.getContext().put("postsPerPage", new Integer(SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE)));
 		JForum.getContext().put("totalRecords", new Integer(totalTopics));
 		JForum.getContext().put("thisPage", new Integer(start));
 		

@@ -54,11 +54,12 @@ import net.jforum.entities.Post;
 import net.jforum.entities.PrivateMessage;
 import net.jforum.entities.PrivateMessageType;
 import net.jforum.entities.User;
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageModel.java,v 1.1 2004/05/23 15:39:59 rafaelsteil Exp $
+ * @version $Id: PrivateMessageModel.java,v 1.2 2004/06/01 19:47:18 pieter2 Exp $
  */
 public class PrivateMessageModel implements net.jforum.model.PrivateMessageModel
 {
@@ -188,7 +189,7 @@ public class PrivateMessageModel implements net.jforum.model.PrivateMessageModel
 		p.setTime(rs.getLong("privmsgs_date"));
 		p.setSubject(rs.getString("privmsgs_subject"));
 		
-		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue("dateTimeFormat").toString());
+		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
 		GregorianCalendar gc = new GregorianCalendar();
 		gc.setTimeInMillis(rs.getLong("privmsgs_date"));
 		pm.setFormatedDate(df.format(gc.getTime()));

@@ -55,11 +55,11 @@ import net.jforum.security.Role;
 import net.jforum.security.RoleCollection;
 import net.jforum.security.RoleValueCollection;
 import net.jforum.security.UserSecurityHelper;
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * $Id: UserSecurityModel.java,v 1.2 2004/05/24 02:25:21 rafaelsteil Exp $
+ * $Id: UserSecurityModel.java,v 1.3 2004/06/01 19:47:25 pieter2 Exp $
  */
 public class UserSecurityModel extends CommonDBTask implements net.jforum.model.security.UserSecurityModel 
 {

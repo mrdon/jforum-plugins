@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: RSSable.java,v 1.2 2004/04/21 23:57:36 rafaelsteil Exp $
+ * $Id: RSSable.java,v 1.3 2004/06/01 19:47:28 pieter2 Exp $
  */
 package net.jforum.util.rss;
 
@@ -60,7 +60,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil

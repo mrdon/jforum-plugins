@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: TopicRepository.java,v 1.3 2004/04/24 01:22:43 rafaelsteil Exp $
+ * $Id: TopicRepository.java,v 1.4 2004/06/01 19:47:23 pieter2 Exp $
  */
 package net.jforum.repository;
 
@@ -50,7 +50,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 import net.jforum.entities.Topic;
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * Repository for the last n topics for each forum.
@@ -60,7 +61,7 @@ import net.jforum.util.SystemGlobals;
 public class TopicRepository
 {
 	private static LinkedHashMap allTopicsMap = new LinkedHashMap();
-	private static int maxItems = Integer.parseInt((String)SystemGlobals.getValue("topicsPerPage"));
+	private static int maxItems = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
 	
 	private TopicRepository() {}
 

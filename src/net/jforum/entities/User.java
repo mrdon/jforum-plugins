@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net 
  * 
- * $Id: User.java,v 1.2 2004/04/21 23:57:31 rafaelsteil Exp $
+ * $Id: User.java,v 1.3 2004/06/01 19:47:31 pieter2 Exp $
  */
 package net.jforum.entities;
 
@@ -49,7 +49,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * Represents a single user in the system.
@@ -444,7 +445,7 @@ public class User
 	 */
 	public String getRegistrationDate() 
 	{
-		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue("dateTimeFormat").toString());
+		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
 		GregorianCalendar gc = new GregorianCalendar();
 		gc.setTimeInMillis(Long.parseLong(this.registrationDate));
 

@@ -54,11 +54,11 @@ import net.jforum.security.Role;
 import net.jforum.security.RoleCollection;
 import net.jforum.security.RoleValue;
 import net.jforum.security.RoleValueCollection;
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityCommon.java,v 1.3 2004/05/31 01:58:53 rafaelsteil Exp $
+ * @version $Id: SecurityCommon.java,v 1.4 2004/06/01 19:47:25 pieter2 Exp $
  */
 public class SecurityCommon 
 {

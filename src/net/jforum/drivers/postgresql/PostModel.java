@@ -48,11 +48,11 @@ import java.util.ArrayList;
 
 import net.jforum.JForum;
 import net.jforum.entities.Post;
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostModel.java,v 1.2 2004/05/24 02:25:19 rafaelsteil Exp $
+ * @version $Id: PostModel.java,v 1.3 2004/06/01 19:47:19 pieter2 Exp $
  */
 public class PostModel extends net.jforum.drivers.generic.PostModel
 {

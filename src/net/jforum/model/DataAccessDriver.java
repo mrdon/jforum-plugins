@@ -43,7 +43,8 @@
 package net.jforum.model;
 
 import net.jforum.ForumException;
-import net.jforum.util.SystemGlobals;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * The class that every driver class must implement.
@@ -59,7 +60,7 @@ import net.jforum.util.SystemGlobals;
  * analise, look at <code>net.jforum.drivers.generic</code> package.
  * 
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.4 2004/05/31 01:58:47 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.5 2004/06/01 19:47:29 pieter2 Exp $
  */
 public abstract class DataAccessDriver 
 {
@@ -79,7 +80,7 @@ public abstract class DataAccessDriver
 	{
 		if (driver == null) {
 			try {
-				driver = (DataAccessDriver)Class.forName((String)SystemGlobals.getValue("dao.driver")).newInstance();
+				driver = (DataAccessDriver)Class.forName(SystemGlobals.getValue(ConfigKeys.DAO_DRIVER)).newInstance();
 			}
 			catch (Exception e) {
 				new ForumException(e);
