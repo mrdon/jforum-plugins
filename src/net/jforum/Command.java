@@ -58,15 +58,15 @@ import freemarker.template.Template;
  * presentation actions must extend this class. 
  * 
  * @author Rafael Steil
- * @version $Id: Command.java,v 1.6 2004/12/26 02:31:50 rafaelsteil Exp $
+ * @version $Id: Command.java,v 1.7 2004/12/27 00:30:52 rafaelsteil Exp $
  */
 public abstract class Command 
 {
 	private String templateName;
-	private Connection conn;
-	private ActionServletRequest request;
-	private HttpServletResponse response;
-	private SimpleHash context;
+	protected Connection conn;
+	protected ActionServletRequest request;
+	protected HttpServletResponse response;
+	protected SimpleHash context;
 	
 	protected void setTemplateName(String templateName)
 	{

@@ -51,7 +51,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.ActionServletRequest;
 import net.jforum.Command;
-import net.jforum.JForum;
 import net.jforum.entities.Group;
 import net.jforum.entities.User;
 import net.jforum.model.DataAccessDriver;
@@ -72,7 +71,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.11 2004/12/26 02:31:48 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.12 2004/12/27 00:30:51 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -82,21 +81,21 @@ public class UserAction extends Command
 		int start = this.preparePagination(DataAccessDriver.getInstance().newUserModel().getTotalUsers());
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
 
-		JForum.getContext().put("users", DataAccessDriver.getInstance().newUserModel().selectAll(start ,usersPerPage));
-		JForum.getContext().put("moduleAction", "user_list.htm");
+		this.context.put("users", DataAccessDriver.getInstance().newUserModel().selectAll(start ,usersPerPage));
+		this.context.put("moduleAction", "user_list.htm");
 	}
 	
 	private int preparePagination(int totalUsers)
 	{
-		String s = JForum.getRequest().getParameter("start");
+		String s = this.request.getParameter("start");
 		int start = ViewCommon.getStartPage();
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
 		
-		JForum.getContext().put("totalPages", new Double(Math.ceil( (double)totalUsers / usersPerPage )));
-		JForum.getContext().put("recordsPerPage", new Integer(usersPerPage));
-		JForum.getContext().put("totalRecords", new Integer(totalUsers));
-		JForum.getContext().put("thisPage", new Double(Math.ceil( (double)(start + 1) / usersPerPage )));
-		JForum.getContext().put("start", new Integer(start));
+		this.context.put("totalPages", new Double(Math.ceil( (double)totalUsers / usersPerPage )));
+		this.context.put("recordsPerPage", new Integer(usersPerPage));
+		this.context.put("totalRecords", new Integer(totalUsers));
+		this.context.put("thisPage", new Double(Math.ceil( (double)(start + 1) / usersPerPage )));
+		this.context.put("start", new Integer(start));
 		
 		return start;
 	}
@@ -104,24 +103,24 @@ public class UserAction extends Command
 	public void search() throws Exception
 	{
 		List users = new ArrayList();
-		String search = JForum.getRequest().getParameter("username");
+		String search = this.request.getParameter("username");
 		
 		if (search != null) {
 			users = DataAccessDriver.getInstance().newUserModel().findByName(search, false);
 		}
 		
-		JForum.getContext().put("moduleAction", "user_list.htm");
-		JForum.getContext().put("users", users);
-		JForum.getContext().put("search", search);
+		this.context.put("moduleAction", "user_list.htm");
+		this.context.put("users", users);
+		this.context.put("search", search);
 		
 		// "start" is added to avoid search error. "start" may be in use when pagination is introduced for search 
-		JForum.getContext().put("start", new Integer(1));
+		this.context.put("start", new Integer(1));
 	}
 	
 	// Permissions
 	public void permissions() throws Exception
 	{
-		int id = Integer.parseInt(JForum.getRequest().getParameter("id"));
+		int id = Integer.parseInt(this.request.getParameter("id"));
 		
 		User user = DataAccessDriver.getInstance().newUserModel().selectById(id);
 		
@@ -132,15 +131,15 @@ public class UserAction extends Command
 		
 		List sections = new XMLPermissionControl(pc).loadConfigurations(SystemGlobals.getApplicationResourceDir() +"/config/permissions.xml");
 		
-		JForum.getContext().put("sections", sections);
-		JForum.getContext().put("user", user);
-		JForum.getContext().put("moduleAction", "user_security_form.htm");
+		this.context.put("sections", sections);
+		this.context.put("user", user);
+		this.context.put("moduleAction", "user_security_form.htm");
 	}
 	
 	// Permissions Save
 	public void permissionsSave() throws Exception
 	{
-		int id = Integer.parseInt(JForum.getRequest().getParameter("id"));
+		int id = Integer.parseInt(this.request.getParameter("id"));
 		User user = DataAccessDriver.getInstance().newUserModel().selectById(id);
 		
 		UserSecurityModel umodel = DataAccessDriver.getInstance().newUserSecurityModel();
@@ -161,19 +160,19 @@ public class UserAction extends Command
 	
 	public void edit() throws Exception
 	{
-		int userId = Integer.parseInt(JForum.getRequest().getParameter("id"));	
+		int userId = Integer.parseInt(this.request.getParameter("id"));	
 		UserModel um = DataAccessDriver.getInstance().newUserModel();
 		User u = um.selectById(userId);
 		
-		JForum.getContext().put("u", u);
-		JForum.getContext().put("action", "editSave");		
-		JForum.getContext().put("moduleAction", "user_form.htm");
-		JForum.getContext().put("admin", true);
+		this.context.put("u", u);
+		this.context.put("action", "editSave");		
+		this.context.put("moduleAction", "user_form.htm");
+		this.context.put("admin", true);
 	}
 	
 	public void editSave() throws Exception
 	{
-		int userId = Integer.parseInt(JForum.getRequest().getParameter("user_id"));
+		int userId = Integer.parseInt(this.request.getParameter("user_id"));
 		UserCommon.saveUser(userId);
 
 		this.list();
@@ -182,7 +181,7 @@ public class UserAction extends Command
 	// Delete
 	public void delete() throws Exception
 	{
-		String ids[] = JForum.getRequest().getParameterValues("user_id");
+		String ids[] = this.request.getParameterValues("user_id");
 		UserModel um = DataAccessDriver.getInstance().newUserModel();
 		
 		if (ids != null) {
@@ -204,7 +203,7 @@ public class UserAction extends Command
 	// Groups
 	public void groups() throws Exception
 	{
-		int userId = Integer.parseInt(JForum.getRequest().getParameter("id"));
+		int userId = Integer.parseInt(this.request.getParameter("id"));
 		
 		UserModel um = DataAccessDriver.getInstance().newUserModel();
 		GroupModel gm = DataAccessDriver.getInstance().newGroupModel();
@@ -216,18 +215,18 @@ public class UserAction extends Command
 			selectedList.add(new Integer(((Group)iter.next()).getId()));
 		}
 		
-		JForum.getContext().put("selectedList", selectedList);
-		JForum.getContext().put("groups", new TreeGroup().getNodes());
-		JForum.getContext().put("user", u);
-		JForum.getContext().put("userId", new Integer(userId));
-		JForum.getContext().put("moduleAction", "user_groups.htm");
-		JForum.getContext().put("groupFor", I18n.getMessage("User.GroupsFor", new String[] { u.getUsername() }));
+		this.context.put("selectedList", selectedList);
+		this.context.put("groups", new TreeGroup().getNodes());
+		this.context.put("user", u);
+		this.context.put("userId", new Integer(userId));
+		this.context.put("moduleAction", "user_groups.htm");
+		this.context.put("groupFor", I18n.getMessage("User.GroupsFor", new String[] { u.getUsername() }));
 	}
 	
 	// Groups Save
 	public void groupsSave() throws Exception
 	{
-		int userId = Integer.parseInt(JForum.getRequest().getParameter("user_id"));
+		int userId = Integer.parseInt(this.request.getParameter("user_id"));
 		
 		UserModel um = DataAccessDriver.getInstance().newUserModel();
 		GroupModel gm = DataAccessDriver.getInstance().newGroupModel();
@@ -246,7 +245,7 @@ public class UserAction extends Command
 		um.removeFromGroup(userId, allGroups);
 		
 		// Associate the user to the selected groups
-		String[] selectedGroups = JForum.getRequest().getParameterValues("groups");
+		String[] selectedGroups = this.request.getParameterValues("groups");
 		int[] newGroups = new int[selectedGroups.length];
 		
 		for (int i = 0; i < selectedGroups.length; i++) {

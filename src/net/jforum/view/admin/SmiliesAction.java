@@ -39,8 +39,6 @@
  * This file creation date: 13/01/2004 / 18:45:31
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: SmiliesAction.java,v 1.3 2004/12/26 02:31:49 rafaelsteil Exp $
  */
 package net.jforum.view.admin;
 
@@ -54,7 +52,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.ActionServletRequest;
 import net.jforum.Command;
-import net.jforum.JForum;
 import net.jforum.entities.Smilie;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.repository.SmiliesRepository;
@@ -66,6 +63,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
+ * @version $Id: SmiliesAction.java,v 1.4 2004/12/27 00:30:51 rafaelsteil Exp $
  */
 public class SmiliesAction extends Command 
 {
@@ -73,13 +71,13 @@ public class SmiliesAction extends Command
 	{
 		String imgName = "";
 		
-		if (JForum.getRequest().getObjectParameter("smilie_img") != null) {
-			imgName = JForum.getRequest().getParameter("smilie_imgName");
+		if (this.request.getObjectParameter("smilie_img") != null) {
+			imgName = this.request.getParameter("smilie_imgName");
 			String extension = extension = imgName.substring(imgName.lastIndexOf('.'));
 			
-			imgName = MD5.crypt(JForum.getRequest().getParameter("smilie_imgName"));
+			imgName = MD5.crypt(this.request.getParameter("smilie_imgName"));
 			
-			BufferedInputStream inputStream = new BufferedInputStream((InputStream)JForum.getRequest().getObjectParameter("smilie_img"));
+			BufferedInputStream inputStream = new BufferedInputStream((InputStream)this.request.getObjectParameter("smilie_img"));
 			FileOutputStream outputStream = new FileOutputStream(SystemGlobals.getApplicationPath() +"/"+ SystemGlobals.getValue(ConfigKeys.SMILIE_IMAGE_DIR) +"/"+ imgName + extension);
 			
 			int c = 0;
@@ -100,14 +98,14 @@ public class SmiliesAction extends Command
 	
 	public void insert()
 	{
-		JForum.getContext().put("moduleAction", "smilie_form.htm");
-		JForum.getContext().put("action", "insertSave");
+		this.context.put("moduleAction", "smilie_form.htm");
+		this.context.put("action", "insertSave");
 	}
 		
 	public void insertSave() throws Exception
 	{
 		Smilie s = new Smilie();
-		s.setCode(JForum.getRequest().getParameter("code"));
+		s.setCode(this.request.getParameter("code"));
 		
 		String imgName = this.processUpload();
 		s.setUrl(SystemGlobals.getValue(ConfigKeys.SMILIE_IMAGE_PATTERN).replaceAll("#IMAGE#", imgName));
@@ -124,21 +122,21 @@ public class SmiliesAction extends Command
 	{
 		int id = 1;
 		
-		if (JForum.getRequest().getParameter("id") != null) {
-			id = Integer.parseInt(JForum.getRequest().getParameter("id"));
+		if (this.request.getParameter("id") != null) {
+			id = Integer.parseInt(this.request.getParameter("id"));
 		}
 		
-		JForum.getContext().put("moduleAction", "smilie_form.htm");
-		JForum.getContext().put("smilie", DataAccessDriver.getInstance().newSmilieModel().selectById(id));
-		JForum.getContext().put("action", "editSave");
+		this.context.put("moduleAction", "smilie_form.htm");
+		this.context.put("smilie", DataAccessDriver.getInstance().newSmilieModel().selectById(id));
+		this.context.put("action", "editSave");
 	}
 	
 	public void editSave() throws Exception
 	{
-		Smilie s = DataAccessDriver.getInstance().newSmilieModel().selectById(Integer.parseInt(JForum.getRequest().getParameter("id")));
-		s.setCode(JForum.getRequest().getParameter("code"));
+		Smilie s = DataAccessDriver.getInstance().newSmilieModel().selectById(Integer.parseInt(this.request.getParameter("id")));
+		s.setCode(this.request.getParameter("code"));
 		
-		if (JForum.getRequest().getObjectParameter("smilie_img") != null) {
+		if (this.request.getObjectParameter("smilie_img") != null) {
 			String imgName = this.processUpload();
 			s.setUrl(SystemGlobals.getValue(ConfigKeys.SMILIE_IMAGE_PATTERN).replaceAll("#IMAGE#", imgName));
 			s.setDiskName(imgName);
@@ -152,8 +150,8 @@ public class SmiliesAction extends Command
 	
 	public void delete() throws Exception
 	{
-		if (JForum.getRequest().getParameter("id") != null) {
-			int id = Integer.parseInt(JForum.getRequest().getParameter("id"));
+		if (this.request.getParameter("id") != null) {
+			int id = Integer.parseInt(this.request.getParameter("id"));
 			Smilie s = DataAccessDriver.getInstance().newSmilieModel().selectById(id);
 			
 			DataAccessDriver.getInstance().newSmilieModel().delete(id);
@@ -173,8 +171,8 @@ public class SmiliesAction extends Command
 	 */
 	public void list() throws Exception 
 	{
-		JForum.getContext().put("smilies", SmiliesRepository.getSmilies());
-		JForum.getContext().put("moduleAction", "smilie_list.htm");
+		this.context.put("smilies", SmiliesRepository.getSmilies());
+		this.context.put("moduleAction", "smilie_list.htm");
 	}
 
 	/*

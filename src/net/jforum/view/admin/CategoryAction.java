@@ -51,7 +51,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.ActionServletRequest;
 import net.jforum.Command;
-import net.jforum.JForum;
 import net.jforum.entities.Category;
 import net.jforum.model.CategoryModel;
 import net.jforum.model.DataAccessDriver;
@@ -73,7 +72,7 @@ import freemarker.template.Template;
  * ViewHelper for category administration.
  * 
  * @author Rafael Steil
- * @version $Id: CategoryAction.java,v 1.9 2004/12/26 02:31:47 rafaelsteil Exp $
+ * @version $Id: CategoryAction.java,v 1.10 2004/12/27 00:30:50 rafaelsteil Exp $
  */
 public class CategoryAction extends Command 
 {
@@ -82,34 +81,34 @@ public class CategoryAction extends Command
 	// Listing
 	public void list() throws Exception
 	{
-		JForum.getContext().put("categories", DataAccessDriver.getInstance().newCategoryModel().selectAll());
-		JForum.getContext().put("repository", new ForumRepository());
-		JForum.getContext().put("moduleAction", "category_list.htm");
+		this.context.put("categories", DataAccessDriver.getInstance().newCategoryModel().selectAll());
+		this.context.put("repository", new ForumRepository());
+		this.context.put("moduleAction", "category_list.htm");
 	}
 	
 	// One more, one more
 	public void insert() throws Exception
 	{
-		JForum.getContext().put("groups", new TreeGroup().getNodes());
-		JForum.getContext().put("selectedList", new ArrayList());
-		JForum.getContext().put("moduleAction", "category_form.htm");
-		JForum.getContext().put("action", "insertSave");
+		this.context.put("groups", new TreeGroup().getNodes());
+		this.context.put("selectedList", new ArrayList());
+		this.context.put("moduleAction", "category_form.htm");
+		this.context.put("action", "insertSave");
 	}
 	
 	// Edit
 	public void edit() throws Exception
 	{
-		JForum.getContext().put("category", this.cm.selectById(Integer.parseInt(JForum.getRequest().getParameter("category_id"))));
-		JForum.getContext().put("moduleAction", "category_form.htm");
-		JForum.getContext().put("action", "editSave");
+		this.context.put("category", this.cm.selectById(Integer.parseInt(this.request.getParameter("category_id"))));
+		this.context.put("moduleAction", "category_form.htm");
+		this.context.put("action", "editSave");
 	}
 	
 	//  Save information
 	public void editSave() throws Exception
 	{
 		Category c = new Category();
-		c.setName(JForum.getRequest().getParameter("category_name"));
-		c.setId(Integer.parseInt(JForum.getRequest().getParameter("categories_id")));
+		c.setName(this.request.getParameter("category_name"));
+		c.setId(Integer.parseInt(this.request.getParameter("categories_id")));
 			
 		this.cm.update(c);
 		ForumRepository.reloadCategory(c);
@@ -120,7 +119,7 @@ public class CategoryAction extends Command
 	// Delete
 	public void delete() throws Exception
 	{
-		String ids[] = JForum.getRequest().getParameterValues("categories_id");
+		String ids[] = this.request.getParameterValues("categories_id");
 		List errors = new ArrayList();
 		
 		if (ids != null) {						
@@ -141,7 +140,7 @@ public class CategoryAction extends Command
 		}
 
 		if (errors.size() > 0) {
-			JForum.getContext().put("errorMessage", errors);
+			this.context.put("errorMessage", errors);
 		}
 		
 		this.list();
@@ -151,14 +150,14 @@ public class CategoryAction extends Command
 	public void insertSave() throws Exception
 	{
 		Category c = new Category();
-		c.setName(JForum.getRequest().getParameter("category_name"));
+		c.setName(this.request.getParameter("category_name"));
 			
 		int categoryId = this.cm.addNew(c);
 		c.setId(categoryId);
 
 		ForumRepository.addCategory(c);
 		
-		String[] groups = JForum.getRequest().getParameterValues("groups");
+		String[] groups = this.request.getParameterValues("groups");
 		if (groups != null) {
 			GroupModel gm = DataAccessDriver.getInstance().newGroupModel();
 			GroupSecurityModel gmodel = DataAccessDriver.getInstance().newGroupSecurityModel();
@@ -203,7 +202,7 @@ public class CategoryAction extends Command
 	private void processOrdering(boolean up) throws Exception
 	{
 		Category toChange = new Category(ForumRepository.getCategory(Integer.parseInt(
-				JForum.getRequest().getParameter("category_id"))));
+				this.request.getParameter("category_id"))));
 		
 		List categories = ForumRepository.getAllCategories();
 		

@@ -51,7 +51,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.ActionServletRequest;
 import net.jforum.Command;
-import net.jforum.JForum;
 import net.jforum.entities.Group;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.GroupModel;
@@ -69,36 +68,36 @@ import freemarker.template.Template;
  * ViewHelper class for group administration.
  * 
  * @author Rafael Steil
- * @version $Id: GroupAction.java,v 1.4 2004/12/26 02:31:48 rafaelsteil Exp $
+ * @version $Id: GroupAction.java,v 1.5 2004/12/27 00:30:51 rafaelsteil Exp $
  */
 public class GroupAction extends Command 
 {
 	// Listing
 	public void list() throws Exception
 	{
-		JForum.getContext().put("groups", new TreeGroup().getNodes());
-		JForum.getContext().put("moduleAction", "group_list.htm");	
+		this.context.put("groups", new TreeGroup().getNodes());
+		this.context.put("moduleAction", "group_list.htm");	
 	}
 	
 	// Insert
 	public void insert() throws Exception
 	{
-		JForum.getContext().put("groups", new TreeGroup().getNodes());
-		JForum.getContext().put("action", "insertSave");
-		JForum.getContext().put("selectedList", new ArrayList());
-		JForum.getContext().put("moduleAction", "group_form.htm");
+		this.context.put("groups", new TreeGroup().getNodes());
+		this.context.put("action", "insertSave");
+		this.context.put("selectedList", new ArrayList());
+		this.context.put("moduleAction", "group_form.htm");
 	}
 	
 	// Save information for an existing group
 	public void editSave() throws Exception
 	{
-		int groupId = Integer.parseInt(JForum.getRequest().getParameter("group_id"));
+		int groupId = Integer.parseInt(this.request.getParameter("group_id"));
 			
 		Group g = new Group();
-		g.setDescription(JForum.getRequest().getParameter("group_description"));
+		g.setDescription(this.request.getParameter("group_description"));
 		g.setId(groupId);
-		g.setParentId(Integer.parseInt(JForum.getRequest().getParameter("parent_id")));
-		g.setName(JForum.getRequest().getParameter("group_name"));
+		g.setParentId(Integer.parseInt(this.request.getParameter("parent_id")));
+		g.setName(this.request.getParameter("group_name"));
 
 		DataAccessDriver.getInstance().newGroupModel().update(g);
 			
@@ -108,20 +107,20 @@ public class GroupAction extends Command
 	// Edit a group
 	public void edit() throws Exception
 	{
-		int groupId = Integer.parseInt(JForum.getRequest().getParameter("group_id"));
+		int groupId = Integer.parseInt(this.request.getParameter("group_id"));
 		GroupModel gm = DataAccessDriver.getInstance().newGroupModel();
 					
-		JForum.getContext().put("group", gm.selectById(groupId));
-		JForum.getContext().put("groups", new TreeGroup().getNodes());
-		JForum.getContext().put("selectedList", new ArrayList());
-		JForum.getContext().put("moduleAction", "group_form.htm");
-		JForum.getContext().put("action", "editSave");	
+		this.context.put("group", gm.selectById(groupId));
+		this.context.put("groups", new TreeGroup().getNodes());
+		this.context.put("selectedList", new ArrayList());
+		this.context.put("moduleAction", "group_form.htm");
+		this.context.put("action", "editSave");	
 	}
 	
 	// Deletes a group
 	public void delete() throws Exception
 	{		
-		String groupId[] = JForum.getRequest().getParameterValues("group_id");
+		String groupId[] = this.request.getParameterValues("group_id");
 		if (groupId == null) {
 			this.list();
 			
@@ -142,7 +141,7 @@ public class GroupAction extends Command
 		}
 		
 		if (errors.size() > 0) {
-			JForum.getContext().put("errorMessage", errors);
+			this.context.put("errorMessage", errors);
 		}
 			
 		this.list();
@@ -154,9 +153,9 @@ public class GroupAction extends Command
 		GroupModel gm = DataAccessDriver.getInstance().newGroupModel();
 		
 		Group g = new Group();
-		g.setDescription(JForum.getRequest().getParameter("group_description"));
-		g.setParentId(Integer.parseInt(JForum.getRequest().getParameter("parent_id")));
-		g.setName(JForum.getRequest().getParameter("group_name"));
+		g.setDescription(this.request.getParameter("group_description"));
+		g.setParentId(Integer.parseInt(this.request.getParameter("parent_id")));
+		g.setName(this.request.getParameter("group_name"));
 			
 		gm.addNew(g);			
 			
@@ -166,7 +165,7 @@ public class GroupAction extends Command
 	// Permissions
 	public void permissions() throws Exception
 	{
-		int id = Integer.parseInt(JForum.getRequest().getParameter("group_id"));
+		int id = Integer.parseInt(this.request.getParameter("group_id"));
 		
 		GroupSecurityModel gmodel = DataAccessDriver.getInstance().newGroupSecurityModel();
 
@@ -178,14 +177,14 @@ public class GroupAction extends Command
 		
 		GroupModel gm = DataAccessDriver.getInstance().newGroupModel();
 
-		JForum.getContext().put("sections", sections);
-		JForum.getContext().put("group", gm.selectById(id));
-		JForum.getContext().put("moduleAction", "group_security_form.htm");
+		this.context.put("sections", sections);
+		this.context.put("group", gm.selectById(id));
+		this.context.put("moduleAction", "group_security_form.htm");
 	}
 	
 	public void permissionsSave() throws Exception
 	{
-		int id = Integer.parseInt(JForum.getRequest().getParameter("id"));
+		int id = Integer.parseInt(this.request.getParameter("id"));
 		
 		GroupSecurityModel gmodel = DataAccessDriver.getInstance().newGroupSecurityModel();
 		

@@ -70,7 +70,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: RSSAction.java,v 1.10 2004/12/26 02:31:52 rafaelsteil Exp $
+ * @version $Id: RSSAction.java,v 1.11 2004/12/27 00:30:52 rafaelsteil Exp $
  */
 public class RSSAction extends Command 
 {
@@ -86,7 +86,7 @@ public class RSSAction extends Command
 		String description = I18n.getMessage("RSS.Forums.description");
 		
 		RSSAware rss = new ForumRSS(title, description, ForumCommon.getAllCategoriesAndForums());
-		JForum.getContext().put("rssContents", rss.createRSS());
+		this.context.put("rssContents", rss.createRSS());
 	}
 	
 	/**
@@ -95,7 +95,7 @@ public class RSSAction extends Command
 	 */
 	public void forumTopics() throws Exception
 	{
-		int forumId = Integer.parseInt(JForum.getRequest().getParameter("forum_id")); 
+		int forumId = Integer.parseInt(this.request.getParameter("forum_id")); 
 		if (!TopicsCommon.isTopicAccessible(forumId)) {
 			return;
 		}
@@ -109,7 +109,7 @@ public class RSSAction extends Command
 				I18n.getMessage("RSS.ForumTopics.description", p),
 				forumId, 
 				topics);
-		JForum.getContext().put("rssContents", rss.createRSS());
+		this.context.put("rssContents", rss.createRSS());
 	}
 	
 	/**
@@ -118,7 +118,7 @@ public class RSSAction extends Command
 	 */
 	public void topicPosts() throws Exception
 	{
-		int topicId = Integer.parseInt(JForum.getRequest().getParameter("topic_id"));
+		int topicId = Integer.parseInt(this.request.getParameter("topic_id"));
 
 		PostModel pm = DataAccessDriver.getInstance().newPostModel();
 		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
@@ -139,7 +139,7 @@ public class RSSAction extends Command
 		String description = I18n.getMessage("RSS.TopicPosts.description", p);
 
 		RSSAware rss = new TopicPostsRSS(title, description, topic.getForumId(), posts);
-		JForum.getContext().put("rssContents", rss.createRSS());
+		this.context.put("rssContents", rss.createRSS());
 	}
 	
 	/** 

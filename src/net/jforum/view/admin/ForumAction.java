@@ -50,7 +50,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.ActionServletRequest;
 import net.jforum.Command;
-import net.jforum.JForum;
 import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
 import net.jforum.model.CategoryModel;
@@ -72,16 +71,16 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.8 2004/12/26 02:31:49 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.9 2004/12/27 00:30:51 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
 	// Listing
 	public void list() throws Exception
 	{
-		JForum.getContext().put("categories", DataAccessDriver.getInstance().newCategoryModel().selectAll());
-		JForum.getContext().put("repository", new ForumRepository());
-		JForum.getContext().put("moduleAction", "forum_list.htm");
+		this.context.put("categories", DataAccessDriver.getInstance().newCategoryModel().selectAll());
+		this.context.put("repository", new ForumRepository());
+		this.context.put("moduleAction", "forum_list.htm");
 	}
 	
 	// One more, one more
@@ -89,11 +88,11 @@ public class ForumAction extends Command
 	{
 		CategoryModel cm = DataAccessDriver.getInstance().newCategoryModel();
 		
-		JForum.getContext().put("groups", new TreeGroup().getNodes());
-		JForum.getContext().put("selectedList", new ArrayList());
-		JForum.getContext().put("moduleAction", "forum_form.htm");
-		JForum.getContext().put("categories",cm.selectAll());
-		JForum.getContext().put("action", "insertSave");		
+		this.context.put("groups", new TreeGroup().getNodes());
+		this.context.put("selectedList", new ArrayList());
+		this.context.put("moduleAction", "forum_form.htm");
+		this.context.put("categories",cm.selectAll());
+		this.context.put("action", "insertSave");		
 	}
 	
 	// Edit
@@ -101,21 +100,21 @@ public class ForumAction extends Command
 	{
 		CategoryModel cm = DataAccessDriver.getInstance().newCategoryModel();
 		
-		JForum.getContext().put("forum", DataAccessDriver.getInstance().newForumModel().selectById(Integer.parseInt(JForum.getRequest().getParameter("forum_id"))));
-		JForum.getContext().put("categories", cm.selectAll());
-		JForum.getContext().put("moduleAction", "forum_form.htm");
-		JForum.getContext().put("action", "editSave");
+		this.context.put("forum", DataAccessDriver.getInstance().newForumModel().selectById(Integer.parseInt(this.request.getParameter("forum_id"))));
+		this.context.put("categories", cm.selectAll());
+		this.context.put("moduleAction", "forum_form.htm");
+		this.context.put("action", "editSave");
 	}
 	
 	//  Save information
 	public void editSave() throws Exception
 	{
 		Forum f = new Forum();
-		f.setDescription(JForum.getRequest().getParameter("description"));
-		f.setId(Integer.parseInt(JForum.getRequest().getParameter("forum_id")));
-		f.setIdCategories(Integer.parseInt(JForum.getRequest().getParameter("categories_id")));
-		f.setModerated(JForum.getRequest().getParameter("moderated") != null && JForum.getRequest().getParameter("moderated").equals("true"));
-		f.setName(JForum.getRequest().getParameter("forum_name"));
+		f.setDescription(this.request.getParameter("description"));
+		f.setId(Integer.parseInt(this.request.getParameter("forum_id")));
+		f.setIdCategories(Integer.parseInt(this.request.getParameter("categories_id")));
+		f.setModerated(this.request.getParameter("moderated") != null && this.request.getParameter("moderated").equals("true"));
+		f.setName(this.request.getParameter("forum_name"));
 			
 		DataAccessDriver.getInstance().newForumModel().update(f);
 		
@@ -137,7 +136,7 @@ public class ForumAction extends Command
 	private void processOrdering(boolean up) throws Exception
 	{
 		Forum toChange = new Forum(ForumRepository.getForum(Integer.parseInt(
-				JForum.getRequest().getParameter("forum_id"))));
+				this.request.getParameter("forum_id"))));
 		
 		Category category = ForumRepository.getCategory(toChange.getCategoryId());
 		List forums = new ArrayList(category.getForums());
@@ -168,7 +167,7 @@ public class ForumAction extends Command
 	// Delete
 	public void delete() throws Exception
 	{
-		String ids[] = JForum.getRequest().getParameterValues("forum_id");
+		String ids[] = this.request.getParameterValues("forum_id");
 		
 		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
 		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
@@ -193,17 +192,17 @@ public class ForumAction extends Command
 	public void insertSave() throws Exception
 	{
 		Forum f = new Forum();
-		f.setDescription(JForum.getRequest().getParameter("description"));
-		f.setIdCategories(Integer.parseInt(JForum.getRequest().getParameter("categories_id")));
-		f.setModerated(JForum.getRequest().getParameter("moderated") != null && JForum.getRequest().getParameter("moderated").equals("true"));
-		f.setName(JForum.getRequest().getParameter("forum_name"));	
+		f.setDescription(this.request.getParameter("description"));
+		f.setIdCategories(Integer.parseInt(this.request.getParameter("categories_id")));
+		f.setModerated(this.request.getParameter("moderated") != null && this.request.getParameter("moderated").equals("true"));
+		f.setName(this.request.getParameter("forum_name"));	
 			
 		int forumId = DataAccessDriver.getInstance().newForumModel().addNew(f);
 		f.setId(forumId);
 		
 		ForumRepository.addForum(f);
 		
-		String[] groups = JForum.getRequest().getParameterValues("groups");
+		String[] groups = this.request.getParameterValues("groups");
 		if (groups != null) {
 			GroupModel gm = DataAccessDriver.getInstance().newGroupModel();
 			GroupSecurityModel gmodel = DataAccessDriver.getInstance().newGroupSecurityModel();

@@ -42,14 +42,13 @@
  */
 package net.jforum.view.forum;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import net.jforum.Command;
-import net.jforum.entities.Topic;
 import net.jforum.entities.Forum;
-import net.jforum.JForum;
+import net.jforum.entities.Topic;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.TopicRepository;
 import net.jforum.util.preferences.ConfigKeys;
@@ -60,7 +59,7 @@ import net.jforum.view.forum.common.TopicsCommon;
  * Display a list of recent Topics
  * 
  * @author James Yong
- * @version $Id: RecentTopicsAction.java,v 1.4 2004/11/30 01:18:49 rafaelsteil Exp $
+ * @version $Id: RecentTopicsAction.java,v 1.5 2004/12/27 00:30:52 rafaelsteil Exp $
  */
 public class RecentTopicsAction extends Command 
 {
@@ -84,10 +83,10 @@ public class RecentTopicsAction extends Command
 			}
 		}
 		
-		JForum.getContext().put("postsPerPage", new Integer(postsPerPage));
-		JForum.getContext().put("topics", TopicsCommon.prepareTopics(tmpTopics));
-		JForum.getContext().put("forums", forums);
-		JForum.getContext().put("moduleAction", "recent_thread.htm");
+		this.context.put("postsPerPage", new Integer(postsPerPage));
+		this.context.put("topics", TopicsCommon.prepareTopics(tmpTopics));
+		this.context.put("forums", forums);
+		this.context.put("moduleAction", "recent_thread.htm");
 		
 		TopicsCommon.topicListingBase();
 	}

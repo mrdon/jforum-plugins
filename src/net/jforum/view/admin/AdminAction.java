@@ -39,8 +39,6 @@
  * This file creation date: 17/01/2004 / 19:34:01
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: AdminAction.java,v 1.4 2004/12/26 02:31:48 rafaelsteil Exp $
  */
 package net.jforum.view.admin;
 
@@ -64,6 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
+ * @version $Id: AdminAction.java,v 1.5 2004/12/27 00:30:51 rafaelsteil Exp $
  */
 public class AdminAction extends Command {
 
@@ -84,28 +83,28 @@ public class AdminAction extends Command {
 		
 		if (logged == null || logged.toString().equals("0") 
 				|| pc == null || !pc.canAccess(SecurityConstants.PERM_ADMINISTRATION)) {
-			String returnPath =  JForum.getRequest().getContextPath() +"/admBase/login" 
+			String returnPath =  this.request.getContextPath() + "/admBase/login" 
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
 
-			JForum.setRedirect(JForum.getRequest().getContextPath() 
+			JForum.setRedirect(this.request.getContextPath() 
 				+ "/jforum" 
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) 
 				+ "?module=user&action=login&returnPath="
 				+ returnPath);
 		}
 		else {
-			JForum.getContext().put("moduleAction", "admin_index.htm");
+			this.context.put("moduleAction", "admin_index.htm");
 		}
 	}
 	
 	public void menu() throws Exception
 	{
-		JForum.getContext().put("moduleAction", "menu.htm");
+		this.context.put("moduleAction", "menu.htm");
 	}
 	
 	public void main() throws Exception
 	{
-		JForum.getContext().put("moduleAction", "welcome.htm");
+		this.context.put("moduleAction", "welcome.htm");
 	}
 	
 	public static boolean isAdmin()
@@ -115,7 +114,7 @@ public class AdminAction extends Command {
 			return true;
 		}
 		else {
-			JForum.setRedirect(JForum.getRequest().getContextPath() +"/admBase/login"
+			JForum.setRedirect(JForum.getRequest().getContextPath() + "/admBase/login"
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 
 			return false;

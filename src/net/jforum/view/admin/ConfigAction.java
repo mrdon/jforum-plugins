@@ -54,7 +54,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.ActionServletRequest;
 import net.jforum.Command;
-import net.jforum.JForum;
 import net.jforum.model.ConfigModel;
 import net.jforum.util.preferences.SystemGlobals;
 import freemarker.template.SimpleHash;
@@ -62,7 +61,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ConfigAction.java,v 1.4 2004/12/26 02:31:48 rafaelsteil Exp $
+ * @version $Id: ConfigAction.java,v 1.5 2004/12/27 00:30:51 rafaelsteil Exp $
  */
 public class ConfigAction extends Command {
 	public void list() throws Exception {
@@ -84,20 +83,20 @@ public class ConfigAction extends Command {
 			localesList.add(e.nextElement());
 		}
 
-		JForum.getContext().put("config", p);
-		JForum.getContext().put("locales", localesList);
-		JForum.getContext().put("moduleAction", "config_list.htm");
+		this.context.put("config", p);
+		this.context.put("locales", localesList);
+		this.context.put("moduleAction", "config_list.htm");
 	}
 
 	public void editSave() throws Exception {
 		Properties p = new Properties();
 
-		Enumeration e = JForum.getRequest().getParameterNames();
+		Enumeration e = this.request.getParameterNames();
 		while (e.hasMoreElements()) {
 			String name = (String) e.nextElement();
 
 			if (name.startsWith("p_")) {
-				p.setProperty(name.substring(name.indexOf('_') + 1), JForum.getRequest().getParameter(name));
+				p.setProperty(name.substring(name.indexOf('_') + 1), this.request.getParameter(name));
 			}
 		}
 

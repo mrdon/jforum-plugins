@@ -45,7 +45,6 @@ package net.jforum.view.forum;
 import java.util.List;
 
 import net.jforum.Command;
-import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.entities.Post;
 import net.jforum.entities.PrivateMessage;
@@ -65,7 +64,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.8 2004/11/30 01:18:48 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.9 2004/12/27 00:30:51 rafaelsteil Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -83,9 +82,9 @@ public class PrivateMessageAction extends Command
 		
 		List pmList = DataAccessDriver.getInstance().newPrivateMessageModel().selectFromInbox(user);
 
-		JForum.getContext().put("inbox", true);
-		JForum.getContext().put("pmList", pmList);
-		JForum.getContext().put("moduleAction", "pm_list.htm");
+		this.context.put("inbox", true);
+		this.context.put("pmList", pmList);
+		this.context.put("moduleAction", "pm_list.htm");
 		this.putTypes();		
 	}
 	
@@ -101,17 +100,17 @@ public class PrivateMessageAction extends Command
 		
 		List pmList = DataAccessDriver.getInstance().newPrivateMessageModel().selectFromSent(user);
 
-		JForum.getContext().put("sentbox", true);
-		JForum.getContext().put("pmList", pmList);
-		JForum.getContext().put("moduleAction", "pm_list.htm");
+		this.context.put("sentbox", true);
+		this.context.put("pmList", pmList);
+		this.context.put("moduleAction", "pm_list.htm");
 		this.putTypes();
 	}
 	
 	private void putTypes()
 	{
-		JForum.getContext().put("NEW", new Integer(PrivateMessageType.NEW));
-		JForum.getContext().put("READ", new Integer(PrivateMessageType.READ));
-		JForum.getContext().put("UNREAD", new Integer(PrivateMessageType.UNREAD));
+		this.context.put("NEW", new Integer(PrivateMessageType.NEW));
+		this.context.put("READ", new Integer(PrivateMessageType.READ));
+		this.context.put("UNREAD", new Integer(PrivateMessageType.UNREAD));
 	}
 	
 	public void send() throws Exception
@@ -124,11 +123,11 @@ public class PrivateMessageAction extends Command
 		User user = DataAccessDriver.getInstance().newUserModel().selectById(
 						SessionFacade.getUserSession().getUserId());
 		
-		JForum.getContext().put("user", user);
-		JForum.getContext().put("moduleName", "pm");
-		JForum.getContext().put("action", "sendSave");
-		JForum.getContext().put("moduleAction", "post_form.htm");
-		JForum.getContext().put("htmlAllowed", true);
+		this.context.put("user", user);
+		this.context.put("moduleName", "pm");
+		this.context.put("action", "sendSave");
+		this.context.put("moduleAction", "post_form.htm");
+		this.context.put("htmlAllowed", true);
 	}
 	public void sendTo() throws Exception
 	{
@@ -140,20 +139,20 @@ public class PrivateMessageAction extends Command
 		User user = DataAccessDriver.getInstance().newUserModel().selectById(
 				SessionFacade.getUserSession().getUserId());
 
-		int userId = Integer.parseInt(JForum.getRequest().getParameter("user_id"));
+		int userId = Integer.parseInt(this.request.getParameter("user_id"));
 		if (userId > 0){
 			User user1 = DataAccessDriver.getInstance().newUserModel().selectById(userId);
-			JForum.getContext().put("pmRecipient", user1);
-			JForum.getContext().put("toUserId", String.valueOf(user1.getId()));
-			JForum.getContext().put("toUsername", user1.getUsername());
-			JForum.getContext().put("toUserEmail", user1.getEmail());
+			this.context.put("pmRecipient", user1);
+			this.context.put("toUserId", String.valueOf(user1.getId()));
+			this.context.put("toUsername", user1.getUsername());
+			this.context.put("toUserEmail", user1.getEmail());
 		}
 
-		JForum.getContext().put("user", user);
-		JForum.getContext().put("moduleName", "pm");
-		JForum.getContext().put("action", "sendSave");
-		JForum.getContext().put("moduleAction", "post_form.htm");
-		JForum.getContext().put("htmlAllowed", true);
+		this.context.put("user", user);
+		this.context.put("moduleName", "pm");
+		this.context.put("action", "sendSave");
+		this.context.put("moduleAction", "post_form.htm");
+		this.context.put("htmlAllowed", true);
 	}
 	
 	public void sendSave() throws Exception
@@ -163,9 +162,9 @@ public class PrivateMessageAction extends Command
 			return;
 		}
 		
-		String sId = JForum.getRequest().getParameter("toUserId");
-		String toUsername = JForum.getRequest().getParameter("toUsername");
-		String userEmail = JForum.getRequest().getParameter("toUserEmail");
+		String sId = this.request.getParameter("toUserId");
+		String toUsername = this.request.getParameter("toUsername");
+		String userEmail = this.request.getParameter("toUserEmail");
 		
 		int toUserId = -1;
 		if (sId == null || sId.equals("")) {
@@ -183,8 +182,8 @@ public class PrivateMessageAction extends Command
 		
 		// We failed to get the user id?
 		if (toUserId == -1) {
-			JForum.getContext().put("moduleAction", "message.htm");
-			JForum.getContext().put("message", I18n.getMessage("PrivateMessage.userIdNotFound"));
+			this.context.put("moduleAction", "message.htm");
+			this.context.put("message", I18n.getMessage("PrivateMessage.userIdNotFound"));
 			return;
 		}
 		
@@ -201,13 +200,13 @@ public class PrivateMessageAction extends Command
 		toUser.setEmail(userEmail);
 		pm.setToUser(toUser);
 		
-		boolean preview = (JForum.getRequest().getParameter("preview") != null);
+		boolean preview = (this.request.getParameter("preview") != null);
 		if (!preview) {
 			DataAccessDriver.getInstance().newPrivateMessageModel().send(pm);
 			
-			JForum.getContext().put("moduleAction", "message.htm");
-			JForum.getContext().put("message", I18n.getMessage("PrivateMessage.messageSent", 
-							new String[] { JForum.getRequest().getContextPath() +"/pm/inbox"
+			this.context.put("moduleAction", "message.htm");
+			this.context.put("message", I18n.getMessage("PrivateMessage.messageSent", 
+							new String[] { this.request.getContextPath() +"/pm/inbox"
 											+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)}));
 			
 			// If the target user if in the forum, then increments its 
@@ -230,12 +229,12 @@ public class PrivateMessageAction extends Command
 			}
 		}
 		else {
-			JForum.getContext().put("preview", true);
-			JForum.getContext().put("post", pm.getPost());
+			this.context.put("preview", true);
+			this.context.put("post", pm.getPost());
 			
 			Post postPreview = new Post(pm.getPost());
-			JForum.getContext().put("postPreview", PostCommon.preparePostForDisplay(postPreview));
-			JForum.getContext().put("pm", pm);
+			this.context.put("postPreview", PostCommon.preparePostForDisplay(postPreview));
+			this.context.put("pm", pm);
 
 			this.send();
 		}
@@ -244,16 +243,16 @@ public class PrivateMessageAction extends Command
 	public void findUser() throws Exception
 	{
 		boolean showResult = false;
-		String username = JForum.getRequest().getParameter("username");
+		String username = this.request.getParameter("username");
 
 		if (username != null && !username.equals("")) {
 			List namesList = DataAccessDriver.getInstance().newUserModel().findByName(username, false);
-			JForum.getContext().put("namesList", namesList);
+			this.context.put("namesList", namesList);
 			showResult = true;
 		}
 		
-		JForum.getContext().put("username", username);
-		JForum.getContext().put("showResult", showResult);
+		this.context.put("username", username);
+		this.context.put("showResult", showResult);
 		this.setTemplateName("default/pm_finduser.htm");
 	}
 	
@@ -264,7 +263,7 @@ public class PrivateMessageAction extends Command
 			return;
 		}
 		
-		int id = Integer.parseInt(JForum.getRequest().getParameter("id"));
+		int id = Integer.parseInt(this.request.getParameter("id"));
 		
 		PrivateMessage pm = new PrivateMessage();
 		pm.setId(id);
@@ -290,12 +289,12 @@ public class PrivateMessageAction extends Command
             u.setSignature(PostCommon.processSmilies(u.getSignature(), 
             		SmiliesRepository.getSmilies()));
             
-			JForum.getContext().put("pm", pm);
-			JForum.getContext().put("moduleAction", "pm_read_message.htm");
+			this.context.put("pm", pm);
+			this.context.put("moduleAction", "pm_read_message.htm");
 		}
 		else {
-			JForum.getContext().put("moduleAction", "message.htm");
-			JForum.getContext().put("message", I18n.getMessage("PrivateMessage.readDenied"));
+			this.context.put("moduleAction", "message.htm");
+			this.context.put("message", I18n.getMessage("PrivateMessage.readDenied"));
 		}
 	}
 	
@@ -306,7 +305,7 @@ public class PrivateMessageAction extends Command
 			return;
 		}
 		
-		String ids[] = JForum.getRequest().getParameterValues("id");
+		String ids[] = this.request.getParameterValues("id");
 		
 		if (ids != null && ids.length > 0) {
 			PrivateMessage[] pm = new PrivateMessage[ids.length];
@@ -322,9 +321,9 @@ public class PrivateMessageAction extends Command
 			DataAccessDriver.getInstance().newPrivateMessageModel().delete(pm);
 		}
 		
-		JForum.getContext().put("moduleAction", "message.htm");
-		JForum.getContext().put("message", I18n.getMessage("PrivateMessage.deleteDone", 
-						new String[] { JForum.getRequest().getContextPath() + "/pm/inbox"
+		this.context.put("moduleAction", "message.htm");
+		this.context.put("message", I18n.getMessage("PrivateMessage.deleteDone", 
+						new String[] { this.request.getContextPath() + "/pm/inbox"
 										+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)}));
 	}
 	
@@ -335,7 +334,7 @@ public class PrivateMessageAction extends Command
 			return;
 		}
 		
-		int id = Integer.parseInt(JForum.getRequest().getParameter("id"));
+		int id = Integer.parseInt(this.request.getParameter("id"));
 		
 		PrivateMessage pm = new PrivateMessage();
 		pm.setId(id);
@@ -343,12 +342,12 @@ public class PrivateMessageAction extends Command
 		
 		pm.getPost().setSubject(I18n.getMessage("PrivateMessage.replyPrefix") + pm.getPost().getSubject());
 		
-		JForum.getContext().put("moduleAction", "post_form.htm");
-		JForum.getContext().put("htmlAllowed", true);
-		JForum.getContext().put("action", "sendSave");
-		JForum.getContext().put("pm", pm);
-		JForum.getContext().put("pmReply", true);
-		JForum.getContext().put("user", DataAccessDriver.getInstance().newUserModel().selectById(
+		this.context.put("moduleAction", "post_form.htm");
+		this.context.put("htmlAllowed", true);
+		this.context.put("action", "sendSave");
+		this.context.put("pm", pm);
+		this.context.put("pmReply", true);
+		this.context.put("user", DataAccessDriver.getInstance().newUserModel().selectById(
 						SessionFacade.getUserSession().getUserId()));
 	}
 	
@@ -359,7 +358,7 @@ public class PrivateMessageAction extends Command
 			return;
 		}
 		
-		int id = Integer.parseInt(JForum.getRequest().getParameter("id"));
+		int id = Integer.parseInt(this.request.getParameter("id"));
 		
 		PrivateMessage pm = new PrivateMessage();
 		pm.setId(id);
@@ -367,14 +366,14 @@ public class PrivateMessageAction extends Command
 		
 		pm.getPost().setSubject(I18n.getMessage("PrivateMessage.replyPrefix") + pm.getPost().getSubject());
 		
-		JForum.getContext().put("quote", "true");
-		JForum.getContext().put("action", "sendSave");
-		JForum.getContext().put("quoteUser", pm.getFromUser().getUsername());
-		JForum.getContext().put("moduleAction", "post_form.htm");
-		JForum.getContext().put("post", pm.getPost());
-		JForum.getContext().put("pm", pm);
-		JForum.getContext().put("htmlAllowed", true);
-		JForum.getContext().put("user", DataAccessDriver.getInstance().newUserModel().selectById(
+		this.context.put("quote", "true");
+		this.context.put("action", "sendSave");
+		this.context.put("quoteUser", pm.getFromUser().getUsername());
+		this.context.put("moduleAction", "post_form.htm");
+		this.context.put("post", pm.getPost());
+		this.context.put("pm", pm);
+		this.context.put("htmlAllowed", true);
+		this.context.put("user", DataAccessDriver.getInstance().newUserModel().selectById(
 						SessionFacade.getUserSession().getUserId()));
 	}
 	

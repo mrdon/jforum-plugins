@@ -71,7 +71,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.21 2004/12/18 15:15:30 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.22 2004/12/27 00:30:51 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -80,29 +80,29 @@ public class ForumAction extends Command
 		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
 		UserModel um = DataAccessDriver.getInstance().newUserModel();
 		
-		JForum.getContext().put("allCategories", ForumCommon.getAllCategoriesAndForums(true));
-		JForum.getContext().put("topicsPerPage",  new Integer(SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE)));
-		JForum.getContext().put("moduleAction", "forum_list.htm");
-		JForum.getContext().put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
+		this.context.put("allCategories", ForumCommon.getAllCategoriesAndForums(true));
+		this.context.put("topicsPerPage",  new Integer(SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE)));
+		this.context.put("moduleAction", "forum_list.htm");
+		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
 		
-		JForum.getContext().put("totalMessages", I18n.getMessage("ForumListing.totalMessagesInfo", 
+		this.context.put("totalMessages", I18n.getMessage("ForumListing.totalMessagesInfo", 
 						new Object[] {new Integer( ForumRepository.getTotalMessages() )}));
 		
-		JForum.getContext().put("totalUsers", I18n.getMessage("ForumListing.registeredUsers", new Object[] {new Integer(um.getTotalUsers())}));
+		this.context.put("totalUsers", I18n.getMessage("ForumListing.registeredUsers", new Object[] {new Integer(um.getTotalUsers())}));
 
 		User lastUser = um.getLastUserInfo();		
-		JForum.getContext().put("lastUserId", new Integer(lastUser.getId()));
-		JForum.getContext().put("lastUserName", lastUser.getUsername());
+		this.context.put("lastUserId", new Integer(lastUser.getId()));
+		this.context.put("lastUserName", lastUser.getUsername());
 		
 		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
 		GregorianCalendar gc = new GregorianCalendar();
-		JForum.getContext().put("now", df.format(gc.getTime()));
+		this.context.put("now", df.format(gc.getTime()));
 		
-		JForum.getContext().put("lastVisit", df.format(SessionFacade.getUserSession().getLastVisit()));
-		JForum.getContext().put("fir", new ForumRepository());
+		this.context.put("lastVisit", df.format(SessionFacade.getUserSession().getLastVisit()));
+		this.context.put("fir", new ForumRepository());
 		
 		// Online Users
-		JForum.getContext().put("totalOnlineUsers", new Integer(SessionFacade.size()));
+		this.context.put("totalOnlineUsers", new Integer(SessionFacade.size()));
 		int guest = 0;
 		int registered = 0;
 		int aid = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
@@ -124,7 +124,7 @@ public class ForumAction extends Command
 		// Check for an optional language parameter
 		UserSession currentUser = SessionFacade.getUserSession();
 		if (currentUser.getUserId() == aid) {
-			String lang = JForum.getRequest().getParameter("lang");
+			String lang = this.request.getParameter("lang");
 			if (lang != null && I18n.languageExists(lang)) {
 				currentUser.setLang(lang);
 			}
@@ -141,8 +141,8 @@ public class ForumAction extends Command
 			onlineUsersList.add(us);
 		}
 		
-		JForum.getContext().put("userSessions", onlineUsersList);
-		JForum.getContext().put("usersOnline", I18n.getMessage("ForumListing.numberOfUsersOnline", 
+		this.context.put("userSessions", onlineUsersList);
+		this.context.put("usersOnline", I18n.getMessage("ForumListing.numberOfUsersOnline", 
 			new Object[] {
 					   new Integer(SessionFacade.size()),
 					   new Integer(registered),
@@ -152,13 +152,13 @@ public class ForumAction extends Command
 	
 	public void moderation() throws Exception
 	{
-		JForum.getContext().put("openModeration", true);
+		this.context.put("openModeration", true);
 		this.show();
 	}
 
 	public void show() throws Exception
 	{
-		int forumId = Integer.parseInt(JForum.getRequest().getParameter("forum_id"));
+		int forumId = Integer.parseInt(this.request.getParameter("forum_id"));
 		
 		// The user can access this forum?
 		if (!SecurityRepository.canAccess(SecurityConstants.PERM_FORUM, Integer.toString(forumId))) {
@@ -176,21 +176,21 @@ public class ForumAction extends Command
 		
 		Forum forum = ForumRepository.getForum(forumId);
 
-		JForum.getContext().put("topics", TopicsCommon.prepareTopics(tmpTopics));
-		JForum.getContext().put("allCategories", ForumCommon.getAllCategoriesAndForums());
-		JForum.getContext().put("forum", forum);
-		JForum.getContext().put("moduleAction", "forum_show.htm");
-		JForum.getContext().put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
-		JForum.getContext().put("pageTitle", SystemGlobals.getValue(ConfigKeys.FORUM_NAME) + " - " + forum.getName());
+		this.context.put("topics", TopicsCommon.prepareTopics(tmpTopics));
+		this.context.put("allCategories", ForumCommon.getAllCategoriesAndForums());
+		this.context.put("forum", forum);
+		this.context.put("moduleAction", "forum_show.htm");
+		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
+		this.context.put("pageTitle", SystemGlobals.getValue(ConfigKeys.FORUM_NAME) + " - " + forum.getName());
 		
 		// Pagination
-		JForum.getContext().put("totalPages", new Double(Math.ceil( (double)totalTopics / (double)topicsPerPage )));
-		JForum.getContext().put("recordsPerPage", new Integer(topicsPerPage));
-		JForum.getContext().put("totalRecords", new Integer(totalTopics));
-		JForum.getContext().put("thisPage", new Double(Math.ceil( (double)(start+1) / (double)topicsPerPage )));
-		JForum.getContext().put("start", new Integer(start));
-		JForum.getContext().put("postsPerPage", new Integer(postsPerPage));
-		JForum.getContext().put("readonly", !SecurityRepository.canAccess(SecurityConstants.PERM_READ_ONLY_FORUMS, 
+		this.context.put("totalPages", new Double(Math.ceil( (double)totalTopics / (double)topicsPerPage )));
+		this.context.put("recordsPerPage", new Integer(topicsPerPage));
+		this.context.put("totalRecords", new Integer(totalTopics));
+		this.context.put("thisPage", new Double(Math.ceil( (double)(start+1) / (double)topicsPerPage )));
+		this.context.put("start", new Integer(start));
+		this.context.put("postsPerPage", new Integer(postsPerPage));
+		this.context.put("readonly", !SecurityRepository.canAccess(SecurityConstants.PERM_READ_ONLY_FORUMS, 
 				Integer.toString(forumId)));
 
 		TopicsCommon.topicListingBase();
@@ -214,16 +214,16 @@ public class ForumAction extends Command
 	// Make an URL to some action
 	private String makeRedirect(String action)
 	{
-		String path = JForum.getRequest().getContextPath() +"/forums/"+ action +"/";
-		String thisPage = JForum.getRequest().getParameter("start");
+		String path = this.request.getContextPath() +"/forums/"+ action +"/";
+		String thisPage = this.request.getParameter("start");
 		
 		if (thisPage != null && !thisPage.equals("0")) {
 			path += thisPage +"/";
 		}
 		
-		String forumId = JForum.getRequest().getParameter("forum_id");
+		String forumId = this.request.getParameter("forum_id");
 		if (forumId == null) {
-			forumId = JForum.getRequest().getParameter("persistData"); 
+			forumId = this.request.getParameter("persistData"); 
 		}
 
 		path += forumId + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
@@ -237,7 +237,7 @@ public class ForumAction extends Command
 		SearchData sd = new SearchData();
 		sd.setTime(SessionFacade.getUserSession().getLastVisit());
 		
-		String forumId = JForum.getRequest().getParameter("forum_id");
+		String forumId = this.request.getParameter("forum_id");
 		if (forumId != null) {
 			sd.setForumId(Integer.parseInt(forumId));
 		}
@@ -254,7 +254,7 @@ public class ForumAction extends Command
 			JForum.setRedirect(this.makeRedirect("show"));
 		}
 		else {
-			JForum.setRedirect(JForum.getRequest().getContextPath() +"/forums/list"
+			JForum.setRedirect(this.request.getContextPath() +"/forums/list"
 					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		}
 	}
@@ -262,10 +262,10 @@ public class ForumAction extends Command
 	// Messages since last visit
 	public void newMessages() throws Exception
 	{
-		JForum.getRequest().addParameter("post_time", Long.toString(SessionFacade.getUserSession().getLastVisit().getTime()));
-		JForum.getRequest().addParameter("clean", "true");
-		JForum.getRequest().addParameter("sort_by", "t.topic_time");
-		JForum.getRequest().addParameter("sort_dir", "DESC");
+		this.request.addParameter("post_time", Long.toString(SessionFacade.getUserSession().getLastVisit().getTime()));
+		this.request.addParameter("clean", "true");
+		this.request.addParameter("sort_by", "t.topic_time");
+		this.request.addParameter("sort_dir", "DESC");
 		new SearchAction().search();
 	}
 	

@@ -40,7 +40,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: RankingAction.java,v 1.3 2004/12/26 02:31:48 rafaelsteil Exp $
+ * $Id: RankingAction.java,v 1.4 2004/12/27 00:30:51 rafaelsteil Exp $
  */
 package net.jforum.view.admin;
 
@@ -51,7 +51,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.ActionServletRequest;
 import net.jforum.Command;
-import net.jforum.JForum;
 import net.jforum.entities.Ranking;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.RankingModel;
@@ -67,32 +66,32 @@ public class RankingAction extends Command
 	// List
 	public void list() throws Exception
 	{
-		JForum.getContext().put("ranks", DataAccessDriver.getInstance().newRankingModel().selectAll());
-		JForum.getContext().put("moduleAction", "ranking_list.htm");
+		this.context.put("ranks", DataAccessDriver.getInstance().newRankingModel().selectAll());
+		this.context.put("moduleAction", "ranking_list.htm");
 	}
 	
 	// One more, one more
 	public void insert() throws Exception
 	{
-		JForum.getContext().put("moduleAction", "ranking_form.htm");
-		JForum.getContext().put("action", "insertSave");
+		this.context.put("moduleAction", "ranking_form.htm");
+		this.context.put("action", "insertSave");
 	}
 	
 	// Edit
 	public void edit() throws Exception
 	{
-		JForum.getContext().put("rank", DataAccessDriver.getInstance().newRankingModel().selectById(Integer.parseInt(JForum.getRequest().getParameter("ranking_id"))));
-		JForum.getContext().put("moduleAction", "ranking_form.htm");
-		JForum.getContext().put("action", "editSave");
+		this.context.put("rank", DataAccessDriver.getInstance().newRankingModel().selectById(Integer.parseInt(this.request.getParameter("ranking_id"))));
+		this.context.put("moduleAction", "ranking_form.htm");
+		this.context.put("action", "editSave");
 	}
 	
 	//  Save information
 	public void editSave() throws Exception
 	{
 		Ranking r = new Ranking();
-		r.setTitle(JForum.getRequest().getParameter("rank_title"));
-		r.setMin(Integer.parseInt(JForum.getRequest().getParameter("rank_min")));
-		r.setId(Integer.parseInt(JForum.getRequest().getParameter("rank_id")));
+		r.setTitle(this.request.getParameter("rank_title"));
+		r.setMin(Integer.parseInt(this.request.getParameter("rank_min")));
+		r.setId(Integer.parseInt(this.request.getParameter("rank_id")));
 		
 		// TODO: needs to add support to images 
 		
@@ -104,7 +103,7 @@ public class RankingAction extends Command
 	// Delete
 	public void delete() throws Exception
 	{
-		String ids[] = JForum.getRequest().getParameterValues("rank_id");
+		String ids[] = this.request.getParameterValues("rank_id");
 		
 		RankingModel rm = DataAccessDriver.getInstance().newRankingModel();
 		
@@ -121,8 +120,8 @@ public class RankingAction extends Command
 	public void insertSave() throws Exception
 	{
 		Ranking r = new Ranking();
-		r.setTitle(JForum.getRequest().getParameter("rank_title"));
-		r.setMin(Integer.parseInt(JForum.getRequest().getParameter("rank_min")));
+		r.setTitle(this.request.getParameter("rank_title"));
+		r.setMin(Integer.parseInt(this.request.getParameter("rank_min")));
 		
 		// TODO: need to add support to images
 		DataAccessDriver.getInstance().newRankingModel().addNew(r);

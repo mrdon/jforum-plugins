@@ -72,7 +72,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.20 2004/12/19 22:32:12 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.21 2004/12/27 00:30:51 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -82,14 +82,14 @@ public class UserAction extends Command
 	{
 		int tmpId = SessionFacade.getUserSession().getUserId();
 		if (SessionFacade.isLogged() 
-				&& tmpId == Integer.parseInt(JForum.getRequest().getParameter("user_id"))) {
-			int userId = Integer.parseInt(JForum.getRequest().getParameter("user_id"));
+				&& tmpId == Integer.parseInt(this.request.getParameter("user_id"))) {
+			int userId = Integer.parseInt(this.request.getParameter("user_id"));
 			UserModel um = DataAccessDriver.getInstance().newUserModel();
 			User u = um.selectById(userId);
 
-			JForum.getContext().put("u", u);
-			JForum.getContext().put("action", "editSave");
-			JForum.getContext().put("moduleAction", "user_form.htm");
+			this.context.put("u", u);
+			this.context.put("action", "editSave");
+			this.context.put("moduleAction", "user_form.htm");
 		} 
 		else {
 			this.profile();
@@ -98,21 +98,21 @@ public class UserAction extends Command
 
 	public void editDone() throws Exception
 	{
-		JForum.getContext().put("editDone", true);
+		this.context.put("editDone", true);
 		this.edit();
 	}
 
 	public void editSave() throws Exception 
 	{
-		int userId = Integer.parseInt(JForum.getRequest().getParameter("user_id"));
+		int userId = Integer.parseInt(this.request.getParameter("user_id"));
 		List warns = UserCommon.saveUser(userId);
 
 		if (warns.size() > 0) {
-			JForum.getContext().put("warns", warns);
+			this.context.put("warns", warns);
 			this.edit();
 		} 
 		else {
-			JForum.setRedirect(JForum.getRequest().getContextPath()
+			JForum.setRedirect(this.request.getContextPath()
 					+ "/user/editDone/" + userId
 					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		}
@@ -120,13 +120,13 @@ public class UserAction extends Command
 
 	public void insert() 
 	{
-		JForum.getContext().put("action", "insertSave");
-		JForum.getContext().put("moduleAction", "user_new.htm");
+		this.context.put("action", "insertSave");
+		this.context.put("moduleAction", "user_new.htm");
 		
 		if (SystemGlobals.getBoolValue(ConfigKeys.CAPTCHA_REGISTRATION)){
 			//create a new image captcha
 			SessionFacade.getUserSession().createNewCaptcha();
-			JForum.getContext().put("captcha_reg", true);
+			this.context.put("captcha_reg", true);
 		}
 	}
 
@@ -135,24 +135,24 @@ public class UserAction extends Command
 		User u = new User();
 		UserModel um = DataAccessDriver.getInstance().newUserModel();
 
-		String username = JForum.getRequest().getParameter("username");
-		String password = JForum.getRequest().getParameter("password");
-		String captchaResponse = JForum.getRequest().getParameter("captchaResponse");
+		String username = this.request.getParameter("username");
+		String password = this.request.getParameter("password");
+		String captchaResponse = this.request.getParameter("captchaResponse");
 
 		boolean error = false;
 		if (username == null || username.trim().equals("") 
 				|| password == null || password.trim().equals("")) {
-			JForum.getContext().put("error", I18n.getMessage("UsernamePasswordCannotBeNull"));
+			this.context.put("error", I18n.getMessage("UsernamePasswordCannotBeNull"));
 			error = true;
 		}
 
-		if (!error && um.isUsernameRegistered(JForum.getRequest().getParameter("username"))) {
-			JForum.getContext().put("error", I18n.getMessage("UsernameExists"));
+		if (!error && um.isUsernameRegistered(this.request.getParameter("username"))) {
+			this.context.put("error", I18n.getMessage("UsernameExists"));
 			error = true;
 		}
 		
 		if (!error && !SessionFacade.getUserSession().validateCaptchaResponse(captchaResponse)){
-			JForum.getContext().put("error", I18n.getMessage("CaptchaResponseFails"));
+			this.context.put("error", I18n.getMessage("CaptchaResponseFails"));
 			error = true;
 		}
 
@@ -164,7 +164,7 @@ public class UserAction extends Command
 
 		u.setUsername(username);
 		u.setPassword(MD5.crypt(password));
-		u.setEmail(JForum.getRequest().getParameter("email"));
+		u.setEmail(this.request.getParameter("email"));
 
 		if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_USER_EMAIL_AUTH)) {
 			u.setActivationKey(MD5.crypt(username + System.currentTimeMillis()));
@@ -183,8 +183,8 @@ public class UserAction extends Command
 				e.printStackTrace();
 			}
 
-			JForum.getContext().put("moduleAction", "message.htm");
-			JForum.getContext().put("message", I18n.getMessage("User.GoActivateAccountMessage"));
+			this.context.put("moduleAction", "message.htm");
+			this.context.put("message", I18n.getMessage("User.GoActivateAccountMessage"));
 		} 
 		else {
 			this.logNewRegisteredUserIn(userId, u);
@@ -193,8 +193,8 @@ public class UserAction extends Command
 
 	public void activateAccount() throws Exception 
 	{
-		String hash = JForum.getRequest().getParameter("hash");
-		int userId = (new Integer(JForum.getRequest().getParameter("user_id"))).intValue();
+		String hash = this.request.getParameter("hash");
+		int userId = (new Integer(this.request.getParameter("user_id"))).intValue();
 
 		String message = "";
 
@@ -209,8 +209,8 @@ public class UserAction extends Command
 		} 
 		else {
 			message = I18n.getMessage("User.invalidActivationKey");
-			JForum.getContext().put("moduleAction", "message.htm");
-			JForum.getContext().put("message", message);
+			this.context.put("moduleAction", "message.htm");
+			this.context.put("message", message);
 		}
 
 	}
@@ -229,7 +229,7 @@ public class UserAction extends Command
 		SessionFacade.add(userSession);
 
 		// Finalizing.. show to user the congrats page
-		JForum.setRedirect(JForum.getRequest().getContextPath()
+		JForum.setRedirect(this.request.getContextPath()
 				+ "/user/registrationComplete"
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 	}
@@ -243,20 +243,20 @@ public class UserAction extends Command
 
 		String message = I18n.getMessage("User.RegistrationCompleteMessage", 
 				new Object[] { profilePage, homePage });
-		JForum.getContext().put("message", message);
-		JForum.getContext().put("moduleAction", "registration_complete.htm");
+		this.context.put("message", message);
+		this.context.put("moduleAction", "registration_complete.htm");
 	}
 
 	public void validateLogin() throws Exception 
 	{
 		boolean validInfo = false;
 
-		String password = JForum.getRequest().getParameter("password");
+		String password = this.request.getParameter("password");
 		if (password.length() > 0) {
-			User user = this.validateLogin(JForum.getRequest().getParameter("username"), password);
+			User user = this.validateLogin(this.request.getParameter("username"), password);
 
 			if (user != null) {
-				JForum.setRedirect(JForum.getRequest().getContextPath()
+				JForum.setRedirect(this.request.getContextPath()
 						+ "/forums/list"
 						+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 
@@ -284,7 +284,7 @@ public class UserAction extends Command
 				I18n.load(user.getLang());
 
 				// Autologin
-				if (JForum.getRequest().getParameter("autologin") != null) {
+				if (this.request.getParameter("autologin") != null) {
 					userSession.setAutoLogin(true);
 					JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN), "1");
 				}
@@ -313,19 +313,19 @@ public class UserAction extends Command
 
 		// Invalid login
 		if (validInfo == false) {
-			JForum.getContext().put("invalidLogin", "1");
-			JForum.getContext().put("moduleAction", "forum_login.htm");
+			this.context.put("invalidLogin", "1");
+			this.context.put("moduleAction", "forum_login.htm");
 
-			if (JForum.getRequest().getParameter("returnPath") != null) {
-				JForum.getContext().put("returnPath",
-						JForum.getRequest().getParameter("returnPath"));
+			if (this.request.getParameter("returnPath") != null) {
+				this.context.put("returnPath",
+						this.request.getParameter("returnPath"));
 			}
 		} 
 		else if (ViewCommon.needReprocessRequest()) {
 			ViewCommon.reprocessRequest();
 		}
-		else if (JForum.getRequest().getParameter("returnPath") != null) {
-			JForum.setRedirect(JForum.getRequest().getParameter("returnPath"));
+		else if (this.request.getParameter("returnPath") != null) {
+			JForum.setRedirect(this.request.getParameter("returnPath"));
 		}
 	}
 
@@ -340,16 +340,16 @@ public class UserAction extends Command
 	{
 		UserModel um = DataAccessDriver.getInstance().newUserModel();
 
-		User u = um.selectById(Integer.parseInt(JForum.getRequest().getParameter("user_id")));
+		User u = um.selectById(Integer.parseInt(this.request.getParameter("user_id")));
 
-		JForum.getContext().put("moduleAction", "user_profile.htm");
-		JForum.getContext().put("rank", new RankingRepository());
-		JForum.getContext().put("u", u);
+		this.context.put("moduleAction", "user_profile.htm");
+		this.context.put("rank", new RankingRepository());
+		this.context.put("u", u);
 	}
 
 	public void logout() throws Exception 
 	{
-		JForum.setRedirect(JForum.getRequest().getContextPath()
+		JForum.setRedirect(this.request.getContextPath()
 				+ "/forums/list"
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 
@@ -370,17 +370,17 @@ public class UserAction extends Command
 
 	public void login() throws Exception 
 	{
-		if (JForum.getRequest().getParameter("returnPath") != null) {
-			JForum.getContext().put("returnPath", JForum.getRequest().getParameter("returnPath"));
+		if (this.request.getParameter("returnPath") != null) {
+			this.context.put("returnPath", this.request.getParameter("returnPath"));
 		}
 
-		JForum.getContext().put("moduleAction", "forum_login.htm");
+		this.context.put("moduleAction", "forum_login.htm");
 	}
 
 	// Lost password form
 	public void lostPassword() 
 	{
-		JForum.getContext().put("moduleAction", "lost_password.htm");
+		this.context.put("moduleAction", "lost_password.htm");
 	}
 	
 	public User prepareLostPassword(String username, String email) throws Exception
@@ -414,13 +414,13 @@ public class UserAction extends Command
 	// Send lost password email
 	public void lostPasswordSend() throws Exception 
 	{
-		String email = JForum.getRequest().getParameter("email");
-		String username = JForum.getRequest().getParameter("username");
+		String email = this.request.getParameter("email");
+		String username = this.request.getParameter("username");
 
 		User user = this.prepareLostPassword(username, email);
 		if (user == null) {
 			// user could not be found
-			JForum.getContext().put("message",
+			this.context.put("message",
 					I18n.getMessage("PasswordRecovery.invalidUserEmail"));
 			this.lostPassword();
 			return;
@@ -435,11 +435,11 @@ public class UserAction extends Command
 			logger.warn("Error while sending email: " + e);
 		}
 
-		JForum.getContext().put("moduleAction", "message.htm");
-		JForum.getContext().put("message", I18n.getMessage(
+		this.context.put("moduleAction", "message.htm");
+		this.context.put("message", I18n.getMessage(
 										"PasswordRecovery.emailSent",
 										new String[] { 
-												JForum.getRequest().getContextPath()
+												this.request.getContextPath()
 												+ "/user/login"
 												+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) 
 											}));
@@ -448,26 +448,26 @@ public class UserAction extends Command
 	// Recover user password ( aka, ask him a new one )
 	public void recoverPassword() throws Exception 
 	{
-		String hash = JForum.getRequest().getParameter("hash");
+		String hash = this.request.getParameter("hash");
 
-		JForum.getContext().put("moduleAction", "recover_password.htm");
-		JForum.getContext().put("recoverHash", hash);
+		this.context.put("moduleAction", "recover_password.htm");
+		this.context.put("recoverHash", hash);
 	}
 
 	public void recoverPasswordValidate() throws Exception 
 	{
-		String hash = JForum.getRequest().getParameter("recoverHash");
-		String email = JForum.getRequest().getParameter("email");
+		String hash = this.request.getParameter("recoverHash");
+		String email = this.request.getParameter("email");
 
 		String message = "";
 
 		boolean isOk = DataAccessDriver.getInstance().newUserModel().validateLostPasswordHash(email, hash);
 		if (isOk) {
-			String password = JForum.getRequest().getParameter("newPassword");
+			String password = this.request.getParameter("newPassword");
 			DataAccessDriver.getInstance().newUserModel().saveNewPassword(MD5.crypt(password), email);
 
 			message = I18n.getMessage("PasswordRecovery.ok",
-					new String[] { JForum.getRequest().getContextPath()
+					new String[] { this.request.getContextPath()
 							+ "/user/login"
 							+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) });
 		} 
@@ -475,8 +475,8 @@ public class UserAction extends Command
 			message = I18n.getMessage("PasswordRecovery.invalidData");
 		}
 
-		JForum.getContext().put("moduleAction", "message.htm");
-		JForum.getContext().put("message", message);
+		this.context.put("moduleAction", "message.htm");
+		this.context.put("message", message);
 	}
 
 	public void list() throws Exception 

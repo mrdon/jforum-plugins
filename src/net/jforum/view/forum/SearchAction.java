@@ -50,7 +50,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.jforum.Command;
-import net.jforum.JForum;
 import net.jforum.entities.Topic;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.SearchData;
@@ -64,7 +63,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.12 2004/12/19 15:17:12 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.13 2004/12/27 00:30:52 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -94,21 +93,21 @@ public class SearchAction extends Command
 	
 	public void filters() throws Exception
 	{
-		JForum.getContext().put("moduleAction", "search.htm");
-		JForum.getContext().put("categories", ForumRepository.getAllCategories());
+		this.context.put("moduleAction", "search.htm");
+		this.context.put("categories", ForumRepository.getAllCategories());
 	}
 	
 	private void getSearchFields()
 	{
-		this.searchTerms = this.addSlashes(JForum.getRequest().getParameter("search_terms"));
-		this.forum = this.addSlashes(JForum.getRequest().getParameter("search_forum"));
-		this.category = this.addSlashes(JForum.getRequest().getParameter("search_cat"));
-		this.sortBy = this.addSlashes(JForum.getRequest().getParameter("sort_by"));
-		this.sortDir = this.addSlashes(JForum.getRequest().getParameter("sort_dir"));
-		this.kw = this.addSlashes(JForum.getRequest().getParameter("search_keywords"));
-		this.author = this.addSlashes(JForum.getRequest().getParameter("search_author"));
-		this.postTime = this.addSlashes(JForum.getRequest().getParameter("post_time"));
-		this.s = JForum.getRequest().getParameter("start");
+		this.searchTerms = this.addSlashes(this.request.getParameter("search_terms"));
+		this.forum = this.addSlashes(this.request.getParameter("search_forum"));
+		this.category = this.addSlashes(this.request.getParameter("search_cat"));
+		this.sortBy = this.addSlashes(this.request.getParameter("sort_by"));
+		this.sortDir = this.addSlashes(this.request.getParameter("sort_dir"));
+		this.kw = this.addSlashes(this.request.getParameter("search_keywords"));
+		this.author = this.addSlashes(this.request.getParameter("search_author"));
+		this.postTime = this.addSlashes(this.request.getParameter("post_time"));
+		this.s = this.request.getParameter("start");
 	}
 	
 	public void search() throws Exception
@@ -146,7 +145,7 @@ public class SearchAction extends Command
 		SearchModel sm = DataAccessDriver.getInstance().newSearchModel();
 
 		// Clean the search
-		if (JForum.getRequest().getParameter("clean") != null) {
+		if (this.request.getParameter("clean") != null) {
 			sm.cleanSearch();
 		}
 		else {
@@ -159,35 +158,35 @@ public class SearchAction extends Command
 		
 		List topics = TopicsCommon.prepareTopics(allTopics.subList(start, sublistLimit));
 		
-		JForum.getContext().put("fr", new ForumRepository());
+		this.context.put("fr", new ForumRepository());
 		
-		JForum.getContext().put("topics", topics);
-		JForum.getContext().put("categories", ForumRepository.getAllCategories());
-		JForum.getContext().put("moduleAction", "search_result.htm");
+		this.context.put("topics", topics);
+		this.context.put("categories", ForumRepository.getAllCategories());
+		this.context.put("moduleAction", "search_result.htm");
 		
 		// Pagination
-		JForum.getContext().put("kw", kw);
-		JForum.getContext().put("terms", searchTerms);
-		JForum.getContext().put("forum", forum);
-		JForum.getContext().put("category", category);
-		JForum.getContext().put("orderField", sortBy);
-		JForum.getContext().put("orderBy", sortDir);
-		JForum.getContext().put("author", author);
-		JForum.getContext().put("postTime", postTime);
+		this.context.put("kw", kw);
+		this.context.put("terms", searchTerms);
+		this.context.put("forum", forum);
+		this.context.put("category", category);
+		this.context.put("orderField", sortBy);
+		this.context.put("orderBy", sortDir);
+		this.context.put("author", author);
+		this.context.put("postTime", postTime);
 		
-		JForum.getContext().put("totalPages", new Double(Math.ceil((float)totalTopics / recordsPerPage)));
-		JForum.getContext().put("recordsPerPage", new Integer(recordsPerPage));
-		JForum.getContext().put("postsPerPage", new Integer(SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE)));
-		JForum.getContext().put("totalRecords", new Integer(totalTopics));
-		JForum.getContext().put("thisPage", new Double(Math.ceil( (double)(start + 1) / (double)recordsPerPage)));
-		JForum.getContext().put("start", new Integer(start));
+		this.context.put("totalPages", new Double(Math.ceil((float)totalTopics / recordsPerPage)));
+		this.context.put("recordsPerPage", new Integer(recordsPerPage));
+		this.context.put("postsPerPage", new Integer(SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE)));
+		this.context.put("totalRecords", new Integer(totalTopics));
+		this.context.put("thisPage", new Double(Math.ceil( (double)(start + 1) / (double)recordsPerPage)));
+		this.context.put("start", new Integer(start));
 		
-		String openModeration = JForum.getRequest().getParameter("openModeration");
+		String openModeration = this.request.getParameter("openModeration");
 		if (openModeration == null) {
 			openModeration = "0";
 		}
 		
-		JForum.getContext().put("openModeration", openModeration.equals("1"));
+		this.context.put("openModeration", openModeration.equals("1"));
 		TopicsCommon.topicListingBase();
 	}
 	
@@ -222,7 +221,7 @@ public class SearchAction extends Command
 	
 	private String makeRedirect() throws Exception
 	{
-		String persistData = JForum.getRequest().getParameter("persistData");
+		String persistData = this.request.getParameter("persistData");
 		if (persistData == null) {
 			this.getSearchFields();
 		}
@@ -243,7 +242,7 @@ public class SearchAction extends Command
 		}
 
 		StringBuffer path = new StringBuffer(512);
-		path.append(JForum.getRequest().getContextPath()).append("/jforum" 
+		path.append(this.request.getContextPath()).append("/jforum" 
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)
 				+ "?module=search&action=search");
 		

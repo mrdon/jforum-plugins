@@ -81,7 +81,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.16 2004/12/26 02:31:52 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.17 2004/12/27 00:30:52 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -91,22 +91,22 @@ public class InstallAction extends Command
 	{
 		this.checkLanguage();
 		
-		InstallServlet.getContext().put("language", this.getFromSession("language"));
-		InstallServlet.getContext().put("database", this.getFromSession("database"));
-		InstallServlet.getContext().put("dbhost", this.getFromSession("dbHost"));
-		InstallServlet.getContext().put("dbuser", this.getFromSession("dbUser"));
-		InstallServlet.getContext().put("dbname", this.getFromSession("dbName"));
-		InstallServlet.getContext().put("dbpasswd", this.getFromSession("dbPassword"));
-		InstallServlet.getContext().put("dbencoding", this.getFromSession("dbEncoding"));
-		InstallServlet.getContext().put("use_pool", this.getFromSession("usePool"));
-		InstallServlet.getContext().put("forum_link", this.getFromSession("forumLink"));
+		this.context.put("language", this.getFromSession("language"));
+		this.context.put("database", this.getFromSession("database"));
+		this.context.put("dbhost", this.getFromSession("dbHost"));
+		this.context.put("dbuser", this.getFromSession("dbUser"));
+		this.context.put("dbname", this.getFromSession("dbName"));
+		this.context.put("dbpasswd", this.getFromSession("dbPassword"));
+		this.context.put("dbencoding", this.getFromSession("dbEncoding"));
+		this.context.put("use_pool", this.getFromSession("usePool"));
+		this.context.put("forum_link", this.getFromSession("forumLink"));
 		
-		InstallServlet.getContext().put("moduleAction", "install.htm");
+		this.context.put("moduleAction", "install.htm");
 	}
 	
 	private void checkLanguage() throws IOException
 	{
-		String lang = InstallServlet.getRequest().getParameter("l");
+		String lang = this.request.getParameter("l");
 		if (lang == null || !I18n.languageExists(lang)) {
 			return;
 		}
@@ -122,12 +122,12 @@ public class InstallAction extends Command
 	
 	private String getFromSession(String key)
 	{
-		return (String)InstallServlet.getRequest().getSession().getAttribute(key);
+		return (String)this.request.getSession().getAttribute(key);
 	}
 	
 	private void error()
 	{
-		InstallServlet.getContext().put("moduleAction", "install_error.htm");
+		this.context.put("moduleAction", "install_error.htm");
 	}
 	
 	public void doInstall() throws Exception
@@ -144,7 +144,7 @@ public class InstallAction extends Command
 			logger.info("Going to configure the database...");
 			conn = this.configureDatabase();
 			if (conn == null) {
-				InstallServlet.getContext().put("message", I18n.getMessage("Install.databaseError"));
+				this.context.put("message", I18n.getMessage("Install.databaseError"));
 				this.error();
 				return;
 			}
@@ -161,7 +161,7 @@ public class InstallAction extends Command
 		}
 		
 		if (!"passed".equals(this.getFromSession("createTables")) && !this.createTables(conn)) {
-			InstallServlet.getContext().put("message", I18n.getMessage("Install.createTablesError"));
+			this.context.put("message", I18n.getMessage("Install.createTablesError"));
 			simpleConnection.releaseConnection(conn);
 			this.error();
 			return;
@@ -172,7 +172,7 @@ public class InstallAction extends Command
 		logger.info("Table creation is ok");
 		
 		if (!"passed".equals(this.getFromSession("importTablesData")) && !this.importTablesData(conn)) {
-			InstallServlet.getContext().put("message", I18n.getMessage("Install.importTablesDataError"));
+			this.context.put("message", I18n.getMessage("Install.importTablesDataError"));
 			simpleConnection.releaseConnection(conn);
 			this.error();
 			return;
@@ -182,7 +182,7 @@ public class InstallAction extends Command
 		this.addToSessionAndContext("importTablesData", "passed");
 		
 		if (!this.updateAdminPassword(conn)) {
-			InstallServlet.getContext().put("message", I18n.getMessage("Install.updateAdminError"));
+			this.context.put("message", I18n.getMessage("Install.updateAdminError"));
 			simpleConnection.releaseConnection(conn);
 			this.error();
 			return;
@@ -190,7 +190,7 @@ public class InstallAction extends Command
 		
 		simpleConnection.releaseConnection(conn);
 
-		InstallServlet.setRedirect(InstallServlet.getRequest().getContextPath() + "/install/install"
+		InstallServlet.setRedirect(this.request.getContextPath() + "/install/install"
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)
 				+ "?module=install&action=finished");
 	}
@@ -210,16 +210,16 @@ public class InstallAction extends Command
 	
 	public void finished() throws Exception
 	{
-		InstallServlet.getContext().put("clickHere", I18n.getMessage("Install.clickHere"));
-		InstallServlet.getContext().put("forumLink", this.getFromSession("forumLink"));
-		InstallServlet.getContext().put("moduleAction", "install_finished.htm");
+		this.context.put("clickHere", I18n.getMessage("Install.clickHere"));
+		this.context.put("forumLink", this.getFromSession("forumLink"));
+		this.context.put("moduleAction", "install_finished.htm");
 		
 		String lang = this.getFromSession("language");
 		if (lang == null) {
 			lang = "en_US";
 		}
 		
-		InstallServlet.getContext().put("lang", lang);
+		this.context.put("lang", lang);
 		
 		this.doFinalSteps();
 		this.configureSystemGlobals();
@@ -227,7 +227,7 @@ public class InstallAction extends Command
 		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
         SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
         
-        SessionFacade.remove(InstallServlet.getRequest().getSession().getId());
+        SessionFacade.remove(this.request.getSession().getId());
 	}
 	
 	private void doFinalSteps() throws Exception
@@ -298,7 +298,7 @@ public class InstallAction extends Command
 				status = false;
 				conn.rollback();
 				logger.error("Error importing data for " + query + ": " + ex);
-				InstallServlet.getContext().put("exceptionMessage", ex.getMessage() + "\n" + query);
+				this.context.put("exceptionMessage", ex.getMessage() + "\n" + query);
 				break;
 			}
 			finally {
@@ -344,7 +344,7 @@ public class InstallAction extends Command
 				conn.rollback();
 
 				logger.error("Error executing query: " + query + ": " + ex);
-				InstallServlet.getContext().put("exceptionMessage", ex.getMessage() + "\n" + query);
+				this.context.put("exceptionMessage", ex.getMessage() + "\n" + query);
 				
 				break;
 			}
@@ -362,8 +362,8 @@ public class InstallAction extends Command
 		boolean canWriteToIndex = this.canWriteToIndex();
 		
 		if (!canWriteToWebInf || !canWriteToIndex) {
-			InstallServlet.getContext().put("message", I18n.getMessage("Install.noWritePermission"));
-			InstallServlet.getContext().put("tryAgain", true);
+			this.context.put("message", I18n.getMessage("Install.noWritePermission"));
+			this.context.put("tryAgain", true);
 			this.error();
 			return false;
 		}
@@ -432,7 +432,7 @@ public class InstallAction extends Command
 		}
 		catch (Exception e) {
 			logger.warn("Error while trying to get a connection: " + e);
-			InstallServlet.getContext().put("exceptionMessage", e.getMessage());
+			this.context.put("exceptionMessage", e.getMessage());
 			return null;
 		}
 		
@@ -466,7 +466,7 @@ public class InstallAction extends Command
 		}
 		catch (Exception e) {
 			logger.warn("Error while trying to update the administrator's password: " + e);
-			InstallServlet.getContext().put("exceptionMessage", e.getMessage());
+			this.context.put("exceptionMessage", e.getMessage());
 		}
 		
 		return status;
@@ -474,17 +474,17 @@ public class InstallAction extends Command
 	
 	public void checkInformation() throws Exception
 	{
-		String language = InstallServlet.getRequest().getParameter("language");
-		String database = InstallServlet.getRequest().getParameter("database");
-		String dbHost = InstallServlet.getRequest().getParameter("dbhost");
-		String dbUser = InstallServlet.getRequest().getParameter("dbuser");
-		String dbName = InstallServlet.getRequest().getParameter("dbname");
-		String dbPassword = InstallServlet.getRequest().getParameter("dbpasswd");
-		String dbEncoding = InstallServlet.getRequest().getParameter("dbencoding");
-		String dbEncodingOther = InstallServlet.getRequest().getParameter("dbencoding_other");
-		String usePool = InstallServlet.getRequest().getParameter("use_pool");
-		String forumLink = InstallServlet.getRequest().getParameter("forum_link");
-		String adminPassword = InstallServlet.getRequest().getParameter("admin_pass1");
+		String language = this.request.getParameter("language");
+		String database = this.request.getParameter("database");
+		String dbHost = this.request.getParameter("dbhost");
+		String dbUser = this.request.getParameter("dbuser");
+		String dbName = this.request.getParameter("dbname");
+		String dbPassword = this.request.getParameter("dbpasswd");
+		String dbEncoding = this.request.getParameter("dbencoding");
+		String dbEncodingOther = this.request.getParameter("dbencoding_other");
+		String usePool = this.request.getParameter("use_pool");
+		String forumLink = this.request.getParameter("forum_link");
+		String adminPassword = this.request.getParameter("admin_pass1");
 		
 		dbHost = this.notNullDefault(dbHost, "localhost");
 		dbEncodingOther = this.notNullDefault(dbEncodingOther, "utf-8");
@@ -511,10 +511,10 @@ public class InstallAction extends Command
 		this.addToSessionAndContext("createTables", null);
 		this.addToSessionAndContext("importTablesData", null);
 		
-		InstallServlet.getContext().put("canWriteToWebInf", this.canWriteToWebInf());
-		InstallServlet.getContext().put("canWriteToIndex", this.canWriteToIndex());
+		this.context.put("canWriteToWebInf", this.canWriteToWebInf());
+		this.context.put("canWriteToIndex", this.canWriteToIndex());
 		
-		InstallServlet.getContext().put("moduleAction", "install_check_info.htm");
+		this.context.put("moduleAction", "install_check_info.htm");
 	}
 	
 	private List readFromDat(String filename) throws Exception
@@ -562,8 +562,8 @@ public class InstallAction extends Command
 	
 	private void addToSessionAndContext(String key, String value)
 	{
-		InstallServlet.getRequest().getSession().setAttribute(key, value);
-		InstallServlet.getContext().put(key, value);
+		this.request.getSession().setAttribute(key, value);
+		this.context.put(key, value);
 	}
 	
 	private String notNullDefault(String value, String useDefault)

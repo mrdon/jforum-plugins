@@ -81,7 +81,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.32 2004/12/20 00:16:44 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.33 2004/12/27 00:30:52 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -94,7 +94,7 @@ public class PostAction extends Command {
 		int userId = SessionFacade.getUserSession().getUserId();
 		int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 
-		int topicId = Integer.parseInt(JForum.getRequest().getParameter("topic_id"));
+		int topicId = Integer.parseInt(this.request.getParameter("topic_id"));
 		Topic topic = tm.selectById(topicId);
 
 		// The topic exists?
@@ -134,38 +134,38 @@ public class PostAction extends Command {
 		// Set the topic status as read
 		tm.updateReadStatus(topic.getId(), userId, true);
 
-		JForum.getContext().put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
-		JForum.getContext().put("canRemove",
+		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
+		this.context.put("canRemove",
 				SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE));
-		JForum.getContext().put("canEdit", canEdit);
-		JForum.getContext().put("moduleAction", "post_show.htm");
-		JForum.getContext().put("topic", topic);
-		JForum.getContext().put("rank", new RankingRepository());
-		JForum.getContext().put("posts", helperList);
-		JForum.getContext().put("forum", ForumRepository.getForum(topic.getForumId()));
-		JForum.getContext().put("users", usersMap);
-		JForum.getContext().put("topicId", new Integer(topicId));
-		JForum.getContext().put("watching", tm.isUserSubscribed(topicId, SessionFacade.getUserSession().getUserId()));
-		JForum.getContext().put("pageTitle", SystemGlobals.getValue(ConfigKeys.FORUM_NAME) + " - " + topic.getTitle());
-		JForum.getContext().put("isAdmin", SecurityRepository.canAccess(SecurityConstants.PERM_ADMINISTRATION));
-		JForum.getContext().put("readonly", !SecurityRepository.canAccess(SecurityConstants.PERM_READ_ONLY_FORUMS, 
+		this.context.put("canEdit", canEdit);
+		this.context.put("moduleAction", "post_show.htm");
+		this.context.put("topic", topic);
+		this.context.put("rank", new RankingRepository());
+		this.context.put("posts", helperList);
+		this.context.put("forum", ForumRepository.getForum(topic.getForumId()));
+		this.context.put("users", usersMap);
+		this.context.put("topicId", new Integer(topicId));
+		this.context.put("watching", tm.isUserSubscribed(topicId, SessionFacade.getUserSession().getUserId()));
+		this.context.put("pageTitle", SystemGlobals.getValue(ConfigKeys.FORUM_NAME) + " - " + topic.getTitle());
+		this.context.put("isAdmin", SecurityRepository.canAccess(SecurityConstants.PERM_ADMINISTRATION));
+		this.context.put("readonly", !SecurityRepository.canAccess(SecurityConstants.PERM_READ_ONLY_FORUMS, 
 				Integer.toString(topic.getForumId())));
 
-		JForum.getContext().put("isModerator", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION)
+		this.context.put("isModerator", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION)
 						&& SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_FORUMS, 
 								Integer.toString(topic.getForumId())));
 
 		// Topic Status
-		JForum.getContext().put("STATUS_LOCKED", new Integer(Topic.STATUS_LOCKED));
-		JForum.getContext().put("STATUS_UNLOCKED", new Integer(Topic.STATUS_UNLOCKED));
+		this.context.put("STATUS_LOCKED", new Integer(Topic.STATUS_LOCKED));
+		this.context.put("STATUS_UNLOCKED", new Integer(Topic.STATUS_UNLOCKED));
 
 		// Pagination
 		int totalPosts = tm.getTotalPosts(topic.getId());
-		JForum.getContext().put("totalPages", new Double(Math.ceil((double) totalPosts / (double) count)));
-		JForum.getContext().put("recordsPerPage", new Integer(count));
-		JForum.getContext().put("totalRecords", new Integer(totalPosts));
-		JForum.getContext().put("thisPage", new Double(Math.ceil((double) (start + 1) / (double) count)));
-		JForum.getContext().put("start", new Integer(start));
+		this.context.put("totalPages", new Double(Math.ceil((double) totalPosts / (double) count)));
+		this.context.put("recordsPerPage", new Integer(count));
+		this.context.put("totalRecords", new Integer(totalPosts));
+		this.context.put("thisPage", new Double(Math.ceil((double) (start + 1) / (double) count)));
+		this.context.put("start", new Integer(start));
 	}
 
 	public void review() throws Exception {
@@ -174,7 +174,7 @@ public class PostAction extends Command {
 		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
 
 		int userId = SessionFacade.getUserSession().getUserId();
-		int topicId = Integer.parseInt(JForum.getRequest().getParameter("topic_id"));
+		int topicId = Integer.parseInt(this.request.getParameter("topic_id"));
 		Topic topic = tm.selectById(topicId);
 
 		if (!TopicsCommon.isTopicAccessible(topic.getForumId())) {
@@ -190,33 +190,33 @@ public class PostAction extends Command {
 
 		this.setTemplateName(SystemGlobals.getValue(ConfigKeys.TEMPLATE_NAME) + "/empty.htm");
 
-		JForum.getContext().put("moduleAction", "topic_review.htm");
-		JForum.getContext().put("posts", helperList);
-		JForum.getContext().put("users", usersMap);
+		this.context.put("moduleAction", "topic_review.htm");
+		this.context.put("posts", helperList);
+		this.context.put("users", usersMap);
 	}
 
 	private void topicNotFound() {
-		JForum.getContext().put("moduleAction", "message.htm");
-		JForum.getContext().put("message", I18n.getMessage("PostShow.TopicNotFound"));
+		this.context.put("moduleAction", "message.htm");
+		this.context.put("message", I18n.getMessage("PostShow.TopicNotFound"));
 	}
 
 	private void postNotFound() {
-		JForum.getContext().put("moduleAction", "message.htm");
-		JForum.getContext().put("message", I18n.getMessage("PostShow.PostNotFound"));
+		this.context.put("moduleAction", "message.htm");
+		this.context.put("message", I18n.getMessage("PostShow.PostNotFound"));
 	}
 
 	public void insert() throws Exception {
-		int forumId = Integer.parseInt(JForum.getRequest().getParameter("forum_id"));
+		int forumId = Integer.parseInt(this.request.getParameter("forum_id"));
 
 		if (!this.anonymousPost(forumId)
-				|| this.isForumReadonly(forumId, JForum.getRequest().getParameter("topic_id") != null)) {
+				|| this.isForumReadonly(forumId, this.request.getParameter("topic_id") != null)) {
 			return;
 		}
 
 		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
 
-		if (JForum.getRequest().getParameter("topic_id") != null) {
-			int topicId = Integer.parseInt(JForum.getRequest().getParameter("topic_id"));
+		if (this.request.getParameter("topic_id") != null) {
+			int topicId = Integer.parseInt(this.request.getParameter("topic_id"));
 			Topic t = DataAccessDriver.getInstance().newTopicModel().selectById(topicId);
 
 			if (t.getStatus() == Topic.STATUS_LOCKED) {
@@ -224,21 +224,21 @@ public class PostAction extends Command {
 				return;
 			}
 
-			JForum.getContext().put("topic", t);
-			JForum.getContext().put("setType", false);
+			this.context.put("topic", t);
+			this.context.put("setType", false);
 		}
 		else {
-			JForum.getContext().put("setType", true);
+			this.context.put("setType", true);
 		}
 
-		JForum.getContext().put("forum", ForumRepository.getForum(forumId));
-		JForum.getContext().put("action", "insertSave");
-		JForum.getContext().put("moduleAction", "post_form.htm");
-		JForum.getContext().put("start", JForum.getRequest().getParameter("start"));
-		JForum.getContext().put("isNewPost", true);
-		JForum.getContext().put("htmlAllowed",
+		this.context.put("forum", ForumRepository.getForum(forumId));
+		this.context.put("action", "insertSave");
+		this.context.put("moduleAction", "post_form.htm");
+		this.context.put("start", this.request.getParameter("start"));
+		this.context.put("isNewPost", true);
+		this.context.put("htmlAllowed",
 				SecurityRepository.canAccess(SecurityConstants.PERM_HTML_DISABLED, Integer.toString(forumId)));
-		JForum.getContext().put("canCreateStickyOrAnnouncementTopics",
+		this.context.put("canCreateStickyOrAnnouncementTopics",
 				SecurityRepository.canAccess(SecurityConstants.PERM_CREATE_STICKY_ANNOUNCEMENT_TOPICS));
 
 		int userId = SessionFacade.getUserSession().getUserId();
@@ -246,11 +246,11 @@ public class PostAction extends Command {
 		user.setSignature(PostCommon.processText(user.getSignature()));
 		user.setSignature(PostCommon.processSmilies(user.getSignature(), SmiliesRepository.getSmilies()));
 
-		if (JForum.getRequest().getParameter("preview") != null) {
-			user.setNotifyOnMessagesEnabled(JForum.getRequest().getParameter("notify") != null);
+		if (this.request.getParameter("preview") != null) {
+			user.setNotifyOnMessagesEnabled(this.request.getParameter("notify") != null);
 		}
 
-		JForum.getContext().put("user", user);
+		this.context.put("user", user);
 	}
 
 	public void edit() throws Exception {
@@ -264,7 +264,7 @@ public class PostAction extends Command {
 
 		if (!preview) {
 			PostModel pm = DataAccessDriver.getInstance().newPostModel();
-			p = pm.selectById(Integer.parseInt(JForum.getRequest().getParameter("post_id")));
+			p = pm.selectById(Integer.parseInt(this.request.getParameter("post_id")));
 
 			// The post exist?
 			if (p.getId() == 0) {
@@ -288,26 +288,26 @@ public class PostAction extends Command {
 				return;
 			}
 
-			if (preview && JForum.getRequest().getParameter("topic_type") != null) {
-				topic.setType(Integer.parseInt(JForum.getRequest().getParameter("topic_type")));
+			if (preview && this.request.getParameter("topic_type") != null) {
+				topic.setType(Integer.parseInt(this.request.getParameter("topic_type")));
 			}
 
-			JForum.getContext().put("forum", ForumRepository.getForum(p.getForumId()));
-			JForum.getContext().put("action", "editSave");
+			this.context.put("forum", ForumRepository.getForum(p.getForumId()));
+			this.context.put("action", "editSave");
 
-			JForum.getContext().put("post", p);
-			JForum.getContext().put("setType", p.getId() == topic.getFirstPostId());
-			JForum.getContext().put("topic", topic);
-			JForum.getContext().put("moduleAction", "post_form.htm");
-			JForum.getContext().put("start", JForum.getRequest().getParameter("start"));
-			JForum.getContext().put("htmlAllowed", SecurityRepository.canAccess(SecurityConstants.PERM_HTML_DISABLED, 
+			this.context.put("post", p);
+			this.context.put("setType", p.getId() == topic.getFirstPostId());
+			this.context.put("topic", topic);
+			this.context.put("moduleAction", "post_form.htm");
+			this.context.put("start", this.request.getParameter("start"));
+			this.context.put("htmlAllowed", SecurityRepository.canAccess(SecurityConstants.PERM_HTML_DISABLED, 
 					Integer.toString(topic.getForumId())));
-			JForum.getContext().put("canCreateStickyOrAnnouncementTopics",
+			this.context.put("canCreateStickyOrAnnouncementTopics",
 					SecurityRepository.canAccess(SecurityConstants.PERM_CREATE_STICKY_ANNOUNCEMENT_TOPICS));
 		}
 		else {
-			JForum.getContext().put("moduleAction", "message.htm");
-			JForum.getContext().put("message", I18n.getMessage("CannotEditPost"));
+			this.context.put("moduleAction", "message.htm");
+			this.context.put("message", I18n.getMessage("CannotEditPost"));
 		}
 
 		User u = DataAccessDriver.getInstance().newUserModel().selectById(sUserId);
@@ -315,15 +315,15 @@ public class PostAction extends Command {
 		u.setSignature(PostCommon.processSmilies(u.getSignature(), SmiliesRepository.getSmilies()));
 
 		if (preview) {
-			u.setNotifyOnMessagesEnabled(JForum.getRequest().getParameter("notify") != null);
+			u.setNotifyOnMessagesEnabled(this.request.getParameter("notify") != null);
 		}
 
-		JForum.getContext().put("user", u);
+		this.context.put("user", u);
 	}
 
 	public void quote() throws Exception {
 		PostModel pm = DataAccessDriver.getInstance().newPostModel();
-		Post p = pm.selectById(Integer.parseInt(JForum.getRequest().getParameter("post_id")));
+		Post p = pm.selectById(Integer.parseInt(this.request.getParameter("post_id")));
 
 		if (!this.anonymousPost(p.getForumId())) {
 			return;
@@ -345,41 +345,41 @@ public class PostAction extends Command {
 			return;
 		}
 
-		JForum.getContext().put("forum", ForumRepository.getForum(p.getForumId()));
-		JForum.getContext().put("action", "insertSave");
-		JForum.getContext().put("post", p);
+		this.context.put("forum", ForumRepository.getForum(p.getForumId()));
+		this.context.put("action", "insertSave");
+		this.context.put("post", p);
 
 		UserModel um = DataAccessDriver.getInstance().newUserModel();
 		User u = um.selectById(p.getUserId());
 
 		Topic topic = DataAccessDriver.getInstance().newTopicModel().selectById(p.getTopicId());
 
-		JForum.getContext().put("topic", topic);
-		JForum.getContext().put("quote", "true");
-		JForum.getContext().put("quoteUser", u.getUsername());
-		JForum.getContext().put("moduleAction", "post_form.htm");
-		JForum.getContext().put("setType", false);
-		JForum.getContext().put("htmlAllowed", SecurityRepository.canAccess(SecurityConstants.PERM_HTML_DISABLED, 
+		this.context.put("topic", topic);
+		this.context.put("quote", "true");
+		this.context.put("quoteUser", u.getUsername());
+		this.context.put("moduleAction", "post_form.htm");
+		this.context.put("setType", false);
+		this.context.put("htmlAllowed", SecurityRepository.canAccess(SecurityConstants.PERM_HTML_DISABLED, 
 				Integer.toString(topic.getForumId())));
-		JForum.getContext().put("start", JForum.getRequest().getParameter("start"));
+		this.context.put("start", this.request.getParameter("start"));
 
 		int userId = SessionFacade.getUserSession().getUserId();
-		JForum.getContext().put("user", DataAccessDriver.getInstance().newUserModel().selectById(userId));
+		this.context.put("user", DataAccessDriver.getInstance().newUserModel().selectById(userId));
 	}
 
 	public void editSave() throws Exception {
 		PostModel pm = DataAccessDriver.getInstance().newPostModel();
 		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
 
-		Post p = pm.selectById(Integer.parseInt(JForum.getRequest().getParameter("post_id")));
+		Post p = pm.selectById(Integer.parseInt(this.request.getParameter("post_id")));
 		p = PostCommon.fillPostFromRequest(p);
 
 		// The user wants to preview the message before posting it?
-		if (JForum.getRequest().getParameter("preview") != null) {
-			JForum.getContext().put("preview", true);
+		if (this.request.getParameter("preview") != null) {
+			this.context.put("preview", true);
 
 			Post postPreview = new Post(p);
-			JForum.getContext().put("postPreview", PostCommon.preparePostForDisplay(postPreview));
+			this.context.put("postPreview", PostCommon.preparePostForDisplay(postPreview));
 
 			this.edit(true, p);
 		}
@@ -401,21 +401,21 @@ public class PostAction extends Command {
 			// Updates the topic title
 			if (t.getFirstPostId() == p.getId()) {
 				t.setTitle(p.getSubject());
-				t.setType(Integer.parseInt(JForum.getRequest().getParameter("topic_type")));
+				t.setType(Integer.parseInt(this.request.getParameter("topic_type")));
 				tm.update(t);
 				ForumRepository.reloadForum(t.getForumId());
 				TopicRepository.clearCache(t.getForumId());
 			}
 
-			if (JForum.getRequest().getParameter("notify") == null) {
+			if (this.request.getParameter("notify") == null) {
 				tm.removeSubscription(p.getTopicId(), SessionFacade.getUserSession().getUserId());
 			}
 
 			// Updates cache for latest topic
 			TopicRepository.pushTopic(tm.selectById(t.getId()));
 
-			String path = JForum.getRequest().getContextPath() + "/posts/list/";
-			String start = JForum.getRequest().getParameter("start");
+			String path = this.request.getContextPath() + "/posts/list/";
+			String start = this.request.getParameter("start");
 			if (start != null && !start.equals("0")) {
 				path += start + "/";
 			}
@@ -427,10 +427,10 @@ public class PostAction extends Command {
 
 	public void insertSave() throws Exception 
 	{
-		int forumId = Integer.parseInt(JForum.getRequest().getParameter("forum_id"));
+		int forumId = Integer.parseInt(this.request.getParameter("forum_id"));
 
 		if (!this.anonymousPost(forumId)) {
-			SessionFacade.setAttribute(ConfigKeys.REQUEST_DUMP, JForum.getRequest().dumpRequest());
+			SessionFacade.setAttribute(ConfigKeys.REQUEST_DUMP, this.request.dumpRequest());
 			return;
 		}
 		
@@ -439,7 +439,7 @@ public class PostAction extends Command {
 		t.setForumId(forumId);
 
 		if (!TopicsCommon.isTopicAccessible(t.getForumId())
-				|| this.isForumReadonly(t.getForumId(), JForum.getRequest().getParameter("topic_id") != null)) {
+				|| this.isForumReadonly(t.getForumId(), this.request.getParameter("topic_id") != null)) {
 			return;
 		}
 
@@ -447,8 +447,8 @@ public class PostAction extends Command {
 		PostModel pm = DataAccessDriver.getInstance().newPostModel();
 		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
 
-		if (JForum.getRequest().getParameter("topic_id") != null) {
-			t = tm.selectById(Integer.parseInt(JForum.getRequest().getParameter("topic_id")));
+		if (this.request.getParameter("topic_id") != null) {
+			t = tm.selectById(Integer.parseInt(this.request.getParameter("topic_id")));
 
 			// Cannot insert new messages on locked topics
 			if (t.getStatus() == Topic.STATUS_LOCKED) {
@@ -457,8 +457,8 @@ public class PostAction extends Command {
 			}
 		}
 
-		if (JForum.getRequest().getParameter("topic_type") != null) {
-			t.setType(Integer.parseInt(JForum.getRequest().getParameter("topic_type")));
+		if (this.request.getParameter("topic_type") != null) {
+			t.setType(Integer.parseInt(this.request.getParameter("topic_type")));
 		}
 
 		UserSession us = SessionFacade.getUserSession();
@@ -470,14 +470,14 @@ public class PostAction extends Command {
 
 		// Set the Post
 		Post p = PostCommon.fillPostFromRequest();
-		p.setForumId(Integer.parseInt(JForum.getRequest().getParameter("forum_id")));
+		p.setForumId(Integer.parseInt(this.request.getParameter("forum_id")));
 
-		boolean preview = (JForum.getRequest().getParameter("preview") != null);
+		boolean preview = (this.request.getParameter("preview") != null);
 		if (!preview) {
 			// If topic_id is -1, then is the first post
 			if (t.getId() == -1) {
 				t.setTime(new Date());
-				t.setTitle(JForum.getRequest().getParameter("subject"));
+				t.setTitle(this.request.getParameter("subject"));
 
 				int topicId = tm.addNew(t);
 				t.setId(topicId);
@@ -508,7 +508,7 @@ public class PostAction extends Command {
 			}
 
 			// Topic watch
-			if (JForum.getRequest().getParameter("notify") != null) {
+			if (this.request.getParameter("notify") != null) {
 				this.watch(tm, t.getId(), u.getId());
 			}
 
@@ -517,7 +517,7 @@ public class PostAction extends Command {
 			// Save the remaining stuff
 			int postId = pm.addNew(p);
 
-			if (JForum.getRequest().getParameter("topic_id") == null) {
+			if (this.request.getParameter("topic_id") == null) {
 				t.setFirstPostId(postId);
 			}
 
@@ -532,9 +532,9 @@ public class PostAction extends Command {
 			// Updates cache for latest topic
 			TopicRepository.pushTopic(tm.selectById(t.getId()));
 
-			String path = JForum.getRequest().getContextPath() + "/posts/list/";
+			String path = this.request.getContextPath() + "/posts/list/";
 
-			String start = JForum.getRequest().getParameter("start");
+			String start = this.request.getParameter("start");
 			if (start == null || start.trim().equals("") || Integer.parseInt(start) < 0) {
 				start = "0";
 			}
@@ -551,13 +551,13 @@ public class PostAction extends Command {
 			}
 		}
 		else {
-			JForum.getContext().put("preview", true);
-			JForum.getContext().put("post", p);
-			JForum.getContext().put("topic", t);
-			JForum.getContext().put("start", JForum.getRequest().getParameter("start"));
+			this.context.put("preview", true);
+			this.context.put("post", p);
+			this.context.put("topic", t);
+			this.context.put("start", this.request.getParameter("start"));
 
 			Post postPreview = new Post(p);
-			JForum.getContext().put("postPreview", PostCommon.preparePostForDisplay(postPreview));
+			this.context.put("postPreview", PostCommon.preparePostForDisplay(postPreview));
 
 			this.insert();
 		}
@@ -577,15 +577,15 @@ public class PostAction extends Command {
 
 	public void delete() throws Exception {
 		if (!SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE)) {
-			JForum.getContext().put("moduleAction", "message.htm");
-			JForum.getContext().put("message", I18n.getMessage("CannotRemovePost"));
+			this.context.put("moduleAction", "message.htm");
+			this.context.put("message", I18n.getMessage("CannotRemovePost"));
 
 			return;
 		}
 
 		// Post
 		PostModel pm = DataAccessDriver.getInstance().newPostModel();
-		Post p = pm.selectById(Integer.parseInt(JForum.getRequest().getParameter("post_id")));
+		Post p = pm.selectById(Integer.parseInt(this.request.getParameter("post_id")));
 
 		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
 		Topic t = tm.selectById(p.getTopicId());
@@ -620,8 +620,8 @@ public class PostAction extends Command {
 		// It was the last remaining post in the topic?
 		int totalPosts = tm.getTotalPosts(p.getTopicId());
 		if (totalPosts > 0) {
-			String page = JForum.getRequest().getParameter("start");
-			String returnPath = JForum.getRequest().getContextPath() + "/posts/list/";
+			String page = this.request.getParameter("start");
+			String returnPath = this.request.getContextPath() + "/posts/list/";
 
 			if (page != null && !page.equals("") && !page.equals("0")) {
 				int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
@@ -650,7 +650,7 @@ public class PostAction extends Command {
 
 			fm.decrementTotalTopics(p.getForumId(), 1);
 
-			JForum.setRedirect(JForum.getRequest().getContextPath() + "/forums/show/" + p.getForumId()
+			JForum.setRedirect(this.request.getContextPath() + "/forums/show/" + p.getForumId()
 					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		}
 
@@ -665,7 +665,7 @@ public class PostAction extends Command {
 	}
 
 	public void watch() throws Exception {
-		int topicId = Integer.parseInt(JForum.getRequest().getParameter("topic_id"));
+		int topicId = Integer.parseInt(this.request.getParameter("topic_id"));
 		int userId = SessionFacade.getUserSession().getUserId();
 
 		this.watch(DataAccessDriver.getInstance().newTopicModel(), topicId, userId);
@@ -674,21 +674,21 @@ public class PostAction extends Command {
 
 	public void unwatch() throws Exception {
 		if (this.isUserLogged()) {
-			int topicId = Integer.parseInt(JForum.getRequest().getParameter("topic_id"));
+			int topicId = Integer.parseInt(this.request.getParameter("topic_id"));
 			int userId = SessionFacade.getUserSession().getUserId();
-			String start = JForum.getRequest().getParameter("start");
+			String start = this.request.getParameter("start");
 
 			DataAccessDriver.getInstance().newTopicModel().removeSubscription(topicId, userId);
 
-			String returnPath = JForum.getRequest().getContextPath() + "/posts/list/";
+			String returnPath = this.request.getContextPath() + "/posts/list/";
 			if (start != null && !start.equals("")) {
 				returnPath += start + "/";
 			}
 
 			returnPath += topicId + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
 
-			JForum.getContext().put("moduleAction", "message.htm");
-			JForum.getContext().put("message", I18n.getMessage("ForumBase.unwatched", new String[] { returnPath }));
+			this.context.put("moduleAction", "message.htm");
+			this.context.put("message", I18n.getMessage("ForumBase.unwatched", new String[] { returnPath }));
 		}
 		else {
 			ViewCommon.contextToLogin();
@@ -700,8 +700,8 @@ public class PostAction extends Command {
 	}
 
 	private void topicLocked() {
-		JForum.getContext().put("moduleAction", "message.htm");
-		JForum.getContext().put("message", I18n.getMessage("PostShow.topicLocked"));
+		this.context.put("moduleAction", "message.htm");
+		this.context.put("message", I18n.getMessage("PostShow.topicLocked"));
 	}
 
 	private boolean isForumReadonly(int forumId, boolean isReply) throws Exception {
@@ -710,7 +710,7 @@ public class PostAction extends Command {
 				this.list();
 			}
 			else {
-				JForum.setRedirect(JForum.getRequest().getContextPath() + "/forums/show/" + forumId
+				JForum.setRedirect(this.request.getContextPath() + "/forums/show/" + forumId
 						+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 			}
 
