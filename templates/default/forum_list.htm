@@ -1,158 +1,166 @@
 <table width="100%" align="center">
-<tr>
-<td width="100%" height="318" valign="top">
-      <TABLE cellSpacing=0 cellPadding=2 width="100%" align=center border=0>
-        <TR>
-          <TD vAlign=bottom align=left>
-		  <#if logged><span class="gensmall">${I18n.getMessage("ForumListing.lastVisit")}: ${lastVisit}</span><br/></#if>
-		  <SPAN class=gensmall>${I18n.getMessage("ForumListing.date")}: ${now}</SPAN><BR>
-		  <SPAN class=forumLink><a class="forumLink" href="${contextPath}">${I18n.getMessage("ForumListing.forumIndex")}</a></SPAN>
-		  </TD>
-          <TD class=gensmall vAlign=middle align=right>&nbsp;
-			<#if logged>
-		  	<A class=gensmall href="${contextPath}/forums/newMessages${extension}">${I18n.getMessage("ForumListing.readLastVisitMessages")}</A>
-			</#if>
-		</TD>
-        </TR>
-		</TABLE>
+	<tr>
+		<td width="100%" height="318" valign="top">
+			<table cellspacing="0" cellpadding="2" width="100%" align="center" border="0">
+				<tr>
+					<td valign="bottom" align="left">
+						<#if logged><span class="gensmall">${I18n.getMessage("ForumListing.lastVisit")}: ${lastVisit}</span><br/></#if>
+						<span class="gensmall">${I18n.getMessage("ForumListing.date")}: ${now}</span><br />
+						<span class="forumLink"><a class="forumLink" href="${contextPath}">${I18n.getMessage("ForumListing.forumIndex")}</a></span>
+					</td>
+					<td class="gensmall" valign="middle" align="right">&nbsp;
+					<#if logged>
+						<a class="gensmall" href="${contextPath}/forums/newMessages${extension}">${I18n.getMessage("ForumListing.readLastVisitMessages")}</a>
+					</#if>
+					</td>
+				</tr>
+			</table>
 		
-      <TABLE class=forumline cellSpacing=1 cellPadding=2 width="100%" border=0>
-        <TR>
-          <TH class=thCornerL noWrap colSpan=2 height=25>&nbsp;${I18n.getMessage("ForumListing.forums")}&nbsp;</TH>
-          <TH class=thTop noWrap width=50>&nbsp;${I18n.getMessage("ForumListing.totalTopics")}&nbsp;</TH>
-          <TH class=thTop noWrap width=50>&nbsp;${I18n.getMessage("ForumListing.totalMessages")}&nbsp;</TH>
-          <TH class=thCornerR noWrap>&nbsp;${I18n.getMessage("ForumListing.lastMessage")}&nbsp;</TH></TR>
+			<table class="forumline" cellspacing="1" cellpadding="2" width="100%" border="0">
+				<tr>
+					<th class="thCornerL" nowrap="nowrap" colspan="2" height="25">&nbsp;${I18n.getMessage("ForumListing.forums")}&nbsp;</th>
+					<th class="thTop" nowrap="nowrap" width="50">&nbsp;${I18n.getMessage("ForumListing.totalTopics")}&nbsp;</th>
+					<th class="thTop" nowrap="nowrap" width="50">&nbsp;${I18n.getMessage("ForumListing.totalMessages")}&nbsp;</th>
+					<th class="thCornerR" nowrap="nowrap">&nbsp;${I18n.getMessage("ForumListing.lastMessage")}&nbsp;</th>
+				</tr>
 		  
-		  <!-- START FORUM LISTING -->
-<#list allForums.keySet() as category>
-	<TR>
-	  <TD class=catLeft colSpan=2 height=28><SPAN class=cattitle>${category.name}</SPAN>
-	  </TD>
-	  <TD class=rowpic align=right colSpan=3>&nbsp;</TD>
-	 </TR>
-	 <#list allForums.get(category) as forum>
-	 	<#assign lpi = fir.getLastPostInfo(forum.id)>
-		<TR>
-		<TD class=row1 vAlign=center align=middle height=50>
-			<#if forum.unread>
-				<img src="${contextPath}/templates/${templateName}/images/folder_new_big.gif" width="46" height="25">
-			<#else>
-				<img src="${contextPath}/templates/${templateName}/images/folder_big.gif" width="46" height="25">
-			</#if>
-		</TD>
-		<TD class=row1 width="100%" height=50><SPAN class=forumlink><A class=forumlink href="${contextPath}/forums/show/${forum.id}${extension}">${forum.name}</A><BR>
-		</SPAN><SPAN class=genmed>${forum.description}<BR></SPAN>
-		</TD>
-		<TD class=row2 vAlign=center align=middle height=50><SPAN class=gensmall>${forum.totalTopics}</SPAN></TD>
-		<TD class=row2 vAlign=center align=middle height=50><SPAN class=gensmall><#if (forum.totalPosts > 0)>${forum.totalPosts}<#else>${I18n.getMessage("ForumListing.noMessages")}</#if></SPAN></TD>
-		<TD class=row2 vAlign=center noWrap align=middle height=50>
-		<SPAN class=gensmall>
-			<#if lpi["postTime"]?exists>${lpi["postTime"]}<BR>
-				<#if lpi["userId"]?exists><A href="${contextPath}/user/profile/${lpi["userId"]}${extension}"></#if>
-				<#if lpi["userName"]?exists>${lpi["userName"]}</#if></A> 
-				
-				<#assign startPage = ""/>
-				<#if (lpi["topic_replies"] + 1 > topicsPerPage)>
-					<#assign startPage = ((lpi["topic_replies"] / topicsPerPage)?int * topicsPerPage) +"/"/>
-				</#if>
-				
-				<a href="${contextPath}/posts/list/${startPage}${lpi["topicId"]}${extension}#${lpi["postId"]}"><img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif" width="18" height="9" border="0"></a>
-			<#else>
-				${I18n.getMessage("ForumListing.noMessages")}
-			</#if>
-		</SPAN>
-		</TD>
-		</TR>
-	</#list>
-</#list>		
-		<!-- END OF FORUM LISTING -->
+				<!-- START FORUM LISTING -->
+				<#list allForums.keySet() as category>
+				<tr>
+					<td class="catLeft" colspan="2" height="28"><span class="cattitle">${category.name}</span></td>
+					<td class="rowpic" align="right" colspan="3">&nbsp;</td>
+				</tr>
+					
+					<#list allForums.get(category) as forum>
+					<#assign lpi = fir.getLastPostInfo(forum.id)>
+					<tr>
+						<td class="row1" valign="center" align="middle" height="50">
+						<#if forum.unread>
+							<img src="${contextPath}/templates/${templateName}/images/folder_new_big.gif" width="46" height="25" />
+						<#else>
+							<img src="${contextPath}/templates/${templateName}/images/folder_big.gif" width="46" height="25" />
+						</#if>
+						</td>
+						<td class="row1" width="100%" height="50">
+							<span class="forumlink"><a class="forumlink" href="${contextPath}/forums/show/${forum.id}${extension}">${forum.name}</a></span><br />
+							<span class="genmed">${forum.description}</span><br />		
+						</td>
+						<td class="row2" valign="center" align="middle" height="50"><span class="gensmall">${forum.totalTopics}</span></td>
+						<td class="row2" valign="center" align="middle" height="50">
+							<span class="gensmall"><#if (forum.totalPosts > 0)>${forum.totalPosts}<#else>${I18n.getMessage("ForumListing.noMessages")}</#if></span>
+						</td>
+						<td class="row2" valign="center" nowrap="nowrap" align="middle" height="50">
+							<span class="gensmall">
+							<#if lpi["postTime"]?exists>
+								${lpi["postTime"]}<br />
+								<#if lpi["userId"]?exists><a href="${contextPath}/user/profile/${lpi["userId"]}${extension}"></#if>
+								<#if lpi["userName"]?exists>${lpi["userName"]}</#if></a> 
+					
+								<#assign startPage = ""/>
+								<#if (lpi["topic_replies"] + 1 > topicsPerPage)>
+									<#assign startPage = ((lpi["topic_replies"] / topicsPerPage)?int * topicsPerPage) +"/"/>
+								</#if>
+					
+								<a href="${contextPath}/posts/list/${startPage}${lpi["topicid"]}${extension}#${lpi["postId"]}"><img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif" width="18" height="9" border="0" /></a>
+							<#else>
+								${I18n.getMessage("ForumListing.noMessages")}
+							</#if>		
+							</span>		
+						</td>
+					</tr>
+					</#list>
+				</#list>		
+				<!-- END OF FORUM LISTING -->
+			</table>
 		
-		</TABLE>
+			<table cellspacing="0" cellpadding="2" width="100%" align="center" border="0">
+				<tr>
+					<td align="left"><span class="gensmall"><a class="gensmall" href="">&nbsp;</a></span><span class="gensmall">&nbsp;</span></td>
+				</tr>
+			</table>
 		
-      <TABLE cellSpacing=0 cellPadding=2 width="100%" align=center border=0>
-        <TR>
-          <TD align=left><SPAN class=gensmall><A class=gensmall href="">&nbsp;</A></SPAN><SPAN class=gensmall>&nbsp;</SPAN></TD>
-        </TR>
-		</TABLE>
-		
-      <TABLE class=forumline cellSpacing=1 cellPadding=3 width="100%" 
-        border=0><TBODY>
-        <TR>
-          <TD class=catHead colSpan=2 height=28><SPAN class=cattitle>${I18n.getMessage("ForumListing.whoIsOnline")}</SPAN></TD>
-        </TR>
-        <TR>
-          <TD class=row1 vAlign=center align=middle rowSpan=2><img src="${contextPath}/templates/${templateName}/images/whosonline.gif" width="46" height="25"></TD>
-          <TD class=row1 align=left width="100%"><SPAN class=gensmall>${totalMessages}<BR>
-           ${totalUsers}<BR>
-		   <a href="${contextPath}/user/profile/${lastUserId}${extension}">${I18n.getMessage("ForumListing.newestUser")} ${lastUserName}</a></SPAN></TD>
-        </TR>
-        <TR>
-          <TD class=row1 align=left>
-			<#assign adminColor = "style=\"color:#FFA34F\""/>
-			<#assign moderatorColor = "style=\"color:#006600\""/>
-			<#assign color = ""/>
+			<table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
+				<tr>
+					<td class="catHead" colspan="2" height="28"><span class="cattitle">${I18n.getMessage("ForumListing.whoIsOnline")}</span></td>
+				</tr>
 
-		  	<SPAN class=gensmall>${usersOnline}&nbsp;&nbsp;
-			
-			[ <span ${adminColor}>${I18n.getMessage("Administrator")}</span> ]&nbsp;[ <span ${moderatorColor}>${I18n.getMessage("Moderator")}</span> ]
-			
-			<br>${I18n.getMessage("ForumListing.connectedUsers")}: 
-			
-			
-			<#list userSessions as us>
-				<#if us.isAdmin()>
-					<#assign color = adminColor/>
-				<#elseif us.isModerator()>
-					<#assign color = moderatorColor/>
-				<#else>
-					<#assign color = ""/>
-				</#if>
+				<tr>
+					<td class="row1" valign="center" align="middle" rowspan="2"><img src="${contextPath}/templates/${templateName}/images/whosonline.gif" width="46" height="25" /></td>
+					<td class="row1" align="left" width="100%">
+						<span class="gensmall">${totalMessages}<br />${totalUsers}<br />
+						<a href="${contextPath}/user/profile/${lastUserId}${extension}">${I18n.getMessage("ForumListing.newestUser")} ${lastUserName}</a></span>
+					</td>
+				</tr>
 
-				<a href="${contextPath}/user/profile/${us.userId}${extension}" ${color}>${us.username}</a>&nbsp;
-			</#list>
-			</span>
-		  </TD>
-        </TR></TBODY></TABLE>
+				<tr>
+					<td class="row1" align="left">
+						<#assign adminColor = "style=\"color:#FFA34F\""/>
+						<#assign moderatorColor = "style=\"color:#006600\""/>
+						<#assign color = ""/>
+
+						<span class="gensmall">${usersOnline}&nbsp;&nbsp;
+			
+						[ <span ${adminColor}>${I18n.getMessage("Administrator")}</span> ]&nbsp;[ <span ${moderatorColor}>${I18n.getMessage("Moderator")}</span> ]
+			
+						<br />
+						${I18n.getMessage("ForumListing.connectedUsers")}: 
+			
+						<#list userSessions as us>
+							<#if us.isAdmin()>
+								<#assign color = adminColor/>
+							<#elseif us.isModerator()>
+								<#assign color = moderatorColor/>
+							<#else>
+								<#assign color = ""/>
+							</#if>
+
+								<a href="${contextPath}/user/profile/${us.userId}${extension}" ${color}>${us.username}</a>&nbsp;
+						</#list>			
+						</span>		  
+					</td>
+				</tr>
+			</table>
         
-        <#if !logged>
-			<form accept-charset="${encoding}" action="${contextPath}/jforum${extension}" method="POST">
-			<input type="hidden" name="module" value="user">
-			<input type="hidden" name="action" value="validateLogin">
-			<input type="hidden" name="securityHash" value="${securityHash}">
-	      	<TABLE class=forumline cellSpacing=1 cellPadding=3 width="100%" border=0>
-	      	<TBODY>
-	        <TR>
-	          <TD class=catHead height=28><A name=login></A><SPAN class=cattitle>${I18n.getMessage("Login.enter")}</SPAN></TD>
-	        </TR>
-	        <TR>
-	          <TD class=row1 vAlign=center align=middle height=28>
-	          	<SPAN class=gensmall>
-	          	${I18n.getMessage("Login.user")}: <INPUT class=post size=10 name=username> 
-	            &nbsp;&nbsp;&nbsp;
-	            ${I18n.getMessage("Login.password")}: <INPUT class=post type=password size=10 name=password> &nbsp;&nbsp; &nbsp;&nbsp;
-	            ${I18n.getMessage("Login.autoLogon")} <INPUT class=text type=checkbox name=autologin> 
-	            &nbsp;&nbsp;&nbsp; 
-	            <INPUT class=mainoption type=submit value="${I18n.getMessage("Login.enter")}" name=login> 
-	          	</SPAN>
-	          </TD>
-	        </TR>
-	        </TBODY>
-	      </TABLE>
-	      </FORM>
-	    </#if>
-      
-      
-      <TABLE cellSpacing=3 cellPadding=0 align=center border=0>
-        <TBODY>
-        <TR>
-          <TD align=middle width=20><img src="${contextPath}/templates/${templateName}/images/folder_new.gif" width="19" height="18"></TD>
-          <TD><SPAN class=gensmall>${I18n.getMessage("ForumListing.newMessages")}</SPAN></TD>
-          <TD>&nbsp;&nbsp;</TD>
-          <TD align=middle width=20><img src="${contextPath}/templates/${templateName}/images/folder.gif" width="19" height="18"></TD>
-          <TD><SPAN class=gensmall>${I18n.getMessage("ForumListing.noNewMessages")}</SPAN></TD>
-          <TD>&nbsp;&nbsp;</TD>
-          <TD align=middle width=20><img src="${contextPath}/templates/${templateName}/images/folder_lock.gif" width="19" height="18"></TD>
-          <TD><SPAN class=gensmall>${I18n.getMessage("ForumListing.blocked")}</SPAN></TD></TR></TBODY></TABLE>
-</td>
-</tr>
+			<#if !logged>
+			<form name="formlogin" accept-charset="${encoding}" action="${contextPath}/jforum${extension}" method="post">
+				<input type="hidden" name="module" value="user" />
+				<input type="hidden" name="action" value="validateLogin" />
+				<input type="hidden" name="securityHash" value="${securityHash}" />
+				
+				<table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
+					<tr>
+						<td class="catHead" height="28"><a name="login" id="login"></a><span class="cattitle">${I18n.getMessage("Login.enter")}</span></td>
+					</tr>
+
+					<tr>
+						<td class="row1" valign="center" align="middle" height="28">
+							<span class="gensmall">
+								${I18n.getMessage("Login.user")}: <input class="post" size="10" name="username" /> 
+								&nbsp;&nbsp;&nbsp;
+								${I18n.getMessage("Login.password")}: <input class="post" type="password" size="10" name="password" /> 
+								&nbsp;&nbsp; &nbsp;&nbsp;
+								${I18n.getMessage("Login.autoLogon")} <input class="text" type="checkbox" name="autologin" /> 
+								&nbsp;&nbsp;&nbsp; 
+								<input class="mainoption" type="submit" value="${I18n.getMessage("Login.enter")}" name="login" /> 
+							</span>
+						</td>
+					</tr>
+				</table>
+			</form>
+			</#if>
+
+			<table cellspacing="3" cellpadding="0" align="center" border="0">
+				<tr>
+					<td align="middle" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_new.gif" width="19" height="18" /></td>
+					<td><span class="gensmall">${I18n.getMessage("ForumListing.newMessages")}</span></td>
+					<td>&nbsp;&nbsp;</td>
+					<td align="middle" width="20"><img src="${contextPath}/templates/${templateName}/images/folder.gif" width="19" height="18" /></td>
+					<td><span class="gensmall">${I18n.getMessage("ForumListing.noNewMessages")}</span></td>
+					<td>&nbsp;&nbsp;</td>
+					<td align="middle" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_lock.gif" width="19" height="18" /></td>
+					<td><span class="gensmall">${I18n.getMessage("ForumListing.blocked")}</span></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
 </table>

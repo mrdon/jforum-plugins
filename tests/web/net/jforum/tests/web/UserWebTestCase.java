@@ -52,14 +52,12 @@ import com.dumbster.smtp.SmtpMessage;
 
 /**
  * @author Marc Wick
- * @version $Id: UserWebTestCase.java,v 1.8 2004/09/29 15:23:36 marcwick Exp $
+ * @version $Id: UserWebTestCase.java,v 1.9 2004/10/01 20:50:38 rafaelsteil Exp $
  */
 public class UserWebTestCase extends AbstractWebTestCase {
 
 	private static String lastTestuser;
-
 	public static String defaultTestuser = "defaultTestuser";
-
 	public static String password = "testpassword";
 
 	public UserWebTestCase(String name) throws IOException {
@@ -80,51 +78,53 @@ public class UserWebTestCase extends AbstractWebTestCase {
 
 	public void testRegisterNewUser() {
 		beginAt(FORUMS_LIST);
-		clickLinkWithText(I18n.getMessage(language, "ForumBase.register"));
+		assertLinkPresent("register");
+		clickLink("register");
+		assertFormPresent("formregister");
 		lastTestuser = "testuser" + new Random().nextInt(1000000);
 		setFormElement("username", lastTestuser);
 		setFormElement("email", lastTestuser);
 		setFormElement("password", "testpassword1");
 		setFormElement("password_confirm", "testpassword1");
 		submit();
-		clickLinkWithText(I18n.getMessage(language, "ForumBase.logout"));
+		logout();
 	}
 
 	public void testChangePassword() {
 		beginAt(FORUMS_LIST);
 		login(lastTestuser, "testpassword1");
-		clickLinkWithText(I18n.getMessage(language, "ForumBase.profile"));
+		assertLinkPresent("myprofile");
+		clickLink("myprofile");
 		setFormElement("current_password", "testpassword1");
 		setFormElement("new_password", password);
 		setFormElement("password_confirm", password);
 		submit();
-		clickLinkWithText(I18n.getMessage(language, "ForumBase.logout"));
-		login(lastTestuser, password);
-		clickLinkWithText(I18n.getMessage(language, "ForumBase.profile"));
-		setFormElement("signature", "signature for testuser");
-		submit();
-		clickLinkWithText(I18n.getMessage(language, "ForumBase.logout"));
+		logout();
 	}
 
 	public void testEditUserProfile() {
 		login(lastTestuser, password);
-		clickLinkWithText(I18n.getMessage(language, "ForumBase.profile"));
+		assertLinkPresent("myprofile");
+		clickLink("myprofile");
 		setFormElement("signature", "signature for testuser");
 		submit();
-		clickLinkWithText(I18n.getMessage(language, "ForumBase.logout"));
+		logout();
 	}
 
 	public void testPasswordForgottenUserName() throws Exception {
 		smtpServer = SimpleSmtpServer.start();
 		beginAt(FORUMS_LIST);
-		clickLinkWithText(I18n.getMessage(language, "ForumBase.login"));
-		clickLinkWithText(I18n.getMessage(language, "Login.lostPassword"));
+		assertLinkPresent("login");
+		clickLink("login");
+		assertLinkPresent("lostpassword");
+		clickLink("lostpassword");
 
+		assertFormPresent("formlostpassword");
 		setFormElement("username", lastTestuser);
 		submit();
 		Thread.sleep(1000);
-		assertEquals("password lost email received", 1, smtpServer
-				.getReceievedEmailSize());
+		assertEquals("password lost email received", 1, 
+						smtpServer.getReceievedEmailSize());
 		SmtpMessage mail = (SmtpMessage) smtpServer.getReceivedEmail().next();
 		String body = mail.getBody();
 		String link = body.substring(body.indexOf("http:"),

@@ -44,16 +44,16 @@ package net.jforum.tests.web;
 
 import java.io.IOException;
 
-import com.dumbster.smtp.SimpleSmtpServer;
-
-import net.jforum.util.I18n;
+import net.jforum.TestCaseUtils;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.sourceforge.jwebunit.WebTestCase;
 
+import com.dumbster.smtp.SimpleSmtpServer;
+
 /**
  * @author Marc Wick
- * @version $Id: AbstractWebTestCase.java,v 1.6 2004/09/30 19:09:31 rafaelsteil Exp $
+ * @version $Id: AbstractWebTestCase.java,v 1.7 2004/10/01 20:50:38 rafaelsteil Exp $
  */
 public abstract class AbstractWebTestCase extends WebTestCase {
 	public static class SimpleHTMLParserListener implements
@@ -96,11 +96,8 @@ public abstract class AbstractWebTestCase extends WebTestCase {
 	}
 
 	private void init() throws IOException {
-		SystemGlobals.initGlobals(this.rootDir, this.rootDir
-				+ "/WEB-INF/config/SystemGlobals.properties", null);
-		SystemGlobals.loadDefaults();
+		TestCaseUtils.loadEnvironment();
 		this.language = SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT);
-		I18n.load();
 	}
 
 	protected void login(String username, String password) {
@@ -111,7 +108,12 @@ public abstract class AbstractWebTestCase extends WebTestCase {
 		setFormElement("username", username);
 		setFormElement("password", password);
 		submit();
-		//assertElementNotPresent("invalidlogin");
+		assertElementNotPresent("invalidlogin");
 	}
-
+	
+	protected void logout() {
+		assertLinkPresent("logout");
+		clickLink("logout");
+		assertLinkPresent("login");
+	}
 }

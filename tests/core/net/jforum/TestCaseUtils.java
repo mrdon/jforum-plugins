@@ -42,16 +42,18 @@
  */
 package net.jforum;
 
+import java.io.File;
 import java.io.IOException;
 
 import net.jforum.util.I18n;
+import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * General utilities for the test cases.
  * 
  * @author Rafael Steil
- * @version $Id: TestCaseUtils.java,v 1.2 2004/10/01 19:25:50 rafaelsteil Exp $
+ * @version $Id: TestCaseUtils.java,v 1.3 2004/10/01 20:50:39 rafaelsteil Exp $
  */
 public class TestCaseUtils
 {
@@ -60,7 +62,7 @@ public class TestCaseUtils
 	
 	private TestCaseUtils() {}
 	
-	public static void loadEnvironment() throws Exception
+	public static void loadEnvironment() throws IOException
 	{
 		utils.init();
 	}
@@ -81,8 +83,11 @@ public class TestCaseUtils
 		getRootDir();
 		SystemGlobals.initGlobals(this.rootDir, this.rootDir
 				+ "/WEB-INF/config/SystemGlobals.properties", null);
-
-		SystemGlobals.loadDefaults();
+		
+		if (new File(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG)).exists()) {
+        	SystemGlobals.loadAdditionalDefaults(
+        					SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG));
+        }
 		I18n.load();
 	}
 }
