@@ -79,7 +79,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.21 2004/11/06 20:22:41 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.22 2004/11/07 04:09:29 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -517,10 +517,11 @@ public class PostAction extends Command
             String path = JForum.getRequest().getContextPath() + "/posts/list/";
 
             String start = JForum.getRequest().getParameter("start");
-            if (start != null && !start.equals("") && !start.equals("0")) {
-                path += this.startPage(t, Integer.parseInt(start)) + "/";
+            if (start == null || start.trim().equals("") || Integer.parseInt(start) < 0) {
+            	start = "0";
             }
 
+            path += this.startPage(t, Integer.parseInt(start)) + "/";
             path += t.getId() + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#" + postId;
 
             JForum.setRedirect(path);

@@ -40,7 +40,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: PermissionProcessHelper.java,v 1.4 2004/10/03 16:53:44 rafaelsteil Exp $
+ * $Id: PermissionProcessHelper.java,v 1.5 2004/11/07 04:09:28 rafaelsteil Exp $
  */
 package net.jforum.view.admin;
 
@@ -87,9 +87,9 @@ class PermissionProcessHelper
 	
 	public void processData() throws Exception
 	{
-		Enumeration enum = JForum.getRequest().getParameterNames();
-		while (enum.hasMoreElements()) {
-			String paramName = (String)enum.nextElement();
+		Enumeration e = JForum.getRequest().getParameterNames();
+		while (e.hasMoreElements()) {
+			String paramName = (String)e.nextElement();
 			
 			if (paramName.startsWith("perm_")) {
 				if (paramName.endsWith("$single")) {

@@ -77,7 +77,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.12 2004/11/04 02:46:54 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.14 2004/11/07 04:09:29 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -210,8 +210,14 @@ public class InstallAction extends Command
 		InstallServlet.getContext().put("forumLink", this.getFromSession("forumLink"));
 		InstallServlet.getContext().put("moduleAction", "install_finished.htm");
 		
+		String lang = this.getFromSession("language");
+		if (lang == null) {
+			lang = "en_US";
+		}
+		
+		InstallServlet.getContext().put("lang", lang);
+		
 		this.doFinalSteps();
-
 		this.configureSystemGlobals();
 
 		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
@@ -223,7 +229,6 @@ public class InstallAction extends Command
 	private void doFinalSteps() throws Exception
 	{
 		// Modules Mapping
-		/*
 		String modulesMapping = SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/modulesMapping.properties";
 		if (new File(modulesMapping).canWrite()) {
 			Properties p = new Properties();
@@ -238,7 +243,6 @@ public class InstallAction extends Command
 				ConfigLoader.loadModulesMapping(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR));
 			}
 		}
-		*/
 		
 		// Index renaming
 		String index = SystemGlobals.getApplicationPath() + "/index.htm";

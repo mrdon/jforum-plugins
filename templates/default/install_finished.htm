@@ -28,8 +28,8 @@ td.catHead,td.catSides,td.catLeft,td.catRight,td.catBottom { background-image: u
 					<tr>
 						<td><img src="${contextPath}/templates/default/images/logo.jpg" border="0" alt="JForum" vspace="1" /></td>
 						<td align="center" width="100%" valign="middle">
-							<span class="maintitle">JForum 2.0 ${I18n.getMessage("Install.installation")}<br/>
-							${I18n.getMessage("Install.finished")}
+							<span class="maintitle">JForum 2.0 ${I18n.getMessage("${lang}", "Install.installation")}<br/>
+							${I18n.getMessage("${lang}", "Install.finished")}
 							</span>
 						</td>
 					</tr>
@@ -39,20 +39,20 @@ td.catHead,td.catSides,td.catLeft,td.catRight,td.catBottom { background-image: u
 			<tr>
 				<td width="100%"><table width="100%" cellpadding="2" cellspacing="1" border="0" class="forumline">
 					<tr>
-						<th colspan="2">${I18n.getMessage("Install.congratulations")}</th>
+						<th colspan="2">${I18n.getMessage("${lang}", "Install.congratulations")}</th>
 					</tr>
 
 					<tr>
 						<td class="row2" align="center">
 						<span class="gen">
 						<p>
-						${I18n.getMessage("Install.congratsMessage")}
+						${I18n.getMessage("${lang}", "Install.congratsMessage")}
 						</p>
 						<br/>
 
 						<p>
 						<b>
-						${I18n.getMessage("Install.cleanFiles")}:<br/>
+						${I18n.getMessage("${lang}", "Install.cleanFiles")}:<br/>
 						</b>
 
 						<table width="80%" align="center">
@@ -61,18 +61,18 @@ td.catHead,td.catSides,td.catLeft,td.catRight,td.catBottom { background-image: u
 								<td>
 									<span class="gen">
 									<img src="${contextPath}/images/smilies/d6741711aa045b812616853b5507fd2a.gif" border="0" align="middle"> 
-									${I18n.getMessage("Install.removeInstallDir")}<br/>
+									${I18n.getMessage("${lang}", "Install.removeInstallDir")}<br/>
 
 									<#if mappingFixed?default("false") == "false">
 										<img src="${contextPath}/images/smilies/d6741711aa045b812616853b5507fd2a.gif" border="0" align="middle"> 
-										${I18n.getMessage("Install.removeMapping")}:<br/>
+										${I18n.getMessage("${lang}", "Install.removeMapping")}:<br/>
 										<div align="center"><b>install = net.jforum.view.install.InstallAction</b></div>
 										<br/>
 									</#if>
 
 									<#if indexFixed?default("false") == "false">
 										<img src="${contextPath}/images/smilies/d6741711aa045b812616853b5507fd2a.gif" border="0" align="middle"> 
-										${I18n.getMessage("Install.renameIndex")}
+										${I18n.getMessage("${lang}", "Install.renameIndex")}
 									</#if>
 									</span>
 								</td>
@@ -97,7 +97,7 @@ td.catHead,td.catSides,td.catLeft,td.catRight,td.catBottom { background-image: u
 						}
 						</script>
 						<br/>
-						<font color="#ff0000"><b><input type="checkbox" name="c" onClick="changeStatus()">&nbsp;${I18n.getMessage("Install.IdidTheSteps")}</b></font>
+						<font color="#ff0000"><b><input type="checkbox" name="c" onClick="changeStatus()">&nbsp;${I18n.getMessage("${lang}", "Install.IdidTheSteps")}</b></font>
 						<br/>
 
 						<p><input type="button" name="click" value="${clickHere}" onClick="document.location = '${forumLink}';" disabled style="color: gray;"></p>
