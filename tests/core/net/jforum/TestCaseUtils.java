@@ -45,20 +45,18 @@ package net.jforum;
 import java.io.IOException;
 
 import net.jforum.util.I18n;
-import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * General utilities for the test cases.
  * 
  * @author Rafael Steil
- * @version $Id: TestCaseUtils.java,v 1.1 2004/09/29 21:36:29 rafaelsteil Exp $
+ * @version $Id: TestCaseUtils.java,v 1.2 2004/10/01 19:25:50 rafaelsteil Exp $
  */
 public class TestCaseUtils
 {
 	private static TestCaseUtils utils = new TestCaseUtils();
 	private String rootDir;
-	private String language;
 	
 	private TestCaseUtils() {}
 	
@@ -67,17 +65,24 @@ public class TestCaseUtils
 		utils.init();
 	}
 	
+	public static String getRootDir()
+	{
+		if (utils.rootDir == null) {
+			utils.rootDir = utils.getClass().getResource("/").getPath();
+			utils.rootDir = utils.rootDir.substring(0, utils.rootDir.length()
+							- "/WEB-INF/classes".length());
+		}
+		
+		return utils.rootDir;
+	}
+	
 	private void init() throws IOException 
 	{
-		this.rootDir = this.getClass().getResource("/").getPath();
-		this.rootDir = this.rootDir.substring(0, utils.rootDir.length()
-						- "/WEB-INF/classes".length());
-
+		getRootDir();
 		SystemGlobals.initGlobals(this.rootDir, this.rootDir
 				+ "/WEB-INF/config/SystemGlobals.properties", null);
 
 		SystemGlobals.loadDefaults();
-		this.language = SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT);
 		I18n.load();
 	}
 }

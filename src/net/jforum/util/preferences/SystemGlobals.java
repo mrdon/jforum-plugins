@@ -66,7 +66,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author Pieter
- * @version $Id: SystemGlobals.java,v 1.11 2004/09/28 19:18:25 marcwick Exp $
+ * @version $Id: SystemGlobals.java,v 1.12 2004/10/01 19:25:49 rafaelsteil Exp $
  */
 public class SystemGlobals implements VariableStore
 {
@@ -84,6 +84,8 @@ public class SystemGlobals implements VariableStore
 	private VariableExpander expander;
 	
 	private static final Logger logger = Logger.getLogger(SystemGlobals.class);
+	
+	private SystemGlobals() {}
 
 	/**
 	 * Initialize the global configuration
@@ -92,37 +94,38 @@ public class SystemGlobals implements VariableStore
 	 * @param defaults The file containing system defaults (when null, defaults to <appPath>/WEB-INF/config/default.conf)
 	 * @param installation The specific installation realm (when null, defaults to System.getProperty("user"))
 	 */
-	static public void initGlobals(String appPath, String defaults, String installKey) throws IOException
+	public static void initGlobals(String appPath, String defaults, String installKey) throws IOException
 	{
-		globals = new SystemGlobals(appPath, defaults, installKey);
+		globals = new SystemGlobals();
+		globals.buildSystem(appPath, defaults, installKey);
 	}
-
-	private SystemGlobals(String appPath, String defaultConfig, String installKey) throws IOException
+	
+	private void buildSystem(String appPath, String defaultConfig, String installKey) throws IOException
 	{
 		if (defaultConfig == null) {
 			throw new InvalidParameterException("defaultConfig could not be null");
 		}
-		
-		expander = new VariableExpander(this, "${", "}");
+
+		this.expander = new VariableExpander(this, "${", "}");
 		
 		if (installKey == null) {
 			installKey = System.getProperty("user.name");
 		}
-		
+
 		this.defaultConfig = defaultConfig;
 		defaults = new Properties();
 
 		defaults.put(ConfigKeys.APPLICATION_PATH, appPath);
 		defaults.put(ConfigKeys.INSTALLATION, installKey);
 		defaults.put(ConfigKeys.DEFAULT_CONFIG, defaultConfig);
-		loadDefaultsImpl();
+		loadDefaults();
 
 		installation = new Properties(defaults);
 		
 		this.installationConfig = getVariableValue(ConfigKeys.INSTALLATION_CONFIG);
 
 		for (Iterator iter = additionalDefaultsList.iterator(); iter.hasNext(); ) {
-			this.loadAdditionalDefaultsImpl((String)iter.next());
+			loadAdditionalDefaults((String)iter.next());
 		}
 	}
 	
@@ -135,13 +138,8 @@ public class SystemGlobals implements VariableStore
 	 * */
 	public static void setValue(String field, String value)
 	{
-		globals.setValueImpl(field, value);
-	}
-
-	private void setValueImpl(String field, Object value)
-	{
-		installation.put(field, value);
-		expander.clearCache();
+		globals.installation.put(field, value);
+		globals.expander.clearCache();
 	}
 
 	/**
@@ -161,7 +159,10 @@ public class SystemGlobals implements VariableStore
 	 */
 	public static void loadDefaults() throws IOException
 	{
-		globals.loadDefaultsImpl();
+		FileInputStream input = new FileInputStream(globals.defaultConfig);
+		globals.defaults.load(input);
+		input.close();
+		globals.expander.clearCache();
 	}
 	
 	/**
@@ -172,26 +173,13 @@ public class SystemGlobals implements VariableStore
 	 */
 	public static void loadAdditionalDefaults(String file) throws IOException
 	{
-		globals.loadAdditionalDefaultsImpl(file);
-	}
-	
-	private void loadAdditionalDefaultsImpl(String file) throws IOException
-	{
 		FileInputStream input = new FileInputStream(file);
-		installation.load(input);
+		globals.installation.load(input);
 		input.close();
 		
 		if (!additionalDefaultsList.contains(file)) {
 			additionalDefaultsList.add(file);
 		}
-	}
-
-	private void loadDefaultsImpl() throws IOException
-	{
-		FileInputStream input = new FileInputStream(defaultConfig);
-		defaults.load(input);
-		input.close();
-		expander.clearCache();
 	}
 
 	/**
@@ -201,14 +189,8 @@ public class SystemGlobals implements VariableStore
 	 */
 	public static void saveInstallation() throws IOException
 	{
-		globals.saveInstallationImpl();
-	}
-
-	private void saveInstallationImpl() throws IOException
-	{
-		FileOutputStream out = new FileOutputStream(installationConfig);
-		installation.store(out, "Installation specific configuration options\n"
-							+ "# Please restart the application after editing this file.");
+		FileOutputStream out = new FileOutputStream(globals.installationConfig);
+		globals.installation.store(out, "Installation specific configuration options");
 		out.close();
 	}
 
@@ -321,11 +303,6 @@ public class SystemGlobals implements VariableStore
 	 **/
 	public static void loadQueries(String queryFile) throws IOException
 	{
-		globals.loadQueriesImpl(queryFile);
-	}
-
-	private void loadQueriesImpl(String queryFile) throws IOException
-	{
 		queries.load(new FileInputStream(queryFile));
 	}
 
@@ -338,11 +315,6 @@ public class SystemGlobals implements VariableStore
 	 * */
 	public static String getSql(String sql)
 	{
-		return globals.getSqlImpl(sql);
-	}
-
-	private String getSqlImpl(String sql)
-	{
 		return queries.getProperty(sql);
 	}
 
@@ -353,11 +325,6 @@ public class SystemGlobals implements VariableStore
 	 */
 	public static Iterator fetchConfigKeyIterator()
 	{
-		return globals.fetchConfigKeyIteratorImpl();
-	}
-
-	private Iterator fetchConfigKeyIteratorImpl()
-	{
-		return defaults.keySet().iterator();
+		return globals.defaults.keySet().iterator();
 	}
 }

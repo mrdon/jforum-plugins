@@ -64,7 +64,7 @@ import net.jforum.util.preferences.SystemGlobals;
  *  
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: I18n.java,v 1.17 2004/09/30 19:09:32 rafaelsteil Exp $
+ * @version $Id: I18n.java,v 1.18 2004/10/01 19:25:50 rafaelsteil Exp $
  */
 public class I18n 
 {
@@ -111,6 +111,7 @@ public class I18n
 		String custom = SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT);
 		if (!custom.equals(defaultName)) {
 			load(custom, defaultName);
+			defaultName = custom;
 		}
 	}
 	

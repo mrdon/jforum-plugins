@@ -46,14 +46,12 @@ import java.io.Serializable;
 
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.SecurityConstants;
-import net.jforum.util.preferences.ConfigKeys;
-import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * Stores information about user's session.
  * 
  * @author Rafael Steil
- * @version $Id: UserSession.java,v 1.7 2004/08/19 04:43:06 jamesyong Exp $
+ * @version $Id: UserSession.java,v 1.8 2004/10/01 19:25:50 rafaelsteil Exp $
  */
 public class UserSession implements Serializable
 {
@@ -144,7 +142,6 @@ public class UserSession implements Serializable
 		this.sessionId = sessionId;
 	}
 
-	// We need it to obey the JavaBeans contract
 	public void setSessionTime(long sessionTime)
 	{
 		this.sessionTime = sessionTime;
@@ -185,10 +182,6 @@ public class UserSession implements Serializable
 	
 	public String getLang()
 	{
-		if (this.lang == null || this.lang.equals("")) {
-			this.lang = SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT_ADMIN);
-		}
-		
 		return this.lang;
 	}
 	
