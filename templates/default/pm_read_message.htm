@@ -9,9 +9,9 @@
                         <table height="40" cellspacing="2" cellpadding="2" border="0">
                           <tbody>
                             <tr valign="center">
-                              <td> <a href="${contextPath}/pm/inbox.page"> <img src="templates/${templateName}/images/msg_inbox.gif" border="0" /> </a></td>
+                              <td> <a href="${contextPath}/pm/inbox.page"> <img src="${contextPath}/templates/${templateName}/images/msg_inbox.gif" border="0" /> </a></td>
                               <td><a href="${contextPath}/pm/inbox.page"> <span class="cattitle">${I18n.getMessage("PrivateMessage.inbox")} &nbsp;</span> </a> </td>
-                              <td> <a href="${contextPath}/pm/sentbox.page"> <img src="templates/${templateName}/images/msg_sentbox.gif" border="0" />  </a></td>
+                              <td> <a href="${contextPath}/pm/sentbox.page"> <img src="${contextPath}/templates/${templateName}/images/msg_sentbox.gif" border="0" />  </a></td>
                               <td> <a href="${contextPath}/pm/sentbox.page"> <span class="cattitle">${I18n.getMessage("PrivateMessage.sentbox")}</span></a><span class="cattitle"> &nbsp;</span></td>
                             </tr>
                           </tbody>
@@ -27,7 +27,7 @@
 					<table cellspacing="2" cellpadding="2" width="100%" border="0">
 						<tbody>
 							<tr>
-								<td valign="center"><a href="${contextPath}/pm/reply/${pm.id}.page"><img src="templates/${templateName}/images/reply.gif" border="0" /></a>
+								<td valign="center"><a href="${contextPath}/pm/reply/${pm.id}.page"><img src="${contextPath}/templates/${templateName}/images/reply.gif" border="0" /></a>
 								</td>
 								<td width="100%">
 									<span class="nav">&nbsp;<A class=nav href="${contextPath}/forums/list.page">${I18n.getMessage("ForumListing.forumIndex")}</a></span>
@@ -56,7 +56,7 @@
 								<td class="row2"><span class="genmed">${I18n.getMessage("PrivateMessage.subject")}:</span></td>
 								<td class="row2" width="100%"><span class="genmed">${pm.post.subject}</span></td>
 								<td class="row2" nowrap="nowrap" align="right">
-									<a href="${contextPath}/pm/quote/${pm.id}.page"><img src="templates/${templateName}/images/icon_quote.gif" border="0" /></a>
+									<a href="${contextPath}/pm/quote/${pm.id}.page"><img src="${contextPath}/templates/${templateName}/images/icon_quote.gif" border="0" /></a>
 								</td>
 							</tr>
 							<tr>
@@ -81,7 +81,7 @@
 					<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
 						<tbody>
 							<tr>
-								<td><a href="${contextPath}/pm/${pm.id}.page"><img src="templates/${templateName}/images/reply.gif" border="0" /></a></td>
+								<td><a href="${contextPath}/pm/${pm.id}.page"><img src="${contextPath}/templates/${templateName}/images/reply.gif" border="0" /></a></td>
 							</tr>
 						</tbody>
 					</table>

@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=${encoding}" />
 <meta name="description" content="${metaDescription}" />
-<meta name="keywords" content="${metaKeywords}, jforum, jforum java, java jforum, java forum, forum, rafael steil, bulletin board, java bb, javabb" />
+<meta name="keywords" content="${metaKeywords}, jforum, jforum java, jforum forum, forum java, java jforum, java forum, forum, rafael steil, bulletin board, java bb, javabb" />
 <meta http-equiv="expires" content="0"/>
 <meta name="resource-type" content="document"/>
 <meta name="distribution" content="global"/>
@@ -12,8 +12,7 @@
 <meta name="robots" content="index, follow/">
 <meta name="revisit-after" content="1 days"/>
 <meta name="rating" content="general"/>
-<base href="${homeLink}" />
-<style type="text/css">@import url( templates/${templateName}/style.css );</style>
+<style type="text/css">@import url( ${contextPath}/templates/${templateName}/style.css );</style>
 <title>${pageTitle}</title>
 </head>
 
@@ -24,7 +23,7 @@
 			<table cellspacing="0" cellpadding="0" width="100%" border="0">
 				<tr>
 					<td>
-						<a href="${homeLink}"><img src="templates/${templateName}/images/logo.jpg" width="180" height="129" vspace="1" border="0"></a>
+						<a href="${contextPath}"><img src="${contextPath}/templates/${templateName}/images/logo.jpg" width="180" height="129" vspace="1" border="0"></a>
 					</td>
 					 
 					<td width="100%" align="center" valign="center">
@@ -32,22 +31,28 @@
 						<table cellspacing="0" cellpadding="2" border="0">
 							<tr>
 								<td vAlign="top" nowrap="nowrap" align="middle">&nbsp;
-									<img src="templates/${templateName}/images/icon_mini_search.gif" width="12" height="13" />
+									<img src="${contextPath}/templates/${templateName}/images/icon_mini_search.gif" width="12" height="13" />
 									<span class="mainmenu"><a class="mainmenu" href="${contextPath}/search/filters.page"><b>${I18n.getMessage("ForumBase.search")}</b></a> &nbsp;
 			
 									<#if logged?default(false)>
-									<a class="mainmenu" href="${contextPath}/user/edit/${session.userId}.page"><img src="templates/${templateName}/images/icon_mini_profile.gif" width="12" height="13" border="0" /> ${I18n.getMessage("ForumBase.profile")}</a>&nbsp; 
-									<a class="mainmenu" href="${contextPath}/pm/inbox.page"><img src="templates/${templateName}/images/icon_mini_message.gif" width="12" height="13" border="0"/> ${I18n.getMessage("ForumBase.privateMessages")}</a>&nbsp;
+									<a class="mainmenu" href="${contextPath}/user/edit/${session.userId}.page"><img src="${contextPath}/templates/${templateName}/images/icon_mini_profile.gif" width="12" height="13" border="0" /> ${I18n.getMessage("ForumBase.profile")}</a>&nbsp; 
+									<a class="mainmenu" href="${contextPath}/pm/inbox.page"><img src="${contextPath}/templates/${templateName}/images/icon_mini_message.gif" width="12" height="13" border="0"/>
+										<#if (session.privateMessages > 0)>
+											${I18n.getMessage("ForumBase.newPm")}: (${session.privateMessages})
+										<#else>
+											${I18n.getMessage("ForumBase.privateMessages")}
+										</#if>
+									</a>&nbsp;
 									</span>
 									</#if>
 			
-									<span class="mainmenu"> <img src="templates/${templateName}/images/icon_mini_groups.gif" width="12" height="13" />&nbsp;<a class="mainmenu" href="${homeLink}">${I18n.getMessage("ForumBase.backToSite")}</a>&nbsp;
+									<span class="mainmenu"> <img src="${contextPath}/templates/${templateName}/images/icon_mini_groups.gif" width="12" height="13" />&nbsp;<a class="mainmenu" href="${contextPath}">${I18n.getMessage("ForumBase.backToSite")}</a>&nbsp;
 									
 									<#if logged?default(false)>
-									<a class="mainmenu" href="${contextPath}/user/logout.page"><img src="templates/${templateName}/images/icon_mini_login.gif" width="12" height="13" border="0" /> ${I18n.getMessage("ForumBase.logout")} [${session.username}] </a></span></td>
+									<a class="mainmenu" href="${contextPath}/user/logout.page"><img src="${contextPath}/templates/${templateName}/images/icon_mini_login.gif" width="12" height="13" border="0" /> ${I18n.getMessage("ForumBase.logout")} [${session.username}] </a></span></td>
 									<#else>
-									<a class="mainmenu" href="${contextPath}/user/insert.page"><img src="templates/${templateName}/images/icon_mini_register.gif" width="12" height="13" border="0" /> ${I18n.getMessage("ForumBase.register")}</a>&nbsp/&nbsp;</span>
-									<a class="mainmenu" href="${contextPath}/user/login.page"><img src="templates/${templateName}/images/icon_mini_login.gif" width="12" height="13" border="0" /> ${I18n.getMessage("ForumBase.login")}</a>&nbsp; </span>
+									<a class="mainmenu" href="${contextPath}/user/insert.page"><img src="${contextPath}/templates/${templateName}/images/icon_mini_register.gif" width="12" height="13" border="0" /> ${I18n.getMessage("ForumBase.register")}</a>&nbsp/&nbsp;</span>
+									<a class="mainmenu" href="${contextPath}/user/login.page"><img src="${contextPath}/templates/${templateName}/images/icon_mini_login.gif" width="12" height="13" border="0" /> ${I18n.getMessage("ForumBase.login")}</a>&nbsp; </span>
 									</#if>
 								</td>
 							</tr>

@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -53,7 +53,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * Stores information about user's session.
  * 
  * @author Rafael Steil
- * @version $Id: UserSession.java,v 1.4 2004/06/01 19:47:31 pieter2 Exp $
+ * @version $Id: UserSession.java,v 1.5 2004/06/10 22:00:03 rafaelsteil Exp $
  */
 public class UserSession implements Serializable
 {
@@ -65,6 +65,9 @@ public class UserSession implements Serializable
 	private String username;
 	private boolean autoLogin;
 	private String lang;
+	private int privateMessages;
+	
+	static final long serialVersionUID = 0;
 	
 	public UserSession() {}
 	
@@ -78,6 +81,7 @@ public class UserSession implements Serializable
 		this.username = us.getUsername();
 		this.autoLogin = us.getAutoLogin();
 		this.lang = us.getLang();
+		this.privateMessages = us.getPrivateMessages();
 	}
 	
 	/**
@@ -90,6 +94,21 @@ public class UserSession implements Serializable
 		this.startTime = startTime;
 	}
 	
+	/**
+	 * @return Returns the privateMessages.
+	 */
+	public int getPrivateMessages()
+	{
+		return this.privateMessages;
+	}
+	
+	/**
+	 * @param privateMessages The privateMessages to set.
+	 */
+	public void setPrivateMessages(int privateMessages)
+	{
+		this.privateMessages = privateMessages;
+	}
 	/**
 	 * Set session last visit time.
 	 * 

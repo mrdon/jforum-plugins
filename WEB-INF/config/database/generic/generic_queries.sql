@@ -40,7 +40,12 @@ ConfigModel.update = UPDATE jforum_config SET config_name = ?, config_value = ? 
 # ##########
 # UserModel
 # ##########
-UserModel.selectById = SELECT * FROM jforum_users WHERE user_id = ?
+UserModel.selectById = SELECT COUNT(pm.privmsgs_to_userid) private_messages, u.* \
+	FROM jforum_users u \
+	LEFT JOIN jforum_privmsgs pm ON pm.privmsgs_type = 1 AND pm.privmsgs_to_userid = u.user_id \
+	WHERE u.user_id = ? \
+	GROUP BY pm.privmsgs_to_userid
+
 UserModel.selectAll = SELECT user_email, user_id, user_posts, user_regdate, username FROM jforum_users ORDER BY username
 UserModel.selectAllbyLimit = SELECT group_id, user_email, user_id, user_posts, user_regdate, username FROM jforum_users ORDER BY username LIMIT ?, ?
 UserModel.deletedStatus = UPDATE jforum_users SET deleted = ? WHERE user_id = ?

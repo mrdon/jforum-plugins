@@ -7,7 +7,7 @@
           <TD vAlign=bottom align=left>
 		  <#if logged><span class="gensmall">${I18n.getMessage("ForumListing.lastVisit")}: ${lastVisit}</span><br/></#if>
 		  <SPAN class=gensmall>${I18n.getMessage("ForumListing.date")}: ${now}</SPAN><BR>
-		  <SPAN class=forumLink><a class="forumLink" href="${homeLink}">${I18n.getMessage("ForumListing.forumIndex")}</a></SPAN>
+		  <SPAN class=forumLink><a class="forumLink" href="${contextPath}">${I18n.getMessage("ForumListing.forumIndex")}</a></SPAN>
 		  </TD>
           <TD class=gensmall vAlign=middle align=right>&nbsp;
 			<#if logged>
@@ -36,9 +36,9 @@
 		<TR>
 		<TD class=row1 vAlign=center align=middle height=50>
 			<#if forum.unread>
-				<img src="templates/${templateName}/images/folder_new_big.gif" width="46" height="25">
+				<img src="${contextPath}/templates/${templateName}/images/folder_new_big.gif" width="46" height="25">
 			<#else>
-				<img src="templates/${templateName}/images/folder_big.gif" width="46" height="25">
+				<img src="${contextPath}/templates/${templateName}/images/folder_big.gif" width="46" height="25">
 			</#if>
 		</TD>
 		<TD class=row1 width="100%" height=50><SPAN class=forumlink><A class=forumlink href="${contextPath}/forums/show/${forum.id}.page">${forum.name}</A><BR>
@@ -57,7 +57,7 @@
 					<#assign startPage = ((lpi["topic_replies"] / topicsPerPage)?int * topicsPerPage) +"/"/>
 				</#if>
 				
-				<a href="${contextPath}/posts/list/${startPage}${lpi["topicId"]}.page#${lpi["postId"]}"><img src="templates/${templateName}/images/icon_latest_reply.gif" width="18" height="9" border="0"></a>
+				<a href="${contextPath}/posts/list/${startPage}${lpi["topicId"]}.page#${lpi["postId"]}"><img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif" width="18" height="9" border="0"></a>
 			<#else>
 				${I18n.getMessage("ForumListing.noMessages")}
 			</#if>
@@ -82,7 +82,7 @@
           <TD class=catHead colSpan=2 height=28><SPAN class=cattitle>${I18n.getMessage("ForumListing.whoIsOnline")}</SPAN></TD>
         </TR>
         <TR>
-          <TD class=row1 vAlign=center align=middle rowSpan=2><img src="templates/${templateName}/images/whosonline.gif" width="46" height="25"></TD>
+          <TD class=row1 vAlign=center align=middle rowSpan=2><img src="${contextPath}/templates/${templateName}/images/whosonline.gif" width="46" height="25"></TD>
           <TD class=row1 align=left width="100%"><SPAN class=gensmall>${totalMessages}<BR>
            ${totalUsers}<BR>
 		   <a href="${contextPath}/user/profile/${lastUserId}.page">${I18n.getMessage("ForumListing.newestUser")} ${lastUserName}</a></SPAN></TD>
@@ -146,13 +146,13 @@
       <TABLE cellSpacing=3 cellPadding=0 align=center border=0>
         <TBODY>
         <TR>
-          <TD align=middle width=20><img src="templates/${templateName}/images/folder_new.gif" width="19" height="18"></TD>
+          <TD align=middle width=20><img src="${contextPath}/templates/${templateName}/images/folder_new.gif" width="19" height="18"></TD>
           <TD><SPAN class=gensmall>${I18n.getMessage("ForumListing.newMessages")}</SPAN></TD>
           <TD>&nbsp;&nbsp;</TD>
-          <TD align=middle width=20><img src="templates/${templateName}/images/folder.gif" width="19" height="18"></TD>
+          <TD align=middle width=20><img src="${contextPath}/templates/${templateName}/images/folder.gif" width="19" height="18"></TD>
           <TD><SPAN class=gensmall>${I18n.getMessage("ForumListing.noNewMessages")}</SPAN></TD>
           <TD>&nbsp;&nbsp;</TD>
-          <TD align=middle width=20><img src="templates/${templateName}/images/folder_lock.gif" width="19" height="18"></TD>
+          <TD align=middle width=20><img src="${contextPath}/templates/${templateName}/images/folder_lock.gif" width="19" height="18"></TD>
           <TD><SPAN class=gensmall>${I18n.getMessage("ForumListing.blocked")}</SPAN></TD></TR></TBODY></TABLE>
 </td>
 </tr>

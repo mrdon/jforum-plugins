@@ -274,7 +274,7 @@ function validatePostForm(f)
 		<th height="25" class="thHead">${I18n.getMessage("PostForm.preview")}</th>
 	</tr>
 	<tr>
-		<td class="row1"><img src="templates/${templateName}/images/icon_minipost.gif"/><span class="postdetails"> ${I18n.getMessage("PostForm.subject")}: ${postPreview.subject}</span></td>
+		<td class="row1"><img src="${contextPath}/templates/${templateName}/images/icon_minipost.gif"/><span class="postdetails"> ${I18n.getMessage("PostForm.subject")}: ${postPreview.subject}</span></td>
 	</tr>
 	<tr>
 		<td class="row1"><table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -293,7 +293,7 @@ function validatePostForm(f)
 		</table></td>
 	</tr>
 	<tr>
-		<td class="spaceRow" height="1"><img src="templates/${templateName}/images/spacer.gif" width="1" height="1" /></td>
+		<td class="spaceRow" height="1"><img src="${contextPath}/templates/${templateName}/images/spacer.gif" width="1" height="1" /></td>
 	</tr>
 </table>
 <br clear="all" />
@@ -367,34 +367,34 @@ function validatePostForm(f)
                     <TR align=middle>
                       <TD class=gensmall colSpan=4><B>${I18n.getMessage("PostForm.emoticons")}</B></TD></TR>
                     <TR vAlign=center align=middle>
-                      <TD><A href="javascript:emoticon(':D')"><IMG src="templates/${templateName}/images/icon_biggrin.gif" alt="Very Happy" width="15" height="15" border=0 title="Very Happy"></A></TD>
-                      <TD><A href="javascript:emoticon(':)')"><IMG src="templates/${templateName}/images/icon_smile.gif" alt=Smile width="15" height="15" border=0 title=Smile></A></TD>
-                      <TD><A href="javascript:emoticon(':(')"><IMG src="templates/${templateName}/images/icon_sad.gif" alt=Sad width="15" height="15" border=0 title=Sad></A></TD>
-                      <TD><A href="javascript:emoticon(':-o')"><IMG src="templates/${templateName}/images/icon_surprised.gif" alt=Surprised width="15" height="15" border=0 title=Surprised></A></TD>
+                      <TD><A href="javascript:emoticon(':D')"><img src="${contextPath}/templates/${templateName}/images/icon_biggrin.gif" alt="Very Happy" width="15" height="15" border=0 title="Very Happy"></A></TD>
+                      <TD><A href="javascript:emoticon(':)')"><img src="${contextPath}/templates/${templateName}/images/icon_smile.gif" alt=Smile width="15" height="15" border=0 title=Smile></A></TD>
+                      <TD><A href="javascript:emoticon(':(')"><img src="${contextPath}/templates/${templateName}/images/icon_sad.gif" alt=Sad width="15" height="15" border=0 title=Sad></A></TD>
+                      <TD><A href="javascript:emoticon(':-o')"><img src="${contextPath}/templates/${templateName}/images/icon_surprised.gif" alt=Surprised width="15" height="15" border=0 title=Surprised></A></TD>
                     </TR>
                     <TR vAlign=center align=middle>
-                      <TD><A href="javascript:emoticon(':shock:')"><IMG src="templates/${templateName}/images/icon_eek.gif" alt=Shocked width="15" height="15" border=0 title=Shocked></A></TD>
-                      <TD><A href="javascript:emoticon(':?')"><IMG src="templates/${templateName}/images/icon_confused.gif" alt=Confused width="15" height="15" border=0 title=Confused></A></TD>
-                      <TD><A href="javascript:emoticon('8)')"><IMG src="templates/${templateName}/images/icon_cool.gif" alt=Cool width="15" height="15" border=0 title=Cool></A></TD>
-                      <TD><A href="javascript:emoticon(':lol:')"><IMG src="templates/${templateName}/images/icon_lol.gif" alt=Laughing width="15" height="15" border=0 title=Laughing></A></TD>
+                      <TD><A href="javascript:emoticon(':shock:')"><img src="${contextPath}/templates/${templateName}/images/icon_eek.gif" alt=Shocked width="15" height="15" border=0 title=Shocked></A></TD>
+                      <TD><A href="javascript:emoticon(':?')"><img src="${contextPath}/templates/${templateName}/images/icon_confused.gif" alt=Confused width="15" height="15" border=0 title=Confused></A></TD>
+                      <TD><A href="javascript:emoticon('8)')"><img src="${contextPath}/templates/${templateName}/images/icon_cool.gif" alt=Cool width="15" height="15" border=0 title=Cool></A></TD>
+                      <TD><A href="javascript:emoticon(':lol:')"><img src="${contextPath}/templates/${templateName}/images/icon_lol.gif" alt=Laughing width="15" height="15" border=0 title=Laughing></A></TD>
                     </TR>
                     <TR vAlign=center align=middle>
-                      <TD><A href="javascript:emoticon(':x')"><IMG src="templates/${templateName}/images/icon_mad.gif" alt=Mad width="15" height="15" border=0 title=Mad></A></TD>
-                      <TD><A href="javascript:emoticon(':P')"><IMG src="templates/${templateName}/images/icon_razz.gif" alt=Razz width="15" height="15" border=0 title=Razz></A></TD>
-                      <TD><A href="javascript:emoticon(':oops:')"><IMG src="templates/${templateName}/images/icon_redface.gif" alt=Embarassed width="15" height="15" border=0 title=Embarassed></A></TD>
-                      <TD><A href="javascript:emoticon(':cry:')"><IMG src="templates/${templateName}/images/icon_cry.gif" alt="Crying or Very sad" width="15" height="15" border=0 title="Crying or Very sad"></A></TD>
+                      <TD><A href="javascript:emoticon(':x')"><img src="${contextPath}/templates/${templateName}/images/icon_mad.gif" alt=Mad width="15" height="15" border=0 title=Mad></A></TD>
+                      <TD><A href="javascript:emoticon(':P')"><img src="${contextPath}/templates/${templateName}/images/icon_razz.gif" alt=Razz width="15" height="15" border=0 title=Razz></A></TD>
+                      <TD><A href="javascript:emoticon(':oops:')"><img src="${contextPath}/templates/${templateName}/images/icon_redface.gif" alt=Embarassed width="15" height="15" border=0 title=Embarassed></A></TD>
+                      <TD><A href="javascript:emoticon(':cry:')"><img src="${contextPath}/templates/${templateName}/images/icon_cry.gif" alt="Crying or Very sad" width="15" height="15" border=0 title="Crying or Very sad"></A></TD>
                     </TR>
                     <TR vAlign=center align=middle>
-                      <TD><A href="javascript:emoticon(':evil:')"><IMG src="templates/${templateName}/images/icon_evil.gif" alt="Evil or Very Mad" width="15" height="15" border=0 title="Evil or Very Mad"></A></TD>
-                      <TD><A href="javascript:emoticon(':twisted:')"><IMG src="templates/${templateName}/images/icon_twisted.gif" alt="Twisted Evil" width="15" height="15" border=0 title="Twisted Evil"></A></TD>
-                      <TD><A href="javascript:emoticon(':roll:')"><IMG src="templates/${templateName}/images/icon_rolleyes.gif" alt="Rolling Eyes" width="15" height="15" border=0 title="Rolling Eyes"></A></TD>
-                      <TD><A href="javascript:emoticon(':wink:')"><IMG src="templates/${templateName}/images/icon_wink.gif" alt=Wink width="15" height="15" border=0 title=Wink></A></TD>
+                      <TD><A href="javascript:emoticon(':evil:')"><img src="${contextPath}/templates/${templateName}/images/icon_evil.gif" alt="Evil or Very Mad" width="15" height="15" border=0 title="Evil or Very Mad"></A></TD>
+                      <TD><A href="javascript:emoticon(':twisted:')"><img src="${contextPath}/templates/${templateName}/images/icon_twisted.gif" alt="Twisted Evil" width="15" height="15" border=0 title="Twisted Evil"></A></TD>
+                      <TD><A href="javascript:emoticon(':roll:')"><img src="${contextPath}/templates/${templateName}/images/icon_rolleyes.gif" alt="Rolling Eyes" width="15" height="15" border=0 title="Rolling Eyes"></A></TD>
+                      <TD><A href="javascript:emoticon(':wink:')"><img src="${contextPath}/templates/${templateName}/images/icon_wink.gif" alt=Wink width="15" height="15" border=0 title=Wink></A></TD>
                     </TR>
                     <TR vAlign=center align=middle>
-                      <TD><A href="javascript:emoticon(':!:')"><IMG src="templates/${templateName}/images/icon_exclaim.gif" alt=Exclamation width="15" height="15" border=0 title=Exclamation></A></TD>
-                      <TD><A href="javascript:emoticon(':?:')"><IMG src="templates/${templateName}/images/icon_question.gif" alt=Question width="15" height="15" border=0 title=Question></A></TD>
-                      <TD><A href="javascript:emoticon(':idea:')"><IMG src="templates/${templateName}/images/icon_idea.gif" alt=Idea width="15" height="15" border=0 title=Idea></A></TD>
-                      <TD><A href="javascript:emoticon(':arrow:')"><IMG src="templates/${templateName}/images/icon_arrow.gif" alt=Arrow width="15" height="15" border=0 title=Arrow></A></TD>
+                      <TD><A href="javascript:emoticon(':!:')"><img src="${contextPath}/templates/${templateName}/images/icon_exclaim.gif" alt=Exclamation width="15" height="15" border=0 title=Exclamation></A></TD>
+                      <TD><A href="javascript:emoticon(':?:')"><img src="${contextPath}/templates/${templateName}/images/icon_question.gif" alt=Question width="15" height="15" border=0 title=Question></A></TD>
+                      <TD><A href="javascript:emoticon(':idea:')"><img src="${contextPath}/templates/${templateName}/images/icon_idea.gif" alt=Idea width="15" height="15" border=0 title=Idea></A></TD>
+                      <TD><A href="javascript:emoticon(':arrow:')"><img src="${contextPath}/templates/${templateName}/images/icon_arrow.gif" alt=Arrow width="15" height="15" border=0 title=Arrow></A></TD>
                     </TR>
                     <TR align=middle>
                       <TD colSpan=4>

@@ -9,6 +9,13 @@ CategoryModel.addNew = INSERT INTO jforum_categories (title, display_order) VALU
 UserModel.selectAllbyLimit = SELECT group_id, user_email, user_id, user_posts, user_regdate, username FROM jforum_users ORDER BY username LIMIT ? OFFSET ?
 UserModel.lastGeneratedUserId = SELECT CURRVAL('jforum_users_seq')
 
+UserModel.selectById = SELECT u.*, \
+	(SELECT COUNT(1) FROM jforum_privmsgs pm \
+	WHERE pm.privmsgs_to_userid = u.user_id \
+	AND pm.privmsgs_type = 1) AS private_messages \
+	FROM jforum_users u \
+	WHERE u.user_id = ?
+
 # #############
 # PostModel
 # #############

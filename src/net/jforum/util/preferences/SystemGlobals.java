@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -52,14 +52,19 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 /**
- * Store global configurations used in the system.
+ * <p>Store global configurations used in the system.
  * This is an helper class used to access the values
  * defined at SystemGlobals.properties and related
- * config files. 
+ * config files.</p> 
+ * 
+ * <p>
+ * Transient values are stored in a special place, and are not
+ * modified when you change a regular key's value. 
+ * </p>
  * 
  * @author Rafael Steil
  * @author Pieter
- * @version $Id: SystemGlobals.java,v 1.4 2004/06/05 22:09:57 rafaelsteil Exp $
+ * @version $Id: SystemGlobals.java,v 1.5 2004/06/10 22:00:05 rafaelsteil Exp $
  */
 public class SystemGlobals implements VariableStore
 {
@@ -71,6 +76,7 @@ public class SystemGlobals implements VariableStore
 	private Properties defaults;
 	private Properties installation;
 	private static Properties queries = new Properties();
+	private static Properties transientValues = new Properties();
 
 	private VariableExpander expander;
 	
@@ -129,7 +135,7 @@ public class SystemGlobals implements VariableStore
 	{
 		String defaultValue = (String) defaults.get(field);
 		if (defaultValue == null) {
-			throw new RuntimeException("unknown property: " + field);
+			throw new IllegalArgumentException("unknown property: " + field);
 		}
 
 		if (defaultValue.equals(value)) {
@@ -148,14 +154,7 @@ public class SystemGlobals implements VariableStore
 	 */
 	public static void setTransientValue(String field, String value)
 	{
-		globals.setTransientValueImpl(field, value);
-	}
-
-	private void setTransientValueImpl(String field, String value)
-	{
-		defaults.put(field, value);
-		installation.remove(field);
-		expander.clearCache();
+		transientValues.put(field, value);
 	}
 
 	/**
@@ -245,6 +244,11 @@ public class SystemGlobals implements VariableStore
 	public static String getValue(String field)
 	{
 		return globals.getVariableValue(field);
+	}
+	
+	public static String getTransientValue(String field)
+	{
+		return transientValues.getProperty(field);
 	}
 
 	/**

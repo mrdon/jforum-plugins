@@ -1,5 +1,5 @@
 <#macro littlePostPagination topicId postsPerPage totalPages totalReplies>
-	[ <img src="templates/${templateName}/images/icon_latest_reply.gif"> ${I18n.getMessage("goToPage")}: 
+	[ <img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif"> ${I18n.getMessage("goToPage")}: 
 	
 	<#list 0 .. totalPages - 1 as page>
 		<#assign start = postsPerPage * page/>

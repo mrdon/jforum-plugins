@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -54,7 +54,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.6 2004/06/05 22:10:01 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.7 2004/06/10 21:59:58 rafaelsteil Exp $
  */
 public class SessionFacade 
 {
@@ -156,7 +156,7 @@ public class SessionFacade
 	 * @return The session id if the user is already registered into the session, 
 	 * or <code>null</code> if it is not.
 	 */
-	static String isUserInSession(String username)
+	public static String isUserInSession(String username)
 	{
 		int aid = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 		
@@ -172,6 +172,29 @@ public class SessionFacade
 	}
 	
 	/**
+	 * Verify if there is an user in the session with the 
+	 * user id passed as parameter.
+	 * 
+	 * @param userId The user id to check for existance in the session
+	 * @return The session id if the user is already registered into the session, 
+	 * or <code>null</code> if it is not.
+	 */
+	public static String isUserInSession(int userId)
+	{
+		int aid = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
+		
+		for (Iterator iter = sessionMap.values().iterator(); iter.hasNext(); ) {
+			UserSession us = (UserSession)iter.next();
+			
+			if (us.getUserId() != aid && us.getUserId() == userId) {
+				return us.getSessionId();
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
 	 * Verify is the user is logged in.
 	 * 
 	 * @return <code>true</code> if the user is logged, or <code>false</code> if is 
@@ -179,7 +202,6 @@ public class SessionFacade
 	 */
 	public static boolean isLogged()
 	{
-		return SessionFacade.getAttribute("logged") != null
-			&& SessionFacade.getAttribute("logged").equals("1");
+		return "1".equals(SessionFacade.getAttribute("logged"));
 	}
 }

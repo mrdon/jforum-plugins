@@ -74,7 +74,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostVH.java,v 1.20 2004/06/08 01:41:28 rafaelsteil Exp $
+ * @version $Id: PostVH.java,v 1.21 2004/06/10 22:00:09 rafaelsteil Exp $
  */
 public class PostVH extends Command 
 {
@@ -84,9 +84,8 @@ public class PostVH extends Command
 		UserModel um = DataAccessDriver.getInstance().newUserModel();
 		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
 		
-		int postId = Integer.parseInt(JForum.getRequest().getParameter("post_id"));
-		
-		Topic topic = tm.selectById(Integer.parseInt(JForum.getRequest().getParameter("post_id")));
+		int topicId = Integer.parseInt(JForum.getRequest().getParameter("topic_id"));
+		Topic topic = tm.selectById(topicId);
 		
 		// Shall we proceed?
 		if (!this.shallProceed(topic.getForumId())) {
@@ -114,7 +113,7 @@ public class PostVH extends Command
 		
 		int count = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 		
-		ArrayList posts = pm.selectAllByTopicByLimit(postId, start, count);
+		ArrayList posts = pm.selectAllByTopicByLimit(topicId, start, count);
 		ArrayList helperList = new ArrayList();
 
 		int userId = SessionFacade.getUserSession().getUserId();
@@ -147,7 +146,8 @@ public class PostVH extends Command
 		JForum.getContext().put("posts",  helperList);
 		JForum.getContext().put("forum", ForumRepository.getForum(topic.getForumId()));
 		JForum.getContext().put("um", um);
-		JForum.getContext().put("postId", new Integer(postId));
+		JForum.getContext().put("topicId", new Integer(topicId));
+		JForum.getContext().put("watching", tm.isUserSubscribed(topicId, SessionFacade.getUserSession().getUserId()));
 		
 		// Topic Status
 		JForum.getContext().put("STATUS_LOCKED", new Integer(Topic.STATUS_LOCKED));
@@ -456,10 +456,8 @@ public class PostVH extends Command
 			}
 			
 			// Topic watch
-			if (!tm.isUserSubscribed(topicId, u.getId())) {
-				if (JForum.getRequest().getParameter("notify") != null) {
-					tm.subscribeUser(topicId, u.getId());
-				}
+			if (JForum.getRequest().getParameter("notify") != null) {
+				this.watch(tm, topicId, u.getId());
 			}
 			
 			p.setTopicId(topicId);
@@ -561,7 +559,21 @@ public class PostVH extends Command
 		// It was the last remaining post in the topic?
 		int totalPosts = tm.getTotalPosts(p.getTopicId());
 		if (totalPosts > 0) {
-			JForum.setRedirect(JForum.getRequest().getContextPath() +"/posts/list/"+ p.getTopicId() +".page");
+			String page = JForum.getRequest().getParameter("start");
+			String returnPath = JForum.getRequest().getContextPath() +"/posts/list/";
+			
+			if (page != null && !page.equals("") && !page.equals("0")) {
+				int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
+				int newPage = Integer.parseInt(page);
+				
+				if (totalPosts % postsPerPage == 0) {
+					newPage -= postsPerPage;
+				}
+				
+				returnPath += newPage +"/";
+			}
+			
+			JForum.setRedirect(returnPath + p.getTopicId() +".page");
 		}
 		else {
 			// Ok, all posts were removed. Time to say goodbye
@@ -588,16 +600,41 @@ public class PostVH extends Command
 		*/
 	}
 	
+	private void watch(TopicModel tm, int topicId, int userId) throws Exception
+	{
+		if (!tm.isUserSubscribed(topicId, userId)) {
+			tm.subscribeUser(topicId, userId);
+		}
+	}
+	
+	public void watch() throws Exception
+	{
+		int topicId = Integer.parseInt(JForum.getRequest().getParameter("topic_id"));
+		int userId = SessionFacade.getUserSession().getUserId();
+		
+		this.watch(DataAccessDriver.getInstance().newTopicModel(), topicId, userId);
+		this.list();
+	}
+	
 	public void unwatch() throws Exception
 	{
 		if (this.isUserLogged()) {
 			int topicId = Integer.parseInt(JForum.getRequest().getParameter("topic_id"));
 			int userId = SessionFacade.getUserSession().getUserId();
+			String start = JForum.getRequest().getParameter("start");
 	
 			DataAccessDriver.getInstance().newTopicModel().removeSubscription(topicId, userId);
 			
+			String returnPath = JForum.getRequest().getContextPath() +"/posts/list/";
+			if (start != null && !start.equals("")) {
+				returnPath += start +"/";
+			}
+			
+			returnPath += topicId +".page";
+			
 			JForum.getContext().put("moduleAction", "message.htm");
-			JForum.getContext().put("message", I18n.getMessage("ForumBase.unwatched"));
+			JForum.getContext().put("message", I18n.getMessage("ForumBase.unwatched",  
+					new String[] { returnPath } ));
 		}
 		else {
 			this.contextToLogin();

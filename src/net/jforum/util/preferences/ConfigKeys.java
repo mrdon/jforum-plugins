@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author pieter
-* @version $Id: ConfigKeys.java,v 1.5 2004/06/05 22:09:57 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.6 2004/06/10 22:00:05 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -75,6 +75,7 @@ public class ConfigKeys {
 	public static final String ENCODING = "encoding";
 	public static final String SERVLET_NAME = "servlet.name";	// transient!
 	public static final String DEFAULT_CONFIG = "default.config"; // transient
+	public static final String CONTEXT_NAME = "context.name"; // transient
 	public static final String SERVLET_EXTENSION = "servlet.extension";
 	public static final String COOKIE_NAME_DATA = "cookie.name.data";
 	public static final String COOKIE_NAME_USER = "cookie.name.user";

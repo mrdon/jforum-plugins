@@ -18,7 +18,7 @@
       <TD class=catRight align=center width="60%"><B><SPAN class=gen>${I18n.getMessage("UserProfile.allAbout")} ${u.username}</SPAN></B></TD>
     </TR>
     <TR>
-      <TD class=row1 vAlign=top align=middle height=6><#if (u.avatar?exists && u.avatar?length > 0)><img src="images/avatar/${u.avatar}" border=0><BR></#if>
+      <TD class=row1 vAlign=top align=middle height=6><#if (u.avatar?exists && u.avatar?length > 0)><img src="${contextPath}/images/avatar/${u.avatar}" border=0><BR></#if>
           <SPAN class=postdetails>Ranking: ${rank.getRankTitle(u.totalPosts)}</SPAN></TD>
       <TD class=row1 vAlign=top rowSpan=3>
         <TABLE cellSpacing=1 cellPadding=3 width="100%" border=0>
@@ -89,13 +89,13 @@
               <TD class=row1 vAlign=center width="100%"><B>
               	<SPAN class=gen>
               	<A href="mailto:${u.email}">
-                  <img src="templates/${templateName}/images/icon_email.gif" border=0></A></SPAN></B>
+                  <img src="${contextPath}/templates/${templateName}/images/icon_email.gif" border=0></A></SPAN></B>
                   </TD>
             </TR>
             <TR>
               <TD vAlign=center noWrap align=right><SPAN class=gen>${I18n.getMessage("UserProfile.privateMessage")}:</SPAN></TD>
               <TD class=row1 vAlign=center><B><SPAN class=gen><A href="#">
-              <img src="templates/${templateName}/images/icon_pm.gif" border=0></A></SPAN></B></TD>
+              <img src="${contextPath}/templates/${templateName}/images/icon_pm.gif" border=0></A></SPAN></B></TD>
             </TR>
             <#if (u.msnm?exists && u.msnm?length > 0)>
             <TR>
@@ -124,15 +124,15 @@
               <TD class=row1>
                 <SCRIPT language=JavaScript type=text/javascript>
 				if ( navigator.userAgent.toLowerCase().indexOf('mozilla') != -1 && navigator.userAgent.indexOf('5.') == -1 ) {
-					document.write(' <a href="http://wwp.icq.com/scripts/search.dll?to=${u.icq}"><img src="templates/${templateName}/images/icon_icq_add.gif" border="0" /></a>');
+					document.write(' <a href="http://wwp.icq.com/scripts/search.dll?to=${u.icq}"><img src="${contextPath}/templates/${templateName}/images/icon_icq_add.gif" border="0" /></a>');
 				}
 				else {
-					document.write('<table cellspacing="0" cellpadding="0" border="0"><tr><td nowrap="nowrap"><div style="position:relative;height:18px"><div style="position:absolute"><a href="http://wwp.icq.com/scripts/search.dll?to=75455439"><img src="templates/${templateName}/images/icon_icq_add.gif" border="0" /></a></div><div style="position:absolute;left:3px;top:-1px"><a href="http://wwp.icq.com/${u.icq}#pager"><img src="http://web.icq.com/whitepages/online?icq=${u.icq}&img=5" width="18" height="18" border="0" /></a></div></div></td></tr></table>');
+					document.write('<table cellspacing="0" cellpadding="0" border="0"><tr><td nowrap="nowrap"><div style="position:relative;height:18px"><div style="position:absolute"><a href="http://wwp.icq.com/scripts/search.dll?to=75455439"><img src="${contextPath}/templates/${templateName}/images/icon_icq_add.gif" border="0" /></a></div><div style="position:absolute;left:3px;top:-1px"><a href="http://wwp.icq.com/${u.icq}#pager"><img src="${contextPath}/http://web.icq.com/whitepages/online?icq=${u.icq}&img=5" width="18" height="18" border="0" /></a></div></div></td></tr></table>');
 				}
 				</SCRIPT>
                 <NOSCRIPT>
                 <A href="http://wwp.icq.com/scripts/search.dll?to=${u.icq}">
-                <img src="templates/${templateName}/images/icon_icq_add.gif" border=0></A>
+                <img src="${contextPath}/templates/${templateName}/images/icon_icq_add.gif" border=0></A>
                 </NOSCRIPT>
               </TD>
             </TR>

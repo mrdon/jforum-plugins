@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -51,13 +51,14 @@ import net.jforum.entities.Post;
 import net.jforum.entities.PrivateMessage;
 import net.jforum.entities.PrivateMessageType;
 import net.jforum.entities.User;
+import net.jforum.entities.UserSession;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.util.I18n;
 import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageVH.java,v 1.4 2004/05/23 17:08:06 rafaelsteil Exp $
+ * @version $Id: PrivateMessageVH.java,v 1.5 2004/06/10 22:00:09 rafaelsteil Exp $
  */
 public class PrivateMessageVH extends Command
 {
@@ -159,6 +160,14 @@ public class PrivateMessageVH extends Command
 			JForum.getContext().put("pm", pm);
 
 			this.send();
+		}
+		
+		// If the target user if in the forum, then increments its 
+		// private messate count
+		String sid = SessionFacade.isUserInSession(toUserId);
+		if (sid != null) {
+			UserSession us = SessionFacade.getUserSession(sid);
+			us.setPrivateMessages(us.getPrivateMessages() + 1);
 		}
 	}
 	
@@ -283,7 +292,7 @@ public class PrivateMessageVH extends Command
 	public Template process() throws Exception
 	{
 		if (!SessionFacade.isLogged()) {
-			JForum.setRedirect("/forums/list.page");
+			JForum.setRedirect(JForum.getRequest().getContextPath() +"/forums/list.page");
 			return null;
 		}
 

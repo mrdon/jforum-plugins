@@ -4,7 +4,7 @@
 <script language="JavaScript">
 function confirmDelete()
 {
-	if (confirm("${I18n.getMessage("Moderation.ConfirmDelete")}")) {
+	if (confirm("${I18n.getMessage("Moderation.ConfirmPostDelete")}")) {
 		return true;
 	}
 	
@@ -27,11 +27,11 @@ function confirmDelete()
 				<tr>
 					<td width="15%" align="left" valign="bottom" nowrap="nowrap">
 						<#if topic.status == STATUS_LOCKED>
-							<img src="templates/${templateName}/images/reply_locked.gif" />
+							<img src="${contextPath}/templates/${templateName}/images/reply_locked.gif" />
 						<#else>
 							<span class="nav">&nbsp;
-							<a href="${contextPath}/jforum.page?module=posts&amp;action=insert&amp;forum_id=${topic.forumId}"><img  src="templates/${templateName}/images/post.gif" width="82" height="25" border="0" /></a>
-							<a href="${contextPath}/jforum.page?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}&start=${thisPage}"><img src="templates/${templateName}/images/reply.gif" width="82" height="25" border="0" /></a>
+							<a href="${contextPath}/jforum.page?module=posts&amp;action=insert&amp;forum_id=${topic.forumId}"><img src="${contextPath}/templates/${templateName}/images/post.gif" width="82" height="25" border="0" /></a>
+							<a href="${contextPath}/jforum.page?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}&start=${thisPage}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" width="82" height="25" border="0" /></a>
 							</span>
 						</#if>
 					</td>
@@ -42,9 +42,25 @@ function confirmDelete()
             			-&gt; <a class="nav" href="${contextPath}/forums/show/${forum.id}.page">${forum.name} </a>
 						</span>
 					</td>
+					
+					<#if logged?default(false)>
+					<td align="left" valign="middle">
+						<span class="nav">
+						<#assign watch = "watch"/>
+						<#assign watchMessage = I18n.getMessage("PostShow.watch")/>
+						<#if watching>
+							<#assign watch = "unwatch"/>
+							<#assign watchMessage = I18n.getMessage("PostShow.unwatch")/>
+						</#if>
+						
+						<a href="${contextPath}/posts/${watch}/${thisPage}/${topicId}.page"><img src="${contextPath}/templates/${templateName}/images/watch.gif" align="top" border="0"></a>
+						<a href="${contextPath}/posts/${watch}/${thisPage}/${topicId}.page">${watchMessage}</a>
+						</span>
+					</td>
+					</#if>
 
 					<td valign="middle" align="right">
-						<@pagination.doPagination "list", postId/>
+						<@pagination.doPagination "list", topicId/>
 					</td>
 			
 				</tr>
@@ -74,7 +90,7 @@ function confirmDelete()
 						<br />
 						
 						<#if (user.avatar?exists && user.avatar?length > 0)>
-							<img src="images/avatar/${user.avatar}" border="0" />
+							<img src="${contextPath}/images/avatar/${user.avatar}" border="0" />
 						</#if>
 						<br /> 
 						
@@ -93,21 +109,21 @@ function confirmDelete()
 							<tr>
 								<td width="80%">
 									<span class="postdetails">
-									<img src="templates/${templateName}/images/icon_minipost.gif" width="12" height="9" />${post.formatedTime}<span class="gen">&nbsp;</span>&nbsp; &nbsp;${I18n.getMessage("PostShow.subject")}: <a name="${post.id}" id="${post.id}">${post.subject?html}</a>
+									<img src="${contextPath}/templates/${templateName}/images/icon_minipost.gif" width="12" height="9" />${post.formatedTime}<span class="gen">&nbsp;</span>&nbsp; &nbsp;${I18n.getMessage("PostShow.subject")}: <a name="${post.id}" id="${post.id}">${post.subject?html}</a>
 									</span>
 								</td>
 								
 								<td valign="top" width="20%" nowrap="nowrap" align="right">
 								<#if topic.status != STATUS_LOCKED>
-									<a href="${contextPath}/jforum.page?module=${moduleName}&amp;action=quote&amp;post_id=${post.id}"><img src="templates/${templateName}/images/icon_quote.gif" width="59" height="18" border="0" /></a>
+									<a href="${contextPath}/jforum.page?module=${moduleName}&amp;action=quote&amp;post_id=${post.id}"><img src="${contextPath}/templates/${templateName}/images/icon_quote.gif" width="59" height="18" border="0" /></a>
 								</#if>
 
 								<#if ((post.canEdit && topic.status != STATUS_LOCKED) || canEdit)>
-									<a href="${contextPath}/jforum.page?module=${moduleName}&amp;action=edit&amp;post_id=${post.id}&start=${thisPage}"><img src="templates/${templateName}/images/icon_edit.gif" width="59" height="18" border="0" /></a>  
+									<a href="${contextPath}/jforum.page?module=${moduleName}&amp;action=edit&amp;post_id=${post.id}&start=${thisPage}"><img src="${contextPath}/templates/${templateName}/images/icon_edit.gif" width="59" height="18" border="0" /></a>  
 								</#if>
 		
 								<#if canRemove>
-									<a href="${contextPath}/jforum.page?module=${moduleName}&amp;action=delete&amp;post_id=${post.id}" onClick="return confirmDelete();"><img src="templates/${templateName}/images/icon_delete.gif" width="16" height="18" border="0" /></a>  
+									<a href="${contextPath}/jforum.page?module=${moduleName}&amp;action=delete&amp;post_id=${post.id}&start=${thisPage}" onClick="return confirmDelete();"><img src="${contextPath}/templates/${templateName}/images/icon_delete.gif" width="16" height="18" border="0" /></a>  
 								</#if>
 								</td>
 							</tr>
@@ -143,26 +159,26 @@ function confirmDelete()
 						<table height="18" cellspacing="0" cellpadding="0" width="469" border="0">
 							<tr>
 								<td valign="center" nowrap="nowrap"> 
-									<a href="${contextPath}/user/profile/${user.id}.page"><img src="templates/${templateName}/images/icon_profile.gif" width="59" height="18" border="0" /></a>
+									<a href="${contextPath}/user/profile/${user.id}.page"><img src="${contextPath}/templates/${templateName}/images/icon_profile.gif" width="59" height="18" border="0" /></a>
 
 									<#if (user.isViewEmailEnabled() && user.email?exists && user.email?length > 0)>
-										<a href="mailto:${user.email}"><img src="templates/${templateName}/images/icon_email.gif" width="59" height="18" border="0" /></a>
+										<a href="mailto:${user.email}"><img src="${contextPath}/templates/${templateName}/images/icon_email.gif" width="59" height="18" border="0" /></a>
 									</#if>
 									
 									<#if (user.webSite?exists && user.webSite?length > 0)>
-										<a href="${user.webSite}" target="_new"><img src="templates/${templateName}/images/icon_www.gif" width="59" height="18" border="0" /></a>
+										<a href="${user.webSite}" target="_new"><img src="${contextPath}/templates/${templateName}/images/icon_www.gif" width="59" height="18" border="0" /></a>
 									</#if>
 									
 									<#if (user.yim?exists && user.yim?length > 0)>
-										<a href="http://edit.yahoo.com/config/send_webmesg?.target=${user.yim}&amp;.src=pg"><img src="templates/${templateName}/images/icon_yim.gif" width="59" height="18" border="0" /></a>
+										<a href="http://edit.yahoo.com/config/send_webmesg?.target=${user.yim}&amp;.src=pg"><img src="${contextPath}/templates/${templateName}/images/icon_yim.gif" width="59" height="18" border="0" /></a>
 									</#if>
 									
 									<#if (user.msnm?exists && user.msnm?length > 0)>
-										<a href="${contextPath}/user/profile/${user.id}.page"><img src="templates/${templateName}/images/icon_msnm.gif" width="59" height="18" border="0" /></a>
+										<a href="${contextPath}/user/profile/${user.id}.page"><img src="${contextPath}/templates/${templateName}/images/icon_msnm.gif" width="59" height="18" border="0" /></a>
 									</#if>
 									
 									<#if (user.icq?exists && user.icq?length > 0)>
-										<a href="http://wwp.icq.com/scripts/search.dll?to=${user.icq}"><img src="templates/${templateName}/images/icon_icq_add.gif" border="0" /></a>
+										<a href="http://wwp.icq.com/scripts/search.dll?to=${user.icq}"><img src="${contextPath}/templates/${templateName}/images/icon_icq_add.gif" border="0" /></a>
 									</#if>
 								</td>
 							</tr>
@@ -171,7 +187,7 @@ function confirmDelete()
 				</tr>
 	
 				<tr>
-					<td class="spaceRow" colspan="2" height="1"><img src="templates/subSilver/images/spacer.gif" alt="" width="1" height="1" /></td>
+					<td class="spaceRow" colspan="2" height="1"><img src="${contextPath}/templates/subSilver/images/spacer.gif" alt="" width="1" height="1" /></td>
 				</tr>
 			</#list>
 			
@@ -191,11 +207,11 @@ function confirmDelete()
 				<tr>
 					<td width="15%" align="left" valign="bottom" nowrap="nowrap">
 					<#if topic.status == STATUS_LOCKED>
-						<img src="templates/${templateName}/images/reply_locked.gif" />
+						<img src="${contextPath}/templates/${templateName}/images/reply_locked.gif" />
 					<#else>
 						<span class="nav">
-							&nbsp;<a href="${contextPath}/jforum.page?module=posts&amp;action=insert&amp;forum_id=${topic.forumId}"><img  src="templates/${templateName}/images/post.gif" width="82" height="25" border="0" /></a>
-							&nbsp;<a href="${contextPath}/jforum.page?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}&start=${thisPage}"><img src="templates/${templateName}/images/reply.gif" width="82" height="25" border="0" /></a>
+							&nbsp;<a href="${contextPath}/jforum.page?module=posts&amp;action=insert&amp;forum_id=${topic.forumId}"><img src="${contextPath}/templates/${templateName}/images/post.gif" width="82" height="25" border="0" /></a>
+							&nbsp;<a href="${contextPath}/jforum.page?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}&start=${thisPage}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" width="82" height="25" border="0" /></a>
 							</span>
 		  			</#if>
 					</td>
@@ -208,12 +224,12 @@ function confirmDelete()
 					</td>
 
 					<td valign="middle" align="right">
-						<@pagination.doPagination "list", postId/>
+						<@pagination.doPagination "list", topicId/>
 					</td>
 				</tr>
 				
 				<tr>
-					<td colspan="3"><img src="templates/subSilver/images/spacer.gif" alt="" width="1" height="1" /></td>
+					<td colspan="3"><img src="${contextPath}/templates/subSilver/images/spacer.gif" alt="" width="1" height="1" /></td>
 				</tr>
 				
 				<!--
@@ -226,14 +242,14 @@ function confirmDelete()
 				</tr>
 				
 				<tr>
-					<td colspan="3"><img src="templates/subSilver/images/spacer.gif" alt="" width="1" height="1" /></td>
+					<td colspan="3"><img src="${contextPath}/templates/subSilver/images/spacer.gif" alt="" width="1" height="1" /></td>
 				</tr>
 				
 				<tr>
 					<td align="left" colspan="2">
-					<img src="templates/${templateName}/images/topic_delete.gif" border="0"/>
-					<img src="templates/${templateName}/images/topic_move.gif" border="0"/>
-					<img src="templates/${templateName}/images/topic_lock.gif" border="0"/>
+					<img src="${contextPath}/templates/${templateName}/images/topic_delete.gif" border="0"/>
+					<img src="${contextPath}/templates/${templateName}/images/topic_move.gif" border="0"/>
+					<img src="${contextPath}/templates/${templateName}/images/topic_lock.gif" border="0"/>
 					</td>
 					<td align="right">eee</td>
 				</tr>

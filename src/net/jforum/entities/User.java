@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net 
  * 
- * $Id: User.java,v 1.3 2004/06/01 19:47:31 pieter2 Exp $
+ * $Id: User.java,v 1.4 2004/06/10 22:00:03 rafaelsteil Exp $
  */
 package net.jforum.entities;
 
@@ -89,11 +89,6 @@ public class User
 	 * The ranking of the user
 	 */
 	private int rankId = 1;
-	
-	/**
-	 * There is private messages to the user?
-	 */
-	private boolean havePrivateMessages;
 	
 	/**
 	 * Is HTML code enabled in user preferences? 
@@ -240,6 +235,8 @@ public class User
 	 */	
 	private ArrayList groupsList;
 	
+	private int privateMessagesCount;
+	
 	
 	/**
 	 * Default Constructor
@@ -319,15 +316,6 @@ public class User
 	 */
 	public String getGender() {
 		return this.gender;
-	}
-
-	/**
-	 * Checks if the user have new private messages
-	 * 
-	 * @return boolean value
-	 */
-	public boolean havePrivateMessages() {
-		return this.havePrivateMessages;
 	}
 
 	/**
@@ -606,15 +594,6 @@ public class User
 	}
 
 	/**
-	 * Sets the status for private messages
-	 * 
-	 * @param havePrivateMessages <code>true</code> or <code>false</code>
-	 */
-	public void setPrivateMessages(boolean havePrivateMessages) {
-		this.havePrivateMessages = havePrivateMessages;
-	}
-
-	/**
 	 * Enable or not HTML code into the messages
 	 * 
 	 * @param htmlEnabled <code>true</code> or <code>false</code>
@@ -874,4 +853,25 @@ public class User
 		return this.groupsList;
 	}
 
+	/**
+	 * @return Returns the privateMessagesCount.
+	 */
+	public int getPrivateMessagesCount()
+	{
+		return this.privateMessagesCount;
+	}
+	/**
+	 * @param privateMessagesCount The privateMessagesCount to set.
+	 */
+	public void setPrivateMessagesCount(int privateMessagesCount)
+	{
+		this.privateMessagesCount = privateMessagesCount;
+	}
+	/**
+	 * @return Returns the hasPrivateMessages.
+	 */
+	public boolean hasPrivateMessages()
+	{
+		return this.privateMessagesCount > 0;
+	}
 }

@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -58,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.4 2004/06/02 03:56:03 rafaelsteil Exp $
+ * @version $Id: UserModel.java,v 1.5 2004/06/10 22:00:02 rafaelsteil Exp $
  */
 public class UserModel extends AutoKeys implements net.jforum.model.UserModel 
 {
@@ -104,6 +104,7 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 			u.setUsername(rs.getString("username"));
 			u.setAttachSignatureEnabled(rs.getInt("user_attachsig") == 1);
 			u.setMsnm(rs.getString("user_msnm"));
+			u.setPrivateMessagesCount(rs.getInt("private_messages"));
 			
 			// User groups
 			p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectGroups"));

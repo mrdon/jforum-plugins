@@ -85,7 +85,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.17 2004/06/07 03:05:04 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.18 2004/06/10 21:59:58 rafaelsteil Exp $
  */
 public class JForum extends HttpServlet 
 {
@@ -401,6 +401,7 @@ public class JForum extends HttpServlet
 						userSession.setStartTime(System.currentTimeMillis());
 					}
 					
+					userSession.setPrivateMessages(user.getPrivateMessagesCount());
 					userSession.setUsername(user.getUsername());
 				}
 				else {
@@ -409,7 +410,7 @@ public class JForum extends HttpServlet
 			}
 			
 			cookie = JForum.getCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN));
-			if (cookie != null && cookie.getValue().equals("1")) {
+			if ("1".equals(cookie.getValue())) {
 				userSession.setAutoLogin(true);
 				SessionFacade.setAttribute("logged", "1");
 			}
@@ -437,7 +438,7 @@ public class JForum extends HttpServlet
 			ActionServletRequest.addUrlPattern(entry.getKey().toString(), entry.getValue().toString());
 		}
 	}
-
+	
 	public void service(HttpServletRequest req, HttpServletResponse response) throws IOException, ServletException
 	{
 		try {
@@ -465,10 +466,10 @@ public class JForum extends HttpServlet
 			JForum.getContext().put("serverPort", Integer.toString(req.getServerPort()));
 			JForum.getContext().put("I18n", I18n.getInstance());
 			JForum.getContext().put("version", SystemGlobals.getValue(ConfigKeys.VERSION));
-			JForum.getContext().put("homeLink",SystemGlobals.getValue(ConfigKeys.FORUM_LINK));
-			JForum.getContext().put("pageTitle",SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_TITLE));
-			JForum.getContext().put("metaKeywords",SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_METATAG_KEYWORDS));
-			JForum.getContext().put("metaDescription",SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_METATAG_DESCRIPTION));
+			JForum.getContext().put("pageTitle", SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_TITLE));
+			JForum.getContext().put("metaKeywords", SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_METATAG_KEYWORDS));
+			JForum.getContext().put("metaDescription", SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_METATAG_DESCRIPTION));
+			JForum.getContext().put("forumLink", SystemGlobals.getValue(ConfigKeys.FORUM_LINK));
 			JForum.getContext().put("encoding", encoding);
 
 			// Request
