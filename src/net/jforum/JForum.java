@@ -68,7 +68,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.28 2004/08/28 14:21:24 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.29 2004/08/28 16:03:40 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -269,5 +269,18 @@ public class JForum extends JForumCommonServlet
 		}
 		
 		localData.set(null);
-	}	
+	}
+	
+	/** 
+	 * @see javax.servlet.GenericServlet#destroy()
+	 */
+	public void destroy() {
+		super.destroy();
+		System.out.println("destroying...");
+		
+		try {
+			DBConnection.getImplementation().realReleaseAllConnections();
+		}
+		catch (Exception e) {}
+	}
 }

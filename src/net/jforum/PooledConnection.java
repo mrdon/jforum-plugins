@@ -81,7 +81,7 @@ import net.jforum.util.preferences.SystemGlobals;
  *
  * @author Paulo Silveira
  * @author Rafael Steil
- * @version $Id: PooledConnection.java,v 1.4 2004/08/28 00:43:04 rafaelsteil Exp $
+ * @version $Id: PooledConnection.java,v 1.5 2004/08/28 16:03:40 rafaelsteil Exp $
  * */
 
 public class PooledConnection extends DBConnection
@@ -96,18 +96,18 @@ public class PooledConnection extends DBConnection
 	/**
 	* It is the connection pool
 	*/
-	private LinkedList connections = new LinkedList();
+	private static LinkedList connections = new LinkedList();
     
 	/**
 	 * It has all the connections, even the ones in use.
 	 * This way, the garbage collector does not get them.
 	 */
-	private LinkedList allConnections = new LinkedList();
+	private static LinkedList allConnections = new LinkedList();
 
 	// for sinalizing a release
 	private Object releaseSignal = new Object();
 	
-	private static final boolean debug = false;
+	private static final boolean debug = true;
 	
 	/**
 	 * Private constructor that loads the driver and set the configuration from
@@ -117,9 +117,17 @@ public class PooledConnection extends DBConnection
 	 * @throws IOException
 	 * @throws Exception
 	*/
-	public PooledConnection() throws IOException, SQLException
-	{
-		SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue("database.driver.config"));
+	public PooledConnection() {}
+
+    /**
+     * Inits ConnectionPool. 
+     * If the pool was already initialized, this action will take no effect.
+	 *
+	 * @throws Exception
+     */
+    public void init() throws Exception
+    {
+    	SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue("database.driver.config"));
 		String driver = SystemGlobals.getValue("database.connection.driver");
 		
 		try {
@@ -144,8 +152,8 @@ public class PooledConnection extends DBConnection
 
 			for (int i = 0; i < this.minConnections; i++) {
 				Connection conn = DriverManager.getConnection(this.connectionString);
-				this.connections.addLast(conn);
-				this.allConnections.add(conn);
+				connections.addLast(conn);
+				allConnections.add(conn);
 				
 				if (debug) {
 					Date now = new Date();
@@ -161,20 +169,8 @@ public class PooledConnection extends DBConnection
 			logger.error("Ouch... Cannot find database driver: "+ driver);
 			throw new IOException("Ouch... Cannot find database driver: "+ driver);
 		}
-    }
-
-    /**
-     * Inits ConnectionPool. 
-     * If the pool was already initialized, this action will take no effect.
-	 *
-	 * @throws Exception
-     */
-    public void init() throws Exception
-    {
-        if (pool == null || !isDatabaseUp) {
-            pool = new PooledConnection();
-            this.enableConnectionPinging();
-        }
+		
+		this.enableConnectionPinging();
     }
 
 	/**
@@ -192,18 +188,18 @@ public class PooledConnection extends DBConnection
 		Connection conn = null;
 
 		// if there is enought Connections
-		if (this.connections.size() != 0) {
-			synchronized (this.connections) {
-				conn = (Connection) this.connections.removeFirst();
+		if (connections.size() != 0) {
+			synchronized (connections) {
+				conn = (Connection) connections.removeFirst();
 			}
 
 			// take a look if the connection has died!
 			try {
 				if (conn.isClosed()) {
-					synchronized (this.allConnections) {
-						this.allConnections.remove(conn);
+					synchronized (allConnections) {
+						allConnections.remove(conn);
 						conn = DriverManager.getConnection(this.connectionString);
-						this.allConnections.add(conn);
+						allConnections.add(conn);
 					}
 				}
 			}
@@ -219,7 +215,7 @@ public class PooledConnection extends DBConnection
 		}
         // Otherwise, create a new one if the Pool is now full
 		else {
-			if (this.allConnections.size() < this.maxConnections) {
+			if (allConnections.size() < this.maxConnections) {
 				try {
 					conn = DriverManager.getConnection(this.connectionString);
 				}
@@ -232,8 +228,8 @@ public class PooledConnection extends DBConnection
 				}
 				
 				// registering the new connection
-				synchronized (this.allConnections) {
-					this.allConnections.add(conn);
+				synchronized (allConnections) {
+					allConnections.add(conn);
 				}
 				
 				return conn;
@@ -253,7 +249,7 @@ public class PooledConnection extends DBConnection
 			 * and this method is already SYNC, there is no way that we will loose
 			 * the state if we receive a signal
 			 */
-			if (this.connections.size() == 0) {
+			if (connections.size() == 0) {
 				try {
 					this.releaseSignal.wait(this.timeout);
 				}
@@ -263,7 +259,7 @@ public class PooledConnection extends DBConnection
 				}
 			}
 
-			if (this.connections.size() == 0) {
+			if (connections.size() == 0) {
 				// TIMED OUT!!!!
 				if (debug) {
 					logger.warn( "Pool is empty, and th waiting for one timed out!"
@@ -272,8 +268,8 @@ public class PooledConnection extends DBConnection
 				}
 			}
 			else {
-				synchronized (this.connections) {
-					conn = (Connection) this.connections.removeFirst();
+				synchronized (connections) {
+					conn = (Connection) connections.removeFirst();
 				}
 				
 				return conn;
@@ -284,9 +280,9 @@ public class PooledConnection extends DBConnection
 	}
 	
 	private void pingConnections() {
-		synchronized(this.allConnections) {
+		synchronized(allConnections) {
 			try {
-				for (Iterator iter = this.allConnections.iterator(); iter.hasNext(); ) {
+				for (Iterator iter = allConnections.iterator(); iter.hasNext(); ) {
 					logger.info("pinging connection....");
 
 					Connection c = (Connection)iter.next();
@@ -312,6 +308,35 @@ public class PooledConnection extends DBConnection
 			}
 		}, Long.parseLong(SystemGlobals.getValue(ConfigKeys.DATABASE_PING_DELAY)));
 	} 
+	
+	/** 
+	 * @see net.jforum.DBConnection#realReleaseAllConnections()
+	 */
+	public void realReleaseAllConnections() throws Exception 
+	{
+		if (allConnections == null || allConnections.size() == 0) {
+			return;	
+		}
+
+		synchronized (allConnections) {
+			for (Iterator iter = allConnections.iterator(); iter.hasNext();) {
+				try {
+					Connection conn = (Connection)iter.next();
+					connections.remove(conn);
+					conn.close();
+					iter.remove();
+					
+					logger.info("Real closing connection...");
+				}
+				catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		allConnections = new LinkedList();
+		connections = new LinkedList();
+	}
 
 	/**
 	 * Releases a connection, making it available to the pool once more.
@@ -329,11 +354,9 @@ public class PooledConnection extends DBConnection
 			return;
 		}
 
-		/*
-		 * Sync because collection.contains() uses the fail fast iterator!
-		 */
-		synchronized (this.allConnections) {
-			if (!this.allConnections.contains(conn) && debug) {
+		// Sync because collection.contains() uses the fail fast iterator!
+		synchronized (allConnections) {
+			if (!allConnections.contains(conn) && debug) {
 				logger.warn("Cannot release a connection that is not from this pool!");
 				
 				return;
@@ -341,7 +364,7 @@ public class PooledConnection extends DBConnection
 			
 			try {
 				if (conn.isClosed()) {
-					this.allConnections.remove(conn);
+					allConnections.remove(conn);
 					
 					return;
 				}
@@ -354,8 +377,8 @@ public class PooledConnection extends DBConnection
 		}
 		
 		synchronized (this.releaseSignal) {
-			synchronized (this.connections) {
-				this.connections.addLast(conn);
+			synchronized (connections) {
+				connections.addLast(conn);
 			}
 			
 			this.releaseSignal.notify();
@@ -376,7 +399,7 @@ public class PooledConnection extends DBConnection
 		StringBuffer status = new StringBuffer();
 		int i = 0;
 
-		Iterator it = this.allConnections.iterator();
+		Iterator it = allConnections.iterator();
 		while (it.hasNext()) {
 			i++;
 			status.append("Connection " + i + ": ");
@@ -400,7 +423,7 @@ public class PooledConnection extends DBConnection
 		status.append("\nPOOL:\n\n");
 		i = 0;
 
-		it = this.connections.iterator();
+		it = connections.iterator();
 		while (it.hasNext()) {
 			i++;
 			status.append("Connection " + i + ": ");

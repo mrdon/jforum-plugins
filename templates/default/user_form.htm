@@ -21,9 +21,18 @@
 
       <TABLE class=forumline cellSpacing=1 cellPadding=3 width="100%" border=0>
       <TBODY>
+		<#assign message = ""/>
 	  	<#if editDone?default(false)>
+			<#assign message = I18n.getMessage("User.editDone")/>
+		<#elseif warns?exists>
+			<#list warns as w>
+				<#assign message = message + w + "<br>"/>
+			</#list>
+		</#if>
+
+		<#if (message?length > 0)>
 	  	<tr>
-			<td class="row2" align="center" colspan="2"><span class="gens"><b><font color="red">${I18n.getMessage("User.editDone")}</font></b></span></td>
+			<td class="row2" align="center" colspan="2"><span class="gens"><b><font color="red">${message}</font></b></span></td>
 		</tr>
 		</#if>
         <TR>

@@ -64,7 +64,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserVH.java,v 1.16 2004/08/20 13:13:41 jamesyong Exp $
+ * @version $Id: UserVH.java,v 1.17 2004/08/28 16:03:39 rafaelsteil Exp $
  */
 public class UserVH extends Command 
 {
@@ -96,9 +96,15 @@ public class UserVH extends Command
 	public void editSave() throws Exception
 	{	
 		int userId = Integer.parseInt(JForum.getRequest().getParameter("user_id"));
-		ViewCommon.saveUser(userId);
+		List warns = ViewCommon.saveUser(userId);
 
-		JForum.setRedirect(JForum.getRequest().getContextPath() +"/user/editDone/"+ userId +".page");
+		if (warns.size() > 0) {
+			JForum.getContext().put("warns", warns);
+			this.edit();
+		}
+		else {		
+			JForum.setRedirect(JForum.getRequest().getContextPath() +"/user/editDone/"+ userId +".page");
+		}
 	}
 	
 	public void insert()

@@ -56,7 +56,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * a connection pool.
  * 
  * @author Rafael Steil
- * @version $Id: SimpleConnection.java,v 1.4 2004/08/27 20:49:25 rafaelsteil Exp $
+ * @version $Id: SimpleConnection.java,v 1.5 2004/08/28 16:03:40 rafaelsteil Exp $
  */
 public class SimpleConnection extends DBConnection 
 {
@@ -99,5 +99,9 @@ public class SimpleConnection extends DBConnection
 	{
 		conn.close();
 	}
-
+	
+	/** 
+	 * @see net.jforum.DBConnection#realReleaseAllConnections()
+	 */
+	public void realReleaseAllConnections() throws Exception {}
 }
