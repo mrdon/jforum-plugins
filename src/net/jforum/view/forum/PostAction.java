@@ -56,6 +56,7 @@ import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.entities.Attachment;
 import net.jforum.entities.Post;
+import net.jforum.entities.QuotaLimit;
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
@@ -86,7 +87,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.59 2005/02/15 19:03:19 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.60 2005/02/16 19:59:43 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -260,8 +261,8 @@ public class PostAction extends Command {
 		this.context.put("attachmentsEnabled", SecurityRepository.canAccess(
 				SecurityConstants.PERM_ATTACHMENTS_ENABLED));
 		
-		this.context.put("maxAttachmentsSize", new Long(new AttachmentCommon(
-				this.request).getQuotaLimit(userId).getSizeInBytes()));
+		QuotaLimit ql = new AttachmentCommon(this.request).getQuotaLimit(userId);
+		this.context.put("maxAttachmentsSize", new Long(ql != null ? ql.getSizeInBytes() : 1));
 		
 		this.context.put("maxAttachments", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
 		this.context.put("forum", ForumRepository.getForum(forumId));
