@@ -58,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: ForumModel.java,v 1.13 2004/12/19 22:14:39 rafaelsteil Exp $
+ * @version $Id: ForumModel.java,v 1.14 2004/12/27 19:59:06 rafaelsteil Exp $
  */
 public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel {
 	private Connection conn;
@@ -200,12 +200,11 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel 
 	 */
 	public int addNew(Forum forum) throws Exception {
 		// Gets the higher order
-		int maxOrder = 0;
 		PreparedStatement pOrder = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.getMaxOrder"));
 		ResultSet rs = pOrder.executeQuery();
 
 		if (rs.next()) {
-			maxOrder = rs.getInt(1);
+			forum.setOrder(rs.getInt(1) + 1);
 		}
 
 		rs.close();
@@ -217,13 +216,14 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel 
 		p.setInt(1, forum.getCategoryId());
 		p.setString(2, forum.getName());
 		p.setString(3, forum.getDescription());
-		p.setInt(4, ++maxOrder);
+		p.setInt(4, forum.getOrder());
 		p.setInt(5, forum.isModerated() ? 1 : 0);
 
 		int forumId = this.executeAutoKeysQuery(p);
 
 		p.close();
 
+		forum.setId(forumId);
 		return forumId;
 	}
 

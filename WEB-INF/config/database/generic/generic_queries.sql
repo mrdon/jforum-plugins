@@ -163,6 +163,7 @@ ForumModel.decrementTotalTopics = UPDATE jforum_forums SET forum_topics = forum_
 ForumModel.decrementTotalPosts = UPDATE jforum_forums SET total_posts = total_posts - ? WHERE forum_id = ?
 ForumModel.getTotalTopics = SELECT COUNT(topic_id) as total FROM jforum_topics WHERE forum_id = ?
 ForumModel.setOrderById = UPDATE jforum_forums SET forum_order = ? WHERE forum_id = ? 
+ForumModel.getMaxOrder = SELECT MAX(forum_order) FROM jforum_forums
 
 ForumModel.lastPostInfo = SELECT post_time, p.topic_id, t.topic_replies, post_id, u.user_id, username \
 	FROM jforum_posts p, jforum_users u, jforum_topics t , jforum_forums f \

@@ -71,7 +71,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.9 2004/12/27 00:30:51 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.10 2004/12/27 19:59:07 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -109,11 +109,9 @@ public class ForumAction extends Command
 	//  Save information
 	public void editSave() throws Exception
 	{
-		Forum f = new Forum();
+		Forum f = new Forum(ForumRepository.getForum(this.request.getIntParameter("forum_id")));
 		f.setDescription(this.request.getParameter("description"));
-		f.setId(Integer.parseInt(this.request.getParameter("forum_id")));
-		f.setIdCategories(Integer.parseInt(this.request.getParameter("categories_id")));
-		f.setModerated(this.request.getParameter("moderated") != null && this.request.getParameter("moderated").equals("true"));
+		f.setIdCategories(this.request.getIntParameter("categories_id"));
 		f.setName(this.request.getParameter("forum_name"));
 			
 		DataAccessDriver.getInstance().newForumModel().update(f);
@@ -179,8 +177,7 @@ public class ForumAction extends Command
 				tm.deleteByForum(forumId);
 				fm.delete(forumId);
 				
-				Forum f = new Forum();
-				f.setId(forumId);
+				Forum f = new Forum(ForumRepository.getForum(forumId));
 				ForumRepository.removeForum(f);
 			}
 		}
@@ -194,7 +191,6 @@ public class ForumAction extends Command
 		Forum f = new Forum();
 		f.setDescription(this.request.getParameter("description"));
 		f.setIdCategories(Integer.parseInt(this.request.getParameter("categories_id")));
-		f.setModerated(this.request.getParameter("moderated") != null && this.request.getParameter("moderated").equals("true"));
 		f.setName(this.request.getParameter("forum_name"));	
 			
 		int forumId = DataAccessDriver.getInstance().newForumModel().addNew(f);
@@ -227,6 +223,7 @@ public class ForumAction extends Command
 		}
 		
 		SecurityRepository.clean();
+
 		this.list();
 	}
 	

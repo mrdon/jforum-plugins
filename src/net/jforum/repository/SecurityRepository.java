@@ -48,6 +48,7 @@ import java.util.Map.Entry;
 
 import net.jforum.SessionFacade;
 import net.jforum.entities.User;
+import net.jforum.exceptions.SecurityLoadException;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.UserModel;
 import net.jforum.model.security.UserSecurityModel;
@@ -55,7 +56,7 @@ import net.jforum.security.PermissionControl;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityRepository.java,v 1.7 2004/12/27 00:37:12 rafaelsteil Exp $
+ * @version $Id: SecurityRepository.java,v 1.8 2004/12/27 19:59:06 rafaelsteil Exp $
  */
 public class SecurityRepository 
 {
@@ -86,12 +87,15 @@ public class SecurityRepository
 	 * @see SecurityRepository#load(User, boolean)
 	 * @throws Exception
 	 */
-	public static void load(int userId, boolean force) throws Exception
+	public static PermissionControl load(int userId, boolean force) throws Exception
 	{
-		if (force || SecurityRepository.securityInfoMap.containsKey(new Integer(userId)) == false) {
+		if (force || !SecurityRepository.securityInfoMap.containsKey(new Integer(userId))) {
 			UserModel um = DataAccessDriver.getInstance().newUserModel();
 			
-			SecurityRepository.load(um.selectById(userId), force);
+			return SecurityRepository.load(um.selectById(userId), force);
+		}
+		else {
+			return SecurityRepository.get(userId);
 		}
 	}
 
@@ -105,9 +109,9 @@ public class SecurityRepository
 	 * @see SecurityRepository#load(User, boolean)
 	 * @throws Exception
 	 */
-	public static void load(int userId) throws Exception
+	public static PermissionControl load(int userId) throws Exception
 	{
-		SecurityRepository.load(userId, false);
+		return SecurityRepository.load(userId, false);
 	}
 	
 	/**
@@ -120,9 +124,9 @@ public class SecurityRepository
 	 * @see SecurityRepository#load(User, boolean)
 	 * @throws Exception
 	 */
-	public static void load(User user) throws Exception
+	public static PermissionControl load(User user) throws Exception
 	{
-		SecurityRepository.load(user, false);
+		return SecurityRepository.load(user, false);
 	}
 
 	/**
@@ -137,9 +141,9 @@ public class SecurityRepository
 	 * @see SecurityRepository#load(User)
 	 * @throws Exception
 	 */
-	public static void load(User user, boolean force) throws Exception
+	public static PermissionControl load(User user, boolean force) throws Exception
 	{
-		if (force || SecurityRepository.securityInfoMap.containsKey(new Integer(user.getId())) == false) {
+		if (force || !SecurityRepository.securityInfoMap.containsKey(new Integer(user.getId()))) {
 			UserSecurityModel umodel = DataAccessDriver.getInstance().newUserSecurityModel();
 			PermissionControl pc = new PermissionControl();
 			
@@ -147,6 +151,11 @@ public class SecurityRepository
 			pc.setRoles(umodel.loadRoles(user));
 			
 			SecurityRepository.add(user.getId(), pc);
+			
+			return pc;
+		}
+		else {
+			return SecurityRepository.get(user.getId());
 		}
 	}
 	
@@ -156,24 +165,19 @@ public class SecurityRepository
 	 * 
 	 * @param roleName The role name to verity
 	 * @return <code>true</code> if the user has access to the role, <code>false</code> if access is denied
+	 * @throws SecurityLoadException if case of erros while trying
+	 * to load the roles
+	 * @see #canAccess(String, String)
+	 * @see #canAccess(int, String, String)
 	 */
-	public static boolean canAccess(String roleName) throws Exception
+	public static boolean canAccess(String roleName)
 	{
 		return canAccess(SessionFacade.getUserSession().getUserId(), roleName);
 	}
 	
-	public static boolean canAccess(int userId, String roleName) throws Exception
+	public static boolean canAccess(int userId, String roleName)
 	{
-		PermissionControl pc = SecurityRepository.get(userId);
-		if (pc == null) {
-			load(userId);
-		}
-		
-		if (pc != null && pc.canAccess(roleName)) {
-			return true;
-		}
-		
-		return false;
+		return canAccess(userId, roleName, null);
 	}
 
 	/**
@@ -184,40 +188,76 @@ public class SecurityRepository
 	 * @param value The value relacted to the role to verify for access
 	 * @return <code>true</code> if the user has access to the role, <code>false</code> if access is denied
 	 */
-	public static boolean canAccess(String roleName, String value) throws Exception
+	public static boolean canAccess(String roleName, String value)
 	{
 		return canAccess(SessionFacade.getUserSession().getUserId(), roleName, value);
 	}
 	
-	public static boolean canAccess(int userId, String roleName, String value) throws Exception
+	public static boolean canAccess(int userId, String roleName, String value)
 	{
 		PermissionControl pc = SecurityRepository.get(userId);
 		if (pc == null) {
-			load(userId);
+			try {
+				load(userId);
+			}
+			catch (Exception e) {
+				throw new SecurityLoadException(e);
+			}
 		}
 		
-		if (pc.canAccess(roleName, value)) {
-			return true;
-		}
-		
-		return false;
+		return (value != null ? pc.canAccess(roleName, value) : pc.canAccess(roleName));
 	}
 
+	/**
+	 * Gets the permssion schema of some specific user.
+	 * If the roles of the user aren't loaded yet, a call
+	 * to {@link #load(int)} will be made.
+	 * 
+	 * @param userId The user's id to get the permissions
+	 * @return The <code>PermissionControl</code> instance related
+	 * to the user id passed as argument
+	 * @throws SecurityLoadException if case of erros while trying
+	 * to load the roles
+	 */
 	public static PermissionControl get(int userId)
 	{
-		return (PermissionControl)SecurityRepository.securityInfoMap.get(new Integer(userId));
+		PermissionControl pc = (PermissionControl)SecurityRepository.securityInfoMap.get(new Integer(userId));
+		if (pc == null) {
+			try {
+				pc = load(userId);
+			}
+			catch (Exception e) {
+				throw new SecurityLoadException(e);
+			}
+		}
+		
+		return pc;
 	}
 
+	/**
+	 * Adds a new permission control schema to the cache
+	 * 
+	 * @param userId The user's id to associate with the schema
+	 * @param pc The <code>PermissionControl</code> instance to add
+	 */
 	public static synchronized void add(int userId, PermissionControl pc)
 	{
 		SecurityRepository.securityInfoMap.put(new Integer(userId), pc);
 	}
 	
+	/**
+	 * Remove the cached roles from a specific user.
+	 * 
+	 * @param userId The id of the user to remove from the cache
+	 */
 	public static synchronized void remove(int userId)
 	{
 		SecurityRepository.securityInfoMap.remove(new Integer(userId));
 	}
 	
+	/**
+	 * Clear all cached security entries.
+	 */
 	public static synchronized void clean()
 	{
 		SecurityRepository.securityInfoMap = createNewRepository();
