@@ -42,99 +42,97 @@
  */
 package net.jforum.util;
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.Vector;
+
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 import org.apache.log4j.Logger;
 import org.htmlparser.Attribute;
 import org.htmlparser.Node;
-import org.htmlparser.Parser;
+import org.htmlparser.Tag;
 import org.htmlparser.lexer.Lexer;
-import org.htmlparser.nodes.TagNode;
 import org.htmlparser.nodes.TextNode;
-import org.htmlparser.tags.BodyTag;
-import org.htmlparser.tags.Html;
-import org.htmlparser.tags.ScriptTag;
-import org.htmlparser.util.NodeIterator;
 
 /**
  * Process text with html and remove possible
  * malicious tags and attributes.
  * 
  * @author Rafael Steil
- * @version $Id: SafeHtml.java,v 1.1 2004/09/28 04:03:28 rafaelsteil Exp $
+ * @version $Id: SafeHtml.java,v 1.2 2004/09/29 21:36:31 rafaelsteil Exp $
  */
 public class SafeHtml 
 {
 	private static final Logger logger = Logger.getLogger(SafeHtml.class);
-	private StringBuffer sb = new StringBuffer(512);
+	private Set welcomeTags;
+	
+	public SafeHtml()
+	{
+		this.welcomeTags = new HashSet();
+		String[] tags = SystemGlobals.getValue(ConfigKeys.HTML_TAGS_WELCOME).toUpperCase().split(",");
+
+		for (int i = 0; i < tags.length; i++) {
+			this.welcomeTags.add(tags[i].trim());
+		}
+	}
 	
 	private String processAllNodes(String contents) throws Exception
 	{
-		Parser p = new Parser(new Lexer(contents));
-		this.displayChildren(p.elements());
+		StringBuffer sb = new StringBuffer(512);
+		Lexer lexer = new Lexer(contents);
+		Node node;
+		while ((node = lexer.nextNode()) != null) {
+			if (this.isTagWelcome(node)) {
+				sb.append(node.toHtml());
+			}
+			else {
+				sb.append(node.toHtml().replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
+			}
+		}
 		
-		return this.sb.toString();
+		return sb.toString();
 	}
 	
-	private Node displayNode(Node node) throws Exception
+	private boolean isTagWelcome(Node node)
 	{
-		if (node == null) {
-			return null;
+		if (node instanceof TextNode) {
+			return true;
 		}
-
-		if (!(node instanceof TagNode)) {
-			return node;
+		
+		Tag tag = (Tag)node;
+		if (!this.welcomeTags.contains(tag.getTagName())) {
+			return false;
 		}
-
-		TagNode tag = (TagNode)node;
-
-		Vector attributes = tag.getAttributesEx();
+		
+		this.checkAndValidateAttributes(tag);
+		
+		return true;
+	}
+	
+	private void checkAndValidateAttributes(Tag tag)
+	{
 		Vector newAttributes = new Vector();
-		for (Iterator iter = attributes.iterator(); iter.hasNext(); ) {
+		for (Iterator iter = tag.getAttributesEx().iterator(); iter.hasNext(); ) {
 			Attribute a = (Attribute)iter.next();
-			if (a.getName() != null && a.getName().toLowerCase().startsWith("on")) {
-				continue;
+
+			String name = a.getName();
+			if (name != null) {
+				name = name.toLowerCase();
+				if (!name.startsWith("on") && !name.startsWith("style")) {
+					newAttributes.add(a);
+				}
 			}
-
-			newAttributes.add(a);
-		}
-
-		if (tag instanceof ScriptTag) {
-			ScriptTag script = (ScriptTag)tag;
-			node = new TextNode("&lt;script" + (script.getLanguage() != null ? " language=" + script.getLanguage() : "") 
-					+ "&gt;" 
-					+ script.getScriptCode() 
-					+ "&lt;/script&gt;");
-		}
-		else {
-			tag.setAttributesEx(newAttributes);
-			
-			if (tag.getChildren() != null) {
-				this.displayChildren(tag.getChildren().elements());
+			else {
+				newAttributes.add(a);
 			}
 		}
+		
+		tag.setAttributesEx(newAttributes);
+	}
 
-		return node;
-	}
-	
-	private void displayChildren(NodeIterator elements) throws Exception
-	{
-		while (elements.hasMoreNodes()) {
-			Node node = elements.nextNode();
-			node = this.displayNode(node);
-			
-			if (!this.ignoreTagRendering(node))
-				this.sb.append(node.toHtml());
-		}
-	}
-	
-	private boolean ignoreTagRendering(Node node)
-	{
-		return ((node instanceof BodyTag) || (node instanceof Html));
-	}
-	
-	
 	public static String makeSafe(String contents)
 	{
 		if (contents == null || contents.trim().length() == 0) {

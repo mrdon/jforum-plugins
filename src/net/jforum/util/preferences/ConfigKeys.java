@@ -48,8 +48,8 @@ package net.jforum.util.preferences;
 * a nice overview of all configuration keys. Last but not least this lets us autocomplete
 * configuration keys under eclipse ;-)
 * 
-* @author pieter
-* @version $Id: ConfigKeys.java,v 1.18 2004/09/22 16:37:49 jamesyong Exp $
+* @author Pieter Olivier
+* @version $Id: ConfigKeys.java,v 1.19 2004/09/29 21:36:30 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -77,9 +77,7 @@ public class ConfigKeys {
 	public static final String DATABASE_CONNECTION_STRING = "database.connection.string";
 	
 	public static final String DATABASE_ERROR_PAGE = "database.error.page";
-	
 
-	// The remaining keys are set in default.config and can be overriden in the installation config 
 	public static final String RESOURCE_DIR = "resource.dir";
 	public static final String CONFIG_DIR = "config.dir";
 	public static final String DATABASE_PROPERTIES = "database.properties";
@@ -142,6 +140,8 @@ public class ConfigKeys {
 	public static final String MAIL_SMTP_PASSWORD = "mail.smtp.password";
 	public static final String MAIL_USER_EMAIL_AUTH = "mail.user.email.auth";
 	public static final String MAIL_ACTIVATION_KEY_MESSAGE_FILE = "mail.activationKey.messageFile";
+	
+	public static final String HTML_TAGS_WELCOME = "html.tags.welcome";
 
 	public static final String SMILIE_IMAGE_DIR = "smilie.image.dir";
 	public static final String SMILIE_IMAGE_PATTERN = "smilie.image.pattern";
