@@ -43,6 +43,7 @@
 package net.jforum.util.mail;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import net.jforum.entities.User;
 import net.jforum.util.preferences.ConfigKeys;
@@ -51,7 +52,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: LostPasswordSpammer.java,v 1.9 2004/10/14 02:23:08 rafaelsteil Exp $
+ * @version $Id: LostPasswordSpammer.java,v 1.10 2005/03/07 23:12:54 rafaelsteil Exp $
  */
 public class LostPasswordSpammer extends Spammer {
 	public LostPasswordSpammer(User user, String mailTitle) {
@@ -67,7 +68,7 @@ public class LostPasswordSpammer extends Spammer {
 		params.put("url", url);
 		params.put("user", user);
 
-		ArrayList recipients = new ArrayList();
+		List recipients = new ArrayList();
 		recipients.add(user.getEmail());
 
 		super.prepareMessage(recipients, params, 

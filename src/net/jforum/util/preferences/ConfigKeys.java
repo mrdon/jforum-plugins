@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.48 2005/02/28 13:24:05 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.49 2005/03/07 23:12:54 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -147,6 +147,7 @@ public class ConfigKeys {
 	public static final String LOCALES_NAMES = "locales.names";
 
 	public static final String MAIL_LOST_PASSWORD_MESSAGE_FILE = "mail.lostPassword.messageFile";
+	public static final String MAIL_LOST_PASSWORD_SUBJECT = "mail.lostPassword.subject";
 	public static final String MAIL_NOTIFY_ANSWERS = "mail.notify.answers";
 	public static final String MAIL_SENDER = "mail.sender";
 	public static final String MAIL_CHARSET = "mail.charset";
