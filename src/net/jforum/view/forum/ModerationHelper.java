@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 10/03/2004 - 18:43:12
- * net.jforum.view.forum.ModerationHelper.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: ModerationHelper.java,v 1.6 2004/11/02 19:02:49 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 
@@ -61,6 +58,7 @@ import net.jforum.util.I18n;
 
 /**
  * @author Rafael Steil
+ * @version $Id: ModerationHelper.java,v 1.7 2004/11/02 19:03:12 rafaelsteil Exp $
  */
 public class ModerationHelper 
 {

@@ -244,7 +244,8 @@ TopicModel.selectRecentTopicsByLimit = SELECT t.*, u.username AS posted_by_usern
 	AND p.post_id = t.topic_first_post_id \
 	AND p2.post_id = t.topic_last_post_id \
 	AND u2.user_id = p2.user_id \
-	ORDER BY t.topic_type DESC, p2.post_time DESC, t.topic_last_post_id DESC \
+	AND t.topic_type = 0 \
+	ORDER BY p2.post_time DESC, t.topic_last_post_id DESC \
 	LIMIT 0, ?
 
 # ############

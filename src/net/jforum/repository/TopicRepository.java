@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 05/04/2004 - 20:11:44
- * net.jforum.repository.TopicRepository.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: TopicRepository.java,v 1.6 2004/11/02 12:56:48 jamesyong Exp $
  */
 package net.jforum.repository;
 
@@ -62,6 +59,8 @@ import net.jforum.util.preferences.SystemGlobals;
  * Repository for the last n topics for each forum.
  * 
  * @author Rafael Steil
+ * @author James Yong
+ * @version $Id: TopicRepository.java,v 1.7 2004/11/02 19:02:51 rafaelsteil Exp $
  */
 public class TopicRepository
 {
@@ -71,7 +70,7 @@ public class TopicRepository
 	
 	static {
 		try {
-			TopicRepository.loadTopics();
+			TopicRepository.loadMostRecentTopics();
 		}
 		catch (Exception e) {
 			new ForumException(e);
@@ -86,22 +85,8 @@ public class TopicRepository
 	public synchronized static void pushTopic(Topic topic)
 	{
 		int limit = SystemGlobals.getIntValue(ConfigKeys.RECENT_TOPICS);
-		int size = recentTopicsList.size();
-		Topic tempTopic;
-		
-		if (size > 0)
-		{
-			for (int i = 0; i < size; i++)
-			{
-				tempTopic = (Topic)recentTopicsList.get(i);
-				if (tempTopic.getId() == topic.getId())
-				{
-					recentTopicsList.remove(i);
-					break;
-				}
-			}
-		}
-		
+
+		recentTopicsList.remove(topic);
 		recentTopicsList.addFirst(topic);
 		
 		while (recentTopicsList.size() > limit)
@@ -118,22 +103,7 @@ public class TopicRepository
 	 */
 	public synchronized static void popTopic(Topic topic)
 	{
-		int size = recentTopicsList.size();
-		Topic tempTopic;
-		
-		if (size > 0){
-			
-			for (int i = 0; i < size; i++)
-			{
-				tempTopic = (Topic)recentTopicsList.get(i);
-				
-				if (tempTopic.getId() == topic.getId())
-				{
-					recentTopicsList.remove(i);
-					break;
-				}
-			}
-		}
+		recentTopicsList.remove(topic);
 	}	
 
 	/**
@@ -151,11 +121,11 @@ public class TopicRepository
 
 	/**
 	 * Add recent topics to the cache
-	 * 
 	 */
-	private static void loadTopics() throws Exception
+	public static void loadMostRecentTopics() throws Exception
 	{
 		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
+		recentTopicsList = new LinkedList();
 		
 		int limit = SystemGlobals.getIntValue(ConfigKeys.RECENT_TOPICS);
 		List l = tm.selectRecentTopics(limit);
@@ -181,7 +151,7 @@ public class TopicRepository
 	 * 
 	 * @param forumId The forum id to clear the cache
 	 */
-	public synchronized static void clearCache(int forumId)
+	public synchronized static void clearCache(int forumId) throws Exception
 	{
 		allTopicsMap.put(new Integer(forumId), new LinkedList());
 	}

@@ -79,7 +79,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.18 2004/11/02 12:58:57 jamesyong Exp $
+ * @version $Id: PostAction.java,v 1.19 2004/11/02 19:02:50 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -371,7 +371,8 @@ public class PostAction extends Command
             JForum.getContext().put("postPreview", PostCommon.preparePostForDisplay(postPreview));
 
             this.edit(true, p);
-        } else {
+        } 
+        else {
             Topic t = tm.selectById(p.getTopicId());
 
             if (!TopicsCommon.isTopicAccessible(t.getForumId())) {
@@ -507,6 +508,7 @@ public class PostAction extends Command
 
             ForumRepository.reloadForum(t.getForumId());
             TopicRepository.clearCache(t.getForumId());
+
             // Updates cache for latest topic
             TopicRepository.pushTopic(tm.selectById(t.getId()));
 
@@ -614,8 +616,9 @@ public class PostAction extends Command
             topic.setId(p.getTopicId());
             tm.delete(topic);
             
-            //Updates the Recent Topics if it contains this topic
+            // Updates the Recent Topics if it contains this topic
             TopicRepository.popTopic(topic);
+            TopicRepository.loadMostRecentTopics();
 
             tm.removeSubscriptionByTopic(p.getTopicId());
 
