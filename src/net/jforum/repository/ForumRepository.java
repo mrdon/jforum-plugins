@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ForumRepository.java,v 1.3 2004/05/04 00:59:41 rafaelsteil Exp $
+ * $Id: ForumRepository.java,v 1.4 2004/10/05 13:42:36 jamesyong Exp $
  */
 package net.jforum.repository;
 
@@ -92,16 +92,24 @@ public class ForumRepository
 	 */
 	public static ArrayList getAllForums(boolean ignoreSecurity)
 	{
-		int userId = SessionFacade.getUserSession().getUserId();
-		PermissionControl pc = SecurityRepository.get(userId);
-		
 		ArrayList l = new ArrayList();
 		Iterator iter = ForumRepository.forumsMap.values().iterator();
-		while (iter.hasNext()) {
-			Forum f = (Forum)iter.next();
+		
+		if (!(ignoreSecurity)) {
+			int userId = SessionFacade.getUserSession().getUserId();
+			PermissionControl pc = SecurityRepository.get(userId);
 
-			if (pc.canAccess(SecurityConstants.PERM_FORUM, Integer.toString(f.getId()))) {
-				l.add(f);
+			while (iter.hasNext()) {
+				Forum f = (Forum)iter.next();
+
+				if (pc.canAccess(SecurityConstants.PERM_FORUM, Integer.toString(f.getId()))) {
+					l.add(f);
+				}
+			}
+		} else {
+			while (iter.hasNext()) {
+				Forum f = (Forum)iter.next();
+			    l.add(f);
 			}
 		}
 		
