@@ -58,7 +58,7 @@ import net.jforum.util.bbcode.BBCode;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.3 2004/08/26 02:43:19 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.4 2004/08/28 14:21:23 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -174,6 +174,10 @@ public class PostCommon
 	
 	public static String processSmilies(String text, ArrayList smilies)
 	{
+		if (text == null || text.equals("")) {
+			return text;
+		}
+		
 		Iterator iter = smilies.iterator();
 		while (iter.hasNext()) {
 			Smilie s = (Smilie)iter.next();

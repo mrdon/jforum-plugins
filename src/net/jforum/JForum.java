@@ -68,7 +68,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.27 2004/08/28 03:30:32 jamesyong Exp $
+ * @version $Id: JForum.java,v 1.28 2004/08/28 14:21:24 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -147,6 +147,11 @@ public class JForum extends JForumCommonServlet
 						userSession.setAutoLogin(true);
 						SessionFacade.setAttribute("logged", "1");
 					}
+					
+					userSession.setLang(user.getLang());
+					if (!"".equals(user.getLang()) && !I18n.contains(user.getLang())) {
+						I18n.load(user.getLang());
+					}
 				}
 				else {
 					this.setAnonymousUserSession(userSession);
@@ -158,14 +163,6 @@ public class JForum extends JForumCommonServlet
 		}
 		else {
 			SessionFacade.getUserSession().updateSessionTime();
-		}
-		
-		//loads the language properties file if it doesn't exist (i18n per user feature)
-		int userId = SessionFacade.getUserSession().getUserId();
-		SessionFacade.getUserSession().setLang(DataAccessDriver.getInstance().newUserModel().selectById(userId).getLang());
-		String userLang = SessionFacade.getUserSession().getLang();
-		if (!(I18n.contains(userLang))){
-			I18n.load(userLang);
 		}
 	}
 	

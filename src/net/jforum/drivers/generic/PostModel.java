@@ -57,7 +57,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: PostModel.java,v 1.7 2004/08/26 02:43:14 rafaelsteil Exp $
+ * @version $Id: PostModel.java,v 1.8 2004/08/28 14:21:27 rafaelsteil Exp $
  */
 public class PostModel extends AutoKeys implements net.jforum.model.PostModel 
 {
@@ -187,7 +187,7 @@ public class PostModel extends AutoKeys implements net.jforum.model.PostModel
 		p.close();
 
 		// Text
-		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.addNewPostText"));
+		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.addNewPostText"));
 		p.setInt(1, postId);
 		p.setString(2, post.getText());
 		p.setString(3, post.getSubject());
