@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.13 2004/10/14 02:22:26 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.14 2004/10/15 13:10:25 marcwick Exp $
  */
 public class UserAction extends Command 
 {
@@ -223,13 +223,8 @@ public class UserAction extends Command
 	{
 		int userId = SessionFacade.getUserSession().getUserId();
 
-		String profilePage = JForum.getRequest().getContextPath()
-				+ "/user/edit/" + userId
-				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
-
-		String homePage = JForum.getRequest().getContextPath() 
-			+ "/forums/list"
-			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
+		String profilePage = JForum.encodeUrlWithPathAndExtension("/user/edit/" + userId);
+		String homePage = JForum.encodeUrlWithPathAndExtension("/forums/list");
 
 		String message = I18n.getMessage("User.RegistrationCompleteMessage", 
 				new Object[] { profilePage, homePage });
@@ -397,7 +392,7 @@ public class UserAction extends Command
 							I18n.getMessage("PasswordRecovery.mailTitle"))));
 		} 
 		catch (EmailException e) {
-			logger.warn("Error while senting email: " + e);
+			logger.warn("Error while sending email: " + e);
 		}
 
 		JForum.getContext().put("moduleAction", "message.htm");

@@ -73,7 +73,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumCommonServlet.java,v 1.9 2004/10/12 06:51:43 marcwick Exp $
+ * @version $Id: JForumCommonServlet.java,v 1.10 2004/10/15 13:10:12 marcwick Exp $
  */
 public class JForumCommonServlet extends HttpServlet {
     private static Properties modulesMapping;
@@ -342,5 +342,17 @@ public class JForumCommonServlet extends HttpServlet {
      */
     public static void setRedirect(String redirect) {
         ((DataHolder) localData.get()).setRedirectTo(getResponse().encodeRedirectURL(redirect));
+    }
+
+    /**
+     * prepend the path, append the extension and encode the url
+     * 
+     * @return 
+     */
+    public static String encodeUrlWithPathAndExtension(String url) {
+        DataHolder dataHolder = (DataHolder) localData.get();
+        return dataHolder.getResponse().encodeURL(
+                JForum.getRequest().getContextPath() + url
+                        + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
     }
 }
