@@ -170,7 +170,7 @@
             <TD class=row1><SPAN class=gen>${I18n.getMessage("User.langPreference")}:</SPAN></TD>
           	<TD class=row2>
      	   		<select name="language">
-     	   			<option value="" <#if u.getLang() == ""> elected</#if>>Default</option>
+     	   			<option value="" <#if u.getLang() == "">selected</#if>>Default</option>
 					<option value="en_US" <#if u.getLang() == "en_US">selected</#if>>American English</option>
 					<option value="nl_NL" <#if u.getLang() == "nl_NL">selected</#if>>Netherlands</option>
 					<option value="pt_BR" <#if u.getLang() == "pt_BR">selected</#if>>Portugu&ecirc;s do Brasil</option>
