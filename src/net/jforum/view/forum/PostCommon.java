@@ -59,7 +59,7 @@ import net.jforum.util.bbcode.BBCode;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.7 2004/10/04 10:08:19 marcwick Exp $
+ * @version $Id: PostCommon.java,v 1.8 2004/10/06 19:36:00 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -139,6 +139,10 @@ public class PostCommon
 						
 						while (matcher.find()) {
 							String contents = matcher.group(1);
+							
+							// Firefox seems to interpret <br> inside <pre>, 
+							// so we need this bizarre workaround
+							contents = contents.replaceAll("<br>", "");
 							
 							// Do not allow other bb tags inside "code"
 							contents = contents.replaceAll("\\[", "&#91;").replaceAll("\\]", "&#93;");

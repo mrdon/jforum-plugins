@@ -40,7 +40,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ViewCommon.java,v 1.14 2004/10/03 16:53:56 rafaelsteil Exp $
+ * $Id: ViewCommon.java,v 1.15 2004/10/06 19:36:00 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 
@@ -54,6 +54,8 @@ import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.log4j.Logger;
 
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
@@ -75,6 +77,8 @@ import net.jforum.util.preferences.SystemGlobals;
  */
 public final class ViewCommon
 {
+	private static final Logger logger = Logger.getLogger(ViewCommon.class);
+	
 	/**
 	 * Common properties to be used when showing topic data
 	 */
@@ -154,6 +158,7 @@ public final class ViewCommon
 				handleAvatar(u);
 			}
 			catch (Exception e) {
+				logger.warn("Problems with avatar upload: " + e);
 				warns.add(I18n.getMessage("User.avatarUploadError"));
 			}
 		}
