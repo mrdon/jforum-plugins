@@ -314,33 +314,28 @@ PermissionControl.loadUserRoles = SELECT r.role_id, r.name, rv.value, rv.type AS
 	WHERE r.user_id = ? \
 	AND r.group_id = 0
 	
-PermissionControl.deleteAllUserRoleValuesByGroup = DELETE jforum_role_values \
-	FROM jforum_roles r, jforum_role_values rv, jforum_users u, jforum_user_groups ug \
-	WHERE r.role_id = rv.role_id \
-	AND u.user_id = ug.user_id \
+PermissionControl.deleteAllUserRoleValuesByGroup = DELETE FROM jforum_roles \
+	where role_id in (select r.role_id from jforum_role_values rv, jforum_users u, jforum_user_groups ug \
+	WHERE u.user_id = ug.user_id \
 	AND ug.group_id = ? \
 	AND r.user_id = u.user_id \
-	AND r.role_name = ?
+	AND r.role_name = ? )
 
-PermissionControl.deleteUserRoleByGroup = DELETE jforum_roles \
-	FROM jforum_roles r, jforum_user_groups ug \
+PermissionControl.deleteUserRoleByGroup = DELETE FROM jforum_roles \
+	where user_id in (select user_id from jforum_user_groups ug where  ug.group_id = ?) \
+	and name = ? \
+	
+PermissionControl.deleteUserRoleValuesByRoleName = DELETE FROM jforum_role_values \
+	where role_id in (select r.role_id from jforum_roles r, jforum_user_groups ug \
 	WHERE ug.user_id = r.user_id \
 	AND ug.group_id = ? \
-	AND r.name = ?
-	
-PermissionControl.deleteUserRoleValuesByRoleName = DELETE jforum_role_values \
-	FROM jforum_role_values rv, jforum_roles r, jforum_user_groups ug \
-	WHERE r.role_id = rv.role_id \
-	AND ug.user_id = r.user_id \
-	AND ug.group_id = ? \
-	AND r.name = ?
+	AND r.name = ? )
 
-PermissionControl.deleteUserRoleValueByGroup = DELETE jforum_role_values \
-	FROM jforum_role_values rv, jforum_roles r, jforum_user_groups ug \
-	WHERE r.role_id = rv.role_id \
-	AND ug.user_id = r.user_id \
+PermissionControl.deleteUserRoleValueByGroup = DELETE FROM jforum_role_values\
+	where role_id in (select r.role_id from jforum_roles r, jforum_user_groups ug \
+	WHERE ug.user_id = r.user_id \
 	AND ug.group_id = ? \
-	AND r.name = ? \
+	AND r.name = ? ) \
 	AND rv.value = ?
 
 # #############
