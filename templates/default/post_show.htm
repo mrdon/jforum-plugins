@@ -175,7 +175,7 @@ function confirmDelete()
 									<a href="${contextPath}/user/profile/${user.id}.page"><img src="${contextPath}/templates/${templateName}/images/icon_profile.gif" width="59" height="18" border="0" /></a>
 
 									<#if (user.isViewEmailEnabled() && user.email?exists && user.email?length > 0)>
-										<a href="mailto:<@utils.convertEmail user.email/>"><img src="${contextPath}/templates/${templateName}/images/icon_email.gif" width="59" height="18" border="0" /></a>
+										<@utils.convertEmail user.email/>
 									</#if>
 									
 									<#if (user.webSite?exists && user.webSite?length > 0)>
