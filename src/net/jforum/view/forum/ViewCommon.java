@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ViewCommon.java,v 1.12 2004/09/28 04:03:27 rafaelsteil Exp $
+ * $Id: ViewCommon.java,v 1.13 2004/09/28 13:39:08 marcwick Exp $
  */
 package net.jforum.view.forum;
 
@@ -132,7 +132,7 @@ public final class ViewCommon
 		u.setLang(JForum.getRequest().getParameter("language"));
 		
 		String website = JForum.getRequest().getParameter("website");
-		if (website != null && !website.toLowerCase().startsWith("http://")) {
+		if (website != null && !"".equals(website) && !website.toLowerCase().startsWith("http://")) {
 			website = "http://" + website;
 		}
 
