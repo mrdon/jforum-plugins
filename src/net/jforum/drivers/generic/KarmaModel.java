@@ -45,6 +45,8 @@ package net.jforum.drivers.generic;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaModel.java,v 1.4 2005/01/31 19:15:16 franklin_samir Exp $
+ * @version $Id: KarmaModel.java,v 1.5 2005/02/16 20:45:01 franklin_samir Exp $
  */
 public class KarmaModel implements net.jforum.model.KarmaModel
 {
@@ -72,6 +74,7 @@ public class KarmaModel implements net.jforum.model.KarmaModel
 		p.setInt(3, karma.getFromUserId());
 		p.setInt(4, karma.getPoints());
 		p.setInt(5, karma.getTopicId());
+		p.setTimestamp(6, new Timestamp((new Date()).getTime()));
 		p.executeUpdate();
 		p.close();
 		
