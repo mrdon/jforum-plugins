@@ -43,6 +43,8 @@
 package net.jforum.view.forum.common;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -53,6 +55,8 @@ import net.jforum.entities.AttachmentExtension;
 import net.jforum.entities.AttachmentInfo;
 import net.jforum.model.AttachmentModel;
 import net.jforum.model.DataAccessDriver;
+import net.jforum.repository.SecurityRepository;
+import net.jforum.security.SecurityConstants;
 import net.jforum.util.MD5;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -62,7 +66,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.2 2005/01/19 19:25:55 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.3 2005/01/21 12:12:29 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {
@@ -77,8 +81,12 @@ public class AttachmentCommon
 		this.am = DataAccessDriver.getInstance().newAttachmentModel();
 	}
 	
-	public void processAttachments(int postId) throws Exception
+	public void insertAttachments(int postId) throws Exception
 	{
+		if (!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED)) {
+			return;
+		}
+		
 		String t = this.request.getParameter("total_files");
 		if (t == null || "".equals(t)) {
 			return;
@@ -136,6 +144,65 @@ public class AttachmentCommon
 		}
 	}
 	
+	public void editAttachments(int postId) throws Exception
+	{
+		if (!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED)) {
+			return;
+		}
+		
+		String[] attachIds = null;
+		String s = this.request.getParameter("edit_attach_ids");
+		if (s != null) {
+			attachIds = s.split(",");
+		}
+		
+		if (attachIds != null) {
+			AttachmentModel am = DataAccessDriver.getInstance().newAttachmentModel();
+			
+			// Check for attachments to remove
+			List deleteList = new ArrayList();
+			String[] delete = null;
+			s = this.request.getParameter("delete_attach");
+			
+			if (s != null) {
+				delete = s.split(",");
+			}
+			
+			if (delete != null) {
+				for (int i = 0; i < delete.length; i++) {
+					if (delete[i] != null && !delete[i].equals("")) {
+						int id = Integer.parseInt(delete[i]);
+						Attachment a = am.selectAttachmentById(id);
+						
+						am.removeAttachment(id, postId);
+						
+						File f = new File(SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR)
+								+ "/" + a.getInfo().getPhysicalFilename());
+						if (f.exists()) {
+							f.delete();
+						}
+					}
+				}
+				
+				deleteList = Arrays.asList(delete);
+			}
+			
+			// Now update
+			for (int i = 0; i < attachIds.length; i++) {
+				if (deleteList.contains(attachIds[i]) 
+						|| attachIds[i] == null || attachIds[i].equals("")) {
+					continue;
+				}
+				
+				int id = Integer.parseInt(attachIds[i]);
+				Attachment a = am.selectAttachmentById(id);
+				a.getInfo().setComment(this.request.getParameter("edit_comment_" + id));
+
+				am.updateAttachment(a);
+			}
+		}
+	}
+	
 	private String makeStoreFilename(AttachmentInfo a)
 	{
 		int year = Calendar.getInstance().get(Calendar.YEAR);
@@ -153,6 +220,10 @@ public class AttachmentCommon
 	
 	public List getAttachments(int postId) throws Exception
 	{
+		if (!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD)) {
+			return new ArrayList();
+		}
+		
 		return this.am.selectAttachments(postId);
 	}
 }

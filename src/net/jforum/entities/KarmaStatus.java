@@ -44,7 +44,7 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaStatus.java,v 1.2 2005/01/14 21:11:48 rafaelsteil Exp $
+ * @version $Id: KarmaStatus.java,v 1.3 2005/01/21 12:12:27 rafaelsteil Exp $
  */
 public class KarmaStatus
 {
@@ -55,8 +55,10 @@ public class KarmaStatus
 	
 	public KarmaStatus(KarmaStatus karma)
 	{
-		this.id = karma.getId();
-		this.karmaPoints = karma.getKarmaPoints();
+		if (karma != null) {
+			this.id = karma.getId();
+			this.karmaPoints = karma.getKarmaPoints();
+		}
 	}
 	
 	public KarmaStatus(int id, double points)

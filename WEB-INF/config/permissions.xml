@@ -77,6 +77,19 @@
 			<option value="allow" description="Yes"/>
 		</permission>
 	</section>
+
+	<!-- Attachments -->
+	<section id="attachments_disabled" title="Attachments">
+		<permission id="perm_attachments_enabled" title="Enable Attachments" type="single">
+			<option value="deny" description="No"/>
+			<option value="allow" description="Yes"/>
+		</permission>
+
+		<permission id="perm_attachments_download" title="Allow download of existing Attachments" type="single">
+			<option value="deny" description="No"/>
+			<option value="allow" description="Yes"/>
+		</permission>
+	</section>
 	
 	<!-- Moderation -->
 	<section id="moderation_section" title="Moderation">

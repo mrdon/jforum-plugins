@@ -64,7 +64,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.11 2005/01/07 13:09:50 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.12 2005/01/21 12:12:27 rafaelsteil Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -122,12 +122,8 @@ public class PrivateMessageAction extends Command
 		
 		User user = DataAccessDriver.getInstance().newUserModel().selectById(
 						SessionFacade.getUserSession().getUserId());
-		
-		this.context.put("user", user);
-		this.context.put("moduleName", "pm");
-		this.context.put("action", "sendSave");
-		this.context.put("moduleAction", "post_form.htm");
-		this.context.put("htmlAllowed", true);
+
+		this.sendFormCommont(user);
 	}
 	public void sendTo() throws Exception
 	{
@@ -148,11 +144,17 @@ public class PrivateMessageAction extends Command
 			this.context.put("toUserEmail", user1.getEmail());
 		}
 
+		this.sendFormCommont(user);
+	}
+	
+	private void sendFormCommont(User user)
+	{
 		this.context.put("user", user);
 		this.context.put("moduleName", "pm");
 		this.context.put("action", "sendSave");
 		this.context.put("moduleAction", "post_form.htm");
 		this.context.put("htmlAllowed", true);
+		this.context.put("attachmentsEnabled", false);
 	}
 	
 	public void sendSave() throws Exception

@@ -489,7 +489,7 @@ AttachmentModel.updateExtension = UPDATE jforum_extensions SET extension_group_i
 	WHERE extension_id = ?
 
 AttachmentModel.removeExtension = DELETE FROM jforum_extensions WHERE extension_id = ?
-AttachmentModel.selectExtensions = SELECT extension_id, extension_group_id, extension, comment, upload_icon, allow FROM jforum_extensions ORDER BY extension
+AttachmentModel.selectExtensions = SELECT extension_id, extension_group_id, extension, comment, upload_icon, allow, '' group_icon FROM jforum_extensions ORDER BY extension
 AttachmentModel.addAttachment = INSERT INTO jforum_attach (post_id, privmsgs_id, user_id) VALUES (?, ?, ?)
 
 AttachmentModel.addAttachmentInfo = INSERT INTO jforum_attach_desc (attach_id, physical_filename, real_filename, comment, \

@@ -42,10 +42,9 @@
  */
 package net.jforum.view.forum;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -89,7 +88,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.47 2005/01/19 23:45:09 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.48 2005/01/21 12:12:28 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -141,7 +140,9 @@ public class PostAction extends Command {
 
 		// Set the topic status as read
 		tm.updateReadStatus(topic.getId(), userId, true);
-
+		
+		this.context.put("canDownloadAttachments", SecurityRepository.canAccess(
+				SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD));
 		this.context.put("am", new AttachmentCommon(this.request));
 		this.context.put("karmaVotes", DataAccessDriver.getInstance().newKarmaModel().getUserVotes(topic.getId()));
 		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
@@ -247,6 +248,9 @@ public class PostAction extends Command {
 			this.context.put("setType", true);
 		}
 
+		this.context.put("attachmentsEnabled", SecurityRepository.canAccess(
+				SecurityConstants.PERM_ATTACHMENTS_ENABLED));
+		this.context.put("maxAttachments", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
 		this.context.put("forum", ForumRepository.getForum(forumId));
 		this.context.put("action", "insertSave");
 		this.context.put("moduleAction", "post_form.htm");
@@ -313,6 +317,9 @@ public class PostAction extends Command {
 						DataAccessDriver.getInstance().newAttachmentModel().selectAttachments(p.getId()));
 			}
 
+			this.context.put("attachmentsEnabled", SecurityRepository.canAccess(
+					SecurityConstants.PERM_ATTACHMENTS_ENABLED));
+			this.context.put("maxAttachments", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
 			this.context.put("forum", ForumRepository.getForum(p.getForumId()));
 			this.context.put("action", "editSave");
 			this.context.put("post", p);
@@ -423,48 +430,9 @@ public class PostAction extends Command {
 			pm.update(p);
 			
 			// Attachments
-			String[] attachIds = null;
-			String s = this.request.getParameter("attach_ids");
-			if (s != null) {
-				attachIds = s.split(",");
-			}
-			
-			if (attachIds != null) {
-				AttachmentModel am = DataAccessDriver.getInstance().newAttachmentModel();
-				
-				// Check for attachments to remove
-				List deleteList = new ArrayList();
-				String[] delete = null;
-				s = this.request.getParameter("delete_attach");
-				
-				if (s != null) {
-					delete = s.split(",");
-				}
-				
-				if (delete != null) {
-					for (int i = 0; i < delete.length; i++) {
-						if (delete[i] != null && !delete[i].equals("")) {
-							am.removeAttachment(Integer.parseInt(delete[i]), p.getId());
-						}
-					}
-					
-					deleteList = Arrays.asList(delete);
-				}
-				
-				// Now update
-				for (int i = 0; i < attachIds.length; i++) {
-					if (deleteList.contains(attachIds[i]) 
-							|| attachIds[i] == null || attachIds[i].equals("")) {
-						continue;
-					}
-					
-					int id = Integer.parseInt(attachIds[i]);
-					Attachment a = am.selectAttachmentById(id);
-					a.getInfo().setComment(this.request.getParameter("comment_" + id));
-
-					am.updateAttachment(a);
-				}
-			}
+			AttachmentCommon ac = new AttachmentCommon(this.request);
+			ac.editAttachments(p.getId());
+			ac.insertAttachments(p.getId());
 
 			// Updates the topic title
 			if (t.getFirstPostId() == p.getId()) {
@@ -597,7 +565,7 @@ public class PostAction extends Command {
 			tm.update(t);
 			
 			// Attachments
-			new AttachmentCommon(this.request).processAttachments(postId);
+			new AttachmentCommon(this.request).insertAttachments(postId);
 
 			fm.setLastPost(t.getForumId(), postId);
 
@@ -774,20 +742,35 @@ public class PostAction extends Command {
 
 	public void downloadAttach() throws Exception
 	{
+		if (!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD)) {
+			this.context.put("moduleAction", "message.htm");
+			this.context.put("message", I18n.getMessage("Attachments.featureDisabled"));
+			return;
+		}
+		
 		int id = this.request.getIntParameter("attach_id");
 		
 		AttachmentModel am = DataAccessDriver.getInstance().newAttachmentModel();
 		Attachment a = am.selectAttachmentById(id);
+		
+		String filename = SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR)
+			+ "/"
+			+ a.getInfo().getPhysicalFilename();
+		
+		if (!new File(filename).exists()) {
+			this.context.put("moduleAction", "message.htm");
+			this.context.put("message", I18n.getMessage("Attachments.notFound"));
+			return;
+		}
+		
 		a.getInfo().setDownloadCount(a.getInfo().getDownloadCount() + 1);
 		am.updateAttachment(a);
 		
-		FileInputStream fis = new FileInputStream(SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR)
-				+ "/"
-				+ a.getInfo().getPhysicalFilename());
+		FileInputStream fis = new FileInputStream(filename);
 		OutputStream os = response.getOutputStream();
 
 		this.response.setContentType("application/octet-stream");
-		this.response.setHeader("Content-Disposition", "attachment; filename=" + a.getInfo().getRealFilename());
+		this.response.setHeader("Content-Disposition", "attachment; filename=\"" + a.getInfo().getRealFilename() + "\";");
 		this.response.setContentLength((int)a.getInfo().getFilesize());
 		
 		byte[] b = new byte[4096];

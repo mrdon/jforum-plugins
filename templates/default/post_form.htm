@@ -548,17 +548,22 @@ function validatePostForm(f)
 					<td height="28" colspan="2" class="catBottom">              
 						<input class="mainoption" tabindex="5" type="submit" value="${I18n.getMessage("PostForm.preview")}" name="preview" />&nbsp;
 						<input class="mainoption" accesskey="s" tabindex="6" type="submit" value="${I18n.getMessage("PostForm.submit")}" name="post" />
-						<input class="mainoption" accesskey="s" tabindex="7" type="button" onClick="openAttachmentPanel();" value="Attach Files" name="post" />
+						<#if attachmentsEnabled>
+							<input class="mainoption" accesskey="s" tabindex="7" type="button" onClick="openAttachmentPanel();" value="${I18n.getMessage("Attachments.attach")}" name="post" />
+						</#if>
 					</td>
 				</tr>
 			</table>
 		</td>
 	</tr>
 
+	<#if attachmentsEnabled>
 	<script language="javascript">
 	var panelOpen = false;
 	var total = 0;
 	var ignoreStart = false;
+	var maxAttachments = ${maxAttachments};
+	var counter = 0;
 
 	var template = "<table width='100%'><tr><td><span class='gen'><b>${I18n.getMessage("Attachments.filename")}</b></span></td>";
 	template += "<td><input type='file' size='50' name='file_#counter#'></td></tr>";
@@ -579,25 +584,39 @@ function validatePostForm(f)
 
 	function addAttachmentFields()
 	{
-		var s = template.replace(/#counter#/g, total);
-		s += "<div id='attach_#counter#'></div>";
-		s = s.replace(/#counter#/, total + 1);
+		if (counter < maxAttachments) {
+			var s = template.replace(/#counter#/g, total);
+			s += "<div id='attach_#counter#'></div>";
+			s = s.replace(/#counter#/, total + 1);
 
-		
-		document.getElementById("attach_" + total).innerHTML = s;
-		document.getElementById("total_files").value = ++total;
+			
+			document.getElementById("attach_" + total).innerHTML = s;
+			document.getElementById("total_files").value = ++total;
+
+			counter++;
+			setAddAttachButtonStatus();
+		}
 	}
 
 	function removeAttach(index)
 	{
 		document.getElementById("attach_" + index).innerHTML = "<div id='attach_" + total + "'></div>";
+		counter--;
+		setAddAttachButtonStatus();
+	}
+
+	function setAddAttachButtonStatus()
+	{
+		var disabled = !(counter < maxAttachments);
+		document.post.add_attach.disabled = disabled;
+		document.post.add_attach.style.color = disabled ? "#cccccc" : "#000000";
 	}
 
 	<#if attachments?exists>
 	var templateEdit = "<table width='100%'><tr><td class='row2'><span class='gen'><b>${I18n.getMessage("Attachments.filename")}</b></span></td>";
 	templateEdit += "<td class='row2'><span class='gen'>#name#</td></tr>";
 	templateEdit += "<tr><td class='row2'><span class='gen'><b>${I18n.getMessage("Attachments.description")}</b></span></td>";
-	templateEdit += "<td class='row2'><textarea rows='4' cols='40' name='comment_#id#'>#value#</textarea>";
+	templateEdit += "<td class='row2'><textarea rows='4' cols='40' name='edit_comment_#id#'>#value#</textarea>";
 	templateEdit += "&nbsp;&nbsp;<span class='gensmall'><input type='checkbox' onClick='configureAttachDeletion(#id#, this);'>${I18n.getMessage("Attachments.remove")}</span></td></tr>";
 	templateEdit += "<tr><td colspan='2' width='100%' class='row3'></td></tr></table>";
 
@@ -606,6 +625,7 @@ function validatePostForm(f)
 		var data = new Array();
 		<#list attachments as a>
 			var attach_${a.id} = new Array();
+
 			attach_${a.id}["filename"] = "${a.info.realFilename}";
 			attach_${a.id}["description"] = "${a.info.comment}";
 			attach_${a.id}["id"] = "${a.id}";
@@ -613,6 +633,9 @@ function validatePostForm(f)
 			data.push(attach_${a.id});
 		</#list>
 
+		counter = data.length;
+		setAddAttachButtonStatus()
+		
 		for (var i = 0; i < data.length; i++) {
 			var a = data[i];
 			var s = templateEdit.replace(/#value#/, a["description"]);
@@ -622,7 +645,7 @@ function validatePostForm(f)
 			var v = document.getElementById("edit_attach").innerHTML;
 			v += s;
 			document.getElementById("edit_attach").innerHTML = v;
-			document.post.attach_ids.value += a["id"] + ",";
+			document.post.edit_attach_ids.value += a["id"] + ",";
 		}
 	}
 
@@ -644,7 +667,7 @@ function validatePostForm(f)
 	</#if>
 	</script>
 
-	<input type="hidden" name="attach_ids">
+	<input type="hidden" name="edit_attach_ids">
 	<input type="hidden" name="delete_attach">
 	<input type="hidden" name="total_files" id="total_files">
 	<tr>
@@ -664,11 +687,12 @@ function validatePostForm(f)
 				</td>
 			</tr>
 			<tr>
-				<td align="center" class="row3"><input type="button" value="Add antoher file" class="mainoption" onClick="addAttachmentFields()"></td>
+				<td align="center" class="row3"><input type="button" name="add_attach" value="Add antoher file" class="mainoption" onClick="addAttachmentFields()"></td>
 			</tr>
 		</table>
 	</td>
 	</tr>
+	</#if>
 
 	<#if (topic?exists && topic.id > 0)>
 	<tr>

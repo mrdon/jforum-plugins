@@ -58,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentModel.java,v 1.8 2005/01/19 23:45:08 rafaelsteil Exp $
+ * @version $Id: AttachmentModel.java,v 1.9 2005/01/21 12:12:28 rafaelsteil Exp $
  */
 public class AttachmentModel extends AutoKeys implements net.jforum.model.AttachmentModel
 {
@@ -236,7 +236,7 @@ public class AttachmentModel extends AutoKeys implements net.jforum.model.Attach
 		p.setInt(1, e.getExtensionGroupId());
 		p.setString(2, e.getComment());
 		p.setString(3, e.getUploadIcon());
-		p.setString(4, e.getExtension());
+		p.setString(4, e.getExtension().toLowerCase());
 		p.setInt(5, e.isAllow() ? 1 : 0);
 		p.executeUpdate();
 		p.close();
@@ -287,7 +287,7 @@ public class AttachmentModel extends AutoKeys implements net.jforum.model.Attach
 		p.setInt(1, e.getExtensionGroupId());
 		p.setString(2, e.getComment());
 		p.setString(3, e.getUploadIcon());
-		p.setString(4, e.getExtension());
+		p.setString(4, e.getExtension().toLowerCase());
 		p.setInt(5, e.isAllow() ? 1 : 0);
 		p.setInt(6, e.getId());
 		p.executeUpdate();
