@@ -54,7 +54,7 @@ import com.dumbster.smtp.SmtpMessage;
 
 /**
  * @author Marc Wick
- * @version $Id: UserWebTestCase.java,v 1.11 2004/10/03 16:53:55 rafaelsteil Exp $
+ * @version $Id: UserWebTestCase.java,v 1.12 2004/10/04 06:58:02 marcwick Exp $
  */
 public class UserWebTestCase extends AbstractWebTestCase {
 
@@ -133,7 +133,7 @@ public class UserWebTestCase extends AbstractWebTestCase {
 		submit();
 
 		// give the jforum servlet time to deliver the email to the smtp server
-		Thread.sleep(1000);
+		Thread.sleep(waitTimeForEmailTread);
 
 		// test if an email has been received by localhost
 		assertEquals("password lost email received", 1, 

@@ -53,89 +53,83 @@ import com.dumbster.smtp.SimpleSmtpServer;
 
 /**
  * @author Marc Wick
- * @version $Id: AbstractWebTestCase.java,v 1.9 2004/10/03 13:03:58 marcwick Exp $
+ * @version $Id: AbstractWebTestCase.java,v 1.10 2004/10/04 06:58:02 marcwick Exp $
  */
 public abstract class AbstractWebTestCase extends WebTestCase {
-	public static class SimpleHTMLParserListener implements
-			com.meterware.httpunit.parsing.HTMLParserListener {
+    public static class SimpleHTMLParserListener implements
+            com.meterware.httpunit.parsing.HTMLParserListener {
 
-		public void error(java.net.URL url, java.lang.String msg, int line,
-				int column) {
-			System.err.println("error : " + url + " " + msg + " " + line + " "
-					+ column);
-		}
+        public void error(java.net.URL url, java.lang.String msg, int line, int column) {
+            System.err.println("error : " + url + " " + msg + " " + line + " " + column);
+        }
 
-		public void warning(java.net.URL url, java.lang.String msg, int line,
-				int column) {
-			System.err.println("warning : " + url + " " + msg + " " + line
-					+ " " + column);
-		}
-	}
+        public void warning(java.net.URL url, java.lang.String msg, int line, int column) {
+            System.err.println("warning : " + url + " " + msg + " " + line + " " + column);
+        }
+    }
 
-	protected String language;
+    protected String language;
 
-	protected String rootDir;
+    protected String rootDir;
 
-	protected String FORUMS_LIST = "/forums/list.page";
+    protected String FORUMS_LIST = "/forums/list.page";
 
-	/**
-	 * for testing emails we use the smtp server dumpster( see :
-	 * http://quintanasoft.com/dumbster/)
-	 * 
-	 * The Dumbster is a very simple fake SMTP server designed for unit and
-	 * system testing applications that send email messages. It responds to all
-	 * standard SMTP commands but does not deliver messages to the user. The
-	 * messages are stored within the Dumbster for later extraction and
-	 * verification.
-	 * 
-	 * usage :
-	 * 
-	 * start the test smtp server on localhost in the testcase with
-	 * smtpServer.start();
-	 * 
-	 * ... run the tests that are sending the email
-	 * 
-	 * get the emails <br>
-	 * smtpServer.getReceivedEmail()
-	 *  
-	 */
-	protected SimpleSmtpServer smtpServer;
+    /**
+     * for testing emails we use the smtp server dumpster( see : http://quintanasoft.com/dumbster/)
+     * 
+     * The Dumbster is a very simple fake SMTP server designed for unit and system testing
+     * applications that send email messages. It responds to all standard SMTP commands but does not
+     * deliver messages to the user. The messages are stored within the Dumbster for later
+     * extraction and verification.
+     * 
+     * usage :
+     * 
+     * start the test smtp server on localhost in the testcase with smtpServer.start();
+     * 
+     * ... run the tests that are sending the email
+     * 
+     * get the emails <br>
+     * smtpServer.getReceivedEmail()
+     *  
+     */
+    protected SimpleSmtpServer smtpServer;
+    
+    protected int waitTimeForEmailTread = 2000;
 
-	public AbstractWebTestCase(String name) throws IOException {
-		super(name);
+    public AbstractWebTestCase(String name) throws IOException {
+        super(name);
 
-		this.rootDir = this.getClass().getResource("/").getPath();
-		this.rootDir = this.rootDir.substring(0, this.rootDir.length()
-				- "/WEB-INF/classes".length());
+        this.rootDir = this.getClass().getResource("/").getPath();
+        this.rootDir = this.rootDir.substring(0, this.rootDir.length()
+                - "/WEB-INF/classes".length());
 
-		init();
-		getTestContext().setBaseUrl(
-				SystemGlobals.getValue(ConfigKeys.FORUM_LINK));
+        init();
+        getTestContext().setBaseUrl(SystemGlobals.getValue(ConfigKeys.FORUM_LINK));
 
-		//HTMLParserFactory.setParserWarningsEnabled(true);
-		//HTMLParserFactory.addHTMLParserListener(new
-		// SimpleHTMLParserListener());
-	}
+        //HTMLParserFactory.setParserWarningsEnabled(true);
+        //HTMLParserFactory.addHTMLParserListener(new
+        // SimpleHTMLParserListener());
+    }
 
-	private void init() throws IOException {
-		TestCaseUtils.loadEnvironment();
-		this.language = SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT);
-	}
+    private void init() throws IOException {
+        TestCaseUtils.loadEnvironment();
+        this.language = SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT);
+    }
 
-	protected void login(String username, String password) {
-		beginAt(FORUMS_LIST);
-		assertLinkPresent("login");
-		clickLink("login");
-		assertFormPresent("loginform");
-		setFormElement("username", username);
-		setFormElement("password", password);
-		submit();
-		assertElementNotPresent("invalidlogin");
-	}
+    protected void login(String username, String password) {
+        beginAt(FORUMS_LIST);
+        assertLinkPresent("login");
+        clickLink("login");
+        assertFormPresent("loginform");
+        setFormElement("username", username);
+        setFormElement("password", password);
+        submit();
+        assertElementNotPresent("invalidlogin");
+    }
 
-	protected void logout() {
-		assertLinkPresent("logout");
-		clickLink("logout");
-		assertLinkPresent("login");
-	}
+    protected void logout() {
+        assertLinkPresent("logout");
+        clickLink("logout");
+        assertLinkPresent("login");
+    }
 }

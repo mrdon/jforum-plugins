@@ -51,7 +51,7 @@ import com.dumbster.smtp.SmtpMessage;
 
 /**
  * @author Marc Wick
- * @version $Id: PostWebTestCase.java,v 1.5 2004/10/03 11:51:19 marcwick Exp $
+ * @version $Id: PostWebTestCase.java,v 1.6 2004/10/04 06:58:02 marcwick Exp $
  */
 public class PostWebTestCase extends AbstractWebTestCase {
 
@@ -142,7 +142,7 @@ public class PostWebTestCase extends AbstractWebTestCase {
 		submit("post");
 
 		// give the jforum servlet time to deliver the email to the smtp server
-		Thread.sleep(1000);
+		Thread.sleep(waitTimeForEmailTread);
 
 		// test if an email has been received by localhost
 		assertEquals("topic watch email received", 1, smtpServer
