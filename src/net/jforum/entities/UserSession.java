@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * Stores information about user's session.
  * 
  * @author Rafael Steil
- * @version $Id: UserSession.java,v 1.12 2004/12/19 15:17:14 rafaelsteil Exp $
+ * @version $Id: UserSession.java,v 1.13 2004/12/28 04:18:13 rafaelsteil Exp $
  */
 public class UserSession implements Serializable
 {
@@ -73,11 +73,10 @@ public class UserSession implements Serializable
 	private String lang;
 	private int privateMessages;
 	private ImageCaptcha imageCaptcha = null;
-	
 	static final long serialVersionUID = 0;
-	
+
 	public UserSession() {}
-	
+
 	public UserSession(UserSession us)
 	{
 		this.startTime = us.getStartTime();
@@ -90,17 +89,17 @@ public class UserSession implements Serializable
 		this.lang = us.getLang();
 		this.privateMessages = us.getPrivateMessages();
 	}
-	
+
 	/**
 	 * Set session's start time.
 	 * 
-	 * @param startTime Start time in miliseconds
+	 * @param startTime  Start time in miliseconds
 	 */
 	public void setStartTime(Date startTime)
 	{
 		this.startTime = startTime;
 	}
-	
+
 	/**
 	 * @return Returns the privateMessages.
 	 */
@@ -108,7 +107,7 @@ public class UserSession implements Serializable
 	{
 		return this.privateMessages;
 	}
-	
+
 	/**
 	 * @param privateMessages The privateMessages to set.
 	 */
@@ -116,6 +115,7 @@ public class UserSession implements Serializable
 	{
 		this.privateMessages = privateMessages;
 	}
+
 	/**
 	 * Set session last visit time.
 	 * 
@@ -125,7 +125,7 @@ public class UserSession implements Serializable
 	{
 		this.lastVisit = lastVisit;
 	}
-	
+
 	/**
 	 * Set user's id
 	 * 
@@ -135,7 +135,7 @@ public class UserSession implements Serializable
 	{
 		this.userId = userId;
 	}
-	
+
 	/**
 	 * Set user's name
 	 * 
@@ -145,7 +145,7 @@ public class UserSession implements Serializable
 	{
 		this.username = username;
 	}
-	
+
 	public void setSessionId(String sessionId)
 	{
 		this.sessionId = sessionId;
@@ -155,30 +155,30 @@ public class UserSession implements Serializable
 	{
 		this.sessionTime = sessionTime;
 	}
-	
+
 	public void setLang(String lang)
 	{
 		this.lang = lang;
 	}
-	
+
 	/**
-	 * Update the session time. 
+	 * Update the session time.
 	 */
 	public void updateSessionTime()
 	{
 		this.sessionTime = System.currentTimeMillis() - this.startTime.getTime();
 	}
-	
+
 	/**
 	 * Enable or disable auto-login.
 	 * 
-	 * @param autoLogin <code>true</code> or <code>false</code> to represent auto-login status
+	 * @param autoLogin  <code>true</code> or <code>false</code> to represent auto-login status
 	 */
 	public void setAutoLogin(boolean autoLogin)
 	{
 		this.autoLogin = autoLogin;
 	}
-	
+
 	/**
 	 * Gets user's session start time
 	 * 
@@ -188,12 +188,12 @@ public class UserSession implements Serializable
 	{
 		return this.startTime;
 	}
-	
+
 	public String getLang()
 	{
 		return this.lang;
 	}
-	
+
 	/**
 	 * Gets user's last visit time
 	 * 
@@ -203,7 +203,7 @@ public class UserSession implements Serializable
 	{
 		return this.lastVisit;
 	}
-	
+
 	/**
 	 * Gets the session time.
 	 * 
@@ -213,7 +213,7 @@ public class UserSession implements Serializable
 	{
 		return this.sessionTime;
 	}
-	
+
 	/**
 	 * Gets user's id
 	 * 
@@ -223,7 +223,7 @@ public class UserSession implements Serializable
 	{
 		return this.userId;
 	}
-	
+
 	/**
 	 * Gets the username
 	 * 
@@ -233,7 +233,7 @@ public class UserSession implements Serializable
 	{
 		return this.username;
 	}
-	
+
 	/**
 	 * Gets auto-login status
 	 * 
@@ -243,41 +243,43 @@ public class UserSession implements Serializable
 	{
 		return this.autoLogin;
 	}
-	
+
 	/**
 	 * Gets the session id related to this user session
+	 * 
 	 * @return A string with the session id
 	 */
 	public String getSessionId()
 	{
 		return this.sessionId;
 	}
-	
+
 	/**
 	 * Checks if the user is an administrator
+	 * 
 	 * @return <code>true</code> if the user is an administrator
 	 */
 	public boolean isAdmin() throws Exception
 	{
 		return SecurityRepository.canAccess(this.userId, SecurityConstants.PERM_ADMINISTRATION);
 	}
-	
+
 	/**
 	 * Checks if the user is a moderator
+	 * 
 	 * @return <code>true</code> if the user has moderations rights
 	 */
 	public boolean isModerator() throws Exception
 	{
 		return SecurityRepository.canAccess(this.userId, SecurityConstants.PERM_MODERATION);
 	}
-	
+
 	/**
-	 * Makes the user's session "anoymous" - eg, the user. 
-	 * This method sets the session's start and last visit time
-	 * to the current datetime, the user id to the return of a call
-	 * to <code>SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)</code> and
-	 * finally sets session attribute named "logged" to "0"
-	 * will be considered a non-authenticated / anonymous user
+	 * Makes the user's session "anoymous" - eg, the user. This method sets the session's start and
+	 * last visit time to the current datetime, the user id to the return of a call to
+	 * <code>SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)</code> and finally sets
+	 * session attribute named "logged" to "0" will be considered a non-authenticated / anonymous
+	 * user
 	 */
 	public void makeAnonymous()
 	{
@@ -287,13 +289,12 @@ public class UserSession implements Serializable
 
 		SessionFacade.setAttribute("logged", "0");
 	}
-	
+
 	/**
-	 * Sets a new user session information using information
-	 * from an <code>User</code> instance. This method sets
-	 * the user id, username, the number of private messages,
-	 * the session's start time ( set to the current date and time )
-	 * and the language.
+	 * Sets a new user session information using information from an <code>User</code> instance.
+	 * This method sets the user id, username, the number of private messages, the session's start
+	 * time ( set to the current date and time ) and the language.
+	 * 
 	 * @param user The <code>User</code> instance to get data from
 	 */
 	public void dataToUser(User user)
@@ -305,53 +306,54 @@ public class UserSession implements Serializable
 		this.setLang(user.getLang());
 	}
 
-    /**
-     * Get the captcha image to challenge the user
-     *
-     * @return BufferedImage the captcha image to challenge the user
-     */
-    public BufferedImage getCaptchaImage()
-    {
-        if (imageCaptcha == null)
-            return null;
-        return (BufferedImage)(imageCaptcha.getChallenge());
-    }
-    
-    /**
-     * Validate the captcha response of user
-     *
-     * @param anwser String the captcha response from user
-     * @return boolean true if the answer is valid, otherwise return false
-     */
-    public boolean validateCaptchaResponse(String userResponse)
-    {
-        if (imageCaptcha != null)
-        {
-        	userResponse = userResponse.toUpperCase();
-        	return (imageCaptcha.validateResponse(userResponse)).booleanValue();
-        } else {
-            return false;
-        }
-    }
-    
-    /**
-     * create a new image captcha
-     * 
-     * @return void
-     */
-    public void createNewCaptcha() 
-    {
-    	destroyCaptcha();
-        imageCaptcha = Captcha.getInstance().getNextImageCaptcha();
-    }
+	/**
+	 * Get the captcha image to challenge the user
+	 * 
+	 * @return BufferedImage the captcha image to challenge the user
+	 */
+	public BufferedImage getCaptchaImage()
+	{
+		if (this.imageCaptcha == null) {
+			return null;
+		}
+		
+		return (BufferedImage)this.imageCaptcha.getChallenge();
+	}
 
-    /**
-     * Destroy the current captcha validation is done
-     * 
-     * @return void
-     */
-    public void destroyCaptcha() 
-    {
-        imageCaptcha = null;
-    }
+	/**
+	 * Validate the captcha response of user
+	 * 
+	 * @param anwser String the captcha response from user
+	 * @return boolean true if the answer is valid, otherwise return false
+	 */
+	public boolean validateCaptchaResponse(String userResponse)
+	{
+		if (this.imageCaptcha != null) {
+			return (this.imageCaptcha.validateResponse(userResponse)).booleanValue();
+		}
+		else {
+			return false;
+		}
+	}
+
+	/**
+	 * create a new image captcha
+	 * 
+	 * @return void
+	 */
+	public void createNewCaptcha()
+	{
+		this.destroyCaptcha();
+		this.imageCaptcha = Captcha.getInstance().getNextImageCaptcha();
+	}
+
+	/**
+	 * Destroy the current captcha validation is done
+	 * 
+	 * @return void
+	 */
+	public void destroyCaptcha()
+	{
+		this.imageCaptcha = null;
+	}
 }
