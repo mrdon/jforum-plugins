@@ -91,6 +91,19 @@
 	</td>
 </tr>
 
+<tr>
+	<td class='row1' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.DisableRegistraion")}</span></td>
+	<td class='row1' width="38%">
+		<#assign o = config.getProperty("registration.enabled")/>
+		<span class='gen'>
+			<select name="p_registration.enabled">
+				<option value="true" <#if o == "true">selected</#if>>True</option>
+				<option value="false" <#if o == "false">selected</#if>>False</option>
+			</select>
+		</span>
+	</td>
+</tr>
+
 <!-- General -->
 <tr>
 	<td class='catSides' colspan="2"><span class='gen'><b>${I18n.getMessage("Config.Form.General")}</b></span></td>

@@ -73,7 +73,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.25 2005/01/14 21:11:49 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.26 2005/01/25 13:53:38 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -118,9 +118,20 @@ public class UserAction extends Command
 					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		}
 	}
+	
+	private void registrationDisabled()
+	{
+		this.context.put("moduleAction", "message.htm");
+		this.context.put("message", I18n.getMessage("User.registrationDisabled"));
+	}
 
 	public void insert() 
 	{
+		if (!SystemGlobals.getBoolValue(ConfigKeys.REGISTRATION_ENABLED)) {
+			this.registrationDisabled();
+			return;
+		}
+		
 		this.context.put("action", "insertSave");
 		this.context.put("moduleAction", "user_new.htm");
 		this.context.put("username", this.request.getParameter("username"));
@@ -135,6 +146,11 @@ public class UserAction extends Command
 
 	public void insertSave() throws Exception 
 	{
+		if (!SystemGlobals.getBoolValue(ConfigKeys.REGISTRATION_ENABLED)) {
+			this.registrationDisabled();
+			return;
+		}
+		
 		User u = new User();
 		UserModel um = DataAccessDriver.getInstance().newUserModel();
 
