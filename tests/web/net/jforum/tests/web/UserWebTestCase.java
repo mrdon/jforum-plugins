@@ -52,7 +52,7 @@ import com.dumbster.smtp.SmtpMessage;
 
 /**
  * @author Marc Wick
- * @version $Id: UserWebTestCase.java,v 1.3 2004/09/24 12:54:37 rafaelsteil Exp $
+ * @version $Id: UserWebTestCase.java,v 1.4 2004/09/24 12:59:17 rafaelsteil Exp $
  */
 public class UserWebTestCase extends AbstractWebTestCase {
 
@@ -107,36 +107,4 @@ public class UserWebTestCase extends AbstractWebTestCase {
 
 	public void testEditUserProfile() {
 		login(lastTestuser, password);
-		clickLinkWithText(I18n.getMessage(language, "ForumBase.profile"));
-		setFormElement("signature", "signature for testuser");
-		submit();
-		clickLinkWithText(I18n.getMessage(language, "ForumBase.logout"));
-	}
-
-	public void testPasswordForgottenUserName() throws Exception {
-		smtpServer = SimpleSmtpServer.start();
-		beginAt("/forums/list.page");
-		clickLinkWithText(I18n.getMessage(language, "ForumBase.login"));
-		clickLinkWithText(I18n.getMessage(language, "Login.lostPassword"));
-
-		setFormElement("username", lastTestuser);
-		submit();
-		Thread.sleep(1000);
-		assertEquals("password lost email received", 1, smtpServer
-				.getReceievedEmailSize());
-		SmtpMessage mail = (SmtpMessage) smtpServer.getReceivedEmail().next();
-		String body = mail.getBody();
-		String link = body.substring(body.indexOf("http:"),
-				body.indexOf(".page") + 5).trim();
-		smtpServer.stop();
-
-		getTestContext().setBaseUrl(link.substring(0, link.lastIndexOf('/')));
-		gotoPage(link.substring(link.lastIndexOf('/')));
-		setFormElement("email", lastTestuser);
-		setFormElement("newPassword", password);
-		setFormElement("confirmPassword", password);
-		submit();
-		clickLinkWithText(I18n.getMessage(language, "ForumBase.logout"));
-	}
-
-}
+		click

@@ -47,58 +47,63 @@ import java.io.IOException;
 import com.dumbster.smtp.SimpleSmtpServer;
 
 import net.jforum.util.I18n;
+import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.sourceforge.jwebunit.WebTestCase;
 
 /**
  * @author Marc Wick
- * @version $Id: AbstractWebTestCase.java,v 1.1 2004/09/21 16:00:13 rafaelsteil
- *          Exp $
+ * @version $Id: AbstractWebTestCase.java,v 1.3 2004/09/24 12:54:37 rafaelsteil Exp $
  */
 public abstract class AbstractWebTestCase extends WebTestCase {
 	public static class SimpleHTMLParserListener implements
 			com.meterware.httpunit.parsing.HTMLParserListener {
 
-		public void error(java.net.URL url, java.lang.String msg, int line,
-				int column) {
-			System.err.println("error : " + url + " " + msg + " " + line + " "
-					+ column);
+		public void error(java.net.URL url, java.lang.String msg, int line, int column) {
+			System.err.println("error : " + url + " " + msg + " " + line + " " + column);
 		}
 
-		public void warning(java.net.URL url, java.lang.String msg, int line,
-				int column) {
-			System.err.println("warning : " + url + " " + msg + " " + line
-					+ " " + column);
+		public void warning(java.net.URL url, java.lang.String msg, int line, int column) {
+			System.err.println("warning : " + url + " " + msg + " " + line + " " + column);
 		}
 	}
 
-	protected String language = "de_DE";
+	protected String language;
+	protected String rootDir;
 
 	protected SimpleSmtpServer smtpServer;
 
 	public AbstractWebTestCase(String name) throws IOException {
 		super(name);
+		
+		this.rootDir = this.getClass().getResource("/").getPath();
+		this.rootDir = this.rootDir.substring(0, this.rootDir.length() - "/WEB-INF/classes".length());
+		
 		init();
-		getTestContext().setBaseUrl("http://localhost:8080/jforum/forums");
+		getTestContext().setBaseUrl(SystemGlobals.getValue(ConfigKeys.FORUM_LINK));
+
 		//HTMLParserFactory.setParserWarningsEnabled(true);
 		//HTMLParserFactory.addHTMLParserListener(new
 		// SimpleHTMLParserListener());
 	}
 
 	private void init() throws IOException {
-		String appPath = "c:/marc/java/jakarta-tomcat-5.0.19/webapps/JForum-RC5";
-		SystemGlobals.initGlobals(appPath, appPath
+		SystemGlobals.initGlobals(this.rootDir, this.rootDir
 				+ "/WEB-INF/config/SystemGlobals.properties", null);
 		SystemGlobals.loadDefaults();
+		this.language = SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT);
 		I18n.load();
 	}
 
 	protected void login(String username, String password) {
-		beginAt("/list.page");
-		clickLinkWithText(I18n.getMessage(language, "ForumBase.login"));
+		beginAt("/forums/list.page");
+		assertLinkPresent("login");
+		clickLink("login");
+		assertFormPresent("formlogin");
 		setFormElement("username", username);
 		setFormElement("password", password);
 		submit();
+		assertElementNotPresent("invalidlogin");
 	}
 
 }
