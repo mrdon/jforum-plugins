@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: TopicRepository.java,v 1.2 2004/04/21 23:57:32 rafaelsteil Exp $
+ * $Id: TopicRepository.java,v 1.3 2004/04/24 01:22:43 rafaelsteil Exp $
  */
 package net.jforum.repository;
 
@@ -139,7 +139,7 @@ public class TopicRepository
 	 * @param forumid The forum id 
 	 * @return <code>ArrayList</code> with the topics.
 	 */
-	public synchronized static ArrayList getTopics(int forumid)
+	public static ArrayList getTopics(int forumid)
 	{
 		LinkedList returnList = (LinkedList)allTopicsMap.get(new Integer(forumid));
 		if (returnList == null) {

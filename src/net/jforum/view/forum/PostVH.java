@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: PostVH.java,v 1.5 2004/04/23 00:47:14 rafaelsteil Exp $
+ * $Id: PostVH.java,v 1.6 2004/04/24 01:22:44 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 
@@ -70,6 +70,7 @@ import net.jforum.repository.ForumRepository;
 import net.jforum.repository.RankingRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.repository.SmiliesRepository;
+import net.jforum.repository.TopicRepository;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.bbcode.BBCode;
@@ -477,8 +478,9 @@ public class PostVH extends Command
 			fm.setLastPost(t.getForumId(), postId);
 			
 			ForumRepository.reloadForum(t.getForumId());
+			TopicRepository.addTopic(tm.selectById(t.getId()));
+
 			JForum.setRedirect(JForum.getRequest().getContextPath() +"/posts/list/"+ topicId +".page#"+ postId);
-			
 			((HashMap)SessionFacade.getAttribute("topics_tracking")).put(new Integer(t.getId()), new Long(p.getTime()));
 
 			// RSS

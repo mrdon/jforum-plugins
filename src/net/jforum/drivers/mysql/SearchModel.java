@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: SearchModel.java,v 1.5 2004/04/21 23:57:21 rafaelsteil Exp $
+ * $Id: SearchModel.java,v 1.6 2004/04/24 01:22:44 rafaelsteil Exp $
  */
 package net.jforum.drivers.mysql;
 
@@ -165,9 +165,15 @@ public class SearchModel implements net.jforum.model.SearchModel
 			}
 		}
 		else {
+			postsIds = new HashSet();
+			
 			for (Iterator iter = eachWordMap.values().iterator(); iter.hasNext(); ) {
 				postsIds.addAll((HashSet)iter.next());
 			}
+		}
+		
+		if (postsIds == null || postsIds.size() == 0) {
+			return;
 		}
 		
 		// Time to get ready to search for the topics ids 
@@ -219,7 +225,7 @@ public class SearchModel implements net.jforum.model.SearchModel
 			
 			if (!rs.next()) {
 				insert.setInt(1, hash);
-				insert.setString(2, words[i]);
+				insert.setString(2, words[i].toLowerCase().replaceAll("[\\.\\\\\\/~^&\\(\\)-_+=!@#$%\"\'\\[\\]\\{\\}?<:>,*]", ""));
 				insert.executeUpdate();
 				
 				ResultSet idRs = insert.getGeneratedKeys();
