@@ -100,6 +100,12 @@ function confirmDelete()
 						
 						<#if user.from?exists>
 							${I18n.getMessage("PostShow.userFrom")}: ${user.from}
+							<br />
+						</#if>
+
+						<#if post.userIp?exists && isModerator>
+							${I18n.getMessage("PostShow.userIP")}: ${post.userIp}
+							<br />
 						</#if>
 						</span>
 						<br />

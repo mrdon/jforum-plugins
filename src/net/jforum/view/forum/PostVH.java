@@ -74,7 +74,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostVH.java,v 1.23 2004/06/21 03:48:09 rafaelsteil Exp $
+ * @version $Id: PostVH.java,v 1.24 2004/07/24 16:07:38 jamesyong Exp $
  */
 public class PostVH extends Command 
 {
@@ -149,6 +149,7 @@ public class PostVH extends Command
 		JForum.getContext().put("topicId", new Integer(topicId));
 		JForum.getContext().put("watching", tm.isUserSubscribed(topicId, SessionFacade.getUserSession().getUserId()));
 		JForum.getContext().put("pageTitle", SystemGlobals.getValue(ConfigKeys.FORUM_NAME) +" - "+ topic.getTitle());
+		JForum.getContext().put("isModerator", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_FORUMS, Integer.toString(topic.getForumId())));
 		
 		// Topic Status
 		JForum.getContext().put("STATUS_LOCKED", new Integer(Topic.STATUS_LOCKED));
