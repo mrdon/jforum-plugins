@@ -33,3 +33,9 @@ img {
 td {
 	font-size: 12px; font-family: verdana;
 }
+
+p.note
+{
+	color: red;
+	font-weight: bold;
+}
