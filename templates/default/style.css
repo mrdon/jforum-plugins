@@ -17,6 +17,10 @@ INPUT.button {
 	LINE-HEIGHT: 18px
 }
 
+IMG {
+	border: 0px;
+}
+
 BODY {
 	background-color: #FFFFFF;
 	scrollbar-face-color: #DEE3E7;

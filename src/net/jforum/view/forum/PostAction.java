@@ -79,7 +79,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.20 2004/11/05 03:29:41 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.21 2004/11/06 20:22:41 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -469,6 +469,8 @@ public class PostAction extends Command
             else {
                 tm.incrementTotalReplies(t.getId());
                 tm.incrementTotalViews(t.getId());
+                
+                t.setTotalReplies(t.getTotalReplies() + 1);
 
                 // Ok, we have an answer. Time to notify the subscribed users
                 if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_NOTIFY_ANSWERS)) {
