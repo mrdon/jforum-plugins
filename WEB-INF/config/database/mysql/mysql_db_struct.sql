@@ -328,7 +328,7 @@ CREATE TABLE jforum_vote_desc (
 --
 
 DROP TABLE IF EXISTS jforum_vote_results;
-CREATE TABLE jforum_vote_resutls (
+CREATE TABLE jforum_vote_results (
   vote_id mediumint(8) NOT NULL default '0',
   vote_option_id tinyint(4) NOT NULL default '0',
   vote_option_text varchar(255) NOT NULL default '',
