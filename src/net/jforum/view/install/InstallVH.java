@@ -65,7 +65,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallVH.java,v 1.2 2004/08/29 23:47:01 rafaelsteil Exp $
+ * @version $Id: InstallVH.java,v 1.3 2004/08/30 13:40:55 rafaelsteil Exp $
  */
 public class InstallVH extends Command
 {
@@ -272,7 +272,7 @@ public class InstallVH extends Command
 	 */
 	public Template process() throws Exception 
 	{
-		this.setTemplateName("empty.htm");
+		this.setTemplateName("default/empty.htm");
 		return super.process();
 	}
 }

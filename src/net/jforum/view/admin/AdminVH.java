@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: AdminVH.java,v 1.3 2004/08/29 23:46:58 rafaelsteil Exp $
+ * $Id: AdminVH.java,v 1.4 2004/08/30 13:40:54 rafaelsteil Exp $
  */
 package net.jforum.view.admin;
 
@@ -114,6 +114,6 @@ public class AdminVH extends Command {
 	{
 		super.process();
 		
-		return Configuration.getDefaultConfiguration().getTemplate("empty.htm");
+		return Configuration.getDefaultConfiguration().getTemplate("admin/empty.htm");
 	}
 }
