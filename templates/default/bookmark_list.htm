@@ -1,72 +1,52 @@
-<a name="top" id="top"></a>
+<#import "../macros/pagination.ftl" as pagination/>
 <script language="javascript">
 <#include "utils.js"/>
 </script>
-<table width="100%" cellspacing="0" cellpadding="10" border="0" align="center">
+<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
+    <tr>
+      <td align="left"><span class="nav"><a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a></span></td>
+    </tr>
+</table>
+
+<table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
+	<#if bookmarks.size() == 0>
+		<tr>
+			<td align="center" colspan="5">
+				<span class="gen">${I18n.getMessage("Bookmarks.empty")}</span>
+			</td>
+		</tr>
+	</#if>
+	<#assign owner = loggedUserId == user.id/>  
 	<tr>
-		<td class="bodyline">
-			<br />
-			<table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
-				<tr>
-					<td align="left" class="nav"><a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a></td>
-				</tr>
-			</table>
-  
-			<table class="forumline" width="100%" cellspacing="1" cellpadding="4" border="0">
-				<tr>
-					<th class="thHead" height="25"><b>${I18n.getMessage("Bookmarks.for")} ${user.username}</b></th>
-				</tr>
-				
-				<tr>
-					<td class="row1">
-						<table width="90%" align="center" cellspacing="0" cellpadding="1" border="0">
-							<tr>
-								<td>&nbsp;</td>
-							</tr>
+		<th class="thCornerL" nowrap="nowrap">&nbsp;</th>
+	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("Bookmarks.title")}&nbsp;</th>
+	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("Bookmarks.description")}&nbsp;</th>
+	  <th class="thTop" nowrap="nowrap" colspan="2">&nbsp;${I18n.getMessage("Action")}&nbsp;</th>
+	</tr>
+	<#list bookmarks as b> 
+		<#if b.relationType == topicType>
+		  <#if b.isPublicVisible() || owner>
+		<tr align="center">		  
+			<td class="row2"><span class="gen">&nbsp;</span></td>
+			<td class="row2"><span class="gen"><img src="${contextPath}/templates/${templateName}/images/icon_minipost.gif" align="middle"><a href="${JForumContext.encodeURL("/posts/list/${b.relationId}")}" class="gen">${b.title}</a></span></td>
+			<td class="row2"><span class="gen"><#if (b.description?default("")?length > 0)>${b.description}</#if></span></td>
+			<td class="row2"><span class="gen"><#if owner><a href="javascript:addBookmark(2, ${b.relationId});">${I18n.getMessage("Edit")}</a></#if></span></td>
+			<td class="row2"><span class="gen"><#if owner><a href="javascript:delBookmark(2, ${b.relationId});">${I18n.getMessage("Delete")}</a></#if></span></td>
+		</tr>
+		  </#if>
+     </#if>
+	</#list>
 
-							<#if bookmarks.size() == 0>
-								<tr>
-									<td align="center">
-										<span class="gen">${I18n.getMessage("Bookmarks.empty")}</span>
-									</td>
-								</tr>
-							</#if>
-	  
-							<#assign owner = loggedUserId == user.id/>
-							<tr>
-								<td>
-									<#list bookmarks as b>
-												<#if b.relationType == topicType>
-													<#if b.isPublicVisible() || owner>
-														<p>
-														<img src="${contextPath}/templates/${templateName}/images/icon_minipost.gif" align="middle"><a href="${JForumContext.encodeURL("/posts/list/${b.relationId}")}" class="gen">${b.title}</a>
-														
-														<span class="gensmall">
-														<#if owner>
-															[ <a href="javascript:addBookmark(2, ${b.relationId});">${I18n.getMessage("Edit")}</a> ]
-														</#if>
-														
-														<#if (b.description?default("")?length > 0)><br/>&nbsp;&nbsp;&nbsp;&nbsp;${b.description}</#if>
-														</span>
-														</p>
-													</#if>
-												</#if>
-											
-									</#list>
-								</td>
-							</tr>
-				  
-							<tr>
-								<td>&nbsp;</td>
-							</tr>
-
-							<tr>
-								<td align="center"><a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a> </td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
+	<tr align="center">
+		<td class="catBottom" colspan="5" height="28">&nbsp;
 		</td>
 	</tr>
 </table>
+</form>
+<table width="100%">
+	<tr>
+		<td align="right"><#if thisPage?exists><@pagination.doPagination "list", -1/></#if></td>
+	</tr>
+</table>
+
+
