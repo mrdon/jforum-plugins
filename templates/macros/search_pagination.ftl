@@ -21,20 +21,81 @@
 	
 	<#return baseUrl/>
 </#function>
-
-<#macro searchPagination kw terms forum category orderField orderBy author postTime formName="fp">
+<#macro searchPagination kw terms forum category orderField orderBy author postTime>
+	<#assign baseUrl = contextPath +"/jforum" + extension + "?module=search&action=search&"/>
+	<#assign baseUrl = baseUrl + moderationParams("") >
+	
 	<#if (totalRecords > recordsPerPage)>
-		<#assign baseUrl = contextPath +"/jforum" + extension + "?module=search&action=search&"/>
-		<#assign baseUrl = baseUrl + moderationParams("") >
-
-		<form name="${formName}">
-		<span class="gensmall">${I18n.getMessage("goToPage")}:</span> 
-		<select name="p">
-			<#list 1 .. totalPages as page>
-				<#assign start = recordsPerPage * (page - 1)/>
-				<option value="${start}" <#if thisPage == start>selected</#if>>${page}</option>
+		<SPAN class=gensmall><B>
+		${I18n.getMessage("goToPage")} 
+		  
+		<#if (thisPage > 0)>
+			<#assign start = thisPage - recordsPerPage>
+		  	 <a href="${baseUrl}&start=${start}">${I18n.getMessage("previous")}</a>
+		</#if>
+		  
+		<#if (totalPages > 6)>
+			<#list 0 .. 3 as page>
+				<#assign start = recordsPerPage * page>
+				<#assign nextPage = page + 1>
+				
+				<#if start == thisPage>
+					${nextPage}
+				<#else>
+					<a href="${baseUrl}&start=${start}">${nextPage}</a>, 
+				</#if>
 			</#list>
-		</select>
-		&nbsp;<input type="button" value="${I18n.getMessage("ForumIndex.goToGo")}" class="mainoption" onClick="document.location = '${JForumContext.encodeURL("${baseUrl}&start=' + document.${formName}.p[document.${formName}.p.selectedIndex].value", "")};">		</form>
+			
+			 ... 
+
+			<#assign startLastFrom = totalPages - 2>
+			<#list startLastFrom .. totalPages as page>
+				<#assign start = recordsPerPage * page >
+				<#assign nextPage = page + 1>
+				
+				<#if start == thisPage>
+					${nextPage}
+				<#else>
+					<a href="${baseUrl}&start=${start}">${nextPage}</a>,
+				</#if>
+			</#list>
+
+			<#assign start = recordsPerPage * totalPages>
+			<#if start != thisPage>
+				<a href="${baseUrl}&start=${start}">${totalPages}</a>
+			<#else>
+				${totalPages}
+			</#if>
+		<#else>
+			<#list 0 .. totalPages - 1 as page>
+				<#assign start = recordsPerPage * page>
+				<#assign nextPage = page + 1>
+				
+				<#if (start != thisPage)>
+					<a href="${baseUrl}&start=${start}">${nextPage}</a>, 
+				<#else>
+					${nextPage}
+				</#if>
+			</#list>
+
+			<#if (totalPages * recordsPerPage != totalRecords)>
+				<#assign start = recordsPerPage * totalPages>
+				<#if start != thisPage>
+					<a href="${baseUrl}&start=${start}">${totalPages + 1}</a> 
+				<#else>
+					${totalPages + 1}
+				</#if>
+			</#if>
+		</#if>
+
+		<#if thisPage != start>
+			<#assign start = thisPage + recordsPerPage/>
+			<a href="${baseUrl}&start=${start}">${I18n.getMessage("next")}</a>
+		</#if>
+		  
+		</B>
+	</SPAN>
+	<#else>
 	</#if>
+
 </#macro>
