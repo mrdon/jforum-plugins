@@ -51,7 +51,7 @@ import com.dumbster.smtp.SimpleSmtpServer;
 
 /**
  * @author Marc Wick
- * @version $Id: AbstractWebTestCase.java,v 1.12 2004/10/10 16:51:23 rafaelsteil Exp $
+ * @version $Id: AbstractWebTestCase.java,v 1.13 2004/10/14 02:21:18 rafaelsteil Exp $
  */
 public abstract class AbstractWebTestCase extends WebTestCase {
     public static class SimpleHTMLParserListener implements
@@ -127,22 +127,5 @@ public abstract class AbstractWebTestCase extends WebTestCase {
         assertLinkPresent("logout");
         clickLink("logout");
         assertLinkPresent("login");
-    }
-
-    protected int waitForEmail() {
-        int timeWaited = 0;
-        int timeToWait = 200;
-        for (int i = 0; i < 100; i++) {
-            if (smtpServer.getReceievedEmailSize() > 0) {
-                break;
-            }
-            try {
-                Thread.sleep(timeToWait);
-                timeWaited = timeWaited + timeToWait;
-            } catch (Exception e) {
-                break;
-            }
-        }
-        return timeWaited;
     }
 }
