@@ -40,6 +40,8 @@
  * net.jforum.repository.RankingRepository.java
  * The JForum Project
  * http://www.jforum.net
+ * 
+ * $Id: RankingRepository.java,v 1.2 2004/04/21 23:57:32 rafaelsteil Exp $
  */
 package net.jforum.repository;
 

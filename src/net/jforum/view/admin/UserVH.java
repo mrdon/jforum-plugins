@@ -40,6 +40,8 @@
  * net.jforum.view.admin.UserVH.java
  * The JForum Project
  * http://www.jforum.net
+ * 
+ * $Id: UserVH.java,v 1.2 2004/04/21 23:57:30 rafaelsteil Exp $
  */
 package net.jforum.view.admin;
 

@@ -40,6 +40,8 @@
  * net.jforum.model.SearchModel.java
  * The JForum Project
  * http://www.jforum.net
+ * 
+ * $Id: SearchModel.java,v 1.3 2004/04/21 23:57:25 rafaelsteil Exp $
  */
 package net.jforum.model;
 

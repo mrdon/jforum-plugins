@@ -38,6 +38,10 @@
  * 
  * This file creation date: 30/12/2003 / 21:40:54
  * net.jforum.entities.UserSession.java
+ * The JForum Project
+ * http://www.jforum.net
+ * 
+ * $Id: UserSession.java,v 1.2 2004/04/21 23:57:31 rafaelsteil Exp $
  */
 package net.jforum.entities;
 

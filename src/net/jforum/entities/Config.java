@@ -37,9 +37,11 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 15/08/2003 / 21:04:47
- * net.jforum.Config.java
+ * net.jforum.entities.Config.java
  * The JForum Project
  * http://www.jforum.net
+ * 
+ * $Id: Config.java,v 1.2 2004/04/21 23:57:30 rafaelsteil Exp $
  */
 package net.jforum.entities;
 

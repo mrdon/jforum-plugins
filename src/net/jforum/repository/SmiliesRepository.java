@@ -38,6 +38,10 @@
  * 
  * This file creation date: 13/01/2004 / 20:23:52
  * net.jforum.repository.SmiliesRepository.java
+ * The JForum Project
+ * http://www.jforum.net
+ * 
+ * $Id: SmiliesRepository.java,v 1.2 2004/04/21 23:57:33 rafaelsteil Exp $
  */
 package net.jforum.repository;
 

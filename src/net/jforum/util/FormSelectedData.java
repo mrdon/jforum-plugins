@@ -39,6 +39,9 @@
  * This file creation date: 10/10/2003 / 22:16:27
  * net.jforum.util.FormSelectedData.java
  * The JForum project
+ * http://www.jforum.net
+ * 
+ * $Id: FormSelectedData.java,v 1.2 2004/04/21 23:57:27 rafaelsteil Exp $
  */
 package net.jforum.util;
 

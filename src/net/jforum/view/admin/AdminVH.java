@@ -38,6 +38,10 @@
  * 
  * This file creation date: 17/01/2004 / 19:34:01
  * net.jforum.view.admin.AdminVH.java
+ * The JForum Project
+ * http://www.jforum.net
+ * 
+ * $Id: AdminVH.java,v 1.2 2004/04/21 23:57:29 rafaelsteil Exp $
  */
 package net.jforum.view.admin;
 

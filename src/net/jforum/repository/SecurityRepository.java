@@ -38,6 +38,10 @@
  * 
  * This file creation date: 18/11/2003 / 23:09:15
  * net.jforum.repository.SecurityRepository.java
+ * The JForum Project
+ * http://www.jforum.net
+ * 
+ * $Id: SecurityRepository.java,v 1.2 2004/04/21 23:57:33 rafaelsteil Exp $
  */
 package net.jforum.repository;
 

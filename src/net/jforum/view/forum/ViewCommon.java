@@ -40,6 +40,8 @@
  * net.jforum.view.forum.ViewCommon.java
  * The JForum Project
  * http://www.jforum.net
+ * 
+ * $Id: ViewCommon.java,v 1.3 2004/04/21 23:57:22 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 

@@ -40,6 +40,8 @@
  * net.jforum.util.mail.EmailException.java
  * The JForum Project
  * http://www.jforum.net
+ * 
+ * $Id: EmailException.java,v 1.2 2004/04/21 23:57:38 rafaelsteil Exp $
  */
 package net.jforum.util.mail;
 

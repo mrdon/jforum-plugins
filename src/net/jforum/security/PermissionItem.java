@@ -38,6 +38,10 @@
  * 
  * This file creation date: 21/09/2003 / 16:39:49
  * net.jforum.PermissionItem.java
+ * The JForum Project
+ * http://www.jforum.net
+ * 
+ * $Id: PermissionItem.java,v 1.2 2004/04/21 23:57:35 rafaelsteil Exp $
  */
 package net.jforum.security;
 

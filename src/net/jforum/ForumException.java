@@ -40,6 +40,8 @@
  * net.jforum.ForumException.java
  * The JForum Project
  * http://www.jforum.net
+ * 
+ * $Id: ForumException.java,v 1.2 2004/04/21 23:57:40 rafaelsteil Exp $
  */
 package net.jforum;
 

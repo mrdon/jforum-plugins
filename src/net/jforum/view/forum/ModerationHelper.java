@@ -40,6 +40,8 @@
  * net.jforum.view.forum.ModerationHelper.java
  * The JForum Project
  * http://www.jforum.net
+ * 
+ * $Id: ModerationHelper.java,v 1.2 2004/04/21 23:57:22 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 

@@ -38,6 +38,10 @@
  * 
  * This file creation date: 13/01/2004 / 18:45:31
  * net.jforum.view.admin.SmiliesVH.java
+ * The JForum Project
+ * http://www.jforum.net
+ * 
+ * $Id: SmiliesVH.java,v 1.2 2004/04/21 23:57:29 rafaelsteil Exp $
  */
 package net.jforum.view.admin;
 

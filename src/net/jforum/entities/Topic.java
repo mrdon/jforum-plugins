@@ -37,9 +37,11 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creating date: Feb 23, 2003 / 12:40:13 PM
- * net.jforum.Topic.java
+ * net.jforum.entities.Topic.java
  * The JForum Project
  * http://www.jforum.net
+ * 
+ * $Id: Topic.java,v 1.2 2004/04/21 23:57:31 rafaelsteil Exp $
  */
 package net.jforum.entities;
 

@@ -40,6 +40,8 @@
  * net.jforum.util.rss.RSSItem.java
  * The JForum Project
  * http://www.jforum.net
+ * 
+ * $Id: RSSItem.java,v 1.2 2004/04/21 23:57:37 rafaelsteil Exp $
  */
 package net.jforum.util.rss;
 

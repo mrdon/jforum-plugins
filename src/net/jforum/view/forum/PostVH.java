@@ -40,6 +40,8 @@
  * net.jforum.view.forum.PostVH.java
  * The JForum Project
  * http://www.jforum.net
+ * 
+ * $Id: PostVH.java,v 1.4 2004/04/21 23:57:22 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 

@@ -38,6 +38,10 @@
  * 
  * This file creation date: 08/01/2004 / 21:41:11
  * net.jforum.security.RoleValueColection.java
+ * The JForum Project
+ * http://www.jforum.net
+ * 
+ * $Id: RoleValueCollection.java,v 1.2 2004/04/21 23:57:34 rafaelsteil Exp $
  */
 package net.jforum.security;
 

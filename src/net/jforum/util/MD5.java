@@ -40,6 +40,8 @@
  * net.jforum.util.MD5.java
  * The JForum Project
  * http://www.jforum.net
+ * 
+ * $Id: MD5.java,v 1.2 2004/04/21 23:57:27 rafaelsteil Exp $
  */
 package net.jforum.util;
 

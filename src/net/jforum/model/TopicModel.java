@@ -40,6 +40,8 @@
  * net.jforum.model.TopicModel.java
  * The JForum Project
  * http://www.jforum.net
+ * 
+ * $Id: TopicModel.java,v 1.3 2004/04/21 23:57:24 rafaelsteil Exp $
  */
 package net.jforum.model;
 

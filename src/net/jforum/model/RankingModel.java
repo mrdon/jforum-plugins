@@ -40,6 +40,8 @@
  * net.jforum.model.RankingModel.java
  * The JForum Project
  * http://www.jforum.net 
+ * 
+ * $Id: RankingModel.java,v 1.2 2004/04/21 23:57:23 rafaelsteil Exp $
  */
 package net.jforum.model;
 

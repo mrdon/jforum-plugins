@@ -38,6 +38,10 @@
  * 
  * This file creation date: 14/01/2004 / 22:02:56
  * net.jforum.view.forum.SearchVH.java
+ * The JForum Project
+ * http://www.jforum.net
+ * 
+ * $Id: SearchVH.java,v 1.3 2004/04/21 23:57:22 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 

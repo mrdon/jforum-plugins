@@ -38,6 +38,10 @@
  * 
  * This file creation date: 08/01/2004 / 21:34:57
  * net.jforum.security.Role.java
+ * The JForum Project
+ * http://www.jforum.net
+ * 
+ * $Id: Role.java,v 1.2 2004/04/21 23:57:35 rafaelsteil Exp $
  */
 package net.jforum.security;
 

@@ -40,6 +40,8 @@
  * net.jforum.view.admin.ConfigVH.java
  * The JForum Project
  * http://www.jforum.net
+ * 
+ * $Id: ConfigVH.java,v 1.2 2004/04/21 23:57:29 rafaelsteil Exp $
  */
 package net.jforum.view.admin;
 

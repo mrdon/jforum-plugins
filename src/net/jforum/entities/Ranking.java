@@ -37,8 +37,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creating date: Feb 17, 2003 / 10:45:42 PM
- * net.jforum.Ranking.java
- * JForum 
+ * net.jforum.entities.Ranking.java
+ * The JForum Project 
+ * 
+ * $Id: Ranking.java,v 1.2 2004/04/21 23:57:31 rafaelsteil Exp $
  */
 package net.jforum.entities;
 

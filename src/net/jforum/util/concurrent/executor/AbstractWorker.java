@@ -40,6 +40,8 @@
  * net.jforum.util.concurrent.executor.AbstractWorker.java
  * The JForum Project
  * http://www.jforum.net
+ * 
+ * $Id: AbstractWorker.java,v 1.3 2004/04/21 23:57:34 rafaelsteil Exp $
  */
  package net.jforum.util.concurrent.executor;
 

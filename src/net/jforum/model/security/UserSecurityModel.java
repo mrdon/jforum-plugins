@@ -40,6 +40,8 @@
  * net.jforum.model.security.UserSecurityModel.java
  * The JForum Project
  * http://www.jforum.net
+ * 
+ * $Id: UserSecurityModel.java,v 1.2 2004/04/21 23:57:26 rafaelsteil Exp $
  */
 package net.jforum.model.security;
 

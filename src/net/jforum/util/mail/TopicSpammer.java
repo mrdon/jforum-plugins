@@ -40,6 +40,8 @@
  * net.jforum.util.mail.TopicSpammer.java
  * The JForum Project
  * http://www.jforum.net
+ * 
+ * $Id: TopicSpammer.java,v 1.3 2004/04/21 23:57:38 rafaelsteil Exp $
  */
 package net.jforum.util.mail;
 

@@ -40,6 +40,8 @@
  * net.jforum.util.rss.RSSChannel.java
  * The JForum Project
  * http://www.jforum.net
+ * 
+ * $Id: RSSChannel.java,v 1.2 2004/04/21 23:57:37 rafaelsteil Exp $
  */
 package net.jforum.util.rss;
 

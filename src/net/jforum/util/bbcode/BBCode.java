@@ -37,9 +37,11 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 02/08/2003 / 02:23:50
- * net.jforum.util.BBCode.java
+ * net.jforum.util.bbcode.BBCode.java
  * The JForum Project
  * http://www.jforum.net
+ * 
+ * $Id: BBCode.java,v 1.2 2004/04/21 23:57:41 rafaelsteil Exp $
  */
 package net.jforum.util.bbcode;
 
