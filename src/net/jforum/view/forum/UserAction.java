@@ -74,7 +74,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.35 2005/03/15 18:24:17 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.36 2005/03/24 16:31:15 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -376,11 +376,21 @@ public class UserAction extends Command
 		UserModel um = DataAccessDriver.getInstance().newUserModel();
 
 		User u = um.selectById(this.request.getIntParameter("user_id"));
-
-		this.setTemplateName(TemplateKeys.USER_PROFILE);
-		this.context.put("karmaEnabled", SecurityRepository.canAccess(SecurityConstants.PERM_KARMA_ENABLED));
-		this.context.put("rank", new RankingRepository());
-		this.context.put("u", u);
+		if (u.getId() == 0) {
+			this.userNotFound();
+		}
+		else {
+			this.setTemplateName(TemplateKeys.USER_PROFILE);
+			this.context.put("karmaEnabled", SecurityRepository.canAccess(SecurityConstants.PERM_KARMA_ENABLED));
+			this.context.put("rank", new RankingRepository());
+			this.context.put("u", u);
+		}
+	}
+	
+	private void userNotFound()
+	{
+		this.context.put("message", I18n.getMessage("User.notFound"));
+		this.setTemplateName(TemplateKeys.USER_NOT_FOUND);
 	}
 
 	public void logout() throws Exception 

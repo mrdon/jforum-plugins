@@ -44,7 +44,7 @@ package net.jforum.util.preferences;
 
 /**
  * @author Rafael Steil
- * @version $Id: TemplateKeys.java,v 1.2 2005/03/15 18:24:19 rafaelsteil Exp $
+ * @version $Id: TemplateKeys.java,v 1.3 2005/03/24 16:31:16 rafaelsteil Exp $
  */
 public class TemplateKeys
 {
@@ -119,6 +119,7 @@ public class TemplateKeys
 	public static final String USER_RECOVERPASSWORD_VALIDATE = "user.recoverpassword.validate";
 	public static final String USER_LIST = "user.list";
 	public static final String USER_SEARCH_KARMA = "user.search.karma";
+	public static final String USER_NOT_FOUND = "user.not.found";
 
 	public static final String VIEWCOMMON_LOGIN = "viewcommon.login";
 
