@@ -69,7 +69,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.6 2005/01/31 20:10:45 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.7 2005/01/31 22:30:30 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -98,7 +98,8 @@ public class PostCommon
 			return null;
 		}
 
-		text = text.replaceAll("\n", "<br>");
+		// DO NOT remove the trailing blank space
+		text = text.replaceAll("\n", "<br> ");
 
 		if (text.indexOf('[') > -1 && text.indexOf(']') > -1) {
 			int openQuotes = 0;
