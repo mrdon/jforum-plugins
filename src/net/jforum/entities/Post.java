@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,7 +37,6 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creating date: Feb 23, 2003 / 1:02:01 PM
- * net.jforum.Post.java
  * The JForum Project
  * http://www.jforum.net
  */
@@ -49,7 +48,7 @@ import java.util.Date;
  * Represents every message post in the system.
  * 
  * @author Rafael Steil
- * @version $Id: Post.java,v 1.3 2004/10/04 10:08:18 marcwick Exp $
+ * @version $Id: Post.java,v 1.4 2005/01/08 15:21:57 rafaelsteil Exp $
  */
 public class Post 
 {

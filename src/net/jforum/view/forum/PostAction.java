@@ -81,7 +81,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.36 2005/01/04 03:25:36 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.37 2005/01/08 15:22:00 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -354,6 +354,7 @@ public class PostAction extends Command {
 
 		Topic topic = DataAccessDriver.getInstance().newTopicModel().selectById(p.getTopicId());
 
+		this.context.put("isNewPost", true);
 		this.context.put("topic", topic);
 		this.context.put("quote", "true");
 		this.context.put("quoteUser", u.getUsername());

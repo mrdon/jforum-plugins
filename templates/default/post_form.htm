@@ -211,16 +211,16 @@ function validatePostForm(f)
 <#assign repliesChecked = "checked"/>
 <#assign smiliesChecked = ""/>
 
-<#if post?exists>
-	<#if post.isHtmlEnabled()><#assign htmlChecked = ""/></#if>
-	<#if !post.isBbCodeEnabled()><#assign bbChecked = "checked"/></#if>
-	<#if !post.isSmiliesEnabled()><#assign smiliesChecked = "checked"/></#if>
-	<#if !post.isSignatureEnabled()><#assign signatureChecked = ""/></#if>
-<#else>
+<#if isNewPost && !preview>
 	<#if user.isHtmlEnabled()><#assign htmlChecked = ""/></#if>
 	<#if !user.isBbCodeEnabled()><#assign bbChecked = "checked"/></#if>
 	<#if !user.isSmiliesEnabled()><#assign smiliesChecked = "checked"/></#if>
 	<#if !user.getAttachSignatureEnabled()><#assign signatureChecked = ""/></#if>
+<#elseif post?exists>
+	<#if post.isHtmlEnabled()><#assign htmlChecked = ""/></#if>
+	<#if !post.isBbCodeEnabled()><#assign bbChecked = "checked"/></#if>
+	<#if !post.isSmiliesEnabled()><#assign smiliesChecked = "checked"/></#if>
+	<#if !post.isSignatureEnabled()><#assign signatureChecked = ""/></#if>
 </#if>
 
 <#if !user.isNotifyOnMessagesEnabled()><#assign repliesChecked = ""/></#if>

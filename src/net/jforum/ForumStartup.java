@@ -56,7 +56,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumStartup.java,v 1.2 2004/12/29 17:18:40 rafaelsteil Exp $
+ * @version $Id: ForumStartup.java,v 1.3 2005/01/08 15:21:56 rafaelsteil Exp $
  */
 public class ForumStartup 
 {
@@ -72,6 +72,10 @@ public class ForumStartup
 		try {
 			if (DBConnection.createInstance()) {
 				DBConnection.getImplementation().init();
+				
+				// Check if we're in fact up and running
+				Connection conn = DBConnection.getImplementation().getConnection();
+				DBConnection.getImplementation().releaseConnection(conn);
 			}
 		}
 		catch (Exception e) {
