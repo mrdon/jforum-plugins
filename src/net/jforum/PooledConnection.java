@@ -81,7 +81,7 @@ import net.jforum.util.preferences.SystemGlobals;
  *
  * @author Paulo Silveira
  * @author Rafael Steil
- * @version $Id: PooledConnection.java,v 1.3 2004/08/27 20:49:25 rafaelsteil Exp $
+ * @version $Id: PooledConnection.java,v 1.4 2004/08/28 00:43:04 rafaelsteil Exp $
  * */
 
 public class PooledConnection extends DBConnection
@@ -117,7 +117,7 @@ public class PooledConnection extends DBConnection
 	 * @throws IOException
 	 * @throws Exception
 	*/
-	private PooledConnection() throws IOException, SQLException
+	public PooledConnection() throws IOException, SQLException
 	{
 		SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue("database.driver.config"));
 		String driver = SystemGlobals.getValue("database.connection.driver");
