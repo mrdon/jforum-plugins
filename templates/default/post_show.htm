@@ -135,10 +135,8 @@ function confirmDelete()
 								<td width="80%">
 									<span class="postdetails">
 									<a href="${JForumContext.encodeURL("/posts/list/${start}/${post.topicId}")}#${post.id}">
-									<img src="${contextPath}/templates/${templateName}/images/icon_minipost_new.gif" />${post.formatedTime}
-									</a>
-									<span class="gen">&nbsp;</span>&nbsp; &nbsp;${I18n.getMessage("PostShow.subject")}: <
-									a name="${post.id}" id="${post.id}">${post.subject?default("")?html}</a>
+									<img src="${contextPath}/templates/${templateName}/images/icon_minipost_new.gif" /></a>${post.formatedTime}
+									<span class="gen">&nbsp;</span>&nbsp; &nbsp;${I18n.getMessage("PostShow.subject")}: <a name="${post.id}" id="${post.id}">${post.subject?default("")?html}</a>
 									</span>
 								</td>
 								

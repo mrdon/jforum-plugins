@@ -79,7 +79,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.23 2004/11/07 14:32:33 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.24 2004/11/08 01:03:21 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -243,7 +243,13 @@ public class PostAction extends Command
                 SecurityRepository.canAccess(SecurityConstants.PERM_CREATE_STICKY_ANNOUNCEMENT_TOPICS));
 
         int userId = SessionFacade.getUserSession().getUserId();
-        JForum.getContext().put("user", DataAccessDriver.getInstance().newUserModel().selectById(userId));
+        User user = DataAccessDriver.getInstance().newUserModel().selectById(userId);
+        
+        if (JForum.getRequest().getParameter("preview") != null) {
+        	user.setNotifyOnMessagesEnabled(JForum.getRequest().getParameter("notify") != null);
+        }
+
+        JForum.getContext().put("user", user);
     }
 
     public void edit() throws Exception {
@@ -266,8 +272,7 @@ public class PostAction extends Command
             }
         }
 
-        boolean isModerator = SecurityRepository
-                .canAccess(SecurityConstants.PERM_MODERATION_POST_EDIT);
+        boolean isModerator = SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_EDIT);
         canAccess = (isModerator || p.getUserId() == sUserId);
 
         if ((sUserId != aId) && canAccess) {
@@ -307,6 +312,11 @@ public class PostAction extends Command
         User u = DataAccessDriver.getInstance().newUserModel().selectById(sUserId);
         u.setSignature(PostCommon.processText(u.getSignature()));
         u.setSignature(PostCommon.processSmilies(u.getSignature(), SmiliesRepository.getSmilies()));
+        
+        if (preview) {
+        	u.setNotifyOnMessagesEnabled(JForum.getRequest().getParameter("notify") != null);
+        }
+
         JForum.getContext().put("user", u);
     }
 
@@ -367,6 +377,7 @@ public class PostAction extends Command
         // The user wants to preview the message before posting it?
         if (JForum.getRequest().getParameter("preview") != null) {
             JForum.getContext().put("preview", true);
+
             Post postPreview = new Post(p);
             JForum.getContext().put("postPreview", PostCommon.preparePostForDisplay(postPreview));
 
