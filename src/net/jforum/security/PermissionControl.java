@@ -49,7 +49,7 @@ import net.jforum.model.security.SecurityModel;
  * actions.  
  * 
  * @author Rafael Steil
- * @version $Id: PermissionControl.java,v 1.7 2004/12/26 02:31:51 rafaelsteil Exp $
+ * @version $Id: PermissionControl.java,v 1.8 2005/01/04 21:11:31 rafaelsteil Exp $
  */
 public class PermissionControl 
 {
@@ -114,16 +114,23 @@ public class PermissionControl
 			return false;
 		}
 		
+		// Hack / assumption
+		// If role.getValues().size() == 1
+		// and role.getValues().get("0").getType == PermissionControl.ROLE_ALLOW
+		// then we consider that the user has access to the feature.
+		// This is related to another hack in the database tables, where
+		// some entries with this "0" value were made to bypass some needs
+		// to re-edit the permission control every time a new role / forum / category
+		// was added to the system. Of course this is not the correct
+		// way of working.
+		if (role.getValues().size() == 1 && role.getValues().get("0") != null) {
+			roleValue = "0";
+		}
+		
 		RoleValue rv = new RoleValue();
 		rv.setType(PermissionControl.ROLE_ALLOW);
-		rv.setValue("0");
-		
-		if (role.getValues().contains(rv)){
-			return true;
-		} 
-		else {
-			rv.setValue(roleValue);
-			return role.getValues().contains(rv);
-		}
+		rv.setValue(roleValue);
+
+		return role.getValues().contains(rv);
 	}
 }
