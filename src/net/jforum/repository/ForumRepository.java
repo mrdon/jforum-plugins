@@ -75,7 +75,7 @@ import net.jforum.util.preferences.ConfigKeys;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.29 2005/02/17 16:24:29 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.30 2005/02/19 16:53:48 andowson Exp $
  */
 public class ForumRepository implements Cacheable
 {
@@ -271,12 +271,13 @@ public class ForumRepository implements Cacheable
 		
 		if (currentAtOrder != null) {
 			tmpSet.remove(currentAtOrder);
+			cache.remove(FQN, Integer.toString(currentAtOrder.getId()));
 		}
 		
 		tmpSet.add(c);
 		cache.add(FQN, Integer.toString(c.getId()), c);
 		
-		if (currentAtOrder != null) {
+		if (currentAtOrder != null && c.getId() != currentAtOrder.getId()) {
 			tmpSet.remove(current);
 			currentAtOrder.setOrder(current.getOrder());
 			tmpSet.add(currentAtOrder);
