@@ -46,7 +46,7 @@
 									</span>
 									</#if>
 			
-									<span class="mainmenu"> <img src="${contextPath}/templates/${templateName}/images/icon_mini_groups.gif" width="12" height="13" />&nbsp;<a id="backtosite" class="mainmenu" href="${JForumContext.encodeURL("/index.htm","")}">${I18n.getMessage("ForumBase.backToSite")}</a>&nbsp;
+									<span class="mainmenu"> <img src="${contextPath}/templates/${templateName}/images/icon_mini_groups.gif" width="12" height="13" />&nbsp;<a id="backtosite" class="mainmenu" href="/index.htm">${I18n.getMessage("ForumBase.backToSite")}</a>&nbsp;
 									
 									<#if logged?default(false)>
 									<a id="logout" class="mainmenu" href="${JForumContext.encodeURL("/user/logout")}"><img src="${contextPath}/templates/${templateName}/images/icon_mini_login.gif" width="12" height="13" border="0" /> ${I18n.getMessage("ForumBase.logout")} [${session.username}] </a></span></td>
