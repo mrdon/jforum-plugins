@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
- * 
+
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
- * 
+
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -36,41 +36,46 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on 21.09.2004 
+ * Created on 24/05/2004 22:36:07
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.drivers.hsqldb;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.List;
+
+import net.jforum.JForum;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
- * @author Marc Wick
+ * @author Rafael Steil
+ * @version $Id: UserModel.java,v 1.1 2004/11/09 15:33:28 marcwick Exp $
  */
-public class DataAccessDriver extends
-		net.jforum.drivers.postgresql.DataAccessDriver {
+public class UserModel extends net.jforum.drivers.postgresql.UserModel {
 
-	private static PostModel postModel = new PostModel();
-	private static UserModel userModel = new UserModel();
-	private static TopicModel topicModel = new TopicModel();
+    /**
+     * @see net.jforum.model.UserModel#selectAll(int, int)
+     */
+    public List selectAll(int startFrom, int count) throws Exception {
+        PreparedStatement p;
 
-	/**
-	 * @see net.jforum.model.DataAccessDriver#newPostModel()
-	 */
-	public net.jforum.model.PostModel newPostModel() {
-		return postModel;
-	}
+        if (count > 0) {
+            p = JForum.getConnection().prepareStatement(
+                    SystemGlobals.getSql("UserModel.selectAllByLimit"));
+           p.setInt(1, startFrom);
+           p.setInt(2, count);
+         } else {
+            p = JForum.getConnection()
+                    .prepareStatement(SystemGlobals.getSql("UserModel.selectAll"));
+        }
 
-	/**
-	 * @see net.jforum.model.DataAccessDriver#newTopicModel()
-	 */
-	public net.jforum.model.TopicModel newTopicModel() {
-		return topicModel;
-	}
-	
-	/**
-	 * @see net.jforum.model.DataAccessDriver#newUserModel()
-	 */
-	public net.jforum.model.UserModel newUserModel() {
-		return userModel;
-	}
+        ResultSet rs = p.executeQuery();
+        List list = super.processSelectAll(rs);
+        rs.close();
+        p.close();
+
+        return list;
+    }
 }
