@@ -70,7 +70,7 @@ import net.jforum.util.CategoryOrderComparator;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.20 2004/12/05 21:51:26 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.21 2004/12/06 00:26:13 rafaelsteil Exp $
  */
 public class ForumRepository 
 {
@@ -220,7 +220,9 @@ public class ForumRepository
 		tmpSet.add(currentCategory);
 		
 		// Force reordering
-		categoriesSet = tmpSet;
+		synchronized (categoriesSet) {
+			categoriesSet = tmpSet;
+		}
 	}
 	
 	/**
