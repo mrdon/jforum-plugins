@@ -1,0 +1,199 @@
+<html>
+<head>
+<title>JForum - Installation & Configuration</title>
+<link href="jforum.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<table background="top_bar.jpg" width="792" height="140" align="center" border="0">
+	<tr>
+		<td width="40">&nbsp;</td>
+		<td class="menu_image"><a href="install.htm"><img src="install.gif"></a></td>
+
+		<td width="40">&nbsp;</td>
+		<td class="menu_image"><a href="screenshots.htm"><img src="ss.gif"></a></td>
+
+		<td width="40">&nbsp;</td>
+		<td valign="bottom" align="center" width="80"><a href="community.htm"><img src="community.gif"></a></td>
+
+		<td width="40">&nbsp;</td>
+		<td class="menu_image"><a href="help.htm"><img src="help.gif"></td>
+
+		<td width="40">&nbsp;</td>
+		<td class="menu_image"><a href="development.htm"><img src="development.gif"></td>
+
+		<td width="200" valign="bottom" align="right">
+		<font style="color: #006699; font-family: verdana; font-size: 11px;">
+		<b>Latest Version: 1.0rc5</b>
+		</font>
+		</td>
+	</tr>
+</table>
+
+<table width="792" align="center" border="0" background="menu_bar.gif">
+	<tr>
+		<td width="40">&nbsp;</td>
+		<td width="100" align="center"><a href="install.htm" class="menu_link">Installation & Configuration</a></td>
+
+		<td width="20">&nbsp;</td>
+		<td width="90" align="right"><a href="screenshots.htm" class="menu_link">Screenshots</a></td>
+
+		<td width="40">&nbsp;</td>
+		<td width="80" align="center"><a href="community.htm" class="menu_link">Community</a></td>
+
+		<td width="40">&nbsp;</td>
+		<td width="100" align="center"><a href="help.htm" class="menu_link">Help</a></td>
+
+		<td width="40">&nbsp;</td>
+		<td width="100" align="center"><a href="development.htm" class="menu_link">Development</a></td>
+
+		<td width="200" valign="top">&nbsp;</td>
+	</tr>
+</table>
+
+<table width="792" align="center" border="0">
+	<tr height="10">
+		<td colspan="2">&nbsp;</td>
+	</tr>
+
+	<tr>
+		<td colspan="2" valign="top">
+			<font style="font-family: verdana; font-size: 22px;"><b>Installation & Configuration</b></font><br/>
+			<img src="h_bar.gif" width="100%" height="2">
+		</td>
+	</tr>
+
+	<tr>
+		<td valign="top">
+<p>
+<br>Here are some basic explanation about JForum installation and configuration. It is considered that the user - you - has some knowledge about how to install / configure a Java web application, as well it's considered that you already have the database up and running. These steps will not be discussed here. 
+<br>
+<br><b><font color='red'>Note: These install instructions is related to relase version RC5. Some of the informations here described may not be valid to older versions, which are no longer supported.</b></font>
+
+<!-- Options -->
+<br>
+<br><a href="#downloading">Downloading and CVS access</a>
+<br><a href="#installing">Installing</a>
+<br><a href="#configuring">Configuring</a>
+<br><a href="#databaseConfig">Database Configuration</a>
+<br><a href="#createTables">Creating the database tables</a>
+<br><a href="#populating">Populating the tables</a>
+<br><a href="#misc">General Information and Considerations</a>
+<br>
+<br><a href="#permissions">Setting permissions for Forums and Categories </a>
+
+<!-- Downloadig -->
+<br>
+<br><img src="info.jpg" border="0"> <a name="downloading"></a><span class="install_subtitle">Downloading JForum</span>
+<p>
+To get JForum, access the <a href="download.htm">download</a> page. <a href="download.htm">Click here</a> to go there and get the latest version.
+</p>
+
+<!-- Installing -->
+<br><img src="info.jpg"> <a name="installing"></a><span class="install_subtitle">Installing</span>
+<p>
+After the download, unpack the .ZIP file into your webapp's directory ( or anyplace you want to put it ). A directory named
+<br>
+<br><i>JForum-&lt;release&gt;</i>
+<br>
+<br>will be created, where <i>&lt;release&gt;</i> is the version, which may be "RC5", "1.0" etc.. it is just to easily identify the version. You can rename the directory if you want. The next step you should do is register the JForum application within your Servlet Container, like Tomcat. This document will use the context name "jforum", but of course you can give the name you want.
+</p>
+
+<!-- Configuring -->
+<br><a name="configuring"></a><img src="info.jpg" border="0"> <span class="install_subtitle">Configuring</span>
+<p>
+There are some things you must configure before trying to use JForum. The steps are described bellow:
+</p>
+
+<!-- Database Configuration -->
+<br><a name="databaseConfig"></a><img src="info.jpg" border="0"> <span class="install_subtitle">Database Configuration</span>
+<p>
+First of all, you must have <a href="http://www.mysql.com" target="_new">MySQL</a> or <a href="http://www.postgresql.org" target="_new">PostgreSQL</a> installed and properly configured. 
+<br>
+Then, open the file <i>WEB-INF/config/SystemGlobals.properties</i>. Now search for a key named <i>database.driver.name</i>. The default value is <i>mysql</i>, which means JForum will try to use MySQL. If you want to use PostgreSQL, change the value to <i>postgresql</i>. 
+
+<br>
+<br>Second, you can tell JForum to use or not a Connection Pool. Connection pools will increase the performance of your application, but there are some situations where the use of a connection pool is not recommended or even possible. 
+<br>The first thing is more specific to MySQL: mysql has a environment variable named "wait_timeout", which you can see by typing
+<br>
+<br>
+		<table width="90%" cellspacing="1" cellpadding="3" border="0" align="center" bgcolor="#2943D4">
+		<tr>
+
+		<td class="code" bgcolor="#F3F5FF"><pre>show variables</pre></td>
+		</tr>
+		</table>
+<br>
+<br>in the mysql console. It is the last one. The default value is 8 hours, which means that, after 8 hours of inactivity the session is automatically closed by the server. Many ISPs set the time limit to a very low number - 15, 30 seconds, less than 5 minutes sometimes -, so having a connection pool in this situations is not recomended, since the overhead will be high. 
+<br>
+<br>JForum has a way to not let the session be invalidated, through a "database ping delay" feature. The key's name is <i>database.ping.delay</i>, and has the default value set to 3600000 - 1 hour -, and you can change it to another value is necessary. The time must be in milliseconds, so, if you want to ping connections every 30 minutes, set to 1800000 ( 60 seconds * 30 minutes * 1000 ). 
+<br>
+<br>The second point is when you simply can't use a connection pool - again, this is more common to occur in shared environments of ISPs. Some companies may limit the resource usage by the applications, so the connection pool is not recomended. 
+<br>
+
+<br>By default JForum uses a connection pool, option which is specified by the key <i>database.connection.implementation</i> - default value set to <i>net.jforum.PooledConnection</i>. If you want to use single connections - eg, a connection to the database will the opened and closed on every request -, when set the value to <i>net.jforum.SimpleConnection</i>. 
+<br>
+<br> <img src="info.jpg" border="0"> Edit the file <i>WEB-INF/config/database/&lt;<b>DBNAME</b>&gt;/&lt;<b>DBNAME</b>&gt;.properties</i>, where &lt;<b>DBNAME</b>&gt; is the database name you are using - for instance, <i>mysql</i> or <i>postgresql</i>. In this file there are some options you should change:
+
+<br> <br> <br> <b><i>database.connection.username</i></b>:  specify the username to use when connection to the database. Default value is <i>root</i>
+<br> <br><b><i>database.connection.password</i></b>: set the password. 
+<br>
+<br><b><i>database.connection.host</i></b>: set the host where the database is located. Generally it will be <i>localhost</i> - the default value -, but if not, just change this property to the right host. 
+<br>
+
+<br><b><i>dbname</i></b>: is the database name you'll be using. The default value is <i>jforum</i>. All JForum tables are preceded by "jforum_", so you don't need to worry about table names conflict. 
+<br>
+<br>The other properties you may leave with the defaults, if you don't know what to put. 
+</p>
+
+
+<!-- Creating Database Tables -->
+<br><a name="createTables"></a><img src="info.jpg"> <span class="install_subtitle">Creating the database tables</span>
+<p>Next step is to create the tables. To do that, use the import script named "&lt;<b>DBNAME</b>&gt;_db_struct.sql", placed at <i>WEB-INF/config/database/&lt;<b>DBNAME</b>&gt;</i>. This script will create all necessary tables to run JForum. The script were tested and should work with no problem at all. 
+<br>Also, please keep in mind that, if you are upgrading JForum, don't forget to take a look in the migration script that may exist. Search for a file named "Readme.txt" in the root directory. 
+</p>
+
+<p>
+<a name="populating"></a><img src="info.jpg" border="0"> <span class="install_subtitle"><b>Populating the tables</b></span><br>
+ Now it is time to run the script to populate the database tables. To do that, use the script named "&lt;<b>DBNAME</b>&gt;_data_dump.sql", also located at <i>WEB-INF/config/database/&lt;<b>DBNAME</b>&gt;</i>. One more time, you should have no problems with this step. If you do, please remember to inform the error message, as well the database name and version you're using. 
+<br>
+<br><a name="misc"></a><span style="font-size: 16px; line-height: normal"><b>General Information and Considerations</b></span>
+<br><img src="info.jpg" border="0"> JForum uses a servlet mapping to invoke the pages. This mapping is <b>*.page</b>, and is already properly configured at WEB-INF/web.xml. If you are running JForum on some ISP, sometimes you'll need to contact their Technical Support and ask them to explicity enable these mapping for you.
+
+<br>
+<br><img src="info.jpg" border="0"> The directory "images" and "tmp" should have write permission to the user who runs the web server. You'll got nasty exceptions when uploading things if there is no write permission.
+<br>
+<br><img src="info.jpg" border="0"> The administration interface is accessible via the link <i>Admin Control Panel</i>, located in the bottom of the main page. You will only see this link if you are logged as Administrator. See above the default password for the admin user: 
+<br>
+<br>The username is <i>Admin</i> and the password is <i>admin</i>
+<br>
+<br><img src="info.jpg" border="0"> This step is <b>HIGHLY</b> recommended: Open the file <i>WEB-INF/config/SystemGlobals.properties</i> and search for a key named <i>user.hash.sequence</i>. There is already a default value to the key, but is <b>VERY RECOMMENDED</b> that you change the value. It may be anything, and you won't need to remember the value. You can just change one or other char, insert some more... just type there some numbers and random characters, and then save the file. This value will be used to enhance the security of your JForum installation, and you will just need to do this step once.
+
+<br>
+<br><a name="permissions"></a><span style="font-size: 16px; line-height: normal"><b>Setting permissions for Forums and Categories</b></span>
+<br><img src="info.jpg" border="0"> By default, JForum will create the Forums with some permissions set to "not allowed" for the users / groups. <b>This is incorrect jforum's behaviour and will be fixed in the next release</b>. So, in order to allow users to insert / reply / edit posts, you should first give the right permissions for the group - by default, "General" "Administrators" and "Moderators". 
+<br>
+<br>The steps are easy, but must be done to every new Category and / or Forum: After creating the category / forum, go to the "Groups" administration, using the link in the left menu and then click on the "Permissions" link. A page with the current existing roles will show up. Now, check if everthing is according to your needs, and the click "Save". <b>You must click save even if you don't change anything</b>, so the roles can be written to the database. 
+<br>
+<br>That's all you should know for now to start using JForum. Don't forget to read the other sections, and don't be shy to ask something if you have doubts or problems. 
+</p>
+		</td>
+	</tr>
+</table>
+
+
+<br/>
+
+<table width="792" align="center" border="0">
+	<tr>
+		<td align="center">
+		<img src="h_bar.gif" width="792" height="2"><br/>
+		<font style="font-family: verdana; font-size: 10px;">
+		Copyright &copy; 2004 - Rafael Steil / The JForum Team
+		</font>
+		</td>
+	</tr>
+</table>
+
+</body>
+</html>
