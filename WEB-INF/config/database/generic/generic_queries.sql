@@ -156,11 +156,13 @@ ForumModel.setOrderByOrder = UPDATE jforum_forums SET forum_order = ? WHERE foru
 ForumModel.setOrderById = UPDATE jforum_forums SET forum_order = ? WHERE forum_id = ?
 
 ForumModel.lastPostInfo = SELECT post_time, p.topic_id, t.topic_replies, post_id, u.user_id, username \
-	FROM jforum_posts p, jforum_users u, jforum_topics t \
-	WHERE p.user_id = u.user_id \
-	AND p.topic_id = t.topic_id \
+	FROM jforum_posts p, jforum_users u, jforum_topics t , jforum_forums f \
+	WHERE t.forum_id = f.forum_id \
+	AND t.topic_id = p.topic_id \
+	AND f.forum_last_post_id = t.topic_last_post_id \
+	AND t.topic_last_post_id = p.post_id \
 	AND p.forum_id = ? \
-	ORDER BY post_time DESC LIMIT 1
+	AND p.user_id = u.user_id
 
 ForumModel.totalMessages = SELECT COUNT(1) as total_messages FROM jforum_posts
 ForumModel.getMaxPostId = SELECT MAX(post_id) AS post_id FROM jforum_posts WHERE forum_id = ?
