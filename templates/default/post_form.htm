@@ -243,8 +243,8 @@ function validatePostForm(f)
 <input type="hidden" name="post_id" value="${post.id}">
 </#if>
 
-<#if topicId?exists>
-<input type="hidden" name="topic_id" value="${topicId}">
+<#if topic?exists>
+<input type="hidden" name="topic_id" value="${topic.id}">
 </#if>
 
 <#if preview>
@@ -338,6 +338,8 @@ function validatePostForm(f)
 		   		<#assign subject = post.subject?html/>
 			<#elseif pmReply?default(false)>
 				<#assign subject = pm.post.subject?html/>
+			<#elseif topic?exists>
+				<#assign subject = I18n.getMessage("Message.replyPrefix") + topic.title?default("")?html/>
 			</#if>
           <TD class=row2 width="78%"><SPAN class=gen><INPUT class=post style="WIDTH: 460px" tabIndex=2 maxLength=100 size=45 name=subject value="${subject?default("")}"> </SPAN></TD>
 		  </TR>

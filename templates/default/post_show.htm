@@ -35,7 +35,7 @@ function confirmDelete()
 							<#if !readonly>
 								<span class="nav">&nbsp;
 								<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&amp;action=insert&amp;forum_id=${topic.forumId}","")}"><img src="${contextPath}/templates/${templateName}/images/post.gif" border="0" /></a>
-								<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}&start=${start}")}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" border="0" /></a>
+								<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}&start=${start}", "")}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" border="0" /></a>
 								</span>
 							<#else>
 								<#assign colspan = "2"/>

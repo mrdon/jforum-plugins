@@ -79,7 +79,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.13 2004/10/20 03:19:46 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.14 2004/10/22 02:59:57 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -224,7 +224,7 @@ public class PostAction extends Command
                 return;
             }
 
-            JForum.getContext().put("topicId", JForum.getRequest().getParameter("topic_id"));
+            JForum.getContext().put("topic", t);
             JForum.getContext().put("setType", false);
         } 
         else {
@@ -336,7 +336,6 @@ public class PostAction extends Command
         UserModel um = DataAccessDriver.getInstance().newUserModel();
         User u = um.selectById(p.getUserId());
 
-        JForum.getContext().put("topicId", Integer.toString(p.getTopicId()));
         JForum.getContext().put("topic",
                 DataAccessDriver.getInstance().newTopicModel().selectById(p.getTopicId()));
         JForum.getContext().put("quote", "true");
@@ -386,12 +385,6 @@ public class PostAction extends Command
                 tm.update(t);
                 ForumRepository.reloadForum(t.getForumId());
                 TopicRepository.clearCache(t.getForumId());
-
-                // RSS
-                /*
-                 * TopicRSS rss = new TopicRSS(); if (rss.objectExists(Integer.toString(t.getId()))) {
-                 * QueuedExecutor.getInstance().execute(new RSSTask(rss)); }
-                 */
             }
 
             if (JForum.getRequest().getParameter("notify") == null) {
@@ -516,11 +509,8 @@ public class PostAction extends Command
             JForum.setRedirect(path);
             ((HashMap) SessionFacade.getAttribute("topics_tracking")).put(new Integer(t.getId()),
                     new Long(p.getTime().getTime()));
-
-            // RSS
-            //QueuedExecutor.getInstance().execute(new RSSTask(new
-            // TopicRSS()));
-        } else {
+        } 
+        else {
             JForum.getContext().put("preview", true);
             JForum.getContext().put("post", p);
             JForum.getContext().put("topic", t);
@@ -621,12 +611,6 @@ public class PostAction extends Command
 
         ForumRepository.reloadForum(p.getForumId());
         TopicRepository.clearCache(p.getForumId());
-
-        // RSS
-        /*
-         * TopicRSS rss = new TopicRSS(); if (rss.objectExists(Integer.toString(p.getTopicId()))) {
-         * QueuedExecutor.getInstance().execute(new RSSTask(rss)); }
-         */
     }
 
     private void watch(TopicModel tm, int topicId, int userId) throws Exception {
