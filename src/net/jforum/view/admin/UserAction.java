@@ -66,7 +66,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.7 2004/10/23 02:56:29 jamesyong Exp $
+ * @version $Id: UserAction.java,v 1.8 2004/10/25 21:43:57 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -83,25 +83,13 @@ public class UserAction extends Command
 	private int preparePagination(int totalUsers)
 	{
 		String s = JForum.getRequest().getParameter("start");
-		int start = 0;
-		
-		if (s == null || s.equals("")) {
-			start = 0;
-		}
-		else {
-			start = Integer.parseInt(s);
-			
-			if (start < 0) {
-				start = 0;
-			}
-		}
-		
+		int start = ViewCommon.getStartPage();
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
 		
-		JForum.getContext().put("totalPages", new Double(Math.ceil( (double)totalUsers / (double)usersPerPage )));
+		JForum.getContext().put("totalPages", new Double(Math.ceil( (double)totalUsers / usersPerPage )));
 		JForum.getContext().put("recordsPerPage", new Integer(usersPerPage));
 		JForum.getContext().put("totalRecords", new Integer(totalUsers));
-		JForum.getContext().put("thisPage", new Double(Math.ceil( (double)(start+1) / (double)usersPerPage )));
+		JForum.getContext().put("thisPage", new Double(Math.ceil( (double)(start + 1) / usersPerPage )));
 		JForum.getContext().put("start", new Integer(start));
 		
 		return start;
@@ -119,7 +107,8 @@ public class UserAction extends Command
 		JForum.getContext().put("moduleAction", "user_list.htm");
 		JForum.getContext().put("users", users);
 		JForum.getContext().put("search", search);
-		//"start" is added to avoid search error. "start" may be in use when pagination is introduced for search 
+		
+		// "start" is added to avoid search error. "start" may be in use when pagination is introduced for search 
 		JForum.getContext().put("start", new Integer(1));
 	}
 	
@@ -188,7 +177,6 @@ public class UserAction extends Command
 	public void delete() throws Exception
 	{
 		String ids[] = JForum.getRequest().getParameterValues("user_id");
-		
 		UserModel um = DataAccessDriver.getInstance().newUserModel();
 		
 		if (ids != null) {
@@ -197,7 +185,8 @@ public class UserAction extends Command
 				int user = Integer.parseInt(ids[i]);
 				if (um.isDeleted(user)){
 					um.undelete(user);
-				} else {
+				} 
+				else {
 					um.delete(user);
 				}
 			}
@@ -263,7 +252,7 @@ public class UserAction extends Command
 		this.list();
 	}
 	
-	/* 
+	/** 
 	 * @see net.jforum.Command#process()
 	 */
 	public Template process() throws Exception 

@@ -26,7 +26,14 @@
 				<option value="${start}" <#if thisPage == page>selected</#if>>${page}</option>
 			</#list>
 		</select>
-		&nbsp;<input type="button" value="${I18n.getMessage("ForumIndex.goToGo")}" class="mainoption" onClick="document.location = '${JForumContext.encodeURL("/${moduleName}/${action}/' + document.${formName}.p[document.${formName}.p.selectedIndex].value + '/${id}")}';">
+		
+		<#if (id > -1)>
+			<#assign idAux = " + '/" + id/>
+		<#else>	
+			<#assign idAux = " + '"/>
+		</#if>
+
+		&nbsp;<input type="button" value="${I18n.getMessage("ForumIndex.goToGo")}" class="mainoption" onClick="document.location = '${JForumContext.encodeURL("/${moduleName}/${action}/' + document.${formName}.p[document.${formName}.p.selectedIndex].value ${idAux}")}';">
 		</form>
 	</#if>
 </#macro>

@@ -1,70 +1,74 @@
 <#setting number_format = "#"/>
-<#import "../../macros/pagination.ftl" as pagination>
+<#import "../../macros/pagination.ftl" as pagination/>
 
-<STYLE type=text/css>@import url( ${contextPath}/templates/${templateName}/admin/style.css );</STYLE>
+<style type="text/css">@import url( ${contextPath}/templates/${templateName}/admin/style.css );</style>
+<table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
+	<tr>
+		<th class="thHead" valign="center" colspan="7" height="25">${I18n.getMessage("User.adminTitle")}</th>
+	</tr>
 
-<TABLE class=forumline cellSpacing=1 cellPadding=3 width="100%" border=0><TBODY>
-<TR>
-<TH class=thHead vAlign=center colSpan=7 height=25>${I18n.getMessage("User.adminTitle")}</TH>
-</TR>
+	<tr>
+		<td class="gen" align="center" colspan="7">
+			<form id="formusersearch" action="${JForumContext.encodeURL("/jforum")}" accept-charset="${encoding}" method="post">
+			<input type="hidden" name="action" value="search" />
+			<input type="hidden" name="module" value="${moduleName}" />
+			<input type="hidden" name="securityHash" value="${securityHash}" />
 
-<tr>
-	<td class="gen" align="center" colspan="7">
-		<form id="formusersearch" action="${contextPath}/jforum${extension}" accept-charset="${encoding}" method="post">
-		<input type="hidden" name="action" value="search">
-		<input type="hidden" name="module" value="${moduleName}">
-		<input type="hidden" name="securityHash" value="${securityHash}">
+			<input type="text" name="username" value="${search?default("")}" />&nbsp;
+			<input type="submit" value="${I18n.getMessage("ForumBase.search")}" class="mainoption"/>
 
-		<input type="text" name="username" value="${search?default("")}">&nbsp;<input type="submit" value="${I18n.getMessage("ForumBase.search")}">
+			</form>
+		</td>
+	</tr>
 
-		</form>
-	</td>
-</tr>
+	<form accept-charset="${encoding}" name="form" action="${JForumContext.encodeURL("/jforum")}" method="post">
+	<input type="hidden" name="action" value="delete" />
+	<input type="hidden" name="module" value="${moduleName}" />
+	<input type="hidden" name="securityHash" value="${securityHash}" />
+	<input type="hidden" name="start" value="${start}" />
+  
+	<tr>
+		<td class="gen"><b>ID</b></td>
+		<td class="gen"><b>Username</b></td>
+		<td class="gen">&nbsp;</td>
+		<td class="gen">&nbsp;</td>
+		<td class="gen">&nbsp;</td>
+		<td class="gen" width="5%" align="center"><b>Lock</b></td>
+		<td class="gen" width="5%" align="center"><b>Unlock</b></td>
+	</tr>
 
-<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum${extension}" method="post">
-<input type="hidden" name="action" value="delete">
-<input type="hidden" name="module" value="${moduleName}">
-<input type="hidden" name="securityHash" value="${securityHash}">
-<input type="hidden" name="start" value="${start}">
+	<#list users as user>
+		<tr>
+			<td class="row2"><span class="gen">${user.id}</span></td>
+			<td class="row2"><span class="gen">${user.username}</span></td>
+			<td class="row2"><span class="gen"><a href="${contextPath}/jforum${extension}?module=adminUsers&amp;action=edit&amp;id=${user.id}">${I18n.getMessage("Edit")}</a></span></td>
+			<td class="row2"><span class="gen"><a href="${contextPath}/jforum${extension}?module=adminUsers&amp;action=groups&amp;id=${user.id}">${I18n.getMessage("User.Groups")}</a></span></td>
+			<td class="row2"><span class="gen"><a href="${contextPath}/jforum${extension}?module=adminUsers&amp;action=permissions&amp;id=${user.id}">${I18n.getMessage("Permissions")}</a></span></td>
 
-<TR>
-<TD class=gen><b>ID</b></TD>
-<TD class=gen><b>Username</b></TD>
-<TD class=gen>&nbsp;</TD>
-<TD class=gen>&nbsp;</TD>
-<TD class=gen>&nbsp;</TD>
-<TD class=gen><b>Lock</b></TD>
-<TD class=gen><b>Unlock</b></td>
-</TR>
+			<#if user.deleted>
+				<td class="row2">&nbsp;</td>
+				<td class="row2" align="center"><input type="checkbox" name="user_id" value="${user.id}" /></td>
+			<#else>
+				<td class="row2" align="center"><input type="checkbox" name="user_id" value="${user.id}" /></td>
+				<td class="row2">&nbsp;</td>
+			</#if>
+		</tr>
+	</#list>
 
-<#list users as user>
-<TR>
-	<TD class=row2><span class="gen">${user.id}</span></TD>
-	<TD class=row2><span class="gen">${user.username}</span></TD>
-	<TD class=row2><span class="gen"><a href="${contextPath}/jforum${extension}?module=adminUsers&action=edit&id=${user.id}">${I18n.getMessage("Edit")}</a></span></TD>
-	<TD class=row2><span class="gen"><a href="${contextPath}/jforum${extension}?module=adminUsers&action=groups&id=${user.id}">${I18n.getMessage("User.Groups")}</a></span></TD>
-	<TD class=row2><span class="gen"><a href="${contextPath}/jforum${extension}?module=adminUsers&action=permissions&id=${user.id}">${I18n.getMessage("Permissions")}</a></span></TD>
-	<#if user.deleted>
-		<TD class=row2>&nbsp;</td>
-		<TD class=row2><input type="checkbox" name="user_id" value="${user.id}"></TD>
-	<#else>
-		<TD class=row2><input type="checkbox" name="user_id" value="${user.id}"></TD>
-		<TD class=row2>&nbsp;</td>
-	</#if>
-</TR>
-</#list>
+	<tr align="center">
+		<td class="catBottom" colspan="5" height="28">
+			<input class="mainoption" type="button" value="${I18n.getMessage("Insert")}" onClick="document.location = '${contextPath}?module=adminUsers&action=insert';" />&nbsp;&nbsp;	
+		</td>
+		<td class="catBottom" colspan="2">
+			<input class="mainoption" type="submit" value="${I18n.getMessage("Lock")} / ${I18n.getMessage("Unlock")}" name="submit" />&nbsp;&nbsp;
+		</td>
+	</tr>
+</table>
+</form>
+<table width="100%">
+	<tr>
+		<td align="right"><#if thisPage?exists><@pagination.doPagination "list", -1, "fp" /></#if></td>
+	</tr>
+</table>
 
-<TR align="center">
-	<TD class=catBottom colSpan=5 height=28>
-		<INPUT class=mainoption type=button value="${I18n.getMessage("Insert")}" onClick="document.location = '${contextPath}?module=adminUsers&action=insert';">&nbsp;&nbsp;
-	</TD>
-	<TD class=catBottom colSpan=2>
-		<INPUT class=mainoption type=submit value="${I18n.getMessage("Lock")}/${I18n.getMessage("Unlock")}" name=submit>&nbsp;&nbsp;
-	</TD>
-</TR></TABLE>
 
-<TABLE width="100%"><TR>
-	<TD align="right"><#if thisPage?exists><@pagination.doPagination "list" /></#if></TD>
-</TR></TABLE>
-</FORM>
-   
