@@ -17,7 +17,7 @@ public class ActivationKeySpammer extends Spammer
 			forumLink += "/";
 		}
 
-		String url =  forumLink + "user/activateAccount/"+ hash + "/" + userId + "."+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
+		String url =  forumLink + "user/activateAccount/"+ hash + "/" + userId + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
 		SimpleHash params = new SimpleHash();
 		params.put("url", url);
 		params.put("username", username);
