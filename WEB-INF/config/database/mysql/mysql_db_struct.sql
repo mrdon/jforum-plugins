@@ -460,4 +460,14 @@ CREATE TABLE jforum_bookmarks (
 	title varchar(255),
 	description varchar(255),
 	INDEX book_idx_relation (relation_id)
-);
+) TYPE=InnoDB;
+-- 
+-- Table structure for table 'jforum_quota_limits'
+--
+DROP TABLE IF EXISTS jforum_quota_limits;
+CREATE TABLE jforum_quota_limits (
+	quota_limit_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	quota_desc VARCHAR(50) NOT NULL,
+	quota_limit INT NOT NULL,
+	quota_type TINYINT(1) DEFAULT '1'
+) TYPE=InnoDB;

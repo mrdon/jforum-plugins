@@ -69,7 +69,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author Pieter
- * @version $Id: SystemGlobals.java,v 1.17 2005/01/02 19:58:01 rafaelsteil Exp $
+ * @version $Id: SystemGlobals.java,v 1.18 2005/01/17 18:59:13 rafaelsteil Exp $
  */
 public class SystemGlobals implements VariableStore
 {
@@ -347,5 +347,10 @@ public class SystemGlobals implements VariableStore
 	public static Iterator fetchConfigKeyIterator()
 	{
 		return globals.defaults.keySet().iterator();
+	}
+	
+	public static Properties getConfigData()
+	{
+		return new Properties(globals.defaults);
 	}
 }
