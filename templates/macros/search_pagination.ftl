@@ -23,7 +23,7 @@
 </#function>
 
 <#macro searchPagination kw terms forum category orderField orderBy author postTime>
-	<#assign baseUrl = contextPath +"/jforum.page?module=search&action=search&"/>
+	<#assign baseUrl = contextPath +"/jforum" + extension + "?module=search&action=search&"/>
 	<#assign baseUrl = baseUrl + moderationParams("") >
 	
 	<#if (totalRecords > recordsPerPage)>
