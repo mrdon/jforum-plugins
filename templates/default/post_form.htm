@@ -496,7 +496,7 @@ function validatePostForm(f)
 			</TR>
 			</#if>
 
-				<#if setType?default(true) && forum?exists && canCreateStickyOrAnnouncementTopics?if_exists>
+				<#if setType?default(true) && forum?exists && canCreateStickyOrAnnouncementTopics?default(false)>
               	<TR>
                 <TD></TD>
                 <TD>
@@ -507,6 +507,8 @@ function validatePostForm(f)
                 	</SPAN>                 
 				</TD>
                </TR>
+			   <#elseif topic?exists>
+				<input type="hidden" name="topic_type" value="${topic.type}">
 			   </#if>
             </TABLE>
            </TD>

@@ -76,7 +76,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.2 2004/09/04 17:29:36 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.3 2004/09/06 02:31:05 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -292,6 +292,8 @@ public class PostAction extends Command
 			JForum.getContext().put("topic", topic);
 			JForum.getContext().put("moduleAction", "post_form.htm");
 			JForum.getContext().put("start", JForum.getRequest().getParameter("start"));
+			JForum.getContext().put("canCreateStickyOrAnnouncementTopics", 
+					SecurityRepository.canAccess(SecurityConstants.PERM_CREATE_STICKY_ANNOUNCEMENT_TOPICS));
 		}
 		else {
 			JForum.getContext().put("moduleAction", "message.htm");
