@@ -48,32 +48,37 @@ function checkBoard()
 function checkDatabase()
 {
 	var f = document.install;
-
-	if (f.dbpasswd.value != f.dbpasswd_confirm.value) {
-		alert("${I18n.getMessage("Install.dbPasswdNotMatch")}");
-		return false;
-	}
-
-	var s = "";
-	if (f.database.value != "hsqldb") {
-		if (f.dbuser.value == "") {
-			s += "${I18n.getMessage("Install.dbUsername")} ${I18n.getMessage("Install.isEmpty")}\n";
-		}
-
-		if (f.dbpasswd.value == "") {
-			s += "${I18n.getMessage("Install.dbPassword")} ${I18n.getMessage("Install.isEmpty")}\n";
-		}
-	}
-	else {
-		if (f.dbpasswd.value == "" || f.dbuser.value == "") {
-			if (confirm("${I18n.getMessage("Install.hsqldbDefault")}. \n${I18n.getMessage("Install.jforumUseDefault")}")) {
-				return true;
-			}
-
+  var s = "";
+  
+	if (f.db_connection_type.selectedIndex == 0) {  // native selected
+		if (f.dbpasswd.value != f.dbpasswd_confirm.value) {
+			alert("${I18n.getMessage("Install.dbPasswdNotMatch")}");
 			return false;
+		}    
+		
+		if (f.database.value != "hsqldb") {
+			if (f.dbuser.value == "") {
+				s += "${I18n.getMessage("Install.dbUsername")} ${I18n.getMessage("Install.isEmpty")}\n";
+			}
+    
+			if (f.dbpasswd.value == "") {
+				s += "${I18n.getMessage("Install.dbPassword")} ${I18n.getMessage("Install.isEmpty")}\n";
+			}
 		}
-	}
-
+		else {
+			if (f.dbpasswd.value == "" || f.dbuser.value == "") {
+				if (confirm("${I18n.getMessage("Install.hsqldbDefault")}. \n${I18n.getMessage("Install.jforumUseDefault")}")) {
+					return true;
+				}
+    
+				return false;
+			}
+		}
+  } else {
+    if (f.dbdatasource == "") {
+      s += "${I18n.getMessage("Install.dbDataSource")} ${I18n.getMessage("Install.isEmpty")}\n";
+    }
+  }
 	if (s != "" && confirm("${I18n.getMessage("Install.dbIssues")}: \n\n" + s + "\n${I18n.getMessage("Install.dbMayResultError")}")) {
 		return true;
 	}
@@ -186,7 +191,7 @@ function checkDatabase()
 					function enableNativeFields()
 					{
 						var f = document.forms[0];
-						var status = f.dbhost.disabled;
+						var status = (f.db_connection_type.selectedIndex == 0);
 						var color = "#ffffff";
 						
 						if (!status) {
@@ -314,7 +319,7 @@ function checkDatabase()
 					</tr>
 					<tr>
 
-						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.adminPassword")} </b></span></td>
+						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.adminPassword")}: </b></span></td>
 						<td class="row2"><input type="password" name="admin_pass1" value="" /></td>
 					</tr>
 					<tr>

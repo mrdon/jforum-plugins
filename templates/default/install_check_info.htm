@@ -72,6 +72,7 @@ td.catHead,td.catSides,td.catLeft,td.catRight,td.catBottom { background-image: u
 					<tr>
 						<th colspan="2">2) ${I18n.getMessage("Install.dbConfiguration")}</th>
 					</tr>
+					<#if db_connection_type?default("native") == "native">
 					<tr>
 						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbHost")}</b></span></td>
 						<td class="row2"><span class="gen">${dbHost}</span></td>
@@ -100,15 +101,23 @@ td.catHead,td.catSides,td.catLeft,td.catRight,td.catBottom { background-image: u
 						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.pool")}: </b></span></td>
 						<td class="row2"><span class="gen">${usePool}</span></td>
 					</tr>
-
+					<#else>
+					<tr>
+						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbDataSource")}: </b></span></td>
+						<td class="row2"><span class="gen">${dbdatasource}</span></td>
+					</tr>
+          </#if>
 					<tr>
 						<th colspan="2">3) ${I18n.getMessage("Install.boardConfiguration")}</th>
-					</tr>
+					</tr>					
 					<tr>
-
 						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.forumLink")}: </b></span></td>
 						<td class="row2"><span class="gen">${forumLink}</span></td>
-					</tr> 
+					</tr>
+					<tr>
+						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.siteLink")}: </b></span></td>
+						<td class="row2"><span class="gen">${siteLink}</span></td>
+					</tr> 					 
 					<tr>
 						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.adminUser")}: </b></span></td>
 						<td class="row2"><span class="gen">Admin</span></td>
