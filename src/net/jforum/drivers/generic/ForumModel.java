@@ -46,19 +46,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import net.jforum.JForum;
 import net.jforum.entities.Forum;
+import net.jforum.entities.LastPostInfo;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: ForumModel.java,v 1.7 2004/11/05 03:29:45 rafaelsteil Exp $
+ * @version $Id: ForumModel.java,v 1.8 2004/11/12 20:46:41 rafaelsteil Exp $
  */
 public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel 
 {
@@ -309,7 +308,7 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
 		p.executeUpdate();
 		p.close();
 		
-		// If there are no more topics, when clean the
+		// If there are no more topics, then clean the
 		// last post id information 
 		int totalTopics = this.getTotalTopics(forumId);
 		if (totalTopics < 1) {
@@ -320,31 +319,33 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
 	/** 
 	 * @see net.jforum.model.ForumModel#getLastPostInfo(int)
 	 */
-	public Map getLastPostInfo(int forumId) throws Exception 
+	public LastPostInfo getLastPostInfo(int forumId) throws Exception 
 	{
-		Map m = new HashMap();
-		
+		LastPostInfo lpi = new LastPostInfo();
+
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.lastPostInfo"));
 		p.setInt(1, forumId);
 
 		ResultSet rs = p.executeQuery();
 		
 		if (rs.next()) {
-			m.put("userName", rs.getString("username"));
-			m.put("userId", new Integer(rs.getInt("user_id")));
+			lpi.setUsername(rs.getString("username"));
+			lpi.setUserId(rs.getInt("user_id"));
 			
 			SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
-			m.put("postTime", df.format(rs.getTimestamp("post_time")));
-			m.put("postId", new Integer(rs.getInt("post_id")));
-			m.put("topicId", new Integer(rs.getInt("topic_id")));
-			m.put("postTimeMillis", new Long(rs.getTimestamp("post_time").getTime()));
-			m.put("topic_replies", new Integer(rs.getInt("topic_replies")));
+			lpi.setPostDate(df.format(rs.getTimestamp("post_time")));
+			lpi.setPostId(rs.getInt("post_id"));
+			lpi.setTopicId(rs.getInt("topic_id"));
+			lpi.setPostTimeMillis(rs.getTimestamp("post_time").getTime());
+			lpi.setTopicReplies(rs.getInt("topic_replies"));
+			
+			lpi.setHasInfo(true);
 		}
 		
 		p.close();
 		rs.close();
 		
-		return m;
+		return lpi;
 	}
 
 	/** 

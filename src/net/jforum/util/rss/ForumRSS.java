@@ -48,19 +48,20 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
+import net.jforum.entities.LastPostInfo;
 import net.jforum.repository.ForumRepository;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.view.forum.ViewCommon;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author Rafael Steil
- * @version $Id: ForumRSS.java,v 1.11 2004/10/31 21:30:54 rafaelsteil Exp $
+ * @version $Id: ForumRSS.java,v 1.12 2004/11/12 20:46:41 rafaelsteil Exp $
  */
 public class ForumRSS extends GenericRSS 
 {
@@ -94,7 +95,7 @@ public class ForumRSS extends GenericRSS
 				for (Iterator fIter = forumsList.iterator(); fIter.hasNext(); ) {
 					Forum forum = (Forum)fIter.next();
 					
-					Map info = ForumRepository.getLastPostInfo(forum.getId());
+					LastPostInfo info = ForumRepository.getLastPostInfo(forum.getId());
 					
 					RSSItem item = new RSSItem();
 					item.addCategory(category.getName());
@@ -105,11 +106,11 @@ public class ForumRSS extends GenericRSS
 							+ "forums/show/" + forum.getId()
 							+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 					
-					String author = (String)info.get("userName");
+					String author = info.getUsername();
 					
 					item.setAuthor(author != null ? author : I18n.getMessage("Guest"));
 					
-					String date = (String)info.get("postTime");
+					String date = info.getPostDate();
 					item.setPublishDate(date != null ? RSSUtils.formatDate(date) : "");
 					
 					this.rss.addItem(item);

@@ -44,20 +44,20 @@ package net.jforum.view.forum;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
+import net.jforum.entities.LastPostInfo;
 import net.jforum.entities.Topic;
+import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.ForumModel;
@@ -72,7 +72,7 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.15 2004/11/12 18:57:44 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.16 2004/11/12 20:46:40 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -115,8 +115,6 @@ public class ForumAction extends Command
 			lastVisit = us.getLastVisit().getTime();
 		}
 		
-		Collections.sort(forums, new ForumOrderComparator());
-		
 		// Do not check for unread posts if the user is not logged in
 		checkUnreadPosts = checkUnreadPosts 
 			&& (us.getUserId() != SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID));
@@ -130,20 +128,20 @@ public class ForumAction extends Command
 				Forum f = new Forum((Forum)tmpIterator.next());
 				
 				if (checkUnreadPosts) {
-					Map lpi = ForumRepository.getLastPostInfo(f.getId());
-					if (lpi.containsKey("postTimeMillis")) {
-						Integer topicId = ((Integer)lpi.get("topicId"));
-						boolean contains = ((HashMap)SessionFacade.getAttribute("topics_tracking")).containsKey(topicId);
-						long lpiTime = ((Long)lpi.get("postTimeMillis")).longValue();
+					LastPostInfo lpi = ForumRepository.getLastPostInfo(f.getId());
+					if (lpi.getPostTimeMillis() > 0) {
+						Integer topicId = new Integer(lpi.getTopicId());
+
+						boolean contains = ((HashMap)SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).containsKey(topicId);
 						
 						if (contains) {
-							long readTime = ((Long)((HashMap)SessionFacade.getAttribute("topics_tracking")).get(topicId)).longValue();
+							long readTime = ((Long)((HashMap)SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).get(topicId)).longValue();
 							
-							if (lpiTime > readTime) {
+							if (lpi.getPostTimeMillis() > readTime) {
 								f.setUnread(true);
 							}
 						}
-						else if (lpiTime > lastVisit) {
+						else if (lpi.getPostTimeMillis() > lastVisit) {
 							f.setUnread(true);
 						}
 					}
@@ -175,9 +173,9 @@ public class ForumAction extends Command
 		
 		JForum.getContext().put("totalUsers", I18n.getMessage("ForumListing.registeredUsers", new Object[] {new Integer(um.getTotalUsers())}));
 
-		HashMap m = um.getLastUserInfo();		
-		JForum.getContext().put("lastUserId", m.get("userId"));
-		JForum.getContext().put("lastUserName", m.get("userName"));		
+		User lastUser = um.getLastUserInfo();		
+		JForum.getContext().put("lastUserId", new Integer(lastUser.getId()));
+		JForum.getContext().put("lastUserName", lastUser.getUsername());
 		
 		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
 		GregorianCalendar gc = new GregorianCalendar();

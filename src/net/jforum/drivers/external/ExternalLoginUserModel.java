@@ -43,7 +43,6 @@
 package net.jforum.drivers.external;
 
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -92,7 +91,7 @@ public class ExternalLoginUserModel implements UserModel {
 		return delegateUserModel.findByName(input, exactMath);
 	}
 	
-	public HashMap getLastUserInfo() throws Exception {
+	public User getLastUserInfo() throws Exception {
 		return delegateUserModel.getLastUserInfo();
 	}
 	

@@ -43,9 +43,9 @@
 package net.jforum.model;
 
 import java.util.List;
-import java.util.Map;
 
 import net.jforum.entities.Forum;
+import net.jforum.entities.LastPostInfo;
 
 /**
 * Model interface for {@link net.jforum.Forum}.
@@ -55,7 +55,7 @@ import net.jforum.entities.Forum;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: ForumModel.java,v 1.3 2004/11/05 03:29:49 rafaelsteil Exp $
+ * @version $Id: ForumModel.java,v 1.4 2004/11/12 20:46:39 rafaelsteil Exp $
  */
 public interface ForumModel 
 {
@@ -155,7 +155,7 @@ public interface ForumModel
 	 */
 	public void decrementTotalTopics(int forumId, int count) throws Exception;
 
-	public Map getLastPostInfo(int forumId) throws Exception;
+	public LastPostInfo getLastPostInfo(int forumId) throws Exception;
 	
 	/**
 	 * Gets the total number of messages of a forum

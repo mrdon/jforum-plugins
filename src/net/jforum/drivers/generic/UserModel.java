@@ -48,7 +48,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import net.jforum.JForum;
@@ -60,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.20 2004/11/05 03:29:45 rafaelsteil Exp $
+ * @version $Id: UserModel.java,v 1.21 2004/11/12 20:46:41 rafaelsteil Exp $
  */
 public class UserModel extends AutoKeys implements net.jforum.model.UserModel 
 {
@@ -365,21 +364,21 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 	/** 
 	 * @see net.jforum.model.UserModel#getLastUserInfo()
 	 */
-	public HashMap getLastUserInfo() throws Exception 
+	public User getLastUserInfo() throws Exception 
 	{
-		HashMap m = new HashMap();
+		User u = new User();
 		
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.lastUserRegistered"));
 		ResultSet rs = p.executeQuery();
 		rs.next();
 		
-		m.put("userName", rs.getString("username"));
-		m.put("userId", new Integer(rs.getInt("user_id")));
+		u.setUsername(rs.getString("username"));
+		u.setId(rs.getInt("user_id"));
 		
 		rs.close();
 		p.close();
 		
-		return m;
+		return u;
 	}
 
 	/** 

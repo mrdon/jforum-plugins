@@ -43,7 +43,6 @@
 package net.jforum.model;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
 import java.util.List;
 
 import net.jforum.entities.User;
@@ -56,7 +55,7 @@ import net.jforum.entities.User;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.12 2004/11/05 03:29:49 rafaelsteil Exp $
+ * @version $Id: UserModel.java,v 1.13 2004/11/12 20:46:39 rafaelsteil Exp $
  */
 public interface UserModel 
 {
@@ -210,7 +209,7 @@ public interface UserModel
 	 * <li><b>userId</b>: The user's ID 
 	 * @throws Exception
 	 */
-	public HashMap getLastUserInfo() throws Exception;
+	public User getLastUserInfo() throws Exception;
 	
 	/**
 	 * Gets the total number of users
