@@ -48,8 +48,11 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
@@ -61,7 +64,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicModel.java,v 1.13 2005/01/31 20:10:41 rafaelsteil Exp $
+ * @version $Id: TopicModel.java,v 1.14 2005/02/21 20:32:11 rafaelsteil Exp $
  */
 public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel 
 {
@@ -608,5 +611,37 @@ public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel
 		p.setInt(2, forumId);
 		p.executeUpdate();
 		p.close();
+	}
+	
+	/**
+	 * @see net.jforum.model.TopicModel#selectTopicTitlesByIds(java.util.Collection)
+	 */
+	public List selectTopicTitlesByIds(Collection idList) throws Exception
+	{
+		List l = new ArrayList();
+		String sql = SystemGlobals.getSql("TopicModel.selectTopicTitlesByIds");
+		
+		StringBuffer sb = new StringBuffer(idList.size() * 2);
+		for (Iterator iter = idList.iterator(); iter.hasNext(); ) {
+			sb.append(iter.next()).append(",");
+		}
+		
+		int len = sb.length();
+		sql = sql.replaceAll(":ids:", len > 0 ? sb.toString().substring(0, len - 1) : "0");
+		PreparedStatement p = JForum.getConnection().prepareStatement(sql);
+		
+		ResultSet rs = p.executeQuery();
+		while (rs.next()) {
+			Map m = new HashMap();
+			m.put("id", new Integer(rs.getInt("topic_id")));
+			m.put("title", rs.getString("topic_title"));
+			
+			l.add(m);
+		}
+		
+		rs.close();
+		p.close();
+		
+		return l;
 	}
 }

@@ -48,7 +48,7 @@ import java.util.Date;
  * Represents every message post in the system.
  * 
  * @author Rafael Steil
- * @version $Id: Post.java,v 1.7 2005/01/31 20:10:40 rafaelsteil Exp $
+ * @version $Id: Post.java,v 1.8 2005/02/21 20:32:11 rafaelsteil Exp $
  */
 public class Post 
 {
@@ -423,5 +423,25 @@ public class Post
 	public void hasAttachments(boolean hasAttachments)
 	{
 		this.hasAttachments = hasAttachments;
+	}
+	
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object o)
+	{
+		if (!(o instanceof Post)) {
+			return false;
+		}
+		
+		return ((Post)o).getId() == this.id;
+	}
+	
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode()
+	{
+		return this.id;
 	}
 }

@@ -43,17 +43,18 @@
 package net.jforum.view.admin;
 
 import java.sql.Connection;
+import java.util.Collection;
 
 import javax.servlet.http.HttpServletResponse;
 
-import freemarker.template.SimpleHash;
-import freemarker.template.Template;
 import net.jforum.ActionServletRequest;
 import net.jforum.Command;
 import net.jforum.SessionFacade;
+import net.jforum.model.DataAccessDriver;
 import net.jforum.repository.BBCodeRepository;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.ModulesRepository;
+import net.jforum.repository.PostRepository;
 import net.jforum.repository.RankingRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.repository.SmiliesRepository;
@@ -61,10 +62,12 @@ import net.jforum.repository.TopicRepository;
 import net.jforum.util.bbcode.BBCodeHandler;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import freemarker.template.SimpleHash;
+import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: CacheAction.java,v 1.1 2005/02/21 14:31:09 rafaelsteil Exp $
+ * @version $Id: CacheAction.java,v 1.2 2005/02/21 20:32:13 rafaelsteil Exp $
  */
 public class CacheAction extends Command
 {
@@ -83,6 +86,7 @@ public class CacheAction extends Command
 		this.context.put("forum", new ForumRepository());
 		this.context.put("topic", new TopicRepository());
 		this.context.put("session", new SessionFacade());
+		this.context.put("posts", new PostRepository());
 	}
 	
 	public void bbReload() throws Exception
@@ -113,6 +117,27 @@ public class CacheAction extends Command
 	{
 		RankingRepository.loadRanks();
 		this.list();
+	}
+	
+	public void postsMoreInfo() throws Exception
+	{
+		if (!SystemGlobals.getBoolValue(ConfigKeys.POSTS_CACHE_ENABLED)) {
+			this.list();
+			return;
+		}
+		
+		Collection topics = PostRepository.cachedTopics();
+		
+		this.context.put("topics", DataAccessDriver.getInstance().newTopicModel().selectTopicTitlesByIds(topics));
+		this.context.put("repository", new PostRepository());
+		this.context.put("moduleAction", "post_repository_info.htm");
+	}
+	
+	public void postsClear() throws Exception
+	{
+		int topicId = this.request.getIntParameter("topic_id");
+		PostRepository.clearCache(topicId);
+		this.postsMoreInfo();
 	}
 
 	/**

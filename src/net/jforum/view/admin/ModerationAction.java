@@ -54,9 +54,11 @@ import net.jforum.model.DataAccessDriver;
 import net.jforum.model.PostModel;
 import net.jforum.model.TopicModel;
 import net.jforum.repository.ForumRepository;
+import net.jforum.repository.PostRepository;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.view.forum.common.AttachmentCommon;
+import net.jforum.view.forum.common.PostCommon;
 import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 import freemarker.template.SimpleHash;
@@ -64,7 +66,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationAction.java,v 1.2 2005/02/07 13:48:56 andowson Exp $
+ * @version $Id: ModerationAction.java,v 1.3 2005/02/21 20:32:13 rafaelsteil Exp $
  */
 public class ModerationAction extends Command
 {
@@ -114,6 +116,10 @@ public class ModerationAction extends Command
 					
 					
 					DataAccessDriver.getInstance().newUserModel().incrementPosts(p.getUserId());
+					
+					if (SystemGlobals.getBoolValue(ConfigKeys.POSTS_CACHE_ENABLED)) {
+						PostRepository.append(p.getTopicId(), PostCommon.preparePostForDisplay(p));
+					}
 				}
 				else {
 					PostModel pm = DataAccessDriver.getInstance().newPostModel();

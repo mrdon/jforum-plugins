@@ -68,6 +68,7 @@ import net.jforum.model.PostModel;
 import net.jforum.model.TopicModel;
 import net.jforum.model.UserModel;
 import net.jforum.repository.ForumRepository;
+import net.jforum.repository.PostRepository;
 import net.jforum.repository.RankingRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.repository.SmiliesRepository;
@@ -87,7 +88,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.61 2005/02/18 19:01:18 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.62 2005/02/21 20:32:16 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -494,6 +495,10 @@ public class PostAction extends Command {
 
 			path += p.getTopicId() + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#" + p.getId();
 			JForum.setRedirect(path);
+			
+			if (SystemGlobals.getBoolValue(ConfigKeys.POSTS_CACHE_ENABLED)) {
+				PostRepository.update(p.getTopicId(), PostCommon.preparePostForDisplay(p));
+			}
 		}
 	}
 	
@@ -638,7 +643,11 @@ public class PostAction extends Command {
 				int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 				if (u.getId() != anonymousUser) {
 					((Map) SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(t.getId()),
-							new Long(System.currentTimeMillis()));
+							new Long(p.getTime().getTime()));
+				}
+				
+				if (SystemGlobals.getBoolValue(ConfigKeys.POSTS_CACHE_ENABLED)) {
+					PostRepository.append(p.getTopicId(), PostCommon.preparePostForDisplay(p));
 				}
 			}
 			else {
@@ -752,6 +761,7 @@ public class PostAction extends Command {
 
 		ForumRepository.reloadForum(p.getForumId());
 		TopicRepository.clearCache(p.getForumId());
+		PostRepository.clearCache(p.getTopicId());
 	}
 
 	private void watch(TopicModel tm, int topicId, int userId) throws Exception {

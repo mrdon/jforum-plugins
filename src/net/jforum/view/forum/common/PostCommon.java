@@ -59,6 +59,7 @@ import net.jforum.model.DataAccessDriver;
 import net.jforum.model.PostModel;
 import net.jforum.model.UserModel;
 import net.jforum.repository.BBCodeRepository;
+import net.jforum.repository.PostRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.repository.SmiliesRepository;
 import net.jforum.security.SecurityConstants;
@@ -69,7 +70,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.9 2005/02/18 19:01:20 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.10 2005/02/21 20:32:15 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -277,21 +278,36 @@ public class PostCommon
 	public static List topicPosts(PostModel pm, UserModel um, Map usersMap, boolean canEdit, int userId, int topicId,
 			int start, int count) throws Exception
 	{
-		List posts = pm.selectAllByTopicByLimit(topicId, start, count);
+		List posts = null;
+		boolean needPrepare = true;
+		
+ 		if (SystemGlobals.getBoolValue(ConfigKeys.POSTS_CACHE_ENABLED)) {
+ 			posts = PostRepository.selectAllByTopicByLimit(topicId, start, count);
+ 			needPrepare = false;
+ 		}
+ 		else {
+ 			posts = pm.selectAllByTopicByLimit(topicId, start, count);
+ 		}
+ 		
 		List helperList = new ArrayList();
 
 		int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 
-		Iterator iter = posts.iterator();
-		while (iter.hasNext()) {
-			Post p = (Post) iter.next();
+		for (Iterator iter = posts.iterator(); iter.hasNext(); ) {
+			Post p;
+			if (needPrepare) {
+				p = (Post)iter.next();
+			}
+			else {
+				p = new Post((Post)iter.next());
+			}
+			
 			if (canEdit || (p.getUserId() != anonymousUser && p.getUserId() == userId)) {
 				p.setCanEdit(true);
 			}
 
 			PostCommon.addToTopicPosters(p.getUserId(), usersMap, um);
-
-			helperList.add(PostCommon.preparePostForDisplay(p));
+			helperList.add(needPrepare ? PostCommon.preparePostForDisplay(p) : p);
 		}
 
 		return helperList;

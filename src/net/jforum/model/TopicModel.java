@@ -42,6 +42,7 @@
  */
 package net.jforum.model;
 
+import java.util.Collection;
 import java.util.List;
 
 import net.jforum.entities.Topic;
@@ -54,7 +55,7 @@ import net.jforum.entities.Topic;
  * select some specific data.
  *
  * @author Rafael Steil
- * @version $Id: TopicModel.java,v 1.8 2005/01/31 20:10:36 rafaelsteil Exp $
+ * @version $Id: TopicModel.java,v 1.9 2005/02/21 20:32:11 rafaelsteil Exp $
  */
 public interface TopicModel 
 {
@@ -86,6 +87,8 @@ public interface TopicModel
 	 * @throws Exception
 	 */
 	public List selectAllByForum(int forumId) throws Exception;
+	
+	public List selectTopicTitlesByIds(Collection idList) throws Exception;
 	
 	/**
 	 * Selects all topics associated to a specific forum, limiting the total number

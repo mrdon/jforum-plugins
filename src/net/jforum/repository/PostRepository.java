@@ -42,14 +42,21 @@
  */
 package net.jforum.repository;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.jforum.cache.CacheEngine;
+import net.jforum.cache.Cacheable;
+import net.jforum.entities.Post;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.PostModel;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.view.forum.common.PostCommon;
 
 import org.apache.log4j.Logger;
 
@@ -58,46 +65,102 @@ import org.apache.log4j.Logger;
  * 
  * @author Sean Mitchell
  * @author Rafael Steil
- * @version $Id: PostRepository.java,v 1.2 2005/02/16 13:46:25 rafaelsteil Exp $
+ * @version $Id: PostRepository.java,v 1.3 2005/02/21 20:32:13 rafaelsteil Exp $
  */
-public class PostRepository
+public class PostRepository implements Cacheable
 {
 	private static Logger logger = Logger.getLogger(PostRepository.class);
 	private static final int CACHE_SIZE = SystemGlobals.getIntValue(ConfigKeys.POSTS_CACHE_SIZE);
-  
-	private static Map cache = new LinkedHashMap(CACHE_SIZE + 1) {
-		protected boolean removeEldestEntry(Map.Entry eldest) {
-			return this.size() > CACHE_SIZE;
+	private static final String FQN = "posts";
+	private static CacheEngine cache;
+	
+	/**
+	 * @see net.jforum.cache.Cacheable#setCacheEngine(net.jforum.cache.CacheEngine)
+	 */
+	public void setCacheEngine(CacheEngine engine)
+	{
+		cache = engine;
+	}
+	
+	public static int size()
+	{
+		Map m = (Map)cache.get(FQN);
+		return (m != null ? m.size() : 0);
+	}
+	
+	public static int size(int topicId)
+	{
+		List posts = (List)cache.get(FQN, Integer.toString(topicId));
+		return (posts == null ? 0 : posts.size());
+	}
+	
+	public static Collection cachedTopics()
+	{
+		Map m = (Map)cache.get(FQN);
+		if (m == null) {
+			return new ArrayList();
 		}
-	};
+		
+		return m.keySet();
+	}
 		
 	public static List selectAllByTopicByLimit(int topicId, int start, int count) throws Exception 
 	{
-		Integer tid = new Integer(topicId);
+		String tid = Integer.toString(topicId);
 		
-		List topics = (List)cache.get(tid);
-		if (topics == null || topics.size() == 0) {
-			synchronized (cache) {
-				if (!cache.containsKey(tid)) {
-					PostModel pm = DataAccessDriver.getInstance().newPostModel();
-					topics = pm.selectAllByTopic(topicId);
+		List posts = (List)cache.get(FQN, tid);
+		if (posts == null || posts.size() == 0) {
+			PostModel pm = DataAccessDriver.getInstance().newPostModel();
+			posts = pm.selectAllByTopic(topicId);
 			
-					cache.put(tid, topics);
-				}
+			for (Iterator iter = posts.iterator(); iter.hasNext(); ) {
+				PostCommon.preparePostForDisplay((Post)iter.next());
+			}
+	
+			Map topics = (Map)cache.get(FQN);
+			if (topics == null || topics.size() == 0 || topics.size() < CACHE_SIZE) {
+				cache.add(FQN, tid, posts);
+			}
+			else {
+				Map m = new LinkedHashMap(CACHE_SIZE + 1) {
+					protected boolean removeEldestEntry(java.util.Map.Entry eldest) {
+						return this.size() > CACHE_SIZE;
+					}
+				};
+				m.putAll(topics);
+				m.put(tid, posts);
+				
+				cache.add(FQN, m);
 			}
 		}
 		
-		return topics.subList(start, start + count);
+		int size = posts.size();
+		return posts.subList(start, (size < start + count) ? size : start + count);
    }
+	
+	public static void update(int topicId, Post p)
+	{
+		String tid = Integer.toString(topicId);
+		List posts = (List)cache.get(tid);
+		if (posts != null && posts.contains(p)) {
+			posts.set(posts.indexOf(p), p);
+			cache.add(FQN, tid, posts);
+		}
+	}
+	
+	public static void append(int topicId, Post p)
+	{
+		String tid = Integer.toString(topicId);
+		List posts = (List)cache.get(tid);
+		if (posts != null && !posts.contains(p)) {
+			posts.add(p);
+			cache.add(FQN, tid, posts);
+		}
+	}
 	
 	public static void clearCache(int topicId)
 	{
-		Integer tid = new Integer(topicId);
-		if (cache.containsKey(tid)) {
-			synchronized (cache) {
-				cache.remove(tid);
-			}
-		}
+		cache.remove(FQN, Integer.toString(topicId));
 	}
 }
 
