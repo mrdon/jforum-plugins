@@ -10,7 +10,6 @@
 	<classpathentry kind="lib" path="lib/servlet-api.jar"/>
 	<classpathentry kind="lib" path="lib/junit.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/htmlparser-1.5.jar"/>
-	<classpathentry kind="lib" path="WEB-INF/lib/pgsql_driver74.213.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/jcaptcha-core-1.0-RC1.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/jcaptcha-engine-1.0-RC1.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/hsqldb-1.7.3.0.jar"/>
@@ -23,5 +22,6 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/jboss-remoting.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/jboss-system.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/mysql-connector-java-3.1.4-beta-bin.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/postgresql-8.0.309.jdbc3.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>
