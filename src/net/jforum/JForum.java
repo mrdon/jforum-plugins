@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: JForum.java,v 1.2 2004/04/21 23:57:40 rafaelsteil Exp $
+ * $Id: JForum.java,v 1.3 2004/04/24 02:02:56 kencochrane Exp $
  */
 package net.jforum;
 
@@ -424,7 +424,10 @@ public class JForum extends HttpServlet
 			JForum.getContext().put("serverPort", Integer.toString(req.getServerPort()));
 			JForum.getContext().put("I18n", I18n.getInstance());
 			JForum.getContext().put("version", SystemGlobals.getValue("version"));
-			
+            JForum.getContext().put("homeLink",SystemGlobals.getValue("forumLink"));
+            JForum.getContext().put("pageTitle",SystemGlobals.getValue("forum.page.title"));
+            JForum.getContext().put("metaKeywords",SystemGlobals.getValue("forum.page.metatag.keywords"));
+            JForum.getContext().put("metaDescription",SystemGlobals.getValue("forum.page.metatag.description"));
 			// Request
 			ActionServletRequest request = new ActionServletRequest(req);
 
