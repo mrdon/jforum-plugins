@@ -81,7 +81,7 @@ import net.jforum.util.preferences.SystemGlobals;
  *
  * @author Paulo Silveira
  * @author Rafael Steil
- * @version $Id: PooledConnection.java,v 1.6 2004/08/29 23:46:59 rafaelsteil Exp $
+ * @version $Id: PooledConnection.java,v 1.7 2004/08/30 15:32:23 rafaelsteil Exp $
  * */
 
 public class PooledConnection extends DBConnection
@@ -107,7 +107,7 @@ public class PooledConnection extends DBConnection
 	// for sinalizing a release
 	private Object releaseSignal = new Object();
 	
-	private static final boolean debug = true;
+	private static final boolean debug = false;
 	
 	/**
 	 * Private constructor that loads the driver and set the configuration from

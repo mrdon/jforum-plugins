@@ -57,17 +57,17 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: PostModel.java,v 1.8 2004/08/28 14:21:27 rafaelsteil Exp $
+ * @version $Id: PostModel.java,v 1.9 2004/08/30 15:32:24 rafaelsteil Exp $
  */
 public class PostModel extends AutoKeys implements net.jforum.model.PostModel 
 {
 	/**
 	 * @see net.jforum.model.PostModel#selectById(int)
 	 */
-	public Post selectById(int PostId) throws Exception 
+	public Post selectById(int postId) throws Exception 
 	{
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.selectById"));		
-		p.setInt(1, PostId);
+		p.setInt(1, postId);
 		
 		ResultSet rs = p.executeQuery();
 		

@@ -106,10 +106,10 @@ UserModel.getUsernameByEmail = SELECT username FROM jforum_users WHERE user_emai
 # #############
 # PostModel
 # #############
-PostModel.selectById = SELECT p.post_id, topic_id, forum_id, jforum_posts.user_id, post_time, poster_ip, enable_bbcode, enable_html, \
+PostModel.selectById = SELECT p.post_id, topic_id, forum_id, p.user_id, post_time, poster_ip, enable_bbcode, enable_html, \
 	enable_smilies, enable_sig, post_edit_time, post_edit_count, status, pt.post_subject, pt.post_text, username \
 	FROM jforum_posts p, jforum_posts_text pt, jforum_users u \
-	WHERE p.post_id = pt.post_id
+	WHERE p.post_id = pt.post_id \
 	AND p.post_id = ? \
 	AND p.user_id = u.user_id
 
