@@ -58,7 +58,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Sean Mitchell
  * @author Rafael Steil
- * @version $Id: PostRepository.java,v 1.1 2005/02/15 18:16:04 rafaelsteil Exp $
+ * @version $Id: PostRepository.java,v 1.2 2005/02/16 13:46:25 rafaelsteil Exp $
  */
 public class PostRepository
 {
@@ -77,11 +77,11 @@ public class PostRepository
 		
 		List topics = (List)cache.get(tid);
 		if (topics == null || topics.size() == 0) {
-			PostModel pm = DataAccessDriver.getInstance().newPostModel();
-			topics = pm.selectAllByTopic(topicId);
-			
 			synchronized (cache) {
 				if (!cache.containsKey(tid)) {
+					PostModel pm = DataAccessDriver.getInstance().newPostModel();
+					topics = pm.selectAllByTopic(topicId);
+			
 					cache.put(tid, topics);
 				}
 			}
