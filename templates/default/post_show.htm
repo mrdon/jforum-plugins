@@ -33,8 +33,8 @@ function confirmDelete()
 						<#else>
 							<#if !readonly>
 								<span class="nav">&nbsp;
-								<a href="${contextPath}/jforum${extension}?module=posts&amp;action=insert&amp;forum_id=${topic.forumId}"><img src="${contextPath}/templates/${templateName}/images/post.gif" width="82" height="25" border="0" /></a>
-								<a href="${contextPath}/jforum${extension}?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}&start=${thisPage}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" width="82" height="25" border="0" /></a>
+								<a href="${contextPath}/jforum${extension}?module=posts&amp;action=insert&amp;forum_id=${topic.forumId}"><img src="${contextPath}/templates/${templateName}/images/post.gif" border="0" /></a>
+								<a href="${contextPath}/jforum${extension}?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}&start=${thisPage}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" border="0" /></a>
 								</span>
 							<#else>
 								<#assign colspan = "2"/>
@@ -128,21 +128,21 @@ function confirmDelete()
 							<tr>
 								<td width="80%">
 									<span class="postdetails">
-									<img src="${contextPath}/templates/${templateName}/images/icon_minipost.gif" width="12" height="9" />${post.formatedTime}<span class="gen">&nbsp;</span>&nbsp; &nbsp;${I18n.getMessage("PostShow.subject")}: <a name="${post.id}" id="${post.id}">${post.subject?html}</a>
+									<img src="${contextPath}/templates/${templateName}/images/icon_minipost.gif" />${post.formatedTime}<span class="gen">&nbsp;</span>&nbsp; &nbsp;${I18n.getMessage("PostShow.subject")}: <a name="${post.id}" id="${post.id}">${post.subject?html}</a>
 									</span>
 								</td>
 								
 								<td valign="top" width="20%" nowrap="nowrap" align="right">
 								<#if topic.status != STATUS_LOCKED>
-									<a href="${contextPath}/jforum${extension}?module=${moduleName}&amp;action=quote&amp;post_id=${post.id}&start=${thisPage}"><img src="${contextPath}/templates/${templateName}/images/icon_quote.gif" width="59" height="18" border="0" /></a>
+									<a href="${contextPath}/jforum${extension}?module=${moduleName}&amp;action=quote&amp;post_id=${post.id}&start=${thisPage}"><img src="${contextPath}/templates/${templateName}/images/icon_quote.gif" border="0" /></a>
 								</#if>
 
 								<#if ((post.canEdit && topic.status != STATUS_LOCKED) || canEdit)>
-									<a href="${contextPath}/jforum${extension}?module=${moduleName}&amp;action=edit&amp;post_id=${post.id}&start=${thisPage}"><img src="${contextPath}/templates/${templateName}/images/icon_edit.gif" width="59" height="18" border="0" /></a>  
+									<a href="${contextPath}/jforum${extension}?module=${moduleName}&amp;action=edit&amp;post_id=${post.id}&start=${thisPage}"><img src="${contextPath}/templates/${templateName}/images/icon_edit.gif" border="0" /></a>  
 								</#if>
 		
 								<#if canRemove>
-									<a href="${contextPath}/jforum${extension}?module=${moduleName}&amp;action=delete&amp;post_id=${post.id}&start=${thisPage}" onClick="return confirmDelete();"><img src="${contextPath}/templates/${templateName}/images/icon_delete.gif" width="16" height="18" border="0" /></a>  
+									<a href="${contextPath}/jforum${extension}?module=${moduleName}&amp;action=delete&amp;post_id=${post.id}&start=${thisPage}" onClick="return confirmDelete();"><img src="${contextPath}/templates/${templateName}/images/icon_delete.gif" border="0" /></a>  
 								</#if>
 								</td>
 							</tr>
@@ -178,22 +178,22 @@ function confirmDelete()
 						<table height="18" cellspacing="0" cellpadding="0" width="469" border="0">
 							<tr>
 								<td valign="center" nowrap="nowrap"> 
-									<a href="${contextPath}/user/profile/${user.id}${extension}"><img src="${contextPath}/templates/${templateName}/images/icon_profile.gif" width="59" height="18" border="0" /></a>
+									<a href="${contextPath}/user/profile/${user.id}${extension}"><img src="${contextPath}/templates/${templateName}/images/icon_profile.gif" border="0" /></a>
 
 									<#if (user.isViewEmailEnabled() && user.email?exists && user.email?length > 0)>
 										<@utils.convertEmail user.email/>
 									</#if>
 									
 									<#if (user.webSite?exists && user.webSite?length > 0)>
-										<a href="${user.webSite}" target="_new"><img src="${contextPath}/templates/${templateName}/images/icon_www.gif" width="59" height="18" border="0" /></a>
+										<a href="${user.webSite}" target="_new"><img src="${contextPath}/templates/${templateName}/images/icon_www.gif" border="0" /></a>
 									</#if>
 									
 									<#if (user.yim?exists && user.yim?length > 0)>
-										<a href="http://edit.yahoo.com/config/send_webmesg?.target=${user.yim}&amp;.src=pg"><img src="${contextPath}/templates/${templateName}/images/icon_yim.gif" width="59" height="18" border="0" /></a>
+										<a href="http://edit.yahoo.com/config/send_webmesg?.target=${user.yim}&amp;.src=pg"><img src="${contextPath}/templates/${templateName}/images/icon_yim.gif" border="0" /></a>
 									</#if>
 									
 									<#if (user.msnm?exists && user.msnm?length > 0)>
-										<a href="${contextPath}/user/profile/${user.id}${extension}"><img src="${contextPath}/templates/${templateName}/images/icon_msnm.gif" width="59" height="18" border="0" /></a>
+										<a href="${contextPath}/user/profile/${user.id}${extension}"><img src="${contextPath}/templates/${templateName}/images/icon_msnm.gif" border="0" /></a>
 									</#if>
 									
 									<#if (user.icq?exists && user.icq?length > 0)>
@@ -232,8 +232,8 @@ function confirmDelete()
 					<#else>
 						<#if !readonly>
 							<span class="nav">
-							&nbsp;<a href="${contextPath}/jforum${extension}?module=posts&amp;action=insert&amp;forum_id=${topic.forumId}"><img src="${contextPath}/templates/${templateName}/images/post.gif" width="82" height="25" border="0" /></a>
-							&nbsp;<a href="${contextPath}/jforum${extension}?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}&start=${thisPage}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" width="82" height="25" border="0" /></a>
+							&nbsp;<a href="${contextPath}/jforum${extension}?module=posts&amp;action=insert&amp;forum_id=${topic.forumId}"><img src="${contextPath}/templates/${templateName}/images/post.gif" border="0" /></a>
+							&nbsp;<a href="${contextPath}/jforum${extension}?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}&start=${thisPage}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" border="0" /></a>
 							</span>
 						<#else>
 							<#assign colspan = "2"/>
