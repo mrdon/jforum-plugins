@@ -42,9 +42,11 @@
  */
 package net.jforum.entities;
 
+import java.util.Date;
+
 /**
  * @author Rafael Steil
- * @version $Id: Karma.java,v 1.2 2005/01/14 21:11:49 rafaelsteil Exp $
+ * @version $Id: Karma.java,v 1.3 2005/02/16 20:15:52 franklin_samir Exp $
  */
 public class Karma
 {
@@ -54,6 +56,7 @@ public class Karma
 	private int postUserId;
 	private int fromUserId;
 	private int points;
+	private Date rateDate;
 	
 	/**
 	 * @return Returns the topicId.
@@ -150,4 +153,20 @@ public class Karma
 	{
 		this.postId = postId;
 	}
+	
+	/**
+	 * @return Returns the date of the vote.
+	 */
+    public Date getRateDate() 
+    {
+        return rateDate;
+    }
+    
+    /**
+	 * @param dateDate The date of the vote.
+	 */
+    public void setRateDate(Date rateDate) 
+    {
+        this.rateDate = rateDate;
+    }
 }
