@@ -13,10 +13,10 @@ SET @MODERATION_GROUP_ID = LAST_INSERT_ID();
 # 
 # Users
 #
-INSERT INTO jforum_users ( username, user_password ) VALUES ('Anonymous', 'nopass');
+INSERT INTO jforum_users ( username, user_password, user_regdate ) VALUES ('Anonymous', 'nopass', NOW());
 SET @ANONYMOUS_ID = LAST_INSERT_ID();
 
-INSERT INTO jforum_users ( username, user_password ) VALUES ('Admin', '21232f297a57a5a743894a0e4a801fc3');
+INSERT INTO jforum_users ( username, user_password, user_regdate ) VALUES ('Admin', '21232f297a57a5a743894a0e4a801fc3', NOW());
 SET @ADMIN_ID = LAST_INSERT_ID();
 
 #
