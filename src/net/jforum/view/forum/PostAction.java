@@ -89,7 +89,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.46 2005/01/19 22:41:42 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.47 2005/01/19 23:45:09 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -423,12 +423,10 @@ public class PostAction extends Command {
 			pm.update(p);
 			
 			// Attachments
-			String[] attachIds = this.request.getParameterValues("attach_ids");
-			if (attachIds == null) {
-				String s = this.request.getParameter("attach_ids");
-				if (s != null) {
-					attachIds = new String[] { s };
-				}
+			String[] attachIds = null;
+			String s = this.request.getParameter("attach_ids");
+			if (s != null) {
+				attachIds = s.split(",");
 			}
 			
 			if (attachIds != null) {
@@ -436,11 +434,18 @@ public class PostAction extends Command {
 				
 				// Check for attachments to remove
 				List deleteList = new ArrayList();
-				String[] delete = this.request.getParameterValues("deleteAttach");
+				String[] delete = null;
+				s = this.request.getParameter("delete_attach");
+				
+				if (s != null) {
+					delete = s.split(",");
+				}
 				
 				if (delete != null) {
 					for (int i = 0; i < delete.length; i++) {
-						am.removeAttachment(Integer.parseInt(delete[i]));
+						if (delete[i] != null && !delete[i].equals("")) {
+							am.removeAttachment(Integer.parseInt(delete[i]), p.getId());
+						}
 					}
 					
 					deleteList = Arrays.asList(delete);
@@ -448,7 +453,8 @@ public class PostAction extends Command {
 				
 				// Now update
 				for (int i = 0; i < attachIds.length; i++) {
-					if (deleteList.contains(attachIds[i])) {
+					if (deleteList.contains(attachIds[i]) 
+							|| attachIds[i] == null || attachIds[i].equals("")) {
 						continue;
 					}
 					

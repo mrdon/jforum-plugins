@@ -208,9 +208,10 @@ function confirmDelete()
 					<td class="${rowColor}" valign="top" height="100%" width="100%">
 						<table cellspacing="0" cellpadding="0" width="100%" border="0" height="100%">
 							<tr>
-								<td colspan="2" valign="top">
+								<td colspan="2" valign="top" height="100%">
 									<span class="postbody">
 									${post.text}
+									</span>
 
 									<#if post.hasAttachments()>
 										<#assign attachments = am.getAttachments(post.id)/>
@@ -236,7 +237,7 @@ function confirmDelete()
 														<#if (a.info.filesize < 1024)>
 															${a.info.filesize} Bytes
 														<#else>
-															${a.info.filesize / 1024} KBytes
+															${a.info.filesize / 1024} kb
 														</#if>
 														</span>
 													</td>
@@ -250,7 +251,6 @@ function confirmDelete()
 											</p>
 										</#list>
 									</#if>
-									</span>
 								</td>
 							</tr>
 									

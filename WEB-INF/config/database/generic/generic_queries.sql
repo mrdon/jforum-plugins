@@ -497,7 +497,7 @@ AttachmentModel.addAttachmentInfo = INSERT INTO jforum_attach_desc (attach_id, p
 	
 AttachmentModel.updatePost = UPDATE jforum_posts SET attach = ? WHERE post_id = ?
 
-AttachmentModel.selectExtension = SELECT e.extension_id, e.extension_group_id, e.extension, e.comment, e.upload_icon, e.allow, g.upload_icon grup_icon \
+AttachmentModel.selectExtension = SELECT e.extension_id, e.extension_group_id, e.extension, e.comment, e.upload_icon, e.allow, g.upload_icon group_icon \
 	FROM jforum_extensions e, jforum_extension_groups g \
 	WHERE e.$field = ? \
 	AND e.extension_group_id = g.extension_group_id
@@ -515,3 +515,6 @@ AttachmentModel.selectAttachmentById = SELECT a.attach_id, a.user_id, a.post_id,
 	AND a.attach_id = d.attach_id
 	
 AttachmentModel.updateAttachment = UPDATE jforum_attach_desc SET comment = ?, download_count = ? WHERE attach_id = ?
+AttachmentModel.removeAttachment = DELETE FROM jforum_attach WHERE attach_id = ?
+AttachmentModel.removeAttachmentInfo = DELETE FROM jforum_attach_desc WHERE attach_id = ?
+AttachmentModel.countPostAttachments = SELECT COUNT(1) FROM jforum_attach WHERE post_id = ?

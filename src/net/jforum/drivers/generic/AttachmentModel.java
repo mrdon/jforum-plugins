@@ -58,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentModel.java,v 1.7 2005/01/19 20:43:45 rafaelsteil Exp $
+ * @version $Id: AttachmentModel.java,v 1.8 2005/01/19 23:45:08 rafaelsteil Exp $
  */
 public class AttachmentModel extends AutoKeys implements net.jforum.model.AttachmentModel
 {
@@ -377,21 +377,47 @@ public class AttachmentModel extends AutoKeys implements net.jforum.model.Attach
 		p.executeUpdate();
 		p.close();
 		
-		p = JForum.getConnection().prepareStatement(
+		this.updatePost(a.getPostId(), 1);
+	}
+	
+	protected void updatePost(int postId, int count) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(
 				SystemGlobals.getSql("AttachmentModel.updatePost"));
-		p.setInt(1, 1);
-		p.setInt(2, a.getPostId());
+		p.setInt(1, count);
+		p.setInt(2, postId);
 		p.executeUpdate();
 		p.close();
 	}
 	
 	/**
-	 * @see net.jforum.model.AttachmentModel#removeAttachment(int)
+	 * @see net.jforum.model.AttachmentModel#removeAttachment(int, int)
 	 */
-	public void removeAttachment(int id) throws Exception
+	public void removeAttachment(int id, int postId) throws Exception
 	{
-		// TODO Auto-generated method stub
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("AttachmentModel.removeAttachmentInfo"));
+		p.setInt(1, id);
+		p.executeUpdate();
+		p.close();
+		
+		p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("AttachmentModel.removeAttachment"));
+		p.setInt(1, id);
+		p.executeUpdate();
+		p.close();
+		
+		p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("AttachmentModel.countPostAttachments"));
+		p.setInt(1, postId);
 
+		ResultSet rs = p.executeQuery();
+		if (rs.next()) {
+			this.updatePost(postId, rs.getInt(1));
+		}
+		
+		rs.close();
+		p.close();
 	}
 	
 	/**

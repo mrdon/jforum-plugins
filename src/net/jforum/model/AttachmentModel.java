@@ -51,7 +51,7 @@ import net.jforum.entities.QuotaLimit;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentModel.java,v 1.6 2005/01/19 20:32:02 rafaelsteil Exp $
+ * @version $Id: AttachmentModel.java,v 1.7 2005/01/19 23:45:07 rafaelsteil Exp $
  */
 public interface AttachmentModel
 {
@@ -76,9 +76,10 @@ public interface AttachmentModel
 	 * Rovemos an attachment.
 	 * 
 	 * @param id The attachment's id to remove
+	 * @param postId the post id
 	 * @throws Exception
 	 */
-	public void removeAttachment(int id) throws Exception;
+	public void removeAttachment(int id, int postId) throws Exception;
 	
 	/**
 	 * Gets the attachments of some message.
