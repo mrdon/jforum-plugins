@@ -84,8 +84,8 @@
 		<#assign o = config.getProperty("captcha.registration")/>
 		<span class='gen'>
 			<select name="p_captcha.registration">
-				<option value="true" <#if o == "true">selected</#if>>True</option>
-				<option value="false" <#if o == "false">selected</#if>>False</option>
+				<option value="true" <#if o == "true">selected</#if>>${I18n.getMessage("True")}</option>
+				<option value="false" <#if o == "false">selected</#if>>${I18n.getMessage("False")}</option>
 			</select>
 		</span>
 	</td>
@@ -97,8 +97,8 @@
 		<#assign o = config.getProperty("registration.enabled")/>
 		<span class='gen'>
 			<select name="p_registration.enabled">
-				<option value="true" <#if o == "true">selected</#if>>True</option>
-				<option value="false" <#if o == "false">selected</#if>>False</option>
+				<option value="true" <#if o == "true">selected</#if>>${I18n.getMessage("True")}</option>
+				<option value="false" <#if o == "false">selected</#if>>${I18n.getMessage("False")}</option>
 			</select>
 		</span>
 	</td>
@@ -165,8 +165,8 @@
 		<#assign o = config.getProperty("rss.enabled")/>
 		<span class='gen'>
 			<select name="p_rss.enabled">
-				<option value="true" <#if o == "true">selected</#if>>True</option>
-				<option value="false" <#if o == "false">selected</#if>>False</option>
+				<option value="true" <#if o == "true">selected</#if>>${I18n.getMessage("True")}</option>
+				<option value="false" <#if o == "false">selected</#if>>${I18n.getMessage("False")}</option>
 			</select>
 		</span>
 	</td>
@@ -209,8 +209,8 @@
 	<td class='row1' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.SmtpAuth")}</span></td>
 	<td class='row2' width="38%">
 		<select name="p_mail.smtp.auth">
-			<option value="false" <#if config.getProperty("mail.smtp.auth") == "false">selected</#if>>False</option>
-			<option value="true" <#if config.getProperty("mail.smtp.auth") == "true">selected</#if>>True</option>
+			<option value="false" <#if config.getProperty("mail.smtp.auth") == "false">selected</#if>>${I18n.getMessage("False")}</option>
+			<option value="true" <#if config.getProperty("mail.smtp.auth") == "true">selected</#if>>${I18n.getMessage("True")}</option>
 		</select>
 	</td>
 </tr>
@@ -226,8 +226,8 @@
 	<td class='row1' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.EmailNotifyAnswers")}</span></td>
 	<td class='row1' width="38%">
 		<select name="p_mail.notify.answers">
-			<option value="false" <#if config.getProperty("mail.notify.answers") == "false">selected</#if>>False</option>
-			<option value="true" <#if config.getProperty("mail.notify.answers") == "true">selected</#if>>True</option>
+			<option value="false" <#if config.getProperty("mail.notify.answers") == "false">selected</#if>>${I18n.getMessage("False")}</option>
+			<option value="true" <#if config.getProperty("mail.notify.answers") == "true">selected</#if>>${I18n.getMessage("True")}</option>
 		</select>
 	</td>
 </tr>
@@ -235,8 +235,8 @@
 	<td class='row1' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.UserEmailAuth")}</span></td>
 	<td class='row1' width="38%">
 		<select name="p_mail.user.email.auth">
-			<option value="false" <#if config.getProperty("mail.user.email.auth") == "false">selected</#if>>False</option>
-			<option value="true" <#if config.getProperty("mail.user.email.auth") == "true">selected</#if>>True</option>
+			<option value="false" <#if config.getProperty("mail.user.email.auth") == "false">selected</#if>>${I18n.getMessage("False")}</option>
+			<option value="true" <#if config.getProperty("mail.user.email.auth") == "true">selected</#if>>${I18n.getMessage("True")}</option>
 		</select>
 	</td>
 </tr>
