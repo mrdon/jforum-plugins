@@ -76,7 +76,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.15 2005/03/26 04:11:22 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.16 2005/04/01 14:38:38 samuelyung Exp $
  */
 public class AttachmentCommon
 {
@@ -320,7 +320,12 @@ public class AttachmentCommon
 		
 		return this.am.selectAttachments(postId);
 	}
-	
+
+        public boolean isPhysicalDownloadMode(int extensionGroupId) throws Exception
+        {
+                return this.am.isPhysicalDownloadMode(extensionGroupId);
+        }
+
 	public void deleteAttachments(int postId, int forumId) throws Exception
 	{
 		// Attachments

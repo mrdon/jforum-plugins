@@ -551,3 +551,24 @@ CREATE TABLE jforum_attach_quota (
 	quota_limit_id INT NOT NULL,
 	KEY(group_id)
 ) TYPE=InnoDB;
+
+--
+-- Table structure for table 'jforum_banner'
+--
+DROP TABLE IF EXISTS jforum_banner;
+CREATE TABLE jforum_banner (
+	banner_id MEDIUMINT(8) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	name VARCHAR(90),
+	placement SMALLINT(1) NOT NULL DEFAULT '0',
+	description VARCHAR(30),
+	clicks MEDIUMINT(8) NOT NULL DEFAULT '0',
+	views MEDIUMINT(8) NOT NULL DEFAULT '0',
+	url VARCHAR(90),
+	weight TINYINT(1) NOT NULL DEFAULT '50',
+	active TINYINT(1) NOT NULL DEFAULT '0',
+	comment VARCHAR(50),
+	type MEDIUMINT(5) NOT NULL DEFAULT '0',
+	width MEDIUMINT(5) NOT NULL DEFAULT '0',
+	height MEDIUMINT(5) NOT NULL DEFAULT '0',
+	KEY(banner_id)
+) TYPE=InnoDB;

@@ -58,7 +58,7 @@ package net.jforum.dao;
  * analise, look at <code>net.jforum.drivers.generic</code> package.
  * 
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.2 2005/03/26 04:10:33 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.3 2005/04/01 14:33:37 samuelyung Exp $
  */
 public abstract class DataAccessDriver 
 {
@@ -236,4 +236,11 @@ public abstract class DataAccessDriver
 	 * @return <code>link net.jforum.model.ScheduledSearchIndexerModel</code> instance
 	 */
 	public abstract net.jforum.dao.ScheduledSearchIndexerDAO newScheduledSearchIndexerDAO();
+
+	/**
+	 * Gets an {@link net.jforum.dao.BannerDAO} instance.
+	 *
+	 * @return <code>net.jforum.dao.BannerDAO</code> instance.
+	 */
+	public abstract net.jforum.dao.BannerDAO newBannerDAO();
 }

@@ -52,7 +52,7 @@ import net.jforum.entities.QuotaLimit;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentDAO.java,v 1.2 2005/03/26 04:10:35 rafaelsteil Exp $
+ * @version $Id: AttachmentDAO.java,v 1.3 2005/04/01 14:33:17 samuelyung Exp $
  */
 public interface AttachmentDAO
 {
@@ -261,4 +261,12 @@ public interface AttachmentDAO
 	 * @throws Exception
 	 */
 	public AttachmentExtension selectExtension(String extension) throws Exception;
+
+	/**
+	 * Gets the download mode by the extension group id
+	 * @param extensionGroupId extension group id
+	 * @return true = physical download mode; false = inline download mode
+	 * @throws Exception
+	 */
+	public boolean isPhysicalDownloadMode(int extensionGroupId) throws Exception;
 }

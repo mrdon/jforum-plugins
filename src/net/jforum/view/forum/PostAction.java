@@ -90,7 +90,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.72 2005/03/28 21:16:36 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.73 2005/04/01 14:37:29 samuelyung Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -858,8 +858,16 @@ public class PostAction extends Command {
 		
 		FileInputStream fis = new FileInputStream(filename);
 		OutputStream os = response.getOutputStream();
+		
+		if(am.isPhysicalDownloadMode(a.getInfo().getExtension().getExtensionGroupId()))
+		{
+			this.response.setContentType("application/octet-stream");
+		}
+		else
+		{
+			this.response.setContentType(a.getInfo().getMimetype());
+		}
 
-		this.response.setContentType("application/octet-stream");
 		this.response.setHeader("Content-Disposition", "attachment; filename=\"" + a.getInfo().getRealFilename() + "\";");
 		this.response.setContentLength((int)a.getInfo().getFilesize());
 		

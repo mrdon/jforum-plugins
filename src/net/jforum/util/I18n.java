@@ -64,7 +64,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: I18n.java,v 1.24 2005/03/07 20:40:28 rafaelsteil Exp $
+ * @version $Id: I18n.java,v 1.25 2005/04/01 14:36:15 samuelyung Exp $
  */
 public class I18n
 {
@@ -76,6 +76,7 @@ public class I18n
 	private static List watching = new ArrayList();
 	public static final String CANNOT_DELETE_GROUP = "CannotDeleteGroup";
 	public static final String CANNOT_DELETE_CATEGORY = "CannotDeleteCategory";
+	public static final String CANNOT_DELETE_BANNER = "CannotDeleteBanner";
 	private static final Logger logger = Logger.getLogger(I18n.class);
 
 	private I18n() {}

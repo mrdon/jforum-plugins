@@ -657,3 +657,28 @@ CREATE TABLE jforum_attach_quota (
 
 CREATE INDEX idx_aq_group ON jforum_attach_quota(group_id);
 CREATE INDEX idx_aq_ql ON jforum_attach_quota(quota_limit_id);
+
+--
+-- Table structure for table 'jforum_banner'
+--
+CREATE SEQUENCE jforum_banner_seq
+INCREMENT BY 1
+    START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
+    CACHE 200 ORDER;
+
+CREATE TABLE jforum_banner (
+	banner_id NUMBER(10) NOT NULL,
+	name VARCHAR(90),
+	placement NUMBER(1) DEFAULT 0 NOT NULL,
+	description VARCHAR(30),
+	clicks NUMBER(8) DEFAULT 0 NOT NULL,
+	views NUMBER(8) DEFAULT 0 NOT NULL,
+	url VARCHAR(90),
+	weight NUMBER(2) DEFAULT 50 NOT NULL,
+	active NUMBER(1) DEFAULT 0 NOT NULL,
+	comment VARCHAR(50),
+	type NUMBER(5) DEFAULT 0 NOT NULL,
+	width NUMBER(5) DEFAULT 0 NOT NULL,
+	height NUMBER(5) DEFAULT 0 NOT NULL,
+	PRIMARY KEY(banner_id)
+);

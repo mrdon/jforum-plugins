@@ -61,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericAttachmentDAO.java,v 1.2 2005/03/26 04:10:47 rafaelsteil Exp $
+ * @version $Id: GenericAttachmentDAO.java,v 1.3 2005/04/01 14:35:08 samuelyung Exp $
  */
 public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.AttachmentDAO
 {
@@ -590,4 +590,26 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
 		
 		return e;
 	}
+	
+	public boolean isPhysicalDownloadMode(int extensionGroupId) throws Exception
+	{
+		boolean result = true;
+		
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("AttachmentModel.isPhysicalDownloadMode"));
+		
+		p.setInt(1, extensionGroupId);
+		
+		ResultSet rs = p.executeQuery();
+		if (rs.next())
+		{
+			result = (rs.getInt("download_mode") == 2);
+		}
+		
+		rs.close();
+		p.close();
+		
+		return result;
+	}
+
 }

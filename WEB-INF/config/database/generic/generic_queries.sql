@@ -557,6 +557,8 @@ AttachmentModel.extensionsForSecurity = SELECT e.extension, e.allow, eg.allow AS
 	FROM jforum_extensions e, jforum_extension_groups eg \
 	WHERE e.extension_group_id = eg.extension_group_id
 
+AttachmentModel.isPhysicalDownloadMode = SELECT download_mode FROM jforum_extension_groups WHERE extension_group_id = ?
+
 AttachmentModel.selectAttachments = SELECT a.attach_id, a.user_id, a.post_id, a.privmsgs_id, d.mimetype, d.physical_filename, d.real_filename, \
 	d.download_count, d.description, d.filesize, d.upload_time, d.extension_id \
 	FROM jforum_attach a, jforum_attach_desc d \
@@ -603,3 +605,24 @@ ModerationModel.topicsByForum = SELECT p.post_id, t.topic_id, t.topic_title, p.u
 	AND p.need_moderate = 1 \
 	ORDER BY t.topic_id, post_time ASC \
 	LIMIT ?, ?
+
+# #############
+# BannerDAO
+# #############
+BannerDAO.selectById = SELECT banner_id, name, placement, description, clicks, views, url, weight, active, comment, type, width, height \
+	FROM jforum_banner \
+	WHERE banner_id = ?
+	
+BannerDAO.selectAll = SELECT banner_id, name, placement, description, clicks, views, url, weight, active, comment, type, width, height \
+	FROM jforum_banner \
+	ORDER BY comment
+	
+BannerDAO.canDelete = SELECT COUNT(1) AS total FROM jforum_banner WHERE banner_id = ?
+BannerDAO.delete = DELETE FROM jforum_banner WHERE banner_id = ?
+
+BannerDAO.update = UPDATE jforum_banner SET name = ?, placement = ?, description = ?, clicks = ?, \
+	views = ?, url = ?, weight = ?, active = ?, comment = ?, type = ?, width = ?, height = ? \
+	WHERE banner_id = ?
+
+BannerDAO.addNew = INSERT INTO jforum_banner (name, placement, description, clicks, views, url, weight, \
+	active, comment, type, width, height) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)

@@ -129,6 +129,9 @@ DROP TABLE [jforum_attach_desc]
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'[jforum_attach_quota]') AND OBJECTPROPERTY(id, N'IsUserTable') = 1)
 DROP TABLE [jforum_attach_quota]
 
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'[jforum_banner]') AND OBJECTPROPERTY(id, N'IsUserTable') = 1)
+DROP TABLE [jforum_banner]
+
 CREATE TABLE [jforum_banlist] (
 	[banlist_id] [bigint] IDENTITY (1, 1) PRIMARY KEY CLUSTERED NOT NULL ,
 	[user_id] [bigint] DEFAULT (0) NOT NULL ,
@@ -492,6 +495,21 @@ CREATE TABLE [jforum_attach_quota] (
 	[quota_limit_id] [INT] NOT NULL
 ) ON [PRIMARY]
 
+CREATE TABLE [jforum_banner] (
+	[banner_id] [INT] IDENTITY (1, 1) PRIMARY KEY CLUSTERED NOT NULL,
+	[name] [VARCHAR](90),
+	[placement] [TINYINT] DEFAULT (0) NOT NULL,
+	[description] [VARCHAR](30),
+	[clicks] [INT] DEFAULT (0) NOT NULL,
+	[views] [INT] DEFAULT (0) NOT NULL,
+	[url] [VARCHAR](90),
+	[weight] [INT] DEFAULT (50) NOT NULL,
+	[active] [TINYINT] DEFAULT (0) NOT NULL,
+	[comment] [VARCHAR](50),
+	[type] [INT] DEFAULT (0) NOT NULL,
+	[width] [INT] DEFAULT (0) NOT NULL,
+	[height] [INT] DEFAULT (0) NOT NULL,
+) ON [PRIMARY]
 
  CREATE  INDEX [forum_id] ON [jforum_posts]([forum_id]) ON [PRIMARY]
  CREATE  INDEX [idx_role] ON [jforum_role_values]([role_id]) ON [PRIMARY]
