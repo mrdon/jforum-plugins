@@ -71,7 +71,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.20 2004/11/30 01:18:46 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.21 2004/12/18 15:15:30 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -267,5 +267,10 @@ public class ForumAction extends Command
 		JForum.getRequest().addParameter("sort_by", "t.topic_time");
 		JForum.getRequest().addParameter("sort_dir", "DESC");
 		new SearchAction().search();
+	}
+	
+	public void pingSession()
+	{
+		this.setTemplateName("pingSession.htm");
 	}
 }
