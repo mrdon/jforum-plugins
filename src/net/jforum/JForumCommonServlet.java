@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, 2004 Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -73,7 +73,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumCommonServlet.java,v 1.7 2004/10/05 12:32:37 marcwick Exp $
+ * @version $Id: JForumCommonServlet.java,v 1.8 2004/10/10 16:46:26 rafaelsteil Exp $
  */
 public class JForumCommonServlet extends HttpServlet {
     private static Properties modulesMapping;
@@ -220,12 +220,17 @@ public class JForumCommonServlet extends HttpServlet {
 
         getResponse().addCookie(cookie);
     }
+    
+    public static void setThreadLocalData(DataHolder dataHolder)
+    {
+    	localData.set(dataHolder);
+    }
 
     /**
      * Request information data holder. Stores information/data like the user request and response,
      * his database connection and any other kind of data needed.
      */
-    protected static class DataHolder {
+    public static class DataHolder {
         /**
          * Database connection
          */
