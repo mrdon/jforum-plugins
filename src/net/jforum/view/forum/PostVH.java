@@ -59,6 +59,7 @@ import net.jforum.model.ForumModel;
 import net.jforum.model.PostModel;
 import net.jforum.model.TopicModel;
 import net.jforum.model.UserModel;
+import net.jforum.model.security.UserSecurityModel;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.RankingRepository;
 import net.jforum.repository.SecurityRepository;
@@ -74,7 +75,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostVH.java,v 1.24 2004/07/24 16:07:38 jamesyong Exp $
+ * @version $Id: PostVH.java,v 1.25 2004/07/25 08:17:06 jamesyong Exp $
  */
 public class PostVH extends Command 
 {
@@ -115,6 +116,7 @@ public class PostVH extends Command
 		
 		ArrayList posts = pm.selectAllByTopicByLimit(topicId, start, count);
 		ArrayList helperList = new ArrayList();
+		ArrayList isModeratorList = new ArrayList();
 
 		int userId = SessionFacade.getUserSession().getUserId();
 		int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
@@ -132,6 +134,17 @@ public class PostVH extends Command
 				p.setCanEdit(true);
 			}
 			
+			UserSecurityModel umodel = DataAccessDriver.getInstance().newUserSecurityModel();
+			pc = new PermissionControl();
+			pc.setSecurityModel(umodel);
+			pc.setRoles(umodel.loadRoles(p.getUserId()));
+			if 	((pc.canAccess(SecurityConstants.PERM_MODERATION)) &&
+				(pc.canAccess(SecurityConstants.PERM_MODERATION_FORUMS, Integer.toString(topic.getForumId())))){
+				isModeratorList.add("true");
+			}
+			else{
+				isModeratorList.add("false");
+			}
 			helperList.add(PostCommon.preparePostText(p));
 		}
 		
@@ -144,12 +157,13 @@ public class PostVH extends Command
 		JForum.getContext().put("topic", topic);
 		JForum.getContext().put("rank", new RankingRepository());
 		JForum.getContext().put("posts",  helperList);
+		JForum.getContext().put("postsIsModerator",  isModeratorList);
 		JForum.getContext().put("forum", ForumRepository.getForum(topic.getForumId()));
 		JForum.getContext().put("um", um);
 		JForum.getContext().put("topicId", new Integer(topicId));
 		JForum.getContext().put("watching", tm.isUserSubscribed(topicId, SessionFacade.getUserSession().getUserId()));
 		JForum.getContext().put("pageTitle", SystemGlobals.getValue(ConfigKeys.FORUM_NAME) +" - "+ topic.getTitle());
-		JForum.getContext().put("isModerator", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_FORUMS, Integer.toString(topic.getForumId())));
+		JForum.getContext().put("isModerator", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION)& SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_FORUMS, Integer.toString(topic.getForumId())));
 		
 		// Topic Status
 		JForum.getContext().put("STATUS_LOCKED", new Integer(Topic.STATUS_LOCKED));
