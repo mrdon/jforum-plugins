@@ -28,13 +28,13 @@
 	<input type="hidden" name="start" value="${start}" />
   
 	<tr>
-		<td class="gen"><b>ID</b></td>
-		<td class="gen"><b>Username</b></td>
+		<td class="gen"><b>${I18n.getMessage("User.id")}</b></td>
+		<td class="gen"><b>${I18n.getMessage("User.username")}</b></td>
 		<td class="gen">&nbsp;</td>
 		<td class="gen">&nbsp;</td>
 		<td class="gen">&nbsp;</td>
-		<td class="gen" width="5%" align="center"><b>Lock</b></td>
-		<td class="gen" width="5%" align="center"><b>Unlock</b></td>
+		<td class="gen" width="5%" align="center"><b>${I18n.getMessage("Lock")}</b></td>
+		<td class="gen" width="5%" align="center"><b>${I18n.getMessage("Unlock")}</b></td>
 	</tr>
 
 	<#list users as user>
