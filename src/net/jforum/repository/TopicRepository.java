@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: TopicRepository.java,v 1.11 2005/02/03 12:37:41 rafaelsteil Exp $
+ * @version $Id: TopicRepository.java,v 1.12 2005/02/16 17:53:33 andowson Exp $
  */
 public class TopicRepository implements Cacheable
 {
@@ -131,7 +131,7 @@ public class TopicRepository implements Cacheable
 		List l = (List)cache.get(FQN, RECENT);
 		if (l == null || l.size() == 0
 				|| !SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
-			loadMostRecentTopics();
+			l = loadMostRecentTopics();
 		}
 		
 		return new ArrayList(l);
