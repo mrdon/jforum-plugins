@@ -65,7 +65,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Sean Mitchell
  * @author Rafael Steil
- * @version $Id: PostRepository.java,v 1.5 2005/03/03 19:20:10 rafaelsteil Exp $
+ * @version $Id: PostRepository.java,v 1.6 2005/03/06 23:04:24 rafaelsteil Exp $
  */
 public class PostRepository implements Cacheable
 {
@@ -122,15 +122,16 @@ public class PostRepository implements Cacheable
 				cache.add(FQN, tid, posts);
 			}
 			else {
-				Map m = new LinkedHashMap(CACHE_SIZE + 1) {
-					protected boolean removeEldestEntry(java.util.Map.Entry eldest) {
-						return this.size() > CACHE_SIZE;
-					}
-				};
-				m.putAll(topics);
-				m.put(tid, posts);
+				if (!(topics instanceof LinkedHashMap)) {
+					topics = new LinkedHashMap(topics) {
+						protected boolean removeEldestEntry(java.util.Map.Entry eldest) {
+							return this.size() > CACHE_SIZE;
+						}
+					};
+				}
 				
-				cache.add(FQN, m);
+				topics.put(tid, posts);
+				cache.add(FQN, topics);
 			}
 		}
 		
