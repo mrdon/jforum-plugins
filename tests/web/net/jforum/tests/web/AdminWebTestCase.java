@@ -49,7 +49,7 @@ import net.jforum.util.I18n;
 
 /**
  * @author Marc Wick
- * @version $Id: AdminWebTestCase.java,v 1.2 2004/09/22 13:43:23 marcwick Exp $
+ * @version $Id: AdminWebTestCase.java,v 1.3 2004/09/28 14:59:22 marcwick Exp $
  */
 public class AdminWebTestCase extends AbstractWebTestCase {
 
@@ -58,7 +58,7 @@ public class AdminWebTestCase extends AbstractWebTestCase {
 	}
 
 	public void testSetupCategoriesAndForums() {
-		beginAt("/list.page");
+		beginAt(FORUMS_LIST);
 		login("Admin", "admin");
 		clickLinkWithText("Admin Control Panel");
 
@@ -79,7 +79,7 @@ public class AdminWebTestCase extends AbstractWebTestCase {
 		clickButton("btn_insert");
 		gotoFrame("main");
 		setFormElement("forum_name", "a test forum");
-		setFormElement("categories_id", "0");
+		setFormElement("categories_id", "1");
 		setFormElement("groups", "1");
 		setFormElement("description",
 				"a forum automatically generated for regression tests");
@@ -102,8 +102,8 @@ public class AdminWebTestCase extends AbstractWebTestCase {
 	 * workaround does not solve the problem.
 	 *  
 	 */
-	public void testWorkaround() {
-		beginAt("/list.page");
+	public void nottestWorkaround() {
+		beginAt(FORUMS_LIST);
 		login("Admin", "admin");
 		clickLinkWithText("Admin Control Panel");
 		gotoFrame("leftFrame");
@@ -122,6 +122,8 @@ public class AdminWebTestCase extends AbstractWebTestCase {
 		gotoFrame("leftFrame");
 		clickLinkWithText("Users");
 		gotoFrame("main");
+		assertFormPresent("formusersearch");
+		submit();
 		clickLinkWithText(I18n.getMessage(language, "Permissions"), 0);
 		gotoFrame("main");
 		setFormElement("perm_administration$single", "allow");
@@ -136,6 +138,9 @@ public class AdminWebTestCase extends AbstractWebTestCase {
 		setFormElement("perm_moderation_topic_move$single", "allow");
 		setFormElement("perm_moderation_topic_lockUnlock$single", "allow");
 		setFormElement("perm_read_only_forums", "all");
+		submit();
+		
+		assertFormPresent("formusersearch");
 		submit();
 		clickLinkWithText(I18n.getMessage(language, "Permissions"), 1);
 		gotoFrame("main");

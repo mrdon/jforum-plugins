@@ -49,12 +49,14 @@ import net.jforum.util.I18n;
 
 /**
  * @author Marc Wick
- * @version $Id: UserWebTestCase.java,v 1.5 2004/09/24 20:56:36 rafaelsteil Exp $
+ * @version $Id: UserWebTestCase.java,v 1.6 2004/09/28 14:59:22 marcwick Exp $
  */
 public class UserWebTestCase extends AbstractWebTestCase {
 
 	private static String lastTestuser;
+
 	public static String defaultTestuser = "defaultTestuser";
+
 	public static String password = "testpassword";
 
 	public UserWebTestCase(String name) throws IOException {
@@ -62,7 +64,7 @@ public class UserWebTestCase extends AbstractWebTestCase {
 	}
 
 	public void testRegisterDefaultUser() {
-		beginAt("/forums/list.page");
+		beginAt(FORUMS_LIST);
 		assertLinkPresent("register");
 		clickLink("register");
 		assertFormPresent("formregister");
@@ -74,7 +76,7 @@ public class UserWebTestCase extends AbstractWebTestCase {
 	}
 
 	public void testRegisterNewUser() {
-		beginAt("/forums/list.page");
+		beginAt(FORUMS_LIST);
 		clickLinkWithText(I18n.getMessage(language, "ForumBase.register"));
 		lastTestuser = "testuser" + new Random().nextInt(1000000);
 		setFormElement("username", lastTestuser);
@@ -86,9 +88,8 @@ public class UserWebTestCase extends AbstractWebTestCase {
 	}
 
 	public void testChangePassword() {
-		beginAt("/forums/list.page");
-		assertLinkPresent("logout");
-		//login(lastTestuser, "testpassword1");
+		beginAt(FORUMS_LIST);
+		login(lastTestuser, "testpassword1");
 		clickLinkWithText(I18n.getMessage(language, "ForumBase.profile"));
 		setFormElement("current_password", "testpassword1");
 		setFormElement("new_password", password);

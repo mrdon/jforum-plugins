@@ -51,25 +51,27 @@ import com.dumbster.smtp.SmtpMessage;
 
 /**
  * @author Marc Wick
- * @version $Id: PostWebTestCase.java,v 1.2 2004/09/22 13:43:23 marcwick Exp $
+ * @version $Id: PostWebTestCase.java,v 1.3 2004/09/28 14:59:22 marcwick Exp $
  */
 public class PostWebTestCase extends AbstractWebTestCase {
+
 
 	public PostWebTestCase(String name) throws IOException {
 		super(name);
 	}
 
 	public void testAnonymousPosting() {
-		beginAt("/list.page");
+		beginAt(FORUMS_LIST);
 		clickLinkWithText("a test forum", 0);
 		clickLinkWithImage("post.gif");
+		dumpResponse(System.out);
 		setFormElement("subject", "subject of test posting");
 		setFormElement("message", "message of test posting");
 		submit("post");
 	}
 
 	public void testAnonymousReply() {
-		beginAt("/list.page");
+		beginAt(FORUMS_LIST);
 		clickLinkWithText("a test forum", 0);
 		clickLinkWithText("subject of test posting", 0);
 		clickLinkWithImage("reply.gif");
@@ -79,7 +81,7 @@ public class PostWebTestCase extends AbstractWebTestCase {
 	}
 
 	public void testNewDefaultUserPosting() {
-		beginAt("/list.page");
+		beginAt(FORUMS_LIST);
 		login(UserWebTestCase.defaultTestuser, UserWebTestCase.password);
 		clickLinkWithText("a test forum", 0);
 		clickLinkWithImage("post.gif");
@@ -90,7 +92,7 @@ public class PostWebTestCase extends AbstractWebTestCase {
 	}
 
 	public void testEditDefaultUserPosting() {
-		beginAt("/list.page");
+		beginAt(FORUMS_LIST);
 		login(UserWebTestCase.defaultTestuser, UserWebTestCase.password);
 		clickLinkWithText("a test forum", 0);
 		clickLinkWithText("defaultUser posting", 0);
@@ -102,7 +104,7 @@ public class PostWebTestCase extends AbstractWebTestCase {
 
 	public void testWatchEmail() throws Exception {
 		smtpServer = SimpleSmtpServer.start();
-		beginAt("/list.page");
+		beginAt(FORUMS_LIST);
 		clickLinkWithText("a test forum", 0);
 		clickLinkWithText("defaultUser posting", 0);
 		clickLinkWithImage("reply.gif");
@@ -133,14 +135,14 @@ public class PostWebTestCase extends AbstractWebTestCase {
 	}
 
 	public void testSearchKeywords() {
-		beginAt("/list.page");
+		beginAt(FORUMS_LIST);
 		clickLinkWithText(I18n.getMessage(language, "ForumBase.search"));
 		setFormElement("search_keywords", "defaultUser");
 		submit();
 	}
 
 	public void testSearchAuthor() {
-		beginAt("/list.page");
+		beginAt(FORUMS_LIST);
 		clickLinkWithText(I18n.getMessage(language, "ForumBase.search"));
 		setFormElement("search_author", "defaultUser");
 		submit();

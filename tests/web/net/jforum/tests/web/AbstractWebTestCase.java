@@ -53,34 +53,43 @@ import net.sourceforge.jwebunit.WebTestCase;
 
 /**
  * @author Marc Wick
- * @version $Id: AbstractWebTestCase.java,v 1.3 2004/09/24 12:54:37 rafaelsteil Exp $
+ * @version $Id: AbstractWebTestCase.java,v 1.3 2004/09/24 12:54:37 rafaelsteil
+ *          Exp $
  */
 public abstract class AbstractWebTestCase extends WebTestCase {
 	public static class SimpleHTMLParserListener implements
 			com.meterware.httpunit.parsing.HTMLParserListener {
 
-		public void error(java.net.URL url, java.lang.String msg, int line, int column) {
-			System.err.println("error : " + url + " " + msg + " " + line + " " + column);
+		public void error(java.net.URL url, java.lang.String msg, int line,
+				int column) {
+			System.err.println("error : " + url + " " + msg + " " + line + " "
+					+ column);
 		}
 
-		public void warning(java.net.URL url, java.lang.String msg, int line, int column) {
-			System.err.println("warning : " + url + " " + msg + " " + line + " " + column);
+		public void warning(java.net.URL url, java.lang.String msg, int line,
+				int column) {
+			System.err.println("warning : " + url + " " + msg + " " + line
+					+ " " + column);
 		}
 	}
 
 	protected String language;
+
 	protected String rootDir;
+	protected String FORUMS_LIST = "/forums/list.page";
 
 	protected SimpleSmtpServer smtpServer;
 
 	public AbstractWebTestCase(String name) throws IOException {
 		super(name);
-		
+
 		this.rootDir = this.getClass().getResource("/").getPath();
-		this.rootDir = this.rootDir.substring(0, this.rootDir.length() - "/WEB-INF/classes".length());
-		
+		this.rootDir = this.rootDir.substring(0, this.rootDir.length() + 1
+				- "/WEB-INF/classes".length());
+
 		init();
-		getTestContext().setBaseUrl(SystemGlobals.getValue(ConfigKeys.FORUM_LINK));
+		getTestContext().setBaseUrl(
+				SystemGlobals.getValue(ConfigKeys.FORUM_LINK));
 
 		//HTMLParserFactory.setParserWarningsEnabled(true);
 		//HTMLParserFactory.addHTMLParserListener(new
@@ -96,14 +105,14 @@ public abstract class AbstractWebTestCase extends WebTestCase {
 	}
 
 	protected void login(String username, String password) {
-		beginAt("/forums/list.page");
+		beginAt(FORUMS_LIST);
 		assertLinkPresent("login");
 		clickLink("login");
-		assertFormPresent("formlogin");
+		assertFormPresent("loginform");
 		setFormElement("username", username);
 		setFormElement("password", password);
 		submit();
-		assertElementNotPresent("invalidlogin");
+		//assertElementNotPresent("invalidlogin");
 	}
 
 }
