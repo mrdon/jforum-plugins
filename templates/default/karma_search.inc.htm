@@ -8,10 +8,12 @@ function activateAdvancedQuery(){
 	document.getElementById("trQuickBody3").style.display = (quick ? "" : "none");
 	document.getElementById("trQuickSubmit1").style.display = (quick ? "" : "none");
 	document.getElementById("trQuickSubmit2").style.display = (quick ? "" : "none");
+	document.getElementById("trSpace").style.display = (quick ? "" : "none");
 	if (quick) {
 		document.location = "#quick";
 	}
 }
+
 </script>
 <table cellspacing="0" cellpadding="0" width="100%" border="0">
 	<tr>
@@ -27,61 +29,70 @@ function activateAdvancedQuery(){
 		</td>
 	</tr>
 </table>
-<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="post" id="post">
-<input type="hidden" name="action" value="searchByPeriod" />
-<input type="hidden" name="module" value="karma" />
-<table align="center" cellspacing="1" cellpadding="3" bgcolor="FFFFFF" width="100%" border="0" >
+
+<table align="center" cellspacing="0" cellpadding="0" bgcolor="FFFFFF" width="100%" border="0" >
 	<tr>
-		<td >
+		<td>
+			<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="searchByMonthForm" id="post">
+			<input type="hidden" name="action" value="searchByMonth" />
+			<input type="hidden" name="module" value="karma" />
 			<table class="forumline" width="100%" align="center">				
 				<tr style="display: none;" id="trQuickBody">
 					<th class="thTop" align="left">
-						<b>User's ratings:</b>
+						<b>${I18n.getMessage("Karma.advancedQuery")}</b>
 					</th>
 				</tr>
 				<tr style="display: none;" id="trQuickBody2">
-					<td class="row2" align="left" >
-						<b>Query by Month:</b>						
+					<td align="left" >
+						<b>${I18n.getMessage("Karma.queryByMonth")}:</b>						
 						<BR>
-						Mouth:
+						${I18n.getMessage("Karma.month")}:
 						<select name="mouths">
-							<option value="January">January</option>
-							<option value="February">February</option>
-							<option value="january">January</option>
-							<option value="january">January</option>
-							<option value="january">January</option>
-							<option value="january">January</option>
-							<option value="january">January</option>
-							<option value="january">January</option>
-							<option value="january">January</option>
-							<option value="january">January</option>
-							<option value="january">January</option>
-							<option value="january">January</option>
+							<option value="01">${I18n.getMessage("january")}</option>
+							<option value="02">${I18n.getMessage("february")}</option>
+							<option value="03">${I18n.getMessage("march")}</option>
+							<option value="04">${I18n.getMessage("april")}</option>
+							<option value="05">${I18n.getMessage("may")}</option>
+							<option value="06">${I18n.getMessage("june")}</option>
+							<option value="07">${I18n.getMessage("july")}</option>
+							<option value="08">${I18n.getMessage("august")}</option>
+							<option value="09">${I18n.getMessage("september")}</option>
+							<option value="10">${I18n.getMessage("october")}</option>
+							<option value="11">${I18n.getMessage("november")}</option>
+							<option value="12">${I18n.getMessage("december")}</option>
 						</select> &nbsp;
-						Year:<input class="post" type="text" maxlength="10" size="15" name="year" value="2005"/>
+						${I18n.getMessage("Karma.year")}:<input class="post" type="text" maxlength="10" size="15" name="year" value="2005"/>
 						<BR>
 					</td>
 				</tr>
 				<tr style="display: none;" id="trQuickSubmit1">
-							<td align="center">
+					<td align="center" >
 						<input type="submit" value="${I18n.getMessage("PostForm.submit")}" class="mainoption">
 					</td>
-				</tr>					
+				</tr>		
+				</form
+			</table>
+			<table class="forumline" width="100%" align="center">				
+				<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="searchByPeriodForm" id="post">
+				<input type="hidden" name="action" value="searchByPeriod" />
+				<input type="hidden" name="module" value="karma" />
+				<tr style="display: none;" id="trSpace">
+					<td align="center"class="row2">&nbsp;</td>
+				</tr>						
 				<tr style="display: none;" id="trQuickBody3">
 					<td>
+						<b>${I18n.getMessage("Karma.queryByPeriod")}:</b>						
 						<BR>
-						<b>Query by period:</b>						
+						${I18n.getMessage("Karma.firstDate")}: <input class="post" type="text" maxlength="10" size="15" name="first_date" value=""/>
+						&nbsp;
+						${I18n.getMessage("Karma.lastDate")}: <input class="post" type="text"  maxlength="10" size="15" name="last_date" value="" id="last_date"/>
 						<BR>
-						Fisrt Date: <input class="post" type="text" maxlength="10" size="15" name="first_date" value="01/02/2005"/>
+						${I18n.getMessage("Karma.orderBy")}:
 						<BR>
-						Last Date: <input class="post" type="text"  maxlength="10" size="15" name="last_date" value="20/02/2005"/>
-						<BR>
-						Order by:
-						<BR>
-						<input type="radio" name="order_by" value="total" checked/> Total Points
-						&nbsp;<input type="radio" name="order_by" value="votes_received"/> Votes Received						
-						&nbsp;<input type="radio" name="order_by" value="votes_given"/> Votes Given						
-						&nbsp;<input type="radio" name="order_by" value="user_karma"/> Karma
+						<input type="radio" name="order_by" value="total" checked/> ${I18n.getMessage("Karma.totalReceived")}
+						&nbsp;<input type="radio" name="order_by" value="votes_received"/> ${I18n.getMessage("Karma.votesReceived")}
+						&nbsp;<input type="radio" name="order_by" value="votes_given"/> ${I18n.getMessage("Karma.votesGiven")}
+						&nbsp;<input type="radio" name="order_by" value="user_karma"/> ${I18n.getMessage("Karma.karma")}						
 					</td>
 				</tr>			
 				<tr style="display: none;" id="trQuickSubmit2">
@@ -89,8 +100,9 @@ function activateAdvancedQuery(){
 						<input type="submit" value="${I18n.getMessage("PostForm.submit")}" class="mainoption">
 					</td>
 				</tr>
+				</form>
 			</table>
 		</td>
 	</tr>
 </table>
-</form>
+<BR>
