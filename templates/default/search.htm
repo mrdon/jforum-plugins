@@ -41,7 +41,7 @@
 				<select class="post" name="search_forum">
 					<option value="" selected="selected">${I18n.getMessage("Search.allAvailable")}</option>
 					<#list categories as c>
-						<#list c.forums as f>
+						<#list c.getForums() as f>
 		  					<option value="${f.id}">${f.name}</option>
 						</#list>
 					</#list>
