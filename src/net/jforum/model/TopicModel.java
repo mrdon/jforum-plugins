@@ -175,12 +175,14 @@ public interface TopicModel
 	public int getTotalPosts(int topicId) throws Exception;
 	
 	/**
-	 * Sends notification to all users that subscribed the topic.
+	 * Get the users to notify
 	 * 
 	 * @param topic The topic 
+	 * @return <code>ArrayList</code> of <code>User</code> objects. Each
+	 * entry is an user who will receive the topic anwser notification
 	 * @throws Exception
 	 * */
-	public void notifyUsers(Topic topic) throws Exception;
+	public ArrayList notifyUsers(Topic topic) throws Exception;
 	
 	/**
 	 * Subscribe the user for notification of new post on the topic

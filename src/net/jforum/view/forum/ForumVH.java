@@ -154,6 +154,7 @@ public class ForumVH extends Command
 		UserModel um = DataAccessDriver.getInstance().newUserModel();
 		
 		JForum.getContext().put("allForums", ForumVH.getAllForums(true));
+		JForum.getContext().put("topicsPerPage",  new Integer((String)SystemGlobals.getValue("topicsPerPage")));
 		JForum.getContext().put("moduleAction", "forum_list.htm");
 		JForum.getContext().put("totalMessages", I18n.getMessage("ForumListing.totalMessagesInfo", new Object[] {new Integer(fm.getTotalMessages())}));
 		JForum.getContext().put("totalUsers", I18n.getMessage("ForumListing.registeredUsers", new Object[] {new Integer(um.getTotalUsers())}));
@@ -205,11 +206,11 @@ public class ForumVH extends Command
 		
 		JForum.getContext().put("userSessions", onlineUsersList);
 		JForum.getContext().put("usersOnline", I18n.getMessage("ForumListing.numberOfUsersOnline", 
-				new Object[] {
-						   new Integer(SessionFacade.size()),
-						   new Integer(registered),
-						   new Integer(guest)
-				}));
+			new Object[] {
+					   new Integer(SessionFacade.size()),
+					   new Integer(registered),
+					   new Integer(guest)
+			}));
 	}
 	
 	public void moderation() throws Exception
@@ -302,7 +303,7 @@ public class ForumVH extends Command
 			
 			if (t.getTotalReplies() + 1 > postsPerPage) {
 				t.setPaginate(true);
-				t.setTotalPages(new Double(Math.floor((t.getTotalReplies() + 1) / postsPerPage)));
+				t.setTotalPages(new Double(Math.floor(t.getTotalReplies() / postsPerPage)));
 			}
 			
 			t.setRead(read);

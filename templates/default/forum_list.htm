@@ -49,7 +49,13 @@
 			<#if lpi["postTime"]?exists>${lpi["postTime"]}<BR>
 				<#if lpi["userId"]?exists><A href="${contextPath}/user/profile/${lpi["userId"]}.page"></#if>
 				<#if lpi["userName"]?exists>${lpi["userName"]}</#if></A> 
-				<a href="${contextPath}/posts/list/${lpi["topicId"]}.page#${lpi["postId"]}"><img src="templates/${templateName}/images/icon_latest_reply.gif" width="18" height="9" border="0"></a>
+				
+				<#assign startPage = ""/>
+				<#if (lpi["topic_replies"] + 1 > topicsPerPage)>
+					<#assign startPage = ((lpi["topic_replies"] / topicsPerPage)?int * topicsPerPage) +"/"/>
+				</#if>
+				
+				<a href="${contextPath}/posts/list/${startPage}${lpi["topicId"]}.page#${lpi["postId"]}"><img src="templates/${templateName}/images/icon_latest_reply.gif" width="18" height="9" border="0"></a>
 			<#else>
 				${I18n.getMessage("ForumListing.noMessages")}
 			</#if>

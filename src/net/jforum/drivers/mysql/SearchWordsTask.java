@@ -52,12 +52,10 @@ import net.jforum.util.concurrent.Task;
 public class SearchWordsTask implements Task
 {
 	private Post post;
-	private String[] words;
 	
-	public SearchWordsTask(Post post, String[] words)
+	public SearchWordsTask(Post post)
 	{
 		this.post = post;
-		this.words = words;
 	}
 
 	/* 
@@ -65,7 +63,7 @@ public class SearchWordsTask implements Task
 	 */
 	public Object execute() throws Exception
 	{
-		new SearchModel().insertSearchWords(this.post, this.words);
+		new SearchModel().insertSearchWords(this.post);
 		
 		return "SUCCESS";
 	}

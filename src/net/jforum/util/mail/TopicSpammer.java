@@ -45,7 +45,10 @@ package net.jforum.util.mail;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 
+import net.jforum.entities.Topic;
+import net.jforum.entities.User;
 import net.jforum.util.SystemGlobals;
 
 import freemarker.template.SimpleHash;
@@ -55,10 +58,32 @@ import freemarker.template.SimpleHash;
  */
 public class TopicSpammer extends Spammer 
 {
-	public TopicSpammer(ArrayList recipients, SimpleHash params, String topicTitle)
+	public TopicSpammer(Topic topic, ArrayList users)
 	{
+		// Prepare the users. In this current version, the email
+		// is not so personalized, so then we'll just use his address
+		ArrayList recipients = new ArrayList();
+		for (Iterator iter = users.iterator(); iter.hasNext(); ) {
+			User u = (User)iter.next();
+			
+			recipients.add(u.getEmail());
+		}
+		
+		// Make the topic url
+		String page = "";
+		int postsPerPage = Integer.parseInt((String)SystemGlobals.getValue("postsPerPage"));
+		if (topic.getTotalReplies() + 1 > postsPerPage) {
+			page += ((((int)topic.getTotalReplies() / postsPerPage)) * postsPerPage) +"/";
+		}
+		
+		String path = SystemGlobals.getValue("forumLink") +"/posts/list/"+ page + topic.getId() +".page#"+ topic.getLastPostId();
+		
+		SimpleHash params = new SimpleHash();
+		params.put("topic", topic);
+		params.put("path", path);
+		
 		super.prepareMessage(recipients, params,
-			MessageFormat.format((String)SystemGlobals.getValue("mail.newAnswer.subject"), new String[] { topicTitle }),
+			MessageFormat.format((String)SystemGlobals.getValue("mail.newAnswer.subject"), new String[] { topic.getTitle() }),
 			(String)SystemGlobals.getValue("mail.newAnswer.messageFile"));
 	}
 }

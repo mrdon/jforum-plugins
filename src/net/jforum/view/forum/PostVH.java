@@ -74,6 +74,8 @@ import net.jforum.util.bbcode.BBCode;
 import net.jforum.util.concurrent.executor.QueuedExecutor;
 import net.jforum.util.I18n;
 import net.jforum.util.SystemGlobals;
+import net.jforum.util.mail.EmailSenderTask;
+import net.jforum.util.mail.TopicSpammer;
 import net.jforum.util.rss.RSSTask;
 import net.jforum.util.rss.TopicRSS;
 
@@ -441,7 +443,12 @@ public class PostVH extends Command
 				tm.incrementTotalViews(topicId);
 				
 				// Ok, we have an answer. Time to notify the subscribed users
-				tm.notifyUsers(t);
+				try {
+					QueuedExecutor.getInstance().execute(new EmailSenderTask(new TopicSpammer(t, tm.notifyUsers(t))));
+				}
+				catch (Exception e) {
+					// Shall we log the error?
+				}
 			}
 			
 			// Topic watch

@@ -58,7 +58,7 @@ public class QueuedExecutor implements Executor
 	final Queue queue;
 	final Object lock = new Object();
 	
-	public static QueuedExecutor instance = new QueuedExecutor(new UnboundedFifoQueue());
+	private static QueuedExecutor instance = new QueuedExecutor(new UnboundedFifoQueue());
 	
 	private QueuedExecutor(Queue queue) 
 	{

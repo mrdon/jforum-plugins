@@ -350,6 +350,7 @@ public class ForumModel implements net.jforum.model.ForumModel
 			m.put("postId", new Integer(rs.getInt("post_id")));
 			m.put("topicId", new Integer(rs.getInt("topic_id")));
 			m.put("postTimeMillis", new Long(rs.getLong("post_time")));
+			m.put("topic_replies", new Integer(rs.getInt("topic_replies")));
 		}
 		
 		p.close();

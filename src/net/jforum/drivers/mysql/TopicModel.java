@@ -56,11 +56,6 @@ import net.jforum.SessionFacade;
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.util.SystemGlobals;
-import net.jforum.util.concurrent.executor.QueuedExecutor;
-import net.jforum.util.mail.EmailSenderTask;
-import net.jforum.util.mail.TopicSpammer;
-import freemarker.template.ObjectWrapper;
-import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
@@ -354,7 +349,7 @@ public class TopicModel implements net.jforum.model.TopicModel
 	/*
  	 * @see net.jforum.model.TopicModel#notifyUsers(int)
  	 */
-	public void notifyUsers(Topic topic) throws Exception 
+	public ArrayList notifyUsers(Topic topic) throws Exception 
 	{ 
 		int posterId = SessionFacade.getUserSession().getUserId();
 		int anonUser = Integer.parseInt((String)SystemGlobals.getValue("anonymousUserId"));
@@ -368,28 +363,16 @@ public class TopicModel implements net.jforum.model.TopicModel
 				
 		rs = stmt.executeQuery();
 		
-		ArrayList addresses = new ArrayList();
+		ArrayList users = new ArrayList();
 		while(rs.next()) {
-			int userId = rs.getInt("user_id");
-			String username = rs.getString("username");
-			String userLang = rs.getString("user_lang");
-			String userEmail = rs.getString("user_email");
-			
-			addresses.add(userEmail);
-			
-			SimpleHash params = new SimpleHash(ObjectWrapper.BEANS_WRAPPER);
-			
-			params.put("username", username);
-			params.put("userEmail", userEmail);
-			params.put("topic", topic);
-			params.put("path", (String)SystemGlobals.getValue("forumLink") +"/posts/list/"+ topic.getId() +".page#"+ topic.getLastPostId());
+			User user = new User();
 
-			try {
-				QueuedExecutor.getInstance().execute(new EmailSenderTask(new TopicSpammer(addresses, params, topic.getTitle())));
-			} 
-			catch (Exception e) {
-				// TODO log the error?
-			}
+			user.setId(rs.getInt("user_id"));
+			user.setEmail(rs.getString("user_email"));
+			user.setUsername(rs.getString("username"));
+			user.setLang(rs.getString("user_lang"));
+			
+			users.add(user);
 		}
 		
 		// Set read status to false
@@ -402,6 +385,8 @@ public class TopicModel implements net.jforum.model.TopicModel
 			
 		rs.close();
 		stmt.close();
+		
+		return users;
 	}
 	
 	/*

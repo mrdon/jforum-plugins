@@ -139,7 +139,14 @@ ForumModel.getOrder = SELECT forum_order FROM jforum_forums WHERE forum_id = ?
 ForumModel.getMaxOrder = SELECT max(forum_order) as max FROM jforum_forums
 ForumModel.setOrderByOrder = UPDATE jforum_forums SET forum_order = ? WHERE forum_order = ?
 ForumModel.setOrderById = UPDATE jforum_forums SET forum_order = ? WHERE forum_id = ?
-ForumModel.lastPostInfo = SELECT post_time, topic_id, post_id, u.user_id, username FROM jforum_posts p, jforum_users u WHERE p.user_id = u.user_id AND p.forum_id = ? ORDER BY post_time DESC LIMIT 1
+
+ForumModel.lastPostInfo = SELECT post_time, p.topic_id, t.topic_replies, post_id, u.user_id, username \
+	FROM jforum_posts p, jforum_users u, jforum_topics t \
+	WHERE p.user_id = u.user_id \
+	AND p.topic_id = t.topic_id \
+	AND p.forum_id = ? \
+	ORDER BY post_time DESC LIMIT 1
+
 ForumModel.totalMessages = SELECT COUNT(1) as total_messages FROM jforum_posts
 ForumModel.getMaxPostId = SELECT MAX(post_id) AS post_id FROM jforum_posts WHERE forum_id = ?
 ForumModel.moveTopics = UPDATE jforum_topics SET forum_id = ? WHERE topic_id = ?

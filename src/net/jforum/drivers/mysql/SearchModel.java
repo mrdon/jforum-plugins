@@ -193,7 +193,7 @@ public class SearchModel implements net.jforum.model.SearchModel
 		p.close();
 	}
 	
-	public void insertSearchWords(Post post, String[] words) throws Exception
+	public void insertSearchWords(Post post) throws Exception
 	{
 		PreparedStatement insert = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.insertWords"),
 						Statement.RETURN_GENERATED_KEYS);
@@ -203,6 +203,7 @@ public class SearchModel implements net.jforum.model.SearchModel
 		PreparedStatement wordToPost = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.associateWordToPost"));
 		wordToPost.setInt(1, post.getId());
 		
+		String[] words = post.getText().split(" ");
 		for (int i = 0; i < words.length; i++) {
 			// Skip words less than 3 chars
 			if (words[i].length() < 3) {
@@ -232,7 +233,13 @@ public class SearchModel implements net.jforum.model.SearchModel
 					insert.executeUpdate();
 				}
 			}
+			
+			rs.close();
 		}
+		
+		insert.close();
+		existing.close();
+		wordToPost.close();
 	}
 	
 	private void associateWordToPost(PreparedStatement p, String word, int hash, Post post) throws Exception

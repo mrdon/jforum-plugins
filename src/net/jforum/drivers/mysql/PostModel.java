@@ -53,6 +53,7 @@ import java.util.GregorianCalendar;
 import net.jforum.JForum;
 import net.jforum.entities.Post;
 import net.jforum.util.SystemGlobals;
+import net.jforum.util.concurrent.executor.QueuedExecutor;
 
 /**
  * @author Vanessa Sabino, Rafael Steil
@@ -168,12 +169,18 @@ public class PostModel implements net.jforum.model.PostModel
 		rs.next();
 		postId = rs.getInt(1);
 		
+		post.setId(postId);
+		
 		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.incrementPosts"));
 		p.setInt(1, post.getUserId());
 		p.executeUpdate();
 		
 		rs.close();
 		p.close();
+		
+		// Tokenize the words for search
+		//QueuedExecutor.getInstance().execute(new SearchWordsTask(post));
+		new SearchModel().insertSearchWords(post);
 		
 		return postId;
 	}

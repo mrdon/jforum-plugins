@@ -68,7 +68,7 @@ public abstract class AbstractWorker implements Runnable
 					try {
 						((Task)task).execute();
 					} catch(Exception e ) {
-						;//I don't care
+						;// I don't care
 					}
 				} 
 				else {

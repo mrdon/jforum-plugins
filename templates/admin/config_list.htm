@@ -140,6 +140,15 @@
 	<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Config.Form.SmtpPassword")}</SPAN></TD>
 	<TD class=row1 width="38%"><SPAN class=gen><input type="password" name="p_mail.smtp.password" value="${config.getProperty("mail.smtp.password")}"></SPAN></TD>
 </TR>
+<TR>
+	<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Config.Form.EmailNotifyAnwsers")}</SPAN></TD>
+	<TD class=row1 width="38%">
+		<select name="p_mail.notify.anwsers">
+			<option value="false" <#if config.getProperty("mail.notify.anwsers") == "false">selected</#if>>False</option>
+			<option value="true" <#if config.getProperty("mail.notify.anwsers") == "true">selected</#if>>True</option>
+		</select>
+	</TD>
+</TR>
 
 <TR>
 	<TD class=catSides colspan="2" align="center"><input type="submit" value="${I18n.getMessage("Update")}">&nbsp;&nbsp;<input type="reset" value="${I18n.getMessage("Reset")}"></TD>
