@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,11 +37,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creating date: Feb 17, 2003 / 10:25:04 PM
- * net.jforum.entities.User.java
  * The JForum Project
  * http://www.jforum.net 
  * 
- * $Id: User.java,v 1.8 2004/10/04 10:08:18 marcwick Exp $
+ * $Id: User.java,v 1.9 2004/10/10 00:19:26 rafaelsteil Exp $
  */
 package net.jforum.entities;
 
@@ -154,6 +153,8 @@ public class User
 	 * User avatar
 	 */
 	private String avatar;
+	
+	private boolean isExternalAvatar;
 	
 	/**
 	 * User email
@@ -575,6 +576,18 @@ public class User
 	 */
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
+		
+		if (avatar != null && avatar.toLowerCase().startsWith("http://")) {
+			this.isExternalAvatar = true;
+		}
+	}
+
+	/**
+	 * Indicates if the avatar points to an external URL
+	 * @return <code>true</code> if the avatar is some external image
+	 */
+	public boolean isExternalAvatar() {
+		return this.isExternalAvatar;
 	}
 
 	/**

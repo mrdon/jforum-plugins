@@ -39,8 +39,6 @@
  * This file creation date: 02/04/2004 - 20:31:35
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: ViewCommon.java,v 1.15 2004/10/06 19:36:00 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 
@@ -74,6 +72,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
+ * @version $Id: ViewCommon.java,v 1.16 2004/10/10 00:20:08 rafaelsteil Exp $
  */
 public final class ViewCommon
 {
@@ -135,7 +134,7 @@ public final class ViewCommon
 		u.setLang(JForum.getRequest().getParameter("language"));
 		
 		String website = SafeHtml.makeSafe(JForum.getRequest().getParameter("website"));
-		if (website != null && !"".equals(website) && !website.toLowerCase().startsWith("http://")) {
+		if (website != null && !"".equals(website.trim()) && !website.toLowerCase().startsWith("http://")) {
 			website = "http://" + website;
 		}
 
@@ -158,8 +157,22 @@ public final class ViewCommon
 				handleAvatar(u);
 			}
 			catch (Exception e) {
-				logger.warn("Problems with avatar upload: " + e);
+				logger.warn("Problems while uploading the avatar: " + e);
 				warns.add(I18n.getMessage("User.avatarUploadError"));
+			}
+		}
+		else {
+			String avatarUrl = JForum.getRequest().getParameter("avatarUrl");
+			if (avatarUrl != null && !"".equals(avatarUrl.trim())) {
+				if (avatarUrl.toLowerCase().startsWith("http://")) {
+					u.setAvatar(avatarUrl);
+				}
+				else {
+					warns.add(I18n.getMessage("User.avatarUrlShouldHaveHttp"));
+				}
+			}
+			else {
+				u.setAvatar(null);
 			}
 		}
 		
