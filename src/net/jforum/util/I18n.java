@@ -51,6 +51,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 import net.jforum.SessionFacade;
+import net.jforum.entities.UserSession;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -60,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * memory and provides a static method to acess them.
  *  
  * @author Rafael Steil
- * @version $Id: I18n.java,v 1.10 2004/08/28 13:50:57 rafaelsteil Exp $
+ * @version $Id: I18n.java,v 1.11 2004/09/03 04:04:40 rafaelsteil Exp $
  */
 public class I18n 
 {
@@ -174,9 +175,12 @@ public class I18n
 	
 	public static String getMessage(String m)
 	{
-		if (SessionFacade.getUserSession().getLang().equals("")){
+		UserSession us = SessionFacade.getUserSession();
+
+		if (us == null || us.getLang().equals("")){
 			return getMessage(defaultName, m);
-		}else{
+		}
+		else {
 			return getMessage(SessionFacade.getUserSession().getLang(), m);
 		}
 	}

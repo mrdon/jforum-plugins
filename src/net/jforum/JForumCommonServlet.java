@@ -73,7 +73,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumCommonServlet.java,v 1.2 2004/08/28 13:50:56 rafaelsteil Exp $
+ * @version $Id: JForumCommonServlet.java,v 1.3 2004/09/03 04:04:40 rafaelsteil Exp $
  */
 public class JForumCommonServlet extends HttpServlet
 {
@@ -111,8 +111,9 @@ public class JForumCommonServlet extends HttpServlet
 			SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
 			SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
 			
+			this.loadConfigStuff();
+			
 			if (!this.debug) {
-				this.loadConfigStuff();
 				templateCfg.setTemplateUpdateDelay(3600);
 			}
 			else {

@@ -68,13 +68,19 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.31 2004/08/30 23:51:20 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.32 2004/09/03 04:04:40 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
+	private static boolean isDatabaseUp; 
+	
 	private void startDatabase() throws Exception
 	{
 		DBConnection.getImplementation().init();
+		
+		// If init() fails, the above code will not
+		// be executed, soh is safe to have it this way
+		isDatabaseUp = true;
 	}
 	
 	public void init(ServletConfig config) throws ServletException
@@ -85,7 +91,9 @@ public class JForum extends JForumCommonServlet
 			this.startDatabase();
 		}
 		catch (Exception e) {
-			new ForumException(e);	
+			// we don't care about the exception here
+			// to not invalidate the context
+			isDatabaseUp = false;
 		}
 	}
 	
@@ -175,10 +183,6 @@ public class JForum extends JForumCommonServlet
 			DataHolder dataHolder = new DataHolder();
 			localData.set(dataHolder);
 
-			if (this.debug) {
-				this.loadConfigStuff();
-			}
-			
 			String encoding = SystemGlobals.getValue(ConfigKeys.ENCODING);
 			req.setCharacterEncoding(encoding);
 			
@@ -194,17 +198,23 @@ public class JForum extends JForumCommonServlet
 			JForum.getContext().put("metaDescription", SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_METATAG_DESCRIPTION));
 			JForum.getContext().put("forumLink", SystemGlobals.getValue(ConfigKeys.FORUM_LINK));
 			JForum.getContext().put("encoding", encoding);
-
+			
 			// Request
 			ActionServletRequest request = new ActionServletRequest(req);
 			request.setCharacterEncoding(encoding);
 
 			dataHolder.setResponse(response);
-			dataHolder.setConnection(DBConnection.getImplementation().getConnection());
 			dataHolder.setRequest(request);
-
-			// Assigns the information to user's thread 
+			
+			if (isDatabaseUp) {
+				dataHolder.setConnection(DBConnection.getImplementation().getConnection());
+			}
+			
 			localData.set(dataHolder);
+			
+			if (!isDatabaseUp) {
+				this.startDatabase();
+			}
 
 			// Verify cookies
 			this.checkCookies();
@@ -215,14 +225,16 @@ public class JForum extends JForumCommonServlet
 			}
 
 			JForum.getContext().put("logged", logged);
-
+			
 			// Process security data
 			SecurityRepository.load(SessionFacade.getUserSession().getUserId());
+
+			String module = request.getModule();
 			
 			// Gets the module class name
-			String moduleClass = this.getModuleClass(request.getModule());
+			String moduleClass = this.getModuleClass(module);
 			
-			JForum.getContext().put("moduleName", request.getModule());
+			JForum.getContext().put("moduleName", module);
 			JForum.getContext().put("action", JForum.getRequest().getAction());
 			
 			JForum.getContext().put("securityHash", MD5.crypt(JForum.getRequest().getSession().getId()));

@@ -68,7 +68,7 @@
 	
 	<tr>
 		<td align='center'>
-			<#if session.isAdmin()><span class="gen"><a href='${contextPath}/admBase/login.page'>Admin Control Panel</a></span></#if>
+			<#if session?exists && session.isAdmin()><span class="gen"><a href='${contextPath}/admBase/login.page'>Admin Control Panel</a></span></#if>
 		</td>
 	</tr>
 

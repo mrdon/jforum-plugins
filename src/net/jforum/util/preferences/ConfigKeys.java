@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author pieter
-* @version $Id: ConfigKeys.java,v 1.15 2004/08/29 23:47:02 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.16 2004/09/03 04:04:41 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -75,6 +75,8 @@ public class ConfigKeys {
 	public static final String DATABASE_CONNECTION_ENCODING = "dbencoding";
 	public static final String DATABASE_CONNECTION_DRIVER = "database.connection.driver";
 	public static final String DATABASE_CONNECTION_STRING = "database.connection.string";
+	
+	public static final String DATABASE_ERROR_PAGE = "database.error.page";
 	
 
 	// The remaining keys are set in default.config and can be overriden in the installation config 
