@@ -62,7 +62,7 @@ import junit.framework.TestCase;
 
 /**
  * @author Rafael Steil
- * @version $Id: CategoryOrderTest.java,v 1.1 2004/12/18 15:00:48 rafaelsteil Exp $
+ * @version $Id: CategoryOrderTest.java,v 1.2 2004/12/19 22:14:40 rafaelsteil Exp $
  */
 public class CategoryOrderTest extends TestCase 
 {
@@ -125,6 +125,11 @@ public class CategoryOrderTest extends TestCase
 
 		names = new String[]{ "Cat 4", "Cat 1", "Cat 3", "Cat 2", "Cat 5" };
 		this.checkExpectedCategories(names, ForumRepository.getAllCategories(1));
+		
+		c4 = new Category(ForumRepository.getCategory(1, 4));
+		c4.setOrder(4);
+		ForumRepository.reloadCategory(c4);
+		this.checkExpectedCategories(new String[] { "Cat 2", "Cat 1", "Cat 3", "Cat 4", "Cat 5" }, ForumRepository.getAllCategories(1));
 	}
 	
 	private void checkExpectedCategories(String[] names, Collection c)

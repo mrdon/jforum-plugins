@@ -70,7 +70,7 @@ import net.jforum.util.CategoryOrderComparator;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.23 2004/12/18 15:00:49 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.24 2004/12/19 22:14:41 rafaelsteil Exp $
  */
 public class ForumRepository 
 {
@@ -131,6 +131,15 @@ public class ForumRepository
 		}
 		
 		return (Category)categoriesMap.get(new Integer(categoryId));
+	}
+	
+	public static Category getCategory(PermissionControl pc, int categoryId)
+	{
+		if (!isCategoryAccessible(pc, categoryId)) {
+			return null;
+		}
+		
+		return (Category)categoriesMap.get(new Integer(categoryId)); 
 	}
 	
 	/**
@@ -226,11 +235,14 @@ public class ForumRepository
 		}
 		
 		tmpSet.add(c);
+		categoriesMap.put(new Integer(c.getId()), c);
 		
 		if (currentAtOrder != null) {
 			tmpSet.remove(current);
 			currentAtOrder.setOrder(current.getOrder());
 			tmpSet.add(currentAtOrder);
+			
+			categoriesMap.put(new Integer(currentAtOrder.getId()), currentAtOrder);
 		}
 		
 		categoriesSet = tmpSet;
@@ -262,6 +274,11 @@ public class ForumRepository
 	{
 		categoriesMap.put(new Integer(c.getId()), c);
 		categoriesSet.add(c);
+		
+		for (Iterator iter = c.getForums().iterator(); iter.hasNext(); ) {
+			Forum f = (Forum)iter.next();
+			forumCategoryRelation.put(new Integer(f.getId()), new Integer(f.getCategoryId()));
+		}
 	}
 	
 	/**

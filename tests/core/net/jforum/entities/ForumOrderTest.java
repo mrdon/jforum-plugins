@@ -44,11 +44,14 @@ package net.jforum.entities;
 
 import java.util.Iterator;
 
+import net.jforum.repository.ForumRepository;
+import net.jforum.security.PermissionControl;
+
 import junit.framework.TestCase;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumOrderTest.java,v 1.2 2004/12/09 02:41:42 rafaelsteil Exp $
+ * @version $Id: ForumOrderTest.java,v 1.3 2004/12/19 22:14:39 rafaelsteil Exp $
  */
 public class ForumOrderTest extends TestCase 
 {
@@ -65,6 +68,50 @@ public class ForumOrderTest extends TestCase
 	public void testForumOrder()
 	{
 		String[] expectedNames = { "Forum 1", "Forum 2", "Forum 3", "Forum 4", "Forum 5" };
+		this.checkExpectedNames(expectedNames);
+	}
+	
+	public void testReload()
+	{
+		Forum f1 = new Forum(this.category.getForum(1));
+		f1.setOrder(3);
+		this.category.changeForumOrder(f1);
+		this.checkExpectedNames(new String[] { "Forum 3", "Forum 2", "Forum 1", "Forum 4", "Forum 5" });
+		
+		assertEquals(5, this.category.getForums().size());
+		
+		Forum f5 = new Forum(this.category.getForum(5));
+		f5.setOrder(2);
+		this.category.changeForumOrder(f5);
+		this.checkExpectedNames(new String[] { "Forum 3", "Forum 5", "Forum 1", "Forum 4", "Forum 2" });
+		
+		assertEquals(5, this.category.getForums().size());
+		
+		f1 = new Forum(this.category.getForum(1));
+		f1.setOrder(1);
+		this.category.changeForumOrder(f1);
+		this.checkExpectedNames(new String[] { "Forum 1", "Forum 5", "Forum 3", "Forum 4", "Forum 2" });
+	}
+	
+	public void testReloadUsingRepository()
+	{
+		this.configureRepository();
+		
+		Forum f = new Forum(ForumRepository.getForum(3));
+		f.setOrder(1);
+		ForumRepository.getCategory(this.pc(), f.getCategoryId()).changeForumOrder(f);
+		this.checkExpectedNames(new String[] { "Forum 3", "Forum 2", "Forum 1", "Forum 4", "Forum 5" });
+		assertEquals(5, ForumRepository.getCategory(this.pc(), f.getCategoryId()).getForums().size());
+		
+		f = new Forum(ForumRepository.getForum(4));
+		f.setOrder(2);
+		ForumRepository.getCategory(this.pc(), f.getCategoryId()).changeForumOrder(f);
+		this.checkExpectedNames(new String[] { "Forum 3", "Forum 4", "Forum 1", "Forum 2", "Forum 5" });
+		assertEquals(5, ForumRepository.getCategory(this.pc(), f.getCategoryId()).getForums().size());
+	}
+	
+	private void checkExpectedNames(String[] expectedNames)
+	{
 		int i = 0; 
 		for (Iterator iter = this.category.getForums().iterator(); iter.hasNext(); ) {
 			Forum f = (Forum)iter.next();
@@ -72,6 +119,17 @@ public class ForumOrderTest extends TestCase
 		}
 	}
 	
+	private void configureRepository()
+	{
+		ForumRepository.addCategory(this.category);
+	}
 	
-
+	private PermissionControl pc()
+	{
+		return new PermissionControl() {
+			public boolean canAccess(String roleName, String roleValue) {
+				return true;
+			}
+		};
+	}
 }

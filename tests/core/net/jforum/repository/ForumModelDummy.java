@@ -50,7 +50,7 @@ import net.jforum.model.ForumModel;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumModelDummy.java,v 1.2 2004/12/05 21:51:24 rafaelsteil Exp $
+ * @version $Id: ForumModelDummy.java,v 1.3 2004/12/19 22:14:40 rafaelsteil Exp $
  */
 class ForumModelDummy implements ForumModel {
 
@@ -73,17 +73,17 @@ class ForumModelDummy implements ForumModel {
 	/** 
 	 * @see net.jforum.model.ForumModel#setOrderUp(int)
 	 */
-	public int setOrderUp(Forum f) throws Exception {
+	public Forum setOrderUp(Forum f, Forum r) throws Exception {
 		// TODO Auto-generated method stub
-		return 0;
+		return null;
 	}
 
 	/** 
 	 * @see net.jforum.model.ForumModel#setOrderDown(int)
 	 */
-	public int setOrderDown(Forum f) throws Exception {
+	public Forum setOrderDown(Forum f, Forum r) throws Exception {
 		// TODO Auto-generated method stub
-		return 0;
+		return null;
 	}
 
 	/** 

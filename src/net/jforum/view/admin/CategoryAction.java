@@ -68,7 +68,7 @@ import freemarker.template.Template;
  * ViewHelper for category administration.
  * 
  * @author Rafael Steil
- * @version $Id: CategoryAction.java,v 1.7 2004/12/18 15:00:48 rafaelsteil Exp $
+ * @version $Id: CategoryAction.java,v 1.8 2004/12/19 22:14:39 rafaelsteil Exp $
  */
 public class CategoryAction extends Command 
 {
@@ -203,21 +203,23 @@ public class CategoryAction extends Command
 		List categories = ForumRepository.getAllCategories();
 		
 		int index = categories.indexOf(toChange);
-		if (index > -1 
-			&& ((up && index - 1 < categories.size() && index > 0)
-				|| (!up))) {
-			Category otherCategory = new Category((Category)categories.get(up ? index - 1 : index + 1));
-			
-			if (up) {
-				this.cm.setOrderUp(toChange, otherCategory);
-			}
-			else {
-				this.cm.setOrderDown(toChange, otherCategory);
-			}
-		
-			ForumRepository.reloadCategory(toChange);
+		if (index == -1 || (up && index == 0) || (!up && index + 1 == categories.size())) {
+			this.list();
+			return;
 		}
 		
+		if (up) {
+			// Get the category which comes *before* the category we want to change
+			Category otherCategory = new Category((Category)categories.get(index - 1));
+			this.cm.setOrderUp(toChange, otherCategory);
+		}
+		else {
+			// Get the category which comes *after* the category we want to change
+			Category otherCategory = new Category((Category)categories.get(index + 1));
+			this.cm.setOrderDown(toChange, otherCategory);
+		}
+		
+		ForumRepository.reloadCategory(toChange);
 		this.list();
 	}
 	

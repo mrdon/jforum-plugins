@@ -58,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: ForumModel.java,v 1.12 2004/12/19 15:17:13 rafaelsteil Exp $
+ * @version $Id: ForumModel.java,v 1.13 2004/12/19 22:14:39 rafaelsteil Exp $
  */
 public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel {
 	private Connection conn;
@@ -128,53 +128,41 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel 
 	}
 
 	/**
-	 * @see net.jforum.model.ForumModel#setOrderUp(Forum)
+	 * @see net.jforum.model.ForumModel#setOrderUp(Forum, Forum)
 	 */
-	public int setOrderUp(Forum forum) throws Exception 
+	public Forum setOrderUp(Forum forum, Forum related) throws Exception 
 	{
-		return this.changeForumOrder(forum, true);
+		return this.changeForumOrder(forum, related, true);
 	}
 	
 	/**
-	 * @see net.jforum.model.ForumModel#setOrderDown(Forum)
+	 * @see net.jforum.model.ForumModel#setOrderDown(Forum, Forum)
 	 */
-	public int setOrderDown(Forum forum) throws Exception {
-		return this.changeForumOrder(forum, false);
+	public Forum setOrderDown(Forum forum, Forum related) throws Exception {
+		return this.changeForumOrder(forum, related, false);
 	}
 	
-	private int changeForumOrder(Forum forum, boolean up) throws Exception
+	private Forum changeForumOrder(Forum forum, Forum related, boolean up) throws Exception
 	{
-		int newOrder = up ? forum.getOrder() + 1 : forum.getOrder() - 1;
-		int relatedForumId = 0;
+		int tmpOrder = related.getOrder();
+		related.setOrder(forum.getOrder());
+		forum.setOrder(tmpOrder);
 
-		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.getForumIdByOrder"));
-		p.setInt(1, newOrder);
-		p.setInt(2, forum.getCategoryId());
-
-		ResultSet rs = p.executeQuery();
-		rs.next();
-		relatedForumId = rs.getInt(1);
-
-		rs.close();
-		p.close();
-
-		// Change the forum's order
-		p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.setOrderById"));
+		// ******** 
+		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.setOrderById"));
 		p.setInt(1, forum.getOrder());
-		p.setInt(2, relatedForumId);
-		p.executeUpdate();
-		p.close();
-
-		// Sets the forum to the higher order
-		p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.setOrderById"));
-		p.setInt(1, newOrder);
 		p.setInt(2, forum.getId());
-
 		p.executeUpdate();
-
 		p.close();
 		
-		return relatedForumId;		
+		// ********
+		p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.setOrderById"));
+		p.setInt(1, related.getOrder());
+		p.setInt(2, related.getId());
+		p.executeUpdate();
+		p.close();
+		
+		return this.selectById(forum.getId());
 	}
 
 	/**

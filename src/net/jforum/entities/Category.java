@@ -71,7 +71,7 @@ import net.jforum.util.ForumOrderComparator;
  * to the user who make the call tho the method. 
  * 
  * @author Rafael Steil
- * @version $Id: Category.java,v 1.13 2004/12/18 15:00:49 rafaelsteil Exp $
+ * @version $Id: Category.java,v 1.14 2004/12/19 22:14:41 rafaelsteil Exp $
  */
 public class Category 
 {
@@ -183,6 +183,7 @@ public class Category
 		tmpSet.addAll(this.forums);
 		tmpSet.remove(currentForum);
 		tmpSet.add(forum);
+		this.forumsIdMap.put(new Integer(forum.getId()), forum);
 		
 		this.forums = tmpSet;
 	}
@@ -210,6 +211,7 @@ public class Category
 		}
 		
 		tmpSet.add(forum);
+		this.forumsIdMap.put(new Integer(forum.getId()), forum);
 		
 		// Remove the forum in the position occupied
 		// by the changed forum before its modification,
@@ -219,6 +221,8 @@ public class Category
 			tmpSet.remove(current);
 			currentAtOrder.setOrder(current.getOrder());
 			tmpSet.add(currentAtOrder);
+
+			this.forumsIdMap.put(new Integer(currentAtOrder.getId()), currentAtOrder);
 		}
 		
 		this.forums = tmpSet;

@@ -50,7 +50,7 @@ import net.jforum.security.PermissionControl;
  * Common methods for testing categories.
  * 
  * @author Rafael Steil
- * @version $Id: CategoryTestCommon.java,v 1.1 2004/12/09 02:41:42 rafaelsteil Exp $
+ * @version $Id: CategoryTestCommon.java,v 1.2 2004/12/19 22:14:40 rafaelsteil Exp $
  */
 public class CategoryTestCommon 
 {
@@ -86,30 +86,35 @@ public class CategoryTestCommon
 		
 		Forum f = new Forum();
 		f.setId(2);
+		f.setIdCategories(1);
 		f.setName("Forum 2");
 		f.setOrder(2);
 		category.addForum(f);
 		
 		f = new Forum();
 		f.setId(5);
+		f.setIdCategories(1);
 		f.setName("Forum 5");
 		f.setOrder(5);
 		category.addForum(f);
 		
 		f = new Forum();
 		f.setId(1);
+		f.setIdCategories(1);
 		f.setName("Forum 1");
 		f.setOrder(1);
 		category.addForum(f);
 		
 		f = new Forum();
 		f.setId(3);
+		f.setIdCategories(1);
 		f.setName("Forum 3");
 		f.setOrder(3);
 		category.addForum(f);
 		
 		f = new Forum();
 		f.setId(4);
+		f.setIdCategories(1);
 		f.setName("Forum 4");
 		f.setOrder(4);
 		category.addForum(f);

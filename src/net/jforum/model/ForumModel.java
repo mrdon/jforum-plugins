@@ -55,7 +55,7 @@ import net.jforum.entities.LastPostInfo;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: ForumModel.java,v 1.5 2004/12/05 21:51:25 rafaelsteil Exp $
+ * @version $Id: ForumModel.java,v 1.6 2004/12/19 22:14:40 rafaelsteil Exp $
  */
 public interface ForumModel 
 {
@@ -86,12 +86,11 @@ public interface ForumModel
 	 * was sent down.
 	 * 
 	 * @param forum The forum to change its order
+	 * @param related The forum which comes before the forum we want to change
 	 * @throws Exception
-	 * @return an integer containing the id of the related forum which 
-	 * had its forum_order changed due to the change of the forum 
-	 * passed as argument.
+	 * @return The changed forum, with the new order set
 	 */
-	public int setOrderUp(Forum forum) throws Exception;
+	public Forum setOrderUp(Forum forum, Forum related) throws Exception;
 	
 	/**
 	 * Sets the forum's order one level down.
@@ -100,12 +99,11 @@ public interface ForumModel
 	 * forum order down.
 	 * 
 	 * @param forum The forum to change its order
+	 * @param related The forum which comes after the forum we want to change
 	 * @throws Exception
-	 * @return an integer containing the id of the related forum which 
-	 * had its forum_order changed due to the change of the forum 
-	 * passed as argument.
+	 * @return The changed forum, with the new order set
 	 */
-	public int setOrderDown(Forum forum) throws Exception;
+	public Forum setOrderDown(Forum forum, Forum related) throws Exception;
 	
 	/**
 	 * Delete a forum.

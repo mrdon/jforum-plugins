@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -55,7 +55,7 @@ import net.jforum.security.PermissionControl;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityRepository.java,v 1.5 2004/12/19 15:17:13 rafaelsteil Exp $
+ * @version $Id: SecurityRepository.java,v 1.6 2004/12/19 22:14:41 rafaelsteil Exp $
  */
 public class SecurityRepository 
 {

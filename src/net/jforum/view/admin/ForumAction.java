@@ -43,9 +43,11 @@
 package net.jforum.view.admin;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import net.jforum.Command;
 import net.jforum.JForum;
+import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
 import net.jforum.model.CategoryModel;
 import net.jforum.model.DataAccessDriver;
@@ -65,7 +67,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.6 2004/12/19 15:17:14 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.7 2004/12/19 22:14:39 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -119,25 +121,42 @@ public class ForumAction extends Command
 	
 	public void up() throws Exception
 	{
-		int forumId = Integer.parseInt(JForum.getRequest().getParameter("forum_id"));
-		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
-		int relatedForumId = fm.setOrderUp(ForumRepository.getForum(forumId));
-
-		ForumRepository.reloadForum(forumId);
-		ForumRepository.reloadForum(relatedForumId);
-
-		this.list();
+		this.processOrdering(true);
 	}
 	
 	public void down() throws Exception
 	{
-		int forumId = Integer.parseInt(JForum.getRequest().getParameter("forum_id"));
+		this.processOrdering(false);
+	}
+	
+	private void processOrdering(boolean up) throws Exception
+	{
+		Forum toChange = new Forum(ForumRepository.getForum(Integer.parseInt(
+				JForum.getRequest().getParameter("forum_id"))));
+		
+		Category category = ForumRepository.getCategory(toChange.getCategoryId());
+		List forums = new ArrayList(category.getForums());
+		int index = forums.indexOf(toChange);
+		
+		if (index == -1 || (up && index == 0) || (!up && index + 1 == forums.size())) {
+			this.list();
+			return;
+		}
+		
 		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
-		int relatedForumId = fm.setOrderDown(ForumRepository.getForum(forumId));
 		
-		ForumRepository.reloadForum(forumId);
-		ForumRepository.reloadForum(relatedForumId);
+		if (up) {
+			// Get the forum which comes *before* the forum we're changing
+			Forum otherForum = new Forum((Forum)forums.get(index - 1));
+			fm.setOrderUp(toChange, otherForum);
+		}
+		else {
+			// Get the forum which comes *after* the forum we're changing
+			Forum otherForum = new Forum((Forum)forums.get(index + 1));
+			fm.setOrderDown(toChange, otherForum);
+		}
 		
+		category.changeForumOrder(toChange);
 		this.list();
 	}
 	
