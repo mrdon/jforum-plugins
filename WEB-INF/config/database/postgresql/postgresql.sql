@@ -12,6 +12,13 @@ UserModel.selectById = SELECT u.*, \
 	AND pm.privmsgs_type = 1) AS private_messages \
 	FROM jforum_users u \
 	WHERE u.user_id = ?
+	
+UserModel.selectAllByGroup = SELECT user_email, u.user_id, user_regdate, username \
+	FROM jforum_users u, jforum_user_groups ug \
+	WHERE u.user_id = ug.user_id \
+	AND ug.group_id = ? \
+	ORDER BY username \
+	LIMIT ? OFFSET ?
 
 # #############
 # PostModel
@@ -131,4 +138,3 @@ ModerationModel.topicsByForum = SELECT p.post_id, t.topic_id, t.topic_title, p.u
 # UserModel
 # ##########
 UserModel.login = SELECT user_id FROM jforum_users WHERE lower(username) = lower(?) AND user_password = ?
-

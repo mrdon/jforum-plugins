@@ -88,7 +88,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.64 2005/02/23 15:48:52 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.65 2005/02/23 20:38:37 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -230,6 +230,18 @@ public class PostAction extends Command {
 		this.context.put("moduleAction", "message.htm");
 		this.context.put("message", I18n.getMessage("PostShow.PostNotFound"));
 	}
+	
+	private void replyOnly()
+	{
+		this.context.put("moduleAction", "message.htm");
+		this.context.put("message", I18n.getMessage("PostShow.replyOnly"));
+	}
+	
+	private boolean isReplyOnly(int forumId) throws Exception
+	{
+		return !SecurityRepository.canAccess(SecurityConstants.PERM_REPLY_ONLY, 
+				Integer.toString(forumId));
+	}
 
 	public void insert() throws Exception {
 		int forumId = this.request.getIntParameter("forum_id");
@@ -254,6 +266,10 @@ public class PostAction extends Command {
 			this.context.put("setType", false);
 		}
 		else {
+			if (this.isReplyOnly(forumId)) {
+				this.replyOnly();
+				return;
+			}
 			this.context.put("setType", true);
 		}
 		
@@ -334,8 +350,8 @@ public class PostAction extends Command {
 			this.context.put("attachmentsEnabled", SecurityRepository.canAccess(
 					SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(p.getForumId())));
 			
-			this.context.put("maxAttachmentsSize", new Long(new AttachmentCommon(
-					this.request).getQuotaLimit(userId).getSizeInBytes()));
+			QuotaLimit ql = new AttachmentCommon(this.request).getQuotaLimit(userId);
+			this.context.put("maxAttachmentsSize", new Long(ql != null ? ql.getSizeInBytes() : 1));
 			
 			this.context.put("maxAttachments", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
 			this.context.put("forum", ForumRepository.getForum(p.getForumId()));
@@ -406,8 +422,8 @@ public class PostAction extends Command {
 		this.context.put("attachmentsEnabled", SecurityRepository.canAccess(
 				SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(topic.getForumId())));
 		
-		this.context.put("maxAttachmentsSize", new Long(new AttachmentCommon(
-				this.request).getQuotaLimit(userId).getSizeInBytes()));
+		QuotaLimit ql = new AttachmentCommon(this.request).getQuotaLimit(userId);
+		this.context.put("maxAttachmentsSize", new Long(ql != null ? ql.getSizeInBytes() : 1));
 		
 		this.context.put("maxAttachments", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
 		this.context.put("isNewPost", true);
@@ -552,6 +568,12 @@ public class PostAction extends Command {
 			// Cannot insert new messages on locked topics
 			if (t.getStatus() == Topic.STATUS_LOCKED) {
 				this.topicLocked();
+				return;
+			}
+		}
+		else {
+			if (this.isReplyOnly(forumId)) {
+				this.replyOnly();
 				return;
 			}
 		}

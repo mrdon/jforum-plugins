@@ -53,7 +53,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: AutoKeys.java,v 1.5 2005/02/22 20:32:38 rafaelsteil Exp $
+ * @version $Id: AutoKeys.java,v 1.6 2005/02/23 20:38:34 rafaelsteil Exp $
  */
 public class AutoKeys
 {
@@ -106,7 +106,7 @@ public class AutoKeys
 				Statement.RETURN_GENERATED_KEYS);
 		}
 		else {
-			p = JForum.getConnection().prepareStatement(SystemGlobals.getSql(queryName));
+			p = conn.prepareStatement(SystemGlobals.getSql(queryName));
 		}
 		
 		return p;

@@ -42,18 +42,11 @@
  */
 package net.jforum.drivers.postgresql;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
-
-import net.jforum.JForum;
-import net.jforum.entities.TopicModerationInfo;
-import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Andowson Chang
- * @version $Id: ModerationModel.java,v 1.2 2005/02/15 18:16:09 rafaelsteil Exp $
+ * @version $Id: ModerationModel.java,v 1.3 2005/02/23 20:38:36 rafaelsteil Exp $
  */
 public class ModerationModel extends net.jforum.drivers.generic.ModerationModel
 {	
@@ -62,41 +55,6 @@ public class ModerationModel extends net.jforum.drivers.generic.ModerationModel
 	 */
 	public List topicsByForum(int forumId, int start, int count) throws Exception
 	{
-		List l = new ArrayList();
-		PreparedStatement p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("ModerationModel.topicsByForum"));
-		p.setInt(1, forumId);
-		p.setInt(2, count);
-		p.setInt(3, start);
-				
-		int lastId = 0;
-		TopicModerationInfo info = null;
-		
-		ResultSet rs = p.executeQuery();
-		while (rs.next()) {
-			int id = rs.getInt("topic_id");
-			if (id != lastId) {
-				lastId = id;
-				
-				if (info != null) {
-					l.add(info);
-				}
-				
-				info = new TopicModerationInfo();
-				info.setTopicId(id);
-				info.setTopicTitle(rs.getString("topic_title"));
-			}
-			
-			info.addPost(this.getPost(rs));
-		}
-		
-		if (info != null) {
-			l.add(info);
-		}
-		
-		rs.close();
-		p.close();
-		
-		return l;
+		return super.topicsByForum(forumId, count, start + count);
 	}	
 }

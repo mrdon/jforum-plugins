@@ -47,7 +47,7 @@ import java.util.List;
 /**
  * @author Marc Wick
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.3 2005/02/21 14:30:59 rafaelsteil Exp $
+ * @version $Id: UserModel.java,v 1.4 2005/02/23 20:38:35 rafaelsteil Exp $
  */
 public class UserModel extends net.jforum.drivers.postgresql.UserModel
 {
@@ -57,5 +57,14 @@ public class UserModel extends net.jforum.drivers.postgresql.UserModel
 	public List selectAll(int startFrom, int count) throws Exception
 	{
 		return new net.jforum.drivers.generic.UserModel().selectAll(startFrom, count);
+	}
+	
+	/**
+	 * @see net.jforum.drivers.postgresql.UserModel#selectAllByGroup(int, int, int)
+	 */
+	public List selectAllByGroup(int groupId, int start, int count) throws Exception
+	{
+		// The parameters are in a different order because the way hsqldb deals with LIMIT clauses
+		return new net.jforum.drivers.generic.UserModel().selectAllByGroup(start, count, groupId);
 	}
 }

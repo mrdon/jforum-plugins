@@ -2,8 +2,14 @@
 # UserModel
 # ##########
 UserModel.lastUserRegistered = SELECT TOP 1 user_id, username FROM jforum_users ORDER BY user_regdate DESC 
-UserModel.selectAllByLimit = SELECT LIMIT ? ? user_email, user_id, user_posts, user_regdate, username, deleted FROM jforum_users ORDER BY username 
-UserModel.lastGeneratedUserId = SELECT max(user_id) from jforum_users
+UserModel.selectAllByLimit = SELECT LIMIT ? ? user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website FROM jforum_users ORDER BY username 
+UserModel.lastGeneratedUserId = SELECT MAX(user_id) from jforum_users
+
+UserModel.selectAllByGroup = SELECT LIMIT ? ? user_email, u.user_id, user_regdate, username \
+	FROM jforum_users u, jforum_user_groups ug \
+	WHERE u.user_id = ug.user_id \
+	AND ug.group_id = ? \
+	ORDER BY username
 
 UserModel.selectById = SELECT u.*, \
 	(SELECT COUNT(1) FROM jforum_privmsgs pm \
@@ -47,7 +53,7 @@ ForumModel.selectAll = SELECT f.*, COUNT(p.post_id) AS total_posts \
 	      f.forum_name, f.forum_desc, \
 	      f.forum_topics, f.forum_last_post_id, f.moderated
 
-ForumModel.generatedForumId = SELECT max(forum_id) from jforum_forums
+ForumModel.generatedForumId = SELECT MAX(forum_id) from jforum_forums
 
 # #############
 # TopicModel
@@ -70,7 +76,7 @@ TopicModel.selectRecentTopicsByLimit = SELECT LIMIT 0 ? t.*, u.username AS poste
 	AND t.topic_type = 0 \
 	ORDER BY p2.post_time DESC, t.topic_last_post_id DESC
 	
-TopicModel.lastGeneratedTopicId = SELECT max(topic_id) from jforum_topics
+TopicModel.lastGeneratedTopicId = SELECT MAX(topic_id) from jforum_topics
 
 # #####################
 # PrivateMessagesModel
@@ -80,7 +86,7 @@ PrivateMessagesModel.lastGeneratedPmId = SELECT max(privmsgs_id) from jforum_pri
 # ############
 # SearchModel
 # ############
-SearchModel.lastGeneratedWordId = select max(word_id) from jforum_search_words
+SearchModel.lastGeneratedWordId = select MAX(word_id) from jforum_search_words
 
 SearchModel.cleanSearchResults = DELETE FROM jforum_search_results WHERE session = ? OR datediff('hh',search_time,current_timestamp) < 1 
 SearchModel.cleanSearchTopics = DELETE FROM jforum_search_topics WHERE session = ? OR datediff('hh',search_time,current_timestamp) < 1 
@@ -95,9 +101,12 @@ SmiliesModel.lastGeneratedSmilieId = SELECT max(smilie_id) from jforum_smilies
 # ##################
 PermissionControl.lastGeneratedRoleId = SELECT max(role_id) from jforum_roles
 
-
-
 # ##############
 # CategoryModel
 # ##############
 CategoryModel.lastGeneratedCategoryId = SELECT max(categories_id) from jforum_categories
+
+# ################
+# AttachmentModel
+# ################
+AttachmentModel.lastGeneratedAttachmentId = SELECT MAX(attach_id) FROM jforum_attach

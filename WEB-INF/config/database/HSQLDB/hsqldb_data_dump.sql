@@ -74,7 +74,7 @@ INSERT INTO jforum_categories VALUES (1,'Category Test',1,0);
 INSERT INTO jforum_forums VALUES (1,1,'Test Forum','This is a test forum',1,1,1,0);
 INSERT INTO jforum_topics VALUES (1,1,'Welcome to JForum',2,'2005-01-04 16:59:54',1,0,0,0,0,1,1,0);
 INSERT INTO jforum_posts VALUES (1,1,1,2,'2005-01-04 16:59:54','127.0.0.1',1,0,1,1,'2005-01-04 17:01:45',2,1,0,0);
-INSERT INTO jforum_posts_text VALUES (1,'[b]Congratulations![/b]. You have completed the installation of JForum. \r\n\r\nTo start administering the board, login as [i]Admin / <the password you supplied in the installer>[/i] and access the [b]Admin Control Panel[/b] using the link that shows up in the bottom of the page. \r\n\r\nThere you will be able to create Categories, Forums and much more. \r\n\r\nFor more information and support, please access [url]http://www.jforum.net/community.htm[/url] and [url]http://www.jforum.net/help.htm[/url]\r\n\r\nThank you for choosing JForum.\r\n\r\nThe JForum Team.','Welcome to JForum');
+INSERT INTO jforum_posts_text VALUES (1,'[b]Congratulations![/b]. You have completed the installation of JForum. To start administering the board, login as [i]Admin / <the password you supplied in the installer>[/i] and access the [b]Admin Control Panel[/b] using the link that shows up in the bottom of the page. There you will be able to create Categories, Forums and much more. For more information and support, please access [url]http://www.jforum.net/community.htm[/url] and [url]http://www.jforum.net/help.htm[/url]. Thank you for choosing JForum. The JForum Team.','Welcome to JForum');
 
 --
 -- View Forum
@@ -132,6 +132,8 @@ INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (25, '1
 --
 INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (26, 'perm_attachments_enabled', 1, 0);
 INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (27, 'perm_attachments_enabled', 2, 0);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (28, 'perm_attachments_download', 1, 1);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (29, 'perm_attachments_download', 2, 1);
 
 INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (26, '1', 1);
 INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (27, '1', 1);
@@ -139,11 +141,20 @@ INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (27, '1
 --
 -- Bookmarks
 --
-INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (28, 'perm_bookmarks_enabled', 1, 1);
-INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (29, 'perm_bookmarks_enabled', 2, 1);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (30, 'perm_bookmarks_enabled', 1, 1);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (31, 'perm_bookmarks_enabled', 2, 1);
 
 --
 -- Karma
 --
-INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (30, 'perm_karma_enabled', 1, 1);
-INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (31, 'perm_karma_enabled', 2, 1);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (32, 'perm_karma_enabled', 1, 1);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (33, 'perm_karma_enabled', 2, 1);
+
+--
+-- Reply only
+--
+INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (34, 'perm_reply_only', 1, 0);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (35, 'perm_reply_only', 2, 0);
+
+INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (34, '1', 1);
+INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (35, '1', 1);

@@ -34,7 +34,7 @@
 				</#if>
 
 				<tr>
-					<#if !readonly || !replyOnly>
+					<#if !readonly && !replyOnly>
 						<td valign="center" align="left" width="50">
 							<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&forum_id=${forum.id}", "")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/post.gif" border="0" /></a>
 						</td>
@@ -136,7 +136,7 @@
 
 			<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
 				<tr>
-					<#if !readonly || !replyOnly>
+					<#if !readonly && !replyOnly>
 						<td valign="center" align="left" width="50">
 							<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&amp;action=insert&amp;forum_id=${forum.id}","")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/post.gif" border="0" /></a>
 						</td>
