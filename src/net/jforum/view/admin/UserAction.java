@@ -68,7 +68,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.2 2004/09/22 16:37:14 jamesyong Exp $
+ * @version $Id: UserAction.java,v 1.3 2004/09/25 02:00:26 jamesyong Exp $
  */
 public class UserAction extends Command 
 {
@@ -160,6 +160,28 @@ public class UserAction extends Command
 		int userId = Integer.parseInt(JForum.getRequest().getParameter("user_id"));
 		ViewCommon.saveUser(userId);
 
+		this.list();
+	}
+
+	// Delete
+	public void delete() throws Exception
+	{
+		String ids[] = JForum.getRequest().getParameterValues("user_id");
+		
+		UserModel um = DataAccessDriver.getInstance().newUserModel();
+		
+		if (ids != null) {
+			for (int i = 0; i < ids.length; i++) {
+				
+				int user = Integer.parseInt(ids[i]);
+				if (um.isDeleted(user)){
+					um.undelete(user);
+				} else {
+					um.delete(user);
+				}
+			}
+		}
+		
 		this.list();
 	}
 	

@@ -16,6 +16,9 @@
 <TD class=gen><b>Username</b></TD>
 <TD class=gen>&nbsp;</TD>
 <TD class=gen>&nbsp;</TD>
+<TD class=gen>&nbsp;</TD>
+<TD class=gen><b>Lock</b></TD>
+<TD class=gen><b>Unlock</b></td>
 </TR>
 
 <#list users as user>
@@ -25,17 +28,27 @@
 	<TD class=row2><span class="gen"><a href="${contextPath}/jforum${extension}?module=adminUsers&action=edit&id=${user.id}">${I18n.getMessage("Edit")}</a></span></TD>
 	<TD class=row2><span class="gen"><a href="${contextPath}/jforum${extension}?module=adminUsers&action=groups&id=${user.id}">${I18n.getMessage("User.Groups")}</a></span></TD>
 	<TD class=row2><span class="gen"><a href="${contextPath}/jforum${extension}?module=adminUsers&action=permissions&id=${user.id}">${I18n.getMessage("Permissions")}</a></span></TD>
-	</TR>
+	<#if user.deleted>
+		<TD class=row2>&nbsp;</td>
+		<TD class=row2><input type="checkbox" name="user_id" value="${user.id}"></TD>
+	<#else>
+		<TD class=row2><input type="checkbox" name="user_id" value="${user.id}"></TD>
+		<TD class=row2>&nbsp;</td>
+	</#if>
+</TR>
 </#list>
 
 <TR align="center">
-<TD class=catBottom colSpan=7 height=28>
-<INPUT class=mainoption type=button value="${I18n.getMessage("Insert")}" onClick="document.location = '${contextPath}?module=adminUsers&action=insert';">&nbsp;&nbsp;
-<INPUT class=mainoption type=submit value="${I18n.getMessage("Forums.List.ClickToDelete")}" name=submit>&nbsp;&nbsp;
-</TD>
+	<TD class=catBottom colSpan=5 height=28>
+		<INPUT class=mainoption type=button value="${I18n.getMessage("Insert")}" onClick="document.location = '${contextPath}?module=adminUsers&action=insert';">&nbsp;&nbsp;
+	</TD>
+	<TD class=catBottom colSpan=2>
+		<INPUT class=mainoption type=submit value="${I18n.getMessage("Lock")}/${I18n.getMessage("Unlock")}" name=submit>&nbsp;&nbsp;
+	</TD>
 </TR></TABLE>
+
 <TABLE width="100%"><TR>
-	<TD align="right"><@pagination.doPagination action /></TD>
+	<TD align="right"><@pagination.doPagination "list" /></TD>
 </TR></TABLE>
 </FORM>
    
