@@ -64,7 +64,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationAction.java,v 1.1 2005/01/31 20:10:43 rafaelsteil Exp $
+ * @version $Id: ModerationAction.java,v 1.2 2005/02/07 13:48:56 andowson Exp $
  */
 public class ModerationAction extends Command
 {
@@ -124,7 +124,7 @@ public class ModerationAction extends Command
 					
 					int totalPosts = tm.getTotalPosts(post.getTopicId());
 					if (totalPosts == 0) {
-						TopicsCommon.deleteTopic(post.getTopicId());
+						TopicsCommon.deleteTopic(post.getTopicId(), post.getForumId());
 					}
 				}
 			}
