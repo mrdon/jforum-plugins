@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.33 2005/01/08 15:21:59 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.34 2005/01/13 23:30:16 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -162,9 +162,10 @@ public class ConfigKeys {
 	public static final String AVATAR_MAX_WIDTH = "avatar.maxWidth";
 	public static final String AVATAR_MAX_HEIGHT = "avatar.maxHeight";
 
-	// jforum_config
 	public static final String MOST_USERS_EVER_ONLINE = "most.users.ever.online";
 	public static final String MOST_USER_EVER_ONLINE_DATE = "most.users.ever.online.date";
+	
+	public static final String OSCACHE_PROPERTIES = "oscache.properties";
 	
 	private ConfigKeys() {}
 }

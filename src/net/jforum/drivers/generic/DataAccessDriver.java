@@ -49,7 +49,7 @@ import net.jforum.drivers.generic.security.UserSecurityModel;
 
 /**
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.4 2004/12/29 17:18:41 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.5 2005/01/13 23:30:17 rafaelsteil Exp $
  */
 public class DataAccessDriver extends net.jforum.model.DataAccessDriver 
 {
@@ -65,6 +65,7 @@ public class DataAccessDriver extends net.jforum.model.DataAccessDriver
 	private static GroupSecurityModel groupSecurityModel = new GroupSecurityModel();
 	private static PrivateMessageModel privateMessageModel = new PrivateMessageModel();
 	private static UserSessionModel userSessionModel = new UserSessionModel();
+	private static KarmaModel karmaModel = new KarmaModel();
 
 	/**
 	 * @see net.jforum.model.DataAccessDriver#getForumModel()
@@ -207,5 +208,13 @@ public class DataAccessDriver extends net.jforum.model.DataAccessDriver
 	public net.jforum.model.ConfigModel newConfigModel(Connection conn)
 	{
 		return new ConfigModel(conn);
+	}
+	
+	/** 
+	 * @see net.jforum.model.DataAccessDriver#newKarmaModel()
+	 */
+	public net.jforum.model.KarmaModel newKarmaModel()
+	{
+		return karmaModel;
 	}
 }

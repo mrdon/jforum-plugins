@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -57,7 +57,7 @@ import org.apache.log4j.Logger;
  * which opens a new connection on every request.  
  * 
  * @author Rafael Steil
- * @version $Id: DBConnection.java,v 1.5 2005/01/08 15:21:57 rafaelsteil Exp $
+ * @version $Id: DBConnection.java,v 1.6 2005/01/13 23:30:18 rafaelsteil Exp $
  */
 public abstract class DBConnection 
 {

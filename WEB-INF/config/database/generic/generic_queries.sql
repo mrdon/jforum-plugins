@@ -413,3 +413,11 @@ UserSessionModel.add = INSERT INTO jforum_sessions ( session_id, session_user_id
 UserSessionModel.update = UPDATE jforum_sessions SET session_start = ?, session_time = ?, session_id = ? WHERE session_user_id = ?
 UserSessionModel.delete = DELETE FROM jforum_sessions WHERE session_user_id = ?
 UserSessionModel.selectById = SELECT session_time, session_start, session_id FROM jforum_sessions WHERE session_user_id = ?
+
+# ###########
+# KarmaModel
+# ###########
+KarmaModel.add = INSERT INTO jforum_karma (user_id, from_user_id, status) VALUES (?, ?, ?)
+KarmaModel.update = UPDATE jforum_karma SET status = ? WHERE karma_id = ?
+KarmaModel.selectPositiveStatus = SELECT COUNT(status) positive FROM jforum_karma WHERE user_id = ? AND status = 1
+KarmaModel.selectNegativeStatus = SELECT COUNT(status) negative FROM jforum_karma WHERE user_id = ? AND status = 0

@@ -16,5 +16,8 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/jcaptcha-engine-1.0-RC1.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/hsqldb-1.7.3.0.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/commons-fileupload-1.1-dev.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/ojdbc14.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/jgroups-2.2.7.jar"/>
+	<classpathentry sourcepath="/OSCache" kind="lib" path="WEB-INF/lib/oscache-2.1-13Jan05.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>

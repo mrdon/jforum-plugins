@@ -28,6 +28,15 @@
 	   </layout>
 	</appender>
 
+	<category name="org.jgroups">
+		<priority value="info"/>
+		<appender-ref ref="jforum-stdout"/>
+	</category>
+
+	<category name="com.opensymphony.oscache">
+		<priority value="info" />
+		<appender-ref ref="jforum-stdout" />
+	</category>
 
 	<category name="net.jforum">
 		<priority value="info" />

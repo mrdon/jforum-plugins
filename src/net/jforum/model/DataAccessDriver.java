@@ -58,7 +58,7 @@ import java.sql.Connection;
  * analise, look at <code>net.jforum.drivers.generic</code> package.
  * 
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.10 2004/12/29 17:18:41 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.11 2005/01/13 23:30:10 rafaelsteil Exp $
  */
 public abstract class DataAccessDriver 
 {
@@ -218,4 +218,11 @@ public abstract class DataAccessDriver
 	 * @return <code>link net.jforum.model.ConfigModel</code> instance
 	 */
 	public abstract net.jforum.model.ConfigModel newConfigModel(Connection conn);
+	
+	/**
+	 * Gets a {@link net.jforum.model.KarmaModel} instance
+	 * 
+	 * @return <code>link net.jforum.model.KarmaModel</code> instance
+	 */
+	public abstract net.jforum.model.KarmaModel newKarmaModel();
 }

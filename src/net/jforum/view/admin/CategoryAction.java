@@ -72,7 +72,7 @@ import freemarker.template.Template;
  * ViewHelper for category administration.
  * 
  * @author Rafael Steil
- * @version $Id: CategoryAction.java,v 1.12 2005/01/04 03:31:18 rafaelsteil Exp $
+ * @version $Id: CategoryAction.java,v 1.13 2005/01/13 23:30:08 rafaelsteil Exp $
  */
 public class CategoryAction extends Command 
 {
@@ -106,9 +106,9 @@ public class CategoryAction extends Command
 	//  Save information
 	public void editSave() throws Exception
 	{
-		Category c = new Category();
+		Category c = new Category(ForumRepository.getCategory(
+				this.request.getIntParameter("categories_id")));
 		c.setName(this.request.getParameter("category_name"));
-		c.setId(this.request.getIntParameter("categories_id"));
 			
 		this.cm.update(c);
 		ForumRepository.reloadCategory(c);
