@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -43,7 +43,6 @@
 package net.jforum.model;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -57,7 +56,7 @@ import net.jforum.entities.User;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.11 2004/09/25 04:38:04 rafaelsteil Exp $
+ * @version $Id: UserModel.java,v 1.12 2004/11/05 03:29:49 rafaelsteil Exp $
  */
 public interface UserModel 
 {
@@ -87,7 +86,7 @@ public interface UserModel
 	 * @return <code>ArrayList</code> with the users. Each entry is an <code>User</code> object
 	 * @throws Exception
 	 */
-	public ArrayList selectAll() throws Exception;
+	public List selectAll() throws Exception;
 	
 	/**
 	 * Finds an user by matching an input string. 
@@ -113,7 +112,7 @@ public interface UserModel
 	 * @return <code>ArrayList</code> with the users. Each entry is an <code>User</code> object
 	 * @throws Exception
 	 */
-	public ArrayList selectAll(int startFrom, int count) throws Exception;
+	public List selectAll(int startFrom, int count) throws Exception;
 	
 
 	/**

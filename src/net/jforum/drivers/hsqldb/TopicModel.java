@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -45,21 +45,23 @@ package net.jforum.drivers.hsqldb;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.jforum.JForum;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Marc Wick
+ * @version $Id: TopicModel.java,v 1.2 2004/11/05 03:29:47 rafaelsteil Exp $
  */
 public class TopicModel extends net.jforum.drivers.postgresql.TopicModel {
 
 	/**
 	 * @see net.jforum.model.TopicModel#selectAllByForumByLimit(int, int, int)
 	 */
-	public ArrayList selectAllByForumByLimit(int forumId, int startFrom,
+	public List selectAllByForumByLimit(int forumId, int startFrom,
 			int count) throws Exception {
-		ArrayList l = new ArrayList();
+		List l = new ArrayList();
 
 		PreparedStatement p = JForum.getConnection().prepareStatement(
 				SystemGlobals.getSql("TopicModel.selectAllByForumByLimit"));

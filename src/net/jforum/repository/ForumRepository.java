@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import net.jforum.entities.Forum;
 import net.jforum.ForumException;
@@ -62,7 +63,7 @@ import net.jforum.security.SecurityConstants;
  * needed just once, and then use the cache when data is requested.<br> 
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.7 2004/11/01 00:23:38 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.8 2004/11/05 03:29:47 rafaelsteil Exp $
  */
 public class ForumRepository 
 {
@@ -183,9 +184,9 @@ public class ForumRepository
 		getTotalMessages(true);
 	}
 	
-	public static HashMap getLastPostInfo(int forumId) throws Exception
+	public static Map getLastPostInfo(int forumId) throws Exception
 	{
-		HashMap lpi = ((HashMap)ForumRepository.lastPostInfoMap.get(Integer.toString(forumId)));
+		Map lpi = ((HashMap)ForumRepository.lastPostInfoMap.get(Integer.toString(forumId)));
 		
 		if (!ForumRepository.lastPostInfoMap.containsKey(Integer.toString(forumId)) || lpi == null || lpi.size() == 0) {
 			lpi = DataAccessDriver.getInstance().newForumModel().getLastPostInfo(forumId);

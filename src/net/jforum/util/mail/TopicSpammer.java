@@ -44,6 +44,7 @@ package net.jforum.util.mail;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Iterator;
 
 import net.jforum.entities.Topic;
@@ -55,11 +56,11 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicSpammer.java,v 1.7 2004/09/11 02:43:18 rafaelsteil Exp $
+ * @version $Id: TopicSpammer.java,v 1.8 2004/11/05 03:29:52 rafaelsteil Exp $
  */
 public class TopicSpammer extends Spammer 
 {
-	public TopicSpammer(Topic topic, ArrayList users)
+	public TopicSpammer(Topic topic, List users)
 	{
 		// Prepare the users. In this current version, the email
 		// is not personalized, so then we'll just use his address

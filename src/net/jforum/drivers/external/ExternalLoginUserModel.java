@@ -43,7 +43,6 @@
 package net.jforum.drivers.external;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -129,11 +128,11 @@ public class ExternalLoginUserModel implements UserModel {
 		delegateUserModel.writeUserActive(userId);
 	}
 	
-	public ArrayList selectAll() throws Exception {
+	public List selectAll() throws Exception {
 		return delegateUserModel.selectAll();
 	}
 	
-	public ArrayList selectAll(int startFrom, int count) throws Exception {
+	public List selectAll(int startFrom, int count) throws Exception {
 		return delegateUserModel.selectAll(startFrom, count);
 	}
 	

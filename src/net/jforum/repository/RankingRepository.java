@@ -41,12 +41,13 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: RankingRepository.java,v 1.2 2004/04/21 23:57:32 rafaelsteil Exp $
+ * $Id: RankingRepository.java,v 1.3 2004/11/05 03:29:48 rafaelsteil Exp $
  */
 package net.jforum.repository;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import net.jforum.ForumException;
 import net.jforum.entities.Ranking;
@@ -76,7 +77,7 @@ public class RankingRepository
 		RankingModel rm = DataAccessDriver.getInstance().newRankingModel();
 		RankingRepository.ranksList.clear();
 		
-		ArrayList l = rm.selectAll();
+		List l = rm.selectAll();
 		int total = l.size();
 		for (Iterator iter = l.iterator(); iter.hasNext(); ) {
 			Ranking r = (Ranking)iter.next();

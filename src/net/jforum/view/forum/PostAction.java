@@ -79,7 +79,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.19 2004/11/02 19:02:50 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.20 2004/11/05 03:29:41 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -113,7 +113,7 @@ public class PostAction extends Command
         int count = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
         int start = ViewCommon.getStartPage();
 
-        ArrayList posts = pm.selectAllByTopicByLimit(topicId, start, count);
+        List posts = pm.selectAllByTopicByLimit(topicId, start, count);
         List helperList = new ArrayList();
         Map usersMap = new HashMap();
 
@@ -473,7 +473,7 @@ public class PostAction extends Command
                 // Ok, we have an answer. Time to notify the subscribed users
                 if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_NOTIFY_ANSWERS)) {
                     try {
-                        ArrayList usersToNotify = tm.notifyUsers(t);
+                        List usersToNotify = tm.notifyUsers(t);
                         
                         // we only have to send an email if there are users subscribed to the topic
                         if (usersToNotify != null && usersToNotify.size() > 0) {

@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -42,7 +42,7 @@
  */
 package net.jforum.model;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import net.jforum.entities.Category;
 
@@ -54,7 +54,7 @@ import net.jforum.entities.Category;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: CategoryModel.java,v 1.3 2004/06/02 03:56:14 rafaelsteil Exp $
+ * @version $Id: CategoryModel.java,v 1.4 2004/11/05 03:29:50 rafaelsteil Exp $
  */
 public interface CategoryModel 
 {	
@@ -75,7 +75,7 @@ public interface CategoryModel
 	 * @throws Exception
 	 * @see #selectById
 	 */
-	public ArrayList selectAll() throws Exception;
+	public List selectAll() throws Exception;
 	
 	/**
 	 * Checks if is possible to delete a specific category.

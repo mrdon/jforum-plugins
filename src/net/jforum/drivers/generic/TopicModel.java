@@ -48,6 +48,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
@@ -59,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicModel.java,v 1.8 2004/11/02 12:45:13 jamesyong Exp $
+ * @version $Id: TopicModel.java,v 1.9 2004/11/05 03:29:45 rafaelsteil Exp $
  */
 public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel 
 {
@@ -75,7 +76,7 @@ public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel
 		
 		Topic t = new Topic();
 		ResultSet rs = p.executeQuery();
-		ArrayList l = this.fillTopicsData(rs);
+		List l = this.fillTopicsData(rs);
 		if (l.size() > 0) {
 			t = (Topic)l.get(0);
 		}
@@ -189,7 +190,7 @@ public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel
 	/** 
 	 * @see net.jforum.model.TopicModel#selectAllByForum(int)
 	 */
-	public ArrayList selectAllByForum(int forumId) throws Exception 
+	public List selectAllByForum(int forumId) throws Exception 
 	{
 		return this.selectAllByForumByLimit(forumId, 0, Integer.MAX_VALUE);
 	}
@@ -197,13 +198,13 @@ public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel
 	/** 
 	 * @see net.jforum.model.TopicModel#selectAllByForumByLimit(int, int, int)
 	 */
-	public ArrayList selectAllByForumByLimit(
+	public List selectAllByForumByLimit(
 		int forumId,
 		int startFrom,
 		int count)
 		throws Exception 
 	{
-		ArrayList l = new ArrayList();
+		List l = new ArrayList();
 
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("TopicModel.selectAllByForumByLimit"));
 		p.setInt(1, forumId);
@@ -219,10 +220,10 @@ public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel
 		return l;
 	}
 	
-	public ArrayList fillTopicsData(ResultSet rs) throws SQLException
+	public List fillTopicsData(ResultSet rs) throws SQLException
 	{
 		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
-		ArrayList l = new ArrayList();
+		List l = new ArrayList();
 		
 		while (rs.next()) {
 			Topic t = new Topic();
@@ -310,9 +311,9 @@ public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel
 	/** 
 	 * @see net.jforum.model.TopicModel#selectLastN(int)
 	 */
-	public ArrayList selectLastN(int count) throws Exception 
+	public List selectLastN(int count) throws Exception 
 	{
-		ArrayList topics = new ArrayList();
+		List topics = new ArrayList();
 		
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("TopicModel.selectLastN"));
 		p.setInt(1, count);
@@ -341,7 +342,7 @@ public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel
 	/**
  	 * @see net.jforum.model.TopicModel#notifyUsers(int)
  	 */
-	public ArrayList notifyUsers(Topic topic) throws Exception 
+	public List notifyUsers(Topic topic) throws Exception 
 	{ 
 		int posterId = SessionFacade.getUserSession().getUserId();
 		int anonUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
@@ -355,7 +356,7 @@ public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel
 				
 		rs = stmt.executeQuery();
 		
-		ArrayList users = new ArrayList();
+		List users = new ArrayList();
 		while(rs.next()) {
 			User user = new User();
 
@@ -483,9 +484,9 @@ public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel
 	/** 
 	 * @see net.jforum.model.TopicModel#selectRecentTopics(int)
 	 */	
-	public ArrayList selectRecentTopics (int limit) throws Exception
+	public List selectRecentTopics (int limit) throws Exception
 	{
-		ArrayList l = new ArrayList();
+		List l = new ArrayList();
 
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("TopicModel.selectRecentTopicsByLimit"));
 		p.setInt(1, limit);

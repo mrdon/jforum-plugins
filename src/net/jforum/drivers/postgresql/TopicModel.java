@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -45,6 +45,7 @@ package net.jforum.drivers.postgresql;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.jforum.JForum;
 import net.jforum.entities.Topic;
@@ -52,7 +53,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicModel.java,v 1.3 2004/06/01 19:47:19 pieter2 Exp $
+ * @version $Id: TopicModel.java,v 1.4 2004/11/05 03:29:42 rafaelsteil Exp $
  */
 public class TopicModel extends net.jforum.drivers.generic.TopicModel
 {
@@ -70,9 +71,9 @@ public class TopicModel extends net.jforum.drivers.generic.TopicModel
 	/** 
 	 * @see net.jforum.model.TopicModel#selectAllByForumByLimit(int, int, int)
 	 */
-	public ArrayList selectAllByForumByLimit(int forumId, int startFrom, int count) throws Exception
+	public List selectAllByForumByLimit(int forumId, int startFrom, int count) throws Exception
 	{
-		ArrayList l = new ArrayList();
+		List l = new ArrayList();
 
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("TopicModel.selectAllByForumByLimit"));
 		p.setInt(1, forumId);

@@ -45,6 +45,7 @@ package net.jforum.drivers.generic;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.jforum.JForum;
 import net.jforum.entities.Group;
@@ -52,11 +53,11 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GroupModel.java,v 1.3 2004/09/22 23:28:54 rafaelsteil Exp $
+ * @version $Id: GroupModel.java,v 1.4 2004/11/05 03:29:46 rafaelsteil Exp $
  */
 public class GroupModel implements net.jforum.model.GroupModel 
 {
-	/*
+	/**
 	 * @see net.jforum.model.GroupModel#selectById(int)
 	 */
 	public Group selectById(int groupId) throws Exception 
@@ -78,7 +79,7 @@ public class GroupModel implements net.jforum.model.GroupModel
 		return g;
 	}
 
-	/*
+	/**
 	 * @see net.jforum.model.GroupModel#canDelete(int)
 	 */
 	public boolean canDelete(int groupId) throws Exception
@@ -99,7 +100,7 @@ public class GroupModel implements net.jforum.model.GroupModel
 		return status;
 	}
 
-	/*
+	/**
 	 * @see net.jforum.model.GroupModel#delete(int)
 	 */
 	public void delete(int groupId) throws Exception 
@@ -111,7 +112,7 @@ public class GroupModel implements net.jforum.model.GroupModel
 		p.close();
 	}
 
-	/*
+	/**
 	 * @see net.jforum.model.GroupModel#update(net.jforum.Group)
 	 */
 	public void update(Group group) throws Exception 
@@ -126,7 +127,7 @@ public class GroupModel implements net.jforum.model.GroupModel
 		p.close();
 	}
 
-	/*
+	/**
 	 * @see net.jforum.model.GroupModel#addNew(net.jforum.Group)
 	 */
 	public void addNew(Group group) throws Exception 
@@ -140,10 +141,10 @@ public class GroupModel implements net.jforum.model.GroupModel
 		p.close();
 	}
 
-	/* 
+	/** 
 	 * @see net.jforum.model.GroupModel#selectUsersIds(int)
 	 */
-	public ArrayList selectUsersIds(int groupId) throws Exception 
+	public List selectUsersIds(int groupId) throws Exception 
 	{
 		ArrayList l = new ArrayList();
 		
@@ -161,9 +162,9 @@ public class GroupModel implements net.jforum.model.GroupModel
 		return l;
 	}
 	
-	private ArrayList fillGroups(ResultSet rs) throws Exception
+	protected List fillGroups(ResultSet rs) throws Exception
 	{
-		ArrayList l = new ArrayList();
+		List l = new ArrayList();
 		
 		while (rs.next()) {
 			l.add(this.getGroup(rs));
@@ -172,7 +173,7 @@ public class GroupModel implements net.jforum.model.GroupModel
 		return l;
 	}
 	
-	private Group getGroup(ResultSet rs) throws Exception
+	protected Group getGroup(ResultSet rs) throws Exception
 	{
 		Group g = new Group();
 		
@@ -184,15 +185,15 @@ public class GroupModel implements net.jforum.model.GroupModel
 		return g;
 	}
 
-	/* 
+	/** 
 	 * @see net.jforum.model.GroupModel#selectAll()
 	 */
-	public ArrayList selectAll() throws Exception 
+	public List selectAll() throws Exception 
 	{
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("GroupModel.selectAll"));
 		ResultSet rs = p.executeQuery();
 		
-		ArrayList l = this.fillGroups(rs);
+		List l = this.fillGroups(rs);
 		
 		rs.close();
 		p.close();

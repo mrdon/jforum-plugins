@@ -66,7 +66,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.8 2004/10/25 21:43:57 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.9 2004/11/05 03:29:52 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -227,7 +227,7 @@ public class UserAction extends Command
 		GroupModel gm = DataAccessDriver.getInstance().newGroupModel();
 		
 		// Remove the old groups
-		ArrayList allGroupsList = gm.selectAll();
+		List allGroupsList = gm.selectAll();
 		int[] allGroups = new int[allGroupsList.size()];
 		
 		int counter = 0;

@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,16 +37,13 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creating date: Feb 23, 2003 / 2:43:40 PM
- * net.jforum.model.ForumModel.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: ForumModel.java,v 1.2 2004/04/21 23:57:23 rafaelsteil Exp $
  */
 package net.jforum.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import net.jforum.entities.Forum;
 
@@ -58,6 +55,7 @@ import net.jforum.entities.Forum;
  * select some specific data.
  * 
  * @author Rafael Steil
+ * @version $Id: ForumModel.java,v 1.3 2004/11/05 03:29:49 rafaelsteil Exp $
  */
 public interface ForumModel 
 {
@@ -78,7 +76,7 @@ public interface ForumModel
 	 * @throws Exception
 	 * @see #selectById
 	 */
-	public ArrayList selectAll() throws Exception;
+	public List selectAll() throws Exception;
 	
 	/**
 	 * Sets the forum's order one level up.
@@ -157,7 +155,7 @@ public interface ForumModel
 	 */
 	public void decrementTotalTopics(int forumId, int count) throws Exception;
 
-	public HashMap getLastPostInfo(int forumId) throws Exception;
+	public Map getLastPostInfo(int forumId) throws Exception;
 	
 	/**
 	 * Gets the total number of messages of a forum

@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageModel.java,v 1.6 2004/10/19 14:32:13 marcwick Exp $
+ * @version $Id: PrivateMessageModel.java,v 1.7 2004/11/05 03:29:46 rafaelsteil Exp $
  */
 public class PrivateMessageModel extends AutoKeys implements net.jforum.model.PrivateMessageModel
 {
@@ -188,12 +188,12 @@ public class PrivateMessageModel extends AutoKeys implements net.jforum.model.Pr
 		return pmList;
 	}
 	
-	private PrivateMessage getPm(ResultSet rs) throws Exception
+	protected PrivateMessage getPm(ResultSet rs) throws Exception
 	{
 		return this.getPm(rs, true);
 	}
 	
-	private PrivateMessage getPm(ResultSet rs, boolean full) throws Exception
+	protected PrivateMessage getPm(ResultSet rs, boolean full) throws Exception
 	{
 		PrivateMessage pm = new PrivateMessage();
 		Post p = new Post();

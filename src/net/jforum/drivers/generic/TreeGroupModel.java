@@ -45,6 +45,7 @@ package net.jforum.drivers.generic;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.jforum.JForum;
 import net.jforum.util.GroupNode;
@@ -52,16 +53,16 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: TreeGroupModel.java,v 1.3 2004/09/22 23:28:54 rafaelsteil Exp $
+ * @version $Id: TreeGroupModel.java,v 1.4 2004/11/05 03:29:46 rafaelsteil Exp $
  */
 public class TreeGroupModel implements net.jforum.model.TreeGroupModel 
 {
-	/* 
+	/** 
 	 * @see net.jforum.model.TreeGroupModel#selectGroups(int)
 	 */
-	public ArrayList selectGroups(int parentId) throws Exception 
+	public List selectGroups(int parentId) throws Exception 
 	{
-		ArrayList list = new ArrayList();
+		List list = new ArrayList();
 		
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("TreeGroup.selectGroup"));
 		p.setInt(1, parentId);

@@ -50,6 +50,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.jforum.Command;
 import net.jforum.JForum;
@@ -71,7 +72,7 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.10 2004/10/25 20:52:09 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.11 2004/11/05 03:29:41 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -125,7 +126,7 @@ public class ForumAction extends Command
 				Forum f = new Forum((Forum)tmpIterator.next());
 				
 				if (checkUnreadPosts) {
-					HashMap lpi = ForumRepository.getLastPostInfo(f.getId());
+					Map lpi = ForumRepository.getLastPostInfo(f.getId());
 					if (lpi.containsKey("postTimeMillis")) {
 						Integer topicId = ((Integer)lpi.get("topicId"));
 						boolean contains = ((HashMap)SessionFacade.getAttribute("topics_tracking")).containsKey(topicId);
@@ -321,7 +322,7 @@ public class ForumAction extends Command
 			sd.setForumId(Integer.parseInt(forumId));
 		}
 		
-		ArrayList allTopics = DataAccessDriver.getInstance().newSearchModel().search(sd);
+		List allTopics = DataAccessDriver.getInstance().newSearchModel().search(sd);
 		for (Iterator iter = allTopics.iterator(); iter.hasNext(); ) {
 			Topic t = (Topic)iter.next();
 			

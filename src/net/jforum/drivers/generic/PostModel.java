@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: PostModel.java,v 1.12 2004/10/04 10:08:17 marcwick Exp $
+ * @version $Id: PostModel.java,v 1.13 2004/11/05 03:29:46 rafaelsteil Exp $
  */
 public class PostModel extends AutoKeys implements net.jforum.model.PostModel 
 {
@@ -262,7 +262,7 @@ public class PostModel extends AutoKeys implements net.jforum.model.PostModel
 	/**
 	 * @see net.jforum.model.PostModel#selectAllBytTopic(int)
 	 */
-	public ArrayList selectAllByTopic(int topicId) throws Exception
+	public List selectAllByTopic(int topicId) throws Exception
 	{
 		return this.selectAllByTopicByLimit(topicId, 0, Integer.MAX_VALUE);
 	}
@@ -270,9 +270,9 @@ public class PostModel extends AutoKeys implements net.jforum.model.PostModel
 	/**
 	 * @see net.jforum.model.PostModel#selectAllBytTopicByLimit(int, int, int)
 	 */
-	public ArrayList selectAllByTopicByLimit(int topicId, int startFrom, int count) throws Exception
+	public List selectAllByTopicByLimit(int topicId, int startFrom, int count) throws Exception
 	{
-		ArrayList l = new ArrayList();
+		List l = new ArrayList();
 		
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.selectAllByTopicByLimit"));
 		p.setInt(1, topicId);

@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,15 +37,12 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creating date: Feb 23, 2003 / 2:56:58 PM
- * net.jforum.model.TopicModel.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: TopicModel.java,v 1.4 2004/11/02 12:48:42 jamesyong Exp $
  */
 package net.jforum.model;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import net.jforum.entities.Topic;
 
@@ -57,6 +54,7 @@ import net.jforum.entities.Topic;
  * select some specific data.
  *
  * @author Rafael Steil
+ * @version $Id: TopicModel.java,v 1.5 2004/11/05 03:29:49 rafaelsteil Exp $
  */
 public interface TopicModel 
 {
@@ -77,7 +75,7 @@ public interface TopicModel
 	 * @return <code>ArrayList</code> with all topics found. Each entry is a <code>net.jforum.Topic</code> object
 	 * @throws Exception
 	 */
-	public ArrayList selectAllByForum(int forumId) throws Exception;
+	public List selectAllByForum(int forumId) throws Exception;
 	
 	/**
 	 * Selects all topics associated to a specific forum, limiting the total number
@@ -87,7 +85,7 @@ public interface TopicModel
 	 * @return <code>ArrayList</code> with all topics found. Each entry is a <code>net.jforum.Topic</code> object
 	 * @throws Exception
 	 */
-	public ArrayList selectAllByForumByLimit(int forumId, int startFrom, int count) throws Exception;
+	public List selectAllByForumByLimit(int forumId, int startFrom, int count) throws Exception;
 	
 	/**
 	 * Selects the last <code>count</code> topics postted. 
@@ -96,7 +94,7 @@ public interface TopicModel
 	 * @return <code>ArrayList</code> with all topics found. Each entry is a <code>net.jforum.Topic</code> object
 	 * @throws Exception
 	 */
-	public ArrayList selectLastN(int count) throws Exception;
+	public List selectLastN(int count) throws Exception;
 	
 	/**
 	 * Delete a Topic.
@@ -184,7 +182,7 @@ public interface TopicModel
 	 * entry is an user who will receive the topic anwser notification
 	 * @throws Exception
 	 * */
-	public ArrayList notifyUsers(Topic topic) throws Exception;
+	public List notifyUsers(Topic topic) throws Exception;
 	
 	/**
 	 * Subscribe the user for notification of new post on the topic
@@ -248,5 +246,5 @@ public interface TopicModel
 	 * @param limit The number of topics to retrieve
 	 * @throws Exception
 	 */	
-	public ArrayList selectRecentTopics (int limit) throws Exception;
+	public List selectRecentTopics (int limit) throws Exception;
 }

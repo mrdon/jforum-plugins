@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -52,7 +52,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserSessionModel.java,v 1.3 2004/10/04 10:08:17 marcwick Exp $
+ * @version $Id: UserSessionModel.java,v 1.4 2004/11/05 03:29:45 rafaelsteil Exp $
  */
 public class UserSessionModel implements net.jforum.model.UserSessionModel
 {

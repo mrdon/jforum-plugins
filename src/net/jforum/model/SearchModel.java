@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,20 +37,18 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 25/02/2004 - 19:27:19
- * net.jforum.model.SearchModel.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: SearchModel.java,v 1.4 2004/05/24 02:43:07 rafaelsteil Exp $
  */
 package net.jforum.model;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import net.jforum.entities.Post;
 
 /**
  * @author Rafael Steil
+ * @version $Id: SearchModel.java,v 1.5 2004/11/05 03:29:50 rafaelsteil Exp $
  */
 public interface SearchModel 
 {
@@ -62,7 +60,7 @@ public interface SearchModel
 	 * represent the found topics.
 	 * @throws Exception
 	 */
-	public ArrayList search(SearchData sd) throws Exception;
+	public List search(SearchData sd) throws Exception;
 	
 	/**
 	 * Clean  user search data or older searches

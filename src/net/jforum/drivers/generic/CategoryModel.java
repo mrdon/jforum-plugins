@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -45,6 +45,7 @@ package net.jforum.drivers.generic;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.jforum.JForum;
 import net.jforum.entities.Category;
@@ -52,11 +53,11 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: CategoryModel.java,v 1.3 2004/06/02 03:56:05 rafaelsteil Exp $
+ * @version $Id: CategoryModel.java,v 1.4 2004/11/05 03:29:45 rafaelsteil Exp $
  */
 public class CategoryModel extends AutoKeys implements net.jforum.model.CategoryModel 
 {
-	/*
+	/**
 	 * @see net.jforum.model.CategoryModel#selectById(int)
 	 */
 	public Category selectById(int categoryId) throws Exception 
@@ -79,13 +80,13 @@ public class CategoryModel extends AutoKeys implements net.jforum.model.Category
 		return c;
 	}
 
-	/* 
+	/** 
 	 * @see net.jforum.model.CategoryModel#selectAll()
 	 */
-	public ArrayList selectAll() throws Exception 
+	public List selectAll() throws Exception 
 	{
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.selectAll"));
-		ArrayList l = new ArrayList();
+		List l = new ArrayList();
 		
 		ResultSet rs = p.executeQuery();		
 		while (rs.next()) {
@@ -104,7 +105,7 @@ public class CategoryModel extends AutoKeys implements net.jforum.model.Category
 		return l;
 	}
 
-	/* 
+	/** 
 	 * @see net.jforum.model.CategoryModel#canDelete(int)
 	 */
 	public boolean canDelete(int categoryId) throws Exception
@@ -123,7 +124,7 @@ public class CategoryModel extends AutoKeys implements net.jforum.model.Category
 		return false;
 	}
 
-	/*
+	/**
 	 * @see net.jforum.model.CategoryModel#delete(int)
 	 */
 	public void delete(int categoryId) throws Exception 
@@ -135,7 +136,7 @@ public class CategoryModel extends AutoKeys implements net.jforum.model.Category
 		p.close();
 	}
 
-	/*
+	/**
 	 * @see net.jforum.model.CategoryModel#update(net.jforum.Category)
 	 */
 	public void update(Category category) throws Exception 
@@ -147,7 +148,7 @@ public class CategoryModel extends AutoKeys implements net.jforum.model.Category
 		p.close();
 	}
 
-	/* 
+	/** 
 	 * @see net.jforum.model.CategoryModel#addNew(net.jforum.Category)
 	 */
 	public int addNew(Category category) throws Exception 

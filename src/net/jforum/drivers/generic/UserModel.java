@@ -60,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.19 2004/10/31 21:30:50 rafaelsteil Exp $
+ * @version $Id: UserModel.java,v 1.20 2004/11/05 03:29:45 rafaelsteil Exp $
  */
 public class UserModel extends AutoKeys implements net.jforum.model.UserModel 
 {
@@ -314,7 +314,7 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 	/** 
 	 * @see net.jforum.model.UserModel#selectAll()
 	 */
-	public ArrayList selectAll() throws Exception 
+	public List selectAll() throws Exception 
 	{
 		return selectAll(0, 0);
 	}
@@ -322,10 +322,9 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 	/** 
 	 * @see net.jforum.model.UserModel#selectAll(int, int)
 	 */
-	public ArrayList selectAll(int startFrom, int count) throws Exception 
+	public List selectAll(int startFrom, int count) throws Exception 
 	{
 		PreparedStatement p;
-		ArrayList list = new ArrayList();
 		
 		if (count > 0) {
 			p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectAllByLimit"));
@@ -337,6 +336,16 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		}
 		
 		ResultSet rs = p.executeQuery();
+		List list = this.processSelectAll(rs);
+		rs.close();
+		p.close();
+		
+		return list;
+	}
+	
+	protected List processSelectAll(ResultSet rs) throws Exception
+	{
+		List list = new ArrayList();
 		while (rs.next()) {
 			User u = new User();
 			
@@ -349,9 +358,6 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 			
 			list.add(u);
 		}
-
-		rs.close();
-		p.close();
 		
 		return list;
 	}

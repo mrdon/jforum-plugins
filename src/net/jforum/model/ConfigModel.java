@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 15/08/2003 / 21:03:31
- * net.jforum.model.ConfigModel.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: ConfigModel.java,v 1.3 2004/06/01 19:47:29 pieter2 Exp $
  */
 package net.jforum.model;
 
@@ -50,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
+import java.util.List;
 
 import net.jforum.entities.Config;
 import net.jforum.util.preferences.SystemGlobals;
@@ -58,6 +56,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * Model interface for the {@link net.jforum.Config} class. 
  * 
  * @author Rafael Steil
+ * @version $Id: ConfigModel.java,v 1.4 2004/11/05 03:29:49 rafaelsteil Exp $
  */
 public class ConfigModel 
 {
@@ -66,7 +65,7 @@ public class ConfigModel
 	 *  
 	 * @return <code>ArrayList</code> with all entries configured
 	 */
-	public ArrayList getAllEntries()  throws IOException
+	public List getAllEntries()  throws IOException
 	{
 	    Iterator iter = SystemGlobals.fetchConfigKeyIterator();
 		ArrayList l = new ArrayList();

@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms,
  * with or without modification, are permitted provided
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above
  * copyright notice, this list of conditions and the
  * following  disclaimer.
@@ -47,6 +47,8 @@ import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import net.jforum.JForum;
 import net.jforum.entities.Forum;
@@ -56,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: ForumModel.java,v 1.6 2004/10/04 10:08:17 marcwick Exp $
+ * @version $Id: ForumModel.java,v 1.7 2004/11/05 03:29:45 rafaelsteil Exp $
  */
 public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel 
 {
@@ -72,15 +74,7 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
         Forum f = new Forum();
 
         if (rs.next()) {
-            f.setId(rs.getInt("forum_id"));
-            f.setIdCategories(rs.getInt("categories_id"));
-            f.setName(rs.getString("forum_name"));
-            f.setDescription(rs.getString("forum_desc"));
-            f.setOrder(rs.getInt("forum_order"));
-            f.setTotalTopics(rs.getInt("forum_topics"));
-            f.setLastPostId(rs.getInt("forum_last_post_id"));
-            f.setModerated(rs.getInt("moderated") > 0);
-            f.setTotalPosts(rs.getInt("total_posts"));
+            f = this.fillForum(rs);
         }
 
         rs.close();
@@ -88,30 +82,35 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
 
         return f;
     }
+    
+    protected Forum fillForum(ResultSet rs) throws Exception
+    {
+    	Forum f = new Forum();
+    	
+    	f.setId(rs.getInt("forum_id"));
+        f.setIdCategories(rs.getInt("categories_id"));
+        f.setName(rs.getString("forum_name"));
+        f.setDescription(rs.getString("forum_desc"));
+        f.setOrder(rs.getInt("forum_order"));
+        f.setTotalTopics(rs.getInt("forum_topics"));
+        f.setLastPostId(rs.getInt("forum_last_post_id"));
+        f.setModerated(rs.getInt("moderated") > 0);
+        f.setTotalPosts(rs.getInt("total_posts"));
+        
+        return f;
+    }
 
     /**
      * @see net.jforum.model.ForumModel#selectAll()
      */
-    public ArrayList selectAll() throws Exception {
+    public List selectAll() throws Exception {
         PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.selectAll"));
-        ArrayList l = new ArrayList();
+        List l = new ArrayList();
 
         ResultSet rs = p.executeQuery();
 
         while (rs.next()) {
-            Forum f = new Forum();
-
-            f.setId(rs.getInt("forum_id"));
-            f.setIdCategories(rs.getInt("categories_id"));
-            f.setName(rs.getString("forum_name"));
-            f.setDescription(rs.getString("forum_desc"));
-            f.setOrder(rs.getInt("forum_order"));
-            f.setTotalTopics(rs.getInt("forum_topics"));
-            f.setLastPostId(rs.getInt("forum_last_post_id"));
-            f.setModerated(rs.getInt("moderated") > 0);
-			f.setTotalPosts(rs.getInt("total_posts"));
-
-            l.add(f);
+            l.add(this.fillForum(rs));
         }
 
         rs.close();
@@ -127,7 +126,7 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
         int order = 0;
         int maxOrder = 0;
 
-        // Retireves the current value of of forum_order
+        // Retrieves the current value of of forum_order
         PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.getOrder"));
         p.setInt(1, forumId);
 
@@ -238,7 +237,6 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
 
         // Order, TotalTopics and LastPostId must be updated using the respective methods
         p.executeUpdate();
-
         p.close();
     }
 
@@ -322,9 +320,9 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
 	/** 
 	 * @see net.jforum.model.ForumModel#getLastPostInfo(int)
 	 */
-	public HashMap getLastPostInfo(int forumId) throws Exception 
+	public Map getLastPostInfo(int forumId) throws Exception 
 	{
-		HashMap m = new HashMap();
+		Map m = new HashMap();
 		
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.lastPostInfo"));
 		p.setInt(1, forumId);

@@ -6,7 +6,7 @@ CategoryModel.addNew = INSERT INTO jforum_categories (title, display_order) VALU
 # ##########
 # UserModel
 # ##########
-UserModel.selectAllByLimit = SELECT user_email, user_id, user_posts, user_regdate, username FROM jforum_users ORDER BY username LIMIT ? OFFSET ?
+UserModel.selectAllByLimit = SELECT user_email, user_id, user_posts, user_regdate, username, deleted FROM jforum_users ORDER BY username LIMIT ? OFFSET ?
 UserModel.lastGeneratedUserId = SELECT CURRVAL('jforum_users_seq')
 
 UserModel.selectById = SELECT u.*, \

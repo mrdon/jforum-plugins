@@ -42,7 +42,6 @@
  */
 package net.jforum.view.forum;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -65,7 +64,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: RSSAction.java,v 1.5 2004/10/24 16:29:48 rafaelsteil Exp $
+ * @version $Id: RSSAction.java,v 1.6 2004/11/05 03:29:42 rafaelsteil Exp $
  */
 public class RSSAction extends Command 
 {
@@ -127,7 +126,7 @@ public class RSSAction extends Command
 		
 		tm.incrementTotalViews(topic.getId());
 		
-		ArrayList posts = pm.selectAllByTopic(topicId);
+		List posts = pm.selectAllByTopic(topicId);
 		
 		String[] p = { topic.getTitle() };
 		

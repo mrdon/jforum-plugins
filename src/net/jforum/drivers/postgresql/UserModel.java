@@ -44,7 +44,7 @@ package net.jforum.drivers.postgresql;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
+import java.util.List;
 
 import net.jforum.JForum;
 import net.jforum.entities.User;
@@ -52,7 +52,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.4 2004/10/04 10:08:17 marcwick Exp $
+ * @version $Id: UserModel.java,v 1.5 2004/11/05 03:29:42 rafaelsteil Exp $
  */
 public class UserModel extends net.jforum.drivers.generic.UserModel
 {
@@ -70,11 +70,10 @@ public class UserModel extends net.jforum.drivers.generic.UserModel
 	/** 
 	 * @see net.jforum.model.UserModel#selectAll(int, int)
 	 */
-	public ArrayList selectAll(int startFrom, int count) throws Exception
+	public List selectAll(int startFrom, int count) throws Exception
 	{
 		PreparedStatement p;
-		ArrayList list = new ArrayList();
-		
+
 		if (count > 0) {
 			p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectAllByLimit"));
 			p.setInt(1, count);
@@ -85,18 +84,7 @@ public class UserModel extends net.jforum.drivers.generic.UserModel
 		}
 		
 		ResultSet rs = p.executeQuery();
-		while (rs.next()) {
-			User u = new User();
-			
-			u.setEmail(rs.getString("user_email"));
-			u.setId(rs.getInt("user_id"));
-			u.setTotalPosts(rs.getInt("user_posts"));
-			u.setRegistrationDate(rs.getTimestamp("user_regdate"));
-			u.setUsername(rs.getString("username"));
-			
-			list.add(u);
-		}
-
+		List list = super.processSelectAll(rs);
 		rs.close();
 		p.close();
 		

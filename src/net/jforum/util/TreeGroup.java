@@ -41,11 +41,12 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: TreeGroup.java,v 1.2 2004/04/21 23:57:26 rafaelsteil Exp $
+ * $Id: TreeGroup.java,v 1.3 2004/11/05 03:29:53 rafaelsteil Exp $
  */
 package net.jforum.util;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Iterator;
 
 import net.jforum.model.DataAccessDriver;
@@ -142,13 +143,13 @@ public class TreeGroup
 	 * @return <code>ArrayList</code> containing the complete group hierarchy. Each element
 	 * from the list represents a single <code>GroupNode<code> object.	 
 	 * */
-	public ArrayList getNodes() throws Exception
+	public List getNodes() throws Exception
 	{
 		ArrayList nodes = new ArrayList();
 		
 		TreeGroupModel tgm = DataAccessDriver.getInstance().newTreeGroupModel();
 
-		ArrayList rootGroups = tgm.selectGroups(0);	
+		List rootGroups = tgm.selectGroups(0);	
 				
 		for (Iterator iter = rootGroups.iterator(); iter.hasNext();) {
 			GroupNode n = (GroupNode)iter.next();
@@ -168,7 +169,7 @@ public class TreeGroup
 	{
 		TreeGroupModel tgm = DataAccessDriver.getInstance().newTreeGroupModel();
 
-		ArrayList childGroups = tgm.selectGroups(n.getId());	
+		List childGroups = tgm.selectGroups(n.getId());	
 				
 		for (Iterator iter = childGroups.iterator(); iter.hasNext();) {
 			GroupNode f = (GroupNode)iter.next();

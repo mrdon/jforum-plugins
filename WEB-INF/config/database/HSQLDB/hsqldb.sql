@@ -7,7 +7,7 @@ CategoryModel.addNew = INSERT INTO jforum_categories (title) VALUES (?)
 # UserModel
 # ##########
 UserModel.lastUserRegistered = SELECT TOP 1 user_id, username FROM jforum_users ORDER BY user_regdate DESC 
-UserModel.selectAllByLimit = SELECT LIMIT ? ? user_email, user_id, user_posts, user_regdate, username FROM jforum_users ORDER BY username 
+UserModel.selectAllByLimit = SELECT LIMIT ? ? user_email, user_id, user_posts, user_regdate, username, deleted FROM jforum_users ORDER BY username 
 UserModel.lastGeneratedUserId = SELECT max(user_id) from jforum_users
 
 UserModel.selectById = SELECT u.*, \

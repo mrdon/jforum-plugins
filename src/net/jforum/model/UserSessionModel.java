@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -48,7 +48,7 @@ import net.jforum.entities.UserSession;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserSessionModel.java,v 1.1 2004/05/31 01:58:47 rafaelsteil Exp $
+ * @version $Id: UserSessionModel.java,v 1.2 2004/11/05 03:29:50 rafaelsteil Exp $
  */
 public interface UserSessionModel
 {

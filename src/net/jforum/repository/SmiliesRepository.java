@@ -44,6 +44,7 @@ package net.jforum.repository;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import net.jforum.JForum;
 import net.jforum.entities.Smilie;
@@ -51,7 +52,7 @@ import net.jforum.model.DataAccessDriver;
 
 /**
  * @author Rafael Steil
- * @version $Id: SmiliesRepository.java,v 1.3 2004/06/17 00:11:49 rafaelsteil Exp $
+ * @version $Id: SmiliesRepository.java,v 1.4 2004/11/05 03:29:48 rafaelsteil Exp $
  */
 public class SmiliesRepository 
 {
@@ -71,7 +72,7 @@ public class SmiliesRepository
 	public static void loadSmilies() throws Exception
 	{
 		SmiliesRepository.smiliesList.clear();
-		ArrayList list = DataAccessDriver.getInstance().newSmilieModel().selectAll();
+		List list = DataAccessDriver.getInstance().newSmilieModel().selectAll();
 		
 		String context = JForum.getRequest().getContextPath();
 		

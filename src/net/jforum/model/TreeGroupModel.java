@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,20 +37,18 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: May 3, 2003 / 2:34:16 PM
- * net.jforum.model.TreeGroupModel.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: TreeGroupModel.java,v 1.2 2004/04/21 23:57:23 rafaelsteil Exp $
  */
 package net.jforum.model;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Rafael Steil
+ * @version $Id: TreeGroupModel.java,v 1.3 2004/11/05 03:29:50 rafaelsteil Exp $
  */
 public interface TreeGroupModel 
 {
-	public ArrayList selectGroups(int parentId) throws Exception;
+	public List selectGroups(int parentId) throws Exception;
 }

@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -46,6 +46,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.jforum.JForum;
 import net.jforum.entities.Smilie;
@@ -53,7 +54,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SmilieModel.java,v 1.4 2004/06/02 03:56:05 rafaelsteil Exp $
+ * @version $Id: SmilieModel.java,v 1.5 2004/11/05 03:29:45 rafaelsteil Exp $
  */
 public class SmilieModel extends AutoKeys implements net.jforum.model.SmilieModel {
 
@@ -116,9 +117,9 @@ public class SmilieModel extends AutoKeys implements net.jforum.model.SmilieMode
 	/** 
 	 * @see net.jforum.repository.SmilieModel#selectAll()
 	 */
-	public ArrayList selectAll() throws Exception 
+	public List selectAll() throws Exception 
 	{
-		ArrayList l = new ArrayList();
+		List l = new ArrayList();
 		
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SmiliesModel.selectAll"));
 		ResultSet rs = p.executeQuery();

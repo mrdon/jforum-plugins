@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
@@ -58,17 +59,17 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchModel.java,v 1.11 2004/10/25 20:52:08 rafaelsteil Exp $
+ * @version $Id: SearchModel.java,v 1.12 2004/11/05 03:29:46 rafaelsteil Exp $
  */
 public class SearchModel extends AutoKeys implements net.jforum.model.SearchModel	
 {
 	/** 
 	 * @see net.jforum.model.SearchModel#search(net.jforum.model.SearchData)
 	 */
-	public ArrayList search(SearchData sd) throws Exception 
+	public List search(SearchData sd) throws Exception 
 	{
-		ArrayList l = new ArrayList();
-		ArrayList topics = new ArrayList();
+		List l = new ArrayList();
+		List topics = new ArrayList();
 		
 		// Check for the search cache
 		if (!sd.getSearchStarted()) {

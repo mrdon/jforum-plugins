@@ -64,7 +64,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.5 2004/10/25 20:52:09 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.6 2004/11/05 03:29:41 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -154,7 +154,7 @@ public class SearchAction extends Command
 			sd.setSearchStarted(true);
 		}
 		
-		ArrayList allTopics = this.onlyAllowedData(sm.search(sd));
+		List allTopics = this.onlyAllowedData(sm.search(sd));
 		int totalTopics = allTopics.size();
 		int sublistLimit = recordsPerPage + start > totalTopics ? totalTopics : recordsPerPage + start;
 		
@@ -191,7 +191,7 @@ public class SearchAction extends Command
 		TopicsCommon.topicListingBase();
 	}
 	
-	private ArrayList onlyAllowedData(ArrayList topics)
+	private ArrayList onlyAllowedData(List topics)
 	{
 		ArrayList l = new ArrayList();
 		

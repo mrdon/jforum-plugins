@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,16 +37,14 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: Apr 24, 2003 / 8:35:17 PM
- * net.jforum.repository.CategoryRepository.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: CategoryRepository.java,v 1.2 2004/04/21 23:57:32 rafaelsteil Exp $
  */
 package net.jforum.repository;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import net.jforum.entities.Category;
 import net.jforum.ForumException;
@@ -60,10 +58,11 @@ import net.jforum.security.SecurityConstants;
  * Yes, it's just a cache.
  * 
  * @author Rafael Steil
+ * @version $Id: CategoryRepository.java,v 1.3 2004/11/05 03:29:48 rafaelsteil Exp $
  */
 public class CategoryRepository 
 {
-	private static ArrayList categoriesList = new ArrayList();
+	private static List categoriesList = new ArrayList();
 	
 	static {
 		try {
@@ -103,7 +102,7 @@ public class CategoryRepository
 	 * 
 	 * @return <code>ArrayList</code> with the categories. Each entry is a <code>Category</code> object.
 	 */
-	public static ArrayList getAllCategories()
+	public static List getAllCategories()
 	{
 		return CategoryRepository.getAllCategories(false);
 	}
@@ -116,7 +115,7 @@ public class CategoryRepository
 	 * 
 	 * @return <code>ArrayList</code> with the categories. Each entry is a <code>Category</code> object.
 	 */
-	public static ArrayList getAllCategories(boolean ignorePermissions)
+	public static List getAllCategories(boolean ignorePermissions)
 	{
 		if (ignorePermissions) {
 			return CategoryRepository.categoriesList;

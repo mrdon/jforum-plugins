@@ -45,6 +45,7 @@ package net.jforum.drivers.generic;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.jforum.JForum;
 import net.jforum.entities.Ranking;
@@ -52,11 +53,11 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: RankingModel.java,v 1.3 2004/09/22 23:28:54 rafaelsteil Exp $
+ * @version $Id: RankingModel.java,v 1.4 2004/11/05 03:29:44 rafaelsteil Exp $
  */
 public class RankingModel implements net.jforum.model.RankingModel 
 {
-	/* 
+	/** 
 	 * @see net.jforum.model.RankingModel#selectById(int)
 	 */
 	public Ranking selectById(int rankingId) throws Exception 
@@ -81,12 +82,12 @@ public class RankingModel implements net.jforum.model.RankingModel
 		return ranking;
 	}
 
-	/*
+	/**
 	 * @see net.jforum.model.RankingModel#selectAll()
 	 */
-	public ArrayList selectAll() throws Exception 
+	public List selectAll() throws Exception 
 	{
-		ArrayList l = new ArrayList();
+		List l = new ArrayList();
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("RankingModel.selectAll"));
 		ResultSet rs = p.executeQuery();
 		
@@ -108,7 +109,7 @@ public class RankingModel implements net.jforum.model.RankingModel
 		return l;
 	}
 
-	/* 
+	/** 
 	 * @see net.jforum.model.RankingModel#delete(int)
 	 */
 	public void delete(int rankingId) throws Exception 
@@ -120,7 +121,7 @@ public class RankingModel implements net.jforum.model.RankingModel
 		p.close();
 	}
 
-	/* 
+	/** 
 	 * @see net.jforum.model.RankingModel#update(net.jforum.Ranking)
 	 */
 	public void update(Ranking ranking) throws Exception 
@@ -137,7 +138,7 @@ public class RankingModel implements net.jforum.model.RankingModel
 		p.close();
 	}
 
-	/* 
+	/** 
 	 * @see net.jforum.model.RankingModel#addNew(net.jforum.Ranking)
 	 */
 	public void addNew(Ranking ranking) throws Exception 
