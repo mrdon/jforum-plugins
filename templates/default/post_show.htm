@@ -96,9 +96,12 @@ function confirmDelete()
 							<tr>
 								<td width="160" class="postInfo" height="22">
 									<span class="postdetails">
+									
 									<a href="${JForumContext.encodeURL("/posts/list/${start}/${post.topicId}")}#${post.id}">
 									<img src="${contextPath}/templates/${templateName}/images/icon_minipost_new.gif" /></a>${post.formatedTime}
 									</span>
+
+									
 								</td>
 
 								<td class="postInfo" height="22">
@@ -116,8 +119,10 @@ function confirmDelete()
 									</#if>
 
 									<#if canRemove>
-										<a href="${JForumContext.encodeURL("/jforum${extension}?module=${moduleName}&amp;action=delete&amp;post_id=${post.id}&start=${start}","")}" onClick="return confirmDelete();"><img src="${contextPath}/templates/${templateName}/images/icon_delete.gif" border="0" /></a>  
+										<a href="${JForumContext.encodeURL("/jforum${extension}?module=${moduleName}&amp;action=delete&amp;post_id=${post.id}&start=${start}","")}" onClick="return confirmDelete();"><img src="${contextPath}/templates/${templateName}/images/icon_delete.gif" border="0"/></a>  
 									</#if>
+
+									
 								</td>
 							</tr>
 						</table>
@@ -310,6 +315,7 @@ function confirmDelete()
 						<table width="100%">
 							<tr>
 								<td align="center">
+									<img src="${contextPath}/templates/${templateName}/images/icon_mini_message.gif" align="middle">
 									<span class="nav"><a href="javascript:activateQuickReply()">${I18n.getMessage("PostForm.quickReply")}</a></span>
 								</td>
 							</td>

@@ -43,12 +43,19 @@
 package net.jforum.view.forum;
 
 import java.lang.reflect.Field;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
+import freemarker.template.SimpleHash;
+
+import net.jforum.ActionServletRequest;
 import net.jforum.Command;
 import net.jforum.entities.Topic;
 import net.jforum.model.DataAccessDriver;
@@ -63,7 +70,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.13 2004/12/27 00:30:52 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.14 2004/12/29 14:48:12 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -77,7 +84,7 @@ public class SearchAction extends Command
 	private String postTime;
 	private String s;
 	
-	private static HashMap fieldsMap = new HashMap();
+	private static Map fieldsMap = new HashMap();
 	
 	static {
 		fieldsMap.put("search_terms", "searchTerms");
@@ -89,6 +96,16 @@ public class SearchAction extends Command
 		fieldsMap.put("search_author", "author");
 		fieldsMap.put("post_time", "postTime");
 		fieldsMap.put("start", "s");
+	}
+	
+	public SearchAction() {}
+	
+	public SearchAction(ActionServletRequest request, HttpServletResponse response,
+			Connection conn, SimpleHash context) {
+		this.request = request;
+		this.response = response;
+		this.conn = conn;
+		this.context = context;
 	}
 	
 	public void filters() throws Exception

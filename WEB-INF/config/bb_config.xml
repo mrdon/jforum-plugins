@@ -20,7 +20,7 @@
 		</replace>
 	</match>
 	
-	<match name="openQuote">
+	<match name="openSimpleQuote">
 		<regex>\[quote\]</regex>
 		<replace>
 		<![CDATA[

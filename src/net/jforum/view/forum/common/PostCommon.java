@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.3 2004/12/29 01:04:39 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.4 2004/12/29 14:48:13 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -122,7 +122,7 @@ public class PostCommon
 				}
 				else {
 					// Another hack for the quotes
-					if (bb.getTagName().equals("openQuote")) {
+					if (bb.getTagName().equals("openQuote") || bb.getTagName().equals("openSimpleQuote")) {
 						Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);								
 						
 						while (matcher.find()) {

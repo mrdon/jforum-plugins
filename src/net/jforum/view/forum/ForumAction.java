@@ -71,7 +71,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.22 2004/12/27 00:30:51 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.23 2004/12/29 14:48:12 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -254,7 +254,7 @@ public class ForumAction extends Command
 			JForum.setRedirect(this.makeRedirect("show"));
 		}
 		else {
-			JForum.setRedirect(this.request.getContextPath() +"/forums/list"
+			JForum.setRedirect(this.request.getContextPath() + "/forums/list"
 					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		}
 	}
@@ -266,7 +266,7 @@ public class ForumAction extends Command
 		this.request.addParameter("clean", "true");
 		this.request.addParameter("sort_by", "t.topic_time");
 		this.request.addParameter("sort_dir", "DESC");
-		new SearchAction().search();
+		new SearchAction(this.request, this.response, this.conn, this.context).search();
 	}
 	
 	public void pingSession()
