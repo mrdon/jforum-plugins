@@ -64,7 +64,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.10 2005/01/04 03:31:18 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.11 2005/01/07 13:09:50 rafaelsteil Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -324,7 +324,7 @@ public class PrivateMessageAction extends Command
 		this.context.put("moduleAction", "message.htm");
 		this.context.put("message", I18n.getMessage("PrivateMessage.deleteDone", 
 						new String[] { this.request.getContextPath() + "/pm/inbox"
-										+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)}));
+										+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) }));
 	}
 	
 	public void reply() throws Exception

@@ -378,7 +378,7 @@ PrivateMessagesModel.addText = INSERT INTO jforum_privmsgs_text ( privmsgs_id, p
 PrivateMessageModel.delete = DELETE FROM jforum_privmsgs WHERE privmsgs_id = ? \
 	AND ( \
 	    (privmsgs_from_userid = ? AND privmsgs_type = 2) \
-	    OR (privmsgs_to_userid = ? AND (privmsgs_type = 0 OR privmsgs_type = 1 OR privmsgs_type = 5)) \
+	    OR (privmsgs_to_userid = ? AND privmsgs_type IN(0, 1, 5)) \
 	)
 	
 PrivateMessagesModel.deleteText = DELETE FROM jforum_privmsgs_text WHERE privmsgs_id = ?

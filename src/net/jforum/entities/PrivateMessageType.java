@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,7 +37,6 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 20/05/2004 - 15:34:10
- * net.jforum.entities.PrivateMessageType.java
  * The JForum Project
  * http://www.jforum.net
  */
@@ -45,7 +44,7 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageType.java,v 1.1 2004/05/21 00:24:11 rafaelsteil Exp $
+ * @version $Id: PrivateMessageType.java,v 1.2 2005/01/07 13:09:51 rafaelsteil Exp $
  */
 public class PrivateMessageType
 {
