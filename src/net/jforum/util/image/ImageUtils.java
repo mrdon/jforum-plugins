@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ImageUtils.java,v 1.8 2004/04/23 00:47:15 rafaelsteil Exp $
+ * $Id: ImageUtils.java,v 1.9 2004/04/23 22:42:43 rafaelsteil Exp $
  */
 package net.jforum.util.image;
 
@@ -175,7 +175,7 @@ public class ImageUtils
 		ImageWriteParam iwparam = new JPEGImageWriteParam(Locale.getDefault());
 		
 		iwparam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-		iwparam.setCompressionQuality(0.2F);
+		iwparam.setCompressionQuality(0.7F);
 		
 		writer.write(null, new IIOImage(image, null, null), iwparam);
 		
@@ -199,11 +199,14 @@ public class ImageUtils
 		GraphicsDevice gv = ge.getDefaultScreenDevice();
 		GraphicsConfiguration gc = gv.getDefaultConfiguration();
 		
-		try {
+		//try {
+			/*
 			bi = gc.createCompatibleImage(w, h, 
 				hasAlpha(image) ? Transparency.BITMASK : Transparency.OPAQUE);
-		}
-		catch (InterruptedException e) {}
+			*/
+			bi = gc.createCompatibleImage(w, h, Transparency.OPAQUE);
+		//}
+		//catch (InterruptedException e) {}
 		
 		if (bi == null) {
 			bi = new BufferedImage(image.getWidth(null), image.getHeight(null), 

@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ViewCommon.java,v 1.4 2004/04/23 00:47:14 rafaelsteil Exp $
+ * $Id: ViewCommon.java,v 1.5 2004/04/23 22:42:42 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 
@@ -138,16 +138,16 @@ public final class ViewCommon
 			
 			// Gets file extension
 			String extension = JForum.getRequest().getParameter("avatarName");
-			extension = extension.substring(extension.lastIndexOf('.'));
+			extension = extension.substring(extension.lastIndexOf('.') + 1);
 		
-			String avatarTmpFileName = SystemGlobals.getApplicationPath() +"/images/avatar/"+ fileName +"_tmp" + extension;
+			String avatarTmpFileName = SystemGlobals.getApplicationPath() +"/images/avatar/"+ fileName +"_tmp." + extension;
 			
 			// We cannot handle gifs
 			if (extension.toLowerCase().equals("gif")) {
 				extension = "png";
 			}
 
-			String avatarFinalFileName = SystemGlobals.getApplicationPath() +"/images/avatar/"+ fileName + extension;
+			String avatarFinalFileName = SystemGlobals.getApplicationPath() +"/images/avatar/"+ fileName +"."+ extension;
 
 			// Read the avatar and stores it into a temporary file
 			BufferedInputStream inputStream = new BufferedInputStream((InputStream)JForum.getRequest().getObjectParameter("avatar"));
@@ -171,14 +171,9 @@ public final class ViewCommon
 
 			BufferedImage image = ImageUtils.resizeImage(avatarTmpFileName, maxWidth, maxHeight);
 			
-			if (type == ImageUtils.IMAGE_PNG) {
-				ImageUtils.saveImage(image, avatarFinalFileName, type);
-			}
-			else {
-				ImageUtils.saveCompressedImage(image, avatarFinalFileName, type);
-			}
+			ImageUtils.saveImage(image, avatarFinalFileName, type);
 
-			u.setAvatar(fileName + extension);
+			u.setAvatar(fileName +"."+ extension);
 			
 			// Delete de temporary file
 			new File(avatarTmpFileName).delete();
