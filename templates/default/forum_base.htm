@@ -4,18 +4,17 @@
 <meta http-equiv="Content-Type" content="text/html; charset=${encoding}" />
 <meta name="description" content="${metaDescription}" />
 <meta name="keywords" content="${metaKeywords}, jforum, jforum java, jforum forum, forum java, java jforum, java forum, forum, rafael steil, bulletin board, java bb, javabb" />
-<meta http-equiv="expires" content="0"/>
 <meta name="resource-type" content="document"/>
 <meta name="distribution" content="global"/>
 <meta name="author" content="www.jforum.net"/>
-<meta name="copyright" content="Copyright (c) 2003,2004 by www.jforum.net"/>
+<meta name="copyright" content="Copyright (c) 2003,2004, 2005 by www.jforum.net"/>
 <meta name="robots" content="index, follow/">
 <meta name="revisit-after" content="1 days"/>
 <meta name="rating" content="general"/>
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="-1"/>
 <style type="text/css">@import url( ${contextPath}/templates/${templateName}/style.css );</style>
-<title>${pageTitle}</title>
+<title>${pageTitle?default("JForum")}</title>
 </head>
 <body>
 <table width="100%" border="0">
@@ -28,7 +27,7 @@
 					</td>
 					 
 					<td width="100%" align="center" valign="center">
-						<span class="maintitle">${forumTitle}</span>
+						<span class="maintitle">${forumTitle?default("JForum")}</span>
 						<table cellspacing="0" cellpadding="2" border="0">
 							<tr>
 								<td vAlign="top" nowrap="nowrap" align="middle">&nbsp;

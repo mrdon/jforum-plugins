@@ -34,8 +34,8 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
- * 
- * This file creation date: 20/05/2004 - 15:37:25
+ *
+ * Created on Jan 16, 2005 12:30:52 PM
  * The JForum Project
  * http://www.jforum.net
  */
@@ -43,71 +43,71 @@ package net.jforum.model;
 
 import java.util.List;
 
-import net.jforum.entities.PrivateMessage;
-import net.jforum.entities.User;
+import net.jforum.entities.Bookmark;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageModel.java,v 1.3 2005/01/17 12:22:30 rafaelsteil Exp $
+ * @version $Id: BookmarkModel.java,v 1.1 2005/01/17 12:22:30 rafaelsteil Exp $
  */
-public interface PrivateMessageModel
+public interface BookmarkModel
 {
 	/**
-	 * Send a new <code>PrivateMessage</code>
+	 * Adds a new bookmark.
 	 * 
-	 * @param pm The pm to add
+	 * @param b The bookmark to add
 	 * @throws Exception
 	 */
-	public void send(PrivateMessage pm) throws Exception;
+	public void add(Bookmark b) throws Exception;
 	
 	/**
-	 * Deletes a collection of private messages.
-	 * Each instance should at least have the private message
-	 * id and the owner user id.
+	 * Updates a bookmark.
+	 * Only the fields <i>publicVisible</i>, <i>title</i>
+	 * and <i>description</i> are changed.
+	 * All other fields remain with the same value.
 	 * 
-	 * @param pm
+	 * @param b The bookmark to update
 	 * @throws Exception
 	 */
-	public void delete(PrivateMessage[] pm) throws Exception;
+	public void update(Bookmark b) throws Exception;
 	
 	/**
-	 * Update the type of some private message.
-	 * You should pass as argument a <code>PrivateMessage</code> instance
-	 * with the pm's id and the new message status. There is no need to
-	 * fill the other members.
+	 * Removes a bookmark.
 	 * 
-	 * @param pm The instance to update 
+	 * @param bookmarkId The bookmark's id to remove
 	 * @throws Exception
 	 */
-	public void updateType(PrivateMessage pm) throws Exception;
+	public void remove(int bookmarkId) throws Exception;
 	
 	/**
-	 * Selects all messages from the user's inbox. 
+	 * Gets all bookmarks of a given type.
 	 * 
-	 * @param user The user to fetch the messages
-	 * @return A <code>List</code> with all messages found. Each 
-	 * entry is a <code>PrivateMessage</code> entry.
+	 * @param userId The bookmark's owner
+	 * @param relationType Any valid type declared in
+	 * <code>net.jforum.entities.BookmarkType</code>
+	 * @return A list with all results found. Each entry is
+	 * a {@link net.jforum.entities.Bookmark} instance.
 	 * @throws Exception
 	 */
-	public List selectFromInbox(User user) throws Exception;
+	public List selectByUser(int userId, int relationType) throws Exception;
 	
 	/**
-	 * Selects all messages from the user's sent box. 
+	 * Gets a bookmark.
 	 * 
-	 * @param user The user to fetch the messages
-	 * @return A <code>List</code> with all messages found. Each 
-	 * entry is a <code>PrivateMessage</code> entry.
+	 * @param bookmarkId The bookmark id
+	 * @return A Bookmark instance or null if no entry found
 	 * @throws Exception
 	 */
-	public List selectFromSent(User user) throws Exception;
+	public Bookmark selectById(int bookmarkId) throws Exception;
 	
 	/**
-	 * Gets a <code>PrivateMessage</code> by its id.
+	 * Gets a bookmark for edition.
 	 * 
-	 * @param pm A <code>PrivateMessage</code> instance containing the pm's id
-	 * to retrieve
-	 * @return The pm contents
+	 * @param relationId The relation's id
+	 * @param relationType The relation type.
+	 * @param userId The bookmark's owner
+	 * @return A bookmark instance of <code>null</code> if 
+	 * the record cannot be found
 	 * @throws Exception
 	 */
-	public PrivateMessage selectById(PrivateMessage pm) throws Exception;
+	public Bookmark selectForUpdate(int relationId, int relationType, int userId) throws Exception;
 }

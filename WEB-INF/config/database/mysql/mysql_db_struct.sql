@@ -446,3 +446,18 @@ CREATE TABLE jforum_karma (
 	from_user_id INT NOT NULL,
 	points INT NOT NULL
 ) TYPE=InnoDB;
+
+--
+-- Table structure for table 'jforum_bookmark'
+--
+DROP TABLE IF EXISTS jforum_bookmarks;
+CREATE TABLE jforum_bookmarks (
+	bookmark_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	user_id INT NOT NULL,
+	relation_id INT NOT NULL,
+	relation_type INT NOT NULL,
+	public_visible INT DEFAULT '1',
+	title varchar(255),
+	description varchar(255),
+	INDEX book_idx_relation (relation_id)
+);

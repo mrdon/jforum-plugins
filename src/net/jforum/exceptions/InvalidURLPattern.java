@@ -1,11 +1,10 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -35,68 +34,21 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
- * 
- * This file creation date: Mar 3, 2003 / 11:52:30 AM
+ *
+ * Created on Jan 16, 2005 8:28:34 PM
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.exceptions;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
-
-import net.jforum.JForum;
-
-import org.apache.log4j.Logger;
-
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-
 /**
  * @author Rafael Steil
- * @version $Id: ForumException.java,v 1.2 2005/01/17 12:22:34 rafaelsteil Exp $
+ * @version $Id: InvalidURLPattern.java,v 1.1 2005/01/17 12:22:34 rafaelsteil Exp $
  */
-public class ForumException  extends RuntimeException
+public class InvalidURLPattern extends RuntimeException
 {
-	private static Logger logger = Logger.getLogger(ForumException.class);
-	
-	public ForumException(Throwable t, Writer w)
+	public InvalidURLPattern(String message)
 	{
-		StringWriter strWriter = new StringWriter();
-		PrintWriter writer = new PrintWriter(strWriter);
-		t.printStackTrace(writer);		
-		writer.close();
-		
-		try {
-			logger.error(strWriter);
-			
-			String message = t.getMessage();
-			if (message == null) {
-				message = t.toString();
-			}
-
-			JForum.getContext().put("stackTrace", strWriter.toString());
-			JForum.getContext().put("message", t.getClass().getName() +": "+  message);
-
-			Template template = Configuration.getDefaultConfiguration().getTemplate("exception.html");
-			template.process(JForum.getContext(), w);
-		}
-		catch (Exception e) {
-			strWriter = new StringWriter();
-			writer = new PrintWriter(strWriter);
-			t.printStackTrace(writer);
-			writer.close();
-			logger.error(strWriter);
-		}
+		super(message);
 	}
-	
-	public ForumException(Throwable t)
-	{
-		StringWriter strWriter = new StringWriter();
-		PrintWriter writer = new PrintWriter(strWriter);
-		t.printStackTrace(writer);
-		writer.close();
-		logger.error(strWriter);
-	}	
 }

@@ -54,6 +54,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
 import net.jforum.exceptions.ForumException;
+import net.jforum.exceptions.InvalidURLPattern;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -65,7 +66,7 @@ import org.apache.commons.fileupload.servlet.ServletRequestContext;
 
 /**
  * @author Rafael Steil
- * @version $Id: ActionServletRequest.java,v 1.13 2004/12/20 00:16:42 rafaelsteil Exp $
+ * @version $Id: ActionServletRequest.java,v 1.14 2005/01/17 12:22:29 rafaelsteil Exp $
  */
 public class ActionServletRequest extends HttpServletRequestWrapper 
 {
@@ -266,7 +267,7 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 					+ (urlModel.length - baseLen));
 
 			if (url == null) {
-				throw new IOException("The request '" + superRequest.getRequestURI() 
+				throw new InvalidURLPattern("The request '" + superRequest.getRequestURI() 
 						+ "' is not valid. A correspondent URL Pattern was not found");
 			}
 			
@@ -291,7 +292,7 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 					for (Iterator iter = items.iterator(); iter.hasNext(); ) {
 						FileItem item = (FileItem)iter.next();
 						if (item.isFormField()) {
-							this.query.put(item.getFieldName(), item.getString());
+							this.query.put(item.getFieldName(), item.getString(SystemGlobals.getValue(ConfigKeys.ENCODING)));
 						}
 						else {
 							if (item.getSize() > 0) {

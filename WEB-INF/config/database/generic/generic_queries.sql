@@ -428,3 +428,37 @@ KarmaModel.getUserKarmaPoints = SELECT SUM(points) points, COUNT(1) votes, from_
 	FROM jforum_karma WHERE post_user_id = ? GROUP BY from_user_id
 	
 KarmaModel.getUserVotes = SELECT points, post_id FROM jforum_karma WHERE topic_id = ?
+
+# ##############
+# BookmarkModel
+# ##############
+BookmarkModel.add = INSERT INTO jforum_bookmarks (user_id, relation_id, relation_type, public_visible, title, description) VALUES (?, ?, ?, ?, ?, ?)
+BookmarkModel.update = UPDATE jforum_bookmarks SET public_visible = ?, title = ?, description = ? WHERE bookmark_id = ?
+BookmarkModel.remove = DELETE FROM jforum_bookmarks WHERE bookmark_id = ?
+
+BookmarkModel.selectForumBookmarks = SELECT b.bookmark_id, b.user_id, b.relation_type, b.relation_id, b.public_visible, b.title, b.description, f.forum_name, f.forum_desc \
+	FROM jforum_bookmarks b, jforum_forums f \
+	WHERE b.relation_type = 1 \
+	AND b.relation_id = f.forum_id \
+	AND b.user_id = ? \
+	ORDER BY f.forum_name
+	
+BookmarkModel.selectTopicBookmarks = SELECT b.bookmark_id, b.user_id, b.relation_type, b.relation_id, b.public_visible, b.title, b.description, t.topic_title \
+	FROM jforum_bookmarks b, jforum_topics t \
+	WHERE b.relation_type = 2 \
+	AND b.relation_id = t.topic_id \
+	AND b.user_id = ? \
+	ORDER BY t.topic_title
+	
+BookmarkModel.selectUserBookmarks = SELECT b.bookmark_id, b.user_id, b.relation_type, b.relation_id, b.public_visible, b.title, b.description, u.username \
+	FROM jforum_bookmarks b, jforum_users u \
+	WHERE b.relation_type = 3 \
+	AND b.relation_id = u.user_id \
+	AND b.user_id = ? \
+	ORDER BY u.username
+
+BookmarkModel.selectForUpdate = SELECT bookmark_id, relation_id, public_visible, relation_type, title, description, user_id \
+	FROM jforum_bookmarks WHERE relation_id = ? AND relation_type = ? AND user_id = ?
+	
+BookmarkModel.selectById = SELECT bookmark_id, relation_id, public_visible, title, description, user_id, relation_type \
+	FROM jforum_bookmarks WHERE bookmark_id = ?

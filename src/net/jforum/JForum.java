@@ -73,7 +73,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.54 2004/12/28 04:10:26 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.55 2005/01/17 12:22:29 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -173,8 +173,6 @@ public class JForum extends JForumCommonServlet
 		JForum.getContext().put("extension", SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		JForum.getContext().put("serverPort", Integer.toString(JForum.getRequest().getServerPort()));
 		JForum.getContext().put("I18n", I18n.getInstance());
-		JForum.getContext().put("JForumContext", new JForumContext(JForum.getRequest().getContextPath(), 
-				SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION), getResponse()));
 		JForum.getContext().put("version", SystemGlobals.getValue(ConfigKeys.VERSION));
 		JForum.getContext().put("forumTitle", SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_TITLE));
 		JForum.getContext().put("pageTitle", SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_TITLE));
@@ -182,6 +180,8 @@ public class JForum extends JForumCommonServlet
 		JForum.getContext().put("metaDescription", SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_METATAG_DESCRIPTION));
 		JForum.getContext().put("forumLink", SystemGlobals.getValue(ConfigKeys.FORUM_LINK));
 		JForum.getContext().put("encoding", SystemGlobals.getValue(ConfigKeys.ENCODING));
+		JForum.getContext().put("JForumContext", new JForumContext(JForum.getRequest().getContextPath(), 
+				SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION), JForum.getResponse()));
 	}
 	
 	public void service(HttpServletRequest req, HttpServletResponse response) throws IOException, ServletException
@@ -190,6 +190,8 @@ public class JForum extends JForumCommonServlet
 		Connection conn = null;
 		
 		try {
+			
+			
 			// Initializes thread local data
 			DataHolder dataHolder = new DataHolder();
 			localData.set(dataHolder);
@@ -288,9 +290,12 @@ public class JForum extends JForumCommonServlet
 				e.printStackTrace();
 			}
 			
-			String redirectTo = ((DataHolder)localData.get()).getRedirectTo();
-			if (redirectTo != null) {
-				response.sendRedirect(redirectTo);
+			DataHolder dh = (DataHolder)localData.get();
+			if (dh != null) {
+				String redirectTo = dh.getRedirectTo();
+				if (redirectTo != null) {
+					response.sendRedirect(redirectTo);
+				}
 			}
 			
 			localData.set(null);

@@ -17,3 +17,9 @@ function writeStars(q, postId)
 		document.images[name].src = q > i ? starOn.src : starOff.src;
 	}
 }
+
+function addBookmark(relationType, relationId)
+{
+	var w = window.open('${JForumContext.encodeURL("/bookmarks/insert/' + relationType + '/' + relationId + '")}', 'bookmark_add', 'width=700, height=180, scrollbars=no');
+	w.focus();
+}

@@ -69,6 +69,14 @@
 			<option value="allow" description="Yes"/>
 		</permission>
 	</section>
+
+	<!-- Bookmarks -->
+	<section id="bookmarks_disabled" title="Bookmarks">
+		<permission id="perm_bookmarks_enabled" title="Enable Bookmarks" type="single">
+			<option value="deny" description="No"/>
+			<option value="allow" description="Yes"/>
+		</permission>
+	</section>
 	
 	<!-- Moderation -->
 	<section id="moderation_section" title="Moderation">
