@@ -55,7 +55,7 @@ import net.jforum.security.PermissionControl;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityRepository.java,v 1.6 2004/12/19 22:14:41 rafaelsteil Exp $
+ * @version $Id: SecurityRepository.java,v 1.7 2004/12/27 00:37:12 rafaelsteil Exp $
  */
 public class SecurityRepository 
 {
@@ -208,12 +208,12 @@ public class SecurityRepository
 		return (PermissionControl)SecurityRepository.securityInfoMap.get(new Integer(userId));
 	}
 
-	public static void add(int userId, PermissionControl pc)
+	public static synchronized void add(int userId, PermissionControl pc)
 	{
 		SecurityRepository.securityInfoMap.put(new Integer(userId), pc);
 	}
 	
-	public static void remove(int userId)
+	public static synchronized void remove(int userId)
 	{
 		SecurityRepository.securityInfoMap.remove(new Integer(userId));
 	}
