@@ -54,7 +54,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: CategoryModel.java,v 1.7 2004/12/05 21:51:24 rafaelsteil Exp $
+ * @version $Id: CategoryModel.java,v 1.8 2004/12/30 02:31:48 rafaelsteil Exp $
  */
 public class CategoryModel extends AutoKeys implements net.jforum.model.CategoryModel 
 {
@@ -166,13 +166,25 @@ public class CategoryModel extends AutoKeys implements net.jforum.model.Category
 	 */
 	public int addNew(Category category) throws Exception 
 	{
-		PreparedStatement p = this.getStatementForAutoKeys("CategoryModel.addNew");
-		p.setString(1, category.getName());
+		int order = 1;
+		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("CategoryModel.getMaxOrder"));
 		
+		ResultSet rs = p.executeQuery();
+		if (rs.next()) {
+			order = rs.getInt(1) + 1;
+		}
+		rs.close();
+		p.close();
+
+		p = this.getStatementForAutoKeys("CategoryModel.addNew");
+		p.setString(1, category.getName());
+		p.setInt(2, order);
 		int id = this.executeAutoKeysQuery(p);
 		
 		p.close();
 		
+		category.setId(id);
+		category.setOrder(order);
 		return id;
 	}
 	

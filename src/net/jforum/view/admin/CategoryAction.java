@@ -72,7 +72,7 @@ import freemarker.template.Template;
  * ViewHelper for category administration.
  * 
  * @author Rafael Steil
- * @version $Id: CategoryAction.java,v 1.10 2004/12/27 00:30:50 rafaelsteil Exp $
+ * @version $Id: CategoryAction.java,v 1.11 2004/12/30 02:31:47 rafaelsteil Exp $
  */
 public class CategoryAction extends Command 
 {
@@ -125,11 +125,9 @@ public class CategoryAction extends Command
 		if (ids != null) {						
 			for (int i = 0; i < ids.length; i++){
 				if (this.cm.canDelete(Integer.parseInt(ids[i]))) {
-					int categoryId = Integer.parseInt(ids[i]);
-					this.cm.delete(categoryId);
-					
-					Category c = new Category();
-					c.setId(categoryId);
+					int id = Integer.parseInt(ids[i]);
+					Category c = this.cm.selectById(id);
+					this.cm.delete(id);
 					
 					ForumRepository.removeCategory(c);
 				}

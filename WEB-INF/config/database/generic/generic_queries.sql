@@ -17,8 +17,9 @@ CategoryModel.selectAll = SELECT * FROM jforum_categories ORDER BY display_order
 CategoryModel.canDelete = SELECT COUNT(1) AS total FROM jforum_forums WHERE categories_id = ?
 CategoryModel.delete = DELETE FROM jforum_categories WHERE categories_id = ?
 CategoryModel.update = UPDATE jforum_categories SET title = ? WHERE categories_id = ?
-CategoryModel.addNew = INSERT INTO jforum_categories (title, display_order) VALUES (?, display_order + 1)
+CategoryModel.addNew = INSERT INTO jforum_categories (title, display_order) VALUES (?, ?)
 CategoryModel.setOrderById = UPDATE jforum_categories SET display_order = ? WHERE categories_id = ?
+CategoryModel.getMaxOrder = SELECT MAX(display_order) FROM jforum_categories
 
 # #############
 # RankingModel
