@@ -26,22 +26,22 @@ function checkBoard()
 	var s = "";
 
 	if (f.server_name.value == "") {
-		s += "Domain Name is empty\n";
+		s += "${I18n.getMessage("Install.domainName")} ${I18n.getMessage("Install.isEmpty")}\n";
 	}
 	else if (f.server_name.value.indexOf("http://") == -1) {
-		s += "Domain Name does not start with 'http://'\n";
+		s += "${I18n.getMessage("Install.domainName")} ${I18n.getMessage("Install.doesNotStart")} 'http://'\n";
 	}
 
 	if (f.admin_pass1.value == "") {
-		s += "Administrator Password is empty\n";
+		s += "${I18n.getMssage("Administrator")} ${I18n.getMessage("User.password")} ${I18n.getMessage("Install.isEmpty")}\n";
 	}
 
 	if (f.admin_pass1.value != f.admin_pass2.value) {
-		s += "Administrator Password confirmation does not match\n";
+		s += "${I18n.getMssage("Administrator")} ${I18n.getMessage("User.password") ${I18n.getMessage("Install.confirmationNotMatch")}h\n";
 	}
 
 	if (s != "") {
-		alert("The following issues were found: \n\n" + s + "\nPlease correct it before continuing");
+		alert("${I18n.getMessage("Install.issuesFound")}: \n\n" + s + "\n${I18n.getMessage("Install.pleaseCorrect")}");
 		return false;
 	}
 
@@ -53,23 +53,23 @@ function checkDatabase()
 	var f = document.install;
 
 	if (f.dbpasswd.value != f.dbpasswd_confirm.value) {
-		alert("Database password confirmation does not match");
+		alert("${I18n.getMessage("Install.dbPasswdNotMatch")}");
 		return false;
 	}
 
 	var s = "";
 	if (f.database.value != "hsqldb") {
 		if (f.dbuser.value == "") {
-			s += "Database Username is empty\n";
+			s += "${I18n.getMessage("Install.dbUsername")} ${I18n.getMessage("Install.isEmpty")}\n";
 		}
 
 		if (f.dbpasswd.value == "") {
-			s += "Database Password is empty\n";
+			s += "${I18n.getMessage("Install.dbPassword")} ${I18n.getMessage("Install.isEmpty")}\n";
 		}
 	}
 	else {
 		if (f.dbpasswd.value == "" || f.dbuser.value == "") {
-			if (confirm("HSQLDB was choosen and no Database Username or Password were set. \nJForum will use the default values. Continue?")) {
+			if (confirm("${I18n.getMessage("Install.hsqldbDefault")}. \n${I18n.getMessage("Install.jforumUseDefault")}")) {
 				return true;
 			}
 
@@ -77,7 +77,7 @@ function checkDatabase()
 		}
 	}
 
-	if (s != "" && confirm("The following issues were found regard to Database Configuration: \n\n" + s + "\nNote that not specifying an username or password may result in errors")) {
+	if (s != "" && confirm("${I18n.getMessage("Install.dbIssues")}: \n\n" + s + "\n${I18n.getMessage("Install.dbMayResultError")}")) {
 		return true;
 	}
 
@@ -95,7 +95,7 @@ function checkDatabase()
 				<td><table width="100%" border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td><img src="${contextPath}/templates/default/images/logo.jpg" border="0" alt="JForum" vspace="1" /></td>
-						<td align="center" width="100%" valign="middle"><span class="maintitle">Welcome to JForum Installation<br/>Version 2.0</span></td>
+						<td align="center" width="100%" valign="middle"><span class="maintitle">${I18n.getMessage("Install.welcome")}<br/>${I18n.getMessage("version")} 2.0</span></td>
 					</tr>
 				</table></td>
 			</tr>
@@ -108,12 +108,9 @@ function checkDatabase()
 					<tr>
 						<td>
 							<span class="gen">
-							Thank you for choosing JForum. In order to complete this install please fill out the details requested below. 
-							Please note that the database you install into should already exist.<br/><br/>
-							This wizard will help you to set the most important configurations for JForum, and, after the installation,
-							you will be able to configure other settings for the board, as well customize it to best fit your needs.
+							${I18n.getMessage("Install.welcomeMessage")}
 							<br/></br>
-							<font color="#ff0000"><b>For help and support, please access <a href="http://www.jforum.net/install.htm">http://www.jforum.net/install.htm</a></b></font>
+							<font color="#ff0000"><b>${I18n.getMessage("Install.forHelpAccess")} <a href="http://www.jforum.net/install.htm">http://www.jforum.net/install.htm</a></b></font>
 							</span>
 						</td>
 					</tr>
@@ -121,7 +118,7 @@ function checkDatabase()
 				</table></td>
 			</tr>
 			<tr>
-				<td align="center" valign="middle"><br/><span class="maintitle">Step 1</span></td>
+				<td align="center" valign="middle"><br/><span class="maintitle">${I18n.getMessage("Install.step1")}</span></td>
 			</tr>
 			<tr>
 				<td width="100%"><table width="100%" cellpadding="2" cellspacing="1" border="0" class="forumline">
@@ -129,11 +126,11 @@ function checkDatabase()
 				<input type="hidden" name="module" value="install">
 				<input type="hidden" name="action" value="checkInformation">
 					<tr>
-						<th colspan="2">1) General Configuration</th>
+						<th colspan="2">1) ${I18n.getMessage("Install.general")}</th>
 
 					</tr>
 					<tr>
-						<td class="row1" align="right" width="40%"><span class="gen"><b>Default board language:</b> </span></td>
+						<td class="row1" align="right" width="40%"><span class="gen"><b>${I18n.getMessage("Install.boardLanguage")}:</b> </span></td>
 						<td class="row2">
 							<select name="language" onchange="this.form.submit()">
 								<option value="en_US">English American (en_US)</option>
@@ -147,136 +144,118 @@ function checkDatabase()
 						</td>
 					</tr>
 					<tr>
-						<td class="row1" align="right"><span class="gen"><b>Database Type: </b></span></td>
+						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbType")}: </b></span></td>
 
 						<td class="row2">
 							<select name="database">
-								<option value="mysql4">MySQL</option>
+								<option value="mysql">MySQL</option>
 								<option value="postgresql">PostgreSQL</option>
 								<option value="hsqldb">HSQLDB</option>
 							</select>
 							<br>
 							<span class="gensmall">
-							Choose the database you want to have JForum running. If you don't know that it means
-							or what option to choose, please select <b>HSQLDB</b>, which is a builtin database.
+							${I18n.getMessage("Install.dbTip")}
 							</span>
 						</td>
 					</tr>
 
 					<tr>
-						<td class="row1" align="right"><span class="gen"><b>Choose your installation type:</b></span></td>
+						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.type")}:</b></span></td>
 						<td class="row2">
 							<select name="install_type">
-								<option value="0">New installation</option>
-								<!-- <option value="1">Upgrade</option> -->
+								<option value="0">${I18n.getMessage("Install.typeNew")}</option>
+								<!-- <option value="1">${I18n.getMessage("Install.typeUpgrade")}</option> -->
 							</select>
 						</td>
 
 					</tr>
 					<tr>
-						<th colspan="2">2) Database Configuration</th>
+						<th colspan="2">2) ${I18n.getMessage("Install.dbConfiguration")}</th>
 					</tr>
 					<tr>
 						<td class="row2" colspan="2">
 						<span class="gensmall">
-						General database options. If you had choosen "MySQL" or "PostgreSQL" as Database Type, it is necessary that 
-						you inform at least the <i>hostname</i>, <i>database name</i>, <i>username</i> and <i>password</i>. This is also
-						valid for "HSQLDB", but if you don't know what to put here, just leave with the defaults.
+						${I18n.getMessage("Install.dbTip")}
 						</span>
 						</td>
 					</tr>
 					<tr>
-						<td class="row1" align="right"><span class="gen"><b>Database Server Hostname</b></span></td>
+						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbHost")}</b></span></td>
 						<td class="row2"><input type="text" name="dbhost" value="localhost" /></td>
 					</tr>
 
 					<tr>
-						<td class="row1" align="right"><span class="gen"><b>Your Database Name: </b></span></td>
+						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbName")}: </b></span></td>
 						<td class="row2"><input type="text" name="dbname" value="jforum" /></td>
 					</tr>
 					<tr>
-						<td class="row1" align="right"><span class="gen"><b>Database Username: </b></span></td>
+						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbUsermame")}: </b></span></td>
 						<td class="row2"><input type="text" name="dbuser" value="" /></td>
 					</tr>
 
 					<tr>
-						<td class="row1" align="right"><span class="gen"><b>Database Password: </b></span></td>
+						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbPassword")}: </b></span></td>
 						<td class="row2"><input type="password" name="dbpasswd" value="" /></td>
 					</tr>
 
 					<tr>
-						<td class="row1" align="right"><span class="gen"><b>Database Password [ Confirm ]: </b></span></td>
+						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbPassword")} [ ${I18n.getMessage("Install.confirm")} ]: </b></span></td>
 						<td class="row2"><input type="password" name="dbpasswd_confirm" value="" /></td>
 					</tr>
 
 					<tr>
-						<td class="row1" align="right"><span class="gen"><b>Database Encoding: </b></span></td>
+						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbEncoding")}: </b></span></td>
 						<td class="row2">
 							<select name="dbencoding">
-								<option value="">Select Encoding</option>
+								<option value="">${I18n.getMessage("Install.selectEncodig")}</option>
 								<option value="utf-8">UTF-8</option>
 								<option value="iso-8859-1">ISO-8859-1</option>
 							</select>
 							&nbsp;
-							<span class="gen"><b>Other: </b></span><input type="text" name="dbencoding_other">
+							<span class="gen"><b>${I18n.getMessage("Install.other")} </b></span><input type="text" name="dbencoding_other">
 							<br/>
 							<span class="gensmall">
-							In most cases you will like to choose "UTF-8" as encoding. If you know what encoding your region, you can
-							specify it in the "Other" field.
+							${I18n.getMessage("Install.encodingTip")}
 							</span>
 						</td>
 					</tr>
 
 					<tr>
-						<td class="row1" align="right"><span class="gen"><b>Use Connection Pool: </b></span></td>
+						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.pool")}: </b></span></td>
 						<td class="row2">
 							<select name="use_pool">
-								<option value="yes">Yes</option>
-								<option value="no">No</option>
+								<option value="yes">${I18n.getMessage("User.yes")}</option>
+								<option value="no">${I18n.getMessage("User.no")}</option>
 							</select>
 						</td>
 					</tr>
 
 					<tr>
-						<th colspan="2">3) Board Configuration</th>
+						<th colspan="2">3) ${I18n.getMessage("Install.boardConfiguration")}</th>
 					</tr>
 					<tr>
-
-						<td class="row1" align="right"><span class="gen"><b>Domain Name: </b></span></td>
-						<td class="row2"><input type="text" name="server_name" value="http://${serverName}" /></td>
+						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.forumLink")}: </b></span></td>
+						<#if serverPort != 80><#assign serverName = serverName + ":" + serverPort/></#if>
+						<#assign serverName = serverName + contextPath?default("/")>
+						<td class="row2"><input type="text" name="forum_link" value="http://${serverName}" /></td>
 					</tr> 
 					<tr>
-						<td class="row1" align="right"><span class="gen"><b>Server Port: </b></span></td>
-						<td class="row2"><input type="text" name="server_port" value="${serverPort}" /></td>
-					</tr>
-					<tr>
-
-						<td class="row1" align="right"><span class="gen"><b>Context path: <b/></span></td>
-						<td class="row2">
-							<input type="text" name="context_path" value="/jforum/" />
-							<br/>
-							<span class="gensmall">
-							If you are going to install JForum in the root context, leave this field empty.
-							</span>
-						</td>
-					</tr>
-					<tr>
-						<td class="row1" align="right"><span class="gen"><b>Administrator Username: </b></span></td>
+						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.adminUsername")}: </b></span></td>
 						<td class="row2"><span class="gen">Admin</span></td>
 					</tr>
 					<tr>
 
-						<td class="row1" align="right"><span class="gen"><b>Administrator Password: </b></span></td>
+						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.adminPassword")} </b></span></td>
 						<td class="row2"><input type="password" name="admin_pass1" value="" /></td>
 					</tr>
 					<tr>
-						<td class="row1" align="right"><span class="gen"><b>Administrator Password [ Confirm ]: </b></span></td>
+						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.adminPasswrod")} [ ${I18n.getMessage("Install.confirm")} ]: </b></span></td>
 						<td class="row2"><input type="password" name="admin_pass2" value="" /></td>
 					</tr>
 					<tr> 
 					  <td class="catBottom" align="center" colspan="2">
 						<input type="hidden" name="install_step" value="1" />
-						<input class="mainoption" type="submit" value="Next Step" />
+						<input class="mainoption" type="submit" value="${I18n.getMessage("Install.nextStep")}" />
 					</td>
 					</tr>
 				</table>
