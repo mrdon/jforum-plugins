@@ -57,7 +57,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: PostModel.java,v 1.5 2004/06/02 03:56:04 rafaelsteil Exp $
+ * @version $Id: PostModel.java,v 1.6 2004/07/24 15:45:59 jamesyong Exp $
  */
 public class PostModel extends AutoKeys implements net.jforum.model.PostModel 
 {
@@ -145,7 +145,8 @@ public class PostModel extends AutoKeys implements net.jforum.model.PostModel
 		p.setLong(7, post.getEditTime());
 		p.setString(8, post.getSubject());
 		p.setString(9, post.getText());		
-		p.setInt(10, post.getId());
+		p.setString(10, post.getUserIp());
+		p.setInt(11, post.getId());
 		
 		p.executeUpdate();
 		p.close();		
