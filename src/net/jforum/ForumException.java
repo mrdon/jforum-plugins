@@ -53,9 +53,9 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumException.java,v 1.5 2004/11/07 14:01:42 rafaelsteil Exp $
+ * @version $Id: ForumException.java,v 1.6 2004/11/12 03:08:09 rafaelsteil Exp $
  */
-public class ForumException 
+public class ForumException  extends RuntimeException
 {
 	private static Logger logger = Logger.getLogger(ForumException.class);
 	

@@ -67,7 +67,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumCommonServlet.java,v 1.14 2004/11/02 18:06:00 rafaelsteil Exp $
+ * @version $Id: JForumCommonServlet.java,v 1.15 2004/11/12 03:08:08 rafaelsteil Exp $
  */
 public class JForumCommonServlet extends HttpServlet {
     private static Properties modulesMapping;
@@ -114,7 +114,7 @@ public class JForumCommonServlet extends HttpServlet {
 
             Configuration.setDefaultConfiguration(templateCfg);
         } catch (Exception e) {
-            new ForumException(e);
+            throw new ForumException(e);
         }
     }
 

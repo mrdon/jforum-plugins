@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: RankingRepository.java,v 1.3 2004/11/05 03:29:48 rafaelsteil Exp $
+ * $Id: RankingRepository.java,v 1.4 2004/11/12 03:08:11 rafaelsteil Exp $
  */
 package net.jforum.repository;
 
@@ -68,7 +68,7 @@ public class RankingRepository
 			loadRanks();
 		}
 		catch (Exception e) {
-			new ForumException(e);
+			throw new ForumException(e);
 		}
 	}
 	

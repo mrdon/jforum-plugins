@@ -60,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * analise, look at <code>net.jforum.drivers.generic</code> package.
  * 
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.5 2004/06/01 19:47:29 pieter2 Exp $
+ * @version $Id: DataAccessDriver.java,v 1.6 2004/11/12 03:08:10 rafaelsteil Exp $
  */
 public abstract class DataAccessDriver 
 {
@@ -83,7 +83,7 @@ public abstract class DataAccessDriver
 				driver = (DataAccessDriver)Class.forName(SystemGlobals.getValue(ConfigKeys.DAO_DRIVER)).newInstance();
 			}
 			catch (Exception e) {
-				new ForumException(e);
+				throw new ForumException(e);
 			}			
 		}
 		

@@ -42,22 +42,28 @@
  */
 package net.jforum;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import net.jforum.entities.UserSession;
+import net.jforum.model.DataAccessDriver;
+import net.jforum.repository.SecurityRepository;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.10 2004/11/06 18:03:48 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.11 2004/11/12 03:08:09 rafaelsteil Exp $
  */
 public class SessionFacade 
 {
+	private static final Logger logger = Logger.getLogger(SessionFacade.class);
 	private static final Map sessionMap = new LinkedHashMap();
 	
 	private SessionFacade() {}
@@ -213,5 +219,41 @@ public class SessionFacade
 	public static boolean isLogged()
 	{
 		return "1".equals(SessionFacade.getAttribute("logged"));
+	}
+
+	/**
+	 * Persists user session information.
+	 * 
+	 * @param sessionId The session which we're going to persist information
+	 * @throws Exception
+	 */
+	public static void storeSessionData(String sessionId) throws Exception
+	{
+		UserSession us = SessionFacade.getUserSession(sessionId);
+		if (us != null) {
+			Connection conn = null;
+			
+			try {
+				if (us.getUserId() != SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
+					conn = DBConnection.getImplementation().getConnection();
+					DataAccessDriver.getInstance().newUserSessionModel().update(us, conn);
+				}
+				
+				SecurityRepository.remove(us.getUserId());
+			}
+			catch (Exception e) {
+				logger.warn("Error storing user session data: " + e);
+			}
+			finally  {
+				if (conn != null) {
+					try {
+						DBConnection.getImplementation().releaseConnection(conn);
+					}
+					catch (Exception e) {
+						logger.warn("Error releasing a connection: " + e);
+					}
+				}
+			}
+		}
 	}
 }

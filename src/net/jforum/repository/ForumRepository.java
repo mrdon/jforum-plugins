@@ -63,7 +63,7 @@ import net.jforum.security.SecurityConstants;
  * needed just once, and then use the cache when data is requested.<br> 
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.9 2004/11/07 14:01:41 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.10 2004/11/12 03:08:11 rafaelsteil Exp $
  */
 public class ForumRepository 
 {
@@ -77,7 +77,7 @@ public class ForumRepository
 			ForumRepository.loadForums();
 		}
 		catch (Exception e) {
-			new ForumException(e);
+			throw new ForumException(e);
 		}
 	}
 	

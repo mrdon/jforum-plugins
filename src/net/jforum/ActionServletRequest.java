@@ -63,7 +63,7 @@ import org.apache.commons.fileupload.FileUploadException;
 
 /**
  * @author Rafael Steil
- * @version $Id: ActionServletRequest.java,v 1.8 2004/09/14 02:16:45 rafaelsteil Exp $
+ * @version $Id: ActionServletRequest.java,v 1.9 2004/11/12 03:08:09 rafaelsteil Exp $
  */
 public class ActionServletRequest extends HttpServletRequestWrapper 
 {
@@ -292,7 +292,7 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 					}
 				}
 				catch (FileUploadException e) {
-					new ForumException(e);
+					throw new ForumException(e);
 				}
 			}
 		}

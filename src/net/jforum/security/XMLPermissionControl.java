@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: XMLPermissionControl.java,v 1.3 2004/06/01 19:47:32 pieter2 Exp $
+ * $Id: XMLPermissionControl.java,v 1.4 2004/11/12 03:08:10 rafaelsteil Exp $
  */
 package net.jforum.security;
 
@@ -188,7 +188,7 @@ public class XMLPermissionControl extends DefaultHandler
 				}
 			}
 			catch (Exception e) {
-				new ForumException(e);
+				throw new ForumException(e);
 			}
 			finally {
 				try {
@@ -198,7 +198,7 @@ public class XMLPermissionControl extends DefaultHandler
 					}
 				}
 				catch (Exception e) {
-					new ForumException(e);
+					throw new ForumException(e);
 				}
 			}
 		}

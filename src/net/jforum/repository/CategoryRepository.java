@@ -58,7 +58,7 @@ import net.jforum.security.SecurityConstants;
  * Yes, it's just a cache.
  * 
  * @author Rafael Steil
- * @version $Id: CategoryRepository.java,v 1.4 2004/11/07 14:01:42 rafaelsteil Exp $
+ * @version $Id: CategoryRepository.java,v 1.5 2004/11/12 03:08:12 rafaelsteil Exp $
  */
 public class CategoryRepository 
 {
@@ -69,7 +69,7 @@ public class CategoryRepository
 			CategoryRepository.loadCategories();
 		}
 		catch (Exception e) {
-			new ForumException(e);
+			throw new ForumException(e);
 		}
 	}
 	

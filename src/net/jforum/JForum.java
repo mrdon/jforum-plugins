@@ -46,7 +46,6 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Date;
-import java.util.HashMap;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -69,7 +68,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.43 2004/11/07 14:01:42 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.44 2004/11/12 03:08:08 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -137,6 +136,16 @@ public class JForum extends JForumCommonServlet
 						&& (MD5.crypt(securityHash + uid).equals(uidHash))) {
 					int userId = Integer.parseInt(uid);
 					userSession.setUserId(userId);
+					
+					// As an user may come back to the forum before its
+					// last visit's session expires, we should check for
+					// existent user information and then, if found, store
+					// it to the database before getting his information back.
+					String sessionId = SessionFacade.isUserInSession(userId);
+					if (sessionId != null) {
+						SessionFacade.storeSessionData(sessionId);
+						SessionFacade.remove(sessionId);
+					}
 
 					User user = DataAccessDriver.getInstance().newUserModel().selectById(userId);
 					UserSessionModel sm = DataAccessDriver.getInstance().newUserSessionModel();
@@ -156,8 +165,8 @@ public class JForum extends JForumCommonServlet
 					userSession.setPrivateMessages(user.getPrivateMessagesCount());
 					userSession.setUsername(user.getUsername());
 
-					// If the execution point is here, then the user
-					// has choosed "autoLogin"
+					// If the execution point gets here, then the user
+					// has chosen "autoLogin"
 					userSession.setAutoLogin(true);
 					SessionFacade.setAttribute("logged", "1");
 					
@@ -172,7 +181,6 @@ public class JForum extends JForumCommonServlet
 			}
 			
 			SessionFacade.add(userSession);
-			SessionFacade.setAttribute("topics_tracking", new HashMap());
 		}
 		else {
 			SessionFacade.getUserSession().updateSessionTime();
@@ -278,11 +286,10 @@ public class JForum extends JForumCommonServlet
 		catch (Exception e) {
 			response.setContentType("text/html");
 			if (out != null) {
-				new ForumException(e, out);
-				out.flush();
+				throw new ForumException(e, out);
 			}
 			else {
-				new ForumException(e, new BufferedWriter(new OutputStreamWriter(response.getOutputStream())));
+				throw new ForumException(e, new BufferedWriter(new OutputStreamWriter(response.getOutputStream())));
 			}
 		}
 		finally {
@@ -292,8 +299,7 @@ public class JForum extends JForumCommonServlet
 				}
 			}
 			catch (Exception e) {
-				new ForumException(e);
-				e.printStackTrace();
+				throw new ForumException(e);
 			}
 		}
 		
@@ -310,7 +316,7 @@ public class JForum extends JForumCommonServlet
 	 */
 	public void destroy() {
 		super.destroy();
-		System.out.println("destroying...");
+		System.out.println("destroying jforum...");
 		
 		try {
 			DBConnection.getImplementation().realReleaseAllConnections();

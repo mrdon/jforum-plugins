@@ -43,6 +43,7 @@
 package net.jforum.view.forum;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -68,7 +69,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.14 2004/10/15 13:10:25 marcwick Exp $
+ * @version $Id: UserAction.java,v 1.15 2004/11/12 03:08:10 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -238,7 +239,7 @@ public class UserAction extends Command
 
 		String password = JForum.getRequest().getParameter("password");
 		if (password.length() > 0) {
-			User user = validateLogin(JForum.getRequest().getParameter("username"), password);
+			User user = this.validateLogin(JForum.getRequest().getParameter("username"), password);
 
 			if (user != null) {
 				JForum.setRedirect(JForum.getRequest().getContextPath()
@@ -251,6 +252,7 @@ public class UserAction extends Command
 				userSession.setUserId(user.getId());
 				userSession.setUsername(JForum.getRequest().getParameter("username"));
 				userSession.setPrivateMessages(user.getPrivateMessagesCount());
+				userSession.setStartTime(new Date(System.currentTimeMillis()));
 
 				userSession.setLang(user.getLang());
 				if (user.getLang() != null && !user.getLang().equals("")
@@ -265,6 +267,7 @@ public class UserAction extends Command
 				}
 
 				SessionFacade.add(userSession);
+				SessionFacade.setAttribute("topics_tracking", new HashMap());
 
 				JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA), 
 						Integer.toString(user.getId()));

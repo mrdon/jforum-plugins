@@ -42,22 +42,14 @@
  */
 package net.jforum;
 
-import java.sql.Connection;
-
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
 import org.apache.log4j.Logger;
 
-import net.jforum.entities.UserSession;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.repository.SecurityRepository;
-import net.jforum.util.preferences.ConfigKeys;
-import net.jforum.util.preferences.SystemGlobals;
-
 /**
  * @author Rafael Steil
- * @version $Id: ForumSessionListener.java,v 1.9 2004/08/26 20:06:41 rafaelsteil Exp $
+ * @version $Id: ForumSessionListener.java,v 1.10 2004/11/12 03:08:09 rafaelsteil Exp $
  */
 public class ForumSessionListener implements HttpSessionListener 
 {
@@ -75,33 +67,15 @@ public class ForumSessionListener implements HttpSessionListener
 	 */
 	public void sessionDestroyed(HttpSessionEvent event) 
 	{
-		UserSession us = SessionFacade.getUserSession(event.getSession().getId());
-		if (us != null) {
-			Connection conn = null;
-			
-			try {
-				if (us.getUserId() != SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
-					conn = DBConnection.getImplementation().getConnection();
-					DataAccessDriver.getInstance().newUserSessionModel().update(us, conn);
-				}
-				
-				SecurityRepository.remove(us.getUserId());
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-			finally  {
-				if (conn != null) {
-					try {
-						DBConnection.getImplementation().releaseConnection(conn);
-					}
-					catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			}
+		String sessionId = event.getSession().getId();
+
+		try {
+			SessionFacade.storeSessionData(sessionId);
 		}
-		
-		SessionFacade.remove(event.getSession().getId());
+		catch (Exception e) {
+			logger.warn(e);
+		}
+
+		SessionFacade.remove(sessionId);
 	}
 }

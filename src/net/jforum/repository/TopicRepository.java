@@ -60,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: TopicRepository.java,v 1.8 2004/11/06 18:03:48 rafaelsteil Exp $
+ * @version $Id: TopicRepository.java,v 1.9 2004/11/12 03:08:11 rafaelsteil Exp $
  */
 public class TopicRepository
 {
@@ -74,7 +74,7 @@ public class TopicRepository
 				TopicRepository.loadMostRecentTopics();
 			}
 			catch (Exception e) {
-				new ForumException(e);
+				throw new ForumException(e);
 			}
 		}
 	}
