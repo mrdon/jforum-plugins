@@ -73,7 +73,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.32 2005/02/01 18:05:08 franklin_samir Exp $
+ * @version $Id: UserAction.java,v 1.33 2005/02/17 21:52:20 franklin_samir Exp $
  */
 public class UserAction extends Command 
 {
@@ -525,7 +525,11 @@ public class UserAction extends Command
 		this.context.put("moduleAction", "user_list.htm");
 	}
 	
-	public void listKarma() throws Exception
+	/**
+	 * @deprecated probably will be removed. Use KarmaAction to load Karma
+	 * @throws Exception
+	 */
+	public void searchKarma() throws Exception
 	{
 		int start = this.preparePagination(DataAccessDriver.getInstance().newUserModel().getTotalUsers());
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);

@@ -43,6 +43,7 @@
 package net.jforum.view.forum;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -63,7 +64,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaAction.java,v 1.3 2005/02/17 19:11:33 franklin_samir Exp $
+ * @version $Id: KarmaAction.java,v 1.4 2005/02/17 21:52:20 franklin_samir Exp $
  */
 public class KarmaAction extends Command
 {
@@ -137,7 +138,13 @@ public class KarmaAction extends Command
 		this.context.put("message", I18n.getMessage("invalidAction"));
 	}
 	
-	//public void searchByPeriod(Date firstPeriod, Date lastPeriod) throws Exception
+	/**
+	 * TODO: Make dynamic data format
+	 * TODO: refactoring here to remove the duplicated code with the method above.
+	 * Performs a search over the users votes between two dates.
+	 * 
+	 * @throws Exception
+	 */
 	public void searchByPeriod() throws Exception
 	{
 	    SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy");
@@ -166,6 +173,44 @@ public class KarmaAction extends Command
 		List users = DataAccessDriver.getInstance().newKarmaModel().getMostRatedUserByPeriod(usersPerPage, firstPeriod, lastPeriod, orderField);
 		this.context.put("users", users);
 		this.context.put("moduleAction", "user_list_karma.htm");
+	}
+	
+	/**
+	 * TODO: Make dynamic data format
+	 * 
+	 * Performs a search over the users votes in a specific month.
+	 * @throws Exception
+	 * 
+	 * @throws Exception
+	 */
+	public void searchByMonth() throws Exception{
+	    SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy");
+	    int month = Integer.parseInt(request.getParameter("month"));
+	    int year = Integer.parseInt(request.getParameter("year"));
+	    	    	   
+	    
+	    Calendar c = Calendar.getInstance();	    
+	    Date firstPeriod, lastPeriod;	           
+	    firstPeriod = formater.parse("01/"+month+"/"+year);
+	    //set the Calendar with the first day of the month
+	    c.setTime(firstPeriod);
+	    //Now get the last day of this month.
+	    lastPeriod = formater.parse(c.getActualMaximum(Calendar.DAY_OF_MONTH)+"/"+month+"/"+year);	    
+	    
+	    String orderField;
+	    if("".equals(request.getParameter("order_by")) || request.getParameter("order_by") == null){
+	        orderField = "total";
+	    }else{
+	        orderField = this.request.getParameter("order_by");	        
+	    }
+	    
+		int start = this.preparePagination(DataAccessDriver.getInstance().newUserModel().getTotalUsers());
+		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
+		//Load all users with your karma
+		List users = DataAccessDriver.getInstance().newKarmaModel().getMostRatedUserByPeriod(usersPerPage, firstPeriod, lastPeriod, orderField);
+		this.context.put("users", users);
+		this.context.put("moduleAction", "user_list_karma.htm");
+	    
 	}
 	
 	private int preparePagination(int totalUsers)
