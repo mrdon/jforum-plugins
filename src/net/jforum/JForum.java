@@ -69,7 +69,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.40 2004/10/12 06:51:43 marcwick Exp $
+ * @version $Id: JForum.java,v 1.41 2004/10/24 16:29:48 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -262,8 +262,14 @@ public class JForum extends JForumCommonServlet
 				Command c = (Command)Class.forName(moduleClass).newInstance();
 				Template template = c.process();
 
-				if (((DataHolder)localData.get()).getRedirectTo() == null) {
-					response.setContentType("text/html; charset=" + encoding);
+				DataHolder dh = (DataHolder)localData.get();
+				if (dh.getRedirectTo() == null) {
+					String contentType = dh.getContentType();
+					if (contentType == null) {
+						contentType = "text/html";
+					}
+					
+					response.setContentType(contentType + ";charset=" + encoding);
 
 					template.process(JForum.getContext(), out);
 					out.flush();

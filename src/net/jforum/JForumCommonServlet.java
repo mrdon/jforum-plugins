@@ -73,7 +73,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumCommonServlet.java,v 1.10 2004/10/15 13:10:12 marcwick Exp $
+ * @version $Id: JForumCommonServlet.java,v 1.11 2004/10/24 16:29:48 rafaelsteil Exp $
  */
 public class JForumCommonServlet extends HttpServlet {
     private static Properties modulesMapping;
@@ -97,7 +97,6 @@ public class JForumCommonServlet extends HttpServlet {
                     + "/WEB-INF/log4j.xml");
 
             // Load system default values
-            // TODO: allow defaultsFile and installation to be overridden by the init parameters
             String appPath = config.getServletContext().getRealPath("");
             SystemGlobals.initGlobals(appPath,
                     appPath + "/WEB-INF/config/SystemGlobals.properties", null);
@@ -186,8 +185,7 @@ public class JForumCommonServlet extends HttpServlet {
     /**
      * Gets a cookie by its name.
      * 
-     * @param name
-     *            The cookie name to retrieve
+     * @param name The cookie name to retrieve
      * @return The <code>Cookie</code> object if found, or <code>null</code> oterwhise
      */
     public static Cookie getCookie(String name) {
@@ -208,10 +206,8 @@ public class JForumCommonServlet extends HttpServlet {
     /**
      * Add or update a cookie. This method adds a cookie, serializing its value using XML.
      * 
-     * @param name
-     *            The cookie name.
-     * @param value
-     *            The cookie value
+     * @param name The cookie name.
+     * @param value The cookie value
      */
     public static void addCookie(String name, String value) {
         Cookie cookie = new Cookie(name, value);
@@ -220,12 +216,22 @@ public class JForumCommonServlet extends HttpServlet {
 
         getResponse().addCookie(cookie);
     }
-    
+
+    /**
+     * Sets the <code>Connection</code>, <code>HttpServletRequest</code>
+     * and <code>HttpServletResponse</code> for the incoming requisition.
+     * As JForum relies on <code>ThreadLocal</code> data, it is necessary,
+     * before of the processing of some request, to set the necessary
+     * data, so the core classes may have access to request, response
+     * and database connections. 
+     * 
+     * @param dataHolder The filled <code>DataHolder</code> class. 
+     */
     public static void setThreadLocalData(DataHolder dataHolder)
     {
     	localData.set(dataHolder);
     }
-
+    
     /**
      * Request information data holder. Stores information/data like the user request and response,
      * his database connection and any other kind of data needed.
@@ -255,6 +261,8 @@ public class JForumCommonServlet extends HttpServlet {
          * If some redirect is needed, the url is here
          */
         private String redirectTo;
+        
+        private String contentType;
 
         // Setters
         public void setConnection(Connection conn) {
@@ -276,8 +284,16 @@ public class JForumCommonServlet extends HttpServlet {
         public void setRedirectTo(String redirectTo) {
             this.redirectTo = redirectTo;
         }
+        
+        public void setContentType(String contentType) {
+        	this.contentType = contentType;
+        }
 
         // Getters
+        public String getContentType() {
+        	return this.contentType;
+        }
+        
         public Connection getConnection() {
             return this.conn;
         }
@@ -342,6 +358,15 @@ public class JForumCommonServlet extends HttpServlet {
      */
     public static void setRedirect(String redirect) {
         ((DataHolder) localData.get()).setRedirectTo(getResponse().encodeRedirectURL(redirect));
+    }
+
+    /**
+     * Sets the content type for the current http response.
+     * 
+     * @param contentType
+     */
+    public static void setContentType(String contentType) {
+    	((DataHolder)localData.get()).setContentType(contentType);
     }
 
     /**

@@ -65,7 +65,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: RSSAction.java,v 1.4 2004/10/22 04:23:47 rafaelsteil Exp $
+ * @version $Id: RSSAction.java,v 1.5 2004/10/24 16:29:48 rafaelsteil Exp $
  */
 public class RSSAction extends Command 
 {
@@ -151,6 +151,7 @@ public class RSSAction extends Command
 	 */
 	public Template process() throws Exception 
 	{
+		JForum.setContentType("text/xml");
 		super.setTemplateName(SystemGlobals.getValue(ConfigKeys.TEMPLATE_NAME) + "/rss.htm");
 		return super.process();
 	}
