@@ -427,7 +427,8 @@ CREATE TABLE [jforum_karma] (
 	[topic_id] [INT] NOT NULL,
 	[post_user_id] [INT] NOT NULL,
 	[from_user_id] [INT] NOT NULL,
-	[points] [INT]NOT NULL
+	[points] [INT] NOT NULL,
+	[rate_date] [datetime] NOT NULL
 ) ON [PRIMARY]
 
 CREATE TABLE [jforum_bookmarks] (
