@@ -52,21 +52,24 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
 import net.jforum.Command;
+import net.jforum.ConfigLoader;
 import net.jforum.DBConnection;
 import net.jforum.InstallServlet;
 import net.jforum.SessionFacade;
 import net.jforum.SimpleConnection;
 import net.jforum.entities.UserSession;
+import net.jforum.util.FileMonitor;
 import net.jforum.util.I18n;
 import net.jforum.util.MD5;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.preferences.SystemGlobalsListener;
 
 import org.apache.log4j.Logger;
 
@@ -74,7 +77,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.10 2004/11/01 16:40:18 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.11 2004/11/02 18:06:02 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -131,6 +134,8 @@ public class InstallAction extends Command
 			return;
 		}
 		
+		this.removeUserConfig();
+		
 		if (!"passed".equals(this.getFromSession("configureDatabase"))) {
 			logger.info("Going to configure the database...");
 			conn = this.configureDatabase();
@@ -172,23 +177,40 @@ public class InstallAction extends Command
 		// Dump is ok
 		this.addToSessionAndContext("importTablesData", "passed");
 		
-		if (!this.updateAdminPassword()) {
+		if (!this.updateAdminPassword(conn)) {
 			InstallServlet.getContext().put("message", I18n.getMessage("Install.updateAdminError"));
 			simpleConnection.releaseConnection(conn);
 			this.error();
 			return;
 		}
+		
+		DBConnection.getImplementation().releaseConnection(conn);
 
 		InstallServlet.setRedirect(InstallServlet.getRequest().getContextPath() + "/install/install"
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)
 				+ "?module=install&action=finished");
 	}
 	
+	private void removeUserConfig()
+	{
+		File f = new File(SystemGlobals.getSql(ConfigKeys.CONFIG_DIR) + "/" + System.getProperty("user.name") + ".properties");
+		if (f.exists() && f.canWrite()) {
+			try {
+				f.delete();
+			}
+			catch (Exception e) {
+				logger.info(e.toString());
+			}
+		}
+	}
+	
 	public void finished() throws Exception
 	{
-		InstallServlet.getContext().put("clickHere", I18n.getMessage("Install.clickHere", 
-				new String[] { this.getFromSession("forumLink") }));
+		InstallServlet.getContext().put("clickHere", I18n.getMessage("Install.clickHere"));
+		InstallServlet.getContext().put("forumLink", this.getFromSession("forumLink"));
 		InstallServlet.getContext().put("moduleAction", "install_finished.htm");
+		
+		this.doFinalSteps();
 
 		this.configureSystemGlobals();
 
@@ -198,7 +220,7 @@ public class InstallAction extends Command
         SessionFacade.remove(InstallServlet.getRequest().getSession().getId());
 	}
 	
-	private void makeFinalSteps() throws Exception
+	private void doFinalSteps() throws Exception
 	{
 		// Modules Mapping
 		String modulesMapping = SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/modulesMapping.properties";
@@ -209,9 +231,10 @@ public class InstallAction extends Command
 			if (p.containsKey("install")) {
 				p.remove("install");
 				
-				p.store(new FileOutputStream(modulesMapping), "Modified by JForum Installer - " + new Date());
+				p.store(new FileOutputStream(modulesMapping), "Modified by JForum Installer");
 				
 				this.addToSessionAndContext("mappingFixed", "true");
+				ConfigLoader.loadModulesMapping(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR));
 			}
 		}
 		
@@ -219,10 +242,11 @@ public class InstallAction extends Command
 		String index = SystemGlobals.getApplicationPath() + "/index.htm";
 		File indexFile = new File(index);
 		if (indexFile.canWrite()) {
-			String newIndex = SystemGlobals.getApplicationPath() + "/index_forum.htm";
+			String newIndex = SystemGlobals.getApplicationPath() + "/new_rename.htm";
 			File newIndexFile = new File(newIndex);
 			if (newIndexFile.exists()) {
-				indexFile.renameTo(newIndexFile);
+				indexFile.delete();
+				newIndexFile.renameTo(indexFile);
 				
 				this.addToSessionAndContext("indexFixed", "true");
 			}
@@ -312,7 +336,7 @@ public class InstallAction extends Command
 			catch (SQLException ex) {
 				status = false;
 				conn.rollback();
-				
+
 				logger.error("Error executing query: " + query + ": " + ex);
 				InstallServlet.getContext().put("exceptionMessage", ex.getMessage() + "\n" + query);
 				
@@ -329,14 +353,30 @@ public class InstallAction extends Command
 	
 	private boolean checkForWritableDir()
 	{
-		File f = new File(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR));
-		if (!f.canWrite()) {
+		if (!this.canWriteToWebInf()) {
 			InstallServlet.getContext().put("message", I18n.getMessage("Install.noWebInfWritePermission"));
 			this.error();
 			return false;
 		}
 		
+		
+		if (!this.canWriteToIndex()) {
+			InstallServlet.getContext().put("message", I18n.getMessage("Install.noWritePermission"));
+			this.error();
+			return false;
+		}
 		return true;
+	}
+	
+	private boolean canWriteToWebInf()
+	{
+		return new File(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/modulesMapping.properties").canWrite();
+	}
+	
+	
+	private boolean canWriteToIndex()
+	{
+		return new File(SystemGlobals.getApplicationPath() + "/index.htm").canWrite();
 	}
 	
 	private Connection configureDatabase() throws Exception
@@ -352,22 +392,32 @@ public class InstallAction extends Command
 			? "net.jforum.PooledConnection"
 			: "net.jforum.SimpleConnection";
 		
+		Properties p = new Properties();
+		p.load(new FileInputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) 
+				+ "/database/" + type + "/" + type + ".properties"));
+		
+		for (Enumeration e = p.keys(); e.hasMoreElements(); ) {
+			String key = (String)e.nextElement();
+			SystemGlobals.setValue(key, p.getProperty(key));
+		}
+		
+		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_IMPLEMENTATION, implementation);
 		SystemGlobals.setValue(ConfigKeys.DATABASE_DRIVER_NAME, type);
+		
+		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_HOST, host);
+		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_USERNAME, username);
+		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_PASSWORD, password);
+		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_DBNAME, dbName);
+		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_ENCODING, encoding);
+		
 		SystemGlobals.saveInstallation();
 		this.restartSystemGlobals();
 		
-		Properties p = new Properties();
-		p.load(new FileInputStream(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG)));
-		
-		p.setProperty(ConfigKeys.DATABASE_CONNECTION_HOST, host);
-		p.setProperty(ConfigKeys.DATABASE_CONNECTION_USERNAME, username);
-		p.setProperty(ConfigKeys.DATABASE_CONNECTION_PASSWORD, password);
-		p.setProperty(ConfigKeys.DATABASE_CONNECTION_DBNAME, dbName);
-		p.setProperty(ConfigKeys.DATABASE_CONNECTION_ENCODING, encoding);
-		
-		p.store(new FileOutputStream(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG)), null);
-
-		this.restartSystemGlobals();
+		int fileChangesDelay = SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY);
+		if (fileChangesDelay > 0) {
+			FileMonitor.getInstance().addFileChangeListener(new SystemGlobalsListener(),
+					SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG), fileChangesDelay);
+		}
 		
 		Connection conn = null;
 		
@@ -397,15 +447,13 @@ public class InstallAction extends Command
         SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
 	}
 	
-	private boolean updateAdminPassword() throws Exception
+	private boolean updateAdminPassword(Connection conn) throws Exception
 	{
 		logger.info("Going to update the administrator's password");
 		
 		boolean status = false;
 		
-		Connection conn  = null;
 		try {
-			conn = DBConnection.getImplementation().getConnection();
 			PreparedStatement p = conn.prepareStatement("UPDATE jforum_users SET user_password = ? WHERE username = 'Admin'");
 			p.setString(1, MD5.crypt(this.getFromSession("adminPassword")));
 			p.executeUpdate();
@@ -417,12 +465,6 @@ public class InstallAction extends Command
 		catch (Exception e) {
 			logger.warn("Error while trying to update the administrator's password: " + e);
 			InstallServlet.getContext().put("exceptionMessage", e.getMessage());
-		}
-		finally {
-			if (conn != null) {
-				try { DBConnection.getImplementation().releaseConnection(conn); }
-				catch (Exception ex) {};
-			}
 		}
 		
 		return status;
@@ -443,7 +485,7 @@ public class InstallAction extends Command
 		String adminPassword = InstallServlet.getRequest().getParameter("admin_pass1");
 		
 		dbHost = this.notNullDefault(dbHost, "localhost");
-		dbEncodingOther = this.notNullDefault(dbEncodingOther, "UTF-8");
+		dbEncodingOther = this.notNullDefault(dbEncodingOther, "utf-8");
 		dbEncoding = this.notNullDefault(dbEncoding, dbEncodingOther);
 		forumLink = this.notNullDefault(forumLink, "http://localhost");
 		dbName = this.notNullDefault(dbName, "jforum");
@@ -466,6 +508,9 @@ public class InstallAction extends Command
 		this.addToSessionAndContext("configureDatabase", null);
 		this.addToSessionAndContext("createTables", null);
 		this.addToSessionAndContext("importTablesData", null);
+		
+		InstallServlet.getContext().put("canWriteToWebInf", this.canWriteToWebInf());
+		InstallServlet.getContext().put("canWriteToIndex", this.canWriteToIndex());
 		
 		InstallServlet.getContext().put("moduleAction", "install_check_info.htm");
 	}

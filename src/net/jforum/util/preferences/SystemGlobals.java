@@ -66,7 +66,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author Pieter
- * @version $Id: SystemGlobals.java,v 1.13 2004/10/31 21:30:53 rafaelsteil Exp $
+ * @version $Id: SystemGlobals.java,v 1.14 2004/11/02 18:06:02 rafaelsteil Exp $
  */
 public class SystemGlobals implements VariableStore
 {
@@ -189,7 +189,7 @@ public class SystemGlobals implements VariableStore
 	 */
 	public static void saveInstallation() throws IOException
 	{
-		FileOutputStream out = new FileOutputStream(globals.installationConfig);
+		FileOutputStream out = new FileOutputStream(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG));
 		globals.installation.store(out, "Installation specific configuration options");
 		out.close();
 	}

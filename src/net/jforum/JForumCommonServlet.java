@@ -43,11 +43,8 @@
 package net.jforum;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.ServletConfig;
@@ -57,13 +54,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.repository.BBCodeRepository;
-import net.jforum.util.FileMonitor;
 import net.jforum.util.I18n;
 import net.jforum.util.bbcode.BBCodeHandler;
 import net.jforum.util.preferences.ConfigKeys;
-import net.jforum.util.preferences.QueriesFileListener;
 import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.util.preferences.SystemGlobalsListener;
 
 import org.apache.log4j.xml.DOMConfigurator;
 
@@ -73,7 +67,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumCommonServlet.java,v 1.13 2004/10/28 02:49:03 rafaelsteil Exp $
+ * @version $Id: JForumCommonServlet.java,v 1.14 2004/11/02 18:06:00 rafaelsteil Exp $
  */
 public class JForumCommonServlet extends HttpServlet {
     private static Properties modulesMapping;
@@ -97,7 +91,7 @@ public class JForumCommonServlet extends HttpServlet {
             DOMConfigurator.configure(appPath + "/WEB-INF/log4j.xml");
 
             // Load system default values
-            this.startSystemglobals(appPath);
+            ConfigLoader.startSystemglobals(appPath);
 
             // Configure the template engine
             Configuration templateCfg = new Configuration();
@@ -116,63 +110,23 @@ public class JForumCommonServlet extends HttpServlet {
                 templateCfg.setTemplateUpdateDelay(3600);
             }
 
-            int fileChangesDelay = SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY);
+            ConfigLoader.listenForChanges();
 
-            if (fileChangesDelay > 0) {
-                // Queries
-                FileMonitor.getInstance().addFileChangeListener(new QueriesFileListener(),
-                        SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC), fileChangesDelay);
-
-                FileMonitor.getInstance().addFileChangeListener(new QueriesFileListener(),
-                        SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER), fileChangesDelay);
-
-                // System Properties
-                FileMonitor.getInstance().addFileChangeListener(new SystemGlobalsListener(),
-                        SystemGlobals.getValue(ConfigKeys.DEFAULT_CONFIG), fileChangesDelay);
-
-                FileMonitor.getInstance().addFileChangeListener(new SystemGlobalsListener(),
-                        SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG), fileChangesDelay);
-            }
             Configuration.setDefaultConfiguration(templateCfg);
         } catch (Exception e) {
             new ForumException(e);
         }
     }
-    
-    protected void startSystemglobals(String appPath) throws Exception
-	{
-    	SystemGlobals.initGlobals(appPath, appPath + "/WEB-INF/config/SystemGlobals.properties", null);
-        SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
-
-        if (new File(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG)).exists()) {
-            SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG));
-        }
-	}
 
     /**
      * Loads modules mapping file
      */
     protected void loadModulesMapping(String baseDir) throws IOException {
-        modulesMapping = new Properties();
-        modulesMapping.load(new FileInputStream(baseDir + "/config/modulesMapping.properties"));
-    }
-
-    protected void loadUrlPatterns() throws IOException {
-        Properties p = new Properties();
-        p.load(new FileInputStream(SystemGlobals.getApplicationResourceDir()
-                + "/config/urlPattern.properties"));
-
-        Iterator iter = p.entrySet().iterator();
-        while (iter.hasNext()) {
-            Map.Entry entry = (Map.Entry) iter.next();
-
-            ActionServletRequest.addUrlPattern(entry.getKey().toString(), entry.getValue()
-                    .toString());
-        }
+        modulesMapping = ConfigLoader.loadModulesMapping(baseDir + "/config");
     }
 
     protected void loadConfigStuff() throws Exception {
-        this.loadUrlPatterns();
+        ConfigLoader.loadUrlPatterns();
         I18n.load();
 
         // BB Code
@@ -377,8 +331,8 @@ public class JForumCommonServlet extends HttpServlet {
      */
     public static String encodeUrlWithPathAndExtension(String url) {
         DataHolder dataHolder = (DataHolder) localData.get();
-        return dataHolder.getResponse().encodeURL(
-                getRequest().getContextPath() + url
-                        + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+        return dataHolder.getResponse().encodeURL(getRequest().getContextPath() 
+					+ url
+					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
        	}
 }
