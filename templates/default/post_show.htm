@@ -68,10 +68,10 @@ function confirmDelete()
 							<#if !readonly>
 								<span class="nav">
 								<#if !replyOnly>
-									<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&forum_id=${topic.forumId}","")}"><img src="${contextPath}/templates/${templateName}/images/post.gif" border="0" /></a>
+									<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&forum_id=${topic.forumId}","")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/post.gif" border="0" /></a>
 								</#if>
 
-								<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&topic_id=${topic.id}&forum_id=${topic.forumId}&start=${start}", "")}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" border="0" /></a>
+								<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&topic_id=${topic.id}&forum_id=${topic.forumId}&start=${start}", "")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/reply.gif" border="0" /></a>
 								</span>
 							<#else>
 								<#assign colspan = "2"/>
@@ -150,11 +150,11 @@ function confirmDelete()
 
 									<!-- Icons -->
 									<#if topic.status != STATUS_LOCKED>
-										<a href="${JForumContext.encodeURL("/jforum${extension}?module=${moduleName}&amp;action=quote&amp;post_id=${post.id}&start=${start}","")}"><img src="${contextPath}/templates/${templateName}/images/icon_quote.gif" border="0" /></a>
+										<a href="${JForumContext.encodeURL("/jforum${extension}?module=${moduleName}&amp;action=quote&amp;post_id=${post.id}&start=${start}","")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/icon_quote.gif" border="0" /></a>
 									</#if>
 
 									<#if ((post.canEdit && topic.status != STATUS_LOCKED) || canEdit)>
-										<a href="${JForumContext.encodeURL("/jforum${extension}?module=${moduleName}&amp;action=edit&amp;post_id=${post.id}&start=${start}","")}"><img src="${contextPath}/templates/${templateName}/images/icon_edit.gif" border="0" /></a>  
+										<a href="${JForumContext.encodeURL("/jforum${extension}?module=${moduleName}&amp;action=edit&amp;post_id=${post.id}&start=${start}","")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/icon_edit.gif" border="0" /></a>  
 									</#if>
 
 									<#if canRemove>
@@ -345,10 +345,10 @@ function confirmDelete()
 						<#if !readonly>
 							<span class="nav">
 							<#if !replyOnly>
-								<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&forum_id=${topic.forumId}","")}"><img src="${contextPath}/templates/${templateName}/images/post.gif" border="0" /></a>
+								<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&forum_id=${topic.forumId}","")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/post.gif" border="0" /></a>
 							</#if>
 
-							&nbsp;<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&topic_id=${topic.id}&forum_id=${topic.forumId}&start=${start}","")}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" border="0" /></a>
+							&nbsp;<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&topic_id=${topic.id}&forum_id=${topic.forumId}&start=${start}","")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/reply.gif" border="0" /></a>
 							</span>
 						<#else>
 							<#assign colspan = "2"/>
