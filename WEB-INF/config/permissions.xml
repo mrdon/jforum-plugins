@@ -32,6 +32,13 @@
 			<sql queryName="ForumModel.selectAll" valueField="forum_id" captionField="forum_name"/>
 		</permission>
 	</section>
+
+	<!-- Post Reply but not allowed to create topics -->
+	<section id="reply_only" title="Reply Only">
+		<permission id="perm_reply_only" title="Deny create new Topics but allow replying to existing messages (e.g, Announcement Forums)" type="multiple">
+			<sql queryName="ForumModel.selectAll" valueField="forum_id" captionField="forum_name"/>
+		</permission>
+	</section>
 	
 	<!-- Create Sticky or Annoucement Topics  -->
 	<section id="topics_sticky_announce" title="Sticky or Announcement Topics">

@@ -81,7 +81,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.37 2005/01/08 15:22:00 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.38 2005/01/14 13:50:29 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -149,6 +149,8 @@ public class PostAction extends Command {
 		this.context.put("pageTitle", SystemGlobals.getValue(ConfigKeys.FORUM_NAME) + " - " + topic.getTitle());
 		this.context.put("isAdmin", SecurityRepository.canAccess(SecurityConstants.PERM_ADMINISTRATION));
 		this.context.put("readonly", !SecurityRepository.canAccess(SecurityConstants.PERM_READ_ONLY_FORUMS, 
+				Integer.toString(topic.getForumId())));
+		this.context.put("replyOnly", !SecurityRepository.canAccess(SecurityConstants.PERM_REPLY_ONLY, 
 				Integer.toString(topic.getForumId())));
 
 		this.context.put("isModerator", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION)

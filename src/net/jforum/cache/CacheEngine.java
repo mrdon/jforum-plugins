@@ -44,11 +44,11 @@ package net.jforum.cache;
 
 /**
  * @author Rafael Steil
- * @version $Id: CacheEngine.java,v 1.1 2005/01/13 23:30:12 rafaelsteil Exp $
+ * @version $Id: CacheEngine.java,v 1.2 2005/01/14 13:50:31 rafaelsteil Exp $
  */
 public interface CacheEngine
 {
-	public static final String DUMMY_FQN = "/";
+	public static final String DUMMY_FQN = "";
 
 	/**
 	 * Inits the cache engine. 

@@ -44,7 +44,7 @@ package net.jforum.security;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityConstants.java,v 1.6 2004/10/24 20:38:33 rafaelsteil Exp $
+ * @version $Id: SecurityConstants.java,v 1.7 2005/01/14 13:50:31 rafaelsteil Exp $
  */
 public class SecurityConstants 
 {
@@ -63,4 +63,5 @@ public class SecurityConstants
 	public static final String PERM_CREATE_STICKY_ANNOUNCEMENT_TOPICS = "perm_create_sticky_announcement_topics";
 	public static final String PERM_READ_ONLY_FORUMS = "perm_read_only_forums";
 	public static final String PERM_HTML_DISABLED = "perm_html_disabled";
+	public static final String PERM_REPLY_ONLY = "perm_reply_only";
 }

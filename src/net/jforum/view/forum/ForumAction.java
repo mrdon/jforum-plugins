@@ -72,7 +72,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.26 2005/01/04 21:36:25 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.27 2005/01/14 13:50:29 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -195,6 +195,12 @@ public class ForumAction extends Command
 		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
 		this.context.put("pageTitle", SystemGlobals.getValue(ConfigKeys.FORUM_NAME) + " - " + forum.getName());
 		
+		this.context.put("replyOnly", !SecurityRepository.canAccess(SecurityConstants.PERM_REPLY_ONLY, 
+				Integer.toString(forum.getId())));
+
+		this.context.put("readonly", !SecurityRepository.canAccess(SecurityConstants.PERM_READ_ONLY_FORUMS, 
+				Integer.toString(forumId)));
+		
 		// Pagination
 		this.context.put("totalPages", new Double(Math.ceil( (double)totalTopics / (double)topicsPerPage )));
 		this.context.put("recordsPerPage", new Integer(topicsPerPage));
@@ -202,8 +208,6 @@ public class ForumAction extends Command
 		this.context.put("thisPage", new Double(Math.ceil( (double)(start + 1) / (double)topicsPerPage )));
 		this.context.put("start", new Integer(start));
 		this.context.put("postsPerPage", new Integer(postsPerPage));
-		this.context.put("readonly", !SecurityRepository.canAccess(SecurityConstants.PERM_READ_ONLY_FORUMS, 
-				Integer.toString(forumId)));
 
 		TopicsCommon.topicListingBase();
 	}

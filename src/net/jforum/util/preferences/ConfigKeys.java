@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.34 2005/01/13 23:30:16 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.35 2005/01/14 13:50:31 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -166,6 +166,7 @@ public class ConfigKeys {
 	public static final String MOST_USER_EVER_ONLINE_DATE = "most.users.ever.online.date";
 	
 	public static final String OSCACHE_PROPERTIES = "oscache.properties";
+	public static final String JBOSS_CACHE_PROPERTIES = "jboss.cache.properties";
 	
 	private ConfigKeys() {}
 }

@@ -32,6 +32,11 @@
 		<priority value="info"/>
 		<appender-ref ref="jforum-stdout"/>
 	</category>
+	
+	<category name="org.jboss">
+		<priority value="info"/>
+		<appender-ref ref="jforum-stdout"/>
+	</category>
 
 	<category name="com.opensymphony.oscache">
 		<priority value="info" />

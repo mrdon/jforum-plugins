@@ -36,9 +36,12 @@ function confirmDelete()
 							<img src="${contextPath}/templates/${templateName}/images/reply_locked.gif" />
 						<#else>
 							<#if !readonly>
-								<span class="nav">&nbsp;
-								<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&amp;action=insert&amp;forum_id=${topic.forumId}","")}"><img src="${contextPath}/templates/${templateName}/images/post.gif" border="0" /></a>
-								<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}&start=${start}", "")}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" border="0" /></a>
+								<span class="nav">
+								<#if !replyOnly>
+									<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&forum_id=${topic.forumId}","")}"><img src="${contextPath}/templates/${templateName}/images/post.gif" border="0" /></a>
+								</#if>
+
+								<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&topic_id=${topic.id}&forum_id=${topic.forumId}&start=${start}", "")}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" border="0" /></a>
 								</span>
 							<#else>
 								<#assign colspan = "2"/>
@@ -47,7 +50,7 @@ function confirmDelete()
 					</td>
 
 					<td valign="center" align="left" colspan="${colspan?default("0")}">
-						<span class="nav">&nbsp;&nbsp;&nbsp;
+						<span class="nav">
 						<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")} </a> 
             			-&gt; <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name} </a>
 						</span>
@@ -250,8 +253,11 @@ function confirmDelete()
 					<#else>
 						<#if !readonly>
 							<span class="nav">
-							&nbsp;<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&amp;action=insert&amp;forum_id=${topic.forumId}","")}"><img src="${contextPath}/templates/${templateName}/images/post.gif" border="0" /></a>
-							&nbsp;<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&amp;action=insert&amp;topic_id=${topic.id}&amp;forum_id=${topic.forumId}&start=${start}","")}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" border="0" /></a>
+							<#if !replyOnly>
+								<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&forum_id=${topic.forumId}","")}"><img src="${contextPath}/templates/${templateName}/images/post.gif" border="0" /></a>
+							</#if>
+
+							&nbsp;<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&topic_id=${topic.id}&forum_id=${topic.forumId}&start=${start}","")}"><img src="${contextPath}/templates/${templateName}/images/reply.gif" border="0" /></a>
 							</span>
 						<#else>
 							<#assign colspan = "2"/>
@@ -260,7 +266,7 @@ function confirmDelete()
 					</td>
 					
 					<td valign="center" align="left" colspan="${colspan?default("0")}">
-						<span class="nav">&nbsp;&nbsp;&nbsp;
+						<span class="nav">
 						<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")} </a> 
             			-&gt; <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name} </a>
 						</span>
