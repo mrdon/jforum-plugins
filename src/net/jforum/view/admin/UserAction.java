@@ -71,7 +71,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.15 2005/01/04 03:31:19 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.16 2005/01/06 02:36:05 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -253,6 +253,7 @@ public class UserAction extends Command
 		}
 		
 		um.addToGroup(userId, newGroups);
+		SecurityRepository.remove(userId);
 		
 		this.list();
 	}
