@@ -47,7 +47,7 @@ import net.jforum.drivers.postgresql.security.UserSecurityModel;
 
 /**
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.8 2005/02/03 12:37:43 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.9 2005/02/13 17:05:08 andowson Exp $
  */
 public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDriver
 {
@@ -62,6 +62,7 @@ public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDrive
 	private static AttachmentModel attachModel = new AttachmentModel();
 	private static ForumModel forumModel = new ForumModel();
 	private static CategoryModel categoryModel = new CategoryModel();
+	private static ModerationModel moderationModel = new ModerationModel();
 
 	/** 
 	 * @see net.jforum.model.DataAccessDriver#newPostModel()
@@ -146,5 +147,13 @@ public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDrive
 	public net.jforum.model.AttachmentModel newAttachmentModel()
 	{
 		return attachModel;
-	}	
+	}
+
+	/**
+	 * @see net.jforum.model.DataAccessDriver#newModerationModel()
+	 */
+	public net.jforum.model.ModerationModel newModerationModel()
+	{
+		return moderationModel;
+	}		
 }
