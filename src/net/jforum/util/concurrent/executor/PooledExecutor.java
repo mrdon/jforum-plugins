@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) 2003, 2004 Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,11 +37,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: Jan 29, 2004
- * net.jforum.util.concurrent.executor.PooledExecutor.java
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: PooledExecutor.java,v 1.2 2004/04/21 23:57:34 rafaelsteil Exp $
+ * $Id: PooledExecutor.java,v 1.3 2004/09/22 00:54:22 rafaelsteil Exp $
  */
 package net.jforum.util.concurrent.executor;
 
@@ -85,7 +84,9 @@ public class PooledExecutor implements Executor
 			return;
 		}
 		
-		new Thread(new Worker()).start();
+		Thread worker = new Thread(new Worker());
+		worker.setDaemon(true);
+		worker.start();
 		
 		lastCreation = curtime;
 		++threadCount;

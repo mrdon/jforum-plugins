@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: QueuedExecutor.java,v 1.4 2004/05/04 00:59:42 rafaelsteil Exp $
+ * $Id: QueuedExecutor.java,v 1.5 2004/09/22 00:54:22 rafaelsteil Exp $
  */
 package net.jforum.util.concurrent.executor;
 
@@ -102,6 +102,7 @@ public class QueuedExecutor implements Executor
 				logger.info("Creating a new thread...");
 				
 				currentThread = new Thread(new WorkerThread());
+				currentThread.setDaemon(true);
 				currentThread.start();	
 			}
 		}
