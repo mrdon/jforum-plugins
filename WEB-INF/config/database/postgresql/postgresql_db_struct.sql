@@ -1,3 +1,7 @@
+--
+-- Table structure for table 'jforum_banlist'
+--
+
 CREATE SEQUENCE jforum_banlist_seq;
 CREATE TABLE jforum_banlist (
   banlist_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_banlist_seq'),
@@ -305,7 +309,7 @@ CREATE TABLE jforum_users (
   deleted INTEGER DEFAULT NULL,
   user_viewonline INTEGER DEFAULT 1,
   security_hash VARCHAR(32),
-  user_karma DECIMAL,
+  user_karma NUMERIC(10,2),
   PRIMARY KEY  (user_id)
 );
 
@@ -476,7 +480,7 @@ CREATE TABLE jforum_extension_groups (
 	upload_icon VARCHAR(100),
 	download_mode INTEGER DEFAULT 1,
 	PRIMARY KEY(extension_group_id)
-) ;
+);
 
 -- 
 -- Table structure for table 'jforum_extensions'
@@ -516,7 +520,7 @@ CREATE INDEX idx_att_user ON jforum_attach(user_id);
 --
 CREATE SEQUENCE jforum_attach_desc_seq;
 CREATE TABLE jforum_attach_desc (
-	attach_desc_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_attach_desc_seq'),
+	attach_desc_id INTEGER NOT NULL PRIMARY KEY DEFAULT NEXTVAL('jforum_attach_desc_seq'),
 	attach_id INTEGER NOT NULL,
 	physical_filename VARCHAR(255) NOT NULL,
 	real_filename VARCHAR(255) NOT NULL,
