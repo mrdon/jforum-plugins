@@ -445,13 +445,10 @@ KarmaModel.getUserTotalVotes = SELECT SUM(points) AS points, COUNT(post_id) AS v
 
 KarmaModel.getMostRatedUserByPeriod = SELECT u.user_id, u.username, SUM(post_user_id) AS total, \
 									  COUNT(post_user_id) AS votes_received, user_karma, \
-									  	(SELECT COUNT(from_user_id) AS given_votes \
-										FROM jforum_karma as k2 \
-										WHERE k2.from_user_id = u.user_id) AS given_votes \
+									  -1 AS given \
 									  FROM jforum_users u, jforum_karma k \
 									  WHERE u.user_id = k.post_user_id \
-									  AND k.rate_date between ? AND ? \
-									  GROUP BY u.user_id, u.username, user_karma
+									  GROUP BY u.user_id, u.username, user_karma\
 
 # ##############
 # BookmarkModel
