@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=${encoding}">
 <meta http-equiv="Content-Style-Type" content="text/css">
-<title>Welcome to JForum 2 Installation</title>
+<title>Welcome to JForum 2.1 Installation</title>
 <link rel="stylesheet" href="${contextPath}/templates/default/style.css" type="text/css">
 <style type="text/css">
 th			{ background-image: url('${contextPath}/templates/default/images/cellpic3.gif') }
@@ -132,6 +132,7 @@ function checkDatabase()
 						<td class="row2">
 							<select name="language" onChange="document.location = '${contextPath}/install/install${extension}?module=install&action=welcome&l=' + this.value;">
 								<option value="en_US" <#if language?default("") == "en_US">selected</#if>>English American (en_US)</option>
+								<option value="zh_TW" <#if language?default("") == "zh_TW">selected</#if>>Chinese Traditional (zh_TW)</option>
 								<option value="zh_CN" <#if language?default("") == "zh_CN">selected</#if>>Chinese Simplifed (zh_CN)</option>
 								<option value="fr_FR" <#if language?default("") == "fr_FR">selected</#if>>French (fr_FR)</option>
 								<option value="de_DE" <#if language?default("") == "de_DE">selected</#if>>German (de_DE)</option>
