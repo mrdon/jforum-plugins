@@ -54,7 +54,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.8 2004/07/22 15:21:05 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.9 2004/08/01 04:47:02 rafaelsteil Exp $
  */
 public class SessionFacade 
 {
@@ -167,8 +167,13 @@ public class SessionFacade
 		
 		for (Iterator iter = sessionMap.values().iterator(); iter.hasNext(); ) {
 			UserSession us = (UserSession)iter.next();
+			String thisUsername = us.getUsername();
 			
-			if (us.getUserId() != aid && us.getUsername().equals(username)) {
+			if (thisUsername == null) {
+				continue;
+			}
+			
+			if (us.getUserId() != aid && thisUsername.equals(username)) {
 				return us.getSessionId();
 			}
 		}
