@@ -47,6 +47,13 @@ import java.io.IOException;
 
 import freemarker.template.Configuration;
 
+import net.jforum.entities.UserSession;
+import net.jforum.http.FakeActionServletRequest;
+import net.jforum.security.PermissionControl;
+import net.jforum.security.Role;
+import net.jforum.security.RoleCollection;
+import net.jforum.security.RoleValue;
+import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -55,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * General utilities for the test cases.
  * 
  * @author Rafael Steil
- * @version $Id: TestCaseUtils.java,v 1.6 2004/10/14 02:22:10 rafaelsteil Exp $
+ * @version $Id: TestCaseUtils.java,v 1.7 2004/12/09 02:41:43 rafaelsteil Exp $
  */
 public class TestCaseUtils
 {
@@ -116,5 +123,59 @@ public class TestCaseUtils
         Configuration.setDefaultConfiguration(templateCfg);
 
 		I18n.load();
+	}
+	
+	public static void createThreadLocalData(int defaultUserId) throws IOException
+	{
+		JForumCommonServlet.DataHolder dh = new JForumCommonServlet.DataHolder();
+		dh.setRequest(new FakeActionServletRequest());
+		
+		JForumCommonServlet.setThreadLocalData(dh);
+		
+		UserSession us = new UserSession();
+		us.setUserId(defaultUserId);
+		
+		SessionFacade.add(us);
+	}
+	
+	public static PermissionControl createForumCategoryPermissionControl(int[] categoryIds, int[] categoryRights, 
+			int[] forumIds, int[] forumRights)
+	{
+		PermissionControl pc = new PermissionControl();
+		RoleCollection rc = new RoleCollection();
+		
+		// Category
+		Role role = new Role();
+		role.setId(1);
+		role.setName(SecurityConstants.PERM_CATEGORY);
+		
+		for (int i = 0; i < categoryIds.length; i++) {
+			RoleValue rv = new RoleValue();
+			rv.setType(categoryRights[i]);
+			rv.setValue(Integer.toString(categoryIds[i]));
+			
+			role.getValues().add(rv);
+		}
+		
+		rc.add(role);
+		
+		// Forums
+		role = new Role();
+		role.setId(2);
+		role.setName(SecurityConstants.PERM_FORUM);
+		
+		for (int i = 0; i < forumIds.length; i++) {
+			RoleValue rv = new RoleValue();
+			rv.setType(forumRights[i]);
+			rv.setValue(Integer.toString(forumIds[i]));
+			
+			role.getValues().add(rv);
+		}
+		
+		rc.add(role);
+
+		pc.setRoles(rc);
+		
+		return pc;
 	}
 }

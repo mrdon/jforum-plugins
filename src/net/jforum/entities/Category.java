@@ -52,6 +52,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import net.jforum.SessionFacade;
+import net.jforum.exceptions.ForumOrderChanged;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.SecurityConstants;
@@ -70,7 +71,7 @@ import net.jforum.util.ForumOrderComparator;
  * to the user who make the call tho the method. 
  * 
  * @author Rafael Steil
- * @version $Id: Category.java,v 1.11 2004/12/06 01:06:14 rafaelsteil Exp $
+ * @version $Id: Category.java,v 1.12 2004/12/09 02:41:41 rafaelsteil Exp $
  */
 public class Category 
 {
@@ -154,6 +155,85 @@ public class Category
 	public void addForum(Forum forum) {
 		this.forumsIdMap.put(new Integer(forum.getId()), forum);
 		this.forums.add(forum);
+	}
+	
+	/**
+	 * Reloads a forum.
+	 * The forum should already be in the cache and <b>SHOULD NOT</b>
+	 * have its order changed. If the forum's order was changed, 
+	 * then you <b>MUST CALL</b> @link #changeForumOrder(Forum) <b>BEFORE</b>
+	 * calling this method.
+	 * 
+	 * @param forum The forum to reload its information
+	 * @throws ForumChangedException if the forum given as parameter
+	 * has a modified display order
+	 * @throws Exception
+	 * @see #changeForumOrder(Forum)
+	 */
+	public void reloadForum(Forum forum) {
+		Forum currentForum = this.getForum(forum.getId());
+		
+		if (forum.getOrder() != currentForum.getOrder()) {
+			throw new ForumOrderChanged("Forum #" + forum.getId() + " cannot be reloaded, since its "
+					+ "display order was changed. You must call Category#changeForumOrder(Forum)"
+					+ "first");
+		}
+		
+		Set tmpSet = new TreeSet(new ForumOrderComparator());
+		tmpSet.addAll(this.forums);
+		tmpSet.remove(currentForum);
+		tmpSet.add(forum);
+		
+		this.forums = tmpSet;
+	}
+	
+	/**
+	 * Changes a forum's display order. 
+	 * This method changes the position of the
+	 * forum in the current display order of the
+	 * forum instance passed as argument, if applicable.
+	 * 
+	 * @param forum The forum to change
+	 */
+	public void changeForumOrder(Forum forum)
+	{
+		Forum current = this.getForum(forum.getId());
+		Forum currentAtOrder = this.findByOrder(forum.getOrder());
+		
+		Set tmpSet = new TreeSet(new ForumOrderComparator());
+		tmpSet.addAll(this.forums);
+		
+		// Remove the forum in the current order
+		// where the changed forum will need to be
+		if (currentAtOrder != null) {
+			tmpSet.remove(currentAtOrder);
+		}
+		
+		tmpSet.add(forum);
+		
+		// Remove the forum in the position occupied
+		// by the changed forum before its modification,
+		// so then we can add the another forum into 
+		// its position
+		if (currentAtOrder != null) {
+			tmpSet.remove(current);
+			currentAtOrder.setOrder(current.getOrder());
+			tmpSet.add(currentAtOrder);
+		}
+		
+		this.forums = tmpSet;
+	}
+	
+	private Forum findByOrder(int order)
+	{
+		for (Iterator iter = this.forums.iterator(); iter.hasNext(); ) {
+			Forum f = (Forum)iter.next();
+			if (f.getOrder() == order) {
+				return f;
+			}
+		}
+		
+		return null;
 	}
 	
 	/**

@@ -36,42 +36,21 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on 17/11/2004 22:03:01
+ * Created on 08/12/2004 23:42:20
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.entities;
-
-import java.util.Iterator;
-
-import junit.framework.TestCase;
+package net.jforum.exceptions;
 
 /**
+ * Thrown when someone tries to reload some cached
+ * forum instance which had its order changed.
+ * 
  * @author Rafael Steil
- * @version $Id: ForumOrderTest.java,v 1.2 2004/12/09 02:41:42 rafaelsteil Exp $
+ * @version $Id: ForumOrderChanged.java,v 1.1 2004/12/09 02:41:43 rafaelsteil Exp $
  */
-public class ForumOrderTest extends TestCase 
-{
-	private Category category;
-
-	/**
-	 * @see TestCase#setUp()
-	 */
-	protected void setUp() throws Exception 
-	{
-		this.category = new CategoryTestCommon().createCategoryAndForums();
+public class ForumOrderChanged extends RuntimeException {
+	public ForumOrderChanged(String message) {
+		super(message);
 	}
-	
-	public void testForumOrder()
-	{
-		String[] expectedNames = { "Forum 1", "Forum 2", "Forum 3", "Forum 4", "Forum 5" };
-		int i = 0; 
-		for (Iterator iter = this.category.getForums().iterator(); iter.hasNext(); ) {
-			Forum f = (Forum)iter.next();
-			assertEquals(expectedNames[i++], f.getName());
-		}
-	}
-	
-	
-
 }

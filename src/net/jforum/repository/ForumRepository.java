@@ -70,7 +70,7 @@ import net.jforum.util.CategoryOrderComparator;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.21 2004/12/06 00:26:13 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.22 2004/12/09 02:41:41 rafaelsteil Exp $
  */
 public class ForumRepository 
 {
@@ -220,9 +220,7 @@ public class ForumRepository
 		tmpSet.add(currentCategory);
 		
 		// Force reordering
-		synchronized (categoriesSet) {
-			categoriesSet = tmpSet;
-		}
+		categoriesSet = tmpSet;
 	}
 	
 	/**
@@ -308,18 +306,24 @@ public class ForumRepository
 	
 	/**
 	 * Reloads a forum.
+	 * The forum should already be in the cache and <b>SHOULD NOT</b>
+	 * have its order changed. If the forum's order was changed, 
+	 * then you <b>MUST CALL</b> @link Category#changeForumOrder(Forum) <b>BEFORE</b>
+	 * calling this method.
 	 * 
-	 * @param forumId The id of the forum to reload its information
+	 * @param forum The forum to reload its information
 	 * @throws Exception
 	 */
 	public static synchronized void reloadForum(int forumId) throws Exception
 	{
 		Forum f = DataAccessDriver.getInstance().newForumModel().selectById(forumId);
-		if (forumCategoryRelation.containsKey(new Integer(forumId))) {
+		
+		if (forumCategoryRelation.containsKey(new Integer(f.getId()))) {
 			Category c = (Category)categoriesMap.get(new Integer(f.getCategoryId()));
+			
 			f.setLastPostInfo(null);
 			f.setLastPostInfo(ForumRepository.getLastPostInfo(f));
-			c.addForum(f);
+			c.reloadForum(f);
 		}
 		
 		getTotalMessages(true);

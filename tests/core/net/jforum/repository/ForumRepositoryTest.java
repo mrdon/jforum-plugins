@@ -42,7 +42,6 @@
  */
 package net.jforum.repository;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -54,20 +53,14 @@ import net.jforum.SessionFacade;
 import net.jforum.TestCaseUtils;
 import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
-import net.jforum.entities.UserSession;
-import net.jforum.http.FakeActionServletRequest;
 import net.jforum.model.CategoryModel;
 import net.jforum.model.ForumModel;
 import net.jforum.security.PermissionControl;
-import net.jforum.security.Role;
-import net.jforum.security.RoleCollection;
-import net.jforum.security.RoleValue;
-import net.jforum.security.SecurityConstants;
 import net.jforum.view.forum.common.ForumCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumRepositoryTest.java,v 1.6 2004/12/04 20:28:02 rafaelsteil Exp $
+ * @version $Id: ForumRepositoryTest.java,v 1.7 2004/12/09 02:41:42 rafaelsteil Exp $
  */
 public class ForumRepositoryTest extends TestCase 
 {
@@ -147,17 +140,18 @@ public class ForumRepositoryTest extends TestCase
 			cm = this.createCategoryModel();
 			fm = this.createForumModel();
 			
-			SecurityRepository.add(SUPER_USER, this.createPermissionControl(superUserCategoryRights, 
-					superUserForumRights));
-			SecurityRepository.add(GENERAL_USER, this.createPermissionControl(generalUserCategoryRights, 
-					generalUserForumRights));
+			SecurityRepository.add(SUPER_USER, TestCaseUtils.createForumCategoryPermissionControl(categoryIds, superUserCategoryRights, 
+					forumIds, superUserForumRights));
+			
+			SecurityRepository.add(GENERAL_USER, TestCaseUtils.createForumCategoryPermissionControl(categoryIds, generalUserCategoryRights, 
+					forumIds, generalUserForumRights));
 			
 			TestCaseUtils.loadEnvironment();
 			
 			loaded = true;
 		}
 		
-		this.createThreadLocalData();
+		TestCaseUtils.createThreadLocalData(SUPER_USER);
 	}
 	
 	/** 
@@ -166,19 +160,6 @@ public class ForumRepositoryTest extends TestCase
 	protected void tearDown() throws Exception 
 	{
 		JForumCommonServlet.setThreadLocalData(null);
-	}
-	
-	private void createThreadLocalData() throws IOException
-	{
-		JForumCommonServlet.DataHolder dh = new JForumCommonServlet.DataHolder();
-		dh.setRequest(new FakeActionServletRequest());
-		
-		JForumCommonServlet.setThreadLocalData(dh);
-		
-		UserSession us = new UserSession();
-		us.setUserId(SUPER_USER);
-		
-		SessionFacade.add(us);
 	}
 	
 	/*
@@ -367,45 +348,6 @@ public class ForumRepositoryTest extends TestCase
 		}
 		
 		return -1;
-	}
-	
-	private PermissionControl createPermissionControl(int[] categoryRights, int[] forumRights)
-	{
-		PermissionControl pc = new PermissionControl();
-		RoleCollection rc = new RoleCollection();
-		
-		// Category
-		Role role = new Role();
-		role.setId(1);
-		role.setName(SecurityConstants.PERM_CATEGORY);
-		
-		for (int i = 0; i < categoryIds.length; i++) {
-			RoleValue rv = new RoleValue();
-			rv.setType(categoryRights[i]);
-			rv.setValue(Integer.toString(categoryIds[i]));
-			
-			role.getValues().add(rv);
-		}
-		
-		rc.add(role);
-		
-		// Forums
-		role = new Role();
-		role.setId(2);
-		role.setName(SecurityConstants.PERM_FORUM);
-		
-		for (int i = 0; i < forumIds.length; i++) {
-			RoleValue rv = new RoleValue();
-			rv.setType(forumRights[i]);
-			rv.setValue(Integer.toString(forumIds[i]));
-			
-			role.getValues().add(rv);
-		}
-		
-		rc.add(role);
-
-		pc.setRoles(rc);
-		return pc;
 	}
 	
 	private CategoryModel createCategoryModel()
