@@ -54,7 +54,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ExceptionWriter.java,v 1.1 2005/02/04 12:55:32 rafaelsteil Exp $
+ * @version $Id: ExceptionWriter.java,v 1.2 2005/02/18 15:15:07 rafaelsteil Exp $
  */
 public class ExceptionWriter
 {
@@ -69,14 +69,22 @@ public class ExceptionWriter
 		
 		try {
 			logger.error(strWriter);
+			String message = null;
 			
-			String message = t.getMessage();
+			if (t.getCause() != null) {
+				message = t.getCause().getMessage();
+			}
+			
+			if (message == null) {
+				message = t.getMessage();
+			}
+			
 			if (message == null) {
 				message = t.toString();
 			}
 
 			JForum.getContext().put("stackTrace", strWriter.toString());
-			JForum.getContext().put("message", t.getClass().getName() +": "+  message);
+			JForum.getContext().put("message", message);
 
 			Template template = Configuration.getDefaultConfiguration().getTemplate("exception.html");
 			template.process(JForum.getContext(), w);
