@@ -24,7 +24,7 @@
 
 		<td width="200" valign="bottom" align="right">
 		<font style="color: #006699; font-family: verdana; font-size: 11px;">
-		<b>Latest Version: 1.0rc5</b>
+		<b>Latest Version: 2.0</b>
 		</font>
 		</td>
 	</tr>
@@ -66,7 +66,7 @@
 
 	<tr>
 		<td colspan="2" valign="top">
-			<font style="font-family: verdana; font-size: 22px;"><b>Installation & Configuration</b></font><br/>
+			<font style="font-family: verdana; font-size: 22px;"><b>Installation & Configuration - Wizard</b></font><br/>
 			<img src="h_bar.gif" width="100%" height="2">
 		</td>
 	</tr>
@@ -74,21 +74,27 @@
 	<tr>
 		<td valign="top">
 <p>
-This is a basic explanation of JForum installation and configuration. It is assumed that the user - you - has some knowledge on how to install / configure a Java servlet, and the database is configured and running. These steps will not be discussed here.
+Here will be showed how to configure and install JForum using the graphical Wizard Interface. It is assumed that the you has some 
+knowledge on how to install / configure a Java servlet Container ( or already has one up and running ), and the database is properly configured.
 </p>
-<p class="note">Note: These instructions are for the installation of JForum, release version RC5. Some of the steps here may not be valid for older versions which are no longer supported.</p>
+
+<p>
+<br/>
+<b>For manual installation instructions, <a href="install_no_wizard.htm">Click Here</a></b>
+<br/></br>
+</p>
+
+<p class="note">Note: These instructions are for the installation of JForum, release version 2.0 Some of the steps here described may not be valid for 
+older versions, which are no longer supported.</p>
 </p>
 
 <!-- Options -->
-<br><a href="#downloading">Downloading and CVS access</a>
-<br><a href="#installing">Installing</a>
+<br><a href="#downloading">Downloading</a>
+<br><a href="#installing">Unpacking</a>
 <br><a href="#configuring">Configuring</a>
-<br><a href="#databaseConfig">Database Configuration</a>
-<br><a href="#createTables">Creating the database tables</a>
-<br><a href="#populating">Populating the tables</a>
-<br><a href="#misc">General Information and Considerations</a>
-<br>
-<br><a href="#permissions">Setting permissions for Forums and Categories </a>
+<br><a href="#administering">Administering the Forum</a>
+
+<p>&nbsp;</p>
 
 <!-- Downloadig -->
 <p><img src="info.jpg" align="middle" border="0"> <a name="downloading"></a><span class="install_subtitle">Downloading JForum</span>
@@ -97,93 +103,155 @@ To get JForum, go to the <a href="download.htm">download page</a> and get the la
 </p>
 
 <!-- Installing -->
-<br><img src="info.jpg" align="middle" align="middle"> <a name="installing"></a><span class="install_subtitle">Installing</span>
+<br><img src="info.jpg" align="middle" align="middle"> <a name="installing"></a><span class="install_subtitle">Unpacking</span>
 <p>
 After the download, unpack the .ZIP file into your webapp's directory (or anyplace you want to put it). A directory named
 <br>
 <br><i>JForum-&lt;release&gt;</i>
 <br>
-<br>will be created, where <i>&lt;release&gt;</i> is the version, which may be "RC5", "1.0" etc.. it is just to easily identify the version. You can rename the directory if you want. The next step you should do is register the JForum application within your Servlet Container, like Tomcat. This document will use the context name "jforum", but of course you can give the name you want.
+<br>will be created, where <i>&lt;release&gt;</i> is the version, which may be "2.0", "2.7.1" etc.. it is just to easily identify the version. 
+You can rename the directory if you want. The next step you should do is register the JForum application within your Servlet Container, 
+like Tomcat. This document will use the context name "jforum", but of course you can give the name you want.
 </p>
 
 <!-- Configuring -->
 <br><a name="configuring"></a><img src="info.jpg" align="middle" border="0"> <span class="install_subtitle">Configuring</span>
 <p>
-There are some things you must configure before trying to use JForum. The steps are described below:
-</p>
+Next, point your browser to the following addres: <br/><br/>
+<a href="http://localhost:8080/jforum/install/install.page?module=install&action=welcome">http://localhost:8080/<b>jforum</b>/install/install.page?module=install&action=welcome</a>
+<br/><br/>
+The bold text, "jforum", is the context's name. Change it to the name you give to the context. After the page loads, you should see the screen
+shown by <i>Image 1</i>:<br/><br/>
 
-<!-- Database Configuration -->
-<br><a name="databaseConfig"></a><img src="info.jpg" align="middle" border="0"> <span class="install_subtitle">Database Configuration</span>
-<p>
-First of all, you must have <a href="http://www.mysql.com" target="_new">MySQL</a> or <a href="http://www.postgresql.org" target="_new">PostgreSQL</a> installed and properly configured. 
-<br>
-Then, open the file <i>WEB-INF/config/SystemGlobals.properties</i>. Now search for a key named <i>database.driver.name</i>. The default value is <i>mysql</i>, which means JForum will try to use MySQL. If you want to use PostgreSQL, change the value to <i>postgresql</i>. 
+<div align="center">
+	<img src="screenshots/install_step_1.jpg"><br/>
+	<i>Image 1 - Welcome Page</i>
+</div>
 
-<br>
-<br>Next, you can tell JForum whether to use a Connection Pool or not. A connection pool will increase the performance of your application, but there are some situations where the use of a connection pool is not recommended or even possible. 
-<br>The first thing is more specific to MySQL: mysql has a environment variable named "wait_timeout", which you can see by typing
-<br>
-<br>
-		<table width="90%" cellspacing="1" cellpadding="3" border="0" align="center" bgcolor="#2943D4">
-		<tr>
-
-		<td class="code" bgcolor="#F3F5FF"><pre>show variables</pre></td>
-		</tr>
-		</table>
-<br>
-<br>in the mysql console. It is the last one. The default value is 8 hours, which means that, after 8 hours of inactivity the session is automatically closed by the server. Many ISPs set the time limit to a very low number - 15, 30 seconds, less than 5 minutes sometimes -, so having a connection pool in this situations is not recomended, since the overhead will be high. 
-<br>
-<br>JForum has a way to not let the session be invalidated, through a "database ping delay" feature. The key's name is <i>database.ping.delay</i>, and has the default value set to 3600000 - 1 hour -, and you can change it to another value as necessary. The time must be in milliseconds, so, if you want to ping connections every 30 minutes, set to 1800000 ( 60 seconds * 30 minutes * 1000 ). 
-<br>
-<br>The second point is when you simply can't use a connection pool - again, this is more common to occur in shared environments of ISPs. Some companies may limit the resource usage by the applications, so the connection pool is not recomended. 
-<br>
-
-<br>By default JForum uses a connection pool, option which is specified by the key <i>database.connection.implementation</i> - default value set to <i>net.jforum.PooledConnection</i>. If you want to use single connections - eg, a connection to the database will the opened and closed on every request -, then set the value to <i>net.jforum.SimpleConnection</i>. 
-<br>
-<br> <img src="info.jpg" align="middle" border="0"> Edit the file <i>WEB-INF/config/database/&lt;<b>DBNAME</b>&gt;/&lt;<b>DBNAME</b>&gt;.properties</i>, where &lt;<b>DBNAME</b>&gt; is the database name you are using - for instance, <i>mysql</i> or <i>postgresql</i>. In this file there are some options you should change:
-
-<br> <br> <br> <b><i>database.connection.username</i></b>:  specify the username to use when connection to the database. Default value is <i>root</i>
-<br> <br><b><i>database.connection.password</i></b>: set the password. 
-<br>
-<br><b><i>database.connection.host</i></b>: set the host where the database is located. Generally it will be <i>localhost</i> - the default value -, but if not, just change this property to the right host. 
-<br>
-
-<br><b><i>dbname</i></b>: is the database name you will be using. The default value is <i>jforum</i>. All JForum tables are preceded by "jforum_", so you don't need to worry about conflicting table names. 
-<br>
-<br>The other properties you may leave with the default values if you don't know what to put. 
-</p>
-
-
-<!-- Creating Database Tables -->
-<br><a name="createTables"></a><img src="info.jpg" align="middle" align="middle"> <span class="install_subtitle">Creating the database tables</span>
-<p>The next step is to create the tables. To do that, use the import script named "&lt;<b>DBNAME</b>&gt;_db_struct.sql", placed at <i>WEB-INF/config/database/&lt;<b>DBNAME</b>&gt;</i>. This script will create all necessary tables to run JForum. The script were tested and should work with no problem at all. 
-<br>Also, please keep in mind that if you are upgrading JForum you need to take a look to see if a migration script exists. Look in the file named "Readme.txt" in the root directory to see.
 </p>
 
 <p>
-<a name="populating"></a><img src="info.jpg" align="middle" border="0"> <span class="install_subtitle"><b>Populating the tables</b></span><br>
- Now it is time to run the script to populate the database tables. To do that, use the script named "&lt;<b>DBNAME</b>&gt;_data_dump.sql", also located at <i>WEB-INF/config/database/&lt;<b>DBNAME</b>&gt;</i>. One more time, you should have no problems with this step. If you do, please remember to inform the error message, as well the database name and version you're using. 
-<br>
-<br><a name="misc"></a><span style="font-size: 16px; line-height: normal"><b>General Information and Considerations</b></span>
-<br><img src="info.jpg" align="middle" border="0"> JForum uses a servlet mapping to invoke the pages. This mapping is <b>*.page</b>, and is already properly configured at WEB-INF/web.xml. If you are running JForum on certain ISPs, you may need to contact their Technical Support and ask them to explicity enable these mapping for you.
+Please read carefully the fiels tips, since they contain valuable information. Below is a little explanation of each field:
 
-<br>
-<br><img src="info.jpg" align="middle" border="0"> The directory "images" and "tmp" should have write permission to the user who runs the web server. You'll got nasty exceptions when uploading things if there is no write permission.
-<br>
-<br><img src="info.jpg" align="middle" border="0"> The administration interface is accessible via the link <i>Admin Control Panel</i>, located in the bottom of the main page. You will only see this link if you are logged as Administrator. See above the default password for the admin user: 
-<br>
-<br>The username is <i>Admin</i> and the password is <i>admin</i>
-<br>
-<br><img src="info.jpg" align="middle" border="0"> This step is <b>HIGHLY</b> recommended: Open the file <i>WEB-INF/config/SystemGlobals.properties</i> and search for a key named <i>user.hash.sequence</i>. There is already a default value to the key, but is <b>VERY RECOMMENDED</b> that you change the value. It may be anything, and you won't need to remember the value. You can just change one or other char, insert some more... just type there some numbers and random characters, and then save the file. This value will be used to enhance the security of your JForum installation, and you will just need to do this step once.
+<table width="90%" align="center">
+	<tr>
+		<td>
+			<table width="100%" bgcolor="#ff9900" cellspacing="2">
+				<tr>
+					<th width="30%">Field Name</th>
+					<th>Required</th>
+					<th>Description</th>
+				</tr>
 
-<br>
-<br><a name="permissions"></a><span style="font-size: 16px; line-height: normal"><b>Setting permissions for Forums and Categories</b></span>
-<br><img src="info.jpg" align="middle" border="0"> By default, JForum will create the forums with some permissions set to "not allowed" for the users / groups. <b>This is incorrect jforum's behaviour and will be fixed in the next release</b>. So, in order to allow users to insert / reply / edit posts, you should first give the right permissions for the group - by default, "General" "Administrators" and "Moderators". 
-<br>
-<br>The steps are easy, but must be done to every new category and/or forum: After creating the category/forum, go to the "Groups" administration, using the link in the left menu and then click on the "Permissions" link. A page with the current existing roles will show up. Now, check if everthing is according to your needs, and the click "Save". <b>You must click save even if you don't change anything</b>, so the roles can be written to the database. 
-<br>
-<br>That's all you should know for now to start using JForum. Don't forget to read the other sections, and don't be shy to ask something if you have questions or problems. 
+				<tr class="fields">
+					<td>Default Board Language</td>
+					<td align="center">Yes</td>
+					<td>The language to display the messages in the forum. Note that, if the translation for some text is not available,
+						an English text will be used</td>
+				</tr>
+
+				<tr class="fields">
+					<td>Database Type</td>
+					<td align="center">Yes</td>
+					<td>The database server to use. If you don't know which one to choose, select "HSQLDB" from the list</td>
+				</tr>
+
+				<tr class="fields">
+					<td>Installation Type</td>
+					<td align="center">Yes</td>
+					<td>Installation mode. Currently only "New Installation" is supported</td>
+				</tr>
+
+				<tr class="fields">
+					<td>Database Server Hostname</td>
+					<td align="center">Yes</td>
+					<td>The host where the database is located</td>
+				</td>
+
+				<tr class="fields">
+					<td>Database Name</td>
+					<td align="center">Yes</td>
+					<td>Where the tables will be created. <b>Note that the database should already exist</b>. If you're going
+					go use HSQLDB, no extra configuration is needed, since it is created on-the-fly</td>
+				</tr>
+
+				<tr class="fields">
+					<td>Database username</td>
+					<td align="center">No*</td>
+					<td>The user of your database instance. *This field is required for databases other than HSQLDB</td>
+				</tr>
+
+				<tr class="fields">
+					<td>Database Password</td>
+					<td align="center">No</td>
+					<td>The database password, if any. Please note that errors may occur when not using any password</td>
+				</tr>
+
+				<tr class="fields">
+					<td>Database Encoding</td>
+					<td align="center">No</td>
+					<td>The text encoding for the database. You can specify it by hand in the "Other" field</td>
+				</tr>
+
+				<tr class="fields">
+					<td>Use Connection Pool</td>
+					<td align="center">Yes</td>
+					<td>In case of doubt, choose <b>No</td>
+				</tr>
+
+				<tr class="fields">
+					<td>Forum Link</td>
+					<td align="center">Yes</td>
+					<td>The link to the forum context. If you are hosting it under some "real" domain and the context path is "/", 
+						the "Forum Link" will be the address of your site, is most cases. 
+					</td>
+				</tr>
+
+				<tr class="fields">
+					<td>Administrator Password</td>
+					<td align="center">Yes</td>
+					<td>Type the password of the adminnistrator ( <i>Admin</i> user ). 
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<br/>
+Now you can click in the button "Next Step". You will see the page shown in <i>Image 2</i>, that contains information about your choices.
 </p>
+
+<p align="center">
+<img src="screenshots/install_step_2.jpg"><br/>
+<i>Image 2 - Checking the configuration before installation begins</i>
+</p>
+
+<p>
+If is everthing alright, click in the button "Begin Install". Note that, if some warning message is shown, then there are some required steps
+that should be made before proceding with the installation. 
+</p>
+
+<p>
+Wait until the installation ends. If no error occur, then you will see a page like the one shown in <i>Image 3</i>
+</p>
+
+<p align="center">
+<img src="screenshots/install_step_3.jpg"><br/>
+<i>Image 3 - Installation Finished</i>
+</p>
+
+<p>
+<b>Congratulations!</b> You have finished your JForum Installation. Before accessing the forum, do the actions pointed by the arrows, click
+in the check button and click in the button "Click Here to Access the Forum". 
+</p>
+
+
+<!-- Administering -->
+<br><a name="administering"></a><img src="info.jpg" align="middle" border="0"> <span class="install_subtitle">Administering the Forum</span>
+<p>
+Now you can login as <b>Admin</b> / <i>&lt;the_password_you_set&gt;</i> and click in the link "Admin Control Panel", at the end of the page. 
+There you will be able to create Categories, Forums, Groups and Users. 
+</p>
+
 		</td>
 	</tr>
 </table>

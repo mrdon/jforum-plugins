@@ -24,7 +24,7 @@
 
 		<td width="200" valign="bottom" align="right">
 		<font style="color: #006699; font-family: verdana; font-size: 11px;">
-		<b>Latest Version: 1.0rc5</b>
+		<b>Latest Version: 2.0</b>
 		</font>
 		</td>
 	</tr>
@@ -73,32 +73,59 @@
 
 	<tr>
 		<td valign="top">
-			
+			<p>
+			<br/>
+			<b>For more help and support, please access the <i>Community</i> forum. <a href="community.htm">Click here</a></b>
+			</p>
+
+			<li><a href="#admin_config">How do I configure the Forum settings?</a><br/>
+			<li><a href="#databases">What database does JForum support? <br/></a>
+			<li><a href="#languages">Which are the languages currently supported in JForum<br/>
+			<li><a href="#sticky">what does "Announce" and "Sticky" mean, other than a special icon? </a><br/>
+			<li><a href="#license">Which open source license is JForum under?</a><br/>
+			<li><a href="#email_notification">How do I configure email notifications?</a><br/>
+			<li><a href="#linux_no_x">Avatar uploading is not working. What's wrong?</a><br/>
+			<li><a href="#encoding">How to I set a different Character Encoding?</a><br/>
+
+			<p>&nbsp</p>
 
 			<p>
-			<img src="dot.gif"> <b>What database does JForum support? </b><br/>
-			As of Release 5, JForum supports MySQL, PostgreSQL and HSQLDB.
-			<br/><br/>
+			<a name="admin_config"></a><b>How do I configure the Forum settings?</b><br/>
+			All administrative settings are done in the "Admin Panel", that can be accessed through the link "Admin Panel" available
+			in the end of the page. You must be logged as administrator, either by using the <i>Admin</i> account or any other 
+			user who has administrative privileges.
+			</p>
 
-			<img src="dot.gif"> <b>Which are the languages currently supported in JForum?</b><br/>
+			<p>
+			<a name="languages"></a><b>Which are the languages currently supported in JForum?</b><br/>
 			As of version 2.0, the languages supported are English, Chinese Simplified, French, German, Dutch, Portugu&ecirc;s do Brasil, and Russian.
-			<br/><br/>
+			</p>
 
-			<img src="dot.gif"> <b>If I make a post "Sticky", what does that mean? Also, what does "Announce" mean, other than a special icon? </b><br/>
+			<p>
+			<a name="#sticky"></a><b>What does "Announce" and "Sticky" mean, other than a special icon? </b><br/>
 			Announces are always shown first. Sticky are shown first of other topics as well, but after Announces.
-			<br/><br/>
+			</p>
 
-			<img src="dot.gif"> <b>What framework is used for the development of JForum?</b><br/>
-			JForum uses Freemarker ( http://www.freemarker.org ) as template engine. There are no other major dependencies or frameworks.
-			<br/><br/>
-
-			<img src="dot.gif"> <b>Which open source license is JForum under?</b><br/>
+			<p>
+			<a name="#license"></a> <b>Which open source license is JForum under?</b><br/>
 			JForum is licensed under the BSD License 
-			<br/><br/>
+			</p>
 
-			<img src="dot.gif"> <b>Is it possible to completely turn off email notifications?</b><br/>
-			Yes, you can. You can change this option in the admin panel, Configurations section.
-			
+			<p>
+			<a name="email_notification"</a> <b>How do I configure email notifications?</b><br/>
+			You can change this option in the admin panel, Configurations section.
+			</p>
+
+			<p>
+			<a name="linux_no_x"></a><b>Avatar uploading is not working. What's wrong?</b><br/>
+			If you are using Linux, or other Unix like machine, it is necessary that you have installed the X server libraries. 
+			Another solution is to run the Servlet Container setting up JAVA_OPTS's parameter <i>java.awt.headless</i> to "true". 
+			For more information, see <a href="http://www.jforum.net/posts/list/219.page">http://www.jforum.net/posts/list/219.page</a>
+			</p>
+
+			<p>
+			<a name="encoding"></a><b>How to I set a different Character Encoding?</b><br/>
+			Go to the Admin Panel, section "Configurations". Set the character encoding you want in the "Character Encoding" field.
 			</p>
 		</td>
 	</tr>

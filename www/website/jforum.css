@@ -34,6 +34,18 @@ td {
 	font-size: 12px; font-family: verdana;
 }
 
+th {
+	font-size: 12px; font-family: verdana; font-weight: bold; background-color: #006699; color: #ffffff;
+}
+
+.fields {
+	 font-family: verdana; background-color: #ffffff; 
+}
+
+.fields td {
+	font-size: 11px;
+}
+
 p.note
 {
 	color: red;
