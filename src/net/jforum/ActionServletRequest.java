@@ -66,7 +66,7 @@ import org.apache.commons.fileupload.servlet.ServletRequestContext;
 
 /**
  * @author Rafael Steil
- * @version $Id: ActionServletRequest.java,v 1.14 2005/01/17 12:22:29 rafaelsteil Exp $
+ * @version $Id: ActionServletRequest.java,v 1.15 2005/01/18 20:59:46 rafaelsteil Exp $
  */
 public class ActionServletRequest extends HttpServletRequestWrapper 
 {
@@ -296,10 +296,7 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 						}
 						else {
 							if (item.getSize() > 0) {
-								this.query.put(item.getFieldName(), item.getInputStream());
-								
-								// Keeps the original file name ( pattern: <fieldName>Name )
-								this.query.put(item.getFieldName() + "Name", item.getName());
+								this.query.put(item.getFieldName(), item);
 							}
 						}
 					}

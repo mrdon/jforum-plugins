@@ -73,6 +73,7 @@ import net.jforum.util.mail.EmailSenderTask;
 import net.jforum.util.mail.TopicSpammer;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.view.forum.common.AttachmentCommon;
 import net.jforum.view.forum.common.ForumCommon;
 import net.jforum.view.forum.common.PostCommon;
 import net.jforum.view.forum.common.TopicsCommon;
@@ -82,7 +83,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.41 2005/01/17 12:46:36 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.42 2005/01/18 20:59:48 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -536,6 +537,9 @@ public class PostAction extends Command {
 
 			t.setLastPostId(postId);
 			tm.update(t);
+			
+			// Attachments
+			new AttachmentCommon(this.request).processAttachments(postId);
 
 			fm.setLastPost(t.getForumId(), postId);
 
@@ -547,12 +551,9 @@ public class PostAction extends Command {
 
 			String path = this.request.getContextPath() + "/posts/list/";
 
-			String start = this.request.getParameter("start");
-			if (start == null || start.trim().equals("") || Integer.parseInt(start) < 0) {
-				start = "0";
-			}
+			int start = ViewCommon.getStartPage();
 
-			path += this.startPage(t, Integer.parseInt(start)) + "/";
+			path += this.startPage(t, start) + "/";
 			path += t.getId() + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#" + postId;
 
 			JForum.setRedirect(path);
@@ -560,7 +561,7 @@ public class PostAction extends Command {
 			int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 			if (u.getId() != anonymousUser) {
 				((HashMap) SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(t.getId()),
-						new Long(p.getTime().getTime()));
+						new Long(System.currentTimeMillis()));
 			}
 		}
 		else {

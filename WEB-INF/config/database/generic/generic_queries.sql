@@ -476,13 +476,24 @@ AttachmentModel.selectQuotaLimit = SELECT quota_limit_id, quota_desc, quota_limi
 	FROM jforum_quota_limit ORDER BY quota_type, quota_limit
 	
 AttachmentModel.addExtensionGroup = INSERT INTO jforum_extension_groups (name, allow, upload_icon, download_mode) VALUES (?, ?, ?, ?)
+
 AttachmentModel.updateExtensionGroups = UPDATE jforum_extension_groups SET name = ?, allow = ?, upload_icon = ?, download_mode = ? \
 	WHERE extension_group_id = ?
+
 AttachmentModel.removeExtensionGroups = DELETE FROM jforum_extension_groups WHERE extension_group_id = ?
 AttachmentModel.selectExtensionGroups = SELECT extension_group_id, name, allow, upload_icon, download_mode FROM jforum_extension_groups ORDER BY name
 
 AttachmentModel.addExtension = INSERT INTO jforum_extensions (extension_group_id, comment, upload_icon, extension, allow) VALUES (?, ?, ?, ?, ?)
+
 AttachmentModel.updateExtension = UPDATE jforum_extensions SET extension_group_id = ?, comment = ?, upload_icon = ?, extension = ?, allow = ? \
 	WHERE extension_id = ?
+
 AttachmentModel.removeExtension = DELETE FROM jforum_extensions WHERE extension_id = ?
 AttachmentModel.selectExtensions = SELECT extension_id, extension_group_id, extension, comment, upload_icon, allow FROM jforum_extensions ORDER BY extension
+AttachmentModel.addAttachment = INSERT INTO jforum_attach (post_id, privmsgs_id, user_id) VALUES (?, ?, ?)
+
+AttachmentModel.addAttachmentInfo = INSERT INTO jforum_attach_desc (attach_id, physical_filename, real_filename, comment, \
+	mimetype, filesize, upload_time, thumb, extension_id ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+	
+AttachmentModel.updatePost = UPDATE jforum_posts SET attach = ? WHERE post_id = ?
+AttachmentModel.selectExtension = SELECT extension_group_id, name, allow, upload_icon, download_mode FROM jforum_extension_groups WHERE name = ?

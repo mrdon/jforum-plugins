@@ -44,8 +44,6 @@ package net.jforum.view.forum.common;
 
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
@@ -54,9 +52,11 @@ import net.jforum.repository.ModulesRepository;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.3 2005/01/14 14:17:13 rafaelsteil Exp $
+ * @version $Id: ViewCommon.java,v 1.4 2005/01/18 20:59:43 rafaelsteil Exp $
  */
 public final class ViewCommon
 {

@@ -540,6 +540,7 @@ function validatePostForm(f)
 					<td height="28" colspan="2" class="catBottom">              
 						<input class="mainoption" tabindex="5" type="submit" value="${I18n.getMessage("PostForm.preview")}" name="preview" />&nbsp;
 						<input class="mainoption" accesskey="s" tabindex="6" type="submit" value="${I18n.getMessage("PostForm.submit")}" name="post" />
+						<input class="mainoption" accesskey="s" tabindex="6" type="button" onClick="openAttachmentPanel()" value="Attach Files" name="post" />
 					</td>
 				</tr>
 			</table>
@@ -547,7 +548,97 @@ function validatePostForm(f)
 		</td>
 	</tr>
 
+	<script language="javascript">
+	var panelOpen = false;
+	var attachCount = 0;
+	var total = 0;
+
+	function openAttachmentPanel() 
+	{
+		if (attachCount == 0) {
+			addAttachmentFields();
+		}
+
+		document.getElementById("tdAttachPanel").style.display = panelOpen ? 'none' : '';
+		panelOpen = !panelOpen;
+	}
+
+	function removeAttach(id)
+	{
+		var index = document.getElementById("comment" + id).rowIndex;
+		var t = document.getElementById("tblAttachments");
+		t.deleteRow(index);
+		t.deleteRow(index - 1);
+		t.deleteRow(index - 2);
+
+		if (index > 4) {
+			t.deleteRow(index - 3)
+		}
+
+		total--;
+		document.getElementById("total_files").value = total;
+	}
+
+	function addAttachmentFields()
+	{
+		var t = document.getElementById("tblAttachments");
+		var row = t.insertRow(t.rows.length);
+		var c = row.insertCell(0);
+		c.rowSpan = attachCount > 0 ? 4 : 3;
+		c.innerHTML = "<span class='gensmall'>" + (attachCount + 1) + "</span>";
+		c.className = "row3";
+
+		if (attachCount > 0) {
+			row = t.insertRow(t.rows.length);
+			var line = row.insertCell(0);
+			line.colSpan = 3;
+			line.width = "100%"
+			line.align = "center";
+			line.className = "row3";
+		}
+
+		row = t.insertRow(t.rows.length)
+
+		// Filename
+		var filenameCell = row.insertCell(0);
+		filenameCell.innerHTML = "<span class='gen'><b>Filename</b></span>";
+
+		// input file
+		var fileCell = row.insertCell(1);
+		fileCell.innerHTML = "<input type='file' size='50' name='file_" + total + "'>";
+
+		// Commentary
+		row = t.insertRow(t.rows.length);
+		row.id = "comment" + attachCount;
+		var commentCell = row.insertCell(0);
+		commentCell.innerHTML = "<span class='gen'><b>Commentary</b></span>";
+
+		// textarea
+		var text = row.insertCell(1);
+		text.innerHTML = "<textarea rows='4' cols='40' name='comment_" + total + "'></textarea>&nbsp;&nbsp;<a href='javascript:removeAttach(" + attachCount + ")' class='gensmall'>Remove</a>";
+
+		attachCount++;
+		total++;
+		document.getElementById("total_files").value = total;
+	}
+	</script>
+
+	<input type="hidden" name="total_files"/>
+	<tr>
+	<td colspan="2" id="tdAttachPanel" style="display: none" align="center">
+		<table border="0" cellpadding="3" cellspacing="0" width="70%" class="forumline" id="tblAttachments">
+			<tr>
+				<td class="catHead" height="28" colspan="3" align="center"><b><span class="cattitle">File Attachment Panel</span></b></td>
+			</tr>
+			<tr>
+				<td colspan="3" class="row3" align="center"><input type="button" value="Add antoher file" class="mainoption" onClick="addAttachmentFields()"></td>
+			</tr>
+		</table>
+	</td>
+	</tr>
+
 	<#if (topic?exists && topic.id > 0)>
+	<tr>
 	<td colspan="2">
 		<table border="0" cellpadding="3" cellspacing="0" width="100%" class="forumline">
 			<tr>
@@ -560,6 +651,6 @@ function validatePostForm(f)
 			
 		</table>
 	</td>
+	</tr>
 	</#if>
 </table>
-

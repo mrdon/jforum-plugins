@@ -44,16 +44,42 @@ package net.jforum.model;
 
 import java.util.List;
 
+import net.jforum.entities.Attachment;
 import net.jforum.entities.AttachmentExtension;
 import net.jforum.entities.AttachmentExtensionGroup;
 import net.jforum.entities.QuotaLimit;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentModel.java,v 1.3 2005/01/17 23:19:03 rafaelsteil Exp $
+ * @version $Id: AttachmentModel.java,v 1.4 2005/01/18 20:59:44 rafaelsteil Exp $
  */
 public interface AttachmentModel
 {
+	/**
+	 * Adds a new attachment.
+	 * 
+	 * @param a The attacment to add
+	 * @throws Exception
+	 */
+	public void addAttachment(Attachment a) throws Exception;
+	
+	/**
+	 * Updates an attachment.
+	 * Only the file comment is updated.
+	 * 
+	 * @param a The attachment to update
+	 * @throws Exception
+	 */
+	public void updateAttachment(Attachment a) throws Exception;
+	
+	/**
+	 * Rovemos an attachment.
+	 * 
+	 * @param id The attachment's id to remove
+	 * @throws Exception
+	 */
+	public void removeAttachment(int id) throws Exception;
+	
 	/**
 	 * Inserts a new quota limit.
 	 * 
@@ -160,4 +186,12 @@ public interface AttachmentModel
 	 * @throws Exception
 	 */
 	public List selectExtensions() throws Exception;
+	
+	/**
+	 * Gets an extension information by the extension's name
+	 * @param extension
+	 * @return
+	 * @throws Exception
+	 */
+	public AttachmentExtension selectExtension(String extension) throws Exception;
 }

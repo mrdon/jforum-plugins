@@ -44,10 +44,12 @@ package net.jforum.drivers.generic;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.jforum.JForum;
+import net.jforum.entities.Attachment;
 import net.jforum.entities.AttachmentExtension;
 import net.jforum.entities.AttachmentExtensionGroup;
 import net.jforum.entities.QuotaLimit;
@@ -55,9 +57,9 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentModel.java,v 1.3 2005/01/17 23:19:04 rafaelsteil Exp $
+ * @version $Id: AttachmentModel.java,v 1.4 2005/01/18 20:59:44 rafaelsteil Exp $
  */
-public class AttachmentModel implements net.jforum.model.AttachmentModel
+public class AttachmentModel extends AutoKeys implements net.jforum.model.AttachmentModel
 {
 	/**
 	 * @see net.jforum.model.AttachmentModel#addQuotaLimit(net.jforum.entities.QuotaLimit)
@@ -291,6 +293,31 @@ public class AttachmentModel implements net.jforum.model.AttachmentModel
 		p.close();
 	}
 	
+	/**
+	 * @see net.jforum.model.AttachmentModel#selectExtension(java.lang.String)
+	 */
+	public AttachmentExtension selectExtension(String extension) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("AttachmentModel.selectExtension"));
+		p.setString(1, extension);
+		
+		AttachmentExtension e = new AttachmentExtension();
+		
+		ResultSet rs = p.executeQuery();
+		if (rs.next()) {
+			e = this.getExtension(rs);
+		}
+		else {
+			e.setUnknown(true);
+		}
+		
+		rs.close();
+		p.close();
+		
+		return e;
+	}
+	
 	protected AttachmentExtension getExtension(ResultSet rs) throws Exception
 	{
 		AttachmentExtension e = new AttachmentExtension();
@@ -302,5 +329,58 @@ public class AttachmentModel implements net.jforum.model.AttachmentModel
 		e.setUploadIcon(rs.getString("upload_icon"));
 		
 		return e;
+	}
+	
+	/**
+	 * @see net.jforum.model.AttachmentModel#addAttachment(net.jforum.entities.Attachment)
+	 */
+	public void addAttachment(Attachment a) throws Exception
+	{
+		PreparedStatement p = this.getStatementForAutoKeys("AttachmentModel.addAttachment");
+		p.setInt(1, a.getPostId());
+		p.setInt(2, a.getPrivmsgsId());
+		p.setInt(3, a.getUserId());
+		
+		int id = this.executeAutoKeysQuery(p);
+		p.close();
+		
+		p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getValue("AttachmentModel.addAttachmentInfo"));
+		p.setInt(1, id);
+		p.setString(2, a.getInfo().getPhysicalFilename());
+		p.setString(3, a.getInfo().getRealFilename());
+		p.setString(4, a.getInfo().getComment());
+		p.setString(5, a.getInfo().getMimetype());
+		p.setLong(6, a.getInfo().getFilesize());
+		p.setTimestamp(7, new Timestamp(a.getInfo().getUploadTimeInMillis()));
+		p.setInt(8, 0);
+		p.setInt(9, a.getInfo().getExtension().getId());
+		p.executeUpdate();
+		p.close();
+		
+		p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getValue("AttachmentModel.updatePost"));
+		p.setInt(1, 1);
+		p.setInt(2, a.getPostId());
+		p.executeUpdate();
+		p.close();
+	}
+	
+	/**
+	 * @see net.jforum.model.AttachmentModel#removeAttachment(int)
+	 */
+	public void removeAttachment(int id) throws Exception
+	{
+		// TODO Auto-generated method stub
+
+	}
+	
+	/**
+	 * @see net.jforum.model.AttachmentModel#updateAttachment(net.jforum.entities.Attachment)
+	 */
+	public void updateAttachment(Attachment a) throws Exception
+	{
+		// TODO Auto-generated method stub
+
 	}
 }

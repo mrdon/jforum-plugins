@@ -36,59 +36,100 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * This file creation date: Mar 29, 2003 / 1:15:50 AM
- * net.jforum.util.MD5.java
+ * Created on Jan 18, 2005 2:58:22 PM
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.util;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
-import net.jforum.exceptions.ForumException;
+package net.jforum.entities;
 
 /**
- * Encodes a string using MD5 hashing 
- * 
  * @author Rafael Steil
- * @version $Id: MD5.java,v 1.3 2005/01/18 20:59:47 rafaelsteil Exp $
+ * @version $Id: Attachment.java,v 1.1 2005/01/18 20:59:45 rafaelsteil Exp $
  */
-public class MD5 
+public class Attachment
 {
+	private int id;
+	private int postId;
+	private int privmsgsId;
+	private int userId;
+	private AttachmentInfo info;
+	
 	/**
-	 * Encodes a string
-	 * 
-	 * @param str String to encode
-	 * @return Encoded String
-	 * @throws NoSuchAlgorithmException
+	 * @return Returns the id.
 	 */
-	public static String crypt(String str)
+	public int getId()
 	{
-		if (str == null || str.length() == 0) {
-			throw new IllegalArgumentException("String to encript cannot be null or zero length");
-		}
-		
-		StringBuffer hexString = new StringBuffer();
-		
-		try {
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			md.update(str.getBytes());
-			byte[] hash = md.digest();
-			
-			for (int i = 0; i < hash.length; i++) {
-				if ((0xff & hash[i]) < 0x10) {
-					hexString.append("0" + Integer.toHexString((0xFF & hash[i])));
-				}				
-				else {
-					hexString.append(Integer.toHexString(0xFF & hash[i]));
-				}				
-			}
-		}
-		catch (NoSuchAlgorithmException e) {
-			throw new ForumException(e);
-		}
-		
-		return hexString.toString();
+		return this.id;
+	}
+	
+	/**
+	 * @param id The id to set.
+	 */
+	public void setId(int id)
+	{
+		this.id = id;
+	}
+	
+	/**
+	 * @return Returns the postId.
+	 */
+	public int getPostId()
+	{
+		return this.postId;
+	}
+	
+	/**
+	 * @param postId The postId to set.
+	 */
+	public void setPostId(int postId)
+	{
+		this.postId = postId;
+	}
+	
+	/**
+	 * @return Returns the privmsgsId.
+	 */
+	public int getPrivmsgsId()
+	{
+		return this.privmsgsId;
+	}
+	
+	/**
+	 * @param privmsgsId The privmsgsId to set.
+	 */
+	public void setPrivmsgsId(int privmsgsId)
+	{
+		this.privmsgsId = privmsgsId;
+	}
+	
+	/**
+	 * @return Returns the userId.
+	 */
+	public int getUserId()
+	{
+		return this.userId;
+	}
+	/**
+	 * @param userId The userId to set.
+	 */
+	public void setUserId(int userId)
+	{
+		this.userId = userId;
+	}
+	
+	/**
+	 * @return Returns the info.
+	 */
+	public AttachmentInfo getInfo()
+	{
+		return this.info;
+	}
+	
+	/**
+	 * @param info The info to set.
+	 */
+	public void setInfo(AttachmentInfo info)
+	{
+		this.info = info;
 	}
 }

@@ -44,16 +44,17 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentExtension.java,v 1.1 2005/01/17 23:19:04 rafaelsteil Exp $
+ * @version $Id: AttachmentExtension.java,v 1.2 2005/01/18 20:59:45 rafaelsteil Exp $
  */
 public class AttachmentExtension
-{
+{	
 	private int id;
 	private int extensionGroupId;
 	private boolean allow;
 	private String comment;
 	private String extension;
 	private String uploadIcon;
+	private boolean unknown;
 	
 	/**
 	 * @return Returns the allow.
@@ -148,5 +149,21 @@ public class AttachmentExtension
 	public void setUploadIcon(String uploadIcon)
 	{
 		this.uploadIcon = uploadIcon;
+	}
+	
+	/**
+	 * @return Returns the unknown.
+	 */
+	public boolean isUnknown()
+	{
+		return this.unknown;
+	}
+	
+	/**
+	 * @param unknown The unknown to set.
+	 */
+	public void setUnknown(boolean unknown)
+	{
+		this.unknown = unknown;
 	}
 }

@@ -36,59 +36,57 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * This file creation date: Mar 29, 2003 / 1:15:50 AM
- * net.jforum.util.MD5.java
+ * Created on Jan 18, 2005 4:06:08 PM
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.util;
+package net.jforum.view.forum.common;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.io.BufferedInputStream;
+import java.io.FileOutputStream;
 
-import net.jforum.exceptions.ForumException;
+import net.jforum.ActionServletRequest;
+
+import org.apache.commons.fileupload.FileItem;
 
 /**
- * Encodes a string using MD5 hashing 
- * 
  * @author Rafael Steil
- * @version $Id: MD5.java,v 1.3 2005/01/18 20:59:47 rafaelsteil Exp $
+ * @version $Id: UploadUtils.java,v 1.1 2005/01/18 20:59:43 rafaelsteil Exp $
  */
-public class MD5 
+public class UploadUtils
 {
-	/**
-	 * Encodes a string
-	 * 
-	 * @param str String to encode
-	 * @return Encoded String
-	 * @throws NoSuchAlgorithmException
-	 */
-	public static String crypt(String str)
+	private FileItem item;
+	private String extension = "";
+	private ActionServletRequest request;
+	
+	public UploadUtils(FileItem item, ActionServletRequest request)
 	{
-		if (str == null || str.length() == 0) {
-			throw new IllegalArgumentException("String to encript cannot be null or zero length");
+		this.item = item;
+		this.request = request;
+	}
+	
+	public String getExtension()
+	{
+		if (this.extension == null) {
+			this.extension = this.item.getName().substring(this.item.getName().lastIndexOf('.') + 1);
 		}
 		
-		StringBuffer hexString = new StringBuffer();
+		return this.extension;
+	}
+	
+	public void saveUploadedFile(String filename) throws Exception
+	{
+		BufferedInputStream inputStream = new BufferedInputStream(this.item.getInputStream());
+		FileOutputStream outputStream = new FileOutputStream(filename);
 		
-		try {
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			md.update(str.getBytes());
-			byte[] hash = md.digest();
-			
-			for (int i = 0; i < hash.length; i++) {
-				if ((0xff & hash[i]) < 0x10) {
-					hexString.append("0" + Integer.toHexString((0xFF & hash[i])));
-				}				
-				else {
-					hexString.append(Integer.toHexString(0xFF & hash[i]));
-				}				
-			}
-		}
-		catch (NoSuchAlgorithmException e) {
-			throw new ForumException(e);
+		int c = 0;
+		byte[] b = new byte[2048];
+		while ((c = inputStream.read(b)) != -1) {
+			outputStream.write(b);
 		}
 		
-		return hexString.toString();
+		outputStream.flush();
+		outputStream.close();
+		inputStream.close();
 	}
 }

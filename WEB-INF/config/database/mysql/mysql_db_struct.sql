@@ -129,6 +129,7 @@ CREATE TABLE jforum_posts (
   post_edit_count smallint(5) NOT NULL default '0',
   status tinyint(1) default '1',
   PRIMARY KEY  (post_id),
+  attach TINYINT(1) DEFAULT '0',
   KEY (user_id),
   KEY (topic_id),
   KEY (forum_id)
@@ -495,4 +496,38 @@ CREATE TABLE jforum_extensions (
 	upload_icon VARCHAR(100),
 	extension VARCHAR(10),
 	allow TINYINT(1) DEFAULT '1'
+) TYPE=InnoDB;
+
+--
+-- Table structure for table 'jforum_attach'
+--
+DROP TABLE IF EXISTS jforum_attach;
+CREATE TABLE jforum_attach (
+	attach_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	post_id INT,
+	privmsgs_id INT,
+	user_id INT NOT NULL,
+	INDEX idx_att_post(post_id),
+	INDEX idx_att_priv(privmsgs_id),
+	INDEX idx_att_user(user_id)
+) TYPE=InnoDB;
+
+-- 
+-- Table structure for table 'jforum_attach_desc'
+--
+DROP TABLE IF EXISTS jforum_attach_desc;
+CREATE TABLE jforum_attach_desc (
+	attach_desc_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	attach_id INT NOT NULL,
+	physical_filename VARCHAR(255) NOT NULL,
+	real_filename VARCHAR(255) NOT NULL,
+	download_count INT,
+	comment VARCHAR(255),
+	mimetype VARCHAR(50),
+	filesize INT,
+	upload_time DATETIME,
+	thumb TINYINT(1) DEFAULT '0',
+	extension_id INT,
+	INDEX idx_att_d_att(attach_id),
+	INDEX idx_att_d_ext(extension_id)
 ) TYPE=InnoDB;

@@ -43,17 +43,12 @@
 package net.jforum.view.forum.common;
 
 import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.log4j.Logger;
 
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
@@ -67,9 +62,12 @@ import net.jforum.util.image.ImageUtils;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.log4j.Logger;
+
 /**
  * @author Rafael Steil
- * @version $Id: UserCommon.java,v 1.1 2004/11/30 01:18:58 rafaelsteil Exp $
+ * @version $Id: UserCommon.java,v 1.2 2005/01/18 20:59:43 rafaelsteil Exp $
  */
 public class UserCommon 
 {
@@ -162,12 +160,14 @@ public class UserCommon
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	private static void handleAvatar(User u) throws NoSuchAlgorithmException, FileNotFoundException, IOException {
+	private static void handleAvatar(User u) throws Exception 
+	{
 		String fileName = MD5.crypt(Integer.toString(u.getId()));
+		FileItem item = (FileItem)JForum.getRequest().getObjectParameter("avatar");
+		UploadUtils uploadUtils = new UploadUtils(item, JForum.getRequest());
 		
 		// Gets file extension
-		String extension = JForum.getRequest().getParameter("avatarName");
-		extension = extension.substring(extension.lastIndexOf('.') + 1).toLowerCase();
+		String extension = uploadUtils.getExtension();
 		int type = -1;
 		
 		if (extension.equals("jpg") || extension.equals("jpeg")) {
@@ -178,28 +178,18 @@ public class UserCommon
 		}
 		
 		if (type != -1) {
-			String avatarTmpFileName = SystemGlobals.getApplicationPath() +"/images/avatar/"+ fileName +"_tmp." + extension;
+			String avatarTmpFileName = SystemGlobals.getApplicationPath() 
+				+ "/images/avatar/" + fileName + "_tmp." + extension;
 			
 			// We cannot handle gifs
 			if (extension.toLowerCase().equals("gif")) {
 				extension = "png";
 			}
 	
-			String avatarFinalFileName = SystemGlobals.getApplicationPath() +"/images/avatar/"+ fileName +"."+ extension;
+			String avatarFinalFileName = SystemGlobals.getApplicationPath() + 
+				"/images/avatar/" + fileName + "." + extension;
 	
-			// Read the avatar and stores it into a temporary file
-			BufferedInputStream inputStream = new BufferedInputStream((InputStream)JForum.getRequest().getObjectParameter("avatar"));
-			FileOutputStream outputStream = new FileOutputStream(avatarTmpFileName);
-			
-			int c = 0;
-			byte[] b = new byte[1024];
-			while ((c = inputStream.read(b)) != -1) {
-				outputStream.write(b);
-			}
-			
-			outputStream.flush();
-			outputStream.close();
-			inputStream.close();
+			uploadUtils.saveUploadedFile(avatarTmpFileName);
 			
 			// OK, time to check and process the avatar size
 			int maxWidth = SystemGlobals.getIntValue(ConfigKeys.AVATAR_MAX_WIDTH);
@@ -208,9 +198,9 @@ public class UserCommon
 			BufferedImage image = ImageUtils.resizeImage(avatarTmpFileName, type, maxWidth, maxHeight);
 			ImageUtils.saveImage(image, avatarFinalFileName, type);
 	
-			u.setAvatar(fileName +"."+ extension);
+			u.setAvatar(fileName + "." + extension);
 			
-			// Delete de temporary file
+			// Delete the temporary file
 			new File(avatarTmpFileName).delete();
 		}
 	}

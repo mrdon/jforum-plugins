@@ -42,10 +42,7 @@
  */
 package net.jforum.view.admin;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.sql.Connection;
 
 import javax.servlet.http.HttpServletResponse;
@@ -58,12 +55,16 @@ import net.jforum.repository.SmiliesRepository;
 import net.jforum.util.MD5;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.view.forum.common.UploadUtils;
+
+import org.apache.commons.fileupload.FileItem;
+
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: SmiliesAction.java,v 1.5 2005/01/04 03:31:19 rafaelsteil Exp $
+ * @version $Id: SmiliesAction.java,v 1.6 2005/01/18 20:59:47 rafaelsteil Exp $
  */
 public class SmiliesAction extends Command 
 {
@@ -72,25 +73,18 @@ public class SmiliesAction extends Command
 		String imgName = "";
 		
 		if (this.request.getObjectParameter("smilie_img") != null) {
-			imgName = this.request.getParameter("smilie_imgName");
-			String extension = extension = imgName.substring(imgName.lastIndexOf('.'));
+			FileItem item = (FileItem)this.request.getObjectParameter("smilie_img");
+			UploadUtils uploadUtils = new UploadUtils(item, this.request);
+
+			imgName = MD5.crypt(item.getName());
 			
-			imgName = MD5.crypt(this.request.getParameter("smilie_imgName"));
+			uploadUtils.saveUploadedFile(SystemGlobals.getApplicationPath() 
+					+ "/"
+					+ SystemGlobals.getValue(ConfigKeys.SMILIE_IMAGE_DIR) 
+					+ "/"
+					+ imgName + "." + uploadUtils.getExtension());
 			
-			BufferedInputStream inputStream = new BufferedInputStream((InputStream)this.request.getObjectParameter("smilie_img"));
-			FileOutputStream outputStream = new FileOutputStream(SystemGlobals.getApplicationPath() +"/"+ SystemGlobals.getValue(ConfigKeys.SMILIE_IMAGE_DIR) +"/"+ imgName + extension);
-			
-			int c = 0;
-			byte[] b = new byte[1024];
-			while ((c = inputStream.read(b)) != -1) {
-				outputStream.write(b);
-			}
-			
-			outputStream.flush();
-			outputStream.close();
-			inputStream.close();
-			
-			imgName += extension;
+			imgName += "." + uploadUtils.getExtension();
 		}
 		
 		return imgName;
