@@ -63,6 +63,7 @@
 		</javac>
 	</target>
 
+	<!--
 	<target name="createZip" depends="compile, createClassJar" description="Creates the .zip distribution file">
 		<mkdir dir="${dist}"/>
 		<copy file="${build}/WEB-INF/lib/*.jar" todir="${project.libs}"/>
@@ -84,6 +85,7 @@
 
 		<jar destfile="${build}/WEB-INF/lib/${projectname}-${version}.jar" basedir="${classes}"/>
 	</target>
+	-->
 
 	<!-- Clean build/doc folders -->
 	<target name="clean" description="Clean build / doc folders">
