@@ -54,7 +54,7 @@ import net.jforum.model.DataAccessDriver;
 
 /**
  * @author Rafael Steil
- * @version $Id: SmiliesRepository.java,v 1.6 2005/02/01 21:41:51 rafaelsteil Exp $
+ * @version $Id: SmiliesRepository.java,v 1.7 2005/03/02 00:36:26 rafaelsteil Exp $
  */
 public class SmiliesRepository implements Cacheable
 {
@@ -75,6 +75,7 @@ public class SmiliesRepository implements Cacheable
 	{
 		try {
 			cache.add(FQN, ENTRIES, DataAccessDriver.getInstance().newSmilieModel().selectAll());
+			contexted = false;
 		}
 		catch (Exception e) {
 			throw new SmiliesLoadException("Error while loading smilies: " + e);

@@ -103,7 +103,7 @@
 						<b>
 						<#if forum?exists>
 							<#if (topic?exists && topic.id > -1)>
-								${I18n.getMessage("PostForm.reply")}
+								${I18n.getMessage("PostForm.reply")} "${topic.title}"
 							<#else>
 								${I18n.getMessage("PostForm.title")}
 							</#if>
