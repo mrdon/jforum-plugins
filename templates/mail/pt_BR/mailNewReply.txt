@@ -8,4 +8,4 @@ ${path}
 
 Se você deseja parar de receber notificações para este tópico, clique no link abaixo:
 
-${forumlink}posts/unwatch/${topic.id}.page
+${unwatch}

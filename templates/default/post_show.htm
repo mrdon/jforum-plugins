@@ -273,7 +273,7 @@ function leaveText()
 				</tr>
 
 
-				<#if logged || anonymousPosts>
+				<#if (logged || anonymousPosts) && topic.status != STATUS_LOCKED>
 				<script language="javascript">
 				var quick = false;
 

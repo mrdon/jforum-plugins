@@ -340,16 +340,19 @@
 								<td><input type="checkbox" name="disable_smilies" ${smiliesChecked} /> </td>
 								<td><span class="gen">${I18n.getMessage("PostForm.disableSmilies")}</span></td>
 							</tr>
-							<tr>
-								<td><input type="checkbox" name="attach_sig" ${signatureChecked} /> </td>
-								<td><span class="gen">${I18n.getMessage("PostForm.appendSignature")}</span></td>
-							</tr>
 
-							<#if forum?exists>
-							<tr>
-								<td><input type="checkbox" name="notify" ${repliesChecked} /> </td>
-								<td><span class="gen">${I18n.getMessage("PostForm.notifyReplies")}</span></td>
-							</tr>
+							<#if user.id != 1>
+								<tr>
+									<td><input type="checkbox" name="attach_sig" ${signatureChecked} /> </td>
+									<td><span class="gen">${I18n.getMessage("PostForm.appendSignature")}</span></td>
+								</tr>
+
+								<#if forum?exists>
+								<tr>
+									<td><input type="checkbox" name="notify" ${repliesChecked} /> </td>
+									<td><span class="gen">${I18n.getMessage("PostForm.notifyReplies")}</span></td>
+								</tr>
+								</#if>
 							</#if>
 
 							<#if setType?default(true) && forum?exists && canCreateStickyOrAnnouncementTopics?default(false)>
