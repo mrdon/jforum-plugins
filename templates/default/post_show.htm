@@ -90,7 +90,7 @@
 	<TR>
 	<TD colSpan=2 valign="top">
 	<span class=postbody>
-	${post.text}
+	${post.text?replace("<script", "&lt;script")}
 	<#if (user.attachSignatureEnabled && user.signature?exists &user.signature?length > 0)>
 	<hr>
 	${user.signature}
