@@ -65,11 +65,11 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallVH.java,v 1.3 2004/08/30 13:40:55 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.1 2004/08/30 23:51:21 rafaelsteil Exp $
  */
-public class InstallVH extends Command
+public class InstallAction extends Command
 {
-	private static Logger logger = Logger.getLogger(InstallVH.class);
+	private static Logger logger = Logger.getLogger(InstallAction.class);
 	
 	public void welcome() throws Exception
 	{

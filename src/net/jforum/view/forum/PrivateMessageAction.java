@@ -63,9 +63,9 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageVH.java,v 1.8 2004/08/26 02:43:19 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.1 2004/08/30 23:51:19 rafaelsteil Exp $
  */
-public class PrivateMessageVH extends Command
+public class PrivateMessageAction extends Command
 {
 	private String templateName;
 	

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) 2003, 2004 Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -73,9 +73,9 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
- * @version $Id: ForumVH.java,v 1.9 2004/08/27 21:37:41 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.1 2004/08/30 23:51:18 rafaelsteil Exp $
  */
-public class ForumVH extends Command 
+public class ForumAction extends Command 
 {
 	/**
 	 * Gets all forums available to the user.
@@ -89,7 +89,7 @@ public class ForumVH extends Command
 	 */
 	public static LinkedHashMap getAllForums() throws Exception
 	{
-		return ForumVH.getAllForums(false);
+		return ForumAction.getAllForums(false);
 	}
 
 	/**
@@ -154,7 +154,7 @@ public class ForumVH extends Command
 		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
 		UserModel um = DataAccessDriver.getInstance().newUserModel();
 		
-		JForum.getContext().put("allForums", ForumVH.getAllForums(true));
+		JForum.getContext().put("allForums", ForumAction.getAllForums(true));
 		JForum.getContext().put("topicsPerPage",  new Integer(SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE)));
 		JForum.getContext().put("moduleAction", "forum_list.htm");
 		
@@ -268,7 +268,7 @@ public class ForumVH extends Command
 		int totalTopics = ForumRepository.getTotalTopics(forumId, true);
 
 		JForum.getContext().put("topics", this.prepareTopics(tmpTopics));
-		JForum.getContext().put("allForums", ForumVH.getAllForums());
+		JForum.getContext().put("allForums", ForumAction.getAllForums());
 		JForum.getContext().put("forum", ForumRepository.getForum(forumId));
 		JForum.getContext().put("moduleAction", "forum_show.htm");
 		
@@ -386,6 +386,6 @@ public class ForumVH extends Command
 	{
 		JForum.getRequest().addParameter("post_time", Long.toString(SessionFacade.getUserSession().getLastVisit()));
 		JForum.getRequest().addParameter("clean", "true");
-		new SearchVH().search();
+		new SearchAction().search();
 	}
 }

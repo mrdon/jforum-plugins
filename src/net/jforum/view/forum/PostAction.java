@@ -76,9 +76,9 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostVH.java,v 1.31 2004/08/26 02:43:19 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.1 2004/08/30 23:51:19 rafaelsteil Exp $
  */
-public class PostVH extends Command 
+public class PostAction extends Command 
 {
 	public void list() throws Exception
 	{

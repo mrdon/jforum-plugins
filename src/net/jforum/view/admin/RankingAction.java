@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) 2003, 2004 Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: RankingVH.java,v 1.2 2004/04/21 23:57:29 rafaelsteil Exp $
+ * $Id: RankingAction.java,v 1.1 2004/08/30 23:51:16 rafaelsteil Exp $
  */
 package net.jforum.view.admin;
 
@@ -58,7 +58,7 @@ import freemarker.template.Template;
 /**
  * @author Rafael Steil
  */
-public class RankingVH extends Command 
+public class RankingAction extends Command 
 {
 	// List
 	public void list() throws Exception
@@ -130,7 +130,7 @@ public class RankingVH extends Command
 	 */
 	public Template process() throws Exception 
 	{
-		if (AdminVH.isAdmin()) {
+		if (AdminAction.isAdmin()) {
 			super.process();
 		}
 		

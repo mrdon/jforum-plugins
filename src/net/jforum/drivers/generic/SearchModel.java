@@ -49,8 +49,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import org.apache.log4j.Logger;
-
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.entities.Post;
@@ -59,12 +57,10 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchModel.java,v 1.8 2004/08/21 02:56:09 rafaelsteil Exp $
+ * @version $Id: SearchModel.java,v 1.9 2004/08/30 23:51:20 rafaelsteil Exp $
  */
 public class SearchModel extends AutoKeys implements net.jforum.model.SearchModel	
 {
-	private static final Logger logger = Logger.getLogger(SearchModel.class);
-
 	/** 
 	 * @see net.jforum.model.SearchModel#search(net.jforum.model.SearchData)
 	 */
@@ -223,7 +219,6 @@ public class SearchModel extends AutoKeys implements net.jforum.model.SearchMode
 		String str = post.getText() +" "+ post.getSubject();
 		
 		String[] words = str.split(" ");
-		logger.info("Going to process "+ str);
 						
 		for (int i = 0; i < words.length; i++) {
 			// Skip words less than 3 chars
@@ -236,36 +231,24 @@ public class SearchModel extends AutoKeys implements net.jforum.model.SearchMode
 			existing.setInt(1, hash);
 			ResultSet rs = existing.executeQuery();
 			
-			logger.info("Checking if "+ words[i] +" exists in the database");
-			
 			if (!rs.next()) {
-				logger.info(words[i] +" does not exist in the database");
 				insert.setInt(1, hash);
 				
 				String[] splitedWord = words[i].toLowerCase().replaceAll("[\\.\\\\\\/~^&\\(\\)-_+=!@#$%\"\'\\[\\]\\{\\}?<:>,*]", " ").split(" ");
-				
-				logger.info("Going to insert the new word in the database");
-				logger.info("words to process are "+ words[i]);
 				
 				for (int j = 0; j < splitedWord.length; j++) {
 					if (splitedWord[j].trim().length() < 3) {
 						continue;
 					}
 					
-					logger.info("Preparing insert statement for word "+ splitedWord[j]);					
 					insert.setString(2, splitedWord[j]);
 
-					logger.info("Executing the insertion");
 					int tmpId = this.executeAutoKeysQuery(insert);
 					
-					logger.info("Associating "+ splitedWord[j] +" to the post");
 					this.associateWordToPost(wordToPost, splitedWord[j], tmpId, post);
 				}
 			}
 			else {
-				logger.info(words[i] +" exist in the database");
-				logger.info("Associating "+ words[i] +" with the post");
-
 				int postId = rs.getInt("post_id");
 				if (postId == 0) {
 					insert.setInt(1, post.getId());
@@ -292,12 +275,8 @@ public class SearchModel extends AutoKeys implements net.jforum.model.SearchMode
 			inSubject = subject.indexOf(word) > -1 ? 1 : 0;
 		}
 		
-		logger.info("Executing associateWordToPost() using "+ word);
-		
 		p.setInt(3, inSubject);
 		p.executeUpdate();
-
-		logger.info("Executing of associateWordToPost() finished");
 	}
 
 	/** 

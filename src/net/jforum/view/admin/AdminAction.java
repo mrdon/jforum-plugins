@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) 2003, 2004 Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: AdminVH.java,v 1.4 2004/08/30 13:40:54 rafaelsteil Exp $
+ * $Id: AdminAction.java,v 1.1 2004/08/30 23:51:15 rafaelsteil Exp $
  */
 package net.jforum.view.admin;
 
@@ -58,7 +58,7 @@ import net.jforum.security.SecurityConstants;
 /**
  * @author Rafael Steil
  */
-public class AdminVH extends Command {
+public class AdminAction extends Command {
 
 	/* 
 	 * @see net.jforum.Command#list()

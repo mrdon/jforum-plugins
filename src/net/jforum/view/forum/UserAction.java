@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) 2003, 2004 Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -64,9 +64,9 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserVH.java,v 1.17 2004/08/28 16:03:39 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.1 2004/08/30 23:51:18 rafaelsteil Exp $
  */
-public class UserVH extends Command 
+public class UserAction extends Command 
 {
 	public void edit() throws Exception
 	{

@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ModerationHelper.java,v 1.3 2004/05/04 00:59:36 rafaelsteil Exp $
+ * $Id: ModerationHelper.java,v 1.4 2004/08/30 23:51:19 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 
@@ -169,7 +169,7 @@ public class ModerationHelper
 	{
 		JForum.getContext().put("moduleAction", "post_move.htm");
 		JForum.getContext().put("persistData", JForum.getRequest().getParameter("persistData"));
-		JForum.getContext().put("allForums", ForumVH.getAllForums());
+		JForum.getContext().put("allForums", ForumAction.getAllForums());
 		
 		String[] topics = JForum.getRequest().getParameterValues("topic_id");
 		if (topics.length > 0) {

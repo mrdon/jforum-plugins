@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) 2003, 2004 Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -62,9 +62,9 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchVH.java,v 1.6 2004/06/17 00:10:27 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.1 2004/08/30 23:51:19 rafaelsteil Exp $
  */
-public class SearchVH extends Command 
+public class SearchAction extends Command 
 {
 	private String searchTerms;
 	private String forum;
@@ -154,12 +154,12 @@ public class SearchVH extends Command
 		int totalTopics = allTopics.size();
 		int sublistLimit = recordsPerPage + start > totalTopics ? totalTopics : recordsPerPage + start;
 		
-		ArrayList topics = new ForumVH().prepareTopics(allTopics.subList(start, sublistLimit));
+		ArrayList topics = new ForumAction().prepareTopics(allTopics.subList(start, sublistLimit));
 		
 		JForum.getContext().put("fr", new ForumRepository());
 		
 		JForum.getContext().put("topics", topics);
-		JForum.getContext().put("allForums", ForumVH.getAllForums());
+		JForum.getContext().put("allForums", ForumAction.getAllForums());
 		JForum.getContext().put("moduleAction", "search_result.htm");
 		
 		// Pagination

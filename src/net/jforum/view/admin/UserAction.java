@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) 2003, 2004 Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -67,9 +67,9 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserVH.java,v 1.5 2004/07/06 21:48:38 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.1 2004/08/30 23:51:17 rafaelsteil Exp $
  */
-public class UserVH extends Command 
+public class UserAction extends Command 
 {
 	// Listing
 	public void list() throws Exception
@@ -201,7 +201,7 @@ public class UserVH extends Command
 	 */
 	public Template process() throws Exception 
 	{
-		if (AdminVH.isAdmin()) {
+		if (AdminAction.isAdmin()) {
 			super.process();
 		}
 		

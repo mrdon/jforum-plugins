@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) 2003, 2004 Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -66,9 +66,9 @@ import freemarker.template.Template;
  * ViewHelper class for group administration.
  * 
  * @author Rafael Steil
- * @version $Id: GroupVH.java,v 1.4 2004/06/02 03:56:08 rafaelsteil Exp $
+ * @version $Id: GroupAction.java,v 1.1 2004/08/30 23:51:17 rafaelsteil Exp $
  */
-public class GroupVH extends Command 
+public class GroupAction extends Command 
 {
 	// Listing
 	public void list() throws Exception
@@ -206,7 +206,7 @@ public class GroupVH extends Command
 	 */
 	public Template process() throws Exception 
 	{
-		if (AdminVH.isAdmin()) {
+		if (AdminAction.isAdmin()) {
 			super.process();
 		}
 		

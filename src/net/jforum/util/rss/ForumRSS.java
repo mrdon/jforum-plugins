@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ForumRSS.java,v 1.3 2004/06/01 19:47:28 pieter2 Exp $
+ * $Id: ForumRSS.java,v 1.4 2004/08/30 23:51:21 rafaelsteil Exp $
  */
 package net.jforum.util.rss;
 
@@ -60,7 +60,7 @@ import net.jforum.entities.Forum;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.view.forum.ForumVH;
+import net.jforum.view.forum.ForumAction;
 
 /**
  * @author Rafael Steil
@@ -74,7 +74,7 @@ public class ForumRSS extends RSSable
 	 */
 	protected RSSDocument prepareRSSDocument() throws Exception 
 	{
-		LinkedHashMap forums = ForumVH.getAllForums();
+		LinkedHashMap forums = ForumAction.getAllForums();
 		RSSDocument rssDocumnet = new RSSDocument();
 		
 		String ctx = JForum.getRequest().getContextPath();

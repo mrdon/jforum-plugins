@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) 2003, 2004 Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -36,7 +36,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * This file creation date: Mar 10, 2003 / 8:49:51 PM
+ * This file creation date: Mar 28, 2003 / 8:21:56 PM
  * The JForum Project
  * http://www.jforum.net
  */
@@ -45,69 +45,77 @@ package net.jforum.view.admin;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import net.jforum.entities.Category;
 import net.jforum.Command;
 import net.jforum.JForum;
+import net.jforum.entities.Forum;
 import net.jforum.model.CategoryModel;
 import net.jforum.model.DataAccessDriver;
+import net.jforum.model.ForumModel;
 import net.jforum.model.GroupModel;
 import net.jforum.model.security.GroupSecurityModel;
-import net.jforum.repository.CategoryRepository;
+import net.jforum.repository.ForumRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.Role;
 import net.jforum.security.RoleValue;
 import net.jforum.security.RoleValueCollection;
 import net.jforum.security.SecurityConstants;
-import net.jforum.util.I18n;
 import net.jforum.util.TreeGroup;
-
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
 /**
- * ViewHelper for category administration.
- * 
  * @author Rafael Steil
- * @version $Id: CategoryVH.java,v 1.3 2004/06/02 03:56:08 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.1 2004/08/30 23:51:17 rafaelsteil Exp $
  */
-public class CategoryVH extends Command 
+public class ForumAction extends Command 
 {
-	private CategoryModel cm;
-	
 	// Listing
 	public void list() throws Exception
 	{
-		JForum.getContext().put("categories", this.cm.selectAll());
-		JForum.getContext().put("moduleAction", "category_list.htm");
+		JForum.getContext().put("forums", DataAccessDriver.getInstance().newForumModel().selectAll());
+		JForum.getContext().put("moduleAction", "forum_list.htm");
 	}
 	
 	// One more, one more
 	public void insert() throws Exception
 	{
+		CategoryModel cm = DataAccessDriver.getInstance().newCategoryModel();
+		
 		JForum.getContext().put("groups", new TreeGroup().getNodes());
 		JForum.getContext().put("selectedList", new ArrayList());
-		JForum.getContext().put("moduleAction", "category_form.htm");
-		JForum.getContext().put("action", "insertSave");
+		JForum.getContext().put("moduleAction", "forum_form.htm");
+		JForum.getContext().put("categories",cm.selectAll());
+		JForum.getContext().put("action", "insertSave");		
 	}
 	
 	// Edit
 	public void edit() throws Exception
 	{
-		JForum.getContext().put("category", this.cm.selectById(Integer.parseInt(JForum.getRequest().getParameter("category_id"))));
-		JForum.getContext().put("moduleAction", "category_form.htm");
+		CategoryModel cm = DataAccessDriver.getInstance().newCategoryModel();
+		
+		JForum.getContext().put("forum", DataAccessDriver.getInstance().newForumModel().selectById(Integer.parseInt(JForum.getRequest().getParameter("forum_id"))));
+		JForum.getContext().put("categories", cm.selectAll());
+		JForum.getContext().put("moduleAction", "forum_form.htm");
 		JForum.getContext().put("action", "editSave");
 	}
 	
 	//  Save information
 	public void editSave() throws Exception
 	{
-		Category c = new Category();
-		c.setName(JForum.getRequest().getParameter("category_name"));
-		c.setId(Integer.parseInt(JForum.getRequest().getParameter("categories_id")));
+		Forum f = new Forum();
+		f.setDescription(JForum.getRequest().getParameter("description"));
+		f.setId(Integer.parseInt(JForum.getRequest().getParameter("forum_id")));
+		f.setIdCategories(Integer.parseInt(JForum.getRequest().getParameter("categories_id")));
+		f.setModerated(JForum.getRequest().getParameter("moderated") != null && JForum.getRequest().getParameter("moderated").equals("true"));
+		f.setName(JForum.getRequest().getParameter("forum_name"));
 			
-		this.cm.update(c);
-		CategoryRepository.loadCategories();
+		DataAccessDriver.getInstance().newForumModel().update(f);
+		
+		ForumRepository.reloadForum(f.getId());
+		
+		// RSS
+		//new ForumRSS().createRSS();
 			
 		this.list();
 	}
@@ -115,37 +123,39 @@ public class CategoryVH extends Command
 	// Delete
 	public void delete() throws Exception
 	{
-		String ids[] = JForum.getRequest().getParameterValues("categories_id");
-		ArrayList errors = new ArrayList();
+		String ids[] = JForum.getRequest().getParameterValues("forum_id");
 		
-		if (ids != null) {						
-			for (int i = 0; i < ids.length; i++){
-				if (this.cm.canDelete(Integer.parseInt(ids[i]))) {
-					this.cm.delete(Integer.parseInt(ids[i]));
-					
-				}
-				else {
-					errors.add(I18n.getMessage(I18n.CANNOT_DELETE_CATEGORY, new Object[] {new Integer(ids[i])}));
-				}
+		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
+		
+		if (ids != null) {
+			for (int i = 0; i < ids.length; i++) {
+				fm.delete(Integer.parseInt(ids[i]));
+				
+				Forum f = new Forum();
+				f.setId(Integer.parseInt(ids[i]));
+				ForumRepository.removeForum(f);
 			}
 		}
-
-		if (errors.size() > 0) {
-			JForum.getContext().put("errorMessage", errors);
-		}
 		
-		CategoryRepository.loadCategories();	
+		// RSS
+		//new ForumRSS().createRSS();
+
 		this.list();
 	}
 	
 	// A new one
 	public void insertSave() throws Exception
 	{
-		Category c = new Category();
-		c.setName(JForum.getRequest().getParameter("category_name"));
+		Forum f = new Forum();
+		f.setDescription(JForum.getRequest().getParameter("description"));
+		f.setIdCategories(Integer.parseInt(JForum.getRequest().getParameter("categories_id")));
+		f.setModerated(JForum.getRequest().getParameter("moderated") != null && JForum.getRequest().getParameter("moderated").equals("true"));
+		f.setName(JForum.getRequest().getParameter("forum_name"));	
 			
-		int categoryId = this.cm.addNew(c);
-		CategoryRepository.loadCategories();
+		int forumId = DataAccessDriver.getInstance().newForumModel().addNew(f);
+		f.setId(forumId);
+		
+		ForumRepository.addForum(f);
 		
 		String[] groups = JForum.getRequest().getParameterValues("groups");
 		if (groups != null) {
@@ -155,7 +165,7 @@ public class CategoryVH extends Command
 			pc.setSecurityModel(gmodel);
 
 			Role role = new Role();
-			role.setName(SecurityConstants.PERM_CATEGORY);
+			role.setName(SecurityConstants.PERM_FORUM);
 
 			for (int i = 0; i < groups.length; i++) {
 				int groupId = Integer.parseInt(groups[i]);
@@ -163,7 +173,7 @@ public class CategoryVH extends Command
 				
 				RoleValue rv = new RoleValue();
 				rv.setType(PermissionControl.ROLE_ALLOW);
-				rv.setValue(Integer.toString(categoryId));
+				rv.setValue(Integer.toString(forumId));
 				
 				roleValues.add(rv);
 				
@@ -175,17 +185,19 @@ public class CategoryVH extends Command
 				}
 			}
 		}
-			
+		
+		// RSS
+		//new ForumRSS().createRSS();
+		
 		this.list();
 	}
 	
-	/* 
+	/** 
 	 * @see net.jforum.Command#process()
 	 */
 	public Template process() throws Exception 
-	{
-		if (AdminVH.isAdmin()) {
-			this.cm = DataAccessDriver.getInstance().newCategoryModel();
+	{	
+		if (AdminAction.isAdmin()) {
 			super.process();
 		}
 

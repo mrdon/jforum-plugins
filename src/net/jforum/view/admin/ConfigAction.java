@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) 2003, 2004 Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ConfigVH.java,v 1.3 2004/06/01 19:47:21 pieter2 Exp $
+ * $Id: ConfigAction.java,v 1.1 2004/08/30 23:51:16 rafaelsteil Exp $
  */
 package net.jforum.view.admin;
 
@@ -61,7 +61,7 @@ import freemarker.template.Template;
 /**
  * @author Rafael Steil
  */
-public class ConfigVH extends Command 
+public class ConfigAction extends Command 
 {
 	//	Listing
 	 public void list() throws Exception
@@ -109,7 +109,7 @@ public class ConfigVH extends Command
 	 */
 	public Template process() throws Exception 
 	{
-		if (AdminVH.isAdmin()) {
+		if (AdminAction.isAdmin()) {
 			super.process();
 		}
 

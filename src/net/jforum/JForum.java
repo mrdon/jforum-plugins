@@ -68,7 +68,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.30 2004/08/30 13:40:55 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.31 2004/08/30 23:51:20 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -149,7 +149,7 @@ public class JForum extends JForumCommonServlet
 					}
 					
 					userSession.setLang(user.getLang());
-					if (user.getLang() != null && !!user.getLang().equals("") && !I18n.contains(user.getLang())) {
+					if (user.getLang() != null && !user.getLang().equals("") && !I18n.contains(user.getLang())) {
 						I18n.load(user.getLang());
 					}
 				}
