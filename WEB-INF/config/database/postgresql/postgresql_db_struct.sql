@@ -21,7 +21,8 @@ CREATE SEQUENCE jforum_categories_order_seq;
 CREATE TABLE jforum_categories (
   categories_id INTEGER NOT NULL PRIMARY KEY DEFAULT NEXTVAL('jforum_categories_seq'),
   title VARCHAR(100) NOT NULL DEFAULT '',
-  display_order INTEGER NOT NULL DEFAULT 0
+  display_order INTEGER NOT NULL DEFAULT 0,
+  moderated INTEGER DEFAULT 0
 );
 
 --
