@@ -44,11 +44,9 @@ package net.jforum.model;
 
 import java.util.List;
 
-import net.jforum.entities.Post;
-
 /**
  * @author Rafael Steil
- * @version $Id: SearchModel.java,v 1.5 2004/11/05 03:29:50 rafaelsteil Exp $
+ * @version $Id: SearchModel.java,v 1.6 2005/02/22 20:32:36 rafaelsteil Exp $
  */
 public interface SearchModel 
 {
@@ -67,6 +65,4 @@ public interface SearchModel
 	 * @throws Exception
 	 */
 	public void cleanSearch() throws Exception;
-	
-	public void insertSearchWords(Post post) throws Exception;
 }

@@ -40,16 +40,16 @@
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.drivers.sqlserver;
+package net.jforum.drivers.oracle;
 
 import net.jforum.entities.Post;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
- * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SearchModel.java,v 1.1 2005/01/26 19:39:37 franklin_samir Exp $
+ * @author Rafael Steil
+ * @version $Id: SearchIndexerModel.java,v 1.1 2005/02/22 20:32:40 rafaelsteil Exp $
  */
-public class SearchModel extends net.jforum.drivers.generic.SearchModel
+public class SearchIndexerModel extends net.jforum.drivers.generic.SearchIndexerModel
 {
 	/** 
 	 * @see net.jforum.drivers.generic.SearchModel#insertSearchWords(net.jforum.entities.Post)

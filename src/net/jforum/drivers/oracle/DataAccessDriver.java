@@ -47,13 +47,12 @@ import net.jforum.drivers.oracle.security.UserSecurityModel;
 
 /**
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.4 2005/02/03 12:37:37 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.5 2005/02/22 20:32:40 rafaelsteil Exp $
  */
 public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDriver
 {
 	private static PostModel postModel = new PostModel();
 	private static TopicModel topicModel = new TopicModel();
-	private static SearchModel searchModel = new SearchModel();
 	private static SmilieModel smilieModel = new SmilieModel();
 	private static UserModel userModel = new UserModel();
 	private static GroupSecurityModel groupSecurityModel = new GroupSecurityModel();
@@ -96,11 +95,11 @@ public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDrive
 	}
 	
 	/** 
-	 * @see net.jforum.model.DataAccessDriver#newSearchModel()
+	 * @see net.jforum.model.DataAccessDriver#newSearchIndexerModel()
 	 */
-	public net.jforum.model.SearchModel newSearchModel()
+	public net.jforum.model.SearchIndexerModel newSearchIndexerModel()
 	{
-		return searchModel;
+		return new SearchIndexerModel();
 	}
 	
 	/** 

@@ -227,7 +227,7 @@ function confirmDelete()
 						<span class="postbody">${post.text}</span>
 
 						<#if post.hasAttachments() && (canDownloadAttachments || attachmentsEnabled)>
-							<#assign attachments = am.getAttachments(post.id)/>
+							<#assign attachments = am.getAttachments(post.id, post.forumId)/>
 
 							<#list attachments as a>
 								<p>

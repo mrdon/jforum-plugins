@@ -68,7 +68,7 @@ import freemarker.template.Template;
  * ViewHelper class for group administration.
  * 
  * @author Rafael Steil
- * @version $Id: GroupAction.java,v 1.8 2005/01/04 03:31:19 rafaelsteil Exp $
+ * @version $Id: GroupAction.java,v 1.9 2005/02/22 20:32:41 rafaelsteil Exp $
  */
 public class GroupAction extends Command 
 {
@@ -127,7 +127,7 @@ public class GroupAction extends Command
 			return;
 		}
 		
-		ArrayList errors = new ArrayList();
+		List errors = new ArrayList();
 		GroupModel gm = DataAccessDriver.getInstance().newGroupModel();
 			
 		for (int i = 0; i < groupId.length; i++) {

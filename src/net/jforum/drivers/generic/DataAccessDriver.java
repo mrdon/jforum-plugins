@@ -47,7 +47,7 @@ import net.jforum.drivers.generic.security.UserSecurityModel;
 
 /**
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.9 2005/02/03 12:37:39 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.10 2005/02/22 20:32:38 rafaelsteil Exp $
  */
 public class DataAccessDriver extends net.jforum.model.DataAccessDriver 
 {
@@ -150,6 +150,15 @@ public class DataAccessDriver extends net.jforum.model.DataAccessDriver
 	{
 		return searchModel;
 	}
+	
+	/** 
+	 * @see net.jforum.model.DataAccessDriver#newSearchIndexerModel()
+	 */
+	public net.jforum.model.SearchIndexerModel newSearchIndexerModel() 
+	{
+		return new SearchIndexerModel();
+	}
+	
 	/** 
 	 * @see net.jforum.model.DataAccessDriver#newGroupSecurityModel()
 	 */

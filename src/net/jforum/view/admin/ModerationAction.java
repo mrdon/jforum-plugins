@@ -66,7 +66,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationAction.java,v 1.3 2005/02/21 20:32:13 rafaelsteil Exp $
+ * @version $Id: ModerationAction.java,v 1.4 2005/02/22 20:32:41 rafaelsteil Exp $
  */
 public class ModerationAction extends Command
 {
@@ -126,7 +126,7 @@ public class ModerationAction extends Command
 					Post post = pm.selectById(postId);
 					pm.delete(post);
 					
-					new AttachmentCommon(this.request).deleteAttachments(postId);
+					new AttachmentCommon(this.request).deleteAttachments(postId, post.getForumId());
 					
 					int totalPosts = tm.getTotalPosts(post.getTopicId());
 					if (totalPosts == 0) {

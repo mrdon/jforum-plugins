@@ -88,7 +88,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.62 2005/02/21 20:32:16 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.63 2005/02/22 20:32:37 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -149,7 +149,7 @@ public class PostAction extends Command {
 		}
 		
 		this.context.put("attachmentsEnabled", SecurityRepository.canAccess(
-				SecurityConstants.PERM_ATTACHMENTS_ENABLED));
+				SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(topic.getForumId())));
 		this.context.put("canDownloadAttachments", SecurityRepository.canAccess(
 				SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD));
 		this.context.put("am", new AttachmentCommon(this.request));
@@ -260,7 +260,7 @@ public class PostAction extends Command {
 		int userId = SessionFacade.getUserSession().getUserId();
 
 		this.context.put("attachmentsEnabled", SecurityRepository.canAccess(
-				SecurityConstants.PERM_ATTACHMENTS_ENABLED));
+				SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(forumId)));
 		
 		QuotaLimit ql = new AttachmentCommon(this.request).getQuotaLimit(userId);
 		this.context.put("maxAttachmentsSize", new Long(ql != null ? ql.getSizeInBytes() : 1));
@@ -332,7 +332,7 @@ public class PostAction extends Command {
 			}
 
 			this.context.put("attachmentsEnabled", SecurityRepository.canAccess(
-					SecurityConstants.PERM_ATTACHMENTS_ENABLED));
+					SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(p.getForumId())));
 			
 			this.context.put("maxAttachmentsSize", new Long(new AttachmentCommon(
 					this.request).getQuotaLimit(userId).getSizeInBytes()));
@@ -404,7 +404,7 @@ public class PostAction extends Command {
 		int userId = SessionFacade.getUserSession().getUserId();
 		
 		this.context.put("attachmentsEnabled", SecurityRepository.canAccess(
-				SecurityConstants.PERM_ATTACHMENTS_ENABLED));
+				SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(topic.getForumId())));
 		
 		this.context.put("maxAttachmentsSize", new Long(new AttachmentCommon(
 				this.request).getQuotaLimit(userId).getSizeInBytes()));
@@ -455,10 +455,10 @@ public class PostAction extends Command {
 			
 			// Attachments
 			AttachmentCommon ac = new AttachmentCommon(this.request);
-			ac.editAttachments(p.getId());
+			ac.editAttachments(p.getId(), p.getForumId());
 			
 			try {
-				ac.insertAttachments(p.getId());
+				ac.insertAttachments(p.getId(), p.getForumId());
 			}
 			catch (AttachmentException e) {
 				JForum.enableCancelCommit();
@@ -615,7 +615,7 @@ public class PostAction extends Command {
 			
 			// Attachments
 			try {
-				new AttachmentCommon(this.request).insertAttachments(postId);
+				new AttachmentCommon(this.request).insertAttachments(postId, forumId);
 			}
 			catch (AttachmentException e) {
 				JForum.enableCancelCommit();
@@ -709,7 +709,7 @@ public class PostAction extends Command {
 		DataAccessDriver.getInstance().newUserModel().decrementPosts(p.getUserId());
 		
 		// Attachments
-		new AttachmentCommon(this.request).deleteAttachments(p.getId());
+		new AttachmentCommon(this.request).deleteAttachments(p.getId(), p.getForumId());
 
 		// Topic
 		tm.decrementTotalReplies(p.getTopicId());

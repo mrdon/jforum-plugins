@@ -53,15 +53,14 @@ import java.util.List;
 
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
-import net.jforum.entities.Post;
 import net.jforum.model.SearchData;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchModel.java,v 1.15 2005/02/21 14:00:05 andowson Exp $
+ * @version $Id: SearchModel.java,v 1.16 2005/02/22 20:32:38 rafaelsteil Exp $
  */
-public class SearchModel extends AutoKeys implements net.jforum.model.SearchModel	
+public class SearchModel implements net.jforum.model.SearchModel	
 {
 	/** 
 	 * @see net.jforum.model.SearchModel#search(net.jforum.model.SearchData)
@@ -210,82 +209,6 @@ public class SearchModel extends AutoKeys implements net.jforum.model.SearchMode
 		p.close();
 	}
 	
-	public void insertSearchWords(Post post) throws Exception
-	{
-		PreparedStatement insert = this.getStatementForAutoKeys("SearchModel.insertWords");
-		PreparedStatement existing = JForum.getConnection().prepareStatement(
-						SystemGlobals.getSql("SearchModel.searchExistingWord"));
-		
-		PreparedStatement existingAssociation = JForum.getConnection().prepareStatement(
-						SystemGlobals.getSql("SearchModel.searchExistingAssociation"));
-		existingAssociation.setInt(2, post.getId());
-		
-		PreparedStatement wordToPost = JForum.getConnection().prepareStatement(
-						SystemGlobals.getSql("SearchModel.associateWordToPost"));
-		wordToPost.setInt(1, post.getId());
-		
-		String str = post.getText() +" "+ post.getSubject();
-		String[] words = str.toLowerCase().replaceAll("[\\.\\\\\\/~^&\\(\\)-_+=!@#$%\"\'\\[\\]\\{\\}?<:>,*¡A¡B¡C¡D¡E¡F¡G¡H¡I¡J¡K¡L¡U¡Z¡]¡^¡a¡b¡e¡f¡i¡j¡m¡n¡q¡r¡u¡v¡y¡z¡£¡¤¡¥¡¦¡§¡¨¡©¡ª¡«¡¬]", " ").split(" ");
-						
-		for (int i = 0; i < words.length; i++) {
-			words[i] = words[i].trim();
-			// Skip words less than 3 chars
-			if (words[i].length() < 3) {
-				continue;
-			}
-			// Trucate words longer than 100 chars
-			if (words[i].length() > 100) {
-			  words[i] = words[i].substring(0, 100); 
-			}
-			// Verify if the current word is not in the database before proceeding
-			int hash = words[i].hashCode();
-			existing.setInt(1, hash);
-			ResultSet rs = existing.executeQuery();
-
-			if (!rs.next()) {
-				// The word is not in the database. Insert it now
-				insert.setInt(1, hash);
-				insert.setString(2, words[i]);
-				int wordId = this.executeAutoKeysQuery(insert);
-
-				// Associate the current word to the post
-				this.associateWordToPost(wordToPost, words[i], wordId, post);
-			}
-			else {
-				// The word is already in the database ( jforum_search_words )
-				// Check then if the current post is not already associated to the word
-				int wordId = rs.getInt("word_id");
-				existingAssociation.setInt(1, wordId);
-				
-				ResultSet rsa = existingAssociation.executeQuery();
-				if (!rsa.next()) {
-					// Assoacite the post to the word
-					this.associateWordToPost(wordToPost, words[i], wordId, post);
-				}
-				rsa.close();
-			}
-			
-			rs.close();
-		}
-		
-		insert.close();
-		existing.close();
-		wordToPost.close();
-	}
-	
-	private void associateWordToPost(PreparedStatement p, String word, int wordId, Post post) throws Exception
-	{
-		p.setInt(2, wordId);
-		
-		String subject = post.getSubject();
-		int inSubject = 0;
-		if (subject != null && !subject.equals("")) {
-			inSubject = subject.indexOf(word) > -1 ? 1 : 0;
-		}
-		
-		p.setInt(3, inSubject);
-		p.executeUpdate();
-	}
 
 	/** 
 	 * @see net.jforum.model.SearchModel#cleanSearch()

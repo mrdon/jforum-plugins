@@ -46,7 +46,7 @@ import net.jforum.drivers.sqlserver.CategoryModel;
 import net.jforum.drivers.sqlserver.ForumModel;
 import net.jforum.drivers.sqlserver.PostModel;
 import net.jforum.drivers.sqlserver.PrivateMessageModel;
-import net.jforum.drivers.sqlserver.SearchModel;
+import net.jforum.drivers.sqlserver.SearchIndexerModel;
 import net.jforum.drivers.sqlserver.SmilieModel;
 import net.jforum.drivers.sqlserver.TopicModel;
 import net.jforum.drivers.sqlserver.UserModel;
@@ -55,14 +55,13 @@ import net.jforum.drivers.sqlserver.security.UserSecurityModel;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: DataAccessDriver.java,v 1.3 2005/02/17 19:14:08 franklin_samir Exp $
+ * @version $Id: DataAccessDriver.java,v 1.4 2005/02/22 20:32:35 rafaelsteil Exp $
  */
 public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDriver
 {
 	private static PostModel postModel = new PostModel();
 	private static TopicModel topicModel = new TopicModel();
 	private static ForumModel forumModel = new ForumModel();
-	private static SearchModel searchModel = new SearchModel();
 	private static SmilieModel smilieModel = new SmilieModel();
 	private static UserModel userModel = new UserModel();
 	private static GroupSecurityModel groupSecurityModel = new GroupSecurityModel();
@@ -96,11 +95,11 @@ public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDrive
 	}
 	
 	/** 
-	 * @see net.jforum.model.DataAccessDriver#newSearchModel()
+	 * @see net.jforum.model.DataAccessDriver#newSearchIndexerModel()
 	 */
-	public net.jforum.model.SearchModel newSearchModel()
+	public net.jforum.model.SearchIndexerModel newSearchIndexerModel()
 	{
-		return searchModel;
+		return new SearchIndexerModel();
 	}
 	
 	/** 

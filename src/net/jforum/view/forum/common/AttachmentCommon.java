@@ -76,7 +76,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.12 2005/02/21 14:31:09 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.13 2005/02/22 20:32:42 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {
@@ -91,9 +91,10 @@ public class AttachmentCommon
 		this.am = DataAccessDriver.getInstance().newAttachmentModel();
 	}
 	
-	public void insertAttachments(int postId) throws Exception
+	public void insertAttachments(int postId, int forumId) throws Exception
 	{
-		if (!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED)) {
+		if (!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED, 
+				Integer.toString(forumId))) {
 			return;
 		}
 		
@@ -146,6 +147,22 @@ public class AttachmentCommon
 			info.setFilesize(item.getSize());
 			info.setComment(this.request.getParameter("comment_" + i));
 			info.setMimetype(item.getContentType());
+			
+			// Get only the filename, without the path (IE does that)
+			String realName = item.getName();
+			String separator = "/";
+			int index = realName.indexOf(separator);
+			
+			if (index == -1) {
+				separator = "\\";
+				index = realName.indexOf(separator);
+			}
+			
+			if (index > -1) {
+				String[] p = realName.split(separator);
+				realName = p[p.length - 1];
+			}
+			
 			info.setRealFilename(item.getName());
 			info.setUploadTimeInMillis(System.currentTimeMillis());
 			
@@ -209,7 +226,7 @@ public class AttachmentCommon
 		return ql;
 	}
 	
-	public void editAttachments(int postId) throws Exception
+	public void editAttachments(int postId, int forumId) throws Exception
 	{
 		// Allow removing the attachments at least
 		AttachmentModel am = DataAccessDriver.getInstance().newAttachmentModel();
@@ -242,7 +259,8 @@ public class AttachmentCommon
 			deleteList = Arrays.asList(delete);
 		}
 		
-		if (!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED)
+		if (!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED, 
+				Integer.toString(forumId))
 				&& !SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD)) {
 			return;
 		}
@@ -288,17 +306,18 @@ public class AttachmentCommon
 			+ "." + a.getExtension().getExtension();
 	}
 	
-	public List getAttachments(int postId) throws Exception
+	public List getAttachments(int postId, int forumId) throws Exception
 	{
 		if (!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD)
-				&& !SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED)) {
+				&& !SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED, 
+						Integer.toString(forumId))) {
 			return new ArrayList();
 		}
 		
 		return this.am.selectAttachments(postId);
 	}
 	
-	public void deleteAttachments(int postId) throws Exception
+	public void deleteAttachments(int postId, int forumId) throws Exception
 	{
 		// Attachments
 		List attachments = DataAccessDriver.getInstance().newAttachmentModel().selectAttachments(postId);
@@ -309,6 +328,6 @@ public class AttachmentCommon
 		}
 		
 		this.request.addParameter("delete_attach", attachIds);
-		this.editAttachments(postId);
+		this.editAttachments(postId, forumId);
 	}
 }
