@@ -132,3 +132,24 @@ INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (@ROLE_ID 
 
 INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (@ROLE_ID + 11, '1', 1);
 INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (@ROLE_ID + 12, '1', 1);
+
+#
+# Attachments
+#
+INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (@ROLE_ID + 13, 'perm_attachments_enabled', @GENERAL_GROUP_ID, 0);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (@ROLE_ID + 14, 'perm_attachments_enabled', @ADMIN_GROUP_ID, 0);
+
+INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (@ROLE_ID + 13, '1', 1);
+INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (@ROLE_ID + 14, '1', 1);
+
+#
+# Bookmarks
+#
+INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (@ROLE_ID + 15, 'perm_bookmarks_enabled', @GENERAL_GROUP_ID, 1);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (@ROLE_ID + 16, 'perm_bookmarks_enabled', @ADMIN_GROUP_ID, 1);
+
+#
+# Karma
+#
+INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (@ROLE_ID + 15, 'perm_karma_enabled', @GENERAL_GROUP_ID, 1);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (@ROLE_ID + 16, 'perm_karma_enabled', @ADMIN_GROUP_ID, 1);
