@@ -330,7 +330,11 @@ function validatePostForm(f)
 		  <tr>
 			  <td class="row1" width="22%"><span class="gen"><b>${I18n.getMessage("PrivateMessage.user")}</b></span></td>
 			  <td class="row2" width="78%">
-			  	<#if preview>
+			  	<#if pmRecipient?exists>
+			  		<#assign toUsername = toUsername/>
+			  		<#assign toUserId = toUserId/>
+			  		<#assign toUserEmail = toUserEmail/>
+			  	<#elseif preview>
 					<#assign toUsername = pm.toUser.username/>
 					<#assign toUserId = pm.toUser.id/>
 					<#assign toUserEmail = pm.toUser.email?default("")/>

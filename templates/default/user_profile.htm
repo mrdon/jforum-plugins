@@ -97,7 +97,7 @@
 			</#if>
             <TR>
               <TD vAlign=center noWrap align=right><SPAN class=gen>${I18n.getMessage("UserProfile.privateMessage")}:</SPAN></TD>
-              <TD class=row1 vAlign=center><B><SPAN class=gen><A href="#">
+              <TD class=row1 vAlign=center><B><SPAN class=gen><A href="${contextPath}/pm/sendTo/${u.id}.page">
               <img src="${contextPath}/templates/${templateName}/images/icon_pm.gif" border=0></A></SPAN></B></TD>
             </TR>
             <#if (u.msnm?exists && u.msnm?length > 0)>

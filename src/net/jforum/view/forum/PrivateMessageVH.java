@@ -63,7 +63,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageVH.java,v 1.6 2004/06/21 03:48:09 rafaelsteil Exp $
+ * @version $Id: PrivateMessageVH.java,v 1.7 2004/08/18 10:56:12 jamesyong Exp $
  */
 public class PrivateMessageVH extends Command
 {
@@ -107,6 +107,25 @@ public class PrivateMessageVH extends Command
 		User user = DataAccessDriver.getInstance().newUserModel().selectById(
 						SessionFacade.getUserSession().getUserId());
 		
+		JForum.getContext().put("user", user);
+		JForum.getContext().put("moduleName", "pm");
+		JForum.getContext().put("action", "sendSave");
+		JForum.getContext().put("moduleAction", "post_form.htm");
+	}
+	public void sendTo() throws Exception
+	{
+		User user = DataAccessDriver.getInstance().newUserModel().selectById(
+				SessionFacade.getUserSession().getUserId());
+
+		int userId = Integer.parseInt(JForum.getRequest().getParameter("user_id"));
+		if (userId>0){
+			User user1 = DataAccessDriver.getInstance().newUserModel().selectById(userId);
+			JForum.getContext().put("pmRecipient", user1);
+			JForum.getContext().put("toUserId", String.valueOf(user1.getId()));
+			JForum.getContext().put("toUsername", user1.getUsername());
+			JForum.getContext().put("toUserEmail", user1.getEmail());
+		}
+
 		JForum.getContext().put("user", user);
 		JForum.getContext().put("moduleName", "pm");
 		JForum.getContext().put("action", "sendSave");
