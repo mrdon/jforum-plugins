@@ -77,7 +77,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.13 2004/11/04 02:48:57 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.12 2004/11/04 02:46:54 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -223,6 +223,7 @@ public class InstallAction extends Command
 	private void doFinalSteps() throws Exception
 	{
 		// Modules Mapping
+		/*
 		String modulesMapping = SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/modulesMapping.properties";
 		if (new File(modulesMapping).canWrite()) {
 			Properties p = new Properties();
@@ -237,6 +238,7 @@ public class InstallAction extends Command
 				ConfigLoader.loadModulesMapping(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR));
 			}
 		}
+		*/
 		
 		// Index renaming
 		String index = SystemGlobals.getApplicationPath() + "/index.htm";
