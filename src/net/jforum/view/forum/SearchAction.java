@@ -53,24 +53,22 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-import freemarker.template.SimpleHash;
-
 import net.jforum.ActionServletRequest;
 import net.jforum.Command;
+import net.jforum.entities.Forum;
 import net.jforum.entities.Topic;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.SearchData;
 import net.jforum.model.SearchModel;
 import net.jforum.repository.ForumRepository;
-import net.jforum.repository.SecurityRepository;
-import net.jforum.security.SecurityConstants;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.view.forum.common.TopicsCommon;
+import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.14 2004/12/29 14:48:12 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.15 2005/01/04 21:28:51 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -213,7 +211,9 @@ public class SearchAction extends Command
 		
 		for (Iterator iter = topics.iterator(); iter.hasNext(); ) {
 			Topic t = (Topic)iter.next();
-			if (SecurityRepository.canAccess(SecurityConstants.PERM_FORUM, Integer.toString(t.getForumId()))) {
+			Forum f = ForumRepository.getForum(t.getForumId());
+			
+			if (f != null && ForumRepository.isCategoryAccessible(f.getCategoryId())) {
 				l.add(t);
 			}
 		}

@@ -74,7 +74,7 @@ import net.jforum.util.preferences.ConfigKeys;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.25 2004/12/29 17:18:44 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.26 2005/01/04 21:28:51 rafaelsteil Exp $
  */
 public class ForumRepository 
 {
@@ -160,6 +160,17 @@ public class ForumRepository
 	public static boolean isCategoryAccessible(int userId, int categoryId)
 	{
 		return isCategoryAccessible(SecurityRepository.get(userId), categoryId);
+	}
+	
+	/**
+	 * Check if some category is accessible.
+	 * 
+	 * @param categoryId The category id to check for access rights
+	 * @return <code>true</code> if access to the category is allowed.
+	 */
+	public static boolean isCategoryAccessible(int categoryId)
+	{
+		return isCategoryAccessible(SessionFacade.getUserSession().getUserId(), categoryId);
 	}
 	
 	/**
