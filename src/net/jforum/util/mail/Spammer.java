@@ -43,8 +43,8 @@
 package net.jforum.util.mail;
 
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 
 import javax.mail.Address;
@@ -55,21 +55,21 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
+
 import org.apache.log4j.Logger;
 
 import freemarker.template.Configuration;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
-import net.jforum.util.preferences.ConfigKeys;
-import net.jforum.util.preferences.SystemGlobals;
-
 /**
  * Dispatch emails to the world. 
  * TODO: should do some refactoring to send a personalized email to each user. 
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.5 2004/06/03 02:22:53 rafaelsteil Exp $
+ * @version $Id: Spammer.java,v 1.6 2004/06/21 03:48:07 rafaelsteil Exp $
  */
 public class Spammer 
 {
@@ -149,7 +149,7 @@ public class Spammer
 		return true;
 	}
 	
-	protected final void prepareMessage(ArrayList addresses, SimpleHash params, String subject, String messageFile) throws EmailException
+	protected final void prepareMessage(List addresses, SimpleHash params, String subject, String messageFile) throws EmailException
 	{
 		this.message = new MimeMessage(session);
 		

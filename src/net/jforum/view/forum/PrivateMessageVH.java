@@ -54,11 +54,16 @@ import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.util.I18n;
+import net.jforum.util.concurrent.executor.QueuedExecutor;
+import net.jforum.util.mail.EmailSenderTask;
+import net.jforum.util.mail.PrivateMessageSpammer;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageVH.java,v 1.5 2004/06/10 22:00:09 rafaelsteil Exp $
+ * @version $Id: PrivateMessageVH.java,v 1.6 2004/06/21 03:48:09 rafaelsteil Exp $
  */
 public class PrivateMessageVH extends Command
 {
@@ -112,12 +117,16 @@ public class PrivateMessageVH extends Command
 	{
 		String sId = JForum.getRequest().getParameter("toUserId");
 		String toUsername = JForum.getRequest().getParameter("toUsername");
+		String userEmail = JForum.getRequest().getParameter("toUserEmail");
+		
 		int toUserId = -1;
 		if (sId == null || sId.equals("")) {
 			List l = DataAccessDriver.getInstance().newUserModel().findByName(toUsername, true);
 			
 			if (l.size() > 0) {
-				toUserId = ((User)l.get(0)).getId();
+				User u = (User)l.get(0);
+				toUserId = u.getId();
+				userEmail = u.getEmail();
 			}
 		}
 		else {
@@ -141,6 +150,7 @@ public class PrivateMessageVH extends Command
 		User toUser = new User();
 		toUser.setId(toUserId);
 		toUser.setUsername(toUsername);
+		toUser.setEmail(userEmail);
 		pm.setToUser(toUser);
 		
 		boolean preview = (JForum.getRequest().getParameter("preview") != null);
@@ -149,7 +159,26 @@ public class PrivateMessageVH extends Command
 			
 			JForum.getContext().put("moduleAction", "message.htm");
 			JForum.getContext().put("message", I18n.getMessage("PrivateMessage.messageSent", 
-							new String[] { "/pm/inbox.page" }));
+							new String[] { JForum.getRequest().getContextPath() +"/pm/inbox.page" }));
+			
+			// If the target user if in the forum, then increments its 
+			// private messate count
+			String sid = SessionFacade.isUserInSession(toUserId);
+			if (sid != null) {
+				UserSession us = SessionFacade.getUserSession(sid);
+				us.setPrivateMessages(us.getPrivateMessages() + 1);
+			}
+			
+			if (userEmail != null && userEmail.trim().length() > 0) {
+				if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_NOTIFY_ANSWERS)) {
+					try {
+						QueuedExecutor.getInstance().execute(new EmailSenderTask(new PrivateMessageSpammer(toUser)));
+					}
+					catch (Exception e) {
+						System.out.println(e);
+					}
+				}
+			}
 		}
 		else {
 			JForum.getContext().put("preview", true);
@@ -160,14 +189,6 @@ public class PrivateMessageVH extends Command
 			JForum.getContext().put("pm", pm);
 
 			this.send();
-		}
-		
-		// If the target user if in the forum, then increments its 
-		// private messate count
-		String sid = SessionFacade.isUserInSession(toUserId);
-		if (sid != null) {
-			UserSession us = SessionFacade.getUserSession(sid);
-			us.setPrivateMessages(us.getPrivateMessages() + 1);
 		}
 	}
 	
@@ -198,7 +219,8 @@ public class PrivateMessageVH extends Command
 		
 		// Don't allow the read of messages that don't belongs
 		// to the current user
-		int userId = SessionFacade.getUserSession().getUserId();
+		UserSession us = SessionFacade.getUserSession();
+		int userId = us.getUserId();
 		if (pm.getToUser().getId() == userId || pm.getFromUser().getId() == userId) {
 			pm.getPost().setText(PostCommon.preparePostText(pm.getPost()).getText());
 			
@@ -206,6 +228,7 @@ public class PrivateMessageVH extends Command
 			if (pm.getType() == PrivateMessageType.NEW) {
 				pm.setType(PrivateMessageType.READ);
 				DataAccessDriver.getInstance().newPrivateMessageModel().updateType(pm);
+				us.setPrivateMessages(us.getPrivateMessages() - 1);
 			}
 			
 			JForum.getContext().put("pm", pm);

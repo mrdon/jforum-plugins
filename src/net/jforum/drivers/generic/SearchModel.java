@@ -57,7 +57,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchModel.java,v 1.5 2004/06/02 03:56:05 rafaelsteil Exp $
+ * @version $Id: SearchModel.java,v 1.6 2004/06/21 03:48:07 rafaelsteil Exp $
  */
 public class SearchModel extends AutoKeys implements net.jforum.model.SearchModel 
 {
@@ -216,10 +216,12 @@ public class SearchModel extends AutoKeys implements net.jforum.model.SearchMode
 		PreparedStatement wordToPost = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.associateWordToPost"));
 		wordToPost.setInt(1, post.getId());
 		
-		String[] words = post.getText().split(" ");
+		String str = post.getText() +" "+ post.getSubject();
+		
+		String[] words = str.split(" ");
 		for (int i = 0; i < words.length; i++) {
-			// Skip words less than 2 chars
-			if (words[i].trim().length() < 2) {
+			// Skip words less than 3 chars
+			if (words[i].trim().length() < 3) {
 				continue;
 			}
 			

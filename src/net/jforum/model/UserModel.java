@@ -57,7 +57,7 @@ import net.jforum.entities.User;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.5 2004/05/31 01:58:48 rafaelsteil Exp $
+ * @version $Id: UserModel.java,v 1.6 2004/06/21 03:48:13 rafaelsteil Exp $
  */
 public interface UserModel 
 {
@@ -217,10 +217,10 @@ public interface UserModel
 	 * 
 	 * @param username The username
 	 * @param password The password
-	 * @return The user id if the provided information was corret, <code>0</code> if the information was invalid 
+	 * @return The user object if the provided information was corret, <code>null</code> if the information was invalid 
 	 * @throws Exception
 	 */
-	public int validateLogin(String username, String password) throws NoSuchAlgorithmException, Exception;
+	public User validateLogin(String username, String password) throws NoSuchAlgorithmException, Exception;
 	
 	/**
 	 * Associate the user to the group

@@ -1,3 +1,4 @@
+<#import "../macros/utils.ftl" as utils/>
 <STYLE type=text/css>@import url(style.css);</STYLE>
 <TABLE cellSpacing=2 cellPadding=2 width="100%" align=center border=0>
   <TBODY>
@@ -84,14 +85,16 @@
       <TD class=row1 vAlign=top>
         <TABLE cellSpacing=1 cellPadding=3 width="100%" border=0>
           <TBODY>
+			<#if (u.isViewEmailEnabled() && u.email?exists && u.email?length > 0)>
             <TR>
               <TD vAlign=center noWrap align=right><SPAN class=gen>${I18n.getMessage("UserProfile.emailAddress")}:</SPAN></TD>
               <TD class=row1 vAlign=center width="100%"><B>
               	<SPAN class=gen>
-              	<A href="mailto:${u.email}">
+              	<A href="mailto:<@utils.convertEmail u.email/>">
                   <img src="${contextPath}/templates/${templateName}/images/icon_email.gif" border=0></A></SPAN></B>
                   </TD>
             </TR>
+			</#if>
             <TR>
               <TD vAlign=center noWrap align=right><SPAN class=gen>${I18n.getMessage("UserProfile.privateMessage")}:</SPAN></TD>
               <TD class=row1 vAlign=center><B><SPAN class=gen><A href="#">

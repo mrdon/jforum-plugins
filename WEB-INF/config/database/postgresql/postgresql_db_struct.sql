@@ -205,7 +205,7 @@ CREATE SEQUENCE jforum_topics_seq;
 CREATE TABLE jforum_topics (
   topic_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_topics_seq'),
   forum_id INTEGER NOT NULL DEFAULT 0,
-  topic_title VARCHAR(60) NOT NULL DEFAULT '',
+  topic_title VARCHAR(100) NOT NULL DEFAULT '',
   user_id INTEGER NOT NULL DEFAULT 0,
   topic_time VARCHAR(13) NOT NULL DEFAULT 0,
   topic_views INTEGER DEFAULT 1,

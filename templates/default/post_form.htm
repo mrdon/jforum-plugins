@@ -333,15 +333,19 @@ function validatePostForm(f)
 			  	<#if preview>
 					<#assign toUsername = pm.toUser.username/>
 					<#assign toUserId = pm.toUser.id/>
+					<#assign toUserEmail = pm.toUser.email?default("")/>
 				<#elseif quote?default("") == "true" || pmReply?default(false)>
 					<#assign toUsername = pm.fromUser.username/>
 					<#assign toUserId = pm.fromUser.id/>
+					<#assign toUserEmail = pm.fromUser.email?default("")/>
 				<#else>
 					<#assign toUsername = ""/>
 					<#assign toUserId = ""/>
+					<#assign toUserEmail = ""/>
 				</#if>
 			  	<input class="post" size="25" name="toUsername" value="${toUsername}"/>&nbsp;<input type="button" value="${I18n.getMessage("PrivateMessage.findUser")}" name="findUser" class="liteoption" onClick="window.open('${contextPath}/pm/findUser.page', '_findUser', 'HEIGHT=250,resizable=yes,WIDTH=400');return false;">
 				<input type="hidden" name="toUserId" value="${toUserId}">
+				<input type="hidden" name="toUserEmail" value="${toUserEmail}"/>
 			  </td>
 		  </tr>
 		  </#if>
@@ -352,7 +356,7 @@ function validatePostForm(f)
 			<#elseif pmReply?default(false)>
 				<#assign subject = pm.post.subject?html/>
 			</#if>
-          <TD class=row2 width="78%"><SPAN class=gen><INPUT class=post style="WIDTH: 450px" tabIndex=2 maxLength=60 size=45 name=subject value="${subject?default("")}"> </SPAN></TD>
+          <TD class=row2 width="78%"><SPAN class=gen><INPUT class=post style="WIDTH: 450px" tabIndex=2 maxLength=100 size=45 name=subject value="${subject?default("")}"> </SPAN></TD>
 		  </TR>
         <TR>
           <TD class=row1 vAlign=top>

@@ -58,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.5 2004/06/10 22:00:02 rafaelsteil Exp $
+ * @version $Id: UserModel.java,v 1.6 2004/06/21 03:48:07 rafaelsteil Exp $
  */
 public class UserModel extends AutoKeys implements net.jforum.model.UserModel 
 {
@@ -365,23 +365,23 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 	/** 
 	 * @see net.jforum.model.UserModel#validateLogin(java.lang.String, java.lang.String)
 	 */
-	public int validateLogin(String username, String password) throws NoSuchAlgorithmException, Exception
+	public User validateLogin(String username, String password) throws NoSuchAlgorithmException, Exception
 	{
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.login"));
 		p.setString(1, username);
 		p.setString(2, MD5.crypt(password));
 		
-		int userId = 0;
+		User user = null;
 		
 		ResultSet rs = p.executeQuery();
 		if (rs.next() && rs.getInt("user_id") > 0) {
-			userId = rs.getInt("user_id");
+			user = this.selectById(rs.getInt("user_id"));
 		}
 
 		rs.close();
 		p.close();
 		
-		return userId;
+		return user;
 	}
 
 	/** 
@@ -507,6 +507,7 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 			User u = new User();
 			u.setId(rs.getInt("user_id"));
 			u.setUsername(rs.getString("username"));
+			u.setEmail(rs.getString("user_email"));
 
 			namesList.add(u);
 		}

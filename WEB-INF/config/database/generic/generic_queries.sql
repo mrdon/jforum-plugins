@@ -54,7 +54,7 @@ UserModel.decrementPosts = UPDATE jforum_users SET user_posts = user_posts - 1 W
 UserModel.rankingId = UPDATE jforum_users SET rank_id = ? WHERE user_id = ?
 UserModel.activeStatus = UPDATE jforum_users SET user_active = ? WHERE user_id = ?
 UserModel.addNew = INSERT INTO jforum_users (username, user_password, user_email, user_regdate) VALUES (?, ?, ?, ?)
-UserModel.findByName = SELECT user_id, username FROM jforum_users WHERE username LIKE ?
+UserModel.findByName = SELECT user_id, username, user_email FROM jforum_users WHERE username LIKE ?
 
 UserModel.update = UPDATE jforum_users SET user_aim = ?, \
 	user_avatar = ?,\
@@ -267,7 +267,7 @@ SearchModel.associateWordToPost = INSERT INTO jforum_search_wordmatch (post_id, 
 SearchModel.searchExistingWord = SELECT w.word_id, wm.post_id \
 	FROM jforum_search_words w \
 	LEFT JOIN jforum_search_wordmatch wm ON wm.word_id = w.word_id \
-	WHERE w.word_id = ?
+	WHERE w.word_hash = ?
 
 # ##########
 # TreeGroup

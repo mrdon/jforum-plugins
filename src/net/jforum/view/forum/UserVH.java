@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserVH.java,v 1.11 2004/06/03 04:18:02 rafaelsteil Exp $
+ * @version $Id: UserVH.java,v 1.12 2004/06/21 03:48:09 rafaelsteil Exp $
  */
 public class UserVH extends Command 
 {
@@ -171,16 +171,17 @@ public class UserVH extends Command
 		boolean validInfo = false;
 
 		if (JForum.getRequest().getParameter("password").length() > 0) { 
-			int userId = um.validateLogin(JForum.getRequest().getParameter("username"), JForum.getRequest().getParameter("password"));
+			User user = um.validateLogin(JForum.getRequest().getParameter("username"), JForum.getRequest().getParameter("password"));
 			
-			if (userId > 0) {
+			if (user != null) {
 				JForum.setRedirect(JForum.getRequest().getContextPath() +"/forums/list.page");
 				
 				SessionFacade.setAttribute("logged", "1");
 				
 				UserSession userSession = SessionFacade.getUserSession();
-				userSession.setUserId(userId);
+				userSession.setUserId(user.getId());
 				userSession.setUsername(JForum.getRequest().getParameter("username"));
+				userSession.setPrivateMessages(user.getPrivateMessagesCount());
 				
 				// Autologin
 				if (JForum.getRequest().getParameter("autologin") != null) {
@@ -190,9 +191,9 @@ public class UserVH extends Command
 				
 				SessionFacade.add(userSession);
 				
-				JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA), Integer.toString(userId));
+				JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA), Integer.toString(user.getId()));
 				
-				SecurityRepository.load(userId, true);
+				SecurityRepository.load(user.getId(), true);
 				validInfo = true;
 			}
 		}

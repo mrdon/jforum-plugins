@@ -110,9 +110,9 @@
 							<tr>
 								<td class="row1" valign="center" align="middle" width="5%">
 									<#if pm.type == NEW>
-										<img height="18" src="templates/${templateName}/images/folder_new.gif" width="19" />
+										<img height="18" src="${contextPath}/templates/${templateName}/images/folder_new.gif" width="19" />
 									<#else>
-										<img height="18" src="templates/${templateName}/images/folder.gif" width="19" />
+										<img height="18" src="${contextPath}/templates/${templateName}/images/folder.gif" width="19" />
 									</#if>
 								</td>
 								<td class="row1" valign="center" width="55%"><span class="topictitle">&nbsp;<a class="topictitle" href="${contextPath}/pm/read/${pm.id}.page">${pm.post.subject}</a></span></td>

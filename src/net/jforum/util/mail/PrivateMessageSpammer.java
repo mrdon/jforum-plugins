@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
- * 
+
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
- * 
+
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -36,72 +36,48 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * This file creation date: May 11, 2003 / 11:30:45 AM
+ * Created on 20/06/2004 03:30:58
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum;
+package net.jforum.util.mail;
 
-import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
-
-import org.apache.log4j.Logger;
-
-import net.jforum.entities.UserSession;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.repository.SecurityRepository;
+import net.jforum.entities.User;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumSessionListener.java,v 1.7 2004/06/21 03:48:06 rafaelsteil Exp $
+ * @version $Id: PrivateMessageSpammer.java,v 1.1 2004/06/21 03:48:06 rafaelsteil Exp $
  */
-public class ForumSessionListener implements HttpSessionListener 
+public class PrivateMessageSpammer extends Spammer
 {
-	private static final Logger logger = Logger.getLogger(ForumSessionListener.class);
-	
-	/** 
-	 * @see javax.servlet.http.HttpSessionListener#sessionCreated(javax.servlet.http.HttpSessionEvent)
-	 */
-	public void sessionCreated(HttpSessionEvent event) 
+	public PrivateMessageSpammer(User user)
 	{
-	} 
-
-	/** 
-	 * @see javax.servlet.http.HttpSessionListener#sessionDestroyed(javax.servlet.http.HttpSessionEvent)
-	 */
-	public void sessionDestroyed(HttpSessionEvent event) 
-	{
-		UserSession us = SessionFacade.getUserSession(event.getSession().getId());
-		if (us != null) {
-			Connection conn = null;
-			
-			try {
-				if (us.getUserId() != SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
-					conn = ConnectionPool.getPool().getConnection();
-					DataAccessDriver.getInstance().newUserSessionModel().update(us, conn);
-				}
-				
-				SecurityRepository.remove(us.getUserId());
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-			finally  {
-				if (conn != null) {
-					try {
-						ConnectionPool.getPool().releaseConnection(conn);
-					}
-					catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			}
+		if (user.getEmail() == null || user.getEmail().trim().equals("")) {
+			return;
 		}
 		
-		SessionFacade.remove(event.getSession().getId());
+		String forumLink = SystemGlobals.getValue(ConfigKeys.FORUM_LINK);
+		if (!forumLink.endsWith("/")) {
+			forumLink += "/";
+		}
+		
+		forumLink += "pm/inbox.page";
+		
+		SimpleHash params = new SimpleHash();
+		params.put("path", forumLink);
+		params.put("user", user);
+		
+		List recipients = new ArrayList();
+		recipients.add(user.getEmail());
+		
+		super.prepareMessage(recipients, params, 
+				SystemGlobals.getValue(ConfigKeys.MAIL_NEW_PM_SUBJECT),
+				SystemGlobals.getValue(ConfigKeys.MAIL_NEW_PM_MESSAGE_FILE));
 	}
 }

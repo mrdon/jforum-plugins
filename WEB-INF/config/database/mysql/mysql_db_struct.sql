@@ -219,7 +219,7 @@ DROP TABLE IF EXISTS jforum_topics;
 CREATE TABLE jforum_topics (
   topic_id mediumint(8) NOT NULL auto_increment,
   forum_id smallint(8) NOT NULL default '0',
-  topic_title varchar(60) NOT NULL default '',
+  topic_title varchar(100) NOT NULL default '',
   user_id mediumint(8) NOT NULL default '0',
   topic_time varchar(13) NOT NULL default '0',
   topic_views mediumint(8) default '1',

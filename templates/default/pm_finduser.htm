@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=${encoding}" />
 <meta name="description" content="${metaDescription}" />
 <meta name="keywords" content="${metaKeywords}, jforum, jforum java, java jforum, java forum, forum, rafael steil, bulletin board, java bb, javabb" />
-<style type="text/css">@import url( templates/${templateName}/style.css );</style>
+<style type="text/css">@import url( ${contextPath}/templates/${templateName}/style.css );</style>
 </head>
 
 <body>
@@ -12,8 +12,11 @@
 <script language="javascript" type="text/javascript">
 function refreshUsername()
 {
-	opener.document.forms['post'].toUserId.value = document.search.selectedUsername.value;
+	var s = document.search.selectedUsername.value.split("#");
+	
+	opener.document.forms['post'].toUserId.value = s[0];
 	opener.document.forms['post'].toUsername.value = document.search.selectedUsername[document.search.selectedUsername.selectedIndex].text;
+	opener.document.forms['post'].toUserEmail.value = s[1];
 	opener.focus();
 	window.close();
 }
@@ -42,7 +45,7 @@ function refreshUsername()
 									<#if showResult>
 									<select name="selectedUsername">
 									<#list namesList as user>
-									<option value="${user.id}">${user.username}</option>
+									<option value="${user.id}#${user.email?default("")}">${user.username}</option>
 									</#list>
 									</select>
 									&nbsp;<input type="button" value="${I18n.getMessage("PrivateMessage.select")}" class="liteoption" onClick="refreshUsername();">
@@ -56,9 +59,9 @@ function refreshUsername()
 			</tr>
 				<tr>
 		<td align="center">
-			<span class="copyright">Powered by <a class="copyright" href="http://www.jforum.net/" target="_blank">JForum ${version} </a>© 2004 - Rafael Steil</span>
+			<span class="copyright">Powered by <a class="copyright" href="http://www.jforum.net/" target="_blank">JForum ${version} </a>ï¿½ 2004 - Rafael Steil</span>
 			<br/>
-			<a href="http://sourceforge.net" target="_new"><img src="${contextPath}/https://sourceforge.net/sflogo.php?group_id=15940&type=1" border="0" /></a>
+			<a href="http://sourceforge.net" target="_new"><img src="https://sourceforge.net/sflogo.php?group_id=15940&type=1" border="0" /></a>
 		</td>
 	</tr>
 		</tbody>

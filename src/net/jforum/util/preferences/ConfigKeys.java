@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author pieter
-* @version $Id: ConfigKeys.java,v 1.6 2004/06/10 22:00:05 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.7 2004/06/21 03:48:13 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -86,6 +86,7 @@ public class ConfigKeys {
 	public static final String VERSION = "version";
 
 	public static final String FORUM_LINK = "forum.link";
+	public static final String FORUM_NAME = "forum.name";
 	public static final String FORUM_PAGE_TITLE = "forum.page.title";
 	public static final String FORUM_PAGE_METATAG_KEYWORDS = "forum.page.metatag.keywords";
 	public static final String FORUM_PAGE_METATAG_DESCRIPTION = "forum.page.metatag.description";
@@ -112,6 +113,8 @@ public class ConfigKeys {
 	public static final String MAIL_CHARSET = "mail.charset";
 	public static final String MAIL_NEW_ANSWER_MESSAGE_FILE = "mail.newAnswer.messageFile";
 	public static final String MAIL_NEW_ANSWER_SUBJECT = "mail.newAnswer.subject";
+	public static final String MAIL_NEW_PM_SUBJECT = "mail.newPm.subject";
+	public static final String MAIL_NEW_PM_MESSAGE_FILE = "mail.newPm.messageFile";
 	public static final String MAIL_MESSSAGE_FORMAT = "mail.messageFormat";
 	public static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
 	public static final String MAIL_SMTP_HOST = "mail.smtp.host";

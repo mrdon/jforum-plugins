@@ -1,0 +1,10 @@
+Hi ${user.username}, 
+
+You have a new Private Message on JForum.net site. You can read it using the following link:
+
+${path}
+
+---
+Best regards, 
+The http://www.jforum.net Team
+---
