@@ -88,8 +88,9 @@ function confirmDelete()
 						<span class="name"><b>${user.username}</b></span>
 						<br />
 						
+						<span class="postdetails">
 						<#if post.userId != 1>
-							<span class="postdetails">${rank.getRankTitle(user.totalPosts)}
+							${rank.getRankTitle(user.totalPosts)}
 							<br />
 						</#if>
 
