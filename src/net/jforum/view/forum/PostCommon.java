@@ -53,13 +53,15 @@ import net.jforum.SessionFacade;
 import net.jforum.entities.Post;
 import net.jforum.entities.Smilie;
 import net.jforum.repository.BBCodeRepository;
+import net.jforum.repository.SecurityRepository;
 import net.jforum.repository.SmiliesRepository;
+import net.jforum.security.SecurityConstants;
 import net.jforum.util.SafeHtml;
 import net.jforum.util.bbcode.BBCode;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.8 2004/10/06 19:36:00 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.9 2004/10/24 20:38:33 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -210,11 +212,15 @@ public class PostCommon
 	{
 		p.setSubject(JForum.getRequest().getParameter("subject"));
 		p.setBbCodeEnabled(JForum.getRequest().getParameter("disable_bbcode") != null ?  false : true);
-		p.setHtmlEnabled(JForum.getRequest().getParameter("disable_html") != null ?  false : true);
 		p.setSmiliesEnabled(JForum.getRequest().getParameter("disable_smilies") != null ?  false : true);
 		p.setSignatureEnabled(JForum.getRequest().getParameter("attach_sig") != null ? true : false);
 		p.setUserId(SessionFacade.getUserSession().getUserId());
 		p.setUserIp(JForum.getRequest().getRemoteAddr());
+
+		boolean htmlEnabled = SecurityRepository.canAccess(
+				SecurityConstants.PERM_HTML_DISABLED, 
+				JForum.getRequest().getParameter("forum_id"));
+		p.setHtmlEnabled(htmlEnabled && JForum.getRequest().getParameter("disable_html") == null); 
 		
 		if (p.isHtmlEnabled()) {
 			p.setText(SafeHtml.makeSafe(JForum.getRequest().getParameter("message")));

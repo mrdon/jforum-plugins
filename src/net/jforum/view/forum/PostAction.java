@@ -79,7 +79,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.14 2004/10/22 02:59:57 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.15 2004/10/24 20:38:33 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -236,6 +236,8 @@ public class PostAction extends Command
         JForum.getContext().put("moduleAction", "post_form.htm");
         JForum.getContext().put("start", JForum.getRequest().getParameter("start"));
         JForum.getContext().put("isNewPost", true);
+        JForum.getContext().put("htmlAllowed", SecurityRepository.canAccess(
+        		SecurityConstants.PERM_HTML_DISABLED, Integer.toString(forumId)));
         JForum.getContext().put("canCreateStickyOrAnnouncementTopics",
                 SecurityRepository.canAccess(SecurityConstants.PERM_CREATE_STICKY_ANNOUNCEMENT_TOPICS));
 
@@ -291,6 +293,8 @@ public class PostAction extends Command
             JForum.getContext().put("topic", topic);
             JForum.getContext().put("moduleAction", "post_form.htm");
             JForum.getContext().put("start", JForum.getRequest().getParameter("start"));
+            JForum.getContext().put("htmlAllowed", SecurityRepository.canAccess(
+            		SecurityConstants.PERM_HTML_DISABLED, Integer.toString(topic.getForumId())));
             JForum.getContext().put("canCreateStickyOrAnnouncementTopics",
                     SecurityRepository.canAccess(SecurityConstants.PERM_CREATE_STICKY_ANNOUNCEMENT_TOPICS));
         } 
@@ -405,6 +409,7 @@ public class PostAction extends Command
 
     public void insertSave() throws Exception {
         Topic t = new Topic();
+        t.setId(-1);
         t.setForumId(Integer.parseInt(JForum.getRequest().getParameter("forum_id")));
 
         if (!TopicsCommon.isTopicAccessible(t.getForumId())
@@ -413,15 +418,12 @@ public class PostAction extends Command
             return;
         }
 
-        int topicId = -1;
-
         TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
         PostModel pm = DataAccessDriver.getInstance().newPostModel();
         ForumModel fm = DataAccessDriver.getInstance().newForumModel();
 
         if (JForum.getRequest().getParameter("topic_id") != null) {
-            topicId = Integer.parseInt(JForum.getRequest().getParameter("topic_id"));
-            t = tm.selectById(topicId);
+            t = tm.selectById(Integer.parseInt(JForum.getRequest().getParameter("topic_id")));
 
             // Cannot insert new messages on locked topics
             if (t.getStatus() == Topic.STATUS_LOCKED) {
@@ -448,16 +450,17 @@ public class PostAction extends Command
         boolean preview = (JForum.getRequest().getParameter("preview") != null);
         if (!preview) {
             // If topic_id is -1, then is the first post
-            if (topicId == -1) {
+            if (t.getId() == -1) {
                 t.setTime(new Date());
                 t.setTitle(JForum.getRequest().getParameter("subject"));
 
-                topicId = tm.addNew(t);
+                int topicId = tm.addNew(t);
                 t.setId(topicId);
                 fm.incrementTotalTopics(t.getForumId(), 1);
-            } else {
-                tm.incrementTotalReplies(topicId);
-                tm.incrementTotalViews(topicId);
+            } 
+            else {
+                tm.incrementTotalReplies(t.getId());
+                tm.incrementTotalViews(t.getId());
 
                 // Ok, we have an answer. Time to notify the subscribed users
                 if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_NOTIFY_ANSWERS)) {
@@ -469,7 +472,8 @@ public class PostAction extends Command
                             QueuedExecutor.getInstance().execute(
                                     new EmailSenderTask(new TopicSpammer(t, usersToNotify)));
                         }
-                    } catch (Exception e) {
+                    } 
+                    catch (Exception e) {
                         logger.warn("Error while sending notification emails: " + e);
                     }
                 }
@@ -477,10 +481,10 @@ public class PostAction extends Command
 
             // Topic watch
             if (JForum.getRequest().getParameter("notify") != null) {
-                this.watch(tm, topicId, u.getId());
+                this.watch(tm, t.getId(), u.getId());
             }
 
-            p.setTopicId(topicId);
+            p.setTopicId(t.getId());
 
             // Save the remaining stuff
             int postId = pm.addNew(p);
@@ -504,7 +508,7 @@ public class PostAction extends Command
                 path += this.startPage(t, Integer.parseInt(start)) + "/";
             }
 
-            path += topicId + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#" + postId;
+            path += t.getId() + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#" + postId;
 
             JForum.setRedirect(path);
             ((HashMap) SessionFacade.getAttribute("topics_tracking")).put(new Integer(t.getId()),

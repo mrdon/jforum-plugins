@@ -243,7 +243,7 @@ function validatePostForm(f)
 <input type="hidden" name="post_id" value="${post.id}">
 </#if>
 
-<#if topic?exists>
+<#if (topic?exists && topic.id > -1)>
 <input type="hidden" name="topic_id" value="${topic.id}">
 </#if>
 
@@ -458,10 +458,14 @@ function validatePostForm(f)
             </TD>
           <TD class=row2><SPAN class=gen></SPAN>
             <TABLE cellSpacing=0 cellPadding=1 border=0>
+				<#if htmlAllowed>
               <TR>
                 <TD><INPUT type=checkbox name=disable_html ${htmlChecked}></TD>
                 <TD><SPAN class=gen>${I18n.getMessage("PostForm.disableHtml")}</SPAN></TD></TR>
               <TR>
+			  <#else>
+				<input type="hidden" name="disable_html" value="1">
+			  </#if>
                 <TD><INPUT type=checkbox name=disable_bbcode ${bbChecked}> </TD>
                 <TD><SPAN class=gen>${I18n.getMessage("PostForm.disableBbCode")}</SPAN></TD></TR>
               <TR>
