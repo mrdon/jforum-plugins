@@ -94,29 +94,6 @@ SmiliesModel.lastGeneratedSmilieId = SELECT CURRVAL('jforum_smilies_seq')
 # ##################
 PermissionControl.lastGeneratedRoleId = SELECT CURRVAL('jforum_roles_seq')
 
-PermissionControl.deleteAllUserRoleValuesByGroup = DELETE FROM jforum_roles \
-	where role_id in (select r.role_id from jforum_role_values rv, jforum_users u, jforum_user_groups ug \
-	WHERE u.user_id = ug.user_id \
-	AND ug.group_id = ? \
-	AND r.user_id = u.user_id \
-	AND r.role_name = ? )
-
-PermissionControl.deleteUserRoleByGroup = DELETE FROM jforum_roles \
-	where user_id in (select user_id from jforum_user_groups ug where  ug.group_id = ?) \
-	and name = ? \
-	
-PermissionControl.deleteUserRoleValuesByRoleName = DELETE FROM jforum_role_values \
-	where role_id in (select r.role_id from jforum_roles r, jforum_user_groups ug \
-	WHERE ug.user_id = r.user_id \
-	AND ug.group_id = ? \
-	AND r.name = ? )
-
-PermissionControl.deleteUserRoleValueByGroup = DELETE FROM jforum_role_values\
-	where role_id in (select r.role_id from jforum_roles r, jforum_user_groups ug \
-	WHERE ug.user_id = r.user_id \
-	AND ug.group_id = ? \
-	AND r.name = ? ) \
-	AND rv.value = ?
 
 # ##############
 # CategoryModel
