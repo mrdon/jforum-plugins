@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 14/01/2004 / 22:02:56
- * net.jforum.view.forum.SearchVH.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: SearchVH.java,v 1.5 2004/06/01 19:47:24 pieter2 Exp $
  */
 package net.jforum.view.forum;
 
@@ -65,6 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
+ * @version $Id: SearchVH.java,v 1.6 2004/06/17 00:10:27 rafaelsteil Exp $
  */
 public class SearchVH extends Command 
 {

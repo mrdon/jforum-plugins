@@ -74,7 +74,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostVH.java,v 1.21 2004/06/10 22:00:09 rafaelsteil Exp $
+ * @version $Id: PostVH.java,v 1.22 2004/06/17 00:10:27 rafaelsteil Exp $
  */
 public class PostVH extends Command 
 {
@@ -480,7 +480,7 @@ public class PostVH extends Command
 			String path = JForum.getRequest().getContextPath() +"/posts/list/";
 
 			String start = JForum.getRequest().getParameter("start");
-			if (start != null && !start.equals("0") && !start.equals("")) {
+			if (start != null && !start.equals("")) {
 				int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 				
 				int newStart = ((t.getTotalReplies() / postsPerPage) * postsPerPage);

@@ -56,7 +56,7 @@
           <th class=thCornerL noWrap align=middle height=25 width="20">&nbsp;</th>
           <TH class=thCornerL noWrap align=middle height=25>&nbsp;${I18n.getMessage("Forums.Form.ForumName")}&nbsp;</TH>
           <TH class=thCornerL noWrap align=middle height=25>&nbsp;${I18n.getMessage("ForumIndex.topics")}&nbsp;</TH>
-          <TH class=thTop noWrap align=middle width=50>&nbsp;${I18n.getMessage("ForumIndex.anwsers")}&nbsp;</TH>
+          <TH class=thTop noWrap align=middle width=50>&nbsp;${I18n.getMessage("ForumIndex.answers")}&nbsp;</TH>
           <TH class=thTop noWrap align=middle width=100>&nbsp;${I18n.getMessage("ForumIndex.author")}&nbsp;</TH>
           <TH class=thTop noWrap align=middle width=50>&nbsp;${I18n.getMessage("ForumIndex.views")}&nbsp;</TH>
           <TH class=thCornerR noWrap align=middle width="150">&nbsp;${I18n.getMessage("ForumIndex.lastMessage")}&nbsp;</TH>
@@ -85,7 +85,7 @@
 			<#if topic.paginate>
 				<span class=gensmall>
 				<br>
-				<@topicPagination.littlePostPagination topic.id, recordsPerPage, topic.totalPages/>
+				<@topicPagination.littlePostPagination topic.id, postsPerPage, topic.totalPages, topic.totalReplies/>
 				</span>
 			</#if>
 		</TD>

@@ -169,11 +169,11 @@
 	<td class='row1' width="38%"><span class='gen'><input type="password" name="p_mail.smtp.password" value="${config.getProperty("mail.smtp.password")}" /></span></td>
 </tr>
 <tr>
-	<td class='row1' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.EmailNotifyAnwsers")}</span></td>
+	<td class='row1' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.EmailNotifyAnswers")}</span></td>
 	<td class='row1' width="38%">
-		<select name="p_mail.notify.anwsers">
-			<option value="false" <#if config.getProperty("mail.notify.anwsers") == "false">selected</#if>>False</option>
-			<option value="true" <#if config.getProperty("mail.notify.anwsers") == "true">selected</#if>>True</option>
+		<select name="p_mail.notify.answers">
+			<option value="false" <#if config.getProperty("mail.notify.answers") == "false">selected</#if>>False</option>
+			<option value="true" <#if config.getProperty("mail.notify.answers") == "true">selected</#if>>True</option>
 		</select>
 	</td>
 </tr>

@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -37,20 +37,21 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 13/01/2004 / 20:23:52
- * net.jforum.repository.SmiliesRepository.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: SmiliesRepository.java,v 1.2 2004/04/21 23:57:33 rafaelsteil Exp $
  */
 package net.jforum.repository;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
+import net.jforum.JForum;
+import net.jforum.entities.Smilie;
 import net.jforum.model.DataAccessDriver;
 
 /**
  * @author Rafael Steil
+ * @version $Id: SmiliesRepository.java,v 1.3 2004/06/17 00:11:49 rafaelsteil Exp $
  */
 public class SmiliesRepository 
 {
@@ -70,7 +71,16 @@ public class SmiliesRepository
 	public static void loadSmilies() throws Exception
 	{
 		SmiliesRepository.smiliesList.clear();
-		SmiliesRepository.smiliesList = DataAccessDriver.getInstance().newSmilieModel().selectAll();
+		ArrayList list = DataAccessDriver.getInstance().newSmilieModel().selectAll();
+		
+		String context = JForum.getRequest().getContextPath();
+		
+		for (Iterator iter = list.iterator(); iter.hasNext(); ) {
+			Smilie s = (Smilie)iter.next();
+			s.setUrl(s.getUrl().replaceAll("#CONTEXT#", context));
+			
+			smiliesList.add(s);
+		}
 	}
 	
 	public static ArrayList getSmilies()
