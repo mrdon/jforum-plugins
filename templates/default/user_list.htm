@@ -70,10 +70,10 @@ function activateAdvancedQuery(){
 			<a href="#" onclick="document.location = 'mailto:' + showEmail('${e[0]?default("")}', ' ${e[1]?default("")}');"><img src="${contextPath}/templates/${templateName}/images/icon_email.gif" border="0" /></a></span></td>
 			<#else>&nbsp;
 			</#if>
-			<td class="row2"><span class="gen"><#if (user.location?exists && user.location?length > 0)>${user.location}<#else>&nbsp;</#if></span></td>
+			<td class="row2"><span class="gen">${user.from?default("&nbsp;")}</span></td>
 			<td class="row2"><span class="gen">${user.registrationDate?date("dd/MM/yyyy")}</span></td>
 			<td class="row2"><span class="gen">${user.totalPosts}</span></td>
-			<td class="row2"><span class="gen">${user.webSite?default("")}</span></td>
+			<td class="row2"><span class="gen">${user.webSite?default("&nbsp;")}</span></td>
 			<td class="row2"><span class="gen">${user.karma.karmaPoints}</span></td>
 		</tr>
 		<#assign id = id+1/>
