@@ -342,3 +342,6 @@ INPUT.liteoption {
 .helpline {
 	BORDER-TOP-STYLE: none; BORDER-RIGHT-STYLE: none; BORDER-LEFT-STYLE: none; BACKGROUND-COLOR: #f7f7f8; BORDER-BOTTOM-STYLE: none
 }
+.moderatortitle {
+	FONT-WEIGHT: bold; FONT-SIZE: 12px; COLOR: #ffa34f
+}

@@ -85,6 +85,12 @@ function confirmDelete()
 				<#assign user = um.selectById(post.userId)/>
 				<tr>
 					<td class="${rowColor}" valign="top" align="left" width="103">
+					
+						<#if postsIsModerator.get(post_index).equals("true")>
+							<span class="moderatortitle">${I18n.getMessage("Moderator")}:</span>
+							<br />
+						</#if>
+						
 						<span class="name"><b>${user.username}</b></span>
 						<br />
 						<span class="postdetails">${rank.getRankTitle(user.totalPosts)}
