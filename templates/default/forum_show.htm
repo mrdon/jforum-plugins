@@ -1,0 +1,179 @@
+<STYLE type=text/css>@import url( style.css );</STYLE>
+<#import "../macros/pagination.ftl" as pagination>
+<#import "../macros/presentation.ftl" as presentation/>
+
+<script language="JavaScript">
+<#include "moderation.js"/>
+</script>
+
+<TABLE cellSpacing=0 cellPadding=10 width="100%" align=center border=0>
+  <TBODY>
+  <TR>
+    <TD class=bodyline valign="top">
+		<#if moderator>
+      	<FORM action="${contextPath}/jforum.page" method="post" name="form1">
+	  	<input type="hidden" name="action" value="doModeration">
+		<input type="hidden" name="module" value="${moduleName}">
+		<input type="hidden" name="securityHash" value="${securityHash}">
+		<input type="hidden" name="persistData" value="${forum.id}">
+		<input type="hidden" name="start" value="${thisPage}">
+		</#if>
+      <TABLE cellSpacing=2 cellPadding=2 width="100%" align=center border=0>
+        <TBODY>
+        <TR>
+          <TD vAlign=bottom align=left colSpan=2><a class="maintitle" href="${contextPath}/forums/show/${forum.id}.page">${forum.name}</a><BR>
+            <SPAN class=gensmall><B><A 
+            href="">${I18n.getMessage("ForumIndex.moderators")}</A></B></SPAN></TD>
+          <TD vAlign=bottom noWrap align=right>
+		  
+		  <@pagination.doPagination action, forum.id/>
+		  
+		  </TD>
+		</TR>
+        <TR>
+          <TD vAlign=center align=left width=50>
+		  <A href="${contextPath}/jforum.page?module=posts&action=insert&forum_id=${forum.id}"><img src="templates/${templateName}/images/post.gif" width="82" height="25" border="0"></A></TD>
+          <TD class=nav valign=center align=left width="100%">
+		  <SPAN class=nav>&nbsp;&nbsp;&nbsp;<A class=nav href="${contextPath}/forums/list.page">${I18n.getMessage("ForumListing.forumIndex")}</A> -&gt; <a class="nav" href="${contextPath}/forums/show/${forum.id}.page">${forum.name}</a></SPAN>
+		  </TD>
+          <TD class=nav vAlign=bottom noWrap align=right>
+		  	<SPAN class=gensmall>
+			<A href="${contextPath}/forums/readAll/${forum.id}.page">${I18n.getMessage("ForumIndex.setAllTopicsAsRead")}</A>
+			
+			<#if moderator>
+				<br>
+				<#if openModeration?default(false)>
+					<a href="${contextPath}/forums/show/<#if (thisPage > 0)>${thisPage}/</#if>${forum.id}.page">${I18n.getMessage("Moderation.CloseModeration")}</a>
+				<#else>
+					<a href="${contextPath}/forums/moderation/<#if (thisPage > 0)>${thisPage}/</#if>${forum.id}.page">${I18n.getMessage("Moderation.OpenModeration")}</a>
+				</#if>
+			</#if>
+			</SPAN>
+		   </TD>
+		  </TR>
+		</TBODY>
+	</TABLE>
+      <TABLE class=forumline cellSpacing=1 cellPadding=4 width="100%" border=0>
+	  <TBODY>
+        <TR>
+          <TH class=thCornerL noWrap align=middle colSpan=2 height=25>&nbsp;${I18n.getMessage("ForumIndex.topics")}&nbsp;</TH>
+          <TH class=thTop noWrap align=middle width=50>&nbsp;${I18n.getMessage("ForumIndex.anwsers")}&nbsp;</TH>
+          <TH class=thTop noWrap align=middle width=100>&nbsp;${I18n.getMessage("ForumIndex.author")}&nbsp;</TH>
+          <TH class=thTop noWrap align=middle width=50>&nbsp;${I18n.getMessage("ForumIndex.views")}&nbsp;</TH>
+          <TH class=thCornerR noWrap align=middle>&nbsp;${I18n.getMessage("ForumIndex.lastMessage")}&nbsp;</TH>
+		  <#if moderator && openModeration?default(false)>
+		  	<TH class=thCornerR noWrap align=middle>&nbsp;Moderation&nbsp;</TH>
+		  </#if>
+		</TR>
+        
+		<!-- TOPICS LISTING -->
+<#list topics as topic>
+		<TR>
+          <TD class=row1 vAlign=center align=middle width=20><@presentation.folderImage topic/></TD>
+          <TD class=row1 width="100%">
+		  	<SPAN class=topictitle>
+				<a href="${contextPath}/posts/list/${topic.id}.page"><#if (topic.title?length == 0)>No Subject<#else>${topic.title}</#if></a>
+			</SPAN>
+
+			<#if topic.paginate>
+				<span class=gensmall>
+				<br>
+				<@pagination.littlePostPagination topic.id, postsPerPage, topic.totalPages/>
+				</span>
+			</#if>
+		</TD>
+          <TD class=row2 vAlign=center align=middle><SPAN 
+            class=postdetails>${topic.totalReplies}</SPAN></TD>
+          <TD class=row3 vAlign=center align=middle>
+		  	<SPAN class=name><a href="${contextPath}/user/profile/${topic.postedBy.id}.page">${topic.postedBy.username}</a></SPAN>
+		</TD>
+          <TD class=row2 vAlign=center align=middle>
+		  <SPAN class=postdetails>${topic.totalViews}</SPAN></TD>
+          <TD class=row3Right vAlign=center noWrap align=middle>
+		  <#if (topic.lastPostTime?length > 0)>
+			  <SPAN class=postdetails>${topic.lastPostTime}<BR>
+			  <a href="${contextPath}/user/profile/${topic.postedBy.id}.page">${topic.lastPostBy.username}</a>
+			  <a href="${contextPath}/posts/list/${topic.id}.page#${topic.lastPostId}"><img src="templates/${templateName}/images/icon_latest_reply.gif" width="18" height="9" border="0"></a></SPAN>
+			</#if>
+		 </TD>
+		 <#if moderator && openModeration?default(false)>
+			 <td class="row2" valign="middle" align="center">
+			 <input type="checkbox" name="topic_id" value="${topic.id}">
+			 </td>
+		 </#if>
+        </TR>
+</#list>		
+		<!-- END OF TOPICS LISTING -->
+		
+        <TR>
+          <TD class=catBottom vAlign=center align="right" colSpan="<#if moderator && openModeration?default(false)>7<#else>6</#if>" height=28>&nbsp;
+		  <@presentation.moderationButtons/>
+		  </TD>
+        </TR></TABLE>
+      <TABLE cellSpacing=2 cellPadding=2 width="100%" align=center border=0>
+        <TBODY>
+        <TR>
+          <TD vAlign=center align=left width=50>
+		  <A href="${contextPath}/jforum.page?module=posts&action=insert&forum_id=${forum.id}"><img src="templates/${templateName}/images/post.gif" width="82" height="25" border="0"></A></TD>
+          <TD vAlign=center align=left width="100%"><SPAN class=nav>&nbsp;&nbsp;&nbsp;
+		  	<A class=nav href="${contextPath}/forums/list.page">${I18n.getMessage("ForumListing.forumIndex")}</A> -&gt;  <a class="nav" href="${contextPath}/forums/show/${forum.id}.page">${forum.name}</a></SPAN>
+			</TD>
+          <TD vAlign=center noWrap align=right>   
+		           
+		 <@pagination.doPagination action, forum.id/>      
+		 
+			</TD>
+        </TR>
+        <TR>
+          <TD align=left colSpan=3><SPAN class=nav></SPAN></TD></TR></TBODY></TABLE>
+		  <#if moderator></FORM></#if>
+      <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+        <TBODY>
+        <TR>
+          <TD align=right>
+            <TABLE cellSpacing=0 cellPadding=0 border=0>
+              <TBODY>
+              <TR>			  
+                <TD noWrap><form name="f"><SPAN class=gensmall>${I18n.getMessage("ForumIndex.goTo")}:&nbsp;<SELECT onchange="if(this.options[this.selectedIndex].value != -1){ document.location = '${contextPath}/forums/show/'+ this.options[this.selectedIndex].value +'.page'; }" name=select>
+				<OPTION value=-1 selected>${I18n.getMessage("ForumIndex.goToSelectAForum")}</OPTION>				
+				<#list allForums.keySet() as category>
+					<OPTION value=-1>&nbsp;</OPTION>
+					<option value="-1">${category.name}</option>
+					<option value="-1">-------------</option>
+					<#list allForums.get(category) as forum>
+					<option value="${forum.id}">${forum.name}</option>
+					</#list>
+				</#list>
+				</SELECT>				  
+				  &nbsp;
+                <INPUT class=liteoption type=button value="${I18n.getMessage("ForumIndex.goToGo")}" onClick="if(document.f.select.options[document.f.select.selectedIndex].value != -1){ document.location = '${contextPath}/forums/show/'+ document.f.select.options[document.f.select.selectedIndex].value +'.page'; }">
+				</form>
+				</TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE>
+      <TABLE cellSpacing=0 cellPadding=0 width="100%" align=center border=0>
+        <TBODY>
+        <TR>
+        <TD vAlign=top align=left>
+            <TABLE cellSpacing=3 cellPadding=0 border=0>
+              <TBODY>
+              <TR>
+                <TD align=left width=20><img src="templates/${templateName}/images/folder_new.gif" width="19" height="18"></TD>
+                <TD class=gensmall>${I18n.getMessage("ForumIndex.newMessages")}</TD>
+                <TD>&nbsp;&nbsp;</TD>
+                <TD align=middle width=20><img src="templates/${templateName}/images/folder.gif" width="19" height="18"></TD>
+                <TD class=gensmall>${I18n.getMessage("ForumIndex.noNewMessages")}</TD>
+                <TD>&nbsp;&nbsp;</TD>
+                <TD align=middle width=20><img src="templates/${templateName}/images/folder_announce.gif" width="19" height="18"></TD>
+                <TD class=gensmall>${I18n.getMessage("ForumIndex.announce")}</TD></TR>
+              <TR>
+                <TD align=middle width=20><img src="templates/${templateName}/images/folder_lock_new.gif" width="19" height="18"></TD>
+                <TD class=gensmall>${I18n.getMessage("ForumIndex.newMessagesBlocked")}</TD>
+                <TD>&nbsp;&nbsp;</TD>
+                <TD align=middle width=20><img src="templates/${templateName}/images/folder_lock.gif" width="19" height="18"></TD>
+                <TD class=gensmall>${I18n.getMessage("ForumIndex.noNewMessagesBlocked")}</TD>
+                <TD>&nbsp;&nbsp;</TD>
+                <TD align=middle width=20><img src="templates/${templateName}/images/folder_sticky.gif" width="19" height="18"></TD>
+                <TD class=gensmall>${I18n.getMessage("ForumIndex.sticky")}</TD></TR>
+              </TBODY></TABLE></TD>
+          <TD align=right><SPAN class=gensmall></SPAN></TD>
+        </TR></TBODY></TABLE>
+    </TD></TR></TBODY></TABLE>

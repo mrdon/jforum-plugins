@@ -1,0 +1,35 @@
+<STYLE type=text/css>@import url( style.css );</STYLE>
+
+<form name="form" action="${contextPath}/jforum.page" method="post">
+<input type="hidden" name="action" value="delete">
+<input type="hidden" name="module" value="${moduleName}">
+<input type="hidden" name="securityHash" value="${securityHash}">
+
+<TABLE class=forumline cellSpacing=1 cellPadding=3 width="100%" border=0><TBODY>
+<TR>
+<TH class=thHead vAlign=center colSpan=4 height=25>${I18n.getMessage("Rank.List.Title")}</TH>
+</TR>
+
+<tr>
+<td class='row2'><span class='gen'><b>Ranking Name</b></span></td>
+<td class='row2'><span class='gen'><b>Action</b></span></td>
+<td class='row2'><span class='gen'><b>Delete</b></span></td>
+</tr>
+
+<#list ranks as rank>
+	<TR>
+	<TD class=row1 width="38%"><SPAN class=gen>${rank.title}</SPAN></TD>
+	<TD width="9%" class=gen>${rank.min}</TD>
+	<TD width="46%" class=gen><span class="gen"><a href="${contextPath}/${moduleName}/edit/${rank.id}.page">${I18n.getMessage("Rank.List.Edit")}</a></span></TD>
+	<TD width="7%" class=row2><input type="checkbox" name="rank_id" value="${rank.id}"></TD>
+	</TR>
+</#list>
+
+<TR align="center">
+<TD class=catBottom colSpan=4 height=28>
+<INPUT class=mainoption type=button value="${I18n.getMessage("Rank.List.ClickToNew")}" name=button onClick="document.location = '${contextPath}/${moduleName}/insert.page';">
+&nbsp;&nbsp;
+<INPUT class=mainoption type=submit value="${I18n.getMessage("Rank.List.ClickToDelete")}" name=submit></TD>
+</TR></TABLE>
+</FORM>
+   

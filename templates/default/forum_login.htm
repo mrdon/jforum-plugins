@@ -1,0 +1,56 @@
+<STYLE type=text/css>@import url( style.css );</STYLE>
+  <form action="${contextPath}/jforum.page" method=post target=_top>
+  <input type="hidden" name="module" value="user">
+  <input type="hidden" name="securityHash" value="${securityHash}">
+  <input type="hidden" name="action" value="validateLogin">
+  
+  <#if returnPath?exists>
+  	<input type="hidden" name="returnPath" value="${returnPath}">
+  </#if>
+  
+  <TABLE cellSpacing=2 cellPadding=2 width="100%" align=center border=0>
+<TBODY>
+<TR>
+  <TD class=nav align=left><A class=nav href="${contextPath}/forums/list.page">${I18n.getMessage("ForumListing.forumIndex")}</A></TD></TR></TBODY></TABLE>
+  <TABLE class=forumline cellSpacing=1 cellPadding=4 width="100%" align=center border=0>
+<TBODY>
+<TR>
+  <TH class=thHead noWrap height=25>${I18n.getMessage("Login.enterUsername")}
+  </TH></TR>
+<TR>
+  <TD class=row1>
+<TABLE cellSpacing=1 cellPadding=3 width="100%" border=0>
+  <TBODY>
+  <TR>
+<TD align=middle colSpan=2>&nbsp;</TD></TR>
+  <TR>
+    <#if invalidLogin?exists>
+    <td align="center" width="100%" colspan="2">
+    <span class="gen">
+  	<font color=red>${I18n.getMessage("Login.invalidLogin")}</font>
+  	</span>
+  	</td>
+  	</tr>
+  </#if>
+<TD align=right width="45%"><SPAN class=gen>
+${I18n.getMessage("Login.user")}:</SPAN></TD>
+<TD><INPUT maxLength=40 size=25 name=username> </TD></TR>
+  <TR>
+<TD align=right><SPAN class=gen>${I18n.getMessage("Login.password")}:</SPAN></TD>
+<TD><INPUT type=password maxLength=25 size=25 name=password> 
+</TD></TR>
+  <TR align=middle>
+<TD colSpan=2><SPAN class=gen>${I18n.getMessage("Login.autoLogon")}: <INPUT type=checkbox name=autologin></SPAN></TD></TR>
+  <TR align=middle>
+<TD colSpan=2><INPUT type=hidden name=redirect><INPUT class=mainoption type=submit value="${I18n.getMessage("Login.enter")}" name=login></TD></TR>
+  <TR align=middle>
+<TD colSpan=2><SPAN class=gensmall>
+<A class=gensmall href="${contextPath}/user/lostPassword.page">${I18n.getMessage("Login.lostPassword")}</A></SPAN>
+  </TD>
+  </TR>
+  </TABLE>
+  </TD>
+  </TR>
+  </TBODY>
+  </TABLE>
+  </FORM>

@@ -1,0 +1,41 @@
+<STYLE type=text/css>@import url( style.css );</STYLE>
+
+<form name="form" action="${contextPath}/jforum.page" method="post">
+<input type="hidden" name="action" value="${action}">
+<input type="hidden" name="module" value="${moduleName}">
+<input type="hidden" name="securityHash" value="${securityHash}">
+
+<#if forum?exists>
+<input type="hidden" name="forum_id" value="${forum.id}">
+</#if>
+
+<TABLE class=forumline cellSpacing=1 cellPadding=3 width="100%" border=0>
+<TR>
+<TH class=thHead vAlign=center colSpan=2 height=25>${I18n.getMessage("Forums.Form.Title")}</TH>
+</TR>
+        
+<TR>
+<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Forums.Form.ForumName")}</SPAN></TD>
+<TD class=row2><INPUT class=post style="WIDTH: 200px" maxLength=25 size=25 name="forum_name" value="<#if forum?exists>${forum.name}</#if>"></TD>
+</TR>
+
+<TR>
+<TD class=row1><SPAN class=gen>${I18n.getMessage("Forums.Form.Category")}</SPAN></TD>
+<TD class=row2>
+<select name="categories_id">
+<#list categories as c><option value="${c.id}" <#if forum?exists><#if forum.categoryId == c.id>selected</#if></#if>>${c.name}</option></#list>
+</select></TD>
+</TR>
+
+<TR>
+<TD class=row1><SPAN class=gen>${I18n.getMessage("Forums.Form.Description")}</SPAN></TD>
+<TD class=row2><textarea name="description" cols="40" rows="6" class="post" style="WIDTH: 200px"><#if forum?exists>${forum.description?default("")}</#if></textarea></TD>
+</TR>
+
+<TR align="center">
+<TD class=catBottom colSpan=2 height=28><INPUT class=mainoption type=submit value="${I18n.getMessage("Forums.Form.ClickToUpdate")}" name=submit></TD>
+</TR>
+
+</TABLE>
+</FORM>
+   

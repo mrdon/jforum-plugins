@@ -1,0 +1,183 @@
+<STYLE type=text/css>@import url( style.css );</STYLE>
+
+      <FORM action=profile.php method=post encType=multipart/form-data>
+      <TABLE class=forumline cellSpacing=1 cellPadding=3 width="100%" 
+        border=0><TBODY>
+        <TR>
+          <TH class=thHead vAlign=center colSpan=2 height=25>Informação de 
+            Registro</TH></TR>
+        <TR>
+          <TD class=row2 colSpan=2><SPAN class=gensmall>Itens marcados com um 
+            * são necessários</SPAN></TD></TR>
+        <TR>
+          <TD class=row1 width="38%"><SPAN class=gen>Usuário: *</SPAN></TD>
+          <TD class=row2><INPUT class=post style="WIDTH: 200px" maxLength=25 
+            size=25 name=username></TD></TR>
+        <TR>
+          <TD class=row1><SPAN class=gen>Endereço de Email: *</SPAN></TD>
+          <TD class=row2><INPUT class=post style="WIDTH: 200px" maxLength=255 
+            size=25 name=email></TD></TR>
+        
+        <TR>
+          <TD class=row1><SPAN class=gen>Senha nova: *</SPAN><BR><SPAN 
+            class=gensmall>Apenas necessita fornecer uma senha caso a pretenda 
+            mudar</SPAN></TD>
+          <TD class=row2><INPUT class=post style="WIDTH: 200px" type=password 
+            maxLength=100 size=25 name=new_password> </TD></TR>
+        <TR>
+          <TD class=row1><SPAN class=gen>Confirmar senha: * </SPAN><BR><SPAN 
+            class=gensmall>Apenas necessita confirmar a sua senha caso a tenha 
+            mudado acima</SPAN></TD>
+          <TD class=row2><INPUT class=post style="WIDTH: 200px" type=password 
+            maxLength=100 size=25 name=password_confirm> </TD></TR>
+        <TR>
+          <TD class=catSides colSpan=2 height=28>&nbsp;</TD></TR>
+        <TR>
+          <TH class=thSides vAlign=center colSpan=2 height=25>Informação de 
+            Perfil</TH></TR>
+        <TR>
+          <TD class=row2 colSpan=2><SPAN class=gensmall>Esta informação irá 
+            estar publicamente visível</SPAN></TD></TR>
+        <TR>
+          <TD class=row1><SPAN class=gen>Número de ICQ:</SPAN></TD>
+          <TD class=row2><INPUT class=post style="WIDTH: 100px" maxLength=15 
+            size=10 name=icq> </TD></TR>
+        <TR>
+          <TD class=row1><SPAN class=gen>Endereço de AIM:</SPAN></TD>
+          <TD class=row2><INPUT class=post style="WIDTH: 150px" maxLength=255 
+            name=aim> </TD></TR>
+        <TR>
+          <TD class=row1><SPAN class=gen>MSN Messenger:</SPAN></TD>
+          <TD class=row2><INPUT class=post style="WIDTH: 150px" maxLength=255 
+            name=msn> </TD></TR>
+        <TR>
+          <TD class=row1><SPAN class=gen>Yahoo Messenger:</SPAN></TD>
+          <TD class=row2><INPUT class=post style="WIDTH: 150px" maxLength=255 
+            name=yim> </TD></TR>
+        <TR>
+          <TD class=row1><SPAN class=gen>Página/WWW:</SPAN></TD>
+          <TD class=row2><INPUT class=post style="WIDTH: 200px" maxLength=255 
+            size=25 name=website> </TD></TR>
+        <TR>
+          <TD class=row1><SPAN class=gen>Local/Origem:</SPAN></TD>
+          <TD class=row2><INPUT class=post style="WIDTH: 200px" maxLength=100 
+            size=25 name=location> </TD></TR>
+        <TR>
+          <TD class=row1><SPAN class=gen>Ocupação:</SPAN></TD>
+          <TD class=row2><INPUT class=post style="WIDTH: 200px" maxLength=100 
+            size=25 name=occupation> </TD></TR>
+        <TR>
+          <TD class=row1><SPAN class=gen>Interesses:</SPAN></TD>
+          <TD class=row2><INPUT class=post style="WIDTH: 200px" maxLength=150 
+            size=35 name=interests> </TD></TR>
+        <TR>
+          <TD class=row1><SPAN class=gen>Assinatura:</SPAN><BR><SPAN 
+            class=gensmall>Isto é um bloco de texto que pode ser adicionado às 
+            mensagens que poste. Há um limite de 255 caracteres<BR>
+          </SPAN></TD>
+          <TD class=row2><TEXTAREA class=post style="WIDTH: 300px" name=signature rows=6 cols=30></TEXTAREA> 
+          </TD></TR>
+        <TR>
+          <TD class=catSides colSpan=2 height=28>&nbsp;</TD></TR>
+        <TR>
+          <TH class=thSides vAlign=center colSpan=2 
+        height=25>Preferências</TH></TR>
+        <TR>
+          <TD class=row1><SPAN class=gen>Mostrar sempre o meu endereço de 
+            Email:</SPAN></TD>
+          <TD class=row2><INPUT type=radio CHECKED value=1 name=viewemail> 
+            <SPAN class=gen>Sim</SPAN>&nbsp;&nbsp; <INPUT type=radio value=0 
+            name=viewemail> <SPAN class=gen>Não</SPAN></TD></TR>
+        <TR>
+          <TD class=row1><SPAN class=gen>Esconder o meu indicador de Conectado 
+            (online):</SPAN></TD>
+          <TD class=row2><INPUT type=radio value=1 name=hideonline> <SPAN 
+            class=gen>Sim</SPAN>&nbsp;&nbsp; <INPUT type=radio CHECKED value=0 
+            name=hideonline> <SPAN class=gen>Não</SPAN></TD></TR>
+        <TR>
+          <TD class=row1><SPAN class=gen>Notificar-me sempre que haja 
+            respostas:</SPAN><BR><SPAN class=gensmall>Envia um email quando 
+            alguém responde a uma mensagem que tenha postado. Isto pode ser 
+            alterado sempre que escreva uma mensagem.</SPAN></TD>
+          <TD class=row2><INPUT type=radio CHECKED value=1 name=notifyreply> 
+            <SPAN class=gen>Sim</SPAN>&nbsp;&nbsp; <INPUT type=radio value=0 
+            name=notifyreply> <SPAN class=gen>Não</SPAN></TD></TR>
+        <TR>
+          <TD class=row1><SPAN class=gen>Notificar-me por email quando houver 
+            Mensagens Privadas novas:</SPAN></TD>
+          <TD class=row2><INPUT type=radio CHECKED value=1 name=notifypm> 
+            <SPAN class=gen>Sim</SPAN>&nbsp;&nbsp; <INPUT type=radio value=0 
+            name=notifypm> <SPAN class=gen>Não</SPAN></TD></TR>
+        <TR>
+          <TD class=row1><SPAN class=gen>Avisar-me em janela destacada quando 
+            houver Mensagens Privadas novas:</SPAN><BR><SPAN 
+            class=gensmall>Surgirá uma pequena janela caso uma Mensagem Privada 
+            lhe seja enviada.</SPAN></TD>
+          <TD class=row2><input type=radio checked value=1 name=popup_pm>            <SPAN class=gen>Sim</SPAN>&nbsp;&nbsp; <INPUT 
+            name=popup_pm type=radio value=0 checked> <SPAN class=gen>Não</SPAN></TD></TR>
+        <TR>
+          <TD class=row1><SPAN class=gen>Anexar sempre a minha 
+            assinatura:</SPAN></TD>
+          <TD class=row2><INPUT type=radio CHECKED value=1 name=attachsig> 
+            <SPAN class=gen>Sim</SPAN>&nbsp;&nbsp; <INPUT type=radio value=0 
+            name=attachsig> <SPAN class=gen>Não</SPAN></TD></TR>
+        <TR>
+          <TD class=row1><SPAN class=gen>Permitir sempre BBCode:</SPAN></TD>
+          <TD class=row2><INPUT type=radio CHECKED value=1 name=allowbbcode> 
+            <SPAN class=gen>Sim</SPAN>&nbsp;&nbsp; <INPUT type=radio value=0 
+            name=allowbbcode> <SPAN class=gen>Não</SPAN></TD></TR>
+        <TR>
+          <TD class=row1><SPAN class=gen>Permitir sempre HTML:</SPAN></TD>
+          <TD class=row2><INPUT type=radio value=1 name=allowhtml> <SPAN 
+            class=gen>Sim</SPAN>&nbsp;&nbsp; <INPUT type=radio CHECKED value=0 
+            name=allowhtml> <SPAN class=gen>Não</SPAN></TD></TR>
+        <TR>
+          <TD class=row1><SPAN class=gen>Ativar sempre os Smileys:</SPAN></TD>
+          <TD class=row2><INPUT type=radio CHECKED value=1 name=allowsmilies> 
+            <SPAN class=gen>Sim</SPAN>&nbsp;&nbsp; <INPUT type=radio value=0 
+            name=allowsmilies> <SPAN class=gen>Não</SPAN></TD></TR>
+        <TR>
+          <TD class=catSides colSpan=2 height=28>&nbsp;</TD></TR>
+        <TR>
+          <TH class=thSides vAlign=center colSpan=2 height=12>Painel de 
+            controle de Avatar</TH></TR>
+        <TR>
+          <TD class=row1 colSpan=2>
+            <TABLE cellSpacing=2 cellPadding=0 width="70%" align=center 
+border=0>
+              <TBODY>
+              <TR>
+                <TD width="65%"><SPAN class=gensmall>Mostra uma pequena imagem 
+                  gráfica por baixo dos seus detalhes nas mensagens. Apenas pode 
+                  ser mostrada uma imagem de cada vez, a largura não exceder 130 
+                  pixels, a altura não ser superior a 130 pixels e o tamanho do 
+                  arquivo não ser superior a 24kB.</SPAN></TD>
+                <TD align=middle><SPAN class=gensmall>Imagem 
+                  atual</SPAN><BR><BR><INPUT type=checkbox 
+                  name=avatardel>&nbsp;<SPAN class=gensmall>Remover a 
+                  imagem</SPAN></TD></TR></TBODY></TABLE></TD></TR>
+        <TR>
+          <TD class=row1><SPAN class=gen>Carregar o Avatar a partir do seu 
+            computador:</SPAN></TD>
+          <TD class=row2><INPUT class=post style="WIDTH: 200px" type=file 
+            name=avatar></TD></TR>
+        <TR>
+          <TD class=row1><SPAN class=gen>Linkar o Avatar a partir de um 
+            URL:</SPAN><BR><SPAN class=gensmall>Escrever a URL do local contendo 
+            o Avatar, para ser copiado para a página.</SPAN></TD>
+          <TD class=row2><INPUT class=post style="WIDTH: 200px" size=40 
+            name=avatarurl></TD></TR>
+        <TR>
+          <TD class=row1><SPAN class=gen>Linkar a um Avatar fora desta 
+            página:</SPAN><BR><SPAN class=gensmall>Escrever a URL do local 
+            contendo o Avatar que pretende que seja mostrado.</SPAN></TD>
+          <TD class=row2><INPUT class=post style="WIDTH: 200px" size=40 
+            name=avatarremoteurl></TD></TR>
+        <TR>
+          <TD class=row1><SPAN class=gen>Selecionar um Avatar da 
+            galeria:</SPAN></TD>
+          <TD class=row2><INPUT class=liteoption type=submit value="Mostrar a galeria" name=avatargallery></TD></TR>
+        <TR align="center">
+          <TD class=catBottom colSpan=2 height=28><INPUT class=mainoption type=submit value=Enviar name=submit>&nbsp;&nbsp;<INPUT class=liteoption type=reset value=Limpar name=reset></TD></TR></TBODY></TABLE>
+      </FORM>
+     

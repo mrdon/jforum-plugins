@@ -1,0 +1,64 @@
+<STYLE type=text/css>@import url( style.css );</STYLE>
+
+<!-- <script language="JavaScript" src="templates/admin/js/permission_control.js"></script> -->
+<script language="JavaScript">
+<#include "js/permission_control.js"/>
+</script>
+
+<form name="form1" action="${contextPath}/jforum.page" method="post">
+<input type="hidden" name="action" value="permissionsSave">
+<input type="hidden" name="module" value="${moduleName}">
+<input type="hidden" name="securityHash" value="${securityHash}">
+<input type="hidden" name="id" value="${group.id}">
+
+<TABLE class=forumline cellSpacing=1 cellPadding=3 width="100%" border=0>
+<TR>
+<TH class=thHead vAlign=center colSpan=3 height=25>${I18n.getMessage("PermissionControl.groupTitle")}</TH>
+</TR>
+
+<#list sections as section>
+<TR>
+<TD class=row1 colspan=3><SPAN class=gen><b>${section.sectionName}</b></SPAN></TD>
+</TR>
+
+<#assign permissions = section.permissions/>
+
+<#list permissions as p>
+	<tr>
+	<td class="row2">&nbsp;</td>
+	<td class="row2" valign="middle" width="33%"><span class="gen">${p.name}</span></td>
+	<td class="row2" valign="middle" align="left">
+	<span class="gen">
+	<#if p.type == "single">
+		<select name="${p.id}$single">
+	<#else>
+		<select name="${p.id}" multiple size="4" onChange="return checkThisField(this)">
+		<option value="all">${I18n.getMessage("PermissionControl.allowAll")}</option>
+	</#if>
+	
+	<#assign permissionData = p.data/>
+
+	<#assign allValues = ""/>
+	<#list permissionData as pd>
+		<option value="${pd.id}" <#if pd.selected == true> selected</#if>>${pd.name}</option>
+		<#assign allValues = allValues +";"+ pd.id/>
+	</#list>
+	</select>
+	
+	<input type="hidden" name="all${p.id}" value="${allValues}">
+	
+	&nbsp;&nbsp;<input type="checkbox" name="OverrideUser${p.id}">&nbsp;Override User Values
+	</span>
+	</td>
+	</tr>
+</#list>
+
+</#list>
+
+
+<TR align="center">
+<TD class=catBottom colSpan=3 height=28><INPUT class=mainoption type=submit value="${I18n.getMessage("PermissionControl.save")}" name=submit></TD>
+</TR>
+</TABLE>
+</FORM>
+<script language="javascript">validateSelectFields();</script>

@@ -1,0 +1,91 @@
+<style type="text/css">
+@import url( style.css );
+</style>
+<a name="top" id="top"></a>
+
+<script language="JavaScript">
+function validateSelectedForum()
+{
+	var f = document.form1.to_forum;
+	if (f[f.selectedIndex].value == "-1") {
+		alert("${I18n.getMessage("Moderation.InvalidForum")}");
+		return false;
+	}
+	
+	return true;
+}
+</script>
+
+<form name="form1" method="post" action="${contextPath}/jforum.page" onSubmit="return validateSelectedForum();">
+<input type="hidden" name="action" value="moveTopic">
+<input type="hidden" name="securityHash" value="${securityHash}">
+<input type="hidden" name="module" value="${moduleName}">
+<input type="hidden" name="persistData" value="${persistData}">
+<input type="hidden" name="topics" value="${topics}">
+<input type="hidden" name="forum_id" value="${forum_id}">
+
+<table width="100%" cellspacing="0" cellpadding="10" border="0" align="center">
+	<tr>
+		<td class="bodyline"><br />
+  
+
+  <table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
+	  <tr>
+		  <td align="left" class="nav"><a class="nav" href="${contextPath}/forums/list.page">${I18n.getMessage("ForumListing.forumIndex")}</a></td>
+	  </tr>
+  </table>
+  
+<table class="forumline" width="100%" cellspacing="1" cellpadding="4" border="0">
+	  <tr>
+		  <th class="thHead" height="25"><b>${I18n.getMessage("PostForm.movingTopic")}</b></th>
+	  </tr>
+	  <tr>
+		  <td class="row1"><table width="100%" cellspacing="0" cellpadding="1" border="0">
+			  <tr>
+				  <td>&nbsp;</td>
+			  </tr>
+  
+			<tr>
+				  <td align="center">
+				  	<span class="gen">
+					${I18n.getMessage("PostForm.moveToForum")}
+					<select name="to_forum">
+						<#list allForums.keySet() as category>
+							<OPTION value=-1>&nbsp;</OPTION>
+							<option value="-1">${category.name}</option>
+							<option value="-1">-------------</option>
+							<#list allForums.get(category) as forum>
+								<option value="${forum.id}">&nbsp;&nbsp;${forum.name}</option>
+							</#list>
+					</#list>
+					</select>
+					</span>
+				   </td>
+			  </tr>
+			  <tr>
+				  <td align="center">
+				  <br/>
+				  <input type="submit" name="submit" class="liteoption" value="${I18n.getMessage("move")}">
+				  &nbsp;
+				  <input type="button" value="${I18n.getMessage("previousPage")}" onClick="history.go(-1)" class="liteoption">
+				  </td>
+			  </tr>
+			   <tr>
+				  <td>&nbsp;</td>
+			  </tr>
+			  <tr>
+				  <td align="center">
+				  <a class="nav" href="${contextPath}/forums/list.page">${I18n.getMessage("ForumListing.forumIndex")}</a>
+				    - <a class="nav" href="#" onClick="history.go(-1)">${I18n.getMessage("previousPage")}</a>
+				  </td>
+			  </tr>
+		  </table>
+		  </td>
+	  </tr>
+  
+</table>
+  
+	  </td></tr>
+
+</table>
+ </form>

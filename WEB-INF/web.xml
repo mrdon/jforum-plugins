@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app>
+    <listener>
+    	<listener-class>net.jforum.ForumSessionListener</listener-class>
+    </listener>   
+
+    <servlet>
+		<servlet-name>jforum</servlet-name>
+		<servlet-class>net.jforum.JForum</servlet-class>
+		
+		<init-param>
+			<param-name>development</param-name>
+			<param-value>true</param-value>
+		</init-param>
+    </servlet>
+   
+    <!-- SERVLETS -->
+    <servlet-mapping>
+    	<servlet-name>jforum</servlet-name>
+    	<url-pattern>*.page</url-pattern>
+    </servlet-mapping>
+    
+    <!-- SESSION -->
+    <session-config>
+    	<session-timeout>10</session-timeout>
+    </session-config>
+    
+</web-app>

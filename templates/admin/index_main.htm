@@ -1,0 +1,45 @@
+<#setting number_format = "#"/>
+<html>
+<head>
+<base href="http://${serverName}:${serverPort}${contextPath}/">
+<STYLE type=text/css>@import url( templates/admin/style.css );</STYLE>	
+</head>
+<body bgcolor="#E5E5E5">
+<!-- MAIN TABLE -->
+<table width="98%" height="100%" align="center" valign="top">
+<tr><td valign="top" height="100%">
+
+<table width="100%">
+<tr>
+<td valign="top">
+
+
+<table width="100%" align="center" cellpadding="3" cellspacing="1">
+	<tr>
+		<td valign="top">
+		<!-- 	DATA TABLE -->
+		<table width="100%">
+		<tr>
+		<td width="100%">
+		<#include moduleAction>
+		</td>
+		</tr>
+		</table>
+		<!-- END OF DATA TABLE -->
+		
+		</font></td>
+	</tr>
+</table>
+	
+
+</td>
+</tr>
+</table>
+
+</td></tr>
+<tr><td>
+<br>
+<center><font><i><SPAN class=gen>Copyright© 2003 Rafael Steil - <a href="http://www.jforum.net">The JForum Project</a>. All Rights Reserved</span></i></font></center>
+</td></tr></table>
+</body>
+</html>

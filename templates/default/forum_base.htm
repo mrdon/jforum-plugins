@@ -1,0 +1,62 @@
+<#setting number_format = "#"/>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>JForum - Java Forum / Discussion Board System</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="description" content="Java forum system / java discussion board">
+<meta name="keywords" content="jforum, jforum java, java jforum, java forum, forum, rafael steil, bulletin board, java bb, javabb, java discussion forum, discussion forum, java, j2ee">
+<base href="http://${serverName}:${serverPort}${contextPath}/">
+<STYLE type=text/css>@import url( templates/${templateName}/style.css );</STYLE>
+</head>
+
+<body>
+<table width="100%" border="0">
+<tr>
+<td>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+        <TR>
+          <TD><A href="http://www.jforum.net"><IMG src="templates/${templateName}/images/logo.jpg" width="180" height="129" vspace=1 border=0></A></TD>
+          <TD width="100%" align=center vAlign=center><SPAN 
+            class=maintitle>${I18n.getMessage("ForumName")}</SPAN> - <SPAN class=gen>${I18n.getMessage("ForumTitle")}<BR>
+&nbsp; </SPAN>
+              <TABLE cellSpacing=0 cellPadding=2 border=0>
+                <TBODY>
+                  <TR>
+                    <TD vAlign=top noWrap align=middle>&nbsp; 
+					<img src="templates/${templateName}/images/icon_mini_search.gif" width="12" height="13"><SPAN class=mainmenu>&nbsp; <A class=mainmenu href="${contextPath}/search/filters.page"><B>${I18n.getMessage("ForumBase.search")}</B></A> &nbsp; 
+
+					<#if logged?default(false)>
+					<A class=mainmenu href="${contextPath}/user/edit/${session.userId}.page"><img src="templates/${templateName}/images/icon_mini_profile.gif" width="12" height="13" border="0"> ${I18n.getMessage("ForumBase.profile")}</A>&nbsp; </SPAN>
+					</#if>
+
+					<SPAN class=mainmenu> <img src="templates/${templateName}/images/icon_mini_groups.gif" width="12" height="13">&nbsp;<A class=mainmenu href="http://www.jforum.net">${I18n.getMessage("ForumBase.backToSite")}</A>&nbsp; 
+					
+					<#if logged?default(false)>
+					<A class=mainmenu href="${contextPath}/user/logout.page"><img src="templates/${templateName}/images/icon_mini_login.gif" width="12" height="13" border="0"> ${I18n.getMessage("ForumBase.logout")} [${session.username}] </A></SPAN></TD>
+					<#else>
+					<A class=mainmenu href="${contextPath}/user/insert.page"><img src="templates/${templateName}/images/icon_mini_register.gif" width="12" height="13" border="0"> ${I18n.getMessage("ForumBase.register")}</A>&nbsp/&nbsp;</SPAN>
+					<A class=mainmenu href="${contextPath}/user/login.page"><img src="templates/${templateName}/images/icon_mini_login.gif" width="12" height="13" border="0"> ${I18n.getMessage("ForumBase.login")}</A>&nbsp; </SPAN>
+					</#if>
+			    </TD>
+                  </TR>
+                </TBODY>
+              </TABLE>
+          </TD>
+        </TR>
+        <TBODY>
+        </TBODY></TABLE></td>
+</tr>
+  <tr>
+    <td><#include moduleAction/></td>
+  </tr>
+  <tr>
+  <td align="center">
+  	<SPAN class=copyright>Powered by <A class=copyright href="http://www.jforum.net/" target=_blank>JForum ${version} </A>© 2004 - Rafael Steil</SPAN>
+<br><a href="http://sourceforge.net" target="_new"><img src="https://sourceforge.net/sflogo.php?group_id=15940&type=1" border="0"></a>
+  </td>
+  </tr>
+</table>
+</body>
+</html>

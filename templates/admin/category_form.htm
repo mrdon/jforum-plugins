@@ -1,0 +1,24 @@
+<STYLE type=text/css>@import url( style.css );</STYLE>
+
+<form name="form" action="${contextPath}/jforum.page" method="post">
+<input type="hidden" name="action" value="${action}">
+<input type="hidden" name="module" value="${moduleName}">
+<input type="hidden" name="securityHash" value="${securityHash}">
+
+<#if category?exists>
+	<input type="hidden" name="categories_id" value="${category.id}">
+</#if>
+
+<TABLE class=forumline cellSpacing=1 cellPadding=3 width="100%" border=0><TBODY>
+<TR>
+<TH class=thHead vAlign=center colSpan=2 height=25>${I18n.getMessage("Category.Form.Title")}</TH></TR>
+
+<TR>
+<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Category.Form.CategoryName")}</SPAN></TD>
+<TD class=row2><INPUT class=post style="WIDTH: 200px" maxLength=25 size=25 name=category_name value="<#if category?exists>${category.name}</#if>"></TD></TR>
+<TR align="center">
+<TD class=catBottom colSpan=2 height=28>
+<INPUT class=mainoption type=submit value="${I18n.getMessage("Category.Form.ClickToUpdate")}" name=submit>
+</TD>
+</TR></TBODY></TABLE>
+</FORM>

@@ -1,0 +1,465 @@
+<STYLE type=text/css>@import url( style.css );</STYLE>
+
+<script language="JavaScript" type="text/javascript">
+// bbCode control by
+// subBlue design
+// www.subBlue.com
+
+// Startup variables
+var imageTag = false;
+var theSelection = false;
+
+// Check for Browser & Platform for PC & IE specific bits
+// More details from: http://www.mozilla.org/docs/web-developer/sniffer/browser_type.page
+var clientPC = navigator.userAgent.toLowerCase(); // Get client info
+var clientVer = parseInt(navigator.appVersion); // Get browser version
+
+var is_ie = ((clientPC.indexOf("msie") != -1) && (clientPC.indexOf("opera") == -1));
+var is_nav  = ((clientPC.indexOf('mozilla')!=-1) && (clientPC.indexOf('spoofer')==-1)
+                && (clientPC.indexOf('compatible') == -1) && (clientPC.indexOf('opera')==-1)
+                && (clientPC.indexOf('webtv')==-1) && (clientPC.indexOf('hotjava')==-1));
+
+var is_win   = ((clientPC.indexOf("win")!=-1) || (clientPC.indexOf("16bit") != -1));
+var is_mac    = (clientPC.indexOf("mac")!=-1);
+
+
+// Helpline messages
+b_help = "${I18n.getMessage("PostForm.helplineBoldText")}: [b]${I18n.getMessage("PostForm.helplineText")}[/b]  (alt+b)";
+i_help = "${I18n.getMessage("PostForm.helplineItalicText")}: [i]${I18n.getMessage("PostForm.helplineText")}[/i]  (alt+i)";
+u_help = "${I18n.getMessage("PostForm.helplineUnderlineText")}: [u]${I18n.getMessage("PostForm.helplineText")}[/u]  (alt+u)";
+q_help = "${I18n.getMessage("PostForm.helplineQuote")}: [quote]${I18n.getMessage("PostForm.helplineText")}[/quote]  (alt+q)";
+c_help = "${I18n.getMessage("PostForm.helplineCode")}: [code]${I18n.getMessage("PostForm.helplineCode")}[/code]  (alt+c)";
+l_help = "${I18n.getMessage("PostForm.helplineList")}: [list]${I18n.getMessage("PostForm.helplineText")}[/list] (alt+l)";
+p_help = "${I18n.getMessage("PostForm.helplineInsertImage")}: [img]http://wwww.xxxx.com/img.ext[/img]  (alt+p)";
+w_help = "${I18n.getMessage("PostForm.helplineInsertUrl")}: [url]http://url[/url] / [url=http://url]${I18n.getMessage("PostForm.helplineUrlDescription")}[/url]  (alt+w)";
+a_help = "${I18n.getMessage("PostForm.helplineCloseAllMarks")}";
+s_help = "${I18n.getMessage("PostForm.helplineColor")}: [color=red]${I18n.getMessage("PostForm.helplineText")}[/color]  ${I18n.getMessage("PostForm.helplineColorTip")} color=#FF0000";
+f_help = "${I18n.getMessage("PostForm.helplineFont")}: [size=x-small]${I18n.getMessage("PostForm.helplineSmallText")}[/size]";
+
+// Define the bbCode tags
+bbcode = new Array();
+bbtags = new Array('[b]','[/b]','[i]','[/i]','[u]','[/u]','[quote]','[/quote]','[code]','[/code]','[list]','[/list]','[img]','[/img]','[url]','[/url]');
+imageTag = false;
+
+// Shows the help messages in the helpline window
+function helpline(help) {
+	document.post.helpbox.value = eval(help + "_help");
+}
+
+
+// Replacement for arrayname.length property
+function getarraysize(thearray) {
+	for (i = 0; i < thearray.length; i++) {
+		if ((thearray[i] == "undefined") || (thearray[i] == "") || (thearray[i] == null))
+			return i;
+		}
+	return thearray.length;
+}
+
+// Replacement for arrayname.push(value) not implemented in IE until version 5.5
+// Appends element to the array
+function arraypush(thearray,value) {
+	thearray[ getarraysize(thearray) ] = value;
+}
+
+// Replacement for arrayname.pop() not implemented in IE until version 5.5
+// Removes and returns the last element of an array
+function arraypop(thearray) {
+	thearraysize = getarraysize(thearray);
+	retval = thearray[thearraysize - 1];
+	delete thearray[thearraysize - 1];
+	return retval;
+}
+
+
+function checkForm() {
+
+	formErrors = false;
+
+	if (document.post.message.value.length < 2) {
+		formErrors = "Deve ser escrita a mensagem";
+	}
+
+	if (formErrors) {
+		alert(formErrors);
+		return false;
+	} else {
+		bbstyle(-1);
+		//formObj.preview.disabled = true;
+		//formObj.submit.disabled = true;
+		return true;
+	}
+}
+
+function emoticon(text) {
+	text = ' ' + text + ' ';
+	if (document.post.message.createTextRange && document.post.message.caretPos) {
+		var caretPos = document.post.message.caretPos;
+		caretPos.text = caretPos.text.charAt(caretPos.text.length - 1) == ' ' ? text + ' ' : text;
+		document.post.message.focus();
+	} else {
+	document.post.message.value  += text;
+	document.post.message.focus();
+	}
+}
+
+function bbfontstyle(bbopen, bbclose) {
+	if ((clientVer >= 4) && is_ie && is_win) {
+		theSelection = document.selection.createRange().text;
+		if (!theSelection) {
+			document.post.message.value += bbopen + bbclose;
+			document.post.message.focus();
+			return;
+		}
+		document.selection.createRange().text = bbopen + theSelection + bbclose;
+		document.post.message.focus();
+		return;
+	} else {
+		document.post.message.value += bbopen + bbclose;
+		document.post.message.focus();
+		return;
+	}
+	storeCaret(document.post.message);
+}
+
+
+function bbstyle(bbnumber) {
+
+	donotinsert = false;
+	theSelection = false;
+	bblast = 0;
+
+	if (bbnumber == -1) { // Close all open tags & default button names
+		while (bbcode[0]) {
+			butnumber = arraypop(bbcode) - 1;
+			document.post.message.value += bbtags[butnumber + 1];
+			buttext = eval('document.post.addbbcode' + butnumber + '.value');
+			eval('document.post.addbbcode' + butnumber + '.value ="' + buttext.substr(0,(buttext.length - 1)) + '"');
+		}
+		imageTag = false; // All tags are closed including image tags :D
+		document.post.message.focus();
+		return;
+	}
+
+	if ((clientVer >= 4) && is_ie && is_win)
+		theSelection = document.selection.createRange().text; // Get text selection
+
+	if (theSelection) {
+		// Add tags around selection
+		document.selection.createRange().text = bbtags[bbnumber] + theSelection + bbtags[bbnumber+1];
+		document.post.message.focus();
+		theSelection = '';
+		return;
+	}
+
+	// Find last occurance of an open tag the same as the one just clicked
+	for (i = 0; i < bbcode.length; i++) {
+		if (bbcode[i] == bbnumber+1) {
+			bblast = i;
+			donotinsert = true;
+		}
+	}
+	
+	if (donotinsert) {		// Close all open tags up to the one just clicked & default button names
+		while (bbcode[bblast]) {
+				butnumber = arraypop(bbcode) - 1;
+				document.post.message.value += bbtags[butnumber + 1];
+				buttext = eval('document.post.addbbcode' + butnumber + '.value');
+				eval('document.post.addbbcode' + butnumber + '.value ="' + buttext.substr(0,(buttext.length - 1)) + '"');
+				imageTag = false;
+			}
+			document.post.message.focus();
+			return;
+	} else { // Open tags
+
+		if (imageTag && (bbnumber != 14)) {		// Close image tag before adding another
+			document.post.message.value += bbtags[15];
+			lastValue = arraypop(bbcode) - 1;	// Remove the close image tag from the list
+			document.post.addbbcode14.value = "Img";	// Return button back to normal state
+			imageTag = false;
+		}
+
+		// Open tag
+		document.post.message.value += bbtags[bbnumber];
+		if ((bbnumber == 14) && (imageTag == false)) imageTag = 1; // Check to stop additional tags after an unclosed image tag
+		arraypush(bbcode,bbnumber+1);
+		eval('document.post.addbbcode'+bbnumber+'.value += "*"');
+		document.post.message.focus();
+		return;
+	}
+	storeCaret(document.post.message);
+}
+
+// Insert at Claret position. Code from
+// http://www.faqts.com/knowledge_base/view.phtml/aid/1052/fid/130
+function storeCaret(textEl) {
+	if (textEl.createTextRange) textEl.caretPos = document.selection.createRange().duplicate();
+}
+
+function validatePostForm(f)
+{
+	<#if setType>
+	if (f.subject.value == "") {
+		alert("${I18n.getMessage("PostForm.subjectEmpty")}");
+		f.subject.focus();
+		
+		return false;
+	}
+	</#if>
+	
+	if (f.message.value == "") {
+		alert("${I18n.getMessage("PostForm.textEmpty")}");
+		f.message.focus();
+		
+		return false;
+	}
+	
+	return true;
+}
+
+</script>
+
+<#assign preview = preview?exists && preview/>
+<#assign isNewPost = isNewPost?exists && isNewPost/>
+
+<#assign htmlChecked = "checked"/>
+<#assign bbChecked = ""/>
+<#assign signatureChecked = "checked"/>
+<#assign repliesChecked = "checked"/>
+<#assign smiliesChecked = ""/>
+
+<#if post?exists>
+	<#if post.isHtmlEnabled()><#assign htmlChecked = ""/></#if>
+	<#if !post.isBbCodeEnabled()><#assign bbChecked = "checked"/></#if>
+	<#if !post.isSmiliesEnabled()><#assign smiliesChecked = "checked"/></#if>
+	<#if !post.isSignatureEnabled()><#assign signatureChecked = ""/></#if>
+<#else>
+	<#if user.isHtmlEnabled()><#assign htmlChecked = ""/></#if>
+	<#if !user.isBbCodeEnabled()><#assign bbChecked = "checked"/></#if>
+	<#if !user.isSmiliesEnabled()><#assign smiliesChecked = "checked"/></#if>
+	<#if !user.getAttachSignatureEnabled()><#assign signatureChecked = ""/></#if>
+</#if>
+
+<#if !user.isNotifyOnMessagesEnabled()><#assign repliesChecked = ""/></#if>
+
+<TABLE cellSpacing=0 cellPadding=10 width="100%" align=center border=0>
+  <TBODY>
+  <TR>
+    <TD class=bodyline>
+<form name="post" action="${contextPath}/jforum.page" method="post" onSubmit="return validatePostForm(this);">
+<input type="hidden" name="action" value="${action}">
+<input type="hidden" name="module" value="${moduleName}">
+<input type="hidden" name="securityHash" value="${securityHash}">
+<input type="hidden" name="forum_id" value="${forum.id}">
+
+<#if post?exists && !isNewPost>
+<input type="hidden" name="post_id" value="${post.id}">
+</#if>
+
+<#if topicId?exists>
+<input type="hidden" name="topic_id" value="${topicId}">
+</#if>
+
+<#if preview>
+<table class="forumline" width="100%" cellspacing="1" cellpadding="4" border="0">
+	<tr>
+		<th height="25" class="thHead">${I18n.getMessage("PostForm.preview")}</th>
+	</tr>
+	<tr>
+		<td class="row1"><img src="templates/${templateName}/images/icon_minipost.gif"/><span class="postdetails"> ${I18n.getMessage("PostForm.subject")}: ${postPreview.subject}</span></td>
+	</tr>
+	<tr>
+		<td class="row1"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+			<tr>
+				<td>
+					<span class="postbody">
+					${postPreview.text}<br />
+					
+					<#if (user?exists && user.attachSignatureEnabled && user.signature?exists &user.signature?length > 0)>
+					<hr>
+					${user.signature}
+					</#if>
+					</span>
+				</td>
+			</tr>
+		</table></td>
+	</tr>
+	<tr>
+		<td class="spaceRow" height="1"><img src="templates/${templateName}/images/spacer.gif" width="1" height="1" /></td>
+	</tr>
+</table>
+<br clear="all" />
+
+</#if>
+
+      <TABLE cellSpacing=2 cellPadding=2 width="100%" align=center border=0>
+        <TBODY>
+        <TR>
+         <TD align=left><SPAN class=nav>
+		 <A class=nav href="${contextPath}/forums/list.page">${I18n.getMessage("ForumListing.forumIndex")}</a>
+           -&gt; <A class=nav href="${contextPath}/forums/show/${forum.id}.page">${forum.name}</A></SPAN>
+		</TD>
+		</TR>
+		</TBODY>
+		</TABLE>
+		
+      <TABLE class=forumline cellSpacing=1 cellPadding=3 width="100%" border=0><TBODY>
+        <TR>
+          <TH class=thHead colSpan=2 height=25><B>${I18n.getMessage("PostForm.title")}</B></TH></TR>
+        <TR>
+          <TD class=row1 width="22%"><SPAN class=gen><B>${I18n.getMessage("PostForm.subject")}</B></SPAN></TD>
+          <TD class=row2 width="78%"><SPAN class=gen><INPUT class=post style="WIDTH: 450px" tabIndex=2 maxLength=60 size=45 name=subject <#if post?exists>value="${post.subject?html}"</#if>> </SPAN></TD>
+		  </TR>
+        <TR>
+          <TD class=row1 vAlign=top>
+            <TABLE cellSpacing=0 cellPadding=1 width="100%" border=0>
+              <TBODY>
+              <TR>
+                <TD><SPAN class=gen><B>${I18n.getMessage("PostForm.body")}</B></SPAN> </TD></TR>
+              <TR>
+                <TD vAlign=center align=middle><BR>
+                  <TABLE cellSpacing=0 cellPadding=5 width=100 border=0>
+                    <TBODY>
+                    <TR align=middle>
+                      <TD class=gensmall colSpan=4><B>${I18n.getMessage("PostForm.emoticons")}</B></TD></TR>
+                    <TR vAlign=center align=middle>
+                      <TD><A href="javascript:emoticon(':D')"><IMG src="templates/${templateName}/images/icon_biggrin.gif" alt="Very Happy" width="15" height="15" border=0 title="Very Happy"></A></TD>
+                      <TD><A href="javascript:emoticon(':)')"><IMG src="templates/${templateName}/images/icon_smile.gif" alt=Smile width="15" height="15" border=0 title=Smile></A></TD>
+                      <TD><A href="javascript:emoticon(':(')"><IMG src="templates/${templateName}/images/icon_sad.gif" alt=Sad width="15" height="15" border=0 title=Sad></A></TD>
+                      <TD><A href="javascript:emoticon(':o')"><IMG src="templates/${templateName}/images/icon_surprised.gif" alt=Surprised width="15" height="15" border=0 title=Surprised></A></TD>
+                    </TR>
+                    <TR vAlign=center align=middle>
+                      <TD><A href="javascript:emoticon(':shock:')"><IMG src="templates/${templateName}/images/icon_eek.gif" alt=Shocked width="15" height="15" border=0 title=Shocked></A></TD>
+                      <TD><A href="javascript:emoticon(':?')"><IMG src="templates/${templateName}/images/icon_confused.gif" alt=Confused width="15" height="15" border=0 title=Confused></A></TD>
+                      <TD><A href="javascript:emoticon('8)')"><IMG src="templates/${templateName}/images/icon_cool.gif" alt=Cool width="15" height="15" border=0 title=Cool></A></TD>
+                      <TD><A href="javascript:emoticon(':lol:')"><IMG src="templates/${templateName}/images/icon_lol.gif" alt=Laughing width="15" height="15" border=0 title=Laughing></A></TD>
+                    </TR>
+                    <TR vAlign=center align=middle>
+                      <TD><A href="javascript:emoticon(':x')"><IMG src="templates/${templateName}/images/icon_mad.gif" alt=Mad width="15" height="15" border=0 title=Mad></A></TD>
+                      <TD><A href="javascript:emoticon(':P')"><IMG src="templates/${templateName}/images/icon_razz.gif" alt=Razz width="15" height="15" border=0 title=Razz></A></TD>
+                      <TD><A href="javascript:emoticon(':oops:')"><IMG src="templates/${templateName}/images/icon_redface.gif" alt=Embarassed width="15" height="15" border=0 title=Embarassed></A></TD>
+                      <TD><A href="javascript:emoticon(':cry:')"><IMG src="templates/${templateName}/images/icon_cry.gif" alt="Crying or Very sad" width="15" height="15" border=0 title="Crying or Very sad"></A></TD>
+                    </TR>
+                    <TR vAlign=center align=middle>
+                      <TD><A href="javascript:emoticon(':evil:')"><IMG src="templates/${templateName}/images/icon_evil.gif" alt="Evil or Very Mad" width="15" height="15" border=0 title="Evil or Very Mad"></A></TD>
+                      <TD><A href="javascript:emoticon(':twisted:')"><IMG src="templates/${templateName}/images/icon_twisted.gif" alt="Twisted Evil" width="15" height="15" border=0 title="Twisted Evil"></A></TD>
+                      <TD><A href="javascript:emoticon(':roll:')"><IMG src="templates/${templateName}/images/icon_rolleyes.gif" alt="Rolling Eyes" width="15" height="15" border=0 title="Rolling Eyes"></A></TD>
+                      <TD><A href="javascript:emoticon(':wink:')"><IMG src="templates/${templateName}/images/icon_wink.gif" alt=Wink width="15" height="15" border=0 title=Wink></A></TD>
+                    </TR>
+                    <TR vAlign=center align=middle>
+                      <TD><A href="javascript:emoticon(':!:')"><IMG src="templates/${templateName}/images/icon_exclaim.gif" alt=Exclamation width="15" height="15" border=0 title=Exclamation></A></TD>
+                      <TD><A href="javascript:emoticon(':?:')"><IMG src="templates/${templateName}/images/icon_question.gif" alt=Question width="15" height="15" border=0 title=Question></A></TD>
+                      <TD><A href="javascript:emoticon(':idea:')"><IMG src="templates/${templateName}/images/icon_idea.gif" alt=Idea width="15" height="15" border=0 title=Idea></A></TD>
+                      <TD><A href="javascript:emoticon(':arrow:')"><IMG src="templates/${templateName}/images/icon_arrow.gif" alt=Arrow width="15" height="15" border=0 title=Arrow></A></TD>
+                    </TR>
+                    <TR align=middle>
+                      <TD colSpan=4>
+                      <SPAN class=nav>
+                      <!--
+                      <A class=nav onclick="window.open('posting.php?mode=smilies', '_smilies', 'HEIGHT=300,resizable=yes,scrollbars=yes,WIDTH=250');return false;" href="#" target=_new>${I18n.getMessage("PostForm.moreSmilies")}</A>
+						-->
+                      </SPAN>
+                    </TD>
+                    </TR></TBODY></TABLE></TD></TR></TBODY></TABLE></TD>
+          <TD class=row2 vAlign=top><SPAN class=gen><SPAN class=genmed></SPAN>
+            <TABLE cellSpacing=0 cellPadding=2 width=450 border=0>
+              <TBODY>
+              <TR vAlign=center align=middle>
+                <TD><SPAN class=genmed><INPUT class=button onmouseover="helpline('b')" style="FONT-WEIGHT: bold; WIDTH: 30px" accessKey=b onclick=bbstyle(0) type=button value=" B " name=addbbcode0> </SPAN></TD>
+                <TD><SPAN class=genmed><INPUT class=button onmouseover="helpline('i')" style="WIDTH: 30px; FONT-STYLE: italic" accessKey=i onclick=bbstyle(2) type=button value=" i " name=addbbcode2> </SPAN></TD>
+                <TD><SPAN class=genmed><INPUT class=button onmouseover="helpline('u')" style="WIDTH: 30px; TEXT-DECORATION: underline" accessKey=u onclick=bbstyle(4) type=button value=" u " name=addbbcode4> </SPAN></TD>
+                <TD><SPAN class=genmed><INPUT class=button onmouseover="helpline('q')" style="WIDTH: 50px" accessKey=q onclick=bbstyle(6) type=button value=Quote name=addbbcode6> </SPAN></TD>
+                <TD><SPAN class=genmed><INPUT class=button onmouseover="helpline('c')" style="WIDTH: 40px" accessKey=c onclick=bbstyle(8) type=button value=Code name=addbbcode8> </SPAN></TD>
+                <TD><SPAN class=genmed><INPUT class=button onmouseover="helpline('l')" style="WIDTH: 40px" accessKey=l onclick=bbstyle(10) type=button value=List name=addbbcode10> </SPAN></TD>
+                <TD><SPAN class=genmed><INPUT class=button onmouseover="helpline('p')" style="WIDTH: 40px" accessKey=p onclick=bbstyle(12) type=button value=Img name=addbbcode12> </SPAN></TD>
+                <TD><SPAN class=genmed><INPUT class=button onmouseover="helpline('w')" style="WIDTH: 40px" accessKey=w onclick=bbstyle(14) type=button value=URL name=addbbcode14> </SPAN></TD>
+				</TR>
+              <TR>
+                <TD colSpan=9>
+                  <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+                    <TBODY>
+                    <TR>
+                      <TD><SPAN class=genmed>&nbsp;${I18n.getMessage("PostForm.textColor")}: 
+					  <SELECT onmouseover="helpline('s')" onchange="bbfontstyle('[color=' + this.form.addbbcode18.options[this.form.addbbcode18.selectedIndex].value + ']', '[/color]')" name=addbbcode18> 
+						<OPTION class=genmed style="COLOR: black; BACKGROUND-COLOR: #fafafa" value=#444444 selected>${I18n.getMessage("PostForm.colorDefault")}</OPTION> 
+						<OPTION class=genmed style="COLOR: darkred; BACKGROUND-COLOR: #fafafa" value=darkred>${I18n.getMessage("PostForm.colorDarkRed")}</OPTION> 
+						<OPTION class=genmed style="COLOR: red; BACKGROUND-COLOR: #fafafa" value=red>${I18n.getMessage("PostForm.colorRed")}</OPTION> 
+						<OPTION class=genmed style="COLOR: orange; BACKGROUND-COLOR: #fafafa" value=orange>${I18n.getMessage("PostForm.colorOrange")}</OPTION> 
+						<OPTION class=genmed style="COLOR: brown; BACKGROUND-COLOR: #fafafa" value=brown>${I18n.getMessage("PostForm.colorBrown")}</OPTION> 
+						<OPTION class=genmed style="COLOR: yellow; BACKGROUND-COLOR: #fafafa" value=yellow>${I18n.getMessage("PostForm.colorYellow")}</OPTION> 
+						<OPTION class=genmed style="COLOR: green; BACKGROUND-COLOR: #fafafa" value=green>${I18n.getMessage("PostForm.colorGreen")}</OPTION> 
+						<OPTION class=genmed style="COLOR: olive; BACKGROUND-COLOR: #fafafa" value=olive>${I18n.getMessage("PostForm.colorOlive")}</OPTION> 
+						<OPTION class=genmed style="COLOR: cyan; BACKGROUND-COLOR: #fafafa" value=cyan>${I18n.getMessage("PostForm.colorCyan")}</OPTION> 
+						<OPTION class=genmed style="COLOR: blue; BACKGROUND-COLOR: #fafafa" value=blue>${I18n.getMessage("PostForm.colorBlue")}</OPTION> 
+						<OPTION class=genmed style="COLOR: darkblue; BACKGROUND-COLOR: #fafafa" value=darkblue>${I18n.getMessage("PostForm.colorDarkBlue")}</OPTION> 
+						<OPTION class=genmed style="COLOR: violet; BACKGROUND-COLOR: #fafafa" value=violet>${I18n.getMessage("PostForm.colorViolet")}</OPTION> 
+						<OPTION class=genmed style="COLOR: white; BACKGROUND-COLOR: #fafafa" value=white>${I18n.getMessage("PostForm.colorWhite")}</OPTION>
+						<OPTION class=genmed style="COLOR: black; BACKGROUND-COLOR: #fafafa" value=black>${I18n.getMessage("PostForm.colorBlack")}</OPTION>
+					  </SELECT> 
+					  &nbsp;${I18n.getMessage("PostForm.font")}:
+					  <SELECT onmouseover="helpline('f')" onchange="bbfontstyle('[size=' + this.form.addbbcode20.options[this.form.addbbcode20.selectedIndex].value + ']', '[/size]')" name=addbbcode20> 
+						<OPTION class=genmed value=7>${I18n.getMessage("PostForm.fontVerySmall")}</OPTION> 
+						<OPTION class=genmed value=9>${I18n.getMessage("PostForm.fontSmall")}</OPTION> 
+						<OPTION class=genmed value=12 selected>${I18n.getMessage("PostForm.fontNormal")}</OPTION> 
+						<OPTION class=genmed value=18>${I18n.getMessage("PostForm.fontBig")}</OPTION> 
+						<OPTION class=genmed value=24>${I18n.getMessage("PostForm.fontGiant")}</OPTION>
+					  </SELECT> </SPAN>
+					  </TD>
+                      <TD noWrap align=right><SPAN class=gensmall><A 
+                        class=genmed onmouseover="helpline('a')" 
+                        href="javascript:bbstyle(-1)">${I18n.getMessage("PostForm.closeMarks")}</A></SPAN>
+					</TD></TR></TBODY></TABLE></TD></TR>
+              <TR>
+                <TD colSpan=9>
+                <SPAN class=gensmall>
+                <INPUT name=helpbox class=helpline style="FONT-SIZE: 10px; WIDTH: 450px" value="${I18n.getMessage("PostForm.helplineTip")}" size=45 maxLength=100> 
+                </SPAN>
+                </TD>
+                </TR>
+              <TR>
+                <TD colSpan=9><SPAN class=gen><TEXTAREA class=post onkeyup=storeCaret(this); style="WIDTH: 450px" onclick=storeCaret(this); tabIndex=3 name=message rows=15 wrap=virtual cols=35 onselect=storeCaret(this);><#if post?exists><#if quote?exists>[quote=${quoteUser}]${post.text?html}[/quote]<#else>${post.text?html}</#if></#if></TEXTAREA> 
+                  </SPAN></TD></TR></TBODY></TABLE></SPAN></TD></TR>
+        <TR>
+          <TD class=row1 vAlign=center align='center'>
+          <SPAN class=gen><B>${I18n.getMessage("PostForm.options")}</B></SPAN>
+            </TD>
+          <TD class=row2><SPAN class=gen></SPAN>
+            <TABLE cellSpacing=0 cellPadding=1 border=0>
+              <TR>
+                <TD><INPUT type=checkbox name=disable_html ${htmlChecked}></TD>
+                <TD><SPAN class=gen>${I18n.getMessage("PostForm.disableHtml")}</SPAN></TD></TR>
+              <TR>
+                <TD><INPUT type=checkbox name=disable_bbcode ${bbChecked}> </TD>
+                <TD><SPAN class=gen>${I18n.getMessage("PostForm.disableBbCode")}</SPAN></TD></TR>
+              <TR>
+                <TD><INPUT type=checkbox name=disable_smilies ${smiliesChecked}> </TD>
+                <TD><SPAN class=gen>${I18n.getMessage("PostForm.disableSmilies")}</SPAN></TD></TR>
+              <TR>
+                <TD><INPUT type=checkbox name=attach_sig ${signatureChecked}> </TD>
+                <TD><SPAN class=gen>${I18n.getMessage("PostForm.appendSignature")}</SPAN></TD></TR>
+              <TR>
+                <TD><INPUT type=checkbox name=notify ${repliesChecked}> </TD>
+                <TD><SPAN class=gen>${I18n.getMessage("PostForm.notifyReplies")}</SPAN></TD></TR>
+
+				<#if setType>
+              	<TR>
+                <TD></TD>
+                <TD>
+					<SPAN class=gen>${I18n.getMessage("PostForm.setTopicAs")}:
+                  	<input type=radio checked value=0 name=topic_type <#if topic?exists && topic.type == 0>checked</#if>>${I18n.getMessage("PostForm.setTopicAsNormal")}&nbsp;&nbsp;
+					<INPUT type=radio value=1 name=topic_type <#if topic?exists && topic.type == 1>checked</#if>>${I18n.getMessage("PostForm.setTopicAsSticky")}&nbsp;&nbsp;
+					<INPUT type=radio value=2 name=topic_type <#if topic?exists && topic.type == 2>checked</#if>>${I18n.getMessage("PostForm.setTopicAsAnnounce")}&nbsp;&nbsp;
+                	</SPAN>                 
+				</TD>
+               </TR>
+			   </#if>
+            </TABLE>
+           </TD>
+          </TR>
+          <tr align="center"><TD height=28 colSpan=2 class=catBottom>              
+			<INPUT class=mainoption tabIndex=5 type=submit value="${I18n.getMessage("PostForm.preview")}" name=preview>&nbsp;
+			<INPUT class=mainoption accessKey=s tabIndex=6 type=submit value="${I18n.getMessage("PostForm.submit")}" name=post>
+		</TD></TR></TABLE>
+		</FORM>
+  </TD>
+  </TR></TBODY></TABLE></BODY></HTML>

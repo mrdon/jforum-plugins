@@ -1,0 +1,25 @@
+<STYLE type=text/css>@import url( style.css );</STYLE>
+<form name="form" action="${contextPath}/jforum.page" method="post">
+<input type="hidden" name="action" value="groupsSave">
+<input type="hidden" name="module" value="${moduleName}">
+<input type="hidden" name="securityHash" value="${securityHash}">
+<input type="hidden" name="user_id" value="${user.id}">
+
+<#import "macros/group_macros.ftl" as lib>
+
+<TABLE class=forumline cellSpacing=1 cellPadding=3 width="100%" border=0>
+<TR>
+<TH class=thHead vAlign=center colSpan=2 height=25>${groupFor}</TH></TR>
+        
+<TR>
+<TD class=row1 width="38%"><span class="gen">${I18n.getMessage("Groups.Form.GroupName")}</span></TD>
+<TD class=row2> 
+<@lib.selectFieldGroups "groups", groups, 0, true, selectedList/>
+</TD>
+</TR>
+
+<TR align="center">
+<TD class=catBottom colSpan=2 height=28><INPUT class=mainoption type=submit value="${I18n.getMessage("Groups.Form.ClickToUpdate")}" name=submit></TD>
+</TR></TABLE>
+</FORM>
+  

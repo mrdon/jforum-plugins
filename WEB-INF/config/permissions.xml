@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+<!DOCTYPE sections SYSTEM "permissions.dtd">
+-->
+
+<sections>
+	<!-- Administration -->
+	<section id="administration_section" title="Administration">
+		<permission id="perm_administration" title="Is Administrator" type="single">
+			<option value="deny" description="No"/>
+			<option value="allow" description="Yes"/>
+		</permission>
+	</section>
+
+	<!-- Categories -->
+	<section id="categories_section" title="Categories">
+		<permission id="perm_category" title="Restricted Categories" type="multiple">
+			<sql queryName="CategoryModel.selectAll" valueField="categories_id" captionField="title"/>
+		</permission>
+	</section>
+
+	<!-- Restricted Forums -->
+	<section id="forums_section" title="Forums">
+		<permission id="perm_forum" title="Restricted Forums" type="multiple">
+			<sql queryName="ForumModel.selectAll" valueField="forum_id" captionField="forum_name"/>
+		</permission>
+	</section>
+
+	<!-- Anonymous Posts -->
+	<section id="anonymous_posts_section" title="Anonymous Posts">
+		<permission id="perm_anonymous_post" title="Deny anonymous posts" type="multiple">
+			<sql queryName="ForumModel.selectAll" valueField="forum_id" captionField="forum_name"/>
+		</permission>
+	</section>
+	
+	<!-- Moderation -->
+	<section id="moderation_section" title="Moderation">
+		<!-- Is a moderator -->
+		<permission id="perm_moderation" title="Is a moderator" type="single">
+			<option value="deny" description="No"/>
+			<option value="allow" description="Yes"/>
+		</permission>
+
+		<!-- Restricted forums to moderate -->		
+		<permission id="perm_moderation_forums" title="Cannot moderate these forums:" type="multiple">
+			<sql queryName="ForumModel.selectAll" valueField="forum_id" captionField="forum_name"/>
+		</permission>
+		
+		<!-- Post removal -->
+		<permission id="perm_moderation_post_remove" title="Can remove posts" type="single">
+			<option value="deny" description="No"/>
+			<option value="allow" description="Yes"/>
+		</permission>
+		
+		<!-- Post edit -->
+		<permission id="perm_moderation_post_edit" title="Can edit messages" type="single">
+			<option value="deny" description="No"/>
+			<option value="allow" description="Yes"/>
+		</permission>
+		
+		<!-- topic Moving -->
+		<permission id="perm_moderation_topic_move" title="Can move messages between forums" type="single">
+			<option value="deny" description="No"/>
+			<option value="allow" description="Yes"/>
+		</permission>
+		
+		<!-- Lock and Unlock topics -->
+		<permission id="perm_moderation_topic_lockUnlock" title="Can lock and unlock topics" type="single">
+			<option value="deny" description="No"/>
+			<option value="allow" description="Yes"/>
+		</permission>
+	</section>
+</sections>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bbConfig>
+	<!-- CODE -->
+	<match>
+		<!--
+		Ok, this is a very very very very very ugly and big dirty 
+		crapy hack. The situation is that bb tags inside of a "code" tag
+		shouldn't be parsed, so before the "real" match, we need to get
+		only the code portion inside the tag and do some replaces... 
+		-->
+		<before useRegex="(?s).*?\[code\](.*?)\[/code\].*?" replace="\[" with="#91;"/>
+		
+		<regex>(?s)\[code\](.*?)\[/code\]</regex>
+		<replace>
+		<![CDATA[
+		<table width="90%" cellspacing="1" cellpadding="3" border="0" align="center">
+		<tr> 
+		<td><span class="genmed"><b>Code:</b></span></td>
+		</tr>
+		</table>
+		<table width="90%" cellspacing="1" cellpadding="3" border="0" align="center" bgcolor="#2943D4">
+		<tr>
+		<td class="code" bgcolor="#F3F5FF"><pre>$1</pre></td>
+		</tr>
+		</table>
+		]]>
+		</replace>
+	</match>
+
+	<match>
+		<regex>(?s)\[quote\](.*?)\[/quote\]</regex>
+		<replace>
+		<![CDATA[
+		<table width="90%" cellspacing="1" cellpadding="1" border="0" align="center" bgcolor="#2943D4" >
+		<tr>
+		<td class="quote" bgcolor="#F3F5FF">
+		$1
+		&nbsp;
+		</td>
+		</tr>
+		</table>
+		
+		]]>
+		</replace>
+	</match>
+	
+	<match>
+		<regex>(?s)\[quote=['"]?(.*?[^'"])['"]?\](.*?)\[/quote\]</regex>
+		<replace>
+		<![CDATA[
+		<table width="90%" cellspacing="1" cellpadding="1" border="0" align="center">
+		<tr> 
+		<td><span class="genmed"><b>$1 wrote:</b></span></td>
+		</tr>
+		</table>
+		
+		<table width="90%" cellspacing="1" cellpadding="1" border="0" align="center" bgcolor="#2943D4" >
+		<tr>
+		<td class="quote" bgcolor="#F3F5FF">
+		$2
+		&nbsp;
+		</td>
+		</tr>
+		</table>
+		
+		]]>
+		</replace>
+	</match>
+
+	<!-- B -->
+	<match>
+		<regex>\[b\](.*?)\[/b\]</regex>
+		<replace>
+		<![CDATA[
+		<b>$1</b>
+		]]>
+		</replace>
+	</match>
+	
+	<!-- I -->
+	<match>
+		<regex>\[i\](.*?)\[/i\]</regex>
+		<replace>
+		<![CDATA[
+		<i>$1</i>
+		]]>
+		</replace>
+	</match>
+	
+	<!-- U -->
+	<match>
+		<regex>\[u\](.*?)\[/u\]</regex>
+		<replace>
+		<![CDATA[
+		<u>$1</u>
+		]]>
+		</replace>
+	</match>
+	
+	<!-- LIST -->
+	<match>
+		<regex>\[list\](.*?)\[/list\]</regex>
+		<replace>
+		<![CDATA[
+		<li> $1
+		]]>
+		</replace>
+	</match>
+	
+	<!-- IMG -->
+	<match>
+		<regex>\[img\](.*?)\[/img\]</regex>
+		<replace>
+		<![CDATA[
+		<img src='$1'>
+		]]>
+		</replace>
+	</match>
+	
+	<!-- URL -->
+	<match>
+		<regex>\[url\](.*?)\[/url\]</regex>
+		<replace>
+		<![CDATA[
+		<a href='$1' target='_new'>$1</a>
+		]]>
+		</replace>
+	</match>
+	
+	<!-- URL=?? -->
+	<match>
+		<regex>\[url=['"]?(.*?[^'"])['"]?\](.*?)\[/url\]</regex>
+		<replace>
+		<![CDATA[
+		<a href="$1" target="_new">$2</a>
+		]]>
+		</replace>
+	</match>
+	
+	<!-- COLOR -->
+	<match>
+		<regex>(?s)\[color=['"]?(.*?[^'"])['"]?\](.*?)\[/color\]</regex>
+		<replace>
+		<![CDATA[
+		<font color='$1'>$2</font>
+		]]>
+		</replace>
+	</match>
+
+	<!-- SIZE -->
+	<match>
+		<regex>(?s)\[size=['"]?(.*?[^'"])['"]?\](.*?)\[/size\]</regex>
+		<replace>
+		<![CDATA[
+		<span style="font-size: $1px; line-height: normal">$2</span>
+		]]>
+		</replace>
+	</match>
+</bbConfig>

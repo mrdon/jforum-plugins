@@ -1,0 +1,145 @@
+<STYLE type=text/css>@import url(style.css);</STYLE>
+<TABLE cellSpacing=2 cellPadding=2 width="100%" align=center border=0>
+  <TBODY>
+    <TR>
+      <TD align=left><SPAN class=nav><A class=nav href="${contextPath}/forums/list.page">${I18n.getMessage("ForumListing.forumIndex")}</A></SPAN></TD>
+    </TR>
+  </TBODY>
+</TABLE>
+<TABLE class=forumline cellSpacing=1 cellPadding=3 width="100%" 
+      align=center border=0>
+  <TBODY>
+    <TR>
+      <TH class=thHead noWrap colSpan=2 height=25>${I18n.getMessage("UserProfile.profileFor")} :: ${u.username}</TH>
+    </TR>
+    <TR>
+      <TD class=catLeft align=middle width="40%" height=28><B><SPAN 
+            class=gen>${I18n.getMessage("UserProfile.avatar")}</SPAN></B></TD>
+      <TD class=catRight align=center width="60%"><B><SPAN class=gen>${I18n.getMessage("UserProfile.allAbout")} ${u.username}</SPAN></B></TD>
+    </TR>
+    <TR>
+      <TD class=row1 vAlign=top align=middle height=6><#if (u.avatar?exists && u.avatar?length > 0)><img src="images/${u.avatar}" border=0><BR></#if>
+          <SPAN class=postdetails>RANKING</SPAN></TD>
+      <TD class=row1 vAlign=top rowSpan=3>
+        <TABLE cellSpacing=1 cellPadding=3 width="100%" border=0>
+          <TBODY>
+            <TR>
+              <TD vAlign=center noWrap align=right><SPAN 
+                  class=gen>${I18n.getMessage("UserProfile.registrationDate")}:&nbsp;</SPAN></TD>
+              <TD width="100%"><B><SPAN class=gen>${u.registrationDate}</SPAN></B></TD>
+            </TR>
+            <TR>
+              <TD vAlign=top noWrap align=right><SPAN class=gen>${I18n.getMessage("UserProfile.totalMessages")}:&nbsp;</SPAN></TD>
+              <TD vAlign=top><B><SPAN class=gen>${u.totalPosts}</SPAN></B><BR>
+			  		<!--
+				  <SPAN class=genmed>[0.80% do total / 1.23 mensagens por dia]</SPAN> <BR>
+                  <SPAN class=genmed>
+				  
+                  <A class=genmed href="http://www.guj.com.br/forum/search.php?search_author=Daniel+Quirino+Oliveira">
+                  ${I18n.getMessage("UserProfile.findAllMessagesBy")} ${u.username}
+                  </A>-->
+				  </SPAN>
+				  </TD>
+            </TR>
+            <#if (u.location?exists && u.location?length > 0)>
+            <TR>
+              <TD vAlign=center noWrap align=right><SPAN 
+                  class=gen>${I18n.getMessage("UserProfile.from")}:&nbsp;</SPAN></TD>
+              <TD><B><SPAN class=gen>${u.location}</SPAN></B></TD>
+            </TR>
+            </#if>
+            
+            <#if (u.webSite?exists && u.webSite?length > 0)>
+            <TR>
+              <TD vAlign=center noWrap align=right><SPAN 
+                  class=gen>${I18n.getMessage("UserProfile.webSite")}:&nbsp;</SPAN></TD>
+              <TD><SPAN class=gen><B><A 
+                  href="${u.webSite}" 
+                  target=_new>${u.webSite}</A></B></SPAN></TD>
+            </TR>
+            </#if>
+            
+            <#if (u.occupation?exists && u.occupation?length > 0)>
+            <TR>
+              <TD vAlign=center noWrap align=right><SPAN 
+                  class=gen>${I18n.getMessage("UserProfile.occupation")}:&nbsp;</SPAN></TD>
+              <TD><B><SPAN class=gen>${u.occupation}</SPAN></B></TD>
+            </TR>
+            </#if>
+            
+            <#if (u.interests?exists && u.interests?length > 0)>
+            <TR>
+              <TD vAlign=top noWrap align=right><SPAN 
+                  class=gen>${I18n.getMessage("UserProfile.interests")}:</SPAN></TD>
+              <TD><B><SPAN class=gen>${u.interests}</SPAN></B></TD>
+            </TR>
+            </#if>
+        </TABLE>
+      </TD>
+    </TR>
+    <TR>
+      <TD class=catLeft align=middle height=28><B><SPAN class=gen>${I18n.getMessage("UserProfile.contact")} ${u.username}</SPAN></B></TD>
+    </TR>
+    <TR>
+      <TD class=row1 vAlign=top>
+        <TABLE cellSpacing=1 cellPadding=3 width="100%" border=0>
+          <TBODY>
+            <TR>
+              <TD vAlign=center noWrap align=right><SPAN class=gen>${I18n.getMessage("UserProfile.emailAddress")}:</SPAN></TD>
+              <TD class=row1 vAlign=center width="100%"><B>
+              	<SPAN class=gen>
+              	<A href="mailto:${u.email}">
+                  <img src="templates/${templateName}/images/icon_email.gif" border=0></A></SPAN></B>
+                  </TD>
+            </TR>
+            <TR>
+              <TD vAlign=center noWrap align=right><SPAN class=gen>${I18n.getMessage("UserProfile.privateMessage")}:</SPAN></TD>
+              <TD class=row1 vAlign=center><B><SPAN class=gen><A href="#">
+              <img src="templates/${templateName}/images/icon_pm.gif" border=0></A></SPAN></B></TD>
+            </TR>
+            <#if (u.msnm?exists && u.msnm?length > 0)>
+            <TR>
+              <TD vAlign=center noWrap align=right><SPAN class=gen>${I18n.getMessage("User.msn")}:</SPAN></TD>
+              <TD class=row1 vAlign=center><SPAN 
+                  class=gen>${u.msnm}</SPAN></TD>
+            </TR>
+            </#if>
+            
+            <#if (u.yim?exists && u.yim?length > 0)>
+            <TR>
+              <TD vAlign=center noWrap align=right><SPAN class=gen>${I18n.getMessage("User.yahoo")}:</SPAN></TD>
+              <TD class=row1 vAlign=center><SPAN class=gen>${u.yim}</SPAN></TD>
+            </TR>
+            </#if>
+            <!--
+            <TR>
+              <TD vAlign=center noWrap align=right><SPAN class=gen>${I18n.getMessage("User.aim")}:</SPAN></TD>
+              <TD class=row1 vAlign=center><SPAN 
+              class=gen>&nbsp;</SPAN></TD>
+            </TR>
+            -->
+            <#if (u.icq?exists && u.icq?length > 0)>
+            <TR>
+              <TD vAlign=center noWrap align=right><SPAN class=gen>${I18n.getMessage("User.icq")}:</SPAN></TD>
+              <TD class=row1>
+                <SCRIPT language=JavaScript type=text/javascript>
+				if ( navigator.userAgent.toLowerCase().indexOf('mozilla') != -1 && navigator.userAgent.indexOf('5.') == -1 ) {
+					document.write(' <a href="http://wwp.icq.com/scripts/search.dll?to=${u.icq}"><img src="templates/${templateName}/images/icon_icq_add.gif" border="0" /></a>');
+				}
+				else {
+					document.write('<table cellspacing="0" cellpadding="0" border="0"><tr><td nowrap="nowrap"><div style="position:relative;height:18px"><div style="position:absolute"><a href="http://wwp.icq.com/scripts/search.dll?to=75455439"><img src="templates/${templateName}/images/icon_icq_add.gif" border="0" /></a></div><div style="position:absolute;left:3px;top:-1px"><a href="http://wwp.icq.com/${u.icq}#pager"><img src="http://web.icq.com/whitepages/online?icq=${u.icq}&img=5" width="18" height="18" border="0" /></a></div></div></td></tr></table>');
+				}
+				</SCRIPT>
+                <NOSCRIPT>
+                <A href="http://wwp.icq.com/scripts/search.dll?to=${u.icq}">
+                <img src="templates/${templateName}/images/icon_icq_add.gif" border=0></A>
+                </NOSCRIPT>
+              </TD>
+            </TR>
+            </#if>
+        </TABLE>
+      </TD>
+    </TR>
+  </TBODY>
+</TABLE>
+

@@ -1,0 +1,36 @@
+<STYLE type=text/css>@import url( style.css );</STYLE>
+
+<form name="form" action="${contextPath}/jforum.page" method="post">
+<input type="hidden" name="action" value="delete">
+<input type="hidden" name="module" value="${moduleName}">
+<input type="hidden" name="securityHash" value="${securityHash}">
+
+<TABLE class=forumline cellSpacing=1 cellPadding=3 width="100%" border=0><TBODY>
+<TR>
+<TH class=thHead vAlign=center colSpan=7 height=25>${I18n.getMessage("User.adminTitle")}</TH>
+</TR>
+<TR>
+<TD class=gen><b>ID</b></TD>
+<TD class=gen><b>Username</b></TD>
+<TD class=gen>&nbsp;</TD>
+<TD class=gen>&nbsp;</TD>
+</TR>
+
+<#list users as user>
+<TR>
+	<TD class=row2><span class="gen">${user.id}</span></TD>
+	<TD class=row2><span class="gen">${user.username}</span></TD>
+	<TD class=row2><span class="gen"><a href="${contextPath}/jforum.page?module=adminUsers&action=edit&id=${user.id}">${I18n.getMessage("Edit")}</a></span></TD>
+	<TD class=row2><span class="gen"><a href="${contextPath}/jforum.page?module=adminUsers&action=groups&id=${user.id}">${I18n.getMessage("User.Groups")}</a></span></TD>
+	<TD class=row2><span class="gen"><a href="${contextPath}/jforum.page?module=adminUsers&action=permissions&id=${user.id}">${I18n.getMessage("Permissions")}</a></span></TD>
+	</TR>
+</#list>
+
+<TR align="center">
+<TD class=catBottom colSpan=7 height=28>
+<INPUT class=mainoption type=button value="${I18n.getMessage("Insert")}" onClick="document.location = '${contextPath}?module=adminUsers&action=insert';">&nbsp;&nbsp;
+<INPUT class=mainoption type=submit value="${I18n.getMessage("Forums.List.ClickToDelete")}" name=submit>&nbsp;&nbsp;
+</TD>
+</TR></TABLE>
+</FORM>
+   

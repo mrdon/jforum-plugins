@@ -1,0 +1,83 @@
+<STYLE type=text/css>@import url( style.css );</STYLE>
+
+  <form action="${contextPath}/jforum.page" method=post>
+  <input type="hidden" name="module" value="${moduleName}">
+  <input type="hidden" name="action" value="search">
+      <TABLE cellSpacing=2 cellPadding=2 width="100%" align=center border=0>
+        <TR>
+          <TD align=left>
+		  <SPAN class=nav>
+		  <A class=nav href="${contextPath}/forums/list.page">${I18n.getMessage("ForumListing.forumIndex")}</A></SPAN></TD>
+		 </TR>
+		</TABLE>
+      <TABLE class=forumline cellSpacing=1 cellPadding=4 width="100%" 
+        border=0>
+        <TR>
+          <TH class=thHead colSpan=4 height=25>${I18n.getMessage("Search.terms")}</TH>
+		</TR>
+		
+        <TR>
+          <TD class=row1 width="50%" colSpan=2><SPAN class=gen>${I18n.getMessage("Search.typeKeywords")}</SPAN></TD>
+          <TD class=row2 vAlign=top colSpan=2><p><SPAN class=genmed>
+          <INPUT class=post style="WIDTH: 300px" size=30 name=search_keywords>
+          <BR>
+          <BR>
+          <INPUT name=search_terms type=radio value=all checked> 
+         ${I18n.getMessage("Search.allTerms")}</SPAN><br>
+		<SPAN class=genmed>
+		<INPUT type=radio value=any name=search_terms>
+		${I18n.getMessage("Search.anyTerm")}</SPAN></TD>
+        </TR>
+        <TR>
+          <TD class=row1 colSpan=2><SPAN class=gen>${I18n.getMessage("Search.byAuthor")}:</SPAN>
+          </TD>
+          <TD class=row2 vAlign=center colSpan=2><SPAN class=genmed>
+		  <INPUT class=post style="WIDTH: 300px" size=30 name=search_author></SPAN></TD></TR>
+        <TR>
+          <TH class=thHead colSpan=4 height=25>${I18n.getMessage("Search.options")}</TH>
+        </TR>
+		
+        <TR>
+          <TD class=row1 align=right><SPAN class=gen>${I18n.getMessage("Search.forum")}:&nbsp;</SPAN></TD>
+          <TD class=row2><SPAN class=genmed>
+		  <SELECT class=post name=search_forum>
+		  <OPTION value="" selected>${I18n.getMessage("Search.allAvailable")}</OPTION>
+		  <#list forums as f>
+		  	<option value="${f.id}">${f.name}</option>
+		  </#list>
+		  </SELECT>
+		  </SPAN>
+		  </TD>
+		   <TD class=row1 align=right rowspan="2"><SPAN class=gen>${I18n.getMessage("Search.orderBy")}:&nbsp;</SPAN></TD>
+          <TD class=row2 vAlign=center noWrap rowspan="2"><SPAN class=genmed>
+		  <SELECT class=post name=sort_by>
+		  	<OPTION value="p.post_time" selected>${I18n.getMessage("Search.postDate")}</OPTION>
+			<OPTION value="p.post_subject">${I18n.getMessage("Search.subject")}</OPTION>
+			<OPTION value="u.username">${I18n.getMessage("Search.author")}</OPTION>
+			<OPTION value="t.forum_id">${I18n.getMessage("Search.forum")}</OPTION>
+		</SELECT>
+		<BR>
+		<INPUT type=radio value=ASC name=sort_dir> 
+		${I18n.getMessage("Search.ascending")}<BR>
+		<INPUT type=radio CHECKED value=DESC name=sort_dir> 
+		${I18n.getMessage("Search.descending")}</SPAN></TD>
+		
+        </TR>
+        <TR>
+          <TD class=row1 align=right><SPAN 
+class=gen>${I18n.getMessage("Search.category")}:&nbsp;</SPAN></TD>
+          <TD class=row2><SPAN class=genmed>
+		  <SELECT class=post name=search_cat>
+		  <OPTION value="" selected>${I18n.getMessage("Search.allAvailable")}</OPTION>
+		  <#list categories as c>
+		  	<option value="${c.id}">${c.name}</option>
+		  </#list>
+		  </SELECT></SPAN></TD>
+         
+        </TR>
+       
+        <TR>
+          <TD class=catBottom align=middle colSpan=4 height=28><INPUT class=liteoption type=submit value="${I18n.getMessage("Search.search")}"></TD>
+		</TR>
+</TABLE>
+     

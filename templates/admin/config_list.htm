@@ -1,0 +1,150 @@
+<STYLE type=text/css>@import url( style.css );</STYLE>
+
+<form name="form" action="${contextPath}/jforum.page" method="post">
+<input type="hidden" name="action" value="editSave">
+<input type="hidden" name="module" value="${moduleName}">
+<input type="hidden" name="securityHash" value="${securityHash}">
+
+<TABLE class=forumline cellSpacing=1 cellPadding=3 width="100%" border=0>
+<TR>
+<TH class=thHead vAlign=center colSpan=2 height=25>${I18n.getMessage("AdminConfig.Title")}</TH>
+</TR>
+
+<!-- General -->
+<TR>
+	<TD class=catSides colspan="2"><SPAN class=gen><b>${I18n.getMessage("Config.Form.Forum")}</b></SPAN></TD>
+</TR>
+<TR>
+	<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Config.Form.ForumURL")}</SPAN></TD>
+	<TD class=row1 width="38%"><SPAN class=gen><input type="text" size="30"name="p_forumLink" value="${config.getProperty("forumLink")}"></SPAN></TD>
+</TR>
+<TR>
+	<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Config.Form.avatarSize")}</SPAN></TD>
+	<TD class=row1 width="38%"><SPAN class=gen><input type="text" size="30"name="p_avatarMaxKbSize" value="${config.getProperty("avatarMaxKbSize")}"></SPAN></TD>
+</TR>
+<TR>
+	<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Config.Form.TopicsPerPage")}</SPAN></TD>
+	<TD class=row1 width="38%"><SPAN class=gen><input type="text" size="30"name="p_topicsPerPage" value="${config.getProperty("topicsPerPage")}"></SPAN></TD>
+</TR>
+<TR>
+	<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Config.Form.PostsPerPage")}</SPAN></TD>
+	<TD class=row1 width="38%"><SPAN class=gen><input type="text" size="30"name="p_postsPerPage" value="${config.getProperty("postsPerPage")}"></SPAN></TD>
+</TR>
+<TR>
+	<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Config.Form.SmilieDir")}</SPAN></TD>
+	<TD class=row1 width="38%"><SPAN class=gen><input type="text" size="30"name="p_smilieImgDir" value="${config.getProperty("smilieImgDir")}"></SPAN></TD>
+</TR>
+
+<!-- General -->
+<TR>
+	<TD class=catSides colspan="2"><SPAN class=gen><b>${I18n.getMessage("Config.Form.General")}</b></SPAN></TD>
+</TR>
+<TR>
+	<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Config.Form.TmpDir")}</SPAN></TD>
+	<TD class=row1 width="38%"><SPAN class=gen><input type="text" size="30"name="p_tmpDir" value="${config.getProperty("tmpDir")}"></SPAN></TD>
+</TR>
+<TR>
+	<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Config.Form.CacheDir")}</SPAN></TD>
+	<TD class=row1 width="38%"><SPAN class=gen><input type="text" size="30"name="p_cacheDir" value="${config.getProperty("cacheDir")}"></SPAN></TD>
+</TR>
+<TR>
+	<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Config.Form.CookieName")}</SPAN></TD>
+	<TD class=row1 width="38%"><SPAN class=gen><input type="text" size="30"name="p_cookieName" value="${config.getProperty("cookieName")}"></SPAN></TD>
+</TR>
+<TR>
+	<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Config.Form.I18n")}</SPAN></TD>
+	<TD class=row1 width="38%">
+		<SPAN class=gen>
+		<select name="p_i18n.default">
+		<#list locales as l>
+			<#assign selected = ""/>
+			<#if l == config.getProperty("i18n.default")>
+				<#assign selected = "selected"/>
+			</#if>
+			
+			<option value="${l}" ${selected}>${l}</option>
+		</#list>
+		</select>
+		</SPAN>
+	</TD>
+</TR>
+<TR>
+	<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Config.Form.DateFormat")}</SPAN></TD>
+	<TD class=row1 width="38%"><SPAN class=gen><input type="text" size="30"name="p_dateTimeFormat" value="${config.getProperty("dateTimeFormat")}"></SPAN></TD>
+</TR>
+
+<!-- RSS -->
+<TR>
+	<TD class=catSides colspan="2"><SPAN class=gen><b>${I18n.getMessage("Config.Form.RSS")}</b></SPAN></TD>
+</TR>
+<TR>
+	<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Config.Form.ForumRSS")}</SPAN></TD>
+	<TD class=row1 width="38%"><SPAN class=gen><input type="text" size="30"name="p_forumRSSFilename" value="${config.getProperty("forumRSSFilename")}"></SPAN></TD>
+</TR>
+<TR>
+	<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Config.Form.TopicRSS")}</SPAN></TD>
+	<TD class=row1 width="38%"><SPAN class=gen><input type="text" size="30"name="p_topicRSSFilename" value="${config.getProperty("topicRSSFilename")}"></SPAN></TD>
+</TR>
+<TR>
+	<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Config.Form.RSSTopics")}</SPAN></TD>
+	<TD class=row1 width="38%"><SPAN class=gen><input type="text" size="30"name="p_rssTopics" value="${config.getProperty("rssTopics")}"></SPAN></TD>
+</TR>
+
+<!-- Mail -->
+<TR>
+	<TD class=catSides colspan="2"><SPAN class=gen><b>${I18n.getMessage("Config.Form.Mail")}</b></SPAN></TD>
+</TR>
+<TR>
+	<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Config.Form.Charset")}</SPAN></TD>
+	<TD class=row1 width="38%"><SPAN class=gen><input type="text" size="30"name="p_mail.charset" value="${config.getProperty("mail.charset")}"></SPAN></TD>
+</TR>
+<TR>
+	<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Config.Form.Sender")}</SPAN></TD>
+	<TD class=row1 width="38%"><SPAN class=gen><input type="text" size="30"name="p_mail.sender" value="${config.getProperty("mail.sender")}"></SPAN></TD>
+</TR>
+<TR>
+	<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Config.Form.AnswerFile")}</SPAN></TD>
+	<TD class=row1 width="38%"><SPAN class=gen><input type="text" size="30"name="p_mail.newAnswer.messageFile" value="${config.getProperty("mail.newAnswer.messageFile")}"></SPAN></TD>
+</TR>
+<TR>
+	<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Config.Form.AnswerSubject")}</SPAN></TD>
+	<TD class=row1 width="38%"><SPAN class=gen><input type="text" size="30"name="p_mail.newAnswer.subject" value="${config.getProperty("mail.newAnswer.subject")}"></SPAN></TD>
+</TR>
+<TR>
+	<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Config.Form.MessageFormat")}</SPAN></TD>
+	<TD class=row1 width="38%">
+		<select name="p_mail.messageFormat">
+			<option value="text" <#if config.getProperty("mail.messageFormat") == "text">selected</#if>>Text</option>
+			<option value="html" <#if config.getProperty("mail.messageFormat") == "html">selected</#if>>HTML</option>
+		</select>	
+	</TD>
+</TR>
+<TR>
+	<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Config.Form.MailHost")}</SPAN></TD>
+	<TD class=row1 width="38%"><SPAN class=gen><input type="text" size="30"name="p_mail.smtp.host" value="${config.getProperty("mail.smtp.host")}"></SPAN></TD>
+</TR>
+<TR>
+	<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Config.Form.SmtpAuth")}</SPAN></TD>
+	<TD class=row2 width="38%">
+		<select name="p_mail.smtp.auth">
+			<option value="false" <#if config.getProperty("mail.smtp.auth") == "false">selected</#if>>False</option>
+			<option value="true" <#if config.getProperty("mail.smtp.auth") == "true">selected</#if>>True</option>
+		</select>
+	</TD>
+</TR>
+<TR>
+	<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Config.Form.SmtpUsername")}</SPAN></TD>
+	<TD class=row1 width="38%"><SPAN class=gen><input type="text" size="30"name="p_mail.smtp.username" value="${config.getProperty("mail.smtp.username")}"></SPAN></TD>
+</TR>
+<TR>
+	<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Config.Form.SmtpPassword")}</SPAN></TD>
+	<TD class=row1 width="38%"><SPAN class=gen><input type="password" name="p_mail.smtp.password" value="${config.getProperty("mail.smtp.password")}"></SPAN></TD>
+</TR>
+
+<TR>
+	<TD class=catSides colspan="2" align="center"><input type="submit" value="${I18n.getMessage("Update")}">&nbsp;&nbsp;<input type="reset" value="${I18n.getMessage("Reset")}"></TD>
+</TR>
+
+</table>
+</FORM>
+   
