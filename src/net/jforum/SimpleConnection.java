@@ -56,7 +56,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * a connection pool.
  * 
  * @author Rafael Steil
- * @version $Id: SimpleConnection.java,v 1.2 2004/08/26 20:06:42 rafaelsteil Exp $
+ * @version $Id: SimpleConnection.java,v 1.3 2004/08/27 01:05:10 rafaelsteil Exp $
  */
 public class SimpleConnection extends DBConnection 
 {
@@ -66,7 +66,7 @@ public class SimpleConnection extends DBConnection
 	public void init() throws Exception 
 	{
 		SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue("database.driver.config"));
-		Class.forName(SystemGlobals.getValue(SystemGlobals.getValue("database.connection.driver")));
+		Class.forName(SystemGlobals.getValue("database.connection.driver"));
 	}
 
 	/** 
