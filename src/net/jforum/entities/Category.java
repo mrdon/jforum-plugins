@@ -70,7 +70,7 @@ import net.jforum.util.ForumOrderComparator;
  * to the user who make the call tho the method. 
  * 
  * @author Rafael Steil
- * @version $Id: Category.java,v 1.10 2004/12/05 21:51:26 rafaelsteil Exp $
+ * @version $Id: Category.java,v 1.11 2004/12/06 01:06:14 rafaelsteil Exp $
  */
 public class Category 
 {
@@ -161,7 +161,7 @@ public class Category
 	 * @param forumId
 	 */
 	public void removeForum(int forumId) {
-		this.forums.remove(new Forum(forumId));
+		this.forums.remove(this.getForum(forumId));
 		this.forumsIdMap.remove(new Integer(forumId));
 	}
 
