@@ -45,6 +45,7 @@ package net.jforum.drivers.generic.security;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import net.jforum.JForum;
 import net.jforum.drivers.generic.AutoKeys;
@@ -59,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * $Id: UserSecurityModel.java,v 1.5 2004/09/11 01:15:10 jamesyong Exp $
+ * $Id: UserSecurityModel.java,v 1.6 2005/01/14 21:11:53 rafaelsteil Exp $
  */
 public class UserSecurityModel extends AutoKeys implements net.jforum.model.security.UserSecurityModel 
 {
@@ -188,7 +189,7 @@ public class UserSecurityModel extends AutoKeys implements net.jforum.model.secu
 		return roles;
 	}
 	
-	private ArrayList loadGroupRoles(ArrayList groups) throws Exception
+	private ArrayList loadGroupRoles(List groups) throws Exception
 	{
 		ArrayList groupRolesList = new ArrayList();
 		GroupSecurityModel gmodel = new GroupSecurityModel();

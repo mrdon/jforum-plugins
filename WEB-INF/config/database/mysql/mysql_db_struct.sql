@@ -319,6 +319,7 @@ CREATE TABLE jforum_users (
   deleted tinyint(1) default NULL,
   user_viewonline tinyint(1) default '1',
   security_hash varchar(32),
+  user_karma DECIMAL(10,2),
   PRIMARY KEY  (user_id)
 ) TYPE=InnoDB;
 
@@ -431,4 +432,17 @@ CREATE TABLE jforum_search_topics (
   KEY(user_id),
   KEY(topic_first_post_id),
   KEY(topic_last_post_id)
+) TYPE=InnoDB;
+
+--
+-- Table structure for table 'jforum_karma'
+--
+DROP TABLE IF EXISTS jforum_karma;
+CREATE TABLE jforum_karma (
+	karma_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	post_id INT NOT NULL,
+	topic_id INT NOT NULL,
+	post_user_id INT NOT NULL,
+	from_user_id INT NOT NULL,
+	points INT NOT NULL
 ) TYPE=InnoDB;

@@ -10,9 +10,38 @@ function confirmDelete()
 	
 	return false;
 }
+
+<#if karmaEnabled>
+	function karmaVote(s, postId) {
+		if (s.selectedIndex == 0) {
+			return;
+		}
+
+		if (confirm("${I18n.getMessage("Karma.confirmVote")}")) {
+			document.location = "${contextPath}/karma/insert/" + postId + "/" + s.value + "${extension}";
+		}
+		else {
+			s.selectedIndex = 0;
+		}
+	}
+
+	function karmaPointsCombo(postId)
+	{
+		document.write('<select name="karma" onChange="karmaVote(this,' + postId + ')">');
+		document.write('	<option value="">Choose a note</option>');
+		document.write('	<option value="1">1</option>');
+		document.write('	<option value="2">2</option>');
+		document.write('	<option value="3">3</option>');
+		document.write('	<option value="4">4</option>');
+		document.write('	<option value="5">5</option>');
+		document.write('</select>');
+	}
+</#if>
 </script>
 
-<script language="javascript" src="${contextPath}/templates/${templateName}/utils.js"></script>
+<script language="javascript">
+<#include "utils.js"/>
+</script>
 
 <table cellspacing="0" cellpadding="10" width="100%" align="center" border="0">
 	<tr>
@@ -114,6 +143,11 @@ function confirmDelete()
 								</td>
 								
 								<td valign="top" nowrap="nowrap" align="right" class="postInfo">
+									<#if karmaEnabled>
+										<script language="javascript">writeStars(${post.karma.karmaPoints}, ${post.id});</script>
+									</#if>
+
+									<!-- Icons -->
 									<#if topic.status != STATUS_LOCKED>
 										<a href="${JForumContext.encodeURL("/jforum${extension}?module=${moduleName}&amp;action=quote&amp;post_id=${post.id}&start=${start}","")}"><img src="${contextPath}/templates/${templateName}/images/icon_quote.gif" border="0" /></a>
 									</#if>
@@ -125,8 +159,6 @@ function confirmDelete()
 									<#if canRemove>
 										<a href="${JForumContext.encodeURL("/jforum${extension}?module=${moduleName}&amp;action=delete&amp;post_id=${post.id}&start=${start}","")}" onClick="return confirmDelete();"><img src="${contextPath}/templates/${templateName}/images/icon_delete.gif" border="0"/></a>  
 									</#if>
-
-									
 								</td>
 							</tr>
 						</table>
@@ -137,6 +169,9 @@ function confirmDelete()
 					
 						<span class="name"><b>${user.username}</b></span>
 						<br />
+						<#if karmaEnabled && post.userId != 1>
+							<script language="javascript">writeStars(${user.karma.karmaPoints}, ${user.id});</script>
+						</#if>
 						
 						<span class="postdetails">
 						<#if post.userId != 1>
@@ -195,7 +230,7 @@ function confirmDelete()
 					</td>
 					
 					<td class="${rowColor}" valign="top" nowrap="nowrap" height="28">
-						<table height="18" cellspacing="0" cellpadding="0" width="469" border="0">
+						<table height="18" cellspacing="0" cellpadding="0" border="0" width="100%">
 							<tr>
 								<td valign="center" nowrap="nowrap"> 
 									<a href="${JForumContext.encodeURL("/user/profile/${user.id}")}"><img src="${contextPath}/templates/${templateName}/images/icon_profile.gif" border="0" /></a>
@@ -222,6 +257,16 @@ function confirmDelete()
 										<a href="http://wwp.icq.com/scripts/search.dll?to=${user.icq}"><img src="${contextPath}/templates/${templateName}/images/icon_icq_add.gif" border="0" /></a>
 									</#if>
 								</td>
+
+								<#if karmaEnabled && post.userId != session.userId && logged>
+									<td align="right">
+									<#if !karmaVotes.containsKey(post.id)>
+										<script language="javascript">karmaPointsCombo(${post.id})</script>
+									<#else>
+										<span class="gensmall">${I18n.getMessage("Karma.yourRate")}: ${karmaVotes.get(post.id)}</span>
+									</#if>
+									</td>
+								</#if>
 							</tr>
 						</table>
 					</td>

@@ -417,7 +417,14 @@ UserSessionModel.selectById = SELECT session_time, session_start, session_id FRO
 # ###########
 # KarmaModel
 # ###########
-KarmaModel.add = INSERT INTO jforum_karma (user_id, from_user_id, status) VALUES (?, ?, ?)
-KarmaModel.update = UPDATE jforum_karma SET status = ? WHERE karma_id = ?
-KarmaModel.selectPositiveStatus = SELECT COUNT(status) positive FROM jforum_karma WHERE user_id = ? AND status = 1
-KarmaModel.selectNegativeStatus = SELECT COUNT(status) negative FROM jforum_karma WHERE user_id = ? AND status = 0
+KarmaModel.add = INSERT INTO jforum_karma (post_id, post_user_id, from_user_id, points, topic_id) VALUES (?, ?, ?, ?, ?)
+KarmaModel.update = UPDATE jforum_karma SET points = ? WHERE karma_id = ?
+KarmaModel.getUserKarma = SELECT user_karma FROM jforum_users WHERE user_id = ?
+KarmaModel.updateUserKarma = UPDATE jforum_users SET user_karma = ? WHERE user_id = ?
+KarmaModel.getPostKarma = SELECT SUM(points) / COUNT(post_id) points FROM jforum_karma WHERE post_id = ?
+KarmaModel.userCanAddKarma = SELECT COUNT(1) FROM jforum_karma WHERE post_id = ? AND from_user_id = ?
+
+KarmaModel.getUserKarmaPoints = SELECT SUM(points) points, COUNT(1) votes, from_user_id \
+	FROM jforum_karma WHERE post_user_id = ? GROUP BY from_user_id
+	
+KarmaModel.getUserVotes = SELECT points, post_id FROM jforum_karma WHERE topic_id = ?

@@ -82,7 +82,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.39 2005/01/14 14:17:14 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.40 2005/01/14 21:11:50 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -135,6 +135,7 @@ public class PostAction extends Command {
 		// Set the topic status as read
 		tm.updateReadStatus(topic.getId(), userId, true);
 
+		this.context.put("karmaVotes", DataAccessDriver.getInstance().newKarmaModel().getUserVotes(topic.getId()));
 		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
 		this.context.put("canRemove",
 				SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE));
@@ -144,6 +145,7 @@ public class PostAction extends Command {
 		this.context.put("topic", topic);
 		this.context.put("rank", new RankingRepository());
 		this.context.put("posts", helperList);
+		this.context.put("karmaEnabled", SecurityRepository.canAccess(SecurityConstants.PERM_KARMA_ENABLED));
 		this.context.put("forum", ForumRepository.getForum(topic.getForumId()));
 		this.context.put("users", usersMap);
 		this.context.put("topicId", new Integer(topicId));

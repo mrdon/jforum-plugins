@@ -58,6 +58,7 @@ import net.jforum.model.UserModel;
 import net.jforum.model.UserSessionModel;
 import net.jforum.repository.RankingRepository;
 import net.jforum.repository.SecurityRepository;
+import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.MD5;
 import net.jforum.util.concurrent.executor.QueuedExecutor;
@@ -72,7 +73,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.24 2005/01/05 00:42:46 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.25 2005/01/14 21:11:49 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -350,6 +351,7 @@ public class UserAction extends Command
 		User u = um.selectById(this.request.getIntParameter("user_id"));
 
 		this.context.put("moduleAction", "user_profile.htm");
+		this.context.put("karmaEnabled", SecurityRepository.canAccess(SecurityConstants.PERM_KARMA_ENABLED));
 		this.context.put("rank", new RankingRepository());
 		this.context.put("u", u);
 	}

@@ -40,13 +40,14 @@
  * The JForum Project
  * http://www.jforum.net 
  * 
- * $Id: User.java,v 1.9 2004/10/10 00:19:26 rafaelsteil Exp $
+ * $Id: User.java,v 1.10 2005/01/14 21:11:49 rafaelsteil Exp $
  */
 package net.jforum.entities;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -234,9 +235,11 @@ public class User
 	/**
 	 * User groups
 	 */	
-	private ArrayList groupsList;
+	private List groupsList;
 	
 	private int privateMessagesCount;
+	
+	private KarmaStatus karma;
 	
 	/**
 	 * Once the user activate the account from his email, active = 1 
@@ -900,7 +903,7 @@ public class User
 	/**
 	 * @return
 	 */
-	public ArrayList getGroupsList() {
+	public List getGroupsList() {
 		return this.groupsList;
 	}
 
@@ -935,5 +938,15 @@ public class User
 	
 	public void setActivationKey(String activationKey){
 		this.activationKey = activationKey;
+	}
+	
+	public void setKarma(KarmaStatus karma)
+	{
+		this.karma = karma;
+	}
+	
+	public KarmaStatus getKarma()
+	{
+		return this.karma;
 	}
 }

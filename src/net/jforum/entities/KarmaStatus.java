@@ -44,38 +44,25 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaStatus.java,v 1.1 2005/01/13 23:30:09 rafaelsteil Exp $
+ * @version $Id: KarmaStatus.java,v 1.2 2005/01/14 21:11:48 rafaelsteil Exp $
  */
 public class KarmaStatus
 {
-	private int userId;
-	private int totalPositive;
-	private int totalNegative;
+	private int id;
 	private double karmaPoints;
 	
 	public KarmaStatus() {}
 	
-	/**
-	 * Creates a new KarmaStatus instance.
-	 * #calculeKarma() is called by this constructor.
-	 * 
-	 * @param userId The id of the user related to this 
-	 * karma status
-	 * @param totalPositive Number of positive votes
-	 * @param totalNegative Number of negative votess
-	 */
-	public KarmaStatus(int userId, int totalPositive, int totalNegative)
+	public KarmaStatus(KarmaStatus karma)
 	{
-		this.userId = userId;
-		this.totalPositive = totalPositive;
-		this.totalNegative = totalNegative;
-		
-		this.calculeKarma();
+		this.id = karma.getId();
+		this.karmaPoints = karma.getKarmaPoints();
 	}
 	
-	public void calculeKarma()
+	public KarmaStatus(int id, double points)
 	{
-		// TODO: define karma status logic
+		this.id = id;
+		this.karmaPoints = points;
 	}
 	
 	/**
@@ -86,51 +73,24 @@ public class KarmaStatus
 		return this.karmaPoints;
 	}
 	
-	/**
-	 * @return Returns the totalNegative.
-	 */
-	public int getTotalNegative()
+	public void setKarmaPoints(double points)
 	{
-		return this.totalNegative;
-	}
-	
-	/**
-	 * @param totalNegative The totalNegative to set.
-	 */
-	public void setTotalNegative(int totalNegative)
-	{
-		this.totalNegative = totalNegative;
-	}
-	
-	/**
-	 * @return Returns the totalPositive.
-	 */
-	public int getTotalPositive()
-	{
-		return this.totalPositive;
-	}
-	
-	/**
-	 * @param totalPositive The totalPositive to set.
-	 */
-	public void setTotalPositive(int totalPositive)
-	{
-		this.totalPositive = totalPositive;
+		this.karmaPoints = points;
 	}
 	
 	/**
 	 * @return Returns the userId.
 	 */
-	public int getUserId()
+	public int getId()
 	{
-		return this.userId;
+		return this.id;
 	}
 	
 	/**
 	 * @param userId The userId to set.
 	 */
-	public void setUserId(int userId)
+	public void setId(int userId)
 	{
-		this.userId = userId;
+		this.id = userId;
 	}
 }

@@ -48,7 +48,7 @@ import java.util.Date;
  * Represents every message post in the system.
  * 
  * @author Rafael Steil
- * @version $Id: Post.java,v 1.4 2005/01/08 15:21:57 rafaelsteil Exp $
+ * @version $Id: Post.java,v 1.5 2005/01/14 21:11:48 rafaelsteil Exp $
  */
 public class Post 
 {
@@ -136,6 +136,8 @@ public class Post
 	 */
 	private String bbCodeUid;
 	
+	private KarmaStatus karma;
+	
 	/**
 	 * Default constructor
 	 */
@@ -166,6 +168,17 @@ public class Post
 		this.setTopicId(p.getTopicId());
 		this.setUserId(p.getUserId());
 		this.setUserIp(p.getUserIp());
+		this.setKarma(new KarmaStatus(p.getKarma()));
+	}
+	
+	public KarmaStatus getKarma()
+	{
+		return this.karma;
+	}
+	
+	public void setKarma(KarmaStatus karma)
+	{
+		this.karma = karma;
 	}
 	
 	/**

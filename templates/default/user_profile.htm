@@ -1,3 +1,6 @@
+<script language="javascript">
+<#include "utils.js"/>
+</script>
 <table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
     <tr>
       <td align="left"><span class="nav"><a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a></span></td>
@@ -23,7 +26,13 @@
 					<img src="${contextPath}/images/avatar/${u.avatar}" border="0" /><br />
 				</#if>
 			</#if>
-			<span class="postdetails">Ranking: ${rank.getRankTitle(u.totalPosts)}</span>
+			<span class="postdetails">
+				Ranking: ${rank.getRankTitle(u.totalPosts)}
+			
+				<#if karmaEnabled>
+					<br/>Karma: <script language="javascript">writeStars(${u.karma.karmaPoints}, ${u.id});</script>
+				</#if>
+			</span>
 		</td>
 
 		<td class="row1" valign="top" rowspan="3">
@@ -81,7 +90,6 @@
 				<td valign="center" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("UserProfile.emailAddress")}:</span></td>
 				<td class="row1" valign="center" width="100%">
 					<b><span class="gen">
-					<script language="JavaScript" src="${contextPath}/templates/default/utils.js" type="text/JavaScript"></script>
 					<#assign e = u.email.split("@")/>
 					<a href="#" onclick="document.location = 'mailto:' + showEmail('${e[0]}', '${e[1]}');"><img src="${contextPath}/templates/${templateName}/images/icon_email.gif" border="0" /></a>
 					</span></b>

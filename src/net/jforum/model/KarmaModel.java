@@ -42,12 +42,14 @@
  */
 package net.jforum.model;
 
+import java.util.Map;
+
 import net.jforum.entities.Karma;
 import net.jforum.entities.KarmaStatus;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaModel.java,v 1.1 2005/01/13 23:30:11 rafaelsteil Exp $
+ * @version $Id: KarmaModel.java,v 1.2 2005/01/14 21:11:52 rafaelsteil Exp $
  */
 public interface KarmaModel
 {
@@ -64,15 +66,59 @@ public interface KarmaModel
 	/**
 	 * Gets the karma status of some user.
 	 * 
-	 * @param userId The user if to gets the karma status
-	 * @return A <code>net.jforum.entities.KarmaStatus</code> instance, or
-	 * <code>null</code> if no records were found
+	 * @param userId The user id to get the karma status
+	 * @return A <code>net.jforum.entities.KarmaStatus</code> instance
 	 */
-	public KarmaStatus selectKarmaStatus(int userId) throws Exception;
+	public KarmaStatus getUserKarma(int userId) throws Exception;
+	
+	/**
+	 * Updates the karma status for some user. 
+	 * This method will store the user's karme in the
+	 * users table. 
+	 * 
+	 * @param userId The id of the user to update
+	 * @throws Exception
+	 */
+	public void updateUserKarma(int userId) throws Exception;
+	
+	/**
+	 * Checks if the user can add the karma.
+	 * The method will search for existing entries in
+	 * the karma table associated with the user id and post id
+	 * passed as argument. If found, it means that the user 
+	 * already has voted, so we cannot allow him to vote one
+	 * more time.
+	 * 
+	 * @param userId The user id to check
+	 * @param postId The post id to chekc
+	 * @return <code>true</code> if the user hasn't voted on the
+	 * post yet, or <code>false</code> otherwise. 
+	 * @throws Exception
+	 */
+	public boolean userCanAddKarma(int userId, int postId) throws Exception;
+	
+	/**
+	 * Gets the karma status of some post.
+	 * 
+	 * @param postId The post id to get the karma status
+	 * @return A <code>net.jforum.entities.KarmaStatus</code> instance
+	 * @throws Exception
+	 */
+	public KarmaStatus getPostKarma(int postId) throws Exception;
 	
 	/**
 	 * Updates a karma
 	 * @param karma The karma instance to update
 	 */
 	public void update(Karma karma) throws Exception;
+	
+	/**
+	 * Gets the votes the user made on some topic.
+	 * 
+	 * @param topicId The topic id.
+	 * @return A <code>java.util.Map</code>, where the key is the post id and the
+	 * value id the rate made by the user.
+	 * @throws Exception
+	 */
+	public Map getUserVotes(int topicId) throws Exception;
 }

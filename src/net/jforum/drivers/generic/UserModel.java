@@ -52,13 +52,14 @@ import java.util.List;
 import net.jforum.JForum;
 import net.jforum.drivers.external.LoginAuthenticator;
 import net.jforum.entities.Group;
+import net.jforum.entities.KarmaStatus;
 import net.jforum.entities.User;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.23 2005/01/09 19:34:53 rafaelsteil Exp $
+ * @version $Id: UserModel.java,v 1.24 2005/01/14 21:11:50 rafaelsteil Exp $
  */
 public class UserModel extends AutoKeys implements net.jforum.model.UserModel 
 {
@@ -90,7 +91,7 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		User u = new User();
 		
 		if (rs.next()) {
-			fillUserFromResultSet(u, rs);
+			this.fillUserFromResultSet(u, rs);
 			u.setPrivateMessagesCount(rs.getInt("private_messages"));
 
 			// User groups
@@ -132,7 +133,8 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		return u;
 	}
 
-	protected void fillUserFromResultSet(User u, ResultSet rs) throws Exception {
+	protected void fillUserFromResultSet(User u, ResultSet rs) throws Exception 
+	{
 		u.setAim(rs.getString("user_aim"));
 		u.setAvatar(rs.getString("user_avatar"));
 		u.setGender(rs.getString("gender"));
@@ -165,6 +167,7 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		u.setMsnm(rs.getString("user_msnm"));
 		u.setLang(rs.getString("user_lang"));
 		u.setActive(rs.getInt("user_active"));
+		u.setKarma(new KarmaStatus(u.getId(), rs.getDouble("user_karma")));
 		
 		String actkey = rs.getString("user_actkey");
 		u.setActivationKey(actkey == null || "".equals(actkey) ? null : actkey);

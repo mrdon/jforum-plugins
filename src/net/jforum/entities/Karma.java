@@ -44,15 +44,33 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
- * @version $Id: Karma.java,v 1.1 2005/01/13 23:30:09 rafaelsteil Exp $
+ * @version $Id: Karma.java,v 1.2 2005/01/14 21:11:49 rafaelsteil Exp $
  */
 public class Karma
 {
 	private int id;
-	private int userId;
+	private int postId;
+	private int topicId;
+	private int postUserId;
 	private int fromUserId;
-	private boolean status;
-		
+	private int points;
+	
+	/**
+	 * @return Returns the topicId.
+	 */
+	public int getTopicId()
+	{
+		return this.topicId;
+	}
+	
+	/**
+	 * @param topicId The topicId to set.
+	 */
+	public void setTopicId(int topicId)
+	{
+		this.topicId = topicId;
+	}
+	
 	/**
 	 * @return Returns the fromUserId.
 	 */
@@ -86,34 +104,50 @@ public class Karma
 	}
 	
 	/**
-	 * @return Returns the status.
-	 */
-	public boolean isKarmaPositive()
-	{
-		return this.status;
-	}
-	
-	/**
-	 * @param status The status to set.
-	 */
-	public void setKarmaStatus(boolean positive)
-	{
-		this.status = positive;
-	}
-	
-	/**
 	 * @return Returns the userId.
 	 */
-	public int getUserId()
+	public int getPostUserId()
 	{
-		return this.userId;
+		return this.postUserId;
 	}
 	
 	/**
 	 * @param userId The userId to set.
 	 */
-	public void setUserId(int userId)
+	public void setPostUserId(int userId)
 	{
-		this.userId = userId;
+		this.postUserId = userId;
+	}
+	
+	/**
+	 * @return Returns the points.
+	 */
+	public int getPoints()
+	{
+		return this.points;
+	}
+	
+	/**
+	 * @param points The points to set.
+	 */
+	public void setPoints(int points)
+	{
+		this.points = points;
+	}
+	
+	/**
+	 * @return Returns the postId.
+	 */
+	public int getPostId()
+	{
+		return this.postId;
+	}
+	
+	/**
+	 * @param postId The postId to set.
+	 */
+	public void setPostId(int postId)
+	{
+		this.postId = postId;
 	}
 }

@@ -44,6 +44,8 @@ package net.jforum.drivers.generic;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.HashMap;
+import java.util.Map;
 
 import net.jforum.JForum;
 import net.jforum.entities.Karma;
@@ -52,7 +54,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaModel.java,v 1.1 2005/01/13 23:30:17 rafaelsteil Exp $
+ * @version $Id: KarmaModel.java,v 1.2 2005/01/14 21:11:50 rafaelsteil Exp $
  */
 public class KarmaModel implements net.jforum.model.KarmaModel
 {
@@ -63,46 +65,68 @@ public class KarmaModel implements net.jforum.model.KarmaModel
 	{
 		PreparedStatement p = JForum.getConnection().prepareStatement(
 				SystemGlobals.getSql("KarmaModel.add"));
-		p.setInt(1, karma.getUserId());
-		p.setInt(2, karma.getFromUserId());
-		p.setInt(3, karma.isKarmaPositive() ? 1 : 0);
+		p.setInt(1, karma.getPostId());
+		p.setInt(2, karma.getPostUserId());
+		p.setInt(3, karma.getFromUserId());
+		p.setInt(4, karma.getPoints());
+		p.setInt(5, karma.getTopicId());
 		p.executeUpdate();
 		p.close();
+		
+		this.updateUserKarma(karma.getPostUserId());
 	}
 
 	/**
 	 * @see net.jforum.model.KarmaModel#selectKarmaStatus(int)
 	 */
-	public KarmaStatus selectKarmaStatus(int userId) throws Exception
+	public KarmaStatus getUserKarma(int userId) throws Exception
 	{
-		KarmaStatus status = null;
+		KarmaStatus status = new KarmaStatus();
 		
 		PreparedStatement p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("KarmaModel.selectPositiveStatus"));
+				SystemGlobals.getSql("KarmaModel.getUserKarma"));
 		p.setInt(1, userId);
 		
 		ResultSet rs = p.executeQuery();
 		if (rs.next()) {
-			int totalPositive = rs.getInt("positive");
-			rs.close();
-			p.close();
-			
-			p = JForum.getConnection().prepareStatement(
-					SystemGlobals.getSql("KarmaModel.selectNegativeStatus"));
-			p.setInt(1, userId);
-			
-			// We're assuming that it will move next
-			rs = p.executeQuery();
-			rs.next();
-			int totalNegative = rs.getInt("negative");
-			
-			status = new KarmaStatus(userId, totalPositive, totalNegative);
+			status.setKarmaPoints(Math.round(rs.getDouble("user_karma")));
 		}
 		
 		rs.close();
 		p.close();
 		
 		return status;
+	}
+	
+	/**
+	 * @see net.jforum.model.KarmaModel#updateUserKarma(int)
+	 */
+	public void updateUserKarma(int userId) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("KarmaModel.getUserKarmaPoints"));
+		p.setInt(1, userId);
+		
+		int totalRecords = 0;
+		double totalPoints = 0;
+		ResultSet rs = p.executeQuery();
+		while (rs.next()) {
+			int points = rs.getInt("points");
+			int votes = rs.getInt("votes");
+
+			totalPoints += ((double)points / votes);
+			totalRecords++;
+		}
+
+		rs.close();
+		p.close();
+		
+		p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("KarmaModel.updateUserKarma"));
+		p.setDouble(1, (double)totalPoints / totalRecords);
+		p.setInt(2, userId);
+		p.executeUpdate();
+		p.close();
 	}
 
 	/**
@@ -112,9 +136,76 @@ public class KarmaModel implements net.jforum.model.KarmaModel
 	{
 		PreparedStatement p = JForum.getConnection().prepareStatement(
 				SystemGlobals.getSql("KarmaModel.update"));
-		p.setInt(1, karma.isKarmaPositive() ? 1 : 0);
+		p.setInt(1, karma.getPoints());
 		p.setInt(2, karma.getId());
 		p.executeUpdate();
 		p.close();
+	}
+	
+	/**
+	 * @see net.jforum.model.KarmaModel#getPostKarma(int)
+	 */
+	public KarmaStatus getPostKarma(int postId) throws Exception
+	{
+		KarmaStatus karma = new KarmaStatus();
+
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("KarmaModel.getPostKarma"));
+		p.setInt(1, postId);
+		
+		ResultSet rs = p.executeQuery();
+		if (rs.next()) {
+			karma.setKarmaPoints(Math.round(rs.getDouble(1)));
+		}
+		
+		rs.close();
+		p.close();
+		
+		return karma;
+	}
+	
+	/**
+	 * @see net.jforum.model.KarmaModel#userCanAddKarma(int, int)
+	 */
+	public boolean userCanAddKarma(int userId, int postId) throws Exception
+	{
+		boolean status = true;
+
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("KarmaModel.userCanAddKarma"));
+		p.setInt(1, postId);
+		p.setInt(2, userId);
+		
+		ResultSet rs = p.executeQuery();
+		if (rs.next()) {
+			status = rs.getInt(1) < 1;
+		}
+		
+		rs.close();
+		p.close();
+		
+		return status;
+	}
+	
+	/**
+	 * @see net.jforum.model.KarmaModel#getUserVotes(int)
+	 */
+	public Map getUserVotes(int topicId) throws Exception
+	{
+		Map m = new HashMap();
+		
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("KarmaModel.getUserVotes"));
+		p.setInt(1, topicId);
+		
+		ResultSet rs = p.executeQuery();
+		while (rs.next()) {
+			m.put(new Integer(rs.getInt("post_id")), new Integer(rs.getInt("points")));
+		}
+		
+		rs.close();
+		p.close();
+		
+		return m;
 	}
 }

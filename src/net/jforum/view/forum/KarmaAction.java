@@ -43,62 +43,84 @@
 package net.jforum.view.forum;
 
 import net.jforum.Command;
+import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.entities.Karma;
+import net.jforum.entities.Post;
 import net.jforum.model.DataAccessDriver;
+import net.jforum.model.KarmaModel;
+import net.jforum.model.PostModel;
+import net.jforum.repository.SecurityRepository;
+import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaAction.java,v 1.1 2005/01/13 23:30:16 rafaelsteil Exp $
+ * @version $Id: KarmaAction.java,v 1.2 2005/01/14 21:11:49 rafaelsteil Exp $
  */
 public class KarmaAction extends Command
 {
-	public void positive() throws Exception
+	public void insert() throws Exception
 	{
-		this.addKarma(true);
-	}
-	
-	public void negative() throws Exception
-	{
-		this.addKarma(false);
-	}
-	
-	private void addKarma(boolean positive) throws Exception
-	{
-		int toUserId = this.request.getIntParameter("to_user_id");
+		if (!SecurityRepository.canAccess(SecurityConstants.PERM_KARMA_ENABLED)) {
+			this.error("Karma.featureDisabled", null);
+			return;
+		}
+
+		int postId = this.request.getIntParameter("post_id");
 		int fromUserId = SessionFacade.getUserSession().getUserId();
 		
+		PostModel pm = DataAccessDriver.getInstance().newPostModel();
+		Post p = pm.selectById(postId);
+		
 		if (fromUserId == SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
-			this.anonymousIsDenied();
+			this.error("Karma.anonymousIsDenied", p);
 			return;
 		}
 		
+		if (p.getUserId() == fromUserId) {
+			this.error("Karma.cannotSelfVote", p);
+			return;
+		}
+		
+		KarmaModel km = DataAccessDriver.getInstance().newKarmaModel();
+		if (!km.userCanAddKarma(fromUserId, postId)) {
+			this.error("Karma.alreadyVoted", p);
+			return;
+		}
+
 		Karma karma = new Karma();
 		karma.setFromUserId(fromUserId);
-		karma.setUserId(toUserId);
-		karma.setKarmaStatus(positive);
+		karma.setPostUserId(p.getUserId());
+		karma.setPostId(postId);
+		karma.setTopicId(p.getTopicId());
+		karma.setPoints(this.request.getIntParameter("points"));
 		
-		DataAccessDriver.getInstance().newKarmaModel().addKarma(karma);
+		km.addKarma(karma);
 		
-		// TODO: return to the referrer page
+		JForum.setRedirect(this.urlToTopic(p));
 	}
 	
-	public void show() throws Exception
+	private void error(String message, Post p)
 	{
+		this.context.put("moduleAction", "message.htm");
 		
+		if (p != null) {
+			this.context.put("message", I18n.getMessage(message, 
+					new String[] { this.urlToTopic(p) }));
+		}
+		else {
+			this.context.put("message", I18n.getMessage(message));
+		}
 	}
 	
-	public void edit() throws Exception
+	private String urlToTopic(Post p)
 	{
-		
-	}
-	
-	private void anonymousIsDenied()
-	{
-		// TODO
+		return JForum.getRequest().getContextPath()
+			+ "/posts/list/" + p.getTopicId()
+			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
 	}
 
 	/**
@@ -109,5 +131,4 @@ public class KarmaAction extends Command
 		this.context.put("moduleAction", "message.htm");
 		this.context.put("message", I18n.getMessage("invalidAction"));
 	}
-
 }
