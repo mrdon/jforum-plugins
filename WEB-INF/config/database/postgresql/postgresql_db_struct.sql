@@ -400,7 +400,7 @@ CREATE INDEX idx_sr_topic ON jforum_search_results(topic_id);
 CREATE TABLE jforum_search_topics (
   topic_id INTEGER NOT NULL,
   forum_id INTEGER NOT NULL DEFAULT 0,
-  topic_title VARCHAR(60) NOT NULL DEFAULT '',
+  topic_title VARCHAR(100) NOT NULL DEFAULT '',
   user_id INTEGER NOT NULL DEFAULT 0,
   topic_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   topic_views INTEGER DEFAULT 1,

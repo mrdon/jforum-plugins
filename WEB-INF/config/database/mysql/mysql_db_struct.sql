@@ -417,7 +417,7 @@ DROP TABLE IF EXISTS jforum_search_topics;
 CREATE TABLE jforum_search_topics (
   topic_id mediumint(8) NOT NULL,
   forum_id smallint(8) NOT NULL default '0',
-  topic_title varchar(60) NOT NULL default '',
+  topic_title varchar(100) NOT NULL default '',
   user_id mediumint(8) NOT NULL default '0',
   topic_time datetime default null,
   topic_views mediumint(8) default '1',
