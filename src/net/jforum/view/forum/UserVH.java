@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: UserVH.java,v 1.3 2004/04/21 23:57:22 rafaelsteil Exp $
+ * $Id: UserVH.java,v 1.4 2004/05/04 01:21:21 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 
@@ -52,6 +52,7 @@ import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.UserModel;
+import net.jforum.repository.RankingRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.util.I18n;
 import net.jforum.util.MD5;
@@ -212,6 +213,7 @@ public class UserVH extends Command
 		User u = um.selectById(Integer.parseInt(JForum.getRequest().getParameter("user_id")));
 		 
 		JForum.getContext().put("moduleAction", "user_profile.htm");
+		JForum.getContext().put("rank", new RankingRepository());
 		JForum.getContext().put("u", u);
 	}
 	

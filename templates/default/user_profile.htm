@@ -19,7 +19,7 @@
     </TR>
     <TR>
       <TD class=row1 vAlign=top align=middle height=6><#if (u.avatar?exists && u.avatar?length > 0)><img src="images/${u.avatar}" border=0><BR></#if>
-          <SPAN class=postdetails>RANKING</SPAN></TD>
+          <SPAN class=postdetails>Ranking: ${rank.getRankTitle(u.totalPosts)}</SPAN></TD>
       <TD class=row1 vAlign=top rowSpan=3>
         <TABLE cellSpacing=1 cellPadding=3 width="100%" border=0>
           <TBODY>
