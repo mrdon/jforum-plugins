@@ -58,7 +58,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageVH.java,v 1.2 2004/05/21 22:10:53 rafaelsteil Exp $
+ * @version $Id: PrivateMessageVH.java,v 1.3 2004/05/21 22:52:44 rafaelsteil Exp $
  */
 public class PrivateMessageVH extends Command
 {
@@ -203,7 +203,7 @@ public class PrivateMessageVH extends Command
 	{
 		String ids[] = JForum.getRequest().getParameterValues("id");
 		
-		if (ids.length > 0) {
+		if (ids != null && ids.length > 0) {
 			PrivateMessage[] pm = new PrivateMessage[ids.length];
 			User u = new User();
 			u.setId(SessionFacade.getUserSession().getUserId());
@@ -224,12 +224,40 @@ public class PrivateMessageVH extends Command
 	
 	public void reply() throws Exception
 	{
+		int id = Integer.parseInt(JForum.getRequest().getParameter("id"));
 		
+		PrivateMessage pm = new PrivateMessage();
+		pm.setId(id);
+		pm = DataAccessDriver.getInstance().newPrivateMessageModel().selectById(pm);
+		
+		pm.getPost().setSubject(I18n.getMessage("PrivateMessage.replyPrefix") + pm.getPost().getSubject());
+		
+		JForum.getContext().put("moduleAction", "post_form.htm");
+		JForum.getContext().put("action", "sendSave");
+		JForum.getContext().put("pm", pm);
+		JForum.getContext().put("pmReply", true);
+		JForum.getContext().put("user", DataAccessDriver.getInstance().newUserModel().selectById(
+						SessionFacade.getUserSession().getUserId()));
 	}
 	
 	public void quote() throws Exception
 	{
+		int id = Integer.parseInt(JForum.getRequest().getParameter("id"));
 		
+		PrivateMessage pm = new PrivateMessage();
+		pm.setId(id);
+		pm = DataAccessDriver.getInstance().newPrivateMessageModel().selectById(pm);
+		
+		pm.getPost().setSubject(I18n.getMessage("PrivateMessage.replyPrefix") + pm.getPost().getSubject());
+		
+		JForum.getContext().put("quote", "true");
+		JForum.getContext().put("action", "sendSave");
+		JForum.getContext().put("quoteUser", pm.getFromUser().getUsername());
+		JForum.getContext().put("moduleAction", "post_form.htm");
+		JForum.getContext().put("post", pm.getPost());
+		JForum.getContext().put("pm", pm);
+		JForum.getContext().put("user", DataAccessDriver.getInstance().newUserModel().selectById(
+						SessionFacade.getUserSession().getUserId()));
 	}
 	
 	/** 

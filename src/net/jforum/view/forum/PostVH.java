@@ -74,7 +74,7 @@ import net.jforum.util.mail.TopicSpammer;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostVH.java,v 1.15 2004/05/21 22:10:54 rafaelsteil Exp $
+ * @version $Id: PostVH.java,v 1.16 2004/05/21 22:52:44 rafaelsteil Exp $
  */
 public class PostVH extends Command 
 {
@@ -310,7 +310,7 @@ public class PostVH extends Command
 		
 		JForum.getContext().put("topicId", Integer.toString(p.getTopicId()));
 		JForum.getContext().put("topic", DataAccessDriver.getInstance().newTopicModel().selectById(p.getTopicId()));
-		JForum.getContext().put("quote", "true");		
+		JForum.getContext().put("quote", "true");
 		JForum.getContext().put("quoteUser", u.getUsername());
 		JForum.getContext().put("moduleAction", "post_form.htm");
 		JForum.getContext().put("setType", false);

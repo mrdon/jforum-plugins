@@ -330,14 +330,29 @@ function validatePostForm(f)
 		  <tr>
 			  <td class="row1" width="22%"><span class="gen"><b>${I18n.getMessage("PrivateMessage.user")}</b></span></td>
 			  <td class="row2" width="78%">
-			  	<input class="post" size="25" name="toUsername" <#if preview>value="${pm.toUser.username}"</#if>/>&nbsp;<input type="button" value="${I18n.getMessage("PrivateMessage.findUser")}" name="findUser" class="liteoption" onClick="window.open('${contextPath}/pm/findUser.page', '_findUser', 'HEIGHT=250,resizable=yes,WIDTH=400');return false;">
-				<input type="hidden" name="toUserId" <#if preview>value="${pm.toUser.id}"</#if>>
+			  	<#if preview>
+					<#assign toUsername = pm.toUser.username/>
+					<#assign toUserId = pm.toUser.id/>
+				<#elseif quote?default("") == "true" || pmReply?default(false)>
+					<#assign toUsername = pm.fromUser.username/>
+					<#assign toUserId = pm.fromUser.id/>
+				<#else>
+					<#assign toUsername = ""/>
+					<#assign toUserId = ""/>
+				</#if>
+			  	<input class="post" size="25" name="toUsername" value="${toUsername}"/>&nbsp;<input type="button" value="${I18n.getMessage("PrivateMessage.findUser")}" name="findUser" class="liteoption" onClick="window.open('${contextPath}/pm/findUser.page', '_findUser', 'HEIGHT=250,resizable=yes,WIDTH=400');return false;">
+				<input type="hidden" name="toUserId" value="${toUserId}">
 			  </td>
 		  </tr>
 		  </#if>
         <TR>
           <TD class=row1 width="22%"><SPAN class=gen><B>${I18n.getMessage("PostForm.subject")}</B></SPAN></TD>
-          <TD class=row2 width="78%"><SPAN class=gen><INPUT class=post style="WIDTH: 450px" tabIndex=2 maxLength=60 size=45 name=subject <#if post?exists>value="${post.subject?html}"</#if>> </SPAN></TD>
+		 	<#if post?exists>
+		   		<#assign subject = post.subject?html/>
+			<#elseif pmReply?default(false)>
+				<#assign subject = pm.post.subject?html/>
+			</#if>
+          <TD class=row2 width="78%"><SPAN class=gen><INPUT class=post style="WIDTH: 450px" tabIndex=2 maxLength=60 size=45 name=subject value="${subject}"> </SPAN></TD>
 		  </TR>
         <TR>
           <TD class=row1 vAlign=top>
