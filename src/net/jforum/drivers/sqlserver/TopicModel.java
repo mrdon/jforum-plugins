@@ -53,7 +53,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: TopicModel.java,v 1.1 2005/01/26 19:39:36 franklin_samir Exp $
+ * @version $Id: TopicModel.java,v 1.2 2005/03/14 16:45:28 franklin_samir Exp $
  */
 public class TopicModel extends net.jforum.drivers.generic.TopicModel
 {
@@ -75,10 +75,12 @@ public class TopicModel extends net.jforum.drivers.generic.TopicModel
 	{
 		List l = new ArrayList();
 
-		String q1 = SystemGlobals.getSql("GenericModel.selectByLimit");
-		String q2 = SystemGlobals.getSql("TopicModel.selectAllByForumByLimit");
-		PreparedStatement p = JForum.getConnection().prepareStatement(q1 + " " + count + " " + q2);
+		String top = SystemGlobals.getSql("GenericModel.selectByLimit");
+		
+		PreparedStatement p = JForum.getConnection().prepareStatement((top + " " + count + " " + SystemGlobals.getSql("TopicModel.selectAllByForumByLimit1")  + " " + top + " " + startFrom + " " + SystemGlobals.getSql("TopicModel.selectAllByForumByLimit2")));
+		System.out.println(top + " " + count + " " + SystemGlobals.getSql("TopicModel.selectAllByForumByLimit1")  + " " + top + " " + startFrom + " " + SystemGlobals.getSql("TopicModel.selectAllByForumByLimit2"));
 		p.setInt(1, forumId);
+		p.setInt(2, forumId);
 
 		ResultSet rs = p.executeQuery();
 		

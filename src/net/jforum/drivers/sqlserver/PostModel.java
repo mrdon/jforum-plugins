@@ -53,7 +53,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: PostModel.java,v 1.1 2005/01/26 19:39:36 franklin_samir Exp $
+ * @version $Id: PostModel.java,v 1.2 2005/03/14 16:45:28 franklin_samir Exp $
  */
 public class PostModel extends net.jforum.drivers.generic.PostModel
 {
@@ -97,11 +97,12 @@ public class PostModel extends net.jforum.drivers.generic.PostModel
 	{
 		List l = new ArrayList();
 
-		String q1 = SystemGlobals.getSql("GenericModel.selectByLimit");
-		String q2 = SystemGlobals.getSql("PostModel.selectAllByTopicByLimit");
-		
-		PreparedStatement p = JForum.getConnection().prepareStatement(q1 + " " + count + " " + q2, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		p.setInt(1, topicId);
+		String top = SystemGlobals.getSql("GenericModel.selectByLimit");
+        
+        PreparedStatement p = JForum.getConnection().prepareStatement(top + " " + count + " " + SystemGlobals.getSql("PostModel.selectAllByTopicByLimit1")  + " " + top + " " + startFrom + " " + SystemGlobals.getSql("PostModel.selectAllByTopicByLimit2"), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        System.out.println(top + " " + count + " " + SystemGlobals.getSql("PostModel.selectAllByTopicByLimit1")  + " " + top + " " + startFrom + " " + SystemGlobals.getSql("PostModel.selectAllByTopicByLimit2"));
+        p.setInt(1, topicId);
+        p.setInt(2, topicId);        
 
 		ResultSet rs = p.executeQuery();
 
