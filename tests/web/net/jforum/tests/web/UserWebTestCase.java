@@ -54,110 +54,108 @@ import com.dumbster.smtp.SmtpMessage;
 
 /**
  * @author Marc Wick
- * @version $Id: UserWebTestCase.java,v 1.12 2004/10/04 06:58:02 marcwick Exp $
+ * @version $Id: UserWebTestCase.java,v 1.13 2004/10/04 15:23:17 marcwick Exp $
  */
 public class UserWebTestCase extends AbstractWebTestCase {
 
-	private static String lastTestuser;
+    private static String lastTestuser;
 
-	public static String defaultTestuser = "defaultTestuser";
+    public static String defaultTestuser = "defaultTestuser";
 
-	public static String password = "testpassword";
+    public static String password = "testpassword";
 
-	public UserWebTestCase(String name) throws IOException {
-		super(name);
-	}
+    public UserWebTestCase(String name) throws IOException {
+        super(name);
+    }
 
-	public void testRegisterDefaultUser() {
-		beginAt(FORUMS_LIST);
-		assertLinkPresent("register");
-		clickLink("register");
-		assertFormPresent("formregister");
-		setFormElement("username", defaultTestuser);
-		setFormElement("email", defaultTestuser);
-		setFormElement("password", password);
-		setFormElement("password_confirm", password);
-		submit();
-	}
+    public void testRegisterDefaultUser() {
+        beginAt(FORUMS_LIST);
+        assertLinkPresent("register");
+        clickLink("register");
+        assertFormPresent("formregister");
+        setFormElement("username", defaultTestuser);
+        setFormElement("email", defaultTestuser);
+        setFormElement("password", password);
+        setFormElement("password_confirm", password);
+        submit();
+    }
 
-	public void testRegisterNewUser() {
-		beginAt(FORUMS_LIST);
-		assertLinkPresent("register");
-		clickLink("register");
-		assertFormPresent("formregister");
-		lastTestuser = "testuser" + new Random().nextInt(1000000);
-		setFormElement("username", lastTestuser);
-		setFormElement("email", lastTestuser);
-		setFormElement("password", "testpassword1");
-		setFormElement("password_confirm", "testpassword1");
-		submit();
-		logout();
-	}
+    public void testRegisterNewUser() {
+        beginAt(FORUMS_LIST);
+        assertLinkPresent("register");
+        clickLink("register");
+        assertFormPresent("formregister");
+        lastTestuser = "testuser" + new Random().nextInt(1000000);
+        setFormElement("username", lastTestuser);
+        setFormElement("email", lastTestuser);
+        setFormElement("password", "testpassword1");
+        setFormElement("password_confirm", "testpassword1");
+        submit();
+        logout();
+    }
 
-	public void testChangePassword() {
-		beginAt(FORUMS_LIST);
-		login(lastTestuser, "testpassword1");
-		assertLinkPresent("myprofile");
-		clickLink("myprofile");
-		setFormElement("current_password", "testpassword1");
-		setFormElement("new_password", password);
-		setFormElement("password_confirm", password);
-		submit();
-		logout();
-	}
+    public void testChangePassword() {
+        beginAt(FORUMS_LIST);
+        login(lastTestuser, "testpassword1");
+        assertLinkPresent("myprofile");
+        clickLink("myprofile");
+        setFormElement("current_password", "testpassword1");
+        setFormElement("new_password", password);
+        setFormElement("password_confirm", password);
+        submit();
+        logout();
+    }
 
-	public void testEditUserProfile() {
-		login(lastTestuser, password);
-		assertLinkPresent("myprofile");
-		clickLink("myprofile");
-		setFormElement("signature", "signature for testuser");
-		submit();
-		logout();
-	}
+    public void testEditUserProfile() {
+        login(lastTestuser, password);
+        assertLinkPresent("myprofile");
+        clickLink("myprofile");
+        setFormElement("signature", "signature for testuser");
+        submit();
+        logout();
+    }
 
-	public void testPasswordForgottenUserName() throws Exception {
-		SystemGlobals.setValue(ConfigKeys.MAIL_SMTP_HOST, "localhost");
-		SystemGlobals.saveInstallation();
-		
-		// start smtp server on localhost to receive and verify test emails
-		smtpServer = SimpleSmtpServer.start();
-		
-		beginAt(FORUMS_LIST);
-		assertLinkPresent("login");
-		clickLink("login");
-		assertLinkPresent("lostpassword");
-		clickLink("lostpassword");
+    public void testPasswordForgottenUserName() throws Exception {
+        SystemGlobals.setValue(ConfigKeys.MAIL_SMTP_HOST, "localhost");
+        SystemGlobals.saveInstallation();
 
-		assertFormPresent("formlostpassword");
-		setFormElement("username", lastTestuser);
-		submit();
+        // start smtp server on localhost to receive and verify test emails
+        smtpServer = SimpleSmtpServer.start();
 
-		// give the jforum servlet time to deliver the email to the smtp server
-		Thread.sleep(waitTimeForEmailTread);
+        beginAt(FORUMS_LIST);
+        assertLinkPresent("login");
+        clickLink("login");
+        assertLinkPresent("lostpassword");
+        clickLink("lostpassword");
 
-		// test if an email has been received by localhost
-		assertEquals("password lost email received", 1, 
-				smtpServer.getReceievedEmailSize());
+        assertFormPresent("formlostpassword");
+        setFormElement("username", lastTestuser);
+        submit();
 
-		// now test the email
-		SmtpMessage mail = (SmtpMessage) smtpServer.getReceivedEmail().next();
-		String body = mail.getBody();
-		String link = body.substring(body.indexOf("http:"),
-				body.indexOf(".page") + 5).trim();
+        // give the jforum servlet time to deliver the email to the smtp server
+        waitForEmail();
 
-		smtpServer.stop();
+        // test if an email has been received by localhost
+        assertEquals("password lost email received", 1, smtpServer.getReceievedEmailSize());
 
-		System.out.println(link);
+        // now test the email
+        SmtpMessage mail = (SmtpMessage) smtpServer.getReceivedEmail().next();
+        String body = mail.getBody();
+        String link = body.substring(body.indexOf("http:"), body.indexOf(".page") + 5).trim();
 
-		getTestContext().setBaseUrl(link.substring(0, link.lastIndexOf('/')));
-		gotoPage(link.substring(link.lastIndexOf('/')));
-		setFormElement("email", lastTestuser);
-		setFormElement("newPassword", password);
-		setFormElement("confirmPassword", password);
-		submit();
+        smtpServer.stop();
 
-		dumpResponse(System.out);
+        System.out.println(link);
 
-		clickLinkWithText(I18n.getMessage(language, "ForumBase.logout"));
-	}
+        getTestContext().setBaseUrl(link.substring(0, link.lastIndexOf('/')));
+        gotoPage(link.substring(link.lastIndexOf('/')));
+        setFormElement("email", lastTestuser);
+        setFormElement("newPassword", password);
+        setFormElement("confirmPassword", password);
+        submit();
+
+        dumpResponse(System.out);
+
+        clickLinkWithText(I18n.getMessage(language, "ForumBase.logout"));
+    }
 }
