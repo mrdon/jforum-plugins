@@ -12,7 +12,8 @@
 		</table>
 		<table width="90%" cellspacing="1" cellpadding="3" border="0" align="center" bgcolor="#2943D4">
 		<tr>
-		<td class="code" bgcolor="#F3F5FF"><pre>$1</pre></td>
+		<td class="code" bgcolor="#F3F5FF">
+		<pre>$1</pre></td>
 		</tr>
 		</table>
 		]]>

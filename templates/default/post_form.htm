@@ -73,26 +73,6 @@ function arraypop(thearray) {
 	return retval;
 }
 
-
-function checkForm() {
-
-	formErrors = false;
-
-	if (document.post.message.value.replace(/^\s*|\s*$/g,"").length < 2) {
-		formErrors = "Deve ser escrita a mensagem";
-	}
-
-	if (formErrors) {
-		alert(formErrors);
-		return false;
-	} else {
-		bbstyle(-1);
-		//formObj.preview.disabled = true;
-		//formObj.submit.disabled = true;
-		return true;
-	}
-}
-
 function emoticon(text) {
 	text = ' ' + text + ' ';
 	if (document.post.message.createTextRange && document.post.message.caretPos) {
@@ -209,7 +189,7 @@ function validatePostForm(f)
 	}
 	</#if>
 	
-	if (f.message.value.replace(/^\s*|\s*$/g,"").length == 0) {
+	if (f.message.value.replace(/^\s*|\s*$/g, "").length == 0) {
 		alert("${I18n.getMessage("PostForm.textEmpty")}");
 		f.message.focus();
 		
@@ -359,7 +339,7 @@ function validatePostForm(f)
 			<#elseif pmReply?default(false)>
 				<#assign subject = pm.post.subject?html/>
 			</#if>
-          <TD class=row2 width="78%"><SPAN class=gen><INPUT class=post style="WIDTH: 450px" tabIndex=2 maxLength=100 size=45 name=subject value="${subject?default("")}"> </SPAN></TD>
+          <TD class=row2 width="78%"><SPAN class=gen><INPUT class=post style="WIDTH: 460px" tabIndex=2 maxLength=100 size=45 name=subject value="${subject?default("")}"> </SPAN></TD>
 		  </TR>
         <TR>
           <TD class=row1 vAlign=top>
@@ -413,7 +393,7 @@ function validatePostForm(f)
                     </TD>
                     </TR></TBODY></TABLE></TD></TR></TBODY></TABLE></TD>
           <TD class=row2 vAlign=top><SPAN class=gen><SPAN class=genmed></SPAN>
-            <TABLE cellSpacing=0 cellPadding=2 width=450 border=0>
+            <TABLE cellSpacing=0 cellPadding=2 width=470 border=0>
               <TBODY>
               <TR vAlign=center align=middle>
                 <TD><SPAN class=genmed><INPUT class=button onmouseover="helpline('b')" style="FONT-WEIGHT: bold; WIDTH: 30px" accessKey=b onclick=bbstyle(0) type=button value=" B " name=addbbcode0> </SPAN></TD>
