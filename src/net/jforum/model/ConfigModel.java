@@ -56,7 +56,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * Model interface for the {@link net.jforum.Config} class. 
  * 
  * @author Rafael Steil
- * @version $Id: ConfigModel.java,v 1.4 2004/11/05 03:29:49 rafaelsteil Exp $
+ * @version $Id: ConfigModel.java,v 1.5 2004/11/12 19:07:14 rafaelsteil Exp $
  */
 public class ConfigModel 
 {
@@ -68,7 +68,7 @@ public class ConfigModel
 	public List getAllEntries()  throws IOException
 	{
 	    Iterator iter = SystemGlobals.fetchConfigKeyIterator();
-		ArrayList l = new ArrayList();
+		List l = new ArrayList();
 	    while (iter.hasNext()) {
 	        String key = (String) iter.next();
 			Config config = new Config();
