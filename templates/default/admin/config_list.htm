@@ -120,16 +120,16 @@
 	<td class='catSides' colspan="2"><span class='gen'><b>${I18n.getMessage("Config.Form.RSS")}</b></span></td>
 </tr>
 <tr>
-	<td class='row1' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.ForumRSS")}</span></td>
-	<td class='row1' width="38%"><span class='gen'><input type="text" size="30"name="p_rss.filename.forum" value="${config.getProperty("rss.filename.forum")}" /></span></td>
-</tr>
-<tr>
-	<td class='row1' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.TopicRSS")}</span></td>
-	<td class='row1' width="38%"><span class='gen'><input type="text" size="30"name="p_rss.filename.topic" value="${config.getProperty("rss.filename.topic")}" /></span></td>
-</tr>
-<tr>
-	<td class='row1' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.RSSTopics")}</span></td>
-	<td class='row1' width="38%"><span class='gen'><input type="text" size="30"name="p_rss.topics" value="${config.getProperty("rss.topics")}" /></span></td>
+	<td class='row1' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.EnableRSS")}</span></td>
+	<td class='row1' width="38%">
+		<#assign o = config.getProperty("rss.enabled")/>
+		<span class='gen'>
+			<select name="p_rss.enabled">
+				<option value="true" <#if o == "true">selected</#if>>True</option>
+				<option value="false" <#if o == "false">selected</#if>>False</option>
+			</select>
+		</span>
+	</td>
 </tr>
 
 <!-- Mail -->

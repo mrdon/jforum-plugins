@@ -71,7 +71,7 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.8 2004/10/20 03:19:45 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.9 2004/10/24 21:59:24 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -163,6 +163,7 @@ public class ForumAction extends Command
 		JForum.getContext().put("allForums", ForumAction.getAllForums(true));
 		JForum.getContext().put("topicsPerPage",  new Integer(SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE)));
 		JForum.getContext().put("moduleAction", "forum_list.htm");
+		JForum.getContext().put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
 		
 		JForum.getContext().put("totalMessages", I18n.getMessage("ForumListing.totalMessagesInfo", 
 						new Object[] {new Integer( ForumRepository.getTotalMessages() )}));
@@ -250,6 +251,7 @@ public class ForumAction extends Command
 		JForum.getContext().put("allForums", ForumAction.getAllForums());
 		JForum.getContext().put("forum", ForumRepository.getForum(forumId));
 		JForum.getContext().put("moduleAction", "forum_show.htm");
+		JForum.getContext().put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
 		
 		// Pagination
 		JForum.getContext().put("totalPages", new Double(Math.ceil( (double)totalTopics / (double)topicsPerPage )));

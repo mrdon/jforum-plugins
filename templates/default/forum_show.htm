@@ -22,8 +22,10 @@
 				<tr>
 					<td valign="bottom" align="left" colspan="2">
 						<a class="maintitle" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name}</a>
+						<#if rssEnabled>
 						<a href="${JForumContext.encodeURL("/rss/forumTopics/${forum.id}")}"><img src="${contextPath}/templates/${templateName}/images/xml_button.gif" border="0"></a>
 						<br />
+						</#if>
 						<span class="gensmall"><!-- forum moderators --> </span>
 					</td>
 

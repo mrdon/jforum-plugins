@@ -79,7 +79,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.15 2004/10/24 20:38:33 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.16 2004/10/24 21:59:24 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -153,6 +153,7 @@ public class PostAction extends Command
         // Set the topic status as read
         tm.updateReadStatus(topic.getId(), userId, true);
 
+        JForum.getContext().put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
         JForum.getContext().put("canRemove",
                 SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE));
         JForum.getContext().put("canEdit",
