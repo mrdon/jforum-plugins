@@ -66,9 +66,9 @@
 	<tr>
 		<td valign="top">
 <p>
-<br>Here are some basic explanation about JForum installation and configuration. It is considered that the user - you - has some knowledge about how to install / configure a Java web application, as well it's considered that you already have the database up and running. These steps will not be discussed here. 
+<br>Here are some basic explanation about JForum installation and configuration. It is considered that the user - you - has some knowledge on how to install / configure a Java web application, and the database is up and running. These steps will not be discussed here. 
 <br>
-<br><b><font color='red'>Note: These install instructions is related to relase version RC5. Some of the informations here described may not be valid to older versions, which are no longer supported.</b></font>
+<br><b><font color='red'>Note: These instructions are for the installation of JForum, release version RC5. Some of the informations described here, may not be valid to older versions which are no longer supported.</b></font>
 
 <!-- Options -->
 <br>
@@ -113,7 +113,7 @@ First of all, you must have <a href="http://www.mysql.com" target="_new">MySQL</
 Then, open the file <i>WEB-INF/config/SystemGlobals.properties</i>. Now search for a key named <i>database.driver.name</i>. The default value is <i>mysql</i>, which means JForum will try to use MySQL. If you want to use PostgreSQL, change the value to <i>postgresql</i>. 
 
 <br>
-<br>Second, you can tell JForum to use or not a Connection Pool. Connection pools will increase the performance of your application, but there are some situations where the use of a connection pool is not recommended or even possible. 
+<br>Secondly, you can tell JForum whether to use a Connection Pool or not. A connection pool will increase the performance of your application, but there are some situations where the use of a connection pool is not recommended or even possible. 
 <br>The first thing is more specific to MySQL: mysql has a environment variable named "wait_timeout", which you can see by typing
 <br>
 <br>
@@ -126,12 +126,12 @@ Then, open the file <i>WEB-INF/config/SystemGlobals.properties</i>. Now search f
 <br>
 <br>in the mysql console. It is the last one. The default value is 8 hours, which means that, after 8 hours of inactivity the session is automatically closed by the server. Many ISPs set the time limit to a very low number - 15, 30 seconds, less than 5 minutes sometimes -, so having a connection pool in this situations is not recomended, since the overhead will be high. 
 <br>
-<br>JForum has a way to not let the session be invalidated, through a "database ping delay" feature. The key's name is <i>database.ping.delay</i>, and has the default value set to 3600000 - 1 hour -, and you can change it to another value is necessary. The time must be in milliseconds, so, if you want to ping connections every 30 minutes, set to 1800000 ( 60 seconds * 30 minutes * 1000 ). 
+<br>JForum has a way to not let the session be invalidated, through a "database ping delay" feature. The key's name is <i>database.ping.delay</i>, and has the default value set to 3600000 - 1 hour -, and you can change it to another value as necessary. The time must be in milliseconds, so, if you want to ping connections every 30 minutes, set to 1800000 ( 60 seconds * 30 minutes * 1000 ). 
 <br>
 <br>The second point is when you simply can't use a connection pool - again, this is more common to occur in shared environments of ISPs. Some companies may limit the resource usage by the applications, so the connection pool is not recomended. 
 <br>
 
-<br>By default JForum uses a connection pool, option which is specified by the key <i>database.connection.implementation</i> - default value set to <i>net.jforum.PooledConnection</i>. If you want to use single connections - eg, a connection to the database will the opened and closed on every request -, when set the value to <i>net.jforum.SimpleConnection</i>. 
+<br>By default JForum uses a connection pool, option which is specified by the key <i>database.connection.implementation</i> - default value set to <i>net.jforum.PooledConnection</i>. If you want to use single connections - eg, a connection to the database will the opened and closed on every request -, then set the value to <i>net.jforum.SimpleConnection</i>. 
 <br>
 <br> <img src="info.jpg" border="0"> Edit the file <i>WEB-INF/config/database/&lt;<b>DBNAME</b>&gt;/&lt;<b>DBNAME</b>&gt;.properties</i>, where &lt;<b>DBNAME</b>&gt; is the database name you are using - for instance, <i>mysql</i> or <i>postgresql</i>. In this file there are some options you should change:
 
