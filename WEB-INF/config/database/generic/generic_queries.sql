@@ -104,7 +104,7 @@ UserModel.validateLostPasswordHash = SELECT COUNT(1) AS valid FROM jforum_users 
 UserModel.writeLostPasswordHash = UPDATE jforum_users SET security_hash = ? WHERE user_email = ?
 UserModel.getUsernameByEmail = SELECT username FROM jforum_users WHERE user_email = ?
 UserModel.validateActivationKeyHash = SELECT COUNT(1) AS valid FROM jforum_users WHERE user_actkey = ? AND user_id = ?
-UserModel.writeUserActive = UPDATE jforum_users SET user_active = 1 WHERE user_id = ?
+UserModel.writeUserActive = UPDATE jforum_users SET user_active = 1, user_actkey = NULL WHERE user_id = ?
 
 # #############
 # PostModel

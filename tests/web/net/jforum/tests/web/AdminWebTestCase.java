@@ -42,18 +42,17 @@
  */
 package net.jforum.tests.web;
 
-import java.io.IOException;
 import java.util.Date;
 
 import net.jforum.util.I18n;
 
 /**
  * @author Marc Wick
- * @version $Id: AdminWebTestCase.java,v 1.7 2004/10/10 05:55:34 marcwick Exp $
+ * @version $Id: AdminWebTestCase.java,v 1.8 2004/10/10 16:51:23 rafaelsteil Exp $
  */
 public class AdminWebTestCase extends AbstractWebTestCase {
 
-    public AdminWebTestCase(String name) throws IOException {
+    public AdminWebTestCase(String name) throws Exception {
         super(name);
     }
 

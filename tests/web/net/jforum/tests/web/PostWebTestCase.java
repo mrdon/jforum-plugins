@@ -42,8 +42,6 @@
  */
 package net.jforum.tests.web;
 
-import java.io.IOException;
-
 import net.jforum.util.I18n;
 
 import com.dumbster.smtp.SimpleSmtpServer;
@@ -51,11 +49,11 @@ import com.dumbster.smtp.SmtpMessage;
 
 /**
  * @author Marc Wick
- * @version $Id: PostWebTestCase.java,v 1.7 2004/10/04 15:23:17 marcwick Exp $
+ * @version $Id: PostWebTestCase.java,v 1.8 2004/10/10 16:51:23 rafaelsteil Exp $
  */
 public class PostWebTestCase extends AbstractWebTestCase {
 
-    public PostWebTestCase(String name) throws IOException {
+    public PostWebTestCase(String name) throws Exception {
         super(name);
     }
 

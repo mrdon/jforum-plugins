@@ -42,8 +42,6 @@
  */
 package net.jforum.tests.web;
 
-import java.io.IOException;
-
 import net.jforum.TestCaseUtils;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -53,7 +51,7 @@ import com.dumbster.smtp.SimpleSmtpServer;
 
 /**
  * @author Marc Wick
- * @version $Id: AbstractWebTestCase.java,v 1.11 2004/10/04 15:23:18 marcwick Exp $
+ * @version $Id: AbstractWebTestCase.java,v 1.12 2004/10/10 16:51:23 rafaelsteil Exp $
  */
 public abstract class AbstractWebTestCase extends WebTestCase {
     public static class SimpleHTMLParserListener implements
@@ -94,7 +92,7 @@ public abstract class AbstractWebTestCase extends WebTestCase {
      */
     protected SimpleSmtpServer smtpServer;
 
-    public AbstractWebTestCase(String name) throws IOException {
+    public AbstractWebTestCase(String name) throws Exception {
         super(name);
 
         this.rootDir = this.getClass().getResource("/").getPath();
@@ -109,7 +107,7 @@ public abstract class AbstractWebTestCase extends WebTestCase {
         // SimpleHTMLParserListener());
     }
 
-    private void init() throws IOException {
+    private void init() throws Exception {
         TestCaseUtils.loadEnvironment();
         this.language = SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT);
     }
