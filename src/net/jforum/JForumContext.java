@@ -42,11 +42,12 @@
  */
 package net.jforum;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Marc Wick
- * @version $Id: JForumContext.java,v 1.1 2004/10/12 06:51:43 marcwick Exp $
+ * @version $Id: JForumContext.java,v 1.2 2005/01/21 15:18:06 marcwick Exp $
  */
 public class JForumContext {
 
@@ -56,17 +57,41 @@ public class JForumContext {
 
     private HttpServletResponse response;
 
-    public JForumContext(String contextPath, String servletExtension, HttpServletResponse response) {
+    private boolean isEncodingDisabled = false;
+
+    public JForumContext(String contextPath, String servletExtension, HttpServletRequest req,
+            HttpServletResponse response) {
         this.contextPath = contextPath;
         this.servletExtension = servletExtension;
         this.response = response;
+
+        if (req != null) {
+            String userAgent = req.getHeader("user-agent");
+            if (userAgent != null) {
+                // search engine robots are not using cookies but don't like sessionid in url
+                // we are nice with the robots and don't encode the session id for them
+                if (userAgent.toLowerCase().indexOf("bot") > -1) {
+                    isEncodingDisabled = true;
+                } else if (userAgent.toLowerCase().indexOf("slurp") > -1) {
+                    isEncodingDisabled = true;
+                } else if (userAgent.toLowerCase().indexOf("crawler") > -1) {
+                    isEncodingDisabled = true;
+                }
+            }
+        }
     }
 
     public String encodeURL(String url) {
+        if (isEncodingDisabled) {
+            return contextPath + url + servletExtension;
+        }
         return response.encodeURL(contextPath + url + servletExtension);
     }
 
     public String encodeURL(String url, String extension) {
+        if (isEncodingDisabled) {
+            return contextPath + url + extension;
+        }
         return response.encodeURL(contextPath + url + extension);
     }
 }

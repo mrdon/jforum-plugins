@@ -73,7 +73,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.56 2005/01/19 19:25:52 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.57 2005/01/21 15:18:06 marcwick Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -181,7 +181,7 @@ public class JForum extends JForumCommonServlet
 		JForum.getContext().put("forumLink", SystemGlobals.getValue(ConfigKeys.FORUM_LINK));
 		JForum.getContext().put("encoding", SystemGlobals.getValue(ConfigKeys.ENCODING));
 		JForum.getContext().put("JForumContext", new JForumContext(JForum.getRequest().getContextPath(), 
-				SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION), JForum.getResponse()));
+				SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION), JForum.getRequest(),JForum.getResponse()));
 	}
 	
 	public void service(HttpServletRequest req, HttpServletResponse response) throws IOException, ServletException
