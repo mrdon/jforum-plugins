@@ -43,7 +43,7 @@
 									<#if logged>
 										<br/>
 										<a id="myprofile" class="mainmenu" href="${JForumContext.encodeURL("/user/edit/${session.userId}")}"><img src="${contextPath}/templates/${templateName}/images/icon_mini_profile.gif" width="12" height="13" border="0" /> ${I18n.getMessage("ForumBase.profile")}</a>&nbsp; 
-										<a class="mainmenu" href="${JForumContext.encodeURL("/bookmarks/list/${session.userId}")}"><img src="${contextPath}/templates/${templateName}/images/icon_minipost.gif">My Bag</a>&nbsp;
+										<a class="mainmenu" href="${JForumContext.encodeURL("/bookmarks/list/${session.userId}")}"><img src="${contextPath}/templates/${templateName}/images/icon_minipost.gif">${I18n.getMessage("Bookmarks.myBag")}</a>&nbsp;
 										<a id="privatemessages" class="mainmenu" href="${JForumContext.encodeURL("/pm/inbox")}"><img src="${contextPath}/templates/${templateName}/images/icon_mini_message.gif" width="12" height="13" border="0"/>
 											<#if (session.privateMessages > 0)>
 												${I18n.getMessage("ForumBase.newPm")}: (${session.privateMessages})
