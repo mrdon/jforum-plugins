@@ -27,10 +27,10 @@
 				</#if>
 			</#if>
 			<span class="postdetails">
-				Ranking: ${rank.getRankTitle(u.totalPosts)}
+				${I18n.getMessage("PostShow.ranking")}: ${rank.getRankTitle(u.totalPosts)}
 			
 				<#if karmaEnabled>
-					<br/>Karma: <script language="javascript">writeStars(${u.karma.karmaPoints}, ${u.id});</script>
+					<br/>${I18n.getMessage("Karma.karma")}: <script language="javascript">writeStars(${u.karma.karmaPoints}, ${u.id});</script>
 				</#if>
 			</span>
 		</td>
