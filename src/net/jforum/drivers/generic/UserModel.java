@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.14 2004/09/25 01:56:11 jamesyong Exp $
+ * @version $Id: UserModel.java,v 1.15 2004/09/25 02:10:11 jamesyong Exp $
  */
 public class UserModel extends AutoKeys implements net.jforum.model.UserModel 
 {
@@ -450,7 +450,7 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		rs.close();
 		p.close();
 		
-		if ((user != null && !user.isDeleted()) && (user.getActivationKey() == null || user.isActive())) {
+		if (user != null && !user.isDeleted() && (user.getActivationKey() == null || user.isActive())) {
 			return user;
 		}
 		
