@@ -52,6 +52,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -73,7 +74,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.9 2004/11/01 14:50:52 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.10 2004/11/01 16:40:18 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -195,6 +196,37 @@ public class InstallAction extends Command
         SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
         
         SessionFacade.remove(InstallServlet.getRequest().getSession().getId());
+	}
+	
+	private void makeFinalSteps() throws Exception
+	{
+		// Modules Mapping
+		String modulesMapping = SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/modulesMapping.properties";
+		if (new File(modulesMapping).canWrite()) {
+			Properties p = new Properties();
+			p.load(new FileInputStream(modulesMapping));
+			
+			if (p.containsKey("install")) {
+				p.remove("install");
+				
+				p.store(new FileOutputStream(modulesMapping), "Modified by JForum Installer - " + new Date());
+				
+				this.addToSessionAndContext("mappingFixed", "true");
+			}
+		}
+		
+		// Index renaming
+		String index = SystemGlobals.getApplicationPath() + "/index.htm";
+		File indexFile = new File(index);
+		if (indexFile.canWrite()) {
+			String newIndex = SystemGlobals.getApplicationPath() + "/index_forum.htm";
+			File newIndexFile = new File(newIndex);
+			if (newIndexFile.exists()) {
+				indexFile.renameTo(newIndexFile);
+				
+				this.addToSessionAndContext("indexFixed", "true");
+			}
+		}
 	}
 	
 	private void configureSystemGlobals() throws Exception
