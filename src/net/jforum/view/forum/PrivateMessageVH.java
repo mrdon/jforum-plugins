@@ -63,7 +63,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageVH.java,v 1.7 2004/08/18 10:56:12 jamesyong Exp $
+ * @version $Id: PrivateMessageVH.java,v 1.8 2004/08/26 02:43:19 rafaelsteil Exp $
  */
 public class PrivateMessageVH extends Command
 {
@@ -204,7 +204,7 @@ public class PrivateMessageVH extends Command
 			JForum.getContext().put("post", pm.getPost());
 			
 			Post postPreview = new Post(pm.getPost());
-			JForum.getContext().put("postPreview", PostCommon.preparePostText(postPreview));
+			JForum.getContext().put("postPreview", PostCommon.preparePostForDisplay(postPreview));
 			JForum.getContext().put("pm", pm);
 
 			this.send();
@@ -241,7 +241,7 @@ public class PrivateMessageVH extends Command
 		UserSession us = SessionFacade.getUserSession();
 		int userId = us.getUserId();
 		if (pm.getToUser().getId() == userId || pm.getFromUser().getId() == userId) {
-			pm.getPost().setText(PostCommon.preparePostText(pm.getPost()).getText());
+			pm.getPost().setText(PostCommon.preparePostForDisplay(pm.getPost()).getText());
 			
 			// Update the message status, if needed
 			if (pm.getType() == PrivateMessageType.NEW) {

@@ -128,12 +128,20 @@ CREATE TABLE jforum_posts (
   post_edit_time varchar(13) default NULL,
   post_edit_count smallint(5) NOT NULL default '0',
   status tinyint(1) default '1',
-  post_subject varchar(100) default NULL,
-  post_text text,
   PRIMARY KEY  (post_id),
   KEY (user_id),
   KEY (topic_id),
   KEY (forum_id)
+) TYPE=InnoDB;
+
+--
+-- Table structure for table 'jforum_posts_text'
+--
+DROP TABLE IF EXISTS jforum_posts_text;
+CREATE TABLE jforum_posts_text (
+	post_id MEDIUMINT(8) NOT NULL PRIMARY KEY,
+	post_text TEXT,
+	post_subject VARCHAR(100)
 ) TYPE=InnoDB;
 
 --
@@ -153,9 +161,15 @@ CREATE TABLE jforum_privmsgs (
   privmsgs_enable_html tinyint(1) NOT NULL default '0',
   privmsgs_enable_smilies tinyint(1) NOT NULL default '1',
   privmsgs_attach_sig tinyint(1) NOT NULL default '1',
-  privmsgs_text text NOT NULL,
   PRIMARY KEY  (privmsgs_id)
 ) TYPE=InnoDB;
+
+DROP TABLE IF EXISTS jforum_privmsgs_text;
+CREATE TABLE jforum_privmsgs_text (
+	privmsgs_id MEDIUMINT(8) NOT NULL,
+	privmsgs_text TEXT,
+	PRIMARY KEY ( privmsgs_id )
+) Type=InnoDB;
 
 --
 -- Table structure for table 'jforum_ranks'

@@ -21,11 +21,12 @@ UserModel.selectById = SELECT u.*, \
 # #############
 PostModel.lastGeneratedPostId = SELECT CURRVAL('jforum_posts_seq')
 
-PostModel.selectAllByTopicByLimit = SELECT post_id, topic_id, forum_id, jforum_posts.user_id, post_time, poster_ip, enable_bbcode, \
-	enable_html, enable_smilies, enable_sig, post_edit_time, post_edit_count, status, post_subject, post_text, username \
-	FROM jforum_posts, jforum_users \
-	WHERE topic_id = ? \
-	AND jforum_posts.user_id = jforum_users.user_id \
+PostModel.selectAllByTopicByLimit = SELECT p.post_id, topic_id, forum_id, p.user_id, post_time, poster_ip, enable_bbcode, \
+	enable_html, enable_smilies, enable_sig, post_edit_time, post_edit_count, status, pt.post_subject, pt.post_text, username \
+	FROM jforum_posts p, jforum_posts_text pt, jforum_users u \
+	WHERE p.post_id = pt.post_id \
+	AND topic_id = ? \
+	AND p.user_id = u.user_id \
 	ORDER BY post_time ASC \
 	LIMIT ? OFFSET ?
 	
@@ -65,6 +66,11 @@ TopicModel.selectAllByForumByLimit = SELECT t.*, u.username AS posted_by_usernam
 	LIMIT ? OFFSET ?
 	
 TopicModel.lastGeneratedTopicId = SELECT CURRVAL('jforum_topics_seq')
+
+# #####################
+# PrivateMessagesModel
+# #####################
+PrivateMessagesModel.lastGeneratedPmId = SELECT CURRVAL('jforum_privmsgs_seq')
 
 # ############
 # SearchModel

@@ -1,6 +1,6 @@
 -- HSQL dump 1.0
 -- Author: Franklin Samir (franklin@portaljava.com) based on MySQL dump file.
--- Obs.: All int variants like mediumint and smallint from MySql was converted to int.
+-- Obs.: All int variants like mediumint and smallint from MySql were converted to int.
 ---------------------------------------------------------
 --
 -- Table structure for table 'jforum_banlist' - VERIFIED
@@ -112,11 +112,19 @@ CREATE TABLE jforum_posts (
   enable_sig tinyint(1) default '1' NOT NULL,
   post_edit_time varchar(13) default 'NULL' NULL,
   post_edit_count int(5) default '0' NOT NULL,
-  status tinyint(1) default '1' NOT NULL,
-  post_subject varchar(100) default 'NULL',
-  post_text LONGVARCHAR   
+  status tinyint(1) default '1' NOT NULL
 ) ;
 CREATE INDEX idx_posts ON jforum_posts(user_id,topic_id,forum_id);
+
+--
+-- Table structure for table 'jforum_posts_text'
+--
+DROP TABLE jforum_posts_text IF EXISTS;
+CREATE TABLE jforum_posts_text (
+	post_id int(8) NOT NULL IDENTITY,
+	post_text LONGVARCHAR,
+	post_subject VARCHAR(100) DEFAULT 'NULL'
+);
 
 --
 -- Table structure for table 'jforum_privmsgs' - VERIFIED
@@ -134,9 +142,14 @@ CREATE TABLE jforum_privmsgs (
   privmsgs_enable_bbcode tinyint(1) default '1' NOT NULL,
   privmsgs_enable_html tinyint(1) default '0' NOT NULL,
   privmsgs_enable_smilies tinyint(1) default '1' NOT NULL,
-  privmsgs_attach_sig tinyint(1) default '1' NOT NULL,
-  privmsgs_text LONGVARCHAR NOT NULL
+  privmsgs_attach_sig tinyint(1) default '1' NOT NULL
 ) ;
+
+DROP TABLE jforum_privmsgs_text IF EXISTS;
+CREATE TABLE jforum_privmsgs_text (
+	privmsgs_id INT(8) NOT NULL IDENTITY,
+	privmsgs_text TEXT
+);
 
 --
 -- Table structure for table 'jforum_ranks' - VERIFIED

@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import net.jforum.Command;
 import net.jforum.JForum;
@@ -59,10 +60,10 @@ import net.jforum.model.ForumModel;
 import net.jforum.model.PostModel;
 import net.jforum.model.TopicModel;
 import net.jforum.model.UserModel;
-import net.jforum.model.security.UserSecurityModel;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.RankingRepository;
 import net.jforum.repository.SecurityRepository;
+import net.jforum.repository.SmiliesRepository;
 import net.jforum.repository.TopicRepository;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.SecurityConstants;
@@ -75,7 +76,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostVH.java,v 1.30 2004/08/21 02:56:09 rafaelsteil Exp $
+ * @version $Id: PostVH.java,v 1.31 2004/08/26 02:43:19 rafaelsteil Exp $
  */
 public class PostVH extends Command 
 {
@@ -116,6 +117,7 @@ public class PostVH extends Command
 		
 		ArrayList posts = pm.selectAllByTopicByLimit(topicId, start, count);
 		ArrayList helperList = new ArrayList();
+		Map usersMap = new HashMap();
 
 		int userId = SessionFacade.getUserSession().getUserId();
 		int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
@@ -133,11 +135,22 @@ public class PostVH extends Command
 				p.setCanEdit(true);
 			}
 			
+			Integer posterId = new Integer(p.getUserId());
+			if (!usersMap.containsKey(posterId)) {
+				User u = um.selectById(p.getUserId());
+				u.setSignature(PostCommon.processText(u.getSignature()));
+				u.setSignature(PostCommon.processSmilies(u.getSignature(), SmiliesRepository.getSmilies()));
+				
+				usersMap.put(posterId, u);
+			}
+			
+			/*
 			UserSecurityModel umodel = DataAccessDriver.getInstance().newUserSecurityModel();
 			pc = new PermissionControl();
 			pc.setRoles(umodel.loadRoles(p.getUserId()));
+			*/
 			
-			helperList.add(PostCommon.preparePostText(p));
+			helperList.add(PostCommon.preparePostForDisplay(p));
 		}
 		
 		boolean isModerator = (pc.canAccess(SecurityConstants.PERM_MODERATION)) &&
@@ -153,7 +166,7 @@ public class PostVH extends Command
 		JForum.getContext().put("rank", new RankingRepository());
 		JForum.getContext().put("posts",  helperList);
 		JForum.getContext().put("forum", ForumRepository.getForum(topic.getForumId()));
-		JForum.getContext().put("um", um);
+		JForum.getContext().put("users", usersMap);
 		JForum.getContext().put("topicId", new Integer(topicId));
 		JForum.getContext().put("watching", tm.isUserSubscribed(topicId, SessionFacade.getUserSession().getUserId()));
 		JForum.getContext().put("pageTitle", SystemGlobals.getValue(ConfigKeys.FORUM_NAME) +" - "+ topic.getTitle());
@@ -352,7 +365,7 @@ public class PostVH extends Command
 		if (JForum.getRequest().getParameter("preview") != null) {
 			JForum.getContext().put("preview", true);
 			Post postPreview = new Post(p);
-			JForum.getContext().put("postPreview", PostCommon.preparePostText(postPreview));
+			JForum.getContext().put("postPreview", PostCommon.preparePostForDisplay(postPreview));
 			
 			this.edit(true, p);
 		}
@@ -521,7 +534,7 @@ public class PostVH extends Command
 			JForum.getContext().put("start", JForum.getRequest().getParameter("start"));
 			
 			Post postPreview = new Post(p);
-			JForum.getContext().put("postPreview", PostCommon.preparePostText(postPreview));
+			JForum.getContext().put("postPreview", PostCommon.preparePostForDisplay(postPreview));
 			
 			this.insert();
 		}

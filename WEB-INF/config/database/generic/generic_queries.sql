@@ -105,21 +105,28 @@ UserModel.getUsernameByEmail = SELECT username FROM jforum_users WHERE user_emai
 # #############
 # PostModel
 # #############
-PostModel.selectById = SELECT post_id, topic_id, forum_id, jforum_posts.user_id, post_time, poster_ip, enable_bbcode, enable_html, \
-	enable_smilies, enable_sig, post_edit_time, post_edit_count, status, post_subject, post_text, username \
-	FROM jforum_posts, jforum_users \
-	WHERE post_id = ? \
-	AND jforum_posts.user_id = jforum_users.user_id
+PostModel.selectById = SELECT p.post_id, topic_id, forum_id, jforum_posts.user_id, post_time, poster_ip, enable_bbcode, enable_html, \
+	enable_smilies, enable_sig, post_edit_time, post_edit_count, status, pt.post_subject, pt.post_text, username \
+	FROM jforum_posts p, jforum_posts_text pt, jforum_users u \
+	WHERE p.post_id = pt.post_id
+	AND p.post_id = ? \
+	AND p.user_id = u.user_id
 
 PostModel.deletePost = DELETE FROM jforum_posts WHERE post_id = ?
-PostModel.updatePost = UPDATE jforum_posts SET topic_id = ?, forum_id = ?, enable_bbcode = ?, enable_html = ?, enable_smilies = ?, enable_sig = ?, post_edit_time = ?, post_edit_count = post_edit_count + 1, post_subject = ?, post_text = ?, poster_ip = ? WHERE post_id = ?
-PostModel.addNewPost = INSERT INTO jforum_posts (topic_id, forum_id, user_id, post_time, poster_ip, enable_bbcode, enable_html, enable_smilies, enable_sig, post_subject, post_text) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+PostModel.deletePostText = DELETE FROM jforum_posts_text WHERE post_id = ?
 
-PostModel.selectAllByTopicByLimit = SELECT post_id, topic_id, forum_id, jforum_posts.user_id, post_time, poster_ip, enable_bbcode, \
-	enable_html, enable_smilies, enable_sig, post_edit_time, post_edit_count, status, post_subject, post_text, username \
-	FROM jforum_posts, jforum_users \
-	WHERE topic_id = ? \
-	AND jforum_posts.user_id = jforum_users.user_id \
+PostModel.updatePost = UPDATE jforum_posts SET topic_id = ?, forum_id = ?, enable_bbcode = ?, enable_html = ?, enable_smilies = ?, enable_sig = ?, post_edit_time = ?, post_edit_count = post_edit_count + 1, poster_ip = ? WHERE post_id = ?
+PostModel.updatePostText = UPDATE jforum_posts_text SET post_text = ?, post_subject = ? WHERE post_id = ?
+
+PostModel.addNewPost = INSERT INTO jforum_posts (topic_id, forum_id, user_id, post_time, poster_ip, enable_bbcode, enable_html, enable_smilies, enable_sig, post_subject, post_text) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+PostModel.addNewPostText = INSERT INTO jforum_posts_text ( post_id, post_text, post_subject ) VALUES (?, ?, ?)
+
+PostModel.selectAllByTopicByLimit = SELECT p.post_id, topic_id, forum_id, p.user_id, post_time, poster_ip, enable_bbcode, \
+	enable_html, enable_smilies, enable_sig, post_edit_time, post_edit_count, status, pt.post_subject, pt.post_text, username \
+	FROM jforum_posts p, jforum_posts_text pt, jforum_users u \
+	WHERE p.post_id = pt.post_id \
+	AND topic_id = ? \
+	AND p.user_id = u.user_id \
 	ORDER BY post_time ASC \
 	LIMIT ?, ?
 	
@@ -351,14 +358,18 @@ SmiliesModel.selectById = SELECT * FROM jforum_smilies WHERE smilie_id = ?
 # ####################
 PrivateMessageModel.add = INSERT INTO jforum_privmsgs ( privmsgs_type, privmsgs_subject, privmsgs_from_userid, \
 	privmsgs_to_userid, privmsgs_date, privmsgs_enable_bbcode, privmsgs_enable_html, privmsgs_enable_smilies, \
-	privmsgs_attach_sig, privmsgs_text ) \
-	VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )
+	privmsgs_attach_sig ) \
+	VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? )
+	
+PrivateMessagesModel.addText = INSERT INTO jforum_privmsgs_text ( privmsgs_id, privmsgs_text ) VALUES (?, ?)
 	
 PrivateMessageModel.delete = DELETE FROM jforum_privmsgs WHERE privmsgs_id = ? \
 	AND ( \
 	    (privmsgs_from_userid = ? AND privmsgs_type = 2) \
 	    OR (privmsgs_to_userid = ? AND (privmsgs_type = 0 OR privmsgs_type = 1 OR privmsgs_type = 5)) \
 	)
+	
+PrivateMessagesModel.deleteText = DELETE FROM jforum_privmsgs_text WHERE privmsgs_id = ?
 
 PrivateMessageModel.baseListing = SELECT pm.privmsgs_type, pm.privmsgs_id, pm.privmsgs_date, pm.privmsgs_subject, u.user_id, u.username \
 	FROM jforum_privmsgs pm, jforum_users u \
@@ -375,8 +386,13 @@ PrivateMessageModel.sent = WHERE privmsgs_from_userid = ? \
 	AND u.user_id = pm.privmsgs_to_userid \
 	AND pm.privmsgs_type = 2
 	
-PrivateMessageModel.selectById = SELECT * FROM jforum_privmsgs WHERE privmsgs_id = ?
 PrivateMessageModel.updateType = UPDATE jforum_privmsgs SET privmsgs_type = ? WHERE privmsgs_id = ?
+
+PrivateMessageModel.selectById = SELECT p.*, pt.privmsgs_text \
+	FROM jforum_privmsgs p, jforum_privmsgs_text pt \
+	WHERE p.privmsgs_id = pt.privmsgs_id \
+	AND privmsgs_id = ?
+
 
 # #################
 # UserSessionModel

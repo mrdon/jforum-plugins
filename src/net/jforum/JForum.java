@@ -85,7 +85,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.23 2004/08/21 02:56:06 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.24 2004/08/26 02:43:15 rafaelsteil Exp $
  */
 public class JForum extends HttpServlet 
 {
@@ -246,8 +246,7 @@ public class JForum extends HttpServlet
 	
 	private void startDatabase() throws Exception
 	{
-		ConnectionPool.init();
-		ConnectionPool.getPool().enableConnectionPinging();
+		net.jforum.Connection.getImplementation().init();
 	}
 	
 	public void init(ServletConfig config) throws ServletException
@@ -479,7 +478,7 @@ public class JForum extends HttpServlet
 			request.setCharacterEncoding(encoding);
 
 			dataHolder.setResponse(response);
-			dataHolder.setConnection(ConnectionPool.getPool().getConnection());
+			dataHolder.setConnection(net.jforum.Connection.getImplementation().getConnection());
 			dataHolder.setRequest(request);
 
 			// Assigns the information to user's thread 
@@ -534,7 +533,7 @@ public class JForum extends HttpServlet
 		finally {
 			try {
 				if (JForum.getConnection() != null) {
-					ConnectionPool.getPool().releaseConnection(JForum.getConnection());
+					net.jforum.Connection.getImplementation().releaseConnection(JForum.getConnection());
 				}
 			}
 			catch (Exception e) {

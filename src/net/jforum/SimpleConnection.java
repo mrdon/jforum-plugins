@@ -36,72 +36,53 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * This file creation date: May 11, 2003 / 11:30:45 AM
+ * This file creation date: 25/08/2004 23:32:20
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
-
-import org.apache.log4j.Logger;
-
-import net.jforum.entities.UserSession;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.repository.SecurityRepository;
-import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
+ * Non-pooled connection implementation.
+ * This class will ask a new conneciton to the database on every
+ * <code>getConnection()</code> class. Uses of this class include
+ * systems where a connection pool is not permited or the 
+ * connections' life time is too short, not justifying to have
+ * a connection pool.
+ * 
  * @author Rafael Steil
- * @version $Id: ForumSessionListener.java,v 1.8 2004/08/26 02:43:16 rafaelsteil Exp $
+ * @version $Id: SimpleConnection.java,v 1.1 2004/08/26 02:43:15 rafaelsteil Exp $
  */
-public class ForumSessionListener implements HttpSessionListener 
+public class SimpleConnection extends net.jforum.Connection 
 {
-	private static final Logger logger = Logger.getLogger(ForumSessionListener.class);
-	
 	/** 
-	 * @see javax.servlet.http.HttpSessionListener#sessionCreated(javax.servlet.http.HttpSessionEvent)
+	 * @see net.jforum.Connection#init()
 	 */
-	public void sessionCreated(HttpSessionEvent event) 
+	public void init() throws Exception 
 	{
-	} 
+		SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue("database.driver.config"));
+		Class.forName(SystemGlobals.getValue(SystemGlobals.getValue("database.connection.driver")));
+	}
 
 	/** 
-	 * @see javax.servlet.http.HttpSessionListener#sessionDestroyed(javax.servlet.http.HttpSessionEvent)
+	 * @see net.jforum.Connection#getConnection()
 	 */
-	public void sessionDestroyed(HttpSessionEvent event) 
+	public Connection getConnection() throws Exception 
 	{
-		UserSession us = SessionFacade.getUserSession(event.getSession().getId());
-		if (us != null) {
-			Connection conn = null;
-			
-			try {
-				if (us.getUserId() != SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
-					conn = net.jforum.Connection.getImplementation().getConnection();
-					DataAccessDriver.getInstance().newUserSessionModel().update(us, conn);
-				}
-				
-				SecurityRepository.remove(us.getUserId());
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-			finally  {
-				if (conn != null) {
-					try {
-						net.jforum.Connection.getImplementation().releaseConnection(conn);
-					}
-					catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}
-		
-		SessionFacade.remove(event.getSession().getId());
+		return DriverManager.getConnection(SystemGlobals.getValue("database.connection.string"));
 	}
+
+	/** 
+	 * @see net.jforum.Connection#releaseConnection(java.sql.Connection)
+	 */
+	public void releaseConnection(Connection conn) throws Exception 
+	{
+		conn.close();
+	}
+
 }

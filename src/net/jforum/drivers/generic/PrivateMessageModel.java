@@ -59,9 +59,9 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageModel.java,v 1.2 2004/06/01 19:47:18 pieter2 Exp $
+ * @version $Id: PrivateMessageModel.java,v 1.3 2004/08/26 02:43:14 rafaelsteil Exp $
  */
-public class PrivateMessageModel implements net.jforum.model.PrivateMessageModel
+public class PrivateMessageModel extends AutoKeys implements net.jforum.model.PrivateMessageModel
 {
 	/** 
 	 * @see net.jforum.model.PrivateMessageModel#send(net.jforum.entities.PrivateMessage)
@@ -70,9 +70,11 @@ public class PrivateMessageModel implements net.jforum.model.PrivateMessageModel
 	{
 		// We should store 2 copies: one for the sendee's sent box
 		// and another for the target user's inbox.
+		
+		PreparedStatement insert = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessagesModel.addText"));
 
 		// Sendee's sent box
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessageModel.add"));
+		PreparedStatement p = this.getStatementForAutoKeys("PrivateMessageModel.add");
 		p.setInt(1, PrivateMessageType.SENT);
 		p.setString(2, pm.getPost().getSubject());
 		p.setInt(3, pm.getFromUser().getId());
@@ -82,14 +84,21 @@ public class PrivateMessageModel implements net.jforum.model.PrivateMessageModel
 		p.setString(7, pm.getPost().isHtmlEnabled() ? "1" : "0");
 		p.setString(8, pm.getPost().isSmiliesEnabled() ? "1" : "0");
 		p.setString(9, pm.getPost().isSignatureEnabled() ? "1" : "0");
-		p.setString(10, pm.getPost().getText());
 		
 		p.executeUpdate();
+		
+		insert.setInt(1, this.executeAutoKeysQuery(p));
+		insert.setString(2, pm.getPost().getText());
+		insert.executeUpdate();
 		
 		// Target user's inbox
 		p.setInt(1, PrivateMessageType.NEW);
 		p.executeUpdate();
 		
+		insert.setInt(1, this.executeAutoKeysQuery(p));
+		insert.executeUpdate();
+		
+		insert.close();
 		p.close();
 	}
 	
@@ -102,11 +111,19 @@ public class PrivateMessageModel implements net.jforum.model.PrivateMessageModel
 		p.setInt(2, pm[0].getFromUser().getId());
 		p.setInt(3, pm[0].getFromUser().getId());
 		
+		PreparedStatement delete = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessagesModel.deleteText"));
+		
 		for (int i = 0; i < pm.length; i++) {
 			p.setInt(1, pm[i].getId());
 			p.executeUpdate();
+			
+			if (p.getUpdateCount() > 0) {
+				delete.setInt(1, pm[i].getId());
+				delete.executeUpdate();
+			}
 		}
 		
+		delete.close();
 		p.close();
 	}
 

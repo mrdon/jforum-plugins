@@ -37,7 +37,6 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 21/05/2004 - 15:33:36
- * net.jforum.view.forum.PostCommon.java
  * The JForum Project
  * http://www.jforum.net
  */
@@ -59,100 +58,19 @@ import net.jforum.util.bbcode.BBCode;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.2 2004/07/24 15:47:53 jamesyong Exp $
+ * @version $Id: PostCommon.java,v 1.3 2004/08/26 02:43:19 rafaelsteil Exp $
  */
 public class PostCommon
 {
-	public static Post preparePostText(Post p)
+	public static Post preparePostForDisplay(Post p)
 	{
 		if (!p.isHtmlEnabled()) {
 			p.setText(p.getText().replaceAll("<", "&lt;"));
 		}
 		
-		// First of all, convert new lines to <br>'s
-		p.setText(p.getText().replaceAll("\n", "<br>"));
-		
 		// Then, search for bb codes
 		if (p.isBbCodeEnabled()) {
-			if (p.getText().indexOf('[') > -1 && p.getText().indexOf(']') > -1) {
-				int openQuotes = 0;
-				Iterator tmpIter = BBCodeRepository.getBBCollection().getBbList().iterator();
-				
-				while (tmpIter.hasNext()) {
-					BBCode bb = (BBCode)tmpIter.next();
-					
-					// little hacks
-					if (bb.removeQuotes()) {
-						Matcher matcher = Pattern.compile(bb.getRegex()).matcher(p.getText());
-						
-						while (matcher.find()) {
-							String contents = matcher.group(1);
-							contents = contents.replaceAll("'", "");
-							contents = contents.replaceAll("\"", "");
-							
-							String replace = bb.getReplace().replaceAll("\\$1", contents);
-							
-							p.setText(p.getText().replaceFirst(bb.getRegex(), replace));
-						}
-					}
-					else {
-						// Another hack for the quotes
-						if (bb.getTagName().equals("openQuote")) {
-							Matcher matcher = Pattern.compile(bb.getRegex()).matcher(p.getText());								
-							
-							while (matcher.find()) {
-								openQuotes++;
-								
-								p.setText(p.getText().replaceFirst(bb.getRegex(), bb.getReplace()));
-							}
-						}
-						else if (bb.getTagName().equals("closeQuote")) {
-							if (openQuotes > 0) {
-								Matcher matcher = Pattern.compile(bb.getRegex()).matcher(p.getText());
-								
-								while (matcher.find()) {
-									openQuotes--;
-									
-									p.setText(p.getText().replaceFirst(bb.getRegex(), bb.getReplace()));
-								}
-							}
-						}
-						else if (bb.getTagName().equals("code")) {
-							Matcher matcher = Pattern.compile(bb.getRegex()).matcher(p.getText());
-							StringBuffer sb = new StringBuffer(p.getText());
-							
-							while (matcher.find()) {
-								String contents = matcher.group(1);
-								
-								StringBuffer replace = new StringBuffer(bb.getReplace());
-								int index = replace.indexOf("$1");
-								if (index > -1) {
-									replace.replace(index, index + 2, contents);
-								}
-								
-								index = sb.indexOf("[code]");
-								int lastIndex = sb.indexOf("[/code]") + "[/code]".length();
-								
-								sb.replace(index, lastIndex, replace.toString());
-								p.setText(sb.toString());
-							}
-						}
-						else {
-							p.setText(p.getText().replaceAll(bb.getRegex(), bb.getReplace()));
-						}
-					}
-					
-				}
-				
-				if (openQuotes > 0) {
-					BBCode closeQuote = BBCodeRepository.findByName("closeQuote");
-					
-					// I'll not check for nulls ( but I should )
-					for (int i = 0; i < openQuotes; i++) {
-						p.setText(p.getText() + closeQuote.getReplace());
-					}
-				}
-			}
+			p.setText(PostCommon.processText(p.getText()));
 		}
 		
 		// Smilies...
@@ -161,6 +79,97 @@ public class PostCommon
 		}
 		
 		return p;
+	}
+	
+	public static String processText(String text)
+	{
+		if (text == null) {
+			return null;
+		}
+		
+		text = text.replaceAll("\n", "<br>");
+		
+		if (text.indexOf('[') > -1 && text.indexOf(']') > -1) {
+			int openQuotes = 0;
+			Iterator tmpIter = BBCodeRepository.getBBCollection().getBbList().iterator();
+			
+			while (tmpIter.hasNext()) {
+				BBCode bb = (BBCode)tmpIter.next();
+				
+				// little hacks
+				if (bb.removeQuotes()) {
+					Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
+					
+					while (matcher.find()) {
+						String contents = matcher.group(1);
+						contents = contents.replaceAll("'", "");
+						contents = contents.replaceAll("\"", "");
+						
+						String replace = bb.getReplace().replaceAll("\\$1", contents);
+						
+						text = text.replaceFirst(bb.getRegex(), replace);
+					}
+				}
+				else {
+					// Another hack for the quotes
+					if (bb.getTagName().equals("openQuote")) {
+						Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);								
+						
+						while (matcher.find()) {
+							openQuotes++;
+							
+							text = text.replaceFirst(bb.getRegex(), bb.getReplace());
+						}
+					}
+					else if (bb.getTagName().equals("closeQuote")) {
+						if (openQuotes > 0) {
+							Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
+							
+							while (matcher.find()) {
+								openQuotes--;
+								
+								text = text.replaceFirst(bb.getRegex(), bb.getReplace());
+							}
+						}
+					}
+					else if (bb.getTagName().equals("code")) {
+						Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
+						StringBuffer sb = new StringBuffer(text);
+						
+						while (matcher.find()) {
+							String contents = matcher.group(1);
+							
+							StringBuffer replace = new StringBuffer(bb.getReplace());
+							int index = replace.indexOf("$1");
+							if (index > -1) {
+								replace.replace(index, index + 2, contents);
+							}
+							
+							index = sb.indexOf("[code]");
+							int lastIndex = sb.indexOf("[/code]") + "[/code]".length();
+							
+							sb.replace(index, lastIndex, replace.toString());
+							text = sb.toString();
+						}
+					}
+					else {
+						text = text.replaceAll(bb.getRegex(), bb.getReplace());
+					}
+				}
+				
+			}
+			
+			if (openQuotes > 0) {
+				BBCode closeQuote = BBCodeRepository.findByName("closeQuote");
+				
+				// I'll not check for nulls ( but I should )
+				for (int i = 0; i < openQuotes; i++) {
+					text = text + closeQuote.getReplace();
+				}
+			}
+		}
+		
+		return text;
 	}
 	
 	public static String processSmilies(String text, ArrayList smilies)

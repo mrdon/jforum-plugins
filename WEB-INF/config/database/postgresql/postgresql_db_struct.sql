@@ -115,13 +115,21 @@ CREATE TABLE jforum_posts (
   post_edit_time VARCHAR(13) DEFAULT NULL,
   post_edit_count INTEGER NOT NULL DEFAULT 0,
   status INTEGER DEFAULT 1,
-  post_subject VARCHAR(100) DEFAULT NULL,
-  post_text TEXT,
   PRIMARY KEY  (post_id)
 );
 CREATE INDEX idx_posts_user ON jforum_posts(user_id);
 CREATE INDEX idx_posts_topic ON jforum_posts(topic_id);
 CREATE INDEX idx_posts_forum ON jforum_posts(forum_id);
+
+--
+-- Table structure for table 'jforum_posts_text'
+--
+CREATE TABLE jforum_posts_text (
+	post_id INTEGER NOT NULL,
+	post_text TEXT,
+	post_subject VARCHAR(100) DEFAULT NULL,
+	PRIMARY KEY ( post_id )
+);
 
 --
 -- Table structure for table 'jforum_privmsgs'
@@ -140,9 +148,14 @@ CREATE TABLE jforum_privmsgs (
   privmsgs_enable_html INTEGER NOT NULL DEFAULT 0,
   privmsgs_enable_smilies INTEGER NOT NULL DEFAULT 1,
   privmsgs_attach_sig INTEGER NOT NULL DEFAULT 1,
-  privmsgs_text text NOT NULL,
   PRIMARY KEY  (privmsgs_id)
 );
+
+CREATE TABLE jforum_privmsgs_text (
+	privmsgs_id INTEGER NOT NULL,
+	privmsgs_text TEXT
+);
+CREATE INDEX idx_pm_text_id ON jforum_privmsgs_text (privmsgs_id);
 
 --
 -- Table structure for table 'jforum_ranks'

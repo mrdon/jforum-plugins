@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -67,7 +67,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * to get a conneciton, simple use
  *
  * <blockquote><pre>
- * 		Connection con = ConnectionPool.getPool().getConnection();
+ * 		Connection con = PooledConnection.getConnection();
  * </pre></blockquote>
  *
  * The name of the query is associated with a Prepared Statement string, which is inside 
@@ -77,22 +77,22 @@ import net.jforum.util.preferences.SystemGlobals;
  * Also manages the connection to the database. The configuration is a config file which
  * is read at the first <code>init()</code> call. You must init it before using the pool.<p>
  *
- * <code>ConnectionPool</code> is for now a singleton.
+ * <code>PooledConnection</code> is for now a singleton.
  *
  * @author Paulo Silveira
  * @author Rafael Steil
- * @version $Id: ConnectionPool.java,v 1.8 2004/08/21 02:56:06 rafaelsteil Exp $
+ * @version $Id: PooledConnection.java,v 1.1 2004/08/26 02:43:15 rafaelsteil Exp $
  * */
 
-public class ConnectionPool 
+public class PooledConnection extends net.jforum.Connection
 {
-	private static ConnectionPool pool;
+	private static PooledConnection pool;
 	private static boolean isDatabaseUp;
 	
 	private int minConnections, maxConnections, timeout;
 	private String connectionString;
 	
-	private static final Logger logger = Logger.getLogger(ConnectionPool.class);
+	private static final Logger logger = Logger.getLogger(PooledConnection.class);
 
 	/**
 	* It is the connection pool
@@ -118,7 +118,7 @@ public class ConnectionPool
 	 * @throws IOException
 	 * @throws Exception
 	*/
-	private ConnectionPool() throws IOException, SQLException
+	private PooledConnection() throws IOException, SQLException
 	{
 		SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue("database.driver.config"));
 		String driver = SystemGlobals.getValue("database.connection.driver");
@@ -166,13 +166,13 @@ public class ConnectionPool
      * Inits ConnectionPool. 
      * If the pool was already initialized, this action will take no effect.
 	 *
-	 * @throws SQLException
-	 * @throws IOException
+	 * @throws Exception
      */
-    public static void init() throws SQLException, IOException
+    public void init() throws Exception
     {
         if (pool == null || !isDatabaseUp) {
-            pool = new ConnectionPool();
+            pool = new PooledConnection();
+            this.enableConnectionPinging();
         }
     }
     
@@ -180,21 +180,6 @@ public class ConnectionPool
     {
     	return isDatabaseUp;
     }
-    
-	/**
-	 *  Gets the ConnectionPool singleton instance. 
-	 * 
-	 * @return <code>ConnectionPool</code> object
-	 * @throws java.sql.SQLException
-	 **/
-	public static ConnectionPool getPool() throws SQLException
-	{
-		if (pool == null) {
-			throw new SQLException("ConnectionPool was not initialized yet. You need to call init() first.");
-		}
-		
-		return pool;
-	}
 
 	/**
 	 * Gets a connection to the database.<p> 

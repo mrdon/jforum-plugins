@@ -57,7 +57,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: PostModel.java,v 1.6 2004/07/24 15:45:59 jamesyong Exp $
+ * @version $Id: PostModel.java,v 1.7 2004/08/26 02:43:14 rafaelsteil Exp $
  */
 public class PostModel extends AutoKeys implements net.jforum.model.PostModel 
 {
@@ -119,8 +119,13 @@ public class PostModel extends AutoKeys implements net.jforum.model.PostModel
 		// Table posts
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.deletePost"));
 		p.setInt(1, post.getId());
-		
 		p.executeUpdate();
+		p.close();
+		
+		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.deletePostText"));
+		p.setInt(1, post.getId());
+		p.executeUpdate();
+		p.close();
 		
 		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.decrementPosts"));
 		p.setInt(1, post.getUserId());
@@ -138,18 +143,24 @@ public class PostModel extends AutoKeys implements net.jforum.model.PostModel
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.updatePost"));
 		p.setInt(1, post.getTopicId());
 		p.setInt(2, post.getForumId());
-		p.setInt(3, post.isBbCodeEnabled()?1:0);
-		p.setInt(4, post.isHtmlEnabled()?1:0);
-		p.setInt(5, post.isSmiliesEnabled()?1:0);
-		p.setInt(6, post.isSignatureEnabled()?1:0);
+		p.setInt(3, post.isBbCodeEnabled() ? 1 : 0);
+		p.setInt(4, post.isHtmlEnabled() ? 1 : 0);
+		p.setInt(5, post.isSmiliesEnabled() ? 1 : 0);
+		p.setInt(6, post.isSignatureEnabled() ? 1 : 0);
 		p.setLong(7, post.getEditTime());
-		p.setString(8, post.getSubject());
-		p.setString(9, post.getText());		
-		p.setString(10, post.getUserIp());
-		p.setInt(11, post.getId());
+		p.setString(8, post.getUserIp());
+		p.setInt(9, post.getId());
 		
 		p.executeUpdate();
-		p.close();		
+		p.close();
+		
+		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.updatePostText"));
+		p.setString(1, post.getText());
+		p.setString(2, post.getSubject());
+		p.setInt(3, post.getId());
+		
+		p.executeUpdate();
+		p.close();
 	}
 
 	/**
@@ -169,17 +180,24 @@ public class PostModel extends AutoKeys implements net.jforum.model.PostModel
 		p.setInt(7, post.isHtmlEnabled()?1:0);
 		p.setInt(8, post.isSmiliesEnabled()?1:0);
 		p.setInt(9, post.isSignatureEnabled()?1:0);
-		p.setString(10, post.getSubject());
-		p.setString(11, post.getText());
 		
 		int postId = this.executeAutoKeysQuery(p);
-		
 		post.setId(postId);
 		
+		p.close();
+
+		// Text
+		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.addNewPostText"));
+		p.setInt(1, postId);
+		p.setString(2, post.getText());
+		p.setString(3, post.getSubject());
+		p.executeUpdate();
+		p.close();
+		
+		// Increment
 		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.incrementPosts"));
 		p.setInt(1, post.getUserId());
 		p.executeUpdate();
-		
 		p.close();
 		
 		// Tokenize the words for search
