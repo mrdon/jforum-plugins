@@ -70,13 +70,13 @@ import net.jforum.util.CategoryOrderComparator;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.22 2004/12/09 02:41:41 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.23 2004/12/18 15:00:49 rafaelsteil Exp $
  */
 public class ForumRepository 
 {
 	private static Map forumCategoryRelation = new HashMap();
 	private static Map categoriesMap = new HashMap();
-	private static Set categoriesSet;// = new TreeSet(new CategoryOrderComparator());
+	private static Set categoriesSet = new TreeSet(new CategoryOrderComparator());
 	private static int totalTopics = -1;
 	private static int totalMessages = 0;
 
@@ -193,6 +193,18 @@ public class ForumRepository
 	{
 		return getAllCategories(SessionFacade.getUserSession().getUserId());
 	}
+	
+	private static Category findCategoryByOrder(int order)
+	{
+		for (Iterator iter = categoriesSet.iterator(); iter.hasNext(); ) {
+			Category c = (Category)iter.next();
+			if (c.getOrder() == order) {
+				return c;
+			}
+		}
+		
+		return null;
+	}
 
 	/**
 	 * Updates some category.
@@ -200,26 +212,27 @@ public class ForumRepository
 	 *  
 	 * @param c The category to update. The method will search for a category
 	 * with the same id and update its data.
-	 * @throws <code>CategoryNotFoundException</code> if the category is not found in the cache. 
 	 */
 	public synchronized static void reloadCategory(Category c)
 	{
-		Category currentCategory = (Category)categoriesMap.get(new Integer(c.getId()));
-
-		if (currentCategory == null) {
-			throw new CategoryNotFoundException("Category #" + c.getId() + " was not found in the cache");
-		}
+		Category current = (Category)categoriesMap.get(new Integer(c.getId()));
+		Category currentAtOrder = findCategoryByOrder(c.getOrder());
 		
 		Set tmpSet = new TreeSet(new CategoryOrderComparator());
 		tmpSet.addAll(categoriesSet);
-		tmpSet.remove(currentCategory);
-
-		currentCategory.setName(c.getName());
-		currentCategory.setOrder(c.getOrder());
 		
-		tmpSet.add(currentCategory);
+		if (currentAtOrder != null) {
+			tmpSet.remove(currentAtOrder);
+		}
 		
-		// Force reordering
+		tmpSet.add(c);
+		
+		if (currentAtOrder != null) {
+			tmpSet.remove(current);
+			currentAtOrder.setOrder(current.getOrder());
+			tmpSet.add(currentAtOrder);
+		}
+		
 		categoriesSet = tmpSet;
 	}
 	

@@ -71,7 +71,7 @@ import net.jforum.util.ForumOrderComparator;
  * to the user who make the call tho the method. 
  * 
  * @author Rafael Steil
- * @version $Id: Category.java,v 1.12 2004/12/09 02:41:41 rafaelsteil Exp $
+ * @version $Id: Category.java,v 1.13 2004/12/18 15:00:49 rafaelsteil Exp $
  */
 public class Category 
 {
@@ -285,6 +285,10 @@ public class Category
 	 */
 	public Collection getForums()
 	{
+		if (this.forums.size() == 0) {
+			return this.forums;
+		}
+
 		return this.getForums(SessionFacade.getUserSession().getUserId());
 	}
 
