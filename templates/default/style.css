@@ -80,6 +80,31 @@ TD.row2 {
 TD.row3 {
 	BACKGROUND-COLOR: #dfdfdf
 }
+
+td.row1Announce {
+	background-color: #EFEFEF;
+}
+
+td.row1Sticky {
+	background-color: #EFEFEF;
+}
+
+td.row2Announce {
+	background-color: #DEE3E7;
+}
+
+td.row2Sticky {
+	background-color: #DEE3E7;
+}
+
+td.row3Announce {
+	background-color: #D1D7DC;
+}
+
+td.row3Sticky {
+	background-color: #D1D7DC;
+}
+
 TD.rowpic {
 	BACKGROUND-IMAGE:  url(images/cellpic2.jpg); BACKGROUND-REPEAT: repeat-y; BACKGROUND-COLOR: #ffffff
 }
