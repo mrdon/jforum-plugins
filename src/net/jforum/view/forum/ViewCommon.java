@@ -69,7 +69,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.19 2004/11/10 01:30:28 rafaelsteil Exp $
+ * @version $Id: ViewCommon.java,v 1.20 2004/11/10 23:03:42 rafaelsteil Exp $
  */
 public final class ViewCommon
 {
@@ -146,9 +146,6 @@ public final class ViewCommon
 				else {
 					warns.add(I18n.getMessage("User.avatarUrlShouldHaveHttp"));
 				}
-			}
-			else {
-				u.setAvatar(null);
 			}
 		}
 		
