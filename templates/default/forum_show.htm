@@ -77,7 +77,7 @@
           <TD class=row1 vAlign=center align=middle width=20><@presentation.folderImage topic/></TD>
           <TD class=row1 width="100%">
 		  	<SPAN class=topictitle>
-				<a href="${contextPath}/posts/list/${topic.id}${extension}"><#if (topic.title?length == 0)>No Subject<#else>${topic.title}</#if></a>
+				<a href="${contextPath}/posts/list/${topic.id}${extension}"><#if (topic.title?length == 0)>No Subject<#else>${topic.title?html}</#if></a>
 			</SPAN>
 
 			<#if topic.paginate>
