@@ -48,6 +48,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -63,226 +64,231 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: I18n.java,v 1.23 2005/02/24 23:00:51 rafaelsteil Exp $
+ * @version $Id: I18n.java,v 1.24 2005/03/07 20:40:28 rafaelsteil Exp $
  */
-public class I18n {
-    private static I18n classInstance = new I18n();
+public class I18n
+{
+	private static I18n classInstance = new I18n();
+	private static Map messagesMap = new HashMap();
+	private static Properties localeNames = new Properties();
+	private static String defaultName;
+	private static String baseDir;
+	private static List watching = new ArrayList();
+	public static final String CANNOT_DELETE_GROUP = "CannotDeleteGroup";
+	public static final String CANNOT_DELETE_CATEGORY = "CannotDeleteCategory";
+	private static final Logger logger = Logger.getLogger(I18n.class);
 
-    private static HashMap messagesMap = new HashMap();
+	private I18n() {}
 
-    private static Properties localeNames = new Properties();
+	/**
+	 * Gets the singleton
+	 * 
+	 * @return Instance of I18n class
+	 */
+	public static I18n getInstance()
+	{
+		return classInstance;
+	}
 
-    private static String defaultName;
+	/**
+	 * Load the default I18n file
+	 * 
+	 * @throws IOException
+	 */
+	public static synchronized void load() throws IOException
+	{
+		baseDir = SystemGlobals.getApplicationResourceDir() + "/" + SystemGlobals.getValue(ConfigKeys.LOCALES_DIR);
 
-    private static String baseDir;
+		loadLocales();
 
-    private static List watching = new ArrayList();
+		defaultName = SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT_ADMIN);
+		load(defaultName, null);
 
-    public static final String CANNOT_DELETE_GROUP = "CannotDeleteGroup";
+		String custom = SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT);
+		if (!custom.equals(defaultName)) {
+			load(custom, defaultName);
+			defaultName = custom;
+		}
+	}
 
-    public static final String CANNOT_DELETE_CATEGORY = "CannotDeleteCategory";
+	private static void loadLocales() throws IOException
+	{
+		localeNames.load(new FileInputStream(baseDir + SystemGlobals.getValue(ConfigKeys.LOCALES_NAMES)));
+	}
 
-    private static final Logger logger = Logger.getLogger(I18n.class);
+	static void load(String localeName, String mergeWith) throws IOException
+	{
+		load(localeName, mergeWith, false);
+	}
 
-    private I18n() {
-    }
+	static void load(String localeName, String mergeWith, boolean force) throws IOException
+	{
+		if (!force && (localeName == null || localeName.trim().equals("") || I18n.contains(localeName))) {
+			return;
+		}
 
-    /**
-     * Gets the singleton
-     * 
-     * @return Instance of I18n class
-     */
-    public static I18n getInstance() {
-        return classInstance;
-    }
+		if (localeNames.size() == 0) {
+			loadLocales();
+		}
 
-    /**
-     * Load the default I18n file
-     * 
-     * @throws IOException
-     */
-    public static synchronized void load() throws IOException {
-        baseDir = SystemGlobals.getApplicationResourceDir() + "/"
-                + SystemGlobals.getValue(ConfigKeys.LOCALES_DIR);
+		Properties p = new Properties();
 
-        loadLocales();
+		if (mergeWith != null) {
+			if (!I18n.contains(mergeWith)) {
+				load(mergeWith, null);
+			}
 
-        defaultName = SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT_ADMIN);
-        load(defaultName, null);
+			p.putAll((Properties) messagesMap.get(mergeWith));
+		}
 
-        String custom = SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT);
-        if (!custom.equals(defaultName)) {
-            load(custom, defaultName);
-            defaultName = custom;
-        }
-    }
+		p.load(new FileInputStream(baseDir + localeNames.getProperty(localeName)));
+		messagesMap.put(localeName, p);
 
-    private static void loadLocales() throws IOException {
-        localeNames.load(new FileInputStream(baseDir
-                + SystemGlobals.getValue(ConfigKeys.LOCALES_NAMES)));
-    }
-    
-    static void load(String localeName, String mergeWith) throws IOException
-    {
-    	load(localeName, mergeWith, false);
-    }
+		watchForChanges(localeName);
+	}
 
-    static void load(String localeName, String mergeWith, boolean force) throws IOException {
-    	if (!force && (localeName == null || localeName.trim().equals("")
-    		|| I18n.contains(localeName))) {
-    		return;
-    	}
+	/**
+	 * Loads a new locale. If <code>localeName</code> is either null or empty, or if the locale is
+	 * already loaded, the method will return without executing any code.
+	 * 
+	 * @param localeName
+	 *            The locale name to load
+	 * @throws IOException
+	 */
+	public static void load(String localeName) throws IOException
+	{
+		load(localeName, SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT));
+	}
 
-        if (localeNames.size() == 0) {
-            loadLocales();
-        }
+	public static void reset()
+	{
+		messagesMap = new HashMap();
+		localeNames = new Properties();
+		defaultName = null;
+	}
 
-        Properties p = new Properties();
+	private static void watchForChanges(final String localeName)
+	{
+		if (!watching.contains(localeName)) {
+			watching.add(localeName);
 
-        if (mergeWith != null) {
-            if (!I18n.contains(mergeWith)) {
-                load(mergeWith, null);
-            }
+			int fileChangesDelay = SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY);
 
-            p.putAll((Properties) messagesMap.get(mergeWith));
-        }
+			if (fileChangesDelay > 0) {
+				FileMonitor.getInstance().addFileChangeListener(new FileChangeListener() {
+					/**
+					 * @see net.jforum.util.FileChangeListener#fileChanged(java.lang.String)
+					 */
+					public void fileChanged(String filename)
+					{
+						logger.info("Reloading i18n for " + localeName);
 
-        p.load(new FileInputStream(baseDir + localeNames.getProperty(localeName)));
-        messagesMap.put(localeName, p);
+						try {
+							I18n.load(localeName, SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT), true);
+						}
+						catch (IOException e) {
+							logger.warn(e);
+							e.printStackTrace();
+						}
+					}
+				}, baseDir + localeNames.getProperty(localeName), fileChangesDelay);
+			}
+		}
+	}
 
-        watchForChanges(localeName);
-    }
+	/**
+	 * Gets a I18N (internationalized) message.
+	 * 
+	 * @param localeName
+	 *            The locale name to retrieve the messages from
+	 * @param messageName
+	 *            The message name to retrieve. Must be a valid entry into the file specified by
+	 *            <code>i18n.file</code> property.
+	 * @param params
+	 *            Parameters needed by some messages. The messages with extra parameters are
+	 *            formated according to {@link java.text.MessageFormat}specification
+	 * @return String With the message
+	 */
+	public static String getMessage(String localeName, String messageName, Object params[])
+	{
+		return MessageFormat.format(((Properties) messagesMap.get(localeName)).getProperty(messageName), params);
+	}
 
-    /**
-     * Loads a new locale. 
-     * If <code>localeName</code> is either null or empty, or if
-     * the locale is already loaded, the method will return
-     * without executing any code. 
-     * @param localeName The locale name to load
-     * @throws IOException
-     */
-    public static void load(String localeName) throws IOException {
-        load(localeName, SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT));
-    }
+	/**
+	 * @see #getMessage(String, String, Object[])
+	 */
+	public static String getMessage(String messageName, Object params[])
+	{
+		String lang = "";
+		UserSession us = SessionFacade.getUserSession();
+		if (us != null && us.getLang() != null) {
+			lang = us.getLang();
+		}
 
-    public static void reset() {
-        messagesMap = new HashMap();
-        localeNames = new Properties();
-        defaultName = null;
-    }
+		if ("".equals(lang)) {
+			return getMessage(defaultName, messageName, params);
+		}
 
-    private static void watchForChanges(final String localeName) {
-        if (!watching.contains(localeName)) {
-            watching.add(localeName);
-
-            int fileChangesDelay = SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY);
-
-            if (fileChangesDelay > 0) {
-                FileMonitor.getInstance().addFileChangeListener(new FileChangeListener() {
-                    /**
-                     * @see net.jforum.util.FileChangeListener#fileChanged(java.lang.String)
-                     */
-                    public void fileChanged(String filename) {
-                        logger.info("Reloading i18n for " + localeName);
-
-                        try {
-                            I18n.load(localeName, SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT), true);
-                        } catch (IOException e) {
-                            logger.warn(e);
-                            e.printStackTrace();
-                        }
-                    }
-                }, baseDir + localeNames.getProperty(localeName), fileChangesDelay);
-            }
-        }
-    }
-
-    /**
-     * Gets a I18N (internationalized) message.
-     * 
-     * @param localeName
-     *            The locale name to retrieve the messages from
-     * @param messageName
-     *            The message name to retrieve. Must be a valid entry into the file specified by
-     *            <code>i18n.file</code> property.
-     * @param params
-     *            Parameters needed by some messages. The messages with extra parameters are
-     *            formated according to {@link java.text.MessageFormat}specification
-     * @return String With the message
-     */
-    public static String getMessage(String localeName, String messageName, Object params[]) {
-        return MessageFormat.format(((Properties) messagesMap.get(localeName))
-                .getProperty(messageName), params);
-    }
-
-    /**
-     * @see #getMessage(String, String, Object[])
-     */
-    public static String getMessage(String messageName, Object params[]) {
-        String lang = "";
-        UserSession us = SessionFacade.getUserSession();
-        if (us != null && us.getLang() != null) {
-            lang = us.getLang();
-        }
-
-        if ("".equals(lang)) {
-            return getMessage(defaultName, messageName, params);
-        }
-		
 		return getMessage(lang, messageName, params);
-    }
+	}
 
-    /**
-     * Gets an I18N (internationalization) message.
-     * 
-     * @param m
-     *            The message name to retrieve. Must be a valid entry into the file specified by
-     *            <code>i18n.file</code> property.
-     * @return String With the message
-     */
-    public static String getMessage(String localeName, String m) {
-        if (!messagesMap.containsKey(localeName)) {
-            try {
-                load(localeName);
-            } catch (IOException e) {
-                logger.warn("Error loading locale " + localeName + ". " + e.getMessage());
-                return null;
-            }
-        }
+	/**
+	 * Gets an I18N (internationalization) message.
+	 * 
+	 * @param m
+	 *            The message name to retrieve. Must be a valid entry into the file specified by
+	 *            <code>i18n.file</code> property.
+	 * @return String With the message
+	 */
+	public static String getMessage(String localeName, String m)
+	{
+		if (!messagesMap.containsKey(localeName)) {
+			try {
+				load(localeName);
+			}
+			catch (IOException e) {
+				logger.warn("Error loading locale " + localeName + ". " + e.getMessage());
+				return null;
+			}
+		}
 
-        return (((Properties) messagesMap.get(localeName)).getProperty(m));
-    }
+		return (((Properties) messagesMap.get(localeName)).getProperty(m));
+	}
 
-    public static String getMessage(String m) {
-        return getMessage(m, SessionFacade.getUserSession());
-    }
+	public static String getMessage(String m)
+	{
+		return getMessage(m, SessionFacade.getUserSession());
+	}
 
-    public static String getMessage(String m, UserSession us) {
-        if (us == null || us.getLang() == null || us.getLang().equals("")) {
-            return getMessage(defaultName, m);
-        }
-		
+	public static String getMessage(String m, UserSession us)
+	{
+		if (us == null || us.getLang() == null || us.getLang().equals("")) {
+			return getMessage(defaultName, m);
+		}
+
 		return getMessage(us.getLang(), m);
-    }
+	}
 
-    /**
-     * Check whether the language is loaded in i18n.
-     * 
-     * @param language
-     * @return boolean
-     */
-    public static boolean contains(String language) {
-        return messagesMap.containsKey(language);
-    }
-    
-    /**
-     * Check if the given language exist.
-     * 
-     * @param language The language to check
-     * @return <code>true</code> if the language is a valid and registered
-     * translation.
-     */
-    public static boolean languageExists(String language) {
-    	return (localeNames.getProperty(language) != null);
-    }
+	/**
+	 * Check whether the language is loaded in i18n.
+	 * 
+	 * @param language
+	 * @return boolean
+	 */
+	public static boolean contains(String language)
+	{
+		return messagesMap.containsKey(language);
+	}
+
+	/**
+	 * Check if the given language exist.
+	 * 
+	 * @param language
+	 *            The language to check
+	 * @return <code>true</code> if the language is a valid and registered translation.
+	 */
+	public static boolean languageExists(String language)
+	{
+		return (localeNames.getProperty(language) != null);
+	}
 }
