@@ -80,7 +80,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.12 2004/06/01 19:47:23 pieter2 Exp $
+ * @version $Id: JForum.java,v 1.13 2004/06/02 00:03:43 rafaelsteil Exp $
  */
 public class JForum extends HttpServlet 
 {
@@ -331,7 +331,7 @@ public class JForum extends HttpServlet
 	{
 		userSession.setStartTime(System.currentTimeMillis());
 		userSession.setLastVisit(System.currentTimeMillis());
-		userSession.setUserId(Integer.parseInt(SystemGlobals.getValue(ConfigKeys.ANONYMOUS_USER_ID)));
+		userSession.setUserId(SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID));
 		userSession.setSessionId(JForum.getRequest().getSession().getId());
 	}
 	
@@ -380,7 +380,7 @@ public class JForum extends HttpServlet
 				SessionFacade.setAttribute("logged", "1");
 			}
 			else {
-				userSession.setUserId(Integer.parseInt(SystemGlobals.getValue(ConfigKeys.ANONYMOUS_USER_ID)));
+				userSession.setUserId(SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID));
 			}
 			
 			SessionFacade.add(userSession);
