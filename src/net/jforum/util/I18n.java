@@ -52,12 +52,12 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
- * I18n (Internacionalization) class implementation. 
+ * I18n (Internationalization) class implementation. 
  * Does nothing of special, just loads the messages into 
  * memory and provides a static method to acess them.
  *  
  * @author Rafael Steil
- * @version $Id: I18n.java,v 1.4 2004/06/05 22:10:05 rafaelsteil Exp $
+ * @version $Id: I18n.java,v 1.5 2004/06/29 03:29:41 rafaelsteil Exp $
  */
 public class I18n 
 {

@@ -22,7 +22,7 @@ function refreshUsername()
 }
 </script>
 
-<form action="${contextPath}/jforum.page" method="post" name="search" id="search">
+<form action="${contextPath}/jforum.page" method="post" name="search" id="search" accept-charset="${encoding}">
 <input type="hidden" name="action" value="${action}">
 <input type="hidden" name="module" value="${moduleName}">
 	<table cellspacing="0" cellpadding="10" width="100%" border="0">
@@ -59,7 +59,7 @@ function refreshUsername()
 			</tr>
 				<tr>
 		<td align="center">
-			<span class="copyright">Powered by <a class="copyright" href="http://www.jforum.net/" target="_blank">JForum ${version} </a>� 2004 - Rafael Steil</span>
+			<span class="copyright">Powered by <a class="copyright" href="http://www.jforum.net/" target="_blank">JForum ${version} </a>&copy; 2004 - Rafael Steil</span>
 			<br/>
 			<a href="http://sourceforge.net" target="_new"><img src="https://sourceforge.net/sflogo.php?group_id=15940&type=1" border="0" /></a>
 		</td>
