@@ -68,7 +68,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.35 2004/09/23 02:23:22 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.36 2004/09/25 05:37:12 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -115,9 +115,12 @@ public class JForum extends JForumCommonServlet
 			
 			Cookie cookie = JForum.getCookie(cookieName);
 			Cookie hashCookie = JForum.getCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_USER_HASH));
+			Cookie autoLoginCookie = JForum.getCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN));
 			
 			// If we don't have any cookie yet, then we should set it with the default values
-			if (hashCookie == null || cookie == null || cookie.getValue().equals(SystemGlobals.getValue(ConfigKeys.ANONYMOUS_USER_ID))) {
+			if (hashCookie == null || cookie == null 
+					|| cookie.getValue().equals(SystemGlobals.getValue(ConfigKeys.ANONYMOUS_USER_ID))
+					|| (autoLoginCookie == null || !"1".equals(autoLoginCookie.getValue()))) {
 				this.setAnonymousUserSession(userSession);
 			}
 			else {
@@ -149,12 +152,11 @@ public class JForum extends JForumCommonServlet
 					
 					userSession.setPrivateMessages(user.getPrivateMessagesCount());
 					userSession.setUsername(user.getUsername());
-					
-					cookie = JForum.getCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN));
-					if (cookie != null && cookie.getValue().equals("1")) {
-						userSession.setAutoLogin(true);
-						SessionFacade.setAttribute("logged", "1");
-					}
+
+					// If the execution point is here, then the user
+					// has choosed "autoLogin"
+					userSession.setAutoLogin(true);
+					SessionFacade.setAttribute("logged", "1");
 					
 					userSession.setLang(user.getLang());
 					if (user.getLang() != null && !user.getLang().equals("") && !I18n.contains(user.getLang())) {
@@ -226,7 +228,7 @@ public class JForum extends JForumCommonServlet
 			this.checkCookies();
 			
 			boolean logged = false;
-			if (SessionFacade.getAttribute("logged") != null && SessionFacade.getAttribute("logged").equals("1")) {
+			if ("1".equals(SessionFacade.getAttribute("logged"))) {
 				logged = true;
 			}
 			

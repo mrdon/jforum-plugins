@@ -2,15 +2,31 @@
 
 <STYLE type=text/css>@import url( style.css );</STYLE>
 
-<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum${extension}" method="post">
-<input type="hidden" name="action" value="delete">
-<input type="hidden" name="module" value="${moduleName}">
-<input type="hidden" name="securityHash" value="${securityHash}">
+
 
 <TABLE class=forumline cellSpacing=1 cellPadding=3 width="100%" border=0><TBODY>
 <TR>
 <TH class=thHead vAlign=center colSpan=7 height=25>${I18n.getMessage("User.adminTitle")}</TH>
 </TR>
+
+<tr>
+	<td class="gen" align="center" colspan="7">
+		<form id="formusersearch" action="${contextPath}/jforum${extension}" accept-charset="${encoding}" method="post">
+		<input type="hidden" name="action" value="search">
+		<input type="hidden" name="module" value="${moduleName}">
+		<input type="hidden" name="securityHash" value="${securityHash}">
+
+		<input type="text" name="username" value="${search?default("")}">&nbsp;<input type="submit" value="${I18n.getMessage("ForumBase.search")}">
+
+		</form>
+	</td>
+</tr>
+
+<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum${extension}" method="post">
+<input type="hidden" name="action" value="delete">
+<input type="hidden" name="module" value="${moduleName}">
+<input type="hidden" name="securityHash" value="${securityHash}">
+
 <TR>
 <TD class=gen><b>ID</b></TD>
 <TD class=gen><b>Username</b></TD>
@@ -48,7 +64,7 @@
 </TR></TABLE>
 
 <TABLE width="100%"><TR>
-	<TD align="right"><@pagination.doPagination "list" /></TD>
+	<TD align="right"><#if thisPage?exists><@pagination.doPagination "list" /></#if></TD>
 </TR></TABLE>
 </FORM>
    
