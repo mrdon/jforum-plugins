@@ -44,18 +44,18 @@ package net.jforum.repository;
 
 import java.util.List;
 
+import net.jforum.dao.ConfigDAO;
 import net.jforum.entities.Config;
-import net.jforum.model.ConfigModel;
 
 /**
  * @author Rafael Steil
- * @version $Id: ConfigModelDummy.java,v 1.1 2004/12/29 17:18:42 rafaelsteil Exp $
+ * @version $Id: ConfigModelDummy.java,v 1.2 2005/03/26 04:11:21 rafaelsteil Exp $
  */
-public class ConfigModelDummy implements ConfigModel
+public class ConfigModelDummy implements ConfigDAO
 {
 
 	/**
-	 * @see net.jforum.model.ConfigModel#insert(net.jforum.entities.Config)
+	 * @see net.jforum.dao.ConfigDAO#insert(net.jforum.entities.Config)
 	 */
 	public void insert(Config config) throws Exception
 	{
@@ -64,7 +64,7 @@ public class ConfigModelDummy implements ConfigModel
 	}
 
 	/**
-	 * @see net.jforum.model.ConfigModel#update(net.jforum.entities.Config)
+	 * @see net.jforum.dao.ConfigDAO#update(net.jforum.entities.Config)
 	 */
 	public void update(Config config) throws Exception
 	{
@@ -73,7 +73,7 @@ public class ConfigModelDummy implements ConfigModel
 	}
 
 	/**
-	 * @see net.jforum.model.ConfigModel#delete(net.jforum.entities.Config)
+	 * @see net.jforum.dao.ConfigDAO#delete(net.jforum.entities.Config)
 	 */
 	public void delete(Config config) throws Exception
 	{
@@ -82,7 +82,7 @@ public class ConfigModelDummy implements ConfigModel
 	}
 
 	/**
-	 * @see net.jforum.model.ConfigModel#selectAll()
+	 * @see net.jforum.dao.ConfigDAO#selectAll()
 	 */
 	public List selectAll() throws Exception
 	{
@@ -91,7 +91,7 @@ public class ConfigModelDummy implements ConfigModel
 	}
 
 	/**
-	 * @see net.jforum.model.ConfigModel#selectByName(java.lang.String)
+	 * @see net.jforum.dao.ConfigDAO#selectByName(java.lang.String)
 	 */
 	public Config selectByName(String name) throws Exception
 	{

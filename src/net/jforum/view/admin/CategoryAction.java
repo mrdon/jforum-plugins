@@ -45,11 +45,11 @@ package net.jforum.view.admin;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.jforum.dao.CategoryDAO;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.GroupDAO;
+import net.jforum.dao.security.GroupSecurityDAO;
 import net.jforum.entities.Category;
-import net.jforum.model.CategoryModel;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.model.GroupModel;
-import net.jforum.model.security.GroupSecurityModel;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.PermissionControl;
@@ -66,16 +66,16 @@ import net.jforum.view.admin.common.ModerationCommon;
  * ViewHelper for category administration.
  * 
  * @author Rafael Steil
- * @version $Id: CategoryAction.java,v 1.17 2005/03/24 03:40:41 rafaelsteil Exp $
+ * @version $Id: CategoryAction.java,v 1.18 2005/03/26 04:11:18 rafaelsteil Exp $
  */
 public class CategoryAction extends AdminCommand 
 {
-	private CategoryModel cm = DataAccessDriver.getInstance().newCategoryModel();
+	private CategoryDAO cm = DataAccessDriver.getInstance().newCategoryDAO();
 	
 	// Listing
 	public void list() throws Exception
 	{
-		this.context.put("categories", DataAccessDriver.getInstance().newCategoryModel().selectAll());
+		this.context.put("categories", DataAccessDriver.getInstance().newCategoryDAO().selectAll());
 		this.context.put("repository", new ForumRepository());
 		this.setTemplateName(TemplateKeys.CATEGORY_LIST);
 	}
@@ -155,8 +155,8 @@ public class CategoryAction extends AdminCommand
 		
 		String[] groups = this.request.getParameterValues("groups");
 		if (groups != null) {
-			GroupModel gm = DataAccessDriver.getInstance().newGroupModel();
-			GroupSecurityModel gmodel = DataAccessDriver.getInstance().newGroupSecurityModel();
+			GroupDAO gm = DataAccessDriver.getInstance().newGroupDAO();
+			GroupSecurityDAO gmodel = DataAccessDriver.getInstance().newGroupSecurityDAO();
 			PermissionControl pc = new PermissionControl();
 			pc.setSecurityModel(gmodel);
 

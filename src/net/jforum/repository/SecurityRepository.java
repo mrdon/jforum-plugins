@@ -46,19 +46,19 @@ import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.UserDAO;
+import net.jforum.dao.security.UserSecurityDAO;
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
 import net.jforum.exceptions.SecurityLoadException;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.model.UserModel;
-import net.jforum.model.security.UserSecurityModel;
 import net.jforum.security.PermissionControl;
 
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityRepository.java,v 1.11 2005/02/24 23:00:51 rafaelsteil Exp $
+ * @version $Id: SecurityRepository.java,v 1.12 2005/03/26 04:10:59 rafaelsteil Exp $
  */
 public class SecurityRepository implements Cacheable
 {
@@ -89,7 +89,7 @@ public class SecurityRepository implements Cacheable
 	public static PermissionControl load(int userId, boolean force) throws Exception
 	{
 		if (force || cache.get(FQN, Integer.toString(userId)) == null) {
-			UserModel um = DataAccessDriver.getInstance().newUserModel();
+			UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 			
 			return SecurityRepository.load(um.selectById(userId), force);
 		}
@@ -143,7 +143,7 @@ public class SecurityRepository implements Cacheable
 	{
 		String userId = Integer.toString(user.getId());
 		if (force || cache.get(FQN, userId) == null) {
-			UserSecurityModel umodel = DataAccessDriver.getInstance().newUserSecurityModel();
+			UserSecurityDAO umodel = DataAccessDriver.getInstance().newUserSecurityDAO();
 			PermissionControl pc = new PermissionControl();
 			
 			pc.setSecurityModel(umodel);

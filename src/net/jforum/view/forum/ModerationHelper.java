@@ -49,10 +49,10 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import net.jforum.JForum;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.ForumDAO;
+import net.jforum.dao.TopicDAO;
 import net.jforum.entities.Topic;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.model.ForumModel;
-import net.jforum.model.TopicModel;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.PostRepository;
 import net.jforum.repository.SecurityRepository;
@@ -64,7 +64,7 @@ import net.jforum.view.forum.common.ForumCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationHelper.java,v 1.17 2005/03/24 03:40:44 rafaelsteil Exp $
+ * @version $Id: ModerationHelper.java,v 1.18 2005/03/26 04:11:15 rafaelsteil Exp $
  */
 public class ModerationHelper 
 {
@@ -130,7 +130,7 @@ public class ModerationHelper
 		String[] topics = JForum.getRequest().getParameterValues("topic_id");
 		
 		List forumsList = new ArrayList();
-		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
+		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 		
 		List topicsToDelete = new ArrayList();
 		
@@ -148,7 +148,7 @@ public class ModerationHelper
 			
 			tm.deleteTopics(topicsToDelete);
 			
-			ForumModel fm = DataAccessDriver.getInstance().newForumModel();
+			ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
 			TopicRepository.loadMostRecentTopics();
 			
 			// Reload changed forums
@@ -181,10 +181,10 @@ public class ModerationHelper
 				ids[i] = Integer.parseInt(topics[i]);
 			}
 			
-			DataAccessDriver.getInstance().newTopicModel().lockUnlock(ids, status);
+			DataAccessDriver.getInstance().newTopicDAO().lockUnlock(ids, status);
 			
 			// Clear the cache
-			Topic t = DataAccessDriver.getInstance().newTopicModel().selectById(ids[0]);
+			Topic t = DataAccessDriver.getInstance().newTopicDAO().selectById(ids[0]);
 			TopicRepository.clearCache(t.getForumId());
 		}
 	}
@@ -199,7 +199,7 @@ public class ModerationHelper
 			// If forum_id is null, get from the database
 			String forumId = JForum.getRequest().getParameter("forum_id");
 			if (forumId == null) {
-				forumId = Integer.toString(DataAccessDriver.getInstance().newTopicModel().selectById(
+				forumId = Integer.toString(DataAccessDriver.getInstance().newTopicDAO().selectById(
 						Integer.parseInt(topics[0])).getForumId());
 			}
 			
@@ -228,7 +228,7 @@ public class ModerationHelper
 				int fromForumId = Integer.parseInt(JForum.getRequest().getParameter("forum_id"));
 				int toForumId = Integer.parseInt(JForum.getRequest().getParameter("to_forum"));
 				
-				DataAccessDriver.getInstance().newForumModel().moveTopics(topics.split(","), fromForumId, toForumId);
+				DataAccessDriver.getInstance().newForumDAO().moveTopics(topics.split(","), fromForumId, toForumId);
 				
 				ForumRepository.reloadForum(fromForumId);
 				ForumRepository.reloadForum(toForumId);

@@ -50,11 +50,11 @@ import java.util.List;
 import java.util.Map;
 
 import net.jforum.SessionFacade;
+import net.jforum.dao.DataAccessDriver;
 import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
 import net.jforum.entities.Topic;
 import net.jforum.entities.UserSession;
-import net.jforum.model.DataAccessDriver;
 import net.jforum.repository.ForumRepository;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -76,7 +76,7 @@ public class ForumCommon
 	 */
 	public static Forum checkUnreadPosts(Forum forum, Map tracking, long lastVisit) throws Exception
 	{
-		List unreadTopics = DataAccessDriver.getInstance().newForumModel().checkUnreadTopics(
+		List unreadTopics = DataAccessDriver.getInstance().newForumDAO().checkUnreadTopics(
 				forum.getId(), lastVisit);
 		
 		if (unreadTopics.size() == 0) {

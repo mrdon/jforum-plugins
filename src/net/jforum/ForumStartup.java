@@ -44,19 +44,19 @@ package net.jforum;
 
 import java.sql.Connection;
 
+import net.jforum.dao.CategoryDAO;
+import net.jforum.dao.ConfigDAO;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.ForumDAO;
 import net.jforum.exceptions.DatabaseStartupException;
 import net.jforum.exceptions.RepositoryStartupException;
-import net.jforum.model.CategoryModel;
-import net.jforum.model.ConfigModel;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.model.ForumModel;
 import net.jforum.repository.ForumRepository;
 
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumStartup.java,v 1.4 2005/02/03 12:37:38 rafaelsteil Exp $
+ * @version $Id: ForumStartup.java,v 1.5 2005/03/26 04:10:37 rafaelsteil Exp $
  */
 public class ForumStartup 
 {
@@ -92,9 +92,9 @@ public class ForumStartup
 	public static void startForumRepository()
 	{
 		try {
-			ForumModel fm = DataAccessDriver.getInstance().newForumModel();
-			CategoryModel cm = DataAccessDriver.getInstance().newCategoryModel();
-			ConfigModel configModel = DataAccessDriver.getInstance().newConfigModel();
+			ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
+			CategoryDAO cm = DataAccessDriver.getInstance().newCategoryDAO();
+			ConfigDAO configModel = DataAccessDriver.getInstance().newConfigDAO();
 
 			ForumRepository.start(fm, cm, configModel);
 		}

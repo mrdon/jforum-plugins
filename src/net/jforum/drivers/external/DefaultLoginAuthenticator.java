@@ -47,8 +47,8 @@ import java.sql.ResultSet;
 import java.util.Map;
 
 import net.jforum.JForum;
+import net.jforum.dao.UserDAO;
 import net.jforum.entities.User;
-import net.jforum.model.UserModel;
 import net.jforum.util.MD5;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -58,16 +58,16 @@ import net.jforum.util.preferences.SystemGlobals;
  * <i>jforum_users</i>. 
  * 
  * @author Rafael Steil
- * @version $Id: DefaultLoginAuthenticator.java,v 1.2 2005/03/16 16:13:14 rafaelsteil Exp $
+ * @version $Id: DefaultLoginAuthenticator.java,v 1.3 2005/03/26 04:11:16 rafaelsteil Exp $
  */
 public class DefaultLoginAuthenticator implements LoginAuthenticator
 {
-	private UserModel userModel;
+	private UserDAO userModel;
 
 	/**
-	 * @see net.jforum.drivers.external.LoginAuthenticator#setUserModel(net.jforum.model.UserModel)
+	 * @see net.jforum.drivers.external.LoginAuthenticator#setUserModel(net.jforum.dao.UserDAO)
 	 */
-	public void setUserModel(UserModel userModel)
+	public void setUserModel(UserDAO userModel)
 	{
 		this.userModel = userModel;
 	}

@@ -44,8 +44,8 @@ package net.jforum.view.admin;
 
 import java.io.File;
 
+import net.jforum.dao.DataAccessDriver;
 import net.jforum.entities.Smilie;
-import net.jforum.model.DataAccessDriver;
 import net.jforum.repository.SmiliesRepository;
 import net.jforum.util.MD5;
 import net.jforum.util.preferences.ConfigKeys;
@@ -57,7 +57,7 @@ import org.apache.commons.fileupload.FileItem;
 
 /**
  * @author Rafael Steil
- * @version $Id: SmiliesAction.java,v 1.7 2005/03/15 18:24:11 rafaelsteil Exp $
+ * @version $Id: SmiliesAction.java,v 1.8 2005/03/26 04:11:18 rafaelsteil Exp $
  */
 public class SmiliesAction extends AdminCommand 
 {
@@ -99,7 +99,7 @@ public class SmiliesAction extends AdminCommand
 		
 		s.setDiskName(imgName);
 		
-		DataAccessDriver.getInstance().newSmilieModel().addNew(s);
+		DataAccessDriver.getInstance().newSmilieDAO().addNew(s);
 		
 		SmiliesRepository.loadSmilies();
 		this.list();
@@ -114,13 +114,13 @@ public class SmiliesAction extends AdminCommand
 		}
 		
 		this.setTemplateName(TemplateKeys.SMILIES_EDIT);
-		this.context.put("smilie", DataAccessDriver.getInstance().newSmilieModel().selectById(id));
+		this.context.put("smilie", DataAccessDriver.getInstance().newSmilieDAO().selectById(id));
 		this.context.put("action", "editSave");
 	}
 	
 	public void editSave() throws Exception
 	{
-		Smilie s = DataAccessDriver.getInstance().newSmilieModel().selectById(this.request.getIntParameter("id"));
+		Smilie s = DataAccessDriver.getInstance().newSmilieDAO().selectById(this.request.getIntParameter("id"));
 		s.setCode(this.request.getParameter("code"));
 		
 		if (this.request.getObjectParameter("smilie_img") != null) {
@@ -129,7 +129,7 @@ public class SmiliesAction extends AdminCommand
 			s.setDiskName(imgName);
 		}
 
-		DataAccessDriver.getInstance().newSmilieModel().update(s);
+		DataAccessDriver.getInstance().newSmilieDAO().update(s);
 		
 		SmiliesRepository.loadSmilies();
 		this.list();
@@ -139,9 +139,9 @@ public class SmiliesAction extends AdminCommand
 	{
 		if (this.request.getParameter("id") != null) {
 			int id = this.request.getIntParameter("id");
-			Smilie s = DataAccessDriver.getInstance().newSmilieModel().selectById(id);
+			Smilie s = DataAccessDriver.getInstance().newSmilieDAO().selectById(id);
 			
-			DataAccessDriver.getInstance().newSmilieModel().delete(id);
+			DataAccessDriver.getInstance().newSmilieDAO().delete(id);
 			
 			File f = new File(SystemGlobals.getApplicationPath() +"/"+ SystemGlobals.getValue(ConfigKeys.SMILIE_IMAGE_DIR) +"/"+ s.getDiskName());
 			if (f.exists()) {

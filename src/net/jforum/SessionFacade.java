@@ -50,8 +50,8 @@ import java.util.List;
 
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
+import net.jforum.dao.DataAccessDriver;
 import net.jforum.entities.UserSession;
-import net.jforum.model.DataAccessDriver;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -60,7 +60,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.17 2005/02/21 14:31:04 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.18 2005/03/26 04:10:37 rafaelsteil Exp $
  */
 public class SessionFacade implements Cacheable
 {
@@ -290,7 +290,7 @@ public class SessionFacade implements Cacheable
 		if (us != null) {
 			try {
 				if (us.getUserId() != SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
-					DataAccessDriver.getInstance().newUserSessionModel().update(us, conn);
+					DataAccessDriver.getInstance().newUserSessionDAO().update(us, conn);
 				}
 				
 				SecurityRepository.remove(us.getUserId());

@@ -45,14 +45,14 @@ package net.jforum.view.admin;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.jforum.dao.CategoryDAO;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.ForumDAO;
+import net.jforum.dao.GroupDAO;
+import net.jforum.dao.TopicDAO;
+import net.jforum.dao.security.GroupSecurityDAO;
 import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
-import net.jforum.model.CategoryModel;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.model.ForumModel;
-import net.jforum.model.GroupModel;
-import net.jforum.model.TopicModel;
-import net.jforum.model.security.GroupSecurityModel;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.PermissionControl;
@@ -66,14 +66,14 @@ import net.jforum.view.admin.common.ModerationCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.19 2005/03/15 18:24:10 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.20 2005/03/26 04:11:19 rafaelsteil Exp $
  */
 public class ForumAction extends AdminCommand 
 {
 	// Listing
 	public void list() throws Exception
 	{
-		this.context.put("categories", DataAccessDriver.getInstance().newCategoryModel().selectAll());
+		this.context.put("categories", DataAccessDriver.getInstance().newCategoryDAO().selectAll());
 		this.context.put("repository", new ForumRepository());
 		this.setTemplateName(TemplateKeys.FORUM_ADMIN_LIST);
 	}
@@ -81,7 +81,7 @@ public class ForumAction extends AdminCommand
 	// One more, one more
 	public void insert() throws Exception
 	{
-		CategoryModel cm = DataAccessDriver.getInstance().newCategoryModel();
+		CategoryDAO cm = DataAccessDriver.getInstance().newCategoryDAO();
 		
 		this.context.put("groups", new TreeGroup().getNodes());
 		this.context.put("selectedList", new ArrayList());
@@ -93,9 +93,9 @@ public class ForumAction extends AdminCommand
 	// Edit
 	public void edit() throws Exception
 	{
-		CategoryModel cm = DataAccessDriver.getInstance().newCategoryModel();
+		CategoryDAO cm = DataAccessDriver.getInstance().newCategoryDAO();
 		
-		this.context.put("forum", DataAccessDriver.getInstance().newForumModel().selectById(
+		this.context.put("forum", DataAccessDriver.getInstance().newForumDAO().selectById(
 				this.request.getIntParameter("forum_id")));
 		this.context.put("categories", cm.selectAll());
 		this.setTemplateName(TemplateKeys.FORUM_ADMIN_EDIT);
@@ -114,7 +114,7 @@ public class ForumAction extends AdminCommand
 		f.setName(this.request.getParameter("forum_name"));
 		f.setModerated("1".equals(this.request.getParameter("moderate")));
 
-		DataAccessDriver.getInstance().newForumModel().update(f);
+		DataAccessDriver.getInstance().newForumDAO().update(f);
 
 		if (moderated != f.isModerated()) {
 			new ModerationCommon().setTopicModerationStatus(f.getId(), f.isModerated());
@@ -158,7 +158,7 @@ public class ForumAction extends AdminCommand
 			return;
 		}
 		
-		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
+		ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
 		
 		if (up) {
 			// Get the forum which comes *before* the forum we're changing
@@ -182,8 +182,8 @@ public class ForumAction extends AdminCommand
 	{
 		String ids[] = this.request.getParameterValues("forum_id");
 		
-		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
-		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
+		ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
+		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 		
 		if (ids != null) {
 			for (int i = 0; i < ids.length; i++) {
@@ -209,14 +209,14 @@ public class ForumAction extends AdminCommand
 		f.setName(this.request.getParameter("forum_name"));	
 		f.setModerated("1".equals(this.request.getParameter("moderate")));
 			
-		int forumId = DataAccessDriver.getInstance().newForumModel().addNew(f);
+		int forumId = DataAccessDriver.getInstance().newForumDAO().addNew(f);
 		f.setId(forumId);
 		
 		ForumRepository.addForum(f);
 		
 		// Process permissions
-		GroupModel gm = DataAccessDriver.getInstance().newGroupModel();
-		GroupSecurityModel gmodel = DataAccessDriver.getInstance().newGroupSecurityModel();
+		GroupDAO gm = DataAccessDriver.getInstance().newGroupDAO();
+		GroupSecurityDAO gmodel = DataAccessDriver.getInstance().newGroupSecurityDAO();
 		PermissionControl pc = new PermissionControl();
 		pc.setSecurityModel(gmodel);
 		

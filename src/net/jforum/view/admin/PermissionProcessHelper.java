@@ -48,8 +48,8 @@ import java.util.Enumeration;
 import java.util.List;
 
 import net.jforum.JForum;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.model.security.UserSecurityModel;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.security.UserSecurityDAO;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.Role;
 import net.jforum.security.RoleValue;
@@ -57,12 +57,12 @@ import net.jforum.security.RoleValueCollection;
 
 /**
  * @author Rafael Steil
- * @version $Id: PermissionProcessHelper.java,v 1.7 2005/01/10 00:03:55 rafaelsteil Exp $
+ * @version $Id: PermissionProcessHelper.java,v 1.8 2005/03/26 04:11:18 rafaelsteil Exp $
  */
 class PermissionProcessHelper 
 {
 	private PermissionControl pc;
-	private UserSecurityModel umodel;
+	private UserSecurityDAO umodel;
 	private int id;
 	private boolean isGroup;
 	
@@ -73,7 +73,7 @@ class PermissionProcessHelper
 		
 		this.isGroup = isGroup;
 		if (this.isGroup) {
-			umodel = DataAccessDriver.getInstance().newUserSecurityModel();
+			umodel = DataAccessDriver.getInstance().newUserSecurityDAO();
 		}
 		
 		this.init();

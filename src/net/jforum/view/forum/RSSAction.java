@@ -50,11 +50,11 @@ import javax.servlet.http.HttpServletResponse;
 import net.jforum.ActionServletRequest;
 import net.jforum.Command;
 import net.jforum.JForum;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.PostDAO;
+import net.jforum.dao.TopicDAO;
 import net.jforum.entities.Forum;
 import net.jforum.entities.Topic;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.model.PostModel;
-import net.jforum.model.TopicModel;
 import net.jforum.repository.ForumRepository;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.TemplateKeys;
@@ -70,7 +70,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: RSSAction.java,v 1.15 2005/03/15 18:24:17 rafaelsteil Exp $
+ * @version $Id: RSSAction.java,v 1.16 2005/03/26 04:11:15 rafaelsteil Exp $
  */
 public class RSSAction extends Command 
 {
@@ -120,8 +120,8 @@ public class RSSAction extends Command
 	{
 		int topicId = this.request.getIntParameter("topic_id");
 
-		PostModel pm = DataAccessDriver.getInstance().newPostModel();
-		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
+		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
+		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 		
 		Topic topic = tm.selectById(topicId);
 		

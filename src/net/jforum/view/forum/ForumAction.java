@@ -52,15 +52,15 @@ import java.util.List;
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.ForumDAO;
+import net.jforum.dao.SearchData;
+import net.jforum.dao.UserDAO;
 import net.jforum.entities.Forum;
 import net.jforum.entities.MostUsersEverOnline;
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.model.ForumModel;
-import net.jforum.model.SearchData;
-import net.jforum.model.UserModel;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.SecurityConstants;
@@ -73,14 +73,14 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.33 2005/03/15 20:42:37 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.34 2005/03/26 04:11:15 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
 	public void list() throws Exception
 	{
-		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
-		UserModel um = DataAccessDriver.getInstance().newUserModel();
+		ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
+		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		
 		this.context.put("allCategories", ForumCommon.getAllCategoriesAndForums(true));
 		this.context.put("topicsPerPage",  new Integer(SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE)));
@@ -267,7 +267,7 @@ public class ForumAction extends Command
 			sd.setForumId(Integer.parseInt(forumId));
 		}
 		
-		List allTopics = DataAccessDriver.getInstance().newSearchModel().search(sd);
+		List allTopics = DataAccessDriver.getInstance().newSearchDAO().search(sd);
 		for (Iterator iter = allTopics.iterator(); iter.hasNext(); ) {
 			Topic t = (Topic)iter.next();
 			

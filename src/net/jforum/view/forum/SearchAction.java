@@ -56,11 +56,11 @@ import javax.servlet.http.HttpServletResponse;
 import net.jforum.ActionServletRequest;
 import net.jforum.Command;
 import net.jforum.JForum;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.SearchData;
+import net.jforum.dao.SearchDAO;
 import net.jforum.entities.Forum;
 import net.jforum.entities.Topic;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.model.SearchData;
-import net.jforum.model.SearchModel;
 import net.jforum.repository.ForumRepository;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -70,7 +70,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.18 2005/03/15 20:42:37 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.19 2005/03/26 04:11:15 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -159,7 +159,7 @@ public class SearchAction extends Command
 			start = Integer.parseInt(s);
 		}
 		
-		SearchModel sm = DataAccessDriver.getInstance().newSearchModel();
+		SearchDAO sm = DataAccessDriver.getInstance().newSearchDAO();
 
 		// Clean the search
 		if (this.request.getParameter("clean") != null) {

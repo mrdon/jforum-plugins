@@ -52,9 +52,9 @@ import java.util.List;
 
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.UserDAO;
 import net.jforum.entities.User;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.model.UserModel;
 import net.jforum.util.I18n;
 import net.jforum.util.MD5;
 import net.jforum.util.SafeHtml;
@@ -67,7 +67,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserCommon.java,v 1.2 2005/01/18 20:59:43 rafaelsteil Exp $
+ * @version $Id: UserCommon.java,v 1.3 2005/03/26 04:11:22 rafaelsteil Exp $
  */
 public class UserCommon 
 {
@@ -81,7 +81,7 @@ public class UserCommon
 	 */
 	public static List saveUser(int userId) throws Exception
 	{
-		UserModel um = DataAccessDriver.getInstance().newUserModel();
+		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		User u = um.selectById(userId);
 		
 		String username = JForum.getRequest().getParameter("username");

@@ -52,7 +52,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.exceptions.ForumStartupException;
-import net.jforum.model.DataAccessDriver;
+import net.jforum.dao.DataAccessDriver;
 import net.jforum.repository.BBCodeRepository;
 import net.jforum.repository.ModulesRepository;
 import net.jforum.repository.Tpl;
@@ -70,7 +70,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumCommonServlet.java,v 1.27 2005/03/24 17:45:31 rafaelsteil Exp $
+ * @version $Id: JForumCommonServlet.java,v 1.28 2005/03/26 04:10:37 rafaelsteil Exp $
  */
 public class JForumCommonServlet extends HttpServlet {
     protected boolean debug;

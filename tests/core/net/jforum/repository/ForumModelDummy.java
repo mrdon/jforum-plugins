@@ -44,18 +44,18 @@ package net.jforum.repository;
 
 import java.util.List;
 
+import net.jforum.dao.ForumDAO;
 import net.jforum.entities.Forum;
 import net.jforum.entities.LastPostInfo;
-import net.jforum.model.ForumModel;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumModelDummy.java,v 1.5 2005/01/31 20:10:45 rafaelsteil Exp $
+ * @version $Id: ForumModelDummy.java,v 1.6 2005/03/26 04:11:21 rafaelsteil Exp $
  */
-class ForumModelDummy implements ForumModel {
+class ForumModelDummy implements ForumDAO {
 
 	/** 
-	 * @see net.jforum.model.ForumModel#selectById(int)
+	 * @see net.jforum.dao.ForumDAO#selectById(int)
 	 */
 	public Forum selectById(int forumId) throws Exception {
 		// TODO Auto-generated method stub
@@ -63,7 +63,7 @@ class ForumModelDummy implements ForumModel {
 	}
 
 	/** 
-	 * @see net.jforum.model.ForumModel#selectAll()
+	 * @see net.jforum.dao.ForumDAO#selectAll()
 	 */
 	public List selectAll() throws Exception {
 		// TODO Auto-generated method stub
@@ -71,7 +71,7 @@ class ForumModelDummy implements ForumModel {
 	}
 
 	/** 
-	 * @see net.jforum.model.ForumModel#setOrderUp(int)
+	 * @see net.jforum.dao.ForumDAO#setOrderUp(int)
 	 */
 	public Forum setOrderUp(Forum f, Forum r) throws Exception {
 		// TODO Auto-generated method stub
@@ -79,7 +79,7 @@ class ForumModelDummy implements ForumModel {
 	}
 
 	/** 
-	 * @see net.jforum.model.ForumModel#setOrderDown(int)
+	 * @see net.jforum.dao.ForumDAO#setOrderDown(int)
 	 */
 	public Forum setOrderDown(Forum f, Forum r) throws Exception {
 		// TODO Auto-generated method stub
@@ -87,7 +87,7 @@ class ForumModelDummy implements ForumModel {
 	}
 
 	/** 
-	 * @see net.jforum.model.ForumModel#delete(int)
+	 * @see net.jforum.dao.ForumDAO#delete(int)
 	 */
 	public void delete(int forumId) throws Exception {
 		// TODO Auto-generated method stub
@@ -95,7 +95,7 @@ class ForumModelDummy implements ForumModel {
 	}
 
 	/** 
-	 * @see net.jforum.model.ForumModel#update(net.jforum.entities.Forum)
+	 * @see net.jforum.dao.ForumDAO#update(net.jforum.entities.Forum)
 	 */
 	public void update(Forum forum) throws Exception {
 		// TODO Auto-generated method stub
@@ -103,7 +103,7 @@ class ForumModelDummy implements ForumModel {
 	}
 
 	/** 
-	 * @see net.jforum.model.ForumModel#addNew(net.jforum.entities.Forum)
+	 * @see net.jforum.dao.ForumDAO#addNew(net.jforum.entities.Forum)
 	 */
 	public int addNew(Forum forum) throws Exception {
 		// TODO Auto-generated method stub
@@ -111,7 +111,7 @@ class ForumModelDummy implements ForumModel {
 	}
 
 	/** 
-	 * @see net.jforum.model.ForumModel#setLastPost(int, int)
+	 * @see net.jforum.dao.ForumDAO#setLastPost(int, int)
 	 */
 	public void setLastPost(int forumId, int postId) throws Exception {
 		// TODO Auto-generated method stub
@@ -119,7 +119,7 @@ class ForumModelDummy implements ForumModel {
 	}
 
 	/** 
-	 * @see net.jforum.model.ForumModel#incrementTotalTopics(int, int)
+	 * @see net.jforum.dao.ForumDAO#incrementTotalTopics(int, int)
 	 */
 	public void incrementTotalTopics(int forumId, int count) throws Exception {
 		// TODO Auto-generated method stub
@@ -127,7 +127,7 @@ class ForumModelDummy implements ForumModel {
 	}
 
 	/** 
-	 * @see net.jforum.model.ForumModel#decrementTotalTopics(int, int)
+	 * @see net.jforum.dao.ForumDAO#decrementTotalTopics(int, int)
 	 */
 	public void decrementTotalTopics(int forumId, int count) throws Exception {
 		// TODO Auto-generated method stub
@@ -135,7 +135,7 @@ class ForumModelDummy implements ForumModel {
 	}
 
 	/** 
-	 * @see net.jforum.model.ForumModel#getLastPostInfo(int)
+	 * @see net.jforum.dao.ForumDAO#getLastPostInfo(int)
 	 */
 	public LastPostInfo getLastPostInfo(int forumId) throws Exception {
 		// TODO Auto-generated method stub
@@ -143,7 +143,7 @@ class ForumModelDummy implements ForumModel {
 	}
 
 	/** 
-	 * @see net.jforum.model.ForumModel#getTotalMessages()
+	 * @see net.jforum.dao.ForumDAO#getTotalMessages()
 	 */
 	public int getTotalMessages() throws Exception {
 		// TODO Auto-generated method stub
@@ -151,7 +151,7 @@ class ForumModelDummy implements ForumModel {
 	}
 
 	/** 
-	 * @see net.jforum.model.ForumModel#getTotalTopics(int)
+	 * @see net.jforum.dao.ForumDAO#getTotalTopics(int)
 	 */
 	public int getTotalTopics(int forumId) throws Exception {
 		// TODO Auto-generated method stub
@@ -159,7 +159,7 @@ class ForumModelDummy implements ForumModel {
 	}
 
 	/** 
-	 * @see net.jforum.model.ForumModel#getMaxPostId(int)
+	 * @see net.jforum.dao.ForumDAO#getMaxPostId(int)
 	 */
 	public int getMaxPostId(int forumId) throws Exception {
 		// TODO Auto-generated method stub
@@ -167,7 +167,7 @@ class ForumModelDummy implements ForumModel {
 	}
 
 	/** 
-	 * @see net.jforum.model.ForumModel#moveTopics(java.lang.String[], int, int)
+	 * @see net.jforum.dao.ForumDAO#moveTopics(java.lang.String[], int, int)
 	 */
 	public void moveTopics(String[] topics, int fromForumId, int toForumId) throws Exception {
 		// TODO Auto-generated method stub
@@ -175,7 +175,7 @@ class ForumModelDummy implements ForumModel {
 	}
 
 	/**
-	 * @see net.jforum.model.ForumModel#checkUnreadTopics(int, long)
+	 * @see net.jforum.dao.ForumDAO#checkUnreadTopics(int, long)
 	 */
 	public List checkUnreadTopics(int forumId, long lastVisit) throws Exception
 	{
@@ -184,7 +184,7 @@ class ForumModelDummy implements ForumModel {
 	}
 	
 	/**
-	 * @see net.jforum.model.ForumModel#setModerated(int, boolean)
+	 * @see net.jforum.dao.ForumDAO#setModerated(int, boolean)
 	 */
 	public void setModerated(int categoryId, boolean status) throws Exception
 	{

@@ -44,19 +44,19 @@ package net.jforum.repository;
 
 import java.util.List;
 
+import net.jforum.dao.CategoryDAO;
 import net.jforum.entities.Category;
-import net.jforum.model.CategoryModel;
 
 /**
  * @author Rafael Steil
- * @version $Id: CategoryModelDummy.java,v 1.3 2004/12/05 21:51:24 rafaelsteil Exp $
+ * @version $Id: CategoryModelDummy.java,v 1.4 2005/03/26 04:11:21 rafaelsteil Exp $
  */
-class CategoryModelDummy implements CategoryModel 
+class CategoryModelDummy implements CategoryDAO 
 {
 	public CategoryModelDummy() {}
 
 	/** 
-	 * @see net.jforum.model.CategoryModel#selectById(int)
+	 * @see net.jforum.dao.CategoryDAO#selectById(int)
 	 */
 	public Category selectById(int categoryId) throws Exception {
 		// TODO Auto-generated method stub
@@ -64,7 +64,7 @@ class CategoryModelDummy implements CategoryModel
 	}
 
 	/** 
-	 * @see net.jforum.model.CategoryModel#selectAll()
+	 * @see net.jforum.dao.CategoryDAO#selectAll()
 	 */
 	public List selectAll() throws Exception {
 		// TODO Auto-generated method stub
@@ -72,7 +72,7 @@ class CategoryModelDummy implements CategoryModel
 	}
 
 	/** 
-	 * @see net.jforum.model.CategoryModel#canDelete(int)
+	 * @see net.jforum.dao.CategoryDAO#canDelete(int)
 	 */
 	public boolean canDelete(int categoryId) throws Exception {
 		// TODO Auto-generated method stub
@@ -80,7 +80,7 @@ class CategoryModelDummy implements CategoryModel
 	}
 
 	/** 
-	 * @see net.jforum.model.CategoryModel#delete(int)
+	 * @see net.jforum.dao.CategoryDAO#delete(int)
 	 */
 	public void delete(int categoryId) throws Exception {
 		// TODO Auto-generated method stub
@@ -88,7 +88,7 @@ class CategoryModelDummy implements CategoryModel
 	}
 
 	/** 
-	 * @see net.jforum.model.CategoryModel#update(net.jforum.entities.Category)
+	 * @see net.jforum.dao.CategoryDAO#update(net.jforum.entities.Category)
 	 */
 	public void update(Category category) throws Exception {
 		// TODO Auto-generated method stub
@@ -96,7 +96,7 @@ class CategoryModelDummy implements CategoryModel
 	}
 
 	/** 
-	 * @see net.jforum.model.CategoryModel#addNew(net.jforum.entities.Category)
+	 * @see net.jforum.dao.CategoryDAO#addNew(net.jforum.entities.Category)
 	 */
 	public int addNew(Category category) throws Exception {
 		// TODO Auto-generated method stub
@@ -104,14 +104,14 @@ class CategoryModelDummy implements CategoryModel
 	}
 	
 	/** 
-	 * @see net.jforum.model.CategoryModel#setOrderDown(net.jforum.entities.Category)
+	 * @see net.jforum.dao.CategoryDAO#setOrderDown(net.jforum.entities.Category)
 	 */
 	public void setOrderDown(Category c, Category c2) throws Exception {
 		// TODO Auto-generated method stub
 	}
 	
 	/** 
-	 * @see net.jforum.model.CategoryModel#setOrderUp(net.jforum.entities.Category)
+	 * @see net.jforum.dao.CategoryDAO#setOrderUp(net.jforum.entities.Category)
 	 */
 	public void setOrderUp(Category c, Category c2) throws Exception {
 		// TODO Auto-generated method stub

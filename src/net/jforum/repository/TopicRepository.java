@@ -48,9 +48,9 @@ import java.util.List;
 
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.TopicDAO;
 import net.jforum.entities.Topic;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.model.TopicModel;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: TopicRepository.java,v 1.13 2005/02/23 15:48:52 rafaelsteil Exp $
+ * @version $Id: TopicRepository.java,v 1.14 2005/03/26 04:10:58 rafaelsteil Exp $
  */
 public class TopicRepository implements Cacheable
 {
@@ -142,7 +142,7 @@ public class TopicRepository implements Cacheable
 	 */
 	public static List loadMostRecentTopics() throws Exception
 	{
-		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
+		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 		int limit = SystemGlobals.getIntValue(ConfigKeys.RECENT_TOPICS);
 		
 		List l = tm.selectRecentTopics(limit);

@@ -44,13 +44,13 @@ package net.jforum.view.admin.common;
 
 import java.util.Iterator;
 
-import net.jforum.model.DataAccessDriver;
+import net.jforum.dao.DataAccessDriver;
 import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationCommon.java,v 1.1 2005/01/31 20:10:37 rafaelsteil Exp $
+ * @version $Id: ModerationCommon.java,v 1.2 2005/03/26 04:11:28 rafaelsteil Exp $
  */
 public class ModerationCommon
 {
@@ -64,11 +64,11 @@ public class ModerationCommon
 			}
 		}
 		
-		DataAccessDriver.getInstance().newForumModel().setModerated(c.getId(), status);
+		DataAccessDriver.getInstance().newForumDAO().setModerated(c.getId(), status);
 	}
 	
 	public void setTopicModerationStatus(int forumId, boolean status) throws Exception
 	{
-		DataAccessDriver.getInstance().newTopicModel().setModerationStatus(forumId, status);
+		DataAccessDriver.getInstance().newTopicDAO().setModerationStatus(forumId, status);
 	}
 }

@@ -54,6 +54,8 @@ import java.util.Map;
 
 import net.jforum.ActionServletRequest;
 import net.jforum.SessionFacade;
+import net.jforum.dao.AttachmentDAO;
+import net.jforum.dao.DataAccessDriver;
 import net.jforum.entities.Attachment;
 import net.jforum.entities.AttachmentExtension;
 import net.jforum.entities.AttachmentInfo;
@@ -62,8 +64,6 @@ import net.jforum.entities.QuotaLimit;
 import net.jforum.entities.User;
 import net.jforum.exceptions.AttachmentSizeTooBigException;
 import net.jforum.exceptions.BadExtensionException;
-import net.jforum.model.AttachmentModel;
-import net.jforum.model.DataAccessDriver;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
@@ -76,19 +76,19 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.14 2005/02/24 15:32:00 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.15 2005/03/26 04:11:22 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {
 	private static Logger logger = Logger.getLogger(AttachmentCommon.class);
 	
 	private ActionServletRequest request;
-	private AttachmentModel am;
+	private AttachmentDAO am;
 	
 	public AttachmentCommon(ActionServletRequest request)
 	{
 		this.request = request;
-		this.am = DataAccessDriver.getInstance().newAttachmentModel();
+		this.am = DataAccessDriver.getInstance().newAttachmentDAO();
 	}
 	
 	public void insertAttachments(int postId, int forumId) throws Exception
@@ -210,7 +210,7 @@ public class AttachmentCommon
 	public QuotaLimit getQuotaLimit(int userId) throws Exception
 	{
 		QuotaLimit ql = new QuotaLimit();
-		User u = DataAccessDriver.getInstance().newUserModel().selectById(userId);
+		User u = DataAccessDriver.getInstance().newUserDAO().selectById(userId);
 		
 		for (Iterator iter = u.getGroupsList().iterator(); iter.hasNext();) {
 			QuotaLimit l = this.am.selectQuotaLimitByGroup(((Group)iter.next()).getId());
@@ -233,7 +233,7 @@ public class AttachmentCommon
 	public void editAttachments(int postId, int forumId) throws Exception
 	{
 		// Allow removing the attachments at least
-		AttachmentModel am = DataAccessDriver.getInstance().newAttachmentModel();
+		AttachmentDAO am = DataAccessDriver.getInstance().newAttachmentDAO();
 		
 		// Check for attachments to remove
 		List deleteList = new ArrayList();
@@ -324,7 +324,7 @@ public class AttachmentCommon
 	public void deleteAttachments(int postId, int forumId) throws Exception
 	{
 		// Attachments
-		List attachments = DataAccessDriver.getInstance().newAttachmentModel().selectAttachments(postId);
+		List attachments = DataAccessDriver.getInstance().newAttachmentDAO().selectAttachments(postId);
 		String attachIds = "";
 		for (Iterator iter = attachments.iterator(); iter.hasNext(); ) {
 			Attachment a = (Attachment)iter.next();

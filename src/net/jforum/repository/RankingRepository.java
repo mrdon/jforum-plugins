@@ -47,14 +47,14 @@ import java.util.List;
 
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.RankingDAO;
 import net.jforum.entities.Ranking;
 import net.jforum.exceptions.RankingLoadException;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.model.RankingModel;
 
 /**
  * @author Rafael Steil
- * @version $Id: RankingRepository.java,v 1.7 2005/02/21 14:31:04 rafaelsteil Exp $
+ * @version $Id: RankingRepository.java,v 1.8 2005/03/26 04:10:58 rafaelsteil Exp $
  */
 public class RankingRepository implements Cacheable
 {
@@ -73,7 +73,7 @@ public class RankingRepository implements Cacheable
 	public static void loadRanks()
 	{
 		try {
-			RankingModel rm = DataAccessDriver.getInstance().newRankingModel();
+			RankingDAO rm = DataAccessDriver.getInstance().newRankingDAO();
 			cache.add(FQN, ENTRIES, rm.selectAll());
 		}
 		catch (Exception e) {

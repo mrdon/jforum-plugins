@@ -45,16 +45,16 @@ package net.jforum.util.search.simple;
 import java.sql.Connection;
 
 import net.jforum.DBConnection;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.SearchIndexerDAO;
 import net.jforum.entities.Post;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.model.SearchIndexerModel;
 import net.jforum.util.concurrent.Task;
 
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: MessageIndexerTask.java,v 1.2 2005/03/12 20:10:47 rafaelsteil Exp $
+ * @version $Id: MessageIndexerTask.java,v 1.3 2005/03/26 04:11:19 rafaelsteil Exp $
  */
 public class MessageIndexerTask implements Task
 {
@@ -74,7 +74,7 @@ public class MessageIndexerTask implements Task
 	public Object execute() throws Exception
 	{
 		try {
-			SearchIndexerModel indexer = DataAccessDriver.getInstance().newSearchIndexerModel();
+			SearchIndexerDAO indexer = DataAccessDriver.getInstance().newSearchIndexerDAO();
 			indexer.setConnection(this.conn);
 			indexer.insertSearchWords(this.post);
 		}

@@ -52,13 +52,13 @@ import net.jforum.ActionServletRequest;
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
+import net.jforum.dao.BookmarkDAO;
+import net.jforum.dao.DataAccessDriver;
 import net.jforum.entities.Bookmark;
 import net.jforum.entities.BookmarkType;
 import net.jforum.entities.Forum;
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
-import net.jforum.model.BookmarkModel;
-import net.jforum.model.DataAccessDriver;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.SecurityConstants;
@@ -69,7 +69,7 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: BookmarkAction.java,v 1.5 2005/03/15 18:24:17 rafaelsteil Exp $
+ * @version $Id: BookmarkAction.java,v 1.6 2005/03/26 04:11:15 rafaelsteil Exp $
  */
 public class BookmarkAction extends Command
 {
@@ -96,7 +96,7 @@ public class BookmarkAction extends Command
 		String title = f.getName();
 		String description = f.getDescription();
 		
-		Bookmark b = DataAccessDriver.getInstance().newBookmarkModel().selectForUpdate(
+		Bookmark b = DataAccessDriver.getInstance().newBookmarkDAO().selectForUpdate(
 				f.getId(), BookmarkType.FORUM, SessionFacade.getUserSession().getUserId());
 		if (b != null) {
 			if (b.getTitle() != null) {
@@ -119,11 +119,11 @@ public class BookmarkAction extends Command
 	
 	private void addTopic() throws Exception
 	{
-		Topic t = DataAccessDriver.getInstance().newTopicModel().selectById(
+		Topic t = DataAccessDriver.getInstance().newTopicDAO().selectById(
 				this.request.getIntParameter("relation_id"));
 		String title = t.getTitle();
 		
-		Bookmark b = DataAccessDriver.getInstance().newBookmarkModel().selectForUpdate(
+		Bookmark b = DataAccessDriver.getInstance().newBookmarkDAO().selectForUpdate(
 				t.getId(), BookmarkType.TOPIC, SessionFacade.getUserSession().getUserId());
 		if (b != null) {
 			if (b.getTitle() != null) {
@@ -142,11 +142,11 @@ public class BookmarkAction extends Command
 	
 	private void addUser() throws Exception
 	{
-		User u = DataAccessDriver.getInstance().newUserModel().selectById(
+		User u = DataAccessDriver.getInstance().newUserDAO().selectById(
 				this.request.getIntParameter("relation_id"));
 		String title = u.getUsername();
 		
-		Bookmark b = DataAccessDriver.getInstance().newBookmarkModel().selectForUpdate(
+		Bookmark b = DataAccessDriver.getInstance().newBookmarkDAO().selectForUpdate(
 				u.getId(), BookmarkType.USER, SessionFacade.getUserSession().getUserId());
 		if (b != null) {
 			if (b.getTitle() != null) {
@@ -173,14 +173,14 @@ public class BookmarkAction extends Command
 		b.setRelationType(this.request.getIntParameter("relation_type"));
 		b.setUserId(SessionFacade.getUserSession().getUserId());
 		
-		DataAccessDriver.getInstance().newBookmarkModel().add(b);
+		DataAccessDriver.getInstance().newBookmarkDAO().add(b);
 		this.setTemplateName(TemplateKeys.BOOKMARKS_INSERT_SAVE);
 	}
 	
 	public void updateSave() throws Exception
 	{
 		int id = this.request.getIntParameter("bookmark_id");
-		BookmarkModel bm = DataAccessDriver.getInstance().newBookmarkModel();
+		BookmarkDAO bm = DataAccessDriver.getInstance().newBookmarkDAO();
 		Bookmark b = bm.selectById(id);
 		
 		if (!this.sanityCheck(b)) {
@@ -200,7 +200,7 @@ public class BookmarkAction extends Command
 	public void edit() throws Exception
 	{
 		int id = this.request.getIntParameter("bookmark_id");
-		BookmarkModel bm = DataAccessDriver.getInstance().newBookmarkModel();
+		BookmarkDAO bm = DataAccessDriver.getInstance().newBookmarkDAO();
 		Bookmark b = bm.selectById(id);
 		
 		if (!this.sanityCheck(b)) {
@@ -214,7 +214,7 @@ public class BookmarkAction extends Command
 	public void delete() throws Exception
 	{
 		int id = this.request.getIntParameter("bookmark_id");
-		BookmarkModel bm = DataAccessDriver.getInstance().newBookmarkModel();
+		BookmarkDAO bm = DataAccessDriver.getInstance().newBookmarkDAO();
 		Bookmark b = bm.selectById(id);
 		
 		if (!this.sanityCheck(b)) {
@@ -266,11 +266,11 @@ public class BookmarkAction extends Command
 		int userId = this.request.getIntParameter("user_id");
 		
 		this.setTemplateName(TemplateKeys.BOOKMARKS_LIST);
-		this.context.put("bookmarks", DataAccessDriver.getInstance().newBookmarkModel().selectByUser(userId));
+		this.context.put("bookmarks", DataAccessDriver.getInstance().newBookmarkDAO().selectByUser(userId));
 		this.context.put("forumType", new Integer(BookmarkType.FORUM));
 		this.context.put("userType", new Integer(BookmarkType.USER));
 		this.context.put("topicType", new Integer(BookmarkType.TOPIC));
-		this.context.put("user", DataAccessDriver.getInstance().newUserModel().selectById(userId));
+		this.context.put("user", DataAccessDriver.getInstance().newUserDAO().selectById(userId));
 		this.context.put("loggedUserId", new Integer(SessionFacade.getUserSession().getUserId()));
 	}
 	

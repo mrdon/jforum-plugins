@@ -45,14 +45,14 @@ package net.jforum.drivers.external;
 
 import java.util.Map;
 
+import net.jforum.dao.UserDAO;
 import net.jforum.entities.User;
-import net.jforum.model.UserModel;
 
 
 /**
  * @author Rafael Steil
  * @author Pieter Olivier
- * @version $Id: LoginAuthenticator.java,v 1.2 2005/03/16 16:13:14 rafaelsteil Exp $
+ * @version $Id: LoginAuthenticator.java,v 1.3 2005/03/26 04:11:16 rafaelsteil Exp $
  */
 public interface LoginAuthenticator 
 {
@@ -72,5 +72,5 @@ public interface LoginAuthenticator
 	 * 
 	 * @param userModel The user model to set
 	 */
-	public void setUserModel(UserModel userModel);
+	public void setUserModel(UserDAO userModel);
 }

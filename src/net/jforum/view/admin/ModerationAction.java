@@ -42,11 +42,11 @@
  */
 package net.jforum.view.admin;
 
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.PostDAO;
+import net.jforum.dao.TopicDAO;
 import net.jforum.entities.Post;
 import net.jforum.entities.Topic;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.model.PostModel;
-import net.jforum.model.TopicModel;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.PostRepository;
 import net.jforum.util.preferences.ConfigKeys;
@@ -59,7 +59,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationAction.java,v 1.5 2005/03/15 18:24:10 rafaelsteil Exp $
+ * @version $Id: ModerationAction.java,v 1.6 2005/03/26 04:11:18 rafaelsteil Exp $
  */
 public class ModerationAction extends AdminCommand
 {
@@ -69,7 +69,7 @@ public class ModerationAction extends AdminCommand
 	public void list() throws Exception
 	{
 		this.setTemplateName(TemplateKeys.MODERATION_ADMIN_LIST);
-		this.context.put("infoList", DataAccessDriver.getInstance().newModerationModel().categoryPendingModeration());
+		this.context.put("infoList", DataAccessDriver.getInstance().newModerationDAO().categoryPendingModeration());
 	}
 	
 	public void view() throws Exception
@@ -81,7 +81,7 @@ public class ModerationAction extends AdminCommand
 		
 		this.setTemplateName(TemplateKeys.MODERATION_ADMIN_VIEW);
 		this.context.put("forum", ForumRepository.getForum(forumId));
-		this.context.put("topics", DataAccessDriver.getInstance().newModerationModel().topicsByForum(
+		this.context.put("topics", DataAccessDriver.getInstance().newModerationDAO().topicsByForum(
 				forumId, start, count));
 	}
 	
@@ -89,7 +89,7 @@ public class ModerationAction extends AdminCommand
 	{
 		String[] posts = this.request.getParameterValues("post_id");
 		if (posts != null) {
-			TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
+			TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 			
 			for (int i = 0; i < posts.length; i++) {
 				int postId = Integer.parseInt(posts[i]);
@@ -100,22 +100,22 @@ public class ModerationAction extends AdminCommand
 				}
 				
 				if ("aprove".startsWith(status)) {
-					Post p = DataAccessDriver.getInstance().newPostModel().selectById(postId);
+					Post p = DataAccessDriver.getInstance().newPostDAO().selectById(postId);
 					Topic t = tm.selectRaw(p.getTopicId());
 					
-					DataAccessDriver.getInstance().newModerationModel().aprovePost(postId);
+					DataAccessDriver.getInstance().newModerationDAO().aprovePost(postId);
 					TopicsCommon.updateBoardStatus(t, postId, t.getFirstPostId() == postId,
-							tm, DataAccessDriver.getInstance().newForumModel());
+							tm, DataAccessDriver.getInstance().newForumDAO());
 					
 					
-					DataAccessDriver.getInstance().newUserModel().incrementPosts(p.getUserId());
+					DataAccessDriver.getInstance().newUserDAO().incrementPosts(p.getUserId());
 					
 					if (SystemGlobals.getBoolValue(ConfigKeys.POSTS_CACHE_ENABLED)) {
 						PostRepository.append(p.getTopicId(), PostCommon.preparePostForDisplay(p));
 					}
 				}
 				else {
-					PostModel pm = DataAccessDriver.getInstance().newPostModel();
+					PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
 					Post post = pm.selectById(postId);
 					pm.delete(post);
 					

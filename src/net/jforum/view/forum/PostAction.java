@@ -55,6 +55,12 @@ import java.util.Map;
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
+import net.jforum.dao.AttachmentDAO;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.ForumDAO;
+import net.jforum.dao.PostDAO;
+import net.jforum.dao.TopicDAO;
+import net.jforum.dao.UserDAO;
 import net.jforum.entities.Attachment;
 import net.jforum.entities.Post;
 import net.jforum.entities.QuotaLimit;
@@ -62,12 +68,6 @@ import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
 import net.jforum.exceptions.AttachmentException;
-import net.jforum.model.AttachmentModel;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.model.ForumModel;
-import net.jforum.model.PostModel;
-import net.jforum.model.TopicModel;
-import net.jforum.model.UserModel;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.PostRepository;
 import net.jforum.repository.RankingRepository;
@@ -90,15 +90,15 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.70 2005/03/15 21:03:44 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.71 2005/03/26 04:11:15 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
 
 	public void list() throws Exception {
-		PostModel pm = DataAccessDriver.getInstance().newPostModel();
-		UserModel um = DataAccessDriver.getInstance().newUserModel();
-		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
+		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
+		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
+		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 
 		int userId = SessionFacade.getUserSession().getUserId();
 		int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
@@ -155,7 +155,7 @@ public class PostAction extends Command {
 		this.context.put("canDownloadAttachments", SecurityRepository.canAccess(
 				SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD));
 		this.context.put("am", new AttachmentCommon(this.request));
-		this.context.put("karmaVotes", DataAccessDriver.getInstance().newKarmaModel().getUserVotes(topic.getId(), userId));
+		this.context.put("karmaVotes", DataAccessDriver.getInstance().newKarmaDAO().getUserVotes(topic.getId(), userId));
 		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
 		this.context.put("canRemove",
 				SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE));
@@ -197,9 +197,9 @@ public class PostAction extends Command {
 	}
 
 	public void review() throws Exception {
-		PostModel pm = DataAccessDriver.getInstance().newPostModel();
-		UserModel um = DataAccessDriver.getInstance().newUserModel();
-		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
+		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
+		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
+		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 
 		int userId = SessionFacade.getUserSession().getUserId();
 		int topicId = this.request.getIntParameter("topic_id");
@@ -253,11 +253,11 @@ public class PostAction extends Command {
 			return;
 		}
 
-		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
+		ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
 
 		if (this.request.getParameter("topic_id") != null) {
 			int topicId = this.request.getIntParameter("topic_id");
-			Topic t = DataAccessDriver.getInstance().newTopicModel().selectById(topicId);
+			Topic t = DataAccessDriver.getInstance().newTopicDAO().selectById(topicId);
 
 			if (t.getStatus() == Topic.STATUS_LOCKED) {
 				this.topicLocked();
@@ -294,7 +294,7 @@ public class PostAction extends Command {
 		this.context.put("canCreateStickyOrAnnouncementTopics",
 				SecurityRepository.canAccess(SecurityConstants.PERM_CREATE_STICKY_ANNOUNCEMENT_TOPICS));
 
-		User user = DataAccessDriver.getInstance().newUserModel().selectById(userId);
+		User user = DataAccessDriver.getInstance().newUserDAO().selectById(userId);
 		user.setSignature(PostCommon.processText(user.getSignature()));
 		user.setSignature(PostCommon.processSmilies(user.getSignature(), SmiliesRepository.getSmilies()));
 
@@ -315,7 +315,7 @@ public class PostAction extends Command {
 		boolean canAccess = false;
 
 		if (!preview) {
-			PostModel pm = DataAccessDriver.getInstance().newPostModel();
+			PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
 			p = pm.selectById(this.request.getIntParameter("post_id"));
 
 			// The post exist?
@@ -329,7 +329,7 @@ public class PostAction extends Command {
 		canAccess = (isModerator || p.getUserId() == userId);
 
 		if ((userId != aId) && canAccess) {
-			Topic topic = DataAccessDriver.getInstance().newTopicModel().selectById(p.getTopicId());
+			Topic topic = DataAccessDriver.getInstance().newTopicDAO().selectById(p.getTopicId());
 
 			if (!TopicsCommon.isTopicAccessible(topic.getForumId())) {
 				return;
@@ -346,7 +346,7 @@ public class PostAction extends Command {
 			
 			if (p.hasAttachments()) {
 				this.context.put("attachments", 
-						DataAccessDriver.getInstance().newAttachmentModel().selectAttachments(p.getId()));
+						DataAccessDriver.getInstance().newAttachmentDAO().selectAttachments(p.getId()));
 			}
 
 			this.context.put("attachmentsEnabled", SecurityRepository.canAccess(
@@ -388,14 +388,14 @@ public class PostAction extends Command {
 	}
 	
 	public void quote() throws Exception {
-		PostModel pm = DataAccessDriver.getInstance().newPostModel();
+		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
 		Post p = pm.selectById(this.request.getIntParameter("post_id"));
 
 		if (!this.anonymousPost(p.getForumId())) {
 			return;
 		}
 
-		Topic t = DataAccessDriver.getInstance().newTopicModel().selectById(p.getTopicId());
+		Topic t = DataAccessDriver.getInstance().newTopicDAO().selectById(p.getTopicId());
 
 		if (!TopicsCommon.isTopicAccessible(t.getForumId())) {
 			return;
@@ -415,10 +415,10 @@ public class PostAction extends Command {
 		this.context.put("action", "insertSave");
 		this.context.put("post", p);
 
-		UserModel um = DataAccessDriver.getInstance().newUserModel();
+		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		User u = um.selectById(p.getUserId());
 
-		Topic topic = DataAccessDriver.getInstance().newTopicModel().selectById(p.getTopicId());
+		Topic topic = DataAccessDriver.getInstance().newTopicDAO().selectById(p.getTopicId());
 		int userId = SessionFacade.getUserSession().getUserId();
 		
 		this.context.put("attachmentsEnabled", SecurityRepository.canAccess(
@@ -437,12 +437,12 @@ public class PostAction extends Command {
 		this.context.put("htmlAllowed", SecurityRepository.canAccess(SecurityConstants.PERM_HTML_DISABLED, 
 				Integer.toString(topic.getForumId())));
 		this.context.put("start", this.request.getParameter("start"));
-		this.context.put("user", DataAccessDriver.getInstance().newUserModel().selectById(userId));
+		this.context.put("user", DataAccessDriver.getInstance().newUserDAO().selectById(userId));
 	}
 
 	public void editSave() throws Exception {
-		PostModel pm = DataAccessDriver.getInstance().newPostModel();
-		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
+		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
+		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 
 		Post p = pm.selectById(this.request.getIntParameter("post_id"));
 		p = PostCommon.fillPostFromRequest(p, true);
@@ -560,9 +560,9 @@ public class PostAction extends Command {
 			return;
 		}
 
-		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
-		PostModel pm = DataAccessDriver.getInstance().newPostModel();
-		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
+		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
+		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
+		ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
 
 		if (this.request.getParameter("topic_id") != null) {
 			t = tm.selectById(this.request.getIntParameter("topic_id"));
@@ -655,7 +655,7 @@ public class PostAction extends Command {
 			}
 
 			if (!moderate) {
-				DataAccessDriver.getInstance().newUserModel().incrementPosts(p.getUserId());
+				DataAccessDriver.getInstance().newUserDAO().incrementPosts(p.getUserId());
 				TopicsCommon.updateBoardStatus(t, postId, firstPost, tm, fm);
 				TopicsCommon.notifyUsers(t, tm);
 	
@@ -719,10 +719,10 @@ public class PostAction extends Command {
 		}
 
 		// Post
-		PostModel pm = DataAccessDriver.getInstance().newPostModel();
+		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
 		Post p = pm.selectById(this.request.getIntParameter("post_id"));
 
-		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
+		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 		Topic t = tm.selectById(p.getTopicId());
 
 		if (!TopicsCommon.isTopicAccessible(t.getForumId())) {
@@ -735,7 +735,7 @@ public class PostAction extends Command {
 		}
 
 		pm.delete(p);
-		DataAccessDriver.getInstance().newUserModel().decrementPosts(p.getUserId());
+		DataAccessDriver.getInstance().newUserDAO().decrementPosts(p.getUserId());
 		
 		// Attachments
 		new AttachmentCommon(this.request).deleteAttachments(p.getId(), p.getForumId());
@@ -754,7 +754,7 @@ public class PostAction extends Command {
 		}
         
 		// Forum
-		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
+		ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
 
 		maxPostId = fm.getMaxPostId(p.getForumId());
 		if (maxPostId > -1) {
@@ -793,7 +793,7 @@ public class PostAction extends Command {
 		PostRepository.clearCache(p.getTopicId());
 	}
 
-	private void watch(TopicModel tm, int topicId, int userId) throws Exception {
+	private void watch(TopicDAO tm, int topicId, int userId) throws Exception {
 		if (!tm.isUserSubscribed(topicId, userId)) {
 			tm.subscribeUser(topicId, userId);
 		}
@@ -803,7 +803,7 @@ public class PostAction extends Command {
 		int topicId = this.request.getIntParameter("topic_id");
 		int userId = SessionFacade.getUserSession().getUserId();
 
-		this.watch(DataAccessDriver.getInstance().newTopicModel(), topicId, userId);
+		this.watch(DataAccessDriver.getInstance().newTopicDAO(), topicId, userId);
 		this.list();
 	}
 
@@ -813,7 +813,7 @@ public class PostAction extends Command {
 			int userId = SessionFacade.getUserSession().getUserId();
 			String start = this.request.getParameter("start");
 
-			DataAccessDriver.getInstance().newTopicModel().removeSubscription(topicId, userId);
+			DataAccessDriver.getInstance().newTopicDAO().removeSubscription(topicId, userId);
 
 			String returnPath = this.request.getContextPath() + "/posts/list/";
 			if (start != null && !start.equals("")) {
@@ -840,7 +840,7 @@ public class PostAction extends Command {
 		
 		int id = this.request.getIntParameter("attach_id");
 		
-		AttachmentModel am = DataAccessDriver.getInstance().newAttachmentModel();
+		AttachmentDAO am = DataAccessDriver.getInstance().newAttachmentDAO();
 		Attachment a = am.selectAttachmentById(id);
 		
 		String filename = SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR)

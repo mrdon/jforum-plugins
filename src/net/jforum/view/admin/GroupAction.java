@@ -45,10 +45,10 @@ package net.jforum.view.admin;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.GroupDAO;
+import net.jforum.dao.security.GroupSecurityDAO;
 import net.jforum.entities.Group;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.model.GroupModel;
-import net.jforum.model.security.GroupSecurityModel;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.XMLPermissionControl;
@@ -62,7 +62,7 @@ import net.jforum.util.preferences.TemplateKeys;
  * ViewHelper class for group administration.
  * 
  * @author Rafael Steil
- * @version $Id: GroupAction.java,v 1.10 2005/03/15 18:24:11 rafaelsteil Exp $
+ * @version $Id: GroupAction.java,v 1.11 2005/03/26 04:11:18 rafaelsteil Exp $
  */
 public class GroupAction extends AdminCommand 
 {
@@ -93,7 +93,7 @@ public class GroupAction extends AdminCommand
 		g.setParentId(this.request.getIntParameter("parent_id"));
 		g.setName(this.request.getParameter("group_name"));
 
-		DataAccessDriver.getInstance().newGroupModel().update(g);
+		DataAccessDriver.getInstance().newGroupDAO().update(g);
 			
 		this.list();
 	}
@@ -102,7 +102,7 @@ public class GroupAction extends AdminCommand
 	public void edit() throws Exception
 	{
 		int groupId = this.request.getIntParameter("group_id");
-		GroupModel gm = DataAccessDriver.getInstance().newGroupModel();
+		GroupDAO gm = DataAccessDriver.getInstance().newGroupDAO();
 					
 		this.context.put("group", gm.selectById(groupId));
 		this.context.put("groups", new TreeGroup().getNodes());
@@ -122,7 +122,7 @@ public class GroupAction extends AdminCommand
 		}
 		
 		List errors = new ArrayList();
-		GroupModel gm = DataAccessDriver.getInstance().newGroupModel();
+		GroupDAO gm = DataAccessDriver.getInstance().newGroupDAO();
 			
 		for (int i = 0; i < groupId.length; i++) {
 			int id = Integer.parseInt(groupId[i]);
@@ -144,7 +144,7 @@ public class GroupAction extends AdminCommand
 	// Saves a new group
 	public void insertSave() throws Exception
 	{
-		GroupModel gm = DataAccessDriver.getInstance().newGroupModel();
+		GroupDAO gm = DataAccessDriver.getInstance().newGroupDAO();
 		
 		Group g = new Group();
 		g.setDescription(this.request.getParameter("group_description"));
@@ -161,7 +161,7 @@ public class GroupAction extends AdminCommand
 	{
 		int id = this.request.getIntParameter("group_id");
 		
-		GroupSecurityModel gmodel = DataAccessDriver.getInstance().newGroupSecurityModel();
+		GroupSecurityDAO gmodel = DataAccessDriver.getInstance().newGroupSecurityDAO();
 
 		PermissionControl pc = new PermissionControl();
 		pc.setSecurityModel(gmodel);
@@ -170,7 +170,7 @@ public class GroupAction extends AdminCommand
 		List sections = new XMLPermissionControl(pc).loadConfigurations(
 				SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/permissions.xml");
 		
-		GroupModel gm = DataAccessDriver.getInstance().newGroupModel();
+		GroupDAO gm = DataAccessDriver.getInstance().newGroupDAO();
 
 		this.context.put("sections", sections);
 		this.context.put("group", gm.selectById(id));
@@ -181,7 +181,7 @@ public class GroupAction extends AdminCommand
 	{
 		int id = this.request.getIntParameter("id");
 		
-		GroupSecurityModel gmodel = DataAccessDriver.getInstance().newGroupSecurityModel();
+		GroupSecurityDAO gmodel = DataAccessDriver.getInstance().newGroupSecurityDAO();
 		
 		PermissionControl pc = new PermissionControl();
 		pc.setSecurityModel(gmodel);

@@ -43,22 +43,22 @@
 package net.jforum.view.admin;
 
 
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.RankingDAO;
 import net.jforum.entities.Ranking;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.model.RankingModel;
 import net.jforum.repository.RankingRepository;
 import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: RankingAction.java,v 1.6 2005/03/15 18:24:10 rafaelsteil Exp $
+ * @version $Id: RankingAction.java,v 1.7 2005/03/26 04:11:18 rafaelsteil Exp $
  */
 public class RankingAction extends AdminCommand 
 {
 	// List
 	public void list() throws Exception
 	{
-		this.context.put("ranks", DataAccessDriver.getInstance().newRankingModel().selectAll());
+		this.context.put("ranks", DataAccessDriver.getInstance().newRankingDAO().selectAll());
 		this.setTemplateName(TemplateKeys.RANKING_LIST);
 	}
 	
@@ -72,7 +72,7 @@ public class RankingAction extends AdminCommand
 	// Edit
 	public void edit() throws Exception
 	{
-		this.context.put("rank", DataAccessDriver.getInstance().newRankingModel().selectById(
+		this.context.put("rank", DataAccessDriver.getInstance().newRankingDAO().selectById(
 				this.request.getIntParameter("ranking_id")));
 		this.setTemplateName(TemplateKeys.RANKING_EDIT);
 		this.context.put("action", "editSave");
@@ -88,7 +88,7 @@ public class RankingAction extends AdminCommand
 		
 		// TODO: needs to add support to images 
 		
-		DataAccessDriver.getInstance().newRankingModel().update(r);
+		DataAccessDriver.getInstance().newRankingDAO().update(r);
 		RankingRepository.loadRanks();	
 		this.list();
 	}
@@ -98,7 +98,7 @@ public class RankingAction extends AdminCommand
 	{
 		String ids[] = this.request.getParameterValues("rank_id");
 		
-		RankingModel rm = DataAccessDriver.getInstance().newRankingModel();
+		RankingDAO rm = DataAccessDriver.getInstance().newRankingDAO();
 		
 		if (ids != null) {
 			for (int i = 0; i < ids.length; i++) {
@@ -117,7 +117,7 @@ public class RankingAction extends AdminCommand
 		r.setMin(this.request.getIntParameter("rank_min"));
 		
 		// TODO: need to add support to images
-		DataAccessDriver.getInstance().newRankingModel().addNew(r);
+		DataAccessDriver.getInstance().newRankingDAO().addNew(r);
 		this.list();
 	}
 }

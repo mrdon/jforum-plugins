@@ -50,11 +50,11 @@ import java.util.List;
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.KarmaDAO;
+import net.jforum.dao.PostDAO;
 import net.jforum.entities.Karma;
 import net.jforum.entities.Post;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.model.KarmaModel;
-import net.jforum.model.PostModel;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
@@ -65,7 +65,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaAction.java,v 1.7 2005/03/15 18:24:17 rafaelsteil Exp $
+ * @version $Id: KarmaAction.java,v 1.8 2005/03/26 04:11:15 rafaelsteil Exp $
  */
 public class KarmaAction extends Command
 {
@@ -79,7 +79,7 @@ public class KarmaAction extends Command
 		int postId = this.request.getIntParameter("post_id");
 		int fromUserId = SessionFacade.getUserSession().getUserId();
 
-		PostModel pm = DataAccessDriver.getInstance().newPostModel();
+		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
 		Post p = pm.selectById(postId);
 
 		if (fromUserId == SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
@@ -92,7 +92,7 @@ public class KarmaAction extends Command
 			return;
 		}
 
-		KarmaModel km = DataAccessDriver.getInstance().newKarmaModel();
+		KarmaDAO km = DataAccessDriver.getInstance().newKarmaDAO();
 		if (!km.userCanAddKarma(fromUserId, postId)) {
 			this.error("Karma.alreadyVoted", p);
 			return;
@@ -171,10 +171,10 @@ public class KarmaAction extends Command
 			orderField = this.request.getParameter("order_by");
 		}
 
-		int start = this.preparePagination(DataAccessDriver.getInstance().newUserModel().getTotalUsers());
+		int start = this.preparePagination(DataAccessDriver.getInstance().newUserDAO().getTotalUsers());
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
 		// Load all users with your karma
-		List users = DataAccessDriver.getInstance().newKarmaModel().getMostRatedUserByPeriod(usersPerPage, firstPeriod,
+		List users = DataAccessDriver.getInstance().newKarmaDAO().getMostRatedUserByPeriod(usersPerPage, firstPeriod,
 				lastPeriod, orderField);
 		this.context.put("users", users);
 		this.setTemplateName(TemplateKeys.KARMA_SEARCH_BYPERIOD);
@@ -209,10 +209,10 @@ public class KarmaAction extends Command
 			orderField = this.request.getParameter("order_by");
 		}
 
-		int start = this.preparePagination(DataAccessDriver.getInstance().newUserModel().getTotalUsers());
+		int start = this.preparePagination(DataAccessDriver.getInstance().newUserDAO().getTotalUsers());
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
 		// Load all users with your karma
-		List users = DataAccessDriver.getInstance().newKarmaModel().getMostRatedUserByPeriod(usersPerPage, firstPeriod,
+		List users = DataAccessDriver.getInstance().newKarmaDAO().getMostRatedUserByPeriod(usersPerPage, firstPeriod,
 				lastPeriod, orderField);
 		this.context.put("users", users);
 		this.setTemplateName(TemplateKeys.KARMA_SEARCH_BYMONTH);

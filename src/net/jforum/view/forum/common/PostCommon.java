@@ -52,12 +52,12 @@ import java.util.regex.Pattern;
 
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.PostDAO;
+import net.jforum.dao.UserDAO;
 import net.jforum.entities.Post;
 import net.jforum.entities.Smilie;
 import net.jforum.entities.User;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.model.PostModel;
-import net.jforum.model.UserModel;
 import net.jforum.repository.BBCodeRepository;
 import net.jforum.repository.PostRepository;
 import net.jforum.repository.SecurityRepository;
@@ -70,7 +70,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.12 2005/03/04 14:15:22 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.13 2005/03/26 04:11:22 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -261,7 +261,7 @@ public class PostCommon
 		return p;
 	}
 
-	public static void addToTopicPosters(int userId, Map usersMap, UserModel um) throws Exception
+	public static void addToTopicPosters(int userId, Map usersMap, UserDAO um) throws Exception
 	{
 		Integer posterId = new Integer(userId);
 		if (!usersMap.containsKey(posterId)) {
@@ -271,14 +271,14 @@ public class PostCommon
 
 	public static User getUserForDisplay(int userId) throws Exception
 	{
-		User u = DataAccessDriver.getInstance().newUserModel().selectById(userId);
+		User u = DataAccessDriver.getInstance().newUserDAO().selectById(userId);
 		u.setSignature(PostCommon.processText(u.getSignature()));
 		u.setSignature(PostCommon.processSmilies(u.getSignature(), SmiliesRepository.getSmilies()));
 
 		return u;
 	}
 
-	public static List topicPosts(PostModel pm, UserModel um, Map usersMap, boolean canEdit, int userId, int topicId,
+	public static List topicPosts(PostDAO pm, UserDAO um, Map usersMap, boolean canEdit, int userId, int topicId,
 			int start, int count) throws Exception
 	{
 		List posts = null;

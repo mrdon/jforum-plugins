@@ -46,11 +46,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import net.jforum.dao.AttachmentDAO;
+import net.jforum.dao.DataAccessDriver;
 import net.jforum.entities.AttachmentExtension;
 import net.jforum.entities.AttachmentExtensionGroup;
 import net.jforum.entities.QuotaLimit;
-import net.jforum.model.AttachmentModel;
-import net.jforum.model.DataAccessDriver;
 import net.jforum.util.TreeGroup;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -58,7 +58,7 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentsAction.java,v 1.7 2005/03/15 18:24:10 rafaelsteil Exp $
+ * @version $Id: AttachmentsAction.java,v 1.8 2005/03/26 04:11:18 rafaelsteil Exp $
  */
 public class AttachmentsAction extends AdminCommand
 {
@@ -83,7 +83,7 @@ public class AttachmentsAction extends AdminCommand
 	
 	public void quotaLimit() throws Exception
 	{
-		AttachmentModel am = DataAccessDriver.getInstance().newAttachmentModel();
+		AttachmentDAO am = DataAccessDriver.getInstance().newAttachmentDAO();
 		
 		this.context.put("quotas", am.selectQuotaLimit());
 		this.setTemplateName(TemplateKeys.ATTACHMENTS_QUOTA_LIMIT);
@@ -99,13 +99,13 @@ public class AttachmentsAction extends AdminCommand
 		ql.setSize(this.request.getIntParameter("max_filesize"));
 		ql.setType(this.request.getIntParameter("type"));
 		
-		DataAccessDriver.getInstance().newAttachmentModel().addQuotaLimit(ql);
+		DataAccessDriver.getInstance().newAttachmentDAO().addQuotaLimit(ql);
 		this.quotaLimit();
 	}
 	
 	public void quotaLimitUpdate() throws Exception
 	{
-		AttachmentModel am = DataAccessDriver.getInstance().newAttachmentModel();
+		AttachmentDAO am = DataAccessDriver.getInstance().newAttachmentDAO();
 		
 		// First check if we should delete some entry
 		String[] delete = this.request.getParameterValues("delete");
@@ -137,7 +137,7 @@ public class AttachmentsAction extends AdminCommand
 	public void extensionGroups() throws Exception
 	{
 		this.setTemplateName(TemplateKeys.ATTACHMENTS_EXTENSION_GROUPS);
-		this.context.put("groups", DataAccessDriver.getInstance().newAttachmentModel().selectExtensionGroups());
+		this.context.put("groups", DataAccessDriver.getInstance().newAttachmentDAO().selectExtensionGroups());
 	}
 	
 	public void extensionGroupsSave() throws Exception
@@ -148,13 +148,13 @@ public class AttachmentsAction extends AdminCommand
 		g.setName(this.request.getParameter("name"));
 		g.setUploadIcon(this.request.getParameter("upload_icon"));
 		
-		DataAccessDriver.getInstance().newAttachmentModel().addExtensionGroup(g);
+		DataAccessDriver.getInstance().newAttachmentDAO().addExtensionGroup(g);
 		this.extensionGroups();
 	}
 	
 	public void extensionGroupsUpdate() throws Exception
 	{
-		AttachmentModel am = DataAccessDriver.getInstance().newAttachmentModel();
+		AttachmentDAO am = DataAccessDriver.getInstance().newAttachmentDAO();
 		
 		// Check if there are records to remove
 		String[] delete = this.request.getParameterValues("delete");
@@ -186,7 +186,7 @@ public class AttachmentsAction extends AdminCommand
 	
 	public void extensions() throws Exception
 	{
-		AttachmentModel am = DataAccessDriver.getInstance().newAttachmentModel();
+		AttachmentDAO am = DataAccessDriver.getInstance().newAttachmentDAO();
 		
 		this.setTemplateName(TemplateKeys.ATTACHMENTS_EXTENSIONS);
 		this.context.put("extensions", am.selectExtensions());
@@ -206,13 +206,13 @@ public class AttachmentsAction extends AdminCommand
 			e.setExtension(e.getExtension().substring(1));
 		}
 		
-		DataAccessDriver.getInstance().newAttachmentModel().addExtension(e);
+		DataAccessDriver.getInstance().newAttachmentDAO().addExtension(e);
 		this.extensions();
 	}
 	
 	public void extensionsUpdate() throws Exception
 	{
-		AttachmentModel am = DataAccessDriver.getInstance().newAttachmentModel();
+		AttachmentDAO am = DataAccessDriver.getInstance().newAttachmentDAO();
 		
 		// Check for records to delete
 		String[] delete = this.request.getParameterValues("delete");
@@ -245,7 +245,7 @@ public class AttachmentsAction extends AdminCommand
 	public void quotaGroupsSave() throws Exception
 	{
 		int total = this.request.getIntParameter("total_groups");
-		AttachmentModel am = DataAccessDriver.getInstance().newAttachmentModel();
+		AttachmentDAO am = DataAccessDriver.getInstance().newAttachmentDAO();
 		am.cleanGroupQuota();
 		
 		for (int i = 0; i < total; i++) {

@@ -97,7 +97,7 @@ ForumModel.selectAll = SELECT f.*, COUNT(p.post_id) AS total_posts \
 	      f.forum_name, f.forum_desc, f.forum_order, \
 	      f.forum_topics, f.forum_last_post_id, f.moderated
 
-ForumModel.generatedForumId = SELECT jforum_forums_seq.currval FROM DUAL
+ForumModel.lastGeneratedForumId = SELECT jforum_forums_seq.currval FROM DUAL
 
 # #############
 # TopicModel

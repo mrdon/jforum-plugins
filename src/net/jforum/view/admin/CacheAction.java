@@ -45,7 +45,7 @@ package net.jforum.view.admin;
 import java.util.Collection;
 
 import net.jforum.SessionFacade;
-import net.jforum.model.DataAccessDriver;
+import net.jforum.dao.DataAccessDriver;
 import net.jforum.repository.BBCodeRepository;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.ModulesRepository;
@@ -61,7 +61,7 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: CacheAction.java,v 1.3 2005/03/15 18:24:10 rafaelsteil Exp $
+ * @version $Id: CacheAction.java,v 1.4 2005/03/26 04:11:18 rafaelsteil Exp $
  */
 public class CacheAction extends AdminCommand
 {
@@ -122,7 +122,7 @@ public class CacheAction extends AdminCommand
 		
 		Collection topics = PostRepository.cachedTopics();
 		
-		this.context.put("topics", DataAccessDriver.getInstance().newTopicModel().selectTopicTitlesByIds(topics));
+		this.context.put("topics", DataAccessDriver.getInstance().newTopicDAO().selectTopicTitlesByIds(topics));
 		this.context.put("repository", new PostRepository());
 		this.setTemplateName(TemplateKeys.CACHE_POST_MOREINFO);
 	}

@@ -46,12 +46,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.GroupDAO;
+import net.jforum.dao.UserDAO;
+import net.jforum.dao.security.UserSecurityDAO;
 import net.jforum.entities.Group;
 import net.jforum.entities.User;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.model.GroupModel;
-import net.jforum.model.UserModel;
-import net.jforum.model.security.UserSecurityModel;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.XMLPermissionControl;
@@ -65,17 +65,17 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.18 2005/03/15 18:24:10 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.19 2005/03/26 04:11:18 rafaelsteil Exp $
  */
 public class UserAction extends AdminCommand 
 {
 	// Listing
 	public void list() throws Exception
 	{
-		int start = this.preparePagination(DataAccessDriver.getInstance().newUserModel().getTotalUsers());
+		int start = this.preparePagination(DataAccessDriver.getInstance().newUserDAO().getTotalUsers());
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
 		
-		this.context.put("users", DataAccessDriver.getInstance().newUserModel().selectAll(start ,usersPerPage));
+		this.context.put("users", DataAccessDriver.getInstance().newUserDAO().selectAll(start ,usersPerPage));
 		this.commonData();
 	}
 	
@@ -110,7 +110,7 @@ public class UserAction extends AdminCommand
 			return;
 		}
 		
-		UserModel um = DataAccessDriver.getInstance().newUserModel();
+		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		
 		int start = this.preparePagination(um.getTotalUsersByGroup(groupId));
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
@@ -130,7 +130,7 @@ public class UserAction extends AdminCommand
 		String group = this.request.getParameter("group");
 		
 		if (search != null && !"".equals(search)) {
-			users = DataAccessDriver.getInstance().newUserModel().findByName(search, false);
+			users = DataAccessDriver.getInstance().newUserDAO().findByName(search, false);
 			
 			this.commonData();
 			
@@ -153,9 +153,9 @@ public class UserAction extends AdminCommand
 	{
 		int id = this.request.getIntParameter("id");
 		
-		User user = DataAccessDriver.getInstance().newUserModel().selectById(id);
+		User user = DataAccessDriver.getInstance().newUserDAO().selectById(id);
 		
-		UserSecurityModel umodel = DataAccessDriver.getInstance().newUserSecurityModel();
+		UserSecurityDAO umodel = DataAccessDriver.getInstance().newUserSecurityDAO();
 		PermissionControl pc = new PermissionControl();
 		pc.setSecurityModel(umodel);
 		pc.setRoles(umodel.loadRoles(user));
@@ -171,9 +171,9 @@ public class UserAction extends AdminCommand
 	public void permissionsSave() throws Exception
 	{
 		int id = this.request.getIntParameter("id");
-		User user = DataAccessDriver.getInstance().newUserModel().selectById(id);
+		User user = DataAccessDriver.getInstance().newUserDAO().selectById(id);
 		
-		UserSecurityModel umodel = DataAccessDriver.getInstance().newUserSecurityModel();
+		UserSecurityDAO umodel = DataAccessDriver.getInstance().newUserSecurityDAO();
 		PermissionControl pc = new PermissionControl();
 		pc.setSecurityModel(umodel);
 
@@ -192,7 +192,7 @@ public class UserAction extends AdminCommand
 	public void edit() throws Exception
 	{
 		int userId = this.request.getIntParameter("id");	
-		UserModel um = DataAccessDriver.getInstance().newUserModel();
+		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		User u = um.selectById(userId);
 		
 		this.context.put("u", u);
@@ -213,7 +213,7 @@ public class UserAction extends AdminCommand
 	public void delete() throws Exception
 	{
 		String ids[] = this.request.getParameterValues("user_id");
-		UserModel um = DataAccessDriver.getInstance().newUserModel();
+		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		
 		if (ids != null) {
 			for (int i = 0; i < ids.length; i++) {
@@ -236,8 +236,8 @@ public class UserAction extends AdminCommand
 	{
 		int userId = this.request.getIntParameter("id");
 		
-		UserModel um = DataAccessDriver.getInstance().newUserModel();
-		GroupModel gm = DataAccessDriver.getInstance().newGroupModel();
+		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
+		GroupDAO gm = DataAccessDriver.getInstance().newGroupDAO();
 		
 		User u = um.selectById(userId);
 		
@@ -259,8 +259,8 @@ public class UserAction extends AdminCommand
 	{
 		int userId = this.request.getIntParameter("user_id");
 		
-		UserModel um = DataAccessDriver.getInstance().newUserModel();
-		GroupModel gm = DataAccessDriver.getInstance().newGroupModel();
+		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
+		GroupDAO gm = DataAccessDriver.getInstance().newGroupDAO();
 		
 		// Remove the old groups
 		List allGroupsList = gm.selectAll();

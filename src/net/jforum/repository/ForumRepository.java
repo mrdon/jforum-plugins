@@ -53,16 +53,16 @@ import java.util.TreeSet;
 import net.jforum.SessionFacade;
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
+import net.jforum.dao.CategoryDAO;
+import net.jforum.dao.ConfigDAO;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.ForumDAO;
 import net.jforum.entities.Category;
 import net.jforum.entities.Config;
 import net.jforum.entities.Forum;
 import net.jforum.entities.LastPostInfo;
 import net.jforum.entities.MostUsersEverOnline;
 import net.jforum.exceptions.CategoryNotFoundException;
-import net.jforum.model.CategoryModel;
-import net.jforum.model.ConfigModel;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.model.ForumModel;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.CategoryOrderComparator;
@@ -75,7 +75,7 @@ import net.jforum.util.preferences.ConfigKeys;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.32 2005/02/22 23:39:22 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.33 2005/03/26 04:10:58 rafaelsteil Exp $
  */
 public class ForumRepository implements Cacheable
 {
@@ -107,9 +107,9 @@ public class ForumRepository implements Cacheable
 	 * be used to retrieve information about the categories.
 	 * @throws Exception
 	 */
-	public synchronized static void start(ForumModel fm, 
-			CategoryModel cm,
-			ConfigModel configModel) throws Exception
+	public synchronized static void start(ForumDAO fm, 
+			CategoryDAO cm,
+			ConfigDAO configModel) throws Exception
 	{
 		if (cache.get(FQN, LOADED) == null) {
 			instance = new ForumRepository();
@@ -438,7 +438,7 @@ public class ForumRepository implements Cacheable
 	 */
 	public static synchronized void reloadForum(int forumId) throws Exception
 	{
-		Forum f = DataAccessDriver.getInstance().newForumModel().selectById(forumId);
+		Forum f = DataAccessDriver.getInstance().newForumDAO().selectById(forumId);
 		
 		if (((Map)cache.get(FQN, RELATION)).containsKey(Integer.toString(forumId))) {
 			String id = Integer.toString(f.getCategoryId());
@@ -466,7 +466,7 @@ public class ForumRepository implements Cacheable
 		LastPostInfo lpi = forum.getLastPostInfo();
 		
 		if (lpi == null || !forum.getLastPostInfo().hasInfo()) {
-			lpi = DataAccessDriver.getInstance().newForumModel().getLastPostInfo(forum.getId());
+			lpi = DataAccessDriver.getInstance().newForumDAO().getLastPostInfo(forum.getId());
 			forum.setLastPostInfo(lpi);
 		}
 		
@@ -502,7 +502,7 @@ public class ForumRepository implements Cacheable
 		int total = (i != null ? i.intValue() : 0);
 		
 		if (fromDb || total == -1) {
-			total = DataAccessDriver.getInstance().newForumModel().getTotalTopics(forumId);
+			total = DataAccessDriver.getInstance().newForumDAO().getTotalTopics(forumId);
 			cache.add(FQN_TOTAL_TOPICS, Integer.toString(forumId), new Integer(total));
 		}
 		
@@ -546,7 +546,7 @@ public class ForumRepository implements Cacheable
 	{
 		int total = ((Integer)cache.get(FQN, TOTAL_MESSAGES)).intValue();
 		if (fromDb || total == 0) {
-			total = DataAccessDriver.getInstance().newForumModel().getTotalMessages();
+			total = DataAccessDriver.getInstance().newForumDAO().getTotalMessages();
 			cache.add(FQN, TOTAL_MESSAGES, new Integer(total));
 		}
 		
@@ -571,7 +571,7 @@ public class ForumRepository implements Cacheable
 	 */
 	public static void updateMostUsersEverOnline(MostUsersEverOnline m) throws Exception
 	{
-		ConfigModel cm = DataAccessDriver.getInstance().newConfigModel();
+		ConfigDAO cm = DataAccessDriver.getInstance().newConfigDAO();
 		Config config = cm.selectByName(ConfigKeys.MOST_USERS_EVER_ONLINE);
 		if (config == null) {
 			// Total
@@ -605,7 +605,7 @@ public class ForumRepository implements Cacheable
 	 * Loads all forums.
 	 * @throws Exception
 	 */
-	private void loadForums(ForumModel fm) throws Exception
+	private void loadForums(ForumDAO fm) throws Exception
 	{
 		List l = fm.selectAll();
 		
@@ -652,7 +652,7 @@ public class ForumRepository implements Cacheable
 	 * Loads all categories.
 	 * @throws Exception 
 	 */
-	private void loadCategories(CategoryModel cm) throws Exception
+	private void loadCategories(CategoryDAO cm) throws Exception
 	{
 		List categories = cm.selectAll();
 		Set categoriesSet = new TreeSet(new CategoryOrderComparator());
@@ -667,7 +667,7 @@ public class ForumRepository implements Cacheable
 		cache.add(FQN, CATEGORIES_SET, categoriesSet);
 	}
 	
-	private void loadMostUsersEverOnline(ConfigModel cm) throws Exception
+	private void loadMostUsersEverOnline(ConfigDAO cm) throws Exception
 	{
 		Config config = cm.selectByName(ConfigKeys.MOST_USERS_EVER_ONLINE);
 		MostUsersEverOnline mostUsersEverOnline = new MostUsersEverOnline();

@@ -51,9 +51,9 @@ import java.util.Map;
 
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.PostDAO;
 import net.jforum.entities.Post;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.model.PostModel;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.view.forum.common.PostCommon;
@@ -65,7 +65,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Sean Mitchell
  * @author Rafael Steil
- * @version $Id: PostRepository.java,v 1.6 2005/03/06 23:04:24 rafaelsteil Exp $
+ * @version $Id: PostRepository.java,v 1.7 2005/03/26 04:10:59 rafaelsteil Exp $
  */
 public class PostRepository implements Cacheable
 {
@@ -110,7 +110,7 @@ public class PostRepository implements Cacheable
 		
 		List posts = (List)cache.get(FQN, tid);
 		if (posts == null || posts.size() == 0) {
-			PostModel pm = DataAccessDriver.getInstance().newPostModel();
+			PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
 			posts = pm.selectAllByTopic(topicId);
 			
 			for (Iterator iter = posts.iterator(); iter.hasNext(); ) {

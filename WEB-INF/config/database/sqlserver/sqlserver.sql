@@ -102,7 +102,7 @@ ForumModel.selectById = SELECT f.*, COUNT(p.post_id) AS total_posts \
 	      f.forum_topics, f.forum_last_post_id, f.moderated
 
 
-ForumModel.generatedForumId = SELECT IDENT_CURRENT('jforum_forums') AS forum_id
+ForumModel.lastGeneratedForumId = SELECT IDENT_CURRENT('jforum_forums') AS forum_id
 
 
 

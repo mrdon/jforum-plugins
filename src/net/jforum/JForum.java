@@ -56,12 +56,12 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.UserSessionDAO;
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
 import net.jforum.exceptions.ExceptionWriter;
 import net.jforum.exceptions.ForumStartupException;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.model.UserSessionModel;
 import net.jforum.repository.ModulesRepository;
 import net.jforum.repository.RankingRepository;
 import net.jforum.repository.SecurityRepository;
@@ -80,7 +80,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.66 2005/03/15 18:24:11 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.67 2005/03/26 04:10:37 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -156,7 +156,7 @@ public class JForum extends JForumCommonServlet
 					
 					UserSession tmpUs = null;
 					
-					User user = DataAccessDriver.getInstance().newUserModel().selectById(userId);
+					User user = DataAccessDriver.getInstance().newUserDAO().selectById(userId);
 					if (user == null || user.getId() != userId) {
 						userSession.makeAnonymous();
 					}
@@ -174,7 +174,7 @@ public class JForum extends JForumCommonServlet
 							SessionFacade.remove(sessionId);
 						}
 						else {
-							UserSessionModel sm = DataAccessDriver.getInstance().newUserSessionModel();
+							UserSessionDAO sm = DataAccessDriver.getInstance().newUserSessionDAO();
 							tmpUs = sm.selectById(userSession, JForum.getConnection());
 						}
 						

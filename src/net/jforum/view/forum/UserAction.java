@@ -53,9 +53,9 @@ import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.model.UserModel;
-import net.jforum.model.UserSessionModel;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.UserDAO;
+import net.jforum.dao.UserSessionDAO;
 import net.jforum.repository.RankingRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.SecurityConstants;
@@ -74,7 +74,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.36 2005/03/24 16:31:15 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.37 2005/03/26 04:11:15 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -86,7 +86,7 @@ public class UserAction extends Command
 		if (SessionFacade.isLogged() 
 				&& tmpId == this.request.getIntParameter("user_id")) {
 			int userId = this.request.getIntParameter("user_id");
-			UserModel um = DataAccessDriver.getInstance().newUserModel();
+			UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 			User u = um.selectById(userId);
 
 			this.context.put("u", u);
@@ -153,7 +153,7 @@ public class UserAction extends Command
 		}
 		
 		User u = new User();
-		UserModel um = DataAccessDriver.getInstance().newUserModel();
+		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 
 		String username = this.request.getParameter("username");
 		String password = this.request.getParameter("password");
@@ -228,7 +228,7 @@ public class UserAction extends Command
 
 		String message = "";
 
-		UserModel um = DataAccessDriver.getInstance().newUserModel();
+		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		User u = um.selectById(userId);
 
 		boolean isOk = um.validateActivationKeyHash(userId, hash);
@@ -307,7 +307,7 @@ public class UserAction extends Command
 					SessionFacade.remove(sessionId);
 				}
 				else {
-					UserSessionModel sm = DataAccessDriver.getInstance().newUserSessionModel();
+					UserSessionDAO sm = DataAccessDriver.getInstance().newUserSessionDAO();
 					tmpUs = sm.selectById(userSession, JForum.getConnection());
 				}
 
@@ -366,14 +366,14 @@ public class UserAction extends Command
 
 	private User validateLogin(String name, String password) throws Exception 
 	{
-		UserModel um = DataAccessDriver.getInstance().newUserModel();
+		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		User user = um.validateLogin(name, password);
 		return user;
 	}
 
 	public void profile() throws Exception 
 	{
-		UserModel um = DataAccessDriver.getInstance().newUserModel();
+		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 
 		User u = um.selectById(this.request.getIntParameter("user_id"));
 		if (u.getId() == 0) {
@@ -432,7 +432,7 @@ public class UserAction extends Command
 	public User prepareLostPassword(String username, String email) throws Exception
 	{
 		User user = null;
-		UserModel um = DataAccessDriver.getInstance().newUserModel();
+		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 
 		if (email != null && !email.trim().equals("")) {
 			username = um.getUsernameByEmail(email);
@@ -506,11 +506,11 @@ public class UserAction extends Command
 		String email = this.request.getParameter("email");
 
 		String message = "";
-
-		boolean isOk = DataAccessDriver.getInstance().newUserModel().validateLostPasswordHash(email, hash);
+		
+		boolean isOk = DataAccessDriver.getInstance().newUserDAO().validateLostPasswordHash(email, hash);
 		if (isOk) {
 			String password = this.request.getParameter("newPassword");
-			DataAccessDriver.getInstance().newUserModel().saveNewPassword(MD5.crypt(password), email);
+			DataAccessDriver.getInstance().newUserDAO().saveNewPassword(MD5.crypt(password), email);
 
 			message = I18n.getMessage("PasswordRecovery.ok",
 					new String[] { this.request.getContextPath()
@@ -528,10 +528,10 @@ public class UserAction extends Command
 		
 	public void list() throws Exception
 	{
-		int start = this.preparePagination(DataAccessDriver.getInstance().newUserModel().getTotalUsers());
+		int start = this.preparePagination(DataAccessDriver.getInstance().newUserDAO().getTotalUsers());
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
 							
-		List users = DataAccessDriver.getInstance().newUserModel().selectAll(start ,usersPerPage);
+		List users = DataAccessDriver.getInstance().newUserDAO().selectAll(start ,usersPerPage);
 		this.context.put("users", users);
 		this.setTemplateName(TemplateKeys.USER_LIST);
 	}
@@ -542,11 +542,11 @@ public class UserAction extends Command
 	 */
 	public void searchKarma() throws Exception
 	{
-		int start = this.preparePagination(DataAccessDriver.getInstance().newUserModel().getTotalUsers());
+		int start = this.preparePagination(DataAccessDriver.getInstance().newUserDAO().getTotalUsers());
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
 		
 		//Load all users with your karma
-		List users = DataAccessDriver.getInstance().newUserModel().selectAllWithKarma(start ,usersPerPage);
+		List users = DataAccessDriver.getInstance().newUserDAO().selectAllWithKarma(start ,usersPerPage);
 		this.context.put("users", users);
 		this.setTemplateName(TemplateKeys.USER_SEARCH_KARMA);
 	}

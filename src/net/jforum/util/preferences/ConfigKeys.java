@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.53 2005/03/24 03:40:47 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.54 2005/03/26 04:11:20 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -82,6 +82,7 @@ public class ConfigKeys {
 	public static final String DATABASE_ERROR_PAGE = "database.error.page";
 	public static final String DATABASE_MYSQL_UNICODE = "mysql.unicode";
 	public static final String DATABASE_MYSQL_ENCODING = "mysql.encoding";
+	public static final String DATABASE_AUTO_KEYS = "database.support.autokeys";
 	
 	public static final String LOGIN_AUTHENTICATOR = "login.authenticator";
 

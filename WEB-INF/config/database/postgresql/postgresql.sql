@@ -55,7 +55,7 @@ ForumModel.selectAll = SELECT f.*, COUNT(p.post_id) AS total_posts \
 	      f.forum_name, f.forum_desc, \
 	      f.forum_topics, f.forum_last_post_id, f.moderated
 
-ForumModel.generatedForumId = SELECT CURRVAL('jforum_forums_seq');
+ForumModel.lastGeneratedForumId = SELECT CURRVAL('jforum_forums_seq');
 
 # #############
 # TopicModel

@@ -52,12 +52,12 @@ import org.apache.log4j.Logger;
 
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.ForumDAO;
+import net.jforum.dao.TopicDAO;
 import net.jforum.entities.Forum;
 import net.jforum.entities.Topic;
 import net.jforum.entities.UserSession;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.model.ForumModel;
-import net.jforum.model.TopicModel;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.repository.TopicRepository;
@@ -74,7 +74,7 @@ import net.jforum.view.forum.ModerationHelper;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.8 2005/03/07 22:05:01 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.9 2005/03/26 04:11:22 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
@@ -92,7 +92,7 @@ public class TopicsCommon
 	 */
 	public static List topicsByForum(int forumId, int start) throws Exception
 	{
-		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
+		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 		int topicsPerPage = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
 		List topics = null;
 		
@@ -214,7 +214,7 @@ public class TopicsCommon
 	 * @param tm A TopicModel instance
 	 * @throws Exception
 	 */
-	public static void notifyUsers(Topic t, TopicModel tm) throws Exception
+	public static void notifyUsers(Topic t, TopicDAO tm) throws Exception
 	{
 		if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_NOTIFY_ANSWERS)) {
 			try {
@@ -245,7 +245,7 @@ public class TopicsCommon
 	 * @param fm A ForumModel instance
 	 * @throws Exception
 	 */
-	public static void updateBoardStatus(Topic t, int lastPostId, boolean firstPost, TopicModel tm, ForumModel fm) throws Exception
+	public static void updateBoardStatus(Topic t, int lastPostId, boolean firstPost, TopicDAO tm, ForumDAO fm) throws Exception
 	{
 		t.setLastPostId(lastPostId);
 		tm.update(t);
@@ -279,8 +279,8 @@ public class TopicsCommon
 	 */
 	public static void deleteTopic(int topicId, int forumId) throws Exception
 	{
-		TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
-		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
+		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
+		ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
 		
 		Topic topic = new Topic();
 		topic.setId(topicId);

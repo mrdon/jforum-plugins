@@ -50,8 +50,8 @@ import java.util.Properties;
 import net.jforum.DBConnection;
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
-import net.jforum.model.DataAccessDriver;
-import net.jforum.model.ScheduledSearchIndexerModel;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.ScheduledSearchIndexerDAO;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -62,7 +62,7 @@ import org.quartz.JobExecutionException;
 
 /**
  * @author Rafael Steil
- * @version $Id: QuartzSearchIndexerJob.java,v 1.2 2005/03/12 20:10:46 rafaelsteil Exp $
+ * @version $Id: QuartzSearchIndexerJob.java,v 1.3 2005/03/26 04:11:17 rafaelsteil Exp $
  */
 public class QuartzSearchIndexerJob implements Job, Cacheable
 {
@@ -106,7 +106,7 @@ public class QuartzSearchIndexerJob implements Job, Cacheable
 			
 			cache.add(FQN, INDEXING, "1");
 			
-			ScheduledSearchIndexerModel ssim = DataAccessDriver.getInstance().newScheduledSearchIndexerModel();
+			ScheduledSearchIndexerDAO ssim = DataAccessDriver.getInstance().newScheduledSearchIndexerDAO();
 			int lastPostId = ssim.index(startPostId, step, conn);
 			
 			conn.setAutoCommit(autoCommit);

@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: TreeGroup.java,v 1.3 2004/11/05 03:29:53 rafaelsteil Exp $
+ * $Id: TreeGroup.java,v 1.4 2005/03/26 04:11:16 rafaelsteil Exp $
  */
 package net.jforum.util;
 
@@ -49,8 +49,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
 
-import net.jforum.model.DataAccessDriver;
-import net.jforum.model.TreeGroupModel;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.TreeGroupDAO;
 
 /** 
  * Implements a tree hierarchy of groups.
@@ -147,7 +147,7 @@ public class TreeGroup
 	{
 		ArrayList nodes = new ArrayList();
 		
-		TreeGroupModel tgm = DataAccessDriver.getInstance().newTreeGroupModel();
+		TreeGroupDAO tgm = DataAccessDriver.getInstance().newTreeGroupDAO();
 
 		List rootGroups = tgm.selectGroups(0);	
 				
@@ -167,7 +167,7 @@ public class TreeGroup
 	 * */
 	private void checkExtraNodes(GroupNode n) throws Exception
 	{
-		TreeGroupModel tgm = DataAccessDriver.getInstance().newTreeGroupModel();
+		TreeGroupDAO tgm = DataAccessDriver.getInstance().newTreeGroupDAO();
 
 		List childGroups = tgm.selectGroups(n.getId());	
 				

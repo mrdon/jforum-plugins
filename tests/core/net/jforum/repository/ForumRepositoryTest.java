@@ -52,16 +52,16 @@ import net.jforum.ConfigLoader;
 import net.jforum.JForumCommonServlet;
 import net.jforum.SessionFacade;
 import net.jforum.TestCaseUtils;
+import net.jforum.dao.CategoryDAO;
+import net.jforum.dao.ForumDAO;
 import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
-import net.jforum.model.CategoryModel;
-import net.jforum.model.ForumModel;
 import net.jforum.security.PermissionControl;
 import net.jforum.view.forum.common.ForumCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumRepositoryTest.java,v 1.9 2005/02/21 14:31:05 rafaelsteil Exp $
+ * @version $Id: ForumRepositoryTest.java,v 1.10 2005/03/26 04:11:21 rafaelsteil Exp $
  */
 public class ForumRepositoryTest extends TestCase 
 {
@@ -95,8 +95,8 @@ public class ForumRepositoryTest extends TestCase
 	
 	private static boolean loaded = false;
 	
-	private static CategoryModel cm;
-	private static ForumModel fm;
+	private static CategoryDAO cm;
+	private static ForumDAO fm;
 	
 	private static String[] categoryNames;
 	private static int[] categoryIds;
@@ -352,7 +352,7 @@ public class ForumRepositoryTest extends TestCase
 		return -1;
 	}
 	
-	private CategoryModel createCategoryModel()
+	private CategoryDAO createCategoryModel()
 	{
 		return new CategoryModelDummy() {
 			private List categories = new ArrayList(); 
@@ -369,7 +369,7 @@ public class ForumRepositoryTest extends TestCase
 		};
 	}
 	
-	private ForumModel createForumModel()
+	private ForumDAO createForumModel()
 	{
 		return new ForumModelDummy() {
 			private List forums = new ArrayList();
