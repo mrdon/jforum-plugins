@@ -319,7 +319,7 @@ function validatePostForm(f)
 							</#if>
 
 							<input class="post" size="25" name="toUsername" value="${toUsername}"/>&nbsp;
-							<input type="button" value="${I18n.getMessage("PrivateMessage.findUser")}" name="findUser" class="liteoption" onClick="window.open('${JForumContext.encodeURL("/pm/findUser")}','_findUser', ',',','height=250,resizable=yes,width=400');return false;">
+							<input type="button" value="${I18n.getMessage("PrivateMessage.findUser")}" name="findUser" class="liteoption" onClick="window.open('${JForumContext.encodeURL("/pm/findUser")}','_findUser', 'height=250,resizable=yes,width=400');return false;">
 							<input type="hidden" name="toUserId" value="${toUserId}" />
 							<input type="hidden" name="toUserEmail" value="${toUserEmail}"/>
 						</td>
