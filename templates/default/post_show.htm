@@ -177,6 +177,7 @@ function confirmDelete()
 						<br />
 						<#if karmaEnabled && post.userId != 1>
 							<script language="javascript">writeStars(${user.karma.karmaPoints}, "${user.id}${post.id}");</script>
+							<br/>
 						</#if>
 						
 						<span class="postdetails">
@@ -263,11 +264,7 @@ function confirmDelete()
 					</tr>
 				</#if>
 	
-				<tr> <!--
-					<td class="${rowColor}" valign="center" align="left">
-						<span class="nav"><a class="nav" href="#top">${I18n.getMessage("PostShow.top")}</a></span>
-					</td>-->
-					
+				<tr> 
 					<td class="${rowColor}" valign="bottom" nowrap="nowrap" height="28" width="100%">
 						<table height="18" cellspacing="0" cellpadding="0" border="0" width="100%">
 							<tr>

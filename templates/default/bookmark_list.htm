@@ -11,7 +11,7 @@
   
 			<table class="forumline" width="100%" cellspacing="1" cellpadding="4" border="0">
 				<tr>
-					<th class="thHead" height="25"><b>Bags - Rafael Steil</b></th>
+					<th class="thHead" height="25"><b>${I18n.getMessage("Bookmarks.for")} ${user.username}</b></th>
 				</tr>
 				
 				<tr>
@@ -23,13 +23,15 @@
 	  
 							<#list bookmarks as b>
 								<#if b.relationType == topicType>
-								<tr>
-									<td align="left">
-										<img src="${contextPath}/templates/${templateName}/images/icon_minipost.gif" align="middle"><a href="${JForumContext.encodeURL("/posts/list/${b.relationId}")}" class="gen">${b.title}</a>
-										
-										<#if (b.description?default("")?length > 0)><br/><span class="gensmall">&nbsp;&nbsp;&nbsp;&nbsp;${b.description}</span></#if>
-									</td>
-								</tr>
+									<#if b.isPublicVisible() || loggedUserId == user.id>
+										<tr>
+											<td align="left">
+												<img src="${contextPath}/templates/${templateName}/images/icon_minipost.gif" align="middle"><a href="${JForumContext.encodeURL("/posts/list/${b.relationId}")}" class="gen">${b.title}</a>
+												
+												<#if (b.description?default("")?length > 0)><br/><span class="gensmall">&nbsp;&nbsp;&nbsp;&nbsp;${b.description}</span></#if>
+											</td>
+										</tr>
+									</#if>
 								</#if>
 							</#list>
 				  

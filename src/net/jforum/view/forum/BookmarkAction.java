@@ -67,7 +67,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: BookmarkAction.java,v 1.2 2005/01/26 12:57:14 rafaelsteil Exp $
+ * @version $Id: BookmarkAction.java,v 1.3 2005/01/27 22:31:48 rafaelsteil Exp $
  */
 public class BookmarkAction extends Command
 {
@@ -252,6 +252,8 @@ public class BookmarkAction extends Command
 		this.context.put("forumType", new Integer(BookmarkType.FORUM));
 		this.context.put("userType", new Integer(BookmarkType.USER));
 		this.context.put("topicType", new Integer(BookmarkType.TOPIC));
+		this.context.put("user", DataAccessDriver.getInstance().newUserModel().selectById(userId));
+		this.context.put("loggedUserId", new Integer(SessionFacade.getUserSession().getUserId()));
 		
 		this.setTemplateName(null);
 	}
@@ -262,7 +264,8 @@ public class BookmarkAction extends Command
 	public Template process(ActionServletRequest request, HttpServletResponse response, Connection conn,
 			SimpleHash context) throws Exception
 	{
-		if (SessionFacade.getUserSession().getUserId() == SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
+		if (SessionFacade.getUserSession().getUserId() == SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)
+				&& !request.getAction().equals("list")) {
 			request.addParameter("action", "anonymousIsDenied");
 		}
 		else if (!SecurityRepository.canAccess(SecurityConstants.PERM_BOOKMARKS_ENABLED)) {
