@@ -196,8 +196,8 @@ DROP TABLE IF EXISTS jforum_sessions;
 CREATE TABLE jforum_sessions (
   session_id varchar(50) default '' NOT NULL,
   session_user_id int default '0' NOT NULL,
-  session_start timestamp default '0' NOT NULL,
-  session_time timestamp default '0' NOT NULL,
+  session_start timestamp default CURRENT_TIMESTAMP NOT NULL,
+  session_time int default '0' NOT NULL,
   session_ip varchar(8) default '' NOT NULL,
   session_page int default '0' NOT NULL,
   session_logged_int int default NULL
