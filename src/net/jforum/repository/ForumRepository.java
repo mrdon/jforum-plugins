@@ -68,7 +68,7 @@ import net.jforum.security.SecurityConstants;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.15 2004/11/13 23:12:34 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.16 2004/11/14 16:28:46 rafaelsteil Exp $
  */
 public class ForumRepository 
 {
@@ -340,14 +340,30 @@ public class ForumRepository
 	{
 		Forum f = DataAccessDriver.getInstance().newForumModel().selectById(forumId);
 		if (forumCategoryRelation.containsKey(new Integer(forumId))) {
-			Category c = getCategory(f.getCategoryId());
-			c.addForum(f);
-			forumCategoryRelation.put(new Integer(f.getId()), new Integer(c.getId()));
+			Category c = (Category)categoriesMap.get(new Integer(f.getCategoryId()));
 			f.setLastPostInfo(null);
-			ForumRepository.getLastPostInfo(forumId);
+			f.setLastPostInfo(ForumRepository.getLastPostInfo(f));
+			c.addForum(f);
 		}
 		
 		getTotalMessages(true);
+	}
+	
+	/**
+	 * Gets information about the last message posted in some forum.
+	 * @param forum The forum to retrieve information
+	 * @return 
+	 */
+	public static LastPostInfo getLastPostInfo(Forum forum) throws Exception
+	{
+		LastPostInfo lpi = forum.getLastPostInfo();
+		
+		if (lpi == null || !forum.getLastPostInfo().hasInfo()) {
+			lpi = DataAccessDriver.getInstance().newForumModel().getLastPostInfo(forum.getId());
+			forum.setLastPostInfo(lpi);
+		}
+		
+		return lpi;
 	}
 	
 	/**
@@ -359,15 +375,7 @@ public class ForumRepository
 	 */
 	public static LastPostInfo getLastPostInfo(int forumId) throws Exception
 	{
-		Forum forum = getForum(forumId);
-		LastPostInfo lpi = forum.getLastPostInfo();
-		
-		if (lpi == null || !forum.getLastPostInfo().hasInfo()) {
-			lpi = DataAccessDriver.getInstance().newForumModel().getLastPostInfo(forumId);
-			forum.setLastPostInfo(lpi);
-		}
-		
-		return lpi;
+		return getLastPostInfo(getForum(forumId));
 	}
 	
 	/**

@@ -61,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * @author Rafael Steil
  */
 public class ForumCommon 
-{ 
+{
 	/**
 	 * Check if some forum has unread messages.
 	 * 
@@ -77,7 +77,7 @@ public class ForumCommon
 	{
 		if (lpi.getPostTimeMillis() > 0) {
 			Integer topicId = new Integer(lpi.getTopicId());
-
+			
 			if (tracking.containsKey(topicId)) {
 				long readTime = ((Long)tracking.get(topicId)).longValue();
 				
@@ -128,10 +128,10 @@ public class ForumCommon
 		}
 
 		for (Iterator iter = categories.iterator(); iter.hasNext(); ) {
-			Category c = (Category)iter.next();
+			Category c = new Category((Category)iter.next());
 			
 			for (Iterator tmpIterator = c.getForums().iterator(); tmpIterator.hasNext(); ) {
-				Forum f = new Forum((Forum)tmpIterator.next());
+				Forum f = (Forum)tmpIterator.next();
 
 				f = ForumCommon.checkUnreadPosts(f, ForumRepository.getLastPostInfo(f.getId()), 
 						tracking, lastVisit);

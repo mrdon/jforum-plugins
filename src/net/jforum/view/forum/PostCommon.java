@@ -61,7 +61,7 @@ import net.jforum.util.bbcode.BBCode;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.12 2004/11/12 18:57:44 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.13 2004/11/14 16:28:44 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -128,9 +128,7 @@ public class PostCommon
 						if (openQuotes > 0) {
 							Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
 							
-							while (matcher.find()) {
-								openQuotes--;
-								
+							while (matcher.find() && openQuotes-- > 0) {
 								text = text.replaceFirst(bb.getRegex(), bb.getReplace());
 							}
 						}
@@ -178,11 +176,6 @@ public class PostCommon
 				for (int i = 0; i < openQuotes; i++) {
 					text = text + closeQuote.getReplace();
 				}
-			}
-			
-			// Removes all remaining [/quote]
-			if (text.indexOf("[/quote]") > -1) {
-				text = text.replaceAll("\\[/quote\\]", "");
 			}
 		}
 		

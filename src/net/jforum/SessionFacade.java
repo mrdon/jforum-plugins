@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.11 2004/11/12 03:08:09 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.12 2004/11/14 16:28:45 rafaelsteil Exp $
  */
 public class SessionFacade 
 {
@@ -223,19 +223,48 @@ public class SessionFacade
 
 	/**
 	 * Persists user session information.
+	 * This method will get a <code>Connection</code> making a call to
+	 * <code>DBConnection.getImplementation().getConnection()</code>, and
+	 * then releasing the connection after the method is processed.   
 	 * 
 	 * @param sessionId The session which we're going to persist information
 	 * @throws Exception
+	 * @see #storeSessionData(String, Connection)
 	 */
 	public static void storeSessionData(String sessionId) throws Exception
 	{
+		Connection conn = null;
+		try {
+			conn = DBConnection.getImplementation().getConnection();
+			SessionFacade.storeSessionData(sessionId, conn);
+		}
+		finally {
+			if (conn != null) {
+				try {
+					DBConnection.getImplementation().releaseConnection(conn);
+				}
+				catch (Exception e) {
+					logger.warn("Error while releasing a connection: " + e);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Persists user session information.
+	 * 
+	 * @param sessionId The session which we're going to persist
+	 * @param conn A <code>Connection</code> to be used to connect to
+	 * the database. 
+	 * @throws Exception
+	 * @see #storeSessionData(String)
+	 */
+	public static void storeSessionData(String sessionId, Connection conn) throws Exception
+	{
 		UserSession us = SessionFacade.getUserSession(sessionId);
 		if (us != null) {
-			Connection conn = null;
-			
 			try {
 				if (us.getUserId() != SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
-					conn = DBConnection.getImplementation().getConnection();
 					DataAccessDriver.getInstance().newUserSessionModel().update(us, conn);
 				}
 				
@@ -243,16 +272,6 @@ public class SessionFacade
 			}
 			catch (Exception e) {
 				logger.warn("Error storing user session data: " + e);
-			}
-			finally  {
-				if (conn != null) {
-					try {
-						DBConnection.getImplementation().releaseConnection(conn);
-					}
-					catch (Exception e) {
-						logger.warn("Error releasing a connection: " + e);
-					}
-				}
 			}
 		}
 	}

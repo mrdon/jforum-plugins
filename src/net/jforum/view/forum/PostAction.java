@@ -79,7 +79,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.25 2004/11/10 01:30:28 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.26 2004/11/14 16:28:45 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -90,6 +90,9 @@ public class PostAction extends Command
         PostModel pm = DataAccessDriver.getInstance().newPostModel();
         UserModel um = DataAccessDriver.getInstance().newUserModel();
         TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
+        
+        int userId = SessionFacade.getUserSession().getUserId();
+        int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 
         int topicId = Integer.parseInt(JForum.getRequest().getParameter("topic_id"));
         Topic topic = tm.selectById(topicId);
@@ -107,8 +110,10 @@ public class PostAction extends Command
 
         tm.incrementTotalViews(topic.getId());
 
-        ((HashMap) SessionFacade.getAttribute("topics_tracking")).put(new Integer(topic.getId()),
-                new Long(topic.getLastPostTimeInMillis().getTime()));
+        if (userId != anonymousUser) {
+	        ((HashMap) SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(topic.getId()),
+	                new Long(topic.getLastPostTimeInMillis().getTime()));
+        }
 
         int count = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
         int start = ViewCommon.getStartPage();
@@ -117,8 +122,6 @@ public class PostAction extends Command
         List helperList = new ArrayList();
         Map usersMap = new HashMap();
 
-        int userId = SessionFacade.getUserSession().getUserId();
-        int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
         PermissionControl pc = SecurityRepository.get(userId);
 
         boolean canEdit = false;
@@ -532,8 +535,12 @@ public class PostAction extends Command
             path += t.getId() + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#" + postId;
 
             JForum.setRedirect(path);
-            ((HashMap) SessionFacade.getAttribute("topics_tracking")).put(new Integer(t.getId()),
-                    new Long(p.getTime().getTime()));
+            
+            int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
+            if (u.getId() != anonymousUser) {
+	            ((HashMap) SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(t.getId()),
+	                    new Long(p.getTime().getTime()));
+            }
         } 
         else {
             JForum.getContext().put("preview", true);

@@ -68,7 +68,7 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.18 2004/11/13 20:12:25 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.19 2004/11/14 16:28:45 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -243,7 +243,7 @@ public class ForumAction extends Command
 		for (Iterator iter = allTopics.iterator(); iter.hasNext(); ) {
 			Topic t = (Topic)iter.next();
 			
-			((HashMap)SessionFacade.getAttribute("topics_tracking")).put(new Integer(t.getId()), 
+			((HashMap)SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(t.getId()), 
 					new Long(t.getLastPostTimeInMillis().getTime()));
 		}
 		

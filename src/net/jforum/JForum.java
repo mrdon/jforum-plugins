@@ -68,11 +68,11 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.47 2004/11/13 13:41:17 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.48 2004/11/14 16:28:45 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
-	private static boolean isDatabaseUp; 
+	private static boolean isDatabaseUp;
 	
 	public void init(ServletConfig config) throws ServletException
 	{
@@ -112,25 +112,28 @@ public class JForum extends JForumCommonServlet
 					int userId = Integer.parseInt(uid);
 					userSession.setUserId(userId);
 					
+					UserSession tmpUs = null;
+					
+					User user = DataAccessDriver.getInstance().newUserModel().selectById(userId);
+					userSession.dataToUser(user);
+
 					// As an user may come back to the forum before its
 					// last visit's session expires, we should check for
 					// existent user information and then, if found, store
 					// it to the database before getting his information back.
 					String sessionId = SessionFacade.isUserInSession(userId);
 					if (sessionId != null) {
-						SessionFacade.storeSessionData(sessionId);
+						SessionFacade.storeSessionData(sessionId, JForum.getConnection());
+						tmpUs = SessionFacade.getUserSession(sessionId);
 						SessionFacade.remove(sessionId);
 					}
-
-					User user = DataAccessDriver.getInstance().newUserModel().selectById(userId);
-					UserSessionModel sm = DataAccessDriver.getInstance().newUserSessionModel();
+					else {
+						UserSessionModel sm = DataAccessDriver.getInstance().newUserSessionModel();
+						tmpUs = sm.selectById(userSession, JForum.getConnection());
+					}
 					
-					userSession.dataToUser(user);
-
-					UserSession tmpUs = sm.selectById(userSession, JForum.getConnection());
 					if (tmpUs == null) {
 						userSession.setLastVisit(new Date(System.currentTimeMillis()));
-						sm.add(userSession, JForum.getConnection());
 					}
 					else {
 						// Update last visit and session start time

@@ -57,7 +57,7 @@ A:active {
 	COLOR: #01336b
 }
 A:visited {
-	COLOR: #01336b
+	COLOR: #01336b; text-decoration: none;
 }
 A:hover {
 	COLOR: #DD6900; TEXT-DECORATION: underline

@@ -55,6 +55,7 @@ import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.UserModel;
+import net.jforum.model.UserSessionModel;
 import net.jforum.repository.RankingRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.util.I18n;
@@ -69,7 +70,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.16 2004/11/12 18:57:43 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.17 2004/11/14 16:28:45 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -247,9 +248,25 @@ public class UserAction extends Command
 						+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 
 				SessionFacade.setAttribute("logged", "1");
-
+				
+				UserSession tmpUs = null;
+				String sessionId = SessionFacade.isUserInSession(user.getId());
+				
 				UserSession userSession = SessionFacade.getUserSession();
 				userSession.dataToUser(user);
+
+				// Check if the user is returning to the system
+				// before its last session has expired ( hypothesis )
+				if (sessionId != null) {
+					// Write its old session data
+					SessionFacade.storeSessionData(sessionId, JForum.getConnection());
+					tmpUs = SessionFacade.getUserSession(sessionId);
+					SessionFacade.remove(sessionId);
+				}
+				else {
+					UserSessionModel sm = DataAccessDriver.getInstance().newUserSessionModel();
+					tmpUs = sm.selectById(userSession, JForum.getConnection());
+				}
 
 				I18n.load(user.getLang());
 
@@ -258,9 +275,18 @@ public class UserAction extends Command
 					userSession.setAutoLogin(true);
 					JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN), "1");
 				}
-
+				
+				// TODO: copy'n paste from JForum.java. Move all to an helper class
+				if (tmpUs == null) {
+					userSession.setLastVisit(new Date(System.currentTimeMillis()));
+				}
+				else {
+					// Update last visit and session start time
+					userSession.setLastVisit(new Date(tmpUs.getStartTime().getTime() + tmpUs.getSessionTime()));
+				}
+				
 				SessionFacade.add(userSession);
-				SessionFacade.setAttribute("topics_tracking", new HashMap());
+				SessionFacade.setAttribute(ConfigKeys.TOPICS_TRACKING, new HashMap());
 
 				JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA), 
 						Integer.toString(user.getId()));
@@ -311,8 +337,10 @@ public class UserAction extends Command
 				+ "/forums/list"
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 
-		// Disable auto login
 		UserSession userSession = SessionFacade.getUserSession();
+		SessionFacade.storeSessionData(userSession.getSessionId(), JForum.getConnection());
+		
+		// Disable auto login
 		userSession.setAutoLogin(false);
 		userSession.setUserId(SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID));
 
