@@ -44,12 +44,13 @@ package net.jforum.model;
 
 import java.util.List;
 
+import net.jforum.entities.AttachmentExtension;
 import net.jforum.entities.AttachmentExtensionGroup;
 import net.jforum.entities.QuotaLimit;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentModel.java,v 1.2 2005/01/17 22:17:18 rafaelsteil Exp $
+ * @version $Id: AttachmentModel.java,v 1.3 2005/01/17 23:19:03 rafaelsteil Exp $
  */
 public interface AttachmentModel
 {
@@ -126,4 +127,37 @@ public interface AttachmentModel
 	 * @throws Exception
 	 */
 	public List selectExtensionGroups() throws Exception;
+	
+	/**
+	 * Adds a new extension
+	 * 
+	 * @param e The extension to add
+	 * @throws Exception
+	 */
+	public void addExtension(AttachmentExtension e) throws Exception;
+	
+	/**
+	 * Updates an extension
+	 * 
+	 * @param e The extension to update
+	 * @throws Exception
+	 */
+	public void updateExtension(AttachmentExtension e) throws Exception;
+	
+	/**
+	 * Removes a set of extensions
+	 * 
+	 * @param ids The ids to remove
+	 * @throws Exception
+	 */
+	public void removeExtensions(String[] ids) throws Exception;
+	
+	/**
+	 * Gets all registered extensions
+	 * 
+	 * @return A list instance, where each entry is an
+	 * {@link net.jforum.entities.AttachmentExtension} instance
+	 * @throws Exception
+	 */
+	public List selectExtensions() throws Exception;
 }

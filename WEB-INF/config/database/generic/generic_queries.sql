@@ -480,3 +480,9 @@ AttachmentModel.updateExtensionGroups = UPDATE jforum_extension_groups SET name 
 	WHERE extension_group_id = ?
 AttachmentModel.removeExtensionGroups = DELETE FROM jforum_extension_groups WHERE extension_group_id = ?
 AttachmentModel.selectExtensionGroups = SELECT extension_group_id, name, allow, upload_icon, download_mode FROM jforum_extension_groups ORDER BY name
+
+AttachmentModel.addExtension = INSERT INTO jforum_extensions (extension_group_id, comment, upload_icon, extension, allow) VALUES (?, ?, ?, ?, ?)
+AttachmentModel.updateExtension = UPDATE jforum_extensions SET extension_group_id = ?, comment = ?, upload_icon = ?, extension = ?, allow = ? \
+	WHERE extension_id = ?
+AttachmentModel.removeExtension = DELETE FROM jforum_extensions WHERE extension_id = ?
+AttachmentModel.selectExtensions = SELECT extension_id, extension_group_id, extension, comment, upload_icon, allow FROM jforum_extensions ORDER BY extension

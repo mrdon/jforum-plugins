@@ -483,3 +483,16 @@ CREATE TABLE jforum_extension_groups (
 	upload_icon VARCHAR(100),
 	download_mode TINYINT(1) DEFAULT '1'
 ) TYPE=InnoDB;
+
+-- 
+-- Table structure for table 'jforum_extensions'
+--
+DROP TABLE IF EXISTS jforum_extensions;
+CREATE TABLE jforum_extensions (
+	extension_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	extension_group_id INT NOT NULL,
+	comment VARCHAR(100),
+	upload_icon VARCHAR(100),
+	extension VARCHAR(10),
+	allow TINYINT(1) DEFAULT '1'
+) TYPE=InnoDB;

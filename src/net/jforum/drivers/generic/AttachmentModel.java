@@ -48,13 +48,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.jforum.JForum;
+import net.jforum.entities.AttachmentExtension;
 import net.jforum.entities.AttachmentExtensionGroup;
 import net.jforum.entities.QuotaLimit;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentModel.java,v 1.2 2005/01/17 22:17:18 rafaelsteil Exp $
+ * @version $Id: AttachmentModel.java,v 1.3 2005/01/17 23:19:04 rafaelsteil Exp $
  */
 public class AttachmentModel implements net.jforum.model.AttachmentModel
 {
@@ -220,5 +221,86 @@ public class AttachmentModel implements net.jforum.model.AttachmentModel
 		g.setDownloadMode(rs.getInt("download_mode"));
 		
 		return g;
+	}
+	
+	/**
+	 * @see net.jforum.model.AttachmentModel#addExtension(net.jforum.entities.AttachmentExtension)
+	 */
+	public void addExtension(AttachmentExtension e) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("AttachmentModel.addExtension"));
+		p.setInt(1, e.getExtensionGroupId());
+		p.setString(2, e.getComment());
+		p.setString(3, e.getUploadIcon());
+		p.setString(4, e.getExtension());
+		p.setInt(5, e.isAllow() ? 1 : 0);
+		p.executeUpdate();
+		p.close();
+	}
+	
+	/**
+	 * @see net.jforum.model.AttachmentModel#removeExtensions(java.lang.String[])
+	 */
+	public void removeExtensions(String[] ids) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("AttachmentModel.removeExtension"));
+		for (int i = 0; i < ids.length; i++) {
+			p.setInt(1, Integer.parseInt(ids[i]));
+			p.executeUpdate();
+		}
+		p.close();
+	}
+	
+	/**
+	 * @see net.jforum.model.AttachmentModel#selectExtensions()
+	 */
+	public List selectExtensions() throws Exception
+	{
+		List l = new ArrayList();
+		
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("AttachmentModel.selectExtensions"));
+		
+		ResultSet rs = p.executeQuery();
+		while (rs.next()) {
+			l.add(this.getExtension(rs));
+		}
+		
+		rs.close();
+		p.close();
+		
+		return l;
+	}
+	
+	/**
+	 * @see net.jforum.model.AttachmentModel#updateExtension(net.jforum.entities.AttachmentExtension)
+	 */
+	public void updateExtension(AttachmentExtension e) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("AttachmentModel.updateExtension"));
+		p.setInt(1, e.getExtensionGroupId());
+		p.setString(2, e.getComment());
+		p.setString(3, e.getUploadIcon());
+		p.setString(4, e.getExtension());
+		p.setInt(5, e.isAllow() ? 1 : 0);
+		p.setInt(6, e.getId());
+		p.executeUpdate();
+		p.close();
+	}
+	
+	protected AttachmentExtension getExtension(ResultSet rs) throws Exception
+	{
+		AttachmentExtension e = new AttachmentExtension();
+		e.setAllow(rs.getInt("allow") == 1);
+		e.setComment(rs.getString("comment"));
+		e.setExtension(rs.getString("extension"));
+		e.setExtensionGroupId(rs.getInt("extension_group_id"));
+		e.setId(rs.getInt("extension_id"));
+		e.setUploadIcon(rs.getString("upload_icon"));
+		
+		return e;
 	}
 }

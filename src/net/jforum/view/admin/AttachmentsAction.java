@@ -51,6 +51,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.ActionServletRequest;
 import net.jforum.Command;
+import net.jforum.entities.AttachmentExtension;
 import net.jforum.entities.AttachmentExtensionGroup;
 import net.jforum.entities.QuotaLimit;
 import net.jforum.model.AttachmentModel;
@@ -62,7 +63,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentsAction.java,v 1.2 2005/01/17 22:17:17 rafaelsteil Exp $
+ * @version $Id: AttachmentsAction.java,v 1.3 2005/01/17 23:19:03 rafaelsteil Exp $
  */
 public class AttachmentsAction extends Command
 {
@@ -181,6 +182,60 @@ public class AttachmentsAction extends Command
 		}
 		
 		this.extensionGroups();
+	}
+	
+	public void extensions() throws Exception
+	{
+		AttachmentModel am = DataAccessDriver.getInstance().newAttachmentModel();
+		
+		this.context.put("moduleAction", "extensions.htm");
+		this.context.put("extensions", am.selectExtensions());
+		this.context.put("groups", am.selectExtensionGroups());
+	}
+	
+	public void extensionsSave() throws Exception
+	{
+		AttachmentExtension e = new AttachmentExtension();
+		e.setAllow(this.request.getParameter("allow") != null);
+		e.setComment(this.request.getParameter("comment"));
+		e.setExtension(this.request.getParameter("extension"));
+		e.setUploadIcon(this.request.getParameter("upload_icon"));
+		e.setExtensionGroupId(this.request.getIntParameter("extension_group"));
+		
+		DataAccessDriver.getInstance().newAttachmentModel().addExtension(e);
+		this.extensions();
+	}
+	
+	public void extensionsUpdate() throws Exception
+	{
+		AttachmentModel am = DataAccessDriver.getInstance().newAttachmentModel();
+		
+		// Check for records to delete
+		String[] delete = this.request.getParameterValues("delete");
+		List deleteList = new ArrayList();
+		if (delete != null) {
+			deleteList = Arrays.asList(delete);
+			am.removeExtensions(delete);
+		}
+		
+		int total = this.request.getIntParameter("total_records");
+		for (int i = 0; i < total; i++) {
+			if (deleteList.contains(this.request.getParameter("id_" + i))) {
+				continue;
+			}
+			
+			AttachmentExtension e = new AttachmentExtension();
+			e.setAllow(this.request.getParameter("allow_" + i) != null);
+			e.setComment(this.request.getParameter("comment_" + i));
+			e.setExtension(this.request.getParameter("extension_" + i));
+			e.setExtensionGroupId(this.request.getIntParameter("extension_group_" + i));
+			e.setId(this.request.getIntParameter("id_" + i));
+			e.setUploadIcon(this.request.getParameter("upload_icon_" + i));
+			
+			am.updateExtension(e);
+		}
+		
+		this.extensions();
 	}
 	
 	/**
