@@ -297,8 +297,18 @@ function validatePostForm(f)
 				<tr>
 					<th class="thHead" colspan="2" height="25">
 						<b>
-						<#if forum?exists>${I18n.getMessage("PostForm.title")}
-						<#else>${I18n.getMessage("PrivateMessage.title")}
+						<#if forum?exists>
+							<#if (topic?exists && topic.id > -1)>
+								${I18n.getMessage("PostForm.reply")}
+							<#else>
+								${I18n.getMessage("PostForm.title")}
+							</#if>
+						<#else>
+							<#if pmReply?default(false)>
+								${I18n.getMessage("PrivateMessage.reply")}
+							<#else>
+								${I18n.getMessage("PrivateMessage.title")}
+							</#if>
 						</#if>
 						</b>
 					</th>
