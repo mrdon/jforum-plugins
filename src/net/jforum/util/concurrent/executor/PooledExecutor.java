@@ -40,7 +40,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: PooledExecutor.java,v 1.3 2004/09/22 00:54:22 rafaelsteil Exp $
+ * $Id: PooledExecutor.java,v 1.4 2004/10/03 08:52:54 marcwick Exp $
  */
 package net.jforum.util.concurrent.executor;
 
@@ -84,7 +84,7 @@ public class PooledExecutor implements Executor
 			return;
 		}
 		
-		Thread worker = new Thread(new Worker());
+		Thread worker = new Thread(new Worker(),"jforum");
 		worker.setDaemon(true);
 		worker.start();
 		

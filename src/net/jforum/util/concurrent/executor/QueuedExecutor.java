@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: QueuedExecutor.java,v 1.5 2004/09/22 00:54:22 rafaelsteil Exp $
+ * $Id: QueuedExecutor.java,v 1.6 2004/10/03 08:52:53 marcwick Exp $
  */
 package net.jforum.util.concurrent.executor;
 
@@ -101,7 +101,7 @@ public class QueuedExecutor implements Executor
 			if(currentThread == null) {
 				logger.info("Creating a new thread...");
 				
-				currentThread = new Thread(new WorkerThread());
+				currentThread = new Thread(new WorkerThread(),"jforum");
 				currentThread.setDaemon(true);
 				currentThread.start();	
 			}
@@ -115,7 +115,7 @@ public class QueuedExecutor implements Executor
 		
 		synchronized(lock) {
 			if(currentThread == null) {
-				currentThread = new Thread(new WorkerThread());
+				currentThread = new Thread(new WorkerThread(),"jforum");
 				currentThread.setDaemon(true);
 				currentThread.setName(this.getClass().getName() +"Thread");
 
