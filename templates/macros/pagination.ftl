@@ -22,14 +22,14 @@
 	]
 </#macro>
 
-<#macro doPagination action id>
+<#macro doPagination action id=0>
 	<#if (totalRecords > recordsPerPage)>
 		<span class="nav"><b>
 		${I18n.getMessage("goToPage")}
 
 		<#if (thisPage > 0)>
 			<#assign start = thisPage - recordsPerPage>
-			<a href="${contextPath}/${moduleName}/${action}/${start}/${id}.page">${I18n.getMessage("previous")}</a>
+			<a href="${contextPath}/${moduleName}/${action}/${start}<#if (id>0)>/${id}</#if>.page">${I18n.getMessage("previous")}</a>
 		</#if>
 
 		<#if (totalPages > 6)>
@@ -40,7 +40,7 @@
 				<#if start == thisPage>
 					${nextPage}
 				<#else>
-					<a href="${contextPath}/${moduleName}/${action}/${start}/${id}.page">${nextPage}</a>, 
+					<a href="${contextPath}/${moduleName}/${action}/${start}<#if (id>0)>/${id}</#if>.page">${nextPage}</a>, 
 				</#if>
 			</#list>
 
@@ -54,13 +54,13 @@
 				<#if start == thisPage>
 					${nextPage}, 
 				<#else>
-					<a href="${contextPath}/${moduleName}/${action}/${start}/${id}.page">${nextPage}</a>,
+					<a href="${contextPath}/${moduleName}/${action}<#if (id>0)>/${start}/${id}</#if>.page">${nextPage}</a>,
 				</#if>
 			</#list>
 
 			<#assign start = recordsPerPage * totalPages>
 			<#if start != thisPage>
-				<a href="${contextPath}/${moduleName}/${action}/${start}/${id}.page">${totalPages + 1}</a>
+				<a href="${contextPath}/${moduleName}/${action}/${start}<#if (id>0)>/${id}</#if>.page">${totalPages + 1}</a>
 			<#else>
 				${totalPages + 1}
 			</#if>
@@ -70,7 +70,7 @@
 				<#assign nextPage = page + 1>
 				
 				<#if (start != thisPage)>
-					<a href="${contextPath}/${moduleName}/${action}/${start}/${id}.page">${nextPage}</a>, 
+					<a href="${contextPath}/${moduleName}/${action}/${start}<#if (id>0)>/${id}</#if>.page">${nextPage}</a>, 
 				<#else>
 					${nextPage}
 				</#if>
@@ -80,7 +80,7 @@
 				<#assign start = recordsPerPage * totalPages>
 				
 				<#if start != thisPage>
-					<a href="${contextPath}/${moduleName}/${action}/${start}/${id}.page">${totalPages + 1}</a> 
+					<a href="${contextPath}/${moduleName}/${action}/${start}<#if (id>0)>/${id}</#if>.page">${totalPages + 1}</a> 
 				<#else>
 					${totalPages + 1}
 				</#if>
@@ -89,7 +89,7 @@
 
 		<#if thisPage != start>
 			<#assign start = thisPage + recordsPerPage/>
-			<a href="${contextPath}/${moduleName}/${action}/${start}/${id}.page">${I18n.getMessage("next")}</a>
+			<a href="${contextPath}/${moduleName}/${action}/${start}<#if (id>0)>/${id}</#if>.page">${I18n.getMessage("next")}</a>
 		</#if>
 
 		</b>

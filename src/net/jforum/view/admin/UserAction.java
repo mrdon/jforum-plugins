@@ -59,6 +59,7 @@ import net.jforum.security.PermissionControl;
 import net.jforum.security.XMLPermissionControl;
 import net.jforum.util.I18n;
 import net.jforum.util.TreeGroup;
+import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.view.forum.ViewCommon;
 
@@ -67,15 +68,38 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.1 2004/08/30 23:51:17 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.2 2004/09/22 16:37:14 jamesyong Exp $
  */
 public class UserAction extends Command 
 {
 	// Listing
 	public void list() throws Exception
 	{
-		JForum.getContext().put("users", DataAccessDriver.getInstance().newUserModel().selectAll());
+		String s = JForum.getRequest().getParameter("start");
+		int start = 0;
+		
+		if (s == null || s.equals("")) {
+			start = 0;
+		}
+		else {
+			start = Integer.parseInt(s);
+			
+			if (start < 0) {
+				start = 0;
+			}
+		}
+		
+		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
+		int totalUsers = DataAccessDriver.getInstance().newUserModel().getTotalUsers();
+
+		JForum.getContext().put("users", DataAccessDriver.getInstance().newUserModel().selectAll(start ,usersPerPage));
 		JForum.getContext().put("moduleAction", "user_list.htm");
+		
+		// Pagination
+		JForum.getContext().put("totalPages", new Double(Math.floor(totalUsers / usersPerPage)));
+		JForum.getContext().put("recordsPerPage", new Integer(usersPerPage));
+		JForum.getContext().put("totalRecords", new Integer(totalUsers));
+		JForum.getContext().put("thisPage", new Integer(start));
 	}
 	
 	// Permissions

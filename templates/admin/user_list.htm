@@ -1,3 +1,5 @@
+<#import "../macros/pagination.ftl" as pagination>
+
 <STYLE type=text/css>@import url( style.css );</STYLE>
 
 <form accept-charset="${encoding}" name="form" action="${contextPath}/jforum${extension}" method="post">
@@ -31,6 +33,9 @@
 <INPUT class=mainoption type=button value="${I18n.getMessage("Insert")}" onClick="document.location = '${contextPath}?module=adminUsers&action=insert';">&nbsp;&nbsp;
 <INPUT class=mainoption type=submit value="${I18n.getMessage("Forums.List.ClickToDelete")}" name=submit>&nbsp;&nbsp;
 </TD>
+</TR>
+<TR>
+	<TD><@pagination.doPagination action /></TD>
 </TR></TABLE>
 </FORM>
    

@@ -47,7 +47,7 @@ UserModel.selectById = SELECT COUNT(pm.privmsgs_to_userid) AS private_messages, 
 	GROUP BY pm.privmsgs_to_userid
 
 UserModel.selectAll = SELECT user_email, user_id, user_posts, user_regdate, username FROM jforum_users ORDER BY username
-UserModel.selectAllbyLimit = SELECT group_id, user_email, user_id, user_posts, user_regdate, username FROM jforum_users ORDER BY username LIMIT ?, ?
+UserModel.selectAllByLimit = SELECT user_email, user_id, user_posts, user_regdate, username FROM jforum_users ORDER BY username LIMIT ?, ?
 UserModel.deletedStatus = UPDATE jforum_users SET deleted = ? WHERE user_id = ?
 UserModel.incrementPosts = UPDATE jforum_users SET user_posts = user_posts + 1 WHERE user_id = ?
 UserModel.decrementPosts = UPDATE jforum_users SET user_posts = user_posts - 1 WHERE user_id = ?
