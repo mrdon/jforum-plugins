@@ -23,7 +23,7 @@
 										<tr valign="center">
 											<td>
 												<#if !inbox?default(false)>
-												<a href="${contextPath}/pm/inbox${extension}">
+												<a href="${JForumContext.encodeURL("/pm/inbox")}">
 												</#if>
 												<img src="${contextPath}/templates/${templateName}/images/msg_inbox.gif" border="0" />
 												<#if !inbox?default(false)>
@@ -32,7 +32,7 @@
 											</td>
 											<td>
 												<#if !inbox?default(false)>
-												<a href="${contextPath}/pm/inbox${extension}">
+												<a href="${JForumContext.encodeURL("/pm/inbox")}">
 												</#if>
 												<span class="cattitle">${I18n.getMessage("PrivateMessage.inbox")} &nbsp;</span>
 												<#if !inbox?default(false)>
@@ -41,7 +41,7 @@
 											</td>
 											<td>
 												<#if !sentbox?default(false)>
-												<a href="${contextPath}/pm/sentbox${extension}">
+												<a href="${JForumContext.encodeURL("/pm/sentbox")}">
 												</#if>
 												<img src="${contextPath}/templates/${templateName}/images/msg_sentbox.gif" border="0" />
 												<#if !sentbox?default(false)>
@@ -50,7 +50,7 @@
 											</td>
 											<td>
 												<#if !sentbox?default(false)>
-												<a href="${contextPath}/pm/sentbox${extension}">
+												<a href="${JForumContext.encodeURL("/pm/sentbox")}">
 												</#if>
 												<span class="cattitle">${I18n.getMessage("PrivateMessage.sentbox")}</a> &nbsp;</span>
 												<#if !sentbox?default(false)>
@@ -65,18 +65,18 @@
 					</tbody>
 				</table>
 				<br clear="all" />
-				<form action="${contextPath}/jforum${extension}" method="post" name="privmsg_list" id="privmsg_list">
+				<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="privmsg_list" id="privmsg_list">
 				<input type="hidden" name="module" value="${moduleName}">
 				<input type="hidden" name="action" value="delete">
 					<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
 						<tbody>
 							<tr>
 								<td valign="center" align="left">
-									<a href="${contextPath}/pm/send${extension}"><img src="${contextPath}/templates/${templateName}/images/msg_newpost.gif" border="0" /></a>
+									<a href="${JForumContext.encodeURL("/pm/send")}"><img src="${contextPath}/templates/${templateName}/images/msg_newpost.gif" border="0" /></a>
 								</td>
 								<td align="left" width="100%">
 									&nbsp;<span class="nav">
-									 <A class=nav href="${contextPath}/forums/list${extension}">${I18n.getMessage("ForumListing.forumIndex")}</a>
+									 <A class=nav href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a>
 									 </span>
 								</td>
 							</tr>
@@ -114,12 +114,12 @@
 										<img height="18" src="${contextPath}/templates/${templateName}/images/folder.gif" width="19" />
 									</#if>
 								</td>
-								<td class="row1" valign="center" width="55%"><span class="topictitle">&nbsp;<a class="topictitle" href="${contextPath}/pm/read/${pm.id}${extension}">${pm.post.subject}</a></span></td>
+								<td class="row1" valign="center" width="55%"><span class="topictitle">&nbsp;<a class="topictitle" href="${JForumContext.encodeURL("/pm/read/${pm.id}")}">${pm.post.subject}</a></span></td>
 								<td class="row1" valign="center" align="middle" width="20%">
 									<#if inbox?default(false)>
-									<span class="name">&nbsp;<a class="name" href="${contextPath}/user/profile/${pm.fromUser.id}${extension}">${pm.fromUser.username}</a></span>
+									<span class="name">&nbsp;<a class="name" href="${JForumContext.encodeURL("/user/profile/${pm.fromUser.id}")}">${pm.fromUser.username}</a></span>
 									<#else>
-									<span class="name">&nbsp;<a class="name" href="${contextPath}/user/profile/${pm.toUser.id}${extension}">${pm.toUser.username}</a></span>
+									<span class="name">&nbsp;<a class="name" href="${JForumContext.encodeURL("/user/profile/${pm.toUser.id}")}">${pm.toUser.username}</a></span>
 									</#if>
 								</td>
 								<td class="row1" valign="center" align="middle" width="15%"><span class="postdetails">${pm.formatedDate}</span></td>
@@ -139,7 +139,7 @@
 						<tbody>
 							<tr>
 								<td valign="center" align="left"><span class="nav">
-									<a href="${contextPath}/pm/send${extension}"><img src="${contextPath}/templates/${templateName}/images/msg_newpost.gif" border="0" /></a></span>
+									<a href="${JForumContext.encodeURL("/pm/send")}"><img src="${contextPath}/templates/${templateName}/images/msg_newpost.gif" border="0" /></a></span>
 								</td>
 								<td valign="center" align="left" width="100%"><span class="nav"></span></td>
 								<td valign="top" nowrap="nowrap" align="right">
