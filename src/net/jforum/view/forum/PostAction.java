@@ -90,7 +90,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.69 2005/03/15 18:24:17 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.70 2005/03/15 21:03:44 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -593,6 +593,12 @@ public class PostAction extends Command {
 
 		// Set the Post
 		Post p = PostCommon.fillPostFromRequest();
+		
+		if (p.getText() == null || p.getText().trim().equals("")) {
+			this.insert();
+			return;
+		}
+		
 		p.setForumId(this.request.getIntParameter("forum_id"));
 		
 		if (p.getSubject() == null || p.getSubject() == "") {
