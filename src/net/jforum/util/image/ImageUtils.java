@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ImageUtils.java,v 1.6 2004/04/21 23:32:18 rafaelsteil Exp $
+ * $Id: ImageUtils.java,v 1.7 2004/04/21 23:33:44 rafaelsteil Exp $
  */
 package net.jforum.util.image;
 
@@ -62,7 +62,7 @@ import javax.imageio.ImageIO;
 /**
  * Utilities methods for image manipulation. 
  * It does not support writting of GIF images, but it
- * can read from. GIF images will be saved to PNG. 
+ * can read from. GIF images will be saved as PNG. 
  * 
  * @author Rafael Steil
  */
