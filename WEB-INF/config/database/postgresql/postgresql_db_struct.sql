@@ -258,7 +258,7 @@ CREATE TABLE jforum_users (
   user_active INTEGER DEFAULT NULL,
   username VARCHAR(50) NOT NULL DEFAULT '',
   user_password VARCHAR(32) NOT NULL DEFAULT '',
-  user_session_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  user_session_time int NOT NULL DEFAULT 0,
   user_session_page INTEGER NOT NULL DEFAULT 0,
   user_lastvisit timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   user_regdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
