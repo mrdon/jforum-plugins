@@ -52,7 +52,7 @@ import com.dumbster.smtp.SmtpMessage;
 
 /**
  * @author Marc Wick
- * @version $Id: UserWebTestCase.java,v 1.7 2004/09/29 08:59:00 marcwick Exp $
+ * @version $Id: UserWebTestCase.java,v 1.8 2004/09/29 15:23:36 marcwick Exp $
  */
 public class UserWebTestCase extends AbstractWebTestCase {
 
@@ -105,7 +105,7 @@ public class UserWebTestCase extends AbstractWebTestCase {
 		submit();
 		clickLinkWithText(I18n.getMessage(language, "ForumBase.logout"));
 	}
-	
+
 	public void testEditUserProfile() {
 		login(lastTestuser, password);
 		clickLinkWithText(I18n.getMessage(language, "ForumBase.profile"));
@@ -116,7 +116,7 @@ public class UserWebTestCase extends AbstractWebTestCase {
 
 	public void testPasswordForgottenUserName() throws Exception {
 		smtpServer = SimpleSmtpServer.start();
-		beginAt("/list.page");
+		beginAt(FORUMS_LIST);
 		clickLinkWithText(I18n.getMessage(language, "ForumBase.login"));
 		clickLinkWithText(I18n.getMessage(language, "Login.lostPassword"));
 
@@ -129,6 +129,7 @@ public class UserWebTestCase extends AbstractWebTestCase {
 		String body = mail.getBody();
 		String link = body.substring(body.indexOf("http:"),
 				body.indexOf(".page") + 5).trim();
+
 		smtpServer.stop();
 
 		getTestContext().setBaseUrl(link.substring(0, link.lastIndexOf('/')));
