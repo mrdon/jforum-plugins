@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ViewCommon.java,v 1.10 2004/09/22 01:36:12 rafaelsteil Exp $
+ * $Id: ViewCommon.java,v 1.11 2004/09/22 23:21:55 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 
@@ -118,7 +118,6 @@ public final class ViewCommon
 		u.setAim(JForum.getRequest().getParameter("aim"));
 		u.setMsnm(JForum.getRequest().getParameter("msn"));
 		u.setYim(JForum.getRequest().getParameter("yim"));
-		u.setWebSite(JForum.getRequest().getParameter("website"));
 		u.setFrom(JForum.getRequest().getParameter("location"));
 		u.setOccupation(JForum.getRequest().getParameter("occupation"));
 		u.setInterests(JForum.getRequest().getParameter("interests"));
@@ -130,6 +129,13 @@ public final class ViewCommon
 		u.setAttachSignatureEnabled(JForum.getRequest().getParameter("attachsig").equals("1"));
 		u.setHtmlEnabled(JForum.getRequest().getParameter("allowhtml").equals("1"));
 		u.setLang(JForum.getRequest().getParameter("language"));
+		
+		String website = JForum.getRequest().getParameter("website");
+		if (website != null && !website.toLowerCase().startsWith("http://")) {
+			website = "http://" + website;
+		}
+
+		u.setWebSite(website);
 		
 		if (JForum.getRequest().getParameter("new_password") != null && JForum.getRequest().getParameter("new_password").length() > 0) {
 			u.setPassword(MD5.crypt(JForum.getRequest().getParameter("new_password")));

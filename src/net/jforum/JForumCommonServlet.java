@@ -73,7 +73,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumCommonServlet.java,v 1.4 2004/09/04 15:42:49 rafaelsteil Exp $
+ * @version $Id: JForumCommonServlet.java,v 1.5 2004/09/22 23:18:23 rafaelsteil Exp $
  */
 public class JForumCommonServlet extends HttpServlet
 {
@@ -100,6 +100,8 @@ public class JForumCommonServlet extends HttpServlet
             // TODO: allow defaultsFile and installation to be overridden by the init parameters
 			String appPath = config.getServletContext().getRealPath("");
             SystemGlobals.initGlobals(appPath, appPath + "/WEB-INF/config/SystemGlobals.properties", null);
+            SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
+            SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG));
             
 			// Configure the template engine
 			Configuration templateCfg = new Configuration();

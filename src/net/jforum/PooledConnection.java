@@ -79,7 +79,7 @@ import org.apache.log4j.Logger;
  *
  * @author Paulo Silveira
  * @author Rafael Steil
- * @version $Id: PooledConnection.java,v 1.9 2004/09/22 00:45:11 rafaelsteil Exp $
+ * @version $Id: PooledConnection.java,v 1.10 2004/09/22 23:18:23 rafaelsteil Exp $
  * */
 
 public class PooledConnection extends DBConnection
@@ -125,7 +125,6 @@ public class PooledConnection extends DBConnection
      */
     public void init() throws Exception
     {
-    	SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
 		String driver = SystemGlobals.getValue(ConfigKeys.DATABASE_CONNECTION_DRIVER);
 		
 		try {

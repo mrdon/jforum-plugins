@@ -46,7 +46,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -64,7 +66,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author Pieter
- * @version $Id: SystemGlobals.java,v 1.7 2004/09/14 02:16:48 rafaelsteil Exp $
+ * @version $Id: SystemGlobals.java,v 1.8 2004/09/22 23:18:22 rafaelsteil Exp $
  */
 public class SystemGlobals implements VariableStore
 {
@@ -75,6 +77,7 @@ public class SystemGlobals implements VariableStore
 
 	private Properties defaults;
 	private Properties installation;
+	private static List additionalDefaultsList = new ArrayList();
 	private static Properties queries = new Properties();
 	private static Properties transientValues = new Properties();
 
@@ -115,8 +118,10 @@ public class SystemGlobals implements VariableStore
 		loadDefaultsImpl();
 
 		installation = new Properties(defaults);
-		this.installationConfig = getVariableValue(ConfigKeys.INSTALLATION_CONFIG);
-		loadInstallationImpl();
+		
+		for (Iterator iter = additionalDefaultsList.iterator(); iter.hasNext(); ) {
+			this.loadAdditionalDefaultsImpl((String)iter.next());
+		}
 	}
 	
 	/**
@@ -133,17 +138,7 @@ public class SystemGlobals implements VariableStore
 
 	private void setValueImpl(String field, Object value)
 	{
-		String defaultValue = (String) defaults.get(field);
-		if (defaultValue == null) {
-			throw new IllegalArgumentException("unknown property: " + field);
-		}
-
-		if (defaultValue.equals(value)) {
-			installation.remove(field);
-		}
-		else {
-			installation.put(field, value);
-		}
+		installation.put(field, value);
 		expander.clearCache();
 	}
 
@@ -183,16 +178,10 @@ public class SystemGlobals implements VariableStore
 		FileInputStream input = new FileInputStream(file);
 		installation.load(input);
 		input.close();
-	}
-
-	/**
-	 * Load installation defaults
-	 * 
-	 * @throws IOException
-	 */
-	public static void loadInstallation() throws IOException
-	{
-		globals.loadInstallationImpl();
+		
+		if (!additionalDefaultsList.contains(file)) {
+			additionalDefaultsList.add(file);
+		}
 	}
 
 	private void loadDefaultsImpl() throws IOException
@@ -201,19 +190,6 @@ public class SystemGlobals implements VariableStore
 		defaults.load(input);
 		input.close();
 		expander.clearCache();
-	}
-
-	private void loadInstallationImpl() throws IOException
-	{
-		try {
-			FileInputStream input = new FileInputStream(installationConfig);
-			installation.load(input);
-			input.close();
-			expander.clearCache();
-		}
-		catch (IOException e) {
-			// no problem
-		}
 	}
 
 	/**
