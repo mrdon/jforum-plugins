@@ -42,6 +42,7 @@
  */
 package net.jforum.view.install;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -66,7 +67,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.4 2004/10/26 03:56:22 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.5 2004/10/28 02:49:03 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -77,43 +78,65 @@ public class InstallAction extends Command
 		InstallServlet.getContext().put("moduleAction", "install.htm");
 	}
 	
+	private String getFromSession(String key)
+	{
+		return (String)InstallServlet.getRequest().getSession().getAttribute(key);
+	}
+	
+	private void error()
+	{
+		InstallServlet.getContext().put("moduleAction", "install_error.htm");
+	}
+	
 	public void doInstall() throws Exception
 	{
 		Connection conn = null;
 		
-		if (!"passed".equals(InstallServlet.getRequest().getParameter("configureDatabase"))) {
+		if (!this.checkForWritableDir()) {
+			return;
+		}
+		
+		if (!"passed".equals(this.getFromSession("configureDatabase"))) {
+			logger.info("Going to configure the database...");
 			conn = this.configureDatabase();
 			if (conn == null) {
-				InstallServlet.getContext().put("error", I18n.getMessage("Install.databaseError"));
-				this.welcome();
+				InstallServlet.getContext().put("message", I18n.getMessage("Install.databaseError"));
+				this.error();
 				return;
 			}
 		}
 		
-		InstallServlet.getContext().put("configureDatabase", "passed");
+		logger.info("Database configuration ok");
+
+		// Database Configuration is ok
+		this.addToSessionAndContext("configureDatabase", "passed");
 		
-		SimpleConnection simpleConnection = new SimpleConnection();
+		DBConnection simpleConnection = new SimpleConnection();
 		if (conn == null) {
 			conn = simpleConnection.getConnection();
 		}
 		
-		if (!"passed".equals(InstallServlet.getRequest().getParameter("createTables")) && !this.createTables(conn)) {
+		if (!"passed".equals(this.getFromSession("createTables")) && !this.createTables(conn)) {
+			logger.info("Going to create tables...");
 			InstallServlet.getContext().put("error", I18n.getMessage("Install.createTablesError"));
 			simpleConnection.releaseConnection(conn);
-			this.welcome();
+			this.error();
 			return;
 		}
 		
-		InstallServlet.getContext().put("createTables", "passed");
+		// Create tables is ok
+		this.addToSessionAndContext("createTables", "passed");
+		logger.info("Table creation is ok");
 		
-		if (!"passed".equals(InstallServlet.getRequest().getParameter("importTablesData")) && !this.importTablesData(conn)) {
+		if (!"passed".equals(this.getFromSession("importTablesData")) && !this.importTablesData(conn)) {
 			InstallServlet.getContext().put("error", I18n.getMessage("Install.importTablesDataError"));
 			simpleConnection.releaseConnection(conn);
-			this.welcome();
+			this.error();
 			return;
 		}
 		
-		InstallServlet.getContext().put("importTablesData", "passed");
+		// Dump is ok
+		this.addToSessionAndContext("importTablesData", "passed");
 		
 		this.configureSystemGlobals();
 
@@ -163,7 +186,7 @@ public class InstallAction extends Command
 			catch (SQLException ex) {
 				status = false;
 				conn.rollback();
-				logger.error("Error importing data for " + key + ": " + ex.getMessage());
+				logger.error("Error importing data for " + key + ": " + ex);
 				break;
 			}
 			finally {
@@ -187,7 +210,7 @@ public class InstallAction extends Command
 	
 	private boolean createTables(Connection conn) throws Exception
 	{
-		String dbType = InstallServlet.getRequest().getParameter("database");
+		String dbType = this.getFromSession("database");
 		boolean status = true;
 		boolean autoCommit = conn.getAutoCommit();
 		
@@ -207,7 +230,7 @@ public class InstallAction extends Command
 				status = false;
 				conn.rollback();
 				
-				logger.error("Error creating table " + key + ": " + ex.getMessage());
+				logger.error("Error creating table " + key + ": " + ex);
 				
 				break;
 			}
@@ -220,21 +243,30 @@ public class InstallAction extends Command
 		return status;
 	}
 	
+	private boolean checkForWritableDir()
+	{
+		File f = new File(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR));
+		if (!f.canWrite()) {
+			InstallServlet.getContext().put("message", I18n.getMessage("Install.noWebInfWritePermission"));
+			this.error();
+			return false;
+		}
+		
+		return true;
+	}
+	
 	private Connection configureDatabase() throws Exception
 	{
-		String username = InstallServlet.getRequest().getParameter("dbuser");
-		String password = InstallServlet.getRequest().getParameter("dbpasswd");
-		String dbName = InstallServlet.getRequest().getParameter("dbname");
-		String host = InstallServlet.getRequest().getParameter("dbhost");
-		String type = InstallServlet.getRequest().getParameter("database");
-		String encoding = InstallServlet.getRequest().getParameter("dbencoding");
+		String username = this.getFromSession("dbUser");
+		String password = this.getFromSession("dbPassword");
+		String dbName = this.getFromSession("dbName");
+		String host = this.getFromSession("dbHost");
+		String type = this.getFromSession("database");
+		String encoding = this.getFromSession("dbEncoding");
 
-		String implementation = "yes".equals(InstallServlet.getRequest().getParameter("use_pool")) 
+		String implementation = "yes".equals(this.getFromSession("usePool")) 
 			? "net.jforum.PooledConnection"
 			: "net.jforum.SimpleConnection";
-		
-		SystemGlobals.setValue(ConfigKeys.DATABASE_DRIVER_NAME, type);
-		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_IMPLEMENTATION, implementation);
 		
 		Properties p = new Properties();
 		p.load(new FileInputStream(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG)));
@@ -247,6 +279,8 @@ public class InstallAction extends Command
 		
 		p.store(new FileOutputStream(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG)), null);
 		
+		this.restartSystemGlobals();
+		
 		Connection conn = null;
 		
 		try {
@@ -256,10 +290,18 @@ public class InstallAction extends Command
 			conn = s.getConnection();
 		}
 		catch (Exception e) {
+			logger.warn("Error while trying to get a connection: " + e);
 			return null;
 		}
 		
 		return conn;
+	}
+	
+	private void restartSystemGlobals() throws Exception
+	{
+		String appPath = SystemGlobals.getApplicationPath();
+		SystemGlobals.initGlobals(appPath, appPath + "/WEB-INF/config/SystemGlobals.properties", null);
+        SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
 	}
 	
 	public void checkInformation() throws Exception
@@ -273,15 +315,13 @@ public class InstallAction extends Command
 		String dbEncoding = InstallServlet.getRequest().getParameter("dbencoding");
 		String dbEncodingOther = InstallServlet.getRequest().getParameter("dbencoding_other");
 		String usePool = InstallServlet.getRequest().getParameter("use_pool");
-		String serverName = InstallServlet.getRequest().getParameter("server_name");
-		String serverPort = InstallServlet.getRequest().getParameter("server_port");
-		String contextPath = InstallServlet.getRequest().getParameter("context_path");
+		String forumLink = InstallServlet.getRequest().getParameter("forum_link");
 		String adminPassword = InstallServlet.getRequest().getParameter("admin_pass1");
 		
 		dbHost = this.notNullDefault(dbHost, "localhost");
 		dbEncodingOther = this.notNullDefault(dbEncodingOther, "UTF-8");
 		dbEncoding = this.notNullDefault(dbEncoding, dbEncodingOther);
-		serverName = this.notNullDefault(serverName, "http://localhost");
+		forumLink = this.notNullDefault(forumLink, "http://localhost");
 		dbName = this.notNullDefault(dbName, "jforum");
 		
 		if ("hsqldb".equals(database)) {
@@ -296,9 +336,7 @@ public class InstallAction extends Command
 		this.addToSessionAndContext("dbPassword", dbPassword);
 		this.addToSessionAndContext("dbEncoding", dbEncoding);
 		this.addToSessionAndContext("usePool", usePool);
-		this.addToSessionAndContext("serverName", serverName);
-		this.addToSessionAndContext("serverPort", serverPort);
-		this.addToSessionAndContext("contextPath", contextPath);
+		this.addToSessionAndContext("forumLink", forumLink);
 		this.addToSessionAndContext("adminPassword", adminPassword);
 		
 		InstallServlet.getContext().put("moduleAction", "install_check_info.htm");

@@ -73,7 +73,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumCommonServlet.java,v 1.12 2004/10/27 03:12:33 rafaelsteil Exp $
+ * @version $Id: JForumCommonServlet.java,v 1.13 2004/10/28 02:49:03 rafaelsteil Exp $
  */
 public class JForumCommonServlet extends HttpServlet {
     private static Properties modulesMapping;
@@ -91,22 +91,13 @@ public class JForumCommonServlet extends HttpServlet {
         super.init(config);
 
         try {
+        	String appPath = config.getServletContext().getRealPath("");
             debug = "true".equals(config.getInitParameter("development"));
 
-            DOMConfigurator.configure(config.getServletContext().getRealPath("")
-                    + "/WEB-INF/log4j.xml");
+            DOMConfigurator.configure(appPath + "/WEB-INF/log4j.xml");
 
             // Load system default values
-            String appPath = config.getServletContext().getRealPath("");
-            SystemGlobals.initGlobals(appPath,
-                    appPath + "/WEB-INF/config/SystemGlobals.properties", null);
-            SystemGlobals.loadAdditionalDefaults(SystemGlobals
-                    .getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
-
-            if (new File(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG)).exists()) {
-                SystemGlobals.loadAdditionalDefaults(SystemGlobals
-                        .getValue(ConfigKeys.INSTALLATION_CONFIG));
-            }
+            this.startSystemglobals(appPath);
 
             // Configure the template engine
             Configuration templateCfg = new Configuration();
@@ -147,6 +138,16 @@ public class JForumCommonServlet extends HttpServlet {
             new ForumException(e);
         }
     }
+    
+    protected void startSystemglobals(String appPath) throws Exception
+	{
+    	SystemGlobals.initGlobals(appPath, appPath + "/WEB-INF/config/SystemGlobals.properties", null);
+        SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
+
+        if (new File(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG)).exists()) {
+            SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG));
+        }
+	}
 
     /**
      * Loads modules mapping file
