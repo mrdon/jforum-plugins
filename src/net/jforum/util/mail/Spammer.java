@@ -69,10 +69,12 @@ import freemarker.template.Template;
  * TODO: should do some refactoring to send a personalized email to each user. 
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.7 2004/10/03 16:53:53 rafaelsteil Exp $
+ * @version $Id: Spammer.java,v 1.8 2004/10/10 16:48:08 rafaelsteil Exp $
  */
 public class Spammer 
 {
+	private static final Logger logger = Logger.getLogger(Spammer.class);
+	
 	private static int MESSAGE_HTML = 0;
 	private static int MESSAGE_TEXT = 1;
 	
@@ -82,9 +84,8 @@ public class Spammer
 	private static String username;
 	private static String password;
 	
-	private static final Logger logger = Logger.getLogger(Spammer.class);
-	
 	private Message message;
+	private String messageText;
 	
 	protected Spammer() throws EmailException
 	{
@@ -159,11 +160,13 @@ public class Spammer
 			Template template = Configuration.getDefaultConfiguration().getTemplate(messageFile);
 			template.process(params, sWriter);
 			
+			this.messageText = sWriter.toString();
+			
 			if (messageFormat == MESSAGE_HTML) {
-				this.message.setContent(sWriter.toString(), "text/html");
+				this.message.setContent(this.messageText, "text/html");
 			}
 			else {
-				this.message.setText(sWriter.toString());
+				this.message.setText(this.messageText);
 			}
 			
 			int i = 0;
@@ -177,5 +180,15 @@ public class Spammer
 			logger.warn("EmailException: "+ e);
 			throw new EmailException(e);
 		}
+	}
+	
+	/**
+	 * Gets the email body
+	 * 
+	 * @return String with the email body that will be sent to the user
+	 */
+	public String getMessageBody()
+	{
+		return this.messageText;
 	}
 }
