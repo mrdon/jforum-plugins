@@ -93,7 +93,7 @@
 	${post.text?replace("<script", "&lt;script")}
 	<#if (user.attachSignatureEnabled && user.signature?exists &user.signature?length > 0)>
 	<hr>
-	${user.signature}
+	${user.signature?replace("<script", "&lt;script")}
 	</#if>
 	</span>
 	</TD>
