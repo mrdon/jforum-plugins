@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * Display a list of recent Topics
  * 
  * @author James Yong
- * @version $Id: RecentTopicsAction.java,v 1.2 2004/11/02 19:02:50 rafaelsteil Exp $
+ * @version $Id: RecentTopicsAction.java,v 1.3 2004/11/06 19:04:41 rafaelsteil Exp $
  */
 public class RecentTopicsAction extends Command 
 {
@@ -73,10 +73,14 @@ public class RecentTopicsAction extends Command
 		while (iter.hasNext()) 
 		{
 			Topic t = (Topic)iter.next();
-
-			// Get name of forum that the topic refers to
-			Forum f = ForumRepository.getForum(t.getForumId());
-			forums.add(f);
+			if (TopicsCommon.isTopicAccessible(t.getForumId())) {
+				// Get name of forum that the topic refers to
+				Forum f = ForumRepository.getForum(t.getForumId());
+				forums.add(f);
+			}
+			else {
+				iter.remove();
+			}
 		}
 		
 		JForum.getContext().put("postsPerPage", new Integer(postsPerPage));
