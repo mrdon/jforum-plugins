@@ -12,6 +12,7 @@
 	</tr>
 
 	<#assign counter = 1/>
+	<#assign categories = repository.getAllCategories()/>
 	<#list categories as category>
 		<tr>
 			<td class="catLeft" width="38%"><span class="cattitle">${category.name}</span></td>
