@@ -45,7 +45,7 @@ package net.jforum.security;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityConstants.java,v 1.3 2004/05/31 01:58:51 rafaelsteil Exp $
+ * @version $Id: SecurityConstants.java,v 1.4 2004/08/07 04:22:16 jamesyong Exp $
  */
 public class SecurityConstants 
 {
@@ -61,4 +61,5 @@ public class SecurityConstants
 	public static final String PERM_MODERATION_POST_EDIT = "perm_moderation_post_edit";
 	public static final String PERM_MODERATION_TOPIC_MOVE = "perm_moderation_topic_move";
 	public static final String PERM_MODERATION_TOPIC_LOCK_UNLOCK = "perm_moderation_topic_lockUnlock";
+	public static final String PERM_CREATE_STICKY_ANNOUNCEMENT_TOPICS = "perm_create_sticky_announcement_topics";
 }

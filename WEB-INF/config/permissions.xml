@@ -33,6 +33,14 @@
 		</permission>
 	</section>
 	
+	<!-- Create Sticky or Annoucement Topics  -->
+	<section id="topics_sticky_announce" title="Sticky or Announcement Topics">
+		<permission id="perm_create_sticky_announcement_topics" title="Can create sticky or announcement topics" type="single">
+			<option value="deny" description="No"/>
+			<option value="allow" description="Yes"/>
+		</permission>
+	</section>
+	
 	<!-- Moderation -->
 	<section id="moderation_section" title="Moderation">
 		<!-- Is a moderator -->
