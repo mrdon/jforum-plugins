@@ -45,6 +45,8 @@ package net.jforum.view.forum;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
@@ -66,10 +68,12 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.10 2004/10/04 10:08:19 marcwick Exp $
+ * @version $Id: UserAction.java,v 1.11 2004/10/10 16:49:51 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
+	private static final Logger logger = Logger.getLogger(UserAction.class);
+	
 	public void edit() throws Exception 
 	{
 		int tmpId = SessionFacade.getUserSession().getUserId();
@@ -160,6 +164,7 @@ public class UserAction extends Command
 								userId, u.getUsername(), u.getEmail(), u.getActivationKey())));
 			} 
 			catch (Exception e) {
+				logger.warn("Error while trying to send an email: " + e);
 				e.printStackTrace();
 			}
 
@@ -182,11 +187,10 @@ public class UserAction extends Command
 		User u = um.selectById(userId);
 
 		boolean isOk = um.validateActivationKeyHash(userId, hash);
-
 		if (isOk) {
-			//make account active
+			// make account active
 			um.writeUserActive(userId);
-			logNewRegisteredUserIn(userId, u);
+			this.logNewRegisteredUserIn(userId, u);
 		} 
 		else {
 			message = I18n.getMessage("User.invalidActivationKey");
@@ -343,6 +347,34 @@ public class UserAction extends Command
 	{
 		JForum.getContext().put("moduleAction", "lost_password.htm");
 	}
+	
+	public User prepareLostPassword(String username, String email) throws Exception
+	{
+		User user = null;
+		UserModel um = DataAccessDriver.getInstance().newUserModel();
+
+		if (email != null && !email.trim().equals("")) {
+			username = um.getUsernameByEmail(email);
+		}
+
+		if (username != null && !username.trim().equals("")) {
+			List l = um.findByName(username, true);
+			if (l.size() > 0) {
+				user = (User)l.get(0);
+			}
+		}
+		
+		if (user == null) {
+			return null;
+		}
+		
+		String hash = MD5.crypt(email + System.currentTimeMillis());
+		um.writeLostPasswordHash(email, hash);
+		
+		user.setActivationKey(hash);
+		
+		return user;
+	}
 
 	// Send lost password email
 	public void lostPasswordSend() throws Exception 
@@ -350,20 +382,7 @@ public class UserAction extends Command
 		String email = JForum.getRequest().getParameter("email");
 		String username = JForum.getRequest().getParameter("username");
 
-		User user = null;
-		UserModel um = DataAccessDriver.getInstance().newUserModel();
-
-		if (email != null && !email.equals("")) {
-			username = um.getUsernameByEmail(email);
-		}
-
-		if (username != null && !username.equals("")) {
-			List l = um.findByName(username, true);
-			if (l.size() > 0) {
-				user = (User) l.get(0);
-			}
-		}
-
+		User user = this.prepareLostPassword(username, email);
 		if (user == null) {
 			// user could not be found
 			JForum.getContext().put("message",
@@ -372,17 +391,12 @@ public class UserAction extends Command
 			return;
 		}
 
-		String hash = MD5.crypt(email + System.currentTimeMillis());
-		um.writeLostPasswordHash(email, hash);
-
 		try {
 			QueuedExecutor.getInstance().execute(
-					new EmailSenderTask(new LostPasswordSpammer(user, hash)));
+					new EmailSenderTask(new LostPasswordSpammer(user)));
 		} 
 		catch (EmailException e) {
-			// I don't care about this error
-			// but I log it (marc)
-			e.printStackTrace();
+			logger.warn("Error while senting email: " + e);
 		}
 
 		JForum.getContext().put("moduleAction", "message.htm");
