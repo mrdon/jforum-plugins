@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchModel.java,v 1.14 2005/01/17 12:22:33 rafaelsteil Exp $
+ * @version $Id: SearchModel.java,v 1.15 2005/02/21 14:00:05 andowson Exp $
  */
 public class SearchModel extends AutoKeys implements net.jforum.model.SearchModel	
 {
@@ -225,7 +225,7 @@ public class SearchModel extends AutoKeys implements net.jforum.model.SearchMode
 		wordToPost.setInt(1, post.getId());
 		
 		String str = post.getText() +" "+ post.getSubject();
-		String[] words = str.toLowerCase().replaceAll("[\\.\\\\\\/~^&\\(\\)-_+=!@#$%\"\'\\[\\]\\{\\}?<:>,*]", " ").split(" ");
+		String[] words = str.toLowerCase().replaceAll("[\\.\\\\\\/~^&\\(\\)-_+=!@#$%\"\'\\[\\]\\{\\}?<:>,*¡A¡B¡C¡D¡E¡F¡G¡H¡I¡J¡K¡L¡U¡Z¡]¡^¡a¡b¡e¡f¡i¡j¡m¡n¡q¡r¡u¡v¡y¡z¡£¡¤¡¥¡¦¡§¡¨¡©¡ª¡«¡¬]", " ").split(" ");
 						
 		for (int i = 0; i < words.length; i++) {
 			words[i] = words[i].trim();
@@ -233,7 +233,10 @@ public class SearchModel extends AutoKeys implements net.jforum.model.SearchMode
 			if (words[i].length() < 3) {
 				continue;
 			}
-			
+			// Trucate words longer than 100 chars
+			if (words[i].length() > 100) {
+			  words[i] = words[i].substring(0, 100); 
+			}
 			// Verify if the current word is not in the database before proceeding
 			int hash = words[i].hashCode();
 			existing.setInt(1, hash);
