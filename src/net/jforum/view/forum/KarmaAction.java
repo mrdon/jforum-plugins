@@ -42,6 +42,10 @@
  */
 package net.jforum.view.forum;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
@@ -55,10 +59,11 @@ import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaAction.java,v 1.2 2005/01/14 21:11:49 rafaelsteil Exp $
+ * @version $Id: KarmaAction.java,v 1.3 2005/02/17 19:11:33 franklin_samir Exp $
  */
 public class KarmaAction extends Command
 {
@@ -131,4 +136,49 @@ public class KarmaAction extends Command
 		this.context.put("moduleAction", "message.htm");
 		this.context.put("message", I18n.getMessage("invalidAction"));
 	}
+	
+	//public void searchByPeriod(Date firstPeriod, Date lastPeriod) throws Exception
+	public void searchByPeriod() throws Exception
+	{
+	    SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy");
+	    Date firstPeriod, lastPeriod;
+	    if("".equals(this.request.getParameter("first_date"))  ){	        
+	        firstPeriod = formater.parse("01/01/1970");//extreme date
+	    }else{
+	        firstPeriod = formater.parse(this.request.getParameter("first_date"));
+	    }
+	    if("".equals(this.request.getParameter("last_date"))){
+	        lastPeriod = new Date();//now
+	    }else{
+	        lastPeriod = formater.parse(this.request.getParameter("last_date"));	        
+	    }	   
+	    
+	    String orderField;
+	    if("".equals(this.request.getParameter("order_by"))){
+	        orderField = "total";
+	    }else{
+	        orderField = this.request.getParameter("order_by");	        
+	    }
+	    
+		int start = this.preparePagination(DataAccessDriver.getInstance().newUserModel().getTotalUsers());
+		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
+		//Load all users with your karma
+		List users = DataAccessDriver.getInstance().newKarmaModel().getMostRatedUserByPeriod(usersPerPage, firstPeriod, lastPeriod, orderField);
+		this.context.put("users", users);
+		this.context.put("moduleAction", "user_list_karma.htm");
+	}
+	
+	private int preparePagination(int totalUsers)
+	{
+		int start = ViewCommon.getStartPage();
+		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
+		
+		this.context.put("totalPages", new Double(Math.ceil( (double)totalUsers / usersPerPage )));
+		this.context.put("recordsPerPage", new Integer(usersPerPage));
+		this.context.put("totalRecords", new Integer(totalUsers));
+		this.context.put("thisPage", new Double(Math.ceil( (double)(start + 1) / usersPerPage )));
+		this.context.put("start", new Integer(start));
+		
+		return start;
+	}	
 }

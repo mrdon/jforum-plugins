@@ -42,6 +42,8 @@
  */
 package net.jforum.model;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import net.jforum.entities.Karma;
@@ -50,7 +52,7 @@ import net.jforum.entities.User;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaModel.java,v 1.4 2005/01/31 19:14:20 franklin_samir Exp $
+ * @version $Id: KarmaModel.java,v 1.5 2005/02/17 19:11:33 franklin_samir Exp $
  */
 public interface KarmaModel
 {
@@ -124,5 +126,21 @@ public interface KarmaModel
 	 */
 	public Map getUserVotes(int topicId, int userId) throws Exception;
 	
+	/**
+	 * @deprecated maybe it will be removed.
+	 * @param user
+	 * @throws Exception
+	 */
 	public void getUserTotalKarma(User user) throws Exception;
+	
+	
+	/**
+	 * Total points received, grouped by user and filtered by a range of dates.
+	 * 
+	 * @param firstPeriod
+	 * @param lastPeriod
+	 * @return Returns a List of users ant your total votes.
+	 * @throws Exception
+	 */
+	public List getMostRatedUserByPeriod(int start, Date firstPeriod, Date lastPeriod, String orderField) throws Exception;
 }
