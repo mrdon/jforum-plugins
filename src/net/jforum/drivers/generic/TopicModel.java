@@ -65,11 +65,38 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicModel.java,v 1.15 2005/03/07 22:05:01 rafaelsteil Exp $
+ * @version $Id: TopicModel.java,v 1.16 2005/03/15 20:42:38 rafaelsteil Exp $
  */
 public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel 
 {
 	private int DUPLICATE_KEY = 1062;
+	
+	/**
+	 * @see net.jforum.model.TopicModel#fixFirstLastPostId(int)
+	 */
+	public void fixFirstLastPostId(int topicId) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("TopicModel.getFirstLastPostId"));
+		p.setInt(1, topicId);
+		
+		ResultSet rs = p.executeQuery();
+		if (rs.next()) {
+			int first = rs.getInt("first_post_id");
+			int last = rs.getInt("last_post_id");
+			
+			rs.close();
+			p.close();
+			
+			p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("TopicModel.fixFirstLastPostId"));
+			p.setInt(1, first);
+			p.setInt(2, last);
+			p.setInt(3, topicId);
+			p.executeUpdate();
+		}
+		
+		rs.close();
+		p.close();
+	}
 
 	/** 
 	 * @see net.jforum.model.TopicModel#selectById(int)

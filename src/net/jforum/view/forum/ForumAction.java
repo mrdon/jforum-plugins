@@ -73,7 +73,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.32 2005/03/15 18:24:16 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.33 2005/03/15 20:42:37 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -233,7 +233,7 @@ public class ForumAction extends Command
 	
 	public void moderationDone() throws Exception
 	{
-		new ModerationHelper().moderationDone(this.makeRedirect("show"));
+		this.setTemplateName(new ModerationHelper().moderationDone(this.makeRedirect("show")));
 	}
 	
 	// Make an URL to some action

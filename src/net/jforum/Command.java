@@ -62,7 +62,7 @@ import freemarker.template.Template;
  * presentation actions must extend this class. 
  * 
  * @author Rafael Steil
- * @version $Id: Command.java,v 1.8 2005/03/15 18:24:12 rafaelsteil Exp $
+ * @version $Id: Command.java,v 1.9 2005/03/15 20:42:39 rafaelsteil Exp $
  */
 public abstract class Command 
 {
@@ -130,7 +130,11 @@ public abstract class Command
 		if (JForum.getRedirect() != null) {
 			this.setTemplateName(TemplateKeys.EMPTY);
 		}
-		else if (this.templateName == null) {
+		else if (request.getAttribute("template") != null) {
+			this.setTemplateName((String)request.getAttribute("template"));
+		}
+		
+		if (this.templateName == null) {
 			throw new TemplateNotFoundException("Template for action " + action + " is not defined");
 		}
 		

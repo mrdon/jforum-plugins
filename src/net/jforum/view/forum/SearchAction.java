@@ -70,7 +70,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.17 2005/03/15 18:24:17 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.18 2005/03/15 20:42:37 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -226,20 +226,20 @@ public class SearchAction extends Command
 	public void doModeration() throws Exception
 	{
 		new ModerationHelper().doModeration(this.makeRedirect());
-	}
-	
-	public void moveTopic() throws Exception
-	{
-		new ModerationHelper().moveTopicsSave(this.makeRedirect());
 		
 		if (JForum.getRequest().getParameter("topicMove") != null) {
 			this.setTemplateName(TemplateKeys.MODERATION_MOVE_TOPICS);
 		}
 	}
 	
+	public void moveTopic() throws Exception
+	{
+		new ModerationHelper().moveTopicsSave(this.makeRedirect());
+	}
+	
 	public void moderationDone() throws Exception
 	{
-		new ModerationHelper().moderationDone(this.makeRedirect());
+		this.setTemplateName(new ModerationHelper().moderationDone(this.makeRedirect()));
 	}
 	
 	private String makeRedirect() throws Exception

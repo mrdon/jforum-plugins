@@ -54,13 +54,15 @@ import net.jforum.JForum;
 import net.jforum.entities.Forum;
 import net.jforum.entities.LastPostInfo;
 import net.jforum.entities.Topic;
+import net.jforum.model.DataAccessDriver;
+import net.jforum.model.TopicModel;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: ForumModel.java,v 1.18 2005/02/03 12:37:39 rafaelsteil Exp $
+ * @version $Id: ForumModel.java,v 1.19 2005/03/15 20:42:38 rafaelsteil Exp $
  */
 public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel 
 {
@@ -262,11 +264,9 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
 			this.setLastPost(forumId, 0);
 		}
 	}
-
-	/**
-	 * @see net.jforum.model.ForumModel#getLastPostInfo(int)
-	 */
-	public LastPostInfo getLastPostInfo(int forumId) throws Exception {
+	
+	private LastPostInfo getLastPostInfo(int forumId, boolean tryFix) throws Exception
+	{
 		LastPostInfo lpi = new LastPostInfo();
 
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.lastPostInfo"));
@@ -286,12 +286,55 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
 			lpi.setTopicReplies(rs.getInt("topic_replies"));
 
 			lpi.setHasInfo(true);
+			
+			// Check if the topic is consistent
+			TopicModel tm = DataAccessDriver.getInstance().newTopicModel();
+			Topic t = tm.selectById(lpi.getTopicId());
+			
+			if (t.getId() == 0) {
+				// Hm, that's not good. Try to fix it
+				tm.fixFirstLastPostId(lpi.getTopicId());
+			}
+			
+			tryFix = false;
+		}
+		else if (tryFix) {
+			p.close();
+			rs.close();
+			
+			int postId = this.getMaxPostId(forumId);
+			
+			p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.latestTopicIdForfix"));
+			p.setInt(1, postId);
+			rs = p.executeQuery();
+			
+			int topicId = -1;
+			
+			if (rs.next()) {
+				topicId = rs.getInt("topic_id");
+				
+				rs.close();
+				p.close();
+				
+				p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.fixLatestPostData"));
+				p.setInt(1, postId);
+				p.setInt(2, topicId);
+				p.executeUpdate();
+			}
 		}
 
 		p.close();
 		rs.close();
+		
+		return (tryFix ? this.getLastPostInfo(forumId, false) : lpi);
+	}
 
-		return lpi;
+	/**
+	 * @see net.jforum.model.ForumModel#getLastPostInfo(int)
+	 */
+	public LastPostInfo getLastPostInfo(int forumId) throws Exception 
+	{
+		return this.getLastPostInfo(forumId, false);
 	}
 
 	/**

@@ -194,6 +194,8 @@ ForumModel.totalMessages = SELECT COUNT(1) as total_messages FROM jforum_posts
 ForumModel.getMaxPostId = SELECT MAX(post_id) AS post_id FROM jforum_posts WHERE forum_id = ?
 ForumModel.moveTopics = UPDATE jforum_topics SET forum_id = ? WHERE topic_id = ?
 ForumModel.checkUnreadTopics = SELECT MAX(post_time), topic_id FROM jforum_posts WHERE forum_id = ? AND post_time > ? GROUP BY topic_id
+ForumModel.latestTopicIdForfix = SELECT topic_id FROM jforum_posts WHERE post_id = ?
+ForumModel.fixLatestPostData = UPDATE jforum_topics SET topic_last_post_id = ? WHERE topic_id = ?
 
 ForumModel.getUnreadForums = SELECT t.forum_id, t.topic_id, p.post_time \
 	FROM jforum_topics t, jforum_posts p \
@@ -272,6 +274,9 @@ TopicModel.selectRecentTopicsByLimit = SELECT t.*, u.username AS posted_by_usern
 	AND t.topic_type = 0 \
 	ORDER BY p2.post_time DESC, t.topic_last_post_id DESC \
 	LIMIT 0, ?
+	
+TopicModel.getFirstLastPostId = SELECT MIN(post_id) AS first_post_id, MAX(post_id) AS last_post_id FROM jforum_posts WHERE topic_id = ?
+TopicModel.fixFirstLastPostId = UPDATE jforum_topics SET topic_first_post_id = ?, topic_last_post_id = ? WHERE topic_id = ?
 
 # ############
 # SearchModel

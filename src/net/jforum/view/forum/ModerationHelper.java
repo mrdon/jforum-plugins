@@ -46,6 +46,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import net.jforum.JForum;
 import net.jforum.entities.Topic;
 import net.jforum.model.DataAccessDriver;
@@ -57,14 +59,17 @@ import net.jforum.repository.SecurityRepository;
 import net.jforum.repository.TopicRepository;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
+import net.jforum.util.preferences.TemplateKeys;
 import net.jforum.view.forum.common.ForumCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationHelper.java,v 1.15 2005/03/15 18:24:17 rafaelsteil Exp $
+ * @version $Id: ModerationHelper.java,v 1.16 2005/03/15 20:42:37 rafaelsteil Exp $
  */
 public class ModerationHelper 
 {
+	private static Logger logger = Logger.getLogger(ModerationHelper.class);
+	
 	public static final int SUCCESS = 1;
 	public static final int FAILURE = 2;
 	public static final int IGNORE = 3;
@@ -152,6 +157,9 @@ public class ModerationHelper
 				if (postId > -1) {
 					fm.setLastPost(forumId, postId);
 				}
+				else {
+					logger.warn("Could not find last post id for forum " + forumId);
+				}
 				
 				ForumRepository.reloadForum(forumId);
 			}
@@ -238,10 +246,10 @@ public class ModerationHelper
 		return status;
 	}
 	
-	public void moderationDone(String redirectUrl)
+	public String moderationDone(String redirectUrl)
 	{
-		JForum.getContext().put("moduleAction", "message.htm");
 		JForum.getContext().put("message", I18n.getMessage("Moderation.ModerationDone", new String[] { redirectUrl }));
+		return TemplateKeys.MODERATION_DONE;
 	}
 	
 	public void denied()
@@ -251,7 +259,7 @@ public class ModerationHelper
 	
 	public void denied(String message)
 	{
-		JForum.getContext().put("moduleAction", "message.htm");
+		JForum.getRequest().setAttribute("template", TemplateKeys.MODERATION_DENIED);
 		JForum.getContext().put("message", message);		
 	}
 }

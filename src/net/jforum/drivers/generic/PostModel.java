@@ -60,7 +60,7 @@ import net.jforum.util.search.SearchFacade;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: PostModel.java,v 1.21 2005/03/12 20:10:48 rafaelsteil Exp $
+ * @version $Id: PostModel.java,v 1.22 2005/03/15 20:42:38 rafaelsteil Exp $
  */
 public class PostModel extends AutoKeys implements net.jforum.model.PostModel 
 {
@@ -148,6 +148,7 @@ public class PostModel extends AutoKeys implements net.jforum.model.PostModel
 
 			post.setInt(1, p.getId());
 			text.setInt(1, p.getId());
+			search.setInt(1, p.getId());
 			
 			text.executeUpdate();
 			search.executeUpdate();

@@ -55,10 +55,19 @@ import net.jforum.entities.Topic;
  * select some specific data.
  *
  * @author Rafael Steil
- * @version $Id: TopicModel.java,v 1.9 2005/02/21 20:32:11 rafaelsteil Exp $
+ * @version $Id: TopicModel.java,v 1.10 2005/03/15 20:42:39 rafaelsteil Exp $
  */
 public interface TopicModel 
 {
+	/**
+	 * Fixes the fields <i>topic_first_post_id</i> and 
+	 * <i>topic_last_post_id</i>.
+	 * 
+	 * @param topicId The topic id to fix
+	 * @throws Exception
+	 */
+	public void fixFirstLastPostId(int topicId) throws Exception;
+	
 	/**
 	 * Gets a specific <code>Topic</code>.
 	 * 
