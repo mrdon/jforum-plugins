@@ -37,7 +37,6 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: May 3, 2003 / 5:05:18 PM
- * net.jforum.view.forum.PostVH.java
  * The JForum Project
  * http://www.jforum.net
  */
@@ -75,7 +74,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostVH.java,v 1.17 2004/06/01 19:47:24 pieter2 Exp $
+ * @version $Id: PostVH.java,v 1.18 2004/06/02 04:13:31 rafaelsteil Exp $
  */
 public class PostVH extends Command 
 {
@@ -213,6 +212,7 @@ public class PostVH extends Command
 		JForum.getContext().put("forum",  ForumRepository.getForum(forumId));		
 		JForum.getContext().put("action", "insertSave");		
 		JForum.getContext().put("moduleAction", "post_form.htm");
+		JForum.getContext().put("start", JForum.getRequest().getParameter("start"));
 		JForum.getContext().put("isNewPost", true);
 		
 		int userId = SessionFacade.getUserSession().getUserId();

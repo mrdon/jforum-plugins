@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author pieter
-* @version $Id: ConfigKeys.java,v 1.2 2004/06/02 03:56:12 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.3 2004/06/02 04:13:32 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -94,7 +94,7 @@ public class ConfigKeys {
 	public static final String DATE_TIME_FORMAT = "dateTime.format";
 
 	public static final String TOPICS_PER_PAGE = "topicsPerPage";
-	public static final String POST_PER_PAGE = "postPerPage";
+	public static final String POST_PER_PAGE = "postsPerPage";
 
 	public static final String RSS_FILENAME_FORUM = "rss.filename.forum";
 	public static final String RSS_FILENAME_TOPIC = "rss.filename.topic";
