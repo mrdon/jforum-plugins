@@ -146,11 +146,11 @@
               <TR>			  
                 <TD noWrap><form accept-charset="${encoding}" name="f"><SPAN class=gensmall>${I18n.getMessage("ForumIndex.goTo")}:&nbsp;<SELECT onchange="if(this.options[this.selectedIndex].value != -1){ document.location = '${contextPath}/forums/show/'+ this.options[this.selectedIndex].value +'${extension}'; }" name=select>
 				<OPTION value=-1 selected>${I18n.getMessage("ForumIndex.goToSelectAForum")}</OPTION>				
-				<#list allForums.keySet() as category>
+				<#list categories as category>
 					<OPTION value=-1>&nbsp;</OPTION>
 					<option value="-1">${category.name}</option>
 					<option value="-1">-------------</option>
-					<#list allForums.get(category) as forum>
+					<#list category.forums as forum>
 					<option value="${forum.id}">${forum.name}</option>
 					</#list>
 				</#list>

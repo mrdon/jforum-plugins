@@ -46,12 +46,12 @@ function validateSelectedForum()
 									<span class="gen">
 									${I18n.getMessage("PostForm.moveToForum")}
 									<select name="to_forum">
-										<#list allForums.keySet() as category>
+										<#list allCategories as category>
 											<option value="-1">&nbsp;</option>
 											<option value="-1">${category.name}</option>
 											<option value="-1">-------------</option>
 											
-											<#list allForums.get(category) as forum>
+											<#list category.forums as forum>
 												<option value="${forum.id}">&nbsp;&nbsp;${forum.name}</option>
 											</#list>
 										</#list>

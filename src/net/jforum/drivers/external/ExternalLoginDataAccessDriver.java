@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -42,6 +42,8 @@
  */
 package net.jforum.drivers.external;
 
+import java.sql.Connection;
+
 import net.jforum.model.CategoryModel;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.ForumModel;
@@ -61,7 +63,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Pieter Olivier
- * @version $Id: ExternalLoginDataAccessDriver.java,v 1.1 2004/08/03 14:30:40 pieter2 Exp $
+ * @version $Id: ExternalLoginDataAccessDriver.java,v 1.2 2004/11/13 13:41:21 rafaelsteil Exp $
  */
 public class ExternalLoginDataAccessDriver extends DataAccessDriver {
 	private DataAccessDriver concreteAccessDriver;
@@ -76,9 +78,17 @@ public class ExternalLoginDataAccessDriver extends DataAccessDriver {
 	public CategoryModel newCategoryModel() {
 		return concreteAccessDriver.newCategoryModel();
 	}
+	
+	public CategoryModel newCategoryModel(Connection conn) {
+		return concreteAccessDriver.newCategoryModel(conn);
+	}
 
 	public ForumModel newForumModel() {
 		return concreteAccessDriver.newForumModel();
+	}
+	
+	public ForumModel newForumModel(Connection conn) {
+		return concreteAccessDriver.newForumModel(conn);
 	}
 
 	public GroupModel newGroupModel() {

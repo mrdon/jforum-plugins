@@ -28,14 +28,14 @@
 				</tr>
 		  
 				<!-- START FORUM LISTING -->
-				<#list allForums.keySet() as category>
-				<tr>
-					<td class="catLeft" colspan="2" height="28"><span class="cattitle">${category.name}</span></td>
-					<td class="rowpic" align="right" colspan="3">&nbsp;</td>
-				</tr>
+				<#list allCategories as category>
+					<tr>
+						<td class="catLeft" colspan="2" height="28"><span class="cattitle">${category.name}</span></td>
+						<td class="rowpic" align="right" colspan="3">&nbsp;</td>
+					</tr>
 					
-					<#list allForums.get(category) as forum>
-					<#assign lpi = fir.getLastPostInfo(forum.id)>
+					<#list category.forums as forum>
+					<#assign lpi = fir.getLastPostInfo(forum.id)/>
 					<tr>
 						<td class="row1" valign="center" align="middle" height="50">
 						<#if forum.unread>
@@ -54,17 +54,17 @@
 						</td>
 						<td class="row2" valign="center" nowrap="nowrap" align="middle" height="50">
 							<span class="gensmall">
-							<#if lpi["postTime"]?exists>
-								${lpi["postTime"]}<br />
-								<#if lpi["userId"]?exists><a href="${contextPath}/user/profile/${lpi["userId"]}${extension}"></#if>
-								<#if lpi["userName"]?exists>${lpi["userName"]}</#if></a> 
+							<#if (lpi.postTimeMillis > 0)>
+								${lpi.postDate}<br />
+								<#if (lpi.userId > 0)><a href="${JForumContext.encodeURL("/user/profile/${lpi.userId}")}"></#if>${lpi.username}</a> 
 					
 								<#assign startPage = ""/>
-								<#if (lpi["topic_replies"] + 1 > topicsPerPage)>
-									<#assign startPage = ((lpi["topic_replies"] / topicsPerPage)?int * topicsPerPage) +"/"/>
+								<#if (lpi.topicReplies + 1 > topicsPerPage)>
+									<#assign startPage = ((lpi.topicReplies / topicsPerPage)?int * topicsPerPage) +"/"/>
 								</#if>
 					
-								<a href="${contextPath}/posts/list/${startPage}${lpi["topicId"]}${extension}#${lpi["postId"]}"><img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif" width="18" height="9" border="0" /></a>
+								<#assign url = JForumContext.encodeURL("/posts/list/${startPage}/${lpi.topicId}") + "#" + lpi.postId/>
+								<a href="${url}"><img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif" width="18" height="9" border="0" /></a>
 							<#else>
 								${I18n.getMessage("ForumListing.noMessages")}
 							</#if>		

@@ -42,6 +42,7 @@
  */
 package net.jforum.drivers.generic;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
@@ -57,15 +58,27 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: ForumModel.java,v 1.8 2004/11/12 20:46:41 rafaelsteil Exp $
+ * @version $Id: ForumModel.java,v 1.9 2004/11/13 13:41:19 rafaelsteil Exp $
  */
 public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel 
 {
+	private Connection conn;
+	
+	public ForumModel()
+	{
+		this.conn = JForum.getConnection();
+	}
+	
+	public ForumModel(Connection conn)
+	{
+		this.conn = conn;
+	}
+	
     /**
      * @see net.jforum.model.ForumModel#selectById(int)
      */
     public Forum selectById(int forumId) throws Exception {
-        PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.selectById"));
+        PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.selectById"));
         p.setInt(1, forumId);
 
         ResultSet rs = p.executeQuery();
@@ -103,7 +116,7 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
      * @see net.jforum.model.ForumModel#selectAll()
      */
     public List selectAll() throws Exception {
-        PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.selectAll"));
+        PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.selectAll"));
         List l = new ArrayList();
 
         ResultSet rs = p.executeQuery();
@@ -126,7 +139,7 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
         int maxOrder = 0;
 
         // Retrieves the current value of of forum_order
-        PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.getOrder"));
+        PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.getOrder"));
         p.setInt(1, forumId);
 
         ResultSet rs = p.executeQuery();
@@ -139,7 +152,7 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
         p.close();
 
         // Retireves the max value of forum_order
-        p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.getMaxOrder"));
+        p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.getMaxOrder"));
         rs = p.executeQuery();
 
         if (rs.next()) {
@@ -151,7 +164,7 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
 
         if (order < maxOrder) {
             // Sets the forum that is in the higher order to the current order
-            p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.setOrderByOrder"));
+            p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.setOrderByOrder"));
             p.setInt(1, order);
             p.setInt(2, ++order);
 
@@ -160,7 +173,7 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
             p.close();
 
             // Sets the forum to the higher order
-            p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.setOrderById"));
+            p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.setOrderById"));
             p.setInt(1, order);
             p.setInt(2, forumId);
 
@@ -177,7 +190,7 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
         int order = 0;
 
         // Retireves the current value of of forum_order
-        PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.getOrder"));
+        PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.getOrder"));
         p.setInt(1, forumId);
 
         ResultSet rs = p.executeQuery();
@@ -191,7 +204,7 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
 
         if (order > 1) {
             // Sets the forum that is in the lower order to the current order
-            p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.setOrderByOrder"));
+            p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.setOrderByOrder"));
             p.setInt(1, order);
             p.setInt(2, --order);
 
@@ -200,7 +213,7 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
             p.close();
 
             // Sets the forum to the lower order
-            p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.setOrderById"));
+            p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.setOrderById"));
             p.setInt(1, order);
             p.setInt(2, forumId);
 
@@ -214,7 +227,7 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
      * @see net.jforum.model.ForumModel#delete(int)
      */
     public void delete(int forumId) throws Exception {
-        PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.delete"));
+        PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.delete"));
         p.setInt(1, forumId);
 
         p.executeUpdate();
@@ -226,7 +239,7 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
      * @see net.jforum.model.ForumModel#update(net.jforum.Forum)
      */
     public void update(Forum forum) throws Exception {
-        PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.update"));
+        PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.update"));
 
         p.setInt(1, forum.getCategoryId());
         p.setString(2, forum.getName());
@@ -245,7 +258,7 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
     public int addNew(Forum forum) throws Exception {
         // Gets the higher order
         int maxOrder = 0;
-        PreparedStatement pOrder = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.getMaxOrder"));
+        PreparedStatement pOrder = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.getMaxOrder"));
         ResultSet rs = pOrder.executeQuery();
 
         if (rs.next()) {
@@ -275,7 +288,7 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
      * @see net.jforum.model.ForumModel#setLastPost(int, int)
      */
     public void setLastPost(int forumId, int postId) throws Exception {
-        PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.updateLastPost"));
+        PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.updateLastPost"));
 
         p.setInt(1, postId);
         p.setInt(2, forumId);
@@ -290,7 +303,7 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
      */
     public void incrementTotalTopics(int forumId, int count) throws Exception 
     {
-        PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.incrementTotalTopics"));        
+        PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.incrementTotalTopics"));        
         p.setInt(1, count);
         p.setInt(2, forumId);
         p.executeUpdate();
@@ -302,7 +315,7 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
 	 */
 	public void decrementTotalTopics(int forumId, int count) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.decrementTotalTopics"));
+		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.decrementTotalTopics"));
 		p.setInt(1, count);
 		p.setInt(2, forumId);
 		p.executeUpdate();
@@ -323,7 +336,7 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
 	{
 		LastPostInfo lpi = new LastPostInfo();
 
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.lastPostInfo"));
+		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.lastPostInfo"));
 		p.setInt(1, forumId);
 
 		ResultSet rs = p.executeQuery();
@@ -353,7 +366,7 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
 	 */
 	public int getTotalMessages() throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.totalMessages"));
+		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.totalMessages"));
 		ResultSet rs = p.executeQuery();
 		rs.next();
 		
@@ -370,7 +383,7 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
 	public int getTotalTopics(int forumId) throws Exception 
 	{
 		int total = 0;
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.getTotalTopics"));
+		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.getTotalTopics"));
 		p.setInt(1, forumId);
 		ResultSet rs = p.executeQuery();
 		
@@ -391,7 +404,7 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
 	{
 		int id = -1;
 		
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.getMaxPostId"));
+		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.getMaxPostId"));
 		p.setInt(1, forumId);
 		
 		ResultSet rs = p.executeQuery();
@@ -410,8 +423,8 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel
 	 */
 	public void moveTopics(String[] topics, int fromForumId, int toForumId) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.moveTopics"));
-		PreparedStatement t = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.setForumByTopic"));
+		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("ForumModel.moveTopics"));
+		PreparedStatement t = this.conn.prepareStatement(SystemGlobals.getSql("PostModel.setForumByTopic"));
 		
 		p.setInt(1, toForumId);
 		t.setInt(1, toForumId);

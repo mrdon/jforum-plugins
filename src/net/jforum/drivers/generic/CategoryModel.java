@@ -42,6 +42,7 @@
  */
 package net.jforum.drivers.generic;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -53,16 +54,28 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: CategoryModel.java,v 1.4 2004/11/05 03:29:45 rafaelsteil Exp $
+ * @version $Id: CategoryModel.java,v 1.5 2004/11/13 13:41:19 rafaelsteil Exp $
  */
 public class CategoryModel extends AutoKeys implements net.jforum.model.CategoryModel 
 {
+	private Connection conn;
+	
+	public CategoryModel()
+	{
+		this.conn = JForum.getConnection();
+	}
+	
+	public CategoryModel(Connection conn)
+	{
+		this.conn = conn;
+	}
+	
 	/**
 	 * @see net.jforum.model.CategoryModel#selectById(int)
 	 */
 	public Category selectById(int categoryId) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.selectById"));
+		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("CategoryModel.selectById"));
 		p.setInt(1, categoryId);
 		
 		ResultSet rs = p.executeQuery();
@@ -85,7 +98,7 @@ public class CategoryModel extends AutoKeys implements net.jforum.model.Category
 	 */
 	public List selectAll() throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.selectAll"));
+		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("CategoryModel.selectAll"));
 		List l = new ArrayList();
 		
 		ResultSet rs = p.executeQuery();		
@@ -110,7 +123,7 @@ public class CategoryModel extends AutoKeys implements net.jforum.model.Category
 	 */
 	public boolean canDelete(int categoryId) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.canDelete"));
+		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("CategoryModel.canDelete"));
 		p.setInt(1, categoryId);
 		
 		ResultSet rs = p.executeQuery();
@@ -129,7 +142,7 @@ public class CategoryModel extends AutoKeys implements net.jforum.model.Category
 	 */
 	public void delete(int categoryId) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.delete"));
+		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("CategoryModel.delete"));
 		p.setInt(1, categoryId);
 		p.executeUpdate();
 		
@@ -141,7 +154,7 @@ public class CategoryModel extends AutoKeys implements net.jforum.model.Category
 	 */
 	public void update(Category category) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.update"));		
+		PreparedStatement p = this.conn.prepareStatement(SystemGlobals.getSql("CategoryModel.update"));		
 		p.setString(1, category.getName());
 		p.setInt(2, category.getId());
 		p.executeUpdate();

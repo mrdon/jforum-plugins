@@ -20,6 +20,6 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/pgsql_driver74.213.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/commons-fileupload-1.0-cvs.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/hsqldb-1.7.2.6.jar"/>
-	<classpathentry kind="lib" path="WEB-INF/lib/mysql-connector-java-3.0.15-ga-bin.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/mysql-connector-java-3.1.4-beta-bin.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>

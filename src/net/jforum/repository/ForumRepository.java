@@ -54,7 +54,7 @@ import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
 import net.jforum.entities.LastPostInfo;
 import net.jforum.exceptions.CategoryNotFoundException;
-import net.jforum.exceptions.LoadForumException;
+import net.jforum.model.CategoryModel;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.ForumModel;
 import net.jforum.security.PermissionControl;
@@ -65,9 +65,10 @@ import net.jforum.security.SecurityConstants;
  * This repository acts like a cache system, to avoid repetitive and unnecessary SQL queries
  * every time we need some info about the forums. Using the repository, we put process information
  * needed just once, and then use the cache when data is requested. 
+ * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.12 2004/11/13 03:14:05 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.13 2004/11/13 13:41:21 rafaelsteil Exp $
  */
 public class ForumRepository 
 {
@@ -76,13 +77,28 @@ public class ForumRepository
 	private static int totalTopics = -1;
 	private static int totalMessages = 0;
 	
-	static {
-		try {
-			ForumRepository.loadForums();
-		}
-		catch (Exception e) {
-			throw new LoadForumException("Error while trying to load forums information: " + e);
-		}
+	private ForumModel forumModel;
+	private CategoryModel categoryModel;
+	
+	private static ForumRepository instance;
+	
+	/**
+	 * Starts the repository.
+	 * 
+	 * @param fm The <code>ForumModel</code> instance which will be 
+	 * used to retrieve information about the forums.
+	 * @param cm The <code>CategoryModel</code> instance which will 
+	 * be used to retrieve information about the categories.
+	 * @throws Exception
+	 */
+	public static void start(ForumModel fm, CategoryModel cm) throws Exception
+	{
+		instance = new ForumRepository();
+		instance.forumModel = fm;
+		instance.categoryModel = cm;
+		
+		instance.loadCategories();
+		instance.loadForums();
 	}
 	
 	/**
@@ -333,15 +349,12 @@ public class ForumRepository
 	
 	/**
 	 * Loads all forums.
-	 * 
 	 * @throws Exception
 	 */
-	private static void loadForums() throws Exception
+	private void loadForums() throws Exception
 	{
-		loadCategories();
-
-		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
-		List l = fm.selectAll();
+		forumCategoryRelation = new HashMap();
+		List l = this.forumModel.selectAll();
 
 		for (Iterator iter = l.iterator(); iter.hasNext(); ) {
 			Forum f = (Forum)iter.next();
@@ -358,12 +371,12 @@ public class ForumRepository
 
 	/**
 	 * Loads all categories.
-	 * 
-	 * @throws Exception
+	 * @throws Exception 
 	 */
-	private static void loadCategories() throws Exception
+	private void loadCategories() throws Exception
 	{
-		List categories = DataAccessDriver.getInstance().newCategoryModel().selectAll();
+		List categories = this.categoryModel.selectAll();
+		categoriesMap = new LinkedHashMap();
 		for (Iterator iter = categories.iterator(); iter.hasNext(); ) {
 			Category c = (Category)iter.next();
 			categoriesMap.put(new Integer(c.getId()), c);

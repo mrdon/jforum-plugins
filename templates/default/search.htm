@@ -40,8 +40,10 @@
 				<span class="genmed">
 				<select class="post" name="search_forum">
 					<option value="" selected="selected">${I18n.getMessage("Search.allAvailable")}</option>
-					<#list forums as f>
-		  				<option value="${f.id}">${f.name}</option>
+					<#list categories as c>
+						<#list c.forums as f>
+		  					<option value="${f.id}">${f.name}</option>
+						</#list>
 					</#list>
 				</select>
 				</span>

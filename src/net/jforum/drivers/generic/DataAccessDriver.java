@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -42,22 +42,22 @@
  */
 package net.jforum.drivers.generic;
 
+import java.sql.Connection;
+
 import net.jforum.drivers.generic.security.GroupSecurityModel;
 import net.jforum.drivers.generic.security.UserSecurityModel;
 
 /**
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.2 2004/05/31 01:58:51 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.3 2004/11/13 13:41:19 rafaelsteil Exp $
  */
 public class DataAccessDriver extends net.jforum.model.DataAccessDriver 
 {
-	private static ForumModel forumModel = new ForumModel();
 	private static GroupModel groupModel = new GroupModel();
 	private static PostModel postModel = new PostModel();
 	private static RankingModel rankingModel = new RankingModel();
 	private static TopicModel topicModel = new TopicModel();
 	private static UserModel userModel = new UserModel();
-	private static CategoryModel categoryModel = new CategoryModel();
 	private static TreeGroupModel treeGroupModel = new TreeGroupModel();
 	private static SmilieModel smilieModel = new SmilieModel();
 	private static SearchModel searchModel = new SearchModel();
@@ -71,7 +71,15 @@ public class DataAccessDriver extends net.jforum.model.DataAccessDriver
 	 */
 	public net.jforum.model.ForumModel newForumModel() 
 	{
-		return forumModel;	
+		return new ForumModel();	
+	}
+	
+	/**
+	 * @see net.jforum.model.DataAccessDriver#getForumModel(Connection)
+	 */
+	public net.jforum.model.ForumModel newForumModel(Connection conn) 
+	{
+		return new ForumModel(conn);	
 	}
 
 	/**
@@ -119,7 +127,15 @@ public class DataAccessDriver extends net.jforum.model.DataAccessDriver
 	 */
 	public net.jforum.model.CategoryModel newCategoryModel() 
 	{
-		return categoryModel;
+		return new CategoryModel();
+	}
+	
+	/**
+	 * @see net.jforum.model.DataAccessDriver#newCategoryModel(Connection)
+	 */
+	public net.jforum.model.CategoryModel newCategoryModel(Connection conn) 
+	{
+		return new CategoryModel(conn);
 	}
 
 	/**

@@ -68,35 +68,18 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.46 2004/11/12 19:27:57 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.47 2004/11/13 13:41:17 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
 	private static boolean isDatabaseUp; 
 	
-	private void startDatabase() throws Exception
-	{
-		if (DBConnection.createInstance()) {
-			DBConnection.getImplementation().init();
-		}
-		
-		// If init() fails, the above code will not
-		// be executed, soh is safe to have it this way
-		isDatabaseUp = true;
-	}
-	
 	public void init(ServletConfig config) throws ServletException
 	{
 		super.init(config);
 		
-		try {
-			this.startDatabase();
-		}
-		catch (Exception e) {
-			// we don't care about the exception here
-			// to not invalidate the context
-			isDatabaseUp = false;
-		}
+		isDatabaseUp = ForumStartup.startDatabase();
+		ForumStartup.startForumRepository();
 	}
 	
 	private void checkCookies() throws Exception
@@ -212,7 +195,7 @@ public class JForum extends JForumCommonServlet
 			dataHolder.setRequest(request);
 			
 			if (!isDatabaseUp) {
-				this.startDatabase();
+				ForumStartup.startDatabase();
 			}
 			
 			
