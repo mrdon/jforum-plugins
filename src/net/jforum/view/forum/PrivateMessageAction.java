@@ -63,7 +63,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.1 2004/08/30 23:51:19 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.2 2004/09/04 15:43:33 rafaelsteil Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -118,7 +118,7 @@ public class PrivateMessageAction extends Command
 				SessionFacade.getUserSession().getUserId());
 
 		int userId = Integer.parseInt(JForum.getRequest().getParameter("user_id"));
-		if (userId>0){
+		if (userId > 0){
 			User user1 = DataAccessDriver.getInstance().newUserModel().selectById(userId);
 			JForum.getContext().put("pmRecipient", user1);
 			JForum.getContext().put("toUserId", String.valueOf(user1.getId()));
@@ -279,7 +279,7 @@ public class PrivateMessageAction extends Command
 		
 		JForum.getContext().put("moduleAction", "message.htm");
 		JForum.getContext().put("message", I18n.getMessage("PrivateMessage.deleteDone", 
-						new String[] { "/pm/inbox.page" }));
+						new String[] { JForum.getRequest().getContextPath() + "/pm/inbox.page" }));
 	}
 	
 	public void reply() throws Exception

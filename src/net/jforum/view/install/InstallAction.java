@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, 2004 Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -65,7 +65,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.1 2004/08/30 23:51:21 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.2 2004/09/04 15:44:43 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {

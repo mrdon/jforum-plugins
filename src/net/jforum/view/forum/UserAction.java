@@ -64,7 +64,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.1 2004/08/30 23:51:18 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.2 2004/09/04 15:43:33 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -190,6 +190,11 @@ public class UserAction extends Command
 				userSession.setUsername(JForum.getRequest().getParameter("username"));
 				userSession.setPrivateMessages(user.getPrivateMessagesCount());
 				
+				userSession.setLang(user.getLang());
+				if (user.getLang() != null && !user.getLang().equals("") && !I18n.contains(user.getLang())) {
+					I18n.load(user.getLang());
+				}
+
 				// Autologin
 				if (JForum.getRequest().getParameter("autologin") != null) {
 					userSession.setAutoLogin(true);

@@ -73,7 +73,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumCommonServlet.java,v 1.3 2004/09/03 04:04:40 rafaelsteil Exp $
+ * @version $Id: JForumCommonServlet.java,v 1.4 2004/09/04 15:42:49 rafaelsteil Exp $
  */
 public class JForumCommonServlet extends HttpServlet
 {
@@ -116,25 +116,24 @@ public class JForumCommonServlet extends HttpServlet
 			if (!this.debug) {
 				templateCfg.setTemplateUpdateDelay(3600);
 			}
-			else {
-				// Queries
-				FileMonitor.getInstance().addFileChangeListener(new QueriesFileListener(), 
-						SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC),
-						SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY));
-				
-				FileMonitor.getInstance().addFileChangeListener(new QueriesFileListener(), 
-						SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER),
-						SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY));
-				
-				// System Properties
-				FileMonitor.getInstance().addFileChangeListener(new SystemGlobalsListener(), 
-            			SystemGlobals.getValue(ConfigKeys.DEFAULT_CONFIG), 
-						SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY));
-				
-				FileMonitor.getInstance().addFileChangeListener(new SystemGlobalsListener(), 
-            			SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG), 
-						SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY));
-			}
+			
+			// Queries
+			FileMonitor.getInstance().addFileChangeListener(new QueriesFileListener(), 
+					SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC),
+					SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY));
+			
+			FileMonitor.getInstance().addFileChangeListener(new QueriesFileListener(), 
+					SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER),
+					SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY));
+			
+			// System Properties
+			FileMonitor.getInstance().addFileChangeListener(new SystemGlobalsListener(), 
+        			SystemGlobals.getValue(ConfigKeys.DEFAULT_CONFIG), 
+					SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY));
+			
+			FileMonitor.getInstance().addFileChangeListener(new SystemGlobalsListener(), 
+        			SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG), 
+					SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY));
 			
 			Configuration.setDefaultConfiguration(templateCfg);
 		}

@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageModel.java,v 1.3 2004/08/26 02:43:14 rafaelsteil Exp $
+ * @version $Id: PrivateMessageModel.java,v 1.4 2004/09/04 15:44:43 rafaelsteil Exp $
  */
 public class PrivateMessageModel extends AutoKeys implements net.jforum.model.PrivateMessageModel
 {
@@ -71,7 +71,7 @@ public class PrivateMessageModel extends AutoKeys implements net.jforum.model.Pr
 		// We should store 2 copies: one for the sendee's sent box
 		// and another for the target user's inbox.
 		
-		PreparedStatement insert = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessagesModel.addText"));
+		PreparedStatement text = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessagesModel.addText"));
 
 		// Sendee's sent box
 		PreparedStatement p = this.getStatementForAutoKeys("PrivateMessageModel.add");
@@ -85,20 +85,17 @@ public class PrivateMessageModel extends AutoKeys implements net.jforum.model.Pr
 		p.setString(8, pm.getPost().isSmiliesEnabled() ? "1" : "0");
 		p.setString(9, pm.getPost().isSignatureEnabled() ? "1" : "0");
 		
-		p.executeUpdate();
-		
-		insert.setInt(1, this.executeAutoKeysQuery(p));
-		insert.setString(2, pm.getPost().getText());
-		insert.executeUpdate();
+		text.setInt(1, this.executeAutoKeysQuery(p));
+		text.setString(2, pm.getPost().getText());
+		text.executeUpdate();
 		
 		// Target user's inbox
 		p.setInt(1, PrivateMessageType.NEW);
-		p.executeUpdate();
 		
-		insert.setInt(1, this.executeAutoKeysQuery(p));
-		insert.executeUpdate();
+		text.setInt(1, this.executeAutoKeysQuery(p));
+		text.executeUpdate();
 		
-		insert.close();
+		text.close();
 		p.close();
 	}
 	

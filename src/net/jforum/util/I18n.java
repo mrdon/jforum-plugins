@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) 2003, 2004 Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -45,7 +45,9 @@ package net.jforum.util;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -61,7 +63,8 @@ import net.jforum.util.preferences.SystemGlobals;
  * memory and provides a static method to acess them.
  *  
  * @author Rafael Steil
- * @version $Id: I18n.java,v 1.11 2004/09/03 04:04:40 rafaelsteil Exp $
+ * @author James Yong
+ * @version $Id: I18n.java,v 1.12 2004/09/04 15:44:09 rafaelsteil Exp $
  */
 public class I18n 
 {
@@ -70,6 +73,7 @@ public class I18n
 	private static Properties localeNames = new Properties();
 	private static String defaultName;
 	private static String baseDir;
+	private static List watching = new ArrayList();
 	
 	public static final String CANNOT_DELETE_GROUP = "CannotDeleteGroup";
 	public static final String CANNOT_DELETE_CATEGORY = "CannotDeleteCategory";
@@ -103,21 +107,43 @@ public class I18n
 	
 	/**
 	 * Loads ConfigKeys.I18N_USER_DEFAULT, where ConfigKeys.I18N_DEFAULT is the default
-	 * @author Rafael Steil, James Yong
 	 */
-	public static void load(String localeName) throws IOException
+	public static void load(final String localeName) throws IOException
 	{
 		String defaultLocaleName = SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT);
-		Properties p1 = new Properties();
-		p1.load(new FileInputStream(baseDir + localeNames.getProperty(defaultLocaleName.toString())));
+		Properties defaultI18n = new Properties();
+		defaultI18n.load(new FileInputStream(baseDir + localeNames.getProperty(defaultLocaleName)));
 		
 		if (defaultLocaleName.toString().equals(localeName)) {
-			messagesMap.put(localeName, p1);
+			messagesMap.put(localeName, defaultI18n);
 		}
 		else {
-			Properties p = new Properties(p1);
+			Properties p = new Properties(defaultI18n);
 			p.load(new FileInputStream(baseDir + localeNames.getProperty(localeName)));
 			messagesMap.put(localeName, p);			
+		}
+		
+		// Watch for changes
+		if (!watching.contains(localeName)) {
+			watching.add(localeName);
+			
+			FileMonitor.getInstance().addFileChangeListener(new FileChangeListener() {
+				/** 
+				 * @see net.jforum.util.FileChangeListener#fileChanged(java.lang.String)
+				 */
+				public void fileChanged(String filename) {
+					logger.info("Reloading i18n for " + localeName);
+					
+					try {
+						I18n.load(localeName);
+					}
+					catch (IOException e) {
+						logger.warn(e);
+						e.printStackTrace();
+					}
+				}
+			}, baseDir + localeNames.getProperty(localeName), 
+				SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY));
 		}
 	}
 	
@@ -141,7 +167,11 @@ public class I18n
 	 */
 	public static String getMessage(String messageName, Object params[])
 	{
-		String lang = SessionFacade.getUserSession().getLang();
+		String lang = "";
+		UserSession us = SessionFacade.getUserSession();
+		if (us != null && us.getLang() != null) {
+			lang = us.getLang();
+		}
 		
 		if ("".equals(lang)){
 			return getMessage(defaultName, messageName, params);
