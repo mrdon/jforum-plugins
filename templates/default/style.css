@@ -42,7 +42,7 @@ TD {
 	FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif
 }
 
-PRE {
+td.PRE {
 	FONT-SIZE: 11px; COLOR: #444444; FONT-FAMILY: Courier, 'Courier New', sans-serif
 }
 
@@ -332,7 +332,7 @@ A.postlink:hover {
 	FONT-SIZE: 11px; COLOR: #444444; FONT-FAMILY: Courier, 'Courier New', sans-serif; background-color: #F3F5FF;
 }
 .code-table {
-	 width: 90%; border-spacing: 1px; border: 0; align: center; background-color: #2943D4;
+	 width: 90%; border-spacing: 1px; border: 0; align: center; background-color: #DEE3E7;
 }
 .code-table-simple {
 	width: 90%; border-spacing: 1px; border: 0; align: center; 
@@ -341,7 +341,7 @@ A.postlink:hover {
 	FONT-SIZE: 11px; COLOR: #444444; LINE-HEIGHT: 125%; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; background-color: #F3F5FF;
 }
 .quote-table {
-	width: 90%; border-spacing: 1px; border: 0; align: center; background-color: #2943D4;
+	width: 90%; border-spacing: 1px; border: 0; align: center; background-color: #DEE3E7;
 }
 .quote-table-simple {
 	width: 90%; border-spacing: 1px; border: 0; align: center; 

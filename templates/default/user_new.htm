@@ -83,7 +83,7 @@ function validateRegistrationForm(f)
 		<tr>
 			<td class="row1" width="38%"><span class="gen">${I18n.getMessage("User.captchaResponse")}: *</span></td>
 			<td class="row2">
-				<input class="post" style="WIDTH: 200px" maxlength="25" size="25" name="captchaResponse" /> 
+				<input class="post" style="WIDTH: 200px; font-weight: bold;" maxlength="25" size="25" name="captchaResponse" /> 
 				<img src="${JForumContext.encodeURL("/captcha/generate")}" border="0" align="middle">
 			</td>
 		</tr>
