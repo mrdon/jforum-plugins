@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageModel.java,v 1.7 2004/11/05 03:29:46 rafaelsteil Exp $
+ * @version $Id: PrivateMessageModel.java,v 1.8 2005/01/26 20:15:11 rafaelsteil Exp $
  */
 public class PrivateMessageModel extends AutoKeys implements net.jforum.model.PrivateMessageModel
 {
@@ -70,11 +70,35 @@ public class PrivateMessageModel extends AutoKeys implements net.jforum.model.Pr
 	{
 		// We should store 2 copies: one for the sendee's sent box
 		// and another for the target user's inbox.
-		
-		PreparedStatement text = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessagesModel.addText"));
+		PreparedStatement p = this.getStatementForAutoKeys("PrivateMessageModel.add");
 
 		// Sendee's sent box
-		PreparedStatement p = this.getStatementForAutoKeys("PrivateMessageModel.add");
+		this.addPm(pm, p);
+		this.addPmText(pm);
+		
+		// Target user's inbox
+		p.setInt(1, PrivateMessageType.NEW);
+		pm.setId(this.executeAutoKeysQuery(p));
+		
+		this.addPmText(pm);
+		
+		p.close();
+	}
+	
+	protected void addPmText(PrivateMessage pm) throws Exception
+	{
+		PreparedStatement text = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("PrivateMessagesModel.addText"));
+		
+		text.setInt(1, pm.getId());
+		text.setString(2, pm.getPost().getText());
+		text.executeUpdate();
+		
+		text.close();
+	}
+	
+	protected void addPm(PrivateMessage pm, PreparedStatement p) throws Exception
+	{
 		p.setInt(1, PrivateMessageType.SENT);
 		p.setString(2, pm.getPost().getSubject());
 		p.setInt(3, pm.getFromUser().getId());
@@ -85,18 +109,7 @@ public class PrivateMessageModel extends AutoKeys implements net.jforum.model.Pr
 		p.setString(8, pm.getPost().isSmiliesEnabled() ? "1" : "0");
 		p.setString(9, pm.getPost().isSignatureEnabled() ? "1" : "0");
 		
-		text.setInt(1, this.executeAutoKeysQuery(p));
-		text.setString(2, pm.getPost().getText());
-		text.executeUpdate();
-		
-		// Target user's inbox
-		p.setInt(1, PrivateMessageType.NEW);
-		
-		text.setInt(1, this.executeAutoKeysQuery(p));
-		text.executeUpdate();
-		
-		text.close();
-		p.close();
+		pm.setId(this.executeAutoKeysQuery(p));
 	}
 	
 	/** 
@@ -215,12 +228,17 @@ public class PrivateMessageModel extends AutoKeys implements net.jforum.model.Pr
 			p.setSignatureEnabled(rs.getInt("privmsgs_attach_sig") == 1);
 			p.setHtmlEnabled(rs.getInt("privmsgs_enable_html") == 1);
 			p.setSmiliesEnabled(rs.getInt("privmsgs_enable_smilies") == 1);
-			p.setText(rs.getString("privmsgs_text"));
+			p.setText(this.getPmText(rs));
 		}
 		
 		pm.setPost(p);
-		
+
 		return pm;
+	}
+	
+	protected String getPmText(ResultSet rs) throws Exception
+	{
+		return rs.getString("privmsgs_text");
 	}
 
 	/** 

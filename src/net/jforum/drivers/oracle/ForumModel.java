@@ -47,10 +47,15 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumModel.java,v 1.1 2005/01/13 23:30:07 rafaelsteil Exp $
+ * @version $Id: ForumModel.java,v 1.2 2005/01/26 20:15:09 rafaelsteil Exp $
  */
 public class ForumModel extends net.jforum.drivers.generic.ForumModel
 {
+	public ForumModel()
+	{
+		super();
+	}
+	
 	/** 
 	 * @see net.jforum.model.ForumModel#addNew(net.jforum.entities.Forum)
 	 */

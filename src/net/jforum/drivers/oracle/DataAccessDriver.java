@@ -42,91 +42,24 @@
  */
 package net.jforum.drivers.oracle;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.sql.Blob;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import net.jforum.JForum;
 import net.jforum.drivers.oracle.security.GroupSecurityModel;
 import net.jforum.drivers.oracle.security.UserSecurityModel;
 
 /**
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.1 2005/01/13 23:30:08 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.2 2005/01/26 20:15:10 rafaelsteil Exp $
  */
 public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDriver
 {
 	private static PostModel postModel = new PostModel();
 	private static TopicModel topicModel = new TopicModel();
-	private static ForumModel forumModel = new ForumModel();
 	private static SearchModel searchModel = new SearchModel();
 	private static SmilieModel smilieModel = new SmilieModel();
 	private static UserModel userModel = new UserModel();
 	private static GroupSecurityModel groupSecurityModel = new GroupSecurityModel();
 	private static UserSecurityModel userSecurityModel = new UserSecurityModel();
-	private static CategoryModel categoryModel = new CategoryModel();
 	private static PrivateMessageModel pmModel = new PrivateMessageModel();
 
-    public static String readBlobUTF16BinaryStream(ResultSet rs, String fieldName) throws IOException, SQLException
-    {
-        Blob clob = rs.getBlob(fieldName);
-
-        InputStream is = clob.getBinaryStream();
-        int readedBytes = 0;
-        final int bufferSize = 4096;
-        StringBuffer sb = new StringBuffer();
-        do
-        {
-            byte[] bytes = new byte[bufferSize];
-            readedBytes = is.read(bytes);
-            if (readedBytes > 0) {
-                String readed =  new String(bytes, 0, readedBytes, "UTF-16");
-                sb.append(readed);
-            }
-        }
-        while(readedBytes == bufferSize);
-
-        is.close();
-
-        return sb.toString();
-    }
-    /**
-     * The query should look like:
-     *
-     * SELECT blob_field from any_table WHERE id = ? FOR UPDATE
-     *
-     * BUT KEEP IN MIND:
-     *
-     * When you insert record in previous step, it should go with empty_blob() like:
-     *
-     * INSERT INTO jforum_posts_text ( post_text ) VALUES (EMPTY_BLOB())
-     *
-     * @param query
-     * @param idForQuery
-     * @param value
-     * @throws IOException
-     * @throws SQLException
-     */
-    public static void writeBlobUTF16BinaryStream( String query, int idForQuery, String value ) throws IOException, SQLException
-    {
-        PreparedStatement p = JForum.getConnection().prepareStatement(query);
-        p.setInt(1, idForQuery);
-
-        ResultSet rs = p.executeQuery();
-        rs.next();
-        Blob post_text = rs.getBlob(1);
-
-        OutputStream blobWriter = ((oracle.sql.BLOB)post_text).getBinaryOutputStream();
-        blobWriter.write(value.getBytes("UTF16"));
-
-        blobWriter.close();
-        rs.close();
-        p.close();
-    }
 	/**
 	 * @see net.jforum.model.DataAccessDriver#newPostModel()
 	 */
@@ -148,7 +81,7 @@ public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDrive
 	 */
 	public net.jforum.model.ForumModel newForumModel()
 	{
-		return forumModel;
+		return new ForumModel();
 	}
 	
 	/** 
@@ -196,7 +129,7 @@ public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDrive
 	 */
 	public net.jforum.model.CategoryModel newCategoryModel()
 	{
-		return categoryModel;
+		return new CategoryModel();
 	}
 	
 	public net.jforum.model.PrivateMessageModel newPrivateMessageModel()

@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: PostModel.java,v 1.16 2005/01/26 19:22:31 franklin_samir Exp $
+ * @version $Id: PostModel.java,v 1.17 2005/01/26 20:15:11 rafaelsteil Exp $
  */
 public class PostModel extends AutoKeys implements net.jforum.model.PostModel 
 {
@@ -102,7 +102,7 @@ public class PostModel extends AutoKeys implements net.jforum.model.PostModel
 		post.setEditTime(rs.getTimestamp("post_edit_time"));
 		post.setEditCount(rs.getInt("post_edit_count"));
 		post.setSubject(rs.getString("post_subject"));
-		post.setText(rs.getString("post_text"));
+		post.setText(this.getPostTextFromResultSet(rs));
 		post.setPostUsername(rs.getString("username"));
 		post.hasAttachments(rs.getInt("attach") > 0);
 		
@@ -112,6 +112,20 @@ public class PostModel extends AutoKeys implements net.jforum.model.PostModel
 		post.setKarma(DataAccessDriver.getInstance().newKarmaModel().getPostKarma(post.getId()));
 		
 		return post;
+	}
+	
+	/**
+	 * Utility method to read the post text fromt the result set.
+	 * This method may be useful when using some "non-standart" way
+	 * to store text, like oracle does when using (c|b)lob
+	 * 
+	 * @param rs The resultset to fetch data from
+	 * @return The post text string
+	 * @throws Exception
+	 */
+	protected String getPostTextFromResultSet(ResultSet rs) throws Exception
+	{
+		return rs.getString("post_text");
 	}
 
 	/**
@@ -174,7 +188,23 @@ public class PostModel extends AutoKeys implements net.jforum.model.PostModel
 	 */
 	public void update(Post post) throws Exception 
 	{
-		// Table posts
+		this.updatePostsTable(post);
+		this.updatePostsTextTable(post);
+	}
+	
+	protected void updatePostsTextTable(Post post) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.updatePostText"));
+		p.setString(1, post.getText());
+		p.setString(2, post.getSubject());
+		p.setInt(3, post.getId());
+		
+		p.executeUpdate();
+		p.close();
+	}
+	
+	protected void updatePostsTable(Post post) throws Exception
+	{
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.updatePost"));
 		p.setInt(1, post.getTopicId());
 		p.setInt(2, post.getForumId());
@@ -188,14 +218,6 @@ public class PostModel extends AutoKeys implements net.jforum.model.PostModel
 		
 		p.executeUpdate();
 		p.close();
-		
-		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.updatePostText"));
-		p.setString(1, post.getText());
-		p.setString(2, post.getSubject());
-		p.setInt(3, post.getId());
-		
-		p.executeUpdate();
-		p.close();
 	}
 
 	/**
@@ -203,7 +225,28 @@ public class PostModel extends AutoKeys implements net.jforum.model.PostModel
 	 */
 	public int addNew(Post post) throws Exception 
 	{
-		// Table posts_texts
+		this.addNewPost(post);
+		this.addNewPostText(post);
+		new UserModel().incrementPosts(post.getUserId());
+		
+		// Tokenize the words for search
+		DataAccessDriver.getInstance().newSearchModel().insertSearchWords(post);
+		
+		return post.getId();
+	}
+	
+	protected void addNewPostText(Post post) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.addNewPostText"));
+		p.setInt(1, post.getId());
+		p.setString(2, post.getText());
+		p.setString(3, post.getSubject());
+		p.executeUpdate();
+		p.close();
+	}
+	
+	protected void addNewPost(Post post) throws Exception
+	{
 		PreparedStatement p = this.getStatementForAutoKeys("PostModel.addNewPost");
 		
 		p.setInt(1, post.getTopicId());
@@ -220,25 +263,6 @@ public class PostModel extends AutoKeys implements net.jforum.model.PostModel
 		post.setId(postId);
 		
 		p.close();
-
-		// Text
-		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.addNewPostText"));
-		p.setInt(1, postId);
-		p.setString(2, post.getText());
-		p.setString(3, post.getSubject());
-		p.executeUpdate();
-		p.close();
-		
-		// Increment
-		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.incrementPosts"));
-		p.setInt(1, post.getUserId());
-		p.executeUpdate();
-		p.close();
-		
-		// Tokenize the words for search
-		DataAccessDriver.getInstance().newSearchModel().insertSearchWords(post);
-		
-		return postId;
 	}
 	
 	/**

@@ -67,7 +67,7 @@ function validateForm()
 			
 				<tr>
 					<td class="row1"><span class="gen">${I18n.getMessage("User.emailAddress")}: *</span></td>
-					<td class="row2"><input class="post" style="WIDTH: 200px" maxlength="255" size="25" name="email" value="${u.email}" /></td>
+					<td class="row2"><input class="post" style="WIDTH: 200px" maxlength="255" size="25" name="email" value="${u.email?default("")}" /></td>
 				</tr>
 			
 				<#if !admin?default(false)>

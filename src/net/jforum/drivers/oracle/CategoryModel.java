@@ -47,10 +47,15 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: CategoryModel.java,v 1.1 2005/01/13 23:30:08 rafaelsteil Exp $
+ * @version $Id: CategoryModel.java,v 1.2 2005/01/26 20:15:09 rafaelsteil Exp $
  */
 public class CategoryModel extends net.jforum.drivers.generic.CategoryModel
 {
+	public CategoryModel()
+	{
+		super();
+	}
+	
 	/** 
 	 * @see net.jforum.model.CategoryModel#addNew(net.jforum.entities.Category)
 	 */

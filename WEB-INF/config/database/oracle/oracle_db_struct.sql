@@ -1,3 +1,6 @@
+--
+-- jforum_banlist
+--
 CREATE SEQUENCE jforum_banlist_seq
 INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
@@ -5,12 +8,11 @@ INCREMENT BY 1
 
 CREATE TABLE jforum_banlist (
     banlist_id NUMBER(10) NOT NULL,
-    user_id NUMBER(10) DEFAULT 0 NOT NULL,
+    user_id NUMBER(10) DEFAULT 0,
     banlist_ip VARCHAR2(20) DEFAULT '' NOT NULL,
     banlist_email VARCHAR2(255) NOT NULL,
     PRIMARY KEY(banlist_id)
 );
-
 
 CREATE INDEX idx_banlist_user ON jforum_banlist(user_id);
 
@@ -19,11 +21,6 @@ CREATE INDEX idx_banlist_user ON jforum_banlist(user_id);
 --
 
 CREATE SEQUENCE jforum_categories_seq
-INCREMENT BY 1
-    START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
-    CACHE 200 ORDER;
-
-CREATE SEQUENCE jforum_categories_order_seq
 INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
@@ -154,6 +151,7 @@ CREATE TABLE jforum_posts (
   post_edit_time DATE DEFAULT NULL,
   post_edit_count NUMBER(10) DEFAULT 0 NOT NULL,
   status NUMBER(10) DEFAULT 1,
+  attach NUMBER(1) DEFAULT 0,
   PRIMARY KEY (post_id)
 );
 
@@ -225,7 +223,7 @@ CREATE TABLE jforum_ranks (
 
 CREATE TABLE jforum_sessions (
   session_id VARCHAR2(50) DEFAULT '' NOT NULL,
-  session_user_id NUMBER(10) DEFAULT 0 NOT NULL,
+  session_user_id NUMBER(10) DEFAULT 0,
   session_start DATE DEFAULT SYSDATE NOT NULL,
   session_time NUMBER(10) DEFAULT 0 NOT NULL,
   session_ip VARCHAR2(8) DEFAULT '' NOT NULL,
@@ -369,6 +367,7 @@ CREATE TABLE jforum_users (
   deleted NUMBER(10) DEFAULT NULL,
   user_viewonline NUMBER(10) DEFAULT 1,
   security_hash VARCHAR2(32),
+  user_karma DECIMAL(10,2),
   PRIMARY KEY (user_id)
 );
 
@@ -494,27 +493,164 @@ CREATE INDEX idx_st_user ON jforum_search_topics(user_id);
 CREATE INDEX idx_st_fp ON jforum_search_topics(topic_first_post_id);
 CREATE INDEX idx_st_lp ON jforum_search_topics(topic_last_post_id);
 
-ALTER TABLE jforum_banlist MODIFY(banlist_id DEFAULT NULL  NULL);
-ALTER TABLE jforum_categories MODIFY(title  DEFAULT NULL  NULL);
-ALTER TABLE jforum_config MODIFY(config_name  DEFAULT NULL  NULL);
-ALTER TABLE jforum_config MODIFY(config_value  DEFAULT NULL  NULL);
-ALTER TABLE jforum_forums MODIFY(forum_name  DEFAULT NULL  NULL);
-ALTER TABLE jforum_groups MODIFY(group_name  DEFAULT NULL  NULL);
-ALTER TABLE jforum_privmsgs MODIFY(privmsgs_subject  DEFAULT NULL  NULL);
-ALTER TABLE jforum_privmsgs MODIFY(privmsgs_ip  DEFAULT NULL  NULL);
-ALTER TABLE jforum_ranks MODIFY(rank_title  DEFAULT NULL  NULL);
-ALTER TABLE jforum_sessions MODIFY(session_id  DEFAULT NULL  NULL);
-ALTER TABLE jforum_sessions MODIFY(session_ip  DEFAULT NULL  NULL);
-ALTER TABLE jforum_smilies MODIFY(code DEFAULT NULL  NULL);
-ALTER TABLE jforum_themes MODIFY(template_name  DEFAULT NULL  NULL);
-ALTER TABLE jforum_themes MODIFY(style_name  DEFAULT NULL  NULL);
-ALTER TABLE jforum_topics MODIFY(topic_title  DEFAULT NULL  NULL);
-ALTER TABLE jforum_users MODIFY(username  DEFAULT NULL  NULL);
-ALTER TABLE jforum_users MODIFY(user_password  DEFAULT NULL  NULL);
-ALTER TABLE jforum_users MODIFY(user_timezone  DEFAULT NULL  NULL);
-ALTER TABLE jforum_users MODIFY(user_email  DEFAULT NULL  NULL);
-ALTER TABLE jforum_vote_results MODIFY(vote_option_text  DEFAULT NULL  NULL);
-ALTER TABLE jforum_vote_voters MODIFY(vote_user_ip  DEFAULT NULL  NULL);
-ALTER TABLE jforum_words MODIFY(word  DEFAULT NULL  NULL);
-ALTER TABLE jforum_words MODIFY(replacement  DEFAULT NULL  NULL);
-ALTER TABLE jforum_search_topics MODIFY(topic_title  DEFAULT NULL  NULL);
+--
+-- Table structure for table 'jforum_karma'
+--
+CREATE SEQUENCE jforum_karma_seq
+INCREMENT BY 1
+    START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
+    CACHE 200 ORDER;
+
+CREATE TABLE jforum_karma (
+	karma_id NUMBER(10) NOT NULL,
+	post_id NUMBER(10) NOT NULL,
+	topic_id NUMBER(10) NOT NULL,
+	post_user_id NUMBER(10) NOT NULL,
+	from_user_id NUMBER(10) NOT NULL,
+	points NUMBER(10) NOT NULL,
+	PRIMARY KEY(karma_id)
+);
+
+CREATE INDEX idx_krm_post ON jforum_karma(post_id);
+CREATE INDEX idx_krm_topic ON jforum_karma(topic_id);
+CREATE INDEX idx_krm_user ON jforum_karma(post_user_id);
+CREATE INDEX idx_krm_from ON jforum_karma(from_user_id);
+
+--
+-- Table structure for table 'jforum_bookmark'
+--
+CREATE SEQUENCE jforum_bookmarks_seq
+INCREMENT BY 1
+    START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
+    CACHE 200 ORDER;
+
+CREATE TABLE jforum_bookmarks (
+	bookmark_id NUMBER(10) NOT NULL,
+	user_id NUMBER(10) NOT NULL,
+	relation_id NUMBER(10) NOT NULL,
+	relation_type NUMBER(10) NOT NULL,
+	public_visible NUMBER(10) DEFAULT 1,
+	title VARCHAR(255),
+	description VARCHAR(255),
+	PRIMARY KEY(bookmark_id)
+);
+
+CREATE INDEX idx_bok_user ON jforum_bookmarks(user_id);
+CREATE INDEX idx_bok_rel ON jforum_bookmarks(relation_id);
+
+-- 
+-- Table structure for table 'jforum_quota_limit'
+--
+CREATE SEQUENCE jforum_quota_limit_seq
+INCREMENT BY 1
+    START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
+    CACHE 200 ORDER;
+
+CREATE TABLE jforum_quota_limit (
+	quota_limit_id NUMBER(10) NOT NULL,
+	quota_desc VARCHAR(50) NOT NULL,
+	quota_limit NUMBER(10) NOT NULL,
+	quota_type NUMBER(1) DEFAULT 1,
+	PRIMARY KEY(quota_limit_id)
+);
+
+--
+-- Table structure for table 'jforum_extension_groups'
+--
+CREATE SEQUENCE jforum_extension_groups_seq
+INCREMENT BY 1
+    START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
+    CACHE 200 ORDER;
+
+CREATE TABLE jforum_extension_groups (
+	extension_group_id NUMBER(10) NOT NULL,
+	name VARCHAR(100) NOT NULL,
+	allow NUMBER(1) DEFAULT 1, 
+	upload_icon VARCHAR(100),
+	download_mode NUMBER(1) DEFAULT 1,
+	PRIMARY KEY(extension_group_id)
+) ;
+
+-- 
+-- Table structure for table 'jforum_extensions'
+--
+CREATE SEQUENCE jforum_extensions_seq
+INCREMENT BY 1
+    START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
+    CACHE 200 ORDER;
+
+CREATE TABLE jforum_extensions (
+	extension_id NUMBER(10) NOT NULL,
+	extension_group_id NUMBER(10) NOT NULL,
+	description VARCHAR(100),
+	upload_icon VARCHAR(100),
+	extension VARCHAR(10),
+	allow NUMBER(1) DEFAULT 1,
+	PRIMARY KEY(extension_id)
+);
+
+CREATE INDEX idx_ext_group ON jforum_extensions(extension_group_id);
+CREATE INDEX idx_ext_ext ON jforum_extensions(extension);
+
+--
+-- Table structure for table 'jforum_attach'
+--
+CREATE SEQUENCE jforum_attach_seq
+INCREMENT BY 1
+    START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
+    CACHE 200 ORDER;
+
+CREATE TABLE jforum_attach (
+	attach_id NUMBER(10) NOT NULL,
+	post_id NUMBER(10),
+	privmsgs_id NUMBER(10),
+	user_id NUMBER(10) NOT NULL,
+	PRIMARY KEY(attach_id)
+);
+
+CREATE INDEX idx_att_post ON jforum_attach(post_id);
+CREATE INDEX idx_att_priv ON jforum_attach(privmsgs_id);
+CREATE INDEX idx_att_user ON jforum_attach(user_id);
+
+-- 
+-- Table structure for table 'jforum_attach_desc'
+--
+CREATE SEQUENCE jforum_attach_desc_seq
+INCREMENT BY 1
+    START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
+    CACHE 200 ORDER;
+
+CREATE TABLE jforum_attach_desc (
+	attach_desc_id NUMBER(10) NOT NULL,
+	attach_id NUMBER(10) NOT NULL,
+	physical_filename VARCHAR(255) NOT NULL,
+	real_filename VARCHAR(255) NOT NULL,
+	download_count NUMBER(10),
+	description VARCHAR(255),
+	mimetype VARCHAR(50),
+	filesize NUMBER(20),
+	upload_time DATE,
+	thumb NUMBER(1) DEFAULT 0,
+	extension_id NUMBER(10)
+);
+
+CREATE INDEX idx_att_d_att ON jforum_attach_desc(attach_id);
+CREATE INDEX idx_att_d_ext ON jforum_attach_desc(extension_id);
+
+--
+-- Table structure for table 'jforum_attach_quota'
+--
+CREATE SEQUENCE jforum_attach_quota_seq
+INCREMENT BY 1
+    START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
+    CACHE 200 ORDER;
+
+CREATE TABLE jforum_attach_quota (
+	attach_quota_id NUMBER(10) NOT NULL,
+	group_id NUMBER(10) NOT NULL,
+	quota_limit_id NUMBER(10) NOT NULL,
+	PRIMARY KEY(attach_quota_id)
+);
+
+CREATE INDEX idx_aq_group ON jforum_attach_quota(group_id);
+CREATE INDEX idx_aq_ql ON jforum_attach_quota(quota_limit_id);

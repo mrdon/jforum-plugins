@@ -73,7 +73,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.58 2005/01/24 20:22:21 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.59 2005/01/26 20:15:12 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -120,37 +120,42 @@ public class JForum extends JForumCommonServlet
 					UserSession tmpUs = null;
 					
 					User user = DataAccessDriver.getInstance().newUserModel().selectById(userId);
-					userSession.dataToUser(user);
-
-					// As an user may come back to the forum before its
-					// last visit's session expires, we should check for
-					// existent user information and then, if found, store
-					// it to the database before getting his information back.
-					String sessionId = SessionFacade.isUserInSession(userId);
-					if (sessionId != null) {
-						SessionFacade.storeSessionData(sessionId, JForum.getConnection());
-						tmpUs = SessionFacade.getUserSession(sessionId);
-						SessionFacade.remove(sessionId);
+					if (user == null) {
+						userSession.makeAnonymous();
 					}
 					else {
-						UserSessionModel sm = DataAccessDriver.getInstance().newUserSessionModel();
-						tmpUs = sm.selectById(userSession, JForum.getConnection());
+						userSession.dataToUser(user);
+	
+						// As an user may come back to the forum before its
+						// last visit's session expires, we should check for
+						// existent user information and then, if found, store
+						// it to the database before getting his information back.
+						String sessionId = SessionFacade.isUserInSession(userId);
+						if (sessionId != null) {
+							SessionFacade.storeSessionData(sessionId, JForum.getConnection());
+							tmpUs = SessionFacade.getUserSession(sessionId);
+							SessionFacade.remove(sessionId);
+						}
+						else {
+							UserSessionModel sm = DataAccessDriver.getInstance().newUserSessionModel();
+							tmpUs = sm.selectById(userSession, JForum.getConnection());
+						}
+						
+						if (tmpUs == null) {
+							userSession.setLastVisit(new Date(System.currentTimeMillis()));
+						}
+						else {
+							// Update last visit and session start time
+							userSession.setLastVisit(new Date(tmpUs.getStartTime().getTime() + tmpUs.getSessionTime()));
+						}
+						
+						// If the execution point gets here, then the user
+						// has chosen "autoLogin"
+						userSession.setAutoLogin(true);
+						SessionFacade.setAttribute("logged", "1");
+	
+						I18n.load(user.getLang());
 					}
-					
-					if (tmpUs == null) {
-						userSession.setLastVisit(new Date(System.currentTimeMillis()));
-					}
-					else {
-						// Update last visit and session start time
-						userSession.setLastVisit(new Date(tmpUs.getStartTime().getTime() + tmpUs.getSessionTime()));
-					}
-					
-					// If the execution point gets here, then the user
-					// has chosen "autoLogin"
-					userSession.setAutoLogin(true);
-					SessionFacade.setAttribute("logged", "1");
-
-					I18n.load(user.getLang());
 				}
 				else {
 					userSession.makeAnonymous();

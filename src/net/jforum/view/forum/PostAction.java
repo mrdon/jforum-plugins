@@ -90,7 +90,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.53 2005/01/25 15:18:13 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.54 2005/01/26 20:15:14 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -387,6 +387,9 @@ public class PostAction extends Command {
 
 		Topic topic = DataAccessDriver.getInstance().newTopicModel().selectById(p.getTopicId());
 
+		this.context.put("attachmentsEnabled", SecurityRepository.canAccess(
+				SecurityConstants.PERM_ATTACHMENTS_ENABLED));
+		this.context.put("maxAttachments", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
 		this.context.put("isNewPost", true);
 		this.context.put("topic", topic);
 		this.context.put("quote", "true");

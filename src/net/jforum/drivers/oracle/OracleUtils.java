@@ -36,45 +36,83 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on 24/05/2004 01:07:39
+ * Created on Jan 26, 2005 4:42:44 PM
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.drivers.oracle;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import net.jforum.JForum;
-import net.jforum.entities.PrivateMessage;
-import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageModel.java,v 1.2 2005/01/26 20:15:09 rafaelsteil Exp $
+ * @version $Id: OracleUtils.java,v 1.1 2005/01/26 20:15:09 rafaelsteil Exp $
  */
-public class PrivateMessageModel extends net.jforum.drivers.generic.PrivateMessageModel
+public class OracleUtils
 {
-	/**
-	 * @see net.jforum.drivers.generic.PrivateMessageModel#addPmText(net.jforum.entities.PrivateMessage)
-	 */
-	protected void addPmText(PrivateMessage pm) throws Exception
+	public static String readBlobUTF16BinaryStream(ResultSet rs, String fieldName) throws IOException, SQLException
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("PrivateMessagesModel.addText"));
-		p.setInt(1, pm.getId());
-		p.executeUpdate();
-		p.close();
-		
-		OracleUtils.writeBlobUTF16BinaryStream(SystemGlobals.getSql("PrivateMessagesModel.addTextField"), 
-				pm.getId(), pm.getPost().getText());
+		Blob clob = rs.getBlob(fieldName);
+
+		InputStream is = clob.getBinaryStream();
+		StringBuffer sb = new StringBuffer();
+		int readedBytes = 0;
+		int bufferSize = 4096;
+
+		do {
+			byte[] bytes = new byte[bufferSize];
+			readedBytes = is.read(bytes);
+			if (readedBytes > 0) {
+				String readed = new String(bytes, 0, readedBytes, "UTF-16");
+				sb.append(readed);
+			}
+		} while (readedBytes == bufferSize);
+
+		is.close();
+
+		return sb.toString();
 	}
-	
+
 	/**
-	 * @see net.jforum.drivers.generic.PrivateMessageModel#getPmText(java.sql.ResultSet)
+	 * The query should look like:
+	 * 
+	 * SELECT blob_field from any_table WHERE id = ? FOR UPDATE
+	 * 
+	 * BUT KEEP IN MIND:
+	 * 
+	 * When you insert record in previous step, it should go with empty_blob() like:
+	 * 
+	 * INSERT INTO jforum_posts_text ( post_text ) VALUES (EMPTY_BLOB())
+	 * 
+	 * @param query
+	 * @param idForQuery
+	 * @param value
+	 * @throws IOException
+	 * @throws SQLException
 	 */
-	protected String getPmText(ResultSet rs) throws Exception
+	public static void writeBlobUTF16BinaryStream(String query, int idForQuery, String value) throws IOException,
+			SQLException
 	{
-		return OracleUtils.readBlobUTF16BinaryStream(rs, "privmsgs_text");
+		PreparedStatement p = JForum.getConnection().prepareStatement(query);
+		p.setInt(1, idForQuery);
+
+		ResultSet rs = p.executeQuery();
+		rs.next();
+		Blob postText = rs.getBlob(1);
+
+		OutputStream blobWriter = ((oracle.sql.BLOB) postText).getBinaryOutputStream();
+		blobWriter.write(value.getBytes("UTF-16"));
+
+		blobWriter.close();
+		rs.close();
+		p.close();
 	}
 }
