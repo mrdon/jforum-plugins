@@ -1,7 +1,7 @@
 # ##########
 # UserModel
 # ##########
-UserModel.selectAllByLimit = SELECT user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from FROM jforum_users ORDER BY username LIMIT ? OFFSET ?
+UserModel.selectAllByLimit = SELECT user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website FROM jforum_users ORDER BY username LIMIT ? OFFSET ?
 UserModel.lastGeneratedUserId = SELECT CURRVAL('jforum_users_seq')
 
 UserModel.selectById = SELECT u.*, \
@@ -110,3 +110,17 @@ CategoryModel.lastGeneratedCategoryId = SELECT CURRVAL('jforum_categories_seq')
 # AttachmentModel
 # ################
 AttachmentModel.lastGeneratedAttachmentId = SELECT CURRVAL('jforum_attach_seq')
+
+# ################
+# ModerationModel
+# ################
+ModerationModel.topicsByForum = SELECT p.post_id, t.topic_id, t.topic_title, p.user_id, enable_bbcode, p.attach, \
+	enable_html, enable_smilies, pt.post_subject, pt.post_text, username \
+	FROM jforum_posts p, jforum_posts_text pt, jforum_users u, jforum_topics t \
+	WHERE p.post_id = pt.post_id \
+	AND p.topic_id = t.topic_id \
+	AND t.forum_id = ? \
+	AND p.user_id = u.user_id \
+	AND p.need_moderate = 1 \
+	ORDER BY t.topic_id, post_time ASC \
+	LIMIT ? OFFSET ?

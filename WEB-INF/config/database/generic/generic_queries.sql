@@ -49,8 +49,8 @@ UserModel.selectById = SELECT COUNT(pm.privmsgs_to_userid) AS private_messages, 
 	WHERE u.user_id = ? \
 	GROUP BY pm.privmsgs_to_userid
 
-UserModel.selectAll = SELECT user_email, user_id, user_posts, user_regdate, username, deleted FROM jforum_users ORDER BY username
-UserModel.selectAllByLimit = SELECT user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from FROM jforum_users ORDER BY username LIMIT ?, ?
+UserModel.selectAll = SELECT user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website FROM jforum_users ORDER BY username
+UserModel.selectAllByLimit = SELECT user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website FROM jforum_users ORDER BY username LIMIT ?, ?
 UserModel.deletedStatus = UPDATE jforum_users SET deleted = ? WHERE user_id = ?
 UserModel.isDeleted = SELECT deleted FROM jforum_users WHERE user_id = ?
 UserModel.incrementPosts = UPDATE jforum_users SET user_posts = user_posts + 1 WHERE user_id = ?
@@ -281,7 +281,7 @@ SearchModel.insertWords = INSERT INTO jforum_search_words ( word_hash, word ) VA
 
 SearchModel.searchByWord = SELECT post_id FROM jforum_search_wordmatch wm, jforum_search_words w \
 	WHERE wm.word_id = w.word_id \
-	AND w.word = ?
+	AND w.word like ?
 	
 SearchModel.insertTopicsIds = INSERT INTO jforum_search_results ( topic_id, session, search_time ) SELECT DISTINCT t.topic_id, ?, NOW() FROM jforum_topics t, jforum_posts p \
 	WHERE t.topic_id = p.topic_id \
