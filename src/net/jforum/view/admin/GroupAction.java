@@ -60,6 +60,7 @@ import net.jforum.security.PermissionControl;
 import net.jforum.security.XMLPermissionControl;
 import net.jforum.util.I18n;
 import net.jforum.util.TreeGroup;
+import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
@@ -68,7 +69,7 @@ import freemarker.template.Template;
  * ViewHelper class for group administration.
  * 
  * @author Rafael Steil
- * @version $Id: GroupAction.java,v 1.5 2004/12/27 00:30:51 rafaelsteil Exp $
+ * @version $Id: GroupAction.java,v 1.6 2004/12/29 17:18:43 rafaelsteil Exp $
  */
 public class GroupAction extends Command 
 {
@@ -173,7 +174,8 @@ public class GroupAction extends Command
 		pc.setSecurityModel(gmodel);
 		pc.setRoles(gmodel.loadRoles(id));
 		
-		List sections = new XMLPermissionControl(pc).loadConfigurations(SystemGlobals.getApplicationResourceDir() +"/config/permissions.xml");
+		List sections = new XMLPermissionControl(pc).loadConfigurations(
+				SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/permissions.xml");
 		
 		GroupModel gm = DataAccessDriver.getInstance().newGroupModel();
 
@@ -203,7 +205,7 @@ public class GroupAction extends Command
 		this.list();
 	}
 	
-	/*
+	/**
 	 * @see net.jforum.Command#process()
 	 */
 	public Template process(ActionServletRequest request, 

@@ -32,11 +32,12 @@ RankingModel.addNew = INSERT INTO jforum_ranks ( rank_title, rank_min ) VALUES (
 # #############
 # ConfigModel
 # #############
-ConfigModel.addEntry = INSERT INTO jforum_config (config_name, config_value) VALUES (?, ?)
+ConfigModel.insert = INSERT INTO jforum_config (config_name, config_value) VALUES (?, ?)
 ConfigModel.selectById = SELECT config_name, config_value FROM jforum_config WHERE config_id = ?
-ConfigModel.selectAll = SELECT config_name, config_value, config_id FROM jforum_config ORDER BY config_name
+ConfigModel.selectByName = SELECT config_name, config_value, config_id FROM jforum_config WHERE config_name = ?
+ConfigModel.selectAll = SELECT config_name, config_value, config_id FROM jforum_config
 ConfigModel.delete = DELETE FROM jforum_config WHERE config_id = ?
-ConfigModel.update = UPDATE jforum_config SET config_name = ?, config_value = ? WHERE config_id = ?
+ConfigModel.update = UPDATE jforum_config SET config_value = ? WHERE config_name = ?
 
 # ##########
 # UserModel

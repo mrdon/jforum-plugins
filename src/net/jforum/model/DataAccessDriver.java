@@ -58,7 +58,7 @@ import java.sql.Connection;
  * analise, look at <code>net.jforum.drivers.generic</code> package.
  * 
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.9 2004/12/26 02:31:50 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.10 2004/12/29 17:18:41 rafaelsteil Exp $
  */
 public abstract class DataAccessDriver 
 {
@@ -204,4 +204,18 @@ public abstract class DataAccessDriver
 	 * @return <code>link net.jforum.model.UserSessionModel</code> instance
 	 */
 	public abstract net.jforum.model.UserSessionModel newUserSessionModel();
+	
+	/**
+	 * Gets a {@link net.jforum.model.ConfigModel} instance
+	 * 
+	 * @return <code>link net.jforum.model.ConfigModel</code> instance
+	 */
+	public abstract net.jforum.model.ConfigModel newConfigModel();
+	
+	/**
+	 * Gets a {@link net.jforum.model.ConfigModel} instance
+	 * 
+	 * @return <code>link net.jforum.model.ConfigModel</code> instance
+	 */
+	public abstract net.jforum.model.ConfigModel newConfigModel(Connection conn);
 }

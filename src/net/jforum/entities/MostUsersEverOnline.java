@@ -35,64 +35,58 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
- * 
- * This file creation date: 15/08/2003 / 21:04:47
+ *
+ * Created on Dec 29, 2004 2:00:00 PM
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.entities;
 
+import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
+
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
+
 /**
  * @author Rafael Steil
- * @version  $Id: Config.java,v 1.3 2004/12/29 17:18:42 rafaelsteil Exp $
+ * @version $Id: MostUsersEverOnline.java,v 1.1 2004/12/29 17:18:42 rafaelsteil Exp $
  */
-public class Config 
+public class MostUsersEverOnline
 {
-	private int id;
-	private String name;
-	private String value;
+	private int total;
+	private String date;
+	private long timeInMillis;
 	
-	public Config() {}
+	public MostUsersEverOnline() {}
 	
-	/**
-	 * Gets the entry name
-	 * @return The Entry name
-	 */
-	public String getName() {
-		return this.name;
+	public int getTotal() {
+		return this.total;
+	}
+	
+	public String getDate() {
+		return this.date;
+	}
+	
+	public long getTimeInMillis() {
+		return this.timeInMillis;
 	}
 
-	/**
-	 * Gets the entry value
-	 * @return The Entry value
-	 */
-	public String getValue() {
-		return this.value;
+	public void setTotal(int total) {
+		this.total = total;
 	}
 	
-	public int getId() {
-		return this.id;
-	}
-
-	/**
-	 * Sets the entry name
-	 * 
-	 * @param string The entry name to set
-	 */
-	public void setName(String string) {
-		this.name = string;
-	}
-
-	/**
-	 * Sets the entry value
-	 * 
-	 * @param string The entry value to set
-	 */
-	public void setValue(String string) {
-		this.value = string;
+	public void setDate(String date) {
+		this.date = date;
 	}
 	
-	public void setId(int id) {
-		this.id = id;
+	public void setTimeInMillis(long time) {
+		this.timeInMillis = time;
+		
+		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTimeInMillis(time);
+		
+		this.setDate(df.format(gc.getTime()));
 	}
 }

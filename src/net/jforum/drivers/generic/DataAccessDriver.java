@@ -49,7 +49,7 @@ import net.jforum.drivers.generic.security.UserSecurityModel;
 
 /**
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.3 2004/11/13 13:41:19 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.4 2004/12/29 17:18:41 rafaelsteil Exp $
  */
 public class DataAccessDriver extends net.jforum.model.DataAccessDriver 
 {
@@ -191,5 +191,21 @@ public class DataAccessDriver extends net.jforum.model.DataAccessDriver
 	public net.jforum.model.UserSessionModel newUserSessionModel()
 	{
 		return userSessionModel;
+	}
+	
+	/** 
+	 * @see net.jforum.model.DataAccessDriver#newConfigModel()
+	 */
+	public net.jforum.model.ConfigModel newConfigModel()
+	{
+		return new ConfigModel();
+	}
+	
+	/** 
+	 * @see net.jforum.model.DataAccessDriver#newConfigModel(Connection)
+	 */
+	public net.jforum.model.ConfigModel newConfigModel(Connection conn)
+	{
+		return new ConfigModel(conn);
 	}
 }

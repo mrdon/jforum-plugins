@@ -53,15 +53,19 @@ import java.util.TreeSet;
 
 import net.jforum.SessionFacade;
 import net.jforum.entities.Category;
+import net.jforum.entities.Config;
 import net.jforum.entities.Forum;
 import net.jforum.entities.LastPostInfo;
+import net.jforum.entities.MostUsersEverOnline;
 import net.jforum.exceptions.CategoryNotFoundException;
 import net.jforum.model.CategoryModel;
+import net.jforum.model.ConfigModel;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.ForumModel;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.CategoryOrderComparator;
+import net.jforum.util.preferences.ConfigKeys;
 
 /**
  * Repository for the forums of the System.
@@ -70,7 +74,7 @@ import net.jforum.util.CategoryOrderComparator;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.24 2004/12/19 22:14:41 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.25 2004/12/29 17:18:44 rafaelsteil Exp $
  */
 public class ForumRepository 
 {
@@ -79,6 +83,7 @@ public class ForumRepository
 	private static Set categoriesSet = new TreeSet(new CategoryOrderComparator());
 	private static int totalTopics = -1;
 	private static int totalMessages = 0;
+	private static MostUsersEverOnline mostUsersEverOnline;
 
 	private static ForumRepository instance;
 	
@@ -91,12 +96,15 @@ public class ForumRepository
 	 * be used to retrieve information about the categories.
 	 * @throws Exception
 	 */
-	public synchronized static void start(ForumModel fm, CategoryModel cm) throws Exception
+	public synchronized static void start(ForumModel fm, 
+			CategoryModel cm,
+			ConfigModel configModel) throws Exception
 	{
 		instance = new ForumRepository();
 		
 		instance.loadCategories(cm);
 		instance.loadForums(fm);
+		instance.loadMostUsersEverOnline(configModel);
 	}
 	
 	/**
@@ -451,6 +459,54 @@ public class ForumRepository
 	}
 	
 	/**
+	 * Gets the number of most online users ever
+	 * @return
+	 */
+	public static MostUsersEverOnline getMostUsersEverOnline()
+	{
+		return mostUsersEverOnline;
+	}
+	
+	/**
+	 * Update the value of most online users ever.
+	 * 
+	 * @param newValue The new value to store. Generally it
+	 * will be a bigger one.
+	 * @throws Exception
+	 */
+	public static void updateMostUsersEverOnline(MostUsersEverOnline m) throws Exception
+	{
+		ConfigModel cm = DataAccessDriver.getInstance().newConfigModel();
+		Config config = cm.selectByName(ConfigKeys.MOST_USERS_EVER_ONLINE);
+		if (config == null) {
+			// Total
+			config = new Config();
+			config.setName(ConfigKeys.MOST_USERS_EVER_ONLINE);
+			config.setValue(Integer.toString(m.getTotal()));
+			
+			cm.insert(config);
+			
+			// Date
+			config.setName(ConfigKeys.MOST_USER_EVER_ONLINE_DATE);
+			config.setValue(Long.toString(m.getTimeInMillis()));
+			
+			cm.insert(config);
+		}
+		else {
+			// Total
+			config.setValue(Integer.toString(m.getTotal()));
+			cm.update(config);
+
+			// Date
+			config.setName(ConfigKeys.MOST_USER_EVER_ONLINE_DATE);
+			config.setValue(Long.toString(m.getTimeInMillis()));
+			cm.update(config);
+		}
+		
+		mostUsersEverOnline = m;
+	}
+	
+	/**
 	 * Loads all forums.
 	 * @throws Exception
 	 */
@@ -485,6 +541,21 @@ public class ForumRepository
 			Category c = (Category)iter.next();
 			categoriesMap.put(new Integer(c.getId()), c);
 			categoriesSet.add(c);
+		}
+	}
+	
+	private void loadMostUsersEverOnline(ConfigModel cm) throws Exception
+	{
+		Config config = cm.selectByName(ConfigKeys.MOST_USERS_EVER_ONLINE);
+		mostUsersEverOnline = new MostUsersEverOnline();
+		
+		if (config != null) {
+			mostUsersEverOnline.setTotal(Integer.parseInt(config.getValue()));
+			
+			// We're assuming that, if we have one key, the another one
+			// will always exist
+			config = cm.selectByName(ConfigKeys.MOST_USER_EVER_ONLINE_DATE);
+			mostUsersEverOnline.setTimeInMillis(Long.parseLong(config.getValue()));
 		}
 	}
 }

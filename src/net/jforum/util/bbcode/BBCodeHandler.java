@@ -49,6 +49,7 @@ import java.util.Map;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 import org.xml.sax.Attributes;
@@ -59,7 +60,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * @author Rafael Steil
- * @version $Id: BBCodeHandler.java,v 1.7 2004/11/21 17:13:49 rafaelsteil Exp $
+ * @version $Id: BBCodeHandler.java,v 1.8 2004/12/29 17:18:44 rafaelsteil Exp $
  */
 public class BBCodeHandler extends DefaultHandler
 {
@@ -74,7 +75,8 @@ public class BBCodeHandler extends DefaultHandler
 	public BBCodeHandler parse() throws Exception
 	{
 		SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-		InputSource input = new InputSource(SystemGlobals.getApplicationResourceDir() + "/config/bb_config.xml");
+		InputSource input = new InputSource(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) 
+				+ "/bb_config.xml");
 		BBCodeHandler bbParser = new BBCodeHandler();
 		parser.parse(input, bbParser);
 		

@@ -43,25 +43,27 @@
 package net.jforum.view.admin;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.ActionServletRequest;
 import net.jforum.Command;
-import net.jforum.model.ConfigModel;
+import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ConfigAction.java,v 1.5 2004/12/27 00:30:51 rafaelsteil Exp $
+ * @version $Id: ConfigAction.java,v 1.6 2004/12/29 17:18:43 rafaelsteil Exp $
  */
 public class ConfigAction extends Command {
 	public void list() throws Exception {
@@ -75,8 +77,8 @@ public class ConfigAction extends Command {
 		}
 
 		Properties locales = new Properties();
-		locales.load(new FileInputStream(SystemGlobals.getApplicationResourceDir()
-						+ "/config/languages/locales.properties"));
+		locales.load(new FileInputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
+						+ "/languages/locales.properties"));
 		List localesList = new ArrayList();
 
 		for (Enumeration e = locales.keys(); e.hasMoreElements();) {
@@ -100,8 +102,19 @@ public class ConfigAction extends Command {
 			}
 		}
 
-		new ConfigModel().update(p);
+		this.updateData(p);
 		this.list();
+	}
+	
+	private void updateData(Properties p) throws IOException
+	{
+		for (Iterator iter = p.entrySet().iterator(); iter.hasNext(); ) {
+			Map.Entry entry = (Map.Entry)iter.next();
+			
+			SystemGlobals.setValue((String)entry.getKey(), (String)entry.getValue());
+		}
+		
+		SystemGlobals.saveInstallation();
 	}
 
 	/**

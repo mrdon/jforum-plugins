@@ -60,7 +60,7 @@ import net.jforum.view.forum.common.ForumCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumRepositoryTest.java,v 1.7 2004/12/09 02:41:42 rafaelsteil Exp $
+ * @version $Id: ForumRepositoryTest.java,v 1.8 2004/12/29 17:18:42 rafaelsteil Exp $
  */
 public class ForumRepositoryTest extends TestCase 
 {
@@ -167,7 +167,7 @@ public class ForumRepositoryTest extends TestCase
 	 */
 	public void testStart() throws Exception
 	{
-		ForumRepository.start(fm, cm);
+		ForumRepository.start(fm, cm, new ConfigModelDummy());
 		
 		// Categories
 		for (int i = 0; i < categoryIds.length; i++) {

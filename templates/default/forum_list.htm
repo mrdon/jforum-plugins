@@ -97,14 +97,15 @@
 
 				<tr>
 					<td class="row1" align="left">
-						<#assign adminColor = "style=\"color:#FFA34F\""/>
-						<#assign moderatorColor = "style=\"color:#006600\""/>
+						<#assign adminColor = "class='admin'"/>
+						<#assign moderatorColor = "class='moderator'"/>
 						<#assign color = ""/>
 
 						<span class="gensmall">${usersOnline}&nbsp;&nbsp;
 			
 						[ <span ${adminColor}>${I18n.getMessage("Administrator")}</span> ]&nbsp;[ <span ${moderatorColor}>${I18n.getMessage("Moderator")}</span> ]
-			
+						<br/>
+						${mostUsersEverOnline}									
 						<br />
 						${I18n.getMessage("ForumListing.connectedUsers")}: 
 			

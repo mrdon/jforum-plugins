@@ -71,7 +71,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.12 2004/12/27 00:30:51 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.13 2004/12/29 17:18:43 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -129,8 +129,8 @@ public class UserAction extends Command
 		pc.setSecurityModel(umodel);
 		pc.setRoles(umodel.loadRoles(user));
 		
-		List sections = new XMLPermissionControl(pc).loadConfigurations(SystemGlobals.getApplicationResourceDir() +"/config/permissions.xml");
-		
+		List sections = new XMLPermissionControl(pc).loadConfigurations(
+				SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/permissions.xml");
 		this.context.put("sections", sections);
 		this.context.put("user", user);
 		this.context.put("moduleAction", "user_security_form.htm");

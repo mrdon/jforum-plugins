@@ -42,73 +42,58 @@
  */
 package net.jforum.model;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
 import java.util.List;
 
 import net.jforum.entities.Config;
-import net.jforum.util.preferences.SystemGlobals;
+
 
 /**
  * Model interface for the {@link net.jforum.Config} class. 
  * 
  * @author Rafael Steil
- * @version $Id: ConfigModel.java,v 1.5 2004/11/12 19:07:14 rafaelsteil Exp $
+ * @version $Id: ConfigModel.java,v 1.6 2004/12/29 17:18:41 rafaelsteil Exp $
  */
-public class ConfigModel 
+public interface ConfigModel 
 {
 	/**
-	 * Gets all entries in the database.
-	 *  
-	 * @return <code>ArrayList</code> with all entries configured
+	 * Insert a new configuration.
+	 * 
+	 * @param config The data to store.
+	 * @throws Exception
 	 */
-	public List getAllEntries()  throws IOException
-	{
-	    Iterator iter = SystemGlobals.fetchConfigKeyIterator();
-		List l = new ArrayList();
-	    while (iter.hasNext()) {
-	        String key = (String) iter.next();
-			Config config = new Config();
-			config.setName(key);
-			config.setValue(SystemGlobals.getValue(key));
-			l.add(config);
-	    }
-	    
-	    return l;
-	}
+	public void insert(Config config) throws Exception;
 	
 	/**
 	 * Updates some config entry
-	 *  	 
-	 * @param name The entry name
-	 * @param value The entry value
-	 * @throws IOException When the installation options cannot be written
+	 * 
+	 * @param config The entry to update
+	 * @throws Exception
 	 */
-	public void update(String name, String value) throws IOException
-	{
-	   if (SystemGlobals.getValue(name) != null) {
-		   SystemGlobals.setValue(name, value);
-		   SystemGlobals.saveInstallation();
-	   }
-	}
+	public void update(Config config) throws Exception;
+
+	/**
+	 * Deletes some specific configuration
+	 * 
+	 * @param config The config to delete
+	 * @throws Exception
+	 */
+	public void delete(Config config) throws Exception;
 	
 	/**
-	 * Update a list of config entries
-	 *  	 
-	 * @param newValues The configuration entries to update and their new values
-	 * @throws IOException When the installation options cannot be written
+	 * Gets all existing configuration entries
+	 * 
+	 * @return <code>java.util.List</code> with all records found. 
+	 * Each entry is a <code>net.jforum.entities.Config</code> instance.
+	 * @throws Exception
 	 */
-	public void update(Properties newValues) throws IOException
-	{
-		for (Iterator iter = newValues.entrySet().iterator(); iter.hasNext(); ) {
-			Map.Entry entry = (Map.Entry)iter.next();
-			
-			SystemGlobals.setValue((String)entry.getKey(), (String)entry.getValue());
-		}
-		
-		SystemGlobals.saveInstallation();
-	}
+	public List selectAll() throws Exception;
+	
+	/**
+	 * Gets a config by its name
+	 * 
+	 * @param name The name to search for.
+	 * @return
+	 * @throws Exception
+	 */
+	public Config selectByName(String name) throws Exception;
 }

@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.30 2004/11/30 01:19:02 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.31 2004/12/29 17:18:44 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -167,6 +167,10 @@ public class ConfigKeys {
 	public static final String EXTERNAL_QUERY_SELECT_NAME = "external.database.query.selectName";
 	public static final String EXTERNAL_QUERY_SELECT_GROUPS = "external.database.query.selectGroups";
 	public static final String EXTERNAL_UNIQUE_NAMES = "external.uniqueNames";
+	
+	// jforum_config
+	public static final String MOST_USERS_EVER_ONLINE = "most.users.ever.online";
+	public static final String MOST_USER_EVER_ONLINE_DATE = "most.users.ever.online.date";
 	
 	private ConfigKeys() {}
 }

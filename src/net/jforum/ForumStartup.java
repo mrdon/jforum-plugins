@@ -47,6 +47,7 @@ import java.sql.Connection;
 import net.jforum.exceptions.DatabaseStartupException;
 import net.jforum.exceptions.RepositoryStartupException;
 import net.jforum.model.CategoryModel;
+import net.jforum.model.ConfigModel;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.ForumModel;
 import net.jforum.repository.ForumRepository;
@@ -55,7 +56,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumStartup.java,v 1.1 2004/11/13 13:41:17 rafaelsteil Exp $
+ * @version $Id: ForumStartup.java,v 1.2 2004/12/29 17:18:40 rafaelsteil Exp $
  */
 public class ForumStartup 
 {
@@ -91,8 +92,9 @@ public class ForumStartup
 			
 			ForumModel fm = DataAccessDriver.getInstance().newForumModel(conn);
 			CategoryModel cm = DataAccessDriver.getInstance().newCategoryModel(conn);
+			ConfigModel configModel = DataAccessDriver.getInstance().newConfigModel(conn);
 
-			ForumRepository.start(fm, cm);
+			ForumRepository.start(fm, cm, configModel);
 			
 			DBConnection.getImplementation().releaseConnection(conn);
 		}

@@ -68,7 +68,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumCommonServlet.java,v 1.19 2004/12/28 04:10:26 rafaelsteil Exp $
+ * @version $Id: JForumCommonServlet.java,v 1.20 2004/12/29 17:18:40 rafaelsteil Exp $
  */
 public class JForumCommonServlet extends HttpServlet {
     protected boolean debug;
@@ -98,7 +98,7 @@ public class JForumCommonServlet extends HttpServlet {
                     + "/templates"));
             templateCfg.setTemplateUpdateDelay(2);
 
-            ModulesRepository.init(SystemGlobals.getApplicationResourceDir() + "/config");
+            ModulesRepository.init(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR));
 
             SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
             SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));

@@ -36,63 +36,67 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * This file creation date: 15/08/2003 / 21:04:47
+ * Created on Dec 29, 2004 1:54:13 PM
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.entities;
+package net.jforum.repository;
+
+import java.util.List;
+
+import net.jforum.entities.Config;
+import net.jforum.model.ConfigModel;
 
 /**
  * @author Rafael Steil
- * @version  $Id: Config.java,v 1.3 2004/12/29 17:18:42 rafaelsteil Exp $
+ * @version $Id: ConfigModelDummy.java,v 1.1 2004/12/29 17:18:42 rafaelsteil Exp $
  */
-public class Config 
+public class ConfigModelDummy implements ConfigModel
 {
-	private int id;
-	private String name;
-	private String value;
-	
-	public Config() {}
-	
+
 	/**
-	 * Gets the entry name
-	 * @return The Entry name
+	 * @see net.jforum.model.ConfigModel#insert(net.jforum.entities.Config)
 	 */
-	public String getName() {
-		return this.name;
+	public void insert(Config config) throws Exception
+	{
+		// TODO Auto-generated method stub
+
 	}
 
 	/**
-	 * Gets the entry value
-	 * @return The Entry value
+	 * @see net.jforum.model.ConfigModel#update(net.jforum.entities.Config)
 	 */
-	public String getValue() {
-		return this.value;
-	}
-	
-	public int getId() {
-		return this.id;
+	public void update(Config config) throws Exception
+	{
+		// TODO Auto-generated method stub
+
 	}
 
 	/**
-	 * Sets the entry name
-	 * 
-	 * @param string The entry name to set
+	 * @see net.jforum.model.ConfigModel#delete(net.jforum.entities.Config)
 	 */
-	public void setName(String string) {
-		this.name = string;
+	public void delete(Config config) throws Exception
+	{
+		// TODO Auto-generated method stub
+
 	}
 
 	/**
-	 * Sets the entry value
-	 * 
-	 * @param string The entry value to set
+	 * @see net.jforum.model.ConfigModel#selectAll()
 	 */
-	public void setValue(String string) {
-		this.value = string;
+	public List selectAll() throws Exception
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
-	
-	public void setId(int id) {
-		this.id = id;
+
+	/**
+	 * @see net.jforum.model.ConfigModel#selectByName(java.lang.String)
+	 */
+	public Config selectByName(String name) throws Exception
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
+
 }

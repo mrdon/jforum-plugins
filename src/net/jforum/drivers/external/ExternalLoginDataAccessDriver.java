@@ -45,6 +45,7 @@ package net.jforum.drivers.external;
 import java.sql.Connection;
 
 import net.jforum.model.CategoryModel;
+import net.jforum.model.ConfigModel;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.ForumModel;
 import net.jforum.model.GroupModel;
@@ -63,7 +64,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Pieter Olivier
- * @version $Id: ExternalLoginDataAccessDriver.java,v 1.2 2004/11/13 13:41:21 rafaelsteil Exp $
+ * @version $Id: ExternalLoginDataAccessDriver.java,v 1.3 2004/12/29 17:18:43 rafaelsteil Exp $
  */
 public class ExternalLoginDataAccessDriver extends DataAccessDriver {
 	private DataAccessDriver concreteAccessDriver;
@@ -137,5 +138,13 @@ public class ExternalLoginDataAccessDriver extends DataAccessDriver {
 
 	public UserSessionModel newUserSessionModel() {
 		return concreteAccessDriver.newUserSessionModel();
+	}
+	
+	public ConfigModel newConfigModel() {
+		return concreteAccessDriver.newConfigModel();
+	}
+	
+	public ConfigModel newConfigModel(Connection conn) {
+		return concreteAccessDriver.newConfigModel(conn);
 	}
 }

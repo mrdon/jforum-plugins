@@ -53,6 +53,7 @@ import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.entities.Forum;
+import net.jforum.entities.MostUsersEverOnline;
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
@@ -71,7 +72,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.23 2004/12/29 14:48:12 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.24 2004/12/29 17:18:41 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -148,6 +149,18 @@ public class ForumAction extends Command
 					   new Integer(registered),
 					   new Integer(guest)
 			}));
+		
+		// Most users ever online
+		MostUsersEverOnline mostUsersEverOnline = ForumRepository.getMostUsersEverOnline();
+		if (SessionFacade.size() > mostUsersEverOnline.getTotal()) {
+			mostUsersEverOnline.setTotal(SessionFacade.size());
+			mostUsersEverOnline.setTimeInMillis(System.currentTimeMillis());
+
+			ForumRepository.updateMostUsersEverOnline(mostUsersEverOnline);
+		}
+		
+		this.context.put("mostUsersEverOnline", I18n.getMessage("ForumListing.mostUsersEverOnline",
+				new String[] { Integer.toString(mostUsersEverOnline.getTotal()), mostUsersEverOnline.getDate() }));
 	}
 	
 	public void moderation() throws Exception
