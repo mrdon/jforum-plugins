@@ -79,7 +79,7 @@ import org.apache.log4j.Logger;
  *
  * @author Paulo Silveira
  * @author Rafael Steil
- * @version $Id: PooledConnection.java,v 1.10 2004/09/22 23:18:23 rafaelsteil Exp $
+ * @version $Id: PooledConnection.java,v 1.11 2005/02/11 14:43:56 rafaelsteil Exp $
  * */
 
 public class PooledConnection extends DBConnection
@@ -105,7 +105,7 @@ public class PooledConnection extends DBConnection
 	// for sinalizing a release
 	private Object releaseSignal = new Object();
 	
-	private static final boolean debug = false;
+	private static final boolean debug = true;
 	
 	/**
 	 * Private constructor that loads the driver and set the configuration from
