@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ForumRSS.java,v 1.4 2004/08/30 23:51:21 rafaelsteil Exp $
+ * $Id: ForumRSS.java,v 1.5 2004/09/11 02:43:22 rafaelsteil Exp $
  */
 package net.jforum.util.rss;
 
@@ -100,7 +100,7 @@ public class ForumRSS extends RSSable
 				item.setLink("http://"+ JForum.getRequest().getServerName() +":"
 						+ JForum.getRequest().getServerPort()
 						+ (ctx.equals("") ? "" : "/"+ ctx)
-						+ "/forums/list/"+ forum.getId() +"."
+						+ "/forums/list/"+ forum.getId()
 						+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 				
 				tmpList.add(Integer.toString(forum.getId()));

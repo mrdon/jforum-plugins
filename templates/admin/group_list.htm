@@ -2,7 +2,7 @@
 
 <#import "macros/group_macros.ftl" as lib>
 
-<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum.page" method="post">
+<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum${extension}" method="post">
 <input type="hidden" name="action" value="delete">
 <input type="hidden" name="module" value="${moduleName}">
 <input type="hidden" name="securityHash" value="${securityHash}">
@@ -35,9 +35,9 @@
 	
 	<TR>
 	<TD class=row1 width="38%"><SPAN class=gen><b>${node.name}</SPAN></TD>
-	<TD class=row2><span class="gen"><a href="${contextPath}/${moduleName}/edit/${node.id}.page">${I18n.getMessage("Groups.List.Edit")}</a></span></TD>
+	<TD class=row2><span class="gen"><a href="${contextPath}/${moduleName}/edit/${node.id}${extension}">${I18n.getMessage("Groups.List.Edit")}</a></span></TD>
 	<td class="row2"><input type="checkbox" name="group_id" value="${node.id}"></td>
-	<TD class=row2><span class="gen"><a href="${contextPath}/${moduleName}/permissions/${node.id}.page">${I18n.getMessage("Permissions")}</a></span></TD>
+	<TD class=row2><span class="gen"><a href="${contextPath}/${moduleName}/permissions/${node.id}${extension}">${I18n.getMessage("Permissions")}</a></span></TD>
 	</TR>
 	
 	<@lib.listGroups node/>
@@ -46,7 +46,7 @@
 
 <TR align="center">
 <TD class=catBottom colSpan=4 height=28>
-<INPUT class=mainoption type=button value="${I18n.getMessage("Groups.List.ClickToNew")}" name=button onClick="document.location = '${contextPath}/${moduleName}/insert.page';">
+<INPUT class=mainoption type=button value="${I18n.getMessage("Groups.List.ClickToNew")}" name=button onClick="document.location = '${contextPath}/${moduleName}/insert${extension}';">
 &nbsp;&nbsp;
 <INPUT class=mainoption type=submit value="${I18n.getMessage("Groups.List.ClickToDelete")}"></TD>
 </TR></TBODY></TABLE>

@@ -1,6 +1,6 @@
 <STYLE type=text/css>@import url( style.css );</STYLE>
 
-<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum.page" method="post">
+<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum${extension}" method="post">
 <input type="hidden" name="action" value="delete">
 <input type="hidden" name="module" value="${moduleName}">
 <input type="hidden" name="securityHash" value="${securityHash}">
@@ -19,13 +19,13 @@
 <#list categories as category>
 	<TR>
 	<TD class=row1 width="38%"><SPAN class=gen>${category.name}</SPAN></TD>
-	<TD class=row2><span class="gen"><a href="${contextPath}/${moduleName}/edit/${category.id}.page">${I18n.getMessage("Category.List.Edit")}</a></span></TD>
+	<TD class=row2><span class="gen"><a href="${contextPath}/${moduleName}/edit/${category.id}${extension}">${I18n.getMessage("Category.List.Edit")}</a></span></TD>
 	<TD class=row2><input type="checkbox" name="categories_id" value="${category.id}"></TD>
 	</TR>
 </#list>
 <TR align="center">
 <TD class=catBottom colSpan=3 height=28>
-<INPUT class=mainoption type=button value="${I18n.getMessage("Category.List.ClickToNew")}" name=button onClick="document.location = '${contextPath}/${moduleName}/insert.page';">
+<INPUT class=mainoption type=button value="${I18n.getMessage("Category.List.ClickToNew")}" name=button onClick="document.location = '${contextPath}/${moduleName}/insert${extension}';">
 &nbsp;&nbsp;
 <INPUT class=mainoption type=submit value="${I18n.getMessage("Category.List.ClickToDelete")}" name=submit></TD>
 </TR>

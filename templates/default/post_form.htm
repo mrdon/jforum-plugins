@@ -12,7 +12,7 @@ var imageTag = false;
 var theSelection = false;
 
 // Check for Browser & Platform for PC & IE specific bits
-// More details from: http://www.mozilla.org/docs/web-developer/sniffer/browser_type.page
+// More details from: http://www.mozilla.org/docs/web-developer/sniffer/browser_type${extension}
 var clientPC = navigator.userAgent.toLowerCase(); // Get client info
 var clientVer = parseInt(navigator.appVersion); // Get browser version
 
@@ -248,7 +248,7 @@ function validatePostForm(f)
   <TBODY>
   <TR>
     <TD class=bodyline>
-<form accept-charset="${encoding}" name="post" action="${contextPath}/jforum.page" method="post" onSubmit="return validatePostForm(this);">
+<form accept-charset="${encoding}" name="post" action="${contextPath}/jforum${extension}" method="post" onSubmit="return validatePostForm(this);">
 <input type="hidden" name="action" value="${action}">
 <input type="hidden" name="module" value="${moduleName}">
 <input type="hidden" name="securityHash" value="${securityHash}">
@@ -303,10 +303,10 @@ function validatePostForm(f)
         <TBODY>
         <TR>
          <TD align=left><SPAN class=nav>
-		 <A class=nav href="${contextPath}/forums/list.page">${I18n.getMessage("ForumListing.forumIndex")}</a>
+		 <A class=nav href="${contextPath}/forums/list${extension}">${I18n.getMessage("ForumListing.forumIndex")}</a>
 		 
 		 <#if forum?exists>
-           -&gt; <A class=nav href="${contextPath}/forums/show/${forum.id}.page">${forum.name}</A></SPAN>
+           -&gt; <A class=nav href="${contextPath}/forums/show/${forum.id}${extension}">${forum.name}</A></SPAN>
 		 </#if>
 		</TD>
 		</TR>
@@ -346,7 +346,7 @@ function validatePostForm(f)
 					<#assign toUserId = ""/>
 					<#assign toUserEmail = ""/>
 				</#if>
-			  	<input class="post" size="25" name="toUsername" value="${toUsername}"/>&nbsp;<input type="button" value="${I18n.getMessage("PrivateMessage.findUser")}" name="findUser" class="liteoption" onClick="window.open('${contextPath}/pm/findUser.page', '_findUser', 'HEIGHT=250,resizable=yes,WIDTH=400');return false;">
+			  	<input class="post" size="25" name="toUsername" value="${toUsername}"/>&nbsp;<input type="button" value="${I18n.getMessage("PrivateMessage.findUser")}" name="findUser" class="liteoption" onClick="window.open('${contextPath}/pm/findUser${extension}', '_findUser', 'HEIGHT=250,resizable=yes,WIDTH=400');return false;">
 				<input type="hidden" name="toUserId" value="${toUserId}">
 				<input type="hidden" name="toUserEmail" value="${toUserEmail}"/>
 			  </td>

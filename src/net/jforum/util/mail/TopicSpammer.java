@@ -55,7 +55,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicSpammer.java,v 1.6 2004/06/05 22:10:04 rafaelsteil Exp $
+ * @version $Id: TopicSpammer.java,v 1.7 2004/09/11 02:43:18 rafaelsteil Exp $
  */
 public class TopicSpammer extends Spammer 
 {
@@ -82,7 +82,8 @@ public class TopicSpammer extends Spammer
 			forumLink += "/";
 		}
 
-		String path = forumLink +"posts/list/"+ page + topic.getId() +".page#"+ topic.getLastPostId();
+		String path = forumLink +"posts/list/" + page + topic.getId() 
+			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#" + topic.getLastPostId();
 		
 		SimpleHash params = new SimpleHash();
 		params.put("topic", topic);

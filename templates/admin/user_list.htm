@@ -1,6 +1,6 @@
 <STYLE type=text/css>@import url( style.css );</STYLE>
 
-<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum.page" method="post">
+<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum${extension}" method="post">
 <input type="hidden" name="action" value="delete">
 <input type="hidden" name="module" value="${moduleName}">
 <input type="hidden" name="securityHash" value="${securityHash}">
@@ -20,9 +20,9 @@
 <TR>
 	<TD class=row2><span class="gen">${user.id}</span></TD>
 	<TD class=row2><span class="gen">${user.username}</span></TD>
-	<TD class=row2><span class="gen"><a href="${contextPath}/jforum.page?module=adminUsers&action=edit&id=${user.id}">${I18n.getMessage("Edit")}</a></span></TD>
-	<TD class=row2><span class="gen"><a href="${contextPath}/jforum.page?module=adminUsers&action=groups&id=${user.id}">${I18n.getMessage("User.Groups")}</a></span></TD>
-	<TD class=row2><span class="gen"><a href="${contextPath}/jforum.page?module=adminUsers&action=permissions&id=${user.id}">${I18n.getMessage("Permissions")}</a></span></TD>
+	<TD class=row2><span class="gen"><a href="${contextPath}/jforum${extension}?module=adminUsers&action=edit&id=${user.id}">${I18n.getMessage("Edit")}</a></span></TD>
+	<TD class=row2><span class="gen"><a href="${contextPath}/jforum${extension}?module=adminUsers&action=groups&id=${user.id}">${I18n.getMessage("User.Groups")}</a></span></TD>
+	<TD class=row2><span class="gen"><a href="${contextPath}/jforum${extension}?module=adminUsers&action=permissions&id=${user.id}">${I18n.getMessage("Permissions")}</a></span></TD>
 	</TR>
 </#list>
 

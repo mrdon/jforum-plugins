@@ -65,7 +65,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.2 2004/09/04 15:44:43 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.3 2004/09/11 02:43:21 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -116,7 +116,9 @@ public class InstallAction extends Command
 		
 		this.configureSystemGlobals();
 
-		InstallServlet.setRedirect(InstallServlet.getRequest().getContextPath() + "/install/install.page?module=install&action=finished");
+		InstallServlet.setRedirect(InstallServlet.getRequest().getContextPath() + "/install/install"
+				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)
+				+ "?module=install&action=finished");
 	}
 	
 	public void finished() throws Exception

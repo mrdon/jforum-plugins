@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -52,7 +52,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageSpammer.java,v 1.1 2004/06/21 03:48:06 rafaelsteil Exp $
+ * @version $Id: PrivateMessageSpammer.java,v 1.2 2004/09/11 02:43:17 rafaelsteil Exp $
  */
 public class PrivateMessageSpammer extends Spammer
 {
@@ -67,7 +67,7 @@ public class PrivateMessageSpammer extends Spammer
 			forumLink += "/";
 		}
 		
-		forumLink += "pm/inbox.page";
+		forumLink += "pm/inbox" + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
 		
 		SimpleHash params = new SimpleHash();
 		params.put("path", forumLink);

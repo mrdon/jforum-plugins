@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: TopicRSS.java,v 1.3 2004/06/01 19:47:28 pieter2 Exp $
+ * $Id: TopicRSS.java,v 1.4 2004/09/11 02:43:21 rafaelsteil Exp $
  */
 package net.jforum.util.rss;
 
@@ -92,7 +92,7 @@ public class TopicRSS extends RSSable
 			item.setLink("http://"+ JForum.getRequest().getServerName() +":"
 					+ JForum.getRequest().getServerPort()
 					+ (ctx.equals("") ? "" : "/"+ ctx)
-					+ "/posts/list/"+ t.getId() +"."
+					+ "/posts/list/"+ t.getId()
 					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 			
 			queueElementsList.add(Integer.toString(t.getId()));

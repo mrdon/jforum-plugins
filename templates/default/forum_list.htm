@@ -10,7 +10,7 @@
 		  </TD>
           <TD class=gensmall vAlign=middle align=right>&nbsp;
 			<#if logged>
-		  	<A class=gensmall href="${contextPath}/forums/newMessages.page">${I18n.getMessage("ForumListing.readLastVisitMessages")}</A>
+		  	<A class=gensmall href="${contextPath}/forums/newMessages${extension}">${I18n.getMessage("ForumListing.readLastVisitMessages")}</A>
 			</#if>
 		</TD>
         </TR>
@@ -40,7 +40,7 @@
 				<img src="${contextPath}/templates/${templateName}/images/folder_big.gif" width="46" height="25">
 			</#if>
 		</TD>
-		<TD class=row1 width="100%" height=50><SPAN class=forumlink><A class=forumlink href="${contextPath}/forums/show/${forum.id}.page">${forum.name}</A><BR>
+		<TD class=row1 width="100%" height=50><SPAN class=forumlink><A class=forumlink href="${contextPath}/forums/show/${forum.id}${extension}">${forum.name}</A><BR>
 		</SPAN><SPAN class=genmed>${forum.description}<BR></SPAN>
 		</TD>
 		<TD class=row2 vAlign=center align=middle height=50><SPAN class=gensmall>${forum.totalTopics}</SPAN></TD>
@@ -48,7 +48,7 @@
 		<TD class=row2 vAlign=center noWrap align=middle height=50>
 		<SPAN class=gensmall>
 			<#if lpi["postTime"]?exists>${lpi["postTime"]}<BR>
-				<#if lpi["userId"]?exists><A href="${contextPath}/user/profile/${lpi["userId"]}.page"></#if>
+				<#if lpi["userId"]?exists><A href="${contextPath}/user/profile/${lpi["userId"]}${extension}"></#if>
 				<#if lpi["userName"]?exists>${lpi["userName"]}</#if></A> 
 				
 				<#assign startPage = ""/>
@@ -56,7 +56,7 @@
 					<#assign startPage = ((lpi["topic_replies"] / topicsPerPage)?int * topicsPerPage) +"/"/>
 				</#if>
 				
-				<a href="${contextPath}/posts/list/${startPage}${lpi["topicId"]}.page#${lpi["postId"]}"><img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif" width="18" height="9" border="0"></a>
+				<a href="${contextPath}/posts/list/${startPage}${lpi["topicId"]}${extension}#${lpi["postId"]}"><img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif" width="18" height="9" border="0"></a>
 			<#else>
 				${I18n.getMessage("ForumListing.noMessages")}
 			</#if>
@@ -84,7 +84,7 @@
           <TD class=row1 vAlign=center align=middle rowSpan=2><img src="${contextPath}/templates/${templateName}/images/whosonline.gif" width="46" height="25"></TD>
           <TD class=row1 align=left width="100%"><SPAN class=gensmall>${totalMessages}<BR>
            ${totalUsers}<BR>
-		   <a href="${contextPath}/user/profile/${lastUserId}.page">${I18n.getMessage("ForumListing.newestUser")} ${lastUserName}</a></SPAN></TD>
+		   <a href="${contextPath}/user/profile/${lastUserId}${extension}">${I18n.getMessage("ForumListing.newestUser")} ${lastUserName}</a></SPAN></TD>
         </TR>
         <TR>
           <TD class=row1 align=left>
@@ -108,14 +108,14 @@
 					<#assign color = ""/>
 				</#if>
 
-				<a href="${contextPath}/user/profile/${us.userId}.page" ${color}>${us.username}</a>&nbsp;
+				<a href="${contextPath}/user/profile/${us.userId}${extension}" ${color}>${us.username}</a>&nbsp;
 			</#list>
 			</span>
 		  </TD>
         </TR></TBODY></TABLE>
         
         <#if !logged>
-			<form accept-charset="${encoding}" action="${contextPath}/jforum.page" method="POST">
+			<form accept-charset="${encoding}" action="${contextPath}/jforum${extension}" method="POST">
 			<input type="hidden" name="module" value="user">
 			<input type="hidden" name="action" value="validateLogin">
 			<input type="hidden" name="securityHash" value="${securityHash}">

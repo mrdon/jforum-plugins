@@ -1,6 +1,6 @@
 <STYLE type=text/css>@import url( style.css );</STYLE>
 
-<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum.page" method="post">
+<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum${extension}" method="post">
 <input type="hidden" name="action" value="delete">
 <input type="hidden" name="module" value="${moduleName}">
 <input type="hidden" name="securityHash" value="${securityHash}">
@@ -19,7 +19,7 @@
 		<span class="gen">${smilie.code}</span>
 	</td>
 	<TD class=row2>
-		<span class="gen"><a href="${contextPath}/jforum.page?module=${moduleName}&action=edit&id=${smilie.id}">${I18n.getMessage("Smilies.List.Edit")}</a></span>
+		<span class="gen"><a href="${contextPath}/jforum${extension}?module=${moduleName}&action=edit&id=${smilie.id}">${I18n.getMessage("Smilies.List.Edit")}</a></span>
 	</TD>
 	<TD class=row2><input type="checkbox" name="id" value="${smilie.id}"></TD>
 	</TR>
@@ -27,7 +27,7 @@
 
 <TR align="center">
 <TD class=catBottom colSpan=4 height=28>
-<INPUT class=mainoption type=button value="${I18n.getMessage("Smilies.List.ClickToNew")}" name=button onClick="document.location = '${contextPath}/${moduleName}/insert.page';">
+<INPUT class=mainoption type=button value="${I18n.getMessage("Smilies.List.ClickToNew")}" name=button onClick="document.location = '${contextPath}/${moduleName}/insert${extension}';">
 &nbsp;&nbsp;
 <INPUT class=mainoption type=submit value="${I18n.getMessage("Smilies.List.ClickToDelete")}" name=submit></TD>
 </TR></TABLE>

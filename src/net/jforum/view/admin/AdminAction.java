@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: AdminAction.java,v 1.1 2004/08/30 23:51:15 rafaelsteil Exp $
+ * $Id: AdminAction.java,v 1.2 2004/09/11 02:43:17 rafaelsteil Exp $
  */
 package net.jforum.view.admin;
 
@@ -54,6 +54,8 @@ import net.jforum.entities.UserSession;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.SecurityConstants;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
@@ -75,9 +77,16 @@ public class AdminAction extends Command {
 		
 		PermissionControl pc = SecurityRepository.get(us.getUserId());
 		
-		if (logged == null || logged.toString().equals("0") || pc == null || !pc.canAccess(SecurityConstants.PERM_ADMINISTRATION)) {
-			String returnPath =  JForum.getRequest().getContextPath() +"/admBase/login.page";
-			JForum.setRedirect(JForum.getRequest().getContextPath() +"/jforum.page?module=user&action=login&returnPath="+ returnPath);
+		if (logged == null || logged.toString().equals("0") 
+				|| pc == null || !pc.canAccess(SecurityConstants.PERM_ADMINISTRATION)) {
+			String returnPath =  JForum.getRequest().getContextPath() +"/admBase/login" 
+				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
+
+			JForum.setRedirect(JForum.getRequest().getContextPath() 
+				+ "/jforum" 
+				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) 
+				+ "?module=user&action=login&returnPath="
+				+ returnPath);
 		}
 		else {
 			JForum.getContext().put("moduleAction", "admin_index.htm");
@@ -101,7 +110,8 @@ public class AdminAction extends Command {
 			return true;
 		}
 		else {
-			JForum.setRedirect(JForum.getRequest().getContextPath() +"/admBase/login.page");
+			JForum.setRedirect(JForum.getRequest().getContextPath() +"/admBase/login"
+				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 
 			return false;
 		}

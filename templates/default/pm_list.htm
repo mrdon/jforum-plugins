@@ -23,7 +23,7 @@
 										<tr valign="center">
 											<td>
 												<#if !inbox?default(false)>
-												<a href="${contextPath}/pm/inbox.page">
+												<a href="${contextPath}/pm/inbox${extension}">
 												</#if>
 												<img src="${contextPath}/templates/${templateName}/images/msg_inbox.gif" border="0" />
 												<#if !inbox?default(false)>
@@ -32,7 +32,7 @@
 											</td>
 											<td>
 												<#if !inbox?default(false)>
-												<a href="${contextPath}/pm/inbox.page">
+												<a href="${contextPath}/pm/inbox${extension}">
 												</#if>
 												<span class="cattitle">${I18n.getMessage("PrivateMessage.inbox")} &nbsp;</span>
 												<#if !inbox?default(false)>
@@ -41,7 +41,7 @@
 											</td>
 											<td>
 												<#if !sentbox?default(false)>
-												<a href="${contextPath}/pm/sentbox.page">
+												<a href="${contextPath}/pm/sentbox${extension}">
 												</#if>
 												<img src="${contextPath}/templates/${templateName}/images/msg_sentbox.gif" border="0" />
 												<#if !sentbox?default(false)>
@@ -50,7 +50,7 @@
 											</td>
 											<td>
 												<#if !sentbox?default(false)>
-												<a href="${contextPath}/pm/sentbox.page">
+												<a href="${contextPath}/pm/sentbox${extension}">
 												</#if>
 												<span class="cattitle">${I18n.getMessage("PrivateMessage.sentbox")}</a> &nbsp;</span>
 												<#if !sentbox?default(false)>
@@ -65,18 +65,18 @@
 					</tbody>
 				</table>
 				<br clear="all" />
-				<form action="${contextPath}/jforum.page" method="post" name="privmsg_list" id="privmsg_list">
+				<form action="${contextPath}/jforum${extension}" method="post" name="privmsg_list" id="privmsg_list">
 				<input type="hidden" name="module" value="${moduleName}">
 				<input type="hidden" name="action" value="delete">
 					<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
 						<tbody>
 							<tr>
 								<td valign="center" align="left">
-									<a href="${contextPath}/pm/send.page"><img src="${contextPath}/templates/${templateName}/images/msg_newpost.gif" border="0" /></a>
+									<a href="${contextPath}/pm/send${extension}"><img src="${contextPath}/templates/${templateName}/images/msg_newpost.gif" border="0" /></a>
 								</td>
 								<td align="left" width="100%">
 									&nbsp;<span class="nav">
-									 <A class=nav href="${contextPath}/forums/list.page">${I18n.getMessage("ForumListing.forumIndex")}</a>
+									 <A class=nav href="${contextPath}/forums/list${extension}">${I18n.getMessage("ForumListing.forumIndex")}</a>
 									 </span>
 								</td>
 							</tr>
@@ -114,12 +114,12 @@
 										<img height="18" src="${contextPath}/templates/${templateName}/images/folder.gif" width="19" />
 									</#if>
 								</td>
-								<td class="row1" valign="center" width="55%"><span class="topictitle">&nbsp;<a class="topictitle" href="${contextPath}/pm/read/${pm.id}.page">${pm.post.subject}</a></span></td>
+								<td class="row1" valign="center" width="55%"><span class="topictitle">&nbsp;<a class="topictitle" href="${contextPath}/pm/read/${pm.id}${extension}">${pm.post.subject}</a></span></td>
 								<td class="row1" valign="center" align="middle" width="20%">
 									<#if inbox?default(false)>
-									<span class="name">&nbsp;<a class="name" href="${contextPath}/user/profile/${pm.fromUser.id}.page">${pm.fromUser.username}</a></span>
+									<span class="name">&nbsp;<a class="name" href="${contextPath}/user/profile/${pm.fromUser.id}${extension}">${pm.fromUser.username}</a></span>
 									<#else>
-									<span class="name">&nbsp;<a class="name" href="${contextPath}/user/profile/${pm.toUser.id}.page">${pm.toUser.username}</a></span>
+									<span class="name">&nbsp;<a class="name" href="${contextPath}/user/profile/${pm.toUser.id}${extension}">${pm.toUser.username}</a></span>
 									</#if>
 								</td>
 								<td class="row1" valign="center" align="middle" width="15%"><span class="postdetails">${pm.formatedDate}</span></td>
@@ -139,7 +139,7 @@
 						<tbody>
 							<tr>
 								<td valign="center" align="left"><span class="nav">
-									<a href="${contextPath}/pm/send.page"><img src="${contextPath}/templates/${templateName}/images/msg_newpost.gif" border="0" /></a></span>
+									<a href="${contextPath}/pm/send${extension}"><img src="${contextPath}/templates/${templateName}/images/msg_newpost.gif" border="0" /></a></span>
 								</td>
 								<td valign="center" align="left" width="100%"><span class="nav"></span></td>
 								<td valign="top" nowrap="nowrap" align="right">

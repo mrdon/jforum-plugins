@@ -68,7 +68,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.32 2004/09/03 04:04:40 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.33 2004/09/11 02:43:17 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -190,6 +190,7 @@ public class JForum extends JForumCommonServlet
 			JForum.getContext().put("contextPath", req.getContextPath());
 			JForum.getContext().put("serverName", req.getServerName());
 			JForum.getContext().put("templateName", "default");
+			JForum.getContext().put("extension", SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 			JForum.getContext().put("serverPort", Integer.toString(req.getServerPort()));
 			JForum.getContext().put("I18n", I18n.getInstance());
 			JForum.getContext().put("version", SystemGlobals.getValue(ConfigKeys.VERSION));

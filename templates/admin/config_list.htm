@@ -1,6 +1,6 @@
 <style type="text/css">@import url( style.css );</style>
 
-<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum.page" method="post">
+<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum${extension}" method="post">
 <input type="hidden" name="action" value="editSave" />
 <input type="hidden" name="module" value="${moduleName}" />
 <input type="hidden" name="securityHash" value="${securityHash}" />
@@ -50,16 +50,16 @@
 
 <tr>
 	<td class='row1' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.MetaTag.description")}</span></td>
-	<td class='row1' width="38%"><span class='gen'><input type="text" size="30"name="p_forum.page.metatag.description" value="${config.getProperty("forum.page.metatag.description")}" /></span></td>
+	<td class='row1' width="38%"><span class='gen'><input type="text" size="30"name="p_forum${extension}.metatag.description" value="${config.getProperty("forum${extension}.metatag.description")}" /></span></td>
 </tr>
 <tr>
 	<td class='row1' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.MetaTag.keywords")}</span></td>
-	<td class='row1' width="38%"><span class='gen'><input type="text" size="30"name="p_forum.page.metatag.keywords" value="${config.getProperty("forum.page.metatag.keywords")}" /></span></td>
+	<td class='row1' width="38%"><span class='gen'><input type="text" size="30"name="p_forum${extension}.metatag.keywords" value="${config.getProperty("forum${extension}.metatag.keywords")}" /></span></td>
 </tr>
 
 <tr>
 	<td class='row1' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.ForumPageTitle")}</span></td>
-	<td class='row1' width="38%"><span class='gen'><input type="text" size="30"name="p_forum.page.title" value="${config.getProperty("forum.page.title")}" /></span></td>
+	<td class='row1' width="38%"><span class='gen'><input type="text" size="30"name="p_forum${extension}.title" value="${config.getProperty("forum${extension}.title")}" /></span></td>
 </tr>
 
 

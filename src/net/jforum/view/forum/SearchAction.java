@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.1 2004/08/30 23:51:19 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.2 2004/09/11 02:43:20 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -239,7 +239,9 @@ public class SearchAction extends Command
 		}
 
 		StringBuffer path = new StringBuffer(512);
-		path.append(JForum.getRequest().getContextPath()).append("/jforum.page?module=search&action=search");
+		path.append(JForum.getRequest().getContextPath()).append("/jforum" 
+				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)
+				+ "?module=search&action=search");
 		
 		if (this.forum != null) { 
 			path.append("&search_forum=").append(this.forum); 

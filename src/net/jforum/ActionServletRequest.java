@@ -63,7 +63,7 @@ import org.apache.commons.fileupload.FileUploadException;
 
 /**
  * @author Rafael Steil
- * @version $Id: ActionServletRequest.java,v 1.6 2004/06/01 19:47:22 pieter2 Exp $
+ * @version $Id: ActionServletRequest.java,v 1.7 2004/09/11 02:43:17 rafaelsteil Exp $
  */
 public class ActionServletRequest extends HttpServletRequestWrapper 
 {
@@ -223,7 +223,7 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 		
 		if (superRequest.getMethod().equalsIgnoreCase("GET") 
 				&& superRequest.getQueryString() == null
-				&& superRequest.getRequestURI().endsWith("."+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION))) {
+				&& superRequest.getRequestURI().endsWith(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION))) {
 			String urlModel[] = superRequest.getRequestURI().split("/");
 			
 			// If (context name is not null) {
@@ -250,7 +250,7 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 				baseLen = 3;
 			}
 			
-			urlModel[urlModel.length - 1] = urlModel[urlModel.length - 1].substring(0, urlModel[urlModel.length - 1].indexOf("."+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)));
+			urlModel[urlModel.length - 1] = urlModel[urlModel.length - 1].substring(0, urlModel[urlModel.length - 1].indexOf(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)));
 			
 			// <moduleName>.<actionName>.<numberOfParameters>
 			UrlPattern url = UrlPatternCollection.findPattern(urlModel[moduleIndex] +"."+ urlModel[actionIndex] +"."+ (urlModel.length - baseLen));

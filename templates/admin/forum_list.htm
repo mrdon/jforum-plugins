@@ -1,6 +1,6 @@
 <STYLE type=text/css>@import url( style.css );</STYLE>
 
-<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum.page" method="post">
+<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum${extension}" method="post">
 <input type="hidden" name="action" value="delete">
 <input type="hidden" name="module" value="${moduleName}">
 <input type="hidden" name="securityHash" value="${securityHash}">
@@ -15,14 +15,14 @@
 <#list forums as forum>
 	<TR>
 	<TD class=row1 width="38%"><SPAN class=gen>${forum.name}</SPAN></TD>
-	<TD class=row2><span class="gen"><a href="${contextPath}/${moduleName}/edit/${forum.id}.page">${I18n.getMessage("Forums.List.Edit")}</a></span></TD>
+	<TD class=row2><span class="gen"><a href="${contextPath}/${moduleName}/edit/${forum.id}${extension}">${I18n.getMessage("Forums.List.Edit")}</a></span></TD>
 	<TD class=row2><input type="checkbox" name="forum_id" value="${forum.id}"></TD>
 	</TR>
 </#list>
 
 <TR align="center">
 <TD class=catBottom colSpan=3 height=28>
-<INPUT class=mainoption type=button value="${I18n.getMessage("Forums.List.ClickToNew")}" name=button onClick="document.location = '${contextPath}/${moduleName}/insert.page';">
+<INPUT class=mainoption type=button value="${I18n.getMessage("Forums.List.ClickToNew")}" name=button onClick="document.location = '${contextPath}/${moduleName}/insert${extension}';">
 &nbsp;&nbsp;
 <INPUT class=mainoption type=submit value="${I18n.getMessage("Forums.List.ClickToDelete")}" name=submit></TD>
 </TR></TABLE>

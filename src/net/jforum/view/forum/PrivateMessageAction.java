@@ -63,7 +63,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.2 2004/09/04 15:43:33 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.3 2004/09/11 02:43:20 rafaelsteil Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -178,7 +178,8 @@ public class PrivateMessageAction extends Command
 			
 			JForum.getContext().put("moduleAction", "message.htm");
 			JForum.getContext().put("message", I18n.getMessage("PrivateMessage.messageSent", 
-							new String[] { JForum.getRequest().getContextPath() +"/pm/inbox.page" }));
+							new String[] { JForum.getRequest().getContextPath() +"/pm/inbox"
+											+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)}));
 			
 			// If the target user if in the forum, then increments its 
 			// private messate count
@@ -279,7 +280,8 @@ public class PrivateMessageAction extends Command
 		
 		JForum.getContext().put("moduleAction", "message.htm");
 		JForum.getContext().put("message", I18n.getMessage("PrivateMessage.deleteDone", 
-						new String[] { JForum.getRequest().getContextPath() + "/pm/inbox.page" }));
+						new String[] { JForum.getRequest().getContextPath() + "/pm/inbox"
+										+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)}));
 	}
 	
 	public void reply() throws Exception
@@ -334,7 +336,9 @@ public class PrivateMessageAction extends Command
 	public Template process() throws Exception
 	{
 		if (!SessionFacade.isLogged()) {
-			JForum.setRedirect(JForum.getRequest().getContextPath() +"/forums/list.page");
+			JForum.setRedirect(JForum.getRequest().getContextPath() +"/forums/list"
+					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+
 			return null;
 		}
 

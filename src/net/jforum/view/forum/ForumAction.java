@@ -74,7 +74,7 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.3 2004/09/04 17:29:36 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.4 2004/09/11 02:43:20 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -355,7 +355,7 @@ public class ForumAction extends Command
 			forumId = JForum.getRequest().getParameter("persistData"); 
 		}
 
-		path += forumId +".page";
+		path += forumId + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
 		
 		return path;
 	}
@@ -382,7 +382,8 @@ public class ForumAction extends Command
 			JForum.setRedirect(this.makeRedirect("show"));
 		}
 		else {
-			JForum.setRedirect(JForum.getRequest().getContextPath() +"/forums/list.page");
+			JForum.setRedirect(JForum.getRequest().getContextPath() +"/forums/list"
+					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		}
 	}
 	

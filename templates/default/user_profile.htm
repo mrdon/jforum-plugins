@@ -2,7 +2,7 @@
 <TABLE cellSpacing=2 cellPadding=2 width="100%" align=center border=0>
   <TBODY>
     <TR>
-      <TD align=left><SPAN class=nav><A class=nav href="${contextPath}/forums/list.page">${I18n.getMessage("ForumListing.forumIndex")}</A></SPAN></TD>
+      <TD align=left><SPAN class=nav><A class=nav href="${contextPath}/forums/list${extension}">${I18n.getMessage("ForumListing.forumIndex")}</A></SPAN></TD>
     </TR>
   </TBODY>
 </TABLE>
@@ -96,7 +96,7 @@
 			</#if>
             <TR>
               <TD vAlign=center noWrap align=right><SPAN class=gen>${I18n.getMessage("UserProfile.privateMessage")}:</SPAN></TD>
-              <TD class=row1 vAlign=center><B><SPAN class=gen><A href="${contextPath}/pm/sendTo/${u.id}.page">
+              <TD class=row1 vAlign=center><B><SPAN class=gen><A href="${contextPath}/pm/sendTo/${u.id}${extension}">
               <img src="${contextPath}/templates/${templateName}/images/icon_pm.gif" border=0></A></SPAN></B></TD>
             </TR>
             <#if (u.msnm?exists && u.msnm?length > 0)>

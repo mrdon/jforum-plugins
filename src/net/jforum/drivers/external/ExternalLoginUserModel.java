@@ -114,6 +114,14 @@ public class ExternalLoginUserModel implements UserModel {
 		delegateUserModel.saveNewPassword(password, email);
 	}
 	
+	public boolean validateActivationKeyHash(int userId, String hash) throws Exception {
+		return delegateUserModel.validateActivationKeyHash(userId, hash);
+	}
+	
+	public void writeUserActive(int userId) throws Exception {
+		delegateUserModel.writeUserActive(userId);
+	}
+	
 	public ArrayList selectAll() throws Exception {
 		return delegateUserModel.selectAll();
 	}

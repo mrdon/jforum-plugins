@@ -65,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.4 2004/09/09 06:49:25 jamesyong Exp $
+ * @version $Id: UserAction.java,v 1.5 2004/09/11 02:43:20 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -104,7 +104,8 @@ public class UserAction extends Command
 			this.edit();
 		}
 		else {		
-			JForum.setRedirect(JForum.getRequest().getContextPath() +"/user/editDone/"+ userId +".page");
+			JForum.setRedirect(JForum.getRequest().getContextPath() +"/user/editDone/"+ userId 
+					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		}
 	}
 	
@@ -121,16 +122,14 @@ public class UserAction extends Command
 		
 		String username = JForum.getRequest().getParameter("username");
 		String password = JForum.getRequest().getParameter("password");
-		String message = "";
 		
 		boolean error = false;
-		
 		if (username == null || username.trim().equals("") || password == null || password.trim().equals("")) {
 			JForum.getContext().put("error", I18n.getMessage("UsernamePasswordCannotBeNull"));
 			error = true;
 		}
 		
-		if ((error == false)&&(um.isUsernameRegistered(JForum.getRequest().getParameter("username")))) {
+		if (!error && um.isUsernameRegistered(JForum.getRequest().getParameter("username"))) {
 			JForum.getContext().put("error", I18n.getMessage("UsernameExists"));
 			error = true;
 		}
@@ -149,20 +148,20 @@ public class UserAction extends Command
 		int userId = um.addNew(u);
 		
 		if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_USER_EMAIL_AUTH)) {
-
 			try {
 				//Send an email to new user
-				QueuedExecutor.getInstance().execute(new EmailSenderTask(new ActivationKeySpammer(userId, u.getUsername(), u.getEmail(), u.getActivationKey())));
+				QueuedExecutor.getInstance().execute(new EmailSenderTask(
+						new ActivationKeySpammer(userId, u.getUsername(), u.getEmail(), u.getActivationKey())));
 			}
 			catch (Exception e) {
-				// Shall we log the error?
+				e.printStackTrace();
 			}
-			message = I18n.getMessage("User.GoActivateAccountMessage");
+
 			JForum.getContext().put("moduleAction", "message.htm");
-			JForum.getContext().put("message", message);			
+			JForum.getContext().put("message", I18n.getMessage("User.GoActivateAccountMessage"));			
 		}			
 		else {
-			logNewRegisteredUserIn(userId, u);
+			this.logNewRegisteredUserIn(userId, u);
 		}
 	}
 
@@ -204,15 +203,18 @@ public class UserAction extends Command
 		SessionFacade.add(userSession);
 
 		// Finalizing.. show to user the congrats page
-		JForum.setRedirect(JForum.getRequest().getContextPath() +"/user/registrationComplete.page");				
+		JForum.setRedirect(JForum.getRequest().getContextPath() +"/user/registrationComplete"
+				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));				
 	}
 	
 	public void registrationComplete() throws Exception
 	{
 		int userId = SessionFacade.getUserSession().getUserId();
 		
-		String profilePage = JForum.getRequest().getContextPath() +"/user/edit/"+ userId +".page";
-		String homePage = JForum.getRequest().getContextPath() +"/forums/list.page";
+		String profilePage = JForum.getRequest().getContextPath() +"/user/edit/"+ userId 
+			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
+		String homePage = JForum.getRequest().getContextPath() +"/forums/list"
+			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
 		
 		String message = I18n.getMessage("User.RegistrationCompleteMessage", new Object[] { profilePage, homePage });
 		JForum.getContext().put("message", message);
@@ -228,7 +230,8 @@ public class UserAction extends Command
 			User user = validateLogin(JForum.getRequest().getParameter("username"), password);
 			
 			if (user != null) {
-				JForum.setRedirect(JForum.getRequest().getContextPath() +"/forums/list.page");
+				JForum.setRedirect(JForum.getRequest().getContextPath() +"/forums/list"
+						+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 				
 				SessionFacade.setAttribute("logged", "1");
 				
@@ -292,7 +295,8 @@ public class UserAction extends Command
 	
 	public void logout() throws Exception
 	{
-		JForum.setRedirect(JForum.getRequest().getContextPath() +"/forums/list.page");
+		JForum.setRedirect(JForum.getRequest().getContextPath() +"/forums/list"
+				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		
 		// Disable auto login
 		UserSession userSession = SessionFacade.getUserSession();
@@ -360,7 +364,8 @@ public class UserAction extends Command
 		
 		JForum.getContext().put("moduleAction", "message.htm");
 		JForum.getContext().put("message", I18n.getMessage("PasswordRecovery.emailSent", 
-			new String[] { JForum.getRequest().getContextPath() + "/user/login.page" }));
+			new String[] { JForum.getRequest().getContextPath() + "/user/login"
+				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)}));
 	}
 	
 	// Recover user password ( aka, ask him a new one )
@@ -384,7 +389,8 @@ public class UserAction extends Command
 			String password = JForum.getRequest().getParameter("newPassword");
 			DataAccessDriver.getInstance().newUserModel().saveNewPassword(MD5.crypt(password), email);
 			
-			message = I18n.getMessage("PasswordRecovery.ok", new String[] { "/user/login.page" });
+			message = I18n.getMessage("PasswordRecovery.ok", new String[] { "/user/login"
+					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)});
 		}
 		else {
 			message = I18n.getMessage("PasswordRecovery.invalidData");

@@ -1,4 +1,4 @@
-  <form accept-charset="${encoding}" action="${contextPath}/jforum.page" method=post target=_top>
+  <form accept-charset="${encoding}" action="${contextPath}/jforum${extension}" method=post target=_top>
   <input type="hidden" name="module" value="user">
   <input type="hidden" name="securityHash" value="${securityHash}">
   <input type="hidden" name="action" value="validateLogin">
@@ -10,7 +10,7 @@
   <TABLE cellSpacing=2 cellPadding=2 width="100%" align=center border=0>
 <TBODY>
 <TR>
-  <TD class=nav align=left><A class=nav href="${contextPath}/forums/list.page">${I18n.getMessage("ForumListing.forumIndex")}</A></TD></TR></TBODY></TABLE>
+  <TD class=nav align=left><A class=nav href="${contextPath}/forums/list${extension}">${I18n.getMessage("ForumListing.forumIndex")}</A></TD></TR></TBODY></TABLE>
   <TABLE class=forumline cellSpacing=1 cellPadding=4 width="100%" align=center border=0>
 <TBODY>
 <TR>
@@ -44,7 +44,7 @@ ${I18n.getMessage("Login.user")}:</SPAN></TD>
 <TD colSpan=2><INPUT type=hidden name=redirect><INPUT class=mainoption type=submit value="${I18n.getMessage("Login.enter")}" name=login></TD></TR>
   <TR align=middle>
 <TD colSpan=2><SPAN class=gensmall>
-<A class=gensmall href="${contextPath}/user/lostPassword.page">${I18n.getMessage("Login.lostPassword")}</A></SPAN>
+<A class=gensmall href="${contextPath}/user/lostPassword${extension}">${I18n.getMessage("Login.lostPassword")}</A></SPAN>
   </TD>
   </TR>
   </TABLE>

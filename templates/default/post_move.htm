@@ -13,7 +13,7 @@ function validateSelectedForum()
 }
 </script>
 
-<form accept-charset="${encoding}" name="form1" method="post" action="${contextPath}/jforum.page" onSubmit="return validateSelectedForum();">
+<form accept-charset="${encoding}" name="form1" method="post" action="${contextPath}/jforum${extension}" onSubmit="return validateSelectedForum();">
 <input type="hidden" name="action" value="moveTopic">
 <input type="hidden" name="securityHash" value="${securityHash}">
 <input type="hidden" name="module" value="${moduleName}">
@@ -28,7 +28,7 @@ function validateSelectedForum()
 
   <table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
 	  <tr>
-		  <td align="left" class="nav"><a class="nav" href="${contextPath}/forums/list.page">${I18n.getMessage("ForumListing.forumIndex")}</a></td>
+		  <td align="left" class="nav"><a class="nav" href="${contextPath}/forums/list${extension}">${I18n.getMessage("ForumListing.forumIndex")}</a></td>
 	  </tr>
   </table>
   
@@ -72,7 +72,7 @@ function validateSelectedForum()
 			  </tr>
 			  <tr>
 				  <td align="center">
-				  <a class="nav" href="${contextPath}/forums/list.page">${I18n.getMessage("ForumListing.forumIndex")}</a>
+				  <a class="nav" href="${contextPath}/forums/list${extension}">${I18n.getMessage("ForumListing.forumIndex")}</a>
 				    - <a class="nav" href="#" onClick="history.go(-1)">${I18n.getMessage("previousPage")}</a>
 				  </td>
 			  </tr>

@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net 
  * 
- * $Id: User.java,v 1.5 2004/09/08 08:54:48 jamesyong Exp $
+ * $Id: User.java,v 1.6 2004/09/11 02:43:22 rafaelsteil Exp $
  */
 package net.jforum.entities;
 
@@ -535,8 +535,8 @@ public class User
 	 * 
 	 * @return integer 1 if true
 	 */	
-	public int isActive(){
-		return this.active;
+	public boolean isActive(){
+		return this.active == 1;
 	}
 	
 	/**
