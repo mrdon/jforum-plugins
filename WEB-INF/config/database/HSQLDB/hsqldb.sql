@@ -22,7 +22,7 @@ UserModel.selectById = SELECT u.*, \
 # #############
 PostModel.lastGeneratedPostId = SELECT max(post_id) from jforum_posts
 
-PostModel.selectAllByTopicByLimit = SELECT LIMIT ? ? p.post_id, topic_id, forum_id, p.user_id, post_time, poster_ip, enable_bbcode, \
+PostModel.selectAllByTopicByLimit = SELECT LIMIT ? ? p.post_id, topic_id, forum_id, p.user_id, post_time, poster_ip, enable_bbcode, p.attach, \
 	enable_html, enable_smilies, enable_sig, post_edit_time, post_edit_count, status, pt.post_subject, pt.post_text, username \
 	FROM jforum_posts p, jforum_posts_text pt, jforum_users u \
 	WHERE p.post_id = pt.post_id \
@@ -56,7 +56,7 @@ ForumModel.generatedForumId = SELECT max(forum_id) from jforum_forums
 # #############
 # TopicModel
 # #############
-TopicModel.selectAllByForumByLimit = SELECT LIMIT ? ? t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time \
+TopicModel.selectAllByForumByLimit = SELECT LIMIT ? ? t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time, p.attach \
 	FROM jforum_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2 \
 	WHERE t.forum_id = ? \
 	AND t.user_id = u.user_id \
@@ -65,7 +65,7 @@ TopicModel.selectAllByForumByLimit = SELECT LIMIT ? ? t.*, u.username AS posted_
 	AND u2.user_id = p2.user_id \
 	ORDER BY t.topic_type DESC, t.topic_time DESC, t.topic_last_post_id DESC
 
-TopicModel.selectRecentTopicsByLimit = SELECT LIMIT 0 ? t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time \
+TopicModel.selectRecentTopicsByLimit = SELECT LIMIT 0 ? t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time, p.attach \
 	FROM jforum_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2 \
 	WHERE t.user_id = u.user_id \
 	AND p.post_id = t.topic_first_post_id \
