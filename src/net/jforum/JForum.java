@@ -73,7 +73,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.60 2005/01/27 18:52:33 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.61 2005/01/27 22:03:32 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -120,7 +120,7 @@ public class JForum extends JForumCommonServlet
 					UserSession tmpUs = null;
 					
 					User user = DataAccessDriver.getInstance().newUserModel().selectById(userId);
-					if (user == null) {
+					if (user == null || user.getId() != userId) {
 						userSession.makeAnonymous();
 					}
 					else {
