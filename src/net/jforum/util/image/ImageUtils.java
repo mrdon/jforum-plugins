@@ -41,8 +41,6 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $id$
- * $id
  */
 package net.jforum.util.image;
 
@@ -73,7 +71,7 @@ public class ImageUtils
 	public static final int IMAGE_PNG = 1;
 	
 	/**
-	 * Resized an image
+	 * Resizes an image
 	 * 
 	 * @param imgName The image name to resize. Must be the complet path to the file
 	 * @param maxWidth The image's max width
