@@ -180,7 +180,7 @@ TopicModel.selectAllByForumByLimit = SELECT t.*, u.username AS posted_by_usernam
 	AND p.post_id = t.topic_first_post_id \
 	AND p2.post_id = t.topic_last_post_id \
 	AND u2.user_id = p2.user_id \
-	ORDER BY t.topic_type DESC, t.topic_time DESC, t.topic_last_post_id DESC \
+	ORDER BY t.topic_type DESC, p2.post_time DESC, t.topic_last_post_id DESC \
 	LIMIT ?, ?
 	
 TopicModel.selectLastN = SELECT topic_title, topic_time, topic_id, topic_type FROM jforum_topics ORDER BY topic_time DESC LIMIT ?
