@@ -59,7 +59,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationAction.java,v 1.6 2005/03/26 04:11:18 rafaelsteil Exp $
+ * @version $Id: ModerationAction.java,v 1.7 2005/03/28 21:16:36 rafaelsteil Exp $
  */
 public class ModerationAction extends AdminCommand
 {
@@ -123,7 +123,7 @@ public class ModerationAction extends AdminCommand
 					
 					int totalPosts = tm.getTotalPosts(post.getTopicId());
 					if (totalPosts == 0) {
-						TopicsCommon.deleteTopic(post.getTopicId(), post.getForumId());
+						TopicsCommon.deleteTopic(post.getTopicId(), post.getForumId(), true);
 					}
 				}
 			}

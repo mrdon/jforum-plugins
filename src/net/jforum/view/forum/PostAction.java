@@ -90,7 +90,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.71 2005/03/26 04:11:15 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.72 2005/03/28 21:16:36 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -782,7 +782,7 @@ public class PostAction extends Command {
 		}
 		else {
 			// Ok, all posts were removed. Time to say goodbye
-			TopicsCommon.deleteTopic(p.getTopicId(), p.getForumId());
+			TopicsCommon.deleteTopic(p.getTopicId(), p.getForumId(), false);
 
 			JForum.setRedirect(this.request.getContextPath() + "/forums/show/" + p.getForumId()
 					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));

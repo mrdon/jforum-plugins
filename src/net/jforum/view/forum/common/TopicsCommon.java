@@ -74,7 +74,7 @@ import net.jforum.view.forum.ModerationHelper;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.9 2005/03/26 04:11:22 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.10 2005/03/28 21:16:36 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
@@ -273,11 +273,12 @@ public class TopicsCommon
 	 * This method will remove the topic from the database,
 	 * clear the entry frm the cache and update the last 
 	 * post info for the associated forum.
-	 * 
 	 * @param topicId The topic id to remove
+	 * @param fromModeration TODO
+	 * 
 	 * @throws Exception
 	 */
-	public static void deleteTopic(int topicId, int forumId) throws Exception
+	public static void deleteTopic(int topicId, int forumId, boolean fromModeration) throws Exception
 	{
 		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 		ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
@@ -286,11 +287,13 @@ public class TopicsCommon
 		topic.setId(topicId);
 		tm.delete(topic);
 
-		// Updates the Recent Topics if it contains this topic
-		TopicRepository.popTopic(topic);
-		TopicRepository.loadMostRecentTopics();
-
-		tm.removeSubscriptionByTopic(topicId);
-		fm.decrementTotalTopics(forumId, 1);
+		if (!fromModeration) {
+			// Updates the Recent Topics if it contains this topic
+			TopicRepository.popTopic(topic);
+			TopicRepository.loadMostRecentTopics();
+	
+			tm.removeSubscriptionByTopic(topicId);
+			fm.decrementTotalTopics(forumId, 1);
+		}
 	}
 }
