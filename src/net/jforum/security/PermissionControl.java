@@ -39,8 +39,6 @@
  * This file creation date: Oct 10, 2003 / 21:46:35 PM
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: PermissionControl.java,v 1.5 2004/09/19 05:13:16 rafaelsteil Exp $
  */
 package net.jforum.security;
 
@@ -51,6 +49,7 @@ import net.jforum.model.security.SecurityModel;
  * actions.  
  * 
  * @author Rafael Steil
+ * @version $Id: PermissionControl.java,v 1.6 2004/11/13 20:12:26 rafaelsteil Exp $
  */
 public class PermissionControl 
 {
@@ -96,7 +95,7 @@ public class PermissionControl
 		return this.roles.get(roleName);
 	}
 	
-	/* 
+	/** 
 	 * @see net.jforum.security.PermissionControl#canAccess(java.lang.String)
 	 */
 	public boolean canAccess(String roleName) 
@@ -105,7 +104,7 @@ public class PermissionControl
 		return (role != null && role.getType() == PermissionControl.ROLE_ALLOW);
 	}
 	
-	/* 
+	/** 
 	 * @see net.jforum.security.PermissionControl#canAccess(java.lang.String, java.lang.String)
 	 */
 	public boolean canAccess(String roleName, String roleValue) 

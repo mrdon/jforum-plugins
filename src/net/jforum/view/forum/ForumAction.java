@@ -48,12 +48,10 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
-import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
@@ -70,87 +68,16 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.17 2004/11/13 03:14:02 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.18 2004/11/13 20:12:25 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
-	/**
-	 * Gets all forums available to the user.
-	 * 
-	 * @return <code>LinkedHashMap</code> with the records found. The <i>key</i> is
-	 * an object of type <code>Category</code>, which represets the forum's category. 
-	 * The <i>value</i> is an <code>ArrayList</code> filled by <code>Forum</code> objects.
-	 * 
-	 * @see #getAllForums(boolean)
-	 * @throws Exception
-	 */
-	public static List getAllCategoriesAndForums() throws Exception
-	{
-		return ForumAction.getAllCategoriesAndForums(false);
-	}
-
-	/**
-	 * Gets all forums available to the user.
-	 * 
-	 * @param checkUnreadPosts <code>true</code> if is to search for unread topics inside the forums, 
-	 * or <code>false</code> if this action is not needed. 
-	 * 
-	 * @return <code>LinkedHashMap</code> with the records found. The <i>key</i> is
-	 * an object of type <code>Category</code>, which represets the forum's category. 
-	 * The <i>value</i> is an <code>ArrayList</code> filled by <code>Forum</code> objects.
-	 * @see #getAllForums()
-	 * @throws Exception
-	 */
-	public static List getAllCategoriesAndForums(boolean checkUnreadPosts) throws Exception
-	{
-		long lastVisit = 0;
-		
-		UserSession us = SessionFacade.getUserSession();
-		if (us != null) {
-			lastVisit = us.getLastVisit().getTime();
-		}
-		
-		// Do not check for unread posts if the user is not logged in
-		checkUnreadPosts = checkUnreadPosts 
-			&& (us.getUserId() != SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID));
-
-		Map tracking = null;
-		if (checkUnreadPosts) {
-			tracking = (HashMap)SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING);
-		}
-		
-		List returnCategories = new ArrayList();
-		List categories = ForumRepository.getAllCategories();
-		for (Iterator iter = categories.iterator(); iter.hasNext(); ) {
-			Category c = (Category)iter.next();
-			
-			for (Iterator tmpIterator = c.getForums(); tmpIterator.hasNext(); ) {
-				Forum f = (Forum)tmpIterator.next();
-				if (!ForumRepository.isForumAccessible(c.getId(), c.getId())) {
-					c.removeForum(f.getId());
-					continue;
-				}
-				
-				f = new Forum(f);
-				
-				if (checkUnreadPosts) {
-					f = ForumCommon.checkUnreadPosts(f, ForumRepository.getLastPostInfo(f.getId()), 
-							tracking, lastVisit);
-				}
-			}
-			
-			returnCategories.add(c);
-		}
-		
-		return returnCategories;
-	}
-	
 	public void list() throws Exception
 	{
 		ForumModel fm = DataAccessDriver.getInstance().newForumModel();
 		UserModel um = DataAccessDriver.getInstance().newUserModel();
 		
-		JForum.getContext().put("allCategories", ForumAction.getAllCategoriesAndForums(true));
+		JForum.getContext().put("allCategories", ForumCommon.getAllCategoriesAndForums(true));
 		JForum.getContext().put("topicsPerPage",  new Integer(SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE)));
 		JForum.getContext().put("moduleAction", "forum_list.htm");
 		JForum.getContext().put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
@@ -226,7 +153,6 @@ public class ForumAction extends Command
 		this.show();
 	}
 
-	
 	public void show() throws Exception
 	{
 		int forumId = Integer.parseInt(JForum.getRequest().getParameter("forum_id"));
@@ -248,7 +174,7 @@ public class ForumAction extends Command
 		Forum forum = ForumRepository.getForum(forumId);
 
 		JForum.getContext().put("topics", TopicsCommon.prepareTopics(tmpTopics));
-		JForum.getContext().put("allCategories", ForumAction.getAllCategoriesAndForums());
+		JForum.getContext().put("allCategories", ForumCommon.getAllCategoriesAndForums());
 		JForum.getContext().put("forum", forum);
 		JForum.getContext().put("moduleAction", "forum_show.htm");
 		JForum.getContext().put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));

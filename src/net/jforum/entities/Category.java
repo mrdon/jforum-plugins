@@ -42,6 +42,7 @@
  */
 package net.jforum.entities;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -50,7 +51,7 @@ import java.util.Map;
  * Represents a category in the System.
  * 
  * @author Rafael Steil
- * @version $Id: Category.java,v 1.4 2004/11/13 03:14:01 rafaelsteil Exp $
+ * @version $Id: Category.java,v 1.5 2004/11/13 20:12:27 rafaelsteil Exp $
  */
 public class Category 
 {
@@ -61,12 +62,17 @@ public class Category
 		
 	public Category() {}
 	
+	public Category(String name, int id) {
+		this.name = name;
+		this.id = id;
+	}
+	
 	public Category(Category c) {
 		this.name = c.getName();
 		this.id = c.getId();
 		this.order = c.getOrder();
 		
-		for (Iterator iter = c.getForums(); iter.hasNext(); ) {
+		for (Iterator iter = c.getForums().iterator(); iter.hasNext(); ) {
 			this.addForum(new Forum((Forum)iter.next()));
 		}
 	}
@@ -149,8 +155,8 @@ public class Category
 	 * Gets all forums from this category
 	 * @return 
 	 */
-	public Iterator getForums() {
-		return this.forums.values().iterator();
+	public Collection getForums() {
+		return this.forums.values();
 	}
 
 	/** 

@@ -59,7 +59,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumRSS.java,v 1.13 2004/11/13 03:14:05 rafaelsteil Exp $
+ * @version $Id: ForumRSS.java,v 1.14 2004/11/13 20:12:27 rafaelsteil Exp $
  */
 public class ForumRSS extends GenericRSS 
 {
@@ -87,7 +87,7 @@ public class ForumRSS extends GenericRSS
 			for (Iterator iter = this.categories.iterator(); iter.hasNext(); ) {
 				Category category = (Category)iter.next();
 				
-				for (Iterator fIter = category.getForums(); fIter.hasNext(); ) {
+				for (Iterator fIter = category.getForums().iterator(); fIter.hasNext(); ) {
 					Forum forum = (Forum)fIter.next();
 					
 					LastPostInfo info = ForumRepository.getLastPostInfo(forum.getId());

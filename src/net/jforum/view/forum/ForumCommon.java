@@ -42,10 +42,20 @@
  */
 package net.jforum.view.forum;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
+import net.jforum.SessionFacade;
+import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
 import net.jforum.entities.LastPostInfo;
+import net.jforum.entities.UserSession;
+import net.jforum.repository.ForumRepository;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
@@ -81,5 +91,71 @@ public class ForumCommon
 		}
 		
 		return forum;
+	}
+	
+	/**
+	 * Gets all forums available to the user.
+	 * 
+	 * @param us An <code>UserSession</code> instance with user information
+	 * @param anonymousUserId The id which represents the anonymous user
+	 * @param tracking <code>Map</code> instance with information 
+	 * about the topics read by the user
+	 * @param checkUnreadPosts <code>true</code> if is to search for unread topics inside the forums, 
+	 * or <code>false</code> if this action is not needed. 
+	 * @return A <code>List</code> instance where each record is an instance of a <code>Category</code>
+	 * object
+	 * @throws Exception
+	 */
+	public static List getAllCategoriesAndForums(UserSession us, int anonymousUserId, 
+			Map tracking, boolean checkUnreadPosts) throws Exception
+	{
+		long lastVisit = 0;
+		int userId = anonymousUserId;
+		
+		if (us != null) {
+			lastVisit = us.getLastVisit().getTime();
+			userId = us.getUserId();
+		}
+		
+		// Do not check for unread posts if the user is not logged in
+		checkUnreadPosts = checkUnreadPosts && (us.getUserId() != anonymousUserId);
+
+		List returnCategories = new ArrayList();
+		List categories = ForumRepository.getAllCategories(userId, false);
+		for (Iterator iter = categories.iterator(); iter.hasNext(); ) {
+			Category c = (Category)iter.next();
+			
+			if (checkUnreadPosts) {
+				for (Iterator tmpIterator = c.getForums().iterator(); tmpIterator.hasNext(); ) {
+					Forum f = new Forum((Forum)tmpIterator.next());
+
+					f = ForumCommon.checkUnreadPosts(f, ForumRepository.getLastPostInfo(f.getId()), 
+							tracking, lastVisit);
+				}
+			}
+			
+			returnCategories.add(c);
+		}
+		
+		return returnCategories;
+	}
+	
+	/**
+	 * @see #getAllCategoriesAndForums(UserSession, int, Map, boolean)
+	 */
+	public static List getAllCategoriesAndForums(boolean checkUnreadPosts) throws Exception
+	{
+		return getAllCategoriesAndForums(SessionFacade.getUserSession(), 
+				SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID), 
+				(HashMap)SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING), 
+				checkUnreadPosts);
+	}
+	
+	/**
+	 * @see #getAllCategoriesAndForums(boolean)
+	 */
+	public static List getAllCategoriesAndForums() throws Exception
+	{
+		return getAllCategoriesAndForums(false);
 	}
 }
