@@ -101,7 +101,9 @@ function confirmDelete()
 						</#if>
 						<br /> 
 						
-						${I18n.getMessage("PostShow.userTotalMessages")}: ${user.totalPosts}
+						<#if post.userId!=1>
+							${I18n.getMessage("PostShow.userTotalMessages")}: ${user.totalPosts}
+						</#if>
 						<br />
 						
 						<#if user.from?exists>
