@@ -63,15 +63,15 @@ function confirmDelete()
 					<td width="15%" align="left" valign="bottom" nowrap="nowrap">
 					</#if>
 						<#if topic.status == STATUS_LOCKED>
-							<img src="${contextPath}/templates/${templateName}/images/reply_locked.gif" />
+							<img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/reply_locked.gif" />
 						<#else>
 							<#if !readonly>
 								<span class="nav">
 								<#if !replyOnly>
-									<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&forum_id=${topic.forumId}","")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/post.gif" border="0" /></a>
+									<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&forum_id=${topic.forumId}","")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/post.gif" border="0" /></a>
 								</#if>
 
-								<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&topic_id=${topic.id}&forum_id=${topic.forumId}&start=${start}", "")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/reply.gif" border="0" /></a>
+								<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&topic_id=${topic.id}&forum_id=${topic.forumId}&start=${start}", "")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/reply.gif" border="0" /></a>
 								</span>
 							<#else>
 								<#assign colspan = "2"/>
@@ -152,16 +152,18 @@ function confirmDelete()
 
 									<!-- Icons -->
 									<#if topic.status != STATUS_LOCKED>
-										<a href="${JForumContext.encodeURL("/jforum${extension}?module=${moduleName}&amp;action=quote&amp;post_id=${post.id}&start=${start}","")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/icon_quote.gif" border="0" /></a>
+										<a href="${JForumContext.encodeURL("/jforum${extension}?module=${moduleName}&amp;action=quote&amp;post_id=${post.id}&start=${start}","")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/icon_quote.gif" border="0" /></a>
 									</#if>
 
 									<#if ((post.canEdit && topic.status != STATUS_LOCKED) || canEdit)>
-										<a href="${JForumContext.encodeURL("/jforum${extension}?module=${moduleName}&amp;action=edit&amp;post_id=${post.id}&start=${start}","")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/icon_edit.gif" border="0" /></a>  
+										<a href="${JForumContext.encodeURL("/jforum${extension}?module=${moduleName}&amp;action=edit&amp;post_id=${post.id}&start=${start}","")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/icon_edit.gif" border="0" /></a>  
 									</#if>
 
 									<#if canRemove>
 										<a href="${JForumContext.encodeURL("/jforum${extension}?module=${moduleName}&amp;action=delete&amp;post_id=${post.id}&start=${start}","")}" onClick="return confirmDelete();"><img src="${contextPath}/templates/${templateName}/images/icon_delete.gif" border="0"/></a>  
 									</#if>
+
+									<a class="nav" href="#top"><img src="${contextPath}/templates/${templateName}/images/icon_up.gif" border="0"/></a>
 								</td>
 							</tr>
 						</table>
@@ -257,7 +259,7 @@ function confirmDelete()
 
 				<#if (user.attachSignatureEnabled && user.signature?exists && user.signature?length > 0 && post.isSignatureEnabled())>
 					<tr>
-							<td colspan="2" width="100%" height="28"><hr/><span class="gensmall">${user.signature}</span></td>
+						<td colspan="2" class="${rowColor}" width="100%" height="28"><hr/><span class="gensmall">${user.signature}</span></td>
 					</tr>
 				</#if>
 	
@@ -270,8 +272,8 @@ function confirmDelete()
 						<table height="18" cellspacing="0" cellpadding="0" border="0" width="100%">
 							<tr>
 								<td valign="center" nowrap="nowrap"> 
-									<a href="${JForumContext.encodeURL("/user/profile/${user.id}")}"><img src="${contextPath}/templates/${templateName}/images/icon_profile.gif" border="0" /></a>
-									<a href="${JForumContext.encodeURL("/pm/sendTo/${user.id}")}"><img src="${contextPath}/templates/${templateName}/images/icon_pm.gif" border="0" /></a>
+									<a href="${JForumContext.encodeURL("/user/profile/${user.id}")}"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/icon_profile.gif" border="0" /></a>
+									<a href="${JForumContext.encodeURL("/pm/sendTo/${user.id}")}"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/icon_pm.gif" border="0" /></a>
 
 									<#if (user.isViewEmailEnabled() && user.email?exists && user.email?length > 0)>
 										<#assign e = user.email.split("@")/>
@@ -333,15 +335,15 @@ function confirmDelete()
 					<td width="15%" align="left" valign="bottom" nowrap="nowrap">
 					</#if>
 					<#if topic.status == STATUS_LOCKED>
-						<img src="${contextPath}/templates/${templateName}/images/reply_locked.gif" />
+						<img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/reply_locked.gif" />
 					<#else>
 						<#if !readonly>
 							<span class="nav">
 							<#if !replyOnly>
-								<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&forum_id=${topic.forumId}","")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/post.gif" border="0" /></a>
+								<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&forum_id=${topic.forumId}","")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/post.gif" border="0" /></a>
 							</#if>
 
-							&nbsp;<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&topic_id=${topic.id}&forum_id=${topic.forumId}&start=${start}","")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/reply.gif" border="0" /></a>
+							&nbsp;<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&topic_id=${topic.id}&forum_id=${topic.forumId}&start=${start}","")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/reply.gif" border="0" /></a>
 							</span>
 						<#else>
 							<#assign colspan = "2"/>

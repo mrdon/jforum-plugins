@@ -73,7 +73,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.59 2005/01/26 20:15:12 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.60 2005/01/27 18:52:33 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -178,12 +178,14 @@ public class JForum extends JForumCommonServlet
 		JForum.getContext().put("extension", SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		JForum.getContext().put("serverPort", Integer.toString(JForum.getRequest().getServerPort()));
 		JForum.getContext().put("I18n", I18n.getInstance());
+		JForum.getContext().put("imagesI18n", SystemGlobals.getValue(ConfigKeys.I18N_IMAGES_DIR));
 		JForum.getContext().put("version", SystemGlobals.getValue(ConfigKeys.VERSION));
 		JForum.getContext().put("forumTitle", SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_TITLE));
 		JForum.getContext().put("pageTitle", SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_TITLE));
 		JForum.getContext().put("metaKeywords", SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_METATAG_KEYWORDS));
 		JForum.getContext().put("metaDescription", SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_METATAG_DESCRIPTION));
 		JForum.getContext().put("forumLink", SystemGlobals.getValue(ConfigKeys.FORUM_LINK));
+		JForum.getContext().put("homepageLink", SystemGlobals.getValue(ConfigKeys.HOMEPAGE_LINK));
 		JForum.getContext().put("encoding", SystemGlobals.getValue(ConfigKeys.ENCODING));
 		JForum.getContext().put("JForumContext", new JForumContext(JForum.getRequest().getContextPath(), 
 				SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION), JForum.getRequest(),JForum.getResponse()));

@@ -24,7 +24,7 @@
 			<table cellspacing="0" cellpadding="0" width="100%" border="0">
 				<tr>
 					<td>
-						<a href="${JForumContext.encodeURL("/forums/list")}"><img src="${contextPath}/templates/${templateName}/images/logo.jpg"  vspace="1" border="0"></a>
+						<a href="${homepageLink}"><img src="${contextPath}/templates/${templateName}/images/logo.jpg"  vspace="1" border="0"></a>
 					</td>
 					 
 					<td width="100%" align="center" valign="center">
@@ -38,7 +38,7 @@
 									<img src="${contextPath}/templates/${templateName}/images/icon_mini_recentTopics.gif" width="12" height="13" />
 									<a id="latest" class="mainmenu" href="${JForumContext.encodeURL("/recentTopics/list")}">${I18n.getMessage("ForumBase.recentTopics")}</a> &nbsp;
 
-									<span class="mainmenu"> <img src="${contextPath}/templates/${templateName}/images/icon_mini_groups.gif" width="12" height="13" />&nbsp;<a id="backtosite" class="mainmenu" href="${forumLink}">${I18n.getMessage("ForumBase.backToSite")}</a>&nbsp;
+									<span class="mainmenu"> <img src="${contextPath}/templates/${templateName}/images/icon_mini_groups.gif" width="12" height="13" />&nbsp;<a id="backtosite" class="mainmenu" href="${homepageLink}">${I18n.getMessage("ForumBase.backToSite")}</a>&nbsp;
 
 									<#if logged>
 										<br/>
