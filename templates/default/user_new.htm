@@ -81,13 +81,11 @@ function validateRegistrationForm(f)
 
 	<#if captcha_reg?exists>
 		<tr>
-			<td class="row1"><span class="gen">${I18n.getMessage("User.captchaChallenge")}: </span></td>
-			<td class="row2"><img src="${contextPath}/imagecaptcha.captcha" border="0"></td>
-		</tr>
-		
-		<tr>
 			<td class="row1" width="38%"><span class="gen">${I18n.getMessage("User.captchaResponse")}: *</span></td>
-			<td class="row2"><input class="post" style="WIDTH: 200px" maxlength="25" size="25" name="captchaResponse" /></td>
+			<td class="row2">
+				<input class="post" style="WIDTH: 200px" maxlength="25" size="25" name="captchaResponse" /> 
+				<img src="${JForumContext.encodeURL("/captcha/generate")}" border="0" align="middle">
+			</td>
 		</tr>
 	</#if>
 						

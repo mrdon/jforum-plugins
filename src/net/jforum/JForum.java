@@ -45,6 +45,7 @@ package net.jforum;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.sql.Connection;
 import java.util.Date;
 import java.util.HashMap;
@@ -72,7 +73,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.53 2004/12/26 02:31:49 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.54 2004/12/28 04:10:26 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -185,7 +186,7 @@ public class JForum extends JForumCommonServlet
 	
 	public void service(HttpServletRequest req, HttpServletResponse response) throws IOException, ServletException
 	{
-		BufferedWriter out = null;
+		Writer out = null;
 		Connection conn = null;
 		
 		try {
@@ -238,8 +239,7 @@ public class JForum extends JForumCommonServlet
 			
 			JForum.getContext().put("securityHash", MD5.crypt(request.getSession().getId()));
 			JForum.getContext().put("session", SessionFacade.getUserSession());
-			
-			out = new BufferedWriter(new OutputStreamWriter(response.getOutputStream(), encoding));
+		
 			if (moduleClass != null) {
 				// Here we go, baby
 				Command c = (Command)Class.forName(moduleClass).newInstance();
@@ -253,9 +253,15 @@ public class JForum extends JForumCommonServlet
 					}
 					
 					response.setContentType(contentType);
-
-					template.process(JForum.getContext(), out);
-					out.flush();
+					
+					// Binary content are expected to be fully 
+					// handled in the action, including outputstream
+					// manipulation
+					if (!dh.isBinaryContent()) {
+						out = new BufferedWriter(new OutputStreamWriter(response.getOutputStream(), encoding));
+						template.process(JForum.getContext(), out);
+						out.flush();
+					}
 				}
 			}
 		}
@@ -272,6 +278,10 @@ public class JForum extends JForumCommonServlet
 			try {
 				if (conn != null) {
 					DBConnection.getImplementation().releaseConnection(conn);
+				}
+				
+				if (out != null) {
+					out.close();
 				}
 			}
 			catch (Exception e) {
