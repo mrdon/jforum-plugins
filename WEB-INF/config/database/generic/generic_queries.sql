@@ -132,6 +132,7 @@ PostModel.selectAllByTopicByLimit = SELECT p.post_id, topic_id, forum_id, p.user
 	LIMIT ?, ?
 	
 PostModel.setForumByTopic = UPDATE jforum_posts SET forum_id = ? WHERE topic_id = ?
+PostModel.deleteByTopic = SELECT post_id, user_id FROM jforum_posts WHERE topic_id = ?
 
 # #############
 # ForumModel

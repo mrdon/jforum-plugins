@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ModerationHelper.java,v 1.4 2004/08/30 23:51:19 rafaelsteil Exp $
+ * $Id: ModerationHelper.java,v 1.5 2004/09/06 01:54:17 rafaelsteil Exp $
  */
 package net.jforum.view.forum;
 
@@ -51,6 +51,7 @@ import java.util.Iterator;
 import net.jforum.JForum;
 import net.jforum.entities.Topic;
 import net.jforum.model.DataAccessDriver;
+import net.jforum.model.ForumModel;
 import net.jforum.model.TopicModel;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.SecurityRepository;
@@ -136,12 +137,19 @@ public class ModerationHelper
 				tm.delete(t);
 			}
 			
+			ForumModel fm = DataAccessDriver.getInstance().newForumModel();
+			
 			// Reload changed forums
 			for (Iterator iter = forumsList.iterator(); iter.hasNext(); ) {
 				int forumId = ((Integer)iter.next()).intValue();
 				
 				ForumRepository.reloadForum(forumId);
 				TopicRepository.clearCache(forumId);
+				
+				int postId = fm.getMaxPostId(forumId);
+				if (postId > -1) {
+					fm.setLastPost(forumId, postId);
+				}
 			}
 		}
 	}

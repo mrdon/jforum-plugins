@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) 2003, 2004 Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -53,12 +53,13 @@ import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
+import net.jforum.model.DataAccessDriver;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicModel.java,v 1.5 2004/06/05 22:09:58 rafaelsteil Exp $
+ * @version $Id: TopicModel.java,v 1.6 2004/09/06 01:54:18 rafaelsteil Exp $
  */
 public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel 
 {
@@ -93,17 +94,13 @@ public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("TopicModel.delete"));
 		p.setInt(1, topic.getId());
 		p.executeUpdate();
+		p.close();
 		
-		// Related posts
-		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("TopicModel.deletePosts"));
-		p.setInt(1, topic.getId());
-		p.executeUpdate();
+		// Remove the related posts
+		DataAccessDriver.getInstance().newPostModel().deleteByTopic(topic.getId());
 		
 		// Update forum stats
-		ForumModel fm = new ForumModel();
-		fm.decrementTotalTopics(topic.getForumId(), 1);
-		
-		p.close();
+		DataAccessDriver.getInstance().newForumModel().decrementTotalTopics(topic.getForumId(), 1);
 	}
 
 	/** 
@@ -218,6 +215,7 @@ public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel
 		l = this.fillTopicsData(rs);
 		
 		rs.close();
+		p.close();
 		return l;
 	}
 	

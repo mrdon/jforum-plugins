@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: PostModel.java,v 1.2 2004/04/21 23:57:25 rafaelsteil Exp $
+ * $Id: PostModel.java,v 1.3 2004/09/06 01:54:18 rafaelsteil Exp $
  */
 package net.jforum.model;
 
@@ -134,4 +134,12 @@ public interface PostModel
 	 * @throws Exception
 	 */	
 	public ArrayList selectAllByTopic(int topicId) throws Exception;
+	
+	/**
+	 * Delete all posts related to the given topic
+	 * 
+	 * @param topicId
+	 * @throws Exception
+	 */
+	public void deleteByTopic(int topicId) throws Exception;
 }

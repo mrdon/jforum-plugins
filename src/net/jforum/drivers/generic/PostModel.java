@@ -47,6 +47,8 @@ import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
+import java.util.List;
 
 import net.jforum.JForum;
 import net.jforum.entities.Post;
@@ -57,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: PostModel.java,v 1.9 2004/08/30 15:32:24 rafaelsteil Exp $
+ * @version $Id: PostModel.java,v 1.10 2004/09/06 01:54:18 rafaelsteil Exp $
  */
 public class PostModel extends AutoKeys implements net.jforum.model.PostModel 
 {
@@ -114,24 +116,56 @@ public class PostModel extends AutoKeys implements net.jforum.model.PostModel
 	/**
 	 * @see net.jforum.model.PostModel#delete(Post)
 	 */
-	public void delete(Post post) throws Exception 
+	public void delete(final Post post) throws Exception 
 	{
-		// Table posts
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.deletePost"));
-		p.setInt(1, post.getId());
-		p.executeUpdate();
+		this.removePosts(new ArrayList() {{ add(post); }});
+	}
+	
+	private void removePosts(List posts) throws Exception
+	{
+		PreparedStatement post = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.deletePost"));
+		PreparedStatement text = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.deletePostText"));
+		PreparedStatement decrement = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.decrementPosts"));
+		
+		for (Iterator iter = posts.iterator(); iter.hasNext(); ) {
+			Post p = (Post)iter.next();
+
+			post.setInt(1, p.getId());
+			text.setInt(1, p.getId());
+			decrement.setInt(1, p.getUserId());
+			
+			post.executeUpdate();
+			text.executeUpdate();
+			decrement.executeUpdate();
+		}
+		
+		post.close();
+		text.close();
+		decrement.close();
+	}
+	
+	/**
+	 * @set net.jforum.model.PostModel#deleteByTopic(int) 
+	 */
+	public void deleteByTopic(int topicId) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.deleteByTopic"));
+		p.setInt(1, topicId);
+		ResultSet rs = p.executeQuery();
+		
+		List posts = new ArrayList();
+		while (rs.next()) {
+			Post post = new Post();
+			post.setId(rs.getInt("post_id"));
+			post.setUserId(rs.getInt("user_id"));
+			
+			posts.add(post);
+		}
+		
+		rs.close();
 		p.close();
 		
-		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.deletePostText"));
-		p.setInt(1, post.getId());
-		p.executeUpdate();
-		p.close();
-		
-		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.decrementPosts"));
-		p.setInt(1, post.getUserId());
-		p.executeUpdate();
-		
-		p.close();
+		this.removePosts(posts);
 	}
 	
 	/**
