@@ -5,12 +5,12 @@
 		<regex>(?s)\[code\](.*?)\[/code\]</regex>
 		<replace>
 		<![CDATA[
-		<table class="code-table-simple">
+		<table class="code-table-simple" align="center">
 		<tr> 
 		<td><span class="genmed"><b>Code:</b></span></td>
 		</tr>
 		</table>
-		<table class="code-table">
+		<table class="code-table" align="center">
 		<tr>
 		<td class="code">
 		<pre>$1</pre></td>
@@ -24,7 +24,7 @@
 		<regex>\[quote\]</regex>
 		<replace>
 		<![CDATA[
-		<table class="quote-table">
+		<table class="quote-table" align="center">
 		<tr>
 		<td class="quote">
 		]]>
@@ -35,13 +35,13 @@
 		<regex>\[quote=['"]?(.*?[^'"])['"]?\]</regex>
 		<replace>
 		<![CDATA[
-		<table class="quote-table-simple">
+		<table class="quote-table-simple" align="center">
 		<tr> 
 		<td><span class="genmed"><b>$1 wrote:</b></span></td>
 		</tr>
 		</table>
 		
-		<table class="quote-table">
+		<table class="quote-table" align="center">
 		<tr>
 		<td class="quote">
 		]]>

@@ -27,7 +27,7 @@
 <#-- Create a <select> HTML field with the groups -->
 <#-- ******************************************** -->
 <#macro selectFieldGroups name groups parentId multiple selectedList>
-	<select name="${name}" <#if multiple>multiple size="8"</#if>>
+	<select name="${name}" <#if multiple>multiple size="4"</#if>>
 	
 	<#if !multiple>
 		<option value="0">Top level Group</option>

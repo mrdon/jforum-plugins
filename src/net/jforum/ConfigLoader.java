@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobalsListener;
  * General utilities methods for loading configurations for JForum.
  * 
  * @author Rafael Steil
- * @version $Id: ConfigLoader.java,v 1.4 2004/12/29 19:17:27 rafaelsteil Exp $
+ * @version $Id: ConfigLoader.java,v 1.5 2005/01/02 19:57:59 rafaelsteil Exp $
  */
 public class ConfigLoader 
 {
@@ -127,7 +127,7 @@ public class ConfigLoader
 	public static void listenForChanges() throws IOException
 	{
 		int fileChangesDelay = SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY);
-
+		
 		if (fileChangesDelay > 0) {
 			// Queries
 			FileMonitor.getInstance().addFileChangeListener(new QueriesFileListener(),
@@ -140,10 +140,19 @@ public class ConfigLoader
 			FileMonitor.getInstance().addFileChangeListener(new SystemGlobalsListener(),
 					SystemGlobals.getValue(ConfigKeys.DEFAULT_CONFIG), fileChangesDelay);
 
+			ConfigLoader.listenInstallationConfig();
+        }
+	}
+	
+	public static void listenInstallationConfig() throws IOException
+	{
+		int fileChangesDelay = SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY);
+		
+		if (fileChangesDelay > 0) {
 			if (new File(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG)).exists()) {
 				FileMonitor.getInstance().addFileChangeListener(new SystemGlobalsListener(),
 						SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG), fileChangesDelay);
 			}
-        }
+		}
 	}
 }

@@ -44,7 +44,6 @@ package net.jforum.view.admin;
 
 import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -69,7 +68,7 @@ import freemarker.template.Template;
  * ViewHelper class for group administration.
  * 
  * @author Rafael Steil
- * @version $Id: GroupAction.java,v 1.6 2004/12/29 17:18:43 rafaelsteil Exp $
+ * @version $Id: GroupAction.java,v 1.7 2005/01/02 19:58:02 rafaelsteil Exp $
  */
 public class GroupAction extends Command 
 {
@@ -186,7 +185,7 @@ public class GroupAction extends Command
 	
 	public void permissionsSave() throws Exception
 	{
-		int id = Integer.parseInt(this.request.getParameter("id"));
+		int id = this.request.getIntParameter("id");
 		
 		GroupSecurityModel gmodel = DataAccessDriver.getInstance().newGroupSecurityModel();
 		
@@ -194,14 +193,8 @@ public class GroupAction extends Command
 		pc.setSecurityModel(gmodel);
 		
 		new PermissionProcessHelper(pc, id, true).processData();
-		
-		GroupModel gm = DataAccessDriver.getInstance().newGroupModel();
 
-		Iterator iter = gm.selectUsersIds(id).iterator();
-		while (iter.hasNext()) {
-			SecurityRepository.remove(Integer.parseInt(iter.next().toString()));
-		}
-		
+		SecurityRepository.clean();
 		this.list();
 	}
 	

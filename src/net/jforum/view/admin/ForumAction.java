@@ -71,7 +71,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.10 2004/12/27 19:59:07 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.11 2005/01/02 19:58:02 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -100,7 +100,8 @@ public class ForumAction extends Command
 	{
 		CategoryModel cm = DataAccessDriver.getInstance().newCategoryModel();
 		
-		this.context.put("forum", DataAccessDriver.getInstance().newForumModel().selectById(Integer.parseInt(this.request.getParameter("forum_id"))));
+		this.context.put("forum", DataAccessDriver.getInstance().newForumModel().selectById(
+				this.request.getIntParameter("forum_id")));
 		this.context.put("categories", cm.selectAll());
 		this.context.put("moduleAction", "forum_form.htm");
 		this.context.put("action", "editSave");
@@ -190,7 +191,7 @@ public class ForumAction extends Command
 	{
 		Forum f = new Forum();
 		f.setDescription(this.request.getParameter("description"));
-		f.setIdCategories(Integer.parseInt(this.request.getParameter("categories_id")));
+		f.setIdCategories(this.request.getIntParameter("categories_id"));
 		f.setName(this.request.getParameter("forum_name"));	
 			
 		int forumId = DataAccessDriver.getInstance().newForumModel().addNew(f);
@@ -198,33 +199,57 @@ public class ForumAction extends Command
 		
 		ForumRepository.addForum(f);
 		
-		String[] groups = this.request.getParameterValues("groups");
+		// Process permissions
+		GroupModel gm = DataAccessDriver.getInstance().newGroupModel();
+		GroupSecurityModel gmodel = DataAccessDriver.getInstance().newGroupSecurityModel();
+		PermissionControl pc = new PermissionControl();
+		pc.setSecurityModel(gmodel);
+		
+		// Access
+		String[] groups = this.request.getParameterValues("groupsAccess");
 		if (groups != null) {
-			GroupModel gm = DataAccessDriver.getInstance().newGroupModel();
-			GroupSecurityModel gmodel = DataAccessDriver.getInstance().newGroupSecurityModel();
-			PermissionControl pc = new PermissionControl();
-			pc.setSecurityModel(gmodel);
-
-			Role role = new Role();
-			role.setName(SecurityConstants.PERM_FORUM);
-
-			for (int i = 0; i < groups.length; i++) {
-				int groupId = Integer.parseInt(groups[i]);
-				RoleValueCollection roleValues = new RoleValueCollection();
-				
-				RoleValue rv = new RoleValue();
-				rv.setType(PermissionControl.ROLE_ALLOW);
-				rv.setValue(Integer.toString(forumId));
-				
-				roleValues.add(rv);
-				
-				pc.addRole(groupId, role, roleValues);
-			}
+			this.addRole(pc, SecurityConstants.PERM_FORUM, f.getId(), groups, false);
+		}
+		
+		// Anonymous posts
+		groups = this.request.getParameterValues("groupsAnonymous");
+		if (groups != null) {
+			this.addRole(pc, SecurityConstants.PERM_ANONYMOUS_POST, f.getId(), groups, false);
+		}
+		
+		// Read-only
+		groups = this.request.getParameterValues("groupsReadOnly");
+		if (groups != null) {
+			this.addRole(pc, SecurityConstants.PERM_READ_ONLY_FORUMS, f.getId(), groups, false);
+		}
+		
+		// HTML
+		groups = this.request.getParameterValues("groupsHtml");
+		if (groups != null) {
+			this.addRole(pc, SecurityConstants.PERM_HTML_DISABLED, f.getId(), groups, false);
 		}
 		
 		SecurityRepository.clean();
 
 		this.list();
+	}
+	
+	private void addRole(PermissionControl pc, String roleName, int forumId, String[] groups, boolean allow) throws Exception
+	{
+		Role role = new Role();
+		role.setName(roleName);
+		
+		for (int i = 0; i < groups.length; i++) {
+			int groupId = Integer.parseInt(groups[i]);
+			RoleValueCollection roleValues = new RoleValueCollection();
+			
+			RoleValue rv = new RoleValue();
+			rv.setType(allow ? PermissionControl.ROLE_ALLOW : PermissionControl.ROLE_DENY);
+			rv.setValue(Integer.toString(forumId));
+			roleValues.add(rv);
+			
+			pc.addRole(groupId, role, roleValues);
+		}
 	}
 	
 	/** 

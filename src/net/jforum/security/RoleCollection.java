@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -40,43 +40,21 @@
  * net.jforum.security.RoleCollection.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: RoleCollection.java,v 1.3 2004/09/19 05:13:16 rafaelsteil Exp $
  */
 package net.jforum.security;
 
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
 
 /**
  * @author Rafael Steil
+ * @version $Id: RoleCollection.java,v 1.4 2005/01/02 19:58:00 rafaelsteil Exp $
  */
-public class RoleCollection extends LinkedHashSet 
+public class RoleCollection extends LinkedHashMap
 {
-	/* 
-	 * @see java.util.Collection#add(java.lang.Object)
-	 */
-	public boolean add(Object o) 
+	public void add(Role role) 
 	{
-		if (!(o instanceof Role)) {
-			throw new IllegalArgumentException("Object passed as argument is not a Role type");
-		}
-
-		return super.add(o);
-	}
-
-	/* 
-	 * @see java.util.Collection#addAll(java.util.Collection)
-	 */
-	public boolean addAll(Collection c) 
-	{
-		boolean status = true;
-		for (Iterator iter = c.iterator(); iter.hasNext(); ) {
-			status = this.add(iter.next());
-		}
-		
-		return status;
+		super.put(role.getName(), role);
 	}
 	
 	/**
@@ -88,15 +66,7 @@ public class RoleCollection extends LinkedHashSet
 	 */
 	public Role get(String name)
 	{
-		for (Iterator iter = this.iterator(); iter.hasNext(); ) {
-			Role role = (Role)iter.next();
-			
-			if (role.getName().equals(name)) {
-				return role;
-			}
-		}
-		
-		return null;
+		return (Role)super.get(name);
 	}
 	
 	/** 
@@ -106,7 +76,7 @@ public class RoleCollection extends LinkedHashSet
 	{
 		StringBuffer sb = new StringBuffer(512);
 		
-		for (Iterator iter = this.iterator(); iter.hasNext(); ) {
+		for (Iterator iter = this.values().iterator(); iter.hasNext(); ) {
 			sb.append(iter.next()).append(", ");
 		}
 		

@@ -52,6 +52,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import net.jforum.ConfigLoader;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -67,7 +69,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author Pieter
- * @version $Id: SystemGlobals.java,v 1.16 2004/11/06 18:03:47 rafaelsteil Exp $
+ * @version $Id: SystemGlobals.java,v 1.17 2005/01/02 19:58:01 rafaelsteil Exp $
  */
 public class SystemGlobals implements VariableStore
 {
@@ -205,6 +207,8 @@ public class SystemGlobals implements VariableStore
 		FileOutputStream out = new FileOutputStream(globals.installationConfig);
 		p.store(out, "Installation specific configuration options");
 		out.close();
+		
+		ConfigLoader.listenInstallationConfig();
 	}
 
 	/**

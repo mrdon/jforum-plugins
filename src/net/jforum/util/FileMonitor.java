@@ -55,7 +55,7 @@ import org.apache.log4j.Logger;
  * Monitor class for file changes.
  * 
  * @author Rafael Steil
- * @version $Id: FileMonitor.java,v 1.4 2004/10/03 16:53:56 rafaelsteil Exp $
+ * @version $Id: FileMonitor.java,v 1.5 2005/01/02 19:58:02 rafaelsteil Exp $
  */
 public class FileMonitor
 {
@@ -85,7 +85,7 @@ public class FileMonitor
 		String filename, long period) throws IOException {
 		this.removeFileChangeListener(filename);
 		
-		logger.info("Watching "+ filename);
+		logger.info("Watching " + filename);
 		
 		FileMonitorTask task = new FileMonitorTask(listener, filename);
 		

@@ -50,7 +50,7 @@ import java.util.Map;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserSecurityHelper.java,v 1.5 2004/12/27 00:06:10 rafaelsteil Exp $
+ * @version $Id: UserSecurityHelper.java,v 1.6 2005/01/02 19:58:00 rafaelsteil Exp $
  */
 public class UserSecurityHelper 
 {
@@ -62,7 +62,7 @@ public class UserSecurityHelper
 		for (Iterator iter = groupsRolesList.iterator(); iter.hasNext(); ) {
 			RoleCollection rc = (RoleCollection)iter.next();
 			
-			for (Iterator rcIter = rc.iterator(); rcIter.hasNext(); ) {
+			for (Iterator rcIter = rc.values().iterator(); rcIter.hasNext(); ) {
 				final Role role = (Role)rcIter.next();
 				Role userRole = userRoles.get(role.getName());
 				

@@ -58,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityCommon.java,v 1.6 2004/12/26 02:31:51 rafaelsteil Exp $
+ * @version $Id: SecurityCommon.java,v 1.7 2005/01/02 19:58:01 rafaelsteil Exp $
  */
 public class SecurityCommon 
 {
@@ -164,7 +164,7 @@ public class SecurityCommon
 				}
 
 				r = new Role();
-				
+
 				r.setGroupId(id);
 				r.setName(rs.getString("name"));
 				r.setType(rs.getInt("role_type"));
