@@ -425,16 +425,16 @@ KarmaModel.add = INSERT INTO jforum_karma (post_id, post_user_id, from_user_id, 
 KarmaModel.update = UPDATE jforum_karma SET points = ? WHERE karma_id = ?
 KarmaModel.getUserKarma = SELECT user_karma FROM jforum_users WHERE user_id = ?
 KarmaModel.updateUserKarma = UPDATE jforum_users SET user_karma = ? WHERE user_id = ?
-KarmaModel.getPostKarma = SELECT SUM(points) / COUNT(post_id) points FROM jforum_karma WHERE post_id = ?
+KarmaModel.getPostKarma = SELECT SUM(points) / COUNT(post_id) AS points FROM jforum_karma WHERE post_id = ?
 KarmaModel.userCanAddKarma = SELECT COUNT(1) FROM jforum_karma WHERE post_id = ? AND from_user_id = ?
 
-KarmaModel.getUserKarmaPoints = SELECT SUM(points) points, COUNT(1) votes, from_user_id \
+KarmaModel.getUserKarmaPoints = SELECT SUM(points) AS points, COUNT(1) AS votes, from_user_id \
 	FROM jforum_karma WHERE post_user_id = ? GROUP BY from_user_id
 KarmaModel.getUserVotes = SELECT points, post_id FROM jforum_karma WHERE topic_id = ? AND from_user_id = ?	
 
 #Frankiln Tests
-KarmaModel.getUserGivenVotes = SELECT COUNT(post_id) votes FROM jforum_karma WHERE from_user_id = ?
-KarmaModel.getUserTotalVotes = SELECT SUM(points) points, COUNT(post_id) votes FROM jforum_karma WHERE post_user_id = ?
+KarmaModel.getUserGivenVotes = SELECT COUNT(post_id) AS votes FROM jforum_karma WHERE from_user_id = ?
+KarmaModel.getUserTotalVotes = SELECT SUM(points) AS points, COUNT(post_id) AS votes FROM jforum_karma WHERE post_user_id = ?
 
 # ##############
 # BookmarkModel
