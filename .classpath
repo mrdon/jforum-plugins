@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="tests/core"/>
+	<classpathentry kind="src" path="tests/web"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/commons-fileupload-1.0.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/log4j-1.2.8.jar"/>
@@ -8,5 +10,12 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/freemarker-2.3-rc3.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/mail.jar"/>
 	<classpathentry kind="lib" path="lib/servlet-api.jar"/>
+	<classpathentry kind="lib" path="lib/httpunit-1.5.4.jar"/>
+	<classpathentry kind="lib" path="lib/js-1.5R4.1.jar"/>
+	<classpathentry kind="lib" path="lib/junit.jar"/>
+	<classpathentry kind="lib" path="lib/nekohtml-0.8.1.jar"/>
+	<classpathentry kind="lib" path="lib/xercesImpl-2.6.2.jar"/>
+	<classpathentry kind="lib" path="lib/xml-apis-1.0.b2.jar"/>
+	<classpathentry kind="lib" path="lib/jwebunit-1.2.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>
