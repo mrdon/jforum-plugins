@@ -557,14 +557,16 @@ function validatePostForm(f)
 		</td>
 	</tr>
 
-	<#if attachmentsEnabled>
 	<script language="javascript">
 	var panelOpen = false;
 	var total = 0;
 	var ignoreStart = false;
 	var maxAttachments = ${maxAttachments};
 	var counter = 0;
+	</script>
 
+	<#if attachmentsEnabled>
+	<script language="javascript">
 	var template = "<table width='100%'><tr><td><span class='gen'><b>${I18n.getMessage("Attachments.filename")}</b></span></td>";
 	template += "<td><input type='file' size='50' name='file_#counter#'></td></tr>";
 	template += "<tr><td><span class='gen'><b>${I18n.getMessage("Attachments.description")}</b></span></td>";
@@ -611,15 +613,18 @@ function validatePostForm(f)
 		document.post.add_attach.disabled = disabled;
 		document.post.add_attach.style.color = disabled ? "#cccccc" : "#000000";
 	}
+	</script>
+	</#if>
 
 	<#if attachments?exists>
+	<script language="javascript">
 	var templateEdit = "<table width='100%'><tr><td class='row2'><span class='gen'><b>${I18n.getMessage("Attachments.filename")}</b></span></td>";
 	templateEdit += "<td class='row2'><span class='gen'>#name#</td></tr>";
 	templateEdit += "<tr><td class='row2'><span class='gen'><b>${I18n.getMessage("Attachments.description")}</b></span></td>";
 	templateEdit += "<td class='row2'><textarea rows='4' cols='40' name='edit_comment_#id#'>#value#</textarea>";
 	templateEdit += "&nbsp;&nbsp;<span class='gensmall'><input type='checkbox' onClick='configureAttachDeletion(#id#, this);'>${I18n.getMessage("Attachments.remove")}</span></td></tr>";
 	templateEdit += "<tr><td colspan='2' width='100%' class='row3'></td></tr></table>";
-
+	
 	function editAttachments()
 	{
 		var data = new Array();
@@ -634,7 +639,7 @@ function validatePostForm(f)
 		</#list>
 
 		counter = data.length;
-		setAddAttachButtonStatus()
+		<#if attachmentsEnabled>setAddAttachButtonStatus();</#if>
 		
 		for (var i = 0; i < data.length; i++) {
 			var a = data[i];
@@ -667,15 +672,16 @@ function validatePostForm(f)
 	</#if>
 	</script>
 
+	<#if attachmentsEnabled || attachments?exists>
 	<input type="hidden" name="edit_attach_ids">
 	<input type="hidden" name="delete_attach">
 	<input type="hidden" name="total_files" id="total_files">
 	<tr>
-	<td colspan="2" id="tdAttachPanel" align="center" style="display: none;">
+	<td colspan="2" id="tdAttachPanel" align="center" style="display: <#if attachmentsEnabled>none;<#elseif attachments?exists>'';</#if>">
 
 		<table border="0" cellpadding="3" cellspacing="0" width="70%" class="forumline" id="tblAttachments">
 			<tr>
-				<td class="catHead" height="28" colspan="3" align="center"><b><span class="cattitle">File Attachment Panel</span></b></td>
+				<td class="catHead" height="28" colspan="3" align="center"><b><span class="cattitle">${I18n.getMessage("Attachments.panel")}</span></b></td>
 			</tr>
 			<tr>
 				<td align="center">
@@ -686,9 +692,11 @@ function validatePostForm(f)
 				   
 				</td>
 			</tr>
+			<#if attachmentsEnabled>
 			<tr>
 				<td align="center" class="row3"><input type="button" name="add_attach" value="Add antoher file" class="mainoption" onClick="addAttachmentFields()"></td>
 			</tr>
+			</#if>
 		</table>
 	</td>
 	</tr>
@@ -715,7 +723,9 @@ function validatePostForm(f)
 <#if attachments?exists>
 <script language="javascript">
 ignoreStart = true;
-openAttachmentPanel();
+<#if attachmentsEnabled>
+	openAttachmentPanel();
+</#if>
 editAttachments();
 </script>
 </#if>

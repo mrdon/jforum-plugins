@@ -61,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicModel.java,v 1.11 2005/01/17 12:46:35 rafaelsteil Exp $
+ * @version $Id: TopicModel.java,v 1.12 2005/01/21 14:00:48 rafaelsteil Exp $
  */
 public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel 
 {
@@ -273,6 +273,7 @@ public class TopicModel extends AutoKeys implements net.jforum.model.TopicModel
 			t.setLastPostId(rs.getInt("topic_last_post_id"));
 			t.setType(rs.getInt("topic_type"));
 			t.setForumId(rs.getInt("forum_id"));
+			t.setHasAttach(rs.getInt("attach") > 0);
 
 			// First Post Time
 			t.setFirstPostTime(df.format(rs.getTimestamp("topic_time")));

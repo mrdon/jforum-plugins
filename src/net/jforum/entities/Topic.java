@@ -48,7 +48,7 @@ import java.util.Date;
  * Represents every topic in the forum.
  * 
  * @author Rafael Steil
- * @version $Id: Topic.java,v 1.6 2004/11/11 11:58:23 rafaelsteil Exp $
+ * @version $Id: Topic.java,v 1.7 2005/01/21 14:00:48 rafaelsteil Exp $
  */
 public class Topic 
 {
@@ -142,6 +142,7 @@ public class Topic
 	private User lastPostBy;
 	
 	private boolean isHot;
+	private boolean hasAttach;
 	
 	/**
 	 * Default Constructor
@@ -430,6 +431,16 @@ public class Topic
 	
 	public boolean isHot() {
 		return this.isHot;
+	}
+	
+	public void setHasAttach(boolean b)
+	{
+		this.hasAttach = b;
+	}
+	
+	public boolean hasAttach()
+	{
+		return this.hasAttach;
 	}
 	
 	/** 

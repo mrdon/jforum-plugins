@@ -48,6 +48,7 @@ import java.io.OutputStream;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -88,7 +89,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.48 2005/01/21 12:12:28 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.49 2005/01/21 14:00:49 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -640,6 +641,17 @@ public class PostAction extends Command {
 		}
 
 		pm.delete(p);
+		
+		// Attachments
+		List attachments = DataAccessDriver.getInstance().newAttachmentModel().selectAttachments(p.getId());
+		String attachIds = "";
+		for (Iterator iter = attachments.iterator(); iter.hasNext(); ) {
+			Attachment a = (Attachment)iter.next();
+			attachIds += a.getId() + ",";
+		}
+		
+		this.request.addParameter("delete_attach", attachIds);
+		new AttachmentCommon(this.request).editAttachments(p.getId());
 
 		// Topic
 		tm.decrementTotalReplies(p.getTopicId());

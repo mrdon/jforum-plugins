@@ -66,7 +66,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.3 2005/01/21 12:12:29 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.4 2005/01/21 14:00:47 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {
@@ -146,48 +146,49 @@ public class AttachmentCommon
 	
 	public void editAttachments(int postId) throws Exception
 	{
-		if (!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED)) {
+		if (!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED)
+				&& !SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD)) {
 			return;
 		}
 		
+		AttachmentModel am = DataAccessDriver.getInstance().newAttachmentModel();
+		
+		// Check for attachments to remove
+		List deleteList = new ArrayList();
+		String[] delete = null;
+		String s = this.request.getParameter("delete_attach");
+		
+		if (s != null) {
+			delete = s.split(",");
+		}
+		
+		if (delete != null) {
+			for (int i = 0; i < delete.length; i++) {
+				if (delete[i] != null && !delete[i].equals("")) {
+					int id = Integer.parseInt(delete[i]);
+					Attachment a = am.selectAttachmentById(id);
+					
+					am.removeAttachment(id, postId);
+					
+					File f = new File(SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR)
+							+ "/" + a.getInfo().getPhysicalFilename());
+					if (f.exists()) {
+						f.delete();
+					}
+				}
+			}
+			
+			deleteList = Arrays.asList(delete);
+		}
+		
+		// Update
 		String[] attachIds = null;
-		String s = this.request.getParameter("edit_attach_ids");
+		s = this.request.getParameter("edit_attach_ids");
 		if (s != null) {
 			attachIds = s.split(",");
 		}
 		
 		if (attachIds != null) {
-			AttachmentModel am = DataAccessDriver.getInstance().newAttachmentModel();
-			
-			// Check for attachments to remove
-			List deleteList = new ArrayList();
-			String[] delete = null;
-			s = this.request.getParameter("delete_attach");
-			
-			if (s != null) {
-				delete = s.split(",");
-			}
-			
-			if (delete != null) {
-				for (int i = 0; i < delete.length; i++) {
-					if (delete[i] != null && !delete[i].equals("")) {
-						int id = Integer.parseInt(delete[i]);
-						Attachment a = am.selectAttachmentById(id);
-						
-						am.removeAttachment(id, postId);
-						
-						File f = new File(SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR)
-								+ "/" + a.getInfo().getPhysicalFilename());
-						if (f.exists()) {
-							f.delete();
-						}
-					}
-				}
-				
-				deleteList = Arrays.asList(delete);
-			}
-			
-			// Now update
 			for (int i = 0; i < attachIds.length; i++) {
 				if (deleteList.contains(attachIds[i]) 
 						|| attachIds[i] == null || attachIds[i].equals("")) {

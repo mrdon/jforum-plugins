@@ -189,7 +189,7 @@ ForumModel.getUnreadForums = SELECT t.forum_id, t.topic_id, p.post_time \
 # #############
 # TopicModel
 # #############
-TopicModel.selectById = SELECT t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time \
+TopicModel.selectById = SELECT t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time, p.attach \
 	FROM jforum_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2 \
 	WHERE t.topic_id = ? \
 	AND t.user_id = u.user_id \
@@ -197,7 +197,7 @@ TopicModel.selectById = SELECT t.*, u.username AS posted_by_username, u.user_id 
 	AND p2.post_id = t.topic_last_post_id \
 	AND u2.user_id = p2.user_id
 
-TopicModel.selectAllByForumByLimit = SELECT t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time \
+TopicModel.selectAllByForumByLimit = SELECT t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time, p.attach \
 	FROM jforum_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2 \
 	WHERE t.forum_id = ? \
 	AND t.user_id = u.user_id \
@@ -244,7 +244,7 @@ TopicModel.notifyUsers = SELECT u.user_id AS user_id, u.username AS username, \
 TopicModel.markAllAsUnread = UPDATE jforum_topics_watch SET is_read = '0' WHERE topic_id = ? AND user_id NOT IN (?, ?)
 TopicModel.lockUnlock = UPDATE jforum_topics SET topic_status = ? WHERE topic_id = ?
 
-TopicModel.selectRecentTopicsByLimit = SELECT t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time \
+TopicModel.selectRecentTopicsByLimit = SELECT t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time, p.attach \
 	FROM jforum_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2 \
 	WHERE t.user_id = u.user_id \
 	AND p.post_id = t.topic_first_post_id \
@@ -257,7 +257,7 @@ TopicModel.selectRecentTopicsByLimit = SELECT t.*, u.username AS posted_by_usern
 # ############
 # SearchModel
 # ############
-SearchModel.searchBase = SELECT t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time \
+SearchModel.searchBase = SELECT t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time, p.attach \
 	FROM jforum_search_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2, jforum_forums f, jforum_search_results sr \
 	WHERE t.user_id = u.user_id \
 	AND p.post_id = t.topic_first_post_id \
