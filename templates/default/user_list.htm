@@ -49,24 +49,22 @@ function activateAdvancedQuery(){
 </table>
 <table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
 	<tr>
-		<th class="thCornerL" nowrap="nowrap">#</th>
-	  <th class="thTop" nowrap="nowrap" width="59px">&nbsp;${I18n.getMessage("UserProfile.privateMessage")}&nbsp;</th>
+	  <th class="thCornerL" nowrap="nowrap">#</th>
 	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("User.username")}&nbsp;</th>
+	  <th class="thTop" nowrap="nowrap" width="59px">&nbsp;${I18n.getMessage("UserProfile.privateMessage")}&nbsp;</th>	  
 	  <th class="thTop" nowrap="nowrap" width="59px">&nbsp;${I18n.getMessage("email")}&nbsp;</th>
 	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("UserProfile.from")}&nbsp;</th>
 	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("UserProfile.registrationDate")}&nbsp;</th>
 	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("User.numMessages")}&nbsp;</th>
-	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("Karma.totalReceived")}&nbsp;</th>
-	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("Karma.votesReceived")}&nbsp;</th>
-	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("Karma.votesGiven")}&nbsp;</th>
+	  <th class="thTop" nowrap="nowrap">&nbsp;www &nbsp;</th>
 	  <th class="thCornerR" nowrap="nowrap">&nbsp;${I18n.getMessage("Karma.karma")}&nbsp;</th>
 	</tr>
   <#assign id = start+1/>
 	<#list users as user>
 		<tr align="center">		  
-			<td class="row2"><span class="gen">${id}</span></td>
-			<td class="row2"><span class="gen"><#if user.id != 1><a href="${JForumContext.encodeURL("/pm/sendTo/${user.id}")}"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/icon_pm.gif" border="0" /></a><#else>&nbsp;</#if></span></td>
+			<td class="row2"><span class="gen">${id}</span></td>			
 			<td class="row2"><span class="gen"><a href="${JForumContext.encodeURL("/user/profile/${user.id}")}">${user.username}</a></span></td>
+			<td class="row2"><span class="gen"><#if user.id != 1><a href="${JForumContext.encodeURL("/pm/sendTo/${user.id}")}"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/icon_pm.gif" border="0" /></a><#else>&nbsp;</#if></span></td>
 			<td class="row2"><span class="gen"><#if (user.isViewEmailEnabled() && user.email?exists && user.email?length > 0)>
 			<#assign e = user.email.split("@")/>
 			<a href="#" onclick="document.location = 'mailto:' + showEmail('${e[0]?default("")}', ' ${e[1]?default("")}');"><img src="${contextPath}/templates/${templateName}/images/icon_email.gif" border="0" /></a></span></td>
@@ -75,9 +73,7 @@ function activateAdvancedQuery(){
 			<td class="row2"><span class="gen"><#if (user.location?exists && user.location?length > 0)>${user.location}<#else>&nbsp;</#if></span></td>
 			<td class="row2"><span class="gen">${user.registrationDate?date("dd/MM/yyyy")}</span></td>
 			<td class="row2"><span class="gen">${user.totalPosts}</span></td>
-			<td class="row2"><span class="gen">${user.karma.totalPoints}</span></td>
-			<td class="row2"><span class="gen">${user.karma.votesReceived}</span></td>
-			<td class="row2"><span class="gen">${user.karma.votesGiven}</span></td>
+			<td class="row2"><span class="gen">${user.webSite?default("")}</span></td>
 			<td class="row2"><span class="gen">${user.karma.karmaPoints}</span></td>
 		</tr>
 		<#assign id = id+1/>
