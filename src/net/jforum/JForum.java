@@ -82,7 +82,7 @@ import net.jforum.util.SystemGlobals;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.9 2004/05/25 03:29:51 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.10 2004/05/28 03:37:15 rafaelsteil Exp $
  */
 public class JForum extends HttpServlet 
 {
@@ -399,9 +399,6 @@ public class JForum extends HttpServlet
 	public void service(HttpServletRequest req, HttpServletResponse response) throws IOException, ServletException
 	{
 		try {
-			String encoding = (String)SystemGlobals.getValue("encoding");
-			req.setCharacterEncoding(encoding);
-
 			// Initializes thread local data
 			DataHolder dataHolder = new DataHolder();
 			localData.set(dataHolder);
@@ -413,6 +410,9 @@ public class JForum extends HttpServlet
 				I18n.load();
 				BBCodeRepository.setBBCollection(new BBCodeHandler().parse());
 			}
+			
+			String encoding = (String)SystemGlobals.getValue("encoding");
+			req.setCharacterEncoding(encoding);
 			
 			// Ensure the database is up and running
 			if (!ConnectionPool.isDatabaseUp()) {
