@@ -12,17 +12,6 @@ td.rowpic	{ background-image: url('${contextPath}/templates/default/images/cellp
 td.catHead,td.catSides,td.catLeft,td.catRight,td.catBottom { background-image: url('${contextPath}/templates/default/images/cellpic1.gif') }
 </style>
 
-<script language="javascript">
-function checkForWriteAccess()
-{
-	<#if !canWriteToWebInf || !canWriteToIndex>
-		alert("${I18n.getMessage("Install.noWritePermission")}");
-		return false;
-	<#else>
-		return true;
-	</#if>
-}
-</script>
 </head>
 <body text="#000000" link="#006699" vlink="#5584AA">
 
@@ -65,7 +54,7 @@ function checkForWriteAccess()
 			</tr>
 			<tr>
 				<td width="100%"><table width="100%" cellpadding="2" cellspacing="1" border="0" class="forumline">
-				<form action="${contextPath}/install/install${extension}" name="install" method="post" onSubmit="return checkForWriteAccess();">
+				<form action="${contextPath}/install/install${extension}" name="install" method="post">
 				<input type="hidden" name="module" value="install">
 				<input type="hidden" name="action" value="doInstall">
 					<tr>

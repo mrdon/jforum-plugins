@@ -66,7 +66,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author Pieter
- * @version $Id: SystemGlobals.java,v 1.14 2004/11/02 18:06:02 rafaelsteil Exp $
+ * @version $Id: SystemGlobals.java,v 1.15 2004/11/04 02:46:53 rafaelsteil Exp $
  */
 public class SystemGlobals implements VariableStore
 {
@@ -113,15 +113,15 @@ public class SystemGlobals implements VariableStore
 		}
 
 		this.defaultConfig = defaultConfig;
-		defaults = new Properties();
+		this.defaults = new Properties();
 
-		defaults.put(ConfigKeys.APPLICATION_PATH, appPath);
-		defaults.put(ConfigKeys.INSTALLATION, installKey);
-		defaults.put(ConfigKeys.DEFAULT_CONFIG, defaultConfig);
+		this.defaults.put(ConfigKeys.APPLICATION_PATH, appPath);
+		this.defaults.put(ConfigKeys.INSTALLATION, installKey);
+		this.defaults.put(ConfigKeys.DEFAULT_CONFIG, defaultConfig);
+		
 		loadDefaults();
 
-		installation = new Properties(defaults);
-		
+		this.installation = new Properties();
 		this.installationConfig = getVariableValue(ConfigKeys.INSTALLATION_CONFIG);
 
 		for (Iterator iter = additionalDefaultsList.iterator(); iter.hasNext(); ) {
@@ -189,8 +189,16 @@ public class SystemGlobals implements VariableStore
 	 */
 	public static void saveInstallation() throws IOException
 	{
-		FileOutputStream out = new FileOutputStream(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG));
-		globals.installation.store(out, "Installation specific configuration options");
+		// We need this temporary "p" because, when
+		// new FileOutputStream() is called, it will 
+		// raise an event to the TimerTask who is listen
+		// for file modifications, which then reloads the
+		// configurations from the filesystem, overwriting
+		// our new keys. 
+		Properties p = new Properties();
+		p.putAll(globals.installation);
+		FileOutputStream out = new FileOutputStream(globals.installationConfig);
+		p.store(out, "Installation specific configuration options");
 		out.close();
 	}
 
@@ -245,9 +253,13 @@ public class SystemGlobals implements VariableStore
 
 	public String getVariableValue(String field)
 	{
-		String preExpansion = installation.getProperty(field);
+		String preExpansion = this.installation.getProperty(field);
 		if (preExpansion == null) {
-			return null;
+			preExpansion = this.defaults.getProperty(field);
+
+			if (preExpansion == null) {
+				return null;
+			}
 		}
 
 		return expander.expandVariables(preExpansion);

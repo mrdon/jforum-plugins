@@ -77,7 +77,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.11 2004/11/02 18:06:02 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.13 2004/11/04 02:48:57 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -184,7 +184,7 @@ public class InstallAction extends Command
 			return;
 		}
 		
-		DBConnection.getImplementation().releaseConnection(conn);
+		simpleConnection.releaseConnection(conn);
 
 		InstallServlet.setRedirect(InstallServlet.getRequest().getContextPath() + "/install/install"
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)
@@ -316,15 +316,11 @@ public class InstallAction extends Command
 		String dbType = this.getFromSession("database");
 		
 		if ("postgresql".equals(dbType)) {
-			this.dropPostgresqlTables();
+			this.dropPostgresqlTables(conn);
 		}
 		
 		boolean status = true;
-		boolean autoCommit = conn.getAutoCommit();
-		
 		List statements = this.readFromDat(SystemGlobals.getApplicationPath() + "/install/" + dbType + "_structure.dat");
-		
-		conn.setAutoCommit(false);
 		for (Iterator iter = statements.iterator(); iter.hasNext(); ) {
 			String query = (String)iter.next();
 			
@@ -347,24 +343,21 @@ public class InstallAction extends Command
 			}
 		}
 		
-		conn.setAutoCommit(autoCommit);
 		return status;
 	}
 	
 	private boolean checkForWritableDir()
 	{
-		if (!this.canWriteToWebInf()) {
-			InstallServlet.getContext().put("message", I18n.getMessage("Install.noWebInfWritePermission"));
-			this.error();
-			return false;
-		}
+		boolean canWriteToWebInf = this.canWriteToWebInf();
+		boolean canWriteToIndex = this.canWriteToIndex();
 		
-		
-		if (!this.canWriteToIndex()) {
+		if (!canWriteToWebInf || !canWriteToIndex) {
 			InstallServlet.getContext().put("message", I18n.getMessage("Install.noWritePermission"));
+			InstallServlet.getContext().put("tryAgain", true);
 			this.error();
 			return false;
 		}
+
 		return true;
 	}
 	
@@ -458,7 +451,6 @@ public class InstallAction extends Command
 			p.setString(1, MD5.crypt(this.getFromSession("adminPassword")));
 			p.executeUpdate();
 			p.close();
-			DBConnection.getImplementation().releaseConnection(conn);
 			
 			status = true;
 		}
@@ -527,7 +519,7 @@ public class InstallAction extends Command
 		return l;
 	}
 	
-	private void dropPostgresqlTables() throws Exception
+	private void dropPostgresqlTables(Connection conn) throws Exception
 	{
 		String[] tables = { "jforum_banlist", "jforum_banlist_seq", "jforum_categories", 
 				"jforum_categories_order_seq", "jforum_categories_seq", "jforum_config",
@@ -542,7 +534,6 @@ public class InstallAction extends Command
 				"jforum_users", "jforum_users_seq", "jforum_vote_desc", "jforum_vote_desc_seq",
 				"jforum_vote_results", "jforum_vote_voters", "jforum_words", "jforum_words_seq" };
 
-		Connection conn = DBConnection.getImplementation().getConnection();
 		for (int i = 0; i < tables.length; i++) {
 			Statement s = conn.createStatement();
 			String query = tables[i].endsWith("_seq") ? "DROP SEQUENCE " : "DROP TABLE ";
@@ -557,8 +548,6 @@ public class InstallAction extends Command
 			
 			s.close();
 		}
-		
-		DBConnection.getImplementation().releaseConnection(conn);
 	}
 	
 	private void addToSessionAndContext(String key, String value)

@@ -67,10 +67,22 @@ td.catHead,td.catSides,td.catLeft,td.catRight,td.catBottom { background-image: u
 							</#if>
 						</td>
 					</tr>
+
+					<#if tryAgain?default(false) == true>
+						<form name="f" action="${contextPath}/install/install${extension}" method="post">
+						<input type="hidden" name="module" value="install">
+						<input type="hidden" name="action" value="doInstall">
+					</#if>
+
 					<tr> 
 					  <td class="catBottom" align="center" colspan="2">
+						<#if tryAgain?default(false) == true>
+							<input type="submit" name="tryagain" class="mainoption" value="${I18n.getMessage("Install.tryAgain")}">&nbsp;&nbsp;
+						</#if>
 						<input type="button" class="mainoption" value="${I18n.getMessage("Install.modifyConfiguration")}" onClick="document.location = '${contextPath}/install/install${extension}?module=install&action=welcome';">
 					</td>
+
+					<#if tryAgain?default(false) == true></form></#if>
 				</table>
 			</form>
 		</td>
