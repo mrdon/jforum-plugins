@@ -81,7 +81,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.33 2004/12/27 00:30:52 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.34 2004/12/29 01:04:39 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -702,6 +702,13 @@ public class PostAction extends Command {
 	private void topicLocked() {
 		this.context.put("moduleAction", "message.htm");
 		this.context.put("message", I18n.getMessage("PostShow.topicLocked"));
+	}
+	
+	public void listSmilies()
+	{
+		this.setTemplateName("default/empty.htm");
+		this.context.put("moduleAction", "list_smilies.htm");
+		this.context.put("smilies", SmiliesRepository.getSmilies());
 	}
 
 	private boolean isForumReadonly(int forumId, boolean isReply) throws Exception {

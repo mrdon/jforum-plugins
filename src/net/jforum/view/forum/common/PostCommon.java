@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2003, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.2 2004/12/19 15:17:14 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.3 2004/12/29 01:04:39 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -192,7 +192,7 @@ public class PostCommon
 		return text;
 	}
 	
-	public static String processSmilies(String text, ArrayList smilies)
+	public static String processSmilies(String text, List smilies)
 	{
 		if (text == null || text.equals("")) {
 			return text;
@@ -204,7 +204,7 @@ public class PostCommon
 			
 			int index = text.indexOf(s.getCode());
 			if (index > -1) {
-				text = text.replaceAll("\\Q"+ s.getCode() +"\\E", s.getUrl());
+				text = text.replaceAll("\\Q" + s.getCode() + "\\E", s.getUrl());
 			}
 		}
 		

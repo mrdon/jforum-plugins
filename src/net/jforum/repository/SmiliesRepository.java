@@ -52,11 +52,11 @@ import net.jforum.model.DataAccessDriver;
 
 /**
  * @author Rafael Steil
- * @version $Id: SmiliesRepository.java,v 1.4 2004/11/05 03:29:48 rafaelsteil Exp $
+ * @version $Id: SmiliesRepository.java,v 1.5 2004/12/29 01:04:38 rafaelsteil Exp $
  */
 public class SmiliesRepository 
 {
-	private static ArrayList smiliesList = new ArrayList();
+	private static List smiliesList = new ArrayList();
 	
 	static {
 		try {
@@ -84,7 +84,7 @@ public class SmiliesRepository
 		}
 	}
 	
-	public static ArrayList getSmilies()
+	public static List getSmilies()
 	{
 		return SmiliesRepository.smiliesList;
 	}
