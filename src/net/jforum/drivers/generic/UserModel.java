@@ -45,24 +45,39 @@ package net.jforum.drivers.generic;
 import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.jforum.JForum;
+import net.jforum.drivers.external.LoginAuthenticator;
 import net.jforum.entities.Group;
 import net.jforum.entities.User;
-import net.jforum.util.MD5;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.21 2004/11/12 20:46:41 rafaelsteil Exp $
+ * @version $Id: UserModel.java,v 1.22 2005/01/03 16:13:25 rafaelsteil Exp $
  */
 public class UserModel extends AutoKeys implements net.jforum.model.UserModel 
 {
+	private static LoginAuthenticator loginAuthenticator;
+	
+	public UserModel()
+	{
+		String className = SystemGlobals.getValue(ConfigKeys.LOGIN_AUTHENTICATOR);
+
+		try {
+			loginAuthenticator = (LoginAuthenticator)Class.forName(className).newInstance();
+			loginAuthenticator.setUserModel(this);
+		}
+		catch (Exception e) {
+			throw new RuntimeException("Error while trying to instantiate a "
+					+ "login.authenticator instance (" + className + "): " + e);
+		}
+	}
+	
 	/** 
 	 * @see net.jforum.model.UserModel#selectById(int)
 	 */
@@ -117,7 +132,7 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		return u;
 	}
 
-	protected void fillUserFromResultSet(User u, ResultSet rs) throws SQLException {
+	protected void fillUserFromResultSet(User u, ResultSet rs) throws Exception {
 		u.setAim(rs.getString("user_aim"));
 		u.setAvatar(rs.getString("user_avatar"));
 		u.setGender(rs.getString("gender"));
@@ -152,7 +167,7 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		u.setActive(rs.getInt("user_active"));
 		
 		String actkey = rs.getString("user_actkey");
-		u.setActivationKey(actkey == null || "".equals(actkey)? null : actkey);
+		u.setActivationKey(actkey == null || "".equals(actkey) ? null : actkey);
 		u.setDeleted(rs.getInt("deleted"));
 	}
 
@@ -214,7 +229,7 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 	{
 		PreparedStatement p = this.getStatementForAutoKeys("UserModel.addNew");
 		
-		initNewUser(user, p);
+		this.initNewUser(user, p);
 		
 		int id = this.executeAutoKeysQuery(p);
 		p.close();
@@ -224,24 +239,24 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		return id;
 	}
 
-	protected void initNewUser(User user, PreparedStatement p) throws SQLException {
+	protected void initNewUser(User user, PreparedStatement p) throws Exception 
+	{
 		p.setString(1, user.getUsername());
 		p.setString(2, user.getPassword());
 		p.setString(3, user.getEmail());
 		p.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
-		p.setString(5, user.getActivationKey() == null ? "" : user.getActivationKey());
+		p.setString(5, user.getActivationKey());
 	}
 
 	/** 
 	 * @see net.jforum.model.UserModel#addNewWithId(net.jforum.User)
-	 * (added by Pieter for external login support)
 	 */
 	public void addNewWithId(User user) throws Exception 
 	{
 		PreparedStatement p = this.getStatementForAutoKeys("UserModel.addNewWithId");
 		
-		initNewUser(user, p);
-		p.setInt(5, user.getId());
+		this.initNewUser(user, p);
+		p.setInt(6, user.getId());
 		
 		p.executeUpdate();
 		p.close();
@@ -446,25 +461,7 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 	 */
 	public User validateLogin(String username, String password) throws NoSuchAlgorithmException, Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.login"));
-		p.setString(1, username);
-		p.setString(2, MD5.crypt(password));
-		
-		User user = null;
-		
-		ResultSet rs = p.executeQuery();
-		if (rs.next() && rs.getInt("user_id") > 0) {
-			user = this.selectById(rs.getInt("user_id"));
-		}
-
-		rs.close();
-		p.close();
-		
-		if (user != null && !user.isDeleted() && (user.getActivationKey() == null || user.isActive())) {
-			return user;
-		}
-		
-		return null;
+		return loginAuthenticator.validateLogin(username, password);
 	}
 
 	/** 
@@ -576,15 +573,8 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		List namesList = new ArrayList();
 		
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.findByName"));
-		
-		if (exactMatch) {
-			p.setString(1, input);
-		}
-		else {
-			p.setString(1, "%"+ input +"%");
-		}
-			
-		
+		p.setString(1, exactMatch ? input : "%" + input + "%");
+	
 		ResultSet rs = p.executeQuery();
 		while (rs.next()) {
 			User u = new User();
@@ -632,5 +622,45 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		p.setInt(1, userId);
 		p.executeUpdate();
 		p.close();
+	}
+	
+	/** 
+	 * @see net.jforum.model.UserModel#updateUsername(int, String)
+	 */
+	public void updateUsername(int userId, String username) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.updateUsername"));
+		p.setString(1, username);
+		p.setInt(2, userId);
+		p.executeUpdate();
+		p.close();
+	}
+	
+	/**
+	 * @see net.jforum.model.UserModel#hasUsernameChanged(int, java.lang.String)
+	 */
+	public boolean hasUsernameChanged(int userId, String usernameToCheck) throws Exception
+	{
+		boolean status = false;
+		
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.getUsername"));
+		p.setString(1, usernameToCheck);
+		p.setInt(2, userId);
+		
+		String dbUsername = null;
+		
+		ResultSet rs = p.executeQuery();
+		if (rs.next()) {
+			dbUsername = rs.getString("username");
+		}
+		
+		if (!usernameToCheck.equals(dbUsername)) {
+			status = true;
+		}
+		
+		rs.close();
+		p.close();
+		
+		return status;
 	}
 }

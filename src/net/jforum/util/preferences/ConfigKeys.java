@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.31 2004/12/29 17:18:44 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.32 2005/01/03 16:13:26 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -75,6 +75,7 @@ public class ConfigKeys {
 	public static final String DATABASE_CONNECTION_ENCODING = "dbencoding";
 	public static final String DATABASE_CONNECTION_DRIVER = "database.connection.driver";
 	public static final String DATABASE_CONNECTION_STRING = "database.connection.string";
+	public static final String LOGIN_AUTHENTICATOR = "login.authenticator";
 	
 	public static final String DATABASE_ERROR_PAGE = "database.error.page";
 
@@ -159,15 +160,6 @@ public class ConfigKeys {
 	public static final String AVATAR_MAX_WIDTH = "avatar.maxWidth";
 	public static final String AVATAR_MAX_HEIGHT = "avatar.maxHeight";
 
-	public static final String LOGIN_MODE = "loginMode";
-	public static final String LOGIN_SERVER_CLASS = "loginServer.class";
-
-	public static final String EXTERNAL_CONNECTION = "external.database.connection.string";
-	public static final String EXTERNAL_QUERY_VALIDATE_LOGIN = "external.database.query.validateLogin";
-	public static final String EXTERNAL_QUERY_SELECT_NAME = "external.database.query.selectName";
-	public static final String EXTERNAL_QUERY_SELECT_GROUPS = "external.database.query.selectGroups";
-	public static final String EXTERNAL_UNIQUE_NAMES = "external.uniqueNames";
-	
 	// jforum_config
 	public static final String MOST_USERS_EVER_ONLINE = "most.users.ever.online";
 	public static final String MOST_USER_EVER_ONLINE_DATE = "most.users.ever.online.date";

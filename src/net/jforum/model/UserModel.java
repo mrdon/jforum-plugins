@@ -55,7 +55,7 @@ import net.jforum.entities.User;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.13 2004/11/12 20:46:39 rafaelsteil Exp $
+ * @version $Id: UserModel.java,v 1.14 2005/01/03 16:13:23 rafaelsteil Exp $
  */
 public interface UserModel 
 {
@@ -320,4 +320,29 @@ public interface UserModel
 	 * @throws Exception
 	 */	
 	public void writeUserActive(int userId) throws Exception;
+	
+	/**
+	 * Updates only the username. 
+	 * This method generally will be used in implementations
+	 * of <code>net.jforum.drivers.external.LoginAuthenticator</code> to 
+	 * update usernames which changed in the external source and therefore
+	 * should be updated in jforum's users table. 
+	 * 
+	 * @param userId The user's id related to the username to update
+	 * @param username The new username to write
+	 * @throws Exception
+	 */
+	public void updateUsername(int userId, String username) throws Exception;
+	
+	/**
+	 * Check if the username passed as argument is different of
+	 * the username existent in the database. 
+	 * 
+	 * @param userId The user's id to work with
+	 * @param usernameToCheck The username to compare with the existing
+	 * one in <i>jforum_users</i>
+	 * @return <code>true</code> if the usernames are different.
+	 * @throws Exception
+	 */
+	public boolean hasUsernameChanged(int userId, String usernameToCheck) throws Exception;
 }

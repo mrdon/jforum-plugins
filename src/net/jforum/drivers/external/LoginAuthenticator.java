@@ -43,10 +43,17 @@
  */
 package net.jforum.drivers.external;
 
-import java.sql.SQLException;
+import net.jforum.entities.User;
+import net.jforum.model.UserModel;
 
-public interface LoginServer {
-	public int validateLogin(String name, String password) throws SQLException;
-	public String getName(int userId) throws SQLException;
-	public int[] getGroups(int userId) throws SQLException;
+
+/**
+ * @author Rafael Steil
+ * @author Pieter Olivier
+ * @version $Id: LoginAuthenticator.java,v 1.1 2005/01/03 16:13:24 rafaelsteil Exp $
+ */
+public interface LoginAuthenticator 
+{
+	public User validateLogin(String username, String password) throws Exception;
+	public void setUserModel(UserModel userModel);
 }

@@ -59,10 +59,8 @@ UserModel.rankingId = UPDATE jforum_users SET rank_id = ? WHERE user_id = ?
 UserModel.activeStatus = UPDATE jforum_users SET user_active = ? WHERE user_id = ?
 UserModel.addNew = INSERT INTO jforum_users (username, user_password, user_email, user_regdate, user_actkey) VALUES (?, ?, ?, ?, ?)
 UserModel.findByName = SELECT user_id, username, user_email FROM jforum_users WHERE UPPER(username) LIKE UPPER(?)
-# Added by Pieter for external login support:
 UserModel.selectByName = SELECT * FROM jforum_users WHERE username = ?
-UserModel.addNewWithId = INSERT INTO jforum_users (username, user_password, user_email, user_regdate, user_id) VALUES (?, ?, ?, ?, ?)
-# End Added by Pieter
+UserModel.addNewWithId = INSERT INTO jforum_users (username, user_password, user_email, user_regdate, user_actkey, user_id) VALUES (?, ?, ?, ?, ?, ?)
 
 UserModel.update = UPDATE jforum_users SET user_aim = ?, \
 	user_avatar = ?,\
@@ -107,7 +105,9 @@ UserModel.validateLostPasswordHash = SELECT COUNT(1) AS valid FROM jforum_users 
 UserModel.writeLostPasswordHash = UPDATE jforum_users SET security_hash = ? WHERE user_email = ?
 UserModel.getUsernameByEmail = SELECT username FROM jforum_users WHERE user_email = ?
 UserModel.validateActivationKeyHash = SELECT COUNT(1) AS valid FROM jforum_users WHERE user_actkey = ? AND user_id = ?
-UserModel.writeUserActive = UPDATE jforum_users SET user_active = 1, user_actkey = NULL WHERE user_id = ?
+UserModel.writeUserActive = UPDATE jforum_users SET user_active = 1, user_actkey = NULL WHERE user_id = ?`
+UserModel.updateUsername = UPDATE jforum_users SET username = ? WHERE user_id = ?
+UserModel.getUsernam = SELECT username FROM jforum_users WHERE user_id = ?
 
 # #############
 # PostModel
