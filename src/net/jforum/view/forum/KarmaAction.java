@@ -64,7 +64,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaAction.java,v 1.5 2005/02/28 14:10:03 rafaelsteil Exp $
+ * @version $Id: KarmaAction.java,v 1.6 2005/03/03 13:31:49 franklin_samir Exp $
  */
 public class KarmaAction extends Command
 {
@@ -180,7 +180,7 @@ public class KarmaAction extends Command
 	}
 
 	/**
-	 * TODO: Make dynamic date format
+	 * FIXME: The date format is not dynamic.
 	 * 
 	 * Performs a search over the users votes in a specific month.
 	 * 
@@ -188,17 +188,17 @@ public class KarmaAction extends Command
 	 */
 	public void searchByMonth() throws Exception
 	{
-		SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		int month = Integer.parseInt(request.getParameter("month"));
 		int year = Integer.parseInt(request.getParameter("year"));
 
 		Calendar c = Calendar.getInstance();
 		Date firstPeriod, lastPeriod;
-		firstPeriod = formater.parse("01/" + month + "/" + year);
+		firstPeriod = formater.parse("01/" + month + "/" + year+ " 00:00:00");
 		// set the Calendar with the first day of the month
 		c.setTime(firstPeriod);
 		// Now get the last day of this month.
-		lastPeriod = formater.parse(c.getActualMaximum(Calendar.DAY_OF_MONTH) + "/" + month + "/" + year);
+		lastPeriod = formater.parse(c.getActualMaximum(Calendar.DAY_OF_MONTH) + "/" + month + "/" + year +" 23:59:59");
 
 		String orderField;
 		if ("".equals(request.getParameter("order_by")) || request.getParameter("order_by") == null) {
