@@ -49,7 +49,7 @@ import net.jforum.util.I18n;
 
 /**
  * @author Marc Wick
- * @version $Id: AdminWebTestCase.java,v 1.3 2004/09/28 14:59:22 marcwick Exp $
+ * @version $Id: AdminWebTestCase.java,v 1.4 2004/10/02 06:27:19 marcwick Exp $
  */
 public class AdminWebTestCase extends AbstractWebTestCase {
 
@@ -90,7 +90,7 @@ public class AdminWebTestCase extends AbstractWebTestCase {
 		gotoFrame("main");
 		setFormElement("p_forum.page.title", "jforum last run regression test "
 				+ new Date());
-		setFormElement("p_i18n.default.admin", language);
+		setFormElement("p_i18n.board.default", language);
 		setFormElement("p_mail.smtp.auth", "false");
 		submit();
 
