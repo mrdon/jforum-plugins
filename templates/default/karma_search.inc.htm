@@ -47,7 +47,7 @@ function activateAdvancedQuery(){
 						<b>${I18n.getMessage("Karma.queryByMonth")}:</b>						
 						<BR>
 						${I18n.getMessage("Karma.month")}:
-						<select name="mouths">
+						<select name="month">
 							<option value="01">${I18n.getMessage("january")}</option>
 							<option value="02">${I18n.getMessage("february")}</option>
 							<option value="03">${I18n.getMessage("march")}</option>
@@ -63,6 +63,12 @@ function activateAdvancedQuery(){
 						</select> &nbsp;
 						${I18n.getMessage("Karma.year")}:<input class="post" type="text" maxlength="10" size="15" name="year" value="2005"/>
 						<BR>
+						${I18n.getMessage("Karma.orderBy")}:
+						<BR>
+						<input type="radio" name="order_by" value="total" checked/> ${I18n.getMessage("Karma.totalReceived")}
+						&nbsp;<input type="radio" name="order_by" value="votes_received"/> ${I18n.getMessage("Karma.votesReceived")}
+						&nbsp;<input type="radio" name="order_by" value="votes_given"/> ${I18n.getMessage("Karma.votesGiven")}
+						&nbsp;<input type="radio" name="order_by" value="user_karma"/> ${I18n.getMessage("Karma.karma")}	
 					</td>
 				</tr>
 				<tr style="display: none;" id="trQuickSubmit1">

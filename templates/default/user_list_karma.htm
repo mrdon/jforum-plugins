@@ -9,7 +9,7 @@
     </tr>
 </table>
 <#include "karma_search.inc.htm"> 
-
+<#if (users.size() > 0) >	
 <table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
 	<tr>
 	  <th class="thCornerL" nowrap="nowrap">${I18n.getMessage("User.id")}</th>
@@ -20,9 +20,10 @@
 	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("Karma.votesGiven")}&nbsp;</th>
 	  <th class="thCornerR" nowrap="nowrap">&nbsp;${I18n.getMessage("Karma.karma")}&nbsp;</th>
 	</tr>
+
 	<#list users as user>
 		<tr align="center">		  
-			<td class="row2"><span class="gen">${user.id}</span></td>			
+			<td class="row2"><span class="gen">${user.id} </span></td>			
 			<td class="row2"><span class="gen"><a href="${JForumContext.encodeURL("/user/profile/${user.id}")}">${user.username}</a></span></td>
 			<td class="row2"><span class="gen"><#if user.id != 1><a href="${JForumContext.encodeURL("/pm/sendTo/${user.id}")}"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/icon_pm.gif" border="0" /></a><#else>&nbsp;</#if></span></td>
 			<td class="row2"><span class="gen">${user.karma.totalPoints}</span></td>
@@ -31,12 +32,27 @@
 			<td class="row2"><span class="gen">${user.karma.karmaPoints}</span></td>
 		</tr>
 	</#list>
-
 	<tr align="center">
 		<td class="catBottom" colspan="11" height="28">&nbsp;
 		</td>
 	</tr>
 </table>
+<#else>
+<TABLE cellSpacing=0 cellPadding=10 width="100%" align=center border=0>
+  <TR>
+    <TD class="bodyline" valign="top">
+      <TABLE cellSpacing=2 cellPadding=2 width="100%" align=center border=0>
+        <TR>
+          <TD vAlign=bottom align=left>
+		  <span class="maintitle">${I18n.getMessage("Generic.recordsNotFound")}</span>
+          </TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+</TABLE>   
+</#if>
+
 </form>
 <table width="100%">
 	<tr>
