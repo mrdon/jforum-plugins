@@ -36,7 +36,7 @@
     
 	<servlet-mapping>
     	<servlet-name>jforum</servlet-name>
-    	<url-pattern>*.java</url-pattern>
+    	<url-pattern>*.page</url-pattern>
     </servlet-mapping>
 
     <!-- SESSION -->
