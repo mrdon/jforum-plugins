@@ -58,6 +58,7 @@ import net.jforum.entities.Post;
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
+import net.jforum.model.AttachmentModel;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.ForumModel;
 import net.jforum.model.PostModel;
@@ -86,7 +87,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.44 2005/01/19 20:32:03 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.45 2005/01/19 20:43:46 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -733,7 +734,11 @@ public class PostAction extends Command {
 	public void downloadAttach() throws Exception
 	{
 		int id = this.request.getIntParameter("attach_id");
-		Attachment a = DataAccessDriver.getInstance().newAttachmentModel().selectAttachmentById(id);
+		
+		AttachmentModel am = DataAccessDriver.getInstance().newAttachmentModel();
+		Attachment a = am.selectAttachmentById(id);
+		a.getInfo().setDownloadCount(a.getInfo().getDownloadCount() + 1);
+		am.updateAttachment(a);
 		
 		FileInputStream fis = new FileInputStream(SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR)
 				+ "/"

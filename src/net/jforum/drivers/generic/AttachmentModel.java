@@ -58,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentModel.java,v 1.6 2005/01/19 20:32:03 rafaelsteil Exp $
+ * @version $Id: AttachmentModel.java,v 1.7 2005/01/19 20:43:45 rafaelsteil Exp $
  */
 public class AttachmentModel extends AutoKeys implements net.jforum.model.AttachmentModel
 {
@@ -399,8 +399,13 @@ public class AttachmentModel extends AutoKeys implements net.jforum.model.Attach
 	 */
 	public void updateAttachment(Attachment a) throws Exception
 	{
-		// TODO Auto-generated method stub
-
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("AttachmentModel.updateAttachment"));
+		p.setString(1, a.getInfo().getComment());
+		p.setInt(2, a.getInfo().getDownloadCount());
+		p.setInt(3, a.getId());
+		p.executeUpdate();
+		p.close();
 	}
 	
 	/**

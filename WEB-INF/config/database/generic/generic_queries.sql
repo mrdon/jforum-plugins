@@ -513,3 +513,5 @@ AttachmentModel.selectAttachmentById = SELECT a.attach_id, a.user_id, a.post_id,
 	FROM jforum_attach a, jforum_attach_desc d \
 	WHERE a.attach_id = ? \
 	AND a.attach_id = d.attach_id
+	
+AttachmentModel.updateAttachment = UPDATE jforum_attach_desc SET comment = ?, download_count = ? WHERE attach_id = ?
