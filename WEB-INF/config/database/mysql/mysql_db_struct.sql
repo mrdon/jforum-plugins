@@ -129,9 +129,9 @@ CREATE TABLE jforum_posts (
   post_edit_time datetime default NULL,
   post_edit_count smallint(5) NOT NULL default '0',
   status tinyint(1) default '1',
-  PRIMARY KEY  (post_id),
   attach TINYINT(1) DEFAULT '0',
   need_moderate TINYINT(1) DEFAULT '0',
+  PRIMARY KEY  (post_id),
   KEY (user_id),
   KEY (topic_id),
   KEY (forum_id)

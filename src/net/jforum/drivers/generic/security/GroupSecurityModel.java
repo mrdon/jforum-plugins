@@ -56,7 +56,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GroupSecurityModel.java,v 1.6 2005/01/28 14:46:20 rafaelsteil Exp $
+ * @version $Id: GroupSecurityModel.java,v 1.7 2005/03/08 23:04:04 rafaelsteil Exp $
  */
 public class GroupSecurityModel extends AutoKeys implements net.jforum.model.security.GroupSecurityModel 
 {
@@ -65,7 +65,12 @@ public class GroupSecurityModel extends AutoKeys implements net.jforum.model.sec
 	 */
 	public void deleteAllRoles(int id) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PermissionControl.deleteAllGroupRoles"));
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PermissionControl.deleteAllRoleValues"));
+		p.setInt(1, id);
+		p.executeUpdate();
+		p.close();
+		
+		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PermissionControl.deleteAllGroupRoles"));
 		p.setInt(1, id);
 		p.executeUpdate();
 		p.close();		

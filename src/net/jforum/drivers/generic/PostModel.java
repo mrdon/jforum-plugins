@@ -62,7 +62,7 @@ import net.jforum.util.search.MessageIndexerTask;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: PostModel.java,v 1.19 2005/02/22 20:32:38 rafaelsteil Exp $
+ * @version $Id: PostModel.java,v 1.20 2005/03/08 23:04:04 rafaelsteil Exp $
  */
 public class PostModel extends AutoKeys implements net.jforum.model.PostModel 
 {
@@ -143,6 +143,7 @@ public class PostModel extends AutoKeys implements net.jforum.model.PostModel
 	{
 		PreparedStatement post = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.deletePost"));
 		PreparedStatement text = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.deletePostText"));
+		PreparedStatement search = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.deleteWordMatch"));
 		
 		for (Iterator iter = posts.iterator(); iter.hasNext(); ) {
 			Post p = (Post)iter.next();
@@ -150,10 +151,12 @@ public class PostModel extends AutoKeys implements net.jforum.model.PostModel
 			post.setInt(1, p.getId());
 			text.setInt(1, p.getId());
 			
-			post.executeUpdate();
 			text.executeUpdate();
+			search.executeUpdate();
+			post.executeUpdate();
 		}
 		
+		search.close();
 		post.close();
 		text.close();
 	}
