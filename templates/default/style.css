@@ -402,3 +402,7 @@ INPUT.liteoption {
 .admin {
 	FONT-SIZE: 10px; color: #FFA34F
 }
+
+td.attachrow		{ font: normal 11px Verdana, Arial, Helvetica, sans-serif; color : #000000; border-color : #000000; }
+td.attachheader     { font: normal 11px Verdana, Arial, Helvetica, sans-serif; color : #000000; border-color : #000000; background-color: #d1d7dc; }
+table.attachtable	{ font: normal 12px Verdana, Arial, Helvetica, sans-serif; color : #000000; border-color : #000000;	border-collapse : collapse; }

@@ -205,20 +205,52 @@ function confirmDelete()
 						<br />
 					</td>
 	
-					<td class="${rowColor}" valign="top" height="28" width="100%">
-						<table cellspacing="0" cellpadding="0" width="100%" border="0">
+					<td class="${rowColor}" valign="top" height="100%" width="100%">
+						<table cellspacing="0" cellpadding="0" width="100%" border="0" height="100%">
 							<tr>
 								<td colspan="2" valign="top">
 									<span class="postbody">
 									${post.text}
-									
-									<#if (user.attachSignatureEnabled && user.signature?exists && user.signature?length > 0 && post.isSignatureEnabled())>
-									<hr />
-									${user.signature}
+
+									<#if post.hasAttachments()>
+										<#assign attachments = am.getAttachments(post.id)/>
+
+										<#list attachments as a>
+											<p>
+											<table width="70%" border="1" cellpadding="2" cellspacing="0" class="attachtable" align="center">
+												<tr>
+													<td width="100%" colspan="3" class="attachheader" align="center"><b><span class="gen">${a.info.realFilename}</span></b></td>
+												</tr>
+												<tr>
+													<td width="15%" class="attachrow"><span class="genmed">&nbsp;Description:</span></td>
+													<td width="75%" class="attachrow"><span class="genmed">This is a Test Movie</span></td>
+													<td rowspan="3" align="center">
+														<img src="${contextPath}/templates/${templateName}/images/icon_disk.gif">
+														<a href="#" class="gensmall"><b>Download</a></a>
+													</td>
+												</tr>
+												<tr>
+													<td class="attachrow"><span class="genmed">&nbsp;Filesize:</span></td>
+													<td class="attachrow"><span class="genmed">&nbsp;501.14 KB</span></td>
+
+												</tr>
+												<tr>
+													<td class="attachrow"><span class="genmed">&nbsp;Viewed:</span></td>
+													<td class="attachrow"><span class="genmed">&nbsp;4 Time(s)</span></td>
+												</tr>
+											</table>
+											</p>
+										</#list>
 									</#if>
 									</span>
 								</td>
 							</tr>
+									
+							<#if (user.attachSignatureEnabled && user.signature?exists && user.signature?length > 0 && post.isSignatureEnabled())>
+								<tr>
+									<td><hr/><span class="gensmall">${user.signature}</span></td>
+								</tr>
+							</#if>
 						</table>
 					</td>
 				</tr>

@@ -51,7 +51,7 @@ import org.apache.commons.fileupload.FileItem;
 
 /**
  * @author Rafael Steil
- * @version $Id: UploadUtils.java,v 1.1 2005/01/18 20:59:43 rafaelsteil Exp $
+ * @version $Id: UploadUtils.java,v 1.2 2005/01/19 19:25:55 rafaelsteil Exp $
  */
 public class UploadUtils
 {
@@ -67,7 +67,7 @@ public class UploadUtils
 	
 	public String getExtension()
 	{
-		if (this.extension == null) {
+		if (this.extension == null || this.extension.equals("")) {
 			this.extension = this.item.getName().substring(this.item.getName().lastIndexOf('.') + 1);
 		}
 		

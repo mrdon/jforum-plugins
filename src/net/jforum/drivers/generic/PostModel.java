@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: PostModel.java,v 1.14 2005/01/14 21:11:50 rafaelsteil Exp $
+ * @version $Id: PostModel.java,v 1.15 2005/01/19 19:25:53 rafaelsteil Exp $
  */
 public class PostModel extends AutoKeys implements net.jforum.model.PostModel 
 {
@@ -103,6 +103,7 @@ public class PostModel extends AutoKeys implements net.jforum.model.PostModel
 		post.setSubject(rs.getString("post_subject"));
 		post.setText(rs.getString("post_text"));
 		post.setPostUsername(rs.getString("username"));
+		post.hasAttachments(rs.getInt("attach") > 0);
 		
 		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
 		post.setFormatedTime(df.format(rs.getTimestamp("post_time")));

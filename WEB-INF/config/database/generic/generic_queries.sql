@@ -112,7 +112,7 @@ UserModel.getUsernam = SELECT username FROM jforum_users WHERE user_id = ?
 # #############
 # PostModel
 # #############
-PostModel.selectById = SELECT p.post_id, topic_id, forum_id, p.user_id, post_time, poster_ip, enable_bbcode, enable_html, \
+PostModel.selectById = SELECT p.post_id, topic_id, forum_id, p.user_id, post_time, poster_ip, enable_bbcode, enable_html, p.attach,\
 	enable_smilies, enable_sig, post_edit_time, post_edit_count, status, pt.post_subject, pt.post_text, username \
 	FROM jforum_posts p, jforum_posts_text pt, jforum_users u \
 	WHERE p.post_id = pt.post_id \
@@ -128,7 +128,7 @@ PostModel.updatePostText = UPDATE jforum_posts_text SET post_text = ?, post_subj
 PostModel.addNewPost = INSERT INTO jforum_posts (topic_id, forum_id, user_id, post_time, poster_ip, enable_bbcode, enable_html, enable_smilies, enable_sig, post_edit_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
 PostModel.addNewPostText = INSERT INTO jforum_posts_text ( post_id, post_text, post_subject ) VALUES (?, ?, ?)
 
-PostModel.selectAllByTopicByLimit = SELECT p.post_id, topic_id, forum_id, p.user_id, post_time, poster_ip, enable_bbcode, \
+PostModel.selectAllByTopicByLimit = SELECT p.post_id, topic_id, forum_id, p.user_id, post_time, poster_ip, enable_bbcode, p.attach, \
 	enable_html, enable_smilies, enable_sig, post_edit_time, post_edit_count, status, pt.post_subject, pt.post_text, username \
 	FROM jforum_posts p, jforum_posts_text pt, jforum_users u \
 	WHERE p.post_id = pt.post_id \
@@ -496,4 +496,14 @@ AttachmentModel.addAttachmentInfo = INSERT INTO jforum_attach_desc (attach_id, p
 	mimetype, filesize, upload_time, thumb, extension_id ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 	
 AttachmentModel.updatePost = UPDATE jforum_posts SET attach = ? WHERE post_id = ?
-AttachmentModel.selectExtension = SELECT extension_group_id, name, allow, upload_icon, download_mode FROM jforum_extension_groups WHERE name = ?
+
+AttachmentModel.selectExtension = SELECT e.extension_id, e.extension_group_id, e.extension, e.comment, e.upload_icon, e.allow, g.upload_icon grup_icon \
+	FROM jforum_extensions e, jforum_extension_groups g \
+	WHERE e.$field = ? \
+	AND e.extension_group_id = g.extension_group_id
+
+AttachmentModel.selectAttachments = SELECT a.attach_id, a.user_id, a.post_id, a.privmsgs_id, d.mimetype, d.physical_filename, d.real_filename, \
+	d.download_count, d.comment, d.filesize, d.upload_time, d.extension_id \
+	FROM jforum_attach a, jforum_attach_desc d \
+	WHERE a.post_id = ? \
+	AND a.attach_id = d.attach_id

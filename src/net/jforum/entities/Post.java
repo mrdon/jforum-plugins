@@ -48,7 +48,7 @@ import java.util.Date;
  * Represents every message post in the system.
  * 
  * @author Rafael Steil
- * @version $Id: Post.java,v 1.5 2005/01/14 21:11:48 rafaelsteil Exp $
+ * @version $Id: Post.java,v 1.6 2005/01/19 19:25:52 rafaelsteil Exp $
  */
 public class Post 
 {
@@ -137,6 +137,8 @@ public class Post
 	private String bbCodeUid;
 	
 	private KarmaStatus karma;
+	
+	private boolean hasAttachments;
 	
 	/**
 	 * Default constructor
@@ -485,5 +487,21 @@ public class Post
 	
 	public void setCanEdit(boolean canEdit) {
 		this.canEdit = canEdit;
+	}
+	
+	/**
+	 * @return Returns the hasAttachments.
+	 */
+	public boolean hasAttachments()
+	{
+		return this.hasAttachments;
+	}
+	
+	/**
+	 * @param hasAttachments The hasAttachments to set.
+	 */
+	public void hasAttachments(boolean hasAttachments)
+	{
+		this.hasAttachments = hasAttachments;
 	}
 }

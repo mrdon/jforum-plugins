@@ -73,7 +73,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.55 2005/01/17 12:22:29 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.56 2005/01/19 19:25:52 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -188,10 +188,10 @@ public class JForum extends JForumCommonServlet
 	{
 		Writer out = null;
 		Connection conn = null;
+		boolean autoCommitStatus = true;
+		boolean useTransactions = SystemGlobals.getBoolValue(ConfigKeys.DATABASE_USE_TRANSACTIONS);
 		
 		try {
-			
-			
 			// Initializes thread local data
 			DataHolder dataHolder = new DataHolder();
 			localData.set(dataHolder);
@@ -211,6 +211,11 @@ public class JForum extends JForumCommonServlet
 			if (isDatabaseUp) {
 				conn = DBConnection.getImplementation().getConnection();
 				dataHolder.setConnection(conn);
+				
+				if (useTransactions) {
+					autoCommitStatus = conn.getAutoCommit();
+					conn.setAutoCommit(false);
+				}
 			}
 			
 			localData.set(dataHolder);
@@ -266,8 +271,21 @@ public class JForum extends JForumCommonServlet
 					}
 				}
 			}
+			
+			if (useTransactions) {
+				conn.commit();
+			}
 		}
 		catch (Exception e) {
+			if (useTransactions && conn != null) {
+				try {
+					conn.rollback();
+				}
+				catch (Exception dbe) {
+					dbe.printStackTrace();
+				}
+			}
+
 			response.setContentType("text/html");
 			if (out != null) {
 				throw new ForumException(e, out);
@@ -279,6 +297,10 @@ public class JForum extends JForumCommonServlet
 		finally {
 			try {
 				if (conn != null) {
+					if (useTransactions) {
+						conn.setAutoCommit(autoCommitStatus);
+					}
+					
 					DBConnection.getImplementation().releaseConnection(conn);
 				}
 				

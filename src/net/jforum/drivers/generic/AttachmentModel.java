@@ -52,12 +52,13 @@ import net.jforum.JForum;
 import net.jforum.entities.Attachment;
 import net.jforum.entities.AttachmentExtension;
 import net.jforum.entities.AttachmentExtensionGroup;
+import net.jforum.entities.AttachmentInfo;
 import net.jforum.entities.QuotaLimit;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentModel.java,v 1.4 2005/01/18 20:59:44 rafaelsteil Exp $
+ * @version $Id: AttachmentModel.java,v 1.5 2005/01/19 19:25:53 rafaelsteil Exp $
  */
 public class AttachmentModel extends AutoKeys implements net.jforum.model.AttachmentModel
 {
@@ -298,9 +299,21 @@ public class AttachmentModel extends AutoKeys implements net.jforum.model.Attach
 	 */
 	public AttachmentExtension selectExtension(String extension) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("AttachmentModel.selectExtension"));
-		p.setString(1, extension);
+		return this.searchExtension("extension", extension);
+	}
+	
+	private AttachmentExtension selectExtension(int extensionId) throws Exception
+	{
+		return this.searchExtension("extension_id", new Integer(extensionId));
+	}
+	
+	private AttachmentExtension searchExtension(String paramName, Object paramValue) throws Exception
+	{
+		String sql = SystemGlobals.getSql("AttachmentModel.selectExtension");
+		sql = sql.replaceAll("\\$field", paramName);
+		
+		PreparedStatement p = JForum.getConnection().prepareStatement(sql);
+		p.setObject(1, paramValue);
 		
 		AttachmentExtension e = new AttachmentExtension();
 		
@@ -326,7 +339,13 @@ public class AttachmentModel extends AutoKeys implements net.jforum.model.Attach
 		e.setExtension(rs.getString("extension"));
 		e.setExtensionGroupId(rs.getInt("extension_group_id"));
 		e.setId(rs.getInt("extension_id"));
-		e.setUploadIcon(rs.getString("upload_icon"));
+		
+		String icon = rs.getString("upload_icon");
+		if (icon == null || icon.equals("")) {
+			icon = rs.getString("group_icon");
+		}
+		
+		e.setUploadIcon(icon);
 		
 		return e;
 	}
@@ -345,7 +364,7 @@ public class AttachmentModel extends AutoKeys implements net.jforum.model.Attach
 		p.close();
 		
 		p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getValue("AttachmentModel.addAttachmentInfo"));
+				SystemGlobals.getSql("AttachmentModel.addAttachmentInfo"));
 		p.setInt(1, id);
 		p.setString(2, a.getInfo().getPhysicalFilename());
 		p.setString(3, a.getInfo().getRealFilename());
@@ -359,7 +378,7 @@ public class AttachmentModel extends AutoKeys implements net.jforum.model.Attach
 		p.close();
 		
 		p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getValue("AttachmentModel.updatePost"));
+				SystemGlobals.getSql("AttachmentModel.updatePost"));
 		p.setInt(1, 1);
 		p.setInt(2, a.getPostId());
 		p.executeUpdate();
@@ -382,5 +401,46 @@ public class AttachmentModel extends AutoKeys implements net.jforum.model.Attach
 	{
 		// TODO Auto-generated method stub
 
+	}
+	
+	/**
+	 * @see net.jforum.model.AttachmentModel#selectAttachments(int)
+	 */
+	public List selectAttachments(int postId) throws Exception
+	{
+		List l = new ArrayList();
+		
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("AttachmentModel.selectAttachments"));
+		p.setInt(1, postId);
+		
+		ResultSet rs = p.executeQuery();
+		while (rs.next()) {
+			l.add(this.getAttachment(rs));
+		}
+		
+		return l;
+	}
+	
+	protected Attachment getAttachment(ResultSet rs) throws Exception
+	{
+		Attachment a = new Attachment();
+		a.setId(rs.getInt("attach_id"));
+		a.setPostId(rs.getInt("post_id"));
+		a.setPrivmsgsId(rs.getInt("privmsgs_id"));
+		
+		AttachmentInfo ai = new AttachmentInfo();
+		ai.setComment(rs.getString("comment"));
+		ai.setDownloadCount(rs.getInt("download_count"));
+		ai.setFilesize(rs.getLong("filesize"));
+		ai.setMimetype(rs.getString("mimetype"));
+		ai.setPhysicalFilename(rs.getString("physical_filename"));
+		ai.setRealFilename(rs.getString("real_filename"));
+		ai.setUploadTime(rs.getTimestamp("upload_time"));
+		ai.setExtension(this.selectExtension(rs.getInt("extension_id")));
+		
+		a.setInfo(ai);
+		
+		return a;
 	}
 }

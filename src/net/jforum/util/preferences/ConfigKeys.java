@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.37 2005/01/18 20:59:48 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.38 2005/01/19 19:25:56 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -76,7 +76,7 @@ public class ConfigKeys {
 	public static final String DATABASE_CONNECTION_DRIVER = "database.connection.driver";
 	public static final String DATABASE_CONNECTION_STRING = "database.connection.string";
 	public static final String LOGIN_AUTHENTICATOR = "login.authenticator";
-	public static final String DATABASE_TRANSACTIONS = "database.transactions";
+	public static final String DATABASE_USE_TRANSACTIONS = "database.use.transactions";
 	public static final String DATABASE_DATASOURCE_NAME = "database.datasource.name";
 	
 	public static final String DATABASE_ERROR_PAGE = "database.error.page";

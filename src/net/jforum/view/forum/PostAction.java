@@ -83,7 +83,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.42 2005/01/18 20:59:48 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.43 2005/01/19 19:25:56 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -136,6 +136,7 @@ public class PostAction extends Command {
 		// Set the topic status as read
 		tm.updateReadStatus(topic.getId(), userId, true);
 
+		this.context.put("am", new AttachmentCommon(this.request));
 		this.context.put("karmaVotes", DataAccessDriver.getInstance().newKarmaModel().getUserVotes(topic.getId()));
 		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
 		this.context.put("canRemove",
@@ -319,15 +320,27 @@ public class PostAction extends Command {
 			this.context.put("message", I18n.getMessage("CannotEditPost"));
 		}
 
-		User u = DataAccessDriver.getInstance().newUserModel().selectById(sUserId);
-		u.setSignature(PostCommon.processText(u.getSignature()));
-		u.setSignature(PostCommon.processSmilies(u.getSignature(), SmiliesRepository.getSmilies()));
+		User u = this.getUserForDisplay(sUserId);
 
 		if (preview) {
 			u.setNotifyOnMessagesEnabled(this.request.getParameter("notify") != null);
+			
+			if (u.getId() != p.getUserId()) {
+				// Probably a moderator is editing the message
+				this.context.put("previewUser", this.getUserForDisplay(p.getUserId()));
+			}
 		}
 
 		this.context.put("user", u);
+	}
+	
+	private User getUserForDisplay(int userId) throws Exception
+	{
+		User u = DataAccessDriver.getInstance().newUserModel().selectById(userId);
+		u.setSignature(PostCommon.processText(u.getSignature()));
+		u.setSignature(PostCommon.processSmilies(u.getSignature(), SmiliesRepository.getSmilies()));
+		
+		return u;
 	}
 
 	public void quote() throws Exception {

@@ -44,6 +44,7 @@ package net.jforum.view.forum.common;
 
 import java.io.File;
 import java.util.Calendar;
+import java.util.List;
 
 import net.jforum.ActionServletRequest;
 import net.jforum.SessionFacade;
@@ -61,7 +62,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.1 2005/01/18 20:59:43 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.2 2005/01/19 19:25:55 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {
@@ -79,7 +80,7 @@ public class AttachmentCommon
 	public void processAttachments(int postId) throws Exception
 	{
 		String t = this.request.getParameter("total_files");
-		if (t == null) {
+		if (t == null || "".equals(t)) {
 			return;
 		}
 		
@@ -94,6 +95,10 @@ public class AttachmentCommon
 		
 		for (int i = 0; i < total; i++) {
 			FileItem item = (FileItem)this.request.getObjectParameter("file_" + i);
+			if (item == null) {
+				continue;
+			}
+
 			if (item.getName().indexOf('\000') > -1) {
 				logger.warn("Possible bad attachment (null char): " + item.getName()
 						+ " - user_id: " + SessionFacade.getUserSession().getUserId());
@@ -122,6 +127,8 @@ public class AttachmentCommon
 			String savePath = this.makeStoreFilename(info);
 			info.setPhysicalFilename(savePath);
 			
+			a.setInfo(info);
+			
 			uploadUtils.saveUploadedFile(SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR)
 					+ "/" + savePath);
 			
@@ -142,5 +149,10 @@ public class AttachmentCommon
 			+ MD5.crypt(a.getRealFilename() + a.getUploadTime()) 
 			+ "_" + SessionFacade.getUserSession().getUserId()
 			+ "." + a.getExtension().getExtension();
+	}
+	
+	public List getAttachments(int postId) throws Exception
+	{
+		return this.am.selectAttachments(postId);
 	}
 }
