@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.13 2004/09/23 14:12:17 rafaelsteil Exp $
+ * @version $Id: UserModel.java,v 1.14 2004/09/25 01:56:11 jamesyong Exp $
  */
 public class UserModel extends AutoKeys implements net.jforum.model.UserModel 
 {
@@ -151,6 +151,7 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		u.setLang(rs.getString("user_lang"));
 		u.setActive(rs.getInt("user_active"));
 		u.setActivationKey(rs.getString("user_actkey"));
+		u.setDeleted(rs.getInt("deleted"));
 	}
 
 	/** 
@@ -341,6 +342,7 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 			u.setTotalPosts(rs.getInt("user_posts"));
 			u.setRegistrationDate(rs.getString("user_regdate"));
 			u.setUsername(rs.getString("username"));
+			u.setDeleted(rs.getInt("deleted"));
 			
 			list.add(u);
 		}
@@ -390,6 +392,25 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 	}
 
 	/** 
+	 * @see net.jforum.model.UserModel#isDeleted(int user_id)
+	 */
+	public boolean isDeleted(int user_id) throws Exception 
+	{	
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.isDeleted"));
+		p.setInt(1, user_id);
+		ResultSet rs = p.executeQuery();
+		rs.next();
+		
+		int deleted = rs.getInt("deleted");
+		
+		rs.close();
+		p.close();
+		
+		return deleted==1;
+
+	}
+	
+	/** 
 	 * @see net.jforum.model.UserModel#isUsernameRegistered(java.lang.String)
 	 */
 	public boolean isUsernameRegistered(String username) throws Exception 
@@ -429,7 +450,7 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		rs.close();
 		p.close();
 		
-		if (user != null && (user.getActivationKey() == null || user.isActive())) {
+		if ((user != null && !user.isDeleted()) && (user.getActivationKey() == null || user.isActive())) {
 			return user;
 		}
 		

@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net 
  * 
- * $Id: User.java,v 1.6 2004/09/11 02:43:22 rafaelsteil Exp $
+ * $Id: User.java,v 1.7 2004/09/25 01:57:23 jamesyong Exp $
  */
 package net.jforum.entities;
 
@@ -246,6 +246,19 @@ public class User
 	 * Key that the user uses to activate account, by email
 	 */
 	private String activationKey;	
+
+	/**
+	 * For locking & unlocking users
+	 */	
+	private int deleted;
+	
+	public boolean isDeleted() {
+		return this.deleted == 1;
+	}	
+	
+	public void setDeleted(int deleted){
+		this.deleted = deleted;
+	}	
 	
 	/**
 	 * Default Constructor

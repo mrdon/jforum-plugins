@@ -57,7 +57,7 @@ import net.jforum.entities.User;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.9 2004/09/08 08:55:22 jamesyong Exp $
+ * @version $Id: UserModel.java,v 1.10 2004/09/25 01:58:42 jamesyong Exp $
  */
 public interface UserModel 
 {
@@ -220,6 +220,14 @@ public interface UserModel
 	 * @throws Exception
 	 */
 	public int getTotalUsers() throws Exception;
+	
+	/**
+	 * whether the user is locked or not.
+	 * 
+	 * @return boolean
+	 * @throws Exception
+	 */	
+	public boolean isDeleted(int user_id) throws Exception;
 	
 	/***
 	 * Checks the existence of some username.
