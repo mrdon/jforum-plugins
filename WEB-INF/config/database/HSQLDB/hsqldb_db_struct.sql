@@ -120,6 +120,7 @@ CREATE TABLE jforum_posts (
   post_edit_time timestamp default NULL,
   post_edit_count int default '0' NOT NULL,
   status int default '1',
+  attach int default 0,
   PRIMARY KEY  (post_id)
 ) ;
 CREATE INDEX idx_posts_user ON jforum_posts(user_id);
@@ -312,7 +313,7 @@ CREATE TABLE jforum_users (
   deleted int default NULL,
   user_viewonline int default '1',
   security_hash varchar(32),
-  attach int default '0',
+  user_karma DECIMAL,
   PRIMARY KEY  (user_id)
 ) ;
 

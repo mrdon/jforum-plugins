@@ -115,6 +115,7 @@ CREATE TABLE jforum_posts (
   post_edit_time timestamp DEFAULT NULL,
   post_edit_count INTEGER NOT NULL DEFAULT 0,
   status INTEGER DEFAULT 1,
+  attach INTEGER DEFAULT 0,
   PRIMARY KEY  (post_id)
 );
 CREATE INDEX idx_posts_user ON jforum_posts(user_id);
@@ -303,6 +304,7 @@ CREATE TABLE jforum_users (
   deleted INTEGER DEFAULT NULL,
   user_viewonline INTEGER DEFAULT 1,
   security_hash VARCHAR(32),
+  user_karma DECIMAL
   PRIMARY KEY  (user_id)
 );
 
@@ -406,8 +408,139 @@ CREATE TABLE jforum_search_topics (
   session VARCHAR(50),
   search_time TIMESTAMP
 );
+
 CREATE INDEX idx_st_topic ON jforum_search_topics(topic_id);
 CREATE INDEX idx_st_forum ON jforum_search_topics(forum_id);
 CREATE INDEX idx_st_user ON jforum_search_topics(user_id);
 CREATE INDEX idx_st_fp ON jforum_search_topics(topic_first_post_id);
 CREATE INDEX idx_st_lp ON jforum_search_topics(topic_last_post_id);
+
+--
+-- Table structure for table 'jforum_karma'
+--
+CREATE SEQUENCE jforum_karma_seq;
+CREATE TABLE jforum_karma (
+	karma_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_karma_seq'),
+	post_id INTEGER NOT NULL,
+	topic_id INTEGER NOT NULL,
+	post_user_id INTEGER NOT NULL,
+	from_user_id INTEGER NOT NULL,
+	points INTEGER NOT NULL,
+	PRIMARY KEY(karma_id)
+);
+
+CREATE INDEX idx_krm_post ON jforum_karma(post_id);
+CREATE INDEX idx_krm_topic ON jforum_karma(topic_id);
+CREATE INDEX idx_krm_user ON jforum_karma(post_user_id);
+CREATE INDEX idx_krm_from ON jforum_karma(from_user_id);
+
+--
+-- Table structure for table 'jforum_bookmark'
+--
+CREATE SEQUENCE jforum_bookmarks_seq;
+CREATE TABLE jforum_bookmarks (
+	bookmark_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_bookmarks_seq'),
+	user_id INTEGER NOT NULL,
+	relation_id INTEGER NOT NULL,
+	relation_type INTEGER NOT NULL,
+	public_visible INTEGER DEFAULT 1,
+	title VARCHAR(255),
+	description VARCHAR(255),
+	PRIMARY KEY(bookmark_id)
+);
+
+CREATE INDEX idx_bok_user ON jforum_bookmarks(user_id);
+CREATE INDEX idx_bok_rel ON jforum_bookmarks(relation_id);
+
+-- 
+-- Table structure for table 'jforum_quota_limit'
+--
+CREATE SEQUENCE jforum_quota_limit_seq;
+CREATE TABLE jforum_quota_limit (
+	quota_limit_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_quota_limit_seq'),
+	quota_desc VARCHAR(50) NOT NULL,
+	quota_limit INTEGER NOT NULL,
+	quota_type INTEGER DEFAULT 1,
+	PRIMARY KEY(quota_limit_id)
+);
+
+--
+-- Table structure for table 'jforum_extension_groups'
+--
+CREATE SEQUENCE jforum_extension_groups_seq;
+CREATE TABLE jforum_extension_groups (
+	extension_group_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_extension_groups_seq'),
+	name VARCHAR(100) NOT NULL,
+	allow INTEGER DEFAULT 1, 
+	upload_icon VARCHAR(100),
+	download_mode INTEGER DEFAULT 1,
+	PRIMARY KEY(extension_group_id)
+) ;
+
+-- 
+-- Table structure for table 'jforum_extensions'
+--
+CREATE SEQUENCE jforum_extensions_seq;
+CREATE TABLE jforum_extensions (
+	extension_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_extensions_seq'),
+	extension_group_id INTEGER NOT NULL,
+	description VARCHAR(100),
+	upload_icon VARCHAR(100),
+	extension VARCHAR(10),
+	allow INTEGER DEFAULT 1,
+	PRIMARY KEY(extension_id)
+);
+
+CREATE INDEX idx_ext_group ON jforum_extensions(extension_group_id);
+CREATE INDEX idx_ext_ext ON jforum_extensions(extension);
+
+--
+-- Table structure for table 'jforum_attach'
+--
+CREATE SEQUENCE jforum_attach_seq;
+CREATE TABLE jforum_attach (
+	attach_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_attach_seq'),
+	post_id INTEGER,
+	privmsgs_id INTEGER,
+	user_id INTEGER NOT NULL,
+	PRIMARY KEY(attach_id)
+);
+
+CREATE INDEX idx_att_post ON jforum_attach(post_id);
+CREATE INDEX idx_att_priv ON jforum_attach(privmsgs_id);
+CREATE INDEX idx_att_user ON jforum_attach(user_id);
+
+-- 
+-- Table structure for table 'jforum_attach_desc'
+--
+CREATE SEQUENCE jforum_attach_desc_seq;
+CREATE TABLE jforum_attach_desc (
+	attach_desc_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_attach_desc_seq'),
+	attach_id INTEGER NOT NULL,
+	physical_filename VARCHAR(255) NOT NULL,
+	real_filename VARCHAR(255) NOT NULL,
+	download_count INTEGER,
+	description VARCHAR(255),
+	mimetype VARCHAR(50),
+	filesize NUMBER(20),
+	upload_time DATE,
+	thumb INTEGER DEFAULT 0,
+	extension_id INTEGER
+);
+
+CREATE INDEX idx_att_d_att ON jforum_attach_desc(attach_id);
+CREATE INDEX idx_att_d_ext ON jforum_attach_desc(extension_id);
+
+--
+-- Table structure for table 'jforum_attach_quota'
+--
+CREATE SEQUENCE jforum_attach_quota_seq;
+CREATE TABLE jforum_attach_quota (
+	attach_quota_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_attach_quota_seq'),
+	group_id INTEGER NOT NULL,
+	quota_limit_id INTEGER NOT NULL,
+	PRIMARY KEY(attach_quota_id)
+);
+
+CREATE INDEX idx_aq_group ON jforum_attach_quota(group_id);
+CREATE INDEX idx_aq_ql ON jforum_attach_quota(quota_limit_id);
