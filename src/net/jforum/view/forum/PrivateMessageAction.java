@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.4 2004/09/22 01:36:12 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.6 2004/11/02 18:18:59 rafaelsteil Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -125,6 +125,7 @@ public class PrivateMessageAction extends Command
 		JForum.getContext().put("moduleName", "pm");
 		JForum.getContext().put("action", "sendSave");
 		JForum.getContext().put("moduleAction", "post_form.htm");
+		JForum.getContext().put("htmlAllowed", true);
 	}
 	public void sendTo() throws Exception
 	{
@@ -149,6 +150,7 @@ public class PrivateMessageAction extends Command
 		JForum.getContext().put("moduleName", "pm");
 		JForum.getContext().put("action", "sendSave");
 		JForum.getContext().put("moduleAction", "post_form.htm");
+		JForum.getContext().put("htmlAllowed", true);
 	}
 	
 	public void sendSave() throws Exception
@@ -334,6 +336,7 @@ public class PrivateMessageAction extends Command
 		pm.getPost().setSubject(I18n.getMessage("PrivateMessage.replyPrefix") + pm.getPost().getSubject());
 		
 		JForum.getContext().put("moduleAction", "post_form.htm");
+		JForum.getContext().put("htmlAllowed", true);
 		JForum.getContext().put("action", "sendSave");
 		JForum.getContext().put("pm", pm);
 		JForum.getContext().put("pmReply", true);
@@ -362,6 +365,7 @@ public class PrivateMessageAction extends Command
 		JForum.getContext().put("moduleAction", "post_form.htm");
 		JForum.getContext().put("post", pm.getPost());
 		JForum.getContext().put("pm", pm);
+		JForum.getContext().put("htmlAllowed", true);
 		JForum.getContext().put("user", DataAccessDriver.getInstance().newUserModel().selectById(
 						SessionFacade.getUserSession().getUserId()));
 	}
