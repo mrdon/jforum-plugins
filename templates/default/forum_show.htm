@@ -173,7 +173,7 @@
 												<option value="-1">${category.name}</option>
 												<option value="-1">-------------</option>
 												
-												<#list category.forums as forum>
+												<#list category.getForums() as forum>
 													<option value="${forum.id}">${forum.name}</option>
 												</#list>
 											</#list>

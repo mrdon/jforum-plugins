@@ -43,7 +43,6 @@
 package net.jforum.view.admin;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import net.jforum.Command;
 import net.jforum.JForum;
@@ -66,7 +65,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.5 2004/12/05 21:51:24 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.6 2004/12/19 15:17:14 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -201,14 +200,10 @@ public class ForumAction extends Command
 				roleValues.add(rv);
 				
 				pc.addRole(groupId, role, roleValues);
-				
-				Iterator iter = gm.selectUsersIds(groupId).iterator();
-				while (iter.hasNext()) {
-					SecurityRepository.remove(Integer.parseInt(iter.next().toString()));
-				}
 			}
 		}
 		
+		SecurityRepository.clean();
 		this.list();
 	}
 	

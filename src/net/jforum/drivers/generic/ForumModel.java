@@ -58,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: ForumModel.java,v 1.11 2004/12/05 21:51:24 rafaelsteil Exp $
+ * @version $Id: ForumModel.java,v 1.12 2004/12/19 15:17:13 rafaelsteil Exp $
  */
 public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel {
 	private Connection conn;
@@ -217,7 +217,7 @@ public class ForumModel extends AutoKeys implements net.jforum.model.ForumModel 
 		ResultSet rs = pOrder.executeQuery();
 
 		if (rs.next()) {
-			maxOrder = rs.getInt("maxOrder");
+			maxOrder = rs.getInt(1);
 		}
 
 		rs.close();

@@ -55,17 +55,22 @@ import net.jforum.security.PermissionControl;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityRepository.java,v 1.4 2004/11/06 18:03:48 rafaelsteil Exp $
+ * @version $Id: SecurityRepository.java,v 1.5 2004/12/19 15:17:13 rafaelsteil Exp $
  */
 public class SecurityRepository 
 {
-	private static int MAX_USERS = 20;
+	private static int MAX_USERS = 500;
 	
-	private static Map securityInfoMap = new LinkedHashMap(MAX_USERS) {
-		protected boolean removeEldestEntry(Entry eldest) {
-			return this.size() > MAX_USERS;
-		}
-	};
+	private static Map securityInfoMap = createNewRepository();
+	
+	private static Map createNewRepository()
+	{
+		return new LinkedHashMap(MAX_USERS) {
+			protected boolean removeEldestEntry(Entry eldest) {
+				return this.size() > MAX_USERS;
+			}
+		};
+	}
 	
 	private SecurityRepository() { }
 	
@@ -152,14 +157,18 @@ public class SecurityRepository
 	 * @param roleName The role name to verity
 	 * @return <code>true</code> if the user has access to the role, <code>false</code> if access is denied
 	 */
-	public static boolean canAccess(String roleName)
+	public static boolean canAccess(String roleName) throws Exception
 	{
 		return canAccess(SessionFacade.getUserSession().getUserId(), roleName);
 	}
 	
-	public static boolean canAccess(int userId, String roleName)
+	public static boolean canAccess(int userId, String roleName) throws Exception
 	{
 		PermissionControl pc = SecurityRepository.get(userId);
+		if (pc == null) {
+			load(userId);
+		}
+		
 		if (pc != null && pc.canAccess(roleName)) {
 			return true;
 		}
@@ -175,14 +184,19 @@ public class SecurityRepository
 	 * @param value The value relacted to the role to verify for access
 	 * @return <code>true</code> if the user has access to the role, <code>false</code> if access is denied
 	 */
-	public static boolean canAccess(String roleName, String value)
+	public static boolean canAccess(String roleName, String value) throws Exception
 	{
 		return canAccess(SessionFacade.getUserSession().getUserId(), roleName, value);
 	}
 	
-	public static boolean canAccess(int userId, String roleName, String value)
+	public static boolean canAccess(int userId, String roleName, String value) throws Exception
 	{
-		if (SecurityRepository.get(userId).canAccess(roleName, value)) {
+		PermissionControl pc = SecurityRepository.get(userId);
+		if (pc == null) {
+			load(userId);
+		}
+		
+		if (pc.canAccess(roleName, value)) {
 			return true;
 		}
 		
@@ -202,5 +216,10 @@ public class SecurityRepository
 	public static void remove(int userId)
 	{
 		SecurityRepository.securityInfoMap.remove(new Integer(userId));
+	}
+	
+	public static synchronized void clean()
+	{
+		SecurityRepository.securityInfoMap = createNewRepository();
 	}
 }

@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * Stores information about user's session.
  * 
  * @author Rafael Steil
- * @version $Id: UserSession.java,v 1.11 2004/11/23 12:45:33 jamesyong Exp $
+ * @version $Id: UserSession.java,v 1.12 2004/12/19 15:17:14 rafaelsteil Exp $
  */
 public class UserSession implements Serializable
 {
@@ -257,7 +257,7 @@ public class UserSession implements Serializable
 	 * Checks if the user is an administrator
 	 * @return <code>true</code> if the user is an administrator
 	 */
-	public boolean isAdmin()
+	public boolean isAdmin() throws Exception
 	{
 		return SecurityRepository.canAccess(this.userId, SecurityConstants.PERM_ADMINISTRATION);
 	}
@@ -266,7 +266,7 @@ public class UserSession implements Serializable
 	 * Checks if the user is a moderator
 	 * @return <code>true</code> if the user has moderations rights
 	 */
-	public boolean isModerator()
+	public boolean isModerator() throws Exception
 	{
 		return SecurityRepository.canAccess(this.userId, SecurityConstants.PERM_MODERATION);
 	}

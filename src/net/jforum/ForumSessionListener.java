@@ -45,11 +45,14 @@ package net.jforum;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
+import net.jforum.entities.UserSession;
+import net.jforum.repository.SecurityRepository;
+
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumSessionListener.java,v 1.10 2004/11/12 03:08:09 rafaelsteil Exp $
+ * @version $Id: ForumSessionListener.java,v 1.11 2004/12/19 15:17:13 rafaelsteil Exp $
  */
 public class ForumSessionListener implements HttpSessionListener 
 {
@@ -76,6 +79,8 @@ public class ForumSessionListener implements HttpSessionListener
 			logger.warn(e);
 		}
 
+		UserSession us = SessionFacade.getUserSession(sessionId);
+		SecurityRepository.remove(us.getUserId());
 		SessionFacade.remove(sessionId);
 	}
 }

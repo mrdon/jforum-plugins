@@ -66,7 +66,7 @@ import net.jforum.view.forum.ModerationHelper;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.1 2004/11/30 01:19:00 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.2 2004/12/19 15:17:14 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
@@ -161,7 +161,7 @@ public class TopicsCommon
 	/**
 	 * Common properties to be used when showing topic data
 	 */
-	public static void topicListingBase()
+	public static void topicListingBase() throws Exception
 	{
 		// Topic Types
 		JForum.getContext().put("TOPIC_ANNOUNCE", new Integer(Topic.TYPE_ANNOUNCE));

@@ -64,7 +64,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.11 2004/11/30 01:18:51 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.12 2004/12/19 15:17:12 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -191,7 +191,7 @@ public class SearchAction extends Command
 		TopicsCommon.topicListingBase();
 	}
 	
-	private List onlyAllowedData(List topics)
+	private List onlyAllowedData(List topics) throws Exception
 	{
 		List l = new ArrayList();
 		

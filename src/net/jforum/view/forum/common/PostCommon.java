@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.1 2004/11/30 01:19:00 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.2 2004/12/19 15:17:14 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -211,7 +211,7 @@ public class PostCommon
 		return text;
 	}
 	
-	public static Post fillPostFromRequest()
+	public static Post fillPostFromRequest() throws Exception
 	{
 		Post p = new Post();
 		p.setTime(new Date());
@@ -219,7 +219,7 @@ public class PostCommon
 		return fillPostFromRequest(p);
 	}
 	
-	public static Post fillPostFromRequest(Post p)
+	public static Post fillPostFromRequest(Post p) throws Exception
 	{
 		p.setSubject(JForum.getRequest().getParameter("subject"));
 		p.setBbCodeEnabled(JForum.getRequest().getParameter("disable_bbcode") != null ?  false : true);

@@ -81,7 +81,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.30 2004/11/30 01:18:51 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.31 2004/12/19 15:17:12 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -718,7 +718,7 @@ public class PostAction extends Command {
 		return false;
 	}
 
-	private boolean anonymousPost(int forumId) {
+	private boolean anonymousPost(int forumId) throws Exception {
 		// Check if anonymous posts are allowed
 		if (!this.isUserLogged()
 				&& !SecurityRepository.canAccess(SecurityConstants.PERM_ANONYMOUS_POST, Integer.toString(forumId))) {
