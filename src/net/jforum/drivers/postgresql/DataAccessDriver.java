@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) 2003, 2004, Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -47,7 +47,7 @@ import net.jforum.drivers.postgresql.security.UserSecurityModel;
 
 /**
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.4 2004/06/02 03:56:10 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.5 2004/09/06 00:03:37 rafaelsteil Exp $
  */
 public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDriver
 {
@@ -60,6 +60,7 @@ public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDrive
 	private static GroupSecurityModel groupSecurityModel = new GroupSecurityModel();
 	private static UserSecurityModel userSecurityModel = new UserSecurityModel();
 	private static CategoryModel categoryModel = new CategoryModel();
+	private static PrivateMessageModel pmModel = new PrivateMessageModel();
 
 	/** 
 	 * @see net.jforum.model.DataAccessDriver#newPostModel()
@@ -131,5 +132,10 @@ public class DataAccessDriver extends net.jforum.drivers.generic.DataAccessDrive
 	public net.jforum.model.CategoryModel newCategoryModel()
 	{
 		return categoryModel;
+	}
+	
+	public net.jforum.model.PrivateMessageModel newPrivateMessageModel()
+	{
+		return pmModel;
 	}
 }

@@ -40,7 +40,7 @@ ConfigModel.update = UPDATE jforum_config SET config_name = ?, config_value = ? 
 # ##########
 # UserModel
 # ##########
-UserModel.selectById = SELECT COUNT(pm.privmsgs_to_userid) private_messages, u.* \
+UserModel.selectById = SELECT COUNT(pm.privmsgs_to_userid) AS private_messages, u.* \
 	FROM jforum_users u \
 	LEFT JOIN jforum_privmsgs pm ON pm.privmsgs_type = 1 AND pm.privmsgs_to_userid = u.user_id \
 	WHERE u.user_id = ? \
@@ -54,7 +54,7 @@ UserModel.decrementPosts = UPDATE jforum_users SET user_posts = user_posts - 1 W
 UserModel.rankingId = UPDATE jforum_users SET rank_id = ? WHERE user_id = ?
 UserModel.activeStatus = UPDATE jforum_users SET user_active = ? WHERE user_id = ?
 UserModel.addNew = INSERT INTO jforum_users (username, user_password, user_email, user_regdate) VALUES (?, ?, ?, ?)
-UserModel.findByName = SELECT user_id, username, user_email FROM jforum_users WHERE username LIKE ?
+UserModel.findByName = SELECT user_id, username, user_email FROM jforum_users WHERE UPPER(username) LIKE UPPER(?)
 # Added by Pieter for external login support:
 UserModel.selectByName = SELECT * FROM jforum_users WHERE username = ?
 UserModel.addNewWithId = INSERT INTO jforum_users (username, user_password, user_email, user_regdate, user_id) VALUES (?, ?, ?, ?, ?)

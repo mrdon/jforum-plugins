@@ -325,7 +325,7 @@ CREATE TABLE jforum_vote_desc (
 -- Table structure for table 'jforum_vote_results'
 --
 
-CREATE TABLE jforum_vote_resutls (
+CREATE TABLE jforum_vote_results (
   vote_id INTEGER NOT NULL DEFAULT 0,
   vote_option_id INTEGER NOT NULL DEFAULT 0,
   vote_option_text VARCHAR(255) NOT NULL DEFAULT '',
