@@ -48,6 +48,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -64,7 +65,7 @@ import org.apache.commons.fileupload.FileUploadException;
 
 /**
  * @author Rafael Steil
- * @version $Id: ActionServletRequest.java,v 1.10 2004/11/21 17:13:45 rafaelsteil Exp $
+ * @version $Id: ActionServletRequest.java,v 1.11 2004/11/30 01:18:44 rafaelsteil Exp $
  */
 public class ActionServletRequest extends HttpServletRequestWrapper 
 {
@@ -207,7 +208,7 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 		}
 	}
 	
-	private HashMap query;
+	private Map query;
 	
 	/**
 	 * Default constructor.
@@ -308,12 +309,35 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 		}
 	}
 
-	/*
+	/**
 	 * @see javax.servlet.ServletRequest#getParameter(java.lang.String)
 	 */
 	public String getParameter(String parameter) 
 	{
 		return (String)this.query.get(parameter);
+	}
+	
+	/**
+	 * Gets all parameters of the current request. 
+	 * 
+	 * @return <code>java.util.Map</code> with all request
+	 * data.
+	 */
+	public Map dumpRequest()
+	{
+		return this.query;
+	}
+	
+	/**
+	 * Restores a request "dump".
+	 * 
+	 * @param query A <code>java.util.Map</code> with all request
+	 * data. Usually it will be the result of a previous call
+	 * to @link #dumpRequest() 
+	 */
+	public void restoreDump(Map query)
+	{
+		this.query = query;
 	}
 	
 	/**

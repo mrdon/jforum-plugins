@@ -54,12 +54,13 @@ import net.jforum.repository.ForumRepository;
 import net.jforum.repository.TopicRepository;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.view.forum.common.TopicsCommon;
 
 /**
  * Display a list of recent Topics
  * 
  * @author James Yong
- * @version $Id: RecentTopicsAction.java,v 1.3 2004/11/06 19:04:41 rafaelsteil Exp $
+ * @version $Id: RecentTopicsAction.java,v 1.4 2004/11/30 01:18:49 rafaelsteil Exp $
  */
 public class RecentTopicsAction extends Command 
 {

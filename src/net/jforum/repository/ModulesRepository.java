@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) 2003, 2004 Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -36,60 +36,45 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on 21/10/2004 00:10:00
+ * Created on 29/11/2004 22:53:28
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.util.rss;
+package net.jforum.repository;
 
-import java.util.Iterator;
-import java.util.List;
+import java.io.IOException;
+import java.util.Properties;
 
-import net.jforum.entities.Topic;
-import net.jforum.util.preferences.ConfigKeys;
-import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.view.forum.common.ViewCommon;
+import net.jforum.ConfigLoader;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicRSS.java,v 1.11 2004/11/30 01:18:52 rafaelsteil Exp $
+ * @version $Id: ModulesRepository.java,v 1.1 2004/11/30 01:18:55 rafaelsteil Exp $
  */
-public class TopicRSS extends GenericRSS 
+public class ModulesRepository 
 {
-	private List topics;
-	private RSS rss;
-	private String forumLink;
+	private static Properties modulesMapping;
 	
-	public TopicRSS(String title, String description, int forumId, List topics)
+	/**
+	 * Loads all modules mapping.
+	 * 
+	 * @param baseDir The directory where the file "modulesMapping.properties"
+	 * is placed.
+	 * @throws IOException
+	 */
+	public static void init(String baseDir) throws IOException
 	{
-		this.topics = topics;
-		this.forumLink = ViewCommon.getForumLink();
-		
-		this.rss = new RSS(title, description, 
-				SystemGlobals.getValue(ConfigKeys.ENCODING), 
-				this.forumLink + "forums/show/" + forumId 
-				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
-		
-		this.prepareRSS();
+		modulesMapping = ConfigLoader.loadModulesMapping(baseDir);
 	}
 	
-	private void prepareRSS()
-	{
-		for (Iterator iter = topics.iterator(); iter.hasNext(); ) {
-			Topic t = (Topic)iter.next();
-			
-			RSSItem item = new RSSItem();
-			item.setAuthor(t.getPostedBy().getUsername());
-			item.setPublishDate(RSSUtils.formatDate(t.getTime()));
-			item.setLink(this.forumLink + "posts/list/" + t.getId()
-					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
-			item.setTitle(t.getTitle());
-			item.setContentType(RSSAware.CONTENT_HTML);
-			item.setDescription(item.getTitle());
-			
-			this.rss.addItem(item);
-		}
-		
-		super.setRSS(this.rss);
+	/**
+	 * Gets the fully qualified name of some given module name.
+	 * 
+	 * @param moduleName The module's name to get its class name
+	 * @return The class name associated to the module name passed
+	 * as argument, or <code>null</code> if not found.
+	 */
+	public static String getModuleClass(String moduleName) {
+		return modulesMapping.getProperty(moduleName);
 	}
 }

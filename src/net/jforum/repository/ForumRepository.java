@@ -68,7 +68,7 @@ import net.jforum.security.SecurityConstants;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.17 2004/11/18 01:31:45 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.18 2004/11/30 01:18:54 rafaelsteil Exp $
  */
 public class ForumRepository 
 {
@@ -94,33 +94,6 @@ public class ForumRepository
 		
 		instance.loadCategories(cm);
 		instance.loadForums(fm);
-	}
-	
-	/**
-	 * @see #isForumAccessible(int, int, int)
-	 */
-	public static boolean isForumAccessible(int categoryId, int forumId)
-	{
-		return isForumAccessible(SessionFacade.getUserSession().getUserId(), categoryId, forumId);
-	}
-	
-	/**
-	 * Checks if the current user has access rights to the forum.
-	 *
-	 * @param userId The id of the user to check for access rights
-	 * @param categoryId The id of the category to which the forum belongs to
-	 * @param forumId The forum id to check
-	 * @return <code>true</code> if access is allowed, and <code>false</code> in all
-	 * other cases. 
-	 */
-	public static boolean isForumAccessible(int userId, int categoryId, int forumId)
-	{
-		Category c = (Category)categoriesMap.get(new Integer(categoryId));
-		Forum f = c.getForum(forumId);
-		
-		PermissionControl pc = SecurityRepository.get(userId);
-
-		return pc.canAccess(SecurityConstants.PERM_FORUM, Integer.toString(f.getId()));
 	}
 
 	/**
@@ -165,26 +138,11 @@ public class ForumRepository
 		}
 		
 		if (ignorePermissions) {
-			return new Category(c);
+			return c;
 		}
 		
 		if (!isCategoryAccessible(userId, categoryId)) {
 			return null;
-		}
-		
-		c = new Category(c);
-		validateForums(c, userId);
-		
-		return c;
-	}
-	
-	private static Category validateForums(Category c, int userId)
-	{
-		for (Iterator iter = c.getForums().iterator(); iter.hasNext(); ) {
-			Forum f = (Forum)iter.next();
-			if (!isForumAccessible(userId, c.getId(), f.getId())) {
-				iter.remove();
-			}
 		}
 		
 		return c;
@@ -229,16 +187,15 @@ public class ForumRepository
 			return new ArrayList(categoriesMap.values());
 		}
 		
-		List l = new ArrayList();
-		
 		PermissionControl pc = SecurityRepository.get(userId);
+		List l = new ArrayList();
 		
 		Iterator iter = categoriesMap.values().iterator();
 		while (iter.hasNext()) {
 			Category c = (Category)iter.next();
 			
 			if (isCategoryAccessible(pc, c.getId())) {
-				l.add(validateForums(new Category(c), userId));
+				l.add(c);
 			}
 		}
 		
@@ -246,6 +203,13 @@ public class ForumRepository
 	}
 
 	/**
+	 * Get all categories.
+	 * 
+	 * @param ignorePermissions Set to <code>true</code> if the permission
+	 * control should be bypassed. This method will make a call to
+	 * <code>SessionFacade.getUserSession().getUserId()</code> to access
+	 * the id of the user who is requesting the categories. 
+	 * 
 	 * @see #getAllCategories(int, boolean)
 	 */
 	public static List getAllCategories(boolean ignorePermissions)
@@ -254,6 +218,10 @@ public class ForumRepository
 	}
 	
 	/**
+	 * Get all available categories to the user. 
+	 * Calling this method has the same result of a call
+	 * to @link #getAllCategories(boolean)
+	 * 
 	 * @see #getAllCategories(boolean)
 	 */
 	public static List getAllCategories()
@@ -262,14 +230,16 @@ public class ForumRepository
 	}
 
 	/**
-	 * Updates some category
+	 * Updates some category.
+	 * This method only updated the "name" and "order" fields. 
+	 *  
 	 * @param c The category to update. The method will search for a category
 	 * with the same id and update its data.
 	 * @throws <code>CategoryNotFoundException</code> if the category is not found in the cache. 
 	 */
 	public static void reloadCategory(Category c)
 	{
-		Category currentCategory = getCategory(c.getId());
+		Category currentCategory = (Category)categoriesMap.get(new Integer(c.getId()));
 		
 		if (currentCategory == null) {
 			throw new CategoryNotFoundException("Category #" + c.getId() + " was not found in the cache");
@@ -287,6 +257,13 @@ public class ForumRepository
 	public static void removeCategory(Category c)
 	{
 		categoriesMap.remove(new Integer(c.getId()));
+		
+		for (Iterator iter = forumCategoryRelation.values().iterator(); iter.hasNext(); ) {
+			int id = ((Integer)iter.next()).intValue();
+			if (id == c.getId()) {
+				iter.remove();
+			}
+		}
 	}
 	
 	/**
@@ -302,12 +279,29 @@ public class ForumRepository
 	 * Gets a specific forum from the cache.	 
 	 * 
 	 * @param forumId The forum's ID to get
-	 * @return <code>net.jforum.Forum</code> object instance
+	 * @return <code>net.jforum.Forum</code> object instance or <code>null</code>
+	 * if the forum was not found or is not accessible to the user.
 	 */
 	public static Forum getForum(int forumId)
 	{
 		int categoryId = ((Integer)forumCategoryRelation.get(new Integer(forumId))).intValue();
-		return getCategory(true, categoryId).getForum(forumId);
+		return ((Category)categoriesMap.get(new Integer(categoryId))).getForum(forumId);
+	}
+	
+	public static boolean isForumAccessible(int forumId)
+	{
+		return isForumAccessible(SessionFacade.getUserSession().getUserId(), forumId);
+	}
+	
+	public static boolean isForumAccessible(int userId, int forumId)
+	{
+		int categoryId = ((Integer)forumCategoryRelation.get(new Integer(forumId))).intValue();
+		return isForumAccessible(userId, categoryId, forumId);
+	}
+	
+	public static boolean isForumAccessible(int userId, int categoryId, int forumId)
+	{
+		return ((Category)categoriesMap.get(new Integer(categoryId))).getForum(userId, forumId) != null;
 	}
 	
 	/**

@@ -36,60 +36,21 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on 21/10/2004 00:10:00
+ * Created on 29/11/2004 22:40:05
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.util.rss;
-
-import java.util.Iterator;
-import java.util.List;
-
-import net.jforum.entities.Topic;
-import net.jforum.util.preferences.ConfigKeys;
-import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.view.forum.common.ViewCommon;
+package net.jforum.exceptions;
 
 /**
+ * Thrown when a call to @link net.jforum.view.forum.ViewCommon#reprocessRequest()
+ * is made and no request dump exists or is invalid.
+ * 
  * @author Rafael Steil
- * @version $Id: TopicRSS.java,v 1.11 2004/11/30 01:18:52 rafaelsteil Exp $
+ * @version $Id: RequestEmptyException.java,v 1.1 2004/11/30 01:19:04 rafaelsteil Exp $
  */
-public class TopicRSS extends GenericRSS 
-{
-	private List topics;
-	private RSS rss;
-	private String forumLink;
-	
-	public TopicRSS(String title, String description, int forumId, List topics)
-	{
-		this.topics = topics;
-		this.forumLink = ViewCommon.getForumLink();
-		
-		this.rss = new RSS(title, description, 
-				SystemGlobals.getValue(ConfigKeys.ENCODING), 
-				this.forumLink + "forums/show/" + forumId 
-				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
-		
-		this.prepareRSS();
-	}
-	
-	private void prepareRSS()
-	{
-		for (Iterator iter = topics.iterator(); iter.hasNext(); ) {
-			Topic t = (Topic)iter.next();
-			
-			RSSItem item = new RSSItem();
-			item.setAuthor(t.getPostedBy().getUsername());
-			item.setPublishDate(RSSUtils.formatDate(t.getTime()));
-			item.setLink(this.forumLink + "posts/list/" + t.getId()
-					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
-			item.setTitle(t.getTitle());
-			item.setContentType(RSSAware.CONTENT_HTML);
-			item.setDescription(item.getTitle());
-			
-			this.rss.addItem(item);
-		}
-		
-		super.setRSS(this.rss);
+public class RequestEmptyException extends RuntimeException {
+	public RequestEmptyException(String message) {
+		super(message);
 	}
 }

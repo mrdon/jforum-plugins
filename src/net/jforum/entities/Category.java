@@ -42,20 +42,34 @@
  */
 package net.jforum.entities;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import net.jforum.view.forum.ForumOrderComparator;
+import net.jforum.repository.SecurityRepository;
+import net.jforum.security.PermissionControl;
+import net.jforum.security.SecurityConstants;
+import net.jforum.util.ForumOrderComparator;
 
 /**
  * Represents a category in the System.
+ * Each category holds a reference to all its forums, which 
+ * can be retrieved by calling either @link #getForums(), 
+ * @link #getForum(int) and related methods. 
+ * 
+ * <br/>
+ * 
+ * This class also controls the access to its forums, so a call
+ * to @link #getForums() will only return the forums accessible
+ * to the user who make the call tho the method. 
  * 
  * @author Rafael Steil
- * @version $Id: Category.java,v 1.7 2004/11/18 01:31:45 rafaelsteil Exp $
+ * @version $Id: Category.java,v 1.8 2004/11/30 01:18:56 rafaelsteil Exp $
  */
 public class Category 
 {
@@ -145,25 +159,69 @@ public class Category
 		this.forums.remove(new Forum(forumId));
 		this.forumsIdMap.remove(new Integer(forumId));
 	}
-	
+
 	/**
 	 * Gets a forum.
 	 * 
-	 * @param forumId The id of the forum to retrieve
+	 * @param userId The user's id who is trying to see the forum
+	 * @param forumId The id of the forum to get
 	 * @return The <code>Forum</code> instance if found, or <code>null</code>
 	 * otherwhise.
+	 * @see #getForum(int)
+	 */
+	public Forum getForum(int userId, int forumId)
+	{
+		PermissionControl pc = SecurityRepository.get(userId);
+		if (pc.canAccess(SecurityConstants.PERM_FORUM, Integer.toString(forumId))) {
+			return (Forum)this.forumsIdMap.get(new Integer(forumId));
+		}
+		
+		return null;
+	}
+
+	/**
+	 * Gets a forum.
+	 * 
+	 * @param forumId The forum's id 
+	 * @return The requested forum, if found, regardless it is 
+	 * accessible to the user or not, or <code>null</code> if
+	 * the forum does not exists.
 	 */
 	public Forum getForum(int forumId)
 	{
 		return (Forum)this.forumsIdMap.get(new Integer(forumId));
 	}
-	
+
 	/**
-	 * Gets all forums from this category
-	 * @return 
+	 * Get all forums from this category.
+	 * 
+	 * @return All forums, regardless it is accessible 
+	 * to the user or not.
 	 */
-	public Collection getForums() {
+	public Collection getForums()
+	{
 		return this.forums;
+	}
+
+	/**
+	 * Gets all forums from this category.
+	 * 
+	 * @return The forums available to the user who make the call
+	 * @see #getForums() 
+	 */
+	public Collection getForums(int userId) 
+	{
+		PermissionControl pc = SecurityRepository.get(userId);
+		List forums = new ArrayList();
+
+		for (Iterator iter = this.forums.iterator(); iter.hasNext(); ) {
+			Forum f = (Forum)iter.next();
+			if (pc.canAccess(SecurityConstants.PERM_FORUM, Integer.toString(f.getId()))) {
+				forums.add(f);
+			}
+		}
+		
+		return forums;
 	}
 
 	/** 

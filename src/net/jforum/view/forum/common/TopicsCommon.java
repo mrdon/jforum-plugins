@@ -40,7 +40,7 @@
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.view.forum;
+package net.jforum.view.forum.common;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,12 +60,13 @@ import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.view.forum.ModerationHelper;
 
 /**
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.6 2004/11/14 16:28:45 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.1 2004/11/30 01:19:00 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {

@@ -60,10 +60,11 @@ import net.jforum.repository.SecurityRepository;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.view.forum.common.TopicsCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.10 2004/11/16 23:58:50 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.11 2004/11/30 01:18:51 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {

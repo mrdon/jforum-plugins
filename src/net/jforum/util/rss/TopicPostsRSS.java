@@ -48,14 +48,14 @@ import java.util.List;
 import net.jforum.entities.Post;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.view.forum.PostCommon;
-import net.jforum.view.forum.ViewCommon;
+import net.jforum.view.forum.common.PostCommon;
+import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * RSS for the messages of some topic
  * 
  * @author Rafael Steil
- * @version $Id: TopicPostsRSS.java,v 1.2 2004/10/24 17:59:56 rafaelsteil Exp $
+ * @version $Id: TopicPostsRSS.java,v 1.3 2004/11/30 01:18:52 rafaelsteil Exp $
  */
 public class TopicPostsRSS extends GenericRSS 
 {

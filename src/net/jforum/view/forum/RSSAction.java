@@ -59,11 +59,13 @@ import net.jforum.util.rss.ForumRSS;
 import net.jforum.util.rss.RSSAware;
 import net.jforum.util.rss.TopicPostsRSS;
 import net.jforum.util.rss.TopicRSS;
+import net.jforum.view.forum.common.ForumCommon;
+import net.jforum.view.forum.common.TopicsCommon;
 import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: RSSAction.java,v 1.8 2004/11/13 20:12:25 rafaelsteil Exp $
+ * @version $Id: RSSAction.java,v 1.9 2004/11/30 01:18:50 rafaelsteil Exp $
  */
 public class RSSAction extends Command 
 {

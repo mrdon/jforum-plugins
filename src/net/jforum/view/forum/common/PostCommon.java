@@ -40,7 +40,7 @@
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.view.forum;
+package net.jforum.view.forum.common;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.14 2004/11/21 17:13:48 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.1 2004/11/30 01:19:00 rafaelsteil Exp $
  */
 public class PostCommon
 {

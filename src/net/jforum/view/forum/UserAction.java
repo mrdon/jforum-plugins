@@ -67,10 +67,12 @@ import net.jforum.util.mail.EmailSenderTask;
 import net.jforum.util.mail.LostPasswordSpammer;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.view.forum.common.UserCommon;
+import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.18 2004/11/23 12:48:03 jamesyong Exp $
+ * @version $Id: UserAction.java,v 1.19 2004/11/30 01:18:48 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -103,7 +105,7 @@ public class UserAction extends Command
 	public void editSave() throws Exception 
 	{
 		int userId = Integer.parseInt(JForum.getRequest().getParameter("user_id"));
-		List warns = ViewCommon.saveUser(userId);
+		List warns = UserCommon.saveUser(userId);
 
 		if (warns.size() > 0) {
 			JForum.getContext().put("warns", warns);
@@ -320,6 +322,9 @@ public class UserAction extends Command
 						JForum.getRequest().getParameter("returnPath"));
 			}
 		} 
+		else if (ViewCommon.needReprocessRequest()) {
+			ViewCommon.reprocessRequest();
+		}
 		else if (JForum.getRequest().getParameter("returnPath") != null) {
 			JForum.setRedirect(JForum.getRequest().getParameter("returnPath"));
 		}

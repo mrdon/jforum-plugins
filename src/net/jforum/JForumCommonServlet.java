@@ -43,9 +43,7 @@
 package net.jforum;
 
 import java.io.File;
-import java.io.IOException;
 import java.sql.Connection;
-import java.util.Properties;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -55,6 +53,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.exceptions.ForumException;
 import net.jforum.repository.BBCodeRepository;
+import net.jforum.repository.ModulesRepository;
 import net.jforum.util.I18n;
 import net.jforum.util.bbcode.BBCodeHandler;
 import net.jforum.util.preferences.ConfigKeys;
@@ -68,11 +67,9 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumCommonServlet.java,v 1.16 2004/11/21 17:13:44 rafaelsteil Exp $
+ * @version $Id: JForumCommonServlet.java,v 1.17 2004/11/30 01:18:44 rafaelsteil Exp $
  */
 public class JForumCommonServlet extends HttpServlet {
-    private static Properties modulesMapping;
-
     protected boolean debug;
 
     // Thread local implementation
@@ -100,7 +97,7 @@ public class JForumCommonServlet extends HttpServlet {
                     + "/templates"));
             templateCfg.setTemplateUpdateDelay(0);
 
-            this.loadModulesMapping(SystemGlobals.getApplicationResourceDir());
+            ModulesRepository.init(SystemGlobals.getApplicationResourceDir() + "/config");
 
             SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
             SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
@@ -119,23 +116,12 @@ public class JForumCommonServlet extends HttpServlet {
         }
     }
 
-    /**
-     * Loads modules mapping file
-     */
-    protected void loadModulesMapping(String baseDir) throws IOException {
-        modulesMapping = ConfigLoader.loadModulesMapping(baseDir + "/config");
-    }
-
     protected void loadConfigStuff() throws Exception {
         ConfigLoader.loadUrlPatterns();
         I18n.load();
 
         // BB Code
         BBCodeRepository.setBBCollection(new BBCodeHandler().parse());
-    }
-
-    protected String getModuleClass(String moduleName) {
-        return modulesMapping.getProperty(moduleName);
     }
 
     /**

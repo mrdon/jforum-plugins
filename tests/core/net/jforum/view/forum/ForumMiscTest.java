@@ -47,11 +47,12 @@ import java.util.Map;
 
 import net.jforum.entities.Forum;
 import net.jforum.entities.LastPostInfo;
+import net.jforum.view.forum.common.ForumCommon;
 import junit.framework.TestCase;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumMiscTest.java,v 1.1 2004/11/13 03:14:04 rafaelsteil Exp $
+ * @version $Id: ForumMiscTest.java,v 1.2 2004/11/30 01:19:03 rafaelsteil Exp $
  */
 public class ForumMiscTest extends TestCase 
 {

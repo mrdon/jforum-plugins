@@ -40,7 +40,7 @@
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.view.forum;
+package net.jforum.util;
 
 import java.util.Comparator;
 
@@ -48,7 +48,7 @@ import net.jforum.entities.Forum;
 /**
  * @author James Yong Boon Leong
  * @author Rafael Steil
- * @version $Id: ForumOrderComparator.java,v 1.4 2004/11/18 01:36:09 rafaelsteil Exp $
+ * @version $Id: ForumOrderComparator.java,v 1.1 2004/11/30 01:19:06 rafaelsteil Exp $
  */
 public class ForumOrderComparator implements Comparator {
 	

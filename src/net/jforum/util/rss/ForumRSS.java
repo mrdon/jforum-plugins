@@ -53,13 +53,13 @@ import net.jforum.repository.ForumRepository;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.view.forum.ViewCommon;
+import net.jforum.view.forum.common.ViewCommon;
 
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumRSS.java,v 1.14 2004/11/13 20:12:27 rafaelsteil Exp $
+ * @version $Id: ForumRSS.java,v 1.15 2004/11/30 01:18:53 rafaelsteil Exp $
  */
 public class ForumRSS extends GenericRSS 
 {

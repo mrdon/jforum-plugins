@@ -66,9 +66,12 @@ import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.view.forum.common.ForumCommon;
+import net.jforum.view.forum.common.TopicsCommon;
+import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.19 2004/11/14 16:28:45 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.20 2004/11/30 01:18:46 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {

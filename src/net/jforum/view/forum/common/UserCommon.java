@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) 2003, 2004 Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -36,11 +36,11 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * This file creation date: 02/04/2004 - 20:31:35
+ * Created on 29/11/2004 23:07:10
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.view.forum;
+package net.jforum.view.forum.common;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
@@ -69,12 +69,12 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.20 2004/11/10 23:03:42 rafaelsteil Exp $
+ * @version $Id: UserCommon.java,v 1.1 2004/11/30 01:18:58 rafaelsteil Exp $
  */
-public final class ViewCommon
+public class UserCommon 
 {
-	private static final Logger logger = Logger.getLogger(ViewCommon.class);
-	
+	private static final Logger logger = Logger.getLogger(UserCommon.class);
+
 	/**
 	 * Updates the user information
 	 * 
@@ -113,7 +113,7 @@ public final class ViewCommon
 		if (website != null && !"".equals(website.trim()) && !website.toLowerCase().startsWith("http://")) {
 			website = "http://" + website;
 		}
-
+	
 		u.setWebSite(website);
 		
 		if (JForum.getRequest().getParameter("new_password") != null && JForum.getRequest().getParameter("new_password").length() > 0) {
@@ -126,14 +126,14 @@ public final class ViewCommon
 			
 			u.setAvatar(null);
 		}
-
+	
 		List warns = new ArrayList();
 		if (JForum.getRequest().getObjectParameter("avatar") != null) {
 			try {
-				handleAvatar(u);
+				UserCommon.handleAvatar(u);
 			}
 			catch (Exception e) {
-				logger.warn("Problems while uploading the avatar: " + e);
+				UserCommon.logger.warn("Problems while uploading the avatar: " + e);
 				warns.add(I18n.getMessage("User.avatarUploadError"));
 			}
 		}
@@ -184,9 +184,9 @@ public final class ViewCommon
 			if (extension.toLowerCase().equals("gif")) {
 				extension = "png";
 			}
-
+	
 			String avatarFinalFileName = SystemGlobals.getApplicationPath() +"/images/avatar/"+ fileName +"."+ extension;
-
+	
 			// Read the avatar and stores it into a temporary file
 			BufferedInputStream inputStream = new BufferedInputStream((InputStream)JForum.getRequest().getObjectParameter("avatar"));
 			FileOutputStream outputStream = new FileOutputStream(avatarTmpFileName);
@@ -204,63 +204,15 @@ public final class ViewCommon
 			// OK, time to check and process the avatar size
 			int maxWidth = SystemGlobals.getIntValue(ConfigKeys.AVATAR_MAX_WIDTH);
 			int maxHeight = SystemGlobals.getIntValue(ConfigKeys.AVATAR_MAX_HEIGHT);
-
+	
 			BufferedImage image = ImageUtils.resizeImage(avatarTmpFileName, type, maxWidth, maxHeight);
 			ImageUtils.saveImage(image, avatarFinalFileName, type);
-
+	
 			u.setAvatar(fileName +"."+ extension);
 			
 			// Delete de temporary file
 			new File(avatarTmpFileName).delete();
 		}
 	}
-	
-	public static void contextToLogin() 
-	{
-		JForum.getContext().put("moduleAction", "forum_login.htm");
-		String uri = JForum.getRequest().getRequestURI();
-		String query = JForum.getRequest().getQueryString();
-		String path = query == null ? uri : uri + "?" + query;
 
-		JForum.getContext().put("returnPath", path);
-	}
-	
-	/**
-	 * Returns the initial page to start fetching records from.
-	 *   
-	 * @return The initial page number
-	 */
-	public static int getStartPage()
-	{
-		String s = JForum.getRequest().getParameter("start");
-		int start = 0;
-		
-		if (s == null || s.trim().equals("")) {
-			start = 0;
-		}
-		else {
-			start = Integer.parseInt(s);
-			
-			if (start < 0) {
-				start = 0;
-			}
-		}
-		
-		return start;
-	}
-	
-	/**
-	 * Gets the forum base link.
-	 * The returned link has a trailing slash
-	 * @return The forum link, with the trailing slash
-	 */
-	public static String getForumLink()
-	{
-		String forumLink = SystemGlobals.getValue(ConfigKeys.FORUM_LINK);
-		if (!forumLink.endsWith("/")) {
-			forumLink += "/";
-		}
-		
-		return forumLink;
-	}
 }

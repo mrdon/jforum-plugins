@@ -52,6 +52,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.exceptions.ForumException;
+import net.jforum.repository.ModulesRepository;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -59,7 +60,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallServlet.java,v 1.8 2004/11/21 17:13:45 rafaelsteil Exp $
+ * @version $Id: InstallServlet.java,v 1.9 2004/11/30 01:18:45 rafaelsteil Exp $
  */
 public class InstallServlet extends JForumCommonServlet
 {
@@ -107,7 +108,7 @@ public class InstallServlet extends JForumCommonServlet
 		}
 		else {		
 			// Module and Action
-			String moduleClass = this.getModuleClass(request.getModule());
+			String moduleClass = ModulesRepository.getModuleClass(request.getModule());
 			
 			InstallServlet.getContext().put("moduleName", request.getModule());
 			InstallServlet.getContext().put("action", InstallServlet.getRequest().getAction());

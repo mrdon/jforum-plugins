@@ -55,10 +55,11 @@ import net.jforum.repository.SecurityRepository;
 import net.jforum.repository.TopicRepository;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
+import net.jforum.view.forum.common.ForumCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationHelper.java,v 1.9 2004/11/13 20:12:25 rafaelsteil Exp $
+ * @version $Id: ModerationHelper.java,v 1.10 2004/11/30 01:18:50 rafaelsteil Exp $
  */
 public class ModerationHelper 
 {

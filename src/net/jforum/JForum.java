@@ -59,6 +59,7 @@ import net.jforum.entities.UserSession;
 import net.jforum.exceptions.ForumException;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.UserSessionModel;
+import net.jforum.repository.ModulesRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.util.I18n;
 import net.jforum.util.MD5;
@@ -70,7 +71,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.50 2004/11/21 17:13:44 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.51 2004/11/30 01:18:44 rafaelsteil Exp $
  */
 public class JForum extends JForumCommonServlet 
 {
@@ -229,7 +230,7 @@ public class JForum extends JForumCommonServlet
 			String module = request.getModule();
 			
 			// Gets the module class name
-			String moduleClass = this.getModuleClass(module);
+			String moduleClass = ModulesRepository.getModuleClass(module);
 			
 			JForum.getContext().put("moduleName", module);
 			JForum.getContext().put("action", JForum.getRequest().getAction());
@@ -247,10 +248,10 @@ public class JForum extends JForumCommonServlet
 				if (dh.getRedirectTo() == null) {
 					String contentType = dh.getContentType();
 					if (contentType == null) {
-						contentType = "text/html";
+						contentType = "text/html; charset=" + encoding;
 					}
 					
-					response.setContentType(contentType + ";charset=" + encoding);
+					response.setContentType(contentType);
 
 					template.process(JForum.getContext(), out);
 					out.flush();

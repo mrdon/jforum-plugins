@@ -58,11 +58,11 @@ import net.jforum.security.Role;
 import net.jforum.security.RoleCollection;
 import net.jforum.security.RoleValue;
 import net.jforum.security.SecurityConstants;
-import net.jforum.view.forum.ForumCommon;
+import net.jforum.view.forum.common.ForumCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumRepositoryTest.java,v 1.4 2004/11/21 17:13:49 rafaelsteil Exp $
+ * @version $Id: ForumRepositoryTest.java,v 1.5 2004/11/30 01:18:57 rafaelsteil Exp $
  */
 public class ForumRepositoryTest extends TestCase 
 {
@@ -205,18 +205,7 @@ public class ForumRepositoryTest extends TestCase
 			}
 		}
 	}
-	
-	public void testCategoryImmutability()
-	{
-		List categories = ForumRepository.getAllCategories(0, true);
-		for (Iterator iter = categories.iterator(); iter.hasNext(); ) {
-			Category c = (Category)iter.next();
-			c.setName("bleh");
 
-			assertNotSame("Category #" + c.getId() + " is not immuatble", c, ForumRepository.getCategory(true, c.getId()));
-		}
-	}
-	
 	/*
 	 * Check access rights for an user with full access to the categories
 	 */
@@ -300,7 +289,7 @@ public class ForumRepositoryTest extends TestCase
 		// Mixed Category
 		assertTrue(ForumRepository.isCategoryAccessible(GENERAL_USER, MIXED_CATEGORY_ID));
 		c = ForumRepository.getCategory(GENERAL_USER, false, MIXED_CATEGORY_ID);
-		assertEquals(1, c.getForums().size());
+		assertEquals(1, c.getForums(GENERAL_USER).size());
 		
 		assertNotNull(c.getForum(MIXED_OPEN_FORUM_ID));
 		assertFalse(ForumRepository.isForumAccessible(GENERAL_USER, c.getId(), MIXED_PRIVATE_FORUM_ID));

@@ -61,12 +61,13 @@ import net.jforum.util.I18n;
 import net.jforum.util.TreeGroup;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.view.forum.ViewCommon;
+import net.jforum.view.forum.common.UserCommon;
+import net.jforum.view.forum.common.ViewCommon;
 import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.9 2004/11/05 03:29:52 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.10 2004/11/30 01:19:07 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -168,7 +169,7 @@ public class UserAction extends Command
 	public void editSave() throws Exception
 	{
 		int userId = Integer.parseInt(JForum.getRequest().getParameter("user_id"));
-		ViewCommon.saveUser(userId);
+		UserCommon.saveUser(userId);
 
 		this.list();
 	}

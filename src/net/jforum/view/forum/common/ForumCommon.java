@@ -40,7 +40,7 @@
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.view.forum;
+package net.jforum.view.forum.common;
 
 import java.util.ArrayList;
 import java.util.HashMap;

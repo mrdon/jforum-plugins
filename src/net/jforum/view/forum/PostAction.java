@@ -73,12 +73,15 @@ import net.jforum.util.mail.EmailSenderTask;
 import net.jforum.util.mail.TopicSpammer;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.view.forum.common.PostCommon;
+import net.jforum.view.forum.common.TopicsCommon;
+import net.jforum.view.forum.common.ViewCommon;
 
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.29 2004/11/21 17:13:48 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.30 2004/11/30 01:18:51 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -420,10 +423,18 @@ public class PostAction extends Command {
 		}
 	}
 
-	public void insertSave() throws Exception {
+	public void insertSave() throws Exception 
+	{
+		int forumId = Integer.parseInt(JForum.getRequest().getParameter("forum_id"));
+
+		if (!this.anonymousPost(forumId)) {
+			SessionFacade.setAttribute(ConfigKeys.REQUEST_DUMP, JForum.getRequest().dumpRequest());
+			return;
+		}
+		
 		Topic t = new Topic();
 		t.setId(-1);
-		t.setForumId(Integer.parseInt(JForum.getRequest().getParameter("forum_id")));
+		t.setForumId(forumId);
 
 		if (!TopicsCommon.isTopicAccessible(t.getForumId())
 				|| this.isForumReadonly(t.getForumId(), JForum.getRequest().getParameter("topic_id") != null)) {

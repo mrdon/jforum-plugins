@@ -60,10 +60,12 @@ import net.jforum.util.mail.EmailSenderTask;
 import net.jforum.util.mail.PrivateMessageSpammer;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.view.forum.common.PostCommon;
+import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.7 2004/11/11 19:41:15 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.8 2004/11/30 01:18:48 rafaelsteil Exp $
  */
 public class PrivateMessageAction extends Command
 {
