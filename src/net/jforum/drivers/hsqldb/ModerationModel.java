@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -36,68 +36,25 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * This file creation date: 13/01/2004 / 20:23:52
+ * Created on Mar 24, 2005 12:42:56 PM
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.repository;
+package net.jforum.drivers.hsqldb;
 
-import java.util.Iterator;
 import java.util.List;
-
-import net.jforum.JForum;
-import net.jforum.cache.CacheEngine;
-import net.jforum.cache.Cacheable;
-import net.jforum.entities.Smilie;
-import net.jforum.exceptions.SmiliesLoadException;
-import net.jforum.model.DataAccessDriver;
 
 /**
  * @author Rafael Steil
- * @version $Id: SmiliesRepository.java,v 1.8 2005/03/24 16:03:29 rafaelsteil Exp $
+ * @version $Id: ModerationModel.java,v 1.1 2005/03/24 16:03:30 rafaelsteil Exp $
  */
-public class SmiliesRepository implements Cacheable
+public class ModerationModel extends net.jforum.drivers.generic.ModerationModel
 {
-	private static CacheEngine cache;
-	private static final String FQN = "smilies";
-	private static final String ENTRIES = "entries";
-	private static boolean contexted = false;
-
 	/**
-	 * @see net.jforum.cache.Cacheable#setCacheEngine(net.jforum.cache.CacheEngine)
+	 * @see net.jforum.model.ModerationModel#topicsByForum(int, int, int)
 	 */
-	public void setCacheEngine(CacheEngine engine)
+	public List topicsByForum(int forumId,int start,int count) throws Exception
 	{
-		cache = engine;
-	}
-	
-	public static void loadSmilies()
-	{
-		try {
-			cache.add(FQN, ENTRIES, DataAccessDriver.getInstance().newSmilieModel().selectAll());
-			contexted = false;
-		}
-		catch (Exception e) {
-			throw new SmiliesLoadException("Error while loading smilies: " + e);
-		}
-	}
-	
-	public static List getSmilies()
-	{
-		List list = (List)cache.get(FQN, ENTRIES);
-		if (!contexted) {
-			String context = JForum.getRequest().getContextPath();
-			
-			for (Iterator iter = list.iterator(); iter.hasNext(); ) {
-				Smilie s = (Smilie)iter.next();
-				s.setUrl(s.getUrl().replaceAll("#CONTEXT#", context)
-						.replaceAll("\\\\", ""));
-			}
-			
-			cache.add(FQN, ENTRIES, list);
-			contexted = true;
-		}
-		
-		return list;
+		return super.topicsByForum(start, count, forumId);
 	}
 }

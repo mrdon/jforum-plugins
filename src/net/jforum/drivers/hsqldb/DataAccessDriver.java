@@ -42,17 +42,23 @@
  */
 package net.jforum.drivers.hsqldb;
 
-
 /**
  * @author Marc Wick
- * @version $Id: DataAccessDriver.java,v 1.4 2005/01/04 14:51:33 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.5 2005/03/24 16:03:29 rafaelsteil Exp $
  */
-public class DataAccessDriver extends
-		net.jforum.drivers.postgresql.DataAccessDriver {
+public class DataAccessDriver extends net.jforum.drivers.postgresql.DataAccessDriver {
 
 	private static PostModel postModel = new PostModel();
 	private static UserModel userModel = new UserModel();
 	private static TopicModel topicModel = new TopicModel();
+	private static ModerationModel moderationModel = new ModerationModel();
+
+	/**
+	 * @see net.jforum.model.DataAccessDriver#newModerationModel()
+	 */
+	public net.jforum.model.ModerationModel newModerationModel() {
+		return moderationModel;
+	}
 
 	/**
 	 * @see net.jforum.model.DataAccessDriver#newPostModel()

@@ -46,7 +46,7 @@ import java.util.List;
 
 /**
  * @author Andowson Chang
- * @version $Id: ModerationModel.java,v 1.3 2005/02/23 20:38:36 rafaelsteil Exp $
+ * @version $Id: ModerationModel.java,v 1.4 2005/03/24 16:03:30 rafaelsteil Exp $
  */
 public class ModerationModel extends net.jforum.drivers.generic.ModerationModel
 {	
@@ -55,6 +55,6 @@ public class ModerationModel extends net.jforum.drivers.generic.ModerationModel
 	 */
 	public List topicsByForum(int forumId, int start, int count) throws Exception
 	{
-		return super.topicsByForum(forumId, count, start + count);
+		return super.topicsByForum(forumId, count, (start > 0 ? start + count : 0));
 	}	
 }

@@ -110,3 +110,16 @@ CategoryModel.lastGeneratedCategoryId = SELECT max(categories_id) from jforum_ca
 # AttachmentModel
 # ################
 AttachmentModel.lastGeneratedAttachmentId = SELECT MAX(attach_id) FROM jforum_attach
+
+# ################
+# ModerationModel
+# ################
+ModerationModel.topicsByForum = SELECT LIMIT ? ? p.post_id, t.topic_id, t.topic_title, p.user_id, enable_bbcode, p.attach, \
+	enable_html, enable_smilies, pt.post_subject, pt.post_text, username \
+	FROM jforum_posts p, jforum_posts_text pt, jforum_users u, jforum_topics t \
+	WHERE p.post_id = pt.post_id \
+	AND p.topic_id = t.topic_id \
+	AND t.forum_id = ? \
+	AND p.user_id = u.user_id \
+	AND p.need_moderate = 1 \
+	ORDER BY t.topic_id, post_time ASC
