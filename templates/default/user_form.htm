@@ -230,7 +230,23 @@
 										<#else>
 											<img src="${contextPath}/images/avatar/${u.avatar}" border="0" /><br />
 										</#if>
-										<input type="checkbox" name="avatardel" />&nbsp;
+
+										<script language="javascript">
+										var avatarBkp = "";
+										
+										function clearAvatar(f)
+										{
+											if (f.avatardel.checked) {
+												avatarBkp = f.avatarUrl.value;
+												f.avatarUrl.value = '';
+											}
+											else {
+												f.avatarUrl.value = avatarBkp;
+											}
+										}
+										</script>
+
+										<input type="checkbox" name="avatardel" onClick="clearAvatar(this.form)"/>&nbsp;
 							
 										<span class="gensmall">${I18n.getMessage("User.removeAvatar")}</span>
 									</#if>
@@ -247,7 +263,7 @@
 
 				<tr>
 					<td class="row1"><span class="gen">${I18n.getMessage("User.avatarExternal")}:</span></td>
-					<td class="row2"><input class="post" style="WIDTH: 200px" type="text" name="avatarUrl" value="${u.avatar?default("")}"/></td>
+					<td class="row2"><input class="post" style="WIDTH: 200px" type="text" name="avatarUrl" value="<#if u.isExternalAvatar()>${u.avatar?default("")}</#if>"/></td>
 				</tr>
 
 				<tr>
