@@ -72,7 +72,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.25 2005/01/04 03:25:35 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.26 2005/01/04 21:36:25 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -174,7 +174,8 @@ public class ForumAction extends Command
 		int forumId = this.request.getIntParameter("forum_id");
 		
 		// The user can access this forum?
-		if (!SecurityRepository.canAccess(SecurityConstants.PERM_FORUM, Integer.toString(forumId))) {
+		Forum forum = ForumRepository.getForum(forumId);
+		if (forum == null || !ForumRepository.isCategoryAccessible(forum.getCategoryId())) {
 			new ModerationHelper().denied(I18n.getMessage("ForumListing.denied"));
 			return;
 		}
@@ -187,8 +188,6 @@ public class ForumAction extends Command
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 		int totalTopics = ForumRepository.getTotalTopics(forumId, true);
 		
-		Forum forum = ForumRepository.getForum(forumId);
-
 		this.context.put("topics", TopicsCommon.prepareTopics(tmpTopics));
 		this.context.put("allCategories", ForumCommon.getAllCategoriesAndForums(false));
 		this.context.put("forum", forum);

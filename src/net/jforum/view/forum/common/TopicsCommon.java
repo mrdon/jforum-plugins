@@ -50,10 +50,12 @@ import java.util.Map;
 
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
+import net.jforum.entities.Forum;
 import net.jforum.entities.Topic;
 import net.jforum.entities.UserSession;
 import net.jforum.model.DataAccessDriver;
 import net.jforum.model.TopicModel;
+import net.jforum.repository.ForumRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.repository.TopicRepository;
 import net.jforum.security.SecurityConstants;
@@ -66,7 +68,7 @@ import net.jforum.view.forum.ModerationHelper;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.3 2005/01/04 03:25:35 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.4 2005/01/04 21:36:25 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
@@ -187,7 +189,8 @@ public class TopicsCommon
 	 */
 	public static boolean isTopicAccessible(int forumId) throws Exception 
 	{
-		if (!SecurityRepository.canAccess(SecurityConstants.PERM_FORUM, Integer.toString(forumId))) {
+		Forum f = ForumRepository.getForum(forumId);
+		if (f == null || !ForumRepository.isCategoryAccessible(f.getCategoryId())) {
 			new ModerationHelper().denied(I18n.getMessage("PostShow.denied"));
 			return false;
 		}
