@@ -40,8 +40,6 @@
  * net.jforum.drivers.mysql.DataAccessDriver.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: DataAccessDriver.java,v 1.2 2004/04/21 23:57:19 rafaelsteil Exp $
  */
 package net.jforum.drivers.mysql;
 
@@ -50,6 +48,7 @@ import net.jforum.drivers.mysql.security.UserSecurityModel;
 
 /**
  * @author Rafael Steil
+ * @version $Id: DataAccessDriver.java,v 1.3 2004/05/21 00:24:09 rafaelsteil Exp $
  */
 public class DataAccessDriver extends net.jforum.model.DataAccessDriver 
 {
@@ -65,8 +64,9 @@ public class DataAccessDriver extends net.jforum.model.DataAccessDriver
 	private static SearchModel searchModel = new SearchModel();
 	private static UserSecurityModel userSecurityModel = new UserSecurityModel();
 	private static GroupSecurityModel groupSecurityModel = new GroupSecurityModel();
+	private static PrivateMessageModel privateMessageModel = new PrivateMessageModel();
 
-	/*
+	/**
 	 * @see net.jforum.model.DataAccessDriver#getForumModel()
 	 */
 	public net.jforum.model.ForumModel newForumModel() 
@@ -74,7 +74,7 @@ public class DataAccessDriver extends net.jforum.model.DataAccessDriver
 		return forumModel;	
 	}
 
-	/*
+	/**
 	 * @see net.jforum.model.DataAccessDriver#getGroupModel()
 	 */
 	public net.jforum.model.GroupModel newGroupModel() 
@@ -82,7 +82,7 @@ public class DataAccessDriver extends net.jforum.model.DataAccessDriver
 		return groupModel;
 	}
 
-	/*
+	/**
 	 * @see net.jforum.model.DataAccessDriver#getPostModel()
 	 */
 	public net.jforum.model.PostModel newPostModel() 
@@ -90,7 +90,7 @@ public class DataAccessDriver extends net.jforum.model.DataAccessDriver
 		return postModel;
 	}
 
-	/*
+	/**
 	 * @see net.jforum.model.DataAccessDriver#getRankingModel()
 	 */
 	public net.jforum.model.RankingModel newRankingModel() 
@@ -98,7 +98,7 @@ public class DataAccessDriver extends net.jforum.model.DataAccessDriver
 		return rankingModel;
 	}
 
-	/*
+	/**
 	 * @see net.jforum.model.DataAccessDriver#getTopicModel()
 	 */
 	public net.jforum.model.TopicModel newTopicModel() 
@@ -106,7 +106,7 @@ public class DataAccessDriver extends net.jforum.model.DataAccessDriver
 		return topicModel;
 	}
 
-	/*
+	/**
 	 * @see net.jforum.model.DataAccessDriver#getUserModel()
 	 */
 	public net.jforum.model.UserModel newUserModel() 
@@ -114,7 +114,7 @@ public class DataAccessDriver extends net.jforum.model.DataAccessDriver
 		return userModel;
 	}
 
-	/*
+	/**
 	 * @see net.jforum.model.DataAccessDriver#newCategoryModel()
 	 */
 	public net.jforum.model.CategoryModel newCategoryModel() 
@@ -122,7 +122,7 @@ public class DataAccessDriver extends net.jforum.model.DataAccessDriver
 		return categoryModel;
 	}
 
-	/* 
+	/**
 	 * @see net.jforum.model.DataAccessDriver#newTreeGroupModel()
 	 */
 	public net.jforum.model.TreeGroupModel newTreeGroupModel() 
@@ -130,7 +130,7 @@ public class DataAccessDriver extends net.jforum.model.DataAccessDriver
 		return treeGroupModel;
 	}
 	
-	/* 
+	/** 
 	 * @see net.jforum.model.DataAccessDriver#newSmilieModel()
 	 */
 	public net.jforum.model.SmilieModel newSmilieModel() 
@@ -138,14 +138,14 @@ public class DataAccessDriver extends net.jforum.model.DataAccessDriver
 		return smilieModel;
 	}
 	
-	/* 
+	/** 
 	 * @see net.jforum.model.DataAccessDriver#newSearchModel()
 	 */
 	public net.jforum.model.SearchModel newSearchModel() 
 	{
 		return searchModel;
 	}
-	/* 
+	/** 
 	 * @see net.jforum.model.DataAccessDriver#newGroupSecurityModel()
 	 */
 	public net.jforum.model.security.GroupSecurityModel newGroupSecurityModel() 
@@ -153,7 +153,7 @@ public class DataAccessDriver extends net.jforum.model.DataAccessDriver
 		return groupSecurityModel;
 	}
 
-	/* 
+	/** 
 	 * @see net.jforum.model.DataAccessDriver#newUserSecurityModel()
 	 */
 	public net.jforum.model.security.UserSecurityModel newUserSecurityModel() 
@@ -161,4 +161,11 @@ public class DataAccessDriver extends net.jforum.model.DataAccessDriver
 		return userSecurityModel;
 	}
 
+	/** 
+	 * @see net.jforum.model.DataAccessDriver#newUserSecurityModel()
+	 */
+	public net.jforum.model.PrivateMessageModel newPrivateMessageModel() 
+	{
+		return privateMessageModel;
+	}
 }

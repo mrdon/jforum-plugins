@@ -1,0 +1,119 @@
+<STYLE type=text/css>@import url( style.css );</STYLE>
+<table cellspacing="0" cellpadding="10" width="100%" align="center" border="0">
+	<tbody>
+		<tr>
+			<td class="bodyline">
+				<script language="JavaScript" type="text/javascript">
+				//
+				// Should really check the browser to stop this whining ...
+				//
+				function select_switch(status) 
+				{
+					for (i = 0; i < document.privmsg_list.length; i++) {
+						document.privmsg_list.elements[i].checked = status;
+					}
+				}
+				</script>
+
+				<table cellspacing="0" cellpadding="0" width="100%" align="center" border="0">
+					<tbody>
+						<tr>
+							<td valign="top" align="middle" width="100%">
+								<table height="40" cellspacing="2" cellpadding="2" border="0">
+									<tbody>
+										<tr valign="center">
+											<td>
+												<img src="templates/${templateName}/images/msg_inbox.gif" border="0" />
+											</td>
+											<td>
+												<span class="cattitle">${I18n.getMessage("PrivateMessage.inbox")} &nbsp;</span>
+											</td>
+											<td>
+												<a href="http://www.guj.com.br/forum/privmsg.php?folder=sentbox"><img src="templates/${templateName}/images/msg_sentbox.gif" border="0" /></a>
+											</td>
+											<td>
+												<span class="cattitle">
+												<a href="http://www.guj.com.br/forum/privmsg.php?folder=sentbox">${I18n.getMessage("PrivateMessage.sentbox")}</a> &nbsp;
+												</span>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<br clear="all" />
+				<form action="privmsg.php?folder=inbox" method="post" name="privmsg_list" id="privmsg_list">
+					<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
+						<tbody>
+							<tr>
+								<td valign="center" align="left">
+									<a href="http://www.guj.com.br/forum/privmsg.php?mode=post"><img src="templates/${templateName}/images/msg_newpost.gif" border="0" /></a>
+								</td>
+								<td align="left" width="100%">
+									&nbsp;<span class="nav">
+									 <A class=nav href="${contextPath}/forums/list.page">${I18n.getMessage("ForumListing.forumIndex")}</a>
+									 </span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
+						<tbody>
+							<tr>
+								<th class="thCornerL" nowrap="nowrap" width="5%" height="25">
+									&nbsp;&nbsp;
+								</th>
+								<th class="thTop" nowrap="nowrap" width="55%">
+									&nbsp;${I18n.getMessage("PrivateMessage.subject")}&nbsp;
+								</th>
+								<th class="thTop" nowrap="nowrap" width="20%">
+									&nbsp;${I18n.getMessage("PrivateMessage.from")}&nbsp;
+								</th>
+								<th class="thTop" nowrap="nowrap" width="15%">
+									&nbsp;${I18n.getMessage("PrivateMessage.date")}&nbsp;
+								</th>
+								<th class="thCornerR" nowrap="nowrap" width="5%">
+									&nbsp;&nbsp;
+								</th>
+							</tr>
+							<tr>
+								<td class="row1" valign="center" align="middle" width="5%"><img height="18" src="templates/${templateName}/images/folder.gif" width="19" /></td>
+								<td class="row1" valign="center" width="55%"><span class="topictitle">&nbsp;<a class="topictitle" href="http://www.guj.com.br/forum/privmsg.php?folder=inbox&amp;mode=read&amp;p=20364">sugestão</a></span></td>
+								<td class="row1" valign="center" align="middle" width="20%"><span class="name">&nbsp;<a class="name" href="http://www.guj.com.br/forum/profile.php?mode=viewprofile&amp;u=2851">n10</a></span></td>
+								<td class="row1" valign="center" align="middle" width="15%"><span class="postdetails">13/05/2004, 5:21 pm</span></td>
+								<td class="row1" valign="center" align="middle" width="5%"><span class="postdetails"><input type="checkbox" value="20364" name="id" />
+									</span></td>
+							</tr>
+							<tr>
+								<td class="catBottom" align="right" colspan="5" height="28">
+									&nbsp; <input class="liteoption" type="submit" value="${I18n.getMessage("PrivateMessage.deleteSelected")}" name="delete" />
+									&nbsp; <input class="liteoption" type="submit" value="${I18n.getMessage("PrivateMessage.deleteAll")}" name="deleteall" />
+								</td></tr>
+						</tbody>
+					</table>
+					<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
+						<tbody>
+							<tr>
+								<td valign="center" align="left"><span class="nav">
+									<a href="http://www.guj.com.br/forum/privmsg.php?mode=post"><img src="templates/${templateName}/images/msg_newpost.gif" border="0" /></a></span>
+								</td>
+								<td valign="center" align="left" width="100%"><span class="nav"></span></td>
+								<td valign="top" nowrap="nowrap" align="right">
+									<b><span class="gensmall"><a class="gensmall" href="javascript:select_switch(true);">${I18n.getMessage("PrivateMessage.checkAll")}</a> :: 
+									<a class="gensmall" href="javascript:select_switch(false);">${I18n.getMessage("PrivateMessage.uncheckAll")}</a></span></b>
+									<br />
+									<span class="nav">
+										<br />
+									</span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+				<div align="center"></div>
+			</td>
+		</tr>
+	</tbody>
+</table>

@@ -137,23 +137,11 @@ CREATE TABLE jforum_posts (
 ) TYPE=InnoDB;
 
 --
--- Table structure for table 'jforum_privmsgs_text'
---
-
-DROP TABLE IF EXISTS jforum_privmsgs_text;
-CREATE TABLE jforum_privmsgs_text (
-  privmsgs_text_id mediumint(8) NOT NULL default '0',
-  privmsgs_bbcode_uid varchar(10) NOT NULL default '',
-  privmsgs_text text NOT NULL,
-  PRIMARY KEY  (privmsgs_text_id)
-) TYPE=InnoDB;
-
---
 -- Table structure for table 'jforum_privmsgs'
 --
 
 DROP TABLE IF EXISTS jforum_privmsgs;
-CREATE TABLE privmsgs (
+CREATE TABLE jforum_privmsgs (
   privmsgs_id mediumint(8) NOT NULL auto_increment,
   privmsgs_type tinyint(4) NOT NULL default '0',
   privmsgs_subject varchar(255) NOT NULL default '',
@@ -165,6 +153,7 @@ CREATE TABLE privmsgs (
   privmsgs_enable_html tinyint(1) NOT NULL default '0',
   privmsgs_enable_smilies tinyint(1) NOT NULL default '1',
   privmsgs_attach_sig tinyint(1) NOT NULL default '1',
+  privmsgs_text text NOT NULL,
   PRIMARY KEY  (privmsgs_id)
 ) TYPE=InnoDB;
 

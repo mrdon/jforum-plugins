@@ -47,6 +47,7 @@ package net.jforum.entities;
  * Represents every message post in the system.
  * 
  * @author Rafael Steil
+ * @version $Id: Post.java,v 1.2 2004/05/21 00:24:10 rafaelsteil Exp $
  */
 public class Post 
 {

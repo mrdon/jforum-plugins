@@ -1,3 +1,7 @@
+#
+# $Id: $
+#
+
 # ############
 # GroupModel 
 # ############
@@ -322,11 +326,36 @@ PermissionControl.deleteUserRoleValueByGroup = DELETE jforum_role_values \
 # #############
 TopicListing.selectTopicData = SELECT topic_id, topic_title, topic_views, topic_replies, topic_last_post_id, user_id FROM jforum_topics WHERE forum_id = ?
 
-# ##############
+# #############
 # SmiliesModel
-# ##############
+# #############
 SmiliesModel.addNew = INSERT INTO jforum_smilies ( code, url, disk_name) VALUES (?, ?, ?)
 SmiliesModel.delete = DELETE FROM jforum_smilies WHERE smilie_id = ?
 SmiliesModel.update = UPDATE jforum_smilies SET code = ?, url = ?, disk_name =? WHERE smilie_id = ?
 SmiliesModel.selectAll = SELECT * FROM jforum_smilies
 SmiliesModel.selectById = SELECT * FROM jforum_smilies WHERE smilie_id = ?
+
+# ####################
+# PrivateMessageModel
+# ####################
+PrivateMessageModel.add = INSERT INTO jforum_privmsgs ( privmsgs_type, privmsgs_subject, privmsgs_from_userid, \
+	privmsgs_to_userid, privmsgs_date, privmsgs_enable_bbcode, privmsgs_enable_html, privmsgs_enable_smilies, \
+	privmsgs_attach_sig, privmsgs_text ) \
+	VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )
+	
+PrivateMessageModel.delete = DELETE FROM jforum_privmsgs WHERE privmsgs_id = ?
+
+PrivateMessageModel.baseListing = SELECT pm.privmsgs_type, pm.privmsgs_id, pm.privmsgs_date, pm.privmsgs_subject, u.user_id, u.username \
+	FROM jforum_privmsgs pm, jforum_users u \
+	#FILTER# \
+	ORDER BY pm.privmsgs_date DESC
+	
+PrivateMessageModel.inbox = WHERE privmsgs_to_userid = ? \
+	AND u.user_id = pm.privmsgs_from_userid \
+	AND ( pm.privmsgs_type = 1 \
+	OR pm.privmsgs_type = 0 \
+	OR privmsgs_type = 5)
+	
+PrivateMessageModel.sent = WHERE privmsgs_from_userid = ? \
+	AND u.user_id = pm.privmsgs_to_userid \
+	AND pm.privmsgs_type = 2

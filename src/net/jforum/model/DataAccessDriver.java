@@ -40,8 +40,6 @@
  * net.jforum.model.DataAccessDriver.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: DataAccessDriver.java,v 1.2 2004/04/21 23:57:23 rafaelsteil Exp $
  */
 package net.jforum.model;
 
@@ -62,6 +60,7 @@ import net.jforum.util.SystemGlobals;
  * analise, look at <code>net.jforum.drivers.mysql</code> package.
  * 
  * @author Rafael Steil
+ * @version $Id: DataAccessDriver.java,v 1.3 2004/05/21 00:24:17 rafaelsteil Exp $
  */
 public abstract class DataAccessDriver 
 {
@@ -155,23 +154,30 @@ public abstract class DataAccessDriver
 	public abstract net.jforum.model.SmilieModel newSmilieModel();
 	
 	/**
-	 * Gest a {@link net.jforum.model.SearchModel} instance
+	 * Gets a {@link net.jforum.model.SearchModel} instance
 	 * 
 	 * @return <code>net.jforum.model.SearchModel</code> instance
 	 */
 	public abstract net.jforum.model.SearchModel newSearchModel();
 	
 	/**
-	 * Gest a {@link net.jforum.model.security.UserSecurityModel} instance
+	 * Gets a {@link net.jforum.model.security.UserSecurityModel} instance
 	 * 
 	 * @return <code>net.jforum.model.security.UserSecurityModel</code> instance
 	 */
 	public abstract net.jforum.model.security.UserSecurityModel newUserSecurityModel();
 	
 	/**
-	 * Gest a {@link net.jforum.model.security.GroupSecurityModel} instance
+	 * Gets a {@link net.jforum.model.security.GroupSecurityModel} instance
 	 * 
 	 * @return <code>net.jforum.model.security.GroupSecurityModel</code> instance
 	 */
 	public abstract net.jforum.model.security.GroupSecurityModel newGroupSecurityModel();
+
+	/**
+	 * Gets a {@link net.jforum.model.security.PrivateMessageModel} instance
+	 * 
+	 * @return <code>link net.jforum.model.security.PrivateMessageModel</code> instance
+	 */
+	public abstract net.jforum.model.PrivateMessageModel newPrivateMessageModel();
 }
