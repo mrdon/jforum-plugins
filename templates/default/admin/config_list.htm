@@ -1,4 +1,25 @@
 <#setting number_format = "#"/>
+
+<script language="javascript">
+function resize()
+{
+	var h = document.form.thumbH.value;
+	var w = document.form.thumbW.value;
+	
+	if ((h > 30 && h < 350) && (w > 30 && w < 350)){
+		document.getElementById("avatarPreview").style.width = w + "px";                   
+		document.getElementById("avatarPreview").style.height = h + "px";          
+	}
+}
+
+function changeValue(field, value)
+{
+	var f = eval("document.form." + field)
+	f.value = value;
+	resize();
+}
+</script>
+
 <STYLE type=text/css>@import url( ${contextPath}/templates/${templateName}/admin/style.css );</STYLE>
 
 <form accept-charset="${encoding}" name="form" action="${contextPath}/jforum${extension}" method="post">
@@ -8,7 +29,7 @@
 
 <table class='forumline' cellspacing='1' cellpadding='3' width="100%" border='0'>
 <tr>
-<th class='thhead' valign='center' colspan='2' height='25'>${I18n.getMessage("AdminConfig.Title")}</th>
+	<th class='thhead' valign='center' colspan='2' height='25'>${I18n.getMessage("AdminConfig.Title")}</th>
 </tr>
 
 <!-- Forum -->
@@ -36,11 +57,19 @@
 </tr>
 <tr>
 	<td class='row1' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.avatarMaxWidth")}</span></td>
-	<td class='row1' width="38%"><span class='gen'><input type="text" size="10"name="p_avatar.maxWidth" value="${config.getProperty("avatar.maxWidth")}" /></span></td>
+	<td class='row1' width="38%"><span class='gen'><input type="text" size="10"name="p_avatar.maxWidth" value="${config.getProperty("avatar.maxWidth")}" onChange="changeValue('thumbW', this.value)"/></span></td>
 </tr>
 <tr>
 	<td class='row2' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.avatarMaxHeight")}</span></td>
-	<td class='row2' width="38%"><span class='gen'><input type="text" size="10"name="p_avatar.maxHeight" value="${config.getProperty("avatar.maxHeight")}" /></span></td>
+	<td class='row2' width="38%"><span class='gen'><input type="text" size="10"name="p_avatar.maxHeight" value="${config.getProperty("avatar.maxHeight")}" onChange="changeValue('thumbH', this.value)"/></span></td>
+</tr>
+<tr>
+	<td class='row2' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.avatarPreview")}</span></td>
+	<td class='row2' width="38%">
+		<input type="hidden" name="thumbH" value="${config.getProperty("avatar.maxHeight")}">	
+		<input type="hidden" name="thumbW" value="${config.getProperty("avatar.maxWidth")}">
+		<div id="avatarPreview" style="align:center; border:1px solid orange;">&nbsp;</div>
+	</td>
 </tr>
 <tr>
 	<td class='row1' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.TopicsPerPage")}</span></td>
@@ -284,3 +313,4 @@
 
 </table>
 </form>
+<script language="javascript">resize();</script>
