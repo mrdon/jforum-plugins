@@ -152,6 +152,7 @@ CREATE TABLE jforum_posts (
   post_edit_count NUMBER(10) DEFAULT 0 NOT NULL,
   status NUMBER(10) DEFAULT 1,
   attach NUMBER(1) DEFAULT 0,
+  need_moderate NUMBER(1) DEFAULT 0,
   PRIMARY KEY (post_id)
 );
 
