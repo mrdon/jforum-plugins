@@ -79,7 +79,7 @@ import org.apache.log4j.Logger;
  *
  * @author Paulo Silveira
  * @author Rafael Steil
- * @version $Id: PooledConnection.java,v 1.8 2004/09/14 02:16:44 rafaelsteil Exp $
+ * @version $Id: PooledConnection.java,v 1.9 2004/09/22 00:45:11 rafaelsteil Exp $
  * */
 
 public class PooledConnection extends DBConnection
@@ -286,28 +286,6 @@ public class PooledConnection extends DBConnection
 			this.init();
 		}
 		catch (Exception e) { e.printStackTrace(); }
-
-		/*
-		synchronized(allConnections) {
-			try {
-				for (Iterator iter = allConnections.iterator(); iter.hasNext(); ) {
-					logger.info("pinging connection....");
-
-					Connection c = (Connection)iter.next();
-					Statement s = c.createStatement();
-					ResultSet rs = s.executeQuery("select 1 from jforum_sessions");
-					rs.next();
-					rs.close();
-					s.close();
-				}
-
-				logger.info("Connection ping finished. Waiting for next iteration");
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		*/
 	} 
 	
 	public void enableConnectionPinging() {
