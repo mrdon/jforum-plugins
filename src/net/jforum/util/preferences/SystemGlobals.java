@@ -66,7 +66,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author Pieter
- * @version $Id: SystemGlobals.java,v 1.12 2004/10/01 19:25:49 rafaelsteil Exp $
+ * @version $Id: SystemGlobals.java,v 1.13 2004/10/31 21:30:53 rafaelsteil Exp $
  */
 public class SystemGlobals implements VariableStore
 {
@@ -232,7 +232,7 @@ public class SystemGlobals implements VariableStore
 	 */
 	public static boolean getBoolValue(String field)
 	{
-		return getValue(field).equals("true");
+		return "true".equals(getValue(field));
 	}
 
 	/**
@@ -240,14 +240,14 @@ public class SystemGlobals implements VariableStore
 	 * on the result.
 	 * 
 	 * @param field The field name to retrieve
-	 * @return The value of the field if present  
+	 * @return The value of the field if present or null if not  
 	 */
 
 	public String getVariableValue(String field)
 	{
 		String preExpansion = installation.getProperty(field);
 		if (preExpansion == null) {
-			throw new RuntimeException("unknown property: " + field);
+			return null;
 		}
 
 		return expander.expandVariables(preExpansion);

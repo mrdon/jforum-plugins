@@ -71,7 +71,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.7 2004/10/30 03:30:09 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.8 2004/10/31 21:30:53 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -151,8 +151,6 @@ public class InstallAction extends Command
 		// Dump is ok
 		this.addToSessionAndContext("importTablesData", "passed");
 		
-		this.configureSystemGlobals();
-		
 		if (!this.updateAdminPassword()) {
 			InstallServlet.getContext().put("message", I18n.getMessage("Install.updateAdminError"));
 			simpleConnection.releaseConnection(conn);
@@ -170,6 +168,11 @@ public class InstallAction extends Command
 		InstallServlet.getContext().put("clickHere", I18n.getMessage("Install.clickHere", 
 				new String[] { this.getFromSession("forumLink") }));
 		InstallServlet.getContext().put("moduleAction", "install_finished.htm");
+
+		this.configureSystemGlobals();
+
+		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
+        SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
 	}
 	
 	private void configureSystemGlobals() throws Exception
@@ -182,6 +185,8 @@ public class InstallAction extends Command
 		SystemGlobals.setValue(ConfigKeys.I18N_DEFAULT, this.getFromSession("language"));
 		SystemGlobals.setValue(ConfigKeys.INSTALLED, "true");
 		SystemGlobals.saveInstallation();
+		
+		this.restartSystemGlobals();
 	}
 	
 	private boolean importTablesData(Connection conn) throws Exception
@@ -230,8 +235,12 @@ public class InstallAction extends Command
 	private boolean createTables(Connection conn) throws Exception
 	{
 		logger.info("Going to create tables...");
-
 		String dbType = this.getFromSession("database");
+		
+		if ("postgresql".equals(dbType)) {
+			this.dropPostgresqlTables();
+		}
+		
 		boolean status = true;
 		boolean autoCommit = conn.getAutoCommit();
 		
@@ -289,6 +298,10 @@ public class InstallAction extends Command
 			? "net.jforum.PooledConnection"
 			: "net.jforum.SimpleConnection";
 		
+		SystemGlobals.setValue(ConfigKeys.DATABASE_DRIVER_NAME, type);
+		SystemGlobals.saveInstallation();
+		this.restartSystemGlobals();
+		
 		Properties p = new Properties();
 		p.load(new FileInputStream(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG)));
 		
@@ -299,7 +312,7 @@ public class InstallAction extends Command
 		p.setProperty(ConfigKeys.DATABASE_CONNECTION_ENCODING, encoding);
 		
 		p.store(new FileOutputStream(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG)), null);
-		
+
 		this.restartSystemGlobals();
 		
 		Connection conn = null;
@@ -317,6 +330,17 @@ public class InstallAction extends Command
 		}
 		
 		return conn;
+	}
+	
+	private void restartSystemGlobals() throws Exception
+	{
+		if (new File(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG)).exists()) {
+            SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG));
+        }
+		
+		String appPath = SystemGlobals.getApplicationPath();
+		SystemGlobals.initGlobals(appPath, appPath + "/WEB-INF/config/SystemGlobals.properties", null);
+        SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
 	}
 	
 	private boolean updateAdminPassword() throws Exception
@@ -348,13 +372,6 @@ public class InstallAction extends Command
 		}
 		
 		return status;
-	}
-	
-	private void restartSystemGlobals() throws Exception
-	{
-		String appPath = SystemGlobals.getApplicationPath();
-		SystemGlobals.initGlobals(appPath, appPath + "/WEB-INF/config/SystemGlobals.properties", null);
-        SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
 	}
 	
 	public void checkInformation() throws Exception
@@ -409,6 +426,40 @@ public class InstallAction extends Command
 		in.close();
 		
 		return l;
+	}
+	
+	private void dropPostgresqlTables() throws Exception
+	{
+		String[] tables = { "jforum_banlist", "jforum_banlist_seq", "jforum_categories", 
+				"jforum_categories_order_seq", "jforum_categories_seq", "jforum_config",
+				"jforum_config_seq", "jforum_forums", "jforum_forums_seq", "jforum_groups",
+				"jforum_groups_seq", "jforum_posts", "jforum_posts_seq", "jforum_posts_text",
+				"jforum_privmsgs", "jforum_privmsgs_seq", "jforum_privmsgs_text",
+				"jforum_ranks", "jforum_ranks_seq", "jforum_role_values", "jforum_roles",
+				"jforum_roles_seq", "jforum_search_results", "jforum_search_topics",
+				"jforum_search_wordmatch", "jforum_search_words", "jforum_search_words_seq", "jforum_sessions",
+				"jforum_smilies", "jforum_smilies_seq", "jforum_themes", "jforum_themes_seq",
+				"jforum_topics", "jforum_topics_seq", "jforum_topics_watch", "jforum_user_groups",
+				"jforum_users", "jforum_users_seq", "jforum_vote_desc", "jforum_vote_desc_seq",
+				"jforum_vote_results", "jforum_vote_voters", "jforum_words", "jforum_words_seq" };
+
+		Connection conn = DBConnection.getImplementation().getConnection();
+		for (int i = 0; i < tables.length; i++) {
+			Statement s = conn.createStatement();
+			String query = tables[i].endsWith("_seq") ? "DROP SEQUENCE " : "DROP TABLE ";
+			query += tables[i];
+			
+			try {
+				s.executeUpdate(query);
+			}
+			catch (SQLException e) {
+				logger.info("IGNORE: " + e.getMessage());
+			}
+			
+			s.close();
+		}
+		
+		DBConnection.getImplementation().releaseConnection(conn);
 	}
 	
 	private void addToSessionAndContext(String key, String value)

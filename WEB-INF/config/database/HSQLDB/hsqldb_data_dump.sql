@@ -3,7 +3,6 @@
 --
 INSERT INTO jforum_groups (group_id, group_name, group_description ) VALUES (1,'General', 'General Users');
 INSERT INTO jforum_groups (group_id, group_name, group_description ) VALUES (2,'Administration', 'Admin Users');
-INSERT INTO jforum_groups (group_id, group_name, group_description ) VALUES (3,'Moderation', 'Moderation Users');
 
 -- 
 -- Users
@@ -27,12 +26,51 @@ INSERT INTO jforum_roles (group_id, name, role_type) VALUES (1, 'perm_moderation
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES (1, 'perm_moderation_topic_move', 0);
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES (1, 'perm_moderation_topic_lockUnlock', 0);
 
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES (1, 'perm_read_only_forums', 0);
+INSERT INTO jforum_role_values (role_id, role_value, role_type) VALUES (IDENTITY(), 0, 1);
+
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES (1, 'perm_anonymous_post', 0);
+INSERT INTO jforum_role_values (role_id, role_value, role_type) VALUES (IDENTITY(), 0, 1);
+
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES (1, 'perm_forum', 0);
+INSERT INTO jforum_role_values (role_id, role_value, role_type) VALUES (IDENTITY(), 0, 1);
+
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES (1, 'perm_category', 0);
+INSERT INTO jforum_role_values (role_id, role_value, role_type) VALUES (IDENTITY(), 0, 1);
+
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES (1, 'perm_html_disabled', 0);
+INSERT INTO jforum_role_values (role_id, role_value, role_type) VALUES (IDENTITY(), 0, 1);
+
+--
+-- Admin
+--
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES (2, 'perm_administration', 1);
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES (2, 'perm_moderation', 1);
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES (2, 'perm_moderation_post_remove', 1);
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES (2, 'perm_moderation_post_edit', 1);
+
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES (2, 'perm_read_only_forums', 0);
+INSERT INTO jforum_role_values (role_id, role_value, role_type) VALUES (IDENTITY(), 0, 1);
+
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES (2, 'perm_anonymous_post', 0);
+INSERT INTO jforum_role_values (role_id, role_value, role_type) VALUES (IDENTITY(), 0, 1);
+
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES (2, 'perm_forum', 0);
+INSERT INTO jforum_role_values (role_id, role_value, role_type) VALUES (IDENTITY(), 0, 1);
+
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES (2, 'perm_create_sticky_announcement_topics', 1);
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES (2, 'perm_moderation_topic_move', 1);
+
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES (2, 'perm_category', 0);
+INSERT INTO jforum_role_values (role_id, role_value, role_type) VALUES (IDENTITY(), 0, 1);
+
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES (2, 'perm_moderation_topic_lockUnlock', 1);
+
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES (2, 'perm_moderation_forums', 0);
+INSERT INTO jforum_role_values (role_id, role_value, role_type) VALUES (IDENTITY(), 0, 1);
+
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES (2, 'perm_html_disabled', 0);
+INSERT INTO jforum_role_values (role_id, role_value, role_type) VALUES (IDENTITY(), 0, 1);
 
 --
 -- Smilies

@@ -1,0 +1,4 @@
+*.log
+*.script
+*.properties
+*.lck

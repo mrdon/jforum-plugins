@@ -60,7 +60,7 @@ import net.jforum.view.forum.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumRSS.java,v 1.10 2004/10/27 01:47:56 rafaelsteil Exp $
+ * @version $Id: ForumRSS.java,v 1.11 2004/10/31 21:30:54 rafaelsteil Exp $
  */
 public class ForumRSS extends GenericRSS 
 {
@@ -108,7 +108,9 @@ public class ForumRSS extends GenericRSS
 					String author = (String)info.get("userName");
 					
 					item.setAuthor(author != null ? author : I18n.getMessage("Guest"));
-					item.setPublishDate(RSSUtils.formatDate((String)info.get("postTime")));
+					
+					String date = (String)info.get("postTime");
+					item.setPublishDate(date != null ? RSSUtils.formatDate(date) : "");
 					
 					this.rss.addItem(item);
 				}

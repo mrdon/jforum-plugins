@@ -10,10 +10,25 @@ INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jf
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_moderation_topic_move', 0);
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_moderation_topic_lockUnlock', 0);
 
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_read_only_forums', 0);
+INSERT INTO jforum_role_values (role_id, role_value, role_type) VALUES ((SELECT CURRVAL('jforum_roles_seq')), 0, 1);
+
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_anonymous_post', 0);
+INSERT INTO jforum_role_values (role_id, role_value, role_type) VALUES ((SELECT CURRVAL('jforum_roles_seq')), 0, 1);
+
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_forum', 0);
+INSERT INTO jforum_role_values (role_id, role_value, role_type) VALUES ((SELECT CURRVAL('jforum_roles_seq')), 0, 1);
+
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_category', 0);
+INSERT INTO jforum_role_values (role_id, role_value, role_type) VALUES ((SELECT CURRVAL('jforum_roles_seq')), 0, 1);
+
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_html_disabled', 0);
+INSERT INTO jforum_role_values (role_id, role_value, role_type) VALUES ((SELECT CURRVAL('jforum_roles_seq')), 0, 1);
+
 -- 
 --  Users from General Group
 -- 
-INSERT INTO jforum_users ( username, user_password ) VALUES ('Anonymous', 'nopass');
+INSERT INTO jforum_users ( username, user_password, user_regdate ) VALUES ('Anonymous', 'nopass', NOW());
 INSERT INTO jforum_user_groups (group_id, user_id) VALUES ((SELECT CURRVAL('jforum_groups_seq')), (SELECT CURRVAL('jforum_users_seq')));
 
 -- 
@@ -26,17 +41,31 @@ INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jf
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_moderation_post_edit', 1);
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_moderation_topic_move', 1);
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_moderation_topic_lockUnlock', 1);
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_create_sticky_announcement_topics', 1);
+
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_read_only_forums', 0);
+INSERT INTO jforum_role_values (role_id, role_value, role_type) VALUES ((SELECT CURRVAL('jforum_roles_seq')), 0, 1);
+
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_anonymous_post', 0);
+INSERT INTO jforum_role_values (role_id, role_value, role_type) VALUES ((SELECT CURRVAL('jforum_roles_seq')), 0, 1);
+
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_forum', 0);
+INSERT INTO jforum_role_values (role_id, role_value, role_type) VALUES ((SELECT CURRVAL('jforum_roles_seq')), 0, 1);
+
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_category', 0);
+INSERT INTO jforum_role_values (role_id, role_value, role_type) VALUES ((SELECT CURRVAL('jforum_roles_seq')), 0, 1);
+
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_moderation_forums', 0);
+INSERT INTO jforum_role_values (role_id, role_value, role_type) VALUES ((SELECT CURRVAL('jforum_roles_seq')), 0, 1);
+
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES ((SELECT CURRVAL('jforum_groups_seq')), 'perm_html_disabled', 0);
+INSERT INTO jforum_role_values (role_id, role_value, role_type) VALUES ((SELECT CURRVAL('jforum_roles_seq')), 0, 1);
 
 -- 
 --  Users from Admin Group
 -- 
-INSERT INTO jforum_users ( username, user_password ) VALUES ('Admin', '21232f297a57a5a743894a0e4a801fc3');
+INSERT INTO jforum_users ( username, user_password, user_regdate ) VALUES ('Admin', '21232f297a57a5a743894a0e4a801fc3', NOW());
 INSERT INTO jforum_user_groups (group_id, user_id) VALUES ((SELECT CURRVAL('jforum_groups_seq')), (SELECT CURRVAL('jforum_users_seq')));
-
--- 
---  Moderation Group
--- 
-INSERT INTO jforum_groups ( group_name, group_description ) VALUES ('Moderation', 'Moderation Users');
 
 -- 
 --  Smilies

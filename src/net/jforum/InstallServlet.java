@@ -58,7 +58,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallServlet.java,v 1.5 2004/10/30 03:30:09 rafaelsteil Exp $
+ * @version $Id: InstallServlet.java,v 1.6 2004/10/31 21:30:51 rafaelsteil Exp $
  */
 public class InstallServlet extends JForumCommonServlet
 {
@@ -100,36 +100,42 @@ public class InstallServlet extends JForumCommonServlet
 		// Assigns the information to user's thread 
 		localData.set(dataHolder);
 		
-		// Module and Action
-		String moduleClass = this.getModuleClass(request.getModule());
+		if (SystemGlobals.getBoolValue(ConfigKeys.INSTALLED)) {
+			InstallServlet.setRedirect(InstallServlet.getRequest().getContextPath() 
+					+ "/forums/list.page");
+		}
+		else {		
+			// Module and Action
+			String moduleClass = this.getModuleClass(request.getModule());
+			
+			InstallServlet.getContext().put("moduleName", request.getModule());
+			InstallServlet.getContext().put("action", InstallServlet.getRequest().getAction());
+			
+			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(response.getOutputStream(), encoding));
+			
+			try {
+				if (moduleClass != null) {
+					// Here we go, baby
+					Command c = (Command)Class.forName(moduleClass).newInstance();
+					Template template = c.process();
 		
-		InstallServlet.getContext().put("moduleName", request.getModule());
-		InstallServlet.getContext().put("action", InstallServlet.getRequest().getAction());
+					if (((DataHolder)localData.get()).getRedirectTo() == null) {
+						response.setContentType("text/html; charset=" + encoding);
 		
-		BufferedWriter out = new BufferedWriter(new OutputStreamWriter(response.getOutputStream(), encoding));
-		
-		try {
-			if (moduleClass != null) {
-				// Here we go, baby
-				Command c = (Command)Class.forName(moduleClass).newInstance();
-				Template template = c.process();
-	
-				if (((DataHolder)localData.get()).getRedirectTo() == null) {
-					response.setContentType("text/html; charset=" + encoding);
-	
-					template.process(InstallServlet.getContext(), out);
-					out.flush();
+						template.process(InstallServlet.getContext(), out);
+						out.flush();
+					}
 				}
 			}
-		}
-		catch (Exception e) {
-			response.setContentType("text/html");
-			if (out != null) {
-				new ForumException(e, out);
-				out.flush();
-			}
-			else {
-				new ForumException(e, new BufferedWriter(new OutputStreamWriter(response.getOutputStream())));
+			catch (Exception e) {
+				response.setContentType("text/html");
+				if (out != null) {
+					new ForumException(e, out);
+					out.flush();
+				}
+				else {
+					new ForumException(e, new BufferedWriter(new OutputStreamWriter(response.getOutputStream())));
+				}
 			}
 		}
 		

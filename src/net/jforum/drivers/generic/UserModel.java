@@ -60,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserModel.java,v 1.18 2004/10/04 10:08:17 marcwick Exp $
+ * @version $Id: UserModel.java,v 1.19 2004/10/31 21:30:50 rafaelsteil Exp $
  */
 public class UserModel extends AutoKeys implements net.jforum.model.UserModel 
 {
@@ -118,7 +118,7 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		return u;
 	}
 
-	private void fillUserFromResultSet(User u, ResultSet rs) throws SQLException {
+	protected void fillUserFromResultSet(User u, ResultSet rs) throws SQLException {
 		u.setAim(rs.getString("user_aim"));
 		u.setAvatar(rs.getString("user_avatar"));
 		u.setGender(rs.getString("gender"));
@@ -225,7 +225,7 @@ public class UserModel extends AutoKeys implements net.jforum.model.UserModel
 		return id;
 	}
 
-	private void initNewUser(User user, PreparedStatement p) throws SQLException {
+	protected void initNewUser(User user, PreparedStatement p) throws SQLException {
 		p.setString(1, user.getUsername());
 		p.setString(2, user.getPassword());
 		p.setString(3, user.getEmail());
