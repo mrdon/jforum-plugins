@@ -66,7 +66,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author Pieter
- * @version $Id: SystemGlobals.java,v 1.10 2004/09/25 04:38:04 rafaelsteil Exp $
+ * @version $Id: SystemGlobals.java,v 1.11 2004/09/28 19:18:25 marcwick Exp $
  */
 public class SystemGlobals implements VariableStore
 {
@@ -119,6 +119,8 @@ public class SystemGlobals implements VariableStore
 
 		installation = new Properties(defaults);
 		
+		this.installationConfig = getVariableValue(ConfigKeys.INSTALLATION_CONFIG);
+
 		for (Iterator iter = additionalDefaultsList.iterator(); iter.hasNext(); ) {
 			this.loadAdditionalDefaultsImpl((String)iter.next());
 		}
