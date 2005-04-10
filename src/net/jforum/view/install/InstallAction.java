@@ -83,7 +83,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.27 2005/03/03 14:44:54 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.28 2005/04/10 04:17:42 andowson Exp $
  */
 public class InstallAction extends Command
 {
@@ -284,7 +284,7 @@ public class InstallAction extends Command
 				+ System.currentTimeMillis()));
 
 		SystemGlobals.setValue(ConfigKeys.FORUM_LINK, this.getFromSession("forumLink"));
-		
+		SystemGlobals.setValue(ConfigKeys.HOMEPAGE_LINK, this.getFromSession("siteLink"));
 		SystemGlobals.setValue(ConfigKeys.I18N_DEFAULT, this.getFromSession("language"));
 		SystemGlobals.setValue(ConfigKeys.INSTALLED, "true");
 		SystemGlobals.saveInstallation();
