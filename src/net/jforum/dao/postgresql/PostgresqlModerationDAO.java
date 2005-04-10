@@ -46,9 +46,9 @@ import java.util.List;
 
 /**
  * @author Andowson Chang
- * @version $Id: PostgresqlModerationDAO.java,v 1.2 2005/03/26 04:11:09 rafaelsteil Exp $
+ * @version $Id: PostgresqlModerationDAO.java,v 1.3 2005/04/10 16:24:37 rafaelsteil Exp $
  */
-public class PostgresqlModerationDAO extends net.jforum.dao.generic.ModerationModel
+public class PostgresqlModerationDAO extends net.jforum.dao.generic.GenericModerationDAO
 {	
 	/**
 	 * @see net.jforum.dao.ModerationDAO#topicsByForum(int, int, int)

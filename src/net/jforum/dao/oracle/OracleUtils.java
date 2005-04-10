@@ -53,8 +53,8 @@ import java.sql.SQLException;
 import net.jforum.JForum;
 
 /**
- * @author Rafael Steil
- * @version $Id: OracleUtils.java,v 1.2 2005/03/26 04:11:01 rafaelsteil Exp $
+ * @author Dmitriy Kiriy
+ * @version $Id: OracleUtils.java,v 1.3 2005/04/10 16:24:38 rafaelsteil Exp $
  */
 public class OracleUtils
 {

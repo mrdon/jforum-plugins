@@ -60,9 +60,9 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaModel.java,v 1.2 2005/03/26 04:10:47 rafaelsteil Exp $
+ * @version $Id: GenericKarmaDAO.java,v 1.1 2005/04/10 16:24:36 rafaelsteil Exp $
  */
-public class KarmaModel implements net.jforum.dao.KarmaDAO
+public class GenericKarmaDAO implements net.jforum.dao.KarmaDAO
 {
 	/**
 	 * @see net.jforum.dao.KarmaDAO#addKarma(net.jforum.entities.Karma)

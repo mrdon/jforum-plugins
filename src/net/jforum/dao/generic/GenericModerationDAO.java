@@ -57,9 +57,9 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationModel.java,v 1.2 2005/03/26 04:10:46 rafaelsteil Exp $
+ * @version $Id: GenericModerationDAO.java,v 1.1 2005/04/10 16:24:35 rafaelsteil Exp $
  */
-public class ModerationModel implements net.jforum.dao.ModerationDAO
+public class GenericModerationDAO implements net.jforum.dao.ModerationDAO
 {
 	/**
 	 * @see net.jforum.dao.ModerationDAO#aprovePost(int)

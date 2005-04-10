@@ -47,30 +47,30 @@ import net.jforum.dao.generic.security.GenericUserSecurityDAO;
 
 /**
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.3 2005/04/01 14:34:43 samuelyung Exp $
+ * @version $Id: DataAccessDriver.java,v 1.4 2005/04/10 16:24:35 rafaelsteil Exp $
  */
 public class DataAccessDriver extends net.jforum.dao.DataAccessDriver 
 {
-	private static GroupModel groupModel = new GroupModel();
-	private static PostModel postModel = new PostModel();
-	private static GenericRankingDAO rankingModel = new GenericRankingDAO();
-	private static GenericTopicModelDAO topicModel = new GenericTopicModelDAO();
-	private static GenericUserDAO userModel = new GenericUserDAO();
-	private static GenericTreeGroupDAO treeGroupModel = new GenericTreeGroupDAO();
-	private static GenericSmilieDAO smilieModel = new GenericSmilieDAO();
-	private static GenericSearchDAO searchModel = new GenericSearchDAO();
-	private static GenericUserSecurityDAO userSecurityModel = new GenericUserSecurityDAO();
-	private static GenericGroupSecurityDAO groupSecurityModel = new GenericGroupSecurityDAO();
-	private static PrivateMessageModel privateMessageModel = new PrivateMessageModel();
-	private static GenericUserSessionDAO userSessionModel = new GenericUserSessionDAO();
-	private static KarmaModel karmaModel = new KarmaModel();
-	private static GenericBookmarkDAO bookmarkModel = new GenericBookmarkDAO();
-	private static GenericAttachmentDAO attachmentModel = new GenericAttachmentDAO();
-	private static ModerationModel moderationModel = new ModerationModel();
-	private static GenericForumDAO forumModel = new GenericForumDAO();
-	private static GenericCategoryDAO categoryModel = new GenericCategoryDAO();
-	private static GenericConfigDAO configModel = new GenericConfigDAO();
-	private static GenericScheduledSearchIndexerDAO ssim = new GenericScheduledSearchIndexerDAO();
+	private static GenericGroupDAO groupDao = new GenericGroupDAO();
+	private static GenericPostDAO postDao = new GenericPostDAO();
+	private static GenericRankingDAO rankingDao = new GenericRankingDAO();
+	private static GenericTopicModelDAO topicDao = new GenericTopicModelDAO();
+	private static GenericUserDAO userDao = new GenericUserDAO();
+	private static GenericTreeGroupDAO treeGroupDao = new GenericTreeGroupDAO();
+	private static GenericSmilieDAO smilieDao = new GenericSmilieDAO();
+	private static GenericSearchDAO searchDao = new GenericSearchDAO();
+	private static GenericUserSecurityDAO userSecurityDao = new GenericUserSecurityDAO();
+	private static GenericGroupSecurityDAO groupSecurityDao = new GenericGroupSecurityDAO();
+	private static GenericPrivateMessageDAO privateMessageDao = new GenericPrivateMessageDAO();
+	private static GenericUserSessionDAO userSessionDao = new GenericUserSessionDAO();
+	private static GenericKarmaDAO karmaDao = new GenericKarmaDAO();
+	private static GenericBookmarkDAO bookmarkDao = new GenericBookmarkDAO();
+	private static GenericAttachmentDAO attachmentDao = new GenericAttachmentDAO();
+	private static GenericModerationDAO moderationDao = new GenericModerationDAO();
+	private static GenericForumDAO forumDao = new GenericForumDAO();
+	private static GenericCategoryDAO categoryDao = new GenericCategoryDAO();
+	private static GenericConfigDAO configDao = new GenericConfigDAO();
+	private static GenericScheduledSearchIndexerDAO ssiDao = new GenericScheduledSearchIndexerDAO();
 	private static GenericBannerDAO bannerDao = new GenericBannerDAO();
 
 	/**
@@ -78,7 +78,7 @@ public class DataAccessDriver extends net.jforum.dao.DataAccessDriver
 	 */
 	public net.jforum.dao.ForumDAO newForumDAO() 
 	{
-		return forumModel;	
+		return forumDao;	
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class DataAccessDriver extends net.jforum.dao.DataAccessDriver
 	 */
 	public net.jforum.dao.GroupDAO newGroupDAO() 
 	{
-		return groupModel;
+		return groupDao;
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class DataAccessDriver extends net.jforum.dao.DataAccessDriver
 	 */
 	public net.jforum.dao.PostDAO newPostDAO() 
 	{
-		return postModel;
+		return postDao;
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class DataAccessDriver extends net.jforum.dao.DataAccessDriver
 	 */
 	public net.jforum.dao.RankingDAO newRankingDAO() 
 	{	
-		return rankingModel;
+		return rankingDao;
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class DataAccessDriver extends net.jforum.dao.DataAccessDriver
 	 */
 	public net.jforum.dao.TopicDAO newTopicDAO() 
 	{
-		return topicModel;
+		return topicDao;
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class DataAccessDriver extends net.jforum.dao.DataAccessDriver
 	 */
 	public net.jforum.dao.UserDAO newUserDAO() 
 	{
-		return userModel;
+		return userDao;
 	}
 
 	/**
@@ -126,7 +126,7 @@ public class DataAccessDriver extends net.jforum.dao.DataAccessDriver
 	 */
 	public net.jforum.dao.CategoryDAO newCategoryDAO() 
 	{
-		return categoryModel;
+		return categoryDao;
 	}
 
 	/**
@@ -134,7 +134,7 @@ public class DataAccessDriver extends net.jforum.dao.DataAccessDriver
 	 */
 	public net.jforum.dao.TreeGroupDAO newTreeGroupDAO() 
 	{
-		return treeGroupModel;
+		return treeGroupDao;
 	}
 	
 	/** 
@@ -142,7 +142,7 @@ public class DataAccessDriver extends net.jforum.dao.DataAccessDriver
 	 */
 	public net.jforum.dao.SmilieDAO newSmilieDAO() 
 	{
-		return smilieModel;
+		return smilieDao;
 	}
 	
 	/** 
@@ -150,7 +150,7 @@ public class DataAccessDriver extends net.jforum.dao.DataAccessDriver
 	 */
 	public net.jforum.dao.SearchDAO newSearchDAO() 
 	{
-		return searchModel;
+		return searchDao;
 	}
 	
 	/** 
@@ -166,7 +166,7 @@ public class DataAccessDriver extends net.jforum.dao.DataAccessDriver
 	 */
 	public net.jforum.dao.security.GroupSecurityDAO newGroupSecurityDAO() 
 	{
-		return groupSecurityModel;
+		return groupSecurityDao;
 	}
 
 	/** 
@@ -174,7 +174,7 @@ public class DataAccessDriver extends net.jforum.dao.DataAccessDriver
 	 */
 	public net.jforum.dao.security.UserSecurityDAO newUserSecurityDAO() 
 	{
-		return userSecurityModel;
+		return userSecurityDao;
 	}
 
 	/** 
@@ -182,7 +182,7 @@ public class DataAccessDriver extends net.jforum.dao.DataAccessDriver
 	 */
 	public net.jforum.dao.PrivateMessageDAO newPrivateMessageDAO() 
 	{
-		return privateMessageModel;
+		return privateMessageDao;
 	}
 	
 	/** 
@@ -190,7 +190,7 @@ public class DataAccessDriver extends net.jforum.dao.DataAccessDriver
 	 */
 	public net.jforum.dao.UserSessionDAO newUserSessionDAO()
 	{
-		return userSessionModel;
+		return userSessionDao;
 	}
 	
 	/** 
@@ -198,7 +198,7 @@ public class DataAccessDriver extends net.jforum.dao.DataAccessDriver
 	 */
 	public net.jforum.dao.ConfigDAO newConfigDAO()
 	{
-		return configModel;
+		return configDao;
 	}
 	
 	/** 
@@ -206,7 +206,7 @@ public class DataAccessDriver extends net.jforum.dao.DataAccessDriver
 	 */
 	public net.jforum.dao.KarmaDAO newKarmaDAO()
 	{
-		return karmaModel;
+		return karmaDao;
 	}
 	
 	/** 
@@ -214,7 +214,7 @@ public class DataAccessDriver extends net.jforum.dao.DataAccessDriver
 	 */
 	public net.jforum.dao.BookmarkDAO newBookmarkDAO()
 	{
-		return bookmarkModel;
+		return bookmarkDao;
 	}
 	
 	/** 
@@ -222,7 +222,7 @@ public class DataAccessDriver extends net.jforum.dao.DataAccessDriver
 	 */
 	public net.jforum.dao.AttachmentDAO newAttachmentDAO()
 	{
-		return attachmentModel;
+		return attachmentDao;
 	}
 	
 	/** 
@@ -230,7 +230,7 @@ public class DataAccessDriver extends net.jforum.dao.DataAccessDriver
 	 */
 	public net.jforum.dao.ModerationDAO newModerationDAO()
 	{
-		return moderationModel;
+		return moderationDao;
 	}
 	
 	/**
@@ -238,7 +238,7 @@ public class DataAccessDriver extends net.jforum.dao.DataAccessDriver
 	 */
 	public net.jforum.dao.ScheduledSearchIndexerDAO newScheduledSearchIndexerDAO()
 	{
-		return ssim;
+		return ssiDao;
 	}
 
 	public net.jforum.dao.BannerDAO newBannerDAO()

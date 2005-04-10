@@ -53,9 +53,9 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerPostDAO.java,v 1.2 2005/03/26 04:11:11 rafaelsteil Exp $
+ * @version $Id: SqlServerPostDAO.java,v 1.3 2005/04/10 16:24:37 rafaelsteil Exp $
  */
-public class SqlServerPostDAO extends net.jforum.dao.generic.PostModel
+public class SqlServerPostDAO extends net.jforum.dao.generic.GenericPostDAO
 {
 	/**
 	 * @see net.jforum.dao.PostDAO#selectById(int)

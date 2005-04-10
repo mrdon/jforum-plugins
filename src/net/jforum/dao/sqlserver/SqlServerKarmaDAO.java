@@ -50,7 +50,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * @author Franklin S. Dattein (<a href="mailto:franklin@portaljava.com">franklin@portaljava.com</a>)
  * 
  */
-public class SqlServerKarmaDAO extends net.jforum.dao.generic.KarmaModel
+public class SqlServerKarmaDAO extends net.jforum.dao.generic.GenericKarmaDAO
 {
 	/**
 	 * @see net.jforum.dao.KarmaDAO#getMostRatedUserByPeriod(java.util.Date, java.util.Date)

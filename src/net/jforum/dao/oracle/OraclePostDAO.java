@@ -52,13 +52,13 @@ import net.jforum.entities.Post;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
- * @author Rafael Steil
- * @version $Id: OraclePostDAO.java,v 1.2 2005/03/26 04:11:00 rafaelsteil Exp $
+ * @author Dmitriy Kiriy
+ * @version $Id: OraclePostDAO.java,v 1.3 2005/04/10 16:24:38 rafaelsteil Exp $
  */
-public class OraclePostDAO extends net.jforum.dao.generic.PostModel
+public class OraclePostDAO extends net.jforum.dao.generic.GenericPostDAO
 {
 	/**
-	 * @see net.jforum.dao.generic.PostModel#addNewPostText(net.jforum.entities.Post)
+	 * @see net.jforum.dao.generic.GenericPostDAO#addNewPostText(net.jforum.entities.Post)
 	 */
 	protected void addNewPostText(Post post) throws Exception
 	{
@@ -75,7 +75,7 @@ public class OraclePostDAO extends net.jforum.dao.generic.PostModel
 	}
 	
 	/**
-	 * @see net.jforum.dao.generic.PostModel#updatePostsTextTable(net.jforum.entities.Post)
+	 * @see net.jforum.dao.generic.GenericPostDAO#updatePostsTextTable(net.jforum.entities.Post)
 	 */
 	protected void updatePostsTextTable(Post post) throws Exception
 	{
@@ -93,7 +93,7 @@ public class OraclePostDAO extends net.jforum.dao.generic.PostModel
 	}
 	
 	/**
-	 * @see net.jforum.dao.generic.PostModel#getPostTextFromResultSet(java.sql.ResultSet)
+	 * @see net.jforum.dao.generic.GenericPostDAO#getPostTextFromResultSet(java.sql.ResultSet)
 	 */
 	protected String getPostTextFromResultSet(ResultSet rs) throws Exception
 	{

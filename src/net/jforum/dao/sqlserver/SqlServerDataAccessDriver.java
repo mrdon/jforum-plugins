@@ -44,22 +44,22 @@ package net.jforum.dao.sqlserver;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerDataAccessDriver.java,v 1.2 2005/03/26 04:11:11 rafaelsteil Exp $
+ * @version $Id: SqlServerDataAccessDriver.java,v 1.3 2005/04/10 16:24:37 rafaelsteil Exp $
  */
 public class SqlServerDataAccessDriver extends net.jforum.dao.generic.DataAccessDriver
 {
-	private static SqlServerPostDAO postModel = new SqlServerPostDAO();
-	private static SqlServerTopicDAO topicModel = new SqlServerTopicDAO();
-	private static SqlServerUserDAO userModel = new SqlServerUserDAO();
-	private static SqlServerPrivateMessageDAO pmModel = new SqlServerPrivateMessageDAO();
-	private static SqlServerKarmaDAO karmaModel = new SqlServerKarmaDAO();
+	private static SqlServerPostDAO postDao = new SqlServerPostDAO();
+	private static SqlServerTopicDAO topicDao = new SqlServerTopicDAO();
+	private static SqlServerUserDAO userDao = new SqlServerUserDAO();
+	private static SqlServerPrivateMessageDAO pmDao = new SqlServerPrivateMessageDAO();
+	private static SqlServerKarmaDAO karmaDao = new SqlServerKarmaDAO();
 
 	/** 
 	 * @see net.jforum.dao.DataAccessDriver#newPostDAO()
 	 */
 	public net.jforum.dao.PostDAO newPostDAO()
 	{
-		return postModel;
+		return postDao;
 	}
 
 	/** 
@@ -67,7 +67,7 @@ public class SqlServerDataAccessDriver extends net.jforum.dao.generic.DataAccess
 	 */
 	public net.jforum.dao.TopicDAO newTopicDAO()
 	{
-		return topicModel;
+		return topicDao;
 	}
 	
 	/** 
@@ -75,7 +75,7 @@ public class SqlServerDataAccessDriver extends net.jforum.dao.generic.DataAccess
 	 */
 	public net.jforum.dao.UserDAO newUserDAO()
 	{
-		return userModel;
+		return userDao;
 	}
 	
 	/** 
@@ -83,7 +83,7 @@ public class SqlServerDataAccessDriver extends net.jforum.dao.generic.DataAccess
 	 */
 	public net.jforum.dao.PrivateMessageDAO newPrivateMessageDAO()
 	{
-		return pmModel;
+		return pmDao;
 	}
 	
 	/** 
@@ -91,6 +91,6 @@ public class SqlServerDataAccessDriver extends net.jforum.dao.generic.DataAccess
 	 */
 	public net.jforum.dao.KarmaDAO newKarmaDAO()
 	{
-		return karmaModel;
+		return karmaDao;
 	}
 }

@@ -42,18 +42,18 @@
  */
 package net.jforum.view.forum.common;
 
-import org.apache.log4j.Logger;
-import net.jforum.ActionServletRequest;
+import java.util.List;
+import java.util.Random;
+
 import net.jforum.dao.BannerDAO;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.entities.Banner;
-import java.util.List;
-import java.util.Random;
-import net.jforum.dao.AttachmentDAO;
+
+import org.apache.log4j.Logger;
 
 /**
  * @author Samuel Yung
- * @version $Id: BannerCommon.java,v 1.1 2005/04/04 18:40:30 samuelyung Exp $
+ * @version $Id: BannerCommon.java,v 1.2 2005/04/10 16:24:34 rafaelsteil Exp $
  */
 public class BannerCommon
 {
@@ -67,13 +67,13 @@ public class BannerCommon
 		this.dao = DataAccessDriver.getInstance().newBannerDAO();
 	}
 
-        /**
-         * Check whether the banner will be displayed based on user rights and
-         * banner filter settings.
-         * @return boolean
-         * @throws Exception
-         */
-        public boolean canBannerDisplay(int bannerId) throws Exception
+    /**
+     * Check whether the banner will be displayed based on user rights and
+     * banner filter settings.
+     * @return boolean
+     * @throws Exception
+     */
+    public boolean canBannerDisplay(int bannerId) throws Exception
 	{
 		boolean result = true;
 
@@ -91,14 +91,12 @@ public class BannerCommon
 	public boolean isActiveBannerExist(int placement) throws Exception
 	{
 		banners = dao.selectActiveBannerByPlacement(placement);
-		if((banners == null) || banners.isEmpty())
+		if (banners == null || banners.isEmpty())
 		{
 			return false;
 		}
-		else
-		{
-			return true;
-		}
+		
+		return true;
 	}
 
 	/**
@@ -119,7 +117,7 @@ public class BannerCommon
 	{
 		Banner result = null;
 
-		if((banners == null) || banners.isEmpty())
+		if (banners == null || banners.isEmpty())
 		{
 			return null;
 		}
@@ -132,7 +130,7 @@ public class BannerCommon
 		{
 			result = (Banner)banners.get(i);
 			weightTo += result.getWeight();
-			if((r >= weightFrom) && (r < weightTo))
+			if (r >= weightFrom && r < weightTo)
 			{
 				break;
 			}

@@ -53,9 +53,9 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GroupModel.java,v 1.2 2005/03/26 04:10:46 rafaelsteil Exp $
+ * @version $Id: GenericGroupDAO.java,v 1.1 2005/04/10 16:24:36 rafaelsteil Exp $
  */
-public class GroupModel implements net.jforum.dao.GroupDAO 
+public class GenericGroupDAO implements net.jforum.dao.GroupDAO 
 {
 	/**
 	 * @see net.jforum.dao.GroupDAO#selectById(int)

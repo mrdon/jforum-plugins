@@ -59,9 +59,9 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageModel.java,v 1.2 2005/03/26 04:10:46 rafaelsteil Exp $
+ * @version $Id: GenericPrivateMessageDAO.java,v 1.1 2005/04/10 16:24:35 rafaelsteil Exp $
  */
-public class PrivateMessageModel extends AutoKeys implements net.jforum.dao.PrivateMessageDAO
+public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao.PrivateMessageDAO
 {
 	/** 
 	 * @see net.jforum.dao.PrivateMessageDAO#send(net.jforum.entities.PrivateMessage)

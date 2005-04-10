@@ -24,10 +24,8 @@ ConfigModel.insert = INSERT INTO jforum_config (config_id, config_name, config_v
 UserModel.addNew = INSERT INTO jforum_users (user_id, username, user_password, user_email, user_regdate, user_actkey) VALUES (jforum_users_seq.nextval, ?, ?, ?, ?, ?)
 
 UserModel.selectAllByLimit = SELECT * FROM ( \
-        SELECT user_email, user_id, user_posts, user_regdate, username, deleted, user_from, ROW_NUMBER() OVER(ORDER BY username) LINENUM  \
-        FROM jforum_users ORDER BY username \
-        ) \
-        WHERE LINENUM >= ? AND LINENUM <= ?
+        SELECT user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail, ROW_NUMBER() OVER(ORDER BY username) LINENUM  \
+        FROM jforum_users ORDER BY username ) WHERE LINENUM >= ? AND LINENUM <= ?
 
 UserModel.lastGeneratedUserId = SELECT jforum_users_seq.currval FROM DUAL
 
@@ -43,6 +41,13 @@ UserModel.lastUserRegistered = SELECT * FROM ( \
         ORDER BY user_regdate DESC \
         ) \
         WHERE LINENUM <= 1
+        
+UserModel.selectAllByGroup = SELECT * FROM ( \
+	SELECT user_email, u.user_id, user_regdate, username, ROW_NUMBER() OVER(ORDER BY username) LINENUM \
+	FROM jforum_users u, jforum_user_groups ug \
+	WHERE u.user_id = ug.user_id \
+	AND ug.group_id = ? \
+	ORDER BY username ) WHERE LINENUM >= ? AND LINENUM <= ?
 
 # ################
 # PermissionControl
@@ -102,8 +107,8 @@ ForumModel.lastGeneratedForumId = SELECT jforum_forums_seq.currval FROM DUAL
 # #############
 # TopicModel
 # #############
-TopicModel.addNew = INSERT INTO jforum_topics (topic_id, forum_id, topic_title, user_id, topic_time, topic_first_post_id, topic_last_post_id, topic_type) \
-	VALUES (jforum_topics_seq.nextval, ?, ?, ?, ?, ?, ?, ?)
+TopicModel.addNew = INSERT INTO jforum_topics (topic_id, forum_id, topic_title, user_id, topic_time, topic_first_post_id, topic_last_post_id, topic_type, moderated) \
+	VALUES (jforum_topics_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?)
 
 TopicModel.selectAllByForumByLimit = SELECT * FROM ( \
     SELECT t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, \
@@ -260,3 +265,19 @@ AttachmentModel.addAttachment = INSERT INTO jforum_attach (attach_id, post_id, p
 
 AttachmentModel.addAttachmentInfo = INSERT INTO jforum_attach_desc (attach_desc_id, attach_id, physical_filename, real_filename, description, \
 	mimetype, filesize, upload_time, thumb, extension_id ) VALUES (jforum_attach_desc_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+	
+# ################
+# ModerationModel
+# ################
+ModerationModel.topicsByForum = SELECT * FROM ( \
+	SELECT p.post_id, t.topic_id, t.topic_title, p.user_id, enable_bbcode, p.attach, \
+	enable_html, enable_smilies, pt.post_subject, pt.post_text, username, \
+    ROW_NUMBER() OVER(ORDER BY post_time ASC) LINENUM \
+	FROM jforum_posts p, jforum_posts_text pt, jforum_users u, jforum_topics t WHERE p.post_id = pt.post_id \
+	AND p.topic_id = t.topic_id \
+	AND t.forum_id = ? \
+	AND p.user_id = u.user_id \
+	AND p.need_moderate = 1 \
+	ORDER BY t.topic_id, post_time ASC \
+      ) \
+	WHERE LINENUM BETWEEN ? AND ?

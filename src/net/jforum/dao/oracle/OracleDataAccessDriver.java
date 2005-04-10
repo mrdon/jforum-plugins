@@ -42,24 +42,35 @@
  */
 package net.jforum.dao.oracle;
 
+import net.jforum.dao.ModerationDAO;
+
 /**
- * @author Rafael Steil
- * @version $Id: OracleDataAccessDriver.java,v 1.2 2005/03/26 04:11:01 rafaelsteil Exp $
+ * @author Dmitriy Kiriy
+ * @version $Id: OracleDataAccessDriver.java,v 1.3 2005/04/10 16:24:38 rafaelsteil Exp $
  */
 public class OracleDataAccessDriver extends net.jforum.dao.generic.DataAccessDriver
 {
-	private static OraclePostDAO postModel = new OraclePostDAO();
-	private static OracleTopicDAO topicModel = new OracleTopicDAO();
-	private static OracleUserDAO userModel = new OracleUserDAO();
-	private static OraclePrivateMessageDAO pmModel = new OraclePrivateMessageDAO();
-	private static OracleScheduledSearchIndexerDAO ssim = new OracleScheduledSearchIndexerDAO();
+	private static OraclePostDAO postDao = new OraclePostDAO();
+	private static OracleTopicDAO topicDao = new OracleTopicDAO();
+	private static OracleUserDAO userDao = new OracleUserDAO();
+	private static OraclePrivateMessageDAO pmDao = new OraclePrivateMessageDAO();
+	private static OracleScheduledSearchIndexerDAO ssiDao = new OracleScheduledSearchIndexerDAO();
+	private static OracleModerationDAO moderationDao = new OracleModerationDAO();
+	
+	/**
+	 * @see net.jforum.dao.DataAccessDriver#newModerationDAO()
+	 */
+	public ModerationDAO newModerationDAO()
+	{
+		return moderationDao;
+	}
 	
 	/**
 	 * @see net.jforum.dao.DataAccessDriver#newPostDAO()
 	 */
 	public net.jforum.dao.PostDAO newPostDAO()
 	{
-		return postModel;
+		return postDao;
 	}
 
 	/** 
@@ -67,7 +78,7 @@ public class OracleDataAccessDriver extends net.jforum.dao.generic.DataAccessDri
 	 */
 	public net.jforum.dao.TopicDAO newTopicDAO()
 	{
-		return topicModel;
+		return topicDao;
 	}
 	
 	/** 
@@ -75,7 +86,7 @@ public class OracleDataAccessDriver extends net.jforum.dao.generic.DataAccessDri
 	 */
 	public net.jforum.dao.UserDAO newUserDAO()
 	{
-		return userModel;
+		return userDao;
 	}
 	
 	/**
@@ -83,7 +94,7 @@ public class OracleDataAccessDriver extends net.jforum.dao.generic.DataAccessDri
 	 */
 	public net.jforum.dao.PrivateMessageDAO newPrivateMessageDAO()
 	{
-		return pmModel;
+		return pmDao;
 	}
 	
 	/**
@@ -91,6 +102,6 @@ public class OracleDataAccessDriver extends net.jforum.dao.generic.DataAccessDri
 	 */
 	public net.jforum.dao.ScheduledSearchIndexerDAO newScheduledSearchIndexerDAO()
 	{
-		return ssim;
+		return ssiDao;
 	}
 }

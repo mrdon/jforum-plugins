@@ -56,7 +56,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericSearchIndexerDAO.java,v 1.2 2005/03/26 04:10:45 rafaelsteil Exp $
+ * @version $Id: GenericSearchIndexerDAO.java,v 1.3 2005/04/10 16:24:34 rafaelsteil Exp $
  */
 public class GenericSearchIndexerDAO extends AutoKeys implements net.jforum.dao.SearchIndexerDAO
 {
@@ -149,6 +149,7 @@ public class GenericSearchIndexerDAO extends AutoKeys implements net.jforum.dao.
 		
 		insert.close();
 		existing.close();
+		existingAssociation.close();
 		wordToPost.close();
 	}
 	

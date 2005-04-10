@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -36,25 +36,27 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on 24/05/2004 22:36:07
+ * Created on Apr 10, 2005 1:21:45 PM
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.dao.oracle;
 
-import java.util.List;
+import java.sql.ResultSet;
+
+import net.jforum.dao.generic.GenericModerationDAO;
 
 /**
- * @author Dmitriy Kiriy
- * @version $Id: OracleUserDAO.java,v 1.3 2005/04/10 16:24:39 rafaelsteil Exp $
+ * @author Rafael Steil
+ * @version $Id: OracleModerationDAO.java,v 1.1 2005/04/10 16:24:38 rafaelsteil Exp $
  */
-public class OracleUserDAO extends net.jforum.dao.generic.GenericUserDAO
+public class OracleModerationDAO extends GenericModerationDAO
 {
-	/** 
-	 * @see net.jforum.dao.UserDAO#selectAll(int, int)
+	/**
+	 * @see net.jforum.dao.generic.GenericModerationDAO#getPostTextFromResultSet(java.sql.ResultSet)
 	 */
-	public List selectAll(int startFrom, int count) throws Exception
+	protected String getPostTextFromResultSet(ResultSet rs) throws Exception
 	{
-		return super.selectAll(startFrom, (count > 0 ? startFrom + count : 0));
+		return OracleUtils.readBlobUTF16BinaryStream(rs, "post_text");
 	}
 }

@@ -46,33 +46,33 @@ package net.jforum.dao.hsqldb;
 
 /**
  * @author Marc Wick
- * @version $Id: HsqldbDataAccessDriver.java,v 1.2 2005/03/26 04:11:21 rafaelsteil Exp $
+ * @version $Id: HsqldbDataAccessDriver.java,v 1.3 2005/04/10 16:24:39 rafaelsteil Exp $
  */
 public class HsqldbDataAccessDriver extends
 		net.jforum.dao.postgresql.PostgresqlDataAccessDriver {
 
-	private static HsqldbPostDAO postModel = new HsqldbPostDAO();
-	private static HsqldbUserDAO userModel = new HsqldbUserDAO();
-	private static HsqldbTopicDAO topicModel = new HsqldbTopicDAO();
+	private static HsqldbPostDAO postDao = new HsqldbPostDAO();
+	private static HsqldbUserDAO userDao = new HsqldbUserDAO();
+	private static HsqldbTopicDAO topicDao = new HsqldbTopicDAO();
 
 	/**
 	 * @see net.jforum.dao.DataAccessDriver#newPostDAO()
 	 */
 	public net.jforum.dao.PostDAO newPostDAO() {
-		return postModel;
+		return postDao;
 	}
 
 	/**
 	 * @see net.jforum.dao.DataAccessDriver#newTopicDAO()
 	 */
 	public net.jforum.dao.TopicDAO newTopicDAO() {
-		return topicModel;
+		return topicDao;
 	}
 	
 	/**
 	 * @see net.jforum.dao.DataAccessDriver#newUserDAO()
 	 */
 	public net.jforum.dao.UserDAO newUserDAO() {
-		return userModel;
+		return userDao;
 	}
 }

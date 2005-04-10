@@ -60,9 +60,9 @@ import net.jforum.util.search.SearchFacade;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: PostModel.java,v 1.2 2005/03/26 04:10:48 rafaelsteil Exp $
+ * @version $Id: GenericPostDAO.java,v 1.1 2005/04/10 16:24:35 rafaelsteil Exp $
  */
-public class PostModel extends AutoKeys implements net.jforum.dao.PostDAO 
+public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO 
 {
 	/**
 	 * @see net.jforum.dao.PostDAO#selectById(int)

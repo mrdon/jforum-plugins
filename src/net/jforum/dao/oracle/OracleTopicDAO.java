@@ -45,8 +45,8 @@ package net.jforum.dao.oracle;
 import java.util.List;
 
 /**
- * @author Rafael Steil
- * @version $Id: OracleTopicDAO.java,v 1.2 2005/03/26 04:11:00 rafaelsteil Exp $
+ * @author Dmitriy Kiriy
+ * @version $Id: OracleTopicDAO.java,v 1.3 2005/04/10 16:24:38 rafaelsteil Exp $
  */
 public class OracleTopicDAO extends net.jforum.dao.generic.GenericTopicModelDAO
 {

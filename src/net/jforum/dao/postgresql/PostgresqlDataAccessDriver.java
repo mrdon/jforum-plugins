@@ -44,21 +44,21 @@ package net.jforum.dao.postgresql;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostgresqlDataAccessDriver.java,v 1.2 2005/03/26 04:11:09 rafaelsteil Exp $
+ * @version $Id: PostgresqlDataAccessDriver.java,v 1.3 2005/04/10 16:24:37 rafaelsteil Exp $
  */
 public class PostgresqlDataAccessDriver extends net.jforum.dao.generic.DataAccessDriver
 {
-	private static PostgresqlPostDAO postModel = new PostgresqlPostDAO();
-	private static PostgresqlTopicDAO topicModel = new PostgresqlTopicDAO();
-	private static PostgresqlUserDAO userModel = new PostgresqlUserDAO();
-	private static PostgresqlModerationDAO moderationModel = new PostgresqlModerationDAO();
+	private static PostgresqlPostDAO postDao = new PostgresqlPostDAO();
+	private static PostgresqlTopicDAO topicDao = new PostgresqlTopicDAO();
+	private static PostgresqlUserDAO userDao = new PostgresqlUserDAO();
+	private static PostgresqlModerationDAO moderationDao = new PostgresqlModerationDAO();
 
 	/** 
 	 * @see net.jforum.dao.DataAccessDriver#newPostDAO()
 	 */
 	public net.jforum.dao.PostDAO newPostDAO()
 	{
-		return postModel;
+		return postDao;
 	}
 
 	/** 
@@ -66,7 +66,7 @@ public class PostgresqlDataAccessDriver extends net.jforum.dao.generic.DataAcces
 	 */
 	public net.jforum.dao.TopicDAO newTopicDAO()
 	{
-		return topicModel;
+		return topicDao;
 	}
 	
 	/** 
@@ -74,7 +74,7 @@ public class PostgresqlDataAccessDriver extends net.jforum.dao.generic.DataAcces
 	 */
 	public net.jforum.dao.UserDAO newUserDAO()
 	{
-		return userModel;
+		return userDao;
 	}
 
 	/**
@@ -82,6 +82,6 @@ public class PostgresqlDataAccessDriver extends net.jforum.dao.generic.DataAcces
 	 */
 	public net.jforum.dao.ModerationDAO newModerationDAO()
 	{
-		return moderationModel;
+		return moderationDao;
 	}		
 }

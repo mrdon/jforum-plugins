@@ -51,9 +51,9 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerPrivateMessageDAO.java,v 1.2 2005/03/26 04:11:11 rafaelsteil Exp $
+ * @version $Id: SqlServerPrivateMessageDAO.java,v 1.3 2005/04/10 16:24:37 rafaelsteil Exp $
  */
-public class SqlServerPrivateMessageDAO extends net.jforum.dao.generic.PrivateMessageModel 
+public class SqlServerPrivateMessageDAO extends net.jforum.dao.generic.GenericPrivateMessageDAO 
 {
 	/** 
 	 * @see net.jforum.dao.PrivateMessageDAO#selectById(net.jforum.entities.PrivateMessage)

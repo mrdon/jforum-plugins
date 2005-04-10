@@ -50,13 +50,13 @@ import net.jforum.entities.PrivateMessage;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
- * @author Rafael Steil
- * @version $Id: OraclePrivateMessageDAO.java,v 1.2 2005/03/26 04:11:00 rafaelsteil Exp $
+ * @author Dmitriy Kiriy
+ * @version $Id: OraclePrivateMessageDAO.java,v 1.3 2005/04/10 16:24:38 rafaelsteil Exp $
  */
-public class OraclePrivateMessageDAO extends net.jforum.dao.generic.PrivateMessageModel
+public class OraclePrivateMessageDAO extends net.jforum.dao.generic.GenericPrivateMessageDAO
 {
 	/**
-	 * @see net.jforum.dao.generic.PrivateMessageModel#addPmText(net.jforum.entities.PrivateMessage)
+	 * @see net.jforum.dao.generic.GenericPrivateMessageDAO#addPmText(net.jforum.entities.PrivateMessage)
 	 */
 	protected void addPmText(PrivateMessage pm) throws Exception
 	{
@@ -71,7 +71,7 @@ public class OraclePrivateMessageDAO extends net.jforum.dao.generic.PrivateMessa
 	}
 	
 	/**
-	 * @see net.jforum.dao.generic.PrivateMessageModel#getPmText(java.sql.ResultSet)
+	 * @see net.jforum.dao.generic.GenericPrivateMessageDAO#getPmText(java.sql.ResultSet)
 	 */
 	protected String getPmText(ResultSet rs) throws Exception
 	{
