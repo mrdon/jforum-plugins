@@ -66,7 +66,7 @@ import org.apache.commons.fileupload.servlet.ServletRequestContext;
 
 /**
  * @author Rafael Steil
- * @version $Id: ActionServletRequest.java,v 1.18 2005/02/04 12:55:31 rafaelsteil Exp $
+ * @version $Id: ActionServletRequest.java,v 1.19 2005/04/10 17:45:25 rafaelsteil Exp $
  */
 public class ActionServletRequest extends HttpServletRequestWrapper 
 {
@@ -225,9 +225,20 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 		boolean isMultipart = false;
 		
 		String requestType = (superRequest.getMethod()).toUpperCase();
+		String requestUri = superRequest.getRequestURI();
 		
-		if ((("GET").equals(requestType) && (superRequest.getQueryString() == null)) && (superRequest.getRequestURI()).endsWith(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION))) {
-			superRequest.setCharacterEncoding(SystemGlobals.getValue(ConfigKeys.ENCODING));  String[] urlModel=(superRequest.getRequestURI()).split("/");
+		// Remove the "jsessionid" (or similar) from the URI
+		// Probably this is not the right way to go, since we're
+		// discarting the value...
+		int index = requestUri.indexOf(';');
+		if (index > -1) {
+			requestUri = requestUri.substring(0, index);
+		}
+		
+		if ((("GET").equals(requestType) && (superRequest.getQueryString() == null)) 
+				&& requestUri.endsWith(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION))) {
+			superRequest.setCharacterEncoding(SystemGlobals.getValue(ConfigKeys.ENCODING));  
+			String[] urlModel = requestUri.split("/");
 			
 			// If (context name is not null) {
 				// 0: empty

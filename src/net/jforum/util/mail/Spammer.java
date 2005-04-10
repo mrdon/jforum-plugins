@@ -66,39 +66,50 @@ import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
 /**
- * Dispatch emails to the world. 
- * TODO: should do some refactoring to send a personalized email to each user. 
+ * Dispatch emails to the world. TODO: should do some refactoring to send a personalized email to
+ * each user.
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.10 2005/03/24 03:40:44 rafaelsteil Exp $
+ * @version $Id: Spammer.java,v 1.11 2005/04/10 17:45:25 rafaelsteil Exp $
  */
-public class Spammer 
+public class Spammer
 {
 	private static final Logger logger = Logger.getLogger(Spammer.class);
-	
+
 	private static int MESSAGE_HTML = 0;
 	private static int MESSAGE_TEXT = 1;
-	
+
 	private Properties mailProps = new Properties();
 	private static int messageFormat;
 	private static Session session;
 	private static String username;
 	private static String password;
-	
 	private MimeMessage message;
 	private String messageText;
-	
+
 	protected Spammer() throws EmailException
 	{
-		mailProps.put("mail.smtp.host", SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_HOST));
+		String host = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_HOST);
+		if (host != null) {
+			int colon = host.indexOf(':');
+
+			if (colon > 0) {
+				mailProps.put("mail.smtp.host", host.substring(0, colon));
+				mailProps.put("mail.smtp.port", String.valueOf(host.substring(colon + 1)));
+			}
+			else {
+				mailProps.put("mail.smtp.host", SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_HOST));
+			}
+		}
 		mailProps.put("mail.mime.address.strict", "false");
 		mailProps.put("mail.mime.charset", SystemGlobals.getValue(ConfigKeys.MAIL_CHARSET));
 		mailProps.put("mail.smtp.auth", SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_AUTH));
-		
+
 		username = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_USERNAME);
 		password = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_PASSWORD);
-		
-		messageFormat = SystemGlobals.getValue(ConfigKeys.MAIL_MESSSAGE_FORMAT).equals("html") ? MESSAGE_HTML : MESSAGE_TEXT;
+
+		messageFormat = SystemGlobals.getValue(ConfigKeys.MAIL_MESSSAGE_FORMAT).equals("html") ? MESSAGE_HTML
+				: MESSAGE_TEXT;
 
 		session = Session.getDefaultInstance(mailProps);
 	}
@@ -107,25 +118,35 @@ public class Spammer
 	{
 		return session;
 	}
-	
+
 	public final Message getMesssage()
 	{
 		return this.message;
 	}
-	
+
 	public boolean dispatchMessages() throws Exception
 	{
 		if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_SMTP_AUTH)) {
 			if (username != null && !username.equals("") && password != null && !password.equals("")) {
 				Transport transport = Spammer.getSession().getTransport("smtp");
-				
+
 				try {
-					transport.connect(SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_HOST), username, password);
+					String host = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_HOST);
+					if (host != null) {
+						int colon = host.indexOf(':');
+						if (colon > 0) {
+							transport.connect(host.substring(0, colon), Integer.parseInt(host.substring(colon + 1)),
+									username, password);
+						}
+						else {
+							transport.connect(host, username, password);
+						}
+					}
 				}
 				catch (MessagingException e) {
 					throw new EmailException("Could not connect to the mail server", e);
 				}
-				
+
 				if (transport.isConnected()) {
 					Address[] addresses = message.getAllRecipients();
 					for (int i = 0; i < addresses.length; i++) {
@@ -143,49 +164,50 @@ public class Spammer
 				Transport.send(message, new Address[] { addresses[i] });
 			}
 		}
-		
+
 		return true;
 	}
-	
-	protected final void prepareMessage(List addresses, SimpleHash params, String subject, String messageFile) throws EmailException
+
+	protected final void prepareMessage(List addresses, SimpleHash params, String subject, String messageFile)
+			throws EmailException
 	{
 		this.message = new MimeMessage(session);
-		
+
 		try {
 			InternetAddress[] recipients = new InternetAddress[addresses.size()];
-			
+
 			String charset = SystemGlobals.getValue(ConfigKeys.MAIL_CHARSET);
 
 			this.message.setSentDate(new Date());
 			this.message.setFrom(new InternetAddress(SystemGlobals.getValue(ConfigKeys.MAIL_SENDER)));
 			this.message.setSubject(subject, charset);
-			
+
 			StringWriter sWriter = new StringWriter();
 			Template template = Configuration.getDefaultConfiguration().getTemplate(messageFile);
 			template.process(params, sWriter);
-			
+
 			this.messageText = sWriter.toString();
-			
+
 			if (messageFormat == MESSAGE_HTML) {
 				this.message.setContent(this.messageText, "text/html; charset=" + charset);
 			}
 			else {
 				this.message.setText(this.messageText, charset);
 			}
-			
+
 			int i = 0;
 			for (Iterator iter = addresses.iterator(); iter.hasNext(); i++) {
-				recipients[i] = new InternetAddress((String)iter.next());
+				recipients[i] = new InternetAddress((String) iter.next());
 			}
-			
+
 			this.message.setRecipients(Message.RecipientType.TO, recipients);
 		}
 		catch (Exception e) {
-			logger.warn("EmailException: "+ e);
+			logger.warn("EmailException: " + e);
 			throw new EmailException(e);
 		}
 	}
-	
+
 	/**
 	 * Gets the email body
 	 * 
