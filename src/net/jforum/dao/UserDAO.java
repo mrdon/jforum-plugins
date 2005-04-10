@@ -55,7 +55,7 @@ import net.jforum.entities.User;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: UserDAO.java,v 1.2 2005/03/26 04:10:33 rafaelsteil Exp $
+ * @version $Id: UserDAO.java,v 1.3 2005/04/10 16:41:18 rafaelsteil Exp $
  */
 public interface UserDAO 
 {
@@ -73,7 +73,8 @@ public interface UserDAO
 	 * Gets a specific <code>User</code>.
 	 * 
 	 * @param username The User name to search
-	 * @return <code>User</code>object containing all the information
+	 * @return <code>User</code> object containing all the information
+	 * or <code>null</code> if no data was found. 
 	 * @throws Exception
 	 * @see #selectAll
 	 */
@@ -178,7 +179,9 @@ public interface UserDAO
 	
 	/**
 	 * Adds a new User.
-	 * 
+	 * After successfuly persisting the data, this method
+	 * <b>shoud</b> call <code>user.setId(theNewId);</code>, as well
+	 * return the new user id. 
 	 * @param user Reference to a valid and configured <code>User</code> object
 	 * @return The new user id
 	 * @throws Exception

@@ -49,6 +49,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import net.jforum.Command;
+import net.jforum.ControllerUtils;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.entities.User;
@@ -56,7 +57,6 @@ import net.jforum.entities.UserSession;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.UserDAO;
 import net.jforum.dao.UserSessionDAO;
-import net.jforum.repository.ForumRepository;
 import net.jforum.repository.RankingRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.SecurityConstants;
@@ -75,7 +75,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.38 2005/04/03 03:12:12 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.39 2005/04/10 16:41:21 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -129,18 +129,19 @@ public class UserAction extends Command
 
 	public void insert() 
 	{
-		if (!SystemGlobals.getBoolValue(ConfigKeys.REGISTRATION_ENABLED)) {
+		if (!SystemGlobals.getBoolValue(ConfigKeys.REGISTRATION_ENABLED)
+				|| ConfigKeys.TYPE_SSO.equals(SystemGlobals.getValue(ConfigKeys.AUTHENTICATION_TYPE))) {
 			this.registrationDisabled();
 			return;
 		}
 		
-		this.context.put("action", "insertSave");
 		this.setTemplateName(TemplateKeys.USER_INSERT);
+		this.context.put("action", "insertSave");
 		this.context.put("username", this.request.getParameter("username"));
 		this.context.put("email", this.request.getParameter("email"));
 		
 		if (SystemGlobals.getBoolValue(ConfigKeys.CAPTCHA_REGISTRATION)){
-			//create a new image captcha
+			// Create a new image captcha
 			SessionFacade.getUserSession().createNewCaptcha();
 			this.context.put("captcha_reg", true);
 		}
@@ -148,7 +149,8 @@ public class UserAction extends Command
 
 	public void insertSave() throws Exception 
 	{
-		if (!SystemGlobals.getBoolValue(ConfigKeys.REGISTRATION_ENABLED)) {
+		if (!SystemGlobals.getBoolValue(ConfigKeys.REGISTRATION_ENABLED)
+				|| ConfigKeys.TYPE_SSO.equals(SystemGlobals.getValue(ConfigKeys.AUTHENTICATION_TYPE))) {
 			this.registrationDisabled();
 			return;
 		}
@@ -202,9 +204,6 @@ public class UserAction extends Command
 		}
 
 		int userId = um.addNew(u);
-		
-		ForumRepository.incrementTotalUsers();
-		ForumRepository.setLastRegisteredUser(u);
 
 		if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_USER_EMAIL_AUTH)) {
 			try {
@@ -318,16 +317,17 @@ public class UserAction extends Command
 				I18n.load(user.getLang());
 
 				// Autologin
-				if (this.request.getParameter("autologin") != null) {
+				if (this.request.getParameter("autologin") != null
+						&& SystemGlobals.getBoolValue(ConfigKeys.AUTO_LOGIN_ENABLED)) {
 					userSession.setAutoLogin(true);
-					JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN), "1");
-					JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_USER_HASH), 
+					ControllerUtils.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN), "1");
+					ControllerUtils.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_USER_HASH), 
 							MD5.crypt(SystemGlobals.getValue(ConfigKeys.USER_HASH_SEQUENCE) + user.getId()));
 				}
 				else {
 					// Remove cookies for safety
-					JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_USER_HASH), null);
-					JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN), null);
+					ControllerUtils.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_USER_HASH), null);
+					ControllerUtils.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN), null);
 				}
 				
 				// TODO: copy'n paste from JForum.java. Move all to an helper class
@@ -342,7 +342,7 @@ public class UserAction extends Command
 				SessionFacade.add(userSession);
 				SessionFacade.setAttribute(ConfigKeys.TOPICS_TRACKING, new HashMap());
 
-				JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA), 
+				ControllerUtils.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA), 
 						Integer.toString(user.getId()));
 
 				SecurityRepository.load(user.getId(), true);
@@ -413,13 +413,18 @@ public class UserAction extends Command
 		SessionFacade.setAttribute("logged", "0");
 		SessionFacade.add(userSession);
 
-		JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN), null);
-		JForum.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA),
+		ControllerUtils.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN), null);
+		ControllerUtils.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA),
 				SystemGlobals.getValue(ConfigKeys.ANONYMOUS_USER_ID));
 	}
 
 	public void login() throws Exception 
 	{
+		if (ConfigKeys.TYPE_SSO.equals(SystemGlobals.getValue(ConfigKeys.AUTHENTICATION_TYPE))) {
+			this.registrationDisabled();
+			return;
+		}
+		
 		if (this.request.getParameter("returnPath") != null) {
 			this.context.put("returnPath", this.request.getParameter("returnPath"));
 		}

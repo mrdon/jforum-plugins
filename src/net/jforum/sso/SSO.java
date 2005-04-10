@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -36,41 +36,27 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Aug 2, 2004 by pieter
- *
+ * Created on Mar 28, 2005 7:22:52 PM
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.drivers.external;
+package net.jforum.sso;
 
-import java.util.Map;
-
-import net.jforum.dao.UserDAO;
-import net.jforum.entities.User;
-
+import net.jforum.ActionServletRequest;
 
 /**
  * @author Rafael Steil
- * @author Pieter Olivier
- * @version $Id: LoginAuthenticator.java,v 1.3 2005/03/26 04:11:16 rafaelsteil Exp $
+ * @version $Id: SSO.java,v 1.2 2005/04/10 16:41:19 rafaelsteil Exp $
  */
-public interface LoginAuthenticator 
+public interface SSO
 {
 	/**
-	 * Authenticates an user.
-	 * 
-	 * @param username Username
-	 * @param password Password
-	 * @param extraParams Extra parameters, if any. 
-	 * @return An instance of a {@link net.jforum.entities.User} or <code>null</code>
-	 * @throws Exception
+	 * Authenticates an user. 
+	 * This method should check if the incoming user is authorized
+	 * to access the forum. 
+	 * @param request The request object
+	 * @return The username, if authentication succeded, or <code>nulll</code> 
+	 * otherwise. 
 	 */
-	public User validateLogin(String username, String password, Map extraParams) throws Exception;
-	
-	/**
-	 * Sets the user model for the instance
-	 * 
-	 * @param userModel The user model to set
-	 */
-	public void setUserModel(UserDAO userModel);
+	public String authenticateUser(ActionServletRequest request);
 }

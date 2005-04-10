@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * General utilities for the test cases.
  * 
  * @author Rafael Steil
- * @version $Id: TestCaseUtils.java,v 1.9 2005/02/16 21:04:44 franklin_samir Exp $
+ * @version $Id: TestCaseUtils.java,v 1.10 2005/04/10 16:41:23 rafaelsteil Exp $
  */
 public class TestCaseUtils
 {
@@ -128,10 +128,10 @@ public class TestCaseUtils
 	
 	public static void createThreadLocalData(int defaultUserId) throws IOException
 	{
-		JForumCommonServlet.DataHolder dh = new JForumCommonServlet.DataHolder();
+		JForumBaseServlet.DataHolder dh = new JForumBaseServlet.DataHolder();
 		dh.setRequest(new FakeActionServletRequest());
 		
-		JForumCommonServlet.setThreadLocalData(dh);
+		JForumBaseServlet.setThreadLocalData(dh);
 		
 		UserSession us = new UserSession();
 		us.setUserId(defaultUserId);

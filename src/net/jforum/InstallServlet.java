@@ -60,9 +60,9 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallServlet.java,v 1.12 2005/02/17 19:05:50 rafaelsteil Exp $
+ * @version $Id: InstallServlet.java,v 1.13 2005/04/10 16:41:20 rafaelsteil Exp $
  */
-public class InstallServlet extends JForumCommonServlet
+public class InstallServlet extends JForumBaseServlet
 {
 	/** 
 	 * @see javax.servlet.GenericServlet#init(javax.servlet.ServletConfig)

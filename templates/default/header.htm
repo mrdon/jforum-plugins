@@ -58,10 +58,12 @@
 										</a>&nbsp;
 										</span>
 
-										<a id="logout" class="mainmenu" href="${JForumContext.encodeURL("/user/logout")}"><img src="${contextPath}/templates/${templateName}/images/icon_mini_login.gif" width="12" height="13" border="0" /> ${I18n.getMessage("ForumBase.logout")} [${session.username}] </a></span>
+										<#if !sso>
+											<a id="logout" class="mainmenu" href="${JForumContext.encodeURL("/user/logout")}"><img src="${contextPath}/templates/${templateName}/images/icon_mini_login.gif" width="12" height="13" border="0" /> ${I18n.getMessage("ForumBase.logout")} [${session.username}] </a></span>
+										</#if>
 									</#if>
 	
-									<#if !logged>
+									<#if !logged && !sso>
 										<br/>
 										<a id="register" class="mainmenu" href="${JForumContext.encodeURL("/user/insert")}"><img src="${contextPath}/templates/${templateName}/images/icon_mini_register.gif" width="12" height="13" border="0" /> ${I18n.getMessage("ForumBase.register")}</a>&nbsp/&nbsp;</span>
 										<a id="login" class="mainmenu" href="${JForumContext.encodeURL("/user/login")}"><img src="${contextPath}/templates/${templateName}/images/icon_mini_login.gif" width="12" height="13" border="0" /> ${I18n.getMessage("ForumBase.login")}</a>&nbsp; </span>

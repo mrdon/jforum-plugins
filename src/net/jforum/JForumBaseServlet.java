@@ -47,12 +47,11 @@ import java.sql.Connection;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
 
-import net.jforum.exceptions.ForumStartupException;
 import net.jforum.dao.DataAccessDriver;
+import net.jforum.exceptions.ForumStartupException;
 import net.jforum.repository.BBCodeRepository;
 import net.jforum.repository.ModulesRepository;
 import net.jforum.repository.Tpl;
@@ -70,9 +69,9 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumCommonServlet.java,v 1.28 2005/03/26 04:10:37 rafaelsteil Exp $
+ * @version $Id: JForumBaseServlet.java,v 1.2 2005/04/10 16:41:20 rafaelsteil Exp $
  */
-public class JForumCommonServlet extends HttpServlet {
+public class JForumBaseServlet extends HttpServlet {
     protected boolean debug;
     private static Logger logger = Logger.getLogger(DataHolder.class);
 
@@ -134,41 +133,6 @@ public class JForumCommonServlet extends HttpServlet {
 
         // BB Code
         BBCodeRepository.setBBCollection(new BBCodeHandler().parse());
-    }
-
-    /**
-     * Gets a cookie by its name.
-     * 
-     * @param name The cookie name to retrieve
-     * @return The <code>Cookie</code> object if found, or <code>null</code> oterwhise
-     */
-    public static Cookie getCookie(String name) {
-        Cookie[] cookies = getRequest().getCookies();
-        if (cookies != null) {
-            for (int i = 0; i < cookies.length; i++) {
-                Cookie c = cookies[i];
-
-                if (c.getName().equals(name)) {
-                    return c;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Add or update a cookie. This method adds a cookie, serializing its value using XML.
-     * 
-     * @param name The cookie name.
-     * @param value The cookie value
-     */
-    public static void addCookie(String name, String value) {
-        Cookie cookie = new Cookie(name, value);
-        cookie.setMaxAge(3600 * 24 * 365);
-        cookie.setPath("/");
-
-        getResponse().addCookie(cookie);
     }
 
     /**

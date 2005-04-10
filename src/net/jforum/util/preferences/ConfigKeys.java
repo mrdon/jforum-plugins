@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.54 2005/03/26 04:11:20 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.55 2005/04/10 16:41:24 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -84,7 +84,12 @@ public class ConfigKeys {
 	public static final String DATABASE_MYSQL_ENCODING = "mysql.encoding";
 	public static final String DATABASE_AUTO_KEYS = "database.support.autokeys";
 	
+	public static final String AUTHENTICATION_TYPE = "authentication.type";
+	public static final String SSO_IMPLEMENATION = "sso.implementation";
 	public static final String LOGIN_AUTHENTICATOR = "login.authenticator";
+	public static final String TYPE_DEFAULT = "default";
+	public static final String TYPE_SSO = "sso";
+	public static final String AUTO_LOGIN_ENABLED = "auto.login.enabled";
 
 	public static final String RESOURCE_DIR = "resource.dir";
 	public static final String CONFIG_DIR = "config.dir";

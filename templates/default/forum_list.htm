@@ -130,7 +130,7 @@
 			
 			<br/>
         
-			<#if !logged>
+			<#if !logged && !sso>
 			<form name="formlogin" accept-charset="${encoding}" action="${JForumContext.encodeURL("/jforum")}" method="post">
 				<input type="hidden" name="module" value="user" />
 				<input type="hidden" name="action" value="validateLogin" />
@@ -147,8 +147,10 @@
 								${I18n.getMessage("Login.user")}: <input class="post" size="10" name="username" /> 
 								&nbsp;&nbsp;&nbsp;
 								${I18n.getMessage("Login.password")}: <input class="post" type="password" size="10" name="password" /> 
-								&nbsp;&nbsp; &nbsp;&nbsp;
-								${I18n.getMessage("Login.autoLogon")} <input class="text" type="checkbox" name="autologin" /> 
+								<#if autoLoginEnabled>
+									&nbsp;&nbsp; &nbsp;&nbsp;
+									${I18n.getMessage("Login.autoLogon")} <input class="text" type="checkbox" name="autologin" />
+								</#if>
 								&nbsp;&nbsp;&nbsp; 
 								<input class="mainoption" type="submit" value="${I18n.getMessage("Login.enter")}" name="login" /> 
 							</span>

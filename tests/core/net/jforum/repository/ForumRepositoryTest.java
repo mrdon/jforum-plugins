@@ -49,7 +49,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 import net.jforum.ConfigLoader;
-import net.jforum.JForumCommonServlet;
+import net.jforum.JForumBaseServlet;
 import net.jforum.SessionFacade;
 import net.jforum.TestCaseUtils;
 import net.jforum.dao.CategoryDAO;
@@ -61,7 +61,7 @@ import net.jforum.view.forum.common.ForumCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumRepositoryTest.java,v 1.10 2005/03/26 04:11:21 rafaelsteil Exp $
+ * @version $Id: ForumRepositoryTest.java,v 1.11 2005/04/10 16:41:23 rafaelsteil Exp $
  */
 public class ForumRepositoryTest extends TestCase 
 {
@@ -161,7 +161,7 @@ public class ForumRepositoryTest extends TestCase
 	 */
 	protected void tearDown() throws Exception 
 	{
-		JForumCommonServlet.setThreadLocalData(null);
+		JForumBaseServlet.setThreadLocalData(null);
 	}
 	
 	/*

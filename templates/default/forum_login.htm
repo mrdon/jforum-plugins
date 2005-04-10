@@ -46,9 +46,11 @@
 					<td><input type="password" maxlength="25" size="25" name="password" /> </td>
 				</tr>
 
-				<tr align="middle">
-					<td colspan="2"><span class="gen">${I18n.getMessage("Login.autoLogon")}: <input type="checkbox" name="autologin" /></span></td>
-				</tr>
+				<#if autoLoginEnabled>
+					<tr align="middle">
+						<td colspan="2"><span class="gen">${I18n.getMessage("Login.autoLogon")}: <input type="checkbox" name="autologin" /></span></td>
+					</tr>
+				</#if>
 
 				<tr align="middle">
 					<td colspan="2">

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -36,65 +36,29 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Jan 3, 2005 1:20:24 PM
+ * Created on Mar 28, 2005 7:36:00 PM
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.drivers.external;
+package net.jforum.sso;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.Map;
-
-import net.jforum.JForum;
-import net.jforum.dao.UserDAO;
-import net.jforum.entities.User;
-import net.jforum.util.MD5;
-import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.ActionServletRequest;
 
 /**
- * Default login authenticator for JForum.
- * This authenticator will validate the input against
- * <i>jforum_users</i>. 
- * 
+ * Simple SSO authenticator. 
+ * This class will try to validate an user by simple
+ * checking <code>request.getRemoteUser()</code> is not
+ * null. 
  * @author Rafael Steil
- * @version $Id: DefaultLoginAuthenticator.java,v 1.3 2005/03/26 04:11:16 rafaelsteil Exp $
+ * @version $Id: RemoteUserSSO.java,v 1.2 2005/04/10 16:41:19 rafaelsteil Exp $
  */
-public class DefaultLoginAuthenticator implements LoginAuthenticator
+public class RemoteUserSSO implements SSO
 {
-	private UserDAO userModel;
-
 	/**
-	 * @see net.jforum.drivers.external.LoginAuthenticator#setUserModel(net.jforum.dao.UserDAO)
+	 * @see net.jforum.sso.SSO#authenticateUser(net.jforum.ActionServletRequest)
 	 */
-	public void setUserModel(UserDAO userModel)
+	public String authenticateUser(ActionServletRequest request)
 	{
-		this.userModel = userModel;
-	}
-
-	/**
-	 * @see net.jforum.drivers.external.LoginAuthenticator#validateLogin(java.lang.String, java.lang.String, Object[])
-	 */
-	public User validateLogin(String username, String password, Map extraParams) throws Exception
-	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.login"));
-		p.setString(1, username);
-		p.setString(2, MD5.crypt(password));
-		
-		User user = null;
-		
-		ResultSet rs = p.executeQuery();
-		if (rs.next() && rs.getInt("user_id") > 0) {
-			user = this.userModel.selectById(rs.getInt("user_id"));
-		}
-
-		rs.close();
-		p.close();
-		
-		if (user != null && !user.isDeleted() && (user.getActivationKey() == null || user.isActive())) {
-			return user;
-		}
-		
-		return null;
+		return request.getRemoteUser();
 	}
 }

@@ -52,16 +52,16 @@ import java.util.List;
 
 import net.jforum.JForum;
 import net.jforum.dao.DataAccessDriver;
-import net.jforum.drivers.external.LoginAuthenticator;
 import net.jforum.entities.Group;
 import net.jforum.entities.KarmaStatus;
 import net.jforum.entities.User;
+import net.jforum.sso.LoginAuthenticator;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericUserDAO.java,v 1.2 2005/03/26 04:10:48 rafaelsteil Exp $
+ * @version $Id: GenericUserDAO.java,v 1.3 2005/04/10 16:41:21 rafaelsteil Exp $
  */
 public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO 
 {
