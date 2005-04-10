@@ -61,13 +61,14 @@ import net.jforum.util.I18n;
 import net.jforum.util.MD5;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.view.forum.common.BannerCommon;
 import freemarker.template.SimpleHash;
 
 /**
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.2 2005/04/10 16:41:20 rafaelsteil Exp $
+ * @version $Id: ControllerUtils.java,v 1.3 2005/04/10 16:56:39 rafaelsteil Exp $
  */
 public class ControllerUtils
 {
@@ -97,6 +98,7 @@ public class ControllerUtils
 		context.put("bookmarksEnabled", SecurityRepository.canAccess(SecurityConstants.PERM_BOOKMARKS_ENABLED));
 		context.put("JForumContext", new JForumContext(JForum.getRequest().getContextPath(), 
 				SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION), JForum.getRequest(),JForum.getResponse()));
+		JForum.getContext().put("bannerCommon", new BannerCommon());
 	}
 	
 	/**
