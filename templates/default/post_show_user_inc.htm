@@ -21,7 +21,7 @@
 <br /> 
 
 <#if post.userId != 1>
-	${I18n.getMessage("PostShow.userRegistrationDate")}: ${user.registrationDate?date('dd/MM/yyyy')}<br />
+	${I18n.getMessage("PostShow.userRegistrationDate")}: ${user.registrationDate}<br />
 	${I18n.getMessage("PostShow.userTotalMessages")}: ${user.totalPosts}
 </#if>
 <br />

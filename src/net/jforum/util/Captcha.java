@@ -75,7 +75,7 @@ import com.octo.captcha.image.gimpy.GimpyFactory;
 
 /**
  * @author James Yong
- * @version $Id: Captcha.java,v 1.3 2004/12/30 00:07:59 rafaelsteil Exp $
+ * @version $Id: Captcha.java,v 1.4 2005/05/02 03:44:14 rafaelsteil Exp $
  */
 public class Captcha extends ListImageCaptchaEngine
 {
@@ -104,16 +104,16 @@ public class Captcha extends ListImageCaptchaEngine
 		this.textPasterList = new ArrayList();
 		this.fontGeneratorList = new ArrayList();
 
-		this.backgroundGeneratorList.add(new GradientBackgroundGenerator(new Integer(220), 
+		this.backgroundGeneratorList.add(new GradientBackgroundGenerator(new Integer(250), 
 				new Integer(50), Color.BLACK, Color.GRAY));
-		this.backgroundGeneratorList.add(new FunkyBackgroundGenerator(new Integer(220), new Integer(50)));
+		this.backgroundGeneratorList.add(new FunkyBackgroundGenerator(new Integer(250), new Integer(50)));
 
 		this.textPasterList.add(new RandomTextPaster(new Integer(6), new Integer(8), Color.RED));
 		this.textPasterList.add(new RandomTextPaster(new Integer(6), new Integer(8), Color.ORANGE));
 		this.textPasterList.add(new RandomTextPaster(new Integer(6), new Integer(8), Color.BLUE));
 		this.textPasterList.add(new RandomTextPaster(new Integer(6), new Integer(8), Color.WHITE));
 
-		this.fontGeneratorList.add(new TwistedAndShearedRandomFontGenerator(new Integer(30), new Integer(40)));
+		this.fontGeneratorList.add(new TwistedAndShearedRandomFontGenerator(new Integer(25), new Integer(35)));
 
 		// Create a random word generator
 		WordGenerator words = new RandomWordGenerator(charsInUsed);

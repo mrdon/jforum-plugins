@@ -67,7 +67,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserCommon.java,v 1.3 2005/03/26 04:11:22 rafaelsteil Exp $
+ * @version $Id: UserCommon.java,v 1.4 2005/05/02 03:44:20 rafaelsteil Exp $
  */
 public class UserCommon 
 {
@@ -167,7 +167,7 @@ public class UserCommon
 		UploadUtils uploadUtils = new UploadUtils(item, JForum.getRequest());
 		
 		// Gets file extension
-		String extension = uploadUtils.getExtension();
+		String extension = uploadUtils.getExtension().toLowerCase();
 		int type = -1;
 		
 		if (extension.equals("jpg") || extension.equals("jpeg")) {

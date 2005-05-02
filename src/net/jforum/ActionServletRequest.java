@@ -66,7 +66,7 @@ import org.apache.commons.fileupload.servlet.ServletRequestContext;
 
 /**
  * @author Rafael Steil
- * @version $Id: ActionServletRequest.java,v 1.19 2005/04/10 17:45:25 rafaelsteil Exp $
+ * @version $Id: ActionServletRequest.java,v 1.20 2005/05/02 03:44:14 rafaelsteil Exp $
  */
 public class ActionServletRequest extends HttpServletRequestWrapper 
 {
@@ -231,8 +231,21 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 		// Probably this is not the right way to go, since we're
 		// discarting the value...
 		int index = requestUri.indexOf(';');
+		
 		if (index > -1) {
-			requestUri = requestUri.substring(0, index);
+			int lastIndex = requestUri.indexOf('?', index);
+			
+			if (lastIndex == -1) {
+				lastIndex = requestUri.indexOf('&', index);
+			}
+			
+			if (lastIndex == -1) {
+				requestUri = requestUri.substring(0, index);
+			}
+			else {
+				String part1 = requestUri.substring(0, index);
+				requestUri = part1 + requestUri.substring(lastIndex);
+			}
 		}
 		
 		if ((("GET").equals(requestType) && (superRequest.getQueryString() == null)) 

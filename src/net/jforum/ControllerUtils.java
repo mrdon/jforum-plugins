@@ -47,6 +47,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpSession;
 
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.UserDAO;
@@ -61,14 +62,13 @@ import net.jforum.util.I18n;
 import net.jforum.util.MD5;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.view.forum.common.BannerCommon;
 import freemarker.template.SimpleHash;
 
 /**
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.3 2005/04/10 16:56:39 rafaelsteil Exp $
+ * @version $Id: ControllerUtils.java,v 1.4 2005/05/02 03:44:14 rafaelsteil Exp $
  */
 public class ControllerUtils
 {
@@ -78,6 +78,7 @@ public class ControllerUtils
 	 */
 	public void prepareTemplateContext(SimpleHash context)
 	{
+		context.put("dateTimeFormat", SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
 		context.put("autoLoginEnabled", SystemGlobals.getBoolValue(ConfigKeys.AUTO_LOGIN_ENABLED));
 		context.put("sso", ConfigKeys.TYPE_SSO.equals(SystemGlobals.getValue(ConfigKeys.AUTHENTICATION_TYPE)));
 		context.put("contextPath", JForum.getRequest().getContextPath());
@@ -97,8 +98,7 @@ public class ControllerUtils
 		context.put("encoding", SystemGlobals.getValue(ConfigKeys.ENCODING));
 		context.put("bookmarksEnabled", SecurityRepository.canAccess(SecurityConstants.PERM_BOOKMARKS_ENABLED));
 		context.put("JForumContext", new JForumContext(JForum.getRequest().getContextPath(), 
-				SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION), JForum.getRequest(),JForum.getResponse()));
-		JForum.getContext().put("bannerCommon", new BannerCommon());
+				SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION), JForum.getRequest(), JForum.getResponse()));
 	}
 	
 	/**
@@ -203,12 +203,27 @@ public class ControllerUtils
 				UserDAO udao = DataAccessDriver.getInstance().newUserDAO();
 				
 				User user = udao.selectByName(username);
+				
 				if (user == null) {
 					// Is a new user for us. Register him
 					user = new User();
 					user.setUsername(username);
-					user.setPassword("sso");
-					user.setEmail("sso@user");
+
+					HttpSession session = JForum.getRequest().getSession();
+					
+					String email = (String)session.getAttribute(ConfigKeys.SSO_EMAIL_ATTRIBUTE);
+					String password = (String)session.getAttribute(ConfigKeys.SSO_PASSWORD_ATTRIBUTE);
+					
+					if (email == null) {
+						email = SystemGlobals.getValue(ConfigKeys.SSO_DEFAULT_EMAIL);
+					}
+					
+					if (password == null) {
+						password = SystemGlobals.getValue(ConfigKeys.SSO_DEFAULT_PASSWORD);
+					}
+					
+					user.setPassword(password);
+					user.setEmail(email);
 					user.setActive(1);
 					
 					udao.addNew(user);

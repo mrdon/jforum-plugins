@@ -5,21 +5,18 @@ CREATE SEQUENCE jforum_banlist_seq
 INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
-
 CREATE TABLE jforum_banlist (
     banlist_id NUMBER(10) NOT NULL,
     user_id NUMBER(10) DEFAULT 0,
-    banlist_ip VARCHAR2(20) DEFAULT '',
+    banlist_ip VARCHAR2(20) DEFAULT ' ' NOT NULL,
     banlist_email VARCHAR2(255) NOT NULL,
     PRIMARY KEY(banlist_id)
 );
-
 CREATE INDEX idx_banlist_user ON jforum_banlist(user_id);
 
 --
 -- Table structure for table 'jforum_categories'
 --
-
 CREATE SEQUENCE jforum_categories_seq
 INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
@@ -27,23 +24,23 @@ INCREMENT BY 1
 
 CREATE TABLE jforum_categories (
   categories_id NUMBER(10) NOT NULL,
-  title VARCHAR2(100) DEFAULT '' ,
+  title VARCHAR2(100) DEFAULT ' ' NOT NULL ,
   display_order NUMBER(10) DEFAULT 0 NOT NULL,
+  moderated NUMBER(10) DEFAULT 0,
   PRIMARY KEY(categories_id)
 );
 
 --
 -- Table structure for table 'jforum_config'
 --
-
 CREATE SEQUENCE jforum_config_seq
 INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
 
 CREATE TABLE jforum_config (
-  config_name VARCHAR2(255)  DEFAULT '',
-  config_value VARCHAR2(255) DEFAULT '',
+  config_name VARCHAR2(255)  DEFAULT ' ' NOT NULL,
+  config_value VARCHAR2(255) DEFAULT ' ' NOT NULL,
   config_id NUMBER(10) NOT NULL,
   PRIMARY KEY(config_id)
 );
@@ -60,14 +57,15 @@ INCREMENT BY 1
 CREATE TABLE jforum_forums (
   forum_id NUMBER(10) NOT NULL,
   categories_id NUMBER(10)  DEFAULT 1 NOT NULL,
-  forum_name VARCHAR2(150) DEFAULT '',
-  forum_desc VARCHAR2(255) DEFAULT NULL,
+  forum_name VARCHAR2(150) DEFAULT ' ' NOT NULL,
+  forum_desc VARCHAR2(255) DEFAULT ' ',
   forum_order NUMBER(10) DEFAULT 1,
   forum_topics NUMBER(10) DEFAULT 0 NOT NULL,
   forum_last_post_id NUMBER(10)  DEFAULT 0 NOT NULL,
   moderated NUMBER(10) DEFAULT 0,
   PRIMARY KEY (forum_id)
 );
+CREATE INDEX idx_forums_categories_id ON jforum_forums(categories_id);
 
 --
 -- Table structure for table 'jforum_groups'
@@ -80,9 +78,8 @@ INCREMENT BY 1
 
 CREATE TABLE jforum_groups (
   group_id NUMBER(10) NOT NULL,
-  group_name VARCHAR2(40) DEFAULT '',
+  group_name VARCHAR2(40) DEFAULT ' ' NOT NULL,
   group_description VARCHAR2(255) DEFAULT NULL,
-  categories_id,
   parent_id NUMBER(10) DEFAULT 0,
   PRIMARY KEY (group_id)
 );
@@ -184,11 +181,11 @@ INCREMENT BY 1
 CREATE TABLE jforum_privmsgs (
   privmsgs_id NUMBER(10) NOT NULL,
   privmsgs_type NUMBER(10) DEFAULT 0 NOT NULL,
-  privmsgs_subject VARCHAR2(255) DEFAULT '' ,
+  privmsgs_subject VARCHAR2(255) DEFAULT ' ' NOT NULL ,
   privmsgs_from_userid NUMBER(10) DEFAULT 0 NOT NULL,
   privmsgs_to_userid NUMBER(10) DEFAULT 0 NOT NULL,
   privmsgs_date DATE DEFAULT SYSDATE NOT NULL,
-  privmsgs_ip VARCHAR2(8) DEFAULT '',
+  privmsgs_ip VARCHAR2(8) DEFAULT ' ' NOT NULL,
   privmsgs_enable_bbcode NUMBER(10) DEFAULT 1 NOT NULL,
   privmsgs_enable_html NUMBER(10) DEFAULT 0 NOT NULL,
   privmsgs_enable_smilies NUMBER(10) DEFAULT 1 NOT NULL,
@@ -213,7 +210,7 @@ INCREMENT BY 1
 
 CREATE TABLE jforum_ranks (
   rank_id NUMBER(10) NOT NULL,
-  rank_title VARCHAR2(50) DEFAULT '',
+  rank_title VARCHAR2(50) DEFAULT ' ' NOT NULL,
   rank_min NUMBER(10) DEFAULT 0 NOT NULL,
   rank_special NUMBER(10) DEFAULT NULL,
   rank_image VARCHAR2(255) DEFAULT NULL,
@@ -225,11 +222,11 @@ CREATE TABLE jforum_ranks (
 --
 
 CREATE TABLE jforum_sessions (
-  session_id VARCHAR2(50) DEFAULT '',
+  session_id VARCHAR2(100) DEFAULT ' ' NOT NULL,
   session_user_id NUMBER(10) DEFAULT 0,
   session_start DATE DEFAULT SYSDATE NOT NULL,
   session_time NUMBER(10) DEFAULT 0 NOT NULL,
-  session_ip VARCHAR2(8) DEFAULT '',
+  session_ip VARCHAR2(8) DEFAULT ' ' NOT NULL,
   session_page NUMBER(10) DEFAULT 0 NOT NULL,
   session_logged_int NUMBER(10) DEFAULT NULL
 );
@@ -245,7 +242,7 @@ INCREMENT BY 1
 
 CREATE TABLE jforum_smilies (
   smilie_id NUMBER(10) NOT NULL,
-  code VARCHAR2(50) DEFAULT '',
+  code VARCHAR2(50) DEFAULT ' ' NOT NULL,
   url VARCHAR2(100) DEFAULT NULL,
   disk_name VARCHAR2(255),
   PRIMARY KEY (smilie_id)
@@ -262,8 +259,8 @@ INCREMENT BY 1
 
 CREATE TABLE jforum_themes (
   themes_id NUMBER(10) NOT NULL,
-  template_name VARCHAR2(30) DEFAULT '',
-  style_name VARCHAR2(30) DEFAULT '',
+  template_name VARCHAR2(30) DEFAULT ' ' NOT NULL,
+  style_name VARCHAR2(30) DEFAULT ' ' NOT NULL,
   PRIMARY KEY (themes_id)
 );
 
@@ -279,7 +276,7 @@ INCREMENT BY 1
 CREATE TABLE jforum_topics (
   topic_id NUMBER(10) NOT NULL,
   forum_id NUMBER(10) DEFAULT 0 NOT NULL,
-  topic_title VARCHAR2(100) DEFAULT '',
+  topic_title VARCHAR2(100) DEFAULT ' ' NOT NULL,
   user_id NUMBER(10) DEFAULT 0 NOT NULL,
   topic_time DATE DEFAULT SYSDATE NOT NULL,
   topic_views NUMBER(10) DEFAULT 1,
@@ -307,7 +304,6 @@ CREATE TABLE jforum_topics_watch (
   user_id NUMBER(10) DEFAULT 0 NOT NULL,
   is_read NUMBER(10) DEFAULT 0 NOT NULL
 );
-
 CREATE INDEX idx_tw_topic ON jforum_topics_watch(topic_id);
 CREATE INDEX idx_tw_user ON jforum_topics_watch(user_id);
 
@@ -323,15 +319,15 @@ INCREMENT BY 1
 CREATE TABLE jforum_users (
   user_id NUMBER(10) NOT NULL,
   user_active NUMBER(10) DEFAULT NULL,
-  username VARCHAR2(50) DEFAULT '',
-  user_password VARCHAR2(32) DEFAULT '',
+  username VARCHAR2(50) DEFAULT ' ' NOT NULL,
+  user_password VARCHAR2(32) DEFAULT ' ' NOT NULL,
   user_session_time NUMBER(10) DEFAULT 0 NOT NULL,
   user_session_page NUMBER(10) DEFAULT 0 NOT NULL,
   user_lastvisit DATE DEFAULT SYSDATE NOT NULL,
   user_regdate DATE DEFAULT SYSDATE NOT NULL,
   user_level NUMBER(10) DEFAULT NULL,
   user_posts NUMBER(10) DEFAULT 0 NOT NULL,
-  user_timezone VARCHAR2(5) DEFAULT '',
+  user_timezone VARCHAR2(5) DEFAULT ' ' NOT NULL,
   user_style NUMBER(10) DEFAULT NULL,
   user_lang VARCHAR2(255) DEFAULT NULL,
   user_dateformat VARCHAR2(30) DEFAULT '%d/%M/%Y %H:%i' NOT NULL,
@@ -353,7 +349,7 @@ CREATE TABLE jforum_users (
   rank_id NUMBER(10) DEFAULT 1,
   user_avatar VARCHAR2(100) DEFAULT NULL,
   user_avatar_type NUMBER(10) DEFAULT 0 NOT NULL,
-  user_email VARCHAR2(255) DEFAULT '',
+  user_email VARCHAR2(255) DEFAULT ' ' NOT NULL,
   user_icq VARCHAR2(15) DEFAULT NULL,
   user_website VARCHAR2(100) DEFAULT NULL,
   user_from VARCHAR2(100) DEFAULT NULL,
@@ -400,7 +396,7 @@ CREATE TABLE jforum_vote_desc (
 CREATE TABLE jforum_vote_results (
   vote_id NUMBER(10) DEFAULT 0 NOT NULL,
   vote_option_id NUMBER(10) DEFAULT 0 NOT NULL,
-  vote_option_text VARCHAR2(255) DEFAULT '',
+  vote_option_text VARCHAR2(255) DEFAULT ' ' NOT NULL,
   vote_result NUMBER(10) DEFAULT 0 NOT NULL
 );
 
@@ -411,7 +407,7 @@ CREATE TABLE jforum_vote_results (
 CREATE TABLE jforum_vote_voters (
   vote_id NUMBER(10) DEFAULT 0 NOT NULL,
   vote_user_id NUMBER(10) DEFAULT 0 NOT NULL,
-  vote_user_ip CHAR(8) DEFAULT ''
+  vote_user_ip CHAR(8) DEFAULT ' ' NOT NULL
 );
 
 --
@@ -425,8 +421,8 @@ INCREMENT BY 1
 
 CREATE TABLE jforum_words (
   word_id NUMBER(10) NOT NULL,
-  word VARCHAR2(100) DEFAULT '',
-  replacement VARCHAR2(100) DEFAULT '',
+  word VARCHAR2(100) DEFAULT ' ' NOT NULL,
+  replacement VARCHAR2(100) DEFAULT ' ' NOT NULL,
   PRIMARY KEY (word_id)
 );
 
@@ -444,7 +440,6 @@ CREATE TABLE jforum_search_words (
   word_hash NUMBER(10),
   PRIMARY KEY (word_id)
 );
-
 CREATE INDEX idx_sw_word ON jforum_search_words(word);
 CREATE INDEX idx_sw_hash ON jforum_search_words(word_hash);
 
@@ -456,7 +451,6 @@ CREATE TABLE jforum_search_wordmatch (
   word_id NUMBER(10) NOT NULL,
   title_match NUMBER(10) DEFAULT 0
 );
-
 CREATE INDEX idx_swm_post ON jforum_search_wordmatch(post_id);
 CREATE INDEX idx_swm_word ON jforum_search_wordmatch(word_id);
 CREATE INDEX idx_swm_title ON jforum_search_wordmatch(title_match);
@@ -466,17 +460,16 @@ CREATE INDEX idx_swm_title ON jforum_search_wordmatch(title_match);
 --
 CREATE TABLE jforum_search_results (
   topic_id NUMBER(10) NOT NULL,
-  session_field VARCHAR2(50),
+  session_id VARCHAR2(100),
   search_time DATE
 );
-
 CREATE INDEX idx_sr_topic ON jforum_search_results(topic_id);
 
 
 CREATE TABLE jforum_search_topics (
   topic_id NUMBER(10) NOT NULL,
   forum_id NUMBER(10) DEFAULT 0 NOT NULL,
-  topic_title VARCHAR2(60) DEFAULT '',
+  topic_title VARCHAR2(100) DEFAULT ' ' NOT NULL,
   user_id NUMBER(10) DEFAULT 0 NOT NULL,
   topic_time DATE DEFAULT SYSDATE NOT NULL,
   topic_views NUMBER(10) DEFAULT 1,
@@ -487,7 +480,7 @@ CREATE TABLE jforum_search_topics (
   topic_first_post_id NUMBER(10) DEFAULT 0,
   topic_last_post_id NUMBER(10) DEFAULT 0 NOT NULL,
   moderated NUMBER(10) DEFAULT 0,
-  session_field VARCHAR2(50),
+  session_id VARCHAR2(100),
   search_time DATE
 );
 CREATE INDEX idx_st_topic ON jforum_search_topics(topic_id);
@@ -511,6 +504,7 @@ CREATE TABLE jforum_karma (
 	post_user_id NUMBER(10) NOT NULL,
 	from_user_id NUMBER(10) NOT NULL,
 	points NUMBER(10) NOT NULL,
+	rate_date DATE DEFAULT NULL,
 	PRIMARY KEY(karma_id)
 );
 
