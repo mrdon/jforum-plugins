@@ -56,7 +56,7 @@ ForumModel.selectAll = SELECT f.*, COUNT(p.post_id) AS total_posts \
 	      f.forum_name, f.forum_desc, \
 	      f.forum_topics, f.forum_last_post_id, f.moderated
 
-ForumModel.generatedForumId = SELECT MAX(forum_id) from jforum_forums
+ForumModel.lastGeneratedForumId = SELECT MAX(forum_id) from jforum_forums
 
 # #############
 # TopicModel

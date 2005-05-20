@@ -55,13 +55,42 @@ import net.jforum.util.preferences.TemplateKeys;
 
 import org.apache.log4j.Logger;
 
+import freemarker.template.SimpleHash;
+
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.5 2005/03/15 18:24:21 rafaelsteil Exp $
+ * @version $Id: ViewCommon.java,v 1.6 2005/05/20 15:37:57 rafaelsteil Exp $
  */
 public final class ViewCommon
 {
 	private static final Logger logger = Logger.getLogger(ViewCommon.class);
+	
+	/**
+	 * Prepared the user context to use data pagination. 
+	 * The following variables are set to the context:
+	 * <p>
+	 * 	<ul>
+	 * 		<li> <i>totalPages</i> - total number of pages
+	 * 		<li> <i>recordsPerPage</i> - how many records will be shown on each page
+	 * 		<li> <i>totalRecords</i> - number of records fount
+	 * 		<li> <i>thisPage</i> - the current page being shown
+	 * 		<li> <i>start</i> - 
+	 * 	</ul>
+	 * </p>
+	 * @param start
+	 * @param totalRecords
+	 * @param recordsPerPage
+	 */
+	public static void contextToPagination(int start, int totalRecords, int recordsPerPage)
+	{
+		SimpleHash context = JForum.getContext();
+		
+		context.put("totalPages", new Double(Math.ceil((double) totalRecords / (double) recordsPerPage)));
+		context.put("recordsPerPage", new Integer(recordsPerPage));
+		context.put("totalRecords", new Integer(totalRecords));
+		context.put("thisPage", new Double(Math.ceil((double) (start + 1) / (double) recordsPerPage)));
+		context.put("start", new Integer(start));
+	}
 	
 	public static String contextToLogin() 
 	{

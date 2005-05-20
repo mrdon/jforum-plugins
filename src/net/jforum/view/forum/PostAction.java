@@ -90,7 +90,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.73 2005/04/01 14:37:29 samuelyung Exp $
+ * @version $Id: PostAction.java,v 1.74 2005/05/20 15:38:01 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -100,7 +100,7 @@ public class PostAction extends Command {
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 
-		int userId = SessionFacade.getUserSession().getUserId();
+		UserSession us = SessionFacade.getUserSession();
 		int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 
 		int topicId = this.request.getIntParameter("topic_id");
@@ -120,7 +120,7 @@ public class PostAction extends Command {
 		int count = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 		int start = ViewCommon.getStartPage();
 
-		PermissionControl pc = SecurityRepository.get(userId);
+		PermissionControl pc = SecurityRepository.get(us.getUserId());
 
 		boolean canEdit = false;
 		if (pc.canAccess(SecurityConstants.PERM_MODERATION_POST_EDIT)) {
@@ -128,7 +128,7 @@ public class PostAction extends Command {
 		}
 
 		Map usersMap = new HashMap();
-		List helperList = PostCommon.topicPosts(pm, um, usersMap, canEdit, userId, topic.getId(), start, count);
+		List helperList = PostCommon.topicPosts(pm, um, usersMap, canEdit, us.getUserId(), topic.getId(), start, count);
 		
 		// Ugly assumption:
 		// Is moderation pending for the topic?
@@ -137,15 +137,12 @@ public class PostAction extends Command {
 			return;
 		}
 
-		boolean isModerator = (pc.canAccess(SecurityConstants.PERM_MODERATION))
-				&& (pc.canAccess(SecurityConstants.PERM_MODERATION_FORUMS, Integer.toString(topic.getForumId())));
-
 		// Set the topic status as read
-		tm.updateReadStatus(topic.getId(), userId, true);
+		tm.updateReadStatus(topic.getId(), us.getUserId(), true);
 		
 		tm.incrementTotalViews(topic.getId());
 
-		if (userId != anonymousUser) {
+		if (us.getUserId() != anonymousUser) {
 			((HashMap) SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(topic.getId()),
 					new Long(topic.getLastPostTimeInMillis().getTime()));
 		}
@@ -155,7 +152,7 @@ public class PostAction extends Command {
 		this.context.put("canDownloadAttachments", SecurityRepository.canAccess(
 				SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD));
 		this.context.put("am", new AttachmentCommon(this.request));
-		this.context.put("karmaVotes", DataAccessDriver.getInstance().newKarmaDAO().getUserVotes(topic.getId(), userId));
+		this.context.put("karmaVotes", DataAccessDriver.getInstance().newKarmaDAO().getUserVotes(topic.getId(), us.getUserId()));
 		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
 		this.context.put("canRemove",
 				SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE));
@@ -179,9 +176,7 @@ public class PostAction extends Command {
 		this.context.put("replyOnly", !SecurityRepository.canAccess(SecurityConstants.PERM_REPLY_ONLY, 
 				Integer.toString(topic.getForumId())));
 
-		this.context.put("isModerator", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION)
-						&& SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_FORUMS, 
-								Integer.toString(topic.getForumId())));
+		this.context.put("isModerator", us.isModerator(topic.getForumId()));
 
 		// Topic Status
 		this.context.put("STATUS_LOCKED", new Integer(Topic.STATUS_LOCKED));
@@ -189,11 +184,7 @@ public class PostAction extends Command {
 
 		// Pagination
 		int totalPosts = tm.getTotalPosts(topic.getId());
-		this.context.put("totalPages", new Double(Math.ceil((double) totalPosts / (double) count)));
-		this.context.put("recordsPerPage", new Integer(count));
-		this.context.put("totalRecords", new Integer(totalPosts));
-		this.context.put("thisPage", new Double(Math.ceil((double) (start + 1) / (double) count)));
-		this.context.put("start", new Integer(start));
+		ViewCommon.contextToPagination(start, totalPosts, count);
 	}
 
 	public void review() throws Exception {

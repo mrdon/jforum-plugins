@@ -61,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericUserDAO.java,v 1.3 2005/04/10 16:41:21 rafaelsteil Exp $
+ * @version $Id: GenericUserDAO.java,v 1.4 2005/05/20 15:37:58 rafaelsteil Exp $
  */
 public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO 
 {
@@ -171,6 +171,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 		u.setLang(rs.getString("user_lang"));
 		u.setActive(rs.getInt("user_active"));
 		u.setKarma(new KarmaStatus(u.getId(), rs.getDouble("user_karma")));
+		u.setNotifyPrivateMessagesEnabled("1".equals(rs.getString("user_notify_pm"))); 
 		
 		String actkey = rs.getString("user_actkey");
 		u.setActivationKey(actkey == null || "".equals(actkey) ? null : actkey);
@@ -222,7 +223,8 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 		p.setInt(23, user.getAttachSignatureEnabled() ? 1 : 0);
 		p.setString(24, user.getUsername());
 		p.setString(25, user.getLang());
-		p.setInt(26, user.getId());
+		p.setInt(26, user.isNotifyPrivateMessagesEnabled() ? 1 : 0);
+		p.setInt(27, user.getId());
 		
 		p.executeUpdate();
 		p.close();

@@ -50,6 +50,7 @@ import java.util.Date;
 
 import net.jforum.SessionFacade;
 import net.jforum.repository.SecurityRepository;
+import net.jforum.security.PermissionControl;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.Captcha;
 import net.jforum.util.preferences.ConfigKeys;
@@ -59,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * Stores information about user's session.
  * 
  * @author Rafael Steil
- * @version $Id: UserSession.java,v 1.15 2005/01/05 00:24:57 rafaelsteil Exp $
+ * @version $Id: UserSession.java,v 1.16 2005/05/20 15:38:00 rafaelsteil Exp $
  */
 public class UserSession implements Serializable
 {
@@ -272,6 +273,21 @@ public class UserSession implements Serializable
 	public boolean isModerator() throws Exception
 	{
 		return SecurityRepository.canAccess(this.userId, SecurityConstants.PERM_MODERATION);
+	}
+	
+	/**
+	 * Checks if the user can moderate a forum
+	 * 
+	 * @param forumId the forum's id to check for moderation rights
+	 * @return <code>true</code> if the user has moderations rights
+	 */
+	public boolean isModerator(int forumId) throws Exception
+	{
+		PermissionControl pc = SecurityRepository.get(this.userId);
+		
+		return (pc.canAccess(SecurityConstants.PERM_MODERATION))
+			&& (pc.canAccess(SecurityConstants.PERM_MODERATION_FORUMS, 
+				Integer.toString(forumId)));
 	}
 
 	/**

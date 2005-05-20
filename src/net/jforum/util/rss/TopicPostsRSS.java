@@ -55,7 +55,7 @@ import net.jforum.view.forum.common.ViewCommon;
  * RSS for the messages of some topic
  * 
  * @author Rafael Steil
- * @version $Id: TopicPostsRSS.java,v 1.4 2005/03/03 02:45:19 rafaelsteil Exp $
+ * @version $Id: TopicPostsRSS.java,v 1.5 2005/05/20 15:38:01 rafaelsteil Exp $
  */
 public class TopicPostsRSS extends GenericRSS 
 {
@@ -70,7 +70,7 @@ public class TopicPostsRSS extends GenericRSS
 		this.posts = posts;
 		this.rss = new RSS(title, description, 
 				SystemGlobals.getValue(ConfigKeys.ENCODING),
-				this.forumLink + "posts/" + topicId 
+				this.forumLink + "posts/list/" + topicId 
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		this.prepareRSS();
 	}
@@ -86,9 +86,11 @@ public class TopicPostsRSS extends GenericRSS
 			item.setDescription(PostCommon.processText(p.getText()));
 			item.setPublishDate(RSSUtils.formatDate(p.getTime()));
 			item.setTitle(p.getSubject());
-			item.setLink(this.forumLink + "posts/" + p.getTopicId()
-					+ "#" + p.getId()
-					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+			item.setLink(this.forumLink 
+					+ "posts/list/" + p.getTopicId()
+					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)
+					+ "#" + p.getId());
+
 			this.rss.addItem(item);
 		}
 		
