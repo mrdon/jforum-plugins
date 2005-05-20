@@ -497,18 +497,18 @@ CREATE TABLE [jforum_attach_quota] (
 
 CREATE TABLE [jforum_banner] (
 	[banner_id] [INT] IDENTITY (1, 1) PRIMARY KEY CLUSTERED NOT NULL,
-	[name] [VARCHAR](90),
-	[placement] [TINYINT] DEFAULT (0) NOT NULL,
-	[description] [VARCHAR](30),
-	[clicks] [INT] DEFAULT (0) NOT NULL,
-	[views] [INT] DEFAULT (0) NOT NULL,
-	[url] [VARCHAR](90),
-	[weight] [INT] DEFAULT (50) NOT NULL,
-	[active] [TINYINT] DEFAULT (0) NOT NULL,
-	[comment] [VARCHAR](50),
-	[type] [INT] DEFAULT (0) NOT NULL,
-	[width] [INT] DEFAULT (0) NOT NULL,
-	[height] [INT] DEFAULT (0) NOT NULL,
+	[banner_name] [VARCHAR](90),
+	[banner_placement] [TINYINT] DEFAULT (0) NOT NULL,
+	[banner_description] [VARCHAR](250),
+	[banner_clicks] [INT] DEFAULT (0) NOT NULL,
+	[banner_views] [INT] DEFAULT (0) NOT NULL,
+	[banner_url] [VARCHAR](250),
+	[banner_weight] [INT] DEFAULT (50) NOT NULL,
+	[banner_active] [TINYINT] DEFAULT (0) NOT NULL,
+	[banner_comment] [VARCHAR](250),
+	[banner_type] [INT] DEFAULT (0) NOT NULL,
+	[banner_width] [INT] DEFAULT (0) NOT NULL,
+	[banner_height] [INT] DEFAULT (0) NOT NULL,
 ) ON [PRIMARY]
 
  CREATE  INDEX [forum_id] ON [jforum_posts]([forum_id]) ON [PRIMARY]

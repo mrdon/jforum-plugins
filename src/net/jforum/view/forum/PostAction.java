@@ -62,6 +62,7 @@ import net.jforum.dao.PostDAO;
 import net.jforum.dao.TopicDAO;
 import net.jforum.dao.UserDAO;
 import net.jforum.entities.Attachment;
+import net.jforum.entities.Forum;
 import net.jforum.entities.Post;
 import net.jforum.entities.QuotaLimit;
 import net.jforum.entities.Topic;
@@ -90,7 +91,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.74 2005/05/20 15:38:01 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.75 2005/05/20 16:03:53 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -113,7 +114,15 @@ public class PostAction extends Command {
 		}
 
 		// Shall we proceed?
-		if (!TopicsCommon.isTopicAccessible(topic.getForumId())) {
+		if (!SessionFacade.isLogged()) {
+			Forum f = ForumRepository.getForum(topic.getForumId());
+			
+			if (f == null || !ForumRepository.isCategoryAccessible(f.getCategoryId())) {
+				this.setTemplateName(ViewCommon.contextToLogin());
+				return;
+			}
+		}
+		else if (!TopicsCommon.isTopicAccessible(topic.getForumId())) {
 			return;
 		}
 

@@ -610,27 +610,31 @@ ModerationModel.topicsByForum = SELECT p.post_id, t.topic_id, t.topic_title, p.u
 # #############
 # BannerDAO
 # #############
-BannerDAO.selectById = SELECT banner_id, name, placement, description, clicks, views, url, weight, active, comment, type, width, height \
+BannerDAO.selectById = SELECT banner_id, name, banner_placement, banner_description, banner_clicks, banner_views, \
+	banner_url, banner_weight, banner_active, banner_comment, banner_type, banner_width, banner_height \
 	FROM jforum_banner \
 	WHERE banner_id = ?
 	
-BannerDAO.selectAll = SELECT banner_id, name, placement, description, clicks, views, url, weight, active, comment, type, width, height \
+BannerDAO.selectAll = SELECT banner_id, banner_name, banner_placement, banner_description, banner_clicks, banner_views, \
+	banner_url, banner_weight, banner_active, banner_comment, banner_type, banner_width, banner_height \
 	FROM jforum_banner \
 	ORDER BY comment
 	
 BannerDAO.canDelete = SELECT COUNT(1) AS total FROM jforum_banner WHERE banner_id = ?
 BannerDAO.delete = DELETE FROM jforum_banner WHERE banner_id = ?
 
-BannerDAO.update = UPDATE jforum_banner SET name = ?, placement = ?, description = ?, clicks = ?, \
-	views = ?, url = ?, weight = ?, active = ?, comment = ?, type = ?, width = ?, height = ? \
+BannerDAO.update = UPDATE jforum_banner SET banner_name = ?, banner_placement = ?, banner_description = ?, banner_clicks = ?, \
+	banner_views = ?, banner_url = ?, banner_weight = ?, banner_active = ?, banner_comment = ?, banner_type = ?, \
+	banner_width = ?, banner_height = ? \
 	WHERE banner_id = ?
 
-BannerDAO.addNew = INSERT INTO jforum_banner (name, placement, description, clicks, views, url, weight, \
-	active, comment, type, width, height) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+BannerDAO.addNew = INSERT INTO jforum_banner (banner_name, banner_placement, banner_description, banner_clicks, banner_views, banner_url, banner_weight, \
+	banner_active, banner_comment, banner_type, banner_width, banner_height) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 
-BannerDAO.selectActiveBannerByPlacement = SELECT banner_id, name, placement, description, clicks, views, url, \
-	weight, active, comment, type, width, height \
+BannerDAO.selectActiveBannerByPlacement = SELECT banner_id, banner_name, banner_placement, banner_description, banner_clicks, \
+	banner_views, banner_url, \
+	banner_weight, banner_active, banner_comment, banner_type, banner_width, banner_height \
 	FROM jforum_banner \
-	WHERE placement = ? \
-	AND active = 1 \
-	ORDER BY weight ASC
+	WHERE banner_placement = ? \
+	AND banner_active = 1 \
+	ORDER BY banner_weight ASC
