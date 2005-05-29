@@ -51,7 +51,7 @@ import org.apache.commons.fileupload.FileItem;
 
 /**
  * @author Rafael Steil
- * @version $Id: UploadUtils.java,v 1.2 2005/01/19 19:25:55 rafaelsteil Exp $
+ * @version $Id: UploadUtils.java,v 1.3 2005/05/29 15:41:58 rafaelsteil Exp $
  */
 public class UploadUtils
 {
@@ -80,9 +80,9 @@ public class UploadUtils
 		FileOutputStream outputStream = new FileOutputStream(filename);
 		
 		int c = 0;
-		byte[] b = new byte[2048];
+		byte[] b = new byte[4096];
 		while ((c = inputStream.read(b)) != -1) {
-			outputStream.write(b);
+			outputStream.write(b, 0, c);
 		}
 		
 		outputStream.flush();
