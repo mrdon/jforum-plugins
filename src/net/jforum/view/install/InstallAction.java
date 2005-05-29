@@ -83,7 +83,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.28 2005/04/10 04:17:42 andowson Exp $
+ * @version $Id: InstallAction.java,v 1.29 2005/05/29 15:51:23 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -304,7 +304,9 @@ public class InstallAction extends Command
 			dbType = "mysql";
 		}
 		
-		List statements = this.readFromDat(SystemGlobals.getApplicationPath() + "/install/" + dbType + "_dump.dat");
+		List statements = this.readFromDat(SystemGlobals.getApplicationResourceDir() 
+				+ "/setup-files/" 
+				+ dbType + "_dump.dat");
 		for (Iterator iter = statements.iterator(); iter.hasNext();) {
 			String query = (String)iter.next();
 			if (query == null || "".equals(query.trim())) {

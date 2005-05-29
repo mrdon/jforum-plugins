@@ -51,7 +51,7 @@ import org.apache.commons.fileupload.FileItem;
 
 /**
  * @author Rafael Steil
- * @version $Id: UploadUtils.java,v 1.3 2005/05/29 15:41:58 rafaelsteil Exp $
+ * @version $Id: UploadUtils.java,v 1.4 2005/05/29 15:51:24 rafaelsteil Exp $
  */
 public class UploadUtils
 {
@@ -76,17 +76,28 @@ public class UploadUtils
 	
 	public void saveUploadedFile(String filename) throws Exception
 	{
-		BufferedInputStream inputStream = new BufferedInputStream(this.item.getInputStream());
-		FileOutputStream outputStream = new FileOutputStream(filename);
+		BufferedInputStream inputStream = null;
+		FileOutputStream outputStream = null;
 		
-		int c = 0;
-		byte[] b = new byte[4096];
-		while ((c = inputStream.read(b)) != -1) {
-			outputStream.write(b, 0, c);
+		try {
+			inputStream = new BufferedInputStream(this.item.getInputStream());
+			outputStream = new FileOutputStream(filename);
+			
+			int c = 0;
+			byte[] b = new byte[4096];
+			while ((c = inputStream.read(b)) != -1) {
+				outputStream.write(b, 0, c);
+			}
 		}
-		
-		outputStream.flush();
-		outputStream.close();
-		inputStream.close();
+		finally {
+			if (outputStream != null) {
+				outputStream.flush();
+				outputStream.close();
+			}
+			
+			if (inputStream != null) {
+				inputStream.close();
+			}
+		}
 	}
 }
