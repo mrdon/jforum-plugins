@@ -70,7 +70,7 @@ import freemarker.template.Template;
  * each user.
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.12 2005/05/20 15:37:57 rafaelsteil Exp $
+ * @version $Id: Spammer.java,v 1.13 2005/05/29 16:05:06 rafaelsteil Exp $
  */
 public class Spammer
 {
@@ -183,13 +183,23 @@ public class Spammer
 			InternetAddress[] recipients = new InternetAddress[addresses.size()];
 
 			String charset = SystemGlobals.getValue(ConfigKeys.MAIL_CHARSET);
+			String templateEncoding = SystemGlobals.getValue(ConfigKeys.MAIL_TEMPLATE_ENCODING); 
 
 			this.message.setSentDate(new Date());
 			this.message.setFrom(new InternetAddress(SystemGlobals.getValue(ConfigKeys.MAIL_SENDER)));
 			this.message.setSubject(subject, charset);
 
 			StringWriter sWriter = new StringWriter();
-			Template template = Configuration.getDefaultConfiguration().getTemplate(messageFile);
+			
+			Template template = null;
+			
+			if (templateEncoding == null || "".equals(templateEncoding.trim())) {
+				template = Configuration.getDefaultConfiguration().getTemplate(messageFile);
+			}
+			else {
+				template = Configuration.getDefaultConfiguration().getTemplate(messageFile, templateEncoding);
+			}
+			
 			template.process(params, sWriter);
 
 			this.messageText = sWriter.toString();
