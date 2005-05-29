@@ -68,15 +68,15 @@ import net.jforum.repository.SecurityRepository;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.MD5;
+import net.jforum.util.legacy.commons.fileupload.FileItem;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
-import org.apache.commons.fileupload.FileItem;
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.16 2005/04/01 14:38:38 samuelyung Exp $
+ * @version $Id: AttachmentCommon.java,v 1.17 2005/05/29 16:31:58 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {

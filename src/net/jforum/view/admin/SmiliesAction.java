@@ -48,16 +48,15 @@ import net.jforum.dao.DataAccessDriver;
 import net.jforum.entities.Smilie;
 import net.jforum.repository.SmiliesRepository;
 import net.jforum.util.MD5;
+import net.jforum.util.legacy.commons.fileupload.FileItem;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
 import net.jforum.view.forum.common.UploadUtils;
 
-import org.apache.commons.fileupload.FileItem;
-
 /**
  * @author Rafael Steil
- * @version $Id: SmiliesAction.java,v 1.8 2005/03/26 04:11:18 rafaelsteil Exp $
+ * @version $Id: SmiliesAction.java,v 1.9 2005/05/29 16:32:00 rafaelsteil Exp $
  */
 public class SmiliesAction extends AdminCommand 
 {

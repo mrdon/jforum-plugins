@@ -55,18 +55,17 @@ import javax.servlet.http.HttpServletRequestWrapper;
 
 import net.jforum.exceptions.InvalidURLPatternException;
 import net.jforum.exceptions.MultipartHandlingException;
+import net.jforum.util.legacy.commons.fileupload.FileItem;
+import net.jforum.util.legacy.commons.fileupload.FileUploadException;
+import net.jforum.util.legacy.commons.fileupload.disk.DiskFileItemFactory;
+import net.jforum.util.legacy.commons.fileupload.servlet.ServletFileUpload;
+import net.jforum.util.legacy.commons.fileupload.servlet.ServletRequestContext;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.fileupload.servlet.ServletRequestContext;
-
 /**
  * @author Rafael Steil
- * @version $Id: ActionServletRequest.java,v 1.20 2005/05/02 03:44:14 rafaelsteil Exp $
+ * @version $Id: ActionServletRequest.java,v 1.21 2005/05/29 16:31:59 rafaelsteil Exp $
  */
 public class ActionServletRequest extends HttpServletRequestWrapper 
 {

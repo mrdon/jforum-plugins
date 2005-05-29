@@ -59,15 +59,15 @@ import net.jforum.util.I18n;
 import net.jforum.util.MD5;
 import net.jforum.util.SafeHtml;
 import net.jforum.util.image.ImageUtils;
+import net.jforum.util.legacy.commons.fileupload.FileItem;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
-import org.apache.commons.fileupload.FileItem;
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserCommon.java,v 1.4 2005/05/02 03:44:20 rafaelsteil Exp $
+ * @version $Id: UserCommon.java,v 1.5 2005/05/29 16:31:58 rafaelsteil Exp $
  */
 public class UserCommon 
 {

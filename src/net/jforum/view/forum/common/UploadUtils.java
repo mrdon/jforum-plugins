@@ -46,12 +46,11 @@ import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 
 import net.jforum.ActionServletRequest;
-
-import org.apache.commons.fileupload.FileItem;
+import net.jforum.util.legacy.commons.fileupload.FileItem;
 
 /**
  * @author Rafael Steil
- * @version $Id: UploadUtils.java,v 1.4 2005/05/29 15:51:24 rafaelsteil Exp $
+ * @version $Id: UploadUtils.java,v 1.5 2005/05/29 16:31:58 rafaelsteil Exp $
  */
 public class UploadUtils
 {
