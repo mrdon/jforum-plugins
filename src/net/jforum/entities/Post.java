@@ -48,7 +48,7 @@ import java.util.Date;
  * Represents every message post in the system.
  * 
  * @author Rafael Steil
- * @version $Id: Post.java,v 1.8 2005/02/21 20:32:11 rafaelsteil Exp $
+ * @version $Id: Post.java,v 1.9 2005/06/01 15:03:42 rafaelsteil Exp $
  */
 public class Post 
 {
@@ -106,6 +106,11 @@ public class Post
 	public void setModerate(boolean status)
 	{
 		this.moderate = status;
+	}
+	
+	public boolean isModerate()
+	{
+		return this.isModerationNeeded();
 	}
 	
 	public boolean isModerationNeeded()

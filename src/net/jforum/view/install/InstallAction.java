@@ -83,7 +83,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.29 2005/05/29 15:51:23 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.30 2005/06/01 15:03:44 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -101,7 +101,7 @@ public class InstallAction extends Command
 		this.context.put("dbpasswd", this.getFromSession("dbPassword"));
 		this.context.put("dbencoding", this.getFromSession("dbEncoding"));
 		this.context.put("use_pool", this.getFromSession("usePool"));
-		this.context.put("forum_link", this.getFromSession("forumLink"));
+		this.context.put("forumLink", this.getFromSession("forumLink"));
 		this.context.put("siteLink", this.getFromSession("siteLink"));
 		this.context.put("dbdatasource", this.getFromSession("dbdatasource"));
 		

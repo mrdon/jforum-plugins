@@ -76,7 +76,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.17 2005/05/29 16:31:58 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.18 2005/06/01 15:03:44 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {
@@ -129,7 +129,7 @@ public class AttachmentCommon
 				continue;
 			}
 			
-			UploadUtils uploadUtils = new UploadUtils(item, this.request);
+			UploadUtils uploadUtils = new UploadUtils(item);
 			
 			// Check if the extension is allowed
 			if (extensions.containsKey(uploadUtils.getExtension())) {

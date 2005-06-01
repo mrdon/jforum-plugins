@@ -56,7 +56,7 @@ import net.jforum.view.forum.common.UploadUtils;
 
 /**
  * @author Rafael Steil
- * @version $Id: SmiliesAction.java,v 1.9 2005/05/29 16:32:00 rafaelsteil Exp $
+ * @version $Id: SmiliesAction.java,v 1.10 2005/06/01 15:03:45 rafaelsteil Exp $
  */
 public class SmiliesAction extends AdminCommand 
 {
@@ -66,7 +66,7 @@ public class SmiliesAction extends AdminCommand
 		
 		if (this.request.getObjectParameter("smilie_img") != null) {
 			FileItem item = (FileItem)this.request.getObjectParameter("smilie_img");
-			UploadUtils uploadUtils = new UploadUtils(item, this.request);
+			UploadUtils uploadUtils = new UploadUtils(item);
 
 			imgName = MD5.crypt(item.getName());
 			

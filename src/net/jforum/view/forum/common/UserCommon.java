@@ -67,7 +67,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserCommon.java,v 1.5 2005/05/29 16:31:58 rafaelsteil Exp $
+ * @version $Id: UserCommon.java,v 1.6 2005/06/01 15:03:44 rafaelsteil Exp $
  */
 public class UserCommon 
 {
@@ -164,7 +164,7 @@ public class UserCommon
 	{
 		String fileName = MD5.crypt(Integer.toString(u.getId()));
 		FileItem item = (FileItem)JForum.getRequest().getObjectParameter("avatar");
-		UploadUtils uploadUtils = new UploadUtils(item, JForum.getRequest());
+		UploadUtils uploadUtils = new UploadUtils(item);
 		
 		// Gets file extension
 		String extension = uploadUtils.getExtension().toLowerCase();

@@ -24,5 +24,6 @@
 	<classpathentry sourcepath="C:/java/quartz-1.4.4/src" kind="lib" path="WEB-INF/lib/quartz-1.4.4.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/concurrent.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/commons-io-1.1-dev.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/dwr-0.8.1-jforum.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>

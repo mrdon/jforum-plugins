@@ -11,6 +11,7 @@
     	<listener-class>net.jforum.ForumSessionListener</listener-class>
     </listener>   
 
+	<!-- JForum Controller -->
     <servlet>
 		<servlet-name>jforum</servlet-name>
 		<servlet-class>net.jforum.JForum</servlet-class>
@@ -21,6 +22,7 @@
 		</init-param>
     </servlet>
     
+	<!-- Installer -->
     <servlet>
     	<servlet-name>install</servlet-name>
     	<servlet-class>net.jforum.InstallServlet</servlet-class>
@@ -30,12 +32,33 @@
 			<param-value>true</param-value>
 		</init-param>
     </servlet>
+
+	<!-- AJAX -->
+	<servlet>
+		<servlet-name>dwr-invoker</servlet-name>
+		<servlet-class>uk.ltd.getahead.dwr.DWRServlet</servlet-class>
+
+		<init-param>
+			<param-name>configJForum</param-name>
+			<param-value>WEB-INF/dwr-jforum.xml</param-value>
+		</init-param>
+
+		<init-param>
+			<param-name>debug</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</servlet>
     
-    <!-- SERVLETS -->
+    <!-- Mapping -->
     <servlet-mapping>
     	<servlet-name>install</servlet-name>
     	<url-pattern>/install/install.page</url-pattern>
     </servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>dwr-invoker</servlet-name>
+		<url-pattern>/dwr/dwr.page</url-pattern>
+	</servlet-mapping>
     
 	<servlet-mapping>
     	<servlet-name>jforum</servlet-name>

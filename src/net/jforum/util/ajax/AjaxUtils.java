@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -36,64 +36,25 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Jan 18, 2005 4:06:08 PM
+ * Created on May 29, 2005 1:45:36 PM
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.view.forum.common;
+package net.jforum.util.ajax;
 
-import java.io.BufferedInputStream;
-import java.io.FileOutputStream;
-
-import net.jforum.util.legacy.commons.fileupload.FileItem;
+import net.jforum.entities.Post;
+import net.jforum.view.forum.common.PostCommon;
 
 /**
+ * General AJAX utility methods. 
+ * 
  * @author Rafael Steil
- * @version $Id: UploadUtils.java,v 1.6 2005/06/01 15:03:44 rafaelsteil Exp $
+ * @version $Id: AjaxUtils.java,v 1.1 2005/06/01 15:03:46 rafaelsteil Exp $
  */
-public class UploadUtils
+public class AjaxUtils
 {
-	private FileItem item;
-	private String extension = "";
-	
-	public UploadUtils(FileItem item)
+	public static Post previewPost(Post p)
 	{
-		this.item = item;
-	}
-	
-	public String getExtension()
-	{
-		if (this.extension == null || this.extension.equals("")) {
-			this.extension = this.item.getName().substring(this.item.getName().lastIndexOf('.') + 1);
-		}
-		
-		return this.extension;
-	}
-	
-	public void saveUploadedFile(String filename) throws Exception
-	{
-		BufferedInputStream inputStream = null;
-		FileOutputStream outputStream = null;
-		
-		try {
-			inputStream = new BufferedInputStream(this.item.getInputStream());
-			outputStream = new FileOutputStream(filename);
-			
-			int c = 0;
-			byte[] b = new byte[4096];
-			while ((c = inputStream.read(b)) != -1) {
-				outputStream.write(b, 0, c);
-			}
-		}
-		finally {
-			if (outputStream != null) {
-				outputStream.flush();
-				outputStream.close();
-			}
-			
-			if (inputStream != null) {
-				inputStream.close();
-			}
-		}
+		return PostCommon.preparePostForDisplay(p);
 	}
 }

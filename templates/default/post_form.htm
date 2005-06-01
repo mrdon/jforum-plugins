@@ -3,6 +3,10 @@
 	<#assign preview = false/>
 </#if>
 
+<script type='text/javascript' src='${contextPath}/dwr/dwr.page?script=AjaxUtils'></script>
+<script type='text/javascript' src='${contextPath}/templates/${templateName}/dwr-engine.js'></script>
+<script type='text/javascript' src='${contextPath}/templates/${templateName}/dwr-util.js'></script>
+
 <script language="JavaScript" type="text/javascript">
 <#include "bbcode.js"/>
 </script>
@@ -44,32 +48,60 @@
 <#if post?exists && !isNewPost><input type="hidden" name="post_id" value="${post.id}" /></#if>
 <#if (topic?exists && topic.id > -1)><input type="hidden" name="topic_id" value="${topic.id}" /></#if>
 
+<script language="javascript">
+function preview()
+{
+	var f = document.post;
+
+	var p = { 
+		text:f.message.value, 
+		subject:f.subject.value, 
+		htmlEnabled:!f.disable_html.checked, 
+		bbCodeEnabled:!f.disable_bbcode.checked, 
+		smiliesEnabled:!f.disable_smilies.checked 
+	};
+
+	AjaxUtils.previewPost(previewCallback, p);
+}
+
+function previewCallback(post)
+{
+	document.getElementById("previewSubject").innerHTML = post.subject;
+	document.getElementById("previewMessage").innerHTML = post.text;
+
+	document.getElementById("previewTable").style.display = '';
+	document.location = "#preview";
+}
+</script>
+
 <table cellspacing="0" cellpadding="10" width="100%" align="center" border="0">
 	<tr>
 		<td class="bodyline">
-			<#if preview>
-			<table class="forumline" width="100%" cellspacing="1" cellpadding="4" border="0">
+			
+			<!-- Preview message -->
+			<a name="preview"></a>
+			<table class="forumline" width="100%" cellspacing="1" cellpadding="4" border="0" style="display: none" id="previewTable">
 				<tr>
 					<th height="25" class="thHead">${I18n.getMessage("PostForm.preview")}</th>
 				</tr>
 				<tr>
 					<td class="row1">
 						<img src="${contextPath}/templates/${templateName}/images/icon_minipost.gif"/>
-						<span class="postdetails"> ${I18n.getMessage("PostForm.subject")}: ${postPreview.subject}</span>
+						<span class="postdetails" id="previewSubject"> ${I18n.getMessage("PostForm.subject")}: <#if postPreview?exists>${postPreview.subject}</#if></span>
 					</td>
 				</tr>
 				<tr>
 					<td class="row1" height="100%">
 						<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
 							<tr>
-								<td><span class="postbody">${postPreview.text}</span></td>
+								<td><span id="previewMessage" class="postbody"><#if postPreview?exists>${postPreview.text}</#if></span></td>
 							</tr>
 
 							<#if (user?exists && user.attachSignatureEnabled && user.signature?exists && user.signature?length > 0 && post.isSignatureEnabled())>
 								<tr>
 									<td>
 										<hr />
-										<span class="gensmall">
+										<span class="gensmall" id="previewSignature">
 											<#if previewUser?exists>
 												${previewUser.signature}
 											<#else>
@@ -87,7 +119,6 @@
 				</tr>
 			</table>
 			<br clear="all" />
-			</#if>
 
 			<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
 				<tr>
@@ -375,7 +406,7 @@
 				
 				<tr align="center">
 					<td height="28" colspan="2" class="catBottom">              
-						<input class="mainoption" tabindex="5" type="submit" value="${I18n.getMessage("PostForm.preview")}" name="preview" />&nbsp;
+						<input class="mainoption" tabindex="5" type="button" value="${I18n.getMessage("PostForm.preview")}" onClick="preview();" />&nbsp;
 						<input class="mainoption" accesskey="s" tabindex="6" type="submit" value="${I18n.getMessage("PostForm.submit")}" name="post" />
 						<#if attachmentsEnabled>
 							<input class="mainoption" accesskey="s" tabindex="7" type="button" onClick="openAttachmentPanel();" value="${I18n.getMessage("Attachments.attach")}" name="post" />
