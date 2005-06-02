@@ -36,48 +36,85 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Aug 2, 2004 by pieter
- *
+ * Created on Jun 2, 2005 6:56:25 PM
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.sso;
 
-import java.util.Map;
-
+import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.UserDAO;
 import net.jforum.entities.User;
 
 /**
- * Validates user's credentials. 
- * Implementations of this interface are supposed
- * to check for access rights in some "shared" environment, 
- * like calling some external procedure, consulting a different
- * users table, reading from a XML file etc.. It is <b>not</b> SSO, 
- * since it still will be JForum that will call the validate login
- * methods. 
- * <br>
- * If you want SSO, please check {@link net.jforum.sso.SSO}
+ * General utilities to use with SSO.
+ * 
  * @author Rafael Steil
- * @version $Id: LoginAuthenticator.java,v 1.3 2005/06/02 22:21:59 rafaelsteil Exp $
+ * @version $Id: SSOUtils.java,v 1.1 2005/06/02 22:21:59 rafaelsteil Exp $
  */
-public interface LoginAuthenticator 
+public class SSOUtils
 {
-	/**
-	 * Authenticates an user.
-	 * 
-	 * @param username Username
-	 * @param password Password
-	 * @param extraParams Extra parameters, if any. 
-	 * @return An instance of a {@link net.jforum.entities.User} or <code>null</code>
-	 * @throws Exception
-	 */
-	public User validateLogin(String username, String password, Map extraParams) throws Exception;
+	private String username;
+	private boolean exists = true;
+	private User user;
+	private UserDAO dao;
 	
 	/**
-	 * Sets the user model for the instance.
+	 * Checks if an user exists in the database
 	 * 
-	 * @param userModel The user model to set
+	 * @param username The username to check
+	 * @return <code>true</code> if the user exists. If <code>false</code> is
+	 * returned, then you can insert the user by calling {@link #register(String, String)}
+	 * @see #register(String, String)
+	 * @see #getUser()
+	 * @throws Exception
 	 */
-	public void setUserModel(UserDAO dao);
+	public boolean userExists(String username) throws Exception
+	{
+		this.username = username;
+		this.dao = DataAccessDriver.getInstance().newUserDAO();
+
+		this.user = this.dao.selectByName(username);
+
+		this.exists = this.user != null;
+		
+		return this.exists;
+	}
+	
+	/**
+	 * Registers a new user. 
+	 * This method should be used together with {@link #userExists(String)}. 
+	 * 
+	 * @param password the user's password. It <em>should</em> be the real / final 
+	 * password. In other words, the data passed as password is the data that'll be
+	 * written to the database
+	 * @param email the user's email
+	 * @see #getUser()
+	 * @throws Exception
+	 */
+	public void register(String password, String email) throws Exception
+	{
+		if (this.exists) {
+			return;
+		}
+		
+		// Is a new user for us. Register him
+		this.user = new User();
+		user.setUsername(this.username);
+		user.setPassword(password);
+		user.setEmail(email);
+		user.setActive(1);
+		
+		this.dao.addNew(user);
+	}
+	
+	/**
+	 * Gets the user associated to this class instance.
+	 * 
+	 * @return the user
+	 */
+	public User getUser()
+	{
+		return this.user;
+	}
 }

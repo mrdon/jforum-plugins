@@ -50,7 +50,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
 import net.jforum.dao.DataAccessDriver;
-import net.jforum.dao.UserDAO;
 import net.jforum.dao.UserSessionDAO;
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
@@ -58,6 +57,7 @@ import net.jforum.exceptions.ForumException;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.SecurityConstants;
 import net.jforum.sso.SSO;
+import net.jforum.sso.SSOUtils;
 import net.jforum.util.I18n;
 import net.jforum.util.MD5;
 import net.jforum.util.preferences.ConfigKeys;
@@ -68,7 +68,7 @@ import freemarker.template.SimpleHash;
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.4 2005/05/02 03:44:14 rafaelsteil Exp $
+ * @version $Id: ControllerUtils.java,v 1.5 2005/06/02 22:22:00 rafaelsteil Exp $
  */
 public class ControllerUtils
 {
@@ -200,15 +200,9 @@ public class ControllerUtils
 				userSession.makeAnonymous();
 			}
 			else {
-				UserDAO udao = DataAccessDriver.getInstance().newUserDAO();
+				SSOUtils utils = new SSOUtils();
 				
-				User user = udao.selectByName(username);
-				
-				if (user == null) {
-					// Is a new user for us. Register him
-					user = new User();
-					user.setUsername(username);
-
+				if (!utils.userExists(username)) {
 					HttpSession session = JForum.getRequest().getSession();
 					
 					String email = (String)session.getAttribute(ConfigKeys.SSO_EMAIL_ATTRIBUTE);
@@ -222,14 +216,10 @@ public class ControllerUtils
 						password = SystemGlobals.getValue(ConfigKeys.SSO_DEFAULT_PASSWORD);
 					}
 					
-					user.setPassword(password);
-					user.setEmail(email);
-					user.setActive(1);
-					
-					udao.addNew(user);
+					utils.register(password, email);
 				}
 				
-				this.configureUserSession(userSession, user);
+				this.configureUserSession(userSession, utils.getUser());
 			}
 		}
 		catch (Exception e) {
