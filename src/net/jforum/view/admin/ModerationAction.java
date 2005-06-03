@@ -59,7 +59,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationAction.java,v 1.7 2005/03/28 21:16:36 rafaelsteil Exp $
+ * @version $Id: ModerationAction.java,v 1.8 2005/06/03 03:07:20 rafaelsteil Exp $
  */
 public class ModerationAction extends AdminCommand
 {
@@ -119,7 +119,7 @@ public class ModerationAction extends AdminCommand
 					Post post = pm.selectById(postId);
 					pm.delete(post);
 					
-					new AttachmentCommon(this.request).deleteAttachments(postId, post.getForumId());
+					new AttachmentCommon(this.request, post.getForumId()).deleteAttachments(postId, post.getForumId());
 					
 					int totalPosts = tm.getTotalPosts(post.getTopicId());
 					if (totalPosts == 0) {

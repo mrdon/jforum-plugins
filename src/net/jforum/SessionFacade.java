@@ -60,7 +60,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.18 2005/03/26 04:10:37 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.19 2005/06/03 03:07:20 rafaelsteil Exp $
  */
 public class SessionFacade implements Cacheable
 {
@@ -97,7 +97,9 @@ public class SessionFacade implements Cacheable
 			remove(sessionId);
 		}
 
-		cache.add(FQN, us.getSessionId(), us);
+		synchronized (FQN) {
+			cache.add(FQN, us.getSessionId(), us);
+		}
 	}
 	
 	/**
@@ -140,7 +142,10 @@ public class SessionFacade implements Cacheable
 	public static void remove(String sessionId)
 	{
 		logger.info("Removing session " + sessionId);
-		cache.remove(FQN, sessionId);
+		
+		synchronized (FQN) {
+			cache.remove(FQN, sessionId);
+		}
 	}
 	
 	/**
@@ -156,8 +161,10 @@ public class SessionFacade implements Cacheable
 	
 	public static void clear()
 	{
-		cache.remove(FQN);
-		cache.add(FQN, new HashMap());
+		synchronized (FQN) {
+			cache.remove(FQN);
+			cache.add(FQN, new HashMap());
+		}
 	}
 	
 	/**
@@ -196,16 +203,18 @@ public class SessionFacade implements Cacheable
 	{
 		int aid = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 		
-		for (Iterator iter = cache.getValues(FQN).iterator(); iter.hasNext(); ) {
-			UserSession us = (UserSession)iter.next();
-			String thisUsername = us.getUsername();
-			
-			if (thisUsername == null) {
-				continue;
-			}
-			
-			if (us.getUserId() != aid && thisUsername.equals(username)) {
-				return us.getSessionId();
+		synchronized (FQN) {
+			for (Iterator iter = cache.getValues(FQN).iterator(); iter.hasNext(); ) {
+				UserSession us = (UserSession)iter.next();
+				String thisUsername = us.getUsername();
+				
+				if (thisUsername == null) {
+					continue;
+				}
+				
+				if (us.getUserId() != aid && thisUsername.equals(username)) {
+					return us.getSessionId();
+				}
 			}
 		}
 		
@@ -224,11 +233,13 @@ public class SessionFacade implements Cacheable
 	{
 		int aid = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 		
-		for (Iterator iter = cache.getValues(FQN).iterator(); iter.hasNext(); ) {
-			UserSession us = (UserSession)iter.next();
-			
-			if (us.getUserId() != aid && us.getUserId() == userId) {
-				return us.getSessionId();
+		synchronized (FQN) {
+			for (Iterator iter = cache.getValues(FQN).iterator(); iter.hasNext(); ) {
+				UserSession us = (UserSession)iter.next();
+				
+				if (us.getUserId() != aid && us.getUserId() == userId) {
+					return us.getSessionId();
+				}
 			}
 		}
 		

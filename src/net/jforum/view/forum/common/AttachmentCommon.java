@@ -76,7 +76,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.18 2005/06/01 15:03:44 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.19 2005/06/03 03:07:20 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {
@@ -84,26 +84,36 @@ public class AttachmentCommon
 	
 	private ActionServletRequest request;
 	private AttachmentDAO am;
+	private boolean canProceed;
+	private Map filesToSave = new HashMap();
 	
-	public AttachmentCommon(ActionServletRequest request)
+	public AttachmentCommon(ActionServletRequest request, int forumId)
 	{
 		this.request = request;
 		this.am = DataAccessDriver.getInstance().newAttachmentDAO();
+		
+		this.canProceed = SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED, 
+				Integer.toString(forumId));
+		
+		if (!this.canProceed) {
+			return;
+		}
 	}
 	
-	public void insertAttachments(int postId, int forumId) throws Exception
+	public void preProcess() throws Exception
 	{
-		if (!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED, 
-				Integer.toString(forumId))) {
+		if (!this.canProceed) {
 			return;
 		}
 		
 		String t = this.request.getParameter("total_files");
+		
 		if (t == null || "".equals(t)) {
 			return;
 		}
 		
 		int total = Integer.parseInt(t);
+		
 		if (total < 1) {
 			return;
 		}
@@ -112,7 +122,6 @@ public class AttachmentCommon
 			total = SystemGlobals.getIntValue(ConfigKeys.ATTACHMENTS_MAX_POST);
 		}
 
-		Map filesToSave = new HashMap();
 		long totalSize = 0;
 		int userId = SessionFacade.getUserSession().getUserId();
 		Map extensions = this.am.extensionsForSecurity();
@@ -140,7 +149,6 @@ public class AttachmentCommon
 			}
 			
 			Attachment a = new Attachment();
-			a.setPostId(postId);
 			a.setUserId(userId);
 			
 			AttachmentInfo info = new AttachmentInfo();
@@ -194,10 +202,18 @@ public class AttachmentCommon
 							new Integer((int)totalSize / 1024) }));
 			}
 		}
+	}
+	
+	public void insertAttachments(int postId) throws Exception
+	{
+		if (!this.canProceed) {
+			return;
+		}
 		
-		for (Iterator iter = filesToSave.entrySet().iterator(); iter.hasNext(); ) {
+		for (Iterator iter = this.filesToSave.entrySet().iterator(); iter.hasNext(); ) {
 			Map.Entry entry = (Map.Entry)iter.next();
 			Attachment a = (Attachment)entry.getValue();
+			a.setPostId(postId);
 			String path = SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR) 
 				+ "/" 
 				+ a.getInfo().getPhysicalFilename();

@@ -69,6 +69,7 @@ import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
 import net.jforum.exceptions.AttachmentException;
+import net.jforum.exceptions.AttachmentSizeTooBigException;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.PostRepository;
 import net.jforum.repository.RankingRepository;
@@ -91,7 +92,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.75 2005/05/20 16:03:53 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.76 2005/06/03 03:07:21 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -160,7 +161,7 @@ public class PostAction extends Command {
 				SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(topic.getForumId())));
 		this.context.put("canDownloadAttachments", SecurityRepository.canAccess(
 				SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD));
-		this.context.put("am", new AttachmentCommon(this.request));
+		this.context.put("am", new AttachmentCommon(this.request, topic.getForumId()));
 		this.context.put("karmaVotes", DataAccessDriver.getInstance().newKarmaDAO().getUserVotes(topic.getId(), us.getUserId()));
 		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
 		this.context.put("canRemove",
@@ -280,7 +281,7 @@ public class PostAction extends Command {
 		this.context.put("attachmentsEnabled", SecurityRepository.canAccess(
 				SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(forumId)));
 		
-		QuotaLimit ql = new AttachmentCommon(this.request).getQuotaLimit(userId);
+		QuotaLimit ql = new AttachmentCommon(this.request, forumId).getQuotaLimit(userId);
 		this.context.put("maxAttachmentsSize", new Long(ql != null ? ql.getSizeInBytes() : 1));
 		
 		this.context.put("maxAttachments", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
@@ -352,7 +353,7 @@ public class PostAction extends Command {
 			this.context.put("attachmentsEnabled", SecurityRepository.canAccess(
 					SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(p.getForumId())));
 			
-			QuotaLimit ql = new AttachmentCommon(this.request).getQuotaLimit(userId);
+			QuotaLimit ql = new AttachmentCommon(this.request, p.getForumId()).getQuotaLimit(userId);
 			this.context.put("maxAttachmentsSize", new Long(ql != null ? ql.getSizeInBytes() : 1));
 			
 			this.context.put("maxAttachments", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
@@ -424,7 +425,7 @@ public class PostAction extends Command {
 		this.context.put("attachmentsEnabled", SecurityRepository.canAccess(
 				SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(topic.getForumId())));
 		
-		QuotaLimit ql = new AttachmentCommon(this.request).getQuotaLimit(userId);
+		QuotaLimit ql = new AttachmentCommon(this.request, topic.getForumId()).getQuotaLimit(userId);
 		this.context.put("maxAttachmentsSize", new Long(ql != null ? ql.getSizeInBytes() : 1));
 		
 		this.context.put("maxAttachments", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
@@ -457,6 +458,20 @@ public class PostAction extends Command {
 			this.edit(true, p);
 		}
 		else {
+			AttachmentCommon attachments = new AttachmentCommon(this.request, p.getForumId());
+			
+			try {
+				attachments.preProcess();
+			}
+			catch (AttachmentException e) {
+				JForum.enableCancelCommit();
+				p.setText(this.request.getParameter("message"));
+				this.context.put("errorMessage", e.getMessage());
+				this.context.put("post", p);
+				this.edit(false, p);
+				return;
+			}
+			
 			Topic t = tm.selectById(p.getTopicId());
 
 			if (!TopicsCommon.isTopicAccessible(t.getForumId())) {
@@ -472,20 +487,8 @@ public class PostAction extends Command {
 			pm.update(p);
 			
 			// Attachments
-			AttachmentCommon ac = new AttachmentCommon(this.request);
-			ac.editAttachments(p.getId(), p.getForumId());
-			
-			try {
-				ac.insertAttachments(p.getId(), p.getForumId());
-			}
-			catch (AttachmentException e) {
-				JForum.enableCancelCommit();
-				p.setText(this.request.getParameter("message"));
-				this.context.put("errorMessage", e.getMessage());
-				this.context.put("post", p);
-				this.edit(false, p);
-				return;
-			}
+			attachments.editAttachments(p.getId(), p.getForumId());
+			attachments.insertAttachments(p.getId());
 
 			// Updates the topic title
 			if (t.getFirstPostId() == p.getId()) {
@@ -608,6 +611,21 @@ public class PostAction extends Command {
 		boolean preview = (this.request.getParameter("preview") != null);
 		boolean moderate = false;
 		if (!preview) {
+			AttachmentCommon attachments = new AttachmentCommon(this.request, forumId);
+			
+			try {
+				attachments.preProcess();
+			}
+			catch (AttachmentSizeTooBigException e) {
+				JForum.enableCancelCommit();
+				p.setText(this.request.getParameter("message"));
+				p.setId(0);
+				this.context.put("errorMessage", e.getMessage());
+				this.context.put("post", p);
+				this.insert();
+				return;
+			}
+			
 			// If topic_id is -1, then is the first post
 			if (t.getId() == -1) {
 				t.setTime(new Date());
@@ -640,20 +658,8 @@ public class PostAction extends Command {
 			
 			tm.update(t);
 			
-			// Attachments
-			try {
-				new AttachmentCommon(this.request).insertAttachments(postId, forumId);
-			}
-			catch (AttachmentException e) {
-				JForum.enableCancelCommit();
-				p.setText(this.request.getParameter("message"));
-				p.setId(0);
-				this.context.put("errorMessage", e.getMessage());
-				this.context.put("post", p);
-				this.insert();
-				return;
-			}
-
+			attachments.insertAttachments(postId);
+			
 			if (!moderate) {
 				DataAccessDriver.getInstance().newUserDAO().incrementPosts(p.getUserId());
 				TopicsCommon.updateBoardStatus(t, postId, firstPost, tm, fm);
@@ -738,7 +744,7 @@ public class PostAction extends Command {
 		DataAccessDriver.getInstance().newUserDAO().decrementPosts(p.getUserId());
 		
 		// Attachments
-		new AttachmentCommon(this.request).deleteAttachments(p.getId(), p.getForumId());
+		new AttachmentCommon(this.request, p.getForumId()).deleteAttachments(p.getId(), p.getForumId());
 
 		// Topic
 		tm.decrementTotalReplies(p.getTopicId());
