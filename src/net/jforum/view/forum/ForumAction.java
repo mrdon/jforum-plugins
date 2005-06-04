@@ -72,7 +72,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.35 2005/04/03 03:12:12 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.36 2005/06/04 03:08:41 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -289,7 +289,10 @@ public class ForumAction extends Command
 		this.request.addParameter("clean", "true");
 		this.request.addParameter("sort_by", "t." + SystemGlobals.getValue(ConfigKeys.TOPIC_TIME_FIELD));
 		this.request.addParameter("sort_dir", "DESC");
+		
 		new SearchAction(this.request, this.response, this.conn, this.context).search();
+		
+		this.setTemplateName(TemplateKeys.SEARCH_NEW_MESSAGES);
 	}
 	
 	public void pingSession()

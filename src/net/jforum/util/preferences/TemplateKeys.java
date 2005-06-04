@@ -44,7 +44,7 @@ package net.jforum.util.preferences;
 
 /**
  * @author Rafael Steil
- * @version $Id: TemplateKeys.java,v 1.4 2005/04/01 14:36:44 samuelyung Exp $
+ * @version $Id: TemplateKeys.java,v 1.5 2005/06/04 03:08:42 rafaelsteil Exp $
  */
 public class TemplateKeys
 {
@@ -103,6 +103,7 @@ public class TemplateKeys
 
 	public static final String SEARCH_FILTERS = "search.filters";
 	public static final String SEARCH_SEARCH = "search.search";
+	public static final String SEARCH_NEW_MESSAGES = "search.new.messages";
 
 	public static final String USER_EDIT = "user.edit";
 	public static final String USER_REGISTRATION_DISABLED = "user.registration.disabled";

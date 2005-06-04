@@ -50,6 +50,8 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import freemarker.template.SimpleHash;
+
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
@@ -74,7 +76,7 @@ import net.jforum.view.forum.ModerationHelper;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.10 2005/03/28 21:16:36 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.11 2005/06/04 03:08:42 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
@@ -172,21 +174,22 @@ public class TopicsCommon
 	 */
 	public static void topicListingBase() throws Exception
 	{
+		SimpleHash context = JForum.getContext();
 		// Topic Types
-		JForum.getContext().put("TOPIC_ANNOUNCE", new Integer(Topic.TYPE_ANNOUNCE));
-		JForum.getContext().put("TOPIC_STICKY", new Integer(Topic.TYPE_STICKY));
-		JForum.getContext().put("TOPIC_NORMAL", new Integer(Topic.TYPE_NORMAL));
+		context.put("TOPIC_ANNOUNCE", new Integer(Topic.TYPE_ANNOUNCE));
+		context.put("TOPIC_STICKY", new Integer(Topic.TYPE_STICKY));
+		context.put("TOPIC_NORMAL", new Integer(Topic.TYPE_NORMAL));
 	
 		// Topic Status
-		JForum.getContext().put("STATUS_LOCKED", new Integer(Topic.STATUS_LOCKED));
-		JForum.getContext().put("STATUS_UNLOCKED", new Integer(Topic.STATUS_UNLOCKED));
+		context.put("STATUS_LOCKED", new Integer(Topic.STATUS_LOCKED));
+		context.put("STATUS_UNLOCKED", new Integer(Topic.STATUS_UNLOCKED));
 		
 		// Moderation
-		JForum.getContext().put("moderator", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION));
-		JForum.getContext().put("can_remove_posts", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE));
-		JForum.getContext().put("can_move_topics", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_TOPIC_MOVE));
-		JForum.getContext().put("can_lockUnlock_topics", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_TOPIC_LOCK_UNLOCK));
-		JForum.getContext().put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
+		context.put("moderator", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION));
+		context.put("can_remove_posts", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE));
+		context.put("can_move_topics", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_TOPIC_MOVE));
+		context.put("can_lockUnlock_topics", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_TOPIC_LOCK_UNLOCK));
+		context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
 	}
 	
 	/**
@@ -199,6 +202,7 @@ public class TopicsCommon
 	public static boolean isTopicAccessible(int forumId) throws Exception 
 	{
 		Forum f = ForumRepository.getForum(forumId);
+		
 		if (f == null || !ForumRepository.isCategoryAccessible(f.getCategoryId())) {
 			new ModerationHelper().denied(I18n.getMessage("PostShow.denied"));
 			return false;
