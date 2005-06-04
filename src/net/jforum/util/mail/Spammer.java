@@ -70,7 +70,7 @@ import freemarker.template.Template;
  * each user.
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.13 2005/05/29 16:05:06 rafaelsteil Exp $
+ * @version $Id: Spammer.java,v 1.14 2005/06/04 03:00:40 rafaelsteil Exp $
  */
 public class Spammer
 {
@@ -114,8 +114,9 @@ public class Spammer
 		username = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_USERNAME);
 		password = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_PASSWORD);
 
-		messageFormat = SystemGlobals.getValue(ConfigKeys.MAIL_MESSSAGE_FORMAT).equals("html") ? MESSAGE_HTML
-				: MESSAGE_TEXT;
+		messageFormat = SystemGlobals.getValue(ConfigKeys.MAIL_MESSSAGE_FORMAT).equals("html") 
+			? MESSAGE_HTML
+			: MESSAGE_TEXT;
 
 		session = Session.getDefaultInstance(mailProps);
 	}
@@ -208,7 +209,7 @@ public class Spammer
 				this.message.setContent(this.messageText, "text/html; charset=" + charset);
 			}
 			else {
-				this.message.setText(this.messageText, charset);
+				this.message.setText(this.messageText, "text/plain; charset=" + charset);
 			}
 
 			int i = 0;
@@ -219,7 +220,7 @@ public class Spammer
 			this.message.setRecipients(Message.RecipientType.TO, recipients);
 		}
 		catch (Exception e) {
-			logger.warn("EmailException: " + e);
+			logger.warn(e);
 			throw new EmailException(e);
 		}
 	}

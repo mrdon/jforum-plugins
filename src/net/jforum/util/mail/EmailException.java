@@ -44,17 +44,19 @@ package net.jforum.util.mail;
 
 /**
  * @author Rafael Steil
- * @version $Id: EmailException.java,v 1.3 2004/06/03 02:22:53 rafaelsteil Exp $
+ * @version $Id: EmailException.java,v 1.4 2005/06/04 03:00:41 rafaelsteil Exp $
  */
 public class EmailException extends RuntimeException 
 {
 	public EmailException(Exception e)
 	{
 		super(e);
+		this.setStackTrace(e.getStackTrace());
 	}
 	
 	public EmailException(String message, Exception e)
 	{
 		super(message, e);
+		this.setStackTrace(e.getStackTrace());
 	}
 }
