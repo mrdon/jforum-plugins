@@ -64,7 +64,7 @@ import net.jforum.view.forum.common.ForumCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationHelper.java,v 1.18 2005/03/26 04:11:15 rafaelsteil Exp $
+ * @version $Id: ModerationHelper.java,v 1.19 2005/06/04 04:30:23 rafaelsteil Exp $
  */
 public class ModerationHelper 
 {
@@ -252,7 +252,9 @@ public class ModerationHelper
 	
 	public String moderationDone(String redirectUrl)
 	{
+		JForum.getRequest().setAttribute("template", TemplateKeys.MODERATION_DONE);
 		JForum.getContext().put("message", I18n.getMessage("Moderation.ModerationDone", new String[] { redirectUrl }));
+		
 		return TemplateKeys.MODERATION_DONE;
 	}
 	

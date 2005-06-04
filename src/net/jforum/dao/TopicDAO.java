@@ -55,7 +55,7 @@ import net.jforum.entities.Topic;
  * select some specific data.
  *
  * @author Rafael Steil
- * @version $Id: TopicDAO.java,v 1.2 2005/03/26 04:10:34 rafaelsteil Exp $
+ * @version $Id: TopicDAO.java,v 1.3 2005/06/04 04:30:24 rafaelsteil Exp $
  */
 public interface TopicDAO 
 {
@@ -310,4 +310,13 @@ public interface TopicDAO
 	 * @throws Exception
 	 */
 	public void setModerationStatus(int forumId, boolean status) throws Exception;
+
+	/**
+	 * Sets the moderatation flag for a given topic.
+	 * 
+	 * @param forumId The topic id
+	 * @param status
+	 * @throws Exception
+	 */
+	public void setModerationStatusByTopic(int topicId, boolean status) throws Exception;
 }

@@ -66,7 +66,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTopicModelDAO.java,v 1.2 2005/03/26 04:10:49 rafaelsteil Exp $
+ * @version $Id: GenericTopicModelDAO.java,v 1.3 2005/06/04 04:30:23 rafaelsteil Exp $
  */
 public class GenericTopicModelDAO extends AutoKeys implements net.jforum.dao.TopicDAO 
 {
@@ -645,6 +645,19 @@ public class GenericTopicModelDAO extends AutoKeys implements net.jforum.dao.Top
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("TopicModel.setModerationStatus"));
 		p.setInt(1, status ? 1 : 0);
 		p.setInt(2, forumId);
+		p.executeUpdate();
+		p.close();
+	}
+	
+	/**
+	 * @see net.jforum.dao.TopicDAO#setModerationStatusByTopic(int, boolean)
+	 */
+	public void setModerationStatusByTopic(int topicId, boolean status) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("TopicModel.setModerationStatusByTopic"));
+		p.setInt(1, status ? 1 : 0);
+		p.setInt(2, topicId);
 		p.executeUpdate();
 		p.close();
 	}

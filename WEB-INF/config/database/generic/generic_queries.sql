@@ -231,6 +231,7 @@ TopicModel.selectAllByForumByLimit = SELECT t.*, u.username AS posted_by_usernam
 TopicModel.selectTopicTitlesByIds SELECT topic_id, topic_title FROM jforum_topics WHERE topic_id IN (:ids:)
 TopicModel.selectLastN = SELECT topic_title, topic_time, topic_id, topic_type FROM jforum_topics ORDER BY topic_time DESC LIMIT ?
 TopicModel.setModerationStatus = UPDATE jforum_topics SET moderated = ? WHERE forum_id = ?
+TopicModel.setModerationStatusByTopic = UPDATE jforum_topics SET moderated = ? WHERE topic_id = ?
 TopicModel.deleteByForum = SELECT topic_id FROM jforum_topics where forum_id = ?
 
 TopicModel.delete = DELETE FROM jforum_topics WHERE topic_id = ?

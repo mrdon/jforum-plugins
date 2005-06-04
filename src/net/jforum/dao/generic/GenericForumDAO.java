@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericForumDAO.java,v 1.2 2005/03/26 04:10:47 rafaelsteil Exp $
+ * @version $Id: GenericForumDAO.java,v 1.3 2005/06/04 04:30:23 rafaelsteil Exp $
  */
 public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO 
 {
@@ -401,14 +401,20 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 
 		p.setInt(1, toForumId);
 		t.setInt(1, toForumId);
+		
+		TopicDAO tdao = DataAccessDriver.getInstance().newTopicDAO();
+		
+		Forum f = this.selectById(toForumId);
 
 		for (int i = 0; i < topics.length; i++) {
 			int topicId = Integer.parseInt(topics[i]);
 			p.setInt(2, topicId);
 			t.setInt(2, topicId);
-
+			
 			p.executeUpdate();
 			t.executeUpdate();
+			
+			tdao.setModerationStatusByTopic(topicId, f.isModerated());
 		}
 
 		this.decrementTotalTopics(fromForumId, topics.length);
