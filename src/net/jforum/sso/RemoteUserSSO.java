@@ -42,7 +42,12 @@
  */
 package net.jforum.sso;
 
+import javax.servlet.http.HttpServletRequest;
+
 import net.jforum.ActionServletRequest;
+import net.jforum.entities.UserSession;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * Simple SSO authenticator. 
@@ -50,7 +55,8 @@ import net.jforum.ActionServletRequest;
  * checking <code>request.getRemoteUser()</code> is not
  * null. 
  * @author Rafael Steil
- * @version $Id: RemoteUserSSO.java,v 1.2 2005/04/10 16:41:19 rafaelsteil Exp $
+ * @author Daniel Campagnoli
+ * @version $Id: RemoteUserSSO.java,v 1.3 2005/06/07 14:23:58 campers Exp $
  */
 public class RemoteUserSSO implements SSO
 {
@@ -61,4 +67,24 @@ public class RemoteUserSSO implements SSO
 	{
 		return request.getRemoteUser();
 	}
+
+   
+    public boolean isSessionValid(UserSession userSession, HttpServletRequest request) 
+    {  
+        String remoteUser = request.getRemoteUser();
+      
+        // user has since logged out
+        if(remoteUser == null && userSession.getUserId() != SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
+            return false;
+      
+        // user has since logged in
+        } else if(remoteUser != null && userSession.getUserId() == SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
+            return false;
+   
+        // user has changed user
+        } else if(remoteUser != null && !remoteUser.equals(userSession.getUsername())) {
+            return false;
+        }
+        return false;
+   }
 }

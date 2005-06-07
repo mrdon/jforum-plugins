@@ -42,11 +42,15 @@
  */
 package net.jforum.sso;
 
+import javax.servlet.http.HttpServletRequest;
+
 import net.jforum.ActionServletRequest;
+import net.jforum.entities.UserSession;
 
 /**
  * @author Rafael Steil
- * @version $Id: SSO.java,v 1.2 2005/04/10 16:41:19 rafaelsteil Exp $
+ * @author Daniel Campagnoli
+ * @version $Id: SSO.java,v 1.3 2005/06/07 14:23:58 campers Exp $
  */
 public interface SSO
 {
@@ -59,4 +63,14 @@ public interface SSO
 	 * otherwise. 
 	 */
 	public String authenticateUser(ActionServletRequest request);
+   
+   
+    /**
+     * Check to see if the user for the current {@link UserSession} is the same user by
+     * single sign on mechanisim.
+     * @param userSession the current user session
+     * @param request the current request
+     * @return if the UserSession is valid
+     */
+    public boolean isSessionValid(UserSession userSession, HttpServletRequest request);
 }
