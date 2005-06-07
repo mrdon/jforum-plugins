@@ -68,7 +68,7 @@ import freemarker.template.SimpleHash;
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.5 2005/06/02 22:22:00 rafaelsteil Exp $
+ * @version $Id: ControllerUtils.java,v 1.6 2005/06/07 14:33:12 campers Exp $
  */
 public class ControllerUtils
 {
@@ -232,37 +232,48 @@ public class ControllerUtils
 	 * Do a refresh in the user's session. 
 	 * This method will update the last visit time for the 
 	 * current user, as well checking for authentication if
-	 * the session is new. 
+	 * the session is new or the SSO user has changed 
 	 * @throws Exception
 	 */
 	public void refreshSession() throws Exception
 	{
-		if (SessionFacade.getUserSession() == null) {
-			UserSession userSession = new UserSession();
-			userSession.setSessionId(JForum.getRequest().getSession().getId());
+       UserSession userSession = SessionFacade.getUserSession();
+      
+       if(userSession == null) {
+           userSession = new UserSession();
+           userSession.setSessionId(JForum.getRequest().getSession().getId());
 
-			userSession.makeAnonymous();
+           userSession.makeAnonymous();
 
-			// Non-SSO authentications can use auto login
-			if (!ConfigKeys.TYPE_SSO.equals(SystemGlobals.getValue(ConfigKeys.AUTHENTICATION_TYPE))) {
-				if (SystemGlobals.getBoolValue(ConfigKeys.AUTO_LOGIN_ENABLED)) {
-					this.checkAutoLogin(userSession);
-				}
-				else {
-					userSession.makeAnonymous();
-				}
-			}
-			else {
-				this.checkSSO(userSession);
-			}
-			
-			SessionFacade.add(userSession);
-			SessionFacade.setAttribute(ConfigKeys.TOPICS_TRACKING, new HashMap());
-		}
-		else {
-			SessionFacade.getUserSession().updateSessionTime();
-		}
-	}
+           // Non-SSO authentications can use auto login
+           if(!ConfigKeys.TYPE_SSO.equals(SystemGlobals.getValue(ConfigKeys.AUTHENTICATION_TYPE))) {
+                if(SystemGlobals.getBoolValue(ConfigKeys.AUTO_LOGIN_ENABLED)) {
+                     this.checkAutoLogin(userSession);
+                } else {
+                     userSession.makeAnonymous();
+                }
+           } else {
+                this.checkSSO(userSession);
+           }
+
+           SessionFacade.add(userSession);
+           SessionFacade.setAttribute(ConfigKeys.TOPICS_TRACKING, new HashMap());
+         
+        // If SSO, then check the session is valid
+        } else if(ConfigKeys.TYPE_SSO.equals(SystemGlobals.getValue(ConfigKeys.AUTHENTICATION_TYPE))) {
+           SSO sso = (SSO)Class.forName(SystemGlobals.getValue(ConfigKeys.SSO_IMPLEMENATION)).newInstance();
+         
+           if(!sso.isSessionValid(userSession, JForum.getRequest())) {
+               JForum.getRequest().getSession().invalidate();
+               SessionFacade.remove(userSession.getSessionId());
+               refreshSession();
+           }
+         
+       } else {
+           SessionFacade.getUserSession().updateSessionTime();
+       }
+   }
+   
 	
     /**
      * Gets a cookie by its name.
