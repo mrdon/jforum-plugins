@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericForumDAO.java,v 1.3 2005/06/04 04:30:23 rafaelsteil Exp $
+ * @version $Id: GenericForumDAO.java,v 1.4 2005/06/07 14:36:37 rafaelsteil Exp $
  */
 public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO 
 {
@@ -306,7 +306,7 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 			int postId = this.getMaxPostId(forumId);
 			
 			p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.latestTopicIdForfix"));
-			p.setInt(1, postId);
+			p.setInt(1, forumId);
 			rs = p.executeQuery();
 			
 			int topicId = -1;
@@ -317,9 +317,17 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 				rs.close();
 				p.close();
 				
+				// Topic
 				p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.fixLatestPostData"));
 				p.setInt(1, postId);
 				p.setInt(2, topicId);
+				p.executeUpdate();
+				p.close();
+				
+				// Forum
+				p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.fixForumLatestPostData"));
+				p.setInt(1, postId);
+				p.setInt(2, forumId);
 				p.executeUpdate();
 			}
 		}
@@ -335,7 +343,7 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 	 */
 	public LastPostInfo getLastPostInfo(int forumId) throws Exception 
 	{
-		return this.getLastPostInfo(forumId, false);
+		return this.getLastPostInfo(forumId, true);
 	}
 
 	/**
