@@ -97,7 +97,7 @@ function previewCallback(post)
 								<td><span id="previewMessage" class="postbody"><#if postPreview?exists>${postPreview.text}</#if></span></td>
 							</tr>
 
-							<#if (user?exists && user.attachSignatureEnabled && user.signature?exists && user.signature?length > 0 && post.isSignatureEnabled())>
+							<#if (user?exists && user.attachSignatureEnabled && user.signature?exists && user.signature?length > 0 && post?exists && post.isSignatureEnabled())>
 								<tr>
 									<td>
 										<hr />

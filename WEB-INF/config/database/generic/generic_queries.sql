@@ -358,13 +358,15 @@ PermissionControl.loadGroupRoles = SELECT r.role_id, r.name, rv.role_value, rv.r
 	FROM jforum_roles r \
 	LEFT JOIN jforum_role_values rv ON rv.role_id = r.role_id \
 	WHERE r.group_id = ? \
-	AND user_id = 0
+	AND user_id = 0 \
+	ORDER BY r.role_id
 
 PermissionControl.loadUserRoles = SELECT r.role_id, r.name, rv.role_value, rv.role_type AS rv_type, r.role_type \
 	FROM jforum_roles r \
 	LEFT JOIN jforum_role_values rv ON rv.role_id = r.role_id \
 	WHERE r.user_id = ? \
-	AND r.group_id = 0
+	AND r.group_id = 0 \
+	ORDER BY r.role_id
 	
 PermissionControl.deleteAllUserRoleValuesByGroup = DELETE FROM jforum_roles \
 	where role_id in (select r.role_id from jforum_role_values rv, jforum_users u, jforum_user_groups ug \
