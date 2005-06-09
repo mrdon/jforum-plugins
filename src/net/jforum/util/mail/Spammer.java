@@ -70,7 +70,7 @@ import freemarker.template.Template;
  * each user.
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.14 2005/06/04 03:00:40 rafaelsteil Exp $
+ * @version $Id: Spammer.java,v 1.15 2005/06/09 17:08:56 rafaelsteil Exp $
  */
 public class Spammer
 {
@@ -162,6 +162,8 @@ public class Spammer
 						transport.sendMessage(message, new Address[] { addresses[i] });
 					}
 				}
+				
+				transport.close();
 			}
 		}
 		else {

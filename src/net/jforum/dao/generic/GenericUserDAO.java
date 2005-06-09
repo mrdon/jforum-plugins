@@ -61,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericUserDAO.java,v 1.4 2005/05/20 15:37:58 rafaelsteil Exp $
+ * @version $Id: GenericUserDAO.java,v 1.5 2005/06/09 17:08:56 rafaelsteil Exp $
  */
 public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO 
 {
@@ -143,16 +143,16 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 		u.setGender(rs.getString("gender"));
 		u.setRankId(rs.getInt("rank_id"));
 		u.setThemeId(rs.getInt("themes_id"));
-		u.setPrivateMessagesEnabled("1".equals(rs.getString("user_allow_pm")));
-		u.setNotifyOnMessagesEnabled("1".equals(rs.getString("user_notify")));
-		u.setViewOnlineEnabled("1".equals(rs.getString("user_viewonline")));
+		u.setPrivateMessagesEnabled(rs.getInt("user_allow_pm") == 1);
+		u.setNotifyOnMessagesEnabled(rs.getInt("user_notify") == 1);
+		u.setViewOnlineEnabled(rs.getInt("user_viewonline") == 1);
 		u.setPassword(rs.getString("user_password"));
-		u.setViewEmailEnabled("1".equals(rs.getString("user_viewemail")));
-		u.setViewOnlineEnabled("1".equals(rs.getString("user_allow_viewonline")));
-		u.setAvatarEnabled("1".equals(rs.getString("user_allowavatar")));
-		u.setBbCodeEnabled("1".equals(rs.getString("user_allowbbcode")));
-		u.setHtmlEnabled("1".equals(rs.getString("user_allowhtml")));
-		u.setSmiliesEnabled("1".equals(rs.getString("user_allowsmilies")));
+		u.setViewEmailEnabled(rs.getInt("user_viewemail") == 1);
+		u.setViewOnlineEnabled(rs.getInt("user_allow_viewonline") == 1);
+		u.setAvatarEnabled(rs.getInt("user_allowavatar") == 1);
+		u.setBbCodeEnabled(rs.getInt("user_allowbbcode") == 1);
+		u.setHtmlEnabled(rs.getInt("user_allowhtml") == 1);
+		u.setSmiliesEnabled(rs.getInt("user_allowsmilies") == 1);
 		u.setEmail(rs.getString("user_email"));
 		u.setFrom(rs.getString("user_from"));
 		u.setIcq(rs.getString("user_icq"));
@@ -171,11 +171,11 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 		u.setLang(rs.getString("user_lang"));
 		u.setActive(rs.getInt("user_active"));
 		u.setKarma(new KarmaStatus(u.getId(), rs.getDouble("user_karma")));
-		u.setNotifyPrivateMessagesEnabled("1".equals(rs.getString("user_notify_pm"))); 
+		u.setNotifyPrivateMessagesEnabled(rs.getInt("user_notify_pm") == 1); 
+		u.setDeleted(rs.getInt("deleted"));
 		
 		String actkey = rs.getString("user_actkey");
 		u.setActivationKey(actkey == null || "".equals(actkey) ? null : actkey);
-		u.setDeleted(rs.getInt("deleted"));
 	}
 
 	/** 
