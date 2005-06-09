@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.59 2005/06/02 22:22:01 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.60 2005/06/09 00:41:53 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -95,6 +95,7 @@ public class ConfigKeys {
 	public static final String SSO_EMAIL_ATTRIBUTE = "sso.email.attribute";
 	public static final String SSO_DEFAULT_PASSWORD = "sso.default.password";
 	public static final String SSO_DEFAULT_EMAIL = "sso.default.email";
+	public static final String SSO_REDIRECT = "sso.redirect";
 	
 	public static final String RESOURCE_DIR = "resource.dir";
 	public static final String CONFIG_DIR = "config.dir";

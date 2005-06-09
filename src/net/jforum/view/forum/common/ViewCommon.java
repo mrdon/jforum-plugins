@@ -59,7 +59,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.6 2005/05/20 15:37:57 rafaelsteil Exp $
+ * @version $Id: ViewCommon.java,v 1.7 2005/06/09 00:41:53 rafaelsteil Exp $
  */
 public final class ViewCommon
 {
@@ -97,8 +97,16 @@ public final class ViewCommon
 		String uri = JForum.getRequest().getRequestURI();
 		String query = JForum.getRequest().getQueryString();
 		String path = query == null ? uri : uri + "?" + query;
-
+		
 		JForum.getContext().put("returnPath", path);
+		
+		if (ConfigKeys.TYPE_SSO.equals(SystemGlobals.getValue(ConfigKeys.AUTHENTICATION_TYPE))) {
+			String redirect = SystemGlobals.getValue(ConfigKeys.SSO_REDIRECT);
+			
+			if (redirect != null && redirect.trim().length() > 0) {
+				JForum.setRedirect(JForum.getRequest().getContextPath() + redirect.trim() + path);
+			}
+		}
 		
 		return TemplateKeys.USER_LOGIN;
 	}
