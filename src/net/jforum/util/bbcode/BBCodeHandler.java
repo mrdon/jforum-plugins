@@ -42,7 +42,8 @@
  */
 package net.jforum.util.bbcode;
 
- import java.io.Serializable;
+ import java.io.File;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -61,7 +62,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * @author Rafael Steil
- * @version $Id: BBCodeHandler.java,v 1.10 2005/02/18 19:01:19 rafaelsteil Exp $
+ * @version $Id: BBCodeHandler.java,v 1.11 2005/06/12 22:36:52 rafaelsteil Exp $
  */
 public class BBCodeHandler extends DefaultHandler implements Serializable
 {
@@ -77,11 +78,21 @@ public class BBCodeHandler extends DefaultHandler implements Serializable
 	public BBCodeHandler parse() throws Exception
 	{
 		SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-		InputSource input = new InputSource(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) 
-				+ "/bb_config.xml");
 		BBCodeHandler bbParser = new BBCodeHandler();
-		parser.parse(input, bbParser);
 		
+		String path = SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) 
+			+ "/bb_config.xml";
+		
+		File fileInput = new File(path);
+		
+		if (fileInput.exists()) {
+			parser.parse(fileInput, bbParser);
+		}
+		else {
+			InputSource input = new InputSource(path);
+			parser.parse(input, bbParser);
+		}
+
 		return bbParser;  
 	}
 	
