@@ -60,7 +60,7 @@ import net.jforum.util.search.SearchFacade;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericPostDAO.java,v 1.1 2005/04/10 16:24:35 rafaelsteil Exp $
+ * @version $Id: GenericPostDAO.java,v 1.2 2005/06/12 19:56:03 rafaelsteil Exp $
  */
 public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO 
 {
@@ -267,28 +267,6 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 		p.close();
 	}
 	
-	/**
-	 * @see net.jforum.dao.PostDAO#setLastPostIdInTopic(int, int)
-	 */
-	public void setLastPostIdInTopic(int postId, int topicId) throws Exception{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("TopicModel.setLastPostId"));
-		p.setInt(1, postId);
-		p.setInt(2, topicId);
-		p.executeUpdate();
-		p.close();
-	}
-	
-	/**
-	 * @see net.jforum.dao.PostDAO#setLastPostIdInForum(int, int)
-	 */
-	public void setLastPostIdInForum(int postId, int forumId) throws Exception{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.updateLastPost"));
-		p.setInt(1, postId);
-		p.setInt(2, forumId);
-		p.executeUpdate();
-		p.close();
-	}
-
 	/**
 	 * @see net.jforum.dao.PostDAO#selectAllBytTopic(int)
 	 */

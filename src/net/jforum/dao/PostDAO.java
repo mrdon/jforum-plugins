@@ -54,7 +54,7 @@ import net.jforum.entities.Post;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: PostDAO.java,v 1.2 2005/03/26 04:10:35 rafaelsteil Exp $
+ * @version $Id: PostDAO.java,v 1.3 2005/06/12 19:56:04 rafaelsteil Exp $
  */
 public interface PostDAO 
 {
@@ -94,24 +94,6 @@ public interface PostDAO
 	 * @throws Exception
 	 */
 	public int addNew(Post post) throws Exception;
-	
-	/**
-	 * Sets the ID of the last post in the topic's table
-	 * 
-	 * @param postId Post ID
-	 * @param topicId Topic ID
-	 * @throws Exception
-	 */
-	public void setLastPostIdInTopic(int postId, int topicId) throws Exception;
-
-	/**
-	 * Sets the ID of the last post of the forum's table
-	 * 
-	 * @param postId Post ID
-	 * @param forumId Forum ID
-	 * @throws Exception
-	 */
-	public void setLastPostIdInForum(int postId, int forumId) throws Exception;
 	
 	/**
 	 * Selects all messages relacted to a specific topic. 

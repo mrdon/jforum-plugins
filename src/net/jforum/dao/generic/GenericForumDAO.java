@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericForumDAO.java,v 1.4 2005/06/07 14:36:37 rafaelsteil Exp $
+ * @version $Id: GenericForumDAO.java,v 1.5 2005/06/12 19:56:03 rafaelsteil Exp $
  */
 public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO 
 {
@@ -406,7 +406,7 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 	public void moveTopics(String[] topics, int fromForumId, int toForumId) throws Exception {
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.moveTopics"));
 		PreparedStatement t = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.setForumByTopic"));
-
+		
 		p.setInt(1, toForumId);
 		t.setInt(1, toForumId);
 		
@@ -427,6 +427,9 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 
 		this.decrementTotalTopics(fromForumId, topics.length);
 		this.incrementTotalTopics(toForumId, topics.length);
+		
+		this.setLastPost(fromForumId, this.getMaxPostId(fromForumId));
+		this.setLastPost(toForumId, this.getMaxPostId(toForumId));
 
 		p.close();
 	}
