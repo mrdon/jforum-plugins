@@ -77,7 +77,7 @@ import net.jforum.util.preferences.ConfigKeys;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.34 2005/04/03 03:12:13 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.35 2005/06/12 20:20:05 rafaelsteil Exp $
  */
 public class ForumRepository implements Cacheable
 {
@@ -369,7 +369,12 @@ public class ForumRepository implements Cacheable
 	public static Forum getForum(int forumId)
 	{
 		String categoryId = (String)((Map)cache.get(FQN, RELATION)).get(Integer.toString(forumId));
-		return ((Category)cache.get(FQN, categoryId)).getForum(forumId);
+		
+		if (categoryId != null) {
+			return ((Category)cache.get(FQN, categoryId)).getForum(forumId);
+		}
+		
+		return null;
 	}
 	
 	public static boolean isForumAccessible(int forumId)

@@ -61,7 +61,7 @@ import net.jforum.view.forum.common.TopicsCommon;
  * 
  * @author James Yong
  * @author Rafael Steil
- * @version $Id: RecentTopicsAction.java,v 1.7 2005/03/15 18:24:17 rafaelsteil Exp $
+ * @version $Id: RecentTopicsAction.java,v 1.8 2005/06/12 20:20:05 rafaelsteil Exp $
  */
 public class RecentTopicsAction extends Command 
 {
@@ -85,9 +85,8 @@ public class RecentTopicsAction extends Command
 		List tmpTopics = TopicRepository.getRecentTopics();
 		
 		this.forums = new ArrayList(postsPerPage);
-		Iterator iter = tmpTopics.iterator();
-		while (iter.hasNext()) 
-		{
+
+		for (Iterator iter = tmpTopics.iterator(); iter.hasNext(); ) {
 			Topic t = (Topic)iter.next();
 			if (TopicsCommon.isTopicAccessible(t.getForumId())) {
 				// Get name of forum that the topic refers to
