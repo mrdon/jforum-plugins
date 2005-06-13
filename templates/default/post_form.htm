@@ -574,7 +574,7 @@ function previewCallback(post)
 	</tr>
 	</#if>
 
-	<#if (topic?exists && topic.id > 0)>
+	<#if ((topic?exists && topic.id > 0) || pmReply?default(false))>
 	<tr>
 	<td colspan="2">
 		<table border="0" cellpadding="3" cellspacing="0" width="100%" class="forumline">
@@ -583,7 +583,12 @@ function previewCallback(post)
 			</tr>
 	
 			<tr>
-				<td class="row1"><iframe width="100%" height="300" frameborder="0" src="${JForumContext.encodeURL("/posts/review/${start}/${topic.id}")}" ></iframe>
+				<td class="row1">
+					<#if pmReply?default(false)>
+						<iframe width="100%" height="300" frameborder="0" src="${JForumContext.encodeURL("/jforum${extension}?module=pm&action=review&id=${pm.id}", "")}" ></iframe>
+					<#else>
+						<iframe width="100%" height="300" frameborder="0" src="${JForumContext.encodeURL("/posts/review/${start}/${topic.id}")}" ></iframe>
+					</#if>
 			</tr>
 			
 		</table>

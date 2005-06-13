@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -65,7 +65,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.20 2005/03/26 04:11:15 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.21 2005/06/13 02:56:39 rafaelsteil Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -304,6 +304,12 @@ public class PrivateMessageAction extends Command
 			this.setTemplateName(TemplateKeys.PM_READ_DENIED);
 			this.context.put("message", I18n.getMessage("PrivateMessage.readDenied"));
 		}
+	}
+	
+	public void review() throws Exception
+	{
+		this.read();
+		this.setTemplateName(TemplateKeys.PM_READ_REVIEW);
 	}
 	
 	public void delete() throws Exception

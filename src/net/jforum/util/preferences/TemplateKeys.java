@@ -44,7 +44,7 @@ package net.jforum.util.preferences;
 
 /**
  * @author Rafael Steil
- * @version $Id: TemplateKeys.java,v 1.5 2005/06/04 03:08:42 rafaelsteil Exp $
+ * @version $Id: TemplateKeys.java,v 1.6 2005/06/13 02:56:40 rafaelsteil Exp $
  */
 public class TemplateKeys
 {
@@ -96,6 +96,7 @@ public class TemplateKeys
 	public static final String PM_SENDSAVE_USER_NOTFOUND = "pm.sendsave.user.notfound";
 	public static final String PM_SENDSAVE = "pm.sendsave";
 	public static final String PM_READ = "pm.read";
+	public static final String PM_READ_REVIEW = "pm.read.review";
 	public static final String PM_READ_DENIED = "pm.read.denied";
 	public static final String PM_DELETE = "pm.delete";
 
