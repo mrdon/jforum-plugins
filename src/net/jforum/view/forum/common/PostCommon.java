@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -43,6 +43,7 @@
 package net.jforum.view.forum.common;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -70,15 +71,24 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.13 2005/03/26 04:11:22 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.14 2005/06/13 00:07:53 rafaelsteil Exp $
  */
 public class PostCommon
 {
 	public static Post preparePostForDisplay(Post p)
 	{
+		if (p.getText() == null) {
+			return p;
+		}
+		
 		if (!p.isHtmlEnabled()) {
 			p.setText(p.getText().replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
 		}
+		
+		// DO NOT remove the trailing blank space
+		p.setText(p.getText().replaceAll("\n", "<br> "));
+		
+		p.setText(alwaysProcess(p.getText(), BBCodeRepository.getBBCollection().getAlwaysProcessList()));
 
 		// Then, search for bb codes
 		if (p.isBbCodeEnabled()) {
@@ -93,18 +103,11 @@ public class PostCommon
 		return p;
 	}
 	
-	private static String matchQuotedBB(BBCode bb, String text)
+	private static String alwaysProcess(String text, Collection bbList)
 	{
-		Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
-
-		while (matcher.find()) {
-			String contents = matcher.group(1);
-			contents = contents.replaceAll("'", "");
-			contents = contents.replaceAll("\"", "");
-
-			String replace = bb.getReplace().replaceAll("\\$1", contents);
-
-			text = text.replaceFirst(bb.getRegex(), replace);
+		for (Iterator iter = bbList.iterator(); iter.hasNext(); ) {
+			BBCode bb = (BBCode)iter.next();
+			text = text.replaceAll(bb.getRegex(), bb.getReplace());
 		}
 		
 		return text;
@@ -116,14 +119,6 @@ public class PostCommon
 			return null;
 		}
 
-		// DO NOT remove the trailing blank space
-		text = text.replaceAll("\n", "<br> ");
-		
-		Iterator iter = BBCodeRepository.getBBCollection().getAlwaysProcessList().iterator();
-		while (iter.hasNext()) {
-			text = PostCommon.matchQuotedBB((BBCode)iter.next(), text);
-		}
-
 		if (text.indexOf('[') > -1 && text.indexOf(']') > -1) {
 			int openQuotes = 0;
 			Iterator tmpIter = BBCodeRepository.getBBCollection().getBbList().iterator();
@@ -131,68 +126,62 @@ public class PostCommon
 			while (tmpIter.hasNext()) {
 				BBCode bb = (BBCode) tmpIter.next();
 
-				// little hacks
-				if (bb.removeQuotes()) {
-					text = PostCommon.matchQuotedBB(bb, text);
+				// Another hack for the quotes
+				if (bb.getTagName().equals("openQuote") || bb.getTagName().equals("openSimpleQuote")) {
+					Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
+
+					while (matcher.find()) {
+						openQuotes++;
+
+						text = text.replaceFirst(bb.getRegex(), bb.getReplace());
+					}
 				}
-				else {
-					// Another hack for the quotes
-					if (bb.getTagName().equals("openQuote") || bb.getTagName().equals("openSimpleQuote")) {
+				else if (bb.getTagName().equals("closeQuote")) {
+					if (openQuotes > 0) {
 						Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
 
-						while (matcher.find()) {
-							openQuotes++;
-
+						while (matcher.find() && openQuotes-- > 0) {
 							text = text.replaceFirst(bb.getRegex(), bb.getReplace());
 						}
 					}
-					else if (bb.getTagName().equals("closeQuote")) {
-						if (openQuotes > 0) {
-							Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
+				}
+				else if (bb.getTagName().equals("code")) {
+					Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
+					StringBuffer sb = new StringBuffer(text);
 
-							while (matcher.find() && openQuotes-- > 0) {
-								text = text.replaceFirst(bb.getRegex(), bb.getReplace());
-							}
+					while (matcher.find()) {
+						String contents = matcher.group(1);
+
+						// Firefox seems to interpret <br> inside <pre>,
+						// so we need this bizarre workaround
+						contents = contents.replaceAll("<br>", "\n");
+
+						// Do not allow other bb tags inside "code"
+						contents = contents.replaceAll("\\[", "&#91;").replaceAll("\\]", "&#93;");
+
+						// Try to bypass smilies interpretation
+						contents = contents.replaceAll("\\(", "&#40;").replaceAll("\\)", "&#41;");
+
+						// XML-like tags
+						contents = contents.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+
+						StringBuffer replace = new StringBuffer(bb.getReplace());
+						int index = replace.indexOf("$1");
+						if (index > -1) {
+							replace.replace(index, index + 2, contents);
+						}
+
+						index = sb.indexOf("[code]");
+						int lastIndex = sb.indexOf("[/code]") + "[/code]".length();
+
+						if (lastIndex > index) {
+							sb.replace(index, lastIndex, replace.toString());
+							text = sb.toString();
 						}
 					}
-					else if (bb.getTagName().equals("code")) {
-						Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
-						StringBuffer sb = new StringBuffer(text);
-
-						while (matcher.find()) {
-							String contents = matcher.group(1);
-
-							// Firefox seems to interpret <br> inside <pre>,
-							// so we need this bizarre workaround
-							contents = contents.replaceAll("<br>", "\n");
-
-							// Do not allow other bb tags inside "code"
-							contents = contents.replaceAll("\\[", "&#91;").replaceAll("\\]", "&#93;");
-
-							// Try to bypass smilies interpretation
-							contents = contents.replaceAll("\\(", "&#40;").replaceAll("\\)", "&#41;");
-
-							// XML-like tags
-							contents = contents.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-
-							StringBuffer replace = new StringBuffer(bb.getReplace());
-							int index = replace.indexOf("$1");
-							if (index > -1) {
-								replace.replace(index, index + 2, contents);
-							}
-
-							index = sb.indexOf("[code]");
-							int lastIndex = sb.indexOf("[/code]") + "[/code]".length();
-
-							if (lastIndex > index) {
-								sb.replace(index, lastIndex, replace.toString());
-								text = sb.toString();
-							}
-						}
-					}
-					else {
-						text = text.replaceAll(bb.getRegex(), bb.getReplace());
-					}
+				}
+				else {
+					text = text.replaceAll(bb.getRegex(), bb.getReplace());
 				}
 			}
 
