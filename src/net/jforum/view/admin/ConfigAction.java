@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -62,7 +62,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ConfigAction.java,v 1.8 2005/03/15 18:24:10 rafaelsteil Exp $
+ * @version $Id: ConfigAction.java,v 1.9 2005/06/13 17:07:56 rafaelsteil Exp $
  */
 public class ConfigAction extends AdminCommand 
 {

@@ -50,7 +50,7 @@ import net.jforum.util.FileChangeListener;
 
 /**
  * @author Rafael Steil
- * @version $Id: QueriesFileListener.java,v 1.1 2004/06/05 22:09:57 rafaelsteil Exp $
+ * @version $Id: QueriesFileListener.java,v 1.2 2005/06/13 17:07:55 rafaelsteil Exp $
  */
 public class QueriesFileListener implements FileChangeListener
 {
@@ -64,6 +64,13 @@ public class QueriesFileListener implements FileChangeListener
 		try {
 			logger.info("Reloading "+ filename);
 			SystemGlobals.loadQueries(filename);
+			
+			String driverQueries = SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER);
+			
+			// Force reload of driver specific queries
+			if (!filename.equals(driverQueries)) {
+				SystemGlobals.loadQueries(driverQueries);
+			}
 		}
 		catch (IOException e) {
 			logger.info(e);

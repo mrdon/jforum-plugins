@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -69,7 +69,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author Pieter Olivier
- * @version $Id: SystemGlobals.java,v 1.20 2005/03/12 20:10:49 rafaelsteil Exp $
+ * @version $Id: SystemGlobals.java,v 1.21 2005/06/13 17:07:55 rafaelsteil Exp $
  */
 public class SystemGlobals implements VariableStore
 {
