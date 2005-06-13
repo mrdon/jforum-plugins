@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c)Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -69,7 +69,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumBaseServlet.java,v 1.2 2005/04/10 16:41:20 rafaelsteil Exp $
+ * @version $Id: JForumBaseServlet.java,v 1.3 2005/06/13 22:25:48 rafaelsteil Exp $
  */
 public class JForumBaseServlet extends HttpServlet {
     protected boolean debug;
@@ -101,6 +101,7 @@ public class JForumBaseServlet extends HttpServlet {
             templateCfg.setDirectoryForTemplateLoading(new File(SystemGlobals.getApplicationPath()
                     + "/templates"));
             templateCfg.setTemplateUpdateDelay(2);
+			templateCfg.setSetting("number_format", "#");
 
             ModulesRepository.init(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR));
 

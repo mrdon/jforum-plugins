@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -70,7 +70,7 @@ import freemarker.template.Template;
  * each user.
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.15 2005/06/09 17:08:56 rafaelsteil Exp $
+ * @version $Id: Spammer.java,v 1.16 2005/06/13 22:25:47 rafaelsteil Exp $
  */
 public class Spammer
 {
@@ -90,6 +90,7 @@ public class Spammer
 	protected Spammer() throws EmailException
 	{
 		String host = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_HOST);
+		
 		if (host != null) {
 			int colon = host.indexOf(':');
 
@@ -107,6 +108,7 @@ public class Spammer
 				mailProps.put("mail.smtp.localhost", localhost);
 			}
 		}
+		
 		mailProps.put("mail.mime.address.strict", "false");
 		mailProps.put("mail.mime.charset", SystemGlobals.getValue(ConfigKeys.MAIL_CHARSET));
 		mailProps.put("mail.smtp.auth", SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_AUTH));
@@ -186,32 +188,18 @@ public class Spammer
 			InternetAddress[] recipients = new InternetAddress[addresses.size()];
 
 			String charset = SystemGlobals.getValue(ConfigKeys.MAIL_CHARSET);
-			String templateEncoding = SystemGlobals.getValue(ConfigKeys.MAIL_TEMPLATE_ENCODING); 
 
 			this.message.setSentDate(new Date());
 			this.message.setFrom(new InternetAddress(SystemGlobals.getValue(ConfigKeys.MAIL_SENDER)));
 			this.message.setSubject(subject, charset);
 
-			StringWriter sWriter = new StringWriter();
-			
-			Template template = null;
-			
-			if (templateEncoding == null || "".equals(templateEncoding.trim())) {
-				template = Configuration.getDefaultConfiguration().getTemplate(messageFile);
-			}
-			else {
-				template = Configuration.getDefaultConfiguration().getTemplate(messageFile, templateEncoding);
-			}
-			
-			template.process(params, sWriter);
-
-			this.messageText = sWriter.toString();
+			this.messageText = this.getMessageText(params, messageFile);
 
 			if (messageFormat == MESSAGE_HTML) {
 				this.message.setContent(this.messageText, "text/html; charset=" + charset);
 			}
 			else {
-				this.message.setText(this.messageText, "text/plain; charset=" + charset);
+				this.message.setText(this.messageText, charset);
 			}
 
 			int i = 0;
@@ -225,6 +213,34 @@ public class Spammer
 			logger.warn(e);
 			throw new EmailException(e);
 		}
+	}
+	
+	/**
+	 * Gets the message text to send in the email.
+	 * 
+	 * @param params The optional params. If no need of any, just pass null
+	 * @param messageFile The optional message file to load the text. 
+	 * @return The email message text
+	 * @throws Exception
+	 */
+	protected String getMessageText(SimpleHash params, String messageFile) throws Exception
+	{
+		String templateEncoding = SystemGlobals.getValue(ConfigKeys.MAIL_TEMPLATE_ENCODING);
+		
+		StringWriter sWriter = new StringWriter();
+		
+		Template template = null;
+		
+		if (templateEncoding == null || "".equals(templateEncoding.trim())) {
+			template = Configuration.getDefaultConfiguration().getTemplate(messageFile);
+		}
+		else {
+			template = Configuration.getDefaultConfiguration().getTemplate(messageFile, templateEncoding);
+		}
+		
+		template.process(params, sWriter);
+		
+		return sWriter.toString();
 	}
 
 	/**

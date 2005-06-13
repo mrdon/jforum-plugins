@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -44,19 +44,18 @@ package net.jforum.util.mail;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-
 import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicSpammer.java,v 1.11 2005/03/24 16:42:03 rafaelsteil Exp $
+ * @version $Id: TopicSpammer.java,v 1.12 2005/06/13 22:25:47 rafaelsteil Exp $
  */
 public class TopicSpammer extends Spammer 
 {
@@ -64,7 +63,7 @@ public class TopicSpammer extends Spammer
 	{
 		// Prepare the users. In this current version, the email
 		// is not personalized, so then we'll just use his address
-		ArrayList recipients = new ArrayList();
+		List recipients = new ArrayList();
 		for (Iterator iter = users.iterator(); iter.hasNext(); ) {
 			User u = (User)iter.next();
 			
@@ -75,7 +74,7 @@ public class TopicSpammer extends Spammer
 		String page = "";
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 		if (topic.getTotalReplies() > postsPerPage) {
-			page += (((topic.getTotalReplies() / postsPerPage)) * postsPerPage) +"/";
+			page += (((topic.getTotalReplies() / postsPerPage)) * postsPerPage) + "/";
 		}
 		
 		String forumLink = SystemGlobals.getValue(ConfigKeys.FORUM_LINK);
