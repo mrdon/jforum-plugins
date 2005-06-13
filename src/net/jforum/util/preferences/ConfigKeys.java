@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.60 2005/06/09 00:41:53 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.61 2005/06/13 19:26:36 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -107,6 +107,7 @@ public class ConfigKeys {
 	public static final String TEMPLATES_MAPPING = "templates.mapping";
 	public static final String TEMPLATE_DIR = "template.dir";
 	public static final String ENCODING = "encoding";
+	public static final String DEFAULT_CONTAINER_ENCODING = "default.container.encoding";
 	public static final String SERVLET_NAME = "servlet.name";
 	public static final String DEFAULT_CONFIG = "default.config";
 	public static final String CONTEXT_NAME = "context.name";
@@ -213,6 +214,7 @@ public class ConfigKeys {
 	public static final String SEARCH_INDEXER_CRON_EXPRESSON = "indexer.cron.expression";
 	public static final String SEARCH_LAST_POST_ID = "last.post.id";
 	public static final String SEARCH_INDEXER_STEP = "indexer.step";
+	public static final String SEARCH_MIN_WORD_SIZE = "search.min.word.size";
 	
 	public static final String TOPIC_TIME_FIELD = "topic.time.field";
 	public static final String EXTENSION_FIELD = "extension.field";

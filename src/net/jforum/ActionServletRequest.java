@@ -65,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: ActionServletRequest.java,v 1.21 2005/05/29 16:31:59 rafaelsteil Exp $
+ * @version $Id: ActionServletRequest.java,v 1.22 2005/06/13 19:26:35 rafaelsteil Exp $
  */
 public class ActionServletRequest extends HttpServletRequestWrapper 
 {
@@ -247,6 +247,8 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 			}
 		}
 		
+		String encoding = SystemGlobals.getValue(ConfigKeys.ENCODING);
+		
 		if ((("GET").equals(requestType) && (superRequest.getQueryString() == null)) 
 				&& requestUri.endsWith(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION))) {
 			superRequest.setCharacterEncoding(SystemGlobals.getValue(ConfigKeys.ENCODING));  
@@ -311,7 +313,7 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 					for (Iterator iter = items.iterator(); iter.hasNext(); ) {
 						FileItem item = (FileItem)iter.next();
 						if (item.isFormField()) {
-							this.query.put(item.getFieldName(), item.getString(SystemGlobals.getValue(ConfigKeys.ENCODING)));
+							this.query.put(item.getFieldName(), item.getString(encoding));
 						}
 						else {
 							if (item.getSize() > 0) {
@@ -327,13 +329,12 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 		}
 		
 		if (isMultipart == false) {
-			superRequest.setCharacterEncoding(SystemGlobals.getValue(ConfigKeys.ENCODING));
-
-			Enumeration e = superRequest.getParameterNames();
-			String name;
-			while (e.hasMoreElements()) {
-				name = (String)e.nextElement();
-				this.query.put(new String(name), superRequest.getParameter(name));
+			superRequest.setCharacterEncoding(encoding);
+			String containerEncoding = SystemGlobals.getValue(ConfigKeys.DEFAULT_CONTAINER_ENCODING);
+			
+			for (Enumeration e = superRequest.getParameterNames(); e.hasMoreElements(); ) {
+				String name = (String)e.nextElement();
+				this.query.put(name, new String(superRequest.getParameter(name).getBytes(containerEncoding), encoding));
 			}
 		}
 	}
