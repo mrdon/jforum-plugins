@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -59,7 +59,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationAction.java,v 1.8 2005/06/03 03:07:20 rafaelsteil Exp $
+ * @version $Id: ModerationAction.java,v 1.9 2005/06/13 15:38:35 rafaelsteil Exp $
  */
 public class ModerationAction extends AdminCommand
 {
