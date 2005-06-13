@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -66,11 +66,12 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
 import net.jforum.view.forum.common.TopicsCommon;
+import net.jforum.view.forum.common.ViewCommon;
 import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.19 2005/03/26 04:11:15 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.20 2005/06/13 20:18:49 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -82,9 +83,9 @@ public class SearchAction extends Command
 	private String kw;
 	private String author;
 	private String postTime;
-	private String s;
 	
 	private static Map fieldsMap = new HashMap();
+	private static Map sortByMap = new HashMap();
 	
 	static {
 		fieldsMap.put("search_terms", "searchTerms");
@@ -95,7 +96,11 @@ public class SearchAction extends Command
 		fieldsMap.put("search_keywords", "kw");
 		fieldsMap.put("search_author", "author");
 		fieldsMap.put("post_time", "postTime");
-		fieldsMap.put("start", "s");
+		
+		sortByMap.put("time", "p.post_time");
+		sortByMap.put("title", "t.topic_title");
+		sortByMap.put("username", "u.username");
+		sortByMap.put("forum", "t.forum_id");
 	}
 	
 	public SearchAction() {}
@@ -119,12 +124,22 @@ public class SearchAction extends Command
 		this.searchTerms = this.addSlashes(this.request.getParameter("search_terms"));
 		this.forum = this.addSlashes(this.request.getParameter("search_forum"));
 		this.category = this.addSlashes(this.request.getParameter("search_cat"));
-		this.sortBy = this.addSlashes(this.request.getParameter("sort_by"));
+		
+		this.sortBy = (String)sortByMap.get(this.addSlashes(this.request.getParameter("sort_by")));
+		
+		if (this.sortBy == null) {
+			this.sortBy = (String)sortByMap.get("time");
+		}
+		
 		this.sortDir = this.addSlashes(this.request.getParameter("sort_dir"));
+		
+		if (!"ASC".equals(this.sortDir) && !"DESC".equals(this.sortDir)) {
+			this.sortDir = "DESC";
+		}
+		
 		this.kw = this.addSlashes(this.request.getParameter("search_keywords"));
 		this.author = this.addSlashes(this.request.getParameter("search_author"));
 		this.postTime = this.addSlashes(this.request.getParameter("post_time"));
-		this.s = this.request.getParameter("start");
 	}
 	
 	public void search() throws Exception
@@ -136,6 +151,7 @@ public class SearchAction extends Command
 		sd.setAuthor(author);
 		sd.setOrderByField(sortBy);
 		sd.setOrderBy(sortDir);
+		
 		if (postTime != null) {
 			sd.setTime(new Date(Long.parseLong(postTime)));		    
 		}
@@ -152,12 +168,8 @@ public class SearchAction extends Command
 			sd.setCategoryId(Integer.parseInt(category));
 		}
 		
-		int start = 0;
+		int start = ViewCommon.getStartPage();
 		int recordsPerPage = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
-		
-		if (s != null) {
-			start = Integer.parseInt(s);
-		}
 		
 		SearchDAO sm = DataAccessDriver.getInstance().newSearchDAO();
 
@@ -173,15 +185,13 @@ public class SearchAction extends Command
 		int totalTopics = allTopics.size();
 		int sublistLimit = recordsPerPage + start > totalTopics ? totalTopics : recordsPerPage + start;
 		
-		List topics = TopicsCommon.prepareTopics(allTopics.subList(start, sublistLimit));
+		this.setTemplateName(TemplateKeys.SEARCH_SEARCH);
 		
 		this.context.put("fr", new ForumRepository());
 		
-		this.context.put("topics", topics);
+		this.context.put("topics", TopicsCommon.prepareTopics(allTopics.subList(start, sublistLimit)));
 		this.context.put("categories", ForumRepository.getAllCategories());
-		this.setTemplateName(TemplateKeys.SEARCH_SEARCH);
 		
-		// Pagination
 		this.context.put("kw", kw);
 		this.context.put("terms", searchTerms);
 		this.context.put("forum", forum);
@@ -190,20 +200,11 @@ public class SearchAction extends Command
 		this.context.put("orderBy", sortDir);
 		this.context.put("author", author);
 		this.context.put("postTime", postTime);
-		
-		this.context.put("totalPages", new Double(Math.ceil((float)totalTopics / recordsPerPage)));
-		this.context.put("recordsPerPage", new Integer(recordsPerPage));
+		this.context.put("openModeration", "1".equals(this.request.getParameter("openModeration")));
 		this.context.put("postsPerPage", new Integer(SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE)));
-		this.context.put("totalRecords", new Integer(totalTopics));
-		this.context.put("thisPage", new Double(Math.ceil( (double)(start + 1) / (double)recordsPerPage)));
-		this.context.put("start", new Integer(start));
 		
-		String openModeration = this.request.getParameter("openModeration");
-		if (openModeration == null) {
-			openModeration = "0";
-		}
+		ViewCommon.contextToPagination(start, totalTopics, recordsPerPage);
 		
-		this.context.put("openModeration", openModeration.equals("1"));
 		TopicsCommon.topicListingBase();
 	}
 	
@@ -297,9 +298,7 @@ public class SearchAction extends Command
 			path.append("&post_time=").append(this.postTime);
 		}
 		
-		if (this.s != null) {
-			path.append("&start=").append(this.s);
-		}
+		path.append("&start=").append(ViewCommon.getStartPage());
 		
 		return path.toString();
 	}

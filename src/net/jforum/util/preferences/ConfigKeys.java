@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.61 2005/06/13 19:26:36 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.62 2005/06/13 20:18:50 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -215,6 +215,7 @@ public class ConfigKeys {
 	public static final String SEARCH_LAST_POST_ID = "last.post.id";
 	public static final String SEARCH_INDEXER_STEP = "indexer.step";
 	public static final String SEARCH_MIN_WORD_SIZE = "search.min.word.size";
+	public static final String SEARCH_WORD_MATCHING = "search.word.matching";
 	
 	public static final String TOPIC_TIME_FIELD = "topic.time.field";
 	public static final String EXTENSION_FIELD = "extension.field";

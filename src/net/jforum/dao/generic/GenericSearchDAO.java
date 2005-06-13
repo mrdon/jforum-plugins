@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -50,15 +50,18 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.dao.SearchData;
+import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericSearchDAO.java,v 1.2 2005/03/26 04:10:49 rafaelsteil Exp $
+ * @version $Id: GenericSearchDAO.java,v 1.3 2005/06/13 20:18:49 rafaelsteil Exp $
  */
 public class GenericSearchDAO implements net.jforum.dao.SearchDAO	
 {
@@ -128,16 +131,28 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 	// Given a set of keywords, find the topics
 	private void topicsByKeyword(SearchData sd) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.searchByWord"));
+		boolean isLike = "like".equals(SystemGlobals.getValue(ConfigKeys.SEARCH_WORD_MATCHING).trim());
+		
+		String sql = isLike 
+			? SystemGlobals.getSql("SearchModel.searchByLikeWord")
+			: SystemGlobals.getSql("SearchModel.searchByWord");
+		
+		PreparedStatement p = JForum.getConnection().prepareStatement(sql);
 
-		HashMap eachWordMap = new HashMap();
+		Map eachWordMap = new HashMap();
 
 		// Get the post ids to which the words are associated to
 		for (int i = 0; i < sd.getKeywords().length; i++) {
-			p.setString(1, sd.getKeywords()[i].toLowerCase());
+			if (isLike) {
+				p.setString(1, "%" + sd.getKeywords()[i].toLowerCase() + "%");
+			}
+			else {
+				p.setString(1, sd.getKeywords()[i].toLowerCase());
+			}
 			
-			HashSet postsIds = new HashSet();
+			Set postsIds = new HashSet();
 			ResultSet rs = p.executeQuery();
+			
 			while (rs.next()) {
 				postsIds.add(new Integer(rs.getInt("post_id")));
 			}
@@ -151,8 +166,7 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 		
 		// If seach type is OR, then get all words
 		// If it is AND, then we want only the ids common to all words
-		// ( oooohhh.. really? that's soooo unlogic )
-		HashSet postsIds = null;
+		Set postsIds = null;
 		
 		if (sd.getUseAllWords()) {
 			for (Iterator iter = eachWordMap.values().iterator(); iter.hasNext(); ) {
@@ -185,7 +199,7 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 		sb.delete(sb.length() - 1, sb.length());
 
 		// Search for the ids, inserting them in the helper table 
-		String sql = SystemGlobals.getSql("SearchModel.insertTopicsIds");
+		sql = SystemGlobals.getSql("SearchModel.insertTopicsIds");
 		sql = sql.replaceAll(":posts:", sb.toString());
 		p = JForum.getConnection().prepareStatement(sql);
 		p.setString(1, SessionFacade.getUserSession().getSessionId());
