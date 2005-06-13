@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -50,6 +50,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.jforum.JForum;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.UserDAO;
 import net.jforum.entities.Post;
 import net.jforum.entities.PrivateMessage;
 import net.jforum.entities.PrivateMessageType;
@@ -59,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericPrivateMessageDAO.java,v 1.1 2005/04/10 16:24:35 rafaelsteil Exp $
+ * @version $Id: GenericPrivateMessageDAO.java,v 1.2 2005/06/13 15:54:07 rafaelsteil Exp $
  */
 public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao.PrivateMessageDAO
 {
@@ -221,7 +223,7 @@ public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao
 		pm.setFormatedDate(df.format(p.getTime()));
 		
 		if (full) {
-			GenericUserDAO um = new GenericUserDAO();
+			UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 			pm.setFromUser(um.selectById(rs.getInt("privmsgs_from_userid")));
 			pm.setToUser(um.selectById(rs.getInt("privmsgs_to_userid")));
 			
