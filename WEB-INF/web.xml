@@ -6,6 +6,17 @@
 <web-app>
     <display-name>JForum - Powering Communities</display-name>
     <description>Open Source Java Forum Software</description>
+
+	<!-- Clickstream -->
+	<filter>
+		<filter-name>clickstream-jforum</filter-name>
+		<filter-class>net.jforum.util.legacy.clickstream.ClickstreamFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>clickstream-jforum</filter-name>
+		<url-pattern>*.page</url-pattern>
+	</filter-mapping>
     
     <listener>
     	<listener-class>net.jforum.ForumSessionListener</listener-class>

@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.62 2005/06/13 20:18:50 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.63 2005/06/14 16:55:23 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -227,6 +227,9 @@ public class ConfigKeys {
 	public static final String LDAP_ORGANIZATION_PREFIX = "ldap.organization.prefix";
 	public static final String LDAP_SERVER_URL = "ldap.server.url";
 	public static final String LDAP_FIELD_EMAIL = "ldap.field.email";
+	
+	public static final String CLICKSTREAM_CONFIG = "clickstream.config";
+	public static final String IS_BOT = "clickstream.is.bot";
 	
 	private ConfigKeys() {}
 }

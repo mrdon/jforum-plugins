@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -62,7 +62,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * @author Rafael Steil
- * @version $Id: BBCodeHandler.java,v 1.11 2005/06/12 22:36:52 rafaelsteil Exp $
+ * @version $Id: BBCodeHandler.java,v 1.12 2005/06/14 16:55:22 rafaelsteil Exp $
  */
 public class BBCodeHandler extends DefaultHandler implements Serializable
 {
