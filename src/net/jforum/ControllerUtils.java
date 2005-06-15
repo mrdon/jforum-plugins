@@ -68,12 +68,13 @@ import freemarker.template.SimpleHash;
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.6 2005/06/07 14:33:12 campers Exp $
+ * @version $Id: ControllerUtils.java,v 1.7 2005/06/15 04:51:30 rafaelsteil Exp $
  */
 public class ControllerUtils
 {
 	/**
-	 * Setup common variables used by almost all templates. 
+	 * Setup common variables used by almost all templates.
+	 * 
 	 * @param context The context to use
 	 */
 	public void prepareTemplateContext(SimpleHash context)
@@ -100,35 +101,34 @@ public class ControllerUtils
 		context.put("JForumContext", new JForumContext(JForum.getRequest().getContextPath(), 
 				SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION), JForum.getRequest(), JForum.getResponse()));
 	}
-	
+
 	/**
-	 * Checks user credentials / automatic login. 
+	 * Checks user credentials / automatic login.
+	 * 
 	 * @param userSession The UserSession instance associated to the user's session
 	 * @throws Exception
 	 */
 	private void checkAutoLogin(UserSession userSession) throws Exception
 	{
 		String cookieName = SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA);
-		
+
 		Cookie cookie = ControllerUtils.getCookie(cookieName);
 		Cookie hashCookie = ControllerUtils.getCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_USER_HASH));
 		Cookie autoLoginCookie = ControllerUtils.getCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN));
-		
+
 		if (hashCookie != null && cookie != null
 				&& !cookie.getValue().equals(SystemGlobals.getValue(ConfigKeys.ANONYMOUS_USER_ID))
-				&& autoLoginCookie != null
-				&& !"1".equals(autoLoginCookie.getValue())) {
+				&& autoLoginCookie != null && !"1".equals(autoLoginCookie.getValue())) {
 			String uid = cookie.getValue();
 			String uidHash = hashCookie.getValue();
-			
+
 			String securityHash = SystemGlobals.getValue(ConfigKeys.USER_HASH_SEQUENCE);
-			
-			if ((uid != null && !uid.equals(""))
-					&& (securityHash != null && !securityHash.equals(""))
+
+			if ((uid != null && !uid.equals("")) && (securityHash != null && !securityHash.equals(""))
 					&& (MD5.crypt(securityHash + uid).equals(uidHash))) {
 				int userId = Integer.parseInt(uid);
 				userSession.setUserId(userId);
-				
+
 				User user = DataAccessDriver.getInstance().newUserDAO().selectById(userId);
 				if (user == null || user.getId() != userId) {
 					userSession.makeAnonymous();
@@ -142,7 +142,7 @@ public class ControllerUtils
 			}
 		}
 	}
-	
+
 	/**
 	 * Setup optios and values for the user's session if authentication was ok.
 	 * 
@@ -159,7 +159,7 @@ public class ControllerUtils
 		// existent user information and then, if found, store
 		// it to the database before getting his information back.
 		String sessionId = SessionFacade.isUserInSession(user.getId());
-		
+
 		UserSession tmpUs = new UserSession();
 		if (sessionId != null) {
 			SessionFacade.storeSessionData(sessionId, JForum.getConnection());
@@ -170,7 +170,7 @@ public class ControllerUtils
 			UserSessionDAO sm = DataAccessDriver.getInstance().newUserSessionDAO();
 			tmpUs = sm.selectById(userSession, JForum.getConnection());
 		}
-		
+
 		if (tmpUs == null) {
 			userSession.setLastVisit(new Date(System.currentTimeMillis()));
 		}
@@ -178,7 +178,7 @@ public class ControllerUtils
 			// Update last visit and session start time
 			userSession.setLastVisit(new Date(tmpUs.getStartTime().getTime() + tmpUs.getSessionTime()));
 		}
-		
+
 		// If the execution point gets here, then the user
 		// has chosen "autoLogin"
 		userSession.setAutoLogin(true);
@@ -186,39 +186,39 @@ public class ControllerUtils
 
 		I18n.load(user.getLang());
 	}
-	
+
 	/**
 	 * Checks for user authentication using some SSO implementation
 	 */
 	private void checkSSO(UserSession userSession)
 	{
 		try {
-			SSO sso = (SSO)Class.forName(SystemGlobals.getValue(ConfigKeys.SSO_IMPLEMENATION)).newInstance();
+			SSO sso = (SSO) Class.forName(SystemGlobals.getValue(ConfigKeys.SSO_IMPLEMENATION)).newInstance();
 			String username = sso.authenticateUser(JForum.getRequest());
-			
+
 			if (username == null || username.trim().equals("")) {
 				userSession.makeAnonymous();
 			}
 			else {
 				SSOUtils utils = new SSOUtils();
-				
+
 				if (!utils.userExists(username)) {
 					HttpSession session = JForum.getRequest().getSession();
-					
-					String email = (String)session.getAttribute(ConfigKeys.SSO_EMAIL_ATTRIBUTE);
-					String password = (String)session.getAttribute(ConfigKeys.SSO_PASSWORD_ATTRIBUTE);
-					
+
+					String email = (String) session.getAttribute(ConfigKeys.SSO_EMAIL_ATTRIBUTE);
+					String password = (String) session.getAttribute(ConfigKeys.SSO_PASSWORD_ATTRIBUTE);
+
 					if (email == null) {
 						email = SystemGlobals.getValue(ConfigKeys.SSO_DEFAULT_EMAIL);
 					}
-					
+
 					if (password == null) {
 						password = SystemGlobals.getValue(ConfigKeys.SSO_DEFAULT_PASSWORD);
 					}
-					
+
 					utils.register(password, email);
 				}
-				
+
 				this.configureUserSession(userSession, utils.getUser());
 			}
 		}
@@ -227,86 +227,88 @@ public class ControllerUtils
 			throw new ForumException("Error while executing SSO actions: " + e);
 		}
 	}
-	
+
 	/**
-	 * Do a refresh in the user's session. 
-	 * This method will update the last visit time for the 
-	 * current user, as well checking for authentication if
-	 * the session is new or the SSO user has changed 
+	 * Do a refresh in the user's session. This method will update the last visit time for the
+	 * current user, as well checking for authentication if the session is new or the SSO user has
+	 * changed
+	 * 
 	 * @throws Exception
 	 */
 	public void refreshSession() throws Exception
 	{
-       UserSession userSession = SessionFacade.getUserSession();
-      
-       if(userSession == null) {
-           userSession = new UserSession();
-           userSession.setSessionId(JForum.getRequest().getSession().getId());
+		UserSession userSession = SessionFacade.getUserSession();
 
-           userSession.makeAnonymous();
+		if (userSession == null) {
+			userSession = new UserSession();
+			userSession.setSessionId(JForum.getRequest().getSession().getId());
 
-           // Non-SSO authentications can use auto login
-           if(!ConfigKeys.TYPE_SSO.equals(SystemGlobals.getValue(ConfigKeys.AUTHENTICATION_TYPE))) {
-                if(SystemGlobals.getBoolValue(ConfigKeys.AUTO_LOGIN_ENABLED)) {
-                     this.checkAutoLogin(userSession);
-                } else {
-                     userSession.makeAnonymous();
-                }
-           } else {
-                this.checkSSO(userSession);
-           }
+			userSession.makeAnonymous();
 
-           SessionFacade.add(userSession);
-           SessionFacade.setAttribute(ConfigKeys.TOPICS_TRACKING, new HashMap());
-         
-        // If SSO, then check the session is valid
-        } else if(ConfigKeys.TYPE_SSO.equals(SystemGlobals.getValue(ConfigKeys.AUTHENTICATION_TYPE))) {
-           SSO sso = (SSO)Class.forName(SystemGlobals.getValue(ConfigKeys.SSO_IMPLEMENATION)).newInstance();
-         
-           if(!sso.isSessionValid(userSession, JForum.getRequest())) {
-               JForum.getRequest().getSession().invalidate();
-               SessionFacade.remove(userSession.getSessionId());
-               refreshSession();
-           }
-         
-       } else {
-           SessionFacade.getUserSession().updateSessionTime();
-       }
-   }
-   
-	
-    /**
-     * Gets a cookie by its name.
-     * 
-     * @param name The cookie name to retrieve
-     * @return The <code>Cookie</code> object if found, or <code>null</code> oterwhise
-     */
-    public static Cookie getCookie(String name) {
-        Cookie[] cookies = JForumBaseServlet.getRequest().getCookies();
-        if (cookies != null) {
-            for (int i = 0; i < cookies.length; i++) {
-                Cookie c = cookies[i];
+			if (!userSession.isBot()) {
+				// Non-SSO authentications can use auto login
+				if (!ConfigKeys.TYPE_SSO.equals(SystemGlobals.getValue(ConfigKeys.AUTHENTICATION_TYPE))) {
+					if (SystemGlobals.getBoolValue(ConfigKeys.AUTO_LOGIN_ENABLED)) {
+						this.checkAutoLogin(userSession);
+					}
+				}
+				else {
+					this.checkSSO(userSession);
+				}
+			}
 
-                if (c.getName().equals(name)) {
-                    return c;
-                }
-            }
-        }
+			SessionFacade.add(userSession);
+			SessionFacade.setAttribute(ConfigKeys.TOPICS_TRACKING, new HashMap());
+		}
+		else if (ConfigKeys.TYPE_SSO.equals(SystemGlobals.getValue(ConfigKeys.AUTHENTICATION_TYPE))) {
+			SSO sso = (SSO) Class.forName(SystemGlobals.getValue(ConfigKeys.SSO_IMPLEMENATION)).newInstance();
 
-        return null;
-    }
+			// If SSO, then check the session is valid
+			if (!sso.isSessionValid(userSession, JForum.getRequest())) {
+				JForum.getRequest().getSession().invalidate();
+				SessionFacade.remove(userSession.getSessionId());
+				refreshSession();
+			}
+		}
+		else {
+			SessionFacade.getUserSession().updateSessionTime();
+		}
+	}
 
-    /**
-     * Add or update a cookie. This method adds a cookie, serializing its value using XML.
-     * 
-     * @param name The cookie name.
-     * @param value The cookie value
-     */
-    public static void addCookie(String name, String value) {
-        Cookie cookie = new Cookie(name, value);
-        cookie.setMaxAge(3600 * 24 * 365);
-        cookie.setPath("/");
+	/**
+	 * Gets a cookie by its name.
+	 * 
+	 * @param name The cookie name to retrieve
+	 * @return The <code>Cookie</code> object if found, or <code>null</code> oterwhise
+	 */
+	public static Cookie getCookie(String name)
+	{
+		Cookie[] cookies = JForumBaseServlet.getRequest().getCookies();
+		if (cookies != null) {
+			for (int i = 0; i < cookies.length; i++) {
+				Cookie c = cookies[i];
+
+				if (c.getName().equals(name)) {
+					return c;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Add or update a cookie. This method adds a cookie, serializing its value using XML.
+	 * 
+	 * @param name The cookie name.
+	 * @param value The cookie value
+	 */
+	public static void addCookie(String name, String value)
+	{
+		Cookie cookie = new Cookie(name, value);
+		cookie.setMaxAge(3600 * 24 * 365);
+		cookie.setPath("/");
 
 		JForumBaseServlet.getResponse().addCookie(cookie);
-    }
+	}
 }

@@ -60,12 +60,17 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.19 2005/06/03 03:07:20 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.20 2005/06/15 04:51:30 rafaelsteil Exp $
  */
 public class SessionFacade implements Cacheable
 {
 	private static final Logger logger = Logger.getLogger(SessionFacade.class);
+	
 	private static final String FQN = "sessions";
+	private static final String ANONYMOUS_COUNT = "anonymousCount";
+	private static final String LOGGED_COUNT = "loggedCount";
+	private static final String FQN_LOGGED = "logged";
+	
 	private static CacheEngine cache;
 
 	/**
@@ -93,13 +98,43 @@ public class SessionFacade implements Cacheable
 		}
 		
 		sessionId = isUserInSession(us.getUsername());
+		
 		if (sessionId != null) {
 			remove(sessionId);
 		}
 
 		synchronized (FQN) {
 			cache.add(FQN, us.getSessionId(), us);
+			
+			if (!us.isBot()) {
+				if (isLogged()) {
+					changeUserCount(LOGGED_COUNT, true);
+					cache.add(FQN_LOGGED, us.getSessionId(), us);
+				}
+				else {
+					// TODO: check the anonymous IP constraint
+					changeUserCount(ANONYMOUS_COUNT, true);
+				}
+			}
 		}
+	}
+	
+	private static void changeUserCount(String cacheEntryName, boolean increment)
+	{
+		Integer count = (Integer)cache.get(FQN, cacheEntryName);
+		
+		if (count == null) {
+			count = new Integer(0);
+		}
+		
+		if (increment) {
+			count = new Integer(count.intValue() + 1);
+		}
+		else if (count.intValue() > 0) {
+			count = new Integer(count.intValue() - 1);
+		}
+		
+		cache.add(FQN, cacheEntryName, count);
 	}
 	
 	/**
@@ -144,6 +179,19 @@ public class SessionFacade implements Cacheable
 		logger.info("Removing session " + sessionId);
 		
 		synchronized (FQN) {
+			UserSession us = getUserSession(sessionId);
+			
+			if (us != null) {
+				cache.remove(FQN_LOGGED, sessionId);
+				
+				if (us.getUserId() != SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
+					changeUserCount(LOGGED_COUNT, false);
+				}
+				else {
+					changeUserCount(ANONYMOUS_COUNT, false);
+				}
+			}
+			
 			cache.remove(FQN, sessionId);
 		}
 	}
@@ -157,6 +205,37 @@ public class SessionFacade implements Cacheable
 	public static List getAllSessions()
 	{
 		return new ArrayList(cache.getValues(FQN));
+	}
+	
+	/**
+	 * Gets the {@link UserSession} instance of all logged users
+	 * @return A list with the user sessions
+	 */
+	public static List getLoggedSessions()
+	{
+		return new ArrayList(cache.getValues(FQN_LOGGED));
+	}
+	
+	/**
+	 * Get the number of logged users
+	 * @return the number of logged users
+	 */
+	public static int registeredSize()
+	{
+		Integer count = (Integer)cache.get(FQN, LOGGED_COUNT);
+
+		return (count == null ? 0 : count.intValue());
+	}
+	
+	/**
+	 * Get the number of anonymous users
+	 * @return the nuber of anonymous users
+	 */
+	public static int anonymousSize()
+	{
+		Integer count = (Integer)cache.get(FQN, ANONYMOUS_COUNT);
+
+		return (count == null ? 0 : count.intValue());
 	}
 	
 	public static void clear()

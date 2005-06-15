@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -72,7 +72,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.69 2005/04/10 16:41:20 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.70 2005/06/15 04:51:30 rafaelsteil Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
@@ -120,6 +120,7 @@ public class JForum extends JForumBaseServlet
 	{
 		Writer out = null;
 		Connection conn = null;
+		
 		boolean autoCommitStatus = true;
 		boolean useTransactions = SystemGlobals.getBoolValue(ConfigKeys.DATABASE_USE_TRANSACTIONS);
 		
@@ -160,6 +161,7 @@ public class JForum extends JForumBaseServlet
 			utils.prepareTemplateContext(context);
 			
 			boolean logged = false;
+			
 			if ("1".equals(SessionFacade.getAttribute("logged"))) {
 				logged = true;
 			}
@@ -186,8 +188,10 @@ public class JForum extends JForumBaseServlet
 				Template template = c.process(request, response, conn, context);
 
 				DataHolder dh = (DataHolder)localData.get();
+				
 				if (dh.getRedirectTo() == null) {
 					String contentType = dh.getContentType();
+					
 					if (contentType == null) {
 						contentType = "text/html; charset=" + encoding;
 					}
@@ -258,8 +262,10 @@ public class JForum extends JForumBaseServlet
 			}
 			
 			DataHolder dh = (DataHolder)localData.get();
+			
 			if (dh != null) {
 				String redirectTo = dh.getRedirectTo();
+				
 				if (redirectTo != null) {
 					response.sendRedirect(redirectTo);
 				}

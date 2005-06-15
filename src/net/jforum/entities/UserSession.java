@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -48,6 +48,7 @@ import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.Date;
 
+import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.PermissionControl;
@@ -60,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * Stores information about user's session.
  * 
  * @author Rafael Steil
- * @version $Id: UserSession.java,v 1.16 2005/05/20 15:38:00 rafaelsteil Exp $
+ * @version $Id: UserSession.java,v 1.17 2005/06/15 04:51:31 rafaelsteil Exp $
  */
 public class UserSession implements Serializable
 {
@@ -371,5 +372,34 @@ public class UserSession implements Serializable
 	public void destroyCaptcha()
 	{
 		this.imageCaptcha = null;
+	}
+	
+	/**
+	 * Checks if it's a bot
+	 * @return <code>true</code> if this user session is from any robot
+	 */
+	public boolean isBot()
+	{
+		return Boolean.TRUE.equals(JForum.getRequest().getAttribute(ConfigKeys.IS_BOT));
+	}
+	
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object o)
+	{
+		if (!(o instanceof UserSession)) {
+			return false;
+		}
+		
+		return this.sessionId.equals(((UserSession)o).getSessionId());
+	}
+	
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode()
+	{
+		return this.sessionId.hashCode();
 	}
 }

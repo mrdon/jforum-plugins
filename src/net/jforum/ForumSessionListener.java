@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -42,6 +42,7 @@
  */
 package net.jforum;
 
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
@@ -52,7 +53,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumSessionListener.java,v 1.14 2005/02/28 12:18:28 rafaelsteil Exp $
+ * @version $Id: ForumSessionListener.java,v 1.15 2005/06/15 04:51:30 rafaelsteil Exp $
  */
 public class ForumSessionListener implements HttpSessionListener 
 {
@@ -61,16 +62,20 @@ public class ForumSessionListener implements HttpSessionListener
 	/** 
 	 * @see javax.servlet.http.HttpSessionListener#sessionCreated(javax.servlet.http.HttpSessionEvent)
 	 */
-	public void sessionCreated(HttpSessionEvent event) 
-	{
-	} 
+	public void sessionCreated(HttpSessionEvent event) {}
 
 	/** 
 	 * @see javax.servlet.http.HttpSessionListener#sessionDestroyed(javax.servlet.http.HttpSessionEvent)
 	 */
 	public void sessionDestroyed(HttpSessionEvent event) 
 	{
-		String sessionId = event.getSession().getId();
+		HttpSession session = event.getSession();
+		
+		if (session == null) {
+			return;
+		}
+		
+		String sessionId = session.getId();
 
 		try {
 			SessionFacade.storeSessionData(sessionId);
@@ -80,6 +85,7 @@ public class ForumSessionListener implements HttpSessionListener
 		}
 
 		UserSession us = SessionFacade.getUserSession(sessionId);
+		
 		if (us != null) {
 			SecurityRepository.remove(us.getUserId());
 		}

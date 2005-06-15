@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -44,12 +44,13 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumStartupException.java,v 1.2 2005/02/16 20:33:49 rafaelsteil Exp $
+ * @version $Id: ForumStartupException.java,v 1.3 2005/06/15 04:51:31 rafaelsteil Exp $
  */
 public class ForumStartupException extends ForumException
 {
 	public ForumStartupException(String message, Throwable t)
 	{
 		super(message, t);
+		this.setStackTrace(t.getStackTrace());
 	}
 }

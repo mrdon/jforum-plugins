@@ -43,7 +43,6 @@
 package net.jforum.view.forum;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -72,7 +71,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.36 2005/06/04 03:08:41 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.37 2005/06/15 04:51:31 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -103,28 +102,17 @@ public class ForumAction extends Command
 		
 		// Online Users
 		this.context.put("totalOnlineUsers", new Integer(SessionFacade.size()));
-		int guest = 0;
-		int registered = 0;
 		int aid = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 	
 		List userSessions = SessionFacade.getAllSessions();
-		List onlineUsersList = new ArrayList();
-		for (Iterator iter = userSessions.iterator(); iter.hasNext(); ) {
-			UserSession us = (UserSession)iter.next();
-			
-			if (us.getUserId() == aid) {
-				guest++;
-			}
-			else {
-				registered++;
-				onlineUsersList.add(us);
-			}
-		}
+		List onlineUsersList = SessionFacade.getLoggedSessions();
 		
 		// Check for an optional language parameter
 		UserSession currentUser = SessionFacade.getUserSession();
+		
 		if (currentUser.getUserId() == aid) {
 			String lang = this.request.getParameter("lang");
+			
 			if (lang != null && I18n.languageExists(lang)) {
 				currentUser.setLang(lang);
 			}
@@ -135,24 +123,30 @@ public class ForumAction extends Command
 		// show the "guest" username
 		if (onlineUsersList.size() == 0) {
 			UserSession us = new UserSession();
+			
 			us.setUserId(aid);
 			us.setUsername(I18n.getMessage("Guest"));
 			
 			onlineUsersList.add(us);
 		}
 		
+		int registeredSize = SessionFacade.registeredSize();
+		int anonymousSize = SessionFacade.anonymousSize();
+		int totalUsers = registeredSize + anonymousSize;
+		
 		this.context.put("userSessions", onlineUsersList);
 		this.context.put("usersOnline", I18n.getMessage("ForumListing.numberOfUsersOnline", 
 			new Object[] {
-					   new Integer(SessionFacade.size()),
-					   new Integer(registered),
-					   new Integer(guest)
+					   new Integer(totalUsers),
+					   new Integer(registeredSize),
+					   new Integer(anonymousSize)
 			}));
 		
 		// Most users ever online
 		MostUsersEverOnline mostUsersEverOnline = ForumRepository.getMostUsersEverOnline();
-		if (SessionFacade.size() > mostUsersEverOnline.getTotal()) {
-			mostUsersEverOnline.setTotal(SessionFacade.size());
+		
+		if (totalUsers > mostUsersEverOnline.getTotal()) {
+			mostUsersEverOnline.setTotal(totalUsers);
 			mostUsersEverOnline.setTimeInMillis(System.currentTimeMillis());
 
 			ForumRepository.updateMostUsersEverOnline(mostUsersEverOnline);
