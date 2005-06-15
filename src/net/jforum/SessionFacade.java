@@ -60,7 +60,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.20 2005/06/15 04:51:30 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.21 2005/06/15 14:17:23 rafaelsteil Exp $
  */
 public class SessionFacade implements Cacheable
 {
@@ -121,7 +121,7 @@ public class SessionFacade implements Cacheable
 	
 	private static void changeUserCount(String cacheEntryName, boolean increment)
 	{
-		Integer count = (Integer)cache.get(FQN, cacheEntryName);
+		Integer count = (Integer)cache.get(cacheEntryName, cacheEntryName);
 		
 		if (count == null) {
 			count = new Integer(0);
@@ -134,7 +134,7 @@ public class SessionFacade implements Cacheable
 			count = new Integer(count.intValue() - 1);
 		}
 		
-		cache.add(FQN, cacheEntryName, count);
+		cache.add(cacheEntryName, cacheEntryName, count);
 	}
 	
 	/**
