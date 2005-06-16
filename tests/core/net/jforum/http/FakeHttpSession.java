@@ -52,7 +52,7 @@ import javax.servlet.http.HttpSessionContext;
 
 /**
  * @author Rafael Steil
- * @version $Id: FakeHttpSession.java,v 1.1 2004/12/04 20:27:59 rafaelsteil Exp $
+ * @version $Id: FakeHttpSession.java,v 1.2 2005/06/16 01:24:55 rafaelsteil Exp $
  */
 public class FakeHttpSession implements HttpSession 
 {
@@ -104,9 +104,6 @@ public class FakeHttpSession implements HttpSession
 		return 0;
 	}
 
-	/** 
-	 * @see javax.servlet.http.HttpSession#getSessionContext()
-	 */
 	public HttpSessionContext getSessionContext() {
 		// TODO Auto-generated method stub
 		return null;
@@ -119,9 +116,6 @@ public class FakeHttpSession implements HttpSession
 		return this.attributes.get(name);
 	}
 
-	/** 
-	 * @see javax.servlet.http.HttpSession#getValue(java.lang.String)
-	 */
 	public Object getValue(String arg0) {
 		// TODO Auto-generated method stub
 		return null;
@@ -135,9 +129,6 @@ public class FakeHttpSession implements HttpSession
 		return null;
 	}
 
-	/** 
-	 * @see javax.servlet.http.HttpSession#getValueNames()
-	 */
 	public String[] getValueNames() {
 		// TODO Auto-generated method stub
 		return null;
@@ -150,9 +141,6 @@ public class FakeHttpSession implements HttpSession
 		this.attributes.put(name, value);
 	}
 
-	/** 
-	 * @see javax.servlet.http.HttpSession#putValue(java.lang.String, java.lang.Object)
-	 */
 	public void putValue(String arg0, Object arg1) {
 		// TODO Auto-generated method stub
 	}
@@ -164,9 +152,6 @@ public class FakeHttpSession implements HttpSession
 		this.attributes.remove(name);
 	}
 
-	/** 
-	 * @see javax.servlet.http.HttpSession#removeValue(java.lang.String)
-	 */
 	public void removeValue(String arg0) {
 		// TODO Auto-generated method stub
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c)Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -49,11 +49,11 @@ import java.util.Map;
 
 /**
  * @author Rafael Steil
- * @version $Id: DefaultCacheEngine.java,v 1.5 2005/02/21 14:31:10 rafaelsteil Exp $
+ * @version $Id: DefaultCacheEngine.java,v 1.6 2005/06/16 01:24:59 rafaelsteil Exp $
  */
 public class DefaultCacheEngine implements CacheEngine
 {
-	private Map cache;
+	private Map cache = new HashMap();
 	
 	/**
 	 * @see net.jforum.cache.CacheEngine#add(java.lang.String, java.lang.Object)

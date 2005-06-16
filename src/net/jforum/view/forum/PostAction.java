@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -92,7 +92,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.76 2005/06/03 03:07:21 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.77 2005/06/16 01:24:57 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -153,7 +153,7 @@ public class PostAction extends Command {
 		tm.incrementTotalViews(topic.getId());
 
 		if (us.getUserId() != anonymousUser) {
-			((HashMap) SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(topic.getId()),
+			((Map) SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(topic.getId()),
 					new Long(topic.getLastPostTimeInMillis().getTime()));
 		}
 		

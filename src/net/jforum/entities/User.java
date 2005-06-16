@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -40,7 +40,7 @@
  * The JForum Project
  * http://www.jforum.net 
  * 
- * $Id: User.java,v 1.13 2005/03/16 16:13:13 rafaelsteil Exp $
+ * $Id: User.java,v 1.14 2005/06/16 01:24:57 rafaelsteil Exp $
  */
 package net.jforum.entities;
 
@@ -848,6 +848,6 @@ public class User implements Serializable
 	 */	
 	public boolean isOnline()
 	{
-		return (SessionFacade.isUserInSession(this.id) != null);
+		return SessionFacade.isLogged();
 	}
 }

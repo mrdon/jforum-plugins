@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -75,7 +75,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.39 2005/04/10 16:41:21 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.40 2005/06/16 01:24:57 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -285,6 +285,7 @@ public class UserAction extends Command
 		boolean validInfo = false;
 
 		String password = this.request.getParameter("password");
+		
 		if (password.length() > 0) {
 			User user = this.validateLogin(this.request.getParameter("username"), password);
 

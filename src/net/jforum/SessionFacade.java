@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -60,16 +60,17 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.21 2005/06/15 14:17:23 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.22 2005/06/16 01:24:56 rafaelsteil Exp $
  */
 public class SessionFacade implements Cacheable
 {
 	private static final Logger logger = Logger.getLogger(SessionFacade.class);
 	
 	private static final String FQN = "sessions";
+	private static final String FQN_LOGGED = "logged";
+	private static final String FQN_COUNT = "count";
 	private static final String ANONYMOUS_COUNT = "anonymousCount";
 	private static final String LOGGED_COUNT = "loggedCount";
-	private static final String FQN_LOGGED = "logged";
 	
 	private static CacheEngine cache;
 
@@ -82,32 +83,46 @@ public class SessionFacade implements Cacheable
 	}
 	
 	/**
-	 * Add a new <code>UserSession</code> entry to the session
+	 * Add a new <code>UserSession</code> entry to the session.
+	 * This method will make a call to <code>JForum.getRequest.getSession().getId()</code>
+	 * to retrieve the session's id
 	 * 
 	 * @param us The user session objetc to add
+	 * @see #add(UserSession, String)
 	 */
 	public static void add(UserSession us)
 	{
 		add(us, JForum.getRequest().getSession().getId());
 	}
 
+	/**
+	 * Registers a new {@link UserSession}.
+	 * <p>
+	 * If a call to {@link UserSession#getUserId()} return a value different 
+	 * of <code>SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)</code>, then 
+	 * the user will be registered as "logged". Otherwise it will enter as anonymous.
+	 * </p>
+	 * 
+	 * <p>
+	 * Please note that, in order to keep the number of guest and logged users correct, 
+	 * it's caller's responsability to {@link #remove(String)} the record before adding it
+	 * again if the current session is currently represented as "guest". 
+	 * </p>
+	 *  
+	 * @param us the UserSession to add
+	 * @param sessionId the user's session id
+	 */
 	public static void add(UserSession us, String sessionId)
 	{
 		if (us.getSessionId() == null || us.getSessionId().equals("")) {
 			us.setSessionId(sessionId);
 		}
 		
-		sessionId = isUserInSession(us.getUsername());
-		
-		if (sessionId != null) {
-			remove(sessionId);
-		}
-
 		synchronized (FQN) {
 			cache.add(FQN, us.getSessionId(), us);
 			
 			if (!us.isBot()) {
-				if (isLogged()) {
+				if (us.getUserId() != SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
 					changeUserCount(LOGGED_COUNT, true);
 					cache.add(FQN_LOGGED, us.getSessionId(), us);
 				}
@@ -121,7 +136,7 @@ public class SessionFacade implements Cacheable
 	
 	private static void changeUserCount(String cacheEntryName, boolean increment)
 	{
-		Integer count = (Integer)cache.get(cacheEntryName, cacheEntryName);
+		Integer count = (Integer)cache.get(FQN_COUNT, cacheEntryName);
 		
 		if (count == null) {
 			count = new Integer(0);
@@ -134,7 +149,7 @@ public class SessionFacade implements Cacheable
 			count = new Integer(count.intValue() - 1);
 		}
 		
-		cache.add(cacheEntryName, cacheEntryName, count);
+		cache.add(FQN_COUNT, cacheEntryName, count);
 	}
 	
 	/**
@@ -222,7 +237,7 @@ public class SessionFacade implements Cacheable
 	 */
 	public static int registeredSize()
 	{
-		Integer count = (Integer)cache.get(FQN, LOGGED_COUNT);
+		Integer count = (Integer)cache.get(FQN_COUNT, LOGGED_COUNT);
 
 		return (count == null ? 0 : count.intValue());
 	}
@@ -233,7 +248,7 @@ public class SessionFacade implements Cacheable
 	 */
 	public static int anonymousSize()
 	{
-		Integer count = (Integer)cache.get(FQN, ANONYMOUS_COUNT);
+		Integer count = (Integer)cache.get(FQN_COUNT, ANONYMOUS_COUNT);
 
 		return (count == null ? 0 : count.intValue());
 	}
@@ -256,9 +271,16 @@ public class SessionFacade implements Cacheable
 		return getUserSession(JForum.getRequest().getSession().getId());
 	}
 	
+	/**
+	 * Gets an {@link UserSession} by the session id.
+	 * 
+	 * @param sessionId the session's id
+	 * @return an <b>immutable</b> UserSession, or <code>null</code> if no entry found
+	 */
 	public static UserSession getUserSession(String sessionId)
 	{
-		return (UserSession)cache.get(FQN, sessionId);
+		UserSession us = (UserSession)cache.get(FQN, sessionId);
+		return (us != null ? new UserSession(us) : null);
 	}
 
 	/**
@@ -386,7 +408,7 @@ public class SessionFacade implements Cacheable
 				SecurityRepository.remove(us.getUserId());
 			}
 			catch (Exception e) {
-				logger.warn("Error storing user session data: " + e);
+				logger.warn("Error storing user session data: " + e, e);
 			}
 		}
 	}

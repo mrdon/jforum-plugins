@@ -61,28 +61,40 @@ import net.jforum.util.preferences.SystemGlobals;
  * Stores information about user's session.
  * 
  * @author Rafael Steil
- * @version $Id: UserSession.java,v 1.17 2005/06/15 04:51:31 rafaelsteil Exp $
+ * @version $Id: UserSession.java,v 1.18 2005/06/16 01:24:57 rafaelsteil Exp $
  */
 public class UserSession implements Serializable
 {
+	static final long serialVersionUID = 0;
+	private long sessionTime;
+	
+	private int userId;
+	private int privateMessages;
+	
 	private Date startTime;
 	private Date lastVisit;
-	private long sessionTime;
-	private int userId;
+	
 	private transient String sessionId;
+	
 	private String username;
-	private boolean autoLogin;
 	private String lang;
-	private int privateMessages;
+	
+	private boolean autoLogin;
+	
 	private ImageCaptcha imageCaptcha = null;
-	static final long serialVersionUID = 0;
 
 	public UserSession() {}
 
 	public UserSession(UserSession us)
 	{
-		this.startTime = us.getStartTime();
-		this.lastVisit = us.getLastVisit();
+		if (us.getStartTime() != null) {
+			this.startTime = new Date(us.getStartTime().getTime());
+		}
+
+		if (us.getLastVisit() != null) {
+			this.lastVisit = new Date(us.getLastVisit().getTime());
+		}
+		
 		this.sessionTime = us.getSessionTime();
 		this.userId = us.getUserId();
 		this.sessionId = us.getSessionId();
@@ -90,6 +102,7 @@ public class UserSession implements Serializable
 		this.autoLogin = us.getAutoLogin();
 		this.lang = us.getLang();
 		this.privateMessages = us.getPrivateMessages();
+		this.imageCaptcha = us.imageCaptcha;
 	}
 
 	/**

@@ -69,22 +69,22 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author Pieter Olivier
- * @version $Id: SystemGlobals.java,v 1.21 2005/06/13 17:07:55 rafaelsteil Exp $
+ * @version $Id: SystemGlobals.java,v 1.22 2005/06/16 01:24:58 rafaelsteil Exp $
  */
 public class SystemGlobals implements VariableStore
 {
-	private static SystemGlobals globals;
+	private static SystemGlobals globals = new SystemGlobals();
 
 	private String defaultConfig;
 	private String installationConfig;
 
-	private Properties defaults;
-	private Properties installation;
+	private Properties defaults = new Properties();
+	private Properties installation = new Properties();
 	private static List additionalDefaultsList = new ArrayList();
 	private static Properties queries = new Properties();
 	private static Properties transientValues = new Properties();
 
-	private VariableExpander expander;
+	private VariableExpander expander = new VariableExpander(this, "${", "}");;
 	
 	private static final Logger logger = Logger.getLogger(SystemGlobals.class);
 	
@@ -108,8 +108,6 @@ public class SystemGlobals implements VariableStore
 			throw new InvalidParameterException("defaultConfig could not be null");
 		}
 
-		this.expander = new VariableExpander(this, "${", "}");
-		
 		this.defaultConfig = defaultConfig;
 		this.defaults = new Properties();
 

@@ -68,7 +68,7 @@ import freemarker.template.SimpleHash;
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.7 2005/06/15 04:51:30 rafaelsteil Exp $
+ * @version $Id: ControllerUtils.java,v 1.8 2005/06/16 01:24:56 rafaelsteil Exp $
  */
 public class ControllerUtils
 {
@@ -193,7 +193,7 @@ public class ControllerUtils
 	private void checkSSO(UserSession userSession)
 	{
 		try {
-			SSO sso = (SSO) Class.forName(SystemGlobals.getValue(ConfigKeys.SSO_IMPLEMENATION)).newInstance();
+			SSO sso = (SSO) Class.forName(SystemGlobals.getValue(ConfigKeys.SSO_IMPLEMENTATION)).newInstance();
 			String username = sso.authenticateUser(JForum.getRequest());
 
 			if (username == null || username.trim().equals("")) {
@@ -261,9 +261,9 @@ public class ControllerUtils
 			SessionFacade.setAttribute(ConfigKeys.TOPICS_TRACKING, new HashMap());
 		}
 		else if (ConfigKeys.TYPE_SSO.equals(SystemGlobals.getValue(ConfigKeys.AUTHENTICATION_TYPE))) {
-			SSO sso = (SSO) Class.forName(SystemGlobals.getValue(ConfigKeys.SSO_IMPLEMENATION)).newInstance();
+			SSO sso = (SSO) Class.forName(SystemGlobals.getValue(ConfigKeys.SSO_IMPLEMENTATION)).newInstance();
 
-			// If SSO, then check the session is valid
+			// If SSO, then check if the session is valid
 			if (!sso.isSessionValid(userSession, JForum.getRequest())) {
 				JForum.getRequest().getSession().invalidate();
 				SessionFacade.remove(userSession.getSessionId());

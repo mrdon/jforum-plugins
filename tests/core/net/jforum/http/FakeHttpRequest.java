@@ -47,6 +47,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
@@ -59,12 +60,13 @@ import javax.servlet.http.HttpSession;
 
 /**
  * @author Rafael Steil
- * @version $Id: FakeHttpRequest.java,v 1.1 2004/12/04 20:27:59 rafaelsteil Exp $
+ * @version $Id: FakeHttpRequest.java,v 1.2 2005/06/16 01:24:55 rafaelsteil Exp $
  */
 public class FakeHttpRequest implements HttpServletRequest 
 {
 	private HttpSession session = new FakeHttpSession();
 	private Hashtable params = new Hashtable();
+	private Map attributes = new HashMap();
 	
 	public String getAuthType() {
 		// TODO Auto-generated method stub
@@ -121,8 +123,7 @@ public class FakeHttpRequest implements HttpServletRequest
 		return null;
 	}
 	public String getRequestURI() {
-		// TODO Auto-generated method stub
-		return null;
+		return "";
 	}
 	public StringBuffer getRequestURL() {
 		// TODO Auto-generated method stub
@@ -163,8 +164,7 @@ public class FakeHttpRequest implements HttpServletRequest
 		return false;
 	}
 	public Object getAttribute(String arg0) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.attributes.get(arg0);
 	}
 	public Enumeration getAttributeNames() {
 		// TODO Auto-generated method stub
@@ -266,12 +266,10 @@ public class FakeHttpRequest implements HttpServletRequest
 		return false;
 	}
 	public void removeAttribute(String arg0) {
-		// TODO Auto-generated method stub
-
+		this.attributes.remove(arg0);
 	}
 	public void setAttribute(String arg0, Object arg1) {
-		// TODO Auto-generated method stub
-
+		this.attributes.put(arg0, arg1);
 	}
 	public void setCharacterEncoding(String arg0) throws UnsupportedEncodingException {
 		// TODO Auto-generated method stub
