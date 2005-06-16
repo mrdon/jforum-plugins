@@ -72,7 +72,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.71 2005/06/16 01:24:56 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.72 2005/06/16 01:54:26 rafaelsteil Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
@@ -254,7 +254,9 @@ public class JForum extends JForumBaseServlet
 				}
 			}
 			catch (Exception e) {
-				e.printStackTrace();
+				if (e.toString().indexOf("ClientAbortException") == -1) {
+					e.printStackTrace();
+				}
 			}
 			
 			DataHolder dh = (DataHolder)localData.get();

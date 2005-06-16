@@ -75,7 +75,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.40 2005/06/16 01:24:57 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.41 2005/06/16 01:54:26 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -340,7 +340,9 @@ public class UserAction extends Command
 					userSession.setLastVisit(new Date(tmpUs.getStartTime().getTime() + tmpUs.getSessionTime()));
 				}
 				
+				SessionFacade.remove(userSession.getSessionId()); // remove the guest record
 				SessionFacade.add(userSession);
+				
 				SessionFacade.setAttribute(ConfigKeys.TOPICS_TRACKING, new HashMap());
 
 				ControllerUtils.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA), 
@@ -411,6 +413,8 @@ public class UserAction extends Command
 		userSession.setAutoLogin(false);
 		userSession.setUserId(SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID));
 
+		SessionFacade.remove(userSession.getSessionId());
+		
 		SessionFacade.setAttribute("logged", "0");
 		SessionFacade.add(userSession);
 
