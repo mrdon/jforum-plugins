@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -55,6 +55,8 @@ import javax.imageio.ImageIO;
 
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 import org.apache.log4j.Logger;
 
@@ -75,7 +77,7 @@ import com.octo.captcha.image.gimpy.GimpyFactory;
 
 /**
  * @author James Yong
- * @version $Id: Captcha.java,v 1.4 2005/05/02 03:44:14 rafaelsteil Exp $
+ * @version $Id: Captcha.java,v 1.5 2005/07/01 04:09:58 rafaelsteil Exp $
  */
 public class Captcha extends ListImageCaptchaEngine
 {
@@ -86,7 +88,7 @@ public class Captcha extends ListImageCaptchaEngine
 	private List textPasterList;
 	private List fontGeneratorList;
 
-	private static final String charsInUsed = "123456789ABCDEFGHJLKMNPRSTWXYZ";
+	private static final String charsInUse = "123456789ABCDEFGHJLKMNPRSTWXYZabcdefghijlmnopkrstuvxzyk@#%^";
 
 	/**
 	 * Gets the singleton
@@ -103,20 +105,30 @@ public class Captcha extends ListImageCaptchaEngine
 		this.backgroundGeneratorList = new ArrayList();
 		this.textPasterList = new ArrayList();
 		this.fontGeneratorList = new ArrayList();
+		
+		int width = SystemGlobals.getIntValue(ConfigKeys.CAPTCHA_WIDTH);
+		int height = SystemGlobals.getIntValue(ConfigKeys.CAPTCHA_HEIGHT);
+		int minWords = SystemGlobals.getIntValue(ConfigKeys.CAPTCHA_MIN_WORDS);
+		int maxWords = SystemGlobals.getIntValue(ConfigKeys.CAPTCHA_MAX_WORDS);
+		int minFontSize = SystemGlobals.getIntValue(ConfigKeys.CAPTCHA_MIN_FONT_SIZE);
+		int maxFontSize = SystemGlobals.getIntValue(ConfigKeys.CAPTCHA_MAX_FONT_SIZE);
 
-		this.backgroundGeneratorList.add(new GradientBackgroundGenerator(new Integer(250), 
-				new Integer(50), Color.BLACK, Color.GRAY));
+		this.backgroundGeneratorList.add(new GradientBackgroundGenerator(new Integer(width), 
+				new Integer(height), Color.BLACK, Color.GRAY));
 		this.backgroundGeneratorList.add(new FunkyBackgroundGenerator(new Integer(250), new Integer(50)));
 
-		this.textPasterList.add(new RandomTextPaster(new Integer(6), new Integer(8), Color.RED));
-		this.textPasterList.add(new RandomTextPaster(new Integer(6), new Integer(8), Color.ORANGE));
-		this.textPasterList.add(new RandomTextPaster(new Integer(6), new Integer(8), Color.BLUE));
-		this.textPasterList.add(new RandomTextPaster(new Integer(6), new Integer(8), Color.WHITE));
+		this.textPasterList.add(new RandomTextPaster(new Integer(minWords), new Integer(maxWords), Color.RED));
+		this.textPasterList.add(new RandomTextPaster(new Integer(minWords), new Integer(maxWords), Color.ORANGE));
+		this.textPasterList.add(new RandomTextPaster(new Integer(minWords), new Integer(maxWords), Color.BLUE));
+		this.textPasterList.add(new RandomTextPaster(new Integer(minWords), new Integer(maxWords), Color.WHITE));
+		this.textPasterList.add(new RandomTextPaster(new Integer(minWords), new Integer(maxWords), Color.GREEN));
+		this.textPasterList.add(new RandomTextPaster(new Integer(minWords), new Integer(maxWords), Color.GRAY));
+		this.textPasterList.add(new RandomTextPaster(new Integer(minWords), new Integer(maxWords), Color.YELLOW));
 
-		this.fontGeneratorList.add(new TwistedAndShearedRandomFontGenerator(new Integer(25), new Integer(35)));
+		this.fontGeneratorList.add(new TwistedAndShearedRandomFontGenerator(new Integer(minFontSize), new Integer(maxFontSize)));
 
 		// Create a random word generator
-		WordGenerator words = new RandomWordGenerator(charsInUsed);
+		WordGenerator words = new RandomWordGenerator(charsInUse);
 
 		for (Iterator fontIter = this.fontGeneratorList.iterator(); fontIter.hasNext();) {
 			FontGenerator fontGeny = (FontGenerator) fontIter.next();
@@ -143,17 +155,16 @@ public class Captcha extends ListImageCaptchaEngine
 	public void writeCaptchaImage()
 	{
 		BufferedImage image = SessionFacade.getUserSession().getCaptchaImage();
+		
 		if (image == null) {
 			return;
 		}
 
 		OutputStream outputStream = null;
+		
 		try {
 			outputStream = JForum.getResponse().getOutputStream();
-			JForum.setContentType("image/png");
-			ImageIO.write(image, "png", outputStream);
-			outputStream.close();
-			outputStream = null;
+			ImageIO.write(image, "jpg", outputStream);
 		}
 		catch (IOException ex) {
 			logger.error(ex);
@@ -163,8 +174,7 @@ public class Captcha extends ListImageCaptchaEngine
 				try {
 					outputStream.close();
 				}
-				catch (IOException ex) {
-				}
+				catch (IOException ex) {}
 			}
 		}
 	}

@@ -92,7 +92,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.77 2005/06/16 01:24:57 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.78 2005/07/01 04:10:00 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -284,12 +284,19 @@ public class PostAction extends Command {
 		QuotaLimit ql = new AttachmentCommon(this.request, forumId).getQuotaLimit(userId);
 		this.context.put("maxAttachmentsSize", new Long(ql != null ? ql.getSizeInBytes() : 1));
 		
+		boolean needCaptcha = SystemGlobals.getBoolValue(ConfigKeys.CAPTCHA_POSTS);
+		
+		if (needCaptcha) {
+			SessionFacade.getUserSession().createNewCaptcha();
+		}
+		
 		this.context.put("maxAttachments", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
 		this.context.put("forum", ForumRepository.getForum(forumId));
 		this.context.put("action", "insertSave");
 		this.setTemplateName(TemplateKeys.POSTS_INSERT);
 		this.context.put("start", this.request.getParameter("start"));
 		this.context.put("isNewPost", true);
+		this.context.put("needCaptcha", needCaptcha);
 		this.context.put("htmlAllowed",
 				SecurityRepository.canAccess(SecurityConstants.PERM_HTML_DISABLED, Integer.toString(forumId)));
 		this.context.put("canCreateStickyOrAnnouncementTopics",
@@ -582,7 +589,7 @@ public class PostAction extends Command {
 				return;
 			}
 		}
-
+		
 		if (this.request.getParameter("topic_type") != null) {
 			t.setType(this.request.getIntParameter("topic_type"));
 		}
@@ -606,6 +613,20 @@ public class PostAction extends Command {
 		
 		if (p.getSubject() == null || p.getSubject() == "") {
 			p.setSubject(t.getTitle());
+		}
+		
+		boolean needCaptcha = SystemGlobals.getBoolValue(ConfigKeys.CAPTCHA_POSTS);
+		
+		if (needCaptcha) {
+			if (!us.validateCaptchaResponse(this.request.getParameter("captcha_anwser"))) {
+				this.context.put("post", p);
+				this.context.put("start", this.request.getParameter("start"));
+				this.context.put("captchaError", I18n.getMessage("CaptchaResponseFails"));
+				
+				this.insert();
+				
+				return;
+			}
 		}
 
 		boolean preview = (this.request.getParameter("preview") != null);
@@ -695,7 +716,6 @@ public class PostAction extends Command {
 		else {
 			this.context.put("preview", true);
 			this.context.put("post", p);
-			this.context.put("topic", t);
 			this.context.put("start", this.request.getParameter("start"));
 
 			Post postPreview = new Post(p);

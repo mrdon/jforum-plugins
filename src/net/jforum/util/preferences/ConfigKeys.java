@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.64 2005/06/16 01:24:58 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.65 2005/07/01 04:10:04 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -151,10 +151,18 @@ public class ConfigKeys {
 	public static final String POST_PER_PAGE = "postsPerPage";
 	public static final String USERS_PER_PAGE = "usersPerPage";
 	public static final String RECENT_TOPICS = "topic.recent";
-	public static final String CAPTCHA_REGISTRATION = "captcha.registration";
 	public static final String POSTS_CACHE_SIZE = "posts.cache.size";
 	public static final String POSTS_CACHE_ENABLED = "posts.cache.enabled";
 
+	public static final String CAPTCHA_REGISTRATION = "captcha.registration";
+	public static final String CAPTCHA_POSTS = "captcha.posts";
+	public static final String CAPTCHA_WIDTH = "captcha.width";
+	public static final String CAPTCHA_HEIGHT = "captcha.height";
+	public static final String CAPTCHA_MIN_FONT_SIZE = "captcha.min.font.size";
+	public static final String CAPTCHA_MAX_FONT_SIZE = "captcha.max.font.size";
+	public static final String CAPTCHA_MIN_WORDS = "captcha.min.words";
+	public static final String CAPTCHA_MAX_WORDS = "captcha.max.words";
+	
 	public static final String I18N_DEFAULT = "i18n.board.default";
 	public static final String I18N_DEFAULT_ADMIN = "i18n.internal";
 	public static final String I18N_IMAGES_DIR = "i18n.images.dir";

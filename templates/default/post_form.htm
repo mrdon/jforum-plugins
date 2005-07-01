@@ -237,7 +237,7 @@ function previewCallback(post)
 										</tr>
 
 										<tr valign="center" align="middle">
-											<td><a href="javascript:emoticon(':x')"><img src="${contextPath}/templates/${templateName}/images/icon_mad.gif" alt="Mad" width="15" height="15" border="0" title="Mad" /></a></td>
+											<td><a href="javascript:emoticon(':x')"><img src="${contextPath}/images/smilies/ed515dbff23a0ee3241dcc0a601c9ed6.gif" alt="Mad" width="15" height="15" border="0" title="Mad" /></a></td>
 											<td><a href="javascript:emoticon(':P')"><img src="${contextPath}/templates/${templateName}/images/icon_razz.gif" alt="Razz" width="15" height="15" border="0" title="Razz" /></a></td>
 											<td><a href="javascript:emoticon(':oops:')"><img src="${contextPath}/templates/${templateName}/images/icon_redface.gif" alt="Embarassed" width="15" height="15" border="0" title="Embarassed" /></a></td>
 											<td><a href="javascript:emoticon(':cry:')"><img src="${contextPath}/templates/${templateName}/images/icon_cry.gif" alt="Crying or Very sad" width="15" height="15" border="0" title="Crying or Very sad" /></a></td>
@@ -403,6 +403,23 @@ function previewCallback(post)
 						</table>
 					</td>
 				</tr>
+
+				<#if needCaptcha?default(false)>
+					<tr>
+						<td class="row1" valign="center"><span class="gen"><b>${I18n.getMessage("User.captchaResponse")}:</b></span></td>
+						<td class="row2">
+							<input class="post" style="WIDTH: 100px; font-weight: bold;" maxlength="25" size="25" name="captcha_anwser" /> 
+							<img src="${JForumContext.encodeURL("/captcha/generate")}" border="0" align="middle">
+						</td>
+					</tr>
+
+					<#if captchaError?exists>
+						<tr>
+							<td class="row1">&nbsp;</td>
+							<td class="row2"><span class="gen"><font color="red"><b>${captchaError}</b></font></span></td>
+						</tr>
+					</#if>
+				</#if>
 				
 				<tr align="center">
 					<td height="28" colspan="2" class="catBottom">              

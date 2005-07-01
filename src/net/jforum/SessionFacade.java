@@ -60,7 +60,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.22 2005/06/16 01:24:56 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.23 2005/07/01 04:10:02 rafaelsteil Exp $
  */
 public class SessionFacade implements Cacheable
 {
@@ -280,7 +280,7 @@ public class SessionFacade implements Cacheable
 	public static UserSession getUserSession(String sessionId)
 	{
 		UserSession us = (UserSession)cache.get(FQN, sessionId);
-		return (us != null ? new UserSession(us) : null);
+		return (us != null ? us : null);
 	}
 
 	/**

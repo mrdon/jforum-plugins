@@ -75,7 +75,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.41 2005/06/16 01:54:26 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.42 2005/07/01 04:10:00 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -299,7 +299,7 @@ public class UserAction extends Command
 				UserSession tmpUs = null;
 				String sessionId = SessionFacade.isUserInSession(user.getId());
 				
-				UserSession userSession = SessionFacade.getUserSession();
+				UserSession userSession = new UserSession(SessionFacade.getUserSession());
 				userSession.dataToUser(user);
 
 				// Check if the user is returning to the system
@@ -307,7 +307,7 @@ public class UserAction extends Command
 				if (sessionId != null) {
 					// Write its old session data
 					SessionFacade.storeSessionData(sessionId, JForum.getConnection());
-					tmpUs = SessionFacade.getUserSession(sessionId);
+					tmpUs = new UserSession(SessionFacade.getUserSession(sessionId));
 					SessionFacade.remove(sessionId);
 				}
 				else {
@@ -331,7 +331,6 @@ public class UserAction extends Command
 					ControllerUtils.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN), null);
 				}
 				
-				// TODO: copy'n paste from JForum.java. Move all to an helper class
 				if (tmpUs == null) {
 					userSession.setLastVisit(new Date(System.currentTimeMillis()));
 				}
@@ -340,7 +339,6 @@ public class UserAction extends Command
 					userSession.setLastVisit(new Date(tmpUs.getStartTime().getTime() + tmpUs.getSessionTime()));
 				}
 				
-				SessionFacade.remove(userSession.getSessionId()); // remove the guest record
 				SessionFacade.add(userSession);
 				
 				SessionFacade.setAttribute(ConfigKeys.TOPICS_TRACKING, new HashMap());

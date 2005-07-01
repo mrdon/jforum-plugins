@@ -61,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * Stores information about user's session.
  * 
  * @author Rafael Steil
- * @version $Id: UserSession.java,v 1.18 2005/06/16 01:24:57 rafaelsteil Exp $
+ * @version $Id: UserSession.java,v 1.19 2005/07/01 04:10:01 rafaelsteil Exp $
  */
 public class UserSession implements Serializable
 {
@@ -358,9 +358,12 @@ public class UserSession implements Serializable
 	 */
 	public boolean validateCaptchaResponse(String userResponse)
 	{
-		if (SystemGlobals.getBoolValue(ConfigKeys.CAPTCHA_REGISTRATION)
+		if ((SystemGlobals.getBoolValue(ConfigKeys.CAPTCHA_REGISTRATION) 
+				|| SystemGlobals.getBoolValue(ConfigKeys.CAPTCHA_POSTS))
 				&& this.imageCaptcha != null) {
-			return this.imageCaptcha.validateResponse(userResponse.toUpperCase()).booleanValue();
+			boolean result =  this.imageCaptcha.validateResponse(userResponse).booleanValue();
+			this.destroyCaptcha();
+			return result;
 		}
 		
 		return true;
