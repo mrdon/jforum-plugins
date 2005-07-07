@@ -68,7 +68,7 @@ import freemarker.template.SimpleHash;
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.8 2005/06/16 01:24:56 rafaelsteil Exp $
+ * @version $Id: ControllerUtils.java,v 1.9 2005/07/07 18:23:50 arawak Exp $
  */
 public class ControllerUtils
 {
@@ -118,7 +118,7 @@ public class ControllerUtils
 
 		if (hashCookie != null && cookie != null
 				&& !cookie.getValue().equals(SystemGlobals.getValue(ConfigKeys.ANONYMOUS_USER_ID))
-				&& autoLoginCookie != null && !"1".equals(autoLoginCookie.getValue())) {
+				&& autoLoginCookie != null && "1".equals(autoLoginCookie.getValue())) {
 			String uid = cookie.getValue();
 			String uidHash = hashCookie.getValue();
 
