@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
- * that the following conditions are met:
-
+ * that the following conditions are met:\
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -61,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * $Id: GenericUserSecurityDAO.java,v 1.2 2005/03/26 04:10:59 rafaelsteil Exp $
+ * $Id: GenericUserSecurityDAO.java,v 1.3 2005/07/08 00:22:54 rafaelsteil Exp $
  */
 public class GenericUserSecurityDAO extends AutoKeys implements net.jforum.dao.security.UserSecurityDAO, Serializable 
 {

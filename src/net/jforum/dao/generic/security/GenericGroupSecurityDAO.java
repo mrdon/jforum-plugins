@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -56,7 +56,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericGroupSecurityDAO.java,v 1.2 2005/03/26 04:10:59 rafaelsteil Exp $
+ * @version $Id: GenericGroupSecurityDAO.java,v 1.3 2005/07/08 00:22:55 rafaelsteil Exp $
  */
 public class GenericGroupSecurityDAO extends AutoKeys implements net.jforum.dao.security.GroupSecurityDAO 
 {
@@ -65,12 +65,14 @@ public class GenericGroupSecurityDAO extends AutoKeys implements net.jforum.dao.
 	 */
 	public void deleteAllRoles(int id) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PermissionControl.deleteAllRoleValues"));
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("PermissionControl.deleteAllRoleValues"));
 		p.setInt(1, id);
 		p.executeUpdate();
 		p.close();
 		
-		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PermissionControl.deleteAllGroupRoles"));
+		p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("PermissionControl.deleteAllGroupRoles"));
 		p.setInt(1, id);
 		p.executeUpdate();
 		p.close();		
@@ -81,7 +83,8 @@ public class GenericGroupSecurityDAO extends AutoKeys implements net.jforum.dao.
 	 */
 	public void deleteRole(int id, String roleName) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PermissionControl.deleteGroupRole"));
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("PermissionControl.deleteGroupRole"));
 		p.setString(1, roleName);
 		p.setInt(2, id);
 		p.executeUpdate();
@@ -119,7 +122,8 @@ public class GenericGroupSecurityDAO extends AutoKeys implements net.jforum.dao.
 	 */
 	public void addRoleValue(int id, Role role, RoleValueCollection rvc) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PermissionControl.getRoleIdByName"));
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("PermissionControl.getRoleIdByName"));
 		p.setString(1, role.getName());
 		p.setInt(2, id);
 		
@@ -137,7 +141,8 @@ public class GenericGroupSecurityDAO extends AutoKeys implements net.jforum.dao.
 			this.addRole(id, role, rvc);
 		}
 		else {
-			p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PermissionControl.addRoleValues"));
+			p = JForum.getConnection().prepareStatement(
+					SystemGlobals.getSql("PermissionControl.addRoleValues"));
 			p.setInt(1, roleId);
 			
 			for (Iterator iter = rvc.iterator(); iter.hasNext(); ) {

@@ -36,14 +36,24 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on 29/05/2004 00:12:37
+ * Created on 02/07/2005 13:35:19
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.dao.mysql;
 
-/**
- * @author Rafael Steil
- * @version $Id: MysqlDataAccessDriver.java,v 1.3 2005/07/08 00:22:56 rafaelsteil Exp $
- */
-public class MysqlDataAccessDriver extends net.jforum.dao.generic.DataAccessDriver {}
+import net.jforum.dao.mysql.security.MySQL323GroupSecurityDAO;
+import net.jforum.dao.security.GroupSecurityDAO;
+
+public class MySQL323DataAccessDriver extends MysqlDataAccessDriver
+{
+	private static GroupSecurityDAO groupSecurityDAO = new MySQL323GroupSecurityDAO();
+	
+	/**
+	 * @see net.jforum.dao.DataAccessDriver#newGroupSecurityDAO()
+	 */
+	public GroupSecurityDAO newGroupSecurityDAO()
+	{
+		return groupSecurityDAO;
+	}
+}

@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.65 2005/07/01 04:10:04 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.66 2005/07/08 00:22:57 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -238,6 +238,9 @@ public class ConfigKeys {
 	
 	public static final String CLICKSTREAM_CONFIG = "clickstream.config";
 	public static final String IS_BOT = "clickstream.is.bot";
+
+	public static final String POSTS_NEW_DELAY = "posts.new.delay";
+	public static final String LAST_POST_TIME = "last.post.time";
 	
 	private ConfigKeys() {}
 }

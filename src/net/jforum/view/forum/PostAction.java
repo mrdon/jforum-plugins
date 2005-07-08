@@ -92,7 +92,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.78 2005/07/01 04:10:00 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.79 2005/07/08 00:22:58 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -609,6 +609,23 @@ public class PostAction extends Command {
 			return;
 		}
 		
+		// Check the elapsed time since the last post from the user
+		int delay = SystemGlobals.getIntValue(ConfigKeys.POSTS_NEW_DELAY);
+		
+		if (delay > 0) {
+			Long lastPostTime = (Long)SessionFacade.getAttribute(ConfigKeys.LAST_POST_TIME);
+			
+			if (lastPostTime != null) {
+				if (System.currentTimeMillis() < (lastPostTime.longValue() + delay)) {
+					this.context.put("post", p);
+					this.context.put("start", this.request.getParameter("start"));
+					this.context.put("error", I18n.getMessage("PostForm.tooSoon"));
+					this.insert();
+					return;
+				}
+			}
+		}
+		
 		p.setForumId(this.request.getIntParameter("forum_id"));
 		
 		if (p.getSubject() == null || p.getSubject() == "") {
@@ -621,7 +638,7 @@ public class PostAction extends Command {
 			if (!us.validateCaptchaResponse(this.request.getParameter("captcha_anwser"))) {
 				this.context.put("post", p);
 				this.context.put("start", this.request.getParameter("start"));
-				this.context.put("captchaError", I18n.getMessage("CaptchaResponseFails"));
+				this.context.put("error", I18n.getMessage("CaptchaResponseFails"));
 				
 				this.insert();
 				
@@ -711,6 +728,10 @@ public class PostAction extends Command {
 				JForum.setRedirect(this.request.getContextPath() + "/posts/waitingModeration/" + (firstPost ? 0 : t.getId())
 						+ "/" + t.getForumId()
 						+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+			}
+			
+			if (delay > 0) {
+				SessionFacade.setAttribute(ConfigKeys.LAST_POST_TIME, new Long(System.currentTimeMillis()));
 			}
 		}
 		else {
