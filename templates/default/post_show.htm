@@ -294,7 +294,7 @@ function leaveText()
 				}
 				</script>
 
-				<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="post" id="post" onsubmit="return validatePostForm(this);" accept-charset="${encoding}">
+				<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="post" id="post" onsubmit="return validatePostForm(this);" enctype="multipart/form-data"  accept-charset="${encoding}">
 					<input type="hidden" name="action" value="insertSave" />
 					<input type="hidden" name="module" value="posts" />
 					<input type="hidden" name="securityHash" value="${securityHash}" />

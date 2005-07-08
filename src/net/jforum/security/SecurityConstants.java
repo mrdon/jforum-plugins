@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -44,7 +44,7 @@ package net.jforum.security;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityConstants.java,v 1.10 2005/01/21 12:12:27 rafaelsteil Exp $
+ * @version $Id: SecurityConstants.java,v 1.11 2005/07/08 18:23:09 rafaelsteil Exp $
  */
 public class SecurityConstants 
 {
@@ -55,6 +55,7 @@ public class SecurityConstants
 	public static final String PERM_FORUM = "perm_forum";
 	public static final String PERM_ANONYMOUS_POST = "perm_anonymous_post";
 	public static final String PERM_MODERATION = "perm_moderation";
+	public static final String PERM_MODERATION_APPROVE_MESSAGES = "perm_moderation_approve_messages";
 	public static final String PERM_MODERATION_FORUMS = "perm_moderation_forums";
 	public static final String PERM_MODERATION_POST_REMOVE = "perm_moderation_post_remove";
 	public static final String PERM_MODERATION_POST_EDIT = "perm_moderation_post_edit";

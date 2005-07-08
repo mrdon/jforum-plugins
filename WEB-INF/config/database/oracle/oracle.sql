@@ -273,19 +273,3 @@ AttachmentModel.addAttachment = INSERT INTO jforum_attach (attach_id, post_id, p
 
 AttachmentModel.addAttachmentInfo = INSERT INTO jforum_attach_desc (attach_desc_id, attach_id, physical_filename, real_filename, description, \
 	mimetype, filesize, upload_time, thumb, extension_id ) VALUES (jforum_attach_desc_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-	
-# ################
-# ModerationModel
-# ################
-ModerationModel.topicsByForum = SELECT * FROM ( \
-	SELECT p.post_id, t.topic_id, t.topic_title, p.user_id, enable_bbcode, p.attach, \
-	enable_html, enable_smilies, pt.post_subject, pt.post_text, username, \
-    ROW_NUMBER() OVER(ORDER BY post_time ASC) LINENUM \
-	FROM jforum_posts p, jforum_posts_text pt, jforum_users u, jforum_topics t WHERE p.post_id = pt.post_id \
-	AND p.topic_id = t.topic_id \
-	AND t.forum_id = ? \
-	AND p.user_id = u.user_id \
-	AND p.need_moderate = 1 \
-	ORDER BY t.topic_id, post_time ASC \
-      ) \
-	WHERE LINENUM BETWEEN ? AND ?

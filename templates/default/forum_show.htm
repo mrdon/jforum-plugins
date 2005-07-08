@@ -26,14 +26,6 @@
 					<td valign="center" nowrap="nowrap" align="right"><@pagination.doPagination action, forum.id/></td>
 				</tr>
 
-				<#if moderator>
-					<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="form1" id="form1" accept-charset="${encoding}">
-					<input type="hidden" name="action" value="doModeration" />
-					<input type="hidden" name="module" value="${moduleName}" />
-					<input type="hidden" name="securityHash" value="${securityHash}" />
-					<input type="hidden" name="persistData" value="${forum.id}" />
-				</#if>
-
 				<tr>
 					<#if !readonly && !replyOnly>
 						<td valign="center" align="left" width="50">
@@ -70,6 +62,92 @@
 				</tr>
 			</table>
 
+			<#if (canApproveMessages && topicsToApprove.size() > 0)>
+				<script type="text/javascript">
+				function viewPending(id)
+				{
+					var tr = document.getElementById("tr_pending_" + id);
+					var d = tr.style.display
+					tr.style.display = (d == "none" ? "" : "none");
+				}
+				</script>
+				<form action="${JForumContext.encodeURL("/jforum")}" method="post" accept-charset="${encoding}">
+				<input type="hidden" name="action" value="approveMessages" />
+				<input type="hidden" name="module" value="${moduleName}" />
+				<input type="hidden" name="securityHash" value="${securityHash}" />
+				<input type="hidden" name="forum_id" value="${forum.id}" />
+
+				<table width="70%"class="forumline" align="center" cellspacing="1" cellpadding="4">
+					<tr>
+						<td class="bg_yellow" align="center" style="height: 30px" colspan="2"><span class="gensmall tx_red"><b>${I18n.getMessage("Moderation.checkQueue")}</b></span></td>
+					</tr>
+
+					<#list topicsToApprove.values() as topic>
+						<#if topic_index % 2 == 0>
+							<#assign rowColor = "">
+						<#else>
+							<#assign rowColor = "bg_small_yellow">
+						</#if>
+
+						<tr class="${rowColor}">
+							<td width="90%">
+								<#if (topic.topicReplies > 0)>
+									<a href="${JForumContext.encodeURL("/posts/list/${topic.topicId}")}" class="gen">${topic.topicTitle}</a>
+								<#else>
+									<span class="gen">${topic.topicTitle}</span>
+								</#if>
+							</td>
+							<td align="center"><span class="gen"><a href="javascript:viewPending(${topic.topicId});"><b>${I18n.getMessage("Moderation.Admin.view")}</b></a></span></td>
+						</tr>
+
+						<!-- Messages -->
+						<tr id="tr_pending_${topic.topicId}" style="display: none">
+							<td colspan="2">
+								<table width="95%" align="right">
+									<#list topic.posts as post>
+										<#assign post = postFormatter.preparePostForDisplay(post)/>
+
+										<tr><td><span class="gensmall"><b>${I18n.getMessage("PostShow.author")}</b>: ${post.postUsername}</span></td></tr>
+										<tr><td><span class="gensmall">${post.text}</span></td></tr>
+
+										<tr>
+											<td colspan="2" align="right">
+												<span class="gensmall">
+													<input type="radio" name="status_${post.id}" value="aprove">${I18n.getMessage("Moderation.Admin.aprove")}&nbsp;
+													<input type="radio" name="status_${post.id}" value="defer" checked>${I18n.getMessage("Moderation.Admin.defer")}&nbsp;
+													<input type="radio" name="status_${post.id}" value="reject">${I18n.getMessage("Moderation.Admin.reject")}&nbsp;
+													<input type="hidden" name="post_id" value="${post.id}">
+												</span>
+											</td>
+										</tr>
+
+										<#if (post_index + 1 < topic.posts.size())>
+											<tr>
+												<td colspan="2" height="1" class="spaceRow"><img src="${contextPath}/templates/${templateName}/images/spacer.gif" alt="" width="1" height="1" /></td>
+											</tr>
+										</#if>
+									</#list>
+								</table>
+							</td>
+						</tr>
+					</#list>
+
+					<!-- Submit -->
+					<tr>
+						<td colspan="2" align="center"><input type="submit" class="mainoption" value="${I18n.getMessage("Moderation.Admin.submit")}"></td></tr> 
+					</tr>
+				</table>
+				</form>
+			</#if>
+
+			<#if moderator>
+				<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="form1" id="form1" accept-charset="${encoding}">
+				<input type="hidden" name="action" value="doModeration" />
+				<input type="hidden" name="module" value="${moduleName}" />
+				<input type="hidden" name="securityHash" value="${securityHash}" />
+				<input type="hidden" name="persistData" value="${forum.id}" />
+			</#if>
+
 			<table class="forumline" cellspacing="1" cellpadding="4" width="100%" border="0">
 				<tr>
 					<th class="thCornerL" nowrap="nowrap" align="middle" colspan="2" height="25">&nbsp;${I18n.getMessage("ForumIndex.topics")}&nbsp;</th>
@@ -85,46 +163,58 @@
 
 				<!-- TOPICS LISTING -->
 				<#list topics as topic>
-				<tr>
-					<td class="<@presentation.row1Class topic/>" valign="center" align="middle" width="20"><@presentation.folderImage topic/></td>
-					<td class="<@presentation.row1Class topic/>" width="100%">
-						<#if topic.hasAttach() && attachmentsEnabled><img src="${contextPath}/templates/${templateName}/images/icon_clip.gif" align="middle"></#if>
-						<span class="topictitle">
-						<a href="${JForumContext.encodeURL("/posts/list/${topic.id}")}"><#if (topic.title?length == 0)>No Subject<#else>${topic.title?html}</#if></a>
-						</span>
+					<#assign class1>class="<@presentation.row1Class topic/>"</#assign>
+					<#assign class2>class="<@presentation.row2Class topic/>"</#assign>
+					<#assign class3>class="<@presentation.row3Class topic/>"</#assign>
 
-						<#if topic.paginate>
-							<span class="gensmall">
-							<br />
-							<@pagination.littlePostPagination topic.id, postsPerPage, topic.totalReplies/>				
-							</span>
-						</#if>		
-					</td>
-
-					<td class="<@presentation.row2Class topic/>" valign="center" align="middle"><span class="postdetails">${topic.totalReplies}</span></td>
-					<td class="<@presentation.row3Class topic/>" valign="center" align="middle">
-						<span class="name"><a href="${JForumContext.encodeURL("/user/profile/${topic.postedBy.id}")}">${topic.postedBy.username}</a></span>
-					</td>
-
-					<td class="<@presentation.row2Class topic/>" valign="center" align="middle"><span class="postdetails">${topic.totalViews}</span></td>
-					<td class="<@presentation.row3Class topic/>" valign="center" nowrap="nowrap" align="middle">
-						<#if (topic.lastPostTime?length > 0)>
-							<span class="postdetails">${topic.lastPostTime}<br />
-							<a href="${JForumContext.encodeURL("/user/profile/${topic.lastPostBy.id}")}">${topic.lastPostBy.username}</a>
-
-							<#assign startPage = ""/>
-							<#if (topic.totalReplies + 1 > postsPerPage?number)>
-								<#assign startPage = ((topic.totalReplies / postsPerPage?number)?int * postsPerPage?number) +"/"/>
-							</#if>
-				  
-							<a href="${JForumContext.encodeURL("/posts/list/${startPage}${topic.id}")}#${topic.lastPostId}"><img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif" width="18" height="9" border="0" /></a></span>
-						</#if>		 
-					</td>
-
-					<#if moderator && openModeration?default(false)>
-						<td class="<@presentation.row2Class topic/>" valign="middle" align="center"><input type="checkbox" name="topic_id" value="${topic.id}" /></td>
+					<#if canApproveMessages>
+						<#if topicsToApprove.containsKey(topic.id)>
+							<#assign class1 = "class='bg_yellow'"/>
+							<#assign class2 = class1/>
+							<#assign class3 = class1/>
+						</#if>
 					</#if>
-				</tr>
+					
+					<tr>
+						<td ${class1} valign="center" align="middle" width="20"><@presentation.folderImage topic/></td>
+						<td ${class1} width="100%">
+							<#if topic.hasAttach() && attachmentsEnabled><img src="${contextPath}/templates/${templateName}/images/icon_clip.gif" align="middle"></#if>
+							<span class="topictitle">
+							<a href="${JForumContext.encodeURL("/posts/list/${topic.id}")}"><#if (topic.title?length == 0)>No Subject<#else>${topic.title?html}</#if></a>
+							</span>
+
+							<#if topic.paginate>
+								<span class="gensmall">
+								<br />
+								<@pagination.littlePostPagination topic.id, postsPerPage, topic.totalReplies/>				
+								</span>
+							</#if>		
+						</td>
+
+						<td ${class2} valign="center" align="middle"><span class="postdetails">${topic.totalReplies}</span></td>
+						<td ${class3} valign="center" align="middle">
+							<span class="name"><a href="${JForumContext.encodeURL("/user/profile/${topic.postedBy.id}")}">${topic.postedBy.username}</a></span>
+						</td>
+
+						<td ${class2} valign="center" align="middle"><span class="postdetails">${topic.totalViews}</span></td>
+						<td ${class3} valign="center" nowrap="nowrap" align="middle">
+							<#if (topic.lastPostTime?length > 0)>
+								<span class="postdetails">${topic.lastPostTime}<br />
+								<a href="${JForumContext.encodeURL("/user/profile/${topic.lastPostBy.id}")}">${topic.lastPostBy.username}</a>
+
+								<#assign startPage = ""/>
+								<#if (topic.totalReplies + 1 > postsPerPage?number)>
+									<#assign startPage = ((topic.totalReplies / postsPerPage?number)?int * postsPerPage?number) +"/"/>
+								</#if>
+					  
+								<a href="${JForumContext.encodeURL("/posts/list/${startPage}${topic.id}")}#${topic.lastPostId}"><img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif" width="18" height="9" border="0" /></a></span>
+							</#if>		 
+						</td>
+
+						<#if moderator && openModeration?default(false)>
+							<td ${class2} valign="middle" align="center"><input type="checkbox" name="topic_id" value="${topic.id}" /></td>
+						</#if>
+					</tr>
 				</#list>		
 				<!-- END OF TOPICS LISTING -->
 				

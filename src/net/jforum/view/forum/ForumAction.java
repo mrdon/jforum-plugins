@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -47,12 +47,14 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
+import net.jforum.dao.ModerationDAO;
 import net.jforum.dao.SearchData;
 import net.jforum.dao.UserDAO;
 import net.jforum.entities.Forum;
@@ -66,12 +68,14 @@ import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
+import net.jforum.view.admin.ModerationAction;
 import net.jforum.view.forum.common.ForumCommon;
+import net.jforum.view.forum.common.PostCommon;
 import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.37 2005/06/15 04:51:31 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.38 2005/07/08 18:23:09 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -175,23 +179,35 @@ public class ForumAction extends Command
 		
 		int start = ViewCommon.getStartPage();
 		
-		int topicsPerPage = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
 		List tmpTopics = TopicsCommon.topicsByForum(forumId, start);
 		
-		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
-		int totalTopics = ForumRepository.getTotalTopics(forumId);
+		this.setTemplateName(TemplateKeys.FORUMS_SHOW);
+		
+		// Moderation
+		boolean canApproveMessages = (SessionFacade.isLogged() 
+			&& SessionFacade.getUserSession().isModerator(this.request.getIntParameter("forum_id"))
+			&& SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_APPROVE_MESSAGES));
+		
+		Map topicsToApprove = new HashMap();
+		
+		if (canApproveMessages) {
+			ModerationDAO mdao = DataAccessDriver.getInstance().newModerationDAO();
+			topicsToApprove = mdao.topicsByForum(forumId);
+			this.context.put("postFormatter", PostCommon.getInstance());
+		}
+		
+		this.context.put("topicsToApprove", topicsToApprove);
 		
 		this.context.put("attachmentsEnabled", SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED,
 				Integer.toString(forumId)) 
 				|| SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD));
-
+		
 		this.context.put("topics", TopicsCommon.prepareTopics(tmpTopics));
 		this.context.put("allCategories", ForumCommon.getAllCategoriesAndForums(false));
 		this.context.put("forum", forum);
-		this.setTemplateName(TemplateKeys.FORUMS_SHOW);
 		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
 		this.context.put("pageTitle", SystemGlobals.getValue(ConfigKeys.FORUM_NAME) + " - " + forum.getName());
-		
+		this.context.put("canApproveMessages", canApproveMessages);
 		this.context.put("replyOnly", !SecurityRepository.canAccess(SecurityConstants.PERM_REPLY_ONLY, 
 				Integer.toString(forum.getId())));
 
@@ -199,11 +215,11 @@ public class ForumAction extends Command
 				Integer.toString(forumId)));
 		
 		// Pagination
-		this.context.put("totalPages", new Double(Math.ceil( (double)totalTopics / (double)topicsPerPage )));
-		this.context.put("recordsPerPage", new Integer(topicsPerPage));
-		this.context.put("totalRecords", new Integer(totalTopics));
-		this.context.put("thisPage", new Double(Math.ceil( (double)(start + 1) / (double)topicsPerPage )));
-		this.context.put("start", new Integer(start));
+		int topicsPerPage = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
+		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
+		int totalTopics = ForumRepository.getTotalTopics(forumId);
+		
+		ViewCommon.contextToPagination(start, totalTopics, topicsPerPage);
 		this.context.put("postsPerPage", new Integer(postsPerPage));
 
 		TopicsCommon.topicListingBase();
@@ -287,6 +303,17 @@ public class ForumAction extends Command
 		new SearchAction(this.request, this.response, this.conn, this.context).search();
 		
 		this.setTemplateName(TemplateKeys.SEARCH_NEW_MESSAGES);
+	}
+	
+	public void approveMessages() throws Exception
+	{
+		if (SessionFacade.getUserSession().isModerator(this.request.getIntParameter("forum_id"))) {
+			new ModerationAction(this.context, this.request).doSave();
+		}
+		
+		JForum.setRedirect(this.request.getContextPath()
+			+ "/forums/show/" + this.request.getParameter("forum_id")
+			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 	}
 	
 	public void pingSession()

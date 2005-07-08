@@ -71,10 +71,24 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.14 2005/06/13 00:07:53 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.15 2005/07/08 18:23:14 rafaelsteil Exp $
  */
 public class PostCommon
 {
+	private static PostCommon instance = new PostCommon();
+	
+	/**
+	 * Gets the instance.
+	 * This method only exists to situations where an instance is 
+	 * needed in the template context, so we don't  need to 
+	 * create a new instance every time.
+	 * @return
+	 */
+	public static PostCommon getInstance()
+	{
+		return instance;
+	}
+	
 	public static Post preparePostForDisplay(Post p)
 	{
 		if (p.getText() == null) {

@@ -194,7 +194,7 @@ function previewCallback(post)
 				<tr>
 					<td class="row1" width="22%"><span class="gen"><b>${I18n.getMessage("PostForm.subject")}</b></span></td>
 					<#if post?exists>
-						<#assign subject = post.subject?html/>
+						<#assign subject = post.subject?default("")?html/>
 						<#elseif pmReply?default(false)>
 						<#assign subject = pm.post.subject?html/>
 						<#elseif topic?exists>

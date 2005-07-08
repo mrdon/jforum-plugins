@@ -98,6 +98,12 @@
 			<option value="allow" description="Yes"/>
 		</permission>
 
+		<!-- Can approve / deny messages -->
+		<permission id="perm_moderation_approve_messages" title="Can approve / deny messages in moderated forums" type="single">
+			<option value="deny" description="No"/>
+			<option value="allow" description="Yes"/>
+		</permission>
+
 		<!-- Restricted forums to moderate -->		
 		<permission id="perm_moderation_forums" title="Cannot moderate these forums:" type="multiple">
 			<sql queryName="ForumModel.selectAll" valueField="forum_id" captionField="forum_name"/>

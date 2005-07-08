@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -47,9 +47,12 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.jforum.JForum;
+import net.jforum.dao.ModerationDAO;
 import net.jforum.entities.ModerationPendingInfo;
 import net.jforum.entities.Post;
 import net.jforum.entities.TopicModerationInfo;
@@ -57,9 +60,9 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericModerationDAO.java,v 1.1 2005/04/10 16:24:35 rafaelsteil Exp $
+ * @version $Id: GenericModerationDAO.java,v 1.2 2005/07/08 18:23:12 rafaelsteil Exp $
  */
-public class GenericModerationDAO implements net.jforum.dao.ModerationDAO
+public class GenericModerationDAO implements ModerationDAO
 {
 	/**
 	 * @see net.jforum.dao.ModerationDAO#aprovePost(int)
@@ -75,16 +78,15 @@ public class GenericModerationDAO implements net.jforum.dao.ModerationDAO
 	}
 	
 	/**
-	 * @see net.jforum.dao.ModerationDAO#topicsByForum(int, int, int)
+	 * @see net.jforum.dao.ModerationDAO#topicsByForum(int)
 	 */
-	public List topicsByForum(int forumId, int start, int count) throws Exception
+	public Map topicsByForum(int forumId) throws Exception
 	{
-		List l = new ArrayList();
+		Map m = new HashMap();
+		
 		PreparedStatement p = JForum.getConnection().prepareStatement(
 				SystemGlobals.getSql("ModerationModel.topicsByForum"));
 		p.setInt(1, forumId);
-		p.setInt(2, start);
-		p.setInt(3, count);
 		
 		int lastId = 0;
 		TopicModerationInfo info = null;
@@ -96,11 +98,12 @@ public class GenericModerationDAO implements net.jforum.dao.ModerationDAO
 				lastId = id;
 				
 				if (info != null) {
-					l.add(info);
+					m.put(new Integer(info.getTopicId()), info);
 				}
 				
 				info = new TopicModerationInfo();
 				info.setTopicId(id);
+				info.setTopicReplies(rs.getInt("topic_replies"));
 				info.setTopicTitle(rs.getString("topic_title"));
 			}
 			
@@ -108,13 +111,13 @@ public class GenericModerationDAO implements net.jforum.dao.ModerationDAO
 		}
 		
 		if (info != null) {
-			l.add(info);
+			m.put(new Integer(info.getTopicId()), info);
 		}
 		
 		rs.close();
 		p.close();
 		
-		return l;
+		return m;
 	}
 	
 	protected Post getPost(ResultSet rs) throws Exception

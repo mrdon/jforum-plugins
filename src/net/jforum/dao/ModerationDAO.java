@@ -43,10 +43,11 @@
 package net.jforum.dao;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationDAO.java,v 1.2 2005/03/26 04:10:37 rafaelsteil Exp $
+ * @version $Id: ModerationDAO.java,v 1.3 2005/07/08 18:23:13 rafaelsteil Exp $
  */
 public interface ModerationDAO
 {
@@ -62,13 +63,11 @@ public interface ModerationDAO
 	 * 
 	 * @param forumId The forum id to search for messages
 	 * to mdoerate
-	 * @param start The start record to start fetching from
-	 * @param count The number of records to fetch
-	 * @return A list instance where each entry is a TopicModerationInfo
-	 * instance.
+	 * @return A map instance where the key is the topic id and the value is 
+	 * a TopicModerationInfo instance.
 	 * @throws Exception
 	 */
-	public List topicsByForum(int forumId, int start, int count) throws Exception;
+	public Map topicsByForum(int forumId) throws Exception;
 	
 	/**
 	 * Gets information about which categories and

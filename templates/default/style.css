@@ -411,6 +411,10 @@ INPUT.liteoption {
 	color: #ff0000;
 }
 
+.bg_yellow { background-color:#FFEEA7; }
+.bg_small_yellow { background-color: #FFF8DD; }
+.tx_red{ color: #B5090F }
+
 td.attachrow		{ font: normal 11px Verdana, Arial, Helvetica, sans-serif; color : #000000; border-color : #000000; }
 td.attachheader     { font: normal 11px Verdana, Arial, Helvetica, sans-serif; color : #000000; border-color : #000000; background-color: #d1d7dc; }
 table.attachtable	{ font: normal 12px Verdana, Arial, Helvetica, sans-serif; color : #000000; border-color : #000000;	border-collapse : collapse; }

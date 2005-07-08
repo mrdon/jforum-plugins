@@ -42,6 +42,7 @@
  */
 package net.jforum.view.admin;
 
+import net.jforum.ActionServletRequest;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.PostDAO;
 import net.jforum.dao.TopicDAO;
@@ -56,13 +57,22 @@ import net.jforum.view.forum.common.AttachmentCommon;
 import net.jforum.view.forum.common.PostCommon;
 import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
+import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationAction.java,v 1.9 2005/06/13 15:38:35 rafaelsteil Exp $
+ * @version $Id: ModerationAction.java,v 1.10 2005/07/08 18:23:10 rafaelsteil Exp $
  */
 public class ModerationAction extends AdminCommand
 {
+	public ModerationAction() {}
+	
+	public ModerationAction(SimpleHash context, ActionServletRequest request)
+	{
+		this.context = context;
+		this.request = request;
+	}
+	
 	/**
 	 * @see net.jforum.Command#list()
 	 */
@@ -82,10 +92,10 @@ public class ModerationAction extends AdminCommand
 		this.setTemplateName(TemplateKeys.MODERATION_ADMIN_VIEW);
 		this.context.put("forum", ForumRepository.getForum(forumId));
 		this.context.put("topics", DataAccessDriver.getInstance().newModerationDAO().topicsByForum(
-				forumId, start, count));
+				forumId));
 	}
 	
-	public void save() throws Exception
+	public void doSave() throws Exception
 	{
 		String[] posts = this.request.getParameterValues("post_id");
 		if (posts != null) {
@@ -128,7 +138,11 @@ public class ModerationAction extends AdminCommand
 				}
 			}
 		}
-		
+	}
+	
+	public void save() throws Exception
+	{
+		this.doSave();
 		this.view();
 	}
 }
