@@ -43,7 +43,6 @@
 package net.jforum.view.admin;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -55,6 +54,7 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.ActionServletRequest;
+import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
@@ -62,7 +62,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ConfigAction.java,v 1.9 2005/06/13 17:07:56 rafaelsteil Exp $
+ * @version $Id: ConfigAction.java,v 1.10 2005/07/08 05:23:45 rafaelsteil Exp $
  */
 public class ConfigAction extends AdminCommand 
 {
@@ -124,7 +124,7 @@ public class ConfigAction extends AdminCommand
 		return p;
 	}
 	
-	void updateData(Properties p) throws IOException
+	void updateData(Properties p) throws Exception
 	{
 		for (Iterator iter = p.entrySet().iterator(); iter.hasNext(); ) {
 			Map.Entry entry = (Map.Entry)iter.next();
@@ -133,5 +133,6 @@ public class ConfigAction extends AdminCommand
 		}
 		
 		SystemGlobals.saveInstallation();
+		I18n.changeBoardDefault(SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT));
 	}
 }

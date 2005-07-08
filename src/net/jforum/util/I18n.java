@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -64,7 +64,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: I18n.java,v 1.25 2005/04/01 14:36:15 samuelyung Exp $
+ * @version $Id: I18n.java,v 1.26 2005/07/08 05:23:45 rafaelsteil Exp $
  */
 public class I18n
 {
@@ -110,6 +110,12 @@ public class I18n
 			load(custom, defaultName);
 			defaultName = custom;
 		}
+	}
+	
+	public static void changeBoardDefault(String newDefaultLanguage) throws Exception
+	{
+		load(newDefaultLanguage, SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT_ADMIN));
+		defaultName = newDefaultLanguage;
 	}
 
 	private static void loadLocales() throws IOException
