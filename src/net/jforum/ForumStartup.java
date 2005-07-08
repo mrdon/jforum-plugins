@@ -48,7 +48,7 @@ import net.jforum.dao.CategoryDAO;
 import net.jforum.dao.ConfigDAO;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
-import net.jforum.exceptions.DatabaseStartupException;
+import net.jforum.exceptions.DatabaseException;
 import net.jforum.exceptions.RepositoryStartupException;
 import net.jforum.repository.ForumRepository;
 
@@ -56,7 +56,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumStartup.java,v 1.5 2005/03/26 04:10:37 rafaelsteil Exp $
+ * @version $Id: ForumStartup.java,v 1.6 2005/07/08 04:14:44 rafaelsteil Exp $
  */
 public class ForumStartup 
 {
@@ -65,7 +65,7 @@ public class ForumStartup
 	/**
 	 * Starts the database implementation
 	 * @return <code>true</code> if everthing were ok
-	 * @throws DatabaseStartupException if something were wrong
+	 * @throws DatabaseException if something were wrong
 	 */
 	public static boolean startDatabase()
 	{
@@ -79,7 +79,7 @@ public class ForumStartup
 			}
 		}
 		catch (Exception e) {
-			throw new DatabaseStartupException("Error while trying to start the database: " + e);
+			throw new DatabaseException("Error while trying to start the database: " + e);
 		}
 		
 		return true;

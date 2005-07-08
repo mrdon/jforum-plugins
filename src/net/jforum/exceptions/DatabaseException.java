@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -44,10 +44,15 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: DatabaseStartupException.java,v 1.1 2004/11/13 13:41:18 rafaelsteil Exp $
+ * @version $Id: DatabaseException.java,v 1.2 2005/07/08 04:14:45 rafaelsteil Exp $
  */
-public class DatabaseStartupException extends RuntimeException {
-	public DatabaseStartupException(String message) {
+public class DatabaseException extends RuntimeException {
+	public DatabaseException(String message) {
 		super(message);
+	}
+	
+	public DatabaseException(Throwable t) {
+		super(t);
+		this.setStackTrace(t.getStackTrace());
 	}
 }

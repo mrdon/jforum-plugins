@@ -53,6 +53,7 @@ import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.UserSessionDAO;
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
+import net.jforum.exceptions.DatabaseException;
 import net.jforum.exceptions.ForumException;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.SecurityConstants;
@@ -68,7 +69,7 @@ import freemarker.template.SimpleHash;
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.9 2005/07/07 18:23:50 arawak Exp $
+ * @version $Id: ControllerUtils.java,v 1.10 2005/07/08 04:14:45 rafaelsteil Exp $
  */
 public class ControllerUtils
 {
@@ -106,15 +107,17 @@ public class ControllerUtils
 	 * Checks user credentials / automatic login.
 	 * 
 	 * @param userSession The UserSession instance associated to the user's session
-	 * @throws Exception
+	 * @return <code>true</code> if auto login was enabled and the user was sucessfuly 
+	 * logged in.
+	 * @throws DatabaseException
 	 */
-	private void checkAutoLogin(UserSession userSession) throws Exception
+	protected boolean checkAutoLogin(UserSession userSession)
 	{
 		String cookieName = SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA);
 
-		Cookie cookie = ControllerUtils.getCookie(cookieName);
-		Cookie hashCookie = ControllerUtils.getCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_USER_HASH));
-		Cookie autoLoginCookie = ControllerUtils.getCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN));
+		Cookie cookie = this.getCookieTemplate(cookieName);
+		Cookie hashCookie = this.getCookieTemplate(SystemGlobals.getValue(ConfigKeys.COOKIE_USER_HASH));
+		Cookie autoLoginCookie = this.getCookieTemplate(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN));
 
 		if (hashCookie != null && cookie != null
 				&& !cookie.getValue().equals(SystemGlobals.getValue(ConfigKeys.ANONYMOUS_USER_ID))
@@ -128,19 +131,28 @@ public class ControllerUtils
 					&& (MD5.crypt(securityHash + uid).equals(uidHash))) {
 				int userId = Integer.parseInt(uid);
 				userSession.setUserId(userId);
-
-				User user = DataAccessDriver.getInstance().newUserDAO().selectById(userId);
-				if (user == null || user.getId() != userId) {
-					userSession.makeAnonymous();
-				}
-				else {
+				
+				try {
+					User user = DataAccessDriver.getInstance().newUserDAO().selectById(userId);
+	
+					if (user == null || user.getId() != userId) {
+						userSession.makeAnonymous();
+						return false;
+					}
+	
 					this.configureUserSession(userSession, user);
 				}
+				catch (Exception e) {
+					throw new DatabaseException(e);
+				}
+				
+				return true;
 			}
-			else {
-				userSession.makeAnonymous();
-			}
+			
+			userSession.makeAnonymous();
 		}
+		
+		return false;
 	}
 
 	/**
@@ -150,7 +162,7 @@ public class ControllerUtils
 	 * @param user The User instance of the authenticated user
 	 * @throws Exception
 	 */
-	private void configureUserSession(UserSession userSession, User user) throws Exception
+	protected void configureUserSession(UserSession userSession, User user) throws Exception
 	{
 		userSession.dataToUser(user);
 
@@ -190,7 +202,7 @@ public class ControllerUtils
 	/**
 	 * Checks for user authentication using some SSO implementation
 	 */
-	private void checkSSO(UserSession userSession)
+	protected void checkSSO(UserSession userSession)
 	{
 		try {
 			SSO sso = (SSO) Class.forName(SystemGlobals.getValue(ConfigKeys.SSO_IMPLEMENTATION)).newInstance();
@@ -296,6 +308,20 @@ public class ControllerUtils
 
 		return null;
 	}
+	
+	/**
+	 * Template method to get a cookie.
+	 * Useful to situations when a subclass
+	 * wants to have a different way to 
+	 * retrieve a cookie.
+	 * @param name The cookie name to retrieve
+	 * @return The Cookie object if found, or null otherwise
+	 * @see #getCookie(String)
+	 */
+	protected Cookie getCookieTemplate(String name)
+	{
+		return ControllerUtils.getCookie(name);
+	}
 
 	/**
 	 * Add or update a cookie. This method adds a cookie, serializing its value using XML.
@@ -310,5 +336,19 @@ public class ControllerUtils
 		cookie.setPath("/");
 
 		JForumBaseServlet.getResponse().addCookie(cookie);
+	}
+	
+	/**
+	 * Template method to add a cookie.
+	 * Useful to suatins when a subclass wants to add
+	 * a cookie in a fashion different than the normal 
+	 * behaviour
+	 * @param name The cookie name
+	 * @param value The cookie value
+	 * @see #addCookie(String, String)
+	 */
+	protected void addCookieTemplate(String name, String value)
+	{
+		ControllerUtils.addCookie(name, value);
 	}
 }

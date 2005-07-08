@@ -25,7 +25,7 @@
 <#assign repliesChecked = "checked"/>
 <#assign smiliesChecked = ""/>
 
-<#if isNewPost && !preview>
+<#if isNewPost && !preview && !post?exists>
 	<#if user.isHtmlEnabled()><#assign htmlChecked = ""/></#if>
 	<#if !user.isBbCodeEnabled()><#assign bbChecked = "checked"/></#if>
 	<#if !user.isSmiliesEnabled()><#assign smiliesChecked = "checked"/></#if>
@@ -237,7 +237,7 @@ function previewCallback(post)
 										</tr>
 
 										<tr valign="center" align="middle">
-											<td><a href="javascript:emoticon(':x')"><img src="${contextPath}/images/smilies/ed515dbff23a0ee3241dcc0a601c9ed6.gif" alt="Mad" width="15" height="15" border="0" title="Mad" /></a></td>
+											<td><a href="javascript:emoticon(':mrgreen:')"><img src="${contextPath}/images/smilies/ed515dbff23a0ee3241dcc0a601c9ed6.gif" alt="Mad" width="15" height="15" border="0" title="Mad" /></a></td>
 											<td><a href="javascript:emoticon(':P')"><img src="${contextPath}/templates/${templateName}/images/icon_razz.gif" alt="Razz" width="15" height="15" border="0" title="Razz" /></a></td>
 											<td><a href="javascript:emoticon(':oops:')"><img src="${contextPath}/templates/${templateName}/images/icon_redface.gif" alt="Embarassed" width="15" height="15" border="0" title="Embarassed" /></a></td>
 											<td><a href="javascript:emoticon(':cry:')"><img src="${contextPath}/templates/${templateName}/images/icon_cry.gif" alt="Crying or Very sad" width="15" height="15" border="0" title="Crying or Very sad" /></a></td>
@@ -291,7 +291,7 @@ function previewCallback(post)
 								</tr>
 								
 								<tr>
-									<td colspan="9">
+									<td colspan="8">
 										<table cellspacing="0" cellpadding="0" width="100%" border="0">
 											<tr>
 												<td>
@@ -340,7 +340,7 @@ function previewCallback(post)
 								</tr>
 								
 								<tr>
-									<td colspan="9">
+									<td colspan="9" valign="top">
 										<span class="gen">
 											<textarea class="post" onkeyup="storeCaret(this);" onclick="storeCaret(this);" onselect="storeCaret(this);" style="WIDTH: 450px"  tabindex="3" name="message" rows="15" wrap="virtual" cols="35"><#if post?exists><#if quote?exists>[quote=${quoteUser}]${post.text}[/quote]<#else>${post.text}</#if></#if></textarea> 
 										</span>
@@ -412,13 +412,13 @@ function previewCallback(post)
 							<img src="${JForumContext.encodeURL("/captcha/generate")}" border="0" align="middle">
 						</td>
 					</tr>
+				</#if>
 
-					<#if captchaError?exists>
-						<tr>
-							<td class="row1">&nbsp;</td>
-							<td class="row2"><span class="gen"><font color="red"><b>${captchaError}</b></font></span></td>
-						</tr>
-					</#if>
+				<#if error?exists>
+					<tr>
+						<td class="row1">&nbsp;</td>
+						<td class="row2"><span class="gen"><font color="red"><b>${error}</b></font></span></td>
+					</tr>
 				</#if>
 				
 				<tr align="center">

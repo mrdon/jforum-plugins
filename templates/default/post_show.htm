@@ -113,10 +113,6 @@ function leaveText()
 						<#else>
 							<#if !readonly>
 								<span class="nav">
-								<#if !replyOnly>
-									<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&forum_id=${topic.forumId}","")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/post.gif" border="0" /></a>
-								</#if>
-
 								<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&topic_id=${topic.id}&forum_id=${topic.forumId}&start=${start}", "")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/reply.gif" border="0" /></a>
 								</span>
 							<#else>
@@ -239,18 +235,14 @@ function leaveText()
 			<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
 				<tr>
 					<#if !readonly>
-					<td width="15%" align="left" valign="bottom" nowrap="nowrap">
+					<td width="8%" align="left" valign="bottom" nowrap="nowrap">
 					</#if>
 					<#if topic.status == STATUS_LOCKED>
 						<img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/reply_locked.gif" />
 					<#else>
 						<#if !readonly>
 							<span class="nav">
-							<#if !replyOnly>
-								<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&forum_id=${topic.forumId}","")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/post.gif" border="0" /></a>
-							</#if>
-
-							&nbsp;<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&topic_id=${topic.id}&forum_id=${topic.forumId}&start=${start}","")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/reply.gif" border="0" /></a>
+							<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&topic_id=${topic.id}&forum_id=${topic.forumId}&start=${start}","")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/reply.gif" border="0" /></a>
 							</span>
 						<#else>
 							<#assign colspan = "2"/>
