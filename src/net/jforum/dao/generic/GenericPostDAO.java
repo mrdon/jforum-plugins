@@ -60,7 +60,7 @@ import net.jforum.util.search.SearchFacade;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericPostDAO.java,v 1.2 2005/06/12 19:56:03 rafaelsteil Exp $
+ * @version $Id: GenericPostDAO.java,v 1.3 2005/07/11 00:26:09 rafaelsteil Exp $
  */
 public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO 
 {
@@ -106,6 +106,7 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 		post.setText(this.getPostTextFromResultSet(rs));
 		post.setPostUsername(rs.getString("username"));
 		post.hasAttachments(rs.getInt("attach") > 0);
+		post.setModerate(rs.getInt("need_moderate") == 1);
 		
 		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
 		post.setFormatedTime(df.format(postTime));

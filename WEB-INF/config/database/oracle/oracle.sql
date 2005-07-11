@@ -73,8 +73,9 @@ PostModel
 PostModel.lastGeneratedPostId = SELECT jforum_posts_seq.currval FROM DUAL
 
 PostModel.selectAllByTopicByLimit = SELECT * FROM ( \
-    SELECT p.post_id, topic_id, forum_id, p.user_id, post_time, poster_ip, enable_bbcode, p.attach, \
-    	enable_html, enable_smilies, enable_sig, post_edit_time, post_edit_count, status, pt.post_subject, pt.post_text, username,  ROW_NUMBER() OVER(ORDER BY p.post_time ASC) LINENUM \
+    SELECT p.post_id, topic_id, forum_id, p.user_id, post_time, poster_ip, enable_bbcode, p.attach, p.need_moderate, \
+   	enable_html, enable_smilies, enable_sig, post_edit_time, post_edit_count, status, pt.post_subject, pt.post_text, username,  \
+   	ROW_NUMBER() OVER(ORDER BY p.post_time ASC) LINENUM \
    	FROM jforum_posts p, jforum_posts_text pt, jforum_users u \
 	WHERE p.post_id = pt.post_id  \
 	AND topic_id = ? \

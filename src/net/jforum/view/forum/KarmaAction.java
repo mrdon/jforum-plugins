@@ -65,7 +65,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaAction.java,v 1.8 2005/03/26 04:11:15 rafaelsteil Exp $
+ * @version $Id: KarmaAction.java,v 1.9 2005/07/11 00:26:09 rafaelsteil Exp $
  */
 public class KarmaAction extends Command
 {
@@ -93,8 +93,18 @@ public class KarmaAction extends Command
 		}
 
 		KarmaDAO km = DataAccessDriver.getInstance().newKarmaDAO();
+		
 		if (!km.userCanAddKarma(fromUserId, postId)) {
 			this.error("Karma.alreadyVoted", p);
+			return;
+		}
+		
+		// Check range
+		int points = this.request.getIntParameter("points");
+		
+		if (points < SystemGlobals.getIntValue(ConfigKeys.KARMA_MIN_POINTS)
+				|| points > SystemGlobals.getIntValue(ConfigKeys.KARMA_MAX_POINTS)) {
+			this.error("Karma.invalidRange", p);
 			return;
 		}
 
@@ -103,7 +113,7 @@ public class KarmaAction extends Command
 		karma.setPostUserId(p.getUserId());
 		karma.setPostId(postId);
 		karma.setTopicId(p.getTopicId());
-		karma.setPoints(this.request.getIntParameter("points"));
+		karma.setPoints(points);
 
 		km.addKarma(karma);
 

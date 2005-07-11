@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.66 2005/07/08 00:22:57 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.67 2005/07/11 00:26:11 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -241,6 +241,9 @@ public class ConfigKeys {
 
 	public static final String POSTS_NEW_DELAY = "posts.new.delay";
 	public static final String LAST_POST_TIME = "last.post.time";
+
+	public static final String KARMA_MIN_POINTS = "karma.min.points";
+	public static final String KARMA_MAX_POINTS = "karma.max.points";
 	
 	private ConfigKeys() {}
 }

@@ -92,7 +92,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.79 2005/07/08 00:22:58 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.80 2005/07/11 00:26:10 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -254,11 +254,9 @@ public class PostAction extends Command {
 			return;
 		}
 
-		ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
-
 		if (this.request.getParameter("topic_id") != null) {
 			int topicId = this.request.getIntParameter("topic_id");
-			Topic t = DataAccessDriver.getInstance().newTopicDAO().selectById(topicId);
+			Topic t = DataAccessDriver.getInstance().newTopicDAO().selectRaw(topicId);
 
 			if (t.getStatus() == Topic.STATUS_LOCKED) {
 				this.topicLocked();
@@ -277,12 +275,20 @@ public class PostAction extends Command {
 		}
 		
 		int userId = SessionFacade.getUserSession().getUserId();
-
-		this.context.put("attachmentsEnabled", SecurityRepository.canAccess(
-				SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(forumId)));
 		
-		QuotaLimit ql = new AttachmentCommon(this.request, forumId).getQuotaLimit(userId);
-		this.context.put("maxAttachmentsSize", new Long(ql != null ? ql.getSizeInBytes() : 1));
+		this.setTemplateName(TemplateKeys.POSTS_INSERT);
+		
+		// Attachments
+		boolean attachmentsEnabled = SecurityRepository.canAccess(
+				SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(forumId));
+
+		this.context.put("attachmentsEnabled", attachmentsEnabled);
+		
+		if (attachmentsEnabled) {
+			QuotaLimit ql = new AttachmentCommon(this.request, forumId).getQuotaLimit(userId);
+			this.context.put("maxAttachmentsSize", new Long(ql != null ? ql.getSizeInBytes() : 1));
+			this.context.put("maxAttachments", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
+		}
 		
 		boolean needCaptcha = SystemGlobals.getBoolValue(ConfigKeys.CAPTCHA_POSTS);
 		
@@ -290,10 +296,8 @@ public class PostAction extends Command {
 			SessionFacade.getUserSession().createNewCaptcha();
 		}
 		
-		this.context.put("maxAttachments", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
 		this.context.put("forum", ForumRepository.getForum(forumId));
 		this.context.put("action", "insertSave");
-		this.setTemplateName(TemplateKeys.POSTS_INSERT);
 		this.context.put("start", this.request.getParameter("start"));
 		this.context.put("isNewPost", true);
 		this.context.put("needCaptcha", needCaptcha);
@@ -403,7 +407,7 @@ public class PostAction extends Command {
 			return;
 		}
 
-		Topic t = DataAccessDriver.getInstance().newTopicDAO().selectById(p.getTopicId());
+		Topic t = DataAccessDriver.getInstance().newTopicDAO().selectRaw(p.getTopicId());
 
 		if (!TopicsCommon.isTopicAccessible(t.getForumId())) {
 			return;
@@ -416,6 +420,11 @@ public class PostAction extends Command {
 
 		if (p.getId() == 0) {
 			this.postNotFound();
+			return;
+		}
+		
+		if (p.isModerationNeeded()) {
+			this.notModeratedYet();
 			return;
 		}
 
@@ -855,7 +864,7 @@ public class PostAction extends Command {
 	}
 
 	public void unwatch() throws Exception {
-		if (this.isUserLogged()) {
+		if (SessionFacade.isLogged()) {
 			int topicId = this.request.getIntParameter("topic_id");
 			int userId = SessionFacade.getUserSession().getUserId();
 			String start = this.request.getParameter("start");
@@ -930,10 +939,6 @@ public class PostAction extends Command {
 		JForum.enableBinaryContent(true);
 	}
 	
-	private boolean isUserLogged() {
-		return (SessionFacade.getAttribute("logged") != null && SessionFacade.getAttribute("logged").equals("1"));
-	}
-
 	private void topicLocked() {
 		this.setTemplateName(TemplateKeys.POSTS_TOPIC_LOCKED);
 		this.context.put("message", I18n.getMessage("PostShow.topicLocked"));
@@ -964,7 +969,7 @@ public class PostAction extends Command {
 
 	private boolean anonymousPost(int forumId) throws Exception {
 		// Check if anonymous posts are allowed
-		if (!this.isUserLogged()
+		if (!SessionFacade.isLogged()
 				&& !SecurityRepository.canAccess(SecurityConstants.PERM_ANONYMOUS_POST, Integer.toString(forumId))) {
 			this.setTemplateName(ViewCommon.contextToLogin());
 

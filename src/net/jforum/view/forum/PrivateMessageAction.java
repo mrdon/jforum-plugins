@@ -65,7 +65,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.21 2005/06/13 02:56:39 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.22 2005/07/11 00:26:10 rafaelsteil Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -258,10 +258,11 @@ public class PrivateMessageAction extends Command
 			this.context.put("namesList", namesList);
 			showResult = true;
 		}
+
+		this.setTemplateName(TemplateKeys.PM_FIND_USER);
 		
 		this.context.put("username", username);
 		this.context.put("showResult", showResult);
-		this.setTemplateName(SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR) + "/pm_finduser.htm");
 	}
 	
 	public void read() throws Exception
@@ -375,11 +376,18 @@ public class PrivateMessageAction extends Command
 		PrivateMessage pm = new PrivateMessage();
 		pm.setId(id);
 		pm = DataAccessDriver.getInstance().newPrivateMessageDAO().selectById(pm);
+
+		int userId = SessionFacade.getUserSession().getUserId();
+		
+		if (pm.getToUser().getId() != userId && pm.getFromUser().getId() != userId) {
+			this.setTemplateName(TemplateKeys.PM_READ_DENIED);
+			this.context.put("message", I18n.getMessage("PrivateMessage.readDenied"));
+			return;
+		}
 		
 		pm.getPost().setSubject(I18n.getMessage("PrivateMessage.replyPrefix") + pm.getPost().getSubject());
 		
-		this.sendFormCommon(DataAccessDriver.getInstance().newUserDAO().selectById(
-						SessionFacade.getUserSession().getUserId()));
+		this.sendFormCommon(DataAccessDriver.getInstance().newUserDAO().selectById(userId));
 		
 		this.context.put("quote", "true");
 		this.context.put("quoteUser", pm.getFromUser().getUsername());
