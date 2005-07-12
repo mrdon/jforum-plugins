@@ -46,11 +46,12 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 
+import net.jforum.ConfigLoader;
 import net.jforum.util.FileChangeListener;
 
 /**
  * @author Rafael Steil
- * @version $Id: SystemGlobalsListener.java,v 1.2 2005/02/15 18:15:59 rafaelsteil Exp $
+ * @version $Id: SystemGlobalsListener.java,v 1.3 2005/07/12 17:11:17 andowson Exp $
  */
 public class SystemGlobalsListener implements FileChangeListener
 {
@@ -66,6 +67,7 @@ public class SystemGlobalsListener implements FileChangeListener
 
 			SystemGlobals.initGlobals(SystemGlobals.getApplicationPath(), 
 					SystemGlobals.getValue(ConfigKeys.DEFAULT_CONFIG));
+			ConfigLoader.listenForChanges();		
 		}
 		catch (IOException e) {
 			logger.info(e);
