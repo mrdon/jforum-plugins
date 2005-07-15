@@ -45,16 +45,21 @@ package net.jforum.repository;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+
 import net.jforum.ConfigLoader;
+import net.jforum.JForum;
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModulesRepository.java,v 1.3 2005/02/21 14:31:04 rafaelsteil Exp $
+ * @version $Id: ModulesRepository.java,v 1.4 2005/07/15 04:31:06 rafaelsteil Exp $
  */
 public class ModulesRepository implements Cacheable
 {
+	private static final Logger logger = Logger.getLogger(ModulesRepository.class);
+	
 	private static CacheEngine cache;
 	private static final String FQN = "modulesMapping";
 	private static final String ENTRIES = "entries";
@@ -92,6 +97,14 @@ public class ModulesRepository implements Cacheable
 	 * as argument, or <code>null</code> if not found.
 	 */
 	public static String getModuleClass(String moduleName) {
-		return ((Properties)cache.get(FQN, ENTRIES)).getProperty(moduleName);
+		Properties p = (Properties)cache.get(FQN, ENTRIES);
+		
+		if (p == null) {
+			logger.error("Null modules. Askes moduleName: " + moduleName
+					+ ", url=" + JForum.getRequest().getQueryString());
+			return null;
+		}
+		
+		return p.getProperty(moduleName);
 	}
 }

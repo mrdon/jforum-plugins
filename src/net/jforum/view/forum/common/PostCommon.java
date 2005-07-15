@@ -71,7 +71,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.15 2005/07/08 18:23:14 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.16 2005/07/15 04:26:38 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -275,6 +275,8 @@ public class PostCommon
 	public static User getUserForDisplay(int userId) throws Exception
 	{
 		User u = DataAccessDriver.getInstance().newUserDAO().selectById(userId);
+		
+		u.setSignature(u.getSignature().replaceAll("\n", "<br>"));
 		u.setSignature(PostCommon.processText(u.getSignature()));
 		u.setSignature(PostCommon.processSmilies(u.getSignature(), SmiliesRepository.getSmilies()));
 
