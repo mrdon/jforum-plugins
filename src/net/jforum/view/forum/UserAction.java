@@ -75,17 +75,27 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.42 2005/07/01 04:10:00 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.43 2005/07/15 03:30:02 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
 	private static final Logger logger = Logger.getLogger(UserAction.class);
 	
-	public void edit() throws Exception 
+	private boolean canEdit() throws Exception
 	{
 		int tmpId = SessionFacade.getUserSession().getUserId();
-		if (SessionFacade.isLogged() 
-				&& tmpId == this.request.getIntParameter("user_id")) {
+		boolean canEdit = SessionFacade.isLogged() && tmpId == this.request.getIntParameter("user_id");
+		
+		if (!canEdit) {
+			this.profile();
+		}
+		
+		return canEdit;
+	}
+	
+	public void edit() throws Exception 
+	{
+		if (this.canEdit()) {
 			int userId = this.request.getIntParameter("user_id");
 			UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 			User u = um.selectById(userId);
@@ -94,9 +104,6 @@ public class UserAction extends Command
 			this.context.put("action", "editSave");
 			this.setTemplateName(TemplateKeys.USER_EDIT);
 		} 
-		else {
-			this.profile();
-		}
 	}
 
 	public void editDone() throws Exception
@@ -107,17 +114,19 @@ public class UserAction extends Command
 
 	public void editSave() throws Exception 
 	{
-		int userId = this.request.getIntParameter("user_id");
-		List warns = UserCommon.saveUser(userId);
-
-		if (warns.size() > 0) {
-			this.context.put("warns", warns);
-			this.edit();
-		} 
-		else {
-			JForum.setRedirect(this.request.getContextPath()
-					+ "/user/editDone/" + userId
-					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+		if (this.canEdit()) {
+			int userId = this.request.getIntParameter("user_id");
+			List warns = UserCommon.saveUser(userId);
+	
+			if (warns.size() > 0) {
+				this.context.put("warns", warns);
+				this.edit();
+			} 
+			else {
+				JForum.setRedirect(this.request.getContextPath()
+						+ "/user/editDone/" + userId
+						+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+			}
 		}
 	}
 	
@@ -300,6 +309,10 @@ public class UserAction extends Command
 				String sessionId = SessionFacade.isUserInSession(user.getId());
 				
 				UserSession userSession = new UserSession(SessionFacade.getUserSession());
+				
+				// Remove the "guest" session
+				SessionFacade.remove(userSession.getSessionId());
+				
 				userSession.dataToUser(user);
 
 				// Check if the user is returning to the system
@@ -406,13 +419,13 @@ public class UserAction extends Command
 
 		UserSession userSession = SessionFacade.getUserSession();
 		SessionFacade.storeSessionData(userSession.getSessionId(), JForum.getConnection());
+
+		SessionFacade.remove(userSession.getSessionId());
 		
 		// Disable auto login
 		userSession.setAutoLogin(false);
 		userSession.setUserId(SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID));
 
-		SessionFacade.remove(userSession.getSessionId());
-		
 		SessionFacade.setAttribute("logged", "0");
 		SessionFacade.add(userSession);
 

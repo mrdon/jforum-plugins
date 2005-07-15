@@ -60,7 +60,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.23 2005/07/01 04:10:02 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.24 2005/07/15 03:30:01 rafaelsteil Exp $
  */
 public class SessionFacade implements Cacheable
 {
@@ -284,13 +284,13 @@ public class SessionFacade implements Cacheable
 	}
 
 	/**
-	 * Gets the number of session elements
+	 * Gets the number of session elements.
 	 * 
-	 * @return The number of session elements currently registered
+	 * @return The number of session elements currently online (without bots)
 	 */
 	public static int size()
 	{
-		return cache.getValues(FQN).size();
+		return (anonymousSize() + registeredSize());
 	}
 	
 	/**

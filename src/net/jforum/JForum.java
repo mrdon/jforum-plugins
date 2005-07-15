@@ -72,13 +72,16 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.72 2005/06/16 01:54:26 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.73 2005/07/15 03:30:01 rafaelsteil Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
 	private static boolean isDatabaseUp;
 	private static Logger logger = Logger.getLogger(JForum.class);
 	
+	/**
+	 * @see javax.servlet.Servlet#init(javax.servlet.ServletConfig)
+	 */
 	public void init(ServletConfig config) throws ServletException
 	{
 		super.init(config);
@@ -116,6 +119,9 @@ public class JForum extends JForumBaseServlet
 		JForum.setThreadLocalData(null);
 	}
 	
+	/**
+	 * @see javax.servlet.http.HttpServlet#service(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 */
 	public void service(HttpServletRequest req, HttpServletResponse response) throws IOException, ServletException
 	{
 		Writer out = null;

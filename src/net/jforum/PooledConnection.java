@@ -53,6 +53,7 @@ import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -79,7 +80,7 @@ import org.apache.log4j.Logger;
  *
  * @author Paulo Silveira
  * @author Rafael Steil
- * @version $Id: PooledConnection.java,v 1.13 2005/03/12 20:10:44 rafaelsteil Exp $
+ * @version $Id: PooledConnection.java,v 1.14 2005/07/15 03:30:01 rafaelsteil Exp $
  * */
 
 public class PooledConnection extends DBConnection
@@ -183,6 +184,10 @@ public class PooledConnection extends DBConnection
 	public synchronized Connection getConnection() throws SQLException 
 	{
 		Connection conn = null;
+		boolean v = false;
+		if (v) {
+			throw new DatabaseException("Timed out to get a database connection. Try again in a few moments, please.");
+		}
 
 		// if there is enought Connections
 		if (connections.size() != 0) {
@@ -232,13 +237,6 @@ public class PooledConnection extends DBConnection
 			return conn;
 		}
 
-        /*
-         * Trying to get some Connections stuck inside some Queries.
-         * The Query.finalize method will release them.
-         * We need to wait sometime, so the GC will get the Connections for us
-         */
-		System.gc();
-
 		synchronized (this.releaseSignal) {
 			/*
 			 * Not inside a while, since we are giving it a maximum timeout, 
@@ -250,29 +248,23 @@ public class PooledConnection extends DBConnection
 					this.releaseSignal.wait(this.timeout);
 				}
 				catch (InterruptedException e) {
-					if (debug)
-						logger.warn("Problems while waiting for connection. "+ e);
+					logger.warn("Problems while waiting for connection. ", e);
 				}
 			}
 
 			if (connections.size() == 0) {
-				// TIMED OUT!!!!
-				if (debug) {
-					logger.warn( "Pool is empty, and th waiting for one timed out!"
-						+ "If this is happening too much, your code is probably not releasing the Connections."
-						+ "If you cant solve this, set your 'database.connection.pool.timeout' to a bigger number.");
-				}
+				logger.warn( "Pool is empty, and th waiting for one timed out!"
+					+ "If this is happening too much, your code is probably not releasing the Connections."
+					+ "If you cant solve this, set your 'database.connection.pool.timeout' to a bigger number.");
+				throw new DatabaseException("Timed out to get a database connection. Try again in a few moments, please.");
 			}
-			else {
-				synchronized (connections) {
-					conn = (Connection) connections.removeFirst();
-				}
-				
-				return conn;
+			
+			synchronized (connections) {
+				conn = (Connection) connections.removeFirst();
 			}
+			
+			return conn;
 		}
-		
-		return conn;
 	}
 	
 	private void pingConnections() {

@@ -12,16 +12,22 @@ import net.jforum.util.legacy.clickstream.config.ConfigLoader;
  * 
  * @author <a href="plightbo@hotmail.com">Patrick Lightbody</a>
  * @author Rafael Steil (little hacks for JForum)
- * @version $Id: BotChecker.java,v 1.1 2005/06/14 16:55:21 rafaelsteil Exp $
+ * @version $Id: BotChecker.java,v 1.2 2005/07/15 03:30:00 rafaelsteil Exp $
  */
 public class BotChecker
 {
-	public static boolean isBot(HttpServletRequest request)
+	/**
+	 * Checks if we have a bot
+	 * @param request the request
+	 * @return <code>null</code> if there is no bots in the current request, 
+	 * or the bot's name otherwise
+	 */
+	public static String isBot(HttpServletRequest request)
 	{
 		if (request.getRequestURI().indexOf("robots.txt") != -1) {
 			// there is a specific request for the robots.txt file, so we assume
 			// it must be a robot (only robots request robots.txt)
-			return true;
+			return "Unknown (asked for robots.txt)";
 		}
 		
 		String userAgent = request.getHeader("User-Agent");
@@ -35,7 +41,7 @@ public class BotChecker
 				String agent = (String) iterator.next();
 				
 				if (userAgent.indexOf(agent) != -1) {
-					return true;
+					return userAgent;
 				}
 			}
 		}
@@ -51,11 +57,11 @@ public class BotChecker
 				String host = (String) iterator.next();
 				
 				if (remoteHost.indexOf(host) != -1) {
-					return true;
+					return remoteHost;
 				}
 			}
 		}
 
-		return false;
+		return null;
 	}
 }
