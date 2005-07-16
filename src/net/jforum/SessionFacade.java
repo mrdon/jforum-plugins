@@ -60,7 +60,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.24 2005/07/15 03:30:01 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.25 2005/07/16 03:49:39 rafaelsteil Exp $
  */
 public class SessionFacade implements Cacheable
 {
@@ -219,7 +219,9 @@ public class SessionFacade implements Cacheable
 	 */
 	public static List getAllSessions()
 	{
-		return new ArrayList(cache.getValues(FQN));
+		synchronized (FQN) {
+			return new ArrayList(cache.getValues(FQN));
+		}
 	}
 	
 	/**
@@ -228,7 +230,9 @@ public class SessionFacade implements Cacheable
 	 */
 	public static List getLoggedSessions()
 	{
-		return new ArrayList(cache.getValues(FQN_LOGGED));
+		synchronized (FQN) {
+			return new ArrayList(cache.getValues(FQN_LOGGED));
+		}
 	}
 	
 	/**
