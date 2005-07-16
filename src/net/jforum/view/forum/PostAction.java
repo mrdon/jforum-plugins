@@ -92,7 +92,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.80 2005/07/11 00:26:10 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.81 2005/07/16 16:11:24 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -172,7 +172,6 @@ public class PostAction extends Command {
 		this.context.put("topic", topic);
 		this.context.put("rank", new RankingRepository());
 		this.context.put("posts", helperList);
-		this.context.put("karmaEnabled", SecurityRepository.canAccess(SecurityConstants.PERM_KARMA_ENABLED));
 		this.context.put("forum", ForumRepository.getForum(topic.getForumId()));
 		this.context.put("users", usersMap);
 		this.context.put("topicId", new Integer(topicId));

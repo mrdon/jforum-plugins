@@ -69,7 +69,7 @@ import freemarker.template.SimpleHash;
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.10 2005/07/08 04:14:45 rafaelsteil Exp $
+ * @version $Id: ControllerUtils.java,v 1.11 2005/07/16 16:11:23 rafaelsteil Exp $
  */
 public class ControllerUtils
 {
@@ -80,6 +80,7 @@ public class ControllerUtils
 	 */
 	public void prepareTemplateContext(SimpleHash context)
 	{
+		context.put("karmaEnabled", SecurityRepository.canAccess(SecurityConstants.PERM_KARMA_ENABLED));
 		context.put("dateTimeFormat", SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
 		context.put("autoLoginEnabled", SystemGlobals.getBoolValue(ConfigKeys.AUTO_LOGIN_ENABLED));
 		context.put("sso", ConfigKeys.TYPE_SSO.equals(SystemGlobals.getValue(ConfigKeys.AUTHENTICATION_TYPE)));

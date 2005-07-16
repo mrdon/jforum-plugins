@@ -470,15 +470,17 @@
 	</#if>
 </table>
 
-<#if attachments?exists>
 <script language="javascript">
-ignoreStart = true;
-<#if attachmentsEnabled>
-	openAttachmentPanel();
+<#include "js/attachments.js"/>
+
+<#if attachments?exists>
+	ignoreStart = true;
+	<#if attachmentsEnabled>
+		openAttachmentPanel();
+	</#if>
+	editAttachments();
 </#if>
-editAttachments();
 </script>
-</#if>
 
 </form>
 
