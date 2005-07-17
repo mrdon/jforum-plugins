@@ -92,7 +92,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.81 2005/07/16 16:11:24 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.82 2005/07/17 15:33:25 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -245,9 +245,14 @@ public class PostAction extends Command {
 				Integer.toString(forumId));
 	}
 
-	public void insert() throws Exception {
+	public void insert() throws Exception 
+	{
 		int forumId = this.request.getIntParameter("forum_id");
 
+		if (!TopicsCommon.isTopicAccessible(forumId)) {
+			return;
+		}
+		
 		if (!this.anonymousPost(forumId)
 				|| this.isForumReadonly(forumId, this.request.getParameter("topic_id") != null)) {
 			return;

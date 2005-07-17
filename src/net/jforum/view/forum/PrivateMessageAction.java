@@ -65,7 +65,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.22 2005/07/11 00:26:10 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.23 2005/07/17 15:33:25 rafaelsteil Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -354,6 +354,14 @@ public class PrivateMessageAction extends Command
 		PrivateMessage pm = new PrivateMessage();
 		pm.setId(id);
 		pm = DataAccessDriver.getInstance().newPrivateMessageDAO().selectById(pm);
+		
+		int userId = SessionFacade.getUserSession().getUserId();
+		
+		if (pm.getToUser().getId() != userId && pm.getFromUser().getId() != userId) {
+			this.setTemplateName(TemplateKeys.PM_READ_DENIED);
+			this.context.put("message", I18n.getMessage("PrivateMessage.readDenied"));
+			return;
+		}
 		
 		pm.getPost().setSubject(I18n.getMessage("PrivateMessage.replyPrefix") + pm.getPost().getSubject());
 		
