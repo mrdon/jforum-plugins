@@ -92,7 +92,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.82 2005/07/17 15:33:25 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.83 2005/07/17 16:16:37 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -513,7 +513,10 @@ public class PostAction extends Command {
 			// Updates the topic title
 			if (t.getFirstPostId() == p.getId()) {
 				t.setTitle(p.getSubject());
-				t.setType(this.request.getIntParameter("topic_type"));
+				
+				if (SecurityRepository.canAccess(SecurityConstants.PERM_CREATE_STICKY_ANNOUNCEMENT_TOPICS)) {
+					t.setType(this.request.getIntParameter("topic_type"));
+				}
 				
 				tm.update(t);
 				
