@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -36,42 +36,24 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on 21.09.2004 
+ * Created on 17/07/2005 14:13:32
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.dao.hsqldb;
 
-import net.jforum.dao.postgresql.PostgresqlDataAccessDriver;
+import java.sql.Connection;
+import java.util.List;
 
-/**
- * @author Marc Wick
- * @version $Id: HsqldbDataAccessDriver.java,v 1.4 2005/07/17 18:10:37 rafaelsteil Exp $
- */
-public class HsqldbDataAccessDriver extends PostgresqlDataAccessDriver {
+import net.jforum.dao.postgresql.PostgresqlScheduledSearchIndexerDAO;
 
-	private static HsqldbPostDAO postDao = new HsqldbPostDAO();
-	private static HsqldbUserDAO userDao = new HsqldbUserDAO();
-	private static HsqldbTopicDAO topicDao = new HsqldbTopicDAO();
-
+public class HsqldbScheduledSearchIndexerDAO extends PostgresqlScheduledSearchIndexerDAO
+{
 	/**
-	 * @see net.jforum.dao.DataAccessDriver#newPostDAO()
+	 * @see net.jforum.dao.generic.GenericScheduledSearchIndexerDAO#getPosts(int, int, int, int, java.sql.Connection)
 	 */
-	public net.jforum.dao.PostDAO newPostDAO() {
-		return postDao;
-	}
-
-	/**
-	 * @see net.jforum.dao.DataAccessDriver#newTopicDAO()
-	 */
-	public net.jforum.dao.TopicDAO newTopicDAO() {
-		return topicDao;
-	}
-	
-	/**
-	 * @see net.jforum.dao.DataAccessDriver#newUserDAO()
-	 */
-	public net.jforum.dao.UserDAO newUserDAO() {
-		return userDao;
+	protected List getPosts(int start, int count, int minPostId, int maxPostId, Connection conn) throws Exception
+	{
+		return super.getPosts(start, count, minPostId, maxPostId, conn);
 	}
 }

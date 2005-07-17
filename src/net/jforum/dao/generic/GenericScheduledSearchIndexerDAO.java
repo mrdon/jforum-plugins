@@ -58,7 +58,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericScheduledSearchIndexerDAO.java,v 1.3 2005/07/17 16:48:24 rafaelsteil Exp $
+ * @version $Id: GenericScheduledSearchIndexerDAO.java,v 1.4 2005/07/17 18:10:41 rafaelsteil Exp $
  */
 public class GenericScheduledSearchIndexerDAO implements net.jforum.dao.ScheduledSearchIndexerDAO
 {
@@ -76,29 +76,40 @@ public class GenericScheduledSearchIndexerDAO implements net.jforum.dao.Schedule
 		p.setTimestamp(1, timestamp);
 
 		ResultSet rs = p.executeQuery();
-		boolean found = rs.next();
 		int maxPostId = -1;
 		
-		if (found) {
+		if (rs.next()) {
 			maxPostId = rs.getInt(1);
 		}
 		
-		if (!found || maxPostId == -1 || maxPostId <= startPostId) {
-			logger.info("No posts found to index. Leaving...");
-			rs.close();
-			p.close();
-			
-			return 0;
-		}
+		// Get the latest indexed post
+		rs.close();
+		p.close();
 		
-		logger.info("Going to index posts from " + startPostId + " to " + maxPostId);
+		int latestIndexedPostId = -1;
+		
+		p = conn.prepareStatement(SystemGlobals.getSql("SearchModel.lastIndexedPostId"));
+		rs = p.executeQuery();
+		
+		if (rs.next()) {
+			latestIndexedPostId = rs.getInt(1);
+		}
 		
 		rs.close();
 		p.close();
 		
+		if (maxPostId == -1 || latestIndexedPostId == -1 || maxPostId <= latestIndexedPostId) {
+			logger.info("No posts found to index. Leaving...");
+			return 0;
+		}
+		
+		logger.info("Going to index posts from " + latestIndexedPostId + " to " + maxPostId);
+		
 		// Count how many posts we have to index
 		p = conn.prepareStatement(SystemGlobals.getSql("SearchModel.howManyToIndex"));
 		p.setTimestamp(1, timestamp);
+		p.setInt(2, latestIndexedPostId);
+		
 		rs = p.executeQuery();
 		rs.next();
 		
@@ -113,12 +124,14 @@ public class GenericScheduledSearchIndexerDAO implements net.jforum.dao.Schedule
 		
 		int start = 0;
 		while (true) {
-			List posts = this.getPosts(start, step, startPostId, maxPostId, conn);
+			List posts = this.getPosts(start, step, latestIndexedPostId, maxPostId, conn);
+			
 			if (posts.size() == 0) {
 				break;
 			}
 			
 			logger.info("Indexing range [" + start + ", " + (start + step) + "] from a total of " + total);
+			
 			sim.insertSearchWords(posts);
 			
 			start += step;

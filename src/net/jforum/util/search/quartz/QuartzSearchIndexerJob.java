@@ -61,7 +61,7 @@ import org.quartz.JobExecutionException;
 
 /**
  * @author Rafael Steil
- * @version $Id: QuartzSearchIndexerJob.java,v 1.4 2005/07/17 16:48:25 rafaelsteil Exp $
+ * @version $Id: QuartzSearchIndexerJob.java,v 1.5 2005/07/17 18:10:39 rafaelsteil Exp $
  */
 public class QuartzSearchIndexerJob implements Job, Cacheable
 {
@@ -107,7 +107,7 @@ public class QuartzSearchIndexerJob implements Job, Cacheable
 			cache.add(FQN, INDEXING, "1");
 			
 			ScheduledSearchIndexerDAO dao = DataAccessDriver.getInstance().newScheduledSearchIndexerDAO();
-			int lastPostId = dao.index(step, conn);
+			dao.index(step, conn);
 		}
 		catch (Exception e) {
 			logger.error("Error while trying to index messagez. Cannot proceed. " + e);

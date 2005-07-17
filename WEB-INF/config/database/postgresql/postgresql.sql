@@ -98,6 +98,12 @@ SearchModel.cleanSearchTopics = DELETE FROM jforum_search_topics WHERE session =
 SearchModel.insertTopicsIds = INSERT INTO jforum_search_results ( topic_id, session, search_time ) SELECT DISTINCT t.topic_id, ?::varchar, NOW() FROM jforum_topics t, jforum_posts p \
 	WHERE t.topic_id = p.topic_id \
 	AND p.post_id IN (:posts:)
+	
+SearchModel.getPostsToIndex = SELECT p.post_id, pt.post_text, pt.post_subject \
+	FROM jforum_posts p, jforum_posts_text pt \
+	WHERE p.post_id = pt.post_id \
+	AND p.post_id BETWEEN ? AND ? \
+	LIMIT ? OFFSET ?
 
 # #############
 # SmiliesModel

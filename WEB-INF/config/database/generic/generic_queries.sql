@@ -330,7 +330,8 @@ SearchModel.associateWordToPost = INSERT INTO jforum_search_wordmatch (post_id, 
 SearchModel.searchExistingWord = SELECT w.word_id FROM jforum_search_words w WHERE w.word_hash = ?
 SearchModel.searchExistingAssociation = SELECT post_id FROM jforum_search_wordmatch WHERE word_id = ? AND post_id = ?
 SearchModel.maxPostIdUntilNow = SELECT MAX(post_id) FROM jforum_posts WHERE post_time < ?
-SearchModel.howManyToIndex = SELECT COUNT(1) FROM jforum_posts WHERE post_time < ?
+SearchModel.lastIndexedPostId = SELECT MAX(post_id) FROM jforum_search_wordmatch
+SearchModel.howManyToIndex = SELECT COUNT(1) FROM jforum_posts WHERE post_time < ? AND post_id > ?
 
 SearchModel.getPostsToIndex = SELECT p.post_id, pt.post_text, pt.post_subject \
 	FROM jforum_posts p, jforum_posts_text pt \

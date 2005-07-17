@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- $Id: bb_config.xml,v 1.16 2005/03/12 19:04:18 rafaelsteil Exp $ -->
+<!-- $Id: bb_config.xml,v 1.17 2005/07/17 18:10:39 rafaelsteil Exp $ -->
 <bbConfig>
 	<!-- CODE -->
 	<match name="code">
-		<regex>(?s)\[code\](.*?)\[/code\]</regex>
+		<regex>(?s)(?i)\[code\](.*?)\[/code\]</regex>
 		<replace>
 		<![CDATA[
 		<table class="code-table-simple" align="center">
@@ -22,7 +22,7 @@
 	</match>
 	
 	<match name="openSimpleQuote">
-		<regex>\[quote\]</regex>
+		<regex>(?i)\[quote\]</regex>
 		<replace>
 		<![CDATA[
 		<table class="quote-table" align="center">
@@ -33,7 +33,7 @@
 	</match>
 	
 	<match name="openQuote">
-		<regex>\[quote=['"]?(.*?[^'"])['"]?\]</regex>
+		<regex>(?i)\[quote=['"]?(.*?[^'"])['"]?\]</regex>
 		<replace>
 		<![CDATA[
 		<table class="quote-table-simple" align="center">
@@ -50,7 +50,7 @@
 	</match>
 	
 	<match name="closeQuote">
-		<regex>\[/quote\]</regex>
+		<regex>(?i)\[/quote\]</regex>
 		<replace>
 		<![CDATA[
 		&nbsp;
@@ -63,7 +63,7 @@
 
 	<!-- B -->
 	<match name="b">
-		<regex>(?s)\[b\](.*?)\[/b\]</regex>
+		<regex>(?s)(?i)\[b\](.*?)\[/b\]</regex>
 		<replace>
 		<![CDATA[
 		<b>$1</b>
@@ -73,7 +73,7 @@
 	
 	<!-- I -->
 	<match name="i">
-		<regex>(?s)\[i\](.*?)\[/i\]</regex>
+		<regex>(?s)(?i)\[i\](.*?)\[/i\]</regex>
 		<replace>
 		<![CDATA[
 		<i>$1</i>
@@ -83,7 +83,7 @@
 	
 	<!-- U -->
 	<match name="u">
-		<regex>(?s)\[u\](.*?)\[/u\]</regex>
+		<regex>(?s)(?i)\[u\](.*?)\[/u\]</regex>
 		<replace>
 		<![CDATA[
 		<u>$1</u>
@@ -93,7 +93,7 @@
 	
 	<!-- LIST -->
 	<match name="list">
-		<regex>\[list\](.*?)\[/list\]</regex>
+		<regex>(?i)\[list\](.*?)\[/list\]</regex>
 		<replace>
 		<![CDATA[
 		<li> $1
@@ -103,7 +103,7 @@
 	
 	<!-- IMG -->
 	<match name="img" removeQuotes="true">
-		<regex>\[img\](.*?)\[/img\]</regex>
+		<regex>(?i)\[img\](.*?)\[/img\]</regex>
 		<replace>
 		<![CDATA[
 		<img src="$1" border="0">
@@ -150,7 +150,7 @@
 	
 	<!-- URL -->
 	<match name="simple-url" removeQuotes="true">
-		<regex>\[url\](.*?)\[/url\]</regex>
+		<regex>(?i)\[url\](.*?)\[/url\]</regex>
 		<replace>
 		<![CDATA[
 		<a href='$1' target='_new' rel="nofollow">$1</a>
@@ -160,7 +160,7 @@
 	
 	<!-- URL=?? -->
 	<match name="descriptive-url" removeQuotes="true">
-		<regex>\[url=['"]?(.*?[^'"])['"]?\](.*?)\[/url\]</regex>
+		<regex>(?i)\[url=['"]?(.*?[^'"])['"]?\](.*?)\[/url\]</regex>
 		<replace>
 		<![CDATA[
 		<a href="$1" target="_new" rel="nofollow">$2</a>
@@ -170,7 +170,7 @@
 	
 	<!-- COLOR -->
 	<match name="color" removeQuotes="true">
-		<regex>(?s)\[color=['"]?(.*?[^'"])['"]?\](.*?)\[/color\]</regex>
+		<regex>(?s)(?i)\[color=['"]?(.*?[^'"])['"]?\](.*?)\[/color\]</regex>
 		<replace>
 		<![CDATA[
 		<font color='$1'>$2</font>
@@ -180,7 +180,7 @@
 
 	<!-- SIZE -->
 	<match name="size" removeQuotes="true">
-		<regex>(?s)\[size=['"]?(.*?[^'"])['"]?\](.*?)\[/size\]</regex>
+		<regex>(?s)(?i)\[size=['"]?(.*?[^'"])['"]?\](.*?)\[/size\]</regex>
 		<replace>
 		<![CDATA[
 		<span style="font-size: $1px; line-height: normal">$2</span>
