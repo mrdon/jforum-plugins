@@ -58,7 +58,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericScheduledSearchIndexerDAO.java,v 1.2 2005/03/26 04:10:46 rafaelsteil Exp $
+ * @version $Id: GenericScheduledSearchIndexerDAO.java,v 1.3 2005/07/17 16:48:24 rafaelsteil Exp $
  */
 public class GenericScheduledSearchIndexerDAO implements net.jforum.dao.ScheduledSearchIndexerDAO
 {
@@ -67,7 +67,7 @@ public class GenericScheduledSearchIndexerDAO implements net.jforum.dao.Schedule
 	/**
 	 * @see net.jforum.dao.ScheduledSearchIndexerDAO#index(int)
 	 */
-	public int index(int startPostId, int step, Connection conn) throws Exception
+	public int index(int step, Connection conn) throws Exception
 	{
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		

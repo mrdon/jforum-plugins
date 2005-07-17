@@ -43,7 +43,6 @@
 package net.jforum.util.search.quartz;
 
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.util.Properties;
 
@@ -62,7 +61,7 @@ import org.quartz.JobExecutionException;
 
 /**
  * @author Rafael Steil
- * @version $Id: QuartzSearchIndexerJob.java,v 1.3 2005/03/26 04:11:17 rafaelsteil Exp $
+ * @version $Id: QuartzSearchIndexerJob.java,v 1.4 2005/07/17 16:48:25 rafaelsteil Exp $
  */
 public class QuartzSearchIndexerJob implements Job, Cacheable
 {
@@ -90,15 +89,16 @@ public class QuartzSearchIndexerJob implements Job, Cacheable
 		}
 		
 		Properties p = this.loadConfig();
+		
 		if (p == null) {
 			return;
 		}
 		
-		int startPostId = Integer.parseInt(p.getProperty(ConfigKeys.QUARTZ_CONTEXT + ConfigKeys.SEARCH_LAST_POST_ID));
 		int step = Integer.parseInt(p.getProperty(ConfigKeys.QUARTZ_CONTEXT + ConfigKeys.SEARCH_INDEXER_STEP));
 		
 		Connection conn = null;
 		boolean autoCommit = false;
+		
 		try {
 			conn = DBConnection.getImplementation().getConnection();
 			autoCommit = conn.getAutoCommit();
@@ -106,25 +106,20 @@ public class QuartzSearchIndexerJob implements Job, Cacheable
 			
 			cache.add(FQN, INDEXING, "1");
 			
-			ScheduledSearchIndexerDAO ssim = DataAccessDriver.getInstance().newScheduledSearchIndexerDAO();
-			int lastPostId = ssim.index(startPostId, step, conn);
-			
-			conn.setAutoCommit(autoCommit);
-			
-			if (lastPostId > startPostId) {
-				this.saveQuartzProperties(lastPostId);
-			}
+			ScheduledSearchIndexerDAO dao = DataAccessDriver.getInstance().newScheduledSearchIndexerDAO();
+			int lastPostId = dao.index(step, conn);
 		}
 		catch (Exception e) {
 			logger.error("Error while trying to index messagez. Cannot proceed. " + e);
 			e.printStackTrace();
 		}
 		finally {
+			cache.remove(FQN, INDEXING);
+			
 			if (conn != null) {
+				try { conn.setAutoCommit(autoCommit); } catch (Exception e) {}
 				DBConnection.getImplementation().releaseConnection(conn);
 			}
-			
-			cache.remove(FQN, INDEXING);
 		}
 	}
 	
@@ -139,24 +134,8 @@ public class QuartzSearchIndexerJob implements Job, Cacheable
 			return p;
 		}
 		catch (Exception e) {
-			logger.warn("Failed to load " + filename + ": " + e);
-			e.printStackTrace();
-			
+			logger.warn("Failed to load " + filename + ": " + e, e);
 			return null;
-		}
-	}
-	
-	private void saveQuartzProperties(int lastPostId)
-	{
-		try {
-			Properties p = new Properties();
-			p.load(new FileInputStream(SystemGlobals.getValue(ConfigKeys.SEARCH_INDEXER_QUARTZ_CONFIG)));
-			p.setProperty(ConfigKeys.QUARTZ_CONTEXT + ConfigKeys.SEARCH_LAST_POST_ID, Integer.toString(lastPostId));
-			p.save(new FileOutputStream(SystemGlobals.getValue(ConfigKeys.SEARCH_INDEXER_QUARTZ_CONFIG)), null);
-		}
-		catch (Exception e) {
-			logger.warn("Error while trying to save quartz config file. " + e);
-			e.printStackTrace();
 		}
 	}
 }

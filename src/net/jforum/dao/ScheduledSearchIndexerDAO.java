@@ -46,19 +46,18 @@ import java.sql.Connection;
 
 /**
  * @author Rafael Steil
- * @version $Id: ScheduledSearchIndexerDAO.java,v 1.2 2005/03/26 04:10:34 rafaelsteil Exp $
+ * @version $Id: ScheduledSearchIndexerDAO.java,v 1.3 2005/07/17 16:48:25 rafaelsteil Exp $
  */
 public interface ScheduledSearchIndexerDAO
 {
 	/**
 	 * Index all scheduled posts.
-	 * 
-	 * @param startPostId The starting post id to index
 	 * @param step How may posts fetch by iteration
 	 * @param conn The database connection to use
+	 * 
 	 * @return The last processed post id
 	 * 
 	 * @throws Exception
 	 */
-	public int index(int startPostId, int step, Connection conn) throws Exception;
+	public int index(int step, Connection conn) throws Exception;
 }

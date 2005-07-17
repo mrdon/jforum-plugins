@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -57,7 +57,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericSearchIndexerDAO.java,v 1.4 2005/06/13 19:26:35 rafaelsteil Exp $
+ * @version $Id: GenericSearchIndexerDAO.java,v 1.5 2005/07/17 16:48:24 rafaelsteil Exp $
  */
 public class GenericSearchIndexerDAO extends AutoKeys implements net.jforum.dao.SearchIndexerDAO
 {

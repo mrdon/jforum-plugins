@@ -92,7 +92,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.83 2005/07/17 16:16:37 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.84 2005/07/17 16:48:26 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -261,6 +261,10 @@ public class PostAction extends Command {
 		if (this.request.getParameter("topic_id") != null) {
 			int topicId = this.request.getIntParameter("topic_id");
 			Topic t = DataAccessDriver.getInstance().newTopicDAO().selectRaw(topicId);
+			
+			if (!TopicsCommon.isTopicAccessible(t.getForumId())) {
+				return;
+			}
 
 			if (t.getStatus() == Topic.STATUS_LOCKED) {
 				this.topicLocked();
@@ -592,6 +596,10 @@ public class PostAction extends Command {
 
 		if (this.request.getParameter("topic_id") != null) {
 			t = tm.selectById(this.request.getIntParameter("topic_id"));
+			
+			if (!TopicsCommon.isTopicAccessible(t.getForumId())) {
+				return;
+			}
 
 			// Cannot insert new messages on locked topics
 			if (t.getStatus() == Topic.STATUS_LOCKED) {
