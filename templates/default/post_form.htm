@@ -8,6 +8,38 @@
 <script type='text/javascript' src='${contextPath}/templates/${templateName}/js/dwr-util.js'></script>
 <script type="text/javascript" src="${JForumContext.encodeURL("/js/list/post")}"></script>
 
+<script type="text/javascript">
+function validatePostForm(f)
+{
+	<#if setType?default(true)>
+	if (f.subject.value == "") {
+		alert("${I18n.getMessage("PostForm.subjectEmpty")}");
+		f.subject.focus();
+		
+		return false;
+	}
+	</#if>
+	
+	if (f.message.value.replace(/^\s*|\s*$/g, "").length == 0) {
+		alert("${I18n.getMessage("PostForm.textEmpty")}");
+		f.message.focus();
+		
+		return false;
+	}
+
+	<#if !forum?exists>
+	if (f.toUsername.value == "") {
+		alert("${I18n.getMessage("PrivateMessage.toUserIsEmpy")}");
+		f.toUsername.focus();
+
+		return false;
+	}
+	</#if>
+	
+	return true;
+}
+</script>
+
 <#assign preview = preview?exists && preview/>
 <#assign isNewPost = isNewPost?exists && isNewPost/>
 <#assign attachmentsEnabled = attachmentsEnabled?exists && attachmentsEnabled/>
