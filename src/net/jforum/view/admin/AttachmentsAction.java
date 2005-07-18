@@ -58,7 +58,7 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentsAction.java,v 1.8 2005/03/26 04:11:18 rafaelsteil Exp $
+ * @version $Id: AttachmentsAction.java,v 1.9 2005/07/18 17:15:53 rafaelsteil Exp $
  */
 public class AttachmentsAction extends AdminCommand
 {
@@ -75,7 +75,7 @@ public class AttachmentsAction extends AdminCommand
 	
 	public void configurationsSave() throws Exception
 	{
-		ConfigAction ca = new ConfigAction(this.request, this.response, this.conn, this.context);
+		ConfigAction ca = new ConfigAction(this.request, this.response, this.context);
 		ca.updateData(ca.getConfig());
 		
 		this.configurations();

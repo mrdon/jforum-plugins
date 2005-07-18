@@ -63,7 +63,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * $Id: GenericUserSecurityDAO.java,v 1.4 2005/07/18 17:15:52 rafaelsteil Exp $
+ * $Id: GenericUserSecurityDAO.java,v 1.5 2005/07/18 17:17:45 rafaelsteil Exp $
  */
 public class GenericUserSecurityDAO extends AutoKeys implements net.jforum.dao.security.UserSecurityDAO, Serializable 
 {
@@ -127,6 +127,7 @@ public class GenericUserSecurityDAO extends AutoKeys implements net.jforum.dao.s
 		p.setInt(1, groupId);
 		p.setString(2, roleName);
 		p.executeUpdate();
+		p.close();
 		
 		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PermissionControl.deleteUserRoleValuesByRoleName"));
 		p.setInt(1, groupId);
@@ -171,6 +172,7 @@ public class GenericUserSecurityDAO extends AutoKeys implements net.jforum.dao.s
 		p.setInt(1, groupId);
 		p.setString(2, roleName);
 		p.executeUpdate();
+		p.close();
 		
 		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PermissionControl.deleteUserRoleValuesByRoleName"));
 		p.setInt(1, groupId);

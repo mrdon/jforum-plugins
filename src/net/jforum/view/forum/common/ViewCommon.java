@@ -59,7 +59,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.7 2005/06/09 00:41:53 rafaelsteil Exp $
+ * @version $Id: ViewCommon.java,v 1.8 2005/07/18 17:15:59 rafaelsteil Exp $
  */
 public final class ViewCommon
 {
@@ -190,6 +190,6 @@ public final class ViewCommon
 		
 		String moduleClass = ModulesRepository.getModuleClass(module);
 		((Command)Class.forName(moduleClass).newInstance()).process(JForum.getRequest(),
-				JForum.getResponse(), JForum.getConnection(), JForum.getContext());
+				JForum.getResponse(), JForum.getContext());
 	}
 }

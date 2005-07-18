@@ -45,6 +45,7 @@ package net.jforum;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -57,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * a connection pool.
  * 
  * @author Rafael Steil
- * @version $Id: SimpleConnection.java,v 1.8 2005/03/12 20:10:45 rafaelsteil Exp $
+ * @version $Id: SimpleConnection.java,v 1.9 2005/07/18 17:15:55 rafaelsteil Exp $
  */
 public class SimpleConnection extends DBConnection 
 {
@@ -86,9 +87,15 @@ public class SimpleConnection extends DBConnection
 	/** 
 	 * @see net.jforum.Connection#getConnection()
 	 */
-	public Connection getConnection() throws Exception 
+	public Connection getConnection()
 	{
-		return DriverManager.getConnection(SystemGlobals.getValue(ConfigKeys.DATABASE_CONNECTION_STRING));
+		try {
+			return DriverManager.getConnection(SystemGlobals.getValue(ConfigKeys.DATABASE_CONNECTION_STRING));
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			throw new DatabaseException(e);
+		}
 	}
 
 	/** 

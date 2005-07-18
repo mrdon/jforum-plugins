@@ -2,9 +2,20 @@
 <#import "../macros/pagination.ftl" as pagination/>
 <#import "../macros/presentation.ftl" as presentation/>
 
-<script type="text/javascript" src="${JForumContext.encodeURL("/js/list/post_show")}"></script>
-<script type="text/javascript" src="${JForumContext.encodeURL("/js/list/post")}"></script>
-<script type="text/javascript"><#include "js/karma.js"></script>
+<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/post_show.js"></script>
+<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/post.js"></script>
+<script type="text/javascript">
+<#include "js/karma.js">
+
+function confirmDelete()
+{
+	if (confirm("${I18n.getMessage("Moderation.ConfirmPostDelete")}")) {
+		return true;
+	}
+	
+	return false;
+}
+</script>
 
 <table cellspacing="0" cellpadding="10" width="100%" align="center" border="0">
 	<tr>

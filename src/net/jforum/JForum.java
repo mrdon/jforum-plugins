@@ -72,7 +72,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.73 2005/07/15 03:30:01 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.74 2005/07/18 17:15:54 rafaelsteil Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
@@ -125,11 +125,7 @@ public class JForum extends JForumBaseServlet
 	public void service(HttpServletRequest req, HttpServletResponse response) throws IOException, ServletException
 	{
 		Writer out = null;
-		Connection conn = null;
-		
-		boolean autoCommitStatus = true;
-		boolean useTransactions = SystemGlobals.getBoolValue(ConfigKeys.DATABASE_USE_TRANSACTIONS);
-		
+
 		try {
 			// Initializes thread local data
 			DataHolder dataHolder = new DataHolder();
@@ -145,16 +141,6 @@ public class JForum extends JForumBaseServlet
 			
 			if (!isDatabaseUp) {
 				ForumStartup.startDatabase();
-			}
-			
-			if (isDatabaseUp) {
-				conn = DBConnection.getImplementation().getConnection();
-				dataHolder.setConnection(conn);
-				
-				if (useTransactions) {
-					autoCommitStatus = conn.getAutoCommit();
-					conn.setAutoCommit(false);
-				}
 			}
 			
 			localData.set(dataHolder);
@@ -187,7 +173,7 @@ public class JForum extends JForumBaseServlet
 			if (moduleClass != null) {
 				// Here we go, baby
 				Command c = (Command)Class.forName(moduleClass).newInstance();
-				Template template = c.process(request, response, conn, context);
+				Template template = c.process(request, response, context);
 
 				DataHolder dh = (DataHolder)localData.get();
 				
@@ -215,25 +201,9 @@ public class JForum extends JForumBaseServlet
 						+ "[module=" + module + ", "
 						+ "action=" + request.getAction() + "]");
 			}
-			
-			if (useTransactions) {
-				if (!JForum.cancelCommit()) {
-					conn.commit();
-				}
-				else {
-					conn.rollback();
-				}
-			}
 		}
 		catch (Exception e) {
-			if (useTransactions && conn != null) {
-				try {
-					conn.rollback();
-				}
-				catch (Exception dbe) {
-					dbe.printStackTrace();
-				}
-			}
+			JForum.enableCancelCommit();
 			
 			if (e.toString().indexOf("ClientAbortException") == -1) {
 				response.setContentType("text/html");
@@ -246,24 +216,7 @@ public class JForum extends JForumBaseServlet
 			}
 		}
 		finally {
-			try {
-				if (conn != null) {
-					if (useTransactions) {
-						conn.setAutoCommit(autoCommitStatus);
-					}
-				
-					DBConnection.getImplementation().releaseConnection(conn);
-				}
-				
-				if (out != null) {
-					out.close();
-				}
-			}
-			catch (Exception e) {
-				if (e.toString().indexOf("ClientAbortException") == -1) {
-					e.printStackTrace();
-				}
-			}
+			this.releaseConnection();
 			
 			DataHolder dh = (DataHolder)localData.get();
 			
@@ -277,6 +230,34 @@ public class JForum extends JForumBaseServlet
 			
 			localData.set(null);
 		}		
+	}
+	
+	private void releaseConnection()
+	{
+		Connection conn = JForum.getConnection(false);
+		
+		if (conn != null) {
+			if (SystemGlobals.getBoolValue(ConfigKeys.DATABASE_USE_TRANSACTIONS)) {
+				if (JForum.cancelCommit()) {
+					try {
+						conn.rollback();
+					}
+					catch (Exception e) {
+						logger.error("Error while rolling back a transaction", e);
+					}
+				}
+				else {
+					try {
+						conn.commit();
+					}
+					catch (Exception e) {
+						logger.error("Error while commiting a transaction", e);
+					}
+				}
+			}
+				
+			DBConnection.getImplementation().releaseConnection(conn);
+		}
 	}
 	
 	/** 

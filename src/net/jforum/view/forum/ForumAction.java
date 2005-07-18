@@ -75,7 +75,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.38 2005/07/08 18:23:09 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.39 2005/07/18 17:15:56 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -300,7 +300,7 @@ public class ForumAction extends Command
 		this.request.addParameter("sort_by", "t." + SystemGlobals.getValue(ConfigKeys.TOPIC_TIME_FIELD));
 		this.request.addParameter("sort_dir", "DESC");
 		
-		new SearchAction(this.request, this.response, this.conn, this.context).search();
+		new SearchAction(this.request, this.response, this.context).search();
 		
 		this.setTemplateName(TemplateKeys.SEARCH_NEW_MESSAGES);
 	}

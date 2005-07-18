@@ -43,7 +43,6 @@
 package net.jforum.view.forum;
 
 import java.lang.reflect.Field;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -71,7 +70,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.20 2005/06/13 20:18:49 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.21 2005/07/18 17:15:56 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -106,10 +105,9 @@ public class SearchAction extends Command
 	public SearchAction() {}
 	
 	public SearchAction(ActionServletRequest request, HttpServletResponse response,
-			Connection conn, SimpleHash context) {
+			SimpleHash context) {
 		this.request = request;
 		this.response = response;
-		this.conn = conn;
 		this.context = context;
 	}
 	

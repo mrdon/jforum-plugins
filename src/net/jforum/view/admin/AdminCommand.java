@@ -42,7 +42,6 @@
  */
 package net.jforum.view.admin;
 
-import java.sql.Connection;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -53,14 +52,14 @@ import net.jforum.Command;
 
 /**
  * @author Rafael Steil
- * @version $Id: AdminCommand.java,v 1.2 2005/03/15 18:24:11 rafaelsteil Exp $
+ * @version $Id: AdminCommand.java,v 1.3 2005/07/18 17:15:53 rafaelsteil Exp $
  */
 public abstract class AdminCommand extends Command
 {
 	public Template process(ActionServletRequest request, HttpServletResponse response, 
-			Connection conn, SimpleHash context) throws Exception
+			SimpleHash context) throws Exception
 	{
 		new AdminAction().checkAdmin();
-		return super.process(request, response, conn, context);
+		return super.process(request, response, context);
 	}
 }

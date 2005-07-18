@@ -42,7 +42,6 @@
  */
 package net.jforum.view.forum;
 
-import java.sql.Connection;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -69,7 +68,7 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: BookmarkAction.java,v 1.6 2005/03/26 04:11:15 rafaelsteil Exp $
+ * @version $Id: BookmarkAction.java,v 1.7 2005/07/18 17:15:56 rafaelsteil Exp $
  */
 public class BookmarkAction extends Command
 {
@@ -275,10 +274,9 @@ public class BookmarkAction extends Command
 	}
 	
 	/**
-	 * @see net.jforum.Command#process(net.jforum.ActionServletRequest, javax.servlet.http.HttpServletResponse, java.sql.Connection, freemarker.template.SimpleHash)
+	 * @see net.jforum.Command#process(net.jforum.ActionServletRequest, javax.servlet.http.HttpServletResponse, freemarker.template.SimpleHash)
 	 */
-	public Template process(ActionServletRequest request, HttpServletResponse response, Connection conn,
-			SimpleHash context) throws Exception
+	public Template process(ActionServletRequest request, HttpServletResponse response, SimpleHash context) throws Exception
 	{
 		if (SessionFacade.getUserSession().getUserId() == SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)
 				&& !request.getAction().equals("list")) {
@@ -288,6 +286,6 @@ public class BookmarkAction extends Command
 			request.addParameter("action", "disabled");
 		}
 
-		return super.process(request, response, conn, context);
+		return super.process(request, response, context);
 	}
 }

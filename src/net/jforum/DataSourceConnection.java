@@ -49,6 +49,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -59,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * SystemGlobals.properties.
  * 
  * @author Rafael Steil
- * @version $Id: DataSourceConnection.java,v 1.3 2005/03/12 20:10:44 rafaelsteil Exp $
+ * @version $Id: DataSourceConnection.java,v 1.4 2005/07/18 17:15:54 rafaelsteil Exp $
  */
 public class DataSourceConnection extends DBConnection
 {
@@ -77,9 +78,15 @@ public class DataSourceConnection extends DBConnection
 	/**
 	 * @see net.jforum.DBConnection#getConnection()
 	 */
-	public Connection getConnection() throws Exception
+	public Connection getConnection()
 	{
-		return this.ds.getConnection();
+		try {
+			return this.ds.getConnection();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			throw new DatabaseException(e);
+		}
 	}
 
 	/**

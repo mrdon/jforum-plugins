@@ -42,7 +42,6 @@
  */
 package net.jforum.view.admin;
 
-import java.sql.Connection;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -62,7 +61,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: AdminAction.java,v 1.7 2005/03/15 18:24:08 rafaelsteil Exp $
+ * @version $Id: AdminAction.java,v 1.8 2005/07/18 17:15:53 rafaelsteil Exp $
  */
 public class AdminAction extends Command {
 
@@ -124,8 +123,8 @@ public class AdminAction extends Command {
 
 	public Template process(ActionServletRequest request, 
 			HttpServletResponse response, 
-			Connection conn, SimpleHash context) throws Exception 
+			SimpleHash context) throws Exception 
 	{
-		return super.process(request, response, conn, context);
+		return super.process(request, response, context);
 	}
 }

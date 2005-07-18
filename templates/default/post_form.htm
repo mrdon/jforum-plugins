@@ -3,10 +3,11 @@
 	<#assign preview = false/>
 </#if>
 
-<script type='text/javascript' src='${contextPath}/dwr/dwr.page?script=AjaxUtils'></script>
+<script type='text/javascript' src='${contextPath}/dwr/dwr${extension}?script=AjaxUtils'></script>
 <script type='text/javascript' src='${contextPath}/templates/${templateName}/js/dwr-engine.js'></script>
 <script type='text/javascript' src='${contextPath}/templates/${templateName}/js/dwr-util.js'></script>
-<script type="text/javascript" src="${JForumContext.encodeURL("/js/list/post")}"></script>
+<script type="text/javascript"><#include "js/bbcode_help.js"/></script>
+<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/post.js"></script>
 
 <script type="text/javascript">
 function validatePostForm(f)

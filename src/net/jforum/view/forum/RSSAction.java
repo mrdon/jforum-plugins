@@ -42,7 +42,6 @@
  */
 package net.jforum.view.forum;
 
-import java.sql.Connection;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -70,7 +69,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: RSSAction.java,v 1.16 2005/03/26 04:11:15 rafaelsteil Exp $
+ * @version $Id: RSSAction.java,v 1.17 2005/07/18 17:15:56 rafaelsteil Exp $
  */
 public class RSSAction extends Command 
 {
@@ -165,12 +164,12 @@ public class RSSAction extends Command
 	 */
 	public Template process(ActionServletRequest request, 
 			HttpServletResponse response, 
-			Connection conn, SimpleHash context) throws Exception 
+			SimpleHash context) throws Exception 
 	{
 		JForum.setContentType("text/xml");
 		super.setTemplateName(TemplateKeys.RSS);
 
-		return super.process(request, response, conn, context);
+		return super.process(request, response, context);
 	}
 
 }

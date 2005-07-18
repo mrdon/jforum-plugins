@@ -69,7 +69,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumBaseServlet.java,v 1.3 2005/06/13 22:25:48 rafaelsteil Exp $
+ * @version $Id: JForumBaseServlet.java,v 1.4 2005/07/18 17:15:54 rafaelsteil Exp $
  */
 public class JForumBaseServlet extends HttpServlet {
     protected boolean debug;
@@ -239,9 +239,28 @@ public class JForumBaseServlet extends HttpServlet {
      * 
      * @return
      */
-    public static Connection getConnection() {
-        return ((DataHolder) localData.get()).getConnection();
-    }
+    public static Connection getConnection() 
+	{
+		return getConnection(true);
+	}
+	
+	public static Connection getConnection(boolean validate)
+	{
+		Connection c =  ((DataHolder)localData.get()).getConnection();
+		
+		if (validate && c == null) {
+			c = DBConnection.getImplementation().getConnection();
+			
+			try {
+				c.setAutoCommit(!SystemGlobals.getBoolValue(ConfigKeys.DATABASE_USE_TRANSACTIONS));
+			}
+			catch (Exception e) {}
+			
+			((DataHolder)localData.get()).setConnection(c);
+		}
+	    
+		return c; 
+	}
 
     /**
      * Gets the current thread's request

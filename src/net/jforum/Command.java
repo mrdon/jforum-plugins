@@ -42,7 +42,6 @@
  */
 package net.jforum;
 
-import java.sql.Connection;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -62,13 +61,12 @@ import freemarker.template.Template;
  * presentation actions must extend this class. 
  * 
  * @author Rafael Steil
- * @version $Id: Command.java,v 1.11 2005/07/11 00:26:13 rafaelsteil Exp $
+ * @version $Id: Command.java,v 1.12 2005/07/18 17:15:55 rafaelsteil Exp $
  */
 public abstract class Command 
 {
 	private boolean ignoreAction;
 	protected String templateName;
-	protected Connection conn;
 	protected ActionServletRequest request;
 	protected HttpServletResponse response;
 	protected SimpleHash context;
@@ -98,21 +96,18 @@ public abstract class Command
 	/**
 	 * Process and manipulate a requisition.
 	 * @param context TODO
-	 * 
 	 * @throws Exception
 	 * @return <code>Template</code> reference
 	 */
 	public Template process(ActionServletRequest request, 
 			HttpServletResponse response,
-			Connection conn, 
 			SimpleHash context) throws Exception 
 	{
 		this.request = request;
 		this.response = response;
-		this.conn = conn;
 		this.context = context;
 		
-		String action = JForum.getRequest().getAction();
+		String action = this.request.getAction();
 
 		if (!this.ignoreAction) {
 			try {

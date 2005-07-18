@@ -83,7 +83,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.30 2005/06/01 15:03:44 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.31 2005/07/18 17:15:59 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -714,9 +714,9 @@ public class InstallAction extends Command
 	 */
 	public Template process(ActionServletRequest request, 
 			HttpServletResponse response, 
-			Connection conn, SimpleHash context) throws Exception 
+			SimpleHash context) throws Exception 
 	{
 		this.setTemplateName("default/empty.htm");
-		return super.process(request, response, conn, context);
+		return super.process(request, response, context);
 	}
 }

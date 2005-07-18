@@ -80,7 +80,7 @@ import org.apache.log4j.Logger;
  *
  * @author Paulo Silveira
  * @author Rafael Steil
- * @version $Id: PooledConnection.java,v 1.14 2005/07/15 03:30:01 rafaelsteil Exp $
+ * @version $Id: PooledConnection.java,v 1.15 2005/07/18 17:15:54 rafaelsteil Exp $
  * */
 
 public class PooledConnection extends DBConnection
@@ -181,13 +181,9 @@ public class PooledConnection extends DBConnection
 	 * @return <code>Connection</code> object
 	 * @throws java.sql.SQLException	 
 	 */
-	public synchronized Connection getConnection() throws SQLException 
+	public synchronized Connection getConnection()
 	{
 		Connection conn = null;
-		boolean v = false;
-		if (v) {
-			throw new DatabaseException("Timed out to get a database connection. Try again in a few moments, please.");
-		}
 
 		// if there is enought Connections
 		if (connections.size() != 0) {
@@ -209,8 +205,6 @@ public class PooledConnection extends DBConnection
 				if (debug) {
 					logger.warn("Cannot reconnect a closed connection:" + this.connectionString + e);
 				}
-				
-				throw e;
 			}
 
 			return conn;
@@ -225,8 +219,6 @@ public class PooledConnection extends DBConnection
 				if (debug) {
 					logger.warn("Cannot stabilish a NEW connection to the database:" + this.connectionString + e);
 				}
-				
-                throw e;
 			}
 			
 			// registering the new connection

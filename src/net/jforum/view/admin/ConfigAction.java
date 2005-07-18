@@ -43,7 +43,6 @@
 package net.jforum.view.admin;
 
 import java.io.FileInputStream;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -62,7 +61,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ConfigAction.java,v 1.10 2005/07/08 05:23:45 rafaelsteil Exp $
+ * @version $Id: ConfigAction.java,v 1.11 2005/07/18 17:15:53 rafaelsteil Exp $
  */
 public class ConfigAction extends AdminCommand 
 {
@@ -70,11 +69,10 @@ public class ConfigAction extends AdminCommand
 	
 	public ConfigAction(ActionServletRequest request, 
 			HttpServletResponse response, 
-			Connection conn, SimpleHash context)
+			SimpleHash context)
 	{
 		this.request = request;
 		this.response = response;
-		this.conn = conn;
 		this.context = context;
 	}
 	

@@ -1,12 +1,3 @@
-function confirmDelete()
-{
-	if (confirm("${I18n.getMessage("Moderation.ConfirmPostDelete")}")) {
-		return true;
-	}
-	
-	return false;
-}
-
 function handleBbCode(evt)
 {
 	var e = evt || window.event;

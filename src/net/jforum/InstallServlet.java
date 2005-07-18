@@ -60,7 +60,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallServlet.java,v 1.13 2005/04/10 16:41:20 rafaelsteil Exp $
+ * @version $Id: InstallServlet.java,v 1.14 2005/07/18 17:15:54 rafaelsteil Exp $
  */
 public class InstallServlet extends JForumBaseServlet
 {
@@ -119,7 +119,7 @@ public class InstallServlet extends JForumBaseServlet
 				if (moduleClass != null) {
 					// Here we go, baby
 					Command c = (Command)Class.forName(moduleClass).newInstance();
-					Template template = c.process(request, response, null, InstallServlet.getContext());
+					Template template = c.process(request, response, InstallServlet.getContext());
 		
 					if (((DataHolder)localData.get()).getRedirectTo() == null) {
 						response.setContentType("text/html; charset=" + encoding);
