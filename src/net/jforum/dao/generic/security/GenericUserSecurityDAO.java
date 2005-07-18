@@ -45,6 +45,7 @@ package net.jforum.dao.generic.security;
 import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -53,6 +54,7 @@ import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.generic.AutoKeys;
 import net.jforum.entities.Group;
 import net.jforum.entities.User;
+import net.jforum.repository.RolesRepository;
 import net.jforum.security.Role;
 import net.jforum.security.RoleCollection;
 import net.jforum.security.RoleValueCollection;
@@ -61,7 +63,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * $Id: GenericUserSecurityDAO.java,v 1.3 2005/07/08 00:22:54 rafaelsteil Exp $
+ * $Id: GenericUserSecurityDAO.java,v 1.4 2005/07/18 17:15:52 rafaelsteil Exp $
  */
 public class GenericUserSecurityDAO extends AutoKeys implements net.jforum.dao.security.UserSecurityDAO, Serializable 
 {
@@ -183,7 +185,37 @@ public class GenericUserSecurityDAO extends AutoKeys implements net.jforum.dao.s
 	 */
 	public RoleCollection loadRoles(User user) throws Exception 
 	{
-		RoleCollection roles = SecurityCommon.processLoadRoles(SystemGlobals.getSql("PermissionControl.loadUserRoles"), user.getId());
+		RoleCollection roles = SecurityCommon.processLoadRoles(SystemGlobals.getSql("PermissionControl.loadUserRoles"), 
+				user.getId());
+		
+		// If the user doesn't have any specific roles, when we will 
+		// just try to get the group's roles from the cache
+		if (roles.size() == 0) {
+			List groups = user.getGroupsList();
+			
+			// For single group, we don't  need to check for merged roles
+			if (groups.size() == 1) {
+				return (RoleCollection)this.loadGroupRoles(groups).get(0);
+			}
+			
+			// When the user is associated to more than one group, we
+			// should check the merged roles
+			int[] groupsIds = this.getSortedGroupIds(groups);
+			
+			RoleCollection groupRoles = RolesRepository.getGroupRoles(groupsIds);
+			
+			// Not cached yet? then do it now
+			if (groupRoles == null) {
+				List l = this.loadGroupRoles(groups);
+				
+				groupRoles = new RoleCollection();
+				UserSecurityHelper.mergeUserGroupRoles(groupRoles, l);
+				
+				RolesRepository.addMergedGroupRoles(groupsIds, groupRoles);
+			}
+			
+			return groupRoles;
+		}
 		
 		List groupRolesList = this.loadGroupRoles(user.getGroupsList());
 		UserSecurityHelper.mergeUserGroupRoles(roles, groupRolesList);
@@ -191,6 +223,11 @@ public class GenericUserSecurityDAO extends AutoKeys implements net.jforum.dao.s
 		return roles;
 	}
 	
+	/**
+	 * Load roles from the groups.
+	 * @param groups The groups to load the roles
+	 * @throws Exception
+	 */
 	private List loadGroupRoles(List groups) throws Exception
 	{
 		List groupRolesList = new ArrayList();
@@ -199,10 +236,31 @@ public class GenericUserSecurityDAO extends AutoKeys implements net.jforum.dao.s
 		for (Iterator iter = groups.iterator(); iter.hasNext(); ) {
 			Group g = (Group)iter.next();
 			
-			groupRolesList.add(gmodel.loadRoles(g.getId()));
+			RoleCollection roles = RolesRepository.getGroupRoles(g.getId());
+			
+			if (roles == null) {
+				roles = gmodel.loadRoles(g.getId());
+				RolesRepository.addGroupRoles(g.getId(), roles);
+			}
+			
+			groupRolesList.add(roles);
 		}
 		
 		return groupRolesList;
+	}
+	
+	private int[] getSortedGroupIds(List groups)
+	{
+		int[] groupsIds = new int[groups.size()];
+		int i = 0;
+		
+		for (Iterator iter = groups.iterator(); iter.hasNext(); ) {
+			groupsIds[i++] = ((Group)iter.next()).getId(); 
+		}
+		
+		Arrays.sort(groupsIds);
+		
+		return groupsIds;
 	}
 
 	/**
