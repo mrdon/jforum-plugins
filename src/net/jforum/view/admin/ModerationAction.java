@@ -61,7 +61,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationAction.java,v 1.10 2005/07/08 18:23:10 rafaelsteil Exp $
+ * @version $Id: ModerationAction.java,v 1.11 2005/07/18 02:14:19 rafaelsteil Exp $
  */
 public class ModerationAction extends AdminCommand
 {
@@ -111,6 +111,12 @@ public class ModerationAction extends AdminCommand
 				
 				if ("aprove".startsWith(status)) {
 					Post p = DataAccessDriver.getInstance().newPostDAO().selectById(postId);
+					
+					// Check is the post is in fact waiting moderation
+					if (!p.isModerationNeeded()) {
+						continue;
+					}
+					
 					Topic t = tm.selectRaw(p.getTopicId());
 					
 					DataAccessDriver.getInstance().newModerationDAO().aprovePost(postId);
@@ -127,11 +133,17 @@ public class ModerationAction extends AdminCommand
 				else {
 					PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
 					Post post = pm.selectById(postId);
+					
+					if (post == null || !post.isModerationNeeded()) {
+						continue;
+					}
+					
 					pm.delete(post);
 					
 					new AttachmentCommon(this.request, post.getForumId()).deleteAttachments(postId, post.getForumId());
 					
 					int totalPosts = tm.getTotalPosts(post.getTopicId());
+					
 					if (totalPosts == 0) {
 						TopicsCommon.deleteTopic(post.getTopicId(), post.getForumId(), true);
 					}
