@@ -71,7 +71,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.18 2005/07/16 03:49:39 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.19 2005/07/18 03:22:31 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -276,13 +276,11 @@ public class PostCommon
 	{
 		User u = DataAccessDriver.getInstance().newUserDAO().selectById(userId);
 		
-		/*
 		if (u.getSignature() != null) {
 			u.setSignature(u.getSignature().replaceAll("\n", "<br>"));
 			u.setSignature(PostCommon.processText(u.getSignature()));
 			u.setSignature(PostCommon.processSmilies(u.getSignature(), SmiliesRepository.getSmilies()));
 		}
-		*/
 		
 		return u;
 	}
