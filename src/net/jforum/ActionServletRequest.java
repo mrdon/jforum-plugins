@@ -65,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: ActionServletRequest.java,v 1.22 2005/06/13 19:26:35 rafaelsteil Exp $
+ * @version $Id: ActionServletRequest.java,v 1.23 2005/07/19 17:03:32 andowson Exp $
  */
 public class ActionServletRequest extends HttpServletRequestWrapper 
 {
@@ -331,7 +331,7 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 		if (isMultipart == false) {
 			superRequest.setCharacterEncoding(encoding);
 			String containerEncoding = SystemGlobals.getValue(ConfigKeys.DEFAULT_CONTAINER_ENCODING);
-			
+			if (("POST").equals(requestType)) containerEncoding = encoding;
 			for (Enumeration e = superRequest.getParameterNames(); e.hasMoreElements(); ) {
 				String name = (String)e.nextElement();
 				this.query.put(name, new String(superRequest.getParameter(name).getBytes(containerEncoding), encoding));
