@@ -1,3 +1,4 @@
+
 # ############
 # GroupModel 
 # ############
@@ -301,11 +302,11 @@ SearchModel.insertWords = INSERT INTO jforum_search_words ( word_hash, word ) VA
 
 SearchModel.searchByWord = SELECT post_id FROM jforum_search_wordmatch wm, jforum_search_words w \
 	WHERE wm.word_id = w.word_id \
-	AND LOWER(w.word) = LOWER(?)
+	AND w.word = ?
 	
 SearchModel.searchByLikeWord = SELECT post_id FROM jforum_search_wordmatch wm, jforum_search_words w \
 	WHERE wm.word_id = w.word_id \
-	AND LOWER(w.word) LIKE LOWER(?)
+	AND w.word LIKE ?
 	
 SearchModel.insertTopicsIds = INSERT INTO jforum_search_results ( topic_id, session, search_time ) SELECT DISTINCT t.topic_id, ?, NOW() FROM jforum_topics t, jforum_posts p \
 	WHERE t.topic_id = p.topic_id \

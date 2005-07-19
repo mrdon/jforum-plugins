@@ -57,7 +57,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericSearchIndexerDAO.java,v 1.5 2005/07/17 16:48:24 rafaelsteil Exp $
+ * @version $Id: GenericSearchIndexerDAO.java,v 1.6 2005/07/19 02:20:01 rafaelsteil Exp $
  */
 public class GenericSearchIndexerDAO extends AutoKeys implements net.jforum.dao.SearchIndexerDAO
 {
@@ -105,8 +105,9 @@ public class GenericSearchIndexerDAO extends AutoKeys implements net.jforum.dao.
 			str = pattern.matcher(str).replaceAll(" ");
 			
 			StringTokenizer tok = new StringTokenizer(str, " ");
+			
 			while (tok.hasMoreTokens()) {
-				String word = tok.nextToken().trim();
+				String word = tok.nextToken().trim().toLowerCase();
 				
 				// Skip words less than "n" chars
 				if (word.length() < minWordSize) {
