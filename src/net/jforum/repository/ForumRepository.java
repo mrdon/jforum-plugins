@@ -77,7 +77,7 @@ import net.jforum.util.preferences.ConfigKeys;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.35 2005/06/12 20:20:05 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.36 2005/07/19 01:46:46 rafaelsteil Exp $
  */
 public class ForumRepository implements Cacheable
 {
@@ -513,6 +513,11 @@ public class ForumRepository implements Cacheable
 	public static void incrementTotalUsers()
 	{
 		Integer i = (Integer)cache.get(FQN, TOTAL_USERS);
+		
+		if (i == null) {
+			i = new Integer(0);
+		}
+		
 		cache.add(FQN,TOTAL_USERS, new Integer(i.intValue() + 1));
 	}
 	

@@ -75,7 +75,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.39 2005/07/18 17:15:56 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.40 2005/07/19 01:46:44 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -314,10 +314,5 @@ public class ForumAction extends Command
 		JForum.setRedirect(this.request.getContextPath()
 			+ "/forums/show/" + this.request.getParameter("forum_id")
 			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
-	}
-	
-	public void pingSession()
-	{
-		this.setTemplateName(TemplateKeys.FORUMS_PING);
 	}
 }

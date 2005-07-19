@@ -57,6 +57,7 @@ import net.jforum.entities.UserSession;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.UserDAO;
 import net.jforum.dao.UserSessionDAO;
+import net.jforum.repository.ForumRepository;
 import net.jforum.repository.RankingRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.SecurityConstants;
@@ -75,7 +76,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.43 2005/07/15 03:30:02 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.44 2005/07/19 01:46:44 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -279,6 +280,10 @@ public class UserAction extends Command
 	public void registrationComplete() throws Exception 
 	{
 		int userId = SessionFacade.getUserSession().getUserId();
+		
+		ForumRepository.setLastRegisteredUser(
+				DataAccessDriver.getInstance().newUserDAO().selectById(userId));
+		ForumRepository.incrementTotalUsers();
 
 		String profilePage = JForum.encodeUrlWithPathAndExtension("/user/edit/" + userId);
 		String homePage = JForum.encodeUrlWithPathAndExtension("/forums/list");

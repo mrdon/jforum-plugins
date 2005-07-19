@@ -47,6 +47,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.jforum.Command;
+import net.jforum.JForum;
 import net.jforum.entities.Forum;
 import net.jforum.entities.Topic;
 import net.jforum.repository.ForumRepository;
@@ -61,7 +62,7 @@ import net.jforum.view.forum.common.TopicsCommon;
  * 
  * @author James Yong
  * @author Rafael Steil
- * @version $Id: RecentTopicsAction.java,v 1.8 2005/06/12 20:20:05 rafaelsteil Exp $
+ * @version $Id: RecentTopicsAction.java,v 1.9 2005/07/19 01:46:45 rafaelsteil Exp $
  */
 public class RecentTopicsAction extends Command 
 {
@@ -70,13 +71,15 @@ public class RecentTopicsAction extends Command
 	public void list() throws Exception
 	{
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
+
+		this.setTemplateName(TemplateKeys.RECENT_LIST);
 		
 		this.context.put("postsPerPage", new Integer(postsPerPage));
 		this.context.put("topics", this.topics());
 		this.context.put("forums", this.forums);
-		this.setTemplateName(TemplateKeys.RECENT_LIST);
 		
 		TopicsCommon.topicListingBase();
+		JForum.getRequest().setAttribute("template", null);
 	}
 	
 	List topics() throws Exception
