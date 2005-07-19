@@ -49,6 +49,7 @@ import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.GroupDAO;
 import net.jforum.dao.security.GroupSecurityDAO;
 import net.jforum.entities.Group;
+import net.jforum.repository.RolesRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.XMLPermissionControl;
@@ -62,7 +63,7 @@ import net.jforum.util.preferences.TemplateKeys;
  * ViewHelper class for group administration.
  * 
  * @author Rafael Steil
- * @version $Id: GroupAction.java,v 1.11 2005/03/26 04:11:18 rafaelsteil Exp $
+ * @version $Id: GroupAction.java,v 1.12 2005/07/19 04:15:27 rafaelsteil Exp $
  */
 public class GroupAction extends AdminCommand 
 {
@@ -189,6 +190,8 @@ public class GroupAction extends AdminCommand
 		new PermissionProcessHelper(pc, id, true).processData();
 
 		SecurityRepository.clean();
+		RolesRepository.clear();
+		
 		this.list();
 	}
 }
