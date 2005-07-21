@@ -69,7 +69,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumBaseServlet.java,v 1.4 2005/07/18 17:15:54 rafaelsteil Exp $
+ * @version $Id: JForumBaseServlet.java,v 1.5 2005/07/21 17:41:11 franklin_samir Exp $
  */
 public class JForumBaseServlet extends HttpServlet {
     protected boolean debug;
@@ -109,8 +109,10 @@ public class JForumBaseServlet extends HttpServlet {
             SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
             
             // Start the dao.driver implementation
-            DataAccessDriver.init((DataAccessDriver)Class.forName(
-            		SystemGlobals.getValue(ConfigKeys.DAO_DRIVER)).newInstance());
+            String driver = SystemGlobals.getValue(ConfigKeys.DAO_DRIVER);
+            Class c = Class.forName(driver);
+            DataAccessDriver d = (DataAccessDriver)c.newInstance();
+            DataAccessDriver.init(d);
 
             this.loadConfigStuff();
 
@@ -122,6 +124,8 @@ public class JForumBaseServlet extends HttpServlet {
 			ConfigLoader.startSearchIndexer();
 
             Configuration.setDefaultConfiguration(templateCfg);
+            
+            ConfigLoader.startSummaryJob();
         } catch (Exception e) {
             throw new ForumStartupException("Error while starting jforum", e);
         }

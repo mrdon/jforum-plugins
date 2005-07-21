@@ -647,3 +647,19 @@ BannerDAO.selectActiveBannerByPlacement = SELECT banner_id, banner_name, banner_
 	WHERE banner_placement = ? \
 	AND banner_active = 1 \
 	ORDER BY banner_weight ASC
+
+##############
+# 	SummaryDAO
+##############
+
+SummaryDAO.selectAllRecipients = SELECT username, user_email FROM jforum_users 
+SummaryDAO.selectPosts = SELECT p.post_id, p.topic_id, p.forum_id, p.user_id, post_time, \
+	pt.post_subject, pt.post_text, username \
+	FROM jforum_topics t,jforum_posts p, jforum_posts_text pt, jforum_users u \
+	WHERE p.post_id = pt.post_id \
+	AND p.post_id = t.topic_first_post_id \
+	AND p.user_id = u.user_id \
+	AND p.need_moderate = 0 \
+	AND status = 1 \
+	AND t.topic_time between  ? AND ? \
+	ORDER BY post_time DESC 

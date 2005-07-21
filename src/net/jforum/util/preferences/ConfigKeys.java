@@ -49,7 +49,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.67 2005/07/11 00:26:11 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.68 2005/07/21 17:36:50 franklin_samir Exp $
 */
 
 public class ConfigKeys {
@@ -244,6 +244,12 @@ public class ConfigKeys {
 
 	public static final String KARMA_MIN_POINTS = "karma.min.points";
 	public static final String KARMA_MAX_POINTS = "karma.max.points";
+    
+    public static final String MAIL_SUMMARY_SUBJECT = "Summary.mail.weekly.subject";
+    public static final String MAIL_SUMMARY_FILE = "mail.summary.weekly.messageFile";
+    public static final String SUMMARY_DAYS_BEFORE = "summary.days.before";
+    public static final String SUMMARY_IS_ENABLED = "summary.enabled";
+    
 	
 	private ConfigKeys() {}
 }

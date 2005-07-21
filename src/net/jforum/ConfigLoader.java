@@ -61,6 +61,7 @@ import net.jforum.repository.SecurityRepository;
 import net.jforum.repository.SmiliesRepository;
 import net.jforum.repository.TopicRepository;
 import net.jforum.repository.Tpl;
+import net.jforum.summary.SummaryScheduler;
 import net.jforum.util.FileMonitor;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.QueriesFileListener;
@@ -70,12 +71,13 @@ import net.jforum.util.search.SearchFacade;
 import net.jforum.util.search.quartz.QuartzSearchIndexerJob;
 
 import org.apache.log4j.Logger;
+import org.quartz.SchedulerException;
 
 /**
  * General utilities methods for loading configurations for JForum.
  * 
  * @author Rafael Steil
- * @version $Id: ConfigLoader.java,v 1.13 2005/07/18 17:15:54 rafaelsteil Exp $
+ * @version $Id: ConfigLoader.java,v 1.14 2005/07/21 17:41:11 franklin_samir Exp $
  */
 public class ConfigLoader 
 {
@@ -203,4 +205,13 @@ public class ConfigLoader
 	{
 		SearchFacade.init();
 	}
+
+    /**
+     * Init a Job who will send e-mails to the all users with a summary of posts...
+     * @throws SchedulerException
+     * @throws IOException
+     */
+    public static void startSummaryJob() throws SchedulerException, IOException {
+        SummaryScheduler.startJob();
+    }
 }

@@ -42,12 +42,13 @@
  */
 package net.jforum.dao.generic;
 
+import net.jforum.dao.SummaryDAO;
 import net.jforum.dao.generic.security.GenericGroupSecurityDAO;
 import net.jforum.dao.generic.security.GenericUserSecurityDAO;
 
 /**
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.4 2005/04/10 16:24:35 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.5 2005/07/21 17:38:20 franklin_samir Exp $
  */
 public class DataAccessDriver extends net.jforum.dao.DataAccessDriver 
 {
@@ -72,6 +73,7 @@ public class DataAccessDriver extends net.jforum.dao.DataAccessDriver
 	private static GenericConfigDAO configDao = new GenericConfigDAO();
 	private static GenericScheduledSearchIndexerDAO ssiDao = new GenericScheduledSearchIndexerDAO();
 	private static GenericBannerDAO bannerDao = new GenericBannerDAO();
+    private static GenericSummaryDAO summaryDao = new GenericSummaryDAO();
 
 	/**
 	 * @see net.jforum.dao.DataAccessDriver#getForumModel()
@@ -241,8 +243,19 @@ public class DataAccessDriver extends net.jforum.dao.DataAccessDriver
 		return ssiDao;
 	}
 
+    /**
+     * @see net.jforum.dao.DataAccessDriver#newBannerDAO()
+     */
 	public net.jforum.dao.BannerDAO newBannerDAO()
 	{
 		return bannerDao;
 	}
+    
+    /**
+     * @see net.jforum.dao.DataAccessDriver#newSummaryDAO()
+     */
+    public SummaryDAO newSummaryDAO()
+    {
+        return summaryDao;
+    }
 }
