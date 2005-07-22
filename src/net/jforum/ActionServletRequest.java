@@ -65,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: ActionServletRequest.java,v 1.23 2005/07/19 17:03:32 andowson Exp $
+ * @version $Id: ActionServletRequest.java,v 1.24 2005/07/22 11:16:24 andowson Exp $
  */
 public class ActionServletRequest extends HttpServletRequestWrapper 
 {
@@ -251,7 +251,7 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 		
 		if ((("GET").equals(requestType) && (superRequest.getQueryString() == null)) 
 				&& requestUri.endsWith(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION))) {
-			superRequest.setCharacterEncoding(SystemGlobals.getValue(ConfigKeys.ENCODING));  
+			superRequest.setCharacterEncoding(encoding);  
 			String[] urlModel = requestUri.split("/");
 			
 			// If (context name is not null) {
@@ -307,7 +307,7 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 			if (isMultipart) {
 			    String tmpDir = SystemGlobals.getApplicationPath() + "/" + SystemGlobals.getValue(ConfigKeys.TMP_DIR);
 				ServletFileUpload upload = new ServletFileUpload(new DiskFileItemFactory(100 * 1024, new File(tmpDir)));
-
+                                upload.setHeaderEncoding(encoding);
 				try {
 					List items = upload.parseRequest(superRequest);
 					for (Iterator iter = items.iterator(); iter.hasNext(); ) {
