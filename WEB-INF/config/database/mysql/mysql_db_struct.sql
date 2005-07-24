@@ -58,7 +58,8 @@ CREATE TABLE jforum_forums (
   forum_last_post_id mediumint(8) NOT NULL default '0',
   moderated TINYINT(1) DEFAULT '0',
   PRIMARY KEY  (forum_id),
-  KEY (categories_id)
+  KEY (categories_id),
+  INDEX idx_forums_cats (categories_id)
 ) TYPE=InnoDB;
 
 --
@@ -200,7 +201,8 @@ CREATE TABLE jforum_sessions (
   session_time bigint default '0',
   session_ip varchar(8) NOT NULL default '',
   session_page int(11) NOT NULL default '0',
-  session_logged_int tinyint(1) default NULL
+  session_logged_int tinyint(1) default NULL,
+  INDEX idx_sessions_users (session_user_id)
 ) TYPE=InnoDB;
 
 --

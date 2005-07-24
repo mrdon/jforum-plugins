@@ -21,7 +21,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * 
  * @author <a href="plightbo@hotmail.com">Patrick Lightbody</a>
  * @author Rafael Steil (little hacks for JForum)
- * @version $Id: ConfigLoader.java,v 1.2 2005/06/16 01:24:58 rafaelsteil Exp $
+ * @version $Id: ConfigLoader.java,v 1.3 2005/07/24 06:01:15 rafaelsteil Exp $
  */
 public class ConfigLoader
 {
@@ -44,47 +44,49 @@ public class ConfigLoader
 			return this.config;
 		}
 
-		this.config = new ClickstreamConfig();
-
-		try {
-			SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-
-			String path = SystemGlobals.getValue(ConfigKeys.CLICKSTREAM_CONFIG);
-			
-			if (log.isInfoEnabled()) {
-				log.info("Loading clickstream config from " + path);
+		synchronized (instance) {
+			this.config = new ClickstreamConfig();
+	
+			try {
+				SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+	
+				String path = SystemGlobals.getValue(ConfigKeys.CLICKSTREAM_CONFIG);
+				
+				if (log.isInfoEnabled()) {
+					log.info("Loading clickstream config from " + path);
+				}
+				
+				File fileInput = new File(path);
+				
+				if (fileInput.exists()) {
+					parser.parse(fileInput, new ConfigHandler());
+				}
+				else {
+					parser.parse(new InputSource(path), new ConfigHandler());
+				}
+				
+				return config;
 			}
-			
-			File fileInput = new File(path);
-			
-			if (fileInput.exists()) {
-				parser.parse(fileInput, new ConfigHandler());
+			catch (SAXException e) {
+				log.error("Could not parse clickstream XML", e);
+				throw new RuntimeException(e.getMessage());
 			}
-			else {
-				parser.parse(new InputSource(path), new ConfigHandler());
+			catch (IOException e) {
+				log.error("Could not read clickstream config from stream", e);
+				throw new RuntimeException(e.getMessage());
 			}
-			
-			return config;
-		}
-		catch (SAXException e) {
-			log.error("Could not parse clickstream XML", e);
-			throw new RuntimeException(e.getMessage());
-		}
-		catch (IOException e) {
-			log.error("Could not read clickstream config from stream", e);
-			throw new RuntimeException(e.getMessage());
-		}
-		catch (ParserConfigurationException e) {
-			log.fatal("Could not obtain SAX parser", e);
-			throw new RuntimeException(e.getMessage());
-		}
-		catch (RuntimeException e) {
-			log.fatal("RuntimeException", e);
-			throw e;
-		}
-		catch (Throwable e) {
-			log.fatal("Exception", e);
-			throw new RuntimeException(e.getMessage());
+			catch (ParserConfigurationException e) {
+				log.fatal("Could not obtain SAX parser", e);
+				throw new RuntimeException(e.getMessage());
+			}
+			catch (RuntimeException e) {
+				log.fatal("RuntimeException", e);
+				throw e;
+			}
+			catch (Throwable e) {
+				log.fatal("Exception", e);
+				throw new RuntimeException(e.getMessage());
+			}
 		}
 	}
 

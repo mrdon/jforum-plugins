@@ -12,7 +12,7 @@ import net.jforum.util.legacy.clickstream.config.ConfigLoader;
  * 
  * @author <a href="plightbo@hotmail.com">Patrick Lightbody</a>
  * @author Rafael Steil (little hacks for JForum)
- * @version $Id: BotChecker.java,v 1.2 2005/07/15 03:30:00 rafaelsteil Exp $
+ * @version $Id: BotChecker.java,v 1.3 2005/07/24 06:01:13 rafaelsteil Exp $
  */
 public class BotChecker
 {
@@ -40,6 +40,10 @@ public class BotChecker
 			for (Iterator iterator = agents.iterator(); iterator.hasNext(); ) {
 				String agent = (String) iterator.next();
 				
+				if (agent == null) {
+					continue;
+				}
+				
 				if (userAgent.indexOf(agent) != -1) {
 					return userAgent;
 				}
@@ -55,6 +59,10 @@ public class BotChecker
 			
 			for (Iterator iterator = hosts.iterator(); iterator.hasNext(); ) {
 				String host = (String) iterator.next();
+				
+				if (host == null) {
+					continue;
+				}
 				
 				if (remoteHost.indexOf(host) != -1) {
 					return remoteHost;

@@ -92,7 +92,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.85 2005/07/22 11:16:50 andowson Exp $
+ * @version $Id: PostAction.java,v 1.86 2005/07/24 06:01:16 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	private static final Logger logger = Logger.getLogger(PostAction.class);
@@ -616,6 +616,11 @@ public class PostAction extends Command {
 		
 		if (this.request.getParameter("topic_type") != null) {
 			t.setType(this.request.getIntParameter("topic_type"));
+			
+			if (t.getType() != Topic.TYPE_NORMAL 
+					&& !SecurityRepository.canAccess(SecurityConstants.PERM_CREATE_STICKY_ANNOUNCEMENT_TOPICS)) {
+				t.setType(Topic.TYPE_NORMAL);
+			}
 		}
 
 		UserSession us = SessionFacade.getUserSession();
@@ -903,7 +908,8 @@ public class PostAction extends Command {
 
 	public void downloadAttach() throws Exception
 	{
-		if (!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD)) {
+		if (SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED) && 
+				!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD)) {
 			this.setTemplateName(TemplateKeys.POSTS_CANNOT_DOWNLOAD);
 			this.context.put("message", I18n.getMessage("Attachments.featureDisabled"));
 			return;
@@ -939,11 +945,7 @@ public class PostAction extends Command {
 			this.response.setContentType(a.getInfo().getMimetype());
 		}
 
-		//this.response.setHeader("Content-Disposition", "attachment; filename=\"" + a.getInfo().getRealFilename() + "\";");
-		//this.response.setHeader("Content-Disposition", "attachment; filename=\"" + new String(a.getInfo().getRealFilename().getBytes(SystemGlobals.getValue(ConfigKeys.ENCODING)), "ISO-8859-1") + "\";");
-		//this.response.setHeader("Content-Disposition", "attachment; filename=\"" + java.net.URLEncoder.encode(a.getInfo().getRealFilename(), "ISO-8859-1") + "\";");
-		//this.response.setHeader("Content-Disposition", "attachment; filename=\"" + java.net.URLEncoder.encode(a.getInfo().getRealFilename(), "UTF-8") + "\";");
-		this.response.setHeader("Content-Disposition", "attachment; filename=\"" + toUtf8String(a.getInfo().getRealFilename()) + "\";");
+		this.response.setHeader("Content-Disposition", "attachment; filename=\"" + ViewCommon.toUtf8String(a.getInfo().getRealFilename()) + "\";");
 		this.response.setContentLength((int)a.getInfo().getFilesize());
 		
 		byte[] b = new byte[4096];
@@ -997,37 +999,4 @@ public class PostAction extends Command {
 
 		return true;
 	}
-
-    public static String toUtf8String(String s) {
-        StringBuffer sb = new StringBuffer();
-
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-
-            if ((c >= 0) && (c <= 255)) {
-                sb.append(c);
-            } else {
-                byte[] b;
-
-                try {
-                    b = Character.toString(c).getBytes("utf-8");
-                } catch (Exception ex) {
-                    System.out.println(ex);
-                    b = new byte[0];
-                }
-
-                for (int j = 0; j < b.length; j++) {
-                    int k = b[j];
-
-                    if (k < 0) {
-                        k += 256;
-                    }
-
-                    sb.append("%" + Integer.toHexString(k).toUpperCase());
-                }
-            }
-        }
-
-        return sb.toString();
-    }
 }

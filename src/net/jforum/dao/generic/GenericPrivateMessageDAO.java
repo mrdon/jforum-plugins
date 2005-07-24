@@ -61,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericPrivateMessageDAO.java,v 1.2 2005/06/13 15:54:07 rafaelsteil Exp $
+ * @version $Id: GenericPrivateMessageDAO.java,v 1.3 2005/07/24 06:01:12 rafaelsteil Exp $
  */
 public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao.PrivateMessageDAO
 {
@@ -124,19 +124,17 @@ public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao
 		p.setInt(2, pm[0].getFromUser().getId());
 		p.setInt(3, pm[0].getFromUser().getId());
 		
-		PreparedStatement delete = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessagesModel.deleteText"));
+		PreparedStatement deleteText = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessagesModel.deleteText"));
 		
 		for (int i = 0; i < pm.length; i++) {
+			deleteText.setInt(1, pm[i].getId());
+			deleteText.executeUpdate();
+			
 			p.setInt(1, pm[i].getId());
 			p.executeUpdate();
-			
-			if (p.getUpdateCount() > 0) {
-				delete.setInt(1, pm[i].getId());
-				delete.executeUpdate();
-			}
 		}
 		
-		delete.close();
+		deleteText.close();
 		p.close();
 	}
 

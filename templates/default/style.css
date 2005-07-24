@@ -21,6 +21,8 @@ IMG {
 	border: 0px;
 }
 
+.bgTop { background-image: url(/jforum/templates/default/images/bg_top.gif); background-repeat: repeat-x; }
+
 BODY {
 	background-color: #FFFFFF;
 	scrollbar-face-color: #DEE3E7;
