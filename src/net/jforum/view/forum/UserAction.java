@@ -76,7 +76,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.44 2005/07/19 01:46:44 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.45 2005/07/25 23:05:42 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -177,6 +177,10 @@ public class UserAction extends Command
 				|| password == null || password.trim().equals("")) {
 			this.context.put("error", I18n.getMessage("UsernamePasswordCannotBeNull"));
 			error = true;
+		}
+		
+		if (username != null) {
+			username = username.trim();
 		}
 		
 		if (!error && username.length() > SystemGlobals.getIntValue(ConfigKeys.USERNAME_MAX_LENGTH)) {

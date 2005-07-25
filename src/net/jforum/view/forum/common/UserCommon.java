@@ -67,7 +67,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserCommon.java,v 1.7 2005/07/25 23:05:42 rafaelsteil Exp $
+ * @version $Id: UserCommon.java,v 1.8 2005/07/25 23:07:02 rafaelsteil Exp $
  */
 public class UserCommon 
 {
@@ -88,7 +88,7 @@ public class UserCommon
 			String username = JForum.getRequest().getParameter("username");
 		
 			if (username != null) {
-				u.setUsername(username);
+				u.setUsername(username.trim());
 			}
 		}
 		
