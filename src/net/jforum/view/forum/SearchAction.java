@@ -70,7 +70,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.21 2005/07/18 17:15:56 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.22 2005/07/25 15:21:56 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -156,6 +156,9 @@ public class SearchAction extends Command
 		
 		if (searchTerms != null) {
 			sd.setUseAllWords(searchTerms.equals("any") ? false : true);
+		}
+		else {
+			sd.setUseAllWords(true);
 		}
 		
 		if (forum != null && !forum.equals("")) {
