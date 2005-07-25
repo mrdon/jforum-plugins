@@ -67,7 +67,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserCommon.java,v 1.6 2005/06/01 15:03:44 rafaelsteil Exp $
+ * @version $Id: UserCommon.java,v 1.7 2005/07/25 23:05:42 rafaelsteil Exp $
  */
 public class UserCommon 
 {
@@ -84,9 +84,12 @@ public class UserCommon
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		User u = um.selectById(userId);
 		
-		String username = JForum.getRequest().getParameter("username");
-		if (username != null) {
-			u.setUsername(username);
+		if (SessionFacade.getUserSession().isAdmin()) {
+			String username = JForum.getRequest().getParameter("username");
+		
+			if (username != null) {
+				u.setUsername(username);
+			}
 		}
 		
 		u.setId(userId);
@@ -204,5 +207,4 @@ public class UserCommon
 			new File(avatarTmpFileName).delete();
 		}
 	}
-
 }
