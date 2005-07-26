@@ -60,38 +60,41 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallServlet.java,v 1.14 2005/07/18 17:15:54 rafaelsteil Exp $
+ * @version $Id: InstallServlet.java,v 1.15 2005/07/26 02:45:32 diegopires Exp $
  */
-public class InstallServlet extends JForumBaseServlet
-{
-	/** 
+public class InstallServlet extends JForumBaseServlet {
+	private static final long serialVersionUID = 959359188496986295L;
+
+	/**
 	 * @see javax.servlet.GenericServlet#init(javax.servlet.ServletConfig)
 	 */
-	public void init(ServletConfig config) throws ServletException
-	{
+	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 	}
-	
-	/** 
-	 * @see javax.servlet.http.HttpServlet#service(javax.servlet.ServletRequest, javax.servlet.ServletResponse)
+
+	/**
+	 * @see javax.servlet.http.HttpServlet#service(javax.servlet.ServletRequest,
+	 *      javax.servlet.ServletResponse)
 	 */
-	public void service(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException
-	{
+	public void service(HttpServletRequest req, HttpServletResponse response)
+			throws ServletException, IOException {
 		DataHolder dataHolder = new DataHolder();
 		localData.set(dataHolder);
-		
+
 		String encoding = SystemGlobals.getValue(ConfigKeys.ENCODING);
 		req.setCharacterEncoding(encoding);
-		
+
 		// Context
 		InstallServlet.getContext().put("contextPath", req.getContextPath());
 		InstallServlet.getContext().put("serverName", req.getServerName());
 		InstallServlet.getContext().put("templateName", "default");
-		InstallServlet.getContext().put("serverPort", Integer.toString(req.getServerPort()));
+		InstallServlet.getContext().put("serverPort",
+				Integer.toString(req.getServerPort()));
 		InstallServlet.getContext().put("I18n", I18n.getInstance());
 		InstallServlet.getContext().put("encoding", encoding);
-		InstallServlet.getContext().put("extension", SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
-		
+		InstallServlet.getContext().put("extension",
+				SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+
 		// Request
 		ActionServletRequest request = new ActionServletRequest(req);
 		request.setCharacterEncoding(encoding);
@@ -99,52 +102,58 @@ public class InstallServlet extends JForumBaseServlet
 		dataHolder.setResponse(response);
 		dataHolder.setRequest(request);
 
-		// Assigns the information to user's thread 
+		// Assigns the information to user's thread
 		localData.set(dataHolder);
-		
+
 		if (SystemGlobals.getBoolValue(ConfigKeys.INSTALLED)) {
-			InstallServlet.setRedirect(InstallServlet.getRequest().getContextPath() 
+			InstallServlet.setRedirect(InstallServlet.getRequest()
+					.getContextPath()
 					+ "/forums/list.page");
-		}
-		else {		
+		} else {
 			// Module and Action
-			String moduleClass = ModulesRepository.getModuleClass(request.getModule());
-			
+			String moduleClass = ModulesRepository.getModuleClass(request
+					.getModule());
+
 			InstallServlet.getContext().put("moduleName", request.getModule());
-			InstallServlet.getContext().put("action", InstallServlet.getRequest().getAction());
-			
-			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(response.getOutputStream(), encoding));
-			
+			InstallServlet.getContext().put("action",
+					InstallServlet.getRequest().getAction());
+
+			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
+					response.getOutputStream(), encoding));
+
 			try {
 				if (moduleClass != null) {
 					// Here we go, baby
-					Command c = (Command)Class.forName(moduleClass).newInstance();
-					Template template = c.process(request, response, InstallServlet.getContext());
-		
-					if (((DataHolder)localData.get()).getRedirectTo() == null) {
-						response.setContentType("text/html; charset=" + encoding);
-		
+					Command c = (Command) Class.forName(moduleClass)
+							.newInstance();
+					Template template = c.process(request, response,
+							InstallServlet.getContext());
+
+					if (((DataHolder) localData.get()).getRedirectTo() == null) {
+						response.setContentType("text/html; charset="
+								+ encoding);
+
 						template.process(InstallServlet.getContext(), out);
 						out.flush();
 					}
 				}
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				response.setContentType("text/html");
 				if (out != null) {
 					new ExceptionWriter().handleExceptionData(e, out);
-				}
-				else {
-					new ExceptionWriter().handleExceptionData(e, new BufferedWriter(new OutputStreamWriter(response.getOutputStream())));
+				} else {
+					new ExceptionWriter().handleExceptionData(e,
+							new BufferedWriter(new OutputStreamWriter(response
+									.getOutputStream())));
 				}
 			}
 		}
-		
-		String redirectTo = ((DataHolder)localData.get()).getRedirectTo();
+
+		String redirectTo = ((DataHolder) localData.get()).getRedirectTo();
 		if (redirectTo != null) {
 			InstallServlet.getResponse().sendRedirect(redirectTo);
 		}
-		
+
 		localData.set(null);
 	}
 }

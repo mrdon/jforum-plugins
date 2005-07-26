@@ -47,60 +47,62 @@ import java.util.List;
 import net.jforum.entities.Ranking;
 
 /**
- * Model interface for {@link net.jforum.Ranking}.
- * This interface defines methods which are expected to be
- * implementd by a specific data access driver. The intention is
- * to provide all functionality needed to update, insert, delete and
- * select some specific data.
+ * Model interface for {@link net.jforum.Ranking}. This interface defines
+ * methods which are expected to be implementd by a specific data access driver.
+ * The intention is to provide all functionality needed to update, insert,
+ * delete and select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: RankingDAO.java,v 1.2 2005/03/26 04:10:36 rafaelsteil Exp $
+ * @version $Id: RankingDAO.java,v 1.3 2005/07/26 02:45:26 diegopires Exp $
  */
-public interface RankingDAO 
-{
+public interface RankingDAO {
 	/**
 	 * Gets a specific <code>Ranking</code>.
 	 * 
-	 * @param rankingId The ranking ID to search
+	 * @param rankingId
+	 *            The ranking ID to search
 	 * @return <code>Ranking</code>object containing all the information
 	 * @throws Exception
 	 * @see #selectAll
 	 */
 	public Ranking selectById(int rankingId) throws Exception;
-	
+
 	/**
 	 * Selects all ranking data from the database.
 	 * 
-	 * @return ArrayList with the rankings. Each entry is a <code>Ranking</code> object 
+	 * @return ArrayList with the rankings. Each entry is a <code>Ranking</code>
+	 *         object
 	 * @throws Exception
 	 * @see #selectById
 	 */
 	public List selectAll() throws Exception;
-	
 
 	/**
 	 * Delete a ranking.
 	 * 
-	 * @param rankingId The ranking ID to delete
+	 * @param rankingId
+	 *            The ranking ID to delete
 	 * @throws Exception
 	 * @see #canDelete(int)
 	 */
 	public void delete(int rankingId) throws Exception;
-	
 
 	/**
 	 * Updates a ranking.
 	 * 
-	 * @param ranking Reference to a <code>Ranking</code> object to update
+	 * @param ranking
+	 *            Reference to a <code>Ranking</code> object to update
 	 * @throws Exception
 	 * @see #update(int)
 	 */
 	public void update(Ranking ranking) throws Exception;
-	
+
 	/**
 	 * Adds a new ranking.
 	 * 
-	 * @param ranking Reference to a valid and configured <code>Ranking</code> object
+	 * @param ranking
+	 *            Reference to a valid and configured <code>Ranking</code>
+	 *            object
 	 * @throws Exception
 	 */
 	public void addNew(Ranking ranking) throws Exception;

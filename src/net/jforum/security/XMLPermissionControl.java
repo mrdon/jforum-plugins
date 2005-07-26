@@ -61,50 +61,55 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
- /**
- * Manipulates XML permission control file definition 
+/**
+ * Manipulates XML permission control file definition
  * 
  * @author Rafael Steil
- * @version $Id: XMLPermissionControl.java,v 1.6 2005/02/04 12:55:31 rafaelsteil Exp $
+ * @version $Id: XMLPermissionControl.java,v 1.6 2005/02/04 12:55:31 rafaelsteil
+ *          Exp $
  */
-public class XMLPermissionControl extends DefaultHandler 
-{
+public class XMLPermissionControl extends DefaultHandler {
 	private PermissionSection section;
+
 	private List listSections;
+
 	private String permissionName;
+
 	private String permissionId;
+
 	private String permissionType;
+
 	private ArrayList permissionData;
+
 	private PermissionControl pc;
-	
+
 	private boolean alreadySelected;
-	
-	public XMLPermissionControl(PermissionControl pc)
-	{
+
+	public XMLPermissionControl(PermissionControl pc) {
 		this.listSections = new ArrayList();
 		this.permissionData = new ArrayList();
 		this.pc = pc;
 	}
 
 	/**
-	 * @return <code>List</code> object containing <code>Section</code> objects. Each
-	 * <code>Section</code>  contains many <code>PermissionItem</code> objects, 
-	 * which represent the permission elements of some section. For its turn, the
-	 * <code>PermissionItem</code> objects have many <code>FormSelectedData</code>
-	 * objects, which are the ones responsible to store field values, and which values
-	 * are checked and which not. 
+	 * @return <code>List</code> object containing <code>Section</code>
+	 *         objects. Each <code>Section</code> contains many
+	 *         <code>PermissionItem</code> objects, which represent the
+	 *         permission elements of some section. For its turn, the
+	 *         <code>PermissionItem</code> objects have many
+	 *         <code>FormSelectedData</code> objects, which are the ones
+	 *         responsible to store field values, and which values are checked
+	 *         and which not.
 	 */
-	public List loadConfigurations(String xmlFile)
-		throws Exception 
-	{
+	public List loadConfigurations(String xmlFile) throws Exception {
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		factory.setValidating(false);
-		
+
 		SAXParser parser = factory.newSAXParser();
 		InputSource input = new InputSource(xmlFile);
-		
+
 		parser.parse(input, this);
-				
+
 		return this.listSections;
 	}
 
@@ -112,13 +117,14 @@ public class XMLPermissionControl extends DefaultHandler
 	 * @see org.xml.sax.ContentHandler#endElement(String, String, String)
 	 */
 	public void endElement(String namespaceURI, String localName, String tag)
-		throws SAXException 
-	{
+			throws SAXException {
 		if (tag.equals("section")) {
 			this.listSections.add(this.section);
-		}
-		else if (tag.equals("permission")) {
-			this.section.addPermission(new PermissionItem(this.permissionName, this.permissionId, this.permissionType, this.permissionData));
+		} else if (tag.equals("permission")) {
+			this.section
+					.addPermission(new PermissionItem(this.permissionName,
+							this.permissionId, this.permissionType,
+							this.permissionData));
 
 			this.permissionData = new ArrayList();
 		}
@@ -127,94 +133,88 @@ public class XMLPermissionControl extends DefaultHandler
 	/**
 	 * @see org.xml.sax.ErrorHandler#error(SAXParseException)
 	 */
-	public void error(SAXParseException exception) throws SAXException 
-	{
+	public void error(SAXParseException exception) throws SAXException {
 		throw exception;
 	}
 
 	/**
-	 * @see org.xml.sax.ContentHandler#startElement(String, String, String, Attributes)
+	 * @see org.xml.sax.ContentHandler#startElement(String, String, String,
+	 *      Attributes)
 	 */
-	public void startElement(
-		String namespaceURI,
-		String localName,
-		String tag,
-		Attributes atts)
-		throws SAXException 
-	{
+	public void startElement(String namespaceURI, String localName, String tag,
+			Attributes atts) throws SAXException {
 		if (tag.equals("section")) {
-			this.section = new PermissionSection(atts.getValue("title"), atts.getValue("id"));
-		}
-		else if (tag.equals("permission")) {
+			this.section = new PermissionSection(atts.getValue("title"), atts
+					.getValue("id"));
+		} else if (tag.equals("permission")) {
 			this.permissionName = atts.getValue("title");
 			this.permissionId = atts.getValue("id");
 			this.permissionType = atts.getValue("type");
 			this.alreadySelected = false;
-		}
-		else if (tag.equals("sql")) {
+		} else if (tag.equals("sql")) {
 			ResultSet rs = null;
 			PreparedStatement p = null;
-			
+
 			try {
-				p = JForum.getConnection().prepareStatement(SystemGlobals.getSql(atts.getValue("queryName")));
+				p = JForum.getConnection().prepareStatement(
+						SystemGlobals.getSql(atts.getValue("queryName")));
 				rs = p.executeQuery();
-				
+
 				String valueField = atts.getValue("valueField");
 				String captionField = atts.getValue("captionField");
-			
+
 				// user/group values array
 				RoleValueCollection roleValues = new RoleValueCollection();
 				Role role = this.pc.getRole(this.permissionId);
-				
+
 				if (role != null) {
 					roleValues = role.getValues();
 				}
-				
+
 				while (rs.next()) {
 					String value = rs.getString(valueField);
 					String caption = rs.getString(captionField);
-					
+
 					RoleValue rv = roleValues.get(value);
 
-					this.permissionData.add(
-						new FormSelectedData(
-							caption, 
-							value,
-							rv != null && rv.getType() == PermissionControl.ROLE_DENY
-						)
-					);
+					this.permissionData
+							.add(new FormSelectedData(
+									caption,
+									value,
+									rv != null
+											&& rv.getType() == PermissionControl.ROLE_DENY));
 				}
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				throw new XMLException("" + e);
-			}
-			finally {
+			} finally {
 				try {
 					if (rs != null) {
 						rs.close();
 						p.close();
 					}
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 					throw new XMLException("" + e);
 				}
 			}
-		}
-		else if (tag.equals("option")) {
+		} else if (tag.equals("option")) {
 			boolean selected = false;
-			
+
 			if (this.permissionType.equals("single")) {
-				if (this.pc.canAccess(this.permissionId) && atts.getValue("value").equals("allow") && !this.alreadySelected) {
+				if (this.pc.canAccess(this.permissionId)
+						&& atts.getValue("value").equals("allow")
+						&& !this.alreadySelected) {
 					selected = true;
 					this.alreadySelected = true;
 				}
-			}
-			else {
+			} else {
 				// TODO: Implement this shit
-				throw new UnsupportedOperationException("'option' tag with 'multiple' attribute support not yet implemented");
+				throw new UnsupportedOperationException(
+						"'option' tag with 'multiple' attribute support not yet implemented");
 			}
-			
-			this.permissionData.add(new FormSelectedData(atts.getValue("description"), atts.getValue("value"), selected));
+
+			this.permissionData
+					.add(new FormSelectedData(atts.getValue("description"),
+							atts.getValue("value"), selected));
 		}
 	}
 

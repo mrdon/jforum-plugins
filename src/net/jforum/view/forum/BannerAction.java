@@ -43,29 +43,25 @@
 package net.jforum.view.forum;
 
 import net.jforum.Command;
-import net.jforum.entities.Banner;
 import net.jforum.JForum;
 import net.jforum.dao.BannerDAO;
 import net.jforum.dao.DataAccessDriver;
+import net.jforum.entities.Banner;
 import net.jforum.view.forum.common.BannerCommon;
 
 /**
  * @author Samuel Yung
- * @version $Id: BannerAction.java,v 1.1 2005/04/04 18:40:02 samuelyung Exp $
+ * @version $Id: BannerAction.java,v 1.2 2005/07/26 02:45:24 diegopires Exp $
  */
-public class BannerAction extends Command
-{
+public class BannerAction extends Command {
 	// dummy listing... there's no need to list in banners
-	public void list() throws Exception
-	{
+	public void list() throws Exception {
 	}
 
 	// redirect
-	public void redirect() throws Exception
-	{
+	public void redirect() throws Exception {
 		int bannerId = this.request.getIntParameter("banner_id");
-		if(!(new BannerCommon()).canBannerDisplay(bannerId))
-		{
+		if (!(new BannerCommon()).canBannerDisplay(bannerId)) {
 			JForum.setRedirect("");
 			return;
 		}

@@ -47,77 +47,81 @@ import java.util.List;
 import net.jforum.entities.Group;
 
 /**
- * Model interface for {@link net.jforum.Group}.
- * This interface defines methods which are expected to be
- * implementd by a specific data access driver. The intention is
- * to provide all functionality needed to update, insert, delete and
- * select some specific data.
+ * Model interface for {@link net.jforum.Group}. This interface defines methods
+ * which are expected to be implementd by a specific data access driver. The
+ * intention is to provide all functionality needed to update, insert, delete
+ * and select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: GroupDAO.java,v 1.2 2005/03/26 04:10:36 rafaelsteil Exp $
+ * @version $Id: GroupDAO.java,v 1.3 2005/07/26 02:45:27 diegopires Exp $
  */
-public interface GroupDAO 
-{
+public interface GroupDAO {
 	/**
 	 * Gets a specific <code>Group</code>.
 	 * 
-	 * @param groupId The Group ID to search
+	 * @param groupId
+	 *            The Group ID to search
 	 * @return <code>Group</code>object containing all the information
 	 * @throws Exception
 	 * @see #selectAll
 	 */
 	public Group selectById(int groupId) throws Exception;
-	
+
 	/**
 	 * Get all groups
 	 * 
-	 * @return <code>ArrayList</code> containing the groups. Each entry
-	 * is an <code>Group</code> object.
+	 * @return <code>ArrayList</code> containing the groups. Each entry is an
+	 *         <code>Group</code> object.
 	 * @throws Exception
 	 */
 	public List selectAll() throws Exception;
-	
+
 	/**
 	 * Checks if is possible to delete a specific group.
 	 * 
-	 * @param groupId The group ID to verify
-	 * @return <code>true</code> if is possible to delete, <code>false</code> if not
+	 * @param groupId
+	 *            The group ID to verify
+	 * @return <code>true</code> if is possible to delete, <code>false</code>
+	 *         if not
 	 * @see #delete(int)
 	 */
 	public boolean canDelete(int groupId) throws Exception;
-	
+
 	/**
 	 * Deletes a group.
 	 * 
-	 * @param groupId The group ID to delete
+	 * @param groupId
+	 *            The group ID to delete
 	 * @throws Exception
 	 * @see #canDelete(int)
 	 */
 	public void delete(int groupId) throws Exception;
-	
-	
+
 	/**
 	 * Updates a group.
 	 * 
-	 * @param group Reference to a <code>Group</code> object to update
+	 * @param group
+	 *            Reference to a <code>Group</code> object to update
 	 * @throws Exception
 	 * @see #update(int)
 	 */
 	public void update(Group group) throws Exception;
-	
+
 	/**
 	 * Adds a new group.
 	 * 
-	 * @param group Reference to a valid and configured <code>Group</code> object
+	 * @param group
+	 *            Reference to a valid and configured <code>Group</code>
+	 *            object
 	 * @throws Exception
 	 */
 	public void addNew(Group group) throws Exception;
 
 	/**
-	 * Select the users associated to some group; 
+	 * Select the users associated to some group;
 	 * 
 	 * @return <code>ArrayList</code> with the user ids
 	 * @throws Exception
-	 */	
+	 */
 	public List selectUsersIds(int groupId) throws Exception;
 }

@@ -15,42 +15,45 @@
  */
 package net.jforum.util.legacy.commons.fileupload;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
- * <p>Abstracts access to the request information needed for file uploads. This
- * interfsace should be implemented for each type of request that may be
- * handled by FileUpload, such as servlets and portlets.</p>
- *
+ * <p>
+ * Abstracts access to the request information needed for file uploads. This
+ * interfsace should be implemented for each type of request that may be handled
+ * by FileUpload, such as servlets and portlets.
+ * </p>
+ * 
  * @author <a href="mailto:martinc@apache.org">Martin Cooper</a>
- *
+ * 
  * @since FileUpload 1.1
- *
- * @version $Id: RequestContext.java,v 1.1 2005/05/29 16:31:55 rafaelsteil Exp $
+ * 
+ * @version $Id: RequestContext.java,v 1.2 2005/07/26 02:45:58 diegopires Exp $
  */
 public interface RequestContext {
 
-    /**
-     * Retrieve the content type of the request.
-     *
-     * @return The content type of the request.
-     */
-    String getContentType();
+	/**
+	 * Retrieve the content type of the request.
+	 * 
+	 * @return The content type of the request.
+	 */
+	String getContentType();
 
-    /**
-     * Retrieve the content length of the request.
-     *
-     * @return The content length of the request.
-     */
-    int getContentLength();
+	/**
+	 * Retrieve the content length of the request.
+	 * 
+	 * @return The content length of the request.
+	 */
+	int getContentLength();
 
-    /**
-     * Retrieve the input stream for the request.
-     *
-     * @return The input stream for the request.
-     *
-     * @throws IOException if a problem occurs.
-     */
-    InputStream getInputStream() throws IOException;
+	/**
+	 * Retrieve the input stream for the request.
+	 * 
+	 * @return The input stream for the request.
+	 * 
+	 * @throws IOException
+	 *             if a problem occurs.
+	 */
+	InputStream getInputStream() throws IOException;
 }

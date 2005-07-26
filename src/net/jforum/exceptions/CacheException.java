@@ -44,12 +44,10 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: CacheException.java,v 1.1 2005/02/01 21:41:57 rafaelsteil Exp $
+ * @version $Id: CacheException.java,v 1.2 2005/07/26 02:45:22 diegopires Exp $
  */
-public class CacheException extends RuntimeException
-{
-	public CacheException(String message)
-	{
+public class CacheException extends RuntimeException {
+	public CacheException(String message) {
 		super(message);
 	}
 }

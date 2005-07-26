@@ -52,180 +52,176 @@ import net.jforum.repository.ModulesRepository;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
-
-import org.apache.log4j.Logger;
-
 import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.9 2005/07/24 06:01:12 rafaelsteil Exp $
+ * @version $Id: ViewCommon.java,v 1.10 2005/07/26 02:45:44 diegopires Exp $
  */
-public final class ViewCommon
-{
-	private static final Logger logger = Logger.getLogger(ViewCommon.class);
-	
+public final class ViewCommon {
 	/**
-	 * Prepared the user context to use data pagination. 
-	 * The following variables are set to the context:
+	 * Prepared the user context to use data pagination. The following variables
+	 * are set to the context:
 	 * <p>
-	 * 	<ul>
-	 * 		<li> <i>totalPages</i> - total number of pages
-	 * 		<li> <i>recordsPerPage</i> - how many records will be shown on each page
-	 * 		<li> <i>totalRecords</i> - number of records fount
-	 * 		<li> <i>thisPage</i> - the current page being shown
-	 * 		<li> <i>start</i> - 
-	 * 	</ul>
+	 * <ul>
+	 * <li> <i>totalPages</i> - total number of pages
+	 * <li> <i>recordsPerPage</i> - how many records will be shown on each page
+	 * <li> <i>totalRecords</i> - number of records fount
+	 * <li> <i>thisPage</i> - the current page being shown
+	 * <li> <i>start</i> -
+	 * </ul>
 	 * </p>
+	 * 
 	 * @param start
 	 * @param totalRecords
 	 * @param recordsPerPage
 	 */
-	public static void contextToPagination(int start, int totalRecords, int recordsPerPage)
-	{
+	public static void contextToPagination(int start, int totalRecords,
+			int recordsPerPage) {
 		SimpleHash context = JForum.getContext();
-		
-		context.put("totalPages", new Double(Math.ceil((double) totalRecords / (double) recordsPerPage)));
+
+		context.put("totalPages", new Double(Math.ceil((double) totalRecords
+				/ (double) recordsPerPage)));
 		context.put("recordsPerPage", new Integer(recordsPerPage));
 		context.put("totalRecords", new Integer(totalRecords));
-		context.put("thisPage", new Double(Math.ceil((double) (start + 1) / (double) recordsPerPage)));
+		context.put("thisPage", new Double(Math.ceil((double) (start + 1)
+				/ (double) recordsPerPage)));
 		context.put("start", new Integer(start));
 	}
-	
-	public static String contextToLogin() 
-	{
+
+	public static String contextToLogin() {
 		String uri = JForum.getRequest().getRequestURI();
 		String query = JForum.getRequest().getQueryString();
 		String path = query == null ? uri : uri + "?" + query;
-		
+
 		JForum.getContext().put("returnPath", path);
-		
-		if (ConfigKeys.TYPE_SSO.equals(SystemGlobals.getValue(ConfigKeys.AUTHENTICATION_TYPE))) {
+
+		if (ConfigKeys.TYPE_SSO.equals(SystemGlobals
+				.getValue(ConfigKeys.AUTHENTICATION_TYPE))) {
 			String redirect = SystemGlobals.getValue(ConfigKeys.SSO_REDIRECT);
-			
+
 			if (redirect != null && redirect.trim().length() > 0) {
-				JForum.setRedirect(JForum.getRequest().getContextPath() + redirect.trim() + path);
+				JForum.setRedirect(JForum.getRequest().getContextPath()
+						+ redirect.trim() + path);
 			}
 		}
-		
+
 		return TemplateKeys.USER_LOGIN;
 	}
-	
+
 	/**
 	 * Returns the initial page to start fetching records from.
-	 *   
+	 * 
 	 * @return The initial page number
 	 */
-	public static int getStartPage()
-	{
+	public static int getStartPage() {
 		String s = JForum.getRequest().getParameter("start");
 		int start = 0;
-		
+
 		if (s == null || s.trim().equals("")) {
 			start = 0;
-		}
-		else {
+		} else {
 			start = Integer.parseInt(s);
-			
+
 			if (start < 0) {
 				start = 0;
 			}
 		}
-		
+
 		return start;
 	}
-	
+
 	/**
-	 * Gets the forum base link.
-	 * The returned link has a trailing slash
+	 * Gets the forum base link. The returned link has a trailing slash
+	 * 
 	 * @return The forum link, with the trailing slash
 	 */
-	public static String getForumLink()
-	{
+	public static String getForumLink() {
 		String forumLink = SystemGlobals.getValue(ConfigKeys.FORUM_LINK);
 		if (!forumLink.endsWith("/")) {
 			forumLink += "/";
 		}
-		
+
 		return forumLink;
 	}
 
 	/**
-	 * Checks if some request needs to be reprocessed. 
-	 * This is likely to happen when @link net.jforum.ActionServletRequest#dumpRequest()
-	 * is stored in the session. 
+	 * Checks if some request needs to be reprocessed. This is likely to happen
+	 * when
 	 * 
-	 * @return <code>true</code> of <code>false</code>, depending of the status.
+	 * @link net.jforum.ActionServletRequest#dumpRequest() is stored in the
+	 *       session.
+	 * 
+	 * @return <code>true</code> of <code>false</code>, depending of the
+	 *         status.
 	 */
-	public static boolean needReprocessRequest()
-	{
+	public static boolean needReprocessRequest() {
 		return (SessionFacade.getAttribute(ConfigKeys.REQUEST_DUMP) != null);
 	}
-	
+
 	/**
-	 * Reprocess a request. 
-	 * The request data should be in the session, held by the key
-	 * <code>ConfigKeys.REQUEST_DUMP</code> and the value as
-	 * a <code>java.util.Map</code>. Usual behaviour is to have the return
-	 * of @link net.jforum.ActionServletRequest#dumpRequest().
-	 * @throws Exception, RequestEmptyException
+	 * Reprocess a request. The request data should be in the session, held by
+	 * the key <code>ConfigKeys.REQUEST_DUMP</code> and the value as a
+	 * <code>java.util.Map</code>. Usual behaviour is to have the return of
+	 * 
+	 * @link net.jforum.ActionServletRequest#dumpRequest().
+	 * @throws Exception,
+	 *             RequestEmptyException
 	 */
-	public static void reprocessRequest() throws Exception
-	{
-		Map data = (Map)SessionFacade.getAttribute(ConfigKeys.REQUEST_DUMP);
+	public static void reprocessRequest() throws Exception {
+		Map data = (Map) SessionFacade.getAttribute(ConfigKeys.REQUEST_DUMP);
 		if (data == null) {
-			throw new RequestEmptyException("A call to ViewCommon#reprocessRequest() was made, but no data found");
+			throw new RequestEmptyException(
+					"A call to ViewCommon#reprocessRequest() was made, but no data found");
 		}
-		
-		String module = (String)data.get("module");
-		String action = (String)data.get("action");
-		
+
+		String module = (String) data.get("module");
+		String action = (String) data.get("action");
+
 		if (module == null || action == null) {
-			throw new RequestEmptyException("A call to ViewCommon#reprocessRequest() was made, "
-					+ "but no module or action name was found");
+			throw new RequestEmptyException(
+					"A call to ViewCommon#reprocessRequest() was made, "
+							+ "but no module or action name was found");
 		}
-		
+
 		JForum.getRequest().restoreDump(data);
 		SessionFacade.removeAttribute(ConfigKeys.REQUEST_DUMP);
-		
+
 		String moduleClass = ModulesRepository.getModuleClass(module);
-		((Command)Class.forName(moduleClass).newInstance()).process(JForum.getRequest(),
-				JForum.getResponse(), JForum.getContext());
+		((Command) Class.forName(moduleClass).newInstance()).process(JForum
+				.getRequest(), JForum.getResponse(), JForum.getContext());
 	}
 
-	public static String toUtf8String(String s)
-	{
+	public static String toUtf8String(String s) {
 		StringBuffer sb = new StringBuffer();
-	
+
 		for (int i = 0; i < s.length(); i++) {
 			char c = s.charAt(i);
-	
+
 			if ((c >= 0) && (c <= 255)) {
 				sb.append(c);
-			}
-			else {
+			} else {
 				byte[] b;
-	
+
 				try {
 					b = Character.toString(c).getBytes("utf-8");
-				}
-				catch (Exception ex) {
+				} catch (Exception ex) {
 					System.out.println(ex);
 					b = new byte[0];
 				}
-	
+
 				for (int j = 0; j < b.length; j++) {
 					int k = b[j];
-	
+
 					if (k < 0) {
 						k += 256;
 					}
-	
+
 					sb.append("%" + Integer.toHexString(k).toUpperCase());
 				}
 			}
 		}
-	
+
 		return sb.toString();
 	}
 }

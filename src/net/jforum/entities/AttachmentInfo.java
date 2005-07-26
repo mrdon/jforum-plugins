@@ -37,7 +37,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * Created on Jan 18, 2005 2:59:54 PM
-  * The JForum Project
+ * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.entities;
@@ -46,212 +46,210 @@ import java.util.Date;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentInfo.java,v 1.1 2005/01/18 20:59:45 rafaelsteil Exp $
+ * @version $Id: AttachmentInfo.java,v 1.2 2005/07/26 02:45:51 diegopires Exp $
  */
-public class AttachmentInfo
-{
+public class AttachmentInfo {
 	private int id;
+
 	private int attachId;
+
 	private String physicalFilename;
+
 	private String realFilename;
+
 	private int downloadCount;
+
 	private String comment;
+
 	private String mimetype;
+
 	private long filesize;
+
 	private Date uploadTime;
+
 	private long uploadTimeInMillis;
+
 	private boolean hasThumb;
+
 	private AttachmentExtension extension;
-	
+
 	/**
 	 * @return Returns the attachId.
 	 */
-	public int getAttachId()
-	{
+	public int getAttachId() {
 		return this.attachId;
 	}
-	
+
 	/**
-	 * @param attachId The attachId to set.
+	 * @param attachId
+	 *            The attachId to set.
 	 */
-	public void setAttachId(int attachId)
-	{
+	public void setAttachId(int attachId) {
 		this.attachId = attachId;
 	}
-	
+
 	/**
 	 * @return Returns the comment.
 	 */
-	public String getComment()
-	{
+	public String getComment() {
 		return this.comment;
 	}
-	
+
 	/**
-	 * @param comment The comment to set.
+	 * @param comment
+	 *            The comment to set.
 	 */
-	public void setComment(String comment)
-	{
+	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 	/**
 	 * @return Returns the downloadCount.
 	 */
-	public int getDownloadCount()
-	{
+	public int getDownloadCount() {
 		return this.downloadCount;
 	}
-	
+
 	/**
-	 * @param downloadCount The downloadCount to set.
+	 * @param downloadCount
+	 *            The downloadCount to set.
 	 */
-	public void setDownloadCount(int downloadCount)
-	{
+	public void setDownloadCount(int downloadCount) {
 		this.downloadCount = downloadCount;
 	}
-	
+
 	/**
 	 * @return Returns the extension.
 	 */
-	public AttachmentExtension getExtension()
-	{
+	public AttachmentExtension getExtension() {
 		return this.extension;
 	}
-	
+
 	/**
-	 * @param extension The extension to set.
+	 * @param extension
+	 *            The extension to set.
 	 */
-	public void setExtension(AttachmentExtension extension)
-	{
+	public void setExtension(AttachmentExtension extension) {
 		this.extension = extension;
 	}
-	
+
 	/**
 	 * @return Returns the filesize.
 	 */
-	public long getFilesize()
-	{
+	public long getFilesize() {
 		return this.filesize;
 	}
-	
+
 	/**
-	 * @param filesize The filesize to set.
+	 * @param filesize
+	 *            The filesize to set.
 	 */
-	public void setFilesize(long filesize)
-	{
+	public void setFilesize(long filesize) {
 		this.filesize = filesize;
 	}
-	
+
 	/**
 	 * @return Returns the hasThumb.
 	 */
-	public boolean isHasThumb()
-	{
+	public boolean isHasThumb() {
 		return this.hasThumb;
 	}
-	
+
 	/**
-	 * @param hasThumb The hasThumb to set.
+	 * @param hasThumb
+	 *            The hasThumb to set.
 	 */
-	public void setHasThumb(boolean hasThumb)
-	{
+	public void setHasThumb(boolean hasThumb) {
 		this.hasThumb = hasThumb;
 	}
-	
+
 	/**
 	 * @return Returns the id.
 	 */
-	public int getId()
-	{
+	public int getId() {
 		return this.id;
 	}
-	
+
 	/**
-	 * @param id The id to set.
+	 * @param id
+	 *            The id to set.
 	 */
-	public void setId(int id)
-	{
+	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	/**
 	 * @return Returns the mimetype.
 	 */
-	public String getMimetype()
-	{
+	public String getMimetype() {
 		return this.mimetype;
 	}
-	
+
 	/**
-	 * @param mimetype The mimetype to set.
+	 * @param mimetype
+	 *            The mimetype to set.
 	 */
-	public void setMimetype(String mimetype)
-	{
+	public void setMimetype(String mimetype) {
 		this.mimetype = mimetype;
 	}
-	
+
 	/**
 	 * @return Returns the physicalFilename.
 	 */
-	public String getPhysicalFilename()
-	{
+	public String getPhysicalFilename() {
 		return this.physicalFilename;
 	}
-	
+
 	/**
-	 * @param physicalFilename The physicalFilename to set.
+	 * @param physicalFilename
+	 *            The physicalFilename to set.
 	 */
-	public void setPhysicalFilename(String physicalFilename)
-	{
+	public void setPhysicalFilename(String physicalFilename) {
 		this.physicalFilename = physicalFilename;
 	}
-	
+
 	/**
 	 * @return Returns the realFilename.
 	 */
-	public String getRealFilename()
-	{
+	public String getRealFilename() {
 		return this.realFilename;
 	}
-	
+
 	/**
-	 * @param realFilename The realFilename to set.
+	 * @param realFilename
+	 *            The realFilename to set.
 	 */
-	public void setRealFilename(String realFilename)
-	{
+	public void setRealFilename(String realFilename) {
 		this.realFilename = realFilename;
 	}
-	
+
 	/**
 	 * @return Returns the uploadTime.
 	 */
-	public Date getUploadTime()
-	{
+	public Date getUploadTime() {
 		return this.uploadTime;
 	}
-	
+
 	/**
-	 * @param uploadTime The uploadTime to set.
+	 * @param uploadTime
+	 *            The uploadTime to set.
 	 */
-	public void setUploadTime(Date uploadTime)
-	{
+	public void setUploadTime(Date uploadTime) {
 		this.uploadTime = uploadTime;
 	}
-	
+
 	/**
 	 * @return Returns the uploadTimeInMillis.
 	 */
-	public long getUploadTimeInMillis()
-	{
+	public long getUploadTimeInMillis() {
 		return this.uploadTimeInMillis;
 	}
-	
+
 	/**
-	 * @param uploadTimeInMillis The uploadTimeInMillis to set.
+	 * @param uploadTimeInMillis
+	 *            The uploadTimeInMillis to set.
 	 */
-	public void setUploadTimeInMillis(long uploadTimeInMillis)
-	{
+	public void setUploadTimeInMillis(long uploadTimeInMillis) {
 		this.uploadTimeInMillis = uploadTimeInMillis;
 	}
 }

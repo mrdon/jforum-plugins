@@ -51,16 +51,17 @@ import net.jforum.ActionServletRequest;
 
 /**
  * @author Rafael Steil
- * @version $Id: FakeActionServletRequest.java,v 1.1 2004/12/04 20:27:59 rafaelsteil Exp $
+ * @version $Id: FakeActionServletRequest.java,v 1.1 2004/12/04 20:27:59
+ *          rafaelsteil Exp $
  */
 public class FakeActionServletRequest extends ActionServletRequest {
 	private static HttpServletRequest request = new FakeHttpRequest();
-	
+
 	public FakeActionServletRequest() throws IOException {
 		super(request);
 	}
-	
-	/** 
+
+	/**
 	 * @see javax.servlet.http.HttpServletRequestWrapper#getSession()
 	 */
 	public HttpSession getSession() {

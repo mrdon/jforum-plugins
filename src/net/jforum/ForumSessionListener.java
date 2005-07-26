@@ -53,39 +53,39 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumSessionListener.java,v 1.15 2005/06/15 04:51:30 rafaelsteil Exp $
+ * @version $Id: ForumSessionListener.java,v 1.15 2005/06/15 04:51:30
+ *          rafaelsteil Exp $
  */
-public class ForumSessionListener implements HttpSessionListener 
-{
-	private static final Logger logger = Logger.getLogger(ForumSessionListener.class);
-	
-	/** 
+public class ForumSessionListener implements HttpSessionListener {
+	private static final Logger logger = Logger
+			.getLogger(ForumSessionListener.class);
+
+	/**
 	 * @see javax.servlet.http.HttpSessionListener#sessionCreated(javax.servlet.http.HttpSessionEvent)
 	 */
-	public void sessionCreated(HttpSessionEvent event) {}
+	public void sessionCreated(HttpSessionEvent event) {
+	}
 
-	/** 
+	/**
 	 * @see javax.servlet.http.HttpSessionListener#sessionDestroyed(javax.servlet.http.HttpSessionEvent)
 	 */
-	public void sessionDestroyed(HttpSessionEvent event) 
-	{
+	public void sessionDestroyed(HttpSessionEvent event) {
 		HttpSession session = event.getSession();
-		
+
 		if (session == null) {
 			return;
 		}
-		
+
 		String sessionId = session.getId();
 
 		try {
 			SessionFacade.storeSessionData(sessionId);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			logger.warn(e);
 		}
 
 		UserSession us = SessionFacade.getUserSession(sessionId);
-		
+
 		if (us != null) {
 			SecurityRepository.remove(us.getUserId());
 		}

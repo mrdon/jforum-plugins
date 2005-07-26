@@ -40,7 +40,7 @@
  * The JForum Project
  * http://www.jforum.net 
  * 
- * $Id: User.java,v 1.14 2005/06/16 01:24:57 rafaelsteil Exp $
+ * $Id: User.java,v 1.15 2005/07/26 02:45:49 diegopires Exp $
  */
 package net.jforum.entities;
 
@@ -57,112 +57,145 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
- * Represents a single user in the system.
- * An user is every person which uses the forum. Well,
- * every registered user. Anonymous users does not have
- * a specific ID, for example. This class contains all information
- * about some user configuration options and preferences.
+ * Represents a single user in the system. An user is every person which uses
+ * the forum. Well, every registered user. Anonymous users does not have a
+ * specific ID, for example. This class contains all information about some user
+ * configuration options and preferences.
  * 
  * @author Rafael Steil
  */
-public class User implements Serializable
-{
+public class User implements Serializable {
 	private int id;
+
 	private int themeId;
+
 	private int level;
+
 	private int totalPosts;
+
 	private boolean attachSignatureEnabled = true;
+
 	private int rankId = 1;
+
 	private boolean htmlEnabled = true;
+
 	private boolean bbCodeEnabled = true;
+
 	private boolean smiliesEnabled = true;
+
 	private boolean avatarEnabled = true;
+
 	private boolean privateMessagesEnabled = true;
+
 	private boolean viewOnlineEnabled = true;
+
 	private boolean notifyPrivateMessagesEnabled = true;
+
 	private boolean notifyOnMessagesEnabled = true;
+
 	private String username;
+
 	private String password;
+
 	private Date lastVisit;
+
 	private Date registrationDate;
+
 	private String avatar;
+
 	private boolean isExternalAvatar;
+
 	private String email;
+
 	private String icq;
+
 	private String webSite;
+
 	private String from;
+
 	private String signature;
+
 	private String aim;
+
 	private String yim;
-	private String msnm; 
+
+	private String msnm;
+
 	private String occupation;
+
 	private String interests;
+
 	private String gender;
+
 	private String timeZone;
+
 	private String lang;
+
 	private String dateFormat;
+
 	private boolean viewEmailEnabled = true;
+
 	private List groupsList;
+
 	private int privateMessagesCount;
+
 	private KarmaStatus karma;
+
 	private int active;
+
 	private String activationKey;
+
 	private int deleted;
+
 	private String firstName;
+
 	private String lastName;
+
 	private Map extra = new HashMap();
-	
+
 	/**
 	 * Default Constructor
 	 */
-	public User() 
-	{
-		this.groupsList = new ArrayList(); 
+	public User() {
+		this.groupsList = new ArrayList();
 	}
-	
-	public void addExtra(String name, Object value)
-	{
+
+	public void addExtra(String name, Object value) {
 		this.extra.put(name, value);
 	}
-	
-	public Object getExtra(String name)
-	{
+
+	public Object getExtra(String name) {
 		return this.extra.get(name);
 	}
-	
-	public void setFirstName(String name)
-	{
+
+	public void setFirstName(String name) {
 		this.firstName = name;
 	}
-	
-	public String getFirstName()
-	{
+
+	public String getFirstName() {
 		return this.firstName;
 	}
-	
-	public void setLastName(String name)
-	{
+
+	public void setLastName(String name) {
 		this.lastName = name;
 	}
-	
-	public String getLastNmame()
-	{
+
+	public String getLastNmame() {
 		return this.lastName;
 	}
-	
-	public String getName()
-	{
+
+	public String getName() {
 		return this.firstName + " " + this.lastName;
 	}
-	
+
 	public boolean isDeleted() {
 		return this.deleted == 1;
-	}	
-	
-	public void setDeleted(int deleted){
+	}
+
+	public void setDeleted(int deleted) {
 		this.deleted = deleted;
-	}	
-	
+	}
+
 	/**
 	 * Gets the AIM identification
 	 * 
@@ -229,7 +262,8 @@ public class User implements Serializable
 	/**
 	 * Gets the user gender
 	 * 
-	 * @return String value. Possible values are <code>M</code> or <code>F</code>
+	 * @return String value. Possible values are <code>M</code> or
+	 *         <code>F</code>
 	 */
 	public String getGender() {
 		return this.gender;
@@ -308,7 +342,7 @@ public class User implements Serializable
 	}
 
 	/**
-	 * Gets the OCC 
+	 * Gets the OCC
 	 * 
 	 * @return String
 	 */
@@ -348,9 +382,9 @@ public class User implements Serializable
 	 * 
 	 * @return String value with the registration date
 	 */
-	public String getRegistrationDate() 
-	{
-		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
+	public String getRegistrationDate() {
+		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals
+				.getValue(ConfigKeys.DATE_TIME_FORMAT));
 
 		return df.format(this.registrationDate);
 	}
@@ -372,7 +406,7 @@ public class User implements Serializable
 	public boolean isSmiliesEnabled() {
 		return this.smiliesEnabled;
 	}
-	
+
 	/**
 	 * Gets the id of the theme chosen by the user
 	 * 
@@ -440,24 +474,26 @@ public class User implements Serializable
 	 * Is the user's email authenticated?
 	 * 
 	 * @return integer 1 if true
-	 */	
-	public boolean isActive(){
+	 */
+	public boolean isActive() {
 		return this.active == 1;
 	}
-	
+
 	/**
 	 * Gets the Yahoo messenger ID
 	 * 
-	 * @return String with the activation key that is created during user registration
-	 */	
-	public String getActivationKey(){
+	 * @return String with the activation key that is created during user
+	 *         registration
+	 */
+	public String getActivationKey() {
 		return this.activationKey;
 	}
-	
+
 	/**
 	 * Sets the aim.
 	 * 
-	 * @param aim The aim ID to set
+	 * @param aim
+	 *            The aim ID to set
 	 */
 	public void setAim(String aim) {
 		this.aim = aim;
@@ -466,11 +502,12 @@ public class User implements Serializable
 	/**
 	 * Sets the avatar.
 	 * 
-	 * @param avatar The avatar to set
+	 * @param avatar
+	 *            The avatar to set
 	 */
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
-		
+
 		if (avatar != null && avatar.toLowerCase().startsWith("http://")) {
 			this.isExternalAvatar = true;
 		}
@@ -478,6 +515,7 @@ public class User implements Serializable
 
 	/**
 	 * Indicates if the avatar points to an external URL
+	 * 
 	 * @return <code>true</code> if the avatar is some external image
 	 */
 	public boolean isExternalAvatar() {
@@ -487,7 +525,8 @@ public class User implements Serializable
 	/**
 	 * Sets avatar status
 	 * 
-	 * @param avatarEnabled <code>true</code> or <code>false</code>
+	 * @param avatarEnabled
+	 *            <code>true</code> or <code>false</code>
 	 */
 	public void setAvatarEnabled(boolean avatarEnabled) {
 		this.avatarEnabled = avatarEnabled;
@@ -496,7 +535,8 @@ public class User implements Serializable
 	/**
 	 * Sets the status for BB codes
 	 * 
-	 * @param bbCodeEnabled <code>true</code> or <code>false</code>
+	 * @param bbCodeEnabled
+	 *            <code>true</code> or <code>false</code>
 	 */
 	public void setBbCodeEnabled(boolean bbCodeEnabled) {
 		this.bbCodeEnabled = bbCodeEnabled;
@@ -505,7 +545,8 @@ public class User implements Serializable
 	/**
 	 * Sets the date format.
 	 * 
-	 * @param dateFormat The date format to set
+	 * @param dateFormat
+	 *            The date format to set
 	 */
 	public void setDateFormat(String dateFormat) {
 		this.dateFormat = dateFormat;
@@ -514,7 +555,8 @@ public class User implements Serializable
 	/**
 	 * Sets the email.
 	 * 
-	 * @param email The email to set
+	 * @param email
+	 *            The email to set
 	 */
 	public void setEmail(String email) {
 		this.email = email;
@@ -523,7 +565,8 @@ public class User implements Serializable
 	/**
 	 * Sets the user location ( where he lives )
 	 * 
-	 * @param from The location
+	 * @param from
+	 *            The location
 	 */
 	public void setFrom(String from) {
 		this.from = from;
@@ -532,7 +575,9 @@ public class User implements Serializable
 	/**
 	 * Sets the gender.
 	 * 
-	 * @param gender The gender to set. Possible values must be <code>M</code> or <code>F</code>
+	 * @param gender
+	 *            The gender to set. Possible values must be <code>M</code> or
+	 *            <code>F</code>
 	 */
 	public void setGender(String gender) {
 		this.gender = gender;
@@ -541,7 +586,8 @@ public class User implements Serializable
 	/**
 	 * Enable or not HTML code into the messages
 	 * 
-	 * @param htmlEnabled <code>true</code> or <code>false</code>
+	 * @param htmlEnabled
+	 *            <code>true</code> or <code>false</code>
 	 */
 	public void setHtmlEnabled(boolean htmlEnabled) {
 		this.htmlEnabled = htmlEnabled;
@@ -550,7 +596,8 @@ public class User implements Serializable
 	/**
 	 * Sets the icq UIN
 	 * 
-	 * @param icq The icq to set
+	 * @param icq
+	 *            The icq to set
 	 */
 	public void setIcq(String icq) {
 		this.icq = icq;
@@ -559,7 +606,8 @@ public class User implements Serializable
 	/**
 	 * Sets the user id.
 	 * 
-	 * @param id The user id to set
+	 * @param id
+	 *            The user id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -568,7 +616,8 @@ public class User implements Serializable
 	/**
 	 * Sets the interests.
 	 * 
-	 * @param interests The interests to set
+	 * @param interests
+	 *            The interests to set
 	 */
 	public void setInterests(String interests) {
 		this.interests = interests;
@@ -577,7 +626,8 @@ public class User implements Serializable
 	/**
 	 * Sets the language.
 	 * 
-	 * @param lang The lang to set
+	 * @param lang
+	 *            The lang to set
 	 */
 	public void setLang(String lang) {
 		this.lang = lang;
@@ -586,7 +636,8 @@ public class User implements Serializable
 	/**
 	 * Sets the last visit time
 	 * 
-	 * @param lastVisit Last visit time, represented as a long value
+	 * @param lastVisit
+	 *            Last visit time, represented as a long value
 	 */
 	public void setLastVisit(Date lastVisit) {
 		this.lastVisit = lastVisit;
@@ -595,7 +646,8 @@ public class User implements Serializable
 	/**
 	 * Sets the level.
 	 * 
-	 * @param level The level to set
+	 * @param level
+	 *            The level to set
 	 */
 	public void setLevel(int level) {
 		this.level = level;
@@ -604,16 +656,19 @@ public class User implements Serializable
 	/**
 	 * Sets the status for notification of new private messages
 	 * 
-	 * @param notifyPrivateMessagesEnabled <code>true</code> or <code>false</code>
+	 * @param notifyPrivateMessagesEnabled
+	 *            <code>true</code> or <code>false</code>
 	 */
-	public void setNotifyPrivateMessagesEnabled(boolean notifyPrivateMessagesEnabled) {
+	public void setNotifyPrivateMessagesEnabled(
+			boolean notifyPrivateMessagesEnabled) {
 		this.notifyPrivateMessagesEnabled = notifyPrivateMessagesEnabled;
 	}
 
 	/**
 	 * Sets the occ.
 	 * 
-	 * @param occ The occ to set
+	 * @param occ
+	 *            The occ to set
 	 */
 	public void setOccupation(String occupation) {
 		this.occupation = occupation;
@@ -622,7 +677,8 @@ public class User implements Serializable
 	/**
 	 * Sets the password.
 	 * 
-	 * @param password The password to set
+	 * @param password
+	 *            The password to set
 	 */
 	public void setPassword(String password) {
 		this.password = password;
@@ -631,7 +687,8 @@ public class User implements Serializable
 	/**
 	 * Enable or not private messages to the user
 	 * 
-	 * @param privateMessagesEnabled <code>true</code> or <code>false</code>
+	 * @param privateMessagesEnabled
+	 *            <code>true</code> or <code>false</code>
 	 */
 	public void setPrivateMessagesEnabled(boolean privateMessagesEnabled) {
 		this.privateMessagesEnabled = privateMessagesEnabled;
@@ -640,7 +697,8 @@ public class User implements Serializable
 	/**
 	 * Sets the ranking id
 	 * 
-	 * @param rankId The id of the ranking
+	 * @param rankId
+	 *            The id of the ranking
 	 */
 	public void setRankId(int rankId) {
 		this.rankId = rankId;
@@ -649,7 +707,8 @@ public class User implements Serializable
 	/**
 	 * Sets the registration date.
 	 * 
-	 * @param registrationDate The registration date to set
+	 * @param registrationDate
+	 *            The registration date to set
 	 */
 	public void setRegistrationDate(Date registrationDate) {
 		this.registrationDate = registrationDate;
@@ -658,7 +717,8 @@ public class User implements Serializable
 	/**
 	 * Sets the signature.
 	 * 
-	 * @param signature The signature to set
+	 * @param signature
+	 *            The signature to set
 	 */
 	public void setSignature(String signature) {
 		this.signature = signature;
@@ -667,7 +727,8 @@ public class User implements Serializable
 	/**
 	 * Enable or not smilies in messages
 	 * 
-	 * @param smilesEnabled <code>true</code> or <code>false</code>
+	 * @param smilesEnabled
+	 *            <code>true</code> or <code>false</code>
 	 */
 	public void setSmiliesEnabled(boolean smilesEnabled) {
 		this.smiliesEnabled = smilesEnabled;
@@ -676,7 +737,8 @@ public class User implements Serializable
 	/**
 	 * Sets the theme id
 	 * 
-	 * @param themeId The theme Id to set
+	 * @param themeId
+	 *            The theme Id to set
 	 */
 	public void setThemeId(int themeId) {
 		this.themeId = themeId;
@@ -685,7 +747,8 @@ public class User implements Serializable
 	/**
 	 * Sets the Timezone.
 	 * 
-	 * @param timeZone The Timezone to set
+	 * @param timeZone
+	 *            The Timezone to set
 	 */
 	public void setTimeZone(String timeZone) {
 		this.timeZone = timeZone;
@@ -694,7 +757,8 @@ public class User implements Serializable
 	/**
 	 * Sets the total number of posts by the user
 	 * 
-	 * @param totalPosts int value with the total of messages posted by the user
+	 * @param totalPosts
+	 *            int value with the total of messages posted by the user
 	 */
 	public void setTotalPosts(int totalPosts) {
 		this.totalPosts = totalPosts;
@@ -703,7 +767,8 @@ public class User implements Serializable
 	/**
 	 * Sets the username.
 	 * 
-	 * @param username The username to set
+	 * @param username
+	 *            The username to set
 	 */
 	public void setUsername(String username) {
 		this.username = username;
@@ -711,7 +776,9 @@ public class User implements Serializable
 
 	/**
 	 * Sets the viewOnlineEnabled.
-	 * @param viewOnlineEnabled The viewOnlineEnabled to set
+	 * 
+	 * @param viewOnlineEnabled
+	 *            The viewOnlineEnabled to set
 	 */
 	public void setViewOnlineEnabled(boolean viewOnlineEnabled) {
 		this.viewOnlineEnabled = viewOnlineEnabled;
@@ -720,7 +787,8 @@ public class User implements Serializable
 	/**
 	 * Sets the webSite.
 	 * 
-	 * @param webSite The webSite to set
+	 * @param webSite
+	 *            The webSite to set
 	 */
 	public void setWebSite(String webSite) {
 		this.webSite = webSite;
@@ -729,7 +797,8 @@ public class User implements Serializable
 	/**
 	 * Sets the Yahoo messenger ID
 	 * 
-	 * @param yim The yim to set
+	 * @param yim
+	 *            The yim to set
 	 */
 	public void setYim(String yim) {
 		this.yim = yim;
@@ -801,53 +870,50 @@ public class User implements Serializable
 	/**
 	 * @return Returns the privateMessagesCount.
 	 */
-	public int getPrivateMessagesCount()
-	{
+	public int getPrivateMessagesCount() {
 		return this.privateMessagesCount;
 	}
+
 	/**
-	 * @param privateMessagesCount The privateMessagesCount to set.
+	 * @param privateMessagesCount
+	 *            The privateMessagesCount to set.
 	 */
-	public void setPrivateMessagesCount(int privateMessagesCount)
-	{
+	public void setPrivateMessagesCount(int privateMessagesCount) {
 		this.privateMessagesCount = privateMessagesCount;
 	}
+
 	/**
 	 * @return Returns the hasPrivateMessages.
 	 */
-	public boolean hasPrivateMessages()
-	{
+	public boolean hasPrivateMessages() {
 		return this.privateMessagesCount > 0;
 	}
-	
+
 	/**
 	 * Set when user authenticates his email after user registration
-	*/
-	public void setActive(int active){
+	 */
+	public void setActive(int active) {
 		this.active = active;
 	}
-	
-	public void setActivationKey(String activationKey){
+
+	public void setActivationKey(String activationKey) {
 		this.activationKey = activationKey;
 	}
-	
-	public void setKarma(KarmaStatus karma)
-	{
+
+	public void setKarma(KarmaStatus karma) {
 		this.karma = karma;
 	}
-	
-	public KarmaStatus getKarma()
-	{
+
+	public KarmaStatus getKarma() {
 		return this.karma;
 	}
-	
+
 	/**
 	 * Is the user online?
 	 * 
 	 * @return true if user is in Session
-	 */	
-	public boolean isOnline()
-	{
+	 */
+	public boolean isOnline() {
 		return SessionFacade.isLogged();
 	}
 }

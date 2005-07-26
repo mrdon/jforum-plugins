@@ -41,141 +41,144 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: TreeGroup.java,v 1.4 2005/03/26 04:11:16 rafaelsteil Exp $
+ * $Id: TreeGroup.java,v 1.5 2005/07/26 02:45:47 diegopires Exp $
  */
 package net.jforum.util;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.TreeGroupDAO;
 
-/** 
- * Implements a tree hierarchy of groups.
- * This class process all group hierarchy, and each group may have unlimited sub groups.
- * Each group is called <code>node</code> ( <code>net.jforum.model.GroupNode</code> object ), and
- * each node may have sub-nodes. For example, given a table like the folowing:  
+/**
+ * Implements a tree hierarchy of groups. This class process all group
+ * hierarchy, and each group may have unlimited sub groups. Each group is called
+ * <code>node</code> ( <code>net.jforum.model.GroupNode</code> object ), and
+ * each node may have sub-nodes. For example, given a table like the folowing:
  * 
  * <pre>
  * <code>
-* +----+----------------+--------+
- * | id | name          | parent |
- * +----+---------------+--------+
- * |  6 | Parent 1      |      0 |
- * |  7 | Sub 1.1       |      6 |
- * |  8 | Sub 1.2       |      6 |
- * |  9 | SubSub 1.2.1  |      8 |
- * | 10 | SubSub 1.2.2  |      8 |
- * | 11 | Parent 2      |      0 |
- * | 12 | Parent 3      |      0 |
- * | 13 | Sub 3.1       |     12 |
- * | 14 | SubSub 3.1.1  |     13 |
- * | 15 | Sub 3.2       |     12 |
- * | 16 | Parent 4      |      0 |
- * +----+---------------+--------+
+ *  +----+----------------+--------+
+ *  | id | name          | parent |
+ *  +----+---------------+--------+
+ *  |  6 | Parent 1      |      0 |
+ *  |  7 | Sub 1.1       |      6 |
+ *  |  8 | Sub 1.2       |      6 |
+ *  |  9 | SubSub 1.2.1  |      8 |
+ *  | 10 | SubSub 1.2.2  |      8 |
+ *  | 11 | Parent 2      |      0 |
+ *  | 12 | Parent 3      |      0 |
+ *  | 13 | Sub 3.1       |     12 |
+ *  | 14 | SubSub 3.1.1  |     13 |
+ *  | 15 | Sub 3.2       |     12 |
+ *  | 16 | Parent 4      |      0 |
+ *  +----+---------------+--------+
  * </code>
  * </pre>
  * 
- * results on the folowing hierarchy 
+ * results on the folowing hierarchy
+ * 
  * <pre>
  * <code>
- * Parent 1
- * ------
- * 	|
- *     Sub 1.1
- * 	----------
- * 	|
- * 	Sub 1.2
- * 	----------
- * 		|
- * 		SubSub 1.2.1
- * 		------------
- * 		|
- * 		SubSub 1.2.2
- * Parent 2
- * -----
- * Parent 3
- * -----
- * 	|
- * 	Sub 3.1
- * 	---------
- * 		|
- * 		SubSub 3.1.1
- * 		------------
- * 	|
- * 	Sub 3.2
- * 	---------
- * Parent 4
- * ------
+ *  Parent 1
+ *  ------
+ *  	|
+ *      Sub 1.1
+ *  	----------
+ *  	|
+ *  	Sub 1.2
+ *  	----------
+ *  		|
+ *  		SubSub 1.2.1
+ *  		------------
+ *  		|
+ *  		SubSub 1.2.2
+ *  Parent 2
+ *  -----
+ *  Parent 3
+ *  -----
+ *  	|
+ *  	Sub 3.1
+ *  	---------
+ *  		|
+ *  		SubSub 3.1.1
+ *  		------------
+ *  	|
+ *  	Sub 3.2
+ *  	---------
+ *  Parent 4
+ *  ------
  * </code>
  * </pre>
- *  
- * As is possible to see, we have 4 parent groups, called <code>Parent 1</code>, <code>Parent 2</code>, 
- * <code>Parent 3</code> and <code>Parent 4</code>. <code>Parent 1</code> has 2 sub groups: <code>Sub 1.1</code>
- * and <code>Sub 1.2</code>. <code>Sub 1.2</code> contains 2 subgroups, <code>SubSub 1.2.1</code> and 
- * <code>SubSub 1.2.2</code>. As every group is a node, ( <code>GroupNode</code> object ), and as each node
- * may have sub-nodes, the processing would be as:
+ * 
+ * As is possible to see, we have 4 parent groups, called <code>Parent 1</code>,
+ * <code>Parent 2</code>, <code>Parent 3</code> and <code>Parent 4</code>.
+ * <code>Parent 1</code> has 2 sub groups: <code>Sub 1.1</code> and
+ * <code>Sub 1.2</code>. <code>Sub 1.2</code> contains 2 subgroups,
+ * <code>SubSub 1.2.1</code> and <code>SubSub 1.2.2</code>. As every group
+ * is a node, ( <code>GroupNode</code> object ), and as each node may have
+ * sub-nodes, the processing would be as:
  * <p>
- * <li> When the method <code>size()</code> of the <code>Parent 1</code> object is called,  the number 2 will
- * be retorned, because <code>Parent 1</code> has 2 sub groups;
- * <li> when the <code>size()</code> method is called on the object of <code>Sub 1.1</code>, will be returned 0, because
- * <code>Sub 1.1</code> does not have any sub groups;
- * <li> On the other hand, then we call the <code>size()</code> method of the object represented by <code>Sub 1.2</code> object,
- * we wil have a return value of 2, because <code>Sub 1.2</code> has 2 sub groups.
- * <br>
- * The same operation is done to all other groups and its sub groups. 
+ * <li> When the method <code>size()</code> of the <code>Parent 1</code>
+ * object is called, the number 2 will be retorned, because
+ * <code>Parent 1</code> has 2 sub groups;
+ * <li> when the <code>size()</code> method is called on the object of
+ * <code>Sub 1.1</code>, will be returned 0, because <code>Sub 1.1</code>
+ * does not have any sub groups;
+ * <li> On the other hand, then we call the <code>size()</code> method of the
+ * object represented by <code>Sub 1.2</code> object, we wil have a return
+ * value of 2, because <code>Sub 1.2</code> has 2 sub groups. <br>
+ * The same operation is done to all other groups and its sub groups.
  * 
  * @author Rafael Steil
  */
-public class TreeGroup 
-{
+public class TreeGroup {
 	/**
 	 * Default Constructor
 	 */
-	public TreeGroup() { }
+	public TreeGroup() {
+	}
 
-	
 	/**
 	 * Process the group hierarchy.
 	 * 
-	 * @return <code>ArrayList</code> containing the complete group hierarchy. Each element
-	 * from the list represents a single <code>GroupNode<code> object.	 
-	 * */
-	public List getNodes() throws Exception
-	{
+	 * @return <code>ArrayList</code> containing the complete group hierarchy.
+	 *         Each element from the list represents a single
+	 *         <code>GroupNode<code> object.
+	 */
+	public List getNodes() throws Exception {
 		ArrayList nodes = new ArrayList();
-		
+
 		TreeGroupDAO tgm = DataAccessDriver.getInstance().newTreeGroupDAO();
 
-		List rootGroups = tgm.selectGroups(0);	
-				
+		List rootGroups = tgm.selectGroups(0);
+
 		for (Iterator iter = rootGroups.iterator(); iter.hasNext();) {
-			GroupNode n = (GroupNode)iter.next();
-						
+			GroupNode n = (GroupNode) iter.next();
+
 			this.checkExtraNodes(n);
-			
+
 			nodes.add(n);
 		}
-		
+
 		return nodes;
 	}
-	
+
 	/**
 	 * Searchs for subgroups of a determined group
-	 * */
-	private void checkExtraNodes(GroupNode n) throws Exception
-	{
+	 */
+	private void checkExtraNodes(GroupNode n) throws Exception {
 		TreeGroupDAO tgm = DataAccessDriver.getInstance().newTreeGroupDAO();
 
-		List childGroups = tgm.selectGroups(n.getId());	
-				
+		List childGroups = tgm.selectGroups(n.getId());
+
 		for (Iterator iter = childGroups.iterator(); iter.hasNext();) {
-			GroupNode f = (GroupNode)iter.next();
-			
+			GroupNode f = (GroupNode) iter.next();
+
 			this.checkExtraNodes(f);
-			
+
 			n.addNode(f);
 		}
 	}

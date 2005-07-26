@@ -44,12 +44,11 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentSizeTooBigException.java,v 1.2 2005/01/24 21:49:27 rafaelsteil Exp $
+ * @version $Id: AttachmentSizeTooBigException.java,v 1.2 2005/01/24 21:49:27
+ *          rafaelsteil Exp $
  */
-public class AttachmentSizeTooBigException extends AttachmentException
-{
-	public AttachmentSizeTooBigException(String message)
-	{
+public class AttachmentSizeTooBigException extends AttachmentException {
+	public AttachmentSizeTooBigException(String message) {
 		super(message);
 	}
 }

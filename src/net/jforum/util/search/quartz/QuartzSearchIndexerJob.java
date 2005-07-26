@@ -61,79 +61,86 @@ import org.quartz.JobExecutionException;
 
 /**
  * @author Rafael Steil
- * @version $Id: QuartzSearchIndexerJob.java,v 1.5 2005/07/17 18:10:39 rafaelsteil Exp $
+ * @version $Id: QuartzSearchIndexerJob.java,v 1.5 2005/07/17 18:10:39
+ *          rafaelsteil Exp $
  */
-public class QuartzSearchIndexerJob implements Job, Cacheable
-{
+public class QuartzSearchIndexerJob implements Job, Cacheable {
 	private static final String FQN = "quartz";
+
 	private static final String INDEXING = "indexing";
-	private static Logger logger = Logger.getLogger(QuartzSearchIndexerJob.class);
+
+	private static Logger logger = Logger
+			.getLogger(QuartzSearchIndexerJob.class);
+
 	private static CacheEngine cache;
-	
+
 	/**
 	 * @see net.jforum.cache.Cacheable#setCacheEngine(net.jforum.cache.CacheEngine)
 	 */
-	public void setCacheEngine(CacheEngine engine)
-	{
+	public void setCacheEngine(CacheEngine engine) {
 		cache = engine;
 	}
-	
+
 	/**
 	 * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
 	 */
-	public void execute(JobExecutionContext context) throws JobExecutionException
-	{
+	public void execute(JobExecutionContext context)
+			throws JobExecutionException {
 		if ("1".equals(cache.get(FQN, INDEXING))) {
 			logger.info("Indexing is already running. Going home...");
 			return;
 		}
-		
+
 		Properties p = this.loadConfig();
-		
+
 		if (p == null) {
 			return;
 		}
-		
-		int step = Integer.parseInt(p.getProperty(ConfigKeys.QUARTZ_CONTEXT + ConfigKeys.SEARCH_INDEXER_STEP));
-		
+
+		int step = Integer.parseInt(p.getProperty(ConfigKeys.QUARTZ_CONTEXT
+				+ ConfigKeys.SEARCH_INDEXER_STEP));
+
 		Connection conn = null;
 		boolean autoCommit = false;
-		
+
 		try {
 			conn = DBConnection.getImplementation().getConnection();
 			autoCommit = conn.getAutoCommit();
 			conn.setAutoCommit(true);
-			
+
 			cache.add(FQN, INDEXING, "1");
-			
-			ScheduledSearchIndexerDAO dao = DataAccessDriver.getInstance().newScheduledSearchIndexerDAO();
+
+			ScheduledSearchIndexerDAO dao = DataAccessDriver.getInstance()
+					.newScheduledSearchIndexerDAO();
 			dao.index(step, conn);
-		}
-		catch (Exception e) {
-			logger.error("Error while trying to index messagez. Cannot proceed. " + e);
+		} catch (Exception e) {
+			logger
+					.error("Error while trying to index messagez. Cannot proceed. "
+							+ e);
 			e.printStackTrace();
-		}
-		finally {
+		} finally {
 			cache.remove(FQN, INDEXING);
-			
+
 			if (conn != null) {
-				try { conn.setAutoCommit(autoCommit); } catch (Exception e) {}
+				try {
+					conn.setAutoCommit(autoCommit);
+				} catch (Exception e) {
+				}
 				DBConnection.getImplementation().releaseConnection(conn);
 			}
 		}
 	}
-	
-	private Properties loadConfig()
-	{
-		String filename = SystemGlobals.getValue(ConfigKeys.SEARCH_INDEXER_QUARTZ_CONFIG);
-		
+
+	private Properties loadConfig() {
+		String filename = SystemGlobals
+				.getValue(ConfigKeys.SEARCH_INDEXER_QUARTZ_CONFIG);
+
 		try {
 			Properties p = new Properties();
 			p.load(new FileInputStream(filename));
 
 			return p;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			logger.warn("Failed to load " + filename + ": " + e, e);
 			return null;
 		}

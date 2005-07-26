@@ -48,74 +48,72 @@ import net.jforum.dao.security.SecurityDAO;
 
 /**
  * Methods and properties for all classes that need make use of security
- * actions.  
+ * actions.
  * 
  * @author Rafael Steil
- * @version $Id: PermissionControl.java,v 1.12 2005/03/26 04:11:23 rafaelsteil Exp $
+ * @version $Id: PermissionControl.java,v 1.12 2005/03/26 04:11:23 rafaelsteil
+ *          Exp $
  */
-public class PermissionControl implements Serializable
-{
+public class PermissionControl implements Serializable {
 	public static final int ROLE_DENY = 0;
+
 	public static final int ROLE_ALLOW = 1;
 
 	private RoleCollection roles;
+
 	private SecurityDAO smodel;
-	
-	public void setRoles(RoleCollection roles)
-	{
+
+	public void setRoles(RoleCollection roles) {
 		this.roles = roles;
 	}
-	
-	public void setSecurityModel(SecurityDAO smodel)
-	{
+
+	public void setSecurityModel(SecurityDAO smodel) {
 		this.smodel = smodel;
 	}
-	
-	public void addRole(int id, Role role) throws Exception
-	{
+
+	public void addRole(int id, Role role) throws Exception {
 		this.smodel.addRole(id, role);
 	}
-	
-	public void addRole(int id, Role role, RoleValueCollection roleValues) throws Exception
-	{
+
+	public void addRole(int id, Role role, RoleValueCollection roleValues)
+			throws Exception {
 		this.smodel.addRole(id, role, roleValues);
 	}
-	
-	public void addRoleValue(int id, Role role, RoleValueCollection roleValues) throws Exception
-	{
+
+	public void addRoleValue(int id, Role role, RoleValueCollection roleValues)
+			throws Exception {
 		this.smodel.addRoleValue(id, role, roleValues);
 	}
-	
-	public void deleteAllRoles(int id) throws Exception
-	{
+
+	public void deleteAllRoles(int id) throws Exception {
 		this.smodel.deleteAllRoles(id);
 	}
-	
+
 	/**
 	 * Gets a role.
 	 * 
-	 * @param roleName The role's name
-	 * @return A <code>Role</code> object if the role was found, or <code>null</code> if not found.
+	 * @param roleName
+	 *            The role's name
+	 * @return A <code>Role</code> object if the role was found, or
+	 *         <code>null</code> if not found.
 	 */
-	public Role getRole(String roleName)
-	{
+	public Role getRole(String roleName) {
 		return this.roles.get(roleName);
 	}
-	
-	/** 
+
+	/**
 	 * @see net.jforum.security.PermissionControl#canAccess(java.lang.String)
 	 */
-	public boolean canAccess(String roleName) 
-	{
+	public boolean canAccess(String roleName) {
 		Role role = this.roles.get(roleName);
 		return (role != null && role.getType() == PermissionControl.ROLE_ALLOW);
 	}
-	
-	/** 
-	 * @see net.jforum.security.PermissionControl#canAccess(java.lang.String, java.lang.String)
+
+	/**
+	 * @see net.jforum.security.PermissionControl#canAccess(java.lang.String,
+	 *      java.lang.String)
 	 */
-	public boolean canAccess(String roleName, String roleValue) 
-	{
+	public boolean canAccess(String roleName, String roleValue) {
 		Role role = this.roles.get(roleName);
 		if (role == null) {
 			return false;

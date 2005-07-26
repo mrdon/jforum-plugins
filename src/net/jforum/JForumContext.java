@@ -47,51 +47,53 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Marc Wick
- * @version $Id: JForumContext.java,v 1.2 2005/01/21 15:18:06 marcwick Exp $
+ * @version $Id: JForumContext.java,v 1.3 2005/07/26 02:45:33 diegopires Exp $
  */
 public class JForumContext {
 
-    private String contextPath;
+	private String contextPath;
 
-    private String servletExtension;
+	private String servletExtension;
 
-    private HttpServletResponse response;
+	private HttpServletResponse response;
 
-    private boolean isEncodingDisabled = false;
+	private boolean isEncodingDisabled = false;
 
-    public JForumContext(String contextPath, String servletExtension, HttpServletRequest req,
-            HttpServletResponse response) {
-        this.contextPath = contextPath;
-        this.servletExtension = servletExtension;
-        this.response = response;
+	public JForumContext(String contextPath, String servletExtension,
+			HttpServletRequest req, HttpServletResponse response) {
+		this.contextPath = contextPath;
+		this.servletExtension = servletExtension;
+		this.response = response;
 
-        if (req != null) {
-            String userAgent = req.getHeader("user-agent");
-            if (userAgent != null) {
-                // search engine robots are not using cookies but don't like sessionid in url
-                // we are nice with the robots and don't encode the session id for them
-                if (userAgent.toLowerCase().indexOf("bot") > -1) {
-                    isEncodingDisabled = true;
-                } else if (userAgent.toLowerCase().indexOf("slurp") > -1) {
-                    isEncodingDisabled = true;
-                } else if (userAgent.toLowerCase().indexOf("crawler") > -1) {
-                    isEncodingDisabled = true;
-                }
-            }
-        }
-    }
+		if (req != null) {
+			String userAgent = req.getHeader("user-agent");
+			if (userAgent != null) {
+				// search engine robots are not using cookies but don't like
+				// sessionid in url
+				// we are nice with the robots and don't encode the session id
+				// for them
+				if (userAgent.toLowerCase().indexOf("bot") > -1) {
+					isEncodingDisabled = true;
+				} else if (userAgent.toLowerCase().indexOf("slurp") > -1) {
+					isEncodingDisabled = true;
+				} else if (userAgent.toLowerCase().indexOf("crawler") > -1) {
+					isEncodingDisabled = true;
+				}
+			}
+		}
+	}
 
-    public String encodeURL(String url) {
-        if (isEncodingDisabled) {
-            return contextPath + url + servletExtension;
-        }
-        return response.encodeURL(contextPath + url + servletExtension);
-    }
+	public String encodeURL(String url) {
+		if (isEncodingDisabled) {
+			return contextPath + url + servletExtension;
+		}
+		return response.encodeURL(contextPath + url + servletExtension);
+	}
 
-    public String encodeURL(String url, String extension) {
-        if (isEncodingDisabled) {
-            return contextPath + url + extension;
-        }
-        return response.encodeURL(contextPath + url + extension);
-    }
+	public String encodeURL(String url, String extension) {
+		if (isEncodingDisabled) {
+			return contextPath + url + extension;
+		}
+		return response.encodeURL(contextPath + url + extension);
+	}
 }

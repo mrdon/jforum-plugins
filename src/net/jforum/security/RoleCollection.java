@@ -48,38 +48,36 @@ import java.util.LinkedHashMap;
 
 /**
  * @author Rafael Steil
- * @version $Id: RoleCollection.java,v 1.6 2005/02/03 12:37:40 rafaelsteil Exp $
+ * @version $Id: RoleCollection.java,v 1.7 2005/07/26 02:45:55 diegopires Exp $
  */
-public class RoleCollection extends LinkedHashMap implements Serializable
-{
-	public void add(Role role) 
-	{
+public class RoleCollection extends LinkedHashMap implements Serializable {
+	public void add(Role role) {
 		super.put(role.getName(), role);
 	}
-	
+
 	/**
 	 * Gets a role.
 	 * 
-	 * @param name The role's name
-	 * @return <code>Role</code> object if a role with a name equals to the name passed
-	 * as argument is found, or <code>null</code> otherwise.
+	 * @param name
+	 *            The role's name
+	 * @return <code>Role</code> object if a role with a name equals to the
+	 *         name passed as argument is found, or <code>null</code>
+	 *         otherwise.
 	 */
-	public Role get(String name)
-	{
-		return (Role)super.get(name);
+	public Role get(String name) {
+		return (Role) super.get(name);
 	}
-	
-	/** 
+
+	/**
 	 * @see java.util.AbstractCollection#toString()
 	 */
-	public String toString() 
-	{
+	public String toString() {
 		StringBuffer sb = new StringBuffer(512);
-		
-		for (Iterator iter = this.values().iterator(); iter.hasNext(); ) {
+
+		for (Iterator iter = this.values().iterator(); iter.hasNext();) {
 			sb.append(iter.next()).append("\n");
 		}
-		
+
 		return sb.toString();
 	}
 

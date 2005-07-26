@@ -10,36 +10,39 @@ import org.jgroups.View;
 
 /**
  * @author Rafael Steil
- * @version $Id: JBossCacheListener.java,v 1.1 2005/03/15 18:24:19 rafaelsteil Exp $
+ * @version $Id: JBossCacheListener.java,v 1.1 2005/03/15 18:24:19 rafaelsteil
+ *          Exp $
  */
-public class JBossCacheListener implements TreeCacheListener
-{
+public class JBossCacheListener implements TreeCacheListener {
 	/**
 	 * @see org.jboss.cache.TreeCacheListener#nodeCreated(org.jboss.cache.Fqn)
 	 */
-	public void nodeCreated(Fqn fqn) {}
-	
+	public void nodeCreated(Fqn fqn) {
+	}
+
 	/**
 	 * @see org.jboss.cache.TreeCacheListener#nodeRemoved(org.jboss.cache.Fqn)
 	 */
-	public void nodeRemoved(Fqn fqn) {}
+	public void nodeRemoved(Fqn fqn) {
+	}
 
 	/**
 	 * @see org.jboss.cache.TreeCacheListener#nodeLoaded(org.jboss.cache.Fqn)
 	 */
-	public void nodeLoaded(Fqn fqn) {}
+	public void nodeLoaded(Fqn fqn) {
+	}
 
 	/**
 	 * @see org.jboss.cache.TreeCacheListener#nodeEvicted(org.jboss.cache.Fqn)
 	 */
-	public void nodeEvicted(Fqn fqn) {}
+	public void nodeEvicted(Fqn fqn) {
+	}
 
 	/**
 	 * @see org.jboss.cache.TreeCacheListener#nodeModified(org.jboss.cache.Fqn)
 	 */
-	public void nodeModified(Fqn fqn)
-	{
-		if (CacheEngine.NOTIFICATION.startsWith((String)fqn.get(0))) {
+	public void nodeModified(Fqn fqn) {
+		if (CacheEngine.NOTIFICATION.startsWith((String) fqn.get(0))) {
 			// TODO
 		}
 	}
@@ -47,20 +50,24 @@ public class JBossCacheListener implements TreeCacheListener
 	/**
 	 * @see org.jboss.cache.TreeCacheListener#nodeVisited(org.jboss.cache.Fqn)
 	 */
-	public void nodeVisited(Fqn fqn) {}
+	public void nodeVisited(Fqn fqn) {
+	}
 
 	/**
 	 * @see org.jboss.cache.TreeCacheListener#cacheStarted(org.jboss.cache.TreeCache)
 	 */
-	public void cacheStarted(TreeCache cache) {}
+	public void cacheStarted(TreeCache cache) {
+	}
 
 	/**
 	 * @see org.jboss.cache.TreeCacheListener#cacheStopped(org.jboss.cache.TreeCache)
 	 */
-	public void cacheStopped(TreeCache cache) {}
+	public void cacheStopped(TreeCache cache) {
+	}
 
 	/**
 	 * @see org.jboss.cache.TreeCacheListener#viewChange(org.jgroups.View)
 	 */
-	public void viewChange(View view) {}
+	public void viewChange(View view) {
+	}
 }

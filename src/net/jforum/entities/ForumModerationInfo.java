@@ -44,43 +44,41 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumModerationInfo.java,v 1.1 2005/01/31 20:10:41 rafaelsteil Exp $
+ * @version $Id: ForumModerationInfo.java,v 1.1 2005/01/31 20:10:41 rafaelsteil
+ *          Exp $
  */
-public class ForumModerationInfo
-{
+public class ForumModerationInfo {
 	private int forumId;
+
 	private String forumName;
+
 	private int postsToModerate;
-	
-	public ForumModerationInfo(String forumName, int forumId, 
-			int postsToModerate)
-	{
+
+	public ForumModerationInfo(String forumName, int forumId,
+			int postsToModerate) {
 		this.forumName = forumName;
 		this.forumId = forumId;
 		this.postsToModerate = postsToModerate;
 	}
-	
+
 	/**
 	 * @return Returns the forumId.
 	 */
-	public int getForumId()
-	{
+	public int getForumId() {
 		return this.forumId;
 	}
 
 	/**
 	 * @return Returns the forumName.
 	 */
-	public String getForumName()
-	{
+	public String getForumName() {
 		return this.forumName;
 	}
-	
+
 	/**
 	 * @return Returns the postsToModerate.
 	 */
-	public int getPostsToModerate()
-	{
+	public int getPostsToModerate() {
 		return this.postsToModerate;
 	}
 }

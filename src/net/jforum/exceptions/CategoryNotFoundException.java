@@ -44,7 +44,8 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: CategoryNotFoundException.java,v 1.1 2004/11/13 03:14:04 rafaelsteil Exp $
+ * @version $Id: CategoryNotFoundException.java,v 1.1 2004/11/13 03:14:04
+ *          rafaelsteil Exp $
  */
 public class CategoryNotFoundException extends RuntimeException {
 	public CategoryNotFoundException(String message) {

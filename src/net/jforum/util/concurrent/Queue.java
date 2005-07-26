@@ -41,39 +41,39 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: Queue.java,v 1.2 2004/04/21 23:57:28 rafaelsteil Exp $
+ * $Id: Queue.java,v 1.3 2005/07/26 02:45:46 diegopires Exp $
  */
 package net.jforum.util.concurrent;
 
 /**
  * Interface for thread-safe queues
  * 
- *@author Rodrigo Kumpera
+ * @author Rodrigo Kumpera
  */
-public interface Queue 
-{
+public interface Queue {
 	/**
 	 * Returns the next object, possibly waiting for an object getting available
-	 * */
+	 */
 	Object get() throws InterruptedException;
-	
+
 	/**
 	 * Try to get the next object waiting for a given timeout
-	 * */
+	 */
 	Object pool(long timeout) throws InterruptedException;
-	
+
 	/**
-	 * Put an object on the queue, possiblt waiting for the queue getting available
-	 * */
-	void put(Object obj) throws InterruptedException;	
-	
+	 * Put an object on the queue, possiblt waiting for the queue getting
+	 * available
+	 */
+	void put(Object obj) throws InterruptedException;
+
 	/**
 	 * Try to put the object on the queue
-	 * */
+	 */
 	boolean offer(Object obj, long timeout) throws InterruptedException;
-	
+
 	/**
 	 * Itens on this queue.
-	 * */
+	 */
 	int size();
 }

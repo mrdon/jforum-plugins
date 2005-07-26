@@ -44,12 +44,11 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: SmiliesLoadException.java,v 1.1 2005/02/01 21:41:57 rafaelsteil Exp $
+ * @version $Id: SmiliesLoadException.java,v 1.1 2005/02/01 21:41:57 rafaelsteil
+ *          Exp $
  */
-public class SmiliesLoadException extends RuntimeException
-{
-	public SmiliesLoadException(String message)
-	{
+public class SmiliesLoadException extends RuntimeException {
+	public SmiliesLoadException(String message) {
 		super(message);
 	}
 }

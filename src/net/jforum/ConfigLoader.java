@@ -77,112 +77,129 @@ import org.quartz.SchedulerException;
  * General utilities methods for loading configurations for JForum.
  * 
  * @author Rafael Steil
- * @version $Id: ConfigLoader.java,v 1.14 2005/07/21 17:41:11 franklin_samir Exp $
+ * @version $Id: ConfigLoader.java,v 1.15 2005/07/26 02:45:34 diegopires Exp $
  */
-public class ConfigLoader 
-{
+public class ConfigLoader {
 	private static final Logger logger = Logger.getLogger(ConfigLoader.class);
-	
+
 	/**
-	 * Start ( or restart ) <code>SystemGlobals</code>.
-	 * This method loads all configuration keys set at
-	 * <i>SystemGlobals.properties</i>, <i>&lt;user.name&gt;.properties</i>
-	 * and database specific stuff.
+	 * Start ( or restart ) <code>SystemGlobals</code>. This method loads all
+	 * configuration keys set at <i>SystemGlobals.properties</i>,
+	 * <i>&lt;user.name&gt;.properties</i> and database specific stuff.
 	 * 
-	 * @param appPath The application root's directory
+	 * @param appPath
+	 *            The application root's directory
 	 * @throws Exception
 	 */
-	public static void startSystemglobals(String appPath) throws Exception
-	{
-		SystemGlobals.initGlobals(appPath, appPath + "/WEB-INF/config/SystemGlobals.properties");
-		SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
-		
-		if (new File(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG)).exists()) {
-			SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG));
+	public static void startSystemglobals(String appPath) throws Exception {
+		SystemGlobals.initGlobals(appPath, appPath
+				+ "/WEB-INF/config/SystemGlobals.properties");
+		SystemGlobals.loadAdditionalDefaults(SystemGlobals
+				.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
+
+		if (new File(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG))
+				.exists()) {
+			SystemGlobals.loadAdditionalDefaults(SystemGlobals
+					.getValue(ConfigKeys.INSTALLATION_CONFIG));
 		}
 	}
 
 	/**
 	 * Loads module mappings for the system.
 	 * 
-	 * @param baseConfigDir The directory where the file <i>modulesMapping.properties</i> is.
-	 * @return The <code>java.util.Properties</code> instance, with the loaded modules 
+	 * @param baseConfigDir
+	 *            The directory where the file <i>modulesMapping.properties</i>
+	 *            is.
+	 * @return The <code>java.util.Properties</code> instance, with the loaded
+	 *         modules
 	 * @throws IOException
 	 */
-	public static Properties loadModulesMapping(String baseConfigDir) throws IOException
-	{
+	public static Properties loadModulesMapping(String baseConfigDir)
+			throws IOException {
 		Properties modulesMapping = new Properties();
-		modulesMapping.load(new FileInputStream(baseConfigDir + "/modulesMapping.properties"));
-		
+		modulesMapping.load(new FileInputStream(baseConfigDir
+				+ "/modulesMapping.properties"));
+
 		return modulesMapping;
 	}
-	
+
 	/**
-	 * Load url patterns.
-	 * The method tries to load url patterns from <i>WEB-INF/config/urlPattern.properties</i>
+	 * Load url patterns. The method tries to load url patterns from
+	 * <i>WEB-INF/config/urlPattern.properties</i>
 	 * 
 	 * @throws IOException
 	 */
 	public static void loadUrlPatterns() throws IOException {
 		Properties p = new Properties();
-		p.load(new FileInputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
-			+ "/urlPattern.properties"));
+		p.load(new FileInputStream(SystemGlobals
+				.getValue(ConfigKeys.CONFIG_DIR)
+				+ "/urlPattern.properties"));
 
 		Iterator iter = p.entrySet().iterator();
 		while (iter.hasNext()) {
 			Map.Entry entry = (Map.Entry) iter.next();
 
-			ActionServletRequest.addUrlPattern((String)entry.getKey(), (String)entry.getValue());
-        }
-    }
-	
+			ActionServletRequest.addUrlPattern((String) entry.getKey(),
+					(String) entry.getValue());
+		}
+	}
+
 	/**
-	 * Listen for changes in common configuration files.
-	 * The watched files are: <i>generic_queries.sql</i>, 
-	 * <i>&lt;database_name&gt;.sql</i>, <i>SystemGlobals.properties</i>
-	 * and <i>&lt;user.name&gt;.properties</i>
+	 * Listen for changes in common configuration files. The watched files are:
+	 * <i>generic_queries.sql</i>, <i>&lt;database_name&gt;.sql</i>,
+	 * <i>SystemGlobals.properties</i> and <i>&lt;user.name&gt;.properties</i>
 	 */
-	public static void listenForChanges()
-	{
-		int fileChangesDelay = SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY);
-		
+	public static void listenForChanges() {
+		int fileChangesDelay = SystemGlobals
+				.getIntValue(ConfigKeys.FILECHANGES_DELAY);
+
 		if (fileChangesDelay > 0) {
 			// Queries
-			FileMonitor.getInstance().addFileChangeListener(new QueriesFileListener(),
-					SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC), fileChangesDelay);
+			FileMonitor.getInstance().addFileChangeListener(
+					new QueriesFileListener(),
+					SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC),
+					fileChangesDelay);
 
-			FileMonitor.getInstance().addFileChangeListener(new QueriesFileListener(),
-					SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER), fileChangesDelay);
+			FileMonitor.getInstance().addFileChangeListener(
+					new QueriesFileListener(),
+					SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER),
+					fileChangesDelay);
 
 			// System Properties
-			FileMonitor.getInstance().addFileChangeListener(new SystemGlobalsListener(),
-					SystemGlobals.getValue(ConfigKeys.DEFAULT_CONFIG), fileChangesDelay);
+			FileMonitor.getInstance().addFileChangeListener(
+					new SystemGlobalsListener(),
+					SystemGlobals.getValue(ConfigKeys.DEFAULT_CONFIG),
+					fileChangesDelay);
 
 			ConfigLoader.listenInstallationConfig();
-        }
+		}
 	}
-	
-	public static void listenInstallationConfig()
-	{
-		int fileChangesDelay = SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY);
-		
+
+	public static void listenInstallationConfig() {
+		int fileChangesDelay = SystemGlobals
+				.getIntValue(ConfigKeys.FILECHANGES_DELAY);
+
 		if (fileChangesDelay > 0) {
-			if (new File(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG)).exists()) {
-				FileMonitor.getInstance().addFileChangeListener(new SystemGlobalsListener(),
-						SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG), fileChangesDelay);
+			if (new File(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG))
+					.exists()) {
+				FileMonitor.getInstance().addFileChangeListener(
+						new SystemGlobalsListener(),
+						SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG),
+						fileChangesDelay);
 			}
 		}
 	}
-	
-	public static void startCacheEngine()
-	{
+
+	public static void startCacheEngine() {
 		try {
-			String cacheImplementation = SystemGlobals.getValue(ConfigKeys.CACHE_IMPLEMENTATION);
+			String cacheImplementation = SystemGlobals
+					.getValue(ConfigKeys.CACHE_IMPLEMENTATION);
 			logger.info("Using cache engine: " + cacheImplementation);
-			
-			CacheEngine cache = (CacheEngine)Class.forName(cacheImplementation).newInstance();
+
+			CacheEngine cache = (CacheEngine) Class
+					.forName(cacheImplementation).newInstance();
 			cache.init();
-			
+
 			new BBCodeRepository().setCacheEngine(cache);
 			new ModulesRepository().setCacheEngine(cache);
 			new RankingRepository().setCacheEngine(cache);
@@ -195,23 +212,24 @@ public class ConfigLoader
 			new QuartzSearchIndexerJob().setCacheEngine(cache);
 			new Tpl().setCacheEngine(cache);
 			new RolesRepository().setCacheEngine(cache);
-		}
-		catch (Exception e) {
-			throw new CacheEngineStartupException("Error while starting the cache engine: " + e);
+		} catch (Exception e) {
+			throw new CacheEngineStartupException(
+					"Error while starting the cache engine: " + e);
 		}
 	}
-	
-	public static void startSearchIndexer()
-	{
+
+	public static void startSearchIndexer() {
 		SearchFacade.init();
 	}
 
-    /**
-     * Init a Job who will send e-mails to the all users with a summary of posts...
-     * @throws SchedulerException
-     * @throws IOException
-     */
-    public static void startSummaryJob() throws SchedulerException, IOException {
-        SummaryScheduler.startJob();
-    }
+	/**
+	 * Init a Job who will send e-mails to the all users with a summary of
+	 * posts...
+	 * 
+	 * @throws SchedulerException
+	 * @throws IOException
+	 */
+	public static void startSummaryJob() throws SchedulerException, IOException {
+		SummaryScheduler.startJob();
+	}
 }

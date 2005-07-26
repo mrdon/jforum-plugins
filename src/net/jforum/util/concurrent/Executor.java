@@ -41,26 +41,25 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: Executor.java,v 1.2 2004/04/21 23:57:28 rafaelsteil Exp $
+ * $Id: Executor.java,v 1.3 2005/07/26 02:45:46 diegopires Exp $
  */
 
 package net.jforum.util.concurrent;
 
-/** 
- * Interface for objects that execute Tasks objects.
- * An executor can use any stategy to execute a given Task.
+/**
+ * Interface for objects that execute Tasks objects. An executor can use any
+ * stategy to execute a given Task.
  * 
  * @author Rodrigo Kumpera
  */
-public interface Executor 
-{	
+public interface Executor {
 	/**
 	 * Puts the given task on the execution queue.
-	 * */
+	 */
 	void execute(Task task) throws InterruptedException;
-	
+
 	/**
 	 * Puts the given talk on the execution queue and returns a Result object.
-	 * */
+	 */
 	Result executeWithResult(Task task) throws InterruptedException;
 }

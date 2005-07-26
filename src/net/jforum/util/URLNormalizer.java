@@ -43,65 +43,68 @@
 package net.jforum.util;
 
 /**
- * Normalizes an URL. 
- * Normalization means replacing blank spaces by underlines, 
+ * Normalizes an URL. Normalization means replacing blank spaces by underlines,
  * changing special chars by its regular form and etc.
+ * 
  * @author Rafael Steil
- * @version $Id: URLNormalizer.java,v 1.1 2005/07/11 04:51:55 rafaelsteil Exp $
+ * @version $Id: URLNormalizer.java,v 1.2 2005/07/26 02:45:49 diegopires Exp $
  */
-public class URLNormalizer
-{
+public class URLNormalizer {
 	public static final int LIMIT = 30;
-	
+
 	/**
-	 * Normalizes an URL.
-	 * The url will be truncated at {@link #LIMIT} chars
-	 * @param url the url to normalize
+	 * Normalizes an URL. The url will be truncated at {@link #LIMIT} chars
+	 * 
+	 * @param url
+	 *            the url to normalize
 	 * @return the normalized url
 	 * @see #normalize(String, int, boolean)
 	 */
-	public static String normalize(String url)
-	{
+	public static String normalize(String url) {
 		return normalize(url, LIMIT, true);
 	}
-	
+
 	/**
 	 * 
-	 * @param url the url to normalize
-	 * @param limit do not process more than <code>limit + 1</code> chars
-	 * @param friendlyTruncate If <code>true</code>, will try to not cut a word if
-	 * more than <code>limit</code> chars were processed. It will stop in the next
-	 * special char
+	 * @param url
+	 *            the url to normalize
+	 * @param limit
+	 *            do not process more than <code>limit + 1</code> chars
+	 * @param friendlyTruncate
+	 *            If <code>true</code>, will try to not cut a word if more
+	 *            than <code>limit</code> chars were processed. It will stop
+	 *            in the next special char
 	 * @return the normalized url
 	 */
-	public static String normalize(String url, int limit, boolean friendlyTruncate)
-	{
+	public static String normalize(String url, int limit,
+			boolean friendlyTruncate) {
 		char[] chars = url.toCharArray();
-		
+
 		StringBuffer sb = new StringBuffer(url.length());
-		
+
 		for (int i = 0; i < chars.length; i++) {
-			if (i <= limit || (friendlyTruncate && i > limit && sb.charAt(sb.length() - 1) != '_')) {
-				
+			if (i <= limit
+					|| (friendlyTruncate && i > limit && sb
+							.charAt(sb.length() - 1) != '_')) {
+
 				if (Character.isSpaceChar(chars[i]) || chars[i] == '-') {
 					if (friendlyTruncate && i > limit) {
 						break;
 					}
-					
+
 					if (i > 0 && sb.charAt(sb.length() - 1) != '_') {
 						sb.append('_');
 					}
 				}
-				
+
 				if (Character.isLetterOrDigit(chars[i])) {
 					sb.append(chars[i]);
-				}
-				else if (friendlyTruncate && i > limit) {
+				} else if (friendlyTruncate && i > limit) {
 					break;
 				}
 			}
 		}
-		
+
 		return sb.toString().toLowerCase();
 	}
 }

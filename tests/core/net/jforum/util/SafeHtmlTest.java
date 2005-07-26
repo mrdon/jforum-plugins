@@ -42,28 +42,28 @@
  */
 package net.jforum.util;
 
+import junit.framework.TestCase;
 import net.jforum.TestCaseUtils;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import junit.framework.TestCase;
 
 /**
  * @author Rafael Steil
- * @version $Id: SafeHtmlTest.java,v 1.4 2005/02/22 23:39:21 rafaelsteil Exp $
+ * @version $Id: SafeHtmlTest.java,v 1.5 2005/07/26 02:45:13 diegopires Exp $
  */
-public class SafeHtmlTest extends TestCase
-{
+public class SafeHtmlTest extends TestCase {
 	private static final String WELCOME_TAGS = "a, b, i, u, img";
+
 	private String input;
+
 	private String expected;
-	
-	/** 
+
+	/**
 	 * @see junit.framework.TestCase#setUp()
 	 */
-	protected void setUp() throws Exception
-	{
+	protected void setUp() throws Exception {
 		TestCaseUtils.loadEnvironment();
-		
+
 		StringBuffer sb = new StringBuffer(512);
 		sb.append("<a href='somelink'>Some Link</a>");
 		sb.append("bla <b>bla</b> <pre>code code</pre>");
@@ -71,9 +71,10 @@ public class SafeHtmlTest extends TestCase
 		sb.append("<img src='imgPath' onLoad='window.close();'>");
 		sb.append("<a href='javascript:alert(bleh)'>xxxx</a>");
 		sb.append("<img src='javascript:alert(bloh)'>");
-		sb.append("<img src=\"&#106ava&#115cript&#58aler&#116&#40&#39Oops&#39&#41&#59\">");
+		sb
+				.append("<img src=\"&#106ava&#115cript&#58aler&#116&#40&#39Oops&#39&#41&#59\">");
 		this.input = sb.toString();
-		
+
 		sb = new StringBuffer(512);
 		sb.append("<a href='somelink'>Some Link</a>");
 		sb.append("bla <b>bla</b> &lt;pre&gt;code code&lt;/pre&gt;");
@@ -81,12 +82,12 @@ public class SafeHtmlTest extends TestCase
 		sb.append("<img src='imgPath' >");
 		sb.append("<a href='#'>xxxx</a>");
 		sb.append("<img src='#'>");
-		sb.append("<img src=\"&amp;#106ava&amp;#115cript&amp;#58aler&amp;#116&amp;#40&amp;#39Oops&amp;#39&amp;#41&amp;#59\">");
+		sb
+				.append("<img src=\"&amp;#106ava&amp;#115cript&amp;#58aler&amp;#116&amp;#40&amp;#39Oops&amp;#39&amp;#41&amp;#59\">");
 		this.expected = sb.toString();
 	}
-	
-	public void testMakeSafe() throws Exception
-	{
+
+	public void testMakeSafe() throws Exception {
 		SystemGlobals.setValue(ConfigKeys.HTML_TAGS_WELCOME, WELCOME_TAGS);
 		assertEquals(this.expected, SafeHtml.makeSafe(this.input));
 	}

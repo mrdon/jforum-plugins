@@ -47,78 +47,87 @@ import net.jforum.entities.Bookmark;
 
 /**
  * @author Rafael Steil
- * @version $Id: BookmarkDAO.java,v 1.2 2005/03/26 04:10:35 rafaelsteil Exp $
+ * @version $Id: BookmarkDAO.java,v 1.3 2005/07/26 02:45:27 diegopires Exp $
  */
-public interface BookmarkDAO
-{
+public interface BookmarkDAO {
 	/**
 	 * Adds a new bookmark.
 	 * 
-	 * @param b The bookmark to add
+	 * @param b
+	 *            The bookmark to add
 	 * @throws Exception
 	 */
 	public void add(Bookmark b) throws Exception;
-	
+
 	/**
-	 * Updates a bookmark.
-	 * Only the fields <i>publicVisible</i>, <i>title</i>
-	 * and <i>description</i> are changed.
-	 * All other fields remain with the same value.
+	 * Updates a bookmark. Only the fields <i>publicVisible</i>, <i>title</i>
+	 * and <i>description</i> are changed. All other fields remain with the
+	 * same value.
 	 * 
-	 * @param b The bookmark to update
+	 * @param b
+	 *            The bookmark to update
 	 * @throws Exception
 	 */
 	public void update(Bookmark b) throws Exception;
-	
+
 	/**
 	 * Removes a bookmark.
 	 * 
-	 * @param bookmarkId The bookmark's id to remove
+	 * @param bookmarkId
+	 *            The bookmark's id to remove
 	 * @throws Exception
 	 */
 	public void remove(int bookmarkId) throws Exception;
-	
+
 	/**
 	 * Gets all bookmarks of a given type.
 	 * 
-	 * @param userId The bookmark's owner
-	 * @param relationType Any valid type declared in
-	 * <code>net.jforum.entities.BookmarkType</code>
-	 * @return A list with all results found. Each entry is
-	 * a {@link net.jforum.entities.Bookmark} instance.
+	 * @param userId
+	 *            The bookmark's owner
+	 * @param relationType
+	 *            Any valid type declared in
+	 *            <code>net.jforum.entities.BookmarkType</code>
+	 * @return A list with all results found. Each entry is a
+	 *         {@link net.jforum.entities.Bookmark} instance.
 	 * @throws Exception
 	 */
 	public List selectByUser(int userId, int relationType) throws Exception;
-	
+
 	/**
 	 * Gets all bookmarks from some user.
 	 * 
-	 * @param userId The bookmark's owner
-	 * <code>net.jforum.entities.BookmarkType</code>
-	 * @return A list with all results found. Each entry is
-	 * a {@link net.jforum.entities.Bookmark} instance.
+	 * @param userId
+	 *            The bookmark's owner
+	 *            <code>net.jforum.entities.BookmarkType</code>
+	 * @return A list with all results found. Each entry is a
+	 *         {@link net.jforum.entities.Bookmark} instance.
 	 * @throws Exception
 	 */
 	public List selectByUser(int userId) throws Exception;
-	
+
 	/**
 	 * Gets a bookmark.
 	 * 
-	 * @param bookmarkId The bookmark id
+	 * @param bookmarkId
+	 *            The bookmark id
 	 * @return A Bookmark instance or null if no entry found
 	 * @throws Exception
 	 */
 	public Bookmark selectById(int bookmarkId) throws Exception;
-	
+
 	/**
 	 * Gets a bookmark for edition.
 	 * 
-	 * @param relationId The relation's id
-	 * @param relationType The relation type.
-	 * @param userId The bookmark's owner
-	 * @return A bookmark instance of <code>null</code> if 
-	 * the record cannot be found
+	 * @param relationId
+	 *            The relation's id
+	 * @param relationType
+	 *            The relation type.
+	 * @param userId
+	 *            The bookmark's owner
+	 * @return A bookmark instance of <code>null</code> if the record cannot
+	 *         be found
 	 * @throws Exception
 	 */
-	public Bookmark selectForUpdate(int relationId, int relationType, int userId) throws Exception;
+	public Bookmark selectForUpdate(int relationId, int relationType, int userId)
+			throws Exception;
 }

@@ -66,109 +66,117 @@ import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
 /**
- * Dispatch emails to the world. TODO: should do some refactoring to send a personalized email to
- * each user.
+ * Dispatch emails to the world. TODO: should do some refactoring to send a
+ * personalized email to each user.
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.16 2005/06/13 22:25:47 rafaelsteil Exp $
+ * @version $Id: Spammer.java,v 1.17 2005/07/26 02:46:05 diegopires Exp $
  */
-public class Spammer
-{
+public class Spammer {
 	private static final Logger logger = Logger.getLogger(Spammer.class);
 
 	private static int MESSAGE_HTML = 0;
+
 	private static int MESSAGE_TEXT = 1;
 
 	private Properties mailProps = new Properties();
+
 	private static int messageFormat;
+
 	private static Session session;
+
 	private static String username;
+
 	private static String password;
+
 	private MimeMessage message;
+
 	private String messageText;
 
-	protected Spammer() throws EmailException
-	{
+	protected Spammer() throws EmailException {
 		String host = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_HOST);
-		
+
 		if (host != null) {
 			int colon = host.indexOf(':');
 
 			if (colon > 0) {
 				mailProps.put("mail.smtp.host", host.substring(0, colon));
-				mailProps.put("mail.smtp.port", String.valueOf(host.substring(colon + 1)));
+				mailProps.put("mail.smtp.port", String.valueOf(host
+						.substring(colon + 1)));
+			} else {
+				mailProps.put("mail.smtp.host", SystemGlobals
+						.getValue(ConfigKeys.MAIL_SMTP_HOST));
 			}
-			else {
-				mailProps.put("mail.smtp.host", SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_HOST));
-			}
-			
-			String localhost = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_LOCALHOST);
-			
+
+			String localhost = SystemGlobals
+					.getValue(ConfigKeys.MAIL_SMTP_LOCALHOST);
+
 			if (localhost != null && localhost.trim().length() > 0) {
 				mailProps.put("mail.smtp.localhost", localhost);
 			}
 		}
-		
+
 		mailProps.put("mail.mime.address.strict", "false");
-		mailProps.put("mail.mime.charset", SystemGlobals.getValue(ConfigKeys.MAIL_CHARSET));
-		mailProps.put("mail.smtp.auth", SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_AUTH));
+		mailProps.put("mail.mime.charset", SystemGlobals
+				.getValue(ConfigKeys.MAIL_CHARSET));
+		mailProps.put("mail.smtp.auth", SystemGlobals
+				.getValue(ConfigKeys.MAIL_SMTP_AUTH));
 
 		username = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_USERNAME);
 		password = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_PASSWORD);
 
-		messageFormat = SystemGlobals.getValue(ConfigKeys.MAIL_MESSSAGE_FORMAT).equals("html") 
-			? MESSAGE_HTML
-			: MESSAGE_TEXT;
+		messageFormat = SystemGlobals.getValue(ConfigKeys.MAIL_MESSSAGE_FORMAT)
+				.equals("html") ? MESSAGE_HTML : MESSAGE_TEXT;
 
 		session = Session.getDefaultInstance(mailProps);
 	}
 
-	public static Session getSession()
-	{
+	public static Session getSession() {
 		return session;
 	}
 
-	public final Message getMesssage()
-	{
+	public final Message getMesssage() {
 		return this.message;
 	}
 
-	public boolean dispatchMessages() throws Exception
-	{
+	public boolean dispatchMessages() throws Exception {
 		if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_SMTP_AUTH)) {
-			if (username != null && !username.equals("") && password != null && !password.equals("")) {
+			if (username != null && !username.equals("") && password != null
+					&& !password.equals("")) {
 				Transport transport = Spammer.getSession().getTransport("smtp");
 
 				try {
-					String host = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_HOST);
+					String host = SystemGlobals
+							.getValue(ConfigKeys.MAIL_SMTP_HOST);
 					if (host != null) {
 						int colon = host.indexOf(':');
 						if (colon > 0) {
-							transport.connect(host.substring(0, colon), Integer.parseInt(host.substring(colon + 1)),
+							transport.connect(host.substring(0, colon), Integer
+									.parseInt(host.substring(colon + 1)),
 									username, password);
-						}
-						else {
+						} else {
 							transport.connect(host, username, password);
 						}
 					}
-				}
-				catch (MessagingException e) {
-					throw new EmailException("Could not connect to the mail server", e);
+				} catch (MessagingException e) {
+					throw new EmailException(
+							"Could not connect to the mail server", e);
 				}
 
 				if (transport.isConnected()) {
 					Address[] addresses = message.getAllRecipients();
 					for (int i = 0; i < addresses.length; i++) {
 						// Tricks and tricks
-						message.setRecipient(Message.RecipientType.TO, addresses[i]);
-						transport.sendMessage(message, new Address[] { addresses[i] });
+						message.setRecipient(Message.RecipientType.TO,
+								addresses[i]);
+						transport.sendMessage(message,
+								new Address[] { addresses[i] });
 					}
 				}
-				
+
 				transport.close();
 			}
-		}
-		else {
+		} else {
 			Address[] addresses = message.getAllRecipients();
 			for (int i = 0; i < addresses.length; i++) {
 				message.setRecipient(Message.RecipientType.TO, addresses[i]);
@@ -179,9 +187,8 @@ public class Spammer
 		return true;
 	}
 
-	protected final void prepareMessage(List addresses, SimpleHash params, String subject, String messageFile)
-			throws EmailException
-	{
+	protected final void prepareMessage(List addresses, SimpleHash params,
+			String subject, String messageFile) throws EmailException {
 		this.message = new MimeMessage(session);
 
 		try {
@@ -190,15 +197,16 @@ public class Spammer
 			String charset = SystemGlobals.getValue(ConfigKeys.MAIL_CHARSET);
 
 			this.message.setSentDate(new Date());
-			this.message.setFrom(new InternetAddress(SystemGlobals.getValue(ConfigKeys.MAIL_SENDER)));
+			this.message.setFrom(new InternetAddress(SystemGlobals
+					.getValue(ConfigKeys.MAIL_SENDER)));
 			this.message.setSubject(subject, charset);
 
 			this.messageText = this.getMessageText(params, messageFile);
 
 			if (messageFormat == MESSAGE_HTML) {
-				this.message.setContent(this.messageText, "text/html; charset=" + charset);
-			}
-			else {
+				this.message.setContent(this.messageText, "text/html; charset="
+						+ charset);
+			} else {
 				this.message.setText(this.messageText, charset);
 			}
 
@@ -208,38 +216,41 @@ public class Spammer
 			}
 
 			this.message.setRecipients(Message.RecipientType.TO, recipients);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			logger.warn(e);
 			throw new EmailException(e);
 		}
 	}
-	
+
 	/**
 	 * Gets the message text to send in the email.
 	 * 
-	 * @param params The optional params. If no need of any, just pass null
-	 * @param messageFile The optional message file to load the text. 
+	 * @param params
+	 *            The optional params. If no need of any, just pass null
+	 * @param messageFile
+	 *            The optional message file to load the text.
 	 * @return The email message text
 	 * @throws Exception
 	 */
-	protected String getMessageText(SimpleHash params, String messageFile) throws Exception
-	{
-		String templateEncoding = SystemGlobals.getValue(ConfigKeys.MAIL_TEMPLATE_ENCODING);
-		
+	protected String getMessageText(SimpleHash params, String messageFile)
+			throws Exception {
+		String templateEncoding = SystemGlobals
+				.getValue(ConfigKeys.MAIL_TEMPLATE_ENCODING);
+
 		StringWriter sWriter = new StringWriter();
-		
+
 		Template template = null;
-		
+
 		if (templateEncoding == null || "".equals(templateEncoding.trim())) {
-			template = Configuration.getDefaultConfiguration().getTemplate(messageFile);
+			template = Configuration.getDefaultConfiguration().getTemplate(
+					messageFile);
+		} else {
+			template = Configuration.getDefaultConfiguration().getTemplate(
+					messageFile, templateEncoding);
 		}
-		else {
-			template = Configuration.getDefaultConfiguration().getTemplate(messageFile, templateEncoding);
-		}
-		
+
 		template.process(params, sWriter);
-		
+
 		return sWriter.toString();
 	}
 
@@ -248,8 +259,7 @@ public class Spammer
 	 * 
 	 * @return String with the email body that will be sent to the user
 	 */
-	public String getMessageBody()
-	{
+	public String getMessageBody() {
 		return this.messageText;
 	}
 }

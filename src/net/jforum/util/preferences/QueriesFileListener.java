@@ -44,35 +44,35 @@ package net.jforum.util.preferences;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
-
 import net.jforum.util.FileChangeListener;
+
+import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: QueriesFileListener.java,v 1.2 2005/06/13 17:07:55 rafaelsteil Exp $
+ * @version $Id: QueriesFileListener.java,v 1.2 2005/06/13 17:07:55 rafaelsteil
+ *          Exp $
  */
-public class QueriesFileListener implements FileChangeListener
-{
-	private static final Logger logger = Logger.getLogger(QueriesFileListener.class);
-	
-	/** 
+public class QueriesFileListener implements FileChangeListener {
+	private static final Logger logger = Logger
+			.getLogger(QueriesFileListener.class);
+
+	/**
 	 * @see net.jforum.util.FileChangeListener#fileChanged(java.lang.String)
 	 */
-	public void fileChanged(String filename)
-	{
+	public void fileChanged(String filename) {
 		try {
-			logger.info("Reloading "+ filename);
+			logger.info("Reloading " + filename);
 			SystemGlobals.loadQueries(filename);
-			
-			String driverQueries = SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER);
-			
+
+			String driverQueries = SystemGlobals
+					.getValue(ConfigKeys.SQL_QUERIES_DRIVER);
+
 			// Force reload of driver specific queries
 			if (!filename.equals(driverQueries)) {
 				SystemGlobals.loadQueries(driverQueries);
 			}
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			logger.info(e);
 		}
 	}

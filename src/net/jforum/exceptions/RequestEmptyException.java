@@ -43,11 +43,14 @@
 package net.jforum.exceptions;
 
 /**
- * Thrown when a call to @link net.jforum.view.forum.ViewCommon#reprocessRequest()
- * is made and no request dump exists or is invalid.
+ * Thrown when a call to
+ * 
+ * @link net.jforum.view.forum.ViewCommon#reprocessRequest() is made and no
+ *       request dump exists or is invalid.
  * 
  * @author Rafael Steil
- * @version $Id: RequestEmptyException.java,v 1.1 2004/11/30 01:19:04 rafaelsteil Exp $
+ * @version $Id: RequestEmptyException.java,v 1.1 2004/11/30 01:19:04
+ *          rafaelsteil Exp $
  */
 public class RequestEmptyException extends RuntimeException {
 	public RequestEmptyException(String message) {

@@ -46,14 +46,17 @@ import java.sql.Connection;
 
 /**
  * @author Rafael Steil
- * @version $Id: ScheduledSearchIndexerDAO.java,v 1.3 2005/07/17 16:48:25 rafaelsteil Exp $
+ * @version $Id: ScheduledSearchIndexerDAO.java,v 1.3 2005/07/17 16:48:25
+ *          rafaelsteil Exp $
  */
-public interface ScheduledSearchIndexerDAO
-{
+public interface ScheduledSearchIndexerDAO {
 	/**
 	 * Index all scheduled posts.
-	 * @param step How may posts fetch by iteration
-	 * @param conn The database connection to use
+	 * 
+	 * @param step
+	 *            How may posts fetch by iteration
+	 * @param conn
+	 *            The database connection to use
 	 * 
 	 * @return The last processed post id
 	 * 

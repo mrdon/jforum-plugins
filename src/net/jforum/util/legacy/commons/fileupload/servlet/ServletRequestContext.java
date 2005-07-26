@@ -23,72 +23,73 @@ import javax.servlet.http.HttpServletRequest;
 import net.jforum.util.legacy.commons.fileupload.RequestContext;
 
 /**
- * <p>Provides access to the request information needed for a request made to
- * an HTTP servlet.</p>
- *
+ * <p>
+ * Provides access to the request information needed for a request made to an
+ * HTTP servlet.
+ * </p>
+ * 
  * @author <a href="mailto:martinc@apache.org">Martin Cooper</a>
- *
+ * 
  * @since FileUpload 1.1
- *
- * @version $Id: ServletRequestContext.java,v 1.1 2005/05/29 16:31:59 rafaelsteil Exp $
+ * 
+ * @version $Id: ServletRequestContext.java,v 1.1 2005/05/29 16:31:59
+ *          rafaelsteil Exp $
  */
 public class ServletRequestContext implements RequestContext {
 
-    // ----------------------------------------------------- Instance Variables
+	// ----------------------------------------------------- Instance Variables
 
-    /**
-     * The request for which the context is being provided.
-     */
-    private HttpServletRequest request;
+	/**
+	 * The request for which the context is being provided.
+	 */
+	private HttpServletRequest request;
 
+	// ----------------------------------------------------------- Constructors
 
-    // ----------------------------------------------------------- Constructors
+	/**
+	 * Construct a context for this request.
+	 * 
+	 * @param request
+	 *            The request to which this context applies.
+	 */
+	public ServletRequestContext(HttpServletRequest request) {
+		this.request = request;
+	}
 
-    /**
-     * Construct a context for this request.
-     *
-     * @param request The request to which this context applies.
-     */
-    public ServletRequestContext(HttpServletRequest request) {
-        this.request = request;
-    }
+	// --------------------------------------------------------- Public Methods
 
+	/**
+	 * Retrieve the content type of the request.
+	 * 
+	 * @return The content type of the request.
+	 */
+	public String getContentType() {
+		return request.getContentType();
+	}
 
-    // --------------------------------------------------------- Public Methods
+	/**
+	 * Retrieve the content length of the request.
+	 * 
+	 * @return The content length of the request.
+	 */
+	public int getContentLength() {
+		return request.getContentLength();
+	}
 
-    /**
-     * Retrieve the content type of the request.
-     *
-     * @return The content type of the request.
-     */
-    public String getContentType() {
-        return request.getContentType();
-    }
+	/**
+	 * Retrieve the input stream for the request.
+	 * 
+	 * @return The input stream for the request.
+	 * 
+	 * @throws IOException
+	 *             if a problem occurs.
+	 */
+	public InputStream getInputStream() throws IOException {
+		return request.getInputStream();
+	}
 
-    /**
-     * Retrieve the content length of the request.
-     *
-     * @return The content length of the request.
-     */
-    public int getContentLength() {
-        return request.getContentLength();
-    }
-
-    /**
-     * Retrieve the input stream for the request.
-     *
-     * @return The input stream for the request.
-     *
-     * @throws IOException if a problem occurs.
-     */
-    public InputStream getInputStream() throws IOException {
-        return request.getInputStream();
-    }
-    
-    public String toString() {
-    	return "ContentLength=" 
-			+ this.getContentLength()
-			+ ", ContentType="
-			+ this.getContentType();
-    }
+	public String toString() {
+		return "ContentLength=" + this.getContentLength() + ", ContentType="
+				+ this.getContentType();
+	}
 }

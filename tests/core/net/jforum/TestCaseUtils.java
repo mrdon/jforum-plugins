@@ -45,8 +45,6 @@ package net.jforum;
 import java.io.File;
 import java.io.IOException;
 
-import freemarker.template.Configuration;
-
 import net.jforum.entities.UserSession;
 import net.jforum.http.FakeActionServletRequest;
 import net.jforum.security.PermissionControl;
@@ -57,126 +55,127 @@ import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import freemarker.template.Configuration;
 
 /**
  * General utilities for the test cases.
  * 
  * @author Rafael Steil
- * @version $Id: TestCaseUtils.java,v 1.10 2005/04/10 16:41:23 rafaelsteil Exp $
+ * @version $Id: TestCaseUtils.java,v 1.11 2005/07/26 02:45:56 diegopires Exp $
  */
-public class TestCaseUtils
-{
+public class TestCaseUtils {
 	private static TestCaseUtils utils = new TestCaseUtils();
+
 	private String rootDir;
-	
-	private TestCaseUtils() {}
-	
-	public static void loadEnvironment() throws Exception
-	{
+
+	private TestCaseUtils() {
+	}
+
+	public static void loadEnvironment() throws Exception {
 		utils.init();
 	}
-	
+
 	/**
-	 * Inits the database stuff. 
-	 * Must be called <b>after</b> #loadEnvironment
+	 * Inits the database stuff. Must be called <b>after</b> #loadEnvironment
 	 * 
 	 * @throws Exception
 	 */
-	public static void initDatabaseImplementation() throws Exception
-	{
-		SystemGlobals.loadAdditionalDefaults(
-				SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
-		
-		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
-        SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
-        
-        DBConnection.createInstance();
+	public static void initDatabaseImplementation() throws Exception {
+		SystemGlobals.loadAdditionalDefaults(SystemGlobals
+				.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
+
+		SystemGlobals.loadQueries(SystemGlobals
+				.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
+		SystemGlobals.loadQueries(SystemGlobals
+				.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
+
+		DBConnection.createInstance();
 		DBConnection.getImplementation().init();
 	}
-	
-	public static String getRootDir()
-	{
+
+	public static String getRootDir() {
 		if (utils.rootDir == null) {
 			utils.rootDir = utils.getClass().getResource("/").getPath();
 			utils.rootDir = utils.rootDir.substring(0, utils.rootDir.length()
-							- "/WEB-INF/classes".length());
+					- "/WEB-INF/classes".length());
 		}
-		
+
 		return utils.rootDir;
 	}
-	
-	private void init() throws IOException 
-	{
+
+	private void init() throws IOException {
 		getRootDir();
 		SystemGlobals.initGlobals(this.rootDir, this.rootDir
 				+ "/WEB-INF/config/SystemGlobals.properties");
-		
-		if (new File(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG)).exists()) {
-        	SystemGlobals.loadAdditionalDefaults(
-        					SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG));
-        }
-		
+
+		if (new File(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG))
+				.exists()) {
+			SystemGlobals.loadAdditionalDefaults(SystemGlobals
+					.getValue(ConfigKeys.INSTALLATION_CONFIG));
+		}
+
 		// Configure the template engine
-        Configuration templateCfg = new Configuration();
-        templateCfg.setDirectoryForTemplateLoading(new File(SystemGlobals.getApplicationPath()
-                + "/templates"));
-        templateCfg.setTemplateUpdateDelay(0);
-        Configuration.setDefaultConfiguration(templateCfg);
+		Configuration templateCfg = new Configuration();
+		templateCfg.setDirectoryForTemplateLoading(new File(SystemGlobals
+				.getApplicationPath()
+				+ "/templates"));
+		templateCfg.setTemplateUpdateDelay(0);
+		Configuration.setDefaultConfiguration(templateCfg);
 
 		I18n.load();
 	}
-	
-	public static void createThreadLocalData(int defaultUserId) throws IOException
-	{
+
+	public static void createThreadLocalData(int defaultUserId)
+			throws IOException {
 		JForumBaseServlet.DataHolder dh = new JForumBaseServlet.DataHolder();
 		dh.setRequest(new FakeActionServletRequest());
-		
+
 		JForumBaseServlet.setThreadLocalData(dh);
-		
+
 		UserSession us = new UserSession();
 		us.setUserId(defaultUserId);
-		
+
 		SessionFacade.add(us);
 	}
-	
-	public static PermissionControl createForumCategoryPermissionControl(int[] categoryIds, int[] categoryRights, 
-			int[] forumIds, int[] forumRights)
-	{
+
+	public static PermissionControl createForumCategoryPermissionControl(
+			int[] categoryIds, int[] categoryRights, int[] forumIds,
+			int[] forumRights) {
 		PermissionControl pc = new PermissionControl();
 		RoleCollection rc = new RoleCollection();
-		
+
 		// Category
 		Role role = new Role();
 		role.setId(1);
 		role.setName(SecurityConstants.PERM_CATEGORY);
-		
+
 		for (int i = 0; i < categoryIds.length; i++) {
 			RoleValue rv = new RoleValue();
 			rv.setType(categoryRights[i]);
 			rv.setValue(Integer.toString(categoryIds[i]));
-			
+
 			role.getValues().add(rv);
 		}
-		
+
 		rc.add(role);
-		
+
 		// Forums
 		role = new Role();
 		role.setId(2);
 		role.setName(SecurityConstants.PERM_FORUM);
-		
+
 		for (int i = 0; i < forumIds.length; i++) {
 			RoleValue rv = new RoleValue();
 			rv.setType(forumRights[i]);
 			rv.setValue(Integer.toString(forumIds[i]));
-			
+
 			role.getValues().add(rv);
 		}
-		
+
 		rc.add(role);
 
 		pc.setRoles(rc);
-		
+
 		return pc;
 	}
 }

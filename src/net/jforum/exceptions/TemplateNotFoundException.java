@@ -44,12 +44,11 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: TemplateNotFoundException.java,v 1.2 2005/03/15 18:24:12 rafaelsteil Exp $
+ * @version $Id: TemplateNotFoundException.java,v 1.2 2005/03/15 18:24:12
+ *          rafaelsteil Exp $
  */
-public class TemplateNotFoundException extends RuntimeException
-{
-	public TemplateNotFoundException(String message)
-	{
+public class TemplateNotFoundException extends RuntimeException {
+	public TemplateNotFoundException(String message) {
 		super(message);
 	}
 }

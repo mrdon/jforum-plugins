@@ -52,34 +52,34 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicRSS.java,v 1.12 2005/03/03 02:45:18 rafaelsteil Exp $
+ * @version $Id: TopicRSS.java,v 1.13 2005/07/26 02:46:03 diegopires Exp $
  */
-public class TopicRSS extends GenericRSS 
-{
+public class TopicRSS extends GenericRSS {
 	protected List topics;
+
 	protected RSS rss;
+
 	protected String forumLink;
-	
-	TopicRSS() {}
-	
-	public TopicRSS(String title, String description, int forumId, List topics)
-	{
+
+	TopicRSS() {
+	}
+
+	public TopicRSS(String title, String description, int forumId, List topics) {
 		this.topics = topics;
 		this.forumLink = ViewCommon.getForumLink();
-		
-		this.rss = new RSS(title, description, 
-				SystemGlobals.getValue(ConfigKeys.ENCODING), 
-				this.forumLink + "forums/show/" + forumId 
+
+		this.rss = new RSS(title, description, SystemGlobals
+				.getValue(ConfigKeys.ENCODING), this.forumLink + "forums/show/"
+				+ forumId
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
-		
+
 		this.prepareRSS();
 	}
-	
-	protected void prepareRSS()
-	{
-		for (Iterator iter = topics.iterator(); iter.hasNext(); ) {
-			Topic t = (Topic)iter.next();
-			
+
+	protected void prepareRSS() {
+		for (Iterator iter = topics.iterator(); iter.hasNext();) {
+			Topic t = (Topic) iter.next();
+
 			RSSItem item = new RSSItem();
 			item.setAuthor(t.getPostedBy().getUsername());
 			item.setPublishDate(RSSUtils.formatDate(t.getTime()));
@@ -88,10 +88,10 @@ public class TopicRSS extends GenericRSS
 			item.setTitle(t.getTitle());
 			item.setContentType(RSSAware.CONTENT_HTML);
 			item.setDescription(item.getTitle());
-			
+
 			this.rss.addItem(item);
 		}
-		
+
 		super.setRSS(this.rss);
 	}
 }

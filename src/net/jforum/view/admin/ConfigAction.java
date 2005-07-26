@@ -61,21 +61,19 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ConfigAction.java,v 1.11 2005/07/18 17:15:53 rafaelsteil Exp $
+ * @version $Id: ConfigAction.java,v 1.12 2005/07/26 02:45:40 diegopires Exp $
  */
-public class ConfigAction extends AdminCommand 
-{
-	public ConfigAction() {}
-	
-	public ConfigAction(ActionServletRequest request, 
-			HttpServletResponse response, 
-			SimpleHash context)
-	{
+public class ConfigAction extends AdminCommand {
+	public ConfigAction() {
+	}
+
+	public ConfigAction(ActionServletRequest request,
+			HttpServletResponse response, SimpleHash context) {
 		this.request = request;
 		this.response = response;
 		this.context = context;
 	}
-	
+
 	public void list() throws Exception {
 		Properties p = new Properties();
 		Iterator iter = SystemGlobals.fetchConfigKeyIterator();
@@ -87,8 +85,9 @@ public class ConfigAction extends AdminCommand
 		}
 
 		Properties locales = new Properties();
-		locales.load(new FileInputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
-						+ "/languages/locales.properties"));
+		locales.load(new FileInputStream(SystemGlobals
+				.getValue(ConfigKeys.CONFIG_DIR)
+				+ "/languages/locales.properties"));
 		List localesList = new ArrayList();
 
 		for (Enumeration e = locales.keys(); e.hasMoreElements();) {
@@ -100,14 +99,12 @@ public class ConfigAction extends AdminCommand
 		this.setTemplateName(TemplateKeys.CONFIG_LIST);
 	}
 
-	public void editSave() throws Exception 
-	{
+	public void editSave() throws Exception {
 		this.updateData(this.getConfig());
 		this.list();
 	}
-	
-	Properties getConfig()
-	{
+
+	Properties getConfig() {
 		Properties p = new Properties();
 
 		Enumeration e = this.request.getParameterNames();
@@ -115,22 +112,25 @@ public class ConfigAction extends AdminCommand
 			String name = (String) e.nextElement();
 
 			if (name.startsWith("p_")) {
-				p.setProperty(name.substring(name.indexOf('_') + 1), this.request.getParameter(name));
+				p.setProperty(name.substring(name.indexOf('_') + 1),
+						this.request.getParameter(name));
 			}
 		}
-		
+
 		return p;
 	}
-	
-	void updateData(Properties p) throws Exception
-	{
-		for (Iterator iter = p.entrySet().iterator(); iter.hasNext(); ) {
-			Map.Entry entry = (Map.Entry)iter.next();
-			
-			SystemGlobals.setValue((String)entry.getKey(), (String)entry.getValue());
+
+	void updateData(Properties p) throws Exception {
+		for (Iterator iter = p.entrySet().iterator(); iter.hasNext();) {
+			Map.Entry entry = (Map.Entry) iter.next();
+
+			SystemGlobals.setValue((String) entry.getKey(), (String) entry
+					.getValue());
 		}
-		
+
 		SystemGlobals.saveInstallation();
-		I18n.changeBoardDefault(SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT));
+		I18n
+				.changeBoardDefault(SystemGlobals
+						.getValue(ConfigKeys.I18N_DEFAULT));
 	}
 }

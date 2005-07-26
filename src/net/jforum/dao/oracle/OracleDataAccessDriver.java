@@ -46,62 +46,62 @@ import net.jforum.dao.ModerationDAO;
 
 /**
  * @author Dmitriy Kiriy
- * @version $Id: OracleDataAccessDriver.java,v 1.3 2005/04/10 16:24:38 rafaelsteil Exp $
+ * @version $Id: OracleDataAccessDriver.java,v 1.3 2005/04/10 16:24:38
+ *          rafaelsteil Exp $
  */
-public class OracleDataAccessDriver extends net.jforum.dao.generic.DataAccessDriver
-{
+public class OracleDataAccessDriver extends
+		net.jforum.dao.generic.DataAccessDriver {
 	private static OraclePostDAO postDao = new OraclePostDAO();
+
 	private static OracleTopicDAO topicDao = new OracleTopicDAO();
+
 	private static OracleUserDAO userDao = new OracleUserDAO();
+
 	private static OraclePrivateMessageDAO pmDao = new OraclePrivateMessageDAO();
+
 	private static OracleScheduledSearchIndexerDAO ssiDao = new OracleScheduledSearchIndexerDAO();
+
 	private static OracleModerationDAO moderationDao = new OracleModerationDAO();
-	
+
 	/**
 	 * @see net.jforum.dao.DataAccessDriver#newModerationDAO()
 	 */
-	public ModerationDAO newModerationDAO()
-	{
+	public ModerationDAO newModerationDAO() {
 		return moderationDao;
 	}
-	
+
 	/**
 	 * @see net.jforum.dao.DataAccessDriver#newPostDAO()
 	 */
-	public net.jforum.dao.PostDAO newPostDAO()
-	{
+	public net.jforum.dao.PostDAO newPostDAO() {
 		return postDao;
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.DataAccessDriver#newTopicDAO()
 	 */
-	public net.jforum.dao.TopicDAO newTopicDAO()
-	{
+	public net.jforum.dao.TopicDAO newTopicDAO() {
 		return topicDao;
 	}
-	
-	/** 
+
+	/**
 	 * @see net.jforum.dao.DataAccessDriver#newUserDAO()
 	 */
-	public net.jforum.dao.UserDAO newUserDAO()
-	{
+	public net.jforum.dao.UserDAO newUserDAO() {
 		return userDao;
 	}
-	
+
 	/**
 	 * @see net.jforum.dao.DataAccessDriver#newPrivateMessageDAO()
 	 */
-	public net.jforum.dao.PrivateMessageDAO newPrivateMessageDAO()
-	{
+	public net.jforum.dao.PrivateMessageDAO newPrivateMessageDAO() {
 		return pmDao;
 	}
-	
+
 	/**
 	 * @see net.jforum.dao.DataAccessDriver#newScheduledSearchIndexerDAO()
 	 */
-	public net.jforum.dao.ScheduledSearchIndexerDAO newScheduledSearchIndexerDAO()
-	{
+	public net.jforum.dao.ScheduledSearchIndexerDAO newScheduledSearchIndexerDAO() {
 		return ssiDao;
 	}
 }

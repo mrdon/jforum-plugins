@@ -42,8 +42,6 @@
  */
 package net.jforum.entities;
 
-import com.octo.captcha.image.ImageCaptcha;
-
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.Date;
@@ -57,36 +55,41 @@ import net.jforum.util.Captcha;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
+import com.octo.captcha.image.ImageCaptcha;
+
 /**
  * Stores information about user's session.
  * 
  * @author Rafael Steil
- * @version $Id: UserSession.java,v 1.19 2005/07/01 04:10:01 rafaelsteil Exp $
+ * @version $Id: UserSession.java,v 1.20 2005/07/26 02:45:50 diegopires Exp $
  */
-public class UserSession implements Serializable
-{
+public class UserSession implements Serializable {
 	static final long serialVersionUID = 0;
+
 	private long sessionTime;
-	
+
 	private int userId;
+
 	private int privateMessages;
-	
+
 	private Date startTime;
+
 	private Date lastVisit;
-	
+
 	private transient String sessionId;
-	
+
 	private String username;
+
 	private String lang;
-	
+
 	private boolean autoLogin;
-	
+
 	private ImageCaptcha imageCaptcha = null;
 
-	public UserSession() {}
+	public UserSession() {
+	}
 
-	public UserSession(UserSession us)
-	{
+	public UserSession(UserSession us) {
 		if (us.getStartTime() != null) {
 			this.startTime = new Date(us.getStartTime().getTime());
 		}
@@ -94,7 +97,7 @@ public class UserSession implements Serializable
 		if (us.getLastVisit() != null) {
 			this.lastVisit = new Date(us.getLastVisit().getTime());
 		}
-		
+
 		this.sessionTime = us.getSessionTime();
 		this.userId = us.getUserId();
 		this.sessionId = us.getSessionId();
@@ -108,89 +111,86 @@ public class UserSession implements Serializable
 	/**
 	 * Set session's start time.
 	 * 
-	 * @param startTime  Start time in miliseconds
+	 * @param startTime
+	 *            Start time in miliseconds
 	 */
-	public void setStartTime(Date startTime)
-	{
+	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
 	}
 
 	/**
 	 * @return Returns the privateMessages.
 	 */
-	public int getPrivateMessages()
-	{
+	public int getPrivateMessages() {
 		return this.privateMessages;
 	}
 
 	/**
-	 * @param privateMessages The privateMessages to set.
+	 * @param privateMessages
+	 *            The privateMessages to set.
 	 */
-	public void setPrivateMessages(int privateMessages)
-	{
+	public void setPrivateMessages(int privateMessages) {
 		this.privateMessages = privateMessages;
 	}
 
 	/**
 	 * Set session last visit time.
 	 * 
-	 * @param lastVisit Time in miliseconds
+	 * @param lastVisit
+	 *            Time in miliseconds
 	 */
-	public void setLastVisit(Date lastVisit)
-	{
+	public void setLastVisit(Date lastVisit) {
 		this.lastVisit = lastVisit;
 	}
 
 	/**
 	 * Set user's id
 	 * 
-	 * @param userId The user id
+	 * @param userId
+	 *            The user id
 	 */
-	public void setUserId(int userId)
-	{
+	public void setUserId(int userId) {
 		this.userId = userId;
 	}
 
 	/**
 	 * Set user's name
 	 * 
-	 * @param username The username
+	 * @param username
+	 *            The username
 	 */
-	public void setUsername(String username)
-	{
+	public void setUsername(String username) {
 		this.username = username;
 	}
 
-	public void setSessionId(String sessionId)
-	{
+	public void setSessionId(String sessionId) {
 		this.sessionId = sessionId;
 	}
 
-	public void setSessionTime(long sessionTime)
-	{
+	public void setSessionTime(long sessionTime) {
 		this.sessionTime = sessionTime;
 	}
 
-	public void setLang(String lang)
-	{
+	public void setLang(String lang) {
 		this.lang = lang;
 	}
 
 	/**
 	 * Update the session time.
 	 */
-	public void updateSessionTime()
-	{
-		this.sessionTime = System.currentTimeMillis() - this.startTime.getTime();
+	public void updateSessionTime() {
+		this.sessionTime = System.currentTimeMillis()
+				- this.startTime.getTime();
 	}
 
 	/**
 	 * Enable or disable auto-login.
 	 * 
-	 * @param autoLogin  <code>true</code> or <code>false</code> to represent auto-login status
+	 * @param autoLogin
+	 *            <code>true</code> or <code>false</code> to represent
+	 *            auto-login status
 	 */
-	public void setAutoLogin(boolean autoLogin)
-	{
+	public void setAutoLogin(boolean autoLogin) {
 		this.autoLogin = autoLogin;
 	}
 
@@ -199,13 +199,11 @@ public class UserSession implements Serializable
 	 * 
 	 * @return Start time in miliseconds
 	 */
-	public Date getStartTime()
-	{
+	public Date getStartTime() {
 		return this.startTime;
 	}
 
-	public String getLang()
-	{
+	public String getLang() {
 		return this.lang;
 	}
 
@@ -214,8 +212,7 @@ public class UserSession implements Serializable
 	 * 
 	 * @return Time in miliseconds
 	 */
-	public Date getLastVisit()
-	{
+	public Date getLastVisit() {
 		return this.lastVisit;
 	}
 
@@ -224,8 +221,7 @@ public class UserSession implements Serializable
 	 * 
 	 * @return The session time
 	 */
-	public long getSessionTime()
-	{
+	public long getSessionTime() {
 		return this.sessionTime;
 	}
 
@@ -234,8 +230,7 @@ public class UserSession implements Serializable
 	 * 
 	 * @return The user id
 	 */
-	public int getUserId()
-	{
+	public int getUserId() {
 		return this.userId;
 	}
 
@@ -244,18 +239,17 @@ public class UserSession implements Serializable
 	 * 
 	 * @return The username
 	 */
-	public String getUsername()
-	{
+	public String getUsername() {
 		return this.username;
 	}
 
 	/**
 	 * Gets auto-login status
 	 * 
-	 * @return <code>true</code> if auto-login is enabled, or <code>false</code> if disabled.
+	 * @return <code>true</code> if auto-login is enabled, or
+	 *         <code>false</code> if disabled.
 	 */
-	public boolean getAutoLogin()
-	{
+	public boolean getAutoLogin() {
 		return this.autoLogin;
 	}
 
@@ -264,8 +258,7 @@ public class UserSession implements Serializable
 	 * 
 	 * @return A string with the session id
 	 */
-	public String getSessionId()
-	{
+	public String getSessionId() {
 		return this.sessionId;
 	}
 
@@ -274,9 +267,9 @@ public class UserSession implements Serializable
 	 * 
 	 * @return <code>true</code> if the user is an administrator
 	 */
-	public boolean isAdmin() throws Exception
-	{
-		return SecurityRepository.canAccess(this.userId, SecurityConstants.PERM_ADMINISTRATION);
+	public boolean isAdmin() throws Exception {
+		return SecurityRepository.canAccess(this.userId,
+				SecurityConstants.PERM_ADMINISTRATION);
 	}
 
 	/**
@@ -284,35 +277,35 @@ public class UserSession implements Serializable
 	 * 
 	 * @return <code>true</code> if the user has moderations rights
 	 */
-	public boolean isModerator() throws Exception
-	{
-		return SecurityRepository.canAccess(this.userId, SecurityConstants.PERM_MODERATION);
-	}
-	
-	/**
-	 * Checks if the user can moderate a forum
-	 * 
-	 * @param forumId the forum's id to check for moderation rights
-	 * @return <code>true</code> if the user has moderations rights
-	 */
-	public boolean isModerator(int forumId) throws Exception
-	{
-		PermissionControl pc = SecurityRepository.get(this.userId);
-		
-		return (pc.canAccess(SecurityConstants.PERM_MODERATION))
-			&& (pc.canAccess(SecurityConstants.PERM_MODERATION_FORUMS, 
-				Integer.toString(forumId)));
+	public boolean isModerator() throws Exception {
+		return SecurityRepository.canAccess(this.userId,
+				SecurityConstants.PERM_MODERATION);
 	}
 
 	/**
-	 * Makes the user's session "anoymous" - eg, the user. This method sets the session's start and
-	 * last visit time to the current datetime, the user id to the return of a call to
-	 * <code>SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)</code> and finally sets
-	 * session attribute named "logged" to "0" will be considered a non-authenticated / anonymous
-	 * user
+	 * Checks if the user can moderate a forum
+	 * 
+	 * @param forumId
+	 *            the forum's id to check for moderation rights
+	 * @return <code>true</code> if the user has moderations rights
 	 */
-	public void makeAnonymous()
-	{
+	public boolean isModerator(int forumId) throws Exception {
+		PermissionControl pc = SecurityRepository.get(this.userId);
+
+		return (pc.canAccess(SecurityConstants.PERM_MODERATION))
+				&& (pc.canAccess(SecurityConstants.PERM_MODERATION_FORUMS,
+						Integer.toString(forumId)));
+	}
+
+	/**
+	 * Makes the user's session "anoymous" - eg, the user. This method sets the
+	 * session's start and last visit time to the current datetime, the user id
+	 * to the return of a call to
+	 * <code>SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)</code>
+	 * and finally sets session attribute named "logged" to "0" will be
+	 * considered a non-authenticated / anonymous user
+	 */
+	public void makeAnonymous() {
 		this.setStartTime(new Date(System.currentTimeMillis()));
 		this.setLastVisit(new Date(System.currentTimeMillis()));
 		this.setUserId(SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID));
@@ -321,14 +314,15 @@ public class UserSession implements Serializable
 	}
 
 	/**
-	 * Sets a new user session information using information from an <code>User</code> instance.
-	 * This method sets the user id, username, the number of private messages, the session's start
-	 * time ( set to the current date and time ) and the language.
+	 * Sets a new user session information using information from an
+	 * <code>User</code> instance. This method sets the user id, username, the
+	 * number of private messages, the session's start time ( set to the current
+	 * date and time ) and the language.
 	 * 
-	 * @param user The <code>User</code> instance to get data from
+	 * @param user
+	 *            The <code>User</code> instance to get data from
 	 */
-	public void dataToUser(User user)
-	{
+	public void dataToUser(User user) {
 		this.setUserId(user.getId());
 		this.setUsername(user.getUsername());
 		this.setPrivateMessages(user.getPrivateMessagesCount());
@@ -341,31 +335,31 @@ public class UserSession implements Serializable
 	 * 
 	 * @return BufferedImage the captcha image to challenge the user
 	 */
-	public BufferedImage getCaptchaImage()
-	{
+	public BufferedImage getCaptchaImage() {
 		if (this.imageCaptcha == null) {
 			return null;
 		}
-		
-		return (BufferedImage)this.imageCaptcha.getChallenge();
+
+		return (BufferedImage) this.imageCaptcha.getChallenge();
 	}
 
 	/**
 	 * Validate the captcha response of user
 	 * 
-	 * @param anwser String the captcha response from user
+	 * @param anwser
+	 *            String the captcha response from user
 	 * @return boolean true if the answer is valid, otherwise return false
 	 */
-	public boolean validateCaptchaResponse(String userResponse)
-	{
-		if ((SystemGlobals.getBoolValue(ConfigKeys.CAPTCHA_REGISTRATION) 
-				|| SystemGlobals.getBoolValue(ConfigKeys.CAPTCHA_POSTS))
+	public boolean validateCaptchaResponse(String userResponse) {
+		if ((SystemGlobals.getBoolValue(ConfigKeys.CAPTCHA_REGISTRATION) || SystemGlobals
+				.getBoolValue(ConfigKeys.CAPTCHA_POSTS))
 				&& this.imageCaptcha != null) {
-			boolean result =  this.imageCaptcha.validateResponse(userResponse).booleanValue();
+			boolean result = this.imageCaptcha.validateResponse(userResponse)
+					.booleanValue();
 			this.destroyCaptcha();
 			return result;
 		}
-		
+
 		return true;
 	}
 
@@ -374,8 +368,7 @@ public class UserSession implements Serializable
 	 * 
 	 * @return void
 	 */
-	public void createNewCaptcha()
-	{
+	public void createNewCaptcha() {
 		this.destroyCaptcha();
 		this.imageCaptcha = Captcha.getInstance().getNextImageCaptcha();
 	}
@@ -385,37 +378,35 @@ public class UserSession implements Serializable
 	 * 
 	 * @return void
 	 */
-	public void destroyCaptcha()
-	{
+	public void destroyCaptcha() {
 		this.imageCaptcha = null;
 	}
-	
+
 	/**
 	 * Checks if it's a bot
+	 * 
 	 * @return <code>true</code> if this user session is from any robot
 	 */
-	public boolean isBot()
-	{
-		return Boolean.TRUE.equals(JForum.getRequest().getAttribute(ConfigKeys.IS_BOT));
+	public boolean isBot() {
+		return Boolean.TRUE.equals(JForum.getRequest().getAttribute(
+				ConfigKeys.IS_BOT));
 	}
-	
+
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	public boolean equals(Object o)
-	{
+	public boolean equals(Object o) {
 		if (!(o instanceof UserSession)) {
 			return false;
 		}
-		
-		return this.sessionId.equals(((UserSession)o).getSessionId());
+
+		return this.sessionId.equals(((UserSession) o).getSessionId());
 	}
-	
+
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
-	public int hashCode()
-	{
+	public int hashCode() {
 		return this.sessionId.hashCode();
 	}
 }

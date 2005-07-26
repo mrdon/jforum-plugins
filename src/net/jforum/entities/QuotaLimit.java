@@ -44,105 +44,101 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
- * @version $Id: QuotaLimit.java,v 1.3 2005/02/24 23:00:53 rafaelsteil Exp $
+ * @version $Id: QuotaLimit.java,v 1.4 2005/07/26 02:45:52 diegopires Exp $
  */
-public class QuotaLimit
-{
+public class QuotaLimit {
 	public static final int KB = 1;
+
 	public static final int MB = 2;
-	
+
 	private int id;
+
 	private String description;
+
 	private int size;
+
 	private int type;
-	
+
 	/**
-	 * Checks if the size passed as argument
-	 * is greater than the quota's limit.
+	 * Checks if the size passed as argument is greater than the quota's limit.
 	 * 
-	 * @param size The size to check
-	 * @return <code>true</code> if the size is greater than
-	 * quota's limit. 
+	 * @param size
+	 *            The size to check
+	 * @return <code>true</code> if the size is greater than quota's limit.
 	 */
-	public boolean exceedsQuota(long size)
-	{
+	public boolean exceedsQuota(long size) {
 		if (this.type == QuotaLimit.KB) {
 			return (size > this.size * 1024);
 		}
-		
+
 		return (size > this.size * 1024 * 1024);
 	}
-	
-	public int getSizeInBytes()
-	{
+
+	public int getSizeInBytes() {
 		if (this.type == QuotaLimit.KB) {
 			return (this.size * 1024);
 		}
-		
+
 		return (this.size * 1024 * 1024);
 	}
-	
+
 	/**
 	 * @return Returns the description.
 	 */
-	public String getDescription()
-	{
+	public String getDescription() {
 		return this.description;
 	}
-	
+
 	/**
-	 * @param description The description to set.
+	 * @param description
+	 *            The description to set.
 	 */
-	public void setDescription(String description)
-	{
+	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	/**
 	 * @return Returns the id.
 	 */
-	public int getId()
-	{
+	public int getId() {
 		return this.id;
 	}
-	
+
 	/**
-	 * @param id The id to set.
+	 * @param id
+	 *            The id to set.
 	 */
-	public void setId(int id)
-	{
+	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	/**
 	 * @return Returns the size.
 	 */
-	public int getSize()
-	{
+	public int getSize() {
 		return this.size;
 	}
-	
+
 	/**
-	 * @param size The size to set.
+	 * @param size
+	 *            The size to set.
 	 */
-	public void setSize(int size)
-	{
+	public void setSize(int size) {
 		this.size = size;
 	}
-	
+
 	/**
 	 * @return Returns the type.
 	 */
-	public int getType()
-	{
+	public int getType() {
 		return this.type;
 	}
-	
+
 	/**
-	 * @param type The type to set.
+	 * @param type
+	 *            The type to set.
 	 */
-	public void setType(int type)
-	{
+	public void setType(int type) {
 		this.type = type;
 	}
 }

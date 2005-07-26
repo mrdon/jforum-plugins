@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: SimpleResult.java,v 1.2 2004/04/21 23:57:34 rafaelsteil Exp $
+ * $Id: SimpleResult.java,v 1.3 2005/07/26 02:46:04 diegopires Exp $
  */
 package net.jforum.util.concurrent.executor;
 
@@ -51,137 +51,133 @@ import net.jforum.util.concurrent.Task;
 /**
  * @author Rodrigo Kumpera
  */
-class SimpleResult implements Result 
-{
+class SimpleResult implements Result {
 	private final Task task;
-	private Exception exception;
-	private Object result;
-	private boolean ready = false;
-	private final Object lock = new Object();
-	
-	SimpleResult(Task task) 
-	{
-		this.task = task;
-	}		
 
-	public boolean hasThrown() throws IllegalStateException 
-	{
-		synchronized(lock) {
-			if(!ready) {
+	private Exception exception;
+
+	private Object result;
+
+	private boolean ready = false;
+
+	private final Object lock = new Object();
+
+	SimpleResult(Task task) {
+		this.task = task;
+	}
+
+	public boolean hasThrown() throws IllegalStateException {
+		synchronized (lock) {
+			if (!ready) {
 				throw new IllegalStateException("task has not completed");
 			}
-			
+
 			return exception != null;
 		}
 	}
 
-	public Object getResult() throws IllegalStateException 
-	{
-		synchronized(lock) {
-			if(!ready) {
+	public Object getResult() throws IllegalStateException {
+		synchronized (lock) {
+			if (!ready) {
 				throw new IllegalStateException("task has not completed");
 			}
-				
-			if(exception != null) {
+
+			if (exception != null) {
 				throw new IllegalStateException("task has thrown an exception");
 			}
-			
+
 			return result;
 		}
 	}
 
-	public Exception getException() throws IllegalStateException 
-	{
-		synchronized(lock) {
-			if(!ready) {
+	public Exception getException() throws IllegalStateException {
+		synchronized (lock) {
+			if (!ready) {
 				throw new IllegalStateException("task has not completed");
 			}
-			
-			if(exception == null) {
-				throw new IllegalStateException("task has not thrown an exception");
+
+			if (exception == null) {
+				throw new IllegalStateException(
+						"task has not thrown an exception");
 			}
-			
+
 			return exception;
 		}
 	}
 
-	public synchronized void waitResult() throws InterruptedException 
-	{
-		if(Thread.interrupted()) {
+	public synchronized void waitResult() throws InterruptedException {
+		if (Thread.interrupted()) {
 			throw new InterruptedException();
 		}
-		
-		synchronized(lock) {
-			if(ready) {
+
+		synchronized (lock) {
+			if (ready) {
 				return;
 			}
-			
-			while(!ready) {
+
+			while (!ready) {
 				lock.wait();
 			}
 		}
 	}
 
-	public synchronized boolean poolResult(long timeout) throws InterruptedException 
-	{
-		if(Thread.interrupted()) {
+	public synchronized boolean poolResult(long timeout)
+			throws InterruptedException {
+		if (Thread.interrupted()) {
 			throw new InterruptedException();
 		}
-		
-		synchronized(lock) {
-			if(ready) {
+
+		synchronized (lock) {
+			if (ready) {
 				return true;
 			}
-			
-			if(timeout <= 0) {
+
+			if (timeout <= 0) {
 				return false;
 			}
 
 			long remaining = timeout;
 			long start = System.currentTimeMillis();
-			
-			for(;;) {
+
+			for (;;) {
 				lock.wait(remaining);
-				if(ready) {
+				if (ready) {
 					return true;
 				}
-				
+
 				remaining = timeout - (System.currentTimeMillis() - start);
-				if(remaining <= 0) {
+				if (remaining <= 0) {
 					return false;
 				}
 			}
 		}
 	}
 
-	void setException(Exception exception) 
-	{
-		synchronized(lock) {
-			if(ready) {
+	void setException(Exception exception) {
+		synchronized (lock) {
+			if (ready) {
 				throw new IllegalStateException("task allready completed");
 			}
-			
+
 			this.exception = exception;
 			ready = true;
 			lock.notifyAll();
 		}
 	}
 
-	void setResult(Object result) 
-	{
-		synchronized(lock) {
-			if(ready) {
+	void setResult(Object result) {
+		synchronized (lock) {
+			if (ready) {
 				throw new IllegalStateException("task allready completed");
 			}
-			
+
 			this.ready = true;
 			this.result = result;
 			lock.notifyAll();
 		}
 	}
 
-	Task getTask() 
-	{
+	Task getTask() {
 		return task;
 	}
 

@@ -44,12 +44,11 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: ConfigLoadException.java,v 1.2 2005/03/15 18:24:12 rafaelsteil Exp $
+ * @version $Id: ConfigLoadException.java,v 1.2 2005/03/15 18:24:12 rafaelsteil
+ *          Exp $
  */
-public class ConfigLoadException extends RuntimeException
-{
-	public ConfigLoadException(String message)
-	{
+public class ConfigLoadException extends RuntimeException {
+	public ConfigLoadException(String message) {
 		super(message);
 	}
 }

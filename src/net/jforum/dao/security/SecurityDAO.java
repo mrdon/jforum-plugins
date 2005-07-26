@@ -47,56 +47,64 @@ import net.jforum.security.RoleCollection;
 import net.jforum.security.RoleValueCollection;
 
 /**
- * Base interface for security access implementation.
- * This interface should not be directly implemented. Instead,
- * the implementation should be done on the interfaces that
- * extend this interface.
+ * Base interface for security access implementation. This interface should not
+ * be directly implemented. Instead, the implementation should be done on the
+ * interfaces that extend this interface.
  * 
  * @author Rafael Steil
- * @version $Id: SecurityDAO.java,v 1.2 2005/03/26 04:11:19 rafaelsteil Exp $
+ * @version $Id: SecurityDAO.java,v 1.3 2005/07/26 02:45:29 diegopires Exp $
  */
-public interface SecurityDAO 
-{
+public interface SecurityDAO {
 	/**
 	 * Delete do banco as permissoes de algum usuario em especifico.
 	 * 
-	 * @param userId ID do usuario/contato
-	 * @param groupId ID do grupo a qual o contato pertence
+	 * @param userId
+	 *            ID do usuario/contato
+	 * @param groupId
+	 *            ID do grupo a qual o contato pertence
 	 * @see #adduserPermission(int, String, String, String)
 	 * @throws Exception
-	 **/
+	 */
 	public void deleteAllRoles(int id) throws Exception;
 
 	/**
 	 * Delete do banco as permissoes de algum usuario em especifico.
 	 * 
-	 * @param userId ID do usuario/contato
-	 * @param groupId ID do grupo a qual o contato pertence
-	 * @param field ID da permissao a deletar
+	 * @param userId
+	 *            ID do usuario/contato
+	 * @param groupId
+	 *            ID do grupo a qual o contato pertence
+	 * @param field
+	 *            ID da permissao a deletar
 	 * @see #adduserPermission(int, String, String, String)
 	 * @throws Exception
-	 **/
+	 */
 	public void deleteRole(int id, String roleName) throws Exception;
 
 	/**
 	 * Adiciona uma nova permissao/restricao ao usuario.
 	 * 
-	 * @param userId ID do usuario/contato
-	 * @param moduleName Nome do modulo
-	 * @param field Nome ( ID ) da permissao 
+	 * @param userId
+	 *            ID do usuario/contato
+	 * @param moduleName
+	 *            Nome do modulo
+	 * @param field
+	 *            Nome ( ID ) da permissao
 	 * @see #addUserPermission(int, int, String, String, String)
-	 * */
+	 */
 	public void addRole(int id, Role role) throws Exception;
-	
-	public void addRoleValue(int id, Role role, RoleValueCollection rvc) throws Exception;
-	
+
+	public void addRoleValue(int id, Role role, RoleValueCollection rvc)
+			throws Exception;
+
 	/**
 	 * @param id
 	 * @param roleName
 	 * @param roleValues
 	 * @throws Exception
 	 */
-	public void addRole(int id, Role role, RoleValueCollection roleValues) throws Exception;
+	public void addRole(int id, Role role, RoleValueCollection roleValues)
+			throws Exception;
 
 	/**
 	 * @param id

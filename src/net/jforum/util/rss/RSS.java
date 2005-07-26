@@ -49,87 +49,91 @@ import java.util.List;
  * Represents a RSS document
  * 
  * @author Rafael Steil
- * @version $Id: RSS.java,v 1.1 2004/10/21 03:26:03 rafaelsteil Exp $
+ * @version $Id: RSS.java,v 1.2 2005/07/26 02:46:02 diegopires Exp $
  */
-public class RSS 
-{
+public class RSS {
 	private List itens;
+
 	private String title;
+
 	private String description;
+
 	private String encoding;
+
 	private String link;
-	
+
 	/**
 	 * Creates a new RSS document.
 	 * 
-	 * @param title The document title
-	 * @param description The document description
-	 * @param encoding The character encoding
-	 * @param link The main document link
+	 * @param title
+	 *            The document title
+	 * @param description
+	 *            The document description
+	 * @param encoding
+	 *            The character encoding
+	 * @param link
+	 *            The main document link
 	 */
-	public RSS(String title, String description, String encoding, String link)
-	{
+	public RSS(String title, String description, String encoding, String link) {
 		this.itens = new ArrayList();
 		this.title = title;
 		this.description = description;
 		this.encoding = encoding;
 		this.link = link;
 	}
-	
+
 	/**
 	 * Gets the main document link
+	 * 
 	 * @return The document link
 	 */
-	public String getLink()
-	{
+	public String getLink() {
 		return this.link;
 	}
-	
+
 	/**
-	 * Gets he document title 
+	 * Gets he document title
+	 * 
 	 * @return The document title
 	 */
-	public String getTitle()
-	{
+	public String getTitle() {
 		return this.title;
 	}
-	
+
 	/**
 	 * Gets the document description
+	 * 
 	 * @return The document description
 	 */
-	public String getDescription()
-	{
+	public String getDescription() {
 		return this.description;
 	}
-	
+
 	/**
 	 * Gets the document character encoding
+	 * 
 	 * @return The encoding
 	 */
-	public String getEncoding()
-	{
+	public String getEncoding() {
 		return this.encoding;
 	}
-	
+
 	/**
-	 * Gets all <code>RSSItem</code> instances related
-	 * to this RSS document.
+	 * Gets all <code>RSSItem</code> instances related to this RSS document.
 	 * 
 	 * @return <code>java.util.List</code> with the entries
 	 */
-	public List getItens()
-	{
+	public List getItens() {
 		return this.itens;
 	}
-	
+
 	/**
 	 * Add a new item to the RSS document
 	 * 
-	 * @param entry <code>RSSItem</code> object containing the item information 
+	 * @param entry
+	 *            <code>RSSItem</code> object containing the item information
 	 */
-	public void addItem(RSSItem item)
-	{
+	public void addItem(RSSItem item) {
 		this.itens.add(item);
 	}
 }

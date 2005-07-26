@@ -51,42 +51,41 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerUserDAO.java,v 1.2 2005/03/26 04:11:11 rafaelsteil Exp $
+ * @version $Id: SqlServerUserDAO.java,v 1.3 2005/07/26 02:45:42 diegopires Exp $
  */
-public class SqlServerUserDAO extends net.jforum.dao.generic.GenericUserDAO
-{
-	/** 
+public class SqlServerUserDAO extends net.jforum.dao.generic.GenericUserDAO {
+	/**
 	 * @see net.jforum.dao.UserDAO#selectAll(int, int)
 	 */
-	public List selectAll(int startFrom, int count) throws Exception
-	{
+	public List selectAll(int startFrom, int count) throws Exception {
 		PreparedStatement p;
 
 		if (count > 0) {
-			p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("GenericModel.selectByLimit") 
-					+ " " 
-					+ count 
-					+ " " 
-					+ SystemGlobals.getSql("UserModel.selectAllByLimit"));
+			p = JForum.getConnection().prepareStatement(
+					SystemGlobals.getSql("GenericModel.selectByLimit")
+							+ " "
+							+ count
+							+ " "
+							+ SystemGlobals
+									.getSql("UserModel.selectAllByLimit"));
+		} else {
+			p = JForum.getConnection().prepareStatement(
+					SystemGlobals.getSql("UserModel.selectAll"));
 		}
-		else {
-			p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectAll"));
-		}
-		
+
 		ResultSet rs = p.executeQuery();
 		List list = super.processSelectAll(rs);
 		rs.close();
 		p.close();
-		
+
 		return list;
 	}
-	
-	/** 
+
+	/**
 	 * @see net.jforum.dao.UserDAO#selectAllWithKarma(int, int)
 	 */
-	public List selectAllWithKarma(int startFrom, int count) throws Exception 
-	{
-	    return super.loadKarma( this.selectAll(startFrom, count) );
+	public List selectAllWithKarma(int startFrom, int count) throws Exception {
+		return super.loadKarma(this.selectAll(startFrom, count));
 	}
-	
+
 }

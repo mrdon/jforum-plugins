@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: PermissionSection.java,v 1.2 2004/04/21 23:57:36 rafaelsteil Exp $
+ * $Id: PermissionSection.java,v 1.3 2005/07/26 02:45:54 diegopires Exp $
  */
 package net.jforum.security;
 
@@ -55,41 +55,42 @@ import java.util.ArrayList;
  * 
  * @author Rafael Steil
  */
-public class PermissionSection 
-{
+public class PermissionSection {
 	/**
 	 * Nome da secao
-	 * */
+	 */
 	private String sectionName;
-	
+
 	/**
 	 * ID da secao
-	 * */
+	 */
 	private String sectionId;
-	
+
 	/**
 	 * Guarda cada tipo de permissao relacionada com esta secao
-	 * */
+	 */
 	private ArrayList permissionItens;
-	
+
 	/**
-	 * @param sectionName Nome da secao
-	 * @param sectionId ID da secao
-	 * */
-	public PermissionSection(String sectionName, String sectionId)
-	{
+	 * @param sectionName
+	 *            Nome da secao
+	 * @param sectionId
+	 *            ID da secao
+	 */
+	public PermissionSection(String sectionName, String sectionId) {
 		this.sectionName = sectionName;
 		this.sectionId = sectionId;
 		this.permissionItens = new ArrayList();
-	}		
-	
+	}
+
 	/**
 	 * Adiciona uma nova entrada de permissao.
 	 * 
-	 * @param item Objeto <code>PermissionItem</code> contendo os dados da permissao
-	 * */
-	public void addPermission(PermissionItem item)
-	{
+	 * @param item
+	 *            Objeto <code>PermissionItem</code> contendo os dados da
+	 *            permissao
+	 */
+	public void addPermission(PermissionItem item) {
 		this.permissionItens.add(item);
 	}
 
@@ -97,13 +98,14 @@ public class PermissionSection
 	 * Pega as permissoes associadas com esta secao
 	 * 
 	 * @return ArrayList contendo as permissoes
-	 * */	
-	public ArrayList getPermissions()
-	{
+	 */
+	public ArrayList getPermissions() {
 		return this.permissionItens;
 	}
+
 	/**
 	 * Returns the sectionId.
+	 * 
 	 * @return String
 	 */
 	public String getSectionId() {
@@ -112,6 +114,7 @@ public class PermissionSection
 
 	/**
 	 * Returns the sectionName.
+	 * 
 	 * @return String
 	 */
 	public String getSectionName() {

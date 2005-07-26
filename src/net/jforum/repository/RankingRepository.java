@@ -54,62 +54,61 @@ import net.jforum.exceptions.RankingLoadException;
 
 /**
  * @author Rafael Steil
- * @version $Id: RankingRepository.java,v 1.8 2005/03/26 04:10:58 rafaelsteil Exp $
+ * @version $Id: RankingRepository.java,v 1.8 2005/03/26 04:10:58 rafaelsteil
+ *          Exp $
  */
-public class RankingRepository implements Cacheable
-{
+public class RankingRepository implements Cacheable {
 	private static CacheEngine cache;
+
 	private static final String FQN = "ranking";
+
 	private static final String ENTRIES = "entries";
 
 	/**
 	 * @see net.jforum.cache.Cacheable#setCacheEngine(net.jforum.cache.CacheEngine)
 	 */
-	public void setCacheEngine(CacheEngine engine)
-	{
+	public void setCacheEngine(CacheEngine engine) {
 		cache = engine;
 	}
-	
-	public static void loadRanks()
-	{
+
+	public static void loadRanks() {
 		try {
 			RankingDAO rm = DataAccessDriver.getInstance().newRankingDAO();
 			cache.add(FQN, ENTRIES, rm.selectAll());
-		}
-		catch (Exception e) {
-			throw new RankingLoadException("Error while loading the rankings: " + e);
+		} catch (Exception e) {
+			throw new RankingLoadException("Error while loading the rankings: "
+					+ e);
 		}
 	}
-	
-	public static int size()
-	{
-		return ((List)cache.get(FQN, ENTRIES)).size();
+
+	public static int size() {
+		return ((List) cache.get(FQN, ENTRIES)).size();
 	}
-	
+
 	/**
 	 * Gets the title associated to total of messages the user have
-	 * @param total Number of messages the user have. The ranking will be
-	 * returned according to the range to which this total belongs to. 
-	 * @return String with the ranking title. 
-	 */	
-	public static String getRankTitle(int total) 
-	{
+	 * 
+	 * @param total
+	 *            Number of messages the user have. The ranking will be returned
+	 *            according to the range to which this total belongs to.
+	 * @return String with the ranking title.
+	 */
+	public static String getRankTitle(int total) {
 		Ranking lastRank = new Ranking();
 
-		List entries = (List)cache.get(FQN, ENTRIES);
-		for (Iterator iter = entries.iterator(); iter.hasNext(); ) {
-			Ranking r = (Ranking)iter.next();
-			
+		List entries = (List) cache.get(FQN, ENTRIES);
+		for (Iterator iter = entries.iterator(); iter.hasNext();) {
+			Ranking r = (Ranking) iter.next();
+
 			if (total == r.getMin()) {
 				return r.getTitle();
-			}
-			else if (total > lastRank.getMin() && total < r.getMin()) {
+			} else if (total > lastRank.getMin() && total < r.getMin()) {
 				return lastRank.getTitle();
 			}
-			
+
 			lastRank = r;
 		}
-		
+
 		return lastRank.getTitle();
 	}
 

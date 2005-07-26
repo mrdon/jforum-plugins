@@ -54,36 +54,33 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
- * DataSource connection implementation for JForum.
- * The datasourcename should be set in the key 
- * <code>database.datasource.name</code> at 
+ * DataSource connection implementation for JForum. The datasourcename should be
+ * set in the key <code>database.datasource.name</code> at
  * SystemGlobals.properties.
  * 
  * @author Rafael Steil
- * @version $Id: DataSourceConnection.java,v 1.4 2005/07/18 17:15:54 rafaelsteil Exp $
+ * @version $Id: DataSourceConnection.java,v 1.4 2005/07/18 17:15:54 rafaelsteil
+ *          Exp $
  */
-public class DataSourceConnection extends DBConnection
-{
+public class DataSourceConnection extends DBConnection {
 	private DataSource ds;
-	
+
 	/**
 	 * @see net.jforum.DBConnection#init()
 	 */
-	public void init() throws Exception 
-	{
+	public void init() throws Exception {
 		Context context = new InitialContext();
-		this.ds = (DataSource)context.lookup(SystemGlobals.getValue(
-				ConfigKeys.DATABASE_DATASOURCE_NAME));
+		this.ds = (DataSource) context.lookup(SystemGlobals
+				.getValue(ConfigKeys.DATABASE_DATASOURCE_NAME));
 	}
+
 	/**
 	 * @see net.jforum.DBConnection#getConnection()
 	 */
-	public Connection getConnection()
-	{
+	public Connection getConnection() {
 		try {
 			return this.ds.getConnection();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw new DatabaseException(e);
 		}
@@ -92,16 +89,16 @@ public class DataSourceConnection extends DBConnection
 	/**
 	 * @see net.jforum.DBConnection#releaseConnection(java.sql.Connection)
 	 */
-	public void releaseConnection(Connection conn)
-	{
+	public void releaseConnection(Connection conn) {
 		try {
 			conn.close();
+		} catch (Exception e) {
 		}
-		catch (Exception e) {}
 	}
 
 	/**
 	 * @see net.jforum.DBConnection#realReleaseAllConnections()
 	 */
-	public void realReleaseAllConnections() throws Exception {}
+	public void realReleaseAllConnections() throws Exception {
+	}
 }

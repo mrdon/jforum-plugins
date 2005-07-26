@@ -48,7 +48,6 @@ import java.util.List;
 import net.jforum.dao.CategoryDAO;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
-import net.jforum.dao.GroupDAO;
 import net.jforum.dao.TopicDAO;
 import net.jforum.dao.security.GroupSecurityDAO;
 import net.jforum.entities.Category;
@@ -66,49 +65,46 @@ import net.jforum.view.admin.common.ModerationCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.20 2005/03/26 04:11:19 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.21 2005/07/26 02:45:41 diegopires Exp $
  */
-public class ForumAction extends AdminCommand 
-{
+public class ForumAction extends AdminCommand {
 	// Listing
-	public void list() throws Exception
-	{
-		this.context.put("categories", DataAccessDriver.getInstance().newCategoryDAO().selectAll());
+	public void list() throws Exception {
+		this.context.put("categories", DataAccessDriver.getInstance()
+				.newCategoryDAO().selectAll());
 		this.context.put("repository", new ForumRepository());
 		this.setTemplateName(TemplateKeys.FORUM_ADMIN_LIST);
 	}
-	
+
 	// One more, one more
-	public void insert() throws Exception
-	{
+	public void insert() throws Exception {
 		CategoryDAO cm = DataAccessDriver.getInstance().newCategoryDAO();
-		
+
 		this.context.put("groups", new TreeGroup().getNodes());
 		this.context.put("selectedList", new ArrayList());
 		this.setTemplateName(TemplateKeys.FORUM_ADMIN_INSERT);
-		this.context.put("categories",cm.selectAll());
-		this.context.put("action", "insertSave");		
+		this.context.put("categories", cm.selectAll());
+		this.context.put("action", "insertSave");
 	}
-	
+
 	// Edit
-	public void edit() throws Exception
-	{
+	public void edit() throws Exception {
 		CategoryDAO cm = DataAccessDriver.getInstance().newCategoryDAO();
-		
-		this.context.put("forum", DataAccessDriver.getInstance().newForumDAO().selectById(
-				this.request.getIntParameter("forum_id")));
+
+		this.context.put("forum", DataAccessDriver.getInstance().newForumDAO()
+				.selectById(this.request.getIntParameter("forum_id")));
 		this.context.put("categories", cm.selectAll());
 		this.setTemplateName(TemplateKeys.FORUM_ADMIN_EDIT);
 		this.context.put("action", "editSave");
 	}
-	
-	//  Save information
-	public void editSave() throws Exception
-	{
-		Forum f = new Forum(ForumRepository.getForum(this.request.getIntParameter("forum_id")));
+
+	// Save information
+	public void editSave() throws Exception {
+		Forum f = new Forum(ForumRepository.getForum(this.request
+				.getIntParameter("forum_id")));
 		boolean moderated = f.isModerated();
 		int categoryId = f.getCategoryId();
-		
+
 		f.setDescription(this.request.getParameter("description"));
 		f.setIdCategories(this.request.getIntParameter("categories_id"));
 		f.setName(this.request.getParameter("forum_name"));
@@ -117,169 +113,170 @@ public class ForumAction extends AdminCommand
 		DataAccessDriver.getInstance().newForumDAO().update(f);
 
 		if (moderated != f.isModerated()) {
-			new ModerationCommon().setTopicModerationStatus(f.getId(), f.isModerated());
+			new ModerationCommon().setTopicModerationStatus(f.getId(), f
+					.isModerated());
 		}
-		
+
 		if (categoryId != f.getCategoryId()) {
 			f.setIdCategories(categoryId);
 			ForumRepository.removeForum(f);
-			
+
 			f.setIdCategories(this.request.getIntParameter("categories_id"));
 			ForumRepository.addForum(f);
-		}
-		else {
+		} else {
 			ForumRepository.reloadForum(f.getId());
 		}
-		
+
 		this.list();
 	}
-	
-	public void up() throws Exception
-	{
+
+	public void up() throws Exception {
 		this.processOrdering(true);
 	}
-	
-	public void down() throws Exception
-	{
+
+	public void down() throws Exception {
 		this.processOrdering(false);
 	}
-	
-	private void processOrdering(boolean up) throws Exception
-	{
-		Forum toChange = new Forum(ForumRepository.getForum(Integer.parseInt(
-				this.request.getParameter("forum_id"))));
-		
-		Category category = ForumRepository.getCategory(toChange.getCategoryId());
+
+	private void processOrdering(boolean up) throws Exception {
+		Forum toChange = new Forum(ForumRepository.getForum(Integer
+				.parseInt(this.request.getParameter("forum_id"))));
+
+		Category category = ForumRepository.getCategory(toChange
+				.getCategoryId());
 		List forums = new ArrayList(category.getForums());
 		int index = forums.indexOf(toChange);
-		
-		if (index == -1 || (up && index == 0) || (!up && index + 1 == forums.size())) {
+
+		if (index == -1 || (up && index == 0)
+				|| (!up && index + 1 == forums.size())) {
 			this.list();
 			return;
 		}
-		
+
 		ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
-		
+
 		if (up) {
 			// Get the forum which comes *before* the forum we're changing
-			Forum otherForum = new Forum((Forum)forums.get(index - 1));
+			Forum otherForum = new Forum((Forum) forums.get(index - 1));
 			fm.setOrderUp(toChange, otherForum);
-		}
-		else {
+		} else {
 			// Get the forum which comes *after* the forum we're changing
-			Forum otherForum = new Forum((Forum)forums.get(index + 1));
+			Forum otherForum = new Forum((Forum) forums.get(index + 1));
 			fm.setOrderDown(toChange, otherForum);
 		}
-		
+
 		category.changeForumOrder(toChange);
 		ForumRepository.refreshCategory(category);
-		
+
 		this.list();
 	}
-	
+
 	// Delete
-	public void delete() throws Exception
-	{
+	public void delete() throws Exception {
 		String ids[] = this.request.getParameterValues("forum_id");
-		
+
 		ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
 		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
-		
+
 		if (ids != null) {
 			for (int i = 0; i < ids.length; i++) {
 				int forumId = Integer.parseInt(ids[i]);
 
 				tm.deleteByForum(forumId);
 				fm.delete(forumId);
-				
+
 				Forum f = new Forum(ForumRepository.getForum(forumId));
 				ForumRepository.removeForum(f);
 			}
 		}
-		
+
 		this.list();
 	}
-	
+
 	// A new one
-	public void insertSave() throws Exception
-	{
+	public void insertSave() throws Exception {
 		Forum f = new Forum();
 		f.setDescription(this.request.getParameter("description"));
 		f.setIdCategories(this.request.getIntParameter("categories_id"));
-		f.setName(this.request.getParameter("forum_name"));	
+		f.setName(this.request.getParameter("forum_name"));
 		f.setModerated("1".equals(this.request.getParameter("moderate")));
-			
+
 		int forumId = DataAccessDriver.getInstance().newForumDAO().addNew(f);
 		f.setId(forumId);
-		
+
 		ForumRepository.addForum(f);
-		
-		// Process permissions
-		GroupDAO gm = DataAccessDriver.getInstance().newGroupDAO();
-		GroupSecurityDAO gmodel = DataAccessDriver.getInstance().newGroupSecurityDAO();
+
+		GroupSecurityDAO gmodel = DataAccessDriver.getInstance()
+				.newGroupSecurityDAO();
 		PermissionControl pc = new PermissionControl();
 		pc.setSecurityModel(gmodel);
-		
+
 		String[] allGroups = this.request.getParameterValues("groups");
-		
+
 		// Access
 		String[] groups = this.request.getParameterValues("groupsAccess");
 		if (groups != null) {
-			this.addRole(pc, SecurityConstants.PERM_FORUM, f.getId(), groups, false);
+			this.addRole(pc, SecurityConstants.PERM_FORUM, f.getId(), groups,
+					false);
+		} else {
+			this.addRole(pc, SecurityConstants.PERM_FORUM, f.getId(),
+					allGroups, true);
 		}
-		else {
-			this.addRole(pc, SecurityConstants.PERM_FORUM, f.getId(), allGroups, true);
-		}
-		
+
 		// Anonymous posts
 		groups = this.request.getParameterValues("groupsAnonymous");
 		if (groups != null) {
-			this.addRole(pc, SecurityConstants.PERM_ANONYMOUS_POST, f.getId(), groups, false);
+			this.addRole(pc, SecurityConstants.PERM_ANONYMOUS_POST, f.getId(),
+					groups, false);
+		} else {
+			this.addRole(pc, SecurityConstants.PERM_ANONYMOUS_POST, f.getId(),
+					allGroups, true);
 		}
-		else {
-			this.addRole(pc, SecurityConstants.PERM_ANONYMOUS_POST, f.getId(), allGroups, true);
-		}
-		
+
 		// Read-only
 		groups = this.request.getParameterValues("groupsReadOnly");
 		if (groups != null) {
-			this.addRole(pc, SecurityConstants.PERM_READ_ONLY_FORUMS, f.getId(), groups, false);
+			this.addRole(pc, SecurityConstants.PERM_READ_ONLY_FORUMS,
+					f.getId(), groups, false);
+		} else {
+			this.addRole(pc, SecurityConstants.PERM_READ_ONLY_FORUMS,
+					f.getId(), allGroups, true);
 		}
-		else {
-			this.addRole(pc, SecurityConstants.PERM_READ_ONLY_FORUMS, f.getId(), allGroups, true);
-		}
-		
+
 		// Reply-only
-		this.addRole(pc, SecurityConstants.PERM_REPLY_ONLY, f.getId(), allGroups, true);
-		
+		this.addRole(pc, SecurityConstants.PERM_REPLY_ONLY, f.getId(),
+				allGroups, true);
+
 		// HTML
 		groups = this.request.getParameterValues("groupsHtml");
 		if (groups != null) {
-			this.addRole(pc, SecurityConstants.PERM_HTML_DISABLED, f.getId(), groups, false);
+			this.addRole(pc, SecurityConstants.PERM_HTML_DISABLED, f.getId(),
+					groups, false);
+		} else {
+			this.addRole(pc, SecurityConstants.PERM_HTML_DISABLED, f.getId(),
+					allGroups, true);
 		}
-		else {
-			this.addRole(pc, SecurityConstants.PERM_HTML_DISABLED, f.getId(), allGroups, true);
-		}
-		
+
 		SecurityRepository.clean();
 
 		this.list();
 	}
-	
-	private void addRole(PermissionControl pc, String roleName, int forumId, String[] groups, boolean allow) throws Exception
-	{
+
+	private void addRole(PermissionControl pc, String roleName, int forumId,
+			String[] groups, boolean allow) throws Exception {
 		Role role = new Role();
 		role.setName(roleName);
-		
+
 		for (int i = 0; i < groups.length; i++) {
 			int groupId = Integer.parseInt(groups[i]);
 			RoleValueCollection roleValues = new RoleValueCollection();
-			
+
 			RoleValue rv = new RoleValue();
-			rv.setType(allow ? PermissionControl.ROLE_ALLOW : PermissionControl.ROLE_DENY);
+			rv.setType(allow ? PermissionControl.ROLE_ALLOW
+					: PermissionControl.ROLE_DENY);
 			rv.setValue(Integer.toString(forumId));
 			roleValues.add(rv);
-			
+
 			pc.addRoleValue(groupId, role, roleValues);
 		}
 	}

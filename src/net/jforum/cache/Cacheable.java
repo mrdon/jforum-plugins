@@ -44,13 +44,14 @@ package net.jforum.cache;
 
 /**
  * @author Rafael Steil
- * @version $Id: Cacheable.java,v 1.2 2005/02/01 21:42:01 rafaelsteil Exp $
+ * @version $Id: Cacheable.java,v 1.3 2005/07/26 02:45:36 diegopires Exp $
  */
-public interface Cacheable
-{
+public interface Cacheable {
 	/**
 	 * Sets the cache engine instance.
-	 * @param engine The instance of the cache engine
+	 * 
+	 * @param engine
+	 *            The instance of the cache engine
 	 */
 	public void setCacheEngine(CacheEngine engine);
 }

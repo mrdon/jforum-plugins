@@ -46,27 +46,27 @@ import java.util.List;
 
 import net.jforum.entities.Config;
 
-
 /**
- * Model interface for the {@link net.jforum.Config} class. 
+ * Model interface for the {@link net.jforum.Config} class.
  * 
  * @author Rafael Steil
- * @version $Id: ConfigDAO.java,v 1.2 2005/03/26 04:10:35 rafaelsteil Exp $
+ * @version $Id: ConfigDAO.java,v 1.3 2005/07/26 02:45:29 diegopires Exp $
  */
-public interface ConfigDAO 
-{
+public interface ConfigDAO {
 	/**
 	 * Insert a new configuration.
 	 * 
-	 * @param config The data to store.
+	 * @param config
+	 *            The data to store.
 	 * @throws Exception
 	 */
 	public void insert(Config config) throws Exception;
-	
+
 	/**
 	 * Updates some config entry
 	 * 
-	 * @param config The entry to update
+	 * @param config
+	 *            The entry to update
 	 * @throws Exception
 	 */
 	public void update(Config config) throws Exception;
@@ -74,24 +74,26 @@ public interface ConfigDAO
 	/**
 	 * Deletes some specific configuration
 	 * 
-	 * @param config The config to delete
+	 * @param config
+	 *            The config to delete
 	 * @throws Exception
 	 */
 	public void delete(Config config) throws Exception;
-	
+
 	/**
 	 * Gets all existing configuration entries
 	 * 
-	 * @return <code>java.util.List</code> with all records found. 
-	 * Each entry is a <code>net.jforum.entities.Config</code> instance.
+	 * @return <code>java.util.List</code> with all records found. Each entry
+	 *         is a <code>net.jforum.entities.Config</code> instance.
 	 * @throws Exception
 	 */
 	public List selectAll() throws Exception;
-	
+
 	/**
 	 * Gets a config by its name
 	 * 
-	 * @param name The name to search for.
+	 * @param name
+	 *            The name to search for.
 	 * @return
 	 * @throws Exception
 	 */

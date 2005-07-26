@@ -48,64 +48,67 @@ import net.jforum.entities.User;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageDAO.java,v 1.2 2005/03/26 04:10:33 rafaelsteil Exp $
+ * @version $Id: PrivateMessageDAO.java,v 1.2 2005/03/26 04:10:33 rafaelsteil
+ *          Exp $
  */
-public interface PrivateMessageDAO
-{
+public interface PrivateMessageDAO {
 	/**
 	 * Send a new <code>PrivateMessage</code>
 	 * 
-	 * @param pm The pm to add
+	 * @param pm
+	 *            The pm to add
 	 * @throws Exception
 	 */
 	public void send(PrivateMessage pm) throws Exception;
-	
+
 	/**
-	 * Deletes a collection of private messages.
-	 * Each instance should at least have the private message
-	 * id and the owner user id.
+	 * Deletes a collection of private messages. Each instance should at least
+	 * have the private message id and the owner user id.
 	 * 
 	 * @param pm
 	 * @throws Exception
 	 */
 	public void delete(PrivateMessage[] pm) throws Exception;
-	
+
 	/**
-	 * Update the type of some private message.
-	 * You should pass as argument a <code>PrivateMessage</code> instance
-	 * with the pm's id and the new message status. There is no need to
-	 * fill the other members.
+	 * Update the type of some private message. You should pass as argument a
+	 * <code>PrivateMessage</code> instance with the pm's id and the new
+	 * message status. There is no need to fill the other members.
 	 * 
-	 * @param pm The instance to update 
+	 * @param pm
+	 *            The instance to update
 	 * @throws Exception
 	 */
 	public void updateType(PrivateMessage pm) throws Exception;
-	
+
 	/**
-	 * Selects all messages from the user's inbox. 
+	 * Selects all messages from the user's inbox.
 	 * 
-	 * @param user The user to fetch the messages
-	 * @return A <code>List</code> with all messages found. Each 
-	 * entry is a <code>PrivateMessage</code> entry.
+	 * @param user
+	 *            The user to fetch the messages
+	 * @return A <code>List</code> with all messages found. Each entry is a
+	 *         <code>PrivateMessage</code> entry.
 	 * @throws Exception
 	 */
 	public List selectFromInbox(User user) throws Exception;
-	
+
 	/**
-	 * Selects all messages from the user's sent box. 
+	 * Selects all messages from the user's sent box.
 	 * 
-	 * @param user The user to fetch the messages
-	 * @return A <code>List</code> with all messages found. Each 
-	 * entry is a <code>PrivateMessage</code> entry.
+	 * @param user
+	 *            The user to fetch the messages
+	 * @return A <code>List</code> with all messages found. Each entry is a
+	 *         <code>PrivateMessage</code> entry.
 	 * @throws Exception
 	 */
 	public List selectFromSent(User user) throws Exception;
-	
+
 	/**
 	 * Gets a <code>PrivateMessage</code> by its id.
 	 * 
-	 * @param pm A <code>PrivateMessage</code> instance containing the pm's id
-	 * to retrieve
+	 * @param pm
+	 *            A <code>PrivateMessage</code> instance containing the pm's
+	 *            id to retrieve
 	 * @return The pm contents
 	 * @throws Exception
 	 */

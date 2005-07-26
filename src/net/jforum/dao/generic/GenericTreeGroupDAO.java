@@ -53,32 +53,32 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTreeGroupDAO.java,v 1.2 2005/03/26 04:10:45 rafaelsteil Exp $
+ * @version $Id: GenericTreeGroupDAO.java,v 1.2 2005/03/26 04:10:45 rafaelsteil
+ *          Exp $
  */
-public class GenericTreeGroupDAO implements net.jforum.dao.TreeGroupDAO 
-{
-	/** 
+public class GenericTreeGroupDAO implements net.jforum.dao.TreeGroupDAO {
+	/**
 	 * @see net.jforum.dao.TreeGroupDAO#selectGroups(int)
 	 */
-	public List selectGroups(int parentId) throws Exception 
-	{
+	public List selectGroups(int parentId) throws Exception {
 		List list = new ArrayList();
-		
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("TreeGroup.selectGroup"));
+
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("TreeGroup.selectGroup"));
 		p.setInt(1, parentId);
-		
+
 		ResultSet rs = p.executeQuery();
 		while (rs.next()) {
 			GroupNode n = new GroupNode();
 			n.setName(rs.getString("group_name"));
 			n.setId(rs.getInt("group_id"));
-			
-			list.add(n);		
+
+			list.add(n);
 		}
-		
+
 		rs.close();
 		p.close();
-		
+
 		return list;
 	}
 }

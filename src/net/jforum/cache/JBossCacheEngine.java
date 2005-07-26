@@ -57,104 +57,98 @@ import org.jboss.cache.TreeCache;
 
 /**
  * @author Rafael Steil
- * @version $Id: JBossCacheEngine.java,v 1.4 2005/02/03 12:37:42 rafaelsteil Exp $
+ * @version $Id: JBossCacheEngine.java,v 1.5 2005/07/26 02:45:37 diegopires Exp $
  */
-public class JBossCacheEngine implements CacheEngine
-{
+public class JBossCacheEngine implements CacheEngine {
 	private Logger logger = Logger.getLogger(JBossCacheEngine.class);
+
 	private TreeCache cache;
 
 	/**
 	 * @see net.jforum.cache.CacheEngine#init()
 	 */
-	public void init()
-	{
+	public void init() {
 		try {
 			this.cache = new TreeCache();
 			PropertyConfigurator config = new PropertyConfigurator();
-			config.configure(this.cache, SystemGlobals.getValue(ConfigKeys.JBOSS_CACHE_PROPERTIES));
-			
+			config.configure(this.cache, SystemGlobals
+					.getValue(ConfigKeys.JBOSS_CACHE_PROPERTIES));
+
 			this.cache.startService();
-		}
-		catch (Exception e) {
-			throw new CacheException("Error while trying to configure jboss-cache: " + e);
+		} catch (Exception e) {
+			throw new CacheException(
+					"Error while trying to configure jboss-cache: " + e);
 		}
 	}
 
 	/**
 	 * @see net.jforum.cache.CacheEngine#add(java.lang.String, java.lang.Object)
 	 */
-	public void add(String key, Object value)
-	{
+	public void add(String key, Object value) {
 		this.add(CacheEngine.DUMMY_FQN, key, value);
 	}
 
 	/**
-	 * @see net.jforum.cache.CacheEngine#add(java.lang.String, java.lang.String, java.lang.Object)
+	 * @see net.jforum.cache.CacheEngine#add(java.lang.String, java.lang.String,
+	 *      java.lang.Object)
 	 */
-	public void add(String fqn, String key, Object value)
-	{
+	public void add(String fqn, String key, Object value) {
 		try {
 			this.cache.put(Fqn.fromString(fqn), key, value);
-		}
-		catch (Exception e) {
-			throw new CacheException("Error adding a new entry to the cache: " + e);
+		} catch (Exception e) {
+			throw new CacheException("Error adding a new entry to the cache: "
+					+ e);
 		}
 	}
 
 	/**
 	 * @see net.jforum.cache.CacheEngine#get(java.lang.String, java.lang.String)
 	 */
-	public Object get(String fqn, String key)
-	{
+	public Object get(String fqn, String key) {
 		try {
 			return this.cache.get(Fqn.fromString(fqn), key);
-		}
-		catch (Exception e) {
-			throw new CacheException("Error while trying to get an entry from the cache: " + e);
+		} catch (Exception e) {
+			throw new CacheException(
+					"Error while trying to get an entry from the cache: " + e);
 		}
 	}
 
 	/**
 	 * @see net.jforum.cache.CacheEngine#get(java.lang.String)
 	 */
-	public Object get(String fqn)
-	{
+	public Object get(String fqn) {
 		try {
 			return this.cache.get(Fqn.fromString(fqn));
-		}
-		catch (Exception e) {
-			throw new CacheException("Error while trying to get an entry from the cache: " + e);
+		} catch (Exception e) {
+			throw new CacheException(
+					"Error while trying to get an entry from the cache: " + e);
 		}
 	}
-	
+
 	/**
 	 * @see net.jforum.cache.CacheEngine#getValues(java.lang.String)
 	 */
-	public Collection getValues(String fqn)
-	{
-		Node node = (Node)this.get(fqn);
+	public Collection getValues(String fqn) {
+		Node node = (Node) this.get(fqn);
 		if (node == null) {
 			return new ArrayList();
 		}
-		
+
 		return node.getData().values();
 	}
 
 	/**
-	 * @see net.jforum.cache.CacheEngine#remove(java.lang.String, java.lang.String)
+	 * @see net.jforum.cache.CacheEngine#remove(java.lang.String,
+	 *      java.lang.String)
 	 */
-	public void remove(String fqn, String key)
-	{
+	public void remove(String fqn, String key) {
 		try {
 			if (key == null) {
 				this.cache.remove(Fqn.fromString(fqn));
-			}
-			else {
+			} else {
 				this.cache.remove(Fqn.fromString(fqn), key);
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			logger.warn("Error while removing a FQN from the cache: " + e);
 		}
 	}
@@ -162,12 +156,10 @@ public class JBossCacheEngine implements CacheEngine
 	/**
 	 * @see net.jforum.cache.CacheEngine#remove(java.lang.String)
 	 */
-	public void remove(String fqn)
-	{
+	public void remove(String fqn) {
 		try {
 			this.cache.remove(Fqn.fromString(fqn));
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			logger.warn("Error while removing a FQN from the cache: " + e);
 		}
 	}

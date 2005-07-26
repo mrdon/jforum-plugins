@@ -59,47 +59,49 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: TopicRepository.java,v 1.14 2005/03/26 04:10:58 rafaelsteil Exp $
+ * @version $Id: TopicRepository.java,v 1.15 2005/07/26 02:45:34 diegopires Exp $
  */
-public class TopicRepository implements Cacheable
-{
-	private static int maxItems = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
+public class TopicRepository implements Cacheable {
+	private static int maxItems = SystemGlobals
+			.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
+
 	private static final String FQN = "topics";
+
 	private static final String RECENT = "recent";
+
 	private static final String FQN_FORUM = FQN + "/byforum";
+
 	private static CacheEngine cache;
-	
+
 	/**
 	 * @see net.jforum.cache.Cacheable#setCacheEngine(net.jforum.cache.CacheEngine)
 	 */
-	public void setCacheEngine(CacheEngine engine)
-	{
+	public void setCacheEngine(CacheEngine engine) {
 		cache = engine;
 	}
 
 	/**
 	 * Add topic to the FIFO stack
 	 * 
-	 * @param topic The topic to add to stack
+	 * @param topic
+	 *            The topic to add to stack
 	 */
-	public synchronized static void pushTopic(Topic topic) throws Exception
-	{
+	public synchronized static void pushTopic(Topic topic) throws Exception {
 		if (SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
 			int limit = SystemGlobals.getIntValue(ConfigKeys.RECENT_TOPICS);
-			
-			LinkedList l = (LinkedList)cache.get(FQN, RECENT);
+
+			LinkedList l = (LinkedList) cache.get(FQN, RECENT);
 			if (l == null || l.size() == 0) {
 				l = new LinkedList(loadMostRecentTopics());
 			}
-			
+
 			l.remove(topic);
 			l.addFirst(topic);
-			
-			while (l.size() > limit)
-			{
+
+			while (l.size() > limit) {
 				l.removeLast();
 			}
-			
+
 			cache.add(FQN, RECENT, l);
 		}
 	}
@@ -107,107 +109,106 @@ public class TopicRepository implements Cacheable
 	/**
 	 * Remove topic to the FIFO stack
 	 * 
-	 * @param topic The topic to remove from stack
+	 * @param topic
+	 *            The topic to remove from stack
 	 */
-	public synchronized static void popTopic(Topic topic) throws Exception
-	{
+	public synchronized static void popTopic(Topic topic) throws Exception {
 		if (SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
-			List l = (List)cache.get(FQN, RECENT);
+			List l = (List) cache.get(FQN, RECENT);
 			if (l == null || l.size() == 0) {
 				l = new LinkedList(loadMostRecentTopics());
 			}
-			
+
 			l.remove(topic);
 			cache.add(FQN, RECENT, l);
 		}
-	}	
+	}
 
 	/**
-	 * Get all cached recent topics. 
+	 * Get all cached recent topics.
 	 * 
-	 */	
-	public static List getRecentTopics() throws Exception
-	{
-		List l = (List)cache.get(FQN, RECENT);
+	 */
+	public static List getRecentTopics() throws Exception {
+		List l = (List) cache.get(FQN, RECENT);
 		if (l == null || l.size() == 0
 				|| !SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
 			l = loadMostRecentTopics();
 		}
-		
+
 		return new ArrayList(l);
-	}	
+	}
 
 	/**
 	 * Add recent topics to the cache
 	 */
-	public static List loadMostRecentTopics() throws Exception
-	{
+	public static List loadMostRecentTopics() throws Exception {
 		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 		int limit = SystemGlobals.getIntValue(ConfigKeys.RECENT_TOPICS);
-		
+
 		List l = tm.selectRecentTopics(limit);
 		cache.add(FQN, RECENT, new LinkedList(l));
-		
+
 		return l;
 	}
+
 	/**
 	 * Add topics to the cache
 	 * 
-	 * @param forumId The forum id to which the topics are related
-	 * @param topics The topics to add
+	 * @param forumId
+	 *            The forum id to which the topics are related
+	 * @param topics
+	 *            The topics to add
 	 */
-	public synchronized static void addAll(int forumId, List topics)
-	{
+	public synchronized static void addAll(int forumId, List topics) {
 		cache.add(FQN_FORUM, Integer.toString(forumId), new LinkedList(topics));
 	}
-	
+
 	/**
 	 * Clears the cache
 	 * 
-	 * @param forumId The forum id to clear the cache
+	 * @param forumId
+	 *            The forum id to clear the cache
 	 */
-	public synchronized static void clearCache(int forumId) throws Exception
-	{
+	public synchronized static void clearCache(int forumId) throws Exception {
 		cache.add(FQN_FORUM, Integer.toString(forumId), new LinkedList());
 	}
-	
+
 	/**
 	 * Adds a new topic to the cache
 	 * 
-	 * @param topic The topic to add
+	 * @param topic
+	 *            The topic to add
 	 */
-	public synchronized static void addTopic(Topic topic)
-	{
+	public synchronized static void addTopic(Topic topic) {
 		if (SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
 			String forumId = Integer.toString(topic.getForumId());
-			LinkedList list = (LinkedList)cache.get(FQN_FORUM, forumId);
-			
+			LinkedList list = (LinkedList) cache.get(FQN_FORUM, forumId);
+
 			if (list == null) {
 				list = new LinkedList();
 				list.add(topic);
-			}
-			else {
+			} else {
 				if (list.size() + 1 > maxItems) {
 					list.removeLast();
 				}
-				
+
 				list.addFirst(topic);
 			}
-			
+
 			cache.add(FQN_FORUM, forumId, list);
 		}
 	}
-	
+
 	/**
 	 * Updates a cached topic
 	 * 
-	 * @param topic The topic to update
+	 * @param topic
+	 *            The topic to update
 	 */
-	public synchronized static void updateTopic(Topic topic)
-	{
+	public synchronized static void updateTopic(Topic topic) {
 		String forumId = Integer.toString(topic.getForumId());
-		List l = (List)cache.get(FQN_FORUM, forumId);
-		
+		List l = (List) cache.get(FQN_FORUM, forumId);
+
 		if (l != null) {
 			int index = l.indexOf(topic);
 			if (index > -1) {
@@ -216,35 +217,38 @@ public class TopicRepository implements Cacheable
 			}
 		}
 	}
-	
+
 	/**
 	 * Checks if a topic is cached
 	 * 
-	 * @param topic The topic to verify
-	 * @return <code>true</code> if the topic is cached, or <code>false</code> if not.
+	 * @param topic
+	 *            The topic to verify
+	 * @return <code>true</code> if the topic is cached, or <code>false</code>
+	 *         if not.
 	 */
-	public static boolean isTopicCached(Topic topic)
-	{
-		return ((List)cache.get(FQN_FORUM, Integer.toString(topic.getForumId()))).contains(topic);
+	public static boolean isTopicCached(Topic topic) {
+		return ((List) cache.get(FQN_FORUM, Integer
+				.toString(topic.getForumId()))).contains(topic);
 	}
-	
+
 	/**
-	 * Get all cached topics related to a forum. 
+	 * Get all cached topics related to a forum.
 	 * 
-	 * @param forumid The forum id 
+	 * @param forumid
+	 *            The forum id
 	 * @return <code>ArrayList</code> with the topics.
 	 */
-	public static List getTopics(int forumid)
-	{
+	public static List getTopics(int forumid) {
 		if (SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
-			List returnList = (List)cache.get(FQN_FORUM, Integer.toString(forumid));
+			List returnList = (List) cache.get(FQN_FORUM, Integer
+					.toString(forumid));
 			if (returnList == null) {
 				return new ArrayList();
 			}
-			
+
 			return new ArrayList(returnList);
 		}
-		
+
 		return new ArrayList();
 	}
 }

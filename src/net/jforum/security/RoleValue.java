@@ -46,71 +46,63 @@ import java.io.Serializable;
 
 /**
  * @author Rafael Steil
- * @version $Id: RoleValue.java,v 1.5 2005/02/03 12:37:40 rafaelsteil Exp $
+ * @version $Id: RoleValue.java,v 1.6 2005/07/26 02:45:55 diegopires Exp $
  */
-public class RoleValue implements Serializable
-{
+public class RoleValue implements Serializable {
 	private int roleId;
+
 	private String value;
+
 	private int type = PermissionControl.ROLE_DENY;
-	
-	public void setRoleId(int roleId)
-	{
+
+	public void setRoleId(int roleId) {
 		this.roleId = roleId;
 	}
-	
-	public void setValue(String value)
-	{
+
+	public void setValue(String value) {
 		this.value = value;
 	}
-	
-	public void setType(int type)
-	{
+
+	public void setType(int type) {
 		this.type = type;
 	}
-	
-	public int getRoleId()
-	{
+
+	public int getRoleId() {
 		return this.roleId;
 	}
-	
-	public String getValue()
-	{
+
+	public String getValue() {
 		return this.value;
 	}
-	
-	public int getType()
-	{
+
+	public int getType() {
 		return this.type;
 	}
-	
-	/** 
+
+	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	public boolean equals(Object o) 
-	{
+	public boolean equals(Object o) {
 		if (!(o instanceof RoleValue)) {
 			return false;
 		}
-		
-		RoleValue rv = (RoleValue)o;
+
+		RoleValue rv = (RoleValue) o;
 		return (rv.getValue().equals(this.value) && rv.getType() == this.type);
 	}
 
-	/** 
+	/**
 	 * @see java.lang.Object#hashCode()
 	 */
-	public int hashCode() 
-	{
+	public int hashCode() {
 		return (this.value + this.type).hashCode();
 	}
-	
-	/** 
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
-	public String toString() 
-	{
-		return "[" + this.value + ", type=" + this.type + "]"; 
+	public String toString() {
+		return "[" + this.value + ", type=" + this.type + "]";
 	}
 
 }

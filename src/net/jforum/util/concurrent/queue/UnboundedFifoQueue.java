@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: UnboundedFifoQueue.java,v 1.2 2004/04/21 23:57:42 rafaelsteil Exp $
+ * $Id: UnboundedFifoQueue.java,v 1.3 2005/07/26 02:45:56 diegopires Exp $
  */
 package net.jforum.util.concurrent.queue;
 
@@ -53,98 +53,91 @@ import net.jforum.util.concurrent.Queue;
 /**
  * @author Rodrigo Kumpera
  */
-public class UnboundedFifoQueue implements Queue 
-{
+public class UnboundedFifoQueue implements Queue {
 	private final LinkedList queue = new LinkedList();
-	
-	public UnboundedFifoQueue() { }
 
-	public Object get() throws InterruptedException 
-	{
-		if(Thread.interrupted()) {
+	public UnboundedFifoQueue() {
+	}
+
+	public Object get() throws InterruptedException {
+		if (Thread.interrupted()) {
 			throw new InterruptedException();
 		}
-		
-		synchronized(queue) {
+
+		synchronized (queue) {
 			try {
-				while(queue.isEmpty()) {
+				while (queue.isEmpty()) {
 					queue.wait();
 				}
-				
+
 				return queue.removeFirst();
-			} 
-			catch(InterruptedException e) {
+			} catch (InterruptedException e) {
 				queue.notify();
 				throw e;
 			}
 		}
 	}
 
-	public Object pool(final long timeout) throws InterruptedException
-	{
-		if(Thread.interrupted()) {
+	public Object pool(final long timeout) throws InterruptedException {
+		if (Thread.interrupted()) {
 			throw new InterruptedException();
 		}
-		
-		synchronized(queue) {
-			if(!queue.isEmpty()) {
+
+		synchronized (queue) {
+			if (!queue.isEmpty()) {
 				return queue.removeFirst();
 			}
-			
-			if(timeout <= 0) {
+
+			if (timeout <= 0) {
 				return null;
 			}
-			
+
 			try {
 				long remaining = timeout;
 				long start = System.currentTimeMillis();
-				
-				for(;;) {
+
+				for (;;) {
 					queue.wait(remaining);
-					
-					if(!queue.isEmpty()) {
+
+					if (!queue.isEmpty()) {
 						return queue.removeFirst();
 					}
-					
+
 					remaining = timeout - (System.currentTimeMillis() - start);
-					
-					if(remaining <= 0) {
-						return null;	
+
+					if (remaining <= 0) {
+						return null;
 					}
-				}				
-			} 
-			catch(InterruptedException e) {
+				}
+			} catch (InterruptedException e) {
 				queue.notify();
 				throw e;
 			}
 		}
 	}
 
-	public void put(Object obj) throws InterruptedException 
-	{
+	public void put(Object obj) throws InterruptedException {
 		offer(obj, 0);
 	}
 
-	public boolean offer(Object obj, long timeout) throws InterruptedException 
-	{
-		if(obj == null) {
+	public boolean offer(Object obj, long timeout) throws InterruptedException {
+		if (obj == null) {
 			throw new InvalidParameterException("obj is null");
 		}
-		
-		if(Thread.interrupted()) {
+
+		if (Thread.interrupted()) {
 			throw new InterruptedException();
 		}
-		
-		synchronized(queue) {
+
+		synchronized (queue) {
 			queue.add(obj);
 			queue.notify();
 		}
 		return true;
 	}
 
-	public int size() 
-	{
-		synchronized(queue) {
+	public int size() {
+		synchronized (queue) {
 			return queue.size();
 		}
 	}

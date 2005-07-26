@@ -44,12 +44,11 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: RankingLoadException.java,v 1.1 2005/02/01 21:41:54 rafaelsteil Exp $
+ * @version $Id: RankingLoadException.java,v 1.1 2005/02/01 21:41:54 rafaelsteil
+ *          Exp $
  */
-public class RankingLoadException extends RuntimeException
-{
-	public RankingLoadException(String message)
-	{
+public class RankingLoadException extends RuntimeException {
+	public RankingLoadException(String message) {
 		super(message);
 	}
 }

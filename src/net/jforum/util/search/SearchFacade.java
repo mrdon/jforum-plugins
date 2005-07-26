@@ -42,49 +42,50 @@
  */
 package net.jforum.util.search;
 
-import org.apache.log4j.Logger;
-
 import net.jforum.entities.Post;
 import net.jforum.exceptions.SearchInstantiationException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author Rafael Steil
- * @version $Id: SearchFacade.java,v 1.2 2005/03/12 20:10:45 rafaelsteil Exp $
+ * @version $Id: SearchFacade.java,v 1.3 2005/07/26 02:46:13 diegopires Exp $
  */
-public class SearchFacade
-{
+public class SearchFacade {
 	private static SearchManager searchManager;
+
 	private static Logger logger = Logger.getLogger(SearchFacade.class);
-	
-	public static void init()
-	{
+
+	public static void init() {
 		if (!SystemGlobals.getBoolValue(ConfigKeys.SEARCH_INDEXING_ENABLED)) {
-			logger.info("Search indexation is disabled. 'Will try to create a SearchManager "
-					+ "instance for runtime configuration changes");
+			logger
+					.info("Search indexation is disabled. 'Will try to create a SearchManager "
+							+ "instance for runtime configuration changes");
 		}
-		
-		String clazz = SystemGlobals.getValue(ConfigKeys.SEARCH_INDEXER_IMPLEMENTATION);
-		
+
+		String clazz = SystemGlobals
+				.getValue(ConfigKeys.SEARCH_INDEXER_IMPLEMENTATION);
+
 		if (clazz != null && !"".equals(clazz)) {
 			try {
-				searchManager = (SearchManager)Class.forName(clazz).newInstance();
-			}
-			catch (Exception e) {
+				searchManager = (SearchManager) Class.forName(clazz)
+						.newInstance();
+			} catch (Exception e) {
 				e.printStackTrace();
-				throw new SearchInstantiationException("Error while tring to start the search manager: " + e);
+				throw new SearchInstantiationException(
+						"Error while tring to start the search manager: " + e);
 			}
-			
+
 			searchManager.init();
-		}
-		else {
-			logger.info(ConfigKeys.SEARCH_INDEXER_IMPLEMENTATION + " is not defined. Skipping.");
+		} else {
+			logger.info(ConfigKeys.SEARCH_INDEXER_IMPLEMENTATION
+					+ " is not defined. Skipping.");
 		}
 	}
-	
-	public static void index(Post post)
-	{
+
+	public static void index(Post post) {
 		if (SystemGlobals.getBoolValue(ConfigKeys.SEARCH_INDEXING_ENABLED)) {
 			searchManager.index(post);
 		}

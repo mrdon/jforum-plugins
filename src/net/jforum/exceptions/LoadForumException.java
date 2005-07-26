@@ -44,7 +44,8 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: LoadForumException.java,v 1.1 2004/11/13 03:14:04 rafaelsteil Exp $
+ * @version $Id: LoadForumException.java,v 1.1 2004/11/13 03:14:04 rafaelsteil
+ *          Exp $
  */
 public class LoadForumException extends RuntimeException {
 	public LoadForumException(String message) {

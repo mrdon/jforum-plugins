@@ -55,45 +55,44 @@ import net.jforum.view.forum.common.ViewCommon;
  * RSS for the messages of some topic
  * 
  * @author Rafael Steil
- * @version $Id: TopicPostsRSS.java,v 1.5 2005/05/20 15:38:01 rafaelsteil Exp $
+ * @version $Id: TopicPostsRSS.java,v 1.6 2005/07/26 02:46:02 diegopires Exp $
  */
-public class TopicPostsRSS extends GenericRSS 
-{
+public class TopicPostsRSS extends GenericRSS {
 	private List posts;
+
 	protected RSS rss;
+
 	protected String forumLink;
-	
-	public TopicPostsRSS(String title, String description, int topicId, List posts)
-	{
+
+	public TopicPostsRSS(String title, String description, int topicId,
+			List posts) {
 		this.forumLink = ViewCommon.getForumLink();
-		
+
 		this.posts = posts;
-		this.rss = new RSS(title, description, 
-				SystemGlobals.getValue(ConfigKeys.ENCODING),
-				this.forumLink + "posts/list/" + topicId 
+		this.rss = new RSS(title, description, SystemGlobals
+				.getValue(ConfigKeys.ENCODING), this.forumLink + "posts/list/"
+				+ topicId
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		this.prepareRSS();
 	}
-	
-	private void prepareRSS()
-	{
-		for (Iterator iter = this.posts.iterator(); iter.hasNext(); ) {
-			Post p = (Post)iter.next();
-			
+
+	private void prepareRSS() {
+		for (Iterator iter = this.posts.iterator(); iter.hasNext();) {
+			Post p = (Post) iter.next();
+
 			RSSItem item = new RSSItem();
 			item.setAuthor(p.getPostUsername());
 			item.setContentType(RSSAware.CONTENT_HTML);
 			item.setDescription(PostCommon.processText(p.getText()));
 			item.setPublishDate(RSSUtils.formatDate(p.getTime()));
 			item.setTitle(p.getSubject());
-			item.setLink(this.forumLink 
-					+ "posts/list/" + p.getTopicId()
+			item.setLink(this.forumLink + "posts/list/" + p.getTopicId()
 					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)
 					+ "#" + p.getId());
 
 			this.rss.addItem(item);
 		}
-		
+
 		super.setRSS(this.rss);
 	}
 }

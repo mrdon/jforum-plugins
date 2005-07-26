@@ -44,6 +44,9 @@ package net.jforum.dao.mysql;
 
 /**
  * @author Rafael Steil
- * @version $Id: MysqlDataAccessDriver.java,v 1.3 2005/07/08 00:22:56 rafaelsteil Exp $
+ * @version $Id: MysqlDataAccessDriver.java,v 1.3 2005/07/08 00:22:56
+ *          rafaelsteil Exp $
  */
-public class MysqlDataAccessDriver extends net.jforum.dao.generic.DataAccessDriver {}
+public class MysqlDataAccessDriver extends
+		net.jforum.dao.generic.DataAccessDriver {
+}

@@ -61,17 +61,15 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: CacheAction.java,v 1.4 2005/03/26 04:11:18 rafaelsteil Exp $
+ * @version $Id: CacheAction.java,v 1.5 2005/07/26 02:45:40 diegopires Exp $
  */
-public class CacheAction extends AdminCommand
-{
+public class CacheAction extends AdminCommand {
 	/**
 	 * @see net.jforum.Command#list()
 	 */
-	public void list() throws Exception
-	{
+	public void list() throws Exception {
 		this.setTemplateName(TemplateKeys.CACHE_LIST);
-		
+
 		this.context.put("bb", new BBCodeRepository());
 		this.context.put("modules", new ModulesRepository());
 		this.context.put("ranking", new RankingRepository());
@@ -82,53 +80,47 @@ public class CacheAction extends AdminCommand
 		this.context.put("session", new SessionFacade());
 		this.context.put("posts", new PostRepository());
 	}
-	
-	public void bbReload() throws Exception
-	{
+
+	public void bbReload() throws Exception {
 		BBCodeRepository.setBBCollection(new BBCodeHandler().parse());
 		this.list();
 	}
-	
-	public void sessionClear() throws Exception
-	{
+
+	public void sessionClear() throws Exception {
 		SessionFacade.clear();
 		this.list();
 	}
-	
-	public void modulesReload() throws Exception
-	{
+
+	public void modulesReload() throws Exception {
 		ModulesRepository.init(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR));
 		this.list();
 	}
-	
-	public void smiliesReload() throws Exception
-	{
+
+	public void smiliesReload() throws Exception {
 		SmiliesRepository.loadSmilies();
 		this.list();
 	}
-	
-	public void rankingReload() throws Exception
-	{
+
+	public void rankingReload() throws Exception {
 		RankingRepository.loadRanks();
 		this.list();
 	}
-	
-	public void postsMoreInfo() throws Exception
-	{
+
+	public void postsMoreInfo() throws Exception {
 		if (!SystemGlobals.getBoolValue(ConfigKeys.POSTS_CACHE_ENABLED)) {
 			this.list();
 			return;
 		}
-		
+
 		Collection topics = PostRepository.cachedTopics();
-		
-		this.context.put("topics", DataAccessDriver.getInstance().newTopicDAO().selectTopicTitlesByIds(topics));
+
+		this.context.put("topics", DataAccessDriver.getInstance().newTopicDAO()
+				.selectTopicTitlesByIds(topics));
 		this.context.put("repository", new PostRepository());
 		this.setTemplateName(TemplateKeys.CACHE_POST_MOREINFO);
 	}
-	
-	public void postsClear() throws Exception
-	{
+
+	public void postsClear() throws Exception {
 		int topicId = this.request.getIntParameter("topic_id");
 		PostRepository.clearCache(topicId);
 		this.postsMoreInfo();

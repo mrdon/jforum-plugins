@@ -46,15 +46,13 @@ import java.util.List;
 
 /**
  * @author Dmitriy Kiriy
- * @version $Id: OracleUserDAO.java,v 1.3 2005/04/10 16:24:39 rafaelsteil Exp $
+ * @version $Id: OracleUserDAO.java,v 1.4 2005/07/26 02:45:38 diegopires Exp $
  */
-public class OracleUserDAO extends net.jforum.dao.generic.GenericUserDAO
-{
-	/** 
+public class OracleUserDAO extends net.jforum.dao.generic.GenericUserDAO {
+	/**
 	 * @see net.jforum.dao.UserDAO#selectAll(int, int)
 	 */
-	public List selectAll(int startFrom, int count) throws Exception
-	{
+	public List selectAll(int startFrom, int count) throws Exception {
 		return super.selectAll(startFrom, (count > 0 ? startFrom + count : 0));
 	}
 }

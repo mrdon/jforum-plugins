@@ -46,27 +46,25 @@ import java.io.Serializable;
 import java.util.Comparator;
 
 import net.jforum.entities.Forum;
+
 /**
  * @author James Yong Boon Leong
  * @author Rafael Steil
- * @version $Id: ForumOrderComparator.java,v 1.3 2005/02/03 12:37:40 rafaelsteil Exp $
+ * @version $Id: ForumOrderComparator.java,v 1.3 2005/02/03 12:37:40 rafaelsteil
+ *          Exp $
  */
 public class ForumOrderComparator implements Comparator, Serializable {
-	
-	public final int compare (Object a, Object b)
-	{
-		Forum f1 = (Forum)a;
-		Forum f2 = (Forum)b;
-		
+
+	public final int compare(Object a, Object b) {
+		Forum f1 = (Forum) a;
+		Forum f2 = (Forum) b;
+
 		if (f1.getOrder() > f2.getOrder()) {
 			return 1;
-		}
-		else if (f1.getOrder() < f2.getOrder() ) {
+		} else if (f1.getOrder() < f2.getOrder()) {
 			return -1;
-		}
-		else {
+		} else {
 			return f1.getName().compareTo(f2.getName());
 		}
 	}
 }
-

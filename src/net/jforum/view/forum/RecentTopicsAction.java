@@ -62,45 +62,42 @@ import net.jforum.view.forum.common.TopicsCommon;
  * 
  * @author James Yong
  * @author Rafael Steil
- * @version $Id: RecentTopicsAction.java,v 1.9 2005/07/19 01:46:45 rafaelsteil Exp $
+ * @version $Id: RecentTopicsAction.java,v 1.9 2005/07/19 01:46:45 rafaelsteil
+ *          Exp $
  */
-public class RecentTopicsAction extends Command 
-{
+public class RecentTopicsAction extends Command {
 	private List forums;
 
-	public void list() throws Exception
-	{
+	public void list() throws Exception {
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 
 		this.setTemplateName(TemplateKeys.RECENT_LIST);
-		
+
 		this.context.put("postsPerPage", new Integer(postsPerPage));
 		this.context.put("topics", this.topics());
 		this.context.put("forums", this.forums);
-		
+
 		TopicsCommon.topicListingBase();
 		JForum.getRequest().setAttribute("template", null);
 	}
-	
-	List topics() throws Exception
-	{
+
+	List topics() throws Exception {
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 		List tmpTopics = TopicRepository.getRecentTopics();
-		
+
 		this.forums = new ArrayList(postsPerPage);
 
-		for (Iterator iter = tmpTopics.iterator(); iter.hasNext(); ) {
-			Topic t = (Topic)iter.next();
+		for (Iterator iter = tmpTopics.iterator(); iter.hasNext();) {
+			Topic t = (Topic) iter.next();
 			if (TopicsCommon.isTopicAccessible(t.getForumId())) {
 				// Get name of forum that the topic refers to
 				Forum f = ForumRepository.getForum(t.getForumId());
 				forums.add(f);
-			}
-			else {
+			} else {
 				iter.remove();
 			}
 		}
-		
+
 		return TopicsCommon.prepareTopics(tmpTopics);
 	}
 }

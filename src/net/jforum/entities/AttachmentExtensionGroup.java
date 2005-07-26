@@ -44,96 +44,96 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentExtensionGroup.java,v 1.1 2005/01/17 22:17:19 rafaelsteil Exp $
+ * @version $Id: AttachmentExtensionGroup.java,v 1.1 2005/01/17 22:17:19
+ *          rafaelsteil Exp $
  */
-public class AttachmentExtensionGroup
-{
+public class AttachmentExtensionGroup {
 	public static final int DOWNLOAD_INLINE = 1;
+
 	public static final int DOWNLOAD_PHYSICAL = 2;
-	
+
 	private int id;
+
 	private String name;
+
 	private boolean allow;
+
 	private String uploadIcon;
+
 	private int downloadMode;
-	
+
 	/**
 	 * @return Returns the downloadMode.
 	 */
-	public int getDownloadMode()
-	{
+	public int getDownloadMode() {
 		return this.downloadMode;
 	}
-	
+
 	/**
-	 * @param downloadMode The downloadMode to set.
+	 * @param downloadMode
+	 *            The downloadMode to set.
 	 */
-	public void setDownloadMode(int downloadMode)
-	{
+	public void setDownloadMode(int downloadMode) {
 		this.downloadMode = downloadMode;
 	}
-	
+
 	/**
 	 * @return Returns the allow.
 	 */
-	public boolean isAllow()
-	{
+	public boolean isAllow() {
 		return this.allow;
 	}
-	
+
 	/**
-	 * @param allow The allow to set.
+	 * @param allow
+	 *            The allow to set.
 	 */
-	public void setAllow(boolean allow)
-	{
+	public void setAllow(boolean allow) {
 		this.allow = allow;
 	}
-	
+
 	/**
 	 * @return Returns the id.
 	 */
-	public int getId()
-	{
+	public int getId() {
 		return this.id;
 	}
-	
+
 	/**
-	 * @param id The id to set.
+	 * @param id
+	 *            The id to set.
 	 */
-	public void setId(int id)
-	{
+	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	/**
 	 * @return Returns the name.
 	 */
-	public String getName()
-	{
+	public String getName() {
 		return this.name;
 	}
-	
+
 	/**
-	 * @param name The name to set.
+	 * @param name
+	 *            The name to set.
 	 */
-	public void setName(String name)
-	{
+	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	/**
 	 * @return Returns the uploadIcon.
 	 */
-	public String getUploadIcon()
-	{
+	public String getUploadIcon() {
 		return this.uploadIcon;
 	}
-	
+
 	/**
-	 * @param uploadIcon The uploadIcon to set.
+	 * @param uploadIcon
+	 *            The uploadIcon to set.
 	 */
-	public void setUploadIcon(String uploadIcon)
-	{
+	public void setUploadIcon(String uploadIcon) {
 		this.uploadIcon = uploadIcon;
 	}
 }

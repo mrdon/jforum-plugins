@@ -41,28 +41,28 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: GroupNode.java,v 1.2 2004/04/21 23:57:26 rafaelsteil Exp $
+ * $Id: GroupNode.java,v 1.3 2005/07/26 02:45:48 diegopires Exp $
  */
 package net.jforum.util;
 
 import java.util.ArrayList;
 
-/** 
- * Represents a node in the group hierarchy.
- * Every single group has a name and an ID, and each group may have 
- * unlimited subgroups. which may have sub-subgroups and so on.
- * This class represents a specific group, supplying methods to add new
- * groups and get information about them, as well all related sugroups.
+/**
+ * Represents a node in the group hierarchy. Every single group has a name and
+ * an ID, and each group may have unlimited subgroups. which may have
+ * sub-subgroups and so on. This class represents a specific group, supplying
+ * methods to add new groups and get information about them, as well all related
+ * sugroups.
  * <p>
  * This class is also used toghether with <code>TreeGroup</code>.
  * 
  * @author Rafael Steil
  */
-public class GroupNode 
-{
+public class GroupNode {
 	private String name;
+
 	private int id;
-	
+
 	/**
 	 * Subgroups of the instantiated group
 	 */
@@ -71,59 +71,57 @@ public class GroupNode
 	/**
 	 * Default Constructor
 	 */
-	public GroupNode()
-	{
+	public GroupNode() {
 		this.extraNodes = new ArrayList();
 	}
 
 	/**
 	 * Gets a node.
 	 * 
-	 * @param pos Node position to retrieve
+	 * @param pos
+	 *            Node position to retrieve
 	 * @return <code>GroupNode</code>
-	 * */
-	public GroupNode getNode(int pos)
-	{
-		return (GroupNode)this.extraNodes.get(pos);
+	 */
+	public GroupNode getNode(int pos) {
+		return (GroupNode) this.extraNodes.get(pos);
 	}
 
 	/**
 	 * Adds a new node.
 	 * 
-	 * @param n Node to add
-	 * */
-	public void addNode(GroupNode n)
-	{
+	 * @param n
+	 *            Node to add
+	 */
+	public void addNode(GroupNode n) {
 		this.extraNodes.add(n);
 	}
 
 	/**
-	 * Gets the total number of nodes 
+	 * Gets the total number of nodes
 	 * 
-	 * @return Quantidade de nos. 
-	 * */
-	public int size()
-	{
+	 * @return Quantidade de nos.
+	 */
+	public int size() {
 		return this.extraNodes.size();
 	}
 
 	/**
 	 * Sets the node's name
 	 * 
-	 * @param name Node name
-	 * */
-	public void setName(String name)
-	{
+	 * @param name
+	 *            Node name
+	 */
+	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
 	 * Sets the node's ID
 	 * 
-	 * @param id Node ID
-	 * */
-	public void setId(int id)
-	{
+	 * @param id
+	 *            Node ID
+	 */
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -131,19 +129,17 @@ public class GroupNode
 	 * Gets the name of the node
 	 * 
 	 * @return String with the name
-	 * */	
-	public String getName()
-	{
+	 */
+	public String getName() {
 		return this.name;
 	}
-	
+
 	/**
 	 * Gets the ID
 	 * 
 	 * @return Node ID
-	 * */
-	public int getId()
-	{
+	 */
+	public int getId() {
 		return this.id;
 	}
 }

@@ -60,15 +60,14 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericModerationDAO.java,v 1.2 2005/07/08 18:23:12 rafaelsteil Exp $
+ * @version $Id: GenericModerationDAO.java,v 1.2 2005/07/08 18:23:12 rafaelsteil
+ *          Exp $
  */
-public class GenericModerationDAO implements ModerationDAO
-{
+public class GenericModerationDAO implements ModerationDAO {
 	/**
 	 * @see net.jforum.dao.ModerationDAO#aprovePost(int)
 	 */
-	public void aprovePost(int postId) throws Exception
-	{
+	public void aprovePost(int postId) throws Exception {
 		PreparedStatement p = JForum.getConnection().prepareStatement(
 				SystemGlobals.getSql("ModerationModel.aprovePost"));
 		p.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
@@ -76,52 +75,50 @@ public class GenericModerationDAO implements ModerationDAO
 		p.executeUpdate();
 		p.close();
 	}
-	
+
 	/**
 	 * @see net.jforum.dao.ModerationDAO#topicsByForum(int)
 	 */
-	public Map topicsByForum(int forumId) throws Exception
-	{
+	public Map topicsByForum(int forumId) throws Exception {
 		Map m = new HashMap();
-		
+
 		PreparedStatement p = JForum.getConnection().prepareStatement(
 				SystemGlobals.getSql("ModerationModel.topicsByForum"));
 		p.setInt(1, forumId);
-		
+
 		int lastId = 0;
 		TopicModerationInfo info = null;
-		
+
 		ResultSet rs = p.executeQuery();
 		while (rs.next()) {
 			int id = rs.getInt("topic_id");
 			if (id != lastId) {
 				lastId = id;
-				
+
 				if (info != null) {
 					m.put(new Integer(info.getTopicId()), info);
 				}
-				
+
 				info = new TopicModerationInfo();
 				info.setTopicId(id);
 				info.setTopicReplies(rs.getInt("topic_replies"));
 				info.setTopicTitle(rs.getString("topic_title"));
 			}
-			
+
 			info.addPost(this.getPost(rs));
 		}
-		
+
 		if (info != null) {
 			m.put(new Integer(info.getTopicId()), info);
 		}
-		
+
 		rs.close();
 		p.close();
-		
+
 		return m;
 	}
-	
-	protected Post getPost(ResultSet rs) throws Exception
-	{
+
+	protected Post getPost(ResultSet rs) throws Exception {
 		Post p = new Post();
 		p.setPostUsername(rs.getString("username"));
 		p.setId(rs.getInt("post_id"));
@@ -131,53 +128,51 @@ public class GenericModerationDAO implements ModerationDAO
 		p.setSmiliesEnabled(rs.getInt("enable_smilies") == 1);
 		p.setSubject(rs.getString("post_subject"));
 		p.setText(this.getPostTextFromResultSet(rs));
-		
+
 		return p;
 	}
-	
-	protected String getPostTextFromResultSet(ResultSet rs) throws Exception
-	{
+
+	protected String getPostTextFromResultSet(ResultSet rs) throws Exception {
 		return rs.getString("post_text");
 	}
-	
+
 	/**
 	 * @see net.jforum.dao.ModerationDAO#categoryPendingModeration()
 	 */
-	public List categoryPendingModeration() throws Exception
-	{
+	public List categoryPendingModeration() throws Exception {
 		List l = new ArrayList();
 		int lastId = 0;
 		ModerationPendingInfo info = null;
 		Statement s = JForum.getConnection().createStatement();
-		
-		ResultSet rs = s.executeQuery(SystemGlobals.getSql("ModerationModel.categoryPendingModeration"));
+
+		ResultSet rs = s.executeQuery(SystemGlobals
+				.getSql("ModerationModel.categoryPendingModeration"));
 		while (rs.next()) {
 			int id = rs.getInt("categories_id");
 			if (id != lastId) {
 				lastId = id;
-				
+
 				if (info != null) {
 					l.add(info);
 				}
-				
+
 				info = new ModerationPendingInfo();
 				info.setCategoryName(rs.getString("title"));
 				info.setCategoryId(id);
 			}
-			
-			info.addInfo(rs.getString("forum_name"), 
-					rs.getInt("forum_id"), 
-					rs.getInt("total"));
+
+			info.addInfo(rs.getString("forum_name"), rs.getInt("forum_id"), rs
+					.getInt("total"));
 		}
-		
+
 		if (info != null) {
 			l.add(info);
 		}
-		
+
 		rs.close();
 		s.close();
-		
+
 		return l;
 	}
-	
+
 }

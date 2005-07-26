@@ -50,71 +50,74 @@ import net.jforum.entities.User;
  * General utilities to use with SSO.
  * 
  * @author Rafael Steil
- * @version $Id: SSOUtils.java,v 1.1 2005/06/02 22:21:59 rafaelsteil Exp $
+ * @version $Id: SSOUtils.java,v 1.2 2005/07/26 02:46:14 diegopires Exp $
  */
-public class SSOUtils
-{
+public class SSOUtils {
 	private String username;
+
 	private boolean exists = true;
+
 	private User user;
+
 	private UserDAO dao;
-	
+
 	/**
 	 * Checks if an user exists in the database
 	 * 
-	 * @param username The username to check
-	 * @return <code>true</code> if the user exists. If <code>false</code> is
-	 * returned, then you can insert the user by calling {@link #register(String, String)}
+	 * @param username
+	 *            The username to check
+	 * @return <code>true</code> if the user exists. If <code>false</code>
+	 *         is returned, then you can insert the user by calling
+	 *         {@link #register(String, String)}
 	 * @see #register(String, String)
 	 * @see #getUser()
 	 * @throws Exception
 	 */
-	public boolean userExists(String username) throws Exception
-	{
+	public boolean userExists(String username) throws Exception {
 		this.username = username;
 		this.dao = DataAccessDriver.getInstance().newUserDAO();
 
 		this.user = this.dao.selectByName(username);
 
 		this.exists = this.user != null;
-		
+
 		return this.exists;
 	}
-	
+
 	/**
-	 * Registers a new user. 
-	 * This method should be used together with {@link #userExists(String)}. 
+	 * Registers a new user. This method should be used together with
+	 * {@link #userExists(String)}.
 	 * 
-	 * @param password the user's password. It <em>should</em> be the real / final 
-	 * password. In other words, the data passed as password is the data that'll be
-	 * written to the database
-	 * @param email the user's email
+	 * @param password
+	 *            the user's password. It <em>should</em> be the real / final
+	 *            password. In other words, the data passed as password is the
+	 *            data that'll be written to the database
+	 * @param email
+	 *            the user's email
 	 * @see #getUser()
 	 * @throws Exception
 	 */
-	public void register(String password, String email) throws Exception
-	{
+	public void register(String password, String email) throws Exception {
 		if (this.exists) {
 			return;
 		}
-		
+
 		// Is a new user for us. Register him
 		this.user = new User();
 		user.setUsername(this.username);
 		user.setPassword(password);
 		user.setEmail(email);
 		user.setActive(1);
-		
+
 		this.dao.addNew(user);
 	}
-	
+
 	/**
 	 * Gets the user associated to this class instance.
 	 * 
 	 * @return the user
 	 */
-	public User getUser()
-	{
+	public User getUser() {
 		return this.user;
 	}
 }

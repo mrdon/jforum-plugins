@@ -52,15 +52,15 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Marc Wick
- * @version $Id: HsqldbPostDAO.java,v 1.2 2005/03/26 04:11:21 rafaelsteil Exp $
+ * @version $Id: HsqldbPostDAO.java,v 1.3 2005/07/26 02:46:10 diegopires Exp $
  */
 public class HsqldbPostDAO extends net.jforum.dao.postgresql.PostgresqlPostDAO {
 
 	/**
 	 * @see net.jforum.dao.PostDAO#selectAllByTopicByLimit(int, int, int)
 	 */
-	public List selectAllByTopicByLimit(int topicId, int startFrom,
-			int count) throws Exception {
+	public List selectAllByTopicByLimit(int topicId, int startFrom, int count)
+			throws Exception {
 		List l = new ArrayList();
 
 		PreparedStatement p = JForum.getConnection().prepareStatement(

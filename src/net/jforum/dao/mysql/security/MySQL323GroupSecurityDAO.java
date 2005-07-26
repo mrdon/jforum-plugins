@@ -53,71 +53,73 @@ import net.jforum.util.preferences.SystemGlobals;
  * Mysq 3.23 hacks based on Andy's work
  * 
  * @author Rafael Steil
- * @version $Id: MySQL323GroupSecurityDAO.java,v 1.1 2005/07/08 00:22:55 rafaelsteil Exp $
+ * @version $Id: MySQL323GroupSecurityDAO.java,v 1.1 2005/07/08 00:22:55
+ *          rafaelsteil Exp $
  */
-public class MySQL323GroupSecurityDAO extends GenericGroupSecurityDAO
-{
+public class MySQL323GroupSecurityDAO extends GenericGroupSecurityDAO {
 	/**
 	 * @see net.jforum.dao.security.SecurityDAO#deleteAllRoles(int)
 	 */
-	public void deleteAllRoles(int id) throws Exception
-	{
+	public void deleteAllRoles(int id) throws Exception {
 		PreparedStatement p = JForum.getConnection().prepareStatement(
 				SystemGlobals.getSql("PermissionControl.getRoleIdsByGroup"));
 		p.setInt(1, id);
-		
+
 		String roleIds = this.getCsvIdList(p);
-		
+
 		p.close();
-		
+
 		if (roleIds.length() == 0) {
 			return;
 		}
-		
-		p = this.getStatementForCsv(
-				SystemGlobals.getSql("PermissionControl.deleteRoleValuesByRoleId"),
-				roleIds);
-		
+
+		p = this.getStatementForCsv(SystemGlobals
+				.getSql("PermissionControl.deleteRoleValuesByRoleId"), roleIds);
+
 		p.executeUpdate();
 		p.close();
 	}
-	
+
 	/**
 	 * Gets a statement to use with some csv data
-	 * @param sql The SQL query to execute. It must have an "?", which
-	 * will be replaced by <code>csv</code>
-	 * @param csv The ids to replace
+	 * 
+	 * @param sql
+	 *            The SQL query to execute. It must have an "?", which will be
+	 *            replaced by <code>csv</code>
+	 * @param csv
+	 *            The ids to replace
 	 * @return The statement, ready to execute
 	 * @throws Exception
 	 */
-	protected PreparedStatement getStatementForCsv(String sql, String csv) throws Exception
-	{
+	protected PreparedStatement getStatementForCsv(String sql, String csv)
+			throws Exception {
 		int index = sql.indexOf('?');
 		sql = sql.substring(0, index) + csv + sql.substring(index + 1);
 		return JForum.getConnection().prepareStatement(sql);
 	}
-	
+
 	/**
-	 * Gets a set of ids from a statement
-	 * The statement is expected to return an id in the first column
-	 * @param p The statement to execute
+	 * Gets a set of ids from a statement The statement is expected to return an
+	 * id in the first column
+	 * 
+	 * @param p
+	 *            The statement to execute
 	 * @return The ids, separated by comma
 	 * @throws Exception
 	 */
-	protected String getCsvIdList(PreparedStatement p) throws Exception
-	{
+	protected String getCsvIdList(PreparedStatement p) throws Exception {
 		ResultSet rs = p.executeQuery();
-		
+
 		StringBuffer sb = new StringBuffer();
-		
+
 		while (rs.next()) {
 			sb.append(rs.getInt(1)).append(",");
 		}
-		
+
 		sb.append("-1");
-		
+
 		rs.close();
-		
+
 		return sb.toString();
 	}
 }

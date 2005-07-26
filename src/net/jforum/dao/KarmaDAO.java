@@ -52,87 +52,93 @@ import net.jforum.entities.User;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaDAO.java,v 1.2 2005/03/26 04:10:33 rafaelsteil Exp $
+ * @version $Id: KarmaDAO.java,v 1.3 2005/07/26 02:45:26 diegopires Exp $
  */
-public interface KarmaDAO
-{
+public interface KarmaDAO {
 	/**
 	 * Insert a new Karma.
 	 * 
-	 * @param karma The karma to add. The instance should at
-	 * least have set the karma status, the user who is receiving
-	 * the karma and the user which is setting the karme.
+	 * @param karma
+	 *            The karma to add. The instance should at least have set the
+	 *            karma status, the user who is receiving the karma and the user
+	 *            which is setting the karme.
 	 * @throws Exception
 	 */
 	public void addKarma(Karma karma) throws Exception;
-	
+
 	/**
 	 * Gets the karma status of some user.
 	 * 
-	 * @param userId The user id to get the karma status
+	 * @param userId
+	 *            The user id to get the karma status
 	 * @return A <code>net.jforum.entities.KarmaStatus</code> instance
 	 */
 	public KarmaStatus getUserKarma(int userId) throws Exception;
-	
+
 	/**
-	 * Updates the karma status for some user. 
-	 * This method will store the user's karme in the
-	 * users table. 
+	 * Updates the karma status for some user. This method will store the user's
+	 * karme in the users table.
 	 * 
-	 * @param userId The id of the user to update
+	 * @param userId
+	 *            The id of the user to update
 	 * @throws Exception
 	 */
 	public void updateUserKarma(int userId) throws Exception;
-	
+
 	/**
-	 * Checks if the user can add the karma.
-	 * The method will search for existing entries in
-	 * the karma table associated with the user id and post id
-	 * passed as argument. If found, it means that the user 
-	 * already has voted, so we cannot allow him to vote one
-	 * more time.
+	 * Checks if the user can add the karma. The method will search for existing
+	 * entries in the karma table associated with the user id and post id passed
+	 * as argument. If found, it means that the user already has voted, so we
+	 * cannot allow him to vote one more time.
 	 * 
-	 * @param userId The user id to check
-	 * @param postId The post id to chekc
-	 * @return <code>true</code> if the user hasn't voted on the
-	 * post yet, or <code>false</code> otherwise. 
+	 * @param userId
+	 *            The user id to check
+	 * @param postId
+	 *            The post id to chekc
+	 * @return <code>true</code> if the user hasn't voted on the post yet, or
+	 *         <code>false</code> otherwise.
 	 * @throws Exception
 	 */
 	public boolean userCanAddKarma(int userId, int postId) throws Exception;
-	
+
 	/**
 	 * Gets the karma status of some post.
 	 * 
-	 * @param postId The post id to get the karma status
+	 * @param postId
+	 *            The post id to get the karma status
 	 * @return A <code>net.jforum.entities.KarmaStatus</code> instance
 	 * @throws Exception
 	 */
 	public KarmaStatus getPostKarma(int postId) throws Exception;
-	
+
 	/**
 	 * Updates a karma
-	 * @param karma The karma instance to update
+	 * 
+	 * @param karma
+	 *            The karma instance to update
 	 */
 	public void update(Karma karma) throws Exception;
-	
+
 	/**
 	 * Gets the votes the user made on some topic.
-	 * @param topicId The topic id.
-	 * @param userId TODO
 	 * 
-	 * @return A <code>java.util.Map</code>, where the key is the post id and the
-	 * value id the rate made by the user.
+	 * @param topicId
+	 *            The topic id.
+	 * @param userId
+	 *            TODO
+	 * 
+	 * @return A <code>java.util.Map</code>, where the key is the post id and
+	 *         the value id the rate made by the user.
 	 * @throws Exception
 	 */
 	public Map getUserVotes(int topicId, int userId) throws Exception;
-	
+
 	/**
 	 * @param user
 	 * @throws Exception
 	 */
 	public void getUserTotalKarma(User user) throws Exception;
-	
-	
+
 	/**
 	 * Total points received, grouped by user and filtered by a range of dates.
 	 * 
@@ -141,5 +147,6 @@ public interface KarmaDAO
 	 * @return Returns a List of users ant your total votes.
 	 * @throws Exception
 	 */
-	public List getMostRatedUserByPeriod(int start, Date firstPeriod, Date lastPeriod, String orderField) throws Exception;
+	public List getMostRatedUserByPeriod(int start, Date firstPeriod,
+			Date lastPeriod, String orderField) throws Exception;
 }

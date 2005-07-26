@@ -50,30 +50,26 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * ViewHelper class for banner administration.
- *
+ * 
  * @author Samuel Yung
- * @version $Id: BannerAction.java,v 1.2 2005/04/04 18:40:20 samuelyung Exp $
+ * @version $Id: BannerAction.java,v 1.3 2005/07/26 02:45:41 diegopires Exp $
  */
-public class BannerAction extends AdminCommand
-{
+public class BannerAction extends AdminCommand {
 	// Listing
-	public void list() throws Exception
-	{
-		this.context.put("banners",
-			DataAccessDriver.getInstance().newBannerDAO().selectAll());
+	public void list() throws Exception {
+		this.context.put("banners", DataAccessDriver.getInstance()
+				.newBannerDAO().selectAll());
 		this.setTemplateName(TemplateKeys.BANNER_LIST);
 	}
 
 	// Insert
-	public void insert() throws Exception
-	{
+	public void insert() throws Exception {
 		this.context.put("action", "insertSave");
 		this.setTemplateName(TemplateKeys.BANNER_INSERT);
 	}
 
 	// Saves a new banner
-	public void insertSave() throws Exception
-	{
+	public void insertSave() throws Exception {
 		BannerDAO dao = DataAccessDriver.getInstance().newBannerDAO();
 
 		dao.addNew(getBanner());
@@ -82,8 +78,7 @@ public class BannerAction extends AdminCommand
 	}
 
 	// Edit a banner
-	public void edit() throws Exception
-	{
+	public void edit() throws Exception {
 		int bannerId = this.request.getIntParameter("banner_id");
 		BannerDAO dao = DataAccessDriver.getInstance().newBannerDAO();
 
@@ -93,8 +88,7 @@ public class BannerAction extends AdminCommand
 	}
 
 	// Save information for an existing banner
-	public void editSave() throws Exception
-	{
+	public void editSave() throws Exception {
 		int bannerId = this.request.getIntParameter("banner_id");
 
 		Banner banner = getBanner();
@@ -106,11 +100,9 @@ public class BannerAction extends AdminCommand
 	}
 
 	// Delete a banner
-	public void delete() throws Exception
-	{
+	public void delete() throws Exception {
 		String bannerId = this.request.getParameter("banner_id");
-		if(bannerId == null)
-		{
+		if (bannerId == null) {
 			this.list();
 			return;
 		}
@@ -118,21 +110,17 @@ public class BannerAction extends AdminCommand
 		BannerDAO dao = DataAccessDriver.getInstance().newBannerDAO();
 
 		int id = Integer.parseInt(bannerId);
-		if(dao.canDelete(id))
-		{
+		if (dao.canDelete(id)) {
 			dao.delete(id);
-		}
-		else
-		{
-			this.context.put("errorMessage",
-				I18n.getMessage(I18n.CANNOT_DELETE_BANNER));
+		} else {
+			this.context.put("errorMessage", I18n
+					.getMessage(I18n.CANNOT_DELETE_BANNER));
 		}
 
 		this.list();
 	}
 
-	protected Banner getBanner()
-	{
+	protected Banner getBanner() {
 		Banner b = new Banner();
 		b.setComment(request.getParameter("comment"));
 		b.setActive(request.getIntParameter("active") == 1);
@@ -142,8 +130,7 @@ public class BannerAction extends AdminCommand
 		b.setWidth(Integer.parseInt(request.getParameter("width")));
 		b.setHeight(Integer.parseInt(request.getParameter("height")));
 		b.setUrl(request.getParameter("url"));
-		b.setPlacement(Integer.parseInt(request.getParameter(
-			"placement")));
+		b.setPlacement(Integer.parseInt(request.getParameter("placement")));
 		b.setWeight(Integer.parseInt(request.getParameter("weight")));
 		b.setViews(Integer.parseInt(request.getParameter("views")));
 		b.setClicks(Integer.parseInt(request.getParameter("clicks")));

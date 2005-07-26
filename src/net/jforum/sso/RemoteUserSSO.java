@@ -50,41 +50,42 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
- * Simple SSO authenticator. 
- * This class will try to validate an user by simple
- * checking <code>request.getRemoteUser()</code> is not
- * null. 
+ * Simple SSO authenticator. This class will try to validate an user by simple
+ * checking <code>request.getRemoteUser()</code> is not null.
+ * 
  * @author Rafael Steil
  * @author Daniel Campagnoli
- * @version $Id: RemoteUserSSO.java,v 1.3 2005/06/07 14:23:58 campers Exp $
+ * @version $Id: RemoteUserSSO.java,v 1.4 2005/07/26 02:46:15 diegopires Exp $
  */
-public class RemoteUserSSO implements SSO
-{
+public class RemoteUserSSO implements SSO {
 	/**
 	 * @see net.jforum.sso.SSO#authenticateUser(net.jforum.ActionServletRequest)
 	 */
-	public String authenticateUser(ActionServletRequest request)
-	{
+	public String authenticateUser(ActionServletRequest request) {
 		return request.getRemoteUser();
 	}
 
-   
-    public boolean isSessionValid(UserSession userSession, HttpServletRequest request) 
-    {  
-        String remoteUser = request.getRemoteUser();
-      
-        // user has since logged out
-        if(remoteUser == null && userSession.getUserId() != SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
-            return false;
-      
-        // user has since logged in
-        } else if(remoteUser != null && userSession.getUserId() == SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
-            return false;
-   
-        // user has changed user
-        } else if(remoteUser != null && !remoteUser.equals(userSession.getUsername())) {
-            return false;
-        }
-        return false;
-   }
+	public boolean isSessionValid(UserSession userSession,
+			HttpServletRequest request) {
+		String remoteUser = request.getRemoteUser();
+
+		// user has since logged out
+		if (remoteUser == null
+				&& userSession.getUserId() != SystemGlobals
+						.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
+			return false;
+
+			// user has since logged in
+		} else if (remoteUser != null
+				&& userSession.getUserId() == SystemGlobals
+						.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
+			return false;
+
+			// user has changed user
+		} else if (remoteUser != null
+				&& !remoteUser.equals(userSession.getUsername())) {
+			return false;
+		}
+		return false;
+	}
 }

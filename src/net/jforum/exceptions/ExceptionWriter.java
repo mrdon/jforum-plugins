@@ -37,7 +37,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * /*
  * Created on Feb 3, 2005 5:15:34 PM
-  * The JForum Project
+ * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.exceptions;
@@ -46,39 +46,38 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 
+import net.jforum.JForum;
+
 import org.apache.log4j.Logger;
 
-import net.jforum.JForum;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ExceptionWriter.java,v 1.2 2005/02/18 15:15:07 rafaelsteil Exp $
+ * @version $Id: ExceptionWriter.java,v 1.3 2005/07/26 02:45:20 diegopires Exp $
  */
-public class ExceptionWriter
-{
+public class ExceptionWriter {
 	private static Logger logger = Logger.getLogger(ExceptionWriter.class);
-	
-	public void handleExceptionData(Throwable t, Writer w)
-	{
+
+	public void handleExceptionData(Throwable t, Writer w) {
 		StringWriter strWriter = new StringWriter();
 		PrintWriter writer = new PrintWriter(strWriter);
-		t.printStackTrace(writer);		
+		t.printStackTrace(writer);
 		writer.close();
-		
+
 		try {
 			logger.error(strWriter);
 			String message = null;
-			
+
 			if (t.getCause() != null) {
 				message = t.getCause().getMessage();
 			}
-			
+
 			if (message == null) {
 				message = t.getMessage();
 			}
-			
+
 			if (message == null) {
 				message = t.toString();
 			}
@@ -86,10 +85,10 @@ public class ExceptionWriter
 			JForum.getContext().put("stackTrace", strWriter.toString());
 			JForum.getContext().put("message", message);
 
-			Template template = Configuration.getDefaultConfiguration().getTemplate("exception.html");
+			Template template = Configuration.getDefaultConfiguration()
+					.getTemplate("exception.html");
 			template.process(JForum.getContext(), w);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			strWriter = new StringWriter();
 			writer = new PrintWriter(strWriter);
 			t.printStackTrace(writer);

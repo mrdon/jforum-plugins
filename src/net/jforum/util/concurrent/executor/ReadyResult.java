@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ReadyResult.java,v 1.2 2004/04/21 23:57:33 rafaelsteil Exp $
+ * $Id: ReadyResult.java,v 1.3 2005/07/26 02:46:04 diegopires Exp $
  */
 package net.jforum.util.concurrent.executor;
 
@@ -50,50 +50,44 @@ import net.jforum.util.concurrent.Result;
 /**
  * @author Rodrigo Kumpera
  */
-class ReadyResult implements Result 
-{
+class ReadyResult implements Result {
 	final Object result;
+
 	final Exception exception;
 
-	public ReadyResult(final Object result, final Exception exception) 
-	{
+	public ReadyResult(final Object result, final Exception exception) {
 		this.result = result;
 		this.exception = exception;
 	}
 
-	public boolean hasThrown() throws IllegalStateException 
-	{
+	public boolean hasThrown() throws IllegalStateException {
 		return exception != null;
 	}
 
-	public Object getResult() throws IllegalStateException
-	{
-		if(hasThrown()) {
+	public Object getResult() throws IllegalStateException {
+		if (hasThrown()) {
 			throw new IllegalStateException("task has thrown an exception");
 		}
-		
+
 		return result;
 	}
 
-	public Exception getException() throws IllegalStateException 
-	{
-		if(!hasThrown()) {
+	public Exception getException() throws IllegalStateException {
+		if (!hasThrown()) {
 			throw new IllegalStateException("task has not thrown an exception");
 		}
-			
+
 		return exception;
 	}
 
-	public void waitResult() throws InterruptedException 
-	{
-		if(Thread.interrupted()) {
+	public void waitResult() throws InterruptedException {
+		if (Thread.interrupted()) {
 			throw new InterruptedException();
 		}
 	}
 
-	public boolean poolResult(long timeout) throws InterruptedException 
-	{
-		if(Thread.interrupted()) {
+	public boolean poolResult(long timeout) throws InterruptedException {
+		if (Thread.interrupted()) {
 			throw new InterruptedException();
 		}
 

@@ -66,146 +66,148 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.20 2005/07/19 04:15:27 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.21 2005/07/26 02:45:41 diegopires Exp $
  */
-public class UserAction extends AdminCommand 
-{
+public class UserAction extends AdminCommand {
 	// Listing
-	public void list() throws Exception
-	{
-		int start = this.preparePagination(DataAccessDriver.getInstance().newUserDAO().getTotalUsers());
+	public void list() throws Exception {
+		int start = this.preparePagination(DataAccessDriver.getInstance()
+				.newUserDAO().getTotalUsers());
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
-		
-		this.context.put("users", DataAccessDriver.getInstance().newUserDAO().selectAll(start ,usersPerPage));
+
+		this.context.put("users", DataAccessDriver.getInstance().newUserDAO()
+				.selectAll(start, usersPerPage));
 		this.commonData();
 	}
-	
-	private int preparePagination(int totalUsers)
-	{
+
+	private int preparePagination(int totalUsers) {
 		int start = ViewCommon.getStartPage();
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
-		
-		this.context.put("totalPages", new Double(Math.ceil( (double)totalUsers / usersPerPage )));
+
+		this.context.put("totalPages", new Double(Math.ceil((double) totalUsers
+				/ usersPerPage)));
 		this.context.put("recordsPerPage", new Integer(usersPerPage));
 		this.context.put("totalRecords", new Integer(totalUsers));
-		this.context.put("thisPage", new Double(Math.ceil( (double)(start + 1) / usersPerPage )));
+		this.context.put("thisPage", new Double(Math.ceil((double) (start + 1)
+				/ usersPerPage)));
 		this.context.put("start", new Integer(start));
-		
+
 		return start;
 	}
-	
-	private void commonData() throws Exception
-	{
+
+	private void commonData() throws Exception {
 		this.context.put("selectedList", new ArrayList());
 		this.context.put("groups", new TreeGroup().getNodes());
 		this.setTemplateName(TemplateKeys.USER_ADMIN_COMMON);
 		this.context.put("searchAction", "list");
 		this.context.put("searchId", new Integer(-1));
 	}
-	
-	public void groupSearch() throws Exception
-	{
+
+	public void groupSearch() throws Exception {
 		final int groupId = this.request.getIntParameter("group_id");
 		if (groupId == 0) {
 			this.list();
 			return;
 		}
-		
+
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
-		
+
 		int start = this.preparePagination(um.getTotalUsersByGroup(groupId));
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
-		
+
 		this.commonData();
-		
-		this.context.put("selectedList", new ArrayList() {{ add(new Integer(groupId)); }});
+
+		this.context.put("selectedList", new ArrayList() {
+			{
+				add(new Integer(groupId));
+			}
+		});
 		this.context.put("searchAction", "groupSearch");
-		this.context.put("users", um.selectAllByGroup(groupId, start, usersPerPage));
+		this.context.put("users", um.selectAllByGroup(groupId, start,
+				usersPerPage));
 		this.context.put("searchId", new Integer(groupId));
 	}
-	
-	public void search() throws Exception
-	{
+
+	public void search() throws Exception {
 		List users = new ArrayList();
 		String search = this.request.getParameter("username");
 		String group = this.request.getParameter("group");
-		
+
 		if (search != null && !"".equals(search)) {
-			users = DataAccessDriver.getInstance().newUserDAO().findByName(search, false);
-			
+			users = DataAccessDriver.getInstance().newUserDAO().findByName(
+					search, false);
+
 			this.commonData();
-			
+
 			this.context.put("users", users);
 			this.context.put("search", search);
 			this.context.put("start", new Integer(1));
-		}
-		else if (!"0".equals(group)) {
+		} else if (!"0".equals(group)) {
 			this.groupSearch();
 			return;
-		}
-		else {
+		} else {
 			this.list();
 			return;
 		}
 	}
-	
+
 	// Permissions
-	public void permissions() throws Exception
-	{
+	public void permissions() throws Exception {
 		int id = this.request.getIntParameter("id");
-		
+
 		User user = DataAccessDriver.getInstance().newUserDAO().selectById(id);
-		
-		UserSecurityDAO umodel = DataAccessDriver.getInstance().newUserSecurityDAO();
+
+		UserSecurityDAO umodel = DataAccessDriver.getInstance()
+				.newUserSecurityDAO();
 		PermissionControl pc = new PermissionControl();
 		pc.setSecurityModel(umodel);
 		pc.setRoles(umodel.loadRoles(user));
-		
-		List sections = new XMLPermissionControl(pc).loadConfigurations(
-				SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/permissions.xml");
+
+		List sections = new XMLPermissionControl(pc)
+				.loadConfigurations(SystemGlobals
+						.getValue(ConfigKeys.CONFIG_DIR)
+						+ "/permissions.xml");
 		this.context.put("sections", sections);
 		this.context.put("user", user);
 		this.setTemplateName(TemplateKeys.USER_ADMIN_PERMISSIONS);
 	}
-	
+
 	// Permissions Save
-	public void permissionsSave() throws Exception
-	{
+	public void permissionsSave() throws Exception {
 		int id = this.request.getIntParameter("id");
 		User user = DataAccessDriver.getInstance().newUserDAO().selectById(id);
-		
-		UserSecurityDAO umodel = DataAccessDriver.getInstance().newUserSecurityDAO();
+
+		UserSecurityDAO umodel = DataAccessDriver.getInstance()
+				.newUserSecurityDAO();
 		PermissionControl pc = new PermissionControl();
 		pc.setSecurityModel(umodel);
 
 		new PermissionProcessHelper(pc, user.getId()).processData();
-		
+
 		// Reload it
 		pc.setRoles(umodel.loadRoles(user));
 
 		// Update Security Repository
 		SecurityRepository.remove(user.getId());
 		SecurityRepository.add(user.getId(), pc);
-		
+
 		RolesRepository.clear();
-		
+
 		this.list();
 	}
-	
-	public void edit() throws Exception
-	{
-		int userId = this.request.getIntParameter("id");	
+
+	public void edit() throws Exception {
+		int userId = this.request.getIntParameter("id");
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		User u = um.selectById(userId);
-		
+
 		this.context.put("u", u);
-		this.context.put("action", "editSave");		
+		this.context.put("action", "editSave");
 		this.setTemplateName(TemplateKeys.USER_ADMIN_EDIT);
 		this.context.put("admin", true);
 	}
-	
-	public void editSave() throws Exception
-	{
+
+	public void editSave() throws Exception {
 		int userId = this.request.getIntParameter("user_id");
 		UserCommon.saveUser(userId);
 
@@ -213,82 +215,77 @@ public class UserAction extends AdminCommand
 	}
 
 	// Delete
-	public void delete() throws Exception
-	{
+	public void delete() throws Exception {
 		String ids[] = this.request.getParameterValues("user_id");
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
-		
+
 		if (ids != null) {
 			for (int i = 0; i < ids.length; i++) {
-				
+
 				int user = Integer.parseInt(ids[i]);
-				if (um.isDeleted(user)){
+				if (um.isDeleted(user)) {
 					um.undelete(user);
-				} 
-				else {
+				} else {
 					um.delete(user);
 				}
 			}
 		}
-		
+
 		this.list();
 	}
-	
+
 	// Groups
-	public void groups() throws Exception
-	{
+	public void groups() throws Exception {
 		int userId = this.request.getIntParameter("id");
-		
+
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
-		GroupDAO gm = DataAccessDriver.getInstance().newGroupDAO();
-		
 		User u = um.selectById(userId);
-		
+
 		List selectedList = new ArrayList();
-		for (Iterator iter = u.getGroupsList().iterator(); iter.hasNext(); ) {
-			selectedList.add(new Integer(((Group)iter.next()).getId()));
+		for (Iterator iter = u.getGroupsList().iterator(); iter.hasNext();) {
+			selectedList.add(new Integer(((Group) iter.next()).getId()));
 		}
-		
+
 		this.context.put("selectedList", selectedList);
 		this.context.put("groups", new TreeGroup().getNodes());
 		this.context.put("user", u);
 		this.context.put("userId", new Integer(userId));
 		this.setTemplateName(TemplateKeys.USER_ADMIN_GROUPS);
-		this.context.put("groupFor", I18n.getMessage("User.GroupsFor", new String[] { u.getUsername() }));
+		this.context.put("groupFor", I18n.getMessage("User.GroupsFor",
+				new String[] { u.getUsername() }));
 	}
-	
+
 	// Groups Save
-	public void groupsSave() throws Exception
-	{
+	public void groupsSave() throws Exception {
 		int userId = this.request.getIntParameter("user_id");
-		
+
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		GroupDAO gm = DataAccessDriver.getInstance().newGroupDAO();
-		
+
 		// Remove the old groups
 		List allGroupsList = gm.selectAll();
 		int[] allGroups = new int[allGroupsList.size()];
-		
+
 		int counter = 0;
 		for (Iterator iter = allGroupsList.iterator(); iter.hasNext(); counter++) {
-			Group g = (Group)iter.next();
-			
+			Group g = (Group) iter.next();
+
 			allGroups[counter] = g.getId();
 		}
-		
+
 		um.removeFromGroup(userId, allGroups);
-		
+
 		// Associate the user to the selected groups
 		String[] selectedGroups = this.request.getParameterValues("groups");
 		int[] newGroups = new int[selectedGroups.length];
-		
+
 		for (int i = 0; i < selectedGroups.length; i++) {
 			newGroups[i] = Integer.parseInt(selectedGroups[i]);
 		}
-		
+
 		um.addToGroup(userId, newGroups);
 		SecurityRepository.remove(userId);
-		
+
 		this.list();
 	}
 }

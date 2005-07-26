@@ -60,7 +60,6 @@ import net.jforum.util.bbcode.BBCodeHandler;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
-import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
 import freemarker.template.Configuration;
@@ -69,278 +68,289 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumBaseServlet.java,v 1.5 2005/07/21 17:41:11 franklin_samir Exp $
+ * @version $Id: JForumBaseServlet.java,v 1.5 2005/07/21 17:41:11 franklin_samir
+ *          Exp $
  */
 public class JForumBaseServlet extends HttpServlet {
-    protected boolean debug;
-    private static Logger logger = Logger.getLogger(DataHolder.class);
 
-    // Thread local implementation
-    protected static ThreadLocal localData = new ThreadLocal() {
-        public Object initialValue() {
-            return new DataHolder();
-        }
-    };
+	private static final long serialVersionUID = 4867182215310555292L;
 
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
+	protected boolean debug;
 
-        try {
-        	String appPath = config.getServletContext().getRealPath("");
-            debug = "true".equals(config.getInitParameter("development"));
+	// Thread local implementation
+	protected static ThreadLocal localData = new ThreadLocal() {
+		public Object initialValue() {
+			return new DataHolder();
+		}
+	};
 
-            DOMConfigurator.configure(appPath + "/WEB-INF/log4j.xml");
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
 
-            // Load system default values
-            ConfigLoader.startSystemglobals(appPath);
-            
-            ConfigLoader.startCacheEngine();
+		try {
+			String appPath = config.getServletContext().getRealPath("");
+			debug = "true".equals(config.getInitParameter("development"));
 
-            // Configure the template engine
-            Configuration templateCfg = new Configuration();
-            templateCfg.setDirectoryForTemplateLoading(new File(SystemGlobals.getApplicationPath()
-                    + "/templates"));
-            templateCfg.setTemplateUpdateDelay(2);
+			DOMConfigurator.configure(appPath + "/WEB-INF/log4j.xml");
+
+			// Load system default values
+			ConfigLoader.startSystemglobals(appPath);
+
+			ConfigLoader.startCacheEngine();
+
+			// Configure the template engine
+			Configuration templateCfg = new Configuration();
+			templateCfg.setDirectoryForTemplateLoading(new File(SystemGlobals
+					.getApplicationPath()
+					+ "/templates"));
+			templateCfg.setTemplateUpdateDelay(2);
 			templateCfg.setSetting("number_format", "#");
 
-            ModulesRepository.init(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR));
+			ModulesRepository.init(SystemGlobals
+					.getValue(ConfigKeys.CONFIG_DIR));
 
-            SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
-            SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
-            
-            // Start the dao.driver implementation
-            String driver = SystemGlobals.getValue(ConfigKeys.DAO_DRIVER);
-            Class c = Class.forName(driver);
-            DataAccessDriver d = (DataAccessDriver)c.newInstance();
-            DataAccessDriver.init(d);
+			SystemGlobals.loadQueries(SystemGlobals
+					.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
+			SystemGlobals.loadQueries(SystemGlobals
+					.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
 
-            this.loadConfigStuff();
+			// Start the dao.driver implementation
+			String driver = SystemGlobals.getValue(ConfigKeys.DAO_DRIVER);
+			Class c = Class.forName(driver);
+			DataAccessDriver d = (DataAccessDriver) c.newInstance();
+			DataAccessDriver.init(d);
 
-            if (!this.debug) {
-                templateCfg.setTemplateUpdateDelay(3600);
-            }
+			this.loadConfigStuff();
 
-            ConfigLoader.listenForChanges();
+			if (!this.debug) {
+				templateCfg.setTemplateUpdateDelay(3600);
+			}
+
+			ConfigLoader.listenForChanges();
 			ConfigLoader.startSearchIndexer();
 
-            Configuration.setDefaultConfiguration(templateCfg);
-            
-            ConfigLoader.startSummaryJob();
-        } catch (Exception e) {
-            throw new ForumStartupException("Error while starting jforum", e);
-        }
-    }
+			Configuration.setDefaultConfiguration(templateCfg);
 
-    protected void loadConfigStuff() throws Exception {
-        ConfigLoader.loadUrlPatterns();
-        I18n.load();
+			ConfigLoader.startSummaryJob();
+		} catch (Exception e) {
+			throw new ForumStartupException("Error while starting jforum", e);
+		}
+	}
+
+	protected void loadConfigStuff() throws Exception {
+		ConfigLoader.loadUrlPatterns();
+		I18n.load();
 		Tpl.load(SystemGlobals.getValue(ConfigKeys.TEMPLATES_MAPPING));
 
-        // BB Code
-        BBCodeRepository.setBBCollection(new BBCodeHandler().parse());
-    }
+		// BB Code
+		BBCodeRepository.setBBCollection(new BBCodeHandler().parse());
+	}
 
-    /**
-     * Sets the <code>Connection</code>, <code>HttpServletRequest</code>
-     * and <code>HttpServletResponse</code> for the incoming requisition.
-     * As JForum relies on <code>ThreadLocal</code> data, it is necessary,
-     * before of the processing of some request, to set the necessary
-     * data, so the core classes may have access to request, response
-     * and database connections. 
-     * 
-     * @param dataHolder The filled <code>DataHolder</code> class. 
-     */
-    public static void setThreadLocalData(DataHolder dataHolder)
-    {
-    	localData.set(dataHolder);
-    }
-    
-    /**
-     * Request information data holder. Stores information/data like the user request and response,
-     * his database connection and any other kind of data needed.
-     */
-    public static class DataHolder {
-    	private Connection conn;
-        private ActionServletRequest request;
-        private HttpServletResponse response;
-        private SimpleHash context = new SimpleHash(ObjectWrapper.BEANS_WRAPPER);
-        private String redirectTo;
-        private String contentType;
-        private boolean isBinaryContent;
-        private boolean cancelCommit;
-        
-        public boolean cancelCommit()
-        {
-        	return this.cancelCommit;
-        }
-        
-        public void enableCancelcommit()
-        {
-        	this.cancelCommit = true;
-        }
-        
-        // Setters
-        public void setConnection(Connection conn) {
-            this.conn = conn;
-        }
+	/**
+	 * Sets the <code>Connection</code>, <code>HttpServletRequest</code>
+	 * and <code>HttpServletResponse</code> for the incoming requisition. As
+	 * JForum relies on <code>ThreadLocal</code> data, it is necessary, before
+	 * of the processing of some request, to set the necessary data, so the core
+	 * classes may have access to request, response and database connections.
+	 * 
+	 * @param dataHolder
+	 *            The filled <code>DataHolder</code> class.
+	 */
+	public static void setThreadLocalData(DataHolder dataHolder) {
+		localData.set(dataHolder);
+	}
 
-        public void setRequest(ActionServletRequest request) {
-            this.request = request;
-        }
+	/**
+	 * Request information data holder. Stores information/data like the user
+	 * request and response, his database connection and any other kind of data
+	 * needed.
+	 */
+	public static class DataHolder {
+		private Connection conn;
 
-        public void setResponse(HttpServletResponse response) {
-            this.response = response;
-        }
+		private ActionServletRequest request;
 
-        public void setContext(SimpleHash context) {
-            this.context = context;
-        }
+		private HttpServletResponse response;
 
-        public void setRedirectTo(String redirectTo) {
-            this.redirectTo = redirectTo;
-        }
-        
-        public void setContentType(String contentType) {
-        	this.contentType = contentType;
-        }
-        
-        public void enableBinaryContent(boolean enable) {
-        	this.isBinaryContent = enable;
-        }
+		private SimpleHash context = new SimpleHash(ObjectWrapper.BEANS_WRAPPER);
 
-        // Getters
-        public boolean isBinaryContent() {
-        	return this.isBinaryContent;
-        }
-        
-        public String getContentType() {
-        	return this.contentType;
-        }
-        
-        public Connection getConnection() {
-            return this.conn;
-        }
+		private String redirectTo;
 
-        public ActionServletRequest getRequest() {
-            return this.request;
-        }
+		private String contentType;
 
-        public HttpServletResponse getResponse() {
-            return this.response;
-        }
+		private boolean isBinaryContent;
 
-        public SimpleHash getContext() {
-            return this.context;
-        }
+		private boolean cancelCommit;
 
-        public String getRedirectTo() {
-            return this.redirectTo;
-        }
-    }
+		public boolean cancelCommit() {
+			return this.cancelCommit;
+		}
 
-    /**
-     * Gets the current thread's connection
-     * 
-     * @return
-     */
-    public static Connection getConnection() 
-	{
+		public void enableCancelcommit() {
+			this.cancelCommit = true;
+		}
+
+		// Setters
+		public void setConnection(Connection conn) {
+			this.conn = conn;
+		}
+
+		public void setRequest(ActionServletRequest request) {
+			this.request = request;
+		}
+
+		public void setResponse(HttpServletResponse response) {
+			this.response = response;
+		}
+
+		public void setContext(SimpleHash context) {
+			this.context = context;
+		}
+
+		public void setRedirectTo(String redirectTo) {
+			this.redirectTo = redirectTo;
+		}
+
+		public void setContentType(String contentType) {
+			this.contentType = contentType;
+		}
+
+		public void enableBinaryContent(boolean enable) {
+			this.isBinaryContent = enable;
+		}
+
+		// Getters
+		public boolean isBinaryContent() {
+			return this.isBinaryContent;
+		}
+
+		public String getContentType() {
+			return this.contentType;
+		}
+
+		public Connection getConnection() {
+			return this.conn;
+		}
+
+		public ActionServletRequest getRequest() {
+			return this.request;
+		}
+
+		public HttpServletResponse getResponse() {
+			return this.response;
+		}
+
+		public SimpleHash getContext() {
+			return this.context;
+		}
+
+		public String getRedirectTo() {
+			return this.redirectTo;
+		}
+	}
+
+	/**
+	 * Gets the current thread's connection
+	 * 
+	 * @return
+	 */
+	public static Connection getConnection() {
 		return getConnection(true);
 	}
-	
-	public static Connection getConnection(boolean validate)
-	{
-		Connection c =  ((DataHolder)localData.get()).getConnection();
-		
+
+	public static Connection getConnection(boolean validate) {
+		Connection c = ((DataHolder) localData.get()).getConnection();
+
 		if (validate && c == null) {
 			c = DBConnection.getImplementation().getConnection();
-			
+
 			try {
-				c.setAutoCommit(!SystemGlobals.getBoolValue(ConfigKeys.DATABASE_USE_TRANSACTIONS));
+				c.setAutoCommit(!SystemGlobals
+						.getBoolValue(ConfigKeys.DATABASE_USE_TRANSACTIONS));
+			} catch (Exception e) {
 			}
-			catch (Exception e) {}
-			
-			((DataHolder)localData.get()).setConnection(c);
+
+			((DataHolder) localData.get()).setConnection(c);
 		}
-	    
-		return c; 
+
+		return c;
 	}
 
-    /**
-     * Gets the current thread's request
-     * 
-     * @return
-     */
-    public static ActionServletRequest getRequest() {
-        return ((DataHolder) localData.get()).getRequest();
-    }
-
-    /**
-     * Gets the current thread's response
-     * 
-     * @return
-     */
-    public static HttpServletResponse getResponse() {
-        return ((DataHolder) localData.get()).getResponse();
-    }
-
-    /**
-     * Gets the current thread's template context
-     * 
-     * @return
-     */
-    public static SimpleHash getContext() {
-        return ((DataHolder) localData.get()).getContext();
-    }
-
-    /**
-     * Gets the current thread's <code>DataHolder</code> instance
-     * 
-     * @return
-     */
-    public static void setRedirect(String redirect) {
-        ((DataHolder) localData.get()).setRedirectTo(getResponse().encodeRedirectURL(redirect));
-    }
-	
-	public static String getRedirect()
-	{
-		return ((DataHolder)localData.get()).getRedirectTo();
+	/**
+	 * Gets the current thread's request
+	 * 
+	 * @return
+	 */
+	public static ActionServletRequest getRequest() {
+		return ((DataHolder) localData.get()).getRequest();
 	}
 
-    /**
-     * Sets the content type for the current http response.
-     * 
-     * @param contentType
-     */
-    public static void setContentType(String contentType) {
-    	((DataHolder)localData.get()).setContentType(contentType);
-    }
-    
-    public static void enableBinaryContent(boolean enable) {
-    	((DataHolder)localData.get()).enableBinaryContent(enable);
-    }
-    
-    public static void enableCancelCommit() {
-    	((DataHolder)localData.get()).enableCancelcommit();
-    }
-	
+	/**
+	 * Gets the current thread's response
+	 * 
+	 * @return
+	 */
+	public static HttpServletResponse getResponse() {
+		return ((DataHolder) localData.get()).getResponse();
+	}
+
+	/**
+	 * Gets the current thread's template context
+	 * 
+	 * @return
+	 */
+	public static SimpleHash getContext() {
+		return ((DataHolder) localData.get()).getContext();
+	}
+
+	/**
+	 * Gets the current thread's <code>DataHolder</code> instance
+	 * 
+	 * @return
+	 */
+	public static void setRedirect(String redirect) {
+		((DataHolder) localData.get()).setRedirectTo(getResponse()
+				.encodeRedirectURL(redirect));
+	}
+
+	public static String getRedirect() {
+		return ((DataHolder) localData.get()).getRedirectTo();
+	}
+
+	/**
+	 * Sets the content type for the current http response.
+	 * 
+	 * @param contentType
+	 */
+	public static void setContentType(String contentType) {
+		((DataHolder) localData.get()).setContentType(contentType);
+	}
+
+	public static void enableBinaryContent(boolean enable) {
+		((DataHolder) localData.get()).enableBinaryContent(enable);
+	}
+
+	public static void enableCancelCommit() {
+		((DataHolder) localData.get()).enableCancelcommit();
+	}
+
 	public static boolean isBinaryContent() {
-		return ((DataHolder)localData.get()).isBinaryContent();
+		return ((DataHolder) localData.get()).isBinaryContent();
 	}
-    
-    public static boolean cancelCommit() {
-    	return ((DataHolder)localData.get()).cancelCommit();
-    }
 
-    /**
-     * prepend the path, append the extension and encode the url
-     * 
-     * @return 
-     */
-    public static String encodeUrlWithPathAndExtension(String url) {
-        DataHolder dataHolder = (DataHolder) localData.get();
-        return dataHolder.getResponse().encodeURL(getRequest().getContextPath() 
-					+ url
-					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
-       	}
+	public static boolean cancelCommit() {
+		return ((DataHolder) localData.get()).cancelCommit();
+	}
+
+	/**
+	 * prepend the path, append the extension and encode the url
+	 * 
+	 * @return
+	 */
+	public static String encodeUrlWithPathAndExtension(String url) {
+		DataHolder dataHolder = (DataHolder) localData.get();
+		return dataHolder.getResponse().encodeURL(
+				getRequest().getContextPath() + url
+						+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+	}
 }

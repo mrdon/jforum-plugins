@@ -50,25 +50,26 @@ import net.jforum.entities.Forum;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationCommon.java,v 1.2 2005/03/26 04:11:28 rafaelsteil Exp $
+ * @version $Id: ModerationCommon.java,v 1.3 2005/07/26 02:46:08 diegopires Exp $
  */
-public class ModerationCommon
-{
-	public void setForumsModerationStatus(Category c, boolean status) throws Exception
-	{
-		for (Iterator iter = c.getForums().iterator(); iter.hasNext(); ) {
-			Forum f = (Forum)iter.next();
+public class ModerationCommon {
+	public void setForumsModerationStatus(Category c, boolean status)
+			throws Exception {
+		for (Iterator iter = c.getForums().iterator(); iter.hasNext();) {
+			Forum f = (Forum) iter.next();
 			if (f.isModerated() != c.isModerated()) {
 				f.setModerated(c.isModerated());
 				this.setTopicModerationStatus(f.getId(), c.isModerated());
 			}
 		}
-		
-		DataAccessDriver.getInstance().newForumDAO().setModerated(c.getId(), status);
+
+		DataAccessDriver.getInstance().newForumDAO().setModerated(c.getId(),
+				status);
 	}
-	
-	public void setTopicModerationStatus(int forumId, boolean status) throws Exception
-	{
-		DataAccessDriver.getInstance().newTopicDAO().setModerationStatus(forumId, status);
+
+	public void setTopicModerationStatus(int forumId, boolean status)
+			throws Exception {
+		DataAccessDriver.getInstance().newTopicDAO().setModerationStatus(
+				forumId, status);
 	}
 }

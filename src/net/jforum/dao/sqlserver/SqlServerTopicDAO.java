@@ -52,46 +52,62 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerTopicDAO.java,v 1.2 2005/03/26 04:11:12 rafaelsteil Exp $
+ * @version $Id: SqlServerTopicDAO.java,v 1.2 2005/03/26 04:11:12 rafaelsteil
+ *          Exp $
  */
-public class SqlServerTopicDAO extends net.jforum.dao.generic.GenericTopicModelDAO
-{
-	/** 
+public class SqlServerTopicDAO extends
+		net.jforum.dao.generic.GenericTopicModelDAO {
+	/**
 	 * @see net.jforum.dao.TopicDAO#selectAllByForumByLimit(int, int, int)
 	 */
-	public List selectAllByForumByLimit(int forumId, int startFrom, int count) throws Exception
-	{
+	public List selectAllByForumByLimit(int forumId, int startFrom, int count)
+			throws Exception {
 		List l = new ArrayList();
 
 		String top = SystemGlobals.getSql("GenericModel.selectByLimit");
-		
-		PreparedStatement p = JForum.getConnection().prepareStatement((top + " " + count + " " + SystemGlobals.getSql("TopicModel.selectAllByForumByLimit1")  + " " + top + " " + startFrom + " " + SystemGlobals.getSql("TopicModel.selectAllByForumByLimit2")));
+
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				(top
+						+ " "
+						+ count
+						+ " "
+						+ SystemGlobals
+								.getSql("TopicModel.selectAllByForumByLimit1")
+						+ " " + top + " " + startFrom + " " + SystemGlobals
+						.getSql("TopicModel.selectAllByForumByLimit2")));
 		p.setInt(1, forumId);
 		p.setInt(2, forumId);
 
 		ResultSet rs = p.executeQuery();
-		
+
 		l = super.fillTopicsData(rs);
-		
+
 		rs.close();
-		return l;	
+		return l;
 	}
-	
-	/** 
+
+	/**
 	 * @see net.jforum.dao.TopicDAO#selectRecentTopics(int)
-	 */	
-	public List selectRecentTopics (int limit) throws Exception
-	{
+	 */
+	public List selectRecentTopics(int limit) throws Exception {
 		List l = new ArrayList();
 
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("GenericModel.selectByLimit") + " " + limit + " " + SystemGlobals.getSql("TopicModel.selectRecentTopicsByLimit"));
-		
+		PreparedStatement p = JForum
+				.getConnection()
+				.prepareStatement(
+						SystemGlobals.getSql("GenericModel.selectByLimit")
+								+ " "
+								+ limit
+								+ " "
+								+ SystemGlobals
+										.getSql("TopicModel.selectRecentTopicsByLimit"));
+
 		ResultSet rs = p.executeQuery();
-		
+
 		l = this.fillTopicsData(rs);
-		
+
 		rs.close();
 		p.close();
-		return l;		
+		return l;
 	}
 }

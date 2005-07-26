@@ -44,7 +44,8 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: RepositoryStartupException.java,v 1.1 2004/11/13 13:41:17 rafaelsteil Exp $
+ * @version $Id: RepositoryStartupException.java,v 1.1 2004/11/13 13:41:17
+ *          rafaelsteil Exp $
  */
 public class RepositoryStartupException extends RuntimeException {
 	public RepositoryStartupException(String message) {

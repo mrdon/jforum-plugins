@@ -54,12 +54,11 @@ import net.jforum.JForum;
 
 /**
  * @author Dmitriy Kiriy
- * @version $Id: OracleUtils.java,v 1.3 2005/04/10 16:24:38 rafaelsteil Exp $
+ * @version $Id: OracleUtils.java,v 1.4 2005/07/26 02:45:38 diegopires Exp $
  */
-public class OracleUtils
-{
-	public static String readBlobUTF16BinaryStream(ResultSet rs, String fieldName) throws IOException, SQLException
-	{
+public class OracleUtils {
+	public static String readBlobUTF16BinaryStream(ResultSet rs,
+			String fieldName) throws IOException, SQLException {
 		Blob clob = rs.getBlob(fieldName);
 
 		InputStream is = clob.getBinaryStream();
@@ -88,7 +87,8 @@ public class OracleUtils
 	 * 
 	 * BUT KEEP IN MIND:
 	 * 
-	 * When you insert record in previous step, it should go with empty_blob() like:
+	 * When you insert record in previous step, it should go with empty_blob()
+	 * like:
 	 * 
 	 * INSERT INTO jforum_posts_text ( post_text ) VALUES (EMPTY_BLOB())
 	 * 
@@ -98,9 +98,8 @@ public class OracleUtils
 	 * @throws IOException
 	 * @throws SQLException
 	 */
-	public static void writeBlobUTF16BinaryStream(String query, int idForQuery, String value) throws IOException,
-			SQLException
-	{
+	public static void writeBlobUTF16BinaryStream(String query, int idForQuery,
+			String value) throws IOException, SQLException {
 		PreparedStatement p = JForum.getConnection().prepareStatement(query);
 		p.setInt(1, idForQuery);
 
@@ -108,7 +107,8 @@ public class OracleUtils
 		rs.next();
 		Blob postText = rs.getBlob(1);
 
-		OutputStream blobWriter = ((oracle.sql.BLOB) postText).getBinaryOutputStream();
+		OutputStream blobWriter = ((oracle.sql.BLOB) postText)
+				.getBinaryOutputStream();
 		blobWriter.write(value.getBytes("UTF-16"));
 
 		blobWriter.close();

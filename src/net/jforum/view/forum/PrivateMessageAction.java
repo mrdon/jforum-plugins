@@ -65,82 +65,80 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.23 2005/07/17 15:33:25 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.23 2005/07/17 15:33:25
+ *          rafaelsteil Exp $
  */
-public class PrivateMessageAction extends Command
-{
-	private String templateName;
-	
-	public void inbox() throws Exception
-	{
+public class PrivateMessageAction extends Command {
+	public void inbox() throws Exception {
 		if (!SessionFacade.isLogged()) {
 			this.setTemplateName(ViewCommon.contextToLogin());
 			return;
 		}
-		
+
 		User user = new User();
 		user.setId(SessionFacade.getUserSession().getUserId());
-		
-		List pmList = DataAccessDriver.getInstance().newPrivateMessageDAO().selectFromInbox(user);
+
+		List pmList = DataAccessDriver.getInstance().newPrivateMessageDAO()
+				.selectFromInbox(user);
 
 		this.context.put("inbox", true);
 		this.context.put("pmList", pmList);
 		this.setTemplateName(TemplateKeys.PM_INBOX);
-		this.putTypes();		
+		this.putTypes();
 	}
-	
-	public void sentbox() throws Exception
-	{
+
+	public void sentbox() throws Exception {
 		if (!SessionFacade.isLogged()) {
 			this.setTemplateName(ViewCommon.contextToLogin());
 			return;
 		}
-		
+
 		User user = new User();
 		user.setId(SessionFacade.getUserSession().getUserId());
-		
-		List pmList = DataAccessDriver.getInstance().newPrivateMessageDAO().selectFromSent(user);
+
+		List pmList = DataAccessDriver.getInstance().newPrivateMessageDAO()
+				.selectFromSent(user);
 
 		this.context.put("sentbox", true);
 		this.context.put("pmList", pmList);
 		this.setTemplateName(TemplateKeys.PM_SENTBOX);
 		this.putTypes();
 	}
-	
-	private void putTypes()
-	{
+
+	private void putTypes() {
 		this.context.put("NEW", new Integer(PrivateMessageType.NEW));
 		this.context.put("READ", new Integer(PrivateMessageType.READ));
 		this.context.put("UNREAD", new Integer(PrivateMessageType.UNREAD));
 	}
-	
-	public void send() throws Exception
-	{
+
+	public void send() throws Exception {
 		if (!SessionFacade.isLogged()) {
 			this.setTemplateName(ViewCommon.contextToLogin());
 			return;
 		}
-		
+
 		User user = DataAccessDriver.getInstance().newUserDAO().selectById(
-						SessionFacade.getUserSession().getUserId());
+				SessionFacade.getUserSession().getUserId());
 		user.setSignature(PostCommon.processText(user.getSignature()));
-		user.setSignature(PostCommon.processSmilies(user.getSignature(), SmiliesRepository.getSmilies()));
+		user.setSignature(PostCommon.processSmilies(user.getSignature(),
+				SmiliesRepository.getSmilies()));
 
 		this.sendFormCommon(user);
 	}
-	public void sendTo() throws Exception
-	{
+
+	public void sendTo() throws Exception {
 		if (!SessionFacade.isLogged()) {
 			this.setTemplateName(ViewCommon.contextToLogin());
 			return;
 		}
-		
+
 		User user = DataAccessDriver.getInstance().newUserDAO().selectById(
 				SessionFacade.getUserSession().getUserId());
 
 		int userId = this.request.getIntParameter("user_id");
-		if (userId > 0){
-			User user1 = DataAccessDriver.getInstance().newUserDAO().selectById(userId);
+		if (userId > 0) {
+			User user1 = DataAccessDriver.getInstance().newUserDAO()
+					.selectById(userId);
 			this.context.put("pmRecipient", user1);
 			this.context.put("toUserId", String.valueOf(user1.getId()));
 			this.context.put("toUsername", user1.getUsername());
@@ -149,265 +147,286 @@ public class PrivateMessageAction extends Command
 
 		this.sendFormCommon(user);
 	}
-	
-	private void sendFormCommon(User user)
-	{
+
+	private void sendFormCommon(User user) {
 		this.context.put("user", user);
 		this.context.put("moduleName", "pm");
 		this.context.put("action", "sendSave");
 		this.setTemplateName(TemplateKeys.PM_SENDFORM);
 		this.context.put("htmlAllowed", true);
 		this.context.put("attachmentsEnabled", false);
-		this.context.put("maxAttachments", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
+		this.context.put("maxAttachments", SystemGlobals
+				.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
 		this.context.put("attachmentsEnabled", false);
 		this.context.put("maxAttachmentsSize", new Integer(0));
 	}
-	
-	public void sendSave() throws Exception
-	{
+
+	public void sendSave() throws Exception {
 		if (!SessionFacade.isLogged()) {
 			this.setTemplateName(ViewCommon.contextToLogin());
 			return;
 		}
-		
+
 		String sId = this.request.getParameter("toUserId");
 		String toUsername = this.request.getParameter("toUsername");
 		String userEmail = this.request.getParameter("toUserEmail");
-		
+
 		int toUserId = -1;
 		if (sId == null || sId.trim().equals("")) {
-			List l = DataAccessDriver.getInstance().newUserDAO().findByName(toUsername, true);
-			
+			List l = DataAccessDriver.getInstance().newUserDAO().findByName(
+					toUsername, true);
+
 			if (l.size() > 0) {
-				User u = (User)l.get(0);
+				User u = (User) l.get(0);
 				toUserId = u.getId();
 				userEmail = u.getEmail();
 			}
-		}
-		else {
+		} else {
 			toUserId = Integer.parseInt(sId);
 		}
-		
+
 		// We failed to get the user id?
 		if (toUserId == -1) {
 			this.setTemplateName(TemplateKeys.PM_SENDSAVE_USER_NOTFOUND);
-			this.context.put("message", I18n.getMessage("PrivateMessage.userIdNotFound"));
+			this.context.put("message", I18n
+					.getMessage("PrivateMessage.userIdNotFound"));
 			return;
 		}
-		
+
 		PrivateMessage pm = new PrivateMessage();
 		pm.setPost(PostCommon.fillPostFromRequest());
-		
+
 		User fromUser = new User();
 		fromUser.setId(SessionFacade.getUserSession().getUserId());
 		pm.setFromUser(fromUser);
-		
+
 		User toUser = new User();
 		toUser.setId(toUserId);
 		toUser.setUsername(toUsername);
 		toUser.setEmail(userEmail);
 		pm.setToUser(toUser);
-		
+
 		boolean preview = (this.request.getParameter("preview") != null);
 		if (!preview) {
 			DataAccessDriver.getInstance().newPrivateMessageDAO().send(pm);
-			
+
 			this.setTemplateName(TemplateKeys.PM_SENDSAVE);
-			this.context.put("message", I18n.getMessage("PrivateMessage.messageSent", 
-							new String[] { this.request.getContextPath() +"/pm/inbox"
-											+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)}));
-			
-			// If the target user if in the forum, then increments its 
+			this.context.put("message", I18n.getMessage(
+					"PrivateMessage.messageSent", new String[] { this.request
+							.getContextPath()
+							+ "/pm/inbox"
+							+ SystemGlobals
+									.getValue(ConfigKeys.SERVLET_EXTENSION) }));
+
+			// If the target user if in the forum, then increments its
 			// private messate count
 			String sid = SessionFacade.isUserInSession(toUserId);
 			if (sid != null) {
 				UserSession us = SessionFacade.getUserSession(sid);
 				us.setPrivateMessages(us.getPrivateMessages() + 1);
 			}
-			
+
 			if (userEmail != null && userEmail.trim().length() > 0) {
 				if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_NOTIFY_ANSWERS)) {
 					try {
-						QueuedExecutor.getInstance().execute(new EmailSenderTask(new PrivateMessageSpammer(toUser)));
-					}
-					catch (Exception e) {
+						QueuedExecutor.getInstance().execute(
+								new EmailSenderTask(new PrivateMessageSpammer(
+										toUser)));
+					} catch (Exception e) {
 						System.out.println(e);
 					}
 				}
 			}
-		}
-		else {
+		} else {
 			this.context.put("preview", true);
 			this.context.put("post", pm.getPost());
-			
+
 			Post postPreview = new Post(pm.getPost());
-			this.context.put("postPreview", PostCommon.preparePostForDisplay(postPreview));
+			this.context.put("postPreview", PostCommon
+					.preparePostForDisplay(postPreview));
 			this.context.put("pm", pm);
 
 			this.send();
 		}
 	}
-	
-	public void findUser() throws Exception
-	{
+
+	public void findUser() throws Exception {
 		boolean showResult = false;
 		String username = this.request.getParameter("username");
 
 		if (username != null && !username.equals("")) {
-			List namesList = DataAccessDriver.getInstance().newUserDAO().findByName(username, false);
+			List namesList = DataAccessDriver.getInstance().newUserDAO()
+					.findByName(username, false);
 			this.context.put("namesList", namesList);
 			showResult = true;
 		}
 
 		this.setTemplateName(TemplateKeys.PM_FIND_USER);
-		
+
 		this.context.put("username", username);
 		this.context.put("showResult", showResult);
 	}
-	
-	public void read() throws Exception
-	{
+
+	public void read() throws Exception {
 		if (!SessionFacade.isLogged()) {
 			this.setTemplateName(ViewCommon.contextToLogin());
 			return;
 		}
-		
+
 		int id = this.request.getIntParameter("id");
-		
+
 		PrivateMessage pm = new PrivateMessage();
 		pm.setId(id);
-		
-		pm = DataAccessDriver.getInstance().newPrivateMessageDAO().selectById(pm);
-		
+
+		pm = DataAccessDriver.getInstance().newPrivateMessageDAO().selectById(
+				pm);
+
 		// Don't allow the read of messages that don't belongs
 		// to the current user
 		UserSession us = SessionFacade.getUserSession();
 		int userId = us.getUserId();
-		if (pm.getToUser().getId() == userId || pm.getFromUser().getId() == userId) {
-			pm.getPost().setText(PostCommon.preparePostForDisplay(pm.getPost()).getText());
-			
+		if (pm.getToUser().getId() == userId
+				|| pm.getFromUser().getId() == userId) {
+			pm.getPost().setText(
+					PostCommon.preparePostForDisplay(pm.getPost()).getText());
+
 			// Update the message status, if needed
 			if (pm.getType() == PrivateMessageType.NEW) {
 				pm.setType(PrivateMessageType.READ);
-				DataAccessDriver.getInstance().newPrivateMessageDAO().updateType(pm);
+				DataAccessDriver.getInstance().newPrivateMessageDAO()
+						.updateType(pm);
 				us.setPrivateMessages(us.getPrivateMessages() - 1);
 			}
-			
+
 			User u = pm.getFromUser();
 			u.setSignature(PostCommon.processText(u.getSignature()));
-            u.setSignature(PostCommon.processSmilies(u.getSignature(), 
-            		SmiliesRepository.getSmilies()));
-            
+			u.setSignature(PostCommon.processSmilies(u.getSignature(),
+					SmiliesRepository.getSmilies()));
+
 			this.context.put("pm", pm);
 			this.setTemplateName(TemplateKeys.PM_READ);
-		}
-		else {
+		} else {
 			this.setTemplateName(TemplateKeys.PM_READ_DENIED);
-			this.context.put("message", I18n.getMessage("PrivateMessage.readDenied"));
+			this.context.put("message", I18n
+					.getMessage("PrivateMessage.readDenied"));
 		}
 	}
-	
-	public void review() throws Exception
-	{
+
+	public void review() throws Exception {
 		this.read();
 		this.setTemplateName(TemplateKeys.PM_READ_REVIEW);
 	}
-	
-	public void delete() throws Exception
-	{
+
+	public void delete() throws Exception {
 		if (!SessionFacade.isLogged()) {
 			this.setTemplateName(ViewCommon.contextToLogin());
 			return;
 		}
-		
+
 		String ids[] = this.request.getParameterValues("id");
-		
+
 		if (ids != null && ids.length > 0) {
 			PrivateMessage[] pm = new PrivateMessage[ids.length];
 			User u = new User();
 			u.setId(SessionFacade.getUserSession().getUserId());
-	
+
 			for (int i = 0; i < ids.length; i++) {
 				pm[i] = new PrivateMessage();
 				pm[i].setFromUser(u);
 				pm[i].setId(Integer.parseInt(ids[i]));
 			}
-			
+
 			DataAccessDriver.getInstance().newPrivateMessageDAO().delete(pm);
 		}
-		
+
 		this.setTemplateName(TemplateKeys.PM_DELETE);
-		this.context.put("message", I18n.getMessage("PrivateMessage.deleteDone", 
-						new String[] { this.request.getContextPath() + "/pm/inbox"
-										+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) }));
+		this.context
+				.put(
+						"message",
+						I18n
+								.getMessage(
+										"PrivateMessage.deleteDone",
+										new String[] { this.request
+												.getContextPath()
+												+ "/pm/inbox"
+												+ SystemGlobals
+														.getValue(ConfigKeys.SERVLET_EXTENSION) }));
 	}
-	
-	public void reply() throws Exception
-	{
+
+	public void reply() throws Exception {
 		if (!SessionFacade.isLogged()) {
 			this.setTemplateName(ViewCommon.contextToLogin());
 			return;
 		}
-		
+
 		int id = this.request.getIntParameter("id");
-		
+
 		PrivateMessage pm = new PrivateMessage();
 		pm.setId(id);
-		pm = DataAccessDriver.getInstance().newPrivateMessageDAO().selectById(pm);
-		
-		int userId = SessionFacade.getUserSession().getUserId();
-		
-		if (pm.getToUser().getId() != userId && pm.getFromUser().getId() != userId) {
-			this.setTemplateName(TemplateKeys.PM_READ_DENIED);
-			this.context.put("message", I18n.getMessage("PrivateMessage.readDenied"));
-			return;
-		}
-		
-		pm.getPost().setSubject(I18n.getMessage("PrivateMessage.replyPrefix") + pm.getPost().getSubject());
-		
-		this.context.put("pm", pm);
-		this.context.put("pmReply", true);
-		
-		this.sendFormCommon(DataAccessDriver.getInstance().newUserDAO().selectById(
-				SessionFacade.getUserSession().getUserId()));
-	}
-	
-	public void quote() throws Exception
-	{
-		if (!SessionFacade.isLogged()) {
-			this.setTemplateName(ViewCommon.contextToLogin());
-			return;
-		}
-		
-		int id = this.request.getIntParameter("id");
-		
-		PrivateMessage pm = new PrivateMessage();
-		pm.setId(id);
-		pm = DataAccessDriver.getInstance().newPrivateMessageDAO().selectById(pm);
+		pm = DataAccessDriver.getInstance().newPrivateMessageDAO().selectById(
+				pm);
 
 		int userId = SessionFacade.getUserSession().getUserId();
-		
-		if (pm.getToUser().getId() != userId && pm.getFromUser().getId() != userId) {
+
+		if (pm.getToUser().getId() != userId
+				&& pm.getFromUser().getId() != userId) {
 			this.setTemplateName(TemplateKeys.PM_READ_DENIED);
-			this.context.put("message", I18n.getMessage("PrivateMessage.readDenied"));
+			this.context.put("message", I18n
+					.getMessage("PrivateMessage.readDenied"));
 			return;
 		}
-		
-		pm.getPost().setSubject(I18n.getMessage("PrivateMessage.replyPrefix") + pm.getPost().getSubject());
-		
-		this.sendFormCommon(DataAccessDriver.getInstance().newUserDAO().selectById(userId));
-		
+
+		pm.getPost().setSubject(
+				I18n.getMessage("PrivateMessage.replyPrefix")
+						+ pm.getPost().getSubject());
+
+		this.context.put("pm", pm);
+		this.context.put("pmReply", true);
+
+		this.sendFormCommon(DataAccessDriver.getInstance().newUserDAO()
+				.selectById(SessionFacade.getUserSession().getUserId()));
+	}
+
+	public void quote() throws Exception {
+		if (!SessionFacade.isLogged()) {
+			this.setTemplateName(ViewCommon.contextToLogin());
+			return;
+		}
+
+		int id = this.request.getIntParameter("id");
+
+		PrivateMessage pm = new PrivateMessage();
+		pm.setId(id);
+		pm = DataAccessDriver.getInstance().newPrivateMessageDAO().selectById(
+				pm);
+
+		int userId = SessionFacade.getUserSession().getUserId();
+
+		if (pm.getToUser().getId() != userId
+				&& pm.getFromUser().getId() != userId) {
+			this.setTemplateName(TemplateKeys.PM_READ_DENIED);
+			this.context.put("message", I18n
+					.getMessage("PrivateMessage.readDenied"));
+			return;
+		}
+
+		pm.getPost().setSubject(
+				I18n.getMessage("PrivateMessage.replyPrefix")
+						+ pm.getPost().getSubject());
+
+		this.sendFormCommon(DataAccessDriver.getInstance().newUserDAO()
+				.selectById(userId));
+
 		this.context.put("quote", "true");
 		this.context.put("quoteUser", pm.getFromUser().getUsername());
 		this.context.put("post", pm.getPost());
 		this.context.put("pm", pm);
 	}
-	
-	/** 
+
+	/**
 	 * @see net.jforum.Command#list()
 	 */
-	public void list() throws Exception
-	{
+	public void list() throws Exception {
 		this.inbox();
 	}
 }

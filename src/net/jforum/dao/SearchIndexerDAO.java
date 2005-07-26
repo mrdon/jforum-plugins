@@ -49,29 +49,31 @@ import net.jforum.entities.Post;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchIndexerDAO.java,v 1.2 2005/03/26 04:10:34 rafaelsteil Exp $
+ * @version $Id: SearchIndexerDAO.java,v 1.3 2005/07/26 02:45:29 diegopires Exp $
  */
-public interface SearchIndexerDAO
-{
+public interface SearchIndexerDAO {
 	/**
 	 * Sets a connection to the class.
 	 * 
-	 * @param conn The connection the class will use
+	 * @param conn
+	 *            The connection the class will use
 	 */
 	public void setConnection(Connection conn);
-	
+
 	/**
 	 * Indexes a set of posts.
 	 * 
-	 * @param posts The posts to index
+	 * @param posts
+	 *            The posts to index
 	 * @throws Exception
 	 */
 	public void insertSearchWords(List posts) throws Exception;
-	
+
 	/**
 	 * Indexes a post
 	 * 
-	 * @param post The post to index
+	 * @param post
+	 *            The post to index
 	 * @throws Exception
 	 */
 	public void insertSearchWords(Post post) throws Exception;

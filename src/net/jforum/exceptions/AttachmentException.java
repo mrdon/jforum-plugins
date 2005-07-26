@@ -44,12 +44,11 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentException.java,v 1.1 2005/01/24 21:49:27 rafaelsteil Exp $
+ * @version $Id: AttachmentException.java,v 1.1 2005/01/24 21:49:27 rafaelsteil
+ *          Exp $
  */
-public class AttachmentException extends RuntimeException
-{
-	public AttachmentException(String message)
-	{
+public class AttachmentException extends RuntimeException {
+	public AttachmentException(String message) {
 		super(message);
 	}
 }

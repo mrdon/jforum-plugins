@@ -61,49 +61,48 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericUserDAO.java,v 1.6 2005/07/16 03:49:39 rafaelsteil Exp $
+ * @version $Id: GenericUserDAO.java,v 1.7 2005/07/26 02:45:17 diegopires Exp $
  */
-public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO 
-{
+public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO {
 	private static LoginAuthenticator loginAuthenticator;
-	
-	public GenericUserDAO()
-	{
-		String className = SystemGlobals.getValue(ConfigKeys.LOGIN_AUTHENTICATOR);
+
+	public GenericUserDAO() {
+		String className = SystemGlobals
+				.getValue(ConfigKeys.LOGIN_AUTHENTICATOR);
 
 		try {
-			loginAuthenticator = (LoginAuthenticator)Class.forName(className).newInstance();
+			loginAuthenticator = (LoginAuthenticator) Class.forName(className)
+					.newInstance();
 			loginAuthenticator.setUserModel(this);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			throw new RuntimeException("Error while trying to instantiate a "
 					+ "login.authenticator instance (" + className + "): " + e);
 		}
 	}
-	
-	/** 
+
+	/**
 	 * @see net.jforum.dao.UserDAO#selectById(int)
 	 */
-	public User selectById(int userId) throws Exception 
-	{
-	    String q = SystemGlobals.getSql("UserModel.selectById");
+	public User selectById(int userId) throws Exception {
+		String q = SystemGlobals.getSql("UserModel.selectById");
 		PreparedStatement p = JForum.getConnection().prepareStatement(q);
 		p.setInt(1, userId);
-		
+
 		ResultSet rs = p.executeQuery();
 		User u = new User();
-		
+
 		if (rs.next()) {
 			this.fillUserFromResultSet(u, rs);
 			u.setPrivateMessagesCount(rs.getInt("private_messages"));
-			
+
 			p.close();
 			rs.close();
 
 			// User groups
-			p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectGroups"));
+			p = JForum.getConnection().prepareStatement(
+					SystemGlobals.getSql("UserModel.selectGroups"));
 			p.setInt(1, userId);
-			
+
 			rs = p.executeQuery();
 			while (rs.next()) {
 				Group g = new Group();
@@ -113,34 +112,33 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 				u.getGroupsList().add(g);
 			}
 		}
-		
+
 		rs.close();
 		p.close();
 
 		return u;
 	}
 
-	public User selectByName(String username) throws Exception 
-	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectByName"));
+	public User selectByName(String username) throws Exception {
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.selectByName"));
 		p.setString(1, username);
-		
+
 		ResultSet rs = p.executeQuery();
 		User u = null;
-		
+
 		if (rs.next()) {
 			u = new User();
 			fillUserFromResultSet(u, rs);
 		}
-		
+
 		rs.close();
 		p.close();
 
 		return u;
 	}
 
-	protected void fillUserFromResultSet(User u, ResultSet rs) throws Exception 
-	{
+	protected void fillUserFromResultSet(User u, ResultSet rs) throws Exception {
 		u.setAim(rs.getString("user_aim"));
 		u.setAvatar(rs.getString("user_avatar"));
 		u.setGender(rs.getString("gender"));
@@ -174,33 +172,33 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 		u.setLang(rs.getString("user_lang"));
 		u.setActive(rs.getInt("user_active"));
 		u.setKarma(new KarmaStatus(u.getId(), rs.getDouble("user_karma")));
-		u.setNotifyPrivateMessagesEnabled(rs.getInt("user_notify_pm") == 1); 
+		u.setNotifyPrivateMessagesEnabled(rs.getInt("user_notify_pm") == 1);
 		u.setDeleted(rs.getInt("deleted"));
-		
+
 		String actkey = rs.getString("user_actkey");
 		u.setActivationKey(actkey == null || "".equals(actkey) ? null : actkey);
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#delete(int)
 	 */
-	public void delete(int userId) throws Exception 
-	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.deletedStatus"));
+	public void delete(int userId) throws Exception {
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.deletedStatus"));
 		p.setInt(1, 1);
 		p.setInt(2, userId);
-		
+
 		p.executeUpdate();
 		p.close();
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#update(net.jforum.User)
 	 */
-	public void update(User user) throws Exception 
-	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.update"));
-		
+	public void update(User user) throws Exception {
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.update"));
+
 		p.setString(1, user.getAim());
 		p.setString(2, user.getAvatar());
 		p.setString(3, user.getGender());
@@ -212,7 +210,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 		p.setInt(9, user.isSmiliesEnabled() ? 1 : 0);
 		p.setString(10, user.getEmail());
 		p.setString(11, user.getFrom());
-		p.setString(12, user.getIcq());		
+		p.setString(12, user.getIcq());
 		p.setString(13, user.getInterests());
 		p.setString(14, user.getOccupation());
 		p.setString(15, user.getSignature());
@@ -228,32 +226,32 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 		p.setString(25, user.getLang());
 		p.setInt(26, user.isNotifyPrivateMessagesEnabled() ? 1 : 0);
 		p.setInt(27, user.getId());
-		
+
 		p.executeUpdate();
 		p.close();
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#addNew(net.jforum.User)
 	 */
-	public int addNew(User user) throws Exception 
-	{
+	public int addNew(User user) throws Exception {
 		PreparedStatement p = this.getStatementForAutoKeys("UserModel.addNew");
-		
+
 		this.initNewUser(user, p);
-		
-		this.setAutoGeneratedKeysQuery(SystemGlobals.getSql("UserModel.lastGeneratedUserId"));
+
+		this.setAutoGeneratedKeysQuery(SystemGlobals
+				.getSql("UserModel.lastGeneratedUserId"));
 		int id = this.executeAutoKeysQuery(p);
 		p.close();
-		
-		this.addToGroup(id, new int[] { SystemGlobals.getIntValue(ConfigKeys.DEFAULT_USER_GROUP) });
-		
+
+		this.addToGroup(id, new int[] { SystemGlobals
+				.getIntValue(ConfigKeys.DEFAULT_USER_GROUP) });
+
 		user.setId(id);
 		return id;
 	}
 
-	protected void initNewUser(User user, PreparedStatement p) throws Exception 
-	{
+	protected void initNewUser(User user, PreparedStatement p) throws Exception {
 		p.setString(1, user.getUsername());
 		p.setString(2, user.getPassword());
 		p.setString(3, user.getEmail());
@@ -261,138 +259,133 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 		p.setString(5, user.getActivationKey());
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#addNewWithId(net.jforum.User)
 	 */
-	public void addNewWithId(User user) throws Exception 
-	{
-		PreparedStatement p = this.getStatementForAutoKeys("UserModel.addNewWithId");
-		
+	public void addNewWithId(User user) throws Exception {
+		PreparedStatement p = this
+				.getStatementForAutoKeys("UserModel.addNewWithId");
+
 		this.initNewUser(user, p);
 		p.setInt(6, user.getId());
-		
+
 		p.executeUpdate();
 		p.close();
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#decrementPosts(int)
 	 */
-	public void decrementPosts(int userId) throws Exception 
-	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.decrementPosts"));
+	public void decrementPosts(int userId) throws Exception {
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.decrementPosts"));
 		p.setInt(1, userId);
-		
+
 		p.executeUpdate();
 		p.close();
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#incrementPosts(int)
 	 */
-	public void incrementPosts(int userId) throws Exception 
-	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.incrementPosts"));
+	public void incrementPosts(int userId) throws Exception {
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.incrementPosts"));
 		p.setInt(1, userId);
-		
+
 		p.executeUpdate();
 		p.close();
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#incrementRanking(int)
 	 */
-	public void setRanking(int userId, int rankingId) throws Exception 
-	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.rankingId"));
+	public void setRanking(int userId, int rankingId) throws Exception {
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.rankingId"));
 		p.setInt(1, rankingId);
 		p.setInt(2, userId);
-		
+
 		p.executeUpdate();
 		p.close();
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#setActive(int, boolean)
 	 */
-	public void setActive(int userId, boolean active) throws Exception 
-	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.activeStatus"));
+	public void setActive(int userId, boolean active) throws Exception {
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.activeStatus"));
 		p.setInt(1, active ? 1 : 0);
 		p.setInt(2, userId);
-		
+
 		p.executeUpdate();
 		p.close();
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#undelete(int)
 	 */
-	public void undelete(int userId) throws Exception 
-	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.deletedStatus"));
+	public void undelete(int userId) throws Exception {
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.deletedStatus"));
 		p.setInt(1, 0);
 		p.setInt(2, userId);
-		
+
 		p.executeUpdate();
 		p.close();
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#selectAll()
 	 */
-	public List selectAll() throws Exception 
-	{
+	public List selectAll() throws Exception {
 		return selectAll(0, 0);
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#selectAll(int, int)
 	 */
-	public List selectAll(int startFrom, int count) throws Exception 
-	{
+	public List selectAll(int startFrom, int count) throws Exception {
 		PreparedStatement p;
-		
+
 		if (count > 0) {
-			p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectAllByLimit"));
+			p = JForum.getConnection().prepareStatement(
+					SystemGlobals.getSql("UserModel.selectAllByLimit"));
 			p.setInt(1, startFrom);
 			p.setInt(2, count);
+		} else {
+			p = JForum.getConnection().prepareStatement(
+					SystemGlobals.getSql("UserModel.selectAll"));
 		}
-		else {
-			p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectAll"));
-		}
-		
+
 		ResultSet rs = p.executeQuery();
 		List list = this.processSelectAll(rs);
 		rs.close();
 		p.close();
-		
+
 		return list;
 	}
-	
-	/** 
+
+	/**
 	 * @see net.jforum.dao.UserDAO#selectAllWithKarma()
 	 */
-	public List selectAllWithKarma() throws Exception 
-	{
+	public List selectAllWithKarma() throws Exception {
 		return this.selectAllWithKarma(0, 0);
-	}	
-	
-	/** 
-	 * @see net.jforum.dao.UserDAO#selectAllWithKarma(int, int)
-	 */
-	public List selectAllWithKarma(int startFrom, int count) throws Exception 
-	{
-	    return this.loadKarma( this.selectAll(startFrom, count) );
 	}
 
-	
-	protected List processSelectAll(ResultSet rs) throws Exception
-	{
+	/**
+	 * @see net.jforum.dao.UserDAO#selectAllWithKarma(int, int)
+	 */
+	public List selectAllWithKarma(int startFrom, int count) throws Exception {
+		return this.loadKarma(this.selectAll(startFrom, count));
+	}
+
+	protected List processSelectAll(ResultSet rs) throws Exception {
 		List list = new ArrayList();
 		while (rs.next()) {
 			User u = new User();
-			
+
 			u.setEmail(rs.getString("user_email"));
 			u.setId(rs.getInt("user_id"));
 			u.setTotalPosts(rs.getInt("user_posts"));
@@ -401,257 +394,262 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			u.setDeleted(rs.getInt("deleted"));
 			KarmaStatus karma = new KarmaStatus();
 			karma.setKarmaPoints(rs.getInt("user_karma"));
-			u.setKarma( karma );
+			u.setKarma(karma);
 			u.setFrom(rs.getString("user_from"));
 			u.setWebSite(rs.getString("user_website"));
 			u.setViewEmailEnabled(rs.getInt("user_viewemail") == 1);
-			
+
 			list.add(u);
 		}
-		
+
 		return list;
 	}
-	
+
 	/**
 	 * @see net.jforum.dao.UserDAO#selectAllByGroup(int, int, int)
 	 */
-	public List selectAllByGroup(int groupId, int start, int count) throws Exception
-	{
+	public List selectAllByGroup(int groupId, int start, int count)
+			throws Exception {
 		List l = new ArrayList();
-		
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectAllByGroup"));
+
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.selectAllByGroup"));
 		p.setInt(1, groupId);
 		p.setInt(2, start);
 		p.setInt(3, count);
-		
+
 		ResultSet rs = p.executeQuery();
 		while (rs.next()) {
 			User u = new User();
 			u.setUsername(rs.getString("username"));
 			u.setId(rs.getInt("user_id"));
 			u.setRegistrationDate(rs.getTimestamp("user_regdate"));
-			
+
 			l.add(u);
 		}
-		
+
 		return l;
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#getLastUserInfo()
 	 */
-	public User getLastUserInfo() throws Exception 
-	{
+	public User getLastUserInfo() throws Exception {
 		User u = new User();
-		
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.lastUserRegistered"));
+
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.lastUserRegistered"));
 		ResultSet rs = p.executeQuery();
 		rs.next();
-		
+
 		u.setUsername(rs.getString("username"));
 		u.setId(rs.getInt("user_id"));
-		
+
 		rs.close();
 		p.close();
-		
+
 		return u;
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#getTotalUsers()
 	 */
-	public int getTotalUsers() throws Exception 
-	{	
-		return this.getTotalUsersCommon(JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("UserModel.totalUsers")));
+	public int getTotalUsers() throws Exception {
+		return this
+				.getTotalUsersCommon(JForum.getConnection().prepareStatement(
+						SystemGlobals.getSql("UserModel.totalUsers")));
 	}
-	
+
 	/**
 	 * @see net.jforum.dao.UserDAO#getTotalUsersByGroup(int)
 	 */
-	public int getTotalUsersByGroup(int groupId) throws Exception
-	{
+	public int getTotalUsersByGroup(int groupId) throws Exception {
 		PreparedStatement p = JForum.getConnection().prepareStatement(
 				SystemGlobals.getSql("UserModel.totalUsersByGroup"));
 		p.setInt(1, groupId);
-		
+
 		return this.getTotalUsersCommon(p);
 	}
-	
-	protected int getTotalUsersCommon(PreparedStatement p) throws Exception
-	{
+
+	protected int getTotalUsersCommon(PreparedStatement p) throws Exception {
 		ResultSet rs = p.executeQuery();
 		rs.next();
-		
+
 		int total = rs.getInt(1);
-		
+
 		rs.close();
 		p.close();
-		
+
 		return total;
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#isDeleted(int user_id)
 	 */
-	public boolean isDeleted(int userId) throws Exception 
-	{	
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.isDeleted"));
+	public boolean isDeleted(int userId) throws Exception {
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.isDeleted"));
 		p.setInt(1, userId);
-		
+
 		int deleted = 0;
-		
+
 		ResultSet rs = p.executeQuery();
-		if (rs.next()) {	
+		if (rs.next()) {
 			deleted = rs.getInt("deleted");
 		}
-		
+
 		rs.close();
 		p.close();
-		
+
 		return deleted == 1;
 	}
-	
-	/** 
+
+	/**
 	 * @see net.jforum.dao.UserDAO#isUsernameRegistered(java.lang.String)
 	 */
-	public boolean isUsernameRegistered(String username) throws Exception 
-	{
+	public boolean isUsernameRegistered(String username) throws Exception {
 		boolean status = false;
-		
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.isUsernameRegistered"));
+
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.isUsernameRegistered"));
 		p.setString(1, username);
-		
+
 		ResultSet rs = p.executeQuery();
 		if (rs.next() && rs.getInt("registered") > 0) {
 			status = true;
 		}
-		
+
 		rs.close();
 		p.close();
-		
+
 		return status;
 	}
 
-	/** 
-	 * @see net.jforum.dao.UserDAO#validateLogin(java.lang.String, java.lang.String)
+	/**
+	 * @see net.jforum.dao.UserDAO#validateLogin(java.lang.String,
+	 *      java.lang.String)
 	 */
-	public User validateLogin(String username, String password) throws NoSuchAlgorithmException, Exception
-	{
+	public User validateLogin(String username, String password)
+			throws NoSuchAlgorithmException, Exception {
 		return loginAuthenticator.validateLogin(username, password, null);
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#addToGroup(int, int[])
 	 */
-	public void addToGroup(int userId, int[] groupId) throws Exception 
-	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.addToGroup"));
+	public void addToGroup(int userId, int[] groupId) throws Exception {
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.addToGroup"));
 		p.setInt(1, userId);
-		
+
 		for (int i = 0; i < groupId.length; i++) {
 			p.setInt(2, groupId[i]);
 			p.executeUpdate();
 		}
-		
+
 		p.close();
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#removeFromGroup(int, int[])
 	 */
-	public void removeFromGroup(int userId, int[] groupId) throws Exception 
-	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.removeFromGroup"));
+	public void removeFromGroup(int userId, int[] groupId) throws Exception {
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.removeFromGroup"));
 		p.setInt(1, userId);
-		
+
 		for (int i = 0; i < groupId.length; i++) {
 			p.setInt(2, groupId[i]);
 			p.executeUpdate();
 		}
-		
+
 		p.close();
 	}
 
-	/** 
-	 * @see net.jforum.dao.UserDAO#saveNewPassword(java.lang.String, java.lang.String)
+	/**
+	 * @see net.jforum.dao.UserDAO#saveNewPassword(java.lang.String,
+	 *      java.lang.String)
 	 */
-	public void saveNewPassword(String password, String email) throws Exception
-	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.saveNewPassword"));
+	public void saveNewPassword(String password, String email) throws Exception {
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.saveNewPassword"));
 		p.setString(1, password);
 		p.setString(2, email);
 		p.executeUpdate();
 		p.close();
 	}
-	
-	/** 
-	 * @see net.jforum.dao.UserDAO#validateLostPasswordHash(java.lang.String, java.lang.String)
+
+	/**
+	 * @see net.jforum.dao.UserDAO#validateLostPasswordHash(java.lang.String,
+	 *      java.lang.String)
 	 */
-	public boolean validateLostPasswordHash(String email, String hash) throws Exception
-	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.validateLostPasswordHash"));
+	public boolean validateLostPasswordHash(String email, String hash)
+			throws Exception {
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.validateLostPasswordHash"));
 		p.setString(1, hash);
 		p.setString(2, email);
-		
+
 		boolean status = false;
-		
+
 		ResultSet rs = p.executeQuery();
 		if (rs.next() && rs.getInt("valid") == 1) {
 			status = true;
-			
+
 			this.writeLostPasswordHash(email, "");
 		}
-		
+
 		rs.close();
 		p.close();
-		
-		return status;		
+
+		return status;
 	}
-	
-	/** 
-	 * @see net.jforum.dao.UserDAO#writeLostPasswordHash(java.lang.String, java.lang.String)
+
+	/**
+	 * @see net.jforum.dao.UserDAO#writeLostPasswordHash(java.lang.String,
+	 *      java.lang.String)
 	 */
-	public void writeLostPasswordHash(String email, String hash) throws Exception
-	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.writeLostPasswordHash"));
+	public void writeLostPasswordHash(String email, String hash)
+			throws Exception {
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.writeLostPasswordHash"));
 		p.setString(1, hash);
 		p.setString(2, email);
 		p.executeUpdate();
 		p.close();
 	}
-	
-	/** 
+
+	/**
 	 * @see net.jforum.dao.UserDAO#getUsernameByEmail(java.lang.String)
 	 */
-	public String getUsernameByEmail(String email) throws Exception
-	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.getUsernameByEmail"));
+	public String getUsernameByEmail(String email) throws Exception {
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.getUsernameByEmail"));
 		p.setString(1, email);
-		
+
 		String username = "";
-		
+
 		ResultSet rs = p.executeQuery();
 		if (rs.next()) {
 			username = rs.getString("username");
 		}
-		
+
 		rs.close();
 		p.close();
-		
+
 		return username;
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#findByName(java.lang.String, boolean)
 	 */
-	public List findByName(String input, boolean exactMatch) throws Exception
-	{
+	public List findByName(String input, boolean exactMatch) throws Exception {
 		List namesList = new ArrayList();
-		
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.findByName"));
+
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.findByName"));
 		p.setString(1, exactMatch ? input : "%" + input + "%");
-	
+
 		ResultSet rs = p.executeQuery();
 		while (rs.next()) {
 			User u = new User();
@@ -661,19 +659,21 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 
 			namesList.add(u);
 		}
-		
+
 		rs.close();
 		p.close();
-		
+
 		return namesList;
 	}
 
-	/** 
-	 * @see net.jforum.dao.UserDAO#validateActivationKeyHash(int, java.lang.String)
+	/**
+	 * @see net.jforum.dao.UserDAO#validateActivationKeyHash(int,
+	 *      java.lang.String)
 	 */
-	public boolean validateActivationKeyHash(int userId , String hash) throws Exception
-	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.validateActivationKeyHash"));
+	public boolean validateActivationKeyHash(int userId, String hash)
+			throws Exception {
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.validateActivationKeyHash"));
 		p.setString(1, hash);
 		p.setInt(2, userId);
 
@@ -690,74 +690,77 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 		return status;
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#writeUserActive(int)
 	 */
-	public void writeUserActive(int userId) throws Exception
-	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.writeUserActive"));
+	public void writeUserActive(int userId) throws Exception {
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.writeUserActive"));
 		p.setInt(1, userId);
 		p.executeUpdate();
 		p.close();
 	}
-	
-	/** 
+
+	/**
 	 * @see net.jforum.dao.UserDAO#updateUsername(int, String)
 	 */
-	public void updateUsername(int userId, String username) throws Exception
-	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.updateUsername"));
+	public void updateUsername(int userId, String username) throws Exception {
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.updateUsername"));
 		p.setString(1, username);
 		p.setInt(2, userId);
 		p.executeUpdate();
 		p.close();
 	}
-	
+
 	/**
 	 * @see net.jforum.dao.UserDAO#hasUsernameChanged(int, java.lang.String)
 	 */
-	public boolean hasUsernameChanged(int userId, String usernameToCheck) throws Exception
-	{
+	public boolean hasUsernameChanged(int userId, String usernameToCheck)
+			throws Exception {
 		boolean status = false;
-		
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.getUsername"));
+
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.getUsername"));
 		p.setString(1, usernameToCheck);
 		p.setInt(2, userId);
-		
+
 		String dbUsername = null;
-		
+
 		ResultSet rs = p.executeQuery();
 		if (rs.next()) {
 			dbUsername = rs.getString("username");
 		}
-		
+
 		if (!usernameToCheck.equals(dbUsername)) {
 			status = true;
 		}
-		
+
 		rs.close();
 		p.close();
-		
+
 		return status;
 	}
-	
+
 	/**
 	 * Load KarmaStatus from a list of users.
-	 * @param users 
+	 * 
+	 * @param users
 	 * @return
 	 * @throws Exception
 	 */
-	protected List loadKarma(List users) throws Exception{
-	    List result = new ArrayList(users.size());
-	    
-	    User user = null;
-		Iterator iter = users.iterator(); 
-		while (iter.hasNext()) {		    
-		    user = (User) iter.next();
-		    //load Karma
-		    DataAccessDriver.getInstance().newKarmaDAO().getUserTotalKarma(user);
-		    result.add(user);
-        }		
+	protected List loadKarma(List users) throws Exception {
+		List result = new ArrayList(users.size());
+
+		User user = null;
+		Iterator iter = users.iterator();
+		while (iter.hasNext()) {
+			user = (User) iter.next();
+			// load Karma
+			DataAccessDriver.getInstance().newKarmaDAO()
+					.getUserTotalKarma(user);
+			result.add(user);
+		}
 		return result;
 	}
 }

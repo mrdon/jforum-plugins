@@ -54,80 +54,91 @@ import org.apache.log4j.Logger;
  * Monitor class for file changes.
  * 
  * @author Rafael Steil
- * @version $Id: FileMonitor.java,v 1.6 2005/02/24 23:00:51 rafaelsteil Exp $
+ * @version $Id: FileMonitor.java,v 1.7 2005/07/26 02:45:47 diegopires Exp $
  */
-public class FileMonitor
-{
+public class FileMonitor {
 	private static Logger logger = Logger.getLogger(FileMonitor.class);
+
 	private static final FileMonitor instance = new FileMonitor();
+
 	private Timer timer;
+
 	private Map timerEntries;
-	
+
 	private FileMonitor() {
 		this.timerEntries = new HashMap();
 		this.timer = new Timer(true);
 	}
-	
+
 	public static FileMonitor getInstance() {
 		return instance;
 	}
-	
+
 	/**
 	 * Add a file to the monitor
 	 * 
-	 * @param listener The file listener
-	 * @param filename The filename to watch
-	 * @param period The watch interval.
+	 * @param listener
+	 *            The file listener
+	 * @param filename
+	 *            The filename to watch
+	 * @param period
+	 *            The watch interval.
 	 */
-	public void addFileChangeListener(FileChangeListener listener, 
-		String filename, long period) {
+	public void addFileChangeListener(FileChangeListener listener,
+			String filename, long period) {
 		this.removeFileChangeListener(filename);
-		
+
 		logger.info("Watching " + filename);
-		
+
 		FileMonitorTask task = new FileMonitorTask(listener, filename);
-		
+
 		this.timerEntries.put(filename, task);
 		this.timer.schedule(task, period, period);
 	}
-	
+
 	/**
 	 * Stop watching a file
 	 * 
-	 * @param listener The file listener
-	 * @param filename The filename to keep watch
+	 * @param listener
+	 *            The file listener
+	 * @param filename
+	 *            The filename to keep watch
 	 */
 	public void removeFileChangeListener(String filename) {
-		FileMonitorTask task = (FileMonitorTask)this.timerEntries.remove(filename);
-		
+		FileMonitorTask task = (FileMonitorTask) this.timerEntries
+				.remove(filename);
+
 		if (task != null) {
 			task.cancel();
 		}
 	}
-	
+
 	private class FileMonitorTask extends TimerTask {
 		private FileChangeListener listener;
+
 		private String filename;
+
 		private File monitoredFile;
+
 		private long lastModified;
-		
+
 		public FileMonitorTask(FileChangeListener listener, String filename) {
 			this.listener = listener;
 			this.filename = filename;
-			
+
 			this.monitoredFile = new File(filename);
 			if (!this.monitoredFile.exists()) {
 				return;
 			}
-			
+
 			this.lastModified = this.monitoredFile.lastModified();
 		}
-		
+
 		public void run() {
 			long latestChange = this.monitoredFile.lastModified();
 			if (this.lastModified != latestChange) {
 				this.lastModified = latestChange;
-				
+
 				this.listener.fileChanged(this.filename);
 			}
 		}

@@ -47,40 +47,54 @@ import net.jforum.security.RoleCollection;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserSecurityDAO.java,v 1.2 2005/03/26 04:11:19 rafaelsteil Exp $
+ * @version $Id: UserSecurityDAO.java,v 1.3 2005/07/26 02:45:29 diegopires Exp $
  */
-public interface UserSecurityDAO extends SecurityDAO 
-{
-	public void deleteUserRoleByGroup(int groupId, String roleName) throws Exception;
-	
+public interface UserSecurityDAO extends SecurityDAO {
+	public void deleteUserRoleByGroup(int groupId, String roleName)
+			throws Exception;
+
 	public RoleCollection loadRoles(User user) throws Exception;
 
 	/**
-	 * Deletes a specific role value of all users who belongs to the group passed as parameter.
+	 * Deletes a specific role value of all users who belongs to the group
+	 * passed as parameter.
 	 * 
-	 * @param groupId The group id
-	 * @param roleName The role name
-	 * @param roleValues An array containing all values to be deleted
+	 * @param groupId
+	 *            The group id
+	 * @param roleName
+	 *            The role name
+	 * @param roleValues
+	 *            An array containing all values to be deleted
 	 * @throws Exception
 	 */
-	public void deleteUserRoleValuesByGroup(int groupId, String roleName, String[] roleValues) throws Exception;
-	
+	public void deleteUserRoleValuesByGroup(int groupId, String roleName,
+			String[] roleValues) throws Exception;
+
 	/**
-	 * Deletes a specific role value of all users who belongs to the group passed as parameter.
+	 * Deletes a specific role value of all users who belongs to the group
+	 * passed as parameter.
 	 * 
-	 * @param groupId The group id
-	 * @param roleName The role name
-	 * @param roleValue The role value
+	 * @param groupId
+	 *            The group id
+	 * @param roleName
+	 *            The role name
+	 * @param roleValue
+	 *            The role value
 	 * @throws Exception
 	 */
-	public void deleteUserRoleValuesByGroup(int groupId, String roleName, String roleValue) throws Exception;
-	
+	public void deleteUserRoleValuesByGroup(int groupId, String roleName,
+			String roleValue) throws Exception;
+
 	/**
-	 * Deletes all role values of all users who belongs to the group passed as parameter.
+	 * Deletes all role values of all users who belongs to the group passed as
+	 * parameter.
 	 * 
-	 * @param groupId The group id
-	 * @param roleName The role name
+	 * @param groupId
+	 *            The group id
+	 * @param roleName
+	 *            The role name
 	 * @throws Exception
 	 */
-	public void deleteUserRoleValuesByGroup(int groupId, String roleName) throws Exception;
+	public void deleteUserRoleValuesByGroup(int groupId, String roleName)
+			throws Exception;
 }

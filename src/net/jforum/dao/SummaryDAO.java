@@ -39,21 +39,22 @@
  * The JForum Project
  * http://www.jforum.net
  *
- */ 
+ */
 package net.jforum.dao;
 
 import java.util.Date;
 import java.util.List;
 
 /**
- * Load sumary of posts from the data Base 
+ * Load sumary of posts from the data Base
  * 
- * @author Franklin S. Dattein (<a href="mailto:franklin@portaljava.com">franklin@portaljava.com</a>)
+ * @author Franklin S. Dattein (<a
+ *         href="mailto:franklin@portaljava.com">franklin@portaljava.com</a>)
  * 
- * @version $Id: SummaryDAO.java,v 1.1 2005/07/21 17:39:42 franklin_samir Exp $
+ * @version $Id: SummaryDAO.java,v 1.2 2005/07/26 02:45:26 diegopires Exp $
  */
 public interface SummaryDAO {
-    public List selectLastPosts(Date firstDate, Date lastDate) throws Exception;
+	public List selectLastPosts(Date firstDate, Date lastDate) throws Exception;
 
-    public List listRecipients() throws Exception;
+	public List listRecipients() throws Exception;
 }

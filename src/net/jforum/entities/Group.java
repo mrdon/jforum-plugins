@@ -41,43 +41,49 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: Group.java,v 1.2 2004/04/21 23:57:31 rafaelsteil Exp $
+ * $Id: Group.java,v 1.3 2005/07/26 02:45:50 diegopires Exp $
  */
 package net.jforum.entities;
 
 /**
- * Represents a group in the system. 
+ * Represents a group in the system.
  * 
  * @author Rafael Steil
  */
-public class Group 
-{
+public class Group {
 	private int id;
+
 	private int parentId;
+
 	private String name;
+
 	private String description;
-	
-	/**
-	 * Default constructor	 
-	 * **/
-	public Group() {}
-	
+
+	/***************************************************************************
+	 * Default constructor
+	 **************************************************************************/
+	public Group() {
+	}
+
 	/**
 	 * Create a new <code>Group</code> object.
-	 *  
-	 * @param id The Group ID
-	 * @param parentId The parent ID for the group
-	 * @param name The Group Name
-	 * @param description The Group Description
- 	 **/
-	public Group(int id, int parentId, String name, String description) 
-	{
+	 * 
+	 * @param id
+	 *            The Group ID
+	 * @param parentId
+	 *            The parent ID for the group
+	 * @param name
+	 *            The Group Name
+	 * @param description
+	 *            The Group Description
+	 */
+	public Group(int id, int parentId, String name, String description) {
 		setName(name);
 		setId(id);
 		setParentId(parentId);
 		setDescription(description);
 	}
-	
+
 	/**
 	 * @return String
 	 */
@@ -91,7 +97,7 @@ public class Group
 	public int getId() {
 		return this.id;
 	}
-	
+
 	/**
 	 * @return int
 	 */
@@ -108,7 +114,9 @@ public class Group
 
 	/**
 	 * Sets the description.
-	 * @param description The description to set
+	 * 
+	 * @param description
+	 *            The description to set
 	 */
 	public void setDescription(String description) {
 		this.description = description;
@@ -116,7 +124,9 @@ public class Group
 
 	/**
 	 * Sets the id.
-	 * @param id The id to set
+	 * 
+	 * @param id
+	 *            The id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -124,7 +134,9 @@ public class Group
 
 	/**
 	 * Sets the parent id.
-	 * @param id The parent id to set
+	 * 
+	 * @param id
+	 *            The parent id to set
 	 */
 	public void setParentId(int parentId) {
 		this.parentId = parentId;
@@ -132,38 +144,37 @@ public class Group
 
 	/**
 	 * Sets the name.
-	 * @param name The name to set
+	 * 
+	 * @param name
+	 *            The name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	/* 
+	/*
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	public boolean equals(Object o) 
-	{
+	public boolean equals(Object o) {
 		if (!(o instanceof Group)) {
 			return false;
 		}
-		
-		return (((Group)o).getId() == this.id);
+
+		return (((Group) o).getId() == this.id);
 	}
 
-	/* 
+	/*
 	 * @see java.lang.Object#hashCode()
 	 */
-	public int hashCode() 
-	{
+	public int hashCode() {
 		return this.id;
 	}
 
-	/* 
+	/*
 	 * @see java.lang.Object#toString()
 	 */
-	public String toString() 
-	{
-		return this.name +" - "+ this.id;
+	public String toString() {
+		return this.name + " - " + this.id;
 	}
 
 }

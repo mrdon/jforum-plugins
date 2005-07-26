@@ -48,26 +48,33 @@ import java.io.Serializable;
  * Represents each bbcode.
  * 
  * @author Rafael Steil
- * @version $Id: BBCode.java,v 1.8 2005/02/18 19:01:19 rafaelsteil Exp $
+ * @version $Id: BBCode.java,v 1.9 2005/07/26 02:45:43 diegopires Exp $
  */
-public class BBCode implements Serializable
-{
+public class BBCode implements Serializable {
 	private String tagName = "";
+
 	private String regex;
+
 	private String replace;
+
 	private boolean removQuotes;
+
 	private boolean alwaysProcess;
-	
-	public BBCode() {}
+
+	public BBCode() {
+	}
 
 	/**
 	 * BBCode class constructor
-	 * @param tagName The tag name we are going to match
-	 * @param regex Regular expression relacted to the tag
-	 * @param replace The replacement string
+	 * 
+	 * @param tagName
+	 *            The tag name we are going to match
+	 * @param regex
+	 *            Regular expression relacted to the tag
+	 * @param replace
+	 *            The replacement string
 	 */
-	public BBCode(String tagName, String regex, String replace)
-	{
+	public BBCode(String tagName, String regex, String replace) {
 		this.tagName = tagName;
 		this.regex = regex;
 		this.replace = replace;
@@ -75,75 +82,74 @@ public class BBCode implements Serializable
 
 	/**
 	 * Gets the regex
+	 * 
 	 * @return String witht the regex
 	 */
-	public String getRegex() 
-	{
+	public String getRegex() {
 		return this.regex;
 	}
 
 	/**
 	 * Gets the replacement string
+	 * 
 	 * @return string with the replacement data
 	 */
-	public String getReplace() 
-	{
+	public String getReplace() {
 		return this.replace;
 	}
 
 	/**
 	 * Getst the tag name
+	 * 
 	 * @return The tag name
 	 */
-	public String getTagName() 
-	{
+	public String getTagName() {
 		return this.tagName;
 	}
-	
-	public boolean removeQuotes()
-	{
+
+	public boolean removeQuotes() {
 		return this.removQuotes;
 	}
 
 	/**
 	 * Sets the regular expression associated to the tag
-	 * @param regex Regular expression string
+	 * 
+	 * @param regex
+	 *            Regular expression string
 	 */
-	public void setRegex(String regex) 
-	{
+	public void setRegex(String regex) {
 		this.regex = regex;
 	}
 
 	/**
 	 * Sets the replacement string, to be aplyied when matching the code
-	 * @param replace The replacement string data
+	 * 
+	 * @param replace
+	 *            The replacement string data
 	 */
-	public void setReplace(String replace) 
-	{
+	public void setReplace(String replace) {
 		this.replace = replace;
 	}
 
 	/**
 	 * Setst the tag name
-	 * @param tagName The tag name
+	 * 
+	 * @param tagName
+	 *            The tag name
 	 */
-	public void setTagName(String tagName) 
-	{
+	public void setTagName(String tagName) {
 		this.tagName = tagName;
 	}
-	
-	public void enableAlwaysProcess()
-	{
+
+	public void enableAlwaysProcess() {
 		this.alwaysProcess = true;
 	}
-	
-	public boolean alwaysProcess()
-	{
+
+	public boolean alwaysProcess() {
 		return this.alwaysProcess;
 	}
-	
-	public void enableRemoveQuotes()
-	{
+
+	public void enableRemoveQuotes() {
 		this.removQuotes = true;
 	}
 }

@@ -42,7 +42,6 @@
  */
 package net.jforum.view.admin;
 
-
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.RankingDAO;
 import net.jforum.entities.Ranking;
@@ -51,71 +50,65 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: RankingAction.java,v 1.7 2005/03/26 04:11:18 rafaelsteil Exp $
+ * @version $Id: RankingAction.java,v 1.8 2005/07/26 02:45:40 diegopires Exp $
  */
-public class RankingAction extends AdminCommand 
-{
+public class RankingAction extends AdminCommand {
 	// List
-	public void list() throws Exception
-	{
-		this.context.put("ranks", DataAccessDriver.getInstance().newRankingDAO().selectAll());
+	public void list() throws Exception {
+		this.context.put("ranks", DataAccessDriver.getInstance()
+				.newRankingDAO().selectAll());
 		this.setTemplateName(TemplateKeys.RANKING_LIST);
 	}
-	
+
 	// One more, one more
-	public void insert() throws Exception
-	{
+	public void insert() throws Exception {
 		this.setTemplateName(TemplateKeys.RANKING_INSERT);
 		this.context.put("action", "insertSave");
 	}
-	
+
 	// Edit
-	public void edit() throws Exception
-	{
-		this.context.put("rank", DataAccessDriver.getInstance().newRankingDAO().selectById(
-				this.request.getIntParameter("ranking_id")));
+	public void edit() throws Exception {
+		this.context.put("rank", DataAccessDriver.getInstance().newRankingDAO()
+				.selectById(this.request.getIntParameter("ranking_id")));
 		this.setTemplateName(TemplateKeys.RANKING_EDIT);
 		this.context.put("action", "editSave");
 	}
-	
-	//  Save information
-	public void editSave() throws Exception
-	{
+
+	// Save information
+	public void editSave() throws Exception {
 		Ranking r = new Ranking();
 		r.setTitle(this.request.getParameter("rank_title"));
 		r.setMin(this.request.getIntParameter("rank_min"));
 		r.setId(this.request.getIntParameter("rank_id"));
-		
-		// TODO: needs to add support to images 
-		
+
+		// TODO: needs to add support to images
+
 		DataAccessDriver.getInstance().newRankingDAO().update(r);
-		RankingRepository.loadRanks();	
+		RankingRepository.loadRanks();
 		this.list();
 	}
-	
+
 	// Delete
-	public void delete() throws Exception
-	{
+	public void delete() throws Exception {
 		String ids[] = this.request.getParameterValues("rank_id");
-		
+
 		RankingDAO rm = DataAccessDriver.getInstance().newRankingDAO();
-		
+
 		if (ids != null) {
 			for (int i = 0; i < ids.length; i++) {
 				rm.delete(Integer.parseInt(ids[i]));
 			}
 		}
-			
+
 		this.list();
 	}
-	
+
 	// A new one
-	public void insertSave() throws Exception
-	{
+	public void insertSave() throws Exception {
 		Ranking r = new Ranking();
 		r.setTitle(this.request.getParameter("rank_title"));
 		r.setMin(this.request.getIntParameter("rank_min"));
-		
+
 		// TODO: need to add support to images
 		DataAccessDriver.getInstance().newRankingDAO().addNew(r);
 		this.list();

@@ -48,40 +48,59 @@ import java.util.Date;
  * Represents every message post in the system.
  * 
  * @author Rafael Steil
- * @version $Id: Post.java,v 1.9 2005/06/01 15:03:42 rafaelsteil Exp $
+ * @version $Id: Post.java,v 1.10 2005/07/26 02:45:50 diegopires Exp $
  */
-public class Post 
-{
+public class Post {
 	private int id;
+
 	private int topicId;
+
 	private int forumId;
+
 	private String formatedTime;
+
 	private int userId;
+
 	private Date time;
+
 	private String text;
+
 	private String subject;
+
 	private String postUsername;
+
 	private boolean bbCodeEnabled = true;
+
 	private boolean htmlEnabled = true;
+
 	private boolean smiliesEnabled = true;
+
 	private boolean signatureEnabled = true;
+
 	private Date editTime;
+
 	private int editCount;
+
 	private String userIp;
+
 	private boolean canEdit;
+
 	private KarmaStatus karma;
+
 	private boolean hasAttachments;
+
 	private boolean moderate;
 
-	public Post() { }
-	
+	public Post() {
+	}
+
 	/**
 	 * Copy constructor
 	 * 
-	 * @param p The Post to make a copy from
+	 * @param p
+	 *            The Post to make a copy from
 	 */
-	public Post(Post p)
-	{
+	public Post(Post p) {
 		this.setBbCodeEnabled(p.isBbCodeEnabled());
 		this.setCanEdit(p.getCanEdit());
 		this.setEditCount(p.getEditCount());
@@ -102,32 +121,27 @@ public class Post
 		this.setKarma(new KarmaStatus(p.getKarma()));
 		this.setModerate(p.isModerationNeeded());
 	}
-	
-	public void setModerate(boolean status)
-	{
+
+	public void setModerate(boolean status) {
 		this.moderate = status;
 	}
-	
-	public boolean isModerate()
-	{
+
+	public boolean isModerate() {
 		return this.isModerationNeeded();
 	}
-	
-	public boolean isModerationNeeded()
-	{
+
+	public boolean isModerationNeeded() {
 		return this.moderate;
 	}
-	
-	public KarmaStatus getKarma()
-	{
+
+	public KarmaStatus getKarma() {
 		return this.karma;
 	}
-	
-	public void setKarma(KarmaStatus karma)
-	{
+
+	public void setKarma(KarmaStatus karma) {
 		this.karma = karma;
 	}
-	
+
 	/**
 	 * Checks if the BB code is enabled
 	 * 
@@ -183,7 +197,8 @@ public class Post
 	}
 
 	/**
-	 * Gets the username of the user ( an anonymous user ) that have posted the message
+	 * Gets the username of the user ( an anonymous user ) that have posted the
+	 * message
 	 * 
 	 * @return String with the username
 	 */
@@ -244,10 +259,13 @@ public class Post
 	public String getUserIp() {
 		return this.userIp;
 	}
+
 	/**
 	 * Sets the status for BB code in the message
 	 * 
-	 * @param bbCodeEnabled <code>true</code> or <code>false</code>, depending the intention
+	 * @param bbCodeEnabled
+	 *            <code>true</code> or <code>false</code>, depending the
+	 *            intention
 	 */
 	public void setBbCodeEnabled(boolean bbCodeEnabled) {
 		this.bbCodeEnabled = bbCodeEnabled;
@@ -256,7 +274,8 @@ public class Post
 	/**
 	 * Sets the count times the message was edited
 	 * 
-	 * @param editCount The count time
+	 * @param editCount
+	 *            The count time
 	 */
 	public void setEditCount(int editCount) {
 		this.editCount = editCount;
@@ -265,7 +284,8 @@ public class Post
 	/**
 	 * Sets the edit time the message was last edited
 	 * 
-	 * @param editTime long value representing the time
+	 * @param editTime
+	 *            long value representing the time
 	 */
 	public void setEditTime(Date editTime) {
 		this.editTime = editTime;
@@ -274,7 +294,8 @@ public class Post
 	/**
 	 * Sets the id of the forum this message belongs to
 	 * 
-	 * @param forumId The forum's id
+	 * @param forumId
+	 *            The forum's id
 	 */
 	public void setForumId(int forumId) {
 		this.forumId = forumId;
@@ -283,7 +304,9 @@ public class Post
 	/**
 	 * Sets the status for HTML code in the message
 	 * 
-	 * @param htmlEnabled <code>true</code> or <code>false</code>, depending the intention
+	 * @param htmlEnabled
+	 *            <code>true</code> or <code>false</code>, depending the
+	 *            intention
 	 */
 	public void setHtmlEnabled(boolean htmlEnabled) {
 		this.htmlEnabled = htmlEnabled;
@@ -292,7 +315,8 @@ public class Post
 	/**
 	 * Sets the id for the message
 	 * 
-	 * @param id The id
+	 * @param id
+	 *            The id
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -301,7 +325,8 @@ public class Post
 	/**
 	 * Sets the username of the anonymous user that have sent the message
 	 * 
-	 * @param postUsername String with the username
+	 * @param postUsername
+	 *            String with the username
 	 */
 	public void setPostUsername(String postUsername) {
 		this.postUsername = postUsername;
@@ -310,7 +335,9 @@ public class Post
 	/**
 	 * Sets the status for signatures in the message
 	 * 
-	 * @param signatureEnabled <code>true</code> or <code>false</code>, depending the intention
+	 * @param signatureEnabled
+	 *            <code>true</code> or <code>false</code>, depending the
+	 *            intention
 	 */
 	public void setSignatureEnabled(boolean signatureEnabled) {
 		this.signatureEnabled = signatureEnabled;
@@ -319,7 +346,9 @@ public class Post
 	/**
 	 * Sets the status for smilies in the message
 	 * 
-	 * @param smiliesEnabled <code>true</code> or <code>false</code>, depending the intention
+	 * @param smiliesEnabled
+	 *            <code>true</code> or <code>false</code>, depending the
+	 *            intention
 	 */
 	public void setSmiliesEnabled(boolean smiliesEnabled) {
 		this.smiliesEnabled = smiliesEnabled;
@@ -328,26 +357,26 @@ public class Post
 	/**
 	 * Sets the time the message was sent
 	 * 
-	 * @param time The time 
+	 * @param time
+	 *            The time
 	 */
 	public void setTime(Date time) {
 		this.time = time;
 	}
-	
-	public void setFormatedTime(String t)
-	{
+
+	public void setFormatedTime(String t) {
 		this.formatedTime = t;
 	}
-	
-	public String getFormatedTime()
-	{
+
+	public String getFormatedTime() {
 		return this.formatedTime;
 	}
 
 	/**
 	 * Sets the id of the topic that the message belongs to
 	 * 
-	 * @param topicId The id of the topic
+	 * @param topicId
+	 *            The id of the topic
 	 */
 	public void setTopicId(int topicId) {
 		this.topicId = topicId;
@@ -356,12 +385,13 @@ public class Post
 	/**
 	 * Sets the id of the user that sent the message
 	 * 
-	 * @param userId The user Id
+	 * @param userId
+	 *            The user Id
 	 */
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
-	
+
 	/**
 	 * Gets the message of the post
 	 * 
@@ -374,14 +404,15 @@ public class Post
 	/**
 	 * Sets the text of the post
 	 * 
-	 * @param text The text to set
+	 * @param text
+	 *            The text to set
 	 */
 	public void setText(String text) {
 		this.text = text;
 	}
-	
+
 	/**
-	 * Gets the subject of the post 
+	 * Gets the subject of the post
 	 * 
 	 * @return String with the subject
 	 */
@@ -392,7 +423,8 @@ public class Post
 	/**
 	 * Sets the subject for the message
 	 * 
-	 * @param subject The subject to set
+	 * @param subject
+	 *            The subject to set
 	 */
 	public void setSubject(String subject) {
 		this.subject = subject;
@@ -401,52 +433,51 @@ public class Post
 	/**
 	 * Sets the IP of the user
 	 * 
-	 * @param userIP The IP address of the user
+	 * @param userIP
+	 *            The IP address of the user
 	 */
 	public void setUserIp(String userIp) {
 		this.userIp = userIp;
 	}
+
 	public boolean getCanEdit() {
 		return this.canEdit;
 	}
-	
+
 	public void setCanEdit(boolean canEdit) {
 		this.canEdit = canEdit;
 	}
-	
+
 	/**
 	 * @return Returns the hasAttachments.
 	 */
-	public boolean hasAttachments()
-	{
+	public boolean hasAttachments() {
 		return this.hasAttachments;
 	}
-	
+
 	/**
-	 * @param hasAttachments The hasAttachments to set.
+	 * @param hasAttachments
+	 *            The hasAttachments to set.
 	 */
-	public void hasAttachments(boolean hasAttachments)
-	{
+	public void hasAttachments(boolean hasAttachments) {
 		this.hasAttachments = hasAttachments;
 	}
-	
+
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	public boolean equals(Object o)
-	{
+	public boolean equals(Object o) {
 		if (!(o instanceof Post)) {
 			return false;
 		}
-		
-		return ((Post)o).getId() == this.id;
+
+		return ((Post) o).getId() == this.id;
 	}
-	
+
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
-	public int hashCode()
-	{
+	public int hashCode() {
 		return this.id;
 	}
 }

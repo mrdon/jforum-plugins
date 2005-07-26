@@ -40,7 +40,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: PooledExecutor.java,v 1.5 2005/02/24 23:00:52 rafaelsteil Exp $
+ * $Id: PooledExecutor.java,v 1.6 2005/07/26 02:46:04 diegopires Exp $
  */
 package net.jforum.util.concurrent.executor;
 
@@ -52,76 +52,83 @@ import net.jforum.util.concurrent.Task;
 /**
  * @author Rodrigo Kumpera
  */
-public class PooledExecutor implements Executor 
-{
-	static final int DEFAULT_MIN_SIZE = Runtime.getRuntime().availableProcessors();
+public class PooledExecutor implements Executor {
+	static final int DEFAULT_MIN_SIZE = Runtime.getRuntime()
+			.availableProcessors();
+
 	static final int DEFAULT_MAX_SIZE = 4 * DEFAULT_MIN_SIZE;
+
 	static final int DEFAULT_MAX_IDLE = DEFAULT_MIN_SIZE;
+
 	static final long DEFAULT_KEEP_ALIVE = 60 * 1000;
 
-	//creation delay should avoid bursts 
+	// creation delay should avoid bursts
 	static final long DEFAULT_CREATION_DELAY = 1000;
-	
+
 	private final Queue queue;
+
 	private final Object lock = new Object();
-	
+
 	private int minSize = DEFAULT_MIN_SIZE;
+
 	private int maxSize = DEFAULT_MAX_SIZE;
+
 	private int maxIdle = DEFAULT_MAX_IDLE;
+
 	private long keepAlive = DEFAULT_KEEP_ALIVE;
+
 	private long minCreationDelay = DEFAULT_CREATION_DELAY;
 
 	private int threadCount = 0;
+
 	private long lastCreation = 0;
+
 	private int waiting = 0;
-	
-	private void createThread() 
-	{
+
+	private void createThread() {
 		long curtime = System.currentTimeMillis();
-		if (threadCount > 0  
-			&& minCreationDelay > 0
-			&& curtime - lastCreation < minCreationDelay) {
+		if (threadCount > 0 && minCreationDelay > 0
+				&& curtime - lastCreation < minCreationDelay) {
 			return;
 		}
-		
-		Thread worker = new Thread(new Worker(),"jforum");
+
+		Thread worker = new Thread(new Worker(), "jforum");
 		worker.setDaemon(true);
 		worker.start();
-		
+
 		lastCreation = curtime;
 		++threadCount;
 	}
-	
-	private class Worker extends AbstractWorker 
-	{
-		protected Object take() throws InterruptedException {			
-			synchronized(lock) {
+
+	private class Worker extends AbstractWorker {
+		protected Object take() throws InterruptedException {
+			synchronized (lock) {
 				++waiting;
-				
+
 				// Terminate if we have more threads than the limit
-				if((threadCount > maxSize && maxSize > 0)
-					// Terminate if we have too many idle threads
-					// but respect the minSize parameter
-					|| (waiting > maxIdle && maxIdle > 0 && threadCount > minSize))
+				if ((threadCount > maxSize && maxSize > 0)
+						// Terminate if we have too many idle threads
+						// but respect the minSize parameter
+						|| (waiting > maxIdle && maxIdle > 0 && threadCount > minSize))
 					return null;
 			}
-			
+
 			try {
-				if(keepAlive >= 0) {
+				if (keepAlive >= 0) {
 					return queue.pool(keepAlive);
 				}
-				
+
 				return queue.get();
-			} finally { 
-				synchronized(lock) {
+			} finally {
+				synchronized (lock) {
 					--waiting;
 				}
 			}
 		}
-		
+
 		protected void cleanup() {
-			synchronized(lock) {
-				if(--threadCount < minSize)
+			synchronized (lock) {
+				if (--threadCount < minSize)
 					createThread();
 			}
 		}
@@ -131,49 +138,44 @@ public class PooledExecutor implements Executor
 		this.queue = queue;
 	}
 
-	protected void queue(Object obj) throws InterruptedException 
-	{
-		for(;;) {
-			synchronized(lock) {
-				if(threadCount < minSize) {
-					createThread();
-				}
-				
-				if(queue.offer(obj, 0)) {
-					break;
-				}
-				
-				if(threadCount < maxSize) {
+	protected void queue(Object obj) throws InterruptedException {
+		for (;;) {
+			synchronized (lock) {
+				if (threadCount < minSize) {
 					createThread();
 				}
 
-				if(queue.offer(obj, 0)) {
+				if (queue.offer(obj, 0)) {
+					break;
+				}
+
+				if (threadCount < maxSize) {
+					createThread();
+				}
+
+				if (queue.offer(obj, 0)) {
 					break;
 				}
 			}
 		}
 	}
 
-	public void execute(Task task) throws InterruptedException 
-	{
+	public void execute(Task task) throws InterruptedException {
 		queue(task);
 	}
 
-	public Result executeWithResult(Task task) throws InterruptedException 
-	{
+	public Result executeWithResult(Task task) throws InterruptedException {
 		SimpleResult result = new SimpleResult(task);
 		queue(result);
-		
+
 		return result;
 	}
 
-	public long getKeepAlive() 
-	{
+	public long getKeepAlive() {
 		return keepAlive;
 	}
 
-	public int getMaxIdle() 
-	{
+	public int getMaxIdle() {
 		return maxIdle;
 	}
 
@@ -181,58 +183,52 @@ public class PooledExecutor implements Executor
 		return maxSize;
 	}
 
-	public long getMinCreationDelay() 
-	{
+	public long getMinCreationDelay() {
 		return minCreationDelay;
 	}
 
-	public int getMinSize() 
-	{
+	public int getMinSize() {
 		return minSize;
 	}
 
-
-	public void setKeepAlive(long l) 
-	{
-		synchronized(lock) {
+	public void setKeepAlive(long l) {
+		synchronized (lock) {
 			keepAlive = l;
 		}
 	}
 
-	public void setMaxIdle(int i) 
-	{
-		synchronized(lock) {
+	public void setMaxIdle(int i) {
+		synchronized (lock) {
 			maxIdle = i;
 		}
 	}
 
-	public void setMaxSize(int maxSize) 
-	{
-		synchronized(lock) {
-			if(maxSize > 0 && maxSize < minSize) {
-				throw new IllegalArgumentException("max size smaller than min size");
+	public void setMaxSize(int maxSize) {
+		synchronized (lock) {
+			if (maxSize > 0 && maxSize < minSize) {
+				throw new IllegalArgumentException(
+						"max size smaller than min size");
 			}
-			
+
 			this.maxSize = maxSize;
 		}
 	}
 
-	public void setMinCreationDelay(long l) 
-	{
-		synchronized(lock) {
+	public void setMinCreationDelay(long l) {
+		synchronized (lock) {
 			minCreationDelay = l;
 		}
 	}
 
-	public void setMinSize(int minSize) 
-	{
-		synchronized(lock) {
-			if(minSize < 1 || (maxSize > 0 && maxSize < minSize)) {
-				throw new IllegalArgumentException("max size smaller than min size");
+	public void setMinSize(int minSize) {
+		synchronized (lock) {
+			if (minSize < 1 || (maxSize > 0 && maxSize < minSize)) {
+				throw new IllegalArgumentException(
+						"max size smaller than min size");
 			}
 
 			this.minSize = minSize;
-		}	
+		}
 	}
 
 }

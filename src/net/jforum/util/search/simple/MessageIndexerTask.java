@@ -54,16 +54,17 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: MessageIndexerTask.java,v 1.3 2005/03/26 04:11:19 rafaelsteil Exp $
+ * @version $Id: MessageIndexerTask.java,v 1.3 2005/03/26 04:11:19 rafaelsteil
+ *          Exp $
  */
-public class MessageIndexerTask implements Task
-{
+public class MessageIndexerTask implements Task {
 	private static Logger logger = Logger.getLogger(MessageIndexerTask.class);
+
 	private Connection conn;
+
 	private Post post;
-	
-	public MessageIndexerTask(Post post) throws Exception
-	{
+
+	public MessageIndexerTask(Post post) throws Exception {
 		this.post = post;
 		this.conn = DBConnection.getImplementation().getConnection();
 	}
@@ -71,26 +72,25 @@ public class MessageIndexerTask implements Task
 	/**
 	 * @see net.jforum.util.concurrent.Task#execute()
 	 */
-	public Object execute() throws Exception
-	{
+	public Object execute() throws Exception {
 		try {
-			SearchIndexerDAO indexer = DataAccessDriver.getInstance().newSearchIndexerDAO();
+			SearchIndexerDAO indexer = DataAccessDriver.getInstance()
+					.newSearchIndexerDAO();
 			indexer.setConnection(this.conn);
 			indexer.insertSearchWords(this.post);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			logger.warn("Error while indexing a post: " + e);
 			e.printStackTrace();
-		}
-		finally {
+		} finally {
 			if (this.conn != null) {
 				try {
-					DBConnection.getImplementation().releaseConnection(this.conn);
+					DBConnection.getImplementation().releaseConnection(
+							this.conn);
+				} catch (Exception e) {
 				}
-				catch (Exception e) {}
 			}
 		}
-		
+
 		return null;
 	}
 }

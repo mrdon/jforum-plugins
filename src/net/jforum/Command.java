@@ -42,7 +42,6 @@
  */
 package net.jforum;
 
-
 import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.exceptions.TemplateNotFoundException;
@@ -50,94 +49,91 @@ import net.jforum.repository.Tpl;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
-
 import freemarker.template.Configuration;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
 /**
- * <code>Command</code> Pattern implementation.
- * All View Helper classes, which are intead to configure and processs
- * presentation actions must extend this class. 
+ * <code>Command</code> Pattern implementation. All View Helper classes, which
+ * are intead to configure and processs presentation actions must extend this
+ * class.
  * 
  * @author Rafael Steil
- * @version $Id: Command.java,v 1.12 2005/07/18 17:15:55 rafaelsteil Exp $
+ * @version $Id: Command.java,v 1.13 2005/07/26 02:45:33 diegopires Exp $
  */
-public abstract class Command 
-{
+public abstract class Command {
 	private boolean ignoreAction;
+
 	protected String templateName;
+
 	protected ActionServletRequest request;
+
 	protected HttpServletResponse response;
+
 	protected SimpleHash context;
-	
-	protected void setTemplateName(String templateName)
-	{
+
+	protected void setTemplateName(String templateName) {
 		this.templateName = Tpl.name(templateName);
 	}
-	
-	protected void ignoreAction()
-	{
+
+	protected void ignoreAction() {
 		this.ignoreAction = true;
 	}
-	
+
 	/**
-	 * Base method for listings. 
-	 * May be used as general listing or as helper
-	 * to another specialized type of listing. Subclasses
-	 * must implement it to the cases where some invalid
-	 * action is called ( which means that the exception will
-	 * be caught and the general listing will be used )
+	 * Base method for listings. May be used as general listing or as helper to
+	 * another specialized type of listing. Subclasses must implement it to the
+	 * cases where some invalid action is called ( which means that the
+	 * exception will be caught and the general listing will be used )
 	 * 
-	 * @throws Exception  
+	 * @throws Exception
 	 */
 	public abstract void list() throws Exception;
-	
+
 	/**
 	 * Process and manipulate a requisition.
-	 * @param context TODO
+	 * 
+	 * @param context
+	 *            TODO
 	 * @throws Exception
 	 * @return <code>Template</code> reference
 	 */
-	public Template process(ActionServletRequest request, 
-			HttpServletResponse response,
-			SimpleHash context) throws Exception 
-	{
+	public Template process(ActionServletRequest request,
+			HttpServletResponse response, SimpleHash context) throws Exception {
 		this.request = request;
 		this.response = response;
 		this.context = context;
-		
+
 		String action = this.request.getAction();
 
 		if (!this.ignoreAction) {
 			try {
-				Class.forName(this.getClass().getName()).getMethod(action, null).invoke(this, null);
-			}
-			catch (NoSuchMethodException e) {		
-				this.list();		
-			}
-			catch (Exception e) {
+				Class.forName(this.getClass().getName())
+						.getMethod(action, null).invoke(this, null);
+			} catch (NoSuchMethodException e) {
+				this.list();
+			} catch (Exception e) {
 				throw e;
 			}
 		}
-		
+
 		if (JForum.getRedirect() != null) {
 			this.setTemplateName(TemplateKeys.EMPTY);
+		} else if (request.getAttribute("template") != null) {
+			this.setTemplateName((String) request.getAttribute("template"));
 		}
-		else if (request.getAttribute("template") != null) {
-			this.setTemplateName((String)request.getAttribute("template"));
-		}
-		
+
 		if (JForum.isBinaryContent()) {
 			return null;
 		}
-		
+
 		if (this.templateName == null) {
-			throw new TemplateNotFoundException("Template for action " + action + " is not defined");
+			throw new TemplateNotFoundException("Template for action " + action
+					+ " is not defined");
 		}
-		
-		return Configuration.getDefaultConfiguration().getTemplate(SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR)
-				+ "/" 
-				+ this.templateName);
+
+		return Configuration.getDefaultConfiguration().getTemplate(
+				SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR) + "/"
+						+ this.templateName);
 	}
 }

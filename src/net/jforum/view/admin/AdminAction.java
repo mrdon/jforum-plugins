@@ -42,7 +42,6 @@
  */
 package net.jforum.view.admin;
 
-
 import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.ActionServletRequest;
@@ -61,70 +60,63 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: AdminAction.java,v 1.8 2005/07/18 17:15:53 rafaelsteil Exp $
+ * @version $Id: AdminAction.java,v 1.9 2005/07/26 02:45:41 diegopires Exp $
  */
 public class AdminAction extends Command {
 
-	/** 
+	/**
 	 * @see net.jforum.Command#list()
 	 */
-	public void list() throws Exception 
-	{
+	public void list() throws Exception {
 		this.login();
 	}
-	
-	public void login() throws Exception
-	{
-		String logged = (String)SessionFacade.getAttribute("logged");
-		UserSession us = SessionFacade.getUserSession();
-		
-		PermissionControl pc = SecurityRepository.get(us.getUserId());
-		
-		if (logged == null || logged.toString().equals("0") 
-				|| pc == null || !pc.canAccess(SecurityConstants.PERM_ADMINISTRATION)) {
-			String returnPath =  this.request.getContextPath() + "/admBase/login" 
-				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
 
-			JForum.setRedirect(this.request.getContextPath() 
-				+ "/jforum" 
-				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) 
-				+ "?module=user&action=login&returnPath="
-				+ returnPath);
-		}
-		else {
+	public void login() throws Exception {
+		String logged = (String) SessionFacade.getAttribute("logged");
+		UserSession us = SessionFacade.getUserSession();
+
+		PermissionControl pc = SecurityRepository.get(us.getUserId());
+
+		if (logged == null || logged.toString().equals("0") || pc == null
+				|| !pc.canAccess(SecurityConstants.PERM_ADMINISTRATION)) {
+			String returnPath = this.request.getContextPath()
+					+ "/admBase/login"
+					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
+
+			JForum.setRedirect(this.request.getContextPath() + "/jforum"
+					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)
+					+ "?module=user&action=login&returnPath=" + returnPath);
+		} else {
 			this.setTemplateName(TemplateKeys.ADMIN_INDEX);
 		}
 	}
-	
-	public void menu() throws Exception
-	{
+
+	public void menu() throws Exception {
 		this.setTemplateName(TemplateKeys.ADMIN_MENU);
 	}
-	
-	public void main() throws Exception
-	{
+
+	public void main() throws Exception {
 		this.setTemplateName(TemplateKeys.ADMIN_MAIN);
 	}
-	
-	public boolean checkAdmin()
-	{
+
+	public boolean checkAdmin() {
 		int userId = SessionFacade.getUserSession().getUserId();
-		if (SecurityRepository.get(userId).canAccess(SecurityConstants.PERM_ADMINISTRATION)) {
+		if (SecurityRepository.get(userId).canAccess(
+				SecurityConstants.PERM_ADMINISTRATION)) {
 			return true;
 		}
-		
-		JForum.setRedirect(JForum.getRequest().getContextPath() + "/admBase/login"
-			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
-		
+
+		JForum.setRedirect(JForum.getRequest().getContextPath()
+				+ "/admBase/login"
+				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+
 		super.ignoreAction();
 
 		return false;
 	}
 
-	public Template process(ActionServletRequest request, 
-			HttpServletResponse response, 
-			SimpleHash context) throws Exception 
-	{
+	public Template process(ActionServletRequest request,
+			HttpServletResponse response, SimpleHash context) throws Exception {
 		return super.process(request, response, context);
 	}
 }

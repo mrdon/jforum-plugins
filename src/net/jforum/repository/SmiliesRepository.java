@@ -54,50 +54,50 @@ import net.jforum.exceptions.SmiliesLoadException;
 
 /**
  * @author Rafael Steil
- * @version $Id: SmiliesRepository.java,v 1.9 2005/03/26 04:10:59 rafaelsteil Exp $
+ * @version $Id: SmiliesRepository.java,v 1.9 2005/03/26 04:10:59 rafaelsteil
+ *          Exp $
  */
-public class SmiliesRepository implements Cacheable
-{
+public class SmiliesRepository implements Cacheable {
 	private static CacheEngine cache;
+
 	private static final String FQN = "smilies";
+
 	private static final String ENTRIES = "entries";
+
 	private static boolean contexted = false;
 
 	/**
 	 * @see net.jforum.cache.Cacheable#setCacheEngine(net.jforum.cache.CacheEngine)
 	 */
-	public void setCacheEngine(CacheEngine engine)
-	{
+	public void setCacheEngine(CacheEngine engine) {
 		cache = engine;
 	}
-	
-	public static void loadSmilies()
-	{
+
+	public static void loadSmilies() {
 		try {
-			cache.add(FQN, ENTRIES, DataAccessDriver.getInstance().newSmilieDAO().selectAll());
+			cache.add(FQN, ENTRIES, DataAccessDriver.getInstance()
+					.newSmilieDAO().selectAll());
 			contexted = false;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			throw new SmiliesLoadException("Error while loading smilies: " + e);
 		}
 	}
-	
-	public static List getSmilies()
-	{
-		List list = (List)cache.get(FQN, ENTRIES);
+
+	public static List getSmilies() {
+		List list = (List) cache.get(FQN, ENTRIES);
 		if (!contexted) {
 			String context = JForum.getRequest().getContextPath();
-			
-			for (Iterator iter = list.iterator(); iter.hasNext(); ) {
-				Smilie s = (Smilie)iter.next();
+
+			for (Iterator iter = list.iterator(); iter.hasNext();) {
+				Smilie s = (Smilie) iter.next();
 				s.setUrl(s.getUrl().replaceAll("#CONTEXT#", context)
 						.replaceAll("\\\\", ""));
 			}
-			
+
 			cache.add(FQN, ENTRIES, list);
 			contexted = true;
 		}
-		
+
 		return list;
 	}
 }

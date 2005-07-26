@@ -44,14 +44,15 @@ package net.jforum.util;
 
 /**
  * @author Rafael Steil
- * @version $Id: FileChangeListener.java,v 1.1 2004/06/03 02:34:37 rafaelsteil Exp $
+ * @version $Id: FileChangeListener.java,v 1.1 2004/06/03 02:34:37 rafaelsteil
+ *          Exp $
  */
-public interface FileChangeListener
-{
+public interface FileChangeListener {
 	/**
 	 * Invoked when a file changes
 	 * 
-	 * @param filename Name of the changed file
+	 * @param filename
+	 *            Name of the changed file
 	 */
 	public void fileChanged(String filename);
 }

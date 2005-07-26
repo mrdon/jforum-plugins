@@ -48,17 +48,16 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.view.forum.common.ViewCommon;
 
-public class RecentTopicsRSS extends TopicRSS
-{
-	public RecentTopicsRSS(String title, String description, List topics)
-	{
+public class RecentTopicsRSS extends TopicRSS {
+	public RecentTopicsRSS(String title, String description, List topics) {
 		super.topics = topics;
 		this.forumLink = ViewCommon.getForumLink();
-		
-		this.rss = new RSS(title, description, SystemGlobals.getValue(ConfigKeys.ENCODING), 
-				this.forumLink + "/recentTopics/"
+
+		this.rss = new RSS(title, description, SystemGlobals
+				.getValue(ConfigKeys.ENCODING), this.forumLink
+				+ "/recentTopics/"
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
-		
+
 		super.prepareRSS();
 	}
 }

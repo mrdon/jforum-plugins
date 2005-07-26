@@ -57,45 +57,49 @@ import org.quartz.impl.StdSchedulerFactory;
 
 /**
  * @author Rafael Steil
- * @version $Id: QuartzSearchManager.java,v 1.2 2005/03/12 20:10:47 rafaelsteil Exp $
+ * @version $Id: QuartzSearchManager.java,v 1.2 2005/03/12 20:10:47 rafaelsteil
+ *          Exp $
  */
-public class QuartzSearchManager implements SearchManager
-{
+public class QuartzSearchManager implements SearchManager {
 	private static Logger logger = Logger.getLogger(QuartzSearchManager.class);
+
 	private static Scheduler scheduler;
+
 	/**
 	 * @see net.jforum.util.search.SearchManager#init()
 	 */
-	public void init()
-	{
+	public void init() {
 		try {
-			String filename = SystemGlobals.getValue(ConfigKeys.SEARCH_INDEXER_QUARTZ_CONFIG);
-			
+			String filename = SystemGlobals
+					.getValue(ConfigKeys.SEARCH_INDEXER_QUARTZ_CONFIG);
+
 			SystemGlobals.loadAdditionalDefaults(filename);
-			String cronExpression = SystemGlobals.getValue(
-					ConfigKeys.QUARTZ_CONTEXT + ConfigKeys.SEARCH_INDEXER_CRON_EXPRESSON);
-			
+			String cronExpression = SystemGlobals
+					.getValue(ConfigKeys.QUARTZ_CONTEXT
+							+ ConfigKeys.SEARCH_INDEXER_CRON_EXPRESSON);
+
 			scheduler = new StdSchedulerFactory(filename).getScheduler();
-			Trigger trigger = new CronTrigger(QuartzSearchIndexerJob.class.getName(), 
-					"indexer", 
-					cronExpression);
-			
-			logger.info("Starting quartz search manager using expression " + cronExpression);
-			
-			scheduler.scheduleJob(new JobDetail(QuartzSearchIndexerJob.class.getName(), 
-					"indexer", 
-					QuartzSearchIndexerJob.class), 
-				trigger);
+			Trigger trigger = new CronTrigger(QuartzSearchIndexerJob.class
+					.getName(), "indexer", cronExpression);
+
+			logger.info("Starting quartz search manager using expression "
+					+ cronExpression);
+
+			scheduler.scheduleJob(new JobDetail(QuartzSearchIndexerJob.class
+					.getName(), "indexer", QuartzSearchIndexerJob.class),
+					trigger);
 			scheduler.start();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			throw new SearchInstantiationException("Error while trying to start " + this.getClass().getName() + ": " + e);
+			throw new SearchInstantiationException(
+					"Error while trying to start " + this.getClass().getName()
+							+ ": " + e);
 		}
 	}
 
 	/**
 	 * @see net.jforum.util.search.SearchManager#index(net.jforum.entities.Post)
 	 */
-	public void index(Post post) {}
+	public void index(Post post) {
+	}
 }

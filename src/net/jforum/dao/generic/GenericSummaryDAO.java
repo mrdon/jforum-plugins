@@ -65,69 +65,68 @@ import net.jforum.util.preferences.SystemGlobals;
  */
 public class GenericSummaryDAO extends AutoKeys implements SummaryDAO {
 
-    /**
-     * @see net.jforum.dao.SummaryDAO#selectById(Date, Date)
-     */
-    public List selectLastPosts(Date firstDate, Date lastDate) throws Exception {
-        String query = SystemGlobals.getSql("SummaryDAO.selectPosts");
-        PreparedStatement p = JForum.getConnection().prepareStatement(query);
-        p.setTimestamp(1, new Timestamp(firstDate.getTime()));
-        p.setTimestamp(2, new Timestamp(lastDate.getTime()));
+	/**
+	 * @see net.jforum.dao.SummaryDAO#selectById(Date, Date)
+	 */
+	public List selectLastPosts(Date firstDate, Date lastDate) throws Exception {
+		String query = SystemGlobals.getSql("SummaryDAO.selectPosts");
+		PreparedStatement p = JForum.getConnection().prepareStatement(query);
+		p.setTimestamp(1, new Timestamp(firstDate.getTime()));
+		p.setTimestamp(2, new Timestamp(lastDate.getTime()));
 
-        List posts = new ArrayList();
-        ResultSet rs = p.executeQuery();
-        
-        while (rs.next()) {        
-            posts.add(this.fillPost(rs));
-        }
+		List posts = new ArrayList();
+		ResultSet rs = p.executeQuery();
 
-        rs.close();
-        p.close();
+		while (rs.next()) {
+			posts.add(this.fillPost(rs));
+		}
 
-        return posts;
-    }
+		rs.close();
+		p.close();
 
-    private Post fillPost(ResultSet rs) throws Exception {
-        Post post = new Post();
-        post.setId(rs.getInt("post_id"));
-        post.setTopicId(rs.getInt("topic_id"));
-        post.setForumId(rs.getInt("forum_id"));
-        post.setUserId(rs.getInt("user_id"));
-        Timestamp postTime = rs.getTimestamp("post_time");
-        post.setTime(postTime);
-        post.setSubject(rs.getString("post_subject"));
-        post.setText(rs.getString("post_text"));
-        post.setPostUsername(rs.getString("username"));
+		return posts;
+	}
 
-        SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
-        post.setFormatedTime(df.format(postTime));
+	private Post fillPost(ResultSet rs) throws Exception {
+		Post post = new Post();
+		post.setId(rs.getInt("post_id"));
+		post.setTopicId(rs.getInt("topic_id"));
+		post.setForumId(rs.getInt("forum_id"));
+		post.setUserId(rs.getInt("user_id"));
+		Timestamp postTime = rs.getTimestamp("post_time");
+		post.setTime(postTime);
+		post.setSubject(rs.getString("post_subject"));
+		post.setText(rs.getString("post_text"));
+		post.setPostUsername(rs.getString("username"));
 
-        post.setKarma(DataAccessDriver.getInstance().newKarmaDAO().getPostKarma(post.getId()));
+		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals
+				.getValue(ConfigKeys.DATE_TIME_FORMAT));
+		post.setFormatedTime(df.format(postTime));
 
-        return post;
-    }
+		post.setKarma(DataAccessDriver.getInstance().newKarmaDAO()
+				.getPostKarma(post.getId()));
 
-    public List listRecipients() throws Exception {
-        String query = SystemGlobals.getSql("SummaryDAO.selectAllRecipients");
-        PreparedStatement p = JForum.getConnection().prepareStatement(query);        
+		return post;
+	}
 
-        List users = new ArrayList();
-        ResultSet rs = p.executeQuery();
-        
+	public List listRecipients() throws Exception {
+		String query = SystemGlobals.getSql("SummaryDAO.selectAllRecipients");
+		PreparedStatement p = JForum.getConnection().prepareStatement(query);
 
-        while (rs.next()) {
-            User user = new User();
-            user.setUsername( rs.getString("username"));
-            user.setEmail( rs.getString("user_email"));
-            users.add(user);
-        }
+		List users = new ArrayList();
+		ResultSet rs = p.executeQuery();
 
-        rs.close();
-        p.close();
+		while (rs.next()) {
+			User user = new User();
+			user.setUsername(rs.getString("username"));
+			user.setEmail(rs.getString("user_email"));
+			users.add(user);
+		}
 
-        return users;
-    }
-    
-    
-    
+		rs.close();
+		p.close();
+
+		return users;
+	}
+
 }

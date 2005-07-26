@@ -51,112 +51,115 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: I18nTest.java,v 1.2 2004/12/04 20:28:02 rafaelsteil Exp $
+ * @version $Id: I18nTest.java,v 1.3 2005/07/26 02:45:13 diegopires Exp $
  */
-public class I18nTest extends TestCase
-{
+public class I18nTest extends TestCase {
 	private static boolean loaded = false;
+
 	private static final String SESSION_ID = "1";
+
 	private UserSession us;
-	
+
 	/**
 	 * @see TestCase#setUp()
 	 */
-	protected void setUp() throws Exception
-	{
+	protected void setUp() throws Exception {
 		if (!loaded) {
 			TestCaseUtils.loadEnvironment();
-			SystemGlobals.setValue(ConfigKeys.RESOURCE_DIR, 
-							SystemGlobals.getApplicationResourceDir() + "/tests");
+			SystemGlobals.setValue(ConfigKeys.RESOURCE_DIR, SystemGlobals
+					.getApplicationResourceDir()
+					+ "/tests");
 			loaded = true;
 		}
-		
+
 		SystemGlobals.setValue(ConfigKeys.I18N_DEFAULT_ADMIN, "default");
 		SystemGlobals.setValue(ConfigKeys.I18N_DEFAULT, "default");
-		
+
 		this.us = new UserSession();
 		this.us.setSessionId(SESSION_ID);
 		SessionFacade.add(this.us, SESSION_ID);
-		
+
 		I18n.reset();
 		I18n.load();
 	}
-	
-	public void testLoad() throws Exception
-	{
+
+	public void testLoad() throws Exception {
 		assertTrue(I18n.contains("default"));
 	}
-	
-	public void testDefaultKeys()
-	{
+
+	public void testDefaultKeys() {
 		assertEquals("default value 1", I18n.getMessage("defaultKey1", this.us));
 		assertEquals("default value 2", I18n.getMessage("defaultKey2", this.us));
 		assertEquals("default value 3", I18n.getMessage("defaultKey3", this.us));
 		assertEquals("default value 4", I18n.getMessage("defaultKey4", this.us));
 		assertEquals("default value 5", I18n.getMessage("defaultKey5", this.us));
 	}
-	
-	public void testLoadCheese() throws Exception
-	{
+
+	public void testLoadCheese() throws Exception {
 		I18n.load("cheese");
 		assertTrue(I18n.contains("cheese"));
 	}
-	
-	public void testCheeseKeys()
-	{
+
+	public void testCheeseKeys() {
 		this.us.setLang("cheese");
-		assertEquals("default cheese 1", I18n.getMessage("defaultKey1", this.us));
-		assertEquals("default cheese 2", I18n.getMessage("defaultKey2", this.us));
-		assertEquals("default cheese 3", I18n.getMessage("defaultKey3", this.us));
-		assertEquals("default cheese 4", I18n.getMessage("defaultKey4", this.us));
+		assertEquals("default cheese 1", I18n
+				.getMessage("defaultKey1", this.us));
+		assertEquals("default cheese 2", I18n
+				.getMessage("defaultKey2", this.us));
+		assertEquals("default cheese 3", I18n
+				.getMessage("defaultKey3", this.us));
+		assertEquals("default cheese 4", I18n
+				.getMessage("defaultKey4", this.us));
 		assertEquals("default value 5", I18n.getMessage("defaultKey5", this.us));
 	}
-	
-	public void testLoadOrange() throws Exception
-	{
+
+	public void testLoadOrange() throws Exception {
 		I18n.load("orange");
 		assertTrue(I18n.contains("orange"));
 	}
-	
-	public void testOrangeKeys()
-	{
+
+	public void testOrangeKeys() {
 		this.us.setLang("orange");
-		assertEquals("default orange 1", I18n.getMessage("defaultKey1", this.us));
-		assertEquals("default orange 2", I18n.getMessage("defaultKey2", this.us));
-		assertEquals("default orange 3", I18n.getMessage("defaultKey3", this.us));
+		assertEquals("default orange 1", I18n
+				.getMessage("defaultKey1", this.us));
+		assertEquals("default orange 2", I18n
+				.getMessage("defaultKey2", this.us));
+		assertEquals("default orange 3", I18n
+				.getMessage("defaultKey3", this.us));
 		assertEquals("default value 4", I18n.getMessage("defaultKey4", this.us));
 		assertEquals("default value 5", I18n.getMessage("defaultKey5", this.us));
 		assertEquals("orange is not cheese", I18n.getMessage("orange", this.us));
 	}
-	
-	public void testGetMessageWithLocale()
-	{
-		assertEquals("default value 1", I18n.getMessage("default", "defaultKey1"));
-		assertEquals("default cheese 1", I18n.getMessage("cheese", "defaultKey1"));
-		assertEquals("default orange 1", I18n.getMessage("orange", "defaultKey1"));
+
+	public void testGetMessageWithLocale() {
+		assertEquals("default value 1", I18n.getMessage("default",
+				"defaultKey1"));
+		assertEquals("default cheese 1", I18n.getMessage("cheese",
+				"defaultKey1"));
+		assertEquals("default orange 1", I18n.getMessage("orange",
+				"defaultKey1"));
 		assertNull(I18n.getMessage("default", "orange"));
 	}
-	
-	public void testRest()
-	{
+
+	public void testRest() {
 		I18n.reset();
 		assertFalse(I18n.contains("default"));
 		assertFalse(I18n.contains("orange"));
 		assertFalse(I18n.contains("cheese"));
 	}
-	
-	public void testMergeCheeseOrange() throws Exception
-	{
+
+	public void testMergeCheeseOrange() throws Exception {
 		this.testRest();
 		I18n.load("cheese", "orange");
 		assertTrue(I18n.contains("cheese"));
 		assertTrue(I18n.contains("orange"));
-		assertEquals("default cheese 1", I18n.getMessage("cheese", "defaultKey1"));
-		assertEquals("orange is not cheese", I18n.getMessage("cheese", "orange"));
+		assertEquals("default cheese 1", I18n.getMessage("cheese",
+				"defaultKey1"));
+		assertEquals("orange is not cheese", I18n
+				.getMessage("cheese", "orange"));
 	}
-	
-	public void testOrangeIsDefault() throws Exception
-	{
+
+	public void testOrangeIsDefault() throws Exception {
 		this.testRest();
 		SystemGlobals.setValue(ConfigKeys.I18N_DEFAULT, "orange");
 		I18n.load();

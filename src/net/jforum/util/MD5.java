@@ -48,46 +48,45 @@ import java.security.NoSuchAlgorithmException;
 import net.jforum.exceptions.ForumException;
 
 /**
- * Encodes a string using MD5 hashing 
+ * Encodes a string using MD5 hashing
  * 
  * @author Rafael Steil
- * @version $Id: MD5.java,v 1.4 2005/02/04 12:55:34 rafaelsteil Exp $
+ * @version $Id: MD5.java,v 1.5 2005/07/26 02:45:48 diegopires Exp $
  */
-public class MD5 
-{
+public class MD5 {
 	/**
 	 * Encodes a string
 	 * 
-	 * @param str String to encode
+	 * @param str
+	 *            String to encode
 	 * @return Encoded String
 	 * @throws NoSuchAlgorithmException
 	 */
-	public static String crypt(String str)
-	{
+	public static String crypt(String str) {
 		if (str == null || str.length() == 0) {
-			throw new IllegalArgumentException("String to encript cannot be null or zero length");
+			throw new IllegalArgumentException(
+					"String to encript cannot be null or zero length");
 		}
-		
+
 		StringBuffer hexString = new StringBuffer();
-		
+
 		try {
 			MessageDigest md = MessageDigest.getInstance("MD5");
 			md.update(str.getBytes());
 			byte[] hash = md.digest();
-			
+
 			for (int i = 0; i < hash.length; i++) {
 				if ((0xff & hash[i]) < 0x10) {
-					hexString.append("0" + Integer.toHexString((0xFF & hash[i])));
-				}				
-				else {
+					hexString.append("0"
+							+ Integer.toHexString((0xFF & hash[i])));
+				} else {
 					hexString.append(Integer.toHexString(0xFF & hash[i]));
-				}				
+				}
 			}
-		}
-		catch (NoSuchAlgorithmException e) {
+		} catch (NoSuchAlgorithmException e) {
 			throw new ForumException("" + e);
 		}
-		
+
 		return hexString.toString();
 	}
 }

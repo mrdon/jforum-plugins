@@ -44,53 +44,53 @@ package net.jforum.dao.sqlserver;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerDataAccessDriver.java,v 1.3 2005/04/10 16:24:37 rafaelsteil Exp $
+ * @version $Id: SqlServerDataAccessDriver.java,v 1.3 2005/04/10 16:24:37
+ *          rafaelsteil Exp $
  */
-public class SqlServerDataAccessDriver extends net.jforum.dao.generic.DataAccessDriver
-{
+public class SqlServerDataAccessDriver extends
+		net.jforum.dao.generic.DataAccessDriver {
 	private static SqlServerPostDAO postDao = new SqlServerPostDAO();
+
 	private static SqlServerTopicDAO topicDao = new SqlServerTopicDAO();
+
 	private static SqlServerUserDAO userDao = new SqlServerUserDAO();
+
 	private static SqlServerPrivateMessageDAO pmDao = new SqlServerPrivateMessageDAO();
+
 	private static SqlServerKarmaDAO karmaDao = new SqlServerKarmaDAO();
 
-	/** 
+	/**
 	 * @see net.jforum.dao.DataAccessDriver#newPostDAO()
 	 */
-	public net.jforum.dao.PostDAO newPostDAO()
-	{
+	public net.jforum.dao.PostDAO newPostDAO() {
 		return postDao;
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.DataAccessDriver#newTopicDAO()
 	 */
-	public net.jforum.dao.TopicDAO newTopicDAO()
-	{
+	public net.jforum.dao.TopicDAO newTopicDAO() {
 		return topicDao;
 	}
-	
-	/** 
+
+	/**
 	 * @see net.jforum.dao.DataAccessDriver#newUserDAO()
 	 */
-	public net.jforum.dao.UserDAO newUserDAO()
-	{
+	public net.jforum.dao.UserDAO newUserDAO() {
 		return userDao;
 	}
-	
-	/** 
+
+	/**
 	 * @see net.jforum.dao.DataAccessDriver#newPrivateMessageDAO()
 	 */
-	public net.jforum.dao.PrivateMessageDAO newPrivateMessageDAO()
-	{
+	public net.jforum.dao.PrivateMessageDAO newPrivateMessageDAO() {
 		return pmDao;
 	}
-	
-	/** 
+
+	/**
 	 * @see net.jforum.dao.DataAccessDriver#newKarmaDAO()
 	 */
-	public net.jforum.dao.KarmaDAO newKarmaDAO()
-	{
+	public net.jforum.dao.KarmaDAO newKarmaDAO() {
 		return karmaDao;
 	}
 }
