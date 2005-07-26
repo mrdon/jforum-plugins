@@ -83,7 +83,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.33 2005/07/26 03:06:09 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.34 2005/07/26 04:24:16 diegopires Exp $
  */
 public class InstallAction extends Command
 {
@@ -343,16 +343,6 @@ public class InstallAction extends Command
 		
 		conn.setAutoCommit(autoCommit);
 		return status;
-	}
-	
-	private Properties loadProperties(String filename) throws IOException
-	{
-		Properties p = new Properties();
-		FileInputStream inputStream = new FileInputStream(filename);
-		p.load(inputStream);
-		inputStream.close();
-		
-		return p;
 	}
 	
 	private boolean createTables(Connection conn) throws Exception
