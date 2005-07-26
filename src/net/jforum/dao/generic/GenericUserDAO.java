@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -61,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericUserDAO.java,v 1.8 2005/07/26 03:04:45 rafaelsteil Exp $
+ * @version $Id: GenericUserDAO.java,v 1.9 2005/07/26 23:31:33 rafaelsteil Exp $
  */
 public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO 
 {
@@ -427,9 +427,11 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 		ResultSet rs = p.executeQuery();
 		while (rs.next()) {
 			User u = new User();
+			
 			u.setUsername(rs.getString("username"));
 			u.setId(rs.getInt("user_id"));
 			u.setRegistrationDate(rs.getTimestamp("user_regdate"));
+			u.setDeleted(rs.getInt("deleted"));
 			
 			l.add(u);
 		}
@@ -655,9 +657,11 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 		ResultSet rs = p.executeQuery();
 		while (rs.next()) {
 			User u = new User();
+			
 			u.setId(rs.getInt("user_id"));
 			u.setUsername(rs.getString("username"));
 			u.setEmail(rs.getString("user_email"));
+			u.setDeleted(rs.getInt("deleted"));
 
 			namesList.add(u);
 		}

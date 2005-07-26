@@ -55,7 +55,7 @@ UserModel.selectAll = SELECT user_email, user_id, user_posts, user_regdate, user
 UserModel.selectAllByLimit = SELECT user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail \
 	FROM jforum_users ORDER BY username LIMIT ?, ?
 
-UserModel.selectAllByGroup = SELECT user_email, u.user_id, user_regdate, username \
+UserModel.selectAllByGroup = SELECT user_email, u.user_id, user_regdate, username, deleted \
 	FROM jforum_users u, jforum_user_groups ug \
 	WHERE u.user_id = ug.user_id \
 	AND ug.group_id = ? \
@@ -69,7 +69,7 @@ UserModel.decrementPosts = UPDATE jforum_users SET user_posts = user_posts - 1 W
 UserModel.rankingId = UPDATE jforum_users SET rank_id = ? WHERE user_id = ?
 UserModel.activeStatus = UPDATE jforum_users SET user_active = ? WHERE user_id = ?
 UserModel.addNew = INSERT INTO jforum_users (username, user_password, user_email, user_regdate, user_actkey) VALUES (?, ?, ?, ?, ?)
-UserModel.findByName = SELECT user_id, username, user_email FROM jforum_users WHERE UPPER(username) LIKE UPPER(?)
+UserModel.findByName = SELECT user_id, username, user_email, deleted FROM jforum_users WHERE UPPER(username) LIKE UPPER(?)
 UserModel.selectByName = SELECT * FROM jforum_users WHERE username = ?
 UserModel.addNewWithId = INSERT INTO jforum_users (username, user_password, user_email, user_regdate, user_actkey, user_id) VALUES (?, ?, ?, ?, ?, ?)
 
