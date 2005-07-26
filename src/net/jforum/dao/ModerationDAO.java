@@ -47,35 +47,34 @@ import java.util.Map;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationDAO.java,v 1.4 2005/07/26 02:45:28 diegopires Exp $
+ * @version $Id: ModerationDAO.java,v 1.5 2005/07/26 03:04:31 rafaelsteil Exp $
  */
-public interface ModerationDAO {
+public interface ModerationDAO
+{
 	/**
 	 * Approves a post.
 	 * 
-	 * @param postId
-	 *            The post id to aprove
+	 * @param postId The post id to aprove
 	 * @throws Exception
 	 */
 	public void aprovePost(int postId) throws Exception;
-
 	/**
 	 * Gets all messages that need moderation.
 	 * 
-	 * @param forumId
-	 *            The forum id to search for messages to mdoerate
-	 * @return A map instance where the key is the topic id and the value is a
-	 *         TopicModerationInfo instance.
+	 * @param forumId The forum id to search for messages
+	 * to mdoerate
+	 * @return A map instance where the key is the topic id and the value is 
+	 * a TopicModerationInfo instance.
 	 * @throws Exception
 	 */
 	public Map topicsByForum(int forumId) throws Exception;
-
+	
 	/**
-	 * Gets information about which categories and foruns have posts to
-	 * moderate.
+	 * Gets information about which categories and
+	 * foruns have posts to moderate.
 	 * 
-	 * @return a list instance where each entry is a ModerationPendingInfo
-	 *         instance.
+	 * @return a list instance where each entry is a
+	 * ModerationPendingInfo instance.
 	 * @throws Exception
 	 */
 	public List categoryPendingModeration() throws Exception;

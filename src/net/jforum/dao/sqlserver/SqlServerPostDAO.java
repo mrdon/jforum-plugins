@@ -53,73 +53,56 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerPostDAO.java,v 1.4 2005/07/26 02:45:42 diegopires Exp $
+ * @version $Id: SqlServerPostDAO.java,v 1.5 2005/07/26 03:05:14 rafaelsteil Exp $
  */
-public class SqlServerPostDAO extends net.jforum.dao.generic.GenericPostDAO {
+public class SqlServerPostDAO extends net.jforum.dao.generic.GenericPostDAO
+{
 	/**
 	 * @see net.jforum.dao.PostDAO#selectById(int)
 	 */
-	public Post selectById(int postId) throws Exception {
-		PreparedStatement p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("PostModel.selectById"),
-				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+	public Post selectById(int postId) throws Exception 
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.selectById"), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		p.setInt(1, postId);
-
+		
 		ResultSet rs = p.executeQuery();
-
+		
 		Post post = new Post();
-
+		
 		if (rs.next()) {
 			post = this.makePost(rs);
 		}
-
+		
 		rs.close();
 		p.close();
-
+		
 		return post;
 	}
-
-	/**
+	
+	/** 
 	 * @see net.jforum.dao.PostDAO#selectAllByTopicByLimit(int, int, int)
 	 */
-	public List selectAllByTopicByLimit(int topicId, int startFrom, int count)
-			throws Exception {
+	public List selectAllByTopicByLimit(int topicId, int startFrom, int count) throws Exception
+	{
 		List l = new ArrayList();
 
 		String top = SystemGlobals.getSql("GenericModel.selectByLimit");
-
-		PreparedStatement p = JForum.getConnection().prepareStatement(
-				top
-						+ " "
-						+ count
-						+ " "
-						+ SystemGlobals
-								.getSql("PostModel.selectAllByTopicByLimit1")
-						+ " "
-						+ top
-						+ " "
-						+ startFrom
-						+ " "
-						+ SystemGlobals
-								.getSql("PostModel.selectAllByTopicByLimit2"),
-				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		System.out.println(top + " " + count + " "
-				+ SystemGlobals.getSql("PostModel.selectAllByTopicByLimit1")
-				+ " " + top + " " + startFrom + " "
-				+ SystemGlobals.getSql("PostModel.selectAllByTopicByLimit2"));
-		p.setInt(1, topicId);
-		p.setInt(2, topicId);
+        
+        PreparedStatement p = JForum.getConnection().prepareStatement(top + " " + count + " " + SystemGlobals.getSql("PostModel.selectAllByTopicByLimit1")  + " " + top + " " + startFrom + " " + SystemGlobals.getSql("PostModel.selectAllByTopicByLimit2"), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        System.out.println(top + " " + count + " " + SystemGlobals.getSql("PostModel.selectAllByTopicByLimit1")  + " " + top + " " + startFrom + " " + SystemGlobals.getSql("PostModel.selectAllByTopicByLimit2"));
+        p.setInt(1, topicId);
+        p.setInt(2, topicId);        
 
 		ResultSet rs = p.executeQuery();
 
 		while (rs.next()) {
 			l.add(this.makePost(rs));
 		}
-
+		
 		rs.close();
 		p.close();
-
+				
 		return l;
 	}
-
+	
 }

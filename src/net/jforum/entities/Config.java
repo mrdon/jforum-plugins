@@ -44,21 +44,18 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
- * @version $Id: Config.java,v 1.4 2005/07/26 02:45:49 diegopires Exp $
+ * @version  $Id: Config.java,v 1.5 2005/07/26 03:04:48 rafaelsteil Exp $
  */
-public class Config {
+public class Config 
+{
 	private int id;
-
 	private String name;
-
 	private String value;
-
-	public Config() {
-	}
-
+	
+	public Config() {}
+	
 	/**
 	 * Gets the entry name
-	 * 
 	 * @return The Entry name
 	 */
 	public String getName() {
@@ -67,13 +64,12 @@ public class Config {
 
 	/**
 	 * Gets the entry value
-	 * 
 	 * @return The Entry value
 	 */
 	public String getValue() {
 		return this.value;
 	}
-
+	
 	public int getId() {
 		return this.id;
 	}
@@ -81,8 +77,7 @@ public class Config {
 	/**
 	 * Sets the entry name
 	 * 
-	 * @param string
-	 *            The entry name to set
+	 * @param string The entry name to set
 	 */
 	public void setName(String string) {
 		this.name = string;
@@ -91,13 +86,12 @@ public class Config {
 	/**
 	 * Sets the entry value
 	 * 
-	 * @param string
-	 *            The entry value to set
+	 * @param string The entry value to set
 	 */
 	public void setValue(String string) {
 		this.value = string;
 	}
-
+	
 	public void setId(int id) {
 		this.id = id;
 	}

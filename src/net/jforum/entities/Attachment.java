@@ -44,91 +44,92 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
- * @version $Id: Attachment.java,v 1.2 2005/07/26 02:45:52 diegopires Exp $
+ * @version $Id: Attachment.java,v 1.3 2005/07/26 03:04:48 rafaelsteil Exp $
  */
-public class Attachment {
+public class Attachment
+{
 	private int id;
-
 	private int postId;
-
 	private int privmsgsId;
-
 	private int userId;
-
 	private AttachmentInfo info;
-
+	
 	/**
 	 * @return Returns the id.
 	 */
-	public int getId() {
+	public int getId()
+	{
 		return this.id;
 	}
-
+	
 	/**
-	 * @param id
-	 *            The id to set.
+	 * @param id The id to set.
 	 */
-	public void setId(int id) {
+	public void setId(int id)
+	{
 		this.id = id;
 	}
-
+	
 	/**
 	 * @return Returns the postId.
 	 */
-	public int getPostId() {
+	public int getPostId()
+	{
 		return this.postId;
 	}
-
+	
 	/**
-	 * @param postId
-	 *            The postId to set.
+	 * @param postId The postId to set.
 	 */
-	public void setPostId(int postId) {
+	public void setPostId(int postId)
+	{
 		this.postId = postId;
 	}
-
+	
 	/**
 	 * @return Returns the privmsgsId.
 	 */
-	public int getPrivmsgsId() {
+	public int getPrivmsgsId()
+	{
 		return this.privmsgsId;
 	}
-
+	
 	/**
-	 * @param privmsgsId
-	 *            The privmsgsId to set.
+	 * @param privmsgsId The privmsgsId to set.
 	 */
-	public void setPrivmsgsId(int privmsgsId) {
+	public void setPrivmsgsId(int privmsgsId)
+	{
 		this.privmsgsId = privmsgsId;
 	}
-
+	
 	/**
 	 * @return Returns the userId.
 	 */
-	public int getUserId() {
+	public int getUserId()
+	{
 		return this.userId;
 	}
-
 	/**
-	 * @param userId
-	 *            The userId to set.
+	 * @param userId The userId to set.
 	 */
-	public void setUserId(int userId) {
+	public void setUserId(int userId)
+	{
 		this.userId = userId;
 	}
-
+	
 	/**
 	 * @return Returns the info.
 	 */
-	public AttachmentInfo getInfo() {
+	public AttachmentInfo getInfo()
+	{
 		return this.info;
 	}
-
+	
 	/**
-	 * @param info
-	 *            The info to set.
+	 * @param info The info to set.
 	 */
-	public void setInfo(AttachmentInfo info) {
+	public void setInfo(AttachmentInfo info)
+	{
 		this.info = info;
 	}
 }

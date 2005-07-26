@@ -49,68 +49,42 @@ import java.util.Date;
  * Represents every topic in the forum.
  * 
  * @author Rafael Steil
- * @version $Id: Topic.java,v 1.10 2005/07/26 02:45:53 diegopires Exp $
+ * @version $Id: Topic.java,v 1.11 2005/07/26 03:04:52 rafaelsteil Exp $
  */
-public class Topic implements Serializable {
-	private static final long serialVersionUID = 7398828349670355403L;
-
+public class Topic implements Serializable
+{
 	public static final int TYPE_NORMAL = 0;
-
 	public static final int TYPE_STICKY = 1;
-
 	public static final int TYPE_ANNOUNCE = 2;
 
 	public static final int STATUS_UNLOCKED = 0;
-
 	public static final int STATUS_LOCKED = 1;
-
+	
 	private int id;
-
 	private int forumId;
-
 	private boolean read = true;
-
 	private String title;
-
 	private Date time;
-
 	private Date lastPostTimeInMillis;
-
 	private int totalViews;
-
 	private int totalReplies;
-
 	private int status;
-
 	private boolean vote;
-
 	private int type;
-
 	private int firstPostId;
-
 	private String firstPostTime;
-
-	private int lastPostId;
-
+	private int lastPostId;	
 	private String lastPostTime;
-
 	private boolean moderated;
-
 	private boolean paginate;
-
 	private Double totalPages;
-
 	private User postedBy;
-
 	private User lastPostBy;
-
 	private boolean isHot;
-
 	private boolean hasAttach;
-
-	public Topic() {
-	}
-
+	
+	public Topic() {}
+		
 	/**
 	 * Returns the ID of the firts topic
 	 * 
@@ -148,7 +122,7 @@ public class Topic implements Serializable {
 	}
 
 	/**
-	 * Returns the status
+	 * Returns the status 
 	 * 
 	 * @return int value with the status
 	 */
@@ -164,11 +138,11 @@ public class Topic implements Serializable {
 	public Date getTime() {
 		return this.time;
 	}
-
+	
 	public void setFirstPostTime(String d) {
 		this.firstPostTime = d;
 	}
-
+	
 	public void setLastPostTime(String d) {
 		this.lastPostTime = d;
 	}
@@ -199,11 +173,11 @@ public class Topic implements Serializable {
 	public int getTotalViews() {
 		return this.totalViews;
 	}
-
+	
 	public User getPostedBy() {
 		return this.postedBy;
 	}
-
+	
 	public User getLastPostBy() {
 		return this.lastPostBy;
 	}
@@ -229,8 +203,7 @@ public class Topic implements Serializable {
 	/**
 	 * Sets the id of the firts post in the topic
 	 * 
-	 * @param firstPostId
-	 *            The post id
+	 * @param firstPostId The post id 
 	 */
 	public void setFirstPostId(int firstPostId) {
 		this.firstPostId = firstPostId;
@@ -239,8 +212,7 @@ public class Topic implements Serializable {
 	/**
 	 * Sets the id to the topic
 	 * 
-	 * @param id
-	 *            The id to set
+	 * @param id The id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -249,8 +221,7 @@ public class Topic implements Serializable {
 	/**
 	 * Sets the id of the forum associeted with this topic
 	 * 
-	 * @param idForum
-	 *            The id of the forum to set
+	 * @param idForum The id of the forum to set
 	 */
 	public void setForumId(int idForum) {
 		this.forumId = idForum;
@@ -259,8 +230,7 @@ public class Topic implements Serializable {
 	/**
 	 * Sets the id of the last post in the topic
 	 * 
-	 * @param lastPostId
-	 *            The post id
+	 * @param lastPostId The post id
 	 */
 	public void setLastPostId(int lastPostId) {
 		this.lastPostId = lastPostId;
@@ -269,8 +239,7 @@ public class Topic implements Serializable {
 	/**
 	 * Sets the status.
 	 * 
-	 * @param status
-	 *            The status to set
+	 * @param status The status to set
 	 */
 	public void setStatus(int status) {
 		this.status = status;
@@ -279,8 +248,7 @@ public class Topic implements Serializable {
 	/**
 	 * Sets the time.
 	 * 
-	 * @param time
-	 *            The time to set
+	 * @param time The time to set
 	 */
 	public void setTime(Date time) {
 		this.time = time;
@@ -289,8 +257,7 @@ public class Topic implements Serializable {
 	/**
 	 * Sets the title.
 	 * 
-	 * @param title
-	 *            The title to set
+	 * @param title The title to set
 	 */
 	public void setTitle(String title) {
 		this.title = title;
@@ -299,8 +266,7 @@ public class Topic implements Serializable {
 	/**
 	 * Sets the totalReplies.
 	 * 
-	 * @param totalReplies
-	 *            The totalReplies to set
+	 * @param totalReplies The totalReplies to set
 	 */
 	public void setTotalReplies(int totalReplies) {
 		this.totalReplies = totalReplies;
@@ -309,8 +275,7 @@ public class Topic implements Serializable {
 	/**
 	 * Sets the totalViews.
 	 * 
-	 * @param totalViews
-	 *            The totalViews to set
+	 * @param totalViews The totalViews to set
 	 */
 	public void setTotalViews(int totalViews) {
 		this.totalViews = totalViews;
@@ -319,8 +284,7 @@ public class Topic implements Serializable {
 	/**
 	 * Sets the type.
 	 * 
-	 * @param type
-	 *            The type to set
+	 * @param type The type to set
 	 */
 	public void setType(int type) {
 		this.type = type;
@@ -329,13 +293,11 @@ public class Topic implements Serializable {
 	/**
 	 * Sets the vote.
 	 * 
-	 * @param vote
-	 *            The vote to set
+	 * @param vote The vote to set
 	 */
 	public void setVote(boolean vote) {
 		this.vote = vote;
 	}
-
 	/**
 	 * @return
 	 */
@@ -349,19 +311,19 @@ public class Topic implements Serializable {
 	public void setModerated(boolean b) {
 		this.moderated = b;
 	}
-
+	
 	public void setPostedBy(User u) {
 		this.postedBy = u;
 	}
-
+	
 	public void setLastPostBy(User u) {
 		this.lastPostBy = u;
 	}
-
+	
 	public String getFirstPostTime() {
 		return this.firstPostTime;
 	}
-
+	
 	public String getLastPostTime() {
 		return this.lastPostTime;
 	}
@@ -369,66 +331,69 @@ public class Topic implements Serializable {
 	public void setRead(boolean read) {
 		this.read = read;
 	}
-
+	
 	public boolean getRead() {
 		return this.read;
 	}
-
+	
 	public void setLastPostTimeInMillis(Date t) {
 		this.lastPostTimeInMillis = t;
 	}
-
+	
 	public Date getLastPostTimeInMillis() {
 		return this.lastPostTimeInMillis;
 	}
-
+	
 	public void setPaginate(boolean paginate) {
 		this.paginate = paginate;
 	}
-
+	
 	public boolean getPaginate() {
 		return this.paginate;
 	}
-
+	
 	public void setTotalPages(Double total) {
 		this.totalPages = total;
 	}
-
+	
 	public Double getTotalPages() {
 		return this.totalPages;
 	}
-
+	
 	public void setHot(boolean hot) {
 		this.isHot = hot;
 	}
-
+	
 	public boolean isHot() {
 		return this.isHot;
 	}
-
-	public void setHasAttach(boolean b) {
+	
+	public void setHasAttach(boolean b)
+	{
 		this.hasAttach = b;
 	}
-
-	public boolean hasAttach() {
+	
+	public boolean hasAttach()
+	{
 		return this.hasAttach;
 	}
-
-	/**
+	
+	/** 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	public boolean equals(Object o) {
+	public boolean equals(Object o)
+	{
 		if (!(o instanceof Topic)) {
 			return false;
 		}
-
-		return (((Topic) o).getId() == this.id);
+		
+		return (((Topic)o).getId() == this.id);
 	}
-
-	/**
+	/** 
 	 * @see java.lang.Object#hashCode()
 	 */
-	public int hashCode() {
+	public int hashCode()
+	{
 		return this.id;
 	}
 }

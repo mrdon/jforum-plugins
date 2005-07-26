@@ -48,19 +48,22 @@ import net.jforum.util.Captcha;
 
 /**
  * @author Rafael Steil
- * @version $Id: CaptchaAction.java,v 1.3 2005/07/26 02:45:24 diegopires Exp $
+ * @version $Id: CaptchaAction.java,v 1.4 2005/07/26 03:05:18 rafaelsteil Exp $
  */
-public class CaptchaAction extends Command {
-	public void generate() throws Exception {
+public class CaptchaAction extends Command
+{
+	public void generate() throws Exception
+	{
 		JForum.enableBinaryContent(true);
 		JForum.setContentType("image/jpg");
 		Captcha.getInstance().writeCaptchaImage();
 	}
-
+	
 	/**
 	 * @see net.jforum.Command#list()
 	 */
-	public void list() throws Exception {
+	public void list() throws Exception
+	{
 		this.generate();
 	}
 }

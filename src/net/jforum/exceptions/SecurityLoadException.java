@@ -44,15 +44,17 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityLoadException.java,v 1.1 2004/12/27 19:59:06
- *          rafaelsteil Exp $
+ * @version $Id: SecurityLoadException.java,v 1.3 2005/07/26 03:04:34 rafaelsteil Exp $
  */
-public class SecurityLoadException extends RuntimeException {
-	public SecurityLoadException(String message) {
+public class SecurityLoadException extends RuntimeException
+{
+	public SecurityLoadException(String message)
+	{
 		super(message);
 	}
-
-	public SecurityLoadException(Exception e) {
+	
+	public SecurityLoadException(Exception e)
+	{
 		super(e);
 	}
 }

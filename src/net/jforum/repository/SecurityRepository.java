@@ -58,222 +58,209 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityRepository.java,v 1.12 2005/03/26 04:10:59 rafaelsteil
- *          Exp $
+ * @version $Id: SecurityRepository.java,v 1.14 2005/07/26 03:04:56 rafaelsteil Exp $
  */
-public class SecurityRepository implements Cacheable {
-	private static final Logger logger = Logger
-			.getLogger(SecurityRepository.class);
-
+public class SecurityRepository implements Cacheable
+{
+	private static final Logger logger = Logger.getLogger(SecurityRepository.class);
 	private static CacheEngine cache;
-
 	private static final String FQN = "security";
 
 	/**
 	 * @see net.jforum.cache.Cacheable#setCacheEngine(net.jforum.cache.CacheEngine)
 	 */
-	public void setCacheEngine(CacheEngine engine) {
+	public void setCacheEngine(CacheEngine engine)
+	{
 		cache = engine;
 	}
 
-	/***************************************************************************
-	 * Load user's roles.
+	/***
+	 * Load user's roles. 
 	 * 
-	 * @param userId
-	 *            The user's id
-	 * @param force
-	 *            If <code>true</code>, forces a reload. If
-	 *            <code>false</code>, the call will be ignored if the roles
-	 *            are already loaded.
+	 * @param userId The user's id
+	 * @param force If <code>true</code>, forces a reload. If <code>false</code>, the call
+	 * will be ignored if the roles are already loaded.
 	 * 
 	 * @see SecurityRepository#load(int)
 	 * @see SecurityRepository#load(User)
 	 * @see SecurityRepository#load(User, boolean)
 	 * @throws Exception
 	 */
-	public static PermissionControl load(int userId, boolean force)
-			throws Exception {
+	public static PermissionControl load(int userId, boolean force) throws Exception
+	{
 		if (force || cache.get(FQN, Integer.toString(userId)) == null) {
 			UserDAO um = DataAccessDriver.getInstance().newUserDAO();
-
+			
 			return SecurityRepository.load(um.selectById(userId), force);
 		}
-
+		
 		return SecurityRepository.get(userId);
 	}
 
 	/**
 	 * Load user's roles.
 	 * 
-	 * @param userId
-	 *            The users's id
+	 * @param userId The users's id
 	 * 
 	 * @see SecurityRepository#load(int, boolean)
 	 * @see SecurityRepository#load(User)
 	 * @see SecurityRepository#load(User, boolean)
 	 * @throws Exception
 	 */
-	public static PermissionControl load(int userId) throws Exception {
+	public static PermissionControl load(int userId) throws Exception
+	{
 		return SecurityRepository.load(userId, false);
 	}
-
+	
 	/**
 	 * Load user's roles.
 	 * 
-	 * @param user
-	 *            The <code>User</code> to load.
+	 * @param user The <code>User</code> to load.
 	 * 
 	 * @see SecurityRepository#load(int)
-	 * @see SecurityRepository#load(int, boolean),
+	 * @see SecurityRepository#load(int, boolean), 
 	 * @see SecurityRepository#load(User, boolean)
 	 * @throws Exception
 	 */
-	public static PermissionControl load(User user) throws Exception {
+	public static PermissionControl load(User user) throws Exception
+	{
 		return SecurityRepository.load(user, false);
 	}
 
 	/**
 	 * Load user's roles.
 	 * 
-	 * @param user
-	 *            The <code>User</code> to load
-	 * @param force
-	 *            If <code>true</code>, forces a reload. If
-	 *            <code>false</code>, the call will be ignored if the roles
-	 *            are already loaded.
+	 * @param user The <code>User</code> to load
+	 * @param force If <code>true</code>, forces a reload. If <code>false</code>, the call
+	 * will be ignored if the roles are already loaded.
 	 * 
 	 * @see SecurityRepository#load(int)
 	 * @see SecurityRepository#load(int, boolean)
 	 * @see SecurityRepository#load(User)
 	 * @throws Exception
 	 */
-	public static PermissionControl load(User user, boolean force)
-			throws Exception {
+	public static PermissionControl load(User user, boolean force) throws Exception
+	{
 		String userId = Integer.toString(user.getId());
 		if (force || cache.get(FQN, userId) == null) {
-			UserSecurityDAO umodel = DataAccessDriver.getInstance()
-					.newUserSecurityDAO();
+			UserSecurityDAO umodel = DataAccessDriver.getInstance().newUserSecurityDAO();
 			PermissionControl pc = new PermissionControl();
-
+			
 			pc.setSecurityModel(umodel);
 			pc.setRoles(umodel.loadRoles(user));
-
+			
 			cache.add(FQN, userId, pc);
-
+			
 			return pc;
 		}
-
+		
 		return SecurityRepository.get(user.getId());
 	}
-
+	
 	/**
-	 * Check if the logged user has access to the role. This method gets user's
-	 * id from its session.
+	 * Check if the logged user has access to the role. 
+	 * This method gets user's id from its session.
 	 * 
-	 * @param roleName
-	 *            The role name to verity
-	 * @return <code>true</code> if the user has access to the role,
-	 *         <code>false</code> if access is denied
-	 * @throws SecurityLoadException
-	 *             if case of erros while trying to load the roles
+	 * @param roleName The role name to verity
+	 * @return <code>true</code> if the user has access to the role, <code>false</code> if access is denied
+	 * @throws SecurityLoadException if case of erros while trying
+	 * to load the roles
 	 * @see #canAccess(String, String)
 	 * @see #canAccess(int, String, String)
 	 */
-	public static boolean canAccess(String roleName) {
+	public static boolean canAccess(String roleName)
+	{
 		return canAccess(roleName, null);
 	}
-
-	public static boolean canAccess(int userId, String roleName) {
+	
+	public static boolean canAccess(int userId, String roleName)
+	{
 		return canAccess(userId, roleName, null);
 	}
 
 	/**
-	 * Check if the logged user has access to the role. This method gets user's
-	 * id from its session.
+	 * Check if the logged user has access to the role. 
+	 * This method gets user's id from its session.
 	 * 
-	 * @param roleName
-	 *            The role name to verify
-	 * @param value
-	 *            The value relacted to the role to verify for access
-	 * @return <code>true</code> if the user has access to the role,
-	 *         <code>false</code> if access is denied
+	 * @param roleName The role name to verify
+	 * @param value The value relacted to the role to verify for access
+	 * @return <code>true</code> if the user has access to the role, <code>false</code> if access is denied
 	 */
-	public static boolean canAccess(String roleName, String value) {
+	public static boolean canAccess(String roleName, String value)
+	{
 		UserSession us = SessionFacade.getUserSession();
 		if (us == null) {
-			logger.warn("Found null userSession. Going anonymous. Session id #"
-					+ JForum.getRequest().getSession().getId());
+			logger.warn("Found null userSession. Going anonymous. Session id #" + JForum.getRequest().getSession().getId());
 			us = new UserSession();
 			us.makeAnonymous();
 		}
-
+		
 		return canAccess(us.getUserId(), roleName, value);
 	}
-
-	public static boolean canAccess(int userId, String roleName, String value) {
+	
+	public static boolean canAccess(int userId, String roleName, String value)
+	{
 		PermissionControl pc = SecurityRepository.get(userId);
 		if (pc == null) {
-			throw new SecurityLoadException(
-					"Failed to load security roles for userId " + userId
-							+ " (null PermissionControl returned). "
-							+ "roleName=" + roleName + ", roleValue=" + value);
+			throw new SecurityLoadException("Failed to load security roles for userId " + userId + " (null PermissionControl returned). "
+				+ "roleName=" + roleName + ", roleValue=" + value);
 		}
-
-		return (value != null ? pc.canAccess(roleName, value) : pc
-				.canAccess(roleName));
+		
+		return (value != null ? pc.canAccess(roleName, value) : pc.canAccess(roleName));
 	}
 
 	/**
-	 * Gets the permssion schema of some specific user. If the roles of the user
-	 * aren't loaded yet, a call to {@link #load(int)} will be made.
+	 * Gets the permssion schema of some specific user.
+	 * If the roles of the user aren't loaded yet, a call
+	 * to {@link #load(int)} will be made.
 	 * 
-	 * @param userId
-	 *            The user's id to get the permissions
-	 * @return The <code>PermissionControl</code> instance related to the user
-	 *         id passed as argument
-	 * @throws SecurityLoadException
-	 *             if case of erros while trying to load the roles
+	 * @param userId The user's id to get the permissions
+	 * @return The <code>PermissionControl</code> instance related
+	 * to the user id passed as argument
+	 * @throws SecurityLoadException if case of erros while trying
+	 * to load the roles
 	 */
-	public static PermissionControl get(int userId) {
-		PermissionControl pc = (PermissionControl) cache.get(FQN, Integer
-				.toString(userId));
+	public static PermissionControl get(int userId)
+	{
+		PermissionControl pc = (PermissionControl)cache.get(FQN, Integer.toString(userId));
 		if (pc == null) {
 			try {
 				pc = load(userId);
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				throw new SecurityLoadException(e);
 			}
 		}
-
+		
 		return pc;
 	}
 
 	/**
 	 * Adds a new permission control schema to the cache
 	 * 
-	 * @param userId
-	 *            The user's id to associate with the schema
-	 * @param pc
-	 *            The <code>PermissionControl</code> instance to add
+	 * @param userId The user's id to associate with the schema
+	 * @param pc The <code>PermissionControl</code> instance to add
 	 */
-	public static synchronized void add(int userId, PermissionControl pc) {
+	public static synchronized void add(int userId, PermissionControl pc)
+	{
 		cache.add(FQN, Integer.toString(userId), pc);
 	}
-
+	
 	/**
 	 * Remove the cached roles from a specific user.
 	 * 
-	 * @param userId
-	 *            The id of the user to remove from the cache
+	 * @param userId The id of the user to remove from the cache
 	 */
-	public static synchronized void remove(int userId) {
+	public static synchronized void remove(int userId)
+	{
 		cache.remove(FQN, Integer.toString(userId));
 	}
-
+	
 	/**
 	 * Clear all cached security entries.
 	 */
-	public static synchronized void clean() {
+	public static synchronized void clean()
+	{
 		cache.remove(FQN);
 	}
 }

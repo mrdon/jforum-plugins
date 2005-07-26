@@ -44,11 +44,12 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: BadExtensionException.java,v 1.1 2005/01/24 21:49:27
- *          rafaelsteil Exp $
+ * @version $Id: BadExtensionException.java,v 1.3 2005/07/26 03:04:35 rafaelsteil Exp $
  */
-public class BadExtensionException extends AttachmentException {
-	public BadExtensionException(String message) {
+public class BadExtensionException extends AttachmentException
+{
+	public BadExtensionException(String message) 
+	{
 		super(message);
 	}
 }

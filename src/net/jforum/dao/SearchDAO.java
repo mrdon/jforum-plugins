@@ -44,26 +44,25 @@ package net.jforum.dao;
 
 import java.util.List;
 
+
 /**
  * @author Rafael Steil
- * @version $Id: SearchDAO.java,v 1.3 2005/07/26 02:45:28 diegopires Exp $
+ * @version $Id: SearchDAO.java,v 1.4 2005/07/26 03:04:28 rafaelsteil Exp $
  */
-public interface SearchDAO {
+public interface SearchDAO 
+{
 	/**
 	 * Searches for topics in the forum.
 	 * 
-	 * @param sd
-	 *            <code>SearchData</code> object containing the search
-	 *            criterias.
-	 * @return An <code>ArrayList</code> of <code>Topic</code> objects,
-	 *         which represent the found topics.
+	 * @param sd <code>SearchData</code> object containing the search criterias.
+	 * @return An <code>ArrayList</code> of <code>Topic</code> objects, which 
+	 * represent the found topics.
 	 * @throws Exception
 	 */
 	public List search(SearchData sd) throws Exception;
-
+	
 	/**
-	 * Clean user search data or older searches
-	 * 
+	 * Clean  user search data or older searches
 	 * @throws Exception
 	 */
 	public void cleanSearch() throws Exception;

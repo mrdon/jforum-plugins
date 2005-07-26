@@ -47,47 +47,52 @@ import java.util.List;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicModerationInfo.java,v 1.2 2005/07/08 18:23:11 rafaelsteil
- *          Exp $
+ * @version $Id: TopicModerationInfo.java,v 1.4 2005/07/26 03:04:48 rafaelsteil Exp $
  */
-public class TopicModerationInfo {
+public class TopicModerationInfo
+{
 	private int topicId;
-
 	private int topicReplies;
-
 	private String topicTitle;
-
 	private List posts = new ArrayList();
-
-	public void setTopicId(int topicId) {
+	
+	public void setTopicId(int topicId)
+	{
 		this.topicId = topicId;
 	}
-
-	public void setTopicReplies(int replies) {
+	
+	public void setTopicReplies(int replies)
+	{
 		this.topicReplies = replies;
 	}
-
-	public void setTopicTitle(String title) {
+	
+	public void setTopicTitle(String title)
+	{
 		this.topicTitle = title;
 	}
-
-	public int getTopicId() {
+	
+	public int getTopicId()
+	{
 		return this.topicId;
 	}
-
-	public String getTopicTitle() {
+	
+	public String getTopicTitle()
+	{
 		return this.topicTitle;
 	}
-
-	public void addPost(Post p) {
+	
+	public void addPost(Post p)
+	{
 		this.posts.add(p);
 	}
-
-	public List getPosts() {
+	
+	public List getPosts()
+	{
 		return this.posts;
 	}
-
-	public int getTopicReplies() {
+	
+	public int getTopicReplies()
+	{
 		return this.topicReplies;
 	}
 }

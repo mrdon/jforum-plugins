@@ -48,9 +48,10 @@ import net.jforum.entities.Smilie;
 
 /**
  * @author Rafael Steil
- * @version $Id: SmilieDAO.java,v 1.3 2005/07/26 02:45:28 diegopires Exp $
+ * @version $Id: SmilieDAO.java,v 1.4 2005/07/26 03:04:29 rafaelsteil Exp $
  */
-public interface SmilieDAO {
+public interface SmilieDAO 
+{
 	/**
 	 * Insert a new Smilie
 	 * 
@@ -59,7 +60,7 @@ public interface SmilieDAO {
 	 * @throws Exception
 	 */
 	public int addNew(Smilie smilie) throws Exception;
-
+	
 	/**
 	 * Deletes a smilie
 	 * 
@@ -67,7 +68,7 @@ public interface SmilieDAO {
 	 * @throws Exception
 	 */
 	public void delete(int id) throws Exception;
-
+	
 	/**
 	 * Updates a smilie
 	 * 
@@ -75,7 +76,7 @@ public interface SmilieDAO {
 	 * @throws Exception
 	 */
 	public void update(Smilie smilie) throws Exception;
-
+	
 	/**
 	 * Select all smilies
 	 * 
@@ -83,12 +84,12 @@ public interface SmilieDAO {
 	 * @throws Exception
 	 */
 	public List selectAll() throws Exception;
-
+	
 	/**
 	 * Gets some specific smilie.
 	 * 
 	 * @param id
-	 * @return
+	 * @return 
 	 * @throws Exception
 	 */
 	public Smilie selectById(int id) throws Exception;

@@ -53,36 +53,36 @@ import net.jforum.util.MD5;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
- * Default login authenticator for JForum. This authenticator will validate the
- * input against <i>jforum_users</i>.
+ * Default login authenticator for JForum.
+ * This authenticator will validate the input against
+ * <i>jforum_users</i>. 
  * 
  * @author Rafael Steil
- * @version $Id: DefaultLoginAuthenticator.java,v 1.2 2005/04/10 16:41:19
- *          rafaelsteil Exp $
+ * @version $Id: DefaultLoginAuthenticator.java,v 1.4 2005/07/26 03:05:32 rafaelsteil Exp $
  */
-public class DefaultLoginAuthenticator implements LoginAuthenticator {
+public class DefaultLoginAuthenticator implements LoginAuthenticator
+{
 	private UserDAO userModel;
 
 	/**
 	 * @see net.jforum.sso.LoginAuthenticator#setUserModel(net.jforum.dao.UserDAO)
 	 */
-	public void setUserModel(UserDAO userModel) {
+	public void setUserModel(UserDAO userModel)
+	{
 		this.userModel = userModel;
 	}
 
 	/**
-	 * @see net.jforum.sso.LoginAuthenticator#validateLogin(java.lang.String,
-	 *      java.lang.String, Object[])
+	 * @see net.jforum.sso.LoginAuthenticator#validateLogin(java.lang.String, java.lang.String, Object[])
 	 */
-	public User validateLogin(String username, String password, Map extraParams)
-			throws Exception {
-		PreparedStatement p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("UserModel.login"));
+	public User validateLogin(String username, String password, Map extraParams) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.login"));
 		p.setString(1, username);
 		p.setString(2, MD5.crypt(password));
-
+		
 		User user = null;
-
+		
 		ResultSet rs = p.executeQuery();
 		if (rs.next() && rs.getInt("user_id") > 0) {
 			user = this.userModel.selectById(rs.getInt("user_id"));
@@ -90,12 +90,11 @@ public class DefaultLoginAuthenticator implements LoginAuthenticator {
 
 		rs.close();
 		p.close();
-
-		if (user != null && !user.isDeleted()
-				&& (user.getActivationKey() == null || user.isActive())) {
+		
+		if (user != null && !user.isDeleted() && (user.getActivationKey() == null || user.isActive())) {
 			return user;
 		}
-
+		
 		return null;
 	}
 }

@@ -55,48 +55,47 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicSpammer.java,v 1.13 2005/07/26 02:46:05 diegopires Exp $
+ * @version $Id: TopicSpammer.java,v 1.14 2005/07/26 03:05:56 rafaelsteil Exp $
  */
-public class TopicSpammer extends Spammer {
-	public TopicSpammer(Topic topic, List users) {
+public class TopicSpammer extends Spammer 
+{
+	public TopicSpammer(Topic topic, List users)
+	{
 		// Prepare the users. In this current version, the email
 		// is not personalized, so then we'll just use his address
 		List recipients = new ArrayList();
-		for (Iterator iter = users.iterator(); iter.hasNext();) {
-			User u = (User) iter.next();
-
+		for (Iterator iter = users.iterator(); iter.hasNext(); ) {
+			User u = (User)iter.next();
+			
 			recipients.add(u.getEmail());
 		}
-
+		
 		// Make the topic url
 		String page = "";
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 		if (topic.getTotalReplies() > postsPerPage) {
-			page += (((topic.getTotalReplies() / postsPerPage)) * postsPerPage)
-					+ "/";
+			page += (((topic.getTotalReplies() / postsPerPage)) * postsPerPage) + "/";
 		}
-
+		
 		String forumLink = SystemGlobals.getValue(ConfigKeys.FORUM_LINK);
 		if (!forumLink.endsWith("/")) {
 			forumLink += "/";
 		}
 
-		String path = forumLink + "posts/list/" + page + topic.getId()
-				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#"
-				+ topic.getLastPostId();
-
+		String path = forumLink + "posts/list/" + page + topic.getId() 
+			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#" + topic.getLastPostId();
+		
 		String unwatch = forumLink + "posts/unwatch/" + topic.getId()
-				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
-
+			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
+		
 		SimpleHash params = new SimpleHash();
 		params.put("topic", topic);
 		params.put("path", path);
 		params.put("forumLink", forumLink);
 		params.put("unwatch", unwatch);
-
-		super.prepareMessage(recipients, params, MessageFormat.format(
-				SystemGlobals.getValue(ConfigKeys.MAIL_NEW_ANSWER_SUBJECT),
-				new String[] { topic.getTitle() }), SystemGlobals
-				.getValue(ConfigKeys.MAIL_NEW_ANSWER_MESSAGE_FILE));
+		
+		super.prepareMessage(recipients, params,
+			MessageFormat.format(SystemGlobals.getValue(ConfigKeys.MAIL_NEW_ANSWER_SUBJECT), new String[] { topic.getTitle() }),
+			SystemGlobals.getValue(ConfigKeys.MAIL_NEW_ANSWER_MESSAGE_FILE));
 	}
 }

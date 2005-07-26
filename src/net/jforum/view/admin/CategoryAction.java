@@ -47,6 +47,7 @@ import java.util.List;
 
 import net.jforum.dao.CategoryDAO;
 import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.GroupDAO;
 import net.jforum.dao.security.GroupSecurityDAO;
 import net.jforum.entities.Category;
 import net.jforum.repository.ForumRepository;
@@ -65,66 +66,70 @@ import net.jforum.view.admin.common.ModerationCommon;
  * ViewHelper for category administration.
  * 
  * @author Rafael Steil
- * @version $Id: CategoryAction.java,v 1.19 2005/07/26 02:45:41 diegopires Exp $
+ * @version $Id: CategoryAction.java,v 1.20 2005/07/26 03:05:42 rafaelsteil Exp $
  */
-public class CategoryAction extends AdminCommand {
+public class CategoryAction extends AdminCommand 
+{
 	private CategoryDAO cm = DataAccessDriver.getInstance().newCategoryDAO();
-
+	
 	// Listing
-	public void list() throws Exception {
-		this.context.put("categories", DataAccessDriver.getInstance()
-				.newCategoryDAO().selectAll());
+	public void list() throws Exception
+	{
+		this.context.put("categories", DataAccessDriver.getInstance().newCategoryDAO().selectAll());
 		this.context.put("repository", new ForumRepository());
 		this.setTemplateName(TemplateKeys.CATEGORY_LIST);
 	}
-
+	
 	// One more, one more
-	public void insert() throws Exception {
+	public void insert() throws Exception
+	{
 		this.context.put("groups", new TreeGroup().getNodes());
 		this.context.put("selectedList", new ArrayList());
 		this.setTemplateName(TemplateKeys.CATEGORY_INSERT);
 		this.context.put("action", "insertSave");
 	}
-
+	
 	// Edit
-	public void edit() throws Exception {
-		this.context.put("category", this.cm.selectById(this.request
-				.getIntParameter("category_id")));
+	public void edit() throws Exception
+	{
+		this.context.put("category", this.cm.selectById(this.request.getIntParameter("category_id")));
 		this.setTemplateName(TemplateKeys.CATEGORY_EDIT);
 		this.context.put("action", "editSave");
 	}
-
-	// Save information
-	public void editSave() throws Exception {
-		Category c = new Category(ForumRepository.getCategory(this.request
-				.getIntParameter("categories_id")));
+	
+	//  Save information
+	public void editSave() throws Exception
+	{
+		Category c = new Category(ForumRepository.getCategory(
+				this.request.getIntParameter("categories_id")));
 		c.setName(this.request.getParameter("category_name"));
 		c.setModerated("1".equals(this.request.getParameter("moderate")));
-
+			
 		this.cm.update(c);
 		ForumRepository.reloadCategory(c);
-
+		
 		new ModerationCommon().setForumsModerationStatus(c, c.isModerated());
-
+		
 		this.list();
 	}
-
+	
 	// Delete
-	public void delete() throws Exception {
+	public void delete() throws Exception
+	{
 		String ids[] = this.request.getParameterValues("categories_id");
 		List errors = new ArrayList();
-
-		if (ids != null) {
-			for (int i = 0; i < ids.length; i++) {
+		
+		if (ids != null) {						
+			for (int i = 0; i < ids.length; i++){
 				if (this.cm.canDelete(Integer.parseInt(ids[i]))) {
 					int id = Integer.parseInt(ids[i]);
 					Category c = this.cm.selectById(id);
 					this.cm.delete(id);
-
+					
 					ForumRepository.removeCategory(c);
-				} else {
-					errors.add(I18n.getMessage(I18n.CANNOT_DELETE_CATEGORY,
-							new Object[] { new Integer(ids[i]) }));
+				}
+				else {
+					errors.add(I18n.getMessage(I18n.CANNOT_DELETE_CATEGORY, new Object[] { new Integer(ids[i]) }));
 				}
 			}
 		}
@@ -132,25 +137,26 @@ public class CategoryAction extends AdminCommand {
 		if (errors.size() > 0) {
 			this.context.put("errorMessage", errors);
 		}
-
+		
 		this.list();
 	}
-
+	
 	// A new one
-	public void insertSave() throws Exception {
+	public void insertSave() throws Exception
+	{
 		Category c = new Category();
 		c.setName(this.request.getParameter("category_name"));
 		c.setModerated("1".equals(this.request.getParameter("moderated")));
-
+			
 		int categoryId = this.cm.addNew(c);
 		c.setId(categoryId);
 
 		ForumRepository.addCategory(c);
-
+		
 		String[] groups = this.request.getParameterValues("groups");
 		if (groups != null) {
-			GroupSecurityDAO gmodel = DataAccessDriver.getInstance()
-					.newGroupSecurityDAO();
+			GroupDAO gm = DataAccessDriver.getInstance().newGroupDAO();
+			GroupSecurityDAO gmodel = DataAccessDriver.getInstance().newGroupSecurityDAO();
 			PermissionControl pc = new PermissionControl();
 			pc.setSecurityModel(gmodel);
 
@@ -160,57 +166,56 @@ public class CategoryAction extends AdminCommand {
 			for (int i = 0; i < groups.length; i++) {
 				int groupId = Integer.parseInt(groups[i]);
 				RoleValueCollection roleValues = new RoleValueCollection();
-
+				
 				RoleValue rv = new RoleValue();
 				rv.setType(PermissionControl.ROLE_ALLOW);
 				rv.setValue(Integer.toString(categoryId));
-
+				
 				roleValues.add(rv);
-
+				
 				pc.addRoleValue(groupId, role, roleValues);
 			}
-
+			
 			SecurityRepository.clean();
 		}
-
+			
 		this.list();
 	}
-
-	public void up() throws Exception {
+	
+	public void up() throws Exception
+	{
 		this.processOrdering(true);
 	}
-
-	public void down() throws Exception {
+	
+	public void down() throws Exception
+	{
 		this.processOrdering(false);
 	}
-
-	private void processOrdering(boolean up) throws Exception {
-		Category toChange = new Category(ForumRepository.getCategory(Integer
-				.parseInt(this.request.getParameter("category_id"))));
-
+	
+	private void processOrdering(boolean up) throws Exception
+	{
+		Category toChange = new Category(ForumRepository.getCategory(Integer.parseInt(
+				this.request.getParameter("category_id"))));
+		
 		List categories = ForumRepository.getAllCategories();
-
+		
 		int index = categories.indexOf(toChange);
-		if (index == -1 || (up && index == 0)
-				|| (!up && index + 1 == categories.size())) {
+		if (index == -1 || (up && index == 0) || (!up && index + 1 == categories.size())) {
 			this.list();
 			return;
 		}
-
+		
 		if (up) {
-			// Get the category which comes *before* the category we want to
-			// change
-			Category otherCategory = new Category((Category) categories
-					.get(index - 1));
+			// Get the category which comes *before* the category we want to change
+			Category otherCategory = new Category((Category)categories.get(index - 1));
 			this.cm.setOrderUp(toChange, otherCategory);
-		} else {
-			// Get the category which comes *after* the category we want to
-			// change
-			Category otherCategory = new Category((Category) categories
-					.get(index + 1));
+		}
+		else {
+			// Get the category which comes *after* the category we want to change
+			Category otherCategory = new Category((Category)categories.get(index + 1));
 			this.cm.setOrderDown(toChange, otherCategory);
 		}
-
+		
 		ForumRepository.reloadCategory(toChange);
 		this.list();
 	}

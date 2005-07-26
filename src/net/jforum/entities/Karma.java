@@ -46,125 +46,127 @@ import java.util.Date;
 
 /**
  * @author Rafael Steil
- * @version $Id: Karma.java,v 1.4 2005/07/26 02:45:51 diegopires Exp $
+ * @version $Id: Karma.java,v 1.5 2005/07/26 03:04:51 rafaelsteil Exp $
  */
-public class Karma {
+public class Karma
+{
 	private int id;
-
 	private int postId;
-
 	private int topicId;
-
 	private int postUserId;
-
 	private int fromUserId;
-
 	private int points;
-
 	private Date rateDate;
-
+	
 	/**
 	 * @return Returns the topicId.
 	 */
-	public int getTopicId() {
+	public int getTopicId()
+	{
 		return this.topicId;
 	}
-
+	
 	/**
-	 * @param topicId
-	 *            The topicId to set.
+	 * @param topicId The topicId to set.
 	 */
-	public void setTopicId(int topicId) {
+	public void setTopicId(int topicId)
+	{
 		this.topicId = topicId;
 	}
-
+	
 	/**
 	 * @return Returns the fromUserId.
 	 */
-	public int getFromUserId() {
+	public int getFromUserId()
+	{
 		return this.fromUserId;
 	}
-
+	
 	/**
-	 * @param fromUserId
-	 *            The fromUserId to set.
+	 * @param fromUserId The fromUserId to set.
 	 */
-	public void setFromUserId(int fromUserId) {
+	public void setFromUserId(int fromUserId)
+	{
 		this.fromUserId = fromUserId;
 	}
-
+	
 	/**
 	 * @return Returns the id.
 	 */
-	public int getId() {
+	public int getId()
+	{
 		return this.id;
 	}
-
+	
 	/**
-	 * @param id
-	 *            The id to set.
+	 * @param id The id to set.
 	 */
-	public void setId(int id) {
+	public void setId(int id)
+	{
 		this.id = id;
 	}
-
+	
 	/**
 	 * @return Returns the userId.
 	 */
-	public int getPostUserId() {
+	public int getPostUserId()
+	{
 		return this.postUserId;
 	}
-
+	
 	/**
-	 * @param userId
-	 *            The userId to set.
+	 * @param userId The userId to set.
 	 */
-	public void setPostUserId(int userId) {
+	public void setPostUserId(int userId)
+	{
 		this.postUserId = userId;
 	}
-
+	
 	/**
 	 * @return Returns the points.
 	 */
-	public int getPoints() {
+	public int getPoints()
+	{
 		return this.points;
 	}
-
+	
 	/**
-	 * @param points
-	 *            The points to set.
+	 * @param points The points to set.
 	 */
-	public void setPoints(int points) {
+	public void setPoints(int points)
+	{
 		this.points = points;
 	}
-
+	
 	/**
 	 * @return Returns the postId.
 	 */
-	public int getPostId() {
+	public int getPostId()
+	{
 		return this.postId;
 	}
-
+	
 	/**
-	 * @param postId
-	 *            The postId to set.
+	 * @param postId The postId to set.
 	 */
-	public void setPostId(int postId) {
+	public void setPostId(int postId)
+	{
 		this.postId = postId;
 	}
-
+	
 	/**
 	 * @return Returns the date of the vote.
 	 */
-	public Date getRateDate() {
-		return rateDate;
-	}
-
-	/**
-	 * @param dateDate
-	 *            The date of the vote.
+    public Date getRateDate() 
+    {
+        return rateDate;
+    }
+    
+    /**
+	 * @param dateDate The date of the vote.
 	 */
-	public void setRateDate(Date rateDate) {
-		this.rateDate = rateDate;
-	}
+    public void setRateDate(Date rateDate) 
+    {
+        this.rateDate = rateDate;
+    }
 }

@@ -71,572 +71,542 @@ import net.jforum.util.CategoryOrderComparator;
 import net.jforum.util.preferences.ConfigKeys;
 
 /**
- * Repository for the forums of the System. This repository acts like a cache
- * system, to avoid repetitive and unnecessary SQL queries every time we need
- * some info about the forums. To start the repository, call the method
- * <code>start(ForumModel, CategoryModel)</code>
+ * Repository for the forums of the System.
+ * This repository acts like a cache system, to avoid repetitive and unnecessary SQL queries
+ * every time we need some info about the forums. 
+ * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version $Id: ForumRepository.java,v 1.37 2005/07/26 02:45:34 diegopires Exp $
+ * @version  $Id: ForumRepository.java,v 1.38 2005/07/26 03:04:54 rafaelsteil Exp $
  */
-public class ForumRepository implements Cacheable {
+public class ForumRepository implements Cacheable
+{
 	private static CacheEngine cache;
-
 	private static final String FQN = "categories";
-
 	private static final String CATEGORIES_SET = "categoriesSet";
-
 	private static final String RELATION = "relationForums";
-
 	private static final String FQN_TOTAL_TOPICS = FQN + "/totalTopics";
-
 	private static final String TOTAL_MESSAGES = "totalMessages";
-
 	private static final String MOST_USERS_ONLINE = "mostUsersEverOnline";
-
 	private static final String LOADED = "loaded";
-
 	private static final String LAST_USER = "lastUser";
-
 	private static final String TOTAL_USERS = "totalUsers";
-
+	
 	private static ForumRepository instance;
-
+	
 	/**
 	 * @see net.jforum.cache.Cacheable#setCacheEngine(net.jforum.cache.CacheEngine)
 	 */
-	public void setCacheEngine(CacheEngine engine) {
+	public void setCacheEngine(CacheEngine engine)
+	{
 		cache = engine;
 	}
-
+	
 	/**
 	 * Starts the repository.
 	 * 
-	 * @param fm
-	 *            The <code>ForumModel</code> instance which will be used to
-	 *            retrieve information about the forums.
-	 * @param cm
-	 *            The <code>CategoryModel</code> instance which will be used
-	 *            to retrieve information about the categories.
+	 * @param fm The <code>ForumModel</code> instance which will be 
+	 * used to retrieve information about the forums.
+	 * @param cm The <code>CategoryModel</code> instance which will 
+	 * be used to retrieve information about the categories.
 	 * @throws Exception
 	 */
-	public synchronized static void start(ForumDAO fm, CategoryDAO cm,
-			ConfigDAO configModel) throws Exception {
+	public synchronized static void start(ForumDAO fm, 
+			CategoryDAO cm,
+			ConfigDAO configModel) throws Exception
+	{
 		if (cache.get(FQN, LOADED) == null) {
 			instance = new ForumRepository();
-
+			
 			instance.loadCategories(cm);
 			instance.loadForums(fm);
 			instance.loadMostUsersEverOnline(configModel);
 			instance.loadUsersInfo();
-
-			Integer i = (Integer) cache.get(FQN, TOTAL_MESSAGES);
+			
+			Integer i = (Integer)cache.get(FQN, TOTAL_MESSAGES);
 			if (i == null) {
 				cache.add(FQN, TOTAL_MESSAGES, new Integer(0));
 			}
-
+			
 			cache.add(FQN, LOADED, "1");
 		}
 	}
-
+	
 	/**
-	 * Gets a category by its id. A call to
+	 * Gets a category by its id.
+	 * A call to @link #getCategory(int, int) is made, using the
+	 * return of <code>SessionFacade.getUserSession().getUserId()</code>
+	 * as argument for the "userId" parameter.
 	 * 
-	 * @link #getCategory(int, int) is made, using the return of
-	 *       <code>SessionFacade.getUserSession().getUserId()</code> as
-	 *       argument for the "userId" parameter.
-	 * 
-	 * @param categoryId
-	 *            The id of the category to check
-	 * @return <code>null</code> if the category is either not found or access
-	 *         is denied.
+	 * @param categoryId The id of the category to check
+	 * @return <code>null</code> if the category is either not
+	 * found or access is denied.
 	 * @see #getCategory(int, int)
 	 */
-	public static Category getCategory(int categoryId) {
-		return getCategory(SessionFacade.getUserSession().getUserId(),
-				categoryId);
+	public static Category getCategory(int categoryId)
+	{
+		return getCategory(SessionFacade.getUserSession().getUserId(), categoryId);
 	}
 
 	/**
 	 * Gets a category by its id.
-	 * 
-	 * @param userId
-	 *            The user id who is requesting the category
-	 * @param categoryId
-	 *            The id of the category to get
-	 * @return <code>null</code> if the category is either not found or access
-	 *         is denied.
+	 *  
+	 * @param userId The user id who is requesting the category
+	 * @param categoryId The id of the category to get
+	 * @return <code>null</code> if the category is either not
+	 * found or access is denied.
 	 * @see #getCategory(int)
 	 */
-	public static Category getCategory(int userId, int categoryId) {
+	public static Category getCategory(int userId, int categoryId)
+	{
 		if (!isCategoryAccessible(userId, categoryId)) {
 			return null;
 		}
-
-		return (Category) cache.get(FQN, Integer.toString(categoryId));
+		
+		return (Category)cache.get(FQN, Integer.toString(categoryId));
 	}
-
-	public static Category getCategory(PermissionControl pc, int categoryId) {
+	
+	public static Category getCategory(PermissionControl pc, int categoryId)
+	{
 		if (!isCategoryAccessible(pc, categoryId)) {
 			return null;
 		}
-
-		return (Category) cache.get(FQN, Integer.toString(categoryId));
+		
+		return (Category)cache.get(FQN, Integer.toString(categoryId)); 
 	}
-
+	
 	/**
 	 * Check is some category is accessible.
 	 * 
-	 * @param userId
-	 *            The user's id who is trying to get the category
-	 * @param categoryId
-	 *            The category's id to check for access rights
+	 * @param userId The user's id who is trying to get the category
+	 * @param categoryId The category's id to check for access rights
 	 * @return <code>true</code> if access to the category is allowed.
 	 */
-	public static boolean isCategoryAccessible(int userId, int categoryId) {
+	public static boolean isCategoryAccessible(int userId, int categoryId)
+	{
 		return isCategoryAccessible(SecurityRepository.get(userId), categoryId);
 	}
-
+	
 	/**
 	 * Check if some category is accessible.
 	 * 
-	 * @param categoryId
-	 *            The category id to check for access rights
+	 * @param categoryId The category id to check for access rights
 	 * @return <code>true</code> if access to the category is allowed.
 	 */
-	public static boolean isCategoryAccessible(int categoryId) {
-		return isCategoryAccessible(SessionFacade.getUserSession().getUserId(),
-				categoryId);
+	public static boolean isCategoryAccessible(int categoryId)
+	{
+		return isCategoryAccessible(SessionFacade.getUserSession().getUserId(), categoryId);
 	}
-
+	
 	/**
 	 * Check is some category is accessible.
 	 * 
-	 * @param pc
-	 *            The <code>PermissionControl</code> instance containing all
-	 *            security info related to the user.
-	 * @param categoryId
-	 *            the category's id to check for access rights
+	 * @param pc The <code>PermissionControl</code> instance containing
+	 * all security info related to the user.
+	 * @param categoryId the category's id to check for access rights
 	 * @return <code>true</code> if access to the category is allowed.
 	 */
-	public static boolean isCategoryAccessible(PermissionControl pc,
-			int categoryId) {
-		return pc.canAccess(SecurityConstants.PERM_CATEGORY, Integer
-				.toString(categoryId));
+	public static boolean isCategoryAccessible(PermissionControl pc, int categoryId)
+	{
+		return pc.canAccess(SecurityConstants.PERM_CATEGORY, Integer.toString(categoryId));
 	}
-
+	
 	/**
-	 * Gets all categories from the cache.
+	 * Gets all categories from the cache. 
 	 * 
-	 * @return <code>List</code> with the categories. Each entry is a
-	 *         <code>Category</code> object.
+	 * @return <code>List</code> with the categories. Each entry is a <code>Category</code> object.
 	 */
-	public static List getAllCategories(int userId) {
+	public static List getAllCategories(int userId)
+	{
 		PermissionControl pc = SecurityRepository.get(userId);
 		List l = new ArrayList();
-
-		Iterator iter = ((Set) cache.get(FQN, CATEGORIES_SET)).iterator();
+		
+		Iterator iter = ((Set)cache.get(FQN, CATEGORIES_SET)).iterator();
 		while (iter.hasNext()) {
-			Category c = (Category) iter.next();
-
+			Category c = (Category)iter.next();
+			
 			if (isCategoryAccessible(pc, c.getId())) {
 				l.add(c);
 			}
 		}
-
+		
 		return l;
 	}
 
 	/**
-	 * Get all categories. A call to
+	 * Get all categories.
+	 * A call to @link #getAllCategories(int) is made, passing
+	 * the return of <code>SessionFacade.getUserSession().getUserId()</code> 
+	 * as the value for the "userId" argument.
 	 * 
-	 * @link #getAllCategories(int) is made, passing the return of
-	 *       <code>SessionFacade.getUserSession().getUserId()</code> as the
-	 *       value for the "userId" argument.
-	 * 
-	 * @return <code>List</code> with the categories. Each entry is a
-	 *         <code>Category</code> object.
+	 * @return <code>List</code> with the categories. Each entry is a <code>Category</code> object.
 	 * @see #getAllCategories(int)
 	 */
-	public static List getAllCategories() {
+	public static List getAllCategories()
+	{
 		return getAllCategories(SessionFacade.getUserSession().getUserId());
 	}
-
-	private static Category findCategoryByOrder(int order) {
-		for (Iterator iter = ((Set) cache.get(FQN, CATEGORIES_SET)).iterator(); iter
-				.hasNext();) {
-			Category c = (Category) iter.next();
+	
+	private static Category findCategoryByOrder(int order)
+	{
+		for (Iterator iter = ((Set)cache.get(FQN, CATEGORIES_SET)).iterator(); iter.hasNext(); ) {
+			Category c = (Category)iter.next();
 			if (c.getOrder() == order) {
 				return c;
 			}
 		}
-
+		
 		return null;
 	}
 
 	/**
-	 * Updates some category. This method only updated the "name" and "order"
-	 * fields.
-	 * 
-	 * @param c
-	 *            The category to update. The method will search for a category
-	 *            with the same id and update its data.
+	 * Updates some category.
+	 * This method only updated the "name" and "order" fields. 
+	 *  
+	 * @param c The category to update. The method will search for a category
+	 * with the same id and update its data.
 	 */
-	public synchronized static void reloadCategory(Category c) {
-		Category current = (Category) cache.get(FQN, Integer
-				.toString(c.getId()));
+	public synchronized static void reloadCategory(Category c)
+	{
+		Category current = (Category)cache.get(FQN, Integer.toString(c.getId()));
 		Category currentAtOrder = findCategoryByOrder(c.getOrder());
-
+		
 		Set tmpSet = new TreeSet(new CategoryOrderComparator());
-		tmpSet.addAll((Set) cache.get(FQN, CATEGORIES_SET));
-
+		tmpSet.addAll((Set)cache.get(FQN, CATEGORIES_SET));
+		
 		if (currentAtOrder != null) {
 			tmpSet.remove(currentAtOrder);
 			cache.remove(FQN, Integer.toString(currentAtOrder.getId()));
 		}
-
+		
 		tmpSet.add(c);
 		cache.add(FQN, Integer.toString(c.getId()), c);
-
+		
 		if (currentAtOrder != null && c.getId() != currentAtOrder.getId()) {
 			tmpSet.remove(current);
 			currentAtOrder.setOrder(current.getOrder());
 			tmpSet.add(currentAtOrder);
-
-			cache.add(FQN, Integer.toString(currentAtOrder.getId()),
-					currentAtOrder);
+			
+			cache.add(FQN, Integer.toString(currentAtOrder.getId()), currentAtOrder);
 		}
-
+		
 		cache.add(FQN, CATEGORIES_SET, tmpSet);
 	}
-
+	
 	/**
 	 * Refreshes a category entry in the cache.
 	 * 
-	 * @param c
-	 *            The category to refresh
+	 * @param c The category to refresh
 	 */
-	public static void refreshCategory(Category c) {
+	public static void refreshCategory(Category c)
+	{
 		cache.add(FQN, Integer.toString(c.getId()), c);
-		Set s = (Set) cache.get(FQN, CATEGORIES_SET);
+		Set s = (Set)cache.get(FQN, CATEGORIES_SET);
 		cache.add(FQN, CATEGORIES_SET, s);
 	}
-
+	
 	/**
 	 * Remove a category from the cache
-	 * 
-	 * @param c
-	 *            The category to remove. The instance should have the category
-	 *            id at least
+	 * @param c The category to remove. The instance should have the 
+	 * category id at least
 	 */
-	public synchronized static void removeCategory(Category c) {
+	public synchronized static void removeCategory(Category c)
+	{
 		cache.remove(FQN, Integer.toString(c.getId()));
-
-		Set s = (Set) cache.get(FQN, CATEGORIES_SET);
+		
+		Set s = (Set)cache.get(FQN, CATEGORIES_SET);
 		s.remove(c);
 		cache.add(FQN, CATEGORIES_SET, s);
-
-		Map m = (Map) cache.get(FQN, RELATION);
-		for (Iterator iter = m.values().iterator(); iter.hasNext();) {
-			if (Integer.parseInt((String) iter.next()) == c.getId()) {
+		
+		Map m = (Map)cache.get(FQN, RELATION);
+		for (Iterator iter = m.values().iterator(); iter.hasNext(); ) {
+			if (Integer.parseInt((String)iter.next()) == c.getId()) {
 				iter.remove();
 			}
 		}
-
+		
 		cache.add(FQN, RELATION, m);
 	}
-
+	
 	/**
 	 * Adds a new category to the cache.
-	 * 
-	 * @param c
-	 *            The category instance to insert in the cache.
+	 * @param c The category instance to insert in the cache.
 	 */
-	public synchronized static void addCategory(Category c) {
+	public synchronized static void addCategory(Category c)
+	{
 		String categoryId = Integer.toString(c.getId());
 		cache.add(FQN, categoryId, c);
-
-		Set s = (Set) cache.get(FQN, CATEGORIES_SET);
-
+		
+		Set s = (Set)cache.get(FQN, CATEGORIES_SET);
+		
 		if (s == null) {
 			s = new TreeSet(new CategoryOrderComparator());
 		}
-
+		
 		s.add(c);
 		cache.add(FQN, CATEGORIES_SET, s);
-
-		Map relation = (Map) cache.get(FQN, RELATION);
+		
+		Map relation = (Map)cache.get(FQN, RELATION);
 		if (relation == null) {
 			relation = new HashMap();
 		}
-
-		for (Iterator iter = c.getForums().iterator(); iter.hasNext();) {
-			Forum f = (Forum) iter.next();
+		
+		for (Iterator iter = c.getForums().iterator(); iter.hasNext(); ) {
+			Forum f = (Forum)iter.next();
 			relation.put(Integer.toString(f.getId()), categoryId);
 		}
-
+		
 		cache.add(FQN, RELATION, relation);
 	}
-
+	
 	/**
-	 * Gets a specific forum from the cache.
+	 * Gets a specific forum from the cache.	 
 	 * 
-	 * @param forumId
-	 *            The forum's ID to get
-	 * @return <code>net.jforum.Forum</code> object instance or
-	 *         <code>null</code> if the forum was not found or is not
-	 *         accessible to the user.
+	 * @param forumId The forum's ID to get
+	 * @return <code>net.jforum.Forum</code> object instance or <code>null</code>
+	 * if the forum was not found or is not accessible to the user.
 	 */
-	public static Forum getForum(int forumId) {
-		String categoryId = (String) ((Map) cache.get(FQN, RELATION))
-				.get(Integer.toString(forumId));
-
+	public static Forum getForum(int forumId)
+	{
+		String categoryId = (String)((Map)cache.get(FQN, RELATION)).get(Integer.toString(forumId));
+		
 		if (categoryId != null) {
-			return ((Category) cache.get(FQN, categoryId)).getForum(forumId);
+			return ((Category)cache.get(FQN, categoryId)).getForum(forumId);
 		}
-
+		
 		return null;
 	}
-
-	public static boolean isForumAccessible(int forumId) {
-		return isForumAccessible(SessionFacade.getUserSession().getUserId(),
-				forumId);
+	
+	public static boolean isForumAccessible(int forumId)
+	{
+		return isForumAccessible(SessionFacade.getUserSession().getUserId(), forumId);
 	}
-
-	public static boolean isForumAccessible(int userId, int forumId) {
-		int categoryId = Integer.parseInt((String) ((Map) cache.get(FQN,
-				RELATION)).get(Integer.toString(forumId)));
+	
+	public static boolean isForumAccessible(int userId, int forumId)
+	{
+		int categoryId = Integer.parseInt((String)((Map)cache.get(FQN, RELATION)).get(Integer.toString(forumId)));
 		return isForumAccessible(userId, categoryId, forumId);
 	}
-
-	public static boolean isForumAccessible(int userId, int categoryId,
-			int forumId) {
-		return ((Category) cache.get(FQN, Integer.toString(categoryId)))
-				.getForum(userId, forumId) != null;
+	
+	public static boolean isForumAccessible(int userId, int categoryId, int forumId)
+	{
+		return ((Category)cache.get(FQN, Integer.toString(categoryId))).getForum(userId, forumId) != null;
 	}
-
+	
 	/**
-	 * Adds a new forum to the cache repository.
+	 * Adds a new forum to the cache repository.	 
 	 * 
-	 * @param forum
-	 *            The forum to add
+	 * @param forum The forum to add
 	 */
-	public synchronized static void addForum(Forum forum) {
+	public synchronized static void addForum(Forum forum)
+	{
 		String categoryId = Integer.toString(forum.getCategoryId());
 
-		Category c = (Category) cache.get(FQN, categoryId);
+		Category c = (Category)cache.get(FQN, categoryId);
 		c.addForum(forum);
 		cache.add(FQN, categoryId, c);
-
-		Map m = (Map) cache.get(FQN, RELATION);
+		
+		Map m = (Map)cache.get(FQN, RELATION);
 		m.put(Integer.toString(forum.getId()), categoryId);
 		cache.add(FQN, RELATION, m);
-
-		Set s = (Set) cache.get(FQN, CATEGORIES_SET);
+		
+		Set s = (Set)cache.get(FQN, CATEGORIES_SET);
 		cache.add(FQN, CATEGORIES_SET, s);
 	}
-
+	
 	/**
 	 * Removes a forum from the cache.
 	 * 
-	 * @param forum
-	 *            The forum instance to remove.
+	 * @param forum The forum instance to remove.
 	 */
-	public synchronized static void removeForum(Forum forum) {
+	public synchronized static void removeForum(Forum forum)
+	{
 		String id = Integer.toString(forum.getId());
-		Map m = (Map) cache.get(FQN, RELATION);
+		Map m = (Map)cache.get(FQN, RELATION);
 		m.remove(id);
 		cache.add(FQN, RELATION, m);
 
 		id = Integer.toString(forum.getCategoryId());
-
-		Category c = (Category) cache.get(FQN, id);
+		
+		Category c = (Category)cache.get(FQN, id);
 		c.removeForum(forum.getId());
 		cache.add(FQN, id, c);
-
-		Set s = (Set) cache.get(FQN, CATEGORIES_SET);
+		
+		Set s = (Set)cache.get(FQN, CATEGORIES_SET);
 		cache.add(FQN, CATEGORIES_SET, s);
 	}
-
+	
 	/**
-	 * Reloads a forum. The forum should already be in the cache and <b>SHOULD
-	 * NOT</b> have its order changed. If the forum's order was changed, then
-	 * you <b>MUST CALL</b>
+	 * Reloads a forum.
+	 * The forum should already be in the cache and <b>SHOULD NOT</b>
+	 * have its order changed. If the forum's order was changed, 
+	 * then you <b>MUST CALL</b> @link Category#changeForumOrder(Forum) <b>BEFORE</b>
+	 * calling this method.
 	 * 
-	 * @link Category#changeForumOrder(Forum) <b>BEFORE</b> calling this
-	 *       method.
-	 * 
-	 * @param forum
-	 *            The forum to reload its information
+	 * @param forum The forum to reload its information
 	 * @throws Exception
 	 */
-	public static synchronized void reloadForum(int forumId) throws Exception {
-		Forum f = DataAccessDriver.getInstance().newForumDAO().selectById(
-				forumId);
-
-		if (((Map) cache.get(FQN, RELATION)).containsKey(Integer
-				.toString(forumId))) {
+	public static synchronized void reloadForum(int forumId) throws Exception
+	{
+		Forum f = DataAccessDriver.getInstance().newForumDAO().selectById(forumId);
+		
+		if (((Map)cache.get(FQN, RELATION)).containsKey(Integer.toString(forumId))) {
 			String id = Integer.toString(f.getCategoryId());
-			Category c = (Category) cache.get(FQN, id);
-
+			Category c = (Category)cache.get(FQN, id);
+			
 			f.setLastPostInfo(null);
 			f.setLastPostInfo(ForumRepository.getLastPostInfo(f));
 			c.reloadForum(f);
-
+			
 			cache.add(FQN, id, c);
-			Set s = (Set) cache.get(FQN, CATEGORIES_SET);
+			Set s = (Set)cache.get(FQN, CATEGORIES_SET);
 			cache.add(FQN, CATEGORIES_SET, s);
 		}
-
+		
 		getTotalMessages(true);
 	}
-
+	
 	/**
 	 * Gets information about the last message posted in some forum.
-	 * 
-	 * @param forum
-	 *            The forum to retrieve information
-	 * @return
+	 * @param forum The forum to retrieve information
+	 * @return 
 	 */
-	public static LastPostInfo getLastPostInfo(Forum forum) throws Exception {
+	public static LastPostInfo getLastPostInfo(Forum forum) throws Exception
+	{
 		LastPostInfo lpi = forum.getLastPostInfo();
-
+		
 		if (lpi == null || !forum.getLastPostInfo().hasInfo()) {
-			lpi = DataAccessDriver.getInstance().newForumDAO().getLastPostInfo(
-					forum.getId());
+			lpi = DataAccessDriver.getInstance().newForumDAO().getLastPostInfo(forum.getId());
 			forum.setLastPostInfo(lpi);
 		}
-
+		
 		return lpi;
 	}
-
+	
 	/**
 	 * Gets information about the last message posted in some forum.
 	 * 
-	 * @param forumId
-	 *            The forum's id to retrieve information
+	 * @param forumId The forum's id to retrieve information
 	 * @return
 	 * @throws Exception
 	 */
-	public static LastPostInfo getLastPostInfo(int forumId) throws Exception {
+	public static LastPostInfo getLastPostInfo(int forumId) throws Exception
+	{
 		return getLastPostInfo(getForum(forumId));
 	}
-
-	public static User lastRegisteredUser() {
-		return (User) cache.get(FQN, LAST_USER);
+	
+	public static User lastRegisteredUser()
+	{
+		return (User)cache.get(FQN, LAST_USER);
 	}
-
-	public static void setLastRegisteredUser(User user) {
+	
+	public static void setLastRegisteredUser(User user)
+	{
 		cache.add(FQN, LAST_USER, user);
 	}
-
-	public static Integer totalUsers() {
-		return (Integer) cache.get(FQN, TOTAL_USERS);
+	
+	public static Integer totalUsers()
+	{
+		return (Integer)cache.get(FQN, TOTAL_USERS);
 	}
-
-	public static void incrementTotalUsers() {
-		Integer i = (Integer) cache.get(FQN, TOTAL_USERS);
-
+	
+	public static void incrementTotalUsers()
+	{
+		Integer i = (Integer)cache.get(FQN, TOTAL_USERS);
+		
 		if (i == null) {
 			i = new Integer(0);
 		}
-
-		cache.add(FQN, TOTAL_USERS, new Integer(i.intValue() + 1));
+		
+		cache.add(FQN,TOTAL_USERS, new Integer(i.intValue() + 1));
 	}
-
+	
 	/**
 	 * Gets the number of topics in some forum.
 	 * 
-	 * @param forumId
-	 *            The forum's id to retrieve the number of topics
-	 * @param fromDb
-	 *            If <code>true</code>, a query to the database will be made
-	 *            to get the number of topics. If <code>false</code>, the
-	 *            cached information will be returned
+	 * @param forumId The forum's id to retrieve the number of topics
+	 * @param fromDb If <code>true</code>, a query to the database will be made 
+	 * to get the number of topics. If <code>false</code>, the cached information
+	 * will be returned
 	 * @return The number of topics
 	 * @throws Exception
 	 * @see #getTotalTopics(int)
 	 */
-	public static int getTotalTopics(int forumId, boolean fromDb)
-			throws Exception {
-		Integer i = (Integer) cache.get(FQN_TOTAL_TOPICS, Integer
-				.toString(forumId));
+	public static int getTotalTopics(int forumId, boolean fromDb) throws Exception
+	{
+		Integer i = (Integer)cache.get(FQN_TOTAL_TOPICS, Integer.toString(forumId));
 		int total = (i != null ? i.intValue() : 0);
-
+		
 		if (fromDb || total == -1) {
-			total = DataAccessDriver.getInstance().newForumDAO()
-					.getTotalTopics(forumId);
-			cache.add(FQN_TOTAL_TOPICS, Integer.toString(forumId), new Integer(
-					total));
+			total = DataAccessDriver.getInstance().newForumDAO().getTotalTopics(forumId);
+			cache.add(FQN_TOTAL_TOPICS, Integer.toString(forumId), new Integer(total));
 		}
-
+		
 		return total;
 	}
-
+	
 	/**
 	 * Gets the number of topics in some forum.
-	 * 
-	 * @param forumId
-	 *            The forum's id to retrieve the number of topics
+	 * @param forumId The forum's id to retrieve the number of topics
 	 * @return The number of topics
 	 * @throws Exception
 	 * @see #getTotalTopics(int, boolean)
 	 */
-	public static int getTotalTopics(int forumId) throws Exception {
-		return ForumRepository.getTotalTopics(forumId, false);
+	public static int getTotalTopics(int forumId) throws Exception
+	{
+		return ForumRepository.getTotalTopics(forumId, false); 
 	}
-
+	
 	/**
 	 * Gets the number of messages in the entire board.
-	 * 
-	 * @return
+	 * @return 
 	 * @throws Exception
 	 * @see #getTotalMessages(boolean)
 	 */
-	public static int getTotalMessages() throws Exception {
+	public static int getTotalMessages() throws Exception
+	{
 		return getTotalMessages(false);
 	}
 
 	/**
 	 * Gets the number of messags in the entire board.
 	 * 
-	 * @param fromDb
-	 *            If <code>true</code>, a query to the database will be made,
-	 *            to retrieve the desired information. If <code>false</code>,
-	 *            the data will be fetched from the cache.
+	 * @param fromDb If <code>true</code>, a query to the database will
+	 * be made, to retrieve the desired information. If <code>false</code>, the
+	 * data will be fetched from the cache.
 	 * @return The number of messages posted in the board.
 	 * @throws Exception
 	 * @see #getTotalMessages()
 	 */
-	public static int getTotalMessages(boolean fromDb) throws Exception {
-		int total = ((Integer) cache.get(FQN, TOTAL_MESSAGES)).intValue();
+	public static int getTotalMessages(boolean fromDb) throws Exception
+	{
+		int total = ((Integer)cache.get(FQN, TOTAL_MESSAGES)).intValue();
 		if (fromDb || total == 0) {
-			total = DataAccessDriver.getInstance().newForumDAO()
-					.getTotalMessages();
+			total = DataAccessDriver.getInstance().newForumDAO().getTotalMessages();
 			cache.add(FQN, TOTAL_MESSAGES, new Integer(total));
 		}
-
+		
 		return total;
 	}
-
+	
 	/**
 	 * Gets the number of most online users ever
-	 * 
 	 * @return
 	 */
-	public static MostUsersEverOnline getMostUsersEverOnline() {
-		return (MostUsersEverOnline) cache.get(FQN, MOST_USERS_ONLINE);
+	public static MostUsersEverOnline getMostUsersEverOnline()
+	{
+		return (MostUsersEverOnline)cache.get(FQN, MOST_USERS_ONLINE);
 	}
-
+	
 	/**
 	 * Update the value of most online users ever.
 	 * 
-	 * @param newValue
-	 *            The new value to store. Generally it will be a bigger one.
+	 * @param newValue The new value to store. Generally it
+	 * will be a bigger one.
 	 * @throws Exception
 	 */
-	public static void updateMostUsersEverOnline(MostUsersEverOnline m)
-			throws Exception {
+	public static void updateMostUsersEverOnline(MostUsersEverOnline m) throws Exception
+	{
 		ConfigDAO cm = DataAccessDriver.getInstance().newConfigDAO();
 		Config config = cm.selectByName(ConfigKeys.MOST_USERS_EVER_ONLINE);
 		if (config == null) {
@@ -644,15 +614,16 @@ public class ForumRepository implements Cacheable {
 			config = new Config();
 			config.setName(ConfigKeys.MOST_USERS_EVER_ONLINE);
 			config.setValue(Integer.toString(m.getTotal()));
-
+			
 			cm.insert(config);
-
+			
 			// Date
 			config.setName(ConfigKeys.MOST_USER_EVER_ONLINE_DATE);
 			config.setValue(Long.toString(m.getTimeInMillis()));
-
+			
 			cm.insert(config);
-		} else {
+		}
+		else {
 			// Total
 			config.setValue(Integer.toString(m.getTotal()));
 			cm.update(config);
@@ -662,59 +633,59 @@ public class ForumRepository implements Cacheable {
 			config.setValue(Long.toString(m.getTimeInMillis()));
 			cm.update(config);
 		}
-
+		
 		cache.add(FQN, MOST_USERS_ONLINE, m);
 	}
-
+	
 	/**
 	 * Loads all forums.
-	 * 
 	 * @throws Exception
 	 */
-	private void loadForums(ForumDAO fm) throws Exception {
+	private void loadForums(ForumDAO fm) throws Exception
+	{
 		List l = fm.selectAll();
-
-		Map m = (Map) cache.get(FQN, RELATION);
+		
+		Map m = (Map)cache.get(FQN, RELATION);
 		if (m == null) {
 			m = new HashMap();
 		}
-
+		
 		int lastId = 0;
 		Category c = null;
 		String catId = null;
 
-		for (Iterator iter = l.iterator(); iter.hasNext();) {
-			Forum f = (Forum) iter.next();
-
+		for (Iterator iter = l.iterator(); iter.hasNext(); ) {
+			Forum f = (Forum)iter.next();
+			
 			if (f.getCategoryId() != lastId) {
 				if (c != null) {
 					cache.add(FQN, catId, c);
 				}
-
+				
 				lastId = f.getCategoryId();
 				catId = Integer.toString(f.getCategoryId());
-				c = (Category) cache.get(FQN, catId);
+				c = (Category)cache.get(FQN, catId);
 			}
-
+			
 			if (c == null) {
-				throw new CategoryNotFoundException("Category for forum #"
-						+ f.getId() + " not found");
+				throw new CategoryNotFoundException("Category for forum #" + f.getId() + " not found");
 			}
-
+			
 			String forumId = Integer.toString(f.getId());
 			c.addForum(f);
 			m.put(forumId, catId);
 			cache.add(FQN_TOTAL_TOPICS, forumId, new Integer(-1));
 		}
-
+		
 		if (c != null) {
 			cache.add(FQN, catId, c);
 		}
-
+		
 		cache.add(FQN, RELATION, m);
 	}
-
-	private void loadUsersInfo() throws Exception {
+	
+	private void loadUsersInfo() throws Exception
+	{
 		UserDAO udao = DataAccessDriver.getInstance().newUserDAO();
 		cache.add(FQN, LAST_USER, udao.getLastUserInfo());
 		cache.add(FQN, TOTAL_USERS, new Integer(udao.getTotalUsers()));
@@ -722,37 +693,37 @@ public class ForumRepository implements Cacheable {
 
 	/**
 	 * Loads all categories.
-	 * 
-	 * @throws Exception
+	 * @throws Exception 
 	 */
-	private void loadCategories(CategoryDAO cm) throws Exception {
+	private void loadCategories(CategoryDAO cm) throws Exception
+	{
 		List categories = cm.selectAll();
 		Set categoriesSet = new TreeSet(new CategoryOrderComparator());
-
-		for (Iterator iter = categories.iterator(); iter.hasNext();) {
-			Category c = (Category) iter.next();
-
+		
+		for (Iterator iter = categories.iterator(); iter.hasNext(); ) {
+			Category c = (Category)iter.next();
+			
 			cache.add(FQN, Integer.toString(c.getId()), c);
 			categoriesSet.add(c);
 		}
-
+		
 		cache.add(FQN, CATEGORIES_SET, categoriesSet);
 	}
-
-	private void loadMostUsersEverOnline(ConfigDAO cm) throws Exception {
+	
+	private void loadMostUsersEverOnline(ConfigDAO cm) throws Exception
+	{
 		Config config = cm.selectByName(ConfigKeys.MOST_USERS_EVER_ONLINE);
 		MostUsersEverOnline mostUsersEverOnline = new MostUsersEverOnline();
-
+		
 		if (config != null) {
 			mostUsersEverOnline.setTotal(Integer.parseInt(config.getValue()));
-
+			
 			// We're assuming that, if we have one key, the another one
 			// will always exist
 			config = cm.selectByName(ConfigKeys.MOST_USER_EVER_ONLINE_DATE);
-			mostUsersEverOnline.setTimeInMillis(Long.parseLong(config
-					.getValue()));
+			mostUsersEverOnline.setTimeInMillis(Long.parseLong(config.getValue()));
 		}
-
+		
 		cache.add(FQN, MOST_USERS_ONLINE, mostUsersEverOnline);
 	}
 }

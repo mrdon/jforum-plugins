@@ -44,28 +44,25 @@ package net.jforum.dao.sqlserver;
 
 import java.util.Date;
 import java.util.List;
-
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
- * @author Franklin S. Dattein (<a
- *         href="mailto:franklin@portaljava.com">franklin@portaljava.com</a>)
+ * @author Franklin S. Dattein (<a href="mailto:franklin@portaljava.com">franklin@portaljava.com</a>)
  * 
  */
-public class SqlServerKarmaDAO extends net.jforum.dao.generic.GenericKarmaDAO {
+public class SqlServerKarmaDAO extends net.jforum.dao.generic.GenericKarmaDAO
+{
 	/**
-	 * @see net.jforum.dao.KarmaDAO#getMostRatedUserByPeriod(java.util.Date,
-	 *      java.util.Date)
+	 * @see net.jforum.dao.KarmaDAO#getMostRatedUserByPeriod(java.util.Date, java.util.Date)
 	 */
-	public List getMostRatedUserByPeriod(int start, Date firstPeriod,
-			Date lastPeriod, String orderField) throws Exception {
-		String sql = SystemGlobals.getSql("GenericModel.selectByLimit") + " "
-				+ start + " "
+	public List getMostRatedUserByPeriod(int start, Date firstPeriod, Date lastPeriod, String orderField)
+			throws Exception
+	{
+		String sql = SystemGlobals.getSql("GenericModel.selectByLimit") + " " + start + " "
 				+ SystemGlobals.getSql("KarmaModel.getMostRatedUserByPeriod");
 		String orderby = " ORDER BY " + orderField + " DESC";
 		sql += orderby;
-
-		return super.getMostRatedUserByPeriod(sql, start, firstPeriod,
-				lastPeriod, orderField);
+		
+		return super.getMostRatedUserByPeriod(sql, start, firstPeriod, lastPeriod, orderField);
 	}
 }

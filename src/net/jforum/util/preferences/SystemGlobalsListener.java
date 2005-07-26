@@ -44,31 +44,32 @@ package net.jforum.util.preferences;
 
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
+
 import net.jforum.ConfigLoader;
 import net.jforum.util.FileChangeListener;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author Rafael Steil
- * @version $Id: SystemGlobalsListener.java,v 1.3 2005/07/12 17:11:17 andowson
- *          Exp $
+ * @version $Id: SystemGlobalsListener.java,v 1.5 2005/07/26 03:05:12 rafaelsteil Exp $
  */
-public class SystemGlobalsListener implements FileChangeListener {
-	private static final Logger logger = Logger
-			.getLogger(SystemGlobalsListener.class);
-
-	/**
+public class SystemGlobalsListener implements FileChangeListener
+{
+	private static final Logger logger = Logger.getLogger(SystemGlobalsListener.class);
+	
+	/** 
 	 * @see net.jforum.util.FileChangeListener#fileChanged(java.lang.String)
 	 */
-	public void fileChanged(String filename) {
+	public void fileChanged(String filename)
+	{
 		try {
-			logger.info("Reloading " + filename);
+			logger.info("Reloading "+ filename);
 
-			SystemGlobals.initGlobals(SystemGlobals.getApplicationPath(),
+			SystemGlobals.initGlobals(SystemGlobals.getApplicationPath(), 
 					SystemGlobals.getValue(ConfigKeys.DEFAULT_CONFIG));
-			ConfigLoader.listenForChanges();
-		} catch (IOException e) {
+			ConfigLoader.listenForChanges();		
+		}
+		catch (IOException e) {
 			logger.info(e);
 			e.printStackTrace();
 		}

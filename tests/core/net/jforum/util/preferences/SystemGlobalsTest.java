@@ -42,53 +42,56 @@
  */
 package net.jforum.util.preferences;
 
-import junit.framework.TestCase;
 import net.jforum.TestCaseUtils;
+import junit.framework.TestCase;
 
 /**
  * @author Rafael Steil
- * @version $Id: SystemGlobalsTest.java,v 1.2 2005/02/15 18:16:04 rafaelsteil
- *          Exp $
+ * @version $Id: SystemGlobalsTest.java,v 1.4 2005/07/26 03:05:58 rafaelsteil Exp $
  */
-public class SystemGlobalsTest extends TestCase {
+public class SystemGlobalsTest extends TestCase
+{
 	private static final String USER_DEFAULTS = "userDefaultsTest.properties";
-
 	private static final String GLOBALS = "/WEB-INF/tests/config/SystemGlobalsTest.properties";
-
-	/**
+	
+	/** 
 	 * @see junit.framework.TestCase#setUp()
 	 */
-	public void setUp() throws Exception {
-		SystemGlobals.initGlobals(TestCaseUtils.getRootDir(), TestCaseUtils
-				.getRootDir()
-				+ GLOBALS);
+	public void setUp() throws Exception
+	{
+		SystemGlobals.initGlobals(TestCaseUtils.getRootDir(), 
+						TestCaseUtils.getRootDir() + GLOBALS);
 	}
-
-	public void testLoad() {
-		assertEquals(TestCaseUtils.getRootDir() + "/WEB-INF", SystemGlobals
-				.getApplicationResourceDir());
-		assertEquals(SystemGlobals.getApplicationResourceDir() + "/config",
-				SystemGlobals.getValue("config.dir"));
+	
+	public void testLoad()
+	{
+		assertEquals(TestCaseUtils.getRootDir() + "/WEB-INF", 
+						SystemGlobals.getApplicationResourceDir());
+		assertEquals(SystemGlobals.getApplicationResourceDir() + "/config", 
+						SystemGlobals.getValue("config.dir"));
 		assertEquals("some value", SystemGlobals.getValue("some.key"));
 	}
-
-	public void testTypes() {
+	
+	public void testTypes()
+	{
 		assertEquals(123, SystemGlobals.getIntValue("int.key"));
 		assertEquals(true, SystemGlobals.getBoolValue("bool.key"));
 		assertEquals(false, SystemGlobals.getBoolValue("bool.key.2"));
 		assertEquals("some string", SystemGlobals.getValue("string.key"));
 	}
-
-	public void testUserDefaults() throws Exception {
+	
+	public void testUserDefaults() throws Exception
+	{
 		SystemGlobals.loadAdditionalDefaults(TestCaseUtils.getRootDir()
-				+ "/WEB-INF/tests/config/" + USER_DEFAULTS);
+						+ "/WEB-INF/tests/config/" + USER_DEFAULTS);
 		assertEquals("user value 1", SystemGlobals.getValue("user.key.1"));
 		assertEquals("user value 2", SystemGlobals.getValue("user.key.2"));
 		assertEquals("some user value", SystemGlobals.getValue("some.key"));
-
+		
 		try {
 			SystemGlobals.getValue("blablabla");
-		} catch (RuntimeException e) {
+		}
+		catch (RuntimeException e) {
 			assertEquals("unknown property: blablabla", e.getMessage());
 		}
 	}

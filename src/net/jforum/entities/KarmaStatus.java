@@ -44,93 +44,104 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaStatus.java,v 1.5 2005/07/26 02:45:53 diegopires Exp $
+ * @version $Id: KarmaStatus.java,v 1.6 2005/07/26 03:04:50 rafaelsteil Exp $
  */
-public class KarmaStatus {
+public class KarmaStatus
+{
 	private int id;
-
+	
 	/**
 	 * Karma average. Total points receveid / number of votes.
 	 */
 	private double karmaPoints;
-
+	
 	/**
 	 * Sum of all votes received.
 	 */
 	private int totalPoints;
-
+	
 	/**
 	 * Number of votes received.
 	 */
 	private int votesReceived;
-
+	
 	/**
 	 * Number of votes given to other users.
 	 */
 	private int votesGiven;
-
-	public KarmaStatus() {
-	}
-
-	public KarmaStatus(KarmaStatus karma) {
+	
+	
+	public KarmaStatus() {}
+	
+	public KarmaStatus(KarmaStatus karma)
+	{
 		if (karma != null) {
 			this.id = karma.getId();
 			this.karmaPoints = karma.getKarmaPoints();
 		}
 	}
-
-	public KarmaStatus(int id, double points) {
+	
+	public KarmaStatus(int id, double points)
+	{
 		this.id = id;
 		this.karmaPoints = points;
 	}
-
+	
 	/**
 	 * @return Returns the karmaPoints.
 	 */
-	public double getKarmaPoints() {
+	public double getKarmaPoints()
+	{
 		return this.karmaPoints;
 	}
-
-	public void setKarmaPoints(double points) {
+	
+	public void setKarmaPoints(double points)
+	{
 		this.karmaPoints = points;
 	}
-
+	
 	/**
 	 * @return Returns the userId.
 	 */
-	public int getId() {
+	public int getId()
+	{
 		return this.id;
 	}
-
+	
 	/**
-	 * @param userId
-	 *            The userId to set.
+	 * @param userId The userId to set.
 	 */
-	public void setId(int userId) {
+	public void setId(int userId)
+	{
 		this.id = userId;
 	}
-
-	public int getVotesReceived() {
-		return votesReceived;
-	}
-
-	public void setVotesReceived(int votesReceived) {
-		this.votesReceived = votesReceived;
-	}
-
-	public int getTotalPoints() {
-		return totalPoints;
-	}
-
-	public void setTotalPoints(int totalPoints) {
-		this.totalPoints = totalPoints;
-	}
-
-	public int getVotesGiven() {
-		return votesGiven;
-	}
-
-	public void setVotesGiven(int votesGiven) {
-		this.votesGiven = votesGiven;
-	}
+	
+    public int getVotesReceived()
+    {
+        return votesReceived;
+    }
+    
+    public void setVotesReceived(int votesReceived)
+    {
+        this.votesReceived = votesReceived;
+    }
+    
+    public int getTotalPoints()
+    {
+        return totalPoints;
+    }
+    
+    public void setTotalPoints(int totalPoints)
+    {
+        this.totalPoints = totalPoints;
+    }
+    
+    public int getVotesGiven()
+    {
+        return votesGiven;
+    }
+    public void setVotesGiven(int votesGiven)
+    {
+        this.votesGiven = votesGiven;
+    }
 }

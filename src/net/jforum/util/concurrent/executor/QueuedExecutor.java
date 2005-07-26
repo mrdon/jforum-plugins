@@ -42,6 +42,8 @@
  */
 package net.jforum.util.concurrent.executor;
 
+import org.apache.log4j.Logger;
+
 import net.jforum.util.concurrent.Executor;
 import net.jforum.util.concurrent.Queue;
 import net.jforum.util.concurrent.Result;
@@ -50,78 +52,82 @@ import net.jforum.util.concurrent.queue.UnboundedFifoQueue;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author Rodrigo Kumpera
- * @version $Id: QueuedExecutor.java,v 1.9 2005/07/26 02:46:04 diegopires Exp $
+ * @version $Id: QueuedExecutor.java,v 1.10 2005/07/26 03:05:59 rafaelsteil Exp $
  */
-public class QueuedExecutor implements Executor {
+public class QueuedExecutor implements Executor 
+{
 	private Thread currentThread;
-
 	private final Queue queue;
-
 	private final Object lock = new Object();
-
 	private static final Logger logger = Logger.getLogger(QueuedExecutor.class);
-
-	private static QueuedExecutor instance = new QueuedExecutor(
-			new UnboundedFifoQueue());
-
-	private QueuedExecutor(Queue queue) {
+	
+	private static QueuedExecutor instance = new QueuedExecutor(new UnboundedFifoQueue());
+	
+	private QueuedExecutor(Queue queue) 
+	{
 		logger.info("Setting queue...");
 		this.queue = queue;
 	}
-
-	public static QueuedExecutor getInstance() {
+	
+	public static QueuedExecutor getInstance()
+	{
 		return instance;
 	}
-
-	private class WorkerThread extends AbstractWorker {
-		protected Object take() throws InterruptedException {
+	
+	private class WorkerThread extends AbstractWorker 
+	{
+		protected Object take() throws InterruptedException 
+		{
 			return queue.get();
 		}
-
-		protected void cleanup() {
-			synchronized (lock) {
+		
+		protected void cleanup() 
+		{
+			synchronized(lock) {
 				currentThread = null;
 				logger.info("Cleaning up the thread...");
 			}
 		}
 	}
 
-	public void execute(Task task) throws InterruptedException {
+	public void execute(Task task) throws InterruptedException 
+	{
 		if (SystemGlobals.getBoolValue(ConfigKeys.BACKGROUND_TASKS)) {
 			queue.put(task);
-			synchronized (lock) {
-				if (currentThread == null) {
+			synchronized(lock) {
+				if(currentThread == null) {
 					logger.info("Creating a new thread...");
-
+					
 					currentThread = new Thread(new WorkerThread(), "jforum");
 					currentThread.setDaemon(true);
-					currentThread.start();
+					currentThread.start();	
 				}
 			}
-		} else {
+		}
+		else {
 			try {
 				task.execute();
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				logger.warn("Error while executing a task: " + e);
 			}
 		}
 	}
-
-	public Result executeWithResult(Task task) throws InterruptedException {
+	
+	public Result executeWithResult(Task task) throws InterruptedException 
+	{
 		SimpleResult result = new SimpleResult(task);
 		queue.put(result);
-
-		synchronized (lock) {
-			if (currentThread == null) {
+		
+		synchronized(lock) {
+			if(currentThread == null) {
 				currentThread = new Thread(new WorkerThread(), "jforum");
 				currentThread.setDaemon(true);
 				currentThread.setName(this.getClass().getName() + "Thread");
 
-				currentThread.start();
+				currentThread.start();	
 			}
 		}
 

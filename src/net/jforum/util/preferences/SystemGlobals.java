@@ -57,68 +57,55 @@ import net.jforum.ConfigLoader;
 import org.apache.log4j.Logger;
 
 /**
- * <p>
- * Store global configurations used in the system. This is an helper class used
- * to access the values defined at SystemGlobals.properties and related config
- * files.
- * </p>
+ * <p>Store global configurations used in the system.
+ * This is an helper class used to access the values
+ * defined at SystemGlobals.properties and related
+ * config files.</p> 
  * 
  * <p>
- * Transient values are stored in a special place, and are not modified when you
- * change a regular key's value.
+ * Transient values are stored in a special place, and are not
+ * modified when you change a regular key's value. 
  * </p>
  * 
  * @author Rafael Steil
  * @author Pieter Olivier
- * @version $Id: SystemGlobals.java,v 1.23 2005/07/26 02:45:14 diegopires Exp $
+ * @version $Id: SystemGlobals.java,v 1.24 2005/07/26 03:05:12 rafaelsteil Exp $
  */
-public class SystemGlobals implements VariableStore {
+public class SystemGlobals implements VariableStore
+{
 	private static SystemGlobals globals = new SystemGlobals();
 
 	private String defaultConfig;
-
 	private String installationConfig;
 
 	private Properties defaults = new Properties();
-
 	private Properties installation = new Properties();
-
 	private static List additionalDefaultsList = new ArrayList();
-
 	private static Properties queries = new Properties();
-
 	private static Properties transientValues = new Properties();
 
 	private VariableExpander expander = new VariableExpander(this, "${", "}");;
-
+	
 	private static final Logger logger = Logger.getLogger(SystemGlobals.class);
-
-	private SystemGlobals() {
-	}
+	
+	private SystemGlobals() {}
 
 	/**
 	 * Initialize the global configuration
-	 * 
-	 * @param appPath
-	 *            The application path (normally the path to the webapp base dir
-	 * @param defaults
-	 *            The file containing system defaults (when null, defaults to
-	 *            <appPath>/WEB-INF/config/default.conf)
-	 * @param installation
-	 *            The specific installation realm (when null, defaults to
-	 *            System.getProperty("user"))
+	 * @param appPath The application path (normally the path to the webapp base dir
+	 * @param defaults The file containing system defaults (when null, defaults to <appPath>/WEB-INF/config/default.conf)
+	 * @param installation The specific installation realm (when null, defaults to System.getProperty("user"))
 	 */
-	public static void initGlobals(String appPath, String defaults)
-			throws IOException {
+	public static void initGlobals(String appPath, String defaults) throws IOException
+	{
 		globals = new SystemGlobals();
 		globals.buildSystem(appPath, defaults);
 	}
-
-	private void buildSystem(String appPath, String defaultConfig)
-			throws IOException {
+	
+	private void buildSystem(String appPath, String defaultConfig) throws IOException
+	{
 		if (defaultConfig == null) {
-			throw new InvalidParameterException(
-					"defaultConfig could not be null");
+			throw new InvalidParameterException("defaultConfig could not be null");
 		}
 
 		this.defaultConfig = defaultConfig;
@@ -126,44 +113,41 @@ public class SystemGlobals implements VariableStore {
 
 		this.defaults.put(ConfigKeys.APPLICATION_PATH, appPath);
 		this.defaults.put(ConfigKeys.DEFAULT_CONFIG, defaultConfig);
-
+		
 		SystemGlobals.loadDefaults();
-
+	
 		this.installation = new Properties();
 		this.installationConfig = getVariableValue(ConfigKeys.INSTALLATION_CONFIG);
 
-		for (Iterator iter = additionalDefaultsList.iterator(); iter.hasNext();) {
-			loadAdditionalDefaults((String) iter.next());
+		for (Iterator iter = additionalDefaultsList.iterator(); iter.hasNext(); ) {
+			loadAdditionalDefaults((String)iter.next());
 		}
-
+		
 		if (new File(this.installationConfig).exists()) {
 			loadAdditionalDefaults(this.installationConfig);
 		}
 	}
-
+	
 	/**
 	 * Sets a value for some property
 	 * 
-	 * @param field
-	 *            The property name
-	 * @param value
-	 *            The property value
+	 * @param field The property name
+	 * @param value The property value 
 	 * @see #getVariableValue(String)
-	 */
-	public static void setValue(String field, String value) {
+	 * */
+	public static void setValue(String field, String value)
+	{
 		globals.installation.put(field, value);
 		globals.expander.clearCache();
 	}
 
 	/**
-	 * Set a transient configuration value (a value that will not be saved)
-	 * 
-	 * @param field
-	 *            The name of the configuration option
-	 * @param value
-	 *            The value of the configuration option
+	 * Set a transient configuration value (a value that will not be saved) 
+	 * @param field The name of the configuration option
+	 * @param value The value of the configuration option
 	 */
-	public static void setTransientValue(String field, String value) {
+	public static void setTransientValue(String field, String value)
+	{
 		transientValues.put(field, value);
 	}
 
@@ -172,30 +156,31 @@ public class SystemGlobals implements VariableStore {
 	 * 
 	 * @throws IOException
 	 */
-	public static void loadDefaults() throws IOException {
+	public static void loadDefaults() throws IOException
+	{
 		FileInputStream input = new FileInputStream(globals.defaultConfig);
 		globals.defaults.load(input);
 		input.close();
 		globals.expander.clearCache();
 	}
-
+	
 	/**
 	 * Merge additional configuration defaults
 	 * 
-	 * @param file
-	 *            File from which to load the additional defaults
+	 * @param file File from which to load the additional defaults
 	 * @throws IOException
 	 */
-	public static void loadAdditionalDefaults(String file) throws IOException {
+	public static void loadAdditionalDefaults(String file) throws IOException
+	{
 		if (!new File(file).exists()) {
 			logger.info("Cannot find file " + file + ". Will ignore it");
 			return;
 		}
-
+		
 		FileInputStream input = new FileInputStream(file);
 		globals.installation.load(input);
 		input.close();
-
+		
 		if (!additionalDefaultsList.contains(file)) {
 			additionalDefaultsList.add(file);
 		}
@@ -204,77 +189,76 @@ public class SystemGlobals implements VariableStore {
 	/**
 	 * Save installation defaults
 	 * 
-	 * @throws IOException
-	 *             when the file could not be written
+	 * @throws IOException when the file could not be written
 	 */
-	public static void saveInstallation() throws IOException {
+	public static void saveInstallation() throws IOException
+	{
 		// We need this temporary "p" because, when
-		// new FileOutputStream() is called, it will
+		// new FileOutputStream() is called, it will 
 		// raise an event to the TimerTask who is listen
 		// for file modifications, which then reloads the
 		// configurations from the filesystem, overwriting
-		// our new keys.
+		// our new keys. 
 		Properties p = new Properties();
 		p.putAll(globals.installation);
 		FileOutputStream out = new FileOutputStream(globals.installationConfig);
 		p.store(out, "Installation specific configuration options");
 		out.close();
-
+		
 		ConfigLoader.listenInstallationConfig();
 	}
 
 	/**
 	 * Gets the value of some property
 	 * 
-	 * @param field
-	 *            The property name to retrieve the value
+	 * @param field The property name to retrieve the value
 	 * @return String with the value, or <code>null</code> if not found
 	 * @see #setValue(String, String)
-	 */
-	public static String getValue(String field) {
+	 * */
+	public static String getValue(String field)
+	{
 		return globals.getVariableValue(field);
 	}
-
-	public static String getTransientValue(String field) {
+	
+	public static String getTransientValue(String field)
+	{
 		return transientValues.getProperty(field);
 	}
 
 	/**
 	 * Retrieve an integer-valued configuration field
 	 * 
-	 * @param field
-	 *            Name of the configuration option
+	 * @param field Name of the configuration option
 	 * @return The value of the configuration option
-	 * @exception NullPointerException
-	 *                when the field does not exists
+	 * @exception NullPointerException when the field does not exists
 	 */
-	public static int getIntValue(String field) {
+	public static int getIntValue(String field)
+	{
 		return Integer.parseInt(getValue(field));
 	}
 
 	/**
 	 * Retrieve an boolean-values configuration field
 	 * 
-	 * @param field
-	 *            name of the configuration option
+	 * @param field name of the configuration option
 	 * @return The value of the configuration option
-	 * @exception NullPointerException
-	 *                when the field does not exists
+	 * @exception NullPointerException when the field does not exists
 	 */
-	public static boolean getBoolValue(String field) {
+	public static boolean getBoolValue(String field)
+	{
 		return "true".equals(getValue(field));
 	}
 
 	/**
-	 * Return the value of a configuration value as a variable. Variable
-	 * expansion is performe on the result.
+	 * Return the value of a configuration value as a variable. Variable expansion is performe
+	 * on the result.
 	 * 
-	 * @param field
-	 *            The field name to retrieve
-	 * @return The value of the field if present or null if not
+	 * @param field The field name to retrieve
+	 * @return The value of the field if present or null if not  
 	 */
 
-	public String getVariableValue(String field) {
+	public String getVariableValue(String field)
+	{
 		String preExpansion = globals.installation.getProperty(field);
 		if (preExpansion == null) {
 			preExpansion = this.defaults.getProperty(field);
@@ -288,13 +272,13 @@ public class SystemGlobals implements VariableStore {
 	}
 
 	/**
-	 * Sets the application's root directory
+	 * Sets the application's root directory 
 	 * 
-	 * @param ap
-	 *            String containing the complete path to the root dir
+	 * @param ap String containing the complete path to the root dir
 	 * @see #getApplicationPath
-	 */
-	public static void setApplicationPath(String ap) {
+	 * */
+	public static void setApplicationPath(String ap)
+	{
 		setValue(ConfigKeys.APPLICATION_PATH, ap);
 	}
 
@@ -303,53 +287,52 @@ public class SystemGlobals implements VariableStore {
 	 * 
 	 * @return String with the path
 	 * @see #setApplicationPath
-	 */
-	public static String getApplicationPath() {
+	 * */
+	public static String getApplicationPath()
+	{
 		return getValue(ConfigKeys.APPLICATION_PATH);
 	}
 
 	/**
-	 * Gets the path to the resource's directory. This method returns the
-	 * directory name where the config files are stored. Caso queira saber o
-	 * caminho absoluto do diretorio, voce precisa usar Note that this method
-	 * does not return the complete path. If you want the full path, you must
-	 * use <blockquote>
+	 * Gets the path to the resource's directory.
+	 * This method returns the directory name where the config
+	 * files are stored. 
+	 *  Caso queira saber o caminho absoluto do diretorio, voce precisa
+	 * usar
+	 * Note that this method does not return the complete path. If you 
+	 * want the full path, you must use 
+	 * <blockquote><pre>SystemGlobals.getApplicationPath() + SystemGlobals.getApplicationResourcedir()</pre></blockquote>
 	 * 
-	 * <pre>
-	 * SystemGlobals.getApplicationPath() + SystemGlobals.getApplicationResourcedir()
-	 * </pre>
-	 * 
-	 * </blockquote>
-	 * 
-	 * @return String with the name of the resource dir, relative to
-	 *         application's root dir.
+	 * @return String with the name of the resource dir, relative 
+	 * to application's root dir.
 	 * @see #setApplicationResourceDir
 	 * @see #getApplicationPath
-	 */
-	public static String getApplicationResourceDir() {
+	 * */
+	public static String getApplicationResourceDir()
+	{
 		return getValue(ConfigKeys.RESOURCE_DIR);
 	}
 
 	/**
 	 * Load the SQL queries
-	 * 
-	 * @param queryFile
-	 *            Complete path to the SQL queries file.
+	 *
+	 * @param queryFile Complete path to the SQL queries file.
 	 * @throws java.io.IOException
-	 */
-	public static void loadQueries(String queryFile) throws IOException {
+	 **/
+	public static void loadQueries(String queryFile) throws IOException
+	{
 		queries.load(new FileInputStream(queryFile));
 	}
 
 	/**
 	 * Gets some SQL statement.
 	 * 
-	 * @param sql
-	 *            The query's name, as defined in the file loaded by
-	 *            {@link #loadQueries(String)}
+	 * @param sql The query's name, as defined in the file loaded by
+	 * {@link #loadQueries(String)}
 	 * @return The SQL statement, or <code>null</code> if not found.
-	 */
-	public static String getSql(String sql) {
+	 * */
+	public static String getSql(String sql)
+	{
 		return queries.getProperty(sql);
 	}
 
@@ -358,11 +341,13 @@ public class SystemGlobals implements VariableStore {
 	 * 
 	 * @return An iterator that iterates over all known configuration keys
 	 */
-	public static Iterator fetchConfigKeyIterator() {
+	public static Iterator fetchConfigKeyIterator()
+	{
 		return globals.defaults.keySet().iterator();
 	}
-
-	public static Properties getConfigData() {
+	
+	public static Properties getConfigData()
+	{
 		return new Properties(globals.defaults);
 	}
 }

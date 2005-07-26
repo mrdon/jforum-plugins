@@ -51,21 +51,22 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author James Young
- * @version $Id: ActivationKeySpammer.java,v 1.4 2005/02/28 13:24:03 rafaelsteil
- *          Exp $
+ * @version $Id: ActivationKeySpammer.java,v 1.6 2005/07/26 03:05:56 rafaelsteil Exp $
  */
-public class ActivationKeySpammer extends Spammer {
-	public ActivationKeySpammer(User u) {
-		// gets the url to the forum.
+public class ActivationKeySpammer extends Spammer
+{
+	public ActivationKeySpammer(User u)
+	{
+		//gets the url to the forum.
 		String forumLink = SystemGlobals.getValue(ConfigKeys.FORUM_LINK);
 		if (!forumLink.endsWith("/")) {
 			forumLink += "/";
 		}
 
-		String url = forumLink + "user/activateAccount/" + u.getActivationKey()
-				+ "/" + u.getId()
-				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
-
+		String url =  forumLink + "user/activateAccount/" + u.getActivationKey() 
+			+ "/" + u.getId() 
+			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
+		
 		SimpleHash params = new SimpleHash();
 		params.put("url", url);
 		params.put("user", u);
@@ -73,9 +74,7 @@ public class ActivationKeySpammer extends Spammer {
 		List recipients = new ArrayList();
 		recipients.add(u.getEmail());
 
-		super.prepareMessage(recipients, params, SystemGlobals
-				.getValue(ConfigKeys.MAIL_ACTIVATION_KEY_SUBJECT),
-				SystemGlobals
-						.getValue(ConfigKeys.MAIL_ACTIVATION_KEY_MESSAGE_FILE));
+		super.prepareMessage(recipients, params, SystemGlobals.getValue(ConfigKeys.MAIL_ACTIVATION_KEY_SUBJECT), 
+				SystemGlobals.getValue(ConfigKeys.MAIL_ACTIVATION_KEY_MESSAGE_FILE));
 	}
 }

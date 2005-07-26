@@ -47,85 +47,74 @@ import java.util.List;
 import net.jforum.entities.Post;
 
 /**
- * Model interface for {@link net.jforum.Post}. This interface defines methods
- * which are expected to be implementd by a specific data access driver. The
- * intention is to provide all functionality needed to update, insert, delete
- * and select some specific data.
+  * Model interface for {@link net.jforum.Post}.
+ * This interface defines methods which are expected to be
+ * implementd by a specific data access driver. The intention is
+ * to provide all functionality needed to update, insert, delete and
+ * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: PostDAO.java,v 1.4 2005/07/26 02:45:28 diegopires Exp $
+ * @version $Id: PostDAO.java,v 1.5 2005/07/26 03:04:30 rafaelsteil Exp $
  */
-public interface PostDAO {
+public interface PostDAO 
+{
 	/**
 	 * Gets a specific <code>Post</code>.
 	 * 
-	 * @param postId
-	 *            The Post ID to search
+	 * @param postId The Post ID to search
 	 * @return <code>Post</code>object containing all the information
 	 * @throws Exception
 	 * @see #selectAll
 	 */
 	public Post selectById(int postId) throws Exception;
-
+		
 	/**
 	 * Delete a Post.
 	 * 
-	 * @param Post
-	 *            The Post to delete
+	 * @param Post The Post to delete
 	 * @throws Exception
 	 * @see #canDelete(int)
 	 */
 	public void delete(Post post) throws Exception;
-
+	
 	/**
 	 * Updates a Post.
 	 * 
-	 * @param post
-	 *            Reference to a <code>Post</code> object to update
+	 * @param post Reference to a <code>Post</code> object to update
 	 * @throws Exception
 	 * @see #update(int)
 	 */
 	public void update(Post post) throws Exception;
-
+	
 	/**
 	 * Adds a new Post.
 	 * 
-	 * @param Post
-	 *            Reference to a valid and configured <code>Post</code> object
+	 * @param Post Reference to a valid and configured <code>Post</code> object
 	 * @return The new ID
 	 * @throws Exception
 	 */
 	public int addNew(Post post) throws Exception;
-
+	
 	/**
-	 * Selects all messages relacted to a specific topic.
+	 * Selects all messages relacted to a specific topic. 
 	 * 
-	 * @param topicId
-	 *            The topic ID
-	 * @param startFrom
-	 *            The count position to start fetching
-	 * @param count
-	 *            The total number of records to retrieve
-	 * @return <code>ArrayList</code> containing all records found. Each entry
-	 *         of the <code>ArrayList</code> is a {@link net.jforum.Post}
-	 *         object
+	 * @param topicId The topic ID 
+	 * @param startFrom The count position to start fetching
+	 * @param count The total number of records to retrieve
+	 * @return <code>ArrayList</code> containing all records found. Each entry of the <code>ArrayList</code> is a {@link net.jforum.Post} object
 	 * @throws Exception
 	 */
-	public List selectAllByTopicByLimit(int topicId, int startFrom, int count)
-			throws Exception;
-
+	public List selectAllByTopicByLimit(int topicId, int startFrom, int count) throws Exception;
+	
 	/**
-	 * Selects all messages relacted to a specific topic.
+	 * Selects all messages relacted to a specific topic. 
 	 * 
-	 * @param topicId
-	 *            The topic ID
-	 * @return <code>ArrayList</code> containing all records found. Each entry
-	 *         of the <code>ArrayList</code> is a {@link net.jforum.Post}
-	 *         object
+	 * @param topicId The topic ID 
+	 * @return <code>ArrayList</code> containing all records found. Each entry of the <code>ArrayList</code> is a {@link net.jforum.Post} object
 	 * @throws Exception
-	 */
+	 */	
 	public List selectAllByTopic(int topicId) throws Exception;
-
+	
 	/**
 	 * Delete all posts related to the given topic
 	 * 

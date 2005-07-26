@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: DirectExecutor.java,v 1.4 2005/07/26 02:46:04 diegopires Exp $
+ * $Id: DirectExecutor.java,v 1.5 2005/07/26 03:05:59 rafaelsteil Exp $
  */
 package net.jforum.util.concurrent.executor;
 
@@ -49,34 +49,39 @@ import net.jforum.util.concurrent.Executor;
 import net.jforum.util.concurrent.Result;
 import net.jforum.util.concurrent.Task;
 
-/**
+/** 
  * Implements a direct executor
  * 
  * @author Rodrigo Kumpera
  */
-public class DirectExecutor implements Executor {
-	public DirectExecutor() {
+public class DirectExecutor implements Executor 
+{
+	public DirectExecutor() 
+	{
 		super();
 	}
 
-	public void execute(Task task) {
+	public void execute(Task task) 
+	{
 		try {
 			task.execute();
-		} catch (Exception e) {
-			// if they don't care, why should I?
+		} 
+		catch(Exception e) {
+			//if they don't care, why should I?
 		}
 	}
 
-	public Result executeWithResult(Task task) {
+	public Result executeWithResult(Task task) 
+	{
 		Object result = null;
 		Exception ex = null;
-
+		
 		try {
 			result = task.execute();
-		} catch (Exception e) {
+		} catch(Exception e) {
 			ex = e;
 		}
-
+		
 		return new ReadyResult(result, ex);
 	}
 

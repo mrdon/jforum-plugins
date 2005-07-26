@@ -57,72 +57,72 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
- * Authenticate users against a LDAP server.
+ * Authenticate users against a LDAP server. 
  * 
  * @author Rafael Steil
- * @version $Id: LDAPAuthenticator.java,v 1.1 2005/06/02 22:21:59 rafaelsteil
- *          Exp $
+ * @version $Id: LDAPAuthenticator.java,v 1.3 2005/07/26 03:05:33 rafaelsteil Exp $
  */
-public class LDAPAuthenticator implements LoginAuthenticator {
-	private Hashtable prepareEnvironment() {
+public class LDAPAuthenticator implements LoginAuthenticator
+{
+	private UserDAO dao;
+	
+	private Hashtable prepareEnvironment()
+	{
 		Hashtable h = new Hashtable();
-
-		h.put(Context.INITIAL_CONTEXT_FACTORY, SystemGlobals
-				.getValue(ConfigKeys.LDAP_FACTORY));
-		h.put(Context.PROVIDER_URL, SystemGlobals
-				.getValue(ConfigKeys.LDAP_SERVER_URL));
-
-		String protocol = SystemGlobals
-				.getValue(ConfigKeys.LDAP_SECURITY_PROTOCOL);
-
+		
+		h.put(Context.INITIAL_CONTEXT_FACTORY, SystemGlobals.getValue(ConfigKeys.LDAP_FACTORY));
+		h.put(Context.PROVIDER_URL, SystemGlobals.getValue(ConfigKeys.LDAP_SERVER_URL));
+		
+		String protocol = SystemGlobals.getValue(ConfigKeys.LDAP_SECURITY_PROTOCOL);
+		
 		if (protocol != null && !"".equals(protocol.trim())) {
 			h.put(Context.SECURITY_PROTOCOL, protocol);
 		}
 
-		String authentication = SystemGlobals
-				.getValue(ConfigKeys.LDAP_AUTHENTICATION);
+		String  authentication = SystemGlobals.getValue(ConfigKeys.LDAP_AUTHENTICATION);
 
 		if (authentication != null && !"".equals(authentication.trim())) {
 			h.put(Context.SECURITY_AUTHENTICATION, authentication);
 		}
-
+		
 		return h;
 	}
-
+	
 	/**
-	 * @see net.jforum.sso.LoginAuthenticator#validateLogin(java.lang.String,
-	 *      java.lang.String, java.util.Map)
+	 * @see net.jforum.sso.LoginAuthenticator#validateLogin(java.lang.String, java.lang.String, java.util.Map)
 	 */
-	public User validateLogin(String username, String password, Map extraParams)
-			throws Exception {
+	public User validateLogin(String username, String password, Map extraParams) throws Exception
+	{
 		Hashtable environment = this.prepareEnvironment();
-
+		
 		String principal = SystemGlobals.getValue(ConfigKeys.LDAP_USER_PREFIX)
-				+ username + ","
-				+ SystemGlobals.getValue(ConfigKeys.LDAP_ORGANIZATION_PREFIX);
-
+			+ username
+			+ ","
+			+ SystemGlobals.getValue(ConfigKeys.LDAP_ORGANIZATION_PREFIX);
+		
 		environment.put(Context.SECURITY_PRINCIPAL, principal);
 		environment.put(Context.SECURITY_CREDENTIALS, password);
-
+		
 		DirContext dir = null;
-
+		
 		try {
 			dir = new InitialDirContext(environment);
-
-			Attribute att = dir.getAttributes(principal).get(
-					SystemGlobals.getValue(ConfigKeys.LDAP_FIELD_EMAIL));
-
+			
+			Attribute att = dir.getAttributes(principal).get(SystemGlobals.getValue(ConfigKeys.LDAP_FIELD_EMAIL));
+			
 			SSOUtils utils = new SSOUtils();
-
+			
 			if (!utils.userExists(username)) {
-				String email = att != null ? (String) att.get() : "noemail";
+				String email = att != null ? (String)att.get() : "noemail";
 				utils.register("ldap", email);
 			}
-
+			
 			return utils.getUser();
-		} catch (AuthenticationException e) {
+		}
+		catch (AuthenticationException e) {
 			return null;
-		} finally {
+		}
+		finally {
 			if (dir != null) {
 				dir.close();
 			}
@@ -132,6 +132,8 @@ public class LDAPAuthenticator implements LoginAuthenticator {
 	/**
 	 * @see net.jforum.sso.LoginAuthenticator#setUserModel(net.jforum.dao.UserDAO)
 	 */
-	public void setUserModel(UserDAO dao) {
+	public void setUserModel(UserDAO dao) 
+	{
+		this.dao = dao;
 	}
 }

@@ -50,11 +50,11 @@ import net.jforum.entities.LastPostInfo;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumModelDummy.java,v 1.7 2005/07/26 02:45:31 diegopires Exp $
+ * @version $Id: ForumModelDummy.java,v 1.8 2005/07/26 03:05:51 rafaelsteil Exp $
  */
 class ForumModelDummy implements ForumDAO {
 
-	/**
+	/** 
 	 * @see net.jforum.dao.ForumDAO#selectById(int)
 	 */
 	public Forum selectById(int forumId) throws Exception {
@@ -62,7 +62,7 @@ class ForumModelDummy implements ForumDAO {
 		return null;
 	}
 
-	/**
+	/** 
 	 * @see net.jforum.dao.ForumDAO#selectAll()
 	 */
 	public List selectAll() throws Exception {
@@ -70,7 +70,7 @@ class ForumModelDummy implements ForumDAO {
 		return null;
 	}
 
-	/**
+	/** 
 	 * @see net.jforum.dao.ForumDAO#setOrderUp(int)
 	 */
 	public Forum setOrderUp(Forum f, Forum r) throws Exception {
@@ -78,7 +78,7 @@ class ForumModelDummy implements ForumDAO {
 		return null;
 	}
 
-	/**
+	/** 
 	 * @see net.jforum.dao.ForumDAO#setOrderDown(int)
 	 */
 	public Forum setOrderDown(Forum f, Forum r) throws Exception {
@@ -86,7 +86,7 @@ class ForumModelDummy implements ForumDAO {
 		return null;
 	}
 
-	/**
+	/** 
 	 * @see net.jforum.dao.ForumDAO#delete(int)
 	 */
 	public void delete(int forumId) throws Exception {
@@ -94,7 +94,7 @@ class ForumModelDummy implements ForumDAO {
 
 	}
 
-	/**
+	/** 
 	 * @see net.jforum.dao.ForumDAO#update(net.jforum.entities.Forum)
 	 */
 	public void update(Forum forum) throws Exception {
@@ -102,7 +102,7 @@ class ForumModelDummy implements ForumDAO {
 
 	}
 
-	/**
+	/** 
 	 * @see net.jforum.dao.ForumDAO#addNew(net.jforum.entities.Forum)
 	 */
 	public int addNew(Forum forum) throws Exception {
@@ -110,7 +110,7 @@ class ForumModelDummy implements ForumDAO {
 		return 0;
 	}
 
-	/**
+	/** 
 	 * @see net.jforum.dao.ForumDAO#setLastPost(int, int)
 	 */
 	public void setLastPost(int forumId, int postId) throws Exception {
@@ -118,7 +118,7 @@ class ForumModelDummy implements ForumDAO {
 
 	}
 
-	/**
+	/** 
 	 * @see net.jforum.dao.ForumDAO#incrementTotalTopics(int, int)
 	 */
 	public void incrementTotalTopics(int forumId, int count) throws Exception {
@@ -126,7 +126,7 @@ class ForumModelDummy implements ForumDAO {
 
 	}
 
-	/**
+	/** 
 	 * @see net.jforum.dao.ForumDAO#decrementTotalTopics(int, int)
 	 */
 	public void decrementTotalTopics(int forumId, int count) throws Exception {
@@ -134,7 +134,7 @@ class ForumModelDummy implements ForumDAO {
 
 	}
 
-	/**
+	/** 
 	 * @see net.jforum.dao.ForumDAO#getLastPostInfo(int)
 	 */
 	public LastPostInfo getLastPostInfo(int forumId) throws Exception {
@@ -142,7 +142,7 @@ class ForumModelDummy implements ForumDAO {
 		return null;
 	}
 
-	/**
+	/** 
 	 * @see net.jforum.dao.ForumDAO#getTotalMessages()
 	 */
 	public int getTotalMessages() throws Exception {
@@ -150,7 +150,7 @@ class ForumModelDummy implements ForumDAO {
 		return 0;
 	}
 
-	/**
+	/** 
 	 * @see net.jforum.dao.ForumDAO#getTotalTopics(int)
 	 */
 	public int getTotalTopics(int forumId) throws Exception {
@@ -158,7 +158,7 @@ class ForumModelDummy implements ForumDAO {
 		return 0;
 	}
 
-	/**
+	/** 
 	 * @see net.jforum.dao.ForumDAO#getMaxPostId(int)
 	 */
 	public int getMaxPostId(int forumId) throws Exception {
@@ -166,11 +166,10 @@ class ForumModelDummy implements ForumDAO {
 		return 0;
 	}
 
-	/**
+	/** 
 	 * @see net.jforum.dao.ForumDAO#moveTopics(java.lang.String[], int, int)
 	 */
-	public void moveTopics(String[] topics, int fromForumId, int toForumId)
-			throws Exception {
+	public void moveTopics(String[] topics, int fromForumId, int toForumId) throws Exception {
 		// TODO Auto-generated method stub
 
 	}
@@ -178,15 +177,17 @@ class ForumModelDummy implements ForumDAO {
 	/**
 	 * @see net.jforum.dao.ForumDAO#checkUnreadTopics(int, long)
 	 */
-	public List checkUnreadTopics(int forumId, long lastVisit) throws Exception {
+	public List checkUnreadTopics(int forumId, long lastVisit) throws Exception
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 	/**
 	 * @see net.jforum.dao.ForumDAO#setModerated(int, boolean)
 	 */
-	public void setModerated(int categoryId, boolean status) throws Exception {
+	public void setModerated(int categoryId, boolean status) throws Exception
+	{
 		// TODO Auto-generated method stub
 
 	}

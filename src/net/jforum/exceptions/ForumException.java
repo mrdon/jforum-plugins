@@ -47,23 +47,27 @@ import java.io.StringWriter;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumException.java,v 1.5 2005/07/26 02:45:19 diegopires Exp $
+ * @version $Id: ForumException.java,v 1.6 2005/07/26 03:04:35 rafaelsteil Exp $
  */
-public class ForumException extends RuntimeException {
-	public ForumException(String message) {
+public class ForumException extends RuntimeException
+{
+	public ForumException(String message)
+	{
 		super(message);
 	}
-
-	public ForumException(String message, Throwable t) {
+	
+	public ForumException(String message, Throwable t)
+	{
 		this(message + " - " + buildStackTrace(t));
 	}
-
-	protected static String buildStackTrace(Throwable t) {
+	
+	protected static String buildStackTrace(Throwable t)
+	{
 		StringWriter strWriter = new StringWriter();
 		PrintWriter writer = new PrintWriter(strWriter);
-		t.printStackTrace(writer);
+		t.printStackTrace(writer);		
 		writer.close();
-
+		
 		return strWriter.toString();
 	}
 }

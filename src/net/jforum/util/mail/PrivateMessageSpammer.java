@@ -52,32 +52,32 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageSpammer.java,v 1.2 2004/09/11 02:43:17
- *          rafaelsteil Exp $
+ * @version $Id: PrivateMessageSpammer.java,v 1.4 2005/07/26 03:05:57 rafaelsteil Exp $
  */
-public class PrivateMessageSpammer extends Spammer {
-	public PrivateMessageSpammer(User user) {
+public class PrivateMessageSpammer extends Spammer
+{
+	public PrivateMessageSpammer(User user)
+	{
 		if (user.getEmail() == null || user.getEmail().trim().equals("")) {
 			return;
 		}
-
+		
 		String forumLink = SystemGlobals.getValue(ConfigKeys.FORUM_LINK);
 		if (!forumLink.endsWith("/")) {
 			forumLink += "/";
 		}
-
-		forumLink += "pm/inbox"
-				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
-
+		
+		forumLink += "pm/inbox" + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
+		
 		SimpleHash params = new SimpleHash();
 		params.put("path", forumLink);
 		params.put("user", user);
-
+		
 		List recipients = new ArrayList();
 		recipients.add(user.getEmail());
-
-		super.prepareMessage(recipients, params, SystemGlobals
-				.getValue(ConfigKeys.MAIL_NEW_PM_SUBJECT), SystemGlobals
-				.getValue(ConfigKeys.MAIL_NEW_PM_MESSAGE_FILE));
+		
+		super.prepareMessage(recipients, params, 
+				SystemGlobals.getValue(ConfigKeys.MAIL_NEW_PM_SUBJECT),
+				SystemGlobals.getValue(ConfigKeys.MAIL_NEW_PM_MESSAGE_FILE));
 	}
 }

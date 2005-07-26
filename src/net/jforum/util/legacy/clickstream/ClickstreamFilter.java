@@ -15,15 +15,14 @@ import net.jforum.util.preferences.ConfigKeys;
 import org.apache.log4j.Logger;
 
 /**
- * The filter that keeps track of a new entry in the clickstream for <b>every
- * request</b>.
+ * The filter that keeps track of a new entry in the clickstream for <b>every request</b>.
  * 
  * @author <a href="plightbo@hotmail.com">Patrick Lightbody</a>
  * @author Rafael Steil (little hacks for JForum)
- * @version $Id: ClickstreamFilter.java,v 1.2 2005/07/15 03:30:00 rafaelsteil
- *          Exp $
+ * @version $Id: ClickstreamFilter.java,v 1.4 2005/07/26 03:05:03 rafaelsteil Exp $
  */
-public class ClickstreamFilter implements Filter {
+public class ClickstreamFilter implements Filter
+{
 	private static final Logger log = Logger.getLogger(ClickstreamFilter.class);
 
 	/**
@@ -34,32 +33,28 @@ public class ClickstreamFilter implements Filter {
 	/**
 	 * Processes the given request and/or response.
 	 * 
-	 * @param request
-	 *            The request
-	 * @param response
-	 *            The response
-	 * @param chain
-	 *            The processing chain
-	 * @throws IOException
-	 *             If an error occurs
-	 * @throws ServletException
-	 *             If an error occurs
+	 * @param request The request
+	 * @param response The response
+	 * @param chain The processing chain
+	 * @throws IOException If an error occurs
+	 * @throws ServletException If an error occurs
 	 */
-	public void doFilter(ServletRequest request, ServletResponse response,
-			FilterChain chain) throws IOException, ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+			ServletException
+	{
 		// Ensure that filter is only applied once per request.
 		if (request.getAttribute(FILTER_APPLIED) == null) {
 			request.setAttribute(FILTER_APPLIED, Boolean.TRUE);
-
-			String bot = BotChecker.isBot((HttpServletRequest) request);
-
+			
+			String bot = BotChecker.isBot((HttpServletRequest)request);
+			
 			if (bot != null && log.isInfoEnabled()) {
 				log.info("Found a bot: " + bot);
 			}
-
+			
 			request.setAttribute(ConfigKeys.IS_BOT, new Boolean(bot != null));
 		}
-
+		
 		// Pass the request on
 		chain.doFilter(request, response);
 	}
@@ -67,17 +62,13 @@ public class ClickstreamFilter implements Filter {
 	/**
 	 * Initializes this filter.
 	 * 
-	 * @param filterConfig
-	 *            The filter configuration
-	 * @throws ServletException
-	 *             If an error occurs
+	 * @param filterConfig The filter configuration
+	 * @throws ServletException If an error occurs
 	 */
-	public void init(FilterConfig filterConfig) throws ServletException {
-	}
+	public void init(FilterConfig filterConfig) throws ServletException {}
 
 	/**
 	 * Destroys this filter.
 	 */
-	public void destroy() {
-	}
+	public void destroy() {}
 }

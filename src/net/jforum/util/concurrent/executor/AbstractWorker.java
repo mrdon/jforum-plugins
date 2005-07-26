@@ -41,55 +41,59 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: AbstractWorker.java,v 1.6 2005/07/26 02:46:04 diegopires Exp $
+ * $Id: AbstractWorker.java,v 1.7 2005/07/26 03:05:59 rafaelsteil Exp $
  */
-package net.jforum.util.concurrent.executor;
-
-import net.jforum.util.concurrent.Task;
+ package net.jforum.util.concurrent.executor;
 
 import org.apache.log4j.Logger;
+
+import net.jforum.util.concurrent.Task;
 
 /**
  * @author Rodrigo Kumpera
  */
-public abstract class AbstractWorker implements Runnable {
+public abstract class AbstractWorker implements Runnable 
+{
 	private static final Logger logger = Logger.getLogger(AbstractWorker.class);
-
 	protected abstract Object take() throws InterruptedException;
-
-	protected void cleanup() {
-	}
-
-	public void run() {
+	
+	protected void cleanup() { }
+	
+	public void run() 
+	{
 		try {
-			while (true) {
+			while(true) {
 				Object task = take();
-
-				if (task == null) {
+				
+				if(task == null) {
 					break;
 				}
-
-				if (task instanceof Task) {
+				
+				if(task instanceof Task) {
 					try {
-						((Task) task).execute();
-					} catch (Exception e) {
+						((Task)task).execute();
+					} catch(Exception e ) {
 						logger.warn("Exception while executing a task: " + e);
 					}
-				} else {
-					SimpleResult sr = (SimpleResult) task;
-
+				} 
+				else {
+					SimpleResult sr = (SimpleResult)task;
+					
 					try {
 						Object result = sr.getTask().execute();
 						sr.setResult(result);
-					} catch (Exception e) {
+					} 
+					catch(Exception e ) {
 						sr.setException(e);
 					}
 				}
 			}
-		} catch (InterruptedException e) {
+		} 
+		catch (InterruptedException e) {
 			// I don't care
-		} finally {
-			cleanup();
+		} 
+		finally {
+			cleanup();	
 		}
 	}
 }

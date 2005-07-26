@@ -50,30 +50,27 @@ import net.jforum.entities.UserSession;
 /**
  * @author Rafael Steil
  * @author Daniel Campagnoli
- * @version $Id: SSO.java,v 1.4 2005/07/26 02:46:15 diegopires Exp $
+ * @version $Id: SSO.java,v 1.5 2005/07/26 03:05:32 rafaelsteil Exp $
  */
-public interface SSO {
+public interface SSO
+{
 	/**
-	 * Authenticates an user. This method should check if the incoming user is
-	 * authorized to access the forum.
-	 * 
-	 * @param request
-	 *            The request object
-	 * @return The username, if authentication succeded, or <code>nulll</code>
-	 *         otherwise.
+	 * Authenticates an user. 
+	 * This method should check if the incoming user is authorized
+	 * to access the forum. 
+	 * @param request The request object
+	 * @return The username, if authentication succeded, or <code>nulll</code> 
+	 * otherwise. 
 	 */
 	public String authenticateUser(ActionServletRequest request);
-
-	/**
-	 * Check to see if the user for the current {@link UserSession} is the same
-	 * user by single sign on mechanisim.
-	 * 
-	 * @param userSession
-	 *            the current user session
-	 * @param request
-	 *            the current request
-	 * @return if the UserSession is valid
-	 */
-	public boolean isSessionValid(UserSession userSession,
-			HttpServletRequest request);
+   
+   
+    /**
+     * Check to see if the user for the current {@link UserSession} is the same user by
+     * single sign on mechanisim.
+     * @param userSession the current user session
+     * @param request the current request
+     * @return if the UserSession is valid
+     */
+    public boolean isSessionValid(UserSession userSession, HttpServletRequest request);
 }

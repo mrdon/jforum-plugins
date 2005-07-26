@@ -71,37 +71,38 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.20 2005/07/26 02:45:45 diegopires Exp $
+ * @version $Id: PostCommon.java,v 1.21 2005/07/26 03:05:56 rafaelsteil Exp $
  */
-public class PostCommon {
+public class PostCommon
+{
 	private static PostCommon instance = new PostCommon();
-
+	
 	/**
-	 * Gets the instance. This method only exists to situations where an
-	 * instance is needed in the template context, so we don't need to create a
-	 * new instance every time.
-	 * 
+	 * Gets the instance.
+	 * This method only exists to situations where an instance is 
+	 * needed in the template context, so we don't  need to 
+	 * create a new instance every time.
 	 * @return
 	 */
-	public static PostCommon getInstance() {
+	public static PostCommon getInstance()
+	{
 		return instance;
 	}
-
-	public static Post preparePostForDisplay(Post p) {
+	
+	public static Post preparePostForDisplay(Post p)
+	{
 		if (p.getText() == null) {
 			return p;
 		}
-
+		
 		if (!p.isHtmlEnabled()) {
-			p.setText(p.getText().replaceAll("<", "&lt;").replaceAll(">",
-					"&gt;"));
+			p.setText(p.getText().replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
 		}
-
+		
 		// DO NOT remove the trailing blank space
 		p.setText(p.getText().replaceAll("\n", "<br> "));
-
-		p.setText(alwaysProcess(p.getText(), BBCodeRepository.getBBCollection()
-				.getAlwaysProcessList()));
+		
+		p.setText(alwaysProcess(p.getText(), BBCodeRepository.getBBCollection().getAlwaysProcessList()));
 
 		// Then, search for bb codes
 		if (p.isBbCodeEnabled()) {
@@ -110,60 +111,56 @@ public class PostCommon {
 
 		// Smilies...
 		if (p.isSmiliesEnabled()) {
-			p.setText(processSmilies(p.getText(), SmiliesRepository
-					.getSmilies()));
+			p.setText(processSmilies(p.getText(), SmiliesRepository.getSmilies()));
 		}
 
 		return p;
 	}
-
-	private static String alwaysProcess(String text, Collection bbList) {
-		for (Iterator iter = bbList.iterator(); iter.hasNext();) {
-			BBCode bb = (BBCode) iter.next();
+	
+	private static String alwaysProcess(String text, Collection bbList)
+	{
+		for (Iterator iter = bbList.iterator(); iter.hasNext(); ) {
+			BBCode bb = (BBCode)iter.next();
 			text = text.replaceAll(bb.getRegex(), bb.getReplace());
 		}
-
+		
 		return text;
 	}
 
-	public static String processText(String text) {
+	public static String processText(String text)
+	{
 		if (text == null) {
 			return null;
 		}
 
 		if (text.indexOf('[') > -1 && text.indexOf(']') > -1) {
 			int openQuotes = 0;
-			Iterator tmpIter = BBCodeRepository.getBBCollection().getBbList()
-					.iterator();
+			Iterator tmpIter = BBCodeRepository.getBBCollection().getBbList().iterator();
 
 			while (tmpIter.hasNext()) {
 				BBCode bb = (BBCode) tmpIter.next();
 
 				// Another hack for the quotes
-				if (bb.getTagName().equals("openQuote")
-						|| bb.getTagName().equals("openSimpleQuote")) {
-					Matcher matcher = Pattern.compile(bb.getRegex()).matcher(
-							text);
+				if (bb.getTagName().equals("openQuote") || bb.getTagName().equals("openSimpleQuote")) {
+					Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
 
 					while (matcher.find()) {
 						openQuotes++;
 
-						text = text
-								.replaceFirst(bb.getRegex(), bb.getReplace());
+						text = text.replaceFirst(bb.getRegex(), bb.getReplace());
 					}
-				} else if (bb.getTagName().equals("closeQuote")) {
+				}
+				else if (bb.getTagName().equals("closeQuote")) {
 					if (openQuotes > 0) {
-						Matcher matcher = Pattern.compile(bb.getRegex())
-								.matcher(text);
+						Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
 
 						while (matcher.find() && openQuotes-- > 0) {
-							text = text.replaceFirst(bb.getRegex(), bb
-									.getReplace());
+							text = text.replaceFirst(bb.getRegex(), bb.getReplace());
 						}
 					}
-				} else if (bb.getTagName().equals("code")) {
-					Matcher matcher = Pattern.compile(bb.getRegex()).matcher(
-							text);
+				}
+				else if (bb.getTagName().equals("code")) {
+					Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
 					StringBuffer sb = new StringBuffer(text);
 
 					while (matcher.find()) {
@@ -174,16 +171,13 @@ public class PostCommon {
 						contents = contents.replaceAll("<br>", "\n");
 
 						// Do not allow other bb tags inside "code"
-						contents = contents.replaceAll("\\[", "&#91;")
-								.replaceAll("\\]", "&#93;");
+						contents = contents.replaceAll("\\[", "&#91;").replaceAll("\\]", "&#93;");
 
 						// Try to bypass smilies interpretation
-						contents = contents.replaceAll("\\(", "&#40;")
-								.replaceAll("\\)", "&#41;");
+						contents = contents.replaceAll("\\(", "&#40;").replaceAll("\\)", "&#41;");
 
 						// XML-like tags
-						contents = contents.replaceAll("<", "&lt;").replaceAll(
-								">", "&gt;");
+						contents = contents.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 
 						StringBuffer replace = new StringBuffer(bb.getReplace());
 						int index = replace.indexOf("$1");
@@ -192,15 +186,15 @@ public class PostCommon {
 						}
 
 						index = sb.indexOf("[code]");
-						int lastIndex = sb.indexOf("[/code]")
-								+ "[/code]".length();
+						int lastIndex = sb.indexOf("[/code]") + "[/code]".length();
 
 						if (lastIndex > index) {
 							sb.replace(index, lastIndex, replace.toString());
 							text = sb.toString();
 						}
 					}
-				} else {
+				}
+				else {
 					text = text.replaceAll(bb.getRegex(), bb.getReplace());
 				}
 			}
@@ -217,7 +211,8 @@ public class PostCommon {
 		return text;
 	}
 
-	public static String processSmilies(String text, List smilies) {
+	public static String processSmilies(String text, List smilies)
+	{
 		if (text == null || text.equals("")) {
 			return text;
 		}
@@ -235,104 +230,95 @@ public class PostCommon {
 		return text;
 	}
 
-	public static Post fillPostFromRequest() throws Exception {
+	public static Post fillPostFromRequest() throws Exception
+	{
 		Post p = new Post();
 		p.setTime(new Date());
 
 		return fillPostFromRequest(p, false);
 	}
 
-	public static Post fillPostFromRequest(Post p, boolean isEdit)
-			throws Exception {
+	public static Post fillPostFromRequest(Post p, boolean isEdit) throws Exception
+	{
 		p.setSubject(JForum.getRequest().getParameter("subject"));
-		p
-				.setBbCodeEnabled(JForum.getRequest().getParameter(
-						"disable_bbcode") != null ? false : true);
-		p
-				.setSmiliesEnabled(JForum.getRequest().getParameter(
-						"disable_smilies") != null ? false : true);
-		p
-				.setSignatureEnabled(JForum.getRequest().getParameter(
-						"attach_sig") != null ? true : false);
+		p.setBbCodeEnabled(JForum.getRequest().getParameter("disable_bbcode") != null ? false : true);
+		p.setSmiliesEnabled(JForum.getRequest().getParameter("disable_smilies") != null ? false : true);
+		p.setSignatureEnabled(JForum.getRequest().getParameter("attach_sig") != null ? true : false);
 
 		if (!isEdit) {
 			p.setUserIp(JForum.getRequest().getRemoteAddr());
 			p.setUserId(SessionFacade.getUserSession().getUserId());
 		}
-
-		boolean htmlEnabled = SecurityRepository.canAccess(
-				SecurityConstants.PERM_HTML_DISABLED, JForum.getRequest()
-						.getParameter("forum_id"));
-		p.setHtmlEnabled(htmlEnabled
-				&& JForum.getRequest().getParameter("disable_html") == null);
+		
+		boolean htmlEnabled = SecurityRepository.canAccess(SecurityConstants.PERM_HTML_DISABLED, JForum.getRequest()
+				.getParameter("forum_id"));
+		p.setHtmlEnabled(htmlEnabled && JForum.getRequest().getParameter("disable_html") == null);
 
 		if (p.isHtmlEnabled()) {
-			p.setText(SafeHtml.makeSafe(JForum.getRequest().getParameter(
-					"message")));
-		} else {
+			p.setText(SafeHtml.makeSafe(JForum.getRequest().getParameter("message")));
+		}
+		else {
 			p.setText(JForum.getRequest().getParameter("message"));
 		}
 
 		return p;
 	}
 
-	public static void addToTopicPosters(int userId, Map usersMap, UserDAO um)
-			throws Exception {
+	public static void addToTopicPosters(int userId, Map usersMap, UserDAO um) throws Exception
+	{
 		Integer posterId = new Integer(userId);
 		if (!usersMap.containsKey(posterId)) {
 			usersMap.put(posterId, PostCommon.getUserForDisplay(userId));
 		}
 	}
 
-	public static User getUserForDisplay(int userId) throws Exception {
+	public static User getUserForDisplay(int userId) throws Exception
+	{
 		User u = DataAccessDriver.getInstance().newUserDAO().selectById(userId);
-
+		
 		if (u.getSignature() != null) {
 			u.setSignature(u.getSignature().replaceAll("\n", "<br>"));
 			u.setSignature(PostCommon.processText(u.getSignature()));
-			u.setSignature(PostCommon.processSmilies(u.getSignature(),
-					SmiliesRepository.getSmilies()));
+			u.setSignature(PostCommon.processSmilies(u.getSignature(), SmiliesRepository.getSmilies()));
 		}
-
+		
 		return u;
 	}
 
-	public static List topicPosts(PostDAO pm, UserDAO um, Map usersMap,
-			boolean canEdit, int userId, int topicId, int start, int count)
-			throws Exception {
+	public static List topicPosts(PostDAO pm, UserDAO um, Map usersMap, boolean canEdit, int userId, int topicId,
+			int start, int count) throws Exception
+	{
 		List posts = null;
 		boolean needPrepare = true;
-
-		if (SystemGlobals.getBoolValue(ConfigKeys.POSTS_CACHE_ENABLED)) {
-			posts = PostRepository.selectAllByTopicByLimit(topicId, start,
-					count);
-			needPrepare = false;
-		} else {
-			posts = pm.selectAllByTopicByLimit(topicId, start, count);
-		}
-
+		
+ 		if (SystemGlobals.getBoolValue(ConfigKeys.POSTS_CACHE_ENABLED)) {
+ 			posts = PostRepository.selectAllByTopicByLimit(topicId, start, count);
+ 			needPrepare = false;
+ 		}
+ 		else {
+ 			posts = pm.selectAllByTopicByLimit(topicId, start, count);
+ 		}
+ 		
 		List helperList = new ArrayList();
 
-		int anonymousUser = SystemGlobals
-				.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
+		int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 
-		for (Iterator iter = posts.iterator(); iter.hasNext();) {
+		for (Iterator iter = posts.iterator(); iter.hasNext(); ) {
 			Post p;
-
+			
 			if (needPrepare) {
-				p = (Post) iter.next();
-			} else {
-				p = new Post((Post) iter.next());
+				p = (Post)iter.next();
 			}
-
-			if (canEdit
-					|| (p.getUserId() != anonymousUser && p.getUserId() == userId)) {
+			else {
+				p = new Post((Post)iter.next());
+			}
+			
+			if (canEdit || (p.getUserId() != anonymousUser && p.getUserId() == userId)) {
 				p.setCanEdit(true);
 			}
 
 			PostCommon.addToTopicPosters(p.getUserId(), usersMap, um);
-			helperList.add(needPrepare ? PostCommon.preparePostForDisplay(p)
-					: p);
+			helperList.add(needPrepare ? PostCommon.preparePostForDisplay(p) : p);
 		}
 
 		return helperList;

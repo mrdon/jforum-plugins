@@ -49,14 +49,13 @@ import net.jforum.entities.Category;
 
 /**
  * @author Rafael Steil
- * @version $Id: CategoryModelDummy.java,v 1.4 2005/03/26 04:11:21 rafaelsteil
- *          Exp $
+ * @version $Id: CategoryModelDummy.java,v 1.6 2005/07/26 03:05:53 rafaelsteil Exp $
  */
-class CategoryModelDummy implements CategoryDAO {
-	public CategoryModelDummy() {
-	}
+class CategoryModelDummy implements CategoryDAO 
+{
+	public CategoryModelDummy() {}
 
-	/**
+	/** 
 	 * @see net.jforum.dao.CategoryDAO#selectById(int)
 	 */
 	public Category selectById(int categoryId) throws Exception {
@@ -64,7 +63,7 @@ class CategoryModelDummy implements CategoryDAO {
 		return null;
 	}
 
-	/**
+	/** 
 	 * @see net.jforum.dao.CategoryDAO#selectAll()
 	 */
 	public List selectAll() throws Exception {
@@ -72,7 +71,7 @@ class CategoryModelDummy implements CategoryDAO {
 		return null;
 	}
 
-	/**
+	/** 
 	 * @see net.jforum.dao.CategoryDAO#canDelete(int)
 	 */
 	public boolean canDelete(int categoryId) throws Exception {
@@ -80,7 +79,7 @@ class CategoryModelDummy implements CategoryDAO {
 		return false;
 	}
 
-	/**
+	/** 
 	 * @see net.jforum.dao.CategoryDAO#delete(int)
 	 */
 	public void delete(int categoryId) throws Exception {
@@ -88,7 +87,7 @@ class CategoryModelDummy implements CategoryDAO {
 
 	}
 
-	/**
+	/** 
 	 * @see net.jforum.dao.CategoryDAO#update(net.jforum.entities.Category)
 	 */
 	public void update(Category category) throws Exception {
@@ -96,26 +95,26 @@ class CategoryModelDummy implements CategoryDAO {
 
 	}
 
-	/**
+	/** 
 	 * @see net.jforum.dao.CategoryDAO#addNew(net.jforum.entities.Category)
 	 */
 	public int addNew(Category category) throws Exception {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
-	/**
+	
+	/** 
 	 * @see net.jforum.dao.CategoryDAO#setOrderDown(net.jforum.entities.Category)
 	 */
 	public void setOrderDown(Category c, Category c2) throws Exception {
 		// TODO Auto-generated method stub
 	}
-
-	/**
+	
+	/** 
 	 * @see net.jforum.dao.CategoryDAO#setOrderUp(net.jforum.entities.Category)
 	 */
 	public void setOrderUp(Category c, Category c2) throws Exception {
 		// TODO Auto-generated method stub
 	}
-
+	
 }

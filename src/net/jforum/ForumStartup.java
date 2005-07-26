@@ -52,53 +52,54 @@ import net.jforum.exceptions.DatabaseException;
 import net.jforum.exceptions.RepositoryStartupException;
 import net.jforum.repository.ForumRepository;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author Rafael Steil
- * @version $Id: ForumStartup.java,v 1.7 2005/07/26 02:45:32 diegopires Exp $
+ * @version $Id: ForumStartup.java,v 1.8 2005/07/26 03:04:40 rafaelsteil Exp $
  */
-public class ForumStartup {
+public class ForumStartup 
+{
+	private static final Logger logger = Logger.getLogger(ForumStartup.class);
+	
 	/**
 	 * Starts the database implementation
-	 * 
 	 * @return <code>true</code> if everthing were ok
-	 * @throws DatabaseException
-	 *             if something were wrong
+	 * @throws DatabaseException if something were wrong
 	 */
-	public static boolean startDatabase() {
+	public static boolean startDatabase()
+	{
 		try {
 			if (DBConnection.createInstance()) {
 				DBConnection.getImplementation().init();
-
+				
 				// Check if we're in fact up and running
-				Connection conn = DBConnection.getImplementation()
-						.getConnection();
+				Connection conn = DBConnection.getImplementation().getConnection();
 				DBConnection.getImplementation().releaseConnection(conn);
 			}
-		} catch (Exception e) {
-			throw new DatabaseException(
-					"Error while trying to start the database: " + e);
 		}
-
+		catch (Exception e) {
+			throw new DatabaseException("Error while trying to start the database: " + e);
+		}
+		
 		return true;
 	}
-
+	
 	/**
 	 * Starts the cache control for forums and categories.
-	 * 
-	 * @throws RepositoryStartupException
-	 *             is something were wrong.
+	 * @throws RepositoryStartupException is something were wrong.
 	 */
-	public static void startForumRepository() {
+	public static void startForumRepository()
+	{
 		try {
 			ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
 			CategoryDAO cm = DataAccessDriver.getInstance().newCategoryDAO();
-			ConfigDAO configModel = DataAccessDriver.getInstance()
-					.newConfigDAO();
+			ConfigDAO configModel = DataAccessDriver.getInstance().newConfigDAO();
 
 			ForumRepository.start(fm, cm, configModel);
-		} catch (Exception e) {
-			throw new RepositoryStartupException(
-					"Error while trying to start ForumRepository: " + e);
+		}
+		catch (Exception e) {
+			throw new RepositoryStartupException("Error while trying to start ForumRepository: " + e);
 		}
 	}
 }

@@ -48,147 +48,131 @@ import java.util.List;
 import net.jforum.entities.Topic;
 
 /**
- * Model interface for {@link net.jforum.Topic}. This interface defines methods
- * which are expected to be implementd by a specific data access driver. The
- * intention is to provide all functionality needed to update, insert, delete
- * and select some specific data.
- * 
+* Model interface for {@link net.jforum.Topic}.
+ * This interface defines methods which are expected to be
+ * implementd by a specific data access driver. The intention is
+ * to provide all functionality needed to update, insert, delete and
+ * select some specific data.
+ *
  * @author Rafael Steil
- * @version $Id: TopicDAO.java,v 1.4 2005/07/26 02:45:27 diegopires Exp $
+ * @version $Id: TopicDAO.java,v 1.5 2005/07/26 03:04:30 rafaelsteil Exp $
  */
-public interface TopicDAO {
+public interface TopicDAO 
+{
 	/**
-	 * Fixes the fields <i>topic_first_post_id</i> and <i>topic_last_post_id</i>.
+	 * Fixes the fields <i>topic_first_post_id</i> and 
+	 * <i>topic_last_post_id</i>.
 	 * 
-	 * @param topicId
-	 *            The topic id to fix
+	 * @param topicId The topic id to fix
 	 * @throws Exception
 	 */
 	public void fixFirstLastPostId(int topicId) throws Exception;
-
+	
 	/**
 	 * Gets a specific <code>Topic</code>.
 	 * 
-	 * @param topicId
-	 *            The Topic ID to search
+	 * @param topicId The Topic ID to search
 	 * @return <code>Topic</code>object containing all the information
 	 * @throws Exception
 	 * @see #selectAll
 	 */
 	public Topic selectById(int topicId) throws Exception;
-
+	
 	/**
-	 * Gets a topic's information from the topics table only. No other
-	 * information, like usernames, are fetched.
+	 * Gets a topic's information from the topics table only.
+	 * No other information, like usernames, are fetched. 
 	 * 
-	 * @param topicId
-	 *            The topic id to get
+	 * @param topicId The topic id to get
 	 * @return A topic instance
 	 * @throws Exception
 	 */
 	public Topic selectRaw(int topicId) throws Exception;
-
+	
 	/**
 	 * Selects all topics associated to a specific forum
 	 * 
-	 * @param forumId
-	 *            The forum id to select the topics
-	 * @return <code>ArrayList</code> with all topics found. Each entry is a
-	 *         <code>net.jforum.Topic</code> object
+	 * @param forumId The forum id to select the topics
+	 * @return <code>ArrayList</code> with all topics found. Each entry is a <code>net.jforum.Topic</code> object
 	 * @throws Exception
 	 */
 	public List selectAllByForum(int forumId) throws Exception;
-
+	
 	public List selectTopicTitlesByIds(Collection idList) throws Exception;
-
+	
 	/**
-	 * Selects all topics associated to a specific forum, limiting the total
-	 * number of records returned.
+	 * Selects all topics associated to a specific forum, limiting the total number
+	 * of records returned.
 	 * 
-	 * @param forumId
-	 *            The forum id to select the topics
-	 * @return <code>ArrayList</code> with all topics found. Each entry is a
-	 *         <code>net.jforum.Topic</code> object
+	 * @param forumId The forum id to select the topics
+	 * @return <code>ArrayList</code> with all topics found. Each entry is a <code>net.jforum.Topic</code> object
 	 * @throws Exception
 	 */
-	public List selectAllByForumByLimit(int forumId, int startFrom, int count)
-			throws Exception;
-
+	public List selectAllByForumByLimit(int forumId, int startFrom, int count) throws Exception;
+	
 	/**
-	 * Selects the last <code>count</code> topics postted.
+	 * Selects the last <code>count</code> topics postted. 
 	 * 
-	 * @param count
-	 *            The desired total to retrieve
-	 * @return <code>ArrayList</code> with all topics found. Each entry is a
-	 *         <code>net.jforum.Topic</code> object
+	 * @param count The desired total to retrieve
+	 * @return <code>ArrayList</code> with all topics found. Each entry is a <code>net.jforum.Topic</code> object
 	 * @throws Exception
 	 */
 	public List selectLastN(int count) throws Exception;
-
+	
 	/**
 	 * Delete a Topic.
 	 * 
-	 * @param topicId
-	 *            The Topic ID to delete
+	 * @param topicId The Topic ID to delete
 	 * @return The total of related posts removed
 	 * @throws Exception
 	 * @see #canDelete(int)
 	 */
 	public void delete(Topic topic) throws Exception;
-
+	
 	/**
 	 * Deletes a set of topics
-	 * 
-	 * @param topics
-	 *            The topics to delete. Each entry must be an instance of
-	 *            net.jforum.entities.Topic
+	 * @param topics The topics to delete. Each entry must be
+	 * an instance of net.jforum.entities.Topic
 	 * @throws Exception
 	 */
 	public void deleteTopics(List topics) throws Exception;
-
+	
 	/**
 	 * Deletes all topics from a forum
-	 * 
 	 * @param forumId
 	 * @throws Exception
 	 */
 	public void deleteByForum(int forumId) throws Exception;
-
+	
 	/**
 	 * Updates a Topic.
 	 * 
-	 * @param topic
-	 *            Reference to a <code>Topic</code> object to update
+	 * @param topic Reference to a <code>Topic</code> object to update
 	 * @throws Exception
 	 * @see #update(int)
 	 */
 	public void update(Topic topic) throws Exception;
-
+	
 	/**
 	 * Adds a new Topic.
 	 * 
-	 * @param topic
-	 *            Reference to a valid and configured <code>Topic</code>
-	 *            object
+	 * @param topic Reference to a valid and configured <code>Topic</code> object
 	 * @return The new ID
 	 * @throws Exception
 	 */
 	public int addNew(Topic topic) throws Exception;
-
+	
 	/**
 	 * Increments the number of times the topic was saw
 	 * 
-	 * @param topicId
-	 *            The topic ID to increment the total number of views
+	 * @param topicId The topic ID to increment the total number of views
 	 * @throws Exception
 	 */
 	public void incrementTotalViews(int topicId) throws Exception;
-
+	
 	/**
 	 * Increments the number of replies the topic has
 	 * 
-	 * @param topicId
-	 *            The topic ID to increment the total number of replies
+	 * @param topicId The topic ID to increment the total number of replies
 	 * @throws Exception
 	 */
 	public void incrementTotalReplies(int topicId) throws Exception;
@@ -196,138 +180,116 @@ public interface TopicDAO {
 	/**
 	 * Decrements the number of replies the topic has
 	 * 
-	 * @param topicId
-	 *            The topic ID to decrement the total number of replies
+	 * @param topicId The topic ID to decrement the total number of replies
 	 * @throws Exception
 	 */
 	public void decrementTotalReplies(int topicId) throws Exception;
-
+	
 	/**
 	 * Sets the ID of the last post of the topic
 	 * 
-	 * @param topicId
-	 *            Topic ID
-	 * @param postId
-	 *            Post ID
+	 * @param topicId Topic ID
+	 * @param postId Post ID
 	 * @throws Exception
 	 */
 	public void setLastPostId(int topicId, int postId) throws Exception;
-
+	
 	/**
 	 * Gets the last post id associated to the topic
 	 * 
-	 * @param topicId
-	 *            The topic id
+	 * @param topicId The topic id
 	 * @throws Exception
 	 */
 	public int getMaxPostId(int topicId) throws Exception;
-
+	
 	/**
 	 * Gets the number of posts the topic has.
 	 * 
-	 * @param topicId
-	 *            The topic id
+	 * @param topicId The topic id
 	 * @return The number of posts
 	 * @throws Exception
 	 */
 	public int getTotalPosts(int topicId) throws Exception;
-
+	
 	/**
 	 * Get the users to notify
 	 * 
-	 * @param topic
-	 *            The topic
+	 * @param topic The topic 
 	 * @return <code>ArrayList</code> of <code>User</code> objects. Each
-	 *         entry is an user who will receive the topic anwser notification
+	 * entry is an user who will receive the topic anwser notification
 	 * @throws Exception
-	 */
+	 * */
 	public List notifyUsers(Topic topic) throws Exception;
-
+	
 	/**
 	 * Subscribe the user for notification of new post on the topic
-	 * 
-	 * @param topicId
-	 *            The topic id
-	 * @param userId
-	 *            The user id
+	 *  
+	 * @param topicId The topic id
+	 * @param userId The user id
 	 * @throws Exception
-	 */
+	 */	
 	public void subscribeUser(int topicId, int userId) throws Exception;
-
+	
 	/**
 	 * Return the subscrition status of the user on the topic.
 	 * 
-	 * @param topicId
-	 *            The topic id
-	 * @param userId
-	 *            The user id
+	 * @param topicId The topic id
+	 * @param userId The user id
 	 * @return true if the user is waiting notification on the topic
 	 * @throws Exception
-	 */
+	 */	
 	public boolean isUserSubscribed(int topicId, int userId) throws Exception;
-
+	
 	/**
 	 * Remove the user's subscription of the topic
 	 * 
-	 * @param topicId
-	 *            The topic id
-	 * @param userId
-	 *            the User id
+	 * @param topicId The topic id
+	 * @param userId the User id
 	 * @throws Exception
 	 */
 	public void removeSubscription(int topicId, int userId) throws Exception;
-
+	
 	/**
 	 * Clean all subscriptions of some topic
 	 * 
-	 * @param topicId
-	 *            The topic id
+	 * @param topicId The topic id
 	 * @throws Exception
 	 */
 	public void removeSubscriptionByTopic(int topicId) throws Exception;
-
+	
 	/**
-	 * Change the topic read status
+	 * Change the topic read status 
 	 * 
-	 * @param topicId
-	 *            The topic id
-	 * @param userId
-	 *            The user id
-	 * @param read
-	 *            <code>true</code> or <code>false</code>
+	 * @param topicId The topic id
+	 * @param userId The user id
+	 * @param read <code>true</code> or <code>false</code>
 	 * @throws Exception
 	 */
-	public void updateReadStatus(int topicId, int userId, boolean read)
-			throws Exception;
-
+	public void updateReadStatus(int topicId, int userId, boolean read) throws Exception;
+	
 	/**
-	 * Lock or unlock a topic.
+	 * Lock or unlock a topic. 
 	 * 
-	 * @param topicId
-	 *            The topic id to perform the action on
-	 * @param status
-	 *            Use <code>Topic.STATUS_LOCKED</code> to lock the topic, or
-	 *            <code>Topic.STATUS_UNLOCKED</code> to unlock.
+	 * @param topicId The topic id to perform the action on
+	 * @param status Use <code>Topic.STATUS_LOCKED</code> to lock the topic, or
+	 * <code>Topic.STATUS_UNLOCKED</code> to unlock. 
 	 * @throws Exception
 	 */
 	public void lockUnlock(int[] topicId, int status) throws Exception;
 
 	/**
-	 * Selects recent topics
-	 * 
-	 * @param limit
-	 *            The number of topics to retrieve
+	 * Selects recent topics 
+	 *
+	 * @param limit The number of topics to retrieve
 	 * @throws Exception
-	 */
-	public List selectRecentTopics(int limit) throws Exception;
-
+	 */	
+	public List selectRecentTopics (int limit) throws Exception;
+	
 	/**
 	 * Sets the ID of the first post of the topic
 	 * 
-	 * @param topicId
-	 *            Topic ID
-	 * @param postId
-	 *            Post ID
+	 * @param topicId Topic ID
+	 * @param postId Post ID
 	 * @throws Exception
 	 */
 	public void setFirstPostId(int topicId, int postId) throws Exception;
@@ -335,31 +297,26 @@ public interface TopicDAO {
 	/**
 	 * Gets the first post id associated to the topic
 	 * 
-	 * @param topicId
-	 *            The topic id
+	 * @param topicId The topic id
 	 * @throws Exception
 	 */
 	public int getMinPostId(int topicId) throws Exception;
-
+	
 	/**
 	 * Sets the moderatation flag for all topics of a given forum.
 	 * 
-	 * @param forumId
-	 *            The forum id
+	 * @param forumId The forum id
 	 * @param status
 	 * @throws Exception
 	 */
-	public void setModerationStatus(int forumId, boolean status)
-			throws Exception;
+	public void setModerationStatus(int forumId, boolean status) throws Exception;
 
 	/**
 	 * Sets the moderatation flag for a given topic.
 	 * 
-	 * @param forumId
-	 *            The topic id
+	 * @param forumId The topic id
 	 * @param status
 	 * @throws Exception
 	 */
-	public void setModerationStatusByTopic(int topicId, boolean status)
-			throws Exception;
+	public void setModerationStatusByTopic(int topicId, boolean status) throws Exception;
 }

@@ -44,10 +44,12 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchException.java,v 1.3 2005/07/26 02:45:21 diegopires Exp $
+ * @version $Id: SearchException.java,v 1.4 2005/07/26 03:04:33 rafaelsteil Exp $
  */
-public class SearchException extends RuntimeException {
-	public SearchException(String message, Throwable t) {
+public class SearchException extends RuntimeException
+{
+	public SearchException(String message, Throwable t)
+	{
 		super(message, t);
 	}
 }

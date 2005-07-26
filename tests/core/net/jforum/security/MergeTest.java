@@ -49,39 +49,44 @@ import junit.framework.TestCase;
 
 /**
  * @author Rafael Steil
- * @version $Id: MergeTest.java,v 1.2 2005/07/26 02:46:09 diegopires Exp $
+ * @version $Id: MergeTest.java,v 1.3 2005/07/26 03:05:21 rafaelsteil Exp $
  */
-public class MergeTest extends TestCase {
+public class MergeTest extends TestCase 
+{
 	private RoleCollection userRoles;
-
+	private List groupRolesList;
+	
 	/**
 	 * @see TestCase#setUp()
 	 */
-	protected void setUp() throws Exception {
+	protected void setUp() throws Exception 
+	{
 		this.userRoles = new RoleCollection();
 	}
-
-	public void testForumMergeWithGroup1() {
+	
+	public void testForumMergeWithGroup1()
+	{
 		List groupRoles = new ArrayList();
 		groupRoles.add(this.createGroup1ForumRoles());
-
+		
 		UserSecurityHelper.mergeUserGroupRoles(this.userRoles, groupRoles);
 		PermissionControl pc = new PermissionControl();
 		pc.setRoles(this.userRoles);
-
+		
 		this.assertAllForumsTrue(pc);
-
+		
 		assertFalse(pc.canAccess(SecurityConstants.PERM_FORUM, "y"));
 	}
-
-	public void testForumMergeWithGroup2() {
+	
+	public void testForumMergeWithGroup2()
+	{
 		List groupRoles = new ArrayList();
 		groupRoles.add(this.createGroup2ForumRoles());
-
+		
 		UserSecurityHelper.mergeUserGroupRoles(this.userRoles, groupRoles);
 		PermissionControl pc = new PermissionControl();
 		pc.setRoles(this.userRoles);
-
+		
 		assertFalse(pc.canAccess(SecurityConstants.PERM_FORUM, "a"));
 		assertTrue(pc.canAccess(SecurityConstants.PERM_FORUM, "b"));
 		assertTrue(pc.canAccess(SecurityConstants.PERM_FORUM, "c"));
@@ -89,36 +94,40 @@ public class MergeTest extends TestCase {
 		assertFalse(pc.canAccess(SecurityConstants.PERM_FORUM, "e"));
 		assertTrue(pc.canAccess(SecurityConstants.PERM_FORUM, "f"));
 	}
-
+	
 	/*
-	 * Merge the roles of group 2 and 3 and check if it worked correctly
+	 * Merge the roles of group 2 and 3 and check if
+	 * it worked correctly
 	 */
-	public void testForumMergeMixed() {
+	public void testForumMergeMixed()
+	{
 		List groupRoles = new ArrayList();
 		groupRoles.add(this.createGroup2ForumRoles());
 		groupRoles.add(this.createGroup3ForumRoles());
-
+		
 		UserSecurityHelper.mergeUserGroupRoles(this.userRoles, groupRoles);
-
+		
 		PermissionControl pc = new PermissionControl();
 		pc.setRoles(this.userRoles);
-
+		
 		this.assertAllForumsTrue(pc);
 	}
-
-	public void testForumMergeUserGroup1() {
+	
+	public void testForumMergeUserGroup1()
+	{
 		this.userRoles = this.createUserRestrictiveForumRoles();
 		List groupRoles = new ArrayList();
 		groupRoles.add(this.createGroup1ForumRoles());
-
+		
 		UserSecurityHelper.mergeUserGroupRoles(this.userRoles, groupRoles);
 		PermissionControl pc = new PermissionControl();
 		pc.setRoles(this.userRoles);
-
+		
 		this.assertUserForums(pc);
 	}
-
-	private void assertUserForums(PermissionControl pc) {
+	
+	private void assertUserForums(PermissionControl pc)
+	{
 		assertFalse(pc.canAccess(SecurityConstants.PERM_FORUM, "a"));
 		assertTrue(pc.canAccess(SecurityConstants.PERM_FORUM, "b"));
 		assertFalse(pc.canAccess(SecurityConstants.PERM_FORUM, "c"));
@@ -126,8 +135,9 @@ public class MergeTest extends TestCase {
 		assertTrue(pc.canAccess(SecurityConstants.PERM_FORUM, "e"));
 		assertTrue(pc.canAccess(SecurityConstants.PERM_FORUM, "f"));
 	}
-
-	private void assertAllForumsTrue(PermissionControl pc) {
+	
+	private void assertAllForumsTrue(PermissionControl pc)
+	{
 		assertTrue(pc.canAccess(SecurityConstants.PERM_FORUM, "a"));
 		assertTrue(pc.canAccess(SecurityConstants.PERM_FORUM, "b"));
 		assertTrue(pc.canAccess(SecurityConstants.PERM_FORUM, "c"));
@@ -135,67 +145,76 @@ public class MergeTest extends TestCase {
 		assertTrue(pc.canAccess(SecurityConstants.PERM_FORUM, "e"));
 		assertTrue(pc.canAccess(SecurityConstants.PERM_FORUM, "f"));
 	}
-
-	private RoleCollection createUserRestrictiveForumRoles() {
+	
+	private RoleCollection createUserRestrictiveForumRoles()
+	{
 		RoleCollection rc = new RoleCollection();
-
+		
 		int deny = PermissionControl.ROLE_DENY;
-		rc.add(this.createRole(SecurityConstants.PERM_FORUM, 5, new String[] {
-				"a", "c" }, new int[] { deny, deny }));
-
+		rc.add(this.createRole(SecurityConstants.PERM_FORUM, 5, 
+				new String[] { "a", "c" },
+				new int[] { deny, deny }));
+		
 		return rc;
 	}
-
-	private RoleCollection createGroup1ForumRoles() {
+	
+	private RoleCollection createGroup1ForumRoles()
+	{
 		RoleCollection rc = new RoleCollection();
-
+		
 		int allow = PermissionControl.ROLE_ALLOW;
-		rc.add(this.createRole(SecurityConstants.PERM_FORUM, 1, new String[] {
-				"a", "b", "c", "d", "e", "f" }, new int[] { allow, allow,
-				allow, allow, allow, allow }));
-
+		rc.add(this.createRole(SecurityConstants.PERM_FORUM, 1, 
+				new String[] { "a", "b", "c", "d", "e", "f" }, 
+				new int[] { allow, allow, allow, allow, allow, allow }));
+		
 		return rc;
 	}
-
-	private RoleCollection createGroup2ForumRoles() {
+	
+	private RoleCollection createGroup2ForumRoles()
+	{
 		RoleCollection rc = new RoleCollection();
-
+		
 		int allow = PermissionControl.ROLE_ALLOW;
-		rc.add(this.createRole(SecurityConstants.PERM_FORUM, 2, new String[] {
-				"b", "c", "f" }, new int[] { allow, allow, allow }));
-
+		rc.add(this.createRole(SecurityConstants.PERM_FORUM, 2, 
+				new String[] { "b", "c", "f" }, 
+				new int[] { allow, allow, allow }));
+		
 		return rc;
 	}
-
-	private RoleCollection createGroup3ForumRoles() {
+	
+	private RoleCollection createGroup3ForumRoles()
+	{
 		RoleCollection rc = new RoleCollection();
-
+		
 		int allow = PermissionControl.ROLE_ALLOW;
-		rc.add(this.createRole(SecurityConstants.PERM_FORUM, 3, new String[] {
-				"a", "d", "e" }, new int[] { allow, allow, allow }));
-
+		rc.add(this.createRole(SecurityConstants.PERM_FORUM, 3, 
+				new String[] { "a", "d", "e" }, 
+				new int[] { allow, allow, allow }));
+		
 		return rc;
 	}
 
-	private Role createRole(String roleName, int id, String[] roleValues,
-			int[] access) {
+	private Role createRole(String roleName, int id,
+			String[] roleValues, int[] access)
+	{
 		Role role = new Role();
 		role.setName(roleName);
 		role.setId(id);
-
+		
 		if (roleValues != null) {
 			for (int i = 0; i < roleValues.length; i++) {
 				RoleValue rv = new RoleValue();
 				rv.setRoleId(id);
 				rv.setType(access[i]);
 				rv.setValue(roleValues[i]);
-
+				
 				role.getValues().add(rv);
 			}
-		} else {
+		}
+		else {
 			role.setType(access[0]);
 		}
-
+		
 		return role;
 	}
 }

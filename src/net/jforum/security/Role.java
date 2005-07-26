@@ -46,89 +46,98 @@ import java.io.Serializable;
 
 /**
  * @author Rafael Steil
- * @version $Id: Role.java,v 1.5 2005/07/26 02:45:54 diegopires Exp $
+ * @version $Id: Role.java,v 1.6 2005/07/26 03:05:05 rafaelsteil Exp $
  */
-public class Role implements Serializable {
+public class Role implements Serializable
+{
 	private int id;
-
 	private int groupId;
-
 	private int userId;
-
 	private String name;
-
 	private int type;
-
 	private RoleValueCollection roleValues = new RoleValueCollection();
-
-	public void setId(int id) {
+	
+	public void setId(int id)
+	{
 		this.id = id;
 	}
-
-	public void setGroupId(int groupId) {
+	
+	public void setGroupId(int groupId)
+	{
 		this.groupId = groupId;
 	}
-
-	public void setUserId(int userId) {
+	
+	public void setUserId(int userId)
+	{
 		this.userId = userId;
 	}
-
-	public void setName(String name) {
+	
+	public void setName(String name)
+	{
 		this.name = name;
 	}
-
-	public void setType(int type) {
+	
+	public void setType(int type)
+	{
 		this.type = type;
 	}
-
-	public int getId() {
+	
+	public int getId()
+	{
 		return this.id;
 	}
-
-	public int getGroupId() {
+	
+	public int getGroupId()
+	{
 		return this.groupId;
 	}
-
-	public int getUserId() {
+	
+	public int getUserId()
+	{
 		return this.userId;
 	}
-
-	public String getName() {
+	
+	public String getName()
+	{
 		return this.name;
 	}
-
-	public int getType() {
+	
+	public int getType()
+	{
 		return this.type;
 	}
-
-	public RoleValueCollection getValues() {
+	
+	public RoleValueCollection getValues()
+	{
 		return this.roleValues;
 	}
-
-	/**
+	
+	/** 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	public boolean equals(Object o) {
+	public boolean equals(Object o) 
+	{
 		if (!(o instanceof Role)) {
 			return false;
 		}
-
-		return (((Role) o).getId() == this.id);
+		
+		return (((Role)o).getId() == this.id);
 	}
 
-	/**
+	/** 
 	 * @see java.lang.Object#hashCode()
 	 */
-	public int hashCode() {
+	public int hashCode() 
+	{
 		return this.id;
 	}
-
-	/**
+	
+	/** 
 	 * @see java.lang.Object#toString()
 	 */
-	public String toString() {
-		return "[name=" + this.name + ", type=" + this.type + ", values=("
-				+ this.roleValues + ")]";
+	public String toString() 
+	{
+		return "[name=" + this.name + ", type=" + this.type + ", values=(" + this.roleValues + ")]";
 	}
 
 }

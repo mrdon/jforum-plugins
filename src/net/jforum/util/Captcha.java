@@ -77,17 +77,15 @@ import com.octo.captcha.image.gimpy.GimpyFactory;
 
 /**
  * @author James Yong
- * @version $Id: Captcha.java,v 1.6 2005/07/26 02:45:48 diegopires Exp $
+ * @version $Id: Captcha.java,v 1.7 2005/07/26 03:05:24 rafaelsteil Exp $
  */
-public class Captcha extends ListImageCaptchaEngine {
+public class Captcha extends ListImageCaptchaEngine
+{
 	private static final Logger logger = Logger.getLogger(Captcha.class);
-
+	
 	private static Captcha classInstance = new Captcha();
-
 	private List backgroundGeneratorList;
-
 	private List textPasterList;
-
 	private List fontGeneratorList;
 
 	private static final String charsInUse = "123456789ABCDEFGHJLKMNPRSTWXYZabcdefghijlmnopkrstuvxzyk@#%^";
@@ -97,73 +95,56 @@ public class Captcha extends ListImageCaptchaEngine {
 	 * 
 	 * @return Instance of Captcha class
 	 */
-	public static Captcha getInstance() {
+	public static Captcha getInstance()
+	{
 		return classInstance;
 	}
 
-	protected void buildInitialFactories() {
+	protected void buildInitialFactories()
+	{
 		this.backgroundGeneratorList = new ArrayList();
 		this.textPasterList = new ArrayList();
 		this.fontGeneratorList = new ArrayList();
-
+		
 		int width = SystemGlobals.getIntValue(ConfigKeys.CAPTCHA_WIDTH);
 		int height = SystemGlobals.getIntValue(ConfigKeys.CAPTCHA_HEIGHT);
 		int minWords = SystemGlobals.getIntValue(ConfigKeys.CAPTCHA_MIN_WORDS);
 		int maxWords = SystemGlobals.getIntValue(ConfigKeys.CAPTCHA_MAX_WORDS);
-		int minFontSize = SystemGlobals
-				.getIntValue(ConfigKeys.CAPTCHA_MIN_FONT_SIZE);
-		int maxFontSize = SystemGlobals
-				.getIntValue(ConfigKeys.CAPTCHA_MAX_FONT_SIZE);
+		int minFontSize = SystemGlobals.getIntValue(ConfigKeys.CAPTCHA_MIN_FONT_SIZE);
+		int maxFontSize = SystemGlobals.getIntValue(ConfigKeys.CAPTCHA_MAX_FONT_SIZE);
 
-		this.backgroundGeneratorList.add(new GradientBackgroundGenerator(
-				new Integer(width), new Integer(height), Color.BLACK,
-				Color.GRAY));
-		this.backgroundGeneratorList.add(new FunkyBackgroundGenerator(
-				new Integer(250), new Integer(50)));
+		this.backgroundGeneratorList.add(new GradientBackgroundGenerator(new Integer(width), 
+				new Integer(height), Color.BLACK, Color.GRAY));
+		this.backgroundGeneratorList.add(new FunkyBackgroundGenerator(new Integer(250), new Integer(50)));
 
-		this.textPasterList.add(new RandomTextPaster(new Integer(minWords),
-				new Integer(maxWords), Color.RED));
-		this.textPasterList.add(new RandomTextPaster(new Integer(minWords),
-				new Integer(maxWords), Color.ORANGE));
-		this.textPasterList.add(new RandomTextPaster(new Integer(minWords),
-				new Integer(maxWords), Color.BLUE));
-		this.textPasterList.add(new RandomTextPaster(new Integer(minWords),
-				new Integer(maxWords), Color.WHITE));
-		this.textPasterList.add(new RandomTextPaster(new Integer(minWords),
-				new Integer(maxWords), Color.GREEN));
-		this.textPasterList.add(new RandomTextPaster(new Integer(minWords),
-				new Integer(maxWords), Color.GRAY));
-		this.textPasterList.add(new RandomTextPaster(new Integer(minWords),
-				new Integer(maxWords), Color.YELLOW));
+		this.textPasterList.add(new RandomTextPaster(new Integer(minWords), new Integer(maxWords), Color.RED));
+		this.textPasterList.add(new RandomTextPaster(new Integer(minWords), new Integer(maxWords), Color.ORANGE));
+		this.textPasterList.add(new RandomTextPaster(new Integer(minWords), new Integer(maxWords), Color.BLUE));
+		this.textPasterList.add(new RandomTextPaster(new Integer(minWords), new Integer(maxWords), Color.WHITE));
+		this.textPasterList.add(new RandomTextPaster(new Integer(minWords), new Integer(maxWords), Color.GREEN));
+		this.textPasterList.add(new RandomTextPaster(new Integer(minWords), new Integer(maxWords), Color.GRAY));
+		this.textPasterList.add(new RandomTextPaster(new Integer(minWords), new Integer(maxWords), Color.YELLOW));
 
-		this.fontGeneratorList.add(new TwistedAndShearedRandomFontGenerator(
-				new Integer(minFontSize), new Integer(maxFontSize)));
+		this.fontGeneratorList.add(new TwistedAndShearedRandomFontGenerator(new Integer(minFontSize), new Integer(maxFontSize)));
 
 		// Create a random word generator
 		WordGenerator words = new RandomWordGenerator(charsInUse);
 
-		for (Iterator fontIter = this.fontGeneratorList.iterator(); fontIter
-				.hasNext();) {
+		for (Iterator fontIter = this.fontGeneratorList.iterator(); fontIter.hasNext();) {
 			FontGenerator fontGeny = (FontGenerator) fontIter.next();
 
-			for (Iterator backIter = this.backgroundGeneratorList.iterator(); backIter
-					.hasNext();) {
-				BackgroundGenerator bkgdGeny = (BackgroundGenerator) backIter
-						.next();
+			for (Iterator backIter = this.backgroundGeneratorList.iterator(); backIter.hasNext();) {
+				BackgroundGenerator bkgdGeny = (BackgroundGenerator) backIter.next();
 
-				for (Iterator textIter = this.textPasterList.iterator(); textIter
-						.hasNext();) {
+				for (Iterator textIter = this.textPasterList.iterator(); textIter.hasNext();) {
 					TextPaster textPaster = (TextPaster) textIter.next();
 
-					WordToImage word2image = new ComposedWordToImage(fontGeny,
-							bkgdGeny, textPaster);
-
+					WordToImage word2image = new ComposedWordToImage(fontGeny, bkgdGeny, textPaster);
+					
 					// Creates a ImageCaptcha Factory
-					ImageCaptchaFactory factory = new GimpyFactory(words,
-							word2image);
-
-					// Add a factory to the gimpy list (A Gimpy is a
-					// ImagCaptcha)
+					ImageCaptchaFactory factory = new GimpyFactory(words, word2image);
+					
+					// Add a factory to the gimpy list (A Gimpy is a ImagCaptcha)
 					addFactory(factory);
 				}
 			}
@@ -171,26 +152,29 @@ public class Captcha extends ListImageCaptchaEngine {
 
 	}
 
-	public void writeCaptchaImage() {
+	public void writeCaptchaImage()
+	{
 		BufferedImage image = SessionFacade.getUserSession().getCaptchaImage();
-
+		
 		if (image == null) {
 			return;
 		}
 
 		OutputStream outputStream = null;
-
+		
 		try {
 			outputStream = JForum.getResponse().getOutputStream();
 			ImageIO.write(image, "jpg", outputStream);
-		} catch (IOException ex) {
+		}
+		catch (IOException ex) {
 			logger.error(ex);
-		} finally {
+		}
+		finally {
 			if (outputStream != null) {
 				try {
 					outputStream.close();
-				} catch (IOException ex) {
 				}
+				catch (IOException ex) {}
 			}
 		}
 	}

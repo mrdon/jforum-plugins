@@ -52,26 +52,27 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericRSS.java,v 1.4 2005/07/26 02:46:01 diegopires Exp $
+ * @version $Id: GenericRSS.java,v 1.5 2005/07/26 03:04:37 rafaelsteil Exp $
  */
-public class GenericRSS implements RSSAware {
+public class GenericRSS implements RSSAware 
+{
 	private RSS rss;
-
-	protected void setRSS(RSS rss) {
+	
+	protected void setRSS(RSS rss) 
+	{
 		this.rss = rss;
 	}
-
-	public String createRSS() throws Exception {
-		Template t = Configuration.getDefaultConfiguration().getTemplate(
-				SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR)
-						+ "/rss_template.htm");
+	
+	public String createRSS() throws Exception
+	{
+		Template t = Configuration.getDefaultConfiguration().getTemplate(SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR) 
+				+ "/rss_template.htm");
 		StringWriter sw = new StringWriter();
-
-		JForum.getContext().put("encoding",
-				SystemGlobals.getValue(ConfigKeys.ENCODING));
+		
+		JForum.getContext().put("encoding", SystemGlobals.getValue(ConfigKeys.ENCODING));
 		JForum.getContext().put("rss", this.rss);
 		t.process(JForum.getContext(), sw);
-
+		
 		return sw.toString();
 	}
 }

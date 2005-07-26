@@ -46,135 +46,108 @@ import java.io.Serializable;
 
 /**
  * @author Rafael Steil
- * @version $Id: LastPostInfo.java,v 1.4 2005/07/26 02:45:50 diegopires Exp $
+ * @version $Id: LastPostInfo.java,v 1.5 2005/07/26 03:04:49 rafaelsteil Exp $
  */
-public class LastPostInfo implements Serializable {
-	private static final long serialVersionUID = -472556606758547155L;
-
+public class LastPostInfo implements Serializable
+{
 	private long postTimeMillis;
-
 	private int topicId;
-
 	private int postId;
-
 	private int userId;
-
 	private int topicReplies;
-
 	private String username;
-
 	private String postDate;
-
 	private boolean hasInfo;
-
+	
 	public void setHasInfo(boolean value) {
 		this.hasInfo = value;
 	}
-
+	
 	public boolean hasInfo() {
 		return this.hasInfo;
 	}
-
+	
+	
 	/**
 	 * @return Returns the postDate.
 	 */
 	public String getPostDate() {
 		return this.postDate;
 	}
-
 	/**
-	 * @param postDate
-	 *            The postDate to set.
+	 * @param postDate The postDate to set.
 	 */
 	public void setPostDate(String postDate) {
 		this.postDate = postDate;
 	}
-
 	/**
 	 * @return Returns the postId.
 	 */
 	public int getPostId() {
 		return this.postId;
 	}
-
 	/**
-	 * @param postId
-	 *            The postId to set.
+	 * @param postId The postId to set.
 	 */
 	public void setPostId(int postId) {
 		this.postId = postId;
 	}
-
 	/**
 	 * @return Returns the postTimeMillis.
 	 */
 	public long getPostTimeMillis() {
 		return this.postTimeMillis;
 	}
-
 	/**
-	 * @param postTimeMillis
-	 *            The postTimeMillis to set.
+	 * @param postTimeMillis The postTimeMillis to set.
 	 */
 	public void setPostTimeMillis(long postTimeMillis) {
 		this.postTimeMillis = postTimeMillis;
 	}
-
 	/**
 	 * @return Returns the topicId.
 	 */
 	public int getTopicId() {
 		return this.topicId;
 	}
-
 	/**
-	 * @param topicId
-	 *            The topicId to set.
+	 * @param topicId The topicId to set.
 	 */
 	public void setTopicId(int topicId) {
 		this.topicId = topicId;
 	}
-
 	/**
 	 * @return Returns the topicReplies.
 	 */
 	public int getTopicReplies() {
 		return this.topicReplies;
 	}
-
 	/**
-	 * @param topicReplies
-	 *            The topicReplies to set.
+	 * @param topicReplies The topicReplies to set.
 	 */
 	public void setTopicReplies(int topicReplies) {
 		this.topicReplies = topicReplies;
 	}
-
 	/**
 	 * @return Returns the userId.
 	 */
 	public int getUserId() {
 		return this.userId;
 	}
-
 	/**
-	 * @param userId
-	 *            The userId to set.
+	 * @param userId The userId to set.
 	 */
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
-
 	/**
 	 * @return Returns the username.
 	 */
 	public String getUsername() {
 		return this.username;
 	}
-
 	/**
-	 * @param username
-	 *            The username to set.
+	 * @param username The username to set.
 	 */
 	public void setUsername(String username) {
 		this.username = username;

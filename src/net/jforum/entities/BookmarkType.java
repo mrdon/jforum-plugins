@@ -44,15 +44,13 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
- * @version $Id: BookmarkType.java,v 1.2 2005/07/26 02:45:53 diegopires Exp $
+ * @version $Id: BookmarkType.java,v 1.3 2005/07/26 03:04:50 rafaelsteil Exp $
  */
-public class BookmarkType {
+public class BookmarkType
+{
 	public static final int FORUM = 1;
-
 	public static final int TOPIC = 2;
-
 	public static final int USER = 3;
-
-	private BookmarkType() {
-	}
+	
+	private BookmarkType() {}
 }

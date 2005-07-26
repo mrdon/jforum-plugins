@@ -49,25 +49,26 @@ import java.util.Map;
 
 /**
  * @author Rafael Steil
- * @version $Id: DefaultCacheEngine.java,v 1.6 2005/06/16 01:24:59 rafaelsteil
- *          Exp $
+ * @version $Id: DefaultCacheEngine.java,v 1.8 2005/07/26 03:04:53 rafaelsteil Exp $
  */
-public class DefaultCacheEngine implements CacheEngine {
+public class DefaultCacheEngine implements CacheEngine
+{
 	private Map cache = new HashMap();
-
+	
 	/**
 	 * @see net.jforum.cache.CacheEngine#add(java.lang.String, java.lang.Object)
 	 */
-	public void add(String key, Object value) {
+	public void add(String key, Object value)
+	{
 		this.cache.put(key, value);
 	}
-
+	
 	/**
-	 * @see net.jforum.cache.CacheEngine#add(java.lang.String, java.lang.String,
-	 *      java.lang.Object)
+	 * @see net.jforum.cache.CacheEngine#add(java.lang.String, java.lang.String, java.lang.Object)
 	 */
-	public void add(String fqn, String key, Object value) {
-		Map m = (Map) this.cache.get(fqn);
+	public void add(String fqn, String key, Object value)
+	{
+		Map m = (Map)this.cache.get(fqn);
 		if (m == null) {
 			m = new HashMap();
 		}
@@ -75,60 +76,65 @@ public class DefaultCacheEngine implements CacheEngine {
 		m.put(key, value);
 		this.cache.put(fqn, m);
 	}
-
+	
 	/**
 	 * @see net.jforum.cache.CacheEngine#get(java.lang.String, java.lang.String)
 	 */
-	public Object get(String fqn, String key) {
-		Map m = (Map) this.cache.get(fqn);
+	public Object get(String fqn, String key)
+	{
+		Map m = (Map)this.cache.get(fqn);
 		if (m == null) {
 			return null;
 		}
-
+		
 		return m.get(key);
 	}
-
+	
 	/**
 	 * @see net.jforum.cache.CacheEngine#get(java.lang.String)
 	 */
-	public Object get(String fqn) {
+	public Object get(String fqn)
+	{
 		return this.cache.get(fqn);
 	}
-
+	
 	/**
 	 * @see net.jforum.cache.CacheEngine#getValues(java.lang.String)
 	 */
-	public Collection getValues(String fqn) {
-		Map m = (Map) this.cache.get(fqn);
+	public Collection getValues(String fqn)
+	{
+		Map m = (Map)this.cache.get(fqn);
 		if (m == null) {
 			return new ArrayList();
 		}
-
+		
 		return m.values();
 	}
-
+	
 	/**
 	 * @see net.jforum.cache.CacheEngine#init()
 	 */
-	public void init() {
+	public void init()
+	{
 		this.cache = new HashMap();
 	}
-
+	
 	/**
-	 * @see net.jforum.cache.CacheEngine#remove(java.lang.String,
-	 *      java.lang.String)
+	 * @see net.jforum.cache.CacheEngine#remove(java.lang.String, java.lang.String)
 	 */
-	public void remove(String fqn, String key) {
-		Map m = (Map) this.cache.get(fqn);
+	public void remove(String fqn, String key)
+	{
+		Map m = (Map)this.cache.get(fqn);
 		if (m != null) {
 			m.remove(key);
 		}
 	}
-
+	
 	/**
 	 * @see net.jforum.cache.CacheEngine#remove(java.lang.String)
 	 */
-	public void remove(String fqn) {
+	public void remove(String fqn)
+	{
 		this.cache.remove(fqn);
 	}
 }

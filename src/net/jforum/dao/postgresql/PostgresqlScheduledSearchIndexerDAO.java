@@ -47,14 +47,13 @@ import java.util.List;
 
 import net.jforum.dao.generic.GenericScheduledSearchIndexerDAO;
 
-public class PostgresqlScheduledSearchIndexerDAO extends
-		GenericScheduledSearchIndexerDAO {
+public class PostgresqlScheduledSearchIndexerDAO extends GenericScheduledSearchIndexerDAO
+{
 	/**
-	 * @see net.jforum.dao.generic.GenericScheduledSearchIndexerDAO#getPosts(int,
-	 *      int, int, int, java.sql.Connection)
+	 * @see net.jforum.dao.generic.GenericScheduledSearchIndexerDAO#getPosts(int, int, int, int, java.sql.Connection)
 	 */
-	protected List getPosts(int start, int count, int minPostId, int maxPostId,
-			Connection conn) throws Exception {
+	protected List getPosts(int start, int count, int minPostId, int maxPostId, Connection conn) throws Exception
+	{
 		return super.getPosts(count, start, minPostId, maxPostId, conn);
 	}
 }

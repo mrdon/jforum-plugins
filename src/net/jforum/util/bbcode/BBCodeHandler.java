@@ -42,7 +42,7 @@
  */
 package net.jforum.util.bbcode;
 
-import java.io.File;
+ import java.io.File;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -62,107 +62,118 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * @author Rafael Steil
- * @version $Id: BBCodeHandler.java,v 1.13 2005/07/26 02:45:43 diegopires Exp $
+ * @version $Id: BBCodeHandler.java,v 1.14 2005/07/26 03:05:28 rafaelsteil Exp $
  */
-public class BBCodeHandler extends DefaultHandler implements Serializable {
+public class BBCodeHandler extends DefaultHandler implements Serializable
+{
 	private Map bbMap = new LinkedHashMap();
-
 	private Map alwaysProcessMap = new LinkedHashMap();
-
+	private boolean matchOpen = false;
 	private String tagName = "";
-
-	private StringBuffer sb;
-
+	private StringBuffer sb;	
 	private BBCode bb;
-
-	public BBCodeHandler() {
-	}
-
-	public BBCodeHandler parse() throws Exception {
+	
+	public BBCodeHandler() { }
+	
+	public BBCodeHandler parse() throws Exception
+	{
 		SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
 		BBCodeHandler bbParser = new BBCodeHandler();
-
-		String path = SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
-				+ "/bb_config.xml";
-
+		
+		String path = SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) 
+			+ "/bb_config.xml";
+		
 		File fileInput = new File(path);
-
+		
 		if (fileInput.exists()) {
 			parser.parse(fileInput, bbParser);
-		} else {
+		}
+		else {
 			InputSource input = new InputSource(path);
 			parser.parse(input, bbParser);
 		}
 
-		return bbParser;
+		return bbParser;  
 	}
-
-	public void addBb(BBCode bb) {
+	
+	public void addBb(BBCode bb)
+	{
 		if (bb.alwaysProcess()) {
 			this.alwaysProcessMap.put(bb.getTagName(), bb);
-		} else {
+		}
+		else {
 			this.bbMap.put(bb.getTagName(), bb);
 		}
 	}
-
-	public Collection getBbList() {
+	
+	public Collection getBbList()
+	{
 		return this.bbMap.values();
 	}
-
-	public Collection getAlwaysProcessList() {
+	
+	public Collection getAlwaysProcessList()
+	{
 		return this.alwaysProcessMap.values();
 	}
-
-	public BBCode findByName(String tagName) {
-		return (BBCode) this.bbMap.get(tagName);
+	
+	public BBCode findByName(String tagName)
+	{
+		return (BBCode)this.bbMap.get(tagName);
 	}
-
-	public void startElement(String uri, String localName, String tag,
-			Attributes attrs) {
+	
+	public void startElement(String uri, String localName, String tag, Attributes attrs)
+	{
 		if (tag.equals("match")) {
+			this.matchOpen = true;
 			this.sb = new StringBuffer();
 			this.bb = new BBCode();
-
+			
 			String tagName = attrs.getValue("name");
 			if (tagName != null) {
 				this.bb.setTagName(tagName);
 			}
-
+			
 			// Shall we remove the infamous quotes?
 			String removeQuotes = attrs.getValue("removeQuotes");
 			if (removeQuotes != null && removeQuotes.equals("true")) {
 				this.bb.enableRemoveQuotes();
 			}
-
+			
 			String alwaysProcess = attrs.getValue("alwaysProcess");
 			if (alwaysProcess != null && "true".equals(alwaysProcess)) {
 				this.bb.enableAlwaysProcess();
 			}
 		}
-
+	
 		this.tagName = tag;
 	}
 
-	public void endElement(String uri, String localName, String tag) {
+	public void endElement(String uri, String localName, String tag)
+	{	
 		if (tag.equals("match")) {
+			this.matchOpen = false;
 			this.addBb(this.bb);
-		} else if (this.tagName.equals("replace")) {
+		}
+		else if (this.tagName.equals("replace")) {
 			this.bb.setReplace(this.sb.toString().trim());
 			this.sb.delete(0, this.sb.length());
-		} else if (this.tagName.equals("regex")) {
+		}
+		else if (this.tagName.equals("regex")) {
 			this.bb.setRegex(this.sb.toString().trim());
 			this.sb.delete(0, this.sb.length());
 		}
-
+	
 		this.tagName = "";
 	}
 
-	public void characters(char ch[], int start, int length) {
+	public void characters(char ch[], int start, int length)
+	{
 		if (this.tagName.equals("replace") || this.tagName.equals("regex"))
 			this.sb.append(ch, start, length);
 	}
 
-	public void error(SAXParseException exception) throws SAXException {
+	public void error(SAXParseException exception) throws SAXException 
+	{
 		throw exception;
 	}
 }

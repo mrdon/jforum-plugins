@@ -50,101 +50,92 @@ import java.util.Map;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserSecurityHelper.java,v 1.6 2005/01/02 19:58:00 rafaelsteil
- *          Exp $
+ * @version $Id: UserSecurityHelper.java,v 1.8 2005/07/26 03:05:06 rafaelsteil Exp $
  */
-public class UserSecurityHelper {
-	public static void mergeUserGroupRoles(RoleCollection userRoles,
-			List groupsRolesList) {
+public class UserSecurityHelper 
+{
+	public static void mergeUserGroupRoles(RoleCollection userRoles, List groupsRolesList)
+	{
 		Map newRolesMap = new HashMap();
-
+		
 		// First, iterate over all group roles and merge them with user roles
-		for (Iterator iter = groupsRolesList.iterator(); iter.hasNext();) {
-			RoleCollection rc = (RoleCollection) iter.next();
-
-			for (Iterator rcIter = rc.values().iterator(); rcIter.hasNext();) {
-				final Role role = (Role) rcIter.next();
+		for (Iterator iter = groupsRolesList.iterator(); iter.hasNext(); ) {
+			RoleCollection rc = (RoleCollection)iter.next();
+			
+			for (Iterator rcIter = rc.values().iterator(); rcIter.hasNext(); ) {
+				final Role role = (Role)rcIter.next();
 				Role userRole = userRoles.get(role.getName());
-
+				
 				if (userRole == null) {
 					if (newRolesMap.containsKey(role.getName())) {
-						((List) newRolesMap.get(role.getName())).add(role);
-					} else {
-						newRolesMap.put(role.getName(), new ArrayList() {
-							{
-								add(role);
-							}
-						});
+						((List)newRolesMap.get(role.getName())).add(role);
 					}
-				} else {
+					else {
+						newRolesMap.put(role.getName(), new ArrayList() {{ add(role); }});
+					}
+				}
+				else {
 					// Merge the little bastards
-					for (Iterator vIter = role.getValues().iterator(); vIter
-							.hasNext();) {
-						RoleValue gRv = (RoleValue) vIter.next();
-						RoleValue uRv = userRole.getValues()
-								.get(gRv.getValue());
-
+					for (Iterator vIter = role.getValues().iterator(); vIter.hasNext(); ) {
+						RoleValue gRv = (RoleValue)vIter.next();
+						RoleValue uRv = userRole.getValues().get(gRv.getValue()); 
+						
 						// We only check for nulls because the user role always
-						// has preference over the group role.
+						// has preference over the group role. 
 						if (uRv == null) {
 							userRole.getValues().add(gRv);
-						}
+						} 
 					}
 				}
 			}
 		}
-
-		for (Iterator iter = newRolesMap.entrySet().iterator(); iter.hasNext();) {
-			Map.Entry entry = (Map.Entry) iter.next();
+		
+		for (Iterator iter = newRolesMap.entrySet().iterator(); iter.hasNext(); ) {
+			Map.Entry entry = (Map.Entry)iter.next();
 
 			Role newRole = new Role();
-			newRole.setName((String) entry.getKey());
+			newRole.setName((String)entry.getKey());
 			newRole.setType(PermissionControl.ROLE_DENY);
-
-			List roles = (List) entry.getValue();
-			for (Iterator rolesIter = roles.iterator(); rolesIter.hasNext();) {
-				Role role = (Role) rolesIter.next();
+			
+			List roles = (List)entry.getValue();
+			for (Iterator rolesIter = roles.iterator(); rolesIter.hasNext(); ) {
+				Role role = (Role)rolesIter.next();
 				newRole.setId(role.getId());
-
+				
 				// Check if it's a single permission ( eg, no children values )
-				// We're assuming here that if the call to getValue() of the
-				// current
-				// role object returns 0, all other related roles will also
-				// return 0
+				// We're assuming here that if the call to getValue() of the current 
+				// role object returns 0, all other related roles will also return 0
 				if (role.getValues().size() == 0) {
 					if (role.getType() == PermissionControl.ROLE_ALLOW) {
 						newRole.setType(PermissionControl.ROLE_ALLOW);
 						break;
 					}
-				} else {
-					// Ok, we have some children ( like forums or categories ids
-					// )
-					// Iterate for all values of the current role, checking the
+				}
+				else {
+					// Ok, we have some children ( like forums or categories ids )
+					// Iterate for all values of the current role, checking the 
 					// access rights of each one
-					for (Iterator valuesIter = role.getValues().iterator(); valuesIter
-							.hasNext();) {
-						RoleValue rv = (RoleValue) valuesIter.next();
-						RoleValue currentValue = newRole.getValues().get(
-								rv.getValue());
-
+					for (Iterator valuesIter = role.getValues().iterator(); valuesIter.hasNext(); ) {
+						RoleValue rv = (RoleValue)valuesIter.next();
+						RoleValue currentValue = newRole.getValues().get(rv.getValue());
+						
 						if (currentValue == null) {
 							newRole.getValues().add(rv);
-						} else {
-							// We already have some value with this name in the
-							// collection
+						}
+						else {
+							// We already have some value with this name in the collection
 							// Time to check for its rights
-							if (rv.getType() != currentValue.getType()
-									&& rv.getType() == PermissionControl.ROLE_ALLOW) {
+							if (rv.getType() != currentValue.getType() 
+								&& rv.getType() == PermissionControl.ROLE_ALLOW) {
 								newRole.getValues().remove(currentValue);
-								currentValue
-										.setType(PermissionControl.ROLE_ALLOW);
+								currentValue.setType(PermissionControl.ROLE_ALLOW);
 								newRole.getValues().add(currentValue);
 							}
 						}
 					}
 				}
 			}
-
+			
 			userRoles.add(newRole);
 		}
 	}

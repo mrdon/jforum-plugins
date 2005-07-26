@@ -60,67 +60,61 @@ import net.jforum.security.SecurityConstants;
 import net.jforum.util.ForumOrderComparator;
 
 /**
- * Represents a category in the System. Each category holds a reference to all
- * its forums, which can be retrieved by calling either
- * 
- * @link #getForums(),
- * @link #getForum(int) and related methods.
+ * Represents a category in the System.
+ * Each category holds a reference to all its forums, which 
+ * can be retrieved by calling either @link #getForums(), 
+ * @link #getForum(int) and related methods. 
  * 
  * <br/>
  * 
- * This class also controls the access to its forums, so a call to
- * @link #getForums() will only return the forums accessible to the user who
- *       make the call tho the method.
+ * This class also controls the access to its forums, so a call
+ * to @link #getForums() will only return the forums accessible
+ * to the user who make the call tho the method. 
  * 
  * @author Rafael Steil
- * @version $Id: Category.java,v 1.18 2005/07/26 02:45:52 diegopires Exp $
+ * @version $Id: Category.java,v 1.19 2005/07/26 03:04:49 rafaelsteil Exp $
  */
-public class Category implements Serializable {
-	private static final long serialVersionUID = -4894230707020588049L;
-
+public class Category  implements Serializable
+{
 	private int id;
-
 	private int order;
-
 	private boolean moderated;
-
 	private String name;
-
 	private Map forumsIdMap = new HashMap();
-
 	private Set forums = new TreeSet(new ForumOrderComparator());
-
-	public Category() {
-	}
-
+		
+	public Category() {}
+	
 	public Category(int id) {
 		this.id = id;
 	}
-
+	
 	public Category(String name, int id) {
 		this.name = name;
 		this.id = id;
 	}
-
+	
 	public Category(Category c) {
 		this.name = c.getName();
 		this.id = c.getId();
 		this.order = c.getOrder();
 		this.moderated = c.isModerated();
-
-		for (Iterator iter = c.getForums().iterator(); iter.hasNext();) {
-			this.addForum(new Forum((Forum) iter.next()));
+		
+		for (Iterator iter = c.getForums().iterator(); iter.hasNext(); ) {
+			this.addForum(new Forum((Forum)iter.next()));
 		}
 	}
-
-	public void setModerated(boolean status) {
+	
+	public void setModerated(boolean status)
+	{
 		this.moderated = status;
 	}
-
-	public boolean isModerated() {
+	
+	public boolean isModerated() 
+	{
 		return this.moderated;
 	}
-
+	
 	/**
 	 * @return int
 	 */
@@ -144,9 +138,7 @@ public class Category implements Serializable {
 
 	/**
 	 * Sets the id.
-	 * 
-	 * @param id
-	 *            The id to set
+	 * @param id The id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -154,9 +146,7 @@ public class Category implements Serializable {
 
 	/**
 	 * Sets the name.
-	 * 
-	 * @param name
-	 *            The name to set
+	 * @param name The name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -164,14 +154,12 @@ public class Category implements Serializable {
 
 	/**
 	 * Sets the order.
-	 * 
-	 * @param order
-	 *            The order to set
+	 * @param order The order to set
 	 */
 	public void setOrder(int order) {
 		this.order = order;
 	}
-
+	
 	/**
 	 * Adds a forum to this category
 	 * 
@@ -181,96 +169,92 @@ public class Category implements Serializable {
 		this.forumsIdMap.put(new Integer(forum.getId()), forum);
 		this.forums.add(forum);
 	}
-
+	
 	/**
-	 * Reloads a forum. The forum should already be in the cache and <b>SHOULD
-	 * NOT</b> have its order changed. If the forum's order was changed, then
-	 * you <b>MUST CALL</b>
+	 * Reloads a forum.
+	 * The forum should already be in the cache and <b>SHOULD NOT</b>
+	 * have its order changed. If the forum's order was changed, 
+	 * then you <b>MUST CALL</b> @link #changeForumOrder(Forum) <b>BEFORE</b>
+	 * calling this method.
 	 * 
-	 * @link #changeForumOrder(Forum) <b>BEFORE</b> calling this method.
-	 * 
-	 * @param forum
-	 *            The forum to reload its information
-	 * @throws ForumChangedException
-	 *             if the forum given as parameter has a modified display order
+	 * @param forum The forum to reload its information
+	 * @throws ForumChangedException if the forum given as parameter
+	 * has a modified display order
 	 * @throws Exception
 	 * @see #changeForumOrder(Forum)
 	 */
 	public void reloadForum(Forum forum) {
 		Forum currentForum = this.getForum(forum.getId());
-
+		
 		if (forum.getOrder() != currentForum.getOrder()) {
-			throw new ForumOrderChangedException(
-					"Forum #"
-							+ forum.getId()
-							+ " cannot be reloaded, since its "
-							+ "display order was changed. You must call Category#changeForumOrder(Forum)"
-							+ "first");
+			throw new ForumOrderChangedException("Forum #" + forum.getId() + " cannot be reloaded, since its "
+					+ "display order was changed. You must call Category#changeForumOrder(Forum)"
+					+ "first");
 		}
-
+		
 		Set tmpSet = new TreeSet(new ForumOrderComparator());
 		tmpSet.addAll(this.forums);
 		tmpSet.remove(currentForum);
 		tmpSet.add(forum);
 		this.forumsIdMap.put(new Integer(forum.getId()), forum);
-
+		
 		this.forums = tmpSet;
 	}
-
+	
 	/**
-	 * Changes a forum's display order. This method changes the position of the
-	 * forum in the current display order of the forum instance passed as
-	 * argument, if applicable.
+	 * Changes a forum's display order. 
+	 * This method changes the position of the
+	 * forum in the current display order of the
+	 * forum instance passed as argument, if applicable.
 	 * 
-	 * @param forum
-	 *            The forum to change
+	 * @param forum The forum to change
 	 */
-	public void changeForumOrder(Forum forum) {
+	public void changeForumOrder(Forum forum)
+	{
 		Forum current = this.getForum(forum.getId());
 		Forum currentAtOrder = this.findByOrder(forum.getOrder());
-
+		
 		Set tmpSet = new TreeSet(new ForumOrderComparator());
 		tmpSet.addAll(this.forums);
-
+		
 		// Remove the forum in the current order
 		// where the changed forum will need to be
 		if (currentAtOrder != null) {
 			tmpSet.remove(currentAtOrder);
 		}
-
+		
 		tmpSet.add(forum);
 		this.forumsIdMap.put(new Integer(forum.getId()), forum);
-
+		
 		// Remove the forum in the position occupied
 		// by the changed forum before its modification,
-		// so then we can add the another forum into
+		// so then we can add the another forum into 
 		// its position
 		if (currentAtOrder != null) {
 			tmpSet.remove(current);
 			currentAtOrder.setOrder(current.getOrder());
 			tmpSet.add(currentAtOrder);
 
-			this.forumsIdMap.put(new Integer(currentAtOrder.getId()),
-					currentAtOrder);
+			this.forumsIdMap.put(new Integer(currentAtOrder.getId()), currentAtOrder);
 		}
-
+		
 		this.forums = tmpSet;
 	}
-
-	private Forum findByOrder(int order) {
-		for (Iterator iter = this.forums.iterator(); iter.hasNext();) {
-			Forum f = (Forum) iter.next();
+	
+	private Forum findByOrder(int order)
+	{
+		for (Iterator iter = this.forums.iterator(); iter.hasNext(); ) {
+			Forum f = (Forum)iter.next();
 			if (f.getOrder() == order) {
 				return f;
 			}
 		}
-
+		
 		return null;
 	}
-
+	
 	/**
 	 * Removes a forum from the list.
-	 * 
 	 * @param forumId
 	 */
 	public void removeForum(int forumId) {
@@ -281,44 +265,43 @@ public class Category implements Serializable {
 	/**
 	 * Gets a forum.
 	 * 
-	 * @param userId
-	 *            The user's id who is trying to see the forum
-	 * @param forumId
-	 *            The id of the forum to get
+	 * @param userId The user's id who is trying to see the forum
+	 * @param forumId The id of the forum to get
 	 * @return The <code>Forum</code> instance if found, or <code>null</code>
-	 *         otherwhise.
+	 * otherwhise.
 	 * @see #getForum(int)
 	 */
-	public Forum getForum(int userId, int forumId) {
+	public Forum getForum(int userId, int forumId)
+	{
 		PermissionControl pc = SecurityRepository.get(userId);
-		if (pc.canAccess(SecurityConstants.PERM_FORUM, Integer
-				.toString(forumId))) {
-			return (Forum) this.forumsIdMap.get(new Integer(forumId));
+		if (pc.canAccess(SecurityConstants.PERM_FORUM, Integer.toString(forumId))) {
+			return (Forum)this.forumsIdMap.get(new Integer(forumId));
 		}
-
+		
 		return null;
 	}
 
 	/**
 	 * Gets a forum.
 	 * 
-	 * @param forumId
-	 *            The forum's id
-	 * @return The requested forum, if found, or <code>null</code> if the
-	 *         forum does not exists or access to it is denied.
+	 * @param forumId The forum's id 
+	 * @return The requested forum, if found, or <code>null</code> if
+	 * the forum does not exists or access to it is denied.
 	 * @see #getForum(int, int)
 	 */
-	public Forum getForum(int forumId) {
-		return this.getForum(SessionFacade.getUserSession().getUserId(),
-				forumId);
+	public Forum getForum(int forumId)
+	{
+		return this.getForum(SessionFacade.getUserSession().getUserId(), forumId);
 	}
 
 	/**
 	 * Get all forums from this category.
 	 * 
-	 * @return All forums, regardless it is accessible to the user or not.
+	 * @return All forums, regardless it is accessible 
+	 * to the user or not.
 	 */
-	public Collection getForums() {
+	public Collection getForums()
+	{
 		if (this.forums.size() == 0) {
 			return this.forums;
 		}
@@ -330,43 +313,44 @@ public class Category implements Serializable {
 	 * Gets all forums from this category.
 	 * 
 	 * @return The forums available to the user who make the call
-	 * @see #getForums()
+	 * @see #getForums() 
 	 */
-	public Collection getForums(int userId) {
+	public Collection getForums(int userId) 
+	{
 		PermissionControl pc = SecurityRepository.get(userId);
 		List forums = new ArrayList();
 
-		for (Iterator iter = this.forums.iterator(); iter.hasNext();) {
-			Forum f = (Forum) iter.next();
-			if (pc.canAccess(SecurityConstants.PERM_FORUM, Integer.toString(f
-					.getId()))) {
+		for (Iterator iter = this.forums.iterator(); iter.hasNext(); ) {
+			Forum f = (Forum)iter.next();
+			if (pc.canAccess(SecurityConstants.PERM_FORUM, Integer.toString(f.getId()))) {
 				forums.add(f);
 			}
 		}
-
+		
 		return forums;
 	}
 
-	/**
+	/** 
 	 * @see java.lang.Object#hashCode()
 	 */
-	public int hashCode() {
+	public int hashCode() 
+	{
 		return this.id;
 	}
 
-	/**
+	/** 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	public boolean equals(Object o) {
-		return ((o instanceof Category) && (((Category) o).getId() == this.id));
+	public boolean equals(Object o) 
+	{
+		return ((o instanceof Category) && (((Category)o).getId() == this.id));
 	}
-
-	/**
+	
+	/** 
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return "[" + this.name + ", id=" + this.id + ", order=" + this.order
-				+ "]";
+		return "[" + this.name + ", id=" + this.id + ", order=" + this.order + "]"; 
 	}
 
 }

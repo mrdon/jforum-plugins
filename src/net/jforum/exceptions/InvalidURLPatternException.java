@@ -43,11 +43,12 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: InvalidURLPatternException.java,v 1.1 2005/02/01 21:41:55
- *          rafaelsteil Exp $
+ * @version $Id: InvalidURLPatternException.java,v 1.3 2005/07/26 03:04:35 rafaelsteil Exp $
  */
-public class InvalidURLPatternException extends RuntimeException {
-	public InvalidURLPatternException(String message) {
+public class InvalidURLPatternException extends RuntimeException
+{
+	public InvalidURLPatternException(String message)
+	{
 		super(message);
 	}
 }

@@ -54,36 +54,35 @@ import net.jforum.util.preferences.SystemGlobals;
  * General utilities for RSS manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: RSSUtils.java,v 1.4 2005/07/26 02:46:01 diegopires Exp $
+ * @version $Id: RSSUtils.java,v 1.5 2005/07/26 03:04:37 rafaelsteil Exp $
  */
-public class RSSUtils {
+public class RSSUtils 
+{
 	/**
 	 * Formats a given date to the expected RSS format
-	 * 
-	 * @param date
-	 *            The date to format
+	 * @param date The date to format
 	 * @return The formated date
 	 */
-	public static String formatDate(Date date) {
-		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals
-				.getValue(ConfigKeys.RSS_DATE_TIME_FORMAT), Locale.ENGLISH);
+	public static String formatDate(Date date)
+	{
+		SimpleDateFormat df = new SimpleDateFormat(
+				SystemGlobals.getValue(ConfigKeys.RSS_DATE_TIME_FORMAT),
+				Locale.ENGLISH);
 		return df.format(date);
 	}
-
+	
 	/**
 	 * Formats a given date to the expected RSS format
-	 * 
-	 * @param date
-	 *            The date to format
-	 * @return The formated date, or the original input if some parsing
-	 *         exception occurs
+	 * @param date The date to format
+	 * @return The formated date, or the original input if some parsing exception occurs
 	 */
-	public static String formatDate(String date) {
+	public static String formatDate(String date)
+	{
 		try {
-			SimpleDateFormat df = new SimpleDateFormat(SystemGlobals
-					.getValue(ConfigKeys.DATE_TIME_FORMAT));
+			SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
 			return formatDate(df.parse(date));
-		} catch (ParseException e) {
+		}
+		catch (ParseException e) {
 			return date;
 		}
 	}

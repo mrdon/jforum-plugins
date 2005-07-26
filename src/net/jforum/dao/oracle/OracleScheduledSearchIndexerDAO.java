@@ -44,17 +44,18 @@ package net.jforum.dao.oracle;
 
 import java.sql.ResultSet;
 
+
 /**
  * @author Rafael Steil
- * @version $Id: OracleScheduledSearchIndexerDAO.java,v 1.2 2005/03/26 04:11:01
- *          rafaelsteil Exp $
+ * @version $Id: OracleScheduledSearchIndexerDAO.java,v 1.4 2005/07/26 03:04:57 rafaelsteil Exp $
  */
-public class OracleScheduledSearchIndexerDAO extends
-		net.jforum.dao.generic.GenericScheduledSearchIndexerDAO {
+public class OracleScheduledSearchIndexerDAO extends net.jforum.dao.generic.GenericScheduledSearchIndexerDAO
+{
 	/**
 	 * @see net.jforum.dao.generic.GenericScheduledSearchIndexerDAO#getPostTextFromResultSet(java.sql.ResultSet)
 	 */
-	protected String getPostTextFromResultSet(ResultSet rs) throws Exception {
+	protected String getPostTextFromResultSet(ResultSet rs) throws Exception
+	{
 		return OracleUtils.readBlobUTF16BinaryStream(rs, "post_text");
 	}
 }

@@ -52,54 +52,55 @@ import net.jforum.exceptions.ConfigLoadException;
 
 /**
  * @author Rafael Steil
- * @version $Id: Tpl.java,v 1.3 2005/07/26 02:45:35 diegopires Exp $
+ * @version $Id: Tpl.java,v 1.4 2005/07/26 03:04:54 rafaelsteil Exp $
  */
-public class Tpl implements Cacheable {
+public class Tpl implements Cacheable
+{
 	private static final String FQN = "templates";
-
+	
 	private static CacheEngine cache;
-
+	
 	/**
 	 * @see net.jforum.cache.Cacheable#setCacheEngine(net.jforum.cache.CacheEngine)
 	 */
-	public void setCacheEngine(CacheEngine engine) {
+	public void setCacheEngine(CacheEngine engine)
+	{
 		cache = engine;
 	}
 
 	/**
-	 * Loads the HTML mappings file.
+	 * Loads the HTML mappings file. 
 	 * 
-	 * @param filename
-	 *            The complete path to the file to load
-	 * @throws ConfigLoadException
-	 *             if the file is not found or some other error occurs when
-	 *             loading the file.
+	 * @param filename The complete path to the file to load
+	 * @throws ConfigLoadException if the file is not found or
+	 * some other error occurs when loading the file.
 	 */
-	public static void load(String filename) {
+	public static void load(String filename)
+	{
 		try {
 			Properties p = new Properties();
 			p.load(new FileInputStream(filename));
-
-			for (Iterator iter = p.keySet().iterator(); iter.hasNext();) {
-				String key = (String) iter.next();
-
+			
+			for (Iterator iter = p.keySet().iterator(); iter.hasNext(); ) {
+				String key = (String)iter.next();
+				
 				cache.add(FQN, key, p.getProperty(key));
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			e.printStackTrace();
-			throw new ConfigLoadException("Error while trying to load "
-					+ filename + ": " + e);
+			throw new ConfigLoadException("Error while trying to load " + filename + ": " + e);
 		}
 	}
-
+	
 	/**
 	 * Gets a temlate filename by its configuration's key
 	 * 
-	 * @param key
-	 *            The Key to load.
+	 * @param key The Key to load.
 	 * @return The html template filename
 	 */
-	public static String name(String key) {
-		return (String) cache.get(FQN, key);
+	public static String name(String key)
+	{
+		return (String)cache.get(FQN, key);
 	}
 }

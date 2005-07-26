@@ -57,97 +57,90 @@ import net.jforum.security.RoleValueCollection;
 
 /**
  * @author Rafael Steil
- * @version $Id: PermissionProcessHelper.java,v 1.8 2005/03/26 04:11:18
- *          rafaelsteil Exp $
+ * @version $Id: PermissionProcessHelper.java,v 1.10 2005/07/26 03:05:41 rafaelsteil Exp $
  */
-class PermissionProcessHelper {
+class PermissionProcessHelper 
+{
 	private PermissionControl pc;
-
 	private UserSecurityDAO umodel;
-
 	private int id;
-
 	private boolean isGroup;
-
-	public PermissionProcessHelper(PermissionControl pc, int id, boolean isGroup)
-			throws Exception {
+	
+	public PermissionProcessHelper(PermissionControl pc, int id, boolean isGroup) throws Exception
+	{
 		this.id = id;
 		this.pc = pc;
-
+		
 		this.isGroup = isGroup;
 		if (this.isGroup) {
 			umodel = DataAccessDriver.getInstance().newUserSecurityDAO();
 		}
-
+		
 		this.init();
 	}
-
-	public PermissionProcessHelper(PermissionControl pc, int id)
-			throws Exception {
+	
+	public PermissionProcessHelper(PermissionControl pc, int id) throws Exception
+	{
 		this(pc, id, false);
 	}
-
-	public void processData() throws Exception {
+	
+	public void processData() throws Exception
+	{
 		Enumeration e = JForum.getRequest().getParameterNames();
 		while (e.hasMoreElements()) {
-			String paramName = (String) e.nextElement();
-
+			String paramName = (String)e.nextElement();
+			
 			if (paramName.startsWith("perm_")) {
 				if (paramName.endsWith("$single")) {
-					String paramValue = JForum.getRequest().getParameter(
-							paramName);
+					String paramValue = JForum.getRequest().getParameter(paramName);
 
 					paramName = paramName.substring(0, paramName.indexOf('$'));
-
+					
 					if (isGroup) {
-						if (JForum.getRequest().getParameter(
-								"OverrideUser" + paramName) != null) {
+						if (JForum.getRequest().getParameter("OverrideUser" + paramName) != null) {
 							this.umodel.deleteUserRoleByGroup(id, paramName);
 						}
 					}
-
+					
 					Role role = new Role();
 					role.setName(paramName);
-
+					
 					if (paramValue.equals("deny")) {
 						role.setType(PermissionControl.ROLE_DENY);
-					} else {
+					}
+					else {
 						role.setType(PermissionControl.ROLE_ALLOW);
 					}
-
+					
 					this.pc.addRole(this.id, role);
-				} else {
-					String[] paramValues = JForum.getRequest()
-							.getParameterValues(paramName);
-
+				}
+				else {
+					String[] paramValues = JForum.getRequest().getParameterValues(paramName);
+					
 					if (isGroup) {
-						if (JForum.getRequest().getParameter(
-								"OverrideUser" + paramName) != null) {
+						if (JForum.getRequest().getParameter("OverrideUser"+ paramName) != null) {
 							this.umodel.deleteUserRoleByGroup(id, paramName);
 						}
 					}
-
+					
 					RoleValueCollection roleValues = new RoleValueCollection();
 					if (paramValues[0].equals("all") == false) {
 						// Deny
 						for (int i = 0; i < paramValues.length; i++) {
-							roleValues.add(this.createRoleValue(paramValues[i],
-									PermissionControl.ROLE_DENY));
+							roleValues.add(this.createRoleValue(paramValues[i], PermissionControl.ROLE_DENY));
 						}
-
+						
 						// Allow
-						List allowList = new ArrayList(Arrays.asList(this
-								.getSplitedValues("all" + paramName)));
+						List allowList = new ArrayList(Arrays.asList(this.getSplitedValues("all" + paramName))); 
 						allowList.removeAll(Arrays.asList(paramValues));
-
-						this.addRoleValues(roleValues, allowList.toArray(),
-								PermissionControl.ROLE_ALLOW);
-					} else {
-						this.addRoleValues(roleValues, this
-								.getSplitedValues("all" + paramName),
+						
+						this.addRoleValues(roleValues, allowList.toArray(), PermissionControl.ROLE_ALLOW);
+					}
+					else {
+						this.addRoleValues(roleValues, this.getSplitedValues("all" + paramName), 
 								PermissionControl.ROLE_ALLOW);
 					}
-
+					
 					Role role = new Role();
 					role.setName(paramName);
 					this.pc.addRole(this.id, role, roleValues);
@@ -155,45 +148,46 @@ class PermissionProcessHelper {
 			}
 		}
 	}
-
-	private String[] getSplitedValues(String paramName) {
-		String[] allValues = JForum.getRequest().getParameter(paramName).split(
-				";");
+	
+	private String[] getSplitedValues(String paramName)
+	{
+		String[] allValues = JForum.getRequest().getParameter(paramName).split(";");
 		String[] returnValues = new String[allValues.length];
-
+		
 		for (int i = 0, counter = 0; i < allValues.length; i++) {
 			if (allValues[i].trim().equals("")) {
 				continue;
 			}
-
+			
 			returnValues[counter++] = allValues[i];
 		}
-
+		
 		return returnValues;
 	}
-
-	private void addRoleValues(RoleValueCollection roleValues,
-			Object[] allValues, int permissionType) {
+	
+	private void addRoleValues(RoleValueCollection roleValues, Object[] allValues, int permissionType)
+	{
 		for (int i = 0; i < allValues.length; i++) {
-			String value = (String) allValues[i];
+			String value = (String)allValues[i];
 			if (value == null || value.equals("")) {
 				continue;
 			}
 
-			roleValues.add(this.createRoleValue((String) allValues[i],
-					permissionType));
+			roleValues.add(this.createRoleValue((String)allValues[i], permissionType));
 		}
 	}
-
-	private RoleValue createRoleValue(String value, int type) {
+	
+	private RoleValue createRoleValue(String value, int type)
+	{
 		RoleValue rv = new RoleValue();
 		rv.setType(type);
 		rv.setValue(value);
-
+		
 		return rv;
 	}
-
-	private void init() throws Exception {
+	
+	private void init() throws Exception
+	{
 		this.pc.deleteAllRoles(this.id);
 	}
 }

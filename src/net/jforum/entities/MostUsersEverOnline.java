@@ -51,29 +51,24 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: MostUsersEverOnline.java,v 1.2 2005/02/03 12:37:41 rafaelsteil
- *          Exp $
+ * @version $Id: MostUsersEverOnline.java,v 1.4 2005/07/26 03:04:50 rafaelsteil Exp $
  */
-public class MostUsersEverOnline implements Serializable {
-	private static final long serialVersionUID = -5495884542725636117L;
-
+public class MostUsersEverOnline implements Serializable
+{
 	private int total;
-
 	private String date;
-
 	private long timeInMillis;
-
-	public MostUsersEverOnline() {
-	}
-
+	
+	public MostUsersEverOnline() {}
+	
 	public int getTotal() {
 		return this.total;
 	}
-
+	
 	public String getDate() {
 		return this.date;
 	}
-
+	
 	public long getTimeInMillis() {
 		return this.timeInMillis;
 	}
@@ -81,19 +76,18 @@ public class MostUsersEverOnline implements Serializable {
 	public void setTotal(int total) {
 		this.total = total;
 	}
-
+	
 	public void setDate(String date) {
 		this.date = date;
 	}
-
+	
 	public void setTimeInMillis(long time) {
 		this.timeInMillis = time;
-
-		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals
-				.getValue(ConfigKeys.DATE_TIME_FORMAT));
+		
+		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
 		GregorianCalendar gc = new GregorianCalendar();
 		gc.setTimeInMillis(time);
-
+		
 		this.setDate(df.format(gc.getTime()));
 	}
 }

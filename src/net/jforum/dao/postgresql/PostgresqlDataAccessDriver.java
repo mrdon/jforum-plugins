@@ -44,35 +44,35 @@ package net.jforum.dao.postgresql;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostgresqlDataAccessDriver.java,v 1.4 2005/07/08 18:23:08
- *          rafaelsteil Exp $
+ * @version $Id: PostgresqlDataAccessDriver.java,v 1.6 2005/07/26 03:05:10 rafaelsteil Exp $
  */
-public class PostgresqlDataAccessDriver extends
-		net.jforum.dao.generic.DataAccessDriver {
+public class PostgresqlDataAccessDriver extends net.jforum.dao.generic.DataAccessDriver
+{
 	private static PostgresqlPostDAO postDao = new PostgresqlPostDAO();
-
 	private static PostgresqlTopicDAO topicDao = new PostgresqlTopicDAO();
-
 	private static PostgresqlUserDAO userDao = new PostgresqlUserDAO();
 
-	/**
+	/** 
 	 * @see net.jforum.dao.DataAccessDriver#newPostDAO()
 	 */
-	public net.jforum.dao.PostDAO newPostDAO() {
+	public net.jforum.dao.PostDAO newPostDAO()
+	{
 		return postDao;
 	}
 
-	/**
+	/** 
 	 * @see net.jforum.dao.DataAccessDriver#newTopicDAO()
 	 */
-	public net.jforum.dao.TopicDAO newTopicDAO() {
+	public net.jforum.dao.TopicDAO newTopicDAO()
+	{
 		return topicDao;
 	}
-
-	/**
+	
+	/** 
 	 * @see net.jforum.dao.DataAccessDriver#newUserDAO()
 	 */
-	public net.jforum.dao.UserDAO newUserDAO() {
+	public net.jforum.dao.UserDAO newUserDAO()
+	{
 		return userDao;
-	}
+	}	
 }

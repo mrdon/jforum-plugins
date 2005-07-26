@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: Smilie.java,v 1.4 2005/07/26 02:45:52 diegopires Exp $
+ * $Id: Smilie.java,v 1.5 2005/07/26 03:04:51 rafaelsteil Exp $
  */
 package net.jforum.entities;
 
@@ -50,17 +50,13 @@ import java.io.Serializable;
 /**
  * @author Rafael Steil
  */
-public class Smilie implements Serializable {
-	private static final long serialVersionUID = -8510503201609223361L;
-
+public class Smilie implements Serializable
+{
 	private int id;
-
 	private String code;
-
 	private String url;
-
 	private String diskName;
-
+	
 	/**
 	 * @return
 	 */
@@ -74,7 +70,7 @@ public class Smilie implements Serializable {
 	public void setCode(String code) {
 		this.code = code;
 	}
-
+	
 	/**
 	 * @param diskName
 	 */

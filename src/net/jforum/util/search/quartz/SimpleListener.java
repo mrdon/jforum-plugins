@@ -51,49 +51,49 @@ import org.quartz.JobListener;
 
 /**
  * @author Rafael Steil
- * @version $Id: SimpleListener.java,v 1.3 2005/07/26 02:46:11 diegopires Exp $
+ * @version $Id: SimpleListener.java,v 1.4 2005/07/26 03:05:38 rafaelsteil Exp $
  */
-public class SimpleListener implements JobListener {
+public class SimpleListener implements JobListener
+{
 	private static Logger logger = Logger.getLogger(SimpleListener.class);
-
 	private String name;
-
-	public void setName(String name) {
+	
+	public void setName(String name)
+	{
 		this.name = name;
 	}
-
+	
 	/**
 	 * @see org.quartz.JobListener#getName()
 	 */
-	public String getName() {
+	public String getName()
+	{
 		return this.name;
 	}
 
 	/**
 	 * @see org.quartz.JobListener#jobToBeExecuted(org.quartz.JobExecutionContext)
 	 */
-	public void jobToBeExecuted(JobExecutionContext context) {
-		logger.info("Job going to be executed: "
-				+ context.getJobDetail().getName() + ", "
-				+ context.getJobDetail().getDescription() + "[" + new Date()
-				+ "]");
+	public void jobToBeExecuted(JobExecutionContext context)
+	{
+		logger.info("Job going to be executed: " + context.getJobDetail().getName() 
+				+ ", " + context.getJobDetail().getDescription()
+				+ "[" + new Date() + "]");
 	}
 
 	/**
 	 * @see org.quartz.JobListener#jobExecutionVetoed(org.quartz.JobExecutionContext)
 	 */
-	public void jobExecutionVetoed(JobExecutionContext context) {
-	}
+	public void jobExecutionVetoed(JobExecutionContext context) {}
 
 	/**
-	 * @see org.quartz.JobListener#jobWasExecuted(org.quartz.JobExecutionContext,
-	 *      org.quartz.JobExecutionException)
+	 * @see org.quartz.JobListener#jobWasExecuted(org.quartz.JobExecutionContext, org.quartz.JobExecutionException)
 	 */
-	public void jobWasExecuted(JobExecutionContext context,
-			JobExecutionException jobException) {
-		logger.info("Job execution ended: " + context.getJobDetail().getName()
-				+ ", " + context.getJobDetail().getDescription() + "["
-				+ new Date() + "]");
+	public void jobWasExecuted(JobExecutionContext context, JobExecutionException jobException)
+	{
+		logger.info("Job execution ended: " + context.getJobDetail().getName() 
+				+ ", " + context.getJobDetail().getDescription()
+				+ "[" + new Date() + "]");
 	}
 
 }

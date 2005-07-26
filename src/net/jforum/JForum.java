@@ -72,62 +72,58 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.75 2005/07/26 02:45:32 diegopires Exp $
+ * @version $Id: JForum.java,v 1.76 2005/07/26 03:04:40 rafaelsteil Exp $
  */
-public class JForum extends JForumBaseServlet {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3731450374143156991L;
-
+public class JForum extends JForumBaseServlet 
+{
 	private static boolean isDatabaseUp;
-
 	private static Logger logger = Logger.getLogger(JForum.class);
-
+	
 	/**
 	 * @see javax.servlet.Servlet#init(javax.servlet.ServletConfig)
 	 */
-	public void init(ServletConfig config) throws ServletException {
+	public void init(ServletConfig config) throws ServletException
+	{
 		super.init(config);
-
+		
 		// Start database
 		isDatabaseUp = ForumStartup.startDatabase();
-
+		
 		// Configure ThreadLocal
 		DataHolder dh = new DataHolder();
 		Connection conn;
-
+		
 		try {
 			conn = DBConnection.getImplementation().getConnection();
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			throw new ForumStartupException("Error while starting jforum", e);
 		}
-
+		
 		dh.setConnection(conn);
 		JForum.setThreadLocalData(dh);
-
+		
 		// Init general forum stuff
 		ForumStartup.startForumRepository();
 		RankingRepository.loadRanks();
 		SmiliesRepository.loadSmilies();
-
+		
 		// Finalize
 		if (conn != null) {
 			try {
 				DBConnection.getImplementation().releaseConnection(conn);
-			} catch (Exception e) {
 			}
+			catch (Exception e) {}
 		}
-
+		
 		JForum.setThreadLocalData(null);
 	}
-
+	
 	/**
-	 * @see javax.servlet.http.HttpServlet#service(javax.servlet.http.HttpServletRequest,
-	 *      javax.servlet.http.HttpServletResponse)
+	 * @see javax.servlet.http.HttpServlet#service(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
-	public void service(HttpServletRequest req, HttpServletResponse response)
-			throws IOException, ServletException {
+	public void service(HttpServletRequest req, HttpServletResponse response) throws IOException, ServletException
+	{
 		Writer out = null;
 
 		try {
@@ -142,137 +138,138 @@ public class JForum extends JForumBaseServlet {
 
 			dataHolder.setResponse(response);
 			dataHolder.setRequest(request);
-
+			
 			if (!isDatabaseUp) {
 				ForumStartup.startDatabase();
 			}
-
+			
 			localData.set(dataHolder);
-
+			
 			// Setup stuff
 			SimpleHash context = JForum.getContext();
-
+			
 			ControllerUtils utils = new ControllerUtils();
 			utils.refreshSession();
 			utils.prepareTemplateContext(context);
-
+			
 			boolean logged = "1".equals(SessionFacade.getAttribute("logged"));
-
+			
 			context.put("logged", logged);
-
+			
 			// Process security data
 			SecurityRepository.load(SessionFacade.getUserSession().getUserId());
 
 			String module = request.getModule();
-
+			
 			// Gets the module class name
 			String moduleClass = ModulesRepository.getModuleClass(module);
-
+			
 			context.put("moduleName", module);
 			context.put("action", request.getAction());
-
-			context
-					.put("securityHash", MD5
-							.crypt(request.getSession().getId()));
+			
+			context.put("securityHash", MD5.crypt(request.getSession().getId()));
 			context.put("session", SessionFacade.getUserSession());
-
+		
 			if (moduleClass != null) {
 				// Here we go, baby
-				Command c = (Command) Class.forName(moduleClass).newInstance();
+				Command c = (Command)Class.forName(moduleClass).newInstance();
 				Template template = c.process(request, response, context);
 
-				DataHolder dh = (DataHolder) localData.get();
-
+				DataHolder dh = (DataHolder)localData.get();
+				
 				if (dh.getRedirectTo() == null) {
 					String contentType = dh.getContentType();
-
+					
 					if (contentType == null) {
 						contentType = "text/html; charset=" + encoding;
 					}
-
+					
 					response.setContentType(contentType);
-
-					// Binary content are expected to be fully
+					
+					// Binary content are expected to be fully 
 					// handled in the action, including outputstream
 					// manipulation
 					if (!dh.isBinaryContent()) {
-						out = new BufferedWriter(new OutputStreamWriter(
-								response.getOutputStream(), encoding));
+						out = new BufferedWriter(new OutputStreamWriter(response.getOutputStream(), encoding));
 						template.process(JForum.getContext(), out);
 						out.flush();
 					}
 				}
-			} else {
-				logger.error("Cannot find the module class name for "
-						+ "[module=" + module + ", " + "action="
-						+ request.getAction() + "]");
 			}
-		} catch (Exception e) {
+			else {
+				logger.error("Cannot find the module class name for "
+						+ "[module=" + module + ", "
+						+ "action=" + request.getAction() + "]");
+			}
+		}
+		catch (Exception e) {
 			JForum.enableCancelCommit();
-
+			
 			if (e.toString().indexOf("ClientAbortException") == -1) {
 				response.setContentType("text/html");
 				if (out != null) {
 					new ExceptionWriter().handleExceptionData(e, out);
-				} else {
-					new ExceptionWriter().handleExceptionData(e,
-							new BufferedWriter(new OutputStreamWriter(response
-									.getOutputStream())));
+				}
+				else {
+					new ExceptionWriter().handleExceptionData(e, new BufferedWriter(new OutputStreamWriter(response.getOutputStream())));
 				}
 			}
-		} finally {
+		}
+		finally {
 			this.releaseConnection();
-
-			DataHolder dh = (DataHolder) localData.get();
-
+			
+			DataHolder dh = (DataHolder)localData.get();
+			
 			if (dh != null) {
 				String redirectTo = dh.getRedirectTo();
-
+				
 				if (redirectTo != null) {
 					response.sendRedirect(redirectTo);
 				}
 			}
-
+			
 			localData.set(null);
-		}
+		}		
 	}
-
-	private void releaseConnection() {
+	
+	private void releaseConnection()
+	{
 		Connection conn = JForum.getConnection(false);
-
+		
 		if (conn != null) {
-			if (SystemGlobals
-					.getBoolValue(ConfigKeys.DATABASE_USE_TRANSACTIONS)) {
+			if (SystemGlobals.getBoolValue(ConfigKeys.DATABASE_USE_TRANSACTIONS)) {
 				if (JForum.cancelCommit()) {
 					try {
 						conn.rollback();
-					} catch (Exception e) {
-						logger.error("Error while rolling back a transaction",
-								e);
 					}
-				} else {
+					catch (Exception e) {
+						logger.error("Error while rolling back a transaction", e);
+					}
+				}
+				else {
 					try {
 						conn.commit();
-					} catch (Exception e) {
+					}
+					catch (Exception e) {
 						logger.error("Error while commiting a transaction", e);
 					}
 				}
 			}
-
+				
 			DBConnection.getImplementation().releaseConnection(conn);
 		}
 	}
-
-	/**
+	
+	/** 
 	 * @see javax.servlet.GenericServlet#destroy()
 	 */
 	public void destroy() {
 		super.destroy();
 		System.out.println("Destroying JForum...");
-
+		
 		try {
 			DBConnection.getImplementation().realReleaseAllConnections();
-		} catch (Exception e) {
 		}
+		catch (Exception e) {}
 	}
 }

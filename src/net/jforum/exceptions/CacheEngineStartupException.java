@@ -44,11 +44,12 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: CacheEngineStartupException.java,v 1.1 2005/02/01 21:41:56
- *          rafaelsteil Exp $
+ * @version $Id: CacheEngineStartupException.java,v 1.3 2005/07/26 03:04:35 rafaelsteil Exp $
  */
-public class CacheEngineStartupException extends RuntimeException {
-	public CacheEngineStartupException(String message) {
+public class CacheEngineStartupException extends RuntimeException
+{
+	public CacheEngineStartupException(String message)
+	{
 		super(message);
 	}
 }

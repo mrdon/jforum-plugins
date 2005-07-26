@@ -83,14 +83,16 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.32 2005/07/26 02:46:12 diegopires Exp $
+ * @version $Id: InstallAction.java,v 1.33 2005/07/26 03:06:09 rafaelsteil Exp $
  */
-public class InstallAction extends Command {
+public class InstallAction extends Command
+{
 	private static Logger logger = Logger.getLogger(InstallAction.class);
-
-	public void welcome() throws Exception {
+	
+	public void welcome() throws Exception
+	{
 		this.checkLanguage();
-
+		
 		this.context.put("language", this.getFromSession("language"));
 		this.context.put("database", this.getFromSession("database"));
 		this.context.put("dbhost", this.getFromSession("dbHost"));
@@ -102,297 +104,305 @@ public class InstallAction extends Command {
 		this.context.put("forumLink", this.getFromSession("forumLink"));
 		this.context.put("siteLink", this.getFromSession("siteLink"));
 		this.context.put("dbdatasource", this.getFromSession("dbdatasource"));
-
+		
 		this.context.put("moduleAction", "install.htm");
 	}
-
-	private void checkLanguage() throws IOException {
+	
+	private void checkLanguage() throws IOException
+	{
 		String lang = this.request.getParameter("l");
 		if (lang == null || !I18n.languageExists(lang)) {
 			return;
 		}
-
+		
 		I18n.load(lang);
-
+		
 		UserSession us = new UserSession();
 		us.setLang(lang);
-
+		
 		SessionFacade.add(us);
 		this.addToSessionAndContext("language", lang);
 	}
-
-	private String getFromSession(String key) {
-		return (String) this.request.getSession().getAttribute(key);
+	
+	private String getFromSession(String key)
+	{
+		return (String)this.request.getSession().getAttribute(key);
 	}
-
-	private void error() {
+	
+	private void error()
+	{
 		this.context.put("moduleAction", "install_error.htm");
 	}
-
-	public void doInstall() throws Exception {
+	
+	public void doInstall() throws Exception
+	{
 		Connection conn = null;
-
+		
 		if (!this.checkForWritableDir()) {
 			return;
 		}
-
+		
 		this.removeUserConfig();
-
+		
 		if (!"passed".equals(this.getFromSession("configureDatabase"))) {
 			logger.info("Going to configure the database...");
 			conn = this.configureDatabase();
 			if (conn == null) {
-				this.context.put("message", I18n
-						.getMessage("Install.databaseError"));
+				this.context.put("message", I18n.getMessage("Install.databaseError"));
 				this.error();
 				return;
 			}
 		}
-
+		
 		logger.info("Database configuration ok");
 
 		// Database Configuration is ok
 		this.addToSessionAndContext("configureDatabase", "passed");
-
+		
 		DBConnection simpleConnection = new SimpleConnection();
 		if (conn == null) {
 			conn = simpleConnection.getConnection();
 		}
-
-		if (!"passed".equals(this.getFromSession("createTables"))
-				&& !this.createTables(conn)) {
-			this.context.put("message", I18n
-					.getMessage("Install.createTablesError"));
+		
+		if (!"passed".equals(this.getFromSession("createTables")) && !this.createTables(conn)) {
+			this.context.put("message", I18n.getMessage("Install.createTablesError"));
 			simpleConnection.releaseConnection(conn);
 			this.error();
 			return;
 		}
-
+		
 		// Create tables is ok
 		this.addToSessionAndContext("createTables", "passed");
 		logger.info("Table creation is ok");
-
-		if (!"passed".equals(this.getFromSession("importTablesData"))
-				&& !this.importTablesData(conn)) {
-			this.context.put("message", I18n
-					.getMessage("Install.importTablesDataError"));
+		
+		if (!"passed".equals(this.getFromSession("importTablesData")) && !this.importTablesData(conn)) {
+			this.context.put("message", I18n.getMessage("Install.importTablesDataError"));
 			simpleConnection.releaseConnection(conn);
 			this.error();
 			return;
 		}
-
+		
 		// Dump is ok
 		this.addToSessionAndContext("importTablesData", "passed");
-
+		
 		if (!this.updateAdminPassword(conn)) {
-			this.context.put("message", I18n
-					.getMessage("Install.updateAdminError"));
+			this.context.put("message", I18n.getMessage("Install.updateAdminError"));
 			simpleConnection.releaseConnection(conn);
 			this.error();
 			return;
 		}
-
+		
 		simpleConnection.releaseConnection(conn);
 
-		InstallServlet.setRedirect(this.request.getContextPath()
-				+ "/install/install"
+		InstallServlet.setRedirect(this.request.getContextPath() + "/install/install"
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)
 				+ "?module=install&action=finished");
 	}
-
-	private void removeUserConfig() {
-		File f = new File(SystemGlobals
-				.getValue(ConfigKeys.INSTALLATION_CONFIG));
+	
+	private void removeUserConfig()
+	{
+		File f = new File(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG));
 		if (f.exists() && f.canWrite()) {
 			try {
 				f.delete();
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				logger.info(e.toString());
 			}
 		}
 	}
-
-	public void finished() throws Exception {
+	
+	public void finished() throws Exception
+	{
 		this.context.put("clickHere", I18n.getMessage("Install.clickHere"));
 		this.context.put("forumLink", this.getFromSession("forumLink"));
 		this.context.put("moduleAction", "install_finished.htm");
-
+		
 		String lang = this.getFromSession("language");
 		if (lang == null) {
 			lang = "en_US";
 		}
-
+		
 		this.context.put("lang", lang);
-
+		
 		this.doFinalSteps();
 		this.configureSystemGlobals();
 
-		SystemGlobals.loadQueries(SystemGlobals
-				.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
-		SystemGlobals.loadQueries(SystemGlobals
-				.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
-
-		SessionFacade.remove(this.request.getSession().getId());
+		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
+        SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
+        
+        SessionFacade.remove(this.request.getSession().getId());
 	}
-
-	private void doFinalSteps() {
+	
+	private void doFinalSteps()
+	{
 		try {
 			// Modules Mapping
-			String modulesMapping = SystemGlobals
-					.getValue(ConfigKeys.CONFIG_DIR)
-					+ "/modulesMapping.properties";
+			String modulesMapping = SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/modulesMapping.properties";
 			if (new File(modulesMapping).canWrite()) {
 				Properties p = new Properties();
 				p.load(new FileInputStream(modulesMapping));
-
+				
 				if (p.containsKey("install")) {
 					p.remove("install");
-
-					p.store(new FileOutputStream(modulesMapping),
-							"Modified by JForum Installer");
-
+					
+					p.store(new FileOutputStream(modulesMapping), "Modified by JForum Installer");
+					
 					this.addToSessionAndContext("mappingFixed", "true");
-					ConfigLoader.loadModulesMapping(SystemGlobals
-							.getValue(ConfigKeys.CONFIG_DIR));
+					ConfigLoader.loadModulesMapping(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR));
 				}
 			}
-		} catch (Exception e) {
-			logger.warn("Error while working on modulesMapping.properties: "
-					+ e);
 		}
-
+		catch (Exception e) {
+			logger.warn("Error while working on modulesMapping.properties: " + e);
+		}
+		
+		
 		try {
 			// Index renaming
 			String index = SystemGlobals.getApplicationPath() + "/index.htm";
 			File indexFile = new File(index);
 			if (indexFile.canWrite()) {
-				String newIndex = SystemGlobals.getApplicationPath()
-						+ "/new_rename.htm";
+				String newIndex = SystemGlobals.getApplicationPath() + "/new_rename.htm";
 				File newIndexFile = new File(newIndex);
 				if (newIndexFile.exists()) {
 					indexFile.delete();
 					newIndexFile.renameTo(indexFile);
-
+					
 					this.addToSessionAndContext("indexFixed", "true");
 				}
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			logger.warn("Error while renaming index.htm: " + e);
 		}
 	}
-
-	private void configureSystemGlobals() throws Exception {
-		SystemGlobals.setValue(ConfigKeys.USER_HASH_SEQUENCE, MD5.crypt(this
-				.getFromSession("dbPassword")
+	
+	private void configureSystemGlobals() throws Exception
+	{
+		SystemGlobals.setValue(ConfigKeys.USER_HASH_SEQUENCE, MD5.crypt(this.getFromSession("dbPassword")
 				+ System.currentTimeMillis()));
 
-		SystemGlobals.setValue(ConfigKeys.FORUM_LINK, this
-				.getFromSession("forumLink"));
-		SystemGlobals.setValue(ConfigKeys.HOMEPAGE_LINK, this
-				.getFromSession("siteLink"));
-		SystemGlobals.setValue(ConfigKeys.I18N_DEFAULT, this
-				.getFromSession("language"));
+		SystemGlobals.setValue(ConfigKeys.FORUM_LINK, this.getFromSession("forumLink"));
+		SystemGlobals.setValue(ConfigKeys.HOMEPAGE_LINK, this.getFromSession("siteLink"));
+		SystemGlobals.setValue(ConfigKeys.I18N_DEFAULT, this.getFromSession("language"));
 		SystemGlobals.setValue(ConfigKeys.INSTALLED, "true");
 		SystemGlobals.saveInstallation();
-
+		
 		this.restartSystemGlobals();
 	}
-
-	private boolean importTablesData(Connection conn) throws Exception {
+	
+	private boolean importTablesData(Connection conn) throws Exception
+	{
 		boolean status = true;
 		boolean autoCommit = conn.getAutoCommit();
 		conn.setAutoCommit(false);
-
+		
 		String dbType = this.getFromSession("database");
-
+		
 		if (dbType.startsWith("mysql")) {
 			dbType = "mysql";
 		}
-
-		List statements = this.readFromDat(SystemGlobals
-				.getApplicationResourceDir()
-				+ "/setup-files/" + dbType + "_dump.dat");
+		
+		List statements = this.readFromDat(SystemGlobals.getApplicationResourceDir() 
+				+ "/setup-files/" 
+				+ dbType + "_dump.dat");
 		for (Iterator iter = statements.iterator(); iter.hasNext();) {
-			String query = (String) iter.next();
+			String query = (String)iter.next();
 			if (query == null || "".equals(query.trim())) {
 				continue;
 			}
-
+			
 			query = query.trim();
-
+			
 			Statement s = conn.createStatement();
-
+			
 			try {
 				if (query.startsWith("UPDATE") || query.startsWith("INSERT")
 						|| query.startsWith("SET")) {
 					s.executeUpdate(query);
-				} else if (query.startsWith("SELECT")) {
+				}
+				else if (query.startsWith("SELECT")) {
 					s.executeQuery(query);
-				} else {
+				}
+				else {
 					throw new Exception("Invalid query: " + query);
 				}
-			} catch (SQLException ex) {
+			}
+			catch (SQLException ex) {
 				status = false;
 				conn.rollback();
 				logger.error("Error importing data for " + query + ": " + ex);
-				this.context.put("exceptionMessage", ex.getMessage() + "\n"
-						+ query);
+				this.context.put("exceptionMessage", ex.getMessage() + "\n" + query);
 				break;
-			} finally {
+			}
+			finally {
 				s.close();
 			}
 		}
-
+		
 		conn.setAutoCommit(autoCommit);
 		return status;
 	}
-
-	private boolean createTables(Connection conn) throws Exception {
+	
+	private Properties loadProperties(String filename) throws IOException
+	{
+		Properties p = new Properties();
+		FileInputStream inputStream = new FileInputStream(filename);
+		p.load(inputStream);
+		inputStream.close();
+		
+		return p;
+	}
+	
+	private boolean createTables(Connection conn) throws Exception
+	{
 		logger.info("Going to create tables...");
 		String dbType = this.getFromSession("database");
-
+		
 		if ("postgresql".equals(dbType)) {
 			this.dropPostgresqlTables(conn);
-		} else if (dbType.startsWith("mysql")) {
+		}
+		else if (dbType.startsWith("mysql")) {
 			dbType = "mysql";
 		}
-
+		
 		boolean status = true;
-		List statements = this.readFromDat(SystemGlobals.getApplicationPath()
-				+ "/install/" + dbType + "_structure.dat");
-		for (Iterator iter = statements.iterator(); iter.hasNext();) {
-			String query = (String) iter.next();
+		List statements = this.readFromDat(SystemGlobals.getApplicationPath() + "/install/" + dbType + "_structure.dat");
+		for (Iterator iter = statements.iterator(); iter.hasNext(); ) {
+			String query = (String)iter.next();
 			if (query == null || "".equals(query.trim())) {
 				continue;
 			}
-
+			
 			Statement s = conn.createStatement();
-
+			
 			try {
 				s.executeUpdate(query);
-			} catch (SQLException ex) {
+			}
+			catch (SQLException ex) {
 				status = false;
 
 				logger.error("Error executing query: " + query + ": " + ex);
-				this.context.put("exceptionMessage", ex.getMessage() + "\n"
-						+ query);
-
+				this.context.put("exceptionMessage", ex.getMessage() + "\n" + query);
+				
 				break;
-			} finally {
+			}
+			finally {
 				s.close();
 			}
 		}
-
+		
 		return status;
 	}
-
-	private boolean checkForWritableDir() {
+	
+	private boolean checkForWritableDir()
+	{
 		boolean canWriteToWebInf = this.canWriteToWebInf();
 		boolean canWriteToIndex = this.canWriteToIndex();
-
+		
 		if (!canWriteToWebInf || !canWriteToIndex) {
-			this.context.put("message", I18n
-					.getMessage("Install.noWritePermission"));
+			this.context.put("message", I18n.getMessage("Install.noWritePermission"));
 			this.context.put("tryAgain", true);
 			this.error();
 			return false;
@@ -400,197 +410,188 @@ public class InstallAction extends Command {
 
 		return true;
 	}
-
-	private boolean canWriteToWebInf() {
-		return new File(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
-				+ "/modulesMapping.properties").canWrite();
+	
+	private boolean canWriteToWebInf()
+	{
+		return new File(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/modulesMapping.properties").canWrite();
 	}
-
-	private boolean canWriteToIndex() {
-		return new File(SystemGlobals.getApplicationPath() + "/index.htm")
-				.canWrite();
+	
+	
+	private boolean canWriteToIndex()
+	{
+		return new File(SystemGlobals.getApplicationPath() + "/index.htm").canWrite();
 	}
-
-	private void configureNativeConnection() throws Exception {
+	
+	private void configureNativeConnection() throws Exception
+	{
 		String username = this.getFromSession("dbUser");
 		String password = this.getFromSession("dbPassword");
 		String dbName = this.getFromSession("dbName");
 		String host = this.getFromSession("dbHost");
 		String type = this.getFromSession("database");
 		String encoding = this.getFromSession("dbEncoding");
-
+		
 		boolean isMysql = type.startsWith("mysql");
 		boolean isMysql41 = "mysql41".equals(type);
-
+		
 		if (isMysql) {
 			type = "mysql";
 		}
-
+		
 		Properties p = new Properties();
-		p.load(new FileInputStream(SystemGlobals
-				.getValue(ConfigKeys.CONFIG_DIR)
+		p.load(new FileInputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) 
 				+ "/database/" + type + "/" + type + ".properties"));
-
+		
 		// Write database information to the respective file
 		p.setProperty(ConfigKeys.DATABASE_CONNECTION_HOST, host);
 		p.setProperty(ConfigKeys.DATABASE_CONNECTION_USERNAME, username);
 		p.setProperty(ConfigKeys.DATABASE_CONNECTION_PASSWORD, password);
 		p.setProperty(ConfigKeys.DATABASE_CONNECTION_DBNAME, dbName);
 		p.setProperty(ConfigKeys.DATABASE_CONNECTION_ENCODING, encoding);
-
+		
 		if (isMysql41) {
 			p.setProperty(ConfigKeys.DATABASE_MYSQL_ENCODING, "");
 			p.setProperty(ConfigKeys.DATABASE_MYSQL_UNICODE, "");
 		}
-
+		
 		try {
-			p.store(new FileOutputStream(SystemGlobals
-					.getValue(ConfigKeys.CONFIG_DIR)
+			p.store(new FileOutputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) 
 					+ "/database/" + type + "/" + type + ".properties"), null);
-		} catch (Exception e) {
-			logger.warn("Error while trying to write to " + type
-					+ ".properties: " + e);
 		}
-
+		catch (Exception e) {
+			logger.warn("Error while trying to write to " + type + ".properties: " + e);
+		}
+		
 		// Proceed to SystemGlobals / jforum-custom.conf configuration
-		for (Enumeration e = p.keys(); e.hasMoreElements();) {
-			String key = (String) e.nextElement();
+		for (Enumeration e = p.keys(); e.hasMoreElements(); ) {
+			String key = (String)e.nextElement();
 			SystemGlobals.setValue(key, p.getProperty(key));
 		}
-
+		
 		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_HOST, host);
-		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_USERNAME,
-				username);
-		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_PASSWORD,
-				password);
+		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_USERNAME, username);
+		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_PASSWORD, password);
 		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_DBNAME, dbName);
-		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_ENCODING,
-				encoding);
+		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_ENCODING, encoding);
 	}
-
-	private void copyFile(String from, String to) throws Exception {
+	
+	private void copyFile(String from, String to) throws Exception
+	{
 		FileChannel source = new FileInputStream(new File(from)).getChannel();
-		FileChannel dest = new FileOutputStream(new File(to)).getChannel();
-
+		FileChannel dest =  new FileOutputStream(new File(to)).getChannel();
+		
 		source.transferTo(0, source.size(), dest);
 		source.close();
 		dest.close();
 	}
-
-	private Connection configureDatabase() throws Exception {
+	
+	private Connection configureDatabase() throws Exception
+	{
 		String database = this.getFromSession("database");
 		String connectionType = this.getFromSession("db_connection_type");
 		String implementation;
 		boolean isDs = false;
-
+		
 		if ("native".equals(connectionType)) {
-			implementation = "yes".equals(this.getFromSession("usePool")) ? "net.jforum.PooledConnection"
-					: "net.jforum.SimpleConnection";
-
+			implementation = "yes".equals(this.getFromSession("usePool")) 
+				? "net.jforum.PooledConnection"
+				: "net.jforum.SimpleConnection";
+			
 			this.configureNativeConnection();
-		} else {
+		}
+		else {
 			isDs = true;
 			implementation = "net.jforum.DataSourceConnection";
-			SystemGlobals.setValue(ConfigKeys.DATABASE_DATASOURCE_NAME, this
-					.getFromSession("dbdatasource"));
+			SystemGlobals.setValue(ConfigKeys.DATABASE_DATASOURCE_NAME, this.getFromSession("dbdatasource"));
 		}
-
+		
 		if (database.startsWith("mysql")) {
 			if ("mysql41".equals(database)) {
-				String path = SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
-						+ "/database/mysql";
-
-				this.copyFile(path + "/mysql_41.sql", path
-						+ "/mysql_41-bkp.sql");
-
+				String path = SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/database/mysql";
+				
+				this.copyFile(path + "/mysql_41.sql", path + "/mysql_41-bkp.sql");
+				
 				new File(path + "/mysql.sql").delete();
-				new File(path + "/mysql_41.sql").renameTo(new File(path
-						+ "/mysql.sql"));
-
-				this.copyFile(path + "/mysql_41-bkp.sql", path
-						+ "/mysql_41.sql");
+				new File(path + "/mysql_41.sql").renameTo(new File(path + "/mysql.sql"));
+				
+				this.copyFile(path + "/mysql_41-bkp.sql", path + "/mysql_41.sql");
 			}
-
+			
 			database = "mysql";
 		}
-
-		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_IMPLEMENTATION,
-				implementation);
+		
+		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_IMPLEMENTATION, implementation);
 		SystemGlobals.setValue(ConfigKeys.DATABASE_DRIVER_NAME, database);
-
+		
 		SystemGlobals.saveInstallation();
 		this.restartSystemGlobals();
-
-		int fileChangesDelay = SystemGlobals
-				.getIntValue(ConfigKeys.FILECHANGES_DELAY);
+		
+		int fileChangesDelay = SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY);
 		if (fileChangesDelay > 0) {
-			FileMonitor.getInstance().addFileChangeListener(
-					new SystemGlobalsListener(),
-					SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG),
-					fileChangesDelay);
+			FileMonitor.getInstance().addFileChangeListener(new SystemGlobalsListener(),
+					SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG), fileChangesDelay);
 		}
-
+		
 		Connection conn = null;
-
+		
 		try {
 			DBConnection s;
-
-			if (!isDs) {
+			
+			if (!isDs) { 
 				s = new SimpleConnection();
-			} else {
-				s = new DataSourceConnection();
 			}
-
+			else {
+				s =  new DataSourceConnection();
+			}
+			
 			s.init();
-
+			
 			conn = s.getConnection();
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			logger.warn("Error while trying to get a connection: " + e);
 			this.context.put("exceptionMessage", e.getMessage());
 			return null;
 		}
-
+		
 		return conn;
 	}
-
-	private void restartSystemGlobals() throws Exception {
+	
+	private void restartSystemGlobals() throws Exception
+	{
 		String appPath = SystemGlobals.getApplicationPath();
-		SystemGlobals.initGlobals(appPath, appPath
-				+ "/WEB-INF/config/SystemGlobals.properties");
-		SystemGlobals.loadAdditionalDefaults(SystemGlobals
-				.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
-
-		if (new File(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG))
-				.exists()) {
-			SystemGlobals.loadAdditionalDefaults(SystemGlobals
-					.getValue(ConfigKeys.INSTALLATION_CONFIG));
-		}
+		SystemGlobals.initGlobals(appPath, appPath + "/WEB-INF/config/SystemGlobals.properties");
+        SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
+        
+        if (new File(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG)).exists()) {
+            SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG));
+        }
 	}
-
-	private boolean updateAdminPassword(Connection conn) throws Exception {
+	
+	private boolean updateAdminPassword(Connection conn) throws Exception
+	{
 		logger.info("Going to update the administrator's password");
-
+		
 		boolean status = false;
-
+		
 		try {
-			PreparedStatement p = conn
-					.prepareStatement("UPDATE jforum_users SET user_password = ? WHERE username = 'Admin'");
+			PreparedStatement p = conn.prepareStatement("UPDATE jforum_users SET user_password = ? WHERE username = 'Admin'");
 			p.setString(1, MD5.crypt(this.getFromSession("adminPassword")));
 			p.executeUpdate();
 			p.close();
-
+			
 			status = true;
-		} catch (Exception e) {
-			logger
-					.warn("Error while trying to update the administrator's password: "
-							+ e);
+		}
+		catch (Exception e) {
+			logger.warn("Error while trying to update the administrator's password: " + e);
 			this.context.put("exceptionMessage", e.getMessage());
 		}
-
+		
 		return status;
 	}
-
-	public void checkInformation() throws Exception {
+	
+	public void checkInformation() throws Exception
+	{
 		String language = this.request.getParameter("language");
 		String database = this.request.getParameter("database");
 		String dbHost = this.request.getParameter("dbhost");
@@ -602,17 +603,17 @@ public class InstallAction extends Command {
 		String usePool = this.request.getParameter("use_pool");
 		String forumLink = this.request.getParameter("forum_link");
 		String adminPassword = this.request.getParameter("admin_pass1");
-
+		
 		dbHost = this.notNullDefault(dbHost, "localhost");
 		dbEncodingOther = this.notNullDefault(dbEncodingOther, "utf-8");
 		dbEncoding = this.notNullDefault(dbEncoding, dbEncodingOther);
 		forumLink = this.notNullDefault(forumLink, "http://localhost");
 		dbName = this.notNullDefault(dbName, "jforum");
-
+		
 		if ("hsqldb".equals(database)) {
 			dbUser = this.notNullDefault(dbUser, "sa");
 		}
-
+		
 		this.addToSessionAndContext("language", language);
 		this.addToSessionAndContext("database", database);
 		this.addToSessionAndContext("dbHost", dbHost);
@@ -622,102 +623,99 @@ public class InstallAction extends Command {
 		this.addToSessionAndContext("dbEncoding", dbEncoding);
 		this.addToSessionAndContext("usePool", usePool);
 		this.addToSessionAndContext("forumLink", forumLink);
-		this.addToSessionAndContext("siteLink", this.request
-				.getParameter("site_link"));
+		this.addToSessionAndContext("siteLink", this.request.getParameter("site_link"));
 		this.addToSessionAndContext("adminPassword", adminPassword);
-		this.addToSessionAndContext("dbdatasource", this.request
-				.getParameter("dbdatasource"));
-		this.addToSessionAndContext("db_connection_type", this.request
-				.getParameter("db_connection_type"));
-
+		this.addToSessionAndContext("dbdatasource", this.request.getParameter("dbdatasource"));
+		this.addToSessionAndContext("db_connection_type", this.request.getParameter("db_connection_type"));
+		
 		this.addToSessionAndContext("configureDatabase", null);
 		this.addToSessionAndContext("createTables", null);
 		this.addToSessionAndContext("importTablesData", null);
-
+		
 		this.context.put("canWriteToWebInf", this.canWriteToWebInf());
 		this.context.put("canWriteToIndex", this.canWriteToIndex());
-
+		
 		this.context.put("moduleAction", "install_check_info.htm");
 	}
-
-	private List readFromDat(String filename) throws Exception {
+	
+	private List readFromDat(String filename) throws Exception
+	{
 		List l = new ArrayList();
-
+		
 		FileInputStream fis = new FileInputStream(filename);
 		ObjectInputStream in = new ObjectInputStream(fis);
-		l = (ArrayList) in.readObject();
+		l = (ArrayList)in.readObject();
 		in.close();
-
+		
 		return l;
 	}
-
-	private void dropPostgresqlTables(Connection conn) throws Exception {
-		String[] tables = { "jforum_banlist", "jforum_banlist_seq",
-				"jforum_categories", "jforum_categories_order_seq",
-				"jforum_categories_seq", "jforum_config", "jforum_config_seq",
-				"jforum_forums", "jforum_forums_seq", "jforum_groups",
-				"jforum_groups_seq", "jforum_posts", "jforum_posts_seq",
-				"jforum_posts_text", "jforum_privmsgs", "jforum_privmsgs_seq",
-				"jforum_privmsgs_text", "jforum_ranks", "jforum_ranks_seq",
-				"jforum_role_values", "jforum_roles", "jforum_roles_seq",
-				"jforum_search_results", "jforum_search_topics",
-				"jforum_search_wordmatch", "jforum_search_words",
-				"jforum_search_words_seq", "jforum_sessions", "jforum_smilies",
-				"jforum_smilies_seq", "jforum_themes", "jforum_themes_seq",
-				"jforum_topics", "jforum_topics_seq", "jforum_topics_watch",
-				"jforum_user_groups", "jforum_users", "jforum_users_seq",
-				"jforum_vote_desc", "jforum_vote_desc_seq",
-				"jforum_vote_results", "jforum_vote_voters", "jforum_words",
-				"jforum_words_seq", "jforum_karma_seq", "jforum_karma",
-				"jforum_bookmarks_seq", "jforum_bookmarks",
-				"jforum_quota_limit", "jforum_quota_limit_seq",
-				"jforum_extension_groups_seq", "jforum_extension_groups",
-				"jforum_extensions_seq", "jforum_extensions",
-				"jforum_attach_seq", "jforum_attach", "jforum_attach_desc_seq",
-				"jforum_attach_desc", "jforum_attach_quota_seq",
-				"jforum_attach_quota" };
+	
+	private void dropPostgresqlTables(Connection conn) throws Exception
+	{
+		String[] tables = { "jforum_banlist", "jforum_banlist_seq", "jforum_categories", 
+				"jforum_categories_order_seq", "jforum_categories_seq", "jforum_config",
+				"jforum_config_seq", "jforum_forums", "jforum_forums_seq", "jforum_groups",
+				"jforum_groups_seq", "jforum_posts", "jforum_posts_seq", "jforum_posts_text",
+				"jforum_privmsgs", "jforum_privmsgs_seq", "jforum_privmsgs_text",
+				"jforum_ranks", "jforum_ranks_seq", "jforum_role_values", "jforum_roles",
+				"jforum_roles_seq", "jforum_search_results", "jforum_search_topics",
+				"jforum_search_wordmatch", "jforum_search_words", "jforum_search_words_seq", "jforum_sessions",
+				"jforum_smilies", "jforum_smilies_seq", "jforum_themes", "jforum_themes_seq",
+				"jforum_topics", "jforum_topics_seq", "jforum_topics_watch", "jforum_user_groups",
+				"jforum_users", "jforum_users_seq", "jforum_vote_desc", "jforum_vote_desc_seq",
+				"jforum_vote_results", "jforum_vote_voters", "jforum_words", "jforum_words_seq",
+				"jforum_karma_seq", "jforum_karma", "jforum_bookmarks_seq", "jforum_bookmarks", 
+				"jforum_quota_limit", "jforum_quota_limit_seq", "jforum_extension_groups_seq", 
+				"jforum_extension_groups", "jforum_extensions_seq", "jforum_extensions", 
+				"jforum_attach_seq", "jforum_attach", "jforum_attach_desc_seq", "jforum_attach_desc",
+				"jforum_attach_quota_seq", "jforum_attach_quota" };
 
 		for (int i = 0; i < tables.length; i++) {
 			Statement s = conn.createStatement();
-			String query = tables[i].endsWith("_seq") ? "DROP SEQUENCE "
-					: "DROP TABLE ";
+			String query = tables[i].endsWith("_seq") ? "DROP SEQUENCE " : "DROP TABLE ";
 			query += tables[i];
-
+			
 			try {
 				s.executeUpdate(query);
-			} catch (SQLException e) {
+			}
+			catch (SQLException e) {
 				logger.info("IGNORE: " + e.getMessage());
 			}
-
+			
 			s.close();
 		}
 	}
-
-	private void addToSessionAndContext(String key, String value) {
+	
+	private void addToSessionAndContext(String key, String value)
+	{
 		this.request.getSession().setAttribute(key, value);
 		this.context.put(key, value);
 	}
-
-	private String notNullDefault(String value, String useDefault) {
+	
+	private String notNullDefault(String value, String useDefault)
+	{
 		if (value == null || value.trim().equals("")) {
 			return useDefault;
 		}
-
+		
 		return value;
 	}
-
-	/**
+	
+	/** 
 	 * @see net.jforum.Command#list()
 	 */
-	public void list() throws Exception {
+	public void list() throws Exception
+	{
 		this.welcome();
 	}
-
-	/**
+	
+	/** 
 	 * @see net.jforum.Command#process()
 	 */
-	public Template process(ActionServletRequest request,
-			HttpServletResponse response, SimpleHash context) throws Exception {
+	public Template process(ActionServletRequest request, 
+			HttpServletResponse response, 
+			SimpleHash context) throws Exception 
+	{
 		this.setTemplateName("default/empty.htm");
 		return super.process(request, response, context);
 	}

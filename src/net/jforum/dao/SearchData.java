@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: SearchData.java,v 1.3 2005/07/26 02:45:27 diegopires Exp $
+ * $Id: SearchData.java,v 1.4 2005/07/26 03:04:31 rafaelsteil Exp $
  */
 package net.jforum.dao;
 
@@ -50,98 +50,112 @@ import java.util.Date;
 /**
  * @author Rafael Steil
  */
-public class SearchData {
+public class SearchData 
+{
+	private static int ORDER_BY_ASC = 0;
+	private static int ORDER_BY_DESC = 1;
+	
 	private String keywords = "";
-
 	private boolean useAllWords;
-
 	private String author;
-
 	private int forumId;
-
 	private int categoryId;
-
 	private String orderBy = "ASC";
-
 	private String orderByField;
-
 	private Date time;
-
 	private boolean searchStarted;
-
-	public void setKeywords(String keywords) {
+	
+	public void setKeywords(String keywords)
+	{
 		this.keywords = keywords;
 	}
-
-	public void setUseAllWords(boolean b) {
+	
+	public void setUseAllWords(boolean b)
+	{
 		this.useAllWords = b;
 	}
-
-	public void setAuthor(String author) {
+	
+	public void setAuthor(String author)
+	{
 		this.author = author;
 	}
-
-	public void setForumId(int forumId) {
+	
+	public void setForumId(int forumId)
+	{
 		this.forumId = forumId;
 	}
-
-	public void setOrderByField(String f) {
+	
+	public void setOrderByField(String f)
+	{
 		this.orderByField = f;
 	}
-
-	public void setSearchStarted(boolean started) {
+	
+	public void setSearchStarted(boolean started)
+	{
 		this.searchStarted = started;
 	}
-
-	public void setCategoryId(int categoryId) {
+	
+	public void setCategoryId(int categoryId)
+	{
 		this.categoryId = categoryId;
 	}
-
-	public void setOrderBy(String orderBy) {
+	
+	public void setOrderBy(String orderBy)
+	{
 		this.orderBy = (orderBy == null ? "ASC" : orderBy);
 	}
-
-	public void setTime(Date time) {
+	
+	public void setTime(Date time) 
+	{
 		this.time = time;
 	}
-
-	public String[] getKeywords() {
+	
+	public String[] getKeywords()
+	{
 		if (this.keywords == null) {
 			return new String[] {};
 		}
 
 		return this.keywords.split(" ");
 	}
-
-	public boolean getUseAllWords() {
+	
+	public boolean getUseAllWords()
+	{
 		return this.useAllWords;
 	}
-
-	public String getAuthor() {
+	
+	public String getAuthor()
+	{
 		return this.author;
 	}
-
-	public int getForumId() {
+	
+	public int getForumId()
+	{
 		return this.forumId;
 	}
-
-	public int getCategoryId() {
+	
+	public int getCategoryId()
+	{
 		return this.categoryId;
 	}
-
-	public String getOrderBy() {
+	
+	public String getOrderBy()
+	{
 		return this.orderBy;
 	}
-
-	public String getOrderByField() {
+	
+	public String getOrderByField()
+	{
 		return this.orderByField;
 	}
-
-	public Date getTime() {
+	
+	public Date getTime()
+	{
 		return this.time;
 	}
-
-	public boolean getSearchStarted() {
+	
+	public boolean getSearchStarted()
+	{
 		return this.searchStarted;
 	}
 }

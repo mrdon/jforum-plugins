@@ -41,37 +41,37 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: Result.java,v 1.3 2005/07/26 02:45:46 diegopires Exp $
+ * $Id: Result.java,v 1.4 2005/07/26 03:05:08 rafaelsteil Exp $
  */
 package net.jforum.util.concurrent;
 
 /**
  * @author Rodrigo Kumpera
  */
-public interface Result {
+public interface Result 
+{	
 	/**
 	 * Returns if the task has thrown an exception or not
-	 */
+	 * */
 	boolean hasThrown() throws IllegalStateException;
-
+	
 	/**
 	 * Returns the result of the task
-	 */
+	 * */
 	Object getResult() throws IllegalStateException;
 
 	/**
 	 * Returns the exception thrown by the task
-	 */
+	 * */
 	Exception getException() throws IllegalStateException;
+	
+	/**
+	 * Waits the completion of the task
+	 * */
+	void waitResult() throws IllegalStateException, InterruptedException; 
 
 	/**
 	 * Waits the completion of the task
-	 */
-	void waitResult() throws IllegalStateException, InterruptedException;
-
-	/**
-	 * Waits the completion of the task
-	 */
-	boolean poolResult(long timeout) throws IllegalStateException,
-			InterruptedException;
+	 * */
+	boolean poolResult(long timeout) throws IllegalStateException, InterruptedException; 
 }

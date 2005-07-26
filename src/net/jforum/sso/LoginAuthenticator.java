@@ -49,39 +49,35 @@ import net.jforum.dao.UserDAO;
 import net.jforum.entities.User;
 
 /**
- * Validates user's credentials. Implementations of this interface are supposed
- * to check for access rights in some "shared" environment, like calling some
- * external procedure, consulting a different users table, reading from a XML
- * file etc.. It is <b>not</b> SSO, since it still will be JForum that will
- * call the validate login methods. <br>
+ * Validates user's credentials. 
+ * Implementations of this interface are supposed
+ * to check for access rights in some "shared" environment, 
+ * like calling some external procedure, consulting a different
+ * users table, reading from a XML file etc.. It is <b>not</b> SSO, 
+ * since it still will be JForum that will call the validate login
+ * methods. 
+ * <br>
  * If you want SSO, please check {@link net.jforum.sso.SSO}
- * 
  * @author Rafael Steil
- * @version $Id: LoginAuthenticator.java,v 1.3 2005/06/02 22:21:59 rafaelsteil
- *          Exp $
+ * @version $Id: LoginAuthenticator.java,v 1.5 2005/07/26 03:05:31 rafaelsteil Exp $
  */
-public interface LoginAuthenticator {
+public interface LoginAuthenticator 
+{
 	/**
 	 * Authenticates an user.
 	 * 
-	 * @param username
-	 *            Username
-	 * @param password
-	 *            Password
-	 * @param extraParams
-	 *            Extra parameters, if any.
-	 * @return An instance of a {@link net.jforum.entities.User} or
-	 *         <code>null</code>
+	 * @param username Username
+	 * @param password Password
+	 * @param extraParams Extra parameters, if any. 
+	 * @return An instance of a {@link net.jforum.entities.User} or <code>null</code>
 	 * @throws Exception
 	 */
-	public User validateLogin(String username, String password, Map extraParams)
-			throws Exception;
-
+	public User validateLogin(String username, String password, Map extraParams) throws Exception;
+	
 	/**
 	 * Sets the user model for the instance.
 	 * 
-	 * @param userModel
-	 *            The user model to set
+	 * @param userModel The user model to set
 	 */
 	public void setUserModel(UserDAO dao);
 }

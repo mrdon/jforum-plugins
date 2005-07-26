@@ -42,20 +42,23 @@
  */
 package net.jforum.view.admin;
 
+
 import javax.servlet.http.HttpServletResponse;
 
-import net.jforum.ActionServletRequest;
-import net.jforum.Command;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
+import net.jforum.ActionServletRequest;
+import net.jforum.Command;
 
 /**
  * @author Rafael Steil
- * @version $Id: AdminCommand.java,v 1.4 2005/07/26 02:45:40 diegopires Exp $
+ * @version $Id: AdminCommand.java,v 1.5 2005/07/26 03:05:42 rafaelsteil Exp $
  */
-public abstract class AdminCommand extends Command {
-	public Template process(ActionServletRequest request,
-			HttpServletResponse response, SimpleHash context) throws Exception {
+public abstract class AdminCommand extends Command
+{
+	public Template process(ActionServletRequest request, HttpServletResponse response, 
+			SimpleHash context) throws Exception
+	{
 		new AdminAction().checkAdmin();
 		return super.process(request, response, context);
 	}

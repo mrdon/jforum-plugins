@@ -46,47 +46,36 @@ import java.io.Serializable;
 
 /**
  * Represents a banner in the System.
- * 
+ *
  * @author Samuel Yung
- * @version $Id: Banner.java,v 1.2 2005/07/26 02:45:52 diegopires Exp $
+ * @version $Id: Banner.java,v 1.3 2005/07/26 03:04:52 rafaelsteil Exp $
  */
-public class Banner implements Serializable {
-	private static final long serialVersionUID = 665553787652802338L;
-
+public class Banner implements Serializable
+{
 	private int id;
-
 	private String comment;
-
 	private boolean active;
-
 	private int type;
-
 	private String name;
-
 	private String description;
-
 	private int width;
-
 	private int height;
-
 	private int views;
-
 	private int clicks;
-
 	private String url;
-
 	private int placement;
-
 	private int weight;
 
-	public Banner() {
-	}
+	public Banner()
+	{}
 
-	public Banner(int id) {
+	public Banner(int id)
+	{
 		this.id = id;
 	}
 
-	public Banner(Banner c) {
+	public Banner(Banner c)
+	{
 		this.id = c.getId();
 		this.comment = c.getComment();
 		this.active = c.isActive();
@@ -105,137 +94,165 @@ public class Banner implements Serializable {
 	/**
 	 * @return int
 	 */
-	public int getId() {
+	public int getId()
+	{
 		return this.id;
 	}
 
-	public String getComment() {
+	public String getComment()
+	{
 		return comment;
 	}
 
-	public boolean isActive() {
+	public boolean isActive()
+	{
 		return active;
 	}
 
-	public int getType() {
+	public int getType()
+	{
 		return type;
 	}
 
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
 
-	public String getDescription() {
+	public String getDescription()
+	{
 		return description;
 	}
 
-	public int getWidth() {
+	public int getWidth()
+	{
 		return width;
 	}
 
-	public int getHeight() {
+	public int getHeight()
+	{
 		return height;
 	}
 
-	public int getViews() {
+	public int getViews()
+	{
 		return views;
 	}
 
-	public int getClicks() {
+	public int getClicks()
+	{
 		return clicks;
 	}
 
-	public String getUrl() {
+	public String getUrl()
+	{
 		return url;
 	}
 
-	public int getPlacement() {
+	public int getPlacement()
+	{
 		return placement;
 	}
 
-	public int getWeight() {
+	public int getWeight()
+	{
 		return weight;
 	}
 
 	/**
 	 * Sets the id.
-	 * 
-	 * @param id
-	 *            The id to set
+	 * @param id The id to set
 	 */
-	public void setId(int id) {
+	public void setId(int id)
+	{
 		this.id = id;
 	}
 
-	public void setComment(String comment) {
+	public void setComment(String comment)
+	{
 		this.comment = comment;
 	}
 
-	public void setActive(boolean active) {
+	public void setActive(boolean active)
+	{
 		this.active = active;
 	}
 
-	public void setType(int type) {
+	public void setType(int type)
+	{
 		this.type = type;
 	}
 
-	public void setName(String name) {
+	public void setName(String name)
+	{
 		this.name = name;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(String description)
+	{
 		this.description = description;
 	}
 
-	public void setWidth(int width) {
+	public void setWidth(int width)
+	{
 		this.width = width;
 	}
 
-	public void setHeight(int height) {
+	public void setHeight(int height)
+	{
 		this.height = height;
 	}
 
-	public void setViews(int views) {
+	public void setViews(int views)
+	{
 		this.views = views;
 	}
 
-	public void setClicks(int clicks) {
+	public void setClicks(int clicks)
+	{
 		this.clicks = clicks;
 	}
 
-	public void setUrl(String url) {
+	public void setUrl(String url)
+	{
 		this.url = url;
 	}
 
-	public void setPlacement(int placement) {
+	public void setPlacement(int placement)
+	{
 		this.placement = placement;
 	}
 
-	public void setWeight(int weight) {
+	public void setWeight(int weight)
+	{
 		this.weight = weight;
 	}
 
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
-	public int hashCode() {
+	public int hashCode()
+	{
 		return this.id;
 	}
 
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	public boolean equals(Object o) {
-		return ((o instanceof Banner) && (((Banner) o).getId() == this.id));
+	public boolean equals(Object o)
+	{
+		return((o instanceof Banner) && (((Banner)o).getId() == this.id));
 	}
 
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	public String toString() {
-		return "[comment=" + this.comment + ", id=" + this.id + ", type="
-				+ this.type + ", name=" + this.name + ", description="
-				+ this.description + ", active=" + this.active + "]";
+	public String toString()
+	{
+		return "[comment=" + this.comment + ", id=" + this.id +
+			", type=" + this.type + ", name=" + this.name +
+			", description=" + this.description + ", active=" +
+			this.active + "]";
 	}
 
 }

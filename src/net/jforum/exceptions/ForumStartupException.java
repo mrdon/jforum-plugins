@@ -44,11 +44,12 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumStartupException.java,v 1.3 2005/06/15 04:51:31
- *          rafaelsteil Exp $
+ * @version $Id: ForumStartupException.java,v 1.5 2005/07/26 03:04:32 rafaelsteil Exp $
  */
-public class ForumStartupException extends ForumException {
-	public ForumStartupException(String message, Throwable t) {
+public class ForumStartupException extends ForumException
+{
+	public ForumStartupException(String message, Throwable t)
+	{
 		super(message, t);
 		this.setStackTrace(t.getStackTrace());
 	}

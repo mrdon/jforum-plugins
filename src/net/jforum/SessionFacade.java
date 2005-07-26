@@ -60,232 +60,230 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.26 2005/07/26 02:45:33 diegopires Exp $
+ * @version $Id: SessionFacade.java,v 1.27 2005/07/26 03:04:40 rafaelsteil Exp $
  */
-public class SessionFacade implements Cacheable {
+public class SessionFacade implements Cacheable
+{
 	private static final Logger logger = Logger.getLogger(SessionFacade.class);
-
+	
 	private static final String FQN = "sessions";
-
 	private static final String FQN_LOGGED = "logged";
-
 	private static final String FQN_COUNT = "count";
-
 	private static final String ANONYMOUS_COUNT = "anonymousCount";
-
 	private static final String LOGGED_COUNT = "loggedCount";
-
+	
 	private static CacheEngine cache;
 
 	/**
 	 * @see net.jforum.cache.Cacheable#setCacheEngine(net.jforum.cache.CacheEngine)
 	 */
-	public void setCacheEngine(CacheEngine engine) {
+	public void setCacheEngine(CacheEngine engine)
+	{
 		cache = engine;
 	}
-
+	
 	/**
-	 * Add a new <code>UserSession</code> entry to the session. This method
-	 * will make a call to <code>JForum.getRequest.getSession().getId()</code>
+	 * Add a new <code>UserSession</code> entry to the session.
+	 * This method will make a call to <code>JForum.getRequest.getSession().getId()</code>
 	 * to retrieve the session's id
 	 * 
-	 * @param us
-	 *            The user session objetc to add
+	 * @param us The user session objetc to add
 	 * @see #add(UserSession, String)
 	 */
-	public static void add(UserSession us) {
+	public static void add(UserSession us)
+	{
 		add(us, JForum.getRequest().getSession().getId());
 	}
 
 	/**
 	 * Registers a new {@link UserSession}.
 	 * <p>
-	 * If a call to {@link UserSession#getUserId()} return a value different of
-	 * <code>SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)</code>,
-	 * then the user will be registered as "logged". Otherwise it will enter as
-	 * anonymous.
+	 * If a call to {@link UserSession#getUserId()} return a value different 
+	 * of <code>SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)</code>, then 
+	 * the user will be registered as "logged". Otherwise it will enter as anonymous.
 	 * </p>
 	 * 
 	 * <p>
-	 * Please note that, in order to keep the number of guest and logged users
-	 * correct, it's caller's responsability to {@link #remove(String)} the
-	 * record before adding it again if the current session is currently
-	 * represented as "guest".
+	 * Please note that, in order to keep the number of guest and logged users correct, 
+	 * it's caller's responsability to {@link #remove(String)} the record before adding it
+	 * again if the current session is currently represented as "guest". 
 	 * </p>
-	 * 
-	 * @param us
-	 *            the UserSession to add
-	 * @param sessionId
-	 *            the user's session id
+	 *  
+	 * @param us the UserSession to add
+	 * @param sessionId the user's session id
 	 */
-	public static void add(UserSession us, String sessionId) {
+	public static void add(UserSession us, String sessionId)
+	{
 		if (us.getSessionId() == null || us.getSessionId().equals("")) {
 			us.setSessionId(sessionId);
 		}
-
+		
 		synchronized (FQN) {
 			cache.add(FQN, us.getSessionId(), us);
-
+			
 			if (!us.isBot()) {
-				if (us.getUserId() != SystemGlobals
-						.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
+				if (us.getUserId() != SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
 					changeUserCount(LOGGED_COUNT, true);
 					cache.add(FQN_LOGGED, us.getSessionId(), us);
-				} else {
+				}
+				else {
 					// TODO: check the anonymous IP constraint
 					changeUserCount(ANONYMOUS_COUNT, true);
 				}
 			}
 		}
 	}
-
-	private static void changeUserCount(String cacheEntryName, boolean increment) {
-		Integer count = (Integer) cache.get(FQN_COUNT, cacheEntryName);
-
+	
+	private static void changeUserCount(String cacheEntryName, boolean increment)
+	{
+		Integer count = (Integer)cache.get(FQN_COUNT, cacheEntryName);
+		
 		if (count == null) {
 			count = new Integer(0);
 		}
-
+		
 		if (increment) {
 			count = new Integer(count.intValue() + 1);
-		} else if (count.intValue() > 0) {
+		}
+		else if (count.intValue() > 0) {
 			count = new Integer(count.intValue() - 1);
 		}
-
+		
 		cache.add(FQN_COUNT, cacheEntryName, count);
 	}
-
+	
 	/**
 	 * Add a new entry to the user's session
 	 * 
-	 * @param name
-	 *            The attribute name
-	 * @param value
-	 *            The attribute value
+	 * @param name The attribute name
+	 * @param value The attribute value
 	 */
-	public static void setAttribute(String name, Object value) {
+	public static void setAttribute(String name, Object value)
+	{
 		JForum.getRequest().getSession().setAttribute(name, value);
 	}
-
+	
 	/**
 	 * Removes an attribute from the session
 	 * 
-	 * @param name
-	 *            The key associated to the the attribute to remove
+	 * @param name The key associated to the the attribute to remove
 	 */
-	public static void removeAttribute(String name) {
+	public static void removeAttribute(String name)
+	{
 		JForum.getRequest().getSession().removeAttribute(name);
 	}
-
+	
 	/**
 	 * Gets an attribute value given its name
 	 * 
-	 * @param name
-	 *            The attribute name to retrieve the value
+	 * @param name The attribute name to retrieve the value
 	 * @return The value as an Object, or null if no entry was found
 	 */
-	public static Object getAttribute(String name) {
+	public static Object getAttribute(String name)
+	{
 		return JForum.getRequest().getSession().getAttribute(name);
 	}
 
 	/**
 	 * Remove an entry fro the session map
 	 * 
-	 * @param sessionId
-	 *            The session id to remove
+	 * @param sessionId The session id to remove
 	 */
-	public static void remove(String sessionId) {
+	public static void remove(String sessionId)
+	{
 		logger.info("Removing session " + sessionId);
-
+		
 		synchronized (FQN) {
 			UserSession us = getUserSession(sessionId);
-
+			
 			if (us != null) {
 				cache.remove(FQN_LOGGED, sessionId);
-
-				if (us.getUserId() != SystemGlobals
-						.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
+				
+				if (us.getUserId() != SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
 					changeUserCount(LOGGED_COUNT, false);
-				} else {
+				}
+				else {
 					changeUserCount(ANONYMOUS_COUNT, false);
 				}
 			}
-
+			
 			cache.remove(FQN, sessionId);
 		}
 	}
-
+	
 	/**
 	 * Get all registered sessions
 	 * 
-	 * @return <code>ArrayList</code> with the sessions. Each entry is an
-	 *         <code>UserSession</code> object.
+	 * @return <code>ArrayList</code> with the sessions. Each entry
+	 * is an <code>UserSession</code> object.
 	 */
-	public static List getAllSessions() {
+	public static List getAllSessions()
+	{
 		synchronized (FQN) {
 			return new ArrayList(cache.getValues(FQN));
 		}
 	}
-
+	
 	/**
 	 * Gets the {@link UserSession} instance of all logged users
-	 * 
 	 * @return A list with the user sessions
 	 */
-	public static List getLoggedSessions() {
+	public static List getLoggedSessions()
+	{
 		synchronized (FQN) {
 			return new ArrayList(cache.getValues(FQN_LOGGED));
 		}
 	}
-
+	
 	/**
 	 * Get the number of logged users
-	 * 
 	 * @return the number of logged users
 	 */
-	public static int registeredSize() {
-		Integer count = (Integer) cache.get(FQN_COUNT, LOGGED_COUNT);
+	public static int registeredSize()
+	{
+		Integer count = (Integer)cache.get(FQN_COUNT, LOGGED_COUNT);
 
 		return (count == null ? 0 : count.intValue());
 	}
-
+	
 	/**
 	 * Get the number of anonymous users
-	 * 
 	 * @return the nuber of anonymous users
 	 */
-	public static int anonymousSize() {
-		Integer count = (Integer) cache.get(FQN_COUNT, ANONYMOUS_COUNT);
+	public static int anonymousSize()
+	{
+		Integer count = (Integer)cache.get(FQN_COUNT, ANONYMOUS_COUNT);
 
 		return (count == null ? 0 : count.intValue());
 	}
-
-	public static void clear() {
+	
+	public static void clear()
+	{
 		synchronized (FQN) {
 			cache.remove(FQN);
 			cache.add(FQN, new HashMap());
 		}
 	}
-
+	
 	/**
 	 * Gets the user's <code>UserSession</code> object
 	 * 
 	 * @return The <code>UserSession</code> associated to the user's session
 	 */
-	public static UserSession getUserSession() {
+	public static UserSession getUserSession()
+	{
 		return getUserSession(JForum.getRequest().getSession().getId());
 	}
-
+	
 	/**
 	 * Gets an {@link UserSession} by the session id.
 	 * 
-	 * @param sessionId
-	 *            the session's id
-	 * @return an <b>immutable</b> UserSession, or <code>null</code> if no
-	 *         entry found
+	 * @param sessionId the session's id
+	 * @return an <b>immutable</b> UserSession, or <code>null</code> if no entry found
 	 */
-	public static UserSession getUserSession(String sessionId) {
-		UserSession us = (UserSession) cache.get(FQN, sessionId);
+	public static UserSession getUserSession(String sessionId)
+	{
+		UserSession us = (UserSession)cache.get(FQN, sessionId);
 		return (us != null ? us : null);
 	}
 
@@ -294,97 +292,99 @@ public class SessionFacade implements Cacheable {
 	 * 
 	 * @return The number of session elements currently online (without bots)
 	 */
-	public static int size() {
+	public static int size()
+	{
 		return (anonymousSize() + registeredSize());
 	}
-
+	
 	/**
 	 * Verify if the user in already loaded
 	 * 
-	 * @param username
-	 *            The username to check
-	 * @return The session id if the user is already registered into the
-	 *         session, or <code>null</code> if it is not.
+	 * @param username The username to check
+	 * @return The session id if the user is already registered into the session, 
+	 * or <code>null</code> if it is not.
 	 */
-	public static String isUserInSession(String username) {
+	public static String isUserInSession(String username)
+	{
 		int aid = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
-
+		
 		synchronized (FQN) {
-			for (Iterator iter = cache.getValues(FQN).iterator(); iter
-					.hasNext();) {
-				UserSession us = (UserSession) iter.next();
+			for (Iterator iter = cache.getValues(FQN).iterator(); iter.hasNext(); ) {
+				UserSession us = (UserSession)iter.next();
 				String thisUsername = us.getUsername();
-
+				
 				if (thisUsername == null) {
 					continue;
 				}
-
+				
 				if (us.getUserId() != aid && thisUsername.equals(username)) {
 					return us.getSessionId();
 				}
 			}
 		}
-
+		
 		return null;
 	}
-
+	
 	/**
-	 * Verify if there is an user in the session with the user id passed as
-	 * parameter.
+	 * Verify if there is an user in the session with the 
+	 * user id passed as parameter.
 	 * 
-	 * @param userId
-	 *            The user id to check for existance in the session
-	 * @return The session id if the user is already registered into the
-	 *         session, or <code>null</code> if it is not.
+	 * @param userId The user id to check for existance in the session
+	 * @return The session id if the user is already registered into the session, 
+	 * or <code>null</code> if it is not.
 	 */
-	public static String isUserInSession(int userId) {
+	public static String isUserInSession(int userId)
+	{
 		int aid = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
-
+		
 		synchronized (FQN) {
-			for (Iterator iter = cache.getValues(FQN).iterator(); iter
-					.hasNext();) {
-				UserSession us = (UserSession) iter.next();
-
+			for (Iterator iter = cache.getValues(FQN).iterator(); iter.hasNext(); ) {
+				UserSession us = (UserSession)iter.next();
+				
 				if (us.getUserId() != aid && us.getUserId() == userId) {
 					return us.getSessionId();
 				}
 			}
 		}
-
+		
 		return null;
 	}
-
+	
 	/**
 	 * Verify is the user is logged in.
 	 * 
-	 * @return <code>true</code> if the user is logged, or <code>false</code>
-	 *         if is an anonymous user.
+	 * @return <code>true</code> if the user is logged, or <code>false</code> if is 
+	 * an anonymous user.
 	 */
-	public static boolean isLogged() {
+	public static boolean isLogged()
+	{
 		return "1".equals(SessionFacade.getAttribute("logged"));
 	}
 
 	/**
-	 * Persists user session information. This method will get a
-	 * <code>Connection</code> making a call to
+	 * Persists user session information.
+	 * This method will get a <code>Connection</code> making a call to
 	 * <code>DBConnection.getImplementation().getConnection()</code>, and
-	 * then releasing the connection after the method is processed.
+	 * then releasing the connection after the method is processed.   
 	 * 
-	 * @param sessionId
-	 *            The session which we're going to persist information
+	 * @param sessionId The session which we're going to persist information
 	 * @throws Exception
 	 * @see #storeSessionData(String, Connection)
 	 */
-	public static void storeSessionData(String sessionId) throws Exception {
+	public static void storeSessionData(String sessionId) throws Exception
+	{
 		Connection conn = null;
 		try {
 			conn = DBConnection.getImplementation().getConnection();
 			SessionFacade.storeSessionData(sessionId, conn);
-		} finally {
+		}
+		finally {
 			if (conn != null) {
 				try {
 					DBConnection.getImplementation().releaseConnection(conn);
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					logger.warn("Error while releasing a connection: " + e);
 				}
 			}
@@ -394,27 +394,24 @@ public class SessionFacade implements Cacheable {
 	/**
 	 * Persists user session information.
 	 * 
-	 * @param sessionId
-	 *            The session which we're going to persist
-	 * @param conn
-	 *            A <code>Connection</code> to be used to connect to the
-	 *            database.
+	 * @param sessionId The session which we're going to persist
+	 * @param conn A <code>Connection</code> to be used to connect to
+	 * the database. 
 	 * @throws Exception
 	 * @see #storeSessionData(String)
 	 */
-	public static void storeSessionData(String sessionId, Connection conn)
-			throws Exception {
+	public static void storeSessionData(String sessionId, Connection conn) throws Exception
+	{
 		UserSession us = SessionFacade.getUserSession(sessionId);
 		if (us != null) {
 			try {
-				if (us.getUserId() != SystemGlobals
-						.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
-					DataAccessDriver.getInstance().newUserSessionDAO().update(
-							us, conn);
+				if (us.getUserId() != SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
+					DataAccessDriver.getInstance().newUserSessionDAO().update(us, conn);
 				}
-
+				
 				SecurityRepository.remove(us.getUserId());
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				logger.warn("Error storing user session data: " + e, e);
 			}
 		}

@@ -46,23 +46,26 @@ import net.jforum.util.concurrent.Task;
 
 /**
  * @author Rafael Steil
- * @version $Id: EmailSenderTask.java,v 1.5 2005/07/26 02:46:05 diegopires Exp $
+ * @version $Id: EmailSenderTask.java,v 1.6 2005/07/26 03:05:57 rafaelsteil Exp $
  */
-public class EmailSenderTask implements Task {
+public class EmailSenderTask implements Task 
+{
 	private final Spammer spammer;
-
-	public EmailSenderTask(Spammer spammer) {
+	
+	public EmailSenderTask(Spammer spammer)
+	{
 		this.spammer = spammer;
 	}
-
-	/**
+	
+	/** 
 	 * @see net.jforum.util.concurrent.Task#execute()
 	 */
-	public Object execute() throws Exception {
+	public Object execute() throws Exception 
+	{
 		if (this.spammer.dispatchMessages()) {
 			return "SUCCESS";
 		}
-
+		
 		return "FAILURE";
 	}
 

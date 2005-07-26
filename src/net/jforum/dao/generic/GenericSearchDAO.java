@@ -61,77 +61,82 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericSearchDAO.java,v 1.4 2005/07/26 02:45:15 diegopires Exp $
+ * @version $Id: GenericSearchDAO.java,v 1.5 2005/07/26 03:04:47 rafaelsteil Exp $
  */
-public class GenericSearchDAO implements net.jforum.dao.SearchDAO {
-	/**
+public class GenericSearchDAO implements net.jforum.dao.SearchDAO	
+{
+	/** 
 	 * @see net.jforum.dao.SearchDAO#search(net.jforum.dao.SearchData)
 	 */
-	public List search(SearchData sd) throws Exception {
+	public List search(SearchData sd) throws Exception 
+	{
 		List l = new ArrayList();
+		List topics = new ArrayList();
+		
 		// Check for the search cache
 		if (!sd.getSearchStarted()) {
 			if (sd.getTime() == null) {
 				this.topicsByKeyword(sd);
-			} else {
+			}
+			else {
 				this.topicsByTime(sd);
 			}
 		}
-
+		
 		StringBuffer criterias = new StringBuffer(256);
 		if (sd.getForumId() != 0) {
-			criterias.append(" AND t.forum_id = " + sd.getForumId());
+			criterias.append(" AND t.forum_id = "+ sd.getForumId());
 		}
-
+		
 		if (sd.getCategoryId() != 0) {
-			criterias.append(" AND f.categories_id = " + sd.getCategoryId());
+			criterias.append(" AND f.categories_id = "+ sd.getCategoryId());
 		}
-
+		
 		if (sd.getOrderByField() == null || sd.getOrderByField().equals("")) {
 			sd.setOrderByField("p.post_time");
 		}
-
+		
 		String sql = SystemGlobals.getSql("SearchModel.searchBase");
 		// Prepare the query
 		sql = sql.replaceAll(":orderByField:", sd.getOrderByField());
 		sql = sql.replaceAll(":orderBy:", sd.getOrderBy());
 		sql = sql.replaceAll(":criterias:", criterias.toString());
-
+		
 		PreparedStatement p = JForum.getConnection().prepareStatement(sql);
 		p.setString(1, SessionFacade.getUserSession().getSessionId());
 		p.setString(2, SessionFacade.getUserSession().getSessionId());
 
 		ResultSet rs = p.executeQuery();
-
+		
 		l = new GenericTopicModelDAO().fillTopicsData(rs);
-
+		
 		rs.close();
 		p.close();
-
+		
 		return l;
 	}
-
+	
 	// Find topics by time
-	private void topicsByTime(SearchData sd) throws Exception {
-		PreparedStatement p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("SearchModel.searchByTime"));
+	private void topicsByTime(SearchData sd) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.searchByTime"));
 		p.setString(1, SessionFacade.getUserSession().getSessionId());
 		p.setTimestamp(2, new Timestamp(sd.getTime().getTime()));
 		p.executeUpdate();
 		p.close();
-
+		
 		this.selectTopicData();
 	}
-
+	
 	// Given a set of keywords, find the topics
-	private void topicsByKeyword(SearchData sd) throws Exception {
-		boolean isLike = "like".equals(SystemGlobals.getValue(
-				ConfigKeys.SEARCH_WORD_MATCHING).trim());
-
-		String sql = isLike ? SystemGlobals
-				.getSql("SearchModel.searchByLikeWord") : SystemGlobals
-				.getSql("SearchModel.searchByWord");
-
+	private void topicsByKeyword(SearchData sd) throws Exception
+	{
+		boolean isLike = "like".equals(SystemGlobals.getValue(ConfigKeys.SEARCH_WORD_MATCHING).trim());
+		
+		String sql = isLike 
+			? SystemGlobals.getSql("SearchModel.searchByLikeWord")
+			: SystemGlobals.getSql("SearchModel.searchByWord");
+		
 		PreparedStatement p = JForum.getConnection().prepareStatement(sql);
 
 		Map eachWordMap = new HashMap();
@@ -140,94 +145,95 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO {
 		for (int i = 0; i < sd.getKeywords().length; i++) {
 			if (isLike) {
 				p.setString(1, "%" + sd.getKeywords()[i].toLowerCase() + "%");
-			} else {
+			}
+			else {
 				p.setString(1, sd.getKeywords()[i].toLowerCase());
 			}
-
+			
 			Set postsIds = new HashSet();
 			ResultSet rs = p.executeQuery();
-
+			
 			while (rs.next()) {
 				postsIds.add(new Integer(rs.getInt("post_id")));
 			}
-
+			
 			if (postsIds.size() > 0) {
 				eachWordMap.put(sd.getKeywords()[i], postsIds);
 			}
 		}
-
+		
 		// [wordName] = { each, post, id }
-
+		
 		// If seach type is OR, then get all words
 		// If it is AND, then we want only the ids common to all words
 		Set postsIds = null;
-
+		
 		if (sd.getUseAllWords()) {
-			for (Iterator iter = eachWordMap.values().iterator(); iter
-					.hasNext();) {
+			for (Iterator iter = eachWordMap.values().iterator(); iter.hasNext(); ) {
 				if (postsIds == null) {
 					postsIds = new HashSet(eachWordMap.values().size());
-					postsIds.addAll((HashSet) iter.next());
-				} else {
-					postsIds.retainAll((HashSet) iter.next());
+					postsIds.addAll((HashSet)iter.next());
+				}
+				else {
+					postsIds.retainAll((HashSet)iter.next());
 				}
 			}
-		} else {
+		}
+		else {
 			postsIds = new HashSet();
-
-			for (Iterator iter = eachWordMap.values().iterator(); iter
-					.hasNext();) {
-				postsIds.addAll((HashSet) iter.next());
+			
+			for (Iterator iter = eachWordMap.values().iterator(); iter.hasNext(); ) {
+				postsIds.addAll((HashSet)iter.next());
 			}
 		}
-
+		
 		if (postsIds == null || postsIds.size() == 0) {
 			return;
 		}
-
-		// Time to get ready to search for the topics ids
+		
+		// Time to get ready to search for the topics ids 
 		StringBuffer sb = new StringBuffer(1024);
-		for (Iterator iter = postsIds.iterator(); iter.hasNext();) {
+		for (Iterator iter = postsIds.iterator(); iter.hasNext(); ) {
 			sb.append(iter.next()).append(",");
 		}
 		sb.delete(sb.length() - 1, sb.length());
 
-		// Search for the ids, inserting them in the helper table
+		// Search for the ids, inserting them in the helper table 
 		sql = SystemGlobals.getSql("SearchModel.insertTopicsIds");
 		sql = sql.replaceAll(":posts:", sb.toString());
 		p = JForum.getConnection().prepareStatement(sql);
 		p.setString(1, SessionFacade.getUserSession().getSessionId());
 		p.executeUpdate();
-
-		// Now that we have the topics ids, it's time to make a copy from the
-		// topics table, to make the search faster ( damn, next version I'll
+		
+		// Now that we have the topics ids, it's time to make a copy from the 
+		// topics table, to make the search faster ( damn, next version I'll 
 		// remove the search functionality. Look for this code's size )
 		this.selectTopicData();
-
+		
 		p.close();
 	}
-
-	private void selectTopicData() throws Exception {
-		PreparedStatement p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("SearchModel.selectTopicData"));
+	
+	private void selectTopicData() throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.selectTopicData"));
 		p.setString(1, SessionFacade.getUserSession().getSessionId());
 		p.setString(2, SessionFacade.getUserSession().getSessionId());
 		p.executeUpdate();
-
+		
 		p.close();
 	}
+	
 
-	/**
+	/** 
 	 * @see net.jforum.dao.SearchDAO#cleanSearch()
 	 */
-	public void cleanSearch() throws Exception {
-		PreparedStatement p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("SearchModel.cleanSearchTopics"));
+	public void cleanSearch() throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.cleanSearchTopics"));
 		p.setString(1, SessionFacade.getUserSession().getSessionId());
 		p.executeUpdate();
-
-		p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("SearchModel.cleanSearchResults"));
+		
+		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.cleanSearchResults"));
 		p.setString(1, SessionFacade.getUserSession().getSessionId());
 		p.executeUpdate();
 		p.close();

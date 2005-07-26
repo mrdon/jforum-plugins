@@ -43,46 +43,41 @@ import org.quartz.impl.StdSchedulerFactory;
  * 
  */
 public class SummaryScheduler {
-	private static Scheduler scheduler;
+    private static Scheduler scheduler;
 
-	private static Logger logger = Logger.getLogger(SummaryScheduler.class);
+    private static Logger logger = Logger.getLogger(SummaryScheduler.class);
 
-	private static boolean isStarted = false;
+    private static boolean isStarted = false;
 
-	/**
-	 * Starts the summary Job. Conditions to start: Is not started yet and is
-	 * enabled on the file SystemGlobasl.properties. The to enable it is
-	 * "summary.enabled" (ConfigKeys.SUMMARY_IS_ENABLED).
-	 * 
-	 * @throws SchedulerException
-	 * @throws IOException
-	 */
-	public static void startJob() throws SchedulerException, IOException {
+    /**
+     * Starts the summary Job.
+     * Conditions to start: 
+     * Is not started yet and is enabled on the file SystemGlobasl.properties. 
+     * The to enable it is "summary.enabled" (ConfigKeys.SUMMARY_IS_ENABLED).
+     * 
+     * @throws SchedulerException
+     * @throws IOException 
+     */
+    public static void startJob() throws SchedulerException, IOException {
 
-		boolean isEnabled = new Boolean(SystemGlobals
-				.getValue(ConfigKeys.SUMMARY_IS_ENABLED)).booleanValue();
-		if (!isStarted && isEnabled) {
-			String filename = SystemGlobals
-					.getValue(ConfigKeys.SEARCH_INDEXER_QUARTZ_CONFIG);
-
-			SystemGlobals.loadAdditionalDefaults(filename);
-
-			String cronExpression = SystemGlobals
-					.getValue("org.quartz.context.summary.cron.expression");
-			scheduler = new StdSchedulerFactory(filename).getScheduler();
-			Trigger trigger = null;
-			try {
-				trigger = new CronTrigger(SummaryJob.class.getName(),
-						"summaryJob", cronExpression);
-				logger.info("Starting quartz summary expression "
-						+ cronExpression);
-				scheduler.scheduleJob(new JobDetail(SummaryJob.class.getName(),
-						"summaryJob", SummaryJob.class), trigger);
-				scheduler.start();
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-		}
-		isStarted = true;
-	}
+        boolean isEnabled = new Boolean(SystemGlobals.getValue(ConfigKeys.SUMMARY_IS_ENABLED)).booleanValue();
+        if (!isStarted && isEnabled) {
+            String filename = SystemGlobals.getValue(ConfigKeys.SEARCH_INDEXER_QUARTZ_CONFIG);
+    
+            SystemGlobals.loadAdditionalDefaults(filename);
+           
+            String cronExpression = SystemGlobals.getValue("org.quartz.context.summary.cron.expression");
+            scheduler = new StdSchedulerFactory(filename).getScheduler();
+            Trigger trigger = null;
+            try {
+                trigger = new CronTrigger(SummaryJob.class.getName(), "summaryJob", cronExpression);
+                logger.info("Starting quartz summary expression " + cronExpression);
+                scheduler.scheduleJob(new JobDetail(SummaryJob.class.getName(), "summaryJob", SummaryJob.class), trigger);
+                scheduler.start();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        isStarted=true;
+    }
 }

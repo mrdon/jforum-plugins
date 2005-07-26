@@ -53,15 +53,16 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericConfigDAO.java,v 1.3 2005/07/26 02:45:16 diegopires Exp $
+ * @version $Id: GenericConfigDAO.java,v 1.4 2005/07/26 03:04:45 rafaelsteil Exp $
  */
-public class GenericConfigDAO implements net.jforum.dao.ConfigDAO {
+public class GenericConfigDAO implements net.jforum.dao.ConfigDAO
+{
 	/**
 	 * @see net.jforum.dao.ConfigDAO#insert(net.jforum.entities.Config)
 	 */
-	public void insert(Config config) throws Exception {
-		PreparedStatement p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("ConfigModel.insert"));
+	public void insert(Config config) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ConfigModel.insert"));
 		p.setString(1, config.getName());
 		p.setString(2, config.getValue());
 		p.executeUpdate();
@@ -71,9 +72,9 @@ public class GenericConfigDAO implements net.jforum.dao.ConfigDAO {
 	/**
 	 * @see net.jforum.dao.ConfigDAO#update(net.jforum.entities.Config)
 	 */
-	public void update(Config config) throws Exception {
-		PreparedStatement p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("ConfigModel.update"));
+	public void update(Config config) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ConfigModel.update"));
 		p.setString(1, config.getValue());
 		p.setString(2, config.getName());
 		p.executeUpdate();
@@ -83,9 +84,9 @@ public class GenericConfigDAO implements net.jforum.dao.ConfigDAO {
 	/**
 	 * @see net.jforum.dao.ConfigDAO#delete(net.jforum.entities.Config)
 	 */
-	public void delete(Config config) throws Exception {
-		PreparedStatement p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("ConfigModel.delete"));
+	public void delete(Config config) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ConfigModel.delete"));
 		p.setInt(1, config.getId());
 		p.executeUpdate();
 		p.close();
@@ -94,48 +95,49 @@ public class GenericConfigDAO implements net.jforum.dao.ConfigDAO {
 	/**
 	 * @see net.jforum.dao.ConfigDAO#selectAll()
 	 */
-	public List selectAll() throws Exception {
+	public List selectAll() throws Exception
+	{
 		List l = new ArrayList();
-
-		PreparedStatement p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("ConfigModel.selectAll"));
+		
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ConfigModel.selectAll"));
 		ResultSet rs = p.executeQuery();
 		while (rs.next()) {
 			l.add(this.makeConfig(rs));
 		}
-
+		
 		rs.close();
 		p.close();
-
+		
 		return l;
 	}
 
 	/**
 	 * @see net.jforum.dao.ConfigDAO#selectByName(java.lang.String)
 	 */
-	public Config selectByName(String name) throws Exception {
-		PreparedStatement p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("ConfigModel.selectByName"));
+	public Config selectByName(String name) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ConfigModel.selectByName"));
 		p.setString(1, name);
 		ResultSet rs = p.executeQuery();
 		Config c = null;
-
+		
 		if (rs.next()) {
 			c = this.makeConfig(rs);
 		}
-
+		
 		rs.close();
 		p.close();
-
+		
 		return c;
 	}
-
-	protected Config makeConfig(ResultSet rs) throws Exception {
+	
+	protected Config makeConfig(ResultSet rs) throws Exception
+	{
 		Config c = new Config();
 		c.setId(rs.getInt("config_id"));
 		c.setName(rs.getString("config_name"));
 		c.setValue(rs.getString("config_value"));
-
+		
 		return c;
 	}
 }

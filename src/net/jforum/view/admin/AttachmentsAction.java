@@ -58,56 +58,55 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentsAction.java,v 1.9 2005/07/18 17:15:53 rafaelsteil
- *          Exp $
+ * @version $Id: AttachmentsAction.java,v 1.11 2005/07/26 03:05:40 rafaelsteil Exp $
  */
-public class AttachmentsAction extends AdminCommand {
-	public void configurations() throws Exception {
-		this.context.put("icon", SystemGlobals
-				.getValue(ConfigKeys.ATTACHMENTS_ICON));
-		this.context.put("createThumb", SystemGlobals
-				.getBoolValue(ConfigKeys.ATTACHMENTS_IMAGES_CREATE_THUMB));
-		this.context.put("thumbH", SystemGlobals
-				.getValue(ConfigKeys.ATTACHMENTS_IMAGES_MIN_THUMB_H));
-		this.context.put("thumbW", SystemGlobals
-				.getValue(ConfigKeys.ATTACHMENTS_IMAGES_MIN_THUMB_W));
-		this.context.put("maxPost", SystemGlobals
-				.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
+public class AttachmentsAction extends AdminCommand
+{
+	public void configurations() throws Exception
+	{
+		this.context.put("icon", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_ICON));
+		this.context.put("createThumb", SystemGlobals.getBoolValue(ConfigKeys.ATTACHMENTS_IMAGES_CREATE_THUMB));
+		this.context.put("thumbH", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_IMAGES_MIN_THUMB_H));
+		this.context.put("thumbW", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_IMAGES_MIN_THUMB_W));
+		this.context.put("maxPost", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
 
 		this.setTemplateName(TemplateKeys.ATTACHMENTS_CONFIG);
 	}
-
-	public void configurationsSave() throws Exception {
-		ConfigAction ca = new ConfigAction(this.request, this.response,
-				this.context);
+	
+	public void configurationsSave() throws Exception
+	{
+		ConfigAction ca = new ConfigAction(this.request, this.response, this.context);
 		ca.updateData(ca.getConfig());
-
+		
 		this.configurations();
 	}
-
-	public void quotaLimit() throws Exception {
+	
+	public void quotaLimit() throws Exception
+	{
 		AttachmentDAO am = DataAccessDriver.getInstance().newAttachmentDAO();
-
+		
 		this.context.put("quotas", am.selectQuotaLimit());
 		this.setTemplateName(TemplateKeys.ATTACHMENTS_QUOTA_LIMIT);
 		this.context.put("groups", new TreeGroup().getNodes());
 		this.context.put("selectedList", new ArrayList());
 		this.context.put("groupQuotas", am.selectGroupsQuotaLimits());
 	}
-
-	public void quotaLimitSave() throws Exception {
+	
+	public void quotaLimitSave() throws Exception
+	{
 		QuotaLimit ql = new QuotaLimit();
 		ql.setDescription(this.request.getParameter("quota_description"));
 		ql.setSize(this.request.getIntParameter("max_filesize"));
 		ql.setType(this.request.getIntParameter("type"));
-
+		
 		DataAccessDriver.getInstance().newAttachmentDAO().addQuotaLimit(ql);
 		this.quotaLimit();
 	}
-
-	public void quotaLimitUpdate() throws Exception {
+	
+	public void quotaLimitUpdate() throws Exception
+	{
 		AttachmentDAO am = DataAccessDriver.getInstance().newAttachmentDAO();
-
+		
 		// First check if we should delete some entry
 		String[] delete = this.request.getParameterValues("delete");
 		List deleteList = new ArrayList();
@@ -115,46 +114,48 @@ public class AttachmentsAction extends AdminCommand {
 			deleteList = Arrays.asList(delete);
 			am.removeQuotaLimit(delete);
 		}
-
+		
 		// Now update the remaining
 		int total = this.request.getIntParameter("total_records");
 		for (int i = 0; i < total; i++) {
 			if (deleteList.contains(this.request.getParameter("id_" + i))) {
 				continue;
 			}
-
+			
 			QuotaLimit ql = new QuotaLimit();
 			ql.setId(this.request.getIntParameter("id_" + i));
 			ql.setDescription(this.request.getParameter("quota_desc_" + i));
 			ql.setSize(this.request.getIntParameter("max_filesize_" + i));
 			ql.setType(this.request.getIntParameter("type_" + i));
-
+			
 			am.updateQuotaLimit(ql);
 		}
-
+		
 		this.quotaLimit();
 	}
-
-	public void extensionGroups() throws Exception {
+	
+	public void extensionGroups() throws Exception
+	{
 		this.setTemplateName(TemplateKeys.ATTACHMENTS_EXTENSION_GROUPS);
-		this.context.put("groups", DataAccessDriver.getInstance()
-				.newAttachmentDAO().selectExtensionGroups());
+		this.context.put("groups", DataAccessDriver.getInstance().newAttachmentDAO().selectExtensionGroups());
 	}
-
-	public void extensionGroupsSave() throws Exception {
-		AttachmentExtensionGroup g = new AttachmentExtensionGroup();
+	
+	public void extensionGroupsSave() throws Exception
+	{
+		AttachmentExtensionGroup g = new AttachmentExtensionGroup();		
 		g.setAllow(this.request.getParameter("allow") != null);
 		g.setDownloadMode(this.request.getIntParameter("download_mode"));
 		g.setName(this.request.getParameter("name"));
 		g.setUploadIcon(this.request.getParameter("upload_icon"));
-
+		
 		DataAccessDriver.getInstance().newAttachmentDAO().addExtensionGroup(g);
 		this.extensionGroups();
 	}
-
-	public void extensionGroupsUpdate() throws Exception {
+	
+	public void extensionGroupsUpdate() throws Exception
+	{
 		AttachmentDAO am = DataAccessDriver.getInstance().newAttachmentDAO();
-
+		
 		// Check if there are records to remove
 		String[] delete = this.request.getParameterValues("delete");
 		List deleteList = new ArrayList();
@@ -162,55 +163,57 @@ public class AttachmentsAction extends AdminCommand {
 			deleteList = Arrays.asList(delete);
 			am.removeExtensionGroups(delete);
 		}
-
+		
 		// Update
 		int total = this.request.getIntParameter("total_records");
 		for (int i = 0; i < total; i++) {
 			if (deleteList.contains(this.request.getParameter("id_" + i))) {
 				continue;
 			}
-
+			
 			AttachmentExtensionGroup g = new AttachmentExtensionGroup();
 			g.setId(this.request.getIntParameter("id_" + i));
 			g.setAllow(this.request.getParameter("allow_" + i) != null);
-			g.setDownloadMode(this.request
-					.getIntParameter("download_mode_" + i));
+			g.setDownloadMode(this.request.getIntParameter("download_mode_" + i));
 			g.setName(this.request.getParameter("name_" + i));
 			g.setUploadIcon(this.request.getParameter("upload_icon_" + i));
-
+			
 			am.updateExtensionGroup(g);
 		}
-
+		
 		this.extensionGroups();
 	}
-
-	public void extensions() throws Exception {
+	
+	public void extensions() throws Exception
+	{
 		AttachmentDAO am = DataAccessDriver.getInstance().newAttachmentDAO();
-
+		
 		this.setTemplateName(TemplateKeys.ATTACHMENTS_EXTENSIONS);
 		this.context.put("extensions", am.selectExtensions());
 		this.context.put("groups", am.selectExtensionGroups());
 	}
-
-	public void extensionsSave() throws Exception {
+	
+	public void extensionsSave() throws Exception
+	{
 		AttachmentExtension e = new AttachmentExtension();
 		e.setAllow(this.request.getParameter("allow") != null);
 		e.setComment(this.request.getParameter("comment"));
 		e.setExtension(this.request.getParameter("extension"));
 		e.setUploadIcon(this.request.getParameter("upload_icon"));
 		e.setExtensionGroupId(this.request.getIntParameter("extension_group"));
-
+		
 		if (e.getExtension().startsWith(".")) {
 			e.setExtension(e.getExtension().substring(1));
 		}
-
+		
 		DataAccessDriver.getInstance().newAttachmentDAO().addExtension(e);
 		this.extensions();
 	}
-
-	public void extensionsUpdate() throws Exception {
+	
+	public void extensionsUpdate() throws Exception
+	{
 		AttachmentDAO am = DataAccessDriver.getInstance().newAttachmentDAO();
-
+		
 		// Check for records to delete
 		String[] delete = this.request.getParameterValues("delete");
 		List deleteList = new ArrayList();
@@ -218,54 +221,55 @@ public class AttachmentsAction extends AdminCommand {
 			deleteList = Arrays.asList(delete);
 			am.removeExtensions(delete);
 		}
-
+		
 		int total = this.request.getIntParameter("total_records");
 		for (int i = 0; i < total; i++) {
 			if (deleteList.contains(this.request.getParameter("id_" + i))) {
 				continue;
 			}
-
+			
 			AttachmentExtension e = new AttachmentExtension();
 			e.setAllow(this.request.getParameter("allow_" + i) != null);
 			e.setComment(this.request.getParameter("comment_" + i));
 			e.setExtension(this.request.getParameter("extension_" + i));
-			e.setExtensionGroupId(this.request
-					.getIntParameter("extension_group_" + i));
+			e.setExtensionGroupId(this.request.getIntParameter("extension_group_" + i));
 			e.setId(this.request.getIntParameter("id_" + i));
 			e.setUploadIcon(this.request.getParameter("upload_icon_" + i));
-
+			
 			am.updateExtension(e);
 		}
-
+		
 		this.extensions();
 	}
-
-	public void quotaGroupsSave() throws Exception {
+	
+	public void quotaGroupsSave() throws Exception
+	{
 		int total = this.request.getIntParameter("total_groups");
 		AttachmentDAO am = DataAccessDriver.getInstance().newAttachmentDAO();
 		am.cleanGroupQuota();
-
+		
 		for (int i = 0; i < total; i++) {
 			String l = this.request.getParameter("limit_" + i);
 			if (l == null || l.equals("")) {
 				continue;
 			}
-
+			
 			int limitId = Integer.parseInt(l);
 			int groupId = this.request.getIntParameter("group_" + i);
-
+			
 			if (groupId > 0) {
 				am.setGroupQuota(groupId, limitId);
 			}
 		}
-
+		
 		this.quotaLimit();
 	}
-
+	
 	/**
 	 * @see net.jforum.Command#list()
 	 */
-	public void list() throws Exception {
+	public void list() throws Exception
+	{
 		this.configurations();
 	}
 }

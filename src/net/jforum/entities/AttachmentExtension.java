@@ -44,126 +44,126 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentExtension.java,v 1.2 2005/01/18 20:59:45 rafaelsteil
- *          Exp $
+ * @version $Id: AttachmentExtension.java,v 1.4 2005/07/26 03:04:50 rafaelsteil Exp $
  */
-public class AttachmentExtension {
+public class AttachmentExtension
+{	
 	private int id;
-
 	private int extensionGroupId;
-
 	private boolean allow;
-
 	private String comment;
-
 	private String extension;
-
 	private String uploadIcon;
-
 	private boolean unknown;
-
+	
 	/**
 	 * @return Returns the allow.
 	 */
-	public boolean isAllow() {
+	public boolean isAllow()
+	{
 		return this.allow;
 	}
-
+	
 	/**
-	 * @param allow
-	 *            The allow to set.
+	 * @param allow The allow to set.
 	 */
-	public void setAllow(boolean allow) {
+	public void setAllow(boolean allow)
+	{
 		this.allow = allow;
 	}
-
+	
 	/**
 	 * @return Returns the comment.
 	 */
-	public String getComment() {
+	public String getComment()
+	{
 		return this.comment;
 	}
-
+	
 	/**
-	 * @param comment
-	 *            The comment to set.
+	 * @param comment The comment to set.
 	 */
-	public void setComment(String comment) {
+	public void setComment(String comment)
+	{
 		this.comment = comment;
 	}
-
+	
 	/**
 	 * @return Returns the extension.
 	 */
-	public String getExtension() {
+	public String getExtension()
+	{
 		return this.extension;
 	}
-
+	
 	/**
-	 * @param extension
-	 *            The extension to set.
+	 * @param extension The extension to set.
 	 */
-	public void setExtension(String extension) {
+	public void setExtension(String extension)
+	{
 		this.extension = extension;
 	}
-
+	
 	/**
 	 * @return Returns the extensionGroupId.
 	 */
-	public int getExtensionGroupId() {
+	public int getExtensionGroupId()
+	{
 		return this.extensionGroupId;
 	}
-
+	
 	/**
-	 * @param extensionGroupId
-	 *            The extensionGroupId to set.
+	 * @param extensionGroupId The extensionGroupId to set.
 	 */
-	public void setExtensionGroupId(int extensionGroupId) {
+	public void setExtensionGroupId(int extensionGroupId)
+	{
 		this.extensionGroupId = extensionGroupId;
 	}
-
+	
 	/**
 	 * @return Returns the id.
 	 */
-	public int getId() {
+	public int getId()
+	{
 		return this.id;
 	}
-
 	/**
-	 * @param id
-	 *            The id to set.
+	 * @param id The id to set.
 	 */
-	public void setId(int id) {
+	public void setId(int id)
+	{
 		this.id = id;
 	}
-
+	
 	/**
 	 * @return Returns the upload_icon.
 	 */
-	public String getUploadIcon() {
+	public String getUploadIcon()
+	{
 		return this.uploadIcon;
 	}
-
+	
 	/**
-	 * @param uploadIcon
-	 *            The upload_icon to set.
+	 * @param uploadIcon The upload_icon to set.
 	 */
-	public void setUploadIcon(String uploadIcon) {
+	public void setUploadIcon(String uploadIcon)
+	{
 		this.uploadIcon = uploadIcon;
 	}
-
+	
 	/**
 	 * @return Returns the unknown.
 	 */
-	public boolean isUnknown() {
+	public boolean isUnknown()
+	{
 		return this.unknown;
 	}
-
+	
 	/**
-	 * @param unknown
-	 *            The unknown to set.
+	 * @param unknown The unknown to set.
 	 */
-	public void setUnknown(boolean unknown) {
+	public void setUnknown(boolean unknown)
+	{
 		this.unknown = unknown;
 	}
 }

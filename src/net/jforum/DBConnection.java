@@ -50,97 +50,100 @@ import net.jforum.util.preferences.SystemGlobals;
 import org.apache.log4j.Logger;
 
 /**
- * Base class for all database connection implementations that may be used with
- * JForum. Default implementations are <code>PooledConnection</code>, which
- * is the defeault connection pool implementation, and
- * <code>SimpleConnection</code>, which opens a new connection on every
- * request.
+ * Base class for all database connection implementations that
+ * may be used with JForum.
+ * Default implementations are <code>PooledConnection</code>, which
+ * is the defeault connection pool implementation, and <code>SimpleConnection</code>,
+ * which opens a new connection on every request.  
  * 
  * @author Rafael Steil
- * @version $Id: DBConnection.java,v 1.9 2005/07/26 02:45:32 diegopires Exp $
+ * @version $Id: DBConnection.java,v 1.10 2005/07/26 03:04:40 rafaelsteil Exp $
  */
-public abstract class DBConnection {
+public abstract class DBConnection 
+{
 	private static final Logger logger = Logger.getLogger(DBConnection.class);
-
+	private boolean autoCommitStatus = true;
 	protected boolean isDatabaseUp;
-
+	
 	private static DBConnection instance;
 
 	/**
-	 * Creates an instance of some <code>DBConnection </code>implementation.
+	 * Creates an instance of some <code>DBConnection </code>implementation. 
 	 * 
-	 * @return <code>true</code> if the instance was successfully created, or
-	 *         <code>false</code> if some exception was thrown.
+	 * @return <code>true</code> if the instance was successfully created, 
+	 * or <code>false</code> if some exception was thrown.
 	 */
-	public static final boolean createInstance() {
+	public static final boolean createInstance()
+	{
 		try {
-			instance = (DBConnection) Class
-					.forName(
-							SystemGlobals
-									.getValue(ConfigKeys.DATABASE_CONNECTION_IMPLEMENTATION))
-					.newInstance();
-		} catch (Exception e) {
-			logger
-					.warn("Error creating the database connection implementation instance. "
-							+ e);
-			e.printStackTrace();
-			return false;
+			instance = (DBConnection)Class.forName(SystemGlobals.getValue(
+					ConfigKeys.DATABASE_CONNECTION_IMPLEMENTATION)).newInstance();
 		}
-
+		catch (Exception e) {
+			 logger.warn("Error creating the database connection implementation instance. " + e);
+			 e.printStackTrace();
+			 return false;
+		}
+		
 		return true;
 	}
-
+	
 	/**
 	 * Gets the current <code>DBConnection</code> implementation's instance
 	 * 
 	 * @return
 	 */
-	public static DBConnection getImplementation() {
+	public static DBConnection getImplementation()
+	{
 		return instance;
 	}
-
+	
 	/**
 	 * Checks if database connection is up.
-	 * 
-	 * @return <code>true</code> if a connection to the database was
-	 *         successfully created, or <code>false</code> if not.
+	 *  
+	 * @return <code>true</code> if a connection to the database
+	 * was successfully created, or <code>false</code> if not.
 	 */
-	public boolean isDatabaseUp() {
+	public boolean isDatabaseUp()
+	{
 		return this.isDatabaseUp;
 	}
-
+	
 	/**
-	 * Inits the implementation. Connection pools may use this method to init
-	 * the connections from the database, while non-pooled implementation can
-	 * provide an empty method block if no other initialization is necessary.
+	 * Inits the implementation. 
+	 * Connection pools may use this method to init the connections from the
+	 * database, while non-pooled implementation can provide an empty method
+	 * block if no other initialization is necessary.
 	 * <br>
-	 * Please note that this method will be called just once, at system startup.
+	 * Please note that this method will be called just once, at system startup. 
 	 * 
 	 * @throws Exception
 	 */
 	public abstract void init() throws Exception;
-
+	
 	/**
-	 * Gets a connection. Connection pools' normal behaviour will be to once
-	 * connection from the pool, while non-pooled implementations will want to
-	 * go to the database and get the connection in time the method is called.
+	 * Gets a connection.
+	 * Connection pools' normal behaviour will be to once connection
+	 * from the pool, while non-pooled implementations will want to
+	 * go to the database and get the connection in time the method
+	 * is called.
 	 * 
 	 * @return
 	 * @throws Exception
 	 */
 	public abstract Connection getConnection();
-
+	
 	/**
-	 * Releases a connection. Connection pools will want to put the connection
-	 * back to the pool list, while non-pooled implementations should call
-	 * <code>close()</code> directly in the connection object.
+	 * Releases a connection.
+	 * Connection pools will want to put the connection back to the pool list,
+	 * while non-pooled implementations should call <code>close()</code> directly
+	 * in the connection object.
 	 * 
-	 * @param conn
-	 *            The connection to release
+	 * @param conn The connection to release
 	 * @throws Exception
 	 */
 	public abstract void releaseConnection(Connection conn);
-
+	
 	/**
 	 * Close all open connections.
 	 * 

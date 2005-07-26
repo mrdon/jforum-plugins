@@ -46,15 +46,12 @@ import net.jforum.dao.postgresql.PostgresqlDataAccessDriver;
 
 /**
  * @author Marc Wick
- * @version $Id: HsqldbDataAccessDriver.java,v 1.4 2005/07/17 18:10:37
- *          rafaelsteil Exp $
+ * @version $Id: HsqldbDataAccessDriver.java,v 1.6 2005/07/26 03:05:49 rafaelsteil Exp $
  */
 public class HsqldbDataAccessDriver extends PostgresqlDataAccessDriver {
 
 	private static HsqldbPostDAO postDao = new HsqldbPostDAO();
-
 	private static HsqldbUserDAO userDao = new HsqldbUserDAO();
-
 	private static HsqldbTopicDAO topicDao = new HsqldbTopicDAO();
 
 	/**
@@ -70,7 +67,7 @@ public class HsqldbDataAccessDriver extends PostgresqlDataAccessDriver {
 	public net.jforum.dao.TopicDAO newTopicDAO() {
 		return topicDao;
 	}
-
+	
 	/**
 	 * @see net.jforum.dao.DataAccessDriver#newUserDAO()
 	 */

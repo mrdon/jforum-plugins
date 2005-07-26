@@ -48,80 +48,80 @@ import net.jforum.security.RoleCollection;
 
 /**
  * @author Rafael Steil
- * @version $Id: RolesRepository.java,v 1.2 2005/07/26 02:45:34 diegopires Exp $
+ * @version $Id: RolesRepository.java,v 1.3 2005/07/26 03:04:54 rafaelsteil Exp $
  */
-public class RolesRepository implements Cacheable {
+public class RolesRepository implements Cacheable
+{
 	private static final String FQN = "roles";
-
 	private static CacheEngine cache;
-
+	
 	/**
 	 * @see net.jforum.cache.Cacheable#setCacheEngine(net.jforum.cache.CacheEngine)
 	 */
-	public void setCacheEngine(CacheEngine engine) {
+	public void setCacheEngine(CacheEngine engine)
+	{
 		cache = engine;
 	}
-
+	
 	/**
 	 * Gets the group roles.
 	 * 
-	 * @param groupId
-	 *            The group id
-	 * @return The roles, if found, or <code>null</code> otherwise.
+	 * @param groupId The group id
+	 * @return The roles, if found, or <code>null</code> otherwise. 
 	 */
-	public static RoleCollection getGroupRoles(int groupId) {
-		return (RoleCollection) cache.get(FQN, Integer.toString(groupId));
+	public static RoleCollection getGroupRoles(int groupId)
+	{
+		return (RoleCollection)cache.get(FQN, Integer.toString(groupId));
 	}
-
+	
 	/**
 	 * Clears the cache
 	 */
-	public static void clear() {
+	public static void clear()
+	{
 		cache.add(FQN, null);
 	}
-
+	
 	/**
 	 * Get merged roles from a set of groups
-	 * 
-	 * @param ids
-	 *            The group ids
-	 * @return The roles, if found, or <code>null</code> otherwise.
+	 * @param ids The group ids
+	 * @return The roles, if found, or <code>null</code> otherwise. 
 	 */
-	public static RoleCollection getGroupRoles(int[] ids) {
-		return (RoleCollection) cache.get(FQN, makeId(ids));
+	public static RoleCollection getGroupRoles(int[] ids)
+	{
+		return (RoleCollection)cache.get(FQN, makeId(ids));
 	}
-
-	private static String makeId(int[] ids) {
+	
+	private static String makeId(int[] ids)
+	{
 		String id = "";
-
+		
 		for (int i = 0; i < ids.length; i++) {
 			id += ids[i];
 		}
-
+		
 		return id;
 	}
-
+	
 	/**
 	 * Adds merged roles to the cache.
 	 * 
-	 * @param ids
-	 *            The ids of the groups
-	 * @param roles
-	 *            The merges roles to add
+	 * @param ids The ids of the groups 
+	 * @param roles The merges roles to add 
 	 */
-	public static void addMergedGroupRoles(int[] ids, RoleCollection roles) {
+	public static void addMergedGroupRoles(int[] ids, RoleCollection roles)
+	{
 		cache.add(FQN, makeId(ids), roles);
 	}
 
 	/**
 	 * Adds the roles of a group to the cache.
 	 * 
-	 * @param groupId
-	 *            The group id
-	 * @param roles
-	 *            The group's roles
+	 * @param groupId The group id
+	 * @param roles The group's roles
 	 */
-	public static void addGroupRoles(int groupId, RoleCollection roles) {
+	public static void addGroupRoles(int groupId, RoleCollection roles)
+	{
 		cache.add(FQN, Integer.toString(groupId), roles);
 	}
 }

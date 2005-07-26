@@ -45,29 +45,22 @@ package net.jforum.entities;
 import java.io.Serializable;
 
 /**
- * Represents an user ranking in the System. An user ranking is just a given
- * "status" which some user have basead on the number of messages posted by
- * them.
- * 
+ * Represents an user ranking in the System.
+ * An user ranking is just a given "status" which some user have
+ * basead on the number of messages posted by them.  
+ *  
  * @author Rafael Steil
- * @version $Id: Ranking.java,v 1.5 2005/07/26 02:45:50 diegopires Exp $
+ * @version $Id: Ranking.java,v 1.6 2005/07/26 03:04:51 rafaelsteil Exp $
  */
-public class Ranking implements Serializable {
-	private static final long serialVersionUID = -5574666128007947659L;
-
+public class Ranking implements Serializable
+{
 	private int id;
-
 	private String title;
-
 	private int special;
-
 	private String image;
-
 	private int min;
-
-	public Ranking() {
-	}
-
+	
+	public Ranking() {}
 	/**
 	 * @return int
 	 */
@@ -92,15 +85,14 @@ public class Ranking implements Serializable {
 	/**
 	 * @return String
 	 */
-	public String getTitle() {
+	public String getTitle() 
+	{
 		return (this.title == null ? "" : this.title);
 	}
 
 	/**
 	 * Sets the id.
-	 * 
-	 * @param id
-	 *            The id to set
+	 * @param id The id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -108,9 +100,7 @@ public class Ranking implements Serializable {
 
 	/**
 	 * Sets the image.
-	 * 
-	 * @param image
-	 *            The image to set
+	 * @param image The image to set
 	 */
 	public void setImage(String image) {
 		this.image = image;
@@ -118,9 +108,7 @@ public class Ranking implements Serializable {
 
 	/**
 	 * Sets the special.
-	 * 
-	 * @param special
-	 *            The special to set
+	 * @param special The special to set
 	 */
 	public void setSpecial(int special) {
 		this.special = special;
@@ -128,9 +116,7 @@ public class Ranking implements Serializable {
 
 	/**
 	 * Sets the title.
-	 * 
-	 * @param title
-	 *            The title to set
+	 * @param title The title to set
 	 */
 	public void setTitle(String title) {
 		this.title = title;

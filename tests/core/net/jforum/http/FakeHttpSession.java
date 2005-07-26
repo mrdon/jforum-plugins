@@ -52,12 +52,13 @@ import javax.servlet.http.HttpSessionContext;
 
 /**
  * @author Rafael Steil
- * @version $Id: FakeHttpSession.java,v 1.3 2005/07/26 02:46:00 diegopires Exp $
+ * @version $Id: FakeHttpSession.java,v 1.4 2005/07/26 03:06:04 rafaelsteil Exp $
  */
-public class FakeHttpSession implements HttpSession {
+public class FakeHttpSession implements HttpSession 
+{
 	private Map attributes = new HashMap();
 
-	/**
+	/** 
 	 * @see javax.servlet.http.HttpSession#getCreationTime()
 	 */
 	public long getCreationTime() {
@@ -65,14 +66,14 @@ public class FakeHttpSession implements HttpSession {
 		return 0;
 	}
 
-	/**
+	/** 
 	 * @see javax.servlet.http.HttpSession#getId()
 	 */
 	public String getId() {
 		return "jforum-testcase";
 	}
 
-	/**
+	/** 
 	 * @see javax.servlet.http.HttpSession#getLastAccessedTime()
 	 */
 	public long getLastAccessedTime() {
@@ -80,7 +81,7 @@ public class FakeHttpSession implements HttpSession {
 		return 0;
 	}
 
-	/**
+	/** 
 	 * @see javax.servlet.http.HttpSession#getServletContext()
 	 */
 	public ServletContext getServletContext() {
@@ -88,14 +89,14 @@ public class FakeHttpSession implements HttpSession {
 		return null;
 	}
 
-	/**
+	/** 
 	 * @see javax.servlet.http.HttpSession#setMaxInactiveInterval(int)
 	 */
 	public void setMaxInactiveInterval(int arg0) {
 		// TODO Auto-generated method stub
 	}
 
-	/**
+	/** 
 	 * @see javax.servlet.http.HttpSession#getMaxInactiveInterval()
 	 */
 	public int getMaxInactiveInterval() {
@@ -108,7 +109,7 @@ public class FakeHttpSession implements HttpSession {
 		return null;
 	}
 
-	/**
+	/** 
 	 * @see javax.servlet.http.HttpSession#getAttribute(java.lang.String)
 	 */
 	public Object getAttribute(String name) {
@@ -120,7 +121,7 @@ public class FakeHttpSession implements HttpSession {
 		return null;
 	}
 
-	/**
+	/** 
 	 * @see javax.servlet.http.HttpSession#getAttributeNames()
 	 */
 	public Enumeration getAttributeNames() {
@@ -133,9 +134,8 @@ public class FakeHttpSession implements HttpSession {
 		return null;
 	}
 
-	/**
-	 * @see javax.servlet.http.HttpSession#setAttribute(java.lang.String,
-	 *      java.lang.Object)
+	/** 
+	 * @see javax.servlet.http.HttpSession#setAttribute(java.lang.String, java.lang.Object)
 	 */
 	public void setAttribute(String name, Object value) {
 		this.attributes.put(name, value);
@@ -145,7 +145,7 @@ public class FakeHttpSession implements HttpSession {
 		// TODO Auto-generated method stub
 	}
 
-	/**
+	/** 
 	 * @see javax.servlet.http.HttpSession#removeAttribute(java.lang.String)
 	 */
 	public void removeAttribute(String name) {
@@ -156,14 +156,14 @@ public class FakeHttpSession implements HttpSession {
 		// TODO Auto-generated method stub
 	}
 
-	/**
+	/** 
 	 * @see javax.servlet.http.HttpSession#invalidate()
 	 */
 	public void invalidate() {
 		// TODO Auto-generated method stub
 	}
 
-	/**
+	/** 
 	 * @see javax.servlet.http.HttpSession#isNew()
 	 */
 	public boolean isNew() {

@@ -44,11 +44,12 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchInstantiationException.java,v 1.2 2005/03/12 20:10:51
- *          rafaelsteil Exp $
+ * @version $Id: SearchInstantiationException.java,v 1.4 2005/07/26 03:04:36 rafaelsteil Exp $
  */
-public class SearchInstantiationException extends RuntimeException {
-	public SearchInstantiationException(String message) {
+public class SearchInstantiationException extends RuntimeException
+{
+	public SearchInstantiationException(String message)
+	{
 		super(message);
 	}
 }

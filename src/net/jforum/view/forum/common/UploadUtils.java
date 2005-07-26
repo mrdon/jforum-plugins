@@ -49,45 +49,48 @@ import net.jforum.util.legacy.commons.fileupload.FileItem;
 
 /**
  * @author Rafael Steil
- * @version $Id: UploadUtils.java,v 1.7 2005/07/26 02:45:44 diegopires Exp $
+ * @version $Id: UploadUtils.java,v 1.8 2005/07/26 03:05:55 rafaelsteil Exp $
  */
-public class UploadUtils {
+public class UploadUtils
+{
 	private FileItem item;
-
 	private String extension = "";
-
-	public UploadUtils(FileItem item) {
+	
+	public UploadUtils(FileItem item)
+	{
 		this.item = item;
 	}
-
-	public String getExtension() {
+	
+	public String getExtension()
+	{
 		if (this.extension == null || this.extension.equals("")) {
-			this.extension = this.item.getName().substring(
-					this.item.getName().lastIndexOf('.') + 1);
+			this.extension = this.item.getName().substring(this.item.getName().lastIndexOf('.') + 1);
 		}
-
+		
 		return this.extension;
 	}
-
-	public void saveUploadedFile(String filename) throws Exception {
+	
+	public void saveUploadedFile(String filename) throws Exception
+	{
 		BufferedInputStream inputStream = null;
 		FileOutputStream outputStream = null;
-
+		
 		try {
 			inputStream = new BufferedInputStream(this.item.getInputStream());
 			outputStream = new FileOutputStream(filename);
-
+			
 			int c = 0;
 			byte[] b = new byte[4096];
 			while ((c = inputStream.read(b)) != -1) {
 				outputStream.write(b, 0, c);
 			}
-		} finally {
+		}
+		finally {
 			if (outputStream != null) {
 				outputStream.flush();
 				outputStream.close();
 			}
-
+			
 			if (inputStream != null) {
 				inputStream.close();
 			}

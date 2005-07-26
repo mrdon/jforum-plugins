@@ -53,101 +53,101 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericRankingDAO.java,v 1.2 2005/03/26 04:10:49 rafaelsteil
- *          Exp $
+ * @version $Id: GenericRankingDAO.java,v 1.4 2005/07/26 03:04:46 rafaelsteil Exp $
  */
-public class GenericRankingDAO implements net.jforum.dao.RankingDAO {
-	/**
+public class GenericRankingDAO implements net.jforum.dao.RankingDAO 
+{
+	/** 
 	 * @see net.jforum.dao.RankingDAO#selectById(int)
 	 */
-	public Ranking selectById(int rankingId) throws Exception {
+	public Ranking selectById(int rankingId) throws Exception 
+	{
 		Ranking ranking = new Ranking();
-
-		PreparedStatement p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("RankingModel.selectById"));
+		
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("RankingModel.selectById"));		
 		p.setInt(1, rankingId);
-
+		
 		ResultSet rs = p.executeQuery();
 		if (rs.next()) {
-			ranking.setId(rankingId);
-			ranking.setTitle(rs.getString("rank_title"));
-			ranking.setImage(rs.getString("rank_image"));
-			ranking.setMin(rs.getInt("rank_min"));
-			ranking.setSpecial(rs.getInt("rank_special"));
+				ranking.setId(rankingId);
+				ranking.setTitle(rs.getString("rank_title"));
+				ranking.setImage(rs.getString("rank_image"));
+				ranking.setMin(rs.getInt("rank_min"));
+				ranking.setSpecial(rs.getInt("rank_special"));
 		}
-
+		
 		rs.close();
 		p.close();
-
+		
 		return ranking;
 	}
 
 	/**
 	 * @see net.jforum.dao.RankingDAO#selectAll()
 	 */
-	public List selectAll() throws Exception {
+	public List selectAll() throws Exception 
+	{
 		List l = new ArrayList();
-		PreparedStatement p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("RankingModel.selectAll"));
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("RankingModel.selectAll"));
 		ResultSet rs = p.executeQuery();
-
+		
 		while (rs.next()) {
 			Ranking ranking = new Ranking();
-
+			
 			ranking.setId(rs.getInt("rank_id"));
 			ranking.setTitle(rs.getString("rank_title"));
 			ranking.setImage(rs.getString("rank_image"));
 			ranking.setMin(rs.getInt("rank_min"));
 			ranking.setSpecial(rs.getInt("rank_special"));
-
-			l.add(ranking);
+			
+			l.add(ranking);			
 		}
-
+		
 		rs.close();
 		p.close();
-
+		
 		return l;
 	}
 
-	/**
+	/** 
 	 * @see net.jforum.dao.RankingDAO#delete(int)
 	 */
-	public void delete(int rankingId) throws Exception {
-		PreparedStatement p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("RankingModel.delete"));
+	public void delete(int rankingId) throws Exception 
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("RankingModel.delete"));
 		p.setInt(1, rankingId);
-
+		
 		p.executeUpdate();
 		p.close();
 	}
 
-	/**
+	/** 
 	 * @see net.jforum.dao.RankingDAO#update(net.jforum.Ranking)
 	 */
-	public void update(Ranking ranking) throws Exception {
-		PreparedStatement p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("RankingModel.update"));
-
+	public void update(Ranking ranking) throws Exception 
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("RankingModel.update"));
+		
 		p.setString(1, ranking.getTitle());
 		p.setString(2, ranking.getImage());
 		p.setInt(3, ranking.getSpecial());
 		p.setInt(4, ranking.getMin());
 		p.setInt(5, ranking.getId());
-
+		
 		p.executeUpdate();
 		p.close();
 	}
 
-	/**
+	/** 
 	 * @see net.jforum.dao.RankingDAO#addNew(net.jforum.Ranking)
 	 */
-	public void addNew(Ranking ranking) throws Exception {
-		PreparedStatement p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("RankingModel.addNew"));
-
+	public void addNew(Ranking ranking) throws Exception 
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("RankingModel.addNew"));
+		
 		p.setString(1, ranking.getTitle());
 		p.setInt(2, ranking.getMin());
-
+		
 		p.executeUpdate();
 		p.close();
 	}

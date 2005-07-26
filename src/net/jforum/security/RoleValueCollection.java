@@ -49,59 +49,60 @@ import java.util.LinkedHashSet;
 
 /**
  * @author Rafael Steil
- * @version $Id: RoleValueCollection.java,v 1.4 2005/02/03 12:37:40 rafaelsteil
- *          Exp $
+ * @version $Id: RoleValueCollection.java,v 1.6 2005/07/26 03:05:05 rafaelsteil Exp $
  */
-public class RoleValueCollection extends LinkedHashSet implements Serializable {
+public class RoleValueCollection extends LinkedHashSet implements Serializable 
+{
 	/**
 	 * Gets a <code>RoleValue</code> by its name.
 	 * 
-	 * @param valueName
-	 *            The <code>RoleValue</code> name
-	 * @return The <code>RoleValue</code> object if found, or
-	 *         <code>null</code> if not found
+	 * @param valueName The <code>RoleValue</code> name
+	 * @return The <code>RoleValue</code> object if found, or <code>null</code> if not found
 	 */
-	public RoleValue get(String valueName) {
-		for (Iterator iter = this.iterator(); iter.hasNext();) {
-			RoleValue v = (RoleValue) iter.next();
-
+	public RoleValue get(String valueName)
+	{
+		for (Iterator iter = this.iterator(); iter.hasNext(); ) {
+			RoleValue v = (RoleValue)iter.next();
+			
 			if (v.getValue().equals(valueName)) {
 				return v;
 			}
 		}
-
+		
 		return null;
 	}
-
-	/**
+	
+	/** 
 	 * @see java.util.HashSet#contains(java.lang.Object)
 	 */
-	public boolean contains(Object o) {
+	public boolean contains(Object o) 
+	{
 		boolean c = super.contains(o);
 		return c;
 	}
-
-	/*
+	
+	/* 
 	 * @see java.util.ArrayList#add(java.lang.Object)
 	 */
-	public boolean add(Object o) {
+	public boolean add(Object o) 
+	{
 		if (!(o instanceof RoleValue)) {
-			throw new IllegalArgumentException(
-					"Object passed as parameter is not a RoleValue type");
+			throw new IllegalArgumentException("Object passed as parameter is not a RoleValue type");
 		}
-
+		
 		return super.add(o);
 	}
 
-	/*
+	/* 
 	 * @see java.util.Collection#addAll(java.util.Collection)
 	 */
-	public boolean addAll(Collection c) {
+	public boolean addAll(Collection c) 
+	{
 		boolean status = true;
-		for (Iterator iter = c.iterator(); iter.hasNext();) {
+		for (Iterator iter = c.iterator(); iter.hasNext(); ) {
 			status = this.add(iter.next());
 		}
-
+		
 		return status;
 	}
 }

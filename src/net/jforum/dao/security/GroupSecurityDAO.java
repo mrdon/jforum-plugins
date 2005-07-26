@@ -42,9 +42,11 @@
  */
 package net.jforum.dao.security;
 
+
+
 /**
  * @author Rafael Steil
- * @version $Id: GroupSecurityDAO.java,v 1.3 2005/07/26 02:45:29 diegopires Exp $
+ * @version $Id: GroupSecurityDAO.java,v 1.4 2005/07/26 03:05:46 rafaelsteil Exp $
  */
 public interface GroupSecurityDAO extends SecurityDAO {
 

@@ -46,62 +46,54 @@ import java.util.Collection;
 
 /**
  * @author Rafael Steil
- * @version $Id: CacheEngine.java,v 1.7 2005/07/26 02:45:37 diegopires Exp $
+ * @version $Id: CacheEngine.java,v 1.8 2005/07/26 03:04:54 rafaelsteil Exp $
  */
-public interface CacheEngine {
+public interface CacheEngine
+{
 	public static final String DUMMY_FQN = "";
-
 	public static final String NOTIFICATION = "notification";
-
+	
 	/**
-	 * Inits the cache engine.
+	 * Inits the cache engine. 
 	 */
 	public void init();
-
+	
 	/**
-	 * Adds a new object to the cache. The fqn will be set as the value of
-	 * {@link #DUMMY_FQN}
+	 * Adds a new object to the cache. 
+	 * The fqn will be set as the value of {@link #DUMMY_FQN}
 	 * 
-	 * @param key
-	 *            The key to associate with the object.
-	 * @param value
-	 *            The object to cache
+	 * @param key The key to associate with the object. 
+	 * @param value The object to cache
 	 */
 	public void add(String key, Object value);
-
+	
 	/**
 	 * 
 	 * Adds a new object to the cache.
 	 * 
-	 * @param fqn
-	 *            The fully qualified name of the cache.
-	 * @param key
-	 *            The key to associate with the object
-	 * @param value
-	 *            The object to cache
+	 * @param fqn The fully qualified name of the cache. 
+	 * @param key The key to associate with the object
+	 * @param value The object to cache
 	 */
 	public void add(String fqn, String key, Object value);
-
+	
 	/**
 	 * Gets some object from the cache.
 	 * 
-	 * @param fqn
-	 *            The fully qualified name associated with the key
-	 * @param key
-	 *            The key to get
+	 * @param fqn The fully qualified name associated with the key
+	 * @param key The key to get
 	 * @return The cached object, or <code>null</code> if no entry was found
 	 */
 	public Object get(String fqn, String key);
-
+	
 	/**
 	 * Gets some object from the cache.
 	 * 
-	 * @param key
-	 *            The fqn tree to get
+	 * @param key The fqn tree to get
 	 * @return The cached object, or <code>null</code> if no entry was found
 	 */
 	public Object get(String fqn);
-
+	
 	/**
 	 * Gets all values from some given FQN.
 	 * 
@@ -109,22 +101,18 @@ public interface CacheEngine {
 	 * @return
 	 */
 	public Collection getValues(String fqn);
-
+	
 	/**
 	 * Removes an entry from the cache.
 	 * 
-	 * @param fqn
-	 *            The fully qualified name associated with the key
-	 * @param key
-	 *            The key to remove
+	 * @param fqn The fully qualified name associated with the key
+	 * @param key The key to remove
 	 */
 	public void remove(String fqn, String key);
-
+	
 	/**
 	 * Removes a complete note from the cache
-	 * 
-	 * @param key
-	 *            The fqn to remove
+	 * @param key The fqn to remove
 	 */
 	public void remove(String fqn);
 }

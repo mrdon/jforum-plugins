@@ -41,70 +41,69 @@
  * The JForum project
  * http://www.jforum.net
  * 
- * $Id: FormSelectedData.java,v 1.3 2005/07/26 02:45:47 diegopires Exp $
+ * $Id: FormSelectedData.java,v 1.4 2005/07/26 03:05:26 rafaelsteil Exp $
  */
 package net.jforum.util;
 
 /**
  * @author Rafael Steil
  */
-public class FormSelectedData {
+public class FormSelectedData 
+{
 	/**
 	 * Nome do campo ( descricao textual )
-	 */
+	 * */
 	private String name;
-
+	
 	/**
 	 * ID relacionada com o campo
-	 */
+	 * */
 	private String id;
-
+	
 	/**
 	 * Para verificar se o campo deve ser marcado como selecionado
-	 */
+	 * */
 	private boolean selected;
-
+	
 	/**
-	 * @param name
-	 *            Nome do campo
-	 * @param id
-	 *            ID relacionado com o campo
-	 * @param selected
-	 *            <code>true</code> ou <code>false</code>, com base no
-	 *            status desejado
-	 */
-	public FormSelectedData(String name, String id, boolean selected) {
+	 * @param name Nome do campo
+	 * @param id ID relacionado com o campo
+	 * @param selected <code>true</code> ou <code>false</code>, com base no status desejado
+	 * */
+	public FormSelectedData(String name, String id, boolean selected)
+	{
 		this.name = name;
 		this.id = id;
 		this.selected = selected;
 	}
-
+	
 	/**
 	 * Pega o nome do campo.
 	 * 
 	 * @return String contendo o nome do campo
-	 */
-	public String getName() {
+	 * */
+	public String getName()
+	{
 		return this.name;
 	}
-
+	
 	/**
 	 * Pega o ID do campo.
 	 * 
 	 * @return String contendo o ID do campo
-	 */
-	public String getId() {
+	 * */
+	public String getId()
+	{
 		return this.id;
 	}
-
+	
 	/**
 	 * Pega o status do campo.
 	 * 
-	 * @param selected
-	 *            <code>true</code> ou <code>false</code>, com base no
-	 *            status
-	 */
-	public boolean getSelected() {
+	 * @param selected <code>true</code> ou <code>false</code>, com base no status
+	 * */
+	public boolean getSelected()
+	{
 		return this.selected;
 	}
 }

@@ -42,6 +42,7 @@
  */
 package net.jforum.util.rss;
 
+
 import java.util.Iterator;
 import java.util.List;
 
@@ -58,67 +59,64 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumRSS.java,v 1.16 2005/07/26 02:46:02 diegopires Exp $
+ * @version $Id: ForumRSS.java,v 1.17 2005/07/26 03:04:38 rafaelsteil Exp $
  */
-public class ForumRSS extends GenericRSS {
+public class ForumRSS extends GenericRSS 
+{
 	private static final Logger logger = Logger.getLogger(ForumRSS.class);
-
+	
 	private List categories;
-
 	private RSS rss;
-
 	private String forumLink;
-
-	public ForumRSS(String title, String description, List categories) {
+	
+	public ForumRSS(String title, String description, List categories)
+	{
 		this.categories = categories;
 		this.forumLink = ViewCommon.getForumLink();
-
-		this.rss = new RSS(title, description, SystemGlobals
-				.getValue(ConfigKeys.ENCODING), this.forumLink);
-
+		
+		this.rss = new RSS(title, description, 
+				SystemGlobals.getValue(ConfigKeys.ENCODING ),
+				this.forumLink);
+		
 		this.prepareRSS();
 	}
-
-	private void prepareRSS() {
+	
+	private void prepareRSS()
+	{
 		try {
-			for (Iterator iter = this.categories.iterator(); iter.hasNext();) {
-				Category category = (Category) iter.next();
-
-				for (Iterator fIter = category.getForums().iterator(); fIter
-						.hasNext();) {
-					Forum forum = (Forum) fIter.next();
-
-					LastPostInfo info = ForumRepository.getLastPostInfo(forum
-							.getId());
-
+			for (Iterator iter = this.categories.iterator(); iter.hasNext(); ) {
+				Category category = (Category)iter.next();
+				
+				for (Iterator fIter = category.getForums().iterator(); fIter.hasNext(); ) {
+					Forum forum = (Forum)fIter.next();
+					
+					LastPostInfo info = ForumRepository.getLastPostInfo(forum.getId());
+					
 					RSSItem item = new RSSItem();
 					item.addCategory(category.getName());
 					item.setTitle(forum.getName());
 					item.setDescription(forum.getDescription());
 					item.setContentType(RSSAware.CONTENT_HTML);
 					item.setLink(this.forumLink
-							+ "forums/show/"
-							+ forum.getId()
-							+ SystemGlobals
-									.getValue(ConfigKeys.SERVLET_EXTENSION));
-
+							+ "forums/show/" + forum.getId()
+							+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+					
 					String author = info.getUsername();
-
-					item.setAuthor(author != null ? author : I18n
-							.getMessage("Guest"));
-
+					
+					item.setAuthor(author != null ? author : I18n.getMessage("Guest"));
+					
 					String date = info.getPostDate();
-					item.setPublishDate(date != null ? RSSUtils
-							.formatDate(date) : "");
-
+					item.setPublishDate(date != null ? RSSUtils.formatDate(date) : "");
+					
 					this.rss.addItem(item);
 				}
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			logger.warn("Error while generating rss for forums: " + e);
 			e.printStackTrace();
 		}
-
+		
 		super.setRSS(this.rss);
 	}
 }

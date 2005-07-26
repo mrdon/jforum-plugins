@@ -43,12 +43,11 @@
 package net.jforum.exceptions;
 
 /**
- * Thrown when someone tries to reload some cached forum instance which had its
- * order changed.
+ * Thrown when someone tries to reload some cached
+ * forum instance which had its order changed.
  * 
  * @author Rafael Steil
- * @version $Id: ForumOrderChangedException.java,v 1.1 2005/02/01 21:41:56
- *          rafaelsteil Exp $
+ * @version $Id: ForumOrderChangedException.java,v 1.3 2005/07/26 03:04:34 rafaelsteil Exp $
  */
 public class ForumOrderChangedException extends RuntimeException {
 	public ForumOrderChangedException(String message) {

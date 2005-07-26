@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: Task.java,v 1.3 2005/07/26 02:45:46 diegopires Exp $
+ * $Id: Task.java,v 1.4 2005/07/26 03:05:08 rafaelsteil Exp $
  */
 package net.jforum.util.concurrent;
 
@@ -50,6 +50,7 @@ package net.jforum.util.concurrent;
  * 
  * @author Rodrigo Kumpera
  */
-public interface Task {
+public interface Task 
+{
 	public Object execute() throws Exception;
 }

@@ -48,14 +48,15 @@ import net.jforum.dao.generic.GenericModerationDAO;
 
 /**
  * @author Rafael Steil
- * @version $Id: OracleModerationDAO.java,v 1.1 2005/04/10 16:24:38 rafaelsteil
- *          Exp $
+ * @version $Id: OracleModerationDAO.java,v 1.3 2005/07/26 03:04:57 rafaelsteil Exp $
  */
-public class OracleModerationDAO extends GenericModerationDAO {
+public class OracleModerationDAO extends GenericModerationDAO
+{
 	/**
 	 * @see net.jforum.dao.generic.GenericModerationDAO#getPostTextFromResultSet(java.sql.ResultSet)
 	 */
-	protected String getPostTextFromResultSet(ResultSet rs) throws Exception {
+	protected String getPostTextFromResultSet(ResultSet rs) throws Exception
+	{
 		return OracleUtils.readBlobUTF16BinaryStream(rs, "post_text");
 	}
 }

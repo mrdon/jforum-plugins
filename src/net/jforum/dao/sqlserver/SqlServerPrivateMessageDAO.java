@@ -51,33 +51,30 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerPrivateMessageDAO.java,v 1.3 2005/04/10 16:24:37
- *          rafaelsteil Exp $
+ * @version $Id: SqlServerPrivateMessageDAO.java,v 1.5 2005/07/26 03:05:13 rafaelsteil Exp $
  */
-public class SqlServerPrivateMessageDAO extends
-		net.jforum.dao.generic.GenericPrivateMessageDAO {
-	/**
+public class SqlServerPrivateMessageDAO extends net.jforum.dao.generic.GenericPrivateMessageDAO 
+{
+	/** 
 	 * @see net.jforum.dao.PrivateMessageDAO#selectById(net.jforum.entities.PrivateMessage)
 	 */
-	public PrivateMessage selectById(PrivateMessage pm) throws Exception {
-		PreparedStatement p = null;
-		p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("PrivateMessageModel.selectById"),
-				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-
+	public PrivateMessage selectById(PrivateMessage pm) throws Exception
+	{
+	    PreparedStatement p = null;
+	    p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessageModel.selectById"), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		
 		p.setInt(1, pm.getId());
-
-		ResultSet rs = null;
-		;
+		
+		ResultSet rs = null;;
 		rs = p.executeQuery();
 		if (rs.next()) {
 			pm = this.getPm(rs);
 		}
-
+		
 		rs.close();
 		p.close();
-
+		
 		return pm;
 	}
-
+		
 }

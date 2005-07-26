@@ -44,128 +44,129 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
- * @version $Id: Bookmark.java,v 1.2 2005/07/26 02:45:53 diegopires Exp $
+ * @version $Id: Bookmark.java,v 1.3 2005/07/26 03:04:50 rafaelsteil Exp $
  */
-public class Bookmark {
+public class Bookmark
+{
 	private int id;
-
 	private int userId;
-
 	private int relationId;
-
 	private int relationType;
-
 	private boolean publicVisible;
-
 	private String title;
-
 	private String description;
-
-	public Bookmark() {
-	}
-
+	
+	public Bookmark() {}
+	
 	/**
 	 * @return Returns the id.
 	 */
-	public int getId() {
+	public int getId()
+	{
 		return this.id;
 	}
-
+	
 	/**
-	 * @param id
-	 *            The id to set.
+	 * @param id The id to set.
 	 */
-	public void setId(int id) {
+	public void setId(int id)
+	{
 		this.id = id;
 	}
-
+	
 	/**
 	 * @return Returns the publicVisible.
 	 */
-	public boolean isPublicVisible() {
+	public boolean isPublicVisible()
+	{
 		return this.publicVisible;
 	}
-
+	
 	/**
-	 * @param publicVisible
-	 *            The publicVisible to set.
+	 * @param publicVisible The publicVisible to set.
 	 */
-	public void setPublicVisible(boolean publicVisible) {
+	public void setPublicVisible(boolean publicVisible)
+	{
 		this.publicVisible = publicVisible;
 	}
-
+	
 	/**
 	 * @return Returns the relationId.
 	 */
-	public int getRelationId() {
+	public int getRelationId()
+	{
 		return this.relationId;
 	}
-
+	
 	/**
-	 * @param relationId
-	 *            The relationId to set.
+	 * @param relationId The relationId to set.
 	 */
-	public void setRelationId(int relationId) {
+	public void setRelationId(int relationId)
+	{
 		this.relationId = relationId;
 	}
-
+	
 	/**
 	 * @return Returns the relationType.
 	 */
-	public int getRelationType() {
+	public int getRelationType()
+	{
 		return this.relationType;
 	}
-
+	
 	/**
-	 * @param relationType
-	 *            The relationType to set.
+	 * @param relationType The relationType to set.
 	 */
-	public void setRelationType(int relationType) {
+	public void setRelationType(int relationType)
+	{
 		this.relationType = relationType;
 	}
-
+	
 	/**
 	 * @return Returns the userId.
 	 */
-	public int getUserId() {
+	public int getUserId()
+	{
 		return this.userId;
 	}
-
+	
 	/**
-	 * @param userId
-	 *            The userId to set.
+	 * @param userId The userId to set.
 	 */
-	public void setUserId(int userId) {
+	public void setUserId(int userId)
+	{
 		this.userId = userId;
 	}
-
+	
 	/**
 	 * @return Returns the description.
 	 */
-	public String getDescription() {
+	public String getDescription()
+	{
 		return this.description;
 	}
-
+	
 	/**
-	 * @param description
-	 *            The description to set.
+	 * @param description The description to set.
 	 */
-	public void setDescription(String description) {
+	public void setDescription(String description)
+	{
 		this.description = description;
 	}
-
+	
 	/**
 	 * @return Returns the title.
 	 */
-	public String getTitle() {
+	public String getTitle()
+	{
 		return this.title;
 	}
-
+	
 	/**
-	 * @param title
-	 *            The title to set.
+	 * @param title The title to set.
 	 */
-	public void setTitle(String title) {
+	public void setTitle(String title)
+	{
 		this.title = title;
 	}
 }

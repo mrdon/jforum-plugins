@@ -43,11 +43,12 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: InvalidBookmarkTypeException.java,v 1.1 2005/02/01 21:41:55
- *          rafaelsteil Exp $
+ * @version $Id: InvalidBookmarkTypeException.java,v 1.3 2005/07/26 03:04:33 rafaelsteil Exp $
  */
-public class InvalidBookmarkTypeException extends RuntimeException {
-	public InvalidBookmarkTypeException(String message) {
+public class InvalidBookmarkTypeException extends RuntimeException
+{
+	public InvalidBookmarkTypeException(String message)
+	{
 		super(message);
 	}
 }

@@ -44,23 +44,17 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageType.java,v 1.2 2005/01/07 13:09:51 rafaelsteil
- *          Exp $
+ * @version $Id: PrivateMessageType.java,v 1.4 2005/07/26 03:04:48 rafaelsteil Exp $
  */
-public class PrivateMessageType {
-	private PrivateMessageType() {
-	}
-
+public class PrivateMessageType
+{
+	private PrivateMessageType() {}
+	
 	public static final int READ = 0;
-
 	public static final int NEW = 1;
-
 	public static final int SENT = 2;
-
 	public static final int SAVED_IN = 3;
-
 	public static final int SAVED_OUT = 4;
-
 	public static final int UNREAD = 5;
-
+	
 }

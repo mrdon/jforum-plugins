@@ -48,6 +48,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
+import freemarker.template.SimpleHash;
+
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
@@ -68,171 +72,154 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.view.forum.ModerationHelper;
 
-import org.apache.log4j.Logger;
-
-import freemarker.template.SimpleHash;
-
 /**
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.12 2005/07/26 02:45:45 diegopires Exp $
+ * @version $Id: TopicsCommon.java,v 1.13 2005/07/26 03:05:54 rafaelsteil Exp $
  */
-public class TopicsCommon {
+public class TopicsCommon 
+{
 	private static Logger logger = Logger.getLogger(TopicsCommon.class);
-
+	
 	/**
-	 * List all first 'n' topics of a given forum. This method returns no more
-	 * than <code>ConfigKeys.TOPICS_PER_PAGE</code> topics for the forum.
+	 * List all first 'n' topics of a given forum.
+	 * This method returns no more than <code>ConfigKeys.TOPICS_PER_PAGE</code>
+	 * topics for the forum. 
 	 * 
-	 * @param forumId
-	 *            The forum id to which the topics belongs to
-	 * @param start
-	 *            The start fetching index
+	 * @param forumId The forum id to which the topics belongs to
+	 * @param start The start fetching index
 	 * @return <code>java.util.List</code> containing the topics found.
 	 * @throws Exception
 	 */
-	public static List topicsByForum(int forumId, int start) throws Exception {
+	public static List topicsByForum(int forumId, int start) throws Exception
+	{
 		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
-		int topicsPerPage = SystemGlobals
-				.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
+		int topicsPerPage = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
 		List topics = null;
-
+		
 		// Try to get the first's page of topics from the cache
-		if (start == 0
-				&& SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
+		if (start == 0 && SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
 			topics = TopicRepository.getTopics(forumId);
 
 			if (topics.size() == 0) {
-				topics = tm.selectAllByForumByLimit(forumId, start,
-						topicsPerPage);
+				topics = tm.selectAllByForumByLimit(forumId, start, topicsPerPage);
 				TopicRepository.addAll(forumId, topics);
 			}
-		} else {
+		}
+		else {
 			topics = tm.selectAllByForumByLimit(forumId, start, topicsPerPage);
 		}
-
+		
 		return topics;
 	}
-
+	
 	/**
-	 * Prepare the topics for listing. This method does some preparation for a
-	 * set ot <code>net.jforum.entities.Topic</code> instances for the current
-	 * user, like verification if the user already read the topic, if pagination
-	 * is a need and so on.
+	 * Prepare the topics for listing.
+	 * This method does some preparation for a set ot <code>net.jforum.entities.Topic</code>
+	 * instances for the current user, like verification if the user already
+	 * read the topic, if pagination is a need and so on.
 	 * 
-	 * @param topics
-	 *            The topics to process
+	 * @param topics The topics to process
 	 * @return The post-processed topics.
 	 */
-	public static List prepareTopics(List topics) {
+	public static List prepareTopics(List topics)
+	{
 		UserSession userSession = SessionFacade.getUserSession();
 
 		long lastVisit = userSession.getLastVisit().getTime();
 		int hotBegin = SystemGlobals.getIntValue(ConfigKeys.HOT_TOPIC_BEGIN);
 
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
-		Map topicsTracking = (HashMap) SessionFacade
-				.getAttribute(ConfigKeys.TOPICS_TRACKING);
+		Map topicsTracking = (HashMap)SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING);
 		List newTopics = new ArrayList(topics.size());
-
-		boolean checkUnread = (userSession.getUserId() != SystemGlobals
-				.getIntValue(ConfigKeys.ANONYMOUS_USER_ID));
-
-		for (Iterator iter = topics.iterator(); iter.hasNext();) {
+		
+		boolean checkUnread = (userSession.getUserId() 
+			!= SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID));
+		
+		for (Iterator iter = topics.iterator(); iter.hasNext(); ) {
 			boolean read = false;
-			Topic t = (Topic) iter.next();
+			Topic t = (Topic)iter.next();
 
-			if (checkUnread
-					&& t.getLastPostTimeInMillis().getTime() > lastVisit) {
+			if (checkUnread && t.getLastPostTimeInMillis().getTime() > lastVisit) {
 				if (topicsTracking.containsKey(new Integer(t.getId()))) {
-					read = (t.getLastPostTimeInMillis().getTime() == ((Long) topicsTracking
-							.get(new Integer(t.getId()))).longValue());
+					read = (t.getLastPostTimeInMillis().getTime() == ((Long)topicsTracking.get(new Integer(t.getId()))).longValue());
 				}
-			} else {
+			}
+			else {
 				read = true;
 			}
-
+			
 			if (t.getTotalReplies() + 1 > postsPerPage) {
 				t.setPaginate(true);
-				t.setTotalPages(new Double(Math.floor(t.getTotalReplies()
-						/ postsPerPage)));
-			} else {
+				t.setTotalPages(new Double(Math.floor(t.getTotalReplies() / postsPerPage)));
+			}
+			else {
 				t.setPaginate(false);
 				t.setTotalPages(new Double(0));
 			}
-
+			
 			// Check if this is a hot topic
 			t.setHot(t.getTotalReplies() >= hotBegin);
-
+			
 			t.setRead(read);
 			newTopics.add(t);
 		}
-
+		
 		return newTopics;
 	}
 
 	/**
 	 * Common properties to be used when showing topic data
 	 */
-	public static void topicListingBase() throws Exception {
+	public static void topicListingBase() throws Exception
+	{
 		SimpleHash context = JForum.getContext();
 		// Topic Types
 		context.put("TOPIC_ANNOUNCE", new Integer(Topic.TYPE_ANNOUNCE));
 		context.put("TOPIC_STICKY", new Integer(Topic.TYPE_STICKY));
 		context.put("TOPIC_NORMAL", new Integer(Topic.TYPE_NORMAL));
-
+	
 		// Topic Status
 		context.put("STATUS_LOCKED", new Integer(Topic.STATUS_LOCKED));
 		context.put("STATUS_UNLOCKED", new Integer(Topic.STATUS_UNLOCKED));
-
+		
 		// Moderation
-		context.put("moderator", SecurityRepository
-				.canAccess(SecurityConstants.PERM_MODERATION));
-		context.put("can_remove_posts", SecurityRepository
-				.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE));
-		context.put("can_move_topics", SecurityRepository
-				.canAccess(SecurityConstants.PERM_MODERATION_TOPIC_MOVE));
-		context
-				.put(
-						"can_lockUnlock_topics",
-						SecurityRepository
-								.canAccess(SecurityConstants.PERM_MODERATION_TOPIC_LOCK_UNLOCK));
-		context.put("rssEnabled", SystemGlobals
-				.getBoolValue(ConfigKeys.RSS_ENABLED));
+		context.put("moderator", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION));
+		context.put("can_remove_posts", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE));
+		context.put("can_move_topics", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_TOPIC_MOVE));
+		context.put("can_lockUnlock_topics", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_TOPIC_LOCK_UNLOCK));
+		context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
 	}
-
+	
 	/**
 	 * Checks if the user is allowed to view the topic
 	 * 
-	 * @param forumId
-	 *            The forum id to which the topics belongs to
-	 * @return <code>true</code> if the topic is accessible,
-	 *         <code>false</code> otherwise
+	 * @param forumId The forum id to which the topics belongs to
+	 * @return <code>true</code> if the topic is accessible, <code>false</code> otherwise
 	 * @throws Exception
 	 */
-	public static boolean isTopicAccessible(int forumId) throws Exception {
+	public static boolean isTopicAccessible(int forumId) throws Exception 
+	{
 		Forum f = ForumRepository.getForum(forumId);
-
-		if (f == null
-				|| !ForumRepository.isCategoryAccessible(f.getCategoryId())) {
+		
+		if (f == null || !ForumRepository.isCategoryAccessible(f.getCategoryId())) {
 			new ModerationHelper().denied(I18n.getMessage("PostShow.denied"));
 			return false;
 		}
 
 		return true;
 	}
-
+	
 	/**
 	 * Sends a "new post" notification message to all users watching the topic.
 	 * 
-	 * @param t
-	 *            The changed topic
-	 * @param tm
-	 *            A TopicModel instance
+	 * @param t The changed topic
+	 * @param tm A TopicModel instance
 	 * @throws Exception
 	 */
-	public static void notifyUsers(Topic t, TopicDAO tm) throws Exception {
+	public static void notifyUsers(Topic t, TopicDAO tm) throws Exception
+	{
 		if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_NOTIFY_ANSWERS)) {
 			try {
 				List usersToNotify = tm.notifyUsers(t);
@@ -241,70 +228,65 @@ public class TopicsCommon {
 				// subscribed to the topic
 				if (usersToNotify != null && usersToNotify.size() > 0) {
 					QueuedExecutor.getInstance().execute(
-							new EmailSenderTask(new TopicSpammer(t,
-									usersToNotify)));
+							new EmailSenderTask(new TopicSpammer(t, usersToNotify)));
 				}
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				logger.warn("Error while sending notification emails: " + e);
 			}
 		}
 	}
-
+	
 	/**
-	 * Updates the board status after a new post is inserted. This method is
-	 * used in conjunct with moderation manipulation. It will increase by 1 the
-	 * number of replies of the tpoic, set the last post id for the topic and
-	 * the forum and refresh the cache.
+	 * Updates the board status after a new post is inserted.
+	 * This method is used in conjunct with moderation manipulation. 
+	 * It will increase by 1 the number of replies of the tpoic, set the
+	 * last post id for the topic and the forum and refresh the cache. 
 	 * 
-	 * @param t
-	 *            The topic to update
-	 * @param lastPostId
-	 *            The id of the last post
-	 * @param tm
-	 *            A TopicModel instance
-	 * @param fm
-	 *            A ForumModel instance
+	 * @param t The topic to update
+	 * @param lastPostId The id of the last post
+	 * @param tm A TopicModel instance
+	 * @param fm A ForumModel instance
 	 * @throws Exception
 	 */
-	public static void updateBoardStatus(Topic t, int lastPostId,
-			boolean firstPost, TopicDAO tm, ForumDAO fm) throws Exception {
+	public static void updateBoardStatus(Topic t, int lastPostId, boolean firstPost, TopicDAO tm, ForumDAO fm) throws Exception
+	{
 		t.setLastPostId(lastPostId);
 		tm.update(t);
-
+		
 		fm.setLastPost(t.getForumId(), lastPostId);
-
+		
 		if (!firstPost) {
 			tm.incrementTotalReplies(t.getId());
-		} else {
+		}
+		else {
 			fm.incrementTotalTopics(t.getForumId(), 1);
 		}
-
+		
 		tm.incrementTotalViews(t.getId());
-
+		
 		ForumRepository.reloadForum(t.getForumId());
 		TopicRepository.clearCache(t.getForumId());
 
 		// Updates cache for latest topic
 		TopicRepository.pushTopic(tm.selectById(t.getId()));
 	}
-
+	
 	/**
-	 * Deletes a topic. This method will remove the topic from the database,
-	 * clear the entry frm the cache and update the last post info for the
-	 * associated forum.
-	 * 
-	 * @param topicId
-	 *            The topic id to remove
-	 * @param fromModeration
-	 *            TODO
+	 * Deletes a topic.
+	 * This method will remove the topic from the database,
+	 * clear the entry frm the cache and update the last 
+	 * post info for the associated forum.
+	 * @param topicId The topic id to remove
+	 * @param fromModeration TODO
 	 * 
 	 * @throws Exception
 	 */
-	public static void deleteTopic(int topicId, int forumId,
-			boolean fromModeration) throws Exception {
+	public static void deleteTopic(int topicId, int forumId, boolean fromModeration) throws Exception
+	{
 		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 		ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
-
+		
 		Topic topic = new Topic();
 		topic.setId(topicId);
 		tm.delete(topic);
@@ -313,7 +295,7 @@ public class TopicsCommon {
 			// Updates the Recent Topics if it contains this topic
 			TopicRepository.popTopic(topic);
 			TopicRepository.loadMostRecentTopics();
-
+	
 			tm.removeSubscriptionByTopic(topicId);
 			fm.decrementTotalTopics(forumId, 1);
 		}

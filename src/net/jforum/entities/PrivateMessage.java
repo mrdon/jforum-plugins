@@ -45,108 +45,110 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessage.java,v 1.3 2005/07/26 02:45:50 diegopires Exp $
+ * @version $Id: PrivateMessage.java,v 1.4 2005/07/26 03:04:52 rafaelsteil Exp $
  */
-public class PrivateMessage {
+public class PrivateMessage 
+{
 	private int id;
-
 	private int type;
-
 	private User fromUser;
-
 	private User toUser;
-
 	private Post post;
-
 	private String formatedDate;
-
+	
 	/**
 	 * @return Returns the fromUser.
 	 */
-	public User getFromUser() {
+	public User getFromUser()
+	{
 		return fromUser;
 	}
-
+	
 	/**
-	 * @param fromUser
-	 *            The fromUser to set.
+	 * @param fromUser The fromUser to set.
 	 */
-	public void setFromUser(User fromUser) {
+	public void setFromUser(User fromUser)
+	{
 		this.fromUser = fromUser;
 	}
-
+	
 	/**
 	 * @return Returns the toUser.
 	 */
-	public User getToUser() {
+	public User getToUser()
+	{
 		return toUser;
 	}
-
+	
 	/**
-	 * @param toUser
-	 *            The toUser to set.
+	 * @param toUser The toUser to set.
 	 */
-	public void setToUser(User toUser) {
+	public void setToUser(User toUser)
+	{
 		this.toUser = toUser;
 	}
-
+	
 	/**
 	 * @return Returns the type.
 	 */
-	public int getType() {
+	public int getType()
+	{
 		return type;
 	}
-
+	
 	/**
-	 * @param type
-	 *            The type to set.
+	 * @param type The type to set.
 	 */
-	public void setType(int type) {
+	public void setType(int type)
+	{
 		this.type = type;
 	}
-
+	
 	/**
 	 * @return Returns the id.
 	 */
-	public int getId() {
+	public int getId()
+	{
 		return id;
 	}
 
 	/**
-	 * @param id
-	 *            The id to set.
+	 * @param id The id to set.
 	 */
-	public void setId(int id) {
+	public void setId(int id)
+	{
 		this.id = id;
 	}
-
+	
 	/**
 	 * @return Returns the post.
 	 */
-	public Post getPost() {
+	public Post getPost()
+	{
 		return post;
 	}
-
+	
 	/**
-	 * @param post
-	 *            The post to set.
+	 * @param post The post to set.
 	 */
-	public void setPost(Post post) {
+	public void setPost(Post post)
+	{
 		this.post = post;
 	}
-
+	
 	/**
 	 * @return Returns the formatedDate.
 	 */
-	public String getFormatedDate() {
+	public String getFormatedDate()
+	{
 		return formatedDate;
 	}
-
+	
 	/**
-	 * @param formatedDate
-	 *            The formatedDate to set.
+	 * @param formatedDate The formatedDate to set.
 	 */
-	public void setFormatedDate(String formatedDate) {
+	public void setFormatedDate(String formatedDate)
+	{
 		this.formatedDate = formatedDate;
 	}
 }

@@ -69,99 +69,103 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: RSSAction.java,v 1.18 2005/07/26 02:45:23 diegopires Exp $
+ * @version $Id: RSSAction.java,v 1.19 2005/07/26 03:05:20 rafaelsteil Exp $
  */
-public class RSSAction extends Command {
+public class RSSAction extends Command 
+{
 	/**
-	 * RSS for all forums. Show rss syndication containing information about all
-	 * available forums
-	 * 
+	 * RSS for all forums.
+	 * Show rss syndication containing information about
+	 * all available forums
 	 * @throws Exception
 	 */
-	public void forums() throws Exception {
+	public void forums() throws Exception
+	{
 		String title = I18n.getMessage("RSS.Forums.title");
 		String description = I18n.getMessage("RSS.Forums.description");
-
-		RSSAware rss = new ForumRSS(title, description, ForumCommon
-				.getAllCategoriesAndForums(false));
+		
+		RSSAware rss = new ForumRSS(title, description, ForumCommon.getAllCategoriesAndForums(false));
 		this.context.put("rssContents", rss.createRSS());
 	}
-
+	
 	/**
 	 * RSS for all N first topics for some given forum
-	 * 
 	 * @throws Exception
 	 */
-	public void forumTopics() throws Exception {
-		int forumId = this.request.getIntParameter("forum_id");
+	public void forumTopics() throws Exception
+	{
+		int forumId = this.request.getIntParameter("forum_id"); 
 		if (!TopicsCommon.isTopicAccessible(forumId)) {
 			return;
 		}
-
+		
 		List topics = TopicsCommon.topicsByForum(forumId, 0);
 		Forum forum = ForumRepository.getForum(forumId);
-
+		
 		String[] p = { forum.getName() };
-
-		RSSAware rss = new TopicRSS(
-				I18n.getMessage("RSS.ForumTopics.title", p), I18n.getMessage(
-						"RSS.ForumTopics.description", p), forumId, topics);
+		
+		RSSAware rss = new TopicRSS(I18n.getMessage("RSS.ForumTopics.title", p),
+				I18n.getMessage("RSS.ForumTopics.description", p),
+				forumId, 
+				topics);
 		this.context.put("rssContents", rss.createRSS());
 	}
-
+	
 	/**
 	 * RSS for all N first posts for some given topic
-	 * 
 	 * @throws Exception
 	 */
-	public void topicPosts() throws Exception {
+	public void topicPosts() throws Exception
+	{
 		int topicId = this.request.getIntParameter("topic_id");
 
 		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
 		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
-
+		
 		Topic topic = tm.selectById(topicId);
-
-		if (!TopicsCommon.isTopicAccessible(topic.getForumId())
-				|| topic.getId() == 0) {
+		
+		if (!TopicsCommon.isTopicAccessible(topic.getForumId()) || topic.getId() == 0) {
 			return;
 		}
-
+		
 		tm.incrementTotalViews(topic.getId());
-
+		
 		List posts = pm.selectAllByTopic(topicId);
-
+		
 		String[] p = { topic.getTitle() };
-
+		
 		String title = I18n.getMessage("RSS.TopicPosts.title", p);
 		String description = I18n.getMessage("RSS.TopicPosts.description", p);
 
-		RSSAware rss = new TopicPostsRSS(title, description,
-				topic.getForumId(), posts);
+		RSSAware rss = new TopicPostsRSS(title, description, topic.getForumId(), posts);
 		this.context.put("rssContents", rss.createRSS());
 	}
-
-	public void recentTopics() throws Exception {
+	
+	public void recentTopics() throws Exception
+	{
 		String title = I18n.getMessage("RSS.RecentTopics.title");
 		String description = I18n.getMessage("RSS.RecentTopics.description");
 
-		RSSAware rss = new RecentTopicsRSS(title, description,
+		RSSAware rss = new RecentTopicsRSS(title, description, 
 				new RecentTopicsAction().topics());
 		this.context.put("rssContents", rss.createRSS());
 	}
-
-	/**
+	
+	/** 
 	 * @see net.jforum.Command#list()
 	 */
-	public void list() throws Exception {
+	public void list() throws Exception 
+	{
 		this.forums();
 	}
-
-	/**
+	
+	/** 
 	 * @see net.jforum.Command#process()
 	 */
-	public Template process(ActionServletRequest request,
-			HttpServletResponse response, SimpleHash context) throws Exception {
+	public Template process(ActionServletRequest request, 
+			HttpServletResponse response, 
+			SimpleHash context) throws Exception 
+	{
 		JForum.setContentType("text/xml");
 		super.setTemplateName(TemplateKeys.RSS);
 

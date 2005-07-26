@@ -60,32 +60,34 @@ import net.jforum.util.search.SearchFacade;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericPostDAO.java,v 1.4 2005/07/26 02:45:14 diegopires Exp $
+ * @version $Id: GenericPostDAO.java,v 1.5 2005/07/26 03:04:42 rafaelsteil Exp $
  */
-public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO {
+public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO 
+{
 	/**
 	 * @see net.jforum.dao.PostDAO#selectById(int)
 	 */
-	public Post selectById(int postId) throws Exception {
-		PreparedStatement p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("PostModel.selectById"));
+	public Post selectById(int postId) throws Exception 
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.selectById"));		
 		p.setInt(1, postId);
-
+		
 		ResultSet rs = p.executeQuery();
-
+		
 		Post post = new Post();
-
+		
 		if (rs.next()) {
 			post = this.makePost(rs);
 		}
-
+		
 		rs.close();
 		p.close();
-
+		
 		return post;
 	}
-
-	protected Post makePost(ResultSet rs) throws Exception {
+	
+	protected Post makePost(ResultSet rs) throws Exception
+	{
 		Post post = new Post();
 		post.setId(rs.getInt("post_id"));
 		post.setTopicId(rs.getInt("topic_id"));
@@ -105,115 +107,107 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO {
 		post.setPostUsername(rs.getString("username"));
 		post.hasAttachments(rs.getInt("attach") > 0);
 		post.setModerate(rs.getInt("need_moderate") == 1);
-
-		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals
-				.getValue(ConfigKeys.DATE_TIME_FORMAT));
+		
+		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
 		post.setFormatedTime(df.format(postTime));
-
-		post.setKarma(DataAccessDriver.getInstance().newKarmaDAO()
-				.getPostKarma(post.getId()));
-
+		
+		post.setKarma(DataAccessDriver.getInstance().newKarmaDAO().getPostKarma(post.getId()));
+		
 		return post;
 	}
-
+	
 	/**
-	 * Utility method to read the post text fromt the result set. This method
-	 * may be useful when using some "non-standart" way to store text, like
-	 * oracle does when using (c|b)lob
+	 * Utility method to read the post text fromt the result set.
+	 * This method may be useful when using some "non-standart" way
+	 * to store text, like oracle does when using (c|b)lob
 	 * 
-	 * @param rs
-	 *            The resultset to fetch data from
+	 * @param rs The resultset to fetch data from
 	 * @return The post text string
 	 * @throws Exception
 	 */
-	protected String getPostTextFromResultSet(ResultSet rs) throws Exception {
+	protected String getPostTextFromResultSet(ResultSet rs) throws Exception
+	{
 		return rs.getString("post_text");
 	}
 
 	/**
 	 * @see net.jforum.dao.PostDAO#delete(Post)
 	 */
-	public void delete(final Post post) throws Exception {
-		this.removePosts(new ArrayList() {
-			private static final long serialVersionUID = -7938761255511131933L;
-
-			{
-				add(post);
-			}
-		});
+	public void delete(final Post post) throws Exception 
+	{
+		this.removePosts(new ArrayList() {{ add(post); }});
 	}
-
-	private void removePosts(List posts) throws Exception {
-		PreparedStatement post = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("PostModel.deletePost"));
-		PreparedStatement text = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("PostModel.deletePostText"));
-		PreparedStatement search = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("PostModel.deleteWordMatch"));
-
-		for (Iterator iter = posts.iterator(); iter.hasNext();) {
-			Post p = (Post) iter.next();
+	
+	private void removePosts(List posts) throws Exception
+	{
+		PreparedStatement post = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.deletePost"));
+		PreparedStatement text = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.deletePostText"));
+		PreparedStatement search = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.deleteWordMatch"));
+		
+		for (Iterator iter = posts.iterator(); iter.hasNext(); ) {
+			Post p = (Post)iter.next();
 
 			post.setInt(1, p.getId());
 			text.setInt(1, p.getId());
 			search.setInt(1, p.getId());
-
+			
 			text.executeUpdate();
 			search.executeUpdate();
 			post.executeUpdate();
 		}
-
+		
 		search.close();
 		post.close();
 		text.close();
 	}
-
+	
 	/**
-	 * @set net.jforum.model.PostModel#deleteByTopic(int)
+	 * @set net.jforum.model.PostModel#deleteByTopic(int) 
 	 */
-	public void deleteByTopic(int topicId) throws Exception {
-		PreparedStatement p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("PostModel.deleteByTopic"));
+	public void deleteByTopic(int topicId) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.deleteByTopic"));
 		p.setInt(1, topicId);
 		ResultSet rs = p.executeQuery();
-
+		
 		List posts = new ArrayList();
 		while (rs.next()) {
 			Post post = new Post();
 			post.setId(rs.getInt("post_id"));
 			post.setUserId(rs.getInt("user_id"));
-
+			
 			posts.add(post);
 		}
-
+		
 		rs.close();
 		p.close();
-
+		
 		this.removePosts(posts);
 	}
-
+	
 	/**
 	 * @see net.jforum.dao.PostDAO#update(net.jforum.Post)
 	 */
-	public void update(Post post) throws Exception {
+	public void update(Post post) throws Exception 
+	{
 		this.updatePostsTable(post);
 		this.updatePostsTextTable(post);
 	}
-
-	protected void updatePostsTextTable(Post post) throws Exception {
-		PreparedStatement p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("PostModel.updatePostText"));
+	
+	protected void updatePostsTextTable(Post post) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.updatePostText"));
 		p.setString(1, post.getText());
 		p.setString(2, post.getSubject());
 		p.setInt(3, post.getId());
-
+		
 		p.executeUpdate();
 		p.close();
 	}
-
-	protected void updatePostsTable(Post post) throws Exception {
-		PreparedStatement p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("PostModel.updatePost"));
+	
+	protected void updatePostsTable(Post post) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.updatePost"));
 		p.setInt(1, post.getTopicId());
 		p.setInt(2, post.getForumId());
 		p.setInt(3, post.isBbCodeEnabled() ? 1 : 0);
@@ -223,7 +217,7 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO {
 		p.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
 		p.setString(8, post.getUserIp());
 		p.setInt(9, post.getId());
-
+		
 		p.executeUpdate();
 		p.close();
 	}
@@ -231,30 +225,31 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO {
 	/**
 	 * @see net.jforum.dao.PostDAO#addNew(net.jforum.Post)
 	 */
-	public int addNew(Post post) throws Exception {
+	public int addNew(Post post) throws Exception 
+	{
 		this.addNewPost(post);
 		this.addNewPostText(post);
-
+		
 		// Search
 		SearchFacade.index(post);
-
+		
 		return post.getId();
 	}
-
-	protected void addNewPostText(Post post) throws Exception {
-		PreparedStatement p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("PostModel.addNewPostText"));
+	
+	protected void addNewPostText(Post post) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.addNewPostText"));
 		p.setInt(1, post.getId());
 		p.setString(2, post.getText());
 		p.setString(3, post.getSubject());
 		p.executeUpdate();
 		p.close();
 	}
-
-	protected void addNewPost(Post post) throws Exception {
-		PreparedStatement p = this
-				.getStatementForAutoKeys("PostModel.addNewPost");
-
+	
+	protected void addNewPost(Post post) throws Exception
+	{
+		PreparedStatement p = this.getStatementForAutoKeys("PostModel.addNewPost");
+		
 		p.setInt(1, post.getTopicId());
 		p.setInt(2, post.getForumId());
 		p.setLong(3, post.getUserId());
@@ -265,44 +260,43 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO {
 		p.setInt(8, post.isSmiliesEnabled() ? 1 : 0);
 		p.setInt(9, post.isSignatureEnabled() ? 1 : 0);
 		p.setInt(10, post.isModerationNeeded() ? 1 : 0);
-
-		this.setAutoGeneratedKeysQuery(SystemGlobals
-				.getSql("PostModel.lastGeneratedPostId"));
+		
+		this.setAutoGeneratedKeysQuery(SystemGlobals.getSql("PostModel.lastGeneratedPostId"));
 		int postId = this.executeAutoKeysQuery(p);
 		post.setId(postId);
-
+		
 		p.close();
 	}
-
+	
 	/**
 	 * @see net.jforum.dao.PostDAO#selectAllBytTopic(int)
 	 */
-	public List selectAllByTopic(int topicId) throws Exception {
+	public List selectAllByTopic(int topicId) throws Exception
+	{
 		return this.selectAllByTopicByLimit(topicId, 0, Integer.MAX_VALUE);
 	}
-
+	
 	/**
 	 * @see net.jforum.dao.PostDAO#selectAllBytTopicByLimit(int, int, int)
 	 */
-	public List selectAllByTopicByLimit(int topicId, int startFrom, int count)
-			throws Exception {
+	public List selectAllByTopicByLimit(int topicId, int startFrom, int count) throws Exception
+	{
 		List l = new ArrayList();
-
-		PreparedStatement p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("PostModel.selectAllByTopicByLimit"));
+		
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.selectAllByTopicByLimit"));
 		p.setInt(1, topicId);
 		p.setInt(2, startFrom);
 		p.setInt(3, count);
-
+		
 		ResultSet rs = p.executeQuery();
-
+						
 		while (rs.next()) {
-			l.add(this.makePost(rs));
+			l.add(this.makePost(rs));			
 		}
-
+		
 		rs.close();
 		p.close();
-
+				
 		return l;
 	}
 }

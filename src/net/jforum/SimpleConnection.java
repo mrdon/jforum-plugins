@@ -50,63 +50,67 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
- * Non-pooled connection implementation. This class will ask a new conneciton to
- * the database on every <code>getConnection()</code> class. Uses of this
- * class include systems where a connection pool is not permited or the
- * connections' life time is too short, not justifying to have a connection
- * pool.
+ * Non-pooled connection implementation.
+ * This class will ask a new conneciton to the database on every
+ * <code>getConnection()</code> class. Uses of this class include
+ * systems where a connection pool is not permited or the 
+ * connections' life time is too short, not justifying to have
+ * a connection pool.
  * 
  * @author Rafael Steil
- * @version $Id: SimpleConnection.java,v 1.10 2005/07/26 02:45:32 diegopires Exp $
+ * @version $Id: SimpleConnection.java,v 1.11 2005/07/26 03:04:38 rafaelsteil Exp $
  */
-public class SimpleConnection extends DBConnection {
-	/**
+public class SimpleConnection extends DBConnection 
+{
+	/** 
 	 * @see net.jforum.Connection#init()
 	 */
-	public void init() throws Exception {
+	public void init() throws Exception 
+	{
 		try {
-			Class.forName(SystemGlobals
-					.getValue(ConfigKeys.DATABASE_CONNECTION_DRIVER));
-
+			Class.forName(SystemGlobals.getValue(ConfigKeys.DATABASE_CONNECTION_DRIVER));
+			
 			// Try to validate the connection url
 			Connection conn = this.getConnection();
 			if (conn != null) {
 				this.releaseConnection(conn);
 			}
-
+			
 			this.isDatabaseUp = true;
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			this.isDatabaseUp = false;
 			throw e;
 		}
 	}
 
-	/**
+	/** 
 	 * @see net.jforum.Connection#getConnection()
 	 */
-	public Connection getConnection() {
+	public Connection getConnection()
+	{
 		try {
-			return DriverManager.getConnection(SystemGlobals
-					.getValue(ConfigKeys.DATABASE_CONNECTION_STRING));
-		} catch (Exception e) {
+			return DriverManager.getConnection(SystemGlobals.getValue(ConfigKeys.DATABASE_CONNECTION_STRING));
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 			throw new DatabaseException(e);
 		}
 	}
 
-	/**
+	/** 
 	 * @see net.jforum.Connection#releaseConnection(java.sql.Connection)
 	 */
-	public void releaseConnection(Connection conn) {
+	public void releaseConnection(Connection conn)
+	{
 		try {
 			conn.close();
-		} catch (Exception e) {
 		}
+		catch (Exception e) {}
 	}
-
-	/**
+	
+	/** 
 	 * @see net.jforum.DBConnection#realReleaseAllConnections()
 	 */
-	public void realReleaseAllConnections() throws Exception {
-	}
+	public void realReleaseAllConnections() throws Exception {}
 }

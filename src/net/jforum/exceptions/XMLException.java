@@ -44,10 +44,12 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: XMLException.java,v 1.2 2005/07/26 02:45:20 diegopires Exp $
+ * @version $Id: XMLException.java,v 1.3 2005/07/26 03:04:33 rafaelsteil Exp $
  */
-public class XMLException extends RuntimeException {
-	public XMLException(String message) {
+public class XMLException extends RuntimeException
+{
+	public XMLException(String message)
+	{
 		super(message);
 	}
 }

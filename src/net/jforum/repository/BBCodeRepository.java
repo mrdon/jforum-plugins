@@ -49,31 +49,34 @@ import net.jforum.util.bbcode.BBCodeHandler;
 
 /**
  * @author Rafael Steil
- * @version $Id: BBCodeRepository.java,v 1.6 2005/07/26 02:45:35 diegopires Exp $
+ * @version $Id: BBCodeRepository.java,v 1.7 2005/07/26 03:04:55 rafaelsteil Exp $
  */
-public class BBCodeRepository implements Cacheable {
+public class BBCodeRepository implements Cacheable
+{
 	private static CacheEngine cache;
-
 	private static final String FQN = "bbcode";
-
 	private static final String BBCOLLECTION = "bbCollection";
-
+	
 	/**
 	 * @see net.jforum.cache.Cacheable#setCacheEngine(net.jforum.cache.CacheEngine)
 	 */
-	public void setCacheEngine(CacheEngine cacheEngine) {
+	public void setCacheEngine(CacheEngine cacheEngine)
+	{
 		cache = cacheEngine;
 	}
-
-	public static void setBBCollection(BBCodeHandler bbCollection) {
+	
+	public static void setBBCollection(BBCodeHandler bbCollection)
+	{
 		cache.add(FQN, BBCOLLECTION, bbCollection);
 	}
-
-	public static BBCodeHandler getBBCollection() {
-		return (BBCodeHandler) cache.get(FQN, BBCOLLECTION);
+	
+	public static BBCodeHandler getBBCollection()
+	{
+		return (BBCodeHandler)cache.get(FQN, BBCOLLECTION);
 	}
-
-	public static BBCode findByName(String tagName) {
+	
+	public static BBCode findByName(String tagName)
+	{
 		return getBBCollection().findByName(tagName);
 	}
 }

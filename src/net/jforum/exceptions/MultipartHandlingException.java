@@ -44,11 +44,12 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: MultipartHandlingException.java,v 1.1 2005/02/04 12:55:32
- *          rafaelsteil Exp $
+ * @version $Id: MultipartHandlingException.java,v 1.3 2005/07/26 03:04:34 rafaelsteil Exp $
  */
-public class MultipartHandlingException extends RuntimeException {
-	public MultipartHandlingException(String message) {
+public class MultipartHandlingException extends RuntimeException
+{
+	public MultipartHandlingException(String message)
+	{
 		super(message);
 	}
 }

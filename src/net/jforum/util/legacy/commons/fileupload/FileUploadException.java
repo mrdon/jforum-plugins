@@ -17,27 +17,26 @@ package net.jforum.util.legacy.commons.fileupload;
 
 /**
  * Exception for errors encountered while processing the request.
- * 
+ *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: FileUploadException.java,v 1.1 2005/05/29 16:31:56 rafaelsteil
- *          Exp $
+ * @version $Id: FileUploadException.java,v 1.3 2005/07/26 03:05:01 rafaelsteil Exp $
  */
-public class FileUploadException extends Exception {
+public class FileUploadException
+    extends Exception {
 
-	/**
-	 * Constructs a new <code>FileUploadException</code> without message.
-	 */
-	public FileUploadException() {
-	}
+    /**
+     * Constructs a new <code>FileUploadException</code> without message.
+     */
+    public FileUploadException() {
+    }
 
-	/**
-	 * Constructs a new <code>FileUploadException</code> with specified detail
-	 * message.
-	 * 
-	 * @param msg
-	 *            the error message.
-	 */
-	public FileUploadException(final String msg) {
-		super(msg);
-	}
+    /**
+     * Constructs a new <code>FileUploadException</code> with specified detail
+     * message.
+     *
+     * @param msg the error message.
+     */
+    public FileUploadException(final String msg) {
+        super(msg);
+    }
 }

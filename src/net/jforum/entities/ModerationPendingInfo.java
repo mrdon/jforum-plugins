@@ -47,38 +47,41 @@ import java.util.List;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationPendingInfo.java,v 1.1 2005/01/31 20:10:41
- *          rafaelsteil Exp $
+ * @version $Id: ModerationPendingInfo.java,v 1.3 2005/07/26 03:04:50 rafaelsteil Exp $
  */
-public class ModerationPendingInfo {
+public class ModerationPendingInfo
+{
 	private int categoryId;
-
 	private String categoryName;
-
 	private List infoList = new ArrayList();
-
-	public void setCategoryId(int categoryId) {
+	
+	public void setCategoryId(int categoryId)
+	{
 		this.categoryId = categoryId;
 	}
-
-	public void setCategoryName(String name) {
+	
+	public void setCategoryName(String name)
+	{
 		this.categoryName = name;
 	}
-
-	public String getCategoryName() {
+	
+	public String getCategoryName()
+	{
 		return this.categoryName;
 	}
-
-	public int getCategoryId() {
+	
+	public int getCategoryId()
+	{
 		return this.categoryId;
 	}
-
-	public void addInfo(String forumName, int forumId, int postsToModerate) {
-		this.infoList.add(new ForumModerationInfo(forumName, forumId,
-				postsToModerate));
+	
+	public void addInfo(String forumName, int forumId, int postsToModerate)
+	{
+		this.infoList.add(new ForumModerationInfo(forumName, forumId, postsToModerate));
 	}
-
-	public List getForums() {
+	
+	public List getForums()
+	{
 		return this.infoList;
 	}
 }
