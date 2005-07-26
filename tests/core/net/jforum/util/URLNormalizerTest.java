@@ -4,12 +4,11 @@
 package net.jforum.util;
 
 import junit.framework.TestCase;
-import net.jforum.util.URLNormalizer;
 
 /**
  * Remove special chars, spaces and etc from a string
  * @author Rafael Steil
- * @version $Id: URLNormalizerTest.java,v 1.3 2005/07/26 03:04:41 rafaelsteil Exp $
+ * @version $Id: URLNormalizerTest.java,v 1.4 2005/07/26 04:01:12 diegopires Exp $
  */
 public class URLNormalizerTest extends TestCase
 {

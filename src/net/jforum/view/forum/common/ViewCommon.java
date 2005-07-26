@@ -52,19 +52,14 @@ import net.jforum.repository.ModulesRepository;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
-
-import org.apache.log4j.Logger;
-
 import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.11 2005/07/26 03:05:55 rafaelsteil Exp $
+ * @version $Id: ViewCommon.java,v 1.12 2005/07/26 04:01:19 diegopires Exp $
  */
 public final class ViewCommon
 {
-	private static final Logger logger = Logger.getLogger(ViewCommon.class);
-	
 	/**
 	 * Prepared the user context to use data pagination. 
 	 * The following variables are set to the context:

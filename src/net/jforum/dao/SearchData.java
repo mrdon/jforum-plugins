@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: SearchData.java,v 1.4 2005/07/26 03:04:31 rafaelsteil Exp $
+ * $Id: SearchData.java,v 1.5 2005/07/26 04:01:17 diegopires Exp $
  */
 package net.jforum.dao;
 
@@ -52,9 +52,6 @@ import java.util.Date;
  */
 public class SearchData 
 {
-	private static int ORDER_BY_ASC = 0;
-	private static int ORDER_BY_DESC = 1;
-	
 	private String keywords = "";
 	private boolean useAllWords;
 	private String author;

@@ -56,12 +56,11 @@ import net.jforum.util.preferences.TemplateKeys;
 import net.jforum.view.forum.common.AttachmentCommon;
 import net.jforum.view.forum.common.PostCommon;
 import net.jforum.view.forum.common.TopicsCommon;
-import net.jforum.view.forum.common.ViewCommon;
 import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationAction.java,v 1.13 2005/07/26 03:05:41 rafaelsteil Exp $
+ * @version $Id: ModerationAction.java,v 1.14 2005/07/26 04:01:15 diegopires Exp $
  */
 public class ModerationAction extends AdminCommand
 {
@@ -85,9 +84,6 @@ public class ModerationAction extends AdminCommand
 	public void view() throws Exception
 	{
 		int forumId = this.request.getIntParameter("forum_id");
-		
-		int start = ViewCommon.getStartPage();
-		int count = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 		
 		this.setTemplateName(TemplateKeys.MODERATION_ADMIN_VIEW);
 		this.context.put("forum", ForumRepository.getForum(forumId));

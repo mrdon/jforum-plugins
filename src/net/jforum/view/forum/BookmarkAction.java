@@ -45,8 +45,6 @@ package net.jforum.view.forum;
 
 import javax.servlet.http.HttpServletResponse;
 
-import freemarker.template.SimpleHash;
-import freemarker.template.Template;
 import net.jforum.ActionServletRequest;
 import net.jforum.Command;
 import net.jforum.JForum;
@@ -65,10 +63,12 @@ import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
+import freemarker.template.SimpleHash;
+import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: BookmarkAction.java,v 1.9 2005/07/26 03:05:16 rafaelsteil Exp $
+ * @version $Id: BookmarkAction.java,v 1.10 2005/07/26 04:01:13 diegopires Exp $
  */
 public class BookmarkAction extends Command
 {

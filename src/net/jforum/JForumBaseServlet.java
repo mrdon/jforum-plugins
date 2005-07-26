@@ -60,7 +60,6 @@ import net.jforum.util.bbcode.BBCodeHandler;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
-import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
 import freemarker.template.Configuration;
@@ -69,12 +68,10 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumBaseServlet.java,v 1.7 2005/07/26 03:04:39 rafaelsteil Exp $
+ * @version $Id: JForumBaseServlet.java,v 1.8 2005/07/26 04:01:17 diegopires Exp $
  */
 public class JForumBaseServlet extends HttpServlet {
     protected boolean debug;
-    private static Logger logger = Logger.getLogger(DataHolder.class);
-
     // Thread local implementation
     protected static ThreadLocal localData = new ThreadLocal() {
         public Object initialValue() {

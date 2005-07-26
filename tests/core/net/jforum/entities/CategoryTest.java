@@ -44,10 +44,9 @@ package net.jforum.entities;
 
 import java.util.Iterator;
 
+import junit.framework.TestCase;
 import net.jforum.ConfigLoader;
 import net.jforum.TestCaseUtils;
-
-import junit.framework.TestCase;
 
 /**
  * Test some general <code>net.jforum.entities.Category</code> methods.
@@ -56,11 +55,10 @@ import junit.framework.TestCase;
  * to test :)
  * 
  * @author Rafael Steil
- * @version $Id: CategoryTest.java,v 1.4 2005/07/26 03:05:47 rafaelsteil Exp $
+ * @version $Id: CategoryTest.java,v 1.5 2005/07/26 04:01:21 diegopires Exp $
  */
 public class CategoryTest extends TestCase 
 {
-	private static boolean loaded = false;
 	private Category category;
 
 	/**

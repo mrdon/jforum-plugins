@@ -65,7 +65,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaAction.java,v 1.11 2005/07/26 03:05:19 rafaelsteil Exp $
+ * @version $Id: KarmaAction.java,v 1.12 2005/07/26 04:01:13 diegopires Exp $
  */
 public class KarmaAction extends Command
 {
@@ -181,7 +181,6 @@ public class KarmaAction extends Command
 			orderField = this.request.getParameter("order_by");
 		}
 
-		int start = this.preparePagination(DataAccessDriver.getInstance().newUserDAO().getTotalUsers());
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
 		// Load all users with your karma
 		List users = DataAccessDriver.getInstance().newKarmaDAO().getMostRatedUserByPeriod(usersPerPage, firstPeriod,
@@ -219,26 +218,11 @@ public class KarmaAction extends Command
 			orderField = this.request.getParameter("order_by");
 		}
 
-		int start = this.preparePagination(DataAccessDriver.getInstance().newUserDAO().getTotalUsers());
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
 		// Load all users with your karma
 		List users = DataAccessDriver.getInstance().newKarmaDAO().getMostRatedUserByPeriod(usersPerPage, firstPeriod,
 				lastPeriod, orderField);
 		this.context.put("users", users);
 		this.setTemplateName(TemplateKeys.KARMA_SEARCH_BYMONTH);
-	}
-
-	private int preparePagination(int totalUsers)
-	{
-		int start = ViewCommon.getStartPage();
-		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
-
-		this.context.put("totalPages", new Double(Math.ceil((double) totalUsers / usersPerPage)));
-		this.context.put("recordsPerPage", new Integer(usersPerPage));
-		this.context.put("totalRecords", new Integer(totalUsers));
-		this.context.put("thisPage", new Double(Math.ceil((double) (start + 1) / usersPerPage)));
-		this.context.put("start", new Integer(start));
-
-		return start;
 	}
 }

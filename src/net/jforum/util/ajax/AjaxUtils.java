@@ -45,18 +45,18 @@ package net.jforum.util.ajax;
 import java.util.ArrayList;
 import java.util.Date;
 
-import freemarker.template.SimpleHash;
 import net.jforum.entities.Post;
 import net.jforum.util.mail.Spammer;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.view.forum.common.PostCommon;
+import freemarker.template.SimpleHash;
 
 /**
  * General AJAX utility methods. 
  * 
  * @author Rafael Steil
- * @version $Id: AjaxUtils.java,v 1.4 2005/07/26 03:05:29 rafaelsteil Exp $
+ * @version $Id: AjaxUtils.java,v 1.5 2005/07/26 04:01:13 diegopires Exp $
  */
 public class AjaxUtils
 {

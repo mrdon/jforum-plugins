@@ -80,13 +80,11 @@ import org.apache.log4j.Logger;
  *
  * @author Paulo Silveira
  * @author Rafael Steil
- * @version $Id: PooledConnection.java,v 1.17 2005/07/26 03:04:38 rafaelsteil Exp $
+ * @version $Id: PooledConnection.java,v 1.18 2005/07/26 04:01:17 diegopires Exp $
  * */
 
 public class PooledConnection extends DBConnection
 {
-	private static PooledConnection pool;
-	
 	private int minConnections, maxConnections, timeout;
 	private String connectionString;
 	

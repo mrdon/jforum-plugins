@@ -17,6 +17,7 @@ package net.jforum.util.legacy.commons.fileupload;
 
 import java.io.File;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -40,7 +41,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author <a href="mailto:martinc@apache.org">Martin Cooper</a>
  * @author Sean C. Sullivan
  *
- * @version $Id: DiskFileUpload.java,v 1.3 2005/07/26 03:05:00 rafaelsteil Exp $
+ * @version $Id: DiskFileUpload.java,v 1.4 2005/07/26 04:01:16 diegopires Exp $
  *
  * @deprecated Use <code>ServletFileUpload</code> together with
  *             <code>DiskFileItemFactory</code> instead.

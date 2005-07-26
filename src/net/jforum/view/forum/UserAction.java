@@ -46,17 +46,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import net.jforum.Command;
 import net.jforum.ControllerUtils;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
-import net.jforum.entities.User;
-import net.jforum.entities.UserSession;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.UserDAO;
 import net.jforum.dao.UserSessionDAO;
+import net.jforum.entities.User;
+import net.jforum.entities.UserSession;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.RankingRepository;
 import net.jforum.repository.SecurityRepository;
@@ -74,9 +72,11 @@ import net.jforum.util.preferences.TemplateKeys;
 import net.jforum.view.forum.common.UserCommon;
 import net.jforum.view.forum.common.ViewCommon;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.47 2005/07/26 03:05:19 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.48 2005/07/26 04:01:13 diegopires Exp $
  */
 public class UserAction extends Command 
 {

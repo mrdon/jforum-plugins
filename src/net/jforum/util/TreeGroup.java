@@ -41,13 +41,13 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: TreeGroup.java,v 1.6 2005/07/26 03:05:22 rafaelsteil Exp $
+ * $Id: TreeGroup.java,v 1.7 2005/07/26 04:01:18 diegopires Exp $
  */
 package net.jforum.util;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.TreeGroupDAO;

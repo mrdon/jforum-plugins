@@ -56,8 +56,8 @@ import net.jforum.ActionServletRequest;
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.dao.DataAccessDriver;
-import net.jforum.dao.SearchData;
 import net.jforum.dao.SearchDAO;
+import net.jforum.dao.SearchData;
 import net.jforum.entities.Forum;
 import net.jforum.entities.Topic;
 import net.jforum.repository.ForumRepository;
@@ -70,7 +70,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.24 2005/07/26 03:05:19 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.25 2005/07/26 04:01:13 diegopires Exp $
  */
 public class SearchAction extends Command 
 {

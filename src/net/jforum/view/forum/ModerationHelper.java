@@ -46,8 +46,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import net.jforum.JForum;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
@@ -62,9 +60,11 @@ import net.jforum.util.I18n;
 import net.jforum.util.preferences.TemplateKeys;
 import net.jforum.view.forum.common.ForumCommon;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author Rafael Steil
- * @version $Id: ModerationHelper.java,v 1.21 2005/07/26 03:05:17 rafaelsteil Exp $
+ * @version $Id: ModerationHelper.java,v 1.22 2005/07/26 04:01:13 diegopires Exp $
  */
 public class ModerationHelper 
 {

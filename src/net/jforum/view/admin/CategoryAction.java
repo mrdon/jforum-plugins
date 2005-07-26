@@ -47,7 +47,6 @@ import java.util.List;
 
 import net.jforum.dao.CategoryDAO;
 import net.jforum.dao.DataAccessDriver;
-import net.jforum.dao.GroupDAO;
 import net.jforum.dao.security.GroupSecurityDAO;
 import net.jforum.entities.Category;
 import net.jforum.repository.ForumRepository;
@@ -66,7 +65,7 @@ import net.jforum.view.admin.common.ModerationCommon;
  * ViewHelper for category administration.
  * 
  * @author Rafael Steil
- * @version $Id: CategoryAction.java,v 1.20 2005/07/26 03:05:42 rafaelsteil Exp $
+ * @version $Id: CategoryAction.java,v 1.21 2005/07/26 04:01:15 diegopires Exp $
  */
 public class CategoryAction extends AdminCommand 
 {
@@ -155,7 +154,6 @@ public class CategoryAction extends AdminCommand
 		
 		String[] groups = this.request.getParameterValues("groups");
 		if (groups != null) {
-			GroupDAO gm = DataAccessDriver.getInstance().newGroupDAO();
 			GroupSecurityDAO gmodel = DataAccessDriver.getInstance().newGroupSecurityDAO();
 			PermissionControl pc = new PermissionControl();
 			pc.setSecurityModel(gmodel);

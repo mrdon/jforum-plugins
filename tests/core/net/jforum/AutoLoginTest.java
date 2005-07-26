@@ -8,14 +8,13 @@ import java.util.Map;
 
 import javax.servlet.http.Cookie;
 
-import net.jforum.entities.UserSession;
-
 import junit.framework.TestCase;
+import net.jforum.entities.UserSession;
 
 /**
  * Tests the auto login feature
  * @author Rafael Steil
- * @version $Id: AutoLoginTest.java,v 1.3 2005/07/26 03:05:09 rafaelsteil Exp $
+ * @version $Id: AutoLoginTest.java,v 1.4 2005/07/26 04:01:19 diegopires Exp $
  */
 public class AutoLoginTest extends TestCase
 {

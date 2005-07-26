@@ -42,8 +42,6 @@
  */
 package net.jforum.entities;
 
-import com.octo.captcha.image.ImageCaptcha;
-
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.Date;
@@ -57,11 +55,13 @@ import net.jforum.util.Captcha;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
+import com.octo.captcha.image.ImageCaptcha;
+
 /**
  * Stores information about user's session.
  * 
  * @author Rafael Steil
- * @version $Id: UserSession.java,v 1.21 2005/07/26 03:04:50 rafaelsteil Exp $
+ * @version $Id: UserSession.java,v 1.22 2005/07/26 04:01:25 diegopires Exp $
  */
 public class UserSession implements Serializable
 {

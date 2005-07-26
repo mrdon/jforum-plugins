@@ -53,10 +53,8 @@ import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
-import net.jforum.dao.ForumDAO;
 import net.jforum.dao.ModerationDAO;
 import net.jforum.dao.SearchData;
-import net.jforum.dao.UserDAO;
 import net.jforum.entities.Forum;
 import net.jforum.entities.MostUsersEverOnline;
 import net.jforum.entities.Topic;
@@ -75,15 +73,12 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.42 2005/07/26 03:05:18 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.43 2005/07/26 04:01:14 diegopires Exp $
  */
 public class ForumAction extends Command 
 {
 	public void list() throws Exception
 	{
-		ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
-		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
-		
 		this.setTemplateName(TemplateKeys.FORUMS_LIST);
 		
 		this.context.put("allCategories", ForumCommon.getAllCategoriesAndForums(true));
@@ -108,7 +103,6 @@ public class ForumAction extends Command
 		this.context.put("totalOnlineUsers", new Integer(SessionFacade.size()));
 		int aid = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 	
-		List userSessions = SessionFacade.getAllSessions();
 		List onlineUsersList = SessionFacade.getLoggedSessions();
 		
 		// Check for an optional language parameter

@@ -46,15 +46,16 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 
+import net.jforum.JForum;
+
 import org.apache.log4j.Logger;
 
-import net.jforum.JForum;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ExceptionWriter.java,v 1.4 2005/07/26 03:04:34 rafaelsteil Exp $
+ * @version $Id: ExceptionWriter.java,v 1.5 2005/07/26 04:01:20 diegopires Exp $
  */
 public class ExceptionWriter
 {

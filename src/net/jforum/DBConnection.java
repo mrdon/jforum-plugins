@@ -57,12 +57,11 @@ import org.apache.log4j.Logger;
  * which opens a new connection on every request.  
  * 
  * @author Rafael Steil
- * @version $Id: DBConnection.java,v 1.10 2005/07/26 03:04:40 rafaelsteil Exp $
+ * @version $Id: DBConnection.java,v 1.11 2005/07/26 04:01:17 diegopires Exp $
  */
 public abstract class DBConnection 
 {
 	private static final Logger logger = Logger.getLogger(DBConnection.class);
-	private boolean autoCommitStatus = true;
 	protected boolean isDatabaseUp;
 	
 	private static DBConnection instance;

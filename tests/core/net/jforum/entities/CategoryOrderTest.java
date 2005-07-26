@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import junit.framework.TestCase;
 import net.jforum.ConfigLoader;
 import net.jforum.TestCaseUtils;
 import net.jforum.repository.ForumRepository;
@@ -60,11 +61,9 @@ import net.jforum.security.RoleValue;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.CategoryOrderComparator;
 
-import junit.framework.TestCase;
-
 /**
  * @author Rafael Steil
- * @version $Id: CategoryOrderTest.java,v 1.5 2005/07/26 03:05:48 rafaelsteil Exp $
+ * @version $Id: CategoryOrderTest.java,v 1.6 2005/07/26 04:01:20 diegopires Exp $
  */
 public class CategoryOrderTest extends TestCase 
 {
@@ -108,7 +107,6 @@ public class CategoryOrderTest extends TestCase
 	{
 		this.fillRepository();
 		
-		int i = 0;
 		List categories = ForumRepository.getAllCategories(1);
 		this.checkExpectedCategories(this.expectedNames, categories);
 	}

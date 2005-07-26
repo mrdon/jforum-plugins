@@ -44,6 +44,7 @@ package net.jforum.dao.sqlserver;
 
 import java.util.Date;
 import java.util.List;
+
 import net.jforum.util.preferences.SystemGlobals;
 
 /**

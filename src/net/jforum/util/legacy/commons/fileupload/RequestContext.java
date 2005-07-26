@@ -15,8 +15,8 @@
  */
 package net.jforum.util.legacy.commons.fileupload;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * <p>Abstracts access to the request information needed for file uploads. This
@@ -27,7 +27,7 @@ import java.io.IOException;
  *
  * @since FileUpload 1.1
  *
- * @version $Id: RequestContext.java,v 1.3 2005/07/26 03:05:01 rafaelsteil Exp $
+ * @version $Id: RequestContext.java,v 1.4 2005/07/26 04:01:16 diegopires Exp $
  */
 public interface RequestContext {
 

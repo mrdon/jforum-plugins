@@ -66,7 +66,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.22 2005/07/26 03:05:41 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.23 2005/07/26 04:01:14 diegopires Exp $
  */
 public class UserAction extends AdminCommand 
 {
@@ -240,8 +240,6 @@ public class UserAction extends AdminCommand
 		int userId = this.request.getIntParameter("id");
 		
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
-		GroupDAO gm = DataAccessDriver.getInstance().newGroupDAO();
-		
 		User u = um.selectById(userId);
 		
 		List selectedList = new ArrayList();

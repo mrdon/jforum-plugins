@@ -62,13 +62,12 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * @author Rafael Steil
- * @version $Id: BBCodeHandler.java,v 1.14 2005/07/26 03:05:28 rafaelsteil Exp $
+ * @version $Id: BBCodeHandler.java,v 1.15 2005/07/26 04:01:23 diegopires Exp $
  */
 public class BBCodeHandler extends DefaultHandler implements Serializable
 {
 	private Map bbMap = new LinkedHashMap();
 	private Map alwaysProcessMap = new LinkedHashMap();
-	private boolean matchOpen = false;
 	private String tagName = "";
 	private StringBuffer sb;	
 	private BBCode bb;
@@ -124,7 +123,6 @@ public class BBCodeHandler extends DefaultHandler implements Serializable
 	public void startElement(String uri, String localName, String tag, Attributes attrs)
 	{
 		if (tag.equals("match")) {
-			this.matchOpen = true;
 			this.sb = new StringBuffer();
 			this.bb = new BBCode();
 			
@@ -151,7 +149,6 @@ public class BBCodeHandler extends DefaultHandler implements Serializable
 	public void endElement(String uri, String localName, String tag)
 	{	
 		if (tag.equals("match")) {
-			this.matchOpen = false;
 			this.addBb(this.bb);
 		}
 		else if (this.tagName.equals("replace")) {

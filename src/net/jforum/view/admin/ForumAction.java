@@ -48,7 +48,6 @@ import java.util.List;
 import net.jforum.dao.CategoryDAO;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
-import net.jforum.dao.GroupDAO;
 import net.jforum.dao.TopicDAO;
 import net.jforum.dao.security.GroupSecurityDAO;
 import net.jforum.entities.Category;
@@ -66,7 +65,7 @@ import net.jforum.view.admin.common.ModerationCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.22 2005/07/26 03:05:43 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.23 2005/07/26 04:01:15 diegopires Exp $
  */
 public class ForumAction extends AdminCommand 
 {
@@ -214,8 +213,6 @@ public class ForumAction extends AdminCommand
 		
 		ForumRepository.addForum(f);
 		
-		// Process permissions
-		GroupDAO gm = DataAccessDriver.getInstance().newGroupDAO();
 		GroupSecurityDAO gmodel = DataAccessDriver.getInstance().newGroupSecurityDAO();
 		PermissionControl pc = new PermissionControl();
 		pc.setSecurityModel(gmodel);

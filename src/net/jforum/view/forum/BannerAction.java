@@ -43,15 +43,15 @@
 package net.jforum.view.forum;
 
 import net.jforum.Command;
-import net.jforum.entities.Banner;
 import net.jforum.JForum;
 import net.jforum.dao.BannerDAO;
 import net.jforum.dao.DataAccessDriver;
+import net.jforum.entities.Banner;
 import net.jforum.view.forum.common.BannerCommon;
 
 /**
  * @author Samuel Yung
- * @version $Id: BannerAction.java,v 1.3 2005/07/26 03:05:19 rafaelsteil Exp $
+ * @version $Id: BannerAction.java,v 1.4 2005/07/26 04:01:13 diegopires Exp $
  */
 public class BannerAction extends Command
 {

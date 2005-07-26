@@ -3,20 +3,19 @@
  */ 
 package net.jforum.summary;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import org.apache.log4j.Logger;
-
-import freemarker.template.SimpleHash;
 
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.SummaryDAO;
 import net.jforum.util.mail.Spammer;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+
+import org.apache.log4j.Logger;
+
+import freemarker.template.SimpleHash;
 
 /**
  * Manage the Summary sents.

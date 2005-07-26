@@ -42,8 +42,6 @@
  */
 package net.jforum.util.search.simple;
 
-import org.apache.log4j.Logger;
-
 import net.jforum.JForum;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.SearchIndexerDAO;
@@ -54,9 +52,11 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.search.SearchManager;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author Rafael Steil
- * @version $Id: SimpleSearchManager.java,v 1.5 2005/07/26 03:05:45 rafaelsteil Exp $
+ * @version $Id: SimpleSearchManager.java,v 1.6 2005/07/26 04:01:26 diegopires Exp $
  */
 public class SimpleSearchManager implements SearchManager
 {

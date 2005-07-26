@@ -52,16 +52,12 @@ import net.jforum.exceptions.DatabaseException;
 import net.jforum.exceptions.RepositoryStartupException;
 import net.jforum.repository.ForumRepository;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author Rafael Steil
- * @version $Id: ForumStartup.java,v 1.8 2005/07/26 03:04:40 rafaelsteil Exp $
+ * @version $Id: ForumStartup.java,v 1.9 2005/07/26 04:01:18 diegopires Exp $
  */
 public class ForumStartup 
 {
-	private static final Logger logger = Logger.getLogger(ForumStartup.class);
-	
 	/**
 	 * Starts the database implementation
 	 * @return <code>true</code> if everthing were ok

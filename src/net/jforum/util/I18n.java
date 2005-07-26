@@ -51,12 +51,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
-
 import net.jforum.SessionFacade;
 import net.jforum.entities.UserSession;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+
+import org.apache.log4j.Logger;
 
 /**
  * I18n (Internationalization) class implementation. Does nothing of special, just loads the
@@ -64,7 +64,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: I18n.java,v 1.28 2005/07/26 03:05:24 rafaelsteil Exp $
+ * @version $Id: I18n.java,v 1.29 2005/07/26 04:01:18 diegopires Exp $
  */
 public class I18n
 {

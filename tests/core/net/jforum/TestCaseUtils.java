@@ -45,8 +45,6 @@ package net.jforum;
 import java.io.File;
 import java.io.IOException;
 
-import freemarker.template.Configuration;
-
 import net.jforum.entities.UserSession;
 import net.jforum.http.FakeActionServletRequest;
 import net.jforum.security.PermissionControl;
@@ -57,12 +55,13 @@ import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import freemarker.template.Configuration;
 
 /**
  * General utilities for the test cases.
  * 
  * @author Rafael Steil
- * @version $Id: TestCaseUtils.java,v 1.12 2005/07/26 03:05:09 rafaelsteil Exp $
+ * @version $Id: TestCaseUtils.java,v 1.13 2005/07/26 04:01:20 diegopires Exp $
  */
 public class TestCaseUtils
 {

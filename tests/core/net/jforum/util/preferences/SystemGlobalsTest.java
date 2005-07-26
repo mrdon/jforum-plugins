@@ -42,12 +42,12 @@
  */
 package net.jforum.util.preferences;
 
-import net.jforum.TestCaseUtils;
 import junit.framework.TestCase;
+import net.jforum.TestCaseUtils;
 
 /**
  * @author Rafael Steil
- * @version $Id: SystemGlobalsTest.java,v 1.4 2005/07/26 03:05:58 rafaelsteil Exp $
+ * @version $Id: SystemGlobalsTest.java,v 1.5 2005/07/26 04:01:23 diegopires Exp $
  */
 public class SystemGlobalsTest extends TestCase
 {

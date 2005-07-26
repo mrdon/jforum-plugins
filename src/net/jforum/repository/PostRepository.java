@@ -58,18 +58,15 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.view.forum.common.PostCommon;
 
-import org.apache.log4j.Logger;
-
 /**
  * Repository for the post in the top n topics for each forum.
  * 
  * @author Sean Mitchell
  * @author Rafael Steil
- * @version $Id: PostRepository.java,v 1.9 2005/07/26 03:04:55 rafaelsteil Exp $
+ * @version $Id: PostRepository.java,v 1.10 2005/07/26 04:01:23 diegopires Exp $
  */
 public class PostRepository implements Cacheable
 {
-	private static Logger logger = Logger.getLogger(PostRepository.class);
 	private static final int CACHE_SIZE = SystemGlobals.getIntValue(ConfigKeys.POSTS_CACHE_SIZE);
 	private static final String FQN = "posts";
 	private static CacheEngine cache;

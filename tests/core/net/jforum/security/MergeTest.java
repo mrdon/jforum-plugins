@@ -49,13 +49,11 @@ import junit.framework.TestCase;
 
 /**
  * @author Rafael Steil
- * @version $Id: MergeTest.java,v 1.3 2005/07/26 03:05:21 rafaelsteil Exp $
+ * @version $Id: MergeTest.java,v 1.4 2005/07/26 04:01:22 diegopires Exp $
  */
 public class MergeTest extends TestCase 
 {
 	private RoleCollection userRoles;
-	private List groupRolesList;
-	
 	/**
 	 * @see TestCase#setUp()
 	 */

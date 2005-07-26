@@ -42,16 +42,16 @@
  */
 package net.jforum.util.search;
 
-import org.apache.log4j.Logger;
-
 import net.jforum.entities.Post;
 import net.jforum.exceptions.SearchInstantiationException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author Rafael Steil
- * @version $Id: SearchFacade.java,v 1.4 2005/07/26 03:04:36 rafaelsteil Exp $
+ * @version $Id: SearchFacade.java,v 1.5 2005/07/26 04:01:22 diegopires Exp $
  */
 public class SearchFacade
 {

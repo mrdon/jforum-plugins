@@ -49,16 +49,12 @@ import net.jforum.dao.BannerDAO;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.entities.Banner;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author Samuel Yung
- * @version $Id: BannerCommon.java,v 1.4 2005/07/26 03:05:56 rafaelsteil Exp $
+ * @version $Id: BannerCommon.java,v 1.5 2005/07/26 04:01:19 diegopires Exp $
  */
 public class BannerCommon
 {
-	private static Logger logger = Logger.getLogger(BannerCommon.class);
-
 	private BannerDAO dao;
 	private List banners;
 

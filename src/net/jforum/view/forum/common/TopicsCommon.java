@@ -48,10 +48,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
-import freemarker.template.SimpleHash;
-
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
@@ -72,11 +68,15 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.view.forum.ModerationHelper;
 
+import org.apache.log4j.Logger;
+
+import freemarker.template.SimpleHash;
+
 /**
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.13 2005/07/26 03:05:54 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.14 2005/07/26 04:01:19 diegopires Exp $
  */
 public class TopicsCommon 
 {

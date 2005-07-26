@@ -44,14 +44,14 @@ package net.jforum.util.preferences;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
-
 import net.jforum.ConfigLoader;
 import net.jforum.util.FileChangeListener;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author Rafael Steil
- * @version $Id: SystemGlobalsListener.java,v 1.5 2005/07/26 03:05:12 rafaelsteil Exp $
+ * @version $Id: SystemGlobalsListener.java,v 1.6 2005/07/26 04:01:24 diegopires Exp $
  */
 public class SystemGlobalsListener implements FileChangeListener
 {

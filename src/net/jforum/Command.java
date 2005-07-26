@@ -50,7 +50,6 @@ import net.jforum.repository.Tpl;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
-
 import freemarker.template.Configuration;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
@@ -61,7 +60,7 @@ import freemarker.template.Template;
  * presentation actions must extend this class. 
  * 
  * @author Rafael Steil
- * @version $Id: Command.java,v 1.14 2005/07/26 03:04:39 rafaelsteil Exp $
+ * @version $Id: Command.java,v 1.15 2005/07/26 04:01:17 diegopires Exp $
  */
 public abstract class Command 
 {

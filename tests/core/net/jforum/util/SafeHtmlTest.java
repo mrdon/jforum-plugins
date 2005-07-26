@@ -42,14 +42,14 @@
  */
 package net.jforum.util;
 
+import junit.framework.TestCase;
 import net.jforum.TestCaseUtils;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import junit.framework.TestCase;
 
 /**
  * @author Rafael Steil
- * @version $Id: SafeHtmlTest.java,v 1.6 2005/07/26 03:04:41 rafaelsteil Exp $
+ * @version $Id: SafeHtmlTest.java,v 1.7 2005/07/26 04:01:12 diegopires Exp $
  */
 public class SafeHtmlTest extends TestCase
 {

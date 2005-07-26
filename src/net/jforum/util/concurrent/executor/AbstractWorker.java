@@ -41,13 +41,13 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: AbstractWorker.java,v 1.7 2005/07/26 03:05:59 rafaelsteil Exp $
+ * $Id: AbstractWorker.java,v 1.8 2005/07/26 04:01:15 diegopires Exp $
  */
  package net.jforum.util.concurrent.executor;
 
-import org.apache.log4j.Logger;
-
 import net.jforum.util.concurrent.Task;
+
+import org.apache.log4j.Logger;
 
 /**
  * @author Rodrigo Kumpera

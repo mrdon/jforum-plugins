@@ -60,12 +60,10 @@ import net.jforum.util.preferences.SystemGlobals;
  * Authenticate users against a LDAP server. 
  * 
  * @author Rafael Steil
- * @version $Id: LDAPAuthenticator.java,v 1.3 2005/07/26 03:05:33 rafaelsteil Exp $
+ * @version $Id: LDAPAuthenticator.java,v 1.4 2005/07/26 04:01:25 diegopires Exp $
  */
 public class LDAPAuthenticator implements LoginAuthenticator
 {
-	private UserDAO dao;
-	
 	private Hashtable prepareEnvironment()
 	{
 		Hashtable h = new Hashtable();
@@ -134,6 +132,5 @@ public class LDAPAuthenticator implements LoginAuthenticator
 	 */
 	public void setUserModel(UserDAO dao) 
 	{
-		this.dao = dao;
 	}
 }

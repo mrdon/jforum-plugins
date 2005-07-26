@@ -44,16 +44,15 @@ package net.jforum.entities;
 
 import java.util.Iterator;
 
+import junit.framework.TestCase;
 import net.jforum.ConfigLoader;
 import net.jforum.TestCaseUtils;
 import net.jforum.repository.ForumRepository;
 import net.jforum.security.PermissionControl;
 
-import junit.framework.TestCase;
-
 /**
  * @author Rafael Steil
- * @version $Id: ForumOrderTest.java,v 1.6 2005/07/26 03:05:48 rafaelsteil Exp $
+ * @version $Id: ForumOrderTest.java,v 1.7 2005/07/26 04:01:21 diegopires Exp $
  */
 public class ForumOrderTest extends TestCase 
 {

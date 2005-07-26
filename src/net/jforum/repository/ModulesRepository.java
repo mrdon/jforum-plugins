@@ -45,16 +45,16 @@ package net.jforum.repository;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
-
 import net.jforum.ConfigLoader;
 import net.jforum.JForum;
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author Rafael Steil
- * @version $Id: ModulesRepository.java,v 1.6 2005/07/26 03:04:55 rafaelsteil Exp $
+ * @version $Id: ModulesRepository.java,v 1.7 2005/07/26 04:01:23 diegopires Exp $
  */
 public class ModulesRepository implements Cacheable
 {

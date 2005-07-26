@@ -42,8 +42,6 @@
  */
 package net.jforum.util.concurrent.executor;
 
-import org.apache.log4j.Logger;
-
 import net.jforum.util.concurrent.Executor;
 import net.jforum.util.concurrent.Queue;
 import net.jforum.util.concurrent.Result;
@@ -52,9 +50,11 @@ import net.jforum.util.concurrent.queue.UnboundedFifoQueue;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author Rodrigo Kumpera
- * @version $Id: QueuedExecutor.java,v 1.10 2005/07/26 03:05:59 rafaelsteil Exp $
+ * @version $Id: QueuedExecutor.java,v 1.11 2005/07/26 04:01:15 diegopires Exp $
  */
 public class QueuedExecutor implements Executor 
 {

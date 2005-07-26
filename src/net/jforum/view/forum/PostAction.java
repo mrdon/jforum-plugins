@@ -88,15 +88,11 @@ import net.jforum.view.forum.common.PostCommon;
 import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.88 2005/07/26 03:05:20 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.89 2005/07/26 04:01:14 diegopires Exp $
  */
 public class PostAction extends Command {
-	private static final Logger logger = Logger.getLogger(PostAction.class);
-
 	public void list() throws Exception {
 		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
@@ -949,8 +945,7 @@ public class PostAction extends Command {
 		this.response.setContentLength((int)a.getInfo().getFilesize());
 		
 		byte[] b = new byte[4096];
-		int c = 0;
-		while ((c = fis.read(b)) != -1) {
+		while ((fis.read(b)) != -1) {
 			os.write(b);
 		}
 		

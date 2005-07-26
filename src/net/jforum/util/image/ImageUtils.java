@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: ImageUtils.java,v 1.13 2005/07/26 03:06:10 rafaelsteil Exp $
+ * $Id: ImageUtils.java,v 1.14 2005/07/26 04:01:25 diegopires Exp $
  */
 package net.jforum.util.image;
 
@@ -98,7 +98,6 @@ public class ImageUtils
 	 */
 	public static BufferedImage resizeImage(Image image, int type, int maxWidth, int maxHeight)
 	{
-		float zoom = 1.0F;
 		Dimension largestDimension = new Dimension(maxWidth, maxHeight);
 
 		// Original size
@@ -108,16 +107,11 @@ public class ImageUtils
 		float aspectRation = (float)imageWidth / imageHeight;
 		
 		if (imageWidth > maxWidth || imageHeight > maxHeight) {
-			int scaledW = Math.round(imageWidth * zoom);
-			int scaledH = Math.round(imageHeight * zoom);
-			
-			Dimension preferedSize = new Dimension(scaledW, scaledH);
-			
 			if ((float)largestDimension.width / largestDimension.height > aspectRation) {
 				largestDimension.width = (int)Math.ceil(largestDimension.height * aspectRation);
 			}
 			else {
-				largestDimension.height = (int)Math.ceil((float)largestDimension.width / aspectRation);
+				largestDimension.height = (int)Math.ceil(largestDimension.width / aspectRation);
 			}
 			
 			imageWidth = largestDimension.width;

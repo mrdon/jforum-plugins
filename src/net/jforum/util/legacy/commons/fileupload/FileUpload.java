@@ -15,6 +15,8 @@
  */
 package net.jforum.util.legacy.commons.fileupload;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * <p>High level API for processing file uploads.</p>
  *
@@ -36,7 +38,7 @@ package net.jforum.util.legacy.commons.fileupload;
  * @author <a href="mailto:martinc@apache.org">Martin Cooper</a>
  * @author Sean C. Sullivan
  *
- * @version $Id: FileUpload.java,v 1.3 2005/07/26 03:05:00 rafaelsteil Exp $
+ * @version $Id: FileUpload.java,v 1.4 2005/07/26 04:01:16 diegopires Exp $
  */
 public class FileUpload
     extends FileUploadBase {

@@ -61,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericSearchDAO.java,v 1.5 2005/07/26 03:04:47 rafaelsteil Exp $
+ * @version $Id: GenericSearchDAO.java,v 1.6 2005/07/26 04:01:21 diegopires Exp $
  */
 public class GenericSearchDAO implements net.jforum.dao.SearchDAO	
 {
@@ -71,8 +71,6 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 	public List search(SearchData sd) throws Exception 
 	{
 		List l = new ArrayList();
-		List topics = new ArrayList();
-		
 		// Check for the search cache
 		if (!sd.getSearchStarted()) {
 			if (sd.getTime() == null) {

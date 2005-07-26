@@ -65,12 +65,10 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.25 2005/07/26 03:05:20 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.26 2005/07/26 04:01:14 diegopires Exp $
  */
 public class PrivateMessageAction extends Command
 {
-	private String templateName;
-	
 	public void inbox() throws Exception
 	{
 		if (!SessionFacade.isLogged()) {
