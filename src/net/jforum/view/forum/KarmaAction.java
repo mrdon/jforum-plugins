@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -55,17 +55,19 @@ import net.jforum.dao.KarmaDAO;
 import net.jforum.dao.PostDAO;
 import net.jforum.entities.Karma;
 import net.jforum.entities.Post;
+import net.jforum.repository.PostRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
+import net.jforum.view.forum.common.PostCommon;
 import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaAction.java,v 1.12 2005/07/26 04:01:13 diegopires Exp $
+ * @version $Id: KarmaAction.java,v 1.13 2005/07/27 00:19:43 rafaelsteil Exp $
  */
 public class KarmaAction extends Command
 {
@@ -116,6 +118,10 @@ public class KarmaAction extends Command
 		karma.setPoints(points);
 
 		km.addKarma(karma);
+		
+		if (SystemGlobals.getBoolValue(ConfigKeys.POSTS_CACHE_ENABLED)) {
+			PostRepository.update(p.getTopicId(), PostCommon.preparePostForDisplay(p));
+		}
 
 		JForum.setRedirect(this.urlToTopic(p));
 	}

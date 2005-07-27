@@ -90,7 +90,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.89 2005/07/26 04:01:14 diegopires Exp $
+ * @version $Id: PostAction.java,v 1.90 2005/07/27 00:19:43 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	public void list() throws Exception {
@@ -492,7 +492,7 @@ public class PostAction extends Command {
 				return;
 			}
 			
-			Topic t = tm.selectById(p.getTopicId());
+			Topic t = tm.selectRaw(p.getTopicId());
 
 			if (!TopicsCommon.isTopicAccessible(t.getForumId())) {
 				return;
@@ -521,7 +521,7 @@ public class PostAction extends Command {
 				tm.update(t);
 				
 				ForumRepository.reloadForum(t.getForumId());
-				TopicRepository.clearCache(t.getForumId());
+				TopicRepository.updateTopic(t);
 			}
 
 			if (this.request.getParameter("notify") == null) {
@@ -530,6 +530,7 @@ public class PostAction extends Command {
 
 			String path = this.request.getContextPath() + "/posts/list/";
 			String start = this.request.getParameter("start");
+			
 			if (start != null && !start.equals("0")) {
 				path += start + "/";
 			}
