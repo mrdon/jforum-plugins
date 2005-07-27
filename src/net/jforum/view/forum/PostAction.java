@@ -90,7 +90,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.90 2005/07/27 00:19:43 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.91 2005/07/27 17:33:21 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	public void list() throws Exception {
@@ -174,7 +174,7 @@ public class PostAction extends Command {
 		this.context.put("anonymousPosts", SecurityRepository.canAccess(SecurityConstants.PERM_ANONYMOUS_POST, 
 				Integer.toString(topic.getForumId())));
 		this.context.put("watching", tm.isUserSubscribed(topicId, SessionFacade.getUserSession().getUserId()));
-		this.context.put("pageTitle", SystemGlobals.getValue(ConfigKeys.FORUM_NAME) + " - " + topic.getTitle());
+		this.context.put("pageTitle", topic.getTitle());
 		this.context.put("isAdmin", SecurityRepository.canAccess(SecurityConstants.PERM_ADMINISTRATION));
 		this.context.put("readonly", !SecurityRepository.canAccess(SecurityConstants.PERM_READ_ONLY_FORUMS, 
 				Integer.toString(topic.getForumId())));

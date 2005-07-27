@@ -73,7 +73,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.43 2005/07/26 04:01:14 diegopires Exp $
+ * @version $Id: ForumAction.java,v 1.44 2005/07/27 17:33:21 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -200,7 +200,7 @@ public class ForumAction extends Command
 		this.context.put("allCategories", ForumCommon.getAllCategoriesAndForums(false));
 		this.context.put("forum", forum);
 		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
-		this.context.put("pageTitle", SystemGlobals.getValue(ConfigKeys.FORUM_NAME) + " - " + forum.getName());
+		this.context.put("pageTitle", forum.getName());
 		this.context.put("canApproveMessages", canApproveMessages);
 		this.context.put("replyOnly", !SecurityRepository.canAccess(SecurityConstants.PERM_REPLY_ONLY, 
 				Integer.toString(forum.getId())));
