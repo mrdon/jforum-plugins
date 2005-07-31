@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -50,6 +50,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.log4j.Logger;
+
 import net.jforum.SessionFacade;
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
@@ -77,7 +79,7 @@ import net.jforum.util.preferences.ConfigKeys;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.38 2005/07/26 03:04:54 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.39 2005/07/31 03:52:00 rafaelsteil Exp $
  */
 public class ForumRepository implements Cacheable
 {
@@ -93,6 +95,7 @@ public class ForumRepository implements Cacheable
 	private static final String TOTAL_USERS = "totalUsers";
 	
 	private static ForumRepository instance;
+	private static Logger logger = Logger.getLogger(ForumRepository.class);
 	
 	/**
 	 * @see net.jforum.cache.Cacheable#setCacheEngine(net.jforum.cache.CacheEngine)
@@ -221,8 +224,28 @@ public class ForumRepository implements Cacheable
 		PermissionControl pc = SecurityRepository.get(userId);
 		List l = new ArrayList();
 		
-		Iterator iter = ((Set)cache.get(FQN, CATEGORIES_SET)).iterator();
-		while (iter.hasNext()) {
+		Set categoriesSet = (Set)cache.get(FQN, CATEGORIES_SET);
+		
+		if (categoriesSet == null) {
+			logger.warn("Categories set returned null from the cache. Trying to reload");
+			
+			try {
+				ForumRepository.instance.loadCategories(DataAccessDriver.getInstance().newCategoryDAO());
+				ForumRepository.instance.loadForums(DataAccessDriver.getInstance().newForumDAO());
+			}
+			catch (Exception e) {
+				throw new CategoryNotFoundException("Failed to get the category", e);
+			}
+			
+			categoriesSet = (Set)cache.get(FQN, CATEGORIES_SET);
+			
+			if (categoriesSet == null) {
+				throw new CategoryNotFoundException("Could not find all categories. There must be a problem "
+						+ "with the cache");
+			}
+		}
+		
+		for (Iterator iter = categoriesSet.iterator(); iter.hasNext(); ) {
 			Category c = (Category)iter.next();
 			
 			if (isCategoryAccessible(pc, c.getId())) {

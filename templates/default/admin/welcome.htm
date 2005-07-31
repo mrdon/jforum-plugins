@@ -1,1 +1,13 @@
 ${I18n.getMessage("Admin.welcome")}
+
+<#if installModuleExists>
+	<p>
+		<font style="color: #ff0000; size: 16px;"><b>Warning</b></font><br/>
+		The <i><b>installation module</b></i> is still enabled. This may allow <b>any</b> user
+		to overwrite your current board installation. <br>
+		To fix this issue, open the file
+		<i>WEB-INF/config/modulesMapping.properties</i> and remove the key named "install", and
+		then go to the <b>Cache</b> option, in the left menu, and click in the <b>Reload</b> link
+		of the item "Modules".
+	</p>
+</#if>

@@ -50,6 +50,7 @@ import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.entities.UserSession;
+import net.jforum.repository.ModulesRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.SecurityConstants;
@@ -61,7 +62,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: AdminAction.java,v 1.10 2005/07/26 03:05:41 rafaelsteil Exp $
+ * @version $Id: AdminAction.java,v 1.11 2005/07/31 03:51:55 rafaelsteil Exp $
  */
 public class AdminAction extends Command {
 
@@ -104,6 +105,9 @@ public class AdminAction extends Command {
 	public void main() throws Exception
 	{
 		this.setTemplateName(TemplateKeys.ADMIN_MAIN);
+		
+		// Checks if the install module is still active
+		this.context.put("installModuleExists", ModulesRepository.getModuleClass("install") != null);
 	}
 	
 	public boolean checkAdmin()

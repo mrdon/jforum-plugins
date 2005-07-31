@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c)Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -42,15 +42,16 @@
  */
 package net.jforum.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Represents every message post in the system.
  * 
  * @author Rafael Steil
- * @version $Id: Post.java,v 1.11 2005/07/26 03:04:52 rafaelsteil Exp $
+ * @version $Id: Post.java,v 1.12 2005/07/31 03:51:54 rafaelsteil Exp $
  */
-public class Post 
+public class Post implements Serializable 
 {
 	private int id;
 	private int topicId;

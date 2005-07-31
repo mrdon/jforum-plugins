@@ -11,11 +11,8 @@
 	<classpathentry kind="lib" path="lib/junit.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/htmlparser-1.5.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/ojdbc14.jar"/>
-	<classpathentry kind="lib" path="WEB-INF/lib/jgroups-2.2.7.jar"/>
-	<classpathentry kind="lib" path="WEB-INF/lib/jboss-cache.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/jboss-common.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/jboss-jmx.jar"/>
-	<classpathentry kind="lib" path="WEB-INF/lib/jboss-remoting.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/jboss-system.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/mysql-connector-java-3.1.4-beta-bin.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/postgresql-8.0.309.jdbc3.jar"/>
@@ -24,5 +21,7 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/commons-io-1.1-dev.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/dwr-0.8.1-jforum.jar"/>
 	<classpathentry sourcepath="C:/java/jcaptcha-src-1.0-RC2.0.1" kind="lib" path="WEB-INF/lib/jcaptcha-all-1.0-RC2.0.1.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/jboss-cache-1.2.3.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/jgroups-2.2.8.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>
