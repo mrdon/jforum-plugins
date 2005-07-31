@@ -1,4 +1,4 @@
-/* Copyright (c) 2005, Rafael Steil
+/* Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms,
@@ -39,21 +39,22 @@
  * The JForum Project
  * http://www.jforum.net
  *
- */ 
+ */
 package net.jforum.dao;
 
 import java.util.Date;
 import java.util.List;
 
 /**
- * Load sumary of posts from the data Base 
+ * Load sumary of posts from the data Base
  * 
  * @author Franklin S. Dattein (<a href="mailto:franklin@portaljava.com">franklin@portaljava.com</a>)
  * 
- * @version $Id: SummaryDAO.java,v 1.3 2005/07/26 03:04:29 rafaelsteil Exp $
+ * @version $Id: SummaryDAO.java,v 1.4 2005/07/31 04:07:33 rafaelsteil Exp $
  */
-public interface SummaryDAO {
-    public List selectLastPosts(Date firstDate, Date lastDate) throws Exception;
+public interface SummaryDAO
+{
+	public List selectLastPosts(Date firstDate, Date lastDate) throws Exception;
 
-    public List listRecipients() throws Exception;
+	public List listRecipients() throws Exception;
 }

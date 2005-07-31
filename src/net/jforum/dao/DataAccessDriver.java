@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -59,7 +59,7 @@ package net.jforum.dao;
  * analise, look at <code>net.jforum.drivers.generic</code> package.
  * 
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.6 2005/07/26 03:04:28 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.7 2005/07/31 04:07:33 rafaelsteil Exp $
  */
 public abstract class DataAccessDriver 
 {

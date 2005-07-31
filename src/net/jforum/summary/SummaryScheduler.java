@@ -1,21 +1,44 @@
 /*
- * Created on 06/11/2003
- *
- * Copyright 2002-2004 the original author or authors.
+ * Copyright (c) Rafael Steil
+ * All rights reserved.
  * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Redistribution and use in source and binary forms, 
+ * with or without modification, are permitted provided 
+ * that the following conditions are met:
  * 
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * 1) Redistributions of source code must retain the above 
+ * copyright notice, this list of conditions and the 
+ * following  disclaimer.
+ * 2)  Redistributions in binary form must reproduce the 
+ * above copyright notice, this list of conditions and 
+ * the following disclaimer in the documentation and/or 
+ * other materials provided with the distribution.
+ * 3) Neither the name of "Rafael Steil" nor 
+ * the names of its contributors may be used to endorse 
+ * or promote products derived from this software without 
+ * specific prior written permission.
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- *	Class created on Jul 15, 2005
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT 
+ * HOLDERS AND CONTRIBUTORS "AS IS" AND ANY 
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, 
+ * BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL 
+ * THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE 
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, 
+ * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER 
+ * IN CONTRACT, STRICT LIABILITY, OR TORT 
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
+ * 
+ * Class created on Jul 15, 2005
+ * The JForum Project
+ * http://www.jforum.net
  */
 package net.jforum.summary;
 
@@ -38,46 +61,51 @@ import org.quartz.impl.StdSchedulerFactory;
  * 
  * @see net.jforum.summary.SummaryJob
  * 
- * @author Franklin S. Dattein (<a
- *         href="mailto:franklin@portaljava.com">franklin@portaljava.com</a>)
- * 
+ * @author Franklin S. Dattein (<a href="mailto:franklin@portaljava.com">franklin@portaljava.com</a>)
+ * @version $Id: SummaryScheduler.java,v 1.4 2005/07/31 04:07:33 rafaelsteil Exp $
  */
-public class SummaryScheduler {
-    private static Scheduler scheduler;
+public class SummaryScheduler
+{
+	private static Scheduler scheduler;
 
-    private static Logger logger = Logger.getLogger(SummaryScheduler.class);
+	private static Logger logger = Logger.getLogger(SummaryScheduler.class);
 
-    private static boolean isStarted = false;
+	private static boolean isStarted = false;
 
-    /**
-     * Starts the summary Job.
-     * Conditions to start: 
-     * Is not started yet and is enabled on the file SystemGlobasl.properties. 
-     * The to enable it is "summary.enabled" (ConfigKeys.SUMMARY_IS_ENABLED).
-     * 
-     * @throws SchedulerException
-     * @throws IOException 
-     */
-    public static void startJob() throws SchedulerException, IOException {
+	/**
+	 * Starts the summary Job. Conditions to start: Is not started yet and is enabled on the file
+	 * SystemGlobasl.properties. The to enable it is "summary.enabled"
+	 * (ConfigKeys.SUMMARY_IS_ENABLED).
+	 * 
+	 * @throws SchedulerException
+	 * @throws IOException
+	 */
+	public static void startJob() throws SchedulerException, IOException
+	{
+		boolean isEnabled = new Boolean(SystemGlobals.getValue(ConfigKeys.SUMMARY_IS_ENABLED)).booleanValue();
+		
+		if (!isStarted && isEnabled) {
+			String filename = SystemGlobals.getValue(ConfigKeys.SEARCH_INDEXER_QUARTZ_CONFIG);
 
-        boolean isEnabled = new Boolean(SystemGlobals.getValue(ConfigKeys.SUMMARY_IS_ENABLED)).booleanValue();
-        if (!isStarted && isEnabled) {
-            String filename = SystemGlobals.getValue(ConfigKeys.SEARCH_INDEXER_QUARTZ_CONFIG);
-    
-            SystemGlobals.loadAdditionalDefaults(filename);
-           
-            String cronExpression = SystemGlobals.getValue("org.quartz.context.summary.cron.expression");
-            scheduler = new StdSchedulerFactory(filename).getScheduler();
-            Trigger trigger = null;
-            try {
-                trigger = new CronTrigger(SummaryJob.class.getName(), "summaryJob", cronExpression);
-                logger.info("Starting quartz summary expression " + cronExpression);
-                scheduler.scheduleJob(new JobDetail(SummaryJob.class.getName(), "summaryJob", SummaryJob.class), trigger);
-                scheduler.start();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-        isStarted=true;
-    }
+			SystemGlobals.loadAdditionalDefaults(filename);
+
+			String cronExpression = SystemGlobals.getValue("org.quartz.context.summary.cron.expression");
+			scheduler = new StdSchedulerFactory(filename).getScheduler();
+			
+			Trigger trigger = null;
+			
+			try {
+				trigger = new CronTrigger(SummaryJob.class.getName(), "summaryJob", cronExpression);
+				logger.info("Starting quartz summary expression " + cronExpression);
+				scheduler.scheduleJob(new JobDetail(SummaryJob.class.getName(), "summaryJob", SummaryJob.class),
+						trigger);
+				scheduler.start();
+			}
+			catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		isStarted = true;
+	}
 }

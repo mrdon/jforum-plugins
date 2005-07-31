@@ -1,4 +1,4 @@
-/* Copyright (c) 2005, Rafael Steil
+/* Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms,
@@ -35,7 +35,6 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  *
- * This file creation date: 30/03/2003 / 02:37:20
  * The JForum Project
  * http://www.jforum.net
  */
@@ -59,75 +58,73 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Franklin Samir (franklin (at) portaljava [dot] com)
- * 
- * @version $Id: GenericSummaryDAO.java ,v 1.0 2005/07/19 00:00:00
- *          franklin_samir Exp $
+ * @version $Id: GenericSummaryDAO.java,v 1.4 2005/07/31 04:07:34 rafaelsteil Exp $
  */
-public class GenericSummaryDAO extends AutoKeys implements SummaryDAO {
+public class GenericSummaryDAO extends AutoKeys implements SummaryDAO
+{
+	/**
+	 * @see net.jforum.dao.SummaryDAO#selectById(Date, Date)
+	 */
+	public List selectLastPosts(Date firstDate, Date lastDate) throws Exception
+	{
+		String query = SystemGlobals.getSql("SummaryDAO.selectPosts");
+		PreparedStatement p = JForum.getConnection().prepareStatement(query);
+		p.setTimestamp(1, new Timestamp(firstDate.getTime()));
+		p.setTimestamp(2, new Timestamp(lastDate.getTime()));
 
-    /**
-     * @see net.jforum.dao.SummaryDAO#selectById(Date, Date)
-     */
-    public List selectLastPosts(Date firstDate, Date lastDate) throws Exception {
-        String query = SystemGlobals.getSql("SummaryDAO.selectPosts");
-        PreparedStatement p = JForum.getConnection().prepareStatement(query);
-        p.setTimestamp(1, new Timestamp(firstDate.getTime()));
-        p.setTimestamp(2, new Timestamp(lastDate.getTime()));
+		List posts = new ArrayList();
+		ResultSet rs = p.executeQuery();
 
-        List posts = new ArrayList();
-        ResultSet rs = p.executeQuery();
-        
-        while (rs.next()) {        
-            posts.add(this.fillPost(rs));
-        }
+		while (rs.next()) {
+			posts.add(this.fillPost(rs));
+		}
+		
+		rs.close();
+		p.close();
 
-        rs.close();
-        p.close();
+		return posts;
+	}
 
-        return posts;
-    }
+	private Post fillPost(ResultSet rs) throws Exception
+	{
+		Post post = new Post();
+		
+		post.setId(rs.getInt("post_id"));
+		post.setTopicId(rs.getInt("topic_id"));
+		post.setForumId(rs.getInt("forum_id"));
+		post.setUserId(rs.getInt("user_id"));
+		Timestamp postTime = rs.getTimestamp("post_time");
+		post.setTime(postTime);
+		post.setSubject(rs.getString("post_subject"));
+		post.setText(rs.getString("post_text"));
+		post.setPostUsername(rs.getString("username"));
 
-    private Post fillPost(ResultSet rs) throws Exception {
-        Post post = new Post();
-        post.setId(rs.getInt("post_id"));
-        post.setTopicId(rs.getInt("topic_id"));
-        post.setForumId(rs.getInt("forum_id"));
-        post.setUserId(rs.getInt("user_id"));
-        Timestamp postTime = rs.getTimestamp("post_time");
-        post.setTime(postTime);
-        post.setSubject(rs.getString("post_subject"));
-        post.setText(rs.getString("post_text"));
-        post.setPostUsername(rs.getString("username"));
+		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
+		post.setFormatedTime(df.format(postTime));
 
-        SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
-        post.setFormatedTime(df.format(postTime));
+		post.setKarma(DataAccessDriver.getInstance().newKarmaDAO().getPostKarma(post.getId()));
 
-        post.setKarma(DataAccessDriver.getInstance().newKarmaDAO().getPostKarma(post.getId()));
+		return post;
+	}
 
-        return post;
-    }
+	public List listRecipients() throws Exception
+	{
+		String query = SystemGlobals.getSql("SummaryDAO.selectAllRecipients");
+		PreparedStatement p = JForum.getConnection().prepareStatement(query);
 
-    public List listRecipients() throws Exception {
-        String query = SystemGlobals.getSql("SummaryDAO.selectAllRecipients");
-        PreparedStatement p = JForum.getConnection().prepareStatement(query);        
+		List users = new ArrayList();
+		ResultSet rs = p.executeQuery();
 
-        List users = new ArrayList();
-        ResultSet rs = p.executeQuery();
-        
+		while (rs.next()) {
+			User user = new User();
+			user.setUsername(rs.getString("username"));
+			user.setEmail(rs.getString("user_email"));
+			users.add(user);
+		}
 
-        while (rs.next()) {
-            User user = new User();
-            user.setUsername( rs.getString("username"));
-            user.setEmail( rs.getString("user_email"));
-            users.add(user);
-        }
+		rs.close();
+		p.close();
 
-        rs.close();
-        p.close();
-
-        return users;
-    }
-    
-    
-    
+		return users;
+	}
 }

@@ -37,7 +37,6 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * Created on May 29, 2004 by pieter
- *
  * The JForum Project
  * http://www.jforum.net
  */
@@ -49,7 +48,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.70 2005/07/26 03:05:11 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.71 2005/07/31 04:07:34 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -245,7 +244,7 @@ public class ConfigKeys {
 	public static final String KARMA_MIN_POINTS = "karma.min.points";
 	public static final String KARMA_MAX_POINTS = "karma.max.points";
     
-    public static final String MAIL_SUMMARY_SUBJECT = "Summary.mail.weekly.subject";
+    public static final String MAIL_SUMMARY_SUBJECT = "mail.summary.weekly.subject";
     public static final String MAIL_SUMMARY_FILE = "mail.summary.weekly.messageFile";
     public static final String SUMMARY_DAYS_BEFORE = "summary.days.before";
     public static final String SUMMARY_IS_ENABLED = "summary.enabled";
