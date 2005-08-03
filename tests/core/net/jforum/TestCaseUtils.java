@@ -45,6 +45,7 @@ package net.jforum;
 import java.io.File;
 import java.io.IOException;
 
+import net.jforum.dao.DataAccessDriver;
 import net.jforum.entities.UserSession;
 import net.jforum.http.FakeActionServletRequest;
 import net.jforum.security.PermissionControl;
@@ -61,7 +62,7 @@ import freemarker.template.Configuration;
  * General utilities for the test cases.
  * 
  * @author Rafael Steil
- * @version $Id: TestCaseUtils.java,v 1.13 2005/07/26 04:01:20 diegopires Exp $
+ * @version $Id: TestCaseUtils.java,v 1.14 2005/08/03 18:04:10 franklin_samir Exp $
  */
 public class TestCaseUtils
 {
@@ -88,6 +89,13 @@ public class TestCaseUtils
 		
 		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
         SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
+        
+        // Start the dao.driver implementation
+        String driver = SystemGlobals.getValue(ConfigKeys.DAO_DRIVER);
+        Class c = Class.forName(driver);
+        DataAccessDriver d = (DataAccessDriver)c.newInstance();
+        DataAccessDriver.init(d);
+        
         
         DBConnection.createInstance();
 		DBConnection.getImplementation().init();
