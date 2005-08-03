@@ -52,13 +52,12 @@ import net.jforum.JForum;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.SummaryDAO;
 import net.jforum.entities.Post;
-import net.jforum.entities.User;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Franklin Samir (franklin (at) portaljava [dot] com)
- * @version $Id: GenericSummaryDAO.java,v 1.4 2005/07/31 04:07:34 rafaelsteil Exp $
+ * @version $Id: GenericSummaryDAO.java,v 1.5 2005/08/03 21:13:42 franklin_samir Exp $
  */
 public class GenericSummaryDAO extends AutoKeys implements SummaryDAO
 {
@@ -112,19 +111,16 @@ public class GenericSummaryDAO extends AutoKeys implements SummaryDAO
 		String query = SystemGlobals.getSql("SummaryDAO.selectAllRecipients");
 		PreparedStatement p = JForum.getConnection().prepareStatement(query);
 
-		List users = new ArrayList();
+		List recipients = new ArrayList();
 		ResultSet rs = p.executeQuery();
 
-		while (rs.next()) {
-			User user = new User();
-			user.setUsername(rs.getString("username"));
-			user.setEmail(rs.getString("user_email"));
-			users.add(user);
+		while (rs.next()) {			
+            recipients.add(rs.getString("username"));			
 		}
 
 		rs.close();
 		p.close();
 
-		return users;
+		return recipients;
 	}
 }
