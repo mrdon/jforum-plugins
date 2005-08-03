@@ -57,7 +57,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Franklin Samir (franklin (at) portaljava [dot] com)
- * @version $Id: GenericSummaryDAO.java,v 1.5 2005/08/03 21:13:42 franklin_samir Exp $
+ * @version $Id: GenericSummaryDAO.java,v 1.6 2005/08/03 21:15:09 franklin_samir Exp $
  */
 public class GenericSummaryDAO extends AutoKeys implements SummaryDAO
 {
@@ -115,7 +115,7 @@ public class GenericSummaryDAO extends AutoKeys implements SummaryDAO
 		ResultSet rs = p.executeQuery();
 
 		while (rs.next()) {			
-            recipients.add(rs.getString("username"));			
+            recipients.add(rs.getString("user_email"));			
 		}
 
 		rs.close();

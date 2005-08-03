@@ -3,7 +3,6 @@
  */ 
 package net.jforum.summary;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -13,7 +12,6 @@ import java.util.List;
 import junit.framework.TestCase;
 import net.jforum.TestCaseUtils;
 import net.jforum.entities.Post;
-import net.jforum.entities.User;
 
 import org.quartz.SchedulerException;
 
@@ -27,13 +25,19 @@ import org.quartz.SchedulerException;
  */
 public class SummaryTest extends TestCase {
     
+    protected void setUp() throws Exception {
+        super.setUp();
+        TestCaseUtils.loadEnvironment();
+        TestCaseUtils.initDatabaseImplementation();
+    }
+
     /**
      * Tests only the scheduler and your frquency.
      * @throws Exception 
      *
      */
     public void testScheduler() throws Exception{
-        this.init();               
+                    
         try {
             SummaryScheduler.startJob();
         } catch (SchedulerException e) {
@@ -41,34 +45,27 @@ public class SummaryTest extends TestCase {
         }        
     }
     
-    public void testLoadRecipients() throws Exception{  
-        this.init();
-        TestCaseUtils.loadEnvironment();
-        TestCaseUtils.initDatabaseImplementation();
-        
+    public void testLoadRecipients() throws Exception{                         
         SummaryModel model = new SummaryModel();
         Iterator iter = model.listRecipients().iterator();
-        while (iter.hasNext()) {
-            User user = (User) iter.next();
-            System.out.println(user.getUsername());
-            
+        while (iter.hasNext()) {            
+            System.out.println(iter.next());            
         }
         assertTrue(model.listRecipients().size()>0);       
     }
     
     public void testSendMails() throws Exception{
-        this.init();
-        
         SummaryModel model = new SummaryModel();
-        //List recipients = model.listRecipients()// Do not use this at least you want to send e-mails to all users.
-        List recipients = new ArrayList(1);
-        recipients.add("fulano@detal.com");
+      //Do not uncommentuse this at least you want to send e-mails to all users.
+        List recipients = model.listRecipients();
+        //List recipients = new ArrayList(1);
+        //recipients.add("franklin@hp.com");
         
         model.sendPostsSummary(recipients);
        
     }
     
-    public void testListPosts() throws Exception{
+    public void testListPosts() throws Exception{       
         SummaryModel model= new SummaryModel();
 //      Gets a Date seven days before now
         long weekBefore = Calendar.getInstance().getTimeInMillis() - (7 * 1000 * 60 * 60 * 24);
@@ -84,9 +81,4 @@ public class SummaryTest extends TestCase {
         assertTrue(posts.size()>0);
         
     }
-    private void init() throws Exception{
-        TestCaseUtils.loadEnvironment();
-        TestCaseUtils.initDatabaseImplementation();
-    }
-
 }
