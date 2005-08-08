@@ -17,7 +17,10 @@
 							<a href="${JForumContext.encodeURL("/rss/forumTopics/${forum.id}")}"><img src="${contextPath}/templates/${templateName}/images/xml_button.gif" border="0"></a>
 							<br />
 						</#if>
-						<span class="gensmall"><!-- forum moderators --> </span>
+						<span class="gensmall"><!-- forum moderators --><b>${I18n.getMessage("ForumIndex.moderators")}:
+                                                        <#list forum.getModeratorList() as moderator>
+                                                        <a href="${JForumContext.encodeURL("/user/profile/${moderator.id}")}"><span>${moderator.username}</span></a>&nbsp;
+                                                        </#list></b></span>
 					</td>
 
 					<td valign="center" nowrap="nowrap" align="right"><@pagination.doPagination action, forum.id/></td>
@@ -33,8 +36,8 @@
 					</#if>
 
 					<td class="nav" valign="center" align="left" width="100%" colspan="${colspan?default("")}">
-						<span class="nav">&nbsp;&nbsp;&nbsp;<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a> -&gt; <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name}</a></span>
-					</td>
+						<span class="nav">&nbsp;&nbsp;&nbsp;<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a> -&gt; <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name}</a></span>                                                					
+                                        </td>
 
 					<td class="nav" valign="bottom" nowrap="nowrap" align="right">
 		  				<span class="gensmall">

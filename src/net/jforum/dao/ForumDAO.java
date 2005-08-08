@@ -55,7 +55,7 @@ import net.jforum.entities.LastPostInfo;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: ForumDAO.java,v 1.4 2005/07/26 03:04:31 rafaelsteil Exp $
+ * @version $Id: ForumDAO.java,v 1.5 2005/08/08 10:43:11 andowson Exp $
  */
 public interface ForumDAO 
 {
@@ -160,6 +160,8 @@ public interface ForumDAO
 	public void decrementTotalTopics(int forumId, int count) throws Exception;
 
 	public LastPostInfo getLastPostInfo(int forumId) throws Exception;
+
+	public List getModeratorList(int forumId) throws Exception;
 	
 	/**
 	 * Gets the total number of messages of a forum

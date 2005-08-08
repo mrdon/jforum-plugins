@@ -43,12 +43,13 @@
 package net.jforum.entities;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Represents a specific forum.
  * 
  * @author Rafael Steil
- * @version $Id: Forum.java,v 1.8 2005/07/26 03:04:51 rafaelsteil Exp $
+ * @version $Id: Forum.java,v 1.9 2005/08/08 10:38:11 andowson Exp $
  */
 public class Forum implements Serializable
 {
@@ -63,7 +64,8 @@ public class Forum implements Serializable
 	private boolean moderated;
 	private boolean unread;
 	private LastPostInfo lpi;
-	
+	private List moderatorList;
+
 	public Forum() { }
 	
 	public Forum(int forumId) {
@@ -83,6 +85,7 @@ public class Forum implements Serializable
 		this.totalTopics = f.getTotalTopics();
 		this.unread = f.getUnread();
 		this.lpi = f.getLastPostInfo();
+                this.moderatorList = f.getModeratorList();
 	}
 	
 	public void setLastPostInfo(LastPostInfo lpi) {
@@ -91,6 +94,14 @@ public class Forum implements Serializable
 	
 	public LastPostInfo getLastPostInfo() {
 		return this.lpi;
+	}
+
+	public void setModeratorList(List moderatorList) {
+		this.moderatorList = moderatorList;
+	}
+	
+	public List getModeratorList() {
+		return this.moderatorList;
 	}
 	
 	/**

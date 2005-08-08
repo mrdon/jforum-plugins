@@ -79,7 +79,7 @@ import net.jforum.util.preferences.ConfigKeys;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.39 2005/07/31 03:52:00 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.40 2005/08/08 10:41:42 andowson Exp $
  */
 public class ForumRepository implements Cacheable
 {
@@ -479,6 +479,7 @@ public class ForumRepository implements Cacheable
 			
 			f.setLastPostInfo(null);
 			f.setLastPostInfo(ForumRepository.getLastPostInfo(f));
+			f.setModeratorList(ForumRepository.getModeratorList(f));
 			c.reloadForum(f);
 			
 			cache.add(FQN, id, c);
@@ -517,6 +518,35 @@ public class ForumRepository implements Cacheable
 	{
 		return getLastPostInfo(getForum(forumId));
 	}
+
+  /**
+   * Gets information about the moderators of some forum.
+   * @param forum The forum to retrieve information
+   * @return
+   */
+  public static List getModeratorList(Forum forum) throws Exception
+  {
+          List l = forum.getModeratorList();
+ 
+          if (l == null) {
+                  l = DataAccessDriver.getInstance().newForumDAO().getModeratorList(forum.getId());
+                  forum.setModeratorList(l);
+          }
+ 
+          return l;
+  }
+ 
+  /**
+   * Gets information about the moderators of some forum.
+   *
+   * @param forumId The forum's id to retrieve information
+   * @return
+   * @throws Exception
+   */
+  public static List getModeratorList(int forumId) throws Exception
+  {
+          return getModeratorList(getForum(forumId));
+  }
 	
 	public static User lastRegisteredUser()
 	{

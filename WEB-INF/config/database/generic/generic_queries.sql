@@ -192,6 +192,26 @@ ForumModel.lastPostInfo = SELECT post_time, p.topic_id, t.topic_replies, post_id
 	AND p.forum_id = ? \
 	AND p.user_id = u.user_id
 
+ForumModel.getModeratorList = SELECT DISTINCT u.user_id, u.username, rv.role_value \
+         FROM jforum_roles r, jforum_role_values rv, jforum_users u, jforum_user_groups ug, jforum_users u2, jforum_roles r2 \
+         WHERE r.role_id = rv.role_id \
+         AND r.name = 'perm_moderation_forums' \
+         AND rv.role_type = 1 \
+         AND rv.role_value = ? \
+         AND r.group_id = ug.group_id \
+         AND ug.user_id = u.user_id \
+         AND u.user_id = u2.user_id \
+         AND r2.name = 'perm_moderation' \
+         AND r2.role_type = 1 \
+         AND r2.group_id = ug.group_id \
+    UNION ( SELECT u.user_id, username, rv.role_value \
+         FROM jforum_roles r, jforum_role_values rv, jforum_users u \
+         WHERE r.role_id = rv.role_id \
+         AND name = 'perm_moderation_forums' \
+         AND rv.role_type = 1 \
+         AND rv.role_value = ? \
+         AND r.user_id = u.user_id )
+
 ForumModel.totalMessages = SELECT COUNT(1) as total_messages FROM jforum_posts
 ForumModel.getMaxPostId = SELECT MAX(post_id) AS post_id FROM jforum_posts WHERE forum_id = ?
 ForumModel.moveTopics = UPDATE jforum_topics SET forum_id = ? WHERE topic_id = ?

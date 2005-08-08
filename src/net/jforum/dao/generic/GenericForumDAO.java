@@ -56,13 +56,14 @@ import net.jforum.dao.TopicDAO;
 import net.jforum.entities.Forum;
 import net.jforum.entities.LastPostInfo;
 import net.jforum.entities.Topic;
+import net.jforum.entities.User;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericForumDAO.java,v 1.7 2005/07/26 03:04:44 rafaelsteil Exp $
+ * @version $Id: GenericForumDAO.java,v 1.8 2005/08/08 10:40:40 andowson Exp $
  */
 public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO 
 {
@@ -344,6 +345,32 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 	public LastPostInfo getLastPostInfo(int forumId) throws Exception 
 	{
 		return this.getLastPostInfo(forumId, true);
+	}
+
+	/**
+	 * @see net.jforum.dao.ForumDAO#getModeratorList(int)
+	 */
+	public List getModeratorList(int forumId) throws Exception
+	{
+		List l = new ArrayList();
+
+		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.getModeratorList"));
+		p.setInt(1, forumId);
+                p.setInt(2, forumId);
+
+		ResultSet rs = p.executeQuery();
+		while (rs.next()) {
+   		        User m = new User();
+			m.setUsername(rs.getString("username"));
+			m.setId(rs.getInt("user_id"));			
+
+                        l.add(m);
+		}
+
+		p.close();
+		rs.close();
+		
+		return l;
 	}
 
 	/**
