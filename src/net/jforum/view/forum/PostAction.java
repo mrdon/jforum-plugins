@@ -90,7 +90,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.91 2005/07/27 17:33:21 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.92 2005/08/09 12:19:25 andowson Exp $
  */
 public class PostAction extends Command {
 	public void list() throws Exception {
@@ -941,8 +941,12 @@ public class PostAction extends Command {
 		{
 			this.response.setContentType(a.getInfo().getMimetype());
 		}
-
-		this.response.setHeader("Content-Disposition", "attachment; filename=\"" + ViewCommon.toUtf8String(a.getInfo().getRealFilename()) + "\";");
+    
+		if (this.request.getHeader("User-Agent").indexOf("Firefox") != -1) {			
+			this.response.setHeader("Content-Disposition", "attachment; filename=\"" + new String(a.getInfo().getRealFilename().getBytes(SystemGlobals.getValue(ConfigKeys.ENCODING)), SystemGlobals.getValue(ConfigKeys.DEFAULT_CONTAINER_ENCODING)) + "\";");
+		} else {
+		  this.response.setHeader("Content-Disposition", "attachment; filename=\"" + ViewCommon.toUtf8String(a.getInfo().getRealFilename()) + "\";");
+	  }
 		this.response.setContentLength((int)a.getInfo().getFilesize());
 		
 		byte[] b = new byte[4096];
