@@ -7,5 +7,4 @@ ${path}
 
 ---
 Best regards, 
-The http://www.jforum.net Team
----
+The JForum.net Team
