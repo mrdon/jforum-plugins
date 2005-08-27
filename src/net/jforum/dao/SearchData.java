@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
 
  * Redistribution and use in source and binary forms, 
@@ -41,11 +41,13 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: SearchData.java,v 1.5 2005/07/26 04:01:17 diegopires Exp $
+ * $Id: SearchData.java,v 1.6 2005/08/27 22:58:14 rafaelsteil Exp $
  */
 package net.jforum.dao;
 
 import java.util.Date;
+
+import net.jforum.util.search.WordSplitter;
 
 /**
  * @author Rafael Steil
@@ -113,7 +115,7 @@ public class SearchData
 			return new String[] {};
 		}
 
-		return this.keywords.split(" ");
+		return WordSplitter.split(this.keywords);
 	}
 	
 	public boolean getUseAllWords()
