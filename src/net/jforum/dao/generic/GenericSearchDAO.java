@@ -61,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericSearchDAO.java,v 1.6 2005/07/26 04:01:21 diegopires Exp $
+ * @version $Id: GenericSearchDAO.java,v 1.7 2005/08/27 15:32:55 rafaelsteil Exp $
  */
 public class GenericSearchDAO implements net.jforum.dao.SearchDAO	
 {
@@ -160,6 +160,8 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 			}
 		}
 		
+		p.close();
+		
 		// [wordName] = { each, post, id }
 		
 		// If seach type is OR, then get all words
@@ -199,13 +201,14 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 		// Search for the ids, inserting them in the helper table 
 		sql = SystemGlobals.getSql("SearchModel.insertTopicsIds");
 		sql = sql.replaceAll(":posts:", sb.toString());
+		
 		p = JForum.getConnection().prepareStatement(sql);
 		p.setString(1, SessionFacade.getUserSession().getSessionId());
+		
 		p.executeUpdate();
 		
 		// Now that we have the topics ids, it's time to make a copy from the 
-		// topics table, to make the search faster ( damn, next version I'll 
-		// remove the search functionality. Look for this code's size )
+		// topics table, to make the search faster
 		this.selectTopicData();
 		
 		p.close();

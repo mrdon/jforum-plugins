@@ -56,7 +56,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.12 2005/07/26 04:01:19 diegopires Exp $
+ * @version $Id: ViewCommon.java,v 1.13 2005/08/27 15:32:53 rafaelsteil Exp $
  */
 public final class ViewCommon
 {
@@ -138,7 +138,8 @@ public final class ViewCommon
 	public static String getForumLink()
 	{
 		String forumLink = SystemGlobals.getValue(ConfigKeys.FORUM_LINK);
-		if (!forumLink.endsWith("/")) {
+		
+		if (forumLink.charAt(forumLink.length() - 1) != '/') {
 			forumLink += "/";
 		}
 		

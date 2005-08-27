@@ -90,7 +90,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.92 2005/08/09 12:19:25 andowson Exp $
+ * @version $Id: PostAction.java,v 1.93 2005/08/27 15:32:55 rafaelsteil Exp $
  */
 public class PostAction extends Command {
 	public void list() throws Exception {
@@ -726,7 +726,7 @@ public class PostAction extends Command {
 			
 			if (!moderate) {
 				DataAccessDriver.getInstance().newUserDAO().incrementPosts(p.getUserId());
-				TopicsCommon.updateBoardStatus(t, postId, firstPost, tm, fm);
+				TopicsCommon.updateBoardStatus(t, postId, firstPost, tm, fm, false);
 				TopicsCommon.notifyUsers(t, tm);
 	
 				String path = this.request.getContextPath() + "/posts/list/";

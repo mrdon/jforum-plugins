@@ -50,6 +50,7 @@ import net.jforum.entities.Post;
 import net.jforum.entities.Topic;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.PostRepository;
+import net.jforum.repository.TopicRepository;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
@@ -60,7 +61,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationAction.java,v 1.14 2005/07/26 04:01:15 diegopires Exp $
+ * @version $Id: ModerationAction.java,v 1.15 2005/08/27 15:32:55 rafaelsteil Exp $
  */
 public class ModerationAction extends AdminCommand
 {
@@ -116,9 +117,12 @@ public class ModerationAction extends AdminCommand
 					Topic t = tm.selectRaw(p.getTopicId());
 					
 					DataAccessDriver.getInstance().newModerationDAO().aprovePost(postId);
-					TopicsCommon.updateBoardStatus(t, postId, t.getFirstPostId() == postId,
-							tm, DataAccessDriver.getInstance().newForumDAO());
 					
+					TopicsCommon.updateBoardStatus(t, postId, t.getFirstPostId() == postId,
+							tm, DataAccessDriver.getInstance().newForumDAO(), true);
+					
+					ForumRepository.reloadForum(t.getForumId());
+					TopicRepository.clearCache(t.getForumId());
 					
 					DataAccessDriver.getInstance().newUserDAO().incrementPosts(p.getUserId());
 					

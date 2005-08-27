@@ -76,7 +76,7 @@ import freemarker.template.SimpleHash;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.14 2005/07/26 04:01:19 diegopires Exp $
+ * @version $Id: TopicsCommon.java,v 1.15 2005/08/27 15:32:53 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
@@ -247,9 +247,10 @@ public class TopicsCommon
 	 * @param lastPostId The id of the last post
 	 * @param tm A TopicModel instance
 	 * @param fm A ForumModel instance
+	 * @param fromModeration TODO
 	 * @throws Exception
 	 */
-	public static void updateBoardStatus(Topic t, int lastPostId, boolean firstPost, TopicDAO tm, ForumDAO fm) throws Exception
+	public static void updateBoardStatus(Topic t, int lastPostId, boolean firstPost, TopicDAO tm, ForumDAO fm, boolean fromModeration) throws Exception
 	{
 		t.setLastPostId(lastPostId);
 		tm.update(t);
@@ -265,8 +266,10 @@ public class TopicsCommon
 		
 		tm.incrementTotalViews(t.getId());
 		
-		ForumRepository.reloadForum(t.getForumId());
-		TopicRepository.clearCache(t.getForumId());
+		if (!fromModeration) {
+			ForumRepository.reloadForum(t.getForumId());
+			TopicRepository.clearCache(t.getForumId());
+		}
 
 		// Updates cache for latest topic
 		TopicRepository.pushTopic(tm.selectById(t.getId()));

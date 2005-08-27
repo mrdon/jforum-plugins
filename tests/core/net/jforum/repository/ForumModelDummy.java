@@ -50,9 +50,15 @@ import net.jforum.entities.LastPostInfo;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumModelDummy.java,v 1.8 2005/07/26 03:05:51 rafaelsteil Exp $
+ * @version $Id: ForumModelDummy.java,v 1.9 2005/08/27 15:32:56 rafaelsteil Exp $
  */
 class ForumModelDummy implements ForumDAO {
+	
+	public List getModeratorList(int forumId) throws Exception
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	/** 
 	 * @see net.jforum.dao.ForumDAO#selectById(int)

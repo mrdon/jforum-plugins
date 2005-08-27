@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- $Id: bb_config.xml,v 1.18 2005/07/19 15:24:49 rafaelsteil Exp $ -->
+<!-- $Id: bb_config.xml,v 1.19 2005/08/27 15:32:57 rafaelsteil Exp $ -->
 <bbConfig>
 	<!-- CODE -->
 	<match name="code">
@@ -184,6 +184,16 @@
 		<replace>
 		<![CDATA[
 		<span style="font-size: $1px; line-height: normal">$2</span>
+		]]>
+		</replace>
+	</match>
+
+	<!-- Google -->
+	<match name="google">
+		<regex>(?i)\[google\](.*?)\[/google\]</regex>
+		<replace>
+		<![CDATA[
+		<a href="http://www.google.com/search?q=$1">$1</a>
 		]]>
 		</replace>
 	</match>

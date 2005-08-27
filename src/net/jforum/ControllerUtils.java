@@ -69,7 +69,7 @@ import freemarker.template.SimpleHash;
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.13 2005/07/26 02:59:12 rafaelsteil Exp $
+ * @version $Id: ControllerUtils.java,v 1.14 2005/08/27 15:32:54 rafaelsteil Exp $
  */
 public class ControllerUtils
 {
@@ -218,8 +218,8 @@ public class ControllerUtils
 				if (!utils.userExists(username)) {
 					HttpSession session = JForum.getRequest().getSession();
 
-					String email = (String) session.getAttribute(ConfigKeys.SSO_EMAIL_ATTRIBUTE);
-					String password = (String) session.getAttribute(ConfigKeys.SSO_PASSWORD_ATTRIBUTE);
+					String email = (String) session.getAttribute(SystemGlobals.getValue(ConfigKeys.SSO_EMAIL_ATTRIBUTE));
+					String password = (String) session.getAttribute(SystemGlobals.getValue(ConfigKeys.SSO_PASSWORD_ATTRIBUTE));
 
 					if (email == null) {
 						email = SystemGlobals.getValue(ConfigKeys.SSO_DEFAULT_EMAIL);
@@ -278,7 +278,6 @@ public class ControllerUtils
 
 			// If SSO, then check if the session is valid
 			if (!sso.isSessionValid(userSession, JForum.getRequest())) {
-				JForum.getRequest().getSession().invalidate();
 				SessionFacade.remove(userSession.getSessionId());
 				refreshSession();
 			}
