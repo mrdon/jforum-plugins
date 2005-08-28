@@ -48,7 +48,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.71 2005/07/31 04:07:34 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.72 2005/08/28 17:12:28 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -82,6 +82,7 @@ public class ConfigKeys {
 	public static final String DATABASE_MYSQL_UNICODE = "mysql.unicode";
 	public static final String DATABASE_MYSQL_ENCODING = "mysql.encoding";
 	public static final String DATABASE_AUTO_KEYS = "database.support.autokeys";
+	public static final String DATABASE_SUPPORT_SUBQUERIES = "database.support_subqueries";
 	
 	public static final String AUTHENTICATION_TYPE = "authentication.type";
 	public static final String SSO_IMPLEMENTATION = "sso.implementation";
@@ -248,7 +249,6 @@ public class ConfigKeys {
     public static final String MAIL_SUMMARY_FILE = "mail.summary.weekly.messageFile";
     public static final String SUMMARY_DAYS_BEFORE = "summary.days.before";
     public static final String SUMMARY_IS_ENABLED = "summary.enabled";
-    
 	
 	private ConfigKeys() {}
 }

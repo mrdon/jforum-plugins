@@ -48,7 +48,6 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -90,10 +89,12 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.93 2005/08/27 15:32:55 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.94 2005/08/28 17:12:29 rafaelsteil Exp $
  */
-public class PostAction extends Command {
-	public void list() throws Exception {
+public class PostAction extends Command 
+{
+	public void list() throws Exception 
+	{
 		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
@@ -133,8 +134,7 @@ public class PostAction extends Command {
 			canEdit = true;
 		}
 
-		Map usersMap = new HashMap();
-		List helperList = PostCommon.topicPosts(pm, um, usersMap, canEdit, us.getUserId(), topic.getId(), start, count);
+		List helperList = PostCommon.topicPosts(pm, canEdit, us.getUserId(), topic.getId(), start, count);
 		
 		// Ugly assumption:
 		// Is moderation pending for the topic?
@@ -169,7 +169,7 @@ public class PostAction extends Command {
 		this.context.put("rank", new RankingRepository());
 		this.context.put("posts", helperList);
 		this.context.put("forum", ForumRepository.getForum(topic.getForumId()));
-		this.context.put("users", usersMap);
+		this.context.put("users", tm.topicPosters(topic.getId()));
 		this.context.put("topicId", new Integer(topicId));
 		this.context.put("anonymousPosts", SecurityRepository.canAccess(SecurityConstants.PERM_ANONYMOUS_POST, 
 				Integer.toString(topic.getForumId())));
@@ -208,8 +208,8 @@ public class PostAction extends Command {
 		int count = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 		int start = ViewCommon.getStartPage();
 
-		Map usersMap = new HashMap();
-		List helperList = PostCommon.topicPosts(pm, um, usersMap, false, userId, topic.getId(), start, count);
+		Map usersMap = tm.topicPosters(topic.getId());
+		List helperList = PostCommon.topicPosts(pm, false, userId, topic.getId(), start, count);
 		Collections.reverse(helperList);
 
 		this.setTemplateName(SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR) + "/empty.htm");

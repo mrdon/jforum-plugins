@@ -250,6 +250,13 @@ TopicModel.selectAllByForumByLimit = SELECT t.*, u.username AS posted_by_usernam
 	ORDER BY t.topic_type DESC, p2.post_time DESC, t.topic_last_post_id DESC \
 	LIMIT ?, ?
 
+TopicModel.topicPosters = SELECT user_id, username, user_karma, user_avatar, user_allowavatar, user_regdate, user_posts, user_icq, \
+	user_from, user_email, rank_id, user_sig, user_attachsig, user_viewemail, user_msnm, user_yim, user_website, user_sig, user_aim \
+	FROM jforum_users \
+	WHERE user_id IN (:ids:)
+
+TopicModel.distinctPosters = SELECT DISTINCT user_id FROM jforum_posts WHERE topic_id = ?
+
 TopicModel.selectTopicTitlesByIds SELECT topic_id, topic_title FROM jforum_topics WHERE topic_id IN (:ids:)
 TopicModel.selectLastN = SELECT topic_title, topic_time, topic_id, topic_type FROM jforum_topics ORDER BY topic_time DESC LIMIT ?
 TopicModel.setModerationStatus = UPDATE jforum_topics SET moderated = ? WHERE forum_id = ?

@@ -44,6 +44,7 @@ package net.jforum.dao;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import net.jforum.entities.Topic;
 
@@ -55,7 +56,7 @@ import net.jforum.entities.Topic;
  * select some specific data.
  *
  * @author Rafael Steil
- * @version $Id: TopicDAO.java,v 1.5 2005/07/26 03:04:30 rafaelsteil Exp $
+ * @version $Id: TopicDAO.java,v 1.6 2005/08/28 17:12:27 rafaelsteil Exp $
  */
 public interface TopicDAO 
 {
@@ -319,4 +320,14 @@ public interface TopicDAO
 	 * @throws Exception
 	 */
 	public void setModerationStatusByTopic(int topicId, boolean status) throws Exception;
+
+	/**
+	 * Get all unique posters of some topic
+	 * @param topicId
+	 * @return A Map instance with all topic posts. Key is the userid, 
+	 * value is an {@link net.jforum.entities.User} instance with minimum
+	 * data filled
+	 * @throws Exception
+	 */
+	public Map topicPosters(int topicId) throws Exception;
 }

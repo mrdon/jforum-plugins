@@ -47,7 +47,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -55,7 +54,6 @@ import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.PostDAO;
-import net.jforum.dao.UserDAO;
 import net.jforum.entities.Post;
 import net.jforum.entities.Smilie;
 import net.jforum.entities.User;
@@ -71,7 +69,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.21 2005/07/26 03:05:56 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.22 2005/08/28 17:12:29 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -264,14 +262,6 @@ public class PostCommon
 		return p;
 	}
 
-	public static void addToTopicPosters(int userId, Map usersMap, UserDAO um) throws Exception
-	{
-		Integer posterId = new Integer(userId);
-		if (!usersMap.containsKey(posterId)) {
-			usersMap.put(posterId, PostCommon.getUserForDisplay(userId));
-		}
-	}
-
 	public static User getUserForDisplay(int userId) throws Exception
 	{
 		User u = DataAccessDriver.getInstance().newUserDAO().selectById(userId);
@@ -285,8 +275,7 @@ public class PostCommon
 		return u;
 	}
 
-	public static List topicPosts(PostDAO pm, UserDAO um, Map usersMap, boolean canEdit, int userId, int topicId,
-			int start, int count) throws Exception
+	public static List topicPosts(PostDAO pm, boolean canEdit, int userId, int topicId, int start, int count) throws Exception
 	{
 		List posts = null;
 		boolean needPrepare = true;
@@ -317,7 +306,6 @@ public class PostCommon
 				p.setCanEdit(true);
 			}
 
-			PostCommon.addToTopicPosters(p.getUserId(), usersMap, um);
 			helperList.add(needPrepare ? PostCommon.preparePostForDisplay(p) : p);
 		}
 

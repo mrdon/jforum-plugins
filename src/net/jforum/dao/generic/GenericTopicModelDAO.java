@@ -59,6 +59,7 @@ import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
 import net.jforum.dao.PostDAO;
+import net.jforum.entities.KarmaStatus;
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.util.preferences.ConfigKeys;
@@ -66,7 +67,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTopicModelDAO.java,v 1.5 2005/07/26 03:04:46 rafaelsteil Exp $
+ * @version $Id: GenericTopicModelDAO.java,v 1.6 2005/08/28 17:12:26 rafaelsteil Exp $
  */
 public class GenericTopicModelDAO extends AutoKeys implements net.jforum.dao.TopicDAO 
 {
@@ -692,5 +693,76 @@ public class GenericTopicModelDAO extends AutoKeys implements net.jforum.dao.Top
 		p.close();
 		
 		return l;
+	}
+	
+	/**
+	 * @see net.jforum.model.UserModel#topicPosters(int)
+	 */
+	public Map topicPosters(int topicId) throws Exception
+	{
+		Map m = new HashMap();
+		PreparedStatement p;
+		
+		StringBuffer sql = new StringBuffer(SystemGlobals.getSql("TopicModel.topicPosters"));
+		
+		if (SystemGlobals.getBoolValue(ConfigKeys.DATABASE_SUPPORT_SUBQUERIES)) {
+			int index = sql.indexOf(":ids:");
+			sql.replace(index, index + 5, SystemGlobals.getSql("TopicModel.distinctPosters"));
+			
+			p = JForum.getConnection().prepareStatement(sql.toString());
+			p.setInt(1, topicId);
+		}
+		else {
+			p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("TopicModel.distinctPosters"));
+			p.setInt(1, topicId);
+			
+			ResultSet rs = p.executeQuery();
+			
+			StringBuffer sb = new StringBuffer();
+			
+			while (rs.next()) {
+				sb.append(rs.getInt("user_id")).append(",");
+			}
+			
+			rs.close();
+			p.close();
+			
+			int index = sql.indexOf(":ids:");
+			sql.replace(index, index + 5, sb.substring(0, sb.length() - 1));
+			
+			p = JForum.getConnection().prepareStatement(sql.toString());
+		}
+		
+		ResultSet rs = p.executeQuery();
+		
+		while (rs.next()) {
+			User u = new User();
+			
+			u.setId(rs.getInt("user_id"));
+			u.setUsername(rs.getString("username"));
+			u.setKarma(new KarmaStatus(u.getId(), rs.getDouble("user_karma")));
+			u.setAvatar(rs.getString("user_avatar"));
+			u.setAvatarEnabled(rs.getInt("user_allowavatar") == 1);
+			u.setRegistrationDate(rs.getTimestamp("user_regdate"));
+			u.setTotalPosts(rs.getInt("user_posts"));
+			u.setFrom(rs.getString("user_from"));
+			u.setEmail(rs.getString("user_email"));
+			u.setRankId(rs.getInt("rank_id"));
+			u.setViewEmailEnabled(rs.getInt("user_viewemail") == 1);
+			u.setIcq(rs.getString("user_icq"));
+			u.setAttachSignatureEnabled(rs.getInt("user_attachsig") == 1);
+			u.setMsnm(rs.getString("user_msnm"));
+			u.setYim(rs.getString("user_yim"));
+			u.setWebSite(rs.getString("user_website"));
+			u.setAim(rs.getString("user_aim"));
+			u.setSignature(rs.getString("user_sig"));
+			
+			m.put(new Integer(u.getId()), u);
+		}
+		
+		rs.close();
+		p.close();
+		
+		return m;
 	}
 }
