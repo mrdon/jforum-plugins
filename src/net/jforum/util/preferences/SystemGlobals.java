@@ -69,7 +69,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author Pieter Olivier
- * @version $Id: SystemGlobals.java,v 1.24 2005/07/26 03:05:12 rafaelsteil Exp $
+ * @version $Id: SystemGlobals.java,v 1.25 2005/08/29 02:13:22 rafaelsteil Exp $
  */
 public class SystemGlobals implements VariableStore
 {
@@ -260,6 +260,7 @@ public class SystemGlobals implements VariableStore
 	public String getVariableValue(String field)
 	{
 		String preExpansion = globals.installation.getProperty(field);
+		
 		if (preExpansion == null) {
 			preExpansion = this.defaults.getProperty(field);
 
