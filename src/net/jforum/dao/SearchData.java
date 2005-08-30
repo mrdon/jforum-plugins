@@ -41,13 +41,11 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: SearchData.java,v 1.6 2005/08/27 22:58:14 rafaelsteil Exp $
+ * $Id: SearchData.java,v 1.7 2005/08/30 21:44:01 rafaelsteil Exp $
  */
 package net.jforum.dao;
 
 import java.util.Date;
-
-import net.jforum.util.search.WordSplitter;
 
 /**
  * @author Rafael Steil
@@ -115,7 +113,7 @@ public class SearchData
 			return new String[] {};
 		}
 
-		return WordSplitter.split(this.keywords);
+		return this.keywords.split(" ");
 	}
 	
 	public boolean getUseAllWords()

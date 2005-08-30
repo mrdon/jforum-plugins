@@ -90,8 +90,6 @@ PrivateMessagesModel.lastGeneratedPmId = SELECT CURRVAL('jforum_privmsgs_seq')
 # ############
 # SearchModel
 # ############
-SearchModel.lastGeneratedWordId = SELECT CURRVAL('jforum_search_words_seq')
-
 SearchModel.cleanSearchResults = DELETE FROM jforum_search_results WHERE session = ? OR search_time < (NOW() - INTERVAL '1 HOUR')
 SearchModel.cleanSearchTopics = DELETE FROM jforum_search_topics WHERE session = ? OR search_time < (NOW() - INTERVAL '1 HOUR')
 

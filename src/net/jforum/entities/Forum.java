@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -45,11 +45,14 @@ package net.jforum.entities;
 import java.io.Serializable;
 import java.util.List;
 
+import net.jforum.exceptions.DatabaseException;
+import net.jforum.repository.ForumRepository;
+
 /**
  * Represents a specific forum.
  * 
  * @author Rafael Steil
- * @version $Id: Forum.java,v 1.9 2005/08/08 10:38:11 andowson Exp $
+ * @version $Id: Forum.java,v 1.10 2005/08/30 21:44:03 rafaelsteil Exp $
  */
 public class Forum implements Serializable
 {
@@ -85,7 +88,7 @@ public class Forum implements Serializable
 		this.totalTopics = f.getTotalTopics();
 		this.unread = f.getUnread();
 		this.lpi = f.getLastPostInfo();
-                this.moderatorList = f.getModeratorList();
+		this.moderatorList = f.getModeratorList();
 	}
 	
 	public void setLastPostInfo(LastPostInfo lpi) {
@@ -100,7 +103,19 @@ public class Forum implements Serializable
 		this.moderatorList = moderatorList;
 	}
 	
-	public List getModeratorList() {
+	public List getModeratorList() 
+	{
+		if (this.moderatorList == null) {
+			synchronized (this) {
+				try {
+					this.moderatorList = ForumRepository.getModeratorList(this.id);
+				}
+				catch (Exception e) {
+					throw new DatabaseException(e);
+				}
+			}
+		}
+		
 		return this.moderatorList;
 	}
 	
@@ -286,5 +301,4 @@ public class Forum implements Serializable
 	public String toString() {
 		return "[" + this.name + ", id=" + this.id + ", order=" + this.order + "]";
 	}
-
 }

@@ -79,7 +79,7 @@ import net.jforum.util.preferences.ConfigKeys;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.40 2005/08/08 10:41:42 andowson Exp $
+ * @version  $Id: ForumRepository.java,v 1.41 2005/08/30 21:44:05 rafaelsteil Exp $
  */
 public class ForumRepository implements Cacheable
 {
@@ -118,15 +118,16 @@ public class ForumRepository implements Cacheable
 			CategoryDAO cm,
 			ConfigDAO configModel) throws Exception
 	{
+		instance = new ForumRepository();
+		
 		if (cache.get(FQN, LOADED) == null) {
-			instance = new ForumRepository();
-			
 			instance.loadCategories(cm);
 			instance.loadForums(fm);
 			instance.loadMostUsersEverOnline(configModel);
 			instance.loadUsersInfo();
 			
 			Integer i = (Integer)cache.get(FQN, TOTAL_MESSAGES);
+			
 			if (i == null) {
 				cache.add(FQN, TOTAL_MESSAGES, new Integer(0));
 			}
@@ -479,7 +480,6 @@ public class ForumRepository implements Cacheable
 			
 			f.setLastPostInfo(null);
 			f.setLastPostInfo(ForumRepository.getLastPostInfo(f));
-			f.setModeratorList(ForumRepository.getModeratorList(f));
 			c.reloadForum(f);
 			
 			cache.add(FQN, id, c);
@@ -519,34 +519,15 @@ public class ForumRepository implements Cacheable
 		return getLastPostInfo(getForum(forumId));
 	}
 
-  /**
-   * Gets information about the moderators of some forum.
-   * @param forum The forum to retrieve information
-   * @return
-   */
-  public static List getModeratorList(Forum forum) throws Exception
-  {
-          List l = forum.getModeratorList();
- 
-          if (l == null) {
-                  l = DataAccessDriver.getInstance().newForumDAO().getModeratorList(forum.getId());
-                  forum.setModeratorList(l);
-          }
- 
-          return l;
-  }
- 
-  /**
-   * Gets information about the moderators of some forum.
-   *
-   * @param forumId The forum's id to retrieve information
-   * @return
-   * @throws Exception
-   */
-  public static List getModeratorList(int forumId) throws Exception
-  {
-          return getModeratorList(getForum(forumId));
-  }
+	/**
+	 * Gets information about the moderators of some forum.
+	 * @param forumId The forum to retrieve information
+	 * @return
+	 */
+	public static List getModeratorList(int forumId) throws Exception
+	{
+		return DataAccessDriver.getInstance().newForumDAO().getModeratorList(forumId);
+	}
 	
 	public static User lastRegisteredUser()
 	{

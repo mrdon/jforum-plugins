@@ -88,8 +88,6 @@ PrivateMessagesModel.lastGeneratedPmId = SELECT max(privmsgs_id) from jforum_pri
 # ############
 # SearchModel
 # ############
-SearchModel.lastGeneratedWordId = select MAX(word_id) from jforum_search_words
-
 SearchModel.cleanSearchResults = DELETE FROM jforum_search_results WHERE session = ? OR datediff('hh',search_time,current_timestamp) < 1 
 SearchModel.cleanSearchTopics = DELETE FROM jforum_search_topics WHERE session = ? OR datediff('hh',search_time,current_timestamp) < 1 
 

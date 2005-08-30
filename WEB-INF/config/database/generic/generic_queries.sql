@@ -325,7 +325,8 @@ SearchModel.searchBase = SELECT t.*, u.username AS posted_by_username, u.user_id
 	:criterias: \
 	ORDER BY :orderByField: :orderBy:
 	
-SearchModel.insertWords = INSERT INTO jforum_search_words ( word_hash, word ) VALUES (?, ?)
+SearchModel.insertWords = INSERT INTO jforum_search_words (word, word_hash) VALUES (?, ?)
+SearchModel.selectExistingWords = SELECT word_id, word FROM jforum_search_words WHERE word IN (#IN#)
 
 SearchModel.searchByWord = SELECT post_id FROM jforum_search_wordmatch wm, jforum_search_words w \
 	WHERE wm.word_id = w.word_id \
@@ -354,9 +355,9 @@ SearchModel.searchByTime = INSERT INTO jforum_search_results (topic_id, session,
 	WHERE t.topic_id = p.topic_id \
 	AND p.post_time > ?
 
-SearchModel.associateWordToPost = INSERT INTO jforum_search_wordmatch (post_id, word_id, title_match) VALUES (?, ?, ?)
-SearchModel.searchExistingWord = SELECT w.word_id FROM jforum_search_words w WHERE w.word_hash = ?
-SearchModel.searchExistingAssociation = SELECT post_id FROM jforum_search_wordmatch WHERE word_id = ? AND post_id = ?
+SearchModel.associateWordToPost = INSERT INTO jforum_search_wordmatch (post_id, word_id, title_match) \
+	SELECT #ID#, word_id, 0 FROM jforum_search_words WHERE word IN (#IN#)
+
 SearchModel.maxPostIdUntilNow = SELECT MAX(post_id) FROM jforum_posts WHERE post_time < ?
 SearchModel.lastIndexedPostId = SELECT MAX(post_id) FROM jforum_search_wordmatch
 SearchModel.howManyToIndex = SELECT COUNT(1) FROM jforum_posts WHERE post_time < ? AND post_id > ?
