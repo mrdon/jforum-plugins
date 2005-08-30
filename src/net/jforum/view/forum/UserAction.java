@@ -76,7 +76,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.48 2005/07/26 04:01:13 diegopires Exp $
+ * @version $Id: UserAction.java,v 1.49 2005/08/30 15:27:11 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -323,13 +323,15 @@ public class UserAction extends Command
 				SessionFacade.remove(userSession.getSessionId());
 				
 				userSession.dataToUser(user);
+				
+				UserSession currentUs = SessionFacade.getUserSession(sessionId);
 
 				// Check if the user is returning to the system
 				// before its last session has expired ( hypothesis )
-				if (sessionId != null) {
+				if (sessionId != null && currentUs != null) {
 					// Write its old session data
 					SessionFacade.storeSessionData(sessionId, JForum.getConnection());
-					tmpUs = new UserSession(SessionFacade.getUserSession(sessionId));
+					tmpUs = new UserSession(currentUs);
 					SessionFacade.remove(sessionId);
 				}
 				else {
