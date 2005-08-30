@@ -157,7 +157,7 @@ CREATE TABLE jforum_privmsgs (
   privmsgs_id INT NOT NULL auto_increment,
   privmsgs_type tinyint(4) NOT NULL default '0',
   privmsgs_subject varchar(255) NOT NULL default '',
-  privmsgs_from_useridINT NOT NULL default '0',
+  privmsgs_from_userid INT NOT NULL default '0',
   privmsgs_to_userid INT NOT NULL default '0',
   privmsgs_date datetime default null,
   privmsgs_ip varchar(8) NOT NULL default '',
