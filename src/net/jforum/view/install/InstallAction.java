@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -83,7 +83,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.34 2005/07/26 04:24:16 diegopires Exp $
+ * @version $Id: InstallAction.java,v 1.35 2005/09/01 14:45:42 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {

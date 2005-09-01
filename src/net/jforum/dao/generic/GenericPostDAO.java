@@ -60,7 +60,7 @@ import net.jforum.util.search.SearchFacade;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericPostDAO.java,v 1.5 2005/07/26 03:04:42 rafaelsteil Exp $
+ * @version $Id: GenericPostDAO.java,v 1.6 2005/09/01 14:45:42 rafaelsteil Exp $
  */
 public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO 
 {
@@ -192,6 +192,8 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 	{
 		this.updatePostsTable(post);
 		this.updatePostsTextTable(post);
+		
+		 SearchFacade.index(post); 
 	}
 	
 	protected void updatePostsTextTable(Post post) throws Exception
