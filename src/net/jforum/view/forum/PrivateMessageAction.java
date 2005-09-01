@@ -65,7 +65,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.26 2005/07/26 04:01:14 diegopires Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.27 2005/09/01 20:54:47 rafaelsteil Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -281,6 +281,7 @@ public class PrivateMessageAction extends Command
 		// to the current user
 		UserSession us = SessionFacade.getUserSession();
 		int userId = us.getUserId();
+		
 		if (pm.getToUser().getId() == userId || pm.getFromUser().getId() == userId) {
 			pm.getPost().setText(PostCommon.preparePostForDisplay(pm.getPost()).getText());
 			
@@ -292,9 +293,7 @@ public class PrivateMessageAction extends Command
 			}
 			
 			User u = pm.getFromUser();
-			u.setSignature(PostCommon.processText(u.getSignature()));
-            u.setSignature(PostCommon.processSmilies(u.getSignature(), 
-            		SmiliesRepository.getSmilies()));
+			ViewCommon.prepareUserSignature(u);
             
 			this.context.put("pm", pm);
 			this.setTemplateName(TemplateKeys.PM_READ);

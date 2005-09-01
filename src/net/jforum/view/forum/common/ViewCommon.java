@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -47,8 +47,10 @@ import java.util.Map;
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
+import net.jforum.entities.User;
 import net.jforum.exceptions.RequestEmptyException;
 import net.jforum.repository.ModulesRepository;
+import net.jforum.repository.SmiliesRepository;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
@@ -56,7 +58,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.13 2005/08/27 15:32:53 rafaelsteil Exp $
+ * @version $Id: ViewCommon.java,v 1.14 2005/09/01 20:54:46 rafaelsteil Exp $
  */
 public final class ViewCommon
 {
@@ -223,5 +225,14 @@ public final class ViewCommon
 		}
 	
 		return sb.toString();
+	}
+
+	public static void prepareUserSignature(User u) throws Exception
+	{
+		if (u.getSignature() != null) {
+			u.setSignature(u.getSignature().replaceAll("\n", "<br>"));
+			u.setSignature(PostCommon.processText(u.getSignature()));
+			u.setSignature(PostCommon.processSmilies(u.getSignature(), SmiliesRepository.getSmilies()));
+		}
 	}
 }

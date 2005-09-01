@@ -52,11 +52,9 @@ import java.util.regex.Pattern;
 
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
-import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.PostDAO;
 import net.jforum.entities.Post;
 import net.jforum.entities.Smilie;
-import net.jforum.entities.User;
 import net.jforum.repository.BBCodeRepository;
 import net.jforum.repository.PostRepository;
 import net.jforum.repository.SecurityRepository;
@@ -69,7 +67,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.22 2005/08/28 17:12:29 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.23 2005/09/01 20:54:46 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -260,19 +258,6 @@ public class PostCommon
 		}
 
 		return p;
-	}
-
-	public static User getUserForDisplay(int userId) throws Exception
-	{
-		User u = DataAccessDriver.getInstance().newUserDAO().selectById(userId);
-		
-		if (u.getSignature() != null) {
-			u.setSignature(u.getSignature().replaceAll("\n", "<br>"));
-			u.setSignature(PostCommon.processText(u.getSignature()));
-			u.setSignature(PostCommon.processSmilies(u.getSignature(), SmiliesRepository.getSmilies()));
-		}
-		
-		return u;
 	}
 
 	public static List topicPosts(PostDAO pm, boolean canEdit, int userId, int topicId, int start, int count) throws Exception

@@ -40,7 +40,7 @@
  * The JForum Project
  * http://www.jforum.net 
  * 
- * $Id: User.java,v 1.16 2005/07/26 03:04:49 rafaelsteil Exp $
+ * $Id: User.java,v 1.17 2005/09/01 20:54:48 rafaelsteil Exp $
  */
 package net.jforum.entities;
 
@@ -848,6 +848,6 @@ public class User implements Serializable
 	 */	
 	public boolean isOnline()
 	{
-		return SessionFacade.isLogged();
+		return (SessionFacade.isUserInSession(this.id) != null);
 	}
 }

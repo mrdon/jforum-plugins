@@ -60,15 +60,16 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.27 2005/07/26 03:04:40 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.28 2005/09/01 20:54:47 rafaelsteil Exp $
  */
 public class SessionFacade implements Cacheable
 {
 	private static final Logger logger = Logger.getLogger(SessionFacade.class);
 	
 	private static final String FQN = "sessions";
-	private static final String FQN_LOGGED = "logged";
-	private static final String FQN_COUNT = "count";
+	private static final String FQN_LOGGED = FQN + "/logged";
+	private static final String FQN_COUNT = FQN + "/count";
+	private static final String FQN_USER_ID = FQN + "/userId";
 	private static final String ANONYMOUS_COUNT = "anonymousCount";
 	private static final String LOGGED_COUNT = "loggedCount";
 	
@@ -125,6 +126,7 @@ public class SessionFacade implements Cacheable
 				if (us.getUserId() != SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
 					changeUserCount(LOGGED_COUNT, true);
 					cache.add(FQN_LOGGED, us.getSessionId(), us);
+					cache.add(FQN_USER_ID, Integer.toString(us.getUserId()), us.getSessionId());
 				}
 				else {
 					// TODO: check the anonymous IP constraint
@@ -198,6 +200,7 @@ public class SessionFacade implements Cacheable
 			
 			if (us != null) {
 				cache.remove(FQN_LOGGED, sessionId);
+				cache.remove(FQN_USER_ID, Integer.toString(us.getUserId()));
 				
 				if (us.getUserId() != SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
 					changeUserCount(LOGGED_COUNT, false);
@@ -260,8 +263,11 @@ public class SessionFacade implements Cacheable
 	public static void clear()
 	{
 		synchronized (FQN) {
-			cache.remove(FQN);
 			cache.add(FQN, new HashMap());
+			cache.add(FQN_COUNT, LOGGED_COUNT, new Integer(0));
+			cache.add(FQN_COUNT, ANONYMOUS_COUNT, new Integer(0));
+			cache.remove(FQN_LOGGED);
+			cache.remove(FQN_USER_ID);
 		}
 	}
 	
@@ -336,19 +342,7 @@ public class SessionFacade implements Cacheable
 	 */
 	public static String isUserInSession(int userId)
 	{
-		int aid = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
-		
-		synchronized (FQN) {
-			for (Iterator iter = cache.getValues(FQN).iterator(); iter.hasNext(); ) {
-				UserSession us = (UserSession)iter.next();
-				
-				if (us.getUserId() != aid && us.getUserId() == userId) {
-					return us.getSessionId();
-				}
-			}
-		}
-		
-		return null;
+		return (String)cache.get(FQN_USER_ID, Integer.toString(userId));
 	}
 	
 	/**

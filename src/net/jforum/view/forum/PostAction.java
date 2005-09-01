@@ -48,6 +48,7 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -89,7 +90,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.94 2005/08/28 17:12:29 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.95 2005/09/01 20:54:47 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -169,7 +170,14 @@ public class PostAction extends Command
 		this.context.put("rank", new RankingRepository());
 		this.context.put("posts", helperList);
 		this.context.put("forum", ForumRepository.getForum(topic.getForumId()));
-		this.context.put("users", tm.topicPosters(topic.getId()));
+		
+		Map topicPosters = tm.topicPosters(topic.getId());
+		
+		for (Iterator iter = topicPosters.values().iterator(); iter.hasNext(); ) {
+			ViewCommon.prepareUserSignature((User)iter.next());
+		}
+		
+		this.context.put("users", topicPosters);
 		this.context.put("topicId", new Integer(topicId));
 		this.context.put("anonymousPosts", SecurityRepository.canAccess(SecurityConstants.PERM_ANONYMOUS_POST, 
 				Integer.toString(topic.getForumId())));
@@ -325,7 +333,8 @@ public class PostAction extends Command
 		this.edit(false, null);
 	}
 
-	private void edit(boolean preview, Post p) throws Exception {
+	private void edit(boolean preview, Post p) throws Exception 
+	{
 		int userId = SessionFacade.getUserSession().getUserId();
 		int aId = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 		boolean canAccess = false;
@@ -389,14 +398,18 @@ public class PostAction extends Command
 			this.context.put("message", I18n.getMessage("CannotEditPost"));
 		}
 
-		User u = PostCommon.getUserForDisplay(userId);
+		UserDAO udao = DataAccessDriver.getInstance().newUserDAO();
+		User u = udao.selectById(userId);
+		ViewCommon.prepareUserSignature(u);
 
 		if (preview) {
 			u.setNotifyOnMessagesEnabled(this.request.getParameter("notify") != null);
 			
 			if (u.getId() != p.getUserId()) {
 				// Probably a moderator is editing the message
-				this.context.put("previewUser", PostCommon.getUserForDisplay(p.getUserId()));
+				User previewUser = udao.selectById(p.getUserId());
+				ViewCommon.prepareUserSignature(previewUser);
+				this.context.put("previewUser", previewUser);
 			}
 		}
 
