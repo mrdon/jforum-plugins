@@ -50,16 +50,18 @@ UserModel.selectById = SELECT COUNT(pm.privmsgs_to_userid) AS private_messages, 
 	WHERE u.user_id = ? \
 	GROUP BY pm.privmsgs_to_userid
 
-UserModel.selectAll = SELECT user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail FROM jforum_users ORDER BY username
+UserModel.selectAll = SELECT user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, \
+	user_website, user_viewemail FROM jforum_users ORDER BY user_id
 
 UserModel.selectAllByLimit = SELECT user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail \
-	FROM jforum_users ORDER BY username LIMIT ?, ?
+	FROM jforum_users ORDER BY user_id LIMIT ?, ?
 
-UserModel.selectAllByGroup = SELECT user_email, u.user_id, user_regdate, username, deleted \
+UserModel.selectAllByGroup = SELECT user_email, u.user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, \
+	user_website, user_viewemail \
 	FROM jforum_users u, jforum_user_groups ug \
 	WHERE u.user_id = ug.user_id \
 	AND ug.group_id = ? \
-	ORDER BY username LIMIT ?, ?
+	ORDER BY user_id LIMIT ?, ?
 
 UserModel.totalUsersByGroup = SELECT COUNT(1) FROM jforum_user_groups WHERE group_id = ?
 UserModel.deletedStatus = UPDATE jforum_users SET deleted = ? WHERE user_id = ?
@@ -192,25 +194,20 @@ ForumModel.lastPostInfo = SELECT post_time, p.topic_id, t.topic_replies, post_id
 	AND p.forum_id = ? \
 	AND p.user_id = u.user_id
 
-ForumModel.getModeratorList = ( SELECT DISTINCT u.user_id, u.username, rv.role_value \
-         FROM jforum_roles r, jforum_role_values rv, jforum_users u, jforum_user_groups ug, jforum_users u2, jforum_roles r2 \
-         WHERE r.role_id = rv.role_id \
-         AND r.name = 'perm_moderation_forums' \
-         AND rv.role_type = 1 \
-         AND rv.role_value = ? \
-         AND r.group_id = ug.group_id \
-         AND ug.user_id = u.user_id \
-         AND u.user_id = u2.user_id \
-         AND r2.name = 'perm_moderation' \
-         AND r2.role_type = 1 \
-         AND r2.group_id = ug.group_id ) \
-    UNION ( SELECT u.user_id, username, rv.role_value \
-         FROM jforum_roles r, jforum_role_values rv, jforum_users u \
-         WHERE r.role_id = rv.role_id \
-         AND name = 'perm_moderation_forums' \
-         AND rv.role_type = 1 \
-         AND rv.role_value = ? \
-         AND r.user_id = u.user_id )
+ForumModel.getModeratorList = SELECT g.group_id AS id, g.group_name AS name, 2 AS mtype \
+		FROM jforum_groups g, jforum_roles r, jforum_role_values rv \
+		WHERE g.group_id = r.group_id \
+		AND r.role_id = rv.role_id \
+		AND r.name = 'perm_moderation_forums' \
+		AND rv.role_value = ? \
+		AND rv.role_type = 1 \
+	UNION SELECT u.user_id AS id, u.username AS name, 1 as mtype \
+		FROM jforum_users u, jforum_roles r, jforum_role_values rv \
+		WHERE u.user_id = r.user_id \
+		AND r.role_id = rv.role_id \
+		AND r.name = 'perm_moderation_forums' \
+		AND rv.role_value = ? \
+		AND rv.role_type = 1
 
 ForumModel.totalMessages = SELECT COUNT(1) as total_messages FROM jforum_posts
 ForumModel.getMaxPostId = SELECT MAX(post_id) AS post_id FROM jforum_posts WHERE forum_id = ?

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms,
@@ -55,15 +55,15 @@ import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.TopicDAO;
 import net.jforum.entities.Forum;
 import net.jforum.entities.LastPostInfo;
+import net.jforum.entities.ModeratorInfo;
 import net.jforum.entities.Topic;
-import net.jforum.entities.User;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericForumDAO.java,v 1.8 2005/08/08 10:40:40 andowson Exp $
+ * @version $Id: GenericForumDAO.java,v 1.9 2005/09/02 00:33:19 rafaelsteil Exp $
  */
 public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO 
 {
@@ -354,21 +354,25 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 	{
 		List l = new ArrayList();
 
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.getModeratorList"));
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("ForumModel.getModeratorList"));
 		p.setInt(1, forumId);
-                p.setInt(2, forumId);
+		p.setInt(2, forumId);
 
 		ResultSet rs = p.executeQuery();
+		
 		while (rs.next()) {
-   		        User m = new User();
-			m.setUsername(rs.getString("username"));
-			m.setId(rs.getInt("user_id"));			
-
-                        l.add(m);
+			ModeratorInfo mi = new ModeratorInfo();
+			
+			mi.setType(rs.getInt("mtype"));
+			mi.setId(rs.getInt("id"));
+			mi.setName(rs.getString("name"));
+			
+			l.add(mi);
 		}
-
-		p.close();
+		
 		rs.close();
+		p.close();
 		
 		return l;
 	}

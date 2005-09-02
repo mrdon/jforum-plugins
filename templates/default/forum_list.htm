@@ -49,12 +49,22 @@
 						</td>
 						<td class="row1" width="100%" height="50">
 							<span class="forumlink"><a class="forumlink" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name}</a></span><br />
-							<span class="genmed">${forum.description}<br />
-                                                        ${I18n.getMessage("ForumIndex.moderators")}
-                                                        <#list fir.getModeratorList(forum.id) as moderator>
-                                                        <a href="${JForumContext.encodeURL("/user/profile/${moderator.id}")}"><span>${moderator.username}</span></a>&nbsp;
-                                                        </#list>
-                                                        </span><br />		
+							<span class="genmed">
+								${forum.description}<br />
+								
+								${I18n.getMessage("ForumIndex.moderators")}
+								
+								<#assign moderators = fir.getModeratorList(forum.id)/>
+								<#list moderators as m>
+									<#if m.type == 1>
+										<a href="${JForumContext.encodeURL("/user/profile/${m.id}")}">
+									<#else>
+										<a href="${JForumContext.encodeURL("/user/listGroup/${m.id}")}">
+									</#if>
+									${m.name}</a>
+								</#list>
+							</span>
+							<br />		
 						</td>
 						<td class="row2" valign="center" align="middle" height="50"><span class="gensmall">${forum.totalTopics}</span></td>
 						<td class="row2" valign="center" align="middle" height="50">

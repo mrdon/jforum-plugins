@@ -2,7 +2,7 @@
 # UserModel
 # ##########
 UserModel.selectAllByLimit = SELECT user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail \
-	FROM jforum_users ORDER BY username LIMIT ? OFFSET ?
+	FROM jforum_users ORDER BY user_id LIMIT ? OFFSET ?
 
 UserModel.lastGeneratedUserId = SELECT CURRVAL('jforum_users_seq')
 
@@ -13,11 +13,11 @@ UserModel.selectById = SELECT u.*, \
 	FROM jforum_users u \
 	WHERE u.user_id = ?
 	
-UserModel.selectAllByGroup = SELECT user_email, u.user_id, user_regdate, username \
+UserModel.selectAllByGroup = SELECT user_email, u.user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail \
 	FROM jforum_users u, jforum_user_groups ug \
 	WHERE u.user_id = ug.user_id \
 	AND ug.group_id = ? \
-	ORDER BY username \
+	ORDER BY user_id \
 	LIMIT ? OFFSET ?
 
 # #############

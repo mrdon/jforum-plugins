@@ -76,7 +76,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.49 2005/08/30 15:27:11 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.50 2005/09/02 00:33:20 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -571,6 +571,19 @@ public class UserAction extends Command
 		this.context.put("users", users);
 		this.setTemplateName(TemplateKeys.USER_LIST);
 	}
+
+	public void listGroup() throws Exception
+	{
+		int groupId = this.request.getIntParameter("group_id");
+		
+		int start = this.preparePagination(DataAccessDriver.getInstance().newUserDAO().getTotalUsersByGroup(groupId));
+		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
+							
+		List users = DataAccessDriver.getInstance().newUserDAO().selectAllByGroup(groupId, start ,usersPerPage);
+		
+		this.context.put("users", users);
+		this.setTemplateName(TemplateKeys.USER_LIST);
+	}
 	
 	/**
 	 * @deprecated probably will be removed. Use KarmaAction to load Karma
@@ -593,11 +606,7 @@ public class UserAction extends Command
 		int start = ViewCommon.getStartPage();
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
 		
-		this.context.put("totalPages", new Double(Math.ceil( (double)totalUsers / usersPerPage )));
-		this.context.put("recordsPerPage", new Integer(usersPerPage));
-		this.context.put("totalRecords", new Integer(totalUsers));
-		this.context.put("thisPage", new Double(Math.ceil( (double)(start + 1) / usersPerPage )));
-		this.context.put("start", new Integer(start));
+		ViewCommon.contextToPagination(start, totalUsers, usersPerPage);
 		
 		return start;
 	}	

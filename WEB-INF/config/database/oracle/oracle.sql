@@ -25,7 +25,7 @@ UserModel.addNew = INSERT INTO jforum_users (user_id, username, user_password, u
 
 
 UserModel.selectAllByLimit = SELECT * FROM ( \
-        SELECT user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail, ROW_NUMBER() OVER(ORDER BY username) LINENUM  \
+        SELECT user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail, ROW_NUMBER() OVER(ORDER BY user_id) LINENUM  \
         FROM jforum_users ORDER BY username \
         ) \
         WHERE LINENUM >= ? AND LINENUM <= ?
@@ -47,7 +47,7 @@ UserModel.lastUserRegistered = SELECT * FROM ( \
         WHERE LINENUM <= 1
         
 UserModel.selectAllByGroup = SELECT * FROM ( \
-	SELECT user_email, u.user_id, user_regdate, username, ROW_NUMBER() OVER(ORDER BY username) LINENUM \
+	SELECT user_email, u.user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail, ROW_NUMBER() OVER(ORDER BY user_id) LINENUM \
 	FROM jforum_users u, jforum_user_groups ug \
 	WHERE u.user_id = ug.user_id \
 	AND ug.group_id = ? \

@@ -61,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericUserDAO.java,v 1.9 2005/07/26 23:31:33 rafaelsteil Exp $
+ * @version $Id: GenericUserDAO.java,v 1.10 2005/09/02 00:33:19 rafaelsteil Exp $
  */
 public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO 
 {
@@ -385,11 +385,11 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	{
 	    return this.loadKarma( this.selectAll(startFrom, count) );
 	}
-
 	
 	protected List processSelectAll(ResultSet rs) throws Exception
 	{
 		List list = new ArrayList();
+
 		while (rs.next()) {
 			User u = new User();
 			
@@ -417,24 +417,14 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	 */
 	public List selectAllByGroup(int groupId, int start, int count) throws Exception
 	{
-		List l = new ArrayList();
-		
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectAllByGroup"));
 		p.setInt(1, groupId);
 		p.setInt(2, start);
 		p.setInt(3, count);
 		
 		ResultSet rs = p.executeQuery();
-		while (rs.next()) {
-			User u = new User();
-			
-			u.setUsername(rs.getString("username"));
-			u.setId(rs.getInt("user_id"));
-			u.setRegistrationDate(rs.getTimestamp("user_regdate"));
-			u.setDeleted(rs.getInt("deleted"));
-			
-			l.add(u);
-		}
+		List l = this.processSelectAll(rs);
+		rs.close();
 		
 		return l;
 	}

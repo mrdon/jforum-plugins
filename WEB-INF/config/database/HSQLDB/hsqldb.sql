@@ -2,14 +2,18 @@
 # UserModel
 # ##########
 UserModel.lastUserRegistered = SELECT TOP 1 user_id, username FROM jforum_users ORDER BY user_regdate DESC 
-UserModel.selectAllByLimit = SELECT LIMIT ? ? user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail FROM jforum_users ORDER BY username 
+
+UserModel.selectAllByLimit = SELECT LIMIT ? ? user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, \
+	user_from, user_website, user_viewemail FROM jforum_users ORDER BY user_id 
+
 UserModel.lastGeneratedUserId = SELECT MAX(user_id) from jforum_users
 
-UserModel.selectAllByGroup = SELECT LIMIT ? ? user_email, u.user_id, user_regdate, username \
+UserModel.selectAllByGroup = SELECT LIMIT ? ? user_email, u.user_id, user_posts, user_regdate, username, deleted, user_karma, \
+	user_from, user_website, user_viewemail \
 	FROM jforum_users u, jforum_user_groups ug \
 	WHERE u.user_id = ug.user_id \
 	AND ug.group_id = ? \
-	ORDER BY username
+	ORDER BY user_id
 
 UserModel.selectById = SELECT u.*, \
 	(SELECT COUNT(1) FROM jforum_privmsgs pm \

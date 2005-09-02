@@ -66,7 +66,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.24 2005/07/26 23:31:34 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.25 2005/09/02 00:33:23 rafaelsteil Exp $
  */
 public class UserAction extends AdminCommand 
 {
@@ -85,11 +85,7 @@ public class UserAction extends AdminCommand
 		int start = ViewCommon.getStartPage();
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
 		
-		this.context.put("totalPages", new Double(Math.ceil( (double)totalUsers / usersPerPage )));
-		this.context.put("recordsPerPage", new Integer(usersPerPage));
-		this.context.put("totalRecords", new Integer(totalUsers));
-		this.context.put("thisPage", new Double(Math.ceil( (double)(start + 1) / usersPerPage )));
-		this.context.put("start", new Integer(start));
+		ViewCommon.contextToPagination(start, totalUsers, usersPerPage);
 		
 		return start;
 	}

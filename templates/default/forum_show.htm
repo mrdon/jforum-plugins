@@ -17,10 +17,19 @@
 							<a href="${JForumContext.encodeURL("/rss/forumTopics/${forum.id}")}"><img src="${contextPath}/templates/${templateName}/images/xml_button.gif" border="0"></a>
 							<br />
 						</#if>
-						<span class="gensmall"><!-- forum moderators --><b>${I18n.getMessage("ForumIndex.moderators")}:
-                                                        <#list forum.getModeratorList() as moderator>
-                                                        <a href="${JForumContext.encodeURL("/user/profile/${moderator.id}")}"><span>${moderator.username}</span></a>&nbsp;
-                                                        </#list></b></span>
+						<span class="gensmall">
+							<b>${I18n.getMessage("ForumIndex.moderators")}:
+							
+							<#assign moderators = forum.getModeratorList()/>
+							<#list moderators as m>
+								<#if m.type == 1>
+									<a href="${JForumContext.encodeURL("/user/profile/${m.id}")}">
+								<#else>
+									<a href="${JForumContext.encodeURL("/user/listGroup/${m.id}")}">
+								</#if>
+								${m.name}</a>
+							</#list>
+						</span>
 					</td>
 
 					<td valign="center" nowrap="nowrap" align="right"><@pagination.doPagination action, forum.id/></td>
