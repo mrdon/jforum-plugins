@@ -1,8 +1,8 @@
 <#setting number_format = "#"/>
 
 <script type='text/javascript' src='${contextPath}/dwr/dwr.page?script=AjaxUtils'></script>
-<script type='text/javascript' src='${contextPath}/templates/${templateName}/dwr-engine.js'></script>
-<script type='text/javascript' src='${contextPath}/templates/${templateName}/dwr-util.js'></script>
+<script type='text/javascript' src='${contextPath}/templates/${templateName}/js/dwr-engine.js'></script>
+<script type='text/javascript' src='${contextPath}/templates/${templateName}/js/dwr-util.js'></script>
 
 <script language="javascript">
 function resize()
@@ -26,7 +26,7 @@ function changeValue(field, value)
 function testEmail()
 {
 	var b = document.getElementById("mailButton");
-	b.value = "Sending...";
+	b.value = "${I18n.getMessage("Config.Form.SmtpTestSending")}...";
 	b.disabled = true;
 
 	AjaxUtils.sendTestMail(emailStatus,
@@ -42,10 +42,10 @@ function testEmail()
 function emailStatus(message)
 {
 	if (message != "OK") {
-		alert("Error while sending the email: \n" + message);
+		alert("${I18n.getMessage("Config.Form.SmtpTestFail")}: \n" + message);
 	}
 	else {
-		alert("Email sent successfully. Please check your inbox");
+		alert("${I18n.getMessage("Config.Form.SmtpTestSuccess")}");
 	}
 
 	var b = document.getElementById("mailButton");
