@@ -72,7 +72,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.76 2005/07/26 03:04:40 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.77 2005/09/08 18:37:11 rafaelsteil Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
@@ -150,7 +150,6 @@ public class JForum extends JForumBaseServlet
 			
 			ControllerUtils utils = new ControllerUtils();
 			utils.refreshSession();
-			utils.prepareTemplateContext(context);
 			
 			boolean logged = "1".equals(SessionFacade.getAttribute("logged"));
 			
@@ -158,6 +157,14 @@ public class JForum extends JForumBaseServlet
 			
 			// Process security data
 			SecurityRepository.load(SessionFacade.getUserSession().getUserId());
+			
+			request.setJForumContext(new JForumContext(request.getContextPath(), 
+					SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION),
+					request,
+					response,
+					SessionFacade.getUserSession().isBot()));
+			
+			utils.prepareTemplateContext(context, request.getJForumContext());
 
 			String module = request.getModule();
 			

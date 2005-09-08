@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -49,7 +49,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SafeHtmlTest.java,v 1.7 2005/07/26 04:01:12 diegopires Exp $
+ * @version $Id: SafeHtmlTest.java,v 1.8 2005/09/08 18:37:13 rafaelsteil Exp $
  */
 public class SafeHtmlTest extends TestCase
 {
@@ -72,6 +72,7 @@ public class SafeHtmlTest extends TestCase
 		sb.append("<a href='javascript:alert(bleh)'>xxxx</a>");
 		sb.append("<img src='javascript:alert(bloh)'>");
 		sb.append("<img src=\"&#106ava&#115cript&#58aler&#116&#40&#39Oops&#39&#41&#59\">");
+		sb.append("\"> TTTTT <");
 		this.input = sb.toString();
 		
 		sb = new StringBuffer(512);
@@ -82,6 +83,7 @@ public class SafeHtmlTest extends TestCase
 		sb.append("<a href='#'>xxxx</a>");
 		sb.append("<img src='#'>");
 		sb.append("<img src=\"&amp;#106ava&amp;#115cript&amp;#58aler&amp;#116&amp;#40&amp;#39Oops&amp;#39&amp;#41&amp;#59\">");
+		sb.append("&amp;&gt; TTTTT &lt;");
 		this.expected = sb.toString();
 	}
 	

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2004, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -47,44 +47,30 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Marc Wick
- * @version $Id: JForumContext.java,v 1.4 2005/07/26 03:04:40 rafaelsteil Exp $
+ * @version $Id: JForumContext.java,v 1.5 2005/09/08 18:37:11 rafaelsteil Exp $
  */
 public class JForumContext {
 
     private String contextPath;
-
     private String servletExtension;
 
     private HttpServletResponse response;
 
-    private boolean isEncodingDisabled = false;
+    private boolean isEncodingDisabled;
 
     public JForumContext(String contextPath, String servletExtension, HttpServletRequest req,
-            HttpServletResponse response) {
+            HttpServletResponse response, boolean isEncodingDisabled) {
         this.contextPath = contextPath;
         this.servletExtension = servletExtension;
         this.response = response;
-
-        if (req != null) {
-            String userAgent = req.getHeader("user-agent");
-            if (userAgent != null) {
-                // search engine robots are not using cookies but don't like sessionid in url
-                // we are nice with the robots and don't encode the session id for them
-                if (userAgent.toLowerCase().indexOf("bot") > -1) {
-                    isEncodingDisabled = true;
-                } else if (userAgent.toLowerCase().indexOf("slurp") > -1) {
-                    isEncodingDisabled = true;
-                } else if (userAgent.toLowerCase().indexOf("crawler") > -1) {
-                    isEncodingDisabled = true;
-                }
-            }
-        }
+        this.isEncodingDisabled = isEncodingDisabled;  
     }
 
     public String encodeURL(String url) {
         if (isEncodingDisabled) {
             return contextPath + url + servletExtension;
         }
+        
         return response.encodeURL(contextPath + url + servletExtension);
     }
 
@@ -92,6 +78,7 @@ public class JForumContext {
         if (isEncodingDisabled) {
             return contextPath + url + extension;
         }
+        
         return response.encodeURL(contextPath + url + extension);
     }
 }

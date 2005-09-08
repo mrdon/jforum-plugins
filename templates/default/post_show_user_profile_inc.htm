@@ -6,15 +6,18 @@
 
 		<#if (user.isViewEmailEnabled() && user.email?exists && user.email?length > 0)>
 			<#assign e = user.email.split("@")/>
-			<a href="#" onClick="document.location = 'mailto:' + showEmail('${e[0]}', '${e[1]}');"><img src="${contextPath}/templates/${templateName}/images/icon_email.gif" border=0></a>
+
+			<#if e?size == 2>
+				<a href="#" onClick="document.location = 'mailto:' + showEmail('${e[0]}', '${e[1]}');"><img src="${contextPath}/templates/${templateName}/images/icon_email.gif" border=0></a>
+			</#if>
 		</#if>
 		
 		<#if (user.webSite?exists && user.webSite?length > 0)>
-			<a href="${user.webSite}" target="_new"><img src="${contextPath}/templates/${templateName}/images/icon_www.gif" border="0" /></a>
+			<a href="${user.webSite?html}" target="_new"><img src="${contextPath}/templates/${templateName}/images/icon_www.gif" border="0" /></a>
 		</#if>
 		
 		<#if (user.yim?exists && user.yim?length > 0)>
-			<a href="http://edit.yahoo.com/config/send_webmesg?.target=${user.yim}&amp;.src=pg"><img src="${contextPath}/templates/${templateName}/images/icon_yim.gif" border="0" /></a>
+			<a href="http://edit.yahoo.com/config/send_webmesg?.target=${user.yim?html}&amp;.src=pg"><img src="${contextPath}/templates/${templateName}/images/icon_yim.gif" border="0" /></a>
 		</#if>
 		
 		<#if (user.msnm?exists && user.msnm?length > 0)>
@@ -22,7 +25,7 @@
 		</#if>
 		
 		<#if (user.icq?exists && user.icq?length > 0)>
-			<a href="http://wwp.icq.com/scripts/search.dll?to=${user.icq}"><img src="${contextPath}/templates/${templateName}/images/icon_icq_add.gif" border="0" /></a>
+			<a href="http://wwp.icq.com/scripts/search.dll?to=${user.icq?html}"><img src="${contextPath}/templates/${templateName}/images/icon_icq_add.gif" border="0" /></a>
 		</#if>
 	</td>
 

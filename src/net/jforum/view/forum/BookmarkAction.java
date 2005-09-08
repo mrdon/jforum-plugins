@@ -68,7 +68,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: BookmarkAction.java,v 1.10 2005/07/26 04:01:13 diegopires Exp $
+ * @version $Id: BookmarkAction.java,v 1.11 2005/09/08 18:37:12 rafaelsteil Exp $
  */
 public class BookmarkAction extends Command
 {
@@ -167,7 +167,10 @@ public class BookmarkAction extends Command
 		Bookmark b = new Bookmark();
 		b.setDescription(this.request.getParameter("description"));
 		b.setTitle(this.request.getParameter("title"));
-		b.setPublicVisible(this.request.getParameter("visible") != null);
+		
+		String publicVisible = this.request.getParameter("visible");
+		b.setPublicVisible(publicVisible != null && publicVisible.length() > 0);
+		
 		b.setRelationId(this.request.getIntParameter("relation_id"));
 		b.setRelationType(this.request.getIntParameter("relation_type"));
 		b.setUserId(SessionFacade.getUserSession().getUserId());

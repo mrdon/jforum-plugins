@@ -1,4 +1,4 @@
-<span class="name"><b>${user.username}</b></span>
+<span class="name"><b>${user.username?html}</b></span>
 <br />
 <#if karmaEnabled && post.userId != 1>
 	<script language="javascript">writeStars(${user.karma.karmaPoints}, "${user.id}${post.id}");</script>
@@ -13,7 +13,7 @@
 
 <#if (user.avatar?exists && user.avatar?length > 0)>
 	<#if user.isExternalAvatar() || user.avatar.startsWith("http://")>
-		<img src="${user.avatar}" border="0">
+		<img src="${user.avatar?html}" border="0">
 	<#else>
 		<img src="${contextPath}/images/avatar/${user.avatar}" border="0" /><br />
 	</#if>
@@ -27,7 +27,7 @@
 <br />
 
 <#if (user.from?exists && user.from?length > 0)>
-	${I18n.getMessage("PostShow.userFrom")}: ${user.from}
+	${I18n.getMessage("PostShow.userFrom")}: ${user.from?html}
 	<br />
 </#if>
 

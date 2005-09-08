@@ -44,6 +44,7 @@ package net.jforum.view.forum;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import net.jforum.Command;
@@ -53,6 +54,7 @@ import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.UserDAO;
 import net.jforum.dao.UserSessionDAO;
+import net.jforum.entities.Bookmark;
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
 import net.jforum.repository.ForumRepository;
@@ -76,7 +78,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.50 2005/09/02 00:33:20 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.51 2005/09/08 18:37:12 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -289,8 +291,8 @@ public class UserAction extends Command
 				DataAccessDriver.getInstance().newUserDAO().selectById(userId));
 		ForumRepository.incrementTotalUsers();
 
-		String profilePage = JForum.encodeUrlWithPathAndExtension("/user/edit/" + userId);
-		String homePage = JForum.encodeUrlWithPathAndExtension("/forums/list");
+		String profilePage = JForum.getRequest().getJForumContext().encodeURL("/user/edit/" + userId);
+		String homePage = JForum.getRequest().getJForumContext().encodeURL("/forums/list");
 
 		String message = I18n.getMessage("User.RegistrationCompleteMessage", 
 				new Object[] { profilePage, homePage });
@@ -402,9 +404,11 @@ public class UserAction extends Command
 
 	public void profile() throws Exception 
 	{
-		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
+		DataAccessDriver da = DataAccessDriver.getInstance();
+		UserDAO udao = da.newUserDAO();
 
-		User u = um.selectById(this.request.getIntParameter("user_id"));
+		User u = udao.selectById(this.request.getIntParameter("user_id"));
+		
 		if (u.getId() == 0) {
 			this.userNotFound();
 		}
@@ -413,6 +417,19 @@ public class UserAction extends Command
 			this.context.put("karmaEnabled", SecurityRepository.canAccess(SecurityConstants.PERM_KARMA_ENABLED));
 			this.context.put("rank", new RankingRepository());
 			this.context.put("u", u);
+			
+			int loggedId = SessionFacade.getUserSession().getUserId();
+			int count = 0;
+			
+			for (Iterator iter = da.newBookmarkDAO().selectByUser(u.getId()).iterator(); iter.hasNext(); ) {
+				Bookmark b = (Bookmark)iter.next();
+
+				if (b.isPublicVisible() || loggedId == u.getId()) {
+					count++;
+				}
+			}
+			
+			this.context.put("nbookmarks", new Integer(count));
 		}
 	}
 	

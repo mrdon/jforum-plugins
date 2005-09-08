@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -65,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: ActionServletRequest.java,v 1.27 2005/07/26 03:04:39 rafaelsteil Exp $
+ * @version $Id: ActionServletRequest.java,v 1.28 2005/09/08 18:37:11 rafaelsteil Exp $
  */
 public class ActionServletRequest extends HttpServletRequestWrapper 
 {
@@ -209,6 +209,7 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 	}
 	
 	private Map query;
+	private JForumContext jforumcontext;
 	
 	/**
 	 * Default constructor.
@@ -490,5 +491,15 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 	public Object getObjectRequestParameter(String parameter)
 	{
 		return this.query.get(parameter);
+	}
+	
+	public JForumContext getJForumContext()
+	{
+		return this.jforumcontext;
+	}
+	
+	public void setJForumContext(JForumContext jforumcontext)
+	{
+		this.jforumcontext = jforumcontext;
 	}
 }

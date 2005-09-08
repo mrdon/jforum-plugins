@@ -1,5 +1,5 @@
 /*
- * Copyright (c)Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -68,7 +68,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumBaseServlet.java,v 1.8 2005/07/26 04:01:17 diegopires Exp $
+ * @version $Id: JForumBaseServlet.java,v 1.9 2005/09/08 18:37:11 rafaelsteil Exp $
  */
 public class JForumBaseServlet extends HttpServlet {
     protected boolean debug;
@@ -328,16 +328,4 @@ public class JForumBaseServlet extends HttpServlet {
     public static boolean cancelCommit() {
     	return ((DataHolder)localData.get()).cancelCommit();
     }
-
-    /**
-     * prepend the path, append the extension and encode the url
-     * 
-     * @return 
-     */
-    public static String encodeUrlWithPathAndExtension(String url) {
-        DataHolder dataHolder = (DataHolder) localData.get();
-        return dataHolder.getResponse().encodeURL(getRequest().getContextPath() 
-					+ url
-					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
-       	}
 }

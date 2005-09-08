@@ -62,7 +62,7 @@ import org.htmlparser.nodes.TextNode;
  * malicious tags and attributes.
  * 
  * @author Rafael Steil
- * @version $Id: SafeHtml.java,v 1.7 2005/07/26 03:05:23 rafaelsteil Exp $
+ * @version $Id: SafeHtml.java,v 1.8 2005/09/08 18:37:14 rafaelsteil Exp $
  */
 public class SafeHtml 
 {
@@ -86,6 +86,17 @@ public class SafeHtml
 		Node node;
 		while ((node = lexer.nextNode()) != null) {
 			if (this.isTagWelcome(node)) {
+				if (node instanceof TextNode) {
+					String text = node.toHtml();
+					
+					if (text.indexOf('>') > -1 || text.indexOf('<') > -1) {
+						text = text.replaceAll("<", "&lt;")
+							.replaceAll(">", "&gt;")
+							.replaceAll("\"", "&amp;");
+						node.setText(text);
+					}
+				}
+			
 				sb.append(node.toHtml());
 			}
 			else {

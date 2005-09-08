@@ -56,9 +56,9 @@ function validateForm()
 					<td class="row2">
 						<span class="gen">
 							<#if admin?default(false)>
-								<input type="text" name="username" value="${u.username}" />
+								<input type="text" name="username" value="${u.username?html}" />
 							<#else>
-								${u.username}
+								${u.username?html}
 							</#if>
 						</span>
 					</td>
@@ -66,7 +66,7 @@ function validateForm()
 			
 				<tr>
 					<td class="row1"><span class="gen">${I18n.getMessage("User.emailAddress")}: *</span></td>
-					<td class="row2"><input class="post" style="WIDTH: 200px" maxlength="255" size="25" name="email" value="${u.email?default("")}" /></td>
+					<td class="row2"><input class="post" style="WIDTH: 200px" maxlength="255" size="25" name="email" value="${u.email?default("")?html}" /></td>
 				</tr>
 			
 				<#if !admin?default(false)>
@@ -108,35 +108,35 @@ function validateForm()
 				</tr>
 				<tr>
 					<td class="row1"><span class="gen">${I18n.getMessage("User.icq")}:</span></td>
-					<td class="row2"><input class="post" style="WIDTH: 100px" maxlength="15" size="10" name="icq" value="${u.icq?default("")}" /> </td>
+					<td class="row2"><input class="post" style="WIDTH: 100px" maxlength="15" size="10" name="icq" value="${u.icq?default("")?html}" /> </td>
 				</tr>
 				<tr>
 					<td class="row1"><span class="gen">${I18n.getMessage("User.aim")}:</span></td>
-					<td class="row2"><input class="post" style="WIDTH: 150px" maxlength="255" name="aim" value="${u.aim?default("")}" /> </td>
+					<td class="row2"><input class="post" style="WIDTH: 150px" maxlength="255" name="aim" value="${u.aim?default("")?html}" /> </td>
 				</tr>
 				<tr>
 					<td class="row1"><span class="gen">${I18n.getMessage("User.msn")}:</span></td>
-					<td class="row2"><input class="post" style="WIDTH: 150px" maxlength="255" name="msn" value="${u.msnm?default("")}" /> </td>
+					<td class="row2"><input class="post" style="WIDTH: 150px" maxlength="255" name="msn" value="${u.msnm?default("")?html}" /> </td>
 				</tr>
 				<tr>
 					<td class="row1"><span class="gen">${I18n.getMessage("User.yahoo")}:</span></td>
-					<td class="row2"><input class="post" style="WIDTH: 150px" maxlength="255" name="yim" value="${u.yim?default("")}" /> </td>
+					<td class="row2"><input class="post" style="WIDTH: 150px" maxlength="255" name="yim" value="${u.yim?default("")?html}" /> </td>
 				</tr>
 				<tr>
 					<td class="row1"><span class="gen">${I18n.getMessage("User.www")}:</span></td>
-					<td class="row2"><input class="post" style="WIDTH: 200px" maxlength="255" size="25" name="website" value="${u.webSite?default("")}" /> </td>
+					<td class="row2"><input class="post" style="WIDTH: 200px" maxlength="255" size="25" name="website" value="${u.webSite?default("")?html}" /> </td>
 				</tr>
 				<tr>
 					<td class="row1"><span class="gen">${I18n.getMessage("User.from")}:</span></td>
-					<td class="row2"><input class="post" style="WIDTH: 200px" maxlength="100" size="25" name="location" value="${u.from?default("")}" /> </td>
+					<td class="row2"><input class="post" style="WIDTH: 200px" maxlength="100" size="25" name="location" value="${u.from?default("")?html}" /> </td>
 				</tr>
 				<tr>
 					<td class="row1"><span class="gen">${I18n.getMessage("User.job")}:</span></td>
-					<td class="row2"><input class="post" style="WIDTH: 200px" maxlength="100" size="25" name="occupation"  value="${u.occupation?default("")}" /> </td>
+					<td class="row2"><input class="post" style="WIDTH: 200px" maxlength="100" size="25" name="occupation"  value="${u.occupation?default("")?html}" /> </td>
 				</tr>
 				<tr>
 					<td class="row1"><span class="gen">${I18n.getMessage("User.interests")}:</span></td>
-					<td class="row2"><input class="post" style="WIDTH: 200px" maxlength="150" size="35" name="interests" value="${u.interests?default("")}" /> </td>
+					<td class="row2"><input class="post" style="WIDTH: 200px" maxlength="150" size="35" name="interests" value="${u.interests?default("")?html}" /> </td>
 				</tr>
 				<tr>
 					<td class="row1">
@@ -244,7 +244,7 @@ function validateForm()
 										<span class="gensmall">${I18n.getMessage("User.currentAvatar")}</span><br />
 										<br />
 										<#if u.isExternalAvatar()>
-											<img src="${u.avatar}" border="0">
+											<img src="${u.avatar?html}" border="0">
 										<#else>
 											<img src="${contextPath}/images/avatar/${u.avatar}" border="0" /><br />
 										</#if>
@@ -281,7 +281,7 @@ function validateForm()
 
 				<tr>
 					<td class="row1"><span class="gen">${I18n.getMessage("User.avatarExternal")}:</span></td>
-					<td class="row2"><input class="post" style="WIDTH: 200px" type="text" name="avatarUrl" value="<#if u.isExternalAvatar()>${u.avatar?default("")}</#if>"/></td>
+					<td class="row2"><input class="post" style="WIDTH: 200px" type="text" name="avatarUrl" value="<#if u.isExternalAvatar()>${u.avatar?default("")?html}</#if>"/></td>
 				</tr>
 
 				<tr>

@@ -66,7 +66,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.25 2005/09/02 00:33:23 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.26 2005/09/08 18:37:14 rafaelsteil Exp $
  */
 public class UserAction extends AdminCommand 
 {
@@ -274,6 +274,11 @@ public class UserAction extends AdminCommand
 		
 		// Associate the user to the selected groups
 		String[] selectedGroups = this.request.getParameterValues("groups");
+		
+		if(selectedGroups == null) {
+			selectedGroups = new String[0]; 
+		}
+		
 		int[] newGroups = new int[selectedGroups.length];
 		
 		for (int i = 0; i < selectedGroups.length; i++) {

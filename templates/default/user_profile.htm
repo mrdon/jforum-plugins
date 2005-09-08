@@ -77,7 +77,12 @@
 				<#if bookmarksEnabled>
 				<tr>
 					<td valign="top" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("Bookmarks.myBag")}:</span></td>
-					<td><b><a class="gen" href="${JForumContext.encodeURL("/bookmarks/list/${u.id}")}">${I18n.getMessage("Bookmarks.for")} ${u.username}</a></b></td>
+					<td>
+						<#if (nbookmarks > 0)>
+							<b><a class="gen" href="${JForumContext.encodeURL("/bookmarks/list/${u.id}")}">[${nbookmarks}] ${I18n.getMessage("Bookmarks.for")} ${u.username}</a> </b>
+						<#else>
+							${I18n.getMessage("Bookmarks.empty")}</#if>
+						</td>
 				</tr>
 				</#if>
 			</table>
