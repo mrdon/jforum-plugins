@@ -81,7 +81,8 @@
 						<#if (nbookmarks > 0)>
 							<b><a class="gen" href="${JForumContext.encodeURL("/bookmarks/list/${u.id}")}">[${nbookmarks}] ${I18n.getMessage("Bookmarks.for")} ${u.username}</a> </b>
 						<#else>
-							${I18n.getMessage("Bookmarks.empty")}</#if>
+							<span class="gensmall">${I18n.getMessage("Bookmarks.empty")}</span>
+						</#if>
 						</td>
 				</tr>
 				</#if>
