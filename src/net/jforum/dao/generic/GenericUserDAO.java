@@ -61,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericUserDAO.java,v 1.10 2005/09/02 00:33:19 rafaelsteil Exp $
+ * @version $Id: GenericUserDAO.java,v 1.11 2005/09/08 03:43:18 rafaelsteil Exp $
  */
 public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO 
 {
@@ -273,6 +273,8 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 		
 		p.executeUpdate();
 		p.close();
+		
+		this.addToGroup(user.getId(), new int[] { SystemGlobals.getIntValue(ConfigKeys.DEFAULT_USER_GROUP) });
 	}
 
 	/** 
