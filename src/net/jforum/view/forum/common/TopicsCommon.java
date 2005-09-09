@@ -76,7 +76,7 @@ import freemarker.template.SimpleHash;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.15 2005/08/27 15:32:53 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.16 2005/09/09 17:59:44 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
@@ -267,12 +267,11 @@ public class TopicsCommon
 		tm.incrementTotalViews(t.getId());
 		
 		if (!fromModeration) {
-			ForumRepository.reloadForum(t.getForumId());
-			TopicRepository.clearCache(t.getForumId());
+			TopicRepository.addTopic(t);
 		}
 
 		// Updates cache for latest topic
-		TopicRepository.pushTopic(tm.selectById(t.getId()));
+		TopicRepository.pushTopic(t);
 	}
 	
 	/**

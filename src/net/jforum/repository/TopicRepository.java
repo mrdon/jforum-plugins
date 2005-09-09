@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -43,8 +43,11 @@
 package net.jforum.repository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
@@ -59,14 +62,17 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: TopicRepository.java,v 1.16 2005/07/26 03:04:55 rafaelsteil Exp $
+ * @version $Id: TopicRepository.java,v 1.17 2005/09/09 17:59:46 rafaelsteil Exp $
  */
 public class TopicRepository implements Cacheable
 {
 	private static int maxItems = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
+	
 	private static final String FQN = "topics";
 	private static final String RECENT = "recent";
 	private static final String FQN_FORUM = FQN + "/byforum";
+	private static final String RELATION = "relation";
+	
 	private static CacheEngine cache;
 	
 	/**
@@ -95,8 +101,7 @@ public class TopicRepository implements Cacheable
 			l.remove(topic);
 			l.addFirst(topic);
 			
-			while (l.size() > limit)
-			{
+			while (l.size() > limit) {
 				l.removeLast();
 			}
 			
@@ -113,6 +118,7 @@ public class TopicRepository implements Cacheable
 	{
 		if (SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
 			List l = (List)cache.get(FQN, RECENT);
+			
 			if (l == null || l.size() == 0) {
 				l = new LinkedList(loadMostRecentTopics());
 			}
@@ -129,6 +135,7 @@ public class TopicRepository implements Cacheable
 	public static List getRecentTopics() throws Exception
 	{
 		List l = (List)cache.get(FQN, RECENT);
+		
 		if (l == null || l.size() == 0
 				|| !SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
 			l = loadMostRecentTopics();
@@ -156,9 +163,27 @@ public class TopicRepository implements Cacheable
 	 * @param forumId The forum id to which the topics are related
 	 * @param topics The topics to add
 	 */
-	public synchronized static void addAll(int forumId, List topics)
+	public static void addAll(int forumId, List topics)
 	{
-		cache.add(FQN_FORUM, Integer.toString(forumId), new LinkedList(topics));
+		synchronized (FQN_FORUM) {
+			cache.add(FQN_FORUM, Integer.toString(forumId), new LinkedList(topics));
+			
+			Map m = (Map)cache.get(FQN, RELATION);
+			
+			if (m == null) {
+				m = new HashMap();
+			}
+			
+			Integer fId = new Integer(forumId);
+			
+			for (Iterator iter = topics.iterator(); iter.hasNext(); ) {
+				Topic t = (Topic)iter.next();
+				
+				m.put(new Integer(t.getId()), fId);
+			}
+			
+			cache.add(FQN, RELATION, m);
+		}
 	}
 	
 	/**
@@ -168,7 +193,10 @@ public class TopicRepository implements Cacheable
 	 */
 	public synchronized static void clearCache(int forumId) throws Exception
 	{
-		cache.add(FQN_FORUM, Integer.toString(forumId), new LinkedList());
+		synchronized (FQN_FORUM) {
+			cache.add(FQN_FORUM, Integer.toString(forumId), new LinkedList());
+			cache.remove(FQN, RELATION);
+		}
 	}
 	
 	/**
@@ -176,9 +204,13 @@ public class TopicRepository implements Cacheable
 	 * 
 	 * @param topic The topic to add
 	 */
-	public synchronized static void addTopic(Topic topic)
+	public static void addTopic(Topic topic)
 	{
-		if (SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
+		if (!SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
+			return;
+		}
+		
+		synchronized (FQN_FORUM) {
 			String forumId = Integer.toString(topic.getForumId());
 			LinkedList list = (LinkedList)cache.get(FQN_FORUM, forumId);
 			
@@ -191,10 +223,41 @@ public class TopicRepository implements Cacheable
 					list.removeLast();
 				}
 				
-				list.addFirst(topic);
+				if (topic.getType() == Topic.TYPE_ANNOUNCE) {
+					list.addFirst(topic);
+				}
+				else {
+					int index = 0;
+					
+					for (Iterator iter = list.iterator(); iter.hasNext(); index++) {
+						Topic current = (Topic)iter.next();
+						
+						if (current.getType() == Topic.TYPE_ANNOUNCE) {
+							continue;
+						}
+						
+						if (current.getType() == Topic.TYPE_STICKY && topic.getType() == Topic.TYPE_STICKY) {
+							list.add(index, topic);
+						}
+						else {
+							list.add(index, topic);
+							break;
+						}
+					}
+				}
 			}
 			
 			cache.add(FQN_FORUM, forumId, list);
+		
+			Map m = (Map)cache.get(FQN, RELATION);
+			
+			if (m == null) {
+				m = new HashMap();
+			}
+			
+			m.put(new Integer(topic.getId()), new Integer(forumId));
+			
+			cache.add(FQN, RELATION, m);
 		}
 	}
 	
@@ -203,18 +266,50 @@ public class TopicRepository implements Cacheable
 	 * 
 	 * @param topic The topic to update
 	 */
-	public synchronized static void updateTopic(Topic topic)
+	public static void updateTopic(Topic topic)
 	{
-		String forumId = Integer.toString(topic.getForumId());
-		List l = (List)cache.get(FQN_FORUM, forumId);
-		
-		if (l != null) {
-			int index = l.indexOf(topic);
-			if (index > -1) {
-				l.set(index, topic);
-				cache.add(FQN_FORUM, forumId, l);
+		synchronized (FQN_FORUM) {
+			String forumId = Integer.toString(topic.getForumId());
+			List l = (List)cache.get(FQN_FORUM, forumId);
+			
+			if (l != null) {
+				int index = l.indexOf(topic);
+				if (index > -1) {
+					l.set(index, topic);
+					cache.add(FQN_FORUM, forumId, l);
+				}
 			}
 		}
+	}
+	
+	/**
+	 * Gets a cached topic.
+	 * 
+	 * @param t The topic to try to get from the cache. The instance
+	 * passed as argument should have ae least the topicId and forumId set
+	 * @return The topic instance, if found, or <code>null</code> otherwise. 
+	 */
+	public static Topic getTopic(Topic t)
+	{
+		if (t.getForumId() == 0) {
+			Map m = (Map)cache.get(FQN, RELATION);
+			
+			if (m != null) {
+				Integer forumId = (Integer)m.get(new Integer(t.getId()));
+				
+				if (forumId != null) {
+					t.setForumId(forumId.intValue());
+				}
+			}
+			
+			if (t.getForumId() == 0) {
+				return null;
+			}
+		}
+		
+		List l = (List)cache.get(FQN_FORUM, Integer.toString(t.getForumId()));
+		int index = l.indexOf(t);
+		return (index == -1 ? null : (Topic)l.get(index));
 	}
 	
 	/**
@@ -237,12 +332,14 @@ public class TopicRepository implements Cacheable
 	public static List getTopics(int forumid)
 	{
 		if (SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
-			List returnList = (List)cache.get(FQN_FORUM, Integer.toString(forumid));
-			if (returnList == null) {
-				return new ArrayList();
+			synchronized (FQN_FORUM) {
+				List returnList = (List)cache.get(FQN_FORUM, Integer.toString(forumid));
+				if (returnList == null) {
+					return new ArrayList();
+				}
+				
+				return new ArrayList(returnList);
 			}
-			
-			return new ArrayList(returnList);
 		}
 		
 		return new ArrayList();

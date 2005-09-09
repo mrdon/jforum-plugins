@@ -72,7 +72,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.77 2005/09/08 18:37:11 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.78 2005/09/09 17:59:45 rafaelsteil Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
@@ -169,7 +169,9 @@ public class JForum extends JForumBaseServlet
 			String module = request.getModule();
 			
 			// Gets the module class name
-			String moduleClass = ModulesRepository.getModuleClass(module);
+			String moduleClass = module != null 
+				? ModulesRepository.getModuleClass(module) 
+				: null;
 			
 			context.put("moduleName", module);
 			context.put("action", request.getAction());
@@ -204,9 +206,8 @@ public class JForum extends JForumBaseServlet
 				}
 			}
 			else {
-				logger.error("Cannot find the module class name for "
-						+ "[module=" + module + ", "
-						+ "action=" + request.getAction() + "]");
+				// Module not found, send 404 not found response
+				response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			}
 		}
 		catch (Exception e) {

@@ -42,6 +42,7 @@
  */
 package net.jforum.repository;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -65,12 +66,15 @@ import net.jforum.entities.Config;
 import net.jforum.entities.Forum;
 import net.jforum.entities.LastPostInfo;
 import net.jforum.entities.MostUsersEverOnline;
+import net.jforum.entities.Post;
+import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.exceptions.CategoryNotFoundException;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.CategoryOrderComparator;
 import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * Repository for the forums of the System.
@@ -79,7 +83,7 @@ import net.jforum.util.preferences.ConfigKeys;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.41 2005/08/30 21:44:05 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.42 2005/09/09 17:59:47 rafaelsteil Exp $
  */
 public class ForumRepository implements Cacheable
 {
@@ -177,6 +181,11 @@ public class ForumRepository implements Cacheable
 		}
 		
 		return (Category)cache.get(FQN, Integer.toString(categoryId)); 
+	}
+	
+	public static Category retrieveCategory(int categoryId)
+	{
+		return (Category)cache.get(FQN, Integer.toString(categoryId));
 	}
 	
 	/**
@@ -488,6 +497,45 @@ public class ForumRepository implements Cacheable
 		}
 		
 		getTotalMessages(true);
+	}
+	
+	public static synchronized void updateForumStats(Topic t, User u, Post p)
+	{
+		Integer f = new Integer(t.getForumId());
+		
+		if (((Map)cache.get(FQN, RELATION)).containsKey(f)) {
+			Forum forum = getForum(t.getForumId());
+
+			SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
+		
+			LastPostInfo lpi = forum.getLastPostInfo();
+			
+			if (lpi == null) {
+				lpi = new LastPostInfo();
+			}
+			
+			lpi.setPostId(p.getId());
+			lpi.setPostDate(df.format(p.getTime()));
+			lpi.setPostTimeMillis(p.getTime().getTime());
+			lpi.setTopicId(t.getId());
+			lpi.setTopicReplies(t.getTotalReplies());
+			lpi.setUserId(u.getId());
+			lpi.setUsername(u.getUsername());
+			
+			forum.setLastPostInfo(lpi);
+			
+			if (t.getTotalReplies() == 0) {
+				forum.setTotalTopics(forum.getTotalTopics() + 1);
+			}
+			else {
+				forum.setTotalPosts(forum.getTotalPosts() + 1);
+			}
+			
+			Category c = retrieveCategory(forum.getCategoryId());
+			c.reloadForum(forum);
+			
+			refreshCategory(c);
+		}
 	}
 	
 	/**

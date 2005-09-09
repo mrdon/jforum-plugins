@@ -90,7 +90,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.95 2005/09/01 20:54:47 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.96 2005/09/09 17:59:48 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -104,7 +104,12 @@ public class PostAction extends Command
 		int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 
 		int topicId = this.request.getIntParameter("topic_id");
-		Topic topic = tm.selectById(topicId);
+		
+		Topic topic = TopicRepository.getTopic(new Topic(topicId));
+		
+		if (topic == null) {
+			topic = tm.selectRaw(topicId);
+		}
 
 		// The topic exists?
 		if (topic.getId() == 0) {
@@ -264,7 +269,12 @@ public class PostAction extends Command
 
 		if (this.request.getParameter("topic_id") != null) {
 			int topicId = this.request.getIntParameter("topic_id");
-			Topic t = DataAccessDriver.getInstance().newTopicDAO().selectRaw(topicId);
+			
+			Topic t = TopicRepository.getTopic(new Topic(topicId));
+			
+			if (t == null) {
+				t = DataAccessDriver.getInstance().newTopicDAO().selectRaw(topicId);
+			}
 			
 			if (!TopicsCommon.isTopicAccessible(t.getForumId())) {
 				return;
@@ -354,7 +364,11 @@ public class PostAction extends Command
 		canAccess = (isModerator || p.getUserId() == userId);
 
 		if ((userId != aId) && canAccess) {
-			Topic topic = DataAccessDriver.getInstance().newTopicDAO().selectById(p.getTopicId());
+			Topic topic = TopicRepository.getTopic(new Topic(p.getTopicId()));
+				
+			if (topic == null) {
+				topic = DataAccessDriver.getInstance().newTopicDAO().selectById(p.getTopicId());
+			}
 
 			if (!TopicsCommon.isTopicAccessible(topic.getForumId())) {
 				return;
@@ -424,7 +438,11 @@ public class PostAction extends Command
 			return;
 		}
 
-		Topic t = DataAccessDriver.getInstance().newTopicDAO().selectRaw(p.getTopicId());
+		Topic t = TopicRepository.getTopic(new Topic(p.getTopicId()));
+		
+		if (t == null) {
+			t = DataAccessDriver.getInstance().newTopicDAO().selectRaw(p.getTopicId());
+		}
 
 		if (!TopicsCommon.isTopicAccessible(t.getForumId())) {
 			return;
@@ -505,7 +523,11 @@ public class PostAction extends Command
 				return;
 			}
 			
-			Topic t = tm.selectRaw(p.getTopicId());
+			Topic t = TopicRepository.getTopic(new Topic(p.getTopicId()));
+			
+			if (t == null) {
+				t = tm.selectRaw(p.getTopicId());
+			}
 
 			if (!TopicsCommon.isTopicAccessible(t.getForumId())) {
 				return;
@@ -595,8 +617,10 @@ public class PostAction extends Command
 		t.setId(-1);
 		t.setForumId(forumId);
 
+		boolean newTopic = (this.request.getParameter("topic_id") == null);
+		
 		if (!TopicsCommon.isTopicAccessible(t.getForumId())
-				|| this.isForumReadonly(t.getForumId(), this.request.getParameter("topic_id") != null)) {
+				|| this.isForumReadonly(t.getForumId(), newTopic)) {
 			return;
 		}
 
@@ -604,8 +628,14 @@ public class PostAction extends Command
 		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
 		ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
 
-		if (this.request.getParameter("topic_id") != null) {
-			t = tm.selectById(this.request.getIntParameter("topic_id"));
+		if (!newTopic) {
+			int topicId = this.request.getIntParameter("topic_id");
+			
+			t = TopicRepository.getTopic(new Topic(topicId));
+			
+			if (t == null) {
+				tm.selectRaw(topicId);
+			}
 			
 			if (!TopicsCommon.isTopicAccessible(t.getForumId())) {
 				return;
@@ -687,6 +717,7 @@ public class PostAction extends Command
 
 		boolean preview = (this.request.getParameter("preview") != null);
 		boolean moderate = false;
+		
 		if (!preview) {
 			AttachmentCommon attachments = new AttachmentCommon(this.request, forumId);
 			
@@ -708,8 +739,11 @@ public class PostAction extends Command
 				t.setTime(new Date());
 				t.setTitle(this.request.getParameter("subject"));
 				t.setModerated(ForumRepository.getForum(forumId).isModerated());
+				t.setPostedBy(u);
+				t.setFirstPostTime(ViewCommon.formatDate(t.getTime()));
 
-				t.setId(tm.addNew(t));
+				int topicId = tm.addNew(t);
+				t.setId(topicId);
 				firstPost = true;
 			}
 			
@@ -733,15 +767,28 @@ public class PostAction extends Command
 				t.setFirstPostId(postId);
 			}
 			
+			t.setLastPostId(postId);
+			t.setLastPostBy(u);
+			t.setLastPostTimeInMillis(p.getTime());
+			t.setLastPostTime(p.getFormatedTime());
+			
 			tm.update(t);
 			
 			attachments.insertAttachments(postId);
 			
 			if (!moderate) {
+				if (!newTopic) {
+					TopicsCommon.notifyUsers(t, tm);
+					t.setTotalReplies(t.getTotalReplies() + 1);
+				}
+				
+				t.setTotalViews(t.getTotalViews() + 1);
+				
 				DataAccessDriver.getInstance().newUserDAO().incrementPosts(p.getUserId());
+				
 				TopicsCommon.updateBoardStatus(t, postId, firstPost, tm, fm, false);
-				TopicsCommon.notifyUsers(t, tm);
-	
+				ForumRepository.updateForumStats(t, u, p);
+				
 				String path = this.request.getContextPath() + "/posts/list/";
 				int start = ViewCommon.getStartPage();
 	

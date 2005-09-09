@@ -49,7 +49,7 @@ import java.util.Date;
  * Represents every topic in the forum.
  * 
  * @author Rafael Steil
- * @version $Id: Topic.java,v 1.11 2005/07/26 03:04:52 rafaelsteil Exp $
+ * @version $Id: Topic.java,v 1.12 2005/09/09 17:59:45 rafaelsteil Exp $
  */
 public class Topic implements Serializable
 {
@@ -84,7 +84,12 @@ public class Topic implements Serializable
 	private boolean hasAttach;
 	
 	public Topic() {}
-		
+	
+	public Topic(int topicId)
+	{
+		this.id = topicId;
+	}
+	
 	/**
 	 * Returns the ID of the firts topic
 	 * 

@@ -53,7 +53,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
-import net.jforum.exceptions.InvalidURLPatternException;
 import net.jforum.exceptions.MultipartHandlingException;
 import net.jforum.util.legacy.commons.fileupload.FileItem;
 import net.jforum.util.legacy.commons.fileupload.FileUploadException;
@@ -65,7 +64,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: ActionServletRequest.java,v 1.28 2005/09/08 18:37:11 rafaelsteil Exp $
+ * @version $Id: ActionServletRequest.java,v 1.29 2005/09/09 17:59:45 rafaelsteil Exp $
  */
 public class ActionServletRequest extends HttpServletRequestWrapper 
 {
@@ -252,7 +251,10 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 		
 		if ((("GET").equals(requestType) && (superRequest.getQueryString() == null)) 
 				&& requestUri.endsWith(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION))) {
-			superRequest.setCharacterEncoding(encoding);  
+			superRequest.setCharacterEncoding(encoding); 
+			
+			requestUri = requestUri.substring(0, requestUri.length() - SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION).length());
+			
 			String[] urlModel = requestUri.split("/");
 			
 			// If (context name is not null) {
@@ -279,28 +281,31 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 				baseLen = 3;
 			}
 			
-			urlModel[urlModel.length - 1] = (urlModel[urlModel.length - 1]).substring(0, (urlModel[urlModel.length - 1]).indexOf(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)));
+			UrlPattern url = null;
 			
-			// <moduleName>.<actionName>.<numberOfParameters>
-			UrlPattern url = UrlPatternCollection.findPattern(urlModel[moduleIndex] 
+			if (urlModel.length >= baseLen) {
+				// <moduleName>.<actionName>.<numberOfParameters>
+				url = UrlPatternCollection.findPattern(urlModel[moduleIndex] 
 					+ "." 
 					+ urlModel[actionIndex] 
 					+ "." 
 					+ (urlModel.length - baseLen));
-
-			if (url == null) {
-				throw new InvalidURLPatternException("The request '" + superRequest.getRequestURI() 
-						+ "' is not valid. A correspondent URL Pattern was not found");
 			}
-			
-			this.addParameter("module", urlModel[moduleIndex]);
-			this.addParameter("action", urlModel[actionIndex]);
-			
-			// We have parameters? 
-			if (url.getSize() >= urlModel.length - baseLen) {
-				for (int i = 0; i < url.getSize(); i++) {
-					this.addParameter(url.getVars()[i], urlModel[i + baseLen]);
+
+			if (url != null) {
+				// We have parameters? 
+				if (url.getSize() >= urlModel.length - baseLen) {
+					for (int i = 0; i < url.getSize(); i++) {
+						this.addParameter(url.getVars()[i], urlModel[i + baseLen]);
+					}
 				}
+				
+				this.addParameter("module", urlModel[moduleIndex]);
+				this.addParameter("action", urlModel[actionIndex]);
+			}
+			else {
+				this.addParameter("module", null);
+				this.addParameter("action", null);
 			}
 		}
 		else if (("POST").equals(requestType)) {

@@ -42,6 +42,8 @@
  */
 package net.jforum.view.forum.common;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 import net.jforum.Command;
@@ -58,7 +60,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.14 2005/09/01 20:54:46 rafaelsteil Exp $
+ * @version $Id: ViewCommon.java,v 1.15 2005/09/09 17:59:44 rafaelsteil Exp $
  */
 public final class ViewCommon
 {
@@ -225,6 +227,12 @@ public final class ViewCommon
 		}
 	
 		return sb.toString();
+	}
+	
+	public static String formatDate(Date date) 
+	{
+		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
+		return df.format(date);
 	}
 
 	public static void prepareUserSignature(User u) throws Exception

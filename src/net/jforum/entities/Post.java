@@ -45,11 +45,13 @@ package net.jforum.entities;
 import java.io.Serializable;
 import java.util.Date;
 
+import net.jforum.view.forum.common.ViewCommon;
+
 /**
  * Represents every message post in the system.
  * 
  * @author Rafael Steil
- * @version $Id: Post.java,v 1.12 2005/07/31 03:51:54 rafaelsteil Exp $
+ * @version $Id: Post.java,v 1.13 2005/09/09 17:59:45 rafaelsteil Exp $
  */
 public class Post implements Serializable 
 {
@@ -342,6 +344,10 @@ public class Post implements Serializable
 	
 	public String getFormatedTime()
 	{
+		if (this.formatedTime == null && this.time != null) {
+			this.formatedTime = ViewCommon.formatDate(this.time);
+		}
+		
 		return this.formatedTime;
 	}
 
