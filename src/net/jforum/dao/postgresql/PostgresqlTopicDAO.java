@@ -46,9 +46,9 @@ import java.util.List;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostgresqlTopicDAO.java,v 1.4 2005/07/26 03:05:10 rafaelsteil Exp $
+ * @version $Id: PostgresqlTopicDAO.java,v 1.5 2005/09/12 21:05:28 rafaelsteil Exp $
  */
-public class PostgresqlTopicDAO extends net.jforum.dao.generic.GenericTopicModelDAO
+public class PostgresqlTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 {
 	/** 
 	 * @see net.jforum.dao.TopicDAO#selectAllByForumByLimit(int, int, int)

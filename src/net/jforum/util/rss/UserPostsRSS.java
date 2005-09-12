@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -36,7 +36,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on 22/10/2004 00:51:36
+ * Created on 12/09/2005 16:10:15
  * The JForum Project
  * http://www.jforum.net
  */
@@ -54,8 +54,8 @@ import net.jforum.view.forum.common.ViewCommon;
 /**
  * RSS for the messages of some topic
  * 
- * @author Rafael Steil
- * @version $Id: UserPostsRSS.java,v 1.1 2005/09/12 17:12:44 vmal Exp $
+ * @author Vladislav Malyshkin
+ * @version $Id: UserPostsRSS.java,v 1.2 2005/09/12 21:05:27 rafaelsteil Exp $
  */
 public class UserPostsRSS extends GenericRSS 
 {

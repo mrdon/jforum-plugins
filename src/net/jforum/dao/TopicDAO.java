@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -56,7 +56,7 @@ import net.jforum.entities.Topic;
  * select some specific data.
  *
  * @author Rafael Steil
- * @version $Id: TopicDAO.java,v 1.7 2005/09/12 17:12:39 vmal Exp $
+ * @version $Id: TopicDAO.java,v 1.8 2005/09/12 21:05:24 rafaelsteil Exp $
  */
 public interface TopicDAO 
 {
@@ -117,7 +117,14 @@ public interface TopicDAO
 	 * @throws Exception
 	 */
 	public List selectByUserByLimit(int userId,int startFrom, int count) throws Exception;
-        public int getUserTopics(int userId) throws Exception;
+
+	/**
+	 * How many topics were created by a given user
+	 * @param userId the user id to check
+	 * @return the number of topics created by the user
+	 * @throws Exception
+	 */
+	public int countUserTopics(int userId) throws Exception;
 
 	/**
 	 * Selects the last <code>count</code> topics postted. 

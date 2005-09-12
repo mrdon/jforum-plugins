@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -44,7 +44,6 @@ package net.jforum.dao.generic;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -62,20 +61,15 @@ import net.jforum.dao.PostDAO;
 import net.jforum.entities.KarmaStatus;
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
-import net.jforum.entities.Category;
-import net.jforum.entities.Forum;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.repository.ForumRepository;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTopicModelDAO.java,v 1.7 2005/09/12 17:12:41 vmal Exp $
+ * @version $Id: GenericTopicDAO.java,v 1.2 2005/09/12 21:05:21 rafaelsteil Exp $
  */
-public class GenericTopicModelDAO extends AutoKeys implements net.jforum.dao.TopicDAO 
+public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO 
 {
-	private int DUPLICATE_KEY = 1062;
-	
 	/**
 	 * @see net.jforum.dao.TopicDAO#fixFirstLastPostId(int)
 	 */
@@ -319,43 +313,50 @@ public class GenericTopicModelDAO extends AutoKeys implements net.jforum.dao.Top
 		return l;
 	}
 
-    public List selectByUserByLimit(int userId,int startFrom, int count) throws Exception
-    {
-
-	StringBuffer sql = new StringBuffer(SystemGlobals.getSql("TopicModel.selectByUserByLimit"));
-	int index = sql.indexOf(":fids:");
-	sql.replace(index, index + 6, ForumRepository.getListAllowedForums());
-	PreparedStatement p = JForum.getConnection().prepareStatement(sql.toString());
-	p.setInt(1,userId);
-	p.setInt(2, startFrom);
-	p.setInt(3, count);
-	ResultSet rs = p.executeQuery();
-	List l = this.fillTopicsData(rs);		
-	rs.close();
-	p.close();
-	return l;
-    }
-
-    public int getUserTopics(int userId) throws Exception
-    {
-	int total = 0;
-
-	StringBuffer sql = new StringBuffer(SystemGlobals.getSql("TopicModel.getUserTopics"));
-	int index = sql.indexOf(":fids:");
-	sql.replace(index, index + 6, ForumRepository.getListAllowedForums());
-	PreparedStatement p = JForum.getConnection().prepareStatement(sql.toString());
-	p.setInt(1, userId);
+	/**
+	 * @see net.jforum.dao.TopicDAO#selectByUserByLimit(int, int, int)
+	 */
+	public List selectByUserByLimit(int userId, int startFrom, int count) throws Exception
+	{
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("TopicModel.selectByUserByLimit"));
 		
-	ResultSet rs = p.executeQuery();
-	if (rs.next()) {
-	    total = rs.getInt("total");
+		p.setInt(1,userId);
+		p.setInt(2, startFrom);
+		p.setInt(3, count);
+		
+		ResultSet rs = p.executeQuery();
+		
+		List l = this.fillTopicsData(rs);		
+		
+		rs.close();
+		p.close();
+		
+		return l;
 	}
+	
+	/**
+	 * @see net.jforum.dao.TopicDAO#countUserTopics(int)
+	 */
+	public int countUserTopics(int userId) throws Exception
+	{
+		int total = 0;
 		
-	rs.close();
-	p.close();
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("TopicModel.countUserTopics"));
+		p.setInt(1, userId);
 		
-	return total;
-    }
+		ResultSet rs = p.executeQuery();
+		
+		if (rs.next()) {
+			total = rs.getInt(1);
+		}
+		
+		rs.close();
+		p.close();
+		
+		return total;
+	}
 	
 	protected Topic getBaseTopicData(ResultSet rs) throws Exception
 	{
@@ -533,24 +534,13 @@ public class GenericTopicModelDAO extends AutoKeys implements net.jforum.dao.Top
 	 */
 	public void subscribeUser(int topicId, int userId) throws Exception 
 	{
-		PreparedStatement stmt = JForum.getConnection(). prepareStatement( SystemGlobals.getSql("TopicModel.subscribeUser"));
+		PreparedStatement p = JForum.getConnection(). prepareStatement(SystemGlobals.getSql("TopicModel.subscribeUser"));
 		
-		try {
-			stmt.setInt(1, topicId);
-			stmt.setInt(2, userId);
+		p.setInt(1, topicId);
+		p.setInt(2, userId);
 			
-			stmt.executeUpdate();
-		} catch(SQLException e) {
-			// Ignore duplicate key warnings
-			if(e.getErrorCode() != DUPLICATE_KEY) {
-				throw e;			
-			}
-		}
-		finally {
-			if(stmt != null) {
-				stmt.close();
-			}
-		}		
+		p.executeUpdate();
+		p.close();
 	}
 	
 	/**

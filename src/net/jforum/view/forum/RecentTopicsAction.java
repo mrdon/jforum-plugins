@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -43,32 +43,33 @@
 package net.jforum.view.forum;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import net.jforum.Command;
 import net.jforum.JForum;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.UserDAO;
 import net.jforum.entities.Forum;
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.TopicRepository;
+import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
-import net.jforum.util.I18n;
 import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
-import net.jforum.view.forum.common.ForumCommon;
-import net.jforum.dao.UserDAO;
-import net.jforum.dao.DataAccessDriver;
 
 /**
  * Display a list of recent Topics
  * 
  * @author James Yong
  * @author Rafael Steil
- * @version $Id: RecentTopicsAction.java,v 1.12 2005/09/12 17:12:46 vmal Exp $
+ * @version $Id: RecentTopicsAction.java,v 1.13 2005/09/12 21:05:22 rafaelsteil Exp $
  */
 public class RecentTopicsAction extends Command 
 {
@@ -112,36 +113,54 @@ public class RecentTopicsAction extends Command
 
 	public void showTopicsByUser() throws Exception
 	{
-	    DataAccessDriver da = DataAccessDriver.getInstance();
-	    UserDAO udao = da.newUserDAO();
-	    User u = udao.selectById(this.request.getIntParameter("user_id"));
+		DataAccessDriver da = DataAccessDriver.getInstance();
 		
-	    if (u.getId() == 0) {
-		this.context.put("message", I18n.getMessage("User.notFound"));
-		this.setTemplateName(TemplateKeys.USER_NOT_FOUND);
-	    } else {
-
+		UserDAO udao = da.newUserDAO();
+		User u = udao.selectById(this.request.getIntParameter("user_id"));
+		
+		if (u.getId() == 0) {
+			this.context.put("message", I18n.getMessage("User.notFound"));
+			this.setTemplateName(TemplateKeys.USER_NOT_FOUND);
+			return;
+		} 
+			
 		TopicsCommon.topicListingBase();
+		
 		int start = ViewCommon.getStartPage();
 		int topicsPerPage = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
-
-		int totalTopics=da.newTopicDAO().getUserTopics(u.getId());
+		
 		this.setTemplateName(TemplateKeys.RECENT_USER_TOPICS_SHOW);
-		this.context.put("u",u);
-		this.context.put("pageTitle", I18n.getMessage("ForumListing.userTopics")+" "+u.getUsername());
-					
-		ViewCommon.contextToPagination(start, totalTopics, topicsPerPage);
+		
+		int totalTopics = da.newTopicDAO().countUserTopics(u.getId());
+		
+		this.context.put("u", u);
+		this.context.put("pageTitle", I18n.getMessage("ForumListing.userTopics") + " " + u.getUsername());
+		
 		this.context.put("postsPerPage", new Integer(postsPerPage));
-		List l=TopicsCommon.prepareTopics(da.newTopicDAO().selectByUserByLimit(u.getId(),start,topicsPerPage));
-		List fl = new ArrayList();
+		
+		List topics = da.newTopicDAO().selectByUserByLimit(u.getId(),start,topicsPerPage);
+		
+		List l = TopicsCommon.prepareTopics(topics);
+		Map forums = new HashMap();
+		
 		for (Iterator iter = l.iterator(); iter.hasNext(); ) {
-		    // they all are accessible
-		    // Get name of forum that the topic refers to
-		    fl.add(ForumRepository.getForum(((Topic)iter.next()).getForumId()));
+			Topic t = (Topic)iter.next();
+			
+			Forum f = ForumRepository.getForum(t.getForumId());
+			
+			if (f == null) {
+				iter.remove();
+				totalTopics--;
+				continue;
+			}
+			
+			forums.put(new Integer(t.getForumId()), f);
 		}
+		
 		this.context.put("topics", l);
-		this.context.put("forums", fl);
-	    }
+		this.context.put("forums", forums);
+		
+		ViewCommon.contextToPagination(start, totalTopics, topicsPerPage);
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -36,23 +36,21 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on 21/10/2004 00:10:00
+ * Created on 12/09/2005 16:10:11
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.util.rss;
 
-import java.util.Iterator;
 import java.util.List;
 
-import net.jforum.entities.Topic;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.view.forum.common.ViewCommon;
 
 /**
- * @author Rafael Steil
- * @version $Id: UserTopicsRSS.java,v 1.1 2005/09/12 17:12:44 vmal Exp $
+ * @author Vladislav Malyshkin
+ * @version $Id: UserTopicsRSS.java,v 1.2 2005/09/12 21:05:26 rafaelsteil Exp $
  */
 public class UserTopicsRSS extends TopicRSS
 {	

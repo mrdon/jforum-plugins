@@ -83,7 +83,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.43 2005/09/12 17:12:42 vmal Exp $
+ * @version  $Id: ForumRepository.java,v 1.44 2005/09/12 21:05:24 rafaelsteil Exp $
  */
 public class ForumRepository implements Cacheable
 {
@@ -808,29 +808,4 @@ public class ForumRepository implements Cacheable
 		
 		cache.add(FQN, MOST_USERS_ONLINE, mostUsersEverOnline);
 	}
-
-
-    public static String getListAllowedForums() throws Exception
-    {
-	StringBuffer buf=new StringBuffer();
-	int n=0;
-	for (Iterator iter = ForumRepository.getAllCategories().iterator();iter.hasNext(); ) {
-	    for (Iterator tmpIterator = ((Category)iter.next()).getForums().iterator(); tmpIterator.hasNext(); ) {
-		Forum f = (Forum)tmpIterator.next();
-		if(ForumRepository.isForumAccessible(f.getId()))
-		{
-		    if(n++>0)
-		    {
-			buf.append(",");
-		    }
-		    buf.append(String.valueOf(f.getId()));
-		}
-	    }
-	}
-	if(n<=0)
-	{
-	    return "-1";
-	}
-	return buf.toString();
-    }
 }

@@ -46,9 +46,9 @@ import java.util.List;
 
 /**
  * @author Dmitriy Kiriy
- * @version $Id: OracleTopicDAO.java,v 1.5 2005/07/26 03:04:57 rafaelsteil Exp $
+ * @version $Id: OracleTopicDAO.java,v 1.6 2005/09/12 21:05:26 rafaelsteil Exp $
  */
-public class OracleTopicDAO extends net.jforum.dao.generic.GenericTopicModelDAO
+public class OracleTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 {
    	/**
 	 * @see net.jforum.dao.TopicDAO#selectAllByForumByLimit(int, int, int)

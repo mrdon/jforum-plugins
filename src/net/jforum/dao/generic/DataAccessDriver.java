@@ -48,14 +48,14 @@ import net.jforum.dao.generic.security.GenericUserSecurityDAO;
 
 /**
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.7 2005/07/26 03:04:42 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.8 2005/09/12 21:05:21 rafaelsteil Exp $
  */
 public class DataAccessDriver extends net.jforum.dao.DataAccessDriver 
 {
 	private static GenericGroupDAO groupDao = new GenericGroupDAO();
 	private static GenericPostDAO postDao = new GenericPostDAO();
 	private static GenericRankingDAO rankingDao = new GenericRankingDAO();
-	private static GenericTopicModelDAO topicDao = new GenericTopicModelDAO();
+	private static GenericTopicDAO topicDao = new GenericTopicDAO();
 	private static GenericUserDAO userDao = new GenericUserDAO();
 	private static GenericTreeGroupDAO treeGroupDao = new GenericTreeGroupDAO();
 	private static GenericSmilieDAO smilieDao = new GenericSmilieDAO();

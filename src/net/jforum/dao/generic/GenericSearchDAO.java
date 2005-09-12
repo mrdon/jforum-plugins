@@ -61,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericSearchDAO.java,v 1.7 2005/08/27 15:32:55 rafaelsteil Exp $
+ * @version $Id: GenericSearchDAO.java,v 1.8 2005/09/12 21:05:21 rafaelsteil Exp $
  */
 public class GenericSearchDAO implements net.jforum.dao.SearchDAO	
 {
@@ -106,7 +106,7 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 
 		ResultSet rs = p.executeQuery();
 		
-		l = new GenericTopicModelDAO().fillTopicsData(rs);
+		l = new GenericTopicDAO().fillTopicsData(rs);
 		
 		rs.close();
 		p.close();

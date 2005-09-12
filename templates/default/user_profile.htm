@@ -43,23 +43,18 @@
 				
 				<tr>
 					<td valign="top" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("UserProfile.totalMessages")}:&nbsp;</span></td>
-					<td valign="top"><b><span class="gen">${u.totalPosts}</span></b><br /></span></td>
-				</tr>
-				<tr>
-					<td valign="top" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("PostShow.userCreatedPosts")}:</span></td>
-					<td>
-						<#if (npostscreated > 0)>
-							<b><a class="gen" href="${JForumContext.encodeURL("/posts/listByUser/${u.id}")}">[${npostscreated}] ${I18n.getMessage("PostShow.userPosts")?html} ${u.username?html}</a> </b>
+					<td valign="top">
+						<#if (u.totalPosts > 0)>
+							<b><a class="gen" href="${JForumContext.encodeURL("/posts/listByUser/${u.id}")}">[${u.totalPosts}] ${I18n.getMessage("PostShow.userPosts")} ${u.username?html}</a> </b>
 						<#else>
-							<span class="gensmall">${I18n.getMessage("PostShow.noUserCreatedPosts")}</span>
+							<span class="gen">${I18n.getMessage("PostShow.noUserCreatedPosts")}</span>
 						</#if>
-						</td>
 				</tr>
 				<tr>
 					<td valign="top" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("ForumListing.userCreatedTopics")}:</span></td>
 					<td>
-						<#if (ntopicscreated > 0)>
-							<b><a class="gen" href="${JForumContext.encodeURL("/recentTopics/showTopicsByUser/${u.id}")}">[${ntopicscreated}] ${I18n.getMessage("ForumListing.userTopics")?html} ${u.username?html}</a> </b>
+						<#if (ntopics > 0)>
+							<b><a class="gen" href="${JForumContext.encodeURL("/recentTopics/showTopicsByUser/${u.id}")}">[${ntopics}] ${I18n.getMessage("ForumListing.userTopics")?html} ${u.username?html}</a> </b>
 						<#else>
 							<span class="gensmall">${I18n.getMessage("ForumListing.noUserCreatedTopics")}</span>
 						</#if>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -54,7 +54,7 @@ import net.jforum.entities.Post;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: PostDAO.java,v 1.6 2005/09/12 17:12:39 vmal Exp $
+ * @version $Id: PostDAO.java,v 1.7 2005/09/12 21:05:24 rafaelsteil Exp $
  */
 public interface PostDAO 
 {
@@ -114,7 +114,6 @@ public interface PostDAO
 	 * @throws Exception
 	 */
 	public List selectByUserByLimit(int userId,int startFrom, int count) throws Exception;
-        public int getUserPosts(int userId) throws Exception;
 	
 	/**
 	 * Selects all messages relacted to a specific topic. 
@@ -132,4 +131,12 @@ public interface PostDAO
 	 * @throws Exception
 	 */
 	public void deleteByTopic(int topicId) throws Exception;
+
+	/**
+	 * Count how many previous posts there are before the given post id
+	 * @param postId
+	 * @return
+	 * @throws Exception
+	 */
+	public int countPreviousPosts(int postId) throws Exception;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -76,7 +76,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.21 2005/07/26 03:05:56 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.22 2005/09/12 21:05:28 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {
@@ -157,23 +157,7 @@ public class AttachmentCommon
 			info.setMimetype(item.getContentType());
 			
 			// Get only the filename, without the path (IE does that)
-			String realName = item.getName();
-			String separator = "/";
-			int index = realName.indexOf(separator);
-			
-			if (index == -1) {
-				separator = "\\";
-				index = realName.indexOf(separator);
-			}
-			
-			if (index > -1) {
-				if (separator.equals("\\")) {
-					separator = "\\\\";
-				}
-				
-				String[] p = realName.split(separator);
-				realName = p[p.length - 1];
-			}
+			String realName = this.stripPath(item.getName());
 			
 			info.setRealFilename(realName);
 			info.setUploadTimeInMillis(System.currentTimeMillis());
@@ -202,6 +186,27 @@ public class AttachmentCommon
 							new Integer((int)totalSize / 1024) }));
 			}
 		}
+	}
+
+	/**
+	 * @param realName
+	 * @return
+	 */
+	public String stripPath(String realName)
+	{
+		String separator = "/";
+		int index = realName.lastIndexOf(separator);
+		
+		if (index == -1) {
+			separator = "\\";
+			index = realName.lastIndexOf(separator);
+		}
+		
+		if (index > -1) {
+			realName = realName.substring(index + 1);
+		}
+		
+		return realName;
 	}
 	
 	public void insertAttachments(int postId) throws Exception

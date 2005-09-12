@@ -78,7 +78,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.52 2005/09/12 17:12:46 vmal Exp $
+ * @version $Id: UserAction.java,v 1.53 2005/09/12 21:05:22 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -430,8 +430,7 @@ public class UserAction extends Command
 			}
 			
 			this.context.put("nbookmarks", new Integer(count));
-			this.context.put("ntopicscreated",new Integer(da.newTopicDAO().getUserTopics(u.getId())));
-			this.context.put("npostscreated",new Integer(da.newPostDAO().getUserPosts(u.getId())));
+			this.context.put("ntopics", new Integer(da.newTopicDAO().countUserTopics(u.getId())));
 		}
 	}
 	

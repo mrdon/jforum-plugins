@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -75,7 +75,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: RSSAction.java,v 1.20 2005/09/12 17:12:45 vmal Exp $
+ * @version $Id: RSSAction.java,v 1.21 2005/09/12 21:05:22 rafaelsteil Exp $
  */
 public class RSSAction extends Command 
 {
@@ -157,46 +157,50 @@ public class RSSAction extends Command
 		this.context.put("rssContents", rss.createRSS());
 	}
 
-        public void showTopicsByUser() throws Exception
+	public void showTopicsByUser() throws Exception
 	{
-
-	        int uid= this.request.getIntParameter("user_id");
-
+		int uid = this.request.getIntParameter("user_id");
+		
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		User u = um.selectById(uid);
 		
-		if (u==null||u.getId()==0){
+		if (u == null || u.getId() == 0) {
 			return;
 		}
-
-                List topics = DataAccessDriver.getInstance().newTopicDAO().selectByUserByLimit(u.getId(), 0, SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE));
+		
+		List topics = DataAccessDriver.getInstance().newTopicDAO().selectByUserByLimit(u.getId(), 
+				0, 
+				SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE));
+		
 		String[] p = { u.getUsername() };
 		
 		String title = I18n.getMessage("RSS.TopicsByUser.title", p);
 		String description = I18n.getMessage("RSS.TopicsByUser.description", p);
-
+		
 		RSSAware rss = new UserTopicsRSS(title, description, u.getId(), topics);
 		this.context.put("rssContents", rss.createRSS());
 	}
-
-        public void showPostsByUser() throws Exception
+	
+	public void showPostsByUser() throws Exception
 	{
-
-	        int uid= this.request.getIntParameter("user_id");
-
+		int uid = this.request.getIntParameter("user_id");
+		
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		User u = um.selectById(uid);
 		
-		if (u==null||u.getId()==0){
+		if (u == null || u.getId() == 0) {
 			return;
 		}
-
-                List topics = DataAccessDriver.getInstance().newPostDAO().selectByUserByLimit(u.getId(), 0, SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE));
+		
+		List topics = DataAccessDriver.getInstance().newPostDAO().selectByUserByLimit(u.getId(), 
+				0, 
+				SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE));
+		
 		String[] p = { u.getUsername() };
 		
 		String title = I18n.getMessage("RSS.PostsByPosts.title", p);
 		String description = I18n.getMessage("RSS.PostsByPosts.description", p);
-
+		
 		RSSAware rss = new UserPostsRSS(title, description, u.getId(), topics);
 		this.context.put("rssContents", rss.createRSS());
 	}

@@ -73,7 +73,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.45 2005/08/27 15:32:55 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.46 2005/09/12 21:05:21 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -166,6 +166,7 @@ public class ForumAction extends Command
 		
 		// The user can access this forum?
 		Forum forum = ForumRepository.getForum(forumId);
+		
 		if (forum == null || !ForumRepository.isCategoryAccessible(forum.getCategoryId())) {
 			new ModerationHelper().denied(I18n.getMessage("ForumListing.denied"));
 			return;
@@ -189,7 +190,7 @@ public class ForumAction extends Command
 			topicsToApprove = mdao.topicsByForum(forumId);
 			this.context.put("postFormatter", PostCommon.getInstance());
 		}
-		
+
 		this.context.put("topicsToApprove", topicsToApprove);
 		
 		this.context.put("attachmentsEnabled", SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED,
