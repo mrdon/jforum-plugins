@@ -90,7 +90,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.96 2005/09/09 17:59:48 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.97 2005/09/12 01:26:00 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -668,8 +668,6 @@ public class PostAction extends Command
 		u.setId(us.getUserId());
 		u.setUsername(us.getUsername());
 
-		t.setPostedBy(u);
-
 		// Set the Post
 		Post p = PostCommon.fillPostFromRequest();
 		
@@ -763,7 +761,7 @@ public class PostAction extends Command
 			p.setModerate(moderate);
 			int postId = pm.addNew(p);
 
-			if (this.request.getParameter("topic_id") == null) {
+			if (newTopic) {
 				t.setFirstPostId(postId);
 			}
 			
@@ -786,7 +784,7 @@ public class PostAction extends Command
 				
 				DataAccessDriver.getInstance().newUserDAO().incrementPosts(p.getUserId());
 				
-				TopicsCommon.updateBoardStatus(t, postId, firstPost, tm, fm, false);
+				TopicsCommon.updateBoardStatus(t, postId, firstPost, tm, fm);
 				ForumRepository.updateForumStats(t, u, p);
 				
 				String path = this.request.getContextPath() + "/posts/list/";

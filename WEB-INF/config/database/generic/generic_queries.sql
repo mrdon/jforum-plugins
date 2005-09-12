@@ -1,4 +1,3 @@
-
 # ############
 # GroupModel 
 # ############
@@ -242,6 +241,7 @@ TopicModel.selectAllByForumByLimit = SELECT t.*, u.username AS posted_by_usernam
 	WHERE t.forum_id = ? \
 	AND t.user_id = u.user_id \
 	AND p.post_id = t.topic_first_post_id \
+	AND p.need_moderate = 0 \
 	AND p2.post_id = t.topic_last_post_id \
 	AND u2.user_id = p2.user_id \
 	ORDER BY t.topic_type DESC, p2.post_time DESC, t.topic_last_post_id DESC \
@@ -297,6 +297,7 @@ TopicModel.selectRecentTopicsByLimit = SELECT t.*, u.username AS posted_by_usern
 	FROM jforum_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2 \
 	WHERE t.user_id = u.user_id \
 	AND p.post_id = t.topic_first_post_id \
+	AND p.need_moderate = 0 \
 	AND p2.post_id = t.topic_last_post_id \
 	AND u2.user_id = p2.user_id \
 	AND t.topic_type = 0 \

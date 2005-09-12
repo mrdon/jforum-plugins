@@ -52,6 +52,7 @@ import net.jforum.repository.SecurityRepository;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.Captcha;
+import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -61,7 +62,7 @@ import com.octo.captcha.image.ImageCaptcha;
  * Stores information about user's session.
  * 
  * @author Rafael Steil
- * @version $Id: UserSession.java,v 1.22 2005/07/26 04:01:25 diegopires Exp $
+ * @version $Id: UserSession.java,v 1.23 2005/09/12 01:25:57 rafaelsteil Exp $
  */
 public class UserSession implements Serializable
 {
@@ -246,6 +247,10 @@ public class UserSession implements Serializable
 	 */
 	public String getUsername()
 	{
+		if (this.username == null && this.userId == SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
+			this.username = I18n.getMessage("Guest");
+		}
+		
 		return this.username;
 	}
 

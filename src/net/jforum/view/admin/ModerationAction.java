@@ -46,11 +46,12 @@ import net.jforum.ActionServletRequest;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.PostDAO;
 import net.jforum.dao.TopicDAO;
+import net.jforum.dao.UserDAO;
 import net.jforum.entities.Post;
 import net.jforum.entities.Topic;
+import net.jforum.entities.User;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.PostRepository;
-import net.jforum.repository.TopicRepository;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
@@ -61,7 +62,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationAction.java,v 1.15 2005/08/27 15:32:55 rafaelsteil Exp $
+ * @version $Id: ModerationAction.java,v 1.16 2005/09/12 01:25:57 rafaelsteil Exp $
  */
 public class ModerationAction extends AdminCommand
 {
@@ -114,17 +115,19 @@ public class ModerationAction extends AdminCommand
 						continue;
 					}
 					
-					Topic t = tm.selectRaw(p.getTopicId());
+					Topic t = tm.selectById(p.getTopicId());
 					
 					DataAccessDriver.getInstance().newModerationDAO().aprovePost(postId);
 					
 					TopicsCommon.updateBoardStatus(t, postId, t.getFirstPostId() == postId,
-							tm, DataAccessDriver.getInstance().newForumDAO(), true);
+							tm, DataAccessDriver.getInstance().newForumDAO());
 					
-					ForumRepository.reloadForum(t.getForumId());
-					TopicRepository.clearCache(t.getForumId());
+					UserDAO udao = DataAccessDriver.getInstance().newUserDAO();
+					User u = udao.selectById(p.getUserId());
 					
-					DataAccessDriver.getInstance().newUserDAO().incrementPosts(p.getUserId());
+					ForumRepository.updateForumStats(t, u, p);
+					
+					udao.incrementPosts(p.getUserId());
 					
 					if (SystemGlobals.getBoolValue(ConfigKeys.POSTS_CACHE_ENABLED)) {
 						PostRepository.append(p.getTopicId(), PostCommon.preparePostForDisplay(p));
