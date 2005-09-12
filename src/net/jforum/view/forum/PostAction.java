@@ -50,6 +50,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 
 import net.jforum.Command;
@@ -90,7 +91,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.97 2005/09/12 01:26:00 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.98 2005/09/12 17:12:45 vmal Exp $
  */
 public class PostAction extends Command 
 {
@@ -203,6 +204,109 @@ public class PostAction extends Command
 		// Pagination
 		int totalPosts = tm.getTotalPosts(topic.getId());
 		ViewCommon.contextToPagination(start, totalPosts, count);
+	}
+
+	public void listByUser() throws Exception 
+	{
+	    PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
+	    UserDAO um = DataAccessDriver.getInstance().newUserDAO();
+	    TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
+	    
+	    UserSession us = SessionFacade.getUserSession();
+	    int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
+
+		
+	    User u = um.selectById(this.request.getIntParameter("user_id"));
+		
+	    if (u.getId() == 0) {
+		this.context.put("message", I18n.getMessage("User.notFound"));
+		this.setTemplateName(TemplateKeys.USER_NOT_FOUND);
+	    } else {
+
+		int count = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
+		int start = ViewCommon.getStartPage();
+		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
+
+		PermissionControl pc = SecurityRepository.get(us.getUserId());
+
+		boolean canEdit = false;
+		if (pc.canAccess(SecurityConstants.PERM_MODERATION_POST_EDIT)) {
+			canEdit = true;
+		}
+
+		List posts = pm.selectByUserByLimit(u.getId(),start,postsPerPage) ;
+		int totalPosts=pm.getUserPosts(u.getId());
+		ViewCommon.contextToPagination(start, totalPosts, count);
+
+		// get list of forums
+		ArrayList 
+		    topics=new ArrayList(),
+		    forums=new ArrayList(),
+		    attachmentsmodel=new ArrayList(),
+		    karmavotes=new ArrayList(),
+		    readonly=new ArrayList(),
+		    replyonly=new ArrayList(),
+		    ismoderator=new ArrayList();
+		    
+		    
+		for (Iterator iter = posts.iterator(); iter.hasNext(); ) {
+		    // they all are accessible because they are from selectByUserByLimit
+		    // Get name of forum that the topic refers to
+		    Post p=(Post)iter.next();
+		    Topic topic = TopicRepository.getTopic(new Topic(p.getTopicId()));
+		    if (topic == null) {
+			topic = tm.selectRaw(p.getTopicId());
+		    }
+		    topics.add(topic);
+		    forums.add(ForumRepository.getForum(p.getForumId()));
+		    karmavotes.add(DataAccessDriver.getInstance().newKarmaDAO().getUserVotes(p.getTopicId(), us.getUserId()));
+		    if(SecurityRepository.canAccess(
+			SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(p.getForumId()))) {
+			attachmentsmodel.add(new AttachmentCommon(this.request, p.getForumId()));
+		    } else {
+			attachmentsmodel.add(null);
+		    }
+		    if(!SecurityRepository.canAccess(SecurityConstants.PERM_READ_ONLY_FORUMS, 
+						     Integer.toString(topic.getForumId()))) {
+			readonly.add(new Boolean(true));	
+		    } else {
+			readonly.add(new Boolean(false));
+		    }
+		    if(!SecurityRepository.canAccess(SecurityConstants.PERM_REPLY_ONLY, 
+						     Integer.toString(topic.getForumId()))) {
+			replyonly.add(new Boolean(true));
+		    } else {
+			replyonly.add(new Boolean(false));
+		    }
+		    if(us.isModerator(topic.getForumId())) {
+			ismoderator.add(new Boolean(true));
+		    } else {
+			ismoderator.add(new Boolean(false));
+		    }
+		}
+		this.context.put("canDownloadAttachments", SecurityRepository.canAccess(
+				   SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD));
+		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
+		this.context.put("canRemove",
+				SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE));
+		this.context.put("canEdit", canEdit);
+		this.setTemplateName(TemplateKeys.POSTS_USER_POSTS_LIST);
+		this.context.put("allCategories", ForumCommon.getAllCategoriesAndForums(false));
+		this.context.put("rank", new RankingRepository());
+		this.context.put("posts", posts);
+		this.context.put("topics", topics);
+		this.context.put("forums", forums);
+		this.context.put("karmavotes",karmavotes);
+		this.context.put("attachmentsmodel",attachmentsmodel);
+		this.context.put("readonlylist",readonly);
+		this.context.put("replyonlylist",replyonly);
+		this.context.put("ismoderatorlist",ismoderator);
+		this.context.put("u",u);
+		this.context.put("pageTitle", I18n.getMessage("PostShow.userPosts")+" "+u.getUsername());
+		this.context.put("isAdmin", SecurityRepository.canAccess(SecurityConstants.PERM_ADMINISTRATION));
+		this.context.put("STATUS_LOCKED", new Integer(Topic.STATUS_LOCKED));
+		this.context.put("STATUS_UNLOCKED", new Integer(Topic.STATUS_UNLOCKED));
+	    }
 	}
 
 	public void review() throws Exception {
@@ -634,7 +738,7 @@ public class PostAction extends Command
 			t = TopicRepository.getTopic(new Topic(topicId));
 			
 			if (t == null) {
-				tm.selectRaw(topicId);
+				t=tm.selectRaw(topicId);
 			}
 			
 			if (!TopicsCommon.isTopicAccessible(t.getForumId())) {

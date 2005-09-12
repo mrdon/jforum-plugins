@@ -152,6 +152,21 @@ PostModel.selectAllByTopicByLimit = SELECT p.post_id, topic_id, forum_id, p.user
 	AND p.need_moderate = 0 \
 	ORDER BY post_time ASC \
 	LIMIT ?, ?
+PostModel.selectByUserByLimit = SELECT p.post_id, topic_id, forum_id, p.user_id, post_time, poster_ip, enable_bbcode, p.attach, \
+	enable_html, enable_smilies, enable_sig, post_edit_time, post_edit_count, status, pt.post_subject, pt.post_text, username, p.need_moderate \
+	FROM jforum_posts p, jforum_posts_text pt, jforum_users u \
+	WHERE p.post_id = pt.post_id \
+	AND p.user_id = u.user_id \
+	AND p.user_id = ? \
+	AND p.need_moderate = 0 \
+	AND forum_id IN(:fids:) \
+	ORDER BY post_time ASC \
+	LIMIT ?, ?
+PostModel.getUserPosts = SELECT COUNT(*) as total FROM jforum_posts p,jforum_users u \
+	WHERE p.user_id = u.user_id \
+	AND p.user_id = ? \
+	AND p.need_moderate = 0 \
+	AND forum_id IN(:fids:)
 	
 PostModel.setForumByTopic = UPDATE jforum_posts SET forum_id = ? WHERE topic_id = ?
 PostModel.deleteByTopic = SELECT post_id, user_id FROM jforum_posts WHERE topic_id = ?
@@ -303,6 +318,18 @@ TopicModel.selectRecentTopicsByLimit = SELECT t.*, u.username AS posted_by_usern
 	AND t.topic_type = 0 \
 	ORDER BY p2.post_time DESC, t.topic_last_post_id DESC \
 	LIMIT 0, ?
+
+TopicModel.selectByUserByLimit = SELECT t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time, p.attach \
+	FROM jforum_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2 \
+	WHERE t.user_id = u.user_id \
+	AND t.user_id = ? AND t.forum_id IN (:fids:) \
+	AND p.post_id = t.topic_first_post_id \
+	AND p2.post_id = t.topic_last_post_id \
+	AND u2.user_id = p2.user_id \
+	AND p.need_moderate = 0 \
+	ORDER BY p2.post_time DESC, t.topic_last_post_id DESC \
+	LIMIT ?, ?
+TopicModel.getUserTopics = SELECT COUNT(*) AS total FROM jforum_topics t, jforum_posts p WHERE t.user_id = ? AND t.forum_id IN (:fids:) AND p.post_id = t.topic_first_post_id AND p.need_moderate = 0;
 	
 TopicModel.getFirstLastPostId = SELECT MIN(post_id) AS first_post_id, MAX(post_id) AS last_post_id FROM jforum_posts WHERE topic_id = ?
 TopicModel.fixFirstLastPostId = UPDATE jforum_topics SET topic_first_post_id = ?, topic_last_post_id = ? WHERE topic_id = ?

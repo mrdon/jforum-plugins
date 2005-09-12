@@ -62,12 +62,15 @@ import net.jforum.dao.PostDAO;
 import net.jforum.entities.KarmaStatus;
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
+import net.jforum.entities.Category;
+import net.jforum.entities.Forum;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.repository.ForumRepository;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTopicModelDAO.java,v 1.6 2005/08/28 17:12:26 rafaelsteil Exp $
+ * @version $Id: GenericTopicModelDAO.java,v 1.7 2005/09/12 17:12:41 vmal Exp $
  */
 public class GenericTopicModelDAO extends AutoKeys implements net.jforum.dao.TopicDAO 
 {
@@ -315,6 +318,44 @@ public class GenericTopicModelDAO extends AutoKeys implements net.jforum.dao.Top
 		p.close();
 		return l;
 	}
+
+    public List selectByUserByLimit(int userId,int startFrom, int count) throws Exception
+    {
+
+	StringBuffer sql = new StringBuffer(SystemGlobals.getSql("TopicModel.selectByUserByLimit"));
+	int index = sql.indexOf(":fids:");
+	sql.replace(index, index + 6, ForumRepository.getListAllowedForums());
+	PreparedStatement p = JForum.getConnection().prepareStatement(sql.toString());
+	p.setInt(1,userId);
+	p.setInt(2, startFrom);
+	p.setInt(3, count);
+	ResultSet rs = p.executeQuery();
+	List l = this.fillTopicsData(rs);		
+	rs.close();
+	p.close();
+	return l;
+    }
+
+    public int getUserTopics(int userId) throws Exception
+    {
+	int total = 0;
+
+	StringBuffer sql = new StringBuffer(SystemGlobals.getSql("TopicModel.getUserTopics"));
+	int index = sql.indexOf(":fids:");
+	sql.replace(index, index + 6, ForumRepository.getListAllowedForums());
+	PreparedStatement p = JForum.getConnection().prepareStatement(sql.toString());
+	p.setInt(1, userId);
+		
+	ResultSet rs = p.executeQuery();
+	if (rs.next()) {
+	    total = rs.getInt("total");
+	}
+		
+	rs.close();
+	p.close();
+		
+	return total;
+    }
 	
 	protected Topic getBaseTopicData(ResultSet rs) throws Exception
 	{

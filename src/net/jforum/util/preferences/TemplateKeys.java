@@ -44,7 +44,7 @@ package net.jforum.util.preferences;
 
 /**
  * @author Rafael Steil
- * @version $Id: TemplateKeys.java,v 1.9 2005/07/26 03:05:11 rafaelsteil Exp $
+ * @version $Id: TemplateKeys.java,v 1.10 2005/09/12 17:12:43 vmal Exp $
  */
 public class TemplateKeys
 {
@@ -73,6 +73,7 @@ public class TemplateKeys
 	public static final String MODERATION_DENIED = "moderation.denied";
 
 	public static final String POSTS_LIST = "posts.list";
+        public static final String POSTS_USER_POSTS_LIST = "posts.userposts.list";
 	public static final String POSTS_REVIEW = "posts.review";
 	public static final String POSTS_TOPIC_NOT_FOUND = "posts.topic.not.found";
 	public static final String POSTS_POST_NOT_FOUND = "posts.post.not.found";
@@ -102,6 +103,7 @@ public class TemplateKeys
 	public static final String PM_FIND_USER = "pm.find.user";
 
 	public static final String RECENT_LIST = "recent.list";
+	public static final String RECENT_USER_TOPICS_SHOW = "recent.usertopics.show";
 
 	public static final String SEARCH_FILTERS = "search.filters";
 	public static final String SEARCH_SEARCH = "search.search";

@@ -1,0 +1,160 @@
+<#include "header.htm"/>
+<#import "../macros/pagination.ftl" as pagination/>
+<#import "../macros/presentation.ftl" as presentation/>
+
+<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/post_show.js"></script>
+<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/post.js"></script>
+<script type="text/javascript">
+<#include "js/karma.js">
+
+function confirmDelete()
+{
+	if (confirm("${I18n.getMessage("Moderation.ConfirmPostDelete")}")) {
+		return true;
+	}
+	
+	return false;
+}
+</script>
+
+<table cellspacing="0" cellpadding="10" width="100%" align="center" border="0">
+	<tr>
+		<td class="bodyline">
+			<table cellspacing="2" cellpadding="2" width="100%" border="0">
+				<tr>
+					<td valign="middle" align="left" colspan="2">
+						<span class="maintitle"><a href="${JForumContext.encodeURL("/posts/listByUser/${u.id}")}" name="top" class="maintitle" id="top">${I18n.getMessage("PostShow.userPosts")?html} ${u.username?html}</a></span>
+						<#if rssEnabled>
+						&nbsp;<a href="${contextPath}/rss/showPostsByUser/${u.id}${extension}"><img src="${contextPath}/templates/${templateName}/images/xml_button.gif" border="0"></a>
+						</#if>
+					</td>
+				</tr>
+			</table>
+			
+			<table cellspacing="2" cellpadding="2" width="100%" border="0">
+				<tr>
+					
+					<td valign="center" align="left" colspan="${colspan?default("0")}">
+						<span class="nav">
+						<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")} </a> 
+            			-&gt; <a class="nav" href="${JForumContext.encodeURL("/posts/listByUser/${u.id}")}">${I18n.getMessage("PostShow.userPosts")?html} ${u.username}</a> [${totalRecords}]
+					</td>
+										
+
+					<td valign="middle" align="right"><@pagination.doPagination "listByUser", u.id/></td>
+			
+				</tr>
+			</table>
+
+			<table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
+				<tr>
+					<th class="thLeft" nowrap="nowrap" width="150" height="26">${I18n.getMessage("PostShow.author")}</th>
+					<th class="thRight" nowrap="nowrap" width="100%">${I18n.getMessage("PostShow.messageTitle")}</th>
+				</tr>
+
+				<!-- POST LISTING --> 
+				<#assign rowColor = ""/>
+				<#list posts as post>
+					<#if post_index % 2 == 0>
+						<#assign rowColor = "row1">
+					<#else>
+						<#assign rowColor = "row2">
+					</#if>
+	
+					<#assign user = u />
+					<#assign topic=topics.get(post_index) />
+					<#assign forum=forums.get(post_index) />
+					<#assign am=attachmentsmodel.get(post_index)?exists />
+					<#assign attachmentsEnabled=am?exists />
+					<#assign readonly=readonlylist.get(post_index) />
+					<#assign replyOnly=replyonlylist.get(post_index) />
+					<#assign isModerator=ismoderatorlist.get(post_index) />
+					<#assign forum=forums.get(post_index) />
+					<#assign karmaVotes=karmavotes.get(post_index) />
+					
+					<tr>
+						<td colspan="2" class="postInfo"><a href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name?html}</a> -&gt; <a href="${JForumContext.encodeURL("/posts/list/${post.topicId}")}">${topic.getTitle()?default("")?html}</a>
+							<#include "post_show_action_buttons_inc.htm"/>
+						</td>
+					</tr>
+
+					<tr>
+						<!-- Username -->
+						<#assign rowspan = "3"/>
+						<#assign useSignature = (user.attachSignatureEnabled && user.signature?exists && user.signature?length > 0 && post.isSignatureEnabled())/>
+
+						<#if useSignature>
+							<#assign rowspan = "3"/>
+						<#else>
+							<#assign rowspan = "2"/>
+						</#if>
+
+						<td class="${rowColor}" valign="top" align="left" rowspan="${rowspan}">
+							<#include "post_show_user_inc.htm"/>
+						</td>
+		
+						<!-- Message -->
+						<td class="${rowColor}" valign="top">
+							<span class="postbody">${post.text}</span>
+
+							<!-- Attachments -->
+							<#if post.hasAttachments() && (canDownloadAttachments || attachmentsEnabled)>
+								<#assign attachments = am.getAttachments(post.id, post.forumId)/>
+
+								<#include "post_show_attachments_inc.htm"/>
+							</#if>
+						</td>
+					</tr>
+
+					<#if useSignature>
+						<tr>
+							<td colspan="2" class="${rowColor}" width="100%" height="28"><hr/><span class="gensmall">${user.signature}</span></td>
+						</tr>
+					</#if>
+		
+					<tr> 
+						<td class="${rowColor}" valign="bottom" nowrap="nowrap" height="28" width="100%">
+							<#include "post_show_user_profile_inc.htm"/>					
+						</td>
+					</tr>
+		
+					<tr>
+						<td class="spaceRow" colspan="2" height="1"><img src="${contextPath}/templates/${templateName}/images/spacer.gif" alt="" width="1" height="1" /></td>
+					</tr>
+				</#list>
+				<!-- END OF POST LISTING -->
+			
+				<tr align="center">
+					<td class="catBottom" colspan="2" height="28">
+						<table cellspacing="0" cellpadding="0" border="0">
+							<tr>
+								<td align="center"><span class="gensmall">&nbsp;</span></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		
+			<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
+				<tr>					
+					
+					<td valign="center" align="left" colspan="${colspan?default("0")}">
+						<span class="nav">
+						<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")} </a> 
+            			-&gt; <a class="nav" href="${JForumContext.encodeURL("/posts/listByUser/${u.id}")}">${I18n.getMessage("PostShow.userPosts")?html} ${u.username}</a> [${totalRecords}]
+						</span>
+					</td>
+
+					<td valign="middle" align="right"><@pagination.doPagination "listByUser", u.id/></td>
+				</tr>
+				
+				<tr>
+					<td colspan="3"><img src="${contextPath}/templates/${templateName}/images/spacer.gif" alt="" width="1" height="1" /></td>
+				</tr>			
+			</table>
+
+			<@presentation.forumsComboTable/>
+	</tr>
+</table>
+<a name="quick"></a>
+<#include "bottom.htm"/>

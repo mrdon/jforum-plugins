@@ -52,8 +52,10 @@ import net.jforum.JForum;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.PostDAO;
 import net.jforum.dao.TopicDAO;
+import net.jforum.dao.UserDAO;
 import net.jforum.entities.Forum;
 import net.jforum.entities.Topic;
+import net.jforum.entities.User;
 import net.jforum.repository.ForumRepository;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.TemplateKeys;
@@ -62,6 +64,10 @@ import net.jforum.util.rss.RSSAware;
 import net.jforum.util.rss.RecentTopicsRSS;
 import net.jforum.util.rss.TopicPostsRSS;
 import net.jforum.util.rss.TopicRSS;
+import net.jforum.util.rss.UserTopicsRSS;
+import net.jforum.util.rss.UserPostsRSS;
+import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.view.forum.common.ForumCommon;
 import net.jforum.view.forum.common.TopicsCommon;
 import freemarker.template.SimpleHash;
@@ -69,7 +75,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: RSSAction.java,v 1.19 2005/07/26 03:05:20 rafaelsteil Exp $
+ * @version $Id: RSSAction.java,v 1.20 2005/09/12 17:12:45 vmal Exp $
  */
 public class RSSAction extends Command 
 {
@@ -148,6 +154,50 @@ public class RSSAction extends Command
 
 		RSSAware rss = new RecentTopicsRSS(title, description, 
 				new RecentTopicsAction().topics());
+		this.context.put("rssContents", rss.createRSS());
+	}
+
+        public void showTopicsByUser() throws Exception
+	{
+
+	        int uid= this.request.getIntParameter("user_id");
+
+		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
+		User u = um.selectById(uid);
+		
+		if (u==null||u.getId()==0){
+			return;
+		}
+
+                List topics = DataAccessDriver.getInstance().newTopicDAO().selectByUserByLimit(u.getId(), 0, SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE));
+		String[] p = { u.getUsername() };
+		
+		String title = I18n.getMessage("RSS.TopicsByUser.title", p);
+		String description = I18n.getMessage("RSS.TopicsByUser.description", p);
+
+		RSSAware rss = new UserTopicsRSS(title, description, u.getId(), topics);
+		this.context.put("rssContents", rss.createRSS());
+	}
+
+        public void showPostsByUser() throws Exception
+	{
+
+	        int uid= this.request.getIntParameter("user_id");
+
+		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
+		User u = um.selectById(uid);
+		
+		if (u==null||u.getId()==0){
+			return;
+		}
+
+                List topics = DataAccessDriver.getInstance().newPostDAO().selectByUserByLimit(u.getId(), 0, SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE));
+		String[] p = { u.getUsername() };
+		
+		String title = I18n.getMessage("RSS.PostsByPosts.title", p);
+		String description = I18n.getMessage("RSS.PostsByPosts.description", p);
+
+		RSSAware rss = new UserPostsRSS(title, description, u.getId(), topics);
 		this.context.put("rssContents", rss.createRSS());
 	}
 	

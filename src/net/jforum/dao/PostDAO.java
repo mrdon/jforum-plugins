@@ -54,7 +54,7 @@ import net.jforum.entities.Post;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: PostDAO.java,v 1.5 2005/07/26 03:04:30 rafaelsteil Exp $
+ * @version $Id: PostDAO.java,v 1.6 2005/09/12 17:12:39 vmal Exp $
  */
 public interface PostDAO 
 {
@@ -105,6 +105,16 @@ public interface PostDAO
 	 * @throws Exception
 	 */
 	public List selectAllByTopicByLimit(int topicId, int startFrom, int count) throws Exception;
+
+
+       /**
+	 * Selects all posts associated to a specific user and belonging to 
+	 * given forums
+	 * @param userId User ID.
+	 * @throws Exception
+	 */
+	public List selectByUserByLimit(int userId,int startFrom, int count) throws Exception;
+        public int getUserPosts(int userId) throws Exception;
 	
 	/**
 	 * Selects all messages relacted to a specific topic. 

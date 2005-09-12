@@ -56,11 +56,12 @@ import net.jforum.entities.Post;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.search.SearchFacade;
+import net.jforum.repository.ForumRepository;
 
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericPostDAO.java,v 1.6 2005/09/01 14:45:42 rafaelsteil Exp $
+ * @version $Id: GenericPostDAO.java,v 1.7 2005/09/12 17:12:40 vmal Exp $
  */
 public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO 
 {
@@ -301,4 +302,47 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 				
 		return l;
 	}
+
+    public List selectByUserByLimit(int userId,int startFrom, int count) throws Exception
+    {
+	StringBuffer sql = new StringBuffer(SystemGlobals.getSql("PostModel.selectByUserByLimit"));
+	int index = sql.indexOf(":fids:");
+	sql.replace(index, index + 6, ForumRepository.getListAllowedForums());
+	PreparedStatement p = JForum.getConnection().prepareStatement(sql.toString());
+	p.setInt(1,userId);
+	p.setInt(2, startFrom);
+	p.setInt(3, count);
+	ResultSet rs = p.executeQuery();
+	List l=new ArrayList();
+	
+	while (rs.next()) {
+	    l.add(this.makePost(rs));			
+	}
+		
+	rs.close();
+	p.close();
+				
+	return l;
+    }
+    public int getUserPosts(int userId) throws Exception
+    {
+	int total = 0;
+
+	StringBuffer sql = new StringBuffer(SystemGlobals.getSql("PostModel.getUserPosts"));
+	int index = sql.indexOf(":fids:");
+	sql.replace(index, index + 6, ForumRepository.getListAllowedForums());
+	PreparedStatement p = JForum.getConnection().prepareStatement(sql.toString());
+	p.setInt(1, userId);
+		
+	ResultSet rs = p.executeQuery();
+	if (rs.next()) {
+	    total = rs.getInt("total");
+	}
+		
+	rs.close();
+	p.close();
+		
+	return total;
+    }
+
 }

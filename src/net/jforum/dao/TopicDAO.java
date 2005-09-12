@@ -56,7 +56,7 @@ import net.jforum.entities.Topic;
  * select some specific data.
  *
  * @author Rafael Steil
- * @version $Id: TopicDAO.java,v 1.6 2005/08/28 17:12:27 rafaelsteil Exp $
+ * @version $Id: TopicDAO.java,v 1.7 2005/09/12 17:12:39 vmal Exp $
  */
 public interface TopicDAO 
 {
@@ -109,7 +109,16 @@ public interface TopicDAO
 	 * @throws Exception
 	 */
 	public List selectAllByForumByLimit(int forumId, int startFrom, int count) throws Exception;
-	
+
+       /**
+	 * Selects all topics associated to a specific user and belonging to 
+	 * given forums
+	 * @param userId User ID.
+	 * @throws Exception
+	 */
+	public List selectByUserByLimit(int userId,int startFrom, int count) throws Exception;
+        public int getUserTopics(int userId) throws Exception;
+
 	/**
 	 * Selects the last <code>count</code> topics postted. 
 	 * 
