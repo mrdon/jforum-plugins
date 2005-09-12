@@ -36,7 +36,11 @@ function validateForm()
 
 				<#if (message?length > 0)>
 				<tr>
-					<td class="row2" align="center" colspan="2"><span class="gens"><b><font color="red">${message}</font></b></span></td>
+					<td class="row2" align="center" colspan="2">
+						<span class="gens">
+							<b><font color="<#if warn?exists>red<#else>green</#if>">${message}</font></b>
+						</span>
+					</td>
 				</tr>
 				</#if>
 
