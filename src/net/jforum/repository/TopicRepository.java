@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: TopicRepository.java,v 1.17 2005/09/09 17:59:46 rafaelsteil Exp $
+ * @version $Id: TopicRepository.java,v 1.18 2005/09/13 02:50:35 rafaelsteil Exp $
  */
 public class TopicRepository implements Cacheable
 {
@@ -219,14 +219,20 @@ public class TopicRepository implements Cacheable
 				list.add(topic);
 			}
 			else {
-				if (list.size() + 1 > maxItems) {
+				boolean contains = list.contains(topic);
+				
+				if (!contains && list.size() + 1 > maxItems) {
 					list.removeLast();
 				}
 				
-				if (topic.getType() == Topic.TYPE_ANNOUNCE) {
+				if (!contains && topic.getType() == Topic.TYPE_ANNOUNCE) {
 					list.addFirst(topic);
 				}
 				else {
+					if (contains) {
+						list.remove(topic);
+					}
+					
 					int index = 0;
 					
 					for (Iterator iter = list.iterator(); iter.hasNext(); index++) {
@@ -236,13 +242,17 @@ public class TopicRepository implements Cacheable
 							continue;
 						}
 						
-						if (current.getType() == Topic.TYPE_STICKY && topic.getType() == Topic.TYPE_STICKY) {
-							list.add(index, topic);
+						if (current.getType() == Topic.TYPE_STICKY) {
+							if (topic.getType() == Topic.TYPE_STICKY) {
+								list.add(index, topic);
+								break;
+							}
+							
+							continue;
 						}
-						else {
-							list.add(index, topic);
-							break;
-						}
+
+						list.add(index, topic);
+						break;
 					}
 				}
 			}
@@ -274,6 +284,7 @@ public class TopicRepository implements Cacheable
 			
 			if (l != null) {
 				int index = l.indexOf(topic);
+				
 				if (index > -1) {
 					l.set(index, topic);
 					cache.add(FQN_FORUM, forumId, l);

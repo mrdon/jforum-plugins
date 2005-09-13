@@ -91,7 +91,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.99 2005/09/12 21:05:22 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.100 2005/09/13 02:50:37 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -613,7 +613,7 @@ public class PostAction extends Command
 			Topic t = TopicRepository.getTopic(new Topic(p.getTopicId()));
 			
 			if (t == null) {
-				t = tm.selectRaw(p.getTopicId());
+				t = tm.selectById(p.getTopicId());
 			}
 
 			if (!TopicsCommon.isTopicAccessible(t.getForumId())) {
@@ -642,8 +642,10 @@ public class PostAction extends Command
 				
 				tm.update(t);
 				
-				ForumRepository.reloadForum(t.getForumId());
-				TopicRepository.updateTopic(t);
+				User u = DataAccessDriver.getInstance().newUserDAO().selectById(p.getUserId());
+				
+				ForumRepository.updateForumStats(t, u, p);
+				TopicRepository.addTopic(t);
 			}
 
 			if (this.request.getParameter("notify") == null) {

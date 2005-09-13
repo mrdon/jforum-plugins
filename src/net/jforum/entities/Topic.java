@@ -49,7 +49,7 @@ import java.util.Date;
  * Represents every topic in the forum.
  * 
  * @author Rafael Steil
- * @version $Id: Topic.java,v 1.12 2005/09/09 17:59:45 rafaelsteil Exp $
+ * @version $Id: Topic.java,v 1.13 2005/09/13 02:50:33 rafaelsteil Exp $
  */
 public class Topic implements Serializable
 {
@@ -62,26 +62,31 @@ public class Topic implements Serializable
 	
 	private int id;
 	private int forumId;
-	private boolean read = true;
-	private String title;
-	private Date time;
-	private Date lastPostTimeInMillis;
 	private int totalViews;
 	private int totalReplies;
 	private int status;
-	private boolean vote;
 	private int type;
 	private int firstPostId;
-	private String firstPostTime;
 	private int lastPostId;	
-	private String lastPostTime;
+	
+	private boolean read = true;
+	private boolean vote;
 	private boolean moderated;
-	private boolean paginate;
-	private Double totalPages;
-	private User postedBy;
-	private User lastPostBy;
 	private boolean isHot;
 	private boolean hasAttach;
+	private boolean paginate;
+	
+	private String firstPostTime;
+	private String lastPostTime;
+	private String title;
+	
+	private Date time;
+	private Date lastPostTimeInMillis;
+	
+	private Double totalPages;
+	
+	private User postedBy;
+	private User lastPostBy;
 	
 	public Topic() {}
 	
@@ -400,5 +405,13 @@ public class Topic implements Serializable
 	public int hashCode()
 	{
 		return this.id;
+	}
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "[" + this.id + ", " + this.title + "]";
 	}
 }
