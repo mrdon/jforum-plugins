@@ -52,6 +52,7 @@ import net.jforum.dao.UserDAO;
 import net.jforum.dao.security.UserSecurityDAO;
 import net.jforum.entities.Group;
 import net.jforum.entities.User;
+import net.jforum.repository.ForumRepository;
 import net.jforum.repository.RolesRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.PermissionControl;
@@ -66,7 +67,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.26 2005/09/08 18:37:14 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.27 2005/09/13 21:27:27 rafaelsteil Exp $
  */
 public class UserAction extends AdminCommand 
 {
@@ -182,6 +183,7 @@ public class UserAction extends AdminCommand
 		// Update Security Repository
 		SecurityRepository.remove(user.getId());
 		SecurityRepository.add(user.getId(), pc);
+		ForumRepository.clearModeratorList();
 		
 		RolesRepository.clear();
 		

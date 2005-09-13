@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -49,6 +49,7 @@ import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.GroupDAO;
 import net.jforum.dao.security.GroupSecurityDAO;
 import net.jforum.entities.Group;
+import net.jforum.repository.ForumRepository;
 import net.jforum.repository.RolesRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.PermissionControl;
@@ -63,7 +64,7 @@ import net.jforum.util.preferences.TemplateKeys;
  * ViewHelper class for group administration.
  * 
  * @author Rafael Steil
- * @version $Id: GroupAction.java,v 1.14 2005/07/26 03:05:43 rafaelsteil Exp $
+ * @version $Id: GroupAction.java,v 1.15 2005/09/13 21:27:27 rafaelsteil Exp $
  */
 public class GroupAction extends AdminCommand 
 {
@@ -191,6 +192,7 @@ public class GroupAction extends AdminCommand
 
 		SecurityRepository.clean();
 		RolesRepository.clear();
+		ForumRepository.clearModeratorList();
 		
 		this.list();
 	}

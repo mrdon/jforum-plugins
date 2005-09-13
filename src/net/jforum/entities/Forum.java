@@ -45,14 +45,13 @@ package net.jforum.entities;
 import java.io.Serializable;
 import java.util.List;
 
-import net.jforum.exceptions.DatabaseException;
 import net.jforum.repository.ForumRepository;
 
 /**
  * Represents a specific forum.
  * 
  * @author Rafael Steil
- * @version $Id: Forum.java,v 1.10 2005/08/30 21:44:03 rafaelsteil Exp $
+ * @version $Id: Forum.java,v 1.11 2005/09/13 21:27:28 rafaelsteil Exp $
  */
 public class Forum implements Serializable
 {
@@ -98,25 +97,10 @@ public class Forum implements Serializable
 	public LastPostInfo getLastPostInfo() {
 		return this.lpi;
 	}
-
-	public void setModeratorList(List moderatorList) {
-		this.moderatorList = moderatorList;
-	}
 	
 	public List getModeratorList() 
 	{
-		if (this.moderatorList == null) {
-			synchronized (this) {
-				try {
-					this.moderatorList = ForumRepository.getModeratorList(this.id);
-				}
-				catch (Exception e) {
-					throw new DatabaseException(e);
-				}
-			}
-		}
-		
-		return this.moderatorList;
+		return ForumRepository.getModeratorList(this.id);
 	}
 	
 	/**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -44,12 +44,13 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: XMLException.java,v 1.3 2005/07/26 03:04:33 rafaelsteil Exp $
+ * @version $Id: XMLException.java,v 1.4 2005/09/13 21:27:29 rafaelsteil Exp $
  */
 public class XMLException extends RuntimeException
 {
-	public XMLException(String message)
+	public XMLException(Throwable t)
 	{
-		super(message);
+		super(t);
+		this.setStackTrace(t.getStackTrace());
 	}
 }

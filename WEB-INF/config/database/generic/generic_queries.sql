@@ -185,6 +185,8 @@ ForumModel.selectAll = SELECT f.*, COUNT(p.post_id) AS total_posts \
 	LEFT JOIN jforum_topics t ON t.forum_id = f.forum_id \
 	LEFT JOIN jforum_posts p ON p.topic_id = t.topic_id \
 	GROUP BY f.categories_id, f.forum_order
+	
+ForumModel.selectAllForPermissions = SELECT forum_id, forum_name FROM jforum_forums ORDER BY forum_name
 
 ForumModel.setModerated = UPDATE jforum_forums SET moderated = ? WHERE categories_id = ?
 ForumModel.delete = DELETE FROM jforum_forums WHERE forum_id = ?
@@ -208,19 +210,26 @@ ForumModel.lastPostInfo = SELECT post_time, p.topic_id, t.topic_replies, post_id
 	AND p.user_id = u.user_id
 
 ForumModel.getModeratorList = SELECT g.group_id AS id, g.group_name AS name, 2 AS mtype \
-		FROM jforum_groups g, jforum_roles r, jforum_role_values rv \
+		FROM jforum_groups g, jforum_roles r, jforum_role_values rv, jforum_roles r2 \
 		WHERE g.group_id = r.group_id \
 		AND r.role_id = rv.role_id \
 		AND r.name = 'perm_moderation_forums' \
 		AND rv.role_value = ? \
 		AND rv.role_type = 1 \
+		AND r2.name = 'perm_moderation' \
+		AND r2.role_type = 1 \
+		AND r2.group_id = g.group_id \
 	UNION SELECT u.user_id AS id, u.username AS name, 1 as mtype \
-		FROM jforum_users u, jforum_roles r, jforum_role_values rv \
+		FROM jforum_users u, jforum_roles r, jforum_role_values rv, jforum_roles r2 \
 		WHERE u.user_id = r.user_id \
 		AND r.role_id = rv.role_id \
 		AND r.name = 'perm_moderation_forums' \
 		AND rv.role_value = ? \
-		AND rv.role_type = 1
+		AND rv.role_type = 1 \
+		AND r2.name = 'perm_moderation' \
+		AND r2.role_type = 1 \
+		AND r2.user_id = u.user_id
+		
 
 ForumModel.totalMessages = SELECT COUNT(1) as total_messages FROM jforum_posts
 ForumModel.getMaxPostId = SELECT MAX(post_id) AS post_id FROM jforum_posts WHERE forum_id = ?

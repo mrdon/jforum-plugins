@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -45,7 +45,10 @@ package net.jforum.security;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -65,24 +68,52 @@ import org.xml.sax.helpers.DefaultHandler;
  * Manipulates XML permission control file definition 
  * 
  * @author Rafael Steil
- * @version $Id: XMLPermissionControl.java,v 1.8 2005/07/26 03:05:06 rafaelsteil Exp $
+ * @version $Id: XMLPermissionControl.java,v 1.9 2005/09/13 21:27:28 rafaelsteil Exp $
  */
 public class XMLPermissionControl extends DefaultHandler 
 {
 	private PermissionSection section;
+
+	private PermissionControl pc;
+	
 	private List listSections;
+	private List permissionData;
+	
+	private Map queries;
+	
 	private String permissionName;
 	private String permissionId;
 	private String permissionType;
-	private ArrayList permissionData;
-	private PermissionControl pc;
 	
 	private boolean alreadySelected;
+	
+	private static class SelectData
+	{
+		private int id;
+		private String name;
+		
+		public SelectData(int id, String name)
+		{
+			this.id = id;
+			this.name = name;
+		}
+		
+		public int getId()
+		{
+			return this.id;
+		}
+		
+		public String getName()
+		{
+			return this.name;
+		}
+	}
 	
 	public XMLPermissionControl(PermissionControl pc)
 	{
 		this.listSections = new ArrayList();
 		this.permissionData = new ArrayList();
+		this.queries = new HashMap();
 		this.pc = pc;
 	}
 
@@ -155,14 +186,42 @@ public class XMLPermissionControl extends DefaultHandler
 			ResultSet rs = null;
 			PreparedStatement p = null;
 			
-			try {
-				p = JForum.getConnection().prepareStatement(SystemGlobals.getSql(atts.getValue("queryName")));
-				rs = p.executeQuery();
-				
-				String valueField = atts.getValue("valueField");
-				String captionField = atts.getValue("captionField");
+			String refName = atts.getValue("refName");
 			
-				// user/group values array
+			// If refName is present, then we have a template query
+			if (refName != null) {
+				try {
+					p = JForum.getConnection().prepareStatement(SystemGlobals.getSql(atts.getValue("queryName")));
+					rs = p.executeQuery();
+					
+					String valueField = atts.getValue("valueField");
+					String captionField = atts.getValue("captionField");
+					
+					List l = new ArrayList();
+					
+					while (rs.next()) {
+						l.add(new SelectData(rs.getInt(valueField), rs.getString(captionField)));
+					}
+					
+					this.queries.put(refName, l);
+				}
+				catch (Exception e) {
+					throw new XMLException(e);
+				}
+				finally {
+					try {
+						if (rs != null) {
+							rs.close();
+							p.close();
+						}
+					}
+					catch (Exception e) {
+						throw new XMLException(e);
+					}
+				}
+			}
+			else {
+				// If it gets here, then it should be a <sql ref="xxxx"> section
 				RoleValueCollection roleValues = new RoleValueCollection();
 				Role role = this.pc.getRole(this.permissionId);
 				
@@ -170,33 +229,21 @@ public class XMLPermissionControl extends DefaultHandler
 					roleValues = role.getValues();
 				}
 				
-				while (rs.next()) {
-					String value = rs.getString(valueField);
-					String caption = rs.getString(captionField);
+				List l = (List)this.queries.get(atts.getValue("ref"));
+				
+				for (Iterator iter = l.iterator(); iter.hasNext(); ) {
+					SelectData data = (SelectData)iter.next();
 					
-					RoleValue rv = roleValues.get(value);
+					String id = Integer.toString(data.getId());
+					RoleValue rv = roleValues.get(id);
 
 					this.permissionData.add(
 						new FormSelectedData(
-							caption, 
-							value,
+							data.getName(), 
+							id,
 							rv != null && rv.getType() == PermissionControl.ROLE_DENY
 						)
 					);
-				}
-			}
-			catch (Exception e) {
-				throw new XMLException("" + e);
-			}
-			finally {
-				try {
-					if (rs != null) {
-						rs.close();
-						p.close();
-					}
-				}
-				catch (Exception e) {
-					throw new XMLException("" + e);
 				}
 			}
 		}
@@ -210,7 +257,7 @@ public class XMLPermissionControl extends DefaultHandler
 				}
 			}
 			else {
-				// TODO: Implement this shit
+				// TODO: Implement this
 				throw new UnsupportedOperationException("'option' tag with 'multiple' attribute support not yet implemented");
 			}
 			

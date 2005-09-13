@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: TopicRepository.java,v 1.18 2005/09/13 02:50:35 rafaelsteil Exp $
+ * @version $Id: TopicRepository.java,v 1.19 2005/09/13 21:27:29 rafaelsteil Exp $
  */
 public class TopicRepository implements Cacheable
 {
@@ -191,7 +191,7 @@ public class TopicRepository implements Cacheable
 	 * 
 	 * @param forumId The forum id to clear the cache
 	 */
-	public synchronized static void clearCache(int forumId) throws Exception
+	public static void clearCache(int forumId) throws Exception
 	{
 		synchronized (FQN_FORUM) {
 			cache.add(FQN_FORUM, Integer.toString(forumId), new LinkedList());

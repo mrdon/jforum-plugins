@@ -70,6 +70,7 @@ import net.jforum.entities.Post;
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.exceptions.CategoryNotFoundException;
+import net.jforum.exceptions.DatabaseException;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.CategoryOrderComparator;
@@ -83,23 +84,24 @@ import net.jforum.util.preferences.SystemGlobals;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.44 2005/09/12 21:05:24 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.45 2005/09/13 21:27:29 rafaelsteil Exp $
  */
 public class ForumRepository implements Cacheable
 {
 	private static CacheEngine cache;
-	private static final String FQN = "categories";
+	private static ForumRepository instance;
+	private static Logger logger = Logger.getLogger(ForumRepository.class);
+	
+	private static final String FQN = "forumRepository";
 	private static final String CATEGORIES_SET = "categoriesSet";
 	private static final String RELATION = "relationForums";
 	private static final String FQN_TOTAL_TOPICS = FQN + "/totalTopics";
+	private static final String FQN_MODERATORS = FQN + "/moderators";
 	private static final String TOTAL_MESSAGES = "totalMessages";
 	private static final String MOST_USERS_ONLINE = "mostUsersEverOnline";
 	private static final String LOADED = "loaded";
 	private static final String LAST_USER = "lastUser";
 	private static final String TOTAL_USERS = "totalUsers";
-	
-	private static ForumRepository instance;
-	private static Logger logger = Logger.getLogger(ForumRepository.class);
 	
 	/**
 	 * @see net.jforum.cache.Cacheable#setCacheEngine(net.jforum.cache.CacheEngine)
@@ -572,9 +574,28 @@ public class ForumRepository implements Cacheable
 	 * @param forumId The forum to retrieve information
 	 * @return
 	 */
-	public static List getModeratorList(int forumId) throws Exception
+	public static List getModeratorList(int forumId)
 	{
-		return DataAccessDriver.getInstance().newForumDAO().getModeratorList(forumId);
+		List l = (List)cache.get(FQN_MODERATORS, Integer.toString(forumId));
+		
+		if (l == null) {
+			synchronized (FQN_MODERATORS) {
+				try {
+					l = DataAccessDriver.getInstance().newForumDAO().getModeratorList(forumId);
+					cache.add(FQN_MODERATORS, Integer.toString(forumId), l);
+				}
+				catch (Exception e) {
+					throw new DatabaseException(e);
+				}
+			}
+		}
+		
+		return l;
+	}
+	
+	public static void clearModeratorList()
+	{
+		cache.remove(FQN_MODERATORS);
 	}
 	
 	public static User lastRegisteredUser()
