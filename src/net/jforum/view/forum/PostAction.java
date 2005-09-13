@@ -91,7 +91,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.100 2005/09/13 02:50:37 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.101 2005/09/13 12:26:33 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -636,8 +636,12 @@ public class PostAction extends Command
 			if (t.getFirstPostId() == p.getId()) {
 				t.setTitle(p.getSubject());
 				
-				if (SecurityRepository.canAccess(SecurityConstants.PERM_CREATE_STICKY_ANNOUNCEMENT_TOPICS)) {
-					t.setType(this.request.getIntParameter("topic_type"));
+				int newType = this.request.getIntParameter("topic_type");
+				boolean changeType = SecurityRepository.canAccess(SecurityConstants.PERM_CREATE_STICKY_ANNOUNCEMENT_TOPICS)
+					&& newType != t.getType();
+				
+				if (changeType) {
+					t.setType(newType);
 				}
 				
 				tm.update(t);
@@ -645,7 +649,13 @@ public class PostAction extends Command
 				User u = DataAccessDriver.getInstance().newUserDAO().selectById(p.getUserId());
 				
 				ForumRepository.updateForumStats(t, u, p);
-				TopicRepository.addTopic(t);
+				
+				if (changeType) {
+					TopicRepository.addTopic(t);
+				}
+				else {
+					TopicRepository.updateTopic(t);
+				}
 			}
 
 			if (this.request.getParameter("notify") == null) {
