@@ -9,7 +9,7 @@
 	<#list 1 .. totalPostPages as page>
 		<#assign start = postsPerPage * (page - 1)/>
 
-		<a href="${contextPath}/posts/list/${start}/${topicId}${extension}">${page}</a>	
+		<a href="${contextPath}/posts/list<#if (start>0)>/${start}</#if>/${topicId}${extension}">${page}</a>	
 		<#if (page < totalPostPages) >,</#if>
 	</#list>
 
@@ -26,7 +26,7 @@
 		
 		<#if (thisPage > 1)>
 			<#assign start = (thisPage - 2) * recordsPerPage/>
-			<a href="${contextPath}/${moduleName}/${action}/${start}<#if (id > -1)>/${id}</#if>${extension}">${I18n.getMessage("previous")}</a>&nbsp;
+			<a href="${contextPath}/${moduleName}/${action}<#if (start>0)>/${start}</#if><#if (id > -1)>/${id}</#if>${extension}">${I18n.getMessage("previous")}</a>&nbsp;
 		</#if>
 
 		<#if (totalPages > numberOfActiveLinks)>
@@ -52,7 +52,7 @@
 				<#if thisPage == page >
 					${page}
 				<#else>
-					<a href="${contextPath}/${moduleName}/${action}/${start}<#if (id > -1)>/${id}</#if>${extension}">${page}</a>
+					<a href="${contextPath}/${moduleName}/${action}<#if (start>0)>/${start}</#if><#if (id > -1)>/${id}</#if>${extension}">${page}</a>
 				</#if>
 				<#if (page < totalPages) >,</#if>
 			</#list>
@@ -67,7 +67,7 @@
 				<#if thisPage == page>
 					${page}
 				<#else>
-					<a href="${contextPath}/${moduleName}/${action}/${start}<#if (id > -1)>/${id}</#if>${extension}">${page}</a>
+					<a href="${contextPath}/${moduleName}/${action}<#if (start>0)>/${start}</#if><#if (id > -1)>/${id}</#if>${extension}">${page}</a>
 				</#if>
 				<#if (page < totalPages) >,</#if>
 			</#list>
@@ -75,7 +75,7 @@
 
 		<#if thisPage < totalPages >
 			<#assign start = thisPage * recordsPerPage/>
-			&nbsp;<a href="${contextPath}/${moduleName}/${action}/${start}<#if (id > -1)>/${id}</#if>${extension}">${I18n.getMessage("next")}</a>
+			&nbsp;<a href="${contextPath}/${moduleName}/${action}<#if (start>0)>/${start}</#if><#if (id > -1)>/${id}</#if>${extension}">${I18n.getMessage("next")}</a>
 		</#if>
 		</b>
 	</span>
