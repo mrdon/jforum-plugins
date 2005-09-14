@@ -91,7 +91,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.101 2005/09/13 12:26:33 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.102 2005/09/14 20:11:17 vmal Exp $
  */
 public class PostAction extends Command 
 {
@@ -214,12 +214,18 @@ public class PostAction extends Command
 		
 		int count = pdao.countPreviousPosts(postId);
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
-		
+
+		int topicId = this.request.getIntParameter("topic_id");
+		String offs;
 		if (count > postsPerPage) {
-			this.request.addParameter("start", Integer.toString(postsPerPage * ((count - 1) / postsPerPage)));
+		    offs=Integer.toString(postsPerPage * ((count - 1) / postsPerPage))+"/";
+		} else {
+		    offs="";
 		}
-		
-		this.list();
+		JForum.setRedirect(
+		  this.request.getContextPath() + "/posts/list/"+
+		  offs+Integer.toString(topicId) +
+		  SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#" + postId);
 	}
 
 	public void listByUser() throws Exception 
