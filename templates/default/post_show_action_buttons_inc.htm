@@ -2,8 +2,9 @@
 	<tr>
 		<td width="160" class="postInfo" height="22">
 			<span class="postdetails">
-			
-			<a href="${JForumContext.encodeURL("/posts/list/${start}/${post.topicId}")}#${post.id}">
+			<#assign startStr=""/>
+			<#if (start>0)><#assign startStr="${start}/"/></#if>
+			<a href="${JForumContext.encodeURL("/posts/list/${startStr}${post.topicId}")}#${post.id}">
 			<img src="${contextPath}/templates/${templateName}/images/icon_minipost_new.gif" /></a>${post.formatedTime}
 			</span>
 		</td>
