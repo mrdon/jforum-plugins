@@ -64,7 +64,7 @@ import net.jforum.util.preferences.TemplateKeys;
  * ViewHelper class for group administration.
  * 
  * @author Rafael Steil
- * @version $Id: GroupAction.java,v 1.15 2005/09/13 21:27:27 rafaelsteil Exp $
+ * @version $Id: GroupAction.java,v 1.16 2005/09/15 21:22:00 rafaelsteil Exp $
  */
 public class GroupAction extends AdminCommand 
 {
@@ -117,6 +117,7 @@ public class GroupAction extends AdminCommand
 	public void delete() throws Exception
 	{		
 		String groupId[] = this.request.getParameterValues("group_id");
+		
 		if (groupId == null) {
 			this.list();
 			
@@ -128,11 +129,12 @@ public class GroupAction extends AdminCommand
 			
 		for (int i = 0; i < groupId.length; i++) {
 			int id = Integer.parseInt(groupId[i]);
+			
 			if (gm.canDelete(id)) {
 				gm.delete(id);
 			}
 			else {
-				errors.add(I18n.getMessage(I18n.CANNOT_DELETE_GROUP, new Object[] {new Integer(id)}));
+				errors.add(I18n.getMessage(I18n.CANNOT_DELETE_GROUP, new Object[] { new Integer(id) }));
 			}
 		}
 		
