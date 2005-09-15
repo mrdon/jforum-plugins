@@ -54,6 +54,7 @@ import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.SecurityRepository;
+import net.jforum.repository.RolesRepository;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.Role;
 import net.jforum.security.RoleValue;
@@ -65,7 +66,7 @@ import net.jforum.view.admin.common.ModerationCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.23 2005/07/26 04:01:15 diegopires Exp $
+ * @version $Id: ForumAction.java,v 1.24 2005/09/15 22:47:32 vmal Exp $
  */
 public class ForumAction extends AdminCommand 
 {
@@ -259,6 +260,7 @@ public class ForumAction extends AdminCommand
 		}
 		
 		SecurityRepository.clean();
+		RolesRepository.clear();
 
 		this.list();
 	}

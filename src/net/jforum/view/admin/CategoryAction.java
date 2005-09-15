@@ -51,6 +51,7 @@ import net.jforum.dao.security.GroupSecurityDAO;
 import net.jforum.entities.Category;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.SecurityRepository;
+import net.jforum.repository.RolesRepository;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.Role;
 import net.jforum.security.RoleValue;
@@ -65,7 +66,7 @@ import net.jforum.view.admin.common.ModerationCommon;
  * ViewHelper for category administration.
  * 
  * @author Rafael Steil
- * @version $Id: CategoryAction.java,v 1.21 2005/07/26 04:01:15 diegopires Exp $
+ * @version $Id: CategoryAction.java,v 1.22 2005/09/15 22:47:32 vmal Exp $
  */
 public class CategoryAction extends AdminCommand 
 {
@@ -175,6 +176,7 @@ public class CategoryAction extends AdminCommand
 			}
 			
 			SecurityRepository.clean();
+			RolesRepository.clear();
 		}
 			
 		this.list();
