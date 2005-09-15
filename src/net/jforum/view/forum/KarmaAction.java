@@ -54,6 +54,7 @@ import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.KarmaDAO;
 import net.jforum.dao.PostDAO;
 import net.jforum.entities.Karma;
+import net.jforum.entities.KarmaStatus;
 import net.jforum.entities.Post;
 import net.jforum.repository.PostRepository;
 import net.jforum.repository.SecurityRepository;
@@ -67,7 +68,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaAction.java,v 1.13 2005/07/27 00:19:43 rafaelsteil Exp $
+ * @version $Id: KarmaAction.java,v 1.14 2005/09/15 00:59:44 rafaelsteil Exp $
  */
 public class KarmaAction extends Command
 {
@@ -118,6 +119,8 @@ public class KarmaAction extends Command
 		karma.setPoints(points);
 
 		km.addKarma(karma);
+		
+		p.setKarma(new KarmaStatus(p.getId(), points));
 		
 		if (SystemGlobals.getBoolValue(ConfigKeys.POSTS_CACHE_ENABLED)) {
 			PostRepository.update(p.getTopicId(), PostCommon.preparePostForDisplay(p));

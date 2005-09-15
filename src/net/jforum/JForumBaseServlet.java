@@ -60,6 +60,7 @@ import net.jforum.util.bbcode.BBCodeHandler;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
+import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
 import freemarker.template.Configuration;
@@ -68,10 +69,14 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumBaseServlet.java,v 1.9 2005/09/08 18:37:11 rafaelsteil Exp $
+ * @version $Id: JForumBaseServlet.java,v 1.10 2005/09/15 00:59:42 rafaelsteil Exp $
  */
-public class JForumBaseServlet extends HttpServlet {
+public class JForumBaseServlet extends HttpServlet 
+{
+	private static Logger logger = Logger.getLogger(JForumBaseServlet.class);
+	
     protected boolean debug;
+
     // Thread local implementation
     protected static ThreadLocal localData = new ThreadLocal() {
         public Object initialValue() {
@@ -85,8 +90,10 @@ public class JForumBaseServlet extends HttpServlet {
         try {
         	String appPath = config.getServletContext().getRealPath("");
             debug = "true".equals(config.getInitParameter("development"));
-
+            
             DOMConfigurator.configure(appPath + "/WEB-INF/log4j.xml");
+            
+            logger.info("Starting JForum. Debug mode is " + debug);
 
             // Load system default values
             ConfigLoader.startSystemglobals(appPath);
@@ -107,6 +114,9 @@ public class JForumBaseServlet extends HttpServlet {
             
             // Start the dao.driver implementation
             String driver = SystemGlobals.getValue(ConfigKeys.DAO_DRIVER);
+            
+            logger.info("Loading JDBC driver " + driver);
+            
             Class c = Class.forName(driver);
             DataAccessDriver d = (DataAccessDriver)c.newInstance();
             DataAccessDriver.init(d);

@@ -48,19 +48,18 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.72 2005/08/28 17:12:28 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.73 2005/09/15 00:59:45 rafaelsteil Exp $
 */
 
-public class ConfigKeys {
+public class ConfigKeys 
+{
 
-	// Configuration values for the keys in this section are set by the web-application itself
 	public static final String APPLICATION_PATH = "application.path";
 	public static final String INSTALLATION = "installation";
 	public static final String INSTALLED = "installed";
 
-	// The installation config file contains keys that are installation specific and differ from
-	// the default config.
 	public static final String INSTALLATION_CONFIG = "installation.config";
+	public static final String CACHEABLE_OBJECTS = "cacheable.objects";
 	
 	public static final String FILECHANGES_DELAY = "file.changes.delay";
 	public static final String DATABASE_PING_DELAY = "database.ping.delay";

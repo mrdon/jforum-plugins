@@ -44,7 +44,7 @@ package net.jforum.util.preferences;
 
 /**
  * @author Rafael Steil
- * @version $Id: TemplateKeys.java,v 1.10 2005/09/12 17:12:43 vmal Exp $
+ * @version $Id: TemplateKeys.java,v 1.11 2005/09/15 00:59:45 rafaelsteil Exp $
  */
 public class TemplateKeys
 {
@@ -139,6 +139,7 @@ public class TemplateKeys
 
 	public static final String CACHE_LIST = "cache.list";
 	public static final String CACHE_POST_MOREINFO = "cache.post.moreinfo";
+	public static final String CACHE_TOPICS_MOREINFO = "cache.topics.moreinfo";
 
 	public static final String CATEGORY_LIST = "category.list";
 	public static final String CATEGORY_INSERT = "category.insert";

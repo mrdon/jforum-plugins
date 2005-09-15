@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -61,7 +61,7 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: CacheAction.java,v 1.6 2005/07/26 03:05:43 rafaelsteil Exp $
+ * @version $Id: CacheAction.java,v 1.7 2005/09/15 00:59:44 rafaelsteil Exp $
  */
 public class CacheAction extends AdminCommand
 {
@@ -111,6 +111,25 @@ public class CacheAction extends AdminCommand
 	{
 		RankingRepository.loadRanks();
 		this.list();
+	}
+	
+	public void topicsMoreInfo() throws Exception
+	{
+		if (!SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
+			this.list();
+			return;
+		}
+		
+		this.setTemplateName(TemplateKeys.CACHE_TOPICS_MOREINFO);
+		
+		this.context.put("categories", ForumRepository.getAllCategories());
+	}
+	
+	public void topicsClear() throws Exception
+	{
+		int forumId = this.request.getIntParameter("forum_id");
+		TopicRepository.clearCache(forumId);
+		this.topicsMoreInfo();
 	}
 	
 	public void postsMoreInfo() throws Exception

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -44,12 +44,13 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: CacheEngineStartupException.java,v 1.3 2005/07/26 03:04:35 rafaelsteil Exp $
+ * @version $Id: CacheEngineStartupException.java,v 1.4 2005/09/15 00:59:44 rafaelsteil Exp $
  */
 public class CacheEngineStartupException extends RuntimeException
 {
-	public CacheEngineStartupException(String message)
+	public CacheEngineStartupException(String message, Throwable t)
 	{
-		super(message);
+		super(message, t);
+		this.setStackTrace(t.getStackTrace());
 	}
 }

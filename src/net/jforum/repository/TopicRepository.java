@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: TopicRepository.java,v 1.19 2005/09/13 21:27:29 rafaelsteil Exp $
+ * @version $Id: TopicRepository.java,v 1.20 2005/09/15 00:59:43 rafaelsteil Exp $
  */
 public class TopicRepository implements Cacheable
 {
@@ -224,21 +224,22 @@ public class TopicRepository implements Cacheable
 				if (!contains && list.size() + 1 > maxItems) {
 					list.removeLast();
 				}
-				
-				if (!contains && topic.getType() == Topic.TYPE_ANNOUNCE) {
-					list.addFirst(topic);
-				}
 				else {
+					int index = 0;
+					
 					if (contains) {
 						list.remove(topic);
 					}
-					
-					int index = 0;
 					
 					for (Iterator iter = list.iterator(); iter.hasNext(); index++) {
 						Topic current = (Topic)iter.next();
 						
 						if (current.getType() == Topic.TYPE_ANNOUNCE) {
+							if (topic.getType() == Topic.TYPE_ANNOUNCE) {
+								list.add(index, topic);
+								break;
+							}
+
 							continue;
 						}
 						
@@ -250,7 +251,7 @@ public class TopicRepository implements Cacheable
 							
 							continue;
 						}
-
+	
 						list.add(index, topic);
 						break;
 					}

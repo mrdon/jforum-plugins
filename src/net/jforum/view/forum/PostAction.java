@@ -91,7 +91,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.102 2005/09/14 20:11:17 vmal Exp $
+ * @version $Id: PostAction.java,v 1.103 2005/09/15 00:59:44 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -154,6 +154,7 @@ public class PostAction extends Command
 		tm.updateReadStatus(topic.getId(), us.getUserId(), true);
 		
 		tm.incrementTotalViews(topic.getId());
+		topic.setTotalViews(topic.getTotalViews() + 1);
 
 		if (us.getUserId() != anonymousUser) {
 			((Map) SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(topic.getId()),
@@ -204,8 +205,14 @@ public class PostAction extends Command
 		// Pagination
 		int totalPosts = tm.getTotalPosts(topic.getId());
 		ViewCommon.contextToPagination(start, totalPosts, count);
+		
+		TopicRepository.updateTopic(topic);
 	}
 	
+	/**
+	 * Given a postId, sends the user to the right page
+	 * @throws Exception
+	 */
 	public void preList() throws Exception
 	{
 		int postId = this.request.getIntParameter("post_id");
@@ -214,18 +221,19 @@ public class PostAction extends Command
 		
 		int count = pdao.countPreviousPosts(postId);
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
-
+		
 		int topicId = this.request.getIntParameter("topic_id");
-		String offs;
+		String page = "";
+		
 		if (count > postsPerPage) {
-		    offs=Integer.toString(postsPerPage * ((count - 1) / postsPerPage))+"/";
-		} else {
-		    offs="";
-		}
+			page = Integer.toString(postsPerPage * ((count - 1) / postsPerPage)) + "/";
+		} 
+
 		JForum.setRedirect(
-		  this.request.getContextPath() + "/posts/list/"+
-		  offs+Integer.toString(topicId) +
-		  SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#" + postId);
+			this.request.getContextPath() + "/posts/list/"
+			+ page + topicId
+			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) 
+			+ "#" + postId);
 	}
 
 	public void listByUser() throws Exception 

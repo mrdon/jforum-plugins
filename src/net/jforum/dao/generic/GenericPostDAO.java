@@ -60,7 +60,7 @@ import net.jforum.util.search.SearchFacade;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericPostDAO.java,v 1.8 2005/09/12 21:05:20 rafaelsteil Exp $
+ * @version $Id: GenericPostDAO.java,v 1.9 2005/09/15 00:59:43 rafaelsteil Exp $
  */
 public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO 
 {
@@ -133,9 +133,11 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 	/**
 	 * @see net.jforum.dao.PostDAO#delete(Post)
 	 */
-	public void delete(final Post post) throws Exception 
+	public void delete(Post post) throws Exception 
 	{
-		this.removePosts(new ArrayList() {{ add(post); }});
+		List l = new ArrayList();
+		l.add(post);
+		this.removePosts(l);
 	}
 	
 	private void removePosts(List posts) throws Exception

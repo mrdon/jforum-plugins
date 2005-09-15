@@ -50,17 +50,8 @@ import java.util.Map;
 import java.util.Properties;
 
 import net.jforum.cache.CacheEngine;
+import net.jforum.cache.Cacheable;
 import net.jforum.exceptions.CacheEngineStartupException;
-import net.jforum.repository.BBCodeRepository;
-import net.jforum.repository.ForumRepository;
-import net.jforum.repository.ModulesRepository;
-import net.jforum.repository.PostRepository;
-import net.jforum.repository.RankingRepository;
-import net.jforum.repository.RolesRepository;
-import net.jforum.repository.SecurityRepository;
-import net.jforum.repository.SmiliesRepository;
-import net.jforum.repository.TopicRepository;
-import net.jforum.repository.Tpl;
 import net.jforum.summary.SummaryScheduler;
 import net.jforum.util.FileMonitor;
 import net.jforum.util.preferences.ConfigKeys;
@@ -68,7 +59,6 @@ import net.jforum.util.preferences.QueriesFileListener;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.SystemGlobalsListener;
 import net.jforum.util.search.SearchFacade;
-import net.jforum.util.search.quartz.QuartzSearchIndexerJob;
 
 import org.apache.log4j.Logger;
 import org.quartz.SchedulerException;
@@ -77,7 +67,7 @@ import org.quartz.SchedulerException;
  * General utilities methods for loading configurations for JForum.
  * 
  * @author Rafael Steil
- * @version $Id: ConfigLoader.java,v 1.16 2005/07/26 03:04:40 rafaelsteil Exp $
+ * @version $Id: ConfigLoader.java,v 1.17 2005/09/15 00:59:42 rafaelsteil Exp $
  */
 public class ConfigLoader 
 {
@@ -183,21 +173,27 @@ public class ConfigLoader
 			CacheEngine cache = (CacheEngine)Class.forName(cacheImplementation).newInstance();
 			cache.init();
 			
-			new BBCodeRepository().setCacheEngine(cache);
-			new ModulesRepository().setCacheEngine(cache);
-			new RankingRepository().setCacheEngine(cache);
-			new SmiliesRepository().setCacheEngine(cache);
-			new SecurityRepository().setCacheEngine(cache);
-			new ForumRepository().setCacheEngine(cache);
-			new TopicRepository().setCacheEngine(cache);
-			new SessionFacade().setCacheEngine(cache);
-			new PostRepository().setCacheEngine(cache);
-			new QuartzSearchIndexerJob().setCacheEngine(cache);
-			new Tpl().setCacheEngine(cache);
-			new RolesRepository().setCacheEngine(cache);
+			String s = SystemGlobals.getValue(ConfigKeys.CACHEABLE_OBJECTS);
+			if (s == null || s.trim().equals("")) {
+				logger.warn("Cannot find Cacheable objects to associate the cache engine instance.");
+				return;
+			}
+			
+			String[] cacheableObjects = s.split(",");
+			for (int i = 0; i < cacheableObjects.length; i++) {
+				logger.info("Creating an instance of " + cacheableObjects[i]);
+				Object o = Class.forName(cacheableObjects[i].trim()).newInstance();
+				
+				if (o instanceof Cacheable) {
+					((Cacheable)o).setCacheEngine(cache);
+				}
+				else {
+					logger.error(cacheableObjects[i] + " is not an instance of net.jforum.cache.Cacheable");
+				}
+			}
 		}
 		catch (Exception e) {
-			throw new CacheEngineStartupException("Error while starting the cache engine: " + e);
+			throw new CacheEngineStartupException("Error while starting the cache engine", e);
 		}
 	}
 	
