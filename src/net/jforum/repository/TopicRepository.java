@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: TopicRepository.java,v 1.20 2005/09/15 00:59:43 rafaelsteil Exp $
+ * @version $Id: TopicRepository.java,v 1.21 2005/09/15 21:10:28 rafaelsteil Exp $
  */
 public class TopicRepository implements Cacheable
 {
@@ -72,6 +72,7 @@ public class TopicRepository implements Cacheable
 	private static final String RECENT = "recent";
 	private static final String FQN_FORUM = FQN + "/byforum";
 	private static final String RELATION = "relation";
+	private static final String FQN_LOADED = FQN + "/loaded";
 	
 	private static CacheEngine cache;
 	
@@ -81,6 +82,11 @@ public class TopicRepository implements Cacheable
 	public void setCacheEngine(CacheEngine engine)
 	{
 		cache = engine;
+	}
+	
+	public static boolean isLoaded(int forumId)
+	{
+		return "1".equals(cache.get(FQN_LOADED, Integer.toString(forumId)));
 	}
 
 	/**
@@ -183,6 +189,7 @@ public class TopicRepository implements Cacheable
 			}
 			
 			cache.add(FQN, RELATION, m);
+			cache.add(FQN_LOADED, Integer.toString(forumId), "1");
 		}
 	}
 	
@@ -346,6 +353,7 @@ public class TopicRepository implements Cacheable
 		if (SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
 			synchronized (FQN_FORUM) {
 				List returnList = (List)cache.get(FQN_FORUM, Integer.toString(forumid));
+
 				if (returnList == null) {
 					return new ArrayList();
 				}

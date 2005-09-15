@@ -76,7 +76,7 @@ import freemarker.template.SimpleHash;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.18 2005/09/13 12:26:33 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.19 2005/09/15 21:10:29 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
@@ -102,7 +102,7 @@ public class TopicsCommon
 		if (start == 0 && SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
 			topics = TopicRepository.getTopics(forumId);
 
-			if (topics.size() == 0) {
+			if (topics.size() == 0 || !TopicRepository.isLoaded(forumId)) {
 				topics = tm.selectAllByForumByLimit(forumId, start, topicsPerPage);
 				TopicRepository.addAll(forumId, topics);
 			}

@@ -25,19 +25,20 @@
 			
 			<table class="forumline" cellspacing="1" cellpadding="4" width="100%" border="0">
 				<tr>
+					<th class="thCornerR" nowrap="nowrap" align="middle">&nbsp;${I18n.getMessage("Forums.Form.ForumName")}&nbsp;</th>
 					<th class="thCornerL" nowrap="nowrap" align="middle" colspan="2" height="25">&nbsp;${I18n.getMessage("ForumIndex.topics")}&nbsp;</th>
 					<th class="thTop" nowrap="nowrap" align="middle" width="50">&nbsp;${I18n.getMessage("ForumIndex.answers")}&nbsp;</th>
 					<th class="thTop" nowrap="nowrap" align="middle" width="100">&nbsp;${I18n.getMessage("ForumIndex.author")}&nbsp;</th>
 					<th class="thTop" nowrap="nowrap" align="middle" width="50">&nbsp;${I18n.getMessage("ForumIndex.views")}&nbsp;</th>
 					<th class="thTop" nowrap="nowrap" align="middle">&nbsp;${I18n.getMessage("ForumIndex.lastMessage")}&nbsp;</th>
-					<th class="thCornerR" nowrap="nowrap" align="middle">&nbsp;${I18n.getMessage("Forums.Form.ForumName")}&nbsp;</th>
 				</tr>
 
 				<!-- TOPICS LISTING -->
 				<#list topics as topic>
 				<tr>
+					<td class="row2" valign="center" align="middle"><a class="postdetails" href="${JForumContext.encodeURL("/forums/show/${forums.get(topic_index).getId()}")}">${forums.get(topic_index).getName()}</a></td>
 					<td class="row1" valign="center" align="middle" width="20"><@presentation.folderImage topic/></td>
-					<td class="row1" width="100%">
+					<td class="row1" width="80%">
 						<span class="topictitle">
 						<a href="${JForumContext.encodeURL("/posts/list/${topic.id}")}"><#if (topic.title?length == 0)>No Subject<#else>${topic.title?html}</#if></a>
 						</span>
@@ -69,8 +70,6 @@
 							<a href="${JForumContext.encodeURL("/posts/list/${startPage}${topic.id}")}#${topic.lastPostId}"><img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif" width="18" height="9" border="0" /></a></span>
 						</#if>		 
 					</td>
-					<td class="row2" valign="center" align="middle"><a class="postdetails" href="${JForumContext.encodeURL("/forums/show/${forums.get(topic_index).getId()}")}">${forums.get(topic_index).getName()}</a></td>
-
 				</tr>
 				</#list>		
 				<!-- END OF TOPICS LISTING -->
