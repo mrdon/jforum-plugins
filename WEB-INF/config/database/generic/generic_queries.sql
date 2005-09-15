@@ -120,7 +120,7 @@ UserModel.getUsernameByEmail = SELECT username FROM jforum_users WHERE user_emai
 UserModel.validateActivationKeyHash = SELECT COUNT(1) AS valid FROM jforum_users WHERE user_actkey = ? AND user_id = ?
 UserModel.writeUserActive = UPDATE jforum_users SET user_active = 1, user_actkey = NULL WHERE user_id = ?
 UserModel.updateUsername = UPDATE jforum_users SET username = ? WHERE user_id = ?
-UserModel.getUsernam = SELECT username FROM jforum_users WHERE user_id = ?
+UserModel.getUsername = SELECT username FROM jforum_users WHERE user_id = ?
 
 # #############
 # PostModel
