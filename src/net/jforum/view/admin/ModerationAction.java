@@ -52,6 +52,7 @@ import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.PostRepository;
+import net.jforum.repository.TopicRepository;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
@@ -62,7 +63,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationAction.java,v 1.16 2005/09/12 01:25:57 rafaelsteil Exp $
+ * @version $Id: ModerationAction.java,v 1.17 2005/09/16 16:29:17 rafaelsteil Exp $
  */
 public class ModerationAction extends AdminCommand
 {
@@ -103,6 +104,7 @@ public class ModerationAction extends AdminCommand
 				int postId = Integer.parseInt(posts[i]);
 				
 				String status = this.request.getParameter("status_" + postId);
+				
 				if ("defer".startsWith(status)) {
 					continue;
 				}
@@ -110,16 +112,26 @@ public class ModerationAction extends AdminCommand
 				if ("aprove".startsWith(status)) {
 					Post p = DataAccessDriver.getInstance().newPostDAO().selectById(postId);
 					
-					// Check is the post is in fact waiting moderation
+					// Check is the post is in fact waiting for moderation
 					if (!p.isModerationNeeded()) {
 						continue;
 					}
 					
-					Topic t = tm.selectById(p.getTopicId());
+					Topic t = TopicRepository.getTopic(new Topic(p.getTopicId()));
+					
+					if (t == null) {
+						t = tm.selectById(p.getTopicId());
+					}
 					
 					DataAccessDriver.getInstance().newModerationDAO().aprovePost(postId);
 					
-					TopicsCommon.updateBoardStatus(t, postId, t.getFirstPostId() == postId,
+					boolean firstPost = (t.getFirstPostId() == postId);
+					
+					if (!firstPost) {
+						t.setTotalReplies(t.getTotalReplies() + 1);
+					}
+					
+					TopicsCommon.updateBoardStatus(t, postId, firstPost,
 							tm, DataAccessDriver.getInstance().newForumDAO());
 					
 					UserDAO udao = DataAccessDriver.getInstance().newUserDAO();

@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: TopicRepository.java,v 1.21 2005/09/15 21:10:28 rafaelsteil Exp $
+ * @version $Id: TopicRepository.java,v 1.22 2005/09/16 16:29:17 rafaelsteil Exp $
  */
 public class TopicRepository implements Cacheable
 {
@@ -231,37 +231,35 @@ public class TopicRepository implements Cacheable
 				if (!contains && list.size() + 1 > maxItems) {
 					list.removeLast();
 				}
-				else {
-					int index = 0;
+				else if (contains) {
+					list.remove(topic);
+				}
+				
+				int index = 0;
+				
+				for (Iterator iter = list.iterator(); iter.hasNext(); index++) {
+					Topic current = (Topic)iter.next();
 					
-					if (contains) {
-						list.remove(topic);
-					}
-					
-					for (Iterator iter = list.iterator(); iter.hasNext(); index++) {
-						Topic current = (Topic)iter.next();
-						
-						if (current.getType() == Topic.TYPE_ANNOUNCE) {
-							if (topic.getType() == Topic.TYPE_ANNOUNCE) {
-								list.add(index, topic);
-								break;
-							}
+					if (current.getType() == Topic.TYPE_ANNOUNCE) {
+						if (topic.getType() == Topic.TYPE_ANNOUNCE) {
+							list.add(index, topic);
+							break;
+						}
 
-							continue;
+						continue;
+					}
+					
+					if (current.getType() == Topic.TYPE_STICKY) {
+						if (topic.getType() == Topic.TYPE_STICKY) {
+							list.add(index, topic);
+							break;
 						}
 						
-						if (current.getType() == Topic.TYPE_STICKY) {
-							if (topic.getType() == Topic.TYPE_STICKY) {
-								list.add(index, topic);
-								break;
-							}
-							
-							continue;
-						}
-	
-						list.add(index, topic);
-						break;
+						continue;
 					}
+
+					list.add(index, topic);
+					break;
 				}
 			}
 			

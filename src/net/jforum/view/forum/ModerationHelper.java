@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -64,7 +64,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationHelper.java,v 1.22 2005/07/26 04:01:13 diegopires Exp $
+ * @version $Id: ModerationHelper.java,v 1.23 2005/09/16 16:29:17 rafaelsteil Exp $
  */
 public class ModerationHelper 
 {
