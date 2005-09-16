@@ -4,7 +4,7 @@
  * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
- * that the following conditions are met:\
+ * that the following conditions are met:
  * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
@@ -63,7 +63,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * $Id: GenericUserSecurityDAO.java,v 1.7 2005/07/26 03:04:56 rafaelsteil Exp $
+ * $Id: GenericUserSecurityDAO.java,v 1.8 2005/09/16 16:11:28 rafaelsteil Exp $
  */
 public class GenericUserSecurityDAO extends AutoKeys implements net.jforum.dao.security.UserSecurityDAO, Serializable 
 {
@@ -72,7 +72,16 @@ public class GenericUserSecurityDAO extends AutoKeys implements net.jforum.dao.s
 	 */
 	public void deleteAllRoles(int id) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PermissionControl.deleteAllUserRoles"));
+		// Values
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("PermissionControl.deleteAllUserRoleValues"));
+		p.setInt(1, id);
+		p.executeUpdate();
+		p.close();
+		
+		// Roles
+		p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("PermissionControl.deleteAllUserRoles"));
 		p.setInt(1, id);
 		p.executeUpdate();
 		p.close();

@@ -4,7 +4,7 @@
  * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
- * that the following conditions are met:\
+ * that the following conditions are met:
  * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
@@ -48,7 +48,7 @@ import net.jforum.security.RoleCollection;
 
 /**
  * @author Rafael Steil
- * @version $Id: RolesRepository.java,v 1.3 2005/07/26 03:04:54 rafaelsteil Exp $
+ * @version $Id: RolesRepository.java,v 1.4 2005/09/16 16:11:29 rafaelsteil Exp $
  */
 public class RolesRepository implements Cacheable
 {
