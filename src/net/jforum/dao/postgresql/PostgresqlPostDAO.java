@@ -46,7 +46,7 @@ import java.util.List;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostgresqlPostDAO.java,v 1.5 2005/07/26 03:05:10 rafaelsteil Exp $
+ * @version $Id: PostgresqlPostDAO.java,v 1.6 2005/09/18 06:56:58 andowson Exp $
  */
 public class PostgresqlPostDAO extends net.jforum.dao.generic.GenericPostDAO
 {
@@ -57,4 +57,12 @@ public class PostgresqlPostDAO extends net.jforum.dao.generic.GenericPostDAO
 	{
 		return super.selectAllByTopicByLimit(topicId, count, startFrom);
 	}
+	
+	/** 
+	 * @see net.jforum.dao.PostDAO#selectByUserByLimit(int, int, int)
+	 */
+	public List selectByUserByLimit(int userId,int startFrom, int count) throws Exception
+	{
+		return super.selectByUserByLimit(userId, count, startFrom);
+	}	
 }

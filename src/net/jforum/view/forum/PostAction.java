@@ -91,7 +91,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.104 2005/09/15 21:10:29 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.105 2005/09/18 06:54:15 andowson Exp $
  */
 public class PostAction extends Command 
 {
@@ -273,7 +273,10 @@ public class PostAction extends Command
 				if (t == null) {
 					t = tm.selectRaw(p.getTopicId());
 				}
-				
+	  		this.context.put("attachmentsEnabled", SecurityRepository.canAccess(
+				SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(t.getForumId())));
+    		this.context.put("am", new AttachmentCommon(this.request, t.getForumId()));				
+	
 				topics.put(new Integer(t.getId()), t);
 			}
 			
@@ -295,6 +298,8 @@ public class PostAction extends Command
 		
 		this.setTemplateName(TemplateKeys.POSTS_USER_POSTS_LIST);
 		
+	this.context.put("canDownloadAttachments", SecurityRepository.canAccess(
+				SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD));				
 		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
 		this.context.put("allCategories", ForumCommon.getAllCategoriesAndForums(false));
 		this.context.put("posts", posts);

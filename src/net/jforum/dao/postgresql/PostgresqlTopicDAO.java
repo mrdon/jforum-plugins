@@ -46,7 +46,7 @@ import java.util.List;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostgresqlTopicDAO.java,v 1.5 2005/09/12 21:05:28 rafaelsteil Exp $
+ * @version $Id: PostgresqlTopicDAO.java,v 1.6 2005/09/18 06:57:07 andowson Exp $
  */
 public class PostgresqlTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 {
@@ -57,4 +57,12 @@ public class PostgresqlTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 	{
 		return super.selectAllByForumByLimit(forumId, count, startFrom);
 	}
+
+	/**
+	 * @see net.jforum.dao.TopicDAO#selectByUserByLimit(int, int, int)
+	 */
+	public List selectByUserByLimit(int userId, int startFrom, int count) throws Exception
+	{
+		return super.selectByUserByLimit(userId, count, startFrom);
+	}		
 }
