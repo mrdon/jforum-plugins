@@ -37,35 +37,11 @@
 	</#if>
 </#macro>
 
-<#macro row1Class topic>
-	<#if topic.type == TOPIC_ANNOUNCE>
-		row1Announce
-	<#elseif topic.type == TOPIC_STICKY>
-		row1Sticky
-	<#else>
-		row1
-	</#if>
-</#macro>
+<#macro row1Class topic><#if topic.type == TOPIC_ANNOUNCE>row1Announce<#elseif topic.type == TOPIC_STICKY>row1Sticky<#else>row1</#if></#macro>
 
-<#macro row2Class topic>
-	<#if topic.type == TOPIC_ANNOUNCE>
-		row2Announce
-	<#elseif topic.type == TOPIC_STICKY>
-		row2Sticky
-	<#else>
-		row2
-	</#if>
-</#macro>
+<#macro row2Class topic><#if topic.type == TOPIC_ANNOUNCE>row2Announce<#elseif topic.type == TOPIC_STICKY>row2Sticky<#else>row2</#if></#macro>
 
-<#macro row3Class topic>
-	<#if topic.type == TOPIC_ANNOUNCE>
-		row3Announce
-	<#elseif topic.type == TOPIC_STICKY>
-		row3Sticky
-	<#else>
-		row3
-	</#if>
-</#macro>
+<#macro row3Class topic><#if topic.type == TOPIC_ANNOUNCE>row3Announce<#elseif topic.type == TOPIC_STICKY>row3Sticky<#else>row3</#if></#macro>
 
 <#-- ****************** -->
 <#-- Moderation buttons -->
