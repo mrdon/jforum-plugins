@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -67,11 +67,12 @@ import org.quartz.SchedulerException;
  * General utilities methods for loading configurations for JForum.
  * 
  * @author Rafael Steil
- * @version $Id: ConfigLoader.java,v 1.17 2005/09/15 00:59:42 rafaelsteil Exp $
+ * @version $Id: ConfigLoader.java,v 1.18 2005/09/25 02:40:27 rafaelsteil Exp $
  */
 public class ConfigLoader 
 {
 	private static final Logger logger = Logger.getLogger(ConfigLoader.class);
+	private static CacheEngine cache;
 	
 	/**
 	 * Start ( or restart ) <code>SystemGlobals</code>.
@@ -170,7 +171,7 @@ public class ConfigLoader
 			String cacheImplementation = SystemGlobals.getValue(ConfigKeys.CACHE_IMPLEMENTATION);
 			logger.info("Using cache engine: " + cacheImplementation);
 			
-			CacheEngine cache = (CacheEngine)Class.forName(cacheImplementation).newInstance();
+			cache = (CacheEngine)Class.forName(cacheImplementation).newInstance();
 			cache.init();
 			
 			String s = SystemGlobals.getValue(ConfigKeys.CACHEABLE_OBJECTS);
@@ -194,6 +195,13 @@ public class ConfigLoader
 		}
 		catch (Exception e) {
 			throw new CacheEngineStartupException("Error while starting the cache engine", e);
+		}
+	}
+	
+	public static void stopCacheEngine()
+	{
+		if (cache != null) {
+			cache.stop();
 		}
 	}
 	

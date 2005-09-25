@@ -72,7 +72,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.78 2005/09/09 17:59:45 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.79 2005/09/25 02:40:27 rafaelsteil Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
@@ -151,9 +151,7 @@ public class JForum extends JForumBaseServlet
 			ControllerUtils utils = new ControllerUtils();
 			utils.refreshSession();
 			
-			boolean logged = "1".equals(SessionFacade.getAttribute("logged"));
-			
-			context.put("logged", logged);
+			context.put("logged", SessionFacade.isLogged());
 			
 			// Process security data
 			SecurityRepository.load(SessionFacade.getUserSession().getUserId());
@@ -277,6 +275,7 @@ public class JForum extends JForumBaseServlet
 		
 		try {
 			DBConnection.getImplementation().realReleaseAllConnections();
+			ConfigLoader.stopCacheEngine();
 		}
 		catch (Exception e) {}
 	}

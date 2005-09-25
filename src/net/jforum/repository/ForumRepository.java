@@ -84,7 +84,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.45 2005/09/13 21:27:29 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.46 2005/09/25 02:40:28 rafaelsteil Exp $
  */
 public class ForumRepository implements Cacheable
 {
@@ -503,7 +503,7 @@ public class ForumRepository implements Cacheable
 	
 	public static synchronized void updateForumStats(Topic t, User u, Post p)
 	{
-		Integer f = new Integer(t.getForumId());
+		String f = Integer.toString(t.getForumId());
 		
 		if (((Map)cache.get(FQN, RELATION)).containsKey(f)) {
 			Forum forum = getForum(t.getForumId());

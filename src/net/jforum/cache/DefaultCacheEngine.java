@@ -49,7 +49,7 @@ import java.util.Map;
 
 /**
  * @author Rafael Steil
- * @version $Id: DefaultCacheEngine.java,v 1.8 2005/07/26 03:04:53 rafaelsteil Exp $
+ * @version $Id: DefaultCacheEngine.java,v 1.9 2005/09/25 02:40:28 rafaelsteil Exp $
  */
 public class DefaultCacheEngine implements CacheEngine
 {
@@ -118,6 +118,11 @@ public class DefaultCacheEngine implements CacheEngine
 	{
 		this.cache = new HashMap();
 	}
+	
+	/**
+	 * @see net.jforum.cache.CacheEngine#stop()
+	 */
+	public void stop() {}
 	
 	/**
 	 * @see net.jforum.cache.CacheEngine#remove(java.lang.String, java.lang.String)

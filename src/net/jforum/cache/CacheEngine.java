@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -46,7 +46,7 @@ import java.util.Collection;
 
 /**
  * @author Rafael Steil
- * @version $Id: CacheEngine.java,v 1.8 2005/07/26 03:04:54 rafaelsteil Exp $
+ * @version $Id: CacheEngine.java,v 1.9 2005/09/25 02:40:28 rafaelsteil Exp $
  */
 public interface CacheEngine
 {
@@ -57,6 +57,11 @@ public interface CacheEngine
 	 * Inits the cache engine. 
 	 */
 	public void init();
+	
+	/**
+	 * Stops the cache engine
+	 */
+	public void stop();
 	
 	/**
 	 * Adds a new object to the cache. 

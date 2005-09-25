@@ -57,7 +57,7 @@ import org.jboss.cache.TreeCache;
 
 /**
  * @author Rafael Steil
- * @version $Id: JBossCacheEngine.java,v 1.6 2005/07/26 03:04:53 rafaelsteil Exp $
+ * @version $Id: JBossCacheEngine.java,v 1.7 2005/09/25 02:40:28 rafaelsteil Exp $
  */
 public class JBossCacheEngine implements CacheEngine
 {
@@ -79,6 +79,14 @@ public class JBossCacheEngine implements CacheEngine
 		catch (Exception e) {
 			throw new CacheException("Error while trying to configure jboss-cache: " + e);
 		}
+	}
+	
+	/**
+	 * @see net.jforum.cache.CacheEngine#stop()
+	 */
+	public void stop()
+	{
+		this.cache.stopService();
 	}
 
 	/**
