@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
 
  * Redistribution and use in source and binary forms, 
@@ -49,7 +49,7 @@ import java.util.LinkedHashSet;
 
 /**
  * @author Rafael Steil
- * @version $Id: RoleValueCollection.java,v 1.6 2005/07/26 03:05:05 rafaelsteil Exp $
+ * @version $Id: RoleValueCollection.java,v 1.7 2005/09/25 02:18:37 rafaelsteil Exp $
  */
 public class RoleValueCollection extends LinkedHashSet implements Serializable 
 {
@@ -81,7 +81,7 @@ public class RoleValueCollection extends LinkedHashSet implements Serializable
 		return c;
 	}
 	
-	/* 
+	/** 
 	 * @see java.util.ArrayList#add(java.lang.Object)
 	 */
 	public boolean add(Object o) 
@@ -93,7 +93,7 @@ public class RoleValueCollection extends LinkedHashSet implements Serializable
 		return super.add(o);
 	}
 
-	/* 
+	/** 
 	 * @see java.util.Collection#addAll(java.util.Collection)
 	 */
 	public boolean addAll(Collection c) 

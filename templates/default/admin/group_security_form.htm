@@ -59,19 +59,10 @@
 					</select>
 					
 					<input type="hidden" name="all${p.id}" value="${allValues}">
-					
-					&nbsp;&nbsp;<input type="checkbox" name="OverrideUser${p.id}">&nbsp;${I18n.getMessage("PermissionControl.userFollowGroup")} *
-					</span>
 				</td>
 			</tr>
 		</#list>
 	</#list>
-	
-	<tr>
-		<td class="row1" colspan="3" align="center">
-			<span class="gensmall"><font color="red">* ${I18n.getMessage("PermissionControl.override")}</font></span>
-		</td>
-	</tr>
 
 	<tr align="center">
 		<td class="catBottom" colspan="3" height="28"><input class="mainoption" type="submit" value="${I18n.getMessage("PermissionControl.save")}" name="submit"></td>

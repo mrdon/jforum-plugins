@@ -49,14 +49,9 @@ import java.util.List;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.GroupDAO;
 import net.jforum.dao.UserDAO;
-import net.jforum.dao.security.UserSecurityDAO;
 import net.jforum.entities.Group;
 import net.jforum.entities.User;
-import net.jforum.repository.ForumRepository;
-import net.jforum.repository.RolesRepository;
 import net.jforum.repository.SecurityRepository;
-import net.jforum.security.PermissionControl;
-import net.jforum.security.XMLPermissionControl;
 import net.jforum.util.I18n;
 import net.jforum.util.TreeGroup;
 import net.jforum.util.preferences.ConfigKeys;
@@ -67,7 +62,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.27 2005/09/13 21:27:27 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.28 2005/09/25 02:18:35 rafaelsteil Exp $
  */
 public class UserAction extends AdminCommand 
 {
@@ -144,50 +139,6 @@ public class UserAction extends AdminCommand
 			this.list();
 			return;
 		}
-	}
-	
-	// Permissions
-	public void permissions() throws Exception
-	{
-		int id = this.request.getIntParameter("id");
-		
-		User user = DataAccessDriver.getInstance().newUserDAO().selectById(id);
-		
-		UserSecurityDAO umodel = DataAccessDriver.getInstance().newUserSecurityDAO();
-		PermissionControl pc = new PermissionControl();
-		pc.setSecurityModel(umodel);
-		pc.setRoles(umodel.loadRoles(user));
-		
-		List sections = new XMLPermissionControl(pc).loadConfigurations(
-				SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/permissions.xml");
-		this.context.put("sections", sections);
-		this.context.put("user", user);
-		this.setTemplateName(TemplateKeys.USER_ADMIN_PERMISSIONS);
-	}
-	
-	// Permissions Save
-	public void permissionsSave() throws Exception
-	{
-		int id = this.request.getIntParameter("id");
-		User user = DataAccessDriver.getInstance().newUserDAO().selectById(id);
-		
-		UserSecurityDAO umodel = DataAccessDriver.getInstance().newUserSecurityDAO();
-		PermissionControl pc = new PermissionControl();
-		pc.setSecurityModel(umodel);
-
-		new PermissionProcessHelper(pc, user.getId()).processData();
-		
-		// Reload it
-		pc.setRoles(umodel.loadRoles(user));
-
-		// Update Security Repository
-		SecurityRepository.remove(user.getId());
-		SecurityRepository.add(user.getId(), pc);
-		ForumRepository.clearModeratorList();
-		
-		RolesRepository.clear();
-		
-		this.list();
 	}
 	
 	public void edit() throws Exception

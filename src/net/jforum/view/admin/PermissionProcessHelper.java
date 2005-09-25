@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -48,8 +48,6 @@ import java.util.Enumeration;
 import java.util.List;
 
 import net.jforum.JForum;
-import net.jforum.dao.DataAccessDriver;
-import net.jforum.dao.security.UserSecurityDAO;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.Role;
 import net.jforum.security.RoleValue;
@@ -57,24 +55,17 @@ import net.jforum.security.RoleValueCollection;
 
 /**
  * @author Rafael Steil
- * @version $Id: PermissionProcessHelper.java,v 1.10 2005/07/26 03:05:41 rafaelsteil Exp $
+ * @version $Id: PermissionProcessHelper.java,v 1.11 2005/09/25 02:18:35 rafaelsteil Exp $
  */
 class PermissionProcessHelper 
 {
 	private PermissionControl pc;
-	private UserSecurityDAO umodel;
 	private int id;
-	private boolean isGroup;
 	
 	public PermissionProcessHelper(PermissionControl pc, int id, boolean isGroup) throws Exception
 	{
 		this.id = id;
 		this.pc = pc;
-		
-		this.isGroup = isGroup;
-		if (this.isGroup) {
-			umodel = DataAccessDriver.getInstance().newUserSecurityDAO();
-		}
 		
 		this.init();
 	}
@@ -96,12 +87,6 @@ class PermissionProcessHelper
 
 					paramName = paramName.substring(0, paramName.indexOf('$'));
 					
-					if (isGroup) {
-						if (JForum.getRequest().getParameter("OverrideUser" + paramName) != null) {
-							this.umodel.deleteUserRoleByGroup(id, paramName);
-						}
-					}
-					
 					Role role = new Role();
 					role.setName(paramName);
 					
@@ -117,14 +102,8 @@ class PermissionProcessHelper
 				else {
 					String[] paramValues = JForum.getRequest().getParameterValues(paramName);
 					
-					if (isGroup) {
-						if (JForum.getRequest().getParameter("OverrideUser"+ paramName) != null) {
-							this.umodel.deleteUserRoleByGroup(id, paramName);
-						}
-					}
-					
 					RoleValueCollection roleValues = new RoleValueCollection();
-					if (paramValues[0].equals("all") == false) {
+					if (!"all".equals(paramValues[0])) {
 						// Deny
 						for (int i = 0; i < paramValues.length; i++) {
 							roleValues.add(this.createRoleValue(paramValues[i], PermissionControl.ROLE_DENY));

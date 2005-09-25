@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -45,42 +45,12 @@ package net.jforum.dao.security;
 import net.jforum.entities.User;
 import net.jforum.security.RoleCollection;
 
+
 /**
  * @author Rafael Steil
- * @version $Id: UserSecurityDAO.java,v 1.4 2005/07/26 03:05:45 rafaelsteil Exp $
+ * @version $Id: UserSecurityDAO.java,v 1.5 2005/09/25 02:18:39 rafaelsteil Exp $
  */
 public interface UserSecurityDAO extends SecurityDAO 
 {
-	public void deleteUserRoleByGroup(int groupId, String roleName) throws Exception;
-	
-	public RoleCollection loadRoles(User user) throws Exception;
-
-	/**
-	 * Deletes a specific role value of all users who belongs to the group passed as parameter.
-	 * 
-	 * @param groupId The group id
-	 * @param roleName The role name
-	 * @param roleValues An array containing all values to be deleted
-	 * @throws Exception
-	 */
-	public void deleteUserRoleValuesByGroup(int groupId, String roleName, String[] roleValues) throws Exception;
-	
-	/**
-	 * Deletes a specific role value of all users who belongs to the group passed as parameter.
-	 * 
-	 * @param groupId The group id
-	 * @param roleName The role name
-	 * @param roleValue The role value
-	 * @throws Exception
-	 */
-	public void deleteUserRoleValuesByGroup(int groupId, String roleName, String roleValue) throws Exception;
-	
-	/**
-	 * Deletes all role values of all users who belongs to the group passed as parameter.
-	 * 
-	 * @param groupId The group id
-	 * @param roleName The role name
-	 * @throws Exception
-	 */
-	public void deleteUserRoleValuesByGroup(int groupId, String roleName) throws Exception;
+	public RoleCollection loadRoles(User user) throws Exception; 
 }

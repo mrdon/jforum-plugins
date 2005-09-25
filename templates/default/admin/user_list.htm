@@ -40,7 +40,6 @@
 		<td class="gen"><b>${I18n.getMessage("User.username")}</b></td>
 		<td class="gen">&nbsp;</td>
 		<td class="gen">&nbsp;</td>
-		<td class="gen">&nbsp;</td>
 		<td class="gen" width="5%" align="center"><b>${I18n.getMessage("Lock")}</b></td>
 		<td class="gen" width="5%" align="center"><b>${I18n.getMessage("Unlock")}</b></td>
 	</tr>
@@ -51,7 +50,6 @@
 			<td class="row2"><span class="gen">${user.username}</span></td>
 			<td class="row2"><span class="gen"><a href="${contextPath}/jforum${extension}?module=adminUsers&amp;action=edit&amp;id=${user.id}">${I18n.getMessage("Edit")}</a></span></td>
 			<td class="row2"><span class="gen"><a href="${contextPath}/jforum${extension}?module=adminUsers&amp;action=groups&amp;id=${user.id}">${I18n.getMessage("User.Groups")}</a></span></td>
-			<td class="row2"><span class="gen"><a href="${contextPath}/jforum${extension}?module=adminUsers&amp;action=permissions&amp;id=${user.id}">${I18n.getMessage("Permissions")}</a></span></td>
 
 			<#if user.deleted>
 				<td class="row2">&nbsp;</td>

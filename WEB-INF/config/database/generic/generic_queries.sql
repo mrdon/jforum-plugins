@@ -410,14 +410,10 @@ TreeGroup.selectGroup = SELECT group_id, group_name FROM jforum_groups WHERE par
 # PermissionControl
 # ################
 PermissionControl.deleteAllRoleValues = DELETE FROM jforum_role_values WHERE role_id IN (SELECT role_id FROM jforum_roles WHERE group_id = ?)
-PermissionControl.deleteAllUserRoleValues = DELETE FROM jforum_role_values WHERE role_id IN (SELECT role_id FROM jforum_roles WHERE user_id = ?)
 
-PermissionControl.deleteAllUserRoles = DELETE FROM jforum_roles WHERE user_id = ?
 PermissionControl.deleteAllGroupRoles = DELETE FROM jforum_roles WHERE group_id = ?
-PermissionControl.deleteUserRole = DELETE from jforum_roles WHERE user_id = ? AND name = ?
 PermissionControl.deleteGroupRole = DELETE FROM jforum_roles WHERE group_id = ? AND name = ?
 PermissionControl.addGroupRole = INSERT INTO jforum_roles ( group_id, name, role_type ) VALUES (?, ?, ?)
-PermissionControl.addUserRole = INSERT INTO jforum_roles ( user_id, name, role_type ) VALUES (?, ?, ?)
 PermissionControl.addRoleValues = INSERT INTO jforum_role_values (role_id, role_value, role_type ) VALUES (?, ?, ?)
 PermissionControl.getRoleIdByName = SELECT role_id FROM jforum_roles WHERE name = ? AND group_id = ?
 
@@ -427,37 +423,6 @@ PermissionControl.loadGroupRoles = SELECT r.role_id, r.name, rv.role_value, rv.r
 	WHERE r.group_id = ? \
 	AND user_id = 0 \
 	ORDER BY r.role_id
-
-PermissionControl.loadUserRoles = SELECT r.role_id, r.name, rv.role_value, rv.role_type AS rv_type, r.role_type \
-	FROM jforum_roles r \
-	LEFT JOIN jforum_role_values rv ON rv.role_id = r.role_id \
-	WHERE r.user_id = ? \
-	AND r.group_id = 0 \
-	ORDER BY r.role_id
-	
-PermissionControl.deleteAllUserRoleValuesByGroup = DELETE FROM jforum_roles \
-	where role_id in (select r.role_id from jforum_role_values rv, jforum_users u, jforum_user_groups ug \
-	WHERE u.user_id = ug.user_id \
-	AND ug.group_id = ? \
-	AND r.user_id = u.user_id \
-	AND r.role_name = ? )
-
-PermissionControl.deleteUserRoleByGroup = DELETE FROM jforum_roles \
-	where user_id in (select user_id from jforum_user_groups ug where  ug.group_id = ?) \
-	and name = ? \
-	
-PermissionControl.deleteUserRoleValuesByRoleName = DELETE FROM jforum_role_values \
-	where role_id in (select r.role_id from jforum_roles r, jforum_user_groups ug \
-	WHERE ug.user_id = r.user_id \
-	AND ug.group_id = ? \
-	AND r.name = ? )
-
-PermissionControl.deleteUserRoleValueByGroup = DELETE FROM jforum_role_values\
-	where role_id in (select r.role_id from jforum_roles r, jforum_user_groups ug \
-	WHERE ug.user_id = r.user_id \
-	AND ug.group_id = ? \
-	AND r.name = ? ) \
-	AND rv.value = ?
 
 # #############
 # TopicListing

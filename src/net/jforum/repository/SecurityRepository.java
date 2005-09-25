@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -58,7 +58,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityRepository.java,v 1.14 2005/07/26 03:04:56 rafaelsteil Exp $
+ * @version $Id: SecurityRepository.java,v 1.15 2005/09/25 02:18:40 rafaelsteil Exp $
  */
 public class SecurityRepository implements Cacheable
 {

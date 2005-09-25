@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -51,7 +51,7 @@ import net.jforum.dao.security.SecurityDAO;
  * actions.  
  * 
  * @author Rafael Steil
- * @version $Id: PermissionControl.java,v 1.14 2005/07/26 03:05:06 rafaelsteil Exp $
+ * @version $Id: PermissionControl.java,v 1.15 2005/09/25 02:18:37 rafaelsteil Exp $
  */
 public class PermissionControl implements Serializable
 {

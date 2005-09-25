@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -48,7 +48,7 @@ import java.util.LinkedHashMap;
 
 /**
  * @author Rafael Steil
- * @version $Id: RoleCollection.java,v 1.8 2005/07/26 03:05:06 rafaelsteil Exp $
+ * @version $Id: RoleCollection.java,v 1.9 2005/09/25 02:18:37 rafaelsteil Exp $
  */
 public class RoleCollection extends LinkedHashMap implements Serializable
 {

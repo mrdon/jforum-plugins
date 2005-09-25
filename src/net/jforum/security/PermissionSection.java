@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
 
  * Redistribution and use in source and binary forms, 
@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 21/09/2003 / 16:38:49
- * net.jforum.PermissionSection.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: PermissionSection.java,v 1.4 2005/07/26 03:05:07 rafaelsteil Exp $
  */
 package net.jforum.security;
 
@@ -49,33 +46,20 @@ package net.jforum.security;
  * @author Rafael Steil
  */
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Guarda as secoes da pagina de permissao e os respectivos itens.
+ * Stores the permissions page's sections and its respective items
  * 
  * @author Rafael Steil
+ * @version $Id: PermissionSection.java,v 1.5 2005/09/25 02:18:38 rafaelsteil Exp $
  */
 public class PermissionSection 
 {
-	/**
-	 * Nome da secao
-	 * */
 	private String sectionName;
-	
-	/**
-	 * ID da secao
-	 * */
 	private String sectionId;
+	private List permissionItens;
 	
-	/**
-	 * Guarda cada tipo de permissao relacionada com esta secao
-	 * */
-	private ArrayList permissionItens;
-	
-	/**
-	 * @param sectionName Nome da secao
-	 * @param sectionId ID da secao
-	 * */
 	public PermissionSection(String sectionName, String sectionId)
 	{
 		this.sectionName = sectionName;
@@ -83,37 +67,20 @@ public class PermissionSection
 		this.permissionItens = new ArrayList();
 	}		
 	
-	/**
-	 * Adiciona uma nova entrada de permissao.
-	 * 
-	 * @param item Objeto <code>PermissionItem</code> contendo os dados da permissao
-	 * */
 	public void addPermission(PermissionItem item)
 	{
 		this.permissionItens.add(item);
 	}
 
-	/**
-	 * Pega as permissoes associadas com esta secao
-	 * 
-	 * @return ArrayList contendo as permissoes
-	 * */	
-	public ArrayList getPermissions()
+	public List getPermissions()
 	{
 		return this.permissionItens;
 	}
-	/**
-	 * Returns the sectionId.
-	 * @return String
-	 */
+
 	public String getSectionId() {
 		return this.sectionId;
 	}
 
-	/**
-	 * Returns the sectionName.
-	 * @return String
-	 */
 	public String getSectionName() {
 		return this.sectionName;
 	}
