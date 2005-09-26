@@ -56,7 +56,7 @@
 								
 								<#assign moderators = fir.getModeratorList(forum.id)/>
 								<#list moderators as m>
-								  <a href="${JForumContext.encodeURL("/user/listGroup/${m.id}")}"> ${m.name?html}</a>
+								  <a href="${JForumContext.encodeURL("/user/listGroup/${m.id}")}">${m.name?html}</a>
 								</#list>
 							</span>
 							<br />		
