@@ -209,7 +209,7 @@ ForumModel.lastPostInfo = SELECT post_time, p.topic_id, t.topic_replies, post_id
 	AND p.forum_id = ? \
 	AND p.user_id = u.user_id
 
-ForumModel.getModeratorList = SELECT g.group_id AS id, g.group_name AS name, 2 AS mtype \
+ForumModel.getModeratorList = SELECT g.group_id AS id, g.group_name AS name \
 		FROM jforum_groups g, jforum_roles r, jforum_role_values rv, jforum_roles r2 \
 		WHERE g.group_id = r.group_id \
 		AND r.role_id = rv.role_id \
@@ -218,18 +218,7 @@ ForumModel.getModeratorList = SELECT g.group_id AS id, g.group_name AS name, 2 A
 		AND rv.role_type = 1 \
 		AND r2.name = 'perm_moderation' \
 		AND r2.role_type = 1 \
-		AND r2.group_id = g.group_id \
-	UNION SELECT u.user_id AS id, u.username AS name, 1 as mtype \
-		FROM jforum_users u, jforum_roles r, jforum_role_values rv, jforum_roles r2 \
-		WHERE u.user_id = r.user_id \
-		AND r.role_id = rv.role_id \
-		AND r.name = 'perm_moderation_forums' \
-		AND rv.role_value = ? \
-		AND rv.role_type = 1 \
-		AND r2.name = 'perm_moderation' \
-		AND r2.role_type = 1 \
-		AND r2.user_id = u.user_id
-		
+		AND r2.group_id = g.group_id 		
 
 ForumModel.totalMessages = SELECT COUNT(1) as total_messages FROM jforum_posts
 ForumModel.getMaxPostId = SELECT MAX(post_id) AS post_id FROM jforum_posts WHERE forum_id = ?

@@ -107,14 +107,12 @@ INCREMENT BY 1
 CREATE TABLE jforum_roles (
   role_id NUMBER(10) NOT NULL,
   group_id NUMBER(10) DEFAULT 0,
-  user_id NUMBER(10) DEFAULT 0,
   name VARCHAR2(255) NOT NULL,
   role_type NUMBER(10) DEFAULT 1,
   PRIMARY KEY (role_id)
 );
 
 CREATE INDEX idx_roles_group ON jforum_roles(group_id);
-CREATE INDEX idx_roles_user ON jforum_roles(user_id);
 CREATE INDEX idx_roles_name ON jforum_roles(name);
 
 --

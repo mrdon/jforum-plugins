@@ -241,7 +241,6 @@ CREATE TABLE [jforum_role_values] (
 CREATE TABLE [jforum_roles] (
 	[role_id] [bigint] IDENTITY (1, 1) PRIMARY KEY CLUSTERED NOT NULL ,
 	[group_id] [bigint] DEFAULT (0) NULL ,
-	[user_id] [bigint] DEFAULT (0) NULL ,
 	[name] [varchar] (255) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL ,
 	[role_type] [tinyint] DEFAULT (1) NULL 
 ) ON [PRIMARY]
@@ -514,7 +513,6 @@ CREATE TABLE [jforum_banner] (
  CREATE  INDEX [forum_id] ON [jforum_posts]([forum_id]) ON [PRIMARY]
  CREATE  INDEX [idx_role] ON [jforum_role_values]([role_id]) ON [PRIMARY]
  CREATE  INDEX [idx_group] ON [jforum_roles]([group_id]) ON [PRIMARY]
- CREATE  INDEX [idx_user] ON [jforum_roles]([user_id]) ON [PRIMARY]
  CREATE  INDEX [idx_name] ON [jforum_roles]([name]) ON [PRIMARY]
  CREATE  INDEX [topic_id] ON [jforum_search_results]([topic_id]) ON [PRIMARY]
  CREATE  INDEX [topic_id] ON [jforum_search_topics]([topic_id]) ON [PRIMARY]

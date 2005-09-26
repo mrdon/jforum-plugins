@@ -63,7 +63,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericForumDAO.java,v 1.9 2005/09/02 00:33:19 rafaelsteil Exp $
+ * @version $Id: GenericForumDAO.java,v 1.10 2005/09/26 14:59:34 vmal Exp $
  */
 public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO 
 {
@@ -364,7 +364,6 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 		while (rs.next()) {
 			ModeratorInfo mi = new ModeratorInfo();
 			
-			mi.setType(rs.getInt("mtype"));
 			mi.setId(rs.getInt("id"));
 			mi.setName(rs.getString("name"));
 			

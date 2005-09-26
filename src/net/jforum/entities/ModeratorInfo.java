@@ -46,18 +46,14 @@ import java.io.Serializable;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModeratorInfo.java,v 1.1 2005/09/02 00:33:19 rafaelsteil Exp $
+ * @version $Id: ModeratorInfo.java,v 1.2 2005/09/26 14:59:34 vmal Exp $
  */
 public class ModeratorInfo implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 	
-	public static final int TYPE_USER = 1;
-	public static final int TYPE_GROUP = 2;
-	
 	private int id;
 	private String name;
-	private int type;
 	
 	/**
 	 * @return Returns the id.
@@ -86,19 +82,5 @@ public class ModeratorInfo implements Serializable
 	public void setName(String name)
 	{
 		this.name = name;
-	}
-	/**
-	 * @return Returns the type.
-	 */
-	public int getType()
-	{
-		return this.type;
-	}
-	/**
-	 * @param type The type to set.
-	 */
-	public void setType(int type)
-	{
-		this.type = type;
 	}
 }
