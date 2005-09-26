@@ -59,7 +59,7 @@ package net.jforum.dao;
  * analise, look at <code>net.jforum.drivers.generic</code> package.
  * 
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.7 2005/07/31 04:07:33 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.8 2005/09/26 15:04:14 vmal Exp $
  */
 public abstract class DataAccessDriver 
 {
@@ -168,13 +168,6 @@ public abstract class DataAccessDriver
 	 * @return <code>net.jforum.model.SearchIndexerModel</code> instance
 	 */
 	public abstract net.jforum.dao.SearchIndexerDAO newSearchIndexerDAO();
-	
-	/**
-	 * Gets a {@link net.jforum.dao.security.UserSecurityDAO} instance
-	 * 
-	 * @return <code>net.jforum.model.security.UserSecurityModel</code> instance
-	 */
-	public abstract net.jforum.dao.security.UserSecurityDAO newUserSecurityDAO();
 	
 	/**
 	 * Gets a {@link net.jforum.dao.security.GroupSecurityDAO} instance

@@ -44,11 +44,10 @@ package net.jforum.dao.generic;
 
 import net.jforum.dao.SummaryDAO;
 import net.jforum.dao.generic.security.GenericGroupSecurityDAO;
-import net.jforum.dao.generic.security.GenericUserSecurityDAO;
 
 /**
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.8 2005/09/12 21:05:21 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.9 2005/09/26 15:04:14 vmal Exp $
  */
 public class DataAccessDriver extends net.jforum.dao.DataAccessDriver 
 {
@@ -60,7 +59,6 @@ public class DataAccessDriver extends net.jforum.dao.DataAccessDriver
 	private static GenericTreeGroupDAO treeGroupDao = new GenericTreeGroupDAO();
 	private static GenericSmilieDAO smilieDao = new GenericSmilieDAO();
 	private static GenericSearchDAO searchDao = new GenericSearchDAO();
-	private static GenericUserSecurityDAO userSecurityDao = new GenericUserSecurityDAO();
 	private static GenericGroupSecurityDAO groupSecurityDao = new GenericGroupSecurityDAO();
 	private static GenericPrivateMessageDAO privateMessageDao = new GenericPrivateMessageDAO();
 	private static GenericUserSessionDAO userSessionDao = new GenericUserSessionDAO();
@@ -172,15 +170,7 @@ public class DataAccessDriver extends net.jforum.dao.DataAccessDriver
 	}
 
 	/** 
-	 * @see net.jforum.dao.DataAccessDriver#newUserSecurityDAO()
-	 */
-	public net.jforum.dao.security.UserSecurityDAO newUserSecurityDAO() 
-	{
-		return userSecurityDao;
-	}
-
-	/** 
-	 * @see net.jforum.dao.DataAccessDriver#newUserSecurityDAO()
+	 * @see net.jforum.dao.DataAccessDriver#newPrivateMessageDAO()
 	 */
 	public net.jforum.dao.PrivateMessageDAO newPrivateMessageDAO() 
 	{
