@@ -410,7 +410,6 @@ PermissionControl.loadGroupRoles = SELECT r.role_id, r.name, rv.role_value, rv.r
 	FROM jforum_roles r \
 	LEFT JOIN jforum_role_values rv ON rv.role_id = r.role_id \
 	WHERE r.group_id = ? \
-	AND user_id = 0 \
 	ORDER BY r.role_id
 
 # #############
