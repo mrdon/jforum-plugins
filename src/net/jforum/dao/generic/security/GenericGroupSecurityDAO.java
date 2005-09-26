@@ -42,21 +42,29 @@
  */
 package net.jforum.dao.generic.security;
 
+import net.jforum.entities.Group;
+import net.jforum.entities.User;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import net.jforum.JForum;
 import net.jforum.dao.generic.AutoKeys;
+import net.jforum.repository.RolesRepository;
 import net.jforum.security.Role;
 import net.jforum.security.RoleCollection;
 import net.jforum.security.RoleValue;
 import net.jforum.security.RoleValueCollection;
+import net.jforum.security.UserSecurityHelper;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericGroupSecurityDAO.java,v 1.5 2005/07/26 03:04:56 rafaelsteil Exp $
+ * @version $Id: GenericGroupSecurityDAO.java,v 1.6 2005/09/26 15:20:04 vmal Exp $
  */
 public class GenericGroupSecurityDAO extends AutoKeys implements net.jforum.dao.security.GroupSecurityDAO 
 {
@@ -155,4 +163,72 @@ public class GenericGroupSecurityDAO extends AutoKeys implements net.jforum.dao.
 			p.close();
 		}
 	}
+
+    public RoleCollection loadRolesByUserGroups(User user) throws Exception
+    {
+	List groups = user.getGroupsList();
+		
+	// For single group, we don't  need to check for merged roles
+	if (groups.size() == 1) {
+	    return (RoleCollection)this.loadGroupRoles(groups).get(0);
+	}
+		
+	// When the user is associated to more than one group, we
+	// should check the merged roles
+	int[] groupIds = this.getSortedGroupIds(groups);
+		
+	RoleCollection groupRoles = RolesRepository.getGroupRoles(groupIds);
+		
+	// Not cached yet? then do it now
+	if (groupRoles == null) {
+	    List l = this.loadGroupRoles(groups);
+	    
+	    groupRoles = new RoleCollection();
+	    UserSecurityHelper.mergeUserGroupRoles(groupRoles, l);
+			
+	    RolesRepository.addMergedGroupRoles(groupIds, groupRoles);
+	}
+		
+	return groupRoles;
+    }
+	
+	/**
+	 * Load roles from the groups.
+	 * @param groups The groups to load the roles
+	 * @throws Exception
+	 */
+	private List loadGroupRoles(List groups) throws Exception
+	{
+		List groupRolesList = new ArrayList();
+		
+		for (Iterator iter = groups.iterator(); iter.hasNext(); ) {
+			Group g = (Group)iter.next();
+			
+			RoleCollection roles = RolesRepository.getGroupRoles(g.getId());
+			
+			if (roles == null) {
+				roles = this.loadRoles(g.getId());
+				RolesRepository.addGroupRoles(g.getId(), roles);
+			}
+			
+			groupRolesList.add(roles);
+		}
+		
+		return groupRolesList;
+	}
+	
+	private int[] getSortedGroupIds(List groups)
+	{
+		int[] groupsIds = new int[groups.size()];
+		int i = 0;
+		
+		for (Iterator iter = groups.iterator(); iter.hasNext(); ) {
+			groupsIds[i++] = ((Group)iter.next()).getId(); 
+		}
+		
+		Arrays.sort(groupsIds);
+		
+		return groupsIds;
+	}
+
 }

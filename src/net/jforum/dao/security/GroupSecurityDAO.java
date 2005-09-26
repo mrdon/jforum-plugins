@@ -42,12 +42,16 @@
  */
 package net.jforum.dao.security;
 
+import net.jforum.security.RoleCollection;
+import net.jforum.entities.User;
 
 
 /**
  * @author Rafael Steil
- * @version $Id: GroupSecurityDAO.java,v 1.4 2005/07/26 03:05:46 rafaelsteil Exp $
+ * @version $Id: GroupSecurityDAO.java,v 1.5 2005/09/26 15:20:04 vmal Exp $
  */
 public interface GroupSecurityDAO extends SecurityDAO {
+
+    public RoleCollection loadRolesByUserGroups(User user) throws Exception; 
 
 }

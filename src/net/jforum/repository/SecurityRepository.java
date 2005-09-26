@@ -47,8 +47,8 @@ import net.jforum.SessionFacade;
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
 import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.security.GroupSecurityDAO;
 import net.jforum.dao.UserDAO;
-import net.jforum.dao.security.UserSecurityDAO;
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
 import net.jforum.exceptions.SecurityLoadException;
@@ -58,7 +58,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityRepository.java,v 1.15 2005/09/25 02:18:40 rafaelsteil Exp $
+ * @version $Id: SecurityRepository.java,v 1.16 2005/09/26 15:20:04 vmal Exp $
  */
 public class SecurityRepository implements Cacheable
 {
@@ -143,11 +143,11 @@ public class SecurityRepository implements Cacheable
 	{
 		String userId = Integer.toString(user.getId());
 		if (force || cache.get(FQN, userId) == null) {
-			UserSecurityDAO umodel = DataAccessDriver.getInstance().newUserSecurityDAO();
+			GroupSecurityDAO gmodel = DataAccessDriver.getInstance().newGroupSecurityDAO();
 			PermissionControl pc = new PermissionControl();
 			
-			pc.setSecurityModel(umodel);
-			pc.setRoles(umodel.loadRoles(user));
+			pc.setSecurityModel(gmodel);
+			pc.setRoles(gmodel.loadRolesByUserGroups(user));
 			
 			cache.add(FQN, userId, pc);
 			
