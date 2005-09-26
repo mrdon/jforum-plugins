@@ -22,12 +22,7 @@
 							
 							<#assign moderators = forum.getModeratorList()/>
 							<#list moderators as m>
-								<#if m.type == 1>
-									<a href="${JForumContext.encodeURL("/user/profile/${m.id}")}">
-								<#else>
-									<a href="${JForumContext.encodeURL("/user/listGroup/${m.id}")}">
-								</#if>
-								${m.name}</a>
+							<a href="${JForumContext.encodeURL("/user/listGroup/${m.id}")}">${m.name?html}</a>
 							</#list>
 						</span>
 					</td>

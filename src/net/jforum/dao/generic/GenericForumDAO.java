@@ -63,7 +63,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericForumDAO.java,v 1.10 2005/09/26 14:59:34 vmal Exp $
+ * @version $Id: GenericForumDAO.java,v 1.11 2005/09/26 15:45:12 vmal Exp $
  */
 public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO 
 {
@@ -357,7 +357,6 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 		PreparedStatement p = JForum.getConnection().prepareStatement(
 				SystemGlobals.getSql("ForumModel.getModeratorList"));
 		p.setInt(1, forumId);
-		p.setInt(2, forumId);
 
 		ResultSet rs = p.executeQuery();
 		
