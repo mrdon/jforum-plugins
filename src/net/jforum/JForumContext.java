@@ -47,7 +47,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Marc Wick
- * @version $Id: JForumContext.java,v 1.5 2005/09/08 18:37:11 rafaelsteil Exp $
+ * @version $Id: JForumContext.java,v 1.6 2005/09/27 21:24:20 vmal Exp $
  */
 public class JForumContext {
 
@@ -67,18 +67,15 @@ public class JForumContext {
     }
 
     public String encodeURL(String url) {
-        if (isEncodingDisabled) {
-            return contextPath + url + servletExtension;
-        }
-        
-        return response.encodeURL(contextPath + url + servletExtension);
+	return encodeURL(url,servletExtension);
     }
 
     public String encodeURL(String url, String extension) {
+	String ucomplete = contextPath + url + extension;
+
         if (isEncodingDisabled) {
-            return contextPath + url + extension;
+            return ucomplete;
         }
-        
-        return response.encodeURL(contextPath + url + extension);
+        return response.encodeURL(ucomplete);
     }
 }
