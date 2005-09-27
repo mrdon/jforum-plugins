@@ -58,7 +58,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityRepository.java,v 1.16 2005/09/26 15:20:04 vmal Exp $
+ * @version $Id: SecurityRepository.java,v 1.17 2005/09/27 07:50:54 vmal Exp $
  */
 public class SecurityRepository implements Cacheable
 {
@@ -143,11 +143,11 @@ public class SecurityRepository implements Cacheable
 	{
 		String userId = Integer.toString(user.getId());
 		if (force || cache.get(FQN, userId) == null) {
-			GroupSecurityDAO gmodel = DataAccessDriver.getInstance().newGroupSecurityDAO();
 			PermissionControl pc = new PermissionControl();
-			
-			pc.setSecurityModel(gmodel);
-			pc.setRoles(gmodel.loadRolesByUserGroups(user));
+			// to make sure we do not update roles set in cache.
+			pc.setSecurityModel(null);
+			// load roles
+			pc.setRoles(DataAccessDriver.getInstance().newGroupSecurityDAO().loadRolesByUserGroups(user));
 			
 			cache.add(FQN, userId, pc);
 			
