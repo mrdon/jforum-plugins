@@ -66,7 +66,7 @@
 							<span class="gensmall"><#if (forum.totalPosts > 0)>${forum.totalPosts}<#else>${I18n.getMessage("ForumListing.noMessages")}</#if></span>
 						</td>
 						<td class="row2" valign="center" nowrap="nowrap" align="middle" height="50">
-							<span class="gensmall">
+							<span class="name">
 							<#if (lpi.postTimeMillis > 0)>
 								${lpi.postDate}<br />
 								<#if (lpi.userId > 0)><a href="${JForumContext.encodeURL("/user/profile/${lpi.userId}")}"></#if>${lpi.username}</a> 

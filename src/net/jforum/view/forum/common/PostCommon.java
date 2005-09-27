@@ -67,7 +67,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.23 2005/09/01 20:54:46 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.24 2005/09/27 03:16:47 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -130,7 +130,6 @@ public class PostCommon
 		}
 
 		if (text.indexOf('[') > -1 && text.indexOf(']') > -1) {
-			int openQuotes = 0;
 			Iterator tmpIter = BBCodeRepository.getBBCollection().getBbList().iterator();
 
 			while (tmpIter.hasNext()) {
@@ -141,18 +140,14 @@ public class PostCommon
 					Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
 
 					while (matcher.find()) {
-						openQuotes++;
-
 						text = text.replaceFirst(bb.getRegex(), bb.getReplace());
 					}
 				}
 				else if (bb.getTagName().equals("closeQuote")) {
-					if (openQuotes > 0) {
-						Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
-
-						while (matcher.find() && openQuotes-- > 0) {
-							text = text.replaceFirst(bb.getRegex(), bb.getReplace());
-						}
+					Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
+					
+					while (matcher.find()) {
+						text = text.replaceFirst(bb.getRegex(), bb.getReplace());
 					}
 				}
 				else if (bb.getTagName().equals("code")) {
@@ -177,6 +172,7 @@ public class PostCommon
 
 						StringBuffer replace = new StringBuffer(bb.getReplace());
 						int index = replace.indexOf("$1");
+						
 						if (index > -1) {
 							replace.replace(index, index + 2, contents);
 						}
@@ -192,14 +188,6 @@ public class PostCommon
 				}
 				else {
 					text = text.replaceAll(bb.getRegex(), bb.getReplace());
-				}
-			}
-
-			if (openQuotes > 0) {
-				BBCode closeQuote = BBCodeRepository.findByName("closeQuote");
-
-				for (int i = 0; i < openQuotes; i++) {
-					text = text + closeQuote.getReplace();
 				}
 			}
 		}

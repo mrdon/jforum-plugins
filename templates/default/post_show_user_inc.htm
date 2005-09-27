@@ -1,11 +1,11 @@
-<span class="name"><b>${user.username?html}</b></span>
+<span class="genmed"><b>${user.username?html}</b></span>
 <br />
 <#if karmaEnabled && post.userId != 1>
 	<script language="javascript">writeStars(${user.karma.karmaPoints}, "${user.id}${post.id}");</script>
 	<br/>
 </#if>
 
-<span class="postdetails">
+<span class="gensmall">
 <#if post.userId != 1>
 	${rank.getRankTitle(user.totalPosts)}
 	<br />

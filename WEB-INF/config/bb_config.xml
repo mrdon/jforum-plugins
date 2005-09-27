@@ -1,22 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- $Id: bb_config.xml,v 1.19 2005/08/27 15:32:57 rafaelsteil Exp $ -->
+<!-- $Id: bb_config.xml,v 1.20 2005/09/27 03:16:47 rafaelsteil Exp $ -->
 <bbConfig>
 	<!-- CODE -->
 	<match name="code">
 		<regex>(?s)\[code\](.*?)\[/code\]</regex>
 		<replace>
 		<![CDATA[
-		<table class="code-table-simple" align="center">
-		<tr> 
-		<td><span class="genmed"><b>Code:</b></span></td>
-		</tr>
-		</table>
-		<table class="code-table" align="center">
-		<tr>
-		<td class="code">
-		<pre>$1</pre></td>
-		</tr>
-		</table>
+		<p><span class="genmed"><b>Code:</b></span></p>
+		<pre>$1</pre>
 		]]>
 		</replace>
 	</match>
@@ -25,9 +16,7 @@
 		<regex>(?i)\[quote\]</regex>
 		<replace>
 		<![CDATA[
-		<table class="quote-table" align="center">
-		<tr>
-		<td class="quote">
+		<blockquote>
 		]]>
 		</replace>
 	</match>
@@ -36,15 +25,9 @@
 		<regex>(?i)\[quote=['"]?(.*?[^'"])['"]?\]</regex>
 		<replace>
 		<![CDATA[
-		<table class="quote-table-simple" align="center">
-		<tr> 
-		<td><span class="genmed"><b>$1 wrote:</b></span></td>
-		</tr>
-		</table>
+		<p><cite><b>$1</b></cite></p>
 		
-		<table class="quote-table" align="center">
-		<tr>
-		<td class="quote">
+		<blockquote>
 		]]>
 		</replace>
 	</match>
@@ -54,9 +37,7 @@
 		<replace>
 		<![CDATA[
 		&nbsp;
-		</td>
-		</tr>
-		</table>
+		</blockquote>
 		]]>
 		</replace>
 	</match>
