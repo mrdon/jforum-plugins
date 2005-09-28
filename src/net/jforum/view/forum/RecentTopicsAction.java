@@ -69,7 +69,7 @@ import net.jforum.view.forum.common.ViewCommon;
  * 
  * @author James Yong
  * @author Rafael Steil
- * @version $Id: RecentTopicsAction.java,v 1.13 2005/09/12 21:05:22 rafaelsteil Exp $
+ * @version $Id: RecentTopicsAction.java,v 1.14 2005/09/28 14:04:16 vmal Exp $
  */
 public class RecentTopicsAction extends Command 
 {
@@ -84,7 +84,8 @@ public class RecentTopicsAction extends Command
 		this.context.put("postsPerPage", new Integer(postsPerPage));
 		this.context.put("topics", this.topics());
 		this.context.put("forums", this.forums);
-		
+		this.context.put("pageTitle", I18n.getMessage("ForumBase.recentTopics"));
+
 		TopicsCommon.topicListingBase();
 		JForum.getRequest().setAttribute("template", null);
 	}
