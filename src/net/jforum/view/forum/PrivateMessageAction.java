@@ -65,7 +65,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.29 2005/09/28 14:50:00 vmal Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.30 2005/09/28 15:02:35 vmal Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -145,7 +145,7 @@ public class PrivateMessageAction extends Command
 			this.context.put("toUserId", String.valueOf(user1.getId()));
 			this.context.put("toUsername", user1.getUsername());
 			this.context.put("toUserEmail", user1.getEmail());
-			this.context.put("pageTitle", I18n.getMessage("ForumBase.privateMessages")+" "+I18n.getMessage("PrivateMessage.to")+user1.getUsername());
+			this.context.put("pageTitle", I18n.getMessage("PrivateMessage.title")+" "+I18n.getMessage("PrivateMessage.to")+" "+user1.getUsername());
 		}
 
 		this.sendFormCommon(user);
