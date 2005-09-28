@@ -65,7 +65,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.27 2005/09/01 20:54:47 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.28 2005/09/28 14:49:21 vmal Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -84,6 +84,7 @@ public class PrivateMessageAction extends Command
 		this.context.put("inbox", true);
 		this.context.put("pmList", pmList);
 		this.setTemplateName(TemplateKeys.PM_INBOX);
+		this.context.put("pageTitle", I18n.getMessage("ForumBase.privateMessages")+" "+I18n.getMessage("PrivateMessage.inbox"));
 		this.putTypes();		
 	}
 	
@@ -102,6 +103,7 @@ public class PrivateMessageAction extends Command
 		this.context.put("sentbox", true);
 		this.context.put("pmList", pmList);
 		this.setTemplateName(TemplateKeys.PM_SENTBOX);
+		this.context.put("pageTitle", I18n.getMessage("ForumBase.privateMessages")+" "+I18n.getMessage("PrivateMessage.sentbox"));
 		this.putTypes();
 	}
 	
@@ -143,6 +145,8 @@ public class PrivateMessageAction extends Command
 			this.context.put("toUserId", String.valueOf(user1.getId()));
 			this.context.put("toUsername", user1.getUsername());
 			this.context.put("toUserEmail", user1.getEmail());
+			this.context.put("pageTitle", I18n.getMessage("ForumBase.privateMessages")+" "+I18n.getMessage("PrivateMessage.to")+user1.getUsername());
+			ForumBase.privateMessages
 		}
 
 		this.sendFormCommon(user);
