@@ -64,7 +64,7 @@ import net.jforum.util.preferences.TemplateKeys;
  * ViewHelper class for group administration.
  * 
  * @author Rafael Steil
- * @version $Id: GroupAction.java,v 1.16 2005/09/15 21:22:00 rafaelsteil Exp $
+ * @version $Id: GroupAction.java,v 1.17 2005/09/28 09:33:05 vmal Exp $
  */
 public class GroupAction extends AdminCommand 
 {
@@ -165,11 +165,8 @@ public class GroupAction extends AdminCommand
 	{
 		int id = this.request.getIntParameter("group_id");
 		
-		GroupSecurityDAO gmodel = DataAccessDriver.getInstance().newGroupSecurityDAO();
-
 		PermissionControl pc = new PermissionControl();
-		pc.setSecurityModel(gmodel);
-		pc.setRoles(gmodel.loadRoles(id));
+		pc.setRoles(DataAccessDriver.getInstance().newGroupSecurityDAO().loadRoles(id));
 		
 		List sections = new XMLPermissionControl(pc).loadConfigurations(
 				SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/permissions.xml");
