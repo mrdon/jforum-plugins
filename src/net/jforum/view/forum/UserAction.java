@@ -78,7 +78,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.53 2005/09/12 21:05:22 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.54 2005/09/28 13:58:28 vmal Exp $
  */
 public class UserAction extends Command 
 {
@@ -428,7 +428,8 @@ public class UserAction extends Command
 					count++;
 				}
 			}
-			
+
+			this.context.put("pageTitle", I18n.getMessage("UserProfile.allAbout")+" "+u.getUsername());
 			this.context.put("nbookmarks", new Integer(count));
 			this.context.put("ntopics", new Integer(da.newTopicDAO().countUserTopics(u.getId())));
 		}
