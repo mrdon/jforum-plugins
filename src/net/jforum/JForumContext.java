@@ -47,35 +47,39 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Marc Wick
- * @version $Id: JForumContext.java,v 1.6 2005/09/27 21:24:20 vmal Exp $
+ * @version $Id: JForumContext.java,v 1.7 2005/09/28 03:40:57 rafaelsteil Exp $
  */
-public class JForumContext {
+public class JForumContext
+{
+	private String contextPath;
+	private String servletExtension;
 
-    private String contextPath;
-    private String servletExtension;
+	private HttpServletResponse response;
 
-    private HttpServletResponse response;
+	private boolean isEncodingDisabled;
 
-    private boolean isEncodingDisabled;
+	public JForumContext(String contextPath, String servletExtension, HttpServletRequest req,
+			HttpServletResponse response, boolean isEncodingDisabled)
+	{
+		this.contextPath = contextPath;
+		this.servletExtension = servletExtension;
+		this.response = response;
+		this.isEncodingDisabled = isEncodingDisabled;
+	}
 
-    public JForumContext(String contextPath, String servletExtension, HttpServletRequest req,
-            HttpServletResponse response, boolean isEncodingDisabled) {
-        this.contextPath = contextPath;
-        this.servletExtension = servletExtension;
-        this.response = response;
-        this.isEncodingDisabled = isEncodingDisabled;  
-    }
+	public String encodeURL(String url)
+	{
+		return this.encodeURL(url, servletExtension);
+	}
 
-    public String encodeURL(String url) {
-	return encodeURL(url,servletExtension);
-    }
+	public String encodeURL(String url, String extension)
+	{
+		String ucomplete = contextPath + url + extension;
 
-    public String encodeURL(String url, String extension) {
-	String ucomplete = contextPath + url + extension;
+		if (isEncodingDisabled) {
+			return ucomplete;
+		}
 
-        if (isEncodingDisabled) {
-            return ucomplete;
-        }
-        return response.encodeURL(ucomplete);
-    }
+		return response.encodeURL(ucomplete);
+	}
 }

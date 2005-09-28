@@ -47,8 +47,8 @@ import net.jforum.SessionFacade;
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
 import net.jforum.dao.DataAccessDriver;
-import net.jforum.dao.security.GroupSecurityDAO;
 import net.jforum.dao.UserDAO;
+import net.jforum.dao.security.GroupSecurityDAO;
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
 import net.jforum.exceptions.SecurityLoadException;
@@ -58,7 +58,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityRepository.java,v 1.17 2005/09/27 07:50:54 vmal Exp $
+ * @version $Id: SecurityRepository.java,v 1.18 2005/09/28 03:40:58 rafaelsteil Exp $
  */
 public class SecurityRepository implements Cacheable
 {
@@ -144,10 +144,10 @@ public class SecurityRepository implements Cacheable
 		String userId = Integer.toString(user.getId());
 		if (force || cache.get(FQN, userId) == null) {
 			PermissionControl pc = new PermissionControl();
-			// to make sure we do not update roles set in cache.
-			pc.setSecurityModel(null);
+			
 			// load roles
-			pc.setRoles(DataAccessDriver.getInstance().newGroupSecurityDAO().loadRolesByUserGroups(user));
+			GroupSecurityDAO dao = DataAccessDriver.getInstance().newGroupSecurityDAO();
+			pc.setRoles(dao.loadRolesByUserGroups(user));
 			
 			cache.add(FQN, userId, pc);
 			
@@ -201,6 +201,7 @@ public class SecurityRepository implements Cacheable
 	public static boolean canAccess(int userId, String roleName, String value)
 	{
 		PermissionControl pc = SecurityRepository.get(userId);
+		
 		if (pc == null) {
 			throw new SecurityLoadException("Failed to load security roles for userId " + userId + " (null PermissionControl returned). "
 				+ "roleName=" + roleName + ", roleValue=" + value);
@@ -223,6 +224,7 @@ public class SecurityRepository implements Cacheable
 	public static PermissionControl get(int userId)
 	{
 		PermissionControl pc = (PermissionControl)cache.get(FQN, Integer.toString(userId));
+		
 		if (pc == null) {
 			try {
 				pc = load(userId);
