@@ -78,7 +78,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.54 2005/09/28 13:58:28 vmal Exp $
+ * @version $Id: UserAction.java,v 1.55 2005/09/28 14:49:21 vmal Exp $
  */
 public class UserAction extends Command 
 {
@@ -105,6 +105,7 @@ public class UserAction extends Command
 
 			this.context.put("u", u);
 			this.context.put("action", "editSave");
+			this.context.put("pageTitle", I18n.getMessage("UserProfile.profileFor")+" "+u.getUsername());
 			this.setTemplateName(TemplateKeys.USER_EDIT);
 		} 
 	}
@@ -151,6 +152,8 @@ public class UserAction extends Command
 		this.context.put("action", "insertSave");
 		this.context.put("username", this.request.getParameter("username"));
 		this.context.put("email", this.request.getParameter("email"));
+		this.context.put("pageTitle", I18n.getMessage("ForumBase.register"));
+
 		
 		if (SystemGlobals.getBoolValue(ConfigKeys.CAPTCHA_REGISTRATION)){
 			// Create a new image captcha
@@ -475,6 +478,7 @@ public class UserAction extends Command
 			this.context.put("returnPath", this.request.getParameter("returnPath"));
 		}
 
+		this.context.put("pageTitle", I18n.getMessage("ForumBase.login"));
 		this.setTemplateName(TemplateKeys.USER_LOGIN);
 	}
 
@@ -482,6 +486,7 @@ public class UserAction extends Command
 	public void lostPassword() 
 	{
 		this.setTemplateName(TemplateKeys.USER_LOSTPASSWORD);
+		this.context.put("pageTitle", I18n.getMessage("PasswordRecovery.title"));
 	}
 	
 	public User prepareLostPassword(String username, String email) throws Exception
@@ -588,6 +593,7 @@ public class UserAction extends Command
 							
 		List users = DataAccessDriver.getInstance().newUserDAO().selectAll(start ,usersPerPage);
 		this.context.put("users", users);
+		this.context.put("pageTitle", I18n.getMessage("ForumBase.usersList"));
 		this.setTemplateName(TemplateKeys.USER_LIST);
 	}
 

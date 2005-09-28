@@ -64,13 +64,14 @@ import net.jforum.repository.ForumRepository;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
+import net.jforum.util.I18n;
 import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.25 2005/07/26 04:01:13 diegopires Exp $
+ * @version $Id: SearchAction.java,v 1.26 2005/09/28 14:49:21 vmal Exp $
  */
 public class SearchAction extends Command 
 {
@@ -115,6 +116,7 @@ public class SearchAction extends Command
 	{
 		this.setTemplateName(TemplateKeys.SEARCH_FILTERS);
 		this.context.put("categories", ForumRepository.getAllCategories());
+		this.context.put("pageTitle", I18n.getMessage("ForumBase.search"));
 	}
 	
 	private void getSearchFields()
@@ -206,6 +208,7 @@ public class SearchAction extends Command
 		
 		ViewCommon.contextToPagination(start, totalTopics, recordsPerPage);
 		
+		this.context.put("pageTitle", I18n.getMessage("ForumBase.search"));
 		TopicsCommon.topicListingBase();
 	}
 	

@@ -68,7 +68,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: BookmarkAction.java,v 1.11 2005/09/08 18:37:12 rafaelsteil Exp $
+ * @version $Id: BookmarkAction.java,v 1.12 2005/09/28 14:49:21 vmal Exp $
  */
 public class BookmarkAction extends Command
 {
@@ -272,8 +272,10 @@ public class BookmarkAction extends Command
 		this.context.put("forumType", new Integer(BookmarkType.FORUM));
 		this.context.put("userType", new Integer(BookmarkType.USER));
 		this.context.put("topicType", new Integer(BookmarkType.TOPIC));
-		this.context.put("user", DataAccessDriver.getInstance().newUserDAO().selectById(userId));
+		User u=DataAccessDriver.getInstance().newUserDAO().selectById(userId);
+		this.context.put("user", u);
 		this.context.put("loggedUserId", new Integer(SessionFacade.getUserSession().getUserId()));
+		this.context.put("pageTitle", I18n.getMessage("Bookmarks.for")+" "+u.getUsername());				
 	}
 	
 	/**
