@@ -203,7 +203,7 @@
 						<td ${class2} valign="center" align="middle"><span class="postdetails">${topic.totalViews}</span></td>
 						<td ${class3} valign="center" nowrap="nowrap" align="middle">
 							<#if (topic.lastPostTime?length > 0)>
-								<span class="name">${topic.lastPostTime}<br />
+								<span class="postDetails">${topic.lastPostTime}<br />
 								<a href="${JForumContext.encodeURL("/user/profile/${topic.lastPostBy.id}")}">${topic.lastPostBy.username}</a>
 
 								<#assign startPage = ""/>

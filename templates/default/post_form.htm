@@ -166,25 +166,20 @@ function validatePostForm(f)
 							<#if pmRecipient?exists>
 								<#assign toUsername = toUsername/>
 								<#assign toUserId = toUserId/>
-								<#assign toUserEmail = toUserEmail/>
 								<#elseif preview>
 								<#assign toUsername = pm.toUser.username/>
 								<#assign toUserId = pm.toUser.id/>
-								<#assign toUserEmail = pm.toUser.email?default("")/>
 								<#elseif quote?default("") == "true" || pmReply?default(false)>
 								<#assign toUsername = pm.fromUser.username/>
 								<#assign toUserId = pm.fromUser.id/>
-								<#assign toUserEmail = pm.fromUser.email?default("")/>
 							<#else>
 								<#assign toUsername = ""/>
 								<#assign toUserId = ""/>
-								<#assign toUserEmail = ""/>
 							</#if>
 
 							<input class="post" size="25" name="toUsername" value="${toUsername}"/>&nbsp;
 							<input type="button" value="${I18n.getMessage("PrivateMessage.findUser")}" name="findUser" class="liteoption" onClick="window.open('${JForumContext.encodeURL("/pm/findUser")}','_findUser', 'height=250,resizable=yes,width=400');return false;">
 							<input type="hidden" name="toUserId" value="${toUserId}" />
-							<input type="hidden" name="toUserEmail" value="${toUserEmail}"/>
 						</td>
 					</tr>
 				</#if>

@@ -47,6 +47,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 
+import net.jforum.ActionServletRequest;
 import net.jforum.JForum;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.Role;
@@ -55,7 +56,7 @@ import net.jforum.security.RoleValueCollection;
 
 /**
  * @author Rafael Steil
- * @version $Id: PermissionProcessHelper.java,v 1.11 2005/09/25 02:18:35 rafaelsteil Exp $
+ * @version $Id: PermissionProcessHelper.java,v 1.12 2005/09/29 02:27:32 rafaelsteil Exp $
  */
 class PermissionProcessHelper 
 {
@@ -77,13 +78,15 @@ class PermissionProcessHelper
 	
 	public void processData() throws Exception
 	{
-		Enumeration e = JForum.getRequest().getParameterNames();
+		ActionServletRequest request = JForum.getRequest();
+		Enumeration e = request.getParameterNames();
+		
 		while (e.hasMoreElements()) {
 			String paramName = (String)e.nextElement();
 			
 			if (paramName.startsWith("perm_")) {
 				if (paramName.endsWith("$single")) {
-					String paramValue = JForum.getRequest().getParameter(paramName);
+					String paramValue = request.getParameter(paramName);
 
 					paramName = paramName.substring(0, paramName.indexOf('$'));
 					
@@ -100,7 +103,7 @@ class PermissionProcessHelper
 					this.pc.addRole(this.id, role);
 				}
 				else {
-					String[] paramValues = JForum.getRequest().getParameterValues(paramName);
+					String[] paramValues = request.getParameterValues(paramName);
 					
 					RoleValueCollection roleValues = new RoleValueCollection();
 					if (!"all".equals(paramValues[0])) {

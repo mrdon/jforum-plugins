@@ -47,6 +47,7 @@ import java.util.List;
 import net.jforum.Command;
 import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.UserDAO;
 import net.jforum.entities.Post;
 import net.jforum.entities.PrivateMessage;
 import net.jforum.entities.PrivateMessageType;
@@ -65,7 +66,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.30 2005/09/28 15:02:35 vmal Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.31 2005/09/29 02:25:04 rafaelsteil Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -128,6 +129,7 @@ public class PrivateMessageAction extends Command
 
 		this.sendFormCommon(user);
 	}
+	
 	public void sendTo() throws Exception
 	{
 		if (!SessionFacade.isLogged()) {
@@ -139,13 +141,16 @@ public class PrivateMessageAction extends Command
 				SessionFacade.getUserSession().getUserId());
 
 		int userId = this.request.getIntParameter("user_id");
+		
 		if (userId > 0){
-			User user1 = DataAccessDriver.getInstance().newUserDAO().selectById(userId);
-			this.context.put("pmRecipient", user1);
-			this.context.put("toUserId", String.valueOf(user1.getId()));
-			this.context.put("toUsername", user1.getUsername());
-			this.context.put("toUserEmail", user1.getEmail());
-			this.context.put("pageTitle", I18n.getMessage("PrivateMessage.title")+" "+I18n.getMessage("PrivateMessage.to")+" "+user1.getUsername());
+			User recipient = DataAccessDriver.getInstance().newUserDAO().selectById(userId);
+			
+			this.context.put("pmRecipient", recipient);
+			this.context.put("toUserId", String.valueOf(recipient.getId()));
+			this.context.put("toUsername", recipient.getUsername());
+			this.context.put("pageTitle", I18n.getMessage("PrivateMessage.title") 
+					+ " " + I18n.getMessage("PrivateMessage.to") 
+					+ " " + recipient.getUsername());
 		}
 
 		this.sendFormCommon(user);
@@ -153,10 +158,11 @@ public class PrivateMessageAction extends Command
 	
 	private void sendFormCommon(User user)
 	{
+		this.setTemplateName(TemplateKeys.PM_SENDFORM);
+		
 		this.context.put("user", user);
 		this.context.put("moduleName", "pm");
 		this.context.put("action", "sendSave");
-		this.setTemplateName(TemplateKeys.PM_SENDFORM);
 		this.context.put("htmlAllowed", true);
 		this.context.put("attachmentsEnabled", false);
 		this.context.put("maxAttachments", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
@@ -171,13 +177,18 @@ public class PrivateMessageAction extends Command
 			return;
 		}
 		
-		String sId = this.request.getParameter("toUserId");
+		UserDAO userDao = DataAccessDriver.getInstance().newUserDAO();
+		
+		String toUserIdStr = this.request.getParameter("toUserId");
 		String toUsername = this.request.getParameter("toUsername");
-		String userEmail = this.request.getParameter("toUserEmail");
+		String userEmail;
 		
 		int toUserId = -1;
-		if (sId == null || sId.trim().equals("")) {
-			List l = DataAccessDriver.getInstance().newUserDAO().findByName(toUsername, true);
+		
+		// If we don't have an user id, then probably the user
+		// inserted the username by hand in the form's field
+		if (toUserIdStr == null || "".equals(toUserIdStr.trim())) {
+			List l = userDao.findByName(toUsername, true);
 			
 			if (l.size() > 0) {
 				User u = (User)l.get(0);
@@ -186,7 +197,7 @@ public class PrivateMessageAction extends Command
 			}
 		}
 		else {
-			toUserId = Integer.parseInt(sId);
+			toUserId = Integer.parseInt(toUserIdStr);
 		}
 		
 		// We failed to get the user id?
@@ -199,14 +210,13 @@ public class PrivateMessageAction extends Command
 		PrivateMessage pm = new PrivateMessage();
 		pm.setPost(PostCommon.fillPostFromRequest());
 		
+		// Sender
 		User fromUser = new User();
 		fromUser.setId(SessionFacade.getUserSession().getUserId());
 		pm.setFromUser(fromUser);
 		
-		User toUser = new User();
-		toUser.setId(toUserId);
-		toUser.setUsername(toUsername);
-		toUser.setEmail(userEmail);
+		// Recipient
+		User toUser = userDao.selectById(toUserId);
 		pm.setToUser(toUser);
 		
 		boolean preview = (this.request.getParameter("preview") != null);
@@ -226,7 +236,7 @@ public class PrivateMessageAction extends Command
 				us.setPrivateMessages(us.getPrivateMessages() + 1);
 			}
 			
-			if (userEmail != null && userEmail.trim().length() > 0) {
+			if (toUser.getEmail() != null && toUser.getEmail().trim().length() > 0) {
 				if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_NOTIFY_ANSWERS)) {
 					try {
 						QueuedExecutor.getInstance().execute(new EmailSenderTask(new PrivateMessageSpammer(toUser)));
