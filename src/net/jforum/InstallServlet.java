@@ -60,7 +60,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallServlet.java,v 1.17 2005/09/29 08:35:09 vmal Exp $
+ * @version $Id: InstallServlet.java,v 1.18 2005/09/29 09:09:19 vmal Exp $
  */
 public class InstallServlet extends JForumBaseServlet
 {
@@ -147,7 +147,7 @@ public class InstallServlet extends JForumBaseServlet
 		
 		String redirectTo = ((DataHolder)localData.get()).getRedirectTo();
 		if (redirectTo != null) {
-			InstallServlet.getResponse().sendRedirect(redirectTo);
+			response.sendRedirect(response.encodeRedirectURL(redirectTo));
 		}
 		
 		localData.set(null);

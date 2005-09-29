@@ -72,7 +72,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.79 2005/09/25 02:40:27 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.80 2005/09/29 09:09:19 vmal Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
@@ -125,6 +125,7 @@ public class JForum extends JForumBaseServlet
 	public void service(HttpServletRequest req, HttpServletResponse response) throws IOException, ServletException
 	{
 		Writer out = null;
+		ActionServletRequest request=null;
 
 		try {
 			// Initializes thread local data
@@ -134,7 +135,7 @@ public class JForum extends JForumBaseServlet
 			String encoding = SystemGlobals.getValue(ConfigKeys.ENCODING);
 
 			// Request
-			ActionServletRequest request = new ActionServletRequest(req);
+			request = new ActionServletRequest(req);
 
 			dataHolder.setResponse(response);
 			dataHolder.setRequest(request);
@@ -230,7 +231,11 @@ public class JForum extends JForumBaseServlet
 				String redirectTo = dh.getRedirectTo();
 				
 				if (redirectTo != null) {
-					response.sendRedirect(redirectTo);
+					if(request.getJForumContext().isEncodingDisabled()) {
+						response.sendRedirect(redirectTo);
+					} else {
+						response.sendRedirect(response.encodeRedirectURL(redirectTo));
+					}
 				}
 			}
 			

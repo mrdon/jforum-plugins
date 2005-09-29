@@ -47,7 +47,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Marc Wick
- * @version $Id: JForumContext.java,v 1.7 2005/09/28 03:40:57 rafaelsteil Exp $
+ * @version $Id: JForumContext.java,v 1.8 2005/09/29 09:09:19 vmal Exp $
  */
 public class JForumContext
 {
@@ -76,10 +76,16 @@ public class JForumContext
 	{
 		String ucomplete = contextPath + url + extension;
 
-		if (isEncodingDisabled) {
+		if (isEncodingDisabled()) {
 			return ucomplete;
 		}
 
 		return response.encodeURL(ucomplete);
 	}
+
+	public boolean isEncodingDisabled()
+	{
+		return this.isEncodingDisabled;
+	}
+
 }
