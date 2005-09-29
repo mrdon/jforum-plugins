@@ -60,7 +60,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallServlet.java,v 1.16 2005/07/26 03:04:40 rafaelsteil Exp $
+ * @version $Id: InstallServlet.java,v 1.17 2005/09/29 08:35:09 vmal Exp $
  */
 public class InstallServlet extends JForumBaseServlet
 {
@@ -95,6 +95,11 @@ public class InstallServlet extends JForumBaseServlet
 		// Request
 		ActionServletRequest request = new ActionServletRequest(req);
 		request.setCharacterEncoding(encoding);
+		request.setJForumContext(new JForumContext(request.getContextPath(), 
+							   SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION),
+							   request,
+							   response,
+							   false));
 
 		dataHolder.setResponse(response);
 		dataHolder.setRequest(request);
