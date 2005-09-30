@@ -111,7 +111,7 @@ TH.thsides {
 TH.thtop {
 	BORDER-RIGHT: #ffffff solid; BORDER-TOP: #ffffff solid; FONT-WEIGHT: bold; BORDER-LEFT: #ffffff solid; BORDER-BOTTOM: #ffffff solid; HEIGHT: 28px
 }
-TH.thLeft {
+TH.thleft {
 	BORDER-RIGHT: #ffffff solid; BORDER-TOP: #ffffff solid; FONT-WEIGHT: bold; BORDER-LEFT: #ffffff solid; BORDER-BOTTOM: #ffffff solid; HEIGHT: 28px
 }
 TH.thRight {
@@ -156,7 +156,7 @@ TD.catright {
 TD.row3Right {
 	BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 1px
 }
-TH.thLeft {
+TH.thleft {
 	BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 1px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px
 }
 TD.catleft {
