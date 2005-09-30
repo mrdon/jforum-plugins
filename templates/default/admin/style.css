@@ -129,7 +129,7 @@ TH.thCornerR {
 TD.row3Right {
 	BORDER-RIGHT: #ffffff solid; BORDER-TOP: #ffffff solid; BORDER-LEFT: #ffffff solid; BORDER-BOTTOM: #ffffff solid; BACKGROUND-COLOR: #dfdfdf
 }
-TD.spaceRow {
+TD.spacerow {
 	BORDER-RIGHT: #ffffff solid; BORDER-TOP: #ffffff solid; BORDER-LEFT: #ffffff solid; BORDER-BOTTOM: #ffffff solid; BACKGROUND-COLOR: #dfdfdf
 }
 TH.thhead {
@@ -144,7 +144,7 @@ TH.thsides {
 TD.catsides {
 	BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 1px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 1px
 }
-TD.spaceRow {
+TD.spacerow {
 	BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 1px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 1px
 }
 TH.thRight {
