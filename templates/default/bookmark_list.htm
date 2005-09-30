@@ -26,9 +26,9 @@ function confirmDelete(id)
 <table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
 	<#assign owner = loggedUserId == user.id/>  
 	<tr>
-	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("Bookmarks.title")}&nbsp;</th>
-	  <th class="thTop" nowrap="nowrap">&nbsp;${I18n.getMessage("Bookmarks.description")}&nbsp;</th>
-	  <#if owner><th class="thTop" nowrap="nowrap" colspan="2">&nbsp;${I18n.getMessage("Action")}&nbsp;</th></#if>
+	  <th class="thtop" nowrap="nowrap">&nbsp;${I18n.getMessage("Bookmarks.title")}&nbsp;</th>
+	  <th class="thtop" nowrap="nowrap">&nbsp;${I18n.getMessage("Bookmarks.description")}&nbsp;</th>
+	  <#if owner><th class="thtop" nowrap="nowrap" colspan="2">&nbsp;${I18n.getMessage("Action")}&nbsp;</th></#if>
 	</tr>
 
 	<#if bookmarks.size() == 0>
