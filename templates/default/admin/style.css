@@ -120,7 +120,7 @@ TH.thRight {
 TH.thBottom {
 	BORDER-RIGHT: #ffffff solid; BORDER-TOP: #ffffff solid; FONT-WEIGHT: bold; BORDER-LEFT: #ffffff solid; BORDER-BOTTOM: #ffffff solid; HEIGHT: 28px
 }
-TH.thCornerL {
+TH.thcornerl {
 	BORDER-RIGHT: #ffffff solid; BORDER-TOP: #ffffff solid; FONT-WEIGHT: bold; BORDER-LEFT: #ffffff solid; BORDER-BOTTOM: #ffffff solid; HEIGHT: 28px
 }
 TH.thCornerR {
@@ -171,7 +171,7 @@ TD.catbottom {
 TH.thtop {
 	BORDER-TOP-WIDTH: 1px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px
 }
-TH.thCornerL {
+TH.thcornerl {
 	BORDER-TOP-WIDTH: 1px; BORDER-LEFT-WIDTH: 1px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px
 }
 TH.thCornerR {
