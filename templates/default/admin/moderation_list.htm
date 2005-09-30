@@ -13,16 +13,16 @@
 	<#else>
 		<#list infoList as info>
 			<tr>
-				<td class="catLeft"><span class="cattitle">${info.categoryName}</span></td>
+				<td class="catleft"><span class="cattitle">${info.categoryName}</span></td>
 			</tr>
 
 			<tr>
 				<td class="row1">
 					<table width="80%" align="center" cellpadding="0" cellspacing="1">
 						<tr>
-							<td colspan="2" class="catLeft" align="center"><span class="gen"><b>${I18n.getMessage("Moderation.Admin.forumName")}</b></span></td>
-							<td class="catLeft" align="center"><span class="gen"><b>${I18n.getMessage("Moderation.Admin.postsToModerate")}</b></span></td>
-							<td class="catLeft" align="center"><span class="gen"><b>${I18n.getMessage("Moderation.Admin.action")}</b></span></td>
+							<td colspan="2" class="catleft" align="center"><span class="gen"><b>${I18n.getMessage("Moderation.Admin.forumName")}</b></span></td>
+							<td class="catleft" align="center"><span class="gen"><b>${I18n.getMessage("Moderation.Admin.postsToModerate")}</b></span></td>
+							<td class="catleft" align="center"><span class="gen"><b>${I18n.getMessage("Moderation.Admin.action")}</b></span></td>
 						</tr>
 
 						<#list info.forums as f>

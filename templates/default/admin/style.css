@@ -84,7 +84,7 @@ TD.cathead {
 TD.catsides {
 	BORDER-RIGHT: #ffffff solid; BORDER-TOP: #ffffff solid; BACKGROUND-IMAGE:  url(images/cellpic1.gif); BORDER-LEFT: #ffffff solid; BORDER-BOTTOM: #ffffff solid; HEIGHT: 28px; BACKGROUND-COLOR: #dfdfdf
 }
-TD.catLeft {
+TD.catleft {
 	BORDER-RIGHT: #ffffff solid; BORDER-TOP: #ffffff solid; BACKGROUND-IMAGE:  url(images/cellpic1.gif); BORDER-LEFT: #ffffff solid; BORDER-BOTTOM: #ffffff solid; HEIGHT: 28px; BACKGROUND-COLOR: #dfdfdf
 }
 TD.catRight {
@@ -159,7 +159,7 @@ TD.row3Right {
 TH.thLeft {
 	BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 1px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px
 }
-TD.catLeft {
+TD.catleft {
 	BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 1px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px
 }
 TH.thbottom {

@@ -21,11 +21,11 @@
 	<#assign categories = repository.getAllCategories()/>
 	<#list categories as category>
 		<tr>
-			<td class="catLeft" width="38%"><span class="cattitle">${category.name}</span></td>
-			<td class="catLeft"><span class="gen"><a id="categoryEdit" href="${contextPath}/${moduleName}/edit/${category.id}${extension}">${I18n.getMessage("Category.List.Edit")}</a></span></td>
-			<td class="catLeft"><input type="checkbox" name="categories_id" value="${category.id}" /></td>
+			<td class="catleft" width="38%"><span class="cattitle">${category.name}</span></td>
+			<td class="catleft"><span class="gen"><a id="categoryEdit" href="${contextPath}/${moduleName}/edit/${category.id}${extension}">${I18n.getMessage("Category.List.Edit")}</a></span></td>
+			<td class="catleft"><input type="checkbox" name="categories_id" value="${category.id}" /></td>
 			
-			<td class="catLeft" align="right" width="8%">
+			<td class="catleft" align="right" width="8%">
 				<#if (counter > 1)>
 					<input type="button" value="Up" class="mainoption" onClick="document.location = '${contextPath}/${moduleName}/up/${category.id}${extension}';">&nbsp;
 				<#else>	
