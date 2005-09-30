@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -52,7 +52,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicRSS.java,v 1.14 2005/07/26 03:04:38 rafaelsteil Exp $
+ * @version $Id: TopicRSS.java,v 1.15 2005/09/30 23:19:21 rafaelsteil Exp $
  */
 public class TopicRSS extends GenericRSS 
 {
@@ -82,7 +82,7 @@ public class TopicRSS extends GenericRSS
 			
 			RSSItem item = new RSSItem();
 			item.setAuthor(t.getPostedBy().getUsername());
-			item.setPublishDate(RSSUtils.formatDate(t.getTime()));
+			item.setPublishDate(RSSUtils.formatDate(t.getLastPostDate()));
 			item.setLink(this.forumLink + "posts/list/" + t.getId()
 					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 			item.setTitle(t.getTitle());

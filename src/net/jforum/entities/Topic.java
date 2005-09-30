@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -49,7 +49,7 @@ import java.util.Date;
  * Represents every topic in the forum.
  * 
  * @author Rafael Steil
- * @version $Id: Topic.java,v 1.13 2005/09/13 02:50:33 rafaelsteil Exp $
+ * @version $Id: Topic.java,v 1.14 2005/09/30 23:19:18 rafaelsteil Exp $
  */
 public class Topic implements Serializable
 {
@@ -346,11 +346,11 @@ public class Topic implements Serializable
 		return this.read;
 	}
 	
-	public void setLastPostTimeInMillis(Date t) {
+	public void setLastPostDate(Date t) {
 		this.lastPostTimeInMillis = t;
 	}
 	
-	public Date getLastPostTimeInMillis() {
+	public Date getLastPostDate() {
 		return this.lastPostTimeInMillis;
 	}
 	

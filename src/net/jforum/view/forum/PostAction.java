@@ -91,7 +91,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.105 2005/09/18 06:54:15 andowson Exp $
+ * @version $Id: PostAction.java,v 1.106 2005/09/30 23:19:20 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -158,7 +158,7 @@ public class PostAction extends Command
 
 		if (us.getUserId() != anonymousUser) {
 			((Map) SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(topic.getId()),
-					new Long(topic.getLastPostTimeInMillis().getTime()));
+					new Long(topic.getLastPostDate().getTime()));
 		}
 		
 		this.context.put("attachmentsEnabled", SecurityRepository.canAccess(
@@ -598,7 +598,8 @@ public class PostAction extends Command
 		this.context.put("user", DataAccessDriver.getInstance().newUserDAO().selectById(userId));
 	}
 
-	public void editSave() throws Exception {
+	public void editSave() throws Exception 
+	{
 		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
 		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 
@@ -666,8 +667,6 @@ public class PostAction extends Command
 				tm.update(t);
 				
 				User u = DataAccessDriver.getInstance().newUserDAO().selectById(p.getUserId());
-				
-				ForumRepository.updateForumStats(t, u, p);
 				
 				if (changeType) {
 					TopicRepository.addTopic(t);
@@ -782,8 +781,16 @@ public class PostAction extends Command
 
 		UserSession us = SessionFacade.getUserSession();
 		User u = new User();
-		u.setId(us.getUserId());
-		u.setUsername(us.getUsername());
+		
+		if ("1".equals(this.request.getParameter("quick")) && SessionFacade.isLogged()) {
+			u = DataAccessDriver.getInstance().newUserDAO().selectById(us.getUserId());
+			this.request.addParameter("notify", u.isNotifyOnMessagesEnabled() ? "1" : null);
+			this.request.addParameter("attach_sig", u.getAttachSignatureEnabled() ? "1" : "0");
+		}
+		else {
+			u.setId(us.getUserId());
+			u.setUsername(us.getUsername());
+		}
 
 		// Set the Post
 		Post p = PostCommon.fillPostFromRequest();
@@ -884,7 +891,7 @@ public class PostAction extends Command
 			
 			t.setLastPostId(postId);
 			t.setLastPostBy(u);
-			t.setLastPostTimeInMillis(p.getTime());
+			t.setLastPostDate(p.getTime());
 			t.setLastPostTime(p.getFormatedTime());
 			
 			tm.update(t);

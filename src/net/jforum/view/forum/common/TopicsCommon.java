@@ -76,7 +76,7 @@ import freemarker.template.SimpleHash;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.19 2005/09/15 21:10:29 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.20 2005/09/30 23:19:23 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
@@ -141,9 +141,9 @@ public class TopicsCommon
 			boolean read = false;
 			Topic t = (Topic)iter.next();
 
-			if (checkUnread && t.getLastPostTimeInMillis().getTime() > lastVisit) {
+			if (checkUnread && t.getLastPostDate().getTime() > lastVisit) {
 				if (topicsTracking.containsKey(new Integer(t.getId()))) {
-					read = (t.getLastPostTimeInMillis().getTime() == ((Long)topicsTracking.get(new Integer(t.getId()))).longValue());
+					read = (t.getLastPostDate().getTime() == ((Long)topicsTracking.get(new Integer(t.getId()))).longValue());
 				}
 			}
 			else {

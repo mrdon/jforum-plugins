@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.GroupDAO;
 import net.jforum.dao.UserDAO;
@@ -62,7 +63,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.28 2005/09/25 02:18:35 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.29 2005/09/30 23:19:20 rafaelsteil Exp $
  */
 public class UserAction extends AdminCommand 
 {
@@ -110,7 +111,10 @@ public class UserAction extends AdminCommand
 		
 		this.commonData();
 		
-		this.context.put("selectedList", new ArrayList() {{ add(new Integer(groupId)); }});
+		List l = new ArrayList();
+		l.add(new Integer(groupId));
+		
+		this.context.put("selectedList", l);
 		this.context.put("searchAction", "groupSearch");
 		this.context.put("users", um.selectAllByGroup(groupId, start, usersPerPage));
 		this.context.put("searchId", new Integer(groupId));
@@ -171,10 +175,17 @@ public class UserAction extends AdminCommand
 			for (int i = 0; i < ids.length; i++) {
 				
 				int user = Integer.parseInt(ids[i]);
+				
 				if (um.isDeleted(user)){
 					um.undelete(user);
 				} 
 				else {
+					String sessionId = SessionFacade.isUserInSession(user);
+					
+					if (sessionId != null) {
+						SessionFacade.remove(sessionId);
+					}
+					
 					um.delete(user);
 				}
 			}

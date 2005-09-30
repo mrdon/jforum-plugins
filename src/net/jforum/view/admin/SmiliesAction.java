@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -45,6 +45,7 @@ package net.jforum.view.admin;
 import java.io.File;
 
 import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.SmilieDAO;
 import net.jforum.entities.Smilie;
 import net.jforum.repository.SmiliesRepository;
 import net.jforum.util.MD5;
@@ -56,7 +57,7 @@ import net.jforum.view.forum.common.UploadUtils;
 
 /**
  * @author Rafael Steil
- * @version $Id: SmiliesAction.java,v 1.12 2005/07/26 03:05:39 rafaelsteil Exp $
+ * @version $Id: SmiliesAction.java,v 1.13 2005/09/30 23:19:20 rafaelsteil Exp $
  */
 public class SmiliesAction extends AdminCommand 
 {
@@ -136,15 +137,26 @@ public class SmiliesAction extends AdminCommand
 	
 	public void delete() throws Exception
 	{
-		if (this.request.getParameter("id") != null) {
-			int id = this.request.getIntParameter("id");
-			Smilie s = DataAccessDriver.getInstance().newSmilieDAO().selectById(id);
+		String[] ids = this.request.getParameterValues("id");
+		
+		if (ids != null) {
+			SmilieDAO dao = DataAccessDriver.getInstance().newSmilieDAO();
 			
-			DataAccessDriver.getInstance().newSmilieDAO().delete(id);
-			
-			File f = new File(SystemGlobals.getApplicationPath() +"/"+ SystemGlobals.getValue(ConfigKeys.SMILIE_IMAGE_DIR) +"/"+ s.getDiskName());
-			if (f.exists()) {
-				f.delete();
+			for (int i = 0; i < ids.length; i++) {
+				int id = Integer.parseInt(ids[i]);
+				
+				Smilie s = dao.selectById(id);
+				dao.delete(id);
+				
+				File f = new File(SystemGlobals.getApplicationPath() 
+						+ "/"
+						+ SystemGlobals.getValue(ConfigKeys.SMILIE_IMAGE_DIR) 
+						+ "/"
+						+ s.getDiskName());
+
+				if (f.exists()) {
+					f.delete();
+				}
 			}
 		}
 		

@@ -73,7 +73,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.46 2005/09/12 21:05:21 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.47 2005/09/30 23:19:19 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -275,7 +275,7 @@ public class ForumAction extends Command
 			Topic t = (Topic)iter.next();
 			
 			((HashMap)SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(t.getId()), 
-					new Long(t.getLastPostTimeInMillis().getTime()));
+					new Long(t.getLastPostDate().getTime()));
 		}
 		
 		if (forumId != null) {

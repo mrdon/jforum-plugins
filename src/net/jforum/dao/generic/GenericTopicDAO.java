@@ -66,7 +66,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTopicDAO.java,v 1.2 2005/09/12 21:05:21 rafaelsteil Exp $
+ * @version $Id: GenericTopicDAO.java,v 1.3 2005/09/30 23:19:19 rafaelsteil Exp $
  */
 public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO 
 {
@@ -391,7 +391,7 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 			
 			// Last Post Time
 			t.setLastPostTime(df.format(rs.getTimestamp("post_time")));
-			t.setLastPostTimeInMillis(rs.getTimestamp("post_time"));
+			t.setLastPostDate(rs.getTimestamp("post_time"));
 
 			// Created by
 			User u = new User();

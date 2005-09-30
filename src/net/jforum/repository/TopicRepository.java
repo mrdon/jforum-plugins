@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: TopicRepository.java,v 1.22 2005/09/16 16:29:17 rafaelsteil Exp $
+ * @version $Id: TopicRepository.java,v 1.23 2005/09/30 23:19:18 rafaelsteil Exp $
  */
 public class TopicRepository implements Cacheable
 {
@@ -325,7 +325,13 @@ public class TopicRepository implements Cacheable
 		}
 		
 		List l = (List)cache.get(FQN_FORUM, Integer.toString(t.getForumId()));
-		int index = l.indexOf(t);
+		
+		int index = -1;
+		
+		if (l != null) {
+			index = l.indexOf(t);
+		}
+		
 		return (index == -1 ? null : (Topic)l.get(index));
 	}
 	
