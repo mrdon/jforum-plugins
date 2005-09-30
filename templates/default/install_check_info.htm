@@ -9,7 +9,7 @@
 th			{ background-image: url('${contextPath}/templates/default/images/cellpic3.gif') }
 td.cat		{ background-image: url('${contextPath}/templates/default/images/cellpic1.gif') }
 td.rowpic	{ background-image: url('${contextPath}/templates/default/images/cellpic2.jpg'); background-repeat: repeat-y }
-td.catHead,td.catSides,td.catLeft,td.catRight,td.catBottom { background-image: url('${contextPath}/templates/default/images/cellpic1.gif') }
+td.catHead,td.catSides,td.catLeft,td.catRight,td.catbottom { background-image: url('${contextPath}/templates/default/images/cellpic1.gif') }
 </style>
 
 </head>
@@ -137,7 +137,7 @@ td.catHead,td.catSides,td.catLeft,td.catRight,td.catBottom { background-image: u
 					}
 					</script>
 					<tr> 
-					  <td class="catBottom" align="center" colspan="2">
+					  <td class="catbottom" align="center" colspan="2">
 						<input type="hidden" name="install_step" value="2" />
 						<input class="mainoption" type="submit" value="${I18n.getMessage("Install.begin")}" name="button_install" onClick="beginInstall();"/>&nbsp;&nbsp;
 						<input type="button" class="mainoption" value="${I18n.getMessage("Install.modifyConfiguration")}" name="button_back" onClick="history.go(-1);">
