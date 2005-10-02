@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
 
  * Redistribution and use in source and binary forms, 
@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 13/01/2004 / 11:55:00
- * net.jforum.entities.Smilie.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: Smilie.java,v 1.5 2005/07/26 03:04:51 rafaelsteil Exp $
  */
 package net.jforum.entities;
 
@@ -49,6 +46,7 @@ import java.io.Serializable;
 
 /**
  * @author Rafael Steil
+ * @version $Id: Smilie.java,v 1.6 2005/10/02 19:06:41 rafaelsteil Exp $
  */
 public class Smilie implements Serializable
 {

@@ -221,39 +221,24 @@ function validatePostForm(f)
 											<td class="gensmall" colspan="4"><b>${I18n.getMessage("PostForm.emoticons")}</b></td>
 										</tr>
 
+										<#assign count = 0/>
+										<#assign lastSmilie = ""/>
 										<tr valign="center" align="middle">
-											<td><a href="javascript:emoticon(':D')"><img src="${contextPath}/templates/${templateName}/images/icon_biggrin.gif" alt="Very Happy" width="15" height="15" border="0" title="Very Happy" /></a></td>
-											<td><a href="javascript:emoticon(':)')"><img src="${contextPath}/templates/${templateName}/images/icon_smile.gif" alt="Smile" width="15" height="15" border="0" title="Smile" /></a></td>
-											<td><a href="javascript:emoticon(':(')"><img src="${contextPath}/templates/${templateName}/images/icon_sad.gif" alt="Sad" width="15" height="15" border="0" title="Sad" /></a></td>
-											<td><a href="javascript:emoticon(':-o')"><img src="${contextPath}/templates/${templateName}/images/icon_surprised.gif" alt="Surprised" width="15" height="15" border="0" title="Surprised" /></a></td>
-										</tr>
+											<#list smilies as smilie>
+												<#if (count < 20)>
+													<#if lastSmilie == "" || lastSmilie.url != smilie.url>
+														<td><a href="javascript:emoticon('${smilie.code}');">${smilie.url}</a></td>
+														<#assign count = count + 1/>
+														<#if count % 4 == 0>
+															</tr>
+														</#if>
+														<#assign lastSmilie = smilie/>
+													</#if>
+												</#if>
+											</#list>
 
-										<tr valign="center" align="middle">
-											<td><a href="javascript:emoticon(':shock:')"><img src="${contextPath}/templates/${templateName}/images/icon_eek.gif" alt="Shocked" width="15" height="15" border="0" title="Shocked" /></a></td>
-											<td><a href="javascript:emoticon(':?:')"><img src="${contextPath}/templates/${templateName}/images/icon_confused.gif" alt="Confused" width="15" height="15" border="0" title="Confused" /></a></td>
-											<td><a href="javascript:emoticon('8)')"><img src="${contextPath}/templates/${templateName}/images/icon_cool.gif" alt="Cool" width="15" height="15" border="0" title="Cool" /></a></td>
-											<td><a href="javascript:emoticon(':lol:')"><img src="${contextPath}/templates/${templateName}/images/icon_lol.gif" alt="Laughing" width="15" height="15" border="0" title="Laughing" /></a></td>
-										</tr>
-
-										<tr valign="center" align="middle">
-											<td><a href="javascript:emoticon(':mrgreen:')"><img src="${contextPath}/images/smilies/ed515dbff23a0ee3241dcc0a601c9ed6.gif" alt="Mad" width="15" height="15" border="0" title="Mad" /></a></td>
-											<td><a href="javascript:emoticon(':P')"><img src="${contextPath}/templates/${templateName}/images/icon_razz.gif" alt="Razz" width="15" height="15" border="0" title="Razz" /></a></td>
-											<td><a href="javascript:emoticon(':oops:')"><img src="${contextPath}/templates/${templateName}/images/icon_redface.gif" alt="Embarassed" width="15" height="15" border="0" title="Embarassed" /></a></td>
-											<td><a href="javascript:emoticon(':cry:')"><img src="${contextPath}/templates/${templateName}/images/icon_cry.gif" alt="Crying or Very sad" width="15" height="15" border="0" title="Crying or Very sad" /></a></td>
-										</tr>
-
-										<tr valign="center" align="middle">
-											<td><a href="javascript:emoticon(':evil:')"><img src="${contextPath}/templates/${templateName}/images/icon_evil.gif" alt="Evil or Very Mad" width="15" height="15" border="0" title="Evil or Very Mad" /></a></td>
-											<td><a href="javascript:emoticon(':twisted:')"><img src="${contextPath}/templates/${templateName}/images/icon_twisted.gif" alt="Twisted Evil" width="15" height="15" border="0" title="Twisted Evil" /></a></td>
-											<td><a href="javascript:emoticon(':roll:')"><img src="${contextPath}/templates/${templateName}/images/icon_rolleyes.gif" alt="Rolling Eyes" width="15" height="15" border="0" title="Rolling Eyes" /></a></td>
-											<td><a href="javascript:emoticon(':wink:')"><img src="${contextPath}/templates/${templateName}/images/icon_wink.gif" alt="Wink" width="15" height="15" border="0" title="Wink" /></a></td>
-										</tr>
-
-										<tr valign="center" align="middle">
-											<td><a href="javascript:emoticon(':!:')"><img src="${contextPath}/templates/${templateName}/images/icon_exclaim.gif" alt="Exclamation" width="15" height="15" border="0" title="Exclamation" /></a></td>
-											<td><a href="javascript:emoticon(':?')"><img src="${contextPath}/templates/${templateName}/images/icon_question.gif" alt="Question" width="15" height="15" border="0" title="Question" /></a></td>
-											<td><a href="javascript:emoticon(':idea:')"><img src="${contextPath}/templates/${templateName}/images/icon_idea.gif" alt="Idea" width="15" height="15" border="0" title="Idea" /></a></td>
-											<td><a href="javascript:emoticon(':arrow:')"><img src="${contextPath}/templates/${templateName}/images/icon_arrow.gif" alt="Arrow" width="15" height="15" border="0" title="Arrow" /></a></td>
+											<#if !(count % 4 == 0)>
+											</#if>
 										</tr>
 
 										<script language="javascript">

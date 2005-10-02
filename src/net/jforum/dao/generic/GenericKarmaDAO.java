@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -60,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericKarmaDAO.java,v 1.4 2005/07/26 04:01:21 diegopires Exp $
+ * @version $Id: GenericKarmaDAO.java,v 1.5 2005/10/02 19:06:48 rafaelsteil Exp $
  */
 public class GenericKarmaDAO implements net.jforum.dao.KarmaDAO
 {
@@ -115,6 +115,7 @@ public class GenericKarmaDAO implements net.jforum.dao.KarmaDAO
 		int totalRecords = 0;
 		double totalPoints = 0;
 		ResultSet rs = p.executeQuery();
+		
 		while (rs.next()) {
 			int points = rs.getInt("points");
 			int votes = rs.getInt("votes");

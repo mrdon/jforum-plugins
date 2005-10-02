@@ -67,7 +67,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.24 2005/09/27 03:16:47 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.25 2005/10/02 19:06:47 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -248,7 +248,7 @@ public class PostCommon
 		return p;
 	}
 
-	public static List topicPosts(PostDAO pm, boolean canEdit, int userId, int topicId, int start, int count) throws Exception
+	public static List topicPosts(PostDAO dao, boolean canEdit, int userId, int topicId, int start, int count) throws Exception
 	{
 		List posts = null;
 		boolean needPrepare = true;
@@ -258,7 +258,7 @@ public class PostCommon
  			needPrepare = false;
  		}
  		else {
- 			posts = pm.selectAllByTopicByLimit(topicId, start, count);
+ 			posts = dao.selectAllByTopicByLimit(topicId, start, count);
  		}
  		
 		List helperList = new ArrayList();

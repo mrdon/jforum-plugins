@@ -44,9 +44,9 @@ package net.jforum.dao.postgresql;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostgresqlDataAccessDriver.java,v 1.6 2005/07/26 03:05:10 rafaelsteil Exp $
+ * @version $Id: PostgresqlDataAccessDriver.java,v 1.7 2005/10/02 19:06:43 rafaelsteil Exp $
  */
-public class PostgresqlDataAccessDriver extends net.jforum.dao.generic.DataAccessDriver
+public class PostgresqlDataAccessDriver extends net.jforum.dao.generic.GenericDataAccessDriver
 {
 	private static PostgresqlPostDAO postDao = new PostgresqlPostDAO();
 	private static PostgresqlTopicDAO topicDao = new PostgresqlTopicDAO();

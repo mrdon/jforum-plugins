@@ -44,9 +44,9 @@ package net.jforum.dao.sqlserver;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerDataAccessDriver.java,v 1.5 2005/07/26 03:05:14 rafaelsteil Exp $
+ * @version $Id: SqlServerDataAccessDriver.java,v 1.6 2005/10/02 19:06:46 rafaelsteil Exp $
  */
-public class SqlServerDataAccessDriver extends net.jforum.dao.generic.DataAccessDriver
+public class SqlServerDataAccessDriver extends net.jforum.dao.generic.GenericDataAccessDriver
 {
 	private static SqlServerPostDAO postDao = new SqlServerPostDAO();
 	private static SqlServerTopicDAO topicDao = new SqlServerTopicDAO();

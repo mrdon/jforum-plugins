@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -42,36 +42,56 @@
  */
 package net.jforum.dao.generic;
 
+import net.jforum.dao.AttachmentDAO;
+import net.jforum.dao.BannerDAO;
+import net.jforum.dao.BookmarkDAO;
+import net.jforum.dao.CategoryDAO;
+import net.jforum.dao.ConfigDAO;
+import net.jforum.dao.ForumDAO;
+import net.jforum.dao.GroupDAO;
+import net.jforum.dao.KarmaDAO;
+import net.jforum.dao.ModerationDAO;
+import net.jforum.dao.PostDAO;
+import net.jforum.dao.PrivateMessageDAO;
+import net.jforum.dao.RankingDAO;
+import net.jforum.dao.ScheduledSearchIndexerDAO;
+import net.jforum.dao.SearchDAO;
+import net.jforum.dao.SmilieDAO;
 import net.jforum.dao.SummaryDAO;
+import net.jforum.dao.TopicDAO;
+import net.jforum.dao.TreeGroupDAO;
+import net.jforum.dao.UserDAO;
+import net.jforum.dao.UserSessionDAO;
 import net.jforum.dao.generic.security.GenericGroupSecurityDAO;
+import net.jforum.dao.security.GroupSecurityDAO;
 
 /**
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.9 2005/09/26 15:04:14 vmal Exp $
+ * @version $Id: GenericDataAccessDriver.java,v 1.2 2005/10/02 19:06:48 rafaelsteil Exp $
  */
-public class DataAccessDriver extends net.jforum.dao.DataAccessDriver 
+public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver 
 {
-	private static GenericGroupDAO groupDao = new GenericGroupDAO();
-	private static GenericPostDAO postDao = new GenericPostDAO();
-	private static GenericRankingDAO rankingDao = new GenericRankingDAO();
-	private static GenericTopicDAO topicDao = new GenericTopicDAO();
-	private static GenericUserDAO userDao = new GenericUserDAO();
-	private static GenericTreeGroupDAO treeGroupDao = new GenericTreeGroupDAO();
-	private static GenericSmilieDAO smilieDao = new GenericSmilieDAO();
-	private static GenericSearchDAO searchDao = new GenericSearchDAO();
-	private static GenericGroupSecurityDAO groupSecurityDao = new GenericGroupSecurityDAO();
-	private static GenericPrivateMessageDAO privateMessageDao = new GenericPrivateMessageDAO();
-	private static GenericUserSessionDAO userSessionDao = new GenericUserSessionDAO();
-	private static GenericKarmaDAO karmaDao = new GenericKarmaDAO();
-	private static GenericBookmarkDAO bookmarkDao = new GenericBookmarkDAO();
-	private static GenericAttachmentDAO attachmentDao = new GenericAttachmentDAO();
-	private static GenericModerationDAO moderationDao = new GenericModerationDAO();
-	private static GenericForumDAO forumDao = new GenericForumDAO();
-	private static GenericCategoryDAO categoryDao = new GenericCategoryDAO();
-	private static GenericConfigDAO configDao = new GenericConfigDAO();
-	private static GenericScheduledSearchIndexerDAO ssiDao = new GenericScheduledSearchIndexerDAO();
-	private static GenericBannerDAO bannerDao = new GenericBannerDAO();
-    private static GenericSummaryDAO summaryDao = new GenericSummaryDAO();
+	private static GroupDAO groupDao = new GenericGroupDAO();
+	private static PostDAO postDao = new GenericPostDAO();
+	private static RankingDAO rankingDao = new GenericRankingDAO();
+	private static TopicDAO topicDao = new GenericTopicDAO();
+	private static UserDAO userDao = new GenericUserDAO();
+	private static TreeGroupDAO treeGroupDao = new GenericTreeGroupDAO();
+	private static SmilieDAO smilieDao = new GenericSmilieDAO();
+	private static SearchDAO searchDao = new GenericSearchDAO();
+	private static GroupSecurityDAO groupSecurityDao = new GenericGroupSecurityDAO();
+	private static PrivateMessageDAO privateMessageDao = new GenericPrivateMessageDAO();
+	private static UserSessionDAO userSessionDao = new GenericUserSessionDAO();
+	private static KarmaDAO karmaDao = new GenericKarmaDAO();
+	private static BookmarkDAO bookmarkDao = new GenericBookmarkDAO();
+	private static AttachmentDAO attachmentDao = new GenericAttachmentDAO();
+	private static ModerationDAO moderationDao = new GenericModerationDAO();
+	private static ForumDAO forumDao = new GenericForumDAO();
+	private static CategoryDAO categoryDao = new GenericCategoryDAO();
+	private static ConfigDAO configDao = new GenericConfigDAO();
+	private static ScheduledSearchIndexerDAO ssiDao = new GenericScheduledSearchIndexerDAO();
+	private static BannerDAO bannerDao = new GenericBannerDAO();
+    private static SummaryDAO summaryDao = new GenericSummaryDAO();
 
 	/**
 	 * @see net.jforum.dao.DataAccessDriver#getForumModel()

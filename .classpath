@@ -5,7 +5,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/log4j-1.2.8.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/activation.jar"/>
-	<classpathentry kind="lib" path="WEB-INF/lib/freemarker-2.3-rc3.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/mail.jar"/>
 	<classpathentry kind="lib" path="lib/servlet-api.jar"/>
 	<classpathentry kind="lib" path="lib/junit.jar"/>
@@ -23,5 +22,6 @@
 	<classpathentry sourcepath="C:/java/jcaptcha-src-1.0-RC2.0.1" kind="lib" path="WEB-INF/lib/jcaptcha-all-1.0-RC2.0.1.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/jboss-cache-1.2.3.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/jgroups-2.2.8.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/freemarker-2.3.3.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>

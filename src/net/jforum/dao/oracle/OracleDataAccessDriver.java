@@ -46,9 +46,9 @@ import net.jforum.dao.ModerationDAO;
 
 /**
  * @author Dmitriy Kiriy
- * @version $Id: OracleDataAccessDriver.java,v 1.5 2005/07/26 03:04:58 rafaelsteil Exp $
+ * @version $Id: OracleDataAccessDriver.java,v 1.6 2005/10/02 19:06:45 rafaelsteil Exp $
  */
-public class OracleDataAccessDriver extends net.jforum.dao.generic.DataAccessDriver
+public class OracleDataAccessDriver extends net.jforum.dao.generic.GenericDataAccessDriver
 {
 	private static OraclePostDAO postDao = new OraclePostDAO();
 	private static OracleTopicDAO topicDao = new OracleTopicDAO();

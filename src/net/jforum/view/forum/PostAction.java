@@ -59,6 +59,7 @@ import net.jforum.SessionFacade;
 import net.jforum.dao.AttachmentDAO;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
+import net.jforum.dao.KarmaDAO;
 import net.jforum.dao.PostDAO;
 import net.jforum.dao.TopicDAO;
 import net.jforum.dao.UserDAO;
@@ -91,7 +92,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.106 2005/09/30 23:19:20 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.107 2005/10/02 19:06:49 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -203,8 +204,7 @@ public class PostAction extends Command
 		this.context.put("STATUS_UNLOCKED", new Integer(Topic.STATUS_UNLOCKED));
 
 		// Pagination
-		int totalPosts = tm.getTotalPosts(topic.getId());
-		ViewCommon.contextToPagination(start, totalPosts, count);
+		ViewCommon.contextToPagination(start, topic.getTotalReplies(), count);
 		
 		TopicRepository.updateTopic(topic);
 	}
@@ -409,6 +409,11 @@ public class PostAction extends Command
 		// Attachments
 		boolean attachmentsEnabled = SecurityRepository.canAccess(
 				SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(forumId));
+		
+		if (attachmentsEnabled && !SessionFacade.isLogged() 
+				&& !SystemGlobals.getBoolValue(ConfigKeys.ATTACHMENTS_ANONYMOUS)) {
+			attachmentsEnabled = false;
+		}
 
 		this.context.put("attachmentsEnabled", attachmentsEnabled);
 		
@@ -424,6 +429,7 @@ public class PostAction extends Command
 			SessionFacade.getUserSession().createNewCaptcha();
 		}
 		
+		this.context.put("smilies", SmiliesRepository.getSmilies());
 		this.context.put("forum", ForumRepository.getForum(forumId));
 		this.context.put("action", "insertSave");
 		this.context.put("start", this.request.getParameter("start"));
@@ -650,7 +656,7 @@ public class PostAction extends Command
 			
 			// Attachments
 			attachments.editAttachments(p.getId(), p.getForumId());
-			attachments.insertAttachments(p.getId());
+			attachments.insertAttachments(p);
 
 			// Updates the topic title
 			if (t.getFirstPostId() == p.getId()) {
@@ -896,7 +902,7 @@ public class PostAction extends Command
 			
 			tm.update(t);
 			
-			attachments.insertAttachments(postId);
+			attachments.insertAttachments(p);
 			
 			if (!moderate) {
 				if (!newTopic) {
@@ -965,7 +971,8 @@ public class PostAction extends Command
 		return currentStart;
 	}
 
-	public void delete() throws Exception {
+	public void delete() throws Exception 
+	{
 		if (!SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE)) {
 			this.setTemplateName(TemplateKeys.POSTS_CANNOT_DELETE);
 			this.context.put("message", I18n.getMessage("CannotRemovePost"));
@@ -978,7 +985,11 @@ public class PostAction extends Command
 		Post p = pm.selectById(this.request.getIntParameter("post_id"));
 
 		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
-		Topic t = tm.selectById(p.getTopicId());
+		Topic t = TopicRepository.getTopic(new Topic(p.getTopicId()));
+		
+		if (t == null) {
+			t = tm.selectById(p.getTopicId());
+		}
 
 		if (!TopicsCommon.isTopicAccessible(t.getForumId())) {
 			return;
@@ -991,6 +1002,10 @@ public class PostAction extends Command
 
 		pm.delete(p);
 		DataAccessDriver.getInstance().newUserDAO().decrementPosts(p.getUserId());
+		
+		// Karma
+		KarmaDAO karmaDao = DataAccessDriver.getInstance().newKarmaDAO();
+		karmaDao.updateUserKarma(p.getUserId());
 		
 		// Attachments
 		new AttachmentCommon(this.request, p.getForumId()).deleteAttachments(p.getId(), p.getForumId());
@@ -1087,8 +1102,9 @@ public class PostAction extends Command
 
 	public void downloadAttach() throws Exception
 	{
-		if (SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED) && 
-				!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD)) {
+		if ((SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED) && 
+				!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD))
+				|| (!SessionFacade.isLogged() && !SystemGlobals.getBoolValue(ConfigKeys.ATTACHMENTS_ANONYMOUS))) {
 			this.setTemplateName(TemplateKeys.POSTS_CANNOT_DOWNLOAD);
 			this.context.put("message", I18n.getMessage("Attachments.featureDisabled"));
 			return;
@@ -1115,25 +1131,29 @@ public class PostAction extends Command
 		FileInputStream fis = new FileInputStream(filename);
 		OutputStream os = response.getOutputStream();
 		
-		if(am.isPhysicalDownloadMode(a.getInfo().getExtension().getExtensionGroupId()))
-		{
+		if(am.isPhysicalDownloadMode(a.getInfo().getExtension().getExtensionGroupId())) {
 			this.response.setContentType("application/octet-stream");
 		}
-		else
-		{
+		else {
 			this.response.setContentType(a.getInfo().getMimetype());
 		}
-    
+		
 		if (this.request.getHeader("User-Agent").indexOf("Firefox") != -1) {			
-			this.response.setHeader("Content-Disposition", "attachment; filename=\"" + new String(a.getInfo().getRealFilename().getBytes(SystemGlobals.getValue(ConfigKeys.ENCODING)), SystemGlobals.getValue(ConfigKeys.DEFAULT_CONTAINER_ENCODING)) + "\";");
-		} else {
-		  this.response.setHeader("Content-Disposition", "attachment; filename=\"" + ViewCommon.toUtf8String(a.getInfo().getRealFilename()) + "\";");
-	  }
+			this.response.setHeader("Content-Disposition", "attachment; filename=\"" 
+					+ new String(a.getInfo().getRealFilename().getBytes(SystemGlobals.getValue(ConfigKeys.ENCODING)), 
+							SystemGlobals.getValue(ConfigKeys.DEFAULT_CONTAINER_ENCODING)) + "\";");
+		} 
+		else {
+			this.response.setHeader("Content-Disposition", "attachment; filename=\"" 
+					+ ViewCommon.toUtf8String(a.getInfo().getRealFilename()) + "\";");
+		}
+		
 		this.response.setContentLength((int)a.getInfo().getFilesize());
 		
+		int c = 0;
 		byte[] b = new byte[4096];
-		while ((fis.read(b)) != -1) {
-			os.write(b);
+		while ((c = fis.read(b)) != -1) {
+			os.write(b, 0, c);
 		}
 		
 		fis.close();

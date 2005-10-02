@@ -60,6 +60,7 @@ import net.jforum.entities.Attachment;
 import net.jforum.entities.AttachmentExtension;
 import net.jforum.entities.AttachmentInfo;
 import net.jforum.entities.Group;
+import net.jforum.entities.Post;
 import net.jforum.entities.QuotaLimit;
 import net.jforum.entities.User;
 import net.jforum.exceptions.AttachmentSizeTooBigException;
@@ -76,7 +77,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.22 2005/09/12 21:05:28 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.23 2005/10/02 19:06:46 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {
@@ -209,16 +210,18 @@ public class AttachmentCommon
 		return realName;
 	}
 	
-	public void insertAttachments(int postId) throws Exception
+	public void insertAttachments(Post post) throws Exception
 	{
 		if (!this.canProceed) {
 			return;
 		}
 		
+		post.hasAttachments(this.filesToSave.size() > 0);
+		
 		for (Iterator iter = this.filesToSave.entrySet().iterator(); iter.hasNext(); ) {
 			Map.Entry entry = (Map.Entry)iter.next();
 			Attachment a = (Attachment)entry.getValue();
-			a.setPostId(postId);
+			a.setPostId(post.getId());
 			String path = SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR) 
 				+ "/" 
 				+ a.getInfo().getPhysicalFilename();
@@ -341,23 +344,24 @@ public class AttachmentCommon
 		
 		return this.am.selectAttachments(postId);
 	}
-
-        public boolean isPhysicalDownloadMode(int extensionGroupId) throws Exception
-        {
-                return this.am.isPhysicalDownloadMode(extensionGroupId);
-        }
+	
+	public boolean isPhysicalDownloadMode(int extensionGroupId) throws Exception
+	{
+		return this.am.isPhysicalDownloadMode(extensionGroupId);
+	}
 
 	public void deleteAttachments(int postId, int forumId) throws Exception
 	{
 		// Attachments
 		List attachments = DataAccessDriver.getInstance().newAttachmentDAO().selectAttachments(postId);
-		String attachIds = "";
+		StringBuffer attachIds = new StringBuffer();
+		
 		for (Iterator iter = attachments.iterator(); iter.hasNext(); ) {
 			Attachment a = (Attachment)iter.next();
-			attachIds += a.getId() + ",";
+			attachIds.append(a.getId()).append(',');
 		}
 		
-		this.request.addParameter("delete_attach", attachIds);
+		this.request.addParameter("delete_attach", attachIds.toString());
 		this.editAttachments(postId, forumId);
 	}
 }

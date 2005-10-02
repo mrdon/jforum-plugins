@@ -60,7 +60,7 @@ import net.jforum.util.search.SearchFacade;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericPostDAO.java,v 1.9 2005/09/15 00:59:43 rafaelsteil Exp $
+ * @version $Id: GenericPostDAO.java,v 1.10 2005/10/02 19:06:48 rafaelsteil Exp $
  */
 public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO 
 {
@@ -277,7 +277,7 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 	 */
 	public List selectAllByTopic(int topicId) throws Exception
 	{
-		return this.selectAllByTopicByLimit(topicId, 0, Integer.MAX_VALUE);
+		return this.selectAllByTopicByLimit(topicId, 0, Integer.MAX_VALUE - 1);
 	}
 	
 	/**

@@ -51,7 +51,7 @@ import net.jforum.view.forum.common.ViewCommon;
  * Represents every message post in the system.
  * 
  * @author Rafael Steil
- * @version $Id: Post.java,v 1.13 2005/09/09 17:59:45 rafaelsteil Exp $
+ * @version $Id: Post.java,v 1.14 2005/10/02 19:06:41 rafaelsteil Exp $
  */
 public class Post implements Serializable 
 {
@@ -104,6 +104,7 @@ public class Post implements Serializable
 		this.setUserIp(p.getUserIp());
 		this.setKarma(new KarmaStatus(p.getKarma()));
 		this.setModerate(p.isModerationNeeded());
+		this.hasAttachments(p.hasAttachments());
 	}
 	
 	public void setModerate(boolean status)

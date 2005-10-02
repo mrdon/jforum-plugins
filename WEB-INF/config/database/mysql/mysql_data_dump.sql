@@ -50,7 +50,7 @@ INSERT INTO jforum_smilies VALUES (2,':-)','<img src=\"#CONTEXT#/images/smilies/
 INSERT INTO jforum_smilies VALUES (3,':D','<img src=\"#CONTEXT#/images/smilies/283a16da79f3aa23fe1025c96295f04f.gif\" border=\"0\">','283a16da79f3aa23fe1025c96295f04f.gif');
 INSERT INTO jforum_smilies VALUES (4,':-D','<img src=\"#CONTEXT#/images/smilies/283a16da79f3aa23fe1025c96295f04f.gif\" border=\"0\">','283a16da79f3aa23fe1025c96295f04f.gif');
 INSERT INTO jforum_smilies VALUES (5,':(','<img src=\"#CONTEXT#/images/smilies/9d71f0541cff0a302a0309c5079e8dee.gif\" border=\"0\">','9d71f0541cff0a302a0309c5079e8dee.gif');
-INSERT INTO jforum_smilies VALUES (6,':-(','<img src=\"#CONTEXT#/images/smilies/9d71f0541cff0a302a0309c5079e8dee.gif\" border=\"0\">','9d71f0541cff0a302a0309c5079e8dee.gif');
+INSERT INTO jforum_smilies VALUES (6,':mrgreen:','<img src=\"#CONTEXT#/images/smilies/ed515dbff23a0ee3241dcc0a601c9ed6.gif\" border=\"0\">','ed515dbff23a0ee3241dcc0a601c9ed6.gif');
 INSERT INTO jforum_smilies VALUES (7,':-o','<img src=\"#CONTEXT#/images/smilies/47941865eb7bbc2a777305b46cc059a2.gif\" border=\"0\">','47941865eb7bbc2a777305b46cc059a2.gif');
 INSERT INTO jforum_smilies VALUES (8,':shock:','<img src=\"#CONTEXT#/images/smilies/385970365b8ed7503b4294502a458efa.gif\" border=\"0\">','385970365b8ed7503b4294502a458efa.gif');
 INSERT INTO jforum_smilies VALUES (9,':?:','<img src=\"#CONTEXT#/images/smilies/0a4d7238daa496a758252d0a2b1a1384.gif\" border=\"0\">','0a4d7238daa496a758252d0a2b1a1384.gif');
@@ -71,8 +71,8 @@ INSERT INTO jforum_smilies VALUES (23,':!:','<img src=\"#CONTEXT#/images/smilies
 INSERT INTO jforum_smilies VALUES (24,':?','<img src=\"#CONTEXT#/images/smilies/136dd33cba83140c7ce38db096d05aed.gif\" border=\"0\">','136dd33cba83140c7ce38db096d05aed.gif');
 INSERT INTO jforum_smilies VALUES (25,':idea:','<img src=\"#CONTEXT#/images/smilies/8f7fb9dd46fb8ef86f81154a4feaada9.gif\" border=\"0\">','8f7fb9dd46fb8ef86f81154a4feaada9.gif');
 INSERT INTO jforum_smilies VALUES (26,':arrow:','<img src=\"#CONTEXT#/images/smilies/d6741711aa045b812616853b5507fd2a.gif\" border=\"0\">','d6741711aa045b812616853b5507fd2a.gif');
-INSERT INTO jforum_smilies VALUES (31,':mrgreen:','<img src=\"#CONTEXT#/images/smilies/ed515dbff23a0ee3241dcc0a601c9ed6.gif\" border=\"0\">','ed515dbff23a0ee3241dcc0a601c9ed6.gif');
 INSERT INTO jforum_smilies VALUES (32,':hunf:','<img src=\"#CONTEXT#/images/smilies/0320a00cb4bb5629ab9fc2bc1fcc4e9e.gif\" border=\"0\">','0320a00cb4bb5629ab9fc2bc1fcc4e9e.gif');
+INSERT INTO jforum_smilies VALUES (31,':-(','<img src=\"#CONTEXT#/images/smilies/9d71f0541cff0a302a0309c5079e8dee.gif\" border=\"0\">','9d71f0541cff0a302a0309c5079e8dee.gif');
 INSERT INTO jforum_smilies VALUES (33,':XD:','<img src=\"#CONTEXT#/images/smilies/49869fe8223507d7223db3451e5321aa.gif\" border=\"0\">','49869fe8223507d7223db3451e5321aa.gif');
 INSERT INTO jforum_smilies VALUES (34,':thumbup:','<img src=\"#CONTEXT#/images/smilies/e8a506dc4ad763aca51bec4ca7dc8560.gif\" border=\"0\">','e8a506dc4ad763aca51bec4ca7dc8560.gif');
 INSERT INTO jforum_smilies VALUES (35,':thumbdown:','<img src=\"#CONTEXT#/images/smilies/e78feac27fa924c4d0ad6cf5819f3554.gif\" border=\"0\">','e78feac27fa924c4d0ad6cf5819f3554.gif');
