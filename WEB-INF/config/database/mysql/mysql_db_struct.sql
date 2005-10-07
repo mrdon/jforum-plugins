@@ -49,7 +49,7 @@ CREATE TABLE jforum_config (
 
 DROP TABLE IF EXISTS jforum_forums;
 CREATE TABLE jforum_forums (
-  forum_id smallint(5) NOT NULL auto_increment,
+  forum_id smallint(8) NOT NULL auto_increment,
   categories_id mediumint(8) NOT NULL default '1',
   forum_name varchar(150) NOT NULL default '',
   forum_desc varchar(255) default NULL,
@@ -117,7 +117,7 @@ DROP TABLE IF EXISTS jforum_posts;
 CREATE TABLE jforum_posts (
   post_id INT NOT NULL auto_increment,
   topic_id INT NOT NULL default '0',
-  forum_id smallint(5) NOT NULL default '0',
+  forum_id smallint(8) NOT NULL default '0',
   user_id INT default NULL,
   post_time datetime default NULL,
   poster_ip varchar(15) default NULL,
