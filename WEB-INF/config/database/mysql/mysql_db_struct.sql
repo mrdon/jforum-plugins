@@ -10,7 +10,7 @@
 
 DROP TABLE IF EXISTS jforum_banlist;
 CREATE TABLE jforum_banlist (
-  banlist_id mediumint(8) NOT NULL auto_increment,
+  banlist_id INT NOT NULL auto_increment,
   user_id INT NOT NULL default '0',
   banlist_ip varchar(8) NOT NULL default '',
   banlist_email varchar(255) default NULL,
@@ -24,9 +24,9 @@ CREATE TABLE jforum_banlist (
 
 DROP TABLE IF EXISTS jforum_categories;
 CREATE TABLE jforum_categories (
-  categories_id mediumint(8) NOT NULL auto_increment,
+  categories_id INT NOT NULL auto_increment,
   title varchar(100) NOT NULL default '',
-  display_order mediumint(8) NOT NULL default '0',
+  display_order INT NOT NULL default '0',
   moderated TINYINT(1) DEFAULT '0',
   PRIMARY KEY  (categories_id)
 ) TYPE=InnoDB;
@@ -49,12 +49,12 @@ CREATE TABLE jforum_config (
 
 DROP TABLE IF EXISTS jforum_forums;
 CREATE TABLE jforum_forums (
-  forum_id smallint(8) NOT NULL auto_increment,
-  categories_id mediumint(8) NOT NULL default '1',
+  forum_id INT NOT NULL auto_increment,
+  categories_id INT NOT NULL default '1',
   forum_name varchar(150) NOT NULL default '',
   forum_desc varchar(255) default NULL,
-  forum_order mediumint(8) default '1',
-  forum_topics mediumint(8) NOT NULL default '0',
+  forum_order INT default '1',
+  forum_topics INT NOT NULL default '0',
   forum_last_post_id INT NOT NULL default '0',
   moderated TINYINT(1) DEFAULT '0',
   PRIMARY KEY  (forum_id),
@@ -68,10 +68,10 @@ CREATE TABLE jforum_forums (
 
 DROP TABLE IF EXISTS jforum_groups;
 CREATE TABLE jforum_groups (
-  group_id mediumint(8) NOT NULL auto_increment,
+  group_id INT NOT NULL auto_increment,
   group_name varchar(40) NOT NULL default '',
   group_description varchar(255) default NULL,
-  parent_id mediumint(8) default '0',
+  parent_id INT default '0',
   PRIMARY KEY  (group_id)
 ) TYPE=InnoDB;
 
@@ -91,7 +91,7 @@ CREATE TABLE jforum_user_groups (
 DROP TABLE IF EXISTS jforum_roles;
 CREATE TABLE jforum_roles (
   role_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  group_id mediumint(8) default '0',
+  group_id INT default '0',
   name varchar(255) NOT NULL,
   role_type TINYINT(1) DEFAULT 1,
   INDEX idx_group (group_id),
@@ -117,7 +117,7 @@ DROP TABLE IF EXISTS jforum_posts;
 CREATE TABLE jforum_posts (
   post_id INT NOT NULL auto_increment,
   topic_id INT NOT NULL default '0',
-  forum_id smallint(8) NOT NULL default '0',
+  forum_id INT NOT NULL default '0',
   user_id INT NOT NULL default '0',
   post_time datetime default NULL,
   poster_ip varchar(15) default NULL,
@@ -126,7 +126,7 @@ CREATE TABLE jforum_posts (
   enable_smilies tinyint(1) NOT NULL default '1',
   enable_sig tinyint(1) NOT NULL default '1',
   post_edit_time datetime default NULL,
-  post_edit_count smallint(5) NOT NULL default '0',
+  post_edit_count INT NOT NULL default '0',
   status tinyint(1) default '1',
   attach TINYINT(1) DEFAULT '0',
   need_moderate TINYINT(1) DEFAULT '0',
@@ -179,9 +179,9 @@ CREATE TABLE jforum_privmsgs_text (
 
 DROP TABLE IF EXISTS jforum_ranks;
 CREATE TABLE jforum_ranks (
-  rank_id smallint(5) NOT NULL auto_increment,
+  rank_id INT NOT NULL auto_increment,
   rank_title varchar(50) NOT NULL default '',
-  rank_min mediumint(8) NOT NULL default '0',
+  rank_min INT NOT NULL default '0',
   rank_special tinyint(1) default NULL,
   rank_image varchar(255) default NULL,
   PRIMARY KEY  (rank_id)
@@ -209,7 +209,7 @@ CREATE TABLE jforum_sessions (
 
 DROP TABLE IF EXISTS jforum_smilies;
 CREATE TABLE jforum_smilies (
-  smilie_id smallint(5) NOT NULL auto_increment,
+  smilie_id INT NOT NULL auto_increment,
   code varchar(50) NOT NULL default '',
   url varchar(100) default NULL,
   disk_name varchar(255),
@@ -222,7 +222,7 @@ CREATE TABLE jforum_smilies (
 
 DROP TABLE IF EXISTS jforum_themes;
 CREATE TABLE jforum_themes (
-  themes_id mediumint(8) NOT NULL auto_increment,
+  themes_id INT NOT NULL auto_increment,
   template_name varchar(30) NOT NULL default '',
   style_name varchar(30) NOT NULL default '',
   PRIMARY KEY  (themes_id)
@@ -235,12 +235,12 @@ CREATE TABLE jforum_themes (
 DROP TABLE IF EXISTS jforum_topics;
 CREATE TABLE jforum_topics (
   topic_id INT NOT NULL auto_increment,
-  forum_id smallint(8) NOT NULL default '0',
+  forum_id INT NOT NULL default '0',
   topic_title varchar(100) NOT NULL default '',
   user_id INT NOT NULL default '0',
   topic_time datetime default null,
-  topic_views mediumint(8) default '1',
-  topic_replies mediumint(8) default '0',
+  topic_views INT default '1',
+  topic_replies INT default '0',
   topic_status tinyint(3) default '0',
   topic_vote tinyint(1) default '0',
   topic_type tinyint(3) default '0',
@@ -278,17 +278,17 @@ CREATE TABLE jforum_users (
   username varchar(50) NOT NULL default '',
   user_password varchar(32) NOT NULL default '',
   user_session_time bigint default 0,
-  user_session_page smallint(5) NOT NULL default '0',
+  user_session_page INT NOT NULL default '0',
   user_lastvisit datetime default null,
   user_regdate datetime default null,
   user_level tinyint(4) default NULL,
-  user_posts mediumint(8) NOT NULL default '0',
+  user_posts INT NOT NULL default '0',
   user_timezone varchar(5) NOT NULL default '',
   user_style tinyint(4) default NULL,
   user_lang varchar(255) NOT NULL default '',
   user_dateformat varchar(20) NOT NULL default '%d/%M/%Y %H:%i',
-  user_new_privmsg smallint(5) NOT NULL default '0',
-  user_unread_privmsg smallint(5) NOT NULL default '0',
+  user_new_privmsg INT NOT NULL default '0',
+  user_unread_privmsg INT NOT NULL default '0',
   user_last_privmsg datetime NULL,
   user_emailtime datetime default NULL,
   user_viewemail tinyint(1) default '0',
@@ -302,7 +302,7 @@ CREATE TABLE jforum_users (
   user_notify tinyint(1) default '1',
   user_notify_pm tinyint(1) default '1',
   user_popup_pm tinyint(1) default '1',
-  rank_id smallint(5) default '1',
+  rank_id INT default '1',
   user_avatar varchar(100) default NULL,
   user_avatar_type tinyint(4) NOT NULL default '0',
   user_email varchar(255) NOT NULL default '',
@@ -318,7 +318,7 @@ CREATE TABLE jforum_users (
   user_interests varchar(255) default NULL,
   user_actkey varchar(32) default NULL,
   gender char(1) default NULL,
-  themes_id mediumint(8) default NULL,
+  themes_id INT default NULL,
   deleted tinyint(1) default NULL,
   user_viewonline tinyint(1) default '1',
   security_hash varchar(32),
@@ -333,7 +333,7 @@ CREATE TABLE jforum_users (
 
 DROP TABLE IF EXISTS jforum_vote_desc;
 CREATE TABLE jforum_vote_desc (
-  vote_id mediumint(8) NOT NULL auto_increment,
+  vote_id INT NOT NULL auto_increment,
   topic_id INT NOT NULL default '0',
   vote_text text NOT NULL,
   vote_start int(11) NOT NULL default '0',
@@ -347,7 +347,7 @@ CREATE TABLE jforum_vote_desc (
 
 DROP TABLE IF EXISTS jforum_vote_results;
 CREATE TABLE jforum_vote_results (
-  vote_id mediumint(8) NOT NULL default '0',
+  vote_id INT NOT NULL default '0',
   vote_option_id tinyint(4) NOT NULL default '0',
   vote_option_text varchar(255) NOT NULL default '',
   vote_result int(11) NOT NULL default '0'
@@ -359,7 +359,7 @@ CREATE TABLE jforum_vote_results (
 
 DROP TABLE IF EXISTS jforum_vote_voters;
 CREATE TABLE jforum_vote_voters (
-  vote_id mediumint(8) NOT NULL default '0',
+  vote_id INT NOT NULL default '0',
   vote_user_id INT NOT NULL default '0',
   vote_user_ip char(8) NOT NULL default ''
 ) TYPE=InnoDB;
@@ -370,7 +370,7 @@ CREATE TABLE jforum_vote_voters (
 
 DROP TABLE IF EXISTS jforum_words;
 CREATE TABLE jforum_words (
-  word_id mediumint(8) NOT NULL auto_increment,
+  word_id INT NOT NULL auto_increment,
   word varchar(100) NOT NULL default '',
   replacement varchar(100) NOT NULL default '',
   PRIMARY KEY  (word_id)
@@ -416,18 +416,18 @@ CREATE TABLE jforum_search_results (
 DROP TABLE IF EXISTS jforum_search_topics;
 CREATE TABLE jforum_search_topics (
   topic_id INT NOT NULL,
-  forum_id smallint(8) NOT NULL default '0',
+  forum_id INT NOT NULL default '0',
   topic_title varchar(100) NOT NULL default '',
   user_id INT NOT NULL default '0',
   topic_time datetime default null,
-  topic_views mediumint(8) default '1',
-  topic_replies mediumint(8) default '0',
+  topic_views INT default '1',
+  topic_replies INT default '0',
   topic_status tinyint(3) default '0',
   topic_vote tinyint(1) default '0',
   topic_type tinyint(3) default '0',
   topic_first_post_id INT default '0',
   topic_last_post_id INT NOT NULL default '0',
-  moderated smallint(1) default '0',
+  moderated INT default '0',
   session varchar(50),
   search_time datetime,
   KEY  (topic_id),
@@ -557,18 +557,18 @@ CREATE TABLE jforum_attach_quota (
 --
 DROP TABLE IF EXISTS jforum_banner;
 CREATE TABLE jforum_banner (
-	banner_id MEDIUMINT(8) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	banner_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	banner_name VARCHAR(90),
-	banner_placement SMALLINT(1) NOT NULL DEFAULT '0',
+	banner_placement INT NOT NULL DEFAULT '0',
 	banner_description VARCHAR(250),
-	banner_clicks MEDIUMINT(8) NOT NULL DEFAULT '0',
-	banner_views MEDIUMINT(8) NOT NULL DEFAULT '0',
+	banner_clicks INT NOT NULL DEFAULT '0',
+	banner_views INT NOT NULL DEFAULT '0',
 	banner_url VARCHAR(250),
 	banner_weight TINYINT(1) NOT NULL DEFAULT '50',
 	banner_active TINYINT(1) NOT NULL DEFAULT '0',
 	banner_comment VARCHAR(250),
-	banner_type MEDIUMINT(5) NOT NULL DEFAULT '0',
-	banner_width MEDIUMINT(5) NOT NULL DEFAULT '0',
-	banner_height MEDIUMINT(5) NOT NULL DEFAULT '0',
+	banner_type INT NOT NULL DEFAULT '0',
+	banner_width INT NOT NULL DEFAULT '0',
+	banner_height INT NOT NULL DEFAULT '0',
 	KEY(banner_id)
 ) TYPE=InnoDB;
