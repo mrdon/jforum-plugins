@@ -1,20 +1,22 @@
+# Set default user/group ids
+SET @GENERAL_GROUP_ID = 1;
+SET @ADMIN_GROUP_ID = 2;
+SET @ANONYMOUS_ID = 1;
+SET @ADMIN_ID = 2;
+
 #
 # Groups
 #
-INSERT INTO jforum_groups ( group_name, group_description ) VALUES ('General', 'General Users');
-SET @GENERAL_GROUP_ID = 1;
+INSERT INTO jforum_groups ( group_id, group_name, group_description ) VALUES (@GENERAL_GROUP_ID, 'General', 'General Users');
 
-INSERT INTO jforum_groups ( group_name, group_description ) VALUES ('Administration', 'Admin Users');
-SET @ADMIN_GROUP_ID = 2;
+INSERT INTO jforum_groups ( group_id, group_name, group_description ) VALUES (@ADMIN_GROUP_ID, 'Administration', 'Admin Users');
 
 # 
 # Users
 #
-INSERT INTO jforum_users ( username, user_password, user_regdate ) VALUES ('Anonymous', 'nopass', NOW());
-SET @ANONYMOUS_ID = 1;
+INSERT INTO jforum_users ( user_id, username, user_password, user_regdate ) VALUES (@ANONYMOUS_ID, 'Anonymous', 'nopass', NOW());
 
-INSERT INTO jforum_users ( username, user_password, user_regdate, user_posts ) VALUES ('Admin', '21232f297a57a5a743894a0e4a801fc3', NOW(), 1);
-SET @ADMIN_ID = 2;
+INSERT INTO jforum_users ( user_id, username, user_password, user_regdate, user_posts ) VALUES (@ADMIN_ID, 'Admin', '21232f297a57a5a743894a0e4a801fc3', NOW(), 1);
 
 #
 # User Groups
