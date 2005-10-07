@@ -138,7 +138,7 @@ CREATE TABLE jforum_posts (
   post_id NUMBER(10) NOT NULL,
   topic_id NUMBER(10) DEFAULT 0 NOT NULL,
   forum_id NUMBER(10) DEFAULT 0 NOT NULL,
-  user_id NUMBER(10) DEFAULT NULL,
+  user_id NUMBER(10) DEFAULT 0 NOT NULL,
   post_time DATE DEFAULT NULL,
   poster_ip VARCHAR2(15) DEFAULT NULL,
   enable_bbcode NUMBER(10) DEFAULT 1 NOT NULL,

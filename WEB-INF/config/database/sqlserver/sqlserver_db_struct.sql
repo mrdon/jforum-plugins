@@ -179,7 +179,7 @@ CREATE TABLE [jforum_posts] (
 	[post_id] [bigint] IDENTITY (1, 1) PRIMARY KEY CLUSTERED NOT NULL ,
 	[topic_id] [bigint] DEFAULT (0) NOT NULL ,
 	[forum_id] [int] DEFAULT (0) NOT NULL ,
-	[user_id] [bigint] NULL ,
+	[user_id] [bigint] DEFAULT (0) NOT NULL ,
 	[post_time] [datetime] NULL ,
 	[poster_ip] [varchar] (15) COLLATE SQL_Latin1_General_CP1_CI_AS NULL ,
 	[enable_bbcode] [tinyint] DEFAULT (1) NOT NULL ,

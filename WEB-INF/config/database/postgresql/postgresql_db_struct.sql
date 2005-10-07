@@ -108,7 +108,7 @@ CREATE TABLE jforum_posts (
   post_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_posts_seq'),
   topic_id INTEGER NOT NULL DEFAULT 0,
   forum_id INTEGER NOT NULL DEFAULT 0,
-  user_id INTEGER DEFAULT NULL,
+  user_id INTEGER NOT NULL DEFAULT 0,
   post_time timestamp DEFAULT NULL,
   poster_ip VARCHAR(15) DEFAULT NULL,
   enable_bbcode INTEGER NOT NULL DEFAULT 1,
