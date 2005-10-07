@@ -11,7 +11,7 @@
 DROP TABLE IF EXISTS jforum_banlist;
 CREATE TABLE jforum_banlist (
   banlist_id mediumint(8) NOT NULL auto_increment,
-  user_id mediumint(8) NOT NULL default '0',
+  user_id INT NOT NULL default '0',
   banlist_ip varchar(8) NOT NULL default '',
   banlist_email varchar(255) default NULL,
   PRIMARY KEY  (banlist_id),
