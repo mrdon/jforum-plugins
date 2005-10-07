@@ -92,7 +92,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.107 2005/10/02 19:06:49 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.108 2005/10/07 16:57:56 vmal Exp $
  */
 public class PostAction extends Command 
 {
@@ -507,6 +507,7 @@ public class PostAction extends Command
 			this.context.put("maxAttachmentsSize", new Long(ql != null ? ql.getSizeInBytes() : 1));
 			
 			this.context.put("maxAttachments", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
+			this.context.put("smilies", SmiliesRepository.getSmilies());
 			this.context.put("forum", ForumRepository.getForum(p.getForumId()));
 			this.context.put("action", "editSave");
 			this.context.put("post", p);
