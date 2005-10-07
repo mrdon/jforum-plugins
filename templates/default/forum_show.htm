@@ -17,6 +17,7 @@
 							<a href="${JForumContext.encodeURL("/rss/forumTopics/${forum.id}")}"><img src="${contextPath}/templates/${templateName}/images/xml_button.gif" border="0"></a>
 							<br />
 						</#if>
+						<#if forum.isModerated()>
 						<span class="gensmall">
 							<b>${I18n.getMessage("ForumIndex.moderators")}:
 							
@@ -25,6 +26,7 @@
 							<a href="${JForumContext.encodeURL("/user/listGroup/${m.id}")}">${m.name?html}</a>
 							</#list>
 						</span>
+						</#if>
 					</td>
 
 					<td valign="center" nowrap="nowrap" align="right"><@pagination.doPagination action, forum.id/></td>

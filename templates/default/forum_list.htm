@@ -50,14 +50,14 @@
 						<td class="row1" width="100%" height="50">
 							<span class="forumlink"><a class="forumlink" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name}</a></span><br />
 							<span class="genmed">
-								${forum.description}<br />
-								
+								${forum.description}
+								<#if forum.isModerated()><br />
 								${I18n.getMessage("ForumIndex.moderators")}
-								
 								<#assign moderators = fir.getModeratorList(forum.id)/>
 								<#list moderators as m>
 								  <a href="${JForumContext.encodeURL("/user/listGroup/${m.id}")}">${m.name?html}</a>
 								</#list>
+								</#if>
 							</span>
 							<br />		
 						</td>
