@@ -118,7 +118,7 @@ CREATE TABLE jforum_posts (
   post_id INT NOT NULL auto_increment,
   topic_id INT NOT NULL default '0',
   forum_id smallint(8) NOT NULL default '0',
-  user_id INT default NULL,
+  user_id INT NOT NULL default '0',
   post_time datetime default NULL,
   poster_ip varchar(15) default NULL,
   enable_bbcode tinyint(1) NOT NULL default '1',
