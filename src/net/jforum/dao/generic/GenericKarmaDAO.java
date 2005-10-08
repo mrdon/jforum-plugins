@@ -60,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericKarmaDAO.java,v 1.5 2005/10/02 19:06:48 rafaelsteil Exp $
+ * @version $Id: GenericKarmaDAO.java,v 1.6 2005/10/08 21:10:28 rafaelsteil Exp $
  */
 public class GenericKarmaDAO implements net.jforum.dao.KarmaDAO
 {
@@ -128,7 +128,14 @@ public class GenericKarmaDAO implements net.jforum.dao.KarmaDAO
 		p.close();
 
 		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("KarmaModel.updateUserKarma"));
-		p.setDouble(1, totalPoints / totalRecords);
+		
+		double karmaPoints = totalPoints / totalRecords;
+		
+		if (Double.isNaN(karmaPoints)) {
+			karmaPoints = 0;
+		}
+		
+		p.setDouble(1, karmaPoints);
 		p.setInt(2, userId);
 		p.executeUpdate();
 		p.close();

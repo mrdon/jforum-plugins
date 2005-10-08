@@ -47,7 +47,7 @@ UserModel.lastUserRegistered = SELECT * FROM ( \
         WHERE LINENUM <= 1
         
 UserModel.selectAllByGroup = SELECT * FROM ( \
-	SELECT user_email, u.user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail, ROW_NUMBER() OVER(ORDER BY user_id) LINENUM \
+	SELECT user_email, u.user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail, ROW_NUMBER() OVER(ORDER BY u.user_id) LINENUM \
 	FROM jforum_users u, jforum_user_groups ug \
 	WHERE u.user_id = ug.user_id \
 	AND ug.group_id = ? \
@@ -235,12 +235,7 @@ PermissionControl.lastGeneratedRoleId = SELECT jforum_roles_seq.currval FROM DUA
 PermissionControl.loadGroupRoles = SELECT r.role_id, r.name, rv.role_value, rv.role_type AS rv_type, r.role_type \
 	FROM jforum_roles r, jforum_role_values rv \
 	WHERE rv.role_id(+) = r.role_id AND r.group_id = ? \
-	AND user_id = 0
-
-PermissionControl.loadUserRoles = SELECT r.role_id, r.name, rv.role_value, rv.role_type AS rv_type, r.role_type \
-	FROM jforum_roles r, jforum_role_values rv \
-	WHERE rv.role_id(+) = r.role_id AND r.user_id = ? \
-	AND r.group_id = 0
+	ORDER BY r.role_id 
 
 # ##############
 # CategoryModel
