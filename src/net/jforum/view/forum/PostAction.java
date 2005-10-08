@@ -92,7 +92,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.108 2005/10/07 16:57:56 vmal Exp $
+ * @version $Id: PostAction.java,v 1.109 2005/10/08 11:02:25 vmal Exp $
  */
 public class PostAction extends Command 
 {
@@ -393,6 +393,7 @@ public class PostAction extends Command
 
 			this.context.put("topic", t);
 			this.context.put("setType", false);
+			this.context.put("pageTitle", I18n.getMessage("PostForm.reply")+" "+t.getTitle());
 		}
 		else {
 			if (this.isReplyOnly(forumId)) {
@@ -400,6 +401,7 @@ public class PostAction extends Command
 				return;
 			}
 			this.context.put("setType", true);
+			this.context.put("pageTitle", I18n.getMessage("PostForm.title"));
 		}
 		
 		int userId = SessionFacade.getUserSession().getUserId();
@@ -513,6 +515,7 @@ public class PostAction extends Command
 			this.context.put("post", p);
 			this.context.put("setType", p.getId() == topic.getFirstPostId());
 			this.context.put("topic", topic);
+			this.context.put("pageTitle", I18n.getMessage("PostShow.messageTitle")+" "+p.getSubject());
 			this.setTemplateName(TemplateKeys.POSTS_EDIT);
 			this.context.put("start", this.request.getParameter("start"));
 			this.context.put("htmlAllowed", SecurityRepository.canAccess(SecurityConstants.PERM_HTML_DISABLED, 
@@ -603,6 +606,7 @@ public class PostAction extends Command
 				Integer.toString(topic.getForumId())));
 		this.context.put("start", this.request.getParameter("start"));
 		this.context.put("user", DataAccessDriver.getInstance().newUserDAO().selectById(userId));
+		this.context.put("pageTitle", I18n.getMessage("PostForm.reply")+" "+p.getSubject());
 	}
 
 	public void editSave() throws Exception 
