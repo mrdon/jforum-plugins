@@ -47,3 +47,9 @@ HR {MARGIN: 0px;COLOR: #CCCCCC;HEIGHT: 1px;BACKGROUND-COLOR: #000;COLOR: #CCCCCC
 #nav LI LI A {PADDING-RIGHT: 8px; PADDING-LEFT: 20px; PADDING-BOTTOM: 6px; PADDING-TOP: 6px}
 
 img.image-border {border: solid 1px #999}
+img { border: 0 }
+.install_subtitle { font-size: 16px; line-height: normal; text-decoration: underline; font-weight: bold; }
+.fields { background-color: #ffffff; }
+th {
+	font-size: 12px; font-family: verdana; font-weight: bold; background-color: #006699; color: #ffffff;
+}
