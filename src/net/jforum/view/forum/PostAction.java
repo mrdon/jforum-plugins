@@ -92,7 +92,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.110 2005/10/08 11:10:10 vmal Exp $
+ * @version $Id: PostAction.java,v 1.111 2005/10/08 11:28:54 vmal Exp $
  */
 public class PostAction extends Command 
 {
@@ -1099,6 +1099,7 @@ public class PostAction extends Command
 			returnPath += topicId + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
 
 			this.setTemplateName(TemplateKeys.POSTS_UNWATCH);
+			this.context.put("pageTitle", I18n.getMessage("PostShow.unwatch"));
 			this.context.put("message", I18n.getMessage("ForumBase.unwatched", new String[] { returnPath }));
 		}
 		else {
