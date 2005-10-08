@@ -43,17 +43,15 @@
 package net.jforum.view.forum.common;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import net.jforum.SessionFacade;
-import net.jforum.dao.DataAccessDriver;
 import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
-import net.jforum.entities.Topic;
+import net.jforum.entities.LastPostInfo;
 import net.jforum.entities.UserSession;
 import net.jforum.repository.ForumRepository;
 import net.jforum.util.preferences.ConfigKeys;
@@ -61,6 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
+ * @version $Id: ForumCommon.java,v 1.8 2005/10/08 22:37:46 rafaelsteil Exp $
  */
 public class ForumCommon 
 {
@@ -68,41 +67,26 @@ public class ForumCommon
 	 * Check if some forum has unread messages.
 	 * @param forum The forum to search for unread messages 
 	 * @param tracking Tracking of the topics read by the user
-	 * @param lastVisit The last visit time of the current usre
-	 * 
-	 * @return The same <code>Forum</code> instance passed as argument, 
-	 * which then a call to "getUnread()" will return the "read" status
-	 * for this forum
+	 * @param lastVisit The last visit time of the current user
 	 */
-	public static Forum checkUnreadPosts(Forum forum, Map tracking, long lastVisit) throws Exception
+	public static void checkUnreadPosts(Forum forum, Map tracking, long lastVisit) throws Exception
 	{
-		List unreadTopics = DataAccessDriver.getInstance().newForumDAO().checkUnreadTopics(
-				forum.getId(), lastVisit);
+		LastPostInfo lpi = forum.getLastPostInfo();
 		
-		if (unreadTopics.size() == 0) {
-			return forum;
+		if (lpi == null) {
+			return;
 		}
+
+		Integer topicId = new Integer(lpi.getTopicId());
 		
-		for (Iterator iter = unreadTopics.iterator(); iter.hasNext(); ) {
-			Topic t = (Topic)iter.next();
-			
-			Integer topicId = new Integer(t.getId());
-			if (tracking != null && tracking.containsKey(topicId)) {
-				long readTime = ((Long)tracking.get(topicId)).longValue();
-				if (t.getTime().compareTo(new Date(readTime)) > 0) {
-					forum.setUnread(true);
-				}
-			}
-			else {
-				forum.setUnread(true);
-			}
-			
-			if (forum.getUnread()) {
-				break;
-			}
+		if (tracking != null && tracking.containsKey(topicId)) {
+			long readTime = ((Long)tracking.get(topicId)).longValue();
+		
+			forum.setUnread(lpi.getPostTimeMillis() > readTime);
 		}
-		
-		return forum;
+		else {
+			forum.setUnread(lpi.getPostTimeMillis() > lastVisit);
+		}
 	}
 	
 	/**
@@ -144,8 +128,7 @@ public class ForumCommon
 			
 			for (Iterator tmpIterator = c.getForums().iterator(); tmpIterator.hasNext(); ) {
 				Forum f = (Forum)tmpIterator.next();
-
-				f = ForumCommon.checkUnreadPosts(f, tracking, lastVisit);
+				ForumCommon.checkUnreadPosts(f, tracking, us.getLastVisit().getTime());
 			}
 			
 			returnCategories.add(c);

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- $Id: bb_config.xml,v 1.20 2005/09/27 03:16:47 rafaelsteil Exp $ -->
+<!-- $Id: bb_config.xml,v 1.21 2005/10/08 22:37:47 rafaelsteil Exp $ -->
 <bbConfig>
 	<!-- CODE -->
 	<match name="code">
@@ -25,7 +25,7 @@
 		<regex>(?i)\[quote=['"]?(.*?[^'"])['"]?\]</regex>
 		<replace>
 		<![CDATA[
-		<p><cite><b>$1</b></cite></p>
+		<p><cite><b>$1 wrote:</b></cite></p>
 		
 		<blockquote>
 		]]>
