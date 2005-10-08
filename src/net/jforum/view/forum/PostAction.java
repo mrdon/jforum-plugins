@@ -92,7 +92,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.111 2005/10/08 11:28:54 vmal Exp $
+ * @version $Id: PostAction.java,v 1.112 2005/10/08 12:12:08 vmal Exp $
  */
 public class PostAction extends Command 
 {
@@ -606,7 +606,7 @@ public class PostAction extends Command
 				Integer.toString(topic.getForumId())));
 		this.context.put("start", this.request.getParameter("start"));
 		this.context.put("user", DataAccessDriver.getInstance().newUserDAO().selectById(userId));
-		this.context.put("pageTitle", I18n.getMessage("PostForm.reply")+" "+p.getSubject());
+		this.context.put("pageTitle", I18n.getMessage("PostForm.reply")+" "+t.getTitle());
 		this.context.put("smilies", SmiliesRepository.getSmilies());
 	}
 
