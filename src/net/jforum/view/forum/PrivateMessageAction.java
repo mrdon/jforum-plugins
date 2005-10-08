@@ -66,7 +66,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.31 2005/09/29 02:25:04 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.32 2005/10/08 11:10:10 vmal Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -168,6 +168,7 @@ public class PrivateMessageAction extends Command
 		this.context.put("maxAttachments", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
 		this.context.put("attachmentsEnabled", false);
 		this.context.put("maxAttachmentsSize", new Integer(0));
+		this.context.put("smilies", SmiliesRepository.getSmilies());
 	}
 	
 	public void sendSave() throws Exception

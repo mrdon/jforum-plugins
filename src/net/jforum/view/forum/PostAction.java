@@ -92,7 +92,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.109 2005/10/08 11:02:25 vmal Exp $
+ * @version $Id: PostAction.java,v 1.110 2005/10/08 11:10:10 vmal Exp $
  */
 public class PostAction extends Command 
 {
@@ -607,6 +607,7 @@ public class PostAction extends Command
 		this.context.put("start", this.request.getParameter("start"));
 		this.context.put("user", DataAccessDriver.getInstance().newUserDAO().selectById(userId));
 		this.context.put("pageTitle", I18n.getMessage("PostForm.reply")+" "+p.getSubject());
+		this.context.put("smilies", SmiliesRepository.getSmilies());
 	}
 
 	public void editSave() throws Exception 
