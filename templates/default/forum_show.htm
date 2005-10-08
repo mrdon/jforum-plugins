@@ -4,7 +4,9 @@
 
 <link rel="alternate" type="application/rss+xml" title="RSS" href="${JForumContext.encodeURL("/rss/forumTopics/${forum.id}")}" />
 
-<script type="text/JavaScript" src="${JForumContext.encodeURL("/js/list/moderation")}"></script>
+<#if moderator>
+	<script type="text/JavaScript" src="${JForumContext.encodeURL("/js/list/moderation")}"></script>
+</#if>
 
 <table cellspacing="0" cellpadding="10" width="100%" align="center" border="0">
 	<tr>
@@ -17,7 +19,6 @@
 							<a href="${JForumContext.encodeURL("/rss/forumTopics/${forum.id}")}"><img src="${contextPath}/templates/${templateName}/images/xml_button.gif" border="0"></a>
 							<br />
 						</#if>
-						<#if forum.isModerated()>
 						<span class="gensmall">
 							<b>${I18n.getMessage("ForumIndex.moderators")}:
 							
@@ -26,7 +27,6 @@
 							<a href="${JForumContext.encodeURL("/user/listGroup/${m.id}")}">${m.name?html}</a>
 							</#list>
 						</span>
-						</#if>
 					</td>
 
 					<td valign="center" nowrap="nowrap" align="right"><@pagination.doPagination action, forum.id/></td>
@@ -146,15 +146,16 @@
 				</form>
 			</#if>
 
-			<#if moderator>
-				<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="form1" id="form1" accept-charset="${encoding}">
-				<input type="hidden" name="action" value="doModeration" />
-				<input type="hidden" name="module" value="${moduleName}" />
-				<input type="hidden" name="securityHash" value="${securityHash}" />
-				<input type="hidden" name="persistData" value="${forum.id}" />
-			</#if>
-
 			<table class="forumline" cellspacing="1" cellpadding="4" width="100%" border="0">
+				<#if moderator>
+					<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="form1" id="form1" accept-charset="${encoding}">
+					<input type="hidden" name="action" value="doModeration" />
+					<input type="hidden" name="module" value="moderation" />
+					<input type="hidden" name="securityHash" value="${securityHash}" />
+					<input type="hidden" name="returnUrl" value="${JForumContext.encodeURL("/${moduleName}/${action}/${start}/${forum.id}")}" />
+					<input type="hidden" name="forum_id" value="${forum.id}">
+				</#if>
+				
 				<tr>
 					<th class="thcornerl" nowrap="nowrap" align="middle" colspan="2" height="25">&nbsp;${I18n.getMessage("ForumIndex.topics")}&nbsp;</th>
 					<th class="thtop" nowrap="nowrap" align="middle" width="50">&nbsp;${I18n.getMessage("ForumIndex.answers")}&nbsp;</th>
@@ -181,7 +182,7 @@
 						</#if>
 					</#if>
 					
-					<tr>
+					<tr class="bg_small_yellow">
 						<td ${class1} valign="center" align="middle" width="20"><@presentation.folderImage topic/></td>
 						<td ${class1} width="100%">
 							<#if topic.hasAttach() && attachmentsEnabled><img src="${contextPath}/templates/${templateName}/images/icon_clip.gif" align="middle"></#if>
@@ -218,7 +219,7 @@
 						</td>
 
 						<#if moderator && openModeration?default(false)>
-							<td ${class2} valign="middle" align="center"><input type="checkbox" name="topic_id" value="${topic.id}" /></td>
+							<td ${class2} valign="middle" align="center"><input type="checkbox" name="topic_id" value="${topic.id}" onClick="changeTrClass(this, ${topic_index});"/></td>
 						</#if>
 					</tr>
 				</#list>		
@@ -229,6 +230,8 @@
 						&nbsp;<@presentation.moderationButtons/>
 					</td>
 				</tr>
+
+				<#if moderator></form></#if>
 			</table>
 
 			<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
@@ -245,8 +248,6 @@
 						<span class="nav">&nbsp;&nbsp;&nbsp;
 						<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a> -&gt;  <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name}</a></span>
 					</td>
-
-					<#if moderator></form></#if>
 
 					<td valign="center" nowrap="nowrap" align="right"><@pagination.doPagination action, forum.id/></td>
 				</tr>

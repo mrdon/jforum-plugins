@@ -84,7 +84,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.46 2005/09/25 02:40:28 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.47 2005/10/08 19:57:54 rafaelsteil Exp $
  */
 public class ForumRepository implements Cacheable
 {
@@ -333,11 +333,20 @@ public class ForumRepository implements Cacheable
 	 * 
 	 * @param c The category to refresh
 	 */
-	public static void refreshCategory(Category c)
+	public synchronized static void refreshCategory(Category c)
 	{
 		cache.add(FQN, Integer.toString(c.getId()), c);
 		Set s = (Set)cache.get(FQN, CATEGORIES_SET);
+		s.remove(c);
+		s.add(c);
 		cache.add(FQN, CATEGORIES_SET, s);
+	}
+	
+	public synchronized static void refreshForum(Forum forum)
+	{
+		Category c = retrieveCategory(forum.getCategoryId());
+		c.addForum(forum);
+		refreshCategory(c);
 	}
 	
 	/**

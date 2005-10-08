@@ -92,7 +92,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.112 2005/10/08 12:12:08 vmal Exp $
+ * @version $Id: PostAction.java,v 1.113 2005/10/08 19:57:52 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -162,15 +162,14 @@ public class PostAction extends Command
 					new Long(topic.getLastPostDate().getTime()));
 		}
 		
-		this.context.put("attachmentsEnabled", SecurityRepository.canAccess(
+		this.context.put("attachmentsEnabled", pc.canAccess(
 				SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(topic.getForumId())));
-		this.context.put("canDownloadAttachments", SecurityRepository.canAccess(
+		this.context.put("canDownloadAttachments", pc.canAccess(
 				SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD));
 		this.context.put("am", new AttachmentCommon(this.request, topic.getForumId()));
 		this.context.put("karmaVotes", DataAccessDriver.getInstance().newKarmaDAO().getUserVotes(topic.getId(), us.getUserId()));
 		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
-		this.context.put("canRemove",
-				SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE));
+		this.context.put("canRemove", pc.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE));
 		this.context.put("canEdit", canEdit);
 		this.setTemplateName(TemplateKeys.POSTS_LIST);
 		this.context.put("allCategories", ForumCommon.getAllCategoriesAndForums(false));
@@ -187,25 +186,22 @@ public class PostAction extends Command
 		
 		this.context.put("users", topicPosters);
 		this.context.put("topicId", new Integer(topicId));
-		this.context.put("anonymousPosts", SecurityRepository.canAccess(SecurityConstants.PERM_ANONYMOUS_POST, 
+		this.context.put("anonymousPosts", pc.canAccess(SecurityConstants.PERM_ANONYMOUS_POST, 
 				Integer.toString(topic.getForumId())));
 		this.context.put("watching", tm.isUserSubscribed(topicId, SessionFacade.getUserSession().getUserId()));
 		this.context.put("pageTitle", topic.getTitle());
-		this.context.put("isAdmin", SecurityRepository.canAccess(SecurityConstants.PERM_ADMINISTRATION));
-		this.context.put("readonly", !SecurityRepository.canAccess(SecurityConstants.PERM_READ_ONLY_FORUMS, 
+		this.context.put("isAdmin", pc.canAccess(SecurityConstants.PERM_ADMINISTRATION));
+		this.context.put("readonly", !pc.canAccess(SecurityConstants.PERM_READ_ONLY_FORUMS, 
 				Integer.toString(topic.getForumId())));
-		this.context.put("replyOnly", !SecurityRepository.canAccess(SecurityConstants.PERM_REPLY_ONLY, 
+		this.context.put("replyOnly", !pc.canAccess(SecurityConstants.PERM_REPLY_ONLY, 
 				Integer.toString(topic.getForumId())));
 
 		this.context.put("isModerator", us.isModerator(topic.getForumId()));
 
-		// Topic Status
-		this.context.put("STATUS_LOCKED", new Integer(Topic.STATUS_LOCKED));
-		this.context.put("STATUS_UNLOCKED", new Integer(Topic.STATUS_UNLOCKED));
-
 		// Pagination
 		ViewCommon.contextToPagination(start, topic.getTotalReplies(), count);
 		
+		TopicsCommon.topicListingBase();
 		TopicRepository.updateTopic(topic);
 	}
 	

@@ -73,7 +73,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.47 2005/09/30 23:19:19 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.48 2005/10/08 19:57:51 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -219,37 +219,19 @@ public class ForumAction extends Command
 
 		TopicsCommon.topicListingBase();
 	}
-	
-	public void doModeration() throws Exception
-	{
-		new ModerationHelper().doModeration(this.makeRedirect("moderationDone"));
-		
-		if (JForum.getRequest().getParameter("topicMove") != null) {
-			this.setTemplateName(TemplateKeys.MODERATION_MOVE_TOPICS);
-		}
-	}
-	
-	public void moveTopic() throws Exception
-	{
-		new ModerationHelper().moveTopicsSave(this.makeRedirect("show"));
-	}
-	
-	public void moderationDone() throws Exception
-	{
-		this.setTemplateName(new ModerationHelper().moderationDone(this.makeRedirect("show")));
-	}
-	
+
 	// Make an URL to some action
 	private String makeRedirect(String action)
 	{
-		String path = this.request.getContextPath() +"/forums/"+ action +"/";
+		String path = this.request.getContextPath() + "/forums/" + action + "/";
 		String thisPage = this.request.getParameter("start");
 		
 		if (thisPage != null && !thisPage.equals("0")) {
-			path += thisPage +"/";
+			path += thisPage + "/";
 		}
 		
 		String forumId = this.request.getParameter("forum_id");
+		
 		if (forumId == null) {
 			forumId = this.request.getParameter("persistData"); 
 		}
@@ -274,7 +256,7 @@ public class ForumAction extends Command
 		for (Iterator iter = allTopics.iterator(); iter.hasNext(); ) {
 			Topic t = (Topic)iter.next();
 			
-			((HashMap)SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(t.getId()), 
+			((Map)SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(t.getId()), 
 					new Long(t.getLastPostDate().getTime()));
 		}
 		

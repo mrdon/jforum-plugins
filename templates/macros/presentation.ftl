@@ -47,14 +47,58 @@
 <#-- Moderation buttons -->
 <#-- ****************** -->
 <#macro moderationButtons>
-	 <#if moderator  && openModeration?default(false)>
+	<#if moderator  && openModeration?default(false)>
 		<#if can_remove_posts?default(false)><input type="submit" name="topicRemove" value="&nbsp;&nbsp;${I18n.getMessage("Delete")}&nbsp;&nbsp;" class="liteoption" onclick="return validateModerationDelete();"></#if>
 		<#if can_move_topics?default(false)><input type="submit" name="topicMove" value="&nbsp;&nbsp;${I18n.getMessage("move")}&nbsp;&nbsp;" class="liteoption" onclick="return verifyModerationCheckedTopics();"></#if>
 		<#if can_lockUnlock_topics?default(false)>
 			<input type="submit" name="topicLock" value="&nbsp;&nbsp;${I18n.getMessage("Lock")}&nbsp;&nbsp;" class="liteoption" onclick="return verifyModerationCheckedTopics();">
 			<input type="submit" name="topicUnlock" value="&nbsp;&nbsp;${I18n.getMessage("Unlock")}&nbsp;&nbsp;" class="liteoption" onclick="return verifyModerationCheckedTopics();">
 		</#if>
-	  </#if>
+	</#if>
+</#macro>
+
+<#-- ****************** -->
+<#-- Moderation images -->
+<#-- ****************** -->
+<#macro moderationImages>
+	<script type="text/javascript">
+	function todo(name) { var todo = document.getElementById("moderationTodo"); todo.name = name; todo.value = "1"; }
+	
+	function deleteTopic() {
+		if (confirm("${I18n.getMessage("Moderation.ConfirmDelete")}")) {
+			todo("topicRemove");
+			document.formModeration.returnUrl.value = "${JForumContext.encodeURL("/forums/show/${topic.forumId}")}";
+			document.formModeration.submit();
+		}
+	}
+
+	function moveTopic() {
+		todo("topicMove");
+		document.formModeration.submit();
+	}
+
+	function lockUnlock(lock) {
+		todo(lock ? "topicLock" : "topicUnlock");
+		document.formModeration.submit();
+	}
+	</script>
+	<#if isModerator>
+		<#if can_remove_posts?default(false)>
+			<a href="javascript:deleteTopic();"><img src="${contextPath}/templates/${templateName}/images/topic_delete.gif" title="${I18n.getMessage("Delete")}"/></a>
+		</#if>
+		
+		<#if can_move_topics?default(false)>
+			<a href="javascript:moveTopic();"><img src="${contextPath}/templates/${templateName}/images/topic_move.gif"  title="${I18n.getMessage("move")}"/></a>
+		</#if>
+
+		<#if can_lockUnlock_topics?default(false)>			
+			<#if topic.status == STATUS_LOCKED>
+				<a href="javascript:lockUnlock(false);"><img src="${contextPath}/templates/${templateName}/images/topic_unlock.gif"  title="${I18n.getMessage("Unlock")}"/></a>
+			<#else>
+				<a href="javascript:lockUnlock(true);"><img src="${contextPath}/templates/${templateName}/images/topic_lock.gif"  title="${I18n.getMessage("Lock")}"/></a>
+			</#if>
+		</#if>
+	</#if>
 </#macro>
 
 <#-- ********************** -->

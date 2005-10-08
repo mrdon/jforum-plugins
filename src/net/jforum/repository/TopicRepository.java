@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: TopicRepository.java,v 1.23 2005/09/30 23:19:18 rafaelsteil Exp $
+ * @version $Id: TopicRepository.java,v 1.24 2005/10/08 19:57:54 rafaelsteil Exp $
  */
 public class TopicRepository implements Cacheable
 {
@@ -295,6 +295,28 @@ public class TopicRepository implements Cacheable
 					l.set(index, topic);
 					cache.add(FQN_FORUM, forumId, l);
 				}
+			}
+		}
+	}
+		
+	/**
+	 * Removes a topic from the cache.
+	 * @param topic The topic to remove. The object instance should
+	 * have at least the topic_id and forum_id fields set
+	 */
+	public static void remove(Topic topic)
+	{
+		synchronized (FQN_FORUM) {
+			if (topic.getForumId() == 0) {
+				throw new IllegalArgumentException("Forum id cannot be empty");
+			}
+			
+			String forumId = Integer.toString(topic.getForumId());
+			List l = (List)cache.get(FQN_FORUM, forumId);
+			
+			if (l != null) {
+				l.remove(topic);
+				cache.add(FQN_FORUM, forumId, l);
 			}
 		}
 	}

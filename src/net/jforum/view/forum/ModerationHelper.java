@@ -46,10 +46,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.jforum.ActionServletRequest;
 import net.jforum.JForum;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
 import net.jforum.dao.TopicDAO;
+import net.jforum.entities.Forum;
 import net.jforum.entities.Topic;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.PostRepository;
@@ -62,9 +64,11 @@ import net.jforum.view.forum.common.ForumCommon;
 
 import org.apache.log4j.Logger;
 
+import freemarker.template.SimpleHash;
+
 /**
  * @author Rafael Steil
- * @version $Id: ModerationHelper.java,v 1.23 2005/09/16 16:29:17 rafaelsteil Exp $
+ * @version $Id: ModerationHelper.java,v 1.24 2005/10/08 19:57:51 rafaelsteil Exp $
  */
 public class ModerationHelper 
 {
@@ -74,34 +78,36 @@ public class ModerationHelper
 	public static final int FAILURE = 2;
 	public static final int IGNORE = 3;
 	
-	public int doModeration(String successUrl) throws Exception
+	public int doModeration(String returnUrl) throws Exception
 	{
 		int status = FAILURE;
 
 		if (SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION)) {
 			// Deleting topics
-			if (JForum.getRequest().getParameter("topicRemove") != null) {
+			ActionServletRequest request = JForum.getRequest();
+			
+			if (request.getParameter("topicRemove") != null) {
 				if (SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE)) {
 					this.removeTopics();
 					
 					status = SUCCESS;
 				}
 			}
-			else if (JForum.getRequest().getParameter("topicMove") != null) {
+			else if (request.getParameter("topicMove") != null) {
 				if (SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_TOPIC_MOVE)) {
 					this.moveTopics();
 					
 					status = IGNORE;
 				}
 			}
-			else if (JForum.getRequest().getParameter("topicLock") != null) {
+			else if (request.getParameter("topicLock") != null) {
 				if (SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_TOPIC_LOCK_UNLOCK)) {
 					this.lockUnlockTopics(Topic.STATUS_LOCKED);
 					
 					status = SUCCESS;
 				}
 			}
-			else if (JForum.getRequest().getParameter("topicUnlock") != null) {
+			else if (request.getParameter("topicUnlock") != null) {
 				if (SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_TOPIC_LOCK_UNLOCK)) {
 					this.lockUnlockTopics(Topic.STATUS_UNLOCKED);
 					
@@ -113,8 +119,8 @@ public class ModerationHelper
 		if (status == ModerationHelper.FAILURE) {
 			this.denied();
 		}
-		else if (status == ModerationHelper.SUCCESS && successUrl != null) {
-			JForum.setRedirect(successUrl);
+		else if (status == ModerationHelper.SUCCESS && returnUrl != null) {
+			JForum.setRedirect(returnUrl);
 		}
 		
 		return status;
@@ -191,44 +197,61 @@ public class ModerationHelper
 	
 	private void moveTopics() throws Exception
 	{
-		JForum.getContext().put("persistData", JForum.getRequest().getParameter("persistData"));
-		JForum.getContext().put("allCategories", ForumCommon.getAllCategoriesAndForums(false));
+		SimpleHash context = JForum.getContext();
+		
+		context.put("persistData", JForum.getRequest().getParameter("persistData"));
+		context.put("allCategories", ForumCommon.getAllCategoriesAndForums(false));
 		
 		String[] topics = JForum.getRequest().getParameterValues("topic_id");
+		
 		if (topics.length > 0) {
 			// If forum_id is null, get from the database
 			String forumId = JForum.getRequest().getParameter("forum_id");
+			
 			if (forumId == null) {
-				forumId = Integer.toString(DataAccessDriver.getInstance().newTopicDAO().selectById(
-						Integer.parseInt(topics[0])).getForumId());
+				int topicId = Integer.parseInt(topics[0]);
+				
+				Topic topic = TopicRepository.getTopic(new Topic(topicId));
+				
+				if (topic == null) {
+					topic = DataAccessDriver.getInstance().newTopicDAO().selectRaw(topicId);
+				}
+				
+				forumId = Integer.toString(topic.getForumId());
 			}
 			
-			JForum.getContext().put("forum_id", forumId);
+			context.put("forum_id", forumId);
 			
 			StringBuffer sb = new StringBuffer(128);
+			
 			for (int i = 0; i < topics.length - 1; i++) {
 				sb.append(topics[i]).append(",");
 			}
 			
 			sb.append(topics[topics.length - 1]);
 			
-			JForum.getContext().put("topics", sb.toString());
+			context.put("topics", sb.toString());
 		}
 	}
 	
 	public int moveTopicsSave(String successUrl) throws Exception
 	{
 		int status = SUCCESS;
+		
 		if (!SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_TOPIC_MOVE)) {
 			status = FAILURE;
 		}
 		else {
-			String topics = JForum.getRequest().getParameter("topics");
+			ActionServletRequest request = JForum.getRequest();
+			String topics = request.getParameter("topics");
+			
 			if (topics != null) {
-				int fromForumId = Integer.parseInt(JForum.getRequest().getParameter("forum_id"));
-				int toForumId = Integer.parseInt(JForum.getRequest().getParameter("to_forum"));
+				int fromForumId = Integer.parseInt(request.getParameter("forum_id"));
+				int toForumId = Integer.parseInt(request.getParameter("to_forum"));
 				
 				DataAccessDriver.getInstance().newForumDAO().moveTopics(topics.split(","), fromForumId, toForumId);
+				
+				Forum fromForum = ForumRepository.getForum(fromForumId);
 				
 				ForumRepository.reloadForum(fromForumId);
 				ForumRepository.reloadForum(toForumId);

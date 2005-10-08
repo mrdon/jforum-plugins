@@ -8,14 +8,16 @@
 <#include "js/karma.js">
 <#include "js/utils.js"/>
 
-function confirmDelete()
-{
-	if (confirm("${I18n.getMessage("Moderation.ConfirmPostDelete")}")) {
-		return true;
+<#if isModerator>
+	function confirmDelete()
+	{
+		if (confirm("${I18n.getMessage("Moderation.ConfirmPostDelete")}")) {
+			return true;
+		}
+		
+		return false;
 	}
-	
-	return false;
-}
+</#if>
 </script>
 
 <table cellspacing="0" cellpadding="10" width="100%" align="center" border="0">
@@ -56,29 +58,17 @@ function confirmDelete()
             			-&gt; <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name} </a>
 					</td>
 					
-					<#if logged?default(false)>
-					<td align="left" valign="middle">
-						<span class="nav">
-						<#assign watch = "watch"/>
-						<#assign watchMessage = I18n.getMessage("PostShow.watch")/>
-						<#if watching>
-							<#assign watch = "unwatch"/>
-							<#assign watchMessage = I18n.getMessage("PostShow.unwatch")/>
-						</#if>
-						
-						<a href="${JForumContext.encodeURL("/posts/${watch}/${start}/${topicId}")}"><img src="${contextPath}/templates/${templateName}/images/watch.gif" align="middle" border="0"></a>
-						<a href="${JForumContext.encodeURL("/posts/${watch}/${start}/${topicId}")}">${watchMessage}</a>
-						
+					<#if logged>
+					<td align="right" valign="middle">
 						<#if bookmarksEnabled>
 							&nbsp;
-							<a href="javascript:addBookmark(2, ${topic.id});"><img src="${contextPath}/templates/${templateName}/images/icon_bookmark.gif" align="middle">&nbsp;${I18n.getMessage("Bookmarks.addTo")}</a>
+							<a href="javascript:addBookmark(2, ${topic.id});" class="gen"><img src="${contextPath}/templates/${templateName}/images/icon_bookmark.gif" align="middle">&nbsp;${I18n.getMessage("Bookmarks.addTo")}</a>
 						</#if>
 						</span>
 					</td>
 					</#if>
 
 					<td valign="middle" align="right"><@pagination.doPagination "list", topic.id/></td>
-			
 				</tr>
 			</table>
 
@@ -259,31 +249,48 @@ function confirmDelete()
 
 				</form>
 
-				
 				</#if>
 				
-				<!--
-		        <tr>
-					<td align="left" colspan="3">
-					<span class="gensmall">
-					<a href="${JForumContext.encodeURL("/posts/unwatch/${topic.id}")}">${I18n.getMessage("PostShow.unwatch")}</a>
-					</span>
-					</td>
-				</tr>
-				
-				<tr>
-					<td colspan="3"><img src="${contextPath}/templates/${templateName}/images/spacer.gif" alt="" width="1" height="1" /></td>
-				</tr>
-				
-				<tr>
-					<td align="left" colspan="2">
-					<img src="${contextPath}/templates/${templateName}/images/topic_delete.gif" border="0"/>
-					<img src="${contextPath}/templates/${templateName}/images/topic_move.gif" border="0"/>
-					<img src="${contextPath}/templates/${templateName}/images/topic_lock.gif" border="0"/>
-					</td>
-					<td align="right">eee</td>
-				</tr>
-				-->
+				<#if logged>
+					<tr>
+						<td align="left" colspan="3">
+							<span class="gensmall">
+							<#assign watch = "watch"/>
+							<#assign watchMessage = I18n.getMessage("PostShow.watch")/>
+							<#if watching>
+								<#assign watch = "unwatch"/>
+								<#assign watchMessage = I18n.getMessage("PostShow.unwatch")/>
+							</#if>
+							
+							<a href="${JForumContext.encodeURL("/posts/${watch}/${start}/${topicId}")}"><img src="${contextPath}/templates/${templateName}/images/watch.gif" align="middle"></a>
+							<a href="${JForumContext.encodeURL("/posts/${watch}/${start}/${topicId}")}">${watchMessage}</a>
+							</span>
+						</td>
+					</tr>
+				</#if>
+					
+				<#if isModerator>
+					<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="formModeration" id="formModeration">
+					<input type="hidden" name="action" value="doModeration" />
+					<input type="hidden" name="module" value="moderation" />
+					<input type="hidden" name="securityHash" value="${securityHash}" />
+					<input type="hidden" name="returnUrl" value="${JForumContext.encodeURL("/${moduleName}/${action}/${start}/${topic.id}")}" />
+					<input type="hidden" name="forum_id" value="${topic.forumId}">
+					<input type="hidden" name="topic_id" value="${topic.id}">
+					<input type="hidden" id="moderationTodo">
+
+					<tr>
+						<td colspan="3"><img src="${contextPath}/templates/${templateName}/images/spacer.gif" alt="" width="1" height="1" /></td>
+					</tr>
+					
+					<tr>
+						<td align="left" colspan="3">
+							<@presentation.moderationImages/>
+						</td>
+					</tr>
+
+					</form>
+				</#if>
 			</table>
 
 			<@presentation.forumsComboTable/>

@@ -64,7 +64,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericGroupSecurityDAO.java,v 1.6 2005/09/26 15:20:04 vmal Exp $
+ * @version $Id: GenericGroupSecurityDAO.java,v 1.7 2005/10/08 19:57:55 rafaelsteil Exp $
  */
 public class GenericGroupSecurityDAO extends AutoKeys implements net.jforum.dao.security.GroupSecurityDAO 
 {
@@ -166,30 +166,30 @@ public class GenericGroupSecurityDAO extends AutoKeys implements net.jforum.dao.
 
     public RoleCollection loadRolesByUserGroups(User user) throws Exception
     {
-	List groups = user.getGroupsList();
-		
-	// For single group, we don't  need to check for merged roles
-	if (groups.size() == 1) {
-	    return (RoleCollection)this.loadGroupRoles(groups).get(0);
-	}
-		
-	// When the user is associated to more than one group, we
-	// should check the merged roles
-	int[] groupIds = this.getSortedGroupIds(groups);
-		
-	RoleCollection groupRoles = RolesRepository.getGroupRoles(groupIds);
-		
-	// Not cached yet? then do it now
-	if (groupRoles == null) {
-	    List l = this.loadGroupRoles(groups);
-	    
-	    groupRoles = new RoleCollection();
-	    UserSecurityHelper.mergeUserGroupRoles(groupRoles, l);
-			
-	    RolesRepository.addMergedGroupRoles(groupIds, groupRoles);
-	}
-		
-	return groupRoles;
+    	List groups = user.getGroupsList();
+    	
+    	// For single group, we don't  need to check for merged roles
+    	if (groups.size() == 1) {
+    		return (RoleCollection)this.loadGroupRoles(groups).get(0);
+    	}
+    	
+    	// When the user is associated to more than one group, we
+    	// should check the merged roles
+    	int[] groupIds = this.getSortedGroupIds(groups);
+    	
+    	RoleCollection groupRoles = RolesRepository.getGroupRoles(groupIds);
+    	
+    	// Not cached yet? then do it now
+    	if (groupRoles == null) {
+    		List l = this.loadGroupRoles(groups);
+    		
+    		groupRoles = new RoleCollection();
+    		UserSecurityHelper.mergeUserGroupRoles(groupRoles, l);
+    		
+    		RolesRepository.addMergedGroupRoles(groupIds, groupRoles);
+    	}
+    	
+    	return groupRoles;
     }
 	
 	/**

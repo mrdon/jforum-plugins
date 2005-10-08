@@ -35,73 +35,52 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
- * /*
- * Created on Feb 3, 2005 5:15:34 PM
-  * The JForum Project
+ * 
+ * Created on 02/10/2005 20:04:15
+ * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.exceptions;
+package net.jforum.view.forum;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
-
+import net.jforum.Command;
 import net.jforum.JForum;
-
-import org.apache.log4j.Logger;
-
-import freemarker.template.Configuration;
-import freemarker.template.Template;
+import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: ExceptionWriter.java,v 1.6 2005/10/08 19:57:55 rafaelsteil Exp $
+ * @version $Id: ModerationAction.java,v 1.1 2005/10/08 19:57:52 rafaelsteil Exp $
  */
-public class ExceptionWriter
+public class ModerationAction extends Command
 {
-	private static Logger logger = Logger.getLogger(ExceptionWriter.class);
-	
-	public void handleExceptionData(Throwable t, Writer w)
+	/**
+	 * @throws UnsupportedOperationException always
+	 * @see net.jforum.Command#list()
+	 */
+	public void list() throws Exception
 	{
-		StringWriter strWriter = new StringWriter();
-		PrintWriter writer = new PrintWriter(strWriter);
-		t.printStackTrace(writer);		
-		writer.close();
+		throw new UnsupportedOperationException();
+	}
+	
+	public void doModeration() throws Exception
+	{
+		String returnUrl = this.request.getParameter("returnUrl");
 		
-		try {
-			logger.error(strWriter);
-			String message = "";
-			
-			if (t.getCause() != null) {
-				message = t.getCause().getMessage();
-			}
-			
-			if (message == null) {
-				message = t.getMessage();
-			}
-			
-			if (message == null) {
-				message = t.toString();
-			}
-
-			String filter = "[<>]";
-			String stackTrace = strWriter.toString();
-			
-			stackTrace = stackTrace.replaceAll(filter, "");
-			message = message.replaceAll(filter, "");
-			
-			JForum.getContext().put("stackTrace", stackTrace);
-			JForum.getContext().put("message", message);
-
-			Template template = Configuration.getDefaultConfiguration().getTemplate("exception.html");
-			template.process(JForum.getContext(), w);
+		new ModerationHelper().doModeration(returnUrl);
+		
+		this.context.put("returnUrl", returnUrl);
+		
+		if (JForum.getRequest().getParameter("topicMove") != null) {
+			this.setTemplateName(TemplateKeys.MODERATION_MOVE_TOPICS);
 		}
-		catch (Exception e) {
-			strWriter = new StringWriter();
-			writer = new PrintWriter(strWriter);
-			t.printStackTrace(writer);
-			writer.close();
-			logger.error(strWriter);
-		}
+	}
+	
+	public void moveTopic() throws Exception
+	{
+		new ModerationHelper().moveTopicsSave(this.request.getParameter("returnUrl"));
+	}
+	
+	public void moderationDone() throws Exception
+	{
+		this.setTemplateName(new ModerationHelper().moderationDone(this.request.getParameter("returnUrl")));
 	}
 }

@@ -59,6 +59,7 @@ import net.jforum.entities.UserSession;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.repository.TopicRepository;
+import net.jforum.security.PermissionControl;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.concurrent.executor.QueuedExecutor;
@@ -76,7 +77,7 @@ import freemarker.template.SimpleHash;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.20 2005/09/30 23:19:23 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.21 2005/10/08 19:57:56 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
@@ -175,6 +176,7 @@ public class TopicsCommon
 	public static void topicListingBase() throws Exception
 	{
 		SimpleHash context = JForum.getContext();
+		
 		// Topic Types
 		context.put("TOPIC_ANNOUNCE", new Integer(Topic.TYPE_ANNOUNCE));
 		context.put("TOPIC_STICKY", new Integer(Topic.TYPE_STICKY));
@@ -185,10 +187,12 @@ public class TopicsCommon
 		context.put("STATUS_UNLOCKED", new Integer(Topic.STATUS_UNLOCKED));
 		
 		// Moderation
-		context.put("moderator", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION));
-		context.put("can_remove_posts", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE));
-		context.put("can_move_topics", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_TOPIC_MOVE));
-		context.put("can_lockUnlock_topics", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_TOPIC_LOCK_UNLOCK));
+		PermissionControl pc = SecurityRepository.get(SessionFacade.getUserSession().getUserId());
+		
+		context.put("moderator", pc.canAccess(SecurityConstants.PERM_MODERATION));
+		context.put("can_remove_posts", pc.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE));
+		context.put("can_move_topics", pc.canAccess(SecurityConstants.PERM_MODERATION_TOPIC_MOVE));
+		context.put("can_lockUnlock_topics", pc.canAccess(SecurityConstants.PERM_MODERATION_TOPIC_LOCK_UNLOCK));
 		context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
 	}
 	
