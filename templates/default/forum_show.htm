@@ -252,15 +252,6 @@
 
 			<table cellspacing="0" cellpadding="0" width="100%" align="center" border="0">
 				<tr>
-					<td valign="top" align="right" class="gensmall">
-							${I18n.getMessage("ForumIndex.forumadmins")}:
-							<#assign moderators = forum.getModeratorList()/>
-							<b><#list moderators as m>
-							<a href="${JForumContext.encodeURL("/user/listGroup/${m.id}")}">${m.name?html}</a>
-							</#list></b>
-					</td>
-				</tr>
-				<tr>
 					<td valign="top" align="left">
 						<table cellspacing="3" cellpadding="0" border="0">
 							<tr>
@@ -296,7 +287,13 @@
 							</t>
 						</table>
 					</td>
-					<td align="right"><span class="gensmall"></span></td>
+					<td align="right" class="gensmall">
+						${I18n.getMessage("ForumIndex.forumAdmins")}:
+						<#assign moderators = forum.getModeratorList()/>
+						<b><#list moderators as m>
+						<a href="${JForumContext.encodeURL("/user/listGroup/${m.id}")}">${m.name?html}</a>
+						</#list></b>
+					</td>
 				</tr>
 			</table>
 		</td>
