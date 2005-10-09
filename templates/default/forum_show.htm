@@ -14,19 +14,10 @@
 			<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
 				<tr>
 					<td valign="bottom" align="left" colspan="2">
-						<a class="maintitle" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name}</a>
+						<a class="maintitle" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name?html}</a>
 						<#if rssEnabled>
 							<a href="${JForumContext.encodeURL("/rss/forumTopics/${forum.id}")}"><img src="${contextPath}/templates/${templateName}/images/xml_button.gif" border="0"></a>
-							<br />
 						</#if>
-						<span class="gensmall">
-							<b>${I18n.getMessage("ForumIndex.moderators")}:
-							
-							<#assign moderators = forum.getModeratorList()/>
-							<#list moderators as m>
-							<a href="${JForumContext.encodeURL("/user/listGroup/${m.id}")}">${m.name?html}</a>
-							</#list>
-						</span>
 					</td>
 
 					<td valign="center" nowrap="nowrap" align="right"><@pagination.doPagination action, forum.id/></td>
@@ -42,7 +33,7 @@
 					</#if>
 
 					<td class="nav" valign="center" align="left" width="100%" colspan="${colspan?default("")}">
-						<span class="nav">&nbsp;&nbsp;&nbsp;<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a> -&gt; <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name}</a></span>                                                					
+						<span class="nav">&nbsp;&nbsp;&nbsp;<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a> -&gt; <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name?html}</a></span>                                                					
                                         </td>
 
 					<td class="nav" valign="bottom" nowrap="nowrap" align="right">
@@ -246,7 +237,7 @@
 
 					<td valign="center" align="left" width="100%" colspan="${colspan?default("0")}">
 						<span class="nav">&nbsp;&nbsp;&nbsp;
-						<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a> -&gt;  <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name}</a></span>
+						<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a> -&gt;  <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name?html}</a></span>
 					</td>
 
 					<td valign="center" nowrap="nowrap" align="right"><@pagination.doPagination action, forum.id/></td>
@@ -260,6 +251,15 @@
 			<@presentation.forumsComboTable/>
 
 			<table cellspacing="0" cellpadding="0" width="100%" align="center" border="0">
+				<tr>
+					<td valign="top" align="right" class="gensmall">
+							${I18n.getMessage("ForumIndex.forumadmins")}:
+							<#assign moderators = forum.getModeratorList()/>
+							<b><#list moderators as m>
+							<a href="${JForumContext.encodeURL("/user/listGroup/${m.id}")}">${m.name?html}</a>
+							</#list></b>
+					</td>
+				</tr>
 				<tr>
 					<td valign="top" align="left">
 						<table cellspacing="3" cellpadding="0" border="0">
