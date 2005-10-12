@@ -3,7 +3,6 @@
 	<classpathentry output="WEB-INF/classes" kind="src" path="src"/>
 	<classpathentry output="WEB-INF/classes" kind="src" path="tests/core"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="WEB-INF/lib/log4j-1.2.8.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/activation.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/mail.jar"/>
 	<classpathentry kind="lib" path="lib/servlet-api.jar"/>
@@ -15,13 +14,14 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/jboss-system.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/mysql-connector-java-3.1.4-beta-bin.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/postgresql-8.0.309.jdbc3.jar"/>
-	<classpathentry sourcepath="C:/java/quartz-1.4.4/src" kind="lib" path="WEB-INF/lib/quartz-1.4.4.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/concurrent.jar"/>
-	<classpathentry kind="lib" path="WEB-INF/lib/commons-io-1.1-dev.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/dwr-0.8.1-jforum.jar"/>
 	<classpathentry sourcepath="C:/java/jcaptcha-src-1.0-RC2.0.1" kind="lib" path="WEB-INF/lib/jcaptcha-all-1.0-RC2.0.1.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/jboss-cache-1.2.3.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/jgroups-2.2.8.jar"/>
-	<classpathentry kind="lib" path="WEB-INF/lib/freemarker-2.3.3.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/quartz-1.5.1.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/commons-io-1.1.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/log4j-1.2.12.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/freemarker-2.3.4.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>
