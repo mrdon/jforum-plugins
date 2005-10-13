@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -46,7 +46,7 @@ import java.util.List;
 
 /**
  * @author Dmitriy Kiriy
- * @version $Id: OracleTopicDAO.java,v 1.6 2005/09/12 21:05:26 rafaelsteil Exp $
+ * @version $Id: OracleTopicDAO.java,v 1.7 2005/10/13 23:48:19 rafaelsteil Exp $
  */
 public class OracleTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 {
@@ -56,5 +56,13 @@ public class OracleTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 	public List selectAllByForumByLimit(int forumId, int startFrom, int count) throws Exception
 	{
 		return super.selectAllByForumByLimit(forumId, startFrom, startFrom + count);
+	}
+	
+	/**
+	 * @see net.jforum.dao.TopicDAO#selectByUserByLimit(int, int, int)
+	 */
+	public List selectByUserByLimit(int userId, int startFrom, int count) throws Exception
+	{
+		return super.selectByUserByLimit(userId, startFrom, startFrom + count);
 	}
 }

@@ -92,7 +92,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.113 2005/10/08 19:57:52 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.114 2005/10/13 23:48:19 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -152,7 +152,9 @@ public class PostAction extends Command
 		}
 
 		// Set the topic status as read
-		tm.updateReadStatus(topic.getId(), us.getUserId(), true);
+		if (us.getUserId() != anonymousUser) {
+			tm.updateReadStatus(topic.getId(), us.getUserId(), true);
+		}
 		
 		tm.incrementTotalViews(topic.getId());
 		topic.setTotalViews(topic.getTotalViews() + 1);
@@ -907,6 +909,16 @@ public class PostAction extends Command
 			attachments.insertAttachments(p);
 			
 			if (!moderate) {
+				// Sets the url to redirect to
+				String path = this.request.getContextPath() + "/posts/list/";
+				int start = ViewCommon.getStartPage();
+	
+				path += this.startPage(t, start) + "/";
+				path += t.getId() + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#" + postId;
+	
+				JForum.setRedirect(path);
+				
+				// Updates forum stats, cache and etc
 				if (!newTopic) {
 					TopicsCommon.notifyUsers(t, tm);
 					t.setTotalReplies(t.getTotalReplies() + 1);
@@ -919,18 +931,10 @@ public class PostAction extends Command
 				TopicsCommon.updateBoardStatus(t, postId, firstPost, tm, fm);
 				ForumRepository.updateForumStats(t, u, p);
 				
-				String path = this.request.getContextPath() + "/posts/list/";
-				int start = ViewCommon.getStartPage();
-	
-				path += this.startPage(t, start) + "/";
-				path += t.getId() + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#" + postId;
-	
-				JForum.setRedirect(path);
-	
 				int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 				if (u.getId() != anonymousUser) {
 					((Map) SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(t.getId()),
-							new Long(p.getTime().getTime()));
+						new Long(p.getTime().getTime()));
 				}
 				
 				if (SystemGlobals.getBoolValue(ConfigKeys.POSTS_CACHE_ENABLED)) {
@@ -966,11 +970,8 @@ public class PostAction extends Command
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 
 		int newStart = (t.getTotalReplies() + 1) / postsPerPage * postsPerPage;
-		if (newStart > currentStart) {
-			return newStart;
-		}
 		
-		return currentStart;
+		return (newStart > currentStart) ? newStart : currentStart;
 	}
 
 	public void delete() throws Exception 

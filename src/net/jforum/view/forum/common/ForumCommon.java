@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumCommon.java,v 1.8 2005/10/08 22:37:46 rafaelsteil Exp $
+ * @version $Id: ForumCommon.java,v 1.9 2005/10/13 23:48:18 rafaelsteil Exp $
  */
 public class ForumCommon 
 {
@@ -82,7 +82,7 @@ public class ForumCommon
 		if (tracking != null && tracking.containsKey(topicId)) {
 			long readTime = ((Long)tracking.get(topicId)).longValue();
 		
-			forum.setUnread(lpi.getPostTimeMillis() > readTime);
+			forum.setUnread(readTime > 0 && lpi.getPostTimeMillis() > readTime);
 		}
 		else {
 			forum.setUnread(lpi.getPostTimeMillis() > lastVisit);

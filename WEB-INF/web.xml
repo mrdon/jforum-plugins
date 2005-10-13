@@ -83,7 +83,7 @@
     
 	<welcome-file-list>
 		<welcome-file>index.htm</welcome-file>
-	</welcome-file-list> 
+	</welcome-file-list>
 
 	<!-- SSO -->
 	<!-- Example of SSO configuration -->

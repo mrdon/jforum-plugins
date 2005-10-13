@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -44,7 +44,6 @@ package net.jforum.dao.oracle;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
 
 import net.jforum.JForum;
@@ -53,7 +52,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Dmitriy Kiriy
- * @version $Id: OraclePostDAO.java,v 1.5 2005/07/26 03:04:57 rafaelsteil Exp $
+ * @version $Id: OraclePostDAO.java,v 1.6 2005/10/13 23:48:19 rafaelsteil Exp $
  */
 public class OraclePostDAO extends net.jforum.dao.generic.GenericPostDAO
 {
@@ -105,22 +104,14 @@ public class OraclePostDAO extends net.jforum.dao.generic.GenericPostDAO
 	 */
 	public List selectAllByTopicByLimit(int topicId, int startFrom, int count) throws Exception
 	{
-		List l = new ArrayList();
-		
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.selectAllByTopicByLimit"));
-		p.setInt(1, topicId);
-		p.setInt(2, startFrom);
-		p.setInt(3, startFrom + count);
-		
-		ResultSet rs = p.executeQuery();
-						
-		while (rs.next()) {
-			l.add(super.makePost(rs));
-		}
-		
-		rs.close();
-		p.close();
-				
-		return l;
+		return super.selectAllByTopicByLimit(topicId, startFrom, startFrom + count);
+	}
+	
+	/**
+	 * @see net.jforum.dao.PostDAO#selectByUserByLimit(int, int, int)
+	 */
+	public List selectByUserByLimit(int userId,int startFrom, int count) throws Exception
+	{
+		return super.selectByUserByLimit(userId, startFrom, startFrom + count);
 	}
 }
