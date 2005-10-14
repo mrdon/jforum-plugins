@@ -60,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * Authenticate users against a LDAP server. 
  * 
  * @author Rafael Steil
- * @version $Id: LDAPAuthenticator.java,v 1.4 2005/07/26 04:01:25 diegopires Exp $
+ * @version $Id: LDAPAuthenticator.java,v 1.5 2005/10/14 00:30:31 rafaelsteil Exp $
  */
 public class LDAPAuthenticator implements LoginAuthenticator
 {
@@ -93,10 +93,10 @@ public class LDAPAuthenticator implements LoginAuthenticator
 	{
 		Hashtable environment = this.prepareEnvironment();
 		
-		String principal = SystemGlobals.getValue(ConfigKeys.LDAP_USER_PREFIX)
+		String principal = SystemGlobals.getValue(ConfigKeys.LDAP_LOGIN_PREFIX)
 			+ username
 			+ ","
-			+ SystemGlobals.getValue(ConfigKeys.LDAP_ORGANIZATION_PREFIX);
+			+ SystemGlobals.getValue(ConfigKeys.LDAP_LOGIN_SUFFIX);
 		
 		environment.put(Context.SECURITY_PRINCIPAL, principal);
 		environment.put(Context.SECURITY_CREDENTIALS, password);
@@ -106,7 +106,20 @@ public class LDAPAuthenticator implements LoginAuthenticator
 		try {
 			dir = new InitialDirContext(environment);
 			
-			Attribute att = dir.getAttributes(principal).get(SystemGlobals.getValue(ConfigKeys.LDAP_FIELD_EMAIL));
+			String lookupPrefix = SystemGlobals.getValue(ConfigKeys.LDAP_LOOKUP_PREFIX);
+			String lookupSuffix = SystemGlobals.getValue(ConfigKeys.LDAP_LOOKUP_SUFFIX);
+			
+			if (lookupPrefix == null || lookupPrefix.length() == 0) {
+				lookupPrefix = SystemGlobals.getValue(ConfigKeys.LDAP_LOGIN_PREFIX);
+			}
+			
+			if (lookupSuffix == null || lookupSuffix .length() == 0) {
+				lookupSuffix = SystemGlobals.getValue(ConfigKeys.LDAP_LOGIN_SUFFIX);
+			}
+
+			String lookupPrincipal = lookupPrefix + username + "," + lookupSuffix ;
+
+			Attribute att = dir.getAttributes(lookupPrincipal ).get(SystemGlobals.getValue(ConfigKeys.LDAP_FIELD_EMAIL));
 			
 			SSOUtils utils = new SSOUtils();
 			

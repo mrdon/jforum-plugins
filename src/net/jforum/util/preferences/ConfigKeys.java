@@ -48,7 +48,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.75 2005/10/14 00:01:01 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.76 2005/10/14 00:30:32 rafaelsteil Exp $
 */
 
 public class ConfigKeys 
@@ -232,10 +232,12 @@ public class ConfigKeys
 	public static final String LDAP_SECURITY_PROTOCOL = "ldap.security.protocol";
 	public static final String LDAP_AUTHENTICATION = "ldap.authentication";
 	public static final String LDAP_FACTORY = "ldap.factory";
-	public static final String LDAP_USER_PREFIX = "ldap.user.prefix";
-	public static final String LDAP_ORGANIZATION_PREFIX = "ldap.organization.prefix";
+	public static final String LDAP_LOGIN_PREFIX = "ldap.login.prefix";
+	public static final String LDAP_LOGIN_SUFFIX = "ldap.login.suffix";
 	public static final String LDAP_SERVER_URL = "ldap.server.url";
 	public static final String LDAP_FIELD_EMAIL = "ldap.field.email";
+	public static final String LDAP_LOOKUP_PREFIX = "ldap.lookup.prefix";
+	public static final String LDAP_LOOKUP_SUFFIX = "ldap.lookup.suffix";
 	
 	public static final String CLICKSTREAM_CONFIG = "clickstream.config";
 	public static final String IS_BOT = "clickstream.is.bot";
