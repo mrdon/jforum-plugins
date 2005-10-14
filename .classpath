@@ -23,5 +23,6 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/commons-io-1.1.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/log4j-1.2.12.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/freemarker-2.3.4.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/ehcache-1.1.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>
