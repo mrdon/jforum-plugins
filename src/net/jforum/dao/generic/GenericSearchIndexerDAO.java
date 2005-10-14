@@ -52,11 +52,12 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import net.jforum.entities.Post;
+import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericSearchIndexerDAO.java,v 1.10 2005/08/30 21:44:04 rafaelsteil Exp $
+ * @version $Id: GenericSearchIndexerDAO.java,v 1.11 2005/10/14 00:01:00 rafaelsteil Exp $
  */
 public class GenericSearchIndexerDAO extends AutoKeys implements net.jforum.dao.SearchIndexerDAO
 {
@@ -75,6 +76,8 @@ public class GenericSearchIndexerDAO extends AutoKeys implements net.jforum.dao.
 	 */
 	public void insertSearchWords(List posts) throws Exception
 	{
+		int minWordSize = SystemGlobals.getIntValue(ConfigKeys.SEARCH_MIN_WORD_SIZE);
+		int maxWordSize = SystemGlobals.getIntValue(ConfigKeys.SEARCH_MAX_WORD_SIZE);
 		StringBuffer sb = new StringBuffer(512);
 		
 		String matchSql = SystemGlobals.getSql("SearchModel.associateWordToPost");
@@ -87,7 +90,7 @@ public class GenericSearchIndexerDAO extends AutoKeys implements net.jforum.dao.
 			String text = new StringBuffer(p.getText()).append(" ")
 				.append(p.getSubject()).toString();
 			
-			text = text.toLowerCase().replaceAll("[\\.\\\\\\/~^&\\(\\)-+=!@#$%\"\'\\[\\]\\{\\}?<:>,*\n\r\t]", " ");
+			text = text.toLowerCase().replaceAll("[\\.\\\\\\/~\\^\\&\\(\\)\\-_+=!@#\\$%\"\'\\[\\]\\{\\}\\?<\\:>,\\*\n\r\t]", " ");
 
 			List allWords = new ArrayList();
 
@@ -99,8 +102,11 @@ public class GenericSearchIndexerDAO extends AutoKeys implements net.jforum.dao.
 			while (st.hasMoreTokens()) {
 				String w = st.nextToken().trim();
 				
-				if (w.length() < 3) {
+				if (w.length() < minWordSize) {
 					continue;
+				}
+				else if (w.length() > maxWordSize) {
+					w = w.substring(0, maxWordSize);
 				}
 				
 				if (!allWords.contains(w)) {

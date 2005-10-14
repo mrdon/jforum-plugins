@@ -48,7 +48,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.74 2005/10/02 19:06:49 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.75 2005/10/14 00:01:01 rafaelsteil Exp $
 */
 
 public class ConfigKeys 
@@ -223,6 +223,7 @@ public class ConfigKeys
 	public static final String SEARCH_LAST_POST_ID = "last.post.id";
 	public static final String SEARCH_INDEXER_STEP = "indexer.step";
 	public static final String SEARCH_MIN_WORD_SIZE = "search.min.word.size";
+	public static final String SEARCH_MAX_WORD_SIZE = "search.max.word.size";
 	public static final String SEARCH_WORD_MATCHING = "search.word.matching";
 	
 	public static final String TOPIC_TIME_FIELD = "topic.time.field";

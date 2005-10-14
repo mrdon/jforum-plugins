@@ -61,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericSearchDAO.java,v 1.8 2005/09/12 21:05:21 rafaelsteil Exp $
+ * @version $Id: GenericSearchDAO.java,v 1.9 2005/10/14 00:01:00 rafaelsteil Exp $
  */
 public class GenericSearchDAO implements net.jforum.dao.SearchDAO	
 {
@@ -138,14 +138,23 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 		PreparedStatement p = JForum.getConnection().prepareStatement(sql);
 
 		Map eachWordMap = new HashMap();
+		
+		int maxWordSize = SystemGlobals.getIntValue(ConfigKeys.SEARCH_MAX_WORD_SIZE);
 
 		// Get the post ids to which the words are associated to
 		for (int i = 0; i < sd.getKeywords().length; i++) {
+			String word = sd.getKeywords()[i].toLowerCase();
+			
+			if (word.length() > maxWordSize) {
+				//truncate the word
+				word = word.substring(0, maxWordSize);
+			}
+			
 			if (isLike) {
-				p.setString(1, "%" + sd.getKeywords()[i].toLowerCase() + "%");
+				p.setString(1, "%" + word + "%");
 			}
 			else {
-				p.setString(1, sd.getKeywords()[i].toLowerCase());
+				p.setString(1, word);
 			}
 			
 			Set postsIds = new HashSet();
