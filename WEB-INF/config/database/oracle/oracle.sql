@@ -86,6 +86,33 @@ PostModel.selectAllByTopicByLimit = SELECT * FROM ( \
 WHERE LINENUM BETWEEN ? AND ?
 
 
+PostModel.selectByUserByLimit = SELECT * FROM ( \
+    SELECT p.post_id, topic_id, forum_id, p.user_id, post_time, poster_ip, enable_bbcode, p.attach, \
+	enable_html, enable_smilies, enable_sig, post_edit_time, post_edit_count, status, pt.post_subject, pt.post_text, username, p.need_moderate, \
+	ROW_NUMBER() OVER(ORDER BY p.post_time ASC) LINENUM \
+	FROM jforum_posts p, jforum_posts_text pt, jforum_users u \
+	WHERE p.post_id = pt.post_id \
+	AND p.user_id = u.user_id \
+	AND p.user_id = ? \
+	AND p.need_moderate = 0 \
+	ORDER BY post_time ASC \
+) \
+WHERE LINENUM BETWEEN ? AND ?
+
+TopicModel.selectByUserByLimit = SELECT * FROM ( \
+    SELECT t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time, p.attach, \
+    ROW_NUMBER() OVER(ORDER BY p2.post_time ASC) LINENUM \
+	FROM jforum_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2 \
+	WHERE t.user_id = u.user_id \
+	AND t.user_id = ? \
+	AND p.post_id = t.topic_first_post_id \
+	AND p2.post_id = t.topic_last_post_id \
+	AND u2.user_id = p2.user_id \
+	AND p.need_moderate = 0 \
+	ORDER BY p2.post_time DESC, t.topic_last_post_id DESC \
+) \
+WHERE LINENUM BETWEEN ? AND ?
+
 # #############
 # ForumModel
 # #############
@@ -178,7 +205,7 @@ PrivateMessagesModel.lastGeneratedPmId = SELECT jforum_privmsgs_seq.currval FROM
 # ############
 # SearchModel
 # ############
-SearchModel.insertWords = INSERT INTO jforum_search_words (word_id, word_hash, word ) VALUES (jforum_search_words_seq.nextval, ?, ?)
+SearchModel.insertWords = INSERT INTO jforum_search_words (word_id, word, word_hash) VALUES (jforum_search_words_seq.nextval, ?, ?)
 
 SearchModel.searchBase = SELECT t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time, p.attach \
 	FROM jforum_search_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2, jforum_forums f, jforum_search_results sr \
@@ -208,6 +235,23 @@ SearchModel.selectTopicData = INSERT INTO jforum_search_topics (topic_id, forum_
 
 SearchModel.lastGeneratedWordId = SELECT jforum_search_words_seq.currval FROM DUAL
 
+SearchModel.getPostsToIndex = SELECT * FROM ( \
+	SELECT p.post_id, pt.post_text, pt.post_subject, \
+	ROW_NUMBER() OVER(ORDER BY p.post_id) LINENUM \
+	FROM jforum_posts p, jforum_posts_text pt \
+	WHERE p.post_id = pt.post_id \
+	AND p.post_id BETWEEN ? AND ? \
+	) \
+	WHERE LINENUM BETWEEN ? AND ?
+
+SearchModel.getPostsToIndex = SELECT * FROM (  \
+	SELECT row_.*, rownum rownum_ from ( \
+	SELECT p.post_id, pt.post_text, pt.post_subject \
+	FROM jforum_posts p, jforum_posts_text pt \
+	WHERE p.post_id = pt.post_id \
+	AND p.post_id BETWEEN ? AND ?) \
+	row_ where rownum < ?) \
+	where rownum_ >= ?
 #
 # The construction ((SYSDATE - time_field)*24) > 1.0 mean following:
 # (SYSDATE - time_field) return days. E.q if delta is 20 minuts it return 0.0125. If multyply on 24, that it would be hours - 0.3
