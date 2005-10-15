@@ -30,7 +30,7 @@
 	</tr>
 
 	<tr align="right">
-	  <td class="catbottom" colspan="5" height="29">  <input type="submit" name="submit" class="liteoption" value="Submit" /></td>
+	  <td class="catbottom" colspan="5" height="29">  <input type="submit" name="submit" class="liteoption" value="${I18n.getMessage("submit")}" /></td>
 	</tr>
 </form>
 
@@ -77,7 +77,7 @@
 		</#list>
 
 		<tr align="right">
-		  <td class="catbottom" colspan="5" height="29"> <input type="submit" name="submit" class="liteoption" value="Submit" /></td>
+		  <td class="catbottom" colspan="5" height="29"> <input type="submit" name="submit" class="liteoption" value="${I18n.getMessage("submit")}" /></td>
 		</tr>
 	</#if>
 </table>
@@ -86,7 +86,7 @@
 
 <#macro quotaCombo n quotaId>
 	<select name="limit_${n}"/>
-	<option value="">-- Choose limit --</option>
+	<option value="">-- ${I18n.getMessage("AdminAttachments.quotaChooseLimit")} --</option>
 	<#list quotas as q>
 		<option value="${q.id}" <#if q.id == quotaId>selected</#if>>${q.description}</option>
 	</#list>
@@ -127,7 +127,7 @@
 	</#list>
 
 	<tr align="right">
-	  <td class="catbottom" colspan="5" height="29" align="center"> <input type="submit" name="submit" class="liteoption" value="Submit" /></td>
+	  <td class="catbottom" colspan="5" height="29" align="center"> <input type="submit" name="submit" class="liteoption" value="${I18n.getMessage("submit")}" /></td>
 	</tr>
 </table>
 </form>

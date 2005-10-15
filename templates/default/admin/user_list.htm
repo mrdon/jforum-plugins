@@ -18,9 +18,6 @@
 			<input type="hidden" name="securityHash" value="${securityHash}" />
 
 			<input type="text" name="username" value="${search?default("")}" />&nbsp;
-
-			or
-
 			${I18n.getMessage("User.searchByGroup")}: 
 			<@lib.selectFieldGroups "group_id", groups, 0, false, selectedList/>
 
