@@ -29,7 +29,7 @@
 					<td valign="center" align="left" colspan="${colspan?default("0")}">
 						<span class="nav">
 						<a href="${JForumContext.encodeURL("/user/profile/${u.id}")}">${I18n.getMessage("UserProfile.profileFor")} ${u.username}</a> 
-            			-&gt; <a href="${JForumContext.encodeURL("/posts/listByUser/${u.id}")}">${I18n.getMessage("PostShow.userPosts")}</a> [${totalRecords}]
+            			-&gt; <a href="${JForumContext.encodeURL("/posts/listByUser/${u.id}")}">${I18n.getMessage("PostShow.userPosts")} ${u.username}</a> [${totalRecords}]
 						</span>
 					</td>
 										
@@ -114,7 +114,7 @@
 					<td valign="center" align="left" colspan="${colspan?default("0")}">
 						<span class="nav">
 						<a href="${JForumContext.encodeURL("/user/profile/${u.id}")}">${I18n.getMessage("UserProfile.profileFor")} ${u.username}</a> 
-            			-&gt; <a href="${JForumContext.encodeURL("/posts/listByUser/${u.id}")}">${I18n.getMessage("PostShow.userPosts")}</a> [${totalRecords}]
+            			-&gt; <a href="${JForumContext.encodeURL("/posts/listByUser/${u.id}")}">${I18n.getMessage("PostShow.userPosts")} ${u.username}</a> [${totalRecords}]
 						</span>
 					</td>
 
