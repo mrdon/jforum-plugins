@@ -30,7 +30,7 @@
 	<select name="${name}" <#if multiple>multiple size="4"</#if>>
 	
 	<#if !multiple>
-		<option value="0">Top level Group</option>
+		<option value="0">${I18n.getMessage("topLevelGroup")}</option>
 	</#if>
 		
 	<#assign len = groups.size() - 1>
