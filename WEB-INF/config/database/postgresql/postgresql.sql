@@ -42,7 +42,7 @@ PostModel.selectByUserByLimit = SELECT p.post_id, topic_id, forum_id, p.user_id,
 	AND p.user_id = u.user_id \
 	AND p.user_id = ? \
 	AND p.need_moderate = 0 \
-	ORDER BY post_time ASC \
+	ORDER BY post_time DESC \
 	LIMIT ? OFFSET ?
 		
 # #############
