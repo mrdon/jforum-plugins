@@ -260,7 +260,7 @@ SearchModel.getPostsToIndex = SELECT * FROM (  \
 SearchModel.cleanSearchResults = DELETE FROM jforum_search_results WHERE session_id = ? OR ((SYSDATE - search_time)*24) > 1.0
 SearchModel.cleanSearchTopics = DELETE FROM jforum_search_topics WHERE session_id = ? OR ((SYSDATE - search_time)*24) > 1.0
 
-SearchModel.searchByTime = INSERT INTO jforum_search_results (topic_id, session_id, time_field) SELECT DISTINCT t.topic_id, ?, SYSDATE FROM jforum_topics t, jforum_posts p \
+SearchModel.searchByTime = INSERT INTO jforum_search_results (topic_id, session_id, search_time) SELECT DISTINCT t.topic_id, ?, SYSDATE FROM jforum_topics t, jforum_posts p \
 	WHERE t.topic_id = p.topic_id \
 	AND p.post_time > ?
 
