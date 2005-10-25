@@ -47,10 +47,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import net.jforum.Command;
-import net.jforum.ControllerUtils;
-import net.jforum.JForum;
-import net.jforum.SessionFacade;
+import net.jforum.*;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.UserDAO;
 import net.jforum.dao.UserSessionDAO;
@@ -78,7 +75,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.55 2005/09/28 14:49:21 vmal Exp $
+ * @version $Id: UserAction.java,v 1.56 2005/10/25 14:29:34 alexieong Exp $
  */
 public class UserAction extends Command 
 {
@@ -307,10 +304,17 @@ public class UserAction extends Command
 	{
 		boolean validInfo = false;
 
-		String password = this.request.getParameter("password");
+        String username, password;
+        if (parseBasicAuthentication()) {
+            username = (String) this.request.getAttribute("username");
+            password = (String) this.request.getAttribute("password");
+        } else {
+            username = this.request.getParameter("username");
+            password = this.request.getParameter("password");
+        }
 		
 		if (password.length() > 0) {
-			User user = this.validateLogin(this.request.getParameter("username"), password);
+			User user = this.validateLogin(username, password);
 
 			if (user != null) {
 				JForum.setRedirect(this.request.getContextPath()
@@ -398,7 +402,31 @@ public class UserAction extends Command
 		}
 	}
 
-	private User validateLogin(String name, String password) throws Exception 
+    public void validateLogin(ActionServletRequest request) throws Exception {
+        this.request = request;
+        validateLogin();
+    }
+
+    public static boolean hasBasicAuthentication(ActionServletRequest request) {
+        String auth = request.getHeader("Authorization");
+        return (auth != null && auth.startsWith("Basic "));
+    }
+
+    private boolean parseBasicAuthentication() throws Exception {
+        if (hasBasicAuthentication(request)) {
+            String auth = request.getHeader("Authorization");
+            String decoded = new String(new sun.misc.BASE64Decoder().decodeBuffer(auth.substring(6)));
+            int p = decoded.indexOf(':');
+            if (p != -1) {
+                request.setAttribute("username", decoded.substring(0, p));
+                request.setAttribute("password", decoded.substring(p + 1));
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private User validateLogin(String name, String password) throws Exception
 	{
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		User user = um.validateLogin(name, password);

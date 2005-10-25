@@ -49,6 +49,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.jforum.ActionServletRequest;
 import net.jforum.Command;
 import net.jforum.JForum;
+import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.PostDAO;
 import net.jforum.dao.TopicDAO;
@@ -75,7 +76,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: RSSAction.java,v 1.21 2005/09/12 21:05:22 rafaelsteil Exp $
+ * @version $Id: RSSAction.java,v 1.22 2005/10/25 14:29:33 alexieong Exp $
  */
 public class RSSAction extends Command 
 {
@@ -102,7 +103,8 @@ public class RSSAction extends Command
 	{
 		int forumId = this.request.getIntParameter("forum_id"); 
 		if (!TopicsCommon.isTopicAccessible(forumId)) {
-			return;
+            JForum.requestBasicAuthentication();
+            return;
 		}
 		
 		List topics = TopicsCommon.topicsByForum(forumId, 0);
@@ -131,7 +133,8 @@ public class RSSAction extends Command
 		Topic topic = tm.selectById(topicId);
 		
 		if (!TopicsCommon.isTopicAccessible(topic.getForumId()) || topic.getId() == 0) {
-			return;
+            JForum.requestBasicAuthentication(); 
+            return;
 		}
 		
 		tm.incrementTotalViews(topic.getId());
@@ -220,7 +223,12 @@ public class RSSAction extends Command
 			HttpServletResponse response, 
 			SimpleHash context) throws Exception 
 	{
-		JForum.setContentType("text/xml");
+        if (!SessionFacade.isLogged() && UserAction.hasBasicAuthentication(request)) {
+            new UserAction().validateLogin(request);
+            JForum.setRedirect(null);
+        }
+
+        JForum.setContentType("text/xml");
 		super.setTemplateName(TemplateKeys.RSS);
 
 		return super.process(request, response, context);

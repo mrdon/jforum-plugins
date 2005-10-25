@@ -43,6 +43,7 @@
 package net.jforum;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 
 import javax.servlet.ServletConfig;
@@ -69,7 +70,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumBaseServlet.java,v 1.11 2005/09/29 09:09:19 vmal Exp $
+ * @version $Id: JForumBaseServlet.java,v 1.12 2005/10/25 14:29:34 alexieong Exp $
  */
 public class JForumBaseServlet extends HttpServlet 
 {
@@ -313,6 +314,17 @@ public class JForumBaseServlet extends HttpServlet
 	{
 		return ((DataHolder)localData.get()).getRedirectTo();
 	}
+
+    /**
+     * Send UNAUTHORIZED to the browser and ask user to login via basic authentication
+     *
+     * @throws IOException
+     */
+    public static void requestBasicAuthentication() throws IOException {
+        getResponse().addHeader("WWW-Authenticate", "Basic realm=\"JForum\"");
+        getResponse().sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        JForum.enableBinaryContent(true);
+    }
 
     /**
      * Sets the content type for the current http response.
