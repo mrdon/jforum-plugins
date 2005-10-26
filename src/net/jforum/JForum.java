@@ -72,7 +72,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.80 2005/09/29 09:09:19 vmal Exp $
+ * @version $Id: JForum.java,v 1.81 2005/10/26 23:16:26 rafaelsteil Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
@@ -125,14 +125,13 @@ public class JForum extends JForumBaseServlet
 	public void service(HttpServletRequest req, HttpServletResponse response) throws IOException, ServletException
 	{
 		Writer out = null;
-		ActionServletRequest request=null;
+		ActionServletRequest request = null;
+		String encoding = SystemGlobals.getValue(ConfigKeys.ENCODING);
 
 		try {
 			// Initializes thread local data
 			DataHolder dataHolder = new DataHolder();
 			localData.set(dataHolder);
-
-			String encoding = SystemGlobals.getValue(ConfigKeys.ENCODING);
 
 			// Request
 			request = new ActionServletRequest(req);
@@ -213,7 +212,7 @@ public class JForum extends JForumBaseServlet
 			JForum.enableCancelCommit();
 			
 			if (e.toString().indexOf("ClientAbortException") == -1) {
-				response.setContentType("text/html");
+				response.setContentType("text/html; charset=" + encoding);
 				if (out != null) {
 					new ExceptionWriter().handleExceptionData(e, out);
 				}
