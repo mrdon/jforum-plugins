@@ -307,7 +307,7 @@ CREATE TABLE jforum_users (
   user_avatar_type tinyint(4) NOT NULL default '0',
   user_email varchar(255) NOT NULL default '',
   user_icq varchar(15) default NULL,
-  user_website varchar(100) default NULL,
+  user_website varchar(255) default NULL,
   user_from varchar(100) default NULL,
   user_sig text,
   user_sig_bbcode_uid varchar(10) default NULL,

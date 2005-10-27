@@ -349,7 +349,7 @@ CREATE TABLE jforum_users (
   user_avatar_type NUMBER(10) DEFAULT 0 NOT NULL,
   user_email VARCHAR2(255) DEFAULT ' ' NOT NULL,
   user_icq VARCHAR2(15) DEFAULT NULL,
-  user_website VARCHAR2(100) DEFAULT NULL,
+  user_website VARCHAR2(255) DEFAULT NULL,
   user_from VARCHAR2(100) DEFAULT NULL,
   user_sig VARCHAR2(4000),
   user_sig_bbcode_uid VARCHAR2(10) DEFAULT NULL,

@@ -374,7 +374,7 @@ CREATE TABLE [jforum_users] (
 	[user_avatar_type] [tinyint] DEFAULT (0) NOT NULL ,
 	[user_email] [varchar] (255) COLLATE SQL_Latin1_General_CP1_CI_AS  DEFAULT('') NOT NULL ,
 	[user_icq] [varchar] (15) COLLATE SQL_Latin1_General_CP1_CI_AS NULL ,
-	[user_website] [varchar] (100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL ,
+	[user_website] [varchar] (255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL ,
 	[user_from] [varchar] (100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL ,
 	[user_sig] [text] COLLATE SQL_Latin1_General_CP1_CI_AS NULL ,
 	[user_sig_bbcode_uid] [varchar] (10) COLLATE SQL_Latin1_General_CP1_CI_AS NULL ,
