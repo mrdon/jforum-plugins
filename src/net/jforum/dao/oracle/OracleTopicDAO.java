@@ -42,21 +42,34 @@
  */
 package net.jforum.dao.oracle;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
+import net.jforum.JForum;
+import net.jforum.entities.Topic;
+import net.jforum.entities.User;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
+
 /**
- * @author Dmitriy Kiriy
- * @version $Id: OracleTopicDAO.java,v 1.7 2005/10/13 23:48:19 rafaelsteil Exp $
+ * @author Dmitriy Kiriy and Jake Fear
+ * @version $Id: OracleTopicDAO.java,v 1.8 2005/10/27 18:55:01 jakefear Exp $
  */
 public class OracleTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 {
    	/**
+   	 * Does some addition to make the parameters work with our query flavor.
 	 * @see net.jforum.dao.TopicDAO#selectAllByForumByLimit(int, int, int)
 	 */
 	public List selectAllByForumByLimit(int forumId, int startFrom, int count) throws Exception
 	{
-		return super.selectAllByForumByLimit(forumId, startFrom, startFrom + count);
+		return super.selectAllByForumByLimit(forumId, startFrom + count, startFrom);
 	}
+	
 	
 	/**
 	 * @see net.jforum.dao.TopicDAO#selectByUserByLimit(int, int, int)

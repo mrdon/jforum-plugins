@@ -66,7 +66,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTopicDAO.java,v 1.3 2005/09/30 23:19:19 rafaelsteil Exp $
+ * @version $Id: GenericTopicDAO.java,v 1.4 2005/10/27 18:55:00 jakefear Exp $
  */
 public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO 
 {
@@ -752,7 +752,7 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 			StringBuffer sb = new StringBuffer();
 			
 			while (rs.next()) {
-				sb.append(rs.getInt("user_id")).append(",");
+				sb.append(rs.getInt("user_id")).append(',');
 			}
 			
 			rs.close();

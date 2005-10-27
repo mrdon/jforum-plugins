@@ -58,7 +58,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericScheduledSearchIndexerDAO.java,v 1.6 2005/07/26 03:04:44 rafaelsteil Exp $
+ * @version $Id: GenericScheduledSearchIndexerDAO.java,v 1.7 2005/10/27 18:54:59 jakefear Exp $
  */
 public class GenericScheduledSearchIndexerDAO implements net.jforum.dao.ScheduledSearchIndexerDAO
 {
@@ -103,7 +103,9 @@ public class GenericScheduledSearchIndexerDAO implements net.jforum.dao.Schedule
 			return 0;
 		}
 		
-		logger.info("Going to index posts from " + latestIndexedPostId + " to " + maxPostId);
+		if (logger.isInfoEnabled()) {
+		    logger.info("Going to index posts from " + latestIndexedPostId + " to " + maxPostId);
+		}
 		
 		// Count how many posts we have to index
 		p = conn.prepareStatement(SystemGlobals.getSql("SearchModel.howManyToIndex"));

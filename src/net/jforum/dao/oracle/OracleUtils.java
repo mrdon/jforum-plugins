@@ -54,7 +54,7 @@ import net.jforum.JForum;
 
 /**
  * @author Dmitriy Kiriy
- * @version $Id: OracleUtils.java,v 1.5 2005/07/26 03:04:58 rafaelsteil Exp $
+ * @version $Id: OracleUtils.java,v 1.6 2005/10/27 18:55:02 jakefear Exp $
  */
 public class OracleUtils
 {
@@ -108,7 +108,7 @@ public class OracleUtils
 		rs.next();
 		Blob postText = rs.getBlob(1);
 
-		OutputStream blobWriter = ((oracle.sql.BLOB) postText).getBinaryOutputStream();
+		OutputStream blobWriter = postText.setBinaryStream(0);//((oracle.sql.BLOB) postText).getBinaryOutputStream();
 		blobWriter.write(value.getBytes("UTF-16"));
 
 		blobWriter.close();

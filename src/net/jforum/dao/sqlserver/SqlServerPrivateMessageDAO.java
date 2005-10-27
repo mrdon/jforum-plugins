@@ -51,7 +51,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerPrivateMessageDAO.java,v 1.5 2005/07/26 03:05:13 rafaelsteil Exp $
+ * @version $Id: SqlServerPrivateMessageDAO.java,v 1.6 2005/10/27 18:55:02 jakefear Exp $
  */
 public class SqlServerPrivateMessageDAO extends net.jforum.dao.generic.GenericPrivateMessageDAO 
 {
@@ -65,7 +65,7 @@ public class SqlServerPrivateMessageDAO extends net.jforum.dao.generic.GenericPr
 		
 		p.setInt(1, pm.getId());
 		
-		ResultSet rs = null;;
+		ResultSet rs = null;
 		rs = p.executeQuery();
 		if (rs.next()) {
 			pm = this.getPm(rs);
