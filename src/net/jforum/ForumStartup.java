@@ -44,6 +44,8 @@ package net.jforum;
 
 import java.sql.Connection;
 
+import org.apache.log4j.Logger;
+
 import net.jforum.dao.CategoryDAO;
 import net.jforum.dao.ConfigDAO;
 import net.jforum.dao.DataAccessDriver;
@@ -54,10 +56,13 @@ import net.jforum.repository.ForumRepository;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumStartup.java,v 1.9 2005/07/26 04:01:18 diegopires Exp $
+ * @version $Id: ForumStartup.java,v 1.10 2005/10/27 21:34:44 jakefear Exp $
  */
 public class ForumStartup 
 {
+	
+	private static final Logger log = Logger.getLogger(ForumStartup.class);
+	
 	/**
 	 * Starts the database implementation
 	 * @return <code>true</code> if everthing were ok
@@ -95,6 +100,7 @@ public class ForumStartup
 			ForumRepository.start(fm, cm, configModel);
 		}
 		catch (Exception e) {
+			log.error("Unable to bootstrap JForum repository.", e);
 			throw new RepositoryStartupException("Error while trying to start ForumRepository: " + e);
 		}
 	}

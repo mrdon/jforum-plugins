@@ -60,10 +60,12 @@ import freemarker.template.Template;
  * presentation actions must extend this class. 
  * 
  * @author Rafael Steil
- * @version $Id: Command.java,v 1.15 2005/07/26 04:01:17 diegopires Exp $
+ * @version $Id: Command.java,v 1.16 2005/10/27 21:34:44 jakefear Exp $
  */
 public abstract class Command 
 {
+	private static Class[] NO_ARGS_CLASS = new Class[0];
+	private static Object[] NO_ARGS_OBJECT = new Object[0];
 	private boolean ignoreAction;
 	protected String templateName;
 	protected ActionServletRequest request;
@@ -110,7 +112,7 @@ public abstract class Command
 
 		if (!this.ignoreAction) {
 			try {
-				Class.forName(this.getClass().getName()).getMethod(action, null).invoke(this, null);
+				Class.forName(this.getClass().getName()).getMethod(action, NO_ARGS_CLASS).invoke(this, NO_ARGS_OBJECT);
 			}
 			catch (NoSuchMethodException e) {		
 				this.list();		
@@ -135,8 +137,8 @@ public abstract class Command
 			throw new TemplateNotFoundException("Template for action " + action + " is not defined");
 		}
 		
-		return Configuration.getDefaultConfiguration().getTemplate(SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR)
-				+ "/" 
-				+ this.templateName);
+		return Configuration.getDefaultConfiguration().getTemplate(
+				new StringBuilder(SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR)).
+				append('/').append(this.templateName).toString());
 	}
 }

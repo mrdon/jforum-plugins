@@ -61,7 +61,7 @@ import org.quartz.JobExecutionException;
 
 /**
  * @author Rafael Steil
- * @version $Id: QuartzSearchIndexerJob.java,v 1.7 2005/07/26 03:05:37 rafaelsteil Exp $
+ * @version $Id: QuartzSearchIndexerJob.java,v 1.8 2005/10/27 21:34:45 jakefear Exp $
  */
 public class QuartzSearchIndexerJob implements Job, Cacheable
 {
@@ -110,7 +110,7 @@ public class QuartzSearchIndexerJob implements Job, Cacheable
 			dao.index(step, conn);
 		}
 		catch (Exception e) {
-			logger.error("Error while trying to index messagez. Cannot proceed. " + e);
+			logger.error("Error while trying to index messages. Cannot proceed. " + e);
 			e.printStackTrace();
 		}
 		finally {

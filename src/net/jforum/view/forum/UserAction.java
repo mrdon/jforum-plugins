@@ -47,7 +47,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import net.jforum.*;
+import net.jforum.ActionServletRequest;
+import net.jforum.Command;
+import net.jforum.ControllerUtils;
+import net.jforum.JForum;
+import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.UserDAO;
 import net.jforum.dao.UserSessionDAO;
@@ -75,7 +79,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.56 2005/10/25 14:29:34 alexieong Exp $
+ * @version $Id: UserAction.java,v 1.57 2005/10/27 21:34:45 jakefear Exp $
  */
 public class UserAction extends Command 
 {
