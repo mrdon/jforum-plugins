@@ -95,7 +95,7 @@ PostModel.selectByUserByLimit = SELECT * FROM ( \
 	AND p.user_id = u.user_id \
 	AND p.user_id = ? \
 	AND p.need_moderate = 0 \
-	ORDER BY post_time DESC \
+	ORDER BY post_time ASC \
 ) \
 WHERE LINENUM BETWEEN ? AND ?
 
@@ -143,19 +143,50 @@ ForumModel.lastGeneratedForumId = SELECT jforum_forums_seq.currval FROM DUAL
 TopicModel.addNew = INSERT INTO jforum_topics (topic_id, forum_id, topic_title, user_id, topic_time, topic_first_post_id, topic_last_post_id, topic_type, moderated) \
 	VALUES (jforum_topics_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?)
 
+##########################################################################################
+# Ignores attachements (0 as attach), but goes two orders of magnitude higher...
+##########################################################################################
 TopicModel.selectAllByForumByLimit = SELECT * FROM ( \
+    SELECT row_.*, rownum rownum_ from ( \
     SELECT t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, \
-        u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time, p.attach, \
-        ROW_NUMBER() OVER(ORDER BY t.topic_type DESC, t.topic_time DESC, t.topic_last_post_id DESC) LINENUM \
-	FROM jforum_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2 \
+        u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time, 0 as attach, rownum \
+	FROM jforum_topics t, jforum_users u, \
+        jforum_posts p2, jforum_users u2 \
 	WHERE t.forum_id = ? \
 	AND t.user_id = u.user_id \
 	AND p.post_id = t.topic_first_post_id \
 	AND p2.post_id = t.topic_last_post_id \
 	AND u2.user_id = p2.user_id \
 	ORDER BY t.topic_type DESC, p2.post_time DESC, t.topic_last_post_id DESC \
-) \
-WHERE LINENUM BETWEEN ? AND ?
+    ) row_ where rownum <= ? ) where rownum_ >= ? 
+
+##########################################################################################
+# This version returns values for the attachment, but is MUCH slower than the above query.
+##########################################################################################
+#TopicModel.selectAllByForumByLimit = SELECT * FROM ( \
+#    SELECT row_.*, rownum rownum_ from ( \
+#    SELECT t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, \
+#        u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time, p.attach, rownum \
+#	FROM jforum_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2 \
+#	WHERE t.forum_id = ? \
+#	AND t.user_id = u.user_id \
+#	AND p.post_id = t.topic_first_post_id \
+#	AND p2.post_id = t.topic_last_post_id \
+#	AND u2.user_id = p2.user_id \
+#	ORDER BY t.topic_type DESC, p2.post_time DESC, t.topic_last_post_id DESC)  \
+#	row_ where rownum <= ? \
+#) \
+#where rownum_ >= ?
+
+#TopicModel.selectAllByForumByLimit = SELECT t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, \
+#    u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time, p.attach \
+#	FROM jforum_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2 \
+#	WHERE t.forum_id = ? \
+#	AND t.user_id = u.user_id \
+#	AND p.post_id = t.topic_first_post_id \
+#	AND p2.post_id = t.topic_last_post_id \
+#	AND u2.user_id = p2.user_id \
+#	ORDER BY t.topic_type DESC, p2.post_time DESC, t.topic_last_post_id DESC 
 
 
 TopicModel.selectRecentTopicsByLimit = SELECT * FROM ( \
@@ -189,6 +220,10 @@ TopicModel.selectLastN = SELECT * FROM ( \
     ) \
     WHERE LINENUM <= ?
 
+TopicModel.topicPosters = SELECT user_id, username, user_karma, user_avatar, user_allowavatar, user_regdate, user_posts, user_icq, \
+	user_from, user_email, rank_id, user_sig, user_attachsig, user_viewemail, user_msnm, user_yim, user_website, user_sig, user_aim \
+	FROM jforum_users \
+	WHERE user_id IN (:ids:)
 
 # ####################
 # PrivateMessageModel
@@ -236,15 +271,6 @@ SearchModel.selectTopicData = INSERT INTO jforum_search_topics (topic_id, forum_
 SearchModel.lastGeneratedWordId = SELECT jforum_search_words_seq.currval FROM DUAL
 
 SearchModel.getPostsToIndex = SELECT * FROM ( \
-	SELECT p.post_id, pt.post_text, pt.post_subject, \
-	ROW_NUMBER() OVER(ORDER BY p.post_id) LINENUM \
-	FROM jforum_posts p, jforum_posts_text pt \
-	WHERE p.post_id = pt.post_id \
-	AND p.post_id BETWEEN ? AND ? \
-	) \
-	WHERE LINENUM BETWEEN ? AND ?
-
-SearchModel.getPostsToIndex = SELECT * FROM (  \
 	SELECT row_.*, rownum rownum_ from ( \
 	SELECT p.post_id, pt.post_text, pt.post_subject \
 	FROM jforum_posts p, jforum_posts_text pt \

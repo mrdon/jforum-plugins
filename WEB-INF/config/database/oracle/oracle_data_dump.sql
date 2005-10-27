@@ -56,7 +56,7 @@ INSERT INTO jforum_user_groups (group_id, user_id) VALUES (jforum_groups_seq.cur
 
 -- 
 --  Smilies
--
+--
 INSERT INTO jforum_smilies VALUES ( jforum_smilies_seq.nextval, ':)','<img src=\"#CONTEXT#/images/smilies/3b63d1616c5dfcf29f8a7a031aaa7cad.gif\" border=\"0\">','3b63d1616c5dfcf29f8a7a031aaa7cad.gif');
 
 INSERT INTO jforum_smilies VALUES ( jforum_smilies_seq.nextval, ':-)','<img src=\"#CONTEXT#/images/smilies/3b63d1616c5dfcf29f8a7a031aaa7cad.gif\" border=\"0\">','3b63d1616c5dfcf29f8a7a031aaa7cad.gif');

@@ -106,6 +106,7 @@ UserModel.lastUserRegistered = SELECT user_id, username FROM jforum_users ORDER 
 UserModel.totalUsers = SELECT COUNT(1) as total_users FROM jforum_users
 UserModel.isUsernameRegistered = SELECT COUNT(1) as registered FROM jforum_users WHERE LOWER(username) = LOWER(?)
 UserModel.login = SELECT user_id FROM jforum_users WHERE LOWER(username) = LOWER(?) AND user_password = ?
+UserModel.loginMatch = SELECT user_id FROM jforum_users WHERE LOWER(username) = LOWER(?)
 UserModel.addToGroup = INSERT INTO jforum_user_groups ( user_id, group_id ) VALUES ( ?, ? )
 UserModel.removeFromGroup = DELETE FROM jforum_user_groups WHERE user_id = ? AND group_id = ?
 
@@ -349,6 +350,7 @@ SearchModel.searchBase = SELECT t.*, u.username AS posted_by_username, u.user_id
 	
 SearchModel.insertWords = INSERT INTO jforum_search_words (word, word_hash) VALUES (?, ?)
 SearchModel.selectExistingWords = SELECT word_id, word FROM jforum_search_words WHERE word IN (#IN#)
+SearchModel.selectAllExistingWords = SELECT word_id, word FROM jforum_search_words
 
 SearchModel.searchByWord = SELECT post_id FROM jforum_search_wordmatch wm, jforum_search_words w \
 	WHERE wm.word_id = w.word_id \
