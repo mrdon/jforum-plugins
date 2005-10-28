@@ -149,15 +149,14 @@ TopicModel.addNew = INSERT INTO jforum_topics (topic_id, forum_id, topic_title, 
 TopicModel.selectAllByForumByLimit = SELECT * FROM ( \
     SELECT row_.*, rownum rownum_ from ( \
     SELECT t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, \
-        u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time, 0 as attach, rownum \
+        u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p.post_time, 0 as attach, rownum \
 	FROM jforum_topics t, jforum_users u, \
-        jforum_posts p2, jforum_users u2 \
+        jforum_posts p, jforum_users u2 \
 	WHERE t.forum_id = ? \
 	AND t.user_id = u.user_id \
 	AND p.post_id = t.topic_first_post_id \
-	AND p2.post_id = t.topic_last_post_id \
-	AND u2.user_id = p2.user_id \
-	ORDER BY t.topic_type DESC, p2.post_time DESC, t.topic_last_post_id DESC \
+	AND u2.user_id = p.user_id \
+	ORDER BY t.topic_type DESC, p.post_time DESC, t.topic_last_post_id DESC \
     ) row_ where rownum <= ? ) where rownum_ >= ? 
 
 ##########################################################################################

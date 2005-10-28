@@ -316,6 +316,7 @@ CREATE TABLE jforum_users (
   user_msnm varchar(255) default NULL,
   user_occ varchar(100) default NULL,
   user_interests varchar(255) default NULL,
+  user_biography text DEFAULT NULL,
   user_actkey varchar(32) default NULL,
   gender char(1) default NULL,
   themes_id INT default NULL,

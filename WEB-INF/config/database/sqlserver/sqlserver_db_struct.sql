@@ -383,6 +383,7 @@ CREATE TABLE [jforum_users] (
 	[user_msnm] [varchar] (255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL ,
 	[user_occ] [varchar] (100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL ,
 	[user_interests] [varchar] (255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL ,
+	[user_biography] [text] COLLATE SQL_Latin1_General_CP1_CI_AS NULL ,
 	[user_actkey] [varchar] (32) COLLATE SQL_Latin1_General_CP1_CI_AS NULL ,
 	[gender] [char] (1) COLLATE SQL_Latin1_General_CP1_CI_AS NULL ,
 	[themes_id] [bigint] NULL ,

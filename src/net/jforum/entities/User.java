@@ -40,7 +40,7 @@
  * The JForum Project
  * http://www.jforum.net 
  * 
- * $Id: User.java,v 1.17 2005/09/01 20:54:48 rafaelsteil Exp $
+ * $Id: User.java,v 1.18 2005/10/28 16:35:14 almilli Exp $
  */
 package net.jforum.entities;
 
@@ -97,6 +97,7 @@ public class User implements Serializable
 	private String msnm; 
 	private String occupation;
 	private String interests;
+	private String biography;
 	private String gender;
 	private String timeZone;
 	private String lang;
@@ -849,5 +850,21 @@ public class User implements Serializable
 	public boolean isOnline()
 	{
 		return (SessionFacade.isUserInSession(this.id) != null);
+	}
+
+	/**
+	 * Gets the user's biography
+	 * @return the user biography
+	 */
+	public String getBiography() {
+		return biography;
+	}
+
+	/**
+	 * Sets the user's biography
+	 * @param biography the user's biography
+	 */
+	public void setBiography(String biography) {
+		this.biography = biography;
 	}
 }

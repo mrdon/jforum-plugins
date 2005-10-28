@@ -99,7 +99,8 @@ UserModel.update = UPDATE jforum_users SET user_aim = ?, \
 	user_attachsig = ?, \
 	username = ?, \
 	user_lang = ?, \
-	user_notify_pm = ? \
+	user_notify_pm = ?, \
+	user_biography = ? \
 	WHERE user_id = ?
 	
 UserModel.lastUserRegistered = SELECT user_id, username FROM jforum_users ORDER BY user_regdate DESC LIMIT 1

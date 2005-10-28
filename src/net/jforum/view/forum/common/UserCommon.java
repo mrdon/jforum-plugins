@@ -67,7 +67,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserCommon.java,v 1.10 2005/07/26 03:05:56 rafaelsteil Exp $
+ * @version $Id: UserCommon.java,v 1.11 2005/10/28 16:35:15 almilli Exp $
  */
 public class UserCommon 
 {
@@ -101,6 +101,7 @@ public class UserCommon
 		u.setFrom(SafeHtml.makeSafe(JForum.getRequest().getParameter("location")));
 		u.setOccupation(SafeHtml.makeSafe(JForum.getRequest().getParameter("occupation")));
 		u.setInterests(SafeHtml.makeSafe(JForum.getRequest().getParameter("interests")));
+		u.setBiography(SafeHtml.makeSafe(JForum.getRequest().getParameter("biography")));
 		u.setSignature(SafeHtml.makeSafe(JForum.getRequest().getParameter("signature")));
 		u.setViewEmailEnabled(JForum.getRequest().getParameter("viewemail").equals("1"));
 		u.setViewOnlineEnabled(JForum.getRequest().getParameter("hideonline").equals("0"));

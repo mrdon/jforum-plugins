@@ -146,6 +146,12 @@ function validateForm()
 				</tr>
 				<tr>
 					<td class="row1">
+						<span class="gen">${I18n.getMessage("User.biography")}:</span><br />
+					</td>
+					<td class="row2"><textarea class="post" style="WIDTH: 300px" name="biography" rows="8" cols="30">${u.biography?default("")}</textarea> </td>
+				</tr>
+				<tr>
+					<td class="row1">
 						<span class="gen">${I18n.getMessage("User.signature")}:</span><br />
 						<span class="gensmall">${I18n.getMessage("User.signatureDef")}</span><br />
 					</td>

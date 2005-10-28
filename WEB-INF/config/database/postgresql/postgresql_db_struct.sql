@@ -302,6 +302,7 @@ CREATE TABLE jforum_users (
   user_msnm VARCHAR(255) DEFAULT NULL,
   user_occ VARCHAR(100) DEFAULT NULL,
   user_interests VARCHAR(255) DEFAULT NULL,
+  user_biography TEXT DEFAULT NULL,
   user_actkey VARCHAR(32) DEFAULT NULL,
   gender CHAR(1) DEFAULT NULL,
   themes_id INTEGER DEFAULT NULL,
