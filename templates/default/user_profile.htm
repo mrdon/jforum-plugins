@@ -91,6 +91,13 @@
 					<td><b><span class="gen">${u.interests}</span></b></td>
 				</tr>
 				</#if>
+            
+				<#if (u.biography?exists && u.biography?length > 0)>
+				<tr>
+					<td valign="top" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("UserProfile.biography")}:</span></td>
+					<td><b><span class="gen">${u.biography}</span></b></td>
+				</tr>
+				</#if>
 
 				<#if bookmarksEnabled>
 				<tr>

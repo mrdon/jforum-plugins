@@ -8,6 +8,7 @@
 <project name="JForum" default="compile" basedir=".">
 
 	<!-- project properties -->
+	<property file="build.properties"/>
 	<property name="projectname" value="JForum" />
 	<property name="author" value="Rafael Steil" />
 	<property name="copyright" value="JForum Team 2003,2004,2005" />
