@@ -43,6 +43,7 @@
 package net.jforum.view.forum.common;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumCommon.java,v 1.11 2005/10/29 23:33:29 rafaelsteil Exp $
+ * @version $Id: ForumCommon.java,v 1.10 2005/10/29 23:33:16 rafaelsteil Exp $
  */
 public class ForumCommon 
 {
