@@ -60,7 +60,7 @@ import freemarker.template.Template;
  * presentation actions must extend this class. 
  * 
  * @author Rafael Steil
- * @version $Id: Command.java,v 1.16 2005/10/27 21:34:44 jakefear Exp $
+ * @version $Id: Command.java,v 1.17 2005/10/29 23:16:08 rafaelsteil Exp $
  */
 public abstract class Command 
 {
@@ -138,7 +138,7 @@ public abstract class Command
 		}
 		
 		return Configuration.getDefaultConfiguration().getTemplate(
-				new StringBuilder(SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR)).
+				new StringBuffer(SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR)).
 				append('/').append(this.templateName).toString());
 	}
 }
