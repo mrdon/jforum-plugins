@@ -43,7 +43,6 @@
 package net.jforum.view.forum.common;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumCommon.java,v 1.9 2005/10/13 23:48:18 rafaelsteil Exp $
+ * @version $Id: ForumCommon.java,v 1.11 2005/10/29 23:33:29 rafaelsteil Exp $
  */
 public class ForumCommon 
 {
@@ -144,7 +143,7 @@ public class ForumCommon
 	{
 		return getAllCategoriesAndForums(SessionFacade.getUserSession(), 
 				SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID), 
-				(HashMap)SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING), 
+				(Map)SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING), 
 				checkUnreadPosts);
 	}
 	

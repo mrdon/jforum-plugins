@@ -92,7 +92,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.114 2005/10/13 23:48:19 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.115 2005/10/29 23:33:00 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -161,9 +161,10 @@ public class PostAction extends Command
 
 		if (us.getUserId() != anonymousUser) {
 			((Map) SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(topic.getId()),
-					new Long(topic.getLastPostDate().getTime()));
+					new Long(System.currentTimeMillis()));
 		}
 		
+		this.setTemplateName(TemplateKeys.POSTS_LIST);
 		this.context.put("attachmentsEnabled", pc.canAccess(
 				SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(topic.getForumId())));
 		this.context.put("canDownloadAttachments", pc.canAccess(
@@ -173,7 +174,6 @@ public class PostAction extends Command
 		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
 		this.context.put("canRemove", pc.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE));
 		this.context.put("canEdit", canEdit);
-		this.setTemplateName(TemplateKeys.POSTS_LIST);
 		this.context.put("allCategories", ForumCommon.getAllCategoriesAndForums(false));
 		this.context.put("topic", topic);
 		this.context.put("rank", new RankingRepository());
