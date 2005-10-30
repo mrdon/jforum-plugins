@@ -64,7 +64,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: I18n.java,v 1.29 2005/07/26 04:01:18 diegopires Exp $
+ * @version $Id: I18n.java,v 1.30 2005/10/30 15:48:17 rafaelsteil Exp $
  */
 public class I18n
 {
@@ -264,7 +264,7 @@ public class I18n
 
 	public static String getMessage(String m)
 	{
-		return getMessage(m, SessionFacade.getUserSession());
+		return getMessage(getUserLanguage(), m);
 	}
 
 	public static String getMessage(String m, UserSession us)
@@ -274,6 +274,23 @@ public class I18n
 		}
 
 		return getMessage(us.getLang(), m);
+	}
+	
+	/**
+	 * Gets the language name for the current request.
+	 * The method will first look at {@link UserSession#getLang()}  and use 
+	 * it if any value is found. Otherwise, the default board language will be used
+	 * @return
+	 */
+	public static String getUserLanguage()
+	{
+		UserSession us = SessionFacade.getUserSession();
+		
+		if (us == null || us.getLang() == null || us.getLang().trim().equals("")) {
+			return defaultName;
+		}
+		
+		return us.getLang();
 	}
 
 	/**

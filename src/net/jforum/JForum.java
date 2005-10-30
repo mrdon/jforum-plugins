@@ -59,6 +59,7 @@ import net.jforum.repository.ModulesRepository;
 import net.jforum.repository.RankingRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.repository.SmiliesRepository;
+import net.jforum.util.I18n;
 import net.jforum.util.MD5;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -72,7 +73,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.81 2005/10/26 23:16:26 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.82 2005/10/30 15:48:16 rafaelsteil Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
@@ -173,7 +174,7 @@ public class JForum extends JForumBaseServlet
 			
 			context.put("moduleName", module);
 			context.put("action", request.getAction());
-			
+			context.put("language", I18n.getUserLanguage());
 			context.put("securityHash", MD5.crypt(request.getSession().getId()));
 			context.put("session", SessionFacade.getUserSession());
 		
