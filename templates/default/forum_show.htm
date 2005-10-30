@@ -11,7 +11,7 @@
 <table cellspacing="0" cellpadding="10" width="100%" align="center" border="0">
 	<tr>
 		<td class="bodyline" valign="top">
-			<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
+			<table cellspacing="2" cellpadding="2" width="100%" align="center">
 				<tr>
 					<td valign="bottom" align="left" colspan="2">
 						<a class="maintitle" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name?html}</a>
@@ -20,20 +20,20 @@
 						</#if>
 					</td>
 
-					<td valign="center" nowrap="nowrap" align="right"><@pagination.doPagination action, forum.id/></td>
+					<td valign="center" nowrap="nowrap" align="right"><#assign paginationData><@pagination.doPagination action, forum.id/></#assign>${paginationData}</td>
 				</tr>
 
 				<tr>
 					<#if !readonly && !replyOnly>
 						<td valign="center" align="left" width="50">
-							<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&forum_id=${forum.id}", "")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/post.gif" border="0" /></a>
+							<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&forum_id=${forum.id}", "")}" rel="nofollow" class="icon_new_topic"><img src="${contextPath}/images/transp.gif"/></a>
 						</td>
 					<#else>
 						<#assign colspan = "2"/>
 					</#if>
 
 					<td class="nav" valign="center" align="left" width="100%" colspan="${colspan?default("")}">
-						<span class="nav">&nbsp;&nbsp;&nbsp;<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a> -&gt; <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name?html}</a></span>                                                					
+						<span class="nav"><a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a> -&gt; <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name?html}</a></span>                                                					
                                         </td>
 
 					<td class="nav" valign="bottom" nowrap="nowrap" align="right">
@@ -229,18 +229,18 @@
 				<tr>
 					<#if !readonly && !replyOnly>
 						<td valign="center" align="left" width="50">
-							<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&amp;action=insert&amp;forum_id=${forum.id}","")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/post.gif" border="0" /></a>
+							<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&amp;action=insert&amp;forum_id=${forum.id}","")}" rel="nofollow" class="icon_new_topic"><img src="${contextPath}/images/transp.gif"/></a>
 						</td>
 					<#else>
 						<#assign colspan = "2"/>
 					</#if>
 
 					<td valign="center" align="left" width="100%" colspan="${colspan?default("0")}">
-						<span class="nav">&nbsp;&nbsp;&nbsp;
+						<span class="nav">
 						<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a> -&gt;  <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name?html}</a></span>
 					</td>
 
-					<td valign="center" nowrap="nowrap" align="right"><@pagination.doPagination action, forum.id/></td>
+					<td valign="center" nowrap="nowrap" align="right">${paginationData}</td>
 				</tr>
 
 				<tr>

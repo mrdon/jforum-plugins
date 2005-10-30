@@ -40,12 +40,10 @@
 					<td width="8%" align="left" valign="bottom" nowrap="nowrap">
 					</#if>
 						<#if topic.status == STATUS_LOCKED>
-							<img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/reply_locked.gif" />
+							<span class="icon_reply_locked"><img src="${contextPath}/images/transp.gif"></span>
 						<#else>
 							<#if !readonly>
-								<span class="nav">
-								<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&topic_id=${topic.id}&forum_id=${topic.forumId}&start=${start}", "")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/reply.gif" border="0" /></a>
-								</span>
+								<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&topic_id=${topic.id}&forum_id=${topic.forumId}&start=${start}", "")}" rel="nofollow" class="icon_reply nav"><img src="${contextPath}/images/transp.gif" /></a>
 							<#else>
 								<#assign colspan = "2"/>
 							</#if>
@@ -68,7 +66,7 @@
 					</td>
 					</#if>
 
-					<td valign="middle" align="right"><@pagination.doPagination "list", topic.id/></td>
+					<td valign="middle" align="right"><#assign paginationData><@pagination.doPagination "list", topic.id/></#assign>${paginationData}</td>
 				</tr>
 			</table>
 
@@ -157,12 +155,10 @@
 					<td width="8%" align="left" valign="bottom" nowrap="nowrap">
 					</#if>
 					<#if topic.status == STATUS_LOCKED>
-						<img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/reply_locked.gif" />
+						<span class="icon_reply_locked"><img src="${contextPath}/images/transp.gif"></span>
 					<#else>
 						<#if !readonly>
-							<span class="nav">
-							<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&topic_id=${topic.id}&forum_id=${topic.forumId}&start=${start}","")}" rel="nofollow"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/reply.gif" border="0" /></a>
-							</span>
+							<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&topic_id=${topic.id}&forum_id=${topic.forumId}&start=${start}","")}" rel="nofollow" class="icon_reply nav"><img src="${contextPath}/images/transp.gif"/></a>
 						<#else>
 							<#assign colspan = "2"/>
 						</#if>
@@ -176,7 +172,7 @@
 						</span>
 					</td>
 
-					<td valign="middle" align="right"><@pagination.doPagination "list", topic.id/></td>
+					<td valign="middle" align="right">${paginationData}</td>
 				</tr>
 				
 				<tr>

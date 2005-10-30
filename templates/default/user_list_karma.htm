@@ -19,7 +19,7 @@
 		<tr align="center">		  
 			<td class="row2"><span class="gen">${user.id} </span></td>			
 			<td class="row2"><span class="gen"><a href="${JForumContext.encodeURL("/user/profile/${user.id}")}">${user.username}</a></span></td>
-			<td class="row2"><span class="gen"><#if user.id != 1><a href="${JForumContext.encodeURL("/pm/sendTo/${user.id}")}"><img src="${contextPath}/templates/${templateName}/images/${imagesI18n}/icon_pm.gif" border="0" /></a><#else>&nbsp;</#if></span></td>
+			<td class="row2"><span class="gen"><#if user.id != 1><a href="${JForumContext.encodeURL("/pm/sendTo/${user.id}")}" class="icon_pm"><img src="${contextPath}/images/transp.gif"/></a><#else>&nbsp;</#if></span></td>
 			<td class="row2"><span class="gen">${user.karma.totalPoints}</span></td>
 			<td class="row2"><span class="gen">${user.karma.votesReceived}</span></td>
 			<td class="row2"><span class="gen">${user.karma.votesGiven}</span></td>
