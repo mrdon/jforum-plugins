@@ -258,8 +258,8 @@
 								<#assign watchMessage = I18n.getMessage("PostShow.unwatch")/>
 							</#if>
 							
-							<a href="${JForumContext.encodeURL("/posts/${watch}/${start}/${topicId}")}"><img src="${contextPath}/templates/${templateName}/images/watch.gif" align="middle"></a>
-							<a href="${JForumContext.encodeURL("/posts/${watch}/${start}/${topicId}")}">${watchMessage}</a>
+							<a href="${JForumContext.encodeURL("/posts/${watch}/${start}/${topic.id}")}"><img src="${contextPath}/templates/${templateName}/images/watch.gif" align="middle"></a>
+							<a href="${JForumContext.encodeURL("/posts/${watch}/${start}/${topic.id}")}">${watchMessage}</a>
 							</span>
 						</td>
 					</tr>

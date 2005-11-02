@@ -16,12 +16,12 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/concurrent.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/dwr-0.8.1-jforum.jar"/>
 	<classpathentry sourcepath="C:/java/jcaptcha-src-1.0-RC2.0.1" kind="lib" path="WEB-INF/lib/jcaptcha-all-1.0-RC2.0.1.jar"/>
-	<classpathentry kind="lib" path="WEB-INF/lib/jboss-cache-1.2.3.jar"/>
-	<classpathentry kind="lib" path="WEB-INF/lib/jgroups-2.2.8.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/quartz-1.5.1.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/commons-io-1.1.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/log4j-1.2.12.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/freemarker-2.3.4.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/ehcache-1.1.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/jboss-cache-1.2.4.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/jgroups-all-2.2.9-beta2.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>
