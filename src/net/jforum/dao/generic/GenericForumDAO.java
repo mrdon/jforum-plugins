@@ -63,7 +63,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericForumDAO.java,v 1.11 2005/09/26 15:45:12 vmal Exp $
+ * @version $Id: GenericForumDAO.java,v 1.12 2005/11/02 01:43:53 rafaelsteil Exp $
  */
 public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO 
 {
@@ -99,7 +99,7 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 		f.setTotalTopics(rs.getInt("forum_topics"));
 		f.setLastPostId(rs.getInt("forum_last_post_id"));
 		f.setModerated(rs.getInt("moderated") > 0);
-		f.setTotalPosts(rs.getInt("total_posts"));
+		f.setTotalPosts(this.getTotalMessages());
 
 		return f;
 	}
@@ -379,11 +379,13 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 	 * @see net.jforum.dao.ForumDAO#getTotalMessages()
 	 */
 	public int getTotalMessages() throws Exception {
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.totalMessages"));
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("ForumModel.totalMessages"));
 		ResultSet rs = p.executeQuery();
 		rs.next();
 
 		int total = rs.getInt("total_messages");
+		
 		p.close();
 		rs.close();
 

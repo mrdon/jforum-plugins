@@ -67,7 +67,7 @@ import org.quartz.SchedulerException;
  * General utilities methods for loading configurations for JForum.
  * 
  * @author Rafael Steil
- * @version $Id: ConfigLoader.java,v 1.18 2005/09/25 02:40:27 rafaelsteil Exp $
+ * @version $Id: ConfigLoader.java,v 1.19 2005/11/02 01:43:54 rafaelsteil Exp $
  */
 public class ConfigLoader 
 {
@@ -210,12 +210,12 @@ public class ConfigLoader
 		SearchFacade.init();
 	}
 
-    /**
-     * Init a Job who will send e-mails to the all users with a summary of posts...
-     * @throws SchedulerException
-     * @throws IOException
-     */
-    public static void startSummaryJob() throws SchedulerException, IOException {
-        SummaryScheduler.startJob();
-    }
+	/**
+	 * Init a Job who will send e-mails to the all users with a summary of posts...
+	 * @throws SchedulerException
+	 * @throws IOException
+	 */
+	public static void startSummaryJob() throws SchedulerException, IOException {
+		SummaryScheduler.startJob();
+	}
 }

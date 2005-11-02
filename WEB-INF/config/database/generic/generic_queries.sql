@@ -175,19 +175,14 @@ PostModel.deleteByTopic = SELECT post_id, user_id FROM jforum_posts WHERE topic_
 # #############
 # ForumModel
 # #############
-ForumModel.selectById = SELECT f.*, COUNT(p.post_id) AS total_posts \
-	FROM jforum_forums f \
-	LEFT JOIN jforum_topics t ON t.forum_id = f.forum_id \
-	LEFT JOIN jforum_posts p ON p.topic_id = t.topic_id \
-	WHERE f.forum_id = ? \
-	GROUP BY f.forum_id
+ForumModel.selectById = SELECT forum_id, forum_name, categories_id, forum_desc, forum_order, forum_topics, forum_last_post_id, moderated \
+	FROM jforum_forums \
+	WHERE f.forum_id = ?
 
-ForumModel.selectAll = SELECT f.*, COUNT(p.post_id) AS total_posts \
-	FROM jforum_forums f \
-	LEFT JOIN jforum_topics t ON t.forum_id = f.forum_id \
-	LEFT JOIN jforum_posts p ON p.topic_id = t.topic_id \
-	GROUP BY f.categories_id, f.forum_order
-	
+ForumModel.selectAll = SELECT forum_id, forum_name, categories_id, forum_desc, forum_order, forum_topics, forum_last_post_id, moderated \
+	FROM jforum_forums \
+	ORDER BY forum_order ASC
+
 ForumModel.selectAllForPermissions = SELECT forum_id, forum_name FROM jforum_forums ORDER BY forum_name
 
 ForumModel.setModerated = UPDATE jforum_forums SET moderated = ? WHERE categories_id = ?
