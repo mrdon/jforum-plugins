@@ -326,7 +326,7 @@ function validatePostForm(f)
 								<tr>
 									<td colspan="9" valign="top">
 										<span class="gen">
-											<textarea class="post" onkeyup="storeCaret(this);" onclick="storeCaret(this);" onselect="storeCaret(this);" style="WIDTH: 450px"  tabindex="3" name="message" rows="15" wrap="virtual" cols="35"><#if post?exists><#if quote?exists>[quote=${quoteUser}]${post.text}[/quote]<#else>${post.text}</#if></#if></textarea> 
+											<textarea class="post" onkeyup="storeCaret(this);" onclick="storeCaret(this);" onselect="storeCaret(this);" style="WIDTH: 450px"  tabindex="3" name="message" rows="15" wrap="virtual" cols="35"><#if post?exists><#if quote?exists>[quote=${quoteUser}]${post.text?html}[/quote]<#else>${post.text?html}</#if></#if></textarea> 
 										</span>
 									</td>
 								</tr>
