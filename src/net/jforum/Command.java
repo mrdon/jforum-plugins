@@ -60,7 +60,7 @@ import freemarker.template.Template;
  * presentation actions must extend this class. 
  * 
  * @author Rafael Steil
- * @version $Id: Command.java,v 1.17 2005/10/29 23:16:08 rafaelsteil Exp $
+ * @version $Id: Command.java,v 1.18 2005/11/02 01:22:21 rafaelsteil Exp $
  */
 public abstract class Command 
 {
@@ -112,7 +112,7 @@ public abstract class Command
 
 		if (!this.ignoreAction) {
 			try {
-				Class.forName(this.getClass().getName()).getMethod(action, NO_ARGS_CLASS).invoke(this, NO_ARGS_OBJECT);
+				this.getClass().getMethod(action, NO_ARGS_CLASS).invoke(this, NO_ARGS_OBJECT);
 			}
 			catch (NoSuchMethodException e) {		
 				this.list();		

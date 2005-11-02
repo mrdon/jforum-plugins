@@ -10,6 +10,36 @@ GenericModel.selectByLimit = SELECT TOP
 # UserModel
 # #############
 
+UserModel.selectAllByLimit = user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail \
+	FROM jforum_users ORDER BY username
+						  
+UserModel.selectAllByGroup = \
+	DECLARE	@id nvarchar(10), \
+			@offset nvarchar(10), \
+			@items nvarchar(10) \
+	SET		@id = ? \
+	SET		@offset = ? \
+	SET		@items = ? \
+	EXEC	( \
+	'SELECT	TOP '+@items+' user_email, u.user_id, user_posts, ' \
+		+'user_regdate, username, deleted, ' \
+		+'user_karma, user_from, ' \
+		+'user_website, user_viewemail ' \
+	+'FROM jforum_users u, jforum_user_groups ug ' \
+	+'WHERE u.user_id = ug.user_id ' \
+	+'AND ug.group_id = '+@id \
+	+' AND u.user_id NOT IN ( ' \
+		+'SELECT	TOP '+@offset+' u.user_id ' \
+		+'FROM	jforum_users u, jforum_user_groups ug ' \
+		+'WHERE	u.user_id = ug.user_id ' \
+		+'AND		ug.group_id = '+@id \
+		+' ORDER BY u.user_id ' \
+	+')	ORDER BY u.user_id ' \
+	) 
+	
+	
+UserModel.lastUserRegistered = SELECT TOP 1 user_id, username FROM jforum_users ORDER BY user_regdate DESC 
+
 UserModel.selectById = SELECT COUNT(pm.privmsgs_to_userid) AS private_messages, u.user_id, u.user_active, u.username, u.user_password, u.user_session_time, \
 								u.user_session_page, u.user_lastvisit, u.user_regdate, u.user_level, u.user_posts, u.user_timezone, u.user_style, \
 								u.user_lang, u.user_dateformat, u.user_new_privmsg, u.user_unread_privmsg, u.user_last_privmsg, u.user_emailtime, \
@@ -32,18 +62,7 @@ UserModel.selectById = SELECT COUNT(pm.privmsgs_to_userid) AS private_messages, 
 								
 UserModel.lastUserRegistered = SELECT TOP 1 user_id, username FROM jforum_users ORDER BY user_regdate DESC
 UserModel.lastGeneratedUserId = SELECT IDENT_CURRENT('jforum_users') AS user_id
-UserModel.selectAllByLimit = user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail FROM jforum_users ORDER BY username
-						  
-#UserModel.selectAllByLimit = select * from ( \
-#								 select top #1 * from ( \
-#								    select top #2 user_email, user_id, user_posts, user_regdate, username, deleted, \
-#										user_karma, user_from, user_website, user_viewemail \
-#								    from jforum_users \
-#								    order by username asc \
-#								 ) as t1 order by username desc \
-#							 ) as t2 order by username asc
-#
-							  
+
 # #############
 # GroupModel
 # #############
@@ -77,6 +96,33 @@ CategoryModel.lastGeneratedCategoryId = SELECT IDENT_CURRENT('jforum_categories'
 # PostModel
 # #############
 
+PostModel.selectByUserByLimit = \
+	DECLARE	@id nvarchar(10), \
+			@offset nvarchar(10), \
+			@items nvarchar(10) \
+	SET		@id = ? \
+	SET		@offset = ? \
+	SET		@items = ? \
+	EXEC ( \
+	'SELECT TOP '+@items+' p.post_id, topic_id, forum_id, p.user_id, post_time, poster_ip, enable_bbcode, p.attach, ' \
+	+'enable_html, enable_smilies, enable_sig, post_edit_time, post_edit_count, status, pt.post_subject, pt.post_text, username, p.need_moderate ' \
+	+'FROM jforum_posts p, jforum_posts_text pt, jforum_users u ' \
+	+'WHERE p.post_id = pt.post_id ' \
+	+'AND p.user_id = u.user_id ' \
+	+'AND p.user_id = '+@id+' ' \
+	+'AND p.need_moderate = 0 ' \
+	+'AND p.post_id NOT IN (' \
+		+'SELECT TOP '+@offset+' p.post_id ' \
+		+'FROM jforum_posts p, jforum_posts_text pt, jforum_users u ' \
+		+'WHERE p.post_id = pt.post_id ' \
+		+'AND p.user_id = u.user_id ' \
+		+'AND p.user_id = '+@id+' ' \
+		+'AND p.need_moderate = 0 ' \
+		+'ORDER BY post_time ASC ' \
+	+') ORDER BY post_time ASC ' \
+	)
+
+	
 PostModel.lastGeneratedPostId = SELECT IDENT_CURRENT('jforum_posts') AS post_id
 
 PostModel.addNewPost = INSERT INTO jforum_posts (topic_id, forum_id, user_id, post_time, poster_ip, enable_bbcode, enable_html, enable_smilies, enable_sig, post_edit_time, need_moderate) \
@@ -119,6 +165,60 @@ ForumModel.lastGeneratedForumId = SELECT IDENT_CURRENT('jforum_forums') AS forum
 # #############
 # TopicModel
 # #############
+TopicModel.selectLastN = \
+	DECLARE	@offset nvarchar(10), \
+			@items nvarchar(10) \
+	SET		@offset = ? \
+	SET		@items = ? \
+	EXEC ( \
+	 'SELECT TOP '+@items+' topic_title, topic_time, topic_id, topic_type ' \
+	+'FROM jforum_topics ' \
+	+'WHERE topic_id NOT IN (' \
+		+'SELECT TOP '+@offset+' topic_id ' \
+		+'FROM jforum_topics ' \
+		+'ORDER BY topic_time DESC '
+	+')' \
+	+'ORDER BY topic_time DESC ' \
+	)
+	
+TopicModel.selectByUserByLimit = \
+	DECLARE	@id nvarchar(10), \
+			@offset nvarchar(10), \
+			@items nvarchar(10) \
+	SET		@id = ? \
+	SET		@offset = ? \
+	SET		@items = ? \
+	EXEC ( \
+	 'SELECT TOP '+@items+' t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time, p.attach ' \
+	+'FROM jforum_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2 ' \
+	+'WHERE t.user_id = u.user_id ' \
+	+'AND t.user_id = '+@id+' ' \
+	+'AND p.post_id = t.topic_first_post_id ' \
+	+'AND p2.post_id = t.topic_last_post_id ' \
+	+'AND u2.user_id = p2.user_id ' \
+	+'AND p.need_moderate = 0 ' \
+	+'AND t.topic_id NOT IN ( ' \
+		+'SELECT TOP '+@offset+' t.topic_id ' \
+		+'FROM jforum_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2 ' \
+		+'WHERE t.user_id = u.user_id ' \
+		+'AND t.user_id = '+@id+' ' \
+		+'AND p.post_id = t.topic_first_post_id ' \
+		+'AND p2.post_id = t.topic_last_post_id ' \
+		+'AND u2.user_id = p2.user_id ' \
+		+'AND p.need_moderate = 0 ' \
+		+'ORDER BY p2.post_time DESC, t.topic_last_post_id DESC' \
+	+') ORDER BY p2.post_time DESC, t.topic_last_post_id DESC' \
+	)
+
+TopicModel.selectRecentTopicsByLimit = SELECT TOP ? t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time, p.attach \
+	FROM jforum_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2 \
+	WHERE t.user_id = u.user_id \
+	AND p.post_id = t.topic_first_post_id \
+	AND p.need_moderate = 0 \
+	AND p2.post_id = t.topic_last_post_id \
+	AND u2.user_id = p2.user_id \
+	ORDER BY p2.post_time DESC, t.topic_last_post_id DESC \
+
 TopicModel.selectAllByForumByLimit1 = t.*, p.attach, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time \
 	FROM jforum_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2 \
 	WHERE t.forum_id = ? \
@@ -134,8 +234,9 @@ TopicModel.selectAllByForumByLimit2 = t.topic_id \
 	AND t.user_id = u.user_id \
 	AND p.post_id = t.topic_first_post_id \
 	AND p2.post_id = t.topic_last_post_id \
-	AND u2.user_id = p2.user_id) \	
-	ORDER BY t.topic_type DESC, t.topic_time DESC, t.topic_last_post_id DESC	
+	AND u2.user_id = p2.user_id \
+	ORDER BY t.topic_type DESC, t.topic_time DESC, t.topic_last_post_id DESC \
+	) ORDER BY t.topic_type DESC, t.topic_time DESC, t.topic_last_post_id DESC \
 
 TopicModel.selectRecentTopicsByLimit = t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time, p2.attach \
 	FROM jforum_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2 \
@@ -161,6 +262,29 @@ PrivateMessageModel.selectById = SELECT p.privmsgs_id, p.privmsgs_type, p.privms
 # #############
 # SearchModel
 # #############
+SearchModel.getPostsToIndex = \
+	DECLARE	@id1 nvarchar(10), \
+			@id2 nvarchar(10), \
+			@offset nvarchar(10), \
+			@items nvarchar(10) \
+	SET		@id1 = ? \
+	SET		@id2 = ? \
+	SET		@offset = ? \
+	SET		@items = ? \
+	EXEC ( \
+	'SELECT TOP '+@items+' p.post_id, pt.post_text, pt.post_subject ' \
+	+'FROM jforum_posts p, jforum_posts_text pt ' \
+	+'WHERE p.post_id = pt.post_id ' \
+	+'AND p.post_id BETWEEN '+@id1+' AND '+@id2+' ' \
+	+'AND p.post_id NOT IN ( ' \
+		+'SELECT TOP '+@offset+' p.post_id ' \
+		+'FROM jforum_posts p, jforum_posts_text pt ' \
+		+'WHERE p.post_id = pt.post_id ' \
+		+'AND p.post_id BETWEEN '+@id1+' AND '+@id2+' ' \
+	+')' \
+	)
+	
+
 SearchModel.lastGeneratedWordId = SELECT IDENT_CURRENT('jforum_search_words') AS word_id 
 
 SearchModel.cleanSearchResults = DELETE FROM jforum_search_results WHERE session = ? OR search_time < DATEADD(HOUR, -1, getdate())

@@ -92,7 +92,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.115 2005/10/29 23:33:00 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.116 2005/11/02 01:22:25 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -104,7 +104,8 @@ public class PostAction extends Command
 
 		UserSession us = SessionFacade.getUserSession();
 		int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
-
+		boolean logged = SessionFacade.isLogged();
+		
 		int topicId = this.request.getIntParameter("topic_id");
 		
 		Topic topic = TopicRepository.getTopic(new Topic(topicId));
@@ -120,7 +121,7 @@ public class PostAction extends Command
 		}
 
 		// Shall we proceed?
-		if (!SessionFacade.isLogged()) {
+		if (!logged) {
 			Forum f = ForumRepository.getForum(topic.getForumId());
 			
 			if (f == null || !ForumRepository.isCategoryAccessible(f.getCategoryId())) {
@@ -152,7 +153,7 @@ public class PostAction extends Command
 		}
 
 		// Set the topic status as read
-		if (us.getUserId() != anonymousUser) {
+		if (logged) {
 			tm.updateReadStatus(topic.getId(), us.getUserId(), true);
 		}
 		
@@ -160,8 +161,14 @@ public class PostAction extends Command
 		topic.setTotalViews(topic.getTotalViews() + 1);
 
 		if (us.getUserId() != anonymousUser) {
-			((Map) SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(topic.getId()),
-					new Long(System.currentTimeMillis()));
+			((Map)SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(topic.getId()),
+				new Long(System.currentTimeMillis()));
+		}
+		
+		Map userVotes = new HashMap();
+		
+		if (logged) {
+			userVotes = DataAccessDriver.getInstance().newKarmaDAO().getUserVotes(topic.getId(), us.getUserId());
 		}
 		
 		this.setTemplateName(TemplateKeys.POSTS_LIST);
@@ -170,7 +177,7 @@ public class PostAction extends Command
 		this.context.put("canDownloadAttachments", pc.canAccess(
 				SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD));
 		this.context.put("am", new AttachmentCommon(this.request, topic.getForumId()));
-		this.context.put("karmaVotes", DataAccessDriver.getInstance().newKarmaDAO().getUserVotes(topic.getId(), us.getUserId()));
+		this.context.put("karmaVotes", userVotes);
 		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
 		this.context.put("canRemove", pc.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE));
 		this.context.put("canEdit", canEdit);

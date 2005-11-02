@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -55,7 +55,7 @@ import net.jforum.entities.LastPostInfo;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: ForumDAO.java,v 1.5 2005/08/08 10:43:11 andowson Exp $
+ * @version $Id: ForumDAO.java,v 1.6 2005/11/02 01:22:21 rafaelsteil Exp $
  */
 public interface ForumDAO 
 {
@@ -159,8 +159,22 @@ public interface ForumDAO
 	 */
 	public void decrementTotalTopics(int forumId, int count) throws Exception;
 
+	/**
+	 * Gets information about the latest message posted in some forum.
+	 * 
+	 * @param forumId the forum's id to inspect
+	 * @return A {@link LastPostInfo} instance
+	 * @throws Exception
+	 */
 	public LastPostInfo getLastPostInfo(int forumId) throws Exception;
 
+	/**
+	 * Get all moderators of some forum
+	 * @param forumId the forum's id to inspect
+	 * @return a list with all moderators. Each entry is an instance of
+	 * {@link net.jforum.entities.ModeratorInfo}
+	 * @throws Exception
+	 */
 	public List getModeratorList(int forumId) throws Exception;
 	
 	/**

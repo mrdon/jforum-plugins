@@ -47,13 +47,15 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import net.jforum.JForum;
 import net.jforum.entities.Post;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerPostDAO.java,v 1.5 2005/07/26 03:05:14 rafaelsteil Exp $
+ * @version $Id: SqlServerPostDAO.java,v 1.6 2005/11/02 01:22:26 rafaelsteil Exp $
  */
 public class SqlServerPostDAO extends net.jforum.dao.generic.GenericPostDAO
 {
@@ -87,9 +89,13 @@ public class SqlServerPostDAO extends net.jforum.dao.generic.GenericPostDAO
 		List l = new ArrayList();
 
 		String top = SystemGlobals.getSql("GenericModel.selectByLimit");
+		String sql = top + " " + count + " " + 
+			SystemGlobals.getSql("PostModel.selectAllByTopicByLimit1")  + 
+			" " + top + " " + startFrom + " " + 
+			SystemGlobals.getSql("PostModel.selectAllByTopicByLimit2");
         
-        PreparedStatement p = JForum.getConnection().prepareStatement(top + " " + count + " " + SystemGlobals.getSql("PostModel.selectAllByTopicByLimit1")  + " " + top + " " + startFrom + " " + SystemGlobals.getSql("PostModel.selectAllByTopicByLimit2"), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        System.out.println(top + " " + count + " " + SystemGlobals.getSql("PostModel.selectAllByTopicByLimit1")  + " " + top + " " + startFrom + " " + SystemGlobals.getSql("PostModel.selectAllByTopicByLimit2"));
+        PreparedStatement p = JForum.getConnection().prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        Logger.getLogger(this.getClass()).debug(sql);
         p.setInt(1, topicId);
         p.setInt(2, topicId);        
 
