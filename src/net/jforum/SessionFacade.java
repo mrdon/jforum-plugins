@@ -60,7 +60,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.28 2005/09/01 20:54:47 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.29 2005/11/02 02:26:27 rafaelsteil Exp $
  */
 public class SessionFacade implements Cacheable
 {
@@ -193,6 +193,11 @@ public class SessionFacade implements Cacheable
 	 */
 	public static void remove(String sessionId)
 	{
+		if (cache == null) {
+			logger.warn("Got a null cache instance. #" + sessionId);
+			return;
+		}
+		
 		logger.info("Removing session " + sessionId);
 		
 		synchronized (FQN) {
@@ -289,8 +294,13 @@ public class SessionFacade implements Cacheable
 	 */
 	public static UserSession getUserSession(String sessionId)
 	{
-		UserSession us = (UserSession)cache.get(FQN, sessionId);
-		return (us != null ? us : null);
+		if (cache != null) {
+			UserSession us = (UserSession)cache.get(FQN, sessionId);
+			return (us != null ? us : null);
+		}
+
+		logger.warn("Got a null cache in getUserSession. #" + sessionId);
+		return null;
 	}
 
 	/**
