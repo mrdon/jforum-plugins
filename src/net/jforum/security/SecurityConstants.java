@@ -44,7 +44,7 @@ package net.jforum.security;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityConstants.java,v 1.13 2005/07/26 03:05:06 rafaelsteil Exp $
+ * @version $Id: SecurityConstants.java,v 1.14 2005/11/02 03:10:40 rafaelsteil Exp $
  */
 public class SecurityConstants 
 {
@@ -55,6 +55,7 @@ public class SecurityConstants
 	public static final String PERM_FORUM = "perm_forum";
 	public static final String PERM_ANONYMOUS_POST = "perm_anonymous_post";
 	public static final String PERM_MODERATION = "perm_moderation";
+	public static final String PERM_REPLY_WITHOUT_MODERATION = "perm_reply_without_moderation";
 	public static final String PERM_MODERATION_APPROVE_MESSAGES = "perm_moderation_approve_messages";
 	public static final String PERM_MODERATION_FORUMS = "perm_moderation_forums";
 	public static final String PERM_MODERATION_POST_REMOVE = "perm_moderation_post_remove";

@@ -177,7 +177,7 @@ PostModel.deleteByTopic = SELECT post_id, user_id FROM jforum_posts WHERE topic_
 # #############
 ForumModel.selectById = SELECT forum_id, forum_name, categories_id, forum_desc, forum_order, forum_topics, forum_last_post_id, moderated \
 	FROM jforum_forums \
-	WHERE f.forum_id = ?
+	WHERE forum_id = ?
 
 ForumModel.selectAll = SELECT forum_id, forum_name, categories_id, forum_desc, forum_order, forum_topics, forum_last_post_id, moderated \
 	FROM jforum_forums \

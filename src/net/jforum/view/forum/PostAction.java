@@ -92,7 +92,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.117 2005/11/02 01:53:10 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.118 2005/11/02 03:10:42 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -855,7 +855,6 @@ public class PostAction extends Command
 		}
 
 		boolean preview = (this.request.getParameter("preview") != null);
-		boolean moderate = false;
 		
 		if (!preview) {
 			AttachmentCommon attachments = new AttachmentCommon(this.request, forumId);
@@ -886,10 +885,17 @@ public class PostAction extends Command
 				firstPost = true;
 			}
 			
+			PermissionControl pc = SecurityRepository.get(us.getUserId());
+			
 			// Moderators and admins don't need to have their messages moderated
-			moderate = (t.isModerated() 
-					&& !SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION)
-					&& !SecurityRepository.canAccess(SecurityConstants.PERM_ADMINISTRATION));
+			boolean moderate = (t.isModerated() 
+					&& !pc.canAccess(SecurityConstants.PERM_MODERATION)
+					&& !pc.canAccess(SecurityConstants.PERM_ADMINISTRATION));
+			
+			if (!firstPost && pc.canAccess(
+					SecurityConstants.PERM_REPLY_WITHOUT_MODERATION, Integer.toString(t.getForumId()))) {
+				moderate = false;
+			}
 
 			// Topic watch
 			if (this.request.getParameter("notify") != null) {
@@ -952,7 +958,9 @@ public class PostAction extends Command
 				}
 			}
 			else {
-				JForum.setRedirect(this.request.getContextPath() + "/posts/waitingModeration/" + (firstPost ? 0 : t.getId())
+				JForum.setRedirect(this.request.getContextPath() 
+						+ "/posts/waitingModeration/" 
+						+ (firstPost ? 0 : t.getId())
 						+ "/" + t.getForumId()
 						+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 			}
