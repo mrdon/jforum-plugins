@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- $Id: bb_config.xml,v 1.21 2005/10/08 22:37:47 rafaelsteil Exp $ -->
+<!-- $Id: bb_config.xml,v 1.22 2005/11/02 19:25:17 rafaelsteil Exp $ -->
 <bbConfig>
 	<!-- CODE -->
 	<match name="code">
 		<regex>(?s)\[code\](.*?)\[/code\]</regex>
 		<replace>
 		<![CDATA[
-		<p><span class="genmed"><b>Code:</b></span></p>
+		
+		<span class="genmed"><b>Code:</b></span><br>
+		<div style="overflow: auto; width: 100%;">
 		<pre>$1</pre>
+		</div>
 		]]>
 		</replace>
 	</match>
@@ -25,9 +28,11 @@
 		<regex>(?i)\[quote=['"]?(.*?[^'"])['"]?\]</regex>
 		<replace>
 		<![CDATA[
-		<p><cite><b>$1 wrote:</b></cite></p>
-		
+		<p></p>
+
+		<cite>$1 wrote:</cite><br>
 		<blockquote>
+		
 		]]>
 		</replace>
 	</match>

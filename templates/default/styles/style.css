@@ -84,7 +84,7 @@ blockquote, .code, pre  {
 
 .pre-error { font-size: 1em; color: #000; font-family: ; background-color: #FAFAFA; border: 0px; ; padding-left: ; }
 
-cite { color: #01336b; }
+cite { font-weight: bold; font-style: italic; font-size: 11px; }
 pre { font-family: courier, 'courier new', sans-serif;  }
 
 .copyright { font-size: 10px; color: #444444; font-family: verdana, arial, helvetica, sans-serif; letter-spacing: -1px }
