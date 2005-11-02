@@ -92,7 +92,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.116 2005/11/02 01:22:25 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.117 2005/11/02 01:53:10 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -121,10 +121,10 @@ public class PostAction extends Command
 		}
 
 		// Shall we proceed?
+		Forum forum = ForumRepository.getForum(topic.getForumId());
+		
 		if (!logged) {
-			Forum f = ForumRepository.getForum(topic.getForumId());
-			
-			if (f == null || !ForumRepository.isCategoryAccessible(f.getCategoryId())) {
+			if (forum == null || !ForumRepository.isCategoryAccessible(forum.getCategoryId())) {
 				this.setTemplateName(ViewCommon.contextToLogin());
 				return;
 			}
@@ -165,9 +165,10 @@ public class PostAction extends Command
 				new Long(System.currentTimeMillis()));
 		}
 		
+		boolean karmaEnabled = SecurityRepository.canAccess(SecurityConstants.PERM_KARMA_ENABLED);
 		Map userVotes = new HashMap();
 		
-		if (logged) {
+		if (logged && karmaEnabled) {
 			userVotes = DataAccessDriver.getInstance().newKarmaDAO().getUserVotes(topic.getId(), us.getUserId());
 		}
 		
@@ -185,7 +186,7 @@ public class PostAction extends Command
 		this.context.put("topic", topic);
 		this.context.put("rank", new RankingRepository());
 		this.context.put("posts", helperList);
-		this.context.put("forum", ForumRepository.getForum(topic.getForumId()));
+		this.context.put("forum", forum);
 		
 		Map topicPosters = tm.topicPosters(topic.getId());
 		
@@ -194,7 +195,6 @@ public class PostAction extends Command
 		}
 		
 		this.context.put("users", topicPosters);
-		this.context.put("topicId", new Integer(topicId));
 		this.context.put("anonymousPosts", pc.canAccess(SecurityConstants.PERM_ANONYMOUS_POST, 
 				Integer.toString(topic.getForumId())));
 		this.context.put("watching", tm.isUserSubscribed(topicId, SessionFacade.getUserSession().getUserId()));
@@ -208,7 +208,7 @@ public class PostAction extends Command
 		this.context.put("isModerator", us.isModerator(topic.getForumId()));
 
 		// Pagination
-		ViewCommon.contextToPagination(start, topic.getTotalReplies(), count);
+		ViewCommon.contextToPagination(start, topic.getTotalReplies() + 1, count);
 		
 		TopicsCommon.topicListingBase();
 		TopicRepository.updateTopic(topic);
