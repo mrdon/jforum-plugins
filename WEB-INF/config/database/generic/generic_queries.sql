@@ -185,6 +185,7 @@ ForumModel.selectAll = SELECT forum_id, forum_name, categories_id, forum_desc, f
 
 ForumModel.selectAllForPermissions = SELECT forum_id, forum_name FROM jforum_forums ORDER BY forum_name
 
+ForumModel.countForumPosts = SELECT COUNT(1) FROM jforum_posts WHERE forum_id = ?
 ForumModel.setModerated = UPDATE jforum_forums SET moderated = ? WHERE categories_id = ?
 ForumModel.delete = DELETE FROM jforum_forums WHERE forum_id = ?
 ForumModel.update = UPDATE jforum_forums SET categories_id = ?, forum_name = ?, forum_desc = ?, moderated = ? WHERE forum_id = ?
