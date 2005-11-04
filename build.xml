@@ -121,8 +121,12 @@
 		<delete dir="${dist}" failonerror="false" />
 	</target>
 	
-	<target name="init" description="Create the dist directory structure used by compile and copy the deployment descriptors into it">
+	<target name="splash" unless="hide.splash">
 		<splash/>
+	</target>
+	
+	<target name="init" description="Create the dist directory structure used by compile and copy the deployment descriptors into it">
+		<antcall target="splash"/>
 		<mkdir dir="${dist}"/>
 		<mkdir dir="${dist}/WEB-INF"/>
 		<mkdir dir="${dist}/WEB-INF/classes"/>
