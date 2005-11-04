@@ -24,7 +24,8 @@
 	<property name="src" value="src" />
 	<property name="classes" value="WEB-INF/classes" />
 	<property name="jarFile" value="${dist}/${jarname}_${version}.jar" />
-	<property name="deploy.dir" value="/java/Tomcat5.5.9/webapps" />
+	<property name="tomcat.home" value="/java/Tomcat5.5.9"/>
+	<property name="deploy.dir" value="${tomcat.home}/webapps" />
 	<property name="web" value="." />
 	
 	<path id="base.path">
