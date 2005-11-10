@@ -383,6 +383,7 @@ CREATE TABLE [jforum_users] (
 	[user_msnm] [varchar] (255) NULL ,
 	[user_occ] [varchar] (100) NULL ,
 	[user_interests] [varchar] (255) NULL ,
+	[user_biography] [text] NULL ,
 	[user_actkey] [varchar] (32) NULL ,
 	[gender] [char] (1) NULL ,
 	[themes_id] [bigint] NULL ,

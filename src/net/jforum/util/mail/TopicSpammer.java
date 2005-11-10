@@ -55,7 +55,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicSpammer.java,v 1.14 2005/07/26 03:05:56 rafaelsteil Exp $
+ * @version $Id: TopicSpammer.java,v 1.15 2005/11/10 21:59:12 almilli Exp $
  */
 public class TopicSpammer extends Spammer 
 {
@@ -95,7 +95,7 @@ public class TopicSpammer extends Spammer
 		params.put("unwatch", unwatch);
 		
 		super.prepareMessage(recipients, params,
-			MessageFormat.format(SystemGlobals.getValue(ConfigKeys.MAIL_NEW_ANSWER_SUBJECT), new String[] { topic.getTitle() }),
+			MessageFormat.format(SystemGlobals.getValue(ConfigKeys.MAIL_NEW_ANSWER_SUBJECT), new Object[] { topic.getTitle() }),
 			SystemGlobals.getValue(ConfigKeys.MAIL_NEW_ANSWER_MESSAGE_FILE));
 	}
 }
