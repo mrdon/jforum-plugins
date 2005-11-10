@@ -255,23 +255,23 @@ SearchModel.searchBase = SELECT t.*, u.username AS posted_by_username, u.user_id
 	AND u2.user_id = p2.user_id \
 	AND f.forum_id = t.forum_id \
 	AND t.topic_id = sr.topic_id \
-	AND sr.session_id = ? \
-	AND t.session_id = ? \
+	AND sr.session = ? \
+	AND t.session = ? \
 	:criterias: \
 	ORDER BY :orderByField: :orderBy:
 
-SearchModel.insertTopicsIds = INSERT INTO jforum_search_results ( topic_id, session_id, search_time ) SELECT DISTINCT t.topic_id, ?, sysdate FROM jforum_topics t, jforum_posts p \
+SearchModel.insertTopicsIds = INSERT INTO jforum_search_results ( topic_id, session, search_time ) SELECT DISTINCT t.topic_id, ?, sysdate FROM jforum_topics t, jforum_posts p \
 	WHERE t.topic_id = p.topic_id \
 	AND p.post_id IN (:posts:)
 
 
 SearchModel.selectTopicData = INSERT INTO jforum_search_topics (topic_id, forum_id, topic_title, user_id, topic_time, \
-	topic_views, topic_status, topic_replies, topic_vote, topic_type, topic_first_post_id, topic_last_post_id, moderated, session_id, search_time) \
+	topic_views, topic_status, topic_replies, topic_vote, topic_type, topic_first_post_id, topic_last_post_id, moderated, session, search_time) \
 	SELECT t.topic_id, t.forum_id, t.topic_title, t.user_id, t.topic_time, \
 	t.topic_views, t.topic_status, t.topic_replies, t.topic_vote, t.topic_type, t.topic_first_post_id, t.topic_last_post_id, t.moderated, ?, sysdate \
 	FROM jforum_topics t, jforum_search_results s \
 	WHERE t.topic_id = s.topic_id \
-	AND s.session_id = ?
+	AND s.session = ?
 
 SearchModel.lastGeneratedWordId = SELECT jforum_search_words_seq.currval FROM DUAL
 
@@ -288,10 +288,10 @@ SearchModel.getPostsToIndex = SELECT * FROM ( \
 # (SYSDATE - time_field) return days. E.q if delta is 20 minuts it return 0.0125. If multyply on 24, that it would be hours - 0.3
 # So, ((SYSDATE - time_field)*24) > 1.0 totally mean 'delta' > 1 hour   
 #
-SearchModel.cleanSearchResults = DELETE FROM jforum_search_results WHERE session_id = ? OR ((SYSDATE - search_time)*24) > 1.0
-SearchModel.cleanSearchTopics = DELETE FROM jforum_search_topics WHERE session_id = ? OR ((SYSDATE - search_time)*24) > 1.0
+SearchModel.cleanSearchResults = DELETE FROM jforum_search_results WHERE session = ? OR ((SYSDATE - search_time)*24) > 1.0
+SearchModel.cleanSearchTopics = DELETE FROM jforum_search_topics WHERE session = ? OR ((SYSDATE - search_time)*24) > 1.0
 
-SearchModel.searchByTime = INSERT INTO jforum_search_results (topic_id, session_id, search_time) SELECT DISTINCT t.topic_id, ?, SYSDATE FROM jforum_topics t, jforum_posts p \
+SearchModel.searchByTime = INSERT INTO jforum_search_results (topic_id, session, search_time) SELECT DISTINCT t.topic_id, ?, SYSDATE FROM jforum_topics t, jforum_posts p \
 	WHERE t.topic_id = p.topic_id \
 	AND p.post_time > ?
 
