@@ -73,7 +73,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.82 2005/10/30 15:48:16 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.83 2005/11/10 18:30:01 almilli Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
@@ -177,6 +177,8 @@ public class JForum extends JForumBaseServlet
 			context.put("language", I18n.getUserLanguage());
 			context.put("securityHash", MD5.crypt(request.getSession().getId()));
 			context.put("session", SessionFacade.getUserSession());
+			context.put("request", req);
+			context.put("response", response);
 		
 			if (moduleClass != null) {
 				// Here we go, baby

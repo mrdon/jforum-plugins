@@ -242,7 +242,7 @@ CREATE TABLE jforum_topics (
   topic_views INT default '1',
   topic_replies INT default '0',
   topic_status tinyint(3) default '0',
-  topic_vote tinyint(1) default '0',
+  topic_vote_id INT NOT NULL default '0',
   topic_type tinyint(3) default '0',
   topic_first_post_id INT default '0',
   topic_last_post_id INT NOT NULL default '0',
@@ -336,8 +336,8 @@ DROP TABLE IF EXISTS jforum_vote_desc;
 CREATE TABLE jforum_vote_desc (
   vote_id INT NOT NULL auto_increment,
   topic_id INT NOT NULL default '0',
-  vote_text text NOT NULL,
-  vote_start int(11) NOT NULL default '0',
+  vote_text varchar(255) NOT NULL default '',
+  vote_start datetime NOT NULL,
   vote_length int(11) NOT NULL default '0',
   PRIMARY KEY  (vote_id)
 ) TYPE=InnoDB;
@@ -362,7 +362,7 @@ DROP TABLE IF EXISTS jforum_vote_voters;
 CREATE TABLE jforum_vote_voters (
   vote_id INT NOT NULL default '0',
   vote_user_id INT NOT NULL default '0',
-  vote_user_ip char(8) NOT NULL default ''
+  vote_user_ip varchar(15) NOT NULL default ''
 ) TYPE=InnoDB;
 
 --
@@ -424,7 +424,7 @@ CREATE TABLE jforum_search_topics (
   topic_views INT default '1',
   topic_replies INT default '0',
   topic_status tinyint(3) default '0',
-  topic_vote tinyint(1) default '0',
+  topic_vote_id INT NOT NULL default '0',
   topic_type tinyint(3) default '0',
   topic_first_post_id INT default '0',
   topic_last_post_id INT NOT NULL default '0',

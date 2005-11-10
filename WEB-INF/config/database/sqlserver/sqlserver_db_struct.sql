@@ -261,7 +261,7 @@ CREATE TABLE [jforum_search_topics] (
 	[topic_views] [bigint] DEFAULT (0) NULL ,
 	[topic_replies] [bigint] DEFAULT (0) NULL ,
 	[topic_status] [tinyint] DEFAULT (0) NULL ,
-	[topic_vote] [tinyint] DEFAULT (0) NULL ,
+	[topic_vote_id] [int] DEFAULT (0) NULL ,
 	[topic_type] [tinyint] DEFAULT (0) NULL ,
 	[topic_first_post_id] [bigint] DEFAULT (0) NULL ,
 	[topic_last_post_id] [bigint] DEFAULT (0) NOT NULL ,
@@ -319,7 +319,7 @@ CREATE TABLE [jforum_topics] (
 	[topic_views] [bigint] DEFAULT (1) NULL ,
 	[topic_replies] [bigint] DEFAULT (0) NULL ,
 	[topic_status] [tinyint] DEFAULT (0) NULL ,
-	[topic_vote] [tinyint] DEFAULT (0) NULL ,
+	[topic_vote_id] [int] DEFAULT (0) NULL ,
 	[topic_type] [tinyint] DEFAULT (0) NULL ,
 	[topic_first_post_id] [bigint] DEFAULT (0) NULL ,
 	[topic_last_post_id] [bigint] DEFAULT (0) NOT NULL ,
@@ -396,8 +396,8 @@ CREATE TABLE [jforum_users] (
 CREATE TABLE [jforum_vote_desc] (
 	[vote_id] [bigint] IDENTITY (1, 1) PRIMARY KEY CLUSTERED NOT NULL ,
 	[topic_id] [bigint] DEFAULT (0) NOT NULL ,
-	[vote_text] [text] NOT NULL ,
-	[vote_start] [bigint] DEFAULT (0) NOT NULL ,
+	[vote_text] [varchar] (255) NOT NULL ,
+	[vote_start] [datetime] NOT NULL ,
 	[vote_length] [bigint] DEFAULT (0) NOT NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
@@ -413,7 +413,7 @@ CREATE TABLE [jforum_vote_results] (
 CREATE TABLE [jforum_vote_voters] (
 	[vote_id] [bigint] DEFAULT (0) NOT NULL ,
 	[vote_user_id] [bigint] DEFAULT (0) NOT NULL ,
-	[vote_user_ip] [char] (8) NOT NULL 
+	[vote_user_ip] [varchar] (15) NOT NULL 
 ) ON [PRIMARY]
 
 

@@ -52,7 +52,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
@@ -60,11 +59,14 @@ import net.jforum.dao.AttachmentDAO;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
 import net.jforum.dao.KarmaDAO;
+import net.jforum.dao.PollDAO;
 import net.jforum.dao.PostDAO;
 import net.jforum.dao.TopicDAO;
 import net.jforum.dao.UserDAO;
 import net.jforum.entities.Attachment;
 import net.jforum.entities.Forum;
+import net.jforum.entities.Poll;
+import net.jforum.entities.PollOption;
 import net.jforum.entities.Post;
 import net.jforum.entities.QuotaLimit;
 import net.jforum.entities.Topic;
@@ -86,19 +88,21 @@ import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
 import net.jforum.view.forum.common.AttachmentCommon;
 import net.jforum.view.forum.common.ForumCommon;
+import net.jforum.view.forum.common.PollCommon;
 import net.jforum.view.forum.common.PostCommon;
 import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.118 2005/11/02 03:10:42 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.119 2005/11/10 18:30:07 almilli Exp $
  */
 public class PostAction extends Command 
 {
 	public void list() throws Exception 
 	{
 		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
+		PollDAO plm = DataAccessDriver.getInstance().newPollDAO();
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 
@@ -156,6 +160,21 @@ public class PostAction extends Command
 		if (logged) {
 			tm.updateReadStatus(topic.getId(), us.getUserId(), true);
 		}
+
+		boolean canVoteOnPoll = SecurityRepository.canAccess(SecurityConstants.PERM_VOTE);
+		Poll poll = null;
+		if (topic.isVote()) {
+			//it has a poll associated with the topic
+			poll = plm.selectById(topic.getVoteId());
+			if (canVoteOnPoll) {
+				int anonUserId = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
+				if (us.getUserId() == anonUserId) {
+					canVoteOnPoll = !plm.hasUserVotedOnPoll(topic.getVoteId(), request.getRemoteAddr());
+				} else {
+					canVoteOnPoll = !plm.hasUserVotedOnPoll(topic.getVoteId(), us.getUserId());
+				}
+			}
+		}
 		
 		tm.incrementTotalViews(topic.getId());
 		topic.setTotalViews(topic.getTotalViews() + 1);
@@ -184,6 +203,8 @@ public class PostAction extends Command
 		this.context.put("canEdit", canEdit);
 		this.context.put("allCategories", ForumCommon.getAllCategoriesAndForums(false));
 		this.context.put("topic", topic);
+		this.context.put("poll", poll);
+		this.context.put("canVoteOnPoll", canVoteOnPoll);
 		this.context.put("rank", new RankingRepository());
 		this.context.put("posts", helperList);
 		this.context.put("forum", forum);
@@ -239,6 +260,31 @@ public class PostAction extends Command
 			+ page + topicId
 			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) 
 			+ "#" + postId);
+	}
+	
+	/**
+	 * Votes on a poll.
+	 * @throws Exception
+	 */
+	public void vote() throws Exception
+	{
+		int pollId = this.request.getIntParameter("poll_id");
+		int topicId = this.request.getIntParameter("topic_id");
+		if (this.request.getParameter("poll_option") != null) {
+			//they voted, save the value
+			int optionId = this.request.getIntParameter("poll_option");
+			
+			PollDAO pm = DataAccessDriver.getInstance().newPollDAO();
+			
+			//vote on the poll
+			UserSession user = SessionFacade.getUserSession();
+			pm.voteOnPoll(pollId, optionId, user.getUserId(), request.getRemoteAddr());
+		}
+
+		JForum.setRedirect(
+			this.request.getContextPath() + "/posts/list/"
+			+ topicId
+			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 	}
 
 	public void listByUser() throws Exception 
@@ -446,6 +492,8 @@ public class PostAction extends Command
 				SecurityRepository.canAccess(SecurityConstants.PERM_HTML_DISABLED, Integer.toString(forumId)));
 		this.context.put("canCreateStickyOrAnnouncementTopics",
 				SecurityRepository.canAccess(SecurityConstants.PERM_CREATE_STICKY_ANNOUNCEMENT_TOPICS));
+		this.context.put("canCreatePolls",
+				SecurityRepository.canAccess(SecurityConstants.PERM_CREATE_POLL));
 
 		User user = DataAccessDriver.getInstance().newUserDAO().selectById(userId);
 		user.setSignature(PostCommon.processText(user.getSignature()));
@@ -507,6 +555,13 @@ public class PostAction extends Command
 						DataAccessDriver.getInstance().newAttachmentDAO().selectAttachments(p.getId()));
 			}
 
+			Poll poll = null;
+			if (topic.isVote()) {
+				//it has a poll associated with the topic
+				PollDAO plm = DataAccessDriver.getInstance().newPollDAO();
+				poll = plm.selectById(topic.getVoteId());
+			}
+
 			this.context.put("attachmentsEnabled", SecurityRepository.canAccess(
 					SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(p.getForumId())));
 			
@@ -520,6 +575,7 @@ public class PostAction extends Command
 			this.context.put("post", p);
 			this.context.put("setType", p.getId() == topic.getFirstPostId());
 			this.context.put("topic", topic);
+			this.context.put("poll", poll);
 			this.context.put("pageTitle", I18n.getMessage("PostShow.messageTitle")+" "+p.getSubject());
 			this.setTemplateName(TemplateKeys.POSTS_EDIT);
 			this.context.put("start", this.request.getParameter("start"));
@@ -527,6 +583,8 @@ public class PostAction extends Command
 					Integer.toString(topic.getForumId())));
 			this.context.put("canCreateStickyOrAnnouncementTopics",
 					SecurityRepository.canAccess(SecurityConstants.PERM_CREATE_STICKY_ANNOUNCEMENT_TOPICS));
+			this.context.put("canCreatePolls",
+					SecurityRepository.canAccess(SecurityConstants.PERM_CREATE_POLL));
 		}
 		else {
 			this.setTemplateName(TemplateKeys.POSTS_EDIT_CANNOTEDIT);
@@ -618,6 +676,7 @@ public class PostAction extends Command
 	public void editSave() throws Exception 
 	{
 		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
+		PollDAO plm = DataAccessDriver.getInstance().newPollDAO();
 		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 
 		Post p = pm.selectById(this.request.getIntParameter("post_id"));
@@ -679,6 +738,39 @@ public class PostAction extends Command
 				
 				if (changeType) {
 					t.setType(newType);
+				}
+
+				// Poll
+				Poll poll = PollCommon.fillPollFromRequest();
+				if (poll != null && !t.isVote()) {
+					//they added a poll
+					poll.setTopicId(t.getId());
+					if (poll.getOptions().size() < 2) {
+						//it is not a valid poll, cancel the post
+						JForum.enableCancelCommit();
+						p.setText(this.request.getParameter("message"));
+						p.setId(0);
+						this.context.put("errorMessage", I18n.getMessage("PostForm.needMorePollOptions"));
+						this.context.put("post", p);
+						this.context.put("poll", poll);
+						this.edit();
+						return;
+					}
+					plm.addNew(poll);
+					t.setVoteId(poll.getId());
+
+				} else if (poll != null) {
+					//they edited the poll in the topic
+					Poll existing = plm.selectById(t.getVoteId());
+					if (!PollCommon.isSamePoll(poll, existing)) {
+						poll.setId(existing.getId());
+						plm.update(poll);
+					}
+					
+				} else if (t.isVote()) {
+					//they deleted the poll from the topic
+					plm.delete(t.getVoteId());
+					t.setVoteId(0);
 				}
 				
 				tm.update(t);
@@ -759,6 +851,7 @@ public class PostAction extends Command
 
 		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
+		PollDAO plm = DataAccessDriver.getInstance().newPollDAO();
 		ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
 
 		if (!newTopic) {
@@ -903,6 +996,26 @@ public class PostAction extends Command
 			}
 
 			p.setTopicId(t.getId());
+
+			// add a poll
+			if (newTopic && request.getParameter("poll_label") != null) {
+				Poll poll = PollCommon.fillPollFromRequest();
+
+				poll.setTopicId(t.getId());
+				if (poll.getOptions().size() < 2) {
+					//it is not a valid poll, cancel the post
+					JForum.enableCancelCommit();
+					p.setText(this.request.getParameter("message"));
+					p.setId(0);
+					this.context.put("errorMessage", I18n.getMessage("PostForm.needMorePollOptions"));
+					this.context.put("post", p);
+					this.context.put("poll", poll);
+					this.insert();
+					return;
+				}
+				plm.addNew(poll);
+				t.setVoteId(poll.getId());
+			}
 
 			// Save the remaining stuff
 			p.setModerate(moderate);

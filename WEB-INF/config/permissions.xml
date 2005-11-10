@@ -47,6 +47,22 @@
 		</permission>
 	</section>
 
+	<!-- Poll topics -->
+	<section id="topics_poll" title="Poll Topics">
+		<permission id="perm_create_poll" title="Can create poll topics" type="single">
+			<option value="deny" description="No"/>
+			<option value="allow" description="Yes"/>
+		</permission>
+	</section>
+
+	<!-- Vote on polls -->
+	<section id="topics_poll" title="Vote">
+		<permission id="perm_vote" title="Can vote on polls" type="single">
+			<option value="deny" description="No"/>
+			<option value="allow" description="Yes"/>
+		</permission>
+	</section>
+
 	<!-- Read-only forums -->
 	<section id="read_only_forum" title="Read-Only Forums">
 		<permission id="perm_read_only_forums" title="Read-Only forums. Choosing 'Allow All' will &lt;b&gt;disable&lt;/b&gt; the read-only flag" type="multiple">

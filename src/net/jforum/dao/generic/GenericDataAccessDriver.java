@@ -51,6 +51,7 @@ import net.jforum.dao.ForumDAO;
 import net.jforum.dao.GroupDAO;
 import net.jforum.dao.KarmaDAO;
 import net.jforum.dao.ModerationDAO;
+import net.jforum.dao.PollDAO;
 import net.jforum.dao.PostDAO;
 import net.jforum.dao.PrivateMessageDAO;
 import net.jforum.dao.RankingDAO;
@@ -67,12 +68,13 @@ import net.jforum.dao.security.GroupSecurityDAO;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericDataAccessDriver.java,v 1.2 2005/10/02 19:06:48 rafaelsteil Exp $
+ * @version $Id: GenericDataAccessDriver.java,v 1.3 2005/11/10 18:30:03 almilli Exp $
  */
 public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver 
 {
 	private static GroupDAO groupDao = new GenericGroupDAO();
 	private static PostDAO postDao = new GenericPostDAO();
+	private static PollDAO pollDao = new GenericPollDAO();
 	private static RankingDAO rankingDao = new GenericRankingDAO();
 	private static TopicDAO topicDao = new GenericTopicDAO();
 	private static UserDAO userDao = new GenericUserDAO();
@@ -115,6 +117,14 @@ public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver
 	public net.jforum.dao.PostDAO newPostDAO() 
 	{
 		return postDao;
+	}
+
+	/**
+	 * @see net.jforum.dao.DataAccessDriver#getPollModel()
+	 */
+	public net.jforum.dao.PollDAO newPollDAO() 
+	{
+		return pollDao;
 	}
 
 	/**

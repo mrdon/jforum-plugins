@@ -5,6 +5,7 @@
 // Startup variables
 var imageTag = false;
 var theSelection = false;
+var pollOptionCount = -1;
 
 // Check for Browser & Platform for PC & IE specific bits
 // More details from: http://www.mozilla.org/docs/web-developer/sniffer/browser_type${extension}
@@ -197,4 +198,79 @@ function previewCallback(post)
 
 	document.getElementById("previewTable").style.display = '';
 	document.location = "#preview";
+}
+
+
+function deletePollOption(button)
+{
+	initPollOptionCount();
+	//first, fix the following ids	
+	var textField = button.parentNode.getElementsByTagName("input")[0];
+	var name = textField.name;
+	var index = name.lastIndexOf("_");
+	if (index != -1) {
+		var num = parseInt(name.substring(index+1));
+		var option;
+		for (i=num+1; i <= pollOptionCount; i++) {
+			option = document.getElementById("pollOption" + i);
+			if (option != null) {
+				option.id = "pollOption" + (i-1);
+				option.name = "poll_option_" + (i-1);
+			}
+		}
+		pollOptionCount--;
+	}
+	
+	var node = button.parentNode;
+	while (node != null) {
+		if (node.id == "pollOption") {
+			node.parentNode.removeChild(node);
+			break;
+		}
+		node = node.parentNode;
+	}
+}
+
+function addPollOption()
+{
+	initPollOptionCount();
+	var addOption = document.getElementById("pollOptionWithAdd");
+	var deleteOption = document.getElementById("pollOptionWithDelete");
+	var newOption = deleteOption.cloneNode(true);
+	if (is_nav) {
+		newOption.style.display = "table-row";
+	} else {
+		newOption.style.display = "block";
+	}
+	newOption.id = "pollOption";
+	
+	var newTextField = newOption.getElementsByTagName("input")[0];
+	var addTextField = addOption.getElementsByTagName("input")[0];
+	
+	//copy the active text data to the inserted option
+	newTextField.id = "pollOption" + pollOptionCount;
+	newTextField.name = "poll_option_" + pollOptionCount;
+	newTextField.value = addTextField.value;
+	
+	pollOptionCount++;
+	
+	//clear out the last text field and increment the id
+	addTextField.id = "pollOption" + pollOptionCount;
+	addTextField.name = "poll_option_" + pollOptionCount;
+	addTextField.value = "";
+	
+	addOption.parentNode.insertBefore(newOption, addOption);
+	addTextField.focus();
+}
+
+function initPollOptionCount()
+{
+	if (pollOptionCount == -1) {
+		var countField = document.getElementById("pollOptionCount");
+		if (countField != null) {
+			pollOptionCount = parseInt(countField.value);
+		} else {
+			pollOptionCount = 1;
+		}
+	}
 }

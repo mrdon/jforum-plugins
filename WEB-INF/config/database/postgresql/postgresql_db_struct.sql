@@ -229,7 +229,7 @@ CREATE TABLE jforum_topics (
   topic_views INTEGER DEFAULT 1,
   topic_replies INTEGER DEFAULT 0,
   topic_status INTEGER DEFAULT 0,
-  topic_vote INTEGER DEFAULT 0,
+  topic_vote_id INTEGER DEFAULT 0,
   topic_type INTEGER DEFAULT 0,
   topic_first_post_id INTEGER DEFAULT 0,
   topic_last_post_id INTEGER NOT NULL DEFAULT 0,
@@ -322,8 +322,8 @@ CREATE SEQUENCE jforum_vote_desc_seq;
 CREATE TABLE jforum_vote_desc (
   vote_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_vote_desc_seq'),
   topic_id INTEGER NOT NULL DEFAULT 0,
-  vote_text TEXT NOT NULL,
-  vote_start INTEGER NOT NULL DEFAULT 0,
+  vote_text VARCHAR(255) NOT NULL DEFAULT '',
+  vote_start TIMESTAMP NOT NULL,
   vote_length INTEGER NOT NULL DEFAULT 0,
   PRIMARY KEY  (vote_id)
 );
@@ -346,7 +346,7 @@ CREATE TABLE jforum_vote_results (
 CREATE TABLE jforum_vote_voters (
   vote_id INTEGER NOT NULL DEFAULT 0,
   vote_user_id INTEGER NOT NULL DEFAULT 0,
-  vote_user_ip CHAR(8) NOT NULL DEFAULT ''
+  vote_user_ip VARCHAR(15) NOT NULL DEFAULT ''
 );
 
 --
@@ -405,7 +405,7 @@ CREATE TABLE jforum_search_topics (
   topic_views INTEGER DEFAULT 1,
   topic_replies INTEGER DEFAULT 0,
   topic_status INTEGER DEFAULT 0,
-  topic_vote INTEGER DEFAULT 0,
+  topic_vote_id INTEGER DEFAULT 0,
   topic_type INTEGER DEFAULT 0,
   topic_first_post_id INTEGER DEFAULT 0,
   topic_last_post_id INTEGER NOT NULL DEFAULT 0,

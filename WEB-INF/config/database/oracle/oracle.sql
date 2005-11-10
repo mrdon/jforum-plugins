@@ -68,8 +68,6 @@ PostModel.addNewPostText = INSERT INTO jforum_posts_text ( post_text, post_id, p
 PostModel.addNewPostTextField = SELECT post_text from jforum_posts_text WHERE post_id = ? FOR UPDATE
 PostModel.updatePostText = UPDATE jforum_posts_text SET post_subject = ? WHERE post_id = ?
 
-PostModel
-
 PostModel.lastGeneratedPostId = SELECT jforum_posts_seq.currval FROM DUAL
 
 PostModel.selectAllByTopicByLimit = SELECT * FROM ( \
@@ -112,6 +110,14 @@ TopicModel.selectByUserByLimit = SELECT * FROM ( \
 	ORDER BY p2.post_time DESC, t.topic_last_post_id DESC \
 ) \
 WHERE LINENUM BETWEEN ? AND ?
+
+# #############
+# PollModel
+# #############
+PollModel.addNewPoll = INSERT INTO jforum_vote_desc (vote_id, topic_id, vote_text, vote_length, vote_start) \
+	VALUES (jforum_vote_desc_seq.nextval, ?, ?, ?, SYSDATE)
+	
+PollModel.lastGeneratedPollId = SELECT jforum_vote_desc_seq.currval FROM DUAL
 
 # #############
 # ForumModel

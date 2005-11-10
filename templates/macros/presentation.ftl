@@ -37,6 +37,31 @@
 	</#if>
 </#macro>
 
+<#macro renderPoll poll>
+	<table class="poll">
+		<tr>
+			<td colspan="4" class="strong" align="center">${poll.label}</td>
+		</tr>
+		<tr>
+			<#list poll.options as option>
+				<tr>
+					<td>${option.text}</td>
+					<td nowrap="nowrap" width="210">
+						<img src="${contextPath}/templates/${templateName}/images/vote_lcap.gif" width="4" height="12"><img 
+							src="${contextPath}/templates/${templateName}/images/voting_bar.gif" width="${option.votePercentage * 2}" height="12"><img 
+							src="${contextPath}/templates/${templateName}/images/vote_rcap.gif" width="4" height="12">
+					</td>
+					<td nowrap="nowrap" class="strong">${option.votePercentage}%</td>
+					<td nowrap="nowrap">[ ${option.voteCount} ]</td>
+				</tr>
+			</#list>
+		</tr>
+		<tr>
+			<td colspan="4" class="strong" align="center">${I18n.getMessage("PostShow.pollTotalVotes")} ${poll.totalVotes}</td>
+		</tr>
+	</table>
+</#macro>
+
 <#macro row1Class topic><#if topic.type == TOPIC_ANNOUNCE>row1Announce<#elseif topic.type == TOPIC_STICKY>row1sticky<#else>row1</#if></#macro>
 
 <#macro row2Class topic><#if topic.type == TOPIC_ANNOUNCE>row2Announce<#elseif topic.type == TOPIC_STICKY>row2sticky<#else>row2</#if></#macro>

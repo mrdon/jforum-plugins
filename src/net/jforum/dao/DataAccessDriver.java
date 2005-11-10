@@ -59,7 +59,7 @@ package net.jforum.dao;
  * analise, look at <code>net.jforum.drivers.generic</code> package.
  * 
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.8 2005/09/26 15:04:14 vmal Exp $
+ * @version $Id: DataAccessDriver.java,v 1.9 2005/11/10 18:30:02 almilli Exp $
  */
 public abstract class DataAccessDriver 
 {
@@ -112,6 +112,13 @@ public abstract class DataAccessDriver
 	 * @return <code>net.jforum.model.PostModel</code> instance.
 	 */
 	public abstract  net.jforum.dao.PostDAO newPostDAO();
+	
+	/**
+	 * Gets a {@link net.jforum.dao.PollDAO} instance.
+	 * 
+	 * @return <code>net.jforum.model.PollModel</code> instance.
+	 */
+	public abstract  net.jforum.dao.PollDAO newPollDAO();
 	
 	/**
 	 * Gets a {@link net.jforum.dao.RankingDAO} instance.

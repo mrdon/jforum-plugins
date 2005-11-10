@@ -173,6 +173,43 @@ PostModel.setForumByTopic = UPDATE jforum_posts SET forum_id = ? WHERE topic_id 
 PostModel.deleteByTopic = SELECT post_id, user_id FROM jforum_posts WHERE topic_id = ?
 
 # #############
+# PollModel
+# #############
+PollModel.addNewPoll = INSERT INTO jforum_vote_desc (topic_id, vote_text, vote_length, vote_start) \
+	VALUES (?, ?, ?, NOW())
+
+PollModel.addNewPollOption = INSERT INTO jforum_vote_results (vote_id, vote_option_id, vote_option_text, vote_result) \
+	VALUES (?, ?, ?, ?)
+
+PollModel.addNewVoter = INSERT INTO jforum_vote_voters (vote_id, vote_user_id, vote_user_ip) \
+	VALUES (?, ?, ?)
+
+PollModel.selectById = SELECT vote_id, topic_id, vote_start, vote_length, vote_text \
+	FROM jforum_vote_desc WHERE vote_id=?
+	
+PollModel.selectPollByTopicId SELECT vote_id, topic_id, vote_start, vote_length, vote_text \
+	FROM jforum_vote_desc WHERE topic_id=?
+
+PollModel.selectOptionsByPollId = SELECT vote_id, vote_option_id, vote_option_text, vote_result \
+	FROM jforum_vote_results WHERE vote_id=? ORDER BY vote_option_id
+
+PollModel.incrementVoteCount = UPDATE jforum_vote_results SET vote_result = vote_result + 1 \
+	WHERE vote_id = ? AND vote_option_id = ?
+
+PollModel.selectVoter = SELECT vote_id, vote_user_id, vote_user_ip \
+	FROM jforum_vote_voters WHERE vote_id = ? AND vote_user_id = ?
+
+PollModel.selectVoterByIP = SELECT vote_id, vote_user_id, vote_user_ip \
+	FROM jforum_vote_voters WHERE vote_id = ? AND vote_user_ip = ?
+
+PollModel.deletePollVoters = DELETE FROM jforum_vote_voters WHERE vote_id = ?
+PollModel.deletePollOptions = DELETE FROM jforum_vote_results WHERE vote_id = ?
+PollModel.deletePoll = DELETE FROM jforum_vote_desc WHERE vote_id = ?
+
+PollModel.updatePoll = UPDATE jforum_vote_desc SET vote_text = ?, \
+	vote_length = ?, vote_start = ? WHERE vote_id = ?
+
+# #############
 # ForumModel
 # #############
 ForumModel.selectById = SELECT forum_id, forum_name, categories_id, forum_desc, forum_order, forum_topics, forum_last_post_id, moderated \
@@ -242,7 +279,7 @@ TopicModel.selectById = SELECT t.*, u.username AS posted_by_username, u.user_id 
 	AND p2.post_id = t.topic_last_post_id \
 	AND u2.user_id = p2.user_id
 	
-TopicModel.selectRaw = SELECT topic_id, forum_id, topic_title, user_id, topic_views, topic_replies, topic_status, topic_vote, topic_type, \
+TopicModel.selectRaw = SELECT topic_id, forum_id, topic_title, user_id, topic_views, topic_replies, topic_status, topic_vote_id, topic_type, \
 	topic_first_post_id, topic_last_post_id, moderated, topic_time \
 	FROM jforum_topics WHERE topic_id = ?
 
@@ -282,7 +319,7 @@ TopicModel.getMinPostId = SELECT MIN(post_id) AS post_id FROM jforum_posts WHERE
 TopicModel.addNew = INSERT INTO jforum_topics (forum_id, topic_title, user_id, topic_time, topic_first_post_id, topic_last_post_id, topic_type, moderated) \
 	VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 
-TopicModel.update = UPDATE jforum_topics SET topic_title = ?, topic_last_post_id = ?, topic_first_post_id = ?, topic_type = ?, moderated =? WHERE topic_id = ?
+TopicModel.update = UPDATE jforum_topics SET topic_title = ?, topic_last_post_id = ?, topic_first_post_id = ?, topic_type = ?, moderated = ?, topic_vote_id = ? WHERE topic_id = ?
 TopicModel.getMaxPostId = SELECT MAX(post_id) AS post_id FROM jforum_posts WHERE topic_id = ?
 TopicModel.getTotalPosts = SELECT COUNT(1) AS total FROM jforum_posts WHERE topic_id = ? AND need_moderate = 0
 
@@ -362,9 +399,9 @@ SearchModel.insertTopicsIds = INSERT INTO jforum_search_results ( topic_id, sess
 	AND p.post_id IN (:posts:)
 	
 SearchModel.selectTopicData = INSERT INTO jforum_search_topics (topic_id, forum_id, topic_title, user_id, topic_time, \
-	topic_views, topic_status, topic_replies, topic_vote, topic_type, topic_first_post_id, topic_last_post_id, moderated, session, search_time) \
+	topic_views, topic_status, topic_replies, topic_vote_id, topic_type, topic_first_post_id, topic_last_post_id, moderated, session, search_time) \
 	SELECT t.topic_id, t.forum_id, t.topic_title, t.user_id, t.topic_time, \
-	t.topic_views, t.topic_status, t.topic_replies, t.topic_vote, t.topic_type, t.topic_first_post_id, t.topic_last_post_id, t.moderated, ?, NOW() \
+	t.topic_views, t.topic_status, t.topic_replies, t.topic_vote_id, t.topic_type, t.topic_first_post_id, t.topic_last_post_id, t.moderated, ?, NOW() \
 	FROM jforum_topics t, jforum_search_results s \
 	WHERE t.topic_id = s.topic_id \
 	AND s.session = ?

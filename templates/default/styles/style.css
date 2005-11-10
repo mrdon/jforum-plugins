@@ -65,9 +65,10 @@ th.thcornerl { border-top-width: 1px; border-left-width: 1px; border-bottom-widt
 th.thcornerr { border-top-width: 1px; border-left-width: 0px; border-bottom-width: 0px; border-right-width: 1px }
 .maintitle { font-weight: bold; font-size: 22px; color: #000000; line-height: 120%; font-family: "trebuchet ms",verdana, arial, helvetica, sans-serif; text-decoration: none }
 
-.gen { font-size: 12px }
+.gen, .poll { font-size: 12px }
 .genmed, .name { font-size: 11px; }
 .gensmall, .postdetails { font-size: 10px; }
+.strong { font-weight: bold; }
 
 .mainmenu { font-size: 11px; color: #000000 }
 .cattitle { font-weight: bold; font-size: 12px; color: #01336b; letter-spacing: 1px; }

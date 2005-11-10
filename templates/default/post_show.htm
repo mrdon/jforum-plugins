@@ -71,6 +71,39 @@
 			</table>
 
 			<table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
+				<#if poll?exists>
+					<tr>
+						<td class="cathead cattitle" align="center" colspan="2" nowrap="nowrap" width="100%">${I18n.getMessage("PostShow.pollTitle")}</td>
+					</tr>
+					<tr>
+						<td class="row1" colspan="2" align="center">
+							<#if (poll.open && canVoteOnPoll && !request.getParameter("viewResults")?exists)>
+								<form action="${JForumContext.encodeURL("/jforum")}" method="post">
+									<input type="hidden" name="action" value="vote" />
+									<input type="hidden" name="module" value="${moduleName}">
+									<input type="hidden" name="securityHash" value="${securityHash}" />
+									<input type="hidden" name="poll_id" value="${poll.id}" />
+									<input type="hidden" name="topic_id" value="${topic.id}" />
+									<div class="poll">
+										<span class="strong">${poll.label}</span>
+										<table class="poll">
+										<#list poll.options as option>
+											<tr>
+												<td><input type="radio" name="poll_option" value="${option.id}">${option.text}</input></td>
+											</tr>
+										</#list>
+										</table>
+										<input type="submit" value="${I18n.getMessage("PostShow.pollVote")}"></input><br>
+										<span class="gensmall" align="center"><a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=list&topic_id=${topic.id}&viewResults=true", "")}">View Results</a></span>
+									</div>
+								</form>
+							<#else>
+								<@presentation.renderPoll poll/>
+							</#if>
+						</td>
+					</tr>
+				</#if>
+				
 				<tr>
 					<th class="thleft" nowrap="nowrap" width="150" height="26">${I18n.getMessage("PostShow.author")}</th>
 					<th class="thright" nowrap="nowrap" width="100%">${I18n.getMessage("PostShow.messageTitle")}</th>

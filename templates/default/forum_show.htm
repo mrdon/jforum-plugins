@@ -178,7 +178,9 @@
 						<td ${class1} width="100%">
 							<#if topic.hasAttach() && attachmentsEnabled><img src="${contextPath}/templates/${templateName}/images/icon_clip.gif" align="middle"></#if>
 							<span class="topictitle">
-							<a href="${JForumContext.encodeURL("/posts/list/${topic.id}")}"><#if (topic.title?length == 0)>No Subject<#else>${topic.title?html}</#if></a>
+							<a href="${JForumContext.encodeURL("/posts/list/${topic.id}")}">
+							<#if topic.vote>${I18n.getMessage("ForumListing.pollLabel")}</#if>
+							<#if (topic.title?length == 0)>No Subject<#else>${topic.title?html}</#if></a>
 							</span>
 
 							<#if topic.paginate>

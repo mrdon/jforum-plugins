@@ -57,6 +57,7 @@ import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
+import net.jforum.dao.PollDAO;
 import net.jforum.dao.PostDAO;
 import net.jforum.entities.KarmaStatus;
 import net.jforum.entities.Topic;
@@ -66,7 +67,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTopicDAO.java,v 1.4 2005/10/27 18:55:00 jakefear Exp $
+ * @version $Id: GenericTopicDAO.java,v 1.5 2005/11/10 18:30:04 almilli Exp $
  */
 public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO 
 {
@@ -151,6 +152,7 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 		ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
 		
 		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
+		PollDAO plm = DataAccessDriver.getInstance().newPollDAO();
 		
 		for (Iterator iter = topics.iterator(); iter.hasNext(); ) {
 			Topic topic = (Topic)iter.next();
@@ -160,6 +162,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 
 			// Remove the messages
 			pm.deleteByTopic(topic.getId());
+			
+			// Remove the poll
+			plm.deleteByTopicId(topic.getId());
 			
 			p.setInt(1, topic.getId());
 			p.executeUpdate();
@@ -206,7 +211,8 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 		p.setInt(3, topic.getFirstPostId());
 		p.setInt(4, topic.getType());
 		p.setInt(5, topic.isModerated() ? 1 : 0);
-		p.setInt(6, topic.getId());
+		p.setInt(6, topic.getVoteId());
+		p.setInt(7, topic.getId());
 		p.executeUpdate();
 		
 		p.close();
@@ -373,6 +379,7 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 		t.setType(rs.getInt("topic_type"));
 		t.setForumId(rs.getInt("forum_id"));
 		t.setModerated(rs.getInt("moderated") == 1);
+		t.setVoteId(rs.getInt("topic_vote_id"));
 		
 		return t;
 	}

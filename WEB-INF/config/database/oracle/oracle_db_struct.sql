@@ -280,7 +280,7 @@ CREATE TABLE jforum_topics (
   topic_views NUMBER(10) DEFAULT 1,
   topic_replies NUMBER(10) DEFAULT 0,
   topic_status NUMBER(10) DEFAULT 0,
-  topic_vote NUMBER(10) DEFAULT 0,
+  topic_vote_id NUMBER(10) DEFAULT 0,
   topic_type NUMBER(10) DEFAULT 0,
   topic_first_post_id NUMBER(10) DEFAULT 0,
   topic_last_post_id NUMBER(10) DEFAULT 0 NOT NULL,
@@ -381,8 +381,8 @@ INCREMENT BY 1
 CREATE TABLE jforum_vote_desc (
   vote_id NUMBER(10) NOT NULL,
   topic_id NUMBER(10) DEFAULT 0 NOT NULL,
-  vote_text BLOB,
-  vote_start NUMBER(10) DEFAULT 0 NOT NULL,
+  vote_text VARCHAR2(255) DEFAULT ' ' NOT NULL,
+  vote_start DATE DEFAULT SYSDATE NOT NULL,
   vote_length NUMBER(10) DEFAULT 0 NOT NULL,
   PRIMARY KEY  (vote_id)
 );
@@ -405,7 +405,7 @@ CREATE TABLE jforum_vote_results (
 CREATE TABLE jforum_vote_voters (
   vote_id NUMBER(10) DEFAULT 0 NOT NULL,
   vote_user_id NUMBER(10) DEFAULT 0 NOT NULL,
-  vote_user_ip CHAR(8) DEFAULT ' ' NOT NULL
+  vote_user_ip VARCHAR2(15) DEFAULT ' ' NOT NULL
 );
 
 --
@@ -473,7 +473,7 @@ CREATE TABLE jforum_search_topics (
   topic_views NUMBER(10) DEFAULT 1,
   topic_replies NUMBER(10) DEFAULT 0,
   topic_status NUMBER(10) DEFAULT 0,
-  topic_vote NUMBER(10) DEFAULT 0,
+  topic_vote_id NUMBER(10) DEFAULT 0,
   topic_type NUMBER(10) DEFAULT 0,
   topic_first_post_id NUMBER(10) DEFAULT 0,
   topic_last_post_id NUMBER(10) DEFAULT 0 NOT NULL,

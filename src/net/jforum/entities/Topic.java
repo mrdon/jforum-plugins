@@ -49,7 +49,7 @@ import java.util.Date;
  * Represents every topic in the forum.
  * 
  * @author Rafael Steil
- * @version $Id: Topic.java,v 1.14 2005/09/30 23:19:18 rafaelsteil Exp $
+ * @version $Id: Topic.java,v 1.15 2005/11/10 18:30:06 almilli Exp $
  */
 public class Topic implements Serializable
 {
@@ -68,9 +68,9 @@ public class Topic implements Serializable
 	private int type;
 	private int firstPostId;
 	private int lastPostId;	
+	private int voteId;
 	
 	private boolean read = true;
-	private boolean vote;
 	private boolean moderated;
 	private boolean isHot;
 	private boolean hasAttach;
@@ -207,7 +207,16 @@ public class Topic implements Serializable
 	 * @return boolean value
 	 */
 	public boolean isVote() {
-		return this.vote;
+		return this.voteId != 0;
+	}
+
+	/**
+	 * Is a votation topic? If so, this is the vote Id
+	 * 
+	 * @return boolean value
+	 */
+	public int getVoteId() {
+		return this.voteId;
 	}
 
 	/**
@@ -301,12 +310,12 @@ public class Topic implements Serializable
 	}
 
 	/**
-	 * Sets the vote.
+	 * Sets the voteId.
 	 * 
-	 * @param vote The vote to set
+	 * @param voteId The voteId to set
 	 */
-	public void setVote(boolean vote) {
-		this.vote = vote;
+	public void setVoteId(int voteId) {
+		this.voteId = voteId;
 	}
 	/**
 	 * @return
