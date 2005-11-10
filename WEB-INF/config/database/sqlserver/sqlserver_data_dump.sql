@@ -25,6 +25,8 @@ INSERT INTO jforum_roles (group_id, name, role_type) VALUES (1, 'perm_moderation
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES (1, 'perm_moderation_post_edit', 0)
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES (1, 'perm_moderation_topic_move', 0)
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES (1, 'perm_moderation_topic_lockUnlock', 0)
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES (1, 'perm_vote', 1)
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES (1, 'perm_create_poll', 0)
 
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES (1, 'perm_read_only_forums', 0)
 INSERT INTO jforum_role_values (role_id, role_value, role_type) VALUES (SCOPE_IDENTITY(), 0, 1)
@@ -48,6 +50,8 @@ INSERT INTO jforum_roles (group_id, name, role_type) VALUES (2, 'perm_administra
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES (2, 'perm_moderation', 1)
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES (2, 'perm_moderation_post_remove', 1)
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES (2, 'perm_moderation_post_edit', 1)
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES (2, 'perm_vote', 1)
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES (2, 'perm_create_poll', 1)
 
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES (2, 'perm_read_only_forums', 0)
 INSERT INTO jforum_role_values (role_id, role_value, role_type) VALUES (SCOPE_IDENTITY(), 0, 1)

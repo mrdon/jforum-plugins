@@ -25,17 +25,21 @@ INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (3, 1, 'per
 INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (4, 1, 'perm_moderation_post_edit', 0);
 INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (5, 1, 'perm_moderation_topic_move', 0);
 INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (6, 1, 'perm_moderation_topic_lockUnlock', 0);
+INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (7, 1, 'perm_vote', 1);
+INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (8, 1, 'perm_create_poll', 0);
 
 --
 -- Admin
 --
-INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (7, 2, 'perm_administration', 1);
-INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (8, 2, 'perm_moderation', 1);
-INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (9, 2, 'perm_moderation_post_remove', 1);
-INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (10, 2, 'perm_moderation_post_edit', 1);
-INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (11, 2, 'perm_moderation_topic_move', 1);
-INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (12, 2, 'perm_moderation_topic_lockUnlock', 1);
-INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (13, 2, 'perm_create_sticky_announcement_topics', 1);
+INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (9, 2, 'perm_administration', 1);
+INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (10, 2, 'perm_moderation', 1);
+INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (11, 2, 'perm_moderation_post_remove', 1);
+INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (12, 2, 'perm_moderation_post_edit', 1);
+INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (13, 2, 'perm_moderation_topic_move', 1);
+INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (14, 2, 'perm_moderation_topic_lockUnlock', 1);
+INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (15, 2, 'perm_create_sticky_announcement_topics', 1);
+INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (16, 2, 'perm_vote', 1);
+INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (17, 2, 'perm_create_poll', 1);
 --
 -- Smilies
 --

@@ -16,6 +16,10 @@ INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (jforum_rol
 
 INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_moderation_topic_lockUnlock', 0);
 
+INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_vote', 1);
+
+INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_create_poll', 0);
+
 
 
 --
@@ -43,6 +47,10 @@ INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (jforum_rol
 INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_moderation_topic_lockUnlock', 1);
 
 INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_create_sticky_announcement_topics', 1);
+
+INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_vote', 1);
+
+INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_create_poll', 1);
 
 
 -- 

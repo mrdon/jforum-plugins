@@ -33,6 +33,8 @@ INSERT INTO jforum_roles (group_id, name, role_type) VALUES (@GENERAL_GROUP_ID, 
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES (@GENERAL_GROUP_ID, 'perm_moderation_post_edit', 0);
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES (@GENERAL_GROUP_ID, 'perm_moderation_topic_move', 0);
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES (@GENERAL_GROUP_ID, 'perm_moderation_topic_lockUnlock', 0);
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES (@GENERAL_GROUP_ID, 'perm_vote', 1);
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES (@GENERAL_GROUP_ID, 'perm_create_poll', 0);
 
 # Admin
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES (@ADMIN_GROUP_ID, 'perm_administration', 1);
@@ -41,6 +43,8 @@ INSERT INTO jforum_roles (group_id, name, role_type) VALUES (@ADMIN_GROUP_ID, 'p
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES (@ADMIN_GROUP_ID, 'perm_moderation_post_edit', 1);
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES (@ADMIN_GROUP_ID, 'perm_moderation_topic_move', 1);
 INSERT INTO jforum_roles (group_id, name, role_type) VALUES (@ADMIN_GROUP_ID, 'perm_moderation_topic_lockUnlock', 1);
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES (@ADMIN_GROUP_ID, 'perm_vote', 1);
+INSERT INTO jforum_roles (group_id, name, role_type) VALUES (@ADMIN_GROUP_ID, 'perm_create_poll', 1);
 
 SET @ROLE_ID = LAST_INSERT_ID();
 
