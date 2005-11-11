@@ -121,3 +121,21 @@ input.liteoption { font-weight: normal; background-color: #fafafa; }
 td.attachrow		{ font: normal 11px verdana, arial, helvetica, sans-serif; color : #000000; border-color : #000000; }
 td.attachheader     { font: normal 11px verdana, arial, helvetica, sans-serif; color : #000000; border-color : #000000; background-color: #d1d7dc; }
 table.attachtable	{ font: normal 12px verdana, arial, helvetica, sans-serif; color : #000000; border-color : #000000;	border-collapse : collapse; }
+
+.icon_folder_announce { background-image: url(../images/folder_announce.gif); width: 19px; height: 18px; display: inline; }
+.icon_folder_sticky { background-image: url(../images/folder_sticky.gif); width: 19px; height: 18px; display: inline; }
+.icon_folder_hot { background-image: url(../images/folder_hot.gif); width: 19px; height: 18px; display: inline; }
+.icon_folder { background-image: url(../images/folder.gif); width: 19px; height: 18px; display: inline; }
+.icon_folder_lock { background-image: url(../images/folder_lock.gif); width: 19px; height: 18px; display: inline; }
+.icon_folder_announce_new { background-image: url(../images/folder_announce_new.gif); width: 19px; height: 18px; display: inline; }
+.icon_folder_sticky_new { background-image: url(../images/folder_sticky_new.gif); width: 19px; height: 18px; display: inline; }
+.icon_folder_new_hot { background-image: url(../images/folder_new_hot.gif); width: 19px; height: 18px; display: inline; }
+.icon_folder_new { background-image: url(../images/folder_new.gif); width: 19px; height: 18px; display: inline; }
+.icon_folder_lock_new { background-image: url(../images/folder_lock_new.gif); width: 19px; height: 18px; display: inline; }
+.icon_vote_lcap { background-image: url(../images/vote_lcap.gif); width: 4px; height: 12px; display: inline; }
+.icon_vote_rcap { background-image: url(../images/vote_rcap.gif); width: 4px; height: 12px; display: inline; }
+.icon_topic_delete { background-image: url(../images/topic_delete.gif); width: 19px; height: 18px; display: inline; }
+.icon_topic_move { background-image: url(../images/topic_move.gif); width: 19px; height: 18px; display: inline; }
+.icon_topic_unlock { background-image: url(../images/topic_unlock.gif); width: 19px; height: 18px; display: inline; }
+.icon_topic_lock { background-image: url(../images/topic_lock.gif); width: 19px; height: 18px; display: inline; }
+.icon_latest_reply { background-image: url(../images/icon_latest_reply.gif); width: 18px; height: 9px; display: inline; }

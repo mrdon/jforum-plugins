@@ -52,7 +52,7 @@ import net.jforum.exceptions.ConfigLoadException;
 
 /**
  * @author Rafael Steil
- * @version $Id: Tpl.java,v 1.4 2005/07/26 03:04:54 rafaelsteil Exp $
+ * @version $Id: Tpl.java,v 1.5 2005/11/11 17:43:43 almilli Exp $
  */
 public class Tpl implements Cacheable
 {
@@ -94,7 +94,7 @@ public class Tpl implements Cacheable
 	}
 	
 	/**
-	 * Gets a temlate filename by its configuration's key
+	 * Gets a template filename by its configuration's key
 	 * 
 	 * @param key The Key to load.
 	 * @return The html template filename

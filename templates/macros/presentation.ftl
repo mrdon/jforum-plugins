@@ -5,34 +5,34 @@
 	<#if topic.read>
 		<#if topic.status == STATUS_UNLOCKED>
 			<#if topic.type == TOPIC_ANNOUNCE>
-				<img src="${contextPath}/templates/${templateName}/images/folder_announce.gif" width="19" height="18">
+				<img class="icon_folder_announce" src="${contextPath}/images/transp.gif"/>
 			<#elseif topic.type == TOPIC_STICKY>
-				<img src="${contextPath}/templates/${templateName}/images/folder_sticky.gif" width="19" height="18">
+				<img class="icon_folder_sticky" src="${contextPath}/images/transp.gif"/>
 			<#else>
 				<#if topic.isHot()>
-					<img src="${contextPath}/templates/${templateName}/images/folder_hot.gif" width="19" height="18">
+					<img class="icon_folder_hot" src="${contextPath}/images/transp.gif"/>
 				<#else>
-					<img src="${contextPath}/templates/${templateName}/images/folder.gif" width="19" height="18">
+					<img class="icon_folder" src="${contextPath}/images/transp.gif"/>
 				</#if>
 			</#if>
 		<#else>
-			<img src="${contextPath}/templates/${templateName}/images/folder_lock.gif" width="19" height="18">
+			<img class="icon_folder_lock" src="${contextPath}/images/transp.gif"/>
 		</#if>
 	<#else>
 		<#if topic.status == STATUS_UNLOCKED>
 			<#if topic.type == TOPIC_ANNOUNCE>
-				<img src="${contextPath}/templates/${templateName}/images/folder_announce_new.gif" width="19" height="18">
+				<img class="icon_folder_announce_new" src="${contextPath}/images/transp.gif"/>
 			<#elseif topic.type == TOPIC_STICKY>
-				<img src="${contextPath}/templates/${templateName}/images/folder_sticky_new.gif" width="19" height="18">
+				<img class="icon_folder_sticky_new" src="${contextPath}/images/transp.gif"/>
 			<#else>
 				<#if topic.isHot()>
-					<img src="${contextPath}/templates/${templateName}/images/folder_new_hot.gif" width="19" height="18">
+					<img class="icon_folder_new_hot" src="${contextPath}/images/transp.gif"/>
 				<#else>
-					<img src="${contextPath}/templates/${templateName}/images/folder_new.gif" width="19" height="18">
+					<img class="icon_folder_new" src="${contextPath}/images/transp.gif"/>
 				</#if>
 			</#if>
 		<#else>
-			<img src="${contextPath}/templates/${templateName}/images/folder_lock_new.gif" width="19" height="18">
+			<img class="icon_folder_lock_new" src="${contextPath}/images/transp.gif"/>
 		</#if>
 	</#if>
 </#macro>
@@ -47,9 +47,9 @@
 				<tr>
 					<td>${option.text}</td>
 					<td nowrap="nowrap" width="210">
-						<img src="${contextPath}/templates/${templateName}/images/vote_lcap.gif" width="4" height="12"><img 
+						<img class="icon_vote_lcap" src="${contextPath}/images/transp.gif"/><img 
 							src="${contextPath}/templates/${templateName}/images/voting_bar.gif" width="${option.votePercentage * 2}" height="12"><img 
-							src="${contextPath}/templates/${templateName}/images/vote_rcap.gif" width="4" height="12">
+							class="icon_vote_rcap" src="${contextPath}/images/transp.gif"/>
 					</td>
 					<td nowrap="nowrap" class="strong">${option.votePercentage}%</td>
 					<td nowrap="nowrap">[ ${option.voteCount} ]</td>
@@ -109,18 +109,18 @@
 	</script>
 	<#if isModerator>
 		<#if can_remove_posts?default(false)>
-			<a href="javascript:deleteTopic();"><img src="${contextPath}/templates/${templateName}/images/topic_delete.gif" title="${I18n.getMessage("Delete")}"/></a>
+			<a href="javascript:deleteTopic();"><img class="icon_topic_delete" src="${contextPath}/images/transp.gif" title="${I18n.getMessage("Delete")}"/></a>
 		</#if>
 		
 		<#if can_move_topics?default(false)>
-			<a href="javascript:moveTopic();"><img src="${contextPath}/templates/${templateName}/images/topic_move.gif"  title="${I18n.getMessage("move")}"/></a>
+			<a href="javascript:moveTopic();"><img class="icon_topic_move" src="${contextPath}/images/transp.gif" title="${I18n.getMessage("move")}"/></a>
 		</#if>
 
 		<#if can_lockUnlock_topics?default(false)>			
 			<#if topic.status == STATUS_LOCKED>
-				<a href="javascript:lockUnlock(false);"><img src="${contextPath}/templates/${templateName}/images/topic_unlock.gif"  title="${I18n.getMessage("Unlock")}"/></a>
+				<a href="javascript:lockUnlock(false);"><img class="icon_topic_unlock" src="${contextPath}/images/transp.gif" title="${I18n.getMessage("Unlock")}"/></a>
 			<#else>
-				<a href="javascript:lockUnlock(true);"><img src="${contextPath}/templates/${templateName}/images/topic_lock.gif"  title="${I18n.getMessage("Lock")}"/></a>
+				<a href="javascript:lockUnlock(true);"><img class="icon_topic_lock" src="${contextPath}/images/transp.gif" title="${I18n.getMessage("Lock")}"/></a>
 			</#if>
 		</#if>
 	</#if>
