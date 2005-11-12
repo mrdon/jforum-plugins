@@ -79,7 +79,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.57 2005/10/27 21:34:45 jakefear Exp $
+ * @version $Id: UserAction.java,v 1.58 2005/11/12 00:30:59 almilli Exp $
  */
 public class UserAction extends Command 
 {
@@ -321,9 +321,13 @@ public class UserAction extends Command
 			User user = this.validateLogin(username, password);
 
 			if (user != null) {
-				JForum.setRedirect(this.request.getContextPath()
+				//NOTE: here we only want to set the redirect location if it hasn't already been
+				//set.  This will give the LoginAuthenticator a chance to set the redirect location.
+				if (JForum.getRedirect() == null) {
+					JForum.setRedirect(this.request.getContextPath()
 						+ "/forums/list"
 						+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+				}
 
 				SessionFacade.setAttribute("logged", "1");
 				
