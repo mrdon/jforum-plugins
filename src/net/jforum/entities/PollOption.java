@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -36,12 +36,16 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  *
- * Created on Dec 29, 2004 2:00:00 PM
+ * This file creation date: 21/05/2004 - 15:17:46
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.entities;
 
+/**
+ * @author David Almilli
+ * @version $Id: PollOption.java,v 1.2 2005/11/15 21:29:59 rafaelsteil Exp $
+ */
 public class PollOption {
 	private int id;
 	private int pollId;

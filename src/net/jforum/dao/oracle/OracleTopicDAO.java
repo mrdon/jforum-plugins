@@ -42,22 +42,12 @@
  */
 package net.jforum.dao.oracle;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 
-import net.jforum.JForum;
-import net.jforum.entities.Topic;
-import net.jforum.entities.User;
-import net.jforum.util.preferences.ConfigKeys;
-import net.jforum.util.preferences.SystemGlobals;
-
 /**
- * @author Dmitriy Kiriy and Jake Fear
- * @version $Id: OracleTopicDAO.java,v 1.8 2005/10/27 18:55:01 jakefear Exp $
+ * @author Dmitriy Kiriy 
+ * @author Jake Fear
+ * @version $Id: OracleTopicDAO.java,v 1.9 2005/11/15 21:30:03 rafaelsteil Exp $
  */
 public class OracleTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 {
@@ -69,7 +59,6 @@ public class OracleTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 	{
 		return super.selectAllByForumByLimit(forumId, startFrom + count, startFrom);
 	}
-	
 	
 	/**
 	 * @see net.jforum.dao.TopicDAO#selectByUserByLimit(int, int, int)

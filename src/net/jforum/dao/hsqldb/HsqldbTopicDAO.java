@@ -43,7 +43,6 @@
 package net.jforum.dao.hsqldb;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +51,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Marc Wick
- * @version $Id: HsqldbTopicDAO.java,v 1.4 2005/07/26 03:05:49 rafaelsteil Exp $
+ * @version $Id: HsqldbTopicDAO.java,v 1.5 2005/11/15 21:29:58 rafaelsteil Exp $
  */
 public class HsqldbTopicDAO extends net.jforum.dao.postgresql.PostgresqlTopicDAO {
 
@@ -69,11 +68,6 @@ public class HsqldbTopicDAO extends net.jforum.dao.postgresql.PostgresqlTopicDAO
 		p.setInt(2, count);
 		p.setInt(3, forumId);
 
-		ResultSet rs = p.executeQuery();
-
-		l = super.fillTopicsData(rs);
-
-		rs.close();
-		return l;
+		return super.fillTopicsData(p);
 	}
 }

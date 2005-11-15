@@ -43,7 +43,6 @@
 package net.jforum.dao.sqlserver;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +51,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerTopicDAO.java,v 1.5 2005/09/12 21:05:21 rafaelsteil Exp $
+ * @version $Id: SqlServerTopicDAO.java,v 1.6 2005/11/15 21:29:56 rafaelsteil Exp $
  */
 public class SqlServerTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 {
@@ -69,12 +68,7 @@ public class SqlServerTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 		p.setInt(1, forumId);
 		p.setInt(2, forumId);
 
-		ResultSet rs = p.executeQuery();
-		
-		l = super.fillTopicsData(rs);
-		
-		rs.close();
-		return l;	
+		return super.fillTopicsData(p);
 	}
 	
 	/** 
@@ -86,12 +80,6 @@ public class SqlServerTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 
 		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("GenericModel.selectByLimit") + " " + limit + " " + SystemGlobals.getSql("TopicModel.selectRecentTopicsByLimit"));
 		
-		ResultSet rs = p.executeQuery();
-		
-		l = this.fillTopicsData(rs);
-		
-		rs.close();
-		p.close();
-		return l;		
+		return this.fillTopicsData(p);
 	}
 }

@@ -52,6 +52,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
@@ -66,7 +67,6 @@ import net.jforum.dao.UserDAO;
 import net.jforum.entities.Attachment;
 import net.jforum.entities.Forum;
 import net.jforum.entities.Poll;
-import net.jforum.entities.PollOption;
 import net.jforum.entities.Post;
 import net.jforum.entities.QuotaLimit;
 import net.jforum.entities.Topic;
@@ -95,7 +95,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.119 2005/11/10 18:30:07 almilli Exp $
+ * @version $Id: PostAction.java,v 1.120 2005/11/15 21:30:03 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {

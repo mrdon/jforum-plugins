@@ -271,27 +271,21 @@ ForumModel.getUnreadForums = SELECT t.forum_id, t.topic_id, p.post_time \
 # #############
 # TopicModel
 # #############
-TopicModel.selectById = SELECT t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time, p.attach \
-	FROM jforum_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2 \
+TopicModel.selectById = SELECT t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \
+	FROM jforum_topics t, jforum_posts p \
 	WHERE t.topic_id = ? \
-	AND t.user_id = u.user_id \
-	AND p.post_id = t.topic_first_post_id \
-	AND p2.post_id = t.topic_last_post_id \
-	AND u2.user_id = p2.user_id
+	AND p.post_id = t.topic_last_post_id
 	
 TopicModel.selectRaw = SELECT topic_id, forum_id, topic_title, user_id, topic_views, topic_replies, topic_status, topic_vote_id, topic_type, \
 	topic_first_post_id, topic_last_post_id, moderated, topic_time \
 	FROM jforum_topics WHERE topic_id = ?
 
-TopicModel.selectAllByForumByLimit = SELECT t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time, p.attach \
-	FROM jforum_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2 \
+TopicModel.selectAllByForumByLimit = SELECT t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \
+	FROM jforum_topics t, jforum_posts p \
 	WHERE t.forum_id = ? \
-	AND t.user_id = u.user_id \
-	AND p.post_id = t.topic_first_post_id \
+	AND p.post_id = t.topic_last_post_id \
 	AND p.need_moderate = 0 \
-	AND p2.post_id = t.topic_last_post_id \
-	AND u2.user_id = p2.user_id \
-	ORDER BY t.topic_type DESC, p2.post_time DESC, t.topic_last_post_id DESC \
+	ORDER BY t.topic_type DESC, t.topic_last_post_id DESC \
 	LIMIT ?, ?
 
 TopicModel.topicPosters = SELECT user_id, username, user_karma, user_avatar, user_allowavatar, user_regdate, user_posts, user_icq, \
@@ -340,25 +334,21 @@ TopicModel.notifyUsers = SELECT u.user_id AS user_id, u.username AS username, \
 TopicModel.markAllAsUnread = UPDATE jforum_topics_watch SET is_read = '0' WHERE topic_id = ? AND user_id NOT IN (?, ?)
 TopicModel.lockUnlock = UPDATE jforum_topics SET topic_status = ? WHERE topic_id = ?
 
-TopicModel.selectRecentTopicsByLimit = SELECT t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time, p.attach \
-	FROM jforum_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2 \
-	WHERE t.user_id = u.user_id \
-	AND p.post_id = t.topic_first_post_id \
+TopicModel.selectRecentTopicsByLimit = SELECT t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \
+	FROM jforum_topics t, jforum_posts p \
+	WHERE p.post_id = t.topic_last_post_id \
 	AND p.need_moderate = 0 \
-	AND p2.post_id = t.topic_last_post_id \
-	AND u2.user_id = p2.user_id \
-	ORDER BY p2.post_time DESC, t.topic_last_post_id DESC \
-	LIMIT 0, ?
+	ORDER BY topic_last_post_id DESC \
+	LIMIT ?
 
-TopicModel.selectByUserByLimit = SELECT t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time, p.attach \
-	FROM jforum_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2 \
-	WHERE t.user_id = u.user_id \
+TopicModel.getUserInformation = SELECT user_id, username FROM jforum_users WHERE user_id IN (#ID#)
+
+TopicModel.selectByUserByLimit = SELECT t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \
+	FROM jforum_topics t, jforum_posts p \
+	WHERE p.post_id = t.topic_last_post_id \
 	AND t.user_id = ? \
-	AND p.post_id = t.topic_first_post_id \
-	AND p2.post_id = t.topic_last_post_id \
-	AND u2.user_id = p2.user_id \
 	AND p.need_moderate = 0 \
-	ORDER BY p2.post_time DESC, t.topic_last_post_id DESC \
+	ORDER BY t.topic_last_post_id DESC \
 	LIMIT ?, ?
 
 TopicModel.countUserTopics = SELECT COUNT(*) AS total FROM jforum_topics where user_id = ?
@@ -369,15 +359,9 @@ TopicModel.fixFirstLastPostId = UPDATE jforum_topics SET topic_first_post_id = ?
 # ############
 # SearchModel
 # ############
-SearchModel.searchBase = SELECT t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time, p.attach \
-	FROM jforum_search_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2, jforum_forums f, jforum_search_results sr \
-	WHERE t.user_id = u.user_id \
-	AND p.post_id = t.topic_first_post_id \
-	AND p2.post_id = t.topic_last_post_id \
-	AND u2.user_id = p2.user_id \
-	AND f.forum_id = t.forum_id \
-	AND t.topic_id = sr.topic_id \
-	AND sr.session = ? \
+SearchModel.searchBase = SELECT t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \
+	FROM jforum_search_topics t, jforum_posts p \
+	WHERE p.post_id = t.topic_last_post_id \
 	AND t.session = ? \
 	:criterias: \
 	ORDER BY :orderByField: :orderBy:

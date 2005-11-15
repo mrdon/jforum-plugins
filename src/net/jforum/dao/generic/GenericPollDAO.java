@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -45,19 +45,13 @@ package net.jforum.dao.generic;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
+
 import net.jforum.JForum;
-import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.PollDAO;
 import net.jforum.entities.Poll;
 import net.jforum.entities.PollOption;
-import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.util.search.SearchFacade;
 
 public class GenericPollDAO extends AutoKeys implements PollDAO {
 

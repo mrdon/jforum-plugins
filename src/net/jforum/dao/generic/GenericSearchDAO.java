@@ -63,7 +63,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericSearchDAO.java,v 1.10 2005/10/27 18:54:59 jakefear Exp $
+ * @version $Id: GenericSearchDAO.java,v 1.11 2005/11/15 21:29:57 rafaelsteil Exp $
  */
 public class GenericSearchDAO implements net.jforum.dao.SearchDAO	
 {
@@ -99,6 +99,7 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 		}
 		
 		String sql = SystemGlobals.getSql("SearchModel.searchBase");
+		
 		// Prepare the query
 		sql = sql.replaceAll(":orderByField:", sd.getOrderByField());
 		sql = sql.replaceAll(":orderBy:", sd.getOrderBy());
@@ -110,16 +111,8 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 		
 		PreparedStatement p = JForum.getConnection().prepareStatement(sql);
 		p.setString(1, SessionFacade.getUserSession().getSessionId());
-		p.setString(2, SessionFacade.getUserSession().getSessionId());
 
-		ResultSet rs = p.executeQuery();
-		
-		l = new GenericTopicDAO().fillTopicsData(rs);
-		
-		rs.close();
-		p.close();
-		
-		return l;
+		return new GenericTopicDAO().fillTopicsData(p);
 	}
 	
 	// Find topics by time

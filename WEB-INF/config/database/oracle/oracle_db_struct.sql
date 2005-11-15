@@ -1,4 +1,4 @@
---
+ --
 -- jforum_banlist
 --
 CREATE SEQUENCE jforum_banlist_seq

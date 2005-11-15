@@ -70,35 +70,20 @@ ForumModel.lastGeneratedForumId = SELECT CURRVAL('jforum_forums_seq');
 # #############
 # TopicModel
 # #############
-TopicModel.selectAllByForumByLimit = SELECT t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time, p.attach \
-	FROM jforum_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2 \
+TopicModel.selectAllByForumByLimit = SELECT t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \
+	FROM jforum_topics t, jforum_posts p \
 	WHERE t.forum_id = ? \
-	AND t.user_id = u.user_id \
-	AND p.post_id = t.topic_first_post_id \
-	AND p2.post_id = t.topic_last_post_id \
-	AND u2.user_id = p2.user_id \
-	ORDER BY t.topic_type DESC, p2.post_time DESC, t.topic_last_post_id DESC \
-	LIMIT ? OFFSET ?
-	
-TopicModel.selectRecentTopicsByLimit = SELECT t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time, p.attach \
-	FROM jforum_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2 \
-	WHERE t.user_id = u.user_id \
-	AND p.post_id = t.topic_first_post_id \
-	AND p2.post_id = t.topic_last_post_id \
-	AND u2.user_id = p2.user_id \
-	AND t.topic_type = 0 \
-	ORDER BY p2.post_time DESC, t.topic_last_post_id DESC \
-	LIMIT ?
-
-TopicModel.selectByUserByLimit = SELECT t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time, p.attach \
-	FROM jforum_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2 \
-	WHERE t.user_id = u.user_id \
-	AND t.user_id = ? \
-	AND p.post_id = t.topic_first_post_id \
-	AND p2.post_id = t.topic_last_post_id \
-	AND u2.user_id = p2.user_id \
+	AND p.post_id = t.topic_last_post_id \
 	AND p.need_moderate = 0 \
-	ORDER BY p2.post_time DESC, t.topic_last_post_id DESC \
+	ORDER BY t.topic_type DESC, t.topic_last_post_id DESC \
+	LIMIT ? OFFSET ?
+
+TopicModel.selectByUserByLimit = SELECT t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \
+	FROM jforum_topics t, jforum_posts p \
+	WHERE p.post_id = t.topic_last_post_id \
+	AND t.user_id = ? \
+	AND p.need_moderate = 0 \
+	ORDER BY t.topic_last_post_id DESC \
 	LIMIT ? OFFSET ?
 		
 TopicModel.lastGeneratedTopicId = SELECT CURRVAL('jforum_topics_seq')

@@ -67,7 +67,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTopicDAO.java,v 1.5 2005/11/10 18:30:04 almilli Exp $
+ * @version $Id: GenericTopicDAO.java,v 1.6 2005/11/15 21:29:57 rafaelsteil Exp $
  */
 public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO 
 {
@@ -107,14 +107,12 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 		p.setInt(1, topicId);
 		
 		Topic t = new Topic();
-		ResultSet rs = p.executeQuery();
-		List l = this.fillTopicsData(rs);
+		List l = this.fillTopicsData(p);
+		
 		if (l.size() > 0) {
 			t = (Topic)l.get(0);
 		}
 		
-		rs.close();
-		p.close();
 		return t;
 	}
 	
@@ -303,20 +301,13 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 		int count)
 		throws Exception 
 	{
-		List l = new ArrayList();
-
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("TopicModel.selectAllByForumByLimit"));
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("TopicModel.selectAllByForumByLimit"));
 		p.setInt(1, forumId);
 		p.setInt(2, startFrom);
 		p.setInt(3, count);
 		
-		ResultSet rs = p.executeQuery();
-		
-		l = this.fillTopicsData(rs);
-		
-		rs.close();
-		p.close();
-		return l;
+		return this.fillTopicsData(p);
 	}
 
 	/**
@@ -331,14 +322,7 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 		p.setInt(2, startFrom);
 		p.setInt(3, count);
 		
-		ResultSet rs = p.executeQuery();
-		
-		List l = this.fillTopicsData(rs);		
-		
-		rs.close();
-		p.close();
-		
-		return l;
+		return this.fillTopicsData(p);		
 	}
 	
 	/**
@@ -382,42 +366,6 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 		t.setVoteId(rs.getInt("topic_vote_id"));
 		
 		return t;
-	}
-	
-	public List fillTopicsData(ResultSet rs) throws Exception
-	{
-		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
-		List l = new ArrayList();
-		
-		while (rs.next()) {
-			Topic t = this.getBaseTopicData(rs);
-			t.setHasAttach(rs.getInt("attach") > 0);
-
-			// First Post Time
-			t.setFirstPostTime(df.format(rs.getTimestamp("topic_time")));
-			
-			// Last Post Time
-			t.setLastPostTime(df.format(rs.getTimestamp("post_time")));
-			t.setLastPostDate(rs.getTimestamp("post_time"));
-
-			// Created by
-			User u = new User();
-			u.setId(rs.getInt("posted_by_id"));
-			u.setUsername(rs.getString("posted_by_username"));
-
-			t.setPostedBy(u);
-			
-			// Last post by
-			u = new User();
-			u.setId(rs.getInt("last_post_by_id"));
-			u.setUsername(rs.getString("last_post_by_username"));
-			
-			t.setLastPostBy(u);
-			
-			l.add(t);
-		}
-		
-		return l;
 	}
 
 	/** 
@@ -624,23 +572,94 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 		p.close();
 	}
 	
+	/**
+	 * Fills all topic data.
+	 * The method will try to get all fields from the topics table, 
+	 * as well information about the user who made the first and the
+	 * last post in the topic. 
+	 * <br>
+	 * <b>The method <i>will</i> close the <i>PreparedStatement</i></b>
+	 * @param p the PreparedStatement to execute
+	 * @return A list with all topics found
+	 * @throws Exception
+	 */
+	public List fillTopicsData(PreparedStatement p) throws Exception
+	{
+		List l = new ArrayList();
+		
+		ResultSet rs = p.executeQuery();
+		
+		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
+		
+		StringBuffer sbFirst = new StringBuffer(128);
+		StringBuffer sbLast = new StringBuffer(128);
+		
+		while (rs.next()) {
+			Topic t = this.getBaseTopicData(rs);
+			
+			// Posted by
+			User u = new User();
+			u.setId(rs.getInt("user_id"));
+			t.setPostedBy(u);
+			
+			// Last post by
+			u = new User();
+			u.setId(rs.getInt("last_user_id"));
+			t.setLastPostBy(u);
+			
+			t.setHasAttach(rs.getInt("attach") > 0);
+			t.setFirstPostTime(df.format(rs.getTimestamp("topic_time")));
+			t.setLastPostTime(df.format(rs.getTimestamp("post_time")));
+			t.setLastPostDate(rs.getTimestamp("post_time"));
+			
+			l.add(t);
+			
+			sbFirst.append(rs.getInt("user_id")).append(',');
+			sbLast.append(rs.getInt("last_user_id")).append(',');
+		}
+		
+		rs.close();
+		p.close();
+		
+		// Users
+		if (sbFirst.length() > 0) {
+			sbLast.delete(sbLast.length() - 1, sbLast.length());
+			
+			String sql = SystemGlobals.getSql("TopicModel.getUserInformation");
+			sql = sql.replaceAll("#ID#", sbFirst.toString() + sbLast.toString());
+			
+			Map users = new HashMap();
+			
+			p = JForum.getConnection().prepareStatement(sql);
+			rs = p.executeQuery();
+
+			while (rs.next()) {
+				users.put(new Integer(rs.getInt("user_id")), rs.getString("username"));
+			}
+			
+			rs.close();
+			p.close();
+			
+			for (Iterator iter = l.iterator(); iter.hasNext(); ) {
+				Topic t = (Topic)iter.next();
+				t.getPostedBy().setUsername((String)users.get(new Integer(t.getPostedBy().getId())));
+				t.getLastPostBy().setUsername((String)users.get(new Integer(t.getLastPostBy().getId())));
+			}
+		}
+		
+		return l;		
+	}
+	
 	/** 
 	 * @see net.jforum.dao.TopicDAO#selectRecentTopics(int)
 	 */	
 	public List selectRecentTopics (int limit) throws Exception
 	{
-		List l = new ArrayList();
-
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("TopicModel.selectRecentTopicsByLimit"));
+		PreparedStatement p = JForum.getConnection().prepareStatement(
+				SystemGlobals.getSql("TopicModel.selectRecentTopicsByLimit"));
 		p.setInt(1, limit);
 		
-		ResultSet rs = p.executeQuery();
-		
-		l = this.fillTopicsData(rs);
-		
-		rs.close();
-		p.close();
-		return l;		
+		return this.fillTopicsData(p);
 	}
 	
 	/** 
