@@ -95,7 +95,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.120 2005/11/15 21:30:03 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.121 2005/11/16 09:40:26 vmal Exp $
  */
 public class PostAction extends Command 
 {
@@ -998,9 +998,8 @@ public class PostAction extends Command
 			p.setTopicId(t.getId());
 
 			// add a poll
-			if (newTopic && request.getParameter("poll_label") != null) {
-				Poll poll = PollCommon.fillPollFromRequest();
-
+			Poll poll = PollCommon.fillPollFromRequest();
+			if (poll != null && newTopic) {
 				poll.setTopicId(t.getId());
 				if (poll.getOptions().size() < 2) {
 					//it is not a valid poll, cancel the post
