@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -60,7 +60,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallServlet.java,v 1.18 2005/09/29 09:09:19 vmal Exp $
+ * @version $Id: InstallServlet.java,v 1.19 2005/11/16 21:07:40 rafaelsteil Exp $
  */
 public class InstallServlet extends JForumBaseServlet
 {
@@ -135,21 +135,23 @@ public class InstallServlet extends JForumBaseServlet
 				}
 			}
 			catch (Exception e) {
-				response.setContentType("text/html");
+				response.setContentType("text/html; charset=" + encoding);
 				if (out != null) {
 					new ExceptionWriter().handleExceptionData(e, out);
 				}
 				else {
-					new ExceptionWriter().handleExceptionData(e, new BufferedWriter(new OutputStreamWriter(response.getOutputStream())));
+					new ExceptionWriter().handleExceptionData(e, 
+							new BufferedWriter(new OutputStreamWriter(response.getOutputStream())));
 				}
 			}
 		}
 		
 		String redirectTo = ((DataHolder)localData.get()).getRedirectTo();
+		
+		localData.set(null);
+		
 		if (redirectTo != null) {
 			response.sendRedirect(response.encodeRedirectURL(redirectTo));
 		}
-		
-		localData.set(null);
 	}
 }

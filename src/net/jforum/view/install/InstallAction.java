@@ -46,13 +46,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.nio.channels.FileChannel;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
@@ -83,7 +81,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.35 2005/09/01 14:45:42 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.36 2005/11/16 21:07:39 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -225,7 +223,7 @@ public class InstallAction extends Command
 		
 		this.context.put("lang", lang);
 		
-		this.doFinalSteps();
+		//this.doFinalSteps();
 		this.configureSystemGlobals();
 
 		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
@@ -262,9 +260,11 @@ public class InstallAction extends Command
 			// Index renaming
 			String index = SystemGlobals.getApplicationPath() + "/index.htm";
 			File indexFile = new File(index);
+			
 			if (indexFile.canWrite()) {
-				String newIndex = SystemGlobals.getApplicationPath() + "/new_rename.htm";
+				String newIndex = SystemGlobals.getApplicationPath() + "/__index.redirect";
 				File newIndexFile = new File(newIndex);
+				
 				if (newIndexFile.exists()) {
 					indexFile.delete();
 					newIndexFile.renameTo(indexFile);
@@ -274,7 +274,7 @@ public class InstallAction extends Command
 			}
 		}
 		catch (Exception e) {
-			logger.warn("Error while renaming index.htm: " + e);
+			logger.warn("Error while renaming index.htm: " + e, e);
 		}
 	}
 	
@@ -304,11 +304,14 @@ public class InstallAction extends Command
 			dbType = "mysql";
 		}
 		
-		List statements = this.readFromDat(SystemGlobals.getApplicationResourceDir() 
-				+ "/setup-files/" 
-				+ dbType + "_dump.dat");
+		List statements = ParseDBDumpFile.parse(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
+				+ "/database/" 
+				+ dbType
+				+ "/" + dbType + "_data_dump.sql");
+
 		for (Iterator iter = statements.iterator(); iter.hasNext();) {
 			String query = (String)iter.next();
+			
 			if (query == null || "".equals(query.trim())) {
 				continue;
 			}
@@ -332,7 +335,7 @@ public class InstallAction extends Command
 			catch (SQLException ex) {
 				status = false;
 				conn.rollback();
-				logger.error("Error importing data for " + query + ": " + ex);
+				logger.error("Error importing data for " + query + ": " + ex, ex);
 				this.context.put("exceptionMessage", ex.getMessage() + "\n" + query);
 				break;
 			}
@@ -358,9 +361,15 @@ public class InstallAction extends Command
 		}
 		
 		boolean status = true;
-		List statements = this.readFromDat(SystemGlobals.getApplicationPath() + "/install/" + dbType + "_structure.dat");
+		
+		List statements = ParseDBStructFile.parse(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
+				+ "/database/"
+				+ dbType
+				+ "/" + dbType + "_db_struct.sql");
+			
 		for (Iterator iter = statements.iterator(); iter.hasNext(); ) {
 			String query = (String)iter.next();
+			
 			if (query == null || "".equals(query.trim())) {
 				continue;
 			}
@@ -373,7 +382,7 @@ public class InstallAction extends Command
 			catch (SQLException ex) {
 				status = false;
 
-				logger.error("Error executing query: " + query + ": " + ex);
+				logger.error("Error executing query: " + query + ": " + ex, ex);
 				this.context.put("exceptionMessage", ex.getMessage() + "\n" + query);
 				
 				break;
@@ -626,18 +635,6 @@ public class InstallAction extends Command
 		this.context.put("canWriteToIndex", this.canWriteToIndex());
 		
 		this.context.put("moduleAction", "install_check_info.htm");
-	}
-	
-	private List readFromDat(String filename) throws Exception
-	{
-		List l = new ArrayList();
-		
-		FileInputStream fis = new FileInputStream(filename);
-		ObjectInputStream in = new ObjectInputStream(fis);
-		l = (ArrayList)in.readObject();
-		in.close();
-		
-		return l;
 	}
 	
 	private void dropPostgresqlTables(Connection conn) throws Exception
