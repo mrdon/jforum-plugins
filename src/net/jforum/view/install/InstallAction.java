@@ -73,6 +73,7 @@ import net.jforum.util.MD5;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.SystemGlobalsListener;
+import net.jforum.util.preferences.TemplateKeys;
 
 import org.apache.log4j.Logger;
 
@@ -81,7 +82,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.36 2005/11/16 21:07:39 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.37 2005/11/16 21:35:33 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -103,7 +104,7 @@ public class InstallAction extends Command
 		this.context.put("siteLink", this.getFromSession("siteLink"));
 		this.context.put("dbdatasource", this.getFromSession("dbdatasource"));
 		
-		this.context.put("moduleAction", "install.htm");
+		this.setTemplateName(TemplateKeys.INSTALL_WELCOME);
 	}
 	
 	private void checkLanguage() throws IOException

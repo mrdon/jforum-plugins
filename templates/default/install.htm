@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=${encoding}">
 <meta http-equiv="Content-Style-Type" content="text/css">
 <title>Welcome to JForum 2.1 Installation</title>
-<link rel="stylesheet" href="${contextPath}/templates/default/style.css" type="text/css">
+<link rel="stylesheet" href="${contextPath}/templates/default/styles/style.css" type="text/css">
 <style type="text/css">
 th			{ background-image: url('${contextPath}/templates/default/images/cellpic3.gif') }
 td.cat		{ background-image: url('${contextPath}/templates/default/images/cellpic1.gif') }
@@ -103,7 +103,7 @@ function checkDatabase()
 				<td><table width="100%" border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td><img src="${contextPath}/templates/default/images/logo.jpg" border="0" alt="JForum" vspace="1" /></td>
-						<td align="center" width="100%" valign="middle"><span class="maintitle">${I18n.getMessage("Install.welcome")} JForum 2.1 ${I18n.getMessage("Install.installation")}</span></td>
+						<td align="center" width="100%" valign="middle"><span class="maintitle">${I18n.getMessage("Install.welcome")} JForum 2.1.5 ${I18n.getMessage("Install.installation")}</span></td>
 					</tr>
 				</table></td>
 			</tr>
@@ -235,7 +235,7 @@ function checkDatabase()
 						<td class="row1" align="right" valign="top"><span class="gen"><b>${I18n.getMessage("Install.dbConnectionType")}</b></span></td>
 						<td class="row2">
 							<select name="db_connection_type" onChange="enableNativeFields()">
-								<option value="native" <#if db_connection_type?default("native") == "native">selected</#if>>${I18n.getMessage("Install.dbConnectionTypeNative")}</option>
+								<option value="JDBC" <#if db_connection_type?default("native") == "native">selected</#if>>${I18n.getMessage("Install.dbConnectionTypeNative")}</option>
 								<option value="ds" <#if db_connection_type?default("native") == "ds">selected</#if>>${I18n.getMessage("Install.dbConnectionTypeDs")}</option>
 							</select><br/>
 							<span class="gensmall">${I18n.getMessage("Install.dbConnectionTypeTip")}</span>

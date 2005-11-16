@@ -44,7 +44,7 @@ package net.jforum.util.preferences;
 
 /**
  * @author Rafael Steil
- * @version $Id: TemplateKeys.java,v 1.11 2005/09/15 00:59:45 rafaelsteil Exp $
+ * @version $Id: TemplateKeys.java,v 1.12 2005/11/16 21:35:35 rafaelsteil Exp $
  */
 public class TemplateKeys
 {
@@ -171,11 +171,13 @@ public class TemplateKeys
 	public static final String USER_ADMIN_PERMISSIONS = "user.admin.permissions";
 	public static final String USER_ADMIN_EDIT = "user.admin.edit";
 	public static final String USER_ADMIN_GROUPS = "user.admin.groups";
-
-        public static final String BANNER_LIST = "banner.list";
-        public static final String BANNER_INSERT = "banner.insert";
-        public static final String BANNER_EDIT = "banner.edit";
+	
+	public static final String BANNER_LIST = "banner.list";
+	public static final String BANNER_INSERT = "banner.insert";
+	public static final String BANNER_EDIT = "banner.edit";
 
 	public static final String RSS = "rss";
 	public static final String EMPTY = "empty";
+	
+	public static final String INSTALL_WELCOME = "install.welcome";
 }
