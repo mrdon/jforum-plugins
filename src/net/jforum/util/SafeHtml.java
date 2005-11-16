@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -62,7 +62,7 @@ import org.htmlparser.nodes.TextNode;
  * malicious tags and attributes.
  * 
  * @author Rafael Steil
- * @version $Id: SafeHtml.java,v 1.8 2005/09/08 18:37:14 rafaelsteil Exp $
+ * @version $Id: SafeHtml.java,v 1.9 2005/11/16 20:40:00 rafaelsteil Exp $
  */
 public class SafeHtml 
 {
@@ -82,8 +82,10 @@ public class SafeHtml
 	private String processAllNodes(String contents) throws Exception
 	{
 		StringBuffer sb = new StringBuffer(512);
+		
 		Lexer lexer = new Lexer(contents);
 		Node node;
+		
 		while ((node = lexer.nextNode()) != null) {
 			if (this.isTagWelcome(node)) {
 				if (node instanceof TextNode) {
@@ -126,6 +128,7 @@ public class SafeHtml
 	private void checkAndValidateAttributes(Tag tag)
 	{
 		Vector newAttributes = new Vector();
+
 		for (Iterator iter = tag.getAttributesEx().iterator(); iter.hasNext(); ) {
 			Attribute a = (Attribute)iter.next();
 
@@ -164,8 +167,7 @@ public class SafeHtml
 			contents = new SafeHtml().processAllNodes(contents);
 		}
 		catch (Exception e) {
-			logger.warn("Problems while parsing the html: " + e);
-			; // we don't care
+			logger.warn("Problems while parsing the HTML: " + e, e);
 		}
 		
 		return contents;

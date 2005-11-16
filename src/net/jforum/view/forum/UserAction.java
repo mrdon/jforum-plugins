@@ -79,7 +79,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.58 2005/11/12 00:30:59 almilli Exp $
+ * @version $Id: UserAction.java,v 1.59 2005/11/16 20:39:56 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -460,7 +460,8 @@ public class UserAction extends Command
 			int loggedId = SessionFacade.getUserSession().getUserId();
 			int count = 0;
 			
-			for (Iterator iter = da.newBookmarkDAO().selectByUser(u.getId()).iterator(); iter.hasNext(); ) {
+			List bookmarks = da.newBookmarkDAO().selectByUser(u.getId());
+			for (Iterator iter = bookmarks.iterator(); iter.hasNext(); ) {
 				Bookmark b = (Bookmark)iter.next();
 
 				if (b.isPublicVisible() || loggedId == u.getId()) {

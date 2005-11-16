@@ -49,7 +49,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SafeHtmlTest.java,v 1.8 2005/09/08 18:37:13 rafaelsteil Exp $
+ * @version $Id: SafeHtmlTest.java,v 1.9 2005/11/16 20:39:55 rafaelsteil Exp $
  */
 public class SafeHtmlTest extends TestCase
 {
@@ -85,6 +85,15 @@ public class SafeHtmlTest extends TestCase
 		sb.append("<img src=\"&amp;#106ava&amp;#115cript&amp;#58aler&amp;#116&amp;#40&amp;#39Oops&amp;#39&amp;#41&amp;#59\">");
 		sb.append("&amp;&gt; TTTTT &lt;");
 		this.expected = sb.toString();
+	}
+	
+	public void testIframe() 
+	{
+		String input = "<iframe src='http://www.google.com' onload='javascript:parent.document.body.style.display=\'none\'; alert(\'where is the forum?\'); ' style='display:none;'></iframe>";
+		String output = "&lt;iframe src='http://www.google.com' onload='javascript:parent.document.body.style.display=\'none\'; alert(\'where is the forum?\'); ' style='display:none;'&gt;&lt;/iframe&gt;";
+		
+		SystemGlobals.setValue(ConfigKeys.HTML_TAGS_WELCOME, WELCOME_TAGS);
+		assertEquals(output, SafeHtml.makeSafe(input));
 	}
 	
 	public void testMakeSafe() throws Exception

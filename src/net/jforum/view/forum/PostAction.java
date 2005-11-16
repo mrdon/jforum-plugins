@@ -95,7 +95,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.121 2005/11/16 09:40:26 vmal Exp $
+ * @version $Id: PostAction.java,v 1.122 2005/11/16 20:39:57 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -324,9 +324,10 @@ public class PostAction extends Command
 				if (t == null) {
 					t = tm.selectRaw(p.getTopicId());
 				}
-	  		this.context.put("attachmentsEnabled", SecurityRepository.canAccess(
-				SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(t.getForumId())));
-    		this.context.put("am", new AttachmentCommon(this.request, t.getForumId()));				
+				
+				this.context.put("attachmentsEnabled", SecurityRepository.canAccess(
+						SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(t.getForumId())));
+				this.context.put("am", new AttachmentCommon(this.request, t.getForumId()));				
 	
 				topics.put(new Integer(t.getId()), t);
 			}

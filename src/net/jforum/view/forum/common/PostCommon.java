@@ -50,6 +50,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.jforum.ActionServletRequest;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
 import net.jforum.dao.PostDAO;
@@ -67,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.25 2005/10/02 19:06:47 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.26 2005/11/16 20:39:59 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -224,25 +225,27 @@ public class PostCommon
 
 	public static Post fillPostFromRequest(Post p, boolean isEdit) throws Exception
 	{
-		p.setSubject(JForum.getRequest().getParameter("subject"));
-		p.setBbCodeEnabled(JForum.getRequest().getParameter("disable_bbcode") != null ? false : true);
-		p.setSmiliesEnabled(JForum.getRequest().getParameter("disable_smilies") != null ? false : true);
-		p.setSignatureEnabled(JForum.getRequest().getParameter("attach_sig") != null ? true : false);
+		ActionServletRequest request = JForum.getRequest();
+		
+		p.setSubject(request.getParameter("subject"));
+		p.setBbCodeEnabled(request.getParameter("disable_bbcode") != null ? false : true);
+		p.setSmiliesEnabled(request.getParameter("disable_smilies") != null ? false : true);
+		p.setSignatureEnabled(request.getParameter("attach_sig") != null ? true : false);
 
 		if (!isEdit) {
-			p.setUserIp(JForum.getRequest().getRemoteAddr());
+			p.setUserIp(request.getRemoteAddr());
 			p.setUserId(SessionFacade.getUserSession().getUserId());
 		}
 		
-		boolean htmlEnabled = SecurityRepository.canAccess(SecurityConstants.PERM_HTML_DISABLED, JForum.getRequest()
-				.getParameter("forum_id"));
-		p.setHtmlEnabled(htmlEnabled && JForum.getRequest().getParameter("disable_html") == null);
+		boolean htmlEnabled = SecurityRepository.canAccess(SecurityConstants.PERM_HTML_DISABLED, 
+				request.getParameter("forum_id"));
+		p.setHtmlEnabled(htmlEnabled && request.getParameter("disable_html") == null);
 
 		if (p.isHtmlEnabled()) {
-			p.setText(SafeHtml.makeSafe(JForum.getRequest().getParameter("message")));
+			p.setText(SafeHtml.makeSafe(request.getParameter("message")));
 		}
 		else {
-			p.setText(JForum.getRequest().getParameter("message"));
+			p.setText(request.getParameter("message"));
 		}
 
 		return p;

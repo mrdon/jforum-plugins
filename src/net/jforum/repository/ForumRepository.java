@@ -84,7 +84,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.47 2005/10/08 19:57:54 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.48 2005/11/16 20:39:57 rafaelsteil Exp $
  */
 public class ForumRepository implements Cacheable
 {
@@ -415,7 +415,11 @@ public class ForumRepository implements Cacheable
 		String categoryId = (String)((Map)cache.get(FQN, RELATION)).get(Integer.toString(forumId));
 		
 		if (categoryId != null) {
-			return ((Category)cache.get(FQN, categoryId)).getForum(forumId);
+			Category category = (Category)cache.get(FQN, categoryId);
+			
+			if (isCategoryAccessible(category.getId())) {
+				return category.getForum(forumId);
+			}
 		}
 		
 		return null;
@@ -693,12 +697,19 @@ public class ForumRepository implements Cacheable
 	public static int getTotalMessages(boolean fromDb) throws Exception
 	{
 		int total = ((Integer)cache.get(FQN, TOTAL_MESSAGES)).intValue();
+		
 		if (fromDb || total == 0) {
 			total = DataAccessDriver.getInstance().newForumDAO().getTotalMessages();
 			cache.add(FQN, TOTAL_MESSAGES, new Integer(total));
 		}
 		
 		return total;
+	}
+	
+	public static synchronized void incrementTotalMessages()
+	{
+		int total = ((Integer)cache.get(FQN, TOTAL_MESSAGES)).intValue();
+		cache.add(FQN, TOTAL_MESSAGES, new Integer(total + 1));
 	}
 	
 	/**
