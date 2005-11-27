@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.26 2005/11/16 20:39:59 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.27 2005/11/27 19:48:21 per_johansson Exp $
  */
 public class PostCommon
 {
@@ -97,7 +97,7 @@ public class PostCommon
 		}
 		
 		// DO NOT remove the trailing blank space
-		p.setText(p.getText().replaceAll("\n", "<br> "));
+		p.setText(p.getText().replaceAll("\n", "<br/> "));
 		
 		p.setText(alwaysProcess(p.getText(), BBCodeRepository.getBBCollection().getAlwaysProcessList()));
 
@@ -158,9 +158,9 @@ public class PostCommon
 					while (matcher.find()) {
 						String contents = matcher.group(1);
 
-						// Firefox seems to interpret <br> inside <pre>,
+						// Firefox seems to interpret <br/> inside <pre>,
 						// so we need this bizarre workaround
-						contents = contents.replaceAll("<br>", "\n");
+						contents = contents.replaceAll("<br/>", "\n");
 
 						// Do not allow other bb tags inside "code"
 						contents = contents.replaceAll("\\[", "&#91;").replaceAll("\\]", "&#93;");

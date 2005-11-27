@@ -60,7 +60,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.15 2005/09/09 17:59:44 rafaelsteil Exp $
+ * @version $Id: ViewCommon.java,v 1.16 2005/11/27 19:50:05 per_johansson Exp $
  */
 public final class ViewCommon
 {
@@ -238,7 +238,7 @@ public final class ViewCommon
 	public static void prepareUserSignature(User u) throws Exception
 	{
 		if (u.getSignature() != null) {
-			u.setSignature(u.getSignature().replaceAll("\n", "<br>"));
+			u.setSignature(u.getSignature().replaceAll("\n", "<br/>"));
 			u.setSignature(PostCommon.processText(u.getSignature()));
 			u.setSignature(PostCommon.processSmilies(u.getSignature(), SmiliesRepository.getSmilies()));
 		}
