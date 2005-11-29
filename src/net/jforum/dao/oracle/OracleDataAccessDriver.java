@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -46,7 +46,7 @@ import net.jforum.dao.ModerationDAO;
 
 /**
  * @author Dmitriy Kiriy
- * @version $Id: OracleDataAccessDriver.java,v 1.6 2005/10/02 19:06:45 rafaelsteil Exp $
+ * @version $Id: OracleDataAccessDriver.java,v 1.7 2005/11/29 00:26:54 rafaelsteil Exp $
  */
 public class OracleDataAccessDriver extends net.jforum.dao.generic.GenericDataAccessDriver
 {

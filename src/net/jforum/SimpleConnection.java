@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -58,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * a connection pool.
  * 
  * @author Rafael Steil
- * @version $Id: SimpleConnection.java,v 1.11 2005/07/26 03:04:38 rafaelsteil Exp $
+ * @version $Id: SimpleConnection.java,v 1.12 2005/11/29 00:26:53 rafaelsteil Exp $
  */
 public class SimpleConnection extends DBConnection 
 {

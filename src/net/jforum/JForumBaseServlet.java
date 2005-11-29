@@ -70,7 +70,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumBaseServlet.java,v 1.12 2005/10/25 14:29:34 alexieong Exp $
+ * @version $Id: JForumBaseServlet.java,v 1.13 2005/11/29 00:26:53 rafaelsteil Exp $
  */
 public class JForumBaseServlet extends HttpServlet 
 {
@@ -84,8 +84,33 @@ public class JForumBaseServlet extends HttpServlet
             return new DataHolder();
         }
     };
+    
+    protected void startFrontController()
+    {
+    	try {
+	    	SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
+	        SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
+	        
+	        // Start the dao.driver implementation
+	        String driver = SystemGlobals.getValue(ConfigKeys.DAO_DRIVER);
+	        
+	        logger.info("Loading JDBC driver " + driver);
+	        
+	        Class c = Class.forName(driver);
+	        DataAccessDriver d = (DataAccessDriver)c.newInstance();
+	        DataAccessDriver.init(d);
+	        
+	        ConfigLoader.listenForChanges();
+	        ConfigLoader.startSearchIndexer();
+	        ConfigLoader.startSummaryJob();
+    	}
+    	catch (Exception e) {
+    		 throw new ForumStartupException("Error while starting JForum", e);
+    	}
+    }
 
-    public void init(ServletConfig config) throws ServletException {
+    public void init(ServletConfig config) throws ServletException 
+    {
         super.init(config);
 
         try {
@@ -96,9 +121,7 @@ public class JForumBaseServlet extends HttpServlet
             
             logger.info("Starting JForum. Debug mode is " + debug);
 
-            // Load system default values
             ConfigLoader.startSystemglobals(appPath);
-            
             ConfigLoader.startCacheEngine();
 
             // Configure the template engine
@@ -110,36 +133,21 @@ public class JForumBaseServlet extends HttpServlet
 
             ModulesRepository.init(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR));
 
-            SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
-            SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
-            
-            // Start the dao.driver implementation
-            String driver = SystemGlobals.getValue(ConfigKeys.DAO_DRIVER);
-            
-            logger.info("Loading JDBC driver " + driver);
-            
-            Class c = Class.forName(driver);
-            DataAccessDriver d = (DataAccessDriver)c.newInstance();
-            DataAccessDriver.init(d);
-
             this.loadConfigStuff();
 
             if (!this.debug) {
                 templateCfg.setTemplateUpdateDelay(3600);
             }
 
-            ConfigLoader.listenForChanges();
-			ConfigLoader.startSearchIndexer();
-
             Configuration.setDefaultConfiguration(templateCfg);
-            
-            ConfigLoader.startSummaryJob();
-        } catch (Exception e) {
-            throw new ForumStartupException("Error while starting jforum", e);
+        } 
+        catch (Exception e) {
+            throw new ForumStartupException("Error while starting JForum", e);
         }
     }
 
-    protected void loadConfigStuff() throws Exception {
+    protected void loadConfigStuff() throws Exception 
+    {
         ConfigLoader.loadUrlPatterns();
         I18n.load();
 		Tpl.load(SystemGlobals.getValue(ConfigKeys.TEMPLATES_MAPPING));

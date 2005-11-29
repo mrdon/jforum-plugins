@@ -47,7 +47,7 @@ import java.util.List;
 /**
  * @author Dmitriy Kiriy 
  * @author Jake Fear
- * @version $Id: OracleTopicDAO.java,v 1.9 2005/11/15 21:30:03 rafaelsteil Exp $
+ * @version $Id: OracleTopicDAO.java,v 1.10 2005/11/29 00:26:54 rafaelsteil Exp $
  */
 public class OracleTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 {
@@ -57,7 +57,7 @@ public class OracleTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 	 */
 	public List selectAllByForumByLimit(int forumId, int startFrom, int count) throws Exception
 	{
-		return super.selectAllByForumByLimit(forumId, startFrom + count, startFrom);
+		return super.selectAllByForumByLimit(forumId, startFrom + 1, startFrom + count);
 	}
 	
 	/**
@@ -65,6 +65,6 @@ public class OracleTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 	 */
 	public List selectByUserByLimit(int userId, int startFrom, int count) throws Exception
 	{
-		return super.selectByUserByLimit(userId, startFrom, startFrom + count);
+		return super.selectByUserByLimit(userId, startFrom + 1, startFrom + count);
 	}
 }

@@ -73,7 +73,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.83 2005/11/10 18:30:01 almilli Exp $
+ * @version $Id: JForum.java,v 1.84 2005/11/29 00:26:53 rafaelsteil Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
@@ -86,6 +86,7 @@ public class JForum extends JForumBaseServlet
 	public void init(ServletConfig config) throws ServletException
 	{
 		super.init(config);
+		super.startFrontController();
 		
 		// Start database
 		isDatabaseUp = ForumStartup.startDatabase();

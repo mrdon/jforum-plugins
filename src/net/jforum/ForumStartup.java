@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
 
  * Redistribution and use in source and binary forms, 
@@ -56,7 +56,7 @@ import net.jforum.repository.ForumRepository;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumStartup.java,v 1.10 2005/10/27 21:34:44 jakefear Exp $
+ * @version $Id: ForumStartup.java,v 1.11 2005/11/29 00:26:53 rafaelsteil Exp $
  */
 public class ForumStartup 
 {

@@ -82,7 +82,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.37 2005/11/16 21:35:33 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.38 2005/11/29 00:26:51 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -130,7 +130,7 @@ public class InstallAction extends Command
 	
 	private void error()
 	{
-		this.context.put("moduleAction", "install_error.htm");
+		this.setTemplateName(TemplateKeys.INSTALL_ERROR);
 	}
 	
 	public void doInstall() throws Exception
@@ -213,9 +213,10 @@ public class InstallAction extends Command
 	
 	public void finished() throws Exception
 	{
+		this.setTemplateName(TemplateKeys.INSTALL_FINISHED);
+		
 		this.context.put("clickHere", I18n.getMessage("Install.clickHere"));
 		this.context.put("forumLink", this.getFromSession("forumLink"));
-		this.context.put("moduleAction", "install_finished.htm");
 		
 		String lang = this.getFromSession("language");
 		if (lang == null) {
@@ -227,8 +228,8 @@ public class InstallAction extends Command
 		//this.doFinalSteps();
 		this.configureSystemGlobals();
 
-		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
-        SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
+		//SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
+        //SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
         
         SessionFacade.remove(this.request.getSession().getId());
 	}
@@ -492,7 +493,7 @@ public class InstallAction extends Command
 		String implementation;
 		boolean isDs = false;
 		
-		if ("native".equals(connectionType)) {
+		if ("JDBC".equals(connectionType)) {
 			implementation = "yes".equals(this.getFromSession("usePool")) 
 				? "net.jforum.PooledConnection"
 				: "net.jforum.SimpleConnection";
@@ -592,6 +593,8 @@ public class InstallAction extends Command
 	
 	public void checkInformation() throws Exception
 	{
+		this.setTemplateName(TemplateKeys.INSTALL_CHECK_INFO);
+		
 		String language = this.request.getParameter("language");
 		String database = this.request.getParameter("database");
 		String dbHost = this.request.getParameter("dbhost");

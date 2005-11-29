@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=${encoding}">
 <meta http-equiv="Content-Style-Type" content="text/css">
-<title>JForum 2.1 Installation - Step 2</title>
-<link rel="stylesheet" href="${contextPath}/templates/default/style.css" type="text/css">
+<title>JForum 2.1.5 Installation - Step 2</title>
+<link rel="stylesheet" href="${contextPath}/templates/default/styles/style.css" type="text/css">
 <style type="text/css">
 th			{ background-image: url('${contextPath}/templates/default/images/cellpic3.gif') }
 td.cat		{ background-image: url('${contextPath}/templates/default/images/cellpic1.gif') }
@@ -27,7 +27,7 @@ td.cathead,td.catsides,td.catleft,td.catright,td.catbottom { background-image: u
 				<td><table width="100%" border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td><img src="${contextPath}/templates/default/images/logo.jpg" border="0" alt="JForum" vspace="1" /></td>
-						<td align="center" width="100%" valign="middle"><span class="maintitle">JForum 2.1 ${I18n.getMessage("Install.installation")}</span></td>
+						<td align="center" width="100%" valign="middle"><span class="maintitle">JForum 2.1.5 ${I18n.getMessage("Install.installation")}</span></td>
 					</tr>
 				</table></td>
 			</tr>
@@ -72,7 +72,7 @@ td.cathead,td.catsides,td.catleft,td.catright,td.catbottom { background-image: u
 					<tr>
 						<th colspan="2">2) ${I18n.getMessage("Install.dbConfiguration")}</th>
 					</tr>
-					<#if db_connection_type?default("native") == "native">
+					<#if db_connection_type?default("JDBC") == "JDBC">
 					<tr>
 						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbHost")}</b></span></td>
 						<td class="row2"><span class="gen">${dbHost}</span></td>

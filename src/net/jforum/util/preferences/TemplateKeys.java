@@ -44,7 +44,7 @@ package net.jforum.util.preferences;
 
 /**
  * @author Rafael Steil
- * @version $Id: TemplateKeys.java,v 1.12 2005/11/16 21:35:35 rafaelsteil Exp $
+ * @version $Id: TemplateKeys.java,v 1.13 2005/11/29 00:26:58 rafaelsteil Exp $
  */
 public class TemplateKeys
 {
@@ -180,4 +180,7 @@ public class TemplateKeys
 	public static final String EMPTY = "empty";
 	
 	public static final String INSTALL_WELCOME = "install.welcome";
+	public static final String INSTALL_CHECK_INFO = "install.check.info";
+	public static final String INSTALL_ERROR = "install.error";
+	public static final String INSTALL_FINISHED = "install.finished";
 }

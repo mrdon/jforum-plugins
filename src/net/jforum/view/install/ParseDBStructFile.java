@@ -50,7 +50,7 @@ import java.util.List;
 
 /**
  * @author Rafael Steil
- * @version $Id: ParseDBStructFile.java,v 1.1 2005/11/16 21:07:39 rafaelsteil Exp $
+ * @version $Id: ParseDBStructFile.java,v 1.2 2005/11/29 00:26:51 rafaelsteil Exp $
  */
 public class ParseDBStructFile
 {
@@ -70,7 +70,13 @@ public class ParseDBStructFile
 			String[] creators = { "CREATE INDEX", "CREATE TABLE", "CREATE SEQUENCE", "DROP TABLE", "IF EXISTS" };
 			
 			while ((line = reader.readLine()) != null) {
-				if (line.length() == 0 || line.charAt(0) == '-') {
+				if (line.length() == 0) {
+					continue;
+				}
+				
+				char charAt = line.charAt(0);
+				
+				if (charAt == '-' || charAt == '#') {
 					continue;
 				}
 				

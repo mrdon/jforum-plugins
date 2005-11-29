@@ -48,7 +48,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.77 2005/10/27 21:34:44 jakefear Exp $
+* @version $Id: ConfigKeys.java,v 1.78 2005/11/29 00:26:58 rafaelsteil Exp $
 */
 
 public class ConfigKeys 
@@ -69,7 +69,7 @@ public class ConfigKeys
 	public static final String DATABASE_CONNECTION_HOST = "database.connection.host";
 	public static final String DATABASE_CONNECTION_USERNAME = "database.connection.username";
 	public static final String DATABASE_CONNECTION_PASSWORD = "database.connection.password";
-	public static final String DATABASE_CONNECTION_DBNAME = "dbname";
+	public static final String DATABASE_CONNECTION_DBNAME = "database.connection.dbname";
 	public static final String DATABASE_CONNECTION_ENCODING = "dbencoding";
 	public static final String DATABASE_CONNECTION_DRIVER = "database.connection.driver";
 	public static final String DATABASE_CONNECTION_STRING = "database.connection.string";

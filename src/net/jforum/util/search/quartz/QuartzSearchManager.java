@@ -57,7 +57,7 @@ import org.quartz.impl.StdSchedulerFactory;
 
 /**
  * @author Rafael Steil
- * @version $Id: QuartzSearchManager.java,v 1.4 2005/07/26 03:05:38 rafaelsteil Exp $
+ * @version $Id: QuartzSearchManager.java,v 1.5 2005/11/29 00:27:01 rafaelsteil Exp $
  */
 public class QuartzSearchManager implements SearchManager
 {
@@ -89,8 +89,9 @@ public class QuartzSearchManager implements SearchManager
 			scheduler.start();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
-			throw new SearchInstantiationException("Error while trying to start " + this.getClass().getName() + ": " + e);
+			if (e.toString().indexOf("org.quartz.ObjectAlreadyExistsException") == -1) {
+				throw new SearchInstantiationException("Error while trying to start " + this.getClass().getName() + ": " + e);
+			}
 		}
 	}
 
