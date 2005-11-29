@@ -70,7 +70,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumBaseServlet.java,v 1.13 2005/11/29 00:26:53 rafaelsteil Exp $
+ * @version $Id: JForumBaseServlet.java,v 1.14 2005/11/29 17:18:48 rafaelsteil Exp $
  */
 public class JForumBaseServlet extends HttpServlet 
 {
@@ -91,15 +91,7 @@ public class JForumBaseServlet extends HttpServlet
 	    	SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
 	        SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
 	        
-	        // Start the dao.driver implementation
-	        String driver = SystemGlobals.getValue(ConfigKeys.DAO_DRIVER);
-	        
-	        logger.info("Loading JDBC driver " + driver);
-	        
-	        Class c = Class.forName(driver);
-	        DataAccessDriver d = (DataAccessDriver)c.newInstance();
-	        DataAccessDriver.init(d);
-	        
+	        ConfigLoader.loadDaoImplementation();
 	        ConfigLoader.listenForChanges();
 	        ConfigLoader.startSearchIndexer();
 	        ConfigLoader.startSummaryJob();

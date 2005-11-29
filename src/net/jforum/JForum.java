@@ -53,6 +53,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.jforum.dao.DatabaseWorkarounder;
 import net.jforum.exceptions.ExceptionWriter;
 import net.jforum.exceptions.ForumStartupException;
 import net.jforum.repository.ModulesRepository;
@@ -73,7 +74,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.84 2005/11/29 00:26:53 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.85 2005/11/29 17:18:47 rafaelsteil Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
@@ -93,10 +94,13 @@ public class JForum extends JForumBaseServlet
 		
 		// Configure ThreadLocal
 		DataHolder dh = new DataHolder();
-		Connection conn;
+		Connection conn = null;
 		
 		try {
 			conn = DBConnection.getImplementation().getConnection();
+			
+			DatabaseWorkarounder dw = new DatabaseWorkarounder();
+			dw.handleWorkarounds(conn);
 		}
 		catch (Exception e) {
 			throw new ForumStartupException("Error while starting jforum", e);

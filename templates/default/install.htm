@@ -158,9 +158,9 @@ function checkDatabase()
 
 						<td class="row2">
 							<select name="database">
-								<option value="mysql40x" <#if database?default("") == "mysql40x">selected</#if>>MySQL <= 4.0.x</option>
-								<option value="mysql41" <#if database?default("") == "mysql41">selected</#if>>MySQL >= 4.1</option>
+								<option value="mysql" <#if database?default("") == "mysql">selected</#if>>MySQL</option>
 								<option value="postgresql" <#if database?default("") == "postgresql">selected</#if>>PostgreSQL</option>
+								<option value="oracle" <#if database?default("") == "oracle">selected</#if>>Oracle</option>
 								<option value="hsqldb" <#if database?default("") == "hsqldb">selected</#if>>HSQLDB</option>
 							</select>
 							<br>

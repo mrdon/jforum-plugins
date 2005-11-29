@@ -82,7 +82,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.38 2005/11/29 00:26:51 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.39 2005/11/29 17:18:46 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -302,10 +302,6 @@ public class InstallAction extends Command
 		
 		String dbType = this.getFromSession("database");
 		
-		if (dbType.startsWith("mysql")) {
-			dbType = "mysql";
-		}
-		
 		List statements = ParseDBDumpFile.parse(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
 				+ "/database/" 
 				+ dbType
@@ -357,9 +353,6 @@ public class InstallAction extends Command
 		
 		if ("postgresql".equals(dbType)) {
 			this.dropPostgresqlTables(conn);
-		}
-		else if (dbType.startsWith("mysql")) {
-			dbType = "mysql";
 		}
 		
 		boolean status = true;
@@ -423,7 +416,7 @@ public class InstallAction extends Command
 		return new File(SystemGlobals.getApplicationPath() + "/index.htm").canWrite();
 	}
 	
-	private void configureNativeConnection() throws Exception
+	private void configureJDBCConnection() throws Exception
 	{
 		String username = this.getFromSession("dbUser");
 		String password = this.getFromSession("dbPassword");
@@ -431,13 +424,6 @@ public class InstallAction extends Command
 		String host = this.getFromSession("dbHost");
 		String type = this.getFromSession("database");
 		String encoding = this.getFromSession("dbEncoding");
-		
-		boolean isMysql = type.startsWith("mysql");
-		boolean isMysql41 = "mysql41".equals(type);
-		
-		if (isMysql) {
-			type = "mysql";
-		}
 		
 		Properties p = new Properties();
 		p.load(new FileInputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) 
@@ -449,18 +435,21 @@ public class InstallAction extends Command
 		p.setProperty(ConfigKeys.DATABASE_CONNECTION_PASSWORD, password);
 		p.setProperty(ConfigKeys.DATABASE_CONNECTION_DBNAME, dbName);
 		p.setProperty(ConfigKeys.DATABASE_CONNECTION_ENCODING, encoding);
-		
-		if (isMysql41) {
-			p.setProperty(ConfigKeys.DATABASE_MYSQL_ENCODING, "");
-			p.setProperty(ConfigKeys.DATABASE_MYSQL_UNICODE, "");
-		}
+
+		FileOutputStream fos = null;
 		
 		try {
-			p.store(new FileOutputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) 
-					+ "/database/" + type + "/" + type + ".properties"), null);
+			fos = new FileOutputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) 
+					+ "/database/" + type + "/" + type + ".properties");
+			p.store(fos, null);
 		}
 		catch (Exception e) {
 			logger.warn("Error while trying to write to " + type + ".properties: " + e);
+		}
+		finally {
+			if (fos != null) {
+				fos.close();
+			}
 		}
 		
 		// Proceed to SystemGlobals / jforum-custom.conf configuration
@@ -498,27 +487,12 @@ public class InstallAction extends Command
 				? "net.jforum.PooledConnection"
 				: "net.jforum.SimpleConnection";
 			
-			this.configureNativeConnection();
+			this.configureJDBCConnection();
 		}
 		else {
 			isDs = true;
 			implementation = "net.jforum.DataSourceConnection";
 			SystemGlobals.setValue(ConfigKeys.DATABASE_DATASOURCE_NAME, this.getFromSession("dbdatasource"));
-		}
-		
-		if (database.startsWith("mysql")) {
-			if ("mysql41".equals(database)) {
-				String path = SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/database/mysql";
-				
-				this.copyFile(path + "/mysql_41.sql", path + "/mysql_41-bkp.sql");
-				
-				new File(path + "/mysql.sql").delete();
-				new File(path + "/mysql_41.sql").renameTo(new File(path + "/mysql.sql"));
-				
-				this.copyFile(path + "/mysql_41-bkp.sql", path + "/mysql_41.sql");
-			}
-			
-			database = "mysql";
 		}
 		
 		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_IMPLEMENTATION, implementation);

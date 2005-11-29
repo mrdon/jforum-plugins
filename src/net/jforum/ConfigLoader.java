@@ -51,6 +51,7 @@ import java.util.Properties;
 
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
+import net.jforum.dao.DataAccessDriver;
 import net.jforum.exceptions.CacheEngineStartupException;
 import net.jforum.summary.SummaryScheduler;
 import net.jforum.util.FileMonitor;
@@ -67,7 +68,7 @@ import org.quartz.SchedulerException;
  * General utilities methods for loading configurations for JForum.
  * 
  * @author Rafael Steil
- * @version $Id: ConfigLoader.java,v 1.19 2005/11/02 01:43:54 rafaelsteil Exp $
+ * @version $Id: ConfigLoader.java,v 1.20 2005/11/29 17:18:47 rafaelsteil Exp $
  */
 public class ConfigLoader 
 {
@@ -163,6 +164,19 @@ public class ConfigLoader
 						SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG), fileChangesDelay);
 			}
 		}
+	}
+	
+	public static void loadDaoImplementation() throws Exception
+	{
+
+        // Start the dao.driver implementation
+        String driver = SystemGlobals.getValue(ConfigKeys.DAO_DRIVER);
+        
+        logger.info("Loading JDBC driver " + driver);
+        
+        Class c = Class.forName(driver);
+        DataAccessDriver d = (DataAccessDriver)c.newInstance();
+        DataAccessDriver.init(d);
 	}
 	
 	public static void startCacheEngine()
