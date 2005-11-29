@@ -62,11 +62,12 @@ import com.octo.captcha.image.ImageCaptcha;
  * Stores information about user's session.
  * 
  * @author Rafael Steil
- * @version $Id: UserSession.java,v 1.23 2005/09/12 01:25:57 rafaelsteil Exp $
+ * @version $Id: UserSession.java,v 1.24 2005/11/29 13:47:24 rafaelsteil Exp $
  */
 public class UserSession implements Serializable
 {
 	static final long serialVersionUID = 0;
+	
 	private long sessionTime;
 	
 	private int userId;
@@ -75,8 +76,7 @@ public class UserSession implements Serializable
 	private Date startTime;
 	private Date lastVisit;
 	
-	private transient String sessionId;
-	
+	private String sessionId;
 	private String username;
 	private String lang;
 	

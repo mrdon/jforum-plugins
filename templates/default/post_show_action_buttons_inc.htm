@@ -12,7 +12,7 @@
 		</#if>
 
 		<#if topic.status != STATUS_LOCKED>
-			<a href="${JForumContext.encodeURL("/posts/quote/${start}/${topic.id}")}" rel="nofollow" class="icon_quote"><img src="${contextPath}/images/transp.gif"/></a>
+			<a href="${JForumContext.encodeURL("/posts/quote/${start}/${post.id}")}" rel="nofollow" class="icon_quote"><img src="${contextPath}/images/transp.gif"/></a>
 		</#if>
 
 		<#if ((post.canEdit && topic.status != STATUS_LOCKED) || canEdit)>

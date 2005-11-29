@@ -95,7 +95,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.122 2005/11/16 20:39:57 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.123 2005/11/29 13:47:26 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -410,6 +410,11 @@ public class PostAction extends Command
 	{
 		return !SecurityRepository.canAccess(SecurityConstants.PERM_REPLY_ONLY, 
 				Integer.toString(forumId));
+	}
+	
+	public void reply() throws Exception
+	{
+		this.insert();
 	}
 
 	public void insert() throws Exception 
