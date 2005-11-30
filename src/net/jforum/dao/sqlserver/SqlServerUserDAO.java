@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
 
  * Redistribution and use in source and binary forms, 
@@ -51,7 +51,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerUserDAO.java,v 1.4 2005/07/26 03:05:14 rafaelsteil Exp $
+ * @version $Id: SqlServerUserDAO.java,v 1.5 2005/11/30 11:44:33 rafaelsteil Exp $
  */
 public class SqlServerUserDAO extends net.jforum.dao.generic.GenericUserDAO
 {
@@ -68,6 +68,8 @@ public class SqlServerUserDAO extends net.jforum.dao.generic.GenericUserDAO
 					+ count 
 					+ " " 
 					+ SystemGlobals.getSql("UserModel.selectAllByLimit"));
+			p.setInt(1, startFrom);
+			p.setInt(2, count);
 		}
 		else {
 			p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectAll"));
