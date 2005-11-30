@@ -35,11 +35,14 @@
 		
 	<#assign len = groups.size() - 1>
 	<#if (len > -1)>
-	<#list 0..len as i>
+	<#list 0 .. len as i>
 		<#assign node = groups.get(i)>
-		<#global level = 0>
-		<option value="${node.id}"<#if parentId == node.id || selectedList.contains(node.id)> selected</#if>>${node.name}</option>
-		<@selectOption node, parentId/>
+
+		<#if !group?exists || node.id != group.id>
+			<#global level = 0>
+			<option value="${node.id}"<#if parentId == node.id || selectedList.contains(node.id)> selected</#if>>${node.name}</option>
+			<@selectOption node, parentId/>
+		</#if>
 	</#list>
 	</#if>
 
@@ -56,10 +59,13 @@
 		<#list 0..len as i>
 			<#global level = level + 2>
 			<#assign n = node.getNode(i)>
-			<option value="${n.id}"<#if parentId == n.id || selectedList.contains(node.id)> selected</#if>><#list 0..level as j>&nbsp;</#list>${n.name}</option>
-			<@selectOption n, parentId/>
-			
-			<#global level = level - 2>
+
+			<#if !group?exists || n.id != group.id>
+				<option value="${n.id}"<#if parentId == n.id || selectedList.contains(node.id)> selected</#if>><#list 0..level as j>&nbsp;</#list>${n.name}</option>
+				<@selectOption n, parentId/>
+				
+				<#global level = level - 2>
+			</#if>
 		</#list>
 	</#if>
 </#macro>

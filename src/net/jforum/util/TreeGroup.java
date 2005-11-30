@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
 
  * Redistribution and use in source and binary forms, 
@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: Mar 3, 2003 / 11:28:25 AM
- * net.jforum.view.TreeGroup.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: TreeGroup.java,v 1.7 2005/07/26 04:01:18 diegopires Exp $
  */
 package net.jforum.util;
 
@@ -128,6 +125,7 @@ import net.jforum.dao.TreeGroupDAO;
  * The same operation is done to all other groups and its sub groups. 
  * 
  * @author Rafael Steil
+ * @version $Id: TreeGroup.java,v 1.8 2005/11/30 13:17:10 rafaelsteil Exp $
  */
 public class TreeGroup 
 {
@@ -140,12 +138,12 @@ public class TreeGroup
 	/**
 	 * Process the group hierarchy.
 	 * 
-	 * @return <code>ArrayList</code> containing the complete group hierarchy. Each element
+	 * @return <code>List</code> containing the complete group hierarchy. Each element
 	 * from the list represents a single <code>GroupNode<code> object.	 
 	 * */
 	public List getNodes() throws Exception
 	{
-		ArrayList nodes = new ArrayList();
+		List nodes = new ArrayList();
 		
 		TreeGroupDAO tgm = DataAccessDriver.getInstance().newTreeGroupDAO();
 
