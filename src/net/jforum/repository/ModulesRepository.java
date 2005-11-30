@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -43,35 +43,26 @@
 package net.jforum.repository;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import net.jforum.ConfigLoader;
 import net.jforum.JForum;
-import net.jforum.cache.CacheEngine;
-import net.jforum.cache.Cacheable;
 
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModulesRepository.java,v 1.7 2005/07/26 04:01:23 diegopires Exp $
+ * @version $Id: ModulesRepository.java,v 1.8 2005/11/30 17:23:09 rafaelsteil Exp $
  */
-public class ModulesRepository implements Cacheable
+public class ModulesRepository
 {
 	private static final Logger logger = Logger.getLogger(ModulesRepository.class);
 	
-	private static CacheEngine cache;
-	private static final String FQN = "modulesMapping";
+	private static Map cache = new HashMap();
 	private static final String ENTRIES = "entries";
 
-	/**
-	 * @see net.jforum.cache.Cacheable#setCacheEngine(net.jforum.cache.CacheEngine)
-	 */
-	public void setCacheEngine(CacheEngine engine)
-	{
-		cache = engine;
-	}
-	
 	/**
 	 * Loads all modules mapping.
 	 * 
@@ -81,12 +72,12 @@ public class ModulesRepository implements Cacheable
 	 */
 	public static void init(String baseDir) throws IOException
 	{
-		cache.add(FQN, ENTRIES, ConfigLoader.loadModulesMapping(baseDir));
+		cache.put(ENTRIES, ConfigLoader.loadModulesMapping(baseDir));
 	}
 	
 	public static int size()
 	{
-		return ((Properties)cache.get(FQN, ENTRIES)).size();
+		return cache.size();
 	}
 	
 	/**
@@ -97,7 +88,7 @@ public class ModulesRepository implements Cacheable
 	 * as argument, or <code>null</code> if not found.
 	 */
 	public static String getModuleClass(String moduleName) {
-		Properties p = (Properties)cache.get(FQN, ENTRIES);
+		Properties p = (Properties)cache.get(ENTRIES);
 		
 		if (p == null) {
 			logger.error("Null modules. Askes moduleName: " + moduleName

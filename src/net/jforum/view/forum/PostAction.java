@@ -95,7 +95,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.123 2005/11/29 13:47:26 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.124 2005/11/30 17:23:14 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -350,7 +350,7 @@ public class PostAction extends Command
 		
 		this.setTemplateName(TemplateKeys.POSTS_USER_POSTS_LIST);
 		
-	this.context.put("canDownloadAttachments", SecurityRepository.canAccess(
+		this.context.put("canDownloadAttachments", SecurityRepository.canAccess(
 				SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD));				
 		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
 		this.context.put("allCategories", ForumCommon.getAllCategoriesAndForums(false));
@@ -363,14 +363,20 @@ public class PostAction extends Command
 		ViewCommon.contextToPagination(start, totalMessages, count);
 	}
 
-	public void review() throws Exception {
+	public void review() throws Exception 
+	{
 		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 
 		int userId = SessionFacade.getUserSession().getUserId();
 		int topicId = this.request.getIntParameter("topic_id");
-		Topic topic = tm.selectById(topicId);
+		
+		Topic topic = TopicRepository.getTopic(new Topic(topicId));
+		
+		if (topic == null) {
+			topic = tm.selectById(topicId);
+		}
 
 		if (!TopicsCommon.isTopicAccessible(topic.getForumId())) {
 			return;
@@ -971,11 +977,19 @@ public class PostAction extends Command
 				return;
 			}
 			
-			// If topic_id is -1, then is the first post
-			if (t.getId() == -1) {
+			Forum forum = ForumRepository.getForum(forumId);
+			PermissionControl pc = SecurityRepository.get(us.getUserId());
+
+			// Moderators and admins don't need to have their messages moderated
+			boolean moderate = (forum.isModerated() 
+				&& !pc.canAccess(SecurityConstants.PERM_MODERATION)
+				&& !pc.canAccess(SecurityConstants.PERM_ADMINISTRATION));
+			
+			
+			if (newTopic) {
 				t.setTime(new Date());
 				t.setTitle(this.request.getParameter("subject"));
-				t.setModerated(ForumRepository.getForum(forumId).isModerated());
+				t.setModerated(moderate);
 				t.setPostedBy(u);
 				t.setFirstPostTime(ViewCommon.formatDate(t.getTime()));
 
@@ -983,13 +997,6 @@ public class PostAction extends Command
 				t.setId(topicId);
 				firstPost = true;
 			}
-			
-			PermissionControl pc = SecurityRepository.get(us.getUserId());
-			
-			// Moderators and admins don't need to have their messages moderated
-			boolean moderate = (t.isModerated() 
-					&& !pc.canAccess(SecurityConstants.PERM_MODERATION)
-					&& !pc.canAccess(SecurityConstants.PERM_ADMINISTRATION));
 			
 			if (!firstPost && pc.canAccess(
 					SecurityConstants.PERM_REPLY_WITHOUT_MODERATION, Integer.toString(t.getForumId()))) {
@@ -1007,6 +1014,7 @@ public class PostAction extends Command
 			Poll poll = PollCommon.fillPollFromRequest();
 			if (poll != null && newTopic) {
 				poll.setTopicId(t.getId());
+				
 				if (poll.getOptions().size() < 2) {
 					//it is not a valid poll, cancel the post
 					JForum.enableCancelCommit();
@@ -1018,6 +1026,7 @@ public class PostAction extends Command
 					this.insert();
 					return;
 				}
+				
 				plm.addNew(poll);
 				t.setVoteId(poll.getId());
 			}
@@ -1030,10 +1039,12 @@ public class PostAction extends Command
 				t.setFirstPostId(postId);
 			}
 			
-			t.setLastPostId(postId);
-			t.setLastPostBy(u);
-			t.setLastPostDate(p.getTime());
-			t.setLastPostTime(p.getFormatedTime());
+			if (!moderate) {
+				t.setLastPostId(postId);
+				t.setLastPostBy(u);
+				t.setLastPostDate(p.getTime());
+				t.setLastPostTime(p.getFormatedTime());
+			}
 			
 			tm.update(t);
 			
@@ -1077,10 +1088,10 @@ public class PostAction extends Command
 			}
 			else {
 				JForum.setRedirect(this.request.getContextPath() 
-						+ "/posts/waitingModeration/" 
-						+ (firstPost ? 0 : t.getId())
-						+ "/" + t.getForumId()
-						+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+					+ "/posts/waitingModeration/" 
+					+ (firstPost ? 0 : t.getId())
+					+ "/" + t.getForumId()
+					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 			}
 			
 			if (delay > 0) {

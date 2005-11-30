@@ -63,7 +63,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationAction.java,v 1.17 2005/09/16 16:29:17 rafaelsteil Exp $
+ * @version $Id: ModerationAction.java,v 1.18 2005/11/30 17:23:11 rafaelsteil Exp $
  */
 public class ModerationAction extends AdminCommand
 {
@@ -97,6 +97,7 @@ public class ModerationAction extends AdminCommand
 	public void doSave() throws Exception
 	{
 		String[] posts = this.request.getParameterValues("post_id");
+
 		if (posts != null) {
 			TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 			
@@ -111,6 +112,9 @@ public class ModerationAction extends AdminCommand
 				
 				if ("aprove".startsWith(status)) {
 					Post p = DataAccessDriver.getInstance().newPostDAO().selectById(postId);
+					
+					UserDAO udao = DataAccessDriver.getInstance().newUserDAO();
+					User u = udao.selectById(p.getUserId());
 					
 					// Check is the post is in fact waiting for moderation
 					if (!p.isModerationNeeded()) {
@@ -131,11 +135,13 @@ public class ModerationAction extends AdminCommand
 						t.setTotalReplies(t.getTotalReplies() + 1);
 					}
 					
+					t.setLastPostId(postId);
+					t.setLastPostBy(u);
+					t.setLastPostDate(p.getTime());
+					t.setLastPostTime(p.getFormatedTime());
+					
 					TopicsCommon.updateBoardStatus(t, postId, firstPost,
 							tm, DataAccessDriver.getInstance().newForumDAO());
-					
-					UserDAO udao = DataAccessDriver.getInstance().newUserDAO();
-					User u = udao.selectById(p.getUserId());
 					
 					ForumRepository.updateForumStats(t, u, p);
 					
