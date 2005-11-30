@@ -81,8 +81,10 @@ import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
 /**
+ * JForum Web Installer.
+ * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.39 2005/11/29 17:18:46 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.40 2005/11/30 19:41:31 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
