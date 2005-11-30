@@ -248,7 +248,7 @@ CREATE TABLE [jforum_roles] (
 
 CREATE TABLE [jforum_search_results] (
 	[topic_id] [bigint] DEFAULT (0) NOT NULL ,
-	[session] [varchar] (50) NULL ,
+	[session_id] [varchar] (50) NULL ,
 	[search_time] [datetime] NULL 
 ) ON [PRIMARY]
 
@@ -266,7 +266,7 @@ CREATE TABLE [jforum_search_topics] (
 	[topic_first_post_id] [bigint] DEFAULT (0) NULL ,
 	[topic_last_post_id] [bigint] DEFAULT (0) NOT NULL ,
 	[moderated] [int] DEFAULT (0) NULL ,
-	[session] [varchar] (50) NULL ,
+	[session_id] [varchar] (50) NULL ,
 	[search_time] [datetime] NULL 
 ) ON [PRIMARY]
 

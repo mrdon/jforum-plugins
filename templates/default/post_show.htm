@@ -8,7 +8,7 @@
 <#include "js/karma.js">
 <#include "js/utils.js"/>
 
-<#if isModerator>
+<#if isModerator || isAdmin>
 	function confirmDelete()
 	{
 		if (confirm("${I18n.getMessage("Moderation.ConfirmPostDelete")}")) {

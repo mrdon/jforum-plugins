@@ -390,7 +390,7 @@ CREATE INDEX idx_swm_title ON jforum_search_wordmatch(title_match);
 --
 CREATE TABLE jforum_search_results (
   topic_id INT NOT NULL,
-  session VARCHAR(50),
+  session_id VARCHAR(50),
   search_time TIMESTAMP
 );
 CREATE INDEX idx_sr_topic ON jforum_search_results(topic_id);
@@ -410,7 +410,7 @@ CREATE TABLE jforum_search_topics (
   topic_first_post_id INTEGER DEFAULT 0,
   topic_last_post_id INTEGER NOT NULL DEFAULT 0,
   moderated INTEGER DEFAULT 0,
-  session VARCHAR(50),
+  session_id VARCHAR(50),
   search_time TIMESTAMP
 );
 
