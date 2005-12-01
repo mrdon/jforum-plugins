@@ -12,7 +12,7 @@
 			<tr bgcolor="#f4f4f4">
 			<td><span class="gen"><#list 0..level as j>&nbsp;</#list>${node.name}</span></td>
 			<td><span class="gen"><a href="${contextPath}/${moduleName}/edit/${node.id}${extension}">${I18n.getMessage("Groups.List.Edit")}</a></span></td>
-			<td><input type="checkbox" name="group_id" value="${node.id}"></td>
+			<td><input type="checkbox" name="group_id" value="${node.id}" /></td>
 			<td class="row2"><span class="gen"><a href="${contextPath}/${moduleName}/permissions/${node.id}${extension}">${I18n.getMessage("Permissions")}</a></span></td>
 			</tr>
 
@@ -27,7 +27,7 @@
 <#-- Create a <select> HTML field with the groups -->
 <#-- ******************************************** -->
 <#macro selectFieldGroups name groups parentId multiple selectedList>
-	<select name="${name}" <#if multiple>multiple size="4"</#if>>
+	<select name="${name}" <#if multiple>multiple="multiple" size="4"</#if>>
 	
 	<#if !multiple>
 		<option value="0">${I18n.getMessage("topLevelGroup")}</option>
@@ -40,7 +40,7 @@
 
 		<#if !group?exists || node.id != group.id>
 			<#global level = 0>
-			<option value="${node.id}"<#if parentId == node.id || selectedList.contains(node.id)> selected</#if>>${node.name}</option>
+			<option value="${node.id}"<#if parentId == node.id || selectedList.contains(node.id)> selected="selected"</#if>>${node.name}</option>
 			<@selectOption node, parentId/>
 		</#if>
 	</#list>
@@ -61,7 +61,7 @@
 			<#assign n = node.getNode(i)>
 
 			<#if !group?exists || n.id != group.id>
-				<option value="${n.id}"<#if parentId == n.id || selectedList.contains(node.id)> selected</#if>><#list 0..level as j>&nbsp;</#list>${n.name}</option>
+				<option value="${n.id}"<#if parentId == n.id || selectedList.contains(node.id)> selected="selected"</#if>><#list 0..level as j>&nbsp;</#list>${n.name}</option>
 				<@selectOption n, parentId/>
 				
 				<#global level = level - 2>
