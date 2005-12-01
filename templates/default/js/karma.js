@@ -14,7 +14,7 @@
 
 	function karmaPointsCombo(postId)
 	{
-		document.write('<select name="karma" onChange="karmaVote(this,' + postId + ')">');
+		document.write('<select name="karma" onchange="karmaVote(this,' + postId + ')">');
 		document.write('	<option value="">${I18n.getMessage("Karma.rateMessage")}</option>');
 		document.write('	<option value="1">1</option>');
 		document.write('	<option value="2">2</option>');

@@ -41,7 +41,8 @@ var counter = 0;
 	function removeAttach(index)
 	{
 		document.getElementById("attach_" + index).innerHTML = "<div id='attach_" + total + "'></div>";
-		counter--;
+		//Avoid HTML Validation error by not using the minusminus shortcut
+		counter = counter-1;
 		setAddAttachButtonStatus();
 	}
 
@@ -58,7 +59,7 @@ var counter = 0;
 	templateEdit += "<td class='row2'><span class='gen'>#name#</td></tr>";
 	templateEdit += "<tr><td class='row2'><span class='gen'><b>${I18n.getMessage("Attachments.description")}</b></span></td>";
 	templateEdit += "<td class='row2'><textarea rows='4' cols='40' name='edit_comment_#id#'>#value#</textarea>";
-	templateEdit += "&nbsp;&nbsp;<span class='gensmall'><input type='checkbox' onClick='configureAttachDeletion(#id#, this);'>${I18n.getMessage("Attachments.remove")}</span></td></tr>";
+	templateEdit += "&nbsp;&nbsp;<span class='gensmall'><input type='checkbox' onclick='configureAttachDeletion(#id#, this);'>${I18n.getMessage("Attachments.remove")}</span></td></tr>";
 	templateEdit += "<tr><td colspan='2' width='100%' class='row3'></td></tr></table>";
 	
 	function editAttachments()
