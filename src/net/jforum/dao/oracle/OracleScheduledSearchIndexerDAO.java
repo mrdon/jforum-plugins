@@ -50,7 +50,7 @@ import java.util.List;
 
 /**
  * @author Rafael Steil
- * @version $Id: OracleScheduledSearchIndexerDAO.java,v 1.6 2005/10/27 18:55:01 jakefear Exp $
+ * @version $Id: OracleScheduledSearchIndexerDAO.java,v 1.7 2005/12/01 12:14:36 rafaelsteil Exp $
  */
 public class OracleScheduledSearchIndexerDAO extends net.jforum.dao.generic.GenericScheduledSearchIndexerDAO
 {
@@ -62,12 +62,11 @@ public class OracleScheduledSearchIndexerDAO extends net.jforum.dao.generic.Gene
 		return OracleUtils.readBlobUTF16BinaryStream(rs, "post_text");
 	}
 	
-	
 	/**
 	 * @see net.jforum.dao.generic.GenericScheduledSearchIndexerDAO#getPosts(int, int, int, int, java.sql.Connection)
 	 */
 	protected List getPosts(int start, int count, int minPostId, int maxPostId, Connection conn) throws Exception
 	{
-		return super.getPosts(start + count, start, minPostId, maxPostId, conn);
+		return super.getPosts(start, start + count, minPostId, maxPostId, conn);
 	}
 }

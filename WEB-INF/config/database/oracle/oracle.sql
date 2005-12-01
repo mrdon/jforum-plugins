@@ -25,10 +25,10 @@ UserModel.addNew = INSERT INTO jforum_users (user_id, username, user_password, u
 
 
 UserModel.selectAllByLimit = SELECT * FROM ( \
-        SELECT user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail, ROW_NUMBER() OVER(ORDER BY user_id) LINENUM  \
+        SELECT user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail, ROW_NUMBER() OVER(ORDER BY user_id) - 1 LINENUM  \
         FROM jforum_users ORDER BY username \
         ) \
-        WHERE LINENUM >= ? AND LINENUM <= ?
+        WHERE LINENUM >= ? AND LINENUM < ?
 
 UserModel.lastGeneratedUserId = SELECT jforum_users_seq.currval FROM DUAL
 
@@ -39,13 +39,11 @@ UserModel.selectById = SELECT u.*, \
 	FROM jforum_users u \
 	WHERE u.user_id = ?
 
-
 UserModel.lastUserRegistered = SELECT * FROM ( \
-        SELECT user_id, username, ROW_NUMBER() OVER(ORDER BY user_regdate DESC) LINENUM FROM jforum_users \
-        ORDER BY user_regdate DESC \
-        ) \
-        WHERE LINENUM <= 1
-        
+		SELECT user_id, username, ROW_NUMBER() OVER(ORDER BY user_regdate DESC) - 1 LINENUM FROM jforum_users ORDER BY user_regdate DESC \
+	) \
+	WHERE LINENUM = 0
+	
 UserModel.selectAllByGroup = SELECT * FROM ( \
 	SELECT user_email, u.user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail, ROW_NUMBER() OVER(ORDER BY u.user_id) LINENUM \
 	FROM jforum_users u, jforum_user_groups ug \
@@ -64,6 +62,7 @@ PermissionControl.addUserRole = INSERT INTO jforum_roles (role_id, user_id, name
 # #############
 PostModel.addNewPost = INSERT INTO jforum_posts (post_id, topic_id, forum_id, user_id, post_time, poster_ip, enable_bbcode, enable_html, enable_smilies, enable_sig, post_edit_time, need_moderate) \
 	VALUES (jforum_posts_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?, SYSDATE, ?)
+
 PostModel.addNewPostText = INSERT INTO jforum_posts_text ( post_text, post_id, post_subject ) VALUES (EMPTY_BLOB(), ?, ?)
 PostModel.addNewPostTextField = SELECT post_text from jforum_posts_text WHERE post_id = ? FOR UPDATE
 PostModel.updatePostText = UPDATE jforum_posts_text SET post_subject = ? WHERE post_id = ?
@@ -73,7 +72,7 @@ PostModel.lastGeneratedPostId = SELECT jforum_posts_seq.currval FROM DUAL
 PostModel.selectAllByTopicByLimit = SELECT * FROM ( \
     SELECT p.post_id, topic_id, forum_id, p.user_id, post_time, poster_ip, enable_bbcode, p.attach, p.need_moderate, \
    	enable_html, enable_smilies, enable_sig, post_edit_time, post_edit_count, status, pt.post_subject, pt.post_text, username,  \
-   	ROW_NUMBER() OVER(ORDER BY p.post_time ASC) LINENUM \
+   	ROW_NUMBER() OVER(ORDER BY p.post_time ASC) - 1 LINENUM \
    	FROM jforum_posts p, jforum_posts_text pt, jforum_users u \
 	WHERE p.post_id = pt.post_id  \
 	AND topic_id = ? \
@@ -81,13 +80,13 @@ PostModel.selectAllByTopicByLimit = SELECT * FROM ( \
 	AND p.need_moderate = 0 \
 	ORDER BY post_time ASC \
 ) \
-WHERE LINENUM BETWEEN ? AND ?
+WHERE LINENUM >= ? AND LINENUM < ?
 
 
 PostModel.selectByUserByLimit = SELECT * FROM ( \
     SELECT p.post_id, topic_id, forum_id, p.user_id, post_time, poster_ip, enable_bbcode, p.attach, \
 	enable_html, enable_smilies, enable_sig, post_edit_time, post_edit_count, status, pt.post_subject, pt.post_text, username, p.need_moderate, \
-	ROW_NUMBER() OVER(ORDER BY p.post_time ASC) LINENUM \
+	ROW_NUMBER() OVER(ORDER BY p.post_time ASC) - 1 LINENUM \
 	FROM jforum_posts p, jforum_posts_text pt, jforum_users u \
 	WHERE p.post_id = pt.post_id \
 	AND p.user_id = u.user_id \
@@ -95,18 +94,18 @@ PostModel.selectByUserByLimit = SELECT * FROM ( \
 	AND p.need_moderate = 0 \
 	ORDER BY post_time ASC \
 ) \
-WHERE LINENUM BETWEEN ? AND ?
+WHERE LINENUM >= ? AND LINENUM < ?
 
 TopicModel.selectByUserByLimit = SELECT * FROM ( \
     SELECT t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach, \
-    ROW_NUMBER() OVER(ORDER BY topic_last_post_id ASC) LINENUM \
+    ROW_NUMBER() OVER(ORDER BY topic_last_post_id ASC) - 1 LINENUM \
 	FROM jforum_topics t, jforum_posts p \
 	WHERE p.post_id = t.topic_last_post_id \
 	AND t.user_id = ? \
 	AND p.need_moderate = 0 \
 	ORDER BY t.topic_last_post_id DESC \
 ) \
-WHERE LINENUM BETWEEN ? AND ?
+WHERE LINENUM >= ? AND LINENUM < ?
 
 # #############
 # PollModel
@@ -120,24 +119,6 @@ PollModel.lastGeneratedPollId = SELECT jforum_vote_desc_seq.currval FROM DUAL
 # ForumModel
 # #############
 ForumModel.addNew = INSERT INTO jforum_forums (forum_id, categories_id, forum_name, forum_desc, forum_order, moderated) VALUES (jforum_forums_seq.nextval, ?, ?, ?, ?, ?)
-
-ForumModel.selectById = SELECT f.*, COUNT(p.post_id) AS total_posts \
-	FROM jforum_forums f, jforum_topics t, jforum_posts p  \
-	WHERE 	t.forum_id(+) = f.forum_id AND \
-        	p.topic_id(+) = t.topic_id AND \
-        	f.forum_id = ? \
-	GROUP BY f.categories_id, f.forum_id, \
-	      f.forum_name, f.forum_desc, f.forum_order, \
-	      f.forum_topics, f.forum_last_post_id, f.moderated
-
-ForumModel.selectAll = SELECT f.*, COUNT(p.post_id) AS total_posts \
-	FROM jforum_forums f, jforum_topics t, jforum_posts p \
-	WHERE 	t.forum_id(+) = f.forum_id AND \
-        	p.topic_id(+) = t.topic_id \
-	GROUP BY f.categories_id, f.forum_id, \
-	      f.forum_name, f.forum_desc, f.forum_order, \
-	      f.forum_topics, f.forum_last_post_id, f.moderated
-
 ForumModel.lastGeneratedForumId = SELECT jforum_forums_seq.currval FROM DUAL
 
 # #############
@@ -151,22 +132,22 @@ TopicModel.addNew = INSERT INTO jforum_topics (topic_id, forum_id, topic_title, 
 ##########################################################################################
 TopicModel.selectAllByForumByLimit = SELECT * FROM ( \
        SELECT t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach,  \
-       ROW_NUMBER() OVER(ORDER BY topic_type DESC, topic_last_post_id DESC) LINENUM \
+       ROW_NUMBER() OVER(ORDER BY topic_type DESC, topic_last_post_id DESC) - 1 LINENUM \
        FROM jforum_topics t, jforum_posts p \
        WHERE t.forum_id = ? \
        AND p.post_id = t.topic_last_post_id \
        AND p.need_moderate = 0 \
 	) \
-	WHERE LINENUM BETWEEN ? AND ?
+	WHERE LINENUM >= ? AND LINENUM < ?
 
 TopicModel.selectRecentTopicsByLimit = SELECT * FROM ( \
        SELECT t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach,  \
-       ROW_NUMBER() OVER(ORDER BY topic_type DESC, topic_last_post_id DESC) LINENUM \
+       ROW_NUMBER() OVER(ORDER BY topic_type DESC, topic_last_post_id DESC) - 1 LINENUM \
        FROM jforum_topics t, jforum_posts p \
        WHERE p.post_id = t.topic_last_post_id \
        AND p.need_moderate = 0 \
 	) \
-	WHERE LINENUM <= ?
+	WHERE LINENUM < ?
 
 TopicModel.notifyUsers = SELECT u.user_id AS user_id, u.username AS username, \
 	u.user_lang AS user_lang, u.user_email AS user_email \
@@ -179,11 +160,11 @@ TopicModel.notifyUsers = SELECT u.user_id AS user_id, u.username AS username, \
 TopicModel.lastGeneratedTopicId = SELECT jforum_topics_seq.currval FROM DUAL
 
 TopicModel.selectLastN = SELECT * FROM ( \
-    SELECT topic_title, topic_time, topic_id, topic_type, ROW_NUMBER() OVER(ORDER BY topic_time DESC) LINENUM \
+    SELECT topic_title, topic_time, topic_id, topic_type, ROW_NUMBER() OVER(ORDER BY topic_time DESC) - 1 LINENUM \
     FROM jforum_topics \
     ORDER BY topic_time DESC \
     ) \
-    WHERE LINENUM <= ?
+    WHERE LINENUM < ?
 
 TopicModel.topicPosters = SELECT user_id, username, user_karma, user_avatar, user_allowavatar, user_regdate, user_posts, user_icq, \
 	user_from, user_email, rank_id, user_sig, user_attachsig, user_viewemail, user_msnm, user_yim, user_website, user_sig, user_aim \
@@ -236,13 +217,15 @@ SearchModel.selectTopicData = INSERT INTO jforum_search_topics (topic_id, forum_
 SearchModel.lastGeneratedWordId = SELECT jforum_search_words_seq.currval FROM DUAL
 
 SearchModel.getPostsToIndex = SELECT * FROM ( \
-	SELECT row_.*, rownum rownum_ from ( \
-	SELECT p.post_id, pt.post_text, pt.post_subject \
-	FROM jforum_posts p, jforum_posts_text pt \
-	WHERE p.post_id = pt.post_id \
-	AND p.post_id BETWEEN ? AND ?) \
-	row_ where rownum < ?) \
-	where rownum_ >= ?
+		SELECT p.post_id, pt.post_text, pt.post_subject,  \
+		ROW_NUMBER() OVER(ORDER BY p.post_id ASC) - 1 LINENUM \
+		FROM jforum_posts p, jforum_posts_text pt \
+		WHERE p.post_id = pt.post_id \
+		AND p.post_id BETWEEN ? AND ? \
+		ORDER BY p.post_id ASC \
+	) \
+	WHERE LINENUM >= ? AND LINENUM < ?
+
 #
 # The construction ((SYSDATE - time_field)*24) > 1.0 mean following:
 # (SYSDATE - time_field) return days. E.q if delta is 20 minuts it return 0.0125. If multyply on 24, that it would be hours - 0.3

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -51,7 +51,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Dmitriy Kiriy
- * @version $Id: OraclePrivateMessageDAO.java,v 1.5 2005/07/26 03:04:57 rafaelsteil Exp $
+ * @version $Id: OraclePrivateMessageDAO.java,v 1.6 2005/12/01 12:14:36 rafaelsteil Exp $
  */
 public class OraclePrivateMessageDAO extends net.jforum.dao.generic.GenericPrivateMessageDAO
 {
