@@ -5,34 +5,34 @@
 	<#if topic.read>
 		<#if topic.status == STATUS_UNLOCKED>
 			<#if topic.type == TOPIC_ANNOUNCE>
-				<img class="icon_folder_announce" src="${contextPath}/images/transp.gif"/>
+				<img class="icon_folder_announce" src="${contextPath}/images/transp.gif" alt="" />
 			<#elseif topic.type == TOPIC_STICKY>
-				<img class="icon_folder_sticky" src="${contextPath}/images/transp.gif"/>
+				<img class="icon_folder_sticky" src="${contextPath}/images/transp.gif" alt="" />
 			<#else>
 				<#if topic.isHot()>
-					<img class="icon_folder_hot" src="${contextPath}/images/transp.gif"/>
+					<img class="icon_folder_hot" src="${contextPath}/images/transp.gif" alt="" />
 				<#else>
-					<img class="icon_folder" src="${contextPath}/images/transp.gif"/>
+					<img class="icon_folder" src="${contextPath}/images/transp.gif" alt="" />
 				</#if>
 			</#if>
 		<#else>
-			<img class="icon_folder_lock" src="${contextPath}/images/transp.gif"/>
+			<img class="icon_folder_lock" src="${contextPath}/images/transp.gif" alt="" />
 		</#if>
 	<#else>
 		<#if topic.status == STATUS_UNLOCKED>
 			<#if topic.type == TOPIC_ANNOUNCE>
-				<img class="icon_folder_announce_new" src="${contextPath}/images/transp.gif"/>
+				<img class="icon_folder_announce_new" src="${contextPath}/images/transp.gif" alt="" />
 			<#elseif topic.type == TOPIC_STICKY>
-				<img class="icon_folder_sticky_new" src="${contextPath}/images/transp.gif"/>
+				<img class="icon_folder_sticky_new" src="${contextPath}/images/transp.gif" alt="" />
 			<#else>
 				<#if topic.isHot()>
-					<img class="icon_folder_new_hot" src="${contextPath}/images/transp.gif"/>
+					<img class="icon_folder_new_hot" src="${contextPath}/images/transp.gif" alt="" />
 				<#else>
-					<img class="icon_folder_new" src="${contextPath}/images/transp.gif"/>
+					<img class="icon_folder_new" src="${contextPath}/images/transp.gif" alt="" />
 				</#if>
 			</#if>
 		<#else>
-			<img class="icon_folder_lock_new" src="${contextPath}/images/transp.gif"/>
+			<img class="icon_folder_lock_new" src="${contextPath}/images/transp.gif" alt="" />
 		</#if>
 	</#if>
 </#macro>
@@ -47,9 +47,9 @@
 				<tr>
 					<td>${option.text}</td>
 					<td nowrap="nowrap" width="210">
-						<img class="icon_vote_lcap" src="${contextPath}/images/transp.gif"/><img 
-							src="${contextPath}/templates/${templateName}/images/voting_bar.gif" width="${option.votePercentage * 2}" height="12"><img 
-							class="icon_vote_rcap" src="${contextPath}/images/transp.gif"/>
+						<img class="icon_vote_lcap" src="${contextPath}/images/transp.gif" alt="" /><img 
+							src="${contextPath}/templates/${templateName}/images/voting_bar.gif" width="${option.votePercentage * 2}" height="12" alt="" /><img 
+							class="icon_vote_rcap" src="${contextPath}/images/transp.gif" alt="" />
 					</td>
 					<td nowrap="nowrap" class="strong">${option.votePercentage}%</td>
 					<td nowrap="nowrap">[ ${option.voteCount} ]</td>
@@ -73,11 +73,11 @@
 <#-- ****************** -->
 <#macro moderationButtons>
 	<#if moderator  && openModeration?default(false)>
-		<#if can_remove_posts?default(false)><input type="submit" name="topicRemove" value="&nbsp;&nbsp;${I18n.getMessage("Delete")}&nbsp;&nbsp;" class="liteoption" onclick="return validateModerationDelete();"></#if>
-		<#if can_move_topics?default(false)><input type="submit" name="topicMove" value="&nbsp;&nbsp;${I18n.getMessage("move")}&nbsp;&nbsp;" class="liteoption" onclick="return verifyModerationCheckedTopics();"></#if>
+		<#if can_remove_posts?default(false)><input type="submit" name="topicRemove" value="&nbsp;&nbsp;${I18n.getMessage("Delete")}&nbsp;&nbsp;" class="liteoption" onclick="return validateModerationDelete();" /></#if>
+		<#if can_move_topics?default(false)><input type="submit" name="topicMove" value="&nbsp;&nbsp;${I18n.getMessage("move")}&nbsp;&nbsp;" class="liteoption" onclick="return verifyModerationCheckedTopics();" /></#if>
 		<#if can_lockUnlock_topics?default(false)>
-			<input type="submit" name="topicLock" value="&nbsp;&nbsp;${I18n.getMessage("Lock")}&nbsp;&nbsp;" class="liteoption" onclick="return verifyModerationCheckedTopics();">
-			<input type="submit" name="topicUnlock" value="&nbsp;&nbsp;${I18n.getMessage("Unlock")}&nbsp;&nbsp;" class="liteoption" onclick="return verifyModerationCheckedTopics();">
+			<input type="submit" name="topicLock" value="&nbsp;&nbsp;${I18n.getMessage("Lock")}&nbsp;&nbsp;" class="liteoption" onclick="return verifyModerationCheckedTopics();" />
+			<input type="submit" name="topicUnlock" value="&nbsp;&nbsp;${I18n.getMessage("Unlock")}&nbsp;&nbsp;" class="liteoption" onclick="return verifyModerationCheckedTopics();" />
 		</#if>
 	</#if>
 </#macro>
@@ -109,18 +109,18 @@
 	</script>
 	<#if isModerator>
 		<#if can_remove_posts?default(false)>
-			<a href="javascript:deleteTopic();"><img class="icon_topic_delete" src="${contextPath}/images/transp.gif" title="${I18n.getMessage("Delete")}"/></a>
+			<a href="javascript:deleteTopic();"><img class="icon_topic_delete" src="${contextPath}/images/transp.gif" title="${I18n.getMessage("Delete")}" alt="" /></a>
 		</#if>
 		
 		<#if can_move_topics?default(false)>
-			<a href="javascript:moveTopic();"><img class="icon_topic_move" src="${contextPath}/images/transp.gif" title="${I18n.getMessage("move")}"/></a>
+			<a href="javascript:moveTopic();"><img class="icon_topic_move" src="${contextPath}/images/transp.gif" title="${I18n.getMessage("move")}" alt="" /></a>
 		</#if>
 
 		<#if can_lockUnlock_topics?default(false)>			
 			<#if topic.status == STATUS_LOCKED>
-				<a href="javascript:lockUnlock(false);"><img class="icon_topic_unlock" src="${contextPath}/images/transp.gif" title="${I18n.getMessage("Unlock")}"/></a>
+				<a href="javascript:lockUnlock(false);"><img class="icon_topic_unlock" src="${contextPath}/images/transp.gif" title="${I18n.getMessage("Unlock")}" alt="" /></a>
 			<#else>
-				<a href="javascript:lockUnlock(true);"><img class="icon_topic_lock" src="${contextPath}/images/transp.gif" title="${I18n.getMessage("Lock")}"/></a>
+				<a href="javascript:lockUnlock(true);"><img class="icon_topic_lock" src="${contextPath}/images/transp.gif" title="${I18n.getMessage("Lock")}" alt="" /></a>
 			</#if>
 		</#if>
 	</#if>
@@ -136,8 +136,8 @@
 				<table cellspacing="0" cellpadding="0" border="0">
 					<tr>			  
 						<td nowrap="nowrap">
-							<form name="f" id="f" accept-charset="${encoding}">
-								<span class="gensmall">${I18n.getMessage("ForumIndex.goTo")}:&nbsp;
+							<form action="" name="f" id="f" accept-charset="${encoding}">
+								<span class="gensmall">${I18n.getMessage("ForumIndex.goTo")}:&nbsp;</span>
 								<select onchange="if(this.options[this.selectedIndex].value != -1){ document.location = '${contextPath}/forums/show/'+ this.options[this.selectedIndex].value +'${extension}'; }" name="select">
 									<option value="-1" selected="selected">${I18n.getMessage("ForumIndex.goToSelectAForum")}</option>				
 									
@@ -152,7 +152,7 @@
 									</#list>
 								</select>
 								&nbsp;
-								<input class="liteoption" type="button" value="${I18n.getMessage("ForumIndex.goToGo")}" onClick="if(document.f.select.options[document.f.select.selectedIndex].value != -1){ document.location = '${contextPath}/forums/show/'+ document.f.select.options[document.f.select.selectedIndex].value +'${extension}'; }" />
+								<input class="liteoption" type="button" value="${I18n.getMessage("ForumIndex.goToGo")}" onclick="if(document.f.select.options[document.f.select.selectedIndex].value != -1){ document.location = '${contextPath}/forums/show/'+ document.f.select.options[document.f.select.selectedIndex].value +'${extension}'; }" />
 							</form>
 						</td>
 					</tr>
