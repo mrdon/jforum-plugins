@@ -83,7 +83,7 @@ blockquote, .code, pre  {
 	border: #01336b 1px solid; padding-left: 5px;
 }
 
-.pre-error { font-size: 1em; color: #000; font-family: ; background-color: #FAFAFA; border: 0px; ; padding-left: ; }
+.pre-error { font-size: 1em; color: #000000; font-family: verdana, arial, helvetica, sans-serif; background-color: #fafafa; border: 0; padding-left: 0; }
 
 cite { font-weight: bold; font-style: italic; font-size: 11px; }
 pre { font-family: courier, 'courier new', sans-serif;  }
