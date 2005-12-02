@@ -234,30 +234,32 @@ function deletePollOption(button)
 function addPollOption()
 {
 	initPollOptionCount();
+	pollOptionCount++;
+
 	var addOption = document.getElementById("pollOptionWithAdd");
 	var deleteOption = document.getElementById("pollOptionWithDelete");
 	var newOption = deleteOption.cloneNode(true);
+	
 	if (is_nav) {
 		newOption.style.display = "table-row";
-	} else {
+	} 
+	else {
 		newOption.style.display = "block";
 	}
+	
 	newOption.id = "pollOption";
 	
 	var newTextField = newOption.getElementsByTagName("input")[0];
-	var addTextField = addOption.getElementsByTagName("input")[0];
+	var addTextField = newOption.getElementsByTagName("input")[1];
 	
 	//copy the active text data to the inserted option
 	newTextField.id = "pollOption" + pollOptionCount;
 	newTextField.name = "poll_option_" + pollOptionCount;
-	newTextField.value = addTextField.value;
-	
-	pollOptionCount++;
+	newTextField.value = "";
 	
 	//clear out the last text field and increment the id
 	addTextField.id = "pollOption" + pollOptionCount;
 	addTextField.name = "poll_option_" + pollOptionCount;
-	addTextField.value = "";
 	
 	addOption.parentNode.insertBefore(newOption, addOption);
 	addTextField.focus();

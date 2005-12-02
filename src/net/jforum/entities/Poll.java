@@ -42,22 +42,25 @@
  */
 package net.jforum.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+
 /**
  * @author David Almilli
- * @version $Id: Poll.java,v 1.2 2005/11/15 21:29:59 rafaelsteil Exp $
+ * @version $Id: Poll.java,v 1.3 2005/12/02 23:49:00 rafaelsteil Exp $
  */
-public class Poll {
+public class Poll implements Serializable {
 	private int id;
 	private int topicId;
+	private int length;
 	private String label;
 	private Date startTime;
-	private int length;
+	private transient PollChanges pollChanges;
 	private List options = new ArrayList();
 
 	public int getId() {
@@ -101,6 +104,14 @@ public class Poll {
 	}
 	public List getOptions() {
 		return options;
+	}
+	
+	public void setChanges(PollChanges changes) {
+		this.pollChanges = changes;
+	}
+	
+	public PollChanges getChanges() {
+		return this.pollChanges;
 	}
 	
 	public int getTotalVotes() {

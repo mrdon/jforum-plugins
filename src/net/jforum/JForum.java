@@ -74,7 +74,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.85 2005/11/29 17:18:47 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.86 2005/12/02 23:48:57 rafaelsteil Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
@@ -217,7 +217,7 @@ public class JForum extends JForumBaseServlet
 			}
 		}
 		catch (Exception e) {
-			JForum.enableCancelCommit();
+			JForum.enableRollback();
 			
 			if (e.toString().indexOf("ClientAbortException") == -1) {
 				response.setContentType("text/html; charset=" + encoding);
@@ -256,7 +256,7 @@ public class JForum extends JForumBaseServlet
 		
 		if (conn != null) {
 			if (SystemGlobals.getBoolValue(ConfigKeys.DATABASE_USE_TRANSACTIONS)) {
-				if (JForum.cancelCommit()) {
+				if (JForum.shouldRollback()) {
 					try {
 						conn.rollback();
 					}

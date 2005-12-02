@@ -42,17 +42,27 @@
  */
 package net.jforum.entities;
 
+import java.io.Serializable;
+
 /**
  * @author David Almilli
- * @version $Id: PollOption.java,v 1.2 2005/11/15 21:29:59 rafaelsteil Exp $
+ * @version $Id: PollOption.java,v 1.3 2005/12/02 23:49:00 rafaelsteil Exp $
  */
-public class PollOption {
+public class PollOption implements Serializable {
 	private int id;
 	private int pollId;
 	private String text;
 	private int voteCount;
 
 	private Poll poll;
+	
+	public PollOption() {}
+	
+	public PollOption(int id, String text, int voteCount) {
+		this.id = id;
+		this.text = text;
+		this.voteCount = voteCount;
+	}
 	
 	public int getId() {
 		return id;
@@ -91,7 +101,53 @@ public class PollOption {
 	public Poll getPoll() {
 		return poll;
 	}
+	
 	protected void setPoll(Poll poll) {
 		this.poll = poll;
+	}
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return new StringBuffer(128)
+			.append('[')
+			.append(this.id)
+			.append(", ")
+			.append(this.text)
+			.append(", ")
+			.append(this.voteCount)
+			.append(']')
+			.toString();
+	}
+	
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object o)
+	{
+		if (!(o instanceof PollOption)) {
+			return false;
+		}
+		
+		PollOption po = (PollOption)o;
+		return po.getId() == this.id
+			&& po.getText().equals(this.text)
+			&& po.getVoteCount() == this.voteCount;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode()
+	{
+		int result = 17;
+		
+		result *= 37 + this.id;
+		result *= 37 + this.text.hashCode();
+		result *= 37 + this.voteCount;
+		
+		return result;
 	}
 }

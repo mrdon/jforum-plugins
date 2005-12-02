@@ -43,70 +43,58 @@
 package net.jforum.view.forum.common;
 
 import java.util.Date;
-import java.util.List;
+
+import net.jforum.ActionServletRequest;
 import net.jforum.JForum;
 import net.jforum.entities.Poll;
 import net.jforum.entities.PollOption;
 
 /**
  * @author David Almilli
- * @version $Id: PollCommon.java,v 1.1 2005/11/10 18:30:08 almilli Exp $
+ * @version $Id: PollCommon.java,v 1.2 2005/12/02 23:48:58 rafaelsteil Exp $
  */
-public class PollCommon {
+public class PollCommon
+{
 	private PollCommon() {}
 
-	public static Poll fillPollFromRequest() throws Exception {
-		String label = JForum.getRequest().getParameter("poll_label");
+	public static Poll fillPollFromRequest() throws Exception
+	{
+		ActionServletRequest request = JForum.getRequest();
+		String label = request.getParameter("poll_label");
+
 		if (label == null || label.length() == 0) {
 			return null;
 		}
+
 		Poll poll = new Poll();
 		poll.setStartTime(new Date());
 		poll.setLabel(label);
-		
-		int i=1;
+
+		int i = 1;
 		String option;
+
 		do {
-			option = JForum.getRequest().getParameter("poll_option_" + i);
+			option = request.getParameter("poll_option_" + i);
 			if (option != null) {
 				option = option.trim();
 			}
+			
 			if (option != null && option.length() > 0) {
 				PollOption po = new PollOption();
 				po.setId(i);
 				po.setText(option);
 				poll.addOption(po);
 			}
+			
 			i++;
 		} while (option != null);
+
+		String pollLength = request.getParameter("poll_length");
 		
-		String pollLength = JForum.getRequest().getParameter("poll_length");
 		if (pollLength != null && pollLength.length() > 0) {
 			poll.setLength(Integer.parseInt(pollLength));
 		}
+		
 		return poll;
-	}
-	
-	public static boolean isSamePoll(Poll first, Poll second) {
-		if (first == null || second == null) {
-			return false;
-		}
-		boolean isSame = first.getLabel().equals(second.getLabel());
-		isSame &= first.getLength() == second.getLength();
-		List firstOptions = first.getOptions();
-		List secondOptions = second.getOptions();
-		if (firstOptions.size() == secondOptions.size()) {
-			PollOption firstOption;
-			PollOption secondOption;
-			for (int i=0; i < firstOptions.size(); i++) {
-				firstOption = (PollOption)firstOptions.get(i);
-				secondOption = (PollOption)secondOptions.get(i);
-				isSame &= firstOption.getText().equals(secondOption.getText());
-				isSame &= firstOption.getId() == secondOption.getId();
-			}
-		} else {
-			isSame = false;
-		}
-		return isSame;
 	}
 }

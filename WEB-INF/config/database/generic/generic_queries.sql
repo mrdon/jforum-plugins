@@ -175,39 +175,26 @@ PostModel.deleteByTopic = SELECT post_id, user_id FROM jforum_posts WHERE topic_
 # #############
 # PollModel
 # #############
-PollModel.addNewPoll = INSERT INTO jforum_vote_desc (topic_id, vote_text, vote_length, vote_start) \
-	VALUES (?, ?, ?, NOW())
-
-PollModel.addNewPollOption = INSERT INTO jforum_vote_results (vote_id, vote_option_id, vote_option_text, vote_result) \
-	VALUES (?, ?, ?, ?)
-
-PollModel.addNewVoter = INSERT INTO jforum_vote_voters (vote_id, vote_user_id, vote_user_ip) \
-	VALUES (?, ?, ?)
-
-PollModel.selectById = SELECT vote_id, topic_id, vote_start, vote_length, vote_text \
-	FROM jforum_vote_desc WHERE vote_id=?
-	
-PollModel.selectPollByTopicId SELECT vote_id, topic_id, vote_start, vote_length, vote_text \
-	FROM jforum_vote_desc WHERE topic_id=?
+PollModel.addNewPoll = INSERT INTO jforum_vote_desc (topic_id, vote_text, vote_length, vote_start) VALUES (?, ?, ?, NOW())
+PollModel.addNewPollOption = INSERT INTO jforum_vote_results (vote_id, vote_option_id, vote_option_text, vote_result) VALUES (?, ?, ?, 0)
+PollModel.addNewVoter = INSERT INTO jforum_vote_voters (vote_id, vote_user_id, vote_user_ip) VALUES (?, ?, ?)
+PollModel.selectById = SELECT vote_id, topic_id, vote_start, vote_length, vote_text FROM jforum_vote_desc WHERE vote_id = ?
+PollModel.selectPollByTopicId SELECT vote_id, topic_id, vote_start, vote_length, vote_text FROM jforum_vote_desc WHERE topic_id = ?
+PollModel.incrementVoteCount = UPDATE jforum_vote_results SET vote_result = vote_result + 1 WHERE vote_id = ? AND vote_option_id = ?
+PollModel.selectMaxVoteId = SELECT MAX(vote_option_id) FROM jforum_vote_results WHERE vote_id = ?
+PollModel.selectVoter = SELECT vote_id, vote_user_id, vote_user_ip FROM jforum_vote_voters WHERE vote_id = ? AND vote_user_id = ?
+PollModel.deletePollVoters = DELETE FROM jforum_vote_voters WHERE vote_id = ?
+PollModel.deletePollOption = DELETE FROM jforum_vote_results WHERE vote_id = ? AND vote_option_id = ?
+PollModel.deleteAllPollOptions = DELETE FROM jforum_vote_results WHERE vote_id = ?
+PollModel.deletePoll = DELETE FROM jforum_vote_desc WHERE vote_id = ?
+PollModel.updatePollOption = UPDATE jforum_vote_results SET vote_option_text = ? WHERE vote_option_id = ? AND vote_id = ?
+PollModel.updatePoll = UPDATE jforum_vote_desc SET vote_text = ?, vote_length = ? WHERE vote_id = ?
 
 PollModel.selectOptionsByPollId = SELECT vote_id, vote_option_id, vote_option_text, vote_result \
 	FROM jforum_vote_results WHERE vote_id=? ORDER BY vote_option_id
 
-PollModel.incrementVoteCount = UPDATE jforum_vote_results SET vote_result = vote_result + 1 \
-	WHERE vote_id = ? AND vote_option_id = ?
-
-PollModel.selectVoter = SELECT vote_id, vote_user_id, vote_user_ip \
-	FROM jforum_vote_voters WHERE vote_id = ? AND vote_user_id = ?
-
 PollModel.selectVoterByIP = SELECT vote_id, vote_user_id, vote_user_ip \
 	FROM jforum_vote_voters WHERE vote_id = ? AND vote_user_ip = ?
-
-PollModel.deletePollVoters = DELETE FROM jforum_vote_voters WHERE vote_id = ?
-PollModel.deletePollOptions = DELETE FROM jforum_vote_results WHERE vote_id = ?
-PollModel.deletePoll = DELETE FROM jforum_vote_desc WHERE vote_id = ?
-
-PollModel.updatePoll = UPDATE jforum_vote_desc SET vote_text = ?, \
-	vote_length = ?, vote_start = ? WHERE vote_id = ?
 
 # #############
 # ForumModel

@@ -51,7 +51,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
 
-import net.jforum.dao.DataAccessDriver;
 import net.jforum.exceptions.ForumStartupException;
 import net.jforum.repository.BBCodeRepository;
 import net.jforum.repository.ModulesRepository;
@@ -70,7 +69,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumBaseServlet.java,v 1.14 2005/11/29 17:18:48 rafaelsteil Exp $
+ * @version $Id: JForumBaseServlet.java,v 1.15 2005/12/02 23:48:57 rafaelsteil Exp $
  */
 public class JForumBaseServlet extends HttpServlet 
 {
@@ -175,16 +174,16 @@ public class JForumBaseServlet extends HttpServlet
         private String redirectTo;
         private String contentType;
         private boolean isBinaryContent;
-        private boolean cancelCommit;
+        private boolean enableRolback;
         
-        public boolean cancelCommit()
+        public boolean shouldRollback()
         {
-        	return this.cancelCommit;
+        	return this.enableRolback;
         }
         
-        public void enableCancelcommit()
+        public void enableRollback()
         {
-        	this.cancelCommit = true;
+        	this.enableRolback = true;
         }
         
         // Setters
@@ -339,15 +338,15 @@ public class JForumBaseServlet extends HttpServlet
     	((DataHolder)localData.get()).enableBinaryContent(enable);
     }
     
-    public static void enableCancelCommit() {
-    	((DataHolder)localData.get()).enableCancelcommit();
+    public static void enableRollback() {
+    	((DataHolder)localData.get()).enableRollback();
     }
 	
 	public static boolean isBinaryContent() {
 		return ((DataHolder)localData.get()).isBinaryContent();
 	}
     
-    public static boolean cancelCommit() {
-    	return ((DataHolder)localData.get()).cancelCommit();
+    public static boolean shouldRollback() {
+    	return ((DataHolder)localData.get()).shouldRollback();
     }
 }

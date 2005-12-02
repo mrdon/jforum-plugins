@@ -43,7 +43,7 @@
 							<span class="icon_reply_locked"><img src="${contextPath}/images/transp.gif"></span>
 						<#else>
 							<#if !readonly>
-								<a href="${JForumContext.encodeURL("/posts/reply/${start}/${topic.forumId}/${topic.id}")}" rel="nofollow" class="icon_reply nav"><img src="${contextPath}/images/transp.gif" /></a>
+								<a href="${JForumContext.encodeURL("/posts/reply/${start}/${topic.id}")}" rel="nofollow" class="icon_reply nav"><img src="${contextPath}/images/transp.gif" /></a>
 							<#else>
 								<#assign colspan = "2"/>
 							</#if>
@@ -191,7 +191,7 @@
 						<span class="icon_reply_locked"><img src="${contextPath}/images/transp.gif"></span>
 					<#else>
 						<#if !readonly>
-							<a href="${JForumContext.encodeURL("/posts/reply/${start}/${topic.forumId}/${topic.id}")}" rel="nofollow" class="icon_reply nav"><img src="${contextPath}/images/transp.gif"/></a>
+							<a href="${JForumContext.encodeURL("/posts/reply/${start}/${topic.id}")}" rel="nofollow" class="icon_reply nav"><img src="${contextPath}/images/transp.gif"/></a>
 						<#else>
 							<#assign colspan = "2"/>
 						</#if>

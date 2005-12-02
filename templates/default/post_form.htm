@@ -43,6 +43,8 @@ function validatePostForm(f)
 
 <#assign preview = preview?exists && preview/>
 <#assign isNewPost = isNewPost?exists && isNewPost/>
+<#assign isEdit = isEdit?if_exists/>
+<#assign isNewTopic = (!topic?exists || topic.id == -1)/>
 <#assign attachmentsEnabled = attachmentsEnabled?exists && attachmentsEnabled/>
 
 <#if !maxAttachments?exists>
@@ -75,8 +77,8 @@ function validatePostForm(f)
 <input type="hidden" name="securityHash" value="${securityHash}" />
 <#if forum?exists><input type="hidden" name="forum_id" value="${forum.id}" /></#if>
 <input type="hidden" name="start" value="${start?default("")}" />
-<#if post?exists && !isNewPost><input type="hidden" name="post_id" value="${post.id}" /></#if>
-<#if (topic?exists && topic.id > -1)><input type="hidden" name="topic_id" value="${topic.id}" /></#if>
+<#if isEdit><input type="hidden" name="post_id" value="${post.id}" /></#if>
+<#if !isNewTopic><input type="hidden" name="topic_id" value="${topic.id}" /></#if>
 
 <table cellspacing="0" cellpadding="10" width="100%" align="center" border="0">
 	<tr>
@@ -388,7 +390,7 @@ function validatePostForm(f)
 					</td>
 				</tr>
 				
-				<#if canCreatePolls?default(false)>
+				<#if setType && canCreatePolls?default(false)>
 					<#if poll?exists>
 						<#assign pollQuestion = poll.label/>
 						<#assign pollLength = poll.length/>
@@ -396,49 +398,62 @@ function validatePostForm(f)
 						<#assign pollQuestion = ""/>
 						<#assign pollLength = "0"/>
 					</#if>
+					
 					<tr>
 						<th class="thhead" colspan="2">${I18n.getMessage("PostForm.addPoll")}</th>
 					</tr>
+					
 					<tr>
 						<td align="center"><span class="gen"><b>${I18n.getMessage("PostForm.pollQuestion")}</b></span></td>
 						<td><span class="gen"><input type="text" name="poll_label" maxlength="255" size="50" value="${pollQuestion}"></input></span></td>
 					</tr>
+					
 					<tr id="pollOptionWithDelete" style="display: none;">
 						<td align="center"><span class="gen"><b>${I18n.getMessage("PostForm.pollOption")}</b></span></td>
-						<td><span class="gen"><input type="text" id="pollOption" name="poll_option" maxlength="255" size="50"></input></span>
-							 <input type="button" onclick="javascript:deletePollOption(this)" value="${I18n.getMessage("PostForm.pollDeleteOption")}"></input></td>
+						<td>
+							<span class="gen"><input type="text" id="pollOption" name="poll_option" maxlength="255" size="50"></input></span>
+							 <input type="button" onclick="javascript:deletePollOption(this)" value="${I18n.getMessage("PostForm.pollDeleteOption")}"></input>
+						</td>
 					</tr>
+
 					<#if poll?exists>
 						<#assign optionCount = poll.options.size()/>
 						<#assign isLast = false/>
+
 						<input type="hidden" id="pollOptionCount" value="${optionCount}"/>
+						
 						<#list poll.options as option>
 							<#assign isLast = (option.id == optionCount)/>
-							<#if isLast>
-								<tr id="pollOptionWithAdd">
-							<#else>
-								<tr id="pollOption">
-							</#if>
+			
+							<tr id="pollOption">
 								<td align="center"><span class="gen"><b>${I18n.getMessage("PostForm.pollOption")}</b></span></td>
-								<td><span class="gen"><input type="text" id="pollOption${option.id}" name="poll_option_${option.id}" maxlength="255" size="50" value="${option.text}"></input></span>
-									<#if isLast>
-										<input type="button" onclick="javascript:addPollOption()" value="${I18n.getMessage("PostForm.pollAddOption")}"></input></td>
-									<#else>
-										<input type="button" onclick="javascript:deletePollOption(this)" value="${I18n.getMessage("PostForm.pollDeleteOption")}"></input></td>
-									</#if>
+								<td>
+									<input type="text" id="pollOption${option.id}" name="poll_option_${option.id}" maxlength="255" size="50" value="${option.text}"></input>
+									<input type="button" onclick="javascript:deletePollOption(this)" value="${I18n.getMessage("PostForm.pollDeleteOption")}"></input>
+								</td>
 							</tr>
 						</#list>
 					<#else>
-						<tr id="pollOptionWithAdd">
+						<tr id="pollOption">
 							<td align="center"><span class="gen"><b>${I18n.getMessage("PostForm.pollOption")}</b></span></td>
-							<td><span class="gen"><input type="text" id="pollOption1" name="poll_option_1" maxlength="255" size="50"></input></span>
-								 <input type="button" onclick="javascript:addPollOption()" value="${I18n.getMessage("PostForm.pollAddOption")}"></input></td>
+							<td>
+								<input type="text" id="pollOption1" name="poll_option_1" maxlength="255" size="50"></input>
+								<input type="button" onclick="javascript:deletePollOption(this)" value="${I18n.getMessage("PostForm.pollDeleteOption")}"></input>
+							</td>
 						</tr>
 					</#if>
+
+					<tr id="pollOptionWithAdd">
+						<td align="center"><span class="gen"><b>${I18n.getMessage("PostForm.pollAddOption")}</b></span></td>
+						<td><input type="button" onclick="javascript:addPollOption()" value="${I18n.getMessage("PostForm.pollAddOption")}"></input></tr>
+					</tr>
+
 					<tr>
 						<td align="center"><span class="gen"><b>${I18n.getMessage("PostForm.pollRunFor")}</b></span></td>
-						<td><span class="gen"><input type="text" name="poll_length" maxlength="5" size="4" value="${pollLength}"></input> <b>${I18n.getMessage("PostForm.pollDays")}</b></span> 
-							<span class="gensmall">${I18n.getMessage("PostForm.pollDaysDescription")}</span></td>
+						<td>
+							<span class="gen"><input type="text" name="poll_length" maxlength="5" size="4" value="${pollLength}"></input> <b>${I18n.getMessage("PostForm.pollDays")}</b></span> 
+							<span class="gensmall">${I18n.getMessage("PostForm.pollDaysDescription")}</span>
+						</td>
 					</tr>
 				</#if>
 
