@@ -3,13 +3,19 @@
 	<#assign preview = false/>
 </#if>
 
-<script type='text/javascript' src='${contextPath}/dwr/dwr${extension}?script=AjaxUtils'></script>
-<script type='text/javascript' src='${contextPath}/templates/${templateName}/js/dwr-engine.js'></script>
-<script type='text/javascript' src='${contextPath}/templates/${templateName}/js/dwr-util.js'></script>
-<script type="text/javascript"><#include "js/bbcode_help.js"/></script>
+<script type="text/javascript" src="${contextPath}/dwr/dwr${extension}?script=AjaxUtils"></script>
+<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/dwr-engine.js"></script>
+<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/dwr-util.js"></script>
+<script type="text/javascript">
+<!--
+<#include "js/bbcode_help.js"/>
+
+-->
+</script>
 <script type="text/javascript" src="${contextPath}/templates/${templateName}/js/post.js"></script>
 
 <script type="text/javascript">
+<!--
 function validatePostForm(f)
 {
 	<#if setType?default(true)>
@@ -39,6 +45,8 @@ function validatePostForm(f)
 	
 	return true;
 }
+
+-->
 </script>
 
 <#assign preview = preview?exists && preview/>
@@ -51,27 +59,27 @@ function validatePostForm(f)
 	<#assign maxAttachments = 0/>
 </#if>
 
-<#assign htmlChecked = "checked"/>
+<#assign htmlChecked = "checked=\"checked\""/>
 <#assign bbChecked = ""/>
-<#assign signatureChecked = "checked"/>
-<#assign repliesChecked = "checked"/>
+<#assign signatureChecked = "checked=\"checked\""/>
+<#assign repliesChecked = "checked=\"checked\""/>
 <#assign smiliesChecked = ""/>
 
 <#if isNewPost && !preview && !post?exists>
 	<#if user.isHtmlEnabled()><#assign htmlChecked = ""/></#if>
-	<#if !user.isBbCodeEnabled()><#assign bbChecked = "checked"/></#if>
-	<#if !user.isSmiliesEnabled()><#assign smiliesChecked = "checked"/></#if>
+	<#if !user.isBbCodeEnabled()><#assign bbChecked = "checked=\"checked\""/></#if>
+	<#if !user.isSmiliesEnabled()><#assign smiliesChecked = "checked=\"checked\""/></#if>
 	<#if !user.getAttachSignatureEnabled()><#assign signatureChecked = ""/></#if>
 <#elseif post?exists>
 	<#if post.isHtmlEnabled()><#assign htmlChecked = ""/></#if>
-	<#if !post.isBbCodeEnabled()><#assign bbChecked = "checked"/></#if>
-	<#if !post.isSmiliesEnabled()><#assign smiliesChecked = "checked"/></#if>
+	<#if !post.isBbCodeEnabled()><#assign bbChecked = "checked=\"checked\""/></#if>
+	<#if !post.isSmiliesEnabled()><#assign smiliesChecked = "checked=\"checked\""/></#if>
 	<#if !post.isSignatureEnabled()><#assign signatureChecked = ""/></#if>
 </#if>
 
 <#if !user.isNotifyOnMessagesEnabled()><#assign repliesChecked = ""/></#if>
 
-<form action="${JForumContext.encodeURL("/jforum")}" method="post" enctype="multipart/form-data" name="post" id="post" onSubmit="return validatePostForm(this)">
+<form action="${JForumContext.encodeURL("/jforum")}" method="post" enctype="multipart/form-data" name="post" id="post" onsubmit="return validatePostForm(this)">
 <input type="hidden" name="action" value="${action}" />
 <input type="hidden" name="module" value="${moduleName}" />
 <input type="hidden" name="securityHash" value="${securityHash}" />
@@ -92,13 +100,13 @@ function validatePostForm(f)
 				</tr>
 				<tr>
 					<td class="row1">
-						<img src="${contextPath}/templates/${templateName}/images/icon_minipost.gif"/>
+						<img src="${contextPath}/templates/${templateName}/images/icon_minipost.gif" alt="Post" />
 						<span class="postdetails" id="previewSubject"> ${I18n.getMessage("PostForm.subject")}: <#if postPreview?exists>${postPreview.subject}</#if></span>
 					</td>
 				</tr>
 				<tr>
 					<td class="row1" height="100%">
-						<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
+						<table width="100%" border="0" cellspacing="0" cellpadding="0" style="height:100%">
 							<tr>
 								<td><span id="previewMessage" class="postbody"><#if postPreview?exists>${postPreview.text}</#if></span></td>
 							</tr>
@@ -121,7 +129,7 @@ function validatePostForm(f)
 					</td>
 				</tr>
 				<tr>
-					<td class="spacerow" height="1"><img src="${contextPath}/templates/${templateName}/images/spacer.gif" width="1" height="1" /></td>
+					<td class="spacerow" height="1"><img src="${contextPath}/templates/${templateName}/images/spacer.gif" alt="" width="1" height="1" /></td>
 				</tr>
 			</table>
 			<br clear="all" />
@@ -180,7 +188,7 @@ function validatePostForm(f)
 							</#if>
 
 							<input class="post" size="25" name="toUsername" value="${toUsername}"/>&nbsp;
-							<input type="button" value="${I18n.getMessage("PrivateMessage.findUser")}" name="findUser" class="liteoption" onClick="window.open('${JForumContext.encodeURL("/pm/findUser")}','_findUser', 'height=250,resizable=yes,width=400');return false;">
+							<input type="button" value="${I18n.getMessage("PrivateMessage.findUser")}" name="findUser" class="liteoption" onclick="window.open('${JForumContext.encodeURL("/pm/findUser")}','_findUser', 'height=250,resizable=yes,width=400');return false;" />
 							<input type="hidden" name="toUserId" value="${toUserId}" />
 						</td>
 					</tr>
@@ -216,19 +224,24 @@ function validatePostForm(f)
 							</tr>
 							
 							<tr>
-								<td valign="center" align="middle">
+								<td valign="middle" align="center">
 									<br />
 									<table cellspacing="0" cellpadding="5" width="100" border="0">
-										<tr align="middle">
+										<tr align="center">
 											<td class="gensmall" colspan="4"><b>${I18n.getMessage("PostForm.emoticons")}</b></td>
 										</tr>
 
 										<#assign count = 0/>
 										<#assign lastSmilie = ""/>
-										<tr valign="center" align="middle">
+										<!--
+										<tr valign="middle" align="center">
+										-->
 											<#list smilies as smilie>
 												<#if (count < 20)>
 													<#if lastSmilie == "" || lastSmilie.url != smilie.url>
+														<#if count % 4 == 0>
+															<tr>
+														</#if>
 														<td><a href="javascript:emoticon('${smilie.code}');">${smilie.url}</a></td>
 														<#assign count = count + 1/>
 														<#if count % 4 == 0>
@@ -241,19 +254,32 @@ function validatePostForm(f)
 
 											<#if !(count % 4 == 0)>
 											</#if>
+											<!--
 										</tr>
-
-										<script language="javascript">
+										-->
+										
+										<!-- Moved down
+										<script type="text/javascript">
 										function smiliePopup()
 										{
 											w = window.open("${JForumContext.encodeURL("/posts/listSmilies")}", "smilies", "width=300, height=300, toolbars=no, scrollbars=yes");
 											w.focus();
 										}
 										</script>
+										-->
 
-										<tr align="middle">
+										<tr align="center">
 											<td colspan="4">
-												<span class="nav"><a href="#" onClick="smiliePopup();return false;">${I18n.getMessage("PostForm.moreSmilies")}</a></span>
+										<script type="text/javascript">
+										<!--
+										function smiliePopup()
+										{
+											w = window.open("${JForumContext.encodeURL("/posts/listSmilies")}", "smilies", "width=300, height=300, toolbars=no, scrollbars=yes");
+											w.focus();
+										}
+										-->
+										</script>
+												<span class="nav"><a href="#" onclick="smiliePopup();return false;">${I18n.getMessage("PostForm.moreSmilies")}</a></span>
 											</td>
 										</tr>
 									</table>
@@ -263,9 +289,9 @@ function validatePostForm(f)
 					</td>
 
 					<td class="row2" valign="top">
-						<span class="gen">
+						<div class="gen"><!--<span class="gen">-->
 							<table cellspacing="0" cellpadding="2" width="470" border="0">
-								<tr valign="center" align="middle">
+								<tr valign="middle" align="center">
 									<td><span class="genmed"><input class="button" onmouseover="helpline('b')" style="FONT-WEIGHT: bold; WIDTH: 30px" accesskey="b" onclick="bbstyle(0)" type="button" value=" B " name="addbbcode0" /> </span></td>
 									<td><span class="genmed"><input class="button" onmouseover="helpline('i')" style="WIDTH: 30px; FONT-STYLE: italic" accesskey="i" onclick="bbstyle(2)" type="button" value=" i " name="addbbcode2" /> </span></td>
 									<td><span class="genmed"><input class="button" onmouseover="helpline('u')" style="WIDTH: 30px; TEXT-DECORATION: underline" accesskey="u" onclick="bbstyle(4)" type="button" value=" u " name="addbbcode4" /> </span></td>
@@ -328,17 +354,17 @@ function validatePostForm(f)
 								<tr>
 									<td colspan="9" valign="top">
 										<span class="gen">
-											<textarea class="post" onkeyup="storeCaret(this);" onclick="storeCaret(this);" onselect="storeCaret(this);" style="WIDTH: 450px"  tabindex="3" name="message" rows="15" wrap="virtual" cols="35"><#if post?exists><#if quote?exists>[quote=${quoteUser}]${post.text?html}[/quote]<#else>${post.text?html}</#if></#if></textarea> 
+											<textarea class="post" onkeyup="storeCaret(this);" onclick="storeCaret(this);" onselect="storeCaret(this);" style="WIDTH: 450px"  tabindex="3" name="message" rows="15"  cols="35"><#if post?exists><#if quote?exists>[quote=${quoteUser}]${post.text?html}[/quote]<#else>${post.text?html}</#if></#if></textarea> 
 										</span>
 									</td>
 								</tr>
 							</table>
-						</span>
+						</div> <!--</span>-->
 					</td>
 				</tr>
 				
 				<tr>
-					<td class="row1" valign="center" align="center"><span class="gen"><b>${I18n.getMessage("PostForm.options")}</b></span></td>
+					<td class="row1" valign="middle" align="center"><span class="gen"><b>${I18n.getMessage("PostForm.options")}</b></span></td>
 					<td class="row2">
 						<table cellspacing="0" cellpadding="1" border="0">
 							<#if htmlAllowed>
@@ -377,9 +403,9 @@ function validatePostForm(f)
 								<td>&nbsp;</td>
 								<td>
 									<span class="gen">${I18n.getMessage("PostForm.setTopicAs")}:
-									<input type="radio" checked value="0" name="topic_type" <#if topic?exists && topic.type == 0>checked</#if>>${I18n.getMessage("PostForm.setTopicAsNormal")}&nbsp;&nbsp;
-									<INPUT type="radio" value="1" name="topic_type" <#if topic?exists && topic.type == 1>checked</#if>>${I18n.getMessage("PostForm.setTopicAsSticky")}&nbsp;&nbsp;
-									<INPUT type="radio" value="2" name="topic_type" <#if topic?exists && topic.type == 2>checked</#if>>${I18n.getMessage("PostForm.setTopicAsAnnounce")}&nbsp;&nbsp;
+									<input type="radio" checked="checked" value="0" name="topic_type" <#if topic?exists && topic.type == 0>checked="checked"</#if> />${I18n.getMessage("PostForm.setTopicAsNormal")}&nbsp;&nbsp;
+									<input type="radio" value="1" name="topic_type" <#if topic?exists && topic.type == 1>checked="checked"</#if> />${I18n.getMessage("PostForm.setTopicAsSticky")}&nbsp;&nbsp;
+									<input type="radio" value="2" name="topic_type" <#if topic?exists && topic.type == 2>checked="checked"</#if> />${I18n.getMessage("PostForm.setTopicAsAnnounce")}&nbsp;&nbsp;
 									</span>
 								</td>
 							</tr>
@@ -398,34 +424,29 @@ function validatePostForm(f)
 						<#assign pollQuestion = ""/>
 						<#assign pollLength = "0"/>
 					</#if>
-					
 					<tr>
 						<th class="thhead" colspan="2">${I18n.getMessage("PostForm.addPoll")}</th>
 					</tr>
-					
 					<tr>
 						<td align="center"><span class="gen"><b>${I18n.getMessage("PostForm.pollQuestion")}</b></span></td>
 						<td><span class="gen"><input type="text" name="poll_label" maxlength="255" size="50" value="${pollQuestion}"></input></span></td>
 					</tr>
-					
 					<tr id="pollOptionWithDelete" style="display: none;">
 						<td align="center"><span class="gen"><b>${I18n.getMessage("PostForm.pollOption")}</b></span></td>
-						<td>
-							<span class="gen"><input type="text" id="pollOption" name="poll_option" maxlength="255" size="50"></input></span>
-							 <input type="button" onclick="javascript:deletePollOption(this)" value="${I18n.getMessage("PostForm.pollDeleteOption")}"></input>
-						</td>
+						<td><span class="gen"><input type="text" id="pollOption" name="poll_option" maxlength="255" size="50"></input></span>
+							 <input type="button" onclick="javascript:deletePollOption(this)" value="${I18n.getMessage("PostForm.pollDeleteOption")}"></input></td>
 					</tr>
-
 					<#if poll?exists>
 						<#assign optionCount = poll.options.size()/>
 						<#assign isLast = false/>
-
 						<input type="hidden" id="pollOptionCount" value="${optionCount}"/>
-						
 						<#list poll.options as option>
 							<#assign isLast = (option.id == optionCount)/>
-			
-							<tr id="pollOption">
+
+
+
+								<tr id="pollOption">
+
 								<td align="center"><span class="gen"><b>${I18n.getMessage("PostForm.pollOption")}</b></span></td>
 								<td>
 									<input type="text" id="pollOption${option.id}" name="poll_option_${option.id}" maxlength="255" size="50" value="${option.text}"></input>
@@ -437,32 +458,32 @@ function validatePostForm(f)
 						<tr id="pollOption">
 							<td align="center"><span class="gen"><b>${I18n.getMessage("PostForm.pollOption")}</b></span></td>
 							<td>
-								<input type="text" id="pollOption1" name="poll_option_1" maxlength="255" size="50"></input>
-								<input type="button" onclick="javascript:deletePollOption(this)" value="${I18n.getMessage("PostForm.pollDeleteOption")}"></input>
+								 <input type="text" id="pollOption1" name="poll_option_1" maxlength="255" size="50"></input>
+								 <input type="button" onclick="javascript:deletePollOption(this)" value="${I18n.getMessage("PostForm.pollDeleteOption")}"></input>								 
 							</td>
 						</tr>
 					</#if>
-
 					<tr id="pollOptionWithAdd">
-						<td align="center"><span class="gen"><b>${I18n.getMessage("PostForm.pollAddOption")}</b></span></td>
-						<td><input type="button" onclick="javascript:addPollOption()" value="${I18n.getMessage("PostForm.pollAddOption")}"></input></tr>
+						<td align="center">
+							<span class="gen"><b>${I18n.getMessage("PostForm.pollAddOption")}</b></span>
+						</td>
+						<td>
+							<input type="button" onclick="javascript:addPollOption()" value="${I18n.getMessage("PostForm.pollAddOption")}"></input>
+						</td>
 					</tr>
-
 					<tr>
 						<td align="center"><span class="gen"><b>${I18n.getMessage("PostForm.pollRunFor")}</b></span></td>
-						<td>
-							<span class="gen"><input type="text" name="poll_length" maxlength="5" size="4" value="${pollLength}"></input> <b>${I18n.getMessage("PostForm.pollDays")}</b></span> 
-							<span class="gensmall">${I18n.getMessage("PostForm.pollDaysDescription")}</span>
-						</td>
+						<td><span class="gen"><input type="text" name="poll_length" maxlength="5" size="4" value="${pollLength}"></input> <b>${I18n.getMessage("PostForm.pollDays")}</b></span> 
+							<span class="gensmall">${I18n.getMessage("PostForm.pollDaysDescription")}</span></td>
 					</tr>
 				</#if>
 
 				<#if needCaptcha?default(false)>
 					<tr>
-						<td class="row1" valign="center"><span class="gen"><b>${I18n.getMessage("User.captchaResponse")}:</b></span></td>
+						<td class="row1" valign="middle"><span class="gen"><b>${I18n.getMessage("User.captchaResponse")}:</b></span></td>
 						<td class="row2">
 							<input class="post" style="WIDTH: 100px; font-weight: bold;" maxlength="25" size="25" name="captcha_anwser" /> 
-							<img src="${JForumContext.encodeURL("/captcha/generate")}" border="0" align="middle">
+							<img src="${JForumContext.encodeURL("/captcha/generate")}" border="0" align="middle" alt="Captcha unavailable" />
 						</td>
 					</tr>
 				</#if>
@@ -476,10 +497,10 @@ function validatePostForm(f)
 				
 				<tr align="center">
 					<td height="28" colspan="2" class="catbottom">              
-						<input class="mainoption" tabindex="5" type="button" value="${I18n.getMessage("PostForm.preview")}" onClick="preview();" />&nbsp;
+						<input class="mainoption" tabindex="5" type="button" value="${I18n.getMessage("PostForm.preview")}" onclick="preview();" />&nbsp;
 						<input class="mainoption" accesskey="s" tabindex="6" type="submit" value="${I18n.getMessage("PostForm.submit")}" name="post" />
 						<#if attachmentsEnabled>
-							<input class="mainoption" accesskey="s" tabindex="7" type="button" onClick="openAttachmentPanel();" value="${I18n.getMessage("Attachments.attach")}" name="post" />
+							<input class="mainoption" accesskey="s" tabindex="7" type="button" onclick="openAttachmentPanel();" value="${I18n.getMessage("Attachments.attach")}" name="post" />
 						</#if>
 					</td>
 				</tr>
@@ -488,11 +509,16 @@ function validatePostForm(f)
 	</tr>
 
 	<#if attachmentsEnabled || attachments?exists>
-	<input type="hidden" name="edit_attach_ids">
-	<input type="hidden" name="delete_attach">
-	<input type="hidden" name="total_files" id="total_files">
+	<!-- Moved down
+	<input type="hidden" name="edit_attach_ids" />
+	<input type="hidden" name="delete_attach" />
+	<input type="hidden" name="total_files" id="total_files" />
+	-->
 	<tr>
 	<td colspan="2" id="tdAttachPanel" align="center" style="display: <#if attachmentsEnabled>none;<#elseif attachments?exists>'';</#if>">
+	<input type="hidden" name="edit_attach_ids" />
+	<input type="hidden" name="delete_attach" />
+	<input type="hidden" name="total_files" id="total_files" />
 
 		<table border="0" cellpadding="3" cellspacing="0" width="70%" class="forumline" id="tblAttachments">
 			<tr>
@@ -521,7 +547,7 @@ function validatePostForm(f)
 			</tr>
 			<#if attachmentsEnabled>
 			<tr>
-				<td align="center" class="row3"><input type="button" name="add_attach" value="${I18n.getMessage("PostForm.AddAnotherFile")}" class="mainoption" onClick="addAttachmentFields()"></td>
+				<td align="center" class="row3"><input type="button" name="add_attach" value="${I18n.getMessage("PostForm.AddAnotherFile")}" class="mainoption" onclick="addAttachmentFields()" /></td>
 			</tr>
 			</#if>
 		</table>
@@ -540,7 +566,7 @@ function validatePostForm(f)
 			<tr>
 				<td class="row1">
 					<#if pmReply?default(false)>
-						<iframe width="100%" height="300" frameborder="0" src="${JForumContext.encodeURL("/jforum${extension}?module=pm&action=review&id=${pm.id}", "")}" ></iframe>
+						<iframe width="100%" height="300" frameborder="0" src="${JForumContext.encodeURL("/jforum${extension}?module=pm&amp;action=review&amp;id=${pm.id}", "")}" ></iframe>
 					<#else>
 						<iframe width="100%" height="300" frameborder="0" src="${JForumContext.encodeURL("/posts/review/${start}/${topic.id}")}" ></iframe>
 					</#if>
@@ -552,7 +578,8 @@ function validatePostForm(f)
 	</#if>
 </table>
 
-<script language="javascript">
+<script type="text/javascript">
+<!--
 <#include "js/attachments.js"/>
 
 <#if attachments?exists>
@@ -562,6 +589,7 @@ function validatePostForm(f)
 	</#if>
 	editAttachments();
 </#if>
+-->
 </script>
 
 </form>
