@@ -16,23 +16,24 @@
 					<td valign="bottom" align="left" colspan="2">
 						<a class="maintitle" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name?html}</a>
 						<#if rssEnabled>
-							<a href="${JForumContext.encodeURL("/rss/forumTopics/${forum.id}")}"><img src="${contextPath}/templates/${templateName}/images/xml_button.gif" border="0"></a>
+							<a href="${JForumContext.encodeURL("/rss/forumTopics/${forum.id}")}"><img src="${contextPath}/templates/${templateName}/images/xml_button.gif" border="0" alt="[XML]" /></a>
+							<br />
 						</#if>
 					</td>
 
-					<td valign="center" nowrap="nowrap" align="right"><#assign paginationData><@pagination.doPagination action, forum.id/></#assign>${paginationData}</td>
+					<td valign="middle"  nowrap="nowrap" align="right"><#assign paginationData><@pagination.doPagination action, forum.id/></#assign>${paginationData}</td>
 				</tr>
 
 				<tr>
 					<#if !readonly && !replyOnly>
-						<td valign="center" align="left" width="50">
-							<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&action=insert&forum_id=${forum.id}", "")}" rel="nofollow" class="icon_new_topic"><img src="${contextPath}/images/transp.gif"/></a>
+						<td valign="middle" align="left" width="50">
+							<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&amp;action=insert&amp;forum_id=${forum.id}", "")}" rel="nofollow" class="icon_new_topic"><img src="${contextPath}/images/transp.gif" alt="" /></a>
 						</td>
 					<#else>
 						<#assign colspan = "2"/>
 					</#if>
 
-					<td class="nav" valign="center" align="left" width="100%" colspan="${colspan?default("")}">
+					<td class="nav" valign="middle" align="left" width="100%" colspan="${colspan?default("")}">
 						<span class="nav"><a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a> -&gt; <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name?html}</a></span>                                                					
                                         </td>
 
@@ -61,12 +62,14 @@
 
 			<#if (canApproveMessages && topicsToApprove.size() > 0)>
 				<script type="text/javascript">
+				<!--
 				function viewPending(id)
 				{
 					var tr = document.getElementById("tr_pending_" + id);
 					var d = tr.style.display
 					tr.style.display = (d == "none" ? "" : "none");
 				}
+				-->
 				</script>
 				<form action="${JForumContext.encodeURL("/jforum")}" method="post" accept-charset="${encoding}">
 				<input type="hidden" name="action" value="approveMessages" />
@@ -110,10 +113,10 @@
 										<tr>
 											<td colspan="2" align="right">
 												<span class="gensmall">
-													<input type="radio" name="status_${post.id}" value="aprove">${I18n.getMessage("Moderation.Admin.aprove")}&nbsp;
-													<input type="radio" name="status_${post.id}" value="defer" checked>${I18n.getMessage("Moderation.Admin.defer")}&nbsp;
-													<input type="radio" name="status_${post.id}" value="reject">${I18n.getMessage("Moderation.Admin.reject")}&nbsp;
-													<input type="hidden" name="post_id" value="${post.id}">
+													<input type="radio" name="status_${post.id}" value="aprove" />${I18n.getMessage("Moderation.Admin.aprove")}&nbsp;
+													<input type="radio" name="status_${post.id}" value="defer" checked="checked" />${I18n.getMessage("Moderation.Admin.defer")}&nbsp;
+													<input type="radio" name="status_${post.id}" value="reject" />${I18n.getMessage("Moderation.Admin.reject")}&nbsp;
+													<input type="hidden" name="post_id" value="${post.id}" />
 												</span>
 											</td>
 										</tr>
@@ -131,7 +134,7 @@
 
 					<!-- Submit -->
 					<tr>
-						<td colspan="2" align="center"><input type="submit" class="mainoption" value="${I18n.getMessage("Moderation.Admin.submit")}"></td></tr> 
+						<td colspan="2" align="center"><input type="submit" class="mainoption" value="${I18n.getMessage("Moderation.Admin.submit")}" /></td></tr> 
 					</tr>
 				</table>
 				</form>
@@ -144,18 +147,18 @@
 					<input type="hidden" name="module" value="moderation" />
 					<input type="hidden" name="securityHash" value="${securityHash}" />
 					<input type="hidden" name="returnUrl" value="${JForumContext.encodeURL("/${moduleName}/${action}/${start}/${forum.id}")}" />
-					<input type="hidden" name="forum_id" value="${forum.id}">
+					<input type="hidden" name="forum_id" value="${forum.id}" />
 				</#if>
 				
 				<tr>
-					<th class="thcornerl" nowrap="nowrap" align="middle" colspan="2" height="25">&nbsp;${I18n.getMessage("ForumIndex.topics")}&nbsp;</th>
-					<th class="thtop" nowrap="nowrap" align="middle" width="50">&nbsp;${I18n.getMessage("ForumIndex.answers")}&nbsp;</th>
-					<th class="thtop" nowrap="nowrap" align="middle" width="100">&nbsp;${I18n.getMessage("ForumIndex.author")}&nbsp;</th>
-					<th class="thtop" nowrap="nowrap" align="middle" width="50">&nbsp;${I18n.getMessage("ForumIndex.views")}&nbsp;</th>
-					<th class="thcornerr" nowrap="nowrap" align="middle">&nbsp;${I18n.getMessage("ForumIndex.lastMessage")}&nbsp;</th>
+					<th class="thcornerl" nowrap="nowrap" align="center" colspan="2" height="25">&nbsp;${I18n.getMessage("ForumIndex.topics")}&nbsp;</th>
+					<th class="thtop" nowrap="nowrap" align="center" width="50">&nbsp;${I18n.getMessage("ForumIndex.answers")}&nbsp;</th>
+					<th class="thtop" nowrap="nowrap" align="center" width="100">&nbsp;${I18n.getMessage("ForumIndex.author")}&nbsp;</th>
+					<th class="thtop" nowrap="nowrap" align="center" width="50">&nbsp;${I18n.getMessage("ForumIndex.views")}&nbsp;</th>
+					<th class="thcornerr" nowrap="nowrap" align="center">&nbsp;${I18n.getMessage("ForumIndex.lastMessage")}&nbsp;</th>
 
 					<#if moderator && openModeration?default(false)>
-						<th class="thcornerr" nowrap="nowrap" align="middle">&nbsp;${I18n.getMessage("ForumIndex.moderation")}&nbsp;</th>
+						<th class="thcornerr" nowrap="nowrap" align="center">&nbsp;${I18n.getMessage("ForumIndex.moderation")}&nbsp;</th>
 					</#if>
 				</tr>
 
@@ -174,9 +177,9 @@
 					</#if>
 					
 					<tr class="bg_small_yellow">
-						<td ${class1} valign="center" align="middle" width="20"><@presentation.folderImage topic/></td>
+						<td ${class1} valign="middle"  align="center" width="20"><@presentation.folderImage topic/></td>
 						<td ${class1} width="100%">
-							<#if topic.hasAttach() && attachmentsEnabled><img src="${contextPath}/templates/${templateName}/images/icon_clip.gif" align="middle"></#if>
+							<#if topic.hasAttach() && attachmentsEnabled><img src="${contextPath}/templates/${templateName}/images/icon_clip.gif" align="middle" alt="[Clip]" /></#if>
 							<span class="topictitle">
 							<a href="${JForumContext.encodeURL("/posts/list/${topic.id}")}">
 							<#if topic.vote>${I18n.getMessage("ForumListing.pollLabel")}</#if>
@@ -191,13 +194,13 @@
 							</#if>		
 						</td>
 
-						<td ${class2} valign="center" align="middle"><span class="postdetails">${topic.totalReplies}</span></td>
-						<td ${class3} valign="center" align="middle">
+						<td ${class2} valign="middle"  align="center"><span class="postdetails">${topic.totalReplies}</span></td>
+						<td ${class3} valign="middle"  align="center">
 							<span class="name"><a href="${JForumContext.encodeURL("/user/profile/${topic.postedBy.id}")}">${topic.postedBy.username}</a></span>
 						</td>
 
-						<td ${class2} valign="center" align="middle"><span class="postdetails">${topic.totalViews}</span></td>
-						<td ${class3} valign="center" nowrap="nowrap" align="middle">
+						<td ${class2} valign="middle"  align="center"><span class="postdetails">${topic.totalViews}</span></td>
+						<td ${class3} valign="middle"  nowrap="nowrap" align="center">
 							<#if (topic.lastPostTime?length > 0)>
 								<span class="postdetails">${topic.lastPostTime}<br />
 								<a href="${JForumContext.encodeURL("/user/profile/${topic.lastPostBy.id}")}">${topic.lastPostBy.username}</a>
@@ -207,19 +210,19 @@
 									<#assign startPage = ((topic.totalReplies / postsPerPage?number)?int * postsPerPage?number) +"/"/>
 								</#if>
 					  
-								<a href="${JForumContext.encodeURL("/posts/list/${startPage}${topic.id}")}#${topic.lastPostId}"><img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif" border="0" /></a></span>
+								<a href="${JForumContext.encodeURL("/posts/list/${startPage}${topic.id}")}#${topic.lastPostId}"><img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif" border="0" alt="[Latest Reply]" /></a></span>
 							</#if>		 
 						</td>
 
 						<#if moderator && openModeration?default(false)>
-							<td ${class2} valign="middle" align="center"><input type="checkbox" name="topic_id" value="${topic.id}" onClick="changeTrClass(this, ${topic_index});"/></td>
+							<td ${class2} valign="middle"  align="center"><input type="checkbox" name="topic_id" value="${topic.id}" onclick="changeTrClass(this, ${topic_index});"/></td>
 						</#if>
 					</tr>
 				</#list>		
 				<!-- END OF TOPICS LISTING -->
 				
 				<tr>
-					<td class="catbottom" valign="center" align="right" colspan="<#if moderator && openModeration?default(false)>7<#else>6</#if>" height="28">
+					<td class="catbottom" valign="middle"  align="right" colspan="<#if moderator && openModeration?default(false)>7<#else>6</#if>" height="28">
 						&nbsp;<@presentation.moderationButtons/>
 					</td>
 				</tr>
@@ -230,19 +233,19 @@
 			<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
 				<tr>
 					<#if !readonly && !replyOnly>
-						<td valign="center" align="left" width="50">
-							<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&amp;action=insert&amp;forum_id=${forum.id}","")}" rel="nofollow" class="icon_new_topic"><img src="${contextPath}/images/transp.gif"/></a>
+						<td valign="middle"  align="left" width="50">
+							<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&amp;action=insert&amp;forum_id=${forum.id}","")}" rel="nofollow" class="icon_new_topic"><img src="${contextPath}/images/transp.gif" alt="" /></a>
 						</td>
 					<#else>
 						<#assign colspan = "2"/>
 					</#if>
 
-					<td valign="center" align="left" width="100%" colspan="${colspan?default("0")}">
+					<td valign="middle"  align="left" width="100%" colspan="${colspan?default("0")}">
 						<span class="nav">
 						<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a> -&gt;  <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name?html}</a></span>
 					</td>
 
-					<td valign="center" nowrap="nowrap" align="right">${paginationData}</td>
+					<td valign="middle"  nowrap="nowrap" align="right">${paginationData}</td>
 				</tr>
 
 				<tr>
@@ -257,36 +260,36 @@
 					<td valign="top" align="left">
 						<table cellspacing="3" cellpadding="0" border="0">
 							<tr>
-								<td align="left" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_new.gif" /></td>
+								<td align="left" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_new.gif" alt="[New Folder]" /></td>
 								<td class="gensmall">${I18n.getMessage("ForumIndex.newMessages")}</td>
 								<td>&nbsp;&nbsp;</td>
-								<td align="middle" width="20"><img src="${contextPath}/templates/${templateName}/images/folder.gif" /></td>
+								<td align="center" width="20"><img src="${contextPath}/templates/${templateName}/images/folder.gif" alt="[Folder]" /></td>
 								<td class="gensmall">${I18n.getMessage("ForumIndex.noNewMessages")}</td>
 								<td>&nbsp;&nbsp;</td>
-								<td align="middle" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_announce.gif"/></td>
+								<td align="center" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_announce.gif" alt="[Announce Folder]" /></td>
 								<td class="gensmall">${I18n.getMessage("ForumIndex.announce")}</td>
 							</tr>
 							
 							<tr>
-								<td align="middle" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_new_hot.gif"/></td>
+								<td align="center" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_new_hot.gif" alt="[New Hot]" /></td>
 								<td class="gensmall">${I18n.getMessage("ForumIndex.newMessagesHot")}</td>
 								<td>&nbsp;&nbsp;</td>
-								<td align="middle" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_hot.gif"/></td>
+								<td align="center" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_hot.gif" alt="[Hot]"/></td>
 								<td class="gensmall">${I18n.getMessage("ForumIndex.noNewMessagesHot")}</td>
 								<td>&nbsp;&nbsp;</td>
-								<td align="middle" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_sticky.gif"/></td>
+								<td align="center" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_sticky.gif" alt="[Sticky]" /></td>
 								<td class="gensmall">${I18n.getMessage("ForumIndex.sticky")}</td>
 							</tr>
 
 							<tr>
-								<td align="middle" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_lock_new.gif"/></td>
+								<td align="center" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_lock_new.gif" alt="[Lock New]" /></td>
 								<td class="gensmall">${I18n.getMessage("ForumIndex.newMessagesBlocked")}</td>
 								<td>&nbsp;&nbsp;</td>
-								<td align="middle" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_lock.gif"/></td>
+								<td align="center" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_lock.gif" alt="[Lock]" /></td>
 								<td class="gensmall">${I18n.getMessage("ForumIndex.noNewMessagesBlocked")}</td>
 								<td>&nbsp;&nbsp;</td>
 								<td colspan="2"></td>
-							</t>
+							</tr>
 						</table>
 					</td>
 					<td align="right" class="gensmall">
