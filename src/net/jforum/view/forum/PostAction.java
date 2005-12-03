@@ -97,7 +97,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.125 2005/12/02 23:49:05 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.126 2005/12/03 20:57:23 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -885,10 +885,10 @@ public class PostAction extends Command
 			return;
 		}
 
-		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
-		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
-		PollDAO plm = DataAccessDriver.getInstance().newPollDAO();
-		ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
+		TopicDAO topicDao = DataAccessDriver.getInstance().newTopicDAO();
+		PostDAO postDao = DataAccessDriver.getInstance().newPostDAO();
+		PollDAO poolDao = DataAccessDriver.getInstance().newPollDAO();
+		ForumDAO forumDao = DataAccessDriver.getInstance().newForumDAO();
 
 		if (!newTopic) {
 			int topicId = this.request.getIntParameter("topic_id");
@@ -896,7 +896,7 @@ public class PostAction extends Command
 			t = TopicRepository.getTopic(new Topic(topicId));
 			
 			if (t == null) {
-				t = tm.selectById(topicId);
+				t = topicDao.selectById(topicId);
 			}
 			
 			if (!TopicsCommon.isTopicAccessible(t.getForumId())) {
@@ -1017,7 +1017,7 @@ public class PostAction extends Command
 				t.setPostedBy(u);
 				t.setFirstPostTime(ViewCommon.formatDate(t.getTime()));
 
-				int topicId = tm.addNew(t);
+				int topicId = topicDao.addNew(t);
 				t.setId(topicId);
 				firstPost = true;
 			}
@@ -1029,7 +1029,7 @@ public class PostAction extends Command
 
 			// Topic watch
 			if (this.request.getParameter("notify") != null) {
-				this.watch(tm, t.getId(), u.getId());
+				this.watch(topicDao, t.getId(), u.getId());
 			}
 
 			p.setTopicId(t.getId());
@@ -1051,13 +1051,13 @@ public class PostAction extends Command
 					return;
 				}
 				
-				plm.addNew(poll);
+				poolDao.addNew(poll);
 				t.setVoteId(poll.getId());
 			}
 
 			// Save the remaining stuff
 			p.setModerate(moderate);
-			int postId = pm.addNew(p);
+			int postId = postDao.addNew(p);
 
 			if (newTopic) {
 				t.setFirstPostId(postId);
@@ -1070,7 +1070,7 @@ public class PostAction extends Command
 				t.setLastPostTime(p.getFormatedTime());
 			}
 			
-			tm.update(t);
+			topicDao.update(t);
 			
 			attachments.insertAttachments(p);
 			
@@ -1086,7 +1086,7 @@ public class PostAction extends Command
 				
 				// Updates forum stats, cache and etc
 				if (!newTopic) {
-					TopicsCommon.notifyUsers(t, tm);
+					TopicsCommon.notifyUsers(t, topicDao);
 					t.setTotalReplies(t.getTotalReplies() + 1);
 				}
 				
@@ -1094,7 +1094,7 @@ public class PostAction extends Command
 				
 				DataAccessDriver.getInstance().newUserDAO().incrementPosts(p.getUserId());
 				
-				TopicsCommon.updateBoardStatus(t, postId, firstPost, tm, fm);
+				TopicsCommon.updateBoardStatus(t, postId, firstPost, topicDao, forumDao);
 				ForumRepository.updateForumStats(t, u, p);
 				
 				int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);

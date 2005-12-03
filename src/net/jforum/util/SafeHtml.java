@@ -62,7 +62,7 @@ import org.htmlparser.nodes.TextNode;
  * malicious tags and attributes.
  * 
  * @author Rafael Steil
- * @version $Id: SafeHtml.java,v 1.9 2005/11/16 20:40:00 rafaelsteil Exp $
+ * @version $Id: SafeHtml.java,v 1.10 2005/12/03 20:57:23 rafaelsteil Exp $
  */
 public class SafeHtml 
 {
@@ -94,7 +94,7 @@ public class SafeHtml
 					if (text.indexOf('>') > -1 || text.indexOf('<') > -1) {
 						text = text.replaceAll("<", "&lt;")
 							.replaceAll(">", "&gt;")
-							.replaceAll("\"", "&amp;");
+							.replaceAll("\"", "&quot;");
 						node.setText(text);
 					}
 				}
