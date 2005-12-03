@@ -11,7 +11,7 @@
 						<span class="gensmall">${I18n.getMessage("ForumListing.date")}: ${now}</span><br />
 						<span class="forumlink"><a class="forumlink" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a></span>
 						<#if rssEnabled>
-							<a href="${contextPath}/rss/forums${extension}"><img src="${contextPath}/templates/${templateName}/images/xml_button.gif" border="0" align="middle"></a>
+							<a href="${contextPath}/rss/forums${extension}"><img src="${contextPath}/templates/${templateName}/images/xml_button.gif" border="0" align="middle" alt="[XML]" /></a>
 						</#if>
 					</td>
 					<td class="gensmall" valign="bottom" align="right">&nbsp;
@@ -24,7 +24,7 @@
 		
 			<table class="forumline" cellspacing="1" cellpadding="2" width="100%" border="0">
 				<tr>
-					<th class="thcornerl" nowrap="nowrap" colspan="2" height="25" align="center" valign="center">&nbsp;${I18n.getMessage("ForumListing.forums")}&nbsp;</th>
+					<th class="thcornerl" nowrap="nowrap" colspan="2" height="25" align="center" valign="middle">&nbsp;${I18n.getMessage("ForumListing.forums")}&nbsp;</th>
 					<th class="thtop" nowrap="nowrap" width="50">&nbsp;${I18n.getMessage("ForumListing.totalTopics")}&nbsp;</th>
 					<th class="thtop" nowrap="nowrap" width="50">&nbsp;${I18n.getMessage("ForumListing.totalMessages")}&nbsp;</th>
 					<th class="thcornerr" nowrap="nowrap">&nbsp;${I18n.getMessage("ForumListing.lastMessage")}&nbsp;</th>
@@ -40,11 +40,11 @@
 					<#list category.getForums() as forum>
 					<#assign lpi = fir.getLastPostInfo(forum.id)/>
 					<tr>
-						<td class="row1" valign="center" align="middle" height="50">
+						<td class="row1" valign="middle" align="center" height="50">
 						<#if forum.unread>
-							<img src="${contextPath}/templates/${templateName}/images/folder_new_big.gif" />
+							<img src="${contextPath}/templates/${templateName}/images/folder_new_big.gif" alt="[New Folder]" />
 						<#else>
-							<img src="${contextPath}/templates/${templateName}/images/folder_big.gif" />
+							<img src="${contextPath}/templates/${templateName}/images/folder_big.gif" alt="[Folder]" />
 						</#if>
 						</td>
 						<td class="row1" width="100%" height="50">
@@ -61,11 +61,11 @@
 							</span>
 							<br />		
 						</td>
-						<td class="row2" valign="center" align="middle" height="50"><span class="gensmall">${forum.totalTopics}</span></td>
-						<td class="row2" valign="center" align="middle" height="50">
+						<td class="row2" valign="middle" align="center" height="50"><span class="gensmall">${forum.totalTopics}</span></td>
+						<td class="row2" valign="middle" align="center" height="50">
 							<span class="gensmall"><#if (forum.totalPosts > 0)>${forum.totalPosts}<#else>${I18n.getMessage("ForumListing.noMessages")}</#if></span>
 						</td>
-						<td class="row2" valign="center" nowrap="nowrap" align="middle" height="50">
+						<td class="row2" valign="middle" nowrap="nowrap" align="center" height="50">
 							<span class="postdetails">
 							<#if (lpi.postTimeMillis > 0)>
 								${lpi.postDate}<br />
@@ -77,7 +77,7 @@
 								</#if>
 					
 								<#assign url = JForumContext.encodeURL("/posts/list/${startPage}${lpi.topicId}") + "#" + lpi.postId/>
-								<a href="${url}"><img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif" border="0" /></a>
+								<a href="${url}"><img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif" border="0" alt="[Latest Reply]" /></a>
 							<#else>
 								${I18n.getMessage("ForumListing.noMessages")}
 							</#if>		
@@ -101,7 +101,7 @@
 				</tr>
 
 				<tr>
-					<td class="row1" valign="center" align="middle" rowspan="2"><img src="${contextPath}/templates/${templateName}/images/whosonline.gif"/></td>
+					<td class="row1" valign="middle" align="center" rowspan="2"><img src="${contextPath}/templates/${templateName}/images/whosonline.gif" alt="[Who's Online]"/></td>
 					<td class="row1" align="left" width="100%">
 						<span class="gensmall">${totalMessages}<br />${totalUsers}<br />
 						${I18n.getMessage("ForumListing.newestUser")} <a href="${JForumContext.encodeURL("/user/profile/${lastUser.id}")}">${lastUser.username}</a></span>
@@ -148,11 +148,11 @@
 				
 				<table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
 					<tr>
-						<td class="cathead" height="28"><a name="login" id="login"></a><span class="cattitle">${I18n.getMessage("Login.enter")}</span></td>
+						<td class="cathead" height="28"><a name="login2" id="login2"></a><span class="cattitle">${I18n.getMessage("Login.enter")}</span></td>
 					</tr>
 
 					<tr>
-						<td class="row1" valign="center" align="middle" height="28">
+						<td class="row1" valign="middle" align="center" height="28">
 							<span class="gensmall">
 								${I18n.getMessage("Login.user")}: <input class="post" size="10" name="username" /> 
 								&nbsp;&nbsp;&nbsp;
@@ -172,13 +172,13 @@
 
 			<table cellspacing="3" cellpadding="0" align="center" border="0">
 				<tr>
-					<td align="middle" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_new.gif"/></td>
+					<td align="center" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_new.gif" alt="[New Folder]" /></td>
 					<td><span class="gensmall">${I18n.getMessage("ForumListing.newMessages")}</span></td>
 					<td>&nbsp;&nbsp;</td>
-					<td align="middle" width="20"><img src="${contextPath}/templates/${templateName}/images/folder.gif"/></td>
+					<td align="center" width="20"><img src="${contextPath}/templates/${templateName}/images/folder.gif" alt="[Folder]" /></td>
 					<td><span class="gensmall">${I18n.getMessage("ForumListing.noNewMessages")}</span></td>
 					<td>&nbsp;&nbsp;</td>
-					<td align="middle" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_lock.gif"/></td>
+					<td align="center" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_lock.gif" alt="[Lock Folder]" /></td>
 					<td><span class="gensmall">${I18n.getMessage("ForumListing.blocked")}</span></td>
 				</tr>
 			</table>
