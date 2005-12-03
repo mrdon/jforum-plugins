@@ -1,19 +1,21 @@
 <#include "header.htm"/>
 <#import "../macros/pagination.ftl" as pagination/>
-<script language="javascript">
+<script type="text/javascript">
+<!--
 function confirmDelete(id)
 {
 	if (confirm("${I18n.getMessage("Bookmarks.reallyDelete")}")) {
 		document.location = "${contextPath}/bookmarks/delete/" + id + "${extension}";
 	}
 }
-
 <#include "js/utils.js"/>
+
+-->
 </script>
 <table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
     <tr>
       <td align="left">
-		<td>
+		
 			<span class="nav">
 				<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a>
 				->
@@ -46,7 +48,7 @@ function confirmDelete(id)
 				<tr align="center">	
 					<td class="${color}" align="left">
 						<span class="gen">
-						<img src="${contextPath}/templates/${templateName}/images/icon_minipost.gif" align="middle"><a href="${JForumContext.encodeURL("/posts/list/${b.relationId}")}" class="gen">${b.title}</a>
+						<img src="${contextPath}/templates/${templateName}/images/icon_minipost.gif" align="middle" alt="[Post]" /><a href="${JForumContext.encodeURL("/posts/list/${b.relationId}")}" class="gen">${b.title}</a>
 						</span>
 					</td>
 					<td class="${color}"><span class="gen"><#if (b.description?default("")?length > 0)>${b.description}</#if></span></td>
@@ -68,7 +70,7 @@ function confirmDelete(id)
 		</td>
 	</tr>
 </table>
-</form>
+
 <table width="100%">
 	<tr>
 		<td align="right"><#if thisPage?exists><@pagination.doPagination "list", -1/></#if></td>
