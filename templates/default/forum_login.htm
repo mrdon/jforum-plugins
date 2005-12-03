@@ -23,7 +23,7 @@
 		<td class="row1">
 			<table cellspacing="1" cellpadding="3" width="100%" border="0">
 				<tr>
-					<td align="middle" colspan="2">&nbsp;</td>
+					<td align="center" colspan="2">&nbsp;</td>
 				</tr>
 				
 				<#if invalidLogin?exists>
@@ -47,19 +47,19 @@
 				</tr>
 
 				<#if autoLoginEnabled>
-					<tr align="middle">
+					<tr align="center">
 						<td colspan="2"><span class="gen">${I18n.getMessage("Login.autoLogon")}: <input type="checkbox" name="autologin" /></span></td>
 					</tr>
 				</#if>
 
-				<tr align="middle">
+				<tr align="center">
 					<td colspan="2">
 						<input type="hidden" name="redirect" />
-						<input class="mainoption" type="submit" value="${I18n.getMessage("Login.enter")}" name=login />
+						<input class="mainoption" type="submit" value="${I18n.getMessage("Login.enter")}" name="login" />
 					</td>
 				</tr>
 
-				<tr align="middle">
+				<tr align="center">
 					<td colspan="2">
 						<span class="gensmall"><a id="lostpassword" class="gensmall" href="${JForumContext.encodeURL("/user/lostPassword")}">${I18n.getMessage("Login.lostPassword")}</a></span>
 					</td>
