@@ -1,5 +1,6 @@
 <#include "header.htm"/>
-<script language="javascript">
+<script type="text/javascript">
+<!--
 function validateForm()
 {
 	var f = document.post;
@@ -13,16 +14,18 @@ function validateForm()
 }
 
 <#include "js/utils.js"/>
+
+-->
 </script>
 
-<form action="${JForumContext.encodeURL("/jforum")}" method="post" enctype="multipart/form-data" name="post" id="post" accept-charset="${encoding}" onSubmit="return validateForm();">
+<form action="${JForumContext.encodeURL("/jforum")}" method="post" enctype="multipart/form-data" name="post" id="post" accept-charset="${encoding}" onsubmit="return validateForm();">
 <input type="hidden" name="action" value="${action}" />
 <input type="hidden" name="module" value="${moduleName}" />
 <input type="hidden" name="securityHash" value="${securityHash}" />
 
 <input type="hidden" name="user_id" value="${u.id}" />
 
-<table cellSpacing="0" cellPadding="10" width="100%" align="center" border="0">
+<table cellspacing="0" cellpadding="10" width="100%" align="center" border="0">
 	<tr>
 		<td class="bodyline">
 
@@ -51,7 +54,7 @@ function validateForm()
 				</tr>
 
 				<tr>
-					<th class="thhead" valign="center" align="center" colspan="2" height="25">${I18n.getMessage("User.registerInformation")}</th>
+					<th class="thhead" valign="middle" align="center" colspan="2" height="25">${I18n.getMessage("User.registerInformation")}</th>
 				</tr>
 				<tr>
 					<td class="row2" colspan="2" align="center"><span class="gensmall"><font color="red">${I18n.getMessage("User.requiredFields")}</font></span></td>
@@ -106,7 +109,7 @@ function validateForm()
 				</tr>
 
 				<tr>
-					<th class="thsides" valign="center" colspan="2" height="25">${I18n.getMessage("User.preferencesInfo")}</th>
+					<th class="thsides" valign="middle" colspan="2" height="25">${I18n.getMessage("User.preferencesInfo")}</th>
 				</tr>
 
 				<tr>
@@ -161,23 +164,23 @@ function validateForm()
 					<td class="catsides" colspan="2" height="28">&nbsp;</td>
 				</tr>
 				<tr>
-					<th class="thsides" valign="center" colspan="2" height="25">${I18n.getMessage("User.preferences")}</th>
+					<th class="thsides" valign="middle" colspan="2" height="25">${I18n.getMessage("User.preferences")}</th>
 				</tr>
 				<tr>
 					<td class="row1"><span class="gen">${I18n.getMessage("User.showEmail")}:</span></td>
 					<td class="row2">
-						<input type="radio" <#if u.isViewEmailEnabled()>checked</#if> value="1" name="viewemail"> 
+						<input type="radio" <#if u.isViewEmailEnabled()>checked="checked"</#if> value="1" name="viewemail" /> 
 						<span class="gen">${I18n.getMessage("User.yes")}</span>&nbsp;&nbsp; 
-						<input type="radio" value="0" <#if u.isViewEmailEnabled() == false>checked</#if> name="viewemail"> 
+						<input type="radio" value="0" <#if u.isViewEmailEnabled() == false>checked="checked"</#if> name="viewemail" /> 
 						<span class="gen">${I18n.getMessage("User.no")}</span>
 					</td>
 				</tr>
 				<tr>
 					<td class="row1"><span class="gen">${I18n.getMessage("User.hideOnlineStatus")}:</span></td>
 					<td class="row2">
-						<input type="radio" value="1" <#if u.isViewOnlineEnabled() == false>checked</#if> name="hideonline"> 
+						<input type="radio" value="1" <#if u.isViewOnlineEnabled() == false>checked="checked"</#if> name="hideonline" /> 
 						<span class="gen">${I18n.getMessage("User.yes")}</span>&nbsp;&nbsp; 
-						<input type="radio" <#if u.isViewOnlineEnabled()>checked</#if> value="0" name="hideonline"> 
+						<input type="radio" <#if u.isViewOnlineEnabled()>checked="checked"</#if> value="0" name="hideonline" /> 
 						<span class="gen">${I18n.getMessage("User.no")}</span>
 					</td>
 				</tr>
@@ -187,36 +190,36 @@ function validateForm()
 						<span class="gensmall">${I18n.getMessage("User.sendPostReplyNotifyDescription")}</span>
 					</td>
 					<td class="row2">
-						<input type="radio" <#if u.isNotifyOnMessagesEnabled()>checked</#if> value="1" name="notifyreply"> 
+						<input type="radio" <#if u.isNotifyOnMessagesEnabled()>checked="checked"</#if> value="1" name="notifyreply" /> 
 						<span class="gen">${I18n.getMessage("User.yes")}</span>&nbsp;&nbsp; 
-						<input type="radio" value="0" <#if u.isNotifyOnMessagesEnabled() == false>checked</#if> name="notifyreply"> 
+						<input type="radio" value="0" <#if u.isNotifyOnMessagesEnabled() == false>checked="checked"</#if> name="notifyreply" /> 
 						<span class="gen">${I18n.getMessage("User.no")}</span>
 					</td>
 				</tr>
 				<tr>
 					<td class="row1"><span class="gen">${I18n.getMessage("User.privateMessagesNotify")}:</span></td>
 					<td class="row2">
-						<input type="radio" <#if u.isNotifyPrivateMessagesEnabled()>checked</#if> value="1" name="notifypm"> 
+						<input type="radio" <#if u.isNotifyPrivateMessagesEnabled()>checked="checked"</#if> value="1" name="notifypm" /> 
 						<span class="gen">${I18n.getMessage("User.yes")}</span>&nbsp;&nbsp; 
-						<input type="radio" value="0" <#if u.isNotifyPrivateMessagesEnabled() == false>checked</#if>  name="notifypm"> 
+						<input type="radio" value="0" <#if u.isNotifyPrivateMessagesEnabled() == false>checked="checked"</#if>  name="notifypm" /> 
 						<span class="gen">${I18n.getMessage("User.no")}</span>
 					</td>
 				</tr>
 				<tr>
 					<td class="row1"><span class="gen">${I18n.getMessage("User.alwaysAttachSignature")}:</span></td>
 					<td class="row2">
-						<input type="radio" <#if u.attachSignatureEnabled>checked</#if> value="1" name="attachsig"> 
+						<input type="radio" <#if u.attachSignatureEnabled>checked="checked"</#if> value="1" name="attachsig" /> 
 						<span class="gen">${I18n.getMessage("User.yes")}</span>&nbsp;&nbsp; 
-						<input type="radio" value="0" <#if u.attachSignatureEnabled == false>checked</#if> name="attachsig"> 
+						<input type="radio" value="0" <#if u.attachSignatureEnabled == false>checked="checked"</#if> name="attachsig" /> 
 						<span class="gen">${I18n.getMessage("User.no")}</span>
 					</td>
 				</tr>
 				<tr>
 					<td class="row1"><span class="gen">${I18n.getMessage("User.allowHtml")}:</span></td>
 					<td class="row2">
-						<input type="radio" value="1" <#if u.isHtmlEnabled()>checked</#if> name="allowhtml"> 
+						<input type="radio" value="1" <#if u.isHtmlEnabled()>checked="checked"</#if> name="allowhtml" /> 
 						<span class="gen">${I18n.getMessage("User.yes")}</span>&nbsp;&nbsp; 
-						<input type="radio" <#if u.isHtmlEnabled() == false>checked</#if> value="0" name="allowhtml"> 
+						<input type="radio" <#if u.isHtmlEnabled() == false>checked="checked"</#if> value="0" name="allowhtml" /> 
 						<span class="gen">${I18n.getMessage("User.no")}</span>
 					</td>
 				</tr>
@@ -224,20 +227,20 @@ function validateForm()
 					<td class="row1"><span class="gen">${I18n.getMessage("User.langPreference")}:</span></td>
 					<td class="row2">
 						<select name="language">
-							<option value="" <#if u.lang?default("") == "">selected</#if>>${I18n.getMessage("User.Lang.default")}</option>
-							<option value="en_US" <#if u.lang?default("") == "en_US">selected</#if>>${I18n.getMessage("User.Lang.en_US")}</option>
-							<option value="zh_TW" <#if u.lang?default("") == "zh_TW">selected</#if>>${I18n.getMessage("User.Lang.zh_TW")}</option>
-							<option value="zh_CN" <#if u.lang?default("") == "zh_CN">selected</#if>>${I18n.getMessage("User.Lang.zh_CN")}</option>							
-							<option value="fr_FR" <#if u.lang?default("") == "fr_FR">selected</#if>>${I18n.getMessage("User.Lang.fr_FR")}</option>
-							<option value="de_DE" <#if u.lang?default("") == "de_DE">selected</#if>>${I18n.getMessage("User.Lang.de_DE")}</option>
-							<option value="nl_NL" <#if u.lang?default("") == "nl_NL">selected</#if>>${I18n.getMessage("User.Lang.nl_NL")}</option>
-							<option value="pt_BR" <#if u.lang?default("") == "pt_BR">selected</#if>>${I18n.getMessage("User.Lang.pt_BR")}</option>
-							<option value="ru_RU" <#if u.lang?default("") == "ru_RU">selected</#if>>${I18n.getMessage("User.Lang.ru_RU")}</option>
-							<option value="fi_FI" <#if u.lang?default("") == "fi_FI">selected</#if>>fi_FI</option>
-							<option value="vi_VN" <#if u.lang?default("") == "vi_VN">selected</#if>>vi_VN</option>
-							<option value="sp_SP" <#if u.lang?default("") == "sp_SP">selected</#if>>sp_SP</option>
-							<option value="es_ES" <#if u.lang?default("") == "es_ES">selected</#if>>es_ES</option>
-							<option value="pl_PL" <#if u.lang?default("") == "pl_PL">selected</#if>>pl_PL</option>
+							<option value="" <#if u.lang?default("") == "">selected="selected"</#if>>${I18n.getMessage("User.Lang.default")}</option>
+							<option value="en_US" <#if u.lang?default("") == "en_US">selected="selected"</#if>>${I18n.getMessage("User.Lang.en_US")}</option>
+							<option value="zh_TW" <#if u.lang?default("") == "zh_TW">selected="selected"</#if>>${I18n.getMessage("User.Lang.zh_TW")}</option>
+							<option value="zh_CN" <#if u.lang?default("") == "zh_CN">selected="selected"</#if>>${I18n.getMessage("User.Lang.zh_CN")}</option>							
+							<option value="fr_FR" <#if u.lang?default("") == "fr_FR">selected="selected"</#if>>${I18n.getMessage("User.Lang.fr_FR")}</option>
+							<option value="de_DE" <#if u.lang?default("") == "de_DE">selected="selected"</#if>>${I18n.getMessage("User.Lang.de_DE")}</option>
+							<option value="nl_NL" <#if u.lang?default("") == "nl_NL">selected="selected"</#if>>${I18n.getMessage("User.Lang.nl_NL")}</option>
+							<option value="pt_BR" <#if u.lang?default("") == "pt_BR">selected="selected"</#if>>${I18n.getMessage("User.Lang.pt_BR")}</option>
+							<option value="ru_RU" <#if u.lang?default("") == "ru_RU">selected="selected"</#if>>${I18n.getMessage("User.Lang.ru_RU")}</option>
+							<option value="fi_FI" <#if u.lang?default("") == "fi_FI">selected="selected"</#if>>fi_FI</option>
+							<option value="vi_VN" <#if u.lang?default("") == "vi_VN">selected="selected"</#if>>vi_VN</option>
+							<option value="sp_SP" <#if u.lang?default("") == "sp_SP">selected="selected"</#if>>sp_SP</option>
+							<option value="es_ES" <#if u.lang?default("") == "es_ES">selected="selected"</#if>>es_ES</option>
+							<option value="pl_PL" <#if u.lang?default("") == "pl_PL">selected="selected"</#if>>pl_PL</option>
 						</select>
 					</td>
 				</tr>
@@ -245,24 +248,25 @@ function validateForm()
 					<td class="catsides" colspan="2" height="28">&nbsp;</td>
 				</tr>
 				<tr>
-					<th class="thsides" valign="center" colspan="2" height="12">${I18n.getMessage("User.avatarControlPanel")}</th>
+					<th class="thsides" valign="middle" colspan="2" height="12">${I18n.getMessage("User.avatarControlPanel")}</th>
 				</tr>
 				<tr>
 					<td class="row1" colspan="2">
 						<table cellspacing="2" cellpadding="0" width="70%" align="center" border="0">
 							<tr>
 								<td width="65%"><span class="gensmall">${I18n.getMessage("User.avatarDesc")}</span></td>
-								<td align="middle">
+								<td align="center">
 									<#if (u.avatar?exists && u.avatar?length > 0)>
 										<span class="gensmall">${I18n.getMessage("User.currentAvatar")}</span><br />
 										<br />
 										<#if u.isExternalAvatar()>
-											<img src="${u.avatar?html}" border="0">
+											<img src="${u.avatar?html}" alt="[Avatar]" />
 										<#else>
-											<img src="${contextPath}/images/avatar/${u.avatar}" border="0" /><br />
+											<img src="${contextPath}/images/avatar/${u.avatar}" alt="[Avatar]" /><br />
 										</#if>
 
-										<script language="javascript">
+										<script type="text/javascript">
+										<!--
 										var avatarBkp = "";
 										
 										function clearAvatar(f)
@@ -275,9 +279,10 @@ function validateForm()
 												f.avatarUrl.value = avatarBkp;
 											}
 										}
+										-->
 										</script>
 
-										<input type="checkbox" name="avatardel" onClick="clearAvatar(this.form)"/>&nbsp;
+										<input type="checkbox" name="avatardel" onclick="clearAvatar(this.form)"/>&nbsp;
 							
 										<span class="gensmall">${I18n.getMessage("User.removeAvatar")}</span>
 									</#if>
@@ -298,9 +303,9 @@ function validateForm()
 				</tr>
 
 				<tr>
-					<td class="catbottom" align="middle" colspan="2" height="28">
+					<td class="catbottom" align="center" colspan="2" height="28">
 						<input class="mainoption" type="submit" value="${I18n.getMessage("User.submit")}" name="submit" />&nbsp;&nbsp;
-						<input class="liteoption" type="reset" value="${I18n.getMessage("User.reset")}" name=reset />
+						<input class="liteoption" type="reset" value="${I18n.getMessage("User.reset")}" name="reset" />
 					</td>
 				</tr>
 			</table>
