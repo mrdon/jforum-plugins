@@ -16,7 +16,7 @@
 						&nbsp;->&nbsp;
 						<a class="nav" href="${JForumContext.encodeURL("/recentTopics/showTopicsByUser/${u.id}")}">${I18n.getMessage("ForumListing.userTopics")} ${u.username?html}</a> [${totalRecords}]
 						<#if rssEnabled>
-							&nbsp;<a href="${contextPath}/rss/showTopicsByUser/${u.id}${extension}"><img src="${contextPath}/templates/${templateName}/images/xml_button.gif" border="0" align="middle"></a>
+							&nbsp;<a href="${contextPath}/rss/showTopicsByUser/${u.id}${extension}"><img src="${contextPath}/templates/${templateName}/images/xml_button.gif" border="0" align="middle" alt="[XML]" /></a>
 						</#if>
 						</span>
 					</td>
@@ -31,18 +31,18 @@
 			
 			<table class="forumline" cellspacing="1" cellpadding="4" width="100%" border="0">
 				<tr>
-					<th class="thcornerl" nowrap="nowrap" align="middle" colspan="2" height="25">&nbsp;${I18n.getMessage("ForumIndex.topics")}&nbsp;</th>
-					<th class="thtop" nowrap="nowrap" align="middle" width="50">&nbsp;${I18n.getMessage("ForumIndex.answers")}&nbsp;</th>
-					<th class="thtop" nowrap="nowrap" align="middle" width="100">&nbsp;${I18n.getMessage("ForumIndex.author")}&nbsp;</th>
-					<th class="thtop" nowrap="nowrap" align="middle" width="50">&nbsp;${I18n.getMessage("ForumIndex.views")}&nbsp;</th>
-					<th class="thtop" nowrap="nowrap" align="middle">&nbsp;${I18n.getMessage("ForumIndex.lastMessage")}&nbsp;</th>
-					<th class="thcornerr" nowrap="nowrap" align="middle">&nbsp;${I18n.getMessage("Forums.Form.ForumName")}&nbsp;</th>
+					<th class="thcornerl" nowrap="nowrap" align="center" colspan="2" height="25">&nbsp;${I18n.getMessage("ForumIndex.topics")}&nbsp;</th>
+					<th class="thtop" nowrap="nowrap" align="center" width="50">&nbsp;${I18n.getMessage("ForumIndex.answers")}&nbsp;</th>
+					<th class="thtop" nowrap="nowrap" align="center" width="100">&nbsp;${I18n.getMessage("ForumIndex.author")}&nbsp;</th>
+					<th class="thtop" nowrap="nowrap" align="center" width="50">&nbsp;${I18n.getMessage("ForumIndex.views")}&nbsp;</th>
+					<th class="thtop" nowrap="nowrap" align="center">&nbsp;${I18n.getMessage("ForumIndex.lastMessage")}&nbsp;</th>
+					<th class="thcornerr" nowrap="nowrap" align="center">&nbsp;${I18n.getMessage("Forums.Form.ForumName")}&nbsp;</th>
 				</tr>
 
 				<!-- TOPICS LISTING -->
 				<#list topics as topic>
 				<tr>
-					<td class="row1" valign="center" align="middle" width="20"><@presentation.folderImage topic/></td>
+					<td class="row1" valign="middle" align="center" width="20"><@presentation.folderImage topic/></td>
 					<td class="row1" width="100%">
 						<span class="topictitle">
 						<a href="${JForumContext.encodeURL("/posts/list/${topic.id}")}"><#if (topic.title?length == 0)>No Subject<#else>${topic.title?html}</#if></a>
@@ -56,13 +56,13 @@
 						</#if>		
 					</td>
 
-					<td class="row2" valign="center" align="middle"><span class="postdetails">${topic.totalReplies}</span></td>
-					<td class="row3" valign="center" align="middle">
+					<td class="row2" valign="middle" align="center"><span class="postdetails">${topic.totalReplies}</span></td>
+					<td class="row3" valign="middle" align="center">
 						<span class="name"><a href="${JForumContext.encodeURL("/user/profile/${topic.postedBy.id}")}">${topic.postedBy.username?html}</a></span>
 					</td>
 
-					<td class="row2" valign="center" align="middle"><span class="postdetails">${topic.totalViews}</span></td>
-					<td class="row3right" valign="center" nowrap="nowrap" align="middle">
+					<td class="row2" valign="middle" align="center"><span class="postdetails">${topic.totalViews}</span></td>
+					<td class="row3right" valign="middle" nowrap="nowrap" align="center">
 						<#if (topic.lastPostTime?length > 0)>
 							<span class="postdetails">${topic.lastPostTime}<br />
 							<a href="${JForumContext.encodeURL("/user/profile/${topic.lastPostBy.id}")}">${topic.lastPostBy.username?html}</a>
@@ -72,13 +72,13 @@
 								<#assign startPage = ((topic.totalReplies / postsPerPage?number)?int * postsPerPage?number) +"/"/>
 							</#if>
 				  
-							<a href="${JForumContext.encodeURL("/posts/list/${startPage}${topic.id}")}#${topic.lastPostId}"><img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif" border="0" /></a></span>
+							<a href="${JForumContext.encodeURL("/posts/list/${startPage}${topic.id}")}#${topic.lastPostId}"><img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif" border="0" alt="[Latest Reply]" /></a></span>
 						</#if>		 
 					</td>
 
 					<#assign forum = forums.get(topic.forumId)/>
 
-					<td class="row2" valign="center" align="middle"><a class="postdetails" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name?html}</a></td>
+					<td class="row2" valign="middle" align="center"><a class="postdetails" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name?html}</a></td>
 
 				</tr>
 				</#list>		
@@ -93,7 +93,7 @@
 						&nbsp;->&nbsp;
 						<a class="nav" href="${JForumContext.encodeURL("/recentTopics/showTopicsByUser/${u.id}")}">${I18n.getMessage("ForumListing.userTopics")?html} ${u.username?html}</a> [${totalRecords}]
 						<#if rssEnabled>
-							&nbsp;<a href="${contextPath}/rss/showTopicsByUser/${u.id}${extension}"><img src="${contextPath}/templates/${templateName}/images/xml_button.gif" border="0" align="middle"></a>
+							&nbsp;<a href="${contextPath}/rss/showTopicsByUser/${u.id}${extension}"><img src="${contextPath}/templates/${templateName}/images/xml_button.gif" border="0" align="middle" alt="[XML]" /></a>
 						</#if>
 						</span>
 					</td>
