@@ -1,7 +1,7 @@
 <span class="genmed"><b>${user.username?html}</b></span>
 <br />
 <#if karmaEnabled && post.userId != 1>
-	<script language="javascript">writeStars(${user.karma.karmaPoints}, "${user.id}${post.id}");</script>
+	<script type="text/javascript">writeStars(${user.karma.karmaPoints}, "${user.id}${post.id}");</script>
 	<br/>
 </#if>
 
@@ -13,9 +13,9 @@
 
 <#if (user.avatar?exists && user.avatar?length > 0)>
 	<#if user.isExternalAvatar() || user.avatar.startsWith("http://")>
-		<img src="${user.avatar?html}" border="0">
+		<img src="${user.avatar?html}" border="0" alt="[Avatar]" />
 	<#else>
-		<img src="${contextPath}/images/avatar/${user.avatar}" border="0" /><br />
+		<img src="${contextPath}/images/avatar/${user.avatar}" border="0" alt="[Avatar]" /><br />
 	</#if>
 </#if>
 <br /> 
