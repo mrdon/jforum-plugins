@@ -45,6 +45,7 @@ package net.jforum.dao;
 import java.util.List;
 
 import net.jforum.entities.Forum;
+import net.jforum.entities.ForumStats;
 import net.jforum.entities.LastPostInfo;
 
 /**
@@ -55,7 +56,7 @@ import net.jforum.entities.LastPostInfo;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: ForumDAO.java,v 1.6 2005/11/02 01:22:21 rafaelsteil Exp $
+ * @version $Id: ForumDAO.java,v 1.7 2005/12/04 01:19:09 rafaelsteil Exp $
  */
 public interface ForumDAO 
 {
@@ -231,4 +232,11 @@ public interface ForumDAO
 	 * @throws Exception
 	 */
 	public void setModerated(int categoryId, boolean status) throws Exception;
+	
+	/**
+	 * Ges general statistics from the board
+	 * @return
+	 * @throws Exception
+	 */
+	public ForumStats getBoardStatus() throws Exception;
 }

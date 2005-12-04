@@ -69,7 +69,7 @@ import freemarker.template.SimpleHash;
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.15 2005/09/08 18:37:11 rafaelsteil Exp $
+ * @version $Id: ControllerUtils.java,v 1.16 2005/12/04 01:19:11 rafaelsteil Exp $
  */
 public class ControllerUtils
 {
@@ -250,10 +250,12 @@ public class ControllerUtils
 	public void refreshSession() throws Exception
 	{
 		UserSession userSession = SessionFacade.getUserSession();
+		ActionServletRequest request = JForum.getRequest();
 
 		if (userSession == null) {
 			userSession = new UserSession();
-			userSession.setSessionId(JForum.getRequest().getSession().getId());
+			userSession.setSessionId(request.getSession().getId());
+			userSession.setIp(request.getRemoteAddr());
 
 			userSession.makeAnonymous();
 
@@ -276,7 +278,7 @@ public class ControllerUtils
 			SSO sso = (SSO) Class.forName(SystemGlobals.getValue(ConfigKeys.SSO_IMPLEMENTATION)).newInstance();
 
 			// If SSO, then check if the session is valid
-			if (!sso.isSessionValid(userSession, JForum.getRequest())) {
+			if (!sso.isSessionValid(userSession, request)) {
 				SessionFacade.remove(userSession.getSessionId());
 				refreshSession();
 			}

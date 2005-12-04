@@ -62,7 +62,7 @@ import com.octo.captcha.image.ImageCaptcha;
  * Stores information about user's session.
  * 
  * @author Rafael Steil
- * @version $Id: UserSession.java,v 1.24 2005/11/29 13:47:24 rafaelsteil Exp $
+ * @version $Id: UserSession.java,v 1.25 2005/12/04 01:19:10 rafaelsteil Exp $
  */
 public class UserSession implements Serializable
 {
@@ -79,6 +79,7 @@ public class UserSession implements Serializable
 	private String sessionId;
 	private String username;
 	private String lang;
+	private String ip;
 	
 	private boolean autoLogin;
 	
@@ -104,6 +105,22 @@ public class UserSession implements Serializable
 		this.lang = us.getLang();
 		this.privateMessages = us.getPrivateMessages();
 		this.imageCaptcha = us.imageCaptcha;
+		this.ip = us.getIp();
+	}
+	
+	public Date sessionLastUpdate()
+	{
+		return new Date(this.startTime.getTime() + this.sessionTime);
+	}
+	
+	public void setIp(String ip)
+	{
+		this.ip = ip;
+	}
+	
+	public String getIp()
+	{
+		return this.ip;
 	}
 
 	/**

@@ -42,8 +42,10 @@
  */
 package net.jforum.dao.generic;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -54,6 +56,7 @@ import net.jforum.JForum;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.TopicDAO;
 import net.jforum.entities.Forum;
+import net.jforum.entities.ForumStats;
 import net.jforum.entities.LastPostInfo;
 import net.jforum.entities.ModeratorInfo;
 import net.jforum.entities.Topic;
@@ -63,7 +66,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericForumDAO.java,v 1.13 2005/11/03 01:19:46 rafaelsteil Exp $
+ * @version $Id: GenericForumDAO.java,v 1.14 2005/12/04 01:19:14 rafaelsteil Exp $
  */
 public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO 
 {
@@ -517,5 +520,77 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 		p.setInt(2, categoryId);
 		p.executeUpdate();
 		p.close();
+	}
+	
+	/**
+	 * @see net.jforum.dao.ForumDAO#getBoardStatus()
+	 */
+	public ForumStats getBoardStatus() throws Exception
+	{
+		ForumStats fs = new ForumStats();
+		fs.setPosts(this.getTotalMessages());
+
+		Connection c = JForum.getConnection();
+		
+		// Total Users
+		Statement s = c.createStatement();
+		ResultSet rs = s.executeQuery(SystemGlobals.getSql("UserModel.totalUsers"));
+		rs.next();
+		fs.setUsers(rs.getInt(1));
+		rs.close();
+		s.close();
+		
+		// Total Topics
+		s = c.createStatement();
+		rs = s.executeQuery(SystemGlobals.getSql("TopicModel.totalTopics"));
+		rs.next();
+		fs.setTopics(rs.getInt(1));
+		rs.close();
+		s.close();
+		
+		// Posts per day
+		s = c.createStatement();
+		rs = s.executeQuery(SystemGlobals.getSql("ForumModel.statsFirstPostTime"));
+		rs.next();
+		Date firstTime = rs.getTimestamp(1);
+		rs.close();
+		s.close();
+		
+		Date today = new Date();
+		
+		int perDay = fs.getPosts() / this.daysUntilToday(today, firstTime);
+		
+		if (fs.getPosts() > 0 && perDay < 1) {
+			perDay = 1;
+		}
+		
+		fs.setPostsPerDay(perDay);
+		
+		// Topics per day
+		perDay = fs.getTopics() / this.daysUntilToday(today, firstTime);
+		
+		if (fs.getTopics() > 0 && perDay < 1) {
+			perDay = 1;
+		}
+		
+		fs.setTopicsPerDay(perDay);
+		
+		// Users per day
+		s = c.createStatement();
+		rs = s.executeQuery(SystemGlobals.getSql("ForumModel.statsFirstRegisteredUserTime"));
+		rs.next();
+		firstTime = rs.getTimestamp(1);
+		rs.close();
+		s.close();
+		
+		perDay = fs.getUsers() / this.daysUntilToday(today, firstTime);
+		fs.setUsersPerDay(perDay);
+		
+		return fs;
+	}
+	
+	private int daysUntilToday(Date today, Date from) 
+	{
+		return (int)((today.getTime() - from.getTime()) / (24 * 60 * 60 * 1000));
 	}
 }

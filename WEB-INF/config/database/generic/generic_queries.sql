@@ -209,6 +209,9 @@ ForumModel.selectAll = SELECT forum_id, forum_name, categories_id, forum_desc, f
 
 ForumModel.selectAllForPermissions = SELECT forum_id, forum_name FROM jforum_forums ORDER BY forum_name
 
+ForumModel.statsFirstPostTime = SELECT MIN(post_time) FROM jforum_posts WHERE post_time > 0
+ForumModel.statsFirstRegisteredUserTime = SELECT MIN(user_regdate) FROM jforum_users WHERE user_regdate > 0
+
 ForumModel.countForumPosts = SELECT COUNT(1) FROM jforum_posts WHERE forum_id = ?
 ForumModel.setModerated = UPDATE jforum_forums SET moderated = ? WHERE categories_id = ?
 ForumModel.delete = DELETE FROM jforum_forums WHERE forum_id = ?
@@ -342,6 +345,7 @@ TopicModel.countUserTopics = SELECT COUNT(*) AS total FROM jforum_topics where u
 	
 TopicModel.getFirstLastPostId = SELECT MIN(post_id) AS first_post_id, MAX(post_id) AS last_post_id FROM jforum_posts WHERE topic_id = ?
 TopicModel.fixFirstLastPostId = UPDATE jforum_topics SET topic_first_post_id = ?, topic_last_post_id = ? WHERE topic_id = ?
+TopicModel.totalTopics = SELECT COUNT(1) FROM jforum_topics
 
 # ############
 # SearchModel

@@ -1,0 +1,5 @@
+2.1.5
+Short description of the latest version
+<li> New feature 1
+<li> New feature 2
+<li> New feature 3

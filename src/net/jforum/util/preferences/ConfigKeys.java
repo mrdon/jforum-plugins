@@ -48,7 +48,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.78 2005/11/29 00:26:58 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.79 2005/12/04 01:19:17 rafaelsteil Exp $
 */
 
 public class ConfigKeys 
@@ -254,6 +254,8 @@ public class ConfigKeys
     public static final String MAIL_SUMMARY_FILE = "mail.summary.weekly.messageFile";
     public static final String SUMMARY_DAYS_BEFORE = "summary.days.before";
     public static final String SUMMARY_IS_ENABLED = "summary.enabled";
-	
+    
+    public static final String JFORUM_VERSION_URL = "jforum.version.url";
+    
 	private ConfigKeys() {}
 }

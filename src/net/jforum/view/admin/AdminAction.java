@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -43,12 +43,20 @@
 package net.jforum.view.admin;
 
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
+
 import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.ActionServletRequest;
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.ForumDAO;
 import net.jforum.entities.UserSession;
 import net.jforum.repository.ModulesRepository;
 import net.jforum.repository.SecurityRepository;
@@ -62,7 +70,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: AdminAction.java,v 1.11 2005/07/31 03:51:55 rafaelsteil Exp $
+ * @version $Id: AdminAction.java,v 1.12 2005/12/04 01:19:10 rafaelsteil Exp $
  */
 public class AdminAction extends Command {
 
@@ -108,16 +116,99 @@ public class AdminAction extends Command {
 		
 		// Checks if the install module is still active
 		this.context.put("installModuleExists", ModulesRepository.getModuleClass("install") != null);
+		this.context.put("sessions", SessionFacade.getAllSessions());
+		
+		ForumDAO dao = DataAccessDriver.getInstance().newForumDAO();
+		this.context.put("stats", dao.getBoardStatus());
+		
+		this.checkBoardVersion();
+	}
+	
+	private void checkBoardVersion()
+	{
+		String data = this.readVersionFromSocket();
+		
+		if (data == null || data.trim().length() == 0) {
+			return;
+		}
+		
+		int index = data.indexOf('\n');
+		
+		String version = data.substring(0, index).trim();
+		String notes = data.substring(index + 1, data.length());
+		
+		this.matchVersion(version);
+		this.context.put("notes", notes);
+	}
+	
+	private void matchVersion(String latest)
+	{
+		String current = SystemGlobals.getValue(ConfigKeys.VERSION);
+		
+		String[] currentParts = current.split("\\.");
+		String[] latestParts = latest.split("\\.");
+		
+		if (Integer.parseInt(latestParts[2]) > Integer.parseInt(currentParts[2]) // Revision
+			|| Integer.parseInt(latestParts[1]) > Integer.parseInt(currentParts[1]) // Minor
+			|| Integer.parseInt(latestParts[0]) > Integer.parseInt(currentParts[0])) { // Major
+			this.context.put("upToDate", false);
+		}
+		else {
+			this.context.put("upToDate", true);
+		}
+		
+		this.context.put("latestVersion", latest);
+		this.context.put("currentVersion", current);
+	}
+	
+	private String readVersionFromSocket()
+	{
+		InputStream is = null;
+		OutputStream os = null;
+		
+		String data = null;
+		
+		try {
+			URL url = new URL(SystemGlobals.getValue(ConfigKeys.JFORUM_VERSION_URL));
+			URLConnection conn = url.openConnection();
+			
+			is = conn.getInputStream();
+			os = new ByteArrayOutputStream();
+			
+			int available = is.available();
+			
+			while (available > 0) {
+				byte[] b = new byte[available];
+				is.read(b);
+				os.write(b);
+				
+				available = is.available();
+			}
+			
+			data = os.toString();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			if (is != null) {
+				try { is.close(); os.close(); } catch (Exception e) {}
+			}
+		}
+		
+		return data;
 	}
 	
 	public boolean checkAdmin()
 	{
 		int userId = SessionFacade.getUserSession().getUserId();
+		
 		if (SecurityRepository.get(userId).canAccess(SecurityConstants.PERM_ADMINISTRATION)) {
 			return true;
 		}
 		
-		JForum.setRedirect(JForum.getRequest().getContextPath() + "/admBase/login"
+		JForum.setRedirect(JForum.getRequest().getContextPath() 
+			+ "/admBase/login"
 			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		
 		super.ignoreAction();

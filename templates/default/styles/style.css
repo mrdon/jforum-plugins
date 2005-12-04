@@ -75,9 +75,6 @@ th.thcornerr { border-top-width: 1px; border-left-width: 0px; border-bottom-widt
 .forumlink { font-weight: bold; font-size: 12px; color: #01336b; }
 .nav, .topictitle { font-weight: bold; font-size: 11px; color: #000000; }
 
-h1 { font-weight: bold; font-size: 11px; color: #000000; }
-h2 { font-weight: bold; font-size: 11px; color: #000000; }
-
 blockquote, .code, pre  {
 	font-size: 11px; color: #444444; font-family: verdana, arial, helvetica, sans-serif; background-color: #f3f5ff;
 	border: #01336b 1px solid; padding-left: 5px;

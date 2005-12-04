@@ -46,11 +46,12 @@ import java.util.List;
 
 import net.jforum.dao.ForumDAO;
 import net.jforum.entities.Forum;
+import net.jforum.entities.ForumStats;
 import net.jforum.entities.LastPostInfo;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumModelDummy.java,v 1.9 2005/08/27 15:32:56 rafaelsteil Exp $
+ * @version $Id: ForumModelDummy.java,v 1.10 2005/12/04 01:19:15 rafaelsteil Exp $
  */
 class ForumModelDummy implements ForumDAO {
 	
@@ -64,6 +65,12 @@ class ForumModelDummy implements ForumDAO {
 	 * @see net.jforum.dao.ForumDAO#selectById(int)
 	 */
 	public Forum selectById(int forumId) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public ForumStats getBoardStatus() throws Exception
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}

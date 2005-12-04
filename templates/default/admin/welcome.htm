@@ -1,13 +1,122 @@
-${I18n.getMessage("Admin.welcome")}
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=${encoding};"  />
+<style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/style.css );</style>
 
-<#if installModuleExists>
+<style type="text/css">
+h1 { font-size: 22px; font-family: arial, verdana; }
+p, td { font-size: 11px; }
+</style>
+</head>
+<body bgcolor="#E5E5E5" text="#000000">
+
+<a name="top"></a>
+
+
+<h1>${I18n.getMessage("ForumListing.versionInformation")}</h1>
+
+<#if !upToDate?exists>
+	<p style="color:red">Could not determine if there are updates available for your JForum installation.
+	Please check <a href="http://www.jforum.net/download.jsp" target="_new">http://www.jforum.net/download.jsp</a> for possible updates.</p>
+<#elseif !upToDate>
+	<p style="color:red">Your installation does <b>not</b> seem to be up to date. 
+	Updates are available for your version of JForum. Please visit <a href="http://www.jforum.net/download.jsp" target="_new">http://www.jforum.net/download.jsp</a> to obtain the latest version.<br />
+	The latest available version is <b>${latestVersion}</b>. You are running version <b>${currentVersion}</b>.</p>
+
 	<p>
-		<font style="color: #ff0000; size: 16px;"><b>Warning</b></font><br/>
-		The <i><b>installation module</b></i> is still enabled. This may allow <b>any</b> user
-		to overwrite your current board installation. <br>
-		To fix this issue, open the file
-		<i>WEB-INF/config/modulesMapping.properties</i> and remove the key named "install", and
-		then go to the <b>Cache</b> option, in the left menu, and click in the <b>Reload</b> link
-		of the item "Modules".
+	<b>Release notes for version ${latestVersion}:</b>
+	</p>
+
+	<p>
+	<i><span class="gen">${notes}</span></i>
+	</p>
+<#else>
+	<p style="color: green">
+		Your installation is up to date. No updates are available. For more information and news about JForum, please check <a href="http://www.jforum.net" target="_new">http://www.jforum.net</a>
 	</p>
 </#if>
+
+<#if installModuleExists>
+	<h1>Security Warning</h1>
+	<p style="color:red">The <i><b>installation module</b></i> is still enabled. This may allow <b>any</b> user
+	to overwrite your current board installation. </p>
+
+	<p>
+	To fix this issue, open the file
+	<i>WEB-INF/config/modulesMapping.properties</i> and remove the key named "install",
+	then go to the <b>Cache</b> option, in the left menu, and click in the <b>Reload</b> link
+	of the item "Modules".<br/>
+	</p>
+</#if>
+
+<h1>${I18n.getMessage("ForumListing.stats")}</h1>
+
+<table width="100%" cellpadding="4" cellspacing="1" border="0" class="forumline">
+  <tr>
+	<th width="25%" nowrap="nowrap" height="25" class="thCornerL">Statistic</th>
+	<th width="25%" height="25" class="thTop">Value</th>
+
+	<th width="25%" nowrap="nowrap" height="25" class="thTop">Statistic</th>
+	<th width="25%" height="25" class="thCornerR">Value</th>
+  </tr>
+  <tr>
+	<td class="row1" nowrap="nowrap">Number of posts:</td>
+	<td class="row1"><b>${stats.posts}</b></td>
+	<td class="row1" nowrap="nowrap">Posts per day:</td>
+
+	<td class="row2"><b>${stats.postsPerDay}</b></td>
+  </tr>
+  <tr>
+	<td class="row2" nowrap="nowrap">Number of topics:</td>
+	<td class="row2"><b>${stats.topics}</b></td>
+	<td class="row2" nowrap="nowrap">Topics per day:</td>
+	<td class="row2"><b>${stats.topicsPerDay}</b></td>
+
+  </tr>
+  <tr>
+	<td class="row1" nowrap="nowrap">Number of users:</td>
+	<td class="row1"><b>${stats.users}</b></td>
+	<td class="row1" nowrap="nowrap">Users per day:</td>
+	<td class="row1"><b>${stats.usersPerDay}</b></td>
+  </tr>
+
+</table>
+<h1>${I18n.getMessage("ForumListing.whoIsOnline")}</h1>
+
+<div <#if (sessions.size() > 10)>style="overflow: auto; width: 100%; height: 280px;"</#if>>
+<table width="100%" cellpadding="4" cellspacing="1" border="0" class="forumline">
+	<tr>
+		<th width="20%" class="thCornerL" height="25">&nbsp;Username&nbsp;</th>
+		<th width="20%" height="25" class="thTop">&nbsp;Log in&nbsp;</th>
+		<th width="20%" class="thTop">&nbsp;Last Updated&nbsp;</th>
+		<th width="20%" height="25" class="thCornerR">&nbsp;IP Address&nbsp;</th>
+	</tr>
+
+	<#list sessions as s>
+		<#if s_index % 2 == 0>
+			<#assign row = "row2"/>
+		<#else>
+			<#assign row = "row1"/>
+		</#if>
+		<tr>
+			<td width="20%" class="${row}">&nbsp;<span class="gen"><a href="${contextPath}/jforum${extension}?module=adminUsers&action=edit&id=${s.userId}" class="gen">${s.username}</a></span>&nbsp;</td>
+			<td width="20%" align="center" class="${row}">&nbsp;<span class="gen">${s.startTime?time}</span>&nbsp;</td>
+			<td width="20%" align="center" nowrap="nowrap" class="${row}">&nbsp;<span class="gen">${s.sessionLastUpdate()?time}</span>&nbsp;</td>
+			<td width="20%" class="${row}">&nbsp;<span class="gen"><a href="http://network-tools.com/default.asp?host=127.0.0.1" class="gen" target="_blank">${s.ip}</a></span>&nbsp;</td>
+		</tr>
+	</#list>
+
+  <tr>
+	<td colspan="5" height="1" class="row3"><img src="../templates/subSilver/images/spacer.gif" width="1" height="1" alt="."></td>
+  </tr>
+</table>
+</div>
+
+<br />
+
+
+
+<center><span class='copyright'>Copyright &copy; <a href="http://www.jforum.net">JForum Team</a>. All Rights Reserved</span></center>
+
+</body>
+</html>
