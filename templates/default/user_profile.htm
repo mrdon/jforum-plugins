@@ -1,7 +1,11 @@
 <#include "header.htm"/>
 
 <script type="text/javascript">
+<!--
+
 <#include "js/utils.js"/>
+
+-->
 </script>
 
 <table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
@@ -16,12 +20,12 @@
 	</tr>
 
 	<tr>
-		<td class="catleft" align="middle" width="40%" height="28"><b><span class="gen">${I18n.getMessage("UserProfile.avatar")}</span></b></td>
+		<td class="catleft" align="center" width="40%" height="28"><b><span class="gen">${I18n.getMessage("UserProfile.avatar")}</span></b></td>
 		<td class="catright" align="center" width="60%"><b><span class="gen">${I18n.getMessage("UserProfile.allAbout")} ${u.username}</span></b></td>
     </tr>
 
 	<tr>
-		<td class="row1" valign="top" align="middle" height="6">
+		<td class="row1" valign="top" align="center" height="6">
 			<#if (u.avatar?exists && u.avatar?length > 0)>
 				<#if u.isExternalAvatar() || u.avatar.startsWith("http://")>
 					<img src="${u.avatar}" border="0">
@@ -33,7 +37,7 @@
 				${I18n.getMessage("PostShow.ranking")}: ${rank.getRankTitle(u.totalPosts)}
 			
 				<#if karmaEnabled>
-					<br/>${I18n.getMessage("Karma.karma")}: <script language="javascript">writeStars(${u.karma.karmaPoints}, ${u.id});</script>
+					<br/>${I18n.getMessage("Karma.karma")}: <script type="text/javascript">writeStars(${u.karma.karmaPoints}, ${u.id});</script>
 				</#if>
 			</span>
 		</td>
@@ -41,7 +45,7 @@
 		<td class="row1" valign="top" rowspan="3">
 			<table cellspacing="1" cellpadding="3" width="100%" border="0">
 				<tr>
-					<td valign="center" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("UserProfile.registrationDate")}:&nbsp;</span></td>
+					<td valign="middle" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("UserProfile.registrationDate")}:&nbsp;</span></td>
 					<td width="100%"><b><span class="gen">${u.registrationDate}</span></b></td>
 				</tr>
 				
@@ -53,6 +57,7 @@
 						<#else>
 							<span class="gen">${I18n.getMessage("PostShow.noUserCreatedPosts")}</span>
 						</#if>
+					</td>
 				</tr>
 				<tr>
 					<td valign="top" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("ForumListing.userCreatedTopics")}:</span></td>
@@ -66,21 +71,21 @@
 				</tr>
 				<#if (u.location?exists && u.location?length > 0)>
 				<tr>
-					<td valign="center" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("UserProfile.from")}:&nbsp;</span></td>
+					<td valign="middle" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("UserProfile.from")}:&nbsp;</span></td>
 					<td><b><span class="gen">${u.location}</span></b></td>
 				</tr>
 				</#if>
             
 				<#if (u.webSite?exists && u.webSite?length > 0)>
 				<tr>
-					<td valign="center" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("UserProfile.webSite")}:&nbsp;</span></td>
+					<td valign="middle" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("UserProfile.webSite")}:&nbsp;</span></td>
 					<td><span class="gen"><b><a href="${u.webSite}" target="_new">${u.webSite}</a></b></span></td>
 				</tr>
 				</#if>
             
 				<#if (u.occupation?exists && u.occupation?length > 0)>
 				<tr>
-					<td valign="center" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("UserProfile.occupation")}:&nbsp;</span></td>
+					<td valign="middle" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("UserProfile.occupation")}:&nbsp;</span></td>
 					<td><b><span class="gen">${u.occupation}</span></b></td>
 				</tr>
 				</#if>
@@ -116,7 +121,7 @@
 	</tr>
     
 	<tr>
-		<td class="catleft" align="middle" height="28"><b><span class="gen">${I18n.getMessage("UserProfile.contact")} ${u.username}</span></b></td>
+		<td class="catleft" align="center" height="28"><b><span class="gen">${I18n.getMessage("UserProfile.contact")} ${u.username}</span></b></td>
 	</tr>
     
 	<tr>
@@ -124,8 +129,8 @@
 			<table cellspacing="1" cellpadding="3" width="100%" border="0">
 			<#if (u.isViewEmailEnabled() && u.email?exists && u.email?length > 0)>
 			<tr>
-				<td valign="center" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("UserProfile.emailAddress")}:</span></td>
-				<td class="row1" valign="center" width="100%">
+				<td valign="middle" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("UserProfile.emailAddress")}:</span></td>
+				<td class="row1" valign="middle" width="100%">
 					<b><span class="gen">
 					<#assign e = u.email.split("@")/>
 					<a href="#" onclick="document.location = 'mailto:' + showEmail('${e[0]}', '${e[1]}');"><img src="${contextPath}/templates/${templateName}/images/icon_email.gif" border="0" /></a>
@@ -136,10 +141,10 @@
 
 			<#if u.id != 1>
 			<tr>
-				<td valign="center" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("UserProfile.privateMessage")}:</span></td>
-				<td class="row1" valign="center">
+				<td valign="middle" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("UserProfile.privateMessage")}:</span></td>
+				<td class="row1" valign="middle">
 					<b><span class="gen">
-					<a href="${JForumContext.encodeURL("/pm/sendTo/${u.id}")}" class="icon_pm"><img src="${contextPath}/images/transp.gif"/></a>
+					<a href="${JForumContext.encodeURL("/pm/sendTo/${u.id}")}" class="icon_pm"><img src="${contextPath}/images/transp.gif"  alt="" /></a>
 					</span></b>
 				</td>
 			</tr>
@@ -147,21 +152,21 @@
             
 			<#if (u.msnm?exists && u.msnm?length > 0)>
 			<tr>
-				<td valign="center" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("User.msn")}:</span></td>
-				<td class="row1" valign="center"><span class="gen">${u.msnm}</span></td>
+				<td valign="middle" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("User.msn")}:</span></td>
+				<td class="row1" valign="middle"><span class="gen">${u.msnm}</span></td>
 			</tr>
 			</#if>
             
 			<#if (u.yim?exists && u.yim?length > 0)>
 			<tr>
-				<td valign="center" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("User.yahoo")}:</span></td>
-				<td class="row1" valign="center"><span class="gen">${u.yim}</span></td>
+				<td valign="middle" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("User.yahoo")}:</span></td>
+				<td class="row1" valign="middle"><span class="gen">${u.yim}</span></td>
 			</tr>
 			</#if>
 
 			<#if (u.icq?exists && u.icq?length > 0)>
 			<tr>
-				<td valign="center" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("User.icq")}:</span></td>
+				<td valign="middle" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("User.icq")}:</span></td>
 				<td class="row1">
 					<a href="http://wwp.icq.com/scripts/search.dll?to=${u.icq}"><img src="${contextPath}/templates/${templateName}/images/icon_icq_add.gif" border="0" /></a>
 				</td>
