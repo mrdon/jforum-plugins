@@ -50,7 +50,7 @@
 				</span>
 			</td>
 			<td class="row1" align="right" rowspan="2"><span class="gen">${I18n.getMessage("Search.orderBy")}:&nbsp;</span></td>
-			<td class="row2" valign="center" nowrap="nowrap" rowspan="2">
+			<td class="row2" valign="middle" nowrap="nowrap" rowspan="2">
 				<span class="genmed">
 				<select class="post" name="sort_by">
 					<option value="time" selected="selected">${I18n.getMessage("Search.postDate")}</option>
@@ -78,11 +78,13 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="catbottom" align="middle" colspan="4" height="28"><input class="liteoption" type="submit" value="${I18n.getMessage("Search.search")}" /></td>
+			<td class="catbottom" align="center" colspan="4" height="28"><input class="liteoption" type="submit" value="${I18n.getMessage("Search.search")}" /></td>
 		</tr>
 	</table>
 </form>
-<script language="javascript">
+<script type="text/javascript">
+<!--
 document.formSearch.search_keywords.focus();
+-->
 </script>
 <#include "bottom.htm"/>
