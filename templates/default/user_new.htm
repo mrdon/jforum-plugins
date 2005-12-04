@@ -1,5 +1,6 @@
 <#include "header.htm"/>
-<script language="JavaScript" type="text/JavaScript">
+<script type="text/javascript">
+<!--
 function validateRegistrationForm(f)
 {
 	if (f.username.value == "") {
@@ -37,6 +38,8 @@ function validateRegistrationForm(f)
 	
 	return true;
 }
+
+-->
 </script>
 <form id="formregister" accept-charset="${encoding}" name="formregister" action="${JForumContext.encodeURL("/jforum")}" method="post" onsubmit="return validateRegistrationForm(this);">
 <input type="hidden" name="action" value="${action}" />
@@ -53,7 +56,7 @@ function validateRegistrationForm(f)
 		
 <table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
 	<tr>
-		<th class="thhead" valign="center" colspan="2" height="25">${I18n.getMessage("User.registerInformation")}</th>
+		<th class="thhead" valign="middle" colspan="2" height="25">${I18n.getMessage("User.registerInformation")}</th>
 	</tr>
         
 	<tr>
@@ -85,7 +88,7 @@ function validateRegistrationForm(f)
 			<td class="row1" width="38%"><span class="gen">${I18n.getMessage("User.captchaResponse")}: *</span></td>
 			<td class="row2">
 				<input class="post" style="WIDTH: 200px; font-weight: bold;" maxlength="25" size="25" name="captchaResponse" /> 
-				<img src="${JForumContext.encodeURL("/captcha/generate")}" border="0" align="middle">
+				<img src="${JForumContext.encodeURL("/captcha/generate")}" border="0" align="middle" alt="Captcha unavailable" />
 			</td>
 		</tr>
 	</#if>
@@ -98,8 +101,8 @@ function validateRegistrationForm(f)
         
 	<tr align="center">
 		<td class="catbottom" colspan="2" height="28">
-			<input class="mainoption" type="submit" value="${I18n.getMessage("User.submit")}" name=submit />&nbsp;&nbsp;
-			<input class="liteoption" type="reset" value="${I18n.getMessage("User.reset")}" name=reset />
+			<input class="mainoption" type="submit" value="${I18n.getMessage("User.submit")}" name="submit" />&nbsp;&nbsp;
+			<input class="liteoption" type="reset" value="${I18n.getMessage("User.reset")}" name="reset" />
 		</td>
 	</tr>
 </table>

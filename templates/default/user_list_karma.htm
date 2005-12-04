@@ -19,7 +19,7 @@
 		<tr align="center">		  
 			<td class="row2"><span class="gen">${user.id} </span></td>			
 			<td class="row2"><span class="gen"><a href="${JForumContext.encodeURL("/user/profile/${user.id}")}">${user.username}</a></span></td>
-			<td class="row2"><span class="gen"><#if user.id != 1><a href="${JForumContext.encodeURL("/pm/sendTo/${user.id}")}" class="icon_pm"><img src="${contextPath}/images/transp.gif"/></a><#else>&nbsp;</#if></span></td>
+			<td class="row2"><span class="gen"><#if user.id != 1><a href="${JForumContext.encodeURL("/pm/sendTo/${user.id}")}" class="icon_pm"><img src="${contextPath}/images/transp.gif" alt="" /></a><#else>&nbsp;</#if></span></td>
 			<td class="row2"><span class="gen">${user.karma.totalPoints}</span></td>
 			<td class="row2"><span class="gen">${user.karma.votesReceived}</span></td>
 			<td class="row2"><span class="gen">${user.karma.votesGiven}</span></td>
@@ -32,22 +32,22 @@
 	</tr>
 </table>
 <#else>
-<TABLE cellSpacing=0 cellPadding=10 width="100%" align=center border=0>
-  <TR>
-    <TD class="bodyline" valign="top">
-      <TABLE cellSpacing=2 cellPadding=2 width="100%" align=center border=0>
-        <TR>
-          <TD vAlign=bottom align=left>
+<table cellspacing="0" cellpadding="10" width="100%" align="center" border="0">
+  <tr>
+    <td class="bodyline" valign="top">
+      <table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
+        <tr>
+          <td valign="bottom" align="left">
 		  <span class="maintitle">${I18n.getMessage("Generic.recordsNotFound")}</span>
-          </TD>
-        </TR>
-      </TABLE>
-    </TD>
-  </TR>
-</TABLE>   
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>   
 </#if>
 
-</form>
+
 <table width="100%">
 	<tr>
 		<td align="right"><#if thisPage?exists><@pagination.doPagination "list", -1/></#if></td>
