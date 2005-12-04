@@ -3,7 +3,8 @@
 	<tbody>
 		<tr>
 			<td class="bodyline">
-				<script language="JavaScript" type="text/javascript">
+				<script type="text/javascript">
+				<!--
 				//
 				// Should really check the browser to stop this whining ...
 				//
@@ -13,20 +14,21 @@
 						document.privmsg_list.elements[i].checked = status;
 					}
 				}
+				-->
 				</script>
 
 				<table cellspacing="0" cellpadding="0" width="100%" align="center" border="0">
 					<tbody>
 						<tr>
-							<td valign="top" align="middle" width="100%">
-								<table height="40" cellspacing="2" cellpadding="2" border="0">
+							<td valign="top" align="center" width="100%">
+								<table cellspacing="2" cellpadding="2" border="0">
 									<tbody>
-										<tr valign="center">
+										<tr valign="middle">
 											<td>
 												<#if !inbox?default(false)>
 												<a href="${JForumContext.encodeURL("/pm/inbox")}">
 												</#if>
-												<img src="${contextPath}/templates/${templateName}/images/msg_inbox.gif" border="0" />
+												<img src="${contextPath}/templates/${templateName}/images/msg_inbox.gif" border="0" alt="[Inbox]" />
 												<#if !inbox?default(false)>
 												</a>
 												</#if>
@@ -44,7 +46,7 @@
 												<#if !sentbox?default(false)>
 												<a href="${JForumContext.encodeURL("/pm/sentbox")}">
 												</#if>
-												<img src="${contextPath}/templates/${templateName}/images/msg_sentbox.gif" border="0" />
+												<img src="${contextPath}/templates/${templateName}/images/msg_sentbox.gif" border="0" alt="[Sentbox]" />
 												<#if !sentbox?default(false)>
 												</a>
 												</#if>
@@ -53,7 +55,7 @@
 												<#if !sentbox?default(false)>
 												<a href="${JForumContext.encodeURL("/pm/sentbox")}">
 												</#if>
-												<span class="cattitle">${I18n.getMessage("PrivateMessage.sentbox")}</a> &nbsp;</span>
+												<span class="cattitle">${I18n.getMessage("PrivateMessage.sentbox")}&nbsp;</span>
 												<#if !sentbox?default(false)>
 												</a>
 												</#if>
@@ -67,17 +69,17 @@
 				</table>
 				<br clear="all" />
 				<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="privmsg_list" id="privmsg_list">
-				<input type="hidden" name="module" value="${moduleName}">
-				<input type="hidden" name="action" value="delete">
+				<input type="hidden" name="module" value="${moduleName}" />
+				<input type="hidden" name="action" value="delete" />
 					<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
 						<tbody>
 							<tr>
-								<td valign="center" align="left">
-									<a href="${JForumContext.encodeURL("/pm/send")}" class="icon_new_topic"><img src="${contextPath}/images/transp.gif"/></a>
+								<td valign="middle" align="left">
+									<a href="${JForumContext.encodeURL("/pm/send")}" class="icon_new_topic"><img src="${contextPath}/images/transp.gif" alt="New Topic" /></a>
 								</td>
 								<td align="left" width="100%">
 									<span class="nav">
-									 <A class=nav href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a>
+									 <a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a>
 									 </span>
 								</td>
 							</tr>
@@ -108,23 +110,23 @@
 							</tr>
 							<#list pmList as pm>
 							<tr>
-								<td class="row1" valign="center" align="middle" width="5%">
+								<td class="row1" valign="middle" align="center" width="5%">
 									<#if pm.type == NEW>
-										<img src="${contextPath}/templates/${templateName}/images/folder_new.gif" />
+										<img src="${contextPath}/templates/${templateName}/images/folder_new.gif" alt="New Folder" />
 									<#else>
-										<img src="${contextPath}/templates/${templateName}/images/folder.gif" />
+										<img src="${contextPath}/templates/${templateName}/images/folder.gif" alt="Folder" />
 									</#if>
 								</td>
-								<td class="row1" valign="center" width="55%"><span class="topictitle">&nbsp;<a class="topictitle" href="${JForumContext.encodeURL("/pm/read/${pm.id}")}">${pm.post.subject}</a></span></td>
-								<td class="row1" valign="center" align="middle" width="20%">
+								<td class="row1" valign="middle" width="55%"><span class="topictitle">&nbsp;<a class="topictitle" href="${JForumContext.encodeURL("/pm/read/${pm.id}")}">${pm.post.subject}</a></span></td>
+								<td class="row1" valign="middle" align="center" width="20%">
 									<#if inbox?default(false)>
 									<span class="name">&nbsp;<a class="name" href="${JForumContext.encodeURL("/user/profile/${pm.fromUser.id}")}">${pm.fromUser.username}</a></span>
 									<#else>
 									<span class="name">&nbsp;<a class="name" href="${JForumContext.encodeURL("/user/profile/${pm.toUser.id}")}">${pm.toUser.username}</a></span>
 									</#if>
 								</td>
-								<td class="row1" valign="center" align="middle" width="15%"><span class="postdetails">${pm.formatedDate}</span></td>
-								<td class="row1" valign="center" align="middle" width="5%"><span class="postdetails"><input type="checkbox" value="${pm.id}" name="id" /></span></td>
+								<td class="row1" valign="middle" align="center" width="15%"><span class="postdetails">${pm.formatedDate}</span></td>
+								<td class="row1" valign="middle" align="center" width="5%"><span class="postdetails"><input type="checkbox" value="${pm.id}" name="id" /></span></td>
 							</tr>
 							</#list>
 							<tr>
@@ -139,10 +141,10 @@
 					<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
 						<tbody>
 							<tr>
-								<td valign="center" align="left">
-									<a href="${JForumContext.encodeURL("/pm/send")}" class="icon_new_topic nav"><img src="${contextPath}/images/transp.gif"/></a>
+								<td valign="middle" align="left">
+									<a href="${JForumContext.encodeURL("/pm/send")}" class="icon_new_topic nav"><img src="${contextPath}/images/transp.gif" alt="" /></a>
 								</td>
-								<td valign="center" align="left" width="100%"><span class="nav"></span></td>
+								<td valign="middle" align="left" width="100%"><span class="nav"></span></td>
 								<td valign="top" nowrap="nowrap" align="right">
 									<b><span class="gensmall"><a class="gensmall" href="javascript:select_switch(true);">${I18n.getMessage("PrivateMessage.checkAll")}</a> :: 
 									<a class="gensmall" href="javascript:select_switch(false);">${I18n.getMessage("PrivateMessage.uncheckAll")}</a></span></b>
