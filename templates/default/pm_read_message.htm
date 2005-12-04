@@ -6,13 +6,13 @@
 				<table cellspacing="0" cellpadding="0" width="100%" align="center" border="0">
                   <tbody>
                     <tr>
-                      <td valign="top" align="middle" width="100%">
-                        <table height="40" cellspacing="2" cellpadding="2" border="0">
+                      <td valign="top" align="center" width="100%">
+                        <table cellspacing="2" cellpadding="2" border="0">
                           <tbody>
-                            <tr valign="center">
-                              <td> <a href="${JForumContext.encodeURL("/pm/inbox")}"> <img src="${contextPath}/templates/${templateName}/images/msg_inbox.gif" border="0" /> </a></td>
+                            <tr valign="middle">
+                              <td> <a href="${JForumContext.encodeURL("/pm/inbox")}"> <img src="${contextPath}/templates/${templateName}/images/msg_inbox.gif" alt="[Inbox]" /> </a></td>
                               <td> <a href="${JForumContext.encodeURL("/pm/inbox")}"> <span class="cattitle">${I18n.getMessage("PrivateMessage.inbox")} &nbsp;</span> </a> </td>
-                              <td> <a href="${JForumContext.encodeURL("/pm/sentbox")}"> <img src="${contextPath}/templates/${templateName}/images/msg_sentbox.gif" border="0" />  </a></td>
+                              <td> <a href="${JForumContext.encodeURL("/pm/sentbox")}"> <img src="${contextPath}/templates/${templateName}/images/msg_sentbox.gif" alt="[Sentbox]" />  </a></td>
                               <td> <a href="${JForumContext.encodeURL("/pm/sentbox")}"> <span class="cattitle">${I18n.getMessage("PrivateMessage.sentbox")}</span></a><span class="cattitle"> &nbsp;</span></td>
                             </tr>
                           </tbody>
@@ -23,15 +23,15 @@
                 </table>
 				<br clear="all" />
 				<form action="${JForumContext.encodeURL("/jforum")}" method="post">
-				<input type="hidden" name="module" value="${moduleName}">
-				<input type="hidden" name="action" value="delete">
+				<input type="hidden" name="module" value="${moduleName}" />
+				<input type="hidden" name="action" value="delete" />
 					<table cellspacing="2" cellpadding="2" width="100%" border="0">
 						<tbody>
 							<tr>
-								<td valign="center"><a href="${JForumContext.encodeURL("/pm/reply/${pm.id}")}" class="icon_reply"><img src="${contextPath}/images/transp.gif"/></a>
+								<td valign="middle"><a href="${JForumContext.encodeURL("/pm/reply/${pm.id}")}" class="icon_reply"><img src="${contextPath}/images/transp.gif" alt="" /></a>
 								</td>
 								<td width="100%">
-									<span class="nav">&nbsp;<A class=nav href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a></span>
+									<span class="nav">&nbsp;<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a></span>
 								</td>
 							</tr>
 						</tbody>
@@ -57,7 +57,7 @@
 								<td class="row2"><span class="genmed">${I18n.getMessage("PrivateMessage.subject")}:</span></td>
 								<td class="row2" width="100%"><span class="genmed">${pm.post.subject}</span></td>
 								<td class="row2" nowrap="nowrap" align="right">
-									<a href="${JForumContext.encodeURL("/pm/quote/${pm.id}")}" class="icon_quote"><img src="${contextPath}/images/transp.gif"/></a>
+									<a href="${JForumContext.encodeURL("/pm/quote/${pm.id}")}" class="icon_quote"><img src="${contextPath}/images/transp.gif" alt="" /></a>
 								</td>
 							</tr>
 							<tr>
@@ -82,7 +82,7 @@
 					<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
 						<tbody>
 							<tr>
-								<td><a href="${JForumContext.encodeURL("/pm/reply/${pm.id}")}" class="icon_reply"><img src="${contextPath}/images/transp.gif"/></a></td>
+								<td><a href="${JForumContext.encodeURL("/pm/reply/${pm.id}")}" class="icon_reply"><img src="${contextPath}/images/transp.gif" alt="" /></a></td>
 							</tr>
 						</tbody>
 					</table>
