@@ -1,11 +1,10 @@
 <#list attachments as a>
-	<p>
 	<table width="70%" border="1" cellpadding="2" cellspacing="0" class="attachtable" align="center">
                 <#assign physicalDownloadMode = am.isPhysicalDownloadMode(a.info.extension.extensionGroupId) />
 		<tr>
 			<td width="100%" colspan="3" class="attachheader" align="center">
                             <#if (!physicalDownloadMode)>
-                              <img src="${JForumContext.encodeURL("/posts/downloadAttach/${a.id}")}">
+                              <img src="${JForumContext.encodeURL("/posts/downloadAttach/${a.id}")}" alt="" />
                             <#else>
                               <b><span class="gen">${a.info.realFilename}</span></b>
                             </#if>
@@ -24,8 +23,8 @@
 			<td width="75%" class="attachrow"><span class="genmed">${a.info.comment?default(I18n.getMessage("Attachments.noDescription"))}</span></td>
                         <#if (physicalDownloadMode)>
                           <td rowspan="3" align="center">
-                            <img src="${contextPath}/templates/${templateName}/images/icon_disk.gif">
-                              <a href="${JForumContext.encodeURL("/posts/downloadAttach/${a.id}")}" class="gensmall"><b>${I18n.getMessage("Attachments.download")}</a></a>
+                            <img src="${contextPath}/templates/${templateName}/images/icon_disk.gif" alt="[Disk]" />
+                              <a href="${JForumContext.encodeURL("/posts/downloadAttach/${a.id}")}" class="gensmall"><b>${I18n.getMessage("Attachments.download")}</b></a>
                             </td>
                         </#if>
 		</tr>
@@ -35,9 +34,9 @@
                     <td class="attachrow">
                       <span class="genmed">
                           <#if (a.info.filesize < 1024)>
-                            ${a.info.filesize} bytes
+                            ${a.info.filesize} byte
                           <#else>
-                            ${a.info.filesize / 1024} kb
+                            ${a.info.filesize / 1024} Kibyte
                           </#if>
                         </span>
                       </td>
@@ -48,5 +47,4 @@
 			<td class="attachrow"><span class="genmed">&nbsp;${a.info.downloadCount} ${I18n.getMessage("Attachments.time")}</span></td>
 		</tr>
 	</table>
-	</p>
 </#list>
