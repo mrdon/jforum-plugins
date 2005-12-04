@@ -560,7 +560,7 @@ function validatePostForm(f)
 	<td colspan="2">
 		<table border="0" cellpadding="3" cellspacing="0" width="100%" class="forumline">
 			<tr>
-				<td class="cathead" height="28" align="center"><b><span class="cattitle">${I18n.getMessage("PostShow.topicReview")}</span></b></th>
+				<th class="cathead" height="28" align="center"><b><span class="cattitle">${I18n.getMessage("PostShow.topicReview")}</span></b></th>
 			</tr>
 	
 			<tr>
@@ -570,6 +570,7 @@ function validatePostForm(f)
 					<#else>
 						<iframe width="100%" height="300" frameborder="0" src="${JForumContext.encodeURL("/posts/review/${start}/${topic.id}")}" ></iframe>
 					</#if>
+				</td>
 			</tr>
 			
 		</table>
