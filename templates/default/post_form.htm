@@ -416,7 +416,7 @@ function validatePostForm(f)
 					</td>
 				</tr>
 				
-				<#if setType && canCreatePolls?default(false)>
+				<#if setType?default(true) && canCreatePolls?default(false)>
 					<#if poll?exists>
 						<#assign pollQuestion = poll.label/>
 						<#assign pollLength = poll.length/>
