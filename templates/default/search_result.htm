@@ -5,198 +5,199 @@
 <#import "../macros/search_pagination.ftl" as pagination>
 <#import "../macros/presentation.ftl" as presentation/>
 
-<TABLE cellSpacing=0 cellPadding=10 width="100%" align=center border=0>
-  <TR>
-    <TD class="bodyline" valign="top">
-      <TABLE cellSpacing=2 cellPadding=2 width="100%" align=center border=0>
-        <TR>
-          <TD vAlign=bottom align=left>
+<table cellspacing="0" cellpadding="10" width="100%" align="center" border="0">
+  <tr>
+    <td class="bodyline" valign="top">
+      <table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
+        <tr>
+          <td valign="bottom" align="left">
 		  <span class="maintitle">${I18n.getMessage("Search.searchResults")}:
 		  ${totalRecords} <#if (totalRecords == 1)>${I18n.getMessage("Search.recordFound")}<#else>${I18n.getMessage("Search.recordsFound")}</#if>
 		  </span>
-		 <BR>
-            </TD>
-          <TD vAlign=bottom noWrap align=right>
+		 <br/>
+            </td>
+          <td valign="bottom" nowrap="nowrap" align="right">
 		  
 		  <@pagination.searchPagination kw?default(""), terms?default(""), forum?default(""), category?default(""), orderField?default(""), orderBy?default(""), author?default(""), postTime?default("")/>
-		  </TD></TR>
-        <TR>
-          <TD align=left vAlign=center>		  
-		    <A class=nav href="${contextPath}/forums/list${extension}">${I18n.getMessage("ForumListing.forumIndex")}</A>
+		  </td></tr>
+        <tr>
+          <td align="left" valign="middle">		  
+		    <a class="nav" href="${contextPath}/forums/list${extension}">${I18n.getMessage("ForumListing.forumIndex")}</a>
 		</td>
-          <TD class=nav vAlign=bottom noWrap align=right>
-		  <SPAN class=gensmall>
+          <td class="nav" valign="bottom" nowrap="nowrap" align="right">
+		  <span class="gensmall">
 		  <#if (moderator && totalRecords > 0)>
 				<#if openModeration?default(false)>
 					<#assign mp = pagination.moderationParams("0")/>
-					<a href="${contextPath}/jforum${extension}?module=search&action=search&${mp}&start=${start}">${I18n.getMessage("Moderation.CloseModeration")}</a>
+					<a href="${contextPath}/jforum${extension}?module=search&amp;action=search&amp;${mp}&amp;start=${start}">${I18n.getMessage("Moderation.CloseModeration")}</a>
 				<#else>
 					<#assign mp = pagination.moderationParams("1")/>
-					<a href="${contextPath}/jforum${extension}?module=search&action=search&${mp}&start=${start}">${I18n.getMessage("Moderation.OpenModeration")}</a>
+					<a href="${contextPath}/jforum${extension}?module=search&amp;action=search&amp;${mp}&amp;start=${start}">${I18n.getMessage("Moderation.OpenModeration")}</a>
 				</#if>
 			</#if>
-		  </SPAN></TD>
-        </TR></TABLE>
+		  </span></td>
+        </tr></table>
 
 <#if moderator>
 	<form accept-charset="${encoding}" action="${contextPath}/jforum${extension}" method="post" name="form1">
-	<input type="hidden" name="action" value="doModeration">
-	<input type="hidden" name="module" value="${moduleName}">
-	<input type="hidden" name="securityHash" value="${securityHash}">
-	<input type="hidden" name="start" value="${thisPage}">
+	<input type="hidden" name="action" value="doModeration" />
+	<input type="hidden" name="module" value="${moduleName}" />
+	<input type="hidden" name="securityHash" value="${securityHash}" />
+	<input type="hidden" name="start" value="${thisPage}" />
 	<#assign mp = pagination.moderationParams("")/>
-	<input type="hidden" name="persistData" value="${mp}">
+	<input type="hidden" name="persistData" value="${mp}" />
 </#if>
 		
-   <TABLE class=forumline cellSpacing=1 cellPadding=4 width="100%" border=0>
-        <TR>
-          <th class="thcornerl" noWrap align=middle height=25 width="20">&nbsp;</th>
-          <TH class="thcornerl" noWrap align=middle height=25>&nbsp;${I18n.getMessage("Forums.Form.ForumName")}&nbsp;</TH>
-          <TH class="thcornerl" noWrap align=middle height=25>&nbsp;${I18n.getMessage("ForumIndex.topics")}&nbsp;</TH>
-          <TH class="thtop" noWrap align=middle width=50>&nbsp;${I18n.getMessage("ForumIndex.answers")}&nbsp;</TH>
-          <TH class="thtop" noWrap align=middle width=100>&nbsp;${I18n.getMessage("ForumIndex.author")}&nbsp;</TH>
-          <TH class="thtop" noWrap align=middle width=50>&nbsp;${I18n.getMessage("ForumIndex.views")}&nbsp;</TH>
-          <TH class="thcornerr" noWrap align=middle width="150">&nbsp;${I18n.getMessage("ForumIndex.lastMessage")}&nbsp;</TH>
+   <table class="forumline" cellspacing="1" cellpadding="4" width="100%" border="0">
+        <tr>
+          <th class="thcornerl" nowrap="nowrap" align="center" height="25" width="20">&nbsp;</th>
+          <th class="thcornerl" nowrap="nowrap" align="center" height="25">&nbsp;${I18n.getMessage("Forums.Form.ForumName")}&nbsp;</th>
+          <th class="thcornerl" nowrap="nowrap" align="center" height="25">&nbsp;${I18n.getMessage("ForumIndex.topics")}&nbsp;</th>
+          <th class="thtop" nowrap="nowrap" align="center" width="50">&nbsp;${I18n.getMessage("ForumIndex.answers")}&nbsp;</th>
+          <th class="thtop" nowrap="nowrap" align="center" width="100">&nbsp;${I18n.getMessage("ForumIndex.author")}&nbsp;</th>
+          <th class="thtop" nowrap="nowrap" align="center" width="50">&nbsp;${I18n.getMessage("ForumIndex.views")}&nbsp;</th>
+          <th class="thcornerr" nowrap="nowrap" align="center" width="150">&nbsp;${I18n.getMessage("ForumIndex.lastMessage")}&nbsp;</th>
 		  <#if moderator && openModeration?default(false)>
-		  	<TH class=thcornerr noWrap align=middle>&nbsp;Moderation&nbsp;</TH>
+		  	<th class="thcornerr" nowrap="nowrap" align="center">&nbsp;Moderation&nbsp;</th>
 		  </#if>
-		</TR>        
+		</tr>        
 		<!-- TOPICS LISTING -->
 <#list topics as topic>
 		<#assign forum = fr.getForum(topic.forumId)/>
 
-		<TR>
-          <TD class=row1 vAlign=center align=middle width="20">
+		<tr>
+          <td class="row1" valign="middle" align="center" width="20">
 		 <@presentation.folderImage topic/>
-		</TD>
+		</td>
 		<td class="row1">
 			<span class="topictitle">
 				<a href="${contextPath}/forums/show/${forum.id}${extension}">${forum.name}</a>
 			</span>
 		</td>
-          <TD class="row1">
-		  	<SPAN class="topictitle">
+          <td class="row1">
+		  	<span class="topictitle">
 				<a href="${contextPath}/posts/list/${topic.id}${extension}"><#if (topic.title?length == 0)>No Subject<#else>${topic.title?html}</#if></a>
-			</SPAN>
+			</span>
 
 			<#if topic.paginate>
-				<span class=gensmall>
-				<br>
+				<span class="gensmall">
+				<br/>
 				<@topicPagination.littlePostPagination topic.id, postsPerPage, topic.totalReplies/>
 				</span>
 			</#if>
-		</TD>
-          <TD class="row2" vAlign="center" align="center"><SPAN 
-            class=postdetails>${topic.totalReplies}</SPAN></TD>
-          <TD class=row3 vAlign=center align="center">
-		  	<SPAN class=name><a href="${contextPath}/user/profile/${topic.postedBy.id}${extension}">${topic.postedBy.username}</a></SPAN>
-		</TD>
-          <TD class="row2" vAlign="center" align="center">
-		  <SPAN class=postdetails>${topic.totalViews}</SPAN></TD>
-          <TD class=row3 vAlign=center noWrap align="center">
+		</td>
+          <td class="row2" valign="middle" align="center"><span 
+            class="postdetails">${topic.totalReplies}</span></td>
+          <td class="row3" valign="middle" align="center">
+		  	<span class="name"><a href="${contextPath}/user/profile/${topic.postedBy.id}${extension}">${topic.postedBy.username}</a></span>
+		</td>
+          <td class="row2" valign="middle" align="center">
+		  <span class="postdetails">${topic.totalViews}</span></td>
+          <td class="row3" valign="middle" nowrap="nowrap" align="center">
 		  <#if (topic.lastPostTime?length > 0)>
-			  <SPAN class=postdetails>${topic.lastPostTime}<BR>
+			  <span class="postdetails">${topic.lastPostTime}<br/>
 			  <a href="${contextPath}/user/profile/${topic.lastPostBy.id}${extension}">${topic.lastPostBy.username}</a>
 			  
 			<#assign startPage = ""/>
 			<#if (topic.totalReplies + 1 > postsPerPage)>
 				<#assign startPage = ((topic.totalReplies / postsPerPage)?int * postsPerPage) +"/"/>
 			</#if>
-			<a href="${contextPath}/posts/list/${startPage}${topic.id}${extension}#${topic.lastPostId}"><img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif" border="0"></a></SPAN>
+			<a href="${contextPath}/posts/list/${startPage}${topic.id}${extension}#${topic.lastPostId}"><img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif" border="0" alt="[Latest Reply]" /></a></span>
 			</#if>
-		 </TD>
+		 </td>
 		  <#if moderator && openModeration?default(false)>
 			 <td class="row2" valign="middle" align="center">
-			 <input type="checkbox" name="topic_id" value="${topic.id}">
+			 <input type="checkbox" name="topic_id" value="${topic.id}" />
 			 </td>
 		 </#if>
-        </TR>
+        </tr>
 </#list>		
 		<!-- END OF TOPICS LISTING -->
 		
-        <TR>
-          <TD class="catbottom" vAlign=center align=right colSpan="<#if moderator && openModeration?default(false)>8<#else>7</#if>" height=28>&nbsp;
+        <tr>
+          <td class="catbottom" valign="middle" align="right" colspan="<#if moderator && openModeration?default(false)>8<#else>7</#if>" height="28">&nbsp;
 		  <@presentation.moderationButtons/>
-		  </TD>
-        </TR></TABLE>
+		  </td>
+        </tr></table>
 		
-		<#if moderator></FORM></#if>
+		<#if moderator></form></#if>
 		
-      <TABLE cellSpacing=2 cellPadding=2 width="100%" align=center border=0>
+      <table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
         
-        <TR>
-          <TD align=left vAlign=center>		  <SPAN class=nav>&nbsp;&nbsp;&nbsp;
-		  	<A class=nav href="${contextPath}/forums/list${extension}">${I18n.getMessage("ForumListing.forumIndex")}</A></SPAN></TD>
-          <TD vAlign=center noWrap align=right>
+        <tr>
+          <td align="left" valign="middle">		  <span class="nav">&nbsp;&nbsp;&nbsp;
+		  	<a class="nav" href="${contextPath}/forums/list${extension}">${I18n.getMessage("ForumListing.forumIndex")}</a></span></td>
+          <td valign="middle" nowrap="nowrap" align="right">
 		  
 		  <@pagination.searchPagination kw?default(""), terms?default(""), forum?default(""), category?default(""), orderField?default(""), orderBy?default(""), author?default(""), postTime?default("")/>
 		  
-		  </TD>
-        </TR>
-        <TR>
-          <TD align=left colSpan=2></TD></TR></TABLE>
+		  </td>
+        </tr>
+        <tr>
+          <td align="left" colspan="2"></td></tr></table>
 		 
-      <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+      <table cellspacing="0" cellpadding="0" width="100%" border="0">
        
-        <TR>
-          <TD align=right>
-            <TABLE cellSpacing=0 cellPadding=0 border=0>
+        <tr>
+          <td align="right">
+            <table cellspacing="0" cellpadding="0" border="0">
               
-              <TR>			  
-                <TD noWrap><form accept-charset="${encoding}" name="f"><SPAN class=gensmall>${I18n.getMessage("ForumIndex.goTo")}:&nbsp;<SELECT onchange="if(this.options[this.selectedIndex].value != -1){ document.location = '${contextPath}/forums/show/'+ this.options[this.selectedIndex].value +'${extension}'; }" name=select>
-				<OPTION value=-1 selected>${I18n.getMessage("ForumIndex.goToSelectAForum")}</OPTION>				
+              <tr>			  
+                <td nowrap="nowrap"><form action="" accept-charset="${encoding}" name="f"><span class="gensmall">${I18n.getMessage("ForumIndex.goTo")}:&nbsp;<select onchange="if(this.options[this.selectedIndex].value != -1){ document.location = '${contextPath}/forums/show/'+ this.options[this.selectedIndex].value +'${extension}'; }" name="select">
+				<option value="-1" selected="selected">${I18n.getMessage("ForumIndex.goToSelectAForum")}</option>				
 				<#list categories as category>
-					<OPTION value=-1>&nbsp;</OPTION>
+					<option value="-1">&nbsp;</option>
 					<option value="-1">${category.name}</option>
 					<option value="-1">-------------</option>
 					<#list category.getForums() as forum>
 					<option value="${forum.id}">${forum.name}</option>
 					</#list>
 				</#list>
-				</SELECT>				  
+				</select>				  
 				  &nbsp;
-                <INPUT class=liteoption type=button value="${I18n.getMessage("ForumIndex.goToGo")}" onClick="if(document.f.select.options[document.f.select.selectedIndex].value != -1){ document.location = '${contextPath}/forums/show/'+ document.f.select.options[document.f.select.selectedIndex].value +'${extension}'; }">
+                <input class="liteoption" type="button" value="${I18n.getMessage("ForumIndex.goToGo")}" onclick="if(document.f.select.options[document.f.select.selectedIndex].value != -1){ document.location = '${contextPath}/forums/show/'+ document.f.select.options[document.f.select.selectedIndex].value +'${extension}'; }" />
+		</span>
 				</form>
-				</TD></TR></TABLE></TD></TR></TABLE>
+				</td></tr></table></td></tr></table>
       <table cellspacing="0" cellpadding="0" width="100%" align="center" border="0">
 				<tr>
 					<td valign="top" align="left">
 						<table cellspacing="3" cellpadding="0" border="0">
 							<tr>
-								<td align="left" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_new.gif"/></td>
+								<td align="left" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_new.gif" alt="[New Folder]"/></td>
 								<td class="gensmall">${I18n.getMessage("ForumIndex.newMessages")}</td>
 								<td>&nbsp;&nbsp;</td>
-								<td align="middle" width="20"><img src="${contextPath}/templates/${templateName}/images/folder.gif"/></td>
+								<td align="center" width="20"><img src="${contextPath}/templates/${templateName}/images/folder.gif" alt="[Folder]" /></td>
 								<td class="gensmall">${I18n.getMessage("ForumIndex.noNewMessages")}</td>
 								<td>&nbsp;&nbsp;</td>
-								<td align="middle" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_announce.gif"/></td>
+								<td align="center" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_announce.gif" alt="[Announce]"/></td>
 								<td class="gensmall">${I18n.getMessage("ForumIndex.announce")}</td>
 							</tr>
 							
 							<tr>
-								<td align="middle" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_new_hot.gif"/></td>
+								<td align="center" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_new_hot.gif" alt="[New Hot]" /></td>
 								<td class="gensmall">${I18n.getMessage("ForumIndex.newMessagesHot")}</td>
 								<td>&nbsp;&nbsp;</td>
-								<td align="middle" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_hot.gif"/></td>
+								<td align="center" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_hot.gif" alt="[Hot]" /></td>
 								<td class="gensmall">${I18n.getMessage("ForumIndex.noNewMessagesHot")}</td>
 								<td>&nbsp;&nbsp;</td>
-								<td align="middle" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_sticky.gif"/></td>
+								<td align="center" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_sticky.gif" alt="[Sticky]" /></td>
 								<td class="gensmall">${I18n.getMessage("ForumIndex.sticky")}</td>
 							</tr>
 
 							<tr>
-								<td align="middle" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_lock_new.gif"/></td>
+								<td align="center" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_lock_new.gif" alt="[New Lock]" /></td>
 								<td class="gensmall">${I18n.getMessage("ForumIndex.newMessagesBlocked")}</td>
 								<td>&nbsp;&nbsp;</td>
-								<td align="middle" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_lock.gif"/></td>
+								<td align="center" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_lock.gif" alt="[Lock]" /></td>
 								<td class="gensmall">${I18n.getMessage("ForumIndex.noNewMessagesBlocked")}</td>
 								<td>&nbsp;&nbsp;</td>
 								<td colspan="2"></td>
-							</t>
+							</tr>
 						</table>
 					</td>
 					<td align="right"><span class="gensmall"></span></td>
 				</tr>
 			</table>
-    </TD></TR></TABLE>
+    </td></tr></table>
 <#include "bottom.htm"/>
