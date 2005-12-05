@@ -176,19 +176,25 @@ function storeCaret(textEl) {
 	if (textEl.createTextRange) textEl.caretPos = document.selection.createRange().duplicate();
 }
 
-function preview()
+function previewMessage()
 {
 	var f = document.post;
 
-	var p = { 
-		text:f.message.value, 
-		subject:f.subject.value, 
-		htmlEnabled:!f.disable_html.checked, 
-		bbCodeEnabled:!f.disable_bbcode.checked, 
-		smiliesEnabled:!f.disable_smilies.checked 
-	};
+	if (supportAjax()) {
+		var p = { 
+			text:f.message.value, 
+			subject:f.subject.value, 
+			htmlEnabled:!f.disable_html.checked, 
+			bbCodeEnabled:!f.disable_bbcode.checked, 
+			smiliesEnabled:!f.disable_smilies.checked 
+		};
 
-	AjaxUtils.previewPost(previewCallback, p);
+		AjaxUtils.previewPost(p, previewCallback);
+	}
+	else {
+		f.preview.value = "1";
+		f.submit();
+	}
 }
 
 function previewCallback(post)

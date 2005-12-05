@@ -1,15 +1,13 @@
 <#include "header.htm"/>
-<#if !preview?exists>
-	<#assign preview = false/>
-</#if>
+<#assign preview = preview?default(false)/>
 
-<script type="text/javascript" src="${contextPath}/dwr/dwr${extension}?script=AjaxUtils"></script>
+<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/utils.js"></script>
+<script type="text/javascript" src="${contextPath}/dwr/interface/AjaxUtils.js"></script>
 <script type="text/javascript" src="${contextPath}/templates/${templateName}/js/dwr-engine.js"></script>
 <script type="text/javascript" src="${contextPath}/templates/${templateName}/js/dwr-util.js"></script>
 <script type="text/javascript">
 <!--
 <#include "js/bbcode_help.js"/>
-
 -->
 </script>
 <script type="text/javascript" src="${contextPath}/templates/${templateName}/js/post.js"></script>
@@ -82,6 +80,7 @@ function validatePostForm(f)
 <form action="${JForumContext.encodeURL("/jforum")}" method="post" enctype="multipart/form-data" name="post" id="post" onsubmit="return validatePostForm(this)">
 <input type="hidden" name="action" value="${action}" />
 <input type="hidden" name="module" value="${moduleName}" />
+<input type="hidden" name="preview" value="0"/>
 <input type="hidden" name="securityHash" value="${securityHash}" />
 <#if forum?exists><input type="hidden" name="forum_id" value="${forum.id}" /></#if>
 <input type="hidden" name="start" value="${start?default("")}" />
@@ -94,7 +93,7 @@ function validatePostForm(f)
 			
 			<!-- Preview message -->
 			<a name="preview"></a>
-			<table class="forumline" width="100%" cellspacing="1" cellpadding="4" border="0" style="display: none" id="previewTable">
+			<table class="forumline" width="100%" cellspacing="1" cellpadding="4" border="0" <#if !preview>style="display: none"</#if> id="previewTable">
 				<tr>
 					<th height="25" class="thhead">${I18n.getMessage("PostForm.preview")}</th>
 				</tr>
@@ -254,20 +253,6 @@ function validatePostForm(f)
 
 											<#if !(count % 4 == 0)>
 											</#if>
-											<!--
-										</tr>
-										-->
-										
-										<!-- Moved down
-										<script type="text/javascript">
-										function smiliePopup()
-										{
-											w = window.open("${JForumContext.encodeURL("/posts/listSmilies")}", "smilies", "width=300, height=300, toolbars=no, scrollbars=yes");
-											w.focus();
-										}
-										</script>
-										-->
-
 										<tr align="center">
 											<td colspan="4">
 										<script type="text/javascript">
@@ -359,7 +344,7 @@ function validatePostForm(f)
 									</td>
 								</tr>
 							</table>
-						</div> <!--</span>-->
+						</div> 
 					</td>
 				</tr>
 				
@@ -497,7 +482,7 @@ function validatePostForm(f)
 				
 				<tr align="center">
 					<td height="28" colspan="2" class="catbottom">              
-						<input class="mainoption" tabindex="5" type="button" value="${I18n.getMessage("PostForm.preview")}" onclick="preview();" />&nbsp;
+						<input class="mainoption" tabindex="5" type="button" value="${I18n.getMessage("PostForm.preview")}" onclick="previewMessage();" />&nbsp;
 						<input class="mainoption" accesskey="s" tabindex="6" type="submit" value="${I18n.getMessage("PostForm.submit")}" name="post" />
 						<#if attachmentsEnabled>
 							<input class="mainoption" accesskey="s" tabindex="7" type="button" onclick="openAttachmentPanel();" value="${I18n.getMessage("Attachments.attach")}" name="post" />
@@ -509,11 +494,6 @@ function validatePostForm(f)
 	</tr>
 
 	<#if attachmentsEnabled || attachments?exists>
-	<!-- Moved down
-	<input type="hidden" name="edit_attach_ids" />
-	<input type="hidden" name="delete_attach" />
-	<input type="hidden" name="total_files" id="total_files" />
-	-->
 	<tr>
 	<td colspan="2" id="tdAttachPanel" align="center" style="display: <#if attachmentsEnabled>none;<#elseif attachments?exists>'';</#if>">
 	<input type="hidden" name="edit_attach_ids" />
@@ -590,6 +570,8 @@ function validatePostForm(f)
 	</#if>
 	editAttachments();
 </#if>
+
+<#if preview>document.location = "#preview";</#if>
 -->
 </script>
 

@@ -32,8 +32,7 @@ DWREngine.IFrame = 2;
  * The default error handler displays an alert box, but that is not correct
  * for all applications, so this method allows you to set an alternative
  * error handler.
- * The default error handler is DWREngine.defaultMessageHandler so you can
- * change the error handler back to the original.
+ * By default there is no error handler set.
  * @param handler A function to call with single an error parameter on failure
  * @see DWREngine.defaultMessageHandler()
  */
@@ -46,8 +45,7 @@ DWREngine.setErrorHandler = function(handler)
  * The default warning handler displays an alert box, but that is not correct
  * for all applications, so this method allows you to set an alternative
  * warning handler.
- * The default warning handler is DWREngine.defaultMessageHandler so you can
- * change the warning handler back to the original.
+ * By default there is no error handler set.
  * @param handler A function to call with single an warning parameter on failure
  * @see DWREngine.defaultMessageHandler()
  */
@@ -122,10 +120,10 @@ DWREngine.setVerb = function(verb)
 /**
  * Do we attempt to ensure that remote calls happen in the order in which they
  * were sent? (Default: false)
- * Warning: Setting this to true will significantly slow down you application,
- * and it exposes you to timeouts if a message gets lost, and it may well mean
- * that you are being lazy and not thinking about the asynchronous model
- * properly. Don't use this method unless you know what you are doing.
+ * Warning: Setting this to true will slow down your application, and could
+ * leave users with an unresponsive browser if a message gets lost.
+ * Sometimes there are better solutions where you make your application use the
+ * asynchronous model properly. Please think before you use this method.
  * @param ordered true or false
  */
 DWREngine.setOrdered = function(ordered)
@@ -173,6 +171,7 @@ DWREngine.beginBatch = function()
     DWREngine._batch.map = {};
     DWREngine._batch.paramCount = 0;
     DWREngine._batch.map.callCount = 0;
+    DWREngine._batch.metadata = {};
 };
 
 /**
@@ -290,6 +289,19 @@ DWREngine._ordered = false;
 DWREngine._batch = null;
 
 /**
+ * The ActiveX objects to use when we want to convert an xml string into a DOM
+ * object.
+ * @private
+ */
+DWREngine._DOMDocument = ["Msxml2.DOMDocument.5.0", "Msxml2.DOMDocument.4.0", "Msxml2.DOMDocument.3.0", "MSXML2.DOMDocument", "MSXML.DOMDocument", "Microsoft.XMLDOM"];
+
+/**
+ * The ActiveX objects to use when we want to do an XMLHttpRequest call.
+ * @private
+ */
+DWREngine._XMLHTTP = ["Msxml2.XMLHTTP.5.0", "Msxml2.XMLHTTP.4.0", "MSXML2.XMLHTTP.3.0", "MSXML2.XMLHTTP", "Microsoft.XMLHTTP"];
+
+/**
  * Called when the replies are received.
  * This method is called by Javascript that is emitted by server
  * @param id The identifier of the call that we are handling a response for
@@ -319,18 +331,6 @@ DWREngine._handleResponse = function(id, reply)
             }
         }
     }
-    else
-    {
-        // If there is no reply then we don;t worry about warning for a missing
-        // callback function.
-        if (reply)
-        {
-            if (DWREngine._warningHandler)
-            {
-                DWREngine._warningHandler("Internal Error: Missing callback for id='" + id + "'");
-            }
-        }
-    }
 };
 
 /**
@@ -357,6 +357,9 @@ DWREngine._finalize = function(batch)
     DWREngine._removeNode(batch.iframe);
     DWREngine._removeNode(batch.form);
 
+    // Avoid IE handles increase
+    delete batch.req;
+
     if (DWREngine._postHook)
     {
         DWREngine._postHook();
@@ -377,9 +380,9 @@ DWREngine._finalize = function(batch)
     // gets turned off, we still process *waiting* batches in an ordered way.
     if (DWREngine._batchQueue.length != 0)
     {
-        var batch = DWREngine._batchQueue.pop();
-        DWREngine._sendData(batch);
-        DWREngine._batches[DWREngine._batches.length] = batch;
+        var sendbatch = DWREngine._batchQueue.shift();
+        DWREngine._sendData(sendbatch);
+        DWREngine._batches[DWREngine._batches.length] = sendbatch;
     }
 };
 
@@ -399,22 +402,29 @@ DWREngine._removeNode = function(node)
 /**
  * Send a request to the server
  * This method is called by Javascript that is emitted by server
- * @param func The callback function to which any returned data should be passed
- *             if this is null, any returned data will be ignored
  * @param path The part of the URL after the host and before the exec bit
  *             without leading or trailing /s
  * @param scriptName The class to execute
  * @param methodName The method on said class to execute
+ * @param func The callback function to which any returned data should be passed
+ *             if this is null, any returned data will be ignored
  * @param vararg_params The parameters to pass to the above class
  * @private
  */
-DWREngine._execute = function(func, path, scriptName, methodName, vararg_params)
+DWREngine._execute = function(path, scriptName, methodName, vararg_params)
 {
     var singleShot = false;
     if (DWREngine._batch == null)
     {
         DWREngine.beginBatch();
         singleShot = true;
+    }
+
+    // To make them easy to manipulate we copy the arguments into an args array
+    var args = [];
+    for (var i = 0; i < arguments.length - 3; i++)
+    {
+        args[i] = arguments[i + 3];
     }
 
     // All the paths MUST be to the same servlet
@@ -435,12 +445,61 @@ DWREngine._execute = function(func, path, scriptName, methodName, vararg_params)
         }
     }
 
-    // Check on the function
-    if (func && typeof func != "function" && typeof func != "object")
+    // From the other params, work out which is the function (or object with
+    // call meta-data) and which is the call parameters
+    var func;
+    var params;
+    var metadata;
+
+    var firstArg = args[0];
+    var lastArg = args[args.length - 1];
+
+    if (typeof firstArg == "function")
+    {
+        func = args.shift();
+        params = args;
+        metadata = {};
+    }
+    else if (typeof lastArg == "function")
+    {
+        func = args.pop();
+        params = args;
+        metadata = {};
+    }
+    else if (typeof lastArg == "object" && lastArg.callback != null && typeof lastArg.callback == "function")
+    {
+        metadata = args.pop();
+        params = args;
+        func = metadata.callback;
+    }
+    else if (firstArg == null)
+    {
+        // This could be a null callback function, but if the last arg is also
+        // null then we can't tell which is the function unless there are only
+        // 2 args, in which case we don't care!
+        if (lastArg == null && args.length > 2)
+        {
+            if (DWREngine._warningHandler)
+            {
+                DWREngine._warningHandler("Ambiguous nulls at start and end of parameter list. Which is the callback function?");
+            }
+        }
+
+        func = args.shift();
+        params = args;
+        metadata = {};
+    }
+    else if (lastArg == null)
+    {
+        func = args.pop();
+        params = args;
+        metadata = {};
+    }
+    else
     {
         if (DWREngine._warningHandler)
         {
-            DWREngine._warningHandler("Supplied callback function is neither null nor a function: " + func);
+            DWREngine._warningHandler("Missing callback function or metadata object.");
         }
 
         return;
@@ -456,15 +515,24 @@ DWREngine._execute = function(func, path, scriptName, methodName, vararg_params)
 
     var prefix = "c" + DWREngine._batch.map.callCount + "-";
 
+    // merge the metadata from this call into the batch
+    if (metadata != null)
+    {
+        for (var prop in metadata)
+        {
+            DWREngine._batch.metadata[prop] = metadata[prop];
+        }
+    }
+
     DWREngine._batch.map[prefix + "scriptName"] = scriptName;
     DWREngine._batch.map[prefix + "methodName"] = methodName;
     DWREngine._batch.map[prefix + "id"] = id;
 
     // Serialize the parameters into batch.map
     DWREngine._addSerializeFunctions();
-    for (var i = 4; i < arguments.length; i++)
+    for (i = 0; i < params.length; i++)
     {
-        DWREngine._serializeAll(DWREngine._batch, [], arguments[i], prefix + "param" + (i - 4));
+        DWREngine._serializeAll(DWREngine._batch, [], params[i], prefix + "param" + i);
     }
     DWREngine._removeSerializeFunctions();
 
@@ -474,6 +542,42 @@ DWREngine._execute = function(func, path, scriptName, methodName, vararg_params)
     if (singleShot)
     {
         DWREngine.endBatch();
+    }
+};
+
+/**
+ * Called as a result of a request timeout or an http reply status != 200
+ * @param batch Block of data about the calls we are making on the server
+ * @private
+ */ 
+DWREngine._abortRequest = function(batch)
+{
+    if (batch && batch.metadata && batch.completed != true)
+    {
+        batch.completed = true;
+        if (batch.req != null)
+        {
+            batch.req.abort();
+
+            if (batch.metadata.errorHandler)
+            {
+                if (typeof batch.metadata.errorHandler == "string")
+                {
+                    eval(batch.metadata.errorHandler); 
+                }
+                else if (typeof batch.metadata.errorHandler == "function")
+                {
+                    batch.metadata.errorHandler(); 
+                }
+                else
+                {
+                    if (DWREngine._warningHandler)
+                    {
+                        DWREngine._warningHandler("errorHandler is neither a string (for eval()) or a function.");
+                    }
+                }
+            }
+        }
     }
 };
 
@@ -490,6 +594,13 @@ DWREngine._sendData = function(batch)
         DWREngine._preHook();
     }
 
+    // Set a timeout
+    if (batch.metadata && batch.metadata.timeout)
+    {
+        var funcReq = function() { DWREngine._abortRequest(batch); };
+        setTimeout(funcReq, batch.metadata.timeout);
+    }
+
     // Get setup for XMLHttpRequest if possible
     if (DWREngine._method == DWREngine.XMLHttpRequest)
     {
@@ -500,7 +611,7 @@ DWREngine._sendData = function(batch)
         // IE5 for the mac claims to support window.ActiveXObject, but throws an error when it's used
         else if (window.ActiveXObject && !(navigator.userAgent.indexOf('Mac') >= 0 && navigator.userAgent.indexOf("MSIE") >= 0))
         {
-            batch.req = new window.ActiveXObject("Microsoft.XMLHTTP");
+            batch.req = DWREngine._newActiveXObject(DWREngine._XMLHTTP);
         }
     }
 
@@ -512,7 +623,7 @@ DWREngine._sendData = function(batch)
     }
     else
     {
-        statsInfo = "Multiple." + batch.length;
+        statsInfo = "Multiple." + batch.map.callCount;
     }
 
     var query = "";
@@ -520,7 +631,7 @@ DWREngine._sendData = function(batch)
 
     if (batch.req)
     {
-        batch.map.xml = true;
+        batch.map.xml = "true";
 
         // Proceed using XMLHttpRequest
         batch.req.onreadystatechange = function() { DWREngine._stateChange(batch); };
@@ -528,55 +639,95 @@ DWREngine._sendData = function(batch)
         // Force Mac people to use GET because Safari is broken.
         if (DWREngine._verb == "GET" || navigator.userAgent.indexOf('Safari') >= 0)
         {
+            // Some browsers (Opera/Safari2) seem to fail to convert the value
+            // of batch.map.callCount to a string in the loop below so we do it
+            // manually here.
+            batch.map.callCount = "" + batch.map.callCount;
+
+            for (prop in batch.map)
+            {
+                var qkey = encodeURIComponent(prop);
+                var qval = encodeURIComponent(batch.map[prop]);
+                if (qval == "")
+                {
+                    alert("found empty qval for qkey=" + qkey);
+                }
+                query += qkey + "=" + qval + "&";
+            }
+            query = query.substring(0, query.length - 1);
+
+            try
+            {
+                batch.req.open("GET", batch.path + "/exec/" + statsInfo + "?" + query);
+                batch.req.send(null);
+            }
+            catch (ex)
+            {
+                if (DWREngine._errorHandler)
+                {
+                    DWREngine._errorHandler(ex);
+                }
+            }
+        }
+        else
+        {
+            for (prop in batch.map)
+            {
+                if (typeof batch.map[prop] != "function")
+                {
+                    query += prop + "=" + batch.map[prop] + "\n";
+                }
+            }
+
+            try
+            {
+                // Prototype does the following, why?
+                // batch.req.setRequestHeader('Connection', 'close');
+                // batch.req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+                batch.req.open("POST", batch.path + "/exec/" + statsInfo, true);
+                batch.req.send(query);
+            }
+            catch (ex)
+            {
+                if (DWREngine._errorHandler)
+                {
+                    DWREngine._errorHandler(ex);
+                }
+            }
+        }
+    }
+    else
+    {
+        batch.map.xml = "false";
+
+        var idname = "dwr-if-" + batch.map["c0-id"];
+
+        // Proceed using iframe
+        batch.div = document.createElement('div');
+        batch.div.innerHTML = "<iframe frameborder='0' width='0' height='0' id='" + idname + "' name='" + idname + "'></iframe>";
+        document.body.appendChild(batch.div);
+        batch.iframe = document.getElementById(idname);
+        batch.iframe.setAttribute('style', 'width:0px; height:0px; border:0px;');
+
+        if (DWREngine._verb == "GET")
+        {
             for (prop in batch.map)
             {
                 query += encodeURIComponent(prop) + "=" + encodeURIComponent(batch.map[prop]) + "&";
             }
             query = query.substring(0, query.length - 1);
 
-            batch.req.open("GET", batch.path + "?" + query + "&action=exec");
-            batch.req.send(null);
-        }
-        else
-        {
-            for (prop in batch.map)
-            {
-                query += prop + "=" + batch.map[prop] + "\n";
-            }
-
-            batch.req.open("POST", batch.path + "?action=exec", true);
-            batch.req.send(query);
-        }
-    }
-    else
-    {
-        batch.map.xml = false;
-
-        // Proceed using iframe
-        for (prop in batch.map)
-        {
-            query += prop + "=" + batch.map[prop] + "&";
-        }
-        query = query.substring(0, query.length - 1);
-
-        batch.div = document.createElement('div');
-        batch.div.innerHTML = "<iframe id='dwr-iframe' name='dwr-iframetarget'></iframe>";
-        document.body.appendChild(batch.div);
-        batch.iframe = document.getElementById('dwr-iframe');
-        batch.iframe.setAttribute('style', 'width:0px; height:0px; border:0px;');
-
-        if (DWREngine._verb == "GET")
-        {
-            batch.iframe.setAttribute('src', batch.path + "?action=exec&" + query);
+            batch.iframe.setAttribute('src', batch.path + "/exec/" + statsInfo + "?" + query);
             document.body.appendChild(batch.iframe);
         }
         else
         {
             batch.form = document.createElement('form');
             batch.form.setAttribute('id', 'dwr-form');
-            batch.form.setAttribute('action', batch.path + "?action=exec");
-            batch.form.setAttribute('target', 'dwr-iframetarget');
-            batch.form.target='dwr-iframetarget';
+            batch.form.setAttribute('action', batch.path + "/exec" + statsInfo);
+            batch.form.setAttribute('target', idname);
+            batch.form.target = idname;
             batch.form.setAttribute('method', 'post');
             for (prop in batch.map)
             {
@@ -599,33 +750,62 @@ DWREngine._sendData = function(batch)
  */
 DWREngine._stateChange = function(batch)
 {
-    if (batch.req.readyState == 4)
+    if (batch.req.readyState == 4 && !batch.completed)
     {
         try
         {
-            if (batch.req.status && batch.req.status == 200)
+            var reply = batch.req.responseText;
+
+            if (reply != null && reply != "")
             {
-                eval(batch.req.responseText);
+                if (batch.req.status && batch.req.status == 200)
+                {
+                    batch.completed = true;
+                    eval(reply);
+                }
+                else
+                {
+                    DWREngine._stateChangeError(batch, reply);
+                }
             }
             else
             {
-                if (DWREngine._errorHandler)
-                {
-                    DWREngine._errorHandler(batch.req.responseText);
-                }
+                DWREngine._stateChangeError(batch, "No data received from server");
             }
         }
         catch (ex)
         {
-            if (DWREngine._errorHandler)
-            {
-                DWREngine._errorHandler(ex);
-            }
+            DWREngine._stateChangeError(batch, ex);
         }
+
+        DWREngine._finalize(batch);
+    }
+};
+
+/**
+ * When something has gone wrong with <code>DWREngine._stateChange()</code>
+ * @param message The error text if any
+ * @private
+ */
+DWREngine._stateChangeError = function(batch, message)
+{
+    if (batch.metadata != null)
+    {
+        DWREngine._abortRequest(batch);
     }
 
-    DWREngine._finalize(batch);
-};
+    if (DWREngine._errorHandler)
+    {
+        if (message == null)
+        {
+            DWREngine._errorHandler("Unknown error occured");
+        }
+        else
+        {
+            DWREngine._errorHandler(message);
+        }
+    }
+}
 
 /**
  * Hack a polymorphic dwrSerialize() function on all basic types. Yeulch
@@ -691,6 +871,10 @@ DWREngine._serializeAll = function(batch, referto, data, name)
         if (data.dwrSerialize)
         {
             batch.map[name] = data.dwrSerialize(batch, referto, data, name);
+        }
+        else if (data.nodeName)
+        {
+            batch.map[name] = DWREngine._serializeXml(batch, referto, data, name);
         }
         else
         {
@@ -761,6 +945,11 @@ DWREngine._serializeObject = function(batch, referto, data, name)
         return ref;
     }
 
+    if (data.nodeName)
+    {
+        return DWREngine._serializeXml(batch, referto, data, name);
+    }
+
     // treat objects as an associative arrays
     var reply = "Object:{";
     var element;
@@ -778,10 +967,41 @@ DWREngine._serializeObject = function(batch, referto, data, name)
             reply += ", ";
         }
     }
-    reply = reply.substring(0, reply.length - 2);
+
+    if (reply.substring(reply.length - 2) == ", ")
+    {
+        reply = reply.substring(0, reply.length - 2);
+    }
     reply += "}";
 
     return reply;
+};
+
+/**
+ * Marshall an object
+ * @private
+ * @see DWREngine._serializeAll()
+ */
+DWREngine._serializeXml = function(batch, referto, data, name)
+{
+    var ref = DWREngine._lookup(referto, this, name);
+    if (ref)
+    {
+        return ref;
+    }
+
+    var output;
+    if (window.XMLSerializer)
+    {
+        var serializer = new XMLSerializer();
+        output = serializer.serializeToString(data);
+    }
+    else
+    {
+        output = data.toXml;
+    }
+
+    return "XML:" + encodeURIComponent(output);
 };
 
 /**
@@ -853,35 +1073,67 @@ DWREngine._serializeString = function(batch, referto, data, name)
  */
 DWREngine._serializeDate = function(batch, referto, data, name)
 {
-    return "Date:[ " +
-        this.getUTCFullYear() + ", " +
-        this.getUTCMonth() + ", " +
-        this.getUTCDate() + ", " +
-        this.getUTCHours() + ", " +
-        this.getUTCMinutes() + ", " +
-        this.getUTCSeconds() + ", " +
-        this.getUTCMilliseconds() + "]";
+    return "Date:" + this.getTime();
 };
 
 /**
  * Convert an XML string into a DOC object.
  * @param xml The xml string
- * @return a DOM version of the xml string 
+ * @return a DOM version of the xml string
  * @private
  */
 DWREngine._unserializeDocument = function(xml)
 {
-    var parser = new DOMParser();
-    var dom = parser.parseFromString(xml, "text/xml");
+    var dom;
 
-    if (!dom.documentElement || dom.documentElement.tagName == "parsererror")
+    if (window.DOMParser)
     {
-        var message = dom.documentElement.firstChild.data;
-        message += "\n" + dom.documentElement.firstChild.nextSibling.firstChild.data;
-        throw message;
+        var parser = new DOMParser();
+        dom = parser.parseFromString(xml, "text/xml");
+
+        if (!dom.documentElement || dom.documentElement.tagName == "parsererror")
+        {
+            var message = dom.documentElement.firstChild.data;
+            message += "\n" + dom.documentElement.firstChild.nextSibling.firstChild.data;
+            throw message;
+        }
+
+        return dom;
+    }
+    else
+    {
+        dom = DWREngine._newActiveXObject(DWREngine._DOMDocument);
+        //dom.async = false;
+        dom.loadXML(xml);
+
+        // What happens on parse fail with IE?
+
+        return dom;
+    }
+};
+
+/**
+ * Helper to find an ActiveX object that works.
+ * @param axarray An array of strings to attempt to create ActiveX objects from
+ * @return An ActiveX object from the first string in the array not to die
+ * @private
+ */
+DWREngine._newActiveXObject = function(axarray)
+{
+    var returnValue;    
+    for (var i = 0; i < axarray.length; i++)
+    {
+        try
+        {
+            returnValue = new ActiveXObject(axarray[i]);
+            break;
+        }
+        catch (ex)
+        {
+        }
     }
 
-    return dom;
+    return returnValue;
 };
 
 /**
@@ -897,3 +1149,224 @@ DWREngine._deprecated = function()
     }
 };
 
+/**
+ * To make up for the lack of encodeURIComponent() on IE5.0
+ * @private
+ */
+//if (typeof Window.encodeURIComponent === 'undefined')
+{
+    DWREngine._utf8 = function(wide)
+    {
+        var c;
+        var s;
+        var enc = "";
+        var i = 0;
+
+        while (i < wide.length)
+        {
+            c = wide.charCodeAt(i++);
+            // handle UTF-16 surrogates
+            if (c >= 0xDC00 && c < 0xE000)
+            {
+                continue;
+            }
+
+            if (c >= 0xD800 && c < 0xDC00)
+            {
+                if (i >= wide.length)
+                {
+                    continue;
+                }
+
+                s = wide.charCodeAt(i++);
+                if (s<0xDC00 || c>=0xDE00)
+                {
+                    continue;
+                }
+
+                c = ((c - 0xD800) << 10) + (s - 0xDC00) + 0x10000;
+            }
+
+            // output value
+            if (c < 0x80)
+            {
+                enc += String.fromCharCode(c);
+            }
+            else if (c < 0x800)
+            {
+                enc += String.fromCharCode(0xC0 + (c >> 6), 0x80 + (c & 0x3F));
+            }
+            else if (c < 0x10000)
+            {
+                enc += String.fromCharCode(0xE0 + (c >> 12), 0x80 + (c >> 6 & 0x3F), 0x80 + (c & 0x3F));
+            }
+            else
+            {
+                enc += String.fromCharCode(0xF0 + (c >> 18), 0x80 + (c >> 12 & 0x3F), 0x80 + (c >> 6 & 0x3F), 0x80 + (c & 0x3F));
+            }
+        }
+
+        return enc;
+    }
+
+    DWREngine._hexchars = "0123456789ABCDEF";
+
+    DWREngine._toHex = function(n)
+    {
+        return DWREngine._hexchars.charAt(n >> 4) + DWREngine._hexchars.charAt(n & 0xF);
+    }
+
+    DWREngine._okURIchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-";
+
+    function encodeURIComponent(s)
+    {
+        s = DWREngine._utf8(s);
+        var c;
+        var enc = "";
+
+        for (var i= 0; i<s.length; i++)
+        {
+            if (DWREngine._okURIchars.indexOf(s.charAt(i)) == -1)
+            {
+                enc += "%" + DWREngine._toHex(s.charCodeAt(i));
+            }
+            else
+            {
+                enc += s.charAt(i);
+            }
+        }
+
+        return enc;
+    }
+}
+
+/**
+ * To make up for the lack of Array.splice() on IE5.0
+ * @private
+ */
+if (typeof Array.prototype.splice === 'undefined')
+{
+    Array.prototype.splice = function(ind, cnt)
+    {
+        if (arguments.length == 0)
+        {
+            return ind;
+        }
+
+        if (typeof ind != "number")
+        {
+            ind = 0;
+        }
+
+        if (ind < 0)
+        {
+            ind = Math.max(0,this.length + ind);
+        }
+
+        if (ind > this.length)
+        {
+            if (arguments.length > 2)
+            {
+                ind = this.length;
+            }
+            else
+            {
+                return [];
+            }
+        }
+
+        if (arguments.length < 2)
+        {
+            cnt = this.length-ind;
+        }
+
+        cnt = (typeof cnt == "number") ? Math.max(0, cnt) : 0;
+        removeArray = this.slice(ind, ind + cnt);
+        endArray = this.slice(ind + cnt);
+        this.length = ind;
+
+        for (var i = 2; i < arguments.length; i++)
+        {
+            this[this.length] = arguments[i];
+        }
+
+        for (i = 0; i < endArray.length; i++)
+        {
+            this[this.length] = endArray[i];
+        }
+
+        return removeArray;
+    }
+}
+
+/**
+ * To make up for the lack of Array.shift() on IE5.0
+ * @private
+ */
+if (typeof Array.prototype.shift === 'undefined')
+{
+    Array.prototype.shift = function(str)
+    {
+        var val = this[0];
+        for (var i = 1; i < this.length; ++i)
+        {
+            this[i - 1] = this[i];
+        }
+
+        this.length--;
+        return val;
+    }
+}
+
+/**
+ * To make up for the lack of Array.unshift() on IE5.0
+ * @private
+ */
+if (typeof Array.prototype.unshift === 'undefined')
+{
+    Array.prototype.unshift = function()
+    {
+        var i = unshift.arguments.length;
+        for (var j = this.length - 1; j >= 0; --j)
+        {
+            this[j + i] = this[j];
+        }
+
+        for (j = 0; j < i; ++j)
+        {
+            this[j] = unshift.arguments[j];
+        }
+    }
+}
+
+/**
+ * To make up for the lack of Array.push() on IE5.0
+ * @private
+ */
+if (typeof Array.prototype.push === 'undefined')
+{
+    Array.prototype.push = function()
+    {
+        var sub = this.length;
+
+        for (var i = 0; i < push.arguments.length; ++i)
+        {
+            this[sub] = push.arguments[i];
+            sub++;
+        }
+    }
+}
+
+/**
+ * To make up for the lack of Array.pop() on IE5.0
+ * @private
+ */
+if (typeof Array.prototype.pop === 'undefined')
+{
+    Array.prototype.pop = function()
+    {
+        var lastElement = this[this.length - 1];
+        this.length--;
+        return lastElement;
+    }
+}

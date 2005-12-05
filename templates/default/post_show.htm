@@ -217,7 +217,6 @@
 
 
 				<#if (logged || anonymousPosts) && topic.status != STATUS_LOCKED>
-				<!--Element moved up -->
 				<tr>
 					<td colspan="3">
 				<script type="text/javascript">
@@ -259,11 +258,8 @@
 					<input type="hidden" name="topic_id" value="${topic.id}" />
 					<input type="hidden" name="disable_html" value="1" />
 					<input type="hidden" name="quick" value="1" />
-<!--
-				<tr>
-					<td colspan="3">
--->					
-						<table width="100%">
+		
+					<table width="100%">
 							<tr>
 								<td align="center">
 									<img src="${contextPath}/templates/${templateName}/images/icon_mini_message.gif" align="middle" alt="Message" />
@@ -282,11 +278,6 @@
 								</td>
 							</tr>
 						</table>
-<!--
-Moved down
-					</td>
-				</tr>
--->
 				</form>
 
 					</td>

@@ -5,7 +5,7 @@
 		<a href="${JForumContext.encodeURL("/posts/list/${startStr}${post.topicId}")}#${post.id}">
 		<img src="${contextPath}/templates/${templateName}/images/icon_minipost_new.gif" alt="[Post New]" /></a>${post.formatedTime}
 	</div>
-	<div class="subject">&nbsp;&nbsp; &nbsp;<b>${I18n.getMessage("PostShow.subject")}:</b> <a name="p${post.id}" id="p${post.id}">${post.subject?default("")?html}</a></div>
+	<div class="subject">&nbsp;&nbsp; &nbsp;<b>${I18n.getMessage("PostShow.subject")}:</b> <a name="${post.id}">${post.subject?default("")?html}</a></div>
 	<div class="action">
 		<#if karmaEnabled>
 			<script type="text/javascript">writeStars(${post.karma.karmaPoints}, ${post.id});</script>

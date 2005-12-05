@@ -97,7 +97,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.126 2005/12/03 20:57:23 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.127 2005/12/05 18:01:04 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -983,7 +983,7 @@ public class PostAction extends Command
 			}
 		}
 
-		boolean preview = (this.request.getParameter("preview") != null);
+		boolean preview = ("1".equals(this.request.getParameter("preview")));
 		
 		if (!preview) {
 			AttachmentCommon attachments = new AttachmentCommon(this.request, forumId);

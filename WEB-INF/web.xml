@@ -56,7 +56,7 @@
 
 		<init-param>
 			<param-name>debug</param-name>
-			<param-value>true</param-value>
+			<param-value>false</param-value>
 		</init-param>
 	</servlet>
     
@@ -68,7 +68,7 @@
 	
 	<servlet-mapping>
 		<servlet-name>dwr-invoker</servlet-name>
-		<url-pattern>/dwr/dwr.page</url-pattern>
+		<url-pattern>/dwr/*</url-pattern>
 	</servlet-mapping>
     
 	<servlet-mapping>
