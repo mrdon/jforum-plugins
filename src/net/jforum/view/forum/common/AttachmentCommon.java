@@ -63,6 +63,7 @@ import net.jforum.entities.Group;
 import net.jforum.entities.Post;
 import net.jforum.entities.QuotaLimit;
 import net.jforum.entities.User;
+import net.jforum.exceptions.AttachmentException;
 import net.jforum.exceptions.AttachmentSizeTooBigException;
 import net.jforum.exceptions.BadExtensionException;
 import net.jforum.repository.SecurityRepository;
@@ -77,7 +78,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.23 2005/10/02 19:06:46 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.24 2005/12/06 21:17:00 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {
@@ -148,13 +149,18 @@ public class AttachmentCommon
 							new String[] { uploadUtils.getExtension() }));
 				}
 			}
+
+			// Check comment length:
+			String comment = this.request.getParameter("comment_" + i);
+			if (comment.length() > 254)
+				throw new AttachmentException("Comment too long.");
 			
 			Attachment a = new Attachment();
 			a.setUserId(userId);
 			
 			AttachmentInfo info = new AttachmentInfo();
 			info.setFilesize(item.getSize());
-			info.setComment(this.request.getParameter("comment_" + i));
+			info.setComment(comment);
 			info.setMimetype(item.getContentType());
 			
 			// Get only the filename, without the path (IE does that)
