@@ -1,8 +1,9 @@
 <#setting number_format = "#"/>
 
-<script type='text/javascript' src='${contextPath}/dwr/dwr.page?script=AjaxUtils'></script>
-<script type='text/javascript' src='${contextPath}/templates/${templateName}/js/dwr-engine.js'></script>
-<script type='text/javascript' src='${contextPath}/templates/${templateName}/js/dwr-util.js'></script>
+<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/utils.js"></script>
+<script type="text/javascript" src="${contextPath}/dwr/interface/AjaxUtils.js"></script>
+<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/dwr-engine.js"></script>
+<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/dwr-util.js"></script>
 
 <script language="javascript">
 function resize()
@@ -25,18 +26,23 @@ function changeValue(field, value)
 
 function testEmail()
 {
-	var b = document.getElementById("mailButton");
-	b.value = "${I18n.getMessage("Config.Form.SmtpTestSending")}...";
-	b.disabled = true;
+	if (supportAjax()) {
+		var b = document.getElementById("mailButton");
+		b.value = "${I18n.getMessage("Config.Form.SmtpTestSending")}...";
+		b.disabled = true;
 
-	AjaxUtils.sendTestMail(emailStatus,
-		document.getElementById("sender").value,
-		document.getElementById("host").value,
-		document.getElementById("auth").value,
-		document.getElementById("username").value,
-		document.getElementById("password").value,
-		document.getElementById("address").value
-	);
+		AjaxUtils.sendTestMail(document.getElementById("sender").value,
+			document.getElementById("host").value,
+			document.getElementById("auth").value,
+			document.getElementById("username").value,
+			document.getElementById("password").value,
+			document.getElementById("address").value,
+			emailStatus
+		);
+	}
+	else {
+		alert("Ajax support is not working correctly. \n Please see http://www.jforum.net/confluence/display/configuration/ajax for more information.");
+	}
 }
 
 function emailStatus(message)
