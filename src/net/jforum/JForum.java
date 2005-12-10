@@ -74,7 +74,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.86 2005/12/02 23:48:57 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.87 2005/12/10 18:37:44 rafaelsteil Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
@@ -130,6 +130,18 @@ public class JForum extends JForumBaseServlet
 	 */
 	public void service(HttpServletRequest req, HttpServletResponse response) throws IOException, ServletException
 	{
+		// Sdmin port control:
+		String adminPort = SystemGlobals.getValue(ConfigKeys.ADMIN_PORT);
+		String servletPath = req.getServletPath();
+		
+		if (adminPort != null
+			&& servletPath.length() >= 3
+			&& servletPath.charAt(0) == 'a' && servletPath.charAt(1) == 'd' && servletPath.charAt(2) == 'm'
+			&& req.getServerPort() != Integer.parseInt(adminPort))	{
+			response.getWriter().print("Access to the Administration Panel is not allowed through this port.");
+			return;
+		}
+		
 		Writer out = null;
 		ActionServletRequest request = null;
 		String encoding = SystemGlobals.getValue(ConfigKeys.ENCODING);

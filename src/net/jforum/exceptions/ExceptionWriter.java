@@ -45,8 +45,12 @@ package net.jforum.exceptions;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.Date;
 
 import net.jforum.JForum;
+import net.jforum.SessionFacade;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 import org.apache.log4j.Logger;
 
@@ -55,7 +59,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ExceptionWriter.java,v 1.6 2005/10/08 19:57:55 rafaelsteil Exp $
+ * @version $Id: ExceptionWriter.java,v 1.7 2005/12/10 18:37:43 rafaelsteil Exp $
  */
 public class ExceptionWriter
 {
@@ -84,16 +88,22 @@ public class ExceptionWriter
 				message = t.toString();
 			}
 
+			boolean canViewStackTrace = !SystemGlobals.getBoolValue(ConfigKeys.STACKTRACE_MODERATORS_ONLY)
+					|| (SessionFacade.isLogged() 
+					&& SessionFacade.getUserSession().isModerator());
+			
 			String filter = "[<>]";
-			String stackTrace = strWriter.toString();
+			String stackTrace = canViewStackTrace
+				? strWriter.toString()
+				: "Only moderators can view stack trace.";
 			
 			stackTrace = stackTrace.replaceAll(filter, "");
 			message = message.replaceAll(filter, "");
 			
 			JForum.getContext().put("stackTrace", stackTrace);
-			JForum.getContext().put("message", message);
+			JForum.getContext().put("message", message+"("+(new Date()).toString()+")");
 
-			Template template = Configuration.getDefaultConfiguration().getTemplate("exception.html");
+			Template template = Configuration.getDefaultConfiguration().getTemplate("exception.htm");
 			template.process(JForum.getContext(), w);
 		}
 		catch (Exception e) {
