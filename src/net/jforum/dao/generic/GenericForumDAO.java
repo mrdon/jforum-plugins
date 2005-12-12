@@ -66,7 +66,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericForumDAO.java,v 1.15 2005/12/12 00:54:41 rafaelsteil Exp $
+ * @version $Id: GenericForumDAO.java,v 1.16 2005/12/12 01:49:16 rafaelsteil Exp $
  */
 public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO 
 {
@@ -597,6 +597,7 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 	
 	private int daysUntilToday(Date today, Date from) 
 	{
-		return (int)((today.getTime() - from.getTime()) / (24 * 60 * 60 * 1000));
+		int days = (int)((today.getTime() - from.getTime()) / (24 * 60 * 60 * 1000));
+		return days == 0 ? 1 : days;
 	}
 }
