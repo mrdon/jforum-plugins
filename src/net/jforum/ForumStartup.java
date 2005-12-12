@@ -56,7 +56,7 @@ import net.jforum.repository.ForumRepository;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumStartup.java,v 1.11 2005/11/29 00:26:53 rafaelsteil Exp $
+ * @version $Id: ForumStartup.java,v 1.12 2005/12/12 00:54:40 rafaelsteil Exp $
  */
 public class ForumStartup 
 {
@@ -80,7 +80,7 @@ public class ForumStartup
 			}
 		}
 		catch (Exception e) {
-			throw new DatabaseException("Error while trying to start the database: " + e);
+			throw new DatabaseException("Error while trying to start the database", e);
 		}
 		
 		return true;

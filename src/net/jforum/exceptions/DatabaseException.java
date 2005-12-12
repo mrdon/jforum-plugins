@@ -44,11 +44,16 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: DatabaseException.java,v 1.4 2005/07/26 03:04:33 rafaelsteil Exp $
+ * @version $Id: DatabaseException.java,v 1.5 2005/12/12 00:54:41 rafaelsteil Exp $
  */
 public class DatabaseException extends RuntimeException {
 	public DatabaseException(String message) {
 		super(message);
+	}
+	
+	public DatabaseException(String message, Throwable t) {
+		super(message, t);
+		this.setStackTrace(t.getStackTrace());
 	}
 	
 	public DatabaseException(Throwable t) {

@@ -61,7 +61,7 @@ import org.apache.log4j.Logger;
  * Try to fix some database configuration problems.
  *  This class will much likely do some checks only for mysql.
  * @author Rafael Steil
- * @version $Id: DatabaseWorkarounder.java,v 1.1 2005/11/29 17:18:45 rafaelsteil Exp $
+ * @version $Id: DatabaseWorkarounder.java,v 1.2 2005/12/12 00:54:40 rafaelsteil Exp $
  */
 public class DatabaseWorkarounder
 {
@@ -248,11 +248,13 @@ public class DatabaseWorkarounder
 			Properties p = new Properties();
 			
 			FileInputStream fis = new FileInputStream(driverConfigPath);
-			FileOutputStream fos = new FileOutputStream(driverConfigPath);
+			FileOutputStream fos = null;
 			
 			try {
 				p.load(fis);
 				p.setProperty(ConfigKeys.DAO_DRIVER, daoClassName);
+				
+				fos = new FileOutputStream(driverConfigPath);
 				p.store(fos, null);
 			}
 			finally {

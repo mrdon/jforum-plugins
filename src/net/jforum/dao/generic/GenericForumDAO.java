@@ -66,7 +66,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericForumDAO.java,v 1.14 2005/12/04 01:19:14 rafaelsteil Exp $
+ * @version $Id: GenericForumDAO.java,v 1.15 2005/12/12 00:54:41 rafaelsteil Exp $
  */
 public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO 
 {
@@ -558,7 +558,7 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 		
 		Date today = new Date();
 		
-		int perDay = fs.getPosts() / this.daysUntilToday(today, firstTime);
+		int perDay = firstTime != null ? fs.getPosts() / this.daysUntilToday(today, firstTime) : 0;
 		
 		if (fs.getPosts() > 0 && perDay < 1) {
 			perDay = 1;
@@ -567,7 +567,7 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 		fs.setPostsPerDay(perDay);
 		
 		// Topics per day
-		perDay = fs.getTopics() / this.daysUntilToday(today, firstTime);
+		perDay = firstTime != null ? fs.getTopics() / this.daysUntilToday(today, firstTime) : 0;
 		
 		if (fs.getTopics() > 0 && perDay < 1) {
 			perDay = 1;
@@ -583,7 +583,13 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 		rs.close();
 		s.close();
 		
-		perDay = fs.getUsers() / this.daysUntilToday(today, firstTime);
+		if (fs.getUsers() > 0) {
+			perDay = fs.getUsers() / this.daysUntilToday(today, firstTime);
+		}
+		else {
+			perDay = 1;
+		}
+		
 		fs.setUsersPerDay(perDay);
 		
 		return fs;
