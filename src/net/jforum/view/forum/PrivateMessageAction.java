@@ -66,7 +66,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.32 2005/10/08 11:10:10 vmal Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.33 2005/12/14 18:19:28 rafaelsteil Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -220,7 +220,8 @@ public class PrivateMessageAction extends Command
 		User toUser = userDao.selectById(toUserId);
 		pm.setToUser(toUser);
 		
-		boolean preview = (this.request.getParameter("preview") != null);
+		boolean preview = ("1".equals(this.request.getParameter("preview")));
+
 		if (!preview) {
 			DataAccessDriver.getInstance().newPrivateMessageDAO().send(pm);
 			

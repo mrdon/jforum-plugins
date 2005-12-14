@@ -45,7 +45,6 @@ package net.jforum.exceptions;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Date;
 
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
@@ -59,7 +58,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ExceptionWriter.java,v 1.7 2005/12/10 18:37:43 rafaelsteil Exp $
+ * @version $Id: ExceptionWriter.java,v 1.8 2005/12/14 18:19:29 rafaelsteil Exp $
  */
 public class ExceptionWriter
 {
@@ -101,15 +100,15 @@ public class ExceptionWriter
 			message = message.replaceAll(filter, "");
 			
 			JForum.getContext().put("stackTrace", stackTrace);
-			JForum.getContext().put("message", message+"("+(new Date()).toString()+")");
+			JForum.getContext().put("message", message);
 
-			Template template = Configuration.getDefaultConfiguration().getTemplate("exception.htm");
+			Template template = Configuration.getDefaultConfiguration().getTemplate("exception.html");
 			template.process(JForum.getContext(), w);
 		}
 		catch (Exception e) {
 			strWriter = new StringWriter();
 			writer = new PrintWriter(strWriter);
-			t.printStackTrace(writer);
+			e.printStackTrace(writer);
 			writer.close();
 			logger.error(strWriter);
 		}

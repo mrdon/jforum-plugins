@@ -15,6 +15,12 @@
 	<property name="version" value="2.1" />
 	<property name="jarname" value="jforum" />
 
+	<property name="compile.debug" value="true"/>
+	<property name="compile.optimize" value="false"/>
+	<property name="compile.deprecation" value="true"/>
+	<property name="compile.source" value="1.4"/>
+	<property name="compile.target" value="1.4"/>
+
 	<property name="build" location="build" />
 	<property name="dist" location="dist" />
 	<property name="doc" location="doc" />
@@ -58,7 +64,9 @@
 		<mkdir dir="${classes}"/>
 
 		<!-- Compile the java code from ${src} into ${classes} -->
-		<javac srcdir="${src}" destdir="${classes}" debug="true">
+		<javac srcdir="${src}" destdir="${classes}"
+			debug="${compile.debug}" deprecation="${compile.deprecation}"
+			source="${compile.source}" target="${compile.target}" optimize="${compile.optimize}">
 			<classpath>
 				<path refid="base.path"/>
 			</classpath>
