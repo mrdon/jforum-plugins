@@ -97,7 +97,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.127 2005/12/05 18:01:04 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.128 2005/12/17 23:14:32 per_johansson Exp $
  */
 public class PostAction extends Command 
 {
@@ -257,7 +257,7 @@ public class PostAction extends Command
 		JForum.setRedirect(this.request.getContextPath() + "/posts/list/"
 			+ page + topicId
 			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) 
-			+ "#" + postId);
+			+ "#postid_" + postId);
 	}
 	
 	/**
@@ -832,7 +832,7 @@ public class PostAction extends Command
 				path += start + "/";
 			}
 
-			path += p.getTopicId() + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#" + p.getId();
+			path += p.getTopicId() + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#postid_" + p.getId();
 			JForum.setRedirect(path);
 			
 			if (SystemGlobals.getBoolValue(ConfigKeys.POSTS_CACHE_ENABLED)) {
@@ -1080,7 +1080,7 @@ public class PostAction extends Command
 				int start = ViewCommon.getStartPage();
 	
 				path += this.startPage(t, start) + "/";
-				path += t.getId() + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#" + postId;
+				path += t.getId() + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#postid_" + postId;
 	
 				JForum.setRedirect(path);
 				

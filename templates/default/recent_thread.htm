@@ -67,7 +67,7 @@
 								<#assign startPage = ((topic.totalReplies / postsPerPage?number)?int * postsPerPage?number) +"/"/>
 							</#if>
 				  
-							<a href="${JForumContext.encodeURL("/posts/list/${startPage}${topic.id}")}#${topic.lastPostId}"><img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif" border="0" alt="Latest Reply" /></a></span>
+							<a href="${JForumContext.encodeURL("/posts/list/${startPage}${topic.id}")}#postid_${topic.lastPostId}"><img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif" border="0" alt="Latest Reply" /></a></span>
 						</#if>		 
 					</td>
 				</tr>

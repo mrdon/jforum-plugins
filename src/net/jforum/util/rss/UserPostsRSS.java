@@ -55,7 +55,7 @@ import net.jforum.view.forum.common.ViewCommon;
  * RSS for the messages of some topic
  * 
  * @author Vladislav Malyshkin
- * @version $Id: UserPostsRSS.java,v 1.3 2005/09/13 02:50:36 rafaelsteil Exp $
+ * @version $Id: UserPostsRSS.java,v 1.4 2005/12/17 23:14:18 per_johansson Exp $
  */
 public class UserPostsRSS extends GenericRSS 
 {
@@ -90,7 +90,7 @@ public class UserPostsRSS extends GenericRSS
 					+ "posts/preList/" + p.getTopicId()
 					+ "/" + p.getId() 
 					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)
-					+ "#" + p.getId());
+					+ "#postid_" + p.getId());
 
 			this.rss.addItem(item);
 		}

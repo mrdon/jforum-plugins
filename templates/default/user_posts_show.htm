@@ -72,7 +72,7 @@
 										<span class="gen">
 											<a href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name?html}</a> 
 											-&gt; <a href="${JForumContext.encodeURL("/posts/list/${post.topicId}")}">${topic.getTitle()?default("Empty")?html}</a>
-											-&gt; <a href="${JForumContext.encodeURL("/posts/preList/${post.topicId}/${post.id}${extension}#${post.id}", "")}">${I18n.getMessage("PostShow.goToMessage")}</a>
+											-&gt; <a href="${JForumContext.encodeURL("/posts/preList/${post.topicId}/${post.id}${extension}#postid_${post.id}", "")}">${I18n.getMessage("PostShow.goToMessage")}</a>
 										</span>
 									</td>
 									<td align="right">
