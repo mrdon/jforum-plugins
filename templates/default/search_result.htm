@@ -102,7 +102,7 @@
 			<#if (topic.totalReplies + 1 > postsPerPage)>
 				<#assign startPage = ((topic.totalReplies / postsPerPage)?int * postsPerPage) +"/"/>
 			</#if>
-			<a href="${contextPath}/posts/list/${startPage}${topic.id}${extension}#postid_${topic.lastPostId}"><img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif" border="0" alt="[Latest Reply]" /></a></span>
+			<a href="${contextPath}/posts/list/${startPage}${topic.id}${extension}#${topic.lastPostId}"><img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif" border="0" alt="[Latest Reply]" /></a></span>
 			</#if>
 		 </td>
 		  <#if moderator && openModeration?default(false)>

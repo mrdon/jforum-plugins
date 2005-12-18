@@ -68,7 +68,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaAction.java,v 1.15 2005/12/17 23:14:32 per_johansson Exp $
+ * @version $Id: KarmaAction.java,v 1.16 2005/12/18 01:58:40 rafaelsteil Exp $
  */
 public class KarmaAction extends Command
 {
@@ -147,7 +147,7 @@ public class KarmaAction extends Command
 			+ ViewCommon.getStartPage()
 			+ "/" + p.getTopicId()
 			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)
-			+ "#postid_" + p.getId();
+			+ "#" + p.getId();
 	}
 
 	/**

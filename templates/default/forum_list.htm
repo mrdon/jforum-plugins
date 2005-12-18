@@ -76,7 +76,7 @@
 									<#assign startPage = ((lpi.topicReplies / topicsPerPage)?int * topicsPerPage) +"/"/>
 								</#if>
 					
-								<#assign url = JForumContext.encodeURL("/posts/list/${startPage}${lpi.topicId}") + "#postid_" + lpi.postId/>
+								<#assign url = JForumContext.encodeURL("/posts/list/${startPage}${lpi.topicId}") + "#" + lpi.postId/>
 								<a href="${url}"><img src="${contextPath}/templates/${templateName}/images/icon_latest_reply.gif" border="0" alt="[Latest Reply]" /></a>
 							<#else>
 								${I18n.getMessage("ForumListing.noMessages")}
