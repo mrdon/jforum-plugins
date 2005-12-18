@@ -97,7 +97,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.129 2005/12/18 01:58:41 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.130 2005/12/18 19:04:43 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -712,7 +712,7 @@ public class PostAction extends Command
 		p = PostCommon.fillPostFromRequest(p, true);
 
 		// The user wants to preview the message before posting it?
-		if (this.request.getParameter("preview") != null) {
+		if ("1".equals(this.request.getParameter("preview"))) {
 			this.context.put("preview", true);
 
 			Post postPreview = new Post(p);
