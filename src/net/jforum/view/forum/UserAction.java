@@ -79,7 +79,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.59 2005/11/16 20:39:56 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.60 2005/12/18 20:31:10 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -580,12 +580,12 @@ public class UserAction extends Command
 
 		this.setTemplateName(TemplateKeys.USER_LOSTPASSWORD_SEND);
 		this.context.put("message", I18n.getMessage(
-										"PasswordRecovery.emailSent",
-										new String[] { 
-												this.request.getContextPath()
-												+ "/user/login"
-												+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) 
-											}));
+			"PasswordRecovery.emailSent",
+			new String[] { 
+					this.request.getContextPath()
+					+ "/user/login"
+					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) 
+				}));
 	}
 
 	// Recover user password ( aka, ask him a new one )

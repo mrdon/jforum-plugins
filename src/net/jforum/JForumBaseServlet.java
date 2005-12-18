@@ -45,6 +45,7 @@ package net.jforum;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
+import java.util.Date;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -69,7 +70,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumBaseServlet.java,v 1.15 2005/12/02 23:48:57 rafaelsteil Exp $
+ * @version $Id: JForumBaseServlet.java,v 1.16 2005/12/18 20:31:11 rafaelsteil Exp $
  */
 public class JForumBaseServlet extends HttpServlet 
 {
@@ -121,6 +122,7 @@ public class JForumBaseServlet extends HttpServlet
                     + "/templates"));
             templateCfg.setTemplateUpdateDelay(2);
 			templateCfg.setSetting("number_format", "#");
+			templateCfg.setSharedVariable("startupTime", new Long(new Date().getTime()));
 
             ModulesRepository.init(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR));
 
