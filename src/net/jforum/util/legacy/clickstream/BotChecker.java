@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import net.jforum.util.legacy.clickstream.config.ClickstreamConfig;
 import net.jforum.util.legacy.clickstream.config.ConfigLoader;
 
 /**
@@ -12,7 +13,7 @@ import net.jforum.util.legacy.clickstream.config.ConfigLoader;
  * 
  * @author <a href="plightbo@hotmail.com">Patrick Lightbody</a>
  * @author Rafael Steil (little hacks for JForum)
- * @version $Id: BotChecker.java,v 1.5 2005/07/26 03:05:03 rafaelsteil Exp $
+ * @version $Id: BotChecker.java,v 1.6 2005/12/18 02:12:54 rafaelsteil Exp $
  */
 public class BotChecker
 {
@@ -32,8 +33,10 @@ public class BotChecker
 		
 		String userAgent = request.getHeader("User-Agent");
 		
-		if (userAgent != null) {
-			List agents = ConfigLoader.instance().getConfig().getBotAgents();
+		ClickstreamConfig config = ConfigLoader.instance().getConfig();
+		
+		if (userAgent != null && config != null) {
+			List agents = config.getBotAgents();
 			
 			userAgent = userAgent.toLowerCase();
 			
@@ -53,7 +56,7 @@ public class BotChecker
 		String remoteHost = request.getRemoteHost(); // requires a DNS lookup
 		
 		if (remoteHost != null && remoteHost.length() > 0 && remoteHost.charAt(remoteHost.length() - 1) > 64) {
-			List hosts = ConfigLoader.instance().getConfig().getBotHosts();
+			List hosts = config.getBotHosts();
 			
 			remoteHost = remoteHost.toLowerCase();
 			

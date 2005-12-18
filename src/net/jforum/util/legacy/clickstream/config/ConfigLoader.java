@@ -21,7 +21,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * 
  * @author <a href="plightbo@hotmail.com">Patrick Lightbody</a>
  * @author Rafael Steil (little hacks for JForum)
- * @version $Id: ConfigLoader.java,v 1.5 2005/07/26 03:05:35 rafaelsteil Exp $
+ * @version $Id: ConfigLoader.java,v 1.6 2005/12/18 02:12:52 rafaelsteil Exp $
  */
 public class ConfigLoader
 {
@@ -52,19 +52,20 @@ public class ConfigLoader
 	
 				String path = SystemGlobals.getValue(ConfigKeys.CLICKSTREAM_CONFIG);
 				
-				if (log.isInfoEnabled()) {
-					log.info("Loading clickstream config from " + path);
+				if (path != null) {
+					if (log.isInfoEnabled()) {
+						log.info("Loading clickstream config from " + path);
+					}
+					
+					File fileInput = new File(path);
+					
+					if (fileInput.exists()) {
+						parser.parse(fileInput, new ConfigHandler());
+					}
+					else {
+						parser.parse(new InputSource(path), new ConfigHandler());
+					}
 				}
-				
-				File fileInput = new File(path);
-				
-				if (fileInput.exists()) {
-					parser.parse(fileInput, new ConfigHandler());
-				}
-				else {
-					parser.parse(new InputSource(path), new ConfigHandler());
-				}
-				
 				return config;
 			}
 			catch (SAXException e) {

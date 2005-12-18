@@ -66,7 +66,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericForumDAO.java,v 1.16 2005/12/12 01:49:16 rafaelsteil Exp $
+ * @version $Id: GenericForumDAO.java,v 1.17 2005/12/18 02:12:53 rafaelsteil Exp $
  */
 public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO 
 {
@@ -558,7 +558,7 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 		
 		Date today = new Date();
 		
-		int perDay = firstTime != null ? fs.getPosts() / this.daysUntilToday(today, firstTime) : 0;
+		double perDay = firstTime != null ? fs.getPosts() / this.daysUntilToday(today, firstTime) : 0;
 		
 		if (fs.getPosts() > 0 && perDay < 1) {
 			perDay = 1;
@@ -568,10 +568,6 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 		
 		// Topics per day
 		perDay = firstTime != null ? fs.getTopics() / this.daysUntilToday(today, firstTime) : 0;
-		
-		if (fs.getTopics() > 0 && perDay < 1) {
-			perDay = 1;
-		}
 		
 		fs.setTopicsPerDay(perDay);
 		
@@ -583,12 +579,7 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 		rs.close();
 		s.close();
 		
-		if (fs.getUsers() > 0) {
-			perDay = fs.getUsers() / this.daysUntilToday(today, firstTime);
-		}
-		else {
-			perDay = 1;
-		}
+		perDay = fs.getUsers() / this.daysUntilToday(today, firstTime);
 		
 		fs.setUsersPerDay(perDay);
 		

@@ -70,7 +70,7 @@ import freemarker.template.Template;
  * each user.
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.18 2005/07/26 03:05:57 rafaelsteil Exp $
+ * @version $Id: Spammer.java,v 1.19 2005/12/18 02:12:52 rafaelsteil Exp $
  */
 public class Spammer
 {
@@ -100,6 +100,12 @@ public class Spammer
 			}
 			else {
 				mailProps.put("mail.smtp.host", SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_HOST));
+			}
+			
+			String port = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_PORT);
+			
+			if (port != null) {
+				mailProps.put("mail.smtp.port", port);
 			}
 			
 			String localhost = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_LOCALHOST);

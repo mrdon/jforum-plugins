@@ -44,16 +44,16 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumStats.java,v 1.1 2005/12/04 01:19:10 rafaelsteil Exp $
+ * @version $Id: ForumStats.java,v 1.2 2005/12/18 02:12:51 rafaelsteil Exp $
  */
 public class ForumStats
 {
 	private int users;
 	private int posts;
 	private int topics;
-	private int postsPerDay;
-	private int topicsPerDay;
-	private int usersPerDay;
+	private double postsPerDay;
+	private double topicsPerDay;
+	private double usersPerDay;
 	
 	/**
 	 * @return Returns the posts.
@@ -74,7 +74,7 @@ public class ForumStats
 	/**
 	 * @return Returns the postsPerDay.
 	 */
-	public int getPostsPerDay()
+	public double getPostsPerDay()
 	{
 		return this.postsPerDay;
 	}
@@ -82,7 +82,7 @@ public class ForumStats
 	/**
 	 * @param postsPerDay The postsPerDay to set.
 	 */
-	public void setPostsPerDay(int postsPerDay)
+	public void setPostsPerDay(double postsPerDay)
 	{
 		this.postsPerDay = postsPerDay;
 	}
@@ -106,7 +106,7 @@ public class ForumStats
 	/**
 	 * @return Returns the topicsPerDay.
 	 */
-	public int getTopicsPerDay()
+	public double getTopicsPerDay()
 	{
 		return this.topicsPerDay;
 	}
@@ -114,7 +114,7 @@ public class ForumStats
 	/**
 	 * @param topicsPerDay The topicsPerDay to set.
 	 */
-	public void setTopicsPerDay(int topicsPerDay)
+	public void setTopicsPerDay(double topicsPerDay)
 	{
 		this.topicsPerDay = topicsPerDay;
 	}
@@ -138,7 +138,7 @@ public class ForumStats
 	/**
 	 * @return Returns the usersPerDay.
 	 */
-	public int getUsersPerDay()
+	public double getUsersPerDay()
 	{
 		return this.usersPerDay;
 	}
@@ -146,7 +146,7 @@ public class ForumStats
 	/**
 	 * @param usersPerDay The usersPerDay to set.
 	 */
-	public void setUsersPerDay(int usersPerDay)
+	public void setUsersPerDay(double usersPerDay)
 	{
 		this.usersPerDay = usersPerDay;
 	}
