@@ -44,6 +44,11 @@ PostModel.selectByUserByLimit = SELECT p.post_id, topic_id, forum_id, p.user_id,
 	AND p.need_moderate = 0 \
 	ORDER BY post_time DESC \
 	LIMIT ? OFFSET ?
+
+# ##########
+# PollModel
+# ##########
+PollModel.lastGeneratedPollId = SELECT CURRVAL('jforum_vote_desc_seq')
 		
 # #############
 # ForumModel
