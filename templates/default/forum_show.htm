@@ -140,14 +140,15 @@
 				</form>
 			</#if>
 
-				<#if moderator>
-					<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="form1" id="form1" accept-charset="${encoding}">
-					<input type="hidden" name="action" value="doModeration" />
-					<input type="hidden" name="module" value="moderation" />
-					<input type="hidden" name="securityHash" value="${securityHash}" />
-					<input type="hidden" name="returnUrl" value="${JForumContext.encodeURL("/${moduleName}/${action}/${start}/${forum.id}")}" />
-					<input type="hidden" name="forum_id" value="${forum.id}" />
-				</#if>
+			<#if moderator>
+				<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="form1" id="form1" accept-charset="${encoding}">
+				<input type="hidden" name="action" value="doModeration" />
+				<input type="hidden" name="module" value="moderation" />
+				<input type="hidden" name="securityHash" value="${securityHash}" />
+				<input type="hidden" name="returnUrl" value="${JForumContext.encodeURL("/${moduleName}/${action}/${start}/${forum.id}")}" />
+				<input type="hidden" name="forum_id" value="${forum.id}" />
+			</#if>
+			
 			<table class="forumline" cellspacing="1" cellpadding="4" width="100%" border="0"> 	
 				<tr>
 					<th class="thcornerl" nowrap="nowrap" align="center" colspan="2" height="25">&nbsp;${I18n.getMessage("ForumIndex.topics")}&nbsp;</th>

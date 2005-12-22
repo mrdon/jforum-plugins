@@ -63,7 +63,11 @@
 						</td>
 						<td class="row2" valign="middle" align="center" height="50"><span class="gensmall">${forum.totalTopics}</span></td>
 						<td class="row2" valign="middle" align="center" height="50">
-							<span class="gensmall"><#if (forum.totalPosts > 0)>${forum.totalPosts}<#else>${I18n.getMessage("ForumListing.noMessages")}</#if></span>
+							<#assign total = forum.totalPosts/>
+							<#if (total == 0 && forum.totalTopics > 0)>
+								<#assign total = forum.totalTopics/>
+							</#if>
+							<span class="gensmall"><#if (total > 0)>${total}<#else>${I18n.getMessage("ForumListing.noMessages")}</#if></span>
 						</td>
 						<td class="row2" valign="middle" nowrap="nowrap" align="center" height="50">
 							<span class="postdetails">
