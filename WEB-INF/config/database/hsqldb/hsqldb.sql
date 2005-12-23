@@ -39,6 +39,20 @@ PostModel.selectAllByTopicByLimit = SELECT LIMIT ? ? p.post_id, topic_id, forum_
 	AND p.need_moderate = 0 \
 	ORDER BY post_time ASC 
 
+PostModel.selectByUserByLimit = SELECT LIMIT ? ? p.post_id, topic_id, forum_id, p.user_id, post_time, poster_ip, enable_bbcode, p.attach, \
+	enable_html, enable_smilies, enable_sig, post_edit_time, post_edit_count, status, pt.post_subject, pt.post_text, username, p.need_moderate \
+	FROM jforum_posts p, jforum_posts_text pt, jforum_users u \
+	WHERE p.post_id = pt.post_id \
+	AND p.user_id = u.user_id \
+	AND p.user_id = ? \
+	AND p.need_moderate = 0 \
+	ORDER BY post_time DESC
+
+# ##########
+# PollModel
+# ##########
+PollModel.lastGeneratedPollId = SELECT MAX(vote_id) FROM jforum_vote_desc
+
 # #############
 # ForumModel
 # #############
@@ -62,6 +76,13 @@ TopicModel.selectRecentTopicsByLimit = SELECT LIMIT 0 ? t.*, p.user_id AS last_u
 	ORDER BY t.topic_last_post_id DESC \
 	
 TopicModel.lastGeneratedTopicId = SELECT MAX(topic_id) from jforum_topics
+
+TopicModel.selectByUserByLimit = SELECT LIMIT ? ? t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \
+	FROM jforum_topics t, jforum_posts p \
+	WHERE p.post_id = t.topic_last_post_id \
+	AND t.user_id = ? \
+	AND p.need_moderate = 0 \
+	ORDER BY t.topic_last_post_id DESC
 
 # #####################
 # PrivateMessagesModel

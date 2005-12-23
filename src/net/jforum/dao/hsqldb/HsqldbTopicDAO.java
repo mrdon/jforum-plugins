@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -42,32 +42,29 @@
  */
 package net.jforum.dao.hsqldb;
 
-import java.sql.PreparedStatement;
-import java.util.ArrayList;
 import java.util.List;
 
-import net.jforum.JForum;
-import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.dao.generic.GenericTopicDAO;
 
 /**
  * @author Marc Wick
- * @version $Id: HsqldbTopicDAO.java,v 1.5 2005/11/15 21:29:58 rafaelsteil Exp $
+ * @version $Id: HsqldbTopicDAO.java,v 1.6 2005/12/23 00:01:16 rafaelsteil Exp $
  */
-public class HsqldbTopicDAO extends net.jforum.dao.postgresql.PostgresqlTopicDAO {
-
+public class HsqldbTopicDAO extends GenericTopicDAO
+{
 	/**
 	 * @see net.jforum.dao.TopicDAO#selectAllByForumByLimit(int, int, int)
 	 */
-	public List selectAllByForumByLimit(int forumId, int startFrom,
-			int count) throws Exception {
-		List l = new ArrayList();
-
-		PreparedStatement p = JForum.getConnection().prepareStatement(
-				SystemGlobals.getSql("TopicModel.selectAllByForumByLimit"));
-		p.setInt(1, startFrom);
-		p.setInt(2, count);
-		p.setInt(3, forumId);
-
-		return super.fillTopicsData(p);
+	public List selectAllByForumByLimit(int forumId, int startFrom, int count) throws Exception 
+	{
+		return super.selectAllByForumByLimit(startFrom, count, forumId);
+	}
+	
+	/**
+	 * @see net.jforum.dao.generic.GenericTopicDAO#selectByUserByLimit(int, int, int)
+	 */
+	public List selectByUserByLimit(int userId, int startFrom, int count) throws Exception
+	{
+		return super.selectByUserByLimit(startFrom, count, userId);
 	}
 }

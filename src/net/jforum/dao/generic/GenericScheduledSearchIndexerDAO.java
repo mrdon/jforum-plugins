@@ -58,7 +58,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericScheduledSearchIndexerDAO.java,v 1.7 2005/10/27 18:54:59 jakefear Exp $
+ * @version $Id: GenericScheduledSearchIndexerDAO.java,v 1.8 2005/12/23 00:01:17 rafaelsteil Exp $
  */
 public class GenericScheduledSearchIndexerDAO implements net.jforum.dao.ScheduledSearchIndexerDAO
 {
@@ -142,7 +142,7 @@ public class GenericScheduledSearchIndexerDAO implements net.jforum.dao.Schedule
 		return maxPostId;
 	}
 	
-	protected List getPosts(int start, int count, int minPostId, int maxPostId, Connection conn) throws Exception
+	public List getPosts(int start, int count, int minPostId, int maxPostId, Connection conn) throws Exception
 	{
 		List l = new ArrayList();
 		

@@ -84,7 +84,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.41 2005/12/22 20:25:27 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.42 2005/12/23 00:01:19 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -485,7 +485,7 @@ public class InstallAction extends Command
 		boolean isDs = false;
 		
 		if ("JDBC".equals(connectionType)) {
-			implementation = "yes".equals(this.getFromSession("usePool")) 
+			implementation = "yes".equals(this.getFromSession("usePool")) && !"hsqldb".equals(database) 
 				? "net.jforum.PooledConnection"
 				: "net.jforum.SimpleConnection";
 			

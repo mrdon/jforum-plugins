@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -46,7 +46,7 @@ import java.util.List;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostgresqlTopicDAO.java,v 1.6 2005/09/18 06:57:07 andowson Exp $
+ * @version $Id: PostgresqlTopicDAO.java,v 1.7 2005/12/23 00:01:21 rafaelsteil Exp $
  */
 public class PostgresqlTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 {

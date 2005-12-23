@@ -88,82 +88,83 @@ INSERT INTO jforum_posts_text VALUES (1,'[b]Congratulations![/b]. You have compl
 --
 -- View Forum
 --
-INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (14, 'perm_forum', 1, 0);
-INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (15, 'perm_forum', 2, 0);
-
-INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (14, '1', 1);
-INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (15, '1', 1);
-
---
--- Anonymous posts
---
-INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (16, 'perm_anonymous_post', 1, 0);
-INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (17, 'perm_anonymous_post', 2, 0);
-
-INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (16, '1', 1);
-INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (17, '1', 1);
-
---
--- View Category
---
-INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (18, 'perm_category', 1, 0);
-INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (19, 'perm_category', 2, 0);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (18, 'perm_forum', 1, 0);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (19, 'perm_forum', 2, 0);
 
 INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (18, '1', 1);
 INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (19, '1', 1);
 
 --
--- Sticky / Announcements
+-- Anonymous posts
 --
-INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (20, 'perm_create_sticky_announcement_topics', 1, 1);
-INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (21, 'perm_create_sticky_announcement_topics', 2, 1);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (20, 'perm_anonymous_post', 1, 0);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (21, 'perm_anonymous_post', 2, 0);
+
+INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (20, '1', 1);
+INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (21, '1', 1);
 
 --
--- Create / Reply to topics
+-- View Category
 --
-INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (22, 'perm_read_only_forums', 1, 0);
-INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (23, 'perm_read_only_forums', 2, 0);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (22, 'perm_category', 1, 0);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (23, 'perm_category', 2, 0);
 
 INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (22, '1', 1);
 INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (23, '1', 1);
 
--- 
--- Enable HTML
 --
-INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (24, 'perm_html_disabled', 1, 0);
-INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (25, 'perm_html_disabled', 2, 0);
-
-INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (24, '1', 1);
-INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (25, '1', 1);
+-- Sticky / Announcements
+--
+INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (24, 'perm_create_sticky_announcement_topics', 1, 1);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (25, 'perm_create_sticky_announcement_topics', 2, 1);
 
 --
--- Attachments
+-- Create / Reply to topics
 --
-INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (26, 'perm_attachments_enabled', 1, 0);
-INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (27, 'perm_attachments_enabled', 2, 0);
-INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (28, 'perm_attachments_download', 1, 1);
-INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (29, 'perm_attachments_download', 2, 1);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (26, 'perm_read_only_forums', 1, 0);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (27, 'perm_read_only_forums', 2, 0);
 
 INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (26, '1', 1);
 INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (27, '1', 1);
 
+-- 
+-- Enable HTML
+--
+INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (28, 'perm_html_disabled', 1, 0);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type ) VALUES (29, 'perm_html_disabled', 2, 0);
+
+INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (28, '1', 1);
+INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (29, '1', 1);
+
+--
+-- Attachments
+--
+INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (30, 'perm_attachments_enabled', 1, 0);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (31, 'perm_attachments_enabled', 2, 0);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (32, 'perm_attachments_download', 1, 1);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (33, 'perm_attachments_download', 2, 1);
+
+INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (30, '1', 1);
+INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (31, '1', 1);
+
 --
 -- Bookmarks
 --
-INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (30, 'perm_bookmarks_enabled', 1, 1);
-INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (31, 'perm_bookmarks_enabled', 2, 1);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (34, 'perm_bookmarks_enabled', 1, 1);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (35, 'perm_bookmarks_enabled', 2, 1);
 
 --
 -- Karma
 --
-INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (32, 'perm_karma_enabled', 1, 1);
-INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (33, 'perm_karma_enabled', 2, 1);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (36, 'perm_karma_enabled', 1, 1);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (37, 'perm_karma_enabled', 2, 1);
 
 --
 -- Reply only
 --
-INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (34, 'perm_reply_only', 1, 0);
-INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (35, 'perm_reply_only', 2, 0);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (38, 'perm_reply_only', 1, 0);
+INSERT INTO jforum_roles (role_id, name, group_id, role_type) VALUES (39, 'perm_reply_only', 2, 0);
 
-INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (34, '1', 1);
-INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (35, '1', 1);
+INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (38, '1', 1);
+INSERT INTO jforum_role_values ( role_id, role_value, role_type ) VALUES (39, '1', 1);
+

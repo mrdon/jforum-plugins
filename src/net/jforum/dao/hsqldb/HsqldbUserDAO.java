@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
 
  * Redistribution and use in source and binary forms, 
@@ -44,27 +44,20 @@ package net.jforum.dao.hsqldb;
 
 import java.util.List;
 
+import net.jforum.dao.generic.GenericUserDAO;
+
 /**
  * @author Marc Wick
  * @author Rafael Steil
- * @version $Id: HsqldbUserDAO.java,v 1.4 2005/07/26 03:05:49 rafaelsteil Exp $
+ * @version $Id: HsqldbUserDAO.java,v 1.5 2005/12/23 00:01:16 rafaelsteil Exp $
  */
-public class HsqldbUserDAO extends net.jforum.dao.postgresql.PostgresqlUserDAO
+public class HsqldbUserDAO extends GenericUserDAO
 {
-	/**
-	 * @see net.jforum.dao.UserDAO#selectAll(int, int)
-	 */
-	public List selectAll(int startFrom, int count) throws Exception
-	{
-		return new net.jforum.dao.generic.GenericUserDAO().selectAll(startFrom, count);
-	}
-	
 	/**
 	 * @see net.jforum.dao.postgresql.PostgresqlUserDAO#selectAllByGroup(int, int, int)
 	 */
 	public List selectAllByGroup(int groupId, int start, int count) throws Exception
 	{
-		// The parameters are in a different order because the way hsqldb deals with LIMIT clauses
-		return new net.jforum.dao.generic.GenericUserDAO().selectAllByGroup(start, count, groupId);
+		return super.selectAllByGroup(start, count, groupId);
 	}
 }
