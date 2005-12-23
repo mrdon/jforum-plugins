@@ -163,7 +163,7 @@
 								${I18n.getMessage("Login.password")}: <input class="post" type="password" size="10" name="password" /> 
 								<#if autoLoginEnabled>
 									&nbsp;&nbsp; &nbsp;&nbsp;
-									${I18n.getMessage("Login.autoLogon")} <input class="text" type="checkbox" name="autologin" />
+									<label for="autologin">${I18n.getMessage("Login.autoLogon")}</label> <input class="text" type="checkbox" name="autologin" id="autologin"/>
 								</#if>
 								&nbsp;&nbsp;&nbsp; 
 								<input class="mainoption" type="submit" value="${I18n.getMessage("Login.enter")}" name="login" /> 

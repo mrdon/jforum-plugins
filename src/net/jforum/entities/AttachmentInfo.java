@@ -46,21 +46,25 @@ import java.util.Date;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentInfo.java,v 1.3 2005/07/26 03:04:53 rafaelsteil Exp $
+ * @version $Id: AttachmentInfo.java,v 1.4 2005/12/23 20:36:57 rafaelsteil Exp $
  */
 public class AttachmentInfo
 {
 	private int id;
 	private int attachId;
+	private int downloadCount;
+	
 	private String physicalFilename;
 	private String realFilename;
-	private int downloadCount;
 	private String comment;
 	private String mimetype;
-	private long filesize;
-	private Date uploadTime;
+	
 	private long uploadTimeInMillis;
+	private long filesize;
+	
 	private boolean hasThumb;
+
+	private Date uploadTime;
 	private AttachmentExtension extension;
 	
 	/**

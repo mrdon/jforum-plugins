@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -58,7 +58,7 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentsAction.java,v 1.11 2005/07/26 03:05:40 rafaelsteil Exp $
+ * @version $Id: AttachmentsAction.java,v 1.12 2005/12/23 20:36:59 rafaelsteil Exp $
  */
 public class AttachmentsAction extends AdminCommand
 {
@@ -66,8 +66,8 @@ public class AttachmentsAction extends AdminCommand
 	{
 		this.context.put("icon", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_ICON));
 		this.context.put("createThumb", SystemGlobals.getBoolValue(ConfigKeys.ATTACHMENTS_IMAGES_CREATE_THUMB));
-		this.context.put("thumbH", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_IMAGES_MIN_THUMB_H));
-		this.context.put("thumbW", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_IMAGES_MIN_THUMB_W));
+		this.context.put("thumbH", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_IMAGES_MAX_THUMB_H));
+		this.context.put("thumbW", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_IMAGES_MAX_THUMB_W));
 		this.context.put("maxPost", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
 
 		this.setTemplateName(TemplateKeys.ATTACHMENTS_CONFIG);

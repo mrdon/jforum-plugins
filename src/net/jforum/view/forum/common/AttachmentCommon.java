@@ -42,6 +42,7 @@
  */
 package net.jforum.view.forum.common;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,6 +71,7 @@ import net.jforum.repository.SecurityRepository;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.MD5;
+import net.jforum.util.image.ImageUtils;
 import net.jforum.util.legacy.commons.fileupload.FileItem;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -78,7 +80,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.24 2005/12/06 21:17:00 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.25 2005/12/23 20:36:58 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {
@@ -130,13 +132,14 @@ public class AttachmentCommon
 		
 		for (int i = 0; i < total; i++) {
 			FileItem item = (FileItem)this.request.getObjectParameter("file_" + i);
+			
 			if (item == null) {
 				continue;
 			}
 
 			if (item.getName().indexOf('\000') > -1) {
 				logger.warn("Possible bad attachment (null char): " + item.getName()
-						+ " - user_id: " + SessionFacade.getUserSession().getUserId());
+					+ " - user_id: " + SessionFacade.getUserSession().getUserId());
 				continue;
 			}
 			
@@ -146,14 +149,15 @@ public class AttachmentCommon
 			if (extensions.containsKey(uploadUtils.getExtension())) {
 				if (!((Boolean)extensions.get(uploadUtils.getExtension())).booleanValue()) {
 					throw new BadExtensionException(I18n.getMessage("Attachments.badExtension", 
-							new String[] { uploadUtils.getExtension() }));
+						new String[] { uploadUtils.getExtension() }));
 				}
 			}
 
 			// Check comment length:
 			String comment = this.request.getParameter("comment_" + i);
-			if (comment.length() > 254)
+			if (comment.length() > 254) {
 				throw new AttachmentException("Comment too long.");
+			}
 			
 			Attachment a = new Attachment();
 			a.setUserId(userId);
@@ -189,8 +193,8 @@ public class AttachmentCommon
 		if (ql != null) {
 			if (ql.exceedsQuota(totalSize)) {
 				throw new AttachmentSizeTooBigException(I18n.getMessage("Attachments.tooBig", 
-						new Integer[] { new Integer(ql.getSizeInBytes() / 1024), 
-							new Integer((int)totalSize / 1024) }));
+					new Integer[] { new Integer(ql.getSizeInBytes() / 1024), 
+						new Integer((int)totalSize / 1024) }));
 			}
 		}
 	}
@@ -228,12 +232,37 @@ public class AttachmentCommon
 			Map.Entry entry = (Map.Entry)iter.next();
 			Attachment a = (Attachment)entry.getValue();
 			a.setPostId(post.getId());
+			
 			String path = SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR) 
 				+ "/" 
 				+ a.getInfo().getPhysicalFilename();
 			
 			this.am.addAttachment(a);
 			((UploadUtils)entry.getKey()).saveUploadedFile(path);
+			
+			if (this.shouldCreateThumb(a)) {
+				this.createSaveThumb(path);
+			}
+		}
+	}
+	
+	private boolean shouldCreateThumb(Attachment a) {
+		String extension = a.getInfo().getExtension().getExtension();
+		
+		return SystemGlobals.getBoolValue(ConfigKeys.ATTACHMENTS_IMAGES_CREATE_THUMB)
+			&& ("jpg".equals(extension) || "jpeg".equals(extension) 
+				|| "gif".equals(extension) || "png".equals(extension));
+	}
+	
+	private void createSaveThumb(String path) {
+		try {
+			BufferedImage image = ImageUtils.resizeImage(path, ImageUtils.IMAGE_JPEG, 
+				SystemGlobals.getIntValue(ConfigKeys.ATTACHMENTS_IMAGES_MAX_THUMB_W),
+				SystemGlobals.getIntValue(ConfigKeys.ATTACHMENTS_IMAGES_MAX_THUMB_H));
+			ImageUtils.saveImage(image, path + "_thumb", ImageUtils.IMAGE_JPEG);
+		}
+		catch (Exception e) {
+			logger.error(e.toString(), e);
 		}
 	}
 	
@@ -282,8 +311,18 @@ public class AttachmentCommon
 					
 					am.removeAttachment(id, postId);
 					
-					File f = new File(SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR)
-							+ "/" + a.getInfo().getPhysicalFilename());
+					String filename = SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR)
+						+ "/" + a.getInfo().getPhysicalFilename();
+					
+					File f = new File(filename);
+					
+					if (f.exists()) {
+						f.delete();
+					}
+					
+					// Check if we have a thumb to delete
+					f = new File(filename = "_thumb");
+					
 					if (f.exists()) {
 						f.delete();
 					}

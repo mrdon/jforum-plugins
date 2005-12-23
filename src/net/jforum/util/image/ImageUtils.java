@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
 
  * Redistribution and use in source and binary forms, 
@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 21/04/2004 - 19:54:16
- * net.jforum.util.image.ImageUtils.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: ImageUtils.java,v 1.14 2005/07/26 04:01:25 diegopires Exp $
  */
 package net.jforum.util.image;
 
@@ -68,6 +65,7 @@ import javax.imageio.stream.ImageOutputStream;
  * can read from. GIF images will be saved as PNG. 
  * 
  * @author Rafael Steil
+ * @version $Id: ImageUtils.java,v 1.15 2005/12/23 20:37:00 rafaelsteil Exp $
  */
 public class ImageUtils
 {

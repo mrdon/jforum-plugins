@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -42,9 +42,14 @@
  */
 package net.jforum.entities;
 
+import java.io.File;
+
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
+
 /**
  * @author Rafael Steil
- * @version $Id: Attachment.java,v 1.3 2005/07/26 03:04:48 rafaelsteil Exp $
+ * @version $Id: Attachment.java,v 1.4 2005/12/23 20:36:57 rafaelsteil Exp $
  */
 public class Attachment
 {
@@ -131,5 +136,20 @@ public class Attachment
 	public void setInfo(AttachmentInfo info)
 	{
 		this.info = info;
+	}
+	
+	public boolean hasThumb() 
+	{
+		return SystemGlobals.getBoolValue(ConfigKeys.ATTACHMENTS_IMAGES_CREATE_THUMB)
+			&& new File(SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR)
+					+ '/'
+					+ this.info.getPhysicalFilename() + "_thumb").exists();
+	}
+	
+	public String thumbPath() {
+		return SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_UPLOAD_DIR)
+			+ '/'
+			+ this.info.getPhysicalFilename()
+			+ "_thumb";
 	}
 }

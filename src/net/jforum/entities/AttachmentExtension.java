@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -44,17 +44,19 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentExtension.java,v 1.4 2005/07/26 03:04:50 rafaelsteil Exp $
+ * @version $Id: AttachmentExtension.java,v 1.5 2005/12/23 20:36:57 rafaelsteil Exp $
  */
 public class AttachmentExtension
 {	
 	private int id;
 	private int extensionGroupId;
+	
 	private boolean allow;
+	private boolean unknown;
+	
 	private String comment;
 	private String extension;
 	private String uploadIcon;
-	private boolean unknown;
 	
 	/**
 	 * @return Returns the allow.
