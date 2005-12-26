@@ -48,7 +48,6 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.util.Iterator;
 import java.util.Properties;
 
 import net.jforum.ConfigLoader;
@@ -59,9 +58,9 @@ import org.apache.log4j.Logger;
 
 /**
  * Try to fix some database configuration problems.
- *  This class will much likely do some checks only for mysql.
+ * This class will much likely do some checks only for mysql.
  * @author Rafael Steil
- * @version $Id: DatabaseWorkarounder.java,v 1.2 2005/12/12 00:54:40 rafaelsteil Exp $
+ * @version $Id: DatabaseWorkarounder.java,v 1.3 2005/12/26 13:04:55 rafaelsteil Exp $
  */
 public class DatabaseWorkarounder
 {
@@ -153,11 +152,7 @@ public class DatabaseWorkarounder
 		Properties p = this.loadSqlQueries();
 		
 		if (p != null && p.size() > 0) {
-			for (Iterator iter = p.keySet().iterator(); iter.hasNext(); ) {
-				iter.remove();
-			}
-			
-			this.saveSqlQueries(p);
+			this.saveSqlQueries(new Properties());
 		}
 		
 		this.fixEncoding();
