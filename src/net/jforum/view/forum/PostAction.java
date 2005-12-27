@@ -97,7 +97,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.131 2005/12/23 20:37:01 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.132 2005/12/27 21:11:38 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -163,14 +163,14 @@ public class PostAction extends Command
 			tm.updateReadStatus(topic.getId(), us.getUserId(), true);
 		}
 
-		boolean canVoteOnPoll = SecurityRepository.canAccess(SecurityConstants.PERM_VOTE);
+		boolean canVoteOnPoll = logged && SecurityRepository.canAccess(SecurityConstants.PERM_VOTE);
 		Poll poll = null;
 		
 		if (topic.isVote()) {
 			// It has a poll associated with the topic
 			poll = pollDao.selectById(topic.getVoteId());
 			
-			if (canVoteOnPoll && logged) {
+			if (canVoteOnPoll) {
 				canVoteOnPoll = !pollDao.hasUserVotedOnPoll(topic.getVoteId(), us.getUserId());
 			}
 		}
@@ -270,7 +270,7 @@ public class PostAction extends Command
 		int topicId = this.request.getIntParameter("topic_id");
 		
 		if (SessionFacade.isLogged() && this.request.getParameter("poll_option") != null) {
-			//they voted, save the value
+			// They voted, save the value
 			int optionId = this.request.getIntParameter("poll_option");
 			
 			PollDAO dao = DataAccessDriver.getInstance().newPollDAO();
