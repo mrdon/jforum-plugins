@@ -42,11 +42,6 @@
  */
 package net.jforum.view.forum;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
 import net.jforum.Command;
 import net.jforum.JForum;
 import net.jforum.SessionFacade;
@@ -68,7 +63,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaAction.java,v 1.16 2005/12/18 01:58:40 rafaelsteil Exp $
+ * @version $Id: KarmaAction.java,v 1.17 2005/12/27 18:09:59 rafaelsteil Exp $
  */
 public class KarmaAction extends Command
 {
@@ -162,9 +157,11 @@ public class KarmaAction extends Command
 	/**
 	 * TODO: Make dynamic data format TODO: refactoring here to remove the duplicated code with the
 	 * method above. Performs a search over the users votes between two dates.
+	 * FIXME: "order_by" should not come from the HTML form representing the real db column name
 	 * 
 	 * @throws Exception
 	 */
+	/*
 	public void searchByPeriod() throws Exception
 	{
 		SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy");
@@ -197,14 +194,17 @@ public class KarmaAction extends Command
 		this.context.put("users", users);
 		this.setTemplateName(TemplateKeys.KARMA_SEARCH_BYPERIOD);
 	}
+	*/
 
 	/**
 	 * FIXME: The date format is not dynamic.
+	 * FIXME: "order_by" should not come from the HTML form representing the real db column name
 	 * 
 	 * Performs a search over the users votes in a specific month.
 	 * 
 	 * @throws Exception
 	 */
+	/*
 	public void searchByMonth() throws Exception
 	{
 		SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -234,4 +234,5 @@ public class KarmaAction extends Command
 		this.context.put("users", users);
 		this.setTemplateName(TemplateKeys.KARMA_SEARCH_BYMONTH);
 	}
+	*/
 }

@@ -2,7 +2,7 @@
 -- jforum_banlist
 --
 CREATE SEQUENCE jforum_banlist_seq
-INCREMENT BY 1
+	INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
 CREATE TABLE jforum_banlist (
@@ -18,7 +18,7 @@ CREATE INDEX idx_banlist_user ON jforum_banlist(user_id);
 -- Table structure for table 'jforum_categories'
 --
 CREATE SEQUENCE jforum_categories_seq
-INCREMENT BY 1
+	INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
 
@@ -34,7 +34,7 @@ CREATE TABLE jforum_categories (
 -- Table structure for table 'jforum_config'
 --
 CREATE SEQUENCE jforum_config_seq
-INCREMENT BY 1
+	INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
 
@@ -50,7 +50,7 @@ CREATE TABLE jforum_config (
 --
 
 CREATE SEQUENCE jforum_forums_seq
-INCREMENT BY 1
+	INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
 
@@ -72,7 +72,7 @@ CREATE INDEX idx_forums_categories_id ON jforum_forums(categories_id);
 --
 
 CREATE SEQUENCE jforum_groups_seq
-INCREMENT BY 1
+	INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
 
@@ -100,7 +100,7 @@ CREATE INDEX idx_ug_user ON jforum_user_groups(user_id);
 --
 
 CREATE SEQUENCE jforum_roles_seq
-INCREMENT BY 1
+	INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
 
@@ -130,7 +130,7 @@ CREATE INDEX idx_rv_role ON jforum_role_values(role_id);
 --
 
 CREATE SEQUENCE jforum_posts_seq
-INCREMENT BY 1
+	INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
 
@@ -172,7 +172,7 @@ CREATE TABLE jforum_posts_text (
 --
 
 CREATE SEQUENCE jforum_privmsgs_seq
-INCREMENT BY 1
+	INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
 
@@ -202,7 +202,7 @@ CREATE INDEX idx_pm_text_id ON jforum_privmsgs_text (privmsgs_id);
 --
 
 CREATE SEQUENCE jforum_ranks_seq
-INCREMENT BY 1
+	INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
 
@@ -234,7 +234,7 @@ CREATE TABLE jforum_sessions (
 --
 
 CREATE SEQUENCE jforum_smilies_seq
-INCREMENT BY 1
+	INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
 
@@ -251,7 +251,7 @@ CREATE TABLE jforum_smilies (
 --
 
 CREATE SEQUENCE jforum_themes_seq
-INCREMENT BY 1
+	INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
 
@@ -267,7 +267,7 @@ CREATE TABLE jforum_themes (
 --
 
 CREATE SEQUENCE jforum_topics_seq
-INCREMENT BY 1
+	INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
 
@@ -310,7 +310,7 @@ CREATE INDEX idx_tw_user ON jforum_topics_watch(user_id);
 --
 
 CREATE SEQUENCE jforum_users_seq
-INCREMENT BY 1
+	INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
 
@@ -375,7 +375,7 @@ CREATE TABLE jforum_users (
 --
 
 CREATE SEQUENCE jforum_vote_desc_seq
-INCREMENT BY 1
+	INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
 
@@ -414,7 +414,7 @@ CREATE TABLE jforum_vote_voters (
 --
 
 CREATE SEQUENCE jforum_words_seq
-INCREMENT BY 1
+	INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
 
@@ -429,7 +429,7 @@ CREATE TABLE jforum_words (
 -- Table structure for table 'jforum_search_words'
 --
 CREATE SEQUENCE jforum_search_words_seq
-INCREMENT BY 1
+	INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
 
@@ -492,7 +492,7 @@ CREATE INDEX idx_st_lp ON jforum_search_topics(topic_last_post_id);
 -- Table structure for table 'jforum_karma'
 --
 CREATE SEQUENCE jforum_karma_seq
-INCREMENT BY 1
+	INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
 
@@ -516,7 +516,7 @@ CREATE INDEX idx_krm_from ON jforum_karma(from_user_id);
 -- Table structure for table 'jforum_bookmark'
 --
 CREATE SEQUENCE jforum_bookmarks_seq
-INCREMENT BY 1
+	INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
 
@@ -538,7 +538,7 @@ CREATE INDEX idx_bok_rel ON jforum_bookmarks(relation_id);
 -- Table structure for table 'jforum_quota_limit'
 --
 CREATE SEQUENCE jforum_quota_limit_seq
-INCREMENT BY 1
+	INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
 
@@ -554,7 +554,7 @@ CREATE TABLE jforum_quota_limit (
 -- Table structure for table 'jforum_extension_groups'
 --
 CREATE SEQUENCE jforum_extension_groups_seq
-INCREMENT BY 1
+	INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
 
@@ -571,7 +571,7 @@ CREATE TABLE jforum_extension_groups (
 -- Table structure for table 'jforum_extensions'
 --
 CREATE SEQUENCE jforum_extensions_seq
-INCREMENT BY 1
+	INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
 
@@ -592,7 +592,7 @@ CREATE INDEX idx_ext_ext ON jforum_extensions(extension);
 -- Table structure for table 'jforum_attach'
 --
 CREATE SEQUENCE jforum_attach_seq
-INCREMENT BY 1
+	INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
 
@@ -612,7 +612,7 @@ CREATE INDEX idx_att_user ON jforum_attach(user_id);
 -- Table structure for table 'jforum_attach_desc'
 --
 CREATE SEQUENCE jforum_attach_desc_seq
-INCREMENT BY 1
+	INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
 
@@ -637,7 +637,7 @@ CREATE INDEX idx_att_d_ext ON jforum_attach_desc(extension_id);
 -- Table structure for table 'jforum_attach_quota'
 --
 CREATE SEQUENCE jforum_attach_quota_seq
-INCREMENT BY 1
+	INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
 
@@ -655,7 +655,7 @@ CREATE INDEX idx_aq_ql ON jforum_attach_quota(quota_limit_id);
 -- Table structure for table 'jforum_banner'
 --
 CREATE SEQUENCE jforum_banner_seq
-INCREMENT BY 1
+	INCREMENT BY 1
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
 

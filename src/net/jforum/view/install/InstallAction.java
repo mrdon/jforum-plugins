@@ -84,7 +84,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.42 2005/12/23 00:01:19 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.43 2005/12/27 18:09:56 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -356,6 +356,9 @@ public class InstallAction extends Command
 		if ("postgresql".equals(dbType)) {
 			this.dropPostgresqlTables(conn);
 		}
+		else if ("oracle".equals(dbType)) {
+			this.dropOracleTables(conn);
+		}
 		
 		boolean status = true;
 		
@@ -390,6 +393,41 @@ public class InstallAction extends Command
 		}
 		
 		return status;
+	}
+	
+	private void dropOracleTables(Connection conn)
+	{
+		Statement s = null;
+		
+		try {
+			List statements = ParseDBStructFile.parse(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
+				+ "/database/oracle/oracle_db_struct_drop.sql");
+			
+			for (Iterator iter = statements.iterator(); iter.hasNext(); ) {
+				try {
+					String query = (String)iter.next();
+					
+					if (query == null || "".equals(query.trim())) {
+						continue;
+					}
+					
+					s = conn.createStatement();
+					s.executeQuery(query);
+					s.close();
+				}
+				catch (Exception e) {
+					logger.error("IGNORE: " + e.toString());
+				}
+			}
+		}
+		catch (Exception e) {
+			logger.error(e.toString(), e);
+		}
+		finally {
+			if (s != null) {
+				try { s.close(); } catch (Exception e) {}
+			}
+		}
 	}
 	
 	private boolean checkForWritableDir()

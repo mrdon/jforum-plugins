@@ -120,6 +120,8 @@ PollModel.lastGeneratedPollId = SELECT jforum_vote_desc_seq.currval FROM DUAL
 # #############
 ForumModel.addNew = INSERT INTO jforum_forums (forum_id, categories_id, forum_name, forum_desc, forum_order, moderated) VALUES (jforum_forums_seq.nextval, ?, ?, ?, ?, ?)
 ForumModel.lastGeneratedForumId = SELECT jforum_forums_seq.currval FROM DUAL
+ForumModel.statsFirstPostTime = SELECT MIN(post_time) FROM jforum_posts
+ForumModel.statsFirstRegisteredUserTime = SELECT MIN(user_regdate) FROM jforum_users
 
 # #############
 # TopicModel
@@ -188,28 +190,14 @@ PrivateMessagesModel.lastGeneratedPmId = SELECT jforum_privmsgs_seq.currval FROM
 # ############
 SearchModel.insertWords = INSERT INTO jforum_search_words (word_id, word, word_hash) VALUES (jforum_search_words_seq.nextval, ?, ?)
 
-SearchModel.searchBase = SELECT t.*, u.username AS posted_by_username, u.user_id AS posted_by_id, u2.username AS last_post_by_username, u2.user_id AS last_post_by_id, p2.post_time, p.attach \
-	FROM jforum_search_topics t, jforum_users u, jforum_posts p, jforum_posts p2, jforum_users u2, jforum_forums f, jforum_search_results sr \
-	WHERE t.user_id = u.user_id \
-	AND p.post_id = t.topic_first_post_id \
-	AND p2.post_id = t.topic_last_post_id \
-	AND u2.user_id = p2.user_id \
-	AND f.forum_id = t.forum_id \
-	AND t.topic_id = sr.topic_id \
-	AND sr.session_id = ? \
-	AND t.session_id = ? \
-	:criterias: \
-	ORDER BY :orderByField: :orderBy:
-
 SearchModel.insertTopicsIds = INSERT INTO jforum_search_results ( topic_id, session_id, search_time ) SELECT DISTINCT t.topic_id, ?, sysdate FROM jforum_topics t, jforum_posts p \
 	WHERE t.topic_id = p.topic_id \
 	AND p.post_id IN (:posts:)
 
-
 SearchModel.selectTopicData = INSERT INTO jforum_search_topics (topic_id, forum_id, topic_title, user_id, topic_time, \
-	topic_views, topic_status, topic_replies, topic_vote, topic_type, topic_first_post_id, topic_last_post_id, moderated, session_id, search_time) \
+	topic_views, topic_status, topic_replies, topic_vote_id, topic_type, topic_first_post_id, topic_last_post_id, moderated, session_id, search_time) \
 	SELECT t.topic_id, t.forum_id, t.topic_title, t.user_id, t.topic_time, \
-	t.topic_views, t.topic_status, t.topic_replies, t.topic_vote, t.topic_type, t.topic_first_post_id, t.topic_last_post_id, t.moderated, ?, sysdate \
+	t.topic_views, t.topic_status, t.topic_replies, t.topic_vote_id, t.topic_type, t.topic_first_post_id, t.topic_last_post_id, t.moderated, ?, sysdate \
 	FROM jforum_topics t, jforum_search_results s \
 	WHERE t.topic_id = s.topic_id \
 	AND s.session_id = ?

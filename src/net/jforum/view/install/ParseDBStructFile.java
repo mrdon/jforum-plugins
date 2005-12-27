@@ -50,7 +50,7 @@ import java.util.List;
 
 /**
  * @author Rafael Steil
- * @version $Id: ParseDBStructFile.java,v 1.2 2005/11/29 00:26:51 rafaelsteil Exp $
+ * @version $Id: ParseDBStructFile.java,v 1.3 2005/12/27 18:09:56 rafaelsteil Exp $
  */
 public class ParseDBStructFile
 {
@@ -67,7 +67,8 @@ public class ParseDBStructFile
 			
 			boolean processing = false;
 			char delimiter = ';';
-			String[] creators = { "CREATE INDEX", "CREATE TABLE", "CREATE SEQUENCE", "DROP TABLE", "IF EXISTS" };
+			String[] creators = { "CREATE INDEX", "CREATE TABLE", "CREATE SEQUENCE", "DROP TABLE", "IF EXISTS",
+					"DROP SEQUENCE", "DROP INDEX" };
 			
 			while ((line = reader.readLine()) != null) {
 				if (line.length() == 0) {
@@ -76,6 +77,7 @@ public class ParseDBStructFile
 				
 				char charAt = line.charAt(0);
 				
+				// Ignore comments
 				if (charAt == '-' || charAt == '#') {
 					continue;
 				}
@@ -84,6 +86,7 @@ public class ParseDBStructFile
 					sb.append(line);
 					
 					if (line.indexOf(delimiter) > -1) {
+						sb.delete(sb.length() - 1, sb.length());
 						statements.add(sb.toString());
 						processing = false;
 					}
@@ -94,6 +97,10 @@ public class ParseDBStructFile
 							sb.delete(0, sb.length());
 							
 							if (line.indexOf(delimiter) > -1) {
+								if (line.indexOf(';') > -1) {
+									line = line.replace(';', ' ');
+								}
+								
 								statements.add(line);
 							}
 							else {

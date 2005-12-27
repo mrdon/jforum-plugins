@@ -65,12 +65,7 @@
     	<servlet-name>install</servlet-name>
     	<url-pattern>/install/install.page</url-pattern>
     </servlet-mapping>
-    
-    <servlet-mapping>
-    	<servlet-name>default</servlet-name>
-    	<url-pattern>/templates/*</url-pattern>
-    </servlet-mapping>
-	
+
 	<servlet-mapping>
 		<servlet-name>dwr-invoker</servlet-name>
 		<url-pattern>/dwr/*</url-pattern>

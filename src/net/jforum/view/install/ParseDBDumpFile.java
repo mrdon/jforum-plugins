@@ -50,7 +50,7 @@ import java.util.List;
 
 /**
  * @author Rafael Steil
- * @version $Id: ParseDBDumpFile.java,v 1.2 2005/11/29 00:26:51 rafaelsteil Exp $
+ * @version $Id: ParseDBDumpFile.java,v 1.3 2005/12/27 18:09:55 rafaelsteil Exp $
  */
 public class ParseDBDumpFile
 {
@@ -74,6 +74,10 @@ public class ParseDBDumpFile
 				
 				if (charAt == '-' || charAt == '#') {
 					continue;
+				}
+				
+				if (line.indexOf(';') > -1) {
+					line = line.replace(';', ' ');
 				}
 				
 				statements.add(line);

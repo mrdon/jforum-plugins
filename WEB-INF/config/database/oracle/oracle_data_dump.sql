@@ -44,7 +44,7 @@ INSERT INTO jforum_smilies VALUES ( jforum_smilies_seq.nextval, ':-)','<img src=
 INSERT INTO jforum_smilies VALUES ( jforum_smilies_seq.nextval, ':D','<img src=\"#CONTEXT#/images/smilies/283a16da79f3aa23fe1025c96295f04f.gif\" alt=\":D\" />','283a16da79f3aa23fe1025c96295f04f.gif');
 INSERT INTO jforum_smilies VALUES ( jforum_smilies_seq.nextval, ':-D','<img src=\"#CONTEXT#/images/smilies/283a16da79f3aa23fe1025c96295f04f.gif\" alt=\":-D\" />','283a16da79f3aa23fe1025c96295f04f.gif');
 INSERT INTO jforum_smilies VALUES ( jforum_smilies_seq.nextval, ':(','<img src=\"#CONTEXT#/images/smilies/9d71f0541cff0a302a0309c5079e8dee.gif\" alt=\":(\" />','9d71f0541cff0a302a0309c5079e8dee.gif');
-INSERT INTO jforum_smilies VALUES ( jforum_smilies_seq.nextval, ':-(','<img src=\"#CONTEXT#/images/smilies/9d71f0541cff0a302a0309c5079e8dee.gif\" alt=\":-(\" />','9d71f0541cff0a302a0309c5079e8dee.gif');
+INSERT INTO jforum_smilies VALUES ( jforum_smilies_seq.nextval, ':mrgreen:', '<img src=\"#CONTEXT#/images/smilies/ed515dbff23a0ee3241dcc0a601c9ed6.gif\" alt=":mrgreen:\" />', 'ed515dbff23a0ee3241dcc0a601c9ed6.gif');
 INSERT INTO jforum_smilies VALUES ( jforum_smilies_seq.nextval, ':-o','<img src=\"#CONTEXT#/images/smilies/47941865eb7bbc2a777305b46cc059a2.gif\" alt=\":-o\" />','47941865eb7bbc2a777305b46cc059a2.gif');
 INSERT INTO jforum_smilies VALUES ( jforum_smilies_seq.nextval, ':shock:','<img src=\"#CONTEXT#/images/smilies/385970365b8ed7503b4294502a458efa.gif\" alt=\":shock:\" />','385970365b8ed7503b4294502a458efa.gif');
 INSERT INTO jforum_smilies VALUES ( jforum_smilies_seq.nextval, ':?:','<img src=\"#CONTEXT#/images/smilies/136dd33cba83140c7ce38db096d05aed.gif\" alt=\":?:\" />','136dd33cba83140c7ce38db096d05aed.gif');
