@@ -97,7 +97,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.132 2005/12/27 21:11:38 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.133 2005/12/27 22:57:34 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -771,19 +771,12 @@ public class PostAction extends Command
 
 				// Poll
 				Poll poll = PollCommon.fillPollFromRequest();
+				
 				if (poll != null && !t.isVote()) {
 					// They added a poll
 					poll.setTopicId(t.getId());
 					
-					if (poll.getOptions().size() < 2) {
-						// It is not a valid poll, cancel the post
-						JForum.enableRollback();
-						p.setText(this.request.getParameter("message"));
-						p.setId(0);
-						this.context.put("errorMessage", I18n.getMessage("PostForm.needMorePollOptions"));
-						this.context.put("post", p);
-						this.context.put("poll", poll);
-						this.edit();
+					if (!this.ensurePollMinimumOptions(p, poll)) {
 						return;
 					}
 					
@@ -792,6 +785,10 @@ public class PostAction extends Command
 
 				} 
 				else if (poll != null) {
+					if (!this.ensurePollMinimumOptions(p, poll)) {
+						return;
+					}
+					
 					// They edited the poll in the topic
 					Poll existing = pollDao.selectById(t.getVoteId());
 					PollChanges changes = new PollChanges(existing, poll);
@@ -839,6 +836,23 @@ public class PostAction extends Command
 				PostRepository.update(p.getTopicId(), PostCommon.preparePostForDisplay(p));
 			}
 		}
+	}
+	
+	private boolean ensurePollMinimumOptions(Post p, Poll poll) throws Exception
+	{
+		if (poll.getOptions().size() < 2) {
+			// It is not a valid poll, cancel the post
+			JForum.enableRollback();
+			p.setText(this.request.getParameter("message"));
+			p.setId(0);
+			this.context.put("errorMessage", I18n.getMessage("PostForm.needMorePollOptions"));
+			this.context.put("post", p);
+			this.context.put("poll", poll);
+			this.edit();
+			return false;
+		}
+		
+		return true;
 	}
 	
 	public void waitingModeration()

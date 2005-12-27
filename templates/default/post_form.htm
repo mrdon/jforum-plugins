@@ -422,24 +422,22 @@ function validatePostForm(f)
 							 <input type="button" onclick="javascript:deletePollOption(this)" value="${I18n.getMessage("PostForm.pollDeleteOption")}"></input></td>
 					</tr>
 					<#if poll?exists>
-						<#assign optionCount = poll.options.size()/>
-						<#assign isLast = false/>
-						<input type="hidden" id="pollOptionCount" value="${optionCount}"/>
+						<#assign optionCount = 0/>
 						<#list poll.options as option>
-							<#assign isLast = (option.id == optionCount)/>
-
-
-
-								<tr id="pollOption">
-
+							<tr id="pollOption">
 								<td align="center"><span class="gen"><b>${I18n.getMessage("PostForm.pollOption")}</b></span></td>
 								<td>
 									<input type="text" id="pollOption${option.id}" name="poll_option_${option.id}" maxlength="255" size="50" value="${option.text}"></input>
 									<input type="button" onclick="javascript:deletePollOption(this)" value="${I18n.getMessage("PostForm.pollDeleteOption")}"></input>
 								</td>
 							</tr>
+
+							<#if (option.id > optionCount)><#assign optionCount = option.id/></#if>
 						</#list>
+
+						<input type="hidden" name="poll_option_count" id="pollOptionCount" value="${optionCount}"/>
 					<#else>
+						<input type="hidden" name="poll_option_count" id="pollOptionCount" value="1"/>
 						<tr id="pollOption">
 							<td align="center"><span class="gen"><b>${I18n.getMessage("PostForm.pollOption")}</b></span></td>
 							<td>

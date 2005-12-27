@@ -51,7 +51,7 @@ import net.jforum.entities.PollOption;
 
 /**
  * @author David Almilli
- * @version $Id: PollCommon.java,v 1.2 2005/12/02 23:48:58 rafaelsteil Exp $
+ * @version $Id: PollCommon.java,v 1.3 2005/12/27 22:57:33 rafaelsteil Exp $
  */
 public class PollCommon
 {
@@ -69,26 +69,26 @@ public class PollCommon
 		Poll poll = new Poll();
 		poll.setStartTime(new Date());
 		poll.setLabel(label);
+		
+		int count = request.getIntParameter("poll_option_count");
 
-		int i = 1;
-		String option;
-
-		do {
-			option = request.getParameter("poll_option_" + i);
-			if (option != null) {
-				option = option.trim();
+		for (int i = 0; i <= count; i++) {
+			String option = request.getParameter("poll_option_" + i);
+			
+			if (option == null) {
+				continue;
 			}
 			
-			if (option != null && option.length() > 0) {
+			option = option.trim();
+			
+			if (option.length() > 0) {
 				PollOption po = new PollOption();
 				po.setId(i);
 				po.setText(option);
 				poll.addOption(po);
 			}
-			
-			i++;
-		} while (option != null);
-
+		}
+		
 		String pollLength = request.getParameter("poll_length");
 		
 		if (pollLength != null && pollLength.length() > 0) {

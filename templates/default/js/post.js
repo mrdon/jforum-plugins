@@ -210,22 +210,6 @@ function previewCallback(post)
 function deletePollOption(button)
 {
 	initPollOptionCount();
-	//first, fix the following ids	
-	var textField = button.parentNode.getElementsByTagName("input")[0];
-	var name = textField.name;
-	var index = name.lastIndexOf("_");
-	if (index != -1) {
-		var num = parseInt(name.substring(index+1));
-		var option;
-		for (i=num+1; i <= pollOptionCount; i++) {
-			option = document.getElementById("pollOption" + i);
-			if (option != null) {
-				option.id = "pollOption" + (i-1);
-				option.name = "poll_option_" + (i-1);
-			}
-		}
-		pollOptionCount--;
-	}
 	
 	var node = button.parentNode;
 	while (node != null) {
@@ -233,6 +217,7 @@ function deletePollOption(button)
 			node.parentNode.removeChild(node);
 			break;
 		}
+
 		node = node.parentNode;
 	}
 }
@@ -240,7 +225,7 @@ function deletePollOption(button)
 function addPollOption()
 {
 	initPollOptionCount();
-	pollOptionCount++;
+	incrementPollOptionCount();
 
 	var addOption = document.getElementById("pollOptionWithAdd");
 	var deleteOption = document.getElementById("pollOptionWithDelete");
@@ -271,13 +256,21 @@ function addPollOption()
 	addTextField.focus();
 }
 
+function incrementPollOptionCount()
+{
+	pollOptionCount++;
+	document.getElementById("pollOptionCount").value = pollOptionCount;
+}
+
 function initPollOptionCount()
 {
 	if (pollOptionCount == -1) {
 		var countField = document.getElementById("pollOptionCount");
+		
 		if (countField != null) {
 			pollOptionCount = parseInt(countField.value);
-		} else {
+		} 
+		else {
 			pollOptionCount = 1;
 		}
 	}

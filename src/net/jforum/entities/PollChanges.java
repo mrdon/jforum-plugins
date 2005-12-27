@@ -1,7 +1,7 @@
 package net.jforum.entities;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import net.jforum.view.forum.common.PostCommon;
@@ -10,7 +10,7 @@ import net.jforum.view.forum.common.PostCommon;
  * An helper class that holds changes made to the pool.
  * 
  * @author Rafael Steil
- * @version $Id: PollChanges.java,v 1.1 2005/12/02 23:49:00 rafaelsteil Exp $
+ * @version $Id: PollChanges.java,v 1.2 2005/12/27 22:57:32 rafaelsteil Exp $
  */
 public class PollChanges {
 	private List deletedOptions = new ArrayList();
@@ -83,31 +83,38 @@ public class PollChanges {
 		int secondSize = secondOptions.size();
 		int maxCount = Math.min(firstSize, secondSize);
 		
-		// Search for changes in existing option
-		for (int i = 0; i < maxCount; i++) {
-			PollOption firstOption = (PollOption)firstOptions.get(i);
-			PollOption secondOption = (PollOption)secondOptions.get(i);
+		// Search for changes in existing options
+		for (Iterator iter = firstOptions.iterator(); iter.hasNext(); ) {
+			PollOption option = (PollOption)iter.next();
+			PollOption changed = this.findOptionById(option.getId(), secondOptions);
 			
-			if (firstOption.getId() == secondOption.getId()
-					&& !firstOption.getText().equals(secondOption.getText())) {
-				this.addChangedOption(secondOption);
+			if (changed != null && !option.getText().equals(changed.getText())) {
+				this.addChangedOption(changed);
+			}
+			else if (changed == null) {
+				this.addDeletedOption(option);
+			}
+		}
+
+		// Check if the incoming poll added options
+		for (Iterator iter = secondOptions.iterator(); iter.hasNext(); ) {
+			PollOption option = (PollOption)iter.next();
+			
+			if (this.findOptionById(option.getId(), firstOptions) == null) {
+				this.addNewOption(option);
+			}
+		}
+	}
+	
+	private PollOption findOptionById(int id, List options) {
+		for (Iterator iter = options.iterator(); iter.hasNext(); ) {
+			PollOption o = (PollOption)iter.next();
+			
+			if (o.getId() == id) {
+				return o;
 			}
 		}
 		
-		// Now check if we have more or less options
-		if (firstSize > secondSize) {
-			// Incoming poll has removed some options
-			for (int i = firstSize - 1; i >= secondSize; i--) {
-				this.addDeletedOption((PollOption)firstOptions.get(i));
-			}
-			
-			Collections.reverse(this.deletedOptions);
-		}
-		else if (firstSize < secondSize) {
-			// Incoming poll added options
-			for (int i = firstSize; i < secondSize; i++) {
-				this.addNewOption((PollOption)secondOptions.get(i));
-			}
-		}
+		return null;
 	}
 }

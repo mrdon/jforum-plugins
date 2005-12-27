@@ -191,7 +191,7 @@ PollModel.updatePollOption = UPDATE jforum_vote_results SET vote_option_text = ?
 PollModel.updatePoll = UPDATE jforum_vote_desc SET vote_text = ?, vote_length = ? WHERE vote_id = ?
 
 PollModel.selectOptionsByPollId = SELECT vote_id, vote_option_id, vote_option_text, vote_result \
-	FROM jforum_vote_results WHERE vote_id=? ORDER BY vote_option_id
+	FROM jforum_vote_results WHERE vote_id = ? ORDER BY vote_option_id
 
 PollModel.selectVoterByIP = SELECT vote_id, vote_user_id, vote_user_ip \
 	FROM jforum_vote_voters WHERE vote_id = ? AND vote_user_ip = ?
