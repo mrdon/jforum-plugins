@@ -16,67 +16,56 @@ p, td { font-size: 11px; }
 <h1>${I18n.getMessage("ForumListing.versionInformation")}</h1>
 
 <#if !upToDate?exists>
-	<p style="color:red">Could not determine if there are updates available for your JForum installation.
-	Please check <a href="http://www.jforum.net/download.jsp" target="_new">http://www.jforum.net/download.jsp</a> for possible updates.</p>
+	<p style="color:red">${I18n.getMessage("Admin.welcome.unknowVersion")}</p>
 <#elseif !upToDate>
-	<p style="color:red">Your installation does <b>not</b> seem to be up to date. 
-	Updates are available for your version of JForum. Please visit <a href="http://www.jforum.net/download.jsp" target="_new">http://www.jforum.net/download.jsp</a> to obtain the latest version.<br />
-	The latest available version is <b>${latestVersion}</b>. You are running version <b>${currentVersion}</b>.</p>
-
-	<p>
-	<b>Release notes for version ${latestVersion}:</b>
+	<p style="color:red">
+		${I18n.getMessage("Admin.welcome.outdatedVersion")}
+		${I18n.getMessage("Admin.welcome.latestVersion")} <b>${latestVersion}</b>.
+		${I18n.getMessage("Admin.welcome.currentVersion")} <b>${currentVersion}</b>.
 	</p>
 
-	<p>
-	<i><span class="gen">${notes}</span></i>
-	</p>
+	<p><b>${I18n.getMessage("Admin.welcome.releaseNotes")} ${latestVersion}:</b></p>
+
+	<p><i><span class="gen">${notes}</span></i></p>
 <#else>
-	<p style="color: green">
-		Your installation is up to date. No updates are available. For more information and news about JForum, please check <a href="http://www.jforum.net" target="_new">http://www.jforum.net</a>
-	</p>
+	<p style="color: green">${I18n.getMessage("Admin.welcome.upToDateVersion")}</p>
 </#if>
 
 <#if installModuleExists>
-	<h1>Security Warning</h1>
-	<p style="color:red">The <i><b>installation module</b></i> is still enabled. This may allow <b>any</b> user
-	to overwrite your current board installation. </p>
+	<h1>${I18n.getMessage("Admin.welcome.securityWarning")}</h1>
+	<p style="color:red">${I18n.getMessage("Admin.welcome.enabledInstallation")}</p>
 
-	<p>
-	To fix this issue, open the file
-	<i>WEB-INF/config/modulesMapping.properties</i> and remove the key named "install",
-	then go to the <b>Cache</b> option, in the left menu, and click in the <b>Reload</b> link
-	of the item "Modules".<br/>
-	</p>
+	<p>${I18n.getMessage("Admin.welcome.removeInstallation")}<br/></p>
 </#if>
 
 <h1>${I18n.getMessage("ForumListing.stats")}</h1>
 
 <table width="100%" cellpadding="4" cellspacing="1" border="0" class="forumline">
   <tr>
-	<th width="25%" nowrap="nowrap" height="25" class="thCornerL">Statistic</th>
-	<th width="25%" height="25" class="thTop">Value</th>
+	<th width="25%" nowrap="nowrap" height="25" class="thCornerL">${I18n.getMessage("Admin.welcome.statistic")}</th>
+	<th width="25%" height="25" class="thTop">${I18n.getMessage("Admin.welcome.value")}</th>
 
-	<th width="25%" nowrap="nowrap" height="25" class="thTop">Statistic</th>
-	<th width="25%" height="25" class="thCornerR">Value</th>
+	<th width="25%" nowrap="nowrap" height="25" class="thTop">${I18n.getMessage("Admin.welcome.statistic")}</th>
+	<th width="25%" height="25" class="thCornerR">${I18n.getMessage("Admin.welcome.value")}</th>
   </tr>
   <tr>
-	<td class="row1" nowrap="nowrap">Number of posts:</td>
+	<td class="row1" nowrap="nowrap">${I18n.getMessage("Admin.welcome.numPosts")}</td>
 	<td class="row1"><b>${stats.posts}</b></td>
-	<td class="row1" nowrap="nowrap">Posts per day:</td>
+	<td class="row1" nowrap="nowrap">${I18n.getMessage("Admin.welcome.postsPerDay")}</td>
 
 	<td class="row2"><b>${stats.postsPerDay}</b></td>
   </tr>
   <tr>
-	<td class="row2" nowrap="nowrap">Number of topics:</td>
+	<td class="row2" nowrap="nowrap">${I18n.getMessage("Admin.welcome.numTopics")}</td>
 	<td class="row2"><b>${stats.topics}</b></td>
-	<td class="row2" nowrap="nowrap">Topics per day:</td>
+	<td class="row2" nowrap="nowrap">${I18n.getMessage("Admin.welcome.topicsPerDay")}</td>
 	<td class="row2"><b>${stats.topicsPerDay}</b></td>
 
   </tr>
   <tr>
-	<td class="row1" nowrap="nowrap">Number of users:</td>
+	<td class="row1" nowrap="nowrap">${I18n.getMessage("Admin.welcome.numUsers")}</td>
 	<td class="row1"><b>${stats.users}</b></td>
-	<td class="row1" nowrap="nowrap">Users per day:</td>
+	<td class="row1" nowrap="nowrap">${I18n.getMessage("Admin.welcome.usersPerDay")}</td>
 	<td class="row1"><b>${stats.usersPerDay}</b></td>
   </tr>
 
@@ -87,9 +76,9 @@ p, td { font-size: 11px; }
 <table width="100%" cellpadding="4" cellspacing="1" border="0" class="forumline">
 	<tr>
 		<th width="20%" class="thCornerL" height="25">&nbsp;Username&nbsp;</th>
-		<th width="20%" height="25" class="thTop">&nbsp;Log in&nbsp;</th>
-		<th width="20%" class="thTop">&nbsp;Last Updated&nbsp;</th>
-		<th width="20%" height="25" class="thCornerR">&nbsp;IP Address&nbsp;</th>
+		<th width="20%" height="25" class="thTop">&nbsp;${I18n.getMessage("Admin.welcome.logIn")}&nbsp;</th>
+		<th width="20%" class="thTop">&nbsp;${I18n.getMessage("Admin.welcome.lastUpdated")}&nbsp;</th>
+		<th width="20%" height="25" class="thCornerR">&nbsp;${I18n.getMessage("Admin.welcome.ipAddress")}&nbsp;</th>
 	</tr>
 
 	<#assign row = "row2"/>
