@@ -63,7 +63,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationAction.java,v 1.19 2005/12/19 17:50:38 rafaelsteil Exp $
+ * @version $Id: ModerationAction.java,v 1.20 2006/01/13 21:35:27 rafaelsteil Exp $
  */
 public class ModerationAction extends AdminCommand
 {
@@ -139,6 +139,8 @@ public class ModerationAction extends AdminCommand
 					t.setLastPostBy(u);
 					t.setLastPostDate(p.getTime());
 					t.setLastPostTime(p.getFormatedTime());
+					
+					tm.update(t);
 					
 					TopicsCommon.updateBoardStatus(t, postId, firstPost,
 							tm, DataAccessDriver.getInstance().newForumDAO());
