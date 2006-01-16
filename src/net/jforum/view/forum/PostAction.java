@@ -97,7 +97,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.133 2005/12/27 22:57:34 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.134 2006/01/16 15:17:36 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -195,6 +195,7 @@ public class PostAction extends Command
 				SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(topic.getForumId())));
 		this.context.put("canDownloadAttachments", pc.canAccess(
 				SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD));
+		this.context.put("thumbShowBox", SystemGlobals.getBoolValue(ConfigKeys.ATTACHMENTS_IMAGES_THUMB_BOX_SHOW));
 		this.context.put("am", new AttachmentCommon(this.request, topic.getForumId()));
 		this.context.put("karmaVotes", userVotes);
 		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
