@@ -80,7 +80,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.25 2005/12/23 20:36:58 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.26 2006/01/16 15:00:44 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {
@@ -321,7 +321,7 @@ public class AttachmentCommon
 					}
 					
 					// Check if we have a thumb to delete
-					f = new File(filename = "_thumb");
+					f = new File(filename + "_thumb");
 					
 					if (f.exists()) {
 						f.delete();
