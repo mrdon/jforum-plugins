@@ -77,7 +77,7 @@ import freemarker.template.SimpleHash;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.23 2005/11/16 20:39:58 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.24 2006/01/16 20:13:57 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
@@ -291,6 +291,7 @@ public class TopicsCommon
 		
 		Topic topic = new Topic();
 		topic.setId(topicId);
+
 		tm.delete(topic);
 
 		if (!fromModeration) {

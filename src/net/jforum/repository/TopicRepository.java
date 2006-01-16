@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: TopicRepository.java,v 1.24 2005/10/08 19:57:54 rafaelsteil Exp $
+ * @version $Id: TopicRepository.java,v 1.25 2006/01/16 20:13:56 rafaelsteil Exp $
  */
 public class TopicRepository implements Cacheable
 {
@@ -317,6 +317,14 @@ public class TopicRepository implements Cacheable
 			if (l != null) {
 				l.remove(topic);
 				cache.add(FQN_FORUM, forumId, l);
+				
+				// Relation
+				Map m = (Map)cache.get(FQN, RELATION);
+				
+				if (m != null) {
+					m.remove(new Integer(topic.getId()));
+					cache.add(FQN, RELATION, m);
+				}
 			}
 		}
 	}

@@ -97,7 +97,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.134 2006/01/16 15:17:36 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.135 2006/01/16 20:13:57 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -1169,20 +1169,20 @@ public class PostAction extends Command
 		// Post
 		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
 		Post p = pm.selectById(this.request.getIntParameter("post_id"));
+		
+		if (p.getId() == 0) {
+			this.postNotFound();
+			return;
+		}
 
 		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 		Topic t = TopicRepository.getTopic(new Topic(p.getTopicId()));
 		
 		if (t == null) {
-			t = tm.selectById(p.getTopicId());
+			t = tm.selectRaw(p.getTopicId());
 		}
 
 		if (!TopicsCommon.isTopicAccessible(t.getForumId())) {
-			return;
-		}
-
-		if (p.getId() == 0) {
-			this.postNotFound();
 			return;
 		}
 
@@ -1196,57 +1196,63 @@ public class PostAction extends Command
 		// Attachments
 		new AttachmentCommon(this.request, p.getForumId()).deleteAttachments(p.getId(), p.getForumId());
 
-		// Topic
-		tm.decrementTotalReplies(p.getTopicId());
-
-		int maxPostId = tm.getMaxPostId(p.getTopicId());
-		if (maxPostId > -1) {
-			tm.setLastPostId(p.getTopicId(), maxPostId);
-		}
-
-		int minPostId = tm.getMinPostId(p.getTopicId());
-		if (minPostId > -1) {
-		  tm.setFirstPostId(p.getTopicId(), minPostId);
-		}
-        
-		// Forum
-		ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
-
-		maxPostId = fm.getMaxPostId(p.getForumId());
-		if (maxPostId > -1) {
-			fm.setLastPost(p.getForumId(), maxPostId);
-		}
-
 		// It was the last remaining post in the topic?
 		int totalPosts = tm.getTotalPosts(p.getTopicId());
+
 		if (totalPosts > 0) {
-			String page = this.request.getParameter("start");
-			String returnPath = this.request.getContextPath() + "/posts/list/";
+			// Topic
+			tm.decrementTotalReplies(p.getTopicId());
 
-			if (page != null && !page.equals("") && !page.equals("0")) {
-				int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
-				int newPage = Integer.parseInt(page);
-
-				if (totalPosts % postsPerPage == 0) {
-					newPage -= postsPerPage;
-				}
-
-				returnPath += newPage + "/";
+			int maxPostId = tm.getMaxPostId(p.getTopicId());
+			if (maxPostId > -1) {
+				tm.setLastPostId(p.getTopicId(), maxPostId);
 			}
 
-			JForum.setRedirect(returnPath + p.getTopicId() + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+			int minPostId = tm.getMinPostId(p.getTopicId());
+			if (minPostId > -1) {
+			  tm.setFirstPostId(p.getTopicId(), minPostId);
+			}
+	        
+			// Forum
+			ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
+
+			maxPostId = fm.getMaxPostId(p.getForumId());
+			if (maxPostId > -1) {
+				fm.setLastPost(p.getForumId(), maxPostId);
+			}
+
+			String returnPath = this.request.getContextPath() + "/posts/list/";
+
+			int page = ViewCommon.getStartPage();
+			
+			if (page > 0) {
+				int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
+
+				if (totalPosts % postsPerPage == 0) {
+					page -= postsPerPage;
+				}
+
+				returnPath += page + "/";
+			}
+
+			JForum.setRedirect(returnPath 
+					+ p.getTopicId() 
+					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		}
 		else {
 			// Ok, all posts were removed. Time to say goodbye
 			TopicsCommon.deleteTopic(p.getTopicId(), p.getForumId(), false);
 
-			JForum.setRedirect(this.request.getContextPath() + "/forums/show/" + p.getForumId()
+			JForum.setRedirect(this.request.getContextPath() 
+					+ "/forums/show/" 
+					+ p.getForumId()
 					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		}
-
+		
+		TopicRepository.remove(t);
+		PostRepository.remove(t.getId(), p.getId());
+		
 		ForumRepository.reloadForum(p.getForumId());
-		TopicRepository.clearCache(p.getForumId());
-		PostRepository.clearCache(p.getTopicId());
 	}
 
 	private void watch(TopicDAO tm, int topicId, int userId) throws Exception {

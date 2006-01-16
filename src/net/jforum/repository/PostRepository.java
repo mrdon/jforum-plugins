@@ -63,7 +63,7 @@ import net.jforum.view.forum.common.PostCommon;
  * 
  * @author Sean Mitchell
  * @author Rafael Steil
- * @version $Id: PostRepository.java,v 1.10 2005/07/26 04:01:23 diegopires Exp $
+ * @version $Id: PostRepository.java,v 1.11 2006/01/16 20:13:57 rafaelsteil Exp $
  */
 public class PostRepository implements Cacheable
 {
@@ -135,6 +135,23 @@ public class PostRepository implements Cacheable
 		int size = posts.size();
 		return posts.subList(start, (size < start + count) ? size : start + count);
    }
+	
+	public static void remove(int topicId, int postId)
+	{
+		synchronized (FQN) {
+			String tid = Integer.toString(topicId);
+			
+			List posts = (List)cache.get(FQN, tid);
+			
+			if (posts != null) {
+				Post p = new Post();
+				p.setId(postId);
+				posts.remove(p);
+				
+				cache.add(FQN, tid, posts);
+			}
+		}
+	}
 	
 	public static void update(int topicId, Post p)
 	{
