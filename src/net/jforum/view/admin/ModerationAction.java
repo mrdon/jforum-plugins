@@ -63,7 +63,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationAction.java,v 1.20 2006/01/13 21:35:27 rafaelsteil Exp $
+ * @version $Id: ModerationAction.java,v 1.21 2006/01/16 16:19:41 rafaelsteil Exp $
  */
 public class ModerationAction extends AdminCommand
 {
@@ -121,10 +121,16 @@ public class ModerationAction extends AdminCommand
 						continue;
 					}
 					
+					boolean first = false;
 					Topic t = TopicRepository.getTopic(new Topic(p.getTopicId()));
 					
 					if (t == null) {
 						t = tm.selectById(p.getTopicId());
+						
+						if (t.getId() == 0) {
+							first = true;
+							t = tm.selectRaw(p.getTopicId());
+						}
 					}
 					
 					DataAccessDriver.getInstance().newModerationDAO().aprovePost(postId);
@@ -142,6 +148,10 @@ public class ModerationAction extends AdminCommand
 					
 					tm.update(t);
 					
+					if (first) {
+						t = tm.selectById(t.getId());
+					}
+
 					TopicsCommon.updateBoardStatus(t, postId, firstPost,
 							tm, DataAccessDriver.getInstance().newForumDAO());
 					
