@@ -58,7 +58,7 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentsAction.java,v 1.12 2005/12/23 20:36:59 rafaelsteil Exp $
+ * @version $Id: AttachmentsAction.java,v 1.13 2006/01/20 15:02:20 rafaelsteil Exp $
  */
 public class AttachmentsAction extends AdminCommand
 {
@@ -69,6 +69,7 @@ public class AttachmentsAction extends AdminCommand
 		this.context.put("thumbH", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_IMAGES_MAX_THUMB_H));
 		this.context.put("thumbW", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_IMAGES_MAX_THUMB_W));
 		this.context.put("maxPost", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
+		this.context.put("thumbBorder", SystemGlobals.getBoolValue(ConfigKeys.ATTACHMENTS_IMAGES_THUMB_BOX_SHOW));
 
 		this.setTemplateName(TemplateKeys.ATTACHMENTS_CONFIG);
 	}
