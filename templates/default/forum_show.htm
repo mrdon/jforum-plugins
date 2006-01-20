@@ -113,9 +113,9 @@
 										<tr>
 											<td colspan="2" align="right">
 												<span class="gensmall">
-													<input type="radio" name="status_${post.id}" value="aprove" />${I18n.getMessage("Moderation.Admin.aprove")}&nbsp;
-													<input type="radio" name="status_${post.id}" value="defer" checked="checked" />${I18n.getMessage("Moderation.Admin.defer")}&nbsp;
-													<input type="radio" name="status_${post.id}" value="reject" />${I18n.getMessage("Moderation.Admin.reject")}&nbsp;
+													<input type="radio" id="status_approve" name="status_${post.id}" value="aprove" /><label for="status_approve">${I18n.getMessage("Moderation.Admin.aprove")}</label>&nbsp;
+													<input type="radio" id="status_defer" name="status_${post.id}" value="defer" checked="checked" /><label for="status_defer">${I18n.getMessage("Moderation.Admin.defer")}</label>&nbsp;
+													<input type="radio" id="status_deny" name="status_${post.id}" value="reject" /><label for="status_deny">${I18n.getMessage("Moderation.Admin.reject")}</label>&nbsp;
 													<input type="hidden" name="post_id" value="${post.id}" />
 												</span>
 											</td>
