@@ -112,8 +112,8 @@
 		<#-- ------------- -->
 		<#-- Next page -->
 		<#-- ------------- -->
-		<#if (thisPage + 1 < totalPages)>
-			<#assign start = (thisPage - 2) * recordsPerPage/>
+		<#if (thisPage < totalPages)>
+			<#assign start = thisPage * recordsPerPage/>
 			<a href="${contextPath}/${moduleName}/${action}<#if (start > 0)>/${start}</#if><#if (id > -1)>/${id}</#if>${extension}">${I18n.getMessage("next")}</a>&nbsp;
 		</#if>
 
