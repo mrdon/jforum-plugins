@@ -16,21 +16,28 @@
 	<#-- ----------- -->
 	<#-- First pages -->
 	<#-- ----------- -->
+	<#assign link = ""/>
+
 	<#list 1 .. minTotal as page>
 		<#assign start = postsPerPage * (page - 1)/>
 
-		<a href="${contextPath}/posts/list<#if (start>0)>/${start}</#if>/${topicId}${extension}">${page}</a>	
-		<#if (page < minTotal)>,</#if>		
+		<#assign link>${link}<a href="${contextPath}/posts/list<#if (start>0)>/${start}</#if>/${topicId}${extension}">${page}</a></#assign>
+		<#if (page < minTotal)><#assign link>${link}, </#assign></#if>		
 	</#list>
 
+	${link}
+
+	<#assign link = ""/>
 	<#if (totalPostPages > 6)>
 		&nbsp;...&nbsp;
 		<#list totalPostPages - 2 .. totalPostPages as page>
 			<#assign start = postsPerPage * (page - 1)/>
 
-			<a href="${contextPath}/posts/list<#if (start>0)>/${start}</#if>/${topicId}${extension}">${page}</a>	
-			<#if (page_index + 1 < 3)>,</#if>
+			<#assign link>${link}<a href="${contextPath}/posts/list<#if (start>0)>/${start}</#if>/${topicId}${extension}">${page}</a></#assign>
+			<#if (page_index + 1 < 3)><#assign link>${link}, </#assign></#if>
 		</#list>
+
+		${link}
 	</#if>
 
 	]
@@ -42,6 +49,8 @@
 <#macro doPagination action id=-1>
 	<#if (totalRecords > recordsPerPage)>
 		<span class="gensmall"><b>${I18n.getMessage("goToPage")}:
+		
+		<#assign link = ""/>
 
 		<#-- ------------- -->
 		<#-- Previous page -->
@@ -96,7 +105,7 @@
 			</#list>
 		<#else>
 			<#list 1 .. totalPages as page>
-				<@pageLink page, id, (page + 1 < totalPages)/>
+				<@pageLink page, id, (page < totalPages)/>
 			</#list>
 		</#if>
 
@@ -115,10 +124,11 @@
 <#macro pageLink page id commaExpression>
 	<#assign start = recordsPerPage * (page - 1)/>
 	<#if page != thisPage>
-		<a href="${contextPath}/${moduleName}/${action}<#if (start > 0)>/${start}</#if>/${id}${extension}">${page}</a>
+		<#assign link><a href="${contextPath}/${moduleName}/${action}<#if (start > 0)>/${start}</#if>/${id}${extension}">${page}</a></#assign>
 	<#else>
-		${page}
+		<#assign link>${page}</#assign>
 	</#if>
 
-	<#if commaExpression>, </#if>
+	<#if commaExpression><#assign link = link + ", "/></#if>
+	${link}
 </#macro>
