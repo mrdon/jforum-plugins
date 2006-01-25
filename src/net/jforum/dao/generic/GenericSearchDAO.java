@@ -63,7 +63,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericSearchDAO.java,v 1.11 2005/11/15 21:29:57 rafaelsteil Exp $
+ * @version $Id: GenericSearchDAO.java,v 1.12 2006/01/25 03:47:11 rafaelsteil Exp $
  */
 public class GenericSearchDAO implements net.jforum.dao.SearchDAO	
 {
@@ -85,20 +85,26 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 			}
 		}
 		
+		String sql = SystemGlobals.getSql("SearchModel.searchBase");
 		StringBuffer criterias = new StringBuffer(256);
+
 		if (sd.getForumId() != 0) {
 			criterias.append(" AND t.forum_id = "+ sd.getForumId());
 		}
 		
 		if (sd.getCategoryId() != 0) {
+			sql = sql.replaceAll(":table_category:", ", jforum_forums f");
+			
 			criterias.append(" AND f.categories_id = "+ sd.getCategoryId());
+			criterias.append(" AND t.forum_id = f.forum_id");
+		}
+		else {
+			sql = sql.replaceAll(":table_category:", "");
 		}
 		
 		if (sd.getOrderByField() == null || sd.getOrderByField().equals("")) {
 			sd.setOrderByField("p.post_time");
 		}
-		
-		String sql = SystemGlobals.getSql("SearchModel.searchBase");
 		
 		// Prepare the query
 		sql = sql.replaceAll(":orderByField:", sd.getOrderByField());
