@@ -63,7 +63,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericSearchDAO.java,v 1.12 2006/01/25 03:47:11 rafaelsteil Exp $
+ * @version $Id: GenericSearchDAO.java,v 1.13 2006/01/25 03:47:44 rafaelsteil Exp $
  */
 public class GenericSearchDAO implements net.jforum.dao.SearchDAO	
 {
@@ -84,7 +84,7 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 				this.topicsByTime(sd);
 			}
 		}
-		
+
 		String sql = SystemGlobals.getSql("SearchModel.searchBase");
 		StringBuffer criterias = new StringBuffer(256);
 
@@ -94,7 +94,7 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 		
 		if (sd.getCategoryId() != 0) {
 			sql = sql.replaceAll(":table_category:", ", jforum_forums f");
-			
+
 			criterias.append(" AND f.categories_id = "+ sd.getCategoryId());
 			criterias.append(" AND t.forum_id = f.forum_id");
 		}
@@ -110,10 +110,6 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 		sql = sql.replaceAll(":orderByField:", sd.getOrderByField());
 		sql = sql.replaceAll(":orderBy:", sd.getOrderBy());
 		sql = sql.replaceAll(":criterias:", criterias.toString());
-		
-		if (log.isDebugEnabled()) {
-			log.debug("SEARCH SQL:" + sql);
-		}
 		
 		PreparedStatement p = JForum.getConnection().prepareStatement(sql);
 		p.setString(1, SessionFacade.getUserSession().getSessionId());
