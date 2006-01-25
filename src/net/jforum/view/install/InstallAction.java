@@ -84,7 +84,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.43 2005/12/27 18:09:56 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.44 2006/01/25 03:34:05 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -227,11 +227,11 @@ public class InstallAction extends Command
 		
 		this.context.put("lang", lang);
 		
-		//this.doFinalSteps();
+		this.doFinalSteps();
 		this.configureSystemGlobals();
 
-		//SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
-        //SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
+		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
+        SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
         
         SessionFacade.remove(this.request.getSession().getId());
 	}
