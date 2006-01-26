@@ -61,7 +61,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericSearchIndexerDAO.java,v 1.12 2005/10/27 18:54:59 jakefear Exp $
+ * @version $Id: GenericSearchIndexerDAO.java,v 1.13 2006/01/26 12:09:50 rafaelsteil Exp $
  */
 public class GenericSearchIndexerDAO extends AutoKeys implements net.jforum.dao.SearchIndexerDAO
 {
@@ -161,8 +161,9 @@ public class GenericSearchIndexerDAO extends AutoKeys implements net.jforum.dao.
 				words.setInt(2, ww.hashCode());
 				
 				try {
-				words.executeUpdate();
-				} catch (SQLException e) {
+					words.executeUpdate();
+				} 
+				catch (SQLException e) {
 					log.error("Cannot index word: \"" + ww + "\"", e);
 					throw e;
 				}
