@@ -74,7 +74,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.89 2006/01/29 15:07:01 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.90 2006/01/29 17:41:45 rafaelsteil Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
@@ -94,6 +94,7 @@ public class JForum extends JForumBaseServlet
 		
 		try {
 			Connection conn = DBConnection.getImplementation().getConnection();
+			conn.setAutoCommit(!SystemGlobals.getBoolValue(ConfigKeys.DATABASE_USE_TRANSACTIONS));
 			
 			// Try to fix some MySQL problems
 			DatabaseWorkarounder dw = new DatabaseWorkarounder();
@@ -224,11 +225,13 @@ public class JForum extends JForumBaseServlet
 			catch (Exception e) {}
 			
 			String redirectTo = JForumExecutionContext.getRedirectTo();
+			JForumExecutionContext.finish();
 			
 			if (redirectTo != null) {
 				if(request.getJForumContext().isEncodingDisabled()) {
 					response.sendRedirect(redirectTo);
-				} else {
+				} 
+				else {
 					response.sendRedirect(response.encodeRedirectURL(redirectTo));
 				}
 			}

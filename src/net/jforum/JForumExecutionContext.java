@@ -60,7 +60,7 @@ import freemarker.template.SimpleHash;
  * Data execution context. 
  * 
  * @author Rafael Steil
- * @version $Id: JForumExecutionContext.java,v 1.1 2006/01/29 15:07:01 rafaelsteil Exp $
+ * @version $Id: JForumExecutionContext.java,v 1.2 2006/01/29 17:41:45 rafaelsteil Exp $
  */
 public class JForumExecutionContext
 {
@@ -84,6 +84,7 @@ public class JForumExecutionContext
 	public static JForumExecutionContext get()
 	{
 		JForumExecutionContext ex = (JForumExecutionContext)userData.get();
+
 		if (ex == null) {
 			ex = new JForumExecutionContext();
 			userData.set(ex);
