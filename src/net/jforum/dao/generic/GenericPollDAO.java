@@ -48,7 +48,7 @@ import java.sql.ResultSet;
 import java.util.Iterator;
 import java.util.List;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.dao.PollDAO;
 import net.jforum.entities.Poll;
 import net.jforum.entities.PollOption;
@@ -56,7 +56,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author David Almilli
- * @version $Id: GenericPollDAO.java,v 1.3 2005/12/02 23:49:05 rafaelsteil Exp $
+ * @version $Id: GenericPollDAO.java,v 1.4 2006/01/29 15:06:24 rafaelsteil Exp $
  */
 public class GenericPollDAO extends AutoKeys implements PollDAO {
 
@@ -84,7 +84,7 @@ public class GenericPollDAO extends AutoKeys implements PollDAO {
 	}
 	
 	protected void addNewPollOptions(int pollId, List options) throws Exception {
-		Connection connection = JForum.getConnection();
+		Connection connection = JForumExecutionContext.getConnection();
 		
 		PreparedStatement p = connection.prepareStatement(SystemGlobals.getSql("PollModel.addNewPollOption"));
 		PreparedStatement max = connection.prepareStatement(SystemGlobals.getSql("PollModel.selectMaxVoteId"));
@@ -115,8 +115,8 @@ public class GenericPollDAO extends AutoKeys implements PollDAO {
 	 * @see net.jforum.dao.PollDAO#selectById(int)
 	 */
 	public Poll selectById(int pollId) throws Exception {
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PollModel.selectById"));		
-		PreparedStatement o = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PollModel.selectOptionsByPollId"));		
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PollModel.selectById"));		
+		PreparedStatement o = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PollModel.selectOptionsByPollId"));		
 		
 		p.setInt(1, pollId);
 		o.setInt(1, pollId);
@@ -169,7 +169,7 @@ public class GenericPollDAO extends AutoKeys implements PollDAO {
 	 * @see net.jforum.dao.PollDAO#voteOnPoll(int, int, int, java.lang.String)
 	 */
 	public void voteOnPoll(int pollId, int optionId, int userId, String ipAddress) throws Exception {
-		Connection connection = JForum.getConnection();
+		Connection connection = JForumExecutionContext.getConnection();
 		
 		PreparedStatement p = connection.prepareStatement(SystemGlobals.getSql("PollModel.incrementVoteCount"));
 		PreparedStatement v = connection.prepareStatement(SystemGlobals.getSql("PollModel.addNewVoter"));
@@ -192,7 +192,7 @@ public class GenericPollDAO extends AutoKeys implements PollDAO {
 	 * @see net.jforum.dao.PollDAO#hasVotedOnPoll(int, int)
 	 */
 	public boolean hasUserVotedOnPoll(int pollId, int userId) throws Exception {
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PollModel.selectVoter"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PollModel.selectVoter"));
 		p.setInt(1, pollId);
 		p.setInt(2, userId);
 		
@@ -215,7 +215,7 @@ public class GenericPollDAO extends AutoKeys implements PollDAO {
 	 * @throws Exception
 	 */
 	public boolean hasUserVotedOnPoll(int pollId, String ipAddress) throws Exception {
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PollModel.selectVoterByIP"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PollModel.selectVoterByIP"));
 		p.setInt(1, pollId);
 		p.setString(2, ipAddress);
 		
@@ -234,7 +234,7 @@ public class GenericPollDAO extends AutoKeys implements PollDAO {
 	 */
 	public void deleteByTopicId(int topicId) throws Exception {
 		//first, lookup the poll id, then delete it
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PollModel.selectPollByTopicId"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PollModel.selectPollByTopicId"));
 		
 		p.setInt(1, topicId);
 		
@@ -262,7 +262,7 @@ public class GenericPollDAO extends AutoKeys implements PollDAO {
 	}
 	
 	protected void deletePoll(int pollId) throws Exception {
-		PreparedStatement poll = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PollModel.deletePoll"));
+		PreparedStatement poll = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PollModel.deletePoll"));
 
 		poll.setInt(1, pollId);
 		poll.executeUpdate();
@@ -270,7 +270,7 @@ public class GenericPollDAO extends AutoKeys implements PollDAO {
 	}
 	
 	protected void deletePollVotes(int pollId) throws Exception {
-		PreparedStatement poll = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PollModel.deletePollVoters"));
+		PreparedStatement poll = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PollModel.deletePollVoters"));
 
 		poll.setInt(1, pollId);
 		poll.executeUpdate();
@@ -279,7 +279,7 @@ public class GenericPollDAO extends AutoKeys implements PollDAO {
 	
 	protected void deleteAllPollOptions(int pollId) throws Exception
 	{
-		PreparedStatement poll = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PollModel.deleteAllPollOptions"));
+		PreparedStatement poll = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PollModel.deleteAllPollOptions"));
 
 		poll.setInt(1, pollId);
 		poll.executeUpdate();
@@ -287,7 +287,7 @@ public class GenericPollDAO extends AutoKeys implements PollDAO {
 	}
 	
 	protected void deletePollOptions(int pollId, List deleted) throws Exception {
-		Connection connection = JForum.getConnection();
+		Connection connection = JForumExecutionContext.getConnection();
 		
 		PreparedStatement options = connection.prepareStatement(SystemGlobals.getSql("PollModel.deletePollOption"));
 
@@ -305,7 +305,7 @@ public class GenericPollDAO extends AutoKeys implements PollDAO {
 	
 	protected void updatePollOptions(int pollId, List options) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PollModel.updatePollOption"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PollModel.updatePollOption"));
 		
 		for (Iterator iter = options.iterator(); iter.hasNext(); ) {
 			PollOption o = (PollOption)iter.next();
@@ -334,7 +334,7 @@ public class GenericPollDAO extends AutoKeys implements PollDAO {
 	}
 	
 	protected void updatePoll(Poll poll) throws Exception {
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PollModel.updatePoll"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PollModel.updatePoll"));
 
 		p.setString(1, poll.getLabel());
 		p.setInt(2, poll.getLength());

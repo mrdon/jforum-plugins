@@ -74,7 +74,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.88 2005/12/12 00:54:40 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.89 2006/01/29 15:07:01 rafaelsteil Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
@@ -92,37 +92,29 @@ public class JForum extends JForumBaseServlet
 		// Start database
 		isDatabaseUp = ForumStartup.startDatabase();
 		
-		// Configure ThreadLocal
-		DataHolder dh = new DataHolder();
-		Connection conn = null;
-		
 		try {
-			conn = DBConnection.getImplementation().getConnection();
+			Connection conn = DBConnection.getImplementation().getConnection();
 			
+			// Try to fix some MySQL problems
 			DatabaseWorkarounder dw = new DatabaseWorkarounder();
 			dw.handleWorkarounds(conn);
+			
+			// Continues loading the forum
+			JForumExecutionContext ex = JForumExecutionContext.get();
+			ex.setConnection(conn);
+			JForumExecutionContext.set(ex);
+			
+			// Init general forum stuff
+			ForumStartup.startForumRepository();
+			RankingRepository.loadRanks();
+			SmiliesRepository.loadSmilies();
 		}
 		catch (Exception e) {
 			throw new ForumStartupException("Error while starting jforum", e);
 		}
-		
-		dh.setConnection(conn);
-		JForum.setThreadLocalData(dh);
-		
-		// Init general forum stuff
-		ForumStartup.startForumRepository();
-		RankingRepository.loadRanks();
-		SmiliesRepository.loadSmilies();
-		
-		// Finalize
-		if (conn != null) {
-			try {
-				DBConnection.getImplementation().releaseConnection(conn);
-			}
-			catch (Exception e) {}
+		finally {
+			JForumExecutionContext.finish();
 		}
-		
-		JForum.setThreadLocalData(null);
 	}
 	
 	/**
@@ -135,24 +127,22 @@ public class JForum extends JForumBaseServlet
 		String encoding = SystemGlobals.getValue(ConfigKeys.ENCODING);
 
 		try {
-			// Initializes thread local data
-			DataHolder dataHolder = new DataHolder();
-			localData.set(dataHolder);
-
 			// Request
 			request = new ActionServletRequest(req);
 
-			dataHolder.setResponse(response);
-			dataHolder.setRequest(request);
-			
+			// Initializes the execution context
+			JForumExecutionContext ex = JForumExecutionContext.get();
+			ex.setRequest(request);
+			ex.setResponse(response);
+
 			if (!isDatabaseUp) {
 				ForumStartup.startDatabase();
 			}
 			
-			localData.set(dataHolder);
+			JForumExecutionContext.set(ex);
 			
 			// Setup stuff
-			SimpleHash context = JForum.getContext();
+			SimpleHash context = JForumExecutionContext.getTemplateContext();
 			
 			ControllerUtils utils = new ControllerUtils();
 			utils.refreshSession();
@@ -190,10 +180,8 @@ public class JForum extends JForumBaseServlet
 				Command c = (Command)Class.forName(moduleClass).newInstance();
 				Template template = c.process(request, response, context);
 
-				DataHolder dh = (DataHolder)localData.get();
-				
-				if (dh.getRedirectTo() == null) {
-					String contentType = dh.getContentType();
+				if (JForumExecutionContext.getRedirectTo() == null) {
+					String contentType = JForumExecutionContext.getContentType();
 					
 					if (contentType == null) {
 						contentType = "text/html; charset=" + encoding;
@@ -204,9 +192,9 @@ public class JForum extends JForumBaseServlet
 					// Binary content are expected to be fully 
 					// handled in the action, including outputstream
 					// manipulation
-					if (!dh.isBinaryContent()) {
+					if (!JForumExecutionContext.isCustomContent()) {
 						out = new BufferedWriter(new OutputStreamWriter(response.getOutputStream(), encoding));
-						template.process(JForum.getContext(), out);
+						template.process(JForumExecutionContext.getTemplateContext(), out);
 						out.flush();
 					}
 				}
@@ -217,7 +205,7 @@ public class JForum extends JForumBaseServlet
 			}
 		}
 		catch (Exception e) {
-			JForum.enableRollback();
+			JForumExecutionContext.enableRollback();
 			
 			if (e.toString().indexOf("ClientAbortException") == -1) {
 				response.setContentType("text/html; charset=" + encoding);
@@ -230,52 +218,21 @@ public class JForum extends JForumBaseServlet
 			}
 		}
 		finally {
-			this.releaseConnection();
+			try {
+				if (out != null) { out.close(); }
+			}
+			catch (Exception e) {}
 			
-			DataHolder dh = (DataHolder)localData.get();
+			String redirectTo = JForumExecutionContext.getRedirectTo();
 			
-			if (dh != null) {
-				String redirectTo = dh.getRedirectTo();
-				
-				if (redirectTo != null) {
-					if(request.getJForumContext().isEncodingDisabled()) {
-						response.sendRedirect(redirectTo);
-					} else {
-						response.sendRedirect(response.encodeRedirectURL(redirectTo));
-					}
+			if (redirectTo != null) {
+				if(request.getJForumContext().isEncodingDisabled()) {
+					response.sendRedirect(redirectTo);
+				} else {
+					response.sendRedirect(response.encodeRedirectURL(redirectTo));
 				}
 			}
-			
-			localData.set(null);
 		}		
-	}
-	
-	private void releaseConnection()
-	{
-		Connection conn = JForum.getConnection(false);
-		
-		if (conn != null) {
-			if (SystemGlobals.getBoolValue(ConfigKeys.DATABASE_USE_TRANSACTIONS)) {
-				if (JForum.shouldRollback()) {
-					try {
-						conn.rollback();
-					}
-					catch (Exception e) {
-						logger.error("Error while rolling back a transaction", e);
-					}
-				}
-				else {
-					try {
-						conn.commit();
-					}
-					catch (Exception e) {
-						logger.error("Error while commiting a transaction", e);
-					}
-				}
-			}
-				
-			DBConnection.getImplementation().releaseConnection(conn);
-		}
 	}
 	
 	/** 

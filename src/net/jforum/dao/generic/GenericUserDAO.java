@@ -50,7 +50,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.entities.Group;
 import net.jforum.entities.KarmaStatus;
@@ -61,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericUserDAO.java,v 1.12 2005/10/28 16:35:13 almilli Exp $
+ * @version $Id: GenericUserDAO.java,v 1.13 2006/01/29 15:06:24 rafaelsteil Exp $
  */
 public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO 
 {
@@ -87,7 +87,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	public User selectById(int userId) throws Exception 
 	{
 	    String q = SystemGlobals.getSql("UserModel.selectById");
-		PreparedStatement p = JForum.getConnection().prepareStatement(q);
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(q);
 		p.setInt(1, userId);
 		
 		ResultSet rs = p.executeQuery();
@@ -101,7 +101,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			rs.close();
 
 			// User groups
-			p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectGroups"));
+			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectGroups"));
 			p.setInt(1, userId);
 			
 			rs = p.executeQuery();
@@ -122,7 +122,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 
 	public User selectByName(String username) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectByName"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectByName"));
 		p.setString(1, username);
 		
 		ResultSet rs = p.executeQuery();
@@ -187,7 +187,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	 */
 	public void delete(int userId) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.deletedStatus"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.deletedStatus"));
 		p.setInt(1, 1);
 		p.setInt(2, userId);
 		
@@ -200,7 +200,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	 */
 	public void update(User user) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.update"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.update"));
 		
 		p.setString(1, user.getAim());
 		p.setString(2, user.getAvatar());
@@ -284,7 +284,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	 */
 	public void decrementPosts(int userId) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.decrementPosts"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.decrementPosts"));
 		p.setInt(1, userId);
 		
 		p.executeUpdate();
@@ -296,7 +296,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	 */
 	public void incrementPosts(int userId) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.incrementPosts"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.incrementPosts"));
 		p.setInt(1, userId);
 		
 		p.executeUpdate();
@@ -308,7 +308,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	 */
 	public void setRanking(int userId, int rankingId) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.rankingId"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.rankingId"));
 		p.setInt(1, rankingId);
 		p.setInt(2, userId);
 		
@@ -321,7 +321,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	 */
 	public void setActive(int userId, boolean active) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.activeStatus"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.activeStatus"));
 		p.setInt(1, active ? 1 : 0);
 		p.setInt(2, userId);
 		
@@ -334,7 +334,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	 */
 	public void undelete(int userId) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.deletedStatus"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.deletedStatus"));
 		p.setInt(1, 0);
 		p.setInt(2, userId);
 		
@@ -358,12 +358,12 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 		PreparedStatement p;
 		
 		if (count > 0) {
-			p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectAllByLimit"));
+			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectAllByLimit"));
 			p.setInt(1, startFrom);
 			p.setInt(2, count);
 		}
 		else {
-			p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectAll"));
+			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectAll"));
 		}
 		
 		ResultSet rs = p.executeQuery();
@@ -421,7 +421,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	 */
 	public List selectAllByGroup(int groupId, int start, int count) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectAllByGroup"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectAllByGroup"));
 		p.setInt(1, groupId);
 		p.setInt(2, start);
 		p.setInt(3, count);
@@ -440,7 +440,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	{
 		User u = new User();
 		
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.lastUserRegistered"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.lastUserRegistered"));
 		ResultSet rs = p.executeQuery();
 		rs.next();
 		
@@ -458,7 +458,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	 */
 	public int getTotalUsers() throws Exception 
 	{	
-		return this.getTotalUsersCommon(JForum.getConnection().prepareStatement(
+		return this.getTotalUsersCommon(JForumExecutionContext.getConnection().prepareStatement(
 				SystemGlobals.getSql("UserModel.totalUsers")));
 	}
 	
@@ -467,7 +467,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	 */
 	public int getTotalUsersByGroup(int groupId) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
 				SystemGlobals.getSql("UserModel.totalUsersByGroup"));
 		p.setInt(1, groupId);
 		
@@ -492,7 +492,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	 */
 	public boolean isDeleted(int userId) throws Exception 
 	{	
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.isDeleted"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.isDeleted"));
 		p.setInt(1, userId);
 		
 		int deleted = 0;
@@ -515,7 +515,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	{
 		boolean status = false;
 		
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.isUsernameRegistered"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.isUsernameRegistered"));
 		p.setString(1, username);
 		
 		ResultSet rs = p.executeQuery();
@@ -542,7 +542,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	 */
 	public void addToGroup(int userId, int[] groupId) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.addToGroup"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.addToGroup"));
 		p.setInt(1, userId);
 		
 		for (int i = 0; i < groupId.length; i++) {
@@ -558,7 +558,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	 */
 	public void removeFromGroup(int userId, int[] groupId) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.removeFromGroup"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.removeFromGroup"));
 		p.setInt(1, userId);
 		
 		for (int i = 0; i < groupId.length; i++) {
@@ -574,7 +574,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	 */
 	public void saveNewPassword(String password, String email) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.saveNewPassword"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.saveNewPassword"));
 		p.setString(1, password);
 		p.setString(2, email);
 		p.executeUpdate();
@@ -586,7 +586,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	 */
 	public boolean validateLostPasswordHash(String email, String hash) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.validateLostPasswordHash"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.validateLostPasswordHash"));
 		p.setString(1, hash);
 		p.setString(2, email);
 		
@@ -610,7 +610,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	 */
 	public void writeLostPasswordHash(String email, String hash) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.writeLostPasswordHash"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.writeLostPasswordHash"));
 		p.setString(1, hash);
 		p.setString(2, email);
 		p.executeUpdate();
@@ -622,7 +622,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	 */
 	public String getUsernameByEmail(String email) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.getUsernameByEmail"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.getUsernameByEmail"));
 		p.setString(1, email);
 		
 		String username = "";
@@ -645,7 +645,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	{
 		List namesList = new ArrayList();
 		
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.findByName"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.findByName"));
 		p.setString(1, exactMatch ? input : "%" + input + "%");
 	
 		ResultSet rs = p.executeQuery();
@@ -671,7 +671,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	 */
 	public boolean validateActivationKeyHash(int userId , String hash) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.validateActivationKeyHash"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.validateActivationKeyHash"));
 		p.setString(1, hash);
 		p.setInt(2, userId);
 
@@ -693,7 +693,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	 */
 	public void writeUserActive(int userId) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.writeUserActive"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.writeUserActive"));
 		p.setInt(1, userId);
 		p.executeUpdate();
 		p.close();
@@ -704,7 +704,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	 */
 	public void updateUsername(int userId, String username) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.updateUsername"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.updateUsername"));
 		p.setString(1, username);
 		p.setInt(2, userId);
 		p.executeUpdate();
@@ -718,7 +718,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	{
 		boolean status = false;
 		
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.getUsername"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.getUsername"));
 		p.setString(1, usernameToCheck);
 		p.setInt(2, userId);
 		

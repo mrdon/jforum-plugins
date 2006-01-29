@@ -62,7 +62,7 @@ import freemarker.template.Configuration;
  * General utilities for the test cases.
  * 
  * @author Rafael Steil
- * @version $Id: TestCaseUtils.java,v 1.14 2005/08/03 18:04:10 franklin_samir Exp $
+ * @version $Id: TestCaseUtils.java,v 1.15 2006/01/29 15:06:43 rafaelsteil Exp $
  */
 public class TestCaseUtils
 {
@@ -128,17 +128,17 @@ public class TestCaseUtils
         templateCfg.setDirectoryForTemplateLoading(new File(SystemGlobals.getApplicationPath()
                 + "/templates"));
         templateCfg.setTemplateUpdateDelay(0);
-        Configuration.setDefaultConfiguration(templateCfg);
+        JForumExecutionContext.setTemplateConfig(templateCfg);
 
 		I18n.load();
 	}
 	
 	public static void createThreadLocalData(int defaultUserId) throws IOException
 	{
-		JForumBaseServlet.DataHolder dh = new JForumBaseServlet.DataHolder();
-		dh.setRequest(new FakeActionServletRequest());
+		JForumExecutionContext ex = JForumExecutionContext.get();
+		ex.setRequest(new FakeActionServletRequest());
 		
-		JForumBaseServlet.setThreadLocalData(dh);
+		JForumExecutionContext.set(ex);
 		
 		UserSession us = new UserSession();
 		us.setUserId(defaultUserId);

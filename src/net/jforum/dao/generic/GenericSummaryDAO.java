@@ -48,7 +48,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.SummaryDAO;
 import net.jforum.entities.Post;
@@ -57,7 +57,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Franklin Samir (franklin (at) portaljava [dot] com)
- * @version $Id: GenericSummaryDAO.java,v 1.7 2005/08/03 21:26:43 franklin_samir Exp $
+ * @version $Id: GenericSummaryDAO.java,v 1.8 2006/01/29 15:06:21 rafaelsteil Exp $
  */
 public class GenericSummaryDAO extends AutoKeys implements SummaryDAO
 {
@@ -67,7 +67,7 @@ public class GenericSummaryDAO extends AutoKeys implements SummaryDAO
 	public List selectLastPosts(Date firstDate, Date lastDate) throws Exception
 	{
 		String query = SystemGlobals.getSql("SummaryDAO.selectPosts");
-		PreparedStatement p = JForum.getConnection().prepareStatement(query);
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(query);
 		p.setTimestamp(1, new Timestamp(firstDate.getTime()));
 		p.setTimestamp(2, new Timestamp(lastDate.getTime()));
 
@@ -109,7 +109,7 @@ public class GenericSummaryDAO extends AutoKeys implements SummaryDAO
 	public List listRecipients() throws Exception
 	{
 		String query = SystemGlobals.getSql("SummaryDAO.selectAllRecipients");
-		PreparedStatement p = JForum.getConnection().prepareStatement(query);
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(query);
 
 		List recipients = new ArrayList();
 		ResultSet rs = p.executeQuery();

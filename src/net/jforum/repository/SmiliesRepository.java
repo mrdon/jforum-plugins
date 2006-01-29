@@ -45,7 +45,7 @@ package net.jforum.repository;
 import java.util.Iterator;
 import java.util.List;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
 import net.jforum.dao.DataAccessDriver;
@@ -54,7 +54,7 @@ import net.jforum.exceptions.SmiliesLoadException;
 
 /**
  * @author Rafael Steil
- * @version $Id: SmiliesRepository.java,v 1.12 2005/10/02 19:06:43 rafaelsteil Exp $
+ * @version $Id: SmiliesRepository.java,v 1.13 2006/01/29 15:07:18 rafaelsteil Exp $
  */
 public class SmiliesRepository implements Cacheable
 {
@@ -86,7 +86,7 @@ public class SmiliesRepository implements Cacheable
 	{
 		List list = (List)cache.get(FQN, ENTRIES);
 		if (!contexted) {
-			String context = JForum.getRequest().getContextPath();
+			String context = JForumExecutionContext.getRequest().getContextPath();
 			
 			for (Iterator iter = list.iterator(); iter.hasNext(); ) {
 				Smilie s = (Smilie)iter.next();

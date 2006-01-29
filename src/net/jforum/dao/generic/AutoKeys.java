@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
 
  * Redistribution and use in source and binary forms,
@@ -48,13 +48,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: AutoKeys.java,v 1.4 2005/07/26 03:04:45 rafaelsteil Exp $
+ * @version $Id: AutoKeys.java,v 1.5 2006/01/29 15:06:24 rafaelsteil Exp $
  */
 public class AutoKeys
 {
@@ -104,12 +104,12 @@ public class AutoKeys
 	
 	protected PreparedStatement getStatementForAutoKeys(String queryName) throws SQLException
 	{
-		return this.getStatementForAutoKeys(queryName, JForum.getConnection());
+		return this.getStatementForAutoKeys(queryName, JForumExecutionContext.getConnection());
 	}
 	
 	protected int executeAutoKeysQuery(PreparedStatement p) throws SQLException
 	{
-		return this.executeAutoKeysQuery(p, JForum.getConnection());
+		return this.executeAutoKeysQuery(p, JForumExecutionContext.getConnection());
 	}
 	
 	protected int executeAutoKeysQuery(PreparedStatement p, Connection conn) throws SQLException

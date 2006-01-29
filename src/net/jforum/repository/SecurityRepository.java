@@ -42,7 +42,7 @@
  */
 package net.jforum.repository;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
@@ -58,7 +58,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityRepository.java,v 1.18 2005/09/28 03:40:58 rafaelsteil Exp $
+ * @version $Id: SecurityRepository.java,v 1.19 2006/01/29 15:07:19 rafaelsteil Exp $
  */
 public class SecurityRepository implements Cacheable
 {
@@ -190,7 +190,8 @@ public class SecurityRepository implements Cacheable
 	{
 		UserSession us = SessionFacade.getUserSession();
 		if (us == null) {
-			logger.warn("Found null userSession. Going anonymous. Session id #" + JForum.getRequest().getSession().getId());
+			logger.warn("Found null userSession. Going anonymous. Session id #" 
+					+ JForumExecutionContext.getRequest().getSession().getId());
 			us = new UserSession();
 			us.makeAnonymous();
 		}

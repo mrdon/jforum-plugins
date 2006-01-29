@@ -47,7 +47,7 @@ import java.util.Date;
 import java.util.Map;
 
 import net.jforum.Command;
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
 import net.jforum.entities.User;
 import net.jforum.exceptions.RequestEmptyException;
@@ -60,7 +60,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.16 2005/11/27 19:50:05 per_johansson Exp $
+ * @version $Id: ViewCommon.java,v 1.17 2006/01/29 15:07:12 rafaelsteil Exp $
  */
 public final class ViewCommon
 {
@@ -82,7 +82,7 @@ public final class ViewCommon
 	 */
 	public static void contextToPagination(int start, int totalRecords, int recordsPerPage)
 	{
-		SimpleHash context = JForum.getContext();
+		SimpleHash context = JForumExecutionContext.getTemplateContext();
 		
 		context.put("totalPages", new Double(Math.ceil((double) totalRecords / (double) recordsPerPage)));
 		context.put("recordsPerPage", new Integer(recordsPerPage));
@@ -93,17 +93,17 @@ public final class ViewCommon
 	
 	public static String contextToLogin() 
 	{
-		String uri = JForum.getRequest().getRequestURI();
-		String query = JForum.getRequest().getQueryString();
+		String uri = JForumExecutionContext.getRequest().getRequestURI();
+		String query = JForumExecutionContext.getRequest().getQueryString();
 		String path = query == null ? uri : uri + "?" + query;
 		
-		JForum.getContext().put("returnPath", path);
+		JForumExecutionContext.getTemplateContext().put("returnPath", path);
 		
 		if (ConfigKeys.TYPE_SSO.equals(SystemGlobals.getValue(ConfigKeys.AUTHENTICATION_TYPE))) {
 			String redirect = SystemGlobals.getValue(ConfigKeys.SSO_REDIRECT);
 			
 			if (redirect != null && redirect.trim().length() > 0) {
-				JForum.setRedirect(JForum.getRequest().getContextPath() + redirect.trim() + path);
+				JForumExecutionContext.setRedirect(JForumExecutionContext.getRequest().getContextPath() + redirect.trim() + path);
 			}
 		}
 		
@@ -117,7 +117,7 @@ public final class ViewCommon
 	 */
 	public static int getStartPage()
 	{
-		String s = JForum.getRequest().getParameter("start");
+		String s = JForumExecutionContext.getRequest().getParameter("start");
 		int start = 0;
 		
 		if (s == null || s.trim().equals("")) {
@@ -185,12 +185,12 @@ public final class ViewCommon
 					+ "but no module or action name was found");
 		}
 		
-		JForum.getRequest().restoreDump(data);
+		JForumExecutionContext.getRequest().restoreDump(data);
 		SessionFacade.removeAttribute(ConfigKeys.REQUEST_DUMP);
 		
 		String moduleClass = ModulesRepository.getModuleClass(module);
-		((Command)Class.forName(moduleClass).newInstance()).process(JForum.getRequest(),
-				JForum.getResponse(), JForum.getContext());
+		((Command)Class.forName(moduleClass).newInstance()).process(JForumExecutionContext.getRequest(),
+				JForumExecutionContext.getResponse(), JForumExecutionContext.getTemplateContext());
 	}
 
 	public static String toUtf8String(String s)

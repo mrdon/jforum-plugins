@@ -45,13 +45,13 @@ package net.jforum.dao.oracle;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.entities.PrivateMessage;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Dmitriy Kiriy
- * @version $Id: OraclePrivateMessageDAO.java,v 1.6 2005/12/01 12:14:36 rafaelsteil Exp $
+ * @version $Id: OraclePrivateMessageDAO.java,v 1.7 2006/01/29 15:07:08 rafaelsteil Exp $
  */
 public class OraclePrivateMessageDAO extends net.jforum.dao.generic.GenericPrivateMessageDAO
 {
@@ -60,7 +60,7 @@ public class OraclePrivateMessageDAO extends net.jforum.dao.generic.GenericPriva
 	 */
 	protected void addPmText(PrivateMessage pm) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
 				SystemGlobals.getSql("PrivateMessagesModel.addText"));
 		p.setInt(1, pm.getId());
 		p.executeUpdate();

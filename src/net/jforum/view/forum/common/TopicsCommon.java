@@ -48,7 +48,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
@@ -77,7 +77,7 @@ import freemarker.template.SimpleHash;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.24 2006/01/16 20:13:57 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.25 2006/01/29 15:07:11 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
@@ -175,7 +175,7 @@ public class TopicsCommon
 	 */
 	public static void topicListingBase() throws Exception
 	{
-		SimpleHash context = JForum.getContext();
+		SimpleHash context = JForumExecutionContext.getTemplateContext();
 		
 		// Topic Types
 		context.put("TOPIC_ANNOUNCE", new Integer(Topic.TYPE_ANNOUNCE));

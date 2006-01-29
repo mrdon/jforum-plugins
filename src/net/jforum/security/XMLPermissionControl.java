@@ -53,7 +53,7 @@ import java.util.Map;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.exceptions.XMLException;
 import net.jforum.util.FormSelectedData;
 import net.jforum.util.preferences.SystemGlobals;
@@ -68,7 +68,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * Manipulates XML permission control file definition 
  * 
  * @author Rafael Steil
- * @version $Id: XMLPermissionControl.java,v 1.9 2005/09/13 21:27:28 rafaelsteil Exp $
+ * @version $Id: XMLPermissionControl.java,v 1.10 2006/01/29 15:07:22 rafaelsteil Exp $
  */
 public class XMLPermissionControl extends DefaultHandler 
 {
@@ -191,7 +191,7 @@ public class XMLPermissionControl extends DefaultHandler
 			// If refName is present, then we have a template query
 			if (refName != null) {
 				try {
-					p = JForum.getConnection().prepareStatement(SystemGlobals.getSql(atts.getValue("queryName")));
+					p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql(atts.getValue("queryName")));
 					rs = p.executeQuery();
 					
 					String valueField = atts.getValue("valueField");

@@ -51,7 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.dao.ModerationDAO;
 import net.jforum.entities.ModerationPendingInfo;
 import net.jforum.entities.Post;
@@ -60,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericModerationDAO.java,v 1.4 2005/07/26 03:04:43 rafaelsteil Exp $
+ * @version $Id: GenericModerationDAO.java,v 1.5 2006/01/29 15:06:21 rafaelsteil Exp $
  */
 public class GenericModerationDAO implements ModerationDAO
 {
@@ -69,7 +69,7 @@ public class GenericModerationDAO implements ModerationDAO
 	 */
 	public void aprovePost(int postId) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
 				SystemGlobals.getSql("ModerationModel.aprovePost"));
 		p.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
 		p.setInt(2, postId);
@@ -84,7 +84,7 @@ public class GenericModerationDAO implements ModerationDAO
 	{
 		Map m = new HashMap();
 		
-		PreparedStatement p = JForum.getConnection().prepareStatement(
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
 				SystemGlobals.getSql("ModerationModel.topicsByForum"));
 		p.setInt(1, forumId);
 		
@@ -148,7 +148,7 @@ public class GenericModerationDAO implements ModerationDAO
 		List l = new ArrayList();
 		int lastId = 0;
 		ModerationPendingInfo info = null;
-		Statement s = JForum.getConnection().createStatement();
+		Statement s = JForumExecutionContext.getConnection().createStatement();
 		
 		ResultSet rs = s.executeQuery(SystemGlobals.getSql("ModerationModel.categoryPendingModeration"));
 		while (rs.next()) {

@@ -46,12 +46,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerUserDAO.java,v 1.5 2005/11/30 11:44:33 rafaelsteil Exp $
+ * @version $Id: SqlServerUserDAO.java,v 1.6 2006/01/29 15:07:10 rafaelsteil Exp $
  */
 public class SqlServerUserDAO extends net.jforum.dao.generic.GenericUserDAO
 {
@@ -63,7 +63,7 @@ public class SqlServerUserDAO extends net.jforum.dao.generic.GenericUserDAO
 		PreparedStatement p;
 
 		if (count > 0) {
-			p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("GenericModel.selectByLimit") 
+			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("GenericModel.selectByLimit") 
 					+ " " 
 					+ count 
 					+ " " 
@@ -72,7 +72,7 @@ public class SqlServerUserDAO extends net.jforum.dao.generic.GenericUserDAO
 			p.setInt(2, count);
 		}
 		else {
-			p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectAll"));
+			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectAll"));
 		}
 		
 		ResultSet rs = p.executeQuery();

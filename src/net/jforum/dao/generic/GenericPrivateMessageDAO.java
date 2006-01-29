@@ -49,7 +49,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.UserDAO;
 import net.jforum.entities.Post;
@@ -61,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericPrivateMessageDAO.java,v 1.5 2005/07/26 03:04:46 rafaelsteil Exp $
+ * @version $Id: GenericPrivateMessageDAO.java,v 1.6 2006/01/29 15:06:25 rafaelsteil Exp $
  */
 public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao.PrivateMessageDAO
 {
@@ -89,7 +89,7 @@ public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao
 	
 	protected void addPmText(PrivateMessage pm) throws Exception
 	{
-		PreparedStatement text = JForum.getConnection().prepareStatement(
+		PreparedStatement text = JForumExecutionContext.getConnection().prepareStatement(
 				SystemGlobals.getSql("PrivateMessagesModel.addText"));
 		
 		text.setInt(1, pm.getId());
@@ -120,11 +120,11 @@ public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao
 	 */
 	public void delete(PrivateMessage[] pm) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessageModel.delete"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessageModel.delete"));
 		p.setInt(2, pm[0].getFromUser().getId());
 		p.setInt(3, pm[0].getFromUser().getId());
 		
-		PreparedStatement deleteText = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessagesModel.deleteText"));
+		PreparedStatement deleteText = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessagesModel.deleteText"));
 		
 		for (int i = 0; i < pm.length; i++) {
 			deleteText.setInt(1, pm[i].getId());
@@ -146,7 +146,7 @@ public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao
 		String query = SystemGlobals.getSql("PrivateMessageModel.baseListing");
 		query = query.replaceAll("#FILTER#", SystemGlobals.getSql("PrivateMessageModel.inbox"));
 		
-		PreparedStatement p = JForum.getConnection().prepareStatement(query);
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(query);
 		p.setInt(1, user.getId());
 		
 		List pmList = new ArrayList();
@@ -178,7 +178,7 @@ public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao
 		String query = SystemGlobals.getSql("PrivateMessageModel.baseListing");
 		query = query.replaceAll("#FILTER#", SystemGlobals.getSql("PrivateMessageModel.sent"));
 		
-		PreparedStatement p = JForum.getConnection().prepareStatement(query);
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(query);
 		p.setInt(1, user.getId());
 		
 		List pmList = new ArrayList();
@@ -247,7 +247,7 @@ public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao
 	 */
 	public PrivateMessage selectById(PrivateMessage pm) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessageModel.selectById"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessageModel.selectById"));
 		p.setInt(1, pm.getId());
 		
 		ResultSet rs = p.executeQuery();
@@ -266,7 +266,7 @@ public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao
 	 */
 	public void updateType(PrivateMessage pm) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessageModel.updateType"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessageModel.updateType"));
 		p.setInt(1,pm.getType());
 		p.setInt(2, pm.getId());
 		p.executeUpdate();

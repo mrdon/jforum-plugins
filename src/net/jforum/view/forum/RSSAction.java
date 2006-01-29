@@ -48,7 +48,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.ActionServletRequest;
 import net.jforum.Command;
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.PostDAO;
@@ -59,16 +59,16 @@ import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.repository.ForumRepository;
 import net.jforum.util.I18n;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
 import net.jforum.util.rss.ForumRSS;
 import net.jforum.util.rss.RSSAware;
 import net.jforum.util.rss.RecentTopicsRSS;
 import net.jforum.util.rss.TopicPostsRSS;
 import net.jforum.util.rss.TopicRSS;
-import net.jforum.util.rss.UserTopicsRSS;
 import net.jforum.util.rss.UserPostsRSS;
-import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.rss.UserTopicsRSS;
 import net.jforum.view.forum.common.ForumCommon;
 import net.jforum.view.forum.common.TopicsCommon;
 import freemarker.template.SimpleHash;
@@ -76,7 +76,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: RSSAction.java,v 1.22 2005/10/25 14:29:33 alexieong Exp $
+ * @version $Id: RSSAction.java,v 1.23 2006/01/29 15:06:59 rafaelsteil Exp $
  */
 public class RSSAction extends Command 
 {
@@ -103,7 +103,7 @@ public class RSSAction extends Command
 	{
 		int forumId = this.request.getIntParameter("forum_id"); 
 		if (!TopicsCommon.isTopicAccessible(forumId)) {
-            JForum.requestBasicAuthentication();
+			JForumExecutionContext.requestBasicAuthentication();
             return;
 		}
 		
@@ -133,7 +133,7 @@ public class RSSAction extends Command
 		Topic topic = tm.selectById(topicId);
 		
 		if (!TopicsCommon.isTopicAccessible(topic.getForumId()) || topic.getId() == 0) {
-            JForum.requestBasicAuthentication(); 
+			JForumExecutionContext.requestBasicAuthentication(); 
             return;
 		}
 		
@@ -225,10 +225,10 @@ public class RSSAction extends Command
 	{
         if (!SessionFacade.isLogged() && UserAction.hasBasicAuthentication(request)) {
             new UserAction().validateLogin(request);
-            JForum.setRedirect(null);
+            JForumExecutionContext.setRedirect(null);
         }
 
-        JForum.setContentType("text/xml");
+        JForumExecutionContext.setContentType("text/xml");
 		super.setTemplateName(TemplateKeys.RSS);
 
 		return super.process(request, response, context);

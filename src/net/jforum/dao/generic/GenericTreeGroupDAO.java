@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -47,13 +47,13 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.util.GroupNode;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTreeGroupDAO.java,v 1.4 2005/07/26 03:04:43 rafaelsteil Exp $
+ * @version $Id: GenericTreeGroupDAO.java,v 1.5 2006/01/29 15:06:22 rafaelsteil Exp $
  */
 public class GenericTreeGroupDAO implements net.jforum.dao.TreeGroupDAO 
 {
@@ -64,10 +64,11 @@ public class GenericTreeGroupDAO implements net.jforum.dao.TreeGroupDAO
 	{
 		List list = new ArrayList();
 		
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("TreeGroup.selectGroup"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("TreeGroup.selectGroup"));
 		p.setInt(1, parentId);
 		
 		ResultSet rs = p.executeQuery();
+		
 		while (rs.next()) {
 			GroupNode n = new GroupNode();
 			n.setName(rs.getString("group_name"));

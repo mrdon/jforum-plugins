@@ -47,7 +47,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.jforum.ActionServletRequest;
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
 import net.jforum.dao.TopicDAO;
@@ -68,7 +68,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationHelper.java,v 1.24 2005/10/08 19:57:51 rafaelsteil Exp $
+ * @version $Id: ModerationHelper.java,v 1.25 2006/01/29 15:06:56 rafaelsteil Exp $
  */
 public class ModerationHelper 
 {
@@ -84,7 +84,7 @@ public class ModerationHelper
 
 		if (SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION)) {
 			// Deleting topics
-			ActionServletRequest request = JForum.getRequest();
+			ActionServletRequest request = JForumExecutionContext.getRequest();
 			
 			if (request.getParameter("topicRemove") != null) {
 				if (SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE)) {
@@ -120,7 +120,7 @@ public class ModerationHelper
 			this.denied();
 		}
 		else if (status == ModerationHelper.SUCCESS && returnUrl != null) {
-			JForum.setRedirect(returnUrl);
+			JForumExecutionContext.setRedirect(returnUrl);
 		}
 		
 		return status;
@@ -133,7 +133,7 @@ public class ModerationHelper
 	
 	private void removeTopics() throws Exception
 	{
-		String[] topics = JForum.getRequest().getParameterValues("topic_id");
+		String[] topics = JForumExecutionContext.getRequest().getParameterValues("topic_id");
 		
 		List forumsList = new ArrayList();
 		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
@@ -178,7 +178,7 @@ public class ModerationHelper
 	
 	private void lockUnlockTopics(int status) throws Exception
 	{
-		String[] topics = JForum.getRequest().getParameterValues("topic_id");
+		String[] topics = JForumExecutionContext.getRequest().getParameterValues("topic_id");
 		
 		if (topics != null && topics.length > 0) {
 			int[] ids = new int[topics.length];
@@ -197,16 +197,16 @@ public class ModerationHelper
 	
 	private void moveTopics() throws Exception
 	{
-		SimpleHash context = JForum.getContext();
+		SimpleHash context = JForumExecutionContext.getTemplateContext();
 		
-		context.put("persistData", JForum.getRequest().getParameter("persistData"));
+		context.put("persistData", JForumExecutionContext.getRequest().getParameter("persistData"));
 		context.put("allCategories", ForumCommon.getAllCategoriesAndForums(false));
 		
-		String[] topics = JForum.getRequest().getParameterValues("topic_id");
+		String[] topics = JForumExecutionContext.getRequest().getParameterValues("topic_id");
 		
 		if (topics.length > 0) {
 			// If forum_id is null, get from the database
-			String forumId = JForum.getRequest().getParameter("forum_id");
+			String forumId = JForumExecutionContext.getRequest().getParameter("forum_id");
 			
 			if (forumId == null) {
 				int topicId = Integer.parseInt(topics[0]);
@@ -242,7 +242,7 @@ public class ModerationHelper
 			status = FAILURE;
 		}
 		else {
-			ActionServletRequest request = JForum.getRequest();
+			ActionServletRequest request = JForumExecutionContext.getRequest();
 			String topics = request.getParameter("topics");
 			
 			if (topics != null) {
@@ -275,8 +275,8 @@ public class ModerationHelper
 	
 	public String moderationDone(String redirectUrl)
 	{
-		JForum.getRequest().setAttribute("template", TemplateKeys.MODERATION_DONE);
-		JForum.getContext().put("message", I18n.getMessage("Moderation.ModerationDone", new String[] { redirectUrl }));
+		JForumExecutionContext.getRequest().setAttribute("template", TemplateKeys.MODERATION_DONE);
+		JForumExecutionContext.getTemplateContext().put("message", I18n.getMessage("Moderation.ModerationDone", new String[] { redirectUrl }));
 		
 		return TemplateKeys.MODERATION_DONE;
 	}
@@ -288,7 +288,7 @@ public class ModerationHelper
 	
 	public void denied(String message)
 	{
-		JForum.getRequest().setAttribute("template", TemplateKeys.MODERATION_DENIED);
-		JForum.getContext().put("message", message);		
+		JForumExecutionContext.getRequest().setAttribute("template", TemplateKeys.MODERATION_DENIED);
+		JForumExecutionContext.getTemplateContext().put("message", message);		
 	}
 }

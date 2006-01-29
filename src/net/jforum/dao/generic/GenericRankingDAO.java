@@ -47,13 +47,13 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.entities.Ranking;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericRankingDAO.java,v 1.4 2005/07/26 03:04:46 rafaelsteil Exp $
+ * @version $Id: GenericRankingDAO.java,v 1.5 2006/01/29 15:06:25 rafaelsteil Exp $
  */
 public class GenericRankingDAO implements net.jforum.dao.RankingDAO 
 {
@@ -64,7 +64,7 @@ public class GenericRankingDAO implements net.jforum.dao.RankingDAO
 	{
 		Ranking ranking = new Ranking();
 		
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("RankingModel.selectById"));		
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("RankingModel.selectById"));		
 		p.setInt(1, rankingId);
 		
 		ResultSet rs = p.executeQuery();
@@ -88,7 +88,7 @@ public class GenericRankingDAO implements net.jforum.dao.RankingDAO
 	public List selectAll() throws Exception 
 	{
 		List l = new ArrayList();
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("RankingModel.selectAll"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("RankingModel.selectAll"));
 		ResultSet rs = p.executeQuery();
 		
 		while (rs.next()) {
@@ -114,7 +114,7 @@ public class GenericRankingDAO implements net.jforum.dao.RankingDAO
 	 */
 	public void delete(int rankingId) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("RankingModel.delete"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("RankingModel.delete"));
 		p.setInt(1, rankingId);
 		
 		p.executeUpdate();
@@ -126,7 +126,7 @@ public class GenericRankingDAO implements net.jforum.dao.RankingDAO
 	 */
 	public void update(Ranking ranking) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("RankingModel.update"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("RankingModel.update"));
 		
 		p.setString(1, ranking.getTitle());
 		p.setString(2, ranking.getImage());
@@ -143,7 +143,7 @@ public class GenericRankingDAO implements net.jforum.dao.RankingDAO
 	 */
 	public void addNew(Ranking ranking) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("RankingModel.addNew"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("RankingModel.addNew"));
 		
 		p.setString(1, ranking.getTitle());
 		p.setInt(2, ranking.getMin());

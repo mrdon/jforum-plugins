@@ -45,7 +45,7 @@ package net.jforum.dao.mysql.security;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.dao.generic.security.GenericGroupSecurityDAO;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -53,7 +53,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * Mysq 3.23 hacks based on Andy's work
  * 
  * @author Rafael Steil
- * @version $Id: MySQL323GroupSecurityDAO.java,v 1.3 2005/07/26 03:05:15 rafaelsteil Exp $
+ * @version $Id: MySQL323GroupSecurityDAO.java,v 1.4 2006/01/29 15:06:55 rafaelsteil Exp $
  */
 public class MySQL323GroupSecurityDAO extends GenericGroupSecurityDAO
 {
@@ -62,7 +62,7 @@ public class MySQL323GroupSecurityDAO extends GenericGroupSecurityDAO
 	 */
 	public void deleteAllRoles(int id) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
 				SystemGlobals.getSql("PermissionControl.getRoleIdsByGroup"));
 		p.setInt(1, id);
 		
@@ -94,7 +94,7 @@ public class MySQL323GroupSecurityDAO extends GenericGroupSecurityDAO
 	{
 		int index = sql.indexOf('?');
 		sql = sql.substring(0, index) + csv + sql.substring(index + 1);
-		return JForum.getConnection().prepareStatement(sql);
+		return JForumExecutionContext.getConnection().prepareStatement(sql);
 	}
 	
 	/**

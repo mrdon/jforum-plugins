@@ -56,11 +56,12 @@ import net.jforum.repository.ModulesRepository;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallServlet.java,v 1.19 2005/11/16 21:07:40 rafaelsteil Exp $
+ * @version $Id: InstallServlet.java,v 1.20 2006/01/29 15:07:01 rafaelsteil Exp $
  */
 public class InstallServlet extends JForumBaseServlet
 {
@@ -77,81 +78,84 @@ public class InstallServlet extends JForumBaseServlet
 	 */
 	public void service(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException
 	{
-		DataHolder dataHolder = new DataHolder();
-		localData.set(dataHolder);
-		
-		String encoding = SystemGlobals.getValue(ConfigKeys.ENCODING);
-		req.setCharacterEncoding(encoding);
-		
-		// Context
-		InstallServlet.getContext().put("contextPath", req.getContextPath());
-		InstallServlet.getContext().put("serverName", req.getServerName());
-		InstallServlet.getContext().put("templateName", "default");
-		InstallServlet.getContext().put("serverPort", Integer.toString(req.getServerPort()));
-		InstallServlet.getContext().put("I18n", I18n.getInstance());
-		InstallServlet.getContext().put("encoding", encoding);
-		InstallServlet.getContext().put("extension", SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
-		
-		// Request
-		ActionServletRequest request = new ActionServletRequest(req);
-		request.setCharacterEncoding(encoding);
-		request.setJForumContext(new JForumContext(request.getContextPath(), 
-							   SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION),
-							   request,
-							   response,
-							   false));
-
-		dataHolder.setResponse(response);
-		dataHolder.setRequest(request);
-
-		// Assigns the information to user's thread 
-		localData.set(dataHolder);
-		
-		if (SystemGlobals.getBoolValue(ConfigKeys.INSTALLED)) {
-			InstallServlet.setRedirect(InstallServlet.getRequest().getContextPath() 
+		try {
+			String encoding = SystemGlobals.getValue(ConfigKeys.ENCODING);
+			req.setCharacterEncoding(encoding);
+			
+			// Context
+			SimpleHash context = JForumExecutionContext.getTemplateContext();
+			
+			context.put("contextPath", req.getContextPath());
+			context.put("serverName", req.getServerName());
+			context.put("templateName", "default");
+			context.put("serverPort", Integer.toString(req.getServerPort()));
+			context.put("I18n", I18n.getInstance());
+			context.put("encoding", encoding);
+			context.put("extension", SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+			
+			// Request
+			ActionServletRequest request = new ActionServletRequest(req);
+			request.setCharacterEncoding(encoding);
+			request.setJForumContext(new JForumContext(request.getContextPath(), 
+			   SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION),
+			   request,
+			   response,
+			   false));
+			
+			JForumExecutionContext ex = JForumExecutionContext.get();
+			ex.setResponse(response);
+			ex.setRequest(request);
+	
+			// Assigns the information to user's thread 
+			JForumExecutionContext.set(ex);
+			
+			if (SystemGlobals.getBoolValue(ConfigKeys.INSTALLED)) {
+				JForumExecutionContext.setRedirect(request.getContextPath() 
 					+ "/forums/list.page");
-		}
-		else {		
-			// Module and Action
-			String moduleClass = ModulesRepository.getModuleClass(request.getModule());
+			}
+			else {		
+				// Module and Action
+				String moduleClass = ModulesRepository.getModuleClass(request.getModule());
+				
+				context.put("moduleName", request.getModule());
+				context.put("action", request.getAction());
+				
+				BufferedWriter out = new BufferedWriter(new OutputStreamWriter(response.getOutputStream(), encoding));
+				
+				try {
+					if (moduleClass != null) {
+						// Here we go, baby
+						Command c = (Command)Class.forName(moduleClass).newInstance();
+						Template template = c.process(request, response, context);
 			
-			InstallServlet.getContext().put("moduleName", request.getModule());
-			InstallServlet.getContext().put("action", InstallServlet.getRequest().getAction());
+						if (JForumExecutionContext.getRedirectTo() == null) {
+							response.setContentType("text/html; charset=" + encoding);
 			
-			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(response.getOutputStream(), encoding));
-			
-			try {
-				if (moduleClass != null) {
-					// Here we go, baby
-					Command c = (Command)Class.forName(moduleClass).newInstance();
-					Template template = c.process(request, response, InstallServlet.getContext());
-		
-					if (((DataHolder)localData.get()).getRedirectTo() == null) {
-						response.setContentType("text/html; charset=" + encoding);
-		
-						template.process(InstallServlet.getContext(), out);
-						out.flush();
+							template.process(context, out);
+							out.flush();
+						}
+					}
+				}
+				catch (Exception e) {
+					response.setContentType("text/html; charset=" + encoding);
+					if (out != null) {
+						new ExceptionWriter().handleExceptionData(e, out);
+					}
+					else {
+						new ExceptionWriter().handleExceptionData(e, 
+							new BufferedWriter(new OutputStreamWriter(response.getOutputStream())));
 					}
 				}
 			}
-			catch (Exception e) {
-				response.setContentType("text/html; charset=" + encoding);
-				if (out != null) {
-					new ExceptionWriter().handleExceptionData(e, out);
-				}
-				else {
-					new ExceptionWriter().handleExceptionData(e, 
-							new BufferedWriter(new OutputStreamWriter(response.getOutputStream())));
-				}
+			
+			String redirectTo = JForumExecutionContext.getRedirectTo();
+			
+			if (redirectTo != null) {
+				response.sendRedirect(response.encodeRedirectURL(redirectTo));
 			}
 		}
-		
-		String redirectTo = ((DataHolder)localData.get()).getRedirectTo();
-		
-		localData.set(null);
-		
-		if (redirectTo != null) {
-			response.sendRedirect(response.encodeRedirectURL(redirectTo));
+		finally {
+			JForumExecutionContext.finish();
 		}
 	}
 }

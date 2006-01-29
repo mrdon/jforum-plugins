@@ -50,7 +50,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.jforum.Command;
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ModerationDAO;
@@ -73,7 +73,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.48 2005/10/08 19:57:51 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.49 2006/01/29 15:06:57 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -261,10 +261,10 @@ public class ForumAction extends Command
 		}
 		
 		if (forumId != null) {
-			JForum.setRedirect(this.makeRedirect("show"));
+			JForumExecutionContext.setRedirect(this.makeRedirect("show"));
 		}
 		else {
-			JForum.setRedirect(this.request.getContextPath() + "/forums/list"
+			JForumExecutionContext.setRedirect(this.request.getContextPath() + "/forums/list"
 					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		}
 	}
@@ -288,7 +288,7 @@ public class ForumAction extends Command
 			new ModerationAction(this.context, this.request).doSave();
 		}
 		
-		JForum.setRedirect(this.request.getContextPath()
+		JForumExecutionContext.setRedirect(this.request.getContextPath()
 			+ "/forums/show/" + this.request.getParameter("forum_id")
 			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 	}

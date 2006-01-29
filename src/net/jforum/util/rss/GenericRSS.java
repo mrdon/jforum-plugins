@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -44,15 +44,15 @@ package net.jforum.util.rss;
 
 import java.io.StringWriter;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import freemarker.template.Configuration;
+import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericRSS.java,v 1.5 2005/07/26 03:04:37 rafaelsteil Exp $
+ * @version $Id: GenericRSS.java,v 1.6 2006/01/29 15:07:19 rafaelsteil Exp $
  */
 public class GenericRSS implements RSSAware 
 {
@@ -65,13 +65,15 @@ public class GenericRSS implements RSSAware
 	
 	public String createRSS() throws Exception
 	{
-		Template t = Configuration.getDefaultConfiguration().getTemplate(SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR) 
+		Template t = JForumExecutionContext.templateConfig().getTemplate(SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR) 
 				+ "/rss_template.htm");
 		StringWriter sw = new StringWriter();
 		
-		JForum.getContext().put("encoding", SystemGlobals.getValue(ConfigKeys.ENCODING));
-		JForum.getContext().put("rss", this.rss);
-		t.process(JForum.getContext(), sw);
+		SimpleHash templateContext = JForumExecutionContext.getTemplateContext();
+		
+		templateContext.put("encoding", SystemGlobals.getValue(ConfigKeys.ENCODING));
+		templateContext.put("rss", this.rss);
+		t.process(templateContext, sw);
 		
 		return sw.toString();
 	}

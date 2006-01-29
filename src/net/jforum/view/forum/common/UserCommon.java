@@ -50,7 +50,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.jforum.JForum;
+import net.jforum.ActionServletRequest;
+import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.UserDAO;
@@ -67,7 +68,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserCommon.java,v 1.11 2005/10/28 16:35:15 almilli Exp $
+ * @version $Id: UserCommon.java,v 1.12 2006/01/29 15:07:13 rafaelsteil Exp $
  */
 public class UserCommon 
 {
@@ -84,8 +85,9 @@ public class UserCommon
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		User u = um.selectById(userId);
 		
+		ActionServletRequest request = JForumExecutionContext.getRequest();
 		if (SessionFacade.getUserSession().isAdmin()) {
-			String username = JForum.getRequest().getParameter("username");
+			String username = request.getParameter("username");
 		
 			if (username != null) {
 				u.setUsername(username.trim());
@@ -93,36 +95,36 @@ public class UserCommon
 		}
 		
 		u.setId(userId);
-		u.setEmail(SafeHtml.makeSafe(JForum.getRequest().getParameter("email")));
-		u.setIcq(SafeHtml.makeSafe(JForum.getRequest().getParameter("icq")));
-		u.setAim(SafeHtml.makeSafe(JForum.getRequest().getParameter("aim")));
-		u.setMsnm(SafeHtml.makeSafe(JForum.getRequest().getParameter("msn")));
-		u.setYim(SafeHtml.makeSafe(JForum.getRequest().getParameter("yim")));
-		u.setFrom(SafeHtml.makeSafe(JForum.getRequest().getParameter("location")));
-		u.setOccupation(SafeHtml.makeSafe(JForum.getRequest().getParameter("occupation")));
-		u.setInterests(SafeHtml.makeSafe(JForum.getRequest().getParameter("interests")));
-		u.setBiography(SafeHtml.makeSafe(JForum.getRequest().getParameter("biography")));
-		u.setSignature(SafeHtml.makeSafe(JForum.getRequest().getParameter("signature")));
-		u.setViewEmailEnabled(JForum.getRequest().getParameter("viewemail").equals("1"));
-		u.setViewOnlineEnabled(JForum.getRequest().getParameter("hideonline").equals("0"));
-		u.setNotifyPrivateMessagesEnabled(JForum.getRequest().getParameter("notifypm").equals("1"));
-		u.setNotifyOnMessagesEnabled(JForum.getRequest().getParameter("notifyreply").equals("1"));
-		u.setAttachSignatureEnabled(JForum.getRequest().getParameter("attachsig").equals("1"));
-		u.setHtmlEnabled(JForum.getRequest().getParameter("allowhtml").equals("1"));
-		u.setLang(JForum.getRequest().getParameter("language"));
+		u.setEmail(SafeHtml.makeSafe(request.getParameter("email")));
+		u.setIcq(SafeHtml.makeSafe(request.getParameter("icq")));
+		u.setAim(SafeHtml.makeSafe(request.getParameter("aim")));
+		u.setMsnm(SafeHtml.makeSafe(request.getParameter("msn")));
+		u.setYim(SafeHtml.makeSafe(request.getParameter("yim")));
+		u.setFrom(SafeHtml.makeSafe(request.getParameter("location")));
+		u.setOccupation(SafeHtml.makeSafe(request.getParameter("occupation")));
+		u.setInterests(SafeHtml.makeSafe(request.getParameter("interests")));
+		u.setBiography(SafeHtml.makeSafe(request.getParameter("biography")));
+		u.setSignature(SafeHtml.makeSafe(request.getParameter("signature")));
+		u.setViewEmailEnabled(request.getParameter("viewemail").equals("1"));
+		u.setViewOnlineEnabled(request.getParameter("hideonline").equals("0"));
+		u.setNotifyPrivateMessagesEnabled(request.getParameter("notifypm").equals("1"));
+		u.setNotifyOnMessagesEnabled(request.getParameter("notifyreply").equals("1"));
+		u.setAttachSignatureEnabled(request.getParameter("attachsig").equals("1"));
+		u.setHtmlEnabled(request.getParameter("allowhtml").equals("1"));
+		u.setLang(request.getParameter("language"));
 		
-		String website = SafeHtml.makeSafe(JForum.getRequest().getParameter("website"));
+		String website = SafeHtml.makeSafe(request.getParameter("website"));
 		if (website != null && !"".equals(website.trim()) && !website.toLowerCase().startsWith("http://")) {
 			website = "http://" + website;
 		}
 	
 		u.setWebSite(website);
 		
-		if (JForum.getRequest().getParameter("new_password") != null && JForum.getRequest().getParameter("new_password").length() > 0) {
-			u.setPassword(MD5.crypt(JForum.getRequest().getParameter("new_password")));
+		if (request.getParameter("new_password") != null && request.getParameter("new_password").length() > 0) {
+			u.setPassword(MD5.crypt(request.getParameter("new_password")));
 		}
 		
-		if (JForum.getRequest().getParameter("avatardel") != null) {
+		if (request.getParameter("avatardel") != null) {
 			File f = new File(SystemGlobals.getApplicationPath() + "/images/avatar/"+ u.getAvatar());
 			f.delete();
 			
@@ -130,7 +132,7 @@ public class UserCommon
 		}
 	
 		List warns = new ArrayList();
-		if (JForum.getRequest().getObjectParameter("avatar") != null) {
+		if (request.getObjectParameter("avatar") != null) {
 			try {
 				UserCommon.handleAvatar(u);
 			}
@@ -140,7 +142,7 @@ public class UserCommon
 			}
 		}
 		else {
-			String avatarUrl = JForum.getRequest().getParameter("avatarUrl");
+			String avatarUrl = request.getParameter("avatarUrl");
 			if (avatarUrl != null && !"".equals(avatarUrl.trim())) {
 				if (avatarUrl.toLowerCase().startsWith("http://")) {
 					u.setAvatar(avatarUrl);
@@ -167,7 +169,7 @@ public class UserCommon
 	private static void handleAvatar(User u) throws Exception 
 	{
 		String fileName = MD5.crypt(Integer.toString(u.getId()));
-		FileItem item = (FileItem)JForum.getRequest().getObjectParameter("avatar");
+		FileItem item = (FileItem)JForumExecutionContext.getRequest().getObjectParameter("avatar");
 		UploadUtils uploadUtils = new UploadUtils(item);
 		
 		// Gets file extension

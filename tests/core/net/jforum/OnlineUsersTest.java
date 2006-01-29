@@ -14,7 +14,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * Test {@link net.jforum.SessionFacade} methods for online users
  * 
  * @author Rafael Steil
- * @version $Id: OnlineUsersTest.java,v 1.4 2005/07/26 04:01:20 diegopires Exp $
+ * @version $Id: OnlineUsersTest.java,v 1.5 2006/01/29 15:06:42 rafaelsteil Exp $
  */
 public class OnlineUsersTest extends TestCase
 {
@@ -24,10 +24,10 @@ public class OnlineUsersTest extends TestCase
 	{
 		new SessionFacade().setCacheEngine(new DefaultCacheEngine());
 		
-		JForumBaseServlet.DataHolder dh = new JForumBaseServlet.DataHolder();
-		dh.setRequest(new ActionServletRequest(new FakeHttpRequest()));
+		JForumExecutionContext ex = JForumExecutionContext.get();
+		ex.setRequest(new ActionServletRequest(new FakeHttpRequest()));
 		
-		JForum.setThreadLocalData(dh);
+		JForumExecutionContext.set(ex);
 		
 		SystemGlobals.setValue(ConfigKeys.ANONYMOUS_USER_ID, Integer.toString(ANONYMOUS));
 	}

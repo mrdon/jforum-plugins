@@ -50,7 +50,6 @@ import net.jforum.repository.Tpl;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
-import freemarker.template.Configuration;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
@@ -60,13 +59,15 @@ import freemarker.template.Template;
  * presentation actions must extend this class. 
  * 
  * @author Rafael Steil
- * @version $Id: Command.java,v 1.18 2005/11/02 01:22:21 rafaelsteil Exp $
+ * @version $Id: Command.java,v 1.19 2006/01/29 15:06:59 rafaelsteil Exp $
  */
 public abstract class Command 
 {
 	private static Class[] NO_ARGS_CLASS = new Class[0];
 	private static Object[] NO_ARGS_OBJECT = new Object[0];
+	
 	private boolean ignoreAction;
+	
 	protected String templateName;
 	protected ActionServletRequest request;
 	protected HttpServletResponse response;
@@ -122,14 +123,14 @@ public abstract class Command
 			}
 		}
 		
-		if (JForum.getRedirect() != null) {
+		if (JForumExecutionContext.getRedirectTo() != null) {
 			this.setTemplateName(TemplateKeys.EMPTY);
 		}
 		else if (request.getAttribute("template") != null) {
 			this.setTemplateName((String)request.getAttribute("template"));
 		}
 		
-		if (JForum.isBinaryContent()) {
+		if (JForumExecutionContext.isCustomContent()) {
 			return null;
 		}
 		
@@ -137,7 +138,7 @@ public abstract class Command
 			throw new TemplateNotFoundException("Template for action " + action + " is not defined");
 		}
 		
-		return Configuration.getDefaultConfiguration().getTemplate(
+		return JForumExecutionContext.templateConfig().getTemplate(
 				new StringBuffer(SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR)).
 				append('/').append(this.templateName).toString());
 	}

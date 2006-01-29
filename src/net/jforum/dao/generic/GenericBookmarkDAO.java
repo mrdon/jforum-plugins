@@ -46,7 +46,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.entities.Bookmark;
 import net.jforum.entities.BookmarkType;
 import net.jforum.exceptions.InvalidBookmarkTypeException;
@@ -54,7 +54,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericBookmarkDAO.java,v 1.4 2005/07/26 03:04:46 rafaelsteil Exp $
+ * @version $Id: GenericBookmarkDAO.java,v 1.5 2006/01/29 15:06:24 rafaelsteil Exp $
  */
 public class GenericBookmarkDAO implements net.jforum.dao.BookmarkDAO
 {
@@ -63,7 +63,7 @@ public class GenericBookmarkDAO implements net.jforum.dao.BookmarkDAO
 	 */
 	public void add(Bookmark b) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
 				SystemGlobals.getSql("BookmarkModel.add"));
 		p.setInt(1, b.getUserId());
 		p.setInt(2, b.getRelationId());
@@ -80,7 +80,7 @@ public class GenericBookmarkDAO implements net.jforum.dao.BookmarkDAO
 	 */
 	public void update(Bookmark b) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
 				SystemGlobals.getSql("BookmarkModel.update"));
 		p.setInt(1, b.isPublicVisible() ? 1 : 0);
 		p.setString(2, b.getTitle());
@@ -95,7 +95,7 @@ public class GenericBookmarkDAO implements net.jforum.dao.BookmarkDAO
 	 */
 	public void remove(int bookmarkId) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
 				SystemGlobals.getSql("BookmarkModel.remove"));
 		p.setInt(1, bookmarkId);
 		p.executeUpdate();
@@ -129,7 +129,7 @@ public class GenericBookmarkDAO implements net.jforum.dao.BookmarkDAO
 	{
 		List l = new ArrayList();
 		
-		PreparedStatement p = JForum.getConnection().prepareStatement(
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
 				SystemGlobals.getSql("BookmarkModel.selectAllFromUser"));
 		p.setInt(1, userId);
 		
@@ -151,7 +151,7 @@ public class GenericBookmarkDAO implements net.jforum.dao.BookmarkDAO
 	{
 		Bookmark b = null;
 		
-		PreparedStatement p = JForum.getConnection().prepareStatement(
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
 				SystemGlobals.getSql("BookmarkModel.selectById"));
 		p.setInt(1, bookmarkId);
 		
@@ -171,7 +171,7 @@ public class GenericBookmarkDAO implements net.jforum.dao.BookmarkDAO
 	 */
 	public Bookmark selectForUpdate(int relationId, int relationType, int userId) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
 				SystemGlobals.getSql("BookmarkModel.selectForUpdate"));
 		p.setInt(1, relationId);
 		p.setInt(2, relationType);
@@ -192,7 +192,7 @@ public class GenericBookmarkDAO implements net.jforum.dao.BookmarkDAO
 	protected List getUsers(int userId) throws Exception
 	{
 		List l = new ArrayList();
-		PreparedStatement p = JForum.getConnection().prepareStatement(
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
 				SystemGlobals.getSql("BookmarkModel.selectUserBookmarks"));
 		p.setInt(1, userId);
 		
@@ -216,7 +216,7 @@ public class GenericBookmarkDAO implements net.jforum.dao.BookmarkDAO
 	protected List getTopics(int userId) throws Exception
 	{
 		List l = new ArrayList();
-		PreparedStatement p = JForum.getConnection().prepareStatement(
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
 				SystemGlobals.getSql("BookmarkModel.selectTopicBookmarks"));
 		p.setInt(1, userId);
 		
@@ -240,7 +240,7 @@ public class GenericBookmarkDAO implements net.jforum.dao.BookmarkDAO
 	protected List getForums(int userId) throws Exception
 	{
 		List l = new ArrayList();
-		PreparedStatement p = JForum.getConnection().prepareStatement(
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
 				SystemGlobals.getSql("BookmarkModel.selectForumBookmarks"));
 		p.setInt(1, userId);
 		

@@ -46,12 +46,12 @@ import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerTopicDAO.java,v 1.6 2005/11/15 21:29:56 rafaelsteil Exp $
+ * @version $Id: SqlServerTopicDAO.java,v 1.7 2006/01/29 15:07:10 rafaelsteil Exp $
  */
 public class SqlServerTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 {
@@ -64,7 +64,7 @@ public class SqlServerTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 
 		String top = SystemGlobals.getSql("GenericModel.selectByLimit");
 		
-		PreparedStatement p = JForum.getConnection().prepareStatement((top + " " + count + " " + SystemGlobals.getSql("TopicModel.selectAllByForumByLimit1")  + " " + top + " " + startFrom + " " + SystemGlobals.getSql("TopicModel.selectAllByForumByLimit2")));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement((top + " " + count + " " + SystemGlobals.getSql("TopicModel.selectAllByForumByLimit1")  + " " + top + " " + startFrom + " " + SystemGlobals.getSql("TopicModel.selectAllByForumByLimit2")));
 		p.setInt(1, forumId);
 		p.setInt(2, forumId);
 
@@ -78,7 +78,7 @@ public class SqlServerTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 	{
 		List l = new ArrayList();
 
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("GenericModel.selectByLimit") + " " + limit + " " + SystemGlobals.getSql("TopicModel.selectRecentTopicsByLimit"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("GenericModel.selectByLimit") + " " + limit + " " + SystemGlobals.getSql("TopicModel.selectRecentTopicsByLimit"));
 		
 		return this.fillTopicsData(p);
 	}

@@ -56,12 +56,12 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import net.jforum.JForumExecutionContext;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 import org.apache.log4j.Logger;
 
-import freemarker.template.Configuration;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
@@ -70,7 +70,7 @@ import freemarker.template.Template;
  * each user.
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.19 2005/12/18 02:12:52 rafaelsteil Exp $
+ * @version $Id: Spammer.java,v 1.20 2006/01/29 15:07:21 rafaelsteil Exp $
  */
 public class Spammer
 {
@@ -238,10 +238,10 @@ public class Spammer
 		Template template = null;
 		
 		if (templateEncoding == null || "".equals(templateEncoding.trim())) {
-			template = Configuration.getDefaultConfiguration().getTemplate(messageFile);
+			template = JForumExecutionContext.templateConfig().getTemplate(messageFile);
 		}
 		else {
-			template = Configuration.getDefaultConfiguration().getTemplate(messageFile, templateEncoding);
+			template = JForumExecutionContext.templateConfig().getTemplate(messageFile, templateEncoding);
 		}
 		
 		template.process(params, sWriter);

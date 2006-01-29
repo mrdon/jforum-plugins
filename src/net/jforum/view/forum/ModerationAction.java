@@ -43,12 +43,12 @@
 package net.jforum.view.forum;
 
 import net.jforum.Command;
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationAction.java,v 1.1 2005/10/08 19:57:52 rafaelsteil Exp $
+ * @version $Id: ModerationAction.java,v 1.2 2006/01/29 15:06:57 rafaelsteil Exp $
  */
 public class ModerationAction extends Command
 {
@@ -69,7 +69,7 @@ public class ModerationAction extends Command
 		
 		this.context.put("returnUrl", returnUrl);
 		
-		if (JForum.getRequest().getParameter("topicMove") != null) {
+		if (JForumExecutionContext.getRequest().getParameter("topicMove") != null) {
 			this.setTemplateName(TemplateKeys.MODERATION_MOVE_TOPICS);
 		}
 	}

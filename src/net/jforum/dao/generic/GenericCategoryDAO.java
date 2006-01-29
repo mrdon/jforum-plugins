@@ -47,13 +47,13 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.entities.Category;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericCategoryDAO.java,v 1.4 2005/07/26 03:04:47 rafaelsteil Exp $
+ * @version $Id: GenericCategoryDAO.java,v 1.5 2006/01/29 15:06:26 rafaelsteil Exp $
  */
 public class GenericCategoryDAO extends AutoKeys implements net.jforum.dao.CategoryDAO 
 {
@@ -62,7 +62,7 @@ public class GenericCategoryDAO extends AutoKeys implements net.jforum.dao.Categ
 	 */
 	public Category selectById(int categoryId) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.selectById"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.selectById"));
 		p.setInt(1, categoryId);
 		
 		ResultSet rs = p.executeQuery();
@@ -83,7 +83,7 @@ public class GenericCategoryDAO extends AutoKeys implements net.jforum.dao.Categ
 	 */
 	public List selectAll() throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.selectAll"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.selectAll"));
 		List l = new ArrayList();
 		
 		ResultSet rs = p.executeQuery();		
@@ -114,7 +114,7 @@ public class GenericCategoryDAO extends AutoKeys implements net.jforum.dao.Categ
 	 */
 	public boolean canDelete(int categoryId) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.canDelete"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.canDelete"));
 		p.setInt(1, categoryId);
 		
 		ResultSet rs = p.executeQuery();
@@ -133,7 +133,7 @@ public class GenericCategoryDAO extends AutoKeys implements net.jforum.dao.Categ
 	 */
 	public void delete(int categoryId) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.delete"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.delete"));
 		p.setInt(1, categoryId);
 		p.executeUpdate();
 		
@@ -145,7 +145,7 @@ public class GenericCategoryDAO extends AutoKeys implements net.jforum.dao.Categ
 	 */
 	public void update(Category category) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.update"));		
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.update"));		
 		p.setString(1, category.getName());
 		p.setInt(2, category.isModerated() ? 1 : 0);
 		p.setInt(3, category.getId());
@@ -159,7 +159,7 @@ public class GenericCategoryDAO extends AutoKeys implements net.jforum.dao.Categ
 	public int addNew(Category category) throws Exception 
 	{
 		int order = 1;
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.getMaxOrder"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.getMaxOrder"));
 		
 		ResultSet rs = p.executeQuery();
 		if (rs.next()) {
@@ -206,14 +206,14 @@ public class GenericCategoryDAO extends AutoKeys implements net.jforum.dao.Categ
 		category.setOrder(tmpOrder);
 
 		// *********
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.setOrderById"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.setOrderById"));
 		p.setInt(1, otherCategory.getOrder());
 		p.setInt(2, otherCategory.getId());
 		p.executeUpdate();
 		p.close();
 
 		// *********
-		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.setOrderById"));
+		p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.setOrderById"));
 		p.setInt(1, category.getOrder());
 		p.setInt(2, category.getId());
 		p.executeUpdate();

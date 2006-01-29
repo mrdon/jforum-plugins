@@ -45,13 +45,13 @@ package net.jforum.dao.sqlserver;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.entities.PrivateMessage;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerPrivateMessageDAO.java,v 1.6 2005/10/27 18:55:02 jakefear Exp $
+ * @version $Id: SqlServerPrivateMessageDAO.java,v 1.7 2006/01/29 15:07:09 rafaelsteil Exp $
  */
 public class SqlServerPrivateMessageDAO extends net.jforum.dao.generic.GenericPrivateMessageDAO 
 {
@@ -61,7 +61,7 @@ public class SqlServerPrivateMessageDAO extends net.jforum.dao.generic.GenericPr
 	public PrivateMessage selectById(PrivateMessage pm) throws Exception
 	{
 	    PreparedStatement p = null;
-	    p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessageModel.selectById"), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+	    p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessageModel.selectById"), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		
 		p.setInt(1, pm.getId());
 		

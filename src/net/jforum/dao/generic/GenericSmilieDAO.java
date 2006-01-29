@@ -48,13 +48,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.entities.Smilie;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericSmilieDAO.java,v 1.4 2005/07/26 03:04:42 rafaelsteil Exp $
+ * @version $Id: GenericSmilieDAO.java,v 1.5 2006/01/29 15:06:20 rafaelsteil Exp $
  */
 public class GenericSmilieDAO extends AutoKeys implements net.jforum.dao.SmilieDAO {
 
@@ -81,7 +81,7 @@ public class GenericSmilieDAO extends AutoKeys implements net.jforum.dao.SmilieD
 	 */
 	public void delete(int id) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SmiliesModel.delete"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("SmiliesModel.delete"));
 		p.setInt(1, id);
 		p.executeUpdate();
 		
@@ -93,7 +93,7 @@ public class GenericSmilieDAO extends AutoKeys implements net.jforum.dao.SmilieD
 	 */
 	public void update(Smilie smilie) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SmiliesModel.update"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("SmiliesModel.update"));
 		p.setString(1, smilie.getCode());
 		p.setString(2, smilie.getUrl());
 		p.setString(3, smilie.getDiskName());
@@ -122,7 +122,7 @@ public class GenericSmilieDAO extends AutoKeys implements net.jforum.dao.SmilieD
 	{
 		List l = new ArrayList();
 		
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SmiliesModel.selectAll"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("SmiliesModel.selectAll"));
 		ResultSet rs = p.executeQuery();
 		while (rs.next()) {
 			l.add(this.getSmilie(rs));
@@ -139,7 +139,7 @@ public class GenericSmilieDAO extends AutoKeys implements net.jforum.dao.SmilieD
 	 */
 	public Smilie selectById(int id) throws Exception 
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SmiliesModel.selectById"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("SmiliesModel.selectById"));
 		p.setInt(1, id);
 		
 		Smilie s = new Smilie();

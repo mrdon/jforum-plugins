@@ -46,19 +46,19 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 import org.apache.log4j.Logger;
 
-import freemarker.template.Configuration;
+import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ExceptionWriter.java,v 1.8 2005/12/14 18:19:29 rafaelsteil Exp $
+ * @version $Id: ExceptionWriter.java,v 1.9 2006/01/29 15:07:16 rafaelsteil Exp $
  */
 public class ExceptionWriter
 {
@@ -99,11 +99,13 @@ public class ExceptionWriter
 			stackTrace = stackTrace.replaceAll(filter, "");
 			message = message.replaceAll(filter, "");
 			
-			JForum.getContext().put("stackTrace", stackTrace);
-			JForum.getContext().put("message", message);
+			SimpleHash templateContext = JForumExecutionContext.getTemplateContext();
+			
+			templateContext.put("stackTrace", stackTrace);
+			templateContext.put("message", message);
 
-			Template template = Configuration.getDefaultConfiguration().getTemplate("exception.html");
-			template.process(JForum.getContext(), w);
+			Template template = JForumExecutionContext.templateConfig().getTemplate("exception.html");
+			template.process(templateContext, w);
 		}
 		catch (Exception e) {
 			strWriter = new StringWriter();

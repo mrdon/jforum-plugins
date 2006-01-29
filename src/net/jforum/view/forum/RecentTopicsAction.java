@@ -49,7 +49,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.jforum.Command;
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.UserDAO;
 import net.jforum.entities.Forum;
@@ -69,7 +69,7 @@ import net.jforum.view.forum.common.ViewCommon;
  * 
  * @author James Yong
  * @author Rafael Steil
- * @version $Id: RecentTopicsAction.java,v 1.14 2005/09/28 14:04:16 vmal Exp $
+ * @version $Id: RecentTopicsAction.java,v 1.15 2006/01/29 15:06:55 rafaelsteil Exp $
  */
 public class RecentTopicsAction extends Command 
 {
@@ -87,7 +87,7 @@ public class RecentTopicsAction extends Command
 		this.context.put("pageTitle", I18n.getMessage("ForumBase.recentTopics"));
 
 		TopicsCommon.topicListingBase();
-		JForum.getRequest().setAttribute("template", null);
+		JForumExecutionContext.getRequest().setAttribute("template", null);
 	}
 	
 	List topics() throws Exception

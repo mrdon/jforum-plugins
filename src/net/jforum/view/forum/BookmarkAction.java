@@ -47,7 +47,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.ActionServletRequest;
 import net.jforum.Command;
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
 import net.jforum.dao.BookmarkDAO;
 import net.jforum.dao.DataAccessDriver;
@@ -68,7 +68,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: BookmarkAction.java,v 1.12 2005/09/28 14:49:21 vmal Exp $
+ * @version $Id: BookmarkAction.java,v 1.13 2006/01/29 15:06:55 rafaelsteil Exp $
  */
 public class BookmarkAction extends Command
 {
@@ -225,7 +225,7 @@ public class BookmarkAction extends Command
 		
 		bm.remove(id);
 		
-		JForum.setRedirect(this.request.getContextPath() + "/bookmarks/list/" + b.getUserId()
+		JForumExecutionContext.setRedirect(this.request.getContextPath() + "/bookmarks/list/" + b.getUserId()
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 	}
 	

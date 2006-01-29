@@ -63,7 +63,7 @@ import net.jforum.Command;
 import net.jforum.ConfigLoader;
 import net.jforum.DBConnection;
 import net.jforum.DataSourceConnection;
-import net.jforum.InstallServlet;
+import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
 import net.jforum.SimpleConnection;
 import net.jforum.entities.UserSession;
@@ -84,7 +84,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.44 2006/01/25 03:34:05 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.45 2006/01/29 15:07:21 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -195,7 +195,7 @@ public class InstallAction extends Command
 		
 		simpleConnection.releaseConnection(conn);
 
-		InstallServlet.setRedirect(this.request.getContextPath() + "/install/install"
+		JForumExecutionContext.setRedirect(this.request.getContextPath() + "/install/install"
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)
 				+ "?module=install&action=finished");
 	}

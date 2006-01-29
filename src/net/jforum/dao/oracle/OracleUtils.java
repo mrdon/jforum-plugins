@@ -50,11 +50,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 
 /**
  * @author Dmitriy Kiriy
- * @version $Id: OracleUtils.java,v 1.7 2005/11/29 00:26:54 rafaelsteil Exp $
+ * @version $Id: OracleUtils.java,v 1.8 2006/01/29 15:07:09 rafaelsteil Exp $
  */
 public class OracleUtils
 {
@@ -101,7 +101,7 @@ public class OracleUtils
 	public static void writeBlobUTF16BinaryStream(String query, int idForQuery, String value) throws IOException,
 			SQLException
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(query);
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(query);
 		p.setInt(1, idForQuery);
 
 		ResultSet rs = p.executeQuery();

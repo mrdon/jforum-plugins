@@ -46,7 +46,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Map;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.dao.UserDAO;
 import net.jforum.entities.User;
 import net.jforum.util.MD5;
@@ -58,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * <i>jforum_users</i>. 
  * 
  * @author Rafael Steil
- * @version $Id: DefaultLoginAuthenticator.java,v 1.4 2005/07/26 03:05:32 rafaelsteil Exp $
+ * @version $Id: DefaultLoginAuthenticator.java,v 1.5 2006/01/29 15:07:17 rafaelsteil Exp $
  */
 public class DefaultLoginAuthenticator implements LoginAuthenticator
 {
@@ -77,7 +77,7 @@ public class DefaultLoginAuthenticator implements LoginAuthenticator
 	 */
 	public User validateLogin(String username, String password, Map extraParams) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.login"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.login"));
 		p.setString(1, username);
 		p.setString(2, MD5.crypt(password));
 		

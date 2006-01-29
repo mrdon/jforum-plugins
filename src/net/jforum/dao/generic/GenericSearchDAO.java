@@ -53,17 +53,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
-
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
 import net.jforum.dao.SearchData;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author Rafael Steil
- * @version $Id: GenericSearchDAO.java,v 1.13 2006/01/25 03:47:44 rafaelsteil Exp $
+ * @version $Id: GenericSearchDAO.java,v 1.14 2006/01/29 15:06:26 rafaelsteil Exp $
  */
 public class GenericSearchDAO implements net.jforum.dao.SearchDAO	
 {
@@ -111,7 +111,7 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 		sql = sql.replaceAll(":orderBy:", sd.getOrderBy());
 		sql = sql.replaceAll(":criterias:", criterias.toString());
 		
-		PreparedStatement p = JForum.getConnection().prepareStatement(sql);
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(sql);
 		p.setString(1, SessionFacade.getUserSession().getSessionId());
 
 		return new GenericTopicDAO().fillTopicsData(p);
@@ -120,7 +120,7 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 	// Find topics by time
 	private void topicsByTime(SearchData sd) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.searchByTime"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.searchByTime"));
 		p.setString(1, SessionFacade.getUserSession().getSessionId());
 		p.setTimestamp(2, new Timestamp(sd.getTime().getTime()));
 		p.executeUpdate();
@@ -138,7 +138,7 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 			? SystemGlobals.getSql("SearchModel.searchByLikeWord")
 			: SystemGlobals.getSql("SearchModel.searchByWord");
 		
-		PreparedStatement p = JForum.getConnection().prepareStatement(sql);
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(sql);
 
 		Map eachWordMap = new HashMap();
 		
@@ -214,7 +214,7 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 		sql = SystemGlobals.getSql("SearchModel.insertTopicsIds");
 		sql = sql.replaceAll(":posts:", sb.toString());
 		
-		p = JForum.getConnection().prepareStatement(sql);
+		p = JForumExecutionContext.getConnection().prepareStatement(sql);
 		p.setString(1, SessionFacade.getUserSession().getSessionId());
 		
 		p.executeUpdate();
@@ -228,7 +228,7 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 	
 	private void selectTopicData() throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.selectTopicData"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.selectTopicData"));
 		p.setString(1, SessionFacade.getUserSession().getSessionId());
 		p.setString(2, SessionFacade.getUserSession().getSessionId());
 		p.executeUpdate();
@@ -242,12 +242,12 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 	 */
 	public void cleanSearch() throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.cleanSearchTopics"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.cleanSearchTopics"));
 		p.setString(1, SessionFacade.getUserSession().getSessionId());
 		p.executeUpdate();
 		p.close();
 		
-		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.cleanSearchResults"));
+		p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.cleanSearchResults"));
 		p.setString(1, SessionFacade.getUserSession().getSessionId());
 		p.executeUpdate();
 		p.close();

@@ -47,19 +47,19 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.entities.Banner;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Samuel Yung
- * @version $Id: GenericBannerDAO.java,v 1.5 2005/07/26 03:04:44 rafaelsteil Exp $
+ * @version $Id: GenericBannerDAO.java,v 1.6 2006/01/29 15:06:22 rafaelsteil Exp $
  */
 public class GenericBannerDAO extends AutoKeys implements net.jforum.dao.BannerDAO
 {
 	public Banner selectById(int bannerId) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("BannerDAO.selectById"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("BannerDAO.selectById"));
 		p.setInt(1, bannerId);
 
 		ResultSet rs = p.executeQuery();
@@ -77,7 +77,7 @@ public class GenericBannerDAO extends AutoKeys implements net.jforum.dao.BannerD
 
 	public List selectAll() throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("BannerDAO.selectAll"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("BannerDAO.selectAll"));
 		List l = new ArrayList();
 
 		ResultSet rs = p.executeQuery();
@@ -115,7 +115,7 @@ public class GenericBannerDAO extends AutoKeys implements net.jforum.dao.BannerD
 	public boolean canDelete(int bannerId) throws Exception
 	{
 		boolean result = true;
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("BannerDAO.canDelete"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("BannerDAO.canDelete"));
 		p.setInt(1, bannerId);
 
 		ResultSet rs = p.executeQuery();
@@ -131,7 +131,7 @@ public class GenericBannerDAO extends AutoKeys implements net.jforum.dao.BannerD
 
 	public void delete(int bannerId) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("BannerDAO.delete"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("BannerDAO.delete"));
 		p.setInt(1, bannerId);
 		p.executeUpdate();
 
@@ -140,7 +140,7 @@ public class GenericBannerDAO extends AutoKeys implements net.jforum.dao.BannerD
 
 	public void update(Banner banner) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("BannerDAO.update"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("BannerDAO.update"));
 		setBannerParam(p, banner);
 		p.setInt(13, banner.getId());
 		p.executeUpdate();
@@ -176,7 +176,7 @@ public class GenericBannerDAO extends AutoKeys implements net.jforum.dao.BannerD
 
 	public List selectActiveBannerByPlacement(int placement) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
 				SystemGlobals.getSql("BannerDAO.selectActiveBannerByPlacement"));
 		p.setInt(1, placement);
 

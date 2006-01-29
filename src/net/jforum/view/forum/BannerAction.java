@@ -43,7 +43,7 @@
 package net.jforum.view.forum;
 
 import net.jforum.Command;
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.dao.BannerDAO;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.entities.Banner;
@@ -51,7 +51,7 @@ import net.jforum.view.forum.common.BannerCommon;
 
 /**
  * @author Samuel Yung
- * @version $Id: BannerAction.java,v 1.4 2005/07/26 04:01:13 diegopires Exp $
+ * @version $Id: BannerAction.java,v 1.5 2006/01/29 15:06:58 rafaelsteil Exp $
  */
 public class BannerAction extends Command
 {
@@ -66,7 +66,7 @@ public class BannerAction extends Command
 		int bannerId = this.request.getIntParameter("banner_id");
 		if(!(new BannerCommon()).canBannerDisplay(bannerId))
 		{
-			JForum.setRedirect("");
+			JForumExecutionContext.setRedirect("");
 			return;
 		}
 
@@ -74,6 +74,6 @@ public class BannerAction extends Command
 		Banner banner = dao.selectById(bannerId);
 		banner.setClicks(banner.getClicks() + 1);
 		dao.update(banner);
-		JForum.setRedirect(banner.getUrl());
+		JForumExecutionContext.setRedirect(banner.getUrl());
 	}
 }

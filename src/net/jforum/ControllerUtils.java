@@ -69,7 +69,7 @@ import freemarker.template.SimpleHash;
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.16 2005/12/04 01:19:11 rafaelsteil Exp $
+ * @version $Id: ControllerUtils.java,v 1.17 2006/01/29 15:07:00 rafaelsteil Exp $
  */
 public class ControllerUtils
 {
@@ -80,17 +80,18 @@ public class ControllerUtils
 	 */
 	public void prepareTemplateContext(SimpleHash context, JForumContext jforumcontext)
 	{
+		ActionServletRequest request = JForumExecutionContext.getRequest();
+		
 		context.put("karmaEnabled", SecurityRepository.canAccess(SecurityConstants.PERM_KARMA_ENABLED));
 		context.put("dateTimeFormat", SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
 		context.put("autoLoginEnabled", SystemGlobals.getBoolValue(ConfigKeys.AUTO_LOGIN_ENABLED));
 		context.put("sso", ConfigKeys.TYPE_SSO.equals(SystemGlobals.getValue(ConfigKeys.AUTHENTICATION_TYPE)));
-		context.put("contextPath", JForum.getRequest().getContextPath());
-		context.put("serverName", JForum.getRequest().getServerName());
+		context.put("contextPath", request.getContextPath());
+		context.put("serverName", request.getServerName());
 		context.put("templateName", SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR));
 		context.put("extension", SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
-		context.put("serverPort", Integer.toString(JForum.getRequest().getServerPort()));
+		context.put("serverPort", Integer.toString(request.getServerPort()));
 		context.put("I18n", I18n.getInstance());
-		context.put("imagesI18n", SystemGlobals.getValue(ConfigKeys.I18N_IMAGES_DIR));
 		context.put("version", SystemGlobals.getValue(ConfigKeys.VERSION));
 		context.put("forumTitle", SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_TITLE));
 		context.put("pageTitle", SystemGlobals.getValue(ConfigKeys.FORUM_PAGE_TITLE));
@@ -174,13 +175,13 @@ public class ControllerUtils
 
 		UserSession tmpUs = new UserSession();
 		if (sessionId != null) {
-			SessionFacade.storeSessionData(sessionId, JForum.getConnection());
+			SessionFacade.storeSessionData(sessionId, JForumExecutionContext.getConnection());
 			tmpUs = SessionFacade.getUserSession(sessionId);
 			SessionFacade.remove(sessionId);
 		}
 		else {
 			UserSessionDAO sm = DataAccessDriver.getInstance().newUserSessionDAO();
-			tmpUs = sm.selectById(userSession, JForum.getConnection());
+			tmpUs = sm.selectById(userSession, JForumExecutionContext.getConnection());
 		}
 
 		if (tmpUs == null) {
@@ -206,7 +207,7 @@ public class ControllerUtils
 	{
 		try {
 			SSO sso = (SSO) Class.forName(SystemGlobals.getValue(ConfigKeys.SSO_IMPLEMENTATION)).newInstance();
-			String username = sso.authenticateUser(JForum.getRequest());
+			String username = sso.authenticateUser(JForumExecutionContext.getRequest());
 
 			if (username == null || username.trim().equals("")) {
 				userSession.makeAnonymous();
@@ -215,7 +216,7 @@ public class ControllerUtils
 				SSOUtils utils = new SSOUtils();
 
 				if (!utils.userExists(username)) {
-					HttpSession session = JForum.getRequest().getSession();
+					HttpSession session = JForumExecutionContext.getRequest().getSession();
 
 					String email = (String) session.getAttribute(SystemGlobals.getValue(ConfigKeys.SSO_EMAIL_ATTRIBUTE));
 					String password = (String) session.getAttribute(SystemGlobals.getValue(ConfigKeys.SSO_PASSWORD_ATTRIBUTE));
@@ -250,7 +251,7 @@ public class ControllerUtils
 	public void refreshSession() throws Exception
 	{
 		UserSession userSession = SessionFacade.getUserSession();
-		ActionServletRequest request = JForum.getRequest();
+		ActionServletRequest request = JForumExecutionContext.getRequest();
 
 		if (userSession == null) {
 			userSession = new UserSession();
@@ -296,7 +297,8 @@ public class ControllerUtils
 	 */
 	public static Cookie getCookie(String name)
 	{
-		Cookie[] cookies = JForumBaseServlet.getRequest().getCookies();
+		Cookie[] cookies = JForumExecutionContext.getRequest().getCookies();
+
 		if (cookies != null) {
 			for (int i = 0; i < cookies.length; i++) {
 				Cookie c = cookies[i];
@@ -336,7 +338,7 @@ public class ControllerUtils
 		cookie.setMaxAge(3600 * 24 * 365);
 		cookie.setPath("/");
 
-		JForumBaseServlet.getResponse().addCookie(cookie);
+		JForumExecutionContext.getResponse().addCookie(cookie);
 	}
 	
 	/**

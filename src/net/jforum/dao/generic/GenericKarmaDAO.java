@@ -52,7 +52,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.entities.Karma;
 import net.jforum.entities.KarmaStatus;
 import net.jforum.entities.User;
@@ -60,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericKarmaDAO.java,v 1.6 2005/10/08 21:10:28 rafaelsteil Exp $
+ * @version $Id: GenericKarmaDAO.java,v 1.7 2006/01/29 15:06:21 rafaelsteil Exp $
  */
 public class GenericKarmaDAO implements net.jforum.dao.KarmaDAO
 {
@@ -69,7 +69,7 @@ public class GenericKarmaDAO implements net.jforum.dao.KarmaDAO
 	 */
 	public void addKarma(Karma karma) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("KarmaModel.add"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("KarmaModel.add"));
 		p.setInt(1, karma.getPostId());
 		p.setInt(2, karma.getPostUserId());
 		p.setInt(3, karma.getFromUserId());
@@ -89,7 +89,7 @@ public class GenericKarmaDAO implements net.jforum.dao.KarmaDAO
 	{
 		KarmaStatus status = new KarmaStatus();
 
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("KarmaModel.getUserKarma"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("KarmaModel.getUserKarma"));
 		p.setInt(1, userId);
 
 		ResultSet rs = p.executeQuery();
@@ -108,7 +108,7 @@ public class GenericKarmaDAO implements net.jforum.dao.KarmaDAO
 	 */
 	public void updateUserKarma(int userId) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
 				SystemGlobals.getSql("KarmaModel.getUserKarmaPoints"));
 		p.setInt(1, userId);
 
@@ -127,7 +127,7 @@ public class GenericKarmaDAO implements net.jforum.dao.KarmaDAO
 		rs.close();
 		p.close();
 
-		p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("KarmaModel.updateUserKarma"));
+		p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("KarmaModel.updateUserKarma"));
 		
 		double karmaPoints = totalPoints / totalRecords;
 		
@@ -146,7 +146,7 @@ public class GenericKarmaDAO implements net.jforum.dao.KarmaDAO
 	 */
 	public void update(Karma karma) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("KarmaModel.update"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("KarmaModel.update"));
 		p.setInt(1, karma.getPoints());
 		p.setInt(2, karma.getId());
 		p.executeUpdate();
@@ -160,7 +160,7 @@ public class GenericKarmaDAO implements net.jforum.dao.KarmaDAO
 	{
 		KarmaStatus karma = new KarmaStatus();
 
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("KarmaModel.getPostKarma"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("KarmaModel.getPostKarma"));
 		p.setInt(1, postId);
 
 		ResultSet rs = p.executeQuery();
@@ -181,7 +181,7 @@ public class GenericKarmaDAO implements net.jforum.dao.KarmaDAO
 	{
 		boolean status = true;
 
-		PreparedStatement p = JForum.getConnection().prepareStatement(
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
 				SystemGlobals.getSql("KarmaModel.userCanAddKarma"));
 		p.setInt(1, postId);
 		p.setInt(2, userId);
@@ -204,7 +204,7 @@ public class GenericKarmaDAO implements net.jforum.dao.KarmaDAO
 	{
 		Map m = new HashMap();
 
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("KarmaModel.getUserVotes"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("KarmaModel.getUserVotes"));
 		p.setInt(1, topicId);
 		p.setInt(2, userId);
 
@@ -221,7 +221,7 @@ public class GenericKarmaDAO implements net.jforum.dao.KarmaDAO
 
 	public void getUserTotalKarma(User user) throws SQLException
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
 				SystemGlobals.getSql("KarmaModel.getUserTotalVotes"));
 		p.setInt(1, user.getId());
 
@@ -246,7 +246,7 @@ public class GenericKarmaDAO implements net.jforum.dao.KarmaDAO
 
 	private void getVotesGiven(User user) throws SQLException
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
 				SystemGlobals.getSql("KarmaModel.getUserGivenVotes"));
 		p.setInt(1, user.getId());
 
@@ -290,7 +290,7 @@ public class GenericKarmaDAO implements net.jforum.dao.KarmaDAO
 			throw new Exception("First Date needs to be before the Last Date");
 		}
 		
-		PreparedStatement p = JForum.getConnection().prepareStatement(sql);
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(sql);
 		p.setTimestamp(1, new Timestamp(firstPeriod.getTime()));
 		p.setTimestamp(2, new Timestamp(lastPeriod.getTime()));
 

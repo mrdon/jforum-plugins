@@ -48,7 +48,7 @@ import java.util.Enumeration;
 import java.util.List;
 
 import net.jforum.ActionServletRequest;
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.Role;
 import net.jforum.security.RoleValue;
@@ -56,7 +56,7 @@ import net.jforum.security.RoleValueCollection;
 
 /**
  * @author Rafael Steil
- * @version $Id: PermissionProcessHelper.java,v 1.12 2005/09/29 02:27:32 rafaelsteil Exp $
+ * @version $Id: PermissionProcessHelper.java,v 1.13 2006/01/29 15:07:13 rafaelsteil Exp $
  */
 class PermissionProcessHelper 
 {
@@ -78,7 +78,7 @@ class PermissionProcessHelper
 	
 	public void processData() throws Exception
 	{
-		ActionServletRequest request = JForum.getRequest();
+		ActionServletRequest request = JForumExecutionContext.getRequest();
 		Enumeration e = request.getParameterNames();
 		
 		while (e.hasMoreElements()) {
@@ -133,7 +133,7 @@ class PermissionProcessHelper
 	
 	private String[] getSplitedValues(String paramName)
 	{
-		String[] allValues = JForum.getRequest().getParameter(paramName).split(";");
+		String[] allValues = JForumExecutionContext.getRequest().getParameter(paramName).split(";");
 		String[] returnValues = new String[allValues.length];
 		
 		for (int i = 0, counter = 0; i < allValues.length; i++) {

@@ -54,7 +54,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.jforum.Command;
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
 import net.jforum.dao.AttachmentDAO;
 import net.jforum.dao.DataAccessDriver;
@@ -97,7 +97,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.135 2006/01/16 20:13:57 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.136 2006/01/29 15:06:59 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -255,7 +255,7 @@ public class PostAction extends Command
 			page = Integer.toString(postsPerPage * ((count - 1) / postsPerPage)) + "/";
 		} 
 
-		JForum.setRedirect(this.request.getContextPath() + "/posts/list/"
+		JForumExecutionContext.setRedirect(this.request.getContextPath() + "/posts/list/"
 			+ page + topicId
 			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) 
 			+ "#" + postId);
@@ -281,7 +281,7 @@ public class PostAction extends Command
 			dao.voteOnPoll(pollId, optionId, user.getUserId(), request.getRemoteAddr());
 		}
 
-		JForum.setRedirect(this.request.getContextPath() 
+		JForumExecutionContext.setRedirect(this.request.getContextPath() 
 			+ "/posts/list/"
 			+ topicId
 			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
@@ -728,7 +728,7 @@ public class PostAction extends Command
 				attachments.preProcess();
 			}
 			catch (AttachmentException e) {
-				JForum.enableRollback();
+				JForumExecutionContext.enableRollback();
 				p.setText(this.request.getParameter("message"));
 				this.context.put("errorMessage", e.getMessage());
 				this.context.put("post", p);
@@ -831,7 +831,7 @@ public class PostAction extends Command
 			}
 
 			path += p.getTopicId() + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#" + p.getId();
-			JForum.setRedirect(path);
+			JForumExecutionContext.setRedirect(path);
 			
 			if (SystemGlobals.getBoolValue(ConfigKeys.POSTS_CACHE_ENABLED)) {
 				PostRepository.update(p.getTopicId(), PostCommon.preparePostForDisplay(p));
@@ -843,7 +843,7 @@ public class PostAction extends Command
 	{
 		if (poll.getOptions().size() < 2) {
 			// It is not a valid poll, cancel the post
-			JForum.enableRollback();
+			JForumExecutionContext.enableRollback();
 			p.setText(this.request.getParameter("message"));
 			p.setId(0);
 			this.context.put("errorMessage", I18n.getMessage("PostForm.needMorePollOptions"));
@@ -1007,7 +1007,7 @@ public class PostAction extends Command
 				attachments.preProcess();
 			}
 			catch (AttachmentSizeTooBigException e) {
-				JForum.enableRollback();
+				JForumExecutionContext.enableRollback();
 				p.setText(this.request.getParameter("message"));
 				p.setId(0);
 				this.context.put("errorMessage", e.getMessage());
@@ -1056,7 +1056,7 @@ public class PostAction extends Command
 				
 				if (poll.getOptions().size() < 2) {
 					//it is not a valid poll, cancel the post
-					JForum.enableRollback();
+					JForumExecutionContext.enableRollback();
 					p.setText(this.request.getParameter("message"));
 					p.setId(0);
 					this.context.put("errorMessage", I18n.getMessage("PostForm.needMorePollOptions"));
@@ -1097,7 +1097,7 @@ public class PostAction extends Command
 				path += this.startPage(t, start) + "/";
 				path += t.getId() + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#" + postId;
 	
-				JForum.setRedirect(path);
+				JForumExecutionContext.setRedirect(path);
 				
 				// Updates forum stats, cache and etc
 				if (!newTopic) {
@@ -1126,7 +1126,7 @@ public class PostAction extends Command
 				}
 			}
 			else {
-				JForum.setRedirect(this.request.getContextPath() 
+				JForumExecutionContext.setRedirect(this.request.getContextPath() 
 					+ "/posts/waitingModeration/" 
 					+ (firstPost ? 0 : t.getId())
 					+ "/" + t.getForumId()
@@ -1235,7 +1235,7 @@ public class PostAction extends Command
 				returnPath += page + "/";
 			}
 
-			JForum.setRedirect(returnPath 
+			JForumExecutionContext.setRedirect(returnPath 
 					+ p.getTopicId() 
 					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		}
@@ -1243,7 +1243,7 @@ public class PostAction extends Command
 			// Ok, all posts were removed. Time to say goodbye
 			TopicsCommon.deleteTopic(p.getTopicId(), p.getForumId(), false);
 
-			JForum.setRedirect(this.request.getContextPath() 
+			JForumExecutionContext.setRedirect(this.request.getContextPath() 
 					+ "/forums/show/" 
 					+ p.getForumId()
 					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
@@ -1352,7 +1352,7 @@ public class PostAction extends Command
 		fis.close();
 		os.close();
 		
-		JForum.enableBinaryContent(true);
+		JForumExecutionContext.enableCustomContent(true);
 	}
 	
 	private void topicLocked() {
@@ -1373,7 +1373,7 @@ public class PostAction extends Command
 				this.list();
 			}
 			else {
-				JForum.setRedirect(this.request.getContextPath() + "/forums/show/" + forumId
+				JForumExecutionContext.setRedirect(this.request.getContextPath() + "/forums/show/" + forumId
 						+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 			}
 

@@ -50,7 +50,7 @@ Modifications by JForum Team
 										<#if bookmarksEnabled>
 											<a class="mainmenu" href="${JForumContext.encodeURL("/bookmarks/list/${session.userId}")}"><img src="${contextPath}/templates/${templateName}/images/icon_minipost.gif" alt="[Post]" />${I18n.getMessage("Bookmarks.myBag")}</a>&nbsp;
 										</#if>
-										<a id="privatemessages" class="mainmenu" href="${JForumContext.encodeURL("/pm/inbox")}"><img src="${contextPath}/templates/${templateName}/images/icon_mini_message<#if (session.privateMessages > 0)>_new</#if>.gif" border="0" alt="[Message]" />
+										<a id="privatemessages" class="mainmenu" href="${JForumContext.encodeURL("/pm/inbox")}"><img src="${contextPath}/templates/${templateName}/images/icon_mini_message.gif" border="0" alt="[Message]" />
 											<#if (session.privateMessages > 0)>
 												${I18n.getMessage("ForumBase.newPm")}: (${session.privateMessages})
 											<#else>

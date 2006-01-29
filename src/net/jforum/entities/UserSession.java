@@ -46,7 +46,7 @@ import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.Date;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.PermissionControl;
@@ -62,7 +62,7 @@ import com.octo.captcha.image.ImageCaptcha;
  * Stores information about user's session.
  * 
  * @author Rafael Steil
- * @version $Id: UserSession.java,v 1.25 2005/12/04 01:19:10 rafaelsteil Exp $
+ * @version $Id: UserSession.java,v 1.26 2006/01/29 15:07:08 rafaelsteil Exp $
  */
 public class UserSession implements Serializable
 {
@@ -418,7 +418,7 @@ public class UserSession implements Serializable
 	 */
 	public boolean isBot()
 	{
-		return Boolean.TRUE.equals(JForum.getRequest().getAttribute(ConfigKeys.IS_BOT));
+		return Boolean.TRUE.equals(JForumExecutionContext.getRequest().getAttribute(ConfigKeys.IS_BOT));
 	}
 	
 	/**

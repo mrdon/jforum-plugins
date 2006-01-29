@@ -51,7 +51,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.jforum.ActionServletRequest;
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
 import net.jforum.dao.PostDAO;
 import net.jforum.entities.Post;
@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.27 2005/11/27 19:48:21 per_johansson Exp $
+ * @version $Id: PostCommon.java,v 1.28 2006/01/29 15:07:12 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -225,7 +225,7 @@ public class PostCommon
 
 	public static Post fillPostFromRequest(Post p, boolean isEdit) throws Exception
 	{
-		ActionServletRequest request = JForum.getRequest();
+		ActionServletRequest request = JForumExecutionContext.getRequest();
 		
 		p.setSubject(request.getParameter("subject"));
 		p.setBbCodeEnabled(request.getParameter("disable_bbcode") != null ? false : true);

@@ -54,24 +54,24 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.ActionServletRequest;
 import net.jforum.Command;
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.SearchDAO;
 import net.jforum.dao.SearchData;
 import net.jforum.entities.Forum;
 import net.jforum.entities.Topic;
 import net.jforum.repository.ForumRepository;
+import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
-import net.jforum.util.I18n;
 import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.26 2005/09/28 14:49:21 vmal Exp $
+ * @version $Id: SearchAction.java,v 1.27 2006/01/29 15:06:58 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -232,7 +232,7 @@ public class SearchAction extends Command
 	{
 		new ModerationHelper().doModeration(this.makeRedirect());
 		
-		if (JForum.getRequest().getParameter("topicMove") != null) {
+		if (JForumExecutionContext.getRequest().getParameter("topicMove") != null) {
 			this.setTemplateName(TemplateKeys.MODERATION_MOVE_TOPICS);
 		}
 	}

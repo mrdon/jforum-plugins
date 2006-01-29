@@ -4,12 +4,12 @@
 package net.jforum.view.forum;
 
 import net.jforum.Command;
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 /**
  * Loads and parse javascript files with FTL statements.
  * 
  * @author Rafael Steil
- * @version $Id: JSAction.java,v 1.3 2005/07/26 03:05:18 rafaelsteil Exp $
+ * @version $Id: JSAction.java,v 1.4 2006/01/29 15:06:56 rafaelsteil Exp $
  */
 public class JSAction extends Command
 {
@@ -21,7 +21,7 @@ public class JSAction extends Command
 	 */
 	public void list() throws Exception
 	{
-		JForum.setContentType("text/javascript");
+		JForumExecutionContext.setContentType("text/javascript");
 		
 		String filename = this.request.getParameter("js");
 		

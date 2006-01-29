@@ -48,13 +48,13 @@ import java.util.Map;
 import java.util.Properties;
 
 import net.jforum.ConfigLoader;
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModulesRepository.java,v 1.8 2005/11/30 17:23:09 rafaelsteil Exp $
+ * @version $Id: ModulesRepository.java,v 1.9 2006/01/29 15:07:18 rafaelsteil Exp $
  */
 public class ModulesRepository
 {
@@ -92,7 +92,7 @@ public class ModulesRepository
 		
 		if (p == null) {
 			logger.error("Null modules. Askes moduleName: " + moduleName
-					+ ", url=" + JForum.getRequest().getQueryString());
+					+ ", url=" + JForumExecutionContext.getRequest().getQueryString());
 			return null;
 		}
 		

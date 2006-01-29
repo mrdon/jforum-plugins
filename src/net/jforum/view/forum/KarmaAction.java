@@ -43,7 +43,7 @@
 package net.jforum.view.forum;
 
 import net.jforum.Command;
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.KarmaDAO;
@@ -63,7 +63,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaAction.java,v 1.17 2005/12/27 18:09:59 rafaelsteil Exp $
+ * @version $Id: KarmaAction.java,v 1.18 2006/01/29 15:06:57 rafaelsteil Exp $
  */
 public class KarmaAction extends Command
 {
@@ -121,7 +121,7 @@ public class KarmaAction extends Command
 			PostRepository.update(p.getTopicId(), PostCommon.preparePostForDisplay(p));
 		}
 
-		JForum.setRedirect(this.urlToTopic(p));
+		JForumExecutionContext.setRedirect(this.urlToTopic(p));
 	}
 
 	private void error(String message, Post p)
@@ -138,7 +138,7 @@ public class KarmaAction extends Command
 
 	private String urlToTopic(Post p)
 	{
-		return JForum.getRequest().getContextPath() + "/posts/list/" 
+		return JForumExecutionContext.getRequest().getContextPath() + "/posts/list/" 
 			+ ViewCommon.getStartPage()
 			+ "/" + p.getTopicId()
 			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)

@@ -53,7 +53,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -77,7 +77,7 @@ import com.octo.captcha.image.gimpy.GimpyFactory;
 
 /**
  * @author James Yong
- * @version $Id: Captcha.java,v 1.7 2005/07/26 03:05:24 rafaelsteil Exp $
+ * @version $Id: Captcha.java,v 1.8 2006/01/29 15:07:17 rafaelsteil Exp $
  */
 public class Captcha extends ListImageCaptchaEngine
 {
@@ -149,7 +149,6 @@ public class Captcha extends ListImageCaptchaEngine
 				}
 			}
 		}
-
 	}
 
 	public void writeCaptchaImage()
@@ -163,7 +162,7 @@ public class Captcha extends ListImageCaptchaEngine
 		OutputStream outputStream = null;
 		
 		try {
-			outputStream = JForum.getResponse().getOutputStream();
+			outputStream = JForumExecutionContext.getResponse().getOutputStream();
 			ImageIO.write(image, "jpg", outputStream);
 		}
 		catch (IOException ex) {

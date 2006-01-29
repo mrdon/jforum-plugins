@@ -45,13 +45,13 @@ package net.jforum.view.forum.common;
 import java.util.Date;
 
 import net.jforum.ActionServletRequest;
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.entities.Poll;
 import net.jforum.entities.PollOption;
 
 /**
  * @author David Almilli
- * @version $Id: PollCommon.java,v 1.3 2005/12/27 22:57:33 rafaelsteil Exp $
+ * @version $Id: PollCommon.java,v 1.4 2006/01/29 15:07:12 rafaelsteil Exp $
  */
 public class PollCommon
 {
@@ -59,7 +59,7 @@ public class PollCommon
 
 	public static Poll fillPollFromRequest() throws Exception
 	{
-		ActionServletRequest request = JForum.getRequest();
+		ActionServletRequest request = JForumExecutionContext.getRequest();
 		String label = request.getParameter("poll_label");
 
 		if (label == null || label.length() == 0) {

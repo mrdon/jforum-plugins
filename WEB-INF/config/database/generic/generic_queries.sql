@@ -351,7 +351,7 @@ TopicModel.totalTopics = SELECT COUNT(1) FROM jforum_topics
 # SearchModel
 # ############
 SearchModel.searchBase = SELECT t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \
-	FROM jforum_search_topics t, jforum_posts p \
+	FROM jforum_search_topics t, jforum_posts p :table_category: \
 	WHERE p.post_id = t.topic_last_post_id \
 	AND t.session_id = ? \
 	:criterias: \

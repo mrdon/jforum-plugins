@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -43,19 +43,19 @@
 package net.jforum.view.forum;
 
 import net.jforum.Command;
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.util.Captcha;
 
 /**
  * @author Rafael Steil
- * @version $Id: CaptchaAction.java,v 1.4 2005/07/26 03:05:18 rafaelsteil Exp $
+ * @version $Id: CaptchaAction.java,v 1.5 2006/01/29 15:06:56 rafaelsteil Exp $
  */
 public class CaptchaAction extends Command
 {
 	public void generate() throws Exception
 	{
-		JForum.enableBinaryContent(true);
-		JForum.setContentType("image/jpg");
+		JForumExecutionContext.enableCustomContent(true);
+		JForumExecutionContext.setContentType("image/jpg");
 		Captcha.getInstance().writeCaptchaImage();
 	}
 	

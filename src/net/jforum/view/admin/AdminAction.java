@@ -53,7 +53,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.ActionServletRequest;
 import net.jforum.Command;
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
@@ -70,7 +70,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: AdminAction.java,v 1.12 2005/12/04 01:19:10 rafaelsteil Exp $
+ * @version $Id: AdminAction.java,v 1.13 2006/01/29 15:07:13 rafaelsteil Exp $
  */
 public class AdminAction extends Command {
 
@@ -94,7 +94,7 @@ public class AdminAction extends Command {
 			String returnPath =  this.request.getContextPath() + "/admBase/login" 
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
 
-			JForum.setRedirect(this.request.getContextPath() 
+			JForumExecutionContext.setRedirect(this.request.getContextPath() 
 				+ "/jforum" 
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) 
 				+ "?module=user&action=login&returnPath="
@@ -207,7 +207,7 @@ public class AdminAction extends Command {
 			return true;
 		}
 		
-		JForum.setRedirect(JForum.getRequest().getContextPath() 
+		JForumExecutionContext.setRedirect(JForumExecutionContext.getRequest().getContextPath() 
 			+ "/admBase/login"
 			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		

@@ -43,14 +43,11 @@
 package net.jforum;
 
 import java.io.File;
-import java.io.IOException;
-import java.sql.Connection;
 import java.util.Date;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.exceptions.ForumStartupException;
 import net.jforum.repository.BBCodeRepository;
@@ -65,26 +62,16 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
 import freemarker.template.Configuration;
-import freemarker.template.ObjectWrapper;
-import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumBaseServlet.java,v 1.16 2005/12/18 20:31:11 rafaelsteil Exp $
+ * @version $Id: JForumBaseServlet.java,v 1.17 2006/01/29 15:07:00 rafaelsteil Exp $
  */
 public class JForumBaseServlet extends HttpServlet 
 {
 	private static Logger logger = Logger.getLogger(JForumBaseServlet.class);
-	
     protected boolean debug;
 
-    // Thread local implementation
-    protected static ThreadLocal localData = new ThreadLocal() {
-        public Object initialValue() {
-            return new DataHolder();
-        }
-    };
-    
     protected void startFrontController()
     {
     	try {
@@ -132,7 +119,7 @@ public class JForumBaseServlet extends HttpServlet
                 templateCfg.setTemplateUpdateDelay(3600);
             }
 
-            Configuration.setDefaultConfiguration(templateCfg);
+            JForumExecutionContext.setTemplateConfig(templateCfg);
         } 
         catch (Exception e) {
             throw new ForumStartupException("Error while starting JForum", e);
@@ -147,208 +134,5 @@ public class JForumBaseServlet extends HttpServlet
 
         // BB Code
         BBCodeRepository.setBBCollection(new BBCodeHandler().parse());
-    }
-
-    /**
-     * Sets the <code>Connection</code>, <code>HttpServletRequest</code>
-     * and <code>HttpServletResponse</code> for the incoming requisition.
-     * As JForum relies on <code>ThreadLocal</code> data, it is necessary,
-     * before of the processing of some request, to set the necessary
-     * data, so the core classes may have access to request, response
-     * and database connections. 
-     * 
-     * @param dataHolder The filled <code>DataHolder</code> class. 
-     */
-    public static void setThreadLocalData(DataHolder dataHolder)
-    {
-    	localData.set(dataHolder);
-    }
-    
-    /**
-     * Request information data holder. Stores information/data like the user request and response,
-     * his database connection and any other kind of data needed.
-     */
-    public static class DataHolder {
-    	private Connection conn;
-        private ActionServletRequest request;
-        private HttpServletResponse response;
-        private SimpleHash context = new SimpleHash(ObjectWrapper.BEANS_WRAPPER);
-        private String redirectTo;
-        private String contentType;
-        private boolean isBinaryContent;
-        private boolean enableRolback;
-        
-        public boolean shouldRollback()
-        {
-        	return this.enableRolback;
-        }
-        
-        public void enableRollback()
-        {
-        	this.enableRolback = true;
-        }
-        
-        // Setters
-        public void setConnection(Connection conn) {
-            this.conn = conn;
-        }
-
-        public void setRequest(ActionServletRequest request) {
-            this.request = request;
-        }
-
-        public void setResponse(HttpServletResponse response) {
-            this.response = response;
-        }
-
-        public void setContext(SimpleHash context) {
-            this.context = context;
-        }
-
-        public void setRedirectTo(String redirectTo) {
-            this.redirectTo = redirectTo;
-        }
-        
-        public void setContentType(String contentType) {
-        	this.contentType = contentType;
-        }
-        
-        public void enableBinaryContent(boolean enable) {
-        	this.isBinaryContent = enable;
-        }
-
-        // Getters
-        public boolean isBinaryContent() {
-        	return this.isBinaryContent;
-        }
-        
-        public String getContentType() {
-        	return this.contentType;
-        }
-        
-        public Connection getConnection() {
-            return this.conn;
-        }
-
-        public ActionServletRequest getRequest() {
-            return this.request;
-        }
-
-        public HttpServletResponse getResponse() {
-            return this.response;
-        }
-
-        public SimpleHash getContext() {
-            return this.context;
-        }
-
-        public String getRedirectTo() {
-            return this.redirectTo;
-        }
-    }
-
-    /**
-     * Gets the current thread's connection
-     * 
-     * @return
-     */
-    public static Connection getConnection() 
-	{
-		return getConnection(true);
-	}
-	
-	public static Connection getConnection(boolean validate)
-	{
-		Connection c =  ((DataHolder)localData.get()).getConnection();
-		
-		if (validate && c == null) {
-			c = DBConnection.getImplementation().getConnection();
-			
-			try {
-				c.setAutoCommit(!SystemGlobals.getBoolValue(ConfigKeys.DATABASE_USE_TRANSACTIONS));
-			}
-			catch (Exception e) {}
-			
-			((DataHolder)localData.get()).setConnection(c);
-		}
-	    
-		return c; 
-	}
-
-    /**
-     * Gets the current thread's request
-     * 
-     * @return
-     */
-    public static ActionServletRequest getRequest() {
-        return ((DataHolder) localData.get()).getRequest();
-    }
-
-    /**
-     * Gets the current thread's response
-     * 
-     * @return
-     */
-    public static HttpServletResponse getResponse() {
-        return ((DataHolder) localData.get()).getResponse();
-    }
-
-    /**
-     * Gets the current thread's template context
-     * 
-     * @return
-     */
-    public static SimpleHash getContext() {
-        return ((DataHolder) localData.get()).getContext();
-    }
-
-    /**
-     * Gets the current thread's <code>DataHolder</code> instance
-     * 
-     * @return
-     */
-    public static void setRedirect(String redirect) {
-        ((DataHolder) localData.get()).setRedirectTo(redirect);
-    }
-	
-	public static String getRedirect()
-	{
-		return ((DataHolder)localData.get()).getRedirectTo();
-	}
-
-    /**
-     * Send UNAUTHORIZED to the browser and ask user to login via basic authentication
-     *
-     * @throws IOException
-     */
-    public static void requestBasicAuthentication() throws IOException {
-        getResponse().addHeader("WWW-Authenticate", "Basic realm=\"JForum\"");
-        getResponse().sendError(HttpServletResponse.SC_UNAUTHORIZED);
-        JForum.enableBinaryContent(true);
-    }
-
-    /**
-     * Sets the content type for the current http response.
-     * 
-     * @param contentType
-     */
-    public static void setContentType(String contentType) {
-    	((DataHolder)localData.get()).setContentType(contentType);
-    }
-    
-    public static void enableBinaryContent(boolean enable) {
-    	((DataHolder)localData.get()).enableBinaryContent(enable);
-    }
-    
-    public static void enableRollback() {
-    	((DataHolder)localData.get()).enableRollback();
-    }
-	
-	public static boolean isBinaryContent() {
-		return ((DataHolder)localData.get()).isBinaryContent();
-	}
-    
-    public static boolean shouldRollback() {
-    	return ((DataHolder)localData.get()).shouldRollback();
     }
 }

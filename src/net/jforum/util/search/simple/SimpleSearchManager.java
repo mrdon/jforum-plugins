@@ -42,7 +42,7 @@
  */
 package net.jforum.util.search.simple;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.SearchIndexerDAO;
 import net.jforum.entities.Post;
@@ -56,7 +56,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SimpleSearchManager.java,v 1.6 2005/07/26 04:01:26 diegopires Exp $
+ * @version $Id: SimpleSearchManager.java,v 1.7 2006/01/29 15:07:22 rafaelsteil Exp $
  */
 public class SimpleSearchManager implements SearchManager
 {
@@ -83,7 +83,7 @@ public class SimpleSearchManager implements SearchManager
 		else {
 			try {
 				SearchIndexerDAO indexer = DataAccessDriver.getInstance().newSearchIndexerDAO();
-				indexer.setConnection(JForum.getConnection());
+				indexer.setConnection(JForumExecutionContext.getConnection());
 				indexer.insertSearchWords(post);
 			}
 			catch (Exception e) {

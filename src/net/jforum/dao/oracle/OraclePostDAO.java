@@ -46,13 +46,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
 
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.entities.Post;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Dmitriy Kiriy
- * @version $Id: OraclePostDAO.java,v 1.6 2005/10/13 23:48:19 rafaelsteil Exp $
+ * @version $Id: OraclePostDAO.java,v 1.7 2006/01/29 15:07:09 rafaelsteil Exp $
  */
 public class OraclePostDAO extends net.jforum.dao.generic.GenericPostDAO
 {
@@ -61,7 +61,7 @@ public class OraclePostDAO extends net.jforum.dao.generic.GenericPostDAO
 	 */
 	protected void addNewPostText(Post post) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.addNewPostText"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.addNewPostText"));
 		p.setInt(1, post.getId());
 		p.setString(2, post.getSubject());
 		p.executeUpdate();
@@ -78,7 +78,7 @@ public class OraclePostDAO extends net.jforum.dao.generic.GenericPostDAO
 	 */
 	protected void updatePostsTextTable(Post post) throws Exception
 	{
-		PreparedStatement p = JForum.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.updatePostText"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.updatePostText"));
 		p.setString(1, post.getSubject());
 		p.setInt(2, post.getId());
 		

@@ -60,7 +60,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.29 2005/11/02 02:26:27 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.30 2006/01/29 15:07:00 rafaelsteil Exp $
  */
 public class SessionFacade implements Cacheable
 {
@@ -93,7 +93,7 @@ public class SessionFacade implements Cacheable
 	 */
 	public static void add(UserSession us)
 	{
-		add(us, JForum.getRequest().getSession().getId());
+		add(us, JForumExecutionContext.getRequest().getSession().getId());
 	}
 
 	/**
@@ -162,7 +162,7 @@ public class SessionFacade implements Cacheable
 	 */
 	public static void setAttribute(String name, Object value)
 	{
-		JForum.getRequest().getSession().setAttribute(name, value);
+		JForumExecutionContext.getRequest().getSession().setAttribute(name, value);
 	}
 	
 	/**
@@ -172,7 +172,7 @@ public class SessionFacade implements Cacheable
 	 */
 	public static void removeAttribute(String name)
 	{
-		JForum.getRequest().getSession().removeAttribute(name);
+		JForumExecutionContext.getRequest().getSession().removeAttribute(name);
 	}
 	
 	/**
@@ -183,7 +183,7 @@ public class SessionFacade implements Cacheable
 	 */
 	public static Object getAttribute(String name)
 	{
-		return JForum.getRequest().getSession().getAttribute(name);
+		return JForumExecutionContext.getRequest().getSession().getAttribute(name);
 	}
 
 	/**
@@ -283,7 +283,7 @@ public class SessionFacade implements Cacheable
 	 */
 	public static UserSession getUserSession()
 	{
-		return getUserSession(JForum.getRequest().getSession().getId());
+		return getUserSession(JForumExecutionContext.getRequest().getSession().getId());
 	}
 	
 	/**

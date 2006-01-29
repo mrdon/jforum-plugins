@@ -50,7 +50,7 @@ import java.util.List;
 import net.jforum.ActionServletRequest;
 import net.jforum.Command;
 import net.jforum.ControllerUtils;
-import net.jforum.JForum;
+import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.UserDAO;
@@ -79,7 +79,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.60 2005/12/18 20:31:10 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.61 2006/01/29 15:06:58 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -128,7 +128,7 @@ public class UserAction extends Command
 				this.edit();
 			} 
 			else {
-				JForum.setRedirect(this.request.getContextPath()
+				JForumExecutionContext.setRedirect(this.request.getContextPath()
 						+ "/user/editDone/" + userId
 						+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 			}
@@ -282,7 +282,7 @@ public class UserAction extends Command
 		SessionFacade.add(userSession);
 
 		// Finalizing.. show to user the congrats page
-		JForum.setRedirect(this.request.getContextPath()
+		JForumExecutionContext.setRedirect(this.request.getContextPath()
 				+ "/user/registrationComplete"
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 	}
@@ -295,8 +295,8 @@ public class UserAction extends Command
 				DataAccessDriver.getInstance().newUserDAO().selectById(userId));
 		ForumRepository.incrementTotalUsers();
 
-		String profilePage = JForum.getRequest().getJForumContext().encodeURL("/user/edit/" + userId);
-		String homePage = JForum.getRequest().getJForumContext().encodeURL("/forums/list");
+		String profilePage = JForumExecutionContext.getRequest().getJForumContext().encodeURL("/user/edit/" + userId);
+		String homePage = JForumExecutionContext.getRequest().getJForumContext().encodeURL("/forums/list");
 
 		String message = I18n.getMessage("User.RegistrationCompleteMessage", 
 				new Object[] { profilePage, homePage });
@@ -323,8 +323,8 @@ public class UserAction extends Command
 			if (user != null) {
 				//NOTE: here we only want to set the redirect location if it hasn't already been
 				//set.  This will give the LoginAuthenticator a chance to set the redirect location.
-				if (JForum.getRedirect() == null) {
-					JForum.setRedirect(this.request.getContextPath()
+				if (JForumExecutionContext.getRedirectTo() == null) {
+					JForumExecutionContext.setRedirect(this.request.getContextPath()
 						+ "/forums/list"
 						+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 				}
@@ -347,13 +347,13 @@ public class UserAction extends Command
 				// before its last session has expired ( hypothesis )
 				if (sessionId != null && currentUs != null) {
 					// Write its old session data
-					SessionFacade.storeSessionData(sessionId, JForum.getConnection());
+					SessionFacade.storeSessionData(sessionId, JForumExecutionContext.getConnection());
 					tmpUs = new UserSession(currentUs);
 					SessionFacade.remove(sessionId);
 				}
 				else {
 					UserSessionDAO sm = DataAccessDriver.getInstance().newUserSessionDAO();
-					tmpUs = sm.selectById(userSession, JForum.getConnection());
+					tmpUs = sm.selectById(userSession, JForumExecutionContext.getConnection());
 				}
 
 				I18n.load(user.getLang());
@@ -406,7 +406,7 @@ public class UserAction extends Command
 			ViewCommon.reprocessRequest();
 		}
 		else if (this.request.getParameter("returnPath") != null) {
-			JForum.setRedirect(this.request.getParameter("returnPath"));
+			JForumExecutionContext.setRedirect(this.request.getParameter("returnPath"));
 		}
 	}
 
@@ -483,12 +483,12 @@ public class UserAction extends Command
 
 	public void logout() throws Exception 
 	{
-		JForum.setRedirect(this.request.getContextPath()
+		JForumExecutionContext.setRedirect(this.request.getContextPath()
 				+ "/forums/list"
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 
 		UserSession userSession = SessionFacade.getUserSession();
-		SessionFacade.storeSessionData(userSession.getSessionId(), JForum.getConnection());
+		SessionFacade.storeSessionData(userSession.getSessionId(), JForumExecutionContext.getConnection());
 
 		SessionFacade.remove(userSession.getSessionId());
 		
