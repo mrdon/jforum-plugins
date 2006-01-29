@@ -61,7 +61,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallServlet.java,v 1.20 2006/01/29 15:07:01 rafaelsteil Exp $
+ * @version $Id: InstallServlet.java,v 1.21 2006/01/29 20:26:36 rafaelsteil Exp $
  */
 public class InstallServlet extends JForumBaseServlet
 {
@@ -82,19 +82,9 @@ public class InstallServlet extends JForumBaseServlet
 			String encoding = SystemGlobals.getValue(ConfigKeys.ENCODING);
 			req.setCharacterEncoding(encoding);
 			
-			// Context
-			SimpleHash context = JForumExecutionContext.getTemplateContext();
-			
-			context.put("contextPath", req.getContextPath());
-			context.put("serverName", req.getServerName());
-			context.put("templateName", "default");
-			context.put("serverPort", Integer.toString(req.getServerPort()));
-			context.put("I18n", I18n.getInstance());
-			context.put("encoding", encoding);
-			context.put("extension", SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
-			
 			// Request
 			ActionServletRequest request = new ActionServletRequest(req);
+
 			request.setCharacterEncoding(encoding);
 			request.setJForumContext(new JForumContext(request.getContextPath(), 
 			   SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION),
@@ -108,6 +98,17 @@ public class InstallServlet extends JForumBaseServlet
 	
 			// Assigns the information to user's thread 
 			JForumExecutionContext.set(ex);
+			
+			// Context
+			SimpleHash context = JForumExecutionContext.getTemplateContext();
+			context.put("contextPath", req.getContextPath());
+			context.put("serverName", req.getServerName());
+			context.put("templateName", "default");
+			context.put("serverPort", Integer.toString(req.getServerPort()));
+			context.put("I18n", I18n.getInstance());
+			context.put("encoding", encoding);
+			context.put("extension", SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+
 			
 			if (SystemGlobals.getBoolValue(ConfigKeys.INSTALLED)) {
 				JForumExecutionContext.setRedirect(request.getContextPath() 
