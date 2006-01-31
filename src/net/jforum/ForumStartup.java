@@ -56,7 +56,7 @@ import net.jforum.repository.ForumRepository;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumStartup.java,v 1.12 2005/12/12 00:54:40 rafaelsteil Exp $
+ * @version $Id: ForumStartup.java,v 1.13 2006/01/31 14:57:33 rafaelsteil Exp $
  */
 public class ForumStartup 
 {
@@ -80,7 +80,7 @@ public class ForumStartup
 			}
 		}
 		catch (Exception e) {
-			throw new DatabaseException("Error while trying to start the database", e);
+			throw new DatabaseException("Error while trying to start the database: " + e, e);
 		}
 		
 		return true;
@@ -101,7 +101,7 @@ public class ForumStartup
 		}
 		catch (Exception e) {
 			log.error("Unable to bootstrap JForum repository.", e);
-			throw new RepositoryStartupException("Error while trying to start ForumRepository: " + e);
+			throw new RepositoryStartupException("Error while trying to start ForumRepository: " + e, e);
 		}
 	}
 }

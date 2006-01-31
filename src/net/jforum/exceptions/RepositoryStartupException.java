@@ -44,10 +44,15 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: RepositoryStartupException.java,v 1.3 2005/07/26 03:04:33 rafaelsteil Exp $
+ * @version $Id: RepositoryStartupException.java,v 1.4 2006/01/31 14:57:33 rafaelsteil Exp $
  */
 public class RepositoryStartupException extends RuntimeException {
 	public RepositoryStartupException(String message) {
 		super(message);
+	}
+	
+	public RepositoryStartupException(String message, Throwable t) {
+		super(message, t);
+		this.setStackTrace(t.getStackTrace());
 	}
 }
