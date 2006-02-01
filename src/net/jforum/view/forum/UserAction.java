@@ -79,7 +79,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.61 2006/01/29 15:06:58 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.62 2006/02/01 00:32:56 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -306,17 +306,19 @@ public class UserAction extends Command
 
 	public void validateLogin() throws Exception 
 	{
-		boolean validInfo = false;
+		String password;
+		String username;
 
-        String username, password;
-        if (parseBasicAuthentication()) {
-            username = (String) this.request.getAttribute("username");
-            password = (String) this.request.getAttribute("password");
-        } else {
-            username = this.request.getParameter("username");
-            password = this.request.getParameter("password");
-        }
-		
+		if (parseBasicAuthentication()) {
+			username = (String) this.request.getAttribute("username");
+			password = (String) this.request.getAttribute("password");
+		} 
+		else {
+			username = this.request.getParameter("username");
+			password = this.request.getParameter("password");
+		}
+
+		boolean validInfo = false;
 		if (password.length() > 0) {
 			User user = this.validateLogin(username, password);
 
