@@ -61,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericUserDAO.java,v 1.13 2006/01/29 15:06:24 rafaelsteil Exp $
+ * @version $Id: GenericUserDAO.java,v 1.14 2006/02/01 23:10:05 rafaelsteil Exp $
  */
 public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO 
 {
@@ -97,8 +97,8 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			this.fillUserFromResultSet(u, rs);
 			u.setPrivateMessagesCount(rs.getInt("private_messages"));
 			
-			p.close();
 			rs.close();
+			p.close();
 
 			// User groups
 			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectGroups"));
