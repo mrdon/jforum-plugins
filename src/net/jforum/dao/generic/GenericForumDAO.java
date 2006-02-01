@@ -66,7 +66,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericForumDAO.java,v 1.18 2006/01/29 15:06:23 rafaelsteil Exp $
+ * @version $Id: GenericForumDAO.java,v 1.19 2006/02/01 00:37:56 rafaelsteil Exp $
  */
 public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO 
 {
@@ -116,9 +116,9 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 		rs.next();
 
 		int total = rs.getInt(1);
-		
-		p.close();
+
 		rs.close();
+		p.close();
 
 		return total;
 	}
