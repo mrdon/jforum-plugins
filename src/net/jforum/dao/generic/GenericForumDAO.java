@@ -66,7 +66,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericForumDAO.java,v 1.19 2006/02/01 00:37:56 rafaelsteil Exp $
+ * @version $Id: GenericForumDAO.java,v 1.20 2006/02/01 23:27:05 rafaelsteil Exp $
  */
 public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO 
 {
@@ -320,8 +320,8 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 			tryFix = false;
 		}
 		else if (tryFix) {
-			p.close();
 			rs.close();
+			p.close();
 			
 			int postId = this.getMaxPostId(forumId);
 			
@@ -352,8 +352,8 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 			}
 		}
 
-		p.close();
 		rs.close();
+		p.close();
 		
 		return (tryFix ? this.getLastPostInfo(forumId, false) : lpi);
 	}
@@ -405,8 +405,8 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 
 		int total = rs.getInt("total_messages");
 		
-		p.close();
 		rs.close();
+		p.close();
 
 		return total;
 	}
@@ -424,8 +424,8 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 			total = rs.getInt(1);
 		}
 
-		p.close();
 		rs.close();
+		p.close();
 
 		return total;
 	}
