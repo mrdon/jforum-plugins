@@ -53,8 +53,10 @@ import net.jforum.Command;
 import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.ForumDAO;
 import net.jforum.dao.ModerationDAO;
 import net.jforum.dao.SearchData;
+import net.jforum.dao.TopicDAO;
 import net.jforum.entities.Forum;
 import net.jforum.entities.MostUsersEverOnline;
 import net.jforum.entities.Topic;
@@ -73,10 +75,13 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.49 2006/01/29 15:06:57 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.50 2006/02/06 17:15:05 iper Exp $
  */
 public class ForumAction extends Command 
 {
+	/**
+	 * List all the forums (first page of forum index)?
+	 */
 	public void list() throws Exception
 	{
 		this.setTemplateName(TemplateKeys.FORUMS_LIST);
@@ -160,9 +165,14 @@ public class ForumAction extends Command
 		this.show();
 	}
 
+	/**
+	 * Display all topics in a forum
+	 * @throws Exception
+	 */
 	public void show() throws Exception
 	{
 		int forumId = this.request.getIntParameter("forum_id");
+		ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
 		
 		// The user can access this forum?
 		Forum forum = ForumRepository.getForum(forumId);
@@ -208,6 +218,8 @@ public class ForumAction extends Command
 
 		this.context.put("readonly", !SecurityRepository.canAccess(SecurityConstants.PERM_READ_ONLY_FORUMS, 
 				Integer.toString(forumId)));
+		
+		this.context.put("watching", fm.isUserSubscribed(forumId, SessionFacade.getUserSession().getUserId()));
 		
 		// Pagination
 		int topicsPerPage = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
@@ -277,8 +289,7 @@ public class ForumAction extends Command
 		this.request.addParameter("sort_by", "t." + SystemGlobals.getValue(ConfigKeys.TOPIC_TIME_FIELD));
 		this.request.addParameter("sort_dir", "DESC");
 		
-		new SearchAction(this.request, this.response, this.context).search();
-		
+		new SearchAction(this.request, this.response, this.context).search();		
 		this.setTemplateName(TemplateKeys.SEARCH_NEW_MESSAGES);
 	}
 	
@@ -291,5 +302,53 @@ public class ForumAction extends Command
 		JForumExecutionContext.setRedirect(this.request.getContextPath()
 			+ "/forums/show/" + this.request.getParameter("forum_id")
 			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+	}
+	
+	/**
+	 * Action when users click on "watch this forum"
+	 * It gets teh forum_id and userId, and put them into a watch_forum table in the database;
+	 * To do: may need change other codes to "create/update" the new table.
+	 * 
+	 * @throws Exception
+	 */
+	public void watchForum() throws Exception{
+		int forumId = this.request.getIntParameter("forum_id");
+		int userId = SessionFacade.getUserSession().getUserId();
+
+		this.watchForum(DataAccessDriver.getInstance().newForumDAO(), forumId, userId);
+		//relist the page?
+		this.show();
+	} 
+	
+	/**
+	 * 
+	 * @param tm
+	 * @param topicId
+	 * @param userId
+	 * @throws Exception
+	 */
+	private void watchForum(ForumDAO tm, int forumId, int userId) throws Exception {
+		if (!tm.isUserSubscribed(forumId, userId)) {
+			tm.subscribeUser(forumId, userId);
+		}
+	}
+	
+	/**
+	 * Unwatch the forum watched.
+	 * @throws Exception
+	 */
+	public void unwatchForum() throws Exception{
+		if (SessionFacade.isLogged()) {
+			int forumId = this.request.getIntParameter("forum_id");
+			int userId = SessionFacade.getUserSession().getUserId();
+
+			DataAccessDriver.getInstance().newForumDAO().removeSubscription(forumId, userId);
+			
+			//just re-show the topics in the forum now, may add a "confirm" page like "watch topic"
+			this.show();
+		}
+		else {
+			this.setTemplateName(ViewCommon.contextToLogin());
+		}	
 	}
 }
