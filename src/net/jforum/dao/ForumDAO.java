@@ -47,6 +47,7 @@ import java.util.List;
 import net.jforum.entities.Forum;
 import net.jforum.entities.ForumStats;
 import net.jforum.entities.LastPostInfo;
+import net.jforum.entities.Topic;
 
 /**
 * Model interface for {@link net.jforum.Forum}.
@@ -56,7 +57,7 @@ import net.jforum.entities.LastPostInfo;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: ForumDAO.java,v 1.7 2005/12/04 01:19:09 rafaelsteil Exp $
+ * @version $Id: ForumDAO.java,v 1.8 2006/02/06 17:18:26 iper Exp $
  */
 public interface ForumDAO 
 {
@@ -239,4 +240,57 @@ public interface ForumDAO
 	 * @throws Exception
 	 */
 	public ForumStats getBoardStatus() throws Exception;
+	
+	
+	//codes below are added by socialnework@gmail.com for "watching forum" purpose
+	/**
+	 * Get the users to notify
+	 * 
+	 * @param forum The forum 
+	 * @return <code>ArrayList</code> of <code>User</code> objects. Each
+	 * entry is an user who will receive the new topic in the forum notification
+	 * @throws Exception
+	 * */
+	public List notifyUsers(Forum forum) throws Exception;
+	
+	
+	/**
+	 * Subscribe the user for notification of new topic in the forum
+	 * Added by socialnetwork@gmail.com
+	 * 
+	 * @param forumId
+	 * @param userId
+	 * @throws Exception
+	 */
+	public void subscribeUser(int forumId, int userId) throws Exception;
+	
+	/**
+	 * Return the subscrition status of the user on the forum.
+	 * Added by socialnetwork@gmail.com
+	 * 
+	 * @param forumId
+	 * @param userId
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean isUserSubscribed(int forumId, int userId) throws Exception;
+	
+	/**
+	 * Remove the user's subscription of the forum
+	 * 
+	 * @param forumId The forum id
+	 * @param userId the User id
+	 * @throws Exception
+	 */
+	public void removeSubscription(int forumId, int userId) throws Exception;
+	
+	/**
+	 * Clean all subscriptions of some forum
+	 * 
+	 * @param forumId The forum id
+	 * @throws Exception
+	 */
+	public void removeSubscriptionByForum(int forumId) throws Exception;
+
+	
 }

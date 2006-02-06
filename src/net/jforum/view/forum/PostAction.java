@@ -97,7 +97,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.136 2006/01/29 15:06:59 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.137 2006/02/06 17:18:22 iper Exp $
  */
 public class PostAction extends Command 
 {
@@ -1000,7 +1000,7 @@ public class PostAction extends Command
 
 		boolean preview = "1".equals(this.request.getParameter("preview"));
 		
-		if (!preview) {
+		if (!preview) { //mean users hit "submit"?
 			AttachmentCommon attachments = new AttachmentCommon(this.request, forumId);
 			
 			try {
@@ -1103,6 +1103,8 @@ public class PostAction extends Command
 				if (!newTopic) {
 					TopicsCommon.notifyUsers(t, topicDao);
 					t.setTotalReplies(t.getTotalReplies() + 1);
+				}else{//notify "forum new topic" users
+					ForumCommon.notifyUsers(forum, t, forumDao);
 				}
 				
 				t.setTotalViews(t.getTotalViews() + 1);
@@ -1292,7 +1294,7 @@ public class PostAction extends Command
 			this.setTemplateName(ViewCommon.contextToLogin());
 		}
 	}
-
+	
 	public void downloadAttach() throws Exception
 	{
 		if ((SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED) && 

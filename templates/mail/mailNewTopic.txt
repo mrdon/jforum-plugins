@@ -1,0 +1,11 @@
+<#setting number_format = "#"/>
+Hi, 
+
+You received this email because there is a new topic of "${topic.title}" at our forum since your last visit. 
+You may use the following URL to read the topic. You will not get more notifications until you read the topic. 
+
+${path}
+
+If you no longer want to receive notifications for this forum, please access the URL
+
+${unwatch}

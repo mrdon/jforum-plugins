@@ -43,26 +43,35 @@
 package net.jforum.view.forum.common;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import net.jforum.SessionFacade;
+import net.jforum.dao.ForumDAO;
+import net.jforum.dao.TopicDAO;
 import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
 import net.jforum.entities.LastPostInfo;
+import net.jforum.entities.Topic;
 import net.jforum.entities.UserSession;
 import net.jforum.repository.ForumRepository;
+import net.jforum.util.concurrent.executor.QueuedExecutor;
+import net.jforum.util.mail.EmailSenderTask;
+import net.jforum.util.mail.ForumSpammer;
+import net.jforum.util.mail.TopicSpammer;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumCommon.java,v 1.10 2005/10/29 23:33:16 rafaelsteil Exp $
+ * @version $Id: ForumCommon.java,v 1.12 2006/02/06 17:18:27 iper Exp $
  */
 public class ForumCommon 
 {
+	private static Logger logger = Logger.getLogger(ForumCommon.class);
 	/**
 	 * Check if some forum has unread messages.
 	 * @param forum The forum to search for unread messages 
@@ -157,5 +166,32 @@ public class ForumCommon
 		boolean checkUnread = (us != null && us.getUserId() 
 				!= SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID));
 		return getAllCategoriesAndForums(checkUnread);
+	}
+	
+	/**
+	 * Sends a "new topic" notification message to all users watching the forum.
+	 * 
+	 * @param f The Forum changed
+	 * @param t The new topic
+	 * @param tm A ForumModel instance
+	 * @throws Exception
+	 */
+	public static void notifyUsers(Forum f, Topic t, ForumDAO tm) throws Exception
+	{
+		if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_NOTIFY_ANSWERS)) {
+			try {
+				List usersToNotify = tm.notifyUsers(f);
+
+				// we only have to send an email if there are users
+				// subscribed to the topic
+				if (usersToNotify != null && usersToNotify.size() > 0) {
+					QueuedExecutor.getInstance().execute(
+							new EmailSenderTask(new ForumSpammer(f, t, usersToNotify)));
+				}
+			}
+			catch (Exception e) {
+				logger.warn("Error while sending notification emails: " + e);
+			}
+		}
 	}
 }

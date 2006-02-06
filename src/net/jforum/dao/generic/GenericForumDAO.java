@@ -53,6 +53,7 @@ import java.util.Date;
 import java.util.List;
 
 import net.jforum.JForumExecutionContext;
+import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.TopicDAO;
 import net.jforum.entities.Forum;
@@ -60,13 +61,16 @@ import net.jforum.entities.ForumStats;
 import net.jforum.entities.LastPostInfo;
 import net.jforum.entities.ModeratorInfo;
 import net.jforum.entities.Topic;
+import net.jforum.entities.User;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericForumDAO.java,v 1.20 2006/02/01 23:27:05 rafaelsteil Exp $
+ * @author socialnetwork@gmail.com, adding "watch forum" methods.
+ * 
+ * @version $Id: GenericForumDAO.java,v 1.21 2006/02/06 17:18:24 iper Exp $
  */
 public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO 
 {
@@ -590,5 +594,106 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 	{
 		int days = (int)((today.getTime() - from.getTime()) / (24 * 60 * 60 * 1000));
 		return days == 0 ? 1 : days;
+	}
+
+	//below are codes that added by socialnetwork@gmail.com
+	//to do the "watch forum" functions
+	
+	/**
+	 * This code is writen by looking at GenericTopicDAO.java
+	 * @see
+	 */
+	public List notifyUsers(Forum forum) throws Exception {
+		int posterId = SessionFacade.getUserSession().getUserId();
+		int anonUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
+		
+		PreparedStatement stmt = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.notifyUsers"));		
+		ResultSet rs = null;
+
+		stmt.setInt(1, forum.getId());
+		stmt.setInt(2, posterId); //don't notify the poster
+		stmt.setInt(3, anonUser); //don't notify the anonimous user
+				
+		rs = stmt.executeQuery();
+		
+		List users = new ArrayList();
+		while(rs.next()) {
+			User user = new User();
+
+			user.setId(rs.getInt("user_id"));
+			user.setEmail(rs.getString("user_email"));
+			user.setUsername(rs.getString("username"));
+			user.setLang(rs.getString("user_lang"));
+			
+			users.add(user);
+		}
+		
+		//Not sure what is this setting doing.. so comment out now...
+//		// Set read status to false
+//		stmt = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.markAllAsUnread"));
+//		stmt.setInt(1, forum.getId());
+//		stmt.setInt(2, posterId); //don't notify the poster
+//		stmt.setInt(3, anonUser); //don't notify the anonimous user
+//		
+//		stmt.executeUpdate();
+//			
+		rs.close();
+		stmt.close();
+		
+		return users;
+
+	}
+
+	public void subscribeUser(int forumId, int userId) throws Exception {
+		PreparedStatement p = JForumExecutionContext.getConnection(). prepareStatement(SystemGlobals.getSql("ForumModel.subscribeUser"));
+		
+		p.setInt(1, forumId);
+		p.setInt(2, userId);
+			
+		p.executeUpdate();
+		p.close();
+
+	}
+
+	public boolean isUserSubscribed(int forumId, int userId) throws Exception {
+		PreparedStatement stmt = JForumExecutionContext.getConnection(). prepareStatement( SystemGlobals.getSql("ForumModel.isUserSubscribed"));
+		ResultSet rs = null;
+		
+		stmt.setInt(1, forumId);
+		stmt.setInt(2, userId);
+		
+		rs = stmt.executeQuery();
+		boolean status = rs.next();
+		
+		rs.close();
+		stmt.close();
+				
+		return status;	
+	}
+
+	public void removeSubscription(int forumId, int userId) throws Exception {
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.removeSubscription"));
+		p.setInt(1, forumId);
+		p.setInt(2, userId);
+		
+		p.executeUpdate();
+		p.close();
+		
+	}
+
+	/**
+	 * Remove all subscriptions on a forum, such as when a forum is locked.
+	 * It is not used now.
+	 * 
+	 * @param forumId
+	 * @throws Exception
+	 */
+	public void removeSubscriptionByForum(int forumId) throws Exception {
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.removeSubscriptionByForum"));
+		p.setInt(1, forumId);
+		
+		p.executeUpdate();
+		p.close();		
+		
 	}
 }

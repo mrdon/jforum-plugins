@@ -51,7 +51,7 @@ import net.jforum.entities.LastPostInfo;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumModelDummy.java,v 1.10 2005/12/04 01:19:15 rafaelsteil Exp $
+ * @version $Id: ForumModelDummy.java,v 1.11 2006/02/06 17:18:26 iper Exp $
  */
 class ForumModelDummy implements ForumDAO {
 	
@@ -204,4 +204,34 @@ class ForumModelDummy implements ForumDAO {
 		// TODO Auto-generated method stub
 
 	}
+
+	// codes below are added by socialnetwork@gmail.com for "watch forum" purpose
+	/**
+	 * @see net.jforum.dao.ForumDAO#notifyUsers(int, boolean)
+	 */
+	public List notifyUsers(Forum forum) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void subscribeUser(int forumId, int userId) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean isUserSubscribed(int forumId, int userId) throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void removeSubscription(int forumId, int userId) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void removeSubscriptionByForum(int forumId) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }
