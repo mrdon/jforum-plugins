@@ -108,6 +108,7 @@ DROP TABLE jforum_user_groups;
 -- Table structure for table 'jforum_forums'
 DROP SEQUENCE jforum_forums_seq;
 DROP TABLE jforum_forums;
+DROP TABLE jforum_forums_watch;
 
 -- Table structure for table 'jforum_config'
 DROP SEQUENCE jforum_config_seq;

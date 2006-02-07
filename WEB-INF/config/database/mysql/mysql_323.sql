@@ -1,8 +1,7 @@
 # ################
 # PermissionControl
 # ################
-PermissionControl.deleteRoleValuesByRoleId = DELETE FROM jforum_role_values \
-	WHERE role_id IN (?)
+PermissionControl.deleteRoleValuesByRoleId = DELETE FROM jforum_role_values WHERE role_id IN (?)
 
 PermissionControl.getRoleIdsByGroup = SELECT DISTINCT rv.role_id \
 	FROM jforum_role_values rv, jforum_roles r \

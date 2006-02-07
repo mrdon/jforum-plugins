@@ -63,6 +63,18 @@ CREATE TABLE jforum_forums (
 ) TYPE=InnoDB;
 
 --
+-- Table structure for table 'jforum_forums_watch'
+--
+DROP TABLE IF EXISTS jforum_forums_watch;
+CREATE TABLE jforum_forums_watch (
+  forum_id INT NOT NULL,
+  user_id INT NOT NULL,
+  is_read tinyint(1) DEFAULT 1,
+  INDEX idx_fw_forum (forum_id),
+  INDEX idx_fw_user (user_id)
+) TYPE=InnoDB;
+
+--
 -- Table structure for table 'jforum_groups'
 --
 
@@ -260,9 +272,9 @@ CREATE TABLE jforum_topics (
 
 DROP TABLE IF EXISTS jforum_topics_watch;
 CREATE TABLE jforum_topics_watch (
-  topic_id INT NOT NULL default '0',
-  user_id INT NOT NULL default '0',
-  is_read tinyint(1) NOT NULL DEFAULT '0',
+  topic_id INT NOT NULL
+  user_id INT NOT NULL
+  is_read tinyint(1) DEFAULT 1
   INDEX idx_topic (topic_id),
   INDEX idx_user (user_id)
 ) TYPE=InnoDB;

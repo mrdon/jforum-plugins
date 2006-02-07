@@ -68,6 +68,18 @@ CREATE TABLE jforum_forums (
 CREATE INDEX idx_forums_categories_id ON jforum_forums(categories_id);
 
 --
+-- Table structure for table 'jforum_forums_watch'
+--
+CREATE TABLE jforum_forums_watch (
+  forum_id NUMBER NOT NULL,
+  user_id NUMBER NOT NULL,
+  is_read NUMBER(1) DEFAULT 1
+);
+CREATE INDEX idx_fw_forum ON jforum_forums_watch(forum_id);
+CREATE INDEX idx_fw_user ON jforum_forums_watch(user_id);
+
+
+--
 -- Table structure for table 'jforum_groups'
 --
 

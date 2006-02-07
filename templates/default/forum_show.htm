@@ -38,24 +38,8 @@
                                         </td>
 
 					<td class="nav" valign="bottom" nowrap="nowrap" align="right">
-						<#if logged>
-								<span class="gensmall">
-								<#assign watch = "watchForum"/>
-								<#assign watchMessage = I18n.getMessage("ForumShow.watch")/>
-								<#if watching>
-									<#assign watch = "unwatchForum"/>
-									<#assign watchMessage = I18n.getMessage("ForumShow.unwatch")/>
-								</#if>
-
-								<a href="${JForumContext.encodeURL("/forums/${watch}/${forum.id}")}"><img src="${contextPath}/templates/${templateName}/images/watch.gif" align="middle" alt="Watch" /></a>
-								<a href="${JForumContext.encodeURL("/forums/${watch}/${forum.id}")}">${watchMessage}</a>
-								</span>
-
-						</#if>
-
 		  				<span class="gensmall">
 						&nbsp;
-		  				<a href="${JForumContext.encodeURL("/forums/readAll/${forum.id}")}">		  				<img src="${contextPath}/templates/${templateName}/images/folder.gif" align="middle" alt="setallread" /></a>
 						<a href="${JForumContext.encodeURL("/forums/readAll/${forum.id}")}">${I18n.getMessage("ForumIndex.setAllTopicsAsRead")}</a>
 
 						<#if moderator>
@@ -270,7 +254,26 @@
 				</tr>
 			</table>
 
-			<@presentation.forumsComboTable/>
+			<table cellspacing="0" cellpadding="5" width="100%" border="0">
+				<tr>
+					<td align="left">
+						<#if logged>
+							<span class="gensmall">
+							<#assign watch = "watchForum"/>
+							<#assign watchMessage = I18n.getMessage("ForumShow.watch")/>
+							<#if watching>
+								<#assign watch = "unwatchForum"/>
+								<#assign watchMessage = I18n.getMessage("ForumShow.unwatch")/>
+							</#if>
+
+							<a href="${JForumContext.encodeURL("/forums/${watch}/${forum.id}")}"><img src="${contextPath}/templates/${templateName}/images/watch.gif" align="middle" alt="Watch" /></a>
+							<a href="${JForumContext.encodeURL("/forums/${watch}/${forum.id}")}">${watchMessage}</a>
+							</span>
+						</#if>
+					</td>
+					<td align="right"><@presentation.forumsComboTable/></td>
+				</tr>
+			</table>
 
 			<table cellspacing="0" cellpadding="0" width="100%" align="center" border="0">
 				<tr>

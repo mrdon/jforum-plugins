@@ -56,7 +56,6 @@ import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
 import net.jforum.dao.ModerationDAO;
 import net.jforum.dao.SearchData;
-import net.jforum.dao.TopicDAO;
 import net.jforum.entities.Forum;
 import net.jforum.entities.MostUsersEverOnline;
 import net.jforum.entities.Topic;
@@ -75,7 +74,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.50 2006/02/06 17:15:05 iper Exp $
+ * @version $Id: ForumAction.java,v 1.51 2006/02/07 14:17:37 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -269,7 +268,7 @@ public class ForumAction extends Command
 			Topic t = (Topic)iter.next();
 			
 			((Map)SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(t.getId()), 
-					new Long(t.getLastPostDate().getTime()));
+				new Long(t.getLastPostDate().getTime()));
 		}
 		
 		if (forumId != null) {
@@ -277,7 +276,7 @@ public class ForumAction extends Command
 		}
 		else {
 			JForumExecutionContext.setRedirect(this.request.getContextPath() + "/forums/list"
-					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		}
 	}
 	
@@ -311,25 +310,36 @@ public class ForumAction extends Command
 	 * 
 	 * @throws Exception
 	 */
-	public void watchForum() throws Exception{
+	public void watchForum() throws Exception {
 		int forumId = this.request.getIntParameter("forum_id");
 		int userId = SessionFacade.getUserSession().getUserId();
 
 		this.watchForum(DataAccessDriver.getInstance().newForumDAO(), forumId, userId);
-		//relist the page?
-		this.show();
-	} 
+
+		JForumExecutionContext.setRedirect(this.redirectLinkToShowAction(forumId));
+	}
+	
+	private String redirectLinkToShowAction(int forumId)
+	{
+		int start = ViewCommon.getStartPage();
+		
+		return this.request.getContextPath()
+			+ "/forums/show/"
+			+ (start > 0 ? start + "/" : "")
+			+ forumId
+			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
+	}
 	
 	/**
 	 * 
-	 * @param tm
+	 * @param dao
 	 * @param topicId
 	 * @param userId
 	 * @throws Exception
 	 */
-	private void watchForum(ForumDAO tm, int forumId, int userId) throws Exception {
-		if (!tm.isUserSubscribed(forumId, userId)) {
-			tm.subscribeUser(forumId, userId);
+	private void watchForum(ForumDAO dao, int forumId, int userId) throws Exception {
+		if (SessionFacade.isLogged() && !dao.isUserSubscribed(forumId, userId)) {
+			dao.subscribeUser(forumId, userId);
 		}
 	}
 	
@@ -344,8 +354,10 @@ public class ForumAction extends Command
 
 			DataAccessDriver.getInstance().newForumDAO().removeSubscription(forumId, userId);
 			
-			//just re-show the topics in the forum now, may add a "confirm" page like "watch topic"
-			this.show();
+			String returnPath = this.redirectLinkToShowAction(forumId);
+			
+			this.setTemplateName(TemplateKeys.POSTS_UNWATCH);
+			this.context.put("message", I18n.getMessage("ForumBase.forumUnwatched", new String[] { returnPath }));
 		}
 		else {
 			this.setTemplateName(ViewCommon.contextToLogin());

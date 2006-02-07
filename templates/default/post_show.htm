@@ -284,24 +284,6 @@
 				</tr>
 				</#if>
 				
-				<#if logged>
-					<tr>
-						<td align="left" colspan="3">
-							<span class="gensmall">
-							<#assign watch = "watch"/>
-							<#assign watchMessage = I18n.getMessage("PostShow.watch")/>
-							<#if watching>
-								<#assign watch = "unwatch"/>
-								<#assign watchMessage = I18n.getMessage("PostShow.unwatch")/>
-							</#if>
-							
-							<a href="${JForumContext.encodeURL("/posts/${watch}/${start}/${topic.id}")}"><img src="${contextPath}/templates/${templateName}/images/watch.gif" align="middle" alt="Watch" /></a>
-							<a href="${JForumContext.encodeURL("/posts/${watch}/${start}/${topic.id}")}">${watchMessage}</a>
-							</span>
-						</td>
-					</tr>
-				</#if>
-					
 				<#if isModerator>
 					<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="formModeration" id="formModeration">
 					<input type="hidden" name="action" value="doModeration" />
@@ -326,7 +308,26 @@
 				</#if>
 			</table>
 
-			<@presentation.forumsComboTable/>
+			<table cellspacing="0" cellpadding="0" width="100%" border="0">
+				<tr>
+					<td align="left">
+						<#if logged>
+							<span class="gensmall">
+							<#assign watch = "watch"/>
+							<#assign watchMessage = I18n.getMessage("PostShow.watch")/>
+							<#if watching>
+								<#assign watch = "unwatch"/>
+								<#assign watchMessage = I18n.getMessage("PostShow.unwatch")/>
+							</#if>
+							
+							<a href="${JForumContext.encodeURL("/posts/${watch}/${start}/${topic.id}")}"><img src="${contextPath}/templates/${templateName}/images/watch.gif" align="middle" alt="Watch" /></a>
+							<a href="${JForumContext.encodeURL("/posts/${watch}/${start}/${topic.id}")}">${watchMessage}</a>
+							</span>
+						</#if>
+					</td>
+					<td align="right"><@presentation.forumsComboTable/></td>
+				</tr>
+			</table>
 		</td>
 	</tr>
 </table>

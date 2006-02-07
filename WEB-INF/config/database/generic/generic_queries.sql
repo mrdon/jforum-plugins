@@ -258,17 +258,17 @@ ForumModel.getUnreadForums = SELECT t.forum_id, t.topic_id, p.post_time \
 	WHERE p.post_id = t.topic_last_post_id \
 	AND p.post_time > ?
 
-ForumModel.subscribeUser = INSERT INTO jforum_forums_watch(forum_id, user_id, is_read) VALUES (?, ?, '1')
+ForumModel.subscribeUser = INSERT INTO jforum_forums_watch(forum_id, user_id, is_read) VALUES (?, ?, 1)
 ForumModel.isUserSubscribed = SELECT user_id FROM jforum_forums_watch WHERE forum_id = ? AND user_id = ?
 ForumModel.removeSubscription = DELETE FROM jforum_forums_watch WHERE forum_id = ? AND user_id = ?
 ForumModel.removeSubscriptionByForum = DELETE FROM jforum_forums_watch WHERE forum_id = ?
 
 ForumModel.notifyUsers = SELECT u.user_id AS user_id, u.username AS username, \
 	u.user_lang AS user_lang, u.user_email AS user_email \
-	FROM jforum_forums_watch tw \
-	INNER JOIN jforum_users u ON (tw.user_id = u.user_id) \
-	WHERE tw.forum_id = ? \
-	AND tw.is_read = 1 \
+	FROM jforum_forums_watch fw, jforum_users u \
+	WHERE fw.user_id = u.user_id \
+	AND fw.forum_id = ? \
+	AND fw.is_read = 1 \
 	AND u.user_id NOT IN ( ?, ? )
 
 # #############
@@ -320,7 +320,7 @@ TopicModel.update = UPDATE jforum_topics SET topic_title = ?, topic_last_post_id
 TopicModel.getMaxPostId = SELECT MAX(post_id) AS post_id FROM jforum_posts WHERE topic_id = ?
 TopicModel.getTotalPosts = SELECT COUNT(1) AS total FROM jforum_posts WHERE topic_id = ? AND need_moderate = 0
 
-TopicModel.subscribeUser = INSERT INTO jforum_topics_watch(topic_id, user_id, is_read) VALUES (?, ?, '1')
+TopicModel.subscribeUser = INSERT INTO jforum_topics_watch(topic_id, user_id, is_read) VALUES (?, ?, 1)
 TopicModel.isUserSubscribed = SELECT user_id FROM jforum_topics_watch WHERE topic_id = ? AND user_id = ?
 TopicModel.removeSubscription = DELETE FROM jforum_topics_watch WHERE topic_id = ? AND user_id = ?
 TopicModel.removeSubscriptionByTopic = DELETE FROM jforum_topics_watch WHERE topic_id = ?
@@ -328,8 +328,8 @@ TopicModel.updateReadStatus = UPDATE jforum_topics_watch SET is_read = ? WHERE t
 
 TopicModel.notifyUsers = SELECT u.user_id AS user_id, u.username AS username, \
 	u.user_lang AS user_lang, u.user_email AS user_email \
-	FROM jforum_topics_watch tw \
-	INNER JOIN jforum_users u ON (tw.user_id = u.user_id) \
+	FROM jforum_topics_watch tw, jforum_users u \
+	WHERE tw.user_id = u.user_id \
 	WHERE tw.topic_id = ? \
 	AND tw.is_read = 1 \
 	AND u.user_id NOT IN ( ?, ? )

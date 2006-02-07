@@ -97,7 +97,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.137 2006/02/06 17:18:22 iper Exp $
+ * @version $Id: PostAction.java,v 1.138 2006/02/07 14:17:37 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -1275,12 +1275,13 @@ public class PostAction extends Command
 		if (SessionFacade.isLogged()) {
 			int topicId = this.request.getIntParameter("topic_id");
 			int userId = SessionFacade.getUserSession().getUserId();
-			String start = this.request.getParameter("start");
+			int start = ViewCommon.getStartPage();
 
 			DataAccessDriver.getInstance().newTopicDAO().removeSubscription(topicId, userId);
 
 			String returnPath = this.request.getContextPath() + "/posts/list/";
-			if (start != null && !start.equals("")) {
+			
+			if (start > 0) {
 				returnPath += start + "/";
 			}
 
