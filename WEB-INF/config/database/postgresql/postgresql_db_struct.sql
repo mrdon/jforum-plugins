@@ -66,7 +66,6 @@ CREATE TABLE jforum_forums_watch (
 CREATE INDEX idx_fw_forum ON jforum_forums_watch(forum_id);
 CREATE INDEX idx_fw_user ON jforum_forums_watch(user_id);
 
-
 --
 -- Table structure for table 'jforum_groups'
 --
