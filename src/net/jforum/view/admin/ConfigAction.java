@@ -53,6 +53,10 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.ActionServletRequest;
+import net.jforum.entities.Category;
+import net.jforum.entities.Forum;
+import net.jforum.repository.ForumRepository;
+import net.jforum.repository.TopicRepository;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -61,7 +65,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ConfigAction.java,v 1.13 2005/07/26 03:05:40 rafaelsteil Exp $
+ * @version $Id: ConfigAction.java,v 1.14 2006/02/12 14:55:22 rafaelsteil Exp $
  */
 public class ConfigAction extends AdminCommand 
 {
@@ -124,6 +128,8 @@ public class ConfigAction extends AdminCommand
 	
 	void updateData(Properties p) throws Exception
 	{
+		int oldTopicsPerPage = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
+
 		for (Iterator iter = p.entrySet().iterator(); iter.hasNext(); ) {
 			Map.Entry entry = (Map.Entry)iter.next();
 			
@@ -132,5 +138,19 @@ public class ConfigAction extends AdminCommand
 		
 		SystemGlobals.saveInstallation();
 		I18n.changeBoardDefault(SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT));
+		
+		// If topicsPerPage has changed, force a reload in all forums
+		if (oldTopicsPerPage != SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE)) {
+			List categories = ForumRepository.getAllCategories();
+			
+			for (Iterator iter = categories.iterator(); iter.hasNext(); ) {
+				Category c = (Category)iter.next();
+				
+				for (Iterator iter2 = c.getForums().iterator(); iter2.hasNext(); ) {
+					Forum f = (Forum)iter2.next();
+					TopicRepository.clearCache(f.getId());
+				}
+			}
+		}
 	}
 }
