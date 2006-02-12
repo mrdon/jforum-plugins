@@ -330,7 +330,7 @@ TopicModel.notifyUsers = SELECT u.user_id AS user_id, u.username AS username, \
 	u.user_lang AS user_lang, u.user_email AS user_email \
 	FROM jforum_topics_watch tw, jforum_users u \
 	WHERE tw.user_id = u.user_id \
-	WHERE tw.topic_id = ? \
+	AND tw.topic_id = ? \
 	AND tw.is_read = 1 \
 	AND u.user_id NOT IN ( ?, ? )
 	

@@ -97,7 +97,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.138 2006/02/07 14:17:37 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.139 2006/02/12 17:58:25 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -1238,22 +1238,24 @@ public class PostAction extends Command
 			}
 
 			JForumExecutionContext.setRedirect(returnPath 
-					+ p.getTopicId() 
-					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+				+ p.getTopicId() 
+				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+			
+			// Update the cache
+			t = tm.selectById(t.getId());
+			TopicRepository.updateTopic(t);
 		}
 		else {
 			// Ok, all posts were removed. Time to say goodbye
 			TopicsCommon.deleteTopic(p.getTopicId(), p.getForumId(), false);
 
 			JForumExecutionContext.setRedirect(this.request.getContextPath() 
-					+ "/forums/show/" 
-					+ p.getForumId()
-					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+				+ "/forums/show/" 
+				+ p.getForumId()
+				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		}
 		
-		TopicRepository.remove(t);
 		PostRepository.remove(t.getId(), p.getId());
-		
 		ForumRepository.reloadForum(p.getForumId());
 	}
 
