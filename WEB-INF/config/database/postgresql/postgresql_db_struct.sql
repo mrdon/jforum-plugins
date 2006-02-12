@@ -57,7 +57,6 @@ CREATE INDEX idx_forums_categories_id ON jforum_forums(categories_id);
 --
 -- Table structure for table 'jforum_forums_watch'
 --
-DROP TABLE IF EXISTS jforum_forums_watch;
 CREATE TABLE jforum_forums_watch (
   forum_id INTEGER NOT NULL,
   user_id INTEGER NOT NULL,

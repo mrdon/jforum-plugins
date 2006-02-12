@@ -84,7 +84,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.45 2006/01/29 15:07:21 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.46 2006/02/12 22:27:31 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -673,7 +673,8 @@ public class InstallAction extends Command
 				"jforum_quota_limit", "jforum_quota_limit_seq", "jforum_extension_groups_seq", 
 				"jforum_extension_groups", "jforum_extensions_seq", "jforum_extensions", 
 				"jforum_attach_seq", "jforum_attach", "jforum_attach_desc_seq", "jforum_attach_desc",
-				"jforum_attach_quota_seq", "jforum_attach_quota", "jforum_banner", "jforum_banner_seq" };
+				"jforum_attach_quota_seq", "jforum_attach_quota", "jforum_banner", "jforum_banner_seq",
+				"jforum_forums_watch" };
 
 		for (int i = 0; i < tables.length; i++) {
 			Statement s = conn.createStatement();
