@@ -65,12 +65,14 @@ import javax.imageio.stream.ImageOutputStream;
  * can read from. GIF images will be saved as PNG. 
  * 
  * @author Rafael Steil
- * @version $Id: ImageUtils.java,v 1.15 2005/12/23 20:37:00 rafaelsteil Exp $
+ * @version $Id: ImageUtils.java,v 1.16 2006/02/12 17:25:58 rafaelsteil Exp $
  */
 public class ImageUtils
 {
+	public static final int IMAGE_UNKNOWN = -1;
 	public static final int IMAGE_JPEG = 0;
 	public static final int IMAGE_PNG = 1;
+	public static final int IMAGE_GIF = 2;
 	
 	/**
 	 * Resizes an image

@@ -68,7 +68,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserCommon.java,v 1.12 2006/01/29 15:07:13 rafaelsteil Exp $
+ * @version $Id: UserCommon.java,v 1.13 2006/02/12 17:25:58 rafaelsteil Exp $
  */
 public class UserCommon 
 {
@@ -174,7 +174,7 @@ public class UserCommon
 		
 		// Gets file extension
 		String extension = uploadUtils.getExtension().toLowerCase();
-		int type = -1;
+		int type = ImageUtils.IMAGE_UNKNOWN;
 		
 		if (extension.equals("jpg") || extension.equals("jpeg")) {
 			type = ImageUtils.IMAGE_JPEG;
@@ -183,7 +183,7 @@ public class UserCommon
 			type = ImageUtils.IMAGE_PNG;
 		}
 		
-		if (type != -1) {
+		if (type != ImageUtils.IMAGE_UNKNOWN) {
 			String avatarTmpFileName = SystemGlobals.getApplicationPath() 
 				+ "/images/avatar/" + fileName + "_tmp." + extension;
 			
