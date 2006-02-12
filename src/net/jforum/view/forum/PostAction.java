@@ -97,7 +97,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.139 2006/02/12 17:58:25 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.140 2006/02/12 18:16:48 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -1338,12 +1338,12 @@ public class PostAction extends Command
 		
 		if (this.request.getHeader("User-Agent").indexOf("Firefox") != -1) {			
 			this.response.setHeader("Content-Disposition", "attachment; filename=\"" 
-					+ new String(a.getInfo().getRealFilename().getBytes(SystemGlobals.getValue(ConfigKeys.ENCODING)), 
-							SystemGlobals.getValue(ConfigKeys.DEFAULT_CONTAINER_ENCODING)) + "\";");
+				+ new String(a.getInfo().getRealFilename().getBytes(SystemGlobals.getValue(ConfigKeys.ENCODING)), 
+					SystemGlobals.getValue(ConfigKeys.DEFAULT_CONTAINER_ENCODING)) + "\";");
 		} 
 		else {
 			this.response.setHeader("Content-Disposition", "attachment; filename=\"" 
-					+ ViewCommon.toUtf8String(a.getInfo().getRealFilename()) + "\";");
+				+ ViewCommon.toUtf8String(a.getInfo().getRealFilename()) + "\";");
 		}
 		
 		this.response.setContentLength((int)a.getInfo().getFilesize());

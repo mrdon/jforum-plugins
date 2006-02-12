@@ -64,7 +64,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: ActionServletRequest.java,v 1.29 2005/09/09 17:59:45 rafaelsteil Exp $
+ * @version $Id: ActionServletRequest.java,v 1.30 2006/02/12 18:14:24 rafaelsteil Exp $
  */
 public class ActionServletRequest extends HttpServletRequestWrapper 
 {
@@ -313,7 +313,8 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 			if (isMultipart) {
 			    String tmpDir = SystemGlobals.getApplicationPath() + "/" + SystemGlobals.getValue(ConfigKeys.TMP_DIR);
 				ServletFileUpload upload = new ServletFileUpload(new DiskFileItemFactory(100 * 1024, new File(tmpDir)));
-                                upload.setHeaderEncoding(encoding);
+				upload.setHeaderEncoding(encoding);
+		
 				try {
 					List items = upload.parseRequest(superRequest);
 					for (Iterator iter = items.iterator(); iter.hasNext(); ) {
