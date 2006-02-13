@@ -67,7 +67,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTopicDAO.java,v 1.7 2006/01/29 15:06:22 rafaelsteil Exp $
+ * @version $Id: GenericTopicDAO.java,v 1.8 2006/02/13 19:15:13 rafaelsteil Exp $
  */
 public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO 
 {
@@ -166,9 +166,6 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 			
 			p.setInt(1, topic.getId());
 			p.executeUpdate();
-			
-			// Update forum stats
-			fm.decrementTotalTopics(topic.getForumId(), 1);
 		}
 		
 		p.close();
