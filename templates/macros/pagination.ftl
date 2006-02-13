@@ -124,7 +124,7 @@
 <#macro pageLink page id commaExpression>
 	<#assign start = recordsPerPage * (page - 1)/>
 	<#if page != thisPage>
-		<#assign link><a href="${contextPath}/${moduleName}/${action}<#if (start > 0)>/${start}</#if>/${id}${extension}">${page}</a></#assign>
+		<#assign link><a href="${contextPath}/${moduleName}/${action}<#if (start > 0)>/${start}</#if><#if (id > -1)>/${id}</#if>${extension}">${page}</a></#assign>
 	<#else>
 		<#assign link>${page}</#assign>
 	</#if>
