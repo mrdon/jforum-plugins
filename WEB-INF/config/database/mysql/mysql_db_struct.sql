@@ -272,9 +272,9 @@ CREATE TABLE jforum_topics (
 
 DROP TABLE IF EXISTS jforum_topics_watch;
 CREATE TABLE jforum_topics_watch (
-  topic_id INT NOT NULL
-  user_id INT NOT NULL
-  is_read tinyint(1) DEFAULT 1
+  topic_id INT NOT NULL,
+  user_id INT NOT NULL,
+  is_read tinyint(1) DEFAULT 1,
   INDEX idx_topic (topic_id),
   INDEX idx_user (user_id)
 ) TYPE=InnoDB;

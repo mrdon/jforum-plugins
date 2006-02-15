@@ -42,7 +42,7 @@ var counter = 0;
 	{
 		document.getElementById("attach_" + index).innerHTML = "<div id='attach_" + total + "'></div>";
 		//Avoid HTML Validation error by not using the minusminus shortcut
-		counter = counter-1;
+		counter = counter - 1;
 		setAddAttachButtonStatus();
 	}
 
