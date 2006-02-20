@@ -42,6 +42,7 @@
  */
 package net.jforum.security;
 
+import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * Manipulates XML permission control file definition 
  * 
  * @author Rafael Steil
- * @version $Id: XMLPermissionControl.java,v 1.10 2006/01/29 15:07:22 rafaelsteil Exp $
+ * @version $Id: XMLPermissionControl.java,v 1.11 2006/02/20 16:52:19 rafaelsteil Exp $
  */
 public class XMLPermissionControl extends DefaultHandler 
 {
@@ -132,10 +133,16 @@ public class XMLPermissionControl extends DefaultHandler
 		factory.setValidating(false);
 		
 		SAXParser parser = factory.newSAXParser();
-		InputSource input = new InputSource(xmlFile);
+		File input = new File(xmlFile);
 		
-		parser.parse(input, this);
-				
+		if (input.exists()) {
+			parser.parse(input, this);
+		}
+		else {
+			InputSource source = new InputSource(xmlFile);
+			parser.parse(input, this);
+		}
+		
 		return this.listSections;
 	}
 
