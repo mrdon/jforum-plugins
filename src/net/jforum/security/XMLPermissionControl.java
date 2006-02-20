@@ -69,7 +69,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * Manipulates XML permission control file definition 
  * 
  * @author Rafael Steil
- * @version $Id: XMLPermissionControl.java,v 1.11 2006/02/20 16:52:19 rafaelsteil Exp $
+ * @version $Id: XMLPermissionControl.java,v 1.12 2006/02/20 16:52:57 rafaelsteil Exp $
  */
 public class XMLPermissionControl extends DefaultHandler 
 {
@@ -140,7 +140,7 @@ public class XMLPermissionControl extends DefaultHandler
 		}
 		else {
 			InputSource source = new InputSource(xmlFile);
-			parser.parse(input, this);
+			parser.parse(source, this);
 		}
 		
 		return this.listSections;
