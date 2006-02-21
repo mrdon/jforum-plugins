@@ -37,11 +37,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
  * This file creation date: 25/02/2004 - 19:16:25
- * net.jforum.model.SearchData.java
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: SearchData.java,v 1.7 2005/08/30 21:44:01 rafaelsteil Exp $
  */
 package net.jforum.dao;
 
@@ -49,18 +46,22 @@ import java.util.Date;
 
 /**
  * @author Rafael Steil
+ * @version $Id: SearchData.java,v 1.8 2006/02/21 16:19:10 rafaelsteil Exp $
  */
 public class SearchData 
 {
 	private String keywords = "";
-	private boolean useAllWords;
 	private String author;
-	private int forumId;
-	private int categoryId;
 	private String orderBy = "ASC";
 	private String orderByField;
-	private Date time;
+	
+	private boolean useAllWords;
 	private boolean searchStarted;
+	
+	private int forumId;
+	private int categoryId;
+	
+	private Date time;
 	
 	public void setKeywords(String keywords)
 	{
@@ -138,6 +139,10 @@ public class SearchData
 	
 	public String getOrderBy()
 	{
+		if (!"ASC".equals(this.orderBy) && !"DESC".equals(this.orderBy)) {
+			return "ASC";
+		}
+
 		return this.orderBy;
 	}
 	

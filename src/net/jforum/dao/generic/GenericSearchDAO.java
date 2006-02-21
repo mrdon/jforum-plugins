@@ -63,7 +63,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericSearchDAO.java,v 1.14 2006/01/29 15:06:26 rafaelsteil Exp $
+ * @version $Id: GenericSearchDAO.java,v 1.15 2006/02/21 16:19:11 rafaelsteil Exp $
  */
 public class GenericSearchDAO implements net.jforum.dao.SearchDAO	
 {
@@ -75,6 +75,7 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 	public List search(SearchData sd) throws Exception 
 	{
 		List l = new ArrayList();
+
 		// Check for the search cache
 		if (!sd.getSearchStarted()) {
 			if (sd.getTime() == null) {
@@ -86,10 +87,10 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 		}
 
 		String sql = SystemGlobals.getSql("SearchModel.searchBase");
-		StringBuffer criterias = new StringBuffer(256);
+		StringBuffer criterias = new StringBuffer(512);
 
 		if (sd.getForumId() != 0) {
-			criterias.append(" AND t.forum_id = "+ sd.getForumId());
+			criterias.append(" AND t.forum_id = " + sd.getForumId());
 		}
 		
 		if (sd.getCategoryId() != 0) {
