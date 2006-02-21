@@ -66,7 +66,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.33 2005/12/14 18:19:28 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.34 2006/02/21 13:59:49 rafaelsteil Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -146,11 +146,11 @@ public class PrivateMessageAction extends Command
 			User recipient = DataAccessDriver.getInstance().newUserDAO().selectById(userId);
 			
 			this.context.put("pmRecipient", recipient);
-			this.context.put("toUserId", String.valueOf(recipient.getId()));
+			this.context.put("toUserId", new Integer(recipient.getId()));
 			this.context.put("toUsername", recipient.getUsername());
 			this.context.put("pageTitle", I18n.getMessage("PrivateMessage.title") 
-					+ " " + I18n.getMessage("PrivateMessage.to") 
-					+ " " + recipient.getUsername());
+				+ " " + I18n.getMessage("PrivateMessage.to") 
+				+ " " + recipient.getUsername());
 		}
 
 		this.sendFormCommon(user);

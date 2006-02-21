@@ -47,7 +47,6 @@ import java.util.List;
 import net.jforum.entities.Forum;
 import net.jforum.entities.ForumStats;
 import net.jforum.entities.LastPostInfo;
-import net.jforum.entities.Topic;
 
 /**
 * Model interface for {@link net.jforum.Forum}.
@@ -57,7 +56,7 @@ import net.jforum.entities.Topic;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: ForumDAO.java,v 1.8 2006/02/06 17:18:26 iper Exp $
+ * @version $Id: ForumDAO.java,v 1.9 2006/02/21 13:59:48 rafaelsteil Exp $
  */
 public interface ForumDAO 
 {

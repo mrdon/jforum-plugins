@@ -97,7 +97,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.140 2006/02/12 18:16:48 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.141 2006/02/21 13:59:49 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -271,6 +271,17 @@ public class PostAction extends Command
 		int topicId = this.request.getIntParameter("topic_id");
 		
 		if (SessionFacade.isLogged() && this.request.getParameter("poll_option") != null) {
+			Topic topic = TopicRepository.getTopic(new Topic(topicId));
+			
+			if (topic == null) {
+				topic = DataAccessDriver.getInstance().newTopicDAO().selectRaw(topicId);
+			}
+			
+			if (topic.getStatus() == Topic.STATUS_LOCKED) {
+				this.topicLocked();
+				return;
+			}
+			
 			// They voted, save the value
 			int optionId = this.request.getIntParameter("poll_option");
 			

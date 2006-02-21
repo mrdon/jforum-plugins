@@ -47,11 +47,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import net.jforum.SessionFacade;
 import net.jforum.dao.ForumDAO;
-import net.jforum.dao.TopicDAO;
 import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
 import net.jforum.entities.LastPostInfo;
@@ -61,13 +58,14 @@ import net.jforum.repository.ForumRepository;
 import net.jforum.util.concurrent.executor.QueuedExecutor;
 import net.jforum.util.mail.EmailSenderTask;
 import net.jforum.util.mail.ForumSpammer;
-import net.jforum.util.mail.TopicSpammer;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author Rafael Steil
- * @version $Id: ForumCommon.java,v 1.12 2006/02/06 17:18:27 iper Exp $
+ * @version $Id: ForumCommon.java,v 1.13 2006/02/21 13:59:48 rafaelsteil Exp $
  */
 public class ForumCommon 
 {

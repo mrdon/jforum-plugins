@@ -47,6 +47,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.Vector;
 
+import net.jforum.exceptions.ForumException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -62,24 +63,25 @@ import org.htmlparser.nodes.TextNode;
  * malicious tags and attributes.
  * 
  * @author Rafael Steil
- * @version $Id: SafeHtml.java,v 1.10 2005/12/03 20:57:23 rafaelsteil Exp $
+ * @version $Id: SafeHtml.java,v 1.11 2006/02/21 13:59:50 rafaelsteil Exp $
  */
 public class SafeHtml 
 {
 	private static final Logger logger = Logger.getLogger(SafeHtml.class);
-	private Set welcomeTags;
+	private static Set welcomeTags;
 	
-	public SafeHtml()
-	{
-		this.welcomeTags = new HashSet();
+	static {
+		welcomeTags = new HashSet();
 		String[] tags = SystemGlobals.getValue(ConfigKeys.HTML_TAGS_WELCOME).toUpperCase().split(",");
 
 		for (int i = 0; i < tags.length; i++) {
-			this.welcomeTags.add(tags[i].trim());
+			welcomeTags.add(tags[i].trim());
 		}
 	}
 	
-	private String processAllNodes(String contents) throws Exception
+	public SafeHtml() {}
+	
+	private String processAllNodes(String contents, boolean onlyEvaluateJs) throws Exception
 	{
 		StringBuffer sb = new StringBuffer(512);
 		
@@ -87,18 +89,23 @@ public class SafeHtml
 		Node node;
 		
 		while ((node = lexer.nextNode()) != null) {
-			if (this.isTagWelcome(node)) {
-				if (node instanceof TextNode) {
-					String text = node.toHtml();
-					
-					if (text.indexOf('>') > -1 || text.indexOf('<') > -1) {
-						text = text.replaceAll("<", "&lt;")
-							.replaceAll(">", "&gt;")
-							.replaceAll("\"", "&quot;");
-						node.setText(text);
-					}
-				}
+			boolean isTextNode = node instanceof TextNode;
 			
+			if (isTextNode) {
+				String text = node.toHtml();
+				
+				if (text.indexOf('>') > -1 || text.indexOf('<') > -1) {
+					text = text.replaceAll("<", "&lt;")
+						.replaceAll(">", "&gt;")
+						.replaceAll("\"", "&quot;");
+					node.setText(text);
+				}
+			}
+			else if (onlyEvaluateJs) {
+				this.checkAndValidateAttributes((Tag)node);
+			}
+			
+			if (isTextNode || onlyEvaluateJs || this.isTagWelcome(node)) {
 				sb.append(node.toHtml());
 			}
 			else {
@@ -111,12 +118,9 @@ public class SafeHtml
 	
 	private boolean isTagWelcome(Node node)
 	{
-		if (node instanceof TextNode) {
-			return true;
-		}
-		
 		Tag tag = (Tag)node;
-		if (!this.welcomeTags.contains(tag.getTagName())) {
+
+		if (!welcomeTags.contains(tag.getTagName())) {
 			return false;
 		}
 		
@@ -156,7 +160,27 @@ public class SafeHtml
 		
 		tag.setAttributesEx(newAttributes);
 	}
+	
+	/**
+	 * Given a string input, tries to avoid all javascript input
+	 * @param contents
+	 * @return the filtered data
+	 */
+	public static String avoidJavascript(String contents)
+	{
+		try {
+			return new SafeHtml().processAllNodes(contents, true);
+		}
+		catch (Exception e) {
+			throw new ForumException("Problems while parsing HTML: " + e, e);
+		}
+	}
 
+	/**
+	 * Parers a text and removes all unwanted tags and javascript code
+	 * @param contents the contents to parse
+	 * @return the filtered data
+	 */
 	public static String makeSafe(String contents)
 	{
 		if (contents == null || contents.trim().length() == 0) {
@@ -164,10 +188,10 @@ public class SafeHtml
 		}
 		
 		try {
-			contents = new SafeHtml().processAllNodes(contents);
+			contents = new SafeHtml().processAllNodes(contents, false);
 		}
 		catch (Exception e) {
-			logger.warn("Problems while parsing the HTML: " + e, e);
+			throw new ForumException("Problems while parsing HTML: " + e, e);
 		}
 		
 		return contents;
