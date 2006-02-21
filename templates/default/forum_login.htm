@@ -5,7 +5,7 @@
   <input type="hidden" name="action" value="validateLogin" />
   
   <#if returnPath?exists>
-  	<input type="hidden" name="returnPath" value="${returnPath}" />
+  	<input type="hidden" name="returnPath" value="${returnPath?html}" />
   </#if>
   
 <table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
