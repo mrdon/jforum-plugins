@@ -63,6 +63,7 @@
 		<!--
 			<input class="mainoption" type="button" value="${I18n.getMessage("Insert")}" onClick="document.location = '${contextPath}/jforum${extension}?module=adminUsers&action=insert';" />&nbsp;&nbsp;	
 		-->
+			<input class="mainoption" type="button" value="${I18n.getMessage("Insert")}" onClick="document.location = '${contextPath}/user/insert.page';" />&nbsp;&nbsp;	
 		</td>
 		<td class="catbottom">
 			<input class="mainoption" type="submit" value="${I18n.getMessage("Lock")} / ${I18n.getMessage("Unlock")}" name="submit" />
@@ -75,5 +76,3 @@
 		<td align="right"><#if thisPage?exists><@pagination.doPagination searchAction, searchId/></#if></td>
 	</tr>
 </table>
-
-

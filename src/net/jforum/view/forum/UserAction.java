@@ -79,7 +79,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.62 2006/02/01 00:32:56 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.63 2006/02/24 01:42:33 Silenius Exp $
  */
 public class UserAction extends Command 
 {
@@ -143,12 +143,15 @@ public class UserAction extends Command
 
 	public void insert() 
 	{
-		if (!SystemGlobals.getBoolValue(ConfigKeys.REGISTRATION_ENABLED)
+		int userId = SessionFacade.getUserSession().getUserId();
+
+		if ((!SystemGlobals.getBoolValue(ConfigKeys.REGISTRATION_ENABLED)
+				&& !SecurityRepository.get(userId).canAccess(SecurityConstants.PERM_ADMINISTRATION))
 				|| ConfigKeys.TYPE_SSO.equals(SystemGlobals.getValue(ConfigKeys.AUTHENTICATION_TYPE))) {
 			this.registrationDisabled();
 			return;
 		}
-		
+
 		this.setTemplateName(TemplateKeys.USER_INSERT);
 		this.context.put("action", "insertSave");
 		this.context.put("username", this.request.getParameter("username"));
@@ -165,12 +168,15 @@ public class UserAction extends Command
 
 	public void insertSave() throws Exception 
 	{
-		if (!SystemGlobals.getBoolValue(ConfigKeys.REGISTRATION_ENABLED)
+		int userId = SessionFacade.getUserSession().getUserId();
+
+		if ((!SystemGlobals.getBoolValue(ConfigKeys.REGISTRATION_ENABLED)
+				&& !SecurityRepository.get(userId).canAccess(SecurityConstants.PERM_ADMINISTRATION))
 				|| ConfigKeys.TYPE_SSO.equals(SystemGlobals.getValue(ConfigKeys.AUTHENTICATION_TYPE))) {
 			this.registrationDisabled();
 			return;
 		}
-		
+
 		User u = new User();
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 
@@ -223,7 +229,7 @@ public class UserAction extends Command
 			u.setActivationKey(MD5.crypt(username + System.currentTimeMillis()));
 		}
 
-		int userId = um.addNew(u);
+		int newUserId = um.addNew(u);
 
 		if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_USER_EMAIL_AUTH)) {
 			try {
@@ -239,8 +245,13 @@ public class UserAction extends Command
 			this.setTemplateName(TemplateKeys.USER_INSERT_ACTIVATE_MAIL);
 			this.context.put("message", I18n.getMessage("User.GoActivateAccountMessage"));
 		} 
+		else if(SecurityRepository.get(userId).canAccess(SecurityConstants.PERM_ADMINISTRATION)) {
+			JForumExecutionContext.setRedirect(this.request.getContextPath()
+					+ "/adminUsers/list"
+					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+		}
 		else {
-			this.logNewRegisteredUserIn(userId, u);
+			this.logNewRegisteredUserIn(newUserId, u);
 		}
 	}
 
