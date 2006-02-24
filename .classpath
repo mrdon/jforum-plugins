@@ -14,7 +14,7 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/jboss-system.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/postgresql-8.0-313.jdbc3.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/concurrent.jar"/>
-	<classpathentry sourcepath="C:/java/jcaptcha-src-1.0-RC2.0.1" kind="lib" path="WEB-INF/lib/jcaptcha-all-1.0-RC2.0.1.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/jcaptcha-all-1.0-RC2.0.1.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/quartz-1.5.1.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/commons-io-1.1.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/log4j-1.2.12.jar"/>
