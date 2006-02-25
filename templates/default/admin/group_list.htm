@@ -34,12 +34,12 @@
 	<#assign node = groups.get(i)>
 	<#global level = 0>
 	
-	<TR>
-	<TD class="row1"><SPAN class=gen><b>${node.name}</SPAN></TD>
-	<TD class="row1" align="center"><span class="gen"><a href="${contextPath}/${moduleName}/edit/${node.id}${extension}">${I18n.getMessage("Groups.List.Edit")}</a></span></TD>
+	<tr>
+	<td class="row1"><span class=gen>${node.name}</span></td>
+	<td class="row1" align="center"><span class="gen"><a href="${contextPath}/${moduleName}/edit/${node.id}${extension}">${I18n.getMessage("Groups.List.Edit")}</a></span></td>
 	<td class="row1" align="center"><input type="checkbox" name="group_id" value="${node.id}"></td>
-	<TD class="row1" align="center"><span class="gen"><a href="${contextPath}/${moduleName}/permissions/${node.id}${extension}">${I18n.getMessage("Permissions")}</a></span></TD>
-	</TR>
+	<td class="row1" align="center"><span class="gen"><a href="${contextPath}/${moduleName}/permissions/${node.id}${extension}">${I18n.getMessage("Permissions")}</a></span></td>
+	</tr>
 	
 	<@lib.listGroups node/>
 </#list>
