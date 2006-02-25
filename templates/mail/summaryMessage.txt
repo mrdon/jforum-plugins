@@ -10,3 +10,7 @@ ${post.text}
 -------------
 
 </#list>
+
+---
+Best regards,
+The JForum.net Team

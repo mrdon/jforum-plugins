@@ -18,17 +18,16 @@
 
 			<tr>
 				<td class="row1">
-					<table width="80%" align="center" cellpadding="0" cellspacing="1">
+					<table width="100%" align="center" cellpadding="0" cellspacing="0">
 						<tr>
-							<td colspan="2" class="catleft" align="center"><span class="gen"><b>${I18n.getMessage("Moderation.Admin.forumName")}</b></span></td>
+							<td class="catleft">&nbsp;<span class="gen"><b>${I18n.getMessage("Moderation.Admin.forumName")}</b></span></td>
 							<td class="catleft" align="center"><span class="gen"><b>${I18n.getMessage("Moderation.Admin.postsToModerate")}</b></span></td>
 							<td class="catleft" align="center"><span class="gen"><b>${I18n.getMessage("Moderation.Admin.action")}</b></span></td>
 						</tr>
 
 						<#list info.forums as f>
 							<tr>
-								<td>&nbsp;</td>
-								<td><span class="gen">${f.forumName}</span></td>
+								<td>&nbsp;<span class="gen">${f.forumName}</span></td>
 								<td align="center"><span class="gen">${f.postsToModerate}</span></td>
 								<td align="center"><a class="gen" href="${contextPath}/adminModeration/view/${f.forumId}${extension}">${I18n.getMessage("Moderation.Admin.view")}</a></td>
 							</tr>

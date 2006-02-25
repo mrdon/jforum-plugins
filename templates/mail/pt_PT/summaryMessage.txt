@@ -10,3 +10,6 @@ ${post.text}
 -------------
 
 </#list>
+
+---
+Powered by JForum.net

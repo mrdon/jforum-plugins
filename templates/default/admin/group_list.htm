@@ -22,10 +22,10 @@
 </#if>
 
 <tr>
-<td class='row2'><span class='gen'>${I18n.getMessage("Groups.List.groupName")}</span></td>
-<td class='row2'><span class='gen'>${I18n.getMessage("Action")}</span></td>
-<td class='row2'><span class='gen'>${I18n.getMessage("Delete")}</span></td>
-<td class='row2'><span class='gen'>${I18n.getMessage("Security")}</span></td>
+<td class='row2' width="38%"><span class='gen'><b>${I18n.getMessage("Groups.List.groupName")}</b></span></td>
+<td class='row2' align="center"><span class='gen'><b>${I18n.getMessage("Action")}</b></span></td>
+<td class='row2' align="center" width="10%"><span class='gen'><b>${I18n.getMessage("Delete")}</b></span></td>
+<td class='row2' align="center"><span class='gen'><b>${I18n.getMessage("Security")}</b></span></td>
 </tr>
 
 <#assign len = groups.size() - 1>
@@ -35,10 +35,10 @@
 	<#global level = 0>
 	
 	<TR>
-	<TD class=row1 width="38%"><SPAN class=gen><b>${node.name}</SPAN></TD>
-	<TD class=row2><span class="gen"><a href="${contextPath}/${moduleName}/edit/${node.id}${extension}">${I18n.getMessage("Groups.List.Edit")}</a></span></TD>
-	<td class="row2"><input type="checkbox" name="group_id" value="${node.id}"></td>
-	<TD class=row2><span class="gen"><a href="${contextPath}/${moduleName}/permissions/${node.id}${extension}">${I18n.getMessage("Permissions")}</a></span></TD>
+	<TD class="row1"><SPAN class=gen><b>${node.name}</SPAN></TD>
+	<TD class="row1" align="center"><span class="gen"><a href="${contextPath}/${moduleName}/edit/${node.id}${extension}">${I18n.getMessage("Groups.List.Edit")}</a></span></TD>
+	<td class="row1" align="center"><input type="checkbox" name="group_id" value="${node.id}"></td>
+	<TD class="row1" align="center"><span class="gen"><a href="${contextPath}/${moduleName}/permissions/${node.id}${extension}">${I18n.getMessage("Permissions")}</a></span></TD>
 	</TR>
 	
 	<@lib.listGroups node/>

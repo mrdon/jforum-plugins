@@ -6,7 +6,7 @@
 <input type="hidden" name="module" value="${moduleName}" />
 <input type="hidden" name="securityHash" value="${securityHash}" />
 
-<table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
+<table class="forumline" cellspacing="0" cellpadding="3" width="100%" border="0">
 	<tr>
 		<th class="thhead" valign="center" colspan="35 height="25">${I18n.getMessage("Category.List.Title")}</th>
 	</tr>
@@ -22,10 +22,10 @@
 	<#list categories as category>
 		<tr>
 			<td class="catleft" width="38%"><span class="cattitle">${category.name}</span></td>
-			<td class="catleft"><span class="gen"><a id="categoryEdit" href="${contextPath}/${moduleName}/edit/${category.id}${extension}">${I18n.getMessage("Category.List.Edit")}</a></span></td>
-			<td class="catleft"><input type="checkbox" name="categories_id" value="${category.id}" /></td>
+			<td class="catleft" align="center"><span class="gen"><a id="categoryEdit" href="${contextPath}/${moduleName}/edit/${category.id}${extension}">${I18n.getMessage("Category.List.Edit")}</a></span></td>
+			<td class="catleft" align="center" width="10%"><input type="checkbox" name="categories_id" value="${category.id}" /></td>
 			
-			<td class="catleft" align="right" width="8%">
+			<td class="catleft" align="center" width="10%">
 				<#if (counter > 1)>
 					<input type="button" value="${I18n.getMessage("up")}" class="mainoption" onClick="document.location = '${contextPath}/${moduleName}/up/${category.id}${extension}';">&nbsp;
 				<#else>	
@@ -33,7 +33,7 @@
 				</#if>
 			</td>
 
-			<td class="rowpic" align="right" width="10%">
+			<td class="rowpic" align="center" width="10%">
 				<#if (counter < categories.size())>
 					<input type="button" value="${I18n.getMessage("down")}" class="mainoption" onClick="document.location = '${contextPath}/${moduleName}/down/${category.id}${extension}';">&nbsp;
 				<#else>

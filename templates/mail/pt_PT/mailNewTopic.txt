@@ -6,3 +6,6 @@ pode usar o seguinte link para o ler:
 ${path}
 
 Se não desejar receber novas notificações sobre este fórum, aceda p.f. a ${unwatch}
+
+---
+Powered by JForum.net

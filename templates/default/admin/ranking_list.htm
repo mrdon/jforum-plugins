@@ -12,7 +12,7 @@
 </TR>
 
 <tr>
-<td class='row2' align="center"><span class='gen'><b>${I18n.getMessage("Rank.List.rankName")}</b></span></td>
+<td class='row2'><span class='gen'><b>${I18n.getMessage("Rank.List.rankName")}</b></span></td>
 <td class='row2' align="center"><span class='gen'><b>${I18n.getMessage("Rank.List.minPosts")}</b></span></td>
 <td class='row2' align="center"><span class='gen'><b>${I18n.getMessage("Action")}</b></span></td>
 <td class='row2' align="center"><span class='gen'><b>${I18n.getMessage("Delete")}</b></span></td>
@@ -20,10 +20,10 @@
 
 <#list ranks as rank>
 	<TR>
-	<TD class=row1 width="38%"><SPAN class=gen>${rank.title}</SPAN></TD>
+	<TD class="row1" width="38%"><SPAN class=gen>${rank.title}</SPAN></TD>
 	<TD width="26%" class="row1" align="center"><span class="gen">${rank.min}</span></TD>
-	<TD width="29%" class="row1" align="center"><span class="gen"><a href="${contextPath}/${moduleName}/edit/${rank.id}${extension}">${I18n.getMessage("Rank.List.Edit")}</a></span></TD>
-	<TD width="7%" class="row1" align="center"><input type="checkbox" name="rank_id" value="${rank.id}"></TD>
+	<TD width="26%" class="row1" align="center"><span class="gen"><a href="${contextPath}/${moduleName}/edit/${rank.id}${extension}">${I18n.getMessage("Rank.List.Edit")}</a></span></TD>
+	<TD width="10%" class="row1" align="center"><input type="checkbox" name="rank_id" value="${rank.id}"></TD>
 	</TR>
 </#list>
 
