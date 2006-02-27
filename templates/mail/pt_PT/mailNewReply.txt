@@ -9,6 +9,3 @@ ${path}
 Se desejar parar de receber notificações para este tópico, clique no link abaixo:
 
 ${unwatch}
-
----
-Powered by JForum.net

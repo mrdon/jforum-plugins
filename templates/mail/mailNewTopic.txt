@@ -6,7 +6,3 @@ and you can use the following URL to read it:
 ${path}
 
 If you no longer want to receive notifications for this forum, please access ${unwatch}
-
----
-Best regards,
-The JForum.net Team

@@ -6,4 +6,4 @@ Possui uma nova mensagem privada no ${website}. Pode lê-la clicando no link abai
 ${path}
 
 ---
-Powered by JForum.net
+Powered by jforum.net
