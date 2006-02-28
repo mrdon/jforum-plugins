@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -47,21 +47,19 @@ import java.util.List;
 import net.jforum.entities.User;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.view.forum.common.ViewCommon;
 import freemarker.template.SimpleHash;
 
 /**
  * @author James Young
- * @version $Id: ActivationKeySpammer.java,v 1.6 2005/07/26 03:05:56 rafaelsteil Exp $
+ * @version $Id: ActivationKeySpammer.java,v 1.7 2006/02/28 01:10:47 rafaelsteil Exp $
  */
 public class ActivationKeySpammer extends Spammer
 {
 	public ActivationKeySpammer(User u)
 	{
 		//gets the url to the forum.
-		String forumLink = SystemGlobals.getValue(ConfigKeys.FORUM_LINK);
-		if (!forumLink.endsWith("/")) {
-			forumLink += "/";
-		}
+		String forumLink = ViewCommon.getForumLink();
 
 		String url =  forumLink + "user/activateAccount/" + u.getActivationKey() 
 			+ "/" + u.getId() 

@@ -1,9 +1,6 @@
 <#setting number_format = "#"/>
 Olá ${user.username}, 
 
-Você possui uma nova mensagem privada no ${website}. Você pode lê-la clicando no link abaixo:
+Você possui uma nova mensagem privada no ${forumName}. Você pode lê-la clicando no link abaixo:
 
 ${path}
-
----
-Powered by jforum.net

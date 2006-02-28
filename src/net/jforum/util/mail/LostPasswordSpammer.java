@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -48,18 +48,16 @@ import java.util.List;
 import net.jforum.entities.User;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.view.forum.common.ViewCommon;
 import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: LostPasswordSpammer.java,v 1.12 2005/07/26 03:05:56 rafaelsteil Exp $
+ * @version $Id: LostPasswordSpammer.java,v 1.13 2006/02/28 01:10:47 rafaelsteil Exp $
  */
 public class LostPasswordSpammer extends Spammer {
 	public LostPasswordSpammer(User user, String mailTitle) {
-		String forumLink = SystemGlobals.getValue(ConfigKeys.FORUM_LINK);
-		if (!forumLink.endsWith("/")) {
-			forumLink += "/";
-		}
+		String forumLink = ViewCommon.getForumLink();
 
 		String url = forumLink + "user/recoverPassword/" 
 				+ user.getActivationKey() 
@@ -72,7 +70,7 @@ public class LostPasswordSpammer extends Spammer {
 		recipients.add(user.getEmail());
 
 		super.prepareMessage(recipients, params, 
-				mailTitle, 
-				SystemGlobals.getValue(ConfigKeys.MAIL_LOST_PASSWORD_MESSAGE_FILE));
+			mailTitle, 
+			SystemGlobals.getValue(ConfigKeys.MAIL_LOST_PASSWORD_MESSAGE_FILE));
 	}
 }

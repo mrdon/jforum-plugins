@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -48,11 +48,12 @@ import java.util.List;
 import net.jforum.entities.User;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.view.forum.common.ViewCommon;
 import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageSpammer.java,v 1.4 2005/07/26 03:05:57 rafaelsteil Exp $
+ * @version $Id: PrivateMessageSpammer.java,v 1.5 2006/02/28 01:10:47 rafaelsteil Exp $
  */
 public class PrivateMessageSpammer extends Spammer
 {
@@ -62,10 +63,7 @@ public class PrivateMessageSpammer extends Spammer
 			return;
 		}
 		
-		String forumLink = SystemGlobals.getValue(ConfigKeys.FORUM_LINK);
-		if (!forumLink.endsWith("/")) {
-			forumLink += "/";
-		}
+		String forumLink = ViewCommon.getForumLink();
 		
 		forumLink += "pm/inbox" + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
 		
@@ -77,7 +75,7 @@ public class PrivateMessageSpammer extends Spammer
 		recipients.add(user.getEmail());
 		
 		super.prepareMessage(recipients, params, 
-				SystemGlobals.getValue(ConfigKeys.MAIL_NEW_PM_SUBJECT),
-				SystemGlobals.getValue(ConfigKeys.MAIL_NEW_PM_MESSAGE_FILE));
+			SystemGlobals.getValue(ConfigKeys.MAIL_NEW_PM_SUBJECT),
+			SystemGlobals.getValue(ConfigKeys.MAIL_NEW_PM_MESSAGE_FILE));
 	}
 }

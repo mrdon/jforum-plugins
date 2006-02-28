@@ -51,11 +51,12 @@ import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.view.forum.common.ViewCommon;
 import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicSpammer.java,v 1.15 2005/11/10 21:59:12 almilli Exp $
+ * @version $Id: TopicSpammer.java,v 1.16 2006/02/28 01:10:47 rafaelsteil Exp $
  */
 public class TopicSpammer extends Spammer 
 {
@@ -74,13 +75,10 @@ public class TopicSpammer extends Spammer
 		String page = "";
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 		if (topic.getTotalReplies() > postsPerPage) {
-			page += (((topic.getTotalReplies() / postsPerPage)) * postsPerPage) + "/";
+			page += (((topic.getTotalReplies() / postsPerPage)) * postsPerPage) + '/';
 		}
 		
-		String forumLink = SystemGlobals.getValue(ConfigKeys.FORUM_LINK);
-		if (!forumLink.endsWith("/")) {
-			forumLink += "/";
-		}
+		String forumLink = ViewCommon.getForumLink();
 
 		String path = forumLink + "posts/list/" + page + topic.getId() 
 			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#" + topic.getLastPostId();

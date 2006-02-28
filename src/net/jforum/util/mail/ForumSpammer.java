@@ -52,6 +52,7 @@ import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.view.forum.common.ViewCommon;
 import freemarker.template.SimpleHash;
 
 /**
@@ -78,10 +79,7 @@ public class ForumSpammer extends Spammer
 			page += (((topic.getTotalReplies() / postsPerPage)) * postsPerPage) + "/";
 		}
 		
-		String forumLink = SystemGlobals.getValue(ConfigKeys.FORUM_LINK);
-		if (!forumLink.endsWith("/")) {
-			forumLink += "/";
-		}
+		String forumLink = ViewCommon.getForumLink();
 
 		String path = forumLink + "posts/list/" + page + topic.getId() 
 			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#" + topic.getLastPostId();

@@ -61,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericUserDAO.java,v 1.14 2006/02/01 23:10:05 rafaelsteil Exp $
+ * @version $Id: GenericUserDAO.java,v 1.15 2006/02/28 01:10:47 rafaelsteil Exp $
  */
 public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO 
 {
@@ -586,14 +586,15 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	 */
 	public boolean validateLostPasswordHash(String email, String hash) throws Exception
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.validateLostPasswordHash"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.validateLostPasswordHash"));
 		p.setString(1, hash);
 		p.setString(2, email);
 		
 		boolean status = false;
 		
 		ResultSet rs = p.executeQuery();
-		if (rs.next() && rs.getInt("valid") == 1) {
+		if (rs.next() && rs.getInt("valid") > 0) {
 			status = true;
 			
 			this.writeLostPasswordHash(email, "");

@@ -69,7 +69,7 @@ import net.jforum.view.forum.common.ViewCommon;
  * 
  * @author James Yong
  * @author Rafael Steil
- * @version $Id: RecentTopicsAction.java,v 1.15 2006/01/29 15:06:55 rafaelsteil Exp $
+ * @version $Id: RecentTopicsAction.java,v 1.16 2006/02/28 01:10:51 rafaelsteil Exp $
  */
 public class RecentTopicsAction extends Command 
 {
@@ -99,6 +99,7 @@ public class RecentTopicsAction extends Command
 
 		for (Iterator iter = tmpTopics.iterator(); iter.hasNext(); ) {
 			Topic t = (Topic)iter.next();
+			
 			if (TopicsCommon.isTopicAccessible(t.getForumId())) {
 				// Get name of forum that the topic refers to
 				Forum f = ForumRepository.getForum(t.getForumId());
@@ -108,6 +109,8 @@ public class RecentTopicsAction extends Command
 				iter.remove();
 			}
 		}
+		
+		this.request.removeAttribute("template");
 		
 		return TopicsCommon.prepareTopics(tmpTopics);
 	}

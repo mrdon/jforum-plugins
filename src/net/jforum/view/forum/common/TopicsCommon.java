@@ -77,7 +77,7 @@ import freemarker.template.SimpleHash;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.27 2006/02/13 19:15:13 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.28 2006/02/28 01:10:51 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
@@ -197,11 +197,14 @@ public class TopicsCommon
 	}
 	
 	/**
-	 * Checks if the user is allowed to view the topic
-	 * 
+	 * Checks if the user is allowed to view the topic.
+	 * If there currently logged user does not have access
+	 * to the forum, the template context will be set to show
+	 * an error message to the user, by calling
+	 * <blockquote>new ModerationHelper().denied(I18n.getMessage("PostShow.denied"))</blockquote>
 	 * @param forumId The forum id to which the topics belongs to
 	 * @return <code>true</code> if the topic is accessible, <code>false</code> otherwise
-	 * @throws Exception
+	 * @throws Exception a
 	 */
 	public static boolean isTopicAccessible(int forumId) throws Exception 
 	{

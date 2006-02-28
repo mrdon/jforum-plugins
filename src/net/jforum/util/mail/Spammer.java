@@ -70,7 +70,7 @@ import freemarker.template.Template;
  * each user.
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.20 2006/01/29 15:07:21 rafaelsteil Exp $
+ * @version $Id: Spammer.java,v 1.21 2006/02/28 01:10:47 rafaelsteil Exp $
  */
 public class Spammer
 {
@@ -189,6 +189,8 @@ public class Spammer
 			throws EmailException
 	{
 		this.message = new MimeMessage(session);
+		
+		params.put("forumName", SystemGlobals.getValue(ConfigKeys.FORUM_NAME));
 
 		try {
 			InternetAddress[] recipients = new InternetAddress[addresses.size()];
