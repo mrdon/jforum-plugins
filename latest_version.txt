@@ -1,5 +1,19 @@
-2.1.5
-Short description of the latest version
-<li> New feature 1
-<li> New feature 2
-<li> New feature 3
+2.1.6
+Fixed a set of small bugs that may interfer on the good working of the board: 
+<ul>
+	<li> Connection Poll causes exception when idle for a while
+	<li> XSS on some special circumstances
+	<li> BBCode print tags localization
+	<li> Mail templates now uses "forum name" instead of "JForum.net"
+	<li> Recent Topics RSS does not work if a private forum exists
+	<li> Syntax error in AjaxUtils.previewPost
+	<li> PostgreSQL scripts fixed
+</ul>
+
+Also, some new minor features were added or improved:
+<ul>
+	<li> Attachments box now display the real uploaded file name
+	<li> Administrators can create new users from the Admin Panel
+	<li> Administrators can create users even when registration is disabled
+	<li> Improved "Quick Reply" Javascript code
+</ul>
