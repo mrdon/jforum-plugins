@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -64,7 +64,7 @@ import freemarker.template.SimpleHash;
  * @see net.jforum.summary.SummaryScheduler
  * 
  * @author Franklin S. Dattein (<a href="mailto:franklin@hp.com">franklin@hp.com</a>)
- * @version $Id: SummaryModel.java,v 1.5 2005/07/31 04:07:33 rafaelsteil Exp $
+ * @version $Id: SummaryModel.java,v 1.6 2006/03/01 13:17:23 rafaelsteil Exp $
  */
 public class SummaryModel extends Spammer
 {
@@ -96,11 +96,6 @@ public class SummaryModel extends Spammer
 		params.put("url", forumLink);
 
 		String subject = SystemGlobals.getValue(ConfigKeys.MAIL_SUMMARY_SUBJECT);
-		
-		// FIXME: use real recipients
-		// recipients = null;
-		// recipients = new ArrayList();
-		// recipients.add("franklin@hp.com");
 
 		this.prepareMessage(recipients, params, subject, SystemGlobals.getValue(ConfigKeys.MAIL_SUMMARY_FILE));
 		super.dispatchMessages();

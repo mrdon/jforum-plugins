@@ -1,7 +1,7 @@
 // Helpline messages
-b_help = "${I18n.getMessage("PostForm.helplineBoldText")}: [n]${I18n.getMessage("PostForm.helplineText")}[/n]  (alt+b)";
+b_help = "${I18n.getMessage("PostForm.helplineBoldText")}: [b]${I18n.getMessage("PostForm.helplineText")}[/b]  (alt+b)";
 i_help = "${I18n.getMessage("PostForm.helplineItalicText")}: [i]${I18n.getMessage("PostForm.helplineText")}[/i]  (alt+i)";
-u_help = "${I18n.getMessage("PostForm.helplineUnderlineText")}: [s]${I18n.getMessage("PostForm.helplineText")}[/s]  (alt+u)";
+u_help = "${I18n.getMessage("PostForm.helplineUnderlineText")}: [u]${I18n.getMessage("PostForm.helplineText")}[/u]  (alt+u)";
 q_help = "${I18n.getMessage("PostForm.helplineQuote")}: [quote]${I18n.getMessage("PostForm.helplineText")}[/quote]  (alt+q)";
 c_help = "${I18n.getMessage("PostForm.helplineCode")}: [code]${I18n.getMessage("PostForm.helplineCode")}[/code]  (alt+c)";
 l_help = "${I18n.getMessage("PostForm.helplineList")}: [list]${I18n.getMessage("PostForm.helplineText")}[/list] (alt+l)";

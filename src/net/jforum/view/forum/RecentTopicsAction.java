@@ -69,7 +69,7 @@ import net.jforum.view.forum.common.ViewCommon;
  * 
  * @author James Yong
  * @author Rafael Steil
- * @version $Id: RecentTopicsAction.java,v 1.16 2006/02/28 01:10:51 rafaelsteil Exp $
+ * @version $Id: RecentTopicsAction.java,v 1.17 2006/03/01 13:17:22 rafaelsteil Exp $
  */
 public class RecentTopicsAction extends Command 
 {
@@ -87,7 +87,7 @@ public class RecentTopicsAction extends Command
 		this.context.put("pageTitle", I18n.getMessage("ForumBase.recentTopics"));
 
 		TopicsCommon.topicListingBase();
-		JForumExecutionContext.getRequest().setAttribute("template", null);
+		this.request.setAttribute("template", null);
 	}
 	
 	List topics() throws Exception
@@ -110,7 +110,7 @@ public class RecentTopicsAction extends Command
 			}
 		}
 		
-		this.request.removeAttribute("template");
+		JForumExecutionContext.getRequest().removeAttribute("template");
 		
 		return TopicsCommon.prepareTopics(tmpTopics);
 	}

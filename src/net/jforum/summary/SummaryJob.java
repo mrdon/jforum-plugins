@@ -47,6 +47,10 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+/**
+ * @author Franklin S. Dattein (<a href="mailto:franklin@hp.com">franklin@hp.com</a>)
+ * @version $Id: SummaryJob.java,v 1.5 2006/03/01 13:17:23 rafaelsteil Exp $
+ */
 public class SummaryJob implements Job
 {
 	private static Logger logger = Logger.getLogger(SummaryJob.class);

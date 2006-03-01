@@ -76,7 +76,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: RSSAction.java,v 1.23 2006/01/29 15:06:59 rafaelsteil Exp $
+ * @version $Id: RSSAction.java,v 1.24 2006/03/01 13:17:22 rafaelsteil Exp $
  */
 public class RSSAction extends Command 
 {
@@ -152,11 +152,12 @@ public class RSSAction extends Command
 	
 	public void recentTopics() throws Exception
 	{
-		String title = I18n.getMessage("RSS.RecentTopics.title");
+		String title = I18n.getMessage("RSS.RecentTopics.title", 
+			new Object[] { SystemGlobals.getValue(ConfigKeys.FORUM_NAME) });
 		String description = I18n.getMessage("RSS.RecentTopics.description");
 
 		RSSAware rss = new RecentTopicsRSS(title, description, 
-				new RecentTopicsAction().topics());
+			new RecentTopicsAction().topics());
 		this.context.put("rssContents", rss.createRSS());
 	}
 

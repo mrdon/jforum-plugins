@@ -65,74 +65,74 @@ import freemarker.template.Configuration;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumBaseServlet.java,v 1.17 2006/01/29 15:07:00 rafaelsteil Exp $
+ * @version $Id: JForumBaseServlet.java,v 1.18 2006/03/01 13:17:23 rafaelsteil Exp $
  */
-public class JForumBaseServlet extends HttpServlet 
+public class JForumBaseServlet extends HttpServlet
 {
 	private static Logger logger = Logger.getLogger(JForumBaseServlet.class);
-    protected boolean debug;
 
-    protected void startFrontController()
-    {
-    	try {
-	    	SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
-	        SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
-	        
-	        ConfigLoader.loadDaoImplementation();
-	        ConfigLoader.listenForChanges();
-	        ConfigLoader.startSearchIndexer();
-	        ConfigLoader.startSummaryJob();
-    	}
-    	catch (Exception e) {
-    		 throw new ForumStartupException("Error while starting JForum", e);
-    	}
-    }
+	protected boolean debug;
 
-    public void init(ServletConfig config) throws ServletException 
-    {
-        super.init(config);
+	protected void startFrontController()
+	{
+		try {
+			SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
+			SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
 
-        try {
-        	String appPath = config.getServletContext().getRealPath("");
-            debug = "true".equals(config.getInitParameter("development"));
-            
-            DOMConfigurator.configure(appPath + "/WEB-INF/log4j.xml");
-            
-            logger.info("Starting JForum. Debug mode is " + debug);
+			ConfigLoader.loadDaoImplementation();
+			ConfigLoader.listenForChanges();
+			ConfigLoader.startSearchIndexer();
+			ConfigLoader.startSummaryJob();
+		}
+		catch (Exception e) {
+			throw new ForumStartupException("Error while starting JForum", e);
+		}
+	}
 
-            ConfigLoader.startSystemglobals(appPath);
-            ConfigLoader.startCacheEngine();
+	public void init(ServletConfig config) throws ServletException
+	{
+		super.init(config);
 
-            // Configure the template engine
-            Configuration templateCfg = new Configuration();
-            templateCfg.setDirectoryForTemplateLoading(new File(SystemGlobals.getApplicationPath()
-                    + "/templates"));
-            templateCfg.setTemplateUpdateDelay(2);
+		try {
+			String appPath = config.getServletContext().getRealPath("");
+			debug = "true".equals(config.getInitParameter("development"));
+
+			DOMConfigurator.configure(appPath + "/WEB-INF/log4j.xml");
+
+			logger.info("Starting JForum. Debug mode is " + debug);
+
+			ConfigLoader.startSystemglobals(appPath);
+			ConfigLoader.startCacheEngine();
+
+			// Configure the template engine
+			Configuration templateCfg = new Configuration();
+			templateCfg.setDirectoryForTemplateLoading(new File(SystemGlobals.getApplicationPath() + "/templates"));
+			templateCfg.setTemplateUpdateDelay(2);
 			templateCfg.setSetting("number_format", "#");
 			templateCfg.setSharedVariable("startupTime", new Long(new Date().getTime()));
 
-            ModulesRepository.init(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR));
+			ModulesRepository.init(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR));
 
-            this.loadConfigStuff();
+			this.loadConfigStuff();
 
-            if (!this.debug) {
-                templateCfg.setTemplateUpdateDelay(3600);
-            }
+			if (!this.debug) {
+				templateCfg.setTemplateUpdateDelay(3600);
+			}
 
-            JForumExecutionContext.setTemplateConfig(templateCfg);
-        } 
-        catch (Exception e) {
-            throw new ForumStartupException("Error while starting JForum", e);
-        }
-    }
+			JForumExecutionContext.setTemplateConfig(templateCfg);
+		}
+		catch (Exception e) {
+			throw new ForumStartupException("Error while starting JForum", e);
+		}
+	}
 
-    protected void loadConfigStuff() throws Exception 
-    {
-        ConfigLoader.loadUrlPatterns();
-        I18n.load();
+	protected void loadConfigStuff() throws Exception
+	{
+		ConfigLoader.loadUrlPatterns();
+		I18n.load();
 		Tpl.load(SystemGlobals.getValue(ConfigKeys.TEMPLATES_MAPPING));
 
-        // BB Code
-        BBCodeRepository.setBBCollection(new BBCodeHandler().parse());
-    }
+		// BB Code
+		BBCodeRepository.setBBCollection(new BBCodeHandler().parse());
+	}
 }
