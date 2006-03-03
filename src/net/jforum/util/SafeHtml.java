@@ -59,27 +59,39 @@ import org.htmlparser.lexer.Lexer;
 import org.htmlparser.nodes.TextNode;
 
 /**
- * Process text with html and remove possible
- * malicious tags and attributes.
- * 
+ * Process text with html and remove possible malicious tags and attributes.
+ * Work based on tips from Amit Klein and the following documents:
+ * <br>
+ * <li>http://ha.ckers.org/xss.html
+ * <li>http://quickwired.com/kallahar/smallprojects/php_xss_filter_function.php
+ * <br>
  * @author Rafael Steil
- * @version $Id: SafeHtml.java,v 1.11 2006/02/21 13:59:50 rafaelsteil Exp $
+ * @version $Id: SafeHtml.java,v 1.12 2006/03/03 20:55:52 rafaelsteil Exp $
  */
 public class SafeHtml 
 {
 	private static final Logger logger = Logger.getLogger(SafeHtml.class);
 	private static Set welcomeTags;
+	private static Set welcomeAttributes;
 	
 	static {
 		welcomeTags = new HashSet();
-		String[] tags = SystemGlobals.getValue(ConfigKeys.HTML_TAGS_WELCOME).toUpperCase().split(",");
-
-		for (int i = 0; i < tags.length; i++) {
-			welcomeTags.add(tags[i].trim());
-		}
+		welcomeAttributes = new HashSet();
+		
+		splitAndTrim(ConfigKeys.HTML_TAGS_WELCOME, welcomeTags);
+		splitAndTrim(ConfigKeys.HTML_ATTRIBUTES_WELCOME, welcomeAttributes);
 	}
 	
 	public SafeHtml() {}
+	
+	private static void splitAndTrim(String s, Set data)
+	{
+		String[] tags = SystemGlobals.getValue(s).toUpperCase().split(",");
+
+		for (int i = 0; i < tags.length; i++) {
+			data.add(tags[i].trim());
+		}
+	}
 	
 	private String processAllNodes(String contents, boolean onlyEvaluateJs) throws Exception
 	{
@@ -92,6 +104,8 @@ public class SafeHtml
 			boolean isTextNode = node instanceof TextNode;
 			
 			if (isTextNode) {
+				// Text nodes are raw data, so we just
+				// strip off all possible html content
 				String text = node.toHtml();
 				
 				if (text.indexOf('>') > -1 || text.indexOf('<') > -1) {
@@ -132,26 +146,43 @@ public class SafeHtml
 	private void checkAndValidateAttributes(Tag tag)
 	{
 		Vector newAttributes = new Vector();
-
+		
 		for (Iterator iter = tag.getAttributesEx().iterator(); iter.hasNext(); ) {
 			Attribute a = (Attribute)iter.next();
 
 			String name = a.getName();
+			
 			if (name != null) {
-				name = name.toLowerCase();
-				if (("href".equals(name) || "src".equals(name)) && a.getValue() != null) {
-					if (a.getValue().toLowerCase().indexOf("javascript:") > -1) {
-						a.setValue("#");
+				name = name.toUpperCase();
+				
+				if (a.getValue() == null) {
+					newAttributes.add(a);
+					continue;
+				}
+				
+				if (!welcomeAttributes.contains(name) 
+					|| (name.length() >= 2 && name.charAt(0) == 'o' && name.charAt(1) == 'n')) {
+					continue;
+				}
+				
+				String value = a.getValue().toLowerCase();
+				
+				if (value.indexOf('\n') > -1 || value.indexOf('\r') > -1 
+					|| value.indexOf('\0') > -1 || value.indexOf(' ') > -1) {
+					continue;
+				}
+				
+				if (("HREF".equals(name) || "SRC".equals(name))) {
+					if (!value.startsWith("http://") && !value.startsWith("https://")) {
+						continue;
 					}
-					else if (a.getValue().indexOf("&#") > -1) {
-						a.setValue(a.getValue().replaceAll("&#", "&amp;#"));
-					}
+				}
 					
-					newAttributes.add(a);
+				if (a.getValue().indexOf("&#") > -1) {
+					a.setValue(a.getValue().replaceAll("&#", "&amp;#"));
 				}
-				else if (!name.startsWith("on") && !name.startsWith("style")) {
-					newAttributes.add(a);
-				}
+				
+				newAttributes.add(a);
 			}
 			else {
 				newAttributes.add(a);

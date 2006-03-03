@@ -48,7 +48,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.85 2006/02/06 17:18:24 iper Exp $
+* @version $Id: ConfigKeys.java,v 1.86 2006/03/03 20:55:52 rafaelsteil Exp $
 */
 
 public class ConfigKeys 
@@ -193,6 +193,7 @@ public class ConfigKeys
 	public static final String MAIL_NEW_TOPIC_SUBJECT = "mail.newTopic.subject";
 
 	public static final String HTML_TAGS_WELCOME = "html.tags.welcome";
+	public static final String HTML_ATTRIBUTES_WELCOME = "html.attributes.welcome";
 
 	public static final String SMILIE_IMAGE_DIR = "smilie.image.dir";
 	public static final String SMILIE_IMAGE_PATTERN = "smilie.image.pattern";
