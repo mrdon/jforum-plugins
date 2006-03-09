@@ -66,7 +66,7 @@ import org.htmlparser.nodes.TextNode;
  * <li>http://quickwired.com/kallahar/smallprojects/php_xss_filter_function.php
  * <br>
  * @author Rafael Steil
- * @version $Id: SafeHtml.java,v 1.12 2006/03/03 20:55:52 rafaelsteil Exp $
+ * @version $Id: SafeHtml.java,v 1.13 2006/03/09 15:38:33 rafaelsteil Exp $
  */
 public class SafeHtml 
 {
@@ -168,7 +168,7 @@ public class SafeHtml
 				String value = a.getValue().toLowerCase();
 				
 				if (value.indexOf('\n') > -1 || value.indexOf('\r') > -1 
-					|| value.indexOf('\0') > -1 || value.indexOf(' ') > -1) {
+					|| value.indexOf('\0') > -1) {
 					continue;
 				}
 				

@@ -44,6 +44,7 @@ package net.jforum.util.ajax;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import net.jforum.entities.Post;
 import net.jforum.util.SafeHtml;
@@ -57,7 +58,7 @@ import freemarker.template.SimpleHash;
  * General AJAX utility methods. 
  * 
  * @author Rafael Steil
- * @version $Id: AjaxUtils.java,v 1.6 2005/11/16 20:39:59 rafaelsteil Exp $
+ * @version $Id: AjaxUtils.java,v 1.7 2006/03/09 15:38:33 rafaelsteil Exp $
  */
 public class AjaxUtils
 {
@@ -90,8 +91,11 @@ public class AjaxUtils
 		
 		// Send the test mail
 		class TestSpammer extends Spammer {
-			public TestSpammer(final String to) {
-				super.prepareMessage(new ArrayList() {{ add(to); }}, null, "JForum Test Mail", null);
+			public TestSpammer(String to) {
+				List l = new ArrayList();
+				l.add(to);
+				
+				super.prepareMessage(l, new SimpleHash(), "JForum Test Mail", null);
 			}
 			
 			protected String getMessageText(SimpleHash params, String messageFile) throws Exception {

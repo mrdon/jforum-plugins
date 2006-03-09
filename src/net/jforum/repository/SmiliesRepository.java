@@ -45,16 +45,17 @@ package net.jforum.repository;
 import java.util.Iterator;
 import java.util.List;
 
-import net.jforum.JForumExecutionContext;
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.entities.Smilie;
 import net.jforum.exceptions.SmiliesLoadException;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SmiliesRepository.java,v 1.13 2006/01/29 15:07:18 rafaelsteil Exp $
+ * @version $Id: SmiliesRepository.java,v 1.14 2006/03/09 15:38:30 rafaelsteil Exp $
  */
 public class SmiliesRepository implements Cacheable
 {
@@ -86,12 +87,11 @@ public class SmiliesRepository implements Cacheable
 	{
 		List list = (List)cache.get(FQN, ENTRIES);
 		if (!contexted) {
-			String context = JForumExecutionContext.getRequest().getContextPath();
+			String forumLink = SystemGlobals.getValue(ConfigKeys.FORUM_LINK);
 			
 			for (Iterator iter = list.iterator(); iter.hasNext(); ) {
 				Smilie s = (Smilie)iter.next();
-				s.setUrl(s.getUrl().replaceAll("#CONTEXT#", context)
-						.replaceAll("\\\\", ""));
+				s.setUrl(s.getUrl().replaceAll("#CONTEXT#", forumLink).replaceAll("\\\\", ""));
 			}
 			
 			cache.add(FQN, ENTRIES, list);
