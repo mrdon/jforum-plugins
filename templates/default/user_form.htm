@@ -43,7 +43,7 @@ function validateForm()
 				<tr>
 					<td class="row2" align="center" colspan="2">
 						<span class="gens">
-							<b><font color="<#if warn?exists>red<#else>green</#if>">${message}</font></b>
+							<b><font color="<#if warns?exists>red<#else>green</#if>">${message}</font></b>
 						</span>
 					</td>
 				</tr>
@@ -223,6 +223,27 @@ function validateForm()
 						<span class="gen">${I18n.getMessage("User.no")}</span>
 					</td>
 				</tr>
+
+				<tr>
+					<td class="row1"><span class="gen">${I18n.getMessage("User.allowBbCode")}:</span></td>
+					<td class="row2">
+						<input type="radio" value="1" <#if u.isBbCodeEnabled()>checked="checked"</#if> name="allowbbcode" /> 
+						<span class="gen">${I18n.getMessage("User.yes")}</span>&nbsp;&nbsp; 
+						<input type="radio" <#if !u.isBbCodeEnabled()>checked="checked"</#if> value="0" name="allowbbcode" /> 
+						<span class="gen">${I18n.getMessage("User.no")}</span>
+					</td>
+				</tr>
+
+								<tr>
+					<td class="row1"><span class="gen">${I18n.getMessage("User.allowSmilies")}:</span></td>
+					<td class="row2">
+						<input type="radio" value="1" <#if u.isSmiliesEnabled()>checked="checked"</#if> name="allowsmilies" /> 
+						<span class="gen">${I18n.getMessage("User.yes")}</span>&nbsp;&nbsp; 
+						<input type="radio" <#if !u.isSmiliesEnabled()>checked="checked"</#if> value="0" name="allowsmilies" /> 
+						<span class="gen">${I18n.getMessage("User.no")}</span>
+					</td>
+				</tr>
+			
 				<tr>
 					<td class="row1"><span class="gen">${I18n.getMessage("User.langPreference")}:</span></td>
 					<td class="row2">

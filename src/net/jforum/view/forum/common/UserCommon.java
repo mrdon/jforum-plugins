@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -68,7 +68,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserCommon.java,v 1.13 2006/02/12 17:25:58 rafaelsteil Exp $
+ * @version $Id: UserCommon.java,v 1.14 2006/03/14 18:16:25 rafaelsteil Exp $
  */
 public class UserCommon 
 {
@@ -82,6 +82,8 @@ public class UserCommon
 	 */
 	public static List saveUser(int userId) throws Exception
 	{
+		List errors = new ArrayList();
+		
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		User u = um.selectById(userId);
 		
@@ -95,7 +97,6 @@ public class UserCommon
 		}
 		
 		u.setId(userId);
-		u.setEmail(SafeHtml.makeSafe(request.getParameter("email")));
 		u.setIcq(SafeHtml.makeSafe(request.getParameter("icq")));
 		u.setAim(SafeHtml.makeSafe(request.getParameter("aim")));
 		u.setMsnm(SafeHtml.makeSafe(request.getParameter("msn")));
@@ -112,6 +113,8 @@ public class UserCommon
 		u.setAttachSignatureEnabled(request.getParameter("attachsig").equals("1"));
 		u.setHtmlEnabled(request.getParameter("allowhtml").equals("1"));
 		u.setLang(request.getParameter("language"));
+		u.setBbCodeEnabled("1".equals(request.getParameter("allowbbcode")));
+		u.setSmiliesEnabled("1".equals(request.getParameter("allowsmilies")));
 		
 		String website = SafeHtml.makeSafe(request.getParameter("website"));
 		if (website != null && !"".equals(website.trim()) && !website.toLowerCase().startsWith("http://")) {
@@ -120,8 +123,23 @@ public class UserCommon
 	
 		u.setWebSite(website);
 		
-		if (request.getParameter("new_password") != null && request.getParameter("new_password").length() > 0) {
-			u.setPassword(MD5.crypt(request.getParameter("new_password")));
+		String currentPassword = request.getParameter("current_password");
+		
+		if (currentPassword != null && !"".equals(currentPassword.trim())) {
+			currentPassword = MD5.crypt(currentPassword);
+			
+			if (u.getPassword().equals(currentPassword)) {
+				u.setEmail(SafeHtml.makeSafe(request.getParameter("email")));
+				
+				String newPassword = request.getParameter("new_password");
+
+				if (newPassword != null && newPassword.length() > 0) {
+					u.setPassword(MD5.crypt(newPassword));
+				}
+			}
+			else {
+				errors.add(I18n.getMessage("User.currentPasswordInvalid"));
+			}
 		}
 		
 		if (request.getParameter("avatardel") != null) {
@@ -131,14 +149,13 @@ public class UserCommon
 			u.setAvatar(null);
 		}
 	
-		List warns = new ArrayList();
 		if (request.getObjectParameter("avatar") != null) {
 			try {
 				UserCommon.handleAvatar(u);
 			}
 			catch (Exception e) {
 				UserCommon.logger.warn("Problems while uploading the avatar: " + e);
-				warns.add(I18n.getMessage("User.avatarUploadError"));
+				errors.add(I18n.getMessage("User.avatarUploadError"));
 			}
 		}
 		else {
@@ -148,16 +165,18 @@ public class UserCommon
 					u.setAvatar(avatarUrl);
 				}
 				else {
-					warns.add(I18n.getMessage("User.avatarUrlShouldHaveHttp"));
+					errors.add(I18n.getMessage("User.avatarUrlShouldHaveHttp"));
 				}
 			}
 		}
 		
-		um.update(u);
+		if (errors.size() == 0) {
+			um.update(u);
+		}
 		
 		SessionFacade.getUserSession().setLang(u.getLang());
 		
-		return warns;
+		return errors;
 	}
 
 	/**

@@ -58,17 +58,6 @@
 						<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")} </a> 
             			-&gt; <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name} </a></span>
 					</td>
-					
-					<#if logged>
-					<td align="right" valign="middle">
-						<#if bookmarksEnabled>
-							&nbsp;
-							<a href="javascript:addBookmark(2, ${topic.id});" class="gen"><img src="${contextPath}/templates/${templateName}/images/icon_bookmark.gif" align="middle"  alt="XML" />&nbsp;${I18n.getMessage("Bookmarks.addTo")}</a>
-						</#if>
-						
-					</td>
-					</#if>
-
 					<td valign="middle" align="right"><#assign paginationData><@pagination.doPagination "list", topic.id/></#assign>${paginationData}</td>
 				</tr>
 			</table>
@@ -211,11 +200,6 @@
 					<td valign="middle" align="right">${paginationData}</td>
 				</tr>
 				
-				<tr>
-					<td colspan="3"><img src="${contextPath}/templates/${templateName}/images/spacer.gif" alt="" width="1" height="1" /></td>
-				</tr>
-
-
 				<#if (logged || anonymousPosts) && topic.status != STATUS_LOCKED>
 				<tr>
 					<td colspan="3">
@@ -231,7 +215,14 @@
 					document.getElementById("trQuickSubmit").style.display = (quick ? "" : "none");
 
 					if (quick) {
-						document.location = document.location + "#quick";
+						var url = document.location.toString();
+						var index = url.indexOf("#");
+
+						if (index > -1) {
+							url = url.substr(0, index);
+						}
+
+						document.location = url + "#quick";
 					}
 				}
 
@@ -249,7 +240,7 @@
 				-->
 				</script>
 
-				<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="post" id="post" onsubmit="return validatePostForm(this);" enctype="multipart/form-data"  accept-charset="${encoding}">
+				<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="post" id="post" onsubmit="return validatePostForm(this);" enctype="multipart/form-data" accept-charset="${encoding}">
 					<input type="hidden" name="action" value="insertSave" />
 					<input type="hidden" name="module" value="posts" />
 					<input type="hidden" name="securityHash" value="${securityHash}" />
@@ -260,24 +251,23 @@
 					<input type="hidden" name="quick" value="1" />
 		
 					<table width="100%">
-							<tr>
-								<td align="center">
-									<img src="${contextPath}/templates/${templateName}/images/icon_mini_message.gif" align="middle" alt="Message" />
-									<span class="nav"><a href="javascript:activateQuickReply()">${I18n.getMessage("PostForm.quickReply")}</a></span>
-								</td>
-							</tr>
-							<tr style="display: none;" id="trQuickBody">
-								<td align="center">
-									<textarea class="post" style="width: 350px" name="message" rows="10" cols="35" onkeyup="enterText(this);" onclick="enterText(this);" onselect="enterText(this);" onblur="leaveText();"></textarea>
-								</td>
-							</tr>
-
-							<tr style="display: none;" id="trQuickSubmit">
-								<td align="center">
-									<input type="submit" value="${I18n.getMessage("PostForm.submit")}" class="mainoption" />
-								</td>
-							</tr>
-						</table>
+						<tr>
+							<td align="center">
+								<img src="${contextPath}/templates/${templateName}/images/icon_mini_message.gif" align="middle" alt="Message" />
+								<span class="nav"><a href="javascript:activateQuickReply()">${I18n.getMessage("PostForm.quickReply")}</a></span>
+							</td>
+						</tr>
+						<tr style="display: none;" id="trQuickBody">
+							<td align="center">
+								<textarea class="post" style="width: 350px" name="message" rows="10" cols="35" onkeyup="enterText(this);" onclick="enterText(this);" onselect="enterText(this);" onblur="leaveText();"></textarea>
+							</td>
+						</tr>
+						<tr style="display: none;" id="trQuickSubmit">
+							<td align="center">
+								<input type="submit" value="${I18n.getMessage("PostForm.submit")}" class="mainoption" />
+							</td>
+						</tr>
+					</table>
 				</form>
 
 					</td>
@@ -295,24 +285,26 @@
 					<input type="hidden" id="moderationTodo" />
 
 					<tr>
-						<td colspan="3"><img src="${contextPath}/templates/${templateName}/images/spacer.gif" alt="" width="1" height="1" /></td>
-					</tr>
-					
-					<tr>
 						<td align="left" colspan="3">
 							<@presentation.moderationImages/>
 						</td>
 					</tr>
-
 					</form>
 				</#if>
 			</table>
 
 			<table cellspacing="0" cellpadding="0" width="100%" border="0">
 				<tr>
-					<td align="left">
+					<td align="left" valign="top">
 						<#if logged>
 							<span class="gensmall">
+							<!-- Bookmarks -->
+							<#if bookmarksEnabled>
+								<a href="javascript:addBookmark(2, ${topic.id});"><img src="${contextPath}/templates/${templateName}/images/icon_bookmark.gif" align="middle"  alt="XML" />&nbsp;${I18n.getMessage("Bookmarks.addTo")}</a>
+								<br>
+							</#if>
+							
+							<!-- Watch -->
 							<#assign watch = "watch"/>
 							<#assign watchMessage = I18n.getMessage("PostShow.watch")/>
 							<#if watching>

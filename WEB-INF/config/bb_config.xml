@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- $Id: bb_config.xml,v 1.22 2005/11/02 19:25:17 rafaelsteil Exp $ -->
+<!-- $Id: bb_config.xml,v 1.23 2006/03/14 18:16:25 rafaelsteil Exp $ -->
 <bbConfig>
 	<!-- CODE -->
 	<match name="code">
 		<regex>(?s)\[code\](.*?)\[/code\]</regex>
 		<replace>
 		<![CDATA[
-		
 		<span class="genmed"><b>Code:</b></span><br>
 		<div style="overflow: auto; width: 100%;">
 		<pre>$1</pre>

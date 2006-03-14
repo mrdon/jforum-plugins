@@ -79,7 +79,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.63 2006/02/24 01:42:33 Silenius Exp $
+ * @version $Id: UserAction.java,v 1.64 2006/03/14 18:16:25 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -129,8 +129,8 @@ public class UserAction extends Command
 			} 
 			else {
 				JForumExecutionContext.setRedirect(this.request.getContextPath()
-						+ "/user/editDone/" + userId
-						+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+					+ "/user/editDone/" + userId
+					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 			}
 		}
 	}

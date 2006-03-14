@@ -66,7 +66,7 @@ import org.htmlparser.nodes.TextNode;
  * <li>http://quickwired.com/kallahar/smallprojects/php_xss_filter_function.php
  * <br>
  * @author Rafael Steil
- * @version $Id: SafeHtml.java,v 1.13 2006/03/09 15:38:33 rafaelsteil Exp $
+ * @version $Id: SafeHtml.java,v 1.14 2006/03/14 18:16:27 rafaelsteil Exp $
  */
 public class SafeHtml 
 {
@@ -174,6 +174,13 @@ public class SafeHtml
 				
 				if (("HREF".equals(name) || "SRC".equals(name))) {
 					if (!value.startsWith("http://") && !value.startsWith("https://")) {
+						continue;
+					}
+				}
+				else if ("STYLE".equals(name)) {
+					// It is much more a try to not allow constructions
+					// like style="background-color: url(javascript:xxxx)" than anything else
+					if (value.indexOf('(') > -1) {
 						continue;
 					}
 				}

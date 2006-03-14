@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.29 2006/02/21 13:59:48 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.30 2006/03/14 18:16:25 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -99,6 +99,12 @@ public class PostCommon
 		// DO NOT remove the trailing blank space
 		p.setText(p.getText().replaceAll("\n", "<br/> "));
 		
+		// Because bbcodes may have attributes not allowed by "html.attributes.welcome", 
+		// we force the "style" attribute at least to be present, because the default
+		// JForum installation uses it sometimes
+		String originalAttributesWelcome = SystemGlobals.getValue(ConfigKeys.HTML_ATTRIBUTES_WELCOME);
+		SystemGlobals.setValue(ConfigKeys.HTML_ATTRIBUTES_WELCOME, originalAttributesWelcome + ",style");
+		
 		p.setText(alwaysProcess(p.getText(), BBCodeRepository.getBBCollection().getAlwaysProcessList()));
 
 		// Then, search for bb codes
@@ -113,6 +119,9 @@ public class PostCommon
 		
 		p.setText(SafeHtml.avoidJavascript(p.getText()));
 
+		// Restore html.attributes.welcome
+		SystemGlobals.setValue(ConfigKeys.HTML_ATTRIBUTES_WELCOME, originalAttributesWelcome);
+		
 		return p;
 	}
 	
@@ -185,9 +194,10 @@ public class PostCommon
 
 						if (lastIndex > index) {
 							sb.replace(index, lastIndex, replace.toString());
-							text = sb.toString();
 						}
 					}
+					
+					text = sb.toString();
 				}
 				else {
 					text = text.replaceAll(bb.getRegex(), bb.getReplace());
