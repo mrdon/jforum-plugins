@@ -58,7 +58,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ExceptionWriter.java,v 1.9 2006/01/29 15:07:16 rafaelsteil Exp $
+ * @version $Id: ExceptionWriter.java,v 1.10 2006/03/14 12:52:38 rafaelsteil Exp $
  */
 public class ExceptionWriter
 {
@@ -79,11 +79,11 @@ public class ExceptionWriter
 				message = t.getCause().getMessage();
 			}
 			
-			if (message == null) {
+			if (message == null || message.equals("")) {
 				message = t.getMessage();
 			}
 			
-			if (message == null) {
+			if (message == null || message.equals("")) {
 				message = t.toString();
 			}
 

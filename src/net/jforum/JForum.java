@@ -74,7 +74,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.90 2006/01/29 17:41:45 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.91 2006/03/14 12:52:38 rafaelsteil Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
@@ -128,11 +128,12 @@ public class JForum extends JForumBaseServlet
 		String encoding = SystemGlobals.getValue(ConfigKeys.ENCODING);
 
 		try {
-			// Request
-			request = new ActionServletRequest(req);
-
 			// Initializes the execution context
 			JForumExecutionContext ex = JForumExecutionContext.get();
+
+			// Request
+			request = new ActionServletRequest(req);
+			
 			ex.setRequest(request);
 			ex.setResponse(response);
 
