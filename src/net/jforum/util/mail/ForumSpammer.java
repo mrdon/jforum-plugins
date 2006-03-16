@@ -73,19 +73,11 @@ public class ForumSpammer extends Spammer
 		}
 		
 		// Make the topic url
-		StringBuffer page = new StringBuffer();
-		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
-		
-		if (topic.getTotalReplies() > postsPerPage) {
-			page.append(((topic.getTotalReplies() / postsPerPage)) * postsPerPage).append('/');
-		}
-		
 		String forumLink = ViewCommon.getForumLink();
 
 		StringBuffer path = new StringBuffer(128)
 			.append(forumLink)
 			.append("posts/list/")
-			.append(page.toString())
 			.append(topic.getId()) 
 			.append(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION))
 			.append('#')
