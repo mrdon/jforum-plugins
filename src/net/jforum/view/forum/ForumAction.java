@@ -74,7 +74,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.51 2006/02/07 14:17:37 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.52 2006/03/16 16:13:37 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -203,8 +203,8 @@ public class ForumAction extends Command
 		this.context.put("topicsToApprove", topicsToApprove);
 		
 		this.context.put("attachmentsEnabled", SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED,
-				Integer.toString(forumId)) 
-				|| SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD));
+			Integer.toString(forumId)) 
+			|| SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD));
 		
 		this.context.put("topics", TopicsCommon.prepareTopics(tmpTopics));
 		this.context.put("allCategories", ForumCommon.getAllCategoriesAndForums(false));
@@ -223,7 +223,7 @@ public class ForumAction extends Command
 		// Pagination
 		int topicsPerPage = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
-		int totalTopics = ForumRepository.getTotalTopics(forumId);
+		int totalTopics = forum.getTotalTopics();
 		
 		ViewCommon.contextToPagination(start, totalTopics, topicsPerPage);
 		this.context.put("postsPerPage", new Integer(postsPerPage));

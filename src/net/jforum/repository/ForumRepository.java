@@ -84,7 +84,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.48 2005/11/16 20:39:57 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.49 2006/03/16 16:13:36 rafaelsteil Exp $
  */
 public class ForumRepository implements Cacheable
 {
@@ -95,7 +95,6 @@ public class ForumRepository implements Cacheable
 	private static final String FQN = "forumRepository";
 	private static final String CATEGORIES_SET = "categoriesSet";
 	private static final String RELATION = "relationForums";
-	private static final String FQN_TOTAL_TOPICS = FQN + "/totalTopics";
 	private static final String FQN_MODERATORS = FQN + "/moderators";
 	private static final String TOTAL_MESSAGES = "totalMessages";
 	private static final String MOST_USERS_ONLINE = "mostUsersEverOnline";
@@ -638,42 +637,6 @@ public class ForumRepository implements Cacheable
 	}
 	
 	/**
-	 * Gets the number of topics in some forum.
-	 * 
-	 * @param forumId The forum's id to retrieve the number of topics
-	 * @param fromDb If <code>true</code>, a query to the database will be made 
-	 * to get the number of topics. If <code>false</code>, the cached information
-	 * will be returned
-	 * @return The number of topics
-	 * @throws Exception
-	 * @see #getTotalTopics(int)
-	 */
-	public static int getTotalTopics(int forumId, boolean fromDb) throws Exception
-	{
-		Integer i = (Integer)cache.get(FQN_TOTAL_TOPICS, Integer.toString(forumId));
-		int total = (i != null ? i.intValue() : 0);
-		
-		if (fromDb || total == -1) {
-			total = DataAccessDriver.getInstance().newForumDAO().getTotalTopics(forumId);
-			cache.add(FQN_TOTAL_TOPICS, Integer.toString(forumId), new Integer(total));
-		}
-		
-		return total;
-	}
-	
-	/**
-	 * Gets the number of topics in some forum.
-	 * @param forumId The forum's id to retrieve the number of topics
-	 * @return The number of topics
-	 * @throws Exception
-	 * @see #getTotalTopics(int, boolean)
-	 */
-	public static int getTotalTopics(int forumId) throws Exception
-	{
-		return ForumRepository.getTotalTopics(forumId, false); 
-	}
-	
-	/**
 	 * Gets the number of messages in the entire board.
 	 * @return 
 	 * @throws Exception
@@ -797,7 +760,6 @@ public class ForumRepository implements Cacheable
 			String forumId = Integer.toString(f.getId());
 			c.addForum(f);
 			m.put(forumId, catId);
-			cache.add(FQN_TOTAL_TOPICS, forumId, new Integer(-1));
 		}
 		
 		if (c != null) {
