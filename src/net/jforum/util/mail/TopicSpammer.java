@@ -56,7 +56,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicSpammer.java,v 1.16 2006/02/28 01:10:47 rafaelsteil Exp $
+ * @version $Id: TopicSpammer.java,v 1.17 2006/03/16 16:31:18 rafaelsteil Exp $
  */
 public class TopicSpammer extends Spammer 
 {
@@ -72,25 +72,35 @@ public class TopicSpammer extends Spammer
 		}
 		
 		// Make the topic url
-		String page = "";
+		StringBuffer page = new StringBuffer();
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
+		
 		if (topic.getTotalReplies() > postsPerPage) {
-			page += (((topic.getTotalReplies() / postsPerPage)) * postsPerPage) + '/';
+			page.append(((topic.getTotalReplies() / postsPerPage)) * postsPerPage).append('/');
 		}
 		
 		String forumLink = ViewCommon.getForumLink();
-
-		String path = forumLink + "posts/list/" + page + topic.getId() 
-			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#" + topic.getLastPostId();
 		
-		String unwatch = forumLink + "posts/unwatch/" + topic.getId()
-			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
+		StringBuffer path = new StringBuffer(128)
+			.append(forumLink)
+			.append("posts/list/")
+			.append(page.toString())
+			.append(topic.getId()) 
+			.append(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION))
+			.append('#')
+			.append(topic.getLastPostId());
+		
+		StringBuffer unwatch = new StringBuffer(128)
+			.append(forumLink)
+			.append("posts/unwatch/")
+			.append(topic.getId())
+			.append(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		
 		SimpleHash params = new SimpleHash();
 		params.put("topic", topic);
-		params.put("path", path);
+		params.put("path", path.toString());
 		params.put("forumLink", forumLink);
-		params.put("unwatch", unwatch);
+		params.put("unwatch", unwatch.toString());
 		
 		super.prepareMessage(recipients, params,
 			MessageFormat.format(SystemGlobals.getValue(ConfigKeys.MAIL_NEW_ANSWER_SUBJECT), new Object[] { topic.getTitle() }),
