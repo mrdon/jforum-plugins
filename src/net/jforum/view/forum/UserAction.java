@@ -79,7 +79,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.64 2006/03/14 18:16:25 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.65 2006/03/16 00:06:07 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -507,14 +507,13 @@ public class UserAction extends Command
 		
 		// Disable auto login
 		userSession.setAutoLogin(false);
-		userSession.setUserId(SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID));
+		userSession.makeAnonymous();
 
-		SessionFacade.setAttribute("logged", "0");
 		SessionFacade.add(userSession);
 
 		ControllerUtils.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN), null);
 		ControllerUtils.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA),
-				SystemGlobals.getValue(ConfigKeys.ANONYMOUS_USER_ID));
+			SystemGlobals.getValue(ConfigKeys.ANONYMOUS_USER_ID));
 	}
 
 	public void login() throws Exception 
