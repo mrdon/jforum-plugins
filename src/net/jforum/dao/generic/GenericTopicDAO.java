@@ -67,7 +67,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTopicDAO.java,v 1.8 2006/02/13 19:15:13 rafaelsteil Exp $
+ * @version $Id: GenericTopicDAO.java,v 1.9 2006/03/16 17:00:10 rafaelsteil Exp $
  */
 public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO 
 {
@@ -146,11 +146,12 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 	public void deleteTopics(List topics) throws Exception
 	{
 		// Topic
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("TopicModel.delete"));
-		ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
+				SystemGlobals.getSql("TopicModel.delete"));
+		ForumDAO forumDao = DataAccessDriver.getInstance().newForumDAO();
 		
-		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
-		PollDAO plm = DataAccessDriver.getInstance().newPollDAO();
+		PostDAO postDao = DataAccessDriver.getInstance().newPostDAO();
+		PollDAO pollDao = DataAccessDriver.getInstance().newPollDAO();
 		
 		for (Iterator iter = topics.iterator(); iter.hasNext(); ) {
 			Topic topic = (Topic)iter.next();
@@ -159,13 +160,16 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 			this.removeSubscriptionByTopic(topic.getId());
 
 			// Remove the messages
-			pm.deleteByTopic(topic.getId());
+			postDao.deleteByTopic(topic.getId());
 			
 			// Remove the poll
-			plm.deleteByTopicId(topic.getId());
-			
+			pollDao.deleteByTopicId(topic.getId());
+
+			// Delete the topic itself
 			p.setInt(1, topic.getId());
 			p.executeUpdate();
+			
+			forumDao.decrementTotalTopics(topic.getForumId(), 1);
 		}
 		
 		p.close();

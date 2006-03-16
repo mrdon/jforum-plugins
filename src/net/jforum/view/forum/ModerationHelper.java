@@ -68,7 +68,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationHelper.java,v 1.25 2006/01/29 15:06:56 rafaelsteil Exp $
+ * @version $Id: ModerationHelper.java,v 1.26 2006/03/16 17:00:10 rafaelsteil Exp $
  */
 public class ModerationHelper 
 {
@@ -142,7 +142,7 @@ public class ModerationHelper
 		
 		if (topics != null && topics.length > 0) {
 			for (int i = 0; i < topics.length; i++) {
-				Topic t = tm.selectById(Integer.parseInt(topics[i]));
+				Topic t = tm.selectRaw(Integer.parseInt(topics[i]));
 				
 				if (!forumsList.contains(new Integer(t.getForumId()))) {
 					forumsList.add(new Integer(t.getForumId()));
@@ -164,6 +164,7 @@ public class ModerationHelper
 				TopicRepository.clearCache(forumId);
 				
 				int postId = fm.getMaxPostId(forumId);
+				
 				if (postId > -1) {
 					fm.setLastPost(forumId, postId);
 				}
