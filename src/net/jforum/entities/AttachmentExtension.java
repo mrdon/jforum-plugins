@@ -44,7 +44,7 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentExtension.java,v 1.5 2005/12/23 20:36:57 rafaelsteil Exp $
+ * @version $Id: AttachmentExtension.java,v 1.6 2006/03/16 21:10:11 rafaelsteil Exp $
  */
 public class AttachmentExtension
 {	
@@ -103,7 +103,9 @@ public class AttachmentExtension
 	 */
 	public void setExtension(String extension)
 	{
-		this.extension = extension;
+		if (extension != null) {
+			this.extension = extension.toLowerCase();
+		}
 	}
 	
 	/**
