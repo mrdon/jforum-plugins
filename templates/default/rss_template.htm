@@ -8,7 +8,7 @@
 		<#list rss.itens as item>
 			<item>
 				<title>${item.title.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("&", "&amp;")}</title>
-				<description><![CDATA[ ${item.description}]]></description>
+				<description><![CDATA[ ${item.description?default("")}]]></description>
 				<#if (item.categories.size() > 0)>
 					<category><![CDATA[<#list item.categories as cat>${cat}, </#list>]]></category>
 				</#if>
