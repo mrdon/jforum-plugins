@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -61,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericAttachmentDAO.java,v 1.6 2006/01/29 15:06:23 rafaelsteil Exp $
+ * @version $Id: GenericAttachmentDAO.java,v 1.7 2006/03/17 12:00:14 rafaelsteil Exp $
  */
 public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.AttachmentDAO
 {

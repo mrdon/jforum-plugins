@@ -65,7 +65,7 @@ PostModel.addNewPost = INSERT INTO jforum_posts (post_id, topic_id, forum_id, us
 
 PostModel.addNewPostText = INSERT INTO jforum_posts_text ( post_text, post_id, post_subject ) VALUES (EMPTY_BLOB(), ?, ?)
 PostModel.addNewPostTextField = SELECT post_text from jforum_posts_text WHERE post_id = ? FOR UPDATE
-PostModel.updatePostText = UPDATE jforum_posts_text SET post_subject = ? WHERE post_id = ?
+PostModel.updatePostText = UPDATE jforum_posts_text SET post_subject = ?, post_text = EMPTY_BLOB() WHERE post_id = ?
 
 PostModel.lastGeneratedPostId = SELECT jforum_posts_seq.currval FROM DUAL
 
