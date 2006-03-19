@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: TopicRepository.java,v 1.25 2006/01/16 20:13:56 rafaelsteil Exp $
+ * @version $Id: TopicRepository.java,v 1.26 2006/03/19 23:03:00 rafaelsteil Exp $
  */
 public class TopicRepository implements Cacheable
 {
@@ -143,7 +143,7 @@ public class TopicRepository implements Cacheable
 		List l = (List)cache.get(FQN, RECENT);
 		
 		if (l == null || l.size() == 0
-				|| !SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
+			|| !SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
 			l = loadMostRecentTopics();
 		}
 		
@@ -171,25 +171,27 @@ public class TopicRepository implements Cacheable
 	 */
 	public static void addAll(int forumId, List topics)
 	{
-		synchronized (FQN_FORUM) {
-			cache.add(FQN_FORUM, Integer.toString(forumId), new LinkedList(topics));
-			
-			Map m = (Map)cache.get(FQN, RELATION);
-			
-			if (m == null) {
-				m = new HashMap();
-			}
-			
-			Integer fId = new Integer(forumId);
-			
-			for (Iterator iter = topics.iterator(); iter.hasNext(); ) {
-				Topic t = (Topic)iter.next();
+		if (SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
+			synchronized (FQN_FORUM) {
+				cache.add(FQN_FORUM, Integer.toString(forumId), new LinkedList(topics));
 				
-				m.put(new Integer(t.getId()), fId);
+				Map m = (Map)cache.get(FQN, RELATION);
+				
+				if (m == null) {
+					m = new HashMap();
+				}
+				
+				Integer fId = new Integer(forumId);
+				
+				for (Iterator iter = topics.iterator(); iter.hasNext(); ) {
+					Topic t = (Topic)iter.next();
+					
+					m.put(new Integer(t.getId()), fId);
+				}
+				
+				cache.add(FQN, RELATION, m);
+				cache.add(FQN_LOADED, Integer.toString(forumId), "1");
 			}
-			
-			cache.add(FQN, RELATION, m);
-			cache.add(FQN_LOADED, Integer.toString(forumId), "1");
 		}
 	}
 	
@@ -284,16 +286,18 @@ public class TopicRepository implements Cacheable
 	 */
 	public static void updateTopic(Topic topic)
 	{
-		synchronized (FQN_FORUM) {
-			String forumId = Integer.toString(topic.getForumId());
-			List l = (List)cache.get(FQN_FORUM, forumId);
-			
-			if (l != null) {
-				int index = l.indexOf(topic);
+		if (SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
+			synchronized (FQN_FORUM) {
+				String forumId = Integer.toString(topic.getForumId());
+				List l = (List)cache.get(FQN_FORUM, forumId);
 				
-				if (index > -1) {
-					l.set(index, topic);
-					cache.add(FQN_FORUM, forumId, l);
+				if (l != null) {
+					int index = l.indexOf(topic);
+					
+					if (index > -1) {
+						l.set(index, topic);
+						cache.add(FQN_FORUM, forumId, l);
+					}
 				}
 			}
 		}
@@ -306,24 +310,26 @@ public class TopicRepository implements Cacheable
 	 */
 	public static void remove(Topic topic)
 	{
-		synchronized (FQN_FORUM) {
-			if (topic.getForumId() == 0) {
-				throw new IllegalArgumentException("Forum id cannot be empty");
-			}
-			
-			String forumId = Integer.toString(topic.getForumId());
-			List l = (List)cache.get(FQN_FORUM, forumId);
-			
-			if (l != null) {
-				l.remove(topic);
-				cache.add(FQN_FORUM, forumId, l);
+		if (SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
+			synchronized (FQN_FORUM) {
+				if (topic.getForumId() == 0) {
+					throw new IllegalArgumentException("Forum id cannot be empty");
+				}
 				
-				// Relation
-				Map m = (Map)cache.get(FQN, RELATION);
+				String forumId = Integer.toString(topic.getForumId());
+				List l = (List)cache.get(FQN_FORUM, forumId);
 				
-				if (m != null) {
-					m.remove(new Integer(topic.getId()));
-					cache.add(FQN, RELATION, m);
+				if (l != null) {
+					l.remove(topic);
+					cache.add(FQN_FORUM, forumId, l);
+					
+					// Relation
+					Map m = (Map)cache.get(FQN, RELATION);
+					
+					if (m != null) {
+						m.remove(new Integer(topic.getId()));
+						cache.add(FQN, RELATION, m);
+					}
 				}
 			}
 		}
@@ -338,6 +344,10 @@ public class TopicRepository implements Cacheable
 	 */
 	public static Topic getTopic(Topic t)
 	{
+		if (!SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
+			return null;
+		}
+		
 		if (t.getForumId() == 0) {
 			Map m = (Map)cache.get(FQN, RELATION);
 			
@@ -373,6 +383,10 @@ public class TopicRepository implements Cacheable
 	 */
 	public static boolean isTopicCached(Topic topic)
 	{
+		if (!SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
+			return false;
+		}
+		
 		return ((List)cache.get(FQN_FORUM, Integer.toString(topic.getForumId()))).contains(topic);
 	}
 	

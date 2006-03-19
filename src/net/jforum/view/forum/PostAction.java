@@ -97,7 +97,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.141 2006/02/21 13:59:49 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.142 2006/03/19 23:03:01 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -940,17 +940,17 @@ public class PostAction extends Command
 				this.replyOnly();
 				return;
 			}
-		}
-		
-		if (this.request.getParameter("topic_type") != null) {
-			t.setType(this.request.getIntParameter("topic_type"));
 			
-			if (t.getType() != Topic.TYPE_NORMAL 
-					&& !SecurityRepository.canAccess(SecurityConstants.PERM_CREATE_STICKY_ANNOUNCEMENT_TOPICS)) {
-				t.setType(Topic.TYPE_NORMAL);
+			if (this.request.getParameter("topic_type") != null) {
+				t.setType(this.request.getIntParameter("topic_type"));
+				
+				if (t.getType() != Topic.TYPE_NORMAL 
+						&& !SecurityRepository.canAccess(SecurityConstants.PERM_CREATE_STICKY_ANNOUNCEMENT_TOPICS)) {
+					t.setType(Topic.TYPE_NORMAL);
+				}
 			}
 		}
-
+		
 		UserSession us = SessionFacade.getUserSession();
 		User u = new User();
 		
