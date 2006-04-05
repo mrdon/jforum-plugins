@@ -79,7 +79,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.65 2006/03/16 00:06:07 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.66 2006/04/05 00:40:37 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -497,8 +497,8 @@ public class UserAction extends Command
 	public void logout() throws Exception 
 	{
 		JForumExecutionContext.setRedirect(this.request.getContextPath()
-				+ "/forums/list"
-				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+			+ "/forums/list"
+			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 
 		UserSession userSession = SessionFacade.getUserSession();
 		SessionFacade.storeSessionData(userSession.getSessionId(), JForumExecutionContext.getConnection());
@@ -510,10 +510,6 @@ public class UserAction extends Command
 		userSession.makeAnonymous();
 
 		SessionFacade.add(userSession);
-
-		ControllerUtils.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN), null);
-		ControllerUtils.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA),
-			SystemGlobals.getValue(ConfigKeys.ANONYMOUS_USER_ID));
 	}
 
 	public void login() throws Exception 

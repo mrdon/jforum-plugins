@@ -46,6 +46,7 @@ import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.Date;
 
+import net.jforum.ControllerUtils;
 import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
 import net.jforum.repository.SecurityRepository;
@@ -62,7 +63,7 @@ import com.octo.captcha.image.ImageCaptcha;
  * Stores information about user's session.
  * 
  * @author Rafael Steil
- * @version $Id: UserSession.java,v 1.26 2006/01/29 15:07:08 rafaelsteil Exp $
+ * @version $Id: UserSession.java,v 1.27 2006/04/05 00:40:37 rafaelsteil Exp $
  */
 public class UserSession implements Serializable
 {
@@ -338,6 +339,10 @@ public class UserSession implements Serializable
 		this.setStartTime(new Date(System.currentTimeMillis()));
 		this.setLastVisit(new Date(System.currentTimeMillis()));
 		this.setUserId(SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID));
+		
+		ControllerUtils.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN), null);
+		ControllerUtils.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA),
+			SystemGlobals.getValue(ConfigKeys.ANONYMOUS_USER_ID));
 
 		SessionFacade.setAttribute("logged", "0");
 	}

@@ -97,7 +97,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.142 2006/03/19 23:03:01 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.143 2006/04/05 00:40:37 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -1398,6 +1398,113 @@ public class PostAction extends Command
 
 		return false;
 	}
+	
+	public void insertSave2() throws Exception
+	{
+		this.insertSave(1, true, "Teste insertSave2", 0, "teste", "Admin", "admin");
+	}
+	
+	private void insertSave(int forumId, boolean newTopic,
+			String subject, int topicId,
+			String body, String username, String password) throws Exception {
+		
+		boolean firstPost = false;
+		boolean moderate = false;
+		
+		TopicDAO topicDao = DataAccessDriver.getInstance().newTopicDAO();
+		PostDAO postDao = DataAccessDriver.getInstance().newPostDAO();
+		ForumDAO forumDao = DataAccessDriver.getInstance().newForumDAO();
+		UserDAO userDao = DataAccessDriver.getInstance().newUserDAO();
+		
+		Topic t = new Topic(-1);
+		t.setForumId(forumId);
+		
+		User u = null;
+		u = userDao.validateLogin(username, password);
+		
+		int userId = u.getId();
+		
+		if (!newTopic) {// replying message, get the topic t
+			t = TopicRepository.getTopic(new Topic(topicId));
+			if (t == null) {
+				t = topicDao.selectById(topicId);
+			}
+			
+			if (!TopicsCommon.isTopicAccessible(t.getForumId())) {
+				return;
+			}
+		} else {
+			t.setTime(new Date());
+			t.setTitle(subject);
+			t.setModerated(moderate);
+			t.setPostedBy(u);
+			t.setFirstPostTime(ViewCommon.formatDate(t.getTime()));
+			t.setType(Topic.TYPE_NORMAL); // now all agent post is norml
+			
+			topicId = topicDao.addNew(t);
+			
+			t.setId(topicId);
+			firstPost = true;
+		}
+		
+		// Set the Post
+		Post p = new Post();
+		p.setTime(new Date());
+		int postId = -1;
+		
+		p = PostCommon.fillPostFromRequest(p, false);
+		p.setForumId(forumId);
+		// the title of the post is same as the org post
+		if (p.getSubject() == null || p.getSubject() == "") {
+			p.setSubject(t.getTitle());
+		}
+		p.setText(body);
+		p.setTopicId(t.getId());
+		// Save the remaining stuff
+		p.setModerate(false);
+		
+		//set user ID
+		p.setUserId(userId);
+		
+		
+		postId = postDao.addNew(p);
+		
+		if (newTopic) {
+			t.setFirstPostId(postId);
+			
+		}
+		if (!moderate) {
+			t.setLastPostId(postId);
+			t.setLastPostBy(u);
+			t.setLastPostDate(p.getTime());
+			t.setLastPostTime(p.getFormatedTime());
+		}
+		
+		topicDao.update(t);
+		
+		if (!moderate) {
+			// Updates forum stats, cache and etc
+			if (!newTopic) {
+				TopicsCommon.notifyUsers(t, topicDao);
+				t.setTotalReplies(t.getTotalReplies() + 1);
+			} else {// notify "forum new topic" users
+				// ForumCommon.notifyUsers(forum, t, forumDao);
+			}
+			
+			t.setTotalViews(t.getTotalViews() + 1);
+			
+			//update user's post statistic
+			DataAccessDriver.getInstance().newUserDAO().incrementPosts(
+					p.getUserId());
+			
+			//update boards statistic
+			TopicsCommon.updateBoardStatus(t, postId, firstPost, topicDao,
+				forumDao);
+			
+			JForumExecutionContext.setRedirect(this.request.getContextPath() + "/posts/list/" + t.getId() + ".page");
+		}
+	}
+ 
 
 	private boolean anonymousPost(int forumId) throws Exception {
 		// Check if anonymous posts are allowed
