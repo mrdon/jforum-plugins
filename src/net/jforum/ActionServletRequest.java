@@ -64,7 +64,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: ActionServletRequest.java,v 1.30 2006/02/12 18:14:24 rafaelsteil Exp $
+ * @version $Id: ActionServletRequest.java,v 1.31 2006/04/08 14:45:41 rafaelsteil Exp $
  */
 public class ActionServletRequest extends HttpServletRequestWrapper 
 {
@@ -249,7 +249,11 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 		
 		String encoding = SystemGlobals.getValue(ConfigKeys.ENCODING);
 		
-		if ((("GET").equals(requestType) && (superRequest.getQueryString() == null)) 
+		boolean isQueryStringEmpty = (superRequest.getQueryString() == null 
+			|| "".equals(superRequest.getQueryString()));
+		
+		if ("GET".equals(requestType) 
+				&& isQueryStringEmpty 
 				&& requestUri.endsWith(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION))) {
 			superRequest.setCharacterEncoding(encoding); 
 			
