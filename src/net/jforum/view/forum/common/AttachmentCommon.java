@@ -80,11 +80,12 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.26 2006/01/16 15:00:44 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.27 2006/04/08 15:28:51 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {
 	private static Logger logger = Logger.getLogger(AttachmentCommon.class);
+	private static final String DENY_ALL = "*";
 	
 	private ActionServletRequest request;
 	private AttachmentDAO am;
@@ -144,13 +145,17 @@ public class AttachmentCommon
 			}
 			
 			UploadUtils uploadUtils = new UploadUtils(item);
-			
+
 			// Check if the extension is allowed
-			if (extensions.containsKey(uploadUtils.getExtension())) {
-				if (!((Boolean)extensions.get(uploadUtils.getExtension())).booleanValue()) {
-					throw new BadExtensionException(I18n.getMessage("Attachments.badExtension", 
-						new String[] { uploadUtils.getExtension() }));
-				}
+			boolean containsExtension = extensions.containsKey(uploadUtils.getExtension());
+			boolean denyAll = extensions.containsKey(DENY_ALL);
+
+			boolean isAllowed = (!denyAll && !containsExtension)
+				|| (containsExtension && extensions.get(uploadUtils.getExtension()).equals(Boolean.TRUE));
+
+			if (!isAllowed) { 
+				throw new BadExtensionException(I18n.getMessage("Attachments.badExtension", 
+					new String[] { uploadUtils.getExtension() }));
 			}
 
 			// Check comment length:

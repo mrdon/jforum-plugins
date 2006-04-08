@@ -58,7 +58,7 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentsAction.java,v 1.13 2006/01/20 15:02:20 rafaelsteil Exp $
+ * @version $Id: AttachmentsAction.java,v 1.14 2006/04/08 15:28:52 rafaelsteil Exp $
  */
 public class AttachmentsAction extends AdminCommand
 {
@@ -218,12 +218,14 @@ public class AttachmentsAction extends AdminCommand
 		// Check for records to delete
 		String[] delete = this.request.getParameterValues("delete");
 		List deleteList = new ArrayList();
+
 		if (delete != null) {
 			deleteList = Arrays.asList(delete);
 			am.removeExtensions(delete);
 		}
 		
 		int total = this.request.getIntParameter("total_records");
+
 		for (int i = 0; i < total; i++) {
 			if (deleteList.contains(this.request.getParameter("id_" + i))) {
 				continue;
@@ -251,6 +253,7 @@ public class AttachmentsAction extends AdminCommand
 		
 		for (int i = 0; i < total; i++) {
 			String l = this.request.getParameter("limit_" + i);
+			
 			if (l == null || l.equals("")) {
 				continue;
 			}
