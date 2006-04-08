@@ -70,7 +70,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: AdminAction.java,v 1.13 2006/01/29 15:07:13 rafaelsteil Exp $
+ * @version $Id: AdminAction.java,v 1.14 2006/04/08 14:15:21 rafaelsteil Exp $
  */
 public class AdminAction extends Command {
 
@@ -107,21 +107,25 @@ public class AdminAction extends Command {
 	
 	public void menu() throws Exception
 	{
-		this.setTemplateName(TemplateKeys.ADMIN_MENU);
+		if (this.checkAdmin()) {
+			this.setTemplateName(TemplateKeys.ADMIN_MENU);
+		}
 	}
 	
 	public void main() throws Exception
 	{
-		this.setTemplateName(TemplateKeys.ADMIN_MAIN);
-		
-		// Checks if the install module is still active
-		this.context.put("installModuleExists", ModulesRepository.getModuleClass("install") != null);
-		this.context.put("sessions", SessionFacade.getAllSessions());
-		
-		ForumDAO dao = DataAccessDriver.getInstance().newForumDAO();
-		this.context.put("stats", dao.getBoardStatus());
-		
-		this.checkBoardVersion();
+		if (this.checkAdmin()) {
+			this.setTemplateName(TemplateKeys.ADMIN_MAIN);
+			
+			// Checks if the install module is still active
+			this.context.put("installModuleExists", ModulesRepository.getModuleClass("install") != null);
+			this.context.put("sessions", SessionFacade.getAllSessions());
+			
+			ForumDAO dao = DataAccessDriver.getInstance().newForumDAO();
+			this.context.put("stats", dao.getBoardStatus());
+			
+			this.checkBoardVersion();
+		}
 	}
 	
 	private void checkBoardVersion()
