@@ -463,7 +463,7 @@ function validatePostForm(f)
 						<td class="row1" valign="middle"><span class="gen"><b>${I18n.getMessage("User.captchaResponse")}:</b></span></td>
 						<td class="row2">
 							<input class="post" style="WIDTH: 100px; font-weight: bold;" maxlength="25" size="25" name="captcha_anwser" /> 
-							<img src="${JForumContext.encodeURL("/captcha/generate")}" border="0" align="middle" alt="Captcha unavailable" />
+							<img src="${JForumContext.encodeURL("/captcha/generate/${timestamp}")}" border="0" align="middle" alt="Captcha unavailable" />
 						</td>
 					</tr>
 				</#if>
