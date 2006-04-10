@@ -64,10 +64,11 @@ import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.repository.ForumRepository;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTopicDAO.java,v 1.9 2006/03/16 17:00:10 rafaelsteil Exp $
+ * @version $Id: GenericTopicDAO.java,v 1.10 2006/04/10 22:45:30 vmal Exp $
  */
 public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO 
 {
@@ -303,7 +304,7 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 		throws Exception 
 	{
 		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("TopicModel.selectAllByForumByLimit"));
+				SystemGlobals.getSql("TopicModel.selectAllByForumByLimit").replaceAll(":fids:",ForumRepository.getListAllowedForums()));
 		p.setInt(1, forumId);
 		p.setInt(2, startFrom);
 		p.setInt(3, count);
@@ -317,7 +318,7 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 	public List selectByUserByLimit(int userId, int startFrom, int count) throws Exception
 	{
 		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("TopicModel.selectByUserByLimit"));
+				SystemGlobals.getSql("TopicModel.selectByUserByLimit").replaceAll(":fids:",ForumRepository.getListAllowedForums()));
 		
 		p.setInt(1,userId);
 		p.setInt(2, startFrom);
@@ -334,7 +335,7 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 		int total = 0;
 		
 		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("TopicModel.countUserTopics"));
+				SystemGlobals.getSql("TopicModel.countUserTopics").replaceAll(":fids:",ForumRepository.getListAllowedForums()));
 		p.setInt(1, userId);
 		
 		ResultSet rs = p.executeQuery();
@@ -418,7 +419,7 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 	{
 		List topics = new ArrayList();
 		
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("TopicModel.selectLastN"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("TopicModel.selectLastN").replaceAll(":fids:",ForumRepository.getListAllowedForums()));
 		p.setInt(1, count);
 		
 		ResultSet rs = p.executeQuery();
@@ -657,7 +658,7 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 	public List selectRecentTopics (int limit) throws Exception
 	{
 		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("TopicModel.selectRecentTopicsByLimit"));
+				SystemGlobals.getSql("TopicModel.selectRecentTopicsByLimit").replaceAll(":fids:",ForumRepository.getListAllowedForums()));
 		p.setInt(1, limit);
 		
 		return this.fillTopicsData(p);
@@ -727,7 +728,7 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 	public List selectTopicTitlesByIds(Collection idList) throws Exception
 	{
 		List l = new ArrayList();
-		String sql = SystemGlobals.getSql("TopicModel.selectTopicTitlesByIds");
+		String sql = SystemGlobals.getSql("TopicModel.selectTopicTitlesByIds").replaceAll(":fids:",ForumRepository.getListAllowedForums());
 		
 		StringBuffer sb = new StringBuffer(idList.size() * 2);
 		for (Iterator iter = idList.iterator(); iter.hasNext(); ) {

@@ -56,11 +56,12 @@ import net.jforum.entities.Post;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.search.SearchFacade;
+import net.jforum.repository.ForumRepository;
 
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericPostDAO.java,v 1.11 2006/01/29 15:06:20 rafaelsteil Exp $
+ * @version $Id: GenericPostDAO.java,v 1.12 2006/04/10 22:45:30 vmal Exp $
  */
 public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO 
 {
@@ -287,7 +288,7 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 	{
 		List l = new ArrayList();
 		
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.selectAllByTopicByLimit"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.selectAllByTopicByLimit").replaceAll(":fids:",ForumRepository.getListAllowedForums()));
 		p.setInt(1, topicId);
 		p.setInt(2, startFrom);
 		p.setInt(3, count);
@@ -310,7 +311,7 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 	public List selectByUserByLimit(int userId,int startFrom, int count) throws Exception
 	{
 		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("PostModel.selectByUserByLimit"));
+				SystemGlobals.getSql("PostModel.selectByUserByLimit").replaceAll(":fids:",ForumRepository.getListAllowedForums()));
 		
 		p.setInt(1,userId);
 		p.setInt(2, startFrom);
@@ -327,6 +328,26 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 		p.close();
 		
 		return l;
+	}
+
+	public int countUserPosts(int userId) throws Exception
+	{
+		int total = 0;
+		
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
+				SystemGlobals.getSql("PostModel.countUserPosts").replaceAll(":fids:",ForumRepository.getListAllowedForums()));
+		p.setInt(1, userId);
+		
+		ResultSet rs = p.executeQuery();
+		
+		if (rs.next()) {
+			total = rs.getInt(1);
+		}
+		
+		rs.close();
+		p.close();
+		
+		return total;
 	}
 	
 	/**

@@ -79,7 +79,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.66 2006/04/05 00:40:37 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.67 2006/04/10 22:45:31 vmal Exp $
  */
 public class UserAction extends Command 
 {
@@ -485,6 +485,7 @@ public class UserAction extends Command
 			this.context.put("pageTitle", I18n.getMessage("UserProfile.allAbout")+" "+u.getUsername());
 			this.context.put("nbookmarks", new Integer(count));
 			this.context.put("ntopics", new Integer(da.newTopicDAO().countUserTopics(u.getId())));
+			this.context.put("nposts", new Integer(da.newPostDAO().countUserPosts(u.getId())));
 		}
 	}
 	

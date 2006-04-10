@@ -50,8 +50,8 @@
 				<tr>
 					<td valign="top" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("UserProfile.totalMessages")}:&nbsp;</span></td>
 					<td valign="top">
-						<#if (u.totalPosts > 0)>
-							<b><a class="gen" href="${JForumContext.encodeURL("/posts/listByUser/${u.id}")}">[${u.totalPosts}] ${I18n.getMessage("PostShow.userPosts")} ${u.username?html}</a> </b>
+						<#if (nposts > 0)>
+							<b><a class="gen" href="${JForumContext.encodeURL("/posts/listByUser/${u.id}")}">[${nposts}] ${I18n.getMessage("PostShow.userPosts")} ${u.username?html}</a> </b>
 						<#else>
 							<span class="gen">${I18n.getMessage("PostShow.noUserCreatedPosts")}</span>
 						</#if>
