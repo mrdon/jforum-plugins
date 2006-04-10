@@ -58,12 +58,13 @@ import net.jforum.SessionFacade;
 import net.jforum.dao.SearchData;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.repository.ForumRepository;
 
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericSearchDAO.java,v 1.15 2006/02/21 16:19:11 rafaelsteil Exp $
+ * @version $Id: GenericSearchDAO.java,v 1.16 2006/04/10 23:11:01 vmal Exp $
  */
 public class GenericSearchDAO implements net.jforum.dao.SearchDAO	
 {
@@ -86,7 +87,7 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 			}
 		}
 
-		String sql = SystemGlobals.getSql("SearchModel.searchBase");
+		String sql = SystemGlobals.getSql("SearchModel.searchBase").replaceAll(":fids:",ForumRepository.getListAllowedForums());
 		StringBuffer criterias = new StringBuffer(512);
 
 		if (sd.getForumId() != 0) {
@@ -121,7 +122,7 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 	// Find topics by time
 	private void topicsByTime(SearchData sd) throws Exception
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.searchByTime"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.searchByTime").replaceAll(":fids:",ForumRepository.getListAllowedForums()));
 		p.setString(1, SessionFacade.getUserSession().getSessionId());
 		p.setTimestamp(2, new Timestamp(sd.getTime().getTime()));
 		p.executeUpdate();
@@ -214,6 +215,7 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 		// Search for the ids, inserting them in the helper table 
 		sql = SystemGlobals.getSql("SearchModel.insertTopicsIds");
 		sql = sql.replaceAll(":posts:", sb.toString());
+		sql = sql.replaceAll(":fids:",ForumRepository.getListAllowedForums());
 		
 		p = JForumExecutionContext.getConnection().prepareStatement(sql);
 		p.setString(1, SessionFacade.getUserSession().getSessionId());

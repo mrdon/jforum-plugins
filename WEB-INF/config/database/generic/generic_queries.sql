@@ -374,6 +374,7 @@ SearchModel.searchBase = SELECT t.*, p.user_id AS last_user_id, p.post_time, 0 A
 	FROM jforum_search_topics t, jforum_posts p :table_category: \
 	WHERE p.post_id = t.topic_last_post_id \
 	AND t.session_id = ? \
+	AND t.forum_id IN(:fids:) \
 	:criterias: \
 	ORDER BY :orderByField: :orderBy:
 	
@@ -390,7 +391,7 @@ SearchModel.searchByLikeWord = SELECT post_id FROM jforum_search_wordmatch wm, j
 	AND w.word LIKE ?
 	
 SearchModel.insertTopicsIds = INSERT INTO jforum_search_results ( topic_id, session_id, search_time ) SELECT DISTINCT t.topic_id, ?, NOW() FROM jforum_topics t, jforum_posts p \
-	WHERE t.topic_id = p.topic_id \
+	WHERE t.topic_id = p.topic_id AND t.forum_id IN(:fids:) \
 	AND p.post_id IN (:posts:)
 	
 SearchModel.selectTopicData = INSERT INTO jforum_search_topics (topic_id, forum_id, topic_title, user_id, topic_time, \
@@ -406,6 +407,7 @@ SearchModel.cleanSearchTopics = DELETE FROM jforum_search_topics WHERE session_i
 	
 SearchModel.searchByTime = INSERT INTO jforum_search_results (topic_id, session_id, search_time) SELECT DISTINCT t.topic_id, ?, NOW() FROM jforum_topics t, jforum_posts p \
 	WHERE t.topic_id = p.topic_id \
+	AND t.forum_id IN(:fids:) \
 	AND p.post_time > ?
 
 SearchModel.associateWordToPost = INSERT INTO jforum_search_wordmatch (post_id, word_id, title_match) \
