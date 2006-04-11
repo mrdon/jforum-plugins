@@ -97,7 +97,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.143 2006/04/05 00:40:37 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.144 2006/04/11 07:17:48 vmal Exp $
  */
 public class PostAction extends Command 
 {
@@ -320,7 +320,7 @@ public class PostAction extends Command
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 		
 		List posts = pm.selectByUserByLimit(u.getId(), start, postsPerPage);
-		int totalMessages = u.getTotalPosts();
+		int totalMessages = pm.countUserPosts(u.getId());
 		
 		// get list of forums
 		Map topics = new HashMap();
