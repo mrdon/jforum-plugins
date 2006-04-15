@@ -69,7 +69,7 @@ import freemarker.template.SimpleHash;
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.18 2006/04/08 15:40:20 rafaelsteil Exp $
+ * @version $Id: ControllerUtils.java,v 1.19 2006/04/15 19:26:35 rafaelsteil Exp $
  */
 public class ControllerUtils
 {
@@ -78,7 +78,7 @@ public class ControllerUtils
 	 * 
 	 * @param context The context to use
 	 */
-	public void prepareTemplateContext(SimpleHash context, JForumContext jforumcontext)
+	public void prepareTemplateContext(SimpleHash context, JForumContext jforumContext)
 	{
 		ActionServletRequest request = JForumExecutionContext.getRequest();
 		
@@ -101,7 +101,7 @@ public class ControllerUtils
 		context.put("homepageLink", SystemGlobals.getValue(ConfigKeys.HOMEPAGE_LINK));
 		context.put("encoding", SystemGlobals.getValue(ConfigKeys.ENCODING));
 		context.put("bookmarksEnabled", SecurityRepository.canAccess(SecurityConstants.PERM_BOOKMARKS_ENABLED));
-		context.put("JForumContext", jforumcontext);
+		context.put("JForumContext", jforumContext);
 		context.put("timestamp", new Long(System.currentTimeMillis()));
 	}
 

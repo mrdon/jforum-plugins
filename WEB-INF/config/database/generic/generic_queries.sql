@@ -358,7 +358,7 @@ TopicModel.selectByUserByLimit = SELECT t.*, p.user_id AS last_user_id, p.post_t
 	ORDER BY t.topic_last_post_id DESC \
 	LIMIT ?, ?
 
-TopicModel.countUserTopics = SELECT COUNT(*) AS total FROM jforum_topics t, jforum_posts p WHERE t.user_id = ? AND t.forum_id IN (:fids:) AND p.post_id = t.topic_first_post_id AND p.need_moderate = 0;
+TopicModel.countUserTopics = SELECT COUNT(1) AS total FROM jforum_topics t, jforum_posts p WHERE t.user_id = ? AND t.forum_id IN (:fids:) AND p.post_id = t.topic_first_post_id AND p.need_moderate = 0;
 	
 TopicModel.getFirstLastPostId = SELECT MIN(post_id) AS first_post_id, MAX(post_id) AS last_post_id FROM jforum_posts WHERE topic_id = ?
 TopicModel.fixFirstLastPostId = UPDATE jforum_topics SET topic_first_post_id = ?, topic_last_post_id = ? WHERE topic_id = ?

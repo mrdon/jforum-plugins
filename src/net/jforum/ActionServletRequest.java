@@ -64,7 +64,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: ActionServletRequest.java,v 1.31 2006/04/08 14:45:41 rafaelsteil Exp $
+ * @version $Id: ActionServletRequest.java,v 1.32 2006/04/15 19:26:35 rafaelsteil Exp $
  */
 public class ActionServletRequest extends HttpServletRequestWrapper 
 {
@@ -208,7 +208,7 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 	}
 	
 	private Map query;
-	private JForumContext jforumcontext;
+	private JForumContext jforumContext;
 	
 	/**
 	 * Default constructor.
@@ -505,11 +505,11 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 	
 	public JForumContext getJForumContext()
 	{
-		return this.jforumcontext;
+		return this.jforumContext;
 	}
 	
 	public void setJForumContext(JForumContext jforumcontext)
 	{
-		this.jforumcontext = jforumcontext;
+		this.jforumContext = jforumcontext;
 	}
 }
