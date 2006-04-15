@@ -97,7 +97,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.144 2006/04/11 07:17:48 vmal Exp $
+ * @version $Id: PostAction.java,v 1.145 2006/04/15 16:41:35 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -1112,9 +1112,11 @@ public class PostAction extends Command
 				
 				// Updates forum stats, cache and etc
 				if (!newTopic) {
-					TopicsCommon.notifyUsers(t, topicDao);
 					t.setTotalReplies(t.getTotalReplies() + 1);
-				}else{//notify "forum new topic" users
+					TopicsCommon.notifyUsers(t, topicDao);
+				}
+				else {
+					//notify "forum new topic" users
 					ForumCommon.notifyUsers(forum, t, forumDao);
 				}
 				

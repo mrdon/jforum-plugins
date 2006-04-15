@@ -56,7 +56,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicSpammer.java,v 1.17 2006/03/16 16:31:18 rafaelsteil Exp $
+ * @version $Id: TopicSpammer.java,v 1.18 2006/04/15 16:41:35 rafaelsteil Exp $
  */
 public class TopicSpammer extends Spammer 
 {
@@ -75,7 +75,7 @@ public class TopicSpammer extends Spammer
 		StringBuffer page = new StringBuffer();
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 		
-		if (topic.getTotalReplies() > postsPerPage) {
+		if (topic.getTotalReplies() >= postsPerPage) {
 			page.append(((topic.getTotalReplies() / postsPerPage)) * postsPerPage).append('/');
 		}
 		

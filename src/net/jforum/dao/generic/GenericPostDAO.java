@@ -61,7 +61,7 @@ import net.jforum.repository.ForumRepository;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericPostDAO.java,v 1.12 2006/04/10 22:45:30 vmal Exp $
+ * @version $Id: GenericPostDAO.java,v 1.13 2006/04/15 16:41:34 rafaelsteil Exp $
  */
 public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO 
 {
@@ -288,7 +288,10 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 	{
 		List l = new ArrayList();
 		
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.selectAllByTopicByLimit").replaceAll(":fids:",ForumRepository.getListAllowedForums()));
+		String sql = SystemGlobals.getSql("PostModel.selectAllByTopicByLimit");
+		sql = sql.replaceAll(":fids:",ForumRepository.getListAllowedForums());
+		
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(sql);
 		p.setInt(1, topicId);
 		p.setInt(2, startFrom);
 		p.setInt(3, count);
@@ -310,8 +313,10 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 	 */
 	public List selectByUserByLimit(int userId,int startFrom, int count) throws Exception
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("PostModel.selectByUserByLimit").replaceAll(":fids:",ForumRepository.getListAllowedForums()));
+		String sql = SystemGlobals.getSql("PostModel.selectByUserByLimit");
+		sql = sql.replaceAll(":fids:",ForumRepository.getListAllowedForums());
+		
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(sql);
 		
 		p.setInt(1,userId);
 		p.setInt(2, startFrom);

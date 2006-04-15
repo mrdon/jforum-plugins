@@ -68,7 +68,7 @@ import net.jforum.repository.ForumRepository;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTopicDAO.java,v 1.10 2006/04/10 22:45:30 vmal Exp $
+ * @version $Id: GenericTopicDAO.java,v 1.11 2006/04/15 16:41:34 rafaelsteil Exp $
  */
 public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO 
 {
@@ -303,8 +303,10 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 		int count)
 		throws Exception 
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("TopicModel.selectAllByForumByLimit").replaceAll(":fids:",ForumRepository.getListAllowedForums()));
+		String sql = SystemGlobals.getSql("TopicModel.selectAllByForumByLimit");
+		sql = sql.replaceAll(":fids:", ForumRepository.getListAllowedForums());
+		
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(sql);
 		p.setInt(1, forumId);
 		p.setInt(2, startFrom);
 		p.setInt(3, count);

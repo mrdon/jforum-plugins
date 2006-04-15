@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
 
  * Redistribution and use in source and binary forms, 
@@ -46,7 +46,7 @@ import java.util.List;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostgresqlUserDAO.java,v 1.4 2005/07/26 03:05:09 rafaelsteil Exp $
+ * @version $Id: PostgresqlUserDAO.java,v 1.5 2006/04/15 16:41:34 rafaelsteil Exp $
  */
 public class PostgresqlUserDAO extends net.jforum.dao.generic.GenericUserDAO
 {
@@ -67,6 +67,6 @@ public class PostgresqlUserDAO extends net.jforum.dao.generic.GenericUserDAO
 	 */
 	public List selectAllByGroup(int groupId, int start, int count) throws Exception
 	{
-		return super.selectAllByGroup(groupId, count, (start > 0 ? start + count : 0));
+		return super.selectAllByGroup(groupId, count, start);
 	}
 }

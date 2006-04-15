@@ -65,7 +65,7 @@ function validateForm()
 					<td class="row2">
 						<span class="gen">
 							<#if admin?default(false)>
-								<input type="text" name="username" value="${u.username?html}" />
+								<input class="post" type="text" name="username" value="${u.username?html}" />
 							<#else>
 								${u.username?html}
 							</#if>
