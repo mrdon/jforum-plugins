@@ -144,27 +144,6 @@ ForumModel.selectById = SELECT f.*, COUNT(p.post_id) AS total_posts \
 
 ForumModel.lastGeneratedForumId = SELECT IDENT_CURRENT('jforum_forums') AS forum_id
 
-
-
-# #############
-# TopicModel
-# #############
-TopicModel.selectLastN = \
-	DECLARE	@offset nvarchar(10), \
-			@items nvarchar(10) \
-	SET		@offset = ? \
-	SET		@items = ? \
-	EXEC ( \
-	 'SELECT TOP '+@items+' topic_title, topic_time, topic_id, topic_type ' \
-	+'FROM jforum_topics ' \
-	+'WHERE topic_id NOT IN (' \
-		+'SELECT TOP '+@offset+' topic_id ' \
-		+'FROM jforum_topics ' \
-		+'ORDER BY topic_time DESC '
-	+')' \
-	+'ORDER BY topic_time DESC ' \
-	)
-	
 TopicModel.selectByUserByLimit = \
 	DECLARE	@id nvarchar(10), \
 			@offset nvarchar(10), \

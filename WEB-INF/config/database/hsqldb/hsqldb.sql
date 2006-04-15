@@ -46,6 +46,7 @@ PostModel.selectByUserByLimit = SELECT LIMIT ? ? p.post_id, topic_id, forum_id, 
 	AND p.user_id = u.user_id \
 	AND p.user_id = ? \
 	AND p.need_moderate = 0 \
+	AND forum_id IN(:fids:) \
 	ORDER BY post_time DESC
 
 # ##########
@@ -82,6 +83,7 @@ TopicModel.selectByUserByLimit = SELECT LIMIT ? ? t.*, p.user_id AS last_user_id
 	WHERE p.post_id = t.topic_last_post_id \
 	AND t.user_id = ? \
 	AND p.need_moderate = 0 \
+	AND t.forum_id IN(:fids:) \
 	ORDER BY t.topic_last_post_id DESC
 
 # #####################

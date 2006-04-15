@@ -56,7 +56,7 @@ import net.jforum.entities.Topic;
  * select some specific data.
  *
  * @author Rafael Steil
- * @version $Id: TopicDAO.java,v 1.8 2005/09/12 21:05:24 rafaelsteil Exp $
+ * @version $Id: TopicDAO.java,v 1.9 2006/04/15 19:15:00 rafaelsteil Exp $
  */
 public interface TopicDAO 
 {
@@ -125,15 +125,6 @@ public interface TopicDAO
 	 * @throws Exception
 	 */
 	public int countUserTopics(int userId) throws Exception;
-
-	/**
-	 * Selects the last <code>count</code> topics postted. 
-	 * 
-	 * @param count The desired total to retrieve
-	 * @return <code>ArrayList</code> with all topics found. Each entry is a <code>net.jforum.Topic</code> object
-	 * @throws Exception
-	 */
-	public List selectLastN(int count) throws Exception;
 	
 	/**
 	 * Delete a Topic.

@@ -68,7 +68,7 @@ import net.jforum.repository.ForumRepository;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTopicDAO.java,v 1.11 2006/04/15 16:41:34 rafaelsteil Exp $
+ * @version $Id: GenericTopicDAO.java,v 1.12 2006/04/15 19:15:00 rafaelsteil Exp $
  */
 public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO 
 {
@@ -304,7 +304,6 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 		throws Exception 
 	{
 		String sql = SystemGlobals.getSql("TopicModel.selectAllByForumByLimit");
-		sql = sql.replaceAll(":fids:", ForumRepository.getListAllowedForums());
 		
 		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(sql);
 		p.setInt(1, forumId);
@@ -412,37 +411,6 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 		p.close();
 		
 		return total;
-	}
-
-	/** 
-	 * @see net.jforum.dao.TopicDAO#selectLastN(int)
-	 */
-	public List selectLastN(int count) throws Exception 
-	{
-		List topics = new ArrayList();
-		
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("TopicModel.selectLastN").replaceAll(":fids:",ForumRepository.getListAllowedForums()));
-		p.setInt(1, count);
-		
-		ResultSet rs = p.executeQuery();
-		
-		// If you want more fields here, just put the code. At the time
-		// this code was written, these were the only needed fields ;)
-		while (rs.next()) {
-			Topic t = new Topic();
-			
-			t.setTitle(rs.getString("topic_title"));
-			t.setId(rs.getInt("topic_id"));
-			t.setTime(rs.getTimestamp("topic_time"));
-			t.setType(rs.getInt("topic_type"));
-			
-			topics.add(t);
-		}
-		
-		rs.close();
-		p.close();
-		
-		return topics;
 	}
 	
 	/**
@@ -660,7 +628,7 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 	public List selectRecentTopics (int limit) throws Exception
 	{
 		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("TopicModel.selectRecentTopicsByLimit").replaceAll(":fids:",ForumRepository.getListAllowedForums()));
+				SystemGlobals.getSql("TopicModel.selectRecentTopicsByLimit"));
 		p.setInt(1, limit);
 		
 		return this.fillTopicsData(p);
@@ -730,7 +698,7 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 	public List selectTopicTitlesByIds(Collection idList) throws Exception
 	{
 		List l = new ArrayList();
-		String sql = SystemGlobals.getSql("TopicModel.selectTopicTitlesByIds").replaceAll(":fids:",ForumRepository.getListAllowedForums());
+		String sql = SystemGlobals.getSql("TopicModel.selectTopicTitlesByIds");
 		
 		StringBuffer sb = new StringBuffer(idList.size() * 2);
 		for (Iterator iter = idList.iterator(); iter.hasNext(); ) {

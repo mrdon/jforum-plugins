@@ -156,7 +156,6 @@ PostModel.selectAllByTopicByLimit = SELECT p.post_id, topic_id, forum_id, p.user
 	AND topic_id = ? \
 	AND p.user_id = u.user_id \
 	AND p.need_moderate = 0 \
-	AND forum_id IN(:fids:) \
 	ORDER BY post_time ASC \
 	LIMIT ?, ?
 
@@ -170,7 +169,8 @@ PostModel.selectByUserByLimit = SELECT p.post_id, topic_id, forum_id, p.user_id,
 	AND forum_id IN(:fids:) \
 	ORDER BY post_time DESC \
 	LIMIT ?, ?
-PostModel.countUserPosts = SELECT COUNT(*) AS total FROM jforum_posts where user_id = ? AND forum_id IN(:fids:) AND need_moderate = 0
+
+PostModel.countUserPosts = SELECT COUNT(1) AS total FROM jforum_posts where user_id = ? AND forum_id IN (:fids:) AND need_moderate = 0
 	
 	
 PostModel.setForumByTopic = UPDATE jforum_posts SET forum_id = ? WHERE topic_id = ?
@@ -292,7 +292,6 @@ TopicModel.selectAllByForumByLimit = SELECT t.*, p.user_id AS last_user_id, p.po
 	WHERE t.forum_id = ? \
 	AND p.post_id = t.topic_last_post_id \
 	AND p.need_moderate = 0 \
-	AND t.forum_id IN(:fids:) \
 	ORDER BY t.topic_type DESC, t.topic_last_post_id DESC \
 	LIMIT ?, ?
 
@@ -303,8 +302,7 @@ TopicModel.topicPosters = SELECT user_id, username, user_karma, user_avatar, use
 
 TopicModel.distinctPosters = SELECT DISTINCT user_id FROM jforum_posts WHERE topic_id = ?
 
-TopicModel.selectTopicTitlesByIds SELECT topic_id, topic_title FROM jforum_topics WHERE topic_id IN (:ids:) AND forum_id IN(:fids:)
-TopicModel.selectLastN = SELECT topic_title, topic_time, topic_id, topic_type FROM jforum_topics WHERE forum_id IN(:fids:) ORDER BY topic_time DESC LIMIT ?
+TopicModel.selectTopicTitlesByIds = SELECT topic_id, topic_title FROM jforum_topics WHERE topic_id IN (:ids:)
 TopicModel.setModerationStatus = UPDATE jforum_topics SET moderated = ? WHERE forum_id = ?
 TopicModel.setModerationStatusByTopic = UPDATE jforum_topics SET moderated = ? WHERE topic_id = ?
 TopicModel.deleteByForum = SELECT topic_id FROM jforum_topics where forum_id = ?
@@ -346,7 +344,6 @@ TopicModel.selectRecentTopicsByLimit = SELECT t.*, p.user_id AS last_user_id, p.
 	FROM jforum_topics t, jforum_posts p \
 	WHERE p.post_id = t.topic_last_post_id \
 	AND p.need_moderate = 0 \
-	AND t.forum_id IN(:fids:) \
 	ORDER BY topic_last_post_id DESC \
 	LIMIT ?
 

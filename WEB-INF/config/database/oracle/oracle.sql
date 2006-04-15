@@ -92,6 +92,7 @@ PostModel.selectByUserByLimit = SELECT * FROM ( \
 	AND p.user_id = u.user_id \
 	AND p.user_id = ? \
 	AND p.need_moderate = 0 \
+	AND forum_id IN(:fids:) \
 	ORDER BY post_time ASC \
 ) \
 WHERE LINENUM >= ? AND LINENUM < ?
@@ -103,6 +104,7 @@ TopicModel.selectByUserByLimit = SELECT * FROM ( \
 	WHERE p.post_id = t.topic_last_post_id \
 	AND t.user_id = ? \
 	AND p.need_moderate = 0 \
+	AND t.forum_id IN(:fids:) \
 	ORDER BY t.topic_last_post_id DESC \
 ) \
 WHERE LINENUM >= ? AND LINENUM < ?
@@ -161,13 +163,6 @@ TopicModel.notifyUsers = SELECT u.user_id AS user_id, u.username AS username, \
 
 TopicModel.lastGeneratedTopicId = SELECT jforum_topics_seq.currval FROM DUAL
 
-TopicModel.selectLastN = SELECT * FROM ( \
-    SELECT topic_title, topic_time, topic_id, topic_type, ROW_NUMBER() OVER(ORDER BY topic_time DESC) - 1 LINENUM \
-    FROM jforum_topics \
-    ORDER BY topic_time DESC \
-    ) \
-    WHERE LINENUM < ?
-
 TopicModel.topicPosters = SELECT user_id, username, user_karma, user_avatar, user_allowavatar, user_regdate, user_posts, user_icq, \
 	user_from, user_email, rank_id, user_sig, user_attachsig, user_viewemail, user_msnm, user_yim, user_website, user_sig, user_aim \
 	FROM jforum_users \
@@ -224,6 +219,7 @@ SearchModel.cleanSearchTopics = DELETE FROM jforum_search_topics WHERE session_i
 
 SearchModel.searchByTime = INSERT INTO jforum_search_results (topic_id, session_id, search_time) SELECT DISTINCT t.topic_id, ?, SYSDATE FROM jforum_topics t, jforum_posts p \
 	WHERE t.topic_id = p.topic_id \
+	AND t.forum_id IN(:fids:) \
 	AND p.post_time > ?
 
 # #############
