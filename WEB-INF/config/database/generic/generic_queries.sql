@@ -358,7 +358,7 @@ TopicModel.selectByUserByLimit = SELECT t.*, p.user_id AS last_user_id, p.post_t
 	ORDER BY t.topic_last_post_id DESC \
 	LIMIT ?, ?
 
-TopicModel.countUserTopics = SELECT COUNT(1) AS total FROM jforum_topics t, jforum_posts p WHERE t.user_id = ? AND t.forum_id IN (:fids:) AND p.post_id = t.topic_first_post_id AND p.need_moderate = 0;
+TopicModel.countUserTopics = SELECT COUNT(1) AS total FROM jforum_topics t, jforum_posts p WHERE t.user_id = ? AND t.forum_id IN (:fids:) AND p.post_id = t.topic_first_post_id AND p.need_moderate = 0
 	
 TopicModel.getFirstLastPostId = SELECT MIN(post_id) AS first_post_id, MAX(post_id) AS last_post_id FROM jforum_posts WHERE topic_id = ?
 TopicModel.fixFirstLastPostId = UPDATE jforum_topics SET topic_first_post_id = ?, topic_last_post_id = ? WHERE topic_id = ?
@@ -630,7 +630,7 @@ AttachmentModel.updateAttachment = UPDATE jforum_attach_desc SET description = ?
 AttachmentModel.removeAttachment = DELETE FROM jforum_attach WHERE attach_id = ?
 AttachmentModel.removeAttachmentInfo = DELETE FROM jforum_attach_desc WHERE attach_id = ?
 AttachmentModel.countPostAttachments = SELECT COUNT(1) FROM jforum_attach WHERE post_id = ?
-AttachmentModel.deleteGroupQuota = DELETE FROM jforum_attach_quota;
+AttachmentModel.deleteGroupQuota = DELETE FROM jforum_attach_quota
 AttachmentModel.setGroupQuota = INSERT INTO jforum_attach_quota (group_id, quota_limit_id) VALUES (?, ?)
 AttachmentModel.selectGroupsQuotaLimits = SELECT group_id, quota_limit_id FROM jforum_attach_quota
 
