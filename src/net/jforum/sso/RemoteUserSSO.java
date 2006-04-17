@@ -55,7 +55,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author Daniel Campagnoli
- * @version $Id: RemoteUserSSO.java,v 1.6 2006/04/15 16:41:35 rafaelsteil Exp $
+ * @version $Id: RemoteUserSSO.java,v 1.7 2006/04/17 04:01:49 campers Exp $
  */
 public class RemoteUserSSO implements SSO
 {
@@ -74,18 +74,17 @@ public class RemoteUserSSO implements SSO
 		// user has since logged out
 		if (remoteUser == null && userSession.getUserId() != SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
 			return false;
-
-			// user has since logged in
 		}
+		// user has since logged in
 		else if (remoteUser != null
 				&& userSession.getUserId() == SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
 			return false;
-
-			// user has changed user
 		}
+		// user has changed user
 		else if (remoteUser != null && !remoteUser.equals(userSession.getUsername())) {
 			return false;
 		}
-		return false;
+        
+		return true;
 	}
 }
