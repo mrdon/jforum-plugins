@@ -10,9 +10,22 @@ GenericModel.selectByLimit = SELECT TOP
 # UserModel
 # #############
 
-UserModel.selectAllByLimit = user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail \
-	FROM jforum_users ORDER BY username
-						  
+
+	
+
+UserModel.selectAllByLimit = \
+        DECLARE	@offset nvarchar(10), \
+	        @items nvarchar(10) \
+ 	SET	@offset = ? SET	@items = ? \
+ 	EXEC	( \
+ 	' SELECT	TOP '+@items+' user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail' \
+ 	+' FROM jforum_users u WHERE u.user_id NOT IN (' \
+ 	+' SELECT	TOP '+@offset+' u.user_id ' \
+ 	+' FROM jforum_users u ORDER BY u.user_id ) ORDER BY u.user_id ' \
+ 	)
+
+
+			  
 UserModel.selectAllByGroup = \
 	DECLARE	@id nvarchar(10), \
 			@offset nvarchar(10), \
@@ -40,25 +53,17 @@ UserModel.selectAllByGroup = \
 	
 UserModel.lastUserRegistered = SELECT TOP 1 user_id, username FROM jforum_users ORDER BY user_regdate DESC 
 
-UserModel.selectById = SELECT COUNT(pm.privmsgs_to_userid) AS private_messages, u.user_id, u.user_active, u.username, u.user_password, u.user_session_time, \
+####modify#####	
+UserModel.selectById = SELECT (SELECT COUNT(pm.privmsgs_to_userid) FROM jforum_privmsgs pm WHERE pm.privmsgs_to_userid = u.user_id ) AS private_messages \
+                                                                 , u.user_id, u.user_active, u.username, u.user_password, u.user_session_time, \
 								u.user_session_page, u.user_lastvisit, u.user_regdate, u.user_level, u.user_posts, u.user_timezone, u.user_style, \
 								u.user_lang, u.user_dateformat, u.user_new_privmsg, u.user_unread_privmsg, u.user_last_privmsg, u.user_emailtime, \
 								u.user_viewemail, u.user_attachsig, u.user_allowhtml, u.user_allowbbcode, u.user_allowsmilies, u.user_allowavatar, \
 								u.user_allow_pm, u.user_allow_viewonline, u.user_notify, u.user_notify_pm, u.user_popup_pm, u.rank_id, u.user_avatar, \
 								u.user_avatar_type, u.user_email, u.user_icq, u.user_website, u.user_from, CAST(u.user_sig as varchar) as user_sig , u.user_sig_bbcode_uid, \
 								u.user_aim, u.user_yim, u.user_msnm, u.user_occ, u.user_interests, u.user_actkey, u.gender, u.themes_id, u.deleted, \
-								u.user_viewonline, u.security_hash, u.user_karma \
-								FROM jforum_users u \
-								LEFT JOIN jforum_privmsgs pm ON pm.privmsgs_type = 1 AND pm.privmsgs_to_userid = u.user_id \
-								WHERE u.user_id = ? \
-								GROUP BY pm.privmsgs_to_userid, u.user_id, u.user_active, u.username, u.user_password, u.user_session_time, \
-								u.user_session_page, u.user_lastvisit, u.user_regdate, u.user_level, u.user_posts, u.user_timezone, u.user_style, \
-								u.user_lang, u.user_dateformat, u.user_new_privmsg, u.user_unread_privmsg, u.user_last_privmsg, u.user_emailtime, \
-								u.user_viewemail, u.user_attachsig, u.user_allowhtml, u.user_allowbbcode, u.user_allowsmilies, u.user_allowavatar, \
-								u.user_allow_pm, u.user_allow_viewonline, u.user_notify, u.user_notify_pm, u.user_popup_pm, u.rank_id, u.user_avatar, \
-								u.user_avatar_type, u.user_email, u.user_icq, u.user_website, u.user_from, CAST(u.user_sig as varchar), u.user_sig_bbcode_uid, \
-								u.user_aim, u.user_yim, u.user_msnm, u.user_occ, u.user_interests, u.user_actkey, u.gender, u.themes_id, u.deleted, \
-								u.user_viewonline, u.security_hash, u.user_karma
+								u.user_viewonline, u.security_hash, u.user_karma, user_biography \
+                                                                FROM jforum_users u WHERE u.user_id = ?
 								
 UserModel.lastUserRegistered = SELECT TOP 1 user_id, username FROM jforum_users ORDER BY user_regdate DESC
 UserModel.lastGeneratedUserId = SELECT IDENT_CURRENT('jforum_users') AS user_id
@@ -102,6 +107,7 @@ PostModel.selectByUserByLimit = \
 		+'AND p.user_id = u.user_id ' \
 		+'AND p.user_id = '+@id+' ' \
 		+'AND p.need_moderate = 0 ' \
+		+'AND forum_id IN(:fids:) '
 		+'ORDER BY post_time ASC ' \
 	+') ORDER BY post_time ASC ' \
 	)
@@ -144,6 +150,27 @@ ForumModel.selectById = SELECT f.*, COUNT(p.post_id) AS total_posts \
 
 ForumModel.lastGeneratedForumId = SELECT IDENT_CURRENT('jforum_forums') AS forum_id
 
+
+
+# #############
+# TopicModel
+# #############
+TopicModel.selectLastN = \
+	DECLARE	@offset nvarchar(10), \
+			@items nvarchar(10) \
+	SET		@offset = ? \
+	SET		@items = ? \
+	EXEC ( \
+	 'SELECT TOP '+@items+' topic_title, topic_time, topic_id, topic_type ' \
+	+'FROM jforum_topics ' \
+	+'WHERE topic_id NOT IN (' \
+		+'SELECT TOP '+@offset+' topic_id ' \
+		+'FROM jforum_topics ' \
+		+'ORDER BY topic_time DESC '
+	+')' \
+	+'ORDER BY topic_time DESC ' \
+	)
+	
 TopicModel.selectByUserByLimit = \
 	DECLARE	@id nvarchar(10), \
 			@offset nvarchar(10), \
@@ -263,11 +290,13 @@ SearchModel.insertTopicsIds = INSERT INTO jforum_search_results ( topic_id, sess
 SearchModel.searchByTime = INSERT INTO jforum_search_results (topic_id, session_id, search_time) SELECT DISTINCT t.topic_id, ?, GETDATE() FROM jforum_topics t, jforum_posts p \
 	WHERE t.topic_id = p.topic_id \
 	AND p.post_time > ?
-	
+
+
+####modify#####	
 SearchModel.selectTopicData = INSERT INTO jforum_search_topics (topic_id, forum_id, topic_title, user_id, topic_time, \
-	topic_views, topic_status, topic_replies, topic_vote, topic_type, topic_first_post_id, topic_last_post_id, moderated, session_id, search_time) \
+	topic_views, topic_status, topic_replies, topic_vote_id, topic_type, topic_first_post_id, topic_last_post_id, moderated, session_id, search_time) \
 	SELECT t.topic_id, t.forum_id, t.topic_title, t.user_id, t.topic_time, \
-	t.topic_views, t.topic_status, t.topic_replies, t.topic_vote, t.topic_type, t.topic_first_post_id, t.topic_last_post_id, t.moderated, ?, GETDATE() \
+	t.topic_views, t.topic_status, t.topic_replies, t.topic_vote_id, t.topic_type, t.topic_first_post_id, t.topic_last_post_id, t.moderated, ?, GETDATE() \
 	FROM jforum_topics t, jforum_search_results s \
 	WHERE t.topic_id = s.topic_id \
 	AND s.session_id = ?
@@ -316,3 +345,12 @@ KarmaModel.getMostRaterUserByPeriod = NO
 # AttachmentsModel
 #########
 AttachmentModel.lastGeneratedAttachmentId = SELECT IDENT_CURRENT('jforum_attach') AS attach_id 
+
+# ############# 
+# PollModel
+# #############
+# ADDED BY Chris 17:27 Fri. April 14 2006
+# BUG NOW() not supported 
+# FIX replaced NOW() with GETDATE()
+ PollModel.addNewPoll = INSERT INTO jforum_vote_desc (topic_id, vote_text, vote_length, vote_start) VALUES (?, ?, ?, GETDATE())
+ PollModel.lastGeneratedPollId = SELECT IDENT_CURRENT('jforum_vote_desc') AS vote_id 
