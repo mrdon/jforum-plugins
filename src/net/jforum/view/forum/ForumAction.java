@@ -74,7 +74,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.52 2006/03/16 16:13:37 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.53 2006/04/29 12:33:11 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -188,8 +188,11 @@ public class ForumAction extends Command
 		this.setTemplateName(TemplateKeys.FORUMS_SHOW);
 		
 		// Moderation
-		boolean canApproveMessages = (SessionFacade.isLogged() 
-			&& SessionFacade.getUserSession().isModerator(forumId)
+		UserSession userSession = SessionFacade.getUserSession();		
+		boolean isLogged = SessionFacade.isLogged();
+		boolean isModerator = userSession.isModerator(forumId);
+
+		boolean canApproveMessages = (isLogged && isModerator
 			&& SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_APPROVE_MESSAGES));
 		
 		Map topicsToApprove = new HashMap();
@@ -218,7 +221,7 @@ public class ForumAction extends Command
 		this.context.put("readonly", !SecurityRepository.canAccess(SecurityConstants.PERM_READ_ONLY_FORUMS, 
 				Integer.toString(forumId)));
 		
-		this.context.put("watching", fm.isUserSubscribed(forumId, SessionFacade.getUserSession().getUserId()));
+		this.context.put("watching", fm.isUserSubscribed(forumId, userSession.getUserId()));
 		
 		// Pagination
 		int topicsPerPage = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
@@ -229,6 +232,7 @@ public class ForumAction extends Command
 		this.context.put("postsPerPage", new Integer(postsPerPage));
 
 		TopicsCommon.topicListingBase();
+		this.context.put("moderator", isLogged && isModerator);
 	}
 
 	// Make an URL to some action
