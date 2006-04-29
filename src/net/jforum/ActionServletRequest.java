@@ -44,6 +44,7 @@ package net.jforum;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -64,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: ActionServletRequest.java,v 1.32 2006/04/15 19:26:35 rafaelsteil Exp $
+ * @version $Id: ActionServletRequest.java,v 1.33 2006/04/29 04:04:11 rafaelsteil Exp $
  */
 public class ActionServletRequest extends HttpServletRequestWrapper 
 {
@@ -224,7 +225,124 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 		boolean isMultipart = false;
 		
 		String requestType = (superRequest.getMethod()).toUpperCase();
-		String requestUri = superRequest.getRequestURI();
+		String contextPath = superRequest.getContextPath();
+		String requestUri = this.extractRequestUri(superRequest.getRequestURI(), contextPath);
+		String encoding = SystemGlobals.getValue(ConfigKeys.ENCODING);
+		String servletExtension = SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
+		
+		boolean isPost = "POST".equals(requestType);
+		boolean isGet = !isPost;
+		
+		boolean isQueryStringEmpty = (superRequest.getQueryString() == null 
+			|| superRequest.getQueryString().length() == 0);
+		
+		if (isGet && isQueryStringEmpty && requestUri.endsWith(servletExtension)) {
+			superRequest.setCharacterEncoding(encoding); 
+			
+			requestUri = requestUri.substring(0, requestUri.length() - servletExtension.length());
+			String[] urlModel = requestUri.split("/");
+			
+			int moduleIndex = 1;
+			int actionIndex = 2;
+			int baseLen = 3;
+			
+			UrlPattern url = null;
+			
+			if (urlModel.length >= baseLen) {
+				// <moduleName>.<actionName>.<numberOfParameters>
+				StringBuffer sb = new StringBuffer(64)
+					.append(urlModel[moduleIndex])
+					.append('.')
+					.append(urlModel[actionIndex])
+					.append('.')
+					.append(urlModel.length - baseLen);
+				
+				url = UrlPatternCollection.findPattern(sb.toString()); 
+			}
+
+			if (url != null) {
+				// We have parameters? 
+				if (url.getSize() >= urlModel.length - baseLen) {
+					for (int i = 0; i < url.getSize(); i++) {
+						this.addParameter(url.getVars()[i], urlModel[i + baseLen]);
+					}
+				}
+				
+				this.addParameter("module", urlModel[moduleIndex]);
+				this.addParameter("action", urlModel[actionIndex]);
+			}
+			else {
+				this.addParameter("module", null);
+				this.addParameter("action", null);
+			}
+		}
+		else if (isPost) {
+			isMultipart = ServletFileUpload.isMultipartContent(new ServletRequestContext(superRequest));
+			
+			if (isMultipart) {
+			    this.handleMultipart(superRequest, encoding);
+			}
+		}
+		
+		if (isMultipart == false) {
+			superRequest.setCharacterEncoding(encoding);
+			String containerEncoding = SystemGlobals.getValue(ConfigKeys.DEFAULT_CONTAINER_ENCODING);
+			
+			if (isPost) { 
+				containerEncoding = encoding;
+			}
+			
+			for (Enumeration e = superRequest.getParameterNames(); e.hasMoreElements(); ) {
+				String name = (String)e.nextElement();
+				this.query.put(name, new String(superRequest.getParameter(name).getBytes(containerEncoding), encoding));
+			}
+		}
+	}
+
+	/**
+	 * @param superRequest
+	 * @param encoding
+	 * @throws UnsupportedEncodingException
+	 */
+	private void handleMultipart(HttpServletRequest superRequest, String encoding) throws UnsupportedEncodingException
+	{
+		String tmpDir = new StringBuffer(256)
+		    .append(SystemGlobals.getApplicationPath())
+		    .append('/')
+		    .append(SystemGlobals.getValue(ConfigKeys.TMP_DIR))
+		    .toString();
+
+		ServletFileUpload upload = new ServletFileUpload(new DiskFileItemFactory(100 * 1024, new File(tmpDir)));
+		upload.setHeaderEncoding(encoding);
+
+		try {
+			List items = upload.parseRequest(superRequest);
+			
+			for (Iterator iter = items.iterator(); iter.hasNext(); ) {
+				FileItem item = (FileItem)iter.next();
+			
+				if (item.isFormField()) {
+					this.query.put(item.getFieldName(), item.getString(encoding));
+				}
+				else {
+					if (item.getSize() > 0) {
+						this.query.put(item.getFieldName(), item);
+					}
+				}
+			}
+		}
+		catch (FileUploadException e) {
+			throw new MultipartHandlingException("Error while processing multipart content: " + e);
+		}
+	}
+	
+	private String extractRequestUri(String requestUri, String contextPath)
+	{
+		// First, remove the context path from the requestUri, 
+		// so we can work only with the important stuff
+		if (contextPath != null && contextPath.length() > 0) {
+			requestUri = requestUri.substring(contextPath.length(), requestUri.length());
+		}
 		
 		// Remove the "jsessionid" (or similar) from the URI
 		// Probably this is not the right way to go, since we're
@@ -247,111 +365,7 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 			}
 		}
 		
-		String encoding = SystemGlobals.getValue(ConfigKeys.ENCODING);
-		
-		boolean isQueryStringEmpty = (superRequest.getQueryString() == null 
-			|| "".equals(superRequest.getQueryString()));
-		
-		if ("GET".equals(requestType) 
-				&& isQueryStringEmpty 
-				&& requestUri.endsWith(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION))) {
-			superRequest.setCharacterEncoding(encoding); 
-			
-			requestUri = requestUri.substring(0, requestUri.length() - SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION).length());
-			
-			String[] urlModel = requestUri.split("/");
-			
-			// If (context name is not null) {
-				// 0: empty
-				// 1: context name
-				// 2: module
-				// 3: action
-				// 4 .. n: request dependent data
-			// } else {
-				// 0: empty
-				// 1: module
-				// 2: action
-				// 3 .. n: request dependent data
-			// }
-			
-			int moduleIndex = 2;
-			int actionIndex = 3;
-			int baseLen = 4;
-			
-			String contextName = superRequest.getContextPath();
-			if ((contextName == null) || contextName.equals("")) {
-				moduleIndex = 1;
-				actionIndex = 2;
-				baseLen = 3;
-			}
-			
-			UrlPattern url = null;
-			
-			if (urlModel.length >= baseLen) {
-				// <moduleName>.<actionName>.<numberOfParameters>
-				url = UrlPatternCollection.findPattern(urlModel[moduleIndex] 
-					+ "." 
-					+ urlModel[actionIndex] 
-					+ "." 
-					+ (urlModel.length - baseLen));
-			}
-
-			if (url != null) {
-				// We have parameters? 
-				if (url.getSize() >= urlModel.length - baseLen) {
-					for (int i = 0; i < url.getSize(); i++) {
-						this.addParameter(url.getVars()[i], urlModel[i + baseLen]);
-					}
-				}
-				
-				this.addParameter("module", urlModel[moduleIndex]);
-				this.addParameter("action", urlModel[actionIndex]);
-			}
-			else {
-				this.addParameter("module", null);
-				this.addParameter("action", null);
-			}
-		}
-		else if (("POST").equals(requestType)) {
-			isMultipart = ServletFileUpload.isMultipartContent(new ServletRequestContext(superRequest));
-			if (isMultipart) {
-			    String tmpDir = SystemGlobals.getApplicationPath() + "/" + SystemGlobals.getValue(ConfigKeys.TMP_DIR);
-				ServletFileUpload upload = new ServletFileUpload(new DiskFileItemFactory(100 * 1024, new File(tmpDir)));
-				upload.setHeaderEncoding(encoding);
-		
-				try {
-					List items = upload.parseRequest(superRequest);
-					for (Iterator iter = items.iterator(); iter.hasNext(); ) {
-						FileItem item = (FileItem)iter.next();
-						if (item.isFormField()) {
-							this.query.put(item.getFieldName(), item.getString(encoding));
-						}
-						else {
-							if (item.getSize() > 0) {
-								this.query.put(item.getFieldName(), item);
-							}
-						}
-					}
-				}
-				catch (FileUploadException e) {
-					throw new MultipartHandlingException("Error while processing multipart content: " + e);
-				}
-			}
-		}
-		
-		if (isMultipart == false) {
-			superRequest.setCharacterEncoding(encoding);
-			String containerEncoding = SystemGlobals.getValue(ConfigKeys.DEFAULT_CONTAINER_ENCODING);
-			
-			if ("POST".equals(requestType)) { 
-				containerEncoding = encoding;
-			}
-			
-			for (Enumeration e = superRequest.getParameterNames(); e.hasMoreElements(); ) {
-				String name = (String)e.nextElement();
-				this.query.put(name, new String(superRequest.getParameter(name).getBytes(containerEncoding), encoding));
-			}
-		}
+		return requestUri;
 	}
 
 	/**
