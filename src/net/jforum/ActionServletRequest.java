@@ -65,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: ActionServletRequest.java,v 1.33 2006/04/29 04:04:11 rafaelsteil Exp $
+ * @version $Id: ActionServletRequest.java,v 1.34 2006/04/29 16:55:02 rafaelsteil Exp $
  */
 public class ActionServletRequest extends HttpServletRequestWrapper 
 {
@@ -306,13 +306,34 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 	 */
 	private void handleMultipart(HttpServletRequest superRequest, String encoding) throws UnsupportedEncodingException
 	{
-		String tmpDir = new StringBuffer(256)
+		String tmpPath = new StringBuffer(256)
 		    .append(SystemGlobals.getApplicationPath())
 		    .append('/')
 		    .append(SystemGlobals.getValue(ConfigKeys.TMP_DIR))
 		    .toString();
+		
+		File tmpDir = new File(tmpPath);
+		boolean success = false;
 
-		ServletFileUpload upload = new ServletFileUpload(new DiskFileItemFactory(100 * 1024, new File(tmpDir)));
+		try {
+			if (!tmpDir.exists()) {
+				tmpDir.mkdirs();
+				success = true;
+			}
+		}
+		catch (Exception e) {
+			// We won't log it because the directory
+			// creation failed for some reason - a SecurityException
+			// or something else. We don't care about it, as the
+			// code below tries to use java.io.tmpdir
+		}
+		
+		if (!success) {
+			tmpPath = System.getProperty("java.io.tmpdir");
+			tmpDir = new File(tmpPath);
+		}
+		
+		ServletFileUpload upload = new ServletFileUpload(new DiskFileItemFactory(100 * 1024, tmpDir));
 		upload.setHeaderEncoding(encoding);
 
 		try {
