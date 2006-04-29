@@ -43,6 +43,8 @@
 package net.jforum.repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -54,6 +56,7 @@ import net.jforum.cache.Cacheable;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.TopicDAO;
 import net.jforum.entities.Topic;
+import net.jforum.entities.TopicTypeComparator;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -62,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: TopicRepository.java,v 1.26 2006/03/19 23:03:00 rafaelsteil Exp $
+ * @version $Id: TopicRepository.java,v 1.27 2006/04/29 14:14:28 rafaelsteil Exp $
  */
 public class TopicRepository implements Cacheable
 {
@@ -73,6 +76,7 @@ public class TopicRepository implements Cacheable
 	private static final String FQN_FORUM = FQN + "/byforum";
 	private static final String RELATION = "relation";
 	private static final String FQN_LOADED = FQN + "/loaded";
+	private static final Comparator TYPE_COMPARATOR = new TopicTypeComparator();
 	
 	private static CacheEngine cache;
 	
@@ -230,6 +234,7 @@ public class TopicRepository implements Cacheable
 			else {
 				boolean contains = list.contains(topic);
 				
+				// If the cache is full, remove the eldest element
 				if (!contains && list.size() + 1 > maxItems) {
 					list.removeLast();
 				}
@@ -237,32 +242,9 @@ public class TopicRepository implements Cacheable
 					list.remove(topic);
 				}
 				
-				int index = 0;
+				list.add(topic);
 				
-				for (Iterator iter = list.iterator(); iter.hasNext(); index++) {
-					Topic current = (Topic)iter.next();
-					
-					if (current.getType() == Topic.TYPE_ANNOUNCE) {
-						if (topic.getType() == Topic.TYPE_ANNOUNCE) {
-							list.add(index, topic);
-							break;
-						}
-
-						continue;
-					}
-					
-					if (current.getType() == Topic.TYPE_STICKY) {
-						if (topic.getType() == Topic.TYPE_STICKY) {
-							list.add(index, topic);
-							break;
-						}
-						
-						continue;
-					}
-
-					list.add(index, topic);
-					break;
-				}
+				Collections.sort(list, TYPE_COMPARATOR);
 			}
 			
 			cache.add(FQN_FORUM, forumId, list);
