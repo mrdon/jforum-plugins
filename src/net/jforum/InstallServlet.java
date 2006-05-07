@@ -61,7 +61,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallServlet.java,v 1.22 2006/04/15 19:26:35 rafaelsteil Exp $
+ * @version $Id: InstallServlet.java,v 1.23 2006/05/07 14:56:20 rafaelsteil Exp $
  */
 public class InstallServlet extends JForumBaseServlet
 {
@@ -79,6 +79,8 @@ public class InstallServlet extends JForumBaseServlet
 	public void service(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException
 	{
 		try {
+			JForumExecutionContext ex = JForumExecutionContext.get();
+			
 			String encoding = SystemGlobals.getValue(ConfigKeys.ENCODING);
 			req.setCharacterEncoding(encoding);
 			
@@ -92,7 +94,6 @@ public class InstallServlet extends JForumBaseServlet
 			   response,
 			   false));
 			
-			JForumExecutionContext ex = JForumExecutionContext.get();
 			ex.setResponse(response);
 			ex.setRequest(request);
 	

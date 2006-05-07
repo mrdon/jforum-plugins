@@ -64,7 +64,7 @@ import net.jforum.util.preferences.TemplateKeys;
  * ViewHelper class for group administration.
  * 
  * @author Rafael Steil
- * @version $Id: GroupAction.java,v 1.18 2005/11/30 13:17:10 rafaelsteil Exp $
+ * @version $Id: GroupAction.java,v 1.19 2006/05/07 14:56:20 rafaelsteil Exp $
  */
 public class GroupAction extends AdminCommand 
 {
@@ -195,7 +195,7 @@ public class GroupAction extends AdminCommand
 		PermissionControl pc = new PermissionControl();
 		pc.setSecurityModel(gmodel);
 		
-		new PermissionProcessHelper(pc, id, true).processData();
+		new PermissionProcessHelper(pc, id).processData();
 
 		SecurityRepository.clean();
 		RolesRepository.clear();

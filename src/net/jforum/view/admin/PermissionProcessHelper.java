@@ -56,24 +56,19 @@ import net.jforum.security.RoleValueCollection;
 
 /**
  * @author Rafael Steil
- * @version $Id: PermissionProcessHelper.java,v 1.13 2006/01/29 15:07:13 rafaelsteil Exp $
+ * @version $Id: PermissionProcessHelper.java,v 1.14 2006/05/07 14:56:20 rafaelsteil Exp $
  */
 class PermissionProcessHelper 
 {
 	private PermissionControl pc;
 	private int id;
 	
-	public PermissionProcessHelper(PermissionControl pc, int id, boolean isGroup) throws Exception
+	public PermissionProcessHelper(PermissionControl pc, int id) throws Exception
 	{
 		this.id = id;
 		this.pc = pc;
 		
 		this.init();
-	}
-	
-	public PermissionProcessHelper(PermissionControl pc, int id) throws Exception
-	{
-		this(pc, id, false);
 	}
 	
 	public void processData() throws Exception
@@ -104,8 +99,8 @@ class PermissionProcessHelper
 				}
 				else {
 					String[] paramValues = request.getParameterValues(paramName);
-					
 					RoleValueCollection roleValues = new RoleValueCollection();
+
 					if (!"all".equals(paramValues[0])) {
 						// Deny
 						for (int i = 0; i < paramValues.length; i++) {
@@ -120,7 +115,7 @@ class PermissionProcessHelper
 					}
 					else {
 						this.addRoleValues(roleValues, this.getSplitedValues("all" + paramName), 
-								PermissionControl.ROLE_ALLOW);
+							PermissionControl.ROLE_ALLOW);
 					}
 					
 					Role role = new Role();
@@ -151,6 +146,7 @@ class PermissionProcessHelper
 	{
 		for (int i = 0; i < allValues.length; i++) {
 			String value = (String)allValues[i];
+			
 			if (value == null || value.equals("")) {
 				continue;
 			}
@@ -162,6 +158,7 @@ class PermissionProcessHelper
 	private RoleValue createRoleValue(String value, int type)
 	{
 		RoleValue rv = new RoleValue();
+		
 		rv.setType(type);
 		rv.setValue(value);
 		
