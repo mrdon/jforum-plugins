@@ -47,6 +47,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -61,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericUserDAO.java,v 1.15 2006/02/28 01:10:47 rafaelsteil Exp $
+ * @version $Id: GenericUserDAO.java,v 1.16 2006/05/14 23:59:49 rafaelsteil Exp $
  */
 public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO 
 {
@@ -165,7 +166,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 		u.setLastVisit(rs.getTimestamp("user_lastvisit"));
 		u.setOccupation(rs.getString("user_occ"));
 		u.setTotalPosts(rs.getInt("user_posts"));
-		u.setRegistrationDate(rs.getTimestamp("user_regdate"));
+		u.setRegistrationDate(new Date(rs.getTimestamp("user_regdate").getTime()));
 		u.setSignature(rs.getString("user_sig"));
 		u.setWebSite(rs.getString("user_website"));
 		u.setYim(rs.getString("user_yim"));
@@ -400,7 +401,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			u.setEmail(rs.getString("user_email"));
 			u.setId(rs.getInt("user_id"));
 			u.setTotalPosts(rs.getInt("user_posts"));
-			u.setRegistrationDate(rs.getTimestamp("user_regdate"));
+			u.setRegistrationDate(new Date(rs.getTimestamp("user_regdate").getTime()));
 			u.setUsername(rs.getString("username"));
 			u.setDeleted(rs.getInt("deleted"));
 			KarmaStatus karma = new KarmaStatus();

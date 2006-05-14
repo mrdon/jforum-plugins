@@ -45,6 +45,7 @@ package net.jforum.dao.generic;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -56,7 +57,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author David Almilli
- * @version $Id: GenericPollDAO.java,v 1.4 2006/01/29 15:06:24 rafaelsteil Exp $
+ * @version $Id: GenericPollDAO.java,v 1.5 2006/05/14 23:59:50 rafaelsteil Exp $
  */
 public class GenericPollDAO extends AutoKeys implements PollDAO {
 
@@ -149,7 +150,7 @@ public class GenericPollDAO extends AutoKeys implements PollDAO {
 		poll.setId(rs.getInt("vote_id"));
 		poll.setTopicId(rs.getInt("topic_id"));
 		poll.setLabel(rs.getString("vote_text"));
-		poll.setStartTime(rs.getTimestamp("vote_start"));
+		poll.setStartTime(new Date(rs.getTimestamp("vote_start").getTime()));
 		poll.setLength(rs.getInt("vote_length"));
 		
 		return poll;

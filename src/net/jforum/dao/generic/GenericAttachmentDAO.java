@@ -46,6 +46,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericAttachmentDAO.java,v 1.7 2006/03/17 12:00:14 rafaelsteil Exp $
+ * @version $Id: GenericAttachmentDAO.java,v 1.8 2006/05/14 23:59:50 rafaelsteil Exp $
  */
 public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.AttachmentDAO
 {
@@ -561,7 +562,7 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
 		ai.setMimetype(rs.getString("mimetype"));
 		ai.setPhysicalFilename(rs.getString("physical_filename"));
 		ai.setRealFilename(rs.getString("real_filename"));
-		ai.setUploadTime(rs.getTimestamp("upload_time"));
+		ai.setUploadTime(new Date(rs.getTimestamp("upload_time").getTime()));
 		ai.setExtension(this.selectExtension(rs.getInt("extension_id")));
 		
 		a.setInfo(ai);

@@ -48,6 +48,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -68,7 +69,7 @@ import net.jforum.repository.ForumRepository;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTopicDAO.java,v 1.12 2006/04/15 19:15:00 rafaelsteil Exp $
+ * @version $Id: GenericTopicDAO.java,v 1.13 2006/05/14 23:59:49 rafaelsteil Exp $
  */
 public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO 
 {
@@ -357,7 +358,7 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 		
 		t.setTitle(rs.getString("topic_title"));
 		t.setId(rs.getInt("topic_id"));
-		t.setTime(rs.getTimestamp("topic_time"));
+		t.setTime(new Date(rs.getTimestamp("topic_time").getTime()));
 		t.setStatus(rs.getInt("topic_status"));
 		t.setTotalViews(rs.getInt("topic_views"));
 		t.setTotalReplies(rs.getInt("topic_replies"));
@@ -582,7 +583,7 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 			t.setHasAttach(rs.getInt("attach") > 0);
 			t.setFirstPostTime(df.format(rs.getTimestamp("topic_time")));
 			t.setLastPostTime(df.format(rs.getTimestamp("post_time")));
-			t.setLastPostDate(rs.getTimestamp("post_time"));
+			t.setLastPostDate(new Date(rs.getTimestamp("post_time").getTime()));
 			
 			l.add(t);
 			
@@ -772,7 +773,7 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 			u.setKarma(new KarmaStatus(u.getId(), rs.getDouble("user_karma")));
 			u.setAvatar(rs.getString("user_avatar"));
 			u.setAvatarEnabled(rs.getInt("user_allowavatar") == 1);
-			u.setRegistrationDate(rs.getTimestamp("user_regdate"));
+			u.setRegistrationDate(new Date(rs.getTimestamp("user_regdate").getTime()));
 			u.setTotalPosts(rs.getInt("user_posts"));
 			u.setFrom(rs.getString("user_from"));
 			u.setEmail(rs.getString("user_email"));

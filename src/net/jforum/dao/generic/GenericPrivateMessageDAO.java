@@ -47,6 +47,7 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import net.jforum.JForumExecutionContext;
@@ -61,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericPrivateMessageDAO.java,v 1.6 2006/01/29 15:06:25 rafaelsteil Exp $
+ * @version $Id: GenericPrivateMessageDAO.java,v 1.7 2006/05/14 23:59:49 rafaelsteil Exp $
  */
 public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao.PrivateMessageDAO
 {
@@ -214,7 +215,7 @@ public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao
 
 		pm.setId(rs.getInt("privmsgs_id"));
 		pm.setType(rs.getInt("privmsgs_type"));
-		p.setTime(rs.getTimestamp("privmsgs_date"));
+		p.setTime(new Date(rs.getTimestamp("privmsgs_date").getTime()));
 		p.setSubject(rs.getString("privmsgs_subject"));
 		
 		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));

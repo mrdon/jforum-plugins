@@ -70,7 +70,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * @author Vanessa Sabino
  * @author socialnetwork@gmail.com, adding "watch forum" methods.
  * 
- * @version $Id: GenericForumDAO.java,v 1.21 2006/02/06 17:18:24 iper Exp $
+ * @version $Id: GenericForumDAO.java,v 1.22 2006/05/14 23:59:49 rafaelsteil Exp $
  */
 public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO 
 {
@@ -556,7 +556,7 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 		s = c.createStatement();
 		rs = s.executeQuery(SystemGlobals.getSql("ForumModel.statsFirstPostTime"));
 		rs.next();
-		Date firstTime = rs.getTimestamp(1);
+		Date firstTime = new Date(rs.getTimestamp(1).getTime());
 		rs.close();
 		s.close();
 		
@@ -579,7 +579,7 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 		s = c.createStatement();
 		rs = s.executeQuery(SystemGlobals.getSql("ForumModel.statsFirstRegisteredUserTime"));
 		rs.next();
-		firstTime = rs.getTimestamp(1);
+		firstTime = new Date(rs.getTimestamp(1).getTime());
 		rs.close();
 		s.close();
 		
