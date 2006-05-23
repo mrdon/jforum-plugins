@@ -79,7 +79,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.67 2006/04/10 22:45:31 vmal Exp $
+ * @version $Id: UserAction.java,v 1.68 2006/05/23 23:27:20 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -205,7 +205,7 @@ public class UserAction extends Command
 			error = true;
 		}
 
-		if (!error && um.isUsernameRegistered(this.request.getParameter("username"))) {
+		if (!error && um.isUsernameRegistered(username)) {
 			this.context.put("error", I18n.getMessage("UsernameExists"));
 			error = true;
 		}
@@ -247,8 +247,8 @@ public class UserAction extends Command
 		} 
 		else if(SecurityRepository.get(userId).canAccess(SecurityConstants.PERM_ADMINISTRATION)) {
 			JForumExecutionContext.setRedirect(this.request.getContextPath()
-					+ "/adminUsers/list"
-					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+				+ "/adminUsers/list"
+				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		}
 		else {
 			this.logNewRegisteredUserIn(newUserId, u);
