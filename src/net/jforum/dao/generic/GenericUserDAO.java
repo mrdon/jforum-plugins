@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericUserDAO.java,v 1.16 2006/05/14 23:59:49 rafaelsteil Exp $
+ * @version $Id: GenericUserDAO.java,v 1.17 2006/05/24 00:10:39 rafaelsteil Exp $
  */
 public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO 
 {
@@ -749,15 +749,51 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	 */
 	protected List loadKarma(List users) throws Exception{
 	    List result = new ArrayList(users.size());
-	    
-	    User user = null;
-		Iterator iter = users.iterator(); 
-		while (iter.hasNext()) {		    
-		    user = (User) iter.next();
-		    //load Karma
+
+	    for (Iterator iter = users.iterator(); iter.hasNext(); ) {		    
+		    User user = (User) iter.next();
+
+		    // Load Karma
 		    DataAccessDriver.getInstance().newKarmaDAO().getUserTotalKarma(user);
 		    result.add(user);
-        }		
+        }
+	    
 		return result;
+	}
+	
+	/**
+	 * @see net.jforum.dao.UserDAO#saveUserAuthHash(int, java.lang.String)
+	 */
+	public void saveUserAuthHash(int userId, String hash) throws Exception
+	{
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.saveUserAuthHash"));
+		p.setString(1, hash);
+		p.setInt(2, userId);
+		p.executeUpdate();
+		p.close();
+	}
+	
+	/**
+	 * @see net.jforum.dao.UserDAO#getUserAuthHash(int)
+	 */
+	public String getUserAuthHash(int userId) throws Exception
+	{
+		String hash = null;
+		
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.getUserAuthHash"));
+		p.setInt(1, userId);
+		
+		ResultSet rs = p.executeQuery();
+		
+		if (rs.next()) {
+			hash = rs.getString(1);
+		}
+		
+		rs.close();
+		p.close();
+		
+		return hash;
 	}
 }

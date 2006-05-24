@@ -390,7 +390,8 @@ CREATE TABLE [jforum_users] (
 	[deleted] [tinyint] NULL ,
 	[user_viewonline] [tinyint] DEFAULT(1) NULL ,
 	[security_hash] [varchar] (32) NULL, 
-	[user_karma] [decimal] (10,2)
+	[user_karma] [decimal] (10,2),
+	[user_authhash] [varchar] (32) NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
 

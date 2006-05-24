@@ -79,7 +79,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.68 2006/05/23 23:27:20 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.69 2006/05/24 00:10:39 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -281,7 +281,7 @@ public class UserAction extends Command
 
 	private void logNewRegisteredUserIn(int userId, User u) 
 	{
-		SessionFacade.setAttribute("logged", "1");
+		SessionFacade.makeLogged();
 
 		UserSession userSession = new UserSession();
 		userSession.setAutoLogin(true);
@@ -334,15 +334,15 @@ public class UserAction extends Command
 			User user = this.validateLogin(username, password);
 
 			if (user != null) {
-				//NOTE: here we only want to set the redirect location if it hasn't already been
-				//set.  This will give the LoginAuthenticator a chance to set the redirect location.
+				// NOTE: here we only want to set the redirect location if it hasn't already been
+				// set.  This will give the LoginAuthenticator a chance to set the redirect location.
 				if (JForumExecutionContext.getRedirectTo() == null) {
 					JForumExecutionContext.setRedirect(this.request.getContextPath()
 						+ "/forums/list"
 						+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 				}
 
-				SessionFacade.setAttribute("logged", "1");
+				SessionFacade.makeLogged();
 				
 				UserSession tmpUs = null;
 				String sessionId = SessionFacade.isUserInSession(user.getId());
@@ -375,9 +375,19 @@ public class UserAction extends Command
 				if (this.request.getParameter("autologin") != null
 						&& SystemGlobals.getBoolValue(ConfigKeys.AUTO_LOGIN_ENABLED)) {
 					userSession.setAutoLogin(true);
+					
+					// Generate the user-specific hash
+					String systemHash = MD5.crypt(SystemGlobals.getValue(ConfigKeys.USER_HASH_SEQUENCE) + user.getId());
+					String userHash = MD5.crypt(System.currentTimeMillis() + systemHash);
+					
+					// Persist the user hash
+					UserDAO dao = DataAccessDriver.getInstance().newUserDAO();
+					dao.saveUserAuthHash(user.getId(), userHash);
+					
+					systemHash = MD5.crypt(userHash);
+					
 					ControllerUtils.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN), "1");
-					ControllerUtils.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_USER_HASH), 
-							MD5.crypt(SystemGlobals.getValue(ConfigKeys.USER_HASH_SEQUENCE) + user.getId()));
+					ControllerUtils.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_USER_HASH), systemHash);
 				}
 				else {
 					// Remove cookies for safety
@@ -394,11 +404,9 @@ public class UserAction extends Command
 				}
 				
 				SessionFacade.add(userSession);
-				
 				SessionFacade.setAttribute(ConfigKeys.TOPICS_TRACKING, new HashMap());
-
 				ControllerUtils.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA), 
-						Integer.toString(user.getId()));
+					Integer.toString(user.getId()));
 
 				SecurityRepository.load(user.getId(), true);
 				validInfo = true;
@@ -504,6 +512,7 @@ public class UserAction extends Command
 		UserSession userSession = SessionFacade.getUserSession();
 		SessionFacade.storeSessionData(userSession.getSessionId(), JForumExecutionContext.getConnection());
 
+		SessionFacade.makeUnlogged();
 		SessionFacade.remove(userSession.getSessionId());
 		
 		// Disable auto login

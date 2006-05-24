@@ -60,7 +60,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.30 2006/01/29 15:07:00 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.31 2006/05/24 00:10:39 rafaelsteil Exp $
  */
 public class SessionFacade implements Cacheable
 {
@@ -363,7 +363,24 @@ public class SessionFacade implements Cacheable
 	 */
 	public static boolean isLogged()
 	{
-		return "1".equals(SessionFacade.getAttribute("logged"));
+		return "1".equals(SessionFacade.getAttribute(ConfigKeys.LOGGED));
+	}
+	
+	/**
+	 * Marks the current user session as "logged" in 
+	 */
+	public static void makeLogged()
+	{
+		SessionFacade.setAttribute(ConfigKeys.LOGGED, "1");
+	}
+	
+	/**
+	 * Marks the current user session as "logged" out
+	 *
+	 */
+	public static void makeUnlogged()
+	{
+		SessionFacade.removeAttribute(ConfigKeys.LOGGED);
 	}
 
 	/**

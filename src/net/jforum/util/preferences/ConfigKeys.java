@@ -48,12 +48,12 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.86 2006/03/03 20:55:52 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.87 2006/05/24 00:10:41 rafaelsteil Exp $
 */
 
 public class ConfigKeys 
 {
-
+	public static final String LOGGED = "logged";
 	public static final String APPLICATION_PATH = "application.path";
 	public static final String INSTALLATION = "installation";
 	public static final String INSTALLED = "installed";

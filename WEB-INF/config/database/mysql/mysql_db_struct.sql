@@ -336,6 +336,7 @@ CREATE TABLE jforum_users (
   user_viewonline tinyint(1) default '1',
   security_hash varchar(32),
   user_karma DECIMAL(10,2),
+  user_authhash VARCHAR(32),
   PRIMARY KEY  (user_id)
 ) TYPE=InnoDB;
 

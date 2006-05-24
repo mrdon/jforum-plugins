@@ -70,7 +70,7 @@ import freemarker.template.SimpleHash;
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.20 2006/05/24 00:10:38 rafaelsteil Exp $
+ * @version $Id: ControllerUtils.java,v 1.21 2006/05/24 00:11:18 rafaelsteil Exp $
  */
 public class ControllerUtils
 {
@@ -128,14 +128,12 @@ public class ControllerUtils
 			String uid = cookie.getValue();
 			String uidHash = hashCookie.getValue();
 
-			String securityHash = MD5.crypt(SystemGlobals.getValue(ConfigKeys.USER_HASH_SEQUENCE) + uid);
-			
 			// Load the user-specific security hash from the database
 			try {
 				UserDAO userDao = DataAccessDriver.getInstance().newUserDAO();
 				String userHash = userDao.getUserAuthHash(Integer.parseInt(uid));
 				
-				securityHash = MD5.crypt(userHash);
+				String securityHash = MD5.crypt(userHash);
 	
 				if (securityHash.equals(uidHash)) {
 					int userId = Integer.parseInt(uid);

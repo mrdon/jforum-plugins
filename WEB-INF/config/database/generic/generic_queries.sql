@@ -62,6 +62,8 @@ UserModel.selectAllByGroup = SELECT user_email, u.user_id, user_posts, user_regd
 	AND ug.group_id = ? \
 	ORDER BY user_id LIMIT ?, ?
 
+UserModel.saveUserAuthHash = UPDATE jforum_users SET user_authhash = ? WHERE user_id = ?
+UserModel.getUserAuthHash = SELECT user_authhash FROM jforum_users WHERE user_id = ?
 UserModel.totalUsersByGroup = SELECT COUNT(1) FROM jforum_user_groups WHERE group_id = ?
 UserModel.deletedStatus = UPDATE jforum_users SET deleted = ? WHERE user_id = ?
 UserModel.isDeleted = SELECT deleted FROM jforum_users WHERE user_id = ?

@@ -63,7 +63,7 @@ import com.octo.captcha.image.ImageCaptcha;
  * Stores information about user's session.
  * 
  * @author Rafael Steil
- * @version $Id: UserSession.java,v 1.27 2006/04/05 00:40:37 rafaelsteil Exp $
+ * @version $Id: UserSession.java,v 1.28 2006/05/24 00:10:40 rafaelsteil Exp $
  */
 public class UserSession implements Serializable
 {
@@ -344,7 +344,7 @@ public class UserSession implements Serializable
 		ControllerUtils.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA),
 			SystemGlobals.getValue(ConfigKeys.ANONYMOUS_USER_ID));
 
-		SessionFacade.setAttribute("logged", "0");
+		SessionFacade.makeUnlogged();
 	}
 
 	/**

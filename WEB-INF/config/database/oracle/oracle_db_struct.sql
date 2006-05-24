@@ -378,6 +378,7 @@ CREATE TABLE jforum_users (
   user_viewonline NUMBER(10) DEFAULT 1,
   security_hash VARCHAR2(32),
   user_karma DECIMAL(10,2),
+  user_authhash VARCHAR(32),
   PRIMARY KEY (user_id)
 );
 

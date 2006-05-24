@@ -70,7 +70,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: AdminAction.java,v 1.14 2006/04/08 14:15:21 rafaelsteil Exp $
+ * @version $Id: AdminAction.java,v 1.15 2006/05/24 00:10:38 rafaelsteil Exp $
  */
 public class AdminAction extends Command {
 
@@ -84,13 +84,12 @@ public class AdminAction extends Command {
 	
 	public void login() throws Exception
 	{
-		String logged = (String)SessionFacade.getAttribute("logged");
 		UserSession us = SessionFacade.getUserSession();
-		
 		PermissionControl pc = SecurityRepository.get(us.getUserId());
 		
-		if (logged == null || logged.toString().equals("0") 
-				|| pc == null || !pc.canAccess(SecurityConstants.PERM_ADMINISTRATION)) {
+		if (!SessionFacade.isLogged() 
+				|| pc == null 
+				|| !pc.canAccess(SecurityConstants.PERM_ADMINISTRATION)) {
 			String returnPath =  this.request.getContextPath() + "/admBase/login" 
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
 

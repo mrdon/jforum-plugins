@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -55,7 +55,7 @@ import net.jforum.entities.User;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: UserDAO.java,v 1.5 2005/07/26 03:04:28 rafaelsteil Exp $
+ * @version $Id: UserDAO.java,v 1.6 2006/05/24 00:10:38 rafaelsteil Exp $
  */
 public interface UserDAO 
 {
@@ -389,4 +389,19 @@ public interface UserDAO
 	 */
 	public boolean hasUsernameChanged(int userId, String usernameToCheck) throws Exception;
 	
+	/**
+	 * Saves the user-specific security hash to the database
+	 * @param userId the user id to save
+	 * @param hash the security hash
+	 * @throws Exception
+	 */
+	public void saveUserAuthHash(int userId, String hash) throws Exception;
+	
+	/**
+	 * Retrieves the auth hash from the database
+	 * @param userId
+	 * @return
+	 * @throws Exception
+	 */
+	public String getUserAuthHash(int userId) throws Exception;
 }
