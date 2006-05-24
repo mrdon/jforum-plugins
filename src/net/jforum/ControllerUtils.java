@@ -50,6 +50,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
 import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.UserDAO;
 import net.jforum.dao.UserSessionDAO;
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
@@ -69,7 +70,7 @@ import freemarker.template.SimpleHash;
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.19 2006/04/15 19:26:35 rafaelsteil Exp $
+ * @version $Id: ControllerUtils.java,v 1.20 2006/05/24 00:10:38 rafaelsteil Exp $
  */
 public class ControllerUtils
 {
@@ -127,15 +128,20 @@ public class ControllerUtils
 			String uid = cookie.getValue();
 			String uidHash = hashCookie.getValue();
 
-			String securityHash = SystemGlobals.getValue(ConfigKeys.USER_HASH_SEQUENCE);
-
-			if ((uid != null && !uid.equals("")) && (securityHash != null && !securityHash.equals(""))
-					&& (MD5.crypt(securityHash + uid).equals(uidHash))) {
-				int userId = Integer.parseInt(uid);
-				userSession.setUserId(userId);
+			String securityHash = MD5.crypt(SystemGlobals.getValue(ConfigKeys.USER_HASH_SEQUENCE) + uid);
+			
+			// Load the user-specific security hash from the database
+			try {
+				UserDAO userDao = DataAccessDriver.getInstance().newUserDAO();
+				String userHash = userDao.getUserAuthHash(Integer.parseInt(uid));
 				
-				try {
-					User user = DataAccessDriver.getInstance().newUserDAO().selectById(userId);
+				securityHash = MD5.crypt(userHash);
+	
+				if (securityHash.equals(uidHash)) {
+					int userId = Integer.parseInt(uid);
+					userSession.setUserId(userId);
+					
+					User user = userDao.selectById(userId);
 	
 					if (user == null || user.getId() != userId) {
 						userSession.makeAnonymous();
@@ -143,12 +149,12 @@ public class ControllerUtils
 					}
 	
 					this.configureUserSession(userSession, user);
+					
+					return true;
 				}
-				catch (Exception e) {
-					throw new DatabaseException(e);
-				}
-				
-				return true;
+			}
+			catch (Exception e) {
+				throw new DatabaseException(e);
 			}
 			
 			userSession.makeAnonymous();
@@ -196,7 +202,7 @@ public class ControllerUtils
 		// If the execution point gets here, then the user
 		// has chosen "autoLogin"
 		userSession.setAutoLogin(true);
-		SessionFacade.setAttribute("logged", "1");
+		SessionFacade.makeLogged();
 
 		I18n.load(user.getLang());
 	}
