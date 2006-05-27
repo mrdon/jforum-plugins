@@ -60,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * Authenticate users against a LDAP server. 
  * 
  * @author Rafael Steil
- * @version $Id: LDAPAuthenticator.java,v 1.5 2005/10/14 00:30:31 rafaelsteil Exp $
+ * @version $Id: LDAPAuthenticator.java,v 1.6 2006/05/27 15:20:46 rafaelsteil Exp $
  */
 public class LDAPAuthenticator implements LoginAuthenticator
 {
@@ -93,12 +93,13 @@ public class LDAPAuthenticator implements LoginAuthenticator
 	{
 		Hashtable environment = this.prepareEnvironment();
 		
-		String principal = SystemGlobals.getValue(ConfigKeys.LDAP_LOGIN_PREFIX)
-			+ username
-			+ ","
-			+ SystemGlobals.getValue(ConfigKeys.LDAP_LOGIN_SUFFIX);
+		StringBuffer principal = new StringBuffer(256)
+			.append(SystemGlobals.getValue(ConfigKeys.LDAP_LOGIN_PREFIX))
+			.append(username)
+			.append(',')
+			.append(SystemGlobals.getValue(ConfigKeys.LDAP_LOGIN_SUFFIX));
 		
-		environment.put(Context.SECURITY_PRINCIPAL, principal);
+		environment.put(Context.SECURITY_PRINCIPAL, principal.toString());
 		environment.put(Context.SECURITY_CREDENTIALS, password);
 		
 		DirContext dir = null;
