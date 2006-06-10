@@ -46,7 +46,7 @@ import java.util.Comparator;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicTypeComparator.java,v 1.1 2006/04/29 14:14:28 rafaelsteil Exp $
+ * @version $Id: TopicTypeComparator.java,v 1.2 2006/06/10 22:52:28 rafaelsteil Exp $
  */
 public class TopicTypeComparator implements Comparator
 {
@@ -59,7 +59,7 @@ public class TopicTypeComparator implements Comparator
 			return 1;
 		}
 		else if (t1.getType() == t2.getType()) {
-			return t2.getTime().compareTo(t1.getTime());
+			return t2.getLastPostDate().compareTo(t1.getLastPostDate());
 		}
 		
 		return -1;

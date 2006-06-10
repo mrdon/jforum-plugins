@@ -49,7 +49,7 @@ import java.util.Date;
  * Represents every topic in the forum.
  * 
  * @author Rafael Steil
- * @version $Id: Topic.java,v 1.15 2005/11/10 18:30:06 almilli Exp $
+ * @version $Id: Topic.java,v 1.16 2006/06/10 22:52:27 rafaelsteil Exp $
  */
 public class Topic implements Serializable
 {
@@ -81,7 +81,7 @@ public class Topic implements Serializable
 	private String title;
 	
 	private Date time;
-	private Date lastPostTimeInMillis;
+	private Date lastPostDate;
 	
 	private Double totalPages;
 	
@@ -356,11 +356,11 @@ public class Topic implements Serializable
 	}
 	
 	public void setLastPostDate(Date t) {
-		this.lastPostTimeInMillis = t;
+		this.lastPostDate = t;
 	}
 	
 	public Date getLastPostDate() {
-		return this.lastPostTimeInMillis;
+		return this.lastPostDate;
 	}
 	
 	public void setPaginate(boolean paginate) {

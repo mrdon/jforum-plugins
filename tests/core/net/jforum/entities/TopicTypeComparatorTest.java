@@ -13,7 +13,7 @@ import junit.framework.TestCase;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicTypeComparatorTest.java,v 1.1 2006/04/29 14:14:28 rafaelsteil Exp $
+ * @version $Id: TopicTypeComparatorTest.java,v 1.2 2006/06/10 22:52:28 rafaelsteil Exp $
  */
 public class TopicTypeComparatorTest extends TestCase
 {
@@ -42,6 +42,27 @@ public class TopicTypeComparatorTest extends TestCase
 		Assert.assertEquals("Regular day 1", this.extractTitle(l, 7));
 	}
 	
+	public void testCreateTwoTopicsThenAddAReply()
+	{
+		List l = new ArrayList();
+		
+		l.add(this.createTopic(Topic.TYPE_NORMAL, 1, "Topic 1"));
+		l.add(this.createTopic(Topic.TYPE_NORMAL, 2, "Topic 2"));
+		
+		Collections.sort(l, new TopicTypeComparator());
+		
+		Assert.assertEquals("Topic 2", this.extractTitle(l, 0));
+		Assert.assertEquals("Topic 1", this.extractTitle(l, 1));
+		
+		// Simulate a reply
+		((Topic)l.get(1)).setLastPostDate(new GregorianCalendar(2006, 4, 3).getTime());
+		
+		Collections.sort(l, new TopicTypeComparator());
+		
+		Assert.assertEquals("Topic 1", this.extractTitle(l, 0));
+		Assert.assertEquals("Topic 2", this.extractTitle(l, 1));
+	}
+	
 	private String extractTitle(List l, int index)
 	{
 		return ((Topic)l.get(index)).getTitle();
@@ -54,6 +75,7 @@ public class TopicTypeComparatorTest extends TestCase
 		t.setTitle(title);
 		t.setType(type);
 		t.setTime(new GregorianCalendar(2006, 4, day).getTime());
+		t.setLastPostDate(t.getTime());
 		
 		return t;
 	}

@@ -97,7 +97,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.145 2006/04/15 16:41:35 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.146 2006/06/10 22:52:28 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -1011,7 +1011,7 @@ public class PostAction extends Command
 
 		boolean preview = "1".equals(this.request.getParameter("preview"));
 		
-		if (!preview) { //mean users hit "submit"?
+		if (!preview) {
 			AttachmentCommon attachments = new AttachmentCommon(this.request, forumId);
 			
 			try {
@@ -1102,13 +1102,16 @@ public class PostAction extends Command
 			
 			if (!moderate) {
 				// Sets the url to redirect to
-				String path = this.request.getContextPath() + "/posts/list/";
+				StringBuffer path = new StringBuffer(512);
+				path.append(this.request.getContextPath()).append("/posts/list/");
+				
 				int start = ViewCommon.getStartPage();
 	
-				path += this.startPage(t, start) + "/";
-				path += t.getId() + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#" + postId;
+				path.append(this.startPage(t, start)).append("/")
+					.append(t.getId()).append(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION))
+					.append('#').append(postId);
 	
-				JForumExecutionContext.setRedirect(path);
+				JForumExecutionContext.setRedirect(path.toString());
 				
 				// Updates forum stats, cache and etc
 				if (!newTopic) {
@@ -1128,6 +1131,7 @@ public class PostAction extends Command
 				ForumRepository.updateForumStats(t, u, p);
 				
 				int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
+				
 				if (u.getId() != anonymousUser) {
 					((Map) SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(t.getId()),
 						new Long(p.getTime().getTime()));
