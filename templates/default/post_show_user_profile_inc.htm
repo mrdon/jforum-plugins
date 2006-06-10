@@ -19,6 +19,10 @@
 		<#if (user.yim?exists && user.yim?length > 0)>
 			<a href="http://edit.yahoo.com/config/send_webmesg?.target=${user.yim?html}&amp;.src=pg"><img src="${contextPath}/templates/${templateName}/images/icon_yim.gif" alt="[Yahoo!]" /></a>
 		</#if>
+
+		<#if (user.aim?exists && user.aim?length > 0)>
+			<a target="_new" href="https://my.screenname.aol.com/_cqr/login/login.psp"><img src="${contextPath}/templates/${templateName}/images/icon_aim.gif" border="0" alt="aim icon"/></a>
+		</#if>
 		
 		<#if (user.msnm?exists && user.msnm?length > 0)>
 			<a href="${JForumContext.encodeURL("/user/profile/${user.id}")}"><img src="${contextPath}/templates/${templateName}/images/icon_msnm.gif" alt="[MSN]"  /></a>
