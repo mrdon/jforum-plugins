@@ -79,7 +79,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.69 2006/05/24 00:10:39 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.70 2006/07/03 00:27:42 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -337,9 +337,20 @@ public class UserAction extends Command
 				// NOTE: here we only want to set the redirect location if it hasn't already been
 				// set.  This will give the LoginAuthenticator a chance to set the redirect location.
 				if (JForumExecutionContext.getRedirectTo() == null) {
-					JForumExecutionContext.setRedirect(this.request.getContextPath()
-						+ "/forums/list"
-						+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+					String forwaredHost = request.getHeader("X-Forwarded-Host");
+					
+					if (forwaredHost == null) {
+						JForumExecutionContext.setRedirect(this.request.getContextPath()
+							+ "/forums/list"
+							+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));						
+					}
+					else {
+						JForumExecutionContext.setRedirect(this.request.getScheme() 
+							+ "://" 
+							+ forwaredHost
+							+ "/forums/list"
+							+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+					}
 				}
 
 				SessionFacade.makeLogged();

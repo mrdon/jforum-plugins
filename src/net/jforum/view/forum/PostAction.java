@@ -97,7 +97,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.146 2006/06/10 22:52:28 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.147 2006/07/03 00:27:42 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -1346,7 +1346,7 @@ public class PostAction extends Command
 		FileInputStream fis = new FileInputStream(filename);
 		OutputStream os = response.getOutputStream();
 		
-		if(am.isPhysicalDownloadMode(a.getInfo().getExtension().getExtensionGroupId())) {
+		if (am.isPhysicalDownloadMode(a.getInfo().getExtension().getExtensionGroupId())) {
 			this.response.setContentType("application/octet-stream");
 		}
 		else {

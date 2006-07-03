@@ -50,11 +50,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import oracle.sql.BLOB;
+
 import net.jforum.JForumExecutionContext;
 
 /**
  * @author Dmitriy Kiriy
- * @version $Id: OracleUtils.java,v 1.8 2006/01/29 15:07:09 rafaelsteil Exp $
+ * @version $Id: OracleUtils.java,v 1.9 2006/07/03 00:27:42 rafaelsteil Exp $
  */
 public class OracleUtils
 {
@@ -108,7 +110,15 @@ public class OracleUtils
 		rs.next();
 		Blob postText = rs.getBlob(1);
 
-		OutputStream blobWriter = ((oracle.sql.BLOB)postText).getBinaryOutputStream();
+		OutputStream blobWriter = null;
+		
+		if (postText instanceof BLOB) {
+			blobWriter = ((BLOB)postText).getBinaryOutputStream();
+		}
+		else {
+			blobWriter = postText.setBinaryStream(0);
+		}
+
 		blobWriter.write(value.getBytes("UTF-16"));
 
 		blobWriter.close();

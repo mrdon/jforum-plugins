@@ -80,7 +80,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.27 2006/04/08 15:28:51 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.28 2006/07/03 00:27:41 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {
@@ -98,11 +98,7 @@ public class AttachmentCommon
 		this.am = DataAccessDriver.getInstance().newAttachmentDAO();
 		
 		this.canProceed = SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED, 
-				Integer.toString(forumId));
-		
-		if (!this.canProceed) {
-			return;
-		}
+			Integer.toString(forumId));
 	}
 	
 	public void preProcess() throws Exception
@@ -371,17 +367,24 @@ public class AttachmentCommon
 		Calendar c = new GregorianCalendar();
 		c.setTimeInMillis(System.currentTimeMillis());
 		c.get(Calendar.YEAR);
+		
 		int year = Calendar.getInstance().get(Calendar.YEAR);
 		int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
 		int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 		
-		String dir = "" + year + "/" + month + "/" + day + "/";
+		StringBuffer dir = new StringBuffer(256);
+		dir.append(year).append('/').append(month).append('/').append(day).append('/');
+		
 		new File(SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR) + "/" + dir).mkdirs();
 		
 		return dir
-			+ MD5.crypt(a.getRealFilename() + a.getUploadTime()) 
-			+ "_" + SessionFacade.getUserSession().getUserId()
-			+ "." + a.getExtension().getExtension();
+			.append(MD5.crypt(a.getRealFilename() + a.getUploadTime()))
+			.append('_')
+			.append(SessionFacade.getUserSession().getUserId())
+			.append('.')
+			.append(a.getExtension().getExtension())
+			.append('_')
+			.toString();
 	}
 	
 	public List getAttachments(int postId, int forumId) throws Exception
