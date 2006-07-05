@@ -63,7 +63,7 @@ import com.octo.captcha.image.ImageCaptcha;
  * Stores information about user's session.
  * 
  * @author Rafael Steil
- * @version $Id: UserSession.java,v 1.28 2006/05/24 00:10:40 rafaelsteil Exp $
+ * @version $Id: UserSession.java,v 1.29 2006/07/05 23:48:55 rafaelsteil Exp $
  */
 public class UserSession implements Serializable
 {
@@ -336,15 +336,25 @@ public class UserSession implements Serializable
 	 */
 	public void makeAnonymous()
 	{
-		this.setStartTime(new Date(System.currentTimeMillis()));
-		this.setLastVisit(new Date(System.currentTimeMillis()));
-		this.setUserId(SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID));
+		this.registerBasicInfo();
 		
 		ControllerUtils.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_AUTO_LOGIN), null);
 		ControllerUtils.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA),
 			SystemGlobals.getValue(ConfigKeys.ANONYMOUS_USER_ID));
 
 		SessionFacade.makeUnlogged();
+	}
+
+	/**
+	 * Sets the startup and last visit time to now, as well set the
+	 * user id to Anonymous. This method is usually called when the
+	 * user hits the forum for the first time. 
+	 */
+	public void registerBasicInfo()
+	{
+		this.setStartTime(new Date(System.currentTimeMillis()));
+		this.setLastVisit(new Date(System.currentTimeMillis()));
+		this.setUserId(SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID));
 	}
 
 	/**
