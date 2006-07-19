@@ -262,7 +262,7 @@ AttachmentModel.addQuotaLimit = INSERT INTO jforum_quota_limit (quota_limit_id, 
 AttachmentModel.lastGeneratedAttachmentId = SELECT jforum_attach_seq.currval FROM dual
 
 AttachmentModel.addExtensionGroup = INSERT INTO jforum_extension_groups (extension_group_id, name, allow, upload_icon, download_mode) \
-	VALUES (jforum_extension_group_seq.nextval, ?, ?, ?, ?)
+	VALUES (jforum_extension_groups_seq.nextval, ?, ?, ?, ?)
 
 AttachmentModel.addExtension = INSERT INTO jforum_extensions (extension_id, extension_group_id, description, upload_icon, extension, allow) \
 	VALUES (jforum_extensions_seq.nextval, ?, ?, ?, ?, ?)
