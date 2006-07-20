@@ -58,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * <i>jforum_users</i>. 
  * 
  * @author Rafael Steil
- * @version $Id: DefaultLoginAuthenticator.java,v 1.5 2006/01/29 15:07:17 rafaelsteil Exp $
+ * @version $Id: DefaultLoginAuthenticator.java,v 1.6 2006/07/20 00:39:09 rafaelsteil Exp $
  */
 public class DefaultLoginAuthenticator implements LoginAuthenticator
 {
@@ -77,7 +77,8 @@ public class DefaultLoginAuthenticator implements LoginAuthenticator
 	 */
 	public User validateLogin(String username, String password, Map extraParams) throws Exception
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.login"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.login"));
 		p.setString(1, username);
 		p.setString(2, MD5.crypt(password));
 		

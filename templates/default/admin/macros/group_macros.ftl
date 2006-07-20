@@ -11,9 +11,9 @@
 			
 			<tr bgcolor="#f4f4f4">
 			<td><span class="gen"><#list 0..level as j>&nbsp;</#list>${node.name}</span></td>
-			<td><span class="gen"><a href="${contextPath}/${moduleName}/edit/${node.id}${extension}">${I18n.getMessage("Groups.List.Edit")}</a></span></td>
-			<td><input type="checkbox" name="group_id" value="${node.id}" /></td>
-			<td class="row2"><span class="gen"><a href="${contextPath}/${moduleName}/permissions/${node.id}${extension}">${I18n.getMessage("Permissions")}</a></span></td>
+			<td align="center"><span class="gen"><a href="${contextPath}/${moduleName}/edit/${node.id}${extension}">${I18n.getMessage("Groups.List.Edit")}</a></span></td>
+			<td align="center"><input type="checkbox" name="group_id" value="${node.id}"/></td>
+			<td class="row2" align="center"><span class="gen"><a href="${contextPath}/${moduleName}/permissions/${node.id}${extension}">${I18n.getMessage("Permissions")}</a></span></td>
 			</tr>
 
 			<@listGroups node/>
@@ -61,7 +61,7 @@
 			<#assign n = node.getNode(i)>
 
 			<#if !group?exists || n.id != group.id>
-				<option value="${n.id}"<#if parentId == n.id || selectedList.contains(node.id)> selected="selected"</#if>><#list 0..level as j>&nbsp;</#list>${n.name}</option>
+				<option value="${n.id}"<#if parentId == n.id || selectedList.contains(n.id)> selected="selected"</#if>><#list 0..level as j>&nbsp;</#list>${n.name}</option>
 				<@selectOption n, parentId/>
 				
 				<#global level = level - 2>
