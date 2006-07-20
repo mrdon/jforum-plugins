@@ -50,7 +50,7 @@ import net.jforum.entities.User;
  * General utilities to use with SSO.
  * 
  * @author Rafael Steil
- * @version $Id: SSOUtils.java,v 1.3 2005/07/26 03:05:33 rafaelsteil Exp $
+ * @version $Id: SSOUtils.java,v 1.4 2006/07/20 00:23:01 rafaelsteil Exp $
  */
 public class SSOUtils
 {
@@ -75,7 +75,6 @@ public class SSOUtils
 		this.dao = DataAccessDriver.getInstance().newUserDAO();
 
 		this.user = this.dao.selectByName(username);
-
 		this.exists = this.user != null;
 		
 		return this.exists;

@@ -73,7 +73,7 @@ UserModel.rankingId = UPDATE jforum_users SET rank_id = ? WHERE user_id = ?
 UserModel.activeStatus = UPDATE jforum_users SET user_active = ? WHERE user_id = ?
 UserModel.addNew = INSERT INTO jforum_users (username, user_password, user_email, user_regdate, user_actkey) VALUES (?, ?, ?, ?, ?)
 UserModel.findByName = SELECT user_id, username, user_email, deleted FROM jforum_users WHERE UPPER(username) LIKE UPPER(?)
-UserModel.selectByName = SELECT * FROM jforum_users WHERE username = ?
+UserModel.selectByName = SELECT * FROM jforum_users WHERE LOWER(username) = LOWER(?)
 UserModel.addNewWithId = INSERT INTO jforum_users (username, user_password, user_email, user_regdate, user_actkey, user_id) VALUES (?, ?, ?, ?, ?, ?)
 
 UserModel.update = UPDATE jforum_users SET user_aim = ?, \

@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericUserDAO.java,v 1.17 2006/05/24 00:10:39 rafaelsteil Exp $
+ * @version $Id: GenericUserDAO.java,v 1.18 2006/07/20 00:23:01 rafaelsteil Exp $
  */
 public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO 
 {
@@ -123,7 +123,8 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 
 	public User selectByName(String username) throws Exception 
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectByName"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.selectByName"));
 		p.setString(1, username);
 		
 		ResultSet rs = p.executeQuery();
@@ -131,7 +132,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 		
 		if (rs.next()) {
 			u = new User();
-			fillUserFromResultSet(u, rs);
+			this.fillUserFromResultSet(u, rs);
 		}
 		
 		rs.close();
@@ -516,7 +517,8 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 	{
 		boolean status = false;
 		
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.isUsernameRegistered"));
+		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.isUsernameRegistered"));
 		p.setString(1, username);
 		
 		ResultSet rs = p.executeQuery();
