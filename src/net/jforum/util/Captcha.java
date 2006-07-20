@@ -77,7 +77,7 @@ import com.octo.captcha.image.gimpy.GimpyFactory;
 
 /**
  * @author James Yong
- * @version $Id: Captcha.java,v 1.8 2006/01/29 15:07:17 rafaelsteil Exp $
+ * @version $Id: Captcha.java,v 1.9 2006/07/20 00:10:10 rafaelsteil Exp $
  */
 public class Captcha extends ListImageCaptchaEngine
 {
@@ -88,8 +88,18 @@ public class Captcha extends ListImageCaptchaEngine
 	private List textPasterList;
 	private List fontGeneratorList;
 
-	private static final String charsInUse = "123456789ABCDEFGHJLKMNPRSTWXYZabcdefghijlmnopkrstuvxzyk@#%^";
-
+	private static String charsInUse;
+	
+	private void initializeChars()
+	{
+		if (SystemGlobals.getBoolValue(ConfigKeys.CAPTCHA_IGNORE_CASE)) {
+			charsInUse = "123456789abcdefghijlmnopkrstuvxzyk@#%^";
+		}
+		else {
+			charsInUse = "123456789ABCDEFGHJLKMNPRSTWXYZabcdefghijlmnopkrstuvxzyk@#%^";
+		}
+	}
+	
 	/**
 	 * Gets the singleton
 	 * 
@@ -102,6 +112,8 @@ public class Captcha extends ListImageCaptchaEngine
 
 	protected void buildInitialFactories()
 	{
+		this.initializeChars();
+		
 		this.backgroundGeneratorList = new ArrayList();
 		this.textPasterList = new ArrayList();
 		this.fontGeneratorList = new ArrayList();

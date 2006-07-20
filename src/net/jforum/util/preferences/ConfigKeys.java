@@ -48,7 +48,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.87 2006/05/24 00:10:41 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.88 2006/07/20 00:10:13 rafaelsteil Exp $
 */
 
 public class ConfigKeys 
@@ -153,6 +153,7 @@ public class ConfigKeys
 	public static final String POSTS_CACHE_SIZE = "posts.cache.size";
 	public static final String POSTS_CACHE_ENABLED = "posts.cache.enabled";
 
+	public static final String CAPTCHA_IGNORE_CASE = "captcha.ignore.case";
 	public static final String CAPTCHA_REGISTRATION = "captcha.registration";
 	public static final String CAPTCHA_POSTS = "captcha.posts";
 	public static final String CAPTCHA_WIDTH = "captcha.width";

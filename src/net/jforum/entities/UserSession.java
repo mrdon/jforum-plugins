@@ -63,7 +63,7 @@ import com.octo.captcha.image.ImageCaptcha;
  * Stores information about user's session.
  * 
  * @author Rafael Steil
- * @version $Id: UserSession.java,v 1.29 2006/07/05 23:48:55 rafaelsteil Exp $
+ * @version $Id: UserSession.java,v 1.30 2006/07/20 00:10:14 rafaelsteil Exp $
  */
 public class UserSession implements Serializable
 {
@@ -398,6 +398,11 @@ public class UserSession implements Serializable
 		if ((SystemGlobals.getBoolValue(ConfigKeys.CAPTCHA_REGISTRATION) 
 				|| SystemGlobals.getBoolValue(ConfigKeys.CAPTCHA_POSTS))
 				&& this.imageCaptcha != null) {
+			
+			if (SystemGlobals.getBoolValue(ConfigKeys.CAPTCHA_IGNORE_CASE)) {
+				userResponse = userResponse.toLowerCase();
+			}
+			
 			boolean result =  this.imageCaptcha.validateResponse(userResponse).booleanValue();
 			this.destroyCaptcha();
 			return result;

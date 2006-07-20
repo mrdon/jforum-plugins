@@ -79,7 +79,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.70 2006/07/03 00:27:42 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.71 2006/07/20 00:10:11 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -168,7 +168,8 @@ public class UserAction extends Command
 
 	public void insertSave() throws Exception 
 	{
-		int userId = SessionFacade.getUserSession().getUserId();
+		UserSession userSession = SessionFacade.getUserSession();
+		int userId = userSession.getUserId();
 
 		if ((!SystemGlobals.getBoolValue(ConfigKeys.REGISTRATION_ENABLED)
 				&& !SecurityRepository.get(userId).canAccess(SecurityConstants.PERM_ADMINISTRATION))
@@ -210,7 +211,7 @@ public class UserAction extends Command
 			error = true;
 		}
 		
-		if (!error && !SessionFacade.getUserSession().validateCaptchaResponse(captchaResponse)){
+		if (!error && !userSession.validateCaptchaResponse(captchaResponse)){
 			this.context.put("error", I18n.getMessage("CaptchaResponseFails"));
 			error = true;
 		}
@@ -233,9 +234,9 @@ public class UserAction extends Command
 
 		if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_USER_EMAIL_AUTH)) {
 			try {
-				//Send an email to new user
+				// Send an email to new user
 				QueuedExecutor.getInstance().execute(
-						new EmailSenderTask(new ActivationKeySpammer(u)));
+					new EmailSenderTask(new ActivationKeySpammer(u)));
 			} 
 			catch (Exception e) {
 				logger.warn("Error while trying to send an email: " + e);
@@ -321,8 +322,8 @@ public class UserAction extends Command
 		String username;
 
 		if (parseBasicAuthentication()) {
-			username = (String) this.request.getAttribute("username");
-			password = (String) this.request.getAttribute("password");
+			username = (String)this.request.getAttribute("username");
+			password = (String)this.request.getAttribute("password");
 		} 
 		else {
 			username = this.request.getParameter("username");
@@ -330,6 +331,7 @@ public class UserAction extends Command
 		}
 
 		boolean validInfo = false;
+		
 		if (password.length() > 0) {
 			User user = this.validateLogin(username, password);
 
