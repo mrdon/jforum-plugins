@@ -48,7 +48,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.88 2006/07/20 00:10:13 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.89 2006/07/20 00:49:40 rafaelsteil Exp $
 */
 
 public class ConfigKeys 
@@ -123,7 +123,6 @@ public class ConfigKeys
 	
 	public static final String TOPIC_CACHE_ENABLED = "topic.cache.enabled";
 	public static final String SECURITY_CACHE_ENABLED = "security.cache.enabled";
-	public static final String FORUM_CACHE_ENABLED = "forum.cache.enabled";
 
 	public static final String VERSION = "version";
 	public static final String BACKGROUND_TASKS = "background.tasks";
