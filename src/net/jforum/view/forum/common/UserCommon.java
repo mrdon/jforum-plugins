@@ -68,7 +68,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserCommon.java,v 1.14 2006/03/14 18:16:25 rafaelsteil Exp $
+ * @version $Id: UserCommon.java,v 1.15 2006/07/30 23:02:36 rafaelsteil Exp $
  */
 public class UserCommon 
 {
@@ -88,7 +88,9 @@ public class UserCommon
 		User u = um.selectById(userId);
 		
 		ActionServletRequest request = JForumExecutionContext.getRequest();
-		if (SessionFacade.getUserSession().isAdmin()) {
+		boolean isAdmin = SessionFacade.getUserSession().isAdmin();
+
+		if (isAdmin) {
 			String username = request.getParameter("username");
 		
 			if (username != null) {
@@ -125,10 +127,10 @@ public class UserCommon
 		
 		String currentPassword = request.getParameter("current_password");
 		
-		if (currentPassword != null && !"".equals(currentPassword.trim())) {
+		if (isAdmin || (currentPassword != null && !"".equals(currentPassword.trim()))) {
 			currentPassword = MD5.crypt(currentPassword);
 			
-			if (u.getPassword().equals(currentPassword)) {
+			if (isAdmin || u.getPassword().equals(currentPassword)) {
 				u.setEmail(SafeHtml.makeSafe(request.getParameter("email")));
 				
 				String newPassword = request.getParameter("new_password");
