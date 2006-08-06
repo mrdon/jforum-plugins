@@ -68,7 +68,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserCommon.java,v 1.15 2006/07/30 23:02:36 rafaelsteil Exp $
+ * @version $Id: UserCommon.java,v 1.16 2006/08/06 00:07:45 rafaelsteil Exp $
  */
 public class UserCommon 
 {
@@ -126,9 +126,12 @@ public class UserCommon
 		u.setWebSite(website);
 		
 		String currentPassword = request.getParameter("current_password");
+		boolean isCurrentPasswordEmpty = currentPassword == null || "".equals(currentPassword.trim());
 		
-		if (isAdmin || (currentPassword != null && !"".equals(currentPassword.trim()))) {
-			currentPassword = MD5.crypt(currentPassword);
+		if (isAdmin || !isCurrentPasswordEmpty) {
+			if (!isCurrentPasswordEmpty) {
+				currentPassword = MD5.crypt(currentPassword);
+			}
 			
 			if (isAdmin || u.getPassword().equals(currentPassword)) {
 				u.setEmail(SafeHtml.makeSafe(request.getParameter("email")));

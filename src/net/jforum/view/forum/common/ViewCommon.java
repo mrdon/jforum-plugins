@@ -51,6 +51,7 @@ import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
 import net.jforum.entities.User;
 import net.jforum.exceptions.RequestEmptyException;
+import net.jforum.repository.BBCodeRepository;
 import net.jforum.repository.ModulesRepository;
 import net.jforum.repository.SmiliesRepository;
 import net.jforum.util.preferences.ConfigKeys;
@@ -60,7 +61,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.17 2006/01/29 15:07:12 rafaelsteil Exp $
+ * @version $Id: ViewCommon.java,v 1.18 2006/08/06 00:07:44 rafaelsteil Exp $
  */
 public final class ViewCommon
 {
@@ -182,7 +183,7 @@ public final class ViewCommon
 		
 		if (module == null || action == null) {
 			throw new RequestEmptyException("A call to ViewCommon#reprocessRequest() was made, "
-					+ "but no module or action name was found");
+				+ "but no module or action name was found");
 		}
 		
 		JForumExecutionContext.getRequest().restoreDump(data);
@@ -221,7 +222,7 @@ public final class ViewCommon
 						k += 256;
 					}
 	
-					sb.append("%" + Integer.toHexString(k).toUpperCase());
+					sb.append('%').append(Integer.toHexString(k).toUpperCase());
 				}
 			}
 		}
@@ -229,18 +230,75 @@ public final class ViewCommon
 		return sb.toString();
 	}
 	
+	/**
+	 * Formats a date using the pattern defined in the configuration file.
+	 * The key is the value of {@link ConfigKeys.DATE_TIME_FORMAT}
+	 * @param date the date to format
+	 * @return the string with the formated date
+	 */
 	public static String formatDate(Date date) 
 	{
 		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
 		return df.format(date);
 	}
+	
+	/**
+	 * Escapes &lt; by &amp;lt; and &gt; by &amp;gt;
+	 * @param contents the string to parse
+	 * @return the new string
+	 */
+	public static String espaceHtml(String contents)
+	{
+		StringBuffer sb = new StringBuffer(contents);
+		
+		replaceAll(sb, "<", "&lt");
+		replaceAll(sb, ">", "&gt;");
+		
+		return sb.toString();
+	}
+	
+	/**
+	 * Replaces some string with another value
+	 * @param sb the StrinbBuilder with the contents to work on
+	 * @param what the string to be replaced
+	 * @param with the new value
+	 * @return the new string
+	 */
+	public static String replaceAll(StringBuffer sb, String what, String with)
+	{
+		int pos = sb.indexOf(what);
+		
+		while (pos > -1) {
+			sb.replace(pos, pos + what.length(), with);
+			pos = sb.indexOf(what);
+		}
+		
+		return sb.toString();
+	}
+	
+	/**
+	 * @see #replaceAll(StringBuffer, String, String)
+	 */
+	public static String replaceAll(String contents, String what, String with)
+	{
+		return replaceAll(new StringBuffer(contents), what, with);
+	}
 
+	/**
+	 * Parse the user's signature, to make it proper to visualization
+	 * @param u the user instance
+	 * @throws Exception
+	 */
 	public static void prepareUserSignature(User u) throws Exception
 	{
 		if (u.getSignature() != null) {
-			u.setSignature(u.getSignature().replaceAll("\n", "<br/>"));
+			StringBuffer sb = new StringBuffer(u.getSignature());
+			
+			replaceAll(sb, "\n", "<br/>");
+			
+			u.setSignature(PostCommon.alwaysProcess(u.getSignature(), BBCodeRepository.getBBCollection().getAlwaysProcessList()));
 			u.setSignature(PostCommon.processText(u.getSignature()));
-			u.setSignature(PostCommon.processSmilies(u.getSignature(), SmiliesRepository.getSmilies()));
+			u.setSignature(PostCommon.processSmilies(new StringBuffer(u.getSignature()), SmiliesRepository.getSmilies()));
 		}
 	}
 }

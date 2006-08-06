@@ -50,6 +50,7 @@ import java.util.Vector;
 import net.jforum.exceptions.ForumException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.view.forum.common.ViewCommon;
 
 import org.apache.log4j.Logger;
 import org.htmlparser.Attribute;
@@ -66,7 +67,7 @@ import org.htmlparser.nodes.TextNode;
  * <li>http://quickwired.com/kallahar/smallprojects/php_xss_filter_function.php
  * <br>
  * @author Rafael Steil
- * @version $Id: SafeHtml.java,v 1.14 2006/03/14 18:16:27 rafaelsteil Exp $
+ * @version $Id: SafeHtml.java,v 1.15 2006/08/06 00:07:47 rafaelsteil Exp $
  */
 public class SafeHtml 
 {
@@ -109,10 +110,13 @@ public class SafeHtml
 				String text = node.toHtml();
 				
 				if (text.indexOf('>') > -1 || text.indexOf('<') > -1) {
-					text = text.replaceAll("<", "&lt;")
-						.replaceAll(">", "&gt;")
-						.replaceAll("\"", "&quot;");
-					node.setText(text);
+					StringBuffer tmp = new StringBuffer(text);
+					
+					ViewCommon.replaceAll(tmp, "<", "&lt");
+					ViewCommon.replaceAll(tmp, ">", "&gt");
+					ViewCommon.replaceAll(tmp, "\"", "&quot;");
+					
+					node.setText(tmp.toString());
 				}
 			}
 			else if (onlyEvaluateJs) {
@@ -123,7 +127,12 @@ public class SafeHtml
 				sb.append(node.toHtml());
 			}
 			else {
-				sb.append(node.toHtml().replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
+				StringBuffer tmp = new StringBuffer(node.toHtml());
+				
+				ViewCommon.replaceAll(tmp, "<", "&lt;");
+				ViewCommon.replaceAll(tmp, ">", "&gt;");
+				
+				sb.append(tmp.toString());
 			}
 		}
 		

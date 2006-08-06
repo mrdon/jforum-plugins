@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.30 2006/03/14 18:16:25 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.31 2006/08/06 00:07:45 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -92,19 +92,17 @@ public class PostCommon
 			return p;
 		}
 		
+		StringBuffer text = new StringBuffer(p.getText());
+		
 		if (!p.isHtmlEnabled()) {
-			p.setText(p.getText().replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
+			ViewCommon.replaceAll(text, "<", "&lt;");
+			ViewCommon.replaceAll(text, ">", "&gt;");
 		}
 		
 		// DO NOT remove the trailing blank space
-		p.setText(p.getText().replaceAll("\n", "<br/> "));
+		ViewCommon.replaceAll(text, "\n", "<br/> ");
 		
-		// Because bbcodes may have attributes not allowed by "html.attributes.welcome", 
-		// we force the "style" attribute at least to be present, because the default
-		// JForum installation uses it sometimes
-		String originalAttributesWelcome = SystemGlobals.getValue(ConfigKeys.HTML_ATTRIBUTES_WELCOME);
-		SystemGlobals.setValue(ConfigKeys.HTML_ATTRIBUTES_WELCOME, originalAttributesWelcome + ",style");
-		
+		p.setText(text.toString());
 		p.setText(alwaysProcess(p.getText(), BBCodeRepository.getBBCollection().getAlwaysProcessList()));
 
 		// Then, search for bb codes
@@ -114,18 +112,15 @@ public class PostCommon
 
 		// Smilies...
 		if (p.isSmiliesEnabled()) {
-			p.setText(processSmilies(p.getText(), SmiliesRepository.getSmilies()));
+			p.setText(processSmilies(new StringBuffer(p.getText()), SmiliesRepository.getSmilies()));
 		}
 		
 		p.setText(SafeHtml.avoidJavascript(p.getText()));
 
-		// Restore html.attributes.welcome
-		SystemGlobals.setValue(ConfigKeys.HTML_ATTRIBUTES_WELCOME, originalAttributesWelcome);
-		
 		return p;
 	}
 	
-	private static String alwaysProcess(String text, Collection bbList)
+	public  static String alwaysProcess(String text, Collection bbList)
 	{
 		for (Iterator iter = bbList.iterator(); iter.hasNext(); ) {
 			BBCode bb = (BBCode)iter.next();
@@ -140,91 +135,87 @@ public class PostCommon
 		if (text == null) {
 			return null;
 		}
+		
+		if (text.indexOf('[') == -1 || text.indexOf(']') == -1) {
+			return text;
+		}
 
-		if (text.indexOf('[') > -1 && text.indexOf(']') > -1) {
-			Iterator tmpIter = BBCodeRepository.getBBCollection().getBbList().iterator();
+		Iterator tmpIter = BBCodeRepository.getBBCollection().getBbList().iterator();
 
-			while (tmpIter.hasNext()) {
-				BBCode bb = (BBCode) tmpIter.next();
+		while (tmpIter.hasNext()) {
+			BBCode bb = (BBCode) tmpIter.next();
 
-				// Another hack for the quotes
-				if (bb.getTagName().equals("openQuote") || bb.getTagName().equals("openSimpleQuote")) {
-					Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
+			// Another hack for the quotes
+			if (bb.getTagName().equals("openQuote") 
+					|| bb.getTagName().equals("openSimpleQuote")
+					|| bb.getTagName().equals("closeQuote")) {
+				text = text.replaceAll(bb.getRegex(), bb.getReplace());
+			}
+			else if (bb.getTagName().equals("code")) {
+				Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
+				StringBuffer sb = new StringBuffer(text);
 
-					while (matcher.find()) {
-						text = text.replaceFirst(bb.getRegex(), bb.getReplace());
-					}
-				}
-				else if (bb.getTagName().equals("closeQuote")) {
-					Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
+				while (matcher.find()) {
+					StringBuffer contents = new StringBuffer(matcher.group(1));
+
+					ViewCommon.replaceAll(contents, "<br/>", "\n");
+
+					// Do not allow other bb tags inside "code"
+					ViewCommon.replaceAll(contents, "[", "&#91;");
+					ViewCommon.replaceAll(contents, "]", "&#93;");
+
+					// Try to bypass smilies interpretation
+					ViewCommon.replaceAll(contents, "(", "&#40;");
+					ViewCommon.replaceAll(contents, ")", "&#41;");
+
+					// XML-like tags
+					ViewCommon.replaceAll(contents, "<", "&lt;");
+					ViewCommon.replaceAll(contents, ">", "&gt;");
+
+					StringBuffer replace = new StringBuffer(bb.getReplace());
+					int index = replace.indexOf("$1");
 					
-					while (matcher.find()) {
-						text = text.replaceFirst(bb.getRegex(), bb.getReplace());
+					if (index > -1) {
+						replace.replace(index, index + 2, contents.toString());
+					}
+
+					index = sb.indexOf("[code]");
+					int lastIndex = sb.indexOf("[/code]") + "[/code]".length();
+
+					if (lastIndex > index) {
+						sb.replace(index, lastIndex, replace.toString());
 					}
 				}
-				else if (bb.getTagName().equals("code")) {
-					Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
-					StringBuffer sb = new StringBuffer(text);
-
-					while (matcher.find()) {
-						String contents = matcher.group(1);
-
-						// Firefox seems to interpret <br/> inside <pre>,
-						// so we need this bizarre workaround
-						contents = contents.replaceAll("<br/>", "\n");
-
-						// Do not allow other bb tags inside "code"
-						contents = contents.replaceAll("\\[", "&#91;").replaceAll("\\]", "&#93;");
-
-						// Try to bypass smilies interpretation
-						contents = contents.replaceAll("\\(", "&#40;").replaceAll("\\)", "&#41;");
-
-						// XML-like tags
-						contents = contents.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-
-						StringBuffer replace = new StringBuffer(bb.getReplace());
-						int index = replace.indexOf("$1");
-						
-						if (index > -1) {
-							replace.replace(index, index + 2, contents);
-						}
-
-						index = sb.indexOf("[code]");
-						int lastIndex = sb.indexOf("[/code]") + "[/code]".length();
-
-						if (lastIndex > index) {
-							sb.replace(index, lastIndex, replace.toString());
-						}
-					}
-					
-					text = sb.toString();
-				}
-				else {
-					text = text.replaceAll(bb.getRegex(), bb.getReplace());
-				}
+				
+				text = sb.toString();
+			}
+			else {
+				text = text.replaceAll(bb.getRegex(), bb.getReplace());
 			}
 		}
 
 		return text;
 	}
 
-	public static String processSmilies(String text, List smilies)
+	/**
+	 * Replace the smlies code by the respective URL.
+	 * @param text The text to process
+	 * @param smilies the relation of {@link Smilie} instances
+	 * @return the parsed text. Note that the StringBuffer you pass as parameter
+	 * will already have the right contents, as the replaces are done on the instance
+	 */
+	public static String processSmilies(StringBuffer text, List smilies)
 	{
-		if (text == null || text.equals("")) {
-			return text;
-		}
-
-		Iterator iter = smilies.iterator();
-		while (iter.hasNext()) {
+		for (Iterator iter = smilies.iterator(); iter.hasNext(); ) {
 			Smilie s = (Smilie) iter.next();
-
-			int index = text.indexOf(s.getCode());
-			if (index > -1) {
-				text = text.replaceAll("\\Q" + s.getCode() + "\\E", s.getUrl());
+			int pos = text.indexOf(s.getCode());
+			
+			if (pos > -1) {
+				text.replace(pos, pos + s.getCode().length(), s.getUrl());
 			}
 		}
 
-		return text;
+		return text.toString();
 	}
 
 	public static Post fillPostFromRequest() throws Exception

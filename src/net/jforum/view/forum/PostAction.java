@@ -97,7 +97,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.147 2006/07/03 00:27:42 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.148 2006/08/06 00:07:46 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -535,7 +535,7 @@ public class PostAction extends Command
 
 		User user = DataAccessDriver.getInstance().newUserDAO().selectById(userId);
 		user.setSignature(PostCommon.processText(user.getSignature()));
-		user.setSignature(PostCommon.processSmilies(user.getSignature(), SmiliesRepository.getSmilies()));
+		user.setSignature(PostCommon.processSmilies(new StringBuffer(user.getSignature()), SmiliesRepository.getSmilies()));
 
 		if (this.request.getParameter("preview") != null) {
 			user.setNotifyOnMessagesEnabled(this.request.getParameter("notify") != null);
