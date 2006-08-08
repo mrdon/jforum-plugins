@@ -63,6 +63,10 @@ function checkDatabase()
 			if (f.dbpasswd.value == "") {
 				s += "${I18n.getMessage("Install.dbPassword")} ${I18n.getMessage("Install.isEmpty")}\n";
 			}
+
+			if (f.dbport.value == "") {
+				s += "${I18n.getMessage("Install.dbPort")} ${I18n.getMessage("Install.isEmpty")}\n";
+			}
 		}
 		else {
 			if (f.dbpasswd.value == "" || f.dbuser.value == "") {
@@ -89,6 +93,18 @@ function checkDatabase()
 	}
 
 	return true;
+}
+
+function changeDbPort(dbName)
+{
+	var port = document.install.dbport;
+
+	if (dbName == "mysql") port.value = 3306;
+	else if (dbName == "oracle") port.value = 1521;
+	else if (dbName == "postgresql") port.value = 5432;
+	else if (dbName == "hsqldb") { 
+		port.enabled = false;
+	}
 }
 </script>
 </head>
@@ -148,7 +164,17 @@ function checkDatabase()
 								<option value="de_DE" <#if language?default("") == "de_DE">selected</#if>>German (de_DE)</option>
 								<option value="nl_NL" <#if language?default("") == "nl_NL">selected</#if>>Dutch (nl_NL)</option>
 								<option value="pt_BR" <#if language?default("") == "pt_BR">selected</#if>>Portugu&ecirc;s do Brasil (pt_BR)</option>
+								<option value="pt_PT" <#if language?default("") == "pt_PT">selected</#if>>Portuguese (Portugal) (pt_PT)</option>
 								<option value="ru_RU" <#if language?default("") == "ru_RU">selected</#if>>Russian (ru_RU)</option>
+								<option value="ar_SA" <#if language?default("") == "ar_SA">selected</#if>>Arabic (Saudi Arabia) (ar_SA)</option>
+								<option value="fi_FI" <#if language?default("") == "fi_FI">selected</#if>>Finnish (Finland) (fi_FI)</option>
+								<option value="hu_HU" <#if language?default("") == "hu_HU">selected</#if>>Hungarian (Hungary) (hu_HU)</option>
+								<option value="it_IT" <#if language?default("") == "it_IT">selected</#if>>Italian (Italy) (it_IT)</option>
+								<option value="pl_PL" <#if language?default("") == "pl_PL">selected</#if>>Polish (Poland) (pl_PL)</option>
+								<option value="sp_SP" <#if language?default("") == "sp_SP">selected</#if>>Spanish (sp_SP)</option>
+								<option value="es_ES" <#if language?default("") == "es_ES">selected</#if>>Spanish (Spain) (es_ES)</option>
+								<option value="sv_SV" <#if language?default("") == "sv_SV">selected</#if>>Swedish (sv_SV)</option>
+								<option value="vi_VN" <#if language?default("") == "vi_VN">selected</#if>>Vietnamese (Vietnam) (vi_VN)</option>
 							</select>
 						</td>
 					</tr>
@@ -156,7 +182,7 @@ function checkDatabase()
 						<td class="row1" align="right" valign="top"><span class="gen"><b>${I18n.getMessage("Install.dbType")}: </b></span></td>
 
 						<td class="row2">
-							<select name="database">
+							<select name="database" onChange="changeDbPort(this.value);">
 								<option value="mysql" <#if database?default("") == "mysql">selected</#if>>MySQL</option>
 								<option value="postgresql" <#if database?default("") == "postgresql">selected</#if>>PostgreSQL</option>
 								<option value="oracle" <#if database?default("") == "oracle">selected</#if>>Oracle</option>
@@ -210,6 +236,9 @@ function checkDatabase()
 						f.dbname.style.bgcolor = color;
 						f.dbname.disabled = !status;
 
+						f.dbport.style.bgcolor = color;
+						f.dbport.disabled = !status;
+
 						f.dbuser.style.bgcolor = color;
 						f.dbuser.disabled = !status;
 
@@ -252,6 +281,14 @@ function checkDatabase()
 					<tr>
 						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbHost")}</b></span></td>
 						<td class="row2"><input type="text" name="dbhost" value="${dbhost?default("localhost")}" /></td>
+					</tr>
+
+					<tr>
+						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbPort")}</b></span></td>
+						<td class="row2">
+							<input type="text" name="dbhost" value="${dbport?default("")}" /><br>
+							<span class="gensmall">${I18n.getMessage("Install.dbPortTip")}</span>
+						</td>
 					</tr>
 
 					<tr>

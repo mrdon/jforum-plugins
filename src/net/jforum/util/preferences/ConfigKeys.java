@@ -48,7 +48,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.89 2006/07/20 00:49:40 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.90 2006/08/08 00:52:11 rafaelsteil Exp $
 */
 
 public class ConfigKeys 
@@ -73,6 +73,7 @@ public class ConfigKeys
 	public static final String DATABASE_CONNECTION_ENCODING = "dbencoding";
 	public static final String DATABASE_CONNECTION_DRIVER = "database.connection.driver";
 	public static final String DATABASE_CONNECTION_STRING = "database.connection.string";
+	public static final String DATABASE_CONNECTION_PORT = "database.connection.port";
 	public static final String DATABASE_POOL_MIN = "database.connection.pool.min";
 	public static final String DATABASE_POOL_MAX = "database.connection.pool.max";
 	public static final String DATABASE_USE_TRANSACTIONS = "database.use.transactions";

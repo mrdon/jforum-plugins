@@ -84,7 +84,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.46 2006/02/12 22:27:31 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.47 2006/08/08 00:52:10 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -99,6 +99,7 @@ public class InstallAction extends Command
 		this.context.put("dbhost", this.getFromSession("dbHost"));
 		this.context.put("dbuser", this.getFromSession("dbUser"));
 		this.context.put("dbname", this.getFromSession("dbName"));
+		this.context.put("dbport", this.getFromSession("dbPort"));
 		this.context.put("dbpasswd", this.getFromSession("dbPassword"));
 		this.context.put("dbencoding", this.getFromSession("dbEncoding"));
 		this.context.put("use_pool", this.getFromSession("usePool"));
@@ -241,6 +242,7 @@ public class InstallAction extends Command
 		try {
 			// Modules Mapping
 			String modulesMapping = SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/modulesMapping.properties";
+			
 			if (new File(modulesMapping).canWrite()) {
 				Properties p = new Properties();
 				p.load(new FileInputStream(modulesMapping));
@@ -258,7 +260,6 @@ public class InstallAction extends Command
 		catch (Exception e) {
 			logger.warn("Error while working on modulesMapping.properties: " + e);
 		}
-		
 		
 		try {
 			// Index renaming
@@ -305,9 +306,9 @@ public class InstallAction extends Command
 		String dbType = this.getFromSession("database");
 		
 		List statements = ParseDBDumpFile.parse(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
-				+ "/database/" 
-				+ dbType
-				+ "/" + dbType + "_data_dump.sql");
+			+ "/database/" 
+			+ dbType
+			+ "/" + dbType + "_data_dump.sql");
 
 		for (Iterator iter = statements.iterator(); iter.hasNext();) {
 			String query = (String)iter.next();
@@ -363,9 +364,9 @@ public class InstallAction extends Command
 		boolean status = true;
 		
 		List statements = ParseDBStructFile.parse(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
-				+ "/database/"
-				+ dbType
-				+ "/" + dbType + "_db_struct.sql");
+			+ "/database/"
+			+ dbType
+			+ "/" + dbType + "_db_struct.sql");
 			
 		for (Iterator iter = statements.iterator(); iter.hasNext(); ) {
 			String query = (String)iter.next();
@@ -456,6 +457,31 @@ public class InstallAction extends Command
 		return new File(SystemGlobals.getApplicationPath() + "/index.htm").canWrite();
 	}
 	
+	private void handleDatabasePort(Properties p, String port)
+	{
+		String portKey = ":${database.connection.port}";
+		String connectionString = p.getProperty(ConfigKeys.DATABASE_CONNECTION_STRING);
+		
+		if (port == null || port.trim().length() == 0) {
+			int index = connectionString.indexOf(portKey);
+			
+			if (index > -1) {
+				if (connectionString.charAt(index - 1) == '\\') {
+					connectionString = connectionString.replaceAll("\\" + portKey, "");
+				}
+				else {
+					connectionString = connectionString.replaceAll(portKey, "");
+				}
+			}
+		}
+		else if (connectionString.indexOf(portKey) == -1) {
+			String hostKey = "${database.connection.host}";
+			connectionString = connectionString.replace(hostKey, hostKey + portKey);
+		}
+		
+		p.setProperty(ConfigKeys.DATABASE_CONNECTION_STRING, connectionString);
+	}
+	
 	private void configureJDBCConnection() throws Exception
 	{
 		String username = this.getFromSession("dbUser");
@@ -464,10 +490,15 @@ public class InstallAction extends Command
 		String host = this.getFromSession("dbHost");
 		String type = this.getFromSession("database");
 		String encoding = this.getFromSession("dbEncoding");
+		String port = this.getFromSession("dbPort");
+		
+		String dbConfigFilePath = SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) 
+			+ "/database/" + type + "/" + type + ".properties";
 		
 		Properties p = new Properties();
-		p.load(new FileInputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) 
-				+ "/database/" + type + "/" + type + ".properties"));
+		p.load(new FileInputStream(dbConfigFilePath));
+		
+		this.handleDatabasePort(p, port);
 		
 		// Write database information to the respective file
 		p.setProperty(ConfigKeys.DATABASE_CONNECTION_HOST, host);
@@ -475,12 +506,12 @@ public class InstallAction extends Command
 		p.setProperty(ConfigKeys.DATABASE_CONNECTION_PASSWORD, password);
 		p.setProperty(ConfigKeys.DATABASE_CONNECTION_DBNAME, dbName);
 		p.setProperty(ConfigKeys.DATABASE_CONNECTION_ENCODING, encoding);
+		p.setProperty(ConfigKeys.DATABASE_CONNECTION_PORT, port);
 
 		FileOutputStream fos = null;
 		
 		try {
-			fos = new FileOutputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) 
-					+ "/database/" + type + "/" + type + ".properties");
+			fos = new FileOutputStream(dbConfigFilePath);
 			p.store(fos, null);
 		}
 		catch (Exception e) {
@@ -495,14 +526,12 @@ public class InstallAction extends Command
 		// Proceed to SystemGlobals / jforum-custom.conf configuration
 		for (Enumeration e = p.keys(); e.hasMoreElements(); ) {
 			String key = (String)e.nextElement();
-			SystemGlobals.setValue(key, p.getProperty(key));
+			String value = p.getProperty(key);
+			
+			SystemGlobals.setValue(key, value);
+			
+			logger.info("Updating key " + key + " with value " + value);
 		}
-		
-		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_HOST, host);
-		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_USERNAME, username);
-		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_PASSWORD, password);
-		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_DBNAME, dbName);
-		SystemGlobals.setValue(ConfigKeys.DATABASE_CONNECTION_ENCODING, encoding);
 	}
 	
 	private void copyFile(String from, String to) throws Exception
@@ -520,6 +549,7 @@ public class InstallAction extends Command
 		String database = this.getFromSession("database");
 		String connectionType = this.getFromSession("db_connection_type");
 		String implementation;
+		
 		boolean isDs = false;
 		
 		if ("JDBC".equals(connectionType)) {
@@ -542,9 +572,10 @@ public class InstallAction extends Command
 		this.restartSystemGlobals();
 		
 		int fileChangesDelay = SystemGlobals.getIntValue(ConfigKeys.FILECHANGES_DELAY);
+		
 		if (fileChangesDelay > 0) {
 			FileMonitor.getInstance().addFileChangeListener(new SystemGlobalsListener(),
-					SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG), fileChangesDelay);
+				SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG), fileChangesDelay);
 		}
 		
 		Connection conn = null;
@@ -575,6 +606,7 @@ public class InstallAction extends Command
 	private void restartSystemGlobals() throws Exception
 	{
 		String appPath = SystemGlobals.getApplicationPath();
+		
 		SystemGlobals.initGlobals(appPath, appPath + "/WEB-INF/config/SystemGlobals.properties");
         SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
         
@@ -612,6 +644,7 @@ public class InstallAction extends Command
 		String language = this.request.getParameter("language");
 		String database = this.request.getParameter("database");
 		String dbHost = this.request.getParameter("dbhost");
+		String dbPort = this.request.getParameter("dbport");
 		String dbUser = this.request.getParameter("dbuser");
 		String dbName = this.request.getParameter("dbname");
 		String dbPassword = this.request.getParameter("dbpasswd");
@@ -634,6 +667,7 @@ public class InstallAction extends Command
 		this.addToSessionAndContext("language", language);
 		this.addToSessionAndContext("database", database);
 		this.addToSessionAndContext("dbHost", dbHost);
+		this.addToSessionAndContext("dbPort", dbPort);
 		this.addToSessionAndContext("dbUser", dbUser);
 		this.addToSessionAndContext("dbName", dbName);
 		this.addToSessionAndContext("dbPassword", dbPassword);
@@ -678,8 +712,9 @@ public class InstallAction extends Command
 
 		for (int i = 0; i < tables.length; i++) {
 			Statement s = conn.createStatement();
-			String query = tables[i].endsWith("_seq") ? "DROP SEQUENCE " : "DROP TABLE ";
-			query += tables[i];
+			
+			String query = new StringBuffer(tables[i].endsWith("_seq") ? "DROP SEQUENCE " : "DROP TABLE ")
+				.append(tables[i]).toString();
 			
 			try {
 				s.executeUpdate(query);
