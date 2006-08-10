@@ -84,7 +84,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.47 2006/08/08 00:52:10 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.48 2006/08/10 00:20:41 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -204,6 +204,7 @@ public class InstallAction extends Command
 	private void removeUserConfig()
 	{
 		File f = new File(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG));
+		
 		if (f.exists() && f.canWrite()) {
 			try {
 				f.delete();
@@ -249,12 +250,12 @@ public class InstallAction extends Command
 				
 				if (p.containsKey("install")) {
 					p.remove("install");
-					
+
 					p.store(new FileOutputStream(modulesMapping), "Modified by JForum Installer");
-					
-					this.addToSessionAndContext("mappingFixed", "true");
 					ConfigLoader.loadModulesMapping(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR));
 				}
+				
+				this.addToSessionAndContext("mappingFixed", "true");
 			}
 		}
 		catch (Exception e) {
@@ -273,9 +274,9 @@ public class InstallAction extends Command
 				if (newIndexFile.exists()) {
 					indexFile.delete();
 					newIndexFile.renameTo(indexFile);
-					
-					this.addToSessionAndContext("indexFixed", "true");
 				}
+				
+				this.addToSessionAndContext("indexFixed", "true");
 			}
 		}
 		catch (Exception e) {
@@ -291,7 +292,7 @@ public class InstallAction extends Command
 		SystemGlobals.setValue(ConfigKeys.FORUM_LINK, this.getFromSession("forumLink"));
 		SystemGlobals.setValue(ConfigKeys.HOMEPAGE_LINK, this.getFromSession("siteLink"));
 		SystemGlobals.setValue(ConfigKeys.I18N_DEFAULT, this.getFromSession("language"));
-		SystemGlobals.setValue(ConfigKeys.INSTALLED, "true");
+		//SystemGlobals.setValue(ConfigKeys.INSTALLED, "true");
 		SystemGlobals.saveInstallation();
 		
 		this.restartSystemGlobals();

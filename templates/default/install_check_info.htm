@@ -1,9 +1,8 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=${encoding}">
 <meta http-equiv="Content-Style-Type" content="text/css">
-<title>JForum 2.1.5 Installation - Step 2</title>
+<title>JForum 2.1.7 Installation - Step 2</title>
 <link rel="stylesheet" href="${contextPath}/templates/default/styles/style.css" type="text/css">
 <style type="text/css">
 th			{ background-image: url('${contextPath}/templates/default/images/cellpic3.gif') }
@@ -27,7 +26,7 @@ td.cathead,td.catsides,td.catleft,td.catright,td.catbottom { background-image: u
 				<td><table width="100%" border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td><img src="${contextPath}/templates/default/images/logo.jpg" border="0" alt="JForum" vspace="1" /></td>
-						<td align="center" width="100%" valign="middle"><span class="maintitle">JForum 2.1.5 ${I18n.getMessage("Install.installation")}</span></td>
+						<td align="center" width="100%" valign="middle"><span class="maintitle">JForum 2.1.7 ${I18n.getMessage("Install.installation")}</span></td>
 					</tr>
 				</table></td>
 			</tr>
@@ -62,69 +61,71 @@ td.cathead,td.catsides,td.catleft,td.catright,td.catbottom { background-image: u
 
 					</tr>
 					<tr>
-						<td class="row1" align="right" width="40%"><span class="gen"><b>${I18n.getMessage("Install.boardLanguage")}</b> </span></td>
-						<td class="row2"><span class="gen">${language}</span></td>
+						<td class="row3" align="right" width="40%"><span class="gen"><b>${I18n.getMessage("Install.boardLanguage")}</b> </span></td>
+						<td class="row3"><span class="gen">${language}</span></td>
 					</tr>
 					<tr>
 						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbType")}: </b></span></td>
-						<td class="row2"><span class="gen">${database}</span></td>
+						<td class="row1"><span class="gen">${database}</span></td>
 					</tr>
 					<tr>
 						<th colspan="2">2) ${I18n.getMessage("Install.dbConfiguration")}</th>
 					</tr>
 					<#if db_connection_type?default("JDBC") == "JDBC">
-					<tr>
-						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbHost")}</b></span></td>
-						<td class="row2"><span class="gen">${dbHost}</span></td>
-					</tr>
+						<tr>
+							<td class="row3" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbHost")}</b></span></td>
+							<td class="row3">
+								<span class="gen">${dbHost}<#if dbPort?exists>:${dbPort}</#if></span>
+							</td>
+						</tr>
 
-					<tr>
-						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbName")}: </b></span></td>
-						<td class="row2"><span class="gen">${dbName}</span></td>
-					</tr>
-					<tr>
-						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbUsername")}: </b></span></td>
-						<td class="row2"><span class="gen">${dbUser}</span></td>
-					</tr>
+						<tr>
+							<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbName")}: </b></span></td>
+							<td class="row1"><span class="gen">${dbName}</span></td>
+						</tr>
+						<tr>
+							<td class="row3" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbUsername")}: </b></span></td>
+							<td class="row3"><span class="gen">${dbUser}</span></td>
+						</tr>
 
-					<tr>
-						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbPassword")}: </b></span></td>
-						<td class="row2"><span class="gen">(${I18n.getMessage("Install.notShown")})</span></td>
-					</tr>
+						<tr>
+							<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbPassword")}: </b></span></td>
+							<td class="row1"><span class="gen">(${I18n.getMessage("Install.notShown")})</span></td>
+						</tr>
 
-					<tr>
-						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbEncoding")}: </b></span></td>
-						<td class="row2"><span class="gen">${dbEncoding}</span></td>
-					</tr>
+						<tr>
+							<td class="row3" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbEncoding")}: </b></span></td>
+							<td class="row3"><span class="gen">${dbEncoding}</span></td>
+						</tr>
 
-					<tr>
-						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.pool")}: </b></span></td>
-						<td class="row2"><span class="gen">${usePool}</span></td>
-					</tr>
+						<tr>
+							<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.pool")}: </b></span></td>
+							<td class="row1"><span class="gen">${usePool}</span></td>
+						</tr>
 					<#else>
 					<tr>
-						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbDataSource")}: </b></span></td>
-						<td class="row2"><span class="gen">${dbdatasource}</span></td>
-					</tr>
-          </#if>
+							<td class="row3" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbDataSource")}: </b></span></td>
+							<td class="row3"><span class="gen">${dbdatasource}</span></td>
+						</tr>
+					 </#if>
 					<tr>
 						<th colspan="2">3) ${I18n.getMessage("Install.boardConfiguration")}</th>
 					</tr>					
 					<tr>
 						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.forumLink")}: </b></span></td>
-						<td class="row2"><span class="gen">${forumLink}</span></td>
+						<td class="row1"><span class="gen">${forumLink}</span></td>
 					</tr>
 					<tr>
-						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.siteLink")}: </b></span></td>
-						<td class="row2"><span class="gen">${siteLink}</span></td>
+						<td class="row3" align="right"><span class="gen"><b>${I18n.getMessage("Install.siteLink")}: </b></span></td>
+						<td class="row3"><span class="gen">${siteLink}</span></td>
 					</tr> 					 
 					<tr>
 						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.adminUser")}: </b></span></td>
 						<td class="row2"><span class="gen">Admin</span></td>
 					</tr>
 					<tr>
-						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.adminPassword")}: </b></span></td>
-						<td class="row2"><span class="gen">(${I18n.getMessage("Install.notShown")})</span></td>
+						<td class="row3" align="right"><span class="gen"><b>${I18n.getMessage("Install.adminPassword")}: </b></span></td>
+						<td class="row3"><span class="gen">(${I18n.getMessage("Install.notShown")})</span></td>
 					</tr>
 					<script language="javascript">
 					function beginInstall()
@@ -150,6 +151,7 @@ td.cathead,td.catsides,td.catleft,td.catright,td.catbottom { background-image: u
 </table></td>
 	</tr>
 </table>
+
 </td>
 </tr>
 </table>

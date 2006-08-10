@@ -103,6 +103,7 @@ function changeDbPort(dbName)
 	else if (dbName == "oracle") port.value = 1521;
 	else if (dbName == "postgresql") port.value = 5432;
 	else if (dbName == "hsqldb") { 
+		port.value = "";
 		port.enabled = false;
 	}
 }
@@ -110,7 +111,11 @@ function changeDbPort(dbName)
 </head>
 <body text="#000000" link="#006699" vlink="#5584AA">
 
-<table width="70%" border="0" cellspacing="0" cellpadding="10" align="center"> 
+<table width="70%" height="100%" align="center">
+<tr>
+<td valign="middle" align="center">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="10" align="center"> 
 	<tr>
 		<td class="bodyline" width="100%"><table width="100%" border="0" cellspacing="0" cellpadding="0">
 
@@ -154,8 +159,8 @@ function changeDbPort(dbName)
 
 					</tr>
 					<tr>
-						<td class="row1" align="right" width="40%"><span class="gen"><b>${I18n.getMessage("Install.boardLanguage")}:</b> </span></td>
-						<td class="row2">
+						<td class="row3" align="right" width="40%"><span class="gen"><b>${I18n.getMessage("Install.boardLanguage")}:</b> </span></td>
+						<td class="row3">
 							<select name="language" onChange="document.location = '${contextPath}/install/install${extension}?module=install&action=welcome&l=' + this.value;">
 								<option value="en_US" <#if language?default("") == "en_US">selected</#if>>English American (en_US)</option>
 								<option value="zh_TW" <#if language?default("") == "zh_TW">selected</#if>>Chinese Traditional (zh_TW)</option>
@@ -180,8 +185,7 @@ function changeDbPort(dbName)
 					</tr>
 					<tr>
 						<td class="row1" align="right" valign="top"><span class="gen"><b>${I18n.getMessage("Install.dbType")}: </b></span></td>
-
-						<td class="row2">
+						<td class="row1">
 							<select name="database" onChange="changeDbPort(this.value);">
 								<option value="mysql" <#if database?default("") == "mysql">selected</#if>>MySQL</option>
 								<option value="postgresql" <#if database?default("") == "postgresql">selected</#if>>PostgreSQL</option>
@@ -190,18 +194,17 @@ function changeDbPort(dbName)
 							</select>
 							<br>
 							<span class="gensmall">
-							${I18n.getMessage("Install.dbTip")}
+							<font color="green">${I18n.getMessage("Install.dbTip")}</font>
 						</td>
 					</tr>
 
 					<tr>
-						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.type")}:</b></span></td>
-						<td class="row2">
+						<td class="row3" align="right" valign="top"><span class="gen"><b>${I18n.getMessage("Install.type")}:</b></span></td>
+						<td class="row3">
 							<select name="install_type">
 								<option value="0">${I18n.getMessage("Install.typeNew")}</option>
-								<!-- <option value="1">${I18n.getMessage("Install.typeUpgrade")}</option> -->
 							</select>
-							<br/><span class="gensmall">${I18n.getMessage("Install.upgradeNotSupported")}</span>
+							<br/><span class="gensmall"><font color="green">${I18n.getMessage("Install.upgradeNotSupported")}</font></span>
 						</td>
 
 					</tr>
@@ -209,7 +212,7 @@ function changeDbPort(dbName)
 						<th colspan="2">2) ${I18n.getMessage("Install.dbConfiguration")}</th>
 					</tr>
 					<tr>
-						<td class="row2" colspan="2">
+						<td class="row1" colspan="2">
 						<span class="gensmall">
 						${I18n.getMessage("Install.dbTipGeneral")}
 						</span>
@@ -260,62 +263,62 @@ function changeDbPort(dbName)
 					</script>
 
 					<tr>
-						<td class="row1" align="right" valign="top"><span class="gen"><b>${I18n.getMessage("Install.dbConnectionType")}</b></span></td>
-						<td class="row2">
+						<td class="row3" align="right" valign="top"><span class="gen"><b>${I18n.getMessage("Install.dbConnectionType")}</b></span></td>
+						<td class="row3">
 							<select name="db_connection_type" onChange="enableNativeFields()">
 								<option value="JDBC" <#if db_connection_type?default("native") == "native">selected</#if>>${I18n.getMessage("Install.dbConnectionTypeNative")}</option>
 								<option value="ds" <#if db_connection_type?default("native") == "ds">selected</#if>>${I18n.getMessage("Install.dbConnectionTypeDs")}</option>
 							</select><br/>
-							<span class="gensmall">${I18n.getMessage("Install.dbConnectionTypeTip")}</span>
+							<span class="gensmall"><font color="green">${I18n.getMessage("Install.dbConnectionTypeTip")}</font></span>
 						</td>
 					</tr>
 
 					<tr>
 						<td class="row1" align="right" valign="top"><span class="gen"><b>${I18n.getMessage("Install.dbDataSource")}</b></span></td>
-						<td class="row2">
+						<td class="row1">
 							<input type="text" name="dbdatasource" value="${dbdatasource?default("")}" disabled style="bgcolor: #cccccc;"/><br/>
-							<span class="gensmall">${I18n.getMessage("Install.dbDataSourceTip")}</span>
+							<span class="gensmall"><font color="green">${I18n.getMessage("Install.dbDataSourceTip")}</font></span>
 						</td>
 					</tr>
 
 					<tr>
-						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbHost")}</b></span></td>
-						<td class="row2"><input type="text" name="dbhost" value="${dbhost?default("localhost")}" /></td>
+						<td class="row3" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbHost")}</b></span></td>
+						<td class="row3"><input type="text" name="dbhost" value="${dbhost?default("localhost")}" /></td>
 					</tr>
 
 					<tr>
-						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbPort")}</b></span></td>
-						<td class="row2">
-							<input type="text" name="dbhost" value="${dbport?default("")}" /><br>
-							<span class="gensmall">${I18n.getMessage("Install.dbPortTip")}</span>
+						<td class="row1" align="right" valign="top"><span class="gen"><b>${I18n.getMessage("Install.dbPort")}</b></span></td>
+						<td class="row1">
+							<input type="text" name="dbport" value="<#if !database?exists>3306<#else>${dbport?default("")}</#if>" /><br>
+							<span class="gensmall"><font color="green">${I18n.getMessage("Install.dbPortTip")}</font></span>
 						</td>
 					</tr>
 
 					<tr>
-						<td class="row1" align="right" valign="top"><span class="gen"><b>${I18n.getMessage("Install.dbName")}: </b></span></td>
-						<td class="row2">
+						<td class="row3" align="right" valign="top"><span class="gen"><b>${I18n.getMessage("Install.dbName")}: </b></span></td>
+						<td class="row3">
 						<input type="text" name="dbname" value="${dbname?default("jforum")}" /><br/>
-						<span class="gensmall">${I18n.getMessage("Install.dbNameTip")}</span>
+						<span class="gensmall"><font color="green">${I18n.getMessage("Install.dbNameTip")}</font></span>
 						</td>
 					</tr>
 					<tr>
 						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbUsername")}: </b></span></td>
-						<td class="row2"><input type="text" name="dbuser" value="${dbuser?default("")}" /></td>
+						<td class="row1"><input type="text" name="dbuser" value="${dbuser?default("")}" /></td>
 					</tr>
 
 					<tr>
-						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbPassword")}: </b></span></td>
-						<td class="row2"><input type="password" name="dbpasswd" value="${dbpasswd?default("")}" /></td>
+						<td class="row3" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbPassword")}: </b></span></td>
+						<td class="row3"><input type="password" name="dbpasswd" value="${dbpasswd?default("")}" /></td>
 					</tr>
 
 					<tr>
 						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.dbPassword")} [ ${I18n.getMessage("Install.confirm")} ]: </b></span></td>
-						<td class="row2"><input type="password" name="dbpasswd_confirm" value="" /></td>
+						<td class="row1"><input type="password" name="dbpasswd_confirm" value="" /></td>
 					</tr>
 
 					<tr>
-						<td class="row1" align="right" valign="top"><span class="gen"><b>${I18n.getMessage("Install.dbEncoding")}: </b></span></td>
-						<td class="row2">
+						<td class="row3" align="right" valign="top"><span class="gen"><b>${I18n.getMessage("Install.dbEncoding")}: </b></span></td>
+						<td class="row3">
 							<select name="dbencoding">
 								<option value="">${I18n.getMessage("Install.selectEncodig")}</option>
 								<option value="utf-8" <#if dbencoding?default("") == "utf-8">selected</#if>>UTF-8</option>
@@ -325,14 +328,14 @@ function changeDbPort(dbName)
 							<span class="gen"><b>${I18n.getMessage("Install.other")} </b></span><input type="text" name="dbencoding_other" value="${dbencoding?default("")}">
 							<br/>
 							<span class="gensmall">
-							${I18n.getMessage("Install.encodingTip")}
+							<font color="green">${I18n.getMessage("Install.encodingTip")}</font>
 							</span>
 						</td>
 					</tr>
 
 					<tr>
 						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.pool")}: </b></span></td>
-						<td class="row2">
+						<td class="row1">
 							<select name="use_pool">
 								<option value="yes" <#if use_pool?default("") == "yes">selected</#if>>${I18n.getMessage("User.yes")}</option>
 								<option value="no" <#if use_pool?default("") == "no">selected</#if>>${I18n.getMessage("User.no")}</option>
@@ -344,27 +347,27 @@ function changeDbPort(dbName)
 						<th colspan="2">3) ${I18n.getMessage("Install.boardConfiguration")}</th>
 					</tr>
 					<tr>
-						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.forumLink")}: </b></span></td>
+						<td class="row3" align="right"><span class="gen"><b>${I18n.getMessage("Install.forumLink")}: </b></span></td>
 						<#if serverPort != "80"><#assign serverName = serverName + ":" + serverPort/></#if>
 						<#assign flink = serverName + contextPath?default("") + "/"/>
-						<td class="row2"><input type="text" name="forum_link" value="${forumLink?default("http://${flink}")}" size="40"/></td>
+						<td class="row3"><input type="text" name="forum_link" value="${forumLink?default("http://${flink}")}" size="40"/></td>
 					</tr> 
 					<tr>
 						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.siteLink")}: </b></span></td>
-						<td class="row2"><input type="text" name="site_link" value="${siteLink?default("http://${serverName}")}" size="40"/></td>
+						<td class="row1"><input type="text" name="site_link" value="${siteLink?default("http://${serverName}")}" size="40"/></td>
 					</tr> 
 					<tr>
-						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.adminUser")}: </b></span></td>
-						<td class="row2"><span class="gen">Admin</span></td>
+						<td class="row3" align="right"><span class="gen"><b>${I18n.getMessage("Install.adminUser")}: </b></span></td>
+						<td class="row3"><span class="gen">Admin</span></td>
 					</tr>
 					<tr>
 
 						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.adminPassword")}: </b></span></td>
-						<td class="row2"><input type="password" name="admin_pass1" value="" /></td>
+						<td class="row1"><input type="password" name="admin_pass1" value="" /></td>
 					</tr>
 					<tr>
-						<td class="row1" align="right"><span class="gen"><b>${I18n.getMessage("Install.adminPassword")} [ ${I18n.getMessage("Install.confirm")} ]: </b></span></td>
-						<td class="row2"><input type="password" name="admin_pass2" value="" /></td>
+						<td class="row3" align="right"><span class="gen"><b>${I18n.getMessage("Install.adminPassword")} [ ${I18n.getMessage("Install.confirm")} ]: </b></span></td>
+						<td class="row3"><input type="password" name="admin_pass2" value="" /></td>
 					</tr>
 					<tr> 
 					  <td class="catbottom" align="center" colspan="2">
@@ -378,6 +381,10 @@ function changeDbPort(dbName)
 	</tr>
 </table></td>
 	</tr>
+</table>
+
+</td>
+</tr>
 </table>
 
 </body>

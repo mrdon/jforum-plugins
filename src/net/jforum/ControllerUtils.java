@@ -70,7 +70,7 @@ import freemarker.template.SimpleHash;
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.23 2006/07/05 23:48:55 rafaelsteil Exp $
+ * @version $Id: ControllerUtils.java,v 1.24 2006/08/10 00:20:41 rafaelsteil Exp $
  */
 public class ControllerUtils
 {
@@ -267,6 +267,7 @@ public class ControllerUtils
 			userSession.registerBasicInfo();
 			userSession.setSessionId(request.getSession().getId());
 			userSession.setIp(request.getRemoteAddr());
+			SessionFacade.makeUnlogged();
 
 			if (!userSession.isBot()) {
 				// Non-SSO authentications can use auto login
