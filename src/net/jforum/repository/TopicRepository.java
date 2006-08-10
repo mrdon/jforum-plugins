@@ -65,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: TopicRepository.java,v 1.27 2006/04/29 14:14:28 rafaelsteil Exp $
+ * @version $Id: TopicRepository.java,v 1.28 2006/08/10 02:35:12 rafaelsteil Exp $
  */
 public class TopicRepository implements Cacheable
 {
@@ -118,25 +118,6 @@ public class TopicRepository implements Cacheable
 			cache.add(FQN, RECENT, l);
 		}
 	}
-
-	/**
-	 * Remove topic to the FIFO stack
-	 * 
-	 * @param topic The topic to remove from stack
-	 */
-	public synchronized static void popTopic(Topic topic) throws Exception
-	{
-		if (SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
-			List l = (List)cache.get(FQN, RECENT);
-			
-			if (l == null || l.size() == 0) {
-				l = new LinkedList(loadMostRecentTopics());
-			}
-			
-			l.remove(topic);
-			cache.add(FQN, RECENT, l);
-		}
-	}	
 
 	/**
 	 * Get all cached recent topics. 
@@ -279,38 +260,6 @@ public class TopicRepository implements Cacheable
 					if (index > -1) {
 						l.set(index, topic);
 						cache.add(FQN_FORUM, forumId, l);
-					}
-				}
-			}
-		}
-	}
-		
-	/**
-	 * Removes a topic from the cache.
-	 * @param topic The topic to remove. The object instance should
-	 * have at least the topic_id and forum_id fields set
-	 */
-	public static void remove(Topic topic)
-	{
-		if (SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
-			synchronized (FQN_FORUM) {
-				if (topic.getForumId() == 0) {
-					throw new IllegalArgumentException("Forum id cannot be empty");
-				}
-				
-				String forumId = Integer.toString(topic.getForumId());
-				List l = (List)cache.get(FQN_FORUM, forumId);
-				
-				if (l != null) {
-					l.remove(topic);
-					cache.add(FQN_FORUM, forumId, l);
-					
-					// Relation
-					Map m = (Map)cache.get(FQN, RELATION);
-					
-					if (m != null) {
-						m.remove(new Integer(topic.getId()));
-						cache.add(FQN, RELATION, m);
 					}
 				}
 			}
