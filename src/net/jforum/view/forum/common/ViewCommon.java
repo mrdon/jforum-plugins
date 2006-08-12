@@ -61,7 +61,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.18 2006/08/06 00:07:44 rafaelsteil Exp $
+ * @version $Id: ViewCommon.java,v 1.19 2006/08/12 00:23:26 rafaelsteil Exp $
  */
 public final class ViewCommon
 {
@@ -295,6 +295,8 @@ public final class ViewCommon
 			StringBuffer sb = new StringBuffer(u.getSignature());
 			
 			replaceAll(sb, "\n", "<br/>");
+			
+			u.setSignature(sb.toString());
 			
 			u.setSignature(PostCommon.alwaysProcess(u.getSignature(), BBCodeRepository.getBBCollection().getAlwaysProcessList()));
 			u.setSignature(PostCommon.processText(u.getSignature()));
