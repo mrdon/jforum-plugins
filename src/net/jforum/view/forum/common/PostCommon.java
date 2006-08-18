@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.31 2006/08/06 00:07:45 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.32 2006/08/18 00:11:17 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -210,8 +210,9 @@ public class PostCommon
 			Smilie s = (Smilie) iter.next();
 			int pos = text.indexOf(s.getCode());
 			
-			if (pos > -1) {
+			while (pos > -1) {
 				text.replace(pos, pos + s.getCode().length(), s.getUrl());
+				pos = text.indexOf(s.getCode());
 			}
 		}
 
