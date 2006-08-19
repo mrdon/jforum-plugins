@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericUserDAO.java,v 1.18 2006/07/20 00:23:01 rafaelsteil Exp $
+ * @version $Id: GenericUserDAO.java,v 1.19 2006/08/19 14:45:09 rafaelsteil Exp $
  */
 public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO 
 {
@@ -231,7 +231,13 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 		p.setString(25, user.getLang());
 		p.setInt(26, user.isNotifyPrivateMessagesEnabled() ? 1 : 0);
 		p.setString(27, user.getBiography());
-		p.setInt(28, user.getId());
+		
+		if (user.getLastVisit() == null) {
+			user.setLastVisit(new Date());
+		}
+		
+		p.setTimestamp(28, new Timestamp(user.getLastVisit().getTime())); 
+		p.setInt(29, user.getId());
 		
 		p.executeUpdate();
 		p.close();
