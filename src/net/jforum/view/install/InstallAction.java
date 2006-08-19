@@ -76,6 +76,7 @@ import net.jforum.util.preferences.SystemGlobalsListener;
 import net.jforum.util.preferences.TemplateKeys;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
@@ -84,7 +85,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.48 2006/08/10 00:20:41 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.49 2006/08/19 17:47:12 sergemaslyukov Exp $
  */
 public class InstallAction extends Command
 {
@@ -477,7 +478,7 @@ public class InstallAction extends Command
 		}
 		else if (connectionString.indexOf(portKey) == -1) {
 			String hostKey = "${database.connection.host}";
-			connectionString = connectionString.replace(hostKey, hostKey + portKey);
+			connectionString = StringUtils.replace(connectionString, hostKey, hostKey + portKey);
 		}
 		
 		p.setProperty(ConfigKeys.DATABASE_CONNECTION_STRING, connectionString);
