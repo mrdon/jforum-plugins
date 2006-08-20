@@ -42,9 +42,7 @@
  */
 package net.jforum.sso;
 
-import javax.servlet.http.HttpServletRequest;
-
-import net.jforum.ActionServletRequest;
+import net.jforum.web_context.WebContextRequest;
 import net.jforum.entities.UserSession;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -55,19 +53,20 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author Daniel Campagnoli
- * @version $Id: RemoteUserSSO.java,v 1.7 2006/04/17 04:01:49 campers Exp $
+ * @version $Id: RemoteUserSSO.java,v 1.8 2006/08/20 15:30:26 sergemaslyukov Exp $
  */
 public class RemoteUserSSO implements SSO
 {
 	/**
-	 * @see net.jforum.sso.SSO#authenticateUser(net.jforum.ActionServletRequest)
+	 * @see net.jforum.sso.SSO#authenticateUser(net.jforum.web_context.WebContextRequest)
+     * @param request AWebContextRequest     * @return String
 	 */
-	public String authenticateUser(ActionServletRequest request)
+	public String authenticateUser(WebContextRequest request)
 	{
 		return request.getRemoteUser();
 	}
 
-	public boolean isSessionValid(UserSession userSession, HttpServletRequest request)
+	public boolean isSessionValid(UserSession userSession, WebContextRequest request)
 	{
 		String remoteUser = request.getRemoteUser();
 

@@ -44,14 +44,14 @@ package net.jforum.view.forum.common;
 
 import java.util.Date;
 
-import net.jforum.ActionServletRequest;
 import net.jforum.JForumExecutionContext;
+import net.jforum.web_context.WebContextRequest;
 import net.jforum.entities.Poll;
 import net.jforum.entities.PollOption;
 
 /**
  * @author David Almilli
- * @version $Id: PollCommon.java,v 1.5 2006/08/20 12:19:17 sergemaslyukov Exp $
+ * @version $Id: PollCommon.java,v 1.6 2006/08/20 15:30:28 sergemaslyukov Exp $
  */
 public class PollCommon
 {
@@ -59,7 +59,7 @@ public class PollCommon
 
 	public static Poll fillPollFromRequest() 
 	{
-		ActionServletRequest request = JForumExecutionContext.getRequest();
+		WebContextRequest request = JForumExecutionContext.getRequest();
 		String label = request.getParameter("poll_label");
 
 		if (label == null || label.length() == 0) {

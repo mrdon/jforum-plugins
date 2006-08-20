@@ -53,8 +53,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import net.jforum.ActionServletRequest;
 import net.jforum.SessionFacade;
+import net.jforum.web_context.WebContextRequest;
 import net.jforum.dao.AttachmentDAO;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.entities.Attachment;
@@ -80,19 +80,19 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.29 2006/08/20 12:19:17 sergemaslyukov Exp $
+ * @version $Id: AttachmentCommon.java,v 1.30 2006/08/20 15:30:28 sergemaslyukov Exp $
  */
 public class AttachmentCommon
 {
 	private static Logger logger = Logger.getLogger(AttachmentCommon.class);
 	private static final String DENY_ALL = "*";
 	
-	private ActionServletRequest request;
+	private WebContextRequest request;
 	private AttachmentDAO am;
 	private boolean canProceed;
 	private Map filesToSave = new HashMap();
 	
-	public AttachmentCommon(ActionServletRequest request, int forumId)
+	public AttachmentCommon(WebContextRequest request, int forumId)
 	{
 		this.request = request;
 		this.am = DataAccessDriver.getInstance().newAttachmentDAO();

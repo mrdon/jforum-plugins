@@ -56,16 +56,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
-import javax.servlet.http.HttpServletResponse;
-
-import net.jforum.ActionServletRequest;
-import net.jforum.Command;
-import net.jforum.ConfigLoader;
-import net.jforum.DBConnection;
-import net.jforum.DataSourceConnection;
-import net.jforum.JForumExecutionContext;
-import net.jforum.SessionFacade;
-import net.jforum.SimpleConnection;
+import net.jforum.*;
+import net.jforum.web_context.WebContextRequest;
+import net.jforum.web_context.WebContextResponse;
 import net.jforum.entities.UserSession;
 import net.jforum.util.FileMonitor;
 import net.jforum.util.I18n;
@@ -86,7 +79,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.50 2006/08/20 12:19:17 sergemaslyukov Exp $
+ * @version $Id: InstallAction.java,v 1.51 2006/08/20 15:30:29 sergemaslyukov Exp $
  */
 public class InstallAction extends Command
 {
@@ -130,7 +123,7 @@ public class InstallAction extends Command
 	
 	private String getFromSession(String key)
 	{
-		return (String)this.request.getSession().getAttribute(key);
+		return (String)this.request.getWebSession().getAttribute(key);
 	}
 	
 	private void error()
@@ -237,7 +230,7 @@ public class InstallAction extends Command
 		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
         SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
         
-        SessionFacade.remove(this.request.getSession().getId());
+        SessionFacade.remove(this.request.getWebSession().getId());
 	}
 	
 	private void doFinalSteps()
@@ -758,7 +751,7 @@ public class InstallAction extends Command
 	
 	private void addToSessionAndContext(String key, String value)
 	{
-		this.request.getSession().setAttribute(key, value);
+		this.request.getWebSession().setAttribute(key, value);
 		this.context.put(key, value);
 	}
 	
@@ -780,10 +773,12 @@ public class InstallAction extends Command
 	}
 	
 	/** 
-	 * @see net.jforum.Command#process(net.jforum.ActionServletRequest, javax.servlet.http.HttpServletResponse, freemarker.template.SimpleHash)
+	 * @see net.jforum.Command#process(net.jforum.web_context.WebContextRequest, net.jforum.web_context.WebContextResponse, freemarker.template.SimpleHash) 
+     * @param request AWebContextRequest     * @param response HttpServletResponse
+     * @param context SimpleHash
 	 */
-	public Template process(ActionServletRequest request, 
-			HttpServletResponse response, 
+	public Template process(WebContextRequest request,
+			WebContextResponse response,
 			SimpleHash context)  
 	{
 		this.setTemplateName("default/empty.htm");

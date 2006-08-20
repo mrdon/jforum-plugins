@@ -50,9 +50,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.jforum.ActionServletRequest;
 import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
+import net.jforum.web_context.WebContextRequest;
 import net.jforum.dao.PostDAO;
 import net.jforum.entities.Post;
 import net.jforum.entities.Smilie;
@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.33 2006/08/20 12:19:17 sergemaslyukov Exp $
+ * @version $Id: PostCommon.java,v 1.34 2006/08/20 15:30:28 sergemaslyukov Exp $
  */
 public class PostCommon
 {
@@ -229,7 +229,7 @@ public class PostCommon
 
 	public static Post fillPostFromRequest(Post p, boolean isEdit) 
 	{
-		ActionServletRequest request = JForumExecutionContext.getRequest();
+		WebContextRequest request = JForumExecutionContext.getRequest();
 		
 		p.setSubject(SafeHtml.makeSafe(request.getParameter("subject")));
 		p.setBbCodeEnabled(request.getParameter("disable_bbcode") == null);

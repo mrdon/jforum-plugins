@@ -60,6 +60,7 @@ import net.jforum.util.preferences.QueriesFileListener;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.SystemGlobalsListener;
 import net.jforum.util.search.SearchFacade;
+import net.jforum.url_pattern.UrlPatternCollection;
 
 import org.apache.log4j.Logger;
 import org.quartz.SchedulerException;
@@ -68,7 +69,7 @@ import org.quartz.SchedulerException;
  * General utilities methods for loading configurations for JForum.
  * 
  * @author Rafael Steil
- * @version $Id: ConfigLoader.java,v 1.21 2006/08/20 12:18:59 sergemaslyukov Exp $
+ * @version $Id: ConfigLoader.java,v 1.22 2006/08/20 15:30:25 sergemaslyukov Exp $
  */
 public class ConfigLoader 
 {
@@ -131,8 +132,8 @@ public class ConfigLoader
             while (iter.hasNext()) {
                 Map.Entry entry = (Map.Entry) iter.next();
 
-                ActionServletRequest.addUrlPattern((String)entry.getKey(), (String)entry.getValue());
-}
+                UrlPatternCollection.addPattern((String)entry.getKey(), (String)entry.getValue());
+            }
         }
         catch (IOException e)
         {

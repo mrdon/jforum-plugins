@@ -40,7 +40,7 @@
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum;
+package net.jforum.web_context;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,152 +62,16 @@ import net.jforum.util.legacy.commons.fileupload.servlet.ServletFileUpload;
 import net.jforum.util.legacy.commons.fileupload.servlet.ServletRequestContext;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.url_pattern.UrlPatternCollection;
+import net.jforum.url_pattern.UrlPattern;
+import net.jforum.JForumContext;
 
 /**
  * @author Rafael Steil
- * @version $Id: ActionServletRequest.java,v 1.34 2006/04/29 16:55:02 rafaelsteil Exp $
+ * @version $Id: HttpWebContextRequestImpl.java,v 1.1 2006/08/20 15:30:29 sergemaslyukov Exp $
  */
-public class ActionServletRequest extends HttpServletRequestWrapper 
+public class HttpWebContextRequestImpl extends HttpServletRequestWrapper implements WebContextRequest
 {
-	/**
-	 * URL Patterns keeper.
-	 * Represents a single URL pattern. Each pattern is composed
-	 * by a name, the pattern itself, the pattern's size and the
-	 * splited variables. <br><br>
-	 * 
-	 * The pattern is expected in the form <i>var1, var2, varN</i>, in the
-	 * correct order. This means that if <i>var1</i> comes first, it <b>must</b>
-	 * come first in the URL. The same is valid to others.<br><br>
-	 * 
-	 * Please note that "first" here is "first" after regular URL, which is
-	 * composed by server and servlet name, in the most simple case.<br><br>
-	 * 
-	 * <b>Example:</b><br>
-	 * 
-	 * URL: <i>http://localhost:8080/webappName/someDir/myServlet/news/view/3.page<i>.
-	 * <br>
-	 * In this case, <i>http://localhost:8080/webappName/someDir/myServlet/</i> is the 
-	 * regular URL, the part that we don't care about. We only want the part 
-	 * <i>news/view/3.page</i> ( where .page is the servlet extension ). 
-	 * <br>For this URL, we could make the following pattern:<br><br>
-	 * 
-	 * <i>news.view.1 = news_id</i><br><br>
-	 * 
-	 * Here, <i>news.view.1</i> is the pattern's name, and <i>news_id</i> is
-	 * the patterns itself. <br>
-	 * Another example:<br><br>
-	 * 
-	 * <i>news.view.2 = page, news_id</i><br><br>
-	 *  
-	 * In this case we have a new var called <i>page</i>, that represents the page being seen.<br>
-	 * Each entry is composed in the form:<br><br>
-	 * 
-	 * <i>&lt;moduleName&gt;.&lt;actionName&gt;.&lt;numberOfParameters&gt; = &lt;var 1&gt;,&lt;var n&gt;</i>
-	 * <br><br>
-	 * 
-	 * Please note that module and action's name aren't pattern's composition, so 
-	 * don't put them there. The system will consider that the pattern only contains
-	 * the variables diferent to each request ( e.g, id's ). If the pattern you're
-	 * constructing doesn't have any variable, just leave it blank, like<br><br>
-	 * 
-	 * <i>myModule.myAction.0 = </i><br><br>
-	 * 
-	 * @author Rafael Steil
-	 */
-	private static class UrlPattern
-	{
-		private String name;
-		private String value;
-		private int size;
-		private String[] vars;
-		
-		public UrlPattern(String name, String value)
-		{
-			this.name = name;
-			this.value = value;
-			
-			this.processPattern();
-		}
-		
-		private void processPattern()
-		{
-			String[] p = this.value.split(",");
-			
-			this.vars = new String[p.length];
-			this.size = ((((p[0]).trim()).equals("")) ? 0 : p.length);
-			
-			for (int i = 0; i < this.size; i++) {
-				this.vars[i] = (p[i]).trim();
-			}
-		}
-
-		/**
-		 * Gets the pattern name
-		 * 
-		 * @return String with the pattern name
-		 */
-		public String getName()
-		{
-			return this.name;
-		}
-
-		/**
-		 * Get pattern's total vars
-		 * 
-		 * @return The total
-		 */
-		public int getSize()
-		{
-			return this.size;
-		}
-		
-		/**
-		 * Gets the vars.
-		 * The URL variables are in the correct order, which means
-		 * that the first position always will be "something1", the
-		 * second "something2" and so on. The system expects this
-		 * order never changes from requisition to requisition.
-		 * 
-		 * @return The vars
-		 */
-		public String[] getVars()
-		{
-			return this.vars;
-		}
-	}
-	
-	/**
-	 * Keeps a collection of <code>UrlPattern</code> objects.
-	 *  
-	 * @author Rafael Steil
-	 */
-	private static class UrlPatternCollection
-	{
-		private static HashMap patternsMap = new HashMap();
-		
-		/**
-		 * Try to find a <code>UrlPattern</code> by its name.
-		 * 
-		 * @param name The pattern name
-		 * @return The <code>UrlPattern</code> object if a match was found, or <code>null</code> if not
-		 */
-		public static UrlPattern findPattern(String name)
-		{
-			return (UrlPattern)UrlPatternCollection.patternsMap.get(name);
-		}
-		
-		/**
-		 * Adds a new <code>UrlPattern</code>.
-		 * 
-		 * @param name The pattern name
-		 * @param value The pattern value
-		 */
-		public static void addPattern(String name, String value)
-		{
-			UrlPatternCollection.patternsMap.put(name, new UrlPattern(name, value));
-		}
-	}
-	
 	private Map query;
 	private JForumContext jforumContext;
 	
@@ -217,7 +81,7 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 	 * @param superRequest Original <code>HttpServletRequest</code> instance
 	 * @throws IOException
 	 */
-	public ActionServletRequest(HttpServletRequest superRequest) throws IOException
+	public HttpWebContextRequestImpl(HttpServletRequest superRequest) throws IOException
 	{
 		super(superRequest);
 
@@ -257,7 +121,7 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 					.append('.')
 					.append(urlModel.length - baseLen);
 				
-				url = UrlPatternCollection.findPattern(sb.toString()); 
+				url = UrlPatternCollection.findPattern(sb.toString());
 			}
 
 			if (url != null) {
@@ -284,7 +148,7 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 			}
 		}
 		
-		if (isMultipart == false) {
+		if (!isMultipart) {
 			superRequest.setCharacterEncoding(encoding);
 			String containerEncoding = SystemGlobals.getValue(ConfigKeys.DEFAULT_CONTAINER_ENCODING);
 			
@@ -299,9 +163,17 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 		}
 	}
 
-	/**
-	 * @param superRequest
-	 * @param encoding
+    public WebContextSession getWebSession(boolean create) {
+        return new HttpWebContextSessionImpl(this.getSession(create));
+    }
+
+    public WebContextSession getWebSession() {
+        return new HttpWebContextSessionImpl(this.getSession());
+    }
+
+    /**
+	 * @param superRequest HttpServletRequest
+	 * @param encoding String
 	 * @throws UnsupportedEncodingException
 	 */
 	private void handleMultipart(HttpServletRequest superRequest, String encoding) throws UnsupportedEncodingException
@@ -402,7 +274,7 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 	 * A call to <code>Integer#parseInt(String)</code> is made
 	 * to do the conversion
 	 * @param parameter The parameter name to get the value
-	 * @return
+	 * @return int
 	 */
 	public int getIntParameter(String parameter)
 	{
@@ -438,23 +310,12 @@ public class ActionServletRequest extends HttpServletRequestWrapper
 	 * of a <i>multipart/form-data</i> request, like a image
 	 * of file. <br>
 	 * 
-	 * @param parameter
-	 * @return
+	 * @param parameter String
+	 * @return Object
 	 */
 	public Object getObjectParameter(String parameter)
 	{
 		return this.query.get(parameter);
-	}
-	
-	/**
-	 * Adds a new <code>UrlPattern</code>.
-	 * 
-	 * @param name The pattern name
-	 * @param value  The Pattern value
-	 */
-	public static void addUrlPattern(String name, String value)
-	{
-		UrlPatternCollection.addPattern(name, value);
 	}
 	
 	/**

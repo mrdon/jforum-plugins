@@ -50,11 +50,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletResponse;
-
-import net.jforum.ActionServletRequest;
 import net.jforum.Command;
 import net.jforum.JForumExecutionContext;
+import net.jforum.web_context.WebContextRequest;
+import net.jforum.web_context.WebContextResponse;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.SearchDAO;
 import net.jforum.dao.SearchData;
@@ -72,7 +71,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.28 2006/08/20 12:19:16 sergemaslyukov Exp $
+ * @version $Id: SearchAction.java,v 1.29 2006/08/20 15:30:28 sergemaslyukov Exp $
  */
 public class SearchAction extends Command 
 {
@@ -108,7 +107,7 @@ public class SearchAction extends Command
 	
 	public SearchAction() {}
 	
-	public SearchAction(ActionServletRequest request, HttpServletResponse response,
+	public SearchAction(WebContextRequest request, WebContextResponse response,
 			SimpleHash context) {
 		this.request = request;
 		this.response = response;

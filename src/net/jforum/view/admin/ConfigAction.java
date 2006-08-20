@@ -53,7 +53,8 @@ import java.util.Properties;
 
 import javax.servlet.http.HttpServletResponse;
 
-import net.jforum.ActionServletRequest;
+import net.jforum.web_context.WebContextRequest;
+import net.jforum.web_context.WebContextResponse;
 import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
 import net.jforum.repository.ForumRepository;
@@ -67,7 +68,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ConfigAction.java,v 1.15 2006/08/20 12:19:14 sergemaslyukov Exp $
+ * @version $Id: ConfigAction.java,v 1.16 2006/08/20 15:30:27 sergemaslyukov Exp $
  */
 public class ConfigAction extends AdminCommand 
 {
@@ -75,8 +76,8 @@ public class ConfigAction extends AdminCommand
 
 	public ConfigAction() {}
 	
-	public ConfigAction(ActionServletRequest request, 
-			HttpServletResponse response, 
+	public ConfigAction(WebContextRequest request,
+			WebContextResponse response, 
 			SimpleHash context)
 	{
 		this.request = request;

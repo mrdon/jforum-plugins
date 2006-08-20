@@ -62,7 +62,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.20 2006/08/20 12:19:17 sergemaslyukov Exp $
+ * @version $Id: ViewCommon.java,v 1.21 2006/08/20 15:30:28 sergemaslyukov Exp $
  */
 public final class ViewCommon
 {
@@ -155,7 +155,7 @@ public final class ViewCommon
 
 	/**
 	 * Checks if some request needs to be reprocessed. 
-	 * This is likely to happen when @link net.jforum.ActionServletRequest#dumpRequest()
+	 * This is likely to happen when @link net.jforum.web_context.WebContextRequest#dumpRequest()
 	 * is stored in the session. 
 	 * 
 	 * @return <code>true</code> of <code>false</code>, depending of the status.
@@ -170,7 +170,7 @@ public final class ViewCommon
 	 * The request data should be in the session, held by the key
 	 * <code>ConfigKeys.REQUEST_DUMP</code> and the value as
 	 * a <code>java.util.Map</code>. Usual behaviour is to have the return
-	 * of @link net.jforum.ActionServletRequest#dumpRequest().
+	 * of @link net.jforum.web_context.WebContextRequest#dumpRequest().
 	 */
 	public static void reprocessRequest()
 	{

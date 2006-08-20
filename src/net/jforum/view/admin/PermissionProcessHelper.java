@@ -47,7 +47,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 
-import net.jforum.ActionServletRequest;
+import net.jforum.web_context.WebContextRequest;
 import net.jforum.JForumExecutionContext;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.Role;
@@ -56,7 +56,7 @@ import net.jforum.security.RoleValueCollection;
 
 /**
  * @author Rafael Steil
- * @version $Id: PermissionProcessHelper.java,v 1.15 2006/08/20 12:19:14 sergemaslyukov Exp $
+ * @version $Id: PermissionProcessHelper.java,v 1.16 2006/08/20 15:30:27 sergemaslyukov Exp $
  */
 class PermissionProcessHelper 
 {
@@ -73,7 +73,7 @@ class PermissionProcessHelper
 	
 	public void processData()
 	{
-		ActionServletRequest request = JForumExecutionContext.getRequest();
+		WebContextRequest request = JForumExecutionContext.getRequest();
 		Enumeration e = request.getParameterNames();
 		
 		while (e.hasMoreElements()) {

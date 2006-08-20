@@ -48,11 +48,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.io.IOException;
 
-import net.jforum.ActionServletRequest;
-import net.jforum.Command;
-import net.jforum.ControllerUtils;
-import net.jforum.JForumExecutionContext;
-import net.jforum.SessionFacade;
+import net.jforum.*;
+import net.jforum.web_context.WebContextRequest;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.UserDAO;
 import net.jforum.dao.UserSessionDAO;
@@ -80,7 +77,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.72 2006/08/20 12:19:16 sergemaslyukov Exp $
+ * @version $Id: UserAction.java,v 1.73 2006/08/20 15:30:28 sergemaslyukov Exp $
  */
 public class UserAction extends Command 
 {
@@ -446,12 +443,12 @@ public class UserAction extends Command
 		}
 	}
 
-    public void validateLogin(ActionServletRequest request)  {
+    public void validateLogin(WebContextRequest request)  {
         this.request = request;
         validateLogin();
     }
 
-    public static boolean hasBasicAuthentication(ActionServletRequest request) {
+    public static boolean hasBasicAuthentication(WebContextRequest request) {
         String auth = request.getHeader("Authorization");
         return (auth != null && auth.startsWith("Basic "));
     }

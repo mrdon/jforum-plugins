@@ -44,12 +44,9 @@ package net.jforum.view.forum;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
-
-import net.jforum.ActionServletRequest;
-import net.jforum.Command;
-import net.jforum.JForumExecutionContext;
-import net.jforum.SessionFacade;
+import net.jforum.*;
+import net.jforum.web_context.WebContextRequest;
+import net.jforum.web_context.WebContextResponse;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.PostDAO;
 import net.jforum.dao.TopicDAO;
@@ -76,7 +73,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: RSSAction.java,v 1.25 2006/08/20 12:19:16 sergemaslyukov Exp $
+ * @version $Id: RSSAction.java,v 1.26 2006/08/20 15:30:28 sergemaslyukov Exp $
  */
 public class RSSAction extends Command 
 {
@@ -215,10 +212,10 @@ public class RSSAction extends Command
 	}
 	
 	/** 
-	 * @see net.jforum.Command#process(net.jforum.ActionServletRequest, javax.servlet.http.HttpServletResponse, freemarker.template.SimpleHash) 
+	 * @see net.jforum.Command#process(net.jforum.web_context.WebContextRequest, net.jforum.web_context.WebContextResponse, freemarker.template.SimpleHash) 
 	 */
-	public Template process(ActionServletRequest request, 
-			HttpServletResponse response, 
+	public Template process(WebContextRequest request,
+			WebContextResponse response,
 			SimpleHash context)
 	{
         if (!SessionFacade.isLogged() && UserAction.hasBasicAuthentication(request)) {

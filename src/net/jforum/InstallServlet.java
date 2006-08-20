@@ -56,12 +56,16 @@ import net.jforum.repository.ModulesRepository;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.web_context.WebContextRequest;
+import net.jforum.web_context.HttpWebContextRequestImpl;
+import net.jforum.web_context.WebContextResponse;
+import net.jforum.web_context.HttpWebContextResponseImpl;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallServlet.java,v 1.23 2006/05/07 14:56:20 rafaelsteil Exp $
+ * @version $Id: InstallServlet.java,v 1.24 2006/08/20 15:30:25 sergemaslyukov Exp $
  */
 public class InstallServlet extends JForumBaseServlet
 {
@@ -76,7 +80,7 @@ public class InstallServlet extends JForumBaseServlet
 	/** 
 	 * @see javax.servlet.http.HttpServlet#service(javax.servlet.ServletRequest, javax.servlet.ServletResponse)
 	 */
-	public void service(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException
+	public void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
 	{
 		try {
 			JForumExecutionContext ex = JForumExecutionContext.get();
@@ -85,7 +89,8 @@ public class InstallServlet extends JForumBaseServlet
 			req.setCharacterEncoding(encoding);
 			
 			// Request
-			ActionServletRequest request = new ActionServletRequest(req);
+			WebContextRequest request = new HttpWebContextRequestImpl(req);
+			WebContextResponse response = new HttpWebContextResponseImpl(res);
 
 			request.setCharacterEncoding(encoding);
 			request.setJForumContext(new JForumContext(request.getContextPath(), 

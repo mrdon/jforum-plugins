@@ -42,15 +42,13 @@
  */
 package net.jforum.sso;
 
-import javax.servlet.http.HttpServletRequest;
-
-import net.jforum.ActionServletRequest;
+import net.jforum.web_context.WebContextRequest;
 import net.jforum.entities.UserSession;
 
 /**
  * @author Rafael Steil
  * @author Daniel Campagnoli
- * @version $Id: SSO.java,v 1.5 2005/07/26 03:05:32 rafaelsteil Exp $
+ * @version $Id: SSO.java,v 1.6 2006/08/20 15:30:26 sergemaslyukov Exp $
  */
 public interface SSO
 {
@@ -62,7 +60,7 @@ public interface SSO
 	 * @return The username, if authentication succeded, or <code>nulll</code> 
 	 * otherwise. 
 	 */
-	public String authenticateUser(ActionServletRequest request);
+	public String authenticateUser(WebContextRequest request);
    
    
     /**
@@ -72,5 +70,5 @@ public interface SSO
      * @param request the current request
      * @return if the UserSession is valid
      */
-    public boolean isSessionValid(UserSession userSession, HttpServletRequest request);
+    public boolean isSessionValid(UserSession userSession, WebContextRequest request);
 }

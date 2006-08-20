@@ -51,10 +51,9 @@ import java.net.URLConnection;
 
 import javax.servlet.http.HttpServletResponse;
 
-import net.jforum.ActionServletRequest;
-import net.jforum.Command;
-import net.jforum.JForumExecutionContext;
-import net.jforum.SessionFacade;
+import net.jforum.*;
+import net.jforum.web_context.WebContextRequest;
+import net.jforum.web_context.WebContextResponse;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
 import net.jforum.entities.UserSession;
@@ -70,7 +69,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: AdminAction.java,v 1.16 2006/08/20 12:19:13 sergemaslyukov Exp $
+ * @version $Id: AdminAction.java,v 1.17 2006/08/20 15:30:27 sergemaslyukov Exp $
  */
 public class AdminAction extends Command {
 
@@ -232,8 +231,7 @@ public class AdminAction extends Command {
 		return false;
 	}
 
-	public Template process(ActionServletRequest request, 
-			HttpServletResponse response, 
+	public Template process(WebContextRequest request, WebContextResponse response, 
 			SimpleHash context)
 	{
 		return super.process(request, response, context);

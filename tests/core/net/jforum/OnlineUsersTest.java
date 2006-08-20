@@ -9,12 +9,13 @@ import net.jforum.entities.UserSession;
 import net.jforum.http.FakeHttpRequest;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.web_context.HttpWebContextRequestImpl;
 
 /**
  * Test {@link net.jforum.SessionFacade} methods for online users
  * 
  * @author Rafael Steil
- * @version $Id: OnlineUsersTest.java,v 1.5 2006/01/29 15:06:42 rafaelsteil Exp $
+ * @version $Id: OnlineUsersTest.java,v 1.6 2006/08/20 15:30:30 sergemaslyukov Exp $
  */
 public class OnlineUsersTest extends TestCase
 {
@@ -25,7 +26,7 @@ public class OnlineUsersTest extends TestCase
 		new SessionFacade().setCacheEngine(new DefaultCacheEngine());
 		
 		JForumExecutionContext ex = JForumExecutionContext.get();
-		ex.setRequest(new ActionServletRequest(new FakeHttpRequest()));
+		ex.setRequest(new HttpWebContextRequestImpl(new FakeHttpRequest()));
 		
 		JForumExecutionContext.set(ex);
 		

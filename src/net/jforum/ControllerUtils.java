@@ -47,7 +47,6 @@ import java.util.Date;
 import java.util.HashMap;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpSession;
 
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.UserDAO;
@@ -64,6 +63,8 @@ import net.jforum.util.I18n;
 import net.jforum.util.MD5;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.web_context.WebContextRequest;
+import net.jforum.web_context.WebContextSession;
 import freemarker.template.SimpleHash;
 import org.apache.log4j.Logger;
 
@@ -71,7 +72,7 @@ import org.apache.log4j.Logger;
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.25 2006/08/20 12:18:59 sergemaslyukov Exp $
+ * @version $Id: ControllerUtils.java,v 1.26 2006/08/20 15:30:25 sergemaslyukov Exp $
  */
 public class ControllerUtils
 {
@@ -85,7 +86,7 @@ public class ControllerUtils
 	 */
 	public void prepareTemplateContext(SimpleHash context, JForumContext jforumContext)
 	{
-		ActionServletRequest request = JForumExecutionContext.getRequest();
+		WebContextRequest request = JForumExecutionContext.getRequest();
 		
 		context.put("karmaEnabled", SecurityRepository.canAccess(SecurityConstants.PERM_KARMA_ENABLED));
 		context.put("dateTimeFormat", SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
@@ -229,7 +230,7 @@ public class ControllerUtils
 				SSOUtils utils = new SSOUtils();
 
 				if (!utils.userExists(username)) {
-					HttpSession session = JForumExecutionContext.getRequest().getSession();
+					WebContextSession session = JForumExecutionContext.getRequest().getWebSession();
 
 					String email = (String) session.getAttribute(SystemGlobals.getValue(ConfigKeys.SSO_EMAIL_ATTRIBUTE));
 					String password = (String) session.getAttribute(SystemGlobals.getValue(ConfigKeys.SSO_PASSWORD_ATTRIBUTE));
@@ -262,12 +263,12 @@ public class ControllerUtils
 	public void refreshSession()
 	{
 		UserSession userSession = SessionFacade.getUserSession();
-		ActionServletRequest request = JForumExecutionContext.getRequest();
+		WebContextRequest request = JForumExecutionContext.getRequest();
 
 		if (userSession == null) {
 			userSession = new UserSession();
 			userSession.registerBasicInfo();
-			userSession.setSessionId(request.getSession().getId());
+			userSession.setSessionId(request.getWebSession().getId());
 			userSession.setIp(request.getRemoteAddr());
 			SessionFacade.makeUnlogged();
 

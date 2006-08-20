@@ -42,24 +42,26 @@
  */
 package net.jforum;
 
-import javax.servlet.http.HttpServletRequest;
+import net.jforum.web_context.WebContextRequest;
+import net.jforum.web_context.WebContextResponse;
+
 import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Marc Wick
- * @version $Id: JForumContext.java,v 1.8 2005/09/29 09:09:19 vmal Exp $
+ * @version $Id: JForumContext.java,v 1.9 2006/08/20 15:30:25 sergemaslyukov Exp $
  */
 public class JForumContext
 {
 	private String contextPath;
 	private String servletExtension;
 
-	private HttpServletResponse response;
+	private WebContextResponse response;
 
 	private boolean isEncodingDisabled;
 
-	public JForumContext(String contextPath, String servletExtension, HttpServletRequest req,
-			HttpServletResponse response, boolean isEncodingDisabled)
+	public JForumContext(String contextPath, String servletExtension, WebContextRequest req,
+			WebContextResponse response, boolean isEncodingDisabled)
 	{
 		this.contextPath = contextPath;
 		this.servletExtension = servletExtension;

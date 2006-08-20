@@ -47,9 +47,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.jforum.ActionServletRequest;
 import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
+import net.jforum.web_context.WebContextRequest;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.UserDAO;
 import net.jforum.entities.User;
@@ -65,7 +65,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserCommon.java,v 1.17 2006/08/20 12:19:17 sergemaslyukov Exp $
+ * @version $Id: UserCommon.java,v 1.18 2006/08/20 15:30:28 sergemaslyukov Exp $
  */
 public class UserCommon 
 {
@@ -84,7 +84,7 @@ public class UserCommon
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		User u = um.selectById(userId);
 		
-		ActionServletRequest request = JForumExecutionContext.getRequest();
+		WebContextRequest request = JForumExecutionContext.getRequest();
 		boolean isAdmin = SessionFacade.getUserSession().isAdmin();
 
 		if (isAdmin) {

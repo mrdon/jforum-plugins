@@ -64,8 +64,10 @@ import net.jforum.util.I18n;
 import net.jforum.util.MD5;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-
-import org.apache.log4j.Logger;
+import net.jforum.web_context.WebContextRequest;
+import net.jforum.web_context.HttpWebContextRequestImpl;
+import net.jforum.web_context.HttpWebContextResponseImpl;
+import net.jforum.web_context.WebContextResponse;
 
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
@@ -74,12 +76,12 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.94 2006/08/20 12:18:59 sergemaslyukov Exp $
+ * @version $Id: JForum.java,v 1.95 2006/08/20 15:30:25 sergemaslyukov Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
 	private static boolean isDatabaseUp;
-	private static Logger logger = Logger.getLogger(JForum.class);
+//	private static Logger logger = Logger.getLogger(JForum.class);
 	
 	/**
 	 * @see javax.servlet.Servlet#init(javax.servlet.ServletConfig)
@@ -122,10 +124,11 @@ public class JForum extends JForumBaseServlet
 	/**
 	 * @see javax.servlet.http.HttpServlet#service(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
-	public void service(HttpServletRequest req, HttpServletResponse response) throws IOException, ServletException
+	public void service(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException
 	{
 		Writer out = null;
-		ActionServletRequest request = null;
+		WebContextRequest request = null;
+		WebContextResponse response = null;
 		String encoding = SystemGlobals.getValue(ConfigKeys.ENCODING);
 
 		try {
@@ -133,8 +136,10 @@ public class JForum extends JForumBaseServlet
 			JForumExecutionContext ex = JForumExecutionContext.get();
 
 			// Request
-			request = new ActionServletRequest(req);
-			
+			request = new HttpWebContextRequestImpl(req);
+            // Response
+            response = new HttpWebContextResponseImpl(res);
+
 			ex.setRequest(request);
 			ex.setResponse(response);
 
@@ -173,7 +178,7 @@ public class JForum extends JForumBaseServlet
 			context.put("moduleName", module);
 			context.put("action", request.getAction());
 			context.put("language", I18n.getUserLanguage());
-			context.put("securityHash", MD5.crypt(request.getSession().getId()));
+			context.put("securityHash", MD5.crypt(request.getWebSession().getId()));
 			context.put("session", SessionFacade.getUserSession());
 			context.put("request", req);
 			context.put("response", response);
@@ -253,6 +258,8 @@ public class JForum extends JForumBaseServlet
 			DBConnection.getImplementation().realReleaseAllConnections();
 			ConfigLoader.stopCacheEngine();
 		}
-		catch (Exception e) {}
+		catch (Exception e) {
+            // catch destroy error
+        }
 	}
 }

@@ -46,8 +46,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.jforum.ActionServletRequest;
 import net.jforum.JForumExecutionContext;
+import net.jforum.web_context.WebContextRequest;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
 import net.jforum.dao.TopicDAO;
@@ -68,7 +68,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationHelper.java,v 1.27 2006/08/20 12:19:16 sergemaslyukov Exp $
+ * @version $Id: ModerationHelper.java,v 1.28 2006/08/20 15:30:28 sergemaslyukov Exp $
  */
 public class ModerationHelper 
 {
@@ -84,7 +84,7 @@ public class ModerationHelper
 
 		if (SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION)) {
 			// Deleting topics
-			ActionServletRequest request = JForumExecutionContext.getRequest();
+			WebContextRequest request = JForumExecutionContext.getRequest();
 			
 			if (request.getParameter("topicRemove") != null) {
 				if (SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE)) {
@@ -243,7 +243,7 @@ public class ModerationHelper
 			status = FAILURE;
 		}
 		else {
-			ActionServletRequest request = JForumExecutionContext.getRequest();
+			WebContextRequest request = JForumExecutionContext.getRequest();
 			String topics = request.getParameter("topics");
 			
 			if (topics != null) {
