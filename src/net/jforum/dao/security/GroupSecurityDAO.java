@@ -48,10 +48,10 @@ import net.jforum.entities.User;
 
 /**
  * @author Rafael Steil
- * @version $Id: GroupSecurityDAO.java,v 1.5 2005/09/26 15:20:04 vmal Exp $
+ * @version $Id: GroupSecurityDAO.java,v 1.6 2006/08/20 12:19:08 sergemaslyukov Exp $
  */
 public interface GroupSecurityDAO extends SecurityDAO {
 
-    public RoleCollection loadRolesByUserGroups(User user) throws Exception; 
+    public RoleCollection loadRolesByUserGroups(User user) ;
 
 }

@@ -49,14 +49,14 @@ import net.jforum.entities.ForumStats;
 import net.jforum.entities.LastPostInfo;
 
 /**
-* Model interface for {@link net.jforum.Forum}.
+* Model interface for {@link net.jforum.entities.Forum}.
  * This interface defines methods which are expected to be
  * implementd by a specific data access driver. The intention is
  * to provide all functionality needed to update, insert, delete and
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: ForumDAO.java,v 1.9 2006/02/21 13:59:48 rafaelsteil Exp $
+ * @version $Id: ForumDAO.java,v 1.10 2006/08/20 12:19:00 sergemaslyukov Exp $
  */
 public interface ForumDAO 
 {
@@ -65,19 +65,17 @@ public interface ForumDAO
 	 * 
 	 * @param forumId The ForumID to search
 	 * @return <code>Forum</code>object containing all the information
-	 * @throws Exception
 	 * @see #selectAll
 	 */
-	public Forum selectById(int forumId) throws Exception;
+	public Forum selectById(int forumId) ;
 	
 	/**
 	 * Selects all forums data from the database.
 	 * 
 	 * @return ArrayList with the forums found 
-	 * @throws Exception
 	 * @see #selectById
 	 */
-	public List selectAll() throws Exception;
+	public List selectAll() ;
 	
 	/**
 	 * Sets the forum's order one level up.
@@ -88,10 +86,9 @@ public interface ForumDAO
 	 * 
 	 * @param forum The forum to change its order
 	 * @param related The forum which comes before the forum we want to change
-	 * @throws Exception
 	 * @return The changed forum, with the new order set
 	 */
-	public Forum setOrderUp(Forum forum, Forum related) throws Exception;
+	public Forum setOrderUp(Forum forum, Forum related) ;
 	
 	/**
 	 * Sets the forum's order one level down.
@@ -101,107 +98,94 @@ public interface ForumDAO
 	 * 
 	 * @param forum The forum to change its order
 	 * @param related The forum which comes after the forum we want to change
-	 * @throws Exception
 	 * @return The changed forum, with the new order set
 	 */
-	public Forum setOrderDown(Forum forum, Forum related) throws Exception;
+	public Forum setOrderDown(Forum forum, Forum related) ;
 	
 	/**
 	 * Delete a forum.
 	 * 
 	 * @param forumId The forum ID to delete
-	 * @throws Exception
-	 * @see #canDelete(int)
 	 */
-	public void delete(int forumId) throws Exception;
+	public void delete(int forumId) ;
 		
 	/**
 	 * Updates a Forum.
 	 * 
 	 * @param forum Reference to a <code>Forum</code> object to update
-	 * @throws Exception
-	 * @see #update(int)
 	 */
-	public void update(Forum forum) throws Exception;
+	public void update(Forum forum) ;
 	
 	/**
 	 * Adds a new Forum.
 	 * 
 	 * @param forum Reference to a valid and configured <code>Forum</code> object
 	 * @return The forum's ID
-	 * @throws Exception
 	 */
-	public int addNew(Forum forum) throws Exception;
+	public int addNew(Forum forum) ;
 	
 	/**
 	 * Sets the last topic of a forum
 	 * 
 	 * @param forumId The forum ID to update
 	 * @param postId Last post ID
-	 * @throws Exception
 	 */
-	public void setLastPost(int forumId, int postId) throws Exception;
+	public void setLastPost(int forumId, int postId) ;
 
 	/**
 	 * Increments the total number of topics of a forum
 	 * 
 	 * @param forumId The forum ID to update
 	 * @param count Increment a total of <code>count</code> elements
-	 * @throws Exception
 	 */
-	public void incrementTotalTopics(int forumId, int count) throws Exception;
+	public void incrementTotalTopics(int forumId, int count) ;
 	
 	/**
 	 * Decrements the total number of topics of a forum
 	 * 
 	 * @param forumId The forum ID to update
 	 * @param count Decrement a total of <code>count</code> elements 
-	 * @throws Exception
 	 */
-	public void decrementTotalTopics(int forumId, int count) throws Exception;
+	public void decrementTotalTopics(int forumId, int count) ;
 
 	/**
 	 * Gets information about the latest message posted in some forum.
 	 * 
 	 * @param forumId the forum's id to inspect
 	 * @return A {@link LastPostInfo} instance
-	 * @throws Exception
 	 */
-	public LastPostInfo getLastPostInfo(int forumId) throws Exception;
+	public LastPostInfo getLastPostInfo(int forumId) ;
 
 	/**
 	 * Get all moderators of some forum
 	 * @param forumId the forum's id to inspect
 	 * @return a list with all moderators. Each entry is an instance of
 	 * {@link net.jforum.entities.ModeratorInfo}
-	 * @throws Exception
 	 */
-	public List getModeratorList(int forumId) throws Exception;
+	public List getModeratorList(int forumId) ;
 	
 	/**
 	 * Gets the total number of messages of a forum
-	 * 
-	 * @param forumId The forum ID
-	 * @throws Exception
-	 */
-	public int getTotalMessages() throws Exception; 
+     * @return int
+     */
+	public int getTotalMessages() ;
 	
 	/**
 	 * Gets the total number os topics of some forum
 	 * 
 	 * @return Total of topics
-	 * @throws Exception
+     * @param forumId int
 	 */
-	public int getTotalTopics(int forumId) throws Exception;
+	public int getTotalTopics(int forumId) ;
 
 	
 	/**
 	 * Gets the last post id associated to the forum
 	 * 
-	 * @param forumId The forum id 
-	 * @throws Exception
+	 * @param forumId The forum id
+     * @return int
 	 */
-	public int getMaxPostId(int forumId) throws Exception;
+	public int getMaxPostId(int forumId) ;
 	
 	/**
 	 * Move the topics to a new forum
@@ -209,9 +193,8 @@ public interface ForumDAO
 	 * @param topics The topics id array
 	 * @param fromForumId The original forum id
 	 * @param toForumId The destination forum id
-	 * @throws Exception
 	 */
-	public void moveTopics(String[] topics, int fromForumId, int toForumId) throws Exception;
+	public void moveTopics(String[] topics, int fromForumId, int toForumId) ;
 	
 	/**
 	 * Check if the forum has unread topics.
@@ -220,25 +203,22 @@ public interface ForumDAO
 	 * @param lastVisit The last visit time the user has seen the forum
 	 * @return An <code>java.util.List</code> instance, where each entry is a
 	 * <code>net.jforum.entities.Topic</code> instance. 
-	 * @throws Exception
 	 */
-	public List checkUnreadTopics(int forumId, long lastVisit) throws Exception;
+	public List checkUnreadTopics(int forumId, long lastVisit) ;
 	
 	/**
 	 * Enable or disabled moderation for the forum.
 	 * 
 	 * @param categoryId The main category for the forum
 	 * @param status a boolean value representing the desired status
-	 * @throws Exception
 	 */
-	public void setModerated(int categoryId, boolean status) throws Exception;
+	public void setModerated(int categoryId, boolean status) ;
 	
 	/**
 	 * Ges general statistics from the board
-	 * @return
-	 * @throws Exception
+	 * @return ForumStats
 	 */
-	public ForumStats getBoardStatus() throws Exception;
+	public ForumStats getBoardStatus() ;
 	
 	
 	//codes below are added by socialnework@gmail.com for "watching forum" purpose
@@ -248,48 +228,43 @@ public interface ForumDAO
 	 * @param forum The forum 
 	 * @return <code>ArrayList</code> of <code>User</code> objects. Each
 	 * entry is an user who will receive the new topic in the forum notification
-	 * @throws Exception
 	 * */
-	public List notifyUsers(Forum forum) throws Exception;
+	public List notifyUsers(Forum forum) ;
 	
 	
 	/**
 	 * Subscribe the user for notification of new topic in the forum
 	 * Added by socialnetwork@gmail.com
 	 * 
-	 * @param forumId
-	 * @param userId
-	 * @throws Exception
+	 * @param forumId int
+	 * @param userId int
 	 */
-	public void subscribeUser(int forumId, int userId) throws Exception;
+	public void subscribeUser(int forumId, int userId) ;
 	
 	/**
 	 * Return the subscrition status of the user on the forum.
 	 * Added by socialnetwork@gmail.com
 	 * 
-	 * @param forumId
-	 * @param userId
-	 * @return
-	 * @throws Exception
+	 * @param forumId int
+	 * @param userId int
+	 * @return boolean
 	 */
-	public boolean isUserSubscribed(int forumId, int userId) throws Exception;
+	public boolean isUserSubscribed(int forumId, int userId) ;
 	
 	/**
 	 * Remove the user's subscription of the forum
 	 * 
 	 * @param forumId The forum id
 	 * @param userId the User id
-	 * @throws Exception
 	 */
-	public void removeSubscription(int forumId, int userId) throws Exception;
+	public void removeSubscription(int forumId, int userId) ;
 	
 	/**
 	 * Clean all subscriptions of some forum
 	 * 
 	 * @param forumId The forum id
-	 * @throws Exception
 	 */
-	public void removeSubscriptionByForum(int forumId) throws Exception;
+	public void removeSubscriptionByForum(int forumId) ;
 
 	
 }

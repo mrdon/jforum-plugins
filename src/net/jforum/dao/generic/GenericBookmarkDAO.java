@@ -43,6 +43,7 @@ package net.jforum.dao.generic;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,61 +52,98 @@ import net.jforum.entities.Bookmark;
 import net.jforum.entities.BookmarkType;
 import net.jforum.exceptions.InvalidBookmarkTypeException;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.DbUtils;
+import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericBookmarkDAO.java,v 1.5 2006/01/29 15:06:24 rafaelsteil Exp $
+ * @version $Id: GenericBookmarkDAO.java,v 1.6 2006/08/20 12:19:03 sergemaslyukov Exp $
  */
 public class GenericBookmarkDAO implements net.jforum.dao.BookmarkDAO
 {
+    private final static Logger log = Logger.getLogger(GenericAttachmentDAO.class);
+
 	/**
 	 * @see net.jforum.dao.BookmarkDAO#add(net.jforum.entities.Bookmark)
 	 */
-	public void add(Bookmark b) throws Exception
+	public void add(Bookmark b)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("BookmarkModel.add"));
-		p.setInt(1, b.getUserId());
-		p.setInt(2, b.getRelationId());
-		p.setInt(3, b.getRelationType());
-		p.setInt(4, b.isPublicVisible() ? 1 : 0);
-		p.setString(5, b.getTitle());
-		p.setString(6, b.getDescription());
-		p.executeUpdate();
-		p.close();
-	}
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("BookmarkModel.add"));
+            p.setInt(1, b.getUserId());
+            p.setInt(2, b.getRelationId());
+            p.setInt(3, b.getRelationType());
+            p.setInt(4, b.isPublicVisible() ? 1 : 0);
+            p.setString(5, b.getTitle());
+            p.setString(6, b.getDescription());
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr add()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
+    }
 
 	/**
 	 * @see net.jforum.dao.BookmarkDAO#update(net.jforum.entities.Bookmark)
 	 */
-	public void update(Bookmark b) throws Exception
+	public void update(Bookmark b) 
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("BookmarkModel.update"));
-		p.setInt(1, b.isPublicVisible() ? 1 : 0);
-		p.setString(2, b.getTitle());
-		p.setString(3, b.getDescription());
-		p.setInt(4, b.getId());
-		p.executeUpdate();
-		p.close();
-	}
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("BookmarkModel.update"));
+            p.setInt(1, b.isPublicVisible() ? 1 : 0);
+            p.setString(2, b.getTitle());
+            p.setString(3, b.getDescription());
+            p.setInt(4, b.getId());
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr update()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
+    }
 
 	/**
 	 * @see net.jforum.dao.BookmarkDAO#remove(int)
 	 */
-	public void remove(int bookmarkId) throws Exception
+	public void remove(int bookmarkId) 
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("BookmarkModel.remove"));
-		p.setInt(1, bookmarkId);
-		p.executeUpdate();
-		p.close();
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("BookmarkModel.remove"));
+            p.setInt(1, bookmarkId);
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr remove()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
 	}
 
 	/**
 	 * @see net.jforum.dao.BookmarkDAO#selectByUser(int, int)
 	 */
-	public List selectByUser(int userId, int relationType) throws Exception
+	public List selectByUser(int userId, int relationType)
 	{
 		if (relationType == BookmarkType.FORUM) {
 			return this.getForums(userId);
@@ -125,152 +163,212 @@ public class GenericBookmarkDAO implements net.jforum.dao.BookmarkDAO
 	/**
 	 * @see net.jforum.dao.BookmarkDAO#selectByUser(int)
 	 */
-	public List selectByUser(int userId) throws Exception
+	public List selectByUser(int userId)
 	{
 		List l = new ArrayList();
 		
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("BookmarkModel.selectAllFromUser"));
-		p.setInt(1, userId);
-		
-		ResultSet rs = p.executeQuery();
-		while (rs.next()) {
-			l.add(this.getBookmark(rs));
-		}
-		
-		rs.close();
-		p.close();
-		
-		return l;
-	}
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("BookmarkModel.selectAllFromUser"));
+            p.setInt(1, userId);
+
+            rs = p.executeQuery();
+            while (rs.next()) {
+                l.add(this.getBookmark(rs));
+            }
+
+            return l;
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectByUser()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 	
 	/**
 	 * @see net.jforum.dao.BookmarkDAO#selectById(int)
 	 */
-	public Bookmark selectById(int bookmarkId) throws Exception
+	public Bookmark selectById(int bookmarkId) 
 	{
 		Bookmark b = null;
 		
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("BookmarkModel.selectById"));
-		p.setInt(1, bookmarkId);
-		
-		ResultSet rs = p.executeQuery();
-		if (rs.next()) {
-			b = this.getBookmark(rs);
-		}
-		
-		rs.close();
-		p.close();
-		
-		return b;
-	}
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("BookmarkModel.selectById"));
+            p.setInt(1, bookmarkId);
+
+            rs = p.executeQuery();
+            if (rs.next()) {
+                b = this.getBookmark(rs);
+            }
+
+            return b;
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectById()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 	
 	/**
 	 * @see net.jforum.dao.BookmarkDAO#selectForUpdate(int, int, int)
 	 */
-	public Bookmark selectForUpdate(int relationId, int relationType, int userId) throws Exception
+	public Bookmark selectForUpdate(int relationId, int relationType, int userId)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("BookmarkModel.selectForUpdate"));
-		p.setInt(1, relationId);
-		p.setInt(2, relationType);
-		p.setInt(3, userId);
-		
-		Bookmark b = null;
-		ResultSet rs = p.executeQuery();
-		if (rs.next()) {
-			b = this.getBookmark(rs);
-		}
-		
-		rs.close();
-		p.close();
-		
-		return b;
-	}
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("BookmarkModel.selectForUpdate"));
+            p.setInt(1, relationId);
+            p.setInt(2, relationType);
+            p.setInt(3, userId);
+
+            Bookmark b = null;
+            rs = p.executeQuery();
+            if (rs.next()) {
+                b = this.getBookmark(rs);
+            }
+
+            return b;
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectForUpdate()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 	
-	protected List getUsers(int userId) throws Exception
-	{
-		List l = new ArrayList();
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("BookmarkModel.selectUserBookmarks"));
-		p.setInt(1, userId);
-		
-		ResultSet rs = p.executeQuery();
-		while (rs.next()) {
-			Bookmark b = this.getBookmark(rs);
-			
-			if (b.getTitle() == null || "".equals(b.getTitle())) {
-				b.setTitle(rs.getString("username"));
-			}
-			
-			l.add(b);
-		}
-		
-		rs.close();
-		p.close();
-		
-		return l;
-	}
-	
-	protected List getTopics(int userId) throws Exception
+	protected List getUsers(int userId)
 	{
 		List l = new ArrayList();
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("BookmarkModel.selectTopicBookmarks"));
-		p.setInt(1, userId);
-		
-		ResultSet rs = p.executeQuery();
-		while (rs.next()) {
-			Bookmark b = this.getBookmark(rs);
-			
-			if (b.getTitle() == null || "".equals(b.getTitle())) {
-				b.setTitle(rs.getString("topic_title"));
-			}
-			
-			l.add(b);
-		}
-		
-		rs.close();
-		p.close();
-		
-		return l;
-	}
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("BookmarkModel.selectUserBookmarks"));
+            p.setInt(1, userId);
+
+            rs = p.executeQuery();
+            while (rs.next()) {
+                Bookmark b = this.getBookmark(rs);
+
+                if (b.getTitle() == null || "".equals(b.getTitle())) {
+                    b.setTitle(rs.getString("username"));
+                }
+
+                l.add(b);
+            }
+
+            return l;
+        }
+        catch (SQLException e) {
+            String es = "Erorr getUsers()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 	
-	protected List getForums(int userId) throws Exception
+	protected List getTopics(int userId)
 	{
-		List l = new ArrayList();
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("BookmarkModel.selectForumBookmarks"));
-		p.setInt(1, userId);
-		
-		ResultSet rs = p.executeQuery();
-		while (rs.next()) {
-			Bookmark b = this.getBookmark(rs);
-			
-			if (b.getTitle() == null || "".equals(b.getTitle())) {
-				b.setTitle(rs.getString("forum_name"));
-			}
-			
-			if (b.getDescription() == null || "".equals(b.getDescription())) {
-				b.setDescription(rs.getString("forum_desc"));
-			}
-			
-			l.add(b);
-		}
-		
-		rs.close();
-		p.close();
-		
-		return l;
-	}
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            List l = new ArrayList();
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("BookmarkModel.selectTopicBookmarks"));
+            p.setInt(1, userId);
+
+            rs = p.executeQuery();
+            while (rs.next()) {
+                Bookmark b = this.getBookmark(rs);
+
+                if (b.getTitle() == null || "".equals(b.getTitle())) {
+                    b.setTitle(rs.getString("topic_title"));
+                }
+
+                l.add(b);
+            }
+
+            return l;
+        }
+        catch (SQLException e) {
+            String es = "Erorr getTopics()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 	
-	protected Bookmark getBookmark(ResultSet rs) throws Exception
+	protected List getForums(int userId)
+	{
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            List l = new ArrayList();
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("BookmarkModel.selectForumBookmarks"));
+            p.setInt(1, userId);
+
+            rs = p.executeQuery();
+            while (rs.next()) {
+                Bookmark b = this.getBookmark(rs);
+
+                if (b.getTitle() == null || "".equals(b.getTitle())) {
+                    b.setTitle(rs.getString("forum_name"));
+                }
+
+                if (b.getDescription() == null || "".equals(b.getDescription())) {
+                    b.setDescription(rs.getString("forum_desc"));
+                }
+
+                l.add(b);
+            }
+
+            return l;
+        }
+        catch (SQLException e) {
+            String es = "Erorr getForums()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
+	
+	protected Bookmark getBookmark(ResultSet rs) throws SQLException
 	{
 		Bookmark b = new Bookmark();
 		b.setId(rs.getInt("bookmark_id"));
 		b.setDescription(rs.getString("description"));
-		b.setPublicVisible(rs.getInt("public_visible") == 1 ? true : false);
+		b.setPublicVisible(rs.getInt("public_visible") == 1);
 		b.setRelationId(rs.getInt("relation_id"));
 		b.setTitle(rs.getString("title"));
 		b.setDescription(rs.getString("description"));

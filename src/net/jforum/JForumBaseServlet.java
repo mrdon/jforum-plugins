@@ -65,7 +65,7 @@ import freemarker.template.Configuration;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumBaseServlet.java,v 1.18 2006/03/01 13:17:23 rafaelsteil Exp $
+ * @version $Id: JForumBaseServlet.java,v 1.19 2006/08/20 12:18:59 sergemaslyukov Exp $
  */
 public class JForumBaseServlet extends HttpServlet
 {
@@ -126,7 +126,7 @@ public class JForumBaseServlet extends HttpServlet
 		}
 	}
 
-	protected void loadConfigStuff() throws Exception
+	protected void loadConfigStuff()
 	{
 		ConfigLoader.loadUrlPatterns();
 		I18n.load();

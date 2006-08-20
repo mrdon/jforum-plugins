@@ -63,11 +63,11 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaAction.java,v 1.18 2006/01/29 15:06:57 rafaelsteil Exp $
+ * @version $Id: KarmaAction.java,v 1.19 2006/08/20 12:19:16 sergemaslyukov Exp $
  */
 public class KarmaAction extends Command
 {
-	public void insert() throws Exception
+	public void insert()
 	{
 		if (!SecurityRepository.canAccess(SecurityConstants.PERM_KARMA_ENABLED)) {
 			this.error("Karma.featureDisabled", null);
@@ -148,7 +148,7 @@ public class KarmaAction extends Command
 	/**
 	 * @see net.jforum.Command#list()
 	 */
-	public void list() throws Exception
+	public void list() 
 	{
 		this.setTemplateName(TemplateKeys.KARMA_LIST);
 		this.context.put("message", I18n.getMessage("invalidAction"));
@@ -159,10 +159,9 @@ public class KarmaAction extends Command
 	 * method above. Performs a search over the users votes between two dates.
 	 * FIXME: "order_by" should not come from the HTML form representing the real db column name
 	 * 
-	 * @throws Exception
 	 */
 	/*
-	public void searchByPeriod() throws Exception
+	public void searchByPeriod() 
 	{
 		SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy");
 		Date firstPeriod, lastPeriod;
@@ -202,10 +201,9 @@ public class KarmaAction extends Command
 	 * 
 	 * Performs a search over the users votes in a specific month.
 	 * 
-	 * @throws Exception
 	 */
 	/*
-	public void searchByMonth() throws Exception
+	public void searchByMonth()
 	{
 		SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		int month = Integer.parseInt(request.getParameter("month"));

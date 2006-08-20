@@ -48,7 +48,7 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationAction.java,v 1.2 2006/01/29 15:06:57 rafaelsteil Exp $
+ * @version $Id: ModerationAction.java,v 1.3 2006/08/20 12:19:16 sergemaslyukov Exp $
  */
 public class ModerationAction extends Command
 {
@@ -56,12 +56,12 @@ public class ModerationAction extends Command
 	 * @throws UnsupportedOperationException always
 	 * @see net.jforum.Command#list()
 	 */
-	public void list() throws Exception
+	public void list()
 	{
 		throw new UnsupportedOperationException();
 	}
 	
-	public void doModeration() throws Exception
+	public void doModeration()
 	{
 		String returnUrl = this.request.getParameter("returnUrl");
 		
@@ -74,12 +74,12 @@ public class ModerationAction extends Command
 		}
 	}
 	
-	public void moveTopic() throws Exception
+	public void moveTopic()
 	{
 		new ModerationHelper().moveTopicsSave(this.request.getParameter("returnUrl"));
 	}
 	
-	public void moderationDone() throws Exception
+	public void moderationDone()
 	{
 		this.setTemplateName(new ModerationHelper().moderationDone(this.request.getParameter("returnUrl")));
 	}

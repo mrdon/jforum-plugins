@@ -57,11 +57,11 @@ import net.jforum.view.forum.common.UploadUtils;
 
 /**
  * @author Rafael Steil
- * @version $Id: SmiliesAction.java,v 1.13 2005/09/30 23:19:20 rafaelsteil Exp $
+ * @version $Id: SmiliesAction.java,v 1.14 2006/08/20 12:19:15 sergemaslyukov Exp $
  */
 public class SmiliesAction extends AdminCommand 
 {
-	private String processUpload() throws Exception
+	private String processUpload()
 	{
 		String imgName = "";
 		
@@ -89,7 +89,7 @@ public class SmiliesAction extends AdminCommand
 		this.context.put("action", "insertSave");
 	}
 		
-	public void insertSave() throws Exception
+	public void insertSave()
 	{
 		Smilie s = new Smilie();
 		s.setCode(this.request.getParameter("code"));
@@ -105,7 +105,7 @@ public class SmiliesAction extends AdminCommand
 		this.list();
 	}
 	
-	public void edit() throws Exception
+	public void edit()
 	{
 		int id = 1;
 		
@@ -118,7 +118,7 @@ public class SmiliesAction extends AdminCommand
 		this.context.put("action", "editSave");
 	}
 	
-	public void editSave() throws Exception
+	public void editSave()
 	{
 		Smilie s = DataAccessDriver.getInstance().newSmilieDAO().selectById(this.request.getIntParameter("id"));
 		s.setCode(this.request.getParameter("code"));
@@ -135,7 +135,7 @@ public class SmiliesAction extends AdminCommand
 		this.list();
 	}
 	
-	public void delete() throws Exception
+	public void delete()
 	{
 		String[] ids = this.request.getParameterValues("id");
 		
@@ -167,7 +167,7 @@ public class SmiliesAction extends AdminCommand
 	/** 
 	 * @see net.jforum.Command#list()
 	 */
-	public void list() throws Exception 
+	public void list()  
 	{
 		this.context.put("smilies", SmiliesRepository.getSmilies());
 		this.setTemplateName(TemplateKeys.SMILIES_LIST);

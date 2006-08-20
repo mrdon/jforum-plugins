@@ -47,14 +47,14 @@ import java.util.List;
 import net.jforum.entities.Ranking;
 
 /**
- * Model interface for {@link net.jforum.Ranking}.
+ * Model interface for {@link net.jforum.entities.Ranking}.
  * This interface defines methods which are expected to be
  * implementd by a specific data access driver. The intention is
  * to provide all functionality needed to update, insert, delete and
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: RankingDAO.java,v 1.4 2005/07/26 03:04:31 rafaelsteil Exp $
+ * @version $Id: RankingDAO.java,v 1.5 2006/08/20 12:19:01 sergemaslyukov Exp $
  */
 public interface RankingDAO 
 {
@@ -63,45 +63,38 @@ public interface RankingDAO
 	 * 
 	 * @param rankingId The ranking ID to search
 	 * @return <code>Ranking</code>object containing all the information
-	 * @throws Exception
 	 * @see #selectAll
 	 */
-	public Ranking selectById(int rankingId) throws Exception;
+	public Ranking selectById(int rankingId) ;
 	
 	/**
 	 * Selects all ranking data from the database.
 	 * 
 	 * @return ArrayList with the rankings. Each entry is a <code>Ranking</code> object 
-	 * @throws Exception
 	 * @see #selectById
 	 */
-	public List selectAll() throws Exception;
+	public List selectAll() ;
 	
 
 	/**
 	 * Delete a ranking.
 	 * 
 	 * @param rankingId The ranking ID to delete
-	 * @throws Exception
-	 * @see #canDelete(int)
 	 */
-	public void delete(int rankingId) throws Exception;
+	public void delete(int rankingId) ;
 	
 
 	/**
 	 * Updates a ranking.
 	 * 
 	 * @param ranking Reference to a <code>Ranking</code> object to update
-	 * @throws Exception
-	 * @see #update(int)
 	 */
-	public void update(Ranking ranking) throws Exception;
+	public void update(Ranking ranking) ;
 	
 	/**
 	 * Adds a new ranking.
 	 * 
 	 * @param ranking Reference to a valid and configured <code>Ranking</code> object
-	 * @throws Exception
 	 */
-	public void addNew(Ranking ranking) throws Exception;
+	public void addNew(Ranking ranking) ;
 }

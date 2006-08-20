@@ -50,11 +50,11 @@ import java.util.List;
  * 
  * @author Franklin S. Dattein (<a href="mailto:franklin@portaljava.com">franklin@portaljava.com</a>)
  * 
- * @version $Id: SummaryDAO.java,v 1.4 2005/07/31 04:07:33 rafaelsteil Exp $
+ * @version $Id: SummaryDAO.java,v 1.5 2006/08/20 12:19:02 sergemaslyukov Exp $
  */
 public interface SummaryDAO
 {
-	public List selectLastPosts(Date firstDate, Date lastDate) throws Exception;
+	public List selectLastPosts(Date firstDate, Date lastDate) ;
 
-	public List listRecipients() throws Exception;
+	public List listRecipients() ;
 }

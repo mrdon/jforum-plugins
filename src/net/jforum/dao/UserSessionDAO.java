@@ -48,7 +48,7 @@ import net.jforum.entities.UserSession;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserSessionDAO.java,v 1.4 2005/07/26 03:04:29 rafaelsteil Exp $
+ * @version $Id: UserSessionDAO.java,v 1.5 2006/08/20 12:19:03 sergemaslyukov Exp $
  */
 public interface UserSessionDAO
 {
@@ -63,9 +63,8 @@ public interface UserSessionDAO
 	 * If any driver implementation of this method will not use a database
 	 * ( eg, where a <code>Connection</code> is not required ), when just
 	 * pass <code>null</code> as argument.
-	 * @throws Exception
 	 */
-	public void add(UserSession us, Connection conn) throws Exception;
+	public void add(UserSession us, Connection conn) ;
 	
 	/**
 	 * Updates an <code>UserSession</code> 
@@ -79,9 +78,8 @@ public interface UserSessionDAO
 	 * ( eg, where a <code>Connection</code> is not required ), when just
 	 * pass <code>null</code> as argument.
 
-	 * @throws Exception
 	 */
-	public void update(UserSession us, Connection conn) throws Exception;
+	public void update(UserSession us, Connection conn) ;
 	
 	/**
 	 * Gets an <code>UserSession</code> from the database.
@@ -97,7 +95,7 @@ public interface UserSessionDAO
 	 * ( eg, where a <code>Connection</code> is not required ), when just
 	 * pass <code>null</code> as argument.
 	 * 
-	 * @return 
+	 * @return UserSession
 	 */
-	public UserSession selectById(UserSession us, Connection conn) throws Exception;
+	public UserSession selectById(UserSession us, Connection conn) ;
 }

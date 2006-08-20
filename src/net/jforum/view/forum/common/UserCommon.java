@@ -44,9 +44,6 @@ package net.jforum.view.forum.common;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,7 +65,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserCommon.java,v 1.16 2006/08/06 00:07:45 rafaelsteil Exp $
+ * @version $Id: UserCommon.java,v 1.17 2006/08/20 12:19:17 sergemaslyukov Exp $
  */
 public class UserCommon 
 {
@@ -77,10 +74,10 @@ public class UserCommon
 	/**
 	 * Updates the user information
 	 * 
-	 * @param userId The user id we are saving
-	 * @throws Exception
+	 * @param userId int The user id we are saving
+     * @return List
 	 */
-	public static List saveUser(int userId) throws Exception
+	public static List saveUser(int userId)
 	{
 		List errors = new ArrayList();
 		
@@ -185,12 +182,9 @@ public class UserCommon
 	}
 
 	/**
-	 * @param u
-	 * @throws NoSuchAlgorithmException
-	 * @throws FileNotFoundException
-	 * @throws IOException
+	 * @param u User
 	 */
-	private static void handleAvatar(User u) throws Exception 
+	private static void handleAvatar(User u)
 	{
 		String fileName = MD5.crypt(Integer.toString(u.getId()));
 		FileItem item = (FileItem)JForumExecutionContext.getRequest().getObjectParameter("avatar");

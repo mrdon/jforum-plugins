@@ -68,7 +68,7 @@ import net.jforum.dao.security.GroupSecurityDAO;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericDataAccessDriver.java,v 1.3 2005/11/10 18:30:03 almilli Exp $
+ * @version $Id: GenericDataAccessDriver.java,v 1.4 2006/08/20 12:19:03 sergemaslyukov Exp $
  */
 public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver 
 {
@@ -96,6 +96,7 @@ public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver
     private static SummaryDAO summaryDao = new GenericSummaryDAO();
 
 	/**
+     * TODO implement this method or delete this javadoc
 	 * @see net.jforum.dao.DataAccessDriver#getForumModel()
 	 */
 	public net.jforum.dao.ForumDAO newForumDAO() 
@@ -104,6 +105,7 @@ public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver
 	}
 
 	/**
+     * TODO implement this method or delete this javadoc
 	 * @see net.jforum.dao.DataAccessDriver#getGroupModel()
 	 */
 	public net.jforum.dao.GroupDAO newGroupDAO() 
@@ -112,6 +114,7 @@ public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver
 	}
 
 	/**
+     * TODO implement this method or delete this javadoc
 	 * @see net.jforum.dao.DataAccessDriver#getPostModel()
 	 */
 	public net.jforum.dao.PostDAO newPostDAO() 
@@ -120,6 +123,7 @@ public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver
 	}
 
 	/**
+     * TODO implement this method or delete this javadoc
 	 * @see net.jforum.dao.DataAccessDriver#getPollModel()
 	 */
 	public net.jforum.dao.PollDAO newPollDAO() 
@@ -128,6 +132,7 @@ public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver
 	}
 
 	/**
+     * TODO implement this method or delete this javadoc
 	 * @see net.jforum.dao.DataAccessDriver#getRankingModel()
 	 */
 	public net.jforum.dao.RankingDAO newRankingDAO() 
@@ -136,6 +141,7 @@ public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver
 	}
 
 	/**
+     * TODO implement this method or delete this javadoc
 	 * @see net.jforum.dao.DataAccessDriver#getTopicModel()
 	 */
 	public net.jforum.dao.TopicDAO newTopicDAO() 
@@ -144,6 +150,7 @@ public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver
 	}
 
 	/**
+     * TODO implement this method or delete this javadoc
 	 * @see net.jforum.dao.DataAccessDriver#getUserModel()
 	 */
 	public net.jforum.dao.UserDAO newUserDAO() 

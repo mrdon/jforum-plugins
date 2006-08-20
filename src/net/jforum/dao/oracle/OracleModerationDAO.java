@@ -43,20 +43,21 @@
 package net.jforum.dao.oracle;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import net.jforum.dao.generic.GenericModerationDAO;
 
 /**
  * @author Rafael Steil
- * @version $Id: OracleModerationDAO.java,v 1.3 2005/07/26 03:04:57 rafaelsteil Exp $
+ * @version $Id: OracleModerationDAO.java,v 1.4 2006/08/20 12:19:06 sergemaslyukov Exp $
  */
 public class OracleModerationDAO extends GenericModerationDAO
 {
 	/**
 	 * @see net.jforum.dao.generic.GenericModerationDAO#getPostTextFromResultSet(java.sql.ResultSet)
 	 */
-	protected String getPostTextFromResultSet(ResultSet rs) throws Exception
-	{
+	protected String getPostTextFromResultSet(ResultSet rs) throws SQLException
+    {
 		return OracleUtils.readBlobUTF16BinaryStream(rs, "post_text");
 	}
 }

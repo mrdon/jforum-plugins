@@ -66,14 +66,14 @@ import net.jforum.view.admin.common.ModerationCommon;
  * ViewHelper for category administration.
  * 
  * @author Rafael Steil
- * @version $Id: CategoryAction.java,v 1.22 2005/09/15 22:47:32 vmal Exp $
+ * @version $Id: CategoryAction.java,v 1.23 2006/08/20 12:19:14 sergemaslyukov Exp $
  */
 public class CategoryAction extends AdminCommand 
 {
 	private CategoryDAO cm = DataAccessDriver.getInstance().newCategoryDAO();
 	
 	// Listing
-	public void list() throws Exception
+	public void list()
 	{
 		this.context.put("categories", DataAccessDriver.getInstance().newCategoryDAO().selectAll());
 		this.context.put("repository", new ForumRepository());
@@ -81,7 +81,7 @@ public class CategoryAction extends AdminCommand
 	}
 	
 	// One more, one more
-	public void insert() throws Exception
+	public void insert()
 	{
 		this.context.put("groups", new TreeGroup().getNodes());
 		this.context.put("selectedList", new ArrayList());
@@ -90,7 +90,7 @@ public class CategoryAction extends AdminCommand
 	}
 	
 	// Edit
-	public void edit() throws Exception
+	public void edit()
 	{
 		this.context.put("category", this.cm.selectById(this.request.getIntParameter("category_id")));
 		this.setTemplateName(TemplateKeys.CATEGORY_EDIT);
@@ -98,7 +98,7 @@ public class CategoryAction extends AdminCommand
 	}
 	
 	//  Save information
-	public void editSave() throws Exception
+	public void editSave()
 	{
 		Category c = new Category(ForumRepository.getCategory(
 				this.request.getIntParameter("categories_id")));
@@ -114,7 +114,7 @@ public class CategoryAction extends AdminCommand
 	}
 	
 	// Delete
-	public void delete() throws Exception
+	public void delete()
 	{
 		String ids[] = this.request.getParameterValues("categories_id");
 		List errors = new ArrayList();
@@ -142,7 +142,7 @@ public class CategoryAction extends AdminCommand
 	}
 	
 	// A new one
-	public void insertSave() throws Exception
+	public void insertSave()
 	{
 		Category c = new Category();
 		c.setName(this.request.getParameter("category_name"));
@@ -182,17 +182,17 @@ public class CategoryAction extends AdminCommand
 		this.list();
 	}
 	
-	public void up() throws Exception
+	public void up()
 	{
 		this.processOrdering(true);
 	}
 	
-	public void down() throws Exception
+	public void down()
 	{
 		this.processOrdering(false);
 	}
 	
-	private void processOrdering(boolean up) throws Exception
+	private void processOrdering(boolean up) 
 	{
 		Category toChange = new Category(ForumRepository.getCategory(Integer.parseInt(
 				this.request.getParameter("category_id"))));

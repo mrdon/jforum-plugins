@@ -60,7 +60,7 @@ import freemarker.template.SimpleHash;
  * Data execution context. 
  * 
  * @author Rafael Steil
- * @version $Id: JForumExecutionContext.java,v 1.2 2006/01/29 17:41:45 rafaelsteil Exp $
+ * @version $Id: JForumExecutionContext.java,v 1.3 2006/08/20 12:18:59 sergemaslyukov Exp $
  */
 public class JForumExecutionContext
 {
@@ -79,7 +79,7 @@ public class JForumExecutionContext
 	
 	/**
 	 * Gets the execution context.
-	 * @return
+	 * @return JForumExecutionContext
 	 */
 	public static JForumExecutionContext get()
 	{
@@ -123,7 +123,7 @@ public class JForumExecutionContext
 	
 	/**
 	 * Sets the execution context
-	 * @param ex
+	 * @param ex JForumExecutionContext
 	 */
 	public static void set(JForumExecutionContext ex)
 	{
@@ -141,7 +141,7 @@ public class JForumExecutionContext
 	
 	/**
 	 * Gets the current thread's connection
-	 * @return
+	 * @return Connection
 	 */
 	public static Connection getConnection() 
 	{
@@ -161,7 +161,9 @@ public class JForumExecutionContext
 			try {
 				c.setAutoCommit(!SystemGlobals.getBoolValue(ConfigKeys.DATABASE_USE_TRANSACTIONS));
 			}
-			catch (Exception e) {}
+			catch (Exception e) {
+                //catch error autocommit
+            }
 			
 			ex.setConnection(c);
 			set(ex);
@@ -181,7 +183,7 @@ public class JForumExecutionContext
 
 	/**
 	 * Gets the current thread's request
-	 * @return
+	 * @return ActionServletRequest
 	 */
 	public static ActionServletRequest getRequest() {
 		return ((JForumExecutionContext)userData.get()).request;
@@ -198,7 +200,7 @@ public class JForumExecutionContext
 
 	/**
 	 * Gets the current thread's response
-	 * @return
+	 * @return HttpServletResponse
 	 */
 	public static HttpServletResponse getResponse() {
 		return ((JForumExecutionContext)userData.get()).response;
@@ -206,7 +208,7 @@ public class JForumExecutionContext
 
 	/**
 	 * Gets the current thread's template context
-	 * @return
+	 * @return SimpleHash
 	 */
 	public static SimpleHash getTemplateContext() {
 		return ((JForumExecutionContext)userData.get()).context;
@@ -214,15 +216,15 @@ public class JForumExecutionContext
 
 	/**
 	 * Gets the current thread's <code>DataHolder</code> instance
-	 * @return
-	 */
+     * @param redirect String
+     */
 	public static void setRedirect(String redirect) {
 		((JForumExecutionContext)userData.get()).redirectTo = redirect;
 	}
 
 	/**
 	 * Sets the content type for the current http response.
-	 * @param contentType
+	 * @param contentType String
 	 */
 	public static void setContentType(String contentType) {
 		((JForumExecutionContext)userData.get()).contentType = contentType;
@@ -230,7 +232,7 @@ public class JForumExecutionContext
 	
 	/**
 	 * Gets the content type for the current request.
-	 * @return
+	 * @return String
 	 */
 	public static String getContentType()
 	{
@@ -249,7 +251,7 @@ public class JForumExecutionContext
 
 	/**
 	 * Marks the request to use a binary content-type.
-	 * @param enable 
+	 * @param enable boolean
 	 */
 	public static void enableCustomContent(boolean enable) {
 		((JForumExecutionContext)userData.get()).isCustomContent = enable;
@@ -282,12 +284,19 @@ public class JForumExecutionContext
 
     /**
      * Send UNAUTHORIZED to the browser and ask user to login via basic authentication
-     *
-     * @throws IOException
      */
-    public static void requestBasicAuthentication() throws IOException {
+    public static void requestBasicAuthentication()  {
         getResponse().addHeader("WWW-Authenticate", "Basic realm=\"JForum\"");
-        getResponse().sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        try
+        {
+            getResponse().sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        }
+        catch (IOException e)
+        {
+            String es = "Erorr add()";
+            logger.error(es, e);
+            throw new RuntimeException(es, e);
+        }
         enableCustomContent(true);
     }
 	

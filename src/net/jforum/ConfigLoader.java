@@ -68,7 +68,7 @@ import org.quartz.SchedulerException;
  * General utilities methods for loading configurations for JForum.
  * 
  * @author Rafael Steil
- * @version $Id: ConfigLoader.java,v 1.20 2005/11/29 17:18:47 rafaelsteil Exp $
+ * @version $Id: ConfigLoader.java,v 1.21 2006/08/20 12:18:59 sergemaslyukov Exp $
  */
 public class ConfigLoader 
 {
@@ -82,9 +82,8 @@ public class ConfigLoader
 	 * and database specific stuff.
 	 * 
 	 * @param appPath The application root's directory
-	 * @throws Exception
 	 */
-	public static void startSystemglobals(String appPath) throws Exception
+	public static void startSystemglobals(String appPath)
 	{
 		SystemGlobals.initGlobals(appPath, appPath + "/WEB-INF/config/SystemGlobals.properties");
 		SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
@@ -99,32 +98,48 @@ public class ConfigLoader
 	 * 
 	 * @param baseConfigDir The directory where the file <i>modulesMapping.properties</i> is.
 	 * @return The <code>java.util.Properties</code> instance, with the loaded modules 
-	 * @throws IOException
 	 */
-	public static Properties loadModulesMapping(String baseConfigDir) throws IOException
+	public static Properties loadModulesMapping(String baseConfigDir)
 	{
-		Properties modulesMapping = new Properties();
-		modulesMapping.load(new FileInputStream(baseConfigDir + "/modulesMapping.properties"));
-		
-		return modulesMapping;
-	}
+        try
+        {
+            Properties modulesMapping = new Properties();
+            modulesMapping.load(new FileInputStream(baseConfigDir + "/modulesMapping.properties"));
+
+            return modulesMapping;
+        }
+        catch (IOException e)
+        {
+            String es = "Erorr loadModulesMapping()";
+            logger.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+    }
 	
 	/**
 	 * Load url patterns.
 	 * The method tries to load url patterns from <i>WEB-INF/config/urlPattern.properties</i>
-	 * 
-	 * @throws IOException
 	 */
-	public static void loadUrlPatterns() throws IOException {
-		Properties p = new Properties();
-		p.load(new FileInputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
-			+ "/urlPattern.properties"));
+	public static void loadUrlPatterns()  {
+        try
+        {
+            Properties p = new Properties();
+            p.load(new FileInputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
+                + "/urlPattern.properties"));
 
-		Iterator iter = p.entrySet().iterator();
-		while (iter.hasNext()) {
-			Map.Entry entry = (Map.Entry) iter.next();
+            Iterator iter = p.entrySet().iterator();
+            while (iter.hasNext()) {
+                Map.Entry entry = (Map.Entry) iter.next();
 
-			ActionServletRequest.addUrlPattern((String)entry.getKey(), (String)entry.getValue());
+                ActionServletRequest.addUrlPattern((String)entry.getKey(), (String)entry.getValue());
+}
+        }
+        catch (IOException e)
+        {
+            String es = "Erorr add()";
+            logger.error(es, e);
+            throw new RuntimeException(es, e);
+
         }
     }
 	
@@ -166,18 +181,27 @@ public class ConfigLoader
 		}
 	}
 	
-	public static void loadDaoImplementation() throws Exception
+	public static void loadDaoImplementation()
 	{
 
         // Start the dao.driver implementation
         String driver = SystemGlobals.getValue(ConfigKeys.DAO_DRIVER);
         
         logger.info("Loading JDBC driver " + driver);
-        
-        Class c = Class.forName(driver);
-        DataAccessDriver d = (DataAccessDriver)c.newInstance();
-        DataAccessDriver.init(d);
-	}
+
+        try
+        {
+            Class c = Class.forName(driver);
+            DataAccessDriver d = (DataAccessDriver)c.newInstance();
+            DataAccessDriver.init(d);
+        }
+        catch (Exception e)
+        {
+            String es = "Erorr loadDaoImplementation()";
+            logger.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+    }
 	
 	public static void startCacheEngine()
 	{

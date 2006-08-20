@@ -65,19 +65,23 @@ import net.jforum.util.MD5;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import freemarker.template.SimpleHash;
+import org.apache.log4j.Logger;
 
 /**
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.24 2006/08/10 00:20:41 rafaelsteil Exp $
+ * @version $Id: ControllerUtils.java,v 1.25 2006/08/20 12:18:59 sergemaslyukov Exp $
  */
 public class ControllerUtils
 {
+    private static final Logger log = Logger.getLogger(ControllerUtils.class);
+
 	/**
 	 * Setup common variables used by almost all templates.
 	 * 
-	 * @param context The context to use
+	 * @param context SimpleHash The context to use
+     * @param jforumContext JForumContext
 	 */
 	public void prepareTemplateContext(SimpleHash context, JForumContext jforumContext)
 	{
@@ -170,9 +174,8 @@ public class ControllerUtils
 	 * 
 	 * @param userSession The UserSession instance of the user
 	 * @param user The User instance of the authenticated user
-	 * @throws Exception
 	 */
-	protected void configureUserSession(UserSession userSession, User user) throws Exception
+	protected void configureUserSession(UserSession userSession, User user)
 	{
 		userSession.dataToUser(user);
 
@@ -182,7 +185,7 @@ public class ControllerUtils
 		// it to the database before getting his information back.
 		String sessionId = SessionFacade.isUserInSession(user.getId());
 
-		UserSession tmpUs = new UserSession();
+		UserSession tmpUs;
 		if (sessionId != null) {
 			SessionFacade.storeSessionData(sessionId, JForumExecutionContext.getConnection());
 			tmpUs = SessionFacade.getUserSession(sessionId);
@@ -211,7 +214,8 @@ public class ControllerUtils
 
 	/**
 	 * Checks for user authentication using some SSO implementation
-	 */
+     * @param userSession UserSession
+     */
 	protected void checkSSO(UserSession userSession)
 	{
 		try {
@@ -254,10 +258,8 @@ public class ControllerUtils
 	 * Do a refresh in the user's session. This method will update the last visit time for the
 	 * current user, as well checking for authentication if the session is new or the SSO user has
 	 * changed
-	 * 
-	 * @throws Exception
 	 */
-	public void refreshSession() throws Exception
+	public void refreshSession()
 	{
 		UserSession userSession = SessionFacade.getUserSession();
 		ActionServletRequest request = JForumExecutionContext.getRequest();
@@ -288,9 +290,19 @@ public class ControllerUtils
 			SessionFacade.setAttribute(ConfigKeys.TOPICS_TRACKING, new HashMap());
 		}
 		else if (ConfigKeys.TYPE_SSO.equals(SystemGlobals.getValue(ConfigKeys.AUTHENTICATION_TYPE))) {
-			SSO sso = (SSO) Class.forName(SystemGlobals.getValue(ConfigKeys.SSO_IMPLEMENTATION)).newInstance();
+            SSO sso;
+            try
+            {
+                sso = (SSO) Class.forName(SystemGlobals.getValue(ConfigKeys.SSO_IMPLEMENTATION)).newInstance();
+            }
+            catch (Exception e)
+            {
+                String es = "Erorr add()";
+                log.error(es, e);
+                throw new RuntimeException(es, e);
+            }
 
-			// If SSO, then check if the session is valid
+            // If SSO, then check if the session is valid
 			if (!sso.isSessionValid(userSession, request)) {
 				SessionFacade.remove(userSession.getSessionId());
 				refreshSession();

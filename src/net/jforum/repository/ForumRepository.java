@@ -85,7 +85,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.52 2006/05/14 23:59:50 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.53 2006/08/20 12:19:09 sergemaslyukov Exp $
  */
 public class ForumRepository implements Cacheable
 {
@@ -114,15 +114,13 @@ public class ForumRepository implements Cacheable
 	/**
 	 * Starts the repository.
 	 * 
-	 * @param fm The <code>ForumModel</code> instance which will be 
+	 * @param fm The <code>ForumModel</code> instance which will be
 	 * used to retrieve information about the forums.
-	 * @param cm The <code>CategoryModel</code> instance which will 
+	 * @param cm The <code>CategoryModel</code> instance which will
 	 * be used to retrieve information about the categories.
-	 * @throws Exception
+     * @param  configModel ConfigDAO
 	 */
-	public synchronized static void start(ForumDAO fm, 
-			CategoryDAO cm,
-			ConfigDAO configModel) throws Exception
+	public synchronized static void start(ForumDAO fm, CategoryDAO cm, ConfigDAO configModel)
 	{
 		instance = new ForumRepository();
 		
@@ -228,7 +226,8 @@ public class ForumRepository implements Cacheable
 	
 	/**
 	 * Gets all categories from the cache. 
-	 * 
+	 *
+     * @param userId int
 	 * @return <code>List</code> with the categories. Each entry is a <code>Category</code> object.
 	 */
 	public static List getAllCategories(int userId)
@@ -491,10 +490,9 @@ public class ForumRepository implements Cacheable
 	 * then you <b>MUST CALL</b> @link Category#changeForumOrder(Forum) <b>BEFORE</b>
 	 * calling this method.
 	 * 
-	 * @param forum The forum to reload its information
-	 * @throws Exception
+	 * @param forumId int The forum to reload its information
 	 */
-	public static synchronized void reloadForum(int forumId) throws Exception
+	public static synchronized void reloadForum(int forumId)
 	{
 		Forum f = DataAccessDriver.getInstance().newForumDAO().selectById(forumId);
 		
@@ -556,9 +554,9 @@ public class ForumRepository implements Cacheable
 	/**
 	 * Gets information about the last message posted in some forum.
 	 * @param forum The forum to retrieve information
-	 * @return 
+	 * @return LastPostInfo
 	 */
-	public static LastPostInfo getLastPostInfo(Forum forum) throws Exception
+	public static LastPostInfo getLastPostInfo(Forum forum)
 	{
 		LastPostInfo lpi = forum.getLastPostInfo();
 		
@@ -574,10 +572,9 @@ public class ForumRepository implements Cacheable
 	 * Gets information about the last message posted in some forum.
 	 * 
 	 * @param forumId The forum's id to retrieve information
-	 * @return
-	 * @throws Exception
+	 * @return LastPostInfo
 	 */
-	public static LastPostInfo getLastPostInfo(int forumId) throws Exception
+	public static LastPostInfo getLastPostInfo(int forumId)
 	{
 		return getLastPostInfo(getForum(forumId));
 	}
@@ -585,7 +582,7 @@ public class ForumRepository implements Cacheable
 	/**
 	 * Gets information about the moderators of some forum.
 	 * @param forumId The forum to retrieve information
-	 * @return
+	 * @return List
 	 */
 	public static List getModeratorList(int forumId)
 	{
@@ -639,11 +636,10 @@ public class ForumRepository implements Cacheable
 	
 	/**
 	 * Gets the number of messages in the entire board.
-	 * @return 
-	 * @throws Exception
+	 * @return int
 	 * @see #getTotalMessages(boolean)
 	 */
-	public static int getTotalMessages() throws Exception
+	public static int getTotalMessages()
 	{
 		return getTotalMessages(false);
 	}
@@ -655,10 +651,9 @@ public class ForumRepository implements Cacheable
 	 * be made, to retrieve the desired information. If <code>false</code>, the
 	 * data will be fetched from the cache.
 	 * @return The number of messages posted in the board.
-	 * @throws Exception
 	 * @see #getTotalMessages()
 	 */
-	public static int getTotalMessages(boolean fromDb) throws Exception
+	public static int getTotalMessages(boolean fromDb) 
 	{
 		Integer i = (Integer)cache.get(FQN, TOTAL_MESSAGES);
 		
@@ -680,7 +675,7 @@ public class ForumRepository implements Cacheable
 	
 	/**
 	 * Gets the number of most online users ever
-	 * @return
+	 * @return MostUsersEverOnline
 	 */
 	public static MostUsersEverOnline getMostUsersEverOnline()
 	{
@@ -690,11 +685,10 @@ public class ForumRepository implements Cacheable
 	/**
 	 * Update the value of most online users ever.
 	 * 
-	 * @param newValue The new value to store. Generally it
+	 * @param m MostUsersEverOnline The new value to store. Generally it
 	 * will be a bigger one.
-	 * @throws Exception
 	 */
-	public static void updateMostUsersEverOnline(MostUsersEverOnline m) throws Exception
+	public static void updateMostUsersEverOnline(MostUsersEverOnline m)
 	{
 		ConfigDAO cm = DataAccessDriver.getInstance().newConfigDAO();
 		Config config = cm.selectByName(ConfigKeys.MOST_USERS_EVER_ONLINE);
@@ -728,9 +722,9 @@ public class ForumRepository implements Cacheable
 	
 	/**
 	 * Loads all forums.
-	 * @throws Exception
-	 */
-	private void loadForums(ForumDAO fm) throws Exception
+     * @param fm ForumDAO
+     */
+	private void loadForums(ForumDAO fm)
 	{
 		List l = fm.selectAll();
 		
@@ -772,7 +766,7 @@ public class ForumRepository implements Cacheable
 		cache.add(FQN, RELATION, m);
 	}
 	
-	private void loadUsersInfo() throws Exception
+	private void loadUsersInfo()
 	{
 		UserDAO udao = DataAccessDriver.getInstance().newUserDAO();
 		cache.add(FQN, LAST_USER, udao.getLastUserInfo());
@@ -781,9 +775,9 @@ public class ForumRepository implements Cacheable
 
 	/**
 	 * Loads all categories.
-	 * @throws Exception 
-	 */
-	private void loadCategories(CategoryDAO cm) throws Exception
+     * @param cm CategoryDAO
+     */
+	private void loadCategories(CategoryDAO cm)
 	{
 		List categories = cm.selectAll();
 		Set categoriesSet = new TreeSet(new CategoryOrderComparator());
@@ -798,7 +792,7 @@ public class ForumRepository implements Cacheable
 		cache.add(FQN, CATEGORIES_SET, categoriesSet);
 	}
 	
-	private void loadMostUsersEverOnline(ConfigDAO cm) throws Exception
+	private void loadMostUsersEverOnline(ConfigDAO cm) 
 	{
 		Config config = cm.selectByName(ConfigKeys.MOST_USERS_EVER_ONLINE);
 		MostUsersEverOnline mostUsersEverOnline = new MostUsersEverOnline();
@@ -816,7 +810,7 @@ public class ForumRepository implements Cacheable
 	}
 
 
-	public static String getListAllowedForums() throws Exception
+	public static String getListAllowedForums() 
 	{
 		int n = 0;
 		StringBuffer buf = new StringBuffer();

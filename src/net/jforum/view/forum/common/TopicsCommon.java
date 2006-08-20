@@ -77,7 +77,7 @@ import freemarker.template.SimpleHash;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.30 2006/08/10 02:35:13 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.31 2006/08/20 12:19:17 sergemaslyukov Exp $
  */
 public class TopicsCommon 
 {
@@ -91,13 +91,12 @@ public class TopicsCommon
 	 * @param forumId The forum id to which the topics belongs to
 	 * @param start The start fetching index
 	 * @return <code>java.util.List</code> containing the topics found.
-	 * @throws Exception
 	 */
-	public static List topicsByForum(int forumId, int start) throws Exception
+	public static List topicsByForum(int forumId, int start)
 	{
 		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 		int topicsPerPage = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
-		List topics = null;
+		List topics;
 		
 		// Try to get the first's page of topics from the cache
 		if (start == 0 && SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
@@ -173,7 +172,7 @@ public class TopicsCommon
 	/**
 	 * Common properties to be used when showing topic data
 	 */
-	public static void topicListingBase() throws Exception
+	public static void topicListingBase()
 	{
 		SimpleHash context = JForumExecutionContext.getTemplateContext();
 		
@@ -204,9 +203,8 @@ public class TopicsCommon
 	 * <blockquote>new ModerationHelper().denied(I18n.getMessage("PostShow.denied"))</blockquote>
 	 * @param forumId The forum id to which the topics belongs to
 	 * @return <code>true</code> if the topic is accessible, <code>false</code> otherwise
-	 * @throws Exception a
 	 */
-	public static boolean isTopicAccessible(int forumId) throws Exception 
+	public static boolean isTopicAccessible(int forumId)
 	{
 		Forum f = ForumRepository.getForum(forumId);
 		
@@ -223,9 +221,8 @@ public class TopicsCommon
 	 * 
 	 * @param t The changed topic
 	 * @param tm A TopicModel instance
-	 * @throws Exception
 	 */
-	public static void notifyUsers(Topic t, TopicDAO tm) throws Exception
+	public static void notifyUsers(Topic t, TopicDAO tm)
 	{
 		if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_NOTIFY_ANSWERS)) {
 			try {
@@ -250,13 +247,13 @@ public class TopicsCommon
 	 * It will increase by 1 the number of replies of the tpoic, set the
 	 * last post id for the topic and the forum and refresh the cache. 
 	 * 
-	 * @param t The topic to update
-	 * @param lastPostId The id of the last post
-	 * @param tm A TopicModel instance
-	 * @param fm A ForumModel instance
-	 * @throws Exception
+	 * @param t Topic The topic to update
+	 * @param lastPostId int The id of the last post
+	 * @param tm TopicDAO A TopicModel instance
+	 * @param fm ForumDAO A ForumModel instance
+     * @param firstPost boolean
 	 */
-	public static void updateBoardStatus(Topic t, int lastPostId, boolean firstPost, TopicDAO tm, ForumDAO fm) throws Exception
+	public static void updateBoardStatus(Topic t, int lastPostId, boolean firstPost, TopicDAO tm, ForumDAO fm)
 	{
 		t.setLastPostId(lastPostId);
 		tm.update(t);
@@ -283,14 +280,14 @@ public class TopicsCommon
 	 * clear the entry frm the cache and update the last 
 	 * post info for the associated forum.
 	 * @param topicId The topic id to remove
-	 * @param fromModeration TODO
-	 * 
-	 * @throws Exception
+	 * @param fromModeration boolean TODO
+     * @param forumId int
 	 */
-	public static void deleteTopic(int topicId, int forumId, boolean fromModeration) throws Exception
+	public static void deleteTopic(int topicId, int forumId, boolean fromModeration)
 	{
 		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
-		ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
+        //TODO use or delete
+        ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
 		
 		Topic topic = new Topic();
 		topic.setId(topicId);

@@ -47,7 +47,7 @@ import java.util.Map;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationDAO.java,v 1.5 2005/07/26 03:04:31 rafaelsteil Exp $
+ * @version $Id: ModerationDAO.java,v 1.6 2006/08/20 12:19:01 sergemaslyukov Exp $
  */
 public interface ModerationDAO
 {
@@ -55,9 +55,8 @@ public interface ModerationDAO
 	 * Approves a post.
 	 * 
 	 * @param postId The post id to aprove
-	 * @throws Exception
 	 */
-	public void aprovePost(int postId) throws Exception;
+	public void aprovePost(int postId) ;
 	/**
 	 * Gets all messages that need moderation.
 	 * 
@@ -65,9 +64,8 @@ public interface ModerationDAO
 	 * to mdoerate
 	 * @return A map instance where the key is the topic id and the value is 
 	 * a TopicModerationInfo instance.
-	 * @throws Exception
 	 */
-	public Map topicsByForum(int forumId) throws Exception;
+	public Map topicsByForum(int forumId) ;
 	
 	/**
 	 * Gets information about which categories and
@@ -75,7 +73,6 @@ public interface ModerationDAO
 	 * 
 	 * @return a list instance where each entry is a
 	 * ModerationPendingInfo instance.
-	 * @throws Exception
 	 */
-	public List categoryPendingModeration() throws Exception;
+	public List categoryPendingModeration() ;
 }

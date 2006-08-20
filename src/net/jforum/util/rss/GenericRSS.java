@@ -43,19 +43,24 @@
 package net.jforum.util.rss;
 
 import java.io.StringWriter;
+import java.io.IOException;
 
 import net.jforum.JForumExecutionContext;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericRSS.java,v 1.6 2006/01/29 15:07:19 rafaelsteil Exp $
+ * @version $Id: GenericRSS.java,v 1.7 2006/08/20 12:19:13 sergemaslyukov Exp $
  */
 public class GenericRSS implements RSSAware 
 {
+    private static final Logger log = Logger.getLogger(GenericRSS.class);
+
 	private RSS rss;
 	
 	protected void setRSS(RSS rss) 
@@ -63,18 +68,27 @@ public class GenericRSS implements RSSAware
 		this.rss = rss;
 	}
 	
-	public String createRSS() throws Exception
+	public String createRSS()
 	{
-		Template t = JForumExecutionContext.templateConfig().getTemplate(SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR) 
-				+ "/rss_template.htm");
-		StringWriter sw = new StringWriter();
-		
-		SimpleHash templateContext = JForumExecutionContext.getTemplateContext();
-		
-		templateContext.put("encoding", SystemGlobals.getValue(ConfigKeys.ENCODING));
-		templateContext.put("rss", this.rss);
-		t.process(templateContext, sw);
-		
-		return sw.toString();
-	}
+        try
+        {
+            Template t = JForumExecutionContext.templateConfig().getTemplate(SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR)
+                    + "/rss_template.htm");
+            StringWriter sw = new StringWriter();
+
+            SimpleHash templateContext = JForumExecutionContext.getTemplateContext();
+
+            templateContext.put("encoding", SystemGlobals.getValue(ConfigKeys.ENCODING));
+            templateContext.put("rss", this.rss);
+            t.process(templateContext, sw);
+
+            return sw.toString();
+        }
+        catch (Exception e)
+        {
+            String es = "Erorr add()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+    }
 }

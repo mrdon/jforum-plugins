@@ -44,54 +44,80 @@ package net.jforum.dao.generic;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.jforum.JForumExecutionContext;
 import net.jforum.entities.Banner;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.DbUtils;
+import org.apache.log4j.Logger;
 
 /**
  * @author Samuel Yung
- * @version $Id: GenericBannerDAO.java,v 1.6 2006/01/29 15:06:22 rafaelsteil Exp $
+ * @version $Id: GenericBannerDAO.java,v 1.7 2006/08/20 12:19:03 sergemaslyukov Exp $
  */
 public class GenericBannerDAO extends AutoKeys implements net.jforum.dao.BannerDAO
 {
-	public Banner selectById(int bannerId) throws Exception
+    private final static Logger log = Logger.getLogger(GenericBannerDAO.class);
+
+	public Banner selectById(int bannerId)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("BannerDAO.selectById"));
-		p.setInt(1, bannerId);
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        Banner b = null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("BannerDAO.selectById"));
+            p.setInt(1, bannerId);
 
-		ResultSet rs = p.executeQuery();
+            rs = p.executeQuery();
 
-		Banner b = new Banner();
-		if (rs.next()) {
-			b = this.getBanner(rs);
-		}
+            b = new Banner();
+            if (rs.next()) {
+                b = this.getBanner(rs);
+            }
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectById()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
 
-		rs.close();
-		p.close();
-
-		return b;
+        return b;
 	}
 
-	public List selectAll() throws Exception
+	public List selectAll()
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("BannerDAO.selectAll"));
-		List l = new ArrayList();
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("BannerDAO.selectAll"));
+            List l = new ArrayList();
 
-		ResultSet rs = p.executeQuery();
-		while (rs.next()) {
-			l.add(this.getBanner(rs));
-		}
+            rs = p.executeQuery();
+            while (rs.next()) {
+                l.add(this.getBanner(rs));
+            }
 
-		rs.close();
-		p.close();
+            return l;
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectAll()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 
-		return l;
-	}
-
-	protected Banner getBanner(ResultSet rs) throws Exception
+	protected Banner getBanner(ResultSet rs) throws SQLException
 	{
 		Banner b = new Banner();
 
@@ -112,53 +138,95 @@ public class GenericBannerDAO extends AutoKeys implements net.jforum.dao.BannerD
 		return b;
 	}
 
-	public boolean canDelete(int bannerId) throws Exception
+	public boolean canDelete(int bannerId)
 	{
 		boolean result = true;
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("BannerDAO.canDelete"));
-		p.setInt(1, bannerId);
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("BannerDAO.canDelete"));
+            p.setInt(1, bannerId);
 
-		ResultSet rs = p.executeQuery();
-		if (!rs.next() || rs.getInt("total") < 1) {
-			result = false;
-		}
+            rs = p.executeQuery();
+            if (!rs.next() || rs.getInt("total") < 1) {
+                result = false;
+            }
 
-		rs.close();
-		p.close();
+            return result;
+        }
+        catch (SQLException e) {
+            String es = "Erorr addAttachment()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 
-		return result;
-	}
-
-	public void delete(int bannerId) throws Exception
+	public void delete(int bannerId)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("BannerDAO.delete"));
-		p.setInt(1, bannerId);
-		p.executeUpdate();
-
-		p.close();
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("BannerDAO.delete"));
+            p.setInt(1, bannerId);
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr delete()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
 	}
 
-	public void update(Banner banner) throws Exception
+	public void update(Banner banner)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("BannerDAO.update"));
-		setBannerParam(p, banner);
-		p.setInt(13, banner.getId());
-		p.executeUpdate();
-		p.close();
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("BannerDAO.update"));
+            setBannerParam(p, banner);
+            p.setInt(13, banner.getId());
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr update()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
 	}
 
-	public int addNew(Banner banner) throws Exception
+	public int addNew(Banner banner)
 	{
-		PreparedStatement p = this.getStatementForAutoKeys("BannerDAO.addNew");
-		setBannerParam(p, banner);
-		int id = this.executeAutoKeysQuery(p);
-		p.close();
+		PreparedStatement p=null;
+        try
+        {
+            p = this.getStatementForAutoKeys("BannerDAO.addNew");
+            setBannerParam(p, banner);
+            int id = this.executeAutoKeysQuery(p);
 
-		banner.setId(id);
-		return id;
-	}
+            banner.setId(id);
+            return id;
+        }
+        catch (SQLException e) {
+            String es = "Erorr addNew()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
+    }
 
-	protected void setBannerParam(PreparedStatement p, Banner b) throws Exception
+	protected void setBannerParam(PreparedStatement p, Banner b) throws SQLException
 	{
 		p.setString(1, b.getName());
 		p.setInt(2, b.getPlacement());
@@ -174,22 +242,32 @@ public class GenericBannerDAO extends AutoKeys implements net.jforum.dao.BannerD
 		p.setInt(12, b.getHeight());
 	}
 
-	public List selectActiveBannerByPlacement(int placement) throws Exception
+	public List selectActiveBannerByPlacement(int placement)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("BannerDAO.selectActiveBannerByPlacement"));
-		p.setInt(1, placement);
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("BannerDAO.selectActiveBannerByPlacement"));
+            p.setInt(1, placement);
 
-		List l = new ArrayList();
+            List l = new ArrayList();
 
-		ResultSet rs = p.executeQuery();
-		while (rs.next()) {
-			l.add(this.getBanner(rs));
-		}
+            rs = p.executeQuery();
+            while (rs.next()) {
+                l.add(this.getBanner(rs));
+            }
 
-		rs.close();
-		p.close();
-
-		return l;
-	}
+            return l;
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectActiveBannerByPlacement()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 }

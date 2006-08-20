@@ -65,14 +65,15 @@ import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Rafael Steil
- * @version $Id: BookmarkAction.java,v 1.13 2006/01/29 15:06:55 rafaelsteil Exp $
+ * @version $Id: BookmarkAction.java,v 1.14 2006/08/20 12:19:15 sergemaslyukov Exp $
  */
 public class BookmarkAction extends Command
 {
-	public void insert() throws Exception
+	public void insert()
 	{
 		int type = this.request.getIntParameter("relation_type");
 		if (type == BookmarkType.FORUM) {
@@ -89,7 +90,7 @@ public class BookmarkAction extends Command
 		}
 	}
 	
-	private void addForum() throws Exception
+	private void addForum()
 	{
 		Forum f = ForumRepository.getForum(this.request.getIntParameter("relation_id"));
 		String title = f.getName();
@@ -116,7 +117,7 @@ public class BookmarkAction extends Command
 		this.context.put("relationId", new Integer(f.getId()));
 	}
 	
-	private void addTopic() throws Exception
+	private void addTopic()
 	{
 		Topic t = DataAccessDriver.getInstance().newTopicDAO().selectById(
 				this.request.getIntParameter("relation_id"));
@@ -139,7 +140,7 @@ public class BookmarkAction extends Command
 		this.context.put("relationId", new Integer(t.getId()));
 	}
 	
-	private void addUser() throws Exception
+	private void addUser()
 	{
 		User u = DataAccessDriver.getInstance().newUserDAO().selectById(
 				this.request.getIntParameter("relation_id"));
@@ -162,7 +163,7 @@ public class BookmarkAction extends Command
 		this.context.put("relationId", new Integer(u.getId()));
 	}
 	
-	public void insertSave() throws Exception
+	public void insertSave()
 	{
 		Bookmark b = new Bookmark();
 		b.setDescription(this.request.getParameter("description"));
@@ -179,7 +180,7 @@ public class BookmarkAction extends Command
 		this.setTemplateName(TemplateKeys.BOOKMARKS_INSERT_SAVE);
 	}
 	
-	public void updateSave() throws Exception
+	public void updateSave()
 	{
 		int id = this.request.getIntParameter("bookmark_id");
 		BookmarkDAO bm = DataAccessDriver.getInstance().newBookmarkDAO();
@@ -193,13 +194,13 @@ public class BookmarkAction extends Command
 		b.setDescription(this.request.getParameter("description"));
 		
 		String visible = this.request.getParameter("visible");
-		b.setPublicVisible(visible != null && !"".equals(visible) ? true : false);
+		b.setPublicVisible(StringUtils.isNotBlank(visible));
 		
 		bm.update(b);
 		this.setTemplateName(TemplateKeys.BOOKMARKS_UPDATE_SAVE);
 	}
 	
-	public void edit() throws Exception
+	public void edit()
 	{
 		int id = this.request.getIntParameter("bookmark_id");
 		BookmarkDAO bm = DataAccessDriver.getInstance().newBookmarkDAO();
@@ -213,7 +214,7 @@ public class BookmarkAction extends Command
 		this.context.put("bookmark", b);
 	}
 	
-	public void delete() throws Exception
+	public void delete()
 	{
 		int id = this.request.getIntParameter("bookmark_id");
 		BookmarkDAO bm = DataAccessDriver.getInstance().newBookmarkDAO();
@@ -263,7 +264,7 @@ public class BookmarkAction extends Command
 	/**
 	 * @see net.jforum.Command#list()
 	 */
-	public void list() throws Exception
+	public void list()
 	{
 		int userId = this.request.getIntParameter("user_id");
 		
@@ -281,7 +282,7 @@ public class BookmarkAction extends Command
 	/**
 	 * @see net.jforum.Command#process(net.jforum.ActionServletRequest, javax.servlet.http.HttpServletResponse, freemarker.template.SimpleHash)
 	 */
-	public Template process(ActionServletRequest request, HttpServletResponse response, SimpleHash context) throws Exception
+	public Template process(ActionServletRequest request, HttpServletResponse response, SimpleHash context)
 	{
 		if (SessionFacade.getUserSession().getUserId() == SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)
 				&& !request.getAction().equals("list")) {

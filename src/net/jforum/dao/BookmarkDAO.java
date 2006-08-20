@@ -47,7 +47,7 @@ import net.jforum.entities.Bookmark;
 
 /**
  * @author Rafael Steil
- * @version $Id: BookmarkDAO.java,v 1.4 2005/07/26 03:04:30 rafaelsteil Exp $
+ * @version $Id: BookmarkDAO.java,v 1.5 2006/08/20 12:19:00 sergemaslyukov Exp $
  */
 public interface BookmarkDAO
 {
@@ -55,9 +55,8 @@ public interface BookmarkDAO
 	 * Adds a new bookmark.
 	 * 
 	 * @param b The bookmark to add
-	 * @throws Exception
 	 */
-	public void add(Bookmark b) throws Exception;
+	public void add(Bookmark b);
 	
 	/**
 	 * Updates a bookmark.
@@ -66,17 +65,15 @@ public interface BookmarkDAO
 	 * All other fields remain with the same value.
 	 * 
 	 * @param b The bookmark to update
-	 * @throws Exception
 	 */
-	public void update(Bookmark b) throws Exception;
+	public void update(Bookmark b);
 	
 	/**
 	 * Removes a bookmark.
 	 * 
 	 * @param bookmarkId The bookmark's id to remove
-	 * @throws Exception
 	 */
-	public void remove(int bookmarkId) throws Exception;
+	public void remove(int bookmarkId);
 	
 	/**
 	 * Gets all bookmarks of a given type.
@@ -86,9 +83,8 @@ public interface BookmarkDAO
 	 * <code>net.jforum.entities.BookmarkType</code>
 	 * @return A list with all results found. Each entry is
 	 * a {@link net.jforum.entities.Bookmark} instance.
-	 * @throws Exception
 	 */
-	public List selectByUser(int userId, int relationType) throws Exception;
+	public List selectByUser(int userId, int relationType);
 	
 	/**
 	 * Gets all bookmarks from some user.
@@ -97,18 +93,16 @@ public interface BookmarkDAO
 	 * <code>net.jforum.entities.BookmarkType</code>
 	 * @return A list with all results found. Each entry is
 	 * a {@link net.jforum.entities.Bookmark} instance.
-	 * @throws Exception
 	 */
-	public List selectByUser(int userId) throws Exception;
+	public List selectByUser(int userId);
 	
 	/**
 	 * Gets a bookmark.
 	 * 
 	 * @param bookmarkId The bookmark id
 	 * @return A Bookmark instance or null if no entry found
-	 * @throws Exception
 	 */
-	public Bookmark selectById(int bookmarkId) throws Exception;
+	public Bookmark selectById(int bookmarkId);
 	
 	/**
 	 * Gets a bookmark for edition.
@@ -118,7 +112,6 @@ public interface BookmarkDAO
 	 * @param userId The bookmark's owner
 	 * @return A bookmark instance of <code>null</code> if 
 	 * the record cannot be found
-	 * @throws Exception
 	 */
-	public Bookmark selectForUpdate(int relationId, int relationType, int userId) throws Exception;
+	public Bookmark selectForUpdate(int relationId, int relationType, int userId);
 }

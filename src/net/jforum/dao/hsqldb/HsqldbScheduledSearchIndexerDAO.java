@@ -54,7 +54,7 @@ public class HsqldbScheduledSearchIndexerDAO extends PostgresqlScheduledSearchIn
 	/**
 	 * @see net.jforum.dao.generic.GenericScheduledSearchIndexerDAO#getPosts(int, int, int, int, java.sql.Connection)
 	 */
-	public List getPosts(int start, int count, int minPostId, int maxPostId, Connection conn) throws Exception
+	public List getPosts(int start, int count, int minPostId, int maxPostId, Connection conn)
 	{
 		return dao.getPosts(minPostId, maxPostId, start, count, conn);
 	}

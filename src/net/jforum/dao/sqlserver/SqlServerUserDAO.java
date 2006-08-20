@@ -44,51 +44,74 @@ package net.jforum.dao.sqlserver;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 import net.jforum.JForumExecutionContext;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.DbUtils;
+import org.apache.log4j.Logger;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerUserDAO.java,v 1.6 2006/01/29 15:07:10 rafaelsteil Exp $
+ * @version $Id: SqlServerUserDAO.java,v 1.7 2006/08/20 12:19:08 sergemaslyukov Exp $
  */
 public class SqlServerUserDAO extends net.jforum.dao.generic.GenericUserDAO
 {
-	/** 
+    private final static Logger log = Logger.getLogger(SqlServerUserDAO.class);
+    
+    /**
 	 * @see net.jforum.dao.UserDAO#selectAll(int, int)
 	 */
-	public List selectAll(int startFrom, int count) throws Exception
+	public List selectAll(int startFrom, int count)
 	{
-		PreparedStatement p;
+		PreparedStatement p=null;
+        ResultSet rs=null;
 
-		if (count > 0) {
-			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("GenericModel.selectByLimit") 
-					+ " " 
-					+ count 
-					+ " " 
-					+ SystemGlobals.getSql("UserModel.selectAllByLimit"));
-			p.setInt(1, startFrom);
-			p.setInt(2, count);
-		}
-		else {
-			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectAll"));
-		}
-		
-		ResultSet rs = p.executeQuery();
-		List list = super.processSelectAll(rs);
-		rs.close();
-		p.close();
-		
-		return list;
-	}
+        try
+        {
+            if (count > 0) {
+                p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("GenericModel.selectByLimit")
+                        + " "
+                        + count
+                        + " "
+                        + SystemGlobals.getSql("UserModel.selectAllByLimit"));
+                p.setInt(1, startFrom);
+                p.setInt(2, count);
+            }
+            else {
+                p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectAll"));
+            }
+
+            rs = p.executeQuery();
+
+            return super.processSelectAll(rs);
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectActiveBannerByPlacement()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 	
 	/** 
 	 * @see net.jforum.dao.UserDAO#selectAllWithKarma(int, int)
 	 */
-	public List selectAllWithKarma(int startFrom, int count) throws Exception 
+	public List selectAllWithKarma(int startFrom, int count)
 	{
-	    return super.loadKarma( this.selectAll(startFrom, count) );
-	}
+        try
+        {
+            return super.loadKarma( this.selectAll(startFrom, count) );
+        }
+        catch (SQLException e)
+        {
+            String es = "Erorr selectAllWithKarma()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+    }
 	
 }

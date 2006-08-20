@@ -70,19 +70,19 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: AdminAction.java,v 1.15 2006/05/24 00:10:38 rafaelsteil Exp $
+ * @version $Id: AdminAction.java,v 1.16 2006/08/20 12:19:13 sergemaslyukov Exp $
  */
 public class AdminAction extends Command {
 
 	/** 
 	 * @see net.jforum.Command#list()
 	 */
-	public void list() throws Exception 
+	public void list()  
 	{
 		this.login();
 	}
 	
-	public void login() throws Exception
+	public void login()
 	{
 		UserSession us = SessionFacade.getUserSession();
 		PermissionControl pc = SecurityRepository.get(us.getUserId());
@@ -104,7 +104,7 @@ public class AdminAction extends Command {
 		}
 	}
 	
-	public void menu() throws Exception
+	public void menu()
 	{
 		if (this.checkAdmin()) {
 			this.setTemplateName(TemplateKeys.ADMIN_MENU);
@@ -195,7 +195,20 @@ public class AdminAction extends Command {
 		}
 		finally {
 			if (is != null) {
-				try { is.close(); os.close(); } catch (Exception e) {}
+				try {
+                    is.close();
+                }
+                catch (Exception e) {
+                    // catch error of in strean
+                }
+			}
+			if (os != null) {
+				try {
+                    os.close();
+                }
+                catch (Exception e) {
+                    // catch error of in strean
+                }
 			}
 		}
 		
@@ -221,7 +234,7 @@ public class AdminAction extends Command {
 
 	public Template process(ActionServletRequest request, 
 			HttpServletResponse response, 
-			SimpleHash context) throws Exception 
+			SimpleHash context)
 	{
 		return super.process(request, response, context);
 	}

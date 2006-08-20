@@ -87,7 +87,11 @@ public class C3P0PooledConnection extends DBConnection
 	 */
 	public void releaseConnection(Connection conn)
 	{
-		try {
+        if (conn==null) {
+            return;
+        }
+
+        try {
 			conn.close();
 		}
 		catch (Exception e) {

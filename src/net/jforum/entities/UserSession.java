@@ -63,7 +63,7 @@ import com.octo.captcha.image.ImageCaptcha;
  * Stores information about user's session.
  * 
  * @author Rafael Steil
- * @version $Id: UserSession.java,v 1.30 2006/07/20 00:10:14 rafaelsteil Exp $
+ * @version $Id: UserSession.java,v 1.31 2006/08/20 12:19:09 sergemaslyukov Exp $
  */
 public class UserSession implements Serializable
 {
@@ -297,7 +297,7 @@ public class UserSession implements Serializable
 	 * 
 	 * @return <code>true</code> if the user is an administrator
 	 */
-	public boolean isAdmin() throws Exception
+	public boolean isAdmin()
 	{
 		return SecurityRepository.canAccess(this.userId, SecurityConstants.PERM_ADMINISTRATION);
 	}
@@ -307,7 +307,7 @@ public class UserSession implements Serializable
 	 * 
 	 * @return <code>true</code> if the user has moderations rights
 	 */
-	public boolean isModerator() throws Exception
+	public boolean isModerator()
 	{
 		return SecurityRepository.canAccess(this.userId, SecurityConstants.PERM_MODERATION);
 	}
@@ -318,7 +318,7 @@ public class UserSession implements Serializable
 	 * @param forumId the forum's id to check for moderation rights
 	 * @return <code>true</code> if the user has moderations rights
 	 */
-	public boolean isModerator(int forumId) throws Exception
+	public boolean isModerator(int forumId)
 	{
 		PermissionControl pc = SecurityRepository.get(this.userId);
 		
@@ -390,7 +390,7 @@ public class UserSession implements Serializable
 	/**
 	 * Validate the captcha response of user
 	 * 
-	 * @param anwser String the captcha response from user
+	 * @param userResponse String the captcha response from user
 	 * @return boolean true if the answer is valid, otherwise return false
 	 */
 	public boolean validateCaptchaResponse(String userResponse)
@@ -414,7 +414,6 @@ public class UserSession implements Serializable
 	/**
 	 * create a new image captcha
 	 * 
-	 * @return void
 	 */
 	public void createNewCaptcha()
 	{
@@ -425,7 +424,6 @@ public class UserSession implements Serializable
 	/**
 	 * Destroy the current captcha validation is done
 	 * 
-	 * @return void
 	 */
 	public void destroyCaptcha()
 	{

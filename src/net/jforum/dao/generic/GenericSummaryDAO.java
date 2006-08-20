@@ -43,6 +43,7 @@ package net.jforum.dao.generic;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -54,37 +55,52 @@ import net.jforum.dao.SummaryDAO;
 import net.jforum.entities.Post;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.DbUtils;
+import org.apache.log4j.Logger;
 
 /**
  * @author Franklin Samir (franklin (at) portaljava [dot] com)
- * @version $Id: GenericSummaryDAO.java,v 1.8 2006/01/29 15:06:21 rafaelsteil Exp $
+ * @version $Id: GenericSummaryDAO.java,v 1.9 2006/08/20 12:19:04 sergemaslyukov Exp $
  */
 public class GenericSummaryDAO extends AutoKeys implements SummaryDAO
 {
-	/**
+    private final static Logger log = Logger.getLogger(GenericSummaryDAO.class);
+    
+    /**
+     * TODO implement this method or remove javadoc
 	 * @see net.jforum.dao.SummaryDAO#selectById(Date, Date)
 	 */
-	public List selectLastPosts(Date firstDate, Date lastDate) throws Exception
+	public List selectLastPosts(Date firstDate, Date lastDate)
 	{
 		String query = SystemGlobals.getSql("SummaryDAO.selectPosts");
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(query);
-		p.setTimestamp(1, new Timestamp(firstDate.getTime()));
-		p.setTimestamp(2, new Timestamp(lastDate.getTime()));
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(query);
+            p.setTimestamp(1, new Timestamp(firstDate.getTime()));
+            p.setTimestamp(2, new Timestamp(lastDate.getTime()));
 
-		List posts = new ArrayList();
-		ResultSet rs = p.executeQuery();
+            List posts = new ArrayList();
+            rs = p.executeQuery();
 
-		while (rs.next()) {
-			posts.add(this.fillPost(rs));
-		}
-		
-		rs.close();
-		p.close();
+            while (rs.next()) {
+                posts.add(this.fillPost(rs));
+            }
 
-		return posts;
-	}
+            return posts;
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectLastPosts()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 
-	private Post fillPost(ResultSet rs) throws Exception
+	private Post fillPost(ResultSet rs) throws SQLException
 	{
 		Post post = new Post();
 		
@@ -106,25 +122,35 @@ public class GenericSummaryDAO extends AutoKeys implements SummaryDAO
 		return post;
 	}
 
-	public List listRecipients() throws Exception
+	public List listRecipients() 
 	{
 		String query = SystemGlobals.getSql("SummaryDAO.selectAllRecipients");
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(query);
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(query);
 
-		List recipients = new ArrayList();
-		ResultSet rs = p.executeQuery();
+            List recipients = new ArrayList();
+            rs = p.executeQuery();
 
-        String mail = null;
-		while (rs.next()) {
-            
-            mail = rs.getString("user_email");
-            if(mail != null && !mail.trim().equals("") )
-                recipients.add(mail);			
-		}
+            String mail = null;
+            while (rs.next()) {
+                mail = rs.getString("user_email");
+                if(mail != null && !mail.trim().equals("") ) {
+                    recipients.add(mail);
+                }
+            }
 
-		rs.close();
-		p.close();
-
-		return recipients;
-	}
+            return recipients;
+        }
+        catch (SQLException e) {
+            String es = "Erorr listRecipients()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 }

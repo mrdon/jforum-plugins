@@ -9,7 +9,7 @@ import net.jforum.JForumExecutionContext;
  * Loads and parse javascript files with FTL statements.
  * 
  * @author Rafael Steil
- * @version $Id: JSAction.java,v 1.4 2006/01/29 15:06:56 rafaelsteil Exp $
+ * @version $Id: JSAction.java,v 1.5 2006/08/20 12:19:16 sergemaslyukov Exp $
  */
 public class JSAction extends Command
 {
@@ -19,7 +19,7 @@ public class JSAction extends Command
 	 * have the extension ".js".
 	 * @see net.jforum.Command#list()
 	 */
-	public void list() throws Exception
+	public void list() 
 	{
 		JForumExecutionContext.setContentType("text/javascript");
 		

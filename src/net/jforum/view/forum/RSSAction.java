@@ -76,7 +76,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: RSSAction.java,v 1.24 2006/03/01 13:17:22 rafaelsteil Exp $
+ * @version $Id: RSSAction.java,v 1.25 2006/08/20 12:19:16 sergemaslyukov Exp $
  */
 public class RSSAction extends Command 
 {
@@ -84,9 +84,8 @@ public class RSSAction extends Command
 	 * RSS for all forums.
 	 * Show rss syndication containing information about
 	 * all available forums
-	 * @throws Exception
 	 */
-	public void forums() throws Exception
+	public void forums()
 	{
 		String title = I18n.getMessage("RSS.Forums.title");
 		String description = I18n.getMessage("RSS.Forums.description");
@@ -97,9 +96,8 @@ public class RSSAction extends Command
 	
 	/**
 	 * RSS for all N first topics for some given forum
-	 * @throws Exception
 	 */
-	public void forumTopics() throws Exception
+	public void forumTopics()
 	{
 		int forumId = this.request.getIntParameter("forum_id"); 
 		if (!TopicsCommon.isTopicAccessible(forumId)) {
@@ -121,9 +119,8 @@ public class RSSAction extends Command
 	
 	/**
 	 * RSS for all N first posts for some given topic
-	 * @throws Exception
 	 */
-	public void topicPosts() throws Exception
+	public void topicPosts()
 	{
 		int topicId = this.request.getIntParameter("topic_id");
 
@@ -150,7 +147,7 @@ public class RSSAction extends Command
 		this.context.put("rssContents", rss.createRSS());
 	}
 	
-	public void recentTopics() throws Exception
+	public void recentTopics()
 	{
 		String title = I18n.getMessage("RSS.RecentTopics.title", 
 			new Object[] { SystemGlobals.getValue(ConfigKeys.FORUM_NAME) });
@@ -161,7 +158,7 @@ public class RSSAction extends Command
 		this.context.put("rssContents", rss.createRSS());
 	}
 
-	public void showTopicsByUser() throws Exception
+	public void showTopicsByUser()
 	{
 		int uid = this.request.getIntParameter("user_id");
 		
@@ -185,7 +182,7 @@ public class RSSAction extends Command
 		this.context.put("rssContents", rss.createRSS());
 	}
 	
-	public void showPostsByUser() throws Exception
+	public void showPostsByUser()
 	{
 		int uid = this.request.getIntParameter("user_id");
 		
@@ -212,17 +209,17 @@ public class RSSAction extends Command
 	/** 
 	 * @see net.jforum.Command#list()
 	 */
-	public void list() throws Exception 
+	public void list()
 	{
 		this.forums();
 	}
 	
 	/** 
-	 * @see net.jforum.Command#process()
+	 * @see net.jforum.Command#process(net.jforum.ActionServletRequest, javax.servlet.http.HttpServletResponse, freemarker.template.SimpleHash) 
 	 */
 	public Template process(ActionServletRequest request, 
 			HttpServletResponse response, 
-			SimpleHash context) throws Exception 
+			SimpleHash context)
 	{
         if (!SessionFacade.isLogged() && UserAction.hasBasicAuthentication(request)) {
             new UserAction().validateLogin(request);

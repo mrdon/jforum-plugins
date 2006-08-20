@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.32 2006/08/18 00:11:17 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.33 2006/08/20 12:19:17 sergemaslyukov Exp $
  */
 public class PostCommon
 {
@@ -79,7 +79,7 @@ public class PostCommon
 	 * This method only exists to situations where an instance is 
 	 * needed in the template context, so we don't  need to 
 	 * create a new instance every time.
-	 * @return
+	 * @return PostCommon
 	 */
 	public static PostCommon getInstance()
 	{
@@ -219,7 +219,7 @@ public class PostCommon
 		return text.toString();
 	}
 
-	public static Post fillPostFromRequest() throws Exception
+	public static Post fillPostFromRequest()
 	{
 		Post p = new Post();
 		p.setTime(new Date());
@@ -227,14 +227,14 @@ public class PostCommon
 		return fillPostFromRequest(p, false);
 	}
 
-	public static Post fillPostFromRequest(Post p, boolean isEdit) throws Exception
+	public static Post fillPostFromRequest(Post p, boolean isEdit) 
 	{
 		ActionServletRequest request = JForumExecutionContext.getRequest();
 		
 		p.setSubject(SafeHtml.makeSafe(request.getParameter("subject")));
-		p.setBbCodeEnabled(request.getParameter("disable_bbcode") != null ? false : true);
-		p.setSmiliesEnabled(request.getParameter("disable_smilies") != null ? false : true);
-		p.setSignatureEnabled(request.getParameter("attach_sig") != null ? true : false);
+		p.setBbCodeEnabled(request.getParameter("disable_bbcode") == null);
+		p.setSmiliesEnabled(request.getParameter("disable_smilies") == null);
+		p.setSignatureEnabled(request.getParameter("attach_sig") != null);
 
 		if (!isEdit) {
 			p.setUserIp(request.getRemoteAddr());
@@ -255,11 +255,11 @@ public class PostCommon
 		return p;
 	}
 
-	public static List topicPosts(PostDAO dao, boolean canEdit, int userId, int topicId, int start, int count) throws Exception
+	public static List topicPosts(PostDAO dao, boolean canEdit, int userId, int topicId, int start, int count)
 	{
-		List posts = null;
 		boolean needPrepare = true;
 		
+        List posts;
  		if (SystemGlobals.getBoolValue(ConfigKeys.POSTS_CACHE_ENABLED)) {
  			posts = PostRepository.selectAllByTopicByLimit(topicId, start, count);
  			needPrepare = false;

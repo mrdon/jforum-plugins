@@ -43,13 +43,16 @@
 package net.jforum.util.mail;
 
 import net.jforum.util.concurrent.Task;
+import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: EmailSenderTask.java,v 1.6 2005/07/26 03:05:57 rafaelsteil Exp $
+ * @version $Id: EmailSenderTask.java,v 1.7 2006/08/20 12:19:12 sergemaslyukov Exp $
  */
 public class EmailSenderTask implements Task 
 {
+    private static final Logger log = Logger.getLogger(EmailSenderTask.class);
+
 	private final Spammer spammer;
 	
 	public EmailSenderTask(Spammer spammer)
@@ -60,13 +63,22 @@ public class EmailSenderTask implements Task
 	/** 
 	 * @see net.jforum.util.concurrent.Task#execute()
 	 */
-	public Object execute() throws Exception 
+	public Object execute()
 	{
-		if (this.spammer.dispatchMessages()) {
-			return "SUCCESS";
-		}
-		
-		return "FAILURE";
-	}
+        try
+        {
+            if (this.spammer.dispatchMessages()) {
+                return "SUCCESS";
+            }
+
+            return "FAILURE";
+        }
+        catch (Exception e)
+        {
+            String es = "Erorr execute()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+    }
 
 }

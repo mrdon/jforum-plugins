@@ -63,7 +63,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationAction.java,v 1.21 2006/01/16 16:19:41 rafaelsteil Exp $
+ * @version $Id: ModerationAction.java,v 1.22 2006/08/20 12:19:14 sergemaslyukov Exp $
  */
 public class ModerationAction extends AdminCommand
 {
@@ -78,13 +78,13 @@ public class ModerationAction extends AdminCommand
 	/**
 	 * @see net.jforum.Command#list()
 	 */
-	public void list() throws Exception
+	public void list()
 	{
 		this.setTemplateName(TemplateKeys.MODERATION_ADMIN_LIST);
 		this.context.put("infoList", DataAccessDriver.getInstance().newModerationDAO().categoryPendingModeration());
 	}
 	
-	public void view() throws Exception
+	public void view()
 	{
 		int forumId = this.request.getIntParameter("forum_id");
 		
@@ -94,7 +94,7 @@ public class ModerationAction extends AdminCommand
 				forumId));
 	}
 	
-	public void doSave() throws Exception
+	public void doSave()
 	{
 		String[] posts = this.request.getParameterValues("post_id");
 
@@ -186,7 +186,7 @@ public class ModerationAction extends AdminCommand
 		}
 	}
 	
-	public void save() throws Exception
+	public void save()
 	{
 		this.doSave();
 		this.view();

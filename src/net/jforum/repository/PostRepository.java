@@ -63,7 +63,7 @@ import net.jforum.view.forum.common.PostCommon;
  * 
  * @author Sean Mitchell
  * @author Rafael Steil
- * @version $Id: PostRepository.java,v 1.11 2006/01/16 20:13:57 rafaelsteil Exp $
+ * @version $Id: PostRepository.java,v 1.12 2006/08/20 12:19:09 sergemaslyukov Exp $
  */
 public class PostRepository implements Cacheable
 {
@@ -101,7 +101,7 @@ public class PostRepository implements Cacheable
 		return m.keySet();
 	}
 		
-	public static List selectAllByTopicByLimit(int topicId, int start, int count) throws Exception 
+	public static List selectAllByTopicByLimit(int topicId, int start, int count)  
 	{
 		String tid = Integer.toString(topicId);
 		

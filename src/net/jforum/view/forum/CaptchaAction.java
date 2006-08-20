@@ -48,11 +48,11 @@ import net.jforum.util.Captcha;
 
 /**
  * @author Rafael Steil
- * @version $Id: CaptchaAction.java,v 1.5 2006/01/29 15:06:56 rafaelsteil Exp $
+ * @version $Id: CaptchaAction.java,v 1.6 2006/08/20 12:19:15 sergemaslyukov Exp $
  */
 public class CaptchaAction extends Command
 {
-	public void generate() throws Exception
+	public void generate()
 	{
 		JForumExecutionContext.enableCustomContent(true);
 		JForumExecutionContext.setContentType("image/jpg");
@@ -62,7 +62,7 @@ public class CaptchaAction extends Command
 	/**
 	 * @see net.jforum.Command#list()
 	 */
-	public void list() throws Exception
+	public void list() 
 	{
 		this.generate();
 	}

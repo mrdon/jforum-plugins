@@ -80,7 +80,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.28 2006/07/03 00:27:41 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.29 2006/08/20 12:19:17 sergemaslyukov Exp $
  */
 public class AttachmentCommon
 {
@@ -101,7 +101,7 @@ public class AttachmentCommon
 			Integer.toString(forumId));
 	}
 	
-	public void preProcess() throws Exception
+	public void preProcess()
 	{
 		if (!this.canProceed) {
 			return;
@@ -201,8 +201,8 @@ public class AttachmentCommon
 	}
 
 	/**
-	 * @param realName
-	 * @return
+	 * @param realName String
+	 * @return String
 	 */
 	public String stripPath(String realName)
 	{
@@ -221,7 +221,7 @@ public class AttachmentCommon
 		return realName;
 	}
 	
-	public void insertAttachments(Post post) throws Exception
+	public void insertAttachments(Post post)
 	{
 		if (!this.canProceed) {
 			return;
@@ -267,7 +267,7 @@ public class AttachmentCommon
 		}
 	}
 	
-	public QuotaLimit getQuotaLimit(int userId) throws Exception
+	public QuotaLimit getQuotaLimit(int userId)
 	{
 		QuotaLimit ql = new QuotaLimit();
 		User u = DataAccessDriver.getInstance().newUserDAO().selectById(userId);
@@ -290,7 +290,7 @@ public class AttachmentCommon
 		return ql;
 	}
 	
-	public void editAttachments(int postId, int forumId) throws Exception
+	public void editAttachments(int postId, int forumId)
 	{
 		// Allow removing the attachments at least
 		AttachmentDAO am = DataAccessDriver.getInstance().newAttachmentDAO();
@@ -387,7 +387,7 @@ public class AttachmentCommon
 			.toString();
 	}
 	
-	public List getAttachments(int postId, int forumId) throws Exception
+	public List getAttachments(int postId, int forumId)
 	{
 		if (!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD)
 				&& !SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED, 
@@ -398,12 +398,12 @@ public class AttachmentCommon
 		return this.am.selectAttachments(postId);
 	}
 	
-	public boolean isPhysicalDownloadMode(int extensionGroupId) throws Exception
+	public boolean isPhysicalDownloadMode(int extensionGroupId) 
 	{
 		return this.am.isPhysicalDownloadMode(extensionGroupId);
 	}
 
-	public void deleteAttachments(int postId, int forumId) throws Exception
+	public void deleteAttachments(int postId, int forumId) 
 	{
 		// Attachments
 		List attachments = DataAccessDriver.getInstance().newAttachmentDAO().selectAttachments(postId);

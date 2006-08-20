@@ -58,13 +58,16 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
 import freemarker.template.SimpleHash;
+import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.19 2006/08/12 00:23:26 rafaelsteil Exp $
+ * @version $Id: ViewCommon.java,v 1.20 2006/08/20 12:19:17 sergemaslyukov Exp $
  */
 public final class ViewCommon
 {
+    private static final Logger log = Logger.getLogger(ViewCommon.class);
+
 	/**
 	 * Prepared the user context to use data pagination. 
 	 * The following variables are set to the context:
@@ -77,9 +80,9 @@ public final class ViewCommon
 	 * 		<li> <i>start</i> - 
 	 * 	</ul>
 	 * </p>
-	 * @param start
-	 * @param totalRecords
-	 * @param recordsPerPage
+	 * @param start int
+	 * @param totalRecords  int
+	 * @param recordsPerPage int
 	 */
 	public static void contextToPagination(int start, int totalRecords, int recordsPerPage)
 	{
@@ -119,8 +122,7 @@ public final class ViewCommon
 	public static int getStartPage()
 	{
 		String s = JForumExecutionContext.getRequest().getParameter("start");
-		int start = 0;
-		
+		int start;
 		if (s == null || s.trim().equals("")) {
 			start = 0;
 		}
@@ -169,9 +171,8 @@ public final class ViewCommon
 	 * <code>ConfigKeys.REQUEST_DUMP</code> and the value as
 	 * a <code>java.util.Map</code>. Usual behaviour is to have the return
 	 * of @link net.jforum.ActionServletRequest#dumpRequest().
-	 * @throws Exception, RequestEmptyException
 	 */
-	public static void reprocessRequest() throws Exception
+	public static void reprocessRequest()
 	{
 		Map data = (Map)SessionFacade.getAttribute(ConfigKeys.REQUEST_DUMP);
 		if (data == null) {
@@ -190,7 +191,20 @@ public final class ViewCommon
 		SessionFacade.removeAttribute(ConfigKeys.REQUEST_DUMP);
 		
 		String moduleClass = ModulesRepository.getModuleClass(module);
-		((Command)Class.forName(moduleClass).newInstance()).process(JForumExecutionContext.getRequest(),
+
+        Command command;
+        try
+        {
+            command = ((Command) Class.forName(moduleClass).newInstance());
+        }
+        catch (Exception e)
+        {
+            String es = "Erorr reprocessRequest()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+
+        command.process(JForumExecutionContext.getRequest(),
 				JForumExecutionContext.getResponse(), JForumExecutionContext.getTemplateContext());
 	}
 
@@ -232,7 +246,7 @@ public final class ViewCommon
 	
 	/**
 	 * Formats a date using the pattern defined in the configuration file.
-	 * The key is the value of {@link ConfigKeys.DATE_TIME_FORMAT}
+	 * The key is the value of {@link net.jforum.util.preferences.ConfigKeys.DATE_TIME_FORMAT}
 	 * @param date the date to format
 	 * @return the string with the formated date
 	 */
@@ -278,6 +292,10 @@ public final class ViewCommon
 	
 	/**
 	 * @see #replaceAll(StringBuffer, String, String)
+     * @param contents String
+     * @param what String
+     * @param with String
+     * @return String
 	 */
 	public static String replaceAll(String contents, String what, String with)
 	{
@@ -287,9 +305,8 @@ public final class ViewCommon
 	/**
 	 * Parse the user's signature, to make it proper to visualization
 	 * @param u the user instance
-	 * @throws Exception
 	 */
-	public static void prepareUserSignature(User u) throws Exception
+	public static void prepareUserSignature(User u)
 	{
 		if (u.getSignature() != null) {
 			StringBuffer sb = new StringBuffer(u.getSignature());

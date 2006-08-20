@@ -57,11 +57,12 @@ import java.util.StringTokenizer;
 import net.jforum.entities.Post;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.DbUtils;
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericSearchIndexerDAO.java,v 1.13 2006/01/26 12:09:50 rafaelsteil Exp $
+ * @version $Id: GenericSearchIndexerDAO.java,v 1.14 2006/08/20 12:19:04 sergemaslyukov Exp $
  */
 public class GenericSearchIndexerDAO extends AutoKeys implements net.jforum.dao.SearchIndexerDAO
 {
@@ -78,9 +79,10 @@ public class GenericSearchIndexerDAO extends AutoKeys implements net.jforum.dao.
 	}
 	
 	/**
-	 * @see net.jforum.dao.SearchIndexerDAO#indexSearchWords(java.util.List)
+     * // TODO implement method or remove javadoc
+	 * @see net.jforum.dao.SearchIndexerDAO#iindexSearchWords(java.util.List)
 	 */
-	public void insertSearchWords(List posts) throws Exception
+	public void insertSearchWords(List posts)
 	{
 		int minWordSize = SystemGlobals.getIntValue(ConfigKeys.SEARCH_MIN_WORD_SIZE);
 		int maxWordSize = SystemGlobals.getIntValue(ConfigKeys.SEARCH_MAX_WORD_SIZE);
@@ -98,91 +100,115 @@ public class GenericSearchIndexerDAO extends AutoKeys implements net.jforum.dao.
 			}
 		}
 		
-		String matchSql = SystemGlobals.getSql("SearchModel.associateWordToPost");
-		PreparedStatement words = this.conn.prepareStatement(SystemGlobals.getSql("SearchModel.insertWords"));
-		
-		for (Iterator iter = posts.iterator(); iter.hasNext(); ) {
-			Post p = (Post)iter.next();
+        PreparedStatement words=null;
+        try
+        {
+            String matchSql = SystemGlobals.getSql("SearchModel.associateWordToPost");
+            words = this.conn.prepareStatement(SystemGlobals.getSql("SearchModel.insertWords"));
 
-			String text = new StringBuffer(p.getText()).append(" ")
-				.append(p.getSubject()).toString();
-			
-			text = text.toLowerCase().replaceAll("[\\.\\\\\\/~\\^\\&\\(\\)\\-_+=!@;#\\$%\"\'\\[\\]\\{\\}\\?<\\:>,\\*\n\r\t]", " ");
+            for (Iterator iter = posts.iterator(); iter.hasNext(); ) {
+                Post p = (Post)iter.next();
 
-			Set allWords = new HashSet();
+                String text = new StringBuffer(p.getText()).append(" ")
+                    .append(p.getSubject()).toString();
 
-			sb.delete(0, sb.length());
-			
-			StringTokenizer st = new StringTokenizer(text, " ");
-			
-			// Go through all words
-			while (st.hasMoreTokens() && 
-					(searchMaxWordsMessage < 1 || allWords.size() < searchMaxWordsMessage)) {
-				String w = st.nextToken().trim();
-				
-				if (w.length() < minWordSize) {
-					continue;
-				}
-				else if (w.length() > maxWordSize) {
-					w = w.substring(0, maxWordSize);
-				}
-				
-				if (!allWords.contains(w) && !excludeWords.contains(w) && 
-						(wordFilterRegex == null || w.matches(wordFilterRegex))) {
-					allWords.add(w);
-					sb.append('\'').append(w).append('\'').append(",");
-				}
-			}
+                text = text.toLowerCase().replaceAll("[\\.\\\\\\/~\\^\\&\\(\\)\\-_+=!@;#\\$%\"\'\\[\\]\\{\\}\\?<\\:>,\\*\n\r\t]", " ");
 
-			String in = sb.substring(0, sb.length() - 1);
-			
-			String sql = SystemGlobals.getSql("SearchModel.selectExistingWords");
-			sql = sql.replaceAll("#IN#", in);
-			
-			Statement s = this.conn.createStatement();
-			ResultSet rs = s.executeQuery(sql);
-			
-			List newWords = new ArrayList();
-			
-			while (rs.next()) {
-				newWords.add(rs.getString("word"));
-			}
-			
-			rs.close();
-			s.close();
-			
-			allWords.removeAll(newWords);
-			
-			// Insert the remaining words
-			for (Iterator witer = allWords.iterator(); witer.hasNext(); ) {
-				String ww = (String)witer.next();
-				
-				words.setString(1, ww);
-				words.setInt(2, ww.hashCode());
-				
-				try {
-					words.executeUpdate();
-				} 
-				catch (SQLException e) {
-					log.error("Cannot index word: \"" + ww + "\"", e);
-					throw e;
-				}
-			}
-			
-			sql = matchSql.replaceAll("#ID#", String.valueOf(p.getId())).replaceAll("#IN#", in);
-			
-			Statement match = this.conn.createStatement();
-			match.executeUpdate(sql);
-			match.close();
-		}
-		
-		words.close();
-	}
+                Set allWords = new HashSet();
+
+                sb.delete(0, sb.length());
+
+                StringTokenizer st = new StringTokenizer(text, " ");
+
+                // Go through all words
+                while (st.hasMoreTokens() &&
+                        (searchMaxWordsMessage < 1 || allWords.size() < searchMaxWordsMessage)) {
+                    String w = st.nextToken().trim();
+
+                    if (w.length() < minWordSize) {
+                        continue;
+                    }
+                    else if (w.length() > maxWordSize) {
+                        w = w.substring(0, maxWordSize);
+                    }
+
+                    if (!allWords.contains(w) && !excludeWords.contains(w) &&
+                            (wordFilterRegex == null || w.matches(wordFilterRegex))) {
+                        allWords.add(w);
+                        sb.append('\'').append(w).append('\'').append(",");
+                    }
+                }
+
+                String in = sb.substring(0, sb.length() - 1);
+
+                String sql = SystemGlobals.getSql("SearchModel.selectExistingWords");
+                sql = sql.replaceAll("#IN#", in);
+
+                Statement s=null;
+                ResultSet rs=null;
+                List newWords;
+                try
+                {
+                    s = this.conn.createStatement();
+                    rs = s.executeQuery(sql);
+
+                    newWords = new ArrayList();
+
+                    while (rs.next()) {
+                        newWords.add(rs.getString("word"));
+                    }
+                }
+                finally
+                {
+                    DbUtils.close(rs, s);
+                }
+
+                allWords.removeAll(newWords);
+
+                // Insert the remaining words
+                for (Iterator witer = allWords.iterator(); witer.hasNext(); ) {
+                    String ww = (String)witer.next();
+
+                    words.setString(1, ww);
+                    words.setInt(2, ww.hashCode());
+
+                    try {
+                        words.executeUpdate();
+                    }
+                    catch (SQLException e) {
+                        log.error("Cannot index word: \"" + ww + "\"", e);
+                        throw e;
+                    }
+                }
+
+                sql = matchSql.replaceAll("#ID#", String.valueOf(p.getId())).replaceAll("#IN#", in);
+
+                Statement match=null;
+                try
+                {
+                    match = this.conn.createStatement();
+                    match.executeUpdate(sql);
+                }
+                finally
+                {
+                    DbUtils.close(match);
+                }
+            }
+        }
+        catch (SQLException e) {
+            String es = "Erorr insertSearchWords()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close( words);
+        }
+    }
 	
 	/**
 	 * @see net.jforum.dao.SearchIndexerDAO#insertSearchWords(net.jforum.entities.Post)
 	 */
-	public void insertSearchWords(final Post post) throws Exception
+	public void insertSearchWords(final Post post)
 	{
 		this.insertSearchWords(Arrays.asList(new Post[] { post }));
 	}

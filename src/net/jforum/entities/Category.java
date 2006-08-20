@@ -72,7 +72,7 @@ import net.jforum.util.ForumOrderComparator;
  * to the user who make the call tho the method. 
  * 
  * @author Rafael Steil
- * @version $Id: Category.java,v 1.19 2005/07/26 03:04:49 rafaelsteil Exp $
+ * @version $Id: Category.java,v 1.20 2006/08/20 12:19:08 sergemaslyukov Exp $
  */
 public class Category  implements Serializable
 {
@@ -163,7 +163,7 @@ public class Category  implements Serializable
 	/**
 	 * Adds a forum to this category
 	 * 
-	 * @param forum
+	 * @param forum Forum
 	 */
 	public void addForum(Forum forum) {
 		this.forumsIdMap.put(new Integer(forum.getId()), forum);
@@ -178,9 +178,6 @@ public class Category  implements Serializable
 	 * calling this method.
 	 * 
 	 * @param forum The forum to reload its information
-	 * @throws ForumChangedException if the forum given as parameter
-	 * has a modified display order
-	 * @throws Exception
 	 * @see #changeForumOrder(Forum)
 	 */
 	public void reloadForum(Forum forum) {
@@ -255,7 +252,7 @@ public class Category  implements Serializable
 	
 	/**
 	 * Removes a forum from the list.
-	 * @param forumId
+	 * @param forumId int
 	 */
 	public void removeForum(int forumId) {
 		this.forums.remove(this.getForum(forumId));
@@ -313,7 +310,8 @@ public class Category  implements Serializable
 	 * Gets all forums from this category.
 	 * 
 	 * @return The forums available to the user who make the call
-	 * @see #getForums() 
+	 * @see #getForums()
+     * @param userId int
 	 */
 	public Collection getForums(int userId) 
 	{

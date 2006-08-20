@@ -60,7 +60,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.31 2006/05/24 00:10:39 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.32 2006/08/20 12:18:59 sergemaslyukov Exp $
  */
 public class SessionFacade implements Cacheable
 {
@@ -390,10 +390,9 @@ public class SessionFacade implements Cacheable
 	 * then releasing the connection after the method is processed.   
 	 * 
 	 * @param sessionId The session which we're going to persist information
-	 * @throws Exception
 	 * @see #storeSessionData(String, Connection)
 	 */
-	public static void storeSessionData(String sessionId) throws Exception
+	public static void storeSessionData(String sessionId)
 	{
 		Connection conn = null;
 		try {
@@ -418,10 +417,9 @@ public class SessionFacade implements Cacheable
 	 * @param sessionId The session which we're going to persist
 	 * @param conn A <code>Connection</code> to be used to connect to
 	 * the database. 
-	 * @throws Exception
 	 * @see #storeSessionData(String)
 	 */
-	public static void storeSessionData(String sessionId, Connection conn) throws Exception
+	public static void storeSessionData(String sessionId, Connection conn) 
 	{
 		UserSession us = SessionFacade.getUserSession(sessionId);
 		if (us != null) {

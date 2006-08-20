@@ -47,6 +47,7 @@ import java.util.Map;
 
 import javax.naming.AuthenticationException;
 import javax.naming.Context;
+import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
@@ -60,7 +61,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * Authenticate users against a LDAP server. 
  * 
  * @author Rafael Steil
- * @version $Id: LDAPAuthenticator.java,v 1.6 2006/05/27 15:20:46 rafaelsteil Exp $
+ * @version $Id: LDAPAuthenticator.java,v 1.7 2006/08/20 12:19:10 sergemaslyukov Exp $
  */
 public class LDAPAuthenticator implements LoginAuthenticator
 {
@@ -89,7 +90,7 @@ public class LDAPAuthenticator implements LoginAuthenticator
 	/**
 	 * @see net.jforum.sso.LoginAuthenticator#validateLogin(java.lang.String, java.lang.String, java.util.Map)
 	 */
-	public User validateLogin(String username, String password, Map extraParams) throws Exception
+	public User validateLogin(String username, String password, Map extraParams)
 	{
 		Hashtable environment = this.prepareEnvironment();
 		
@@ -134,10 +135,21 @@ public class LDAPAuthenticator implements LoginAuthenticator
 		catch (AuthenticationException e) {
 			return null;
 		}
-		finally {
+        catch (NamingException e)
+        {
+            return null;
+        }
+        finally {
 			if (dir != null) {
-				dir.close();
-			}
+                try
+                {
+                    dir.close();
+                }
+                catch (NamingException e)
+                {
+                    //close jndi context
+                }
+            }
 		}
 	}
 

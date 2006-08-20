@@ -60,7 +60,7 @@ import org.apache.log4j.Logger;
  * Try to fix some database configuration problems.
  * This class will much likely do some checks only for mysql.
  * @author Rafael Steil
- * @version $Id: DatabaseWorkarounder.java,v 1.3 2005/12/26 13:04:55 rafaelsteil Exp $
+ * @version $Id: DatabaseWorkarounder.java,v 1.4 2006/08/20 12:19:00 sergemaslyukov Exp $
  */
 public class DatabaseWorkarounder
 {
@@ -182,8 +182,10 @@ public class DatabaseWorkarounder
 		}
 		finally {
 			if (fis != null) {
-				os.close();
 				fis.close();
+			}
+			if (os != null) {
+				os.close();
 			}
 		}
 	}
@@ -253,8 +255,11 @@ public class DatabaseWorkarounder
 				p.store(fos, null);
 			}
 			finally {
-				fos.close();
-				fis.close();
+                if (fos != null)
+                {
+                    fos.close();
+                }
+                fis.close();
 			}
 		}
 		else {

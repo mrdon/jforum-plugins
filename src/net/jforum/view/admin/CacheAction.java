@@ -61,14 +61,14 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: CacheAction.java,v 1.7 2005/09/15 00:59:44 rafaelsteil Exp $
+ * @version $Id: CacheAction.java,v 1.8 2006/08/20 12:19:14 sergemaslyukov Exp $
  */
 public class CacheAction extends AdminCommand
 {
 	/**
 	 * @see net.jforum.Command#list()
 	 */
-	public void list() throws Exception
+	public void list()
 	{
 		this.setTemplateName(TemplateKeys.CACHE_LIST);
 		
@@ -83,37 +83,37 @@ public class CacheAction extends AdminCommand
 		this.context.put("posts", new PostRepository());
 	}
 	
-	public void bbReload() throws Exception
+	public void bbReload()
 	{
 		BBCodeRepository.setBBCollection(new BBCodeHandler().parse());
 		this.list();
 	}
 	
-	public void sessionClear() throws Exception
+	public void sessionClear()
 	{
 		SessionFacade.clear();
 		this.list();
 	}
 	
-	public void modulesReload() throws Exception
+	public void modulesReload()
 	{
 		ModulesRepository.init(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR));
 		this.list();
 	}
 	
-	public void smiliesReload() throws Exception
+	public void smiliesReload()
 	{
 		SmiliesRepository.loadSmilies();
 		this.list();
 	}
 	
-	public void rankingReload() throws Exception
+	public void rankingReload()
 	{
 		RankingRepository.loadRanks();
 		this.list();
 	}
 	
-	public void topicsMoreInfo() throws Exception
+	public void topicsMoreInfo()
 	{
 		if (!SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
 			this.list();
@@ -125,14 +125,14 @@ public class CacheAction extends AdminCommand
 		this.context.put("categories", ForumRepository.getAllCategories());
 	}
 	
-	public void topicsClear() throws Exception
+	public void topicsClear()
 	{
 		int forumId = this.request.getIntParameter("forum_id");
 		TopicRepository.clearCache(forumId);
 		this.topicsMoreInfo();
 	}
 	
-	public void postsMoreInfo() throws Exception
+	public void postsMoreInfo()
 	{
 		if (!SystemGlobals.getBoolValue(ConfigKeys.POSTS_CACHE_ENABLED)) {
 			this.list();
@@ -146,7 +146,7 @@ public class CacheAction extends AdminCommand
 		this.setTemplateName(TemplateKeys.CACHE_POST_MOREINFO);
 	}
 	
-	public void postsClear() throws Exception
+	public void postsClear() 
 	{
 		int topicId = this.request.getIntParameter("topic_id");
 		PostRepository.clearCache(topicId);

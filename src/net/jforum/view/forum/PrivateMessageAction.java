@@ -66,11 +66,11 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.35 2006/08/06 00:07:46 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.36 2006/08/20 12:19:16 sergemaslyukov Exp $
  */
 public class PrivateMessageAction extends Command
 {
-	public void inbox() throws Exception
+	public void inbox()
 	{
 		if (!SessionFacade.isLogged()) {
 			this.setTemplateName(ViewCommon.contextToLogin());
@@ -89,7 +89,7 @@ public class PrivateMessageAction extends Command
 		this.putTypes();		
 	}
 	
-	public void sentbox() throws Exception
+	public void sentbox()
 	{
 		if (!SessionFacade.isLogged()) {
 			this.setTemplateName(ViewCommon.contextToLogin());
@@ -115,7 +115,7 @@ public class PrivateMessageAction extends Command
 		this.context.put("UNREAD", new Integer(PrivateMessageType.UNREAD));
 	}
 	
-	public void send() throws Exception
+	public void send() 
 	{
 		if (!SessionFacade.isLogged()) {
 			this.setTemplateName(ViewCommon.contextToLogin());
@@ -130,7 +130,7 @@ public class PrivateMessageAction extends Command
 		this.sendFormCommon(user);
 	}
 	
-	public void sendTo() throws Exception
+	public void sendTo()
 	{
 		if (!SessionFacade.isLogged()) {
 			this.setTemplateName(ViewCommon.contextToLogin());
@@ -171,7 +171,7 @@ public class PrivateMessageAction extends Command
 		this.context.put("smilies", SmiliesRepository.getSmilies());
 	}
 	
-	public void sendSave() throws Exception
+	public void sendSave()
 	{
 		if (!SessionFacade.isLogged()) {
 			this.setTemplateName(ViewCommon.contextToLogin());
@@ -182,8 +182,10 @@ public class PrivateMessageAction extends Command
 		
 		String toUserIdStr = this.request.getParameter("toUserId");
 		String toUsername = this.request.getParameter("toUsername");
-		String userEmail;
-		
+
+        // TODO userEmail is not used. Remove or use
+        String userEmail;
+
 		int toUserId = -1;
 		
 		// If we don't have an user id, then probably the user
@@ -261,7 +263,7 @@ public class PrivateMessageAction extends Command
 		}
 	}
 	
-	public void findUser() throws Exception
+	public void findUser()
 	{
 		boolean showResult = false;
 		String username = this.request.getParameter("username");
@@ -278,7 +280,7 @@ public class PrivateMessageAction extends Command
 		this.context.put("showResult", showResult);
 	}
 	
-	public void read() throws Exception
+	public void read()
 	{
 		if (!SessionFacade.isLogged()) {
 			this.setTemplateName(ViewCommon.contextToLogin());
@@ -319,13 +321,13 @@ public class PrivateMessageAction extends Command
 		}
 	}
 	
-	public void review() throws Exception
+	public void review()
 	{
 		this.read();
 		this.setTemplateName(TemplateKeys.PM_READ_REVIEW);
 	}
 	
-	public void delete() throws Exception
+	public void delete()
 	{
 		if (!SessionFacade.isLogged()) {
 			this.setTemplateName(ViewCommon.contextToLogin());
@@ -354,7 +356,7 @@ public class PrivateMessageAction extends Command
 										+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) }));
 	}
 	
-	public void reply() throws Exception
+	public void reply()
 	{
 		if (!SessionFacade.isLogged()) {
 			this.setTemplateName(ViewCommon.contextToLogin());
@@ -384,7 +386,7 @@ public class PrivateMessageAction extends Command
 				SessionFacade.getUserSession().getUserId()));
 	}
 	
-	public void quote() throws Exception
+	public void quote()
 	{
 		if (!SessionFacade.isLogged()) {
 			this.setTemplateName(ViewCommon.contextToLogin());
@@ -418,7 +420,7 @@ public class PrivateMessageAction extends Command
 	/** 
 	 * @see net.jforum.Command#list()
 	 */
-	public void list() throws Exception
+	public void list()
 	{
 		this.inbox();
 	}

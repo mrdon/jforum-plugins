@@ -42,11 +42,7 @@
  */
 package net.jforum.dao.generic;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -64,38 +60,53 @@ import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.DbUtils;
+import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
  * @author socialnetwork@gmail.com, adding "watch forum" methods.
  * 
- * @version $Id: GenericForumDAO.java,v 1.22 2006/05/14 23:59:49 rafaelsteil Exp $
+ * @version $Id: GenericForumDAO.java,v 1.23 2006/08/20 12:19:03 sergemaslyukov Exp $
  */
 public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO 
 {
+    private final static Logger log = Logger.getLogger(GenericForumDAO.class);
+
+
 	/**
 	 * @see net.jforum.dao.ForumDAO#selectById(int)
 	 */
-	public Forum selectById(int forumId) throws Exception {
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.selectById"));
-		p.setInt(1, forumId);
+	public Forum selectById(int forumId) {
+        
+        PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.selectById"));
+            p.setInt(1, forumId);
 
-		ResultSet rs = p.executeQuery();
+            rs = p.executeQuery();
 
-		Forum f = new Forum();
+            Forum f = new Forum();
 
-		if (rs.next()) {
-			f = this.fillForum(rs);
-		}
+            if (rs.next()) {
+                f = this.fillForum(rs);
+            }
+            return f;
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectById()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 
-		rs.close();
-		p.close();
-
-		return f;
-	}
-
-	protected Forum fillForum(ResultSet rs) throws Exception {
+	protected Forum fillForum(ResultSet rs) throws SQLException {
 		Forum f = new Forum();
 
 		f.setId(rs.getInt("forum_id"));
@@ -111,45 +122,66 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 		return f;
 	}
 	
-	protected int countForumPosts(int forumId) throws Exception
+	protected int countForumPosts(int forumId)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("ForumModel.countForumPosts"));
-		p.setInt(1, forumId);
-		ResultSet rs = p.executeQuery();
-		rs.next();
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("ForumModel.countForumPosts"));
+            p.setInt(1, forumId);
+            rs = p.executeQuery();
+            rs.next();
 
-		int total = rs.getInt(1);
-
-		rs.close();
-		p.close();
-
-		return total;
-	}
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            return 0;
+        }
+        catch (SQLException e) {
+            String es = "Erorr countForumPosts()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 
 	/**
 	 * @see net.jforum.dao.ForumDAO#selectAll()
 	 */
-	public List selectAll() throws Exception {
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.selectAll"));
-		List l = new ArrayList();
+	public List selectAll() {
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.selectAll"));
+            List l = new ArrayList();
 
-		ResultSet rs = p.executeQuery();
+            rs = p.executeQuery();
 
-		while (rs.next()) {
-			l.add(this.fillForum(rs));
-		}
+            while (rs.next()) {
+                l.add(this.fillForum(rs));
+            }
 
-		rs.close();
-		p.close();
-
-		return l;
-	}
+            return l;
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectAll()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 
 	/**
 	 * @see net.jforum.dao.ForumDAO#setOrderUp(Forum, Forum)
 	 */
-	public Forum setOrderUp(Forum forum, Forum related) throws Exception 
+	public Forum setOrderUp(Forum forum, Forum related)
 	{
 		return this.changeForumOrder(forum, related, true);
 	}
@@ -157,215 +189,309 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 	/**
 	 * @see net.jforum.dao.ForumDAO#setOrderDown(Forum, Forum)
 	 */
-	public Forum setOrderDown(Forum forum, Forum related) throws Exception {
+	public Forum setOrderDown(Forum forum, Forum related)  {
 		return this.changeForumOrder(forum, related, false);
 	}
 	
-	private Forum changeForumOrder(Forum forum, Forum related, boolean up) throws Exception
+	private Forum changeForumOrder(Forum forum, Forum related, boolean up)
 	{
 		int tmpOrder = related.getOrder();
 		related.setOrder(forum.getOrder());
 		forum.setOrder(tmpOrder);
 
 		// ******** 
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.setOrderById"));
-		p.setInt(1, forum.getOrder());
-		p.setInt(2, forum.getId());
-		p.executeUpdate();
-		p.close();
-		
-		// ********
-		p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.setOrderById"));
-		p.setInt(1, related.getOrder());
-		p.setInt(2, related.getId());
-		p.executeUpdate();
-		p.close();
-		
-		return this.selectById(forum.getId());
-	}
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.setOrderById"));
+            p.setInt(1, forum.getOrder());
+            p.setInt(2, forum.getId());
+            p.executeUpdate();
+            p.close();
+            p=null;
+
+            // ********
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.setOrderById"));
+            p.setInt(1, related.getOrder());
+            p.setInt(2, related.getId());
+            p.executeUpdate();
+
+            return this.selectById(forum.getId());
+        }
+        catch (SQLException e) {
+            String es = "Erorr changeForumOrder()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
+    }
 
 	/**
 	 * @see net.jforum.dao.ForumDAO#delete(int)
 	 */
-	public void delete(int forumId) throws Exception {
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.delete"));
-		p.setInt(1, forumId);
+	public void delete(int forumId) {
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.delete"));
+            p.setInt(1, forumId);
 
-		p.executeUpdate();
-
-		p.close();
-	}
-
-	/**
-	 * @see net.jforum.dao.ForumDAO#update(net.jforum.Forum)
-	 */
-	public void update(Forum forum) throws Exception {
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.update"));
-
-		p.setInt(1, forum.getCategoryId());
-		p.setString(2, forum.getName());
-		p.setString(3, forum.getDescription());
-		p.setInt(4, forum.isModerated() ? 1 : 0);
-		p.setInt(5, forum.getId());
-
-		// Order, TotalTopics and LastPostId must be updated using the
-		// respective methods
-		p.executeUpdate();
-		p.close();
-	}
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr delete()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
+    }
 
 	/**
-	 * @see net.jforum.dao.ForumDAO#addNew(net.jforum.Forum)
+	 * @see net.jforum.dao.ForumDAO#update(net.jforum.entities.Forum)
 	 */
-	public int addNew(Forum forum) throws Exception {
+	public void update(Forum forum) {
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.update"));
+
+            p.setInt(1, forum.getCategoryId());
+            p.setString(2, forum.getName());
+            p.setString(3, forum.getDescription());
+            p.setInt(4, forum.isModerated() ? 1 : 0);
+            p.setInt(5, forum.getId());
+
+            // Order, TotalTopics and LastPostId must be updated using the
+            // respective methods
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr update()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
+    }
+
+	/**
+	 * @see net.jforum.dao.ForumDAO#addNew(net.jforum.entities.Forum) 
+	 */
+	public int addNew(Forum forum) {
 		// Gets the higher order
-		PreparedStatement pOrder = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.getMaxOrder"));
-		ResultSet rs = pOrder.executeQuery();
+		PreparedStatement pOrder=null;
+        ResultSet rs=null;
+        try
+        {
+            pOrder = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.getMaxOrder"));
+            rs = pOrder.executeQuery();
 
-		if (rs.next()) {
-			forum.setOrder(rs.getInt(1) + 1);
-		}
+            if (rs.next()) {
+                forum.setOrder(rs.getInt(1) + 1);
+            }
 
-		rs.close();
-		pOrder.close();
+            rs.close();
+            rs=null;
+            pOrder.close();
+            pOrder=null;
 
-		// Updates the order
-		PreparedStatement p = this.getStatementForAutoKeys("ForumModel.addNew");
+            pOrder = this.getStatementForAutoKeys("ForumModel.addNew");
 
-		p.setInt(1, forum.getCategoryId());
-		p.setString(2, forum.getName());
-		p.setString(3, forum.getDescription());
-		p.setInt(4, forum.getOrder());
-		p.setInt(5, forum.isModerated() ? 1 : 0);
+            pOrder.setInt(1, forum.getCategoryId());
+            pOrder.setString(2, forum.getName());
+            pOrder.setString(3, forum.getDescription());
+            pOrder.setInt(4, forum.getOrder());
+            pOrder.setInt(5, forum.isModerated() ? 1 : 0);
 
-		this.setAutoGeneratedKeysQuery(SystemGlobals.getSql("ForumModel.lastGeneratedForumId"));
-		int forumId = this.executeAutoKeysQuery(p);
+            this.setAutoGeneratedKeysQuery(SystemGlobals.getSql("ForumModel.lastGeneratedForumId"));
+            int forumId = this.executeAutoKeysQuery(pOrder);
 
-		p.close();
-
-		forum.setId(forumId);
-		return forumId;
-	}
+            forum.setId(forumId);
+            return forumId;
+        }
+        catch (SQLException e) {
+            String es = "Erorr addNew()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, pOrder);
+        }
+    }
 
 	/**
 	 * @see net.jforum.dao.ForumDAO#setLastPost(int, int)
 	 */
-	public void setLastPost(int forumId, int postId) throws Exception {
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.updateLastPost"));
+	public void setLastPost(int forumId, int postId) {
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.updateLastPost"));
 
-		p.setInt(1, postId);
-		p.setInt(2, forumId);
+            p.setInt(1, postId);
+            p.setInt(2, forumId);
 
-		p.executeUpdate();
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr setLastPost()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
+    }
 
-		p.close();
+	/**
+     * // TODO implement this or delete javadoc
+	 * @see net.jforum.dao.ForumDAO#setTotalTopics(int)
+	 */
+	public void incrementTotalTopics(int forumId, int count) {
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.incrementTotalTopics"));
+            p.setInt(1, count);
+            p.setInt(2, forumId);
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr incrementTotalTopics()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close( p);
+        }
 	}
 
 	/**
+     * // TODO implement this or delete javadoc
 	 * @see net.jforum.dao.ForumDAO#setTotalTopics(int)
 	 */
-	public void incrementTotalTopics(int forumId, int count) throws Exception {
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.incrementTotalTopics"));
-		p.setInt(1, count);
-		p.setInt(2, forumId);
-		p.executeUpdate();
-		p.close();
-	}
+	public void decrementTotalTopics(int forumId, int count) {
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.decrementTotalTopics"));
+            p.setInt(1, count);
+            p.setInt(2, forumId);
+            p.executeUpdate();
 
-	/**
-	 * @see net.jforum.dao.ForumDAO#setTotalTopics(int)
-	 */
-	public void decrementTotalTopics(int forumId, int count) throws Exception {
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.decrementTotalTopics"));
-		p.setInt(1, count);
-		p.setInt(2, forumId);
-		p.executeUpdate();
-		p.close();
-
-		// If there are no more topics, then clean the
-		// last post id information
-		int totalTopics = this.getTotalTopics(forumId);
-		if (totalTopics < 1) {
-			this.setLastPost(forumId, 0);
-		}
-	}
+            // If there are no more topics, then clean the
+            // last post id information
+            int totalTopics = this.getTotalTopics(forumId);
+            if (totalTopics < 1) {
+                this.setLastPost(forumId, 0);
+            }
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectActiveBannerByPlacement()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
+    }
 	
-	private LastPostInfo getLastPostInfo(int forumId, boolean tryFix) throws Exception
+	private LastPostInfo getLastPostInfo(int forumId, boolean tryFix)
 	{
 		LastPostInfo lpi = new LastPostInfo();
 
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.lastPostInfo"));
-		p.setInt(1, forumId);
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.lastPostInfo"));
+            p.setInt(1, forumId);
 
-		ResultSet rs = p.executeQuery();
+            rs = p.executeQuery();
 
-		if (rs.next()) {
-			lpi.setUsername(rs.getString("username"));
-			lpi.setUserId(rs.getInt("user_id"));
+            if (rs.next()) {
+                lpi.setUsername(rs.getString("username"));
+                lpi.setUserId(rs.getInt("user_id"));
 
-			SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
-			lpi.setPostDate(df.format(rs.getTimestamp("post_time")));
-			lpi.setPostId(rs.getInt("post_id"));
-			lpi.setTopicId(rs.getInt("topic_id"));
-			lpi.setPostTimeMillis(rs.getTimestamp("post_time").getTime());
-			lpi.setTopicReplies(rs.getInt("topic_replies"));
+                SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
+                lpi.setPostDate(df.format(rs.getTimestamp("post_time")));
+                lpi.setPostId(rs.getInt("post_id"));
+                lpi.setTopicId(rs.getInt("topic_id"));
+                lpi.setPostTimeMillis(rs.getTimestamp("post_time").getTime());
+                lpi.setTopicReplies(rs.getInt("topic_replies"));
 
-			lpi.setHasInfo(true);
-			
-			// Check if the topic is consistent
-			TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
-			Topic t = tm.selectById(lpi.getTopicId());
-			
-			if (t.getId() == 0) {
-				// Hm, that's not good. Try to fix it
-				tm.fixFirstLastPostId(lpi.getTopicId());
-			}
-			
-			tryFix = false;
-		}
-		else if (tryFix) {
-			rs.close();
-			p.close();
-			
-			int postId = this.getMaxPostId(forumId);
-			
-			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.latestTopicIdForfix"));
-			p.setInt(1, forumId);
-			rs = p.executeQuery();
-			
-			int topicId = -1;
-			
-			if (rs.next()) {
-				topicId = rs.getInt("topic_id");
-				
-				rs.close();
-				p.close();
-				
-				// Topic
-				p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.fixLatestPostData"));
-				p.setInt(1, postId);
-				p.setInt(2, topicId);
-				p.executeUpdate();
-				p.close();
-				
-				// Forum
-				p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.fixForumLatestPostData"));
-				p.setInt(1, postId);
-				p.setInt(2, forumId);
-				p.executeUpdate();
-			}
-		}
+                lpi.setHasInfo(true);
 
-		rs.close();
-		p.close();
-		
-		return (tryFix ? this.getLastPostInfo(forumId, false) : lpi);
-	}
+                // Check if the topic is consistent
+                TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
+                Topic t = tm.selectById(lpi.getTopicId());
+
+                if (t.getId() == 0) {
+                    // Hm, that's not good. Try to fix it
+                    tm.fixFirstLastPostId(lpi.getTopicId());
+                }
+
+                tryFix = false;
+            }
+            else if (tryFix) {
+                rs.close();
+                rs=null;
+                p.close();
+                p=null;
+
+                int postId = this.getMaxPostId(forumId);
+
+                p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.latestTopicIdForfix"));
+                p.setInt(1, forumId);
+                rs = p.executeQuery();
+
+
+                if (rs.next()) {
+                    int topicId;
+                    topicId = rs.getInt("topic_id");
+
+                    rs.close();
+                    rs=null;
+                    p.close();
+                    p=null;
+
+                    // Topic
+                    p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.fixLatestPostData"));
+                    p.setInt(1, postId);
+                    p.setInt(2, topicId);
+                    p.executeUpdate();
+                    p.close();
+                    p=null;
+
+                    // Forum
+                    p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.fixForumLatestPostData"));
+                    p.setInt(1, postId);
+                    p.setInt(2, forumId);
+                    p.executeUpdate();
+                }
+            }
+
+            return (tryFix ? this.getLastPostInfo(forumId, false) : lpi);
+        }
+        catch (SQLException e) {
+            String es = "Erorr getLastPostInfo()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 
 	/**
 	 * @see net.jforum.dao.ForumDAO#getLastPostInfo(int)
 	 */
-	public LastPostInfo getLastPostInfo(int forumId) throws Exception 
+	public LastPostInfo getLastPostInfo(int forumId)
 	{
 		return this.getLastPostInfo(forumId, true);
 	}
@@ -373,163 +499,239 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 	/**
 	 * @see net.jforum.dao.ForumDAO#getModeratorList(int)
 	 */
-	public List getModeratorList(int forumId) throws Exception
+	public List getModeratorList(int forumId)
 	{
 		List l = new ArrayList();
 
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("ForumModel.getModeratorList"));
-		p.setInt(1, forumId);
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("ForumModel.getModeratorList"));
+            p.setInt(1, forumId);
 
-		ResultSet rs = p.executeQuery();
-		
-		while (rs.next()) {
-			ModeratorInfo mi = new ModeratorInfo();
-			
-			mi.setId(rs.getInt("id"));
-			mi.setName(rs.getString("name"));
-			
-			l.add(mi);
-		}
-		
-		rs.close();
-		p.close();
-		
-		return l;
-	}
+            rs = p.executeQuery();
+
+            while (rs.next()) {
+                ModeratorInfo mi = new ModeratorInfo();
+
+                mi.setId(rs.getInt("id"));
+                mi.setName(rs.getString("name"));
+
+                l.add(mi);
+            }
+
+            return l;
+        }
+        catch (SQLException e) {
+            String es = "Erorr getModeratorList()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 
 	/**
 	 * @see net.jforum.dao.ForumDAO#getTotalMessages()
 	 */
-	public int getTotalMessages() throws Exception {
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("ForumModel.totalMessages"));
-		ResultSet rs = p.executeQuery();
-		rs.next();
+	public int getTotalMessages() {
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("ForumModel.totalMessages"));
+            rs = p.executeQuery();
+            rs.next();
 
-		int total = rs.getInt("total_messages");
-		
-		rs.close();
-		p.close();
+            if (rs.next()) {
+                return  rs.getInt("total_messages");
+            }
 
-		return total;
-	}
+            return 0;
+        }
+        catch (SQLException e) {
+            String es = "Erorr getTotalMessages()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 
 	/**
 	 * @see net.jforum.dao.ForumDAO#getTotalTopics(int)
 	 */
-	public int getTotalTopics(int forumId) throws Exception {
+	public int getTotalTopics(int forumId) {
 		int total = 0;
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.getTotalTopics"));
-		p.setInt(1, forumId);
-		ResultSet rs = p.executeQuery();
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.getTotalTopics"));
+            p.setInt(1, forumId);
+            rs = p.executeQuery();
 
-		if (rs.next()) {
-			total = rs.getInt(1);
-		}
+            if (rs.next()) {
+                total = rs.getInt(1);
+            }
 
-		rs.close();
-		p.close();
-
-		return total;
-	}
+            return total;
+        }
+        catch (SQLException e) {
+            String es = "Erorr getTotalTopics()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 
 	/**
 	 * @see net.jforum.dao.ForumDAO#getMaxPostId(int)
 	 */
-	public int getMaxPostId(int forumId) throws Exception {
+	public int getMaxPostId(int forumId) {
 		int id = -1;
 
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.getMaxPostId"));
-		p.setInt(1, forumId);
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.getMaxPostId"));
+            p.setInt(1, forumId);
 
-		ResultSet rs = p.executeQuery();
-		if (rs.next()) {
-			id = rs.getInt("post_id");
-		}
+            rs = p.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt("post_id");
+            }
 
-		rs.close();
-		p.close();
-
-		return id;
-	}
+            return id;
+        }
+        catch (SQLException e) {
+            String es = "Erorr getMaxPostId()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 
 	/**
 	 * @see net.jforum.dao.ForumDAO#moveTopics(java.lang.String[], int, int)
 	 */
-	public void moveTopics(String[] topics, int fromForumId, int toForumId) throws Exception {
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.moveTopics"));
-		PreparedStatement t = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.setForumByTopic"));
-		
-		p.setInt(1, toForumId);
-		t.setInt(1, toForumId);
-		
-		TopicDAO tdao = DataAccessDriver.getInstance().newTopicDAO();
-		
-		Forum f = this.selectById(toForumId);
+	public void moveTopics(String[] topics, int fromForumId, int toForumId) {
+		PreparedStatement p=null;
+        PreparedStatement t=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.moveTopics"));
+            t = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.setForumByTopic"));
 
-		for (int i = 0; i < topics.length; i++) {
-			int topicId = Integer.parseInt(topics[i]);
-			p.setInt(2, topicId);
-			t.setInt(2, topicId);
-			
-			p.executeUpdate();
-			t.executeUpdate();
-			
-			tdao.setModerationStatusByTopic(topicId, f.isModerated());
-		}
+            p.setInt(1, toForumId);
+            t.setInt(1, toForumId);
 
-		this.decrementTotalTopics(fromForumId, topics.length);
-		this.incrementTotalTopics(toForumId, topics.length);
-		
-		this.setLastPost(fromForumId, this.getMaxPostId(fromForumId));
-		this.setLastPost(toForumId, this.getMaxPostId(toForumId));
+            TopicDAO tdao = DataAccessDriver.getInstance().newTopicDAO();
 
-		p.close();
-	}
+            Forum f = this.selectById(toForumId);
+
+            for (int i = 0; i < topics.length; i++) {
+                int topicId = Integer.parseInt(topics[i]);
+                p.setInt(2, topicId);
+                t.setInt(2, topicId);
+
+                p.executeUpdate();
+                t.executeUpdate();
+
+                tdao.setModerationStatusByTopic(topicId, f.isModerated());
+            }
+
+            this.decrementTotalTopics(fromForumId, topics.length);
+            this.incrementTotalTopics(toForumId, topics.length);
+
+            this.setLastPost(fromForumId, this.getMaxPostId(fromForumId));
+            this.setLastPost(toForumId, this.getMaxPostId(toForumId));
+        }
+        catch (SQLException e) {
+            String es = "Erorr moveTopics()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+            DbUtils.close(t);
+        }
+    }
 	
 	/**
+     * // TODO implement this or delete javadoc
 	 * @see net.jforum.dao.ForumDAO#hasUnreadTopics(int, long)
 	 */
-	public List checkUnreadTopics(int forumId, long lastVisit) throws Exception
+	public List checkUnreadTopics(int forumId, long lastVisit)
 	{
 		List l = new ArrayList();
 		
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.checkUnreadTopics"));
-		p.setInt(1, forumId);
-		p.setTimestamp(2, new Timestamp(lastVisit));
-		
-		ResultSet rs = p.executeQuery();
-		while (rs.next()) {
-			Topic t = new Topic();
-			t.setId(rs.getInt("topic_id"));
-			t.setTime(new Date(rs.getTimestamp(1).getTime()));
-			
-			l.add(t);
-		}
-		
-		rs.close();
-		p.close();
-		
-		return l;
-	}
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.checkUnreadTopics"));
+            p.setInt(1, forumId);
+            p.setTimestamp(2, new Timestamp(lastVisit));
+
+            rs = p.executeQuery();
+            while (rs.next()) {
+                Topic t = new Topic();
+                t.setId(rs.getInt("topic_id"));
+                t.setTime(new Date(rs.getTimestamp(1).getTime()));
+
+                l.add(t);
+            }
+
+            return l;
+        }
+        catch (SQLException e) {
+            String es = "Erorr checkUnreadTopics()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 	
 	/**
 	 * @see net.jforum.dao.ForumDAO#setModerated(int, boolean)
 	 */
-	public void setModerated(int categoryId, boolean status) throws Exception
+	public void setModerated(int categoryId, boolean status)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.setModerated"));
-		p.setInt(1, status ? 1 : 0);
-		p.setInt(2, categoryId);
-		p.executeUpdate();
-		p.close();
-	}
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.setModerated"));
+            p.setInt(1, status ? 1 : 0);
+            p.setInt(2, categoryId);
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr setModerated()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
+    }
 	
 	/**
 	 * @see net.jforum.dao.ForumDAO#getBoardStatus()
 	 */
-	public ForumStats getBoardStatus() throws Exception
+	public ForumStats getBoardStatus()
 	{
 		ForumStats fs = new ForumStats();
 		fs.setPosts(this.getTotalMessages());
@@ -537,58 +739,80 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 		Connection c = JForumExecutionContext.getConnection();
 		
 		// Total Users
-		Statement s = c.createStatement();
-		ResultSet rs = s.executeQuery(SystemGlobals.getSql("UserModel.totalUsers"));
-		rs.next();
-		fs.setUsers(rs.getInt(1));
-		rs.close();
-		s.close();
-		
-		// Total Topics
-		s = c.createStatement();
-		rs = s.executeQuery(SystemGlobals.getSql("TopicModel.totalTopics"));
-		rs.next();
-		fs.setTopics(rs.getInt(1));
-		rs.close();
-		s.close();
-		
-		// Posts per day
-		s = c.createStatement();
-		rs = s.executeQuery(SystemGlobals.getSql("ForumModel.statsFirstPostTime"));
-		rs.next();
-		Date firstTime = new Date(rs.getTimestamp(1).getTime());
-		rs.close();
-		s.close();
-		
-		Date today = new Date();
-		
-		double perDay = firstTime != null ? fs.getPosts() / this.daysUntilToday(today, firstTime) : 0;
-		
-		if (fs.getPosts() > 0 && perDay < 1) {
-			perDay = 1;
-		}
-		
-		fs.setPostsPerDay(perDay);
-		
-		// Topics per day
-		perDay = firstTime != null ? fs.getTopics() / this.daysUntilToday(today, firstTime) : 0;
-		
-		fs.setTopicsPerDay(perDay);
-		
-		// Users per day
-		s = c.createStatement();
-		rs = s.executeQuery(SystemGlobals.getSql("ForumModel.statsFirstRegisteredUserTime"));
-		rs.next();
-		firstTime = new Date(rs.getTimestamp(1).getTime());
-		rs.close();
-		s.close();
-		
-		perDay = fs.getUsers() / this.daysUntilToday(today, firstTime);
-		
-		fs.setUsersPerDay(perDay);
-		
-		return fs;
-	}
+		Statement s=null;
+        ResultSet rs=null;
+
+        try
+        {
+            s = c.createStatement();
+            rs = s.executeQuery(SystemGlobals.getSql("UserModel.totalUsers"));
+            rs.next();
+            fs.setUsers(rs.getInt(1));
+            rs.close();
+            rs=null;
+            s.close();
+            s=null;
+
+            // Total Topics
+            s = c.createStatement();
+            rs = s.executeQuery(SystemGlobals.getSql("TopicModel.totalTopics"));
+            rs.next();
+            fs.setTopics(rs.getInt(1));
+            rs.close();
+            rs=null;
+            s.close();
+            s=null;
+
+            // Posts per day
+            s = c.createStatement();
+            rs = s.executeQuery(SystemGlobals.getSql("ForumModel.statsFirstPostTime"));
+            rs.next();
+            Date firstTime = new Date(rs.getTimestamp(1).getTime());
+            rs.close();
+            rs=null;
+            s.close();
+            s=null;
+
+            Date today = new Date();
+
+            double perDay = firstTime != null ? fs.getPosts() / this.daysUntilToday(today, firstTime) : 0;
+
+            if (fs.getPosts() > 0 && perDay < 1) {
+                perDay = 1;
+            }
+
+            fs.setPostsPerDay(perDay);
+
+            // Topics per day
+            perDay = firstTime != null ? fs.getTopics() / this.daysUntilToday(today, firstTime) : 0;
+
+            fs.setTopicsPerDay(perDay);
+
+            // Users per day
+            s = c.createStatement();
+            rs = s.executeQuery(SystemGlobals.getSql("ForumModel.statsFirstRegisteredUserTime"));
+            rs.next();
+            firstTime = new Date(rs.getTimestamp(1).getTime());
+            rs.close();
+            rs=null;
+            s.close();
+            s=null;
+
+            perDay = fs.getUsers() / this.daysUntilToday(today, firstTime);
+
+            fs.setUsersPerDay(perDay);
+
+            return fs;
+        }
+        catch (SQLException e) {
+            String es = "Erorr getBoardStatus()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, s);
+        }
+    }
 	
 	private int daysUntilToday(Date today, Date from) 
 	{
@@ -603,97 +827,146 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 	 * This code is writen by looking at GenericTopicDAO.java
 	 * @see
 	 */
-	public List notifyUsers(Forum forum) throws Exception {
+	public List notifyUsers(Forum forum) {
 		int posterId = SessionFacade.getUserSession().getUserId();
 		int anonUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 		
-		PreparedStatement stmt = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.notifyUsers"));		
-		ResultSet rs = null;
+		PreparedStatement stmt=null;
+        ResultSet rs = null;
+        try
+        {
+            stmt = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.notifyUsers"));
 
-		stmt.setInt(1, forum.getId());
-		stmt.setInt(2, posterId); //don't notify the poster
-		stmt.setInt(3, anonUser); //don't notify the anonimous user
-				
-		rs = stmt.executeQuery();
-		
-		List users = new ArrayList();
-		while(rs.next()) {
-			User user = new User();
+            stmt.setInt(1, forum.getId());
+            stmt.setInt(2, posterId); //don't notify the poster
+            stmt.setInt(3, anonUser); //don't notify the anonimous user
 
-			user.setId(rs.getInt("user_id"));
-			user.setEmail(rs.getString("user_email"));
-			user.setUsername(rs.getString("username"));
-			user.setLang(rs.getString("user_lang"));
-			
-			users.add(user);
-		}
-		
-		//Not sure what is this setting doing.. so comment out now...
+            rs = stmt.executeQuery();
+
+            List users = new ArrayList();
+            while(rs.next()) {
+                User user = new User();
+
+                user.setId(rs.getInt("user_id"));
+                user.setEmail(rs.getString("user_email"));
+                user.setUsername(rs.getString("username"));
+                user.setLang(rs.getString("user_lang"));
+
+                users.add(user);
+            }
+
+            //Not sure what is this setting doing.. so comment out now...
 //		// Set read status to false
 //		stmt = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.markAllAsUnread"));
 //		stmt.setInt(1, forum.getId());
 //		stmt.setInt(2, posterId); //don't notify the poster
 //		stmt.setInt(3, anonUser); //don't notify the anonimous user
-//		
+//
 //		stmt.executeUpdate();
-//			
-		rs.close();
-		stmt.close();
-		
-		return users;
+//
+            return users;
+        }
+        catch (SQLException e) {
+            String es = "Erorr notifyUsers()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, stmt);
+        }
+
+    }
+
+	public void subscribeUser(int forumId, int userId) {
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection(). prepareStatement(SystemGlobals.getSql("ForumModel.subscribeUser"));
+
+            p.setInt(1, forumId);
+            p.setInt(2, userId);
+
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr subscribeUser()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
 
 	}
 
-	public void subscribeUser(int forumId, int userId) throws Exception {
-		PreparedStatement p = JForumExecutionContext.getConnection(). prepareStatement(SystemGlobals.getSql("ForumModel.subscribeUser"));
-		
-		p.setInt(1, forumId);
-		p.setInt(2, userId);
-			
-		p.executeUpdate();
-		p.close();
+	public boolean isUserSubscribed(int forumId, int userId) {
+		PreparedStatement stmt=null;
+        ResultSet rs = null;
+        try
+        {
+            stmt = JForumExecutionContext.getConnection(). prepareStatement( SystemGlobals.getSql("ForumModel.isUserSubscribed"));
 
-	}
+            stmt.setInt(1, forumId);
+            stmt.setInt(2, userId);
 
-	public boolean isUserSubscribed(int forumId, int userId) throws Exception {
-		PreparedStatement stmt = JForumExecutionContext.getConnection(). prepareStatement( SystemGlobals.getSql("ForumModel.isUserSubscribed"));
-		ResultSet rs = null;
-		
-		stmt.setInt(1, forumId);
-		stmt.setInt(2, userId);
-		
-		rs = stmt.executeQuery();
-		boolean status = rs.next();
-		
-		rs.close();
-		stmt.close();
-				
-		return status;	
-	}
+            rs = stmt.executeQuery();
 
-	public void removeSubscription(int forumId, int userId) throws Exception {
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.removeSubscription"));
-		p.setInt(1, forumId);
-		p.setInt(2, userId);
-		
-		p.executeUpdate();
-		p.close();
-		
+            return rs.next();
+        }
+        catch (SQLException e) {
+            String es = "Erorr isUserSubscribed()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, stmt);
+        }
+    }
+
+	public void removeSubscription(int forumId, int userId) {
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.removeSubscription"));
+            p.setInt(1, forumId);
+            p.setInt(2, userId);
+
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr removeSubscription()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
+
 	}
 
 	/**
 	 * Remove all subscriptions on a forum, such as when a forum is locked.
 	 * It is not used now.
 	 * 
-	 * @param forumId
-	 * @throws Exception
+	 * @param forumId int
 	 */
-	public void removeSubscriptionByForum(int forumId) throws Exception {
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.removeSubscriptionByForum"));
-		p.setInt(1, forumId);
-		
-		p.executeUpdate();
-		p.close();		
-		
+	public void removeSubscriptionByForum(int forumId) {
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.removeSubscriptionByForum"));
+            p.setInt(1, forumId);
+
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr removeSubscriptionByForum()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
+
 	}
 }

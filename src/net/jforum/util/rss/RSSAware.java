@@ -46,7 +46,7 @@ package net.jforum.util.rss;
  * A RSS representation of some content.
  * 
  * @author Rafael Steil
- * @version $Id: RSSAware.java,v 1.6 2005/07/26 03:04:37 rafaelsteil Exp $
+ * @version $Id: RSSAware.java,v 1.7 2006/08/20 12:19:13 sergemaslyukov Exp $
  */
 public interface RSSAware
 {
@@ -56,5 +56,5 @@ public interface RSSAware
 	
 	public static final String DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss";
 	
-	public String createRSS() throws Exception;
+	public String createRSS() ;
 }

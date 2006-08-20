@@ -68,7 +68,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationHelper.java,v 1.26 2006/03/16 17:00:10 rafaelsteil Exp $
+ * @version $Id: ModerationHelper.java,v 1.27 2006/08/20 12:19:16 sergemaslyukov Exp $
  */
 public class ModerationHelper 
 {
@@ -78,7 +78,7 @@ public class ModerationHelper
 	public static final int FAILURE = 2;
 	public static final int IGNORE = 3;
 	
-	public int doModeration(String returnUrl) throws Exception
+	public int doModeration(String returnUrl)
 	{
 		int status = FAILURE;
 
@@ -126,12 +126,12 @@ public class ModerationHelper
 		return status;
 	}
 	
-	public int doModeration() throws Exception
+	public int doModeration() 
 	{
 		return this.doModeration(null);
 	}
 	
-	private void removeTopics() throws Exception
+	private void removeTopics()
 	{
 		String[] topics = JForumExecutionContext.getRequest().getParameterValues("topic_id");
 		
@@ -177,7 +177,7 @@ public class ModerationHelper
 		}
 	}
 	
-	private void lockUnlockTopics(int status) throws Exception
+	private void lockUnlockTopics(int status)
 	{
 		String[] topics = JForumExecutionContext.getRequest().getParameterValues("topic_id");
 		
@@ -196,7 +196,7 @@ public class ModerationHelper
 		}
 	}
 	
-	private void moveTopics() throws Exception
+	private void moveTopics()
 	{
 		SimpleHash context = JForumExecutionContext.getTemplateContext();
 		
@@ -235,7 +235,7 @@ public class ModerationHelper
 		}
 	}
 	
-	public int moveTopicsSave(String successUrl) throws Exception
+	public int moveTopicsSave(String successUrl)
 	{
 		int status = SUCCESS;
 		
@@ -251,8 +251,9 @@ public class ModerationHelper
 				int toForumId = Integer.parseInt(request.getParameter("to_forum"));
 				
 				DataAccessDriver.getInstance().newForumDAO().moveTopics(topics.split(","), fromForumId, toForumId);
-				
-				Forum fromForum = ForumRepository.getForum(fromForumId);
+
+                // TODO fromForum is not used. Remove or use
+                Forum fromForum = ForumRepository.getForum(fromForumId);
 				
 				ForumRepository.reloadForum(fromForumId);
 				ForumRepository.reloadForum(toForumId);

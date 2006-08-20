@@ -43,6 +43,7 @@
 package net.jforum.view.admin;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -62,13 +63,16 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
 import freemarker.template.SimpleHash;
+import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ConfigAction.java,v 1.14 2006/02/12 14:55:22 rafaelsteil Exp $
+ * @version $Id: ConfigAction.java,v 1.15 2006/08/20 12:19:14 sergemaslyukov Exp $
  */
 public class ConfigAction extends AdminCommand 
 {
+    private static final Logger log = Logger.getLogger(ConfigAction.class);
+
 	public ConfigAction() {}
 	
 	public ConfigAction(ActionServletRequest request, 
@@ -80,7 +84,7 @@ public class ConfigAction extends AdminCommand
 		this.context = context;
 	}
 	
-	public void list() throws Exception {
+	public void list() {
 		Properties p = new Properties();
 		Iterator iter = SystemGlobals.fetchConfigKeyIterator();
 
@@ -91,9 +95,18 @@ public class ConfigAction extends AdminCommand
 		}
 
 		Properties locales = new Properties();
-		locales.load(new FileInputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
-						+ "/languages/locales.properties"));
-		List localesList = new ArrayList();
+        try
+        {
+            locales.load(new FileInputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
+                            + "/languages/locales.properties"));
+        }
+        catch (IOException e)
+        {
+            String es = "Erorr list()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        List localesList = new ArrayList();
 
 		for (Enumeration e = locales.keys(); e.hasMoreElements();) {
 			localesList.add(e.nextElement());
@@ -104,7 +117,7 @@ public class ConfigAction extends AdminCommand
 		this.setTemplateName(TemplateKeys.CONFIG_LIST);
 	}
 
-	public void editSave() throws Exception 
+	public void editSave()
 	{
 		this.updateData(this.getConfig());
 		this.list();
@@ -126,7 +139,7 @@ public class ConfigAction extends AdminCommand
 		return p;
 	}
 	
-	void updateData(Properties p) throws Exception
+	void updateData(Properties p)
 	{
 		int oldTopicsPerPage = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
 

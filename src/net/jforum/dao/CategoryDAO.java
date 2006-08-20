@@ -47,14 +47,14 @@ import java.util.List;
 import net.jforum.entities.Category;
 
 /**
- * Model interface for {@link net.jforum.Category}.
+ * Model interface for {@link net.jforum.entities.Category}.
  * This interface defines methods which are expected to be
  * implementd by a specific data access driver. The intention is
  * to provide all functionality needed to update, insert, delete and
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: CategoryDAO.java,v 1.4 2005/07/26 03:04:31 rafaelsteil Exp $
+ * @version $Id: CategoryDAO.java,v 1.5 2006/08/20 12:19:00 sergemaslyukov Exp $
  */
 public interface CategoryDAO 
 {	
@@ -63,19 +63,17 @@ public interface CategoryDAO
 	 * 
 	 * @param categoryId The Category ID to search
 	 * @return <code>Category</code>object containing all the information
-	 * @throws Exception
 	 * @see #selectAll
 	 */
-	public Category selectById(int categoryId) throws Exception;
+	public Category selectById(int categoryId);
 	
 	/**
 	 * Selects all categories data from the database.
 	 * 
 	 * @return ArrayList with the categories found 
-	 * @throws Exception
 	 * @see #selectById
 	 */
-	public List selectAll() throws Exception;
+	public List selectAll();
 	
 	/**
 	 * Checks if is possible to delete a specific category.
@@ -83,59 +81,48 @@ public interface CategoryDAO
 	 * @param categoryId The category ID to verify
 	 * @return <code>true</code> if is possible to delete, <code>false</code> if not
 	 * @see #delete(int)
-	 * @throws Exception
 	 */
-	public boolean canDelete(int categoryId) throws Exception;
+	public boolean canDelete(int categoryId);
 	
 	/**
 	 * Delete a category.
 	 * 
 	 * @param categoryId The category ID to delete
-	 * @throws Exception
 	 * @see #canDelete(int)
 	 */
-	public void delete(int categoryId) throws Exception;
+	public void delete(int categoryId);
 	
 	/**
 	 * Updates a category.
 	 * 
 	 * @param category Reference to a <code>Category</code> object to update
-	 * @throws Exception
-	 * @see #update(int)
 	 */
-	public void update(Category category) throws Exception;
+	public void update(Category category);
 	
 	/**
 	 * Adds a new category.
 	 * 
 	 * @param category Reference to a valid and configured <code>Category</code> object
-	 * @throws Exception
+     * @return int
 	 */
-	public int addNew(Category category) throws Exception;
+	public int addNew(Category category);
 
 	/**
 	 * Changes the display order of some category.
 	 *  
 	 * @param category The <code>Category</code> instance to change its order
-	 * @return An <code>int</code> containing the id of the category which 
-	 * held the display order now represented by the category passed as
-	 * argument to the method.
-	 * 
-	 * @throws Exception
-	 * @see #setOrderDown(Category)
+	 * @see #setOrderDown(net.jforum.entities.Category, net.jforum.entities.Category)
+     * @param otherCategory Category
 	 */
-	public void setOrderUp(Category category, Category otherCategory) throws Exception;
+	public void setOrderUp(Category category, Category otherCategory);
 	
 	/**
 	 * Changes the display order of some category.
 	 *  
 	 * @param category The <code>Category</code> instance to change its order
-	 * @return An <code>int</code> containing the id of the category which 
-	 * held the display order now represented by the category passed as
-	 * argument to the method.
-	 * 
-	 * @throws Exception
-	 * @see #setOrderUp(Category)
+	 *
+	 * @see #setOrderUp(net.jforum.entities.Category, net.jforum.entities.Category)
+     * @param otherCategory Category
 	 */
-	public void setOrderDown(Category category, Category otherCategory) throws Exception;
+	public void setOrderDown(Category category, Category otherCategory);
 }

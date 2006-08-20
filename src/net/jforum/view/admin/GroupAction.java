@@ -64,19 +64,19 @@ import net.jforum.util.preferences.TemplateKeys;
  * ViewHelper class for group administration.
  * 
  * @author Rafael Steil
- * @version $Id: GroupAction.java,v 1.19 2006/05/07 14:56:20 rafaelsteil Exp $
+ * @version $Id: GroupAction.java,v 1.20 2006/08/20 12:19:14 sergemaslyukov Exp $
  */
 public class GroupAction extends AdminCommand 
 {
 	// Listing
-	public void list() throws Exception
+	public void list()
 	{
 		this.context.put("groups", new TreeGroup().getNodes());
 		this.setTemplateName(TemplateKeys.GROUP_LIST);
 	}
 	
 	// Insert
-	public void insert() throws Exception
+	public void insert()
 	{
 		this.context.put("groups", new TreeGroup().getNodes());
 		this.context.put("action", "insertSave");
@@ -85,7 +85,7 @@ public class GroupAction extends AdminCommand
 	}
 	
 	// Save information for an existing group
-	public void editSave() throws Exception
+	public void editSave()
 	{
 		int groupId = this.request.getIntParameter("group_id");
 			
@@ -108,7 +108,7 @@ public class GroupAction extends AdminCommand
 	}
 	
 	// Edit a group
-	public void edit() throws Exception
+	public void edit()
 	{
 		int groupId = this.request.getIntParameter("group_id");
 		GroupDAO gm = DataAccessDriver.getInstance().newGroupDAO();
@@ -122,7 +122,7 @@ public class GroupAction extends AdminCommand
 	}
 	
 	// Deletes a group
-	public void delete() throws Exception
+	public void delete() 
 	{		
 		String groupId[] = this.request.getParameterValues("group_id");
 		
@@ -154,7 +154,7 @@ public class GroupAction extends AdminCommand
 	}
 	
 	// Saves a new group
-	public void insertSave() throws Exception
+	public void insertSave()
 	{
 		GroupDAO gm = DataAccessDriver.getInstance().newGroupDAO();
 		
@@ -169,7 +169,7 @@ public class GroupAction extends AdminCommand
 	}
 	
 	// Permissions
-	public void permissions() throws Exception
+	public void permissions()
 	{
 		int id = this.request.getIntParameter("group_id");
 		
@@ -186,7 +186,7 @@ public class GroupAction extends AdminCommand
 		this.setTemplateName(TemplateKeys.GROUP_PERMISSIONS);
 	}
 	
-	public void permissionsSave() throws Exception
+	public void permissionsSave()
 	{
 		int id = this.request.getIntParameter("id");
 		

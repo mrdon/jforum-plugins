@@ -51,17 +51,17 @@ import net.jforum.view.forum.common.BannerCommon;
 
 /**
  * @author Samuel Yung
- * @version $Id: BannerAction.java,v 1.5 2006/01/29 15:06:58 rafaelsteil Exp $
+ * @version $Id: BannerAction.java,v 1.6 2006/08/20 12:19:15 sergemaslyukov Exp $
  */
 public class BannerAction extends Command
 {
 	// dummy listing... there's no need to list in banners
-	public void list() throws Exception
+	public void list()
 	{
 	}
 
 	// redirect
-	public void redirect() throws Exception
+	public void redirect() 
 	{
 		int bannerId = this.request.getIntParameter("banner_id");
 		if(!(new BannerCommon()).canBannerDisplay(bannerId))

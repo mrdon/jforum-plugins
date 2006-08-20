@@ -46,9 +46,9 @@ import java.util.List;
 
 /**
  * @author Rafael Steil
- * @version $Id: TreeGroupDAO.java,v 1.4 2005/07/26 03:04:31 rafaelsteil Exp $
+ * @version $Id: TreeGroupDAO.java,v 1.5 2006/08/20 12:19:02 sergemaslyukov Exp $
  */
 public interface TreeGroupDAO 
 {
-	public List selectGroups(int parentId) throws Exception;
+	public List selectGroups(int parentId) ;
 }

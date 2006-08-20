@@ -51,72 +51,60 @@ public interface PollDAO {
 	 * 
 	 * @param pollId The Poll ID to search
 	 * @return <code>Poll</code>object containing all the information
-	 * @throws Exception
 	 */
-	public Poll selectById(int pollId) throws Exception;
+	public Poll selectById(int pollId) ;
 		
 	/**
 	 * Delete a Poll.
 	 * 
 	 * @param pollId The Poll to delete
-	 * @throws Exception
-	 * @see #canDelete(int)
 	 */
-	public void delete(int pollId) throws Exception;
+	public void delete(int pollId) ;
 		
 	/**
 	 * Delete a Poll.
 	 * 
 	 * @param topicId The topic id for the poll to delete
-	 * @throws Exception
-	 * @see #canDelete(int)
 	 */
-	public void deleteByTopicId(int topicId) throws Exception;
+	public void deleteByTopicId(int topicId) ;
 	
 	/**
 	 * Updates a Poll.
 	 * 
 	 * @param poll Reference to a <code>Poll</code> object to update
-	 * @throws Exception
-	 * @see #update(int)
 	 */
-	public void update(Poll poll) throws Exception;
+	public void update(Poll poll) ;
 	
 	/**
 	 * Adds a new Poll.
 	 * 
-	 * @param Poll Reference to a valid and configured <code>Poll</code> object
+	 * @param poll Poll Reference to a valid and configured <code>Poll</code> object
 	 * @return The new ID
-	 * @throws Exception
 	 */
-	public int addNew(Poll poll) throws Exception;
+	public int addNew(Poll poll) ;
 
 	/**
 	 * Increments the vote count on the poll for the given poll id and option id
 	 * @param pollId the poll id that the vote is for
 	 * @param optionId the option that was selected for the poll
-	 * @param userId TODO
-	 * @param ipAddress TODO
-	 * @throws Exception
+	 * @param userId int TODO
+	 * @param ipAddress String TODO
 	 */
-	public void voteOnPoll(int pollId, int optionId, int userId, String ipAddress) 
-	throws Exception;
+	public void voteOnPoll(int pollId, int optionId, int userId, String ipAddress);
 	
 	/**
 	 * Tells if the user has already voted on the given poll
 	 * @param pollId the poll id that is being checked
 	 * @param userId the user id to check the vote for
 	 * @return true if the user has already voted on the given poll
-	 * @throws Exception
 	 */
-	public boolean hasUserVotedOnPoll(int pollId, int userId) throws Exception;
+	public boolean hasUserVotedOnPoll(int pollId, int userId) ;
 	
 	/**
 	 * Tells if any user has already voted on the given poll from the given IP
 	 * @param pollId the poll id that is being checked
 	 * @param ipAddress the IP address of the user to check the vote for
 	 * @return true if the user has already voted on the given poll
-	 * @throws Exception
 	 */
-	public boolean hasUserVotedOnPoll(int pollId, String ipAddress) throws Exception;
+	public boolean hasUserVotedOnPoll(int pollId, String ipAddress) ;
 }

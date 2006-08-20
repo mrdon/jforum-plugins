@@ -54,7 +54,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModulesRepository.java,v 1.9 2006/01/29 15:07:18 rafaelsteil Exp $
+ * @version $Id: ModulesRepository.java,v 1.10 2006/08/20 12:19:09 sergemaslyukov Exp $
  */
 public class ModulesRepository
 {
@@ -70,7 +70,7 @@ public class ModulesRepository
 	 * is placed.
 	 * @throws IOException
 	 */
-	public static void init(String baseDir) throws IOException
+	public static void init(String baseDir)
 	{
 		cache.put(ENTRIES, ConfigLoader.loadModulesMapping(baseDir));
 	}

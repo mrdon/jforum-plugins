@@ -51,13 +51,13 @@ import net.jforum.entities.PollOption;
 
 /**
  * @author David Almilli
- * @version $Id: PollCommon.java,v 1.4 2006/01/29 15:07:12 rafaelsteil Exp $
+ * @version $Id: PollCommon.java,v 1.5 2006/08/20 12:19:17 sergemaslyukov Exp $
  */
 public class PollCommon
 {
 	private PollCommon() {}
 
-	public static Poll fillPollFromRequest() throws Exception
+	public static Poll fillPollFromRequest() 
 	{
 		ActionServletRequest request = JForumExecutionContext.getRequest();
 		String label = request.getParameter("poll_label");

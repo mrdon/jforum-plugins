@@ -55,8 +55,8 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import net.jforum.JForumExecutionContext;
-import net.jforum.exceptions.XMLException;
 import net.jforum.util.FormSelectedData;
+import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.SystemGlobals;
 
 import org.xml.sax.Attributes;
@@ -64,16 +64,19 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
+import org.apache.log4j.Logger;
 
- /**
+/**
  * Manipulates XML permission control file definition 
  * 
  * @author Rafael Steil
- * @version $Id: XMLPermissionControl.java,v 1.13 2006/02/20 16:53:36 rafaelsteil Exp $
+ * @version $Id: XMLPermissionControl.java,v 1.14 2006/08/20 12:19:09 sergemaslyukov Exp $
  */
 public class XMLPermissionControl extends DefaultHandler 
 {
-	private PermissionSection section;
+    private static final Logger log = Logger.getLogger(XMLPermissionControl.class);
+    
+    private PermissionSection section;
 
 	private PermissionControl pc;
 	
@@ -124,27 +127,36 @@ public class XMLPermissionControl extends DefaultHandler
 	 * which represent the permission elements of some section. For its turn, the
 	 * <code>PermissionItem</code> objects have many <code>FormSelectedData</code>
 	 * objects, which are the ones responsible to store field values, and which values
-	 * are checked and which not. 
+	 * are checked and which not.
+     * @param xmlFile String
 	 */
 	public List loadConfigurations(String xmlFile)
-		throws Exception 
 	{
-		SAXParserFactory factory = SAXParserFactory.newInstance();
-		factory.setValidating(false);
-		
-		SAXParser parser = factory.newSAXParser();
-		File fileInput = new File(xmlFile);
-		
-		if (fileInput.exists()) {
-			parser.parse(fileInput, this);
-		}
-		else {
-			InputSource inputSource = new InputSource(xmlFile);
-			parser.parse(inputSource, this);
-		}
-		
-		return this.listSections;
-	}
+        try
+        {
+            SAXParserFactory factory = SAXParserFactory.newInstance();
+            factory.setValidating(false);
+
+            SAXParser parser = factory.newSAXParser();
+            File fileInput = new File(xmlFile);
+
+            if (fileInput.exists()) {
+                parser.parse(fileInput, this);
+            }
+            else {
+                InputSource inputSource = new InputSource(xmlFile);
+                parser.parse(inputSource, this);
+            }
+
+            return this.listSections;
+        }
+        catch (Exception e)
+        {
+            String es = "Erorr loadConfigurations()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+    }
 
 	/**
 	 * @see org.xml.sax.ContentHandler#endElement(String, String, String)
@@ -190,13 +202,13 @@ public class XMLPermissionControl extends DefaultHandler
 			this.alreadySelected = false;
 		}
 		else if (tag.equals("sql")) {
-			ResultSet rs = null;
-			PreparedStatement p = null;
-			
+
 			String refName = atts.getValue("refName");
 			
 			// If refName is present, then we have a template query
 			if (refName != null) {
+                ResultSet rs = null;
+                PreparedStatement p = null;
 				try {
 					p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql(atts.getValue("queryName")));
 					rs = p.executeQuery();
@@ -213,18 +225,12 @@ public class XMLPermissionControl extends DefaultHandler
 					this.queries.put(refName, l);
 				}
 				catch (Exception e) {
-					throw new XMLException(e);
+                    String es = "Erorr startElement()";
+                    log.error(es, e);
+                    throw new RuntimeException(es, e);
 				}
 				finally {
-					try {
-						if (rs != null) {
-							rs.close();
-							p.close();
-						}
-					}
-					catch (Exception e) {
-						throw new XMLException(e);
-					}
+                    DbUtils.close(rs, p);
 				}
 			}
 			else {

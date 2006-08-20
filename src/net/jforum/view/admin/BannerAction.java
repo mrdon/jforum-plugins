@@ -52,12 +52,12 @@ import net.jforum.util.preferences.TemplateKeys;
  * ViewHelper class for banner administration.
  *
  * @author Samuel Yung
- * @version $Id: BannerAction.java,v 1.4 2005/07/26 03:05:41 rafaelsteil Exp $
+ * @version $Id: BannerAction.java,v 1.5 2006/08/20 12:19:14 sergemaslyukov Exp $
  */
 public class BannerAction extends AdminCommand
 {
 	// Listing
-	public void list() throws Exception
+	public void list()
 	{
 		this.context.put("banners",
 			DataAccessDriver.getInstance().newBannerDAO().selectAll());
@@ -65,14 +65,14 @@ public class BannerAction extends AdminCommand
 	}
 
 	// Insert
-	public void insert() throws Exception
+	public void insert()
 	{
 		this.context.put("action", "insertSave");
 		this.setTemplateName(TemplateKeys.BANNER_INSERT);
 	}
 
 	// Saves a new banner
-	public void insertSave() throws Exception
+	public void insertSave()
 	{
 		BannerDAO dao = DataAccessDriver.getInstance().newBannerDAO();
 
@@ -82,7 +82,7 @@ public class BannerAction extends AdminCommand
 	}
 
 	// Edit a banner
-	public void edit() throws Exception
+	public void edit()
 	{
 		int bannerId = this.request.getIntParameter("banner_id");
 		BannerDAO dao = DataAccessDriver.getInstance().newBannerDAO();
@@ -93,7 +93,7 @@ public class BannerAction extends AdminCommand
 	}
 
 	// Save information for an existing banner
-	public void editSave() throws Exception
+	public void editSave() 
 	{
 		int bannerId = this.request.getIntParameter("banner_id");
 
@@ -106,7 +106,7 @@ public class BannerAction extends AdminCommand
 	}
 
 	// Delete a banner
-	public void delete() throws Exception
+	public void delete() 
 	{
 		String bannerId = this.request.getParameter("banner_id");
 		if(bannerId == null)

@@ -60,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * SystemGlobals.properties.
  * 
  * @author Rafael Steil
- * @version $Id: DataSourceConnection.java,v 1.7 2005/11/30 19:41:28 rafaelsteil Exp $
+ * @version $Id: DataSourceConnection.java,v 1.8 2006/08/20 12:18:59 sergemaslyukov Exp $
  */
 public class DataSourceConnection extends DBConnection
 {
@@ -94,10 +94,15 @@ public class DataSourceConnection extends DBConnection
 	 */
 	public void releaseConnection(Connection conn)
 	{
+        if (conn==null) {
+            return;
+        }
 		try {
 			conn.close();
 		}
-		catch (Exception e) {}
+		catch (Exception e) {
+            // catch error of close of connection
+        }
 	}
 
 	/**

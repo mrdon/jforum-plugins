@@ -45,6 +45,7 @@ package net.jforum.dao.generic;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -59,36 +60,50 @@ import net.jforum.entities.PrivateMessageType;
 import net.jforum.entities.User;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.DbUtils;
+import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericPrivateMessageDAO.java,v 1.7 2006/05/14 23:59:49 rafaelsteil Exp $
+ * @version $Id: GenericPrivateMessageDAO.java,v 1.8 2006/08/20 12:19:04 sergemaslyukov Exp $
  */
 public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao.PrivateMessageDAO
 {
-	/** 
+    private final static Logger log = Logger.getLogger(GenericPrivateMessageDAO.class);
+
+    /**
 	 * @see net.jforum.dao.PrivateMessageDAO#send(net.jforum.entities.PrivateMessage)
 	 */
-	public void send(PrivateMessage pm) throws Exception
+	public void send(PrivateMessage pm)
 	{
 		// We should store 2 copies: one for the sendee's sent box
 		// and another for the target user's inbox.
-		PreparedStatement p = this.getStatementForAutoKeys("PrivateMessageModel.add");
+		PreparedStatement p=null;
+        try
+        {
+            p = this.getStatementForAutoKeys("PrivateMessageModel.add");
 
-		// Sendee's sent box
-		this.addPm(pm, p);
-		this.addPmText(pm);
-		
-		// Target user's inbox
-		p.setInt(1, PrivateMessageType.NEW);
-		pm.setId(this.executeAutoKeysQuery(p));
-		
-		this.addPmText(pm);
-		
-		p.close();
-	}
+            // Sendee's sent box
+            this.addPm(pm, p);
+            this.addPmText(pm);
+
+            // Target user's inbox
+            p.setInt(1, PrivateMessageType.NEW);
+            pm.setId(this.executeAutoKeysQuery(p));
+
+            this.addPmText(pm);
+        }
+        catch (SQLException e) {
+            String es = "Erorr send()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
+    }
 	
-	protected void addPmText(PrivateMessage pm) throws Exception
+	protected void addPmText(PrivateMessage pm) throws SQLException
 	{
 		PreparedStatement text = JForumExecutionContext.getConnection().prepareStatement(
 				SystemGlobals.getSql("PrivateMessagesModel.addText"));
@@ -100,7 +115,7 @@ public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao
 		text.close();
 	}
 	
-	protected void addPm(PrivateMessage pm, PreparedStatement p) throws Exception
+	protected void addPm(PrivateMessage pm, PreparedStatement p) throws SQLException
 	{
 		p.setInt(1, PrivateMessageType.SENT);
 		p.setString(2, pm.getPost().getSubject());
@@ -119,96 +134,126 @@ public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao
 	/** 
 	 * @see net.jforum.dao.PrivateMessageDAO#delete(net.jforum.entities.PrivateMessage[])
 	 */
-	public void delete(PrivateMessage[] pm) throws Exception
+	public void delete(PrivateMessage[] pm) 
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessageModel.delete"));
-		p.setInt(2, pm[0].getFromUser().getId());
-		p.setInt(3, pm[0].getFromUser().getId());
-		
-		PreparedStatement deleteText = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessagesModel.deleteText"));
-		
-		for (int i = 0; i < pm.length; i++) {
-			deleteText.setInt(1, pm[i].getId());
-			deleteText.executeUpdate();
-			
-			p.setInt(1, pm[i].getId());
-			p.executeUpdate();
-		}
-		
-		deleteText.close();
-		p.close();
-	}
+		PreparedStatement p=null;
+        PreparedStatement deleteText=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessageModel.delete"));
+            p.setInt(2, pm[0].getFromUser().getId());
+            p.setInt(3, pm[0].getFromUser().getId());
+
+            deleteText = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessagesModel.deleteText"));
+
+            for (int i = 0; i < pm.length; i++) {
+                deleteText.setInt(1, pm[i].getId());
+                deleteText.executeUpdate();
+
+                p.setInt(1, pm[i].getId());
+                p.executeUpdate();
+            }
+        }
+        catch (SQLException e) {
+            String es = "Erorr delete()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close( p);
+            DbUtils.close( deleteText);
+        }
+    }
 
 	/**
 	 * @see net.jforum.dao.PrivateMessageDAO#selectFromInbox(net.jforum.entities.User)
 	 */
-	public List selectFromInbox(User user) throws Exception
+	public List selectFromInbox(User user)
 	{
 		String query = SystemGlobals.getSql("PrivateMessageModel.baseListing");
 		query = query.replaceAll("#FILTER#", SystemGlobals.getSql("PrivateMessageModel.inbox"));
 		
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(query);
-		p.setInt(1, user.getId());
-		
-		List pmList = new ArrayList();
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(query);
+            p.setInt(1, user.getId());
 
-		ResultSet rs = p.executeQuery();
-		while (rs.next()) {
-			PrivateMessage pm = this.getPm(rs, false);
-			
-			User fromUser = new User();
-			fromUser.setId(rs.getInt("user_id"));
-			fromUser.setUsername(rs.getString("username"));
-			
-			pm.setFromUser(fromUser);
-			
-			pmList.add(pm);
-		}
-		
-		rs.close();
-		p.close();
-		
-		return pmList;
-	}
+            List pmList = new ArrayList();
+
+            rs = p.executeQuery();
+            while (rs.next()) {
+                PrivateMessage pm = this.getPm(rs, false);
+
+                User fromUser = new User();
+                fromUser.setId(rs.getInt("user_id"));
+                fromUser.setUsername(rs.getString("username"));
+
+                pm.setFromUser(fromUser);
+
+                pmList.add(pm);
+            }
+
+            return pmList;
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectFromInbox()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 
 	/** 
 	 * @see net.jforum.dao.PrivateMessageDAO#selectFromSent(net.jforum.entities.User)
 	 */
-	public List selectFromSent(User user) throws Exception
+	public List selectFromSent(User user)
 	{
 		String query = SystemGlobals.getSql("PrivateMessageModel.baseListing");
 		query = query.replaceAll("#FILTER#", SystemGlobals.getSql("PrivateMessageModel.sent"));
 		
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(query);
-		p.setInt(1, user.getId());
-		
-		List pmList = new ArrayList();
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(query);
+            p.setInt(1, user.getId());
 
-		ResultSet rs = p.executeQuery();
-		while (rs.next()) {
-			PrivateMessage pm = this.getPm(rs, false);
-			
-			User toUser = new User();
-			toUser.setId(rs.getInt("user_id"));
-			toUser.setUsername(rs.getString("username"));
-			
-			pm.setToUser(toUser);
-			
-			pmList.add(pm);
-		}
-		
-		rs.close();
-		p.close();
-		
-		return pmList;
-	}
+            List pmList = new ArrayList();
+
+            rs = p.executeQuery();
+            while (rs.next()) {
+                PrivateMessage pm = this.getPm(rs, false);
+
+                User toUser = new User();
+                toUser.setId(rs.getInt("user_id"));
+                toUser.setUsername(rs.getString("username"));
+
+                pm.setToUser(toUser);
+
+                pmList.add(pm);
+            }
+            return pmList;
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectFromSent()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 	
-	protected PrivateMessage getPm(ResultSet rs) throws Exception
+	protected PrivateMessage getPm(ResultSet rs) throws SQLException
 	{
 		return this.getPm(rs, true);
 	}
 	
-	protected PrivateMessage getPm(ResultSet rs, boolean full) throws Exception
+	protected PrivateMessage getPm(ResultSet rs, boolean full) throws SQLException
 	{
 		PrivateMessage pm = new PrivateMessage();
 		Post p = new Post();
@@ -238,7 +283,7 @@ public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao
 		return pm;
 	}
 	
-	protected String getPmText(ResultSet rs) throws Exception
+	protected String getPmText(ResultSet rs) throws SQLException
 	{
 		return rs.getString("privmsgs_text");
 	}
@@ -246,31 +291,52 @@ public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao
 	/** 
 	 * @see net.jforum.dao.PrivateMessageDAO#selectById(net.jforum.entities.PrivateMessage)
 	 */
-	public PrivateMessage selectById(PrivateMessage pm) throws Exception
+	public PrivateMessage selectById(PrivateMessage pm)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessageModel.selectById"));
-		p.setInt(1, pm.getId());
-		
-		ResultSet rs = p.executeQuery();
-		if (rs.next()) {
-			pm = this.getPm(rs);
-		}
-		
-		rs.close();
-		p.close();
-		
-		return pm;
-	}
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessageModel.selectById"));
+            p.setInt(1, pm.getId());
+
+            rs = p.executeQuery();
+            if (rs.next()) {
+                pm = this.getPm(rs);
+            }
+
+            return pm;
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectById()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 
 	/** 
 	 * @see net.jforum.dao.PrivateMessageDAO#updateType(net.jforum.entities.PrivateMessage)
 	 */
-	public void updateType(PrivateMessage pm) throws Exception
+	public void updateType(PrivateMessage pm)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessageModel.updateType"));
-		p.setInt(1,pm.getType());
-		p.setInt(2, pm.getId());
-		p.executeUpdate();
-		p.close();
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessageModel.updateType"));
+            p.setInt(1,pm.getType());
+            p.setInt(2, pm.getId());
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr updateType()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close( p);
+        }
 	}
 }

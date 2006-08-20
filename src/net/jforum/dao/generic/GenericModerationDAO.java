@@ -42,10 +42,7 @@
  */
 package net.jforum.dao.generic;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,70 +54,95 @@ import net.jforum.entities.ModerationPendingInfo;
 import net.jforum.entities.Post;
 import net.jforum.entities.TopicModerationInfo;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.DbUtils;
+import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericModerationDAO.java,v 1.5 2006/01/29 15:06:21 rafaelsteil Exp $
+ * @version $Id: GenericModerationDAO.java,v 1.6 2006/08/20 12:19:04 sergemaslyukov Exp $
  */
 public class GenericModerationDAO implements ModerationDAO
 {
-	/**
+    private final static Logger log = Logger.getLogger(GenericModerationDAO.class);
+    
+    /**
 	 * @see net.jforum.dao.ModerationDAO#aprovePost(int)
 	 */
-	public void aprovePost(int postId) throws Exception
+	public void aprovePost(int postId)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("ModerationModel.aprovePost"));
-		p.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
-		p.setInt(2, postId);
-		p.executeUpdate();
-		p.close();
-	}
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("ModerationModel.aprovePost"));
+            p.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+            p.setInt(2, postId);
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectActiveBannerByPlacement()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
+    }
 	
 	/**
 	 * @see net.jforum.dao.ModerationDAO#topicsByForum(int)
 	 */
-	public Map topicsByForum(int forumId) throws Exception
+	public Map topicsByForum(int forumId)
 	{
 		Map m = new HashMap();
 		
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("ModerationModel.topicsByForum"));
-		p.setInt(1, forumId);
-		
-		int lastId = 0;
-		TopicModerationInfo info = null;
-		
-		ResultSet rs = p.executeQuery();
-		while (rs.next()) {
-			int id = rs.getInt("topic_id");
-			if (id != lastId) {
-				lastId = id;
-				
-				if (info != null) {
-					m.put(new Integer(info.getTopicId()), info);
-				}
-				
-				info = new TopicModerationInfo();
-				info.setTopicId(id);
-				info.setTopicReplies(rs.getInt("topic_replies"));
-				info.setTopicTitle(rs.getString("topic_title"));
-			}
-			
-			info.addPost(this.getPost(rs));
-		}
-		
-		if (info != null) {
-			m.put(new Integer(info.getTopicId()), info);
-		}
-		
-		rs.close();
-		p.close();
-		
-		return m;
-	}
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("ModerationModel.topicsByForum"));
+            p.setInt(1, forumId);
+
+            int lastId = 0;
+            TopicModerationInfo info = null;
+
+            rs = p.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("topic_id");
+                if (id != lastId) {
+                    lastId = id;
+
+                    if (info != null) {
+                        m.put(new Integer(info.getTopicId()), info);
+                    }
+
+                    info = new TopicModerationInfo();
+                    info.setTopicId(id);
+                    info.setTopicReplies(rs.getInt("topic_replies"));
+                    info.setTopicTitle(rs.getString("topic_title"));
+                }
+
+                // TODO object info can be null at this line and NPE possible
+                info.addPost(this.getPost(rs));
+            }
+
+            if (info != null) {
+                m.put(new Integer(info.getTopicId()), info);
+            }
+            return m;
+        }
+        catch (SQLException e) {
+            String es = "Erorr topicsByForum()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 	
-	protected Post getPost(ResultSet rs) throws Exception
+	protected Post getPost(ResultSet rs) throws SQLException
 	{
 		Post p = new Post();
 		p.setPostUsername(rs.getString("username"));
@@ -135,7 +157,7 @@ public class GenericModerationDAO implements ModerationDAO
 		return p;
 	}
 	
-	protected String getPostTextFromResultSet(ResultSet rs) throws Exception
+	protected String getPostTextFromResultSet(ResultSet rs) throws SQLException
 	{
 		return rs.getString("post_text");
 	}
@@ -143,41 +165,49 @@ public class GenericModerationDAO implements ModerationDAO
 	/**
 	 * @see net.jforum.dao.ModerationDAO#categoryPendingModeration()
 	 */
-	public List categoryPendingModeration() throws Exception
+	public List categoryPendingModeration()
 	{
 		List l = new ArrayList();
 		int lastId = 0;
 		ModerationPendingInfo info = null;
-		Statement s = JForumExecutionContext.getConnection().createStatement();
-		
-		ResultSet rs = s.executeQuery(SystemGlobals.getSql("ModerationModel.categoryPendingModeration"));
-		while (rs.next()) {
-			int id = rs.getInt("categories_id");
-			if (id != lastId) {
-				lastId = id;
-				
-				if (info != null) {
-					l.add(info);
-				}
-				
-				info = new ModerationPendingInfo();
-				info.setCategoryName(rs.getString("title"));
-				info.setCategoryId(id);
-			}
-			
-			info.addInfo(rs.getString("forum_name"), 
-					rs.getInt("forum_id"), 
-					rs.getInt("total"));
-		}
-		
-		if (info != null) {
-			l.add(info);
-		}
-		
-		rs.close();
-		s.close();
-		
-		return l;
-	}
-	
+		Statement s=null;
+        ResultSet rs=null;
+        try
+        {
+            s = JForumExecutionContext.getConnection().createStatement();
+
+            rs = s.executeQuery(SystemGlobals.getSql("ModerationModel.categoryPendingModeration"));
+            while (rs.next()) {
+                int id = rs.getInt("categories_id");
+                if (id != lastId) {
+                    lastId = id;
+
+                    if (info != null) {
+                        l.add(info);
+                    }
+
+                    info = new ModerationPendingInfo();
+                    info.setCategoryName(rs.getString("title"));
+                    info.setCategoryId(id);
+                }
+
+                // TODO object info can be null at this line and NPE possible
+                info.addInfo(rs.getString("forum_name"), rs.getInt("forum_id"), rs.getInt("total"));
+            }
+
+            if (info != null) {
+                l.add(info);
+            }
+
+            return l;
+        }
+        catch (SQLException e) {
+            String es = "Erorr categoryPendingModeration()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, s);
+        }
+    }
 }

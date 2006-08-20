@@ -125,7 +125,7 @@ import net.jforum.dao.TreeGroupDAO;
  * The same operation is done to all other groups and its sub groups. 
  * 
  * @author Rafael Steil
- * @version $Id: TreeGroup.java,v 1.8 2005/11/30 13:17:10 rafaelsteil Exp $
+ * @version $Id: TreeGroup.java,v 1.9 2006/08/20 12:19:11 sergemaslyukov Exp $
  */
 public class TreeGroup 
 {
@@ -141,7 +141,7 @@ public class TreeGroup
 	 * @return <code>List</code> containing the complete group hierarchy. Each element
 	 * from the list represents a single <code>GroupNode<code> object.	 
 	 * */
-	public List getNodes() throws Exception
+	public List getNodes()
 	{
 		List nodes = new ArrayList();
 		
@@ -162,8 +162,10 @@ public class TreeGroup
 	
 	/**
 	 * Searchs for subgroups of a determined group
-	 * */
-	private void checkExtraNodes(GroupNode n) throws Exception
+	 *
+     * @param n  GroupNode
+     */
+	private void checkExtraNodes(GroupNode n)
 	{
 		TreeGroupDAO tgm = DataAccessDriver.getInstance().newTreeGroupDAO();
 

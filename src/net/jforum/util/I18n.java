@@ -64,10 +64,12 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: I18n.java,v 1.30 2005/10/30 15:48:17 rafaelsteil Exp $
+ * @version $Id: I18n.java,v 1.31 2006/08/20 12:19:11 sergemaslyukov Exp $
  */
 public class I18n
 {
+    private static final Logger logger = Logger.getLogger(I18n.class);
+
 	private static I18n classInstance = new I18n();
 	private static Map messagesMap = new HashMap();
 	private static Properties localeNames = new Properties();
@@ -77,7 +79,6 @@ public class I18n
 	public static final String CANNOT_DELETE_GROUP = "CannotDeleteGroup";
 	public static final String CANNOT_DELETE_CATEGORY = "CannotDeleteCategory";
 	public static final String CANNOT_DELETE_BANNER = "CannotDeleteBanner";
-	private static final Logger logger = Logger.getLogger(I18n.class);
 
 	private I18n() {}
 
@@ -94,9 +95,8 @@ public class I18n
 	/**
 	 * Load the default I18n file
 	 * 
-	 * @throws IOException
 	 */
-	public static synchronized void load() throws IOException
+	public static synchronized void load() 
 	{
 		baseDir = SystemGlobals.getApplicationResourceDir() + "/" + SystemGlobals.getValue(ConfigKeys.LOCALES_DIR);
 
@@ -112,23 +112,32 @@ public class I18n
 		}
 	}
 	
-	public static void changeBoardDefault(String newDefaultLanguage) throws Exception
+	public static void changeBoardDefault(String newDefaultLanguage)
 	{
 		load(newDefaultLanguage, SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT_ADMIN));
 		defaultName = newDefaultLanguage;
 	}
 
-	private static void loadLocales() throws IOException
+	private static void loadLocales()
 	{
-		localeNames.load(new FileInputStream(baseDir + SystemGlobals.getValue(ConfigKeys.LOCALES_NAMES)));
-	}
+        try
+        {
+            localeNames.load(new FileInputStream(baseDir + SystemGlobals.getValue(ConfigKeys.LOCALES_NAMES)));
+        }
+        catch (IOException e)
+        {
+            String es = "Erorr loadLocales()";
+            logger.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+    }
 
-	static void load(String localeName, String mergeWith) throws IOException
+	static void load(String localeName, String mergeWith)
 	{
 		load(localeName, mergeWith, false);
 	}
 
-	static void load(String localeName, String mergeWith, boolean force) throws IOException
+	static void load(String localeName, String mergeWith, boolean force)
 	{
 		if (!force && (localeName == null || localeName.trim().equals("") || I18n.contains(localeName))) {
 			return;
@@ -148,8 +157,17 @@ public class I18n
 			p.putAll((Properties) messagesMap.get(mergeWith));
 		}
 
-		p.load(new FileInputStream(baseDir + localeNames.getProperty(localeName)));
-		messagesMap.put(localeName, p);
+        try
+        {
+            p.load(new FileInputStream(baseDir + localeNames.getProperty(localeName)));
+        }
+        catch (IOException e)
+        {
+            String es = "Erorr load()";
+            logger.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        messagesMap.put(localeName, p);
 
 		watchForChanges(localeName);
 	}
@@ -160,9 +178,8 @@ public class I18n
 	 * 
 	 * @param localeName
 	 *            The locale name to load
-	 * @throws IOException
 	 */
-	public static void load(String localeName) throws IOException
+	public static void load(String localeName)
 	{
 		load(localeName, SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT));
 	}
@@ -188,15 +205,11 @@ public class I18n
 					 */
 					public void fileChanged(String filename)
 					{
-						logger.info("Reloading i18n for " + localeName);
+						if (logger.isDebugEnabled()) {
+                            logger.info("Reloading i18n for " + localeName);
+                        }
 
-						try {
-							I18n.load(localeName, SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT), true);
-						}
-						catch (IOException e) {
-							logger.warn(e);
-							e.printStackTrace();
-						}
+                        I18n.load(localeName, SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT), true);
 					}
 				}, baseDir + localeNames.getProperty(localeName), fileChangesDelay);
 			}
@@ -223,6 +236,9 @@ public class I18n
 
 	/**
 	 * @see #getMessage(String, String, Object[])
+     * @param messageName String
+     * @param params Object
+     * @return String
 	 */
 	public static String getMessage(String messageName, Object params[])
 	{
@@ -246,17 +262,12 @@ public class I18n
 	 *            The message name to retrieve. Must be a valid entry into the file specified by
 	 *            <code>i18n.file</code> property.
 	 * @return String With the message
+     * @param localeName String
 	 */
 	public static String getMessage(String localeName, String m)
 	{
 		if (!messagesMap.containsKey(localeName)) {
-			try {
-				load(localeName);
-			}
-			catch (IOException e) {
-				logger.warn("Error loading locale " + localeName + ". " + e.getMessage());
-				return null;
-			}
+            load(localeName);
 		}
 
 		return (((Properties) messagesMap.get(localeName)).getProperty(m));
@@ -280,7 +291,7 @@ public class I18n
 	 * Gets the language name for the current request.
 	 * The method will first look at {@link UserSession#getLang()}  and use 
 	 * it if any value is found. Otherwise, the default board language will be used
-	 * @return
+	 * @return String
 	 */
 	public static String getUserLanguage()
 	{
@@ -296,7 +307,7 @@ public class I18n
 	/**
 	 * Check whether the language is loaded in i18n.
 	 * 
-	 * @param language
+	 * @param language String
 	 * @return boolean
 	 */
 	public static boolean contains(String language)

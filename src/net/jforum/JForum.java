@@ -74,7 +74,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.93 2006/04/29 17:07:30 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.94 2006/08/20 12:18:59 sergemaslyukov Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
@@ -110,8 +110,9 @@ public class JForum extends JForumBaseServlet
 			RankingRepository.loadRanks();
 			SmiliesRepository.loadSmilies();
 		}
-		catch (Exception e) {
-			throw new ForumStartupException("Error while starting jforum", e);
+		catch (Throwable e) {
+            e.printStackTrace();
+            throw new ForumStartupException("Error while starting jforum", e);
 		}
 		finally {
 			JForumExecutionContext.finish();
@@ -223,7 +224,9 @@ public class JForum extends JForumBaseServlet
 			try {
 				if (out != null) { out.close(); }
 			}
-			catch (Exception e) {}
+			catch (Exception e) {
+                // catch close error 
+            }
 			
 			String redirectTo = JForumExecutionContext.getRedirectTo();
 			JForumExecutionContext.finish();

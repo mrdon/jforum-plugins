@@ -42,19 +42,22 @@
  */
 package net.jforum.view.install;
 
+import org.apache.log4j.Logger;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Rafael Steil
- * @version $Id: ParseDBStructFile.java,v 1.3 2005/12/27 18:09:56 rafaelsteil Exp $
+ * @version $Id: ParseDBStructFile.java,v 1.4 2006/08/20 12:19:18 sergemaslyukov Exp $
  */
 public class ParseDBStructFile
 {
-	public static List parse(String filename) throws IOException
+    private static final Logger log = Logger.getLogger(ParseDBStructFile.class);
+    
+    public static List parse(String filename)
 	{
 		List statements = new ArrayList();
 		
@@ -63,13 +66,13 @@ public class ParseDBStructFile
 		try {
 			reader = new BufferedReader(new FileReader(filename));
 			StringBuffer sb = new StringBuffer(512);
-			String line = null;
-			
+
 			boolean processing = false;
 			char delimiter = ';';
 			String[] creators = { "CREATE INDEX", "CREATE TABLE", "CREATE SEQUENCE", "DROP TABLE", "IF EXISTS",
 					"DROP SEQUENCE", "DROP INDEX" };
 			
+            String line ;
 			while ((line = reader.readLine()) != null) {
 				if (line.length() == 0) {
 					continue;
@@ -114,9 +117,18 @@ public class ParseDBStructFile
 				}
 			}
 		}
-		finally {
+        catch (Exception e)
+        {
+            String es = "Erorr add()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
 			if (reader != null) {
-				try { reader.close(); } catch (Exception e) {}
+				try { reader.close(); }
+                catch (Exception e) {
+                    // catch close BufferedReader
+                }
 			}
 		}
 		

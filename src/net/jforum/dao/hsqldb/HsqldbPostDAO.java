@@ -48,14 +48,14 @@ import net.jforum.dao.generic.GenericPostDAO;
 
 /**
  * @author Marc Wick
- * @version $Id: HsqldbPostDAO.java,v 1.5 2005/12/23 00:01:17 rafaelsteil Exp $
+ * @version $Id: HsqldbPostDAO.java,v 1.6 2006/08/20 12:19:05 sergemaslyukov Exp $
  */
 public class HsqldbPostDAO extends GenericPostDAO
 {
 	/**
 	 * @see net.jforum.dao.PostDAO#selectAllByTopicByLimit(int, int, int)
 	 */
-	public List selectAllByTopicByLimit(int topicId, int startFrom, int count) throws Exception 
+	public List selectAllByTopicByLimit(int topicId, int startFrom, int count)
 	{
 		return super.selectAllByTopicByLimit(startFrom, count, topicId);
 	}
@@ -63,7 +63,7 @@ public class HsqldbPostDAO extends GenericPostDAO
 	/**
 	 * @see net.jforum.dao.generic.GenericPostDAO#selectByUserByLimit(int, int, int)
 	 */
-	public List selectByUserByLimit(int userId, int startFrom, int count) throws Exception
+	public List selectByUserByLimit(int userId, int startFrom, int count) 
 	{
 		return super.selectByUserByLimit(startFrom, count, userId);
 	}

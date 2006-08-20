@@ -68,13 +68,16 @@ import net.jforum.util.preferences.TemplateKeys;
 import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 import freemarker.template.SimpleHash;
+import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.27 2006/01/29 15:06:58 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.28 2006/08/20 12:19:16 sergemaslyukov Exp $
  */
 public class SearchAction extends Command 
 {
+    private static final Logger log = Logger.getLogger(SearchAction.class);
+
 	private String searchTerms;
 	private String forum;
 	private String category;
@@ -112,7 +115,7 @@ public class SearchAction extends Command
 		this.context = context;
 	}
 	
-	public void filters() throws Exception
+	public void filters()
 	{
 		this.setTemplateName(TemplateKeys.SEARCH_FILTERS);
 		this.context.put("categories", ForumRepository.getAllCategories());
@@ -142,7 +145,7 @@ public class SearchAction extends Command
 		this.postTime = this.addSlashes(this.request.getParameter("post_time"));
 	}
 	
-	public void search() throws Exception
+	public void search()
 	{
 		this.getSearchFields();
 		
@@ -157,7 +160,7 @@ public class SearchAction extends Command
 		}
 		
 		if (searchTerms != null) {
-			sd.setUseAllWords(searchTerms.equals("any") ? false : true);
+			sd.setUseAllWords(!searchTerms.equals("any"));
 		}
 		else {
 			sd.setUseAllWords(true);
@@ -212,7 +215,7 @@ public class SearchAction extends Command
 		TopicsCommon.topicListingBase();
 	}
 	
-	private List onlyAllowedData(List topics) throws Exception
+	private List onlyAllowedData(List topics)
 	{
 		List l = new ArrayList();
 		
@@ -228,7 +231,7 @@ public class SearchAction extends Command
 		return l;
 	}
 	
-	public void doModeration() throws Exception
+	public void doModeration()
 	{
 		new ModerationHelper().doModeration(this.makeRedirect());
 		
@@ -237,17 +240,17 @@ public class SearchAction extends Command
 		}
 	}
 	
-	public void moveTopic() throws Exception
+	public void moveTopic()
 	{
 		new ModerationHelper().moveTopicsSave(this.makeRedirect());
 	}
 	
-	public void moderationDone() throws Exception
+	public void moderationDone()
 	{
 		this.setTemplateName(new ModerationHelper().moderationDone(this.makeRedirect()));
 	}
 	
-	private String makeRedirect() throws Exception
+	private String makeRedirect()
 	{
 		String persistData = this.request.getParameter("persistData");
 		if (persistData == null) {
@@ -261,18 +264,28 @@ public class SearchAction extends Command
 				
 				String name = (String)fieldsMap.get(v[0]);
 				if (name != null) {
-					Field field = this.getClass().getDeclaredField(name);
-					if (field != null && v[1] != null && !v[1].equals("")) {
-						field.set(this, v[1]);
-					}
-				}
+					Field field;
+                    try
+                    {
+                        field = this.getClass().getDeclaredField(name);
+                        if (field != null && v[1] != null && !v[1].equals("")) {
+                            field.set(this, v[1]);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        String es = "Erorr add()";
+                        log.error(es, e);
+                        throw new RuntimeException(es, e);
+                    }
+                }
 			}
 		}
 
 		StringBuffer path = new StringBuffer(512);
-		path.append(this.request.getContextPath()).append("/jforum" 
-				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)
-				+ "?module=search&action=search&clean=1");
+		path.append(this.request.getContextPath()).append("/jforum").append( 
+				SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)).append(
+				"?module=search&action=search&clean=1");
 		
 		if (this.forum != null) { 
 			path.append("&search_forum=").append(this.forum); 
@@ -320,7 +333,7 @@ public class SearchAction extends Command
 	/** 
 	 * @see net.jforum.Command#list()
 	 */
-	public void list() throws Exception 
+	public void list()  
 	{
 		this.filters();
 	}

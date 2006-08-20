@@ -44,112 +44,170 @@ package net.jforum.dao.generic;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.jforum.JForumExecutionContext;
 import net.jforum.entities.Ranking;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.DbUtils;
+import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericRankingDAO.java,v 1.5 2006/01/29 15:06:25 rafaelsteil Exp $
+ * @version $Id: GenericRankingDAO.java,v 1.6 2006/08/20 12:19:04 sergemaslyukov Exp $
  */
 public class GenericRankingDAO implements net.jforum.dao.RankingDAO 
 {
-	/** 
+    private final static Logger log = Logger.getLogger(GenericRankingDAO.class);
+
+	/**
 	 * @see net.jforum.dao.RankingDAO#selectById(int)
 	 */
-	public Ranking selectById(int rankingId) throws Exception 
+	public Ranking selectById(int rankingId)
 	{
 		Ranking ranking = new Ranking();
 		
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("RankingModel.selectById"));		
-		p.setInt(1, rankingId);
-		
-		ResultSet rs = p.executeQuery();
-		if (rs.next()) {
-				ranking.setId(rankingId);
-				ranking.setTitle(rs.getString("rank_title"));
-				ranking.setImage(rs.getString("rank_image"));
-				ranking.setMin(rs.getInt("rank_min"));
-				ranking.setSpecial(rs.getInt("rank_special"));
-		}
-		
-		rs.close();
-		p.close();
-		
-		return ranking;
-	}
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("RankingModel.selectById"));
+            p.setInt(1, rankingId);
+
+            rs = p.executeQuery();
+            if (rs.next()) {
+                    ranking.setId(rankingId);
+                    ranking.setTitle(rs.getString("rank_title"));
+                    ranking.setImage(rs.getString("rank_image"));
+                    ranking.setMin(rs.getInt("rank_min"));
+                    ranking.setSpecial(rs.getInt("rank_special"));
+            }
+
+            return ranking;
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectById()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 
 	/**
 	 * @see net.jforum.dao.RankingDAO#selectAll()
 	 */
-	public List selectAll() throws Exception 
+	public List selectAll()
 	{
 		List l = new ArrayList();
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("RankingModel.selectAll"));
-		ResultSet rs = p.executeQuery();
-		
-		while (rs.next()) {
-			Ranking ranking = new Ranking();
-			
-			ranking.setId(rs.getInt("rank_id"));
-			ranking.setTitle(rs.getString("rank_title"));
-			ranking.setImage(rs.getString("rank_image"));
-			ranking.setMin(rs.getInt("rank_min"));
-			ranking.setSpecial(rs.getInt("rank_special"));
-			
-			l.add(ranking);			
-		}
-		
-		rs.close();
-		p.close();
-		
-		return l;
-	}
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("RankingModel.selectAll"));
+            rs = p.executeQuery();
+
+            while (rs.next()) {
+                Ranking ranking = new Ranking();
+
+                ranking.setId(rs.getInt("rank_id"));
+                ranking.setTitle(rs.getString("rank_title"));
+                ranking.setImage(rs.getString("rank_image"));
+                ranking.setMin(rs.getInt("rank_min"));
+                ranking.setSpecial(rs.getInt("rank_special"));
+
+                l.add(ranking);
+            }
+
+            return l;
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectAll()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 
 	/** 
 	 * @see net.jforum.dao.RankingDAO#delete(int)
 	 */
-	public void delete(int rankingId) throws Exception 
+	public void delete(int rankingId)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("RankingModel.delete"));
-		p.setInt(1, rankingId);
-		
-		p.executeUpdate();
-		p.close();
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("RankingModel.delete"));
+            p.setInt(1, rankingId);
+
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectActiveBannerByPlacement()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close( p);
+        }
 	}
 
 	/** 
-	 * @see net.jforum.dao.RankingDAO#update(net.jforum.Ranking)
+	 * @see net.jforum.dao.RankingDAO#update(net.jforum.entities.Ranking)
 	 */
-	public void update(Ranking ranking) throws Exception 
+	public void update(Ranking ranking)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("RankingModel.update"));
-		
-		p.setString(1, ranking.getTitle());
-		p.setString(2, ranking.getImage());
-		p.setInt(3, ranking.getSpecial());
-		p.setInt(4, ranking.getMin());
-		p.setInt(5, ranking.getId());
-		
-		p.executeUpdate();
-		p.close();
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("RankingModel.update"));
+
+            p.setString(1, ranking.getTitle());
+            p.setString(2, ranking.getImage());
+            p.setInt(3, ranking.getSpecial());
+            p.setInt(4, ranking.getMin());
+            p.setInt(5, ranking.getId());
+
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr update()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close( p);
+        }
 	}
 
 	/** 
-	 * @see net.jforum.dao.RankingDAO#addNew(net.jforum.Ranking)
+	 * @see net.jforum.dao.RankingDAO#addNew(net.jforum.entities.Ranking)
 	 */
-	public void addNew(Ranking ranking) throws Exception 
+	public void addNew(Ranking ranking)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("RankingModel.addNew"));
-		
-		p.setString(1, ranking.getTitle());
-		p.setInt(2, ranking.getMin());
-		
-		p.executeUpdate();
-		p.close();
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("RankingModel.addNew"));
+
+            p.setString(1, ranking.getTitle());
+            p.setInt(2, ranking.getMin());
+
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectActiveBannerByPlacement()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close( p);
+        }
 	}
 
 }

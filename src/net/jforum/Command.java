@@ -52,6 +52,9 @@ import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
+import org.apache.log4j.Logger;
+
+import java.io.IOException;
 
 /**
  * <code>Command</code> Pattern implementation.
@@ -59,10 +62,12 @@ import freemarker.template.Template;
  * presentation actions must extend this class. 
  * 
  * @author Rafael Steil
- * @version $Id: Command.java,v 1.19 2006/01/29 15:06:59 rafaelsteil Exp $
+ * @version $Id: Command.java,v 1.20 2006/08/20 12:18:59 sergemaslyukov Exp $
  */
 public abstract class Command 
 {
+    private static final Logger log = Logger.getLogger(Command.class);
+
 	private static Class[] NO_ARGS_CLASS = new Class[0];
 	private static Object[] NO_ARGS_OBJECT = new Object[0];
 	
@@ -90,20 +95,18 @@ public abstract class Command
 	 * must implement it to the cases where some invalid
 	 * action is called ( which means that the exception will
 	 * be caught and the general listing will be used )
-	 * 
-	 * @throws Exception  
 	 */
-	public abstract void list() throws Exception;
+	public abstract void list() ;
 	
 	/**
 	 * Process and manipulate a requisition.
 	 * @param context TODO
-	 * @throws Exception
 	 * @return <code>Template</code> reference
+     * @param request ActionServletRequest
+     * @param response HttpServletResponse
 	 */
-	public Template process(ActionServletRequest request, 
-			HttpServletResponse response,
-			SimpleHash context) throws Exception 
+	public Template process(ActionServletRequest request, HttpServletResponse response,
+			SimpleHash context)
 	{
 		this.request = request;
 		this.response = response;
@@ -118,8 +121,11 @@ public abstract class Command
 			catch (NoSuchMethodException e) {		
 				this.list();		
 			}
-			catch (Exception e) {
-				throw e;
+			catch (Exception e)
+            {
+                String es = "Erorr process()";
+                log.error(es, e);
+                throw new RuntimeException(es, e);
 			}
 		}
 		
@@ -137,9 +143,18 @@ public abstract class Command
 		if (this.templateName == null) {
 			throw new TemplateNotFoundException("Template for action " + action + " is not defined");
 		}
-		
-		return JForumExecutionContext.templateConfig().getTemplate(
-				new StringBuffer(SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR)).
-				append('/').append(this.templateName).toString());
-	}
+
+        try
+        {
+            return JForumExecutionContext.templateConfig().getTemplate(
+                    new StringBuffer(SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR)).
+                    append('/').append(this.templateName).toString());
+        }
+        catch (IOException e)
+        {
+            String es = "Erorr process()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+    }
 }

@@ -44,37 +44,51 @@ package net.jforum.dao.sqlserver;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import net.jforum.JForumExecutionContext;
+import net.jforum.dao.generic.GenericForumDAO;
 import net.jforum.entities.PrivateMessage;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.DbUtils;
+import org.apache.log4j.Logger;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerPrivateMessageDAO.java,v 1.7 2006/01/29 15:07:09 rafaelsteil Exp $
+ * @version $Id: SqlServerPrivateMessageDAO.java,v 1.8 2006/08/20 12:19:08 sergemaslyukov Exp $
  */
 public class SqlServerPrivateMessageDAO extends net.jforum.dao.generic.GenericPrivateMessageDAO 
 {
+    private final static Logger log = Logger.getLogger(GenericForumDAO.class);
+
 	/** 
 	 * @see net.jforum.dao.PrivateMessageDAO#selectById(net.jforum.entities.PrivateMessage)
 	 */
-	public PrivateMessage selectById(PrivateMessage pm) throws Exception
+	public PrivateMessage selectById(PrivateMessage pm) 
 	{
 	    PreparedStatement p = null;
-	    p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessageModel.selectById"), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		
-		p.setInt(1, pm.getId());
-		
-		ResultSet rs = null;
-		rs = p.executeQuery();
-		if (rs.next()) {
-			pm = this.getPm(rs);
-		}
-		
-		rs.close();
-		p.close();
-		
-		return pm;
-	}
+        ResultSet rs = null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessageModel.selectById"), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
+            p.setInt(1, pm.getId());
+
+            rs = p.executeQuery();
+            if (rs.next()) {
+                pm = this.getPm(rs);
+            }
+
+            return pm;
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectById()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 		
 }

@@ -46,7 +46,7 @@ import java.sql.Connection;
 
 /**
  * @author Rafael Steil
- * @version $Id: ScheduledSearchIndexerDAO.java,v 1.5 2005/07/26 03:04:30 rafaelsteil Exp $
+ * @version $Id: ScheduledSearchIndexerDAO.java,v 1.6 2006/08/20 12:19:02 sergemaslyukov Exp $
  */
 public interface ScheduledSearchIndexerDAO
 {
@@ -56,8 +56,6 @@ public interface ScheduledSearchIndexerDAO
 	 * @param conn The database connection to use
 	 * 
 	 * @return The last processed post id
-	 * 
-	 * @throws Exception
 	 */
-	public int index(int step, Connection conn) throws Exception;
+	public int index(int step, Connection conn) ;
 }

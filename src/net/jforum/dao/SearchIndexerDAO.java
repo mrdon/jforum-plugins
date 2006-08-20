@@ -49,7 +49,7 @@ import net.jforum.entities.Post;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchIndexerDAO.java,v 1.4 2005/07/26 03:04:29 rafaelsteil Exp $
+ * @version $Id: SearchIndexerDAO.java,v 1.5 2006/08/20 12:19:02 sergemaslyukov Exp $
  */
 public interface SearchIndexerDAO
 {
@@ -64,15 +64,13 @@ public interface SearchIndexerDAO
 	 * Indexes a set of posts.
 	 * 
 	 * @param posts The posts to index
-	 * @throws Exception
 	 */
-	public void insertSearchWords(List posts) throws Exception;
+	public void insertSearchWords(List posts);
 	
 	/**
 	 * Indexes a post
 	 * 
 	 * @param post The post to index
-	 * @throws Exception
 	 */
-	public void insertSearchWords(Post post) throws Exception;
+	public void insertSearchWords(Post post);
 }

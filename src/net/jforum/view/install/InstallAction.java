@@ -70,6 +70,7 @@ import net.jforum.entities.UserSession;
 import net.jforum.util.FileMonitor;
 import net.jforum.util.I18n;
 import net.jforum.util.MD5;
+import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.SystemGlobalsListener;
@@ -85,13 +86,13 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.49 2006/08/19 17:47:12 sergemaslyukov Exp $
+ * @version $Id: InstallAction.java,v 1.50 2006/08/20 12:19:17 sergemaslyukov Exp $
  */
 public class InstallAction extends Command
 {
 	private static Logger logger = Logger.getLogger(InstallAction.class);
 	
-	public void welcome() throws Exception
+	public void welcome()
 	{
 		this.checkLanguage();
 		
@@ -111,7 +112,7 @@ public class InstallAction extends Command
 		this.setTemplateName(TemplateKeys.INSTALL_WELCOME);
 	}
 	
-	private void checkLanguage() throws IOException
+	private void checkLanguage()
 	{
 		String lang = this.request.getParameter("l");
 		if (lang == null || !I18n.languageExists(lang)) {
@@ -137,7 +138,7 @@ public class InstallAction extends Command
 		this.setTemplateName(TemplateKeys.INSTALL_ERROR);
 	}
 	
-	public void doInstall() throws Exception
+	public void doInstall()
 	{
 		Connection conn = null;
 		
@@ -177,8 +178,8 @@ public class InstallAction extends Command
 		// Create tables is ok
 		this.addToSessionAndContext("createTables", "passed");
 		logger.info("Table creation is ok");
-		
-		if (!"passed".equals(this.getFromSession("importTablesData")) && !this.importTablesData(conn)) {
+
+        if (!"passed".equals(this.getFromSession("importTablesData")) && !this.importTablesData(conn)) {
 			this.context.put("message", I18n.getMessage("Install.importTablesDataError"));
 			simpleConnection.releaseConnection(conn);
 			this.error();
@@ -216,7 +217,7 @@ public class InstallAction extends Command
 		}
 	}
 	
-	public void finished() throws Exception
+	public void finished()
 	{
 		this.setTemplateName(TemplateKeys.INSTALL_FINISHED);
 		
@@ -285,7 +286,7 @@ public class InstallAction extends Command
 		}
 	}
 	
-	private void configureSystemGlobals() throws Exception
+	private void configureSystemGlobals()
 	{
 		SystemGlobals.setValue(ConfigKeys.USER_HASH_SEQUENCE, MD5.crypt(this.getFromSession("dbPassword")
 				+ System.currentTimeMillis()));
@@ -299,59 +300,68 @@ public class InstallAction extends Command
 		this.restartSystemGlobals();
 	}
 	
-	private boolean importTablesData(Connection conn) throws Exception
-	{
-		boolean status = true;
-		boolean autoCommit = conn.getAutoCommit();
-		conn.setAutoCommit(false);
-		
-		String dbType = this.getFromSession("database");
-		
-		List statements = ParseDBDumpFile.parse(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
-			+ "/database/" 
-			+ dbType
-			+ "/" + dbType + "_data_dump.sql");
+	private boolean importTablesData(Connection conn)
+    {
+        try
+        {
+            boolean status = true;
+            boolean autoCommit = conn.getAutoCommit();
+            conn.setAutoCommit(false);
 
-		for (Iterator iter = statements.iterator(); iter.hasNext();) {
-			String query = (String)iter.next();
-			
-			if (query == null || "".equals(query.trim())) {
-				continue;
-			}
-			
-			query = query.trim();
-			
-			Statement s = conn.createStatement();
-			
-			try {
-				if (query.startsWith("UPDATE") || query.startsWith("INSERT")
-						|| query.startsWith("SET")) {
-					s.executeUpdate(query);
-				}
-				else if (query.startsWith("SELECT")) {
-					s.executeQuery(query);
-				}
-				else {
-					throw new Exception("Invalid query: " + query);
-				}
-			}
-			catch (SQLException ex) {
-				status = false;
-				conn.rollback();
-				logger.error("Error importing data for " + query + ": " + ex, ex);
-				this.context.put("exceptionMessage", ex.getMessage() + "\n" + query);
-				break;
-			}
-			finally {
-				s.close();
-			}
-		}
-		
-		conn.setAutoCommit(autoCommit);
-		return status;
-	}
+            String dbType = this.getFromSession("database");
+
+            List statements = ParseDBDumpFile.parse(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
+                + "/database/"
+                + dbType
+                + "/" + dbType + "_data_dump.sql");
+
+            for (Iterator iter = statements.iterator(); iter.hasNext();) {
+                String query = (String)iter.next();
+
+                if (query == null || "".equals(query.trim())) {
+                    continue;
+                }
+
+                query = query.trim();
+
+                Statement s = conn.createStatement();
+
+                try {
+                    if (query.startsWith("UPDATE") || query.startsWith("INSERT")
+                            || query.startsWith("SET")) {
+                        s.executeUpdate(query);
+                    }
+                    else if (query.startsWith("SELECT")) {
+                        s.executeQuery(query);
+                    }
+                    else {
+                        throw new SQLException("Invalid query: " + query);
+                    }
+                }
+                catch (SQLException ex) {
+                    status = false;
+                    conn.rollback();
+                    logger.error("Error importing data for " + query + ": " + ex, ex);
+                    this.context.put("exceptionMessage", ex.getMessage() + "\n" + query);
+                    break;
+                }
+                finally {
+                    s.close();
+                }
+            }
+
+            conn.setAutoCommit(autoCommit);
+            return status;
+        }
+        catch (Exception e)
+        {
+            String es = "Erorr importTablesData()";
+            logger.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+    }
 	
-	private boolean createTables(Connection conn) throws Exception
+	private boolean createTables(Connection conn)
 	{
 		logger.info("Going to create tables...");
 		String dbType = this.getFromSession("database");
@@ -377,9 +387,9 @@ public class InstallAction extends Command
 				continue;
 			}
 			
-			Statement s = conn.createStatement();
-			
-			try {
+			Statement s=null;
+            try {
+                s = conn.createStatement();
 				s.executeUpdate(query);
 			}
 			catch (SQLException ex) {
@@ -391,7 +401,7 @@ public class InstallAction extends Command
 				break;
 			}
 			finally {
-				s.close();
+                DbUtils.close(s);
 			}
 		}
 		
@@ -401,7 +411,6 @@ public class InstallAction extends Command
 	private void dropOracleTables(Connection conn)
 	{
 		Statement s = null;
-		
 		try {
 			List statements = ParseDBStructFile.parse(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
 				+ "/database/oracle/oracle_db_struct_drop.sql");
@@ -417,7 +426,8 @@ public class InstallAction extends Command
 					s = conn.createStatement();
 					s.executeQuery(query);
 					s.close();
-				}
+                    s=null;
+                }
 				catch (Exception e) {
 					logger.error("IGNORE: " + e.toString());
 				}
@@ -427,9 +437,7 @@ public class InstallAction extends Command
 			logger.error(e.toString(), e);
 		}
 		finally {
-			if (s != null) {
-				try { s.close(); } catch (Exception e) {}
-			}
+            DbUtils.close(s);
 		}
 	}
 	
@@ -484,7 +492,7 @@ public class InstallAction extends Command
 		p.setProperty(ConfigKeys.DATABASE_CONNECTION_STRING, connectionString);
 	}
 	
-	private void configureJDBCConnection() throws Exception
+	private void configureJDBCConnection()
 	{
 		String username = this.getFromSession("dbUser");
 		String password = this.getFromSession("dbPassword");
@@ -498,9 +506,18 @@ public class InstallAction extends Command
 			+ "/database/" + type + "/" + type + ".properties";
 		
 		Properties p = new Properties();
-		p.load(new FileInputStream(dbConfigFilePath));
-		
-		this.handleDatabasePort(p, port);
+        try
+        {
+            p.load(new FileInputStream(dbConfigFilePath));
+        }
+        catch (IOException e)
+        {
+            String es = "Erorr configureJDBCConnection()";
+            logger.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+
+        this.handleDatabasePort(p, port);
 		
 		// Write database information to the respective file
 		p.setProperty(ConfigKeys.DATABASE_CONNECTION_HOST, host);
@@ -521,8 +538,15 @@ public class InstallAction extends Command
 		}
 		finally {
 			if (fos != null) {
-				fos.close();
-			}
+                try
+                {
+                    fos.close();
+                }
+                catch (IOException e)
+                {
+                    //catch close outputStream
+                }
+            }
 		}
 		
 		// Proceed to SystemGlobals / jforum-custom.conf configuration
@@ -546,7 +570,7 @@ public class InstallAction extends Command
 		dest.close();
 	}
 	
-	private Connection configureDatabase() throws Exception
+	private Connection configureDatabase()
 	{
 		String database = this.getFromSession("database");
 		String connectionType = this.getFromSession("db_connection_type");
@@ -580,8 +604,7 @@ public class InstallAction extends Command
 				SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG), fileChangesDelay);
 		}
 		
-		Connection conn = null;
-		
+		Connection conn;
 		try {
 			DBConnection s;
 			
@@ -605,7 +628,7 @@ public class InstallAction extends Command
 		return conn;
 	}
 	
-	private void restartSystemGlobals() throws Exception
+	private void restartSystemGlobals() 
 	{
 		String appPath = SystemGlobals.getApplicationPath();
 		
@@ -617,29 +640,31 @@ public class InstallAction extends Command
         }
 	}
 	
-	private boolean updateAdminPassword(Connection conn) throws Exception
+	private boolean updateAdminPassword(Connection conn)
 	{
 		logger.info("Going to update the administrator's password");
 		
 		boolean status = false;
 		
+        PreparedStatement p=null;
 		try {
-			PreparedStatement p = conn.prepareStatement("UPDATE jforum_users SET user_password = ? WHERE username = 'Admin'");
-			p.setString(1, MD5.crypt(this.getFromSession("adminPassword")));
+            p = conn.prepareStatement("UPDATE jforum_users SET user_password = ? WHERE username = 'Admin'");
+            p.setString(1, MD5.crypt(this.getFromSession("adminPassword")));
 			p.executeUpdate();
-			p.close();
-			
 			status = true;
 		}
 		catch (Exception e) {
 			logger.warn("Error while trying to update the administrator's password: " + e);
 			this.context.put("exceptionMessage", e.getMessage());
 		}
-		
-		return status;
+        finally {
+            DbUtils.close(p);
+        }
+
+        return status;
 	}
 	
-	public void checkInformation() throws Exception
+	public void checkInformation() 
 	{
 		this.setTemplateName(TemplateKeys.INSTALL_CHECK_INFO);
 		
@@ -691,7 +716,7 @@ public class InstallAction extends Command
 		this.context.put("moduleAction", "install_check_info.htm");
 	}
 	
-	private void dropPostgresqlTables(Connection conn) throws Exception
+	private void dropPostgresqlTables(Connection conn)
 	{
 		String[] tables = { "jforum_banlist", "jforum_banlist_seq", "jforum_categories", 
 				"jforum_categories_order_seq", "jforum_categories_seq", "jforum_config",
@@ -713,20 +738,22 @@ public class InstallAction extends Command
 				"jforum_forums_watch" };
 
 		for (int i = 0; i < tables.length; i++) {
-			Statement s = conn.createStatement();
-			
+
 			String query = new StringBuffer(tables[i].endsWith("_seq") ? "DROP SEQUENCE " : "DROP TABLE ")
 				.append(tables[i]).toString();
 			
+            Statement s=null;
 			try {
-				s.executeUpdate(query);
+                s = conn.createStatement();
+                s.executeUpdate(query);
 			}
 			catch (SQLException e) {
 				logger.info("IGNORE: " + e.getMessage());
 			}
-			
-			s.close();
-		}
+            finally {
+                DbUtils.close(s);
+            }
+        }
 	}
 	
 	private void addToSessionAndContext(String key, String value)
@@ -747,17 +774,17 @@ public class InstallAction extends Command
 	/** 
 	 * @see net.jforum.Command#list()
 	 */
-	public void list() throws Exception
+	public void list()
 	{
 		this.welcome();
 	}
 	
 	/** 
-	 * @see net.jforum.Command#process()
+	 * @see net.jforum.Command#process(net.jforum.ActionServletRequest, javax.servlet.http.HttpServletResponse, freemarker.template.SimpleHash)
 	 */
 	public Template process(ActionServletRequest request, 
 			HttpServletResponse response, 
-			SimpleHash context) throws Exception 
+			SimpleHash context)  
 	{
 		this.setTemplateName("default/empty.htm");
 		return super.process(request, response, context);

@@ -45,6 +45,7 @@ package net.jforum.dao.generic;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -59,70 +60,118 @@ import net.jforum.entities.AttachmentInfo;
 import net.jforum.entities.QuotaLimit;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.DbUtils;
+import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericAttachmentDAO.java,v 1.8 2006/05/14 23:59:50 rafaelsteil Exp $
+ * @version $Id: GenericAttachmentDAO.java,v 1.9 2006/08/20 12:19:03 sergemaslyukov Exp $
  */
 public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.AttachmentDAO
 {
+    private final static Logger log = Logger.getLogger(GenericAttachmentDAO.class);
+
 	/**
 	 * @see net.jforum.dao.AttachmentDAO#addQuotaLimit(net.jforum.entities.QuotaLimit)
 	 */
-	public void addQuotaLimit(QuotaLimit limit) throws Exception
+	public void addQuotaLimit(QuotaLimit limit)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("AttachmentModel.addQuotaLimit"));
-		p.setString(1, limit.getDescription());
-		p.setInt(2, limit.getSize());
-		p.setInt(3, limit.getType());
-		p.executeUpdate();
-		p.close();
-	}
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("AttachmentModel.addQuotaLimit"));
+            p.setString(1, limit.getDescription());
+            p.setInt(2, limit.getSize());
+            p.setInt(3, limit.getType());
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr addQuotaLimit()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
+    }
 
 	/**
 	 * @see net.jforum.dao.AttachmentDAO#updateQuotaLimit(net.jforum.entities.QuotaLimit)
 	 */
-	public void updateQuotaLimit(QuotaLimit limit) throws Exception
+	public void updateQuotaLimit(QuotaLimit limit)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("AttachmentModel.updateQuotaLimit"));
-		p.setString(1, limit.getDescription());
-		p.setInt(2, limit.getSize());
-		p.setInt(3, limit.getType());
-		p.setInt(4, limit.getId());
-		p.executeUpdate();
-		p.close();
-	}
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("AttachmentModel.updateQuotaLimit"));
+            p.setString(1, limit.getDescription());
+            p.setInt(2, limit.getSize());
+            p.setInt(3, limit.getType());
+            p.setInt(4, limit.getId());
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr updateQuotaLimit()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
+    }
 	
 	/**
 	 * @see net.jforum.dao.AttachmentDAO#cleanGroupQuota()
 	 */
-	public void cleanGroupQuota() throws Exception
+	public void cleanGroupQuota()
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("AttachmentModel.deleteGroupQuota"));
-		p.executeUpdate();
-		p.close();
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("AttachmentModel.deleteGroupQuota"));
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr cleanGroupQuota()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
 	}
 	
 	/**
 	 * @see net.jforum.dao.AttachmentDAO#setGroupQuota(int, int)
 	 */
-	public void setGroupQuota(int groupId, int quotaId) throws Exception
+	public void setGroupQuota(int groupId, int quotaId)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("AttachmentModel.setGroupQuota"));
-		p.setInt(1, groupId);
-		p.setInt(2, quotaId);
-		p.executeUpdate();
-		p.close();
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("AttachmentModel.setGroupQuota"));
+            p.setInt(1, groupId);
+            p.setInt(2, quotaId);
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr setGroupQuota()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
 	}
 
 	/**
 	 * @see net.jforum.dao.AttachmentDAO#removeQuotaLimit(int)
 	 */
-	public void removeQuotaLimit(int id) throws Exception
+	public void removeQuotaLimit(int id)
 	{
 		this.removeQuotaLimit(new String[] { Integer.toString(id) });
 	}
@@ -130,79 +179,121 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
 	/**
 	 * @see net.jforum.dao.AttachmentDAO#removeQuotaLimit(java.lang.String[])
 	 */
-	public void removeQuotaLimit(String[] ids) throws Exception
+	public void removeQuotaLimit(String[] ids)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("AttachmentModel.removeQuotaLimit"));
-		
-		for (int i = 0; i < ids.length; i++) {
-			p.setInt(1, Integer.parseInt(ids[i]));
-			p.executeUpdate();
-		}
-		
-		p.close();
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("AttachmentModel.removeQuotaLimit"));
+
+            for (int i = 0; i < ids.length; i++) {
+                p.setInt(1, Integer.parseInt(ids[i]));
+                p.executeUpdate();
+            }
+        }
+        catch (SQLException e) {
+            String es = "Erorr removeQuotaLimit()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
 	}
 	
 	/**
 	 * @see net.jforum.dao.AttachmentDAO#selectQuotaLimit()
 	 */
-	public List selectQuotaLimit() throws Exception
+	public List selectQuotaLimit()
 	{
 		List l = new ArrayList();
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("AttachmentModel.selectQuotaLimit"));
-		
-		ResultSet rs = p.executeQuery();
-		while (rs.next()) {
-			l.add(this.getQuotaLimit(rs));
-		}
-		
-		rs.close();
-		p.close();
-		
-		return l;
-	}
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("AttachmentModel.selectQuotaLimit"));
+
+            rs = p.executeQuery();
+            while (rs.next()) {
+                l.add(this.getQuotaLimit(rs));
+            }
+
+            return l;
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectQuotaLimit()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 	
 	/**
 	 * @see net.jforum.dao.AttachmentDAO#selectQuotaLimit()
 	 */
-	public QuotaLimit selectQuotaLimitByGroup(int groupId) throws Exception
+	public QuotaLimit selectQuotaLimitByGroup(int groupId)
 	{
 		QuotaLimit ql = null;
 		
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("AttachmentModel.selectQuotaLimitByGroup"));
-		p.setInt(1, groupId);
-		
-		ResultSet rs = p.executeQuery();
-		if (rs.next()) {
-			ql = this.getQuotaLimit(rs);
-		}
-		
-		rs.close();
-		p.close();
-		
-		return ql;
-	}
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("AttachmentModel.selectQuotaLimitByGroup"));
+            p.setInt(1, groupId);
+
+            rs = p.executeQuery();
+            if (rs.next()) {
+                ql = this.getQuotaLimit(rs);
+            }
+            return ql;
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectQuotaLimitByGroup()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 	
 	/**
 	 * @see net.jforum.dao.AttachmentDAO#selectGroupsQuotaLimits()
 	 */
-	public Map selectGroupsQuotaLimits() throws Exception
+	public Map selectGroupsQuotaLimits()
 	{
 		Map m = new HashMap();
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("AttachmentModel.selectGroupsQuotaLimits"));
-		
-		ResultSet rs = p.executeQuery();
-		while (rs.next()) {
-			m.put(new Integer(rs.getInt("group_id")), new Integer(rs.getInt("quota_limit_id")));
-		}
-		
-		return m;
-	}
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("AttachmentModel.selectGroupsQuotaLimits"));
+
+            rs = p.executeQuery();
+            while (rs.next()) {
+                m.put(new Integer(rs.getInt("group_id")), new Integer(rs.getInt("quota_limit_id")));
+            }
+
+            return m;
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectGroupsQuotaLimits()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 	
-	protected QuotaLimit getQuotaLimit(ResultSet rs) throws Exception
+	protected QuotaLimit getQuotaLimit(ResultSet rs) throws SQLException
 	{
 		QuotaLimit ql = new QuotaLimit();
 		ql.setDescription(rs.getString("quota_desc"));
@@ -216,98 +307,150 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
 	/**
 	 * @see net.jforum.dao.AttachmentDAO#addExtensionGroup(net.jforum.entities.AttachmentExtensionGroup)
 	 */
-	public void addExtensionGroup(AttachmentExtensionGroup g) throws Exception
+	public void addExtensionGroup(AttachmentExtensionGroup g)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("AttachmentModel.addExtensionGroup"));
-		p.setString(1, g.getName());
-		p.setInt(2, g.isAllow() ? 1 : 0);
-		p.setString(3, g.getUploadIcon());
-		p.setInt(4, g.getDownloadMode());
-		p.executeUpdate();
-		p.close();
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("AttachmentModel.addExtensionGroup"));
+            p.setString(1, g.getName());
+            p.setInt(2, g.isAllow() ? 1 : 0);
+            p.setString(3, g.getUploadIcon());
+            p.setInt(4, g.getDownloadMode());
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr addExtensionGroup()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
 	}
 	
 	/**
 	 * @see net.jforum.dao.AttachmentDAO#removeExtensionGroups(java.lang.String[])
 	 */
-	public void removeExtensionGroups(String[] ids) throws Exception
+	public void removeExtensionGroups(String[] ids)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("AttachmentModel.removeExtensionGroups"));
-		
-		for (int i = 0; i < ids.length; i++) {
-			p.setInt(1, Integer.parseInt(ids[i]));
-			p.executeUpdate();
-		}
-		
-		p.close();
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("AttachmentModel.removeExtensionGroups"));
+
+            for (int i = 0; i < ids.length; i++) {
+                p.setInt(1, Integer.parseInt(ids[i]));
+                p.executeUpdate();
+            }
+        }
+        catch (SQLException e) {
+            String es = "Erorr removeExtensionGroups()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
 	}
 	
 	/**
 	 * @see net.jforum.dao.AttachmentDAO#selectExtensionGroups()
 	 */
-	public List selectExtensionGroups() throws Exception
+	public List selectExtensionGroups()
 	{
 		List l = new ArrayList();
 		
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("AttachmentModel.selectExtensionGroups"));
-		
-		ResultSet rs = p.executeQuery();
-		while (rs.next()) {
-			l.add(this.getExtensionGroup(rs));
-		}
-		
-		rs.close();
-		p.close();
-		
-		return l;
-	}
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("AttachmentModel.selectExtensionGroups"));
+
+            rs = p.executeQuery();
+            while (rs.next()) {
+                l.add(this.getExtensionGroup(rs));
+            }
+
+            return l;
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectExtensionGroups()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 	
 	/**
 	 * @see net.jforum.dao.AttachmentDAO#extensionsForSecurity()
 	 */
-	public Map extensionsForSecurity() throws Exception
+	public Map extensionsForSecurity()
 	{
 		Map m = new HashMap();
 		
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("AttachmentModel.extensionsForSecurity"));
-		
-		ResultSet rs = p.executeQuery();
-		while (rs.next()) {
-			int allow = rs.getInt("group_allow");
-			if (allow == 1) {
-				allow = rs.getInt("allow");
-			}
-			
-			m.put(rs.getString("extension"), new Boolean(allow == 1));
-		}
-		
-		rs.close();
-		p.close();
-		
-		return m;
-	}
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("AttachmentModel.extensionsForSecurity"));
+
+            rs = p.executeQuery();
+            while (rs.next()) {
+                int allow = rs.getInt("group_allow");
+                if (allow == 1) {
+                    allow = rs.getInt("allow");
+                }
+
+                m.put(rs.getString("extension"), Boolean.valueOf(allow == 1));
+            }
+
+            return m;
+        }
+        catch (SQLException e) {
+            String es = "Erorr extensionsForSecurity()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 	
 	/**
 	 * @see net.jforum.dao.AttachmentDAO#updateExtensionGroup(net.jforum.entities.AttachmentExtensionGroup)
 	 */
-	public void updateExtensionGroup(AttachmentExtensionGroup g) throws Exception
+	public void updateExtensionGroup(AttachmentExtensionGroup g)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("AttachmentModel.updateExtensionGroups"));
-		p.setString(1, g.getName());
-		p.setInt(2, g.isAllow() ? 1 : 0);
-		p.setString(3, g.getUploadIcon());
-		p.setInt(4, g.getDownloadMode());
-		p.setInt(5, g.getId());
-		p.executeUpdate();
-		p.close();
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("AttachmentModel.updateExtensionGroups"));
+            p.setString(1, g.getName());
+            p.setInt(2, g.isAllow() ? 1 : 0);
+            p.setString(3, g.getUploadIcon());
+            p.setInt(4, g.getDownloadMode());
+            p.setInt(5, g.getId());
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr updateExtensionGroup()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
 	}
 	
-	protected AttachmentExtensionGroup getExtensionGroup(ResultSet rs) throws Exception
+	protected AttachmentExtensionGroup getExtensionGroup(ResultSet rs) throws SQLException
 	{
 		AttachmentExtensionGroup g = new AttachmentExtensionGroup();
 		g.setId(rs.getInt("extension_group_id"));
@@ -322,110 +465,163 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
 	/**
 	 * @see net.jforum.dao.AttachmentDAO#addExtension(net.jforum.entities.AttachmentExtension)
 	 */
-	public void addExtension(AttachmentExtension e) throws Exception
+	public void addExtension(AttachmentExtension extension)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("AttachmentModel.addExtension"));
-		p.setInt(1, e.getExtensionGroupId());
-		p.setString(2, e.getComment());
-		p.setString(3, e.getUploadIcon());
-		p.setString(4, e.getExtension().toLowerCase());
-		p.setInt(5, e.isAllow() ? 1 : 0);
-		p.executeUpdate();
-		p.close();
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("AttachmentModel.addExtension"));
+            p.setInt(1, extension.getExtensionGroupId());
+            p.setString(2, extension.getComment());
+            p.setString(3, extension.getUploadIcon());
+            p.setString(4, extension.getExtension().toLowerCase());
+            p.setInt(5, extension.isAllow() ? 1 : 0);
+            p.executeUpdate();
+        }
+        catch (SQLException ex) {
+            String es = "Erorr addExtension()";
+            log.error(es, ex);
+            throw new RuntimeException(es, ex);
+        }
+        finally {
+            DbUtils.close(p);
+        }
 	}
 	
 	/**
 	 * @see net.jforum.dao.AttachmentDAO#removeExtensions(java.lang.String[])
 	 */
-	public void removeExtensions(String[] ids) throws Exception
+	public void removeExtensions(String[] ids)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("AttachmentModel.removeExtension"));
-		for (int i = 0; i < ids.length; i++) {
-			p.setInt(1, Integer.parseInt(ids[i]));
-			p.executeUpdate();
-		}
-		p.close();
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("AttachmentModel.removeExtension"));
+            for (int i = 0; i < ids.length; i++) {
+                p.setInt(1, Integer.parseInt(ids[i]));
+                p.executeUpdate();
+            }
+        }
+        catch (SQLException e) {
+            String es = "Erorr removeExtensions()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
 	}
 	
 	/**
 	 * @see net.jforum.dao.AttachmentDAO#selectExtensions()
 	 */
-	public List selectExtensions() throws Exception
+	public List selectExtensions()
 	{
 		List l = new ArrayList();
 		
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("AttachmentModel.selectExtensions"));
-		
-		ResultSet rs = p.executeQuery();
-		while (rs.next()) {
-			l.add(this.getExtension(rs));
-		}
-		
-		rs.close();
-		p.close();
-		
-		return l;
-	}
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("AttachmentModel.selectExtensions"));
+
+            rs = p.executeQuery();
+            while (rs.next()) {
+                l.add(this.getExtension(rs));
+            }
+
+            return l;
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectExtensions()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 	
 	/**
 	 * @see net.jforum.dao.AttachmentDAO#updateExtension(net.jforum.entities.AttachmentExtension)
 	 */
-	public void updateExtension(AttachmentExtension e) throws Exception
+	public void updateExtension(AttachmentExtension extension)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("AttachmentModel.updateExtension"));
-		p.setInt(1, e.getExtensionGroupId());
-		p.setString(2, e.getComment());
-		p.setString(3, e.getUploadIcon());
-		p.setString(4, e.getExtension().toLowerCase());
-		p.setInt(5, e.isAllow() ? 1 : 0);
-		p.setInt(6, e.getId());
-		p.executeUpdate();
-		p.close();
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("AttachmentModel.updateExtension"));
+            p.setInt(1, extension.getExtensionGroupId());
+            p.setString(2, extension.getComment());
+            p.setString(3, extension.getUploadIcon());
+            p.setString(4, extension.getExtension().toLowerCase());
+            p.setInt(5, extension.isAllow() ? 1 : 0);
+            p.setInt(6, extension.getId());
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr updateExtension()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close( p);
+        }
 	}
 	
 	/**
 	 * @see net.jforum.dao.AttachmentDAO#selectExtension(java.lang.String)
 	 */
-	public AttachmentExtension selectExtension(String extension) throws Exception
+	public AttachmentExtension selectExtension(String extension)
 	{
 		return this.searchExtension(SystemGlobals.getValue(ConfigKeys.EXTENSION_FIELD), 
 				extension);
 	}
 	
-	private AttachmentExtension selectExtension(int extensionId) throws Exception
+	private AttachmentExtension selectExtension(int extensionId)
 	{
 		return this.searchExtension("extension_id", new Integer(extensionId));
 	}
 	
-	private AttachmentExtension searchExtension(String paramName, Object paramValue) throws Exception
+	private AttachmentExtension searchExtension(String paramName, Object paramValue)
 	{
-		String sql = SystemGlobals.getSql("AttachmentModel.selectExtension");
-		sql = sql.replaceAll("\\$field", paramName);
-		
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(sql);
-		p.setObject(1, paramValue);
-		
-		AttachmentExtension e = new AttachmentExtension();
-		
-		ResultSet rs = p.executeQuery();
-		if (rs.next()) {
-			e = this.getExtension(rs);
-		}
-		else {
-			e.setUnknown(true);
-		}
-		
-		rs.close();
-		p.close();
-		
-		return e;
-	}
+        PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            String sql = SystemGlobals.getSql("AttachmentModel.selectExtension");
+            sql = sql.replaceAll("\\$field", paramName);
+
+            p = JForumExecutionContext.getConnection().prepareStatement(sql);
+            p.setObject(1, paramValue);
+
+            AttachmentExtension e = new AttachmentExtension();
+
+            rs = p.executeQuery();
+            if (rs.next()) {
+                e = this.getExtension(rs);
+            }
+            else {
+                e.setUnknown(true);
+            }
+
+            return e;
+        }
+        catch (SQLException e) {
+            String es = "Erorr searchExtension()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 	
-	protected AttachmentExtension getExtension(ResultSet rs) throws Exception
+	protected AttachmentExtension getExtension(ResultSet rs) throws SQLException
 	{
 		AttachmentExtension e = new AttachmentExtension();
 		e.setAllow(rs.getInt("allow") == 1);
@@ -447,108 +643,167 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
 	/**
 	 * @see net.jforum.dao.AttachmentDAO#addAttachment(net.jforum.entities.Attachment)
 	 */
-	public void addAttachment(Attachment a) throws Exception
+	public void addAttachment(Attachment a)
 	{
-		PreparedStatement p = this.getStatementForAutoKeys("AttachmentModel.addAttachment");
-		p.setInt(1, a.getPostId());
-		p.setInt(2, a.getPrivmsgsId());
-		p.setInt(3, a.getUserId());
-		
-		this.setAutoGeneratedKeysQuery(SystemGlobals.getSql("AttachmentModel.lastGeneratedAttachmentId"));
-		int id = this.executeAutoKeysQuery(p);
-		p.close();
-		
-		p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("AttachmentModel.addAttachmentInfo"));
-		p.setInt(1, id);
-		p.setString(2, a.getInfo().getPhysicalFilename());
-		p.setString(3, a.getInfo().getRealFilename());
-		p.setString(4, a.getInfo().getComment());
-		p.setString(5, a.getInfo().getMimetype());
-		p.setLong(6, a.getInfo().getFilesize());
-		p.setTimestamp(7, new Timestamp(a.getInfo().getUploadTimeInMillis()));
-		p.setInt(8, 0);
-		p.setInt(9, a.getInfo().getExtension().getId());
-		p.executeUpdate();
-		p.close();
-		
-		this.updatePost(a.getPostId(), 1);
+		PreparedStatement p=null;
+        try
+        {
+            p = this.getStatementForAutoKeys("AttachmentModel.addAttachment");
+            p.setInt(1, a.getPostId());
+            p.setInt(2, a.getPrivmsgsId());
+            p.setInt(3, a.getUserId());
+
+            this.setAutoGeneratedKeysQuery(SystemGlobals.getSql("AttachmentModel.lastGeneratedAttachmentId"));
+            int id = this.executeAutoKeysQuery(p);
+            p.close();
+            p=null;
+
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("AttachmentModel.addAttachmentInfo"));
+            p.setInt(1, id);
+            p.setString(2, a.getInfo().getPhysicalFilename());
+            p.setString(3, a.getInfo().getRealFilename());
+            p.setString(4, a.getInfo().getComment());
+            p.setString(5, a.getInfo().getMimetype());
+            p.setLong(6, a.getInfo().getFilesize());
+            p.setTimestamp(7, new Timestamp(a.getInfo().getUploadTimeInMillis()));
+            p.setInt(8, 0);
+            p.setInt(9, a.getInfo().getExtension().getId());
+            p.executeUpdate();
+
+            this.updatePost(a.getPostId(), 1);
+        }
+        catch (SQLException e) {
+            String es = "Erorr addAttachment()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
 	}
 	
-	protected void updatePost(int postId, int count) throws Exception
+	protected void updatePost(int postId, int count) 
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("AttachmentModel.updatePost"));
-		p.setInt(1, count);
-		p.setInt(2, postId);
-		p.executeUpdate();
-		p.close();
-	}
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("AttachmentModel.updatePost"));
+            p.setInt(1, count);
+            p.setInt(2, postId);
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr updatePost()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
+    }
 	
 	/**
 	 * @see net.jforum.dao.AttachmentDAO#removeAttachment(int, int)
 	 */
-	public void removeAttachment(int id, int postId) throws Exception
+	public void removeAttachment(int id, int postId) 
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("AttachmentModel.removeAttachmentInfo"));
-		p.setInt(1, id);
-		p.executeUpdate();
-		p.close();
-		
-		p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("AttachmentModel.removeAttachment"));
-		p.setInt(1, id);
-		p.executeUpdate();
-		p.close();
-		
-		p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("AttachmentModel.countPostAttachments"));
-		p.setInt(1, postId);
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("AttachmentModel.removeAttachmentInfo"));
+            p.setInt(1, id);
+            p.executeUpdate();
+            p.close();
+            p=null;
 
-		ResultSet rs = p.executeQuery();
-		if (rs.next()) {
-			this.updatePost(postId, rs.getInt(1));
-		}
-		
-		rs.close();
-		p.close();
-	}
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("AttachmentModel.removeAttachment"));
+            p.setInt(1, id);
+            p.executeUpdate();
+            p.close();
+            p=null;
+
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("AttachmentModel.countPostAttachments"));
+            p.setInt(1, postId);
+
+            rs = p.executeQuery();
+            if (rs.next()) {
+                this.updatePost(postId, rs.getInt(1));
+            }
+        }
+        catch (SQLException e) {
+            String es = "Erorr removeAttachment()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 	
 	/**
 	 * @see net.jforum.dao.AttachmentDAO#updateAttachment(net.jforum.entities.Attachment)
 	 */
-	public void updateAttachment(Attachment a) throws Exception
+	public void updateAttachment(Attachment a)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("AttachmentModel.updateAttachment"));
-		p.setString(1, a.getInfo().getComment());
-		p.setInt(2, a.getInfo().getDownloadCount());
-		p.setInt(3, a.getId());
-		p.executeUpdate();
-		p.close();
-	}
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("AttachmentModel.updateAttachment"));
+            p.setString(1, a.getInfo().getComment());
+            p.setInt(2, a.getInfo().getDownloadCount());
+            p.setInt(3, a.getId());
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr updateAttachment()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
+    }
 	
 	/**
 	 * @see net.jforum.dao.AttachmentDAO#selectAttachments(int)
 	 */
-	public List selectAttachments(int postId) throws Exception
+	public List selectAttachments(int postId)
 	{
 		List l = new ArrayList();
 		
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("AttachmentModel.selectAttachments"));
-		p.setInt(1, postId);
-		
-		ResultSet rs = p.executeQuery();
-		while (rs.next()) {
-			l.add(this.getAttachment(rs));
-		}
-		
-		return l;
-	}
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("AttachmentModel.selectAttachments"));
+            p.setInt(1, postId);
+
+            rs = p.executeQuery();
+            while (rs.next()) {
+                l.add(this.getAttachment(rs));
+            }
+
+            return l;
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectAttachments()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 	
-	protected Attachment getAttachment(ResultSet rs) throws Exception
+	protected Attachment getAttachment(ResultSet rs) throws SQLException
 	{
 		Attachment a = new Attachment();
 		a.setId(rs.getInt("attach_id"));
@@ -573,44 +828,63 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
 	/**
 	 * @see net.jforum.dao.AttachmentDAO#selectAttachmentById(int)
 	 */
-	public Attachment selectAttachmentById(int attachId) throws Exception
+	public Attachment selectAttachmentById(int attachId)
 	{
-		Attachment e = null;
-		
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("AttachmentModel.selectAttachmentById"));
-		p.setInt(1, attachId);
-		
-		ResultSet rs = p.executeQuery();
-		if (rs.next()) {
-			e = this.getAttachment(rs);
-		}
-		
-		rs.close();
-		p.close();
-		
-		return e;
-	}
+        ResultSet rs=null;
+		PreparedStatement p=null;
+        try
+        {
+            Attachment e = null;
+
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("AttachmentModel.selectAttachmentById"));
+            p.setInt(1, attachId);
+
+            rs = p.executeQuery();
+            if (rs.next()) {
+                e = this.getAttachment(rs);
+            }
+
+            return e;
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectAttachmentById()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 	
-	public boolean isPhysicalDownloadMode(int extensionGroupId) throws Exception
+	public boolean isPhysicalDownloadMode(int extensionGroupId)
 	{
 		boolean result = true;
 		
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("AttachmentModel.isPhysicalDownloadMode"));
-		
-		p.setInt(1, extensionGroupId);
-		
-		ResultSet rs = p.executeQuery();
-		if (rs.next())
-		{
-			result = (rs.getInt("download_mode") == 2);
-		}
-		
-		rs.close();
-		p.close();
-		
-		return result;
-	}
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("AttachmentModel.isPhysicalDownloadMode"));
 
+            p.setInt(1, extensionGroupId);
+
+            rs = p.executeQuery();
+            if (rs.next())
+            {
+                result = (rs.getInt("download_mode") == 2);
+            }
+
+            return result;
+        }
+        catch (SQLException e) {
+            String es = "Erorr isPhysicalDownloadMode()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 }

@@ -56,14 +56,14 @@ import net.jforum.security.RoleValueCollection;
 
 /**
  * @author Rafael Steil
- * @version $Id: PermissionProcessHelper.java,v 1.14 2006/05/07 14:56:20 rafaelsteil Exp $
+ * @version $Id: PermissionProcessHelper.java,v 1.15 2006/08/20 12:19:14 sergemaslyukov Exp $
  */
 class PermissionProcessHelper 
 {
 	private PermissionControl pc;
 	private int id;
 	
-	public PermissionProcessHelper(PermissionControl pc, int id) throws Exception
+	public PermissionProcessHelper(PermissionControl pc, int id)
 	{
 		this.id = id;
 		this.pc = pc;
@@ -71,7 +71,7 @@ class PermissionProcessHelper
 		this.init();
 	}
 	
-	public void processData() throws Exception
+	public void processData()
 	{
 		ActionServletRequest request = JForumExecutionContext.getRequest();
 		Enumeration e = request.getParameterNames();
@@ -165,7 +165,7 @@ class PermissionProcessHelper
 		return rv;
 	}
 	
-	private void init() throws Exception
+	private void init()
 	{
 		this.pc.deleteAllRoles(this.id);
 	}

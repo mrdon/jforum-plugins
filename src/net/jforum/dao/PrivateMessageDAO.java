@@ -48,7 +48,7 @@ import net.jforum.entities.User;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageDAO.java,v 1.4 2005/07/26 03:04:28 rafaelsteil Exp $
+ * @version $Id: PrivateMessageDAO.java,v 1.5 2006/08/20 12:19:01 sergemaslyukov Exp $
  */
 public interface PrivateMessageDAO
 {
@@ -56,19 +56,17 @@ public interface PrivateMessageDAO
 	 * Send a new <code>PrivateMessage</code>
 	 * 
 	 * @param pm The pm to add
-	 * @throws Exception
 	 */
-	public void send(PrivateMessage pm) throws Exception;
+	public void send(PrivateMessage pm) ;
 	
 	/**
 	 * Deletes a collection of private messages.
 	 * Each instance should at least have the private message
 	 * id and the owner user id.
 	 * 
-	 * @param pm
-	 * @throws Exception
+	 * @param pm PrivateMessage[]
 	 */
-	public void delete(PrivateMessage[] pm) throws Exception;
+	public void delete(PrivateMessage[] pm) ;
 	
 	/**
 	 * Update the type of some private message.
@@ -77,9 +75,8 @@ public interface PrivateMessageDAO
 	 * fill the other members.
 	 * 
 	 * @param pm The instance to update 
-	 * @throws Exception
 	 */
-	public void updateType(PrivateMessage pm) throws Exception;
+	public void updateType(PrivateMessage pm) ;
 	
 	/**
 	 * Selects all messages from the user's inbox. 
@@ -87,9 +84,8 @@ public interface PrivateMessageDAO
 	 * @param user The user to fetch the messages
 	 * @return A <code>List</code> with all messages found. Each 
 	 * entry is a <code>PrivateMessage</code> entry.
-	 * @throws Exception
 	 */
-	public List selectFromInbox(User user) throws Exception;
+	public List selectFromInbox(User user) ;
 	
 	/**
 	 * Selects all messages from the user's sent box. 
@@ -97,9 +93,8 @@ public interface PrivateMessageDAO
 	 * @param user The user to fetch the messages
 	 * @return A <code>List</code> with all messages found. Each 
 	 * entry is a <code>PrivateMessage</code> entry.
-	 * @throws Exception
 	 */
-	public List selectFromSent(User user) throws Exception;
+	public List selectFromSent(User user) ;
 	
 	/**
 	 * Gets a <code>PrivateMessage</code> by its id.
@@ -107,7 +102,6 @@ public interface PrivateMessageDAO
 	 * @param pm A <code>PrivateMessage</code> instance containing the pm's id
 	 * to retrieve
 	 * @return The pm contents
-	 * @throws Exception
 	 */
-	public PrivateMessage selectById(PrivateMessage pm) throws Exception;
+	public PrivateMessage selectById(PrivateMessage pm) ;
 }

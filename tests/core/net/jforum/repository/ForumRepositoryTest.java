@@ -61,7 +61,7 @@ import net.jforum.view.forum.common.ForumCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumRepositoryTest.java,v 1.14 2006/01/29 15:07:16 rafaelsteil Exp $
+ * @version $Id: ForumRepositoryTest.java,v 1.15 2006/08/20 12:19:18 sergemaslyukov Exp $
  */
 public class ForumRepositoryTest extends TestCase 
 {
@@ -363,7 +363,7 @@ public class ForumRepositoryTest extends TestCase
 				}
 			}
 			
-			public List selectAll() throws Exception {
+			public List selectAll() {
 				return this.categories;
 			}
 		};
@@ -385,7 +385,7 @@ public class ForumRepositoryTest extends TestCase
 				}
 			}
 			
-			public List selectAll() throws Exception {
+			public List selectAll() {
 				return this.forums;
 			}
 		};

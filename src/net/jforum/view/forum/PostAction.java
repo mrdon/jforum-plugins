@@ -45,6 +45,7 @@ package net.jforum.view.forum;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -94,18 +95,24 @@ import net.jforum.view.forum.common.PollCommon;
 import net.jforum.view.forum.common.PostCommon;
 import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.149 2006/08/12 00:23:27 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.150 2006/08/20 12:19:16 sergemaslyukov Exp $
  */
 public class PostAction extends Command 
 {
-	public void list() throws Exception 
+    private static final Logger log = Logger.getLogger(PostAction.class);
+
+	public void list()
 	{
 		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
 		PollDAO pollDao = DataAccessDriver.getInstance().newPollDAO();
-		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
+
+        //TODO um not user. remove or use?
+        UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 
 		UserSession us = SessionFacade.getUserSession();
@@ -237,9 +244,8 @@ public class PostAction extends Command
 	
 	/**
 	 * Given a postId, sends the user to the right page
-	 * @throws Exception
 	 */
-	public void preList() throws Exception
+	public void preList()
 	{
 		int postId = this.request.getIntParameter("post_id");
 		
@@ -263,9 +269,8 @@ public class PostAction extends Command
 	
 	/**
 	 * Votes on a poll.
-	 * @throws Exception
 	 */
-	public void vote() throws Exception
+	public void vote()
 	{
 		int pollId = this.request.getIntParameter("poll_id");
 		int topicId = this.request.getIntParameter("topic_id");
@@ -298,13 +303,14 @@ public class PostAction extends Command
 			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 	}
 
-	public void listByUser() throws Exception 
+	public void listByUser()
 	{
 		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
-		
-		UserSession us = SessionFacade.getUserSession();
+
+        // TODO us and anonymousUser not used. remove or use?
+        UserSession us = SessionFacade.getUserSession();
 		int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 		
 		User u = um.selectById(this.request.getIntParameter("user_id"));
@@ -374,9 +380,11 @@ public class PostAction extends Command
 		ViewCommon.contextToPagination(start, totalMessages, count);
 	}
 
-	public void review() throws Exception 
+	public void review()
 	{
 		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
+
+        //TODO um not user. remove or use?
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 
@@ -423,21 +431,21 @@ public class PostAction extends Command
 		this.context.put("message", I18n.getMessage("PostShow.replyOnly"));
 	}
 	
-	private boolean isReplyOnly(int forumId) throws Exception
+	private boolean isReplyOnly(int forumId)
 	{
 		return !SecurityRepository.canAccess(SecurityConstants.PERM_REPLY_ONLY, 
 				Integer.toString(forumId));
 	}
 	
-	public void reply() throws Exception
+	public void reply()
 	{
 		this.insert();
 	}
 
-	public void insert() throws Exception 
+	public void insert()
 	{
-		int forumId = -1;
-		
+		int forumId;
+
 		// If we have a topic_id, then it should be a reply
 		if (this.request.getParameter("topic_id") != null) {
 			int topicId = this.request.getIntParameter("topic_id");
@@ -544,15 +552,14 @@ public class PostAction extends Command
 		this.context.put("user", user);
 	}
 
-	public void edit() throws Exception {
+	public void edit()  {
 		this.edit(false, null);
 	}
 
-	private void edit(boolean preview, Post p) throws Exception 
+	private void edit(boolean preview, Post p)
 	{
 		int userId = SessionFacade.getUserSession().getUserId();
 		int aId = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
-		boolean canAccess = false;
 
 		if (!preview) {
 			PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
@@ -566,6 +573,7 @@ public class PostAction extends Command
 		}
 
 		boolean isModerator = SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_EDIT);
+        boolean canAccess;
 		canAccess = (isModerator || p.getUserId() == userId);
 
 		if ((userId != aId) && canAccess) {
@@ -649,7 +657,7 @@ public class PostAction extends Command
 		this.context.put("user", u);
 	}
 	
-	public void quote() throws Exception 
+	public void quote()
 	{
 		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
 		Post p = pm.selectById(this.request.getIntParameter("post_id"));
@@ -714,7 +722,7 @@ public class PostAction extends Command
 		this.context.put("smilies", SmiliesRepository.getSmilies());
 	}
 
-	public void editSave() throws Exception 
+	public void editSave()
 	{
 		PostDAO postDao = DataAccessDriver.getInstance().newPostDAO();
 		PollDAO pollDao = DataAccessDriver.getInstance().newPollDAO();
@@ -820,6 +828,7 @@ public class PostAction extends Command
 				
 				topicDao.update(t);
 				
+                //TODO u not user. remove or use?
 				User u = DataAccessDriver.getInstance().newUserDAO().selectById(p.getUserId());
 				
 				if (changeType) {
@@ -850,7 +859,7 @@ public class PostAction extends Command
 		}
 	}
 	
-	private boolean ensurePollMinimumOptions(Post p, Poll poll) throws Exception
+	private boolean ensurePollMinimumOptions(Post p, Poll poll)
 	{
 		if (poll.getOptions().size() < 2) {
 			// It is not a valid poll, cancel the post
@@ -891,7 +900,7 @@ public class PostAction extends Command
 		this.context.put("message", I18n.getMessage("PostShow.notModeratedYet"));
 	}
 
-	public void insertSave() throws Exception 
+	public void insertSave()
 	{
 		int forumId = this.request.getIntParameter("forum_id");
 		boolean firstPost = false;
@@ -991,7 +1000,7 @@ public class PostAction extends Command
 		
 		p.setForumId(this.request.getIntParameter("forum_id"));
 		
-		if (p.getSubject() == null || p.getSubject() == "") {
+		if (StringUtils.isBlank(p.getSubject())) {
 			p.setSubject(t.getTitle());
 		}
 		
@@ -1176,7 +1185,7 @@ public class PostAction extends Command
 		return (newStart > currentStart) ? newStart : currentStart;
 	}
 
-	public void delete() throws Exception 
+	public void delete()
 	{
 		if (!SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE)) {
 			this.setTemplateName(TemplateKeys.POSTS_CANNOT_DELETE);
@@ -1276,13 +1285,13 @@ public class PostAction extends Command
 		ForumRepository.reloadForum(p.getForumId());
 	}
 
-	private void watch(TopicDAO tm, int topicId, int userId) throws Exception {
+	private void watch(TopicDAO tm, int topicId, int userId)  {
 		if (!tm.isUserSubscribed(topicId, userId)) {
 			tm.subscribeUser(topicId, userId);
 		}
 	}
 
-	public void watch() throws Exception {
+	public void watch()  {
 		int topicId = this.request.getIntParameter("topic_id");
 		int userId = SessionFacade.getUserSession().getUserId();
 
@@ -1290,7 +1299,7 @@ public class PostAction extends Command
 		this.list();
 	}
 
-	public void unwatch() throws Exception {
+	public void unwatch()  {
 		if (SessionFacade.isLogged()) {
 			int topicId = this.request.getIntParameter("topic_id");
 			int userId = SessionFacade.getUserSession().getUserId();
@@ -1315,67 +1324,76 @@ public class PostAction extends Command
 		}
 	}
 	
-	public void downloadAttach() throws Exception
+	public void downloadAttach()
 	{
-		if ((SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED) && 
-				!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD))
-				|| (!SessionFacade.isLogged() && !SystemGlobals.getBoolValue(ConfigKeys.ATTACHMENTS_ANONYMOUS))) {
-			this.setTemplateName(TemplateKeys.POSTS_CANNOT_DOWNLOAD);
-			this.context.put("message", I18n.getMessage("Attachments.featureDisabled"));
-			return;
-		}
-		
-		int id = this.request.getIntParameter("attach_id");
-		
-		AttachmentDAO am = DataAccessDriver.getInstance().newAttachmentDAO();
-		Attachment a = am.selectAttachmentById(id);
-		
-		String filename = SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR)
-			+ "/"
-			+ a.getInfo().getPhysicalFilename();
-		
-		if (!new File(filename).exists()) {
-			this.setTemplateName(TemplateKeys.POSTS_ATTACH_NOTFOUND);
-			this.context.put("message", I18n.getMessage("Attachments.notFound"));
-			return;
-		}
-		
-		a.getInfo().setDownloadCount(a.getInfo().getDownloadCount() + 1);
-		am.updateAttachment(a);
-		
-		FileInputStream fis = new FileInputStream(filename);
-		OutputStream os = response.getOutputStream();
-		
-		if (am.isPhysicalDownloadMode(a.getInfo().getExtension().getExtensionGroupId())) {
-			this.response.setContentType("application/octet-stream");
-		}
-		else {
-			this.response.setContentType(a.getInfo().getMimetype());
-		}
-		
-		if (this.request.getHeader("User-Agent").indexOf("Firefox") != -1) {			
-			this.response.setHeader("Content-Disposition", "attachment; filename=\"" 
-				+ new String(a.getInfo().getRealFilename().getBytes(SystemGlobals.getValue(ConfigKeys.ENCODING)), 
-					SystemGlobals.getValue(ConfigKeys.DEFAULT_CONTAINER_ENCODING)) + "\";");
-		} 
-		else {
-			this.response.setHeader("Content-Disposition", "attachment; filename=\"" 
-				+ ViewCommon.toUtf8String(a.getInfo().getRealFilename()) + "\";");
-		}
-		
-		this.response.setContentLength((int)a.getInfo().getFilesize());
-		
-		int c = 0;
-		byte[] b = new byte[4096];
-		while ((c = fis.read(b)) != -1) {
-			os.write(b, 0, c);
-		}
-		
-		fis.close();
-		os.close();
-		
-		JForumExecutionContext.enableCustomContent(true);
-	}
+        try
+        {
+            if ((SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED) &&
+                    !SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD))
+                    || (!SessionFacade.isLogged() && !SystemGlobals.getBoolValue(ConfigKeys.ATTACHMENTS_ANONYMOUS))) {
+                this.setTemplateName(TemplateKeys.POSTS_CANNOT_DOWNLOAD);
+                this.context.put("message", I18n.getMessage("Attachments.featureDisabled"));
+                return;
+            }
+
+            int id = this.request.getIntParameter("attach_id");
+
+            AttachmentDAO am = DataAccessDriver.getInstance().newAttachmentDAO();
+            Attachment a = am.selectAttachmentById(id);
+
+            String filename = SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR)
+                + "/"
+                + a.getInfo().getPhysicalFilename();
+
+            if (!new File(filename).exists()) {
+                this.setTemplateName(TemplateKeys.POSTS_ATTACH_NOTFOUND);
+                this.context.put("message", I18n.getMessage("Attachments.notFound"));
+                return;
+            }
+
+            a.getInfo().setDownloadCount(a.getInfo().getDownloadCount() + 1);
+            am.updateAttachment(a);
+
+            FileInputStream fis = new FileInputStream(filename);
+            OutputStream os = response.getOutputStream();
+
+            if (am.isPhysicalDownloadMode(a.getInfo().getExtension().getExtensionGroupId())) {
+                this.response.setContentType("application/octet-stream");
+            }
+            else {
+                this.response.setContentType(a.getInfo().getMimetype());
+            }
+
+            if (this.request.getHeader("User-Agent").indexOf("Firefox") != -1) {
+                this.response.setHeader("Content-Disposition", "attachment; filename=\""
+                    + new String(a.getInfo().getRealFilename().getBytes(SystemGlobals.getValue(ConfigKeys.ENCODING)),
+                        SystemGlobals.getValue(ConfigKeys.DEFAULT_CONTAINER_ENCODING)) + "\";");
+            }
+            else {
+                this.response.setHeader("Content-Disposition", "attachment; filename=\""
+                    + ViewCommon.toUtf8String(a.getInfo().getRealFilename()) + "\";");
+            }
+
+            this.response.setContentLength((int)a.getInfo().getFilesize());
+
+            int c;
+            byte[] b = new byte[4096];
+            while ((c = fis.read(b)) != -1) {
+                os.write(b, 0, c);
+            }
+
+            fis.close();
+            os.close();
+
+            JForumExecutionContext.enableCustomContent(true);
+        }
+        catch (IOException e)
+        {
+            String es = "Erorr downloadAttach()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+    }
 	
 	private void topicLocked() {
 		this.setTemplateName(TemplateKeys.POSTS_TOPIC_LOCKED);
@@ -1389,7 +1407,7 @@ public class PostAction extends Command
 		this.context.put("smilies", SmiliesRepository.getSmilies());
 	}
 
-	private boolean isForumReadonly(int forumId, boolean isReply) throws Exception {
+	private boolean isForumReadonly(int forumId, boolean isReply) {
 		if (!SecurityRepository.canAccess(SecurityConstants.PERM_READ_ONLY_FORUMS, Integer.toString(forumId))) {
 			if (isReply) {
 				this.list();
@@ -1405,14 +1423,14 @@ public class PostAction extends Command
 		return false;
 	}
 	
-	public void insertSave2() throws Exception
+	public void insertSave2()
 	{
 		this.insertSave(1, true, "Teste insertSave2", 0, "teste", "Admin", "admin");
 	}
 	
 	private void insertSave(int forumId, boolean newTopic,
 			String subject, int topicId,
-			String body, String username, String password) throws Exception {
+			String body, String username, String password)  {
 		
 		boolean firstPost = false;
 		boolean moderate = false;
@@ -1425,7 +1443,7 @@ public class PostAction extends Command
 		Topic t = new Topic(-1);
 		t.setForumId(forumId);
 		
-		User u = null;
+		User u;
 		u = userDao.validateLogin(username, password);
 		
 		int userId = u.getId();
@@ -1456,12 +1474,11 @@ public class PostAction extends Command
 		// Set the Post
 		Post p = new Post();
 		p.setTime(new Date());
-		int postId = -1;
-		
+
 		p = PostCommon.fillPostFromRequest(p, false);
 		p.setForumId(forumId);
 		// the title of the post is same as the org post
-		if (p.getSubject() == null || p.getSubject() == "") {
+		if (StringUtils.isBlank(p.getSubject())) {
 			p.setSubject(t.getTitle());
 		}
 		p.setText(body);
@@ -1473,13 +1490,16 @@ public class PostAction extends Command
 		p.setUserId(userId);
 		
 		
+        int postId;
 		postId = postDao.addNew(p);
 		
 		if (newTopic) {
 			t.setFirstPostId(postId);
 			
 		}
-		if (!moderate) {
+
+        // TODO at this point moderate always false
+        if (!moderate) {
 			t.setLastPostId(postId);
 			t.setLastPostBy(u);
 			t.setLastPostDate(p.getTime());
@@ -1488,6 +1508,7 @@ public class PostAction extends Command
 		
 		topicDao.update(t);
 		
+        // TODO at this point moderate always false
 		if (!moderate) {
 			// Updates forum stats, cache and etc
 			if (!newTopic) {
@@ -1500,19 +1521,17 @@ public class PostAction extends Command
 			t.setTotalViews(t.getTotalViews() + 1);
 			
 			//update user's post statistic
-			DataAccessDriver.getInstance().newUserDAO().incrementPosts(
-					p.getUserId());
+			DataAccessDriver.getInstance().newUserDAO().incrementPosts(p.getUserId());
 			
 			//update boards statistic
-			TopicsCommon.updateBoardStatus(t, postId, firstPost, topicDao,
-				forumDao);
+			TopicsCommon.updateBoardStatus(t, postId, firstPost, topicDao,forumDao);
 			
 			JForumExecutionContext.setRedirect(this.request.getContextPath() + "/posts/list/" + t.getId() + ".page");
 		}
 	}
  
 
-	private boolean anonymousPost(int forumId) throws Exception {
+	private boolean anonymousPost(int forumId)  {
 		// Check if anonymous posts are allowed
 		if (!SessionFacade.isLogged()
 				&& !SecurityRepository.canAccess(SecurityConstants.PERM_ANONYMOUS_POST, Integer.toString(forumId))) {

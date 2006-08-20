@@ -51,7 +51,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SystemGlobalsListener.java,v 1.6 2005/07/26 04:01:24 diegopires Exp $
+ * @version $Id: SystemGlobalsListener.java,v 1.7 2006/08/20 12:19:13 sergemaslyukov Exp $
  */
 public class SystemGlobalsListener implements FileChangeListener
 {
@@ -62,17 +62,10 @@ public class SystemGlobalsListener implements FileChangeListener
 	 */
 	public void fileChanged(String filename)
 	{
-		try {
-			logger.info("Reloading "+ filename);
+        logger.info("Reloading "+ filename);
 
-			SystemGlobals.initGlobals(SystemGlobals.getApplicationPath(), 
-					SystemGlobals.getValue(ConfigKeys.DEFAULT_CONFIG));
-			ConfigLoader.listenForChanges();		
-		}
-		catch (IOException e) {
-			logger.info(e);
-			e.printStackTrace();
-		}
-	}
-
+        SystemGlobals.initGlobals(SystemGlobals.getApplicationPath(),
+            SystemGlobals.getValue(ConfigKeys.DEFAULT_CONFIG));
+        ConfigLoader.listenForChanges();
+    }
 }

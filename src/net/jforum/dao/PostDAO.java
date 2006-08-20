@@ -47,14 +47,14 @@ import java.util.List;
 import net.jforum.entities.Post;
 
 /**
-  * Model interface for {@link net.jforum.Post}.
+  * Model interface for {@link net.jforum.entities.Post}.
  * This interface defines methods which are expected to be
  * implementd by a specific data access driver. The intention is
  * to provide all functionality needed to update, insert, delete and
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: PostDAO.java,v 1.8 2006/04/10 22:45:30 vmal Exp $
+ * @version $Id: PostDAO.java,v 1.9 2006/08/20 12:19:01 sergemaslyukov Exp $
  */
 public interface PostDAO 
 {
@@ -63,37 +63,30 @@ public interface PostDAO
 	 * 
 	 * @param postId The Post ID to search
 	 * @return <code>Post</code>object containing all the information
-	 * @throws Exception
-	 * @see #selectAll
 	 */
-	public Post selectById(int postId) throws Exception;
+	public Post selectById(int postId) ;
 		
 	/**
 	 * Delete a Post.
 	 * 
-	 * @param Post The Post to delete
-	 * @throws Exception
-	 * @see #canDelete(int)
+	 * @param post Post The Post to delete
 	 */
-	public void delete(Post post) throws Exception;
+	public void delete(Post post) ;
 	
 	/**
 	 * Updates a Post.
 	 * 
 	 * @param post Reference to a <code>Post</code> object to update
-	 * @throws Exception
-	 * @see #update(int)
 	 */
-	public void update(Post post) throws Exception;
+	public void update(Post post) ;
 	
 	/**
 	 * Adds a new Post.
 	 * 
-	 * @param Post Reference to a valid and configured <code>Post</code> object
+	 * @param post Post Reference to a valid and configured <code>Post</code> object
 	 * @return The new ID
-	 * @throws Exception
 	 */
-	public int addNew(Post post) throws Exception;
+	public int addNew(Post post) ;
 	
 	/**
 	 * Selects all messages relacted to a specific topic. 
@@ -101,46 +94,47 @@ public interface PostDAO
 	 * @param topicId The topic ID 
 	 * @param startFrom The count position to start fetching
 	 * @param count The total number of records to retrieve
-	 * @return <code>ArrayList</code> containing all records found. Each entry of the <code>ArrayList</code> is a {@link net.jforum.Post} object
-	 * @throws Exception
+	 * @return <code>ArrayList</code> containing all records found. Each entry of the <code>ArrayList</code> is a {@link net.jforum.entities.Post} object
 	 */
-	public List selectAllByTopicByLimit(int topicId, int startFrom, int count) throws Exception;
+	public List selectAllByTopicByLimit(int topicId, int startFrom, int count) ;
 
 
        /**
 	 * Selects all posts associated to a specific user and belonging to 
 	 * given forums
-	 * @param userId User ID.
-	 * @throws Exception
+	 * @param userId int User ID.
+	 * @param startFrom int
+	 * @param count int
+	 * @return  List
 	 */
-	public List selectByUserByLimit(int userId,int startFrom, int count) throws Exception;
+	public List selectByUserByLimit(int userId,int startFrom, int count) ;
 
-	/** Count user posts.
-	*/
-	public int countUserPosts(int userId) throws Exception;
+    /**
+     * Count user posts.
+     * @param userId int
+     * @return int
+     */
+	public int countUserPosts(int userId) ;
 
 	/**
 	 * Selects all messages relacted to a specific topic. 
 	 * 
 	 * @param topicId The topic ID 
-	 * @return <code>ArrayList</code> containing all records found. Each entry of the <code>ArrayList</code> is a {@link net.jforum.Post} object
-	 * @throws Exception
-	 */	
-	public List selectAllByTopic(int topicId) throws Exception;
+	 * @return <code>ArrayList</code> containing all records found. Each entry of the <code>ArrayList</code> is a {@link net.jforum.entities.Post} object
+	 */
+	public List selectAllByTopic(int topicId) ;
 	
 	/**
 	 * Delete all posts related to the given topic
 	 * 
-	 * @param topicId
-	 * @throws Exception
+	 * @param topicId int
 	 */
-	public void deleteByTopic(int topicId) throws Exception;
+	public void deleteByTopic(int topicId) ;
 
 	/**
 	 * Count how many previous posts there are before the given post id
-	 * @param postId
-	 * @return
-	 * @throws Exception
+	 * @param postId int
+	 * @return int
 	 */
-	public int countPreviousPosts(int postId) throws Exception;
+	public int countPreviousPosts(int postId) ;
 }

@@ -50,7 +50,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: QueriesFileListener.java,v 1.5 2005/07/26 04:01:24 diegopires Exp $
+ * @version $Id: QueriesFileListener.java,v 1.6 2006/08/20 12:19:12 sergemaslyukov Exp $
  */
 public class QueriesFileListener implements FileChangeListener
 {
@@ -61,20 +61,15 @@ public class QueriesFileListener implements FileChangeListener
 	 */
 	public void fileChanged(String filename)
 	{
-		try {
-			logger.info("Reloading "+ filename);
-			SystemGlobals.loadQueries(filename);
+        logger.info("Reloading "+ filename);
+        SystemGlobals.loadQueries(filename);
 			
-			String driverQueries = SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER);
+        String driverQueries = SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER);
 			
-			// Force reload of driver specific queries
-			if (!filename.equals(driverQueries)) {
-				SystemGlobals.loadQueries(driverQueries);
-			}
-		}
-		catch (IOException e) {
-			logger.info(e);
-		}
+        // Force reload of driver specific queries
+        if (!filename.equals(driverQueries)) {
+            SystemGlobals.loadQueries(driverQueries);
+        }
 	}
 
 }

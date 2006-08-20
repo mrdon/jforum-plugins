@@ -67,7 +67,7 @@ import org.htmlparser.nodes.TextNode;
  * <li>http://quickwired.com/kallahar/smallprojects/php_xss_filter_function.php
  * <br>
  * @author Rafael Steil
- * @version $Id: SafeHtml.java,v 1.15 2006/08/06 00:07:47 rafaelsteil Exp $
+ * @version $Id: SafeHtml.java,v 1.16 2006/08/20 12:19:11 sergemaslyukov Exp $
  */
 public class SafeHtml 
 {
@@ -87,7 +87,11 @@ public class SafeHtml
 	
 	private static void splitAndTrim(String s, Set data)
 	{
-		String[] tags = SystemGlobals.getValue(s).toUpperCase().split(",");
+        String s1 = SystemGlobals.getValue(s);
+        if (s1==null) {
+            return;
+        }
+        String[] tags = s1.toUpperCase().split(",");
 
 		for (int i = 0; i < tags.length; i++) {
 			data.add(tags[i].trim());

@@ -49,7 +49,7 @@ import net.jforum.entities.Category;
 
 /**
  * @author Rafael Steil
- * @version $Id: CategoryModelDummy.java,v 1.6 2005/07/26 03:05:53 rafaelsteil Exp $
+ * @version $Id: CategoryModelDummy.java,v 1.7 2006/08/20 12:19:18 sergemaslyukov Exp $
  */
 class CategoryModelDummy implements CategoryDAO 
 {
@@ -58,7 +58,7 @@ class CategoryModelDummy implements CategoryDAO
 	/** 
 	 * @see net.jforum.dao.CategoryDAO#selectById(int)
 	 */
-	public Category selectById(int categoryId) throws Exception {
+	public Category selectById(int categoryId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -66,7 +66,7 @@ class CategoryModelDummy implements CategoryDAO
 	/** 
 	 * @see net.jforum.dao.CategoryDAO#selectAll()
 	 */
-	public List selectAll() throws Exception {
+	public List selectAll() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -74,7 +74,7 @@ class CategoryModelDummy implements CategoryDAO
 	/** 
 	 * @see net.jforum.dao.CategoryDAO#canDelete(int)
 	 */
-	public boolean canDelete(int categoryId) throws Exception {
+	public boolean canDelete(int categoryId) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -82,7 +82,7 @@ class CategoryModelDummy implements CategoryDAO
 	/** 
 	 * @see net.jforum.dao.CategoryDAO#delete(int)
 	 */
-	public void delete(int categoryId) throws Exception {
+	public void delete(int categoryId) {
 		// TODO Auto-generated method stub
 
 	}
@@ -90,7 +90,7 @@ class CategoryModelDummy implements CategoryDAO
 	/** 
 	 * @see net.jforum.dao.CategoryDAO#update(net.jforum.entities.Category)
 	 */
-	public void update(Category category) throws Exception {
+	public void update(Category category) {
 		// TODO Auto-generated method stub
 
 	}
@@ -98,22 +98,22 @@ class CategoryModelDummy implements CategoryDAO
 	/** 
 	 * @see net.jforum.dao.CategoryDAO#addNew(net.jforum.entities.Category)
 	 */
-	public int addNew(Category category) throws Exception {
+	public int addNew(Category category) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 	
 	/** 
-	 * @see net.jforum.dao.CategoryDAO#setOrderDown(net.jforum.entities.Category)
+	 * @see net.jforum.dao.CategoryDAO#setOrderDown(net.jforum.entities.Category, net.jforum.entities.Category)
 	 */
-	public void setOrderDown(Category c, Category c2) throws Exception {
+	public void setOrderDown(Category c, Category c2) {
 		// TODO Auto-generated method stub
 	}
 	
 	/** 
-	 * @see net.jforum.dao.CategoryDAO#setOrderUp(net.jforum.entities.Category)
+	 * @see net.jforum.dao.CategoryDAO#setOrderUp(net.jforum.entities.Category, net.jforum.entities.Category) 
 	 */
-	public void setOrderUp(Category c, Category c2) throws Exception {
+	public void setOrderUp(Category c, Category c2) {
 		// TODO Auto-generated method stub
 	}
 	

@@ -54,28 +54,28 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: MessageIndexerTask.java,v 1.5 2005/07/26 03:05:44 rafaelsteil Exp $
+ * @version $Id: MessageIndexerTask.java,v 1.6 2006/08/20 12:19:13 sergemaslyukov Exp $
  */
 public class MessageIndexerTask implements Task
 {
 	private static Logger logger = Logger.getLogger(MessageIndexerTask.class);
-	private Connection conn;
 	private Post post;
 	
-	public MessageIndexerTask(Post post) throws Exception
+	public MessageIndexerTask(Post post)
 	{
 		this.post = post;
-		this.conn = DBConnection.getImplementation().getConnection();
 	}
 
 	/**
 	 * @see net.jforum.util.concurrent.Task#execute()
 	 */
-	public Object execute() throws Exception
+	public Object execute()
 	{
+        Connection conn=null;
 		try {
+            conn = DBConnection.getImplementation().getConnection();
 			SearchIndexerDAO indexer = DataAccessDriver.getInstance().newSearchIndexerDAO();
-			indexer.setConnection(this.conn);
+			indexer.setConnection(conn);
 			indexer.insertSearchWords(this.post);
 		}
 		catch (Exception e) {
@@ -83,12 +83,7 @@ public class MessageIndexerTask implements Task
 			e.printStackTrace();
 		}
 		finally {
-			if (this.conn != null) {
-				try {
-					DBConnection.getImplementation().releaseConnection(this.conn);
-				}
-				catch (Exception e) {}
-			}
+            DBConnection.getImplementation().releaseConnection(conn);
 		}
 		
 		return null;

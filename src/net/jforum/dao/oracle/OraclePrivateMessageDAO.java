@@ -44,6 +44,7 @@ package net.jforum.dao.oracle;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import net.jforum.JForumExecutionContext;
 import net.jforum.entities.PrivateMessage;
@@ -51,15 +52,15 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Dmitriy Kiriy
- * @version $Id: OraclePrivateMessageDAO.java,v 1.7 2006/01/29 15:07:08 rafaelsteil Exp $
+ * @version $Id: OraclePrivateMessageDAO.java,v 1.8 2006/08/20 12:19:06 sergemaslyukov Exp $
  */
 public class OraclePrivateMessageDAO extends net.jforum.dao.generic.GenericPrivateMessageDAO
 {
 	/**
 	 * @see net.jforum.dao.generic.GenericPrivateMessageDAO#addPmText(net.jforum.entities.PrivateMessage)
 	 */
-	protected void addPmText(PrivateMessage pm) throws Exception
-	{
+	protected void addPmText(PrivateMessage pm) throws SQLException
+    {
 		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
 				SystemGlobals.getSql("PrivateMessagesModel.addText"));
 		p.setInt(1, pm.getId());
@@ -73,7 +74,7 @@ public class OraclePrivateMessageDAO extends net.jforum.dao.generic.GenericPriva
 	/**
 	 * @see net.jforum.dao.generic.GenericPrivateMessageDAO#getPmText(java.sql.ResultSet)
 	 */
-	protected String getPmText(ResultSet rs) throws Exception
+	protected String getPmText(ResultSet rs) throws SQLException
 	{
 		return OracleUtils.readBlobUTF16BinaryStream(rs, "privmsgs_text");
 	}

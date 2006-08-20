@@ -66,12 +66,12 @@ import net.jforum.view.admin.common.ModerationCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.25 2006/04/08 14:15:21 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.26 2006/08/20 12:19:14 sergemaslyukov Exp $
  */
 public class ForumAction extends AdminCommand 
 {
 	// Listing
-	public void list() throws Exception
+	public void list()
 	{
 		this.context.put("categories", DataAccessDriver.getInstance().newCategoryDAO().selectAll());
 		this.context.put("repository", new ForumRepository());
@@ -79,7 +79,7 @@ public class ForumAction extends AdminCommand
 	}
 	
 	// One more, one more
-	public void insert() throws Exception
+	public void insert()
 	{
 		CategoryDAO cm = DataAccessDriver.getInstance().newCategoryDAO();
 		
@@ -91,7 +91,7 @@ public class ForumAction extends AdminCommand
 	}
 	
 	// Edit
-	public void edit() throws Exception
+	public void edit()
 	{
 		CategoryDAO cm = DataAccessDriver.getInstance().newCategoryDAO();
 		
@@ -103,7 +103,7 @@ public class ForumAction extends AdminCommand
 	}
 	
 	//  Save information
-	public void editSave() throws Exception
+	public void editSave()
 	{
 		Forum f = new Forum(ForumRepository.getForum(this.request.getIntParameter("forum_id")));
 		boolean moderated = f.isModerated();
@@ -134,17 +134,17 @@ public class ForumAction extends AdminCommand
 		this.list();
 	}
 	
-	public void up() throws Exception
+	public void up()
 	{
 		this.processOrdering(true);
 	}
 	
-	public void down() throws Exception
+	public void down()
 	{
 		this.processOrdering(false);
 	}
 	
-	private void processOrdering(boolean up) throws Exception
+	private void processOrdering(boolean up)
 	{
 		Forum toChange = new Forum(ForumRepository.getForum(Integer.parseInt(
 				this.request.getParameter("forum_id"))));
@@ -178,7 +178,7 @@ public class ForumAction extends AdminCommand
 	}
 	
 	// Delete
-	public void delete() throws Exception
+	public void delete()
 	{
 		String ids[] = this.request.getParameterValues("forum_id");
 		
@@ -201,7 +201,7 @@ public class ForumAction extends AdminCommand
 	}
 	
 	// A new one
-	public void insertSave() throws Exception
+	public void insertSave()
 	{
 		Forum f = new Forum();
 		f.setDescription(this.request.getParameter("description"));
@@ -265,7 +265,7 @@ public class ForumAction extends AdminCommand
 		this.list();
 	}
 	
-	private void addRole(PermissionControl pc, String roleName, int forumId, String[] groups, boolean allow) throws Exception
+	private void addRole(PermissionControl pc, String roleName, int forumId, String[] groups, boolean allow) 
 	{
 		Role role = new Role();
 		role.setName(roleName);

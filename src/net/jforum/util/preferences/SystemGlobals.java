@@ -69,10 +69,12 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author Pieter Olivier
- * @version $Id: SystemGlobals.java,v 1.25 2005/08/29 02:13:22 rafaelsteil Exp $
+ * @version $Id: SystemGlobals.java,v 1.26 2006/08/20 12:19:13 sergemaslyukov Exp $
  */
 public class SystemGlobals implements VariableStore
 {
+    private final static Logger log = Logger.getLogger(SystemGlobals.class);
+
 	private static SystemGlobals globals = new SystemGlobals();
 
 	private String defaultConfig;
@@ -84,7 +86,7 @@ public class SystemGlobals implements VariableStore
 	private static Properties queries = new Properties();
 	private static Properties transientValues = new Properties();
 
-	private VariableExpander expander = new VariableExpander(this, "${", "}");;
+	private VariableExpander expander = new VariableExpander(this, "${", "}");
 	
 	private static final Logger logger = Logger.getLogger(SystemGlobals.class);
 	
@@ -94,15 +96,14 @@ public class SystemGlobals implements VariableStore
 	 * Initialize the global configuration
 	 * @param appPath The application path (normally the path to the webapp base dir
 	 * @param defaults The file containing system defaults (when null, defaults to <appPath>/WEB-INF/config/default.conf)
-	 * @param installation The specific installation realm (when null, defaults to System.getProperty("user"))
 	 */
-	public static void initGlobals(String appPath, String defaults) throws IOException
+	public static void initGlobals(String appPath, String defaults)
 	{
 		globals = new SystemGlobals();
 		globals.buildSystem(appPath, defaults);
 	}
 	
-	private void buildSystem(String appPath, String defaultConfig) throws IOException
+	private void buildSystem(String appPath, String defaultConfig)
 	{
 		if (defaultConfig == null) {
 			throw new InvalidParameterException("defaultConfig could not be null");
@@ -153,45 +154,58 @@ public class SystemGlobals implements VariableStore
 
 	/**
 	 * Load system defaults
-	 * 
-	 * @throws IOException
 	 */
-	public static void loadDefaults() throws IOException
+	public static void loadDefaults()
 	{
-		FileInputStream input = new FileInputStream(globals.defaultConfig);
-		globals.defaults.load(input);
-		input.close();
-		globals.expander.clearCache();
-	}
+        try
+        {
+            FileInputStream input = new FileInputStream(globals.defaultConfig);
+            globals.defaults.load(input);
+            input.close();
+            globals.expander.clearCache();
+        }
+        catch (IOException e)
+        {
+            String es = "Erorr loadDefaults()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+    }
 	
 	/**
 	 * Merge additional configuration defaults
 	 * 
 	 * @param file File from which to load the additional defaults
-	 * @throws IOException
 	 */
-	public static void loadAdditionalDefaults(String file) throws IOException
+	public static void loadAdditionalDefaults(String file)
 	{
 		if (!new File(file).exists()) {
 			logger.info("Cannot find file " + file + ". Will ignore it");
 			return;
 		}
-		
-		FileInputStream input = new FileInputStream(file);
-		globals.installation.load(input);
-		input.close();
-		
-		if (!additionalDefaultsList.contains(file)) {
+
+        try
+        {
+            FileInputStream input = new FileInputStream(file);
+            globals.installation.load(input);
+            input.close();
+        }
+        catch (IOException e)
+        {
+            String es = "Erorr loadAdditionalDefaults()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+
+        if (!additionalDefaultsList.contains(file)) {
 			additionalDefaultsList.add(file);
 		}
 	}
 
 	/**
 	 * Save installation defaults
-	 * 
-	 * @throws IOException when the file could not be written
 	 */
-	public static void saveInstallation() throws IOException
+	public static void saveInstallation()
 	{
 		// We need this temporary "p" because, when
 		// new FileOutputStream() is called, it will 
@@ -201,11 +215,20 @@ public class SystemGlobals implements VariableStore
 		// our new keys. 
 		Properties p = new Properties();
 		p.putAll(globals.installation);
-		FileOutputStream out = new FileOutputStream(globals.installationConfig);
-		p.store(out, "Installation specific configuration options");
-		out.close();
-		
-		ConfigLoader.listenInstallationConfig();
+        try
+        {
+            FileOutputStream out = new FileOutputStream(globals.installationConfig);
+            p.store(out, "Installation specific configuration options");
+            out.close();
+        }
+        catch (IOException e)
+        {
+            String es = "Erorr add()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+
+        ConfigLoader.listenInstallationConfig();
 	}
 
 	/**
@@ -306,8 +329,7 @@ public class SystemGlobals implements VariableStore
 	 * 
 	 * @return String with the name of the resource dir, relative 
 	 * to application's root dir.
-	 * @see #setApplicationResourceDir
-	 * @see #getApplicationPath
+	 * @see #getApplicationPath()
 	 * */
 	public static String getApplicationResourceDir()
 	{
@@ -318,12 +340,20 @@ public class SystemGlobals implements VariableStore
 	 * Load the SQL queries
 	 *
 	 * @param queryFile Complete path to the SQL queries file.
-	 * @throws java.io.IOException
 	 **/
-	public static void loadQueries(String queryFile) throws IOException
+	public static void loadQueries(String queryFile)
 	{
-		queries.load(new FileInputStream(queryFile));
-	}
+        try
+        {
+            queries.load(new FileInputStream(queryFile));
+        }
+        catch (IOException e)
+        {
+            String es = "Erorr loadQueries()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+    }
 
 	/**
 	 * Gets some SQL statement.

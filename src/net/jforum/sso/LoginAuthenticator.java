@@ -59,7 +59,7 @@ import net.jforum.entities.User;
  * <br>
  * If you want SSO, please check {@link net.jforum.sso.SSO}
  * @author Rafael Steil
- * @version $Id: LoginAuthenticator.java,v 1.5 2005/07/26 03:05:31 rafaelsteil Exp $
+ * @version $Id: LoginAuthenticator.java,v 1.6 2006/08/20 12:19:10 sergemaslyukov Exp $
  */
 public interface LoginAuthenticator 
 {
@@ -70,14 +70,13 @@ public interface LoginAuthenticator
 	 * @param password Password
 	 * @param extraParams Extra parameters, if any. 
 	 * @return An instance of a {@link net.jforum.entities.User} or <code>null</code>
-	 * @throws Exception
 	 */
-	public User validateLogin(String username, String password, Map extraParams) throws Exception;
+	public User validateLogin(String username, String password, Map extraParams) ;
 	
 	/**
 	 * Sets the user model for the instance.
 	 * 
-	 * @param userModel The user model to set
+	 * @param dao UserDAOThe user model to set
 	 */
 	public void setUserModel(UserDAO dao);
 }

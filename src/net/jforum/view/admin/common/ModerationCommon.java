@@ -50,11 +50,11 @@ import net.jforum.entities.Forum;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationCommon.java,v 1.4 2005/07/26 03:06:08 rafaelsteil Exp $
+ * @version $Id: ModerationCommon.java,v 1.5 2006/08/20 12:19:15 sergemaslyukov Exp $
  */
 public class ModerationCommon
 {
-	public void setForumsModerationStatus(Category c, boolean status) throws Exception
+	public void setForumsModerationStatus(Category c, boolean status)
 	{
 		for (Iterator iter = c.getForums().iterator(); iter.hasNext(); ) {
 			Forum f = (Forum)iter.next();
@@ -67,7 +67,7 @@ public class ModerationCommon
 		DataAccessDriver.getInstance().newForumDAO().setModerated(c.getId(), status);
 	}
 	
-	public void setTopicModerationStatus(int forumId, boolean status) throws Exception
+	public void setTopicModerationStatus(int forumId, boolean status) 
 	{
 		DataAccessDriver.getInstance().newTopicDAO().setModerationStatus(forumId, status);
 	}

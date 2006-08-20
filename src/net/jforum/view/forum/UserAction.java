@@ -46,6 +46,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.io.IOException;
 
 import net.jforum.ActionServletRequest;
 import net.jforum.Command;
@@ -79,13 +80,13 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.71 2006/07/20 00:10:11 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.72 2006/08/20 12:19:16 sergemaslyukov Exp $
  */
 public class UserAction extends Command 
 {
 	private static final Logger logger = Logger.getLogger(UserAction.class);
 	
-	private boolean canEdit() throws Exception
+	private boolean canEdit()
 	{
 		int tmpId = SessionFacade.getUserSession().getUserId();
 		boolean canEdit = SessionFacade.isLogged() && tmpId == this.request.getIntParameter("user_id");
@@ -97,7 +98,7 @@ public class UserAction extends Command
 		return canEdit;
 	}
 	
-	public void edit() throws Exception 
+	public void edit()
 	{
 		if (this.canEdit()) {
 			int userId = this.request.getIntParameter("user_id");
@@ -111,13 +112,13 @@ public class UserAction extends Command
 		} 
 	}
 
-	public void editDone() throws Exception
+	public void editDone()
 	{
 		this.context.put("editDone", true);
 		this.edit();
 	}
 
-	public void editSave() throws Exception 
+	public void editSave()
 	{
 		if (this.canEdit()) {
 			int userId = this.request.getIntParameter("user_id");
@@ -166,7 +167,7 @@ public class UserAction extends Command
 		}
 	}
 
-	public void insertSave() throws Exception 
+	public void insertSave()
 	{
 		UserSession userSession = SessionFacade.getUserSession();
 		int userId = userSession.getUserId();
@@ -195,8 +196,10 @@ public class UserAction extends Command
 		if (username != null) {
 			username = username.trim();
 		}
-		
-		if (!error && username.length() > SystemGlobals.getIntValue(ConfigKeys.USERNAME_MAX_LENGTH)) {
+
+        // TODO username at this point can be null. NPE possible
+
+        if (!error && username.length() > SystemGlobals.getIntValue(ConfigKeys.USERNAME_MAX_LENGTH)) {
 			this.context.put("error", I18n.getMessage("User.usernameTooBig"));
 			error = true;
 		}
@@ -256,12 +259,10 @@ public class UserAction extends Command
 		}
 	}
 
-	public void activateAccount() throws Exception 
+	public void activateAccount()
 	{
 		String hash = this.request.getParameter("hash");
 		int userId = (new Integer(this.request.getParameter("user_id"))).intValue();
-
-		String message = "";
 
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		User u = um.selectById(userId);
@@ -273,6 +274,7 @@ public class UserAction extends Command
 			this.logNewRegisteredUserIn(userId, u);
 		} 
 		else {
+            String message;
 			message = I18n.getMessage("User.invalidActivationKey");
 			this.setTemplateName(TemplateKeys.USER_INVALID_ACTIVATION);
 			this.context.put("message", message);
@@ -299,7 +301,7 @@ public class UserAction extends Command
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 	}
 
-	public void registrationComplete() throws Exception 
+	public void registrationComplete()
 	{
 		int userId = SessionFacade.getUserSession().getUserId();
 		
@@ -316,7 +318,7 @@ public class UserAction extends Command
 		this.setTemplateName(TemplateKeys.USER_REGISTRATION_COMPLETE);
 	}
 
-	public void validateLogin() throws Exception 
+	public void validateLogin()
 	{
 		String password;
 		String username;
@@ -427,7 +429,7 @@ public class UserAction extends Command
 		}
 
 		// Invalid login
-		if (validInfo == false) {
+		if (!validInfo) {
 			this.context.put("invalidLogin", "1");
 			this.setTemplateName(TemplateKeys.USER_VALIDATE_LOGIN);
 
@@ -444,7 +446,7 @@ public class UserAction extends Command
 		}
 	}
 
-    public void validateLogin(ActionServletRequest request) throws Exception {
+    public void validateLogin(ActionServletRequest request)  {
         this.request = request;
         validateLogin();
     }
@@ -454,10 +456,20 @@ public class UserAction extends Command
         return (auth != null && auth.startsWith("Basic "));
     }
 
-    private boolean parseBasicAuthentication() throws Exception {
+    private boolean parseBasicAuthentication()  {
         if (hasBasicAuthentication(request)) {
             String auth = request.getHeader("Authorization");
-            String decoded = new String(new sun.misc.BASE64Decoder().decodeBuffer(auth.substring(6)));
+            String decoded;
+            try
+            {
+                decoded = new String(new sun.misc.BASE64Decoder().decodeBuffer(auth.substring(6)));
+            }
+            catch (IOException e)
+            {
+                String es = "Erorr add()";
+                logger.error(es, e);
+                throw new RuntimeException(es, e);
+            }
             int p = decoded.indexOf(':');
             if (p != -1) {
                 request.setAttribute("username", decoded.substring(0, p));
@@ -468,14 +480,13 @@ public class UserAction extends Command
         return false;
     }
 
-    private User validateLogin(String name, String password) throws Exception
+    private User validateLogin(String name, String password)
 	{
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
-		User user = um.validateLogin(name, password);
-		return user;
+        return um.validateLogin(name, password);
 	}
 
-	public void profile() throws Exception 
+	public void profile()
 	{
 		DataAccessDriver da = DataAccessDriver.getInstance();
 		UserDAO udao = da.newUserDAO();
@@ -516,7 +527,7 @@ public class UserAction extends Command
 		this.setTemplateName(TemplateKeys.USER_NOT_FOUND);
 	}
 
-	public void logout() throws Exception 
+	public void logout()
 	{
 		JForumExecutionContext.setRedirect(this.request.getContextPath()
 			+ "/forums/list"
@@ -535,7 +546,7 @@ public class UserAction extends Command
 		SessionFacade.add(userSession);
 	}
 
-	public void login() throws Exception 
+	public void login()
 	{
 		if (ConfigKeys.TYPE_SSO.equals(SystemGlobals.getValue(ConfigKeys.AUTHENTICATION_TYPE))) {
 			this.registrationDisabled();
@@ -557,7 +568,7 @@ public class UserAction extends Command
 		this.context.put("pageTitle", I18n.getMessage("PasswordRecovery.title"));
 	}
 	
-	public User prepareLostPassword(String username, String email) throws Exception
+	public User prepareLostPassword(String username, String email)
 	{
 		User user = null;
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
@@ -586,7 +597,7 @@ public class UserAction extends Command
 	}
 
 	// Send lost password email
-	public void lostPasswordSend() throws Exception 
+	public void lostPasswordSend()
 	{
 		String email = this.request.getParameter("email");
 		String username = this.request.getParameter("username");
@@ -620,7 +631,7 @@ public class UserAction extends Command
 	}
 
 	// Recover user password ( aka, ask him a new one )
-	public void recoverPassword() throws Exception 
+	public void recoverPassword()
 	{
 		String hash = this.request.getParameter("hash");
 
@@ -628,13 +639,12 @@ public class UserAction extends Command
 		this.context.put("recoverHash", hash);
 	}
 
-	public void recoverPasswordValidate() throws Exception 
+	public void recoverPasswordValidate()
 	{
 		String hash = this.request.getParameter("recoverHash");
 		String email = this.request.getParameter("email");
 
-		String message = "";
-		
+		String message;
 		boolean isOk = DataAccessDriver.getInstance().newUserDAO().validateLostPasswordHash(email, hash);
 		if (isOk) {
 			String password = this.request.getParameter("newPassword");
@@ -654,7 +664,7 @@ public class UserAction extends Command
 	}
 
 		
-	public void list() throws Exception
+	public void list()
 	{
 		int start = this.preparePagination(DataAccessDriver.getInstance().newUserDAO().getTotalUsers());
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
@@ -665,7 +675,7 @@ public class UserAction extends Command
 		this.setTemplateName(TemplateKeys.USER_LIST);
 	}
 
-	public void listGroup() throws Exception
+	public void listGroup()
 	{
 		int groupId = this.request.getIntParameter("group_id");
 		
@@ -680,9 +690,8 @@ public class UserAction extends Command
 	
 	/**
 	 * @deprecated probably will be removed. Use KarmaAction to load Karma
-	 * @throws Exception
 	 */
-	public void searchKarma() throws Exception
+	public void searchKarma() 
 	{
 		int start = this.preparePagination(DataAccessDriver.getInstance().newUserDAO().getTotalUsers());
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);

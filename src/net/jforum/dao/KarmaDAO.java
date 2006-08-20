@@ -52,7 +52,7 @@ import net.jforum.entities.User;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaDAO.java,v 1.4 2005/07/26 03:04:29 rafaelsteil Exp $
+ * @version $Id: KarmaDAO.java,v 1.5 2006/08/20 12:19:01 sergemaslyukov Exp $
  */
 public interface KarmaDAO
 {
@@ -62,9 +62,8 @@ public interface KarmaDAO
 	 * @param karma The karma to add. The instance should at
 	 * least have set the karma status, the user who is receiving
 	 * the karma and the user which is setting the karme.
-	 * @throws Exception
 	 */
-	public void addKarma(Karma karma) throws Exception;
+	public void addKarma(Karma karma) ;
 	
 	/**
 	 * Gets the karma status of some user.
@@ -72,7 +71,7 @@ public interface KarmaDAO
 	 * @param userId The user id to get the karma status
 	 * @return A <code>net.jforum.entities.KarmaStatus</code> instance
 	 */
-	public KarmaStatus getUserKarma(int userId) throws Exception;
+	public KarmaStatus getUserKarma(int userId) ;
 	
 	/**
 	 * Updates the karma status for some user. 
@@ -80,9 +79,8 @@ public interface KarmaDAO
 	 * users table. 
 	 * 
 	 * @param userId The id of the user to update
-	 * @throws Exception
 	 */
-	public void updateUserKarma(int userId) throws Exception;
+	public void updateUserKarma(int userId) ;
 	
 	/**
 	 * Checks if the user can add the karma.
@@ -96,24 +94,22 @@ public interface KarmaDAO
 	 * @param postId The post id to chekc
 	 * @return <code>true</code> if the user hasn't voted on the
 	 * post yet, or <code>false</code> otherwise. 
-	 * @throws Exception
 	 */
-	public boolean userCanAddKarma(int userId, int postId) throws Exception;
+	public boolean userCanAddKarma(int userId, int postId) ;
 	
 	/**
 	 * Gets the karma status of some post.
 	 * 
 	 * @param postId The post id to get the karma status
 	 * @return A <code>net.jforum.entities.KarmaStatus</code> instance
-	 * @throws Exception
 	 */
-	public KarmaStatus getPostKarma(int postId) throws Exception;
+	public KarmaStatus getPostKarma(int postId) ;
 	
 	/**
 	 * Updates a karma
 	 * @param karma The karma instance to update
 	 */
-	public void update(Karma karma) throws Exception;
+	public void update(Karma karma) ;
 	
 	/**
 	 * Gets the votes the user made on some topic.
@@ -122,24 +118,23 @@ public interface KarmaDAO
 	 * 
 	 * @return A <code>java.util.Map</code>, where the key is the post id and the
 	 * value id the rate made by the user.
-	 * @throws Exception
 	 */
-	public Map getUserVotes(int topicId, int userId) throws Exception;
+	public Map getUserVotes(int topicId, int userId) ;
 	
 	/**
-	 * @param user
-	 * @throws Exception
+	 * @param user User
 	 */
-	public void getUserTotalKarma(User user) throws Exception;
+	public void getUserTotalKarma(User user) ;
 	
 	
 	/**
 	 * Total points received, grouped by user and filtered by a range of dates.
 	 * 
-	 * @param firstPeriod
-	 * @param lastPeriod
+	 * @param firstPeriod Date
+	 * @param lastPeriod Date
+     * @param start int
+     * @param orderField orderField
 	 * @return Returns a List of users ant your total votes.
-	 * @throws Exception
 	 */
-	public List getMostRatedUserByPeriod(int start, Date firstPeriod, Date lastPeriod, String orderField) throws Exception;
+	public List getMostRatedUserByPeriod(int start, Date firstPeriod, Date lastPeriod, String orderField) ;
 }

@@ -46,14 +46,14 @@ import java.util.List;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostgresqlUserDAO.java,v 1.5 2006/04/15 16:41:34 rafaelsteil Exp $
+ * @version $Id: PostgresqlUserDAO.java,v 1.6 2006/08/20 12:19:07 sergemaslyukov Exp $
  */
 public class PostgresqlUserDAO extends net.jforum.dao.generic.GenericUserDAO
 {
 	/** 
 	 * @see net.jforum.dao.UserDAO#selectAll(int, int)
 	 */
-	public List selectAll(int startFrom, int count) throws Exception
+	public List selectAll(int startFrom, int count)
 	{
 		if (count > 0) {
 			return super.selectAll(count, startFrom);
@@ -65,7 +65,7 @@ public class PostgresqlUserDAO extends net.jforum.dao.generic.GenericUserDAO
 	/**
 	 * @see net.jforum.dao.generic.GenericUserDAO#selectAllByGroup(int, int, int)
 	 */
-	public List selectAllByGroup(int groupId, int start, int count) throws Exception
+	public List selectAllByGroup(int groupId, int start, int count) 
 	{
 		return super.selectAllByGroup(groupId, count, start);
 	}

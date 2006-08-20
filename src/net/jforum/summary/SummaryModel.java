@@ -64,7 +64,7 @@ import freemarker.template.SimpleHash;
  * @see net.jforum.summary.SummaryScheduler
  * 
  * @author Franklin S. Dattein (<a href="mailto:franklin@hp.com">franklin@hp.com</a>)
- * @version $Id: SummaryModel.java,v 1.6 2006/03/01 13:17:23 rafaelsteil Exp $
+ * @version $Id: SummaryModel.java,v 1.7 2006/08/20 12:19:10 sergemaslyukov Exp $
  */
 public class SummaryModel extends Spammer
 {
@@ -77,7 +77,7 @@ public class SummaryModel extends Spammer
 		this.dao = DataAccessDriver.getInstance().newSummaryDAO();
 	}
 
-	public void sendPostsSummary(List recipients) throws Exception
+	public void sendPostsSummary(List recipients)
 	{
 		logger.info("Sending Weekly summary...");
 
@@ -105,9 +105,8 @@ public class SummaryModel extends Spammer
 	 * List all recipients able to receive posts summaries.
 	 * 
 	 * @return List of users
-	 * @throws Exception
 	 */
-	public List listRecipients() throws Exception
+	public List listRecipients()
 	{
 		return this.dao.listRecipients();
 	}
@@ -118,9 +117,8 @@ public class SummaryModel extends Spammer
 	 * @param firstDate First date of a period.
 	 * @param lastDate Last date of a period.
 	 * @return List of Posts
-	 * @throws Exception
 	 */
-	public List listPosts(Date firstDate, Date lastDate) throws Exception
+	public List listPosts(Date firstDate, Date lastDate)
 	{
 		return this.dao.selectLastPosts(firstDate, lastDate);
 	}

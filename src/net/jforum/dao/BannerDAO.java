@@ -47,14 +47,14 @@ import java.util.List;
 import net.jforum.entities.Banner;
 
 /**
- * Model interface for {@link net.jforum.entity.Banner}.
+ * Model interface for {@link net.jforum.entities.Banner}.
  * This interface defines methods which are expected to be
  * implementd by a specific data access driver. The intention is
  * to provide all functionality needed to update, insert, delete and
  * select some specific data.
  *
  * @author Samuel Yung
- * @version $Id: BannerDAO.java,v 1.4 2005/07/26 03:04:30 rafaelsteil Exp $
+ * @version $Id: BannerDAO.java,v 1.5 2006/08/20 12:19:00 sergemaslyukov Exp $
  */
 public interface BannerDAO
 {
@@ -63,35 +63,32 @@ public interface BannerDAO
 	 *
 	 * @param bannerId The Banner ID to search
 	 * @return <code>Banner</code> object containing all the information
-	 * @throws Exception
 	 * @see #selectAll
 	 */
-	public Banner selectById(int bannerId) throws Exception;
+	public Banner selectById(int bannerId);
 
 	/**
 	 * Selects all banners data from the database.
 	 *
 	 * @return List with the banners found
-	 * @throws Exception
 	 * @see #selectById
 	 */
-	public List selectAll() throws Exception;
+	public List selectAll();
 
 	/**
 	 * Adds a new banner.
 	 *
 	 * @param banner Reference to a valid and configured <code>Banner</code> object
-	 * @throws Exception
+     * @return int
 	 */
-	public int addNew(Banner banner) throws Exception;
+	public int addNew(Banner banner);
 
 	/**
 	 * Updates a banner.
 	 *
 	 * @param banner Reference to a <code>Banner</code> object to update
-	 * @throws Exception
 	 */
-	public void update(Banner banner) throws Exception;
+	public void update(Banner banner);
 
 	/**
 	 * Checks if is possible to delete a specific banner.
@@ -99,24 +96,21 @@ public interface BannerDAO
 	 * @param bannerId The banner ID to verify
 	 * @return <code>true</code> if is possible to delete, <code>false</code> if not
 	 * @see #delete(int)
-	 * @throws Exception
 	 */
-	public boolean canDelete(int bannerId) throws Exception;
+	public boolean canDelete(int bannerId);
 
 	/**
 	 * Delete a banner.
 	 *
 	 * @param bannerId The banner ID to delete
-	 * @throws Exception
 	 */
-	public void delete(int bannerId) throws Exception;
+	public void delete(int bannerId);
 
 	/**
 	 * Select a list of active banners by its placement.
 	 *
 	 * @param placement The placement number
-	 * @throws Exception
+     * @return List
 	 */
-	public List selectActiveBannerByPlacement(int placement) throws
-		Exception;
+	public List selectActiveBannerByPlacement(int placement);
 }

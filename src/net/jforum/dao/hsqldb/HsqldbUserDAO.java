@@ -49,14 +49,14 @@ import net.jforum.dao.generic.GenericUserDAO;
 /**
  * @author Marc Wick
  * @author Rafael Steil
- * @version $Id: HsqldbUserDAO.java,v 1.5 2005/12/23 00:01:16 rafaelsteil Exp $
+ * @version $Id: HsqldbUserDAO.java,v 1.6 2006/08/20 12:19:06 sergemaslyukov Exp $
  */
 public class HsqldbUserDAO extends GenericUserDAO
 {
 	/**
 	 * @see net.jforum.dao.postgresql.PostgresqlUserDAO#selectAllByGroup(int, int, int)
 	 */
-	public List selectAllByGroup(int groupId, int start, int count) throws Exception
+	public List selectAllByGroup(int groupId, int start, int count)
 	{
 		return super.selectAllByGroup(start, count, groupId);
 	}

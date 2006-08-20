@@ -42,20 +42,19 @@
  */
 package net.jforum.dao;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import net.jforum.entities.User;
 
 /**
-  * Model interface for {@link net.jforum.User}.
+  * Model interface for {@link net.jforum.entities.User}.
  * This interface defines methods which are expected to be
  * implementd by a specific data access driver. The intention is
  * to provide all functionality needed to update, insert, delete and
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: UserDAO.java,v 1.6 2006/05/24 00:10:38 rafaelsteil Exp $
+ * @version $Id: UserDAO.java,v 1.7 2006/08/20 12:19:02 sergemaslyukov Exp $
  */
 public interface UserDAO 
 {
@@ -64,10 +63,9 @@ public interface UserDAO
 	 * 
 	 * @param userId The User ID to search
 	 * @return <code>User</code>object containing all the information
-	 * @throws Exception
 	 * @see #selectAll
 	 */
-	public User selectById(int userId) throws Exception;
+	public User selectById(int userId) ;
 	
 	/**
 	 * Gets a specific <code>User</code>.
@@ -75,27 +73,24 @@ public interface UserDAO
 	 * @param username The User name to search
 	 * @return <code>User</code> object containing all the information
 	 * or <code>null</code> if no data was found. 
-	 * @throws Exception
 	 * @see #selectAll
 	 */
-	public User selectByName(String username) throws Exception;
+	public User selectByName(String username) ;
 	
 	/**
 	 * Gets all users
 	 * 
 	 * @return <code>ArrayList</code> with the users. Each entry is an <code>User</code> object
-	 * @throws Exception
 	 */
-	public List selectAll() throws Exception;
+	public List selectAll() ;
 	
 	/**
 	 * Gets all users with your Karma.
 	 * 
 	 * @return <code>List</code> with the users. Each entry is an <code>User</code> object
 	 * (with the KarmaStatus populated).
-	 * @throws Exception
 	 */
-	public List selectAllWithKarma() throws Exception;
+	public List selectAllWithKarma() ;
 	
 	/**
 	 * Gets all users from a specific group.
@@ -104,9 +99,8 @@ public interface UserDAO
 	 * @param start The index position to start fetching
 	 * @param count The total number of records to fetch
 	 * @return <code>List</code> with the users. Each entry is an <code>User</code> object
-	 * @throws Exception
 	 */
-	public List selectAllByGroup(int groupId, int start, int count) throws Exception; 
+	public List selectAllByGroup(int groupId, int start, int count) ;
 	
 	/**
 	 * Gets all users
@@ -115,9 +109,8 @@ public interface UserDAO
 	 * @param count Number of records to retrieve
 	 * @return <code>ArrayList</code> with the users. Each entry is an <code>User</code> object
 	 * (with the KarmaStatus populated).
-	 * @throws Exception
 	 */
-	public List selectAllWithKarma(int startFrom, int count) throws Exception;
+	public List selectAllWithKarma(int startFrom, int count) ;
 	
 	/**
 	 * Finds an user by matching an input string. 
@@ -131,9 +124,8 @@ public interface UserDAO
 	 * @return <code>List</code> with the found users. Each entry is an 
 	 * <code>User</code> object, where only the <i>id</i> and <i>username</i>
 	 * members are filled.
-	 * @throws Exception exact
 	 */
-	public List findByName(String input, boolean exactMath) throws Exception;
+	public List findByName(String input, boolean exactMath) ;
 	
 	/**
 	 * Gets all users
@@ -141,19 +133,17 @@ public interface UserDAO
 	 * @param startFrom Index to start fetching from
 	 * @param count Number of records to retrieve
 	 * @return <code>ArrayList</code> with the users. Each entry is an <code>User</code> object
-	 * @throws Exception
 	 */
-	public List selectAll(int startFrom, int count) throws Exception;
+	public List selectAll(int startFrom, int count) ;
 	
 
 	/**
 	 * Deletes an user.
 	 * 
 	 * @param userId The user ID to delete
-	 * @throws Exception
 	 * @see #undelete(int)
 	 */
-	public void delete(int userId) throws Exception;
+	public void delete(int userId) ;
 	
 	/**
 	 * Undeletes an user.
@@ -163,19 +153,16 @@ public interface UserDAO
 	 * data integrity.
 	 * 
 	 * @param userId The user ID to undelete
-	 * @throws Exception
 	 * @see #delete(int)
 	 */
-	public void undelete(int userId) throws Exception;
+	public void undelete(int userId) ;
 	
 	/**
 	 * Updates a user.
 	 * 
 	 * @param user Reference to a <code>User</code> object to update
-	 * @throws Exception
-	 * @see #update(int)
 	 */
-	public void update(User user) throws Exception;
+	public void update(User user) ;
 	
 	/**
 	 * Adds a new User.
@@ -184,18 +171,16 @@ public interface UserDAO
 	 * return the new user id. 
 	 * @param user Reference to a valid and configured <code>User</code> object
 	 * @return The new user id
-	 * @throws Exception
 	 */
-	public int addNew(User user) throws Exception;
+	public int addNew(User user) ;
 
 	/**
 	 * Adds a new user with a predefined user id
 	 * 
 	 * (added by Pieter for external login support)
 	 * @param user Reference to a valid and configured <code>User</code> object, with the user id already set
-	 * @throws Exception
 	 */
-	public void addNewWithId(User user) throws Exception ;
+	public void addNewWithId(User user)  ;
 	
 	/**
 	 * Set the active status.
@@ -206,33 +191,30 @@ public interface UserDAO
 	 * 
 	 * @param userId The user ID to change the status
 	 * @param active <code>true</code> or <code>false</code>
-	 * @throws Exception
 	 */
-	public void setActive(int userId, boolean active) throws Exception;
+	public void setActive(int userId, boolean active) ;
 	
 	/**
 	 * Sets the ranking.
 	 * 
 	 * @param userId The user ID
-	 * @throws Exception
+	 * @param rankingId int
 	 */
-	public void setRanking(int userId, int rankingId) throws Exception;
+	public void setRanking(int userId, int rankingId) ;
 	
 	/**
 	 * Increments the number of posts of the user.
 	 * 
 	 * @param userId The user ID to increment the number of posts
-	 * @throws Exception
 	 */
-	public void incrementPosts(int userId) throws Exception;
+	public void incrementPosts(int userId) ;
 	
 	/**
 	 * Decrement the number of posts of some user.
 	 * 
 	 * @param userId The user ID do decrement the number of posts.
-	 * @throws Exception
 	 */
-	public void decrementPosts(int userId) throws Exception;
+	public void decrementPosts(int userId) ;
 	
 	/**
 	 * Gest some piece of information of the last user registered
@@ -241,34 +223,31 @@ public interface UserDAO
 	 * has two keys:<br>
 	 * <li><b>userName</b>: The username
 	 * <li><b>userId</b>: The user's ID 
-	 * @throws Exception
 	 */
-	public User getLastUserInfo() throws Exception;
+	public User getLastUserInfo() ;
 	
 	/**
 	 * Gets the total number of users
 	 * 
 	 * @return The total number of users
-	 * @throws Exception
 	 */
-	public int getTotalUsers() throws Exception;
+	public int getTotalUsers() ;
 	
 	/**
 	 * Gets the total number of users of some group.
 	 * 
 	 * @param groupId The group id
 	 * @return The total number of users
-	 * @throws Exception
 	 */
-	public int getTotalUsersByGroup(int groupId) throws Exception;
+	public int getTotalUsersByGroup(int groupId) ;
 	
 	/**
 	 * whether the user is locked or not.
-	 * 
+	 *
+     * @param  user_id  int
 	 * @return boolean
-	 * @throws Exception
-	 */	
-	public boolean isDeleted(int user_id) throws Exception;
+	 */
+	public boolean isDeleted(int user_id) ;
 	
 	/***
 	 * Checks the existence of some username.
@@ -276,9 +255,8 @@ public interface UserDAO
 	 * 
 	 * @param username The username to verify
 	 * @return <code>true</code> or <code>false</code>, if the user was found or not, respectively
-	 * @throws Exception
 	 */
-	public boolean isUsernameRegistered(String username) throws Exception;
+	public boolean isUsernameRegistered(String username) ;
 	
 	/**
 	 * Validates the user login.
@@ -286,18 +264,16 @@ public interface UserDAO
 	 * @param username The username
 	 * @param password The password
 	 * @return The user object if the provided information was corret, <code>null</code> if the information was invalid 
-	 * @throws Exception
 	 */
-	public User validateLogin(String username, String password) throws NoSuchAlgorithmException, Exception;
+	public User validateLogin(String username, String password) ;
 	
 	/**
 	 * Associate the user to the group
 	 * 
 	 * @param userId The user id 
 	 * @param groupId The group id to associate to
-	 * @throws Exception
 	 */
-	public void addToGroup(int userId, int[] groupId) throws Exception;
+	public void addToGroup(int userId, int[] groupId) ;
 	
 	/**
 	 * Remove the user from the group
@@ -305,7 +281,7 @@ public interface UserDAO
 	 * @param userId The user id
 	 * @param groupId The group id to remove the user from
 	 */
-	public void removeFromGroup(int userId, int[] groupId) throws Exception;
+	public void removeFromGroup(int userId, int[] groupId) ;
 	
 	/**
 	 * Stores the "lost password" security hash, that was generated
@@ -314,9 +290,8 @@ public interface UserDAO
 	 * 
 	 * @param email The user email
 	 * @param hash The hash to store.
-	 * @throws Exception
 	 */
-	public void writeLostPasswordHash(String email, String hash) throws Exception;
+	public void writeLostPasswordHash(String email, String hash) ;
 	
 	/**
 	 * Validate the provided security hash against the data stored in our system.
@@ -324,27 +299,24 @@ public interface UserDAO
 	 * @param email The user email
 	 * @param hash The supplied security hash
 	 * @return <code>true</code> if the data matches ok, of <code>false</code> if it is invalid
-	 * @throws Exception
 	 */
-	public boolean validateLostPasswordHash(String email, String hash) throws Exception;
+	public boolean validateLostPasswordHash(String email, String hash) ;
 	
 	/**
 	 * Writes a new password for the user. 
 	 * 
 	 * @param password The new password
 	 * @param email The user email
-	 * @throws Exception
 	 */
-	public void saveNewPassword(String password, String email) throws Exception;
+	public void saveNewPassword(String password, String email) ;
 	
 	/**
 	 * Gets the username related to the email
 	 * 
 	 * @param email The email to search for the username
 	 * @return The username, if found, or an empty <code>String</code>
-	 * @throws Exception
 	 */
-	public String getUsernameByEmail(String email) throws Exception;
+	public String getUsernameByEmail(String email) ;
 	
 	/**
 	 * Validate if the activated key matches the one in the database
@@ -352,17 +324,15 @@ public interface UserDAO
 	 * @param userId Which user to validate the activation key?
 	 * @param hash The activation key
 	 * @return <code>true</code> if the data matches ok, of <code>false</code> if it is invalid
-	 * @throws Exception
 	 */
-	public boolean validateActivationKeyHash(int userId , String hash) throws Exception;
+	public boolean validateActivationKeyHash(int userId , String hash) ;
 
 	/**
 	 * Set user account to active
 	 * 
 	 * @param userId Which user account to set active?
-	 * @throws Exception
-	 */	
-	public void writeUserActive(int userId) throws Exception;
+	 */
+	public void writeUserActive(int userId) ;
 	
 	/**
 	 * Updates only the username. 
@@ -373,9 +343,8 @@ public interface UserDAO
 	 * 
 	 * @param userId The user's id related to the username to update
 	 * @param username The new username to write
-	 * @throws Exception
 	 */
-	public void updateUsername(int userId, String username) throws Exception;
+	public void updateUsername(int userId, String username) ;
 	
 	/**
 	 * Check if the username passed as argument is different of
@@ -385,23 +354,20 @@ public interface UserDAO
 	 * @param usernameToCheck The username to compare with the existing
 	 * one in <i>jforum_users</i>
 	 * @return <code>true</code> if the usernames are different.
-	 * @throws Exception
 	 */
-	public boolean hasUsernameChanged(int userId, String usernameToCheck) throws Exception;
+	public boolean hasUsernameChanged(int userId, String usernameToCheck) ;
 	
 	/**
 	 * Saves the user-specific security hash to the database
 	 * @param userId the user id to save
 	 * @param hash the security hash
-	 * @throws Exception
 	 */
-	public void saveUserAuthHash(int userId, String hash) throws Exception;
+	public void saveUserAuthHash(int userId, String hash) ;
 	
 	/**
 	 * Retrieves the auth hash from the database
-	 * @param userId
-	 * @return
-	 * @throws Exception
+	 * @param userId intt
+	 * @return String
 	 */
-	public String getUserAuthHash(int userId) throws Exception;
+	public String getUserAuthHash(int userId) ;
 }

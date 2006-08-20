@@ -47,13 +47,15 @@ import net.jforum.security.RoleCollection;
 import net.jforum.security.RoleValueCollection;
 
 /**
+ * TODO fix all javadoc
+ * 
  * Base interface for security access implementation.
  * This interface should not be directly implemented. Instead,
  * the implementation should be done on the interfaces that
  * extend this interface.
  * 
  * @author Rafael Steil
- * @version $Id: SecurityDAO.java,v 1.4 2005/07/26 03:05:45 rafaelsteil Exp $
+ * @version $Id: SecurityDAO.java,v 1.5 2006/08/20 12:19:08 sergemaslyukov Exp $
  */
 public interface SecurityDAO 
 {
@@ -63,9 +65,8 @@ public interface SecurityDAO
 	 * @param userId ID do usuario/contato
 	 * @param groupId ID do grupo a qual o contato pertence
 	 * @see #adduserPermission(int, String, String, String)
-	 * @throws Exception
 	 **/
-	public void deleteAllRoles(int id) throws Exception;
+	public void deleteAllRoles(int id) ;
 
 	/**
 	 * Delete do banco as permissoes de algum usuario em especifico.
@@ -74,9 +75,8 @@ public interface SecurityDAO
 	 * @param groupId ID do grupo a qual o contato pertence
 	 * @param field ID da permissao a deletar
 	 * @see #adduserPermission(int, String, String, String)
-	 * @throws Exception
 	 **/
-	public void deleteRole(int id, String roleName) throws Exception;
+	public void deleteRole(int id, String roleName) ;
 
 	/**
 	 * Adiciona uma nova permissao/restricao ao usuario.
@@ -86,22 +86,20 @@ public interface SecurityDAO
 	 * @param field Nome ( ID ) da permissao 
 	 * @see #addUserPermission(int, int, String, String, String)
 	 * */
-	public void addRole(int id, Role role) throws Exception;
+	public void addRole(int id, Role role) ;
 	
-	public void addRoleValue(int id, Role role, RoleValueCollection rvc) throws Exception;
+	public void addRoleValue(int id, Role role, RoleValueCollection rvc) ;
 	
 	/**
 	 * @param id
 	 * @param roleName
 	 * @param roleValues
-	 * @throws Exception
 	 */
-	public void addRole(int id, Role role, RoleValueCollection roleValues) throws Exception;
+	public void addRole(int id, Role role, RoleValueCollection roleValues) ;
 
 	/**
-	 * @param id
-	 * @return
-	 * @throws Exception
+	 * @param id int
+	 * @return RoleCollection
 	 */
-	public RoleCollection loadRoles(int id) throws Exception;
+	public RoleCollection loadRoles(int id) ;
 }

@@ -44,57 +44,72 @@ package net.jforum.dao.oracle;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 import net.jforum.JForumExecutionContext;
 import net.jforum.entities.Post;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.DbUtils;
 
 /**
  * @author Dmitriy Kiriy
- * @version $Id: OraclePostDAO.java,v 1.7 2006/01/29 15:07:09 rafaelsteil Exp $
+ * @version $Id: OraclePostDAO.java,v 1.8 2006/08/20 12:19:06 sergemaslyukov Exp $
  */
 public class OraclePostDAO extends net.jforum.dao.generic.GenericPostDAO
 {
 	/**
 	 * @see net.jforum.dao.generic.GenericPostDAO#addNewPostText(net.jforum.entities.Post)
 	 */
-	protected void addNewPostText(Post post) throws Exception
-	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.addNewPostText"));
-		p.setInt(1, post.getId());
-		p.setString(2, post.getSubject());
-		p.executeUpdate();
-		p.close();
-		
-		OracleUtils.writeBlobUTF16BinaryStream(
+	protected void addNewPostText(Post post) throws SQLException
+    {
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.addNewPostText"));
+            p.setInt(1, post.getId());
+            p.setString(2, post.getSubject());
+            p.executeUpdate();
+            p.close();
+
+            OracleUtils.writeBlobUTF16BinaryStream(
 				SystemGlobals.getSql("PostModel.addNewPostTextField"),
 				post.getId(), post.getText()
-			);
-	}
+                );
+        }
+        finally {
+            DbUtils.close(p);
+        }
+    }
 	
 	/**
 	 * @see net.jforum.dao.generic.GenericPostDAO#updatePostsTextTable(net.jforum.entities.Post)
 	 */
-	protected void updatePostsTextTable(Post post) throws Exception
+	protected void updatePostsTextTable(Post post) throws SQLException
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.updatePostText"));
-		p.setString(1, post.getSubject());
-		p.setInt(2, post.getId());
-		
-		p.executeUpdate();
-		p.close();
-		
-		OracleUtils.writeBlobUTF16BinaryStream(
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.updatePostText"));
+            p.setString(1, post.getSubject());
+            p.setInt(2, post.getId());
+
+            p.executeUpdate();
+
+            OracleUtils.writeBlobUTF16BinaryStream(
 			SystemGlobals.getSql("PostModel.addNewPostTextField"),
 			post.getId(), post.getText()
-		);
-	}
+            );
+        }
+        finally {
+            DbUtils.close(p);
+        }
+    }
 	
 	/**
 	 * @see net.jforum.dao.generic.GenericPostDAO#getPostTextFromResultSet(java.sql.ResultSet)
 	 */
-	protected String getPostTextFromResultSet(ResultSet rs) throws Exception
+	protected String getPostTextFromResultSet(ResultSet rs) throws SQLException
 	{
 		return OracleUtils.readBlobUTF16BinaryStream(rs, "post_text");
 	}
@@ -102,7 +117,7 @@ public class OraclePostDAO extends net.jforum.dao.generic.GenericPostDAO
     /**
 	 * @see net.jforum.dao.PostDAO#selectAllByTopicByLimit(int, int, int)
 	 */
-	public List selectAllByTopicByLimit(int topicId, int startFrom, int count) throws Exception
+	public List selectAllByTopicByLimit(int topicId, int startFrom, int count)
 	{
 		return super.selectAllByTopicByLimit(topicId, startFrom, startFrom + count);
 	}
@@ -110,7 +125,7 @@ public class OraclePostDAO extends net.jforum.dao.generic.GenericPostDAO
 	/**
 	 * @see net.jforum.dao.PostDAO#selectByUserByLimit(int, int, int)
 	 */
-	public List selectByUserByLimit(int userId,int startFrom, int count) throws Exception
+	public List selectByUserByLimit(int userId,int startFrom, int count)
 	{
 		return super.selectByUserByLimit(userId, startFrom, startFrom + count);
 	}

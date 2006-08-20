@@ -58,7 +58,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityRepository.java,v 1.19 2006/01/29 15:07:19 rafaelsteil Exp $
+ * @version $Id: SecurityRepository.java,v 1.20 2006/08/20 12:19:09 sergemaslyukov Exp $
  */
 public class SecurityRepository implements Cacheable
 {
@@ -84,9 +84,9 @@ public class SecurityRepository implements Cacheable
 	 * @see SecurityRepository#load(int)
 	 * @see SecurityRepository#load(User)
 	 * @see SecurityRepository#load(User, boolean)
-	 * @throws Exception
+     * @return PermissionControl
 	 */
-	public static PermissionControl load(int userId, boolean force) throws Exception
+	public static PermissionControl load(int userId, boolean force)
 	{
 		if (force || cache.get(FQN, Integer.toString(userId)) == null) {
 			UserDAO um = DataAccessDriver.getInstance().newUserDAO();
@@ -105,9 +105,9 @@ public class SecurityRepository implements Cacheable
 	 * @see SecurityRepository#load(int, boolean)
 	 * @see SecurityRepository#load(User)
 	 * @see SecurityRepository#load(User, boolean)
-	 * @throws Exception
+     * @return PermissionControl
 	 */
-	public static PermissionControl load(int userId) throws Exception
+	public static PermissionControl load(int userId)
 	{
 		return SecurityRepository.load(userId, false);
 	}
@@ -120,9 +120,9 @@ public class SecurityRepository implements Cacheable
 	 * @see SecurityRepository#load(int)
 	 * @see SecurityRepository#load(int, boolean), 
 	 * @see SecurityRepository#load(User, boolean)
-	 * @throws Exception
+     * @return  PermissionControl
 	 */
-	public static PermissionControl load(User user) throws Exception
+	public static PermissionControl load(User user)
 	{
 		return SecurityRepository.load(user, false);
 	}
@@ -137,9 +137,9 @@ public class SecurityRepository implements Cacheable
 	 * @see SecurityRepository#load(int)
 	 * @see SecurityRepository#load(int, boolean)
 	 * @see SecurityRepository#load(User)
-	 * @throws Exception
+     * @return PermissionControl
 	 */
-	public static PermissionControl load(User user, boolean force) throws Exception
+	public static PermissionControl load(User user, boolean force)
 	{
 		String userId = Integer.toString(user.getId());
 		if (force || cache.get(FQN, userId) == null) {

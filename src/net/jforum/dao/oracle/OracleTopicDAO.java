@@ -47,7 +47,7 @@ import java.util.List;
 /**
  * @author Dmitriy Kiriy 
  * @author Jake Fear
- * @version $Id: OracleTopicDAO.java,v 1.11 2005/12/01 12:14:37 rafaelsteil Exp $
+ * @version $Id: OracleTopicDAO.java,v 1.12 2006/08/20 12:19:06 sergemaslyukov Exp $
  */
 public class OracleTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 {
@@ -55,7 +55,7 @@ public class OracleTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
    	 * Does some addition to make the parameters work with our query flavor.
 	 * @see net.jforum.dao.TopicDAO#selectAllByForumByLimit(int, int, int)
 	 */
-	public List selectAllByForumByLimit(int forumId, int startFrom, int count) throws Exception
+	public List selectAllByForumByLimit(int forumId, int startFrom, int count)
 	{
 		return super.selectAllByForumByLimit(forumId, startFrom, startFrom + count);
 	}
@@ -63,7 +63,7 @@ public class OracleTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 	/**
 	 * @see net.jforum.dao.TopicDAO#selectByUserByLimit(int, int, int)
 	 */
-	public List selectByUserByLimit(int userId, int startFrom, int count) throws Exception
+	public List selectByUserByLimit(int userId, int startFrom, int count) 
 	{
 		return super.selectByUserByLimit(userId, startFrom, startFrom + count);
 	}

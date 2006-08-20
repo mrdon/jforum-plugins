@@ -51,26 +51,26 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: RankingAction.java,v 1.9 2005/07/26 03:05:40 rafaelsteil Exp $
+ * @version $Id: RankingAction.java,v 1.10 2006/08/20 12:19:14 sergemaslyukov Exp $
  */
 public class RankingAction extends AdminCommand 
 {
 	// List
-	public void list() throws Exception
+	public void list()
 	{
 		this.context.put("ranks", DataAccessDriver.getInstance().newRankingDAO().selectAll());
 		this.setTemplateName(TemplateKeys.RANKING_LIST);
 	}
 	
 	// One more, one more
-	public void insert() throws Exception
+	public void insert()
 	{
 		this.setTemplateName(TemplateKeys.RANKING_INSERT);
 		this.context.put("action", "insertSave");
 	}
 	
 	// Edit
-	public void edit() throws Exception
+	public void edit()
 	{
 		this.context.put("rank", DataAccessDriver.getInstance().newRankingDAO().selectById(
 				this.request.getIntParameter("ranking_id")));
@@ -79,7 +79,7 @@ public class RankingAction extends AdminCommand
 	}
 	
 	//  Save information
-	public void editSave() throws Exception
+	public void editSave()
 	{
 		Ranking r = new Ranking();
 		r.setTitle(this.request.getParameter("rank_title"));
@@ -94,7 +94,7 @@ public class RankingAction extends AdminCommand
 	}
 	
 	// Delete
-	public void delete() throws Exception
+	public void delete()
 	{
 		String ids[] = this.request.getParameterValues("rank_id");
 		
@@ -110,7 +110,7 @@ public class RankingAction extends AdminCommand
 	}
 	
 	// A new one
-	public void insertSave() throws Exception
+	public void insertSave() 
 	{
 		Ranking r = new Ranking();
 		r.setTitle(this.request.getParameter("rank_title"));

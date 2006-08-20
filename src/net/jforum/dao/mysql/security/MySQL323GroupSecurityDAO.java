@@ -44,42 +44,61 @@ package net.jforum.dao.mysql.security;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import net.jforum.JForumExecutionContext;
 import net.jforum.dao.generic.security.GenericGroupSecurityDAO;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.DbUtils;
+import org.apache.log4j.Logger;
 
 /**
  * Mysq 3.23 hacks based on Andy's work
  * 
  * @author Rafael Steil
- * @version $Id: MySQL323GroupSecurityDAO.java,v 1.4 2006/01/29 15:06:55 rafaelsteil Exp $
+ * @version $Id: MySQL323GroupSecurityDAO.java,v 1.5 2006/08/20 12:19:06 sergemaslyukov Exp $
  */
 public class MySQL323GroupSecurityDAO extends GenericGroupSecurityDAO
 {
+    private static final Logger log = Logger.getLogger(MySQL323GroupSecurityDAO.class);
+
 	/**
 	 * @see net.jforum.dao.security.SecurityDAO#deleteAllRoles(int)
 	 */
-	public void deleteAllRoles(int id) throws Exception
+	public void deleteAllRoles(int id)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("PermissionControl.getRoleIdsByGroup"));
-		p.setInt(1, id);
-		
-		String roleIds = this.getCsvIdList(p);
-		
-		p.close();
-		
-		if (roleIds.length() == 0) {
-			return;
-		}
-		
-		p = this.getStatementForCsv(
-				SystemGlobals.getSql("PermissionControl.deleteRoleValuesByRoleId"),
-				roleIds);
-		
-		p.executeUpdate();
-		p.close();
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("PermissionControl.getRoleIdsByGroup"));
+            p.setInt(1, id);
+
+            String roleIds = this.getCsvIdList(p);
+
+            p.close();
+            p=null;
+
+            if (roleIds.length() == 0) {
+                return;
+            }
+
+            p = this.getStatementForCsv(
+                    SystemGlobals.getSql("PermissionControl.deleteRoleValuesByRoleId"),
+                    roleIds);
+
+            p.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            String es = "Erorr deleteAllRoles()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally
+        {
+            DbUtils.close( p);
+        }
 	}
 	
 	/**
@@ -88,9 +107,9 @@ public class MySQL323GroupSecurityDAO extends GenericGroupSecurityDAO
 	 * will be replaced by <code>csv</code>
 	 * @param csv The ids to replace
 	 * @return The statement, ready to execute
-	 * @throws Exception
+	 * @throws SQLException
 	 */
-	protected PreparedStatement getStatementForCsv(String sql, String csv) throws Exception
+	protected PreparedStatement getStatementForCsv(String sql, String csv) throws SQLException
 	{
 		int index = sql.indexOf('?');
 		sql = sql.substring(0, index) + csv + sql.substring(index + 1);
@@ -102,9 +121,9 @@ public class MySQL323GroupSecurityDAO extends GenericGroupSecurityDAO
 	 * The statement is expected to return an id in the first column
 	 * @param p The statement to execute
 	 * @return The ids, separated by comma
-	 * @throws Exception
+	 * @throws SQLException
 	 */
-	protected String getCsvIdList(PreparedStatement p) throws Exception
+	protected String getCsvIdList(PreparedStatement p) throws SQLException
 	{
 		ResultSet rs = p.executeQuery();
 		

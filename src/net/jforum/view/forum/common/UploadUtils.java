@@ -44,15 +44,19 @@ package net.jforum.view.forum.common;
 
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 import net.jforum.util.legacy.commons.fileupload.FileItem;
+import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UploadUtils.java,v 1.9 2005/12/23 20:36:58 rafaelsteil Exp $
+ * @version $Id: UploadUtils.java,v 1.10 2006/08/20 12:19:17 sergemaslyukov Exp $
  */
 public class UploadUtils
 {
+    private static Logger log = Logger.getLogger(AttachmentCommon.class);
+
 	private FileItem item;
 	private String extension = "";
 	
@@ -70,7 +74,7 @@ public class UploadUtils
 		return this.extension;
 	}
 	
-	public void saveUploadedFile(String filename) throws Exception
+	public void saveUploadedFile(String filename) 
 	{
 		BufferedInputStream inputStream = null;
 		FileOutputStream outputStream = null;
@@ -79,21 +83,41 @@ public class UploadUtils
 			inputStream = new BufferedInputStream(this.item.getInputStream());
 			outputStream = new FileOutputStream(filename);
 			
-			int c = 0;
+			int c;
 			byte[] b = new byte[4096];
 			while ((c = inputStream.read(b)) != -1) {
 				outputStream.write(b, 0, c);
 			}
 		}
+        catch (IOException e)
+        {
+            String es = "Erorr saveUploadedFile()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
 		finally {
 			if (outputStream != null) {
-				outputStream.flush();
-				outputStream.close();
-			}
+                try
+                {
+                    outputStream.flush();
+                    outputStream.close();
+                }
+                catch (IOException e)
+                {
+                    // catch close exception
+                }
+            }
 			
 			if (inputStream != null) {
-				inputStream.close();
-			}
+                try
+                {
+                    inputStream.close();
+                }
+                catch (IOException e)
+                {
+                    // catch close exception
+                }
+            }
 		}
 	}
 }

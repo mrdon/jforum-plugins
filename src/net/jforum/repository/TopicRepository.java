@@ -65,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: TopicRepository.java,v 1.28 2006/08/10 02:35:12 rafaelsteil Exp $
+ * @version $Id: TopicRepository.java,v 1.29 2006/08/20 12:19:09 sergemaslyukov Exp $
  */
 public class TopicRepository implements Cacheable
 {
@@ -98,7 +98,7 @@ public class TopicRepository implements Cacheable
 	 * 
 	 * @param topic The topic to add to stack
 	 */
-	public synchronized static void pushTopic(Topic topic) throws Exception
+	public synchronized static void pushTopic(Topic topic)
 	{
 		if (SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
 			int limit = SystemGlobals.getIntValue(ConfigKeys.RECENT_TOPICS);
@@ -123,7 +123,7 @@ public class TopicRepository implements Cacheable
 	 * Get all cached recent topics. 
 	 * 
 	 */	
-	public static List getRecentTopics() throws Exception
+	public static List getRecentTopics()
 	{
 		List l = (List)cache.get(FQN, RECENT);
 		
@@ -138,7 +138,7 @@ public class TopicRepository implements Cacheable
 	/**
 	 * Add recent topics to the cache
 	 */
-	public static List loadMostRecentTopics() throws Exception
+	public static List loadMostRecentTopics()
 	{
 		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 		int limit = SystemGlobals.getIntValue(ConfigKeys.RECENT_TOPICS);
@@ -185,7 +185,7 @@ public class TopicRepository implements Cacheable
 	 * 
 	 * @param forumId The forum id to clear the cache
 	 */
-	public static void clearCache(int forumId) throws Exception
+	public static void clearCache(int forumId) 
 	{
 		synchronized (FQN_FORUM) {
 			cache.add(FQN_FORUM, Integer.toString(forumId), new LinkedList());

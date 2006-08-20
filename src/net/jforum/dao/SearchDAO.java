@@ -47,7 +47,7 @@ import java.util.List;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchDAO.java,v 1.4 2005/07/26 03:04:28 rafaelsteil Exp $
+ * @version $Id: SearchDAO.java,v 1.5 2006/08/20 12:19:02 sergemaslyukov Exp $
  */
 public interface SearchDAO 
 {
@@ -57,13 +57,11 @@ public interface SearchDAO
 	 * @param sd <code>SearchData</code> object containing the search criterias.
 	 * @return An <code>ArrayList</code> of <code>Topic</code> objects, which 
 	 * represent the found topics.
-	 * @throws Exception
 	 */
-	public List search(SearchData sd) throws Exception;
+	public List search(SearchData sd) ;
 	
 	/**
 	 * Clean  user search data or older searches
-	 * @throws Exception
 	 */
-	public void cleanSearch() throws Exception;
+	public void cleanSearch() ;
 }

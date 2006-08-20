@@ -70,7 +70,7 @@ import freemarker.template.Template;
  * each user.
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.21 2006/02/28 01:10:47 rafaelsteil Exp $
+ * @version $Id: Spammer.java,v 1.22 2006/08/20 12:19:12 sergemaslyukov Exp $
  */
 public class Spammer
 {
@@ -139,50 +139,51 @@ public class Spammer
 		return this.message;
 	}
 
-	public boolean dispatchMessages() throws Exception
+	public boolean dispatchMessages()
 	{
-		if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_SMTP_AUTH)) {
-			if (username != null && !username.equals("") && password != null && !password.equals("")) {
-				Transport transport = Spammer.getSession().getTransport("smtp");
+        try
+        {
+            if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_SMTP_AUTH)) {
+                if (username != null && !username.equals("") && password != null && !password.equals("")) {
+                    Transport transport = Spammer.getSession().getTransport("smtp");
 
-				try {
-					String host = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_HOST);
-					if (host != null) {
-						int colon = host.indexOf(':');
-						if (colon > 0) {
-							transport.connect(host.substring(0, colon), Integer.parseInt(host.substring(colon + 1)),
-									username, password);
-						}
-						else {
-							transport.connect(host, username, password);
-						}
-					}
-				}
-				catch (MessagingException e) {
-					throw new EmailException("Could not connect to the mail server", e);
-				}
+                        String host = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_HOST);
+                        if (host != null) {
+                            int colon = host.indexOf(':');
+                            if (colon > 0) {
+                                transport.connect(host.substring(0, colon), Integer.parseInt(host.substring(colon + 1)),
+                                        username, password);
+                            }
+                            else {
+                                transport.connect(host, username, password);
+                            }
+                        }
 
-				if (transport.isConnected()) {
-					Address[] addresses = message.getAllRecipients();
-					for (int i = 0; i < addresses.length; i++) {
-						// Tricks and tricks
-						message.setRecipient(Message.RecipientType.TO, addresses[i]);
-						transport.sendMessage(message, new Address[] { addresses[i] });
-					}
-				}
-				
-				transport.close();
-			}
-		}
-		else {
-			Address[] addresses = message.getAllRecipients();
-			for (int i = 0; i < addresses.length; i++) {
-				message.setRecipient(Message.RecipientType.TO, addresses[i]);
-				Transport.send(message, new Address[] { addresses[i] });
-			}
-		}
+                    if (transport.isConnected()) {
+                        Address[] addresses = message.getAllRecipients();
+                        for (int i = 0; i < addresses.length; i++) {
+                            // Tricks and tricks
+                            message.setRecipient(Message.RecipientType.TO, addresses[i]);
+                            transport.sendMessage(message, new Address[] { addresses[i] });
+                        }
+                    }
 
-		return true;
+                    transport.close();
+                }
+            }
+            else {
+                Address[] addresses = message.getAllRecipients();
+                for (int i = 0; i < addresses.length; i++) {
+                    message.setRecipient(Message.RecipientType.TO, addresses[i]);
+                    Transport.send(message, new Address[] { addresses[i] });
+                }
+            }
+        }
+        catch (MessagingException e) {
+            throw new EmailException("Error dispatch message.", e);
+        }
+
+        return true;
 	}
 
 	protected final void prepareMessage(List addresses, SimpleHash params, String subject, String messageFile)
@@ -237,8 +238,7 @@ public class Spammer
 		
 		StringWriter sWriter = new StringWriter();
 		
-		Template template = null;
-		
+		Template template;
 		if (templateEncoding == null || "".equals(templateEncoding.trim())) {
 			template = JForumExecutionContext.templateConfig().getTemplate(messageFile);
 		}

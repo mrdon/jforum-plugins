@@ -52,12 +52,12 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: AdminCommand.java,v 1.6 2005/07/26 04:01:14 diegopires Exp $
+ * @version $Id: AdminCommand.java,v 1.7 2006/08/20 12:19:14 sergemaslyukov Exp $
  */
 public abstract class AdminCommand extends Command
 {
 	public Template process(ActionServletRequest request, HttpServletResponse response, 
-			SimpleHash context) throws Exception
+			SimpleHash context)
 	{
 		new AdminAction().checkAdmin();
 		return super.process(request, response, context);

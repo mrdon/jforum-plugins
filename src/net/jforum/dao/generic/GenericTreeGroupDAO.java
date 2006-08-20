@@ -44,42 +44,57 @@ package net.jforum.dao.generic;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.jforum.JForumExecutionContext;
 import net.jforum.util.GroupNode;
+import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.SystemGlobals;
+import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTreeGroupDAO.java,v 1.5 2006/01/29 15:06:22 rafaelsteil Exp $
+ * @version $Id: GenericTreeGroupDAO.java,v 1.6 2006/08/20 12:19:05 sergemaslyukov Exp $
  */
 public class GenericTreeGroupDAO implements net.jforum.dao.TreeGroupDAO 
 {
-	/** 
+    private final static Logger log = Logger.getLogger(GenericTreeGroupDAO.class);
+
+	/**
 	 * @see net.jforum.dao.TreeGroupDAO#selectGroups(int)
 	 */
-	public List selectGroups(int parentId) throws Exception 
+	public List selectGroups(int parentId)
 	{
 		List list = new ArrayList();
 		
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("TreeGroup.selectGroup"));
-		p.setInt(1, parentId);
-		
-		ResultSet rs = p.executeQuery();
-		
-		while (rs.next()) {
-			GroupNode n = new GroupNode();
-			n.setName(rs.getString("group_name"));
-			n.setId(rs.getInt("group_id"));
-			
-			list.add(n);		
-		}
-		
-		rs.close();
-		p.close();
-		
-		return list;
-	}
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("TreeGroup.selectGroup"));
+            p.setInt(1, parentId);
+
+            rs = p.executeQuery();
+
+            while (rs.next()) {
+                GroupNode n = new GroupNode();
+                n.setName(rs.getString("group_name"));
+                n.setId(rs.getInt("group_id"));
+
+                list.add(n);
+            }
+
+            return list;
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectGroups()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 }

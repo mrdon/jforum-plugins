@@ -59,7 +59,7 @@ package net.jforum.dao;
  * analise, look at <code>net.jforum.drivers.generic</code> package.
  * 
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.9 2005/11/10 18:30:02 almilli Exp $
+ * @version $Id: DataAccessDriver.java,v 1.10 2006/08/20 12:19:00 sergemaslyukov Exp $
  */
 public abstract class DataAccessDriver 
 {
@@ -74,7 +74,7 @@ public abstract class DataAccessDriver
 	 * 
 	 * @param implementation The dao.driver implementation
 	 */
-	public static final void init(DataAccessDriver implementation)
+	public static void init(DataAccessDriver implementation)
 	{
 		driver = implementation;
 	}
@@ -87,7 +87,7 @@ public abstract class DataAccessDriver
 	 * 
 	 * @return <code>DataAccessDriver</code> instance
 	 */
-	public final static DataAccessDriver getInstance()
+	public static DataAccessDriver getInstance()
 	{
 		return driver;
 	}
@@ -184,7 +184,7 @@ public abstract class DataAccessDriver
 	public abstract net.jforum.dao.security.GroupSecurityDAO newGroupSecurityDAO();
 
 	/**
-	 * Gets a {@link net.jforum.model.security.PrivateMessageDAO} instance
+	 * Gets a {@link net.jforum.dao.PrivateMessageDAO} instance
 	 * 
 	 * @return <code>link net.jforum.model.security.PrivateMessageModel</code> instance
 	 */

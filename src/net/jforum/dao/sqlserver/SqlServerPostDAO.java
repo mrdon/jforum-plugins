@@ -44,47 +44,61 @@ package net.jforum.dao.sqlserver;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.jforum.JForumExecutionContext;
 import net.jforum.entities.Post;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.DbUtils;
 
 import org.apache.log4j.Logger;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerPostDAO.java,v 1.7 2006/01/29 15:07:10 rafaelsteil Exp $
+ * @version $Id: SqlServerPostDAO.java,v 1.8 2006/08/20 12:19:08 sergemaslyukov Exp $
  */
 public class SqlServerPostDAO extends net.jforum.dao.generic.GenericPostDAO
 {
+    private final static Logger log = Logger.getLogger(SqlServerPostDAO.class);
+
 	/**
 	 * @see net.jforum.dao.PostDAO#selectById(int)
 	 */
-	public Post selectById(int postId) throws Exception 
+	public Post selectById(int postId)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.selectById"), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		p.setInt(1, postId);
-		
-		ResultSet rs = p.executeQuery();
-		
-		Post post = new Post();
-		
-		if (rs.next()) {
-			post = this.makePost(rs);
-		}
-		
-		rs.close();
-		p.close();
-		
-		return post;
-	}
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.selectById"), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            p.setInt(1, postId);
+
+            rs = p.executeQuery();
+
+            Post post = new Post();
+
+            if (rs.next()) {
+                post = this.makePost(rs);
+            }
+
+            return post;
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectById()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 	
 	/** 
 	 * @see net.jforum.dao.PostDAO#selectAllByTopicByLimit(int, int, int)
 	 */
-	public List selectAllByTopicByLimit(int topicId, int startFrom, int count) throws Exception
+	public List selectAllByTopicByLimit(int topicId, int startFrom, int count)
 	{
 		List l = new ArrayList();
 
@@ -94,21 +108,31 @@ public class SqlServerPostDAO extends net.jforum.dao.generic.GenericPostDAO
 			" " + top + " " + startFrom + " " + 
 			SystemGlobals.getSql("PostModel.selectAllByTopicByLimit2");
         
-        PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        Logger.getLogger(this.getClass()).debug(sql);
-        p.setInt(1, topicId);
-        p.setInt(2, topicId);        
+        PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            Logger.getLogger(this.getClass()).debug(sql);
+            p.setInt(1, topicId);
+            p.setInt(2, topicId);
 
-		ResultSet rs = p.executeQuery();
+            rs = p.executeQuery();
 
-		while (rs.next()) {
-			l.add(this.makePost(rs));
-		}
-		
-		rs.close();
-		p.close();
-				
-		return l;
-	}
+            while (rs.next()) {
+                l.add(this.makePost(rs));
+            }
+
+            return l;
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectAllByTopicByLimit()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 	
 }

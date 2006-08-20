@@ -57,258 +57,362 @@ import net.jforum.entities.Karma;
 import net.jforum.entities.KarmaStatus;
 import net.jforum.entities.User;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.DbUtils;
+import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericKarmaDAO.java,v 1.7 2006/01/29 15:06:21 rafaelsteil Exp $
+ * @version $Id: GenericKarmaDAO.java,v 1.8 2006/08/20 12:19:04 sergemaslyukov Exp $
  */
 public class GenericKarmaDAO implements net.jforum.dao.KarmaDAO
 {
+    private final static Logger log = Logger.getLogger(GenericKarmaDAO.class);
 	/**
 	 * @see net.jforum.dao.KarmaDAO#addKarma(net.jforum.entities.Karma)
 	 */
-	public void addKarma(Karma karma) throws Exception
+	public void addKarma(Karma karma)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("KarmaModel.add"));
-		p.setInt(1, karma.getPostId());
-		p.setInt(2, karma.getPostUserId());
-		p.setInt(3, karma.getFromUserId());
-		p.setInt(4, karma.getPoints());
-		p.setInt(5, karma.getTopicId());
-		p.setTimestamp(6, new Timestamp((new Date()).getTime()));
-		p.executeUpdate();
-		p.close();
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("KarmaModel.add"));
+            p.setInt(1, karma.getPostId());
+            p.setInt(2, karma.getPostUserId());
+            p.setInt(3, karma.getFromUserId());
+            p.setInt(4, karma.getPoints());
+            p.setInt(5, karma.getTopicId());
+            p.setTimestamp(6, new Timestamp((new Date()).getTime()));
+            p.executeUpdate();
 
-		this.updateUserKarma(karma.getPostUserId());
-	}
+            this.updateUserKarma(karma.getPostUserId());
+        }
+        catch (SQLException e) {
+            String es = "Erorr addKarma()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
+    }
 
 	/**
+     * TODO inplement ir delete this javadoc
 	 * @see net.jforum.dao.KarmaDAO#selectKarmaStatus(int)
 	 */
-	public KarmaStatus getUserKarma(int userId) throws Exception
+	public KarmaStatus getUserKarma(int userId)
 	{
 		KarmaStatus status = new KarmaStatus();
 
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("KarmaModel.getUserKarma"));
-		p.setInt(1, userId);
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("KarmaModel.getUserKarma"));
+            p.setInt(1, userId);
 
-		ResultSet rs = p.executeQuery();
-		if (rs.next()) {
-			status.setKarmaPoints(Math.round(rs.getDouble("user_karma")));
-		}
+            rs = p.executeQuery();
+            if (rs.next()) {
+                status.setKarmaPoints(Math.round(rs.getDouble("user_karma")));
+            }
 
-		rs.close();
-		p.close();
-
-		return status;
-	}
+            return status;
+        }
+        catch (SQLException e) {
+            String es = "Erorr getUserKarma()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 
 	/**
 	 * @see net.jforum.dao.KarmaDAO#updateUserKarma(int)
 	 */
-	public void updateUserKarma(int userId) throws Exception
+	public void updateUserKarma(int userId)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("KarmaModel.getUserKarmaPoints"));
-		p.setInt(1, userId);
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("KarmaModel.getUserKarmaPoints"));
+            p.setInt(1, userId);
 
-		int totalRecords = 0;
-		double totalPoints = 0;
-		ResultSet rs = p.executeQuery();
-		
-		while (rs.next()) {
-			int points = rs.getInt("points");
-			int votes = rs.getInt("votes");
+            int totalRecords = 0;
+            double totalPoints = 0;
+            rs = p.executeQuery();
 
-			totalPoints += ((double) points / votes);
-			totalRecords++;
-		}
+            while (rs.next()) {
+                int points = rs.getInt("points");
+                int votes = rs.getInt("votes");
 
-		rs.close();
-		p.close();
+                totalPoints += ((double) points / votes);
+                totalRecords++;
+            }
 
-		p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("KarmaModel.updateUserKarma"));
-		
-		double karmaPoints = totalPoints / totalRecords;
-		
-		if (Double.isNaN(karmaPoints)) {
-			karmaPoints = 0;
-		}
-		
-		p.setDouble(1, karmaPoints);
-		p.setInt(2, userId);
-		p.executeUpdate();
-		p.close();
-	}
+            rs.close();
+            rs=null;
+            p.close();
+            p=null;
+
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("KarmaModel.updateUserKarma"));
+
+            double karmaPoints = totalPoints / totalRecords;
+
+            if (Double.isNaN(karmaPoints)) {
+                karmaPoints = 0;
+            }
+
+            p.setDouble(1, karmaPoints);
+            p.setInt(2, userId);
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr updateUserKarma()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 
 	/**
 	 * @see net.jforum.dao.KarmaDAO#update(net.jforum.entities.Karma)
 	 */
-	public void update(Karma karma) throws Exception
+	public void update(Karma karma)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("KarmaModel.update"));
-		p.setInt(1, karma.getPoints());
-		p.setInt(2, karma.getId());
-		p.executeUpdate();
-		p.close();
-	}
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("KarmaModel.update"));
+            p.setInt(1, karma.getPoints());
+            p.setInt(2, karma.getId());
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr update()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
+    }
 
 	/**
 	 * @see net.jforum.dao.KarmaDAO#getPostKarma(int)
 	 */
-	public KarmaStatus getPostKarma(int postId) throws Exception
+	public KarmaStatus getPostKarma(int postId)
 	{
 		KarmaStatus karma = new KarmaStatus();
 
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("KarmaModel.getPostKarma"));
-		p.setInt(1, postId);
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("KarmaModel.getPostKarma"));
+            p.setInt(1, postId);
 
-		ResultSet rs = p.executeQuery();
-		if (rs.next()) {
-			karma.setKarmaPoints(Math.round(rs.getDouble(1)));
-		}
+            rs = p.executeQuery();
+            if (rs.next()) {
+                karma.setKarmaPoints(Math.round(rs.getDouble(1)));
+            }
 
-		rs.close();
-		p.close();
-
-		return karma;
-	}
+            return karma;
+        }
+        catch (SQLException e) {
+            String es = "Erorr getPostKarma()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 
 	/**
 	 * @see net.jforum.dao.KarmaDAO#userCanAddKarma(int, int)
 	 */
-	public boolean userCanAddKarma(int userId, int postId) throws Exception
+	public boolean userCanAddKarma(int userId, int postId)
 	{
 		boolean status = true;
 
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("KarmaModel.userCanAddKarma"));
-		p.setInt(1, postId);
-		p.setInt(2, userId);
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("KarmaModel.userCanAddKarma"));
+            p.setInt(1, postId);
+            p.setInt(2, userId);
 
-		ResultSet rs = p.executeQuery();
-		if (rs.next()) {
-			status = rs.getInt(1) < 1;
-		}
+            rs = p.executeQuery();
+            if (rs.next()) {
+                status = rs.getInt(1) < 1;
+            }
 
-		rs.close();
-		p.close();
-
-		return status;
-	}
+            return status;
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectActiveBannerByPlacement()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 
 	/**
 	 * @see net.jforum.dao.KarmaDAO#getUserVotes(int, int)
 	 */
-	public Map getUserVotes(int topicId, int userId) throws Exception
+	public Map getUserVotes(int topicId, int userId)
 	{
 		Map m = new HashMap();
 
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("KarmaModel.getUserVotes"));
-		p.setInt(1, topicId);
-		p.setInt(2, userId);
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("KarmaModel.getUserVotes"));
+            p.setInt(1, topicId);
+            p.setInt(2, userId);
 
-		ResultSet rs = p.executeQuery();
-		while (rs.next()) {
-			m.put(new Integer(rs.getInt("post_id")), new Integer(rs.getInt("points")));
-		}
+            rs = p.executeQuery();
+            while (rs.next()) {
+                m.put(new Integer(rs.getInt("post_id")), new Integer(rs.getInt("points")));
+            }
 
-		rs.close();
-		p.close();
+            return m;
+        }
+        catch (SQLException e) {
+            String es = "Erorr getUserVotes()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 
-		return m;
-	}
-
-	public void getUserTotalKarma(User user) throws SQLException
+	public void getUserTotalKarma(User user)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("KarmaModel.getUserTotalVotes"));
-		p.setInt(1, user.getId());
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("KarmaModel.getUserTotalVotes"));
+            p.setInt(1, user.getId());
 
-		ResultSet rs = p.executeQuery();
+            rs = p.executeQuery();
 
-		user.setKarma(new KarmaStatus());
+            user.setKarma(new KarmaStatus());
 
-		if (rs.next()) {
-			user.getKarma().setTotalPoints(rs.getInt("points"));
-			user.getKarma().setVotesReceived(rs.getInt("votes"));
-		}
+            if (rs.next()) {
+                user.getKarma().setTotalPoints(rs.getInt("points"));
+                user.getKarma().setVotesReceived(rs.getInt("votes"));
+            }
 
-		if (user.getKarma().getVotesReceived() != 0)// prevetns division by
-			// zero.
-			user.getKarma().setKarmaPoints(user.getKarma().getTotalPoints() / user.getKarma().getVotesReceived());
+            if (user.getKarma().getVotesReceived() != 0)// prevetns division by
+                // zero.
+                user.getKarma().setKarmaPoints(user.getKarma().getTotalPoints() / user.getKarma().getVotesReceived());
 
-		this.getVotesGiven(user);
-
-		rs.close();
-		p.close();
+            this.getVotesGiven(user);
+        }
+        catch (SQLException e) {
+            String es = "Erorr getUserTotalKarma()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
 	}
 
-	private void getVotesGiven(User user) throws SQLException
+	private void getVotesGiven(User user)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("KarmaModel.getUserGivenVotes"));
-		p.setInt(1, user.getId());
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("KarmaModel.getUserGivenVotes"));
+            p.setInt(1, user.getId());
 
-		ResultSet rs = p.executeQuery();
+            rs = p.executeQuery();
 
-		if (rs.next()) {
-			user.getKarma().setVotesGiven(rs.getInt("votes"));
-		}
-
-		rs.close();
-		p.close();
-	}
+            if (rs.next()) {
+                user.getKarma().setVotesGiven(rs.getInt("votes"));
+            }
+        }
+        catch (SQLException e) {
+            String es = "Erorr getVotesGiven()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 
 	/**
-	 * @see net.jforum.dao.KarmaDAO#getMostRatedUserByPeriod(java.util.Date, java.util.Date)
+	 * @see net.jforum.dao.KarmaDAO#getMostRatedUserByPeriod(int, java.util.Date, java.util.Date, String) 
 	 */
 	public List getMostRatedUserByPeriod(int start, Date firstPeriod, Date lastPeriod, String orderField)
-			throws Exception
 	{
 		String sql = SystemGlobals.getSql("KarmaModel.getMostRatedUserByPeriod");
-		String orderby = " ORDER BY " + orderField + " DESC";
-		sql += orderby;
+        sql += " ORDER BY " + orderField + " DESC";
 		
 		return this.getMostRatedUserByPeriod(sql, start, firstPeriod, lastPeriod, orderField);
 	}
 
 	/**
 	 * 
-	 * @param sql
-	 * @param start
-	 * @param firstPeriod
-	 * @param lastPeriod
-	 * @param orderField
-	 * @return
-	 * @throws Exception
+	 * @param sql String
+	 * @param start int
+	 * @param firstPeriod Date
+	 * @param lastPeriod Date
+	 * @param orderField String
+	 * @return List
 	 */
 	protected List getMostRatedUserByPeriod(String sql, int start, Date firstPeriod, Date lastPeriod, String orderField)
-			throws Exception
 	{
 		if (firstPeriod.after(lastPeriod)) {
-			throw new Exception("First Date needs to be before the Last Date");
+			throw new RuntimeException("First Date needs to be before the Last Date");
 		}
 		
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(sql);
-		p.setTimestamp(1, new Timestamp(firstPeriod.getTime()));
-		p.setTimestamp(2, new Timestamp(lastPeriod.getTime()));
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(sql);
+            p.setTimestamp(1, new Timestamp(firstPeriod.getTime()));
+            p.setTimestamp(2, new Timestamp(lastPeriod.getTime()));
 
-		ResultSet rs = p.executeQuery();
-		List usersAndPoints = this.fillUser(rs);
-		rs.close();
-		p.close();
-
-		return usersAndPoints;
-	}
+            rs = p.executeQuery();
+            return this.fillUser(rs);
+        }
+        catch (SQLException e) {
+            String es = "Erorr getMostRatedUserByPeriod()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 
 	protected List fillUser(ResultSet rs) throws SQLException
 	{
 		List usersAndPoints = new ArrayList();
-		User user = null;
 		KarmaStatus karma = null;
 		while (rs.next()) {
-			user = new User();
+			User user = new User();
 			karma = new KarmaStatus();
 			karma.setTotalPoints(rs.getInt("total"));
 			karma.setVotesReceived(rs.getInt("votes_received"));

@@ -51,7 +51,7 @@ import net.jforum.dao.security.SecurityDAO;
  * actions.  
  * 
  * @author Rafael Steil
- * @version $Id: PermissionControl.java,v 1.15 2005/09/25 02:18:37 rafaelsteil Exp $
+ * @version $Id: PermissionControl.java,v 1.16 2006/08/20 12:19:09 sergemaslyukov Exp $
  */
 public class PermissionControl implements Serializable
 {
@@ -71,22 +71,22 @@ public class PermissionControl implements Serializable
 		this.smodel = smodel;
 	}
 	
-	public void addRole(int id, Role role) throws Exception
+	public void addRole(int id, Role role)
 	{
 		this.smodel.addRole(id, role);
 	}
 	
-	public void addRole(int id, Role role, RoleValueCollection roleValues) throws Exception
+	public void addRole(int id, Role role, RoleValueCollection roleValues) 
 	{
 		this.smodel.addRole(id, role, roleValues);
 	}
 	
-	public void addRoleValue(int id, Role role, RoleValueCollection roleValues) throws Exception
+	public void addRoleValue(int id, Role role, RoleValueCollection roleValues)
 	{
 		this.smodel.addRoleValue(id, role, roleValues);
 	}
 	
-	public void deleteAllRoles(int id) throws Exception
+	public void deleteAllRoles(int id) 
 	{
 		this.smodel.deleteAllRoles(id);
 	}
@@ -104,6 +104,8 @@ public class PermissionControl implements Serializable
 	
 	/** 
 	 * @see net.jforum.security.PermissionControl#canAccess(java.lang.String)
+     * @param roleName String
+     * @return boolean
 	 */
 	public boolean canAccess(String roleName) 
 	{
@@ -113,6 +115,9 @@ public class PermissionControl implements Serializable
 	
 	/** 
 	 * @see net.jforum.security.PermissionControl#canAccess(java.lang.String, java.lang.String)
+     * @return boolean
+     * @param roleName String
+     * @param roleValue String
 	 */
 	public boolean canAccess(String roleName, String roleValue) 
 	{

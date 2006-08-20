@@ -49,7 +49,7 @@ import net.jforum.entities.Config;
 
 /**
  * @author Rafael Steil
- * @version $Id: ConfigModelDummy.java,v 1.4 2005/07/26 03:05:53 rafaelsteil Exp $
+ * @version $Id: ConfigModelDummy.java,v 1.5 2006/08/20 12:19:18 sergemaslyukov Exp $
  */
 public class ConfigModelDummy implements ConfigDAO
 {
@@ -57,8 +57,7 @@ public class ConfigModelDummy implements ConfigDAO
 	/**
 	 * @see net.jforum.dao.ConfigDAO#insert(net.jforum.entities.Config)
 	 */
-	public void insert(Config config) throws Exception
-	{
+	public void insert(Config config) 	{
 		// TODO Auto-generated method stub
 
 	}
@@ -66,7 +65,7 @@ public class ConfigModelDummy implements ConfigDAO
 	/**
 	 * @see net.jforum.dao.ConfigDAO#update(net.jforum.entities.Config)
 	 */
-	public void update(Config config) throws Exception
+	public void update(Config config)
 	{
 		// TODO Auto-generated method stub
 
@@ -75,7 +74,7 @@ public class ConfigModelDummy implements ConfigDAO
 	/**
 	 * @see net.jforum.dao.ConfigDAO#delete(net.jforum.entities.Config)
 	 */
-	public void delete(Config config) throws Exception
+	public void delete(Config config)
 	{
 		// TODO Auto-generated method stub
 
@@ -84,7 +83,7 @@ public class ConfigModelDummy implements ConfigDAO
 	/**
 	 * @see net.jforum.dao.ConfigDAO#selectAll()
 	 */
-	public List selectAll() throws Exception
+	public List selectAll()
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -93,7 +92,7 @@ public class ConfigModelDummy implements ConfigDAO
 	/**
 	 * @see net.jforum.dao.ConfigDAO#selectByName(java.lang.String)
 	 */
-	public Config selectByName(String name) throws Exception
+	public Config selectByName(String name) 
 	{
 		// TODO Auto-generated method stub
 		return null;

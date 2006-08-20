@@ -44,13 +44,16 @@ package net.jforum.sso;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Map;
 
 import net.jforum.JForumExecutionContext;
 import net.jforum.dao.UserDAO;
 import net.jforum.entities.User;
 import net.jforum.util.MD5;
+import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.SystemGlobals;
+import org.apache.log4j.Logger;
 
 /**
  * Default login authenticator for JForum.
@@ -58,10 +61,12 @@ import net.jforum.util.preferences.SystemGlobals;
  * <i>jforum_users</i>. 
  * 
  * @author Rafael Steil
- * @version $Id: DefaultLoginAuthenticator.java,v 1.6 2006/07/20 00:39:09 rafaelsteil Exp $
+ * @version $Id: DefaultLoginAuthenticator.java,v 1.7 2006/08/20 12:19:10 sergemaslyukov Exp $
  */
 public class DefaultLoginAuthenticator implements LoginAuthenticator
 {
+    private final static Logger log = Logger.getLogger(DefaultLoginAuthenticator.class);
+
 	private UserDAO userModel;
 
 	/**
@@ -73,26 +78,37 @@ public class DefaultLoginAuthenticator implements LoginAuthenticator
 	}
 
 	/**
-	 * @see net.jforum.sso.LoginAuthenticator#validateLogin(java.lang.String, java.lang.String, Object[])
+	 * @see net.jforum.sso.LoginAuthenticator#validateLogin(String, String, java.util.Map) 
 	 */
-	public User validateLogin(String username, String password, Map extraParams) throws Exception
+	public User validateLogin(String username, String password, Map extraParams)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("UserModel.login"));
-		p.setString(1, username);
-		p.setString(2, MD5.crypt(password));
-		
-		User user = null;
-		
-		ResultSet rs = p.executeQuery();
-		if (rs.next() && rs.getInt("user_id") > 0) {
-			user = this.userModel.selectById(rs.getInt("user_id"));
-		}
+        User user = null;
+        ResultSet rs=null;
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(
+                    SystemGlobals.getSql("UserModel.login"));
+            p.setString(1, username);
+            p.setString(2, MD5.crypt(password));
 
-		rs.close();
-		p.close();
-		
-		if (user != null && !user.isDeleted() && (user.getActivationKey() == null || user.isActive())) {
+            rs = p.executeQuery();
+            if (rs.next() && rs.getInt("user_id") > 0) {
+                user = this.userModel.selectById(rs.getInt("user_id"));
+            }
+        }
+        catch (SQLException e)
+        {
+            String es = "Erorr update()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally
+        {
+            DbUtils.close(rs, p);
+        }
+
+        if (user != null && !user.isDeleted() && (user.getActivationKey() == null || user.isActive())) {
 			return user;
 		}
 		

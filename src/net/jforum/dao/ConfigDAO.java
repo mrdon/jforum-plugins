@@ -48,10 +48,10 @@ import net.jforum.entities.Config;
 
 
 /**
- * Model interface for the {@link net.jforum.Config} class. 
+ * Model interface for the {@link net.jforum.entities.Config} class. 
  * 
  * @author Rafael Steil
- * @version $Id: ConfigDAO.java,v 1.4 2005/07/26 03:04:30 rafaelsteil Exp $
+ * @version $Id: ConfigDAO.java,v 1.5 2006/08/20 12:19:00 sergemaslyukov Exp $
  */
 public interface ConfigDAO 
 {
@@ -59,41 +59,36 @@ public interface ConfigDAO
 	 * Insert a new configuration.
 	 * 
 	 * @param config The data to store.
-	 * @throws Exception
 	 */
-	public void insert(Config config) throws Exception;
+	public void insert(Config config);
 	
 	/**
 	 * Updates some config entry
 	 * 
 	 * @param config The entry to update
-	 * @throws Exception
 	 */
-	public void update(Config config) throws Exception;
+	public void update(Config config);
 
 	/**
 	 * Deletes some specific configuration
 	 * 
 	 * @param config The config to delete
-	 * @throws Exception
 	 */
-	public void delete(Config config) throws Exception;
+	public void delete(Config config) ;
 	
 	/**
 	 * Gets all existing configuration entries
 	 * 
 	 * @return <code>java.util.List</code> with all records found. 
 	 * Each entry is a <code>net.jforum.entities.Config</code> instance.
-	 * @throws Exception
 	 */
-	public List selectAll() throws Exception;
+	public List selectAll() ;
 	
 	/**
 	 * Gets a config by its name
 	 * 
 	 * @param name The name to search for.
-	 * @return
-	 * @throws Exception
+	 * @return Config
 	 */
-	public Config selectByName(String name) throws Exception;
+	public Config selectByName(String name) ;
 }

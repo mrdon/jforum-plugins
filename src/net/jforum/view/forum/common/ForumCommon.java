@@ -65,7 +65,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumCommon.java,v 1.13 2006/02/21 13:59:48 rafaelsteil Exp $
+ * @version $Id: ForumCommon.java,v 1.14 2006/08/20 12:19:17 sergemaslyukov Exp $
  */
 public class ForumCommon 
 {
@@ -76,7 +76,7 @@ public class ForumCommon
 	 * @param tracking Tracking of the topics read by the user
 	 * @param lastVisit The last visit time of the current user
 	 */
-	public static void checkUnreadPosts(Forum forum, Map tracking, long lastVisit) throws Exception
+	public static void checkUnreadPosts(Forum forum, Map tracking, long lastVisit) 
 	{
 		LastPostInfo lpi = forum.getLastPostInfo();
 		
@@ -107,10 +107,9 @@ public class ForumCommon
 	 * or <code>false</code> if this action is not needed. 
 	 * @return A <code>List</code> instance where each record is an instance of a <code>Category</code>
 	 * object
-	 * @throws Exception
 	 */
 	public static List getAllCategoriesAndForums(UserSession us, int anonymousUserId, 
-			Map tracking, boolean checkUnreadPosts) throws Exception
+			Map tracking, boolean checkUnreadPosts)
 	{
 		long lastVisit = 0;
 		int userId = anonymousUserId;
@@ -119,8 +118,9 @@ public class ForumCommon
 			lastVisit = us.getLastVisit().getTime();
 			userId = us.getUserId();
 		}
-		
-		// Do not check for unread posts if the user is not logged in
+
+        // TODO at this position us may null and NPE possible
+        // Do not check for unread posts if the user is not logged in
 		checkUnreadPosts = checkUnreadPosts && (us.getUserId() != anonymousUserId);
 
 		List categories = ForumRepository.getAllCategories(userId);
@@ -146,8 +146,10 @@ public class ForumCommon
 	
 	/**
 	 * @see #getAllCategoriesAndForums(UserSession, int, Map, boolean)
+     * @return List
+     * @param checkUnreadPosts boolean
 	 */
-	public static List getAllCategoriesAndForums(boolean checkUnreadPosts) throws Exception
+	public static List getAllCategoriesAndForums(boolean checkUnreadPosts)
 	{
 		return getAllCategoriesAndForums(SessionFacade.getUserSession(), 
 				SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID), 
@@ -157,8 +159,9 @@ public class ForumCommon
 	
 	/**
 	 * @see #getAllCategoriesAndForums(boolean)
+     * @return List
 	 */
-	public static List getAllCategoriesAndForums() throws Exception
+	public static List getAllCategoriesAndForums()
 	{
 		UserSession us = SessionFacade.getUserSession();
 		boolean checkUnread = (us != null && us.getUserId() 
@@ -172,9 +175,8 @@ public class ForumCommon
 	 * @param f The Forum changed
 	 * @param t The new topic
 	 * @param tm A ForumModel instance
-	 * @throws Exception
 	 */
-	public static void notifyUsers(Forum f, Topic t, ForumDAO tm) throws Exception
+	public static void notifyUsers(Forum f, Topic t, ForumDAO tm)
 	{
 		if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_NOTIFY_ANSWERS)) {
 			try {

@@ -54,7 +54,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rodrigo Kumpera
- * @version $Id: QueuedExecutor.java,v 1.11 2005/07/26 04:01:15 diegopires Exp $
+ * @version $Id: QueuedExecutor.java,v 1.12 2006/08/20 12:19:12 sergemaslyukov Exp $
  */
 public class QueuedExecutor implements Executor 
 {
@@ -92,11 +92,20 @@ public class QueuedExecutor implements Executor
 		}
 	}
 
-	public void execute(Task task) throws InterruptedException 
+	public void execute(Task task)
 	{
 		if (SystemGlobals.getBoolValue(ConfigKeys.BACKGROUND_TASKS)) {
-			queue.put(task);
-			synchronized(lock) {
+            try
+            {
+                queue.put(task);
+            }
+            catch (InterruptedException e)
+            {
+                String es = "Erorr execute()";
+                logger.error(es, e);
+                throw new RuntimeException(es, e);
+            }
+            synchronized(lock) {
 				if(currentThread == null) {
 					logger.info("Creating a new thread...");
 					

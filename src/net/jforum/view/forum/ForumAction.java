@@ -74,14 +74,14 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.53 2006/04/29 12:33:11 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.54 2006/08/20 12:19:15 sergemaslyukov Exp $
  */
 public class ForumAction extends Command 
 {
 	/**
 	 * List all the forums (first page of forum index)?
 	 */
-	public void list() throws Exception
+	public void list()
 	{
 		this.setTemplateName(TemplateKeys.FORUMS_LIST);
 		
@@ -158,7 +158,7 @@ public class ForumAction extends Command
 				new String[] { Integer.toString(mostUsersEverOnline.getTotal()), mostUsersEverOnline.getDate() }));
 	}
 	
-	public void moderation() throws Exception
+	public void moderation()
 	{
 		this.context.put("openModeration", true);
 		this.show();
@@ -166,9 +166,8 @@ public class ForumAction extends Command
 
 	/**
 	 * Display all topics in a forum
-	 * @throws Exception
 	 */
-	public void show() throws Exception
+	public void show()
 	{
 		int forumId = this.request.getIntParameter("forum_id");
 		ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
@@ -257,7 +256,7 @@ public class ForumAction extends Command
 	}
 	
 	// Mark all topics as read
-	public void readAll() throws Exception
+	public void readAll()
 	{
 		SearchData sd = new SearchData();
 		sd.setTime(SessionFacade.getUserSession().getLastVisit());
@@ -285,7 +284,7 @@ public class ForumAction extends Command
 	}
 	
 	// Messages since last visit
-	public void newMessages() throws Exception
+	public void newMessages()
 	{
 		this.request.addParameter("post_time", Long.toString(SessionFacade.getUserSession().getLastVisit().getTime()));
 		this.request.addParameter("clean", "true");
@@ -296,7 +295,7 @@ public class ForumAction extends Command
 		this.setTemplateName(TemplateKeys.SEARCH_NEW_MESSAGES);
 	}
 	
-	public void approveMessages() throws Exception
+	public void approveMessages()
 	{
 		if (SessionFacade.getUserSession().isModerator(this.request.getIntParameter("forum_id"))) {
 			new ModerationAction(this.context, this.request).doSave();
@@ -311,10 +310,8 @@ public class ForumAction extends Command
 	 * Action when users click on "watch this forum"
 	 * It gets teh forum_id and userId, and put them into a watch_forum table in the database;
 	 * To do: may need change other codes to "create/update" the new table.
-	 * 
-	 * @throws Exception
 	 */
-	public void watchForum() throws Exception {
+	public void watchForum()  {
 		int forumId = this.request.getIntParameter("forum_id");
 		int userId = SessionFacade.getUserSession().getUserId();
 
@@ -336,12 +333,11 @@ public class ForumAction extends Command
 	
 	/**
 	 * 
-	 * @param dao
-	 * @param topicId
-	 * @param userId
-	 * @throws Exception
+	 * @param dao ForumDAO
+	 * @param forumId int
+	 * @param userId int
 	 */
-	private void watchForum(ForumDAO dao, int forumId, int userId) throws Exception {
+	private void watchForum(ForumDAO dao, int forumId, int userId)  {
 		if (SessionFacade.isLogged() && !dao.isUserSubscribed(forumId, userId)) {
 			dao.subscribeUser(forumId, userId);
 		}
@@ -349,9 +345,8 @@ public class ForumAction extends Command
 	
 	/**
 	 * Unwatch the forum watched.
-	 * @throws Exception
 	 */
-	public void unwatchForum() throws Exception{
+	public void unwatchForum() {
 		if (SessionFacade.isLogged()) {
 			int forumId = this.request.getIntParameter("forum_id");
 			int userId = SessionFacade.getUserSession().getUserId();

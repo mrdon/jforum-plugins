@@ -50,7 +50,7 @@ import net.jforum.entities.User;
  * General utilities to use with SSO.
  * 
  * @author Rafael Steil
- * @version $Id: SSOUtils.java,v 1.4 2006/07/20 00:23:01 rafaelsteil Exp $
+ * @version $Id: SSOUtils.java,v 1.5 2006/08/20 12:19:10 sergemaslyukov Exp $
  */
 public class SSOUtils
 {
@@ -67,9 +67,8 @@ public class SSOUtils
 	 * returned, then you can insert the user by calling {@link #register(String, String)}
 	 * @see #register(String, String)
 	 * @see #getUser()
-	 * @throws Exception
 	 */
-	public boolean userExists(String username) throws Exception
+	public boolean userExists(String username)
 	{
 		this.username = username;
 		this.dao = DataAccessDriver.getInstance().newUserDAO();
@@ -89,9 +88,8 @@ public class SSOUtils
 	 * written to the database
 	 * @param email the user's email
 	 * @see #getUser()
-	 * @throws Exception
 	 */
-	public void register(String password, String email) throws Exception
+	public void register(String password, String email)
 	{
 		if (this.exists) {
 			return;

@@ -48,49 +48,44 @@ import net.jforum.entities.Smilie;
 
 /**
  * @author Rafael Steil
- * @version $Id: SmilieDAO.java,v 1.4 2005/07/26 03:04:29 rafaelsteil Exp $
+ * @version $Id: SmilieDAO.java,v 1.5 2006/08/20 12:19:02 sergemaslyukov Exp $
  */
 public interface SmilieDAO 
 {
 	/**
 	 * Insert a new Smilie
 	 * 
-	 * @param smilie
+	 * @param smilie  Smilie
 	 * @return The Smilie id
-	 * @throws Exception
 	 */
-	public int addNew(Smilie smilie) throws Exception;
+	public int addNew(Smilie smilie) ;
 	
 	/**
 	 * Deletes a smilie
 	 * 
-	 * @param id
-	 * @throws Exception
+	 * @param id int
 	 */
-	public void delete(int id) throws Exception;
+	public void delete(int id) ;
 	
 	/**
 	 * Updates a smilie
 	 * 
-	 * @param smilie
-	 * @throws Exception
+	 * @param smilie Smilie
 	 */
-	public void update(Smilie smilie) throws Exception;
+	public void update(Smilie smilie) ;
 	
 	/**
 	 * Select all smilies
 	 * 
-	 * @return
-	 * @throws Exception
+	 * @return List
 	 */
-	public List selectAll() throws Exception;
+	public List selectAll() ;
 	
 	/**
 	 * Gets some specific smilie.
 	 * 
-	 * @param id
-	 * @return 
-	 * @throws Exception
+	 * @param id int
+	 * @return Smilie
 	 */
-	public Smilie selectById(int id) throws Exception;
+	public Smilie selectById(int id) ;
 }

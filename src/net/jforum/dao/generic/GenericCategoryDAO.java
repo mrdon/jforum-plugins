@@ -44,60 +44,84 @@ package net.jforum.dao.generic;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.jforum.JForumExecutionContext;
 import net.jforum.entities.Category;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.DbUtils;
+import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericCategoryDAO.java,v 1.5 2006/01/29 15:06:26 rafaelsteil Exp $
+ * @version $Id: GenericCategoryDAO.java,v 1.6 2006/08/20 12:19:03 sergemaslyukov Exp $
  */
 public class GenericCategoryDAO extends AutoKeys implements net.jforum.dao.CategoryDAO 
 {
+    private final static Logger log = Logger.getLogger(GenericCategoryDAO.class);
+
 	/**
 	 * @see net.jforum.dao.CategoryDAO#selectById(int)
 	 */
-	public Category selectById(int categoryId) throws Exception 
+	public Category selectById(int categoryId)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.selectById"));
-		p.setInt(1, categoryId);
-		
-		ResultSet rs = p.executeQuery();
-		
-		Category c = new Category();
-		if (rs.next()) {
-			c = this.getCategory(rs);
-		}
-		
-		rs.close();
-		p.close();
-		
-		return c;
-	}
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.selectById"));
+            p.setInt(1, categoryId);
+
+            rs = p.executeQuery();
+
+            Category c = new Category();
+            if (rs.next()) {
+                c = this.getCategory(rs);
+            }
+
+            return c;
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectById()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 
 	/** 
 	 * @see net.jforum.dao.CategoryDAO#selectAll()
 	 */
-	public List selectAll() throws Exception 
+	public List selectAll() 
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.selectAll"));
-		List l = new ArrayList();
-		
-		ResultSet rs = p.executeQuery();		
-		while (rs.next()) {
-			l.add(this.getCategory(rs));		
-		}
-		
-		rs.close();
-		p.close();
-			
-		return l;
-	}
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.selectAll"));
+            List l = new ArrayList();
+
+            rs = p.executeQuery();
+            while (rs.next()) {
+                l.add(this.getCategory(rs));
+            }
+            return l;
+        }
+        catch (SQLException e) {
+            String es = "Erorr selectAll()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 	
-	protected Category getCategory(ResultSet rs) throws Exception
+	protected Category getCategory(ResultSet rs) throws SQLException
 	{
 		Category c = new Category();
 		
@@ -112,81 +136,121 @@ public class GenericCategoryDAO extends AutoKeys implements net.jforum.dao.Categ
 	/** 
 	 * @see net.jforum.dao.CategoryDAO#canDelete(int)
 	 */
-	public boolean canDelete(int categoryId) throws Exception
+	public boolean canDelete(int categoryId)
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.canDelete"));
-		p.setInt(1, categoryId);
-		
-		ResultSet rs = p.executeQuery();
-		if (!rs.next() || rs.getInt("total") < 1) {		
-			return true;
-		}
-		
-		rs.close();
-		p.close();
-		
-		return false;
-	}
+		PreparedStatement p=null;
+        ResultSet rs=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.canDelete"));
+            p.setInt(1, categoryId);
+
+            rs = p.executeQuery();
+            return !rs.next() || rs.getInt("total") < 1;
+
+        }
+        catch (SQLException e) {
+            String es = "Erorr canDelete()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 
 	/**
 	 * @see net.jforum.dao.CategoryDAO#delete(int)
 	 */
-	public void delete(int categoryId) throws Exception 
+	public void delete(int categoryId) 
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.delete"));
-		p.setInt(1, categoryId);
-		p.executeUpdate();
-		
-		p.close();
-	}
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.delete"));
+            p.setInt(1, categoryId);
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr delete()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
+    }
 
 	/**
-	 * @see net.jforum.dao.CategoryDAO#update(net.jforum.Category)
+	 * @see net.jforum.dao.CategoryDAO#update(net.jforum.entities.Category) 
 	 */
-	public void update(Category category) throws Exception 
+	public void update(Category category) 
 	{
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.update"));		
-		p.setString(1, category.getName());
-		p.setInt(2, category.isModerated() ? 1 : 0);
-		p.setInt(3, category.getId());
-		p.executeUpdate();
-		p.close();
-	}
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.update"));
+            p.setString(1, category.getName());
+            p.setInt(2, category.isModerated() ? 1 : 0);
+            p.setInt(3, category.getId());
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr update()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
+    }
 
 	/** 
-	 * @see net.jforum.dao.CategoryDAO#addNew(net.jforum.Category)
+	 * @see net.jforum.dao.CategoryDAO#addNew(net.jforum.entities.Category)
 	 */
-	public int addNew(Category category) throws Exception 
+	public int addNew(Category category) 
 	{
 		int order = 1;
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.getMaxOrder"));
-		
-		ResultSet rs = p.executeQuery();
-		if (rs.next()) {
-			order = rs.getInt(1) + 1;
-		}
-		rs.close();
-		p.close();
+        ResultSet rs=null;
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.getMaxOrder"));
+            rs = p.executeQuery();
+            if (rs.next()) {
+                order = rs.getInt(1) + 1;
+            }
+            rs.close();
+            rs=null;
+            p.close();
+            p=null;
 
-		p = this.getStatementForAutoKeys("CategoryModel.addNew");
-		p.setString(1, category.getName());
-		p.setInt(2, order);
-		p.setInt(3, category.isModerated() ? 1 : 0);
-		
-		this.setAutoGeneratedKeysQuery(SystemGlobals.getSql("CategoryModel.lastGeneratedCategoryId"));
-		int id = this.executeAutoKeysQuery(p);
-		
-		p.close();
-		
-		category.setId(id);
-		category.setOrder(order);
-		return id;
-	}
+            p = this.getStatementForAutoKeys("CategoryModel.addNew");
+            p.setString(1, category.getName());
+            p.setInt(2, order);
+            p.setInt(3, category.isModerated() ? 1 : 0);
+
+            this.setAutoGeneratedKeysQuery(SystemGlobals.getSql("CategoryModel.lastGeneratedCategoryId"));
+            int id = this.executeAutoKeysQuery(p);
+
+            category.setId(id);
+            category.setOrder(order);
+            return id;
+        }
+        catch (SQLException e) {
+            String es = "Erorr addAttachment()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(rs, p);
+        }
+    }
 	
 	/**
 	 * @see net.jforum.dao.CategoryDAO#setOrderUp(Category, Category)
 	 */
-	public void setOrderUp(Category category, Category relatedCategory) throws Exception 
+	public void setOrderUp(Category category, Category relatedCategory)
 	{
 		this.setOrder(category, relatedCategory, true);
 	}
@@ -194,29 +258,47 @@ public class GenericCategoryDAO extends AutoKeys implements net.jforum.dao.Categ
 	/**
 	 * @see net.jforum.dao.CategoryDAO#setOrderDown(Category, Category)
 	 */
-	public void setOrderDown(Category category, Category relatedCategory) throws Exception 
+	public void setOrderDown(Category category, Category relatedCategory)
 	{
 		this.setOrder(category, relatedCategory, false);
 	}
-	
-	private void setOrder(Category category, Category otherCategory, boolean up) throws Exception
+
+    /**
+     * TODO parameter 'up' not used - must be removed or used
+     * @param category Category
+     * @param otherCategory Category
+     * @param up boolean
+     */
+    private void setOrder(Category category, Category otherCategory, boolean up)
 	{
 		int tmpOrder = otherCategory.getOrder();
 		otherCategory.setOrder(category.getOrder());
 		category.setOrder(tmpOrder);
 
 		// *********
-		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.setOrderById"));
-		p.setInt(1, otherCategory.getOrder());
-		p.setInt(2, otherCategory.getId());
-		p.executeUpdate();
-		p.close();
+		PreparedStatement p=null;
+        try
+        {
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.setOrderById"));
+            p.setInt(1, otherCategory.getOrder());
+            p.setInt(2, otherCategory.getId());
+            p.executeUpdate();
+            p.close();
+            p=null;
 
-		// *********
-		p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.setOrderById"));
-		p.setInt(1, category.getOrder());
-		p.setInt(2, category.getId());
-		p.executeUpdate();
-		p.close();
+            // *********
+            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("CategoryModel.setOrderById"));
+            p.setInt(1, category.getOrder());
+            p.setInt(2, category.getId());
+            p.executeUpdate();
+        }
+        catch (SQLException e) {
+            String es = "Erorr setOrder()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+        finally {
+            DbUtils.close(p);
+        }
 	}
 }

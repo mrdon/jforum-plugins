@@ -57,7 +57,7 @@ import org.apache.log4j.Logger;
  * which opens a new connection on every request.  
  * 
  * @author Rafael Steil
- * @version $Id: DBConnection.java,v 1.11 2005/07/26 04:01:17 diegopires Exp $
+ * @version $Id: DBConnection.java,v 1.12 2006/08/20 12:18:59 sergemaslyukov Exp $
  */
 public abstract class DBConnection 
 {
@@ -72,7 +72,7 @@ public abstract class DBConnection
 	 * @return <code>true</code> if the instance was successfully created, 
 	 * or <code>false</code> if some exception was thrown.
 	 */
-	public static final boolean createInstance()
+	public static boolean createInstance()
 	{
 		try {
 			instance = (DBConnection)Class.forName(SystemGlobals.getValue(
@@ -90,7 +90,7 @@ public abstract class DBConnection
 	/**
 	 * Gets the current <code>DBConnection</code> implementation's instance
 	 * 
-	 * @return
+	 * @return DBConnection
 	 */
 	public static DBConnection getImplementation()
 	{
@@ -127,8 +127,7 @@ public abstract class DBConnection
 	 * go to the database and get the connection in time the method
 	 * is called.
 	 * 
-	 * @return
-	 * @throws Exception
+	 * @return Connection
 	 */
 	public abstract Connection getConnection();
 	
@@ -139,7 +138,6 @@ public abstract class DBConnection
 	 * in the connection object.
 	 * 
 	 * @param conn The connection to release
-	 * @throws Exception
 	 */
 	public abstract void releaseConnection(Connection conn);
 	

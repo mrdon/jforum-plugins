@@ -63,12 +63,12 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.29 2005/09/30 23:19:20 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.30 2006/08/20 12:19:15 sergemaslyukov Exp $
  */
 public class UserAction extends AdminCommand 
 {
 	// Listing
-	public void list() throws Exception
+	public void list()
 	{
 		int start = this.preparePagination(DataAccessDriver.getInstance().newUserDAO().getTotalUsers());
 		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
@@ -87,7 +87,7 @@ public class UserAction extends AdminCommand
 		return start;
 	}
 	
-	private void commonData() throws Exception
+	private void commonData()
 	{
 		this.context.put("selectedList", new ArrayList());
 		this.context.put("groups", new TreeGroup().getNodes());
@@ -96,7 +96,7 @@ public class UserAction extends AdminCommand
 		this.context.put("searchId", new Integer(-1));
 	}
 	
-	public void groupSearch() throws Exception
+	public void groupSearch()
 	{
 		final int groupId = this.request.getIntParameter("group_id");
 		if (groupId == 0) {
@@ -120,13 +120,13 @@ public class UserAction extends AdminCommand
 		this.context.put("searchId", new Integer(groupId));
 	}
 	
-	public void search() throws Exception
+	public void search()
 	{
-		List users = new ArrayList();
 		String search = this.request.getParameter("username");
 		String group = this.request.getParameter("group");
 		
 		if (search != null && !"".equals(search)) {
+            List users;
 			users = DataAccessDriver.getInstance().newUserDAO().findByName(search, false);
 			
 			this.commonData();
@@ -137,15 +137,13 @@ public class UserAction extends AdminCommand
 		}
 		else if (!"0".equals(group)) {
 			this.groupSearch();
-			return;
 		}
 		else {
 			this.list();
-			return;
 		}
 	}
 	
-	public void edit() throws Exception
+	public void edit()
 	{
 		int userId = this.request.getIntParameter("id");	
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
@@ -157,7 +155,7 @@ public class UserAction extends AdminCommand
 		this.context.put("admin", true);
 	}
 	
-	public void editSave() throws Exception
+	public void editSave() 
 	{
 		int userId = this.request.getIntParameter("user_id");
 		UserCommon.saveUser(userId);
@@ -166,7 +164,7 @@ public class UserAction extends AdminCommand
 	}
 
 	// Delete
-	public void delete() throws Exception
+	public void delete()
 	{
 		String ids[] = this.request.getParameterValues("user_id");
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
@@ -195,7 +193,7 @@ public class UserAction extends AdminCommand
 	}
 	
 	// Groups
-	public void groups() throws Exception
+	public void groups()
 	{
 		int userId = this.request.getIntParameter("id");
 		
@@ -216,7 +214,7 @@ public class UserAction extends AdminCommand
 	}
 	
 	// Groups Save
-	public void groupsSave() throws Exception
+	public void groupsSave()
 	{
 		int userId = this.request.getIntParameter("user_id");
 		

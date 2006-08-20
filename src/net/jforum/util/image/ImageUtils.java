@@ -42,6 +42,8 @@
  */
 package net.jforum.util.image;
 
+import org.apache.log4j.Logger;
+
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -65,11 +67,13 @@ import javax.imageio.stream.ImageOutputStream;
  * can read from. GIF images will be saved as PNG. 
  * 
  * @author Rafael Steil
- * @version $Id: ImageUtils.java,v 1.16 2006/02/12 17:25:58 rafaelsteil Exp $
+ * @version $Id: ImageUtils.java,v 1.17 2006/08/20 12:19:12 sergemaslyukov Exp $
  */
 public class ImageUtils
 {
-	public static final int IMAGE_UNKNOWN = -1;
+    private final static Logger log = Logger.getLogger(ImageUtils.class);
+
+    public static final int IMAGE_UNKNOWN = -1;
 	public static final int IMAGE_JPEG = 0;
 	public static final int IMAGE_PNG = 1;
 	public static final int IMAGE_GIF = 2;
@@ -78,15 +82,24 @@ public class ImageUtils
 	 * Resizes an image
 	 * 
 	 * @param imgName The image name to resize. Must be the complet path to the file
+	 * @param type int
 	 * @param maxWidth The image's max width
 	 * @param maxHeight The image's max height
 	 * @return A resized <code>BufferedImage</code>
-	 * @throws IOException If the file is not found
 	 */
-	public static BufferedImage resizeImage(String imgName, int type, int maxWidth, int maxHeight) throws IOException
+	public static BufferedImage resizeImage(String imgName, int type, int maxWidth, int maxHeight) 
 	{
-		return resizeImage(ImageIO.read(new File(imgName)), type, maxWidth, maxHeight);
-	}
+        try
+        {
+            return resizeImage(ImageIO.read(new File(imgName)), type, maxWidth, maxHeight);
+        }
+        catch (IOException e)
+        {
+            String es = "Erorr resizeImage()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+    }
 	
 	/**
 	 * Resizes an image. 
@@ -95,6 +108,7 @@ public class ImageUtils
 	 * @param maxWidth The image's max width
 	 * @param maxHeight The image's max height
 	 * @return A resized <code>BufferedImage</code>
+     * @param type int
 	 */
 	public static BufferedImage resizeImage(Image image, int type, int maxWidth, int maxHeight)
 	{
@@ -129,12 +143,20 @@ public class ImageUtils
 	 * @param type The image type. Use <code>ImageUtils.IMAGE_JPEG</code> to save as JPEG
 	 * images, or <code>ImageUtils.IMAGE_PNG</code> to save as PNG. 
 	 * @return <code>false</code> if no appropriate writer is found
-	 * @throws IOException
 	 */
-	public static boolean saveImage(BufferedImage image, String toFileName, int type) throws IOException
+	public static boolean saveImage(BufferedImage image, String toFileName, int type)
 	{
-		return ImageIO.write(image, type == IMAGE_JPEG ? "jpg" : "png", new File(toFileName));
-	}
+        try
+        {
+            return ImageIO.write(image, type == IMAGE_JPEG ? "jpg" : "png", new File(toFileName));
+        }
+        catch (IOException e)
+        {
+            String es = "Erorr saveImage()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+    }
 	
 	/**
 	 * Compress and save an image to the disk.
@@ -144,35 +166,40 @@ public class ImageUtils
 	 * @param toFileName The filename to use
 	 * @param type The image type. Use <code>ImageUtils.IMAGE_JPEG</code> to save as JPEG
 	 * images, or <code>ImageUtils.IMAGE_PNG</code> to save as PNG.
-	 * @param compress Set to <code>true</code> if you want to compress the image.  
-	 * @return <code>false</code> if no appropriate writer is found
-	 * @throws IOException
 	 */
-	public static void saveCompressedImage(BufferedImage image, String toFileName, int type) throws IOException
+	public static void saveCompressedImage(BufferedImage image, String toFileName, int type)
 	{
-		if (type == IMAGE_PNG) {
-			throw new UnsupportedOperationException("PNG compression not implemented");
-		}
-		
-		ImageWriter writer = null;
-		
-		Iterator iter = ImageIO.getImageWritersByFormatName("jpg");
-		writer = (ImageWriter)iter.next();
-		
-		ImageOutputStream ios = ImageIO.createImageOutputStream(new File(toFileName));
-		writer.setOutput(ios);
-		
-		ImageWriteParam iwparam = new JPEGImageWriteParam(Locale.getDefault());
-		
-		iwparam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-		iwparam.setCompressionQuality(0.7F);
-		
-		writer.write(null, new IIOImage(image, null, null), iwparam);
-		
-		ios.flush();
-		writer.dispose();
-		ios.close();
-	}
+        try
+        {
+            if (type == IMAGE_PNG) {
+                throw new UnsupportedOperationException("PNG compression not implemented");
+            }
+
+            Iterator iter = ImageIO.getImageWritersByFormatName("jpg");
+            ImageWriter writer;
+            writer = (ImageWriter)iter.next();
+
+            ImageOutputStream ios = ImageIO.createImageOutputStream(new File(toFileName));
+            writer.setOutput(ios);
+
+            ImageWriteParam iwparam = new JPEGImageWriteParam(Locale.getDefault());
+
+            iwparam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+            iwparam.setCompressionQuality(0.7F);
+
+            writer.write(null, new IIOImage(image, null, null), iwparam);
+
+            ios.flush();
+            writer.dispose();
+            ios.close();
+        }
+        catch (IOException e)
+        {
+            String es = "Erorr saveCompressedImage()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+    }
 	
 	/**
 	 * Creates a <code>BufferedImage</code> from an <code>Image</code>. 
@@ -181,6 +208,7 @@ public class ImageUtils
 	 * @param w The desired image width
 	 * @param h The desired image height
 	 * @return The converted image
+     * @param type int
 	 */
 	public static BufferedImage createBufferedImage(Image image, int type, int w, int h)
 	{
@@ -205,7 +233,6 @@ public class ImageUtils
 	 * 
 	 * @param image The image to check for transparent pixel.s
 	 * @return <code>true</code> of <code>false</code>, according to the result 
-	 * @throws InterruptedException
 	 */
 	public static boolean hasAlpha(Image image)
 	{

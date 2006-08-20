@@ -69,13 +69,13 @@ import net.jforum.view.forum.common.ViewCommon;
  * 
  * @author James Yong
  * @author Rafael Steil
- * @version $Id: RecentTopicsAction.java,v 1.17 2006/03/01 13:17:22 rafaelsteil Exp $
+ * @version $Id: RecentTopicsAction.java,v 1.18 2006/08/20 12:19:16 sergemaslyukov Exp $
  */
 public class RecentTopicsAction extends Command 
 {
 	private List forums;
 
-	public void list() throws Exception
+	public void list()
 	{
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 
@@ -90,7 +90,7 @@ public class RecentTopicsAction extends Command
 		this.request.setAttribute("template", null);
 	}
 	
-	List topics() throws Exception
+	List topics()
 	{
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 		List tmpTopics = TopicRepository.getRecentTopics();
@@ -115,7 +115,7 @@ public class RecentTopicsAction extends Command
 		return TopicsCommon.prepareTopics(tmpTopics);
 	}
 
-	public void showTopicsByUser() throws Exception
+	public void showTopicsByUser() 
 	{
 		DataAccessDriver da = DataAccessDriver.getInstance();
 		

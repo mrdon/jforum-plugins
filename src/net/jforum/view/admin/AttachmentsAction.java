@@ -58,11 +58,11 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentsAction.java,v 1.14 2006/04/08 15:28:52 rafaelsteil Exp $
+ * @version $Id: AttachmentsAction.java,v 1.15 2006/08/20 12:19:14 sergemaslyukov Exp $
  */
 public class AttachmentsAction extends AdminCommand
 {
-	public void configurations() throws Exception
+	public void configurations()
 	{
 		this.context.put("icon", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_ICON));
 		this.context.put("createThumb", SystemGlobals.getBoolValue(ConfigKeys.ATTACHMENTS_IMAGES_CREATE_THUMB));
@@ -74,7 +74,7 @@ public class AttachmentsAction extends AdminCommand
 		this.setTemplateName(TemplateKeys.ATTACHMENTS_CONFIG);
 	}
 	
-	public void configurationsSave() throws Exception
+	public void configurationsSave()
 	{
 		ConfigAction ca = new ConfigAction(this.request, this.response, this.context);
 		ca.updateData(ca.getConfig());
@@ -82,7 +82,7 @@ public class AttachmentsAction extends AdminCommand
 		this.configurations();
 	}
 	
-	public void quotaLimit() throws Exception
+	public void quotaLimit()
 	{
 		AttachmentDAO am = DataAccessDriver.getInstance().newAttachmentDAO();
 		
@@ -93,7 +93,7 @@ public class AttachmentsAction extends AdminCommand
 		this.context.put("groupQuotas", am.selectGroupsQuotaLimits());
 	}
 	
-	public void quotaLimitSave() throws Exception
+	public void quotaLimitSave()
 	{
 		QuotaLimit ql = new QuotaLimit();
 		ql.setDescription(this.request.getParameter("quota_description"));
@@ -104,7 +104,7 @@ public class AttachmentsAction extends AdminCommand
 		this.quotaLimit();
 	}
 	
-	public void quotaLimitUpdate() throws Exception
+	public void quotaLimitUpdate()
 	{
 		AttachmentDAO am = DataAccessDriver.getInstance().newAttachmentDAO();
 		
@@ -135,13 +135,13 @@ public class AttachmentsAction extends AdminCommand
 		this.quotaLimit();
 	}
 	
-	public void extensionGroups() throws Exception
+	public void extensionGroups()
 	{
 		this.setTemplateName(TemplateKeys.ATTACHMENTS_EXTENSION_GROUPS);
 		this.context.put("groups", DataAccessDriver.getInstance().newAttachmentDAO().selectExtensionGroups());
 	}
 	
-	public void extensionGroupsSave() throws Exception
+	public void extensionGroupsSave()
 	{
 		AttachmentExtensionGroup g = new AttachmentExtensionGroup();		
 		g.setAllow(this.request.getParameter("allow") != null);
@@ -153,7 +153,7 @@ public class AttachmentsAction extends AdminCommand
 		this.extensionGroups();
 	}
 	
-	public void extensionGroupsUpdate() throws Exception
+	public void extensionGroupsUpdate()
 	{
 		AttachmentDAO am = DataAccessDriver.getInstance().newAttachmentDAO();
 		
@@ -185,7 +185,7 @@ public class AttachmentsAction extends AdminCommand
 		this.extensionGroups();
 	}
 	
-	public void extensions() throws Exception
+	public void extensions()
 	{
 		AttachmentDAO am = DataAccessDriver.getInstance().newAttachmentDAO();
 		
@@ -194,7 +194,7 @@ public class AttachmentsAction extends AdminCommand
 		this.context.put("groups", am.selectExtensionGroups());
 	}
 	
-	public void extensionsSave() throws Exception
+	public void extensionsSave() 
 	{
 		AttachmentExtension e = new AttachmentExtension();
 		e.setAllow(this.request.getParameter("allow") != null);
@@ -211,7 +211,7 @@ public class AttachmentsAction extends AdminCommand
 		this.extensions();
 	}
 	
-	public void extensionsUpdate() throws Exception
+	public void extensionsUpdate()
 	{
 		AttachmentDAO am = DataAccessDriver.getInstance().newAttachmentDAO();
 		
@@ -245,7 +245,7 @@ public class AttachmentsAction extends AdminCommand
 		this.extensions();
 	}
 	
-	public void quotaGroupsSave() throws Exception
+	public void quotaGroupsSave() 
 	{
 		int total = this.request.getIntParameter("total_groups");
 		AttachmentDAO am = DataAccessDriver.getInstance().newAttachmentDAO();
@@ -272,7 +272,7 @@ public class AttachmentsAction extends AdminCommand
 	/**
 	 * @see net.jforum.Command#list()
 	 */
-	public void list() throws Exception
+	public void list()
 	{
 		this.configurations();
 	}

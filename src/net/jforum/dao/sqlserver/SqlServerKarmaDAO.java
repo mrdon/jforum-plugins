@@ -54,15 +54,13 @@ import net.jforum.util.preferences.SystemGlobals;
 public class SqlServerKarmaDAO extends net.jforum.dao.generic.GenericKarmaDAO
 {
 	/**
-	 * @see net.jforum.dao.KarmaDAO#getMostRatedUserByPeriod(java.util.Date, java.util.Date)
+	 * @see net.jforum.dao.KarmaDAO#getMostRatedUserByPeriod(int, java.util.Date, java.util.Date, String) 
 	 */
 	public List getMostRatedUserByPeriod(int start, Date firstPeriod, Date lastPeriod, String orderField)
-			throws Exception
-	{
+    {
 		String sql = SystemGlobals.getSql("GenericModel.selectByLimit") + " " + start + " "
 				+ SystemGlobals.getSql("KarmaModel.getMostRatedUserByPeriod");
-		String orderby = " ORDER BY " + orderField + " DESC";
-		sql += orderby;
+        sql += " ORDER BY " + orderField + " DESC";
 		
 		return super.getMostRatedUserByPeriod(sql, start, firstPeriod, lastPeriod, orderField);
 	}

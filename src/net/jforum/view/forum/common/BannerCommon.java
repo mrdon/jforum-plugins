@@ -51,7 +51,7 @@ import net.jforum.entities.Banner;
 
 /**
  * @author Samuel Yung
- * @version $Id: BannerCommon.java,v 1.5 2005/07/26 04:01:19 diegopires Exp $
+ * @version $Id: BannerCommon.java,v 1.6 2006/08/20 12:19:17 sergemaslyukov Exp $
  */
 public class BannerCommon
 {
@@ -67,9 +67,9 @@ public class BannerCommon
      * Check whether the banner will be displayed based on user rights and
      * banner filter settings.
      * @return boolean
-     * @throws Exception
+     * @param bannerId int
      */
-    public boolean canBannerDisplay(int bannerId) throws Exception
+    public boolean canBannerDisplay(int bannerId)
 	{
 		boolean result = true;
 
@@ -82,9 +82,8 @@ public class BannerCommon
 	 * Test whether any active banner exist at the placement indicated.
 	 * @param placement int
 	 * @return boolean
-	 * @throws Exception
 	 */
-	public boolean isActiveBannerExist(int placement) throws Exception
+	public boolean isActiveBannerExist(int placement) 
 	{
 		banners = dao.selectActiveBannerByPlacement(placement);
 		if (banners == null || banners.isEmpty())
@@ -104,12 +103,9 @@ public class BannerCommon
 	 * weight's banner will be chosen. After a correct banner is found, its
 	 * views variable will be incremented by 1.
 	 *
-	 * @param placement int
 	 * @return Banner
-	 * @throws Exception
-	 * @see #isBannerExist(int)
 	 */
-	public Banner getBanner() throws Exception
+	public Banner getBanner()
 	{
 		Banner result = null;
 
@@ -133,7 +129,8 @@ public class BannerCommon
 			weightFrom = weightTo;
 		}
 
-		// increment views by 1
+        // TODO at this position result can be null and NPE possible
+        // increment views by 1
 		result.setViews(result.getViews() + 1);
 		dao.update(result);
 

@@ -48,14 +48,14 @@ import net.jforum.dao.generic.GenericTopicDAO;
 
 /**
  * @author Marc Wick
- * @version $Id: HsqldbTopicDAO.java,v 1.6 2005/12/23 00:01:16 rafaelsteil Exp $
+ * @version $Id: HsqldbTopicDAO.java,v 1.7 2006/08/20 12:19:06 sergemaslyukov Exp $
  */
 public class HsqldbTopicDAO extends GenericTopicDAO
 {
 	/**
 	 * @see net.jforum.dao.TopicDAO#selectAllByForumByLimit(int, int, int)
 	 */
-	public List selectAllByForumByLimit(int forumId, int startFrom, int count) throws Exception 
+	public List selectAllByForumByLimit(int forumId, int startFrom, int count)
 	{
 		return super.selectAllByForumByLimit(startFrom, count, forumId);
 	}
@@ -63,7 +63,7 @@ public class HsqldbTopicDAO extends GenericTopicDAO
 	/**
 	 * @see net.jforum.dao.generic.GenericTopicDAO#selectByUserByLimit(int, int, int)
 	 */
-	public List selectByUserByLimit(int userId, int startFrom, int count) throws Exception
+	public List selectByUserByLimit(int userId, int startFrom, int count) 
 	{
 		return super.selectByUserByLimit(startFrom, count, userId);
 	}

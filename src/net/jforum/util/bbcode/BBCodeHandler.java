@@ -44,14 +44,16 @@ package net.jforum.util.bbcode;
 
  import java.io.File;
 import java.io.Serializable;
-import java.util.Collection;
+ import java.io.IOException;
+ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+ import javax.xml.parsers.ParserConfigurationException;
 
-import net.jforum.util.preferences.ConfigKeys;
+ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 import org.xml.sax.Attributes;
@@ -59,13 +61,16 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
+ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: BBCodeHandler.java,v 1.15 2005/07/26 04:01:23 diegopires Exp $
+ * @version $Id: BBCodeHandler.java,v 1.16 2006/08/20 12:19:11 sergemaslyukov Exp $
  */
 public class BBCodeHandler extends DefaultHandler implements Serializable
 {
+    private static final Logger log = Logger.getLogger(BBCodeHandler.class);
+
 	private Map bbMap = new LinkedHashMap();
 	private Map alwaysProcessMap = new LinkedHashMap();
 	private String tagName = "";
@@ -74,26 +79,35 @@ public class BBCodeHandler extends DefaultHandler implements Serializable
 	
 	public BBCodeHandler() { }
 	
-	public BBCodeHandler parse() throws Exception
+	public BBCodeHandler parse()
 	{
-		SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-		BBCodeHandler bbParser = new BBCodeHandler();
-		
-		String path = SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) 
-			+ "/bb_config.xml";
-		
-		File fileInput = new File(path);
-		
-		if (fileInput.exists()) {
-			parser.parse(fileInput, bbParser);
-		}
-		else {
-			InputSource input = new InputSource(path);
-			parser.parse(input, bbParser);
-		}
+        try
+        {
+            SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+            BBCodeHandler bbParser = new BBCodeHandler();
 
-		return bbParser;  
-	}
+            String path = SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
+                + "/bb_config.xml";
+
+            File fileInput = new File(path);
+
+            if (fileInput.exists()) {
+                parser.parse(fileInput, bbParser);
+            }
+            else {
+                InputSource input = new InputSource(path);
+                parser.parse(input, bbParser);
+            }
+
+            return bbParser;
+        }
+        catch (Exception e)
+        {
+            String es = "Erorr parse()";
+            log.error(es, e);
+            throw new RuntimeException(es, e);
+        }
+    }
 	
 	public void addBb(BBCode bb)
 	{
