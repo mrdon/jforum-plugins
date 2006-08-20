@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -44,7 +44,7 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: DatabaseException.java,v 1.5 2005/12/12 00:54:41 rafaelsteil Exp $
+ * @version $Id: DatabaseException.java,v 1.6 2006/08/20 22:47:23 rafaelsteil Exp $
  */
 public class DatabaseException extends RuntimeException {
 	public DatabaseException(String message) {

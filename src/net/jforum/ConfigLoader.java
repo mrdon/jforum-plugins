@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -51,6 +51,7 @@ import java.util.Properties;
 
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
+import net.jforum.core.UrlPatternCollection;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.exceptions.CacheEngineStartupException;
 import net.jforum.summary.SummaryScheduler;
@@ -60,7 +61,6 @@ import net.jforum.util.preferences.QueriesFileListener;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.SystemGlobalsListener;
 import net.jforum.util.search.SearchFacade;
-import net.jforum.url_pattern.UrlPatternCollection;
 
 import org.apache.log4j.Logger;
 import org.quartz.SchedulerException;
@@ -69,7 +69,7 @@ import org.quartz.SchedulerException;
  * General utilities methods for loading configurations for JForum.
  * 
  * @author Rafael Steil
- * @version $Id: ConfigLoader.java,v 1.22 2006/08/20 15:30:25 sergemaslyukov Exp $
+ * @version $Id: ConfigLoader.java,v 1.23 2006/08/20 22:47:25 rafaelsteil Exp $
  */
 public class ConfigLoader 
 {
@@ -111,7 +111,7 @@ public class ConfigLoader
         }
         catch (IOException e)
         {
-            String es = "Erorr loadModulesMapping()";
+            String es = "Error loadModulesMapping()";
             logger.error(es, e);
             throw new RuntimeException(es, e);
         }
@@ -137,7 +137,7 @@ public class ConfigLoader
         }
         catch (IOException e)
         {
-            String es = "Erorr add()";
+            String es = "Error add()";
             logger.error(es, e);
             throw new RuntimeException(es, e);
 
@@ -198,7 +198,7 @@ public class ConfigLoader
         }
         catch (Exception e)
         {
-            String es = "Erorr loadDaoImplementation()";
+            String es = "Error loadDaoImplementation()";
             logger.error(es, e);
             throw new RuntimeException(es, e);
         }
@@ -254,7 +254,7 @@ public class ConfigLoader
 	 * @throws SchedulerException
 	 * @throws IOException
 	 */
-	public static void startSummaryJob() throws SchedulerException, IOException {
+	public static void startSummaryJob() throws SchedulerException {
 		SummaryScheduler.startJob();
 	}
 }

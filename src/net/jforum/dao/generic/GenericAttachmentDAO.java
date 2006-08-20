@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -44,8 +44,8 @@ package net.jforum.dao.generic;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -58,14 +58,16 @@ import net.jforum.entities.AttachmentExtension;
 import net.jforum.entities.AttachmentExtensionGroup;
 import net.jforum.entities.AttachmentInfo;
 import net.jforum.entities.QuotaLimit;
+import net.jforum.exceptions.DatabaseException;
+import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.util.DbUtils;
+
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericAttachmentDAO.java,v 1.9 2006/08/20 12:19:03 sergemaslyukov Exp $
+ * @version $Id: GenericAttachmentDAO.java,v 1.10 2006/08/20 22:47:27 rafaelsteil Exp $
  */
 public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.AttachmentDAO
 {
@@ -87,9 +89,9 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr addQuotaLimit()";
+            String es = "Error addQuotaLimit()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(p);
@@ -113,9 +115,9 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr updateQuotaLimit()";
+            String es = "Error updateQuotaLimit()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(p);
@@ -135,9 +137,9 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr cleanGroupQuota()";
+            String es = "Error cleanGroupQuota()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(p);
@@ -159,9 +161,9 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr setGroupQuota()";
+            String es = "Error setGroupQuota()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(p);
@@ -193,9 +195,9 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
             }
         }
         catch (SQLException e) {
-            String es = "Erorr removeQuotaLimit()";
+            String es = "Error removeQuotaLimit()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(p);
@@ -223,9 +225,9 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
             return l;
         }
         catch (SQLException e) {
-            String es = "Erorr selectQuotaLimit()";
+            String es = "Error selectQuotaLimit()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -254,9 +256,9 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
             return ql;
         }
         catch (SQLException e) {
-            String es = "Erorr selectQuotaLimitByGroup()";
+            String es = "Error selectQuotaLimitByGroup()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -284,9 +286,9 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
             return m;
         }
         catch (SQLException e) {
-            String es = "Erorr selectGroupsQuotaLimits()";
+            String es = "Error selectGroupsQuotaLimits()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -321,9 +323,9 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr addExtensionGroup()";
+            String es = "Error addExtensionGroup()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(p);
@@ -347,9 +349,9 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
             }
         }
         catch (SQLException e) {
-            String es = "Erorr removeExtensionGroups()";
+            String es = "Error removeExtensionGroups()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(p);
@@ -378,9 +380,9 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
             return l;
         }
         catch (SQLException e) {
-            String es = "Erorr selectExtensionGroups()";
+            String es = "Error selectExtensionGroups()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -414,9 +416,9 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
             return m;
         }
         catch (SQLException e) {
-            String es = "Erorr extensionsForSecurity()";
+            String es = "Error extensionsForSecurity()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -441,9 +443,9 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr updateExtensionGroup()";
+            String es = "Error updateExtensionGroup()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(p);
@@ -480,9 +482,9 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
             p.executeUpdate();
         }
         catch (SQLException ex) {
-            String es = "Erorr addExtension()";
+            String es = "Error addExtension()";
             log.error(es, ex);
-            throw new RuntimeException(es, ex);
+            throw new DatabaseException(es, ex);
         }
         finally {
             DbUtils.close(p);
@@ -505,9 +507,9 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
             }
         }
         catch (SQLException e) {
-            String es = "Erorr removeExtensions()";
+            String es = "Error removeExtensions()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(p);
@@ -536,9 +538,9 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
             return l;
         }
         catch (SQLException e) {
-            String es = "Erorr selectExtensions()";
+            String es = "Error selectExtensions()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -564,9 +566,9 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr updateExtension()";
+            String es = "Error updateExtension()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);
@@ -612,9 +614,9 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
             return e;
         }
         catch (SQLException e) {
-            String es = "Erorr searchExtension()";
+            String es = "Error searchExtension()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -674,9 +676,9 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
             this.updatePost(a.getPostId(), 1);
         }
         catch (SQLException e) {
-            String es = "Erorr addAttachment()";
+            String es = "Error addAttachment()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(p);
@@ -695,9 +697,9 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr updatePost()";
+            String es = "Error updatePost()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(p);
@@ -737,9 +739,9 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
             }
         }
         catch (SQLException e) {
-            String es = "Erorr removeAttachment()";
+            String es = "Error removeAttachment()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -762,9 +764,9 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr updateAttachment()";
+            String es = "Error updateAttachment()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(p);
@@ -794,9 +796,9 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
             return l;
         }
         catch (SQLException e) {
-            String es = "Erorr selectAttachments()";
+            String es = "Error selectAttachments()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -848,9 +850,9 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
             return e;
         }
         catch (SQLException e) {
-            String es = "Erorr selectAttachmentById()";
+            String es = "Error selectAttachmentById()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -879,9 +881,9 @@ public class GenericAttachmentDAO extends AutoKeys implements net.jforum.dao.Att
             return result;
         }
         catch (SQLException e) {
-            String es = "Erorr isPhysicalDownloadMode()";
+            String es = "Error isPhysicalDownloadMode()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -44,8 +44,8 @@ package net.jforum.dao.generic;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -58,14 +58,16 @@ import net.jforum.entities.Post;
 import net.jforum.entities.PrivateMessage;
 import net.jforum.entities.PrivateMessageType;
 import net.jforum.entities.User;
+import net.jforum.exceptions.DatabaseException;
+import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.util.DbUtils;
+
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericPrivateMessageDAO.java,v 1.8 2006/08/20 12:19:04 sergemaslyukov Exp $
+ * @version $Id: GenericPrivateMessageDAO.java,v 1.9 2006/08/20 22:47:28 rafaelsteil Exp $
  */
 public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao.PrivateMessageDAO
 {
@@ -94,9 +96,9 @@ public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao
             this.addPmText(pm);
         }
         catch (SQLException e) {
-            String es = "Erorr send()";
+            String es = "Error send()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(p);
@@ -155,9 +157,9 @@ public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao
             }
         }
         catch (SQLException e) {
-            String es = "Erorr delete()";
+            String es = "Error delete()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);
@@ -198,9 +200,9 @@ public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao
             return pmList;
         }
         catch (SQLException e) {
-            String es = "Erorr selectFromInbox()";
+            String es = "Error selectFromInbox()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -239,9 +241,9 @@ public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao
             return pmList;
         }
         catch (SQLException e) {
-            String es = "Erorr selectFromSent()";
+            String es = "Error selectFromSent()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -308,9 +310,9 @@ public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao
             return pm;
         }
         catch (SQLException e) {
-            String es = "Erorr selectById()";
+            String es = "Error selectById()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -331,9 +333,9 @@ public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr updateType()";
+            String es = "Error updateType()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);

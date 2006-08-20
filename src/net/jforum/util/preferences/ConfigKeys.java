@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -48,7 +48,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.90 2006/08/08 00:52:11 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.91 2006/08/20 22:47:37 rafaelsteil Exp $
 */
 
 public class ConfigKeys 

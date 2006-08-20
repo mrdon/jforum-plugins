@@ -49,13 +49,15 @@ import java.sql.SQLException;
 import net.jforum.JForumExecutionContext;
 import net.jforum.dao.generic.GenericForumDAO;
 import net.jforum.entities.PrivateMessage;
-import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.DbUtils;
+import net.jforum.util.preferences.SystemGlobals;
+
 import org.apache.log4j.Logger;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerPrivateMessageDAO.java,v 1.8 2006/08/20 12:19:08 sergemaslyukov Exp $
+ * @version $Id: SqlServerPrivateMessageDAO.java,v 1.9 2006/08/20 22:47:48 rafaelsteil Exp $
  */
 public class SqlServerPrivateMessageDAO extends net.jforum.dao.generic.GenericPrivateMessageDAO 
 {
@@ -82,9 +84,9 @@ public class SqlServerPrivateMessageDAO extends net.jforum.dao.generic.GenericPr
             return pm;
         }
         catch (SQLException e) {
-            String es = "Erorr selectById()";
+            String es = "Error selectById()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);

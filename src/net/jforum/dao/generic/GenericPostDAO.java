@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -44,8 +44,8 @@ package net.jforum.dao.generic;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -55,54 +55,54 @@ import java.util.List;
 import net.jforum.JForumExecutionContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.entities.Post;
+import net.jforum.exceptions.DatabaseException;
+import net.jforum.repository.ForumRepository;
+import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.search.SearchFacade;
-import net.jforum.util.DbUtils;
-import net.jforum.repository.ForumRepository;
+
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericPostDAO.java,v 1.15 2006/08/20 12:19:04 sergemaslyukov Exp $
+ * @version $Id: GenericPostDAO.java,v 1.16 2006/08/20 22:47:26 rafaelsteil Exp $
  */
 public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 {
-    private final static Logger log = Logger.getLogger(GenericPostDAO.class);
+	private final static Logger log = Logger.getLogger(GenericPostDAO.class);
 
 	/**
 	 * @see net.jforum.dao.PostDAO#selectById(int)
 	 */
 	public Post selectById(int postId)
 	{
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(
-                    SystemGlobals.getSql("PostModel.selectById"));
-            p.setInt(1, postId);
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.selectById"));
+			p.setInt(1, postId);
 
-            rs = p.executeQuery();
+			rs = p.executeQuery();
 
-            Post post = new Post();
+			Post post = new Post();
 
-            if (rs.next()) {
-                post = this.makePost(rs);
-            }
+			if (rs.next()) {
+				post = this.makePost(rs);
+			}
 
-            return post;
-        }
-        catch (SQLException e) {
-            String es = "Erorr selectById()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally {
-            DbUtils.close(rs, p);
-        }
-    }
+			return post;
+		}
+		catch (SQLException e) {
+			String es = "Error selectById()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
 
 	protected Post makePost(ResultSet rs) throws SQLException
 	{
@@ -159,225 +159,212 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 
 	private void removePosts(List posts)
 	{
-		PreparedStatement post=null;
-        PreparedStatement text=null;
-        PreparedStatement search=null;
+		PreparedStatement post = null;
+		PreparedStatement text = null;
+		PreparedStatement search = null;
 
-        try
-        {
-            post = JForumExecutionContext.getConnection().prepareStatement(
-                    SystemGlobals.getSql("PostModel.deletePost"));
+		try {
+			post = JForumExecutionContext.getConnection()
+					.prepareStatement(SystemGlobals.getSql("PostModel.deletePost"));
 
-            text = JForumExecutionContext.getConnection().prepareStatement(
-                    SystemGlobals.getSql("PostModel.deletePostText"));
+			text = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("PostModel.deletePostText"));
 
-            search = JForumExecutionContext.getConnection().prepareStatement(
-                    SystemGlobals.getSql("PostModel.deleteWordMatch"));
+			search = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("PostModel.deleteWordMatch"));
 
-            for (Iterator iter = posts.iterator(); iter.hasNext();) {
-                Post p = (Post) iter.next();
+			for (Iterator iter = posts.iterator(); iter.hasNext();) {
+				Post p = (Post) iter.next();
 
-                post.setInt(1, p.getId());
-                text.setInt(1, p.getId());
-                search.setInt(1, p.getId());
+				post.setInt(1, p.getId());
+				text.setInt(1, p.getId());
+				search.setInt(1, p.getId());
 
-                text.executeUpdate();
-                search.executeUpdate();
-                post.executeUpdate();
-            }
-        }
-        catch (SQLException e) {
-            String es = "Erorr removePosts()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally {
-            DbUtils.close(post);
-            DbUtils.close(text);
-            DbUtils.close(search);
-        }
-    }
+				text.executeUpdate();
+				search.executeUpdate();
+				post.executeUpdate();
+			}
+		}
+		catch (SQLException e) {
+			String es = "Error removePosts()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(post);
+			DbUtils.close(text);
+			DbUtils.close(search);
+		}
+	}
 
 	/**
-     * TODO implement this method or delete this javadoc
+	 * TODO implement this method or delete this javadoc
+	 * 
 	 * @see net.jforum.model.PostModel#deleteByTopic(int)
 	 */
 	public void deleteByTopic(int topicId)
 	{
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(
-                    SystemGlobals.getSql("PostModel.deleteByTopic"));
-            p.setInt(1, topicId);
-            rs = p.executeQuery();
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = JForumExecutionContext.getConnection()
+					.prepareStatement(SystemGlobals.getSql("PostModel.deleteByTopic"));
+			p.setInt(1, topicId);
+			rs = p.executeQuery();
 
-            List posts = new ArrayList();
-            while (rs.next()) {
-                Post post = new Post();
-                post.setId(rs.getInt("post_id"));
-                post.setUserId(rs.getInt("user_id"));
+			List posts = new ArrayList();
+			while (rs.next()) {
+				Post post = new Post();
+				post.setId(rs.getInt("post_id"));
+				post.setUserId(rs.getInt("user_id"));
 
-                posts.add(post);
-            }
+				posts.add(post);
+			}
 
-            this.removePosts(posts);
-        }
-        catch (SQLException e) {
-            String es = "Erorr deleteByTopic()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally {
-            DbUtils.close(rs, p);
-        }
-    }
+			this.removePosts(posts);
+		}
+		catch (SQLException e) {
+			String es = "Error deleteByTopic()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
 
 	/**
 	 * @see net.jforum.dao.PostDAO#update(net.jforum.entities.Post)
 	 */
 	public void update(Post post)
 	{
-        try
-        {
-            this.updatePostsTable(post);
-            this.updatePostsTextTable(post);
+		this.updatePostsTable(post);
+		this.updatePostsTextTable(post);
 
-            SearchFacade.index(post);
-        }
-        catch (SQLException e) {
-            String es = "Erorr update()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-    }
+		SearchFacade.index(post);
+	}
 
-	protected void updatePostsTextTable(Post post) throws SQLException
+	protected void updatePostsTextTable(Post post)
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(
-                    SystemGlobals.getSql("PostModel.updatePostText"));
-            p.setString(1, post.getText());
-            p.setString(2, post.getSubject());
-            p.setInt(3, post.getId());
+		PreparedStatement p = null;
 
-            p.executeUpdate();
-        }
-        catch (SQLException e) {
-            String es = "Erorr updatePostsTextTable()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally {
-            DbUtils.close(p);
-        }
-    }
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("PostModel.updatePostText"));
+			p.setString(1, post.getText());
+			p.setString(2, post.getSubject());
+			p.setInt(3, post.getId());
+
+			p.executeUpdate();
+		}
+		catch (SQLException e) {
+			String es = "Error updatePostsTextTable()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
 
 	protected void updatePostsTable(Post post)
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(
-                    SystemGlobals.getSql("PostModel.updatePost"));
-            p.setInt(1, post.getTopicId());
-            p.setInt(2, post.getForumId());
-            p.setInt(3, post.isBbCodeEnabled() ? 1 : 0);
-            p.setInt(4, post.isHtmlEnabled() ? 1 : 0);
-            p.setInt(5, post.isSmiliesEnabled() ? 1 : 0);
-            p.setInt(6, post.isSignatureEnabled() ? 1 : 0);
-            p.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
-            p.setString(8, post.getUserIp());
-            p.setInt(9, post.getId());
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.updatePost"));
+			p.setInt(1, post.getTopicId());
+			p.setInt(2, post.getForumId());
+			p.setInt(3, post.isBbCodeEnabled() ? 1 : 0);
+			p.setInt(4, post.isHtmlEnabled() ? 1 : 0);
+			p.setInt(5, post.isSmiliesEnabled() ? 1 : 0);
+			p.setInt(6, post.isSignatureEnabled() ? 1 : 0);
+			p.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
+			p.setString(8, post.getUserIp());
+			p.setInt(9, post.getId());
 
-            p.executeUpdate();
-        }
-        catch (SQLException e) {
-            String es = "Erorr updatePostsTable()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally {
-            DbUtils.close( p);
-        }
-    }
+			p.executeUpdate();
+		}
+		catch (SQLException e) {
+			String es = "Error updatePostsTable()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
 
 	/**
 	 * @see net.jforum.dao.PostDAO#addNew(net.jforum.entities.Post)
 	 */
-	public int addNew(Post post) 
+	public int addNew(Post post)
 	{
-        try
-        {
-            this.addNewPost(post);
-            this.addNewPostText(post);
+		try {
+			this.addNewPost(post);
+			this.addNewPostText(post);
 
-            // Search
-            SearchFacade.index(post);
+			// Search
+			SearchFacade.index(post);
 
-            return post.getId();
-        }
-        catch (SQLException e) {
-            String es = "Erorr addNew()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-    }
+			return post.getId();
+		}
+		catch (SQLException e) {
+			String es = "Error addNew()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+	}
 
 	protected void addNewPostText(Post post) throws SQLException
-    {
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(
-                    SystemGlobals.getSql("PostModel.addNewPostText"));
-            p.setInt(1, post.getId());
-            p.setString(2, post.getText());
-            p.setString(3, post.getSubject());
-            p.executeUpdate();
-        }
-        finally {
-            DbUtils.close( p);
-        }
-    }
+	{
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("PostModel.addNewPostText"));
+			p.setInt(1, post.getId());
+			p.setString(2, post.getText());
+			p.setString(3, post.getSubject());
+			p.executeUpdate();
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
 
 	protected void addNewPost(Post post)
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = this.getStatementForAutoKeys("PostModel.addNewPost");
+		PreparedStatement p = null;
+		try {
+			p = this.getStatementForAutoKeys("PostModel.addNewPost");
 
-            p.setInt(1, post.getTopicId());
-            p.setInt(2, post.getForumId());
-            p.setLong(3, post.getUserId());
-            p.setTimestamp(4, new Timestamp(post.getTime().getTime()));
-            p.setString(5, post.getUserIp());
-            p.setInt(6, post.isBbCodeEnabled() ? 1 : 0);
-            p.setInt(7, post.isHtmlEnabled() ? 1 : 0);
-            p.setInt(8, post.isSmiliesEnabled() ? 1 : 0);
-            p.setInt(9, post.isSignatureEnabled() ? 1 : 0);
-            p.setInt(10, post.isModerationNeeded() ? 1 : 0);
+			p.setInt(1, post.getTopicId());
+			p.setInt(2, post.getForumId());
+			p.setLong(3, post.getUserId());
+			p.setTimestamp(4, new Timestamp(post.getTime().getTime()));
+			p.setString(5, post.getUserIp());
+			p.setInt(6, post.isBbCodeEnabled() ? 1 : 0);
+			p.setInt(7, post.isHtmlEnabled() ? 1 : 0);
+			p.setInt(8, post.isSmiliesEnabled() ? 1 : 0);
+			p.setInt(9, post.isSignatureEnabled() ? 1 : 0);
+			p.setInt(10, post.isModerationNeeded() ? 1 : 0);
 
-            this.setAutoGeneratedKeysQuery(SystemGlobals.getSql("PostModel.lastGeneratedPostId"));
-            int postId = this.executeAutoKeysQuery(p);
-            post.setId(postId);
-        }
-        catch (SQLException e) {
-            String es = "Erorr addNewPost()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally {
-            DbUtils.close( p);
-        }
-    }
+			this.setAutoGeneratedKeysQuery(SystemGlobals.getSql("PostModel.lastGeneratedPostId"));
+			int postId = this.executeAutoKeysQuery(p);
+			post.setId(postId);
+		}
+		catch (SQLException e) {
+			String es = "Error addNewPost()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
 
 	/**
-     * TODO implement this method or delete this javadoc
+	 * TODO implement this method or delete this javadoc
+	 * 
 	 * @see net.jforum.dao.PostDAO#selectAllBytTopic(int)
 	 */
 	public List selectAllByTopic(int topicId)
@@ -386,7 +373,8 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 	}
 
 	/**
-     * TODO implement this method or delete this javadoc
+	 * TODO implement this method or delete this javadoc
+	 * 
 	 * @see net.jforum.dao.PostDAO#selectAllBytTopicByLimit(int, int, int)
 	 */
 	public List selectAllByTopicByLimit(int topicId, int startFrom, int count)
@@ -396,32 +384,31 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 		String sql = SystemGlobals.getSql("PostModel.selectAllByTopicByLimit");
 		sql = sql.replaceAll(":fids:", ForumRepository.getListAllowedForums());
 
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(sql);
-            p.setInt(1, topicId);
-            p.setInt(2, startFrom);
-            p.setInt(3, count);
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(sql);
+			p.setInt(1, topicId);
+			p.setInt(2, startFrom);
+			p.setInt(3, count);
 
-            rs = p.executeQuery();
+			rs = p.executeQuery();
 
-            while (rs.next()) {
-                l.add(this.makePost(rs));
-            }
+			while (rs.next()) {
+				l.add(this.makePost(rs));
+			}
 
-            return l;
-        }
-        catch (SQLException e) {
-            String es = "Erorr selectAllByTopicByLimit()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally {
-            DbUtils.close(rs, p);
-        }
-    }
+			return l;
+		}
+		catch (SQLException e) {
+			String es = "Error selectAllByTopicByLimit()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
 
 	/**
 	 * @see net.jforum.dao.PostDAO#selectByUserByLimit(int, int, int)
@@ -431,98 +418,96 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 		String sql = SystemGlobals.getSql("PostModel.selectByUserByLimit");
 		sql = sql.replaceAll(":fids:", ForumRepository.getListAllowedForums());
 
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(sql);
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(sql);
 
-            p.setInt(1, userId);
-            p.setInt(2, startFrom);
-            p.setInt(3, count);
+			p.setInt(1, userId);
+			p.setInt(2, startFrom);
+			p.setInt(3, count);
 
-            rs = p.executeQuery();
-            List l = new ArrayList();
+			rs = p.executeQuery();
+			List l = new ArrayList();
 
-            while (rs.next()) {
-                l.add(this.makePost(rs));
-            }
+			while (rs.next()) {
+				l.add(this.makePost(rs));
+			}
 
-            return l;
-        }
-        catch (SQLException e) {
-            String es = "Erorr selectByUserByLimit()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally {
-            DbUtils.close(rs, p);
-        }
-    }
+			return l;
+		}
+		catch (SQLException e) {
+			String es = "Error selectByUserByLimit()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
 
 	public int countUserPosts(int userId)
 	{
 		int total = 0;
 
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(
-                    SystemGlobals.getSql("PostModel.countUserPosts").replaceAll(":fids:",
-                            ForumRepository.getListAllowedForums()));
-            p.setInt(1, userId);
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("PostModel.countUserPosts").replaceAll(":fids:",
+							ForumRepository.getListAllowedForums()));
+			p.setInt(1, userId);
 
-            rs = p.executeQuery();
+			rs = p.executeQuery();
 
-            if (rs.next()) {
-                total = rs.getInt(1);
-            }
+			if (rs.next()) {
+				total = rs.getInt(1);
+			}
 
-            return total;
-        }
-        catch (SQLException e) {
-            String es = "Erorr countUserPosts()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally {
-            DbUtils.close(rs, p);
-        }
-    }
+			return total;
+		}
+		catch (SQLException e) {
+			String es = "Error countUserPosts()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
 
 	/**
-     * TODO implement this method or delete this javadoc
+	 * TODO implement this method or delete this javadoc
+	 * 
 	 * @see net.jforum.model.PostModel#countPreviousPosts(int)
 	 */
 	public int countPreviousPosts(int postId)
 	{
 		int total = 0;
 
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(
-                    SystemGlobals.getSql("PostModel.countPreviousPosts"));
-            p.setInt(1, postId);
-            p.setInt(2, postId);
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("PostModel.countPreviousPosts"));
+			p.setInt(1, postId);
+			p.setInt(2, postId);
 
-            rs = p.executeQuery();
+			rs = p.executeQuery();
 
-            if (rs.next()) {
-                total = rs.getInt(1);
-            }
+			if (rs.next()) {
+				total = rs.getInt(1);
+			}
 
-            return total;
-        }
-        catch (SQLException e) {
-            String es = "Erorr countPreviousPosts()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally {
-            DbUtils.close(rs, p);
-        }
-    }
+			return total;
+		}
+		catch (SQLException e) {
+			String es = "Error countPreviousPosts()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
 }

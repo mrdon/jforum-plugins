@@ -1,4 +1,4 @@
-/* Copyright (c) Rafael Steil
+/* Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms,
@@ -42,8 +42,8 @@ package net.jforum.dao.generic;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -53,14 +53,16 @@ import net.jforum.JForumExecutionContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.SummaryDAO;
 import net.jforum.entities.Post;
+import net.jforum.exceptions.DatabaseException;
+import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.util.DbUtils;
+
 import org.apache.log4j.Logger;
 
 /**
  * @author Franklin Samir (franklin (at) portaljava [dot] com)
- * @version $Id: GenericSummaryDAO.java,v 1.9 2006/08/20 12:19:04 sergemaslyukov Exp $
+ * @version $Id: GenericSummaryDAO.java,v 1.10 2006/08/20 22:47:27 rafaelsteil Exp $
  */
 public class GenericSummaryDAO extends AutoKeys implements SummaryDAO
 {
@@ -91,9 +93,9 @@ public class GenericSummaryDAO extends AutoKeys implements SummaryDAO
             return posts;
         }
         catch (SQLException e) {
-            String es = "Erorr selectLastPosts()";
+            String es = "Error selectLastPosts()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -145,9 +147,9 @@ public class GenericSummaryDAO extends AutoKeys implements SummaryDAO
             return recipients;
         }
         catch (SQLException e) {
-            String es = "Erorr listRecipients()";
+            String es = "Error listRecipients()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);

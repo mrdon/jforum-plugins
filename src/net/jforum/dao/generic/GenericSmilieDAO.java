@@ -50,13 +50,15 @@ import java.util.List;
 
 import net.jforum.JForumExecutionContext;
 import net.jforum.entities.Smilie;
-import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.DbUtils;
+import net.jforum.util.preferences.SystemGlobals;
+
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericSmilieDAO.java,v 1.6 2006/08/20 12:19:04 sergemaslyukov Exp $
+ * @version $Id: GenericSmilieDAO.java,v 1.7 2006/08/20 22:47:26 rafaelsteil Exp $
  */
 public class GenericSmilieDAO extends AutoKeys implements net.jforum.dao.SmilieDAO {
 
@@ -82,9 +84,9 @@ public class GenericSmilieDAO extends AutoKeys implements net.jforum.dao.SmilieD
             return this.executeAutoKeysQuery(p);
         }
         catch (SQLException e) {
-            String es = "Erorr addNew()";
+            String es = "Error addNew()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);
@@ -105,9 +107,9 @@ public class GenericSmilieDAO extends AutoKeys implements net.jforum.dao.SmilieD
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr delete()";
+            String es = "Error delete()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);
@@ -132,9 +134,9 @@ public class GenericSmilieDAO extends AutoKeys implements net.jforum.dao.SmilieD
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr update()";
+            String es = "Error update()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);
@@ -174,9 +176,9 @@ public class GenericSmilieDAO extends AutoKeys implements net.jforum.dao.SmilieD
             return l;
         }
         catch (SQLException e) {
-            String es = "Erorr selectAll()";
+            String es = "Error selectAll()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -205,9 +207,9 @@ public class GenericSmilieDAO extends AutoKeys implements net.jforum.dao.SmilieD
             return s;
         }
         catch (SQLException e) {
-            String es = "Erorr selectById()";
+            String es = "Error selectById()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);

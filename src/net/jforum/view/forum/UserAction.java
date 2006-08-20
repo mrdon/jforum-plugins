@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -49,7 +49,7 @@ import java.util.List;
 import java.io.IOException;
 
 import net.jforum.*;
-import net.jforum.web_context.WebContextRequest;
+import net.jforum.core.context.RequestContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.UserDAO;
 import net.jforum.dao.UserSessionDAO;
@@ -77,7 +77,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.73 2006/08/20 15:30:28 sergemaslyukov Exp $
+ * @version $Id: UserAction.java,v 1.74 2006/08/20 22:47:40 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -443,12 +443,12 @@ public class UserAction extends Command
 		}
 	}
 
-    public void validateLogin(WebContextRequest request)  {
+    public void validateLogin(RequestContext request)  {
         this.request = request;
         validateLogin();
     }
 
-    public static boolean hasBasicAuthentication(WebContextRequest request) {
+    public static boolean hasBasicAuthentication(RequestContext request) {
         String auth = request.getHeader("Authorization");
         return (auth != null && auth.startsWith("Basic "));
     }
@@ -463,7 +463,7 @@ public class UserAction extends Command
             }
             catch (IOException e)
             {
-                String es = "Erorr add()";
+                String es = "Error add()";
                 logger.error(es, e);
                 throw new RuntimeException(es, e);
             }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -52,8 +52,8 @@ import java.util.Map;
 
 import net.jforum.Command;
 import net.jforum.JForumExecutionContext;
-import net.jforum.web_context.WebContextRequest;
-import net.jforum.web_context.WebContextResponse;
+import net.jforum.core.context.RequestContext;
+import net.jforum.core.context.ResponseContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.SearchDAO;
 import net.jforum.dao.SearchData;
@@ -71,7 +71,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.29 2006/08/20 15:30:28 sergemaslyukov Exp $
+ * @version $Id: SearchAction.java,v 1.30 2006/08/20 22:47:40 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -107,7 +107,7 @@ public class SearchAction extends Command
 	
 	public SearchAction() {}
 	
-	public SearchAction(WebContextRequest request, WebContextResponse response,
+	public SearchAction(RequestContext request, ResponseContext response,
 			SimpleHash context) {
 		this.request = request;
 		this.response = response;
@@ -273,7 +273,7 @@ public class SearchAction extends Command
                     }
                     catch (Exception e)
                     {
-                        String es = "Erorr add()";
+                        String es = "Error add()";
                         log.error(es, e);
                         throw new RuntimeException(es, e);
                     }

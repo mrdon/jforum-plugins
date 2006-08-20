@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -50,6 +50,7 @@ import java.util.List;
 
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
+import net.jforum.core.db.DBConnection;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.entities.UserSession;
 import net.jforum.repository.SecurityRepository;
@@ -60,7 +61,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.33 2006/08/20 15:30:26 sergemaslyukov Exp $
+ * @version $Id: SessionFacade.java,v 1.34 2006/08/20 22:47:25 rafaelsteil Exp $
  */
 public class SessionFacade implements Cacheable
 {

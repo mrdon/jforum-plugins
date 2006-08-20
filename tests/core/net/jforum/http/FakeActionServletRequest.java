@@ -47,13 +47,13 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import net.jforum.web_context.HttpWebContextRequestImpl;
+import net.jforum.core.context.web.WebRequestContext;
 
 /**
  * @author Rafael Steil
- * @version $Id: FakeActionServletRequest.java,v 1.4 2006/08/20 15:30:30 sergemaslyukov Exp $
+ * @version $Id: FakeActionServletRequest.java,v 1.5 2006/08/20 22:47:55 rafaelsteil Exp $
  */
-public class FakeActionServletRequest extends HttpWebContextRequestImpl
+public class FakeActionServletRequest extends WebRequestContext
 {
 	private static HttpServletRequest request = new FakeHttpRequest();
 	

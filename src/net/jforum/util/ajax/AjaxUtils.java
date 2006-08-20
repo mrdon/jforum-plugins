@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -58,7 +58,7 @@ import freemarker.template.SimpleHash;
  * General AJAX utility methods. 
  * 
  * @author Rafael Steil
- * @version $Id: AjaxUtils.java,v 1.7 2006/03/09 15:38:33 rafaelsteil Exp $
+ * @version $Id: AjaxUtils.java,v 1.8 2006/08/20 22:47:43 rafaelsteil Exp $
  */
 public class AjaxUtils
 {

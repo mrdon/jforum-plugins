@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -65,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: TopicRepository.java,v 1.29 2006/08/20 12:19:09 sergemaslyukov Exp $
+ * @version $Id: TopicRepository.java,v 1.30 2006/08/20 22:47:38 rafaelsteil Exp $
  */
 public class TopicRepository implements Cacheable
 {

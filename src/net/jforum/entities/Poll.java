@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -52,7 +52,7 @@ import java.util.List;
 
 /**
  * @author David Almilli
- * @version $Id: Poll.java,v 1.3 2005/12/02 23:49:00 rafaelsteil Exp $
+ * @version $Id: Poll.java,v 1.4 2006/08/20 22:47:35 rafaelsteil Exp $
  */
 public class Poll implements Serializable {
 	private int id;

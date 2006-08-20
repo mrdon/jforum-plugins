@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -45,8 +45,8 @@ package net.jforum.view.forum;
 import java.util.List;
 
 import net.jforum.*;
-import net.jforum.web_context.WebContextRequest;
-import net.jforum.web_context.WebContextResponse;
+import net.jforum.core.context.RequestContext;
+import net.jforum.core.context.ResponseContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.PostDAO;
 import net.jforum.dao.TopicDAO;
@@ -73,7 +73,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: RSSAction.java,v 1.26 2006/08/20 15:30:28 sergemaslyukov Exp $
+ * @version $Id: RSSAction.java,v 1.27 2006/08/20 22:47:40 rafaelsteil Exp $
  */
 public class RSSAction extends Command 
 {
@@ -212,10 +212,10 @@ public class RSSAction extends Command
 	}
 	
 	/** 
-	 * @see net.jforum.Command#process(net.jforum.web_context.WebContextRequest, net.jforum.web_context.WebContextResponse, freemarker.template.SimpleHash) 
+	 * @see net.jforum.Command#process(net.jforum.core.context.RequestContext, net.jforum.core.context.ResponseContext, freemarker.template.SimpleHash) 
 	 */
-	public Template process(WebContextRequest request,
-			WebContextResponse response,
+	public Template process(RequestContext request,
+			ResponseContext response,
 			SimpleHash context)
 	{
         if (!SessionFacade.isLogged() && UserAction.hasBasicAuthentication(request)) {

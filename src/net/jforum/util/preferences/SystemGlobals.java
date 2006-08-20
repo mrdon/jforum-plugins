@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -69,7 +69,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author Pieter Olivier
- * @version $Id: SystemGlobals.java,v 1.26 2006/08/20 12:19:13 sergemaslyukov Exp $
+ * @version $Id: SystemGlobals.java,v 1.27 2006/08/20 22:47:37 rafaelsteil Exp $
  */
 public class SystemGlobals implements VariableStore
 {
@@ -166,7 +166,7 @@ public class SystemGlobals implements VariableStore
         }
         catch (IOException e)
         {
-            String es = "Erorr loadDefaults()";
+            String es = "Error loadDefaults()";
             log.error(es, e);
             throw new RuntimeException(es, e);
         }
@@ -192,7 +192,7 @@ public class SystemGlobals implements VariableStore
         }
         catch (IOException e)
         {
-            String es = "Erorr loadAdditionalDefaults()";
+            String es = "Error loadAdditionalDefaults()";
             log.error(es, e);
             throw new RuntimeException(es, e);
         }
@@ -223,7 +223,7 @@ public class SystemGlobals implements VariableStore
         }
         catch (IOException e)
         {
-            String es = "Erorr add()";
+            String es = "Error add()";
             log.error(es, e);
             throw new RuntimeException(es, e);
         }
@@ -349,7 +349,7 @@ public class SystemGlobals implements VariableStore
         }
         catch (IOException e)
         {
-            String es = "Erorr loadQueries()";
+            String es = "Error loadQueries()";
             log.error(es, e);
             throw new RuntimeException(es, e);
         }

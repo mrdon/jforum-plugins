@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -42,13 +42,13 @@
  */
 package net.jforum.sso;
 
-import net.jforum.web_context.WebContextRequest;
+import net.jforum.core.context.RequestContext;
 import net.jforum.entities.UserSession;
 
 /**
  * @author Rafael Steil
  * @author Daniel Campagnoli
- * @version $Id: SSO.java,v 1.6 2006/08/20 15:30:26 sergemaslyukov Exp $
+ * @version $Id: SSO.java,v 1.7 2006/08/20 22:47:43 rafaelsteil Exp $
  */
 public interface SSO
 {
@@ -60,7 +60,7 @@ public interface SSO
 	 * @return The username, if authentication succeded, or <code>nulll</code> 
 	 * otherwise. 
 	 */
-	public String authenticateUser(WebContextRequest request);
+	public String authenticateUser(RequestContext request);
    
    
     /**
@@ -70,5 +70,5 @@ public interface SSO
      * @param request the current request
      * @return if the UserSession is valid
      */
-    public boolean isSessionValid(UserSession userSession, WebContextRequest request);
+    public boolean isSessionValid(UserSession userSession, RequestContext request);
 }

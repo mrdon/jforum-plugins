@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
 
  * Redistribution and use in source and binary forms, 
@@ -125,7 +125,7 @@ import net.jforum.dao.TreeGroupDAO;
  * The same operation is done to all other groups and its sub groups. 
  * 
  * @author Rafael Steil
- * @version $Id: TreeGroup.java,v 1.9 2006/08/20 12:19:11 sergemaslyukov Exp $
+ * @version $Id: TreeGroup.java,v 1.10 2006/08/20 22:47:42 rafaelsteil Exp $
  */
 public class TreeGroup 
 {

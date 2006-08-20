@@ -47,7 +47,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: EmailSenderTask.java,v 1.7 2006/08/20 12:19:12 sergemaslyukov Exp $
+ * @version $Id: EmailSenderTask.java,v 1.8 2006/08/20 22:47:51 rafaelsteil Exp $
  */
 public class EmailSenderTask implements Task 
 {
@@ -75,7 +75,7 @@ public class EmailSenderTask implements Task
         }
         catch (Exception e)
         {
-            String es = "Erorr execute()";
+            String es = "Error execute()";
             log.error(es, e);
             throw new RuntimeException(es, e);
         }

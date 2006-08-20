@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms,
@@ -36,90 +36,89 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  *
- *
  * The JForum Project
  * http://www.jforum.net
+ * 19.08.2006 21:50:05
  */
 package net.jforum.util;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
- * User: SergeMaslyukov
- * Date: 19.08.2006
- * Time: 21:50:05
- * <p/>
- * $Id: DbUtils.java,v 1.1 2006/08/20 12:19:11 sergemaslyukov Exp $
+ * @author SergeMaslyukov
+ * @version $Id: DbUtils.java,v 1.2 2006/08/20 22:47:42 rafaelsteil Exp $
  */
-public class DbUtils {
+public class DbUtils
+{
+	public static void close(final Connection conn)
+	{
+		if (conn == null) {
+			return;
+		}
 
-    public static void close(final Connection conn) {
-        if (conn == null)
-            return;
+		try {
+			conn.rollback();
+		}
+		catch (Exception e) { }
 
-        try {
-            conn.rollback();
-        }
-        catch (Exception e) {
-            // catch rollback error
-        }
+		try {
+			conn.close();
+		}
+		catch (Exception e) { }
+	}
 
-        try {
-            conn.close();
-        }
-        catch (Exception e) {
-            // catch close error
-        }
-    }
+	public static void close(final Connection conn, final ResultSet rs, final PreparedStatement ps)
+	{
+		close(rs, ps);
+		close(conn);
+	}
 
-    public static void close(final Connection conn, final ResultSet rs, final PreparedStatement ps) {
-        close(rs, ps);
-        close(conn);
-    }
+	public static void close(final Connection conn, final PreparedStatement ps)
+	{
+		close(ps);
+		close(conn);
+	}
 
-    public static void close(final Connection conn, final PreparedStatement ps) {
-        close(ps);
-        close(conn);
-    }
+	public static void close(final ResultSet rs, final Statement st)
+	{
+		if (rs != null) {
+			try {
+				rs.close();
+			}
+			catch (Exception e) { }
+		}
+		
+		if (st != null) {
+			try {
+				st.clearWarnings();
+				st.close();
+			}
+			catch (Exception e) { }
+		}
+	}
 
-    public static void close(final ResultSet rs, final Statement st) {
-        if (rs != null) {
-            try {
-                rs.close();
-            }
-            catch (Exception e01) {
-                // catch SQLException
-            }
-        }
-        if (st != null) {
-            try {
-                st.close();
-            }
-            catch (Exception e02) {
-                // catch SQLException
-            }
-        }
-    }
+	public static void close(final ResultSet rs)
+	{
+		if (rs != null) {
+			try {
+				rs.close();
+			}
+			catch (Exception e) { }
+		}
+	}
 
-    public static void close(final ResultSet rs) {
-        if (rs != null) {
-            try {
-                rs.close();
-            }
-            catch (Exception e01) {
-                // catch SQLException
-            }
-        }
-    }
-
-    public static void close(final Statement st) {
-        if (st != null) {
-            try {
-                st.close();
-            }
-            catch (SQLException e201) {
-                // catch SQLException
-            }
-        }
-    }
+	public static void close(final Statement st)
+	{
+		if (st != null) {
+			try {
+				st.clearWarnings();
+				st.close();
+			}
+			catch (SQLException e) { }
+		}
+	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -54,19 +54,21 @@ import net.jforum.JForumExecutionContext;
 import net.jforum.dao.generic.AutoKeys;
 import net.jforum.entities.Group;
 import net.jforum.entities.User;
+import net.jforum.exceptions.DatabaseException;
 import net.jforum.repository.RolesRepository;
 import net.jforum.security.Role;
 import net.jforum.security.RoleCollection;
 import net.jforum.security.RoleValue;
 import net.jforum.security.RoleValueCollection;
 import net.jforum.security.UserSecurityHelper;
-import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.DbUtils;
+import net.jforum.util.preferences.SystemGlobals;
+
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericGroupSecurityDAO.java,v 1.9 2006/08/20 12:19:05 sergemaslyukov Exp $
+ * @version $Id: GenericGroupSecurityDAO.java,v 1.10 2006/08/20 22:47:29 rafaelsteil Exp $
  */
 public class GenericGroupSecurityDAO extends AutoKeys implements net.jforum.dao.security.GroupSecurityDAO 
 {
@@ -94,9 +96,9 @@ public class GenericGroupSecurityDAO extends AutoKeys implements net.jforum.dao.
         }
         catch (SQLException e)
         {
-            String es = "Erorr deleteAllRoles()";
+            String es = "Error deleteAllRoles()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally
         {
@@ -120,9 +122,9 @@ public class GenericGroupSecurityDAO extends AutoKeys implements net.jforum.dao.
         }
         catch (SQLException e)
         {
-            String es = "Erorr deleteRole()";
+            String es = "Error deleteRole()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally
         {
@@ -200,9 +202,9 @@ public class GenericGroupSecurityDAO extends AutoKeys implements net.jforum.dao.
         }
         catch (SQLException e)
         {
-            String es = "Erorr deleteAllRoles()";
+            String es = "Error deleteAllRoles()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally
         {

@@ -49,19 +49,21 @@ import java.sql.Statement;
 import java.util.Iterator;
 
 import net.jforum.JForumExecutionContext;
+import net.jforum.exceptions.DatabaseException;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.Role;
 import net.jforum.security.RoleCollection;
 import net.jforum.security.RoleValue;
 import net.jforum.security.RoleValueCollection;
-import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.DbUtils;
-import org.apache.log4j.Logger;
+import net.jforum.util.preferences.SystemGlobals;
+
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityCommon.java,v 1.6 2006/08/20 12:19:05 sergemaslyukov Exp $
+ * @version $Id: SecurityCommon.java,v 1.7 2006/08/20 22:47:29 rafaelsteil Exp $
  */
 public class SecurityCommon 
 {
@@ -144,9 +146,9 @@ public class SecurityCommon
         }
         catch (SQLException e)
         {
-            String es = "Erorr deleteAllRoles()";
+            String es = "Error deleteAllRoles()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally
         {
@@ -213,9 +215,9 @@ public class SecurityCommon
         }
         catch (SQLException e)
         {
-            String es = "Erorr processLoadRoles()";
+            String es = "Error processLoadRoles()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally
         {

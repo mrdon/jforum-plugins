@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -46,7 +46,7 @@ import java.util.Comparator;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicTypeComparator.java,v 1.2 2006/06/10 22:52:28 rafaelsteil Exp $
+ * @version $Id: TopicTypeComparator.java,v 1.3 2006/08/20 22:47:36 rafaelsteil Exp $
  */
 public class TopicTypeComparator implements Comparator
 {

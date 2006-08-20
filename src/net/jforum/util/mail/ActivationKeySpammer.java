@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -52,7 +52,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author James Young
- * @version $Id: ActivationKeySpammer.java,v 1.7 2006/02/28 01:10:47 rafaelsteil Exp $
+ * @version $Id: ActivationKeySpammer.java,v 1.8 2006/08/20 22:47:51 rafaelsteil Exp $
  */
 public class ActivationKeySpammer extends Spammer
 {

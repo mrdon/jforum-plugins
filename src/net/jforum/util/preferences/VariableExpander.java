@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  
  * Redistribution and use in source and binary forms, 
@@ -48,7 +48,7 @@ import java.util.Map;
 /**
  * @author Pieter
  * @author Rafael Steil
- * @version $Id: VariableExpander.java,v 1.5 2005/08/29 02:13:22 rafaelsteil Exp $
+ * @version $Id: VariableExpander.java,v 1.6 2006/08/20 22:47:37 rafaelsteil Exp $
  */
 public class VariableExpander
 {

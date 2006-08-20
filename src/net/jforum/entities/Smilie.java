@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
 
  * Redistribution and use in source and binary forms, 
@@ -46,7 +46,7 @@ import java.io.Serializable;
 
 /**
  * @author Rafael Steil
- * @version $Id: Smilie.java,v 1.6 2005/10/02 19:06:41 rafaelsteil Exp $
+ * @version $Id: Smilie.java,v 1.7 2006/08/20 22:47:35 rafaelsteil Exp $
  */
 public class Smilie implements Serializable
 {

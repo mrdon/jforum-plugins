@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -74,7 +74,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.54 2006/08/20 12:19:15 sergemaslyukov Exp $
+ * @version $Id: ForumAction.java,v 1.55 2006/08/20 22:47:39 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {

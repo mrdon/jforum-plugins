@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -70,7 +70,7 @@ import org.apache.log4j.Logger;
  * Manipulates XML permission control file definition 
  * 
  * @author Rafael Steil
- * @version $Id: XMLPermissionControl.java,v 1.14 2006/08/20 12:19:09 sergemaslyukov Exp $
+ * @version $Id: XMLPermissionControl.java,v 1.15 2006/08/20 22:47:35 rafaelsteil Exp $
  */
 public class XMLPermissionControl extends DefaultHandler 
 {
@@ -152,7 +152,7 @@ public class XMLPermissionControl extends DefaultHandler
         }
         catch (Exception e)
         {
-            String es = "Erorr loadConfigurations()";
+            String es = "Error loadConfigurations()";
             log.error(es, e);
             throw new RuntimeException(es, e);
         }
@@ -225,7 +225,7 @@ public class XMLPermissionControl extends DefaultHandler
 					this.queries.put(refName, l);
 				}
 				catch (Exception e) {
-                    String es = "Erorr startElement()";
+                    String es = "Error startElement()";
                     log.error(es, e);
                     throw new RuntimeException(es, e);
 				}

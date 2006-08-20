@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -53,7 +53,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumSessionListener.java,v 1.17 2005/07/26 03:04:39 rafaelsteil Exp $
+ * @version $Id: ForumSessionListener.java,v 1.18 2006/08/20 22:47:24 rafaelsteil Exp $
  */
 public class ForumSessionListener implements HttpSessionListener 
 {

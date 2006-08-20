@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -69,7 +69,7 @@ import net.jforum.view.forum.common.ViewCommon;
  * 
  * @author James Yong
  * @author Rafael Steil
- * @version $Id: RecentTopicsAction.java,v 1.18 2006/08/20 12:19:16 sergemaslyukov Exp $
+ * @version $Id: RecentTopicsAction.java,v 1.19 2006/08/20 22:47:39 rafaelsteil Exp $
  */
 public class RecentTopicsAction extends Command 
 {

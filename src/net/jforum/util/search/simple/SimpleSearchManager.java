@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -56,7 +56,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SimpleSearchManager.java,v 1.7 2006/01/29 15:07:22 rafaelsteil Exp $
+ * @version $Id: SimpleSearchManager.java,v 1.8 2006/08/20 22:47:46 rafaelsteil Exp $
  */
 public class SimpleSearchManager implements SearchManager
 {

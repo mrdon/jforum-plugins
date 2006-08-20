@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -46,9 +46,9 @@ import java.io.FileInputStream;
 import java.sql.Connection;
 import java.util.Properties;
 
-import net.jforum.DBConnection;
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
+import net.jforum.core.db.DBConnection;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ScheduledSearchIndexerDAO;
 import net.jforum.util.preferences.ConfigKeys;
@@ -61,7 +61,7 @@ import org.quartz.JobExecutionException;
 
 /**
  * @author Rafael Steil
- * @version $Id: QuartzSearchIndexerJob.java,v 1.8 2005/10/27 21:34:45 jakefear Exp $
+ * @version $Id: QuartzSearchIndexerJob.java,v 1.9 2006/08/20 22:47:44 rafaelsteil Exp $
  */
 public class QuartzSearchIndexerJob implements Job, Cacheable
 {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
 
  * Redistribution and use in source and binary forms, 
@@ -46,7 +46,7 @@ import java.util.Date;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchData.java,v 1.8 2006/02/21 16:19:10 rafaelsteil Exp $
+ * @version $Id: SearchData.java,v 1.9 2006/08/20 22:47:22 rafaelsteil Exp $
  */
 public class SearchData 
 {

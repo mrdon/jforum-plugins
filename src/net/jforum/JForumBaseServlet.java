@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -65,7 +65,7 @@ import freemarker.template.Configuration;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumBaseServlet.java,v 1.19 2006/08/20 12:18:59 sergemaslyukov Exp $
+ * @version $Id: JForumBaseServlet.java,v 1.20 2006/08/20 22:47:24 rafaelsteil Exp $
  */
 public class JForumBaseServlet extends HttpServlet
 {

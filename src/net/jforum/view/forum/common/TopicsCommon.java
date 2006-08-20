@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -77,7 +77,7 @@ import freemarker.template.SimpleHash;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.31 2006/08/20 12:19:17 sergemaslyukov Exp $
+ * @version $Id: TopicsCommon.java,v 1.32 2006/08/20 22:47:49 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -42,7 +42,7 @@
  */
 package net.jforum.sso;
 
-import net.jforum.web_context.WebContextRequest;
+import net.jforum.core.context.RequestContext;
 import net.jforum.entities.UserSession;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -53,20 +53,20 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author Daniel Campagnoli
- * @version $Id: RemoteUserSSO.java,v 1.8 2006/08/20 15:30:26 sergemaslyukov Exp $
+ * @version $Id: RemoteUserSSO.java,v 1.9 2006/08/20 22:47:43 rafaelsteil Exp $
  */
 public class RemoteUserSSO implements SSO
 {
 	/**
-	 * @see net.jforum.sso.SSO#authenticateUser(net.jforum.web_context.WebContextRequest)
+	 * @see net.jforum.sso.SSO#authenticateUser(net.jforum.core.context.RequestContext)
      * @param request AWebContextRequest     * @return String
 	 */
-	public String authenticateUser(WebContextRequest request)
+	public String authenticateUser(RequestContext request)
 	{
 		return request.getRemoteUser();
 	}
 
-	public boolean isSessionValid(UserSession userSession, WebContextRequest request)
+	public boolean isSessionValid(UserSession userSession, RequestContext request)
 	{
 		String remoteUser = request.getRemoteUser();
 

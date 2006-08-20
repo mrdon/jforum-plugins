@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -48,7 +48,7 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationAction.java,v 1.3 2006/08/20 12:19:16 sergemaslyukov Exp $
+ * @version $Id: ModerationAction.java,v 1.4 2006/08/20 22:47:39 rafaelsteil Exp $
  */
 public class ModerationAction extends Command
 {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -46,7 +46,7 @@ import java.util.Date;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentInfo.java,v 1.5 2006/03/16 21:10:11 rafaelsteil Exp $
+ * @version $Id: AttachmentInfo.java,v 1.6 2006/08/20 22:47:36 rafaelsteil Exp $
  */
 public class AttachmentInfo
 {

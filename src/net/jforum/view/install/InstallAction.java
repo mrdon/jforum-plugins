@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -57,8 +57,11 @@ import java.util.List;
 import java.util.Properties;
 
 import net.jforum.*;
-import net.jforum.web_context.WebContextRequest;
-import net.jforum.web_context.WebContextResponse;
+import net.jforum.core.context.RequestContext;
+import net.jforum.core.context.ResponseContext;
+import net.jforum.core.db.DBConnection;
+import net.jforum.core.db.DataSourceConnection;
+import net.jforum.core.db.SimpleConnection;
 import net.jforum.entities.UserSession;
 import net.jforum.util.FileMonitor;
 import net.jforum.util.I18n;
@@ -79,7 +82,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.51 2006/08/20 15:30:29 sergemaslyukov Exp $
+ * @version $Id: InstallAction.java,v 1.52 2006/08/20 22:47:53 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -348,7 +351,7 @@ public class InstallAction extends Command
         }
         catch (Exception e)
         {
-            String es = "Erorr importTablesData()";
+            String es = "Error importTablesData()";
             logger.error(es, e);
             throw new RuntimeException(es, e);
         }
@@ -505,7 +508,7 @@ public class InstallAction extends Command
         }
         catch (IOException e)
         {
-            String es = "Erorr configureJDBCConnection()";
+            String es = "Error configureJDBCConnection()";
             logger.error(es, e);
             throw new RuntimeException(es, e);
         }
@@ -773,12 +776,12 @@ public class InstallAction extends Command
 	}
 	
 	/** 
-	 * @see net.jforum.Command#process(net.jforum.web_context.WebContextRequest, net.jforum.web_context.WebContextResponse, freemarker.template.SimpleHash) 
+	 * @see net.jforum.Command#process(net.jforum.core.context.RequestContext, net.jforum.core.context.ResponseContext, freemarker.template.SimpleHash) 
      * @param request AWebContextRequest     * @param response HttpServletResponse
      * @param context SimpleHash
 	 */
-	public Template process(WebContextRequest request,
-			WebContextResponse response,
+	public Template process(RequestContext request,
+			ResponseContext response,
 			SimpleHash context)  
 	{
 		this.setTemplateName("default/empty.htm");

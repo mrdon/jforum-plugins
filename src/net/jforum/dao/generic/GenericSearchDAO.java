@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -44,8 +44,8 @@ package net.jforum.dao.generic;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -56,16 +56,17 @@ import java.util.Set;
 import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
 import net.jforum.dao.SearchData;
+import net.jforum.exceptions.DatabaseException;
+import net.jforum.repository.ForumRepository;
+import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.util.DbUtils;
-import net.jforum.repository.ForumRepository;
 
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericSearchDAO.java,v 1.17 2006/08/20 12:19:04 sergemaslyukov Exp $
+ * @version $Id: GenericSearchDAO.java,v 1.18 2006/08/20 22:47:28 rafaelsteil Exp $
  */
 public class GenericSearchDAO implements net.jforum.dao.SearchDAO	
 {
@@ -123,9 +124,9 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
             return list;
         }
         catch (SQLException e) {
-            String es = "Erorr search()";
+            String es = "Error search()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);
@@ -151,7 +152,7 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
     }
 	
 	// Given a set of keywords, find the topics
-	private void topicsByKeyword(SearchData sd) throws SQLException
+	private void topicsByKeyword(SearchData sd)
     {
 		boolean isLike = "like".equals(SystemGlobals.getValue(ConfigKeys.SEARCH_WORD_MATCHING).trim());
 		
@@ -259,9 +260,9 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 
         }
         catch (SQLException e) {
-            String es = "Erorr topicsByKeyword()";
+            String es = "Error topicsByKeyword()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);
@@ -303,9 +304,9 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr cleanSearch()";
+            String es = "Error cleanSearch()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);

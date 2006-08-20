@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -54,15 +54,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
+
 import net.jforum.entities.Post;
+import net.jforum.exceptions.DatabaseException;
+import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.util.DbUtils;
+
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericSearchIndexerDAO.java,v 1.14 2006/08/20 12:19:04 sergemaslyukov Exp $
+ * @version $Id: GenericSearchIndexerDAO.java,v 1.15 2006/08/20 22:47:27 rafaelsteil Exp $
  */
 public class GenericSearchIndexerDAO extends AutoKeys implements net.jforum.dao.SearchIndexerDAO
 {
@@ -196,9 +199,9 @@ public class GenericSearchIndexerDAO extends AutoKeys implements net.jforum.dao.
             }
         }
         catch (SQLException e) {
-            String es = "Erorr insertSearchWords()";
+            String es = "Error insertSearchWords()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( words);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -50,7 +50,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Vladislav Malyshkin
- * @version $Id: UserTopicsRSS.java,v 1.2 2005/09/12 21:05:26 rafaelsteil Exp $
+ * @version $Id: UserTopicsRSS.java,v 1.3 2006/08/20 22:47:48 rafaelsteil Exp $
  */
 public class UserTopicsRSS extends TopicRSS
 {	

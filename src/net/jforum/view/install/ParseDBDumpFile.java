@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -50,7 +50,7 @@ import java.util.List;
 
 /**
  * @author Rafael Steil
- * @version $Id: ParseDBDumpFile.java,v 1.3 2005/12/27 18:09:55 rafaelsteil Exp $
+ * @version $Id: ParseDBDumpFile.java,v 1.4 2006/08/20 22:47:54 rafaelsteil Exp $
  */
 public class ParseDBDumpFile
 {

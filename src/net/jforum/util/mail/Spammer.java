@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -70,7 +70,7 @@ import freemarker.template.Template;
  * each user.
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.22 2006/08/20 12:19:12 sergemaslyukov Exp $
+ * @version $Id: Spammer.java,v 1.23 2006/08/20 22:47:51 rafaelsteil Exp $
  */
 public class Spammer
 {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -46,7 +46,7 @@ import java.io.Serializable;
 
 /**
  * @author David Almilli
- * @version $Id: PollOption.java,v 1.3 2005/12/02 23:49:00 rafaelsteil Exp $
+ * @version $Id: PollOption.java,v 1.4 2006/08/20 22:47:36 rafaelsteil Exp $
  */
 public class PollOption implements Serializable {
 	private int id;

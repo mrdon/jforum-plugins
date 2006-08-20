@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -42,7 +42,7 @@
  */
 package net.jforum.view.admin;
 
-import net.jforum.web_context.WebContextRequest;
+import net.jforum.core.context.RequestContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.PostDAO;
 import net.jforum.dao.TopicDAO;
@@ -63,13 +63,13 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationAction.java,v 1.23 2006/08/20 15:30:27 sergemaslyukov Exp $
+ * @version $Id: ModerationAction.java,v 1.24 2006/08/20 22:47:45 rafaelsteil Exp $
  */
 public class ModerationAction extends AdminCommand
 {
 	public ModerationAction() {}
 	
-	public ModerationAction(SimpleHash context, WebContextRequest request)
+	public ModerationAction(SimpleHash context, RequestContext request)
 	{
 		this.context = context;
 		this.request = request;

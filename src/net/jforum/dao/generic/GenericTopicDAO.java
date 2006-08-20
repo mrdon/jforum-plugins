@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -44,8 +44,8 @@ package net.jforum.dao.generic;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -64,15 +64,17 @@ import net.jforum.dao.PostDAO;
 import net.jforum.entities.KarmaStatus;
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
+import net.jforum.exceptions.DatabaseException;
+import net.jforum.repository.ForumRepository;
+import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.util.DbUtils;
-import net.jforum.repository.ForumRepository;
+
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTopicDAO.java,v 1.14 2006/08/20 12:19:05 sergemaslyukov Exp $
+ * @version $Id: GenericTopicDAO.java,v 1.15 2006/08/20 22:47:27 rafaelsteil Exp $
  */
 public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO 
 {
@@ -108,9 +110,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             }
         }
         catch (SQLException e) {
-            String es = "Erorr fixFirstLastPostId()";
+            String es = "Error fixFirstLastPostId()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -139,9 +141,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             return t;
         }
         catch (SQLException e) {
-            String es = "Erorr selectById()";
+            String es = "Error selectById()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);
@@ -169,9 +171,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             return t;
         }
         catch (SQLException e) {
-            String es = "Erorr selectRaw()";
+            String es = "Error selectRaw()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -220,9 +222,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             }
         }
         catch (SQLException e) {
-            String es = "Erorr selectActiveBannerByPlacement()";
+            String es = "Error selectActiveBannerByPlacement()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);
@@ -255,9 +257,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             this.deleteTopics(topics);
         }
         catch (SQLException e) {
-            String es = "Erorr deleteByForum()";
+            String es = "Error deleteByForum()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -284,9 +286,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr update()";
+            String es = "Error update()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);
@@ -318,9 +320,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             return this.executeAutoKeysQuery(p);
         }
         catch (SQLException e) {
-            String es = "Erorr addNew()";
+            String es = "Error addNew()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);
@@ -340,9 +342,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr incrementTotalViews()";
+            String es = "Error incrementTotalViews()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);
@@ -362,9 +364,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr incrementTotalReplies()";
+            String es = "Error incrementTotalReplies()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);
@@ -384,9 +386,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr decrementTotalReplies()";
+            String es = "Error decrementTotalReplies()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);
@@ -407,9 +409,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr setLastPostId()";
+            String es = "Error setLastPostId()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);
@@ -444,9 +446,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             return list;
         }
         catch (SQLException e) {
-            String es = "Erorr selectAllByForumByLimit()";
+            String es = "Error selectAllByForumByLimit()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);
@@ -473,9 +475,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             return list;
         }
         catch (SQLException e) {
-            String es = "Erorr selectActiveBannerByPlacement()";
+            String es = "Error selectActiveBannerByPlacement()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);
@@ -506,9 +508,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             return total;
         }
         catch (SQLException e) {
-            String es = "Erorr countUserTopics()";
+            String es = "Error countUserTopics()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -558,9 +560,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             return id;
         }
         catch (SQLException e) {
-            String es = "Erorr getMaxPostId()";
+            String es = "Error getMaxPostId()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -589,9 +591,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             return total;
         }
         catch (SQLException e) {
-            String es = "Erorr getTotalPosts()";
+            String es = "Error getTotalPosts()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -645,9 +647,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             return users;
         }
         catch (SQLException e) {
-            String es = "Erorr notifyUsers()";
+            String es = "Error notifyUsers()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, stmt);
@@ -670,9 +672,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr subscribeUser()";
+            String es = "Error subscribeUser()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(p);
@@ -699,9 +701,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             return rs.next();
         }
         catch (SQLException e) {
-            String es = "Erorr isUserSubscribed()";
+            String es = "Error isUserSubscribed()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, stmt);
@@ -723,9 +725,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr removeSubscription()";
+            String es = "Error removeSubscription()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);
@@ -746,9 +748,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr removeSubscriptionByTopic()";
+            String es = "Error removeSubscriptionByTopic()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);
@@ -771,9 +773,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr updateReadStatus()";
+            String es = "Error updateReadStatus()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);
@@ -797,9 +799,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             }
         }
         catch (SQLException e) {
-            String es = "Erorr lockUnlock()";
+            String es = "Error lockUnlock()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);
@@ -817,7 +819,7 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 	 * @return A list with all topics found
 	 * @throws SQLException
 	 */
-	public List fillTopicsData(PreparedStatement p) throws SQLException
+	public List fillTopicsData(PreparedStatement p)
     {
 		List l = new ArrayList();
 		
@@ -891,9 +893,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             return l;
         }
         catch (SQLException e) {
-            String es = "Erorr fillTopicsData()";
+            String es = "Error fillTopicsData()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -917,9 +919,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             return list;
         }
         catch (SQLException e) {
-            String es = "Erorr selectRecentTopics()";
+            String es = "Error selectRecentTopics()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);
@@ -940,9 +942,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr setFirstPostId()";
+            String es = "Error setFirstPostId()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);
@@ -970,9 +972,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             return id;
         }
         catch (SQLException e) {
-            String es = "Erorr getMinPostId()";
+            String es = "Error getMinPostId()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);
@@ -993,9 +995,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr setModerationStatus()";
+            String es = "Error setModerationStatus()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);
@@ -1017,9 +1019,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr setModerationStatusByTopic()";
+            String es = "Error setModerationStatusByTopic()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);
@@ -1058,9 +1060,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             return l;
         }
         catch (SQLException e) {
-            String es = "Erorr selectActiveBannerByPlacement()";
+            String es = "Error selectActiveBannerByPlacement()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -1140,9 +1142,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
             return m;
         }
         catch (SQLException e) {
-            String es = "Erorr topicPosters()";
+            String es = "Error topicPosters()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);

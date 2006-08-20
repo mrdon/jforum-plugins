@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -62,7 +62,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.21 2006/08/20 15:30:28 sergemaslyukov Exp $
+ * @version $Id: ViewCommon.java,v 1.22 2006/08/20 22:47:50 rafaelsteil Exp $
  */
 public final class ViewCommon
 {
@@ -199,7 +199,7 @@ public final class ViewCommon
         }
         catch (Exception e)
         {
-            String es = "Erorr reprocessRequest()";
+            String es = "Error reprocessRequest()";
             log.error(es, e);
             throw new RuntimeException(es, e);
         }

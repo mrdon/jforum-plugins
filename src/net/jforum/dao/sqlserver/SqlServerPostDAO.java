@@ -50,14 +50,15 @@ import java.util.List;
 
 import net.jforum.JForumExecutionContext;
 import net.jforum.entities.Post;
-import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.DbUtils;
+import net.jforum.util.preferences.SystemGlobals;
 
 import org.apache.log4j.Logger;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerPostDAO.java,v 1.8 2006/08/20 12:19:08 sergemaslyukov Exp $
+ * @version $Id: SqlServerPostDAO.java,v 1.9 2006/08/20 22:47:48 rafaelsteil Exp $
  */
 public class SqlServerPostDAO extends net.jforum.dao.generic.GenericPostDAO
 {
@@ -86,9 +87,9 @@ public class SqlServerPostDAO extends net.jforum.dao.generic.GenericPostDAO
             return post;
         }
         catch (SQLException e) {
-            String es = "Erorr selectById()";
+            String es = "Error selectById()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -126,9 +127,9 @@ public class SqlServerPostDAO extends net.jforum.dao.generic.GenericPostDAO
             return l;
         }
         catch (SQLException e) {
-            String es = "Erorr selectAllByTopicByLimit()";
+            String es = "Error selectAllByTopicByLimit()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -40,7 +40,7 @@
  * The JForum Project
  * http://www.jforum.net 
  * 
- * $Id: User.java,v 1.18 2005/10/28 16:35:14 almilli Exp $
+ * $Id: User.java,v 1.19 2006/08/20 22:47:35 rafaelsteil Exp $
  */
 package net.jforum.entities;
 

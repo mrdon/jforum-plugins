@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -49,7 +49,7 @@ import java.util.Date;
  * Represents every topic in the forum.
  * 
  * @author Rafael Steil
- * @version $Id: Topic.java,v 1.16 2006/06/10 22:52:27 rafaelsteil Exp $
+ * @version $Id: Topic.java,v 1.17 2006/08/20 22:47:36 rafaelsteil Exp $
  */
 public class Topic implements Serializable
 {

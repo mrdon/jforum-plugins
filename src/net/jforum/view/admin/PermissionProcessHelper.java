@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -47,8 +47,8 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 
-import net.jforum.web_context.WebContextRequest;
 import net.jforum.JForumExecutionContext;
+import net.jforum.core.context.RequestContext;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.Role;
 import net.jforum.security.RoleValue;
@@ -56,7 +56,7 @@ import net.jforum.security.RoleValueCollection;
 
 /**
  * @author Rafael Steil
- * @version $Id: PermissionProcessHelper.java,v 1.16 2006/08/20 15:30:27 sergemaslyukov Exp $
+ * @version $Id: PermissionProcessHelper.java,v 1.17 2006/08/20 22:47:45 rafaelsteil Exp $
  */
 class PermissionProcessHelper 
 {
@@ -73,7 +73,7 @@ class PermissionProcessHelper
 	
 	public void processData()
 	{
-		WebContextRequest request = JForumExecutionContext.getRequest();
+		RequestContext request = JForumExecutionContext.getRequest();
 		Enumeration e = request.getParameterNames();
 		
 		while (e.hasMoreElements()) {

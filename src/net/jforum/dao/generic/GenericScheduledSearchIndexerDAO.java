@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -42,21 +42,26 @@
  */
 package net.jforum.dao.generic;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.SearchIndexerDAO;
 import net.jforum.entities.Post;
-import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.DbUtils;
+import net.jforum.util.preferences.SystemGlobals;
 
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericScheduledSearchIndexerDAO.java,v 1.9 2006/08/20 12:19:04 sergemaslyukov Exp $
+ * @version $Id: GenericScheduledSearchIndexerDAO.java,v 1.10 2006/08/20 22:47:27 rafaelsteil Exp $
  */
 public class GenericScheduledSearchIndexerDAO implements net.jforum.dao.ScheduledSearchIndexerDAO
 {
@@ -151,9 +156,9 @@ public class GenericScheduledSearchIndexerDAO implements net.jforum.dao.Schedule
             return maxPostId;
         }
         catch (SQLException e) {
-            String es = "Erorr index()";
+            String es = "Error index()";
             logger.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -182,9 +187,9 @@ public class GenericScheduledSearchIndexerDAO implements net.jforum.dao.Schedule
             return l;
         }
         catch (SQLException e) {
-            String es = "Erorr getPosts()";
+            String es = "Error getPosts()";
             logger.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);

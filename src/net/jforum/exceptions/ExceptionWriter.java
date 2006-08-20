@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -58,7 +58,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ExceptionWriter.java,v 1.10 2006/03/14 12:52:38 rafaelsteil Exp $
+ * @version $Id: ExceptionWriter.java,v 1.11 2006/08/20 22:47:23 rafaelsteil Exp $
  */
 public class ExceptionWriter
 {

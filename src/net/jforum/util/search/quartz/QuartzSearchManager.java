@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -57,7 +57,7 @@ import org.quartz.impl.StdSchedulerFactory;
 
 /**
  * @author Rafael Steil
- * @version $Id: QuartzSearchManager.java,v 1.5 2005/11/29 00:27:01 rafaelsteil Exp $
+ * @version $Id: QuartzSearchManager.java,v 1.6 2006/08/20 22:47:44 rafaelsteil Exp $
  */
 public class QuartzSearchManager implements SearchManager
 {

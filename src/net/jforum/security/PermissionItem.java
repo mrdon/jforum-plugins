@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -50,7 +50,7 @@ import java.util.List;
  * esta classe encapsula o nome, id e os itens do campo de permissao.
  * 
  * @author Rafael Steil
- * @version $Id: PermissionItem.java,v 1.6 2005/09/25 02:18:36 rafaelsteil Exp $
+ * @version $Id: PermissionItem.java,v 1.7 2006/08/20 22:47:34 rafaelsteil Exp $
  */
 public class PermissionItem 
 {

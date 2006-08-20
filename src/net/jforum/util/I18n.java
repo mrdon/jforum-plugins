@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -64,7 +64,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: I18n.java,v 1.31 2006/08/20 12:19:11 sergemaslyukov Exp $
+ * @version $Id: I18n.java,v 1.32 2006/08/20 22:47:42 rafaelsteil Exp $
  */
 public class I18n
 {
@@ -126,7 +126,7 @@ public class I18n
         }
         catch (IOException e)
         {
-            String es = "Erorr loadLocales()";
+            String es = "Error loadLocales()";
             logger.error(es, e);
             throw new RuntimeException(es, e);
         }
@@ -163,7 +163,7 @@ public class I18n
         }
         catch (IOException e)
         {
-            String es = "Erorr load()";
+            String es = "Error load()";
             logger.error(es, e);
             throw new RuntimeException(es, e);
         }

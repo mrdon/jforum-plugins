@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -57,7 +57,7 @@ import net.jforum.view.forum.common.UploadUtils;
 
 /**
  * @author Rafael Steil
- * @version $Id: SmiliesAction.java,v 1.14 2006/08/20 12:19:15 sergemaslyukov Exp $
+ * @version $Id: SmiliesAction.java,v 1.15 2006/08/20 22:47:44 rafaelsteil Exp $
  */
 public class SmiliesAction extends AdminCommand 
 {

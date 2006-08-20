@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -47,10 +47,11 @@ import java.sql.Connection;
 
 import javax.servlet.http.HttpServletResponse;
 
+import net.jforum.core.context.RequestContext;
+import net.jforum.core.context.ResponseContext;
+import net.jforum.core.db.DBConnection;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.web_context.WebContextRequest;
-import net.jforum.web_context.WebContextResponse;
 
 import org.apache.log4j.Logger;
 
@@ -62,7 +63,7 @@ import freemarker.template.SimpleHash;
  * Data execution context. 
  * 
  * @author Rafael Steil
- * @version $Id: JForumExecutionContext.java,v 1.4 2006/08/20 15:30:26 sergemaslyukov Exp $
+ * @version $Id: JForumExecutionContext.java,v 1.5 2006/08/20 22:47:26 rafaelsteil Exp $
  */
 public class JForumExecutionContext
 {
@@ -71,8 +72,8 @@ public class JForumExecutionContext
 	private static Configuration templateConfig;
 	
 	private Connection conn;
-    private WebContextRequest request;
-    private WebContextResponse response;
+    private RequestContext request;
+    private ResponseContext response;
     private SimpleHash context = new SimpleHash(ObjectWrapper.BEANS_WRAPPER);
     private String redirectTo;
     private String contentType;
@@ -178,7 +179,7 @@ public class JForumExecutionContext
 	 * Sets a request to the execution context.
 	 * @param request The request to set
 	 */
-	public void setRequest(WebContextRequest request)
+	public void setRequest(RequestContext request)
 	{
 		this.request = request;
 	}
@@ -187,7 +188,7 @@ public class JForumExecutionContext
 	 * Gets the current thread's request
 	 * @return WebContextRequest
 	 */
-	public static WebContextRequest getRequest() {
+	public static RequestContext getRequest() {
 		return ((JForumExecutionContext)userData.get()).request;
 	}
 	
@@ -195,7 +196,7 @@ public class JForumExecutionContext
 	 * Sets the reponse to the execution context.
 	 * @param response The response to set
 	 */
-	public void setResponse(WebContextResponse response)
+	public void setResponse(ResponseContext response)
 	{
 		this.response = response;
 	}
@@ -204,7 +205,7 @@ public class JForumExecutionContext
 	 * Gets the current thread's response
 	 * @return HttpServletResponse
 	 */
-	public static WebContextResponse getResponse() {
+	public static ResponseContext getResponse() {
 		return ((JForumExecutionContext)userData.get()).response;
 	}
 
@@ -295,7 +296,7 @@ public class JForumExecutionContext
         }
         catch (IOException e)
         {
-            String es = "Erorr add()";
+            String es = "Error add()";
             logger.error(es, e);
             throw new RuntimeException(es, e);
         }

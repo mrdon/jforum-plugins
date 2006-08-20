@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -56,7 +56,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicSpammer.java,v 1.18 2006/04/15 16:41:35 rafaelsteil Exp $
+ * @version $Id: TopicSpammer.java,v 1.19 2006/08/20 22:47:51 rafaelsteil Exp $
  */
 public class TopicSpammer extends Spammer 
 {

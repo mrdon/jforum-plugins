@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -42,7 +42,11 @@
  */
 package net.jforum.dao.generic;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,13 +57,15 @@ import net.jforum.dao.ModerationDAO;
 import net.jforum.entities.ModerationPendingInfo;
 import net.jforum.entities.Post;
 import net.jforum.entities.TopicModerationInfo;
-import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.DbUtils;
+import net.jforum.util.preferences.SystemGlobals;
+
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericModerationDAO.java,v 1.6 2006/08/20 12:19:04 sergemaslyukov Exp $
+ * @version $Id: GenericModerationDAO.java,v 1.7 2006/08/20 22:47:27 rafaelsteil Exp $
  */
 public class GenericModerationDAO implements ModerationDAO
 {
@@ -80,9 +86,9 @@ public class GenericModerationDAO implements ModerationDAO
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr selectActiveBannerByPlacement()";
+            String es = "Error selectActiveBannerByPlacement()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(p);
@@ -133,9 +139,9 @@ public class GenericModerationDAO implements ModerationDAO
             return m;
         }
         catch (SQLException e) {
-            String es = "Erorr topicsByForum()";
+            String es = "Error topicsByForum()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -202,9 +208,9 @@ public class GenericModerationDAO implements ModerationDAO
             return l;
         }
         catch (SQLException e) {
-            String es = "Erorr categoryPendingModeration()";
+            String es = "Error categoryPendingModeration()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, s);

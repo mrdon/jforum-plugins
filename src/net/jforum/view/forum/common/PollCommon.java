@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -45,13 +45,13 @@ package net.jforum.view.forum.common;
 import java.util.Date;
 
 import net.jforum.JForumExecutionContext;
-import net.jforum.web_context.WebContextRequest;
+import net.jforum.core.context.RequestContext;
 import net.jforum.entities.Poll;
 import net.jforum.entities.PollOption;
 
 /**
  * @author David Almilli
- * @version $Id: PollCommon.java,v 1.6 2006/08/20 15:30:28 sergemaslyukov Exp $
+ * @version $Id: PollCommon.java,v 1.7 2006/08/20 22:47:50 rafaelsteil Exp $
  */
 public class PollCommon
 {
@@ -59,7 +59,7 @@ public class PollCommon
 
 	public static Poll fillPollFromRequest() 
 	{
-		WebContextRequest request = JForumExecutionContext.getRequest();
+		RequestContext request = JForumExecutionContext.getRequest();
 		String label = request.getParameter("poll_label");
 
 		if (label == null || label.length() == 0) {

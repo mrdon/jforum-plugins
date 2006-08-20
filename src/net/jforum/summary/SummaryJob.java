@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -49,7 +49,7 @@ import org.quartz.JobExecutionException;
 
 /**
  * @author Franklin S. Dattein (<a href="mailto:franklin@hp.com">franklin@hp.com</a>)
- * @version $Id: SummaryJob.java,v 1.5 2006/03/01 13:17:23 rafaelsteil Exp $
+ * @version $Id: SummaryJob.java,v 1.6 2006/08/20 22:47:55 rafaelsteil Exp $
  */
 public class SummaryJob implements Job
 {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -100,7 +100,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.150 2006/08/20 12:19:16 sergemaslyukov Exp $
+ * @version $Id: PostAction.java,v 1.151 2006/08/20 22:47:40 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -1389,7 +1389,7 @@ public class PostAction extends Command
         }
         catch (IOException e)
         {
-            String es = "Erorr downloadAttach()";
+            String es = "Error downloadAttach()";
             log.error(es, e);
             throw new RuntimeException(es, e);
         }

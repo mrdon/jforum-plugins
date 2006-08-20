@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -54,13 +54,15 @@ import net.jforum.JForumExecutionContext;
 import net.jforum.dao.PollDAO;
 import net.jforum.entities.Poll;
 import net.jforum.entities.PollOption;
-import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.DbUtils;
+import net.jforum.util.preferences.SystemGlobals;
+
 import org.apache.log4j.Logger;
 
 /**
  * @author David Almilli
- * @version $Id: GenericPollDAO.java,v 1.6 2006/08/20 12:19:04 sergemaslyukov Exp $
+ * @version $Id: GenericPollDAO.java,v 1.7 2006/08/20 22:47:28 rafaelsteil Exp $
  */
 public class GenericPollDAO extends AutoKeys implements PollDAO {
     private final static Logger log = Logger.getLogger(GenericForumDAO.class);
@@ -89,9 +91,9 @@ public class GenericPollDAO extends AutoKeys implements PollDAO {
             poll.setId(pollId);
         }
         catch (SQLException e) {
-            String es = "Erorr addNewPoll()";
+            String es = "Error addNewPoll()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(p);
@@ -130,9 +132,9 @@ public class GenericPollDAO extends AutoKeys implements PollDAO {
             }
         }
         catch (SQLException e) {
-            String es = "Erorr selectActiveBannerByPlacement()";
+            String es = "Error selectActiveBannerByPlacement()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -169,9 +171,9 @@ public class GenericPollDAO extends AutoKeys implements PollDAO {
             return poll;
         }
         catch (SQLException e) {
-            String es = "Erorr selectActiveBannerByPlacement()";
+            String es = "Error selectActiveBannerByPlacement()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(prs, p);
@@ -224,9 +226,9 @@ public class GenericPollDAO extends AutoKeys implements PollDAO {
             v.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr voteOnPoll()";
+            String es = "Error voteOnPoll()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(p);
@@ -252,9 +254,9 @@ public class GenericPollDAO extends AutoKeys implements PollDAO {
             return rs.next();
         }
         catch (SQLException e) {
-            String es = "Erorr hasUserVotedOnPoll()";
+            String es = "Error hasUserVotedOnPoll()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -282,9 +284,9 @@ public class GenericPollDAO extends AutoKeys implements PollDAO {
             return rs.next();
         }
         catch (SQLException e) {
-            String es = "Erorr hasUserVotedOnPoll()";
+            String es = "Error hasUserVotedOnPoll()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -316,9 +318,9 @@ public class GenericPollDAO extends AutoKeys implements PollDAO {
             }
         }
         catch (SQLException e) {
-            String es = "Erorr deleteByTopicId()";
+            String es = "Error deleteByTopicId()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -343,9 +345,9 @@ public class GenericPollDAO extends AutoKeys implements PollDAO {
             poll.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr deletePoll()";
+            String es = "Error deletePoll()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(poll);
@@ -361,9 +363,9 @@ public class GenericPollDAO extends AutoKeys implements PollDAO {
             poll.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr deletePollVotes()";
+            String es = "Error deletePollVotes()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(poll);
@@ -381,9 +383,9 @@ public class GenericPollDAO extends AutoKeys implements PollDAO {
             poll.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr deleteAllPollOptions()";
+            String es = "Error deleteAllPollOptions()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(poll);
@@ -451,9 +453,9 @@ public class GenericPollDAO extends AutoKeys implements PollDAO {
             }
         }
         catch (SQLException e) {
-            String es = "Erorr update()";
+            String es = "Error update()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
     }
 	

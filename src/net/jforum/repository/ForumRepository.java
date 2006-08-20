@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -85,7 +85,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.53 2006/08/20 12:19:09 sergemaslyukov Exp $
+ * @version  $Id: ForumRepository.java,v 1.54 2006/08/20 22:47:38 rafaelsteil Exp $
  */
 public class ForumRepository implements Cacheable
 {

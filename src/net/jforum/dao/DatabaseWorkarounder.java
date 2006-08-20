@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -60,7 +60,7 @@ import org.apache.log4j.Logger;
  * Try to fix some database configuration problems.
  * This class will much likely do some checks only for mysql.
  * @author Rafael Steil
- * @version $Id: DatabaseWorkarounder.java,v 1.4 2006/08/20 12:19:00 sergemaslyukov Exp $
+ * @version $Id: DatabaseWorkarounder.java,v 1.5 2006/08/20 22:47:23 rafaelsteil Exp $
  */
 public class DatabaseWorkarounder
 {

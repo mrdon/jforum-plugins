@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * 
  * All rights reserved.
  * Redistribution and use in source and binary forms, 
@@ -44,7 +44,7 @@ package net.jforum.util.preferences;
 
 /**
  * @author Rafael Steil
- * @version $Id: TemplateKeys.java,v 1.13 2005/11/29 00:26:58 rafaelsteil Exp $
+ * @version $Id: TemplateKeys.java,v 1.14 2006/08/20 22:47:37 rafaelsteil Exp $
  */
 public class TemplateKeys
 {

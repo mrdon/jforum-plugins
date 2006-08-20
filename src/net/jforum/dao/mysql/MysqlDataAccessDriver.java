@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -44,6 +44,6 @@ package net.jforum.dao.mysql;
 
 /**
  * @author Rafael Steil
- * @version $Id: MysqlDataAccessDriver.java,v 1.6 2005/10/02 19:06:46 rafaelsteil Exp $
+ * @version $Id: MysqlDataAccessDriver.java,v 1.7 2006/08/20 22:47:54 rafaelsteil Exp $
  */
 public class MysqlDataAccessDriver extends net.jforum.dao.generic.GenericDataAccessDriver {}

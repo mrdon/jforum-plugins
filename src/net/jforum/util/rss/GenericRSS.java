@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -43,19 +43,19 @@
 package net.jforum.util.rss;
 
 import java.io.StringWriter;
-import java.io.IOException;
 
 import net.jforum.JForumExecutionContext;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+
+import org.apache.log4j.Logger;
+
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericRSS.java,v 1.7 2006/08/20 12:19:13 sergemaslyukov Exp $
+ * @version $Id: GenericRSS.java,v 1.8 2006/08/20 22:47:48 rafaelsteil Exp $
  */
 public class GenericRSS implements RSSAware 
 {
@@ -86,7 +86,7 @@ public class GenericRSS implements RSSAware
         }
         catch (Exception e)
         {
-            String es = "Erorr add()";
+            String es = "Error add()";
             log.error(es, e);
             throw new RuntimeException(es, e);
         }

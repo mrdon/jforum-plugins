@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -47,13 +47,15 @@ import java.sql.SQLException;
 import java.util.List;
 
 import net.jforum.JForumExecutionContext;
-import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.DbUtils;
+import net.jforum.util.preferences.SystemGlobals;
+
 import org.apache.log4j.Logger;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerTopicDAO.java,v 1.9 2006/08/20 12:19:08 sergemaslyukov Exp $
+ * @version $Id: SqlServerTopicDAO.java,v 1.10 2006/08/20 22:47:48 rafaelsteil Exp $
  */
 public class SqlServerTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 {
@@ -78,9 +80,9 @@ public class SqlServerTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
             return list;
         }
         catch (SQLException e) {
-            String es = "Erorr selectAllByForumByLimit()";
+            String es = "Error selectAllByForumByLimit()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);
@@ -102,9 +104,9 @@ public class SqlServerTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
             return list;
         }
         catch (SQLException e) {
-            String es = "Erorr selectRecentTopics()";
+            String es = "Error selectRecentTopics()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close( p);

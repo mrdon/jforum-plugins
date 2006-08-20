@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -51,7 +51,7 @@ import net.jforum.repository.ForumRepository;
  * Represents a specific forum.
  * 
  * @author Rafael Steil
- * @version $Id: Forum.java,v 1.11 2005/09/13 21:27:28 rafaelsteil Exp $
+ * @version $Id: Forum.java,v 1.12 2006/08/20 22:47:36 rafaelsteil Exp $
  */
 public class Forum implements Serializable
 {

@@ -50,13 +50,15 @@ import java.util.List;
 
 import net.jforum.JForumExecutionContext;
 import net.jforum.entities.Config;
-import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.DbUtils;
+import net.jforum.util.preferences.SystemGlobals;
+
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericConfigDAO.java,v 1.6 2006/08/20 12:19:03 sergemaslyukov Exp $
+ * @version $Id: GenericConfigDAO.java,v 1.7 2006/08/20 22:47:28 rafaelsteil Exp $
  */
 public class GenericConfigDAO implements net.jforum.dao.ConfigDAO
 {
@@ -76,9 +78,9 @@ public class GenericConfigDAO implements net.jforum.dao.ConfigDAO
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr insert()";
+            String es = "Error insert()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(p);
@@ -99,9 +101,9 @@ public class GenericConfigDAO implements net.jforum.dao.ConfigDAO
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr update()";
+            String es = "Error update()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(p);
@@ -121,9 +123,9 @@ public class GenericConfigDAO implements net.jforum.dao.ConfigDAO
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr delete()";
+            String es = "Error delete()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(p);
@@ -150,9 +152,9 @@ public class GenericConfigDAO implements net.jforum.dao.ConfigDAO
             return l;
         }
         catch (SQLException e) {
-            String es = "Erorr selectAll()";
+            String es = "Error selectAll()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -180,9 +182,9 @@ public class GenericConfigDAO implements net.jforum.dao.ConfigDAO
             return c;
         }
         catch (SQLException e) {
-            String es = "Erorr selectByName()";
+            String es = "Error selectByName()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);

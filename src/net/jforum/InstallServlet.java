@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -51,21 +51,22 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.jforum.core.context.JForumContext;
+import net.jforum.core.context.RequestContext;
+import net.jforum.core.context.ResponseContext;
+import net.jforum.core.context.web.WebRequestContext;
+import net.jforum.core.context.web.WebResponseContext;
 import net.jforum.exceptions.ExceptionWriter;
 import net.jforum.repository.ModulesRepository;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.web_context.WebContextRequest;
-import net.jforum.web_context.HttpWebContextRequestImpl;
-import net.jforum.web_context.WebContextResponse;
-import net.jforum.web_context.HttpWebContextResponseImpl;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallServlet.java,v 1.24 2006/08/20 15:30:25 sergemaslyukov Exp $
+ * @version $Id: InstallServlet.java,v 1.25 2006/08/20 22:47:26 rafaelsteil Exp $
  */
 public class InstallServlet extends JForumBaseServlet
 {
@@ -89,8 +90,8 @@ public class InstallServlet extends JForumBaseServlet
 			req.setCharacterEncoding(encoding);
 			
 			// Request
-			WebContextRequest request = new HttpWebContextRequestImpl(req);
-			WebContextResponse response = new HttpWebContextResponseImpl(res);
+			RequestContext request = new WebRequestContext(req);
+			ResponseContext response = new WebResponseContext(res);
 
 			request.setCharacterEncoding(encoding);
 			request.setJForumContext(new JForumContext(request.getContextPath(), 

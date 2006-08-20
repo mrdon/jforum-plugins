@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -46,7 +46,7 @@ import java.util.Collection;
 
 /**
  * @author Rafael Steil
- * @version $Id: CacheEngine.java,v 1.10 2006/08/20 15:42:37 sergemaslyukov Exp $
+ * @version $Id: CacheEngine.java,v 1.11 2006/08/20 22:47:56 rafaelsteil Exp $
  */
 public interface CacheEngine
 {

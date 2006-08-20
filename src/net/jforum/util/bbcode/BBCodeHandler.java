@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -44,28 +44,26 @@ package net.jforum.util.bbcode;
 
  import java.io.File;
 import java.io.Serializable;
- import java.io.IOException;
- import java.util.Collection;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
- import javax.xml.parsers.ParserConfigurationException;
 
- import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
+import org.apache.log4j.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
- import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: BBCodeHandler.java,v 1.16 2006/08/20 12:19:11 sergemaslyukov Exp $
+ * @version $Id: BBCodeHandler.java,v 1.17 2006/08/20 22:47:49 rafaelsteil Exp $
  */
 public class BBCodeHandler extends DefaultHandler implements Serializable
 {
@@ -103,7 +101,7 @@ public class BBCodeHandler extends DefaultHandler implements Serializable
         }
         catch (Exception e)
         {
-            String es = "Erorr parse()";
+            String es = "Error parse()";
             log.error(es, e);
             throw new RuntimeException(es, e);
         }

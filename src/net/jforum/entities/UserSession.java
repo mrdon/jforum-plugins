@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -63,7 +63,7 @@ import com.octo.captcha.image.ImageCaptcha;
  * Stores information about user's session.
  * 
  * @author Rafael Steil
- * @version $Id: UserSession.java,v 1.31 2006/08/20 12:19:09 sergemaslyukov Exp $
+ * @version $Id: UserSession.java,v 1.32 2006/08/20 22:47:35 rafaelsteil Exp $
  */
 public class UserSession implements Serializable
 {

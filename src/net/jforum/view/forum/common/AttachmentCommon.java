@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -54,7 +54,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.jforum.SessionFacade;
-import net.jforum.web_context.WebContextRequest;
+import net.jforum.core.context.RequestContext;
 import net.jforum.dao.AttachmentDAO;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.entities.Attachment;
@@ -80,19 +80,19 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.30 2006/08/20 15:30:28 sergemaslyukov Exp $
+ * @version $Id: AttachmentCommon.java,v 1.31 2006/08/20 22:47:50 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {
 	private static Logger logger = Logger.getLogger(AttachmentCommon.class);
 	private static final String DENY_ALL = "*";
 	
-	private WebContextRequest request;
+	private RequestContext request;
 	private AttachmentDAO am;
 	private boolean canProceed;
 	private Map filesToSave = new HashMap();
 	
-	public AttachmentCommon(WebContextRequest request, int forumId)
+	public AttachmentCommon(RequestContext request, int forumId)
 	{
 		this.request = request;
 		this.am = DataAccessDriver.getInstance().newAttachmentDAO();

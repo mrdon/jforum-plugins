@@ -42,15 +42,13 @@
  */
 package net.jforum.util.preferences;
 
-import java.io.IOException;
-
 import net.jforum.util.FileChangeListener;
 
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: QueriesFileListener.java,v 1.6 2006/08/20 12:19:12 sergemaslyukov Exp $
+ * @version $Id: QueriesFileListener.java,v 1.7 2006/08/20 22:47:38 rafaelsteil Exp $
  */
 public class QueriesFileListener implements FileChangeListener
 {

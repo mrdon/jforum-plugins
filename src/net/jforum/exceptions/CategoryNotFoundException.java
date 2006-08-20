@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -44,7 +44,7 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: CategoryNotFoundException.java,v 1.4 2005/07/31 03:51:59 rafaelsteil Exp $
+ * @version $Id: CategoryNotFoundException.java,v 1.5 2006/08/20 22:47:23 rafaelsteil Exp $
  */
 public class CategoryNotFoundException extends RuntimeException {
 	public CategoryNotFoundException(String message) {

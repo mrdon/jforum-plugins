@@ -42,13 +42,13 @@
  */
 package net.jforum;
 
+import net.jforum.core.context.RequestContext;
+import net.jforum.core.context.ResponseContext;
 import net.jforum.exceptions.TemplateNotFoundException;
 import net.jforum.repository.Tpl;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
-import net.jforum.web_context.WebContextRequest;
-import net.jforum.web_context.WebContextResponse;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 import org.apache.log4j.Logger;
@@ -61,7 +61,7 @@ import java.io.IOException;
  * presentation actions must extend this class. 
  * 
  * @author Rafael Steil
- * @version $Id: Command.java,v 1.21 2006/08/20 15:30:25 sergemaslyukov Exp $
+ * @version $Id: Command.java,v 1.22 2006/08/20 22:47:24 rafaelsteil Exp $
  */
 public abstract class Command 
 {
@@ -73,8 +73,8 @@ public abstract class Command
 	private boolean ignoreAction;
 	
 	protected String templateName;
-	protected WebContextRequest request;
-	protected WebContextResponse response;
+	protected RequestContext request;
+	protected ResponseContext response;
 	protected SimpleHash context;
 	
 	protected void setTemplateName(String templateName)
@@ -104,7 +104,7 @@ public abstract class Command
      * @param request WebContextRequest
      * @param response WebContextResponse
 	 */
-	public Template process(WebContextRequest request, WebContextResponse response, SimpleHash context)
+	public Template process(RequestContext request, ResponseContext response, SimpleHash context)
 	{
 		this.request = request;
 		this.response = response;
@@ -121,7 +121,7 @@ public abstract class Command
 			}
 			catch (Exception e)
             {
-                String es = "Erorr process()";
+                String es = "Error process()";
                 log.error(es, e);
                 throw new RuntimeException(es, e);
 			}
@@ -150,7 +150,7 @@ public abstract class Command
         }
         catch (IOException e)
         {
-            String es = "Erorr process()";
+            String es = "Error process()";
             log.error(es, e);
             throw new RuntimeException(es, e);
         }

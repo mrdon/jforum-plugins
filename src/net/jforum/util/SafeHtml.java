@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -67,7 +67,7 @@ import org.htmlparser.nodes.TextNode;
  * <li>http://quickwired.com/kallahar/smallprojects/php_xss_filter_function.php
  * <br>
  * @author Rafael Steil
- * @version $Id: SafeHtml.java,v 1.16 2006/08/20 12:19:11 sergemaslyukov Exp $
+ * @version $Id: SafeHtml.java,v 1.17 2006/08/20 22:47:42 rafaelsteil Exp $
  */
 public class SafeHtml 
 {

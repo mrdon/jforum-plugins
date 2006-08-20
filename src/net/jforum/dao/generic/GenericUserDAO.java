@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -44,8 +44,8 @@ package net.jforum.dao.generic;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -56,116 +56,116 @@ import net.jforum.dao.DataAccessDriver;
 import net.jforum.entities.Group;
 import net.jforum.entities.KarmaStatus;
 import net.jforum.entities.User;
+import net.jforum.exceptions.DatabaseException;
 import net.jforum.sso.LoginAuthenticator;
+import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.util.DbUtils;
+
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericUserDAO.java,v 1.20 2006/08/20 12:19:05 sergemaslyukov Exp $
+ * @version $Id: GenericUserDAO.java,v 1.21 2006/08/20 22:47:28 rafaelsteil Exp $
  */
-public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO 
+public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 {
-    private final static Logger log = Logger.getLogger(GenericUserDAO.class);
+	private final static Logger log = Logger.getLogger(GenericUserDAO.class);
 
 	private static LoginAuthenticator loginAuthenticator;
-	
+
 	public GenericUserDAO()
 	{
 		String className = SystemGlobals.getValue(ConfigKeys.LOGIN_AUTHENTICATOR);
 
 		try {
-			loginAuthenticator = (LoginAuthenticator)Class.forName(className).newInstance();
+			loginAuthenticator = (LoginAuthenticator) Class.forName(className).newInstance();
 			loginAuthenticator.setUserModel(this);
 		}
 		catch (Exception e) {
-			throw new RuntimeException("Error while trying to instantiate a "
-					+ "login.authenticator instance (" + className + "): " + e);
+			throw new DatabaseException("Error while trying to instantiate a " + "login.authenticator instance ("
+					+ className + "): " + e);
 		}
 	}
-	
-	/** 
+
+	/**
 	 * @see net.jforum.dao.UserDAO#selectById(int)
 	 */
 	public User selectById(int userId)
 	{
-	    String q = SystemGlobals.getSql("UserModel.selectById");
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(q);
-            p.setInt(1, userId);
+		String q = SystemGlobals.getSql("UserModel.selectById");
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(q);
+			p.setInt(1, userId);
 
-            rs = p.executeQuery();
-            User u = new User();
+			rs = p.executeQuery();
+			User u = new User();
 
-            if (rs.next()) {
-                this.fillUserFromResultSet(u, rs);
-                u.setPrivateMessagesCount(rs.getInt("private_messages"));
+			if (rs.next()) {
+				this.fillUserFromResultSet(u, rs);
+				u.setPrivateMessagesCount(rs.getInt("private_messages"));
 
-                rs.close();
-                p.close();
+				rs.close();
+				p.close();
 
-                // User groups
-                p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectGroups"));
-                p.setInt(1, userId);
+				// User groups
+				p = JForumExecutionContext.getConnection().prepareStatement(
+						SystemGlobals.getSql("UserModel.selectGroups"));
+				p.setInt(1, userId);
 
-                rs = p.executeQuery();
-                while (rs.next()) {
-                    Group g = new Group();
-                    g.setName(rs.getString("group_name"));
-                    g.setId(rs.getInt("group_id"));
+				rs = p.executeQuery();
+				while (rs.next()) {
+					Group g = new Group();
+					g.setName(rs.getString("group_name"));
+					g.setId(rs.getInt("group_id"));
 
-                    u.getGroupsList().add(g);
-                }
-            }
+					u.getGroupsList().add(g);
+				}
+			}
 
-            return u;
-        }
-        catch (SQLException e) {
-            String es = "Erorr selectById()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally {
-            DbUtils.close(rs, p);
-        }
-    }
+			return u;
+		}
+		catch (SQLException e) {
+			String es = "Error selectById()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
 
-	public User selectByName(String username)  
+	public User selectByName(String username)
 	{
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(
-                    SystemGlobals.getSql("UserModel.selectByName"));
-            p.setString(1, username);
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectByName"));
+			p.setString(1, username);
 
-            rs = p.executeQuery();
-            User u = null;
+			rs = p.executeQuery();
+			User u = null;
 
-            if (rs.next()) {
-                u = new User();
-                this.fillUserFromResultSet(u, rs);
-            }
+			if (rs.next()) {
+				u = new User();
+				this.fillUserFromResultSet(u, rs);
+			}
 
-            return u;
-        }
-        catch (SQLException e) {
-            String es = "Erorr selectByName()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally {
-            DbUtils.close(rs, p);
-        }
-    }
+			return u;
+		}
+		catch (SQLException e) {
+			String es = "Error selectByName()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
 
-	protected void fillUserFromResultSet(User u, ResultSet rs) throws SQLException 
+	protected void fillUserFromResultSet(User u, ResultSet rs) throws SQLException
 	{
 		u.setAim(rs.getString("user_aim"));
 		u.setAvatar(rs.getString("user_avatar"));
@@ -201,127 +201,123 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 		u.setLang(rs.getString("user_lang"));
 		u.setActive(rs.getInt("user_active"));
 		u.setKarma(new KarmaStatus(u.getId(), rs.getDouble("user_karma")));
-		u.setNotifyPrivateMessagesEnabled(rs.getInt("user_notify_pm") == 1); 
+		u.setNotifyPrivateMessagesEnabled(rs.getInt("user_notify_pm") == 1);
 		u.setDeleted(rs.getInt("deleted"));
-		
+
 		String actkey = rs.getString("user_actkey");
 		u.setActivationKey(actkey == null || "".equals(actkey) ? null : actkey);
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#delete(int)
 	 */
 	public void delete(int userId)
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.deletedStatus"));
-            p.setInt(1, 1);
-            p.setInt(2, userId);
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection()
+					.prepareStatement(SystemGlobals.getSql("UserModel.deletedStatus"));
+			p.setInt(1, 1);
+			p.setInt(2, userId);
 
-            p.executeUpdate();
-        }
-        catch (SQLException e) {
-            String es = "Erorr delete()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally {
-            DbUtils.close( p);
-        }
+			p.executeUpdate();
+		}
+		catch (SQLException e) {
+			String es = "Error delete()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
 	}
 
-	/** 
-	 * @see net.jforum.dao.UserDAO#update(net.jforum.entities.User) 
+	/**
+	 * @see net.jforum.dao.UserDAO#update(net.jforum.entities.User)
 	 */
 	public void update(User user)
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.update"));
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.update"));
 
-            p.setString(1, user.getAim());
-            p.setString(2, user.getAvatar());
-            p.setString(3, user.getGender());
-            p.setInt(4, user.getThemeId());
-            p.setInt(5, user.isPrivateMessagesEnabled() ? 1 : 0);
-            p.setInt(6, user.isAvatarEnabled() ? 1 : 0);
-            p.setInt(7, user.isBbCodeEnabled() ? 1 : 0);
-            p.setInt(8, user.isHtmlEnabled() ? 1 : 0);
-            p.setInt(9, user.isSmiliesEnabled() ? 1 : 0);
-            p.setString(10, user.getEmail());
-            p.setString(11, user.getFrom());
-            p.setString(12, user.getIcq());
-            p.setString(13, user.getInterests());
-            p.setString(14, user.getOccupation());
-            p.setString(15, user.getSignature());
-            p.setString(16, user.getWebSite());
-            p.setString(17, user.getYim());
-            p.setString(18, user.getMsnm());
-            p.setString(19, user.getPassword());
-            p.setInt(20, user.isViewEmailEnabled() ? 1 : 0);
-            p.setInt(21, user.isViewOnlineEnabled() ? 1 : 0);
-            p.setInt(22, user.isNotifyOnMessagesEnabled() ? 1 : 0);
-            p.setInt(23, user.getAttachSignatureEnabled() ? 1 : 0);
-            p.setString(24, user.getUsername());
-            p.setString(25, user.getLang());
-            p.setInt(26, user.isNotifyPrivateMessagesEnabled() ? 1 : 0);
-            p.setString(27, user.getBiography());
+			p.setString(1, user.getAim());
+			p.setString(2, user.getAvatar());
+			p.setString(3, user.getGender());
+			p.setInt(4, user.getThemeId());
+			p.setInt(5, user.isPrivateMessagesEnabled() ? 1 : 0);
+			p.setInt(6, user.isAvatarEnabled() ? 1 : 0);
+			p.setInt(7, user.isBbCodeEnabled() ? 1 : 0);
+			p.setInt(8, user.isHtmlEnabled() ? 1 : 0);
+			p.setInt(9, user.isSmiliesEnabled() ? 1 : 0);
+			p.setString(10, user.getEmail());
+			p.setString(11, user.getFrom());
+			p.setString(12, user.getIcq());
+			p.setString(13, user.getInterests());
+			p.setString(14, user.getOccupation());
+			p.setString(15, user.getSignature());
+			p.setString(16, user.getWebSite());
+			p.setString(17, user.getYim());
+			p.setString(18, user.getMsnm());
+			p.setString(19, user.getPassword());
+			p.setInt(20, user.isViewEmailEnabled() ? 1 : 0);
+			p.setInt(21, user.isViewOnlineEnabled() ? 1 : 0);
+			p.setInt(22, user.isNotifyOnMessagesEnabled() ? 1 : 0);
+			p.setInt(23, user.getAttachSignatureEnabled() ? 1 : 0);
+			p.setString(24, user.getUsername());
+			p.setString(25, user.getLang());
+			p.setInt(26, user.isNotifyPrivateMessagesEnabled() ? 1 : 0);
+			p.setString(27, user.getBiography());
 
-            if (user.getLastVisit() == null) {
-                user.setLastVisit(new Date());
-            }
+			if (user.getLastVisit() == null) {
+				user.setLastVisit(new Date());
+			}
 
-            p.setTimestamp(28, new Timestamp(user.getLastVisit().getTime()));
-            p.setInt(29, user.getId());
+			p.setTimestamp(28, new Timestamp(user.getLastVisit().getTime()));
+			p.setInt(29, user.getId());
 
-            p.executeUpdate();
-        }
-        catch (SQLException e) {
-            String es = "Erorr update()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally {
-            DbUtils.close(p);
-        }
-    }
+			p.executeUpdate();
+		}
+		catch (SQLException e) {
+			String es = "Error update()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
 
-	/** 
-	 * @see net.jforum.dao.UserDAO#addNew(net.jforum.entities.User) 
+	/**
+	 * @see net.jforum.dao.UserDAO#addNew(net.jforum.entities.User)
 	 */
 	public int addNew(User user)
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = this.getStatementForAutoKeys("UserModel.addNew");
+		PreparedStatement p = null;
+		try {
+			p = this.getStatementForAutoKeys("UserModel.addNew");
 
-            this.initNewUser(user, p);
+			this.initNewUser(user, p);
 
-            this.setAutoGeneratedKeysQuery(SystemGlobals.getSql("UserModel.lastGeneratedUserId"));
-            int id = this.executeAutoKeysQuery(p);
+			this.setAutoGeneratedKeysQuery(SystemGlobals.getSql("UserModel.lastGeneratedUserId"));
+			int id = this.executeAutoKeysQuery(p);
 
-            this.addToGroup(id, new int[] { SystemGlobals.getIntValue(ConfigKeys.DEFAULT_USER_GROUP) });
+			this.addToGroup(id, new int[] { SystemGlobals.getIntValue(ConfigKeys.DEFAULT_USER_GROUP) });
 
-            user.setId(id);
-            return id;
-        }
-        catch (SQLException e)
-        {
-            String es = "Erorr addNew()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally
-        {
-            DbUtils.close(p);
-        }
-    }
+			user.setId(id);
+			return id;
+		}
+		catch (SQLException e) {
+			String es = "Error addNew()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
 
-	protected void initNewUser(User user, PreparedStatement p) throws SQLException 
+	protected void initNewUser(User user, PreparedStatement p) throws SQLException
 	{
 		p.setString(1, user.getUsername());
 		p.setString(2, user.getPassword());
@@ -330,165 +326,151 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 		p.setString(5, user.getActivationKey());
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#addNewWithId(net.jforum.entities.User)
 	 */
 	public void addNewWithId(User user)
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = this.getStatementForAutoKeys("UserModel.addNewWithId");
+		PreparedStatement p = null;
+		try {
+			p = this.getStatementForAutoKeys("UserModel.addNewWithId");
 
-            this.initNewUser(user, p);
-            p.setInt(6, user.getId());
+			this.initNewUser(user, p);
+			p.setInt(6, user.getId());
 
-            p.executeUpdate();
+			p.executeUpdate();
 
-            this.addToGroup(user.getId(), new int[] { SystemGlobals.getIntValue(ConfigKeys.DEFAULT_USER_GROUP) });
-        }
-        catch (SQLException e)
-        {
-            String es = "Erorr addNewWithId()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally
-        {
-            DbUtils.close(p);
-        }
-    }
+			this.addToGroup(user.getId(), new int[] { SystemGlobals.getIntValue(ConfigKeys.DEFAULT_USER_GROUP) });
+		}
+		catch (SQLException e) {
+			String es = "Error addNewWithId()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#decrementPosts(int)
 	 */
 	public void decrementPosts(int userId)
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.decrementPosts"));
-            p.setInt(1, userId);
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("UserModel.decrementPosts"));
+			p.setInt(1, userId);
 
-            p.executeUpdate();
-        }
-        catch (SQLException e)
-        {
-            String es = "Erorr update()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally
-        {
-            DbUtils.close(p);
-        }
-    }
+			p.executeUpdate();
+		}
+		catch (SQLException e) {
+			String es = "Error update()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#incrementPosts(int)
 	 */
 	public void incrementPosts(int userId)
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.incrementPosts"));
-            p.setInt(1, userId);
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("UserModel.incrementPosts"));
+			p.setInt(1, userId);
 
-            p.executeUpdate();
-        }
-        catch (SQLException e)
-        {
-            String es = "Erorr incrementPosts()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally
-        {
-            DbUtils.close(p);
-        }
-    }
+			p.executeUpdate();
+		}
+		catch (SQLException e) {
+			String es = "Error incrementPosts()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
 
 	/**
-     * TODO implement this method or delete javadoc 
+	 * TODO implement this method or delete javadoc
+	 * 
 	 * @see net.jforum.dao.UserDAO#incrementRanking(int)
 	 */
 	public void setRanking(int userId, int rankingId)
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.rankingId"));
-            p.setInt(1, rankingId);
-            p.setInt(2, userId);
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.rankingId"));
+			p.setInt(1, rankingId);
+			p.setInt(2, userId);
 
-            p.executeUpdate();
-        }
-        catch (SQLException e)
-        {
-            String es = "Erorr setRanking()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally
-        {
-            DbUtils.close( p);
-        }
-    }
+			p.executeUpdate();
+		}
+		catch (SQLException e) {
+			String es = "Error setRanking()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#setActive(int, boolean)
 	 */
 	public void setActive(int userId, boolean active)
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.activeStatus"));
-            p.setInt(1, active ? 1 : 0);
-            p.setInt(2, userId);
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.activeStatus"));
+			p.setInt(1, active ? 1 : 0);
+			p.setInt(2, userId);
 
-            p.executeUpdate();
-        }
-        catch (SQLException e)
-        {
-            String es = "Erorr setActive()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally
-        {
-            DbUtils.close( p);
-        }
+			p.executeUpdate();
+		}
+		catch (SQLException e) {
+			String es = "Error setActive()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#undelete(int)
 	 */
-	public void undelete(int userId)  
+	public void undelete(int userId)
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.deletedStatus"));
-            p.setInt(1, 0);
-            p.setInt(2, userId);
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection()
+					.prepareStatement(SystemGlobals.getSql("UserModel.deletedStatus"));
+			p.setInt(1, 0);
+			p.setInt(2, userId);
 
-            p.executeUpdate();
-        }
-        catch (SQLException e)
-        {
-            String es = "Erorr undelete()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally
-        {
-            DbUtils.close(p);
-        }
-    }
+			p.executeUpdate();
+		}
+		catch (SQLException e) {
+			String es = "Error undelete()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#selectAll()
 	 */
 	public List selectAll()
@@ -496,73 +478,63 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 		return selectAll(0, 0);
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#selectAll(int, int)
 	 */
 	public List selectAll(int startFrom, int count)
 	{
-		PreparedStatement p=null;
-        ResultSet rs=null;
+		PreparedStatement p = null;
+		ResultSet rs = null;
 
-        try
-        {
-            if (count > 0) {
-                p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectAllByLimit"));
-                p.setInt(1, startFrom);
-                p.setInt(2, count);
-            }
-            else {
-                p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectAll"));
-            }
+		try {
+			if (count > 0) {
+				p = JForumExecutionContext.getConnection().prepareStatement(
+						SystemGlobals.getSql("UserModel.selectAllByLimit"));
+				p.setInt(1, startFrom);
+				p.setInt(2, count);
+			}
+			else {
+				p = JForumExecutionContext.getConnection()
+						.prepareStatement(SystemGlobals.getSql("UserModel.selectAll"));
+			}
 
-            rs = p.executeQuery();
+			rs = p.executeQuery();
 
-            return this.processSelectAll(rs);
-        }
-        catch (SQLException e)
-        {
-            String es = "Erorr selectAll()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally
-        {
-            DbUtils.close(rs, p);
-        }
-    }
-	
-	/** 
+			return this.processSelectAll(rs);
+		}
+		catch (SQLException e) {
+			String es = "Error selectAll()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
+
+	/**
 	 * @see net.jforum.dao.UserDAO#selectAllWithKarma()
 	 */
-	public List selectAllWithKarma()  
+	public List selectAllWithKarma()
 	{
 		return this.selectAllWithKarma(0, 0);
-	}	
-	
-	/** 
+	}
+
+	/**
 	 * @see net.jforum.dao.UserDAO#selectAllWithKarma(int, int)
 	 */
-	public List selectAllWithKarma(int startFrom, int count)  
+	public List selectAllWithKarma(int startFrom, int count)
 	{
-        try
-        {
-            return this.loadKarma( this.selectAll(startFrom, count) );
-        }
-        catch (SQLException e)
-        {
-            String es = "Erorr selectAllWithKarma()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-    }
-	
+		return this.loadKarma(this.selectAll(startFrom, count));
+	}
+
 	protected List processSelectAll(ResultSet rs) throws SQLException
 	{
 		List list = new ArrayList();
 
 		while (rs.next()) {
 			User u = new User();
-			
+
 			u.setEmail(rs.getString("user_email"));
 			u.setId(rs.getInt("user_id"));
 			u.setTotalPosts(rs.getInt("user_posts"));
@@ -571,208 +543,194 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			u.setDeleted(rs.getInt("deleted"));
 			KarmaStatus karma = new KarmaStatus();
 			karma.setKarmaPoints(rs.getInt("user_karma"));
-			u.setKarma( karma );
+			u.setKarma(karma);
 			u.setFrom(rs.getString("user_from"));
 			u.setWebSite(rs.getString("user_website"));
 			u.setViewEmailEnabled(rs.getInt("user_viewemail") == 1);
-			
+
 			list.add(u);
 		}
-		
+
 		return list;
 	}
-	
+
 	/**
 	 * @see net.jforum.dao.UserDAO#selectAllByGroup(int, int, int)
 	 */
 	public List selectAllByGroup(int groupId, int start, int count)
 	{
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.selectAllByGroup"));
-            p.setInt(1, groupId);
-            p.setInt(2, start);
-            p.setInt(3, count);
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("UserModel.selectAllByGroup"));
+			p.setInt(1, groupId);
+			p.setInt(2, start);
+			p.setInt(3, count);
 
-            rs = p.executeQuery();
+			rs = p.executeQuery();
 
-            return this.processSelectAll(rs);
-        }
-        catch (SQLException e) {
-            String es = "Erorr selectAllByGroup()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally {
-            DbUtils.close(rs, p);
-        }
-    }
+			return this.processSelectAll(rs);
+		}
+		catch (SQLException e) {
+			String es = "Error selectAllByGroup()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#getLastUserInfo()
 	 */
 	public User getLastUserInfo()
 	{
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            User u = new User();
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			User u = new User();
 
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.lastUserRegistered"));
-            rs = p.executeQuery();
-            rs.next();
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("UserModel.lastUserRegistered"));
+			rs = p.executeQuery();
+			rs.next();
 
-            u.setUsername(rs.getString("username"));
-            u.setId(rs.getInt("user_id"));
+			u.setUsername(rs.getString("username"));
+			u.setId(rs.getInt("user_id"));
 
-            return u;
-        }
-        catch (SQLException e)
-        {
-            String es = "Erorr getLastUserInfo()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally
-        {
-            DbUtils.close(rs, p);
-        }
-    }
+			return u;
+		}
+		catch (SQLException e) {
+			String es = "Error getLastUserInfo()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#getTotalUsers()
 	 */
 	public int getTotalUsers()
 	{
-        PreparedStatement preparedStatement=null;
-        try
-        {
-            preparedStatement = JForumExecutionContext.getConnection().prepareStatement(
-                SystemGlobals.getSql("UserModel.totalUsers"));
-            return this.getTotalUsersCommon(preparedStatement);
-        }
-        catch (SQLException e)
-        {
-            String es = "Erorr getTotalUsers()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally
-        {
-            DbUtils.close(preparedStatement);
-        }
-    }
-	
+		PreparedStatement preparedStatement = null;
+		try {
+			preparedStatement = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("UserModel.totalUsers"));
+			return this.getTotalUsersCommon(preparedStatement);
+		}
+		catch (SQLException e) {
+			String es = "Error getTotalUsers()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(preparedStatement);
+		}
+	}
+
 	/**
 	 * @see net.jforum.dao.UserDAO#getTotalUsersByGroup(int)
 	 */
 	public int getTotalUsersByGroup(int groupId)
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(
-                    SystemGlobals.getSql("UserModel.totalUsersByGroup"));
-            p.setInt(1, groupId);
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("UserModel.totalUsersByGroup"));
+			p.setInt(1, groupId);
 
-            return this.getTotalUsersCommon(p);
-        }
-        catch (SQLException e)
-        {
-            String es = "Erorr getTotalUsersByGroup()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally
-        {
-            DbUtils.close( p);
-        }
-    }
-	
+			return this.getTotalUsersCommon(p);
+		}
+		catch (SQLException e) {
+			String es = "Error getTotalUsersByGroup()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
+
 	protected int getTotalUsersCommon(PreparedStatement p) throws SQLException
 	{
 		ResultSet rs = p.executeQuery();
 		rs.next();
-		
+
 		int total = rs.getInt(1);
-		
+
 		rs.close();
 		p.close();
-		
+
 		return total;
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#isDeleted(int user_id)
 	 */
 	public boolean isDeleted(int userId)
-	{	
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.isDeleted"));
-            p.setInt(1, userId);
+	{
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.isDeleted"));
+			p.setInt(1, userId);
 
-            int deleted = 0;
+			int deleted = 0;
 
-            rs = p.executeQuery();
-            if (rs.next()) {
-                deleted = rs.getInt("deleted");
-            }
+			rs = p.executeQuery();
+			if (rs.next()) {
+				deleted = rs.getInt("deleted");
+			}
 
-            return deleted == 1;
-        }
-        catch (SQLException e)
-        {
-            String es = "Erorr isDeleted()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally
-        {
-            DbUtils.close(rs, p);
-        }
-    }
-	
-	/** 
+			return deleted == 1;
+		}
+		catch (SQLException e) {
+			String es = "Error isDeleted()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
+
+	/**
 	 * @see net.jforum.dao.UserDAO#isUsernameRegistered(java.lang.String)
 	 */
 	public boolean isUsernameRegistered(String username)
 	{
 		boolean status = false;
-		
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(
-                    SystemGlobals.getSql("UserModel.isUsernameRegistered"));
-            p.setString(1, username);
 
-            rs = p.executeQuery();
-            if (rs.next() && rs.getInt("registered") > 0) {
-                status = true;
-            }
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("UserModel.isUsernameRegistered"));
+			p.setString(1, username);
 
-            return status;
-        }
-        catch (SQLException e)
-        {
-            String es = "Erorr isUsernameRegistered()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally
-        {
-            DbUtils.close(rs, p);
-        }
-    }
+			rs = p.executeQuery();
+			if (rs.next() && rs.getInt("registered") > 0) {
+				status = true;
+			}
 
-	/** 
+			return status;
+		}
+		catch (SQLException e) {
+			String es = "Error isUsernameRegistered()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
+
+	/**
 	 * @see net.jforum.dao.UserDAO#validateLogin(java.lang.String, java.lang.String)
 	 */
 	public User validateLogin(String username, String password)
@@ -780,422 +738,393 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 		return loginAuthenticator.validateLogin(username, password, null);
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#addToGroup(int, int[])
 	 */
 	public void addToGroup(int userId, int[] groupId)
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.addToGroup"));
-            p.setInt(1, userId);
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.addToGroup"));
+			p.setInt(1, userId);
 
-            for (int i = 0; i < groupId.length; i++) {
-                p.setInt(2, groupId[i]);
-                p.executeUpdate();
-            }
-        }
-        catch (SQLException e)
-        {
-            String es = "Erorr addToGroup()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally
-        {
-            DbUtils.close(p);
-        }
+			for (int i = 0; i < groupId.length; i++) {
+				p.setInt(2, groupId[i]);
+				p.executeUpdate();
+			}
+		}
+		catch (SQLException e) {
+			String es = "Error addToGroup()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
 
-    }
+	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#removeFromGroup(int, int[])
 	 */
 	public void removeFromGroup(int userId, int[] groupId)
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.removeFromGroup"));
-            p.setInt(1, userId);
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("UserModel.removeFromGroup"));
+			p.setInt(1, userId);
 
-            for (int i = 0; i < groupId.length; i++) {
-                p.setInt(2, groupId[i]);
-                p.executeUpdate();
-            }
-        }
-        catch (SQLException e)
-        {
-            String es = "Erorr removeFromGroup()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally
-        {
-            DbUtils.close( p);
-        }
+			for (int i = 0; i < groupId.length; i++) {
+				p.setInt(2, groupId[i]);
+				p.executeUpdate();
+			}
+		}
+		catch (SQLException e) {
+			String es = "Error removeFromGroup()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#saveNewPassword(java.lang.String, java.lang.String)
 	 */
 	public void saveNewPassword(String password, String email)
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.saveNewPassword"));
-            p.setString(1, password);
-            p.setString(2, email);
-            p.executeUpdate();
-        }
-        catch (SQLException e)
-        {
-            String es = "Erorr saveNewPassword()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally
-        {
-            DbUtils.close( p);
-        }
-    }
-	
-	/** 
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("UserModel.saveNewPassword"));
+			p.setString(1, password);
+			p.setString(2, email);
+			p.executeUpdate();
+		}
+		catch (SQLException e) {
+			String es = "Error saveNewPassword()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
+
+	/**
 	 * @see net.jforum.dao.UserDAO#validateLostPasswordHash(java.lang.String, java.lang.String)
 	 */
 	public boolean validateLostPasswordHash(String email, String hash)
 	{
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(
-                    SystemGlobals.getSql("UserModel.validateLostPasswordHash"));
-            p.setString(1, hash);
-            p.setString(2, email);
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("UserModel.validateLostPasswordHash"));
+			p.setString(1, hash);
+			p.setString(2, email);
 
-            boolean status = false;
+			boolean status = false;
 
-            rs = p.executeQuery();
-            if (rs.next() && rs.getInt("valid") > 0) {
-                status = true;
+			rs = p.executeQuery();
+			if (rs.next() && rs.getInt("valid") > 0) {
+				status = true;
 
-                this.writeLostPasswordHash(email, "");
-            }
+				this.writeLostPasswordHash(email, "");
+			}
 
-            return status;
-        }
-        catch (SQLException e)
-        {
-            String es = "Erorr validateLostPasswordHash()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally
-        {
-            DbUtils.close(rs, p);
-        }
-    }
-	
-	/** 
+			return status;
+		}
+		catch (SQLException e) {
+			String es = "Error validateLostPasswordHash()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
+
+	/**
 	 * @see net.jforum.dao.UserDAO#writeLostPasswordHash(java.lang.String, java.lang.String)
 	 */
 	public void writeLostPasswordHash(String email, String hash)
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.writeLostPasswordHash"));
-            p.setString(1, hash);
-            p.setString(2, email);
-            p.executeUpdate();
-        }
-        catch (SQLException e)
-        {
-            String es = "Erorr writeLostPasswordHash()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally
-        {
-            DbUtils.close( p);
-        }
-    }
-	
-	/** 
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("UserModel.writeLostPasswordHash"));
+			p.setString(1, hash);
+			p.setString(2, email);
+			p.executeUpdate();
+		}
+		catch (SQLException e) {
+			String es = "Error writeLostPasswordHash()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
+
+	/**
 	 * @see net.jforum.dao.UserDAO#getUsernameByEmail(java.lang.String)
 	 */
 	public String getUsernameByEmail(String email)
 	{
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.getUsernameByEmail"));
-            p.setString(1, email);
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("UserModel.getUsernameByEmail"));
+			p.setString(1, email);
 
-            String username = "";
+			String username = "";
 
-            rs = p.executeQuery();
-            if (rs.next()) {
-                username = rs.getString("username");
-            }
+			rs = p.executeQuery();
+			if (rs.next()) {
+				username = rs.getString("username");
+			}
 
-            return username;
-        }
-        catch (SQLException e)
-        {
-            String es = "Erorr getUsernameByEmail()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally
-        {
-            DbUtils.close(rs, p);
-        }
-    }
+			return username;
+		}
+		catch (SQLException e) {
+			String es = "Error getUsernameByEmail()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#findByName(java.lang.String, boolean)
 	 */
 	public List findByName(String input, boolean exactMatch)
 	{
 		List namesList = new ArrayList();
-		
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.findByName"));
-            p.setString(1, exactMatch ? input : "%" + input + "%");
 
-            rs = p.executeQuery();
-            while (rs.next()) {
-                User u = new User();
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.findByName"));
+			p.setString(1, exactMatch ? input : "%" + input + "%");
 
-                u.setId(rs.getInt("user_id"));
-                u.setUsername(rs.getString("username"));
-                u.setEmail(rs.getString("user_email"));
-                u.setDeleted(rs.getInt("deleted"));
+			rs = p.executeQuery();
+			while (rs.next()) {
+				User u = new User();
 
-                namesList.add(u);
-            }
-            return namesList;
-        }
-        catch (SQLException e)
-        {
-            String es = "Erorr findByName()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally
-        {
-            DbUtils.close(rs, p);
-        }
-    }
+				u.setId(rs.getInt("user_id"));
+				u.setUsername(rs.getString("username"));
+				u.setEmail(rs.getString("user_email"));
+				u.setDeleted(rs.getInt("deleted"));
 
-	/** 
+				namesList.add(u);
+			}
+			return namesList;
+		}
+		catch (SQLException e) {
+			String es = "Error findByName()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
+
+	/**
 	 * @see net.jforum.dao.UserDAO#validateActivationKeyHash(int, java.lang.String)
 	 */
-	public boolean validateActivationKeyHash(int userId , String hash)
+	public boolean validateActivationKeyHash(int userId, String hash)
 	{
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.validateActivationKeyHash"));
-            p.setString(1, hash);
-            p.setInt(2, userId);
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("UserModel.validateActivationKeyHash"));
+			p.setString(1, hash);
+			p.setInt(2, userId);
 
-            boolean status = false;
+			boolean status = false;
 
-            rs = p.executeQuery();
-            if (rs.next() && rs.getInt("valid") == 1) {
-                status = true;
-            }
+			rs = p.executeQuery();
+			if (rs.next() && rs.getInt("valid") == 1) {
+				status = true;
+			}
 
-            return status;
-        }
-        catch (SQLException e)
-        {
-            String es = "Erorr validateActivationKeyHash()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally
-        {
-            DbUtils.close(rs, p);
-        }
-    }
+			return status;
+		}
+		catch (SQLException e) {
+			String es = "Error validateActivationKeyHash()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.UserDAO#writeUserActive(int)
 	 */
 	public void writeUserActive(int userId)
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.writeUserActive"));
-            p.setInt(1, userId);
-            p.executeUpdate();
-        }
-        catch (SQLException e)
-        {
-            String es = "Erorr writeUserActive()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally
-        {
-            DbUtils.close( p);
-        }
-    }
-	
-	/** 
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("UserModel.writeUserActive"));
+			p.setInt(1, userId);
+			p.executeUpdate();
+		}
+		catch (SQLException e) {
+			String es = "Error writeUserActive()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
+
+	/**
 	 * @see net.jforum.dao.UserDAO#updateUsername(int, String)
 	 */
 	public void updateUsername(int userId, String username)
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.updateUsername"));
-            p.setString(1, username);
-            p.setInt(2, userId);
-            p.executeUpdate();
-        }
-        catch (SQLException e)
-        {
-            String es = "Erorr updateUsername()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally
-        {
-            DbUtils.close( p);
-        }
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("UserModel.updateUsername"));
+			p.setString(1, username);
+			p.setInt(2, userId);
+			p.executeUpdate();
+		}
+		catch (SQLException e) {
+			String es = "Error updateUsername()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
 	}
-	
+
 	/**
 	 * @see net.jforum.dao.UserDAO#hasUsernameChanged(int, java.lang.String)
 	 */
 	public boolean hasUsernameChanged(int userId, String usernameToCheck)
 	{
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.getUsername"));
-            p.setString(1, usernameToCheck);
-            p.setInt(2, userId);
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("UserModel.getUsername"));
+			p.setString(1, usernameToCheck);
+			p.setInt(2, userId);
 
-            String dbUsername = null;
+			String dbUsername = null;
 
-            rs = p.executeQuery();
-            if (rs.next()) {
-                dbUsername = rs.getString("username");
-            }
+			rs = p.executeQuery();
+			if (rs.next()) {
+				dbUsername = rs.getString("username");
+			}
 
-            boolean status = false;
+			boolean status = false;
 
-            if (!usernameToCheck.equals(dbUsername)) {
-                status = true;
-            }
+			if (!usernameToCheck.equals(dbUsername)) {
+				status = true;
+			}
 
-            return status;
-        }
-        catch (SQLException e)
-        {
-            String es = "Erorr hasUsernameChanged()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally
-        {
-            DbUtils.close(rs, p);
-        }
-    }
-	
+			return status;
+		}
+		catch (SQLException e) {
+			String es = "Error hasUsernameChanged()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
+
 	/**
 	 * Load KarmaStatus from a list of users.
-	 * @param users List
+	 * 
+	 * @param users
+	 *            List
 	 * @return List
 	 * @throws SQLException
 	 */
-	protected List loadKarma(List users) throws SQLException{
-	    List result = new ArrayList(users.size());
+	protected List loadKarma(List users)
+	{
+		List result = new ArrayList(users.size());
 
-	    for (Iterator iter = users.iterator(); iter.hasNext(); ) {		    
-		    User user = (User) iter.next();
+		for (Iterator iter = users.iterator(); iter.hasNext();) {
+			User user = (User) iter.next();
 
-		    // Load Karma
-		    DataAccessDriver.getInstance().newKarmaDAO().getUserTotalKarma(user);
-		    result.add(user);
-        }
-	    
+			// Load Karma
+			DataAccessDriver.getInstance().newKarmaDAO().getUserTotalKarma(user);
+			result.add(user);
+		}
+
 		return result;
 	}
-	
+
 	/**
 	 * @see net.jforum.dao.UserDAO#saveUserAuthHash(int, java.lang.String)
 	 */
-	public void saveUserAuthHash(int userId, String hash) 
+	public void saveUserAuthHash(int userId, String hash)
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(
-                    SystemGlobals.getSql("UserModel.saveUserAuthHash"));
-            p.setString(1, hash);
-            p.setInt(2, userId);
-            p.executeUpdate();
-        }
-        catch (SQLException e)
-        {
-            String es = "Erorr saveUserAuthHash()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally
-        {
-            DbUtils.close( p);
-        }
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("UserModel.saveUserAuthHash"));
+			p.setString(1, hash);
+			p.setInt(2, userId);
+			p.executeUpdate();
+		}
+		catch (SQLException e) {
+			String es = "Error saveUserAuthHash()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
 	}
-	
+
 	/**
 	 * @see net.jforum.dao.UserDAO#getUserAuthHash(int)
 	 */
 	public String getUserAuthHash(int userId)
 	{
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(
-                    SystemGlobals.getSql("UserModel.getUserAuthHash"));
-            p.setInt(1, userId);
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("UserModel.getUserAuthHash"));
+			p.setInt(1, userId);
 
-            rs = p.executeQuery();
+			rs = p.executeQuery();
 
-            String hash = null;
-            if (rs.next()) {
-                hash = rs.getString(1);
-            }
+			String hash = null;
+			if (rs.next()) {
+				hash = rs.getString(1);
+			}
 
-            return hash;
-        }
-        catch (SQLException e)
-        {
-            String es = "Erorr getUserAuthHash()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally
-        {
-            DbUtils.close(rs, p);
-        }
-    }
+			return hash;
+		}
+		catch (SQLException e) {
+			String es = "Error getUserAuthHash()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -52,7 +52,7 @@ import java.util.regex.Pattern;
 
 import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
-import net.jforum.web_context.WebContextRequest;
+import net.jforum.core.context.RequestContext;
 import net.jforum.dao.PostDAO;
 import net.jforum.entities.Post;
 import net.jforum.entities.Smilie;
@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.34 2006/08/20 15:30:28 sergemaslyukov Exp $
+ * @version $Id: PostCommon.java,v 1.35 2006/08/20 22:47:50 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -229,7 +229,7 @@ public class PostCommon
 
 	public static Post fillPostFromRequest(Post p, boolean isEdit) 
 	{
-		WebContextRequest request = JForumExecutionContext.getRequest();
+		RequestContext request = JForumExecutionContext.getRequest();
 		
 		p.setSubject(SafeHtml.makeSafe(request.getParameter("subject")));
 		p.setBbCodeEnabled(request.getParameter("disable_bbcode") == null);

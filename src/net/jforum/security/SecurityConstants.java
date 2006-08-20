@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -44,7 +44,7 @@ package net.jforum.security;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityConstants.java,v 1.15 2005/11/10 18:30:06 almilli Exp $
+ * @version $Id: SecurityConstants.java,v 1.16 2006/08/20 22:47:35 rafaelsteil Exp $
  */
 public class SecurityConstants 
 {

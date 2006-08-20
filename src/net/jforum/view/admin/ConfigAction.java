@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -51,10 +51,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.servlet.http.HttpServletResponse;
-
-import net.jforum.web_context.WebContextRequest;
-import net.jforum.web_context.WebContextResponse;
+import net.jforum.core.context.RequestContext;
+import net.jforum.core.context.ResponseContext;
 import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
 import net.jforum.repository.ForumRepository;
@@ -63,12 +61,14 @@ import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
-import freemarker.template.SimpleHash;
+
 import org.apache.log4j.Logger;
+
+import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ConfigAction.java,v 1.16 2006/08/20 15:30:27 sergemaslyukov Exp $
+ * @version $Id: ConfigAction.java,v 1.17 2006/08/20 22:47:45 rafaelsteil Exp $
  */
 public class ConfigAction extends AdminCommand 
 {
@@ -76,8 +76,8 @@ public class ConfigAction extends AdminCommand
 
 	public ConfigAction() {}
 	
-	public ConfigAction(WebContextRequest request,
-			WebContextResponse response, 
+	public ConfigAction(RequestContext request,
+			ResponseContext response, 
 			SimpleHash context)
 	{
 		this.request = request;
@@ -103,7 +103,7 @@ public class ConfigAction extends AdminCommand
         }
         catch (IOException e)
         {
-            String es = "Erorr list()";
+            String es = "Error list()";
             log.error(es, e);
             throw new RuntimeException(es, e);
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -51,7 +51,7 @@ import java.util.List;
 
 /**
  * @author Rafael Steil
- * @version $Id: ParseDBStructFile.java,v 1.4 2006/08/20 12:19:18 sergemaslyukov Exp $
+ * @version $Id: ParseDBStructFile.java,v 1.5 2006/08/20 22:47:53 rafaelsteil Exp $
  */
 public class ParseDBStructFile
 {
@@ -119,7 +119,7 @@ public class ParseDBStructFile
 		}
         catch (Exception e)
         {
-            String es = "Erorr add()";
+            String es = "Error add()";
             log.error(es, e);
             throw new RuntimeException(es, e);
         }

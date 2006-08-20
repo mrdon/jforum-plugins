@@ -42,16 +42,22 @@
  */
 package net.jforum.dao.generic;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import net.jforum.entities.UserSession;
-import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.DbUtils;
+import net.jforum.util.preferences.SystemGlobals;
+
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericUserSessionDAO.java,v 1.5 2006/08/20 12:19:05 sergemaslyukov Exp $
+ * @version $Id: GenericUserSessionDAO.java,v 1.6 2006/08/20 22:47:28 rafaelsteil Exp $
  */
 public class GenericUserSessionDAO implements net.jforum.dao.UserSessionDAO
 {
@@ -83,9 +89,9 @@ public class GenericUserSessionDAO implements net.jforum.dao.UserSessionDAO
         }
         catch (SQLException e)
         {
-            String es = "Erorr add()";
+            String es = "Error add()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally
         {
@@ -116,9 +122,9 @@ public class GenericUserSessionDAO implements net.jforum.dao.UserSessionDAO
         }
         catch (SQLException e)
         {
-            String es = "Erorr update()";
+            String es = "Error update()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally
         {
@@ -153,9 +159,9 @@ public class GenericUserSessionDAO implements net.jforum.dao.UserSessionDAO
         }
         catch (SQLException e)
         {
-            String es = "Erorr selectById()";
+            String es = "Error selectById()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally
         {

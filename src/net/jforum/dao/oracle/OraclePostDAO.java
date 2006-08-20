@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -48,64 +48,72 @@ import java.sql.SQLException;
 import java.util.List;
 
 import net.jforum.JForumExecutionContext;
+import net.jforum.dao.generic.GenericPostDAO;
 import net.jforum.entities.Post;
-import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.DbUtils;
+import net.jforum.util.preferences.SystemGlobals;
+
+import org.apache.log4j.Logger;
 
 /**
  * @author Dmitriy Kiriy
- * @version $Id: OraclePostDAO.java,v 1.8 2006/08/20 12:19:06 sergemaslyukov Exp $
+ * @version $Id: OraclePostDAO.java,v 1.9 2006/08/20 22:47:32 rafaelsteil Exp $
  */
 public class OraclePostDAO extends net.jforum.dao.generic.GenericPostDAO
 {
+	private final static Logger log = Logger.getLogger(GenericPostDAO.class);
+	
 	/**
 	 * @see net.jforum.dao.generic.GenericPostDAO#addNewPostText(net.jforum.entities.Post)
 	 */
 	protected void addNewPostText(Post post) throws SQLException
-    {
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.addNewPostText"));
-            p.setInt(1, post.getId());
-            p.setString(2, post.getSubject());
-            p.executeUpdate();
-            p.close();
+	{
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("PostModel.addNewPostText"));
+			p.setInt(1, post.getId());
+			p.setString(2, post.getSubject());
+			p.executeUpdate();
+			p.close();
 
-            OracleUtils.writeBlobUTF16BinaryStream(
-				SystemGlobals.getSql("PostModel.addNewPostTextField"),
-				post.getId(), post.getText()
-                );
-        }
-        finally {
-            DbUtils.close(p);
-        }
-    }
-	
+			OracleUtils.writeBlobUTF16BinaryStream(SystemGlobals.getSql("PostModel.addNewPostTextField"), post.getId(),
+					post.getText());
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
+
 	/**
 	 * @see net.jforum.dao.generic.GenericPostDAO#updatePostsTextTable(net.jforum.entities.Post)
 	 */
-	protected void updatePostsTextTable(Post post) throws SQLException
+	protected void updatePostsTextTable(Post post)
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.updatePostText"));
-            p.setString(1, post.getSubject());
-            p.setInt(2, post.getId());
+		PreparedStatement p = null;
 
-            p.executeUpdate();
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("PostModel.updatePostText"));
+			p.setString(1, post.getSubject());
+			p.setInt(2, post.getId());
 
-            OracleUtils.writeBlobUTF16BinaryStream(
-			SystemGlobals.getSql("PostModel.addNewPostTextField"),
-			post.getId(), post.getText()
-            );
-        }
-        finally {
-            DbUtils.close(p);
-        }
-    }
-	
+			p.executeUpdate();
+
+			OracleUtils.writeBlobUTF16BinaryStream(SystemGlobals.getSql("PostModel.addNewPostTextField"), 
+					post.getId(), post.getText());
+		}
+		catch (SQLException e) {
+			String es = "Error updatePostsTextTable()";
+			log.error(es, e);
+			throw new DatabaseException(es, e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
+
 	/**
 	 * @see net.jforum.dao.generic.GenericPostDAO#getPostTextFromResultSet(java.sql.ResultSet)
 	 */
@@ -114,18 +122,18 @@ public class OraclePostDAO extends net.jforum.dao.generic.GenericPostDAO
 		return OracleUtils.readBlobUTF16BinaryStream(rs, "post_text");
 	}
 
-    /**
+	/**
 	 * @see net.jforum.dao.PostDAO#selectAllByTopicByLimit(int, int, int)
 	 */
 	public List selectAllByTopicByLimit(int topicId, int startFrom, int count)
 	{
 		return super.selectAllByTopicByLimit(topicId, startFrom, startFrom + count);
 	}
-	
+
 	/**
 	 * @see net.jforum.dao.PostDAO#selectByUserByLimit(int, int, int)
 	 */
-	public List selectByUserByLimit(int userId,int startFrom, int count)
+	public List selectByUserByLimit(int userId, int startFrom, int count)
 	{
 		return super.selectByUserByLimit(userId, startFrom, startFrom + count);
 	}

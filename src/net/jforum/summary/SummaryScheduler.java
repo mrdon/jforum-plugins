@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -62,7 +62,7 @@ import org.quartz.impl.StdSchedulerFactory;
  * @see net.jforum.summary.SummaryJob
  * 
  * @author Franklin S. Dattein (<a href="mailto:franklin@portaljava.com">franklin@portaljava.com</a>)
- * @version $Id: SummaryScheduler.java,v 1.4 2005/07/31 04:07:33 rafaelsteil Exp $
+ * @version $Id: SummaryScheduler.java,v 1.5 2006/08/20 22:47:56 rafaelsteil Exp $
  */
 public class SummaryScheduler
 {
@@ -80,7 +80,7 @@ public class SummaryScheduler
 	 * @throws SchedulerException
 	 * @throws IOException
 	 */
-	public static void startJob() throws SchedulerException, IOException
+	public static void startJob() throws SchedulerException
 	{
 		boolean isEnabled = new Boolean(SystemGlobals.getValue(ConfigKeys.SUMMARY_IS_ENABLED)).booleanValue();
 		

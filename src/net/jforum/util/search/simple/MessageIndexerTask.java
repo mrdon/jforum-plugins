@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -44,7 +44,7 @@ package net.jforum.util.search.simple;
 
 import java.sql.Connection;
 
-import net.jforum.DBConnection;
+import net.jforum.core.db.DBConnection;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.SearchIndexerDAO;
 import net.jforum.entities.Post;
@@ -54,7 +54,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: MessageIndexerTask.java,v 1.6 2006/08/20 12:19:13 sergemaslyukov Exp $
+ * @version $Id: MessageIndexerTask.java,v 1.7 2006/08/20 22:47:46 rafaelsteil Exp $
  */
 public class MessageIndexerTask implements Task
 {

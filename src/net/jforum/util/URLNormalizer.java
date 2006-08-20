@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -47,7 +47,7 @@ package net.jforum.util;
  * Normalization means replacing blank spaces by underlines, 
  * changing special chars by its regular form and etc.
  * @author Rafael Steil
- * @version $Id: URLNormalizer.java,v 1.3 2005/07/26 03:05:22 rafaelsteil Exp $
+ * @version $Id: URLNormalizer.java,v 1.4 2006/08/20 22:47:42 rafaelsteil Exp $
  */
 public class URLNormalizer
 {

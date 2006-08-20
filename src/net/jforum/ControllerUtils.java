@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -48,6 +48,9 @@ import java.util.HashMap;
 
 import javax.servlet.http.Cookie;
 
+import net.jforum.core.context.JForumContext;
+import net.jforum.core.context.RequestContext;
+import net.jforum.core.context.SessionContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.UserDAO;
 import net.jforum.dao.UserSessionDAO;
@@ -63,8 +66,6 @@ import net.jforum.util.I18n;
 import net.jforum.util.MD5;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.web_context.WebContextRequest;
-import net.jforum.web_context.WebContextSession;
 import freemarker.template.SimpleHash;
 import org.apache.log4j.Logger;
 
@@ -72,7 +73,7 @@ import org.apache.log4j.Logger;
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.26 2006/08/20 15:30:25 sergemaslyukov Exp $
+ * @version $Id: ControllerUtils.java,v 1.27 2006/08/20 22:47:25 rafaelsteil Exp $
  */
 public class ControllerUtils
 {
@@ -86,7 +87,7 @@ public class ControllerUtils
 	 */
 	public void prepareTemplateContext(SimpleHash context, JForumContext jforumContext)
 	{
-		WebContextRequest request = JForumExecutionContext.getRequest();
+		RequestContext request = JForumExecutionContext.getRequest();
 		
 		context.put("karmaEnabled", SecurityRepository.canAccess(SecurityConstants.PERM_KARMA_ENABLED));
 		context.put("dateTimeFormat", SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
@@ -230,7 +231,7 @@ public class ControllerUtils
 				SSOUtils utils = new SSOUtils();
 
 				if (!utils.userExists(username)) {
-					WebContextSession session = JForumExecutionContext.getRequest().getWebSession();
+					SessionContext session = JForumExecutionContext.getRequest().getWebSession();
 
 					String email = (String) session.getAttribute(SystemGlobals.getValue(ConfigKeys.SSO_EMAIL_ATTRIBUTE));
 					String password = (String) session.getAttribute(SystemGlobals.getValue(ConfigKeys.SSO_PASSWORD_ATTRIBUTE));
@@ -263,7 +264,7 @@ public class ControllerUtils
 	public void refreshSession()
 	{
 		UserSession userSession = SessionFacade.getUserSession();
-		WebContextRequest request = JForumExecutionContext.getRequest();
+		RequestContext request = JForumExecutionContext.getRequest();
 
 		if (userSession == null) {
 			userSession = new UserSession();
@@ -298,7 +299,7 @@ public class ControllerUtils
             }
             catch (Exception e)
             {
-                String es = "Erorr add()";
+                String es = "Error add()";
                 log.error(es, e);
                 throw new RuntimeException(es, e);
             }

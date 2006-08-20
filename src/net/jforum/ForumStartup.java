@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
 
  * Redistribution and use in source and binary forms, 
@@ -46,6 +46,7 @@ import java.sql.Connection;
 
 import org.apache.log4j.Logger;
 
+import net.jforum.core.db.DBConnection;
 import net.jforum.dao.CategoryDAO;
 import net.jforum.dao.ConfigDAO;
 import net.jforum.dao.DataAccessDriver;
@@ -56,7 +57,7 @@ import net.jforum.repository.ForumRepository;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumStartup.java,v 1.13 2006/01/31 14:57:33 rafaelsteil Exp $
+ * @version $Id: ForumStartup.java,v 1.14 2006/08/20 22:47:26 rafaelsteil Exp $
  */
 public class ForumStartup 
 {

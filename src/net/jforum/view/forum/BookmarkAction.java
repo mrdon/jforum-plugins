@@ -43,8 +43,8 @@
 package net.jforum.view.forum;
 
 import net.jforum.*;
-import net.jforum.web_context.WebContextRequest;
-import net.jforum.web_context.WebContextResponse;
+import net.jforum.core.context.RequestContext;
+import net.jforum.core.context.ResponseContext;
 import net.jforum.dao.BookmarkDAO;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.entities.Bookmark;
@@ -65,7 +65,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Rafael Steil
- * @version $Id: BookmarkAction.java,v 1.15 2006/08/20 15:30:27 sergemaslyukov Exp $
+ * @version $Id: BookmarkAction.java,v 1.16 2006/08/20 22:47:39 rafaelsteil Exp $
  */
 public class BookmarkAction extends Command
 {
@@ -276,9 +276,9 @@ public class BookmarkAction extends Command
 	}
 	
 	/**
-	 * @see net.jforum.Command#process(net.jforum.web_context.WebContextRequest, net.jforum.web_context.WebContextResponse, freemarker.template.SimpleHash) 
+	 * @see net.jforum.Command#process(net.jforum.core.context.RequestContext, net.jforum.core.context.ResponseContext, freemarker.template.SimpleHash) 
 	 */
-	public Template process(WebContextRequest request, WebContextResponse response, SimpleHash context)
+	public Template process(RequestContext request, ResponseContext response, SimpleHash context)
 	{
 		if (SessionFacade.getUserSession().getUserId() == SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)
 				&& !request.getAction().equals("list")) {

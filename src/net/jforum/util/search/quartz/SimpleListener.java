@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -51,7 +51,7 @@ import org.quartz.JobListener;
 
 /**
  * @author Rafael Steil
- * @version $Id: SimpleListener.java,v 1.4 2005/07/26 03:05:38 rafaelsteil Exp $
+ * @version $Id: SimpleListener.java,v 1.5 2006/08/20 22:47:44 rafaelsteil Exp $
  */
 public class SimpleListener implements JobListener
 {

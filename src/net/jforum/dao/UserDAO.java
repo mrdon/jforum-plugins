@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -54,7 +54,7 @@ import net.jforum.entities.User;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: UserDAO.java,v 1.7 2006/08/20 12:19:02 sergemaslyukov Exp $
+ * @version $Id: UserDAO.java,v 1.8 2006/08/20 22:47:22 rafaelsteil Exp $
  */
 public interface UserDAO 
 {

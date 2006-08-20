@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -53,7 +53,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageSpammer.java,v 1.5 2006/02/28 01:10:47 rafaelsteil Exp $
+ * @version $Id: PrivateMessageSpammer.java,v 1.6 2006/08/20 22:47:51 rafaelsteil Exp $
  */
 public class PrivateMessageSpammer extends Spammer
 {

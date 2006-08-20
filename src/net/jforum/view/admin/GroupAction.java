@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -64,7 +64,7 @@ import net.jforum.util.preferences.TemplateKeys;
  * ViewHelper class for group administration.
  * 
  * @author Rafael Steil
- * @version $Id: GroupAction.java,v 1.20 2006/08/20 12:19:14 sergemaslyukov Exp $
+ * @version $Id: GroupAction.java,v 1.21 2006/08/20 22:47:45 rafaelsteil Exp $
  */
 public class GroupAction extends AdminCommand 
 {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -77,7 +77,7 @@ import com.octo.captcha.image.gimpy.GimpyFactory;
 
 /**
  * @author James Yong
- * @version $Id: Captcha.java,v 1.9 2006/07/20 00:10:10 rafaelsteil Exp $
+ * @version $Id: Captcha.java,v 1.10 2006/08/20 22:47:42 rafaelsteil Exp $
  */
 public class Captcha extends ListImageCaptchaEngine
 {

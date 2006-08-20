@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
 
  * Redistribution and use in source and binary forms, 
@@ -67,7 +67,7 @@ import javax.imageio.stream.ImageOutputStream;
  * can read from. GIF images will be saved as PNG. 
  * 
  * @author Rafael Steil
- * @version $Id: ImageUtils.java,v 1.17 2006/08/20 12:19:12 sergemaslyukov Exp $
+ * @version $Id: ImageUtils.java,v 1.18 2006/08/20 22:47:56 rafaelsteil Exp $
  */
 public class ImageUtils
 {
@@ -95,7 +95,7 @@ public class ImageUtils
         }
         catch (IOException e)
         {
-            String es = "Erorr resizeImage()";
+            String es = "Error resizeImage()";
             log.error(es, e);
             throw new RuntimeException(es, e);
         }
@@ -152,7 +152,7 @@ public class ImageUtils
         }
         catch (IOException e)
         {
-            String es = "Erorr saveImage()";
+            String es = "Error saveImage()";
             log.error(es, e);
             throw new RuntimeException(es, e);
         }
@@ -195,7 +195,7 @@ public class ImageUtils
         }
         catch (IOException e)
         {
-            String es = "Erorr saveCompressedImage()";
+            String es = "Error saveCompressedImage()";
             log.error(es, e);
             throw new RuntimeException(es, e);
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
 
  * Redistribution and use in source and binary forms, 
@@ -46,7 +46,7 @@ import java.io.Serializable;
 
 /**
  * @author Rafael Steil
- * @version $Id: Role.java,v 1.7 2005/09/25 02:18:38 rafaelsteil Exp $
+ * @version $Id: Role.java,v 1.8 2006/08/20 22:47:34 rafaelsteil Exp $
  */
 public class Role implements Serializable
 {

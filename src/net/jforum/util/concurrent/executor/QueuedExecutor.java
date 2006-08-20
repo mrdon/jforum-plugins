@@ -54,7 +54,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rodrigo Kumpera
- * @version $Id: QueuedExecutor.java,v 1.12 2006/08/20 12:19:12 sergemaslyukov Exp $
+ * @version $Id: QueuedExecutor.java,v 1.13 2006/08/20 22:47:51 rafaelsteil Exp $
  */
 public class QueuedExecutor implements Executor 
 {
@@ -101,7 +101,7 @@ public class QueuedExecutor implements Executor
             }
             catch (InterruptedException e)
             {
-                String es = "Erorr execute()";
+                String es = "Error execute()";
                 logger.error(es, e);
                 throw new RuntimeException(es, e);
             }

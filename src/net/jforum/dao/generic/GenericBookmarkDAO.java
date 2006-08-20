@@ -50,14 +50,16 @@ import java.util.List;
 import net.jforum.JForumExecutionContext;
 import net.jforum.entities.Bookmark;
 import net.jforum.entities.BookmarkType;
+import net.jforum.exceptions.DatabaseException;
 import net.jforum.exceptions.InvalidBookmarkTypeException;
-import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.DbUtils;
+import net.jforum.util.preferences.SystemGlobals;
+
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericBookmarkDAO.java,v 1.6 2006/08/20 12:19:03 sergemaslyukov Exp $
+ * @version $Id: GenericBookmarkDAO.java,v 1.7 2006/08/20 22:47:28 rafaelsteil Exp $
  */
 public class GenericBookmarkDAO implements net.jforum.dao.BookmarkDAO
 {
@@ -82,9 +84,9 @@ public class GenericBookmarkDAO implements net.jforum.dao.BookmarkDAO
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr add()";
+            String es = "Error add()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(p);
@@ -108,9 +110,9 @@ public class GenericBookmarkDAO implements net.jforum.dao.BookmarkDAO
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr update()";
+            String es = "Error update()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(p);
@@ -131,9 +133,9 @@ public class GenericBookmarkDAO implements net.jforum.dao.BookmarkDAO
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Erorr remove()";
+            String es = "Error remove()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(p);
@@ -183,9 +185,9 @@ public class GenericBookmarkDAO implements net.jforum.dao.BookmarkDAO
             return l;
         }
         catch (SQLException e) {
-            String es = "Erorr selectByUser()";
+            String es = "Error selectByUser()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -215,9 +217,9 @@ public class GenericBookmarkDAO implements net.jforum.dao.BookmarkDAO
             return b;
         }
         catch (SQLException e) {
-            String es = "Erorr selectById()";
+            String es = "Error selectById()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -248,9 +250,9 @@ public class GenericBookmarkDAO implements net.jforum.dao.BookmarkDAO
             return b;
         }
         catch (SQLException e) {
-            String es = "Erorr selectForUpdate()";
+            String es = "Error selectForUpdate()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -282,9 +284,9 @@ public class GenericBookmarkDAO implements net.jforum.dao.BookmarkDAO
             return l;
         }
         catch (SQLException e) {
-            String es = "Erorr getUsers()";
+            String es = "Error getUsers()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -316,9 +318,9 @@ public class GenericBookmarkDAO implements net.jforum.dao.BookmarkDAO
             return l;
         }
         catch (SQLException e) {
-            String es = "Erorr getTopics()";
+            String es = "Error getTopics()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -354,9 +356,9 @@ public class GenericBookmarkDAO implements net.jforum.dao.BookmarkDAO
             return l;
         }
         catch (SQLException e) {
-            String es = "Erorr getForums()";
+            String es = "Error getForums()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);

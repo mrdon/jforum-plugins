@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -44,7 +44,7 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumStats.java,v 1.2 2005/12/18 02:12:51 rafaelsteil Exp $
+ * @version $Id: ForumStats.java,v 1.3 2006/08/20 22:47:36 rafaelsteil Exp $
  */
 public class ForumStats
 {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -50,15 +50,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import net.jforum.JForumExecutionContext;
+import net.jforum.exceptions.DatabaseException;
+import net.jforum.util.DbUtils;
 import oracle.sql.BLOB;
 
-import net.jforum.JForumExecutionContext;
-import net.jforum.util.DbUtils;
 import org.apache.log4j.Logger;
 
 /**
  * @author Dmitriy Kiriy
- * @version $Id: OracleUtils.java,v 1.10 2006/08/20 12:19:07 sergemaslyukov Exp $
+ * @version $Id: OracleUtils.java,v 1.11 2006/08/20 22:47:32 rafaelsteil Exp $
  */
 public class OracleUtils
 {
@@ -87,9 +88,9 @@ public class OracleUtils
             return sb.toString();
         }
         catch (IOException e) {
-            String es = "Erorr readBlobUTF16BinaryStream()";
+            String es = "Error readBlobUTF16BinaryStream()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
 
 	}
@@ -136,9 +137,9 @@ public class OracleUtils
             blobWriter.close();
         }
         catch (IOException e) {
-            String es = "Erorr writeBlobUTF16BinaryStream()";
+            String es = "Error writeBlobUTF16BinaryStream()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally {
             DbUtils.close(rs, p);

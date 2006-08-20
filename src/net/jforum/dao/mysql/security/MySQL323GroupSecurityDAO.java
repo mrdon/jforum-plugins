@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -48,15 +48,17 @@ import java.sql.SQLException;
 
 import net.jforum.JForumExecutionContext;
 import net.jforum.dao.generic.security.GenericGroupSecurityDAO;
-import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.DbUtils;
+import net.jforum.util.preferences.SystemGlobals;
+
 import org.apache.log4j.Logger;
 
 /**
  * Mysq 3.23 hacks based on Andy's work
  * 
  * @author Rafael Steil
- * @version $Id: MySQL323GroupSecurityDAO.java,v 1.5 2006/08/20 12:19:06 sergemaslyukov Exp $
+ * @version $Id: MySQL323GroupSecurityDAO.java,v 1.6 2006/08/20 22:47:39 rafaelsteil Exp $
  */
 public class MySQL323GroupSecurityDAO extends GenericGroupSecurityDAO
 {
@@ -91,9 +93,9 @@ public class MySQL323GroupSecurityDAO extends GenericGroupSecurityDAO
         }
         catch (SQLException e)
         {
-            String es = "Erorr deleteAllRoles()";
+            String es = "Error deleteAllRoles()";
             log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new DatabaseException(es, e);
         }
         finally
         {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -61,7 +61,7 @@ import org.apache.log4j.Logger;
  * <i>jforum_users</i>. 
  * 
  * @author Rafael Steil
- * @version $Id: DefaultLoginAuthenticator.java,v 1.7 2006/08/20 12:19:10 sergemaslyukov Exp $
+ * @version $Id: DefaultLoginAuthenticator.java,v 1.8 2006/08/20 22:47:43 rafaelsteil Exp $
  */
 public class DefaultLoginAuthenticator implements LoginAuthenticator
 {
@@ -99,7 +99,7 @@ public class DefaultLoginAuthenticator implements LoginAuthenticator
         }
         catch (SQLException e)
         {
-            String es = "Erorr update()";
+            String es = "Error update()";
             log.error(es, e);
             throw new RuntimeException(es, e);
         }

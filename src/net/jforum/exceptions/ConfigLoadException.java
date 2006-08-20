@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Rafael Steil
+ * Copyright (c) JForum Team
  * 
  * All rights reserved.
  * Redistribution and use in source and binary forms, 
@@ -44,7 +44,7 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: ConfigLoadException.java,v 1.4 2005/07/26 03:04:32 rafaelsteil Exp $
+ * @version $Id: ConfigLoadException.java,v 1.5 2006/08/20 22:47:23 rafaelsteil Exp $
  */
 public class ConfigLoadException extends RuntimeException
 {
