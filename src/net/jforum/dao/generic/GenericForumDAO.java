@@ -68,7 +68,7 @@ import org.apache.log4j.Logger;
  * @author Vanessa Sabino
  * @author socialnetwork@gmail.com, adding "watch forum" methods.
  * 
- * @version $Id: GenericForumDAO.java,v 1.23 2006/08/20 12:19:03 sergemaslyukov Exp $
+ * @version $Id: GenericForumDAO.java,v 1.24 2006/08/20 17:11:13 sergemaslyukov Exp $
  */
 public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO 
 {
@@ -764,43 +764,49 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
             s=null;
 
             // Posts per day
+            double postPerDay=0;
+            // Topics per day
+            double topicPerDay=0;
+            //user per day
+            double userPerDay=0;
+
             s = c.createStatement();
             rs = s.executeQuery(SystemGlobals.getSql("ForumModel.statsFirstPostTime"));
-            rs.next();
-            Date firstTime = new Date(rs.getTimestamp(1).getTime());
-            rs.close();
-            rs=null;
-            s.close();
-            s=null;
+            if (rs.next()) {
 
-            Date today = new Date();
+                Date firstTime = new Date(rs.getTimestamp(1).getTime());
+                rs.close();
+                rs=null;
+                s.close();
+                s=null;
 
-            double perDay = firstTime != null ? fs.getPosts() / this.daysUntilToday(today, firstTime) : 0;
+                Date today = new Date();
 
-            if (fs.getPosts() > 0 && perDay < 1) {
-                perDay = 1;
+                postPerDay = firstTime != null ? fs.getPosts() / this.daysUntilToday(today, firstTime) : 0;
+
+                if (fs.getPosts() > 0 && postPerDay < 1) {
+                    postPerDay = 1;
+                }
+
+                topicPerDay = firstTime != null ? fs.getTopics() / this.daysUntilToday(today, firstTime) : 0;
+
+
+                // Users per day
+                s = c.createStatement();
+                rs = s.executeQuery(SystemGlobals.getSql("ForumModel.statsFirstRegisteredUserTime"));
+                rs.next();
+                firstTime = new Date(rs.getTimestamp(1).getTime());
+                rs.close();
+                rs=null;
+                s.close();
+                s=null;
+
+                userPerDay = fs.getUsers() / this.daysUntilToday(today, firstTime);
             }
 
-            fs.setPostsPerDay(perDay);
-
-            // Topics per day
-            perDay = firstTime != null ? fs.getTopics() / this.daysUntilToday(today, firstTime) : 0;
-
-            fs.setTopicsPerDay(perDay);
-
-            // Users per day
-            s = c.createStatement();
-            rs = s.executeQuery(SystemGlobals.getSql("ForumModel.statsFirstRegisteredUserTime"));
-            rs.next();
-            firstTime = new Date(rs.getTimestamp(1).getTime());
-            rs.close();
-            rs=null;
-            s.close();
-            s=null;
-
-            perDay = fs.getUsers() / this.daysUntilToday(today, firstTime);
-
-            fs.setUsersPerDay(perDay);
+            fs.setPostsPerDay(postPerDay);
+            fs.setTopicsPerDay(topicPerDay);
+            fs.setUsersPerDay(userPerDay);
 
             return fs;
         }
