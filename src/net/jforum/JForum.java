@@ -76,7 +76,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.95 2006/08/20 15:30:25 sergemaslyukov Exp $
+ * @version $Id: JForum.java,v 1.96 2006/08/20 15:42:09 sergemaslyukov Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
@@ -144,8 +144,13 @@ public class JForum extends JForumBaseServlet
 			ex.setResponse(response);
 
 			if (!isDatabaseUp) {
-				ForumStartup.startDatabase();
-			}
+                synchronized (this)
+                {
+                    if (!isDatabaseUp) {
+                        isDatabaseUp = ForumStartup.startDatabase();
+                    }
+                }
+            }
 			
 			JForumExecutionContext.set(ex);
 			
