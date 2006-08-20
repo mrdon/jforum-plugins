@@ -46,7 +46,7 @@ import java.util.Collection;
 
 /**
  * @author Rafael Steil
- * @version $Id: CacheEngine.java,v 1.9 2005/09/25 02:40:28 rafaelsteil Exp $
+ * @version $Id: CacheEngine.java,v 1.10 2006/08/20 15:42:37 sergemaslyukov Exp $
  */
 public interface CacheEngine
 {
@@ -94,7 +94,7 @@ public interface CacheEngine
 	/**
 	 * Gets some object from the cache.
 	 * 
-	 * @param key The fqn tree to get
+	 * @param fqn The fqn tree to get
 	 * @return The cached object, or <code>null</code> if no entry was found
 	 */
 	public Object get(String fqn);
@@ -102,8 +102,8 @@ public interface CacheEngine
 	/**
 	 * Gets all values from some given FQN.
 	 * 
-	 * @param fqn
-	 * @return
+	 * @param fqn String
+	 * @return Collection
 	 */
 	public Collection getValues(String fqn);
 	
@@ -117,7 +117,7 @@ public interface CacheEngine
 	
 	/**
 	 * Removes a complete note from the cache
-	 * @param key The fqn to remove
+	 * @param fqn The fqn to remove
 	 */
 	public void remove(String fqn);
 }
