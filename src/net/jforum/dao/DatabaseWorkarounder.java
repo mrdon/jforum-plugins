@@ -60,12 +60,12 @@ import org.apache.log4j.Logger;
  * Try to fix some database configuration problems.
  * This class will much likely do some checks only for mysql.
  * @author Rafael Steil
- * @version $Id: DatabaseWorkarounder.java,v 1.6 2006/08/21 19:39:49 sergemaslyukov Exp $
+ * @version $Id: DatabaseWorkarounder.java,v 1.7 2006/08/21 22:47:55 rafaelsteil Exp $
  */
 public class DatabaseWorkarounder
 {
 	private static Logger logger = Logger.getLogger(DatabaseWorkarounder.class);
-    private static final String MY_SQL323_DATA_ACCESS_DRIVER = net.jforum.dao.mysql.MySQL323DataAccessDriver.class.getName();
+    private static final String MYSQL_323_DATA_ACCESS_DRIVER = net.jforum.dao.mysql.MySQL323DataAccessDriver.class.getName();
     private static final String MYSQL_DATA_ACCESS_DRIVER = net.jforum.dao.mysql.MysqlDataAccessDriver.class.getName();
 
     public void handleWorkarounds(Connection c)
@@ -103,7 +103,7 @@ public class DatabaseWorkarounder
 	
 	private void handleMySql323() throws Exception
 	{
-		this.ensureDaoClassIsCorrect(MY_SQL323_DATA_ACCESS_DRIVER);
+		this.ensureDaoClassIsCorrect(MYSQL_323_DATA_ACCESS_DRIVER);
 		
 		Properties p = this.loadSqlQueries();
 		

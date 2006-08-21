@@ -82,7 +82,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.53 2006/08/21 19:39:50 sergemaslyukov Exp $
+ * @version $Id: InstallAction.java,v 1.54 2006/08/21 22:47:55 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -90,7 +90,7 @@ public class InstallAction extends Command
 
     private static final String POOLED_CONNECTION = net.jforum.core.db.PooledConnection.class.getName();
     private static final String SIMPLE_CONNECTION = net.jforum.core.db.SimpleConnection.class.getName();
-    private static final String DATA_SOURCE_CONNECTION = net.jforum.core.db.DataSourceConnection.class.getName();
+    private static final String DATASOURCE_CONNECTION = net.jforum.core.db.DataSourceConnection.class.getName();
 
     public void welcome()
 	{
@@ -587,7 +587,7 @@ public class InstallAction extends Command
 		}
 		else {
 			isDs = true;
-			implementation = DATA_SOURCE_CONNECTION;
+			implementation = DATASOURCE_CONNECTION;
 			SystemGlobals.setValue(ConfigKeys.DATABASE_DATASOURCE_NAME, this.getFromSession("dbdatasource"));
 		}
 		
