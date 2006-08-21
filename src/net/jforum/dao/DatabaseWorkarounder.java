@@ -60,13 +60,15 @@ import org.apache.log4j.Logger;
  * Try to fix some database configuration problems.
  * This class will much likely do some checks only for mysql.
  * @author Rafael Steil
- * @version $Id: DatabaseWorkarounder.java,v 1.5 2006/08/20 22:47:23 rafaelsteil Exp $
+ * @version $Id: DatabaseWorkarounder.java,v 1.6 2006/08/21 19:39:49 sergemaslyukov Exp $
  */
 public class DatabaseWorkarounder
 {
 	private static Logger logger = Logger.getLogger(DatabaseWorkarounder.class);
-	
-	public void handleWorkarounds(Connection c)
+    private static final String MY_SQL323_DATA_ACCESS_DRIVER = net.jforum.dao.mysql.MySQL323DataAccessDriver.class.getName();
+    private static final String MYSQL_DATA_ACCESS_DRIVER = net.jforum.dao.mysql.MysqlDataAccessDriver.class.getName();
+
+    public void handleWorkarounds(Connection c)
 	{
 		if (c == null) {
 			logger.warn("Cannot work with a null connection");
@@ -101,7 +103,7 @@ public class DatabaseWorkarounder
 	
 	private void handleMySql323() throws Exception
 	{
-		this.ensureDaoClassIsCorrect("net.jforum.dao.mysql.MySQL323DataAccessDriver");
+		this.ensureDaoClassIsCorrect(MY_SQL323_DATA_ACCESS_DRIVER);
 		
 		Properties p = this.loadSqlQueries();
 		
@@ -124,7 +126,7 @@ public class DatabaseWorkarounder
 	
 	private void handleMySql40x() throws Exception
 	{
-		this.ensureDaoClassIsCorrect("net.jforum.dao.mysql.MysqlDataAccessDriver");
+		this.ensureDaoClassIsCorrect(MYSQL_DATA_ACCESS_DRIVER);
 		
 		Properties p = this.loadSqlQueries();
 		
@@ -147,7 +149,7 @@ public class DatabaseWorkarounder
 	
 	private void handleMySql41xPlus() throws Exception
 	{
-		this.ensureDaoClassIsCorrect("net.jforum.dao.mysql.MysqlDataAccessDriver");
+		this.ensureDaoClassIsCorrect(MYSQL_DATA_ACCESS_DRIVER);
 		
 		Properties p = this.loadSqlQueries();
 		

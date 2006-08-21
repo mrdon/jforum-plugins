@@ -82,13 +82,17 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.52 2006/08/20 22:47:53 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.53 2006/08/21 19:39:50 sergemaslyukov Exp $
  */
 public class InstallAction extends Command
 {
 	private static Logger logger = Logger.getLogger(InstallAction.class);
-	
-	public void welcome()
+
+    private static final String POOLED_CONNECTION = net.jforum.core.db.PooledConnection.class.getName();
+    private static final String SIMPLE_CONNECTION = net.jforum.core.db.SimpleConnection.class.getName();
+    private static final String DATA_SOURCE_CONNECTION = net.jforum.core.db.DataSourceConnection.class.getName();
+
+    public void welcome()
 	{
 		this.checkLanguage();
 		
@@ -576,14 +580,14 @@ public class InstallAction extends Command
 		
 		if ("JDBC".equals(connectionType)) {
 			implementation = "yes".equals(this.getFromSession("usePool")) && !"hsqldb".equals(database) 
-				? "net.jforum.PooledConnection"
-				: "net.jforum.SimpleConnection";
+				? POOLED_CONNECTION
+                : SIMPLE_CONNECTION;
 			
 			this.configureJDBCConnection();
 		}
 		else {
 			isDs = true;
-			implementation = "net.jforum.DataSourceConnection";
+			implementation = DATA_SOURCE_CONNECTION;
 			SystemGlobals.setValue(ConfigKeys.DATABASE_DATASOURCE_NAME, this.getFromSession("dbdatasource"));
 		}
 		
