@@ -36,7 +36,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Jan 24, 2005 6:29:32 PM
+ * Created on 21/08/2006 22:49:58
  * The JForum Project
  * http://www.jforum.net
  */
@@ -44,12 +44,13 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: BadExtensionException.java,v 1.4 2006/08/22 02:05:23 rafaelsteil Exp $
+ * @version $Id: MailException.java,v 1.2 2006/08/22 02:05:23 rafaelsteil Exp $
  */
-public class BadExtensionException extends AttachmentException
+public class MailException extends RuntimeException
 {
-	public BadExtensionException(String message) 
+	public MailException(Throwable t)
 	{
-		super(message);
+		super(t);
+		this.setStackTrace(t.getStackTrace());
 	}
 }

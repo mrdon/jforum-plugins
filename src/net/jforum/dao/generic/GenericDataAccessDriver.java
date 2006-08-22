@@ -50,6 +50,7 @@ import net.jforum.dao.ConfigDAO;
 import net.jforum.dao.ForumDAO;
 import net.jforum.dao.GroupDAO;
 import net.jforum.dao.KarmaDAO;
+import net.jforum.dao.MailIntegrationDAO;
 import net.jforum.dao.ModerationDAO;
 import net.jforum.dao.PollDAO;
 import net.jforum.dao.PostDAO;
@@ -68,7 +69,7 @@ import net.jforum.dao.security.GroupSecurityDAO;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericDataAccessDriver.java,v 1.5 2006/08/20 22:47:27 rafaelsteil Exp $
+ * @version $Id: GenericDataAccessDriver.java,v 1.6 2006/08/22 02:05:26 rafaelsteil Exp $
  */
 public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver 
 {
@@ -284,5 +285,13 @@ public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver
     public SummaryDAO newSummaryDAO()
     {
         return summaryDao;
+    }
+    
+    /**
+     * @see net.jforum.dao.DataAccessDriver#newMailIntegrationDAO()
+     */
+    public MailIntegrationDAO newMailIntegrationDAO()
+    {
+    	return null;
     }
 }
