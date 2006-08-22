@@ -75,7 +75,7 @@ import org.apache.log4j.Logger;
  * @author Vanessa Sabino
  * @author socialnetwork@gmail.com, adding "watch forum" methods.
  * 
- * @version $Id: GenericForumDAO.java,v 1.25 2006/08/20 22:47:27 rafaelsteil Exp $
+ * @version $Id: GenericForumDAO.java,v 1.26 2006/08/22 18:33:24 sergemaslyukov Exp $
  */
 public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO 
 {
@@ -781,7 +781,10 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
             rs = s.executeQuery(SystemGlobals.getSql("ForumModel.statsFirstPostTime"));
             if (rs.next()) {
 
-                Date firstTime = new Date(rs.getTimestamp(1).getTime());
+                Timestamp firstTime = rs.getTimestamp(1);
+                if (rs.wasNull()) {
+                    firstTime = null;
+                }
                 rs.close();
                 rs=null;
                 s.close();
@@ -801,14 +804,18 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
                 // Users per day
                 s = c.createStatement();
                 rs = s.executeQuery(SystemGlobals.getSql("ForumModel.statsFirstRegisteredUserTime"));
-                rs.next();
-                firstTime = new Date(rs.getTimestamp(1).getTime());
+                if (rs.next()) {
+                    firstTime = rs.getTimestamp(1);
+                    if (rs.wasNull()) {
+                        firstTime = null;
+                    }
+                }
                 rs.close();
                 rs=null;
                 s.close();
                 s=null;
 
-                userPerDay = fs.getUsers() / this.daysUntilToday(today, firstTime);
+                userPerDay = firstTime != null ? fs.getUsers() / this.daysUntilToday(today, firstTime) : 0;
             }
 
             fs.setPostsPerDay(postPerDay);
