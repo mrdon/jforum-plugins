@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -51,7 +51,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: MostUsersEverOnline.java,v 1.4 2005/07/26 03:04:50 rafaelsteil Exp $
+ * @version $Id: MostUsersEverOnline.java,v 1.5 2006/08/23 02:13:46 rafaelsteil Exp $
  */
 public class MostUsersEverOnline implements Serializable
 {

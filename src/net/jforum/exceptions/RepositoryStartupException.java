@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -44,7 +44,7 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: RepositoryStartupException.java,v 1.4 2006/01/31 14:57:33 rafaelsteil Exp $
+ * @version $Id: RepositoryStartupException.java,v 1.5 2006/08/23 02:13:37 rafaelsteil Exp $
  */
 public class RepositoryStartupException extends RuntimeException {
 	public RepositoryStartupException(String message) {

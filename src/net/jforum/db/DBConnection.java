@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -40,7 +40,7 @@
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.core.db;
+package net.jforum.db;
 
 import java.sql.Connection;
 
@@ -57,7 +57,7 @@ import org.apache.log4j.Logger;
  * which opens a new connection on every request.  
  * 
  * @author Rafael Steil
- * @version $Id: DBConnection.java,v 1.1 2006/08/20 22:47:33 rafaelsteil Exp $
+ * @version $Id: DBConnection.java,v 1.1 2006/08/23 02:13:45 rafaelsteil Exp $
  */
 public abstract class DBConnection 
 {

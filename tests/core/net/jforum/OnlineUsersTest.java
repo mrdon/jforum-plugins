@@ -5,7 +5,7 @@ package net.jforum;
 
 import junit.framework.TestCase;
 import net.jforum.cache.DefaultCacheEngine;
-import net.jforum.core.context.web.WebRequestContext;
+import net.jforum.context.web.WebRequestContext;
 import net.jforum.entities.UserSession;
 import net.jforum.http.FakeHttpRequest;
 import net.jforum.util.preferences.ConfigKeys;
@@ -15,7 +15,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * Test {@link net.jforum.SessionFacade} methods for online users
  * 
  * @author Rafael Steil
- * @version $Id: OnlineUsersTest.java,v 1.7 2006/08/20 22:47:36 rafaelsteil Exp $
+ * @version $Id: OnlineUsersTest.java,v 1.8 2006/08/23 02:13:52 rafaelsteil Exp $
  */
 public class OnlineUsersTest extends TestCase
 {

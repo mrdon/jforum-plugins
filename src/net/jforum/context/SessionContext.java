@@ -13,7 +13,7 @@
  * above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
- * 3) Neither the name of "Rafael Steil" nor
+ * 3) Neither the name of "Rafael Steil" nor                       
  * the names of its contributors may be used to endorse
  * or promote products derived from this software without
  * specific prior written permission.
@@ -38,56 +38,27 @@
  *
  * The JForum Project
  * http://www.jforum.net
- * 20.08.2006 18:42:11 
+ * 20.08.2006 18:38:59
  */
-package net.jforum.core.context.web;
-
-import javax.servlet.http.HttpSession;
-
-import net.jforum.core.context.SessionContext;
+package net.jforum.context;
 
 import java.util.Enumeration;
 
 /**
- * @author: SergeMaslyukov 
- * @version $Id: WebSessionContext.java,v 1.1 2006/08/20 22:47:34 rafaelsteil Exp $
+ * @author SergeMaslyukov 
+ * @version $Id: SessionContext.java,v 1.1 2006/08/23 02:13:47 rafaelsteil Exp $
  */
-public class WebSessionContext implements SessionContext
+public interface SessionContext
 {
-	private HttpSession httpSession = null;
+	void setAttribute(String name, Object value);
 
-	public WebSessionContext(HttpSession httpSession)
-	{
-		this.httpSession = httpSession;
-	}
+	void removeAttribute(String name);
 
-	public void setAttribute(String name, Object value)
-	{
-		httpSession.setAttribute(name, value);
-	}
+	Object getAttribute(String name);
 
-	public void removeAttribute(String name)
-	{
-		httpSession.removeAttribute(name);
-	}
+	String getId();
 
-	public Object getAttribute(String name)
-	{
-		return httpSession.getAttribute(name);
-	}
+	Enumeration getAttributeNames();
 
-	public String getId()
-	{
-		return httpSession.getId();
-	}
-
-	public Enumeration getAttributeNames()
-	{
-		return httpSession.getAttributeNames();
-	}
-
-	public void invalidate()
-	{
-		httpSession.invalidate();
-	}
+	void invalidate();
 }

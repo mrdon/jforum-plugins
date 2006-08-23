@@ -41,7 +41,7 @@
  * http://www.jforum.net
  */
 
-package net.jforum.core.db;
+package net.jforum.db;
 
 
 /**
@@ -49,6 +49,6 @@ package net.jforum.core.db;
  * It just extends {@link C3P0PooledConnection}
  * 
  * @author Rafael Steil
- * @version $Id: PooledConnection.java,v 1.1 2006/08/20 22:47:33 rafaelsteil Exp $
+ * @version $Id: PooledConnection.java,v 1.1 2006/08/23 02:13:45 rafaelsteil Exp $
  */
 public class PooledConnection extends C3P0PooledConnection {}

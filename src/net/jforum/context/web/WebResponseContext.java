@@ -40,20 +40,20 @@
  * http://www.jforum.net
  * 20.08.2006 18:52:22
  */
-package net.jforum.core.context.web;
+package net.jforum.context.web;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.ServletOutputStream;
 
-import net.jforum.core.context.ResponseContext;
+import net.jforum.context.ResponseContext;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
  * @author SergeMaslyukov
- * @version $Id: WebResponseContext.java,v 1.1 2006/08/20 22:47:34 rafaelsteil Exp $
+ * @version $Id: WebResponseContext.java,v 1.1 2006/08/23 02:13:58 rafaelsteil Exp $
  */
 public class WebResponseContext implements ResponseContext
 {

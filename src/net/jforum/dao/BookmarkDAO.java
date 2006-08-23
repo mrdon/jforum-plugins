@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -47,7 +47,7 @@ import net.jforum.entities.Bookmark;
 
 /**
  * @author Rafael Steil
- * @version $Id: BookmarkDAO.java,v 1.5 2006/08/20 12:19:00 sergemaslyukov Exp $
+ * @version $Id: BookmarkDAO.java,v 1.6 2006/08/23 02:13:35 rafaelsteil Exp $
  */
 public interface BookmarkDAO
 {

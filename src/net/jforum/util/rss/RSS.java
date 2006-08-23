@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -49,7 +49,7 @@ import java.util.List;
  * Represents a RSS document
  * 
  * @author Rafael Steil
- * @version $Id: RSS.java,v 1.3 2005/07/26 03:04:37 rafaelsteil Exp $
+ * @version $Id: RSS.java,v 1.4 2006/08/23 02:13:38 rafaelsteil Exp $
  */
 public class RSS 
 {

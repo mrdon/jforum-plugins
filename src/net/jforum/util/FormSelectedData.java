@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
 
  * Redistribution and use in source and binary forms, 
@@ -41,7 +41,7 @@
  * The JForum project
  * http://www.jforum.net
  * 
- * $Id: FormSelectedData.java,v 1.4 2005/07/26 03:05:26 rafaelsteil Exp $
+ * $Id: FormSelectedData.java,v 1.5 2006/08/23 02:13:44 rafaelsteil Exp $
  */
 package net.jforum.util;
 

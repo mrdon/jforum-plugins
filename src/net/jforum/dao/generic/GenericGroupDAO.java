@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -54,100 +54,87 @@ import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.SystemGlobals;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author Rafael Steil
- * @version $Id: GenericGroupDAO.java,v 1.6 2006/08/20 22:47:28 rafaelsteil Exp $
+ * @version $Id: GenericGroupDAO.java,v 1.7 2006/08/23 02:13:43 rafaelsteil Exp $
  */
-public class GenericGroupDAO implements net.jforum.dao.GroupDAO 
+public class GenericGroupDAO implements net.jforum.dao.GroupDAO
 {
-    private final static Logger log = Logger.getLogger(GenericGroupDAO.class);
-
 	/**
 	 * @see net.jforum.dao.GroupDAO#selectById(int)
 	 */
-	public Group selectById(int groupId) 
+	public Group selectById(int groupId)
 	{
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("GroupModel.selectById"));
-            p.setInt(1, groupId);
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("GroupModel.selectById"));
+			p.setInt(1, groupId);
 
-            rs = p.executeQuery();
+			rs = p.executeQuery();
 
-            Group g = new Group();
+			Group g = new Group();
 
-            if (rs.next()) {
-                g = this.getGroup(rs);
-            }
+			if (rs.next()) {
+				g = this.getGroup(rs);
+			}
 
-            return g;
-        }
-        catch (SQLException e) {
-            String es = "Error selectById()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
-        }
-        finally {
-            DbUtils.close(rs, p);
-        }
-    }
+			return g;
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
 
 	/**
 	 * @see net.jforum.dao.GroupDAO#canDelete(int)
 	 */
 	public boolean canDelete(int groupId)
 	{
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("GroupModel.canDelete"));
-            p.setInt(1, groupId);
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("GroupModel.canDelete"));
+			p.setInt(1, groupId);
 
-            boolean status = false;
+			boolean status = false;
 
-            rs = p.executeQuery();
-            if (!rs.next() || rs.getInt("total") < 1) {
-                status = true;
-            }
+			rs = p.executeQuery();
+			if (!rs.next() || rs.getInt("total") < 1) {
+				status = true;
+			}
 
-            return status;
-        }
-        catch (SQLException e) {
-            String es = "Error canDelete()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
-        }
-        finally {
-            DbUtils.close(rs, p);
-        }
-    }
+			return status;
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
 
 	/**
 	 * @see net.jforum.dao.GroupDAO#delete(int)
 	 */
 	public void delete(int groupId)
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("GroupModel.delete"));
-            p.setInt(1, groupId);
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("GroupModel.delete"));
+			p.setInt(1, groupId);
 
-            p.executeUpdate();
-        }
-        catch (SQLException e) {
-            String es = "Error delete()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
-        }
-        finally {
-            DbUtils.close( p);
-        }
+			p.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
 	}
 
 	/**
@@ -155,128 +142,116 @@ public class GenericGroupDAO implements net.jforum.dao.GroupDAO
 	 */
 	public void update(Group group)
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("GroupModel.update"));
-            p.setString(1, group.getName());
-            p.setInt(2, group.getParentId());
-            p.setString(3, group.getDescription());
-            p.setInt(4, group.getId());
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("GroupModel.update"));
+			p.setString(1, group.getName());
+			p.setInt(2, group.getParentId());
+			p.setString(3, group.getDescription());
+			p.setInt(4, group.getId());
 
-            p.executeUpdate();
-        }
-        catch (SQLException e) {
-            String es = "Error update()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
-        }
-        finally {
-            DbUtils.close(p);
-        }
-    }
+			p.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
 
 	/**
 	 * @see net.jforum.dao.GroupDAO#addNew(net.jforum.entities.Group)
 	 */
 	public void addNew(Group group)
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("GroupModel.addNew"));
-            p.setString(1, group.getName());
-            p.setString(2, group.getDescription());
-            p.setInt(3, group.getParentId());
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("GroupModel.addNew"));
+			p.setString(1, group.getName());
+			p.setString(2, group.getDescription());
+			p.setInt(3, group.getParentId());
 
-            p.executeUpdate();
-        }
-        catch (SQLException e) {
-            String es = "Error selectActiveBannerByPlacement()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
-        }
-        finally {
-            DbUtils.close(p);
-        }
+			p.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.GroupDAO#selectUsersIds(int)
 	 */
 	public List selectUsersIds(int groupId)
 	{
 		ArrayList l = new ArrayList();
-		
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("GroupModel.selectUsersIds"));
-            p.setInt(1, groupId);
 
-            rs = p.executeQuery();
-            while (rs.next()) {
-                l.add(new Integer(rs.getInt("user_id")));
-            }
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("GroupModel.selectUsersIds"));
+			p.setInt(1, groupId);
 
-            return l;
-        }
-        catch (SQLException e) {
-            String es = "Error selectUsersIds()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
-        }
-        finally {
-            DbUtils.close(rs, p);
-        }
-    }
-	
+			rs = p.executeQuery();
+			while (rs.next()) {
+				l.add(new Integer(rs.getInt("user_id")));
+			}
+
+			return l;
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
+
 	protected List fillGroups(ResultSet rs) throws SQLException
 	{
 		List l = new ArrayList();
-		
+
 		while (rs.next()) {
 			l.add(this.getGroup(rs));
 		}
-		
+
 		return l;
 	}
-	
+
 	protected Group getGroup(ResultSet rs) throws SQLException
 	{
 		Group g = new Group();
-		
+
 		g.setId(rs.getInt("group_id"));
 		g.setDescription(rs.getString("group_description"));
 		g.setName(rs.getString("group_name"));
 		g.setParentId(rs.getInt("parent_id"));
-		
+
 		return g;
 	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.GroupDAO#selectAll()
 	 */
 	public List selectAll()
 	{
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("GroupModel.selectAll"));
-            rs = p.executeQuery();
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("GroupModel.selectAll"));
+			rs = p.executeQuery();
 
-            return this.fillGroups(rs);
-        }
-        catch (SQLException e) {
-            String es = "Error selectAll()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
-        }
-        finally {
-            DbUtils.close(rs, p);
-        }
-    }
-
+			return this.fillGroups(rs);
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
 }

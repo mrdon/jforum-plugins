@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -43,8 +43,8 @@
 package net.jforum.view.forum;
 
 import net.jforum.*;
-import net.jforum.core.context.RequestContext;
-import net.jforum.core.context.ResponseContext;
+import net.jforum.context.RequestContext;
+import net.jforum.context.ResponseContext;
 import net.jforum.dao.BookmarkDAO;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.entities.Bookmark;
@@ -65,7 +65,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Rafael Steil
- * @version $Id: BookmarkAction.java,v 1.16 2006/08/20 22:47:39 rafaelsteil Exp $
+ * @version $Id: BookmarkAction.java,v 1.17 2006/08/23 02:13:53 rafaelsteil Exp $
  */
 public class BookmarkAction extends Command
 {
@@ -276,7 +276,7 @@ public class BookmarkAction extends Command
 	}
 	
 	/**
-	 * @see net.jforum.Command#process(net.jforum.core.context.RequestContext, net.jforum.core.context.ResponseContext, freemarker.template.SimpleHash) 
+	 * @see net.jforum.Command#process(net.jforum.context.RequestContext, net.jforum.context.ResponseContext, freemarker.template.SimpleHash) 
 	 */
 	public Template process(RequestContext request, ResponseContext response, SimpleHash context)
 	{

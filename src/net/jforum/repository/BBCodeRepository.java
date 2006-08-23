@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -49,7 +49,7 @@ import net.jforum.util.bbcode.BBCodeHandler;
 
 /**
  * @author Rafael Steil
- * @version $Id: BBCodeRepository.java,v 1.7 2005/07/26 03:04:55 rafaelsteil Exp $
+ * @version $Id: BBCodeRepository.java,v 1.8 2006/08/23 02:13:48 rafaelsteil Exp $
  */
 public class BBCodeRepository implements Cacheable
 {

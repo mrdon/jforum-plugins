@@ -51,11 +51,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.jforum.core.context.JForumContext;
-import net.jforum.core.context.RequestContext;
-import net.jforum.core.context.ResponseContext;
-import net.jforum.core.context.web.WebRequestContext;
-import net.jforum.core.context.web.WebResponseContext;
+import net.jforum.context.JForumContext;
+import net.jforum.context.RequestContext;
+import net.jforum.context.ResponseContext;
+import net.jforum.context.web.WebRequestContext;
+import net.jforum.context.web.WebResponseContext;
 import net.jforum.exceptions.ExceptionWriter;
 import net.jforum.repository.ModulesRepository;
 import net.jforum.util.I18n;
@@ -66,7 +66,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallServlet.java,v 1.25 2006/08/20 22:47:26 rafaelsteil Exp $
+ * @version $Id: InstallServlet.java,v 1.26 2006/08/23 02:13:50 rafaelsteil Exp $
  */
 public class InstallServlet extends JForumBaseServlet
 {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -46,7 +46,7 @@ import java.io.Serializable;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaStatus.java,v 1.7 2005/07/31 03:51:54 rafaelsteil Exp $
+ * @version $Id: KarmaStatus.java,v 1.8 2006/08/23 02:13:46 rafaelsteil Exp $
  */
 public class KarmaStatus implements Serializable
 {

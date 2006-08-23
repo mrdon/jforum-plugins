@@ -44,9 +44,9 @@ package net.jforum.util.search.simple;
 
 import java.sql.Connection;
 
-import net.jforum.core.db.DBConnection;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.SearchIndexerDAO;
+import net.jforum.db.DBConnection;
 import net.jforum.entities.Post;
 import net.jforum.util.concurrent.Task;
 
@@ -54,7 +54,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: MessageIndexerTask.java,v 1.7 2006/08/20 22:47:46 rafaelsteil Exp $
+ * @version $Id: MessageIndexerTask.java,v 1.8 2006/08/23 02:13:57 rafaelsteil Exp $
  */
 public class MessageIndexerTask implements Task
 {

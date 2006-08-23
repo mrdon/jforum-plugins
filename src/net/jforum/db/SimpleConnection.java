@@ -40,7 +40,7 @@
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.core.db;
+package net.jforum.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -58,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * a connection pool.
  * 
  * @author Rafael Steil
- * @version $Id: SimpleConnection.java,v 1.1 2006/08/20 22:47:32 rafaelsteil Exp $
+ * @version $Id: SimpleConnection.java,v 1.1 2006/08/23 02:13:44 rafaelsteil Exp $
  */
 public class SimpleConnection extends DBConnection 
 {
@@ -115,7 +115,7 @@ public class SimpleConnection extends DBConnection
 	}
 	
 	/** 
-	 * @see net.jforum.core.db.DBConnection#realReleaseAllConnections()
+	 * @see net.jforum.db.DBConnection#realReleaseAllConnections()
 	 */
 	public void realReleaseAllConnections() throws Exception {}
 }

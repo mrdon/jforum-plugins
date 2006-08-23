@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms,
@@ -48,7 +48,7 @@ import java.io.Serializable;
  * Represents a banner in the System.
  *
  * @author Samuel Yung
- * @version $Id: Banner.java,v 1.3 2005/07/26 03:04:52 rafaelsteil Exp $
+ * @version $Id: Banner.java,v 1.4 2006/08/23 02:13:46 rafaelsteil Exp $
  */
 public class Banner implements Serializable
 {

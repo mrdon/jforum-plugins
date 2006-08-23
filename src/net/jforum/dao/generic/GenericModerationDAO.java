@@ -61,16 +61,12 @@ import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.SystemGlobals;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author Rafael Steil
- * @version $Id: GenericModerationDAO.java,v 1.7 2006/08/20 22:47:27 rafaelsteil Exp $
+ * @version $Id: GenericModerationDAO.java,v 1.8 2006/08/23 02:13:42 rafaelsteil Exp $
  */
 public class GenericModerationDAO implements ModerationDAO
 {
-    private final static Logger log = Logger.getLogger(GenericModerationDAO.class);
-    
     /**
 	 * @see net.jforum.dao.ModerationDAO#aprovePost(int)
 	 */
@@ -86,9 +82,7 @@ public class GenericModerationDAO implements ModerationDAO
             p.executeUpdate();
         }
         catch (SQLException e) {
-            String es = "Error selectActiveBannerByPlacement()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
+            throw new DatabaseException(e);
         }
         finally {
             DbUtils.close(p);
@@ -139,9 +133,7 @@ public class GenericModerationDAO implements ModerationDAO
             return m;
         }
         catch (SQLException e) {
-            String es = "Error topicsByForum()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
+            throw new DatabaseException(e);
         }
         finally {
             DbUtils.close(rs, p);
@@ -208,9 +200,7 @@ public class GenericModerationDAO implements ModerationDAO
             return l;
         }
         catch (SQLException e) {
-            String es = "Error categoryPendingModeration()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
+            throw new DatabaseException(e);
         }
         finally {
             DbUtils.close(rs, s);

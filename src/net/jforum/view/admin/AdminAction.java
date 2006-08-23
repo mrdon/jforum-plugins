@@ -52,8 +52,8 @@ import java.net.URLConnection;
 import net.jforum.Command;
 import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
-import net.jforum.core.context.RequestContext;
-import net.jforum.core.context.ResponseContext;
+import net.jforum.context.RequestContext;
+import net.jforum.context.ResponseContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
 import net.jforum.entities.UserSession;
@@ -69,7 +69,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: AdminAction.java,v 1.18 2006/08/20 22:47:45 rafaelsteil Exp $
+ * @version $Id: AdminAction.java,v 1.19 2006/08/23 02:13:36 rafaelsteil Exp $
  */
 public class AdminAction extends Command {
 

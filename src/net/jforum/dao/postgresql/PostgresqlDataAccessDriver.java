@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -44,7 +44,7 @@ package net.jforum.dao.postgresql;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostgresqlDataAccessDriver.java,v 1.7 2005/10/02 19:06:43 rafaelsteil Exp $
+ * @version $Id: PostgresqlDataAccessDriver.java,v 1.8 2006/08/23 02:13:51 rafaelsteil Exp $
  */
 public class PostgresqlDataAccessDriver extends net.jforum.dao.generic.GenericDataAccessDriver
 {

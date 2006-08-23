@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -48,7 +48,7 @@ import java.io.Serializable;
  * Represents each bbcode.
  * 
  * @author Rafael Steil
- * @version $Id: BBCode.java,v 1.10 2005/07/26 03:05:27 rafaelsteil Exp $
+ * @version $Id: BBCode.java,v 1.11 2006/08/23 02:13:55 rafaelsteil Exp $
  */
 public class BBCode implements Serializable
 {

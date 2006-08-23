@@ -62,16 +62,12 @@ import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author Rafael Steil
- * @version $Id: GenericUserDAO.java,v 1.21 2006/08/20 22:47:28 rafaelsteil Exp $
+ * @version $Id: GenericUserDAO.java,v 1.22 2006/08/23 02:13:42 rafaelsteil Exp $
  */
 public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 {
-	private final static Logger log = Logger.getLogger(GenericUserDAO.class);
-
 	private static LoginAuthenticator loginAuthenticator;
 
 	public GenericUserDAO()
@@ -84,7 +80,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 		}
 		catch (Exception e) {
 			throw new DatabaseException("Error while trying to instantiate a " + "login.authenticator instance ("
-					+ className + "): " + e);
+				+ className + "): " + e);
 		}
 	}
 
@@ -96,6 +92,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 		String q = SystemGlobals.getSql("UserModel.selectById");
 		PreparedStatement p = null;
 		ResultSet rs = null;
+		
 		try {
 			p = JForumExecutionContext.getConnection().prepareStatement(q);
 			p.setInt(1, userId);
@@ -128,9 +125,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			return u;
 		}
 		catch (SQLException e) {
-			String es = "Error selectById()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(rs, p);
@@ -156,9 +151,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			return u;
 		}
 		catch (SQLException e) {
-			String es = "Error selectByName()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(rs, p);
@@ -223,9 +216,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			p.executeUpdate();
 		}
 		catch (SQLException e) {
-			String es = "Error delete()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(p);
@@ -279,9 +270,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			p.executeUpdate();
 		}
 		catch (SQLException e) {
-			String es = "Error update()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(p);
@@ -308,9 +297,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			return id;
 		}
 		catch (SQLException e) {
-			String es = "Error addNew()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(p);
@@ -343,9 +330,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			this.addToGroup(user.getId(), new int[] { SystemGlobals.getIntValue(ConfigKeys.DEFAULT_USER_GROUP) });
 		}
 		catch (SQLException e) {
-			String es = "Error addNewWithId()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(p);
@@ -366,9 +351,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			p.executeUpdate();
 		}
 		catch (SQLException e) {
-			String es = "Error update()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(p);
@@ -389,9 +372,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			p.executeUpdate();
 		}
 		catch (SQLException e) {
-			String es = "Error incrementPosts()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(p);
@@ -414,9 +395,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			p.executeUpdate();
 		}
 		catch (SQLException e) {
-			String es = "Error setRanking()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(p);
@@ -437,9 +416,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			p.executeUpdate();
 		}
 		catch (SQLException e) {
-			String es = "Error setActive()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(p);
@@ -461,9 +438,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			p.executeUpdate();
 		}
 		catch (SQLException e) {
-			String es = "Error undelete()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(p);
@@ -503,9 +478,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			return this.processSelectAll(rs);
 		}
 		catch (SQLException e) {
-			String es = "Error selectAll()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(rs, p);
@@ -573,9 +546,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			return this.processSelectAll(rs);
 		}
 		catch (SQLException e) {
-			String es = "Error selectAllByGroup()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(rs, p);
@@ -603,9 +574,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			return u;
 		}
 		catch (SQLException e) {
-			String es = "Error getLastUserInfo()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(rs, p);
@@ -624,9 +593,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			return this.getTotalUsersCommon(preparedStatement);
 		}
 		catch (SQLException e) {
-			String es = "Error getTotalUsers()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(preparedStatement);
@@ -647,9 +614,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			return this.getTotalUsersCommon(p);
 		}
 		catch (SQLException e) {
-			String es = "Error getTotalUsersByGroup()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(p);
@@ -690,9 +655,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			return deleted == 1;
 		}
 		catch (SQLException e) {
-			String es = "Error isDeleted()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(rs, p);
@@ -721,9 +684,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			return status;
 		}
 		catch (SQLException e) {
-			String es = "Error isUsernameRegistered()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(rs, p);
@@ -754,9 +715,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			}
 		}
 		catch (SQLException e) {
-			String es = "Error addToGroup()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(p);
@@ -781,9 +740,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			}
 		}
 		catch (SQLException e) {
-			String es = "Error removeFromGroup()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(p);
@@ -804,9 +761,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			p.executeUpdate();
 		}
 		catch (SQLException e) {
-			String es = "Error saveNewPassword()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(p);
@@ -838,9 +793,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			return status;
 		}
 		catch (SQLException e) {
-			String es = "Error validateLostPasswordHash()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(rs, p);
@@ -861,9 +814,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			p.executeUpdate();
 		}
 		catch (SQLException e) {
-			String es = "Error writeLostPasswordHash()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(p);
@@ -892,9 +843,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			return username;
 		}
 		catch (SQLException e) {
-			String es = "Error getUsernameByEmail()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(rs, p);
@@ -928,9 +877,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			return namesList;
 		}
 		catch (SQLException e) {
-			String es = "Error findByName()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(rs, p);
@@ -960,9 +907,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			return status;
 		}
 		catch (SQLException e) {
-			String es = "Error validateActivationKeyHash()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(rs, p);
@@ -982,9 +927,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			p.executeUpdate();
 		}
 		catch (SQLException e) {
-			String es = "Error writeUserActive()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(p);
@@ -1005,9 +948,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			p.executeUpdate();
 		}
 		catch (SQLException e) {
-			String es = "Error updateUsername()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(p);
@@ -1042,9 +983,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			return status;
 		}
 		catch (SQLException e) {
-			String es = "Error hasUsernameChanged()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(rs, p);
@@ -1088,9 +1027,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			p.executeUpdate();
 		}
 		catch (SQLException e) {
-			String es = "Error saveUserAuthHash()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(p);
@@ -1119,9 +1056,7 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 			return hash;
 		}
 		catch (SQLException e) {
-			String es = "Error getUserAuthHash()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(rs, p);

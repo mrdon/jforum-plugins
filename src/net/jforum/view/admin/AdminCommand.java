@@ -43,14 +43,14 @@
 package net.jforum.view.admin;
 
 import net.jforum.Command;
-import net.jforum.core.context.RequestContext;
-import net.jforum.core.context.ResponseContext;
+import net.jforum.context.RequestContext;
+import net.jforum.context.ResponseContext;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: AdminCommand.java,v 1.9 2006/08/20 22:47:45 rafaelsteil Exp $
+ * @version $Id: AdminCommand.java,v 1.10 2006/08/23 02:13:36 rafaelsteil Exp $
  */
 public abstract class AdminCommand extends Command
 {

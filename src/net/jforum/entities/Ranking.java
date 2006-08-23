@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
 
  * Redistribution and use in source and binary forms, 
@@ -50,7 +50,7 @@ import java.io.Serializable;
  * basead on the number of messages posted by them.  
  *  
  * @author Rafael Steil
- * @version $Id: Ranking.java,v 1.6 2005/07/26 03:04:51 rafaelsteil Exp $
+ * @version $Id: Ranking.java,v 1.7 2006/08/23 02:13:47 rafaelsteil Exp $
  */
 public class Ranking implements Serializable
 {

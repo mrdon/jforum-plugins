@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -58,45 +58,41 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerPostDAO.java,v 1.9 2006/08/20 22:47:48 rafaelsteil Exp $
+ * @version $Id: SqlServerPostDAO.java,v 1.10 2006/08/23 02:13:54 rafaelsteil Exp $
  */
 public class SqlServerPostDAO extends net.jforum.dao.generic.GenericPostDAO
 {
-    private final static Logger log = Logger.getLogger(SqlServerPostDAO.class);
-
 	/**
 	 * @see net.jforum.dao.PostDAO#selectById(int)
 	 */
 	public Post selectById(int postId)
 	{
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.selectById"), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            p.setInt(1, postId);
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.selectById"),
+					ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			p.setInt(1, postId);
 
-            rs = p.executeQuery();
+			rs = p.executeQuery();
 
-            Post post = new Post();
+			Post post = new Post();
 
-            if (rs.next()) {
-                post = this.makePost(rs);
-            }
+			if (rs.next()) {
+				post = this.makePost(rs);
+			}
 
-            return post;
-        }
-        catch (SQLException e) {
-            String es = "Error selectById()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
-        }
-        finally {
-            DbUtils.close(rs, p);
-        }
-    }
-	
-	/** 
+			return post;
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
+
+	/**
 	 * @see net.jforum.dao.PostDAO#selectAllByTopicByLimit(int, int, int)
 	 */
 	public List selectAllByTopicByLimit(int topicId, int startFrom, int count)
@@ -104,36 +100,31 @@ public class SqlServerPostDAO extends net.jforum.dao.generic.GenericPostDAO
 		List l = new ArrayList();
 
 		String top = SystemGlobals.getSql("GenericModel.selectByLimit");
-		String sql = top + " " + count + " " + 
-			SystemGlobals.getSql("PostModel.selectAllByTopicByLimit1")  + 
-			" " + top + " " + startFrom + " " + 
-			SystemGlobals.getSql("PostModel.selectAllByTopicByLimit2");
-        
-        PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            Logger.getLogger(this.getClass()).debug(sql);
-            p.setInt(1, topicId);
-            p.setInt(2, topicId);
+		String sql = top + " " + count + " " + SystemGlobals.getSql("PostModel.selectAllByTopicByLimit1") + " " + top
+				+ " " + startFrom + " " + SystemGlobals.getSql("PostModel.selectAllByTopicByLimit2");
 
-            rs = p.executeQuery();
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE,
+					ResultSet.CONCUR_UPDATABLE);
+			Logger.getLogger(this.getClass()).debug(sql);
+			p.setInt(1, topicId);
+			p.setInt(2, topicId);
 
-            while (rs.next()) {
-                l.add(this.makePost(rs));
-            }
+			rs = p.executeQuery();
 
-            return l;
-        }
-        catch (SQLException e) {
-            String es = "Error selectAllByTopicByLimit()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
-        }
-        finally {
-            DbUtils.close(rs, p);
-        }
-    }
-	
+			while (rs.next()) {
+				l.add(this.makePost(rs));
+			}
+
+			return l;
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
 }

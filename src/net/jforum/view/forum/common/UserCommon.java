@@ -49,7 +49,7 @@ import java.util.List;
 
 import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
-import net.jforum.core.context.RequestContext;
+import net.jforum.context.RequestContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.UserDAO;
 import net.jforum.entities.User;
@@ -65,7 +65,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserCommon.java,v 1.19 2006/08/20 22:47:50 rafaelsteil Exp $
+ * @version $Id: UserCommon.java,v 1.20 2006/08/23 02:13:56 rafaelsteil Exp $
  */
 public class UserCommon 
 {

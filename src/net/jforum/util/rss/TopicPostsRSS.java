@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -55,7 +55,7 @@ import net.jforum.view.forum.common.ViewCommon;
  * RSS for the messages of some topic
  * 
  * @author Rafael Steil
- * @version $Id: TopicPostsRSS.java,v 1.9 2005/12/18 01:58:40 rafaelsteil Exp $
+ * @version $Id: TopicPostsRSS.java,v 1.10 2006/08/23 02:13:38 rafaelsteil Exp $
  */
 public class TopicPostsRSS extends GenericRSS 
 {

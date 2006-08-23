@@ -59,39 +59,36 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Dmitriy Kiriy
- * @version $Id: OracleUtils.java,v 1.11 2006/08/20 22:47:32 rafaelsteil Exp $
+ * @version $Id: OracleUtils.java,v 1.12 2006/08/23 02:13:55 rafaelsteil Exp $
  */
 public class OracleUtils
 {
-    private final static Logger log = Logger.getLogger(OracleUtils.class);
+	private final static Logger log = Logger.getLogger(OracleUtils.class);
 
 	public static String readBlobUTF16BinaryStream(ResultSet rs, String fieldName) throws SQLException
 	{
-        try
-        {
-            Blob clob = rs.getBlob(fieldName);
+		try {
+			Blob clob = rs.getBlob(fieldName);
 
-            InputStream is = clob.getBinaryStream();
-            StringBuffer sb = new StringBuffer();
-            int readedBytes;
-            int bufferSize = 4096;
-            do {
-                byte[] bytes = new byte[bufferSize];
-                readedBytes = is.read(bytes);
-                if (readedBytes > 0) {
-                    String readed = new String(bytes, 0, readedBytes, "UTF-16");
-                    sb.append(readed);
-                }
-            } while (readedBytes == bufferSize);
+			InputStream is = clob.getBinaryStream();
+			StringBuffer sb = new StringBuffer();
+			int readedBytes;
+			int bufferSize = 4096;
+			do {
+				byte[] bytes = new byte[bufferSize];
+				readedBytes = is.read(bytes);
+				if (readedBytes > 0) {
+					String readed = new String(bytes, 0, readedBytes, "UTF-16");
+					sb.append(readed);
+				}
+			} while (readedBytes == bufferSize);
 
-            is.close();
-            return sb.toString();
-        }
-        catch (IOException e) {
-            String es = "Error readBlobUTF16BinaryStream()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
-        }
+			is.close();
+			return sb.toString();
+		}
+		catch (IOException e) {
+			throw new DatabaseException(e);
+		}
 
 	}
 
@@ -113,36 +110,33 @@ public class OracleUtils
 	 */
 	public static void writeBlobUTF16BinaryStream(String query, int idForQuery, String value) throws SQLException
 	{
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(query);
-            p.setInt(1, idForQuery);
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(query);
+			p.setInt(1, idForQuery);
 
-            rs = p.executeQuery();
-            rs.next();
-            Blob postText = rs.getBlob(1);
+			rs = p.executeQuery();
+			rs.next();
+			Blob postText = rs.getBlob(1);
 
-            OutputStream blobWriter;
-            if (postText instanceof BLOB) {
-                blobWriter = ((BLOB)postText).getBinaryOutputStream();
-            }
-            else {
-                blobWriter = postText.setBinaryStream(0);
-            }
+			OutputStream blobWriter;
+			if (postText instanceof BLOB) {
+				blobWriter = ((BLOB) postText).getBinaryOutputStream();
+			}
+			else {
+				blobWriter = postText.setBinaryStream(0);
+			}
 
-            blobWriter.write(value.getBytes("UTF-16"));
+			blobWriter.write(value.getBytes("UTF-16"));
 
-            blobWriter.close();
-        }
-        catch (IOException e) {
-            String es = "Error writeBlobUTF16BinaryStream()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
-        }
-        finally {
-            DbUtils.close(rs, p);
-        }
-    }
+			blobWriter.close();
+		}
+		catch (IOException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
 }

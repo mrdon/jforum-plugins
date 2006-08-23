@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -54,82 +54,69 @@ import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.SystemGlobals;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author Rafael Steil
- * @version $Id: GenericConfigDAO.java,v 1.7 2006/08/20 22:47:28 rafaelsteil Exp $
+ * @version $Id: GenericConfigDAO.java,v 1.8 2006/08/23 02:13:42 rafaelsteil Exp $
  */
 public class GenericConfigDAO implements net.jforum.dao.ConfigDAO
 {
-    private final static Logger log = Logger.getLogger(GenericConfigDAO.class);
-
 	/**
 	 * @see net.jforum.dao.ConfigDAO#insert(net.jforum.entities.Config)
 	 */
 	public void insert(Config config)
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ConfigModel.insert"));
-            p.setString(1, config.getName());
-            p.setString(2, config.getValue());
-            p.executeUpdate();
-        }
-        catch (SQLException e) {
-            String es = "Error insert()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
-        }
-        finally {
-            DbUtils.close(p);
-        }
-    }
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ConfigModel.insert"));
+			p.setString(1, config.getName());
+			p.setString(2, config.getValue());
+			p.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
 
 	/**
 	 * @see net.jforum.dao.ConfigDAO#update(net.jforum.entities.Config)
 	 */
 	public void update(Config config)
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ConfigModel.update"));
-            p.setString(1, config.getValue());
-            p.setString(2, config.getName());
-            p.executeUpdate();
-        }
-        catch (SQLException e) {
-            String es = "Error update()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
-        }
-        finally {
-            DbUtils.close(p);
-        }
-    }
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ConfigModel.update"));
+			p.setString(1, config.getValue());
+			p.setString(2, config.getName());
+			p.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
 
 	/**
 	 * @see net.jforum.dao.ConfigDAO#delete(net.jforum.entities.Config)
 	 */
 	public void delete(Config config)
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ConfigModel.delete"));
-            p.setInt(1, config.getId());
-            p.executeUpdate();
-        }
-        catch (SQLException e) {
-            String es = "Error delete()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
-        }
-        finally {
-            DbUtils.close(p);
-        }
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ConfigModel.delete"));
+			p.setInt(1, config.getId());
+			p.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
 	}
 
 	/**
@@ -138,66 +125,61 @@ public class GenericConfigDAO implements net.jforum.dao.ConfigDAO
 	public List selectAll()
 	{
 		List l = new ArrayList();
-		
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ConfigModel.selectAll"));
-            rs = p.executeQuery();
-            while (rs.next()) {
-                l.add(this.makeConfig(rs));
-            }
 
-            return l;
-        }
-        catch (SQLException e) {
-            String es = "Error selectAll()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
-        }
-        finally {
-            DbUtils.close(rs, p);
-        }
-    }
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ConfigModel.selectAll"));
+			rs = p.executeQuery();
+			while (rs.next()) {
+				l.add(this.makeConfig(rs));
+			}
+
+			return l;
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
 
 	/**
 	 * @see net.jforum.dao.ConfigDAO#selectByName(java.lang.String)
 	 */
 	public Config selectByName(String name)
 	{
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ConfigModel.selectByName"));
-            p.setString(1, name);
-            rs = p.executeQuery();
-            Config c = null;
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("ConfigModel.selectByName"));
+			p.setString(1, name);
+			rs = p.executeQuery();
+			Config c = null;
 
-            if (rs.next()) {
-                c = this.makeConfig(rs);
-            }
+			if (rs.next()) {
+				c = this.makeConfig(rs);
+			}
 
-            return c;
-        }
-        catch (SQLException e) {
-            String es = "Error selectByName()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
-        }
-        finally {
-            DbUtils.close(rs, p);
-        }
-    }
-	
+			return c;
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
+
 	protected Config makeConfig(ResultSet rs) throws SQLException
 	{
 		Config c = new Config();
 		c.setId(rs.getInt("config_id"));
 		c.setName(rs.getString("config_name"));
 		c.setValue(rs.getString("config_value"));
-		
+
 		return c;
 	}
 }

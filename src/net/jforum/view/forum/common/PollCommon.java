@@ -45,13 +45,13 @@ package net.jforum.view.forum.common;
 import java.util.Date;
 
 import net.jforum.JForumExecutionContext;
-import net.jforum.core.context.RequestContext;
+import net.jforum.context.RequestContext;
 import net.jforum.entities.Poll;
 import net.jforum.entities.PollOption;
 
 /**
  * @author David Almilli
- * @version $Id: PollCommon.java,v 1.7 2006/08/20 22:47:50 rafaelsteil Exp $
+ * @version $Id: PollCommon.java,v 1.8 2006/08/23 02:13:56 rafaelsteil Exp $
  */
 public class PollCommon
 {

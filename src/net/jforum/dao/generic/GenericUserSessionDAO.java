@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -53,16 +53,12 @@ import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.SystemGlobals;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author Rafael Steil
- * @version $Id: GenericUserSessionDAO.java,v 1.6 2006/08/20 22:47:28 rafaelsteil Exp $
+ * @version $Id: GenericUserSessionDAO.java,v 1.7 2006/08/23 02:13:43 rafaelsteil Exp $
  */
 public class GenericUserSessionDAO implements net.jforum.dao.UserSessionDAO
 {
-    private final static Logger log = Logger.getLogger(GenericUserSessionDAO.class);
-
 	/**
 	 * @see net.jforum.dao.UserSessionDAO#add(net.jforum.entities.UserSession, java.sql.Connection)
 	 */
@@ -70,37 +66,33 @@ public class GenericUserSessionDAO implements net.jforum.dao.UserSessionDAO
 	{
 		this.add(us, conn, false);
 	}
-	
+
 	private void add(UserSession us, Connection conn, boolean checked)
 	{
 		if (!checked && this.selectById(us, conn) != null) {
 			return;
 		}
-		
-		PreparedStatement p=null;
-        try
-        {
-            p = conn.prepareStatement(SystemGlobals.getSql("UserSessionModel.add"));
-            p.setString(1, us.getSessionId());
-            p.setInt(2, us.getUserId());
-            p.setTimestamp(3, new Timestamp(us.getStartTime().getTime()));
 
-            p.executeUpdate();
-        }
-        catch (SQLException e)
-        {
-            String es = "Error add()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
-        }
-        finally
-        {
-            DbUtils.close( p);
-        }
+		PreparedStatement p = null;
+		try {
+			p = conn.prepareStatement(SystemGlobals.getSql("UserSessionModel.add"));
+			p.setString(1, us.getSessionId());
+			p.setInt(2, us.getUserId());
+			p.setTimestamp(3, new Timestamp(us.getStartTime().getTime()));
+
+			p.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
 	}
 
-	/** 
-	 * @see net.jforum.dao.UserSessionDAO#update(net.jforum.entities.UserSession, java.sql.Connection)
+	/**
+	 * @see net.jforum.dao.UserSessionDAO#update(net.jforum.entities.UserSession,
+	 *      java.sql.Connection)
 	 */
 	public void update(UserSession us, Connection conn)
 	{
@@ -108,65 +100,55 @@ public class GenericUserSessionDAO implements net.jforum.dao.UserSessionDAO
 			this.add(us, conn, true);
 			return;
 		}
-		
-		PreparedStatement p=null;
-        try
-        {
-            p = conn.prepareStatement(SystemGlobals.getSql("UserSessionModel.update"));
-            p.setTimestamp(1, new Timestamp(us.getStartTime().getTime()));
-            p.setLong(2, us.getSessionTime());
-            p.setString(3, us.getSessionId());
-            p.setInt(4, us.getUserId());
 
-            p.executeUpdate();
-        }
-        catch (SQLException e)
-        {
-            String es = "Error update()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
-        }
-        finally
-        {
-            DbUtils.close( p);
-        }
+		PreparedStatement p = null;
+		try {
+			p = conn.prepareStatement(SystemGlobals.getSql("UserSessionModel.update"));
+			p.setTimestamp(1, new Timestamp(us.getStartTime().getTime()));
+			p.setLong(2, us.getSessionTime());
+			p.setString(3, us.getSessionId());
+			p.setInt(4, us.getUserId());
+
+			p.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
 	}
 
-	/** 
-	 * @see net.jforum.dao.UserSessionDAO#selectById(net.jforum.entities.UserSession, java.sql.Connection)
+	/**
+	 * @see net.jforum.dao.UserSessionDAO#selectById(net.jforum.entities.UserSession,
+	 *      java.sql.Connection)
 	 */
 	public UserSession selectById(UserSession us, Connection conn)
 	{
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = conn.prepareStatement(SystemGlobals.getSql("UserSessionModel.selectById"));
-            p.setInt(1, us.getUserId());
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = conn.prepareStatement(SystemGlobals.getSql("UserSessionModel.selectById"));
+			p.setInt(1, us.getUserId());
 
-            rs = p.executeQuery();
-            boolean found = false;
+			rs = p.executeQuery();
+			boolean found = false;
 
-            UserSession returnUs = new UserSession(us);
+			UserSession returnUs = new UserSession(us);
 
-            if (rs.next()) {
-                returnUs.setSessionTime(rs.getLong("session_time"));
-                returnUs.setStartTime(rs.getTimestamp("session_start"));
-                found = true;
-            }
+			if (rs.next()) {
+				returnUs.setSessionTime(rs.getLong("session_time"));
+				returnUs.setStartTime(rs.getTimestamp("session_start"));
+				found = true;
+			}
 
-            return (found ? returnUs : null);
-        }
-        catch (SQLException e)
-        {
-            String es = "Error selectById()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
-        }
-        finally
-        {
-            DbUtils.close(rs, p);
-        }
-    }
-
+			return (found ? returnUs : null);
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
 }

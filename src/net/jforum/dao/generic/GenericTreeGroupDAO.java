@@ -54,49 +54,42 @@ import net.jforum.util.DbUtils;
 import net.jforum.util.GroupNode;
 import net.jforum.util.preferences.SystemGlobals;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author Rafael Steil
- * @version $Id: GenericTreeGroupDAO.java,v 1.7 2006/08/20 22:47:27 rafaelsteil Exp $
+ * @version $Id: GenericTreeGroupDAO.java,v 1.8 2006/08/23 02:13:42 rafaelsteil Exp $
  */
-public class GenericTreeGroupDAO implements net.jforum.dao.TreeGroupDAO 
+public class GenericTreeGroupDAO implements net.jforum.dao.TreeGroupDAO
 {
-    private final static Logger log = Logger.getLogger(GenericTreeGroupDAO.class);
-
 	/**
 	 * @see net.jforum.dao.TreeGroupDAO#selectGroups(int)
 	 */
 	public List selectGroups(int parentId)
 	{
 		List list = new ArrayList();
-		
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("TreeGroup.selectGroup"));
-            p.setInt(1, parentId);
 
-            rs = p.executeQuery();
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("TreeGroup.selectGroup"));
+			p.setInt(1, parentId);
 
-            while (rs.next()) {
-                GroupNode n = new GroupNode();
-                n.setName(rs.getString("group_name"));
-                n.setId(rs.getInt("group_id"));
+			rs = p.executeQuery();
 
-                list.add(n);
-            }
+			while (rs.next()) {
+				GroupNode n = new GroupNode();
+				n.setName(rs.getString("group_name"));
+				n.setId(rs.getInt("group_id"));
 
-            return list;
-        }
-        catch (SQLException e) {
-            String es = "Error selectGroups()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
-        }
-        finally {
-            DbUtils.close(rs, p);
-        }
-    }
+				list.add(n);
+			}
+
+			return list;
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
 }

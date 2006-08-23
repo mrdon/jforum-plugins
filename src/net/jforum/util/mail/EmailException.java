@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
 
  * Redistribution and use in source and binary forms, 
@@ -44,7 +44,7 @@ package net.jforum.util.mail;
 
 /**
  * @author Rafael Steil
- * @version $Id: EmailException.java,v 1.6 2005/07/26 03:05:57 rafaelsteil Exp $
+ * @version $Id: EmailException.java,v 1.7 2006/08/23 02:13:58 rafaelsteil Exp $
  */
 public class EmailException extends RuntimeException 
 {

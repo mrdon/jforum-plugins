@@ -45,8 +45,8 @@ package net.jforum.view.forum;
 import java.util.List;
 
 import net.jforum.*;
-import net.jforum.core.context.RequestContext;
-import net.jforum.core.context.ResponseContext;
+import net.jforum.context.RequestContext;
+import net.jforum.context.ResponseContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.PostDAO;
 import net.jforum.dao.TopicDAO;
@@ -73,7 +73,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: RSSAction.java,v 1.27 2006/08/20 22:47:40 rafaelsteil Exp $
+ * @version $Id: RSSAction.java,v 1.28 2006/08/23 02:13:53 rafaelsteil Exp $
  */
 public class RSSAction extends Command 
 {
@@ -212,7 +212,7 @@ public class RSSAction extends Command
 	}
 	
 	/** 
-	 * @see net.jforum.Command#process(net.jforum.core.context.RequestContext, net.jforum.core.context.ResponseContext, freemarker.template.SimpleHash) 
+	 * @see net.jforum.Command#process(net.jforum.context.RequestContext, net.jforum.context.ResponseContext, freemarker.template.SimpleHash) 
 	 */
 	public Template process(RequestContext request,
 			ResponseContext response,

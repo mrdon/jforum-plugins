@@ -51,8 +51,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import net.jforum.core.context.RequestContext;
-import net.jforum.core.context.ResponseContext;
+import net.jforum.context.RequestContext;
+import net.jforum.context.ResponseContext;
 import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
 import net.jforum.repository.ForumRepository;
@@ -68,7 +68,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ConfigAction.java,v 1.17 2006/08/20 22:47:45 rafaelsteil Exp $
+ * @version $Id: ConfigAction.java,v 1.18 2006/08/23 02:13:36 rafaelsteil Exp $
  */
 public class ConfigAction extends AdminCommand 
 {

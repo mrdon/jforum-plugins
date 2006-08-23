@@ -47,9 +47,9 @@ import java.sql.Connection;
 
 import javax.servlet.http.HttpServletResponse;
 
-import net.jforum.core.context.RequestContext;
-import net.jforum.core.context.ResponseContext;
-import net.jforum.core.db.DBConnection;
+import net.jforum.context.RequestContext;
+import net.jforum.context.ResponseContext;
+import net.jforum.db.DBConnection;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -63,7 +63,7 @@ import freemarker.template.SimpleHash;
  * Data execution context. 
  * 
  * @author Rafael Steil
- * @version $Id: JForumExecutionContext.java,v 1.5 2006/08/20 22:47:26 rafaelsteil Exp $
+ * @version $Id: JForumExecutionContext.java,v 1.6 2006/08/23 02:13:50 rafaelsteil Exp $
  */
 public class JForumExecutionContext
 {

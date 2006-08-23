@@ -54,7 +54,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.jforum.SessionFacade;
-import net.jforum.core.context.RequestContext;
+import net.jforum.context.RequestContext;
 import net.jforum.dao.AttachmentDAO;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.entities.Attachment;
@@ -80,7 +80,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.31 2006/08/20 22:47:50 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.32 2006/08/23 02:13:56 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {

@@ -61,153 +61,147 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericScheduledSearchIndexerDAO.java,v 1.10 2006/08/20 22:47:27 rafaelsteil Exp $
+ * @version $Id: GenericScheduledSearchIndexerDAO.java,v 1.11 2006/08/23 02:13:42 rafaelsteil Exp $
  */
 public class GenericScheduledSearchIndexerDAO implements net.jforum.dao.ScheduledSearchIndexerDAO
 {
 	private static Logger logger = Logger.getLogger(GenericScheduledSearchIndexerDAO.class);
-	
+
 	/**
-	 * @see net.jforum.dao.ScheduledSearchIndexerDAO#index(int, java.sql.Connection) 
+	 * @see net.jforum.dao.ScheduledSearchIndexerDAO#index(int, java.sql.Connection)
 	 */
 	public int index(int step, Connection conn)
 	{
-        PreparedStatement p=null;
-        ResultSet rs=null;
+		PreparedStatement p = null;
+		ResultSet rs = null;
 
-        try
-        {
-            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+		try {
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
-            // Get the last post id so far
-            p = conn.prepareStatement(SystemGlobals.getSql("SearchModel.maxPostIdUntilNow"));
-            p.setTimestamp(1, timestamp);
+			// Get the last post id so far
+			p = conn.prepareStatement(SystemGlobals.getSql("SearchModel.maxPostIdUntilNow"));
+			p.setTimestamp(1, timestamp);
 
-            rs = p.executeQuery();
-            int maxPostId = -1;
+			rs = p.executeQuery();
+			int maxPostId = -1;
 
-            if (rs.next()) {
-                maxPostId = rs.getInt(1);
-            }
+			if (rs.next()) {
+				maxPostId = rs.getInt(1);
+			}
 
-            // Get the latest indexed post
-            rs.close();
-            rs=null;
-            p.close();
-            p=null;
+			// Get the latest indexed post
+			rs.close();
+			rs = null;
+			p.close();
+			p = null;
 
-            int latestIndexedPostId = -1;
+			int latestIndexedPostId = -1;
 
-            p = conn.prepareStatement(SystemGlobals.getSql("SearchModel.lastIndexedPostId"));
-            rs = p.executeQuery();
+			p = conn.prepareStatement(SystemGlobals.getSql("SearchModel.lastIndexedPostId"));
+			rs = p.executeQuery();
 
-            if (rs.next()) {
-                latestIndexedPostId = rs.getInt(1);
-            }
+			if (rs.next()) {
+				latestIndexedPostId = rs.getInt(1);
+			}
 
-            rs.close();
-            rs=null;
-            p.close();
-            p=null;
+			rs.close();
+			rs = null;
+			p.close();
+			p = null;
 
-            if (maxPostId == -1 || latestIndexedPostId == -1 || maxPostId <= latestIndexedPostId) {
-                logger.info("No posts found to index. Leaving...");
-                return 0;
-            }
+			if (maxPostId == -1 || latestIndexedPostId == -1 || maxPostId <= latestIndexedPostId) {
+				logger.info("No posts found to index. Leaving...");
+				return 0;
+			}
 
-            if (logger.isInfoEnabled()) {
-                logger.info("Going to index posts from " + latestIndexedPostId + " to " + maxPostId);
-            }
+			if (logger.isInfoEnabled()) {
+				logger.info("Going to index posts from " + latestIndexedPostId + " to " + maxPostId);
+			}
 
-            // Count how many posts we have to index
-            p = conn.prepareStatement(SystemGlobals.getSql("SearchModel.howManyToIndex"));
-            p.setTimestamp(1, timestamp);
-            p.setInt(2, latestIndexedPostId);
+			// Count how many posts we have to index
+			p = conn.prepareStatement(SystemGlobals.getSql("SearchModel.howManyToIndex"));
+			p.setTimestamp(1, timestamp);
+			p.setInt(2, latestIndexedPostId);
 
-            rs = p.executeQuery();
-            rs.next();
+			rs = p.executeQuery();
+			rs.next();
 
-            int total = rs.getInt(1);
+			int total = rs.getInt(1);
 
-            rs.close();
-            rs=null;
-            p.close();
-            p=null;
+			rs.close();
+			rs = null;
+			p.close();
+			p = null;
 
-            // Do the dirty job
-            SearchIndexerDAO sim = DataAccessDriver.getInstance().newSearchIndexerDAO();
-            sim.setConnection(conn);
+			// Do the dirty job
+			SearchIndexerDAO sim = DataAccessDriver.getInstance().newSearchIndexerDAO();
+			sim.setConnection(conn);
 
-            int start = 0;
-            while (true) {
-                List posts = this.getPosts(start, step, latestIndexedPostId, maxPostId, conn);
+			int start = 0;
+			while (true) {
+				List posts = this.getPosts(start, step, latestIndexedPostId, maxPostId, conn);
 
-                if (posts.size() == 0) {
-                    break;
-                }
+				if (posts.size() == 0) {
+					break;
+				}
 
-                logger.info("Indexing range [" + start + ", " + (start + step) + "] from a total of " + total);
+				logger.info("Indexing range [" + start + ", " + (start + step) + "] from a total of " + total);
 
-                sim.insertSearchWords(posts);
+				sim.insertSearchWords(posts);
 
-                start += step;
-            }
+				start += step;
+			}
 
-            return maxPostId;
-        }
-        catch (SQLException e) {
-            String es = "Error index()";
-            logger.error(es, e);
-            throw new DatabaseException(es, e);
-        }
-        finally {
-            DbUtils.close(rs, p);
-        }
-    }
-	
+			return maxPostId;
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
+
 	public List getPosts(int start, int count, int minPostId, int maxPostId, Connection conn)
 	{
 		List l = new ArrayList();
-		
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = conn.prepareStatement(SystemGlobals.getSql("SearchModel.getPostsToIndex"));
-            p.setInt(1, minPostId);
-            p.setInt(2, maxPostId);
-            p.setInt(3, start);
-            p.setInt(4, count);
 
-            rs = p.executeQuery();
-            while (rs.next()) {
-                l.add(this.makePost(rs));
-            }
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = conn.prepareStatement(SystemGlobals.getSql("SearchModel.getPostsToIndex"));
+			p.setInt(1, minPostId);
+			p.setInt(2, maxPostId);
+			p.setInt(3, start);
+			p.setInt(4, count);
 
-            return l;
-        }
-        catch (SQLException e) {
-            String es = "Error getPosts()";
-            logger.error(es, e);
-            throw new DatabaseException(es, e);
-        }
-        finally {
-            DbUtils.close(rs, p);
-        }
-    }
-	
+			rs = p.executeQuery();
+			while (rs.next()) {
+				l.add(this.makePost(rs));
+			}
+
+			return l;
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
+
 	protected String getPostTextFromResultSet(ResultSet rs) throws SQLException
 	{
 		return rs.getString("post_text");
 	}
-	
+
 	protected Post makePost(ResultSet rs) throws SQLException
 	{
 		Post p = new Post();
 		p.setId(rs.getInt("post_id"));
 		p.setText(this.getPostTextFromResultSet(rs));
 		p.setSubject("post_subject");
-		
+
 		return p;
 	}
 }

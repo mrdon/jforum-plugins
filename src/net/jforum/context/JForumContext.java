@@ -36,77 +36,55 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Jan 7, 2005 7:44:40 PM
- *
+ * This file creating date: 11.10.2004
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.core.db;
+package net.jforum.context;
 
-import java.sql.Connection;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.sql.DataSource;
-
-import net.jforum.exceptions.DatabaseException;
-import net.jforum.util.preferences.ConfigKeys;
-import net.jforum.util.preferences.SystemGlobals;
 
 /**
- * DataSource connection implementation for JForum.
- * The datasourcename should be set in the key 
- * <code>database.datasource.name</code> at 
- * SystemGlobals.properties.
- * 
- * @author Rafael Steil
- * @version $Id: DataSourceConnection.java,v 1.1 2006/08/20 22:47:33 rafaelsteil Exp $
+ * @author Marc Wick
+ * @version $Id: JForumContext.java,v 1.1 2006/08/23 02:13:47 rafaelsteil Exp $
  */
-public class DataSourceConnection extends DBConnection
+public class JForumContext
 {
-	private DataSource ds;
-	
-	/**
-	 * @see net.jforum.core.db.DBConnection#init()
-	 */
-	public void init() throws Exception 
+	private String contextPath;
+	private String servletExtension;
+
+	private ResponseContext response;
+
+	private boolean isEncodingDisabled;
+
+	public JForumContext(String contextPath, String servletExtension, RequestContext req,
+			ResponseContext response, boolean isEncodingDisabled)
 	{
-		Context context = new InitialContext();
-		this.ds = (DataSource)context.lookup(SystemGlobals.getValue(
-				ConfigKeys.DATABASE_DATASOURCE_NAME));
-	}
-	/**
-	 * @see net.jforum.core.db.DBConnection#getConnection()
-	 */
-	public Connection getConnection()
-	{
-		try {
-			return this.ds.getConnection();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			throw new DatabaseException(e);
-		}
+		this.contextPath = contextPath;
+		this.servletExtension = servletExtension;
+		this.response = response;
+		this.isEncodingDisabled = isEncodingDisabled;
 	}
 
-	/**
-	 * @see net.jforum.core.db.DBConnection#releaseConnection(java.sql.Connection)
-	 */
-	public void releaseConnection(Connection conn)
+	public String encodeURL(String url)
 	{
-        if (conn==null) {
-            return;
-        }
-		try {
-			conn.close();
-		}
-		catch (Exception e) {
-            // catch error of close of connection
-        }
+		return this.encodeURL(url, servletExtension);
 	}
 
-	/**
-	 * @see net.jforum.core.db.DBConnection#realReleaseAllConnections()
-	 */
-	public void realReleaseAllConnections() throws Exception {}
+	public String encodeURL(String url, String extension)
+	{
+		String ucomplete = contextPath + url + extension;
+
+		if (isEncodingDisabled()) {
+			return ucomplete;
+		}
+
+		return response.encodeURL(ucomplete);
+	}
+
+	public boolean isEncodingDisabled()
+	{
+		return this.isEncodingDisabled;
+	}
+
 }

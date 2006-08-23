@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -59,7 +59,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumRSS.java,v 1.17 2005/07/26 03:04:38 rafaelsteil Exp $
+ * @version $Id: ForumRSS.java,v 1.18 2006/08/23 02:13:39 rafaelsteil Exp $
  */
 public class ForumRSS extends GenericRSS 
 {

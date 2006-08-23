@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -44,7 +44,7 @@ package net.jforum.cache;
 
 /**
  * @author Rafael Steil
- * @version $Id: Cacheable.java,v 1.4 2005/07/26 03:04:53 rafaelsteil Exp $
+ * @version $Id: Cacheable.java,v 1.5 2006/08/23 02:13:57 rafaelsteil Exp $
  */
 public interface Cacheable
 {

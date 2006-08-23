@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -47,7 +47,7 @@ import java.io.StringWriter;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumException.java,v 1.6 2005/07/26 03:04:35 rafaelsteil Exp $
+ * @version $Id: ForumException.java,v 1.7 2006/08/23 02:13:38 rafaelsteil Exp $
  */
 public class ForumException extends RuntimeException
 {

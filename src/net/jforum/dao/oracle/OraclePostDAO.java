@@ -48,22 +48,17 @@ import java.sql.SQLException;
 import java.util.List;
 
 import net.jforum.JForumExecutionContext;
-import net.jforum.dao.generic.GenericPostDAO;
 import net.jforum.entities.Post;
 import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.SystemGlobals;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author Dmitriy Kiriy
- * @version $Id: OraclePostDAO.java,v 1.9 2006/08/20 22:47:32 rafaelsteil Exp $
+ * @version $Id: OraclePostDAO.java,v 1.10 2006/08/23 02:13:55 rafaelsteil Exp $
  */
 public class OraclePostDAO extends net.jforum.dao.generic.GenericPostDAO
 {
-	private final static Logger log = Logger.getLogger(GenericPostDAO.class);
-	
 	/**
 	 * @see net.jforum.dao.generic.GenericPostDAO#addNewPostText(net.jforum.entities.Post)
 	 */
@@ -101,13 +96,11 @@ public class OraclePostDAO extends net.jforum.dao.generic.GenericPostDAO
 
 			p.executeUpdate();
 
-			OracleUtils.writeBlobUTF16BinaryStream(SystemGlobals.getSql("PostModel.addNewPostTextField"), 
-					post.getId(), post.getText());
+			OracleUtils.writeBlobUTF16BinaryStream(SystemGlobals.getSql("PostModel.addNewPostTextField"), post.getId(),
+					post.getText());
 		}
 		catch (SQLException e) {
-			String es = "Error updatePostsTextTable()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(p);

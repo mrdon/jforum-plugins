@@ -42,13 +42,13 @@
  */
 package net.jforum.sso;
 
-import net.jforum.core.context.RequestContext;
+import net.jforum.context.RequestContext;
 import net.jforum.entities.UserSession;
 
 /**
  * @author Rafael Steil
  * @author Daniel Campagnoli
- * @version $Id: SSO.java,v 1.7 2006/08/20 22:47:43 rafaelsteil Exp $
+ * @version $Id: SSO.java,v 1.8 2006/08/23 02:13:53 rafaelsteil Exp $
  */
 public interface SSO
 {

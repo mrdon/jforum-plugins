@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -54,7 +54,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rodrigo Kumpera
- * @version $Id: QueuedExecutor.java,v 1.13 2006/08/20 22:47:51 rafaelsteil Exp $
+ * @version $Id: QueuedExecutor.java,v 1.14 2006/08/23 02:13:50 rafaelsteil Exp $
  */
 public class QueuedExecutor implements Executor 
 {

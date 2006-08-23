@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -47,7 +47,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: EmailSenderTask.java,v 1.8 2006/08/20 22:47:51 rafaelsteil Exp $
+ * @version $Id: EmailSenderTask.java,v 1.9 2006/08/23 02:13:58 rafaelsteil Exp $
  */
 public class EmailSenderTask implements Task 
 {

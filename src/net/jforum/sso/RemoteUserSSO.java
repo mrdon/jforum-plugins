@@ -42,7 +42,7 @@
  */
 package net.jforum.sso;
 
-import net.jforum.core.context.RequestContext;
+import net.jforum.context.RequestContext;
 import net.jforum.entities.UserSession;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -53,12 +53,12 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author Daniel Campagnoli
- * @version $Id: RemoteUserSSO.java,v 1.9 2006/08/20 22:47:43 rafaelsteil Exp $
+ * @version $Id: RemoteUserSSO.java,v 1.10 2006/08/23 02:13:53 rafaelsteil Exp $
  */
 public class RemoteUserSSO implements SSO
 {
 	/**
-	 * @see net.jforum.sso.SSO#authenticateUser(net.jforum.core.context.RequestContext)
+	 * @see net.jforum.sso.SSO#authenticateUser(net.jforum.context.RequestContext)
      * @param request AWebContextRequest     * @return String
 	 */
 	public String authenticateUser(RequestContext request)

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -49,7 +49,7 @@ import net.jforum.entities.Forum;
 /**
  * @author James Yong Boon Leong
  * @author Rafael Steil
- * @version $Id: ForumOrderComparator.java,v 1.5 2005/07/26 03:05:24 rafaelsteil Exp $
+ * @version $Id: ForumOrderComparator.java,v 1.6 2006/08/23 02:13:44 rafaelsteil Exp $
  */
 public class ForumOrderComparator implements Comparator, Serializable {
 	

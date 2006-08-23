@@ -49,7 +49,7 @@ import java.util.List;
 import java.io.IOException;
 
 import net.jforum.*;
-import net.jforum.core.context.RequestContext;
+import net.jforum.context.RequestContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.UserDAO;
 import net.jforum.dao.UserSessionDAO;
@@ -77,7 +77,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.74 2006/08/20 22:47:40 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.75 2006/08/23 02:13:53 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {

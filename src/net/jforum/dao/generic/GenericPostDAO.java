@@ -62,17 +62,13 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.search.SearchFacade;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericPostDAO.java,v 1.16 2006/08/20 22:47:26 rafaelsteil Exp $
+ * @version $Id: GenericPostDAO.java,v 1.17 2006/08/23 02:13:41 rafaelsteil Exp $
  */
 public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 {
-	private final static Logger log = Logger.getLogger(GenericPostDAO.class);
-
 	/**
 	 * @see net.jforum.dao.PostDAO#selectById(int)
 	 */
@@ -95,9 +91,7 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 			return post;
 		}
 		catch (SQLException e) {
-			String es = "Error selectById()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(rs, p);
@@ -137,8 +131,7 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 	 * Utility method to read the post text fromt the result set. This method may be useful when
 	 * using some "non-standart" way to store text, like oracle does when using (c|b)lob
 	 * 
-	 * @param rs
-	 *            The resultset to fetch data from
+	 * @param rs The resultset to fetch data from
 	 * @return The post text string
 	 * @throws SQLException
 	 */
@@ -186,9 +179,7 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 			}
 		}
 		catch (SQLException e) {
-			String es = "Error removePosts()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(post);
@@ -198,8 +189,6 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 	}
 
 	/**
-	 * TODO implement this method or delete this javadoc
-	 * 
 	 * @see net.jforum.model.PostModel#deleteByTopic(int)
 	 */
 	public void deleteByTopic(int topicId)
@@ -224,9 +213,7 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 			this.removePosts(posts);
 		}
 		catch (SQLException e) {
-			String es = "Error deleteByTopic()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(rs, p);
@@ -258,9 +245,7 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 			p.executeUpdate();
 		}
 		catch (SQLException e) {
-			String es = "Error updatePostsTextTable()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(p);
@@ -285,9 +270,7 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 			p.executeUpdate();
 		}
 		catch (SQLException e) {
-			String es = "Error updatePostsTable()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(p);
@@ -309,9 +292,7 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 			return post.getId();
 		}
 		catch (SQLException e) {
-			String es = "Error addNew()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 	}
 
@@ -353,9 +334,7 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 			post.setId(postId);
 		}
 		catch (SQLException e) {
-			String es = "Error addNewPost()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(p);
@@ -363,8 +342,6 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 	}
 
 	/**
-	 * TODO implement this method or delete this javadoc
-	 * 
 	 * @see net.jforum.dao.PostDAO#selectAllBytTopic(int)
 	 */
 	public List selectAllByTopic(int topicId)
@@ -373,8 +350,6 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 	}
 
 	/**
-	 * TODO implement this method or delete this javadoc
-	 * 
 	 * @see net.jforum.dao.PostDAO#selectAllBytTopicByLimit(int, int, int)
 	 */
 	public List selectAllByTopicByLimit(int topicId, int startFrom, int count)
@@ -401,9 +376,7 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 			return l;
 		}
 		catch (SQLException e) {
-			String es = "Error selectAllByTopicByLimit()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(rs, p);
@@ -437,9 +410,7 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 			return l;
 		}
 		catch (SQLException e) {
-			String es = "Error selectByUserByLimit()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(rs, p);
@@ -467,9 +438,7 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 			return total;
 		}
 		catch (SQLException e) {
-			String es = "Error countUserPosts()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(rs, p);
@@ -502,9 +471,7 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 			return total;
 		}
 		catch (SQLException e) {
-			String es = "Error countPreviousPosts()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(rs, p);

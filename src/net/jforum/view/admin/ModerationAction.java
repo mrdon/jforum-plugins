@@ -42,7 +42,7 @@
  */
 package net.jforum.view.admin;
 
-import net.jforum.core.context.RequestContext;
+import net.jforum.context.RequestContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.PostDAO;
 import net.jforum.dao.TopicDAO;
@@ -63,7 +63,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationAction.java,v 1.24 2006/08/20 22:47:45 rafaelsteil Exp $
+ * @version $Id: ModerationAction.java,v 1.25 2006/08/23 02:13:36 rafaelsteil Exp $
  */
 public class ModerationAction extends AdminCommand
 {

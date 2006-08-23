@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -49,7 +49,7 @@ import net.jforum.entities.Category;
 
 /**
  * @author Rafael Steil
- * @version $Id: CategoryOrderComparator.java,v 1.4 2005/07/26 03:05:24 rafaelsteil Exp $
+ * @version $Id: CategoryOrderComparator.java,v 1.5 2006/08/23 02:13:44 rafaelsteil Exp $
  */
 public class CategoryOrderComparator implements Comparator, Serializable
 {

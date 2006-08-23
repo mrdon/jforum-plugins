@@ -40,7 +40,7 @@
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.core.db;
+package net.jforum.db;
 
 import java.sql.Connection;
 
@@ -53,7 +53,7 @@ import com.mchange.v2.c3p0.DataSources;
 
 /**
  * @author Rafael Steil
- * @version $Id: C3P0PooledConnection.java,v 1.1 2006/08/20 22:47:33 rafaelsteil Exp $
+ * @version $Id: C3P0PooledConnection.java,v 1.1 2006/08/23 02:13:45 rafaelsteil Exp $
  */
 public class C3P0PooledConnection extends DBConnection
 {
@@ -61,7 +61,7 @@ public class C3P0PooledConnection extends DBConnection
 	
 	/**
 	 * 
-	 * @see net.jforum.core.db.DBConnection#init()
+	 * @see net.jforum.db.DBConnection#init()
 	 */
 	public void init() throws Exception
 	{
@@ -74,7 +74,7 @@ public class C3P0PooledConnection extends DBConnection
 	}
 
 	/**
-	 * @see net.jforum.core.db.DBConnection#getConnection()
+	 * @see net.jforum.db.DBConnection#getConnection()
 	 */
 	public Connection getConnection()
 	{
@@ -87,7 +87,7 @@ public class C3P0PooledConnection extends DBConnection
 	}
 
 	/**
-	 * @see net.jforum.core.db.DBConnection#releaseConnection(java.sql.Connection)
+	 * @see net.jforum.db.DBConnection#releaseConnection(java.sql.Connection)
 	 */
 	public void releaseConnection(Connection conn)
 	{
@@ -104,7 +104,7 @@ public class C3P0PooledConnection extends DBConnection
 	}
 
 	/**
-	 * @see net.jforum.core.db.DBConnection#realReleaseAllConnections()
+	 * @see net.jforum.db.DBConnection#realReleaseAllConnections()
 	 */
 	public void realReleaseAllConnections() throws Exception
 	{

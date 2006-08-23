@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -47,50 +47,43 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import net.jforum.JForumExecutionContext;
-import net.jforum.dao.generic.GenericForumDAO;
 import net.jforum.entities.PrivateMessage;
 import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.SystemGlobals;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerPrivateMessageDAO.java,v 1.9 2006/08/20 22:47:48 rafaelsteil Exp $
+ * @version $Id: SqlServerPrivateMessageDAO.java,v 1.10 2006/08/23 02:13:54 rafaelsteil Exp $
  */
-public class SqlServerPrivateMessageDAO extends net.jforum.dao.generic.GenericPrivateMessageDAO 
+public class SqlServerPrivateMessageDAO extends net.jforum.dao.generic.GenericPrivateMessageDAO
 {
-    private final static Logger log = Logger.getLogger(GenericForumDAO.class);
-
-	/** 
+	/**
 	 * @see net.jforum.dao.PrivateMessageDAO#selectById(net.jforum.entities.PrivateMessage)
 	 */
-	public PrivateMessage selectById(PrivateMessage pm) 
+	public PrivateMessage selectById(PrivateMessage pm)
 	{
-	    PreparedStatement p = null;
-        ResultSet rs = null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PrivateMessageModel.selectById"), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("PrivateMessageModel.selectById"), ResultSet.TYPE_SCROLL_INSENSITIVE,
+					ResultSet.CONCUR_UPDATABLE);
 
-            p.setInt(1, pm.getId());
+			p.setInt(1, pm.getId());
 
-            rs = p.executeQuery();
-            if (rs.next()) {
-                pm = this.getPm(rs);
-            }
+			rs = p.executeQuery();
+			if (rs.next()) {
+				pm = this.getPm(rs);
+			}
 
-            return pm;
-        }
-        catch (SQLException e) {
-            String es = "Error selectById()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
-        }
-        finally {
-            DbUtils.close(rs, p);
-        }
-    }
-		
+			return pm;
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
 }

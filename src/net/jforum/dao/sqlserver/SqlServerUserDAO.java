@@ -52,16 +52,12 @@ import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.SystemGlobals;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerUserDAO.java,v 1.8 2006/08/20 22:47:48 rafaelsteil Exp $
+ * @version $Id: SqlServerUserDAO.java,v 1.9 2006/08/23 02:13:54 rafaelsteil Exp $
  */
 public class SqlServerUserDAO extends net.jforum.dao.generic.GenericUserDAO
 {
-	private final static Logger log = Logger.getLogger(SqlServerUserDAO.class);
-
 	/**
 	 * @see net.jforum.dao.UserDAO#selectAll(int, int)
 	 */
@@ -88,9 +84,7 @@ public class SqlServerUserDAO extends net.jforum.dao.generic.GenericUserDAO
 			return super.processSelectAll(rs);
 		}
 		catch (SQLException e) {
-			String es = "Error selectActiveBannerByPlacement()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(rs, p);

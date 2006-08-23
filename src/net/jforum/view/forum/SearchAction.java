@@ -52,8 +52,8 @@ import java.util.Map;
 
 import net.jforum.Command;
 import net.jforum.JForumExecutionContext;
-import net.jforum.core.context.RequestContext;
-import net.jforum.core.context.ResponseContext;
+import net.jforum.context.RequestContext;
+import net.jforum.context.ResponseContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.SearchDAO;
 import net.jforum.dao.SearchData;
@@ -71,7 +71,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.30 2006/08/20 22:47:40 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.31 2006/08/23 02:13:53 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {

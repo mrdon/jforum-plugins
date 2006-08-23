@@ -46,18 +46,18 @@ import java.sql.Connection;
 
 import org.apache.log4j.Logger;
 
-import net.jforum.core.db.DBConnection;
 import net.jforum.dao.CategoryDAO;
 import net.jforum.dao.ConfigDAO;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
+import net.jforum.db.DBConnection;
 import net.jforum.exceptions.DatabaseException;
 import net.jforum.exceptions.RepositoryStartupException;
 import net.jforum.repository.ForumRepository;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumStartup.java,v 1.14 2006/08/20 22:47:26 rafaelsteil Exp $
+ * @version $Id: ForumStartup.java,v 1.15 2006/08/23 02:13:49 rafaelsteil Exp $
  */
 public class ForumStartup 
 {

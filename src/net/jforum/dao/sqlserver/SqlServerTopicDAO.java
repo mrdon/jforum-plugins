@@ -51,65 +51,59 @@ import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.SystemGlobals;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerTopicDAO.java,v 1.10 2006/08/20 22:47:48 rafaelsteil Exp $
+ * @version $Id: SqlServerTopicDAO.java,v 1.11 2006/08/23 02:13:54 rafaelsteil Exp $
  */
 public class SqlServerTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 {
-    private final static Logger log = Logger.getLogger(SqlServerTopicDAO.class);
-
 	/**
 	 * @see net.jforum.dao.TopicDAO#selectAllByForumByLimit(int, int, int)
 	 */
 	public List selectAllByForumByLimit(int forumId, int startFrom, int count)
 	{
 		String top = SystemGlobals.getSql("GenericModel.selectByLimit");
-		
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement((top + " " + count + " " + SystemGlobals.getSql("TopicModel.selectAllByForumByLimit1")  + " " + top + " " + startFrom + " " + SystemGlobals.getSql("TopicModel.selectAllByForumByLimit2")));
-            p.setInt(1, forumId);
-            p.setInt(2, forumId);
 
-            List list = super.fillTopicsData(p);
-            p=null;
-            return list;
-        }
-        catch (SQLException e) {
-            String es = "Error selectAllByForumByLimit()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
-        }
-        finally {
-            DbUtils.close( p);
-        }
-    }
-	
-	/** 
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					(top + " " + count + " " + SystemGlobals.getSql("TopicModel.selectAllByForumByLimit1") + " " + top
+							+ " " + startFrom + " " + SystemGlobals.getSql("TopicModel.selectAllByForumByLimit2")));
+			p.setInt(1, forumId);
+			p.setInt(2, forumId);
+
+			List list = super.fillTopicsData(p);
+			p = null;
+			return list;
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
+
+	/**
 	 * @see net.jforum.dao.TopicDAO#selectRecentTopics(int)
-	 */	
-	public List selectRecentTopics (int limit)
+	 */
+	public List selectRecentTopics(int limit)
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("GenericModel.selectByLimit") + " " + limit + " " + SystemGlobals.getSql("TopicModel.selectRecentTopicsByLimit"));
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("GenericModel.selectByLimit") + " " + limit + " "
+							+ SystemGlobals.getSql("TopicModel.selectRecentTopicsByLimit"));
 
-            List list = this.fillTopicsData(p);
-            p=null;
-            return list;
-        }
-        catch (SQLException e) {
-            String es = "Error selectRecentTopics()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
-        }
-        finally {
-            DbUtils.close( p);
-        }
-    }
+			List list = this.fillTopicsData(p);
+			p = null;
+			return list;
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
 }

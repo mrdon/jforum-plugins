@@ -50,8 +50,8 @@ import java.util.List;
 
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
-import net.jforum.core.db.DBConnection;
 import net.jforum.dao.DataAccessDriver;
+import net.jforum.db.DBConnection;
 import net.jforum.entities.UserSession;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.util.preferences.ConfigKeys;
@@ -61,7 +61,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.34 2006/08/20 22:47:25 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.35 2006/08/23 02:13:49 rafaelsteil Exp $
  */
 public class SessionFacade implements Cacheable
 {

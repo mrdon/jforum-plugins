@@ -48,9 +48,9 @@ import java.util.HashMap;
 
 import javax.servlet.http.Cookie;
 
-import net.jforum.core.context.JForumContext;
-import net.jforum.core.context.RequestContext;
-import net.jforum.core.context.SessionContext;
+import net.jforum.context.JForumContext;
+import net.jforum.context.RequestContext;
+import net.jforum.context.SessionContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.UserDAO;
 import net.jforum.dao.UserSessionDAO;
@@ -73,7 +73,7 @@ import org.apache.log4j.Logger;
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.27 2006/08/20 22:47:25 rafaelsteil Exp $
+ * @version $Id: ControllerUtils.java,v 1.28 2006/08/23 02:13:50 rafaelsteil Exp $
  */
 public class ControllerUtils
 {

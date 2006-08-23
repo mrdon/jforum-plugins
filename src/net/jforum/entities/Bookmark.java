@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -44,7 +44,7 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
- * @version $Id: Bookmark.java,v 1.3 2005/07/26 03:04:50 rafaelsteil Exp $
+ * @version $Id: Bookmark.java,v 1.4 2006/08/23 02:13:46 rafaelsteil Exp $
  */
 public class Bookmark
 {

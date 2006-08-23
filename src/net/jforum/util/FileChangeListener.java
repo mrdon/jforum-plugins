@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
 
  * Redistribution and use in source and binary forms, 
@@ -44,7 +44,7 @@ package net.jforum.util;
 
 /**
  * @author Rafael Steil
- * @version $Id: FileChangeListener.java,v 1.3 2005/07/26 03:05:24 rafaelsteil Exp $
+ * @version $Id: FileChangeListener.java,v 1.4 2006/08/23 02:13:44 rafaelsteil Exp $
  */
 public interface FileChangeListener
 {

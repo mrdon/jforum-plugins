@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * 
  * All rights reserved.
  * Redistribution and use in source and binary forms, 
@@ -49,7 +49,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SystemGlobalsListener.java,v 1.8 2006/08/20 22:47:37 rafaelsteil Exp $
+ * @version $Id: SystemGlobalsListener.java,v 1.9 2006/08/23 02:13:57 rafaelsteil Exp $
  */
 public class SystemGlobalsListener implements FileChangeListener
 {

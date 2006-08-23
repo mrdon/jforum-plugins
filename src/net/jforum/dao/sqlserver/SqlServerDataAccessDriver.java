@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
 
  * Redistribution and use in source and binary forms, 
@@ -44,7 +44,7 @@ package net.jforum.dao.sqlserver;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerDataAccessDriver.java,v 1.6 2005/10/02 19:06:46 rafaelsteil Exp $
+ * @version $Id: SqlServerDataAccessDriver.java,v 1.7 2006/08/23 02:13:54 rafaelsteil Exp $
  */
 public class SqlServerDataAccessDriver extends net.jforum.dao.generic.GenericDataAccessDriver
 {

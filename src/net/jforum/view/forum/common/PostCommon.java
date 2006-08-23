@@ -52,7 +52,7 @@ import java.util.regex.Pattern;
 
 import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
-import net.jforum.core.context.RequestContext;
+import net.jforum.context.RequestContext;
 import net.jforum.dao.PostDAO;
 import net.jforum.entities.Post;
 import net.jforum.entities.Smilie;
@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.35 2006/08/20 22:47:50 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.36 2006/08/23 02:13:56 rafaelsteil Exp $
  */
 public class PostCommon
 {

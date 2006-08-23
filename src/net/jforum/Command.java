@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -42,8 +42,8 @@
  */
 package net.jforum;
 
-import net.jforum.core.context.RequestContext;
-import net.jforum.core.context.ResponseContext;
+import net.jforum.context.RequestContext;
+import net.jforum.context.ResponseContext;
 import net.jforum.exceptions.TemplateNotFoundException;
 import net.jforum.repository.Tpl;
 import net.jforum.util.preferences.ConfigKeys;
@@ -61,7 +61,7 @@ import java.io.IOException;
  * presentation actions must extend this class. 
  * 
  * @author Rafael Steil
- * @version $Id: Command.java,v 1.22 2006/08/20 22:47:24 rafaelsteil Exp $
+ * @version $Id: Command.java,v 1.23 2006/08/23 02:13:49 rafaelsteil Exp $
  */
 public abstract class Command 
 {

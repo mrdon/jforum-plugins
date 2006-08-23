@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -47,7 +47,7 @@ package net.jforum.exceptions;
  * forum instance which had its order changed.
  * 
  * @author Rafael Steil
- * @version $Id: ForumOrderChangedException.java,v 1.3 2005/07/26 03:04:34 rafaelsteil Exp $
+ * @version $Id: ForumOrderChangedException.java,v 1.4 2006/08/23 02:13:37 rafaelsteil Exp $
  */
 public class ForumOrderChangedException extends RuntimeException {
 	public ForumOrderChangedException(String message) {

@@ -54,16 +54,12 @@ import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.SystemGlobals;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author Samuel Yung
- * @version $Id: GenericBannerDAO.java,v 1.8 2006/08/20 22:47:27 rafaelsteil Exp $
+ * @version $Id: GenericBannerDAO.java,v 1.9 2006/08/23 02:13:41 rafaelsteil Exp $
  */
 public class GenericBannerDAO extends AutoKeys implements net.jforum.dao.BannerDAO
 {
-	private final static Logger log = Logger.getLogger(GenericBannerDAO.class);
-
 	public Banner selectById(int bannerId)
 	{
 		PreparedStatement p = null;
@@ -81,9 +77,7 @@ public class GenericBannerDAO extends AutoKeys implements net.jforum.dao.BannerD
 			}
 		}
 		catch (SQLException e) {
-			String es = "Error selectById()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(rs, p);
@@ -108,9 +102,7 @@ public class GenericBannerDAO extends AutoKeys implements net.jforum.dao.BannerD
 			return l;
 		}
 		catch (SQLException e) {
-			String es = "Error selectAll()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(rs, p);
@@ -155,9 +147,7 @@ public class GenericBannerDAO extends AutoKeys implements net.jforum.dao.BannerD
 			return result;
 		}
 		catch (SQLException e) {
-			String es = "Error addAttachment()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(rs, p);
@@ -173,9 +163,7 @@ public class GenericBannerDAO extends AutoKeys implements net.jforum.dao.BannerD
 			p.executeUpdate();
 		}
 		catch (SQLException e) {
-			String es = "Error delete()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(p);
@@ -192,9 +180,7 @@ public class GenericBannerDAO extends AutoKeys implements net.jforum.dao.BannerD
 			p.executeUpdate();
 		}
 		catch (SQLException e) {
-			String es = "Error update()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(p);
@@ -213,9 +199,7 @@ public class GenericBannerDAO extends AutoKeys implements net.jforum.dao.BannerD
 			return id;
 		}
 		catch (SQLException e) {
-			String es = "Error addNew()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(p);
@@ -257,9 +241,7 @@ public class GenericBannerDAO extends AutoKeys implements net.jforum.dao.BannerD
 			return l;
 		}
 		catch (SQLException e) {
-			String es = "Error selectActiveBannerByPlacement()";
-			log.error(es, e);
-			throw new DatabaseException(es, e);
+			throw new DatabaseException(e);
 		}
 		finally {
 			DbUtils.close(rs, p);

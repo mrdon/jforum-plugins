@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -51,7 +51,7 @@ import net.jforum.exceptions.ForumException;
  * Encodes a string using MD5 hashing 
  * 
  * @author Rafael Steil
- * @version $Id: MD5.java,v 1.6 2005/07/26 03:05:26 rafaelsteil Exp $
+ * @version $Id: MD5.java,v 1.7 2006/08/23 02:13:44 rafaelsteil Exp $
  */
 public class MD5 
 {

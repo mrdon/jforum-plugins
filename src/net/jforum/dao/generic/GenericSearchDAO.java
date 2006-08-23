@@ -66,250 +66,241 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericSearchDAO.java,v 1.18 2006/08/20 22:47:28 rafaelsteil Exp $
+ * @version $Id: GenericSearchDAO.java,v 1.19 2006/08/23 02:13:43 rafaelsteil Exp $
  */
-public class GenericSearchDAO implements net.jforum.dao.SearchDAO	
+public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 {
 	private static final Logger log = Logger.getLogger(GenericSearchDAO.class);
-	
-	/** 
+
+	/**
 	 * @see net.jforum.dao.SearchDAO#search(net.jforum.dao.SearchData)
 	 */
 	public List search(SearchData sd)
 	{
-        PreparedStatement p=null;
-        try
-        {
-            // Check for the search cache
-            if (!sd.getSearchStarted()) {
-                if (sd.getTime() == null) {
-                    this.topicsByKeyword(sd);
-                }
-                else {
-                    this.topicsByTime(sd);
-                }
-            }
+		PreparedStatement p = null;
+		try {
+			// Check for the search cache
+			if (!sd.getSearchStarted()) {
+				if (sd.getTime() == null) {
+					this.topicsByKeyword(sd);
+				}
+				else {
+					this.topicsByTime(sd);
+				}
+			}
 
-            String sql = SystemGlobals.getSql("SearchModel.searchBase").replaceAll(":fids:",ForumRepository.getListAllowedForums());
-            StringBuffer criterias = new StringBuffer(512);
+			String sql = SystemGlobals.getSql("SearchModel.searchBase").replaceAll(":fids:",
+					ForumRepository.getListAllowedForums());
+			StringBuffer criterias = new StringBuffer(512);
 
-            if (sd.getForumId() != 0) {
-                criterias.append(" AND t.forum_id = ").append( sd.getForumId());
-            }
+			if (sd.getForumId() != 0) {
+				criterias.append(" AND t.forum_id = ").append(sd.getForumId());
+			}
 
-            if (sd.getCategoryId() != 0) {
-                sql = sql.replaceAll(":table_category:", ", jforum_forums f");
+			if (sd.getCategoryId() != 0) {
+				sql = sql.replaceAll(":table_category:", ", jforum_forums f");
 
-                criterias.append(" AND f.categories_id = ").append( sd.getCategoryId());
-                criterias.append(" AND t.forum_id = f.forum_id");
-            }
-            else {
-                sql = sql.replaceAll(":table_category:", "");
-            }
+				criterias.append(" AND f.categories_id = ").append(sd.getCategoryId());
+				criterias.append(" AND t.forum_id = f.forum_id");
+			}
+			else {
+				sql = sql.replaceAll(":table_category:", "");
+			}
 
-            if (sd.getOrderByField() == null || sd.getOrderByField().equals("")) {
-                sd.setOrderByField("p.post_time");
-            }
+			if (sd.getOrderByField() == null || sd.getOrderByField().equals("")) {
+				sd.setOrderByField("p.post_time");
+			}
 
-            // Prepare the query
-            sql = sql.replaceAll(":orderByField:", sd.getOrderByField());
-            sql = sql.replaceAll(":orderBy:", sd.getOrderBy());
-            sql = sql.replaceAll(":criterias:", criterias.toString());
+			// Prepare the query
+			sql = sql.replaceAll(":orderByField:", sd.getOrderByField());
+			sql = sql.replaceAll(":orderBy:", sd.getOrderBy());
+			sql = sql.replaceAll(":criterias:", criterias.toString());
 
-            p = JForumExecutionContext.getConnection().prepareStatement(sql);
-            p.setString(1, SessionFacade.getUserSession().getSessionId());
+			p = JForumExecutionContext.getConnection().prepareStatement(sql);
+			p.setString(1, SessionFacade.getUserSession().getSessionId());
 
-            List list = new GenericTopicDAO().fillTopicsData(p);
-            p=null;
-            return list;
-        }
-        catch (SQLException e) {
-            String es = "Error search()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
-        }
-        finally {
-            DbUtils.close( p);
-        }
-    }
-	
+			List list = new GenericTopicDAO().fillTopicsData(p);
+			p = null;
+			return list;
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
+
 	// Find topics by time
 	private void topicsByTime(SearchData sd) throws SQLException
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.searchByTime").replaceAll(":fids:", ForumRepository.getListAllowedForums()));
-            p.setString(1, SessionFacade.getUserSession().getSessionId());
-            p.setTimestamp(2, new Timestamp(sd.getTime().getTime()));
-            p.executeUpdate();
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("SearchModel.searchByTime").replaceAll(":fids:",
+							ForumRepository.getListAllowedForums()));
+			p.setString(1, SessionFacade.getUserSession().getSessionId());
+			p.setTimestamp(2, new Timestamp(sd.getTime().getTime()));
+			p.executeUpdate();
 
-            this.selectTopicData();
-        }
-        finally {
-            DbUtils.close(p);
-        }
-    }
-	
+			this.selectTopicData();
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
+
 	// Given a set of keywords, find the topics
 	private void topicsByKeyword(SearchData sd)
-    {
+	{
 		boolean isLike = "like".equals(SystemGlobals.getValue(ConfigKeys.SEARCH_WORD_MATCHING).trim());
-		
-		String sql = isLike 
-			? SystemGlobals.getSql("SearchModel.searchByLikeWord")
-			: SystemGlobals.getSql("SearchModel.searchByWord");
-		
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(sql);
 
-            Map eachWordMap = new HashMap();
+		String sql = isLike ? SystemGlobals.getSql("SearchModel.searchByLikeWord") : SystemGlobals
+				.getSql("SearchModel.searchByWord");
 
-            int maxWordSize = SystemGlobals.getIntValue(ConfigKeys.SEARCH_MAX_WORD_SIZE);
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(sql);
 
-            // Get the post ids to which the words are associated to
-            for (int i = 0; i < sd.getKeywords().length; i++) {
-                String word = sd.getKeywords()[i].toLowerCase();
+			Map eachWordMap = new HashMap();
 
-                if (word.length() > maxWordSize) {
-                    //truncate the word
-                    word = word.substring(0, maxWordSize);
-                }
+			int maxWordSize = SystemGlobals.getIntValue(ConfigKeys.SEARCH_MAX_WORD_SIZE);
 
-                if (isLike) {
-                    p.setString(1, "%" + word + "%");
-                }
-                else {
-                    p.setString(1, word);
-                }
+			// Get the post ids to which the words are associated to
+			for (int i = 0; i < sd.getKeywords().length; i++) {
+				String word = sd.getKeywords()[i].toLowerCase();
 
-                Set postsIds = new HashSet();
-                ResultSet rs=null;
-                try
-                {
-                    rs = p.executeQuery();
+				if (word.length() > maxWordSize) {
+					// truncate the word
+					word = word.substring(0, maxWordSize);
+				}
 
-                    while (rs.next()) {
-                        postsIds.add(new Integer(rs.getInt("post_id")));
-                    }
-                }
-                finally
-                {
-                    DbUtils.close(rs);
-                }
+				if (isLike) {
+					p.setString(1, "%" + word + "%");
+				}
+				else {
+					p.setString(1, word);
+				}
 
-                if (postsIds.size() > 0) {
-                    eachWordMap.put(sd.getKeywords()[i], postsIds);
-                }
-            }
+				Set postsIds = new HashSet();
+				ResultSet rs = null;
+				try {
+					rs = p.executeQuery();
 
-            p.close();
-            p=null;
+					while (rs.next()) {
+						postsIds.add(new Integer(rs.getInt("post_id")));
+					}
+				}
+				finally {
+					DbUtils.close(rs);
+				}
 
-            // [wordName] = { each, post, id }
+				if (postsIds.size() > 0) {
+					eachWordMap.put(sd.getKeywords()[i], postsIds);
+				}
+			}
 
-            // If seach type is OR, then get all words
-            // If it is AND, then we want only the ids common to all words
-            Set postsIds = null;
+			p.close();
+			p = null;
 
-            if (sd.getUseAllWords()) {
-                for (Iterator iter = eachWordMap.values().iterator(); iter.hasNext(); ) {
-                    if (postsIds == null) {
-                        postsIds = new HashSet(eachWordMap.values().size());
-                        postsIds.addAll((HashSet)iter.next());
-                    }
-                    else {
-                        postsIds.retainAll((HashSet)iter.next());
-                    }
-                }
-            }
-            else {
-                postsIds = new HashSet();
+			// [wordName] = { each, post, id }
 
-                for (Iterator iter = eachWordMap.values().iterator(); iter.hasNext(); ) {
-                    postsIds.addAll((HashSet)iter.next());
-                }
-            }
+			// If seach type is OR, then get all words
+			// If it is AND, then we want only the ids common to all words
+			Set postsIds = null;
 
-            if (postsIds == null || postsIds.size() == 0) {
-                return;
-            }
+			if (sd.getUseAllWords()) {
+				for (Iterator iter = eachWordMap.values().iterator(); iter.hasNext();) {
+					if (postsIds == null) {
+						postsIds = new HashSet(eachWordMap.values().size());
+						postsIds.addAll((HashSet) iter.next());
+					}
+					else {
+						postsIds.retainAll((HashSet) iter.next());
+					}
+				}
+			}
+			else {
+				postsIds = new HashSet();
 
-            // Time to get ready to search for the topics ids
-            StringBuffer sb = new StringBuffer(1024);
-            for (Iterator iter = postsIds.iterator(); iter.hasNext(); ) {
-                sb.append(iter.next()).append(",");
-            }
-            sb.delete(sb.length() - 1, sb.length());
+				for (Iterator iter = eachWordMap.values().iterator(); iter.hasNext();) {
+					postsIds.addAll((HashSet) iter.next());
+				}
+			}
 
-            // Search for the ids, inserting them in the helper table
-            sql = SystemGlobals.getSql("SearchModel.insertTopicsIds");
-            sql = sql.replaceAll(":posts:", sb.toString());
-            sql = sql.replaceAll(":fids:",ForumRepository.getListAllowedForums());
+			if (postsIds == null || postsIds.size() == 0) {
+				return;
+			}
 
-            p = JForumExecutionContext.getConnection().prepareStatement(sql);
-            p.setString(1, SessionFacade.getUserSession().getSessionId());
+			// Time to get ready to search for the topics ids
+			StringBuffer sb = new StringBuffer(1024);
+			for (Iterator iter = postsIds.iterator(); iter.hasNext();) {
+				sb.append(iter.next()).append(",");
+			}
+			sb.delete(sb.length() - 1, sb.length());
 
-            p.executeUpdate();
+			// Search for the ids, inserting them in the helper table
+			sql = SystemGlobals.getSql("SearchModel.insertTopicsIds");
+			sql = sql.replaceAll(":posts:", sb.toString());
+			sql = sql.replaceAll(":fids:", ForumRepository.getListAllowedForums());
 
-            // Now that we have the topics ids, it's time to make a copy from the
-            // topics table, to make the search faster
-            this.selectTopicData();
+			p = JForumExecutionContext.getConnection().prepareStatement(sql);
+			p.setString(1, SessionFacade.getUserSession().getSessionId());
 
-        }
-        catch (SQLException e) {
-            String es = "Error topicsByKeyword()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
-        }
-        finally {
-            DbUtils.close( p);
-        }
-    }
-	
+			p.executeUpdate();
+
+			// Now that we have the topics ids, it's time to make a copy from the
+			// topics table, to make the search faster
+			this.selectTopicData();
+
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
+
 	private void selectTopicData() throws SQLException
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.selectTopicData"));
-            p.setString(1, SessionFacade.getUserSession().getSessionId());
-            p.setString(2, SessionFacade.getUserSession().getSessionId());
-            p.executeUpdate();
-        }
-        finally {
-            DbUtils.close(p);
-        }
-    }
-	
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("SearchModel.selectTopicData"));
+			p.setString(1, SessionFacade.getUserSession().getSessionId());
+			p.setString(2, SessionFacade.getUserSession().getSessionId());
+			p.executeUpdate();
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
 
-	/** 
+	/**
 	 * @see net.jforum.dao.SearchDAO#cleanSearch()
 	 */
 	public void cleanSearch()
 	{
-		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.cleanSearchTopics"));
-            p.setString(1, SessionFacade.getUserSession().getSessionId());
-            p.executeUpdate();
-            p.close();
-            p=null;
+		PreparedStatement p = null;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("SearchModel.cleanSearchTopics"));
+			p.setString(1, SessionFacade.getUserSession().getSessionId());
+			p.executeUpdate();
+			p.close();
+			p = null;
 
-            p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("SearchModel.cleanSearchResults"));
-            p.setString(1, SessionFacade.getUserSession().getSessionId());
-            p.executeUpdate();
-        }
-        catch (SQLException e) {
-            String es = "Error cleanSearch()";
-            log.error(es, e);
-            throw new DatabaseException(es, e);
-        }
-        finally {
-            DbUtils.close( p);
-        }
-    }
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("SearchModel.cleanSearchResults"));
+			p.setString(1, SessionFacade.getUserSession().getSessionId());
+			p.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
 }

@@ -57,11 +57,11 @@ import java.util.List;
 import java.util.Properties;
 
 import net.jforum.*;
-import net.jforum.core.context.RequestContext;
-import net.jforum.core.context.ResponseContext;
-import net.jforum.core.db.DBConnection;
-import net.jforum.core.db.DataSourceConnection;
-import net.jforum.core.db.SimpleConnection;
+import net.jforum.context.RequestContext;
+import net.jforum.context.ResponseContext;
+import net.jforum.db.DBConnection;
+import net.jforum.db.DataSourceConnection;
+import net.jforum.db.SimpleConnection;
 import net.jforum.entities.UserSession;
 import net.jforum.util.FileMonitor;
 import net.jforum.util.I18n;
@@ -82,15 +82,15 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.54 2006/08/21 22:47:55 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.55 2006/08/23 02:13:57 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
 	private static Logger logger = Logger.getLogger(InstallAction.class);
 
-    private static final String POOLED_CONNECTION = net.jforum.core.db.PooledConnection.class.getName();
-    private static final String SIMPLE_CONNECTION = net.jforum.core.db.SimpleConnection.class.getName();
-    private static final String DATASOURCE_CONNECTION = net.jforum.core.db.DataSourceConnection.class.getName();
+    private static final String POOLED_CONNECTION = net.jforum.db.PooledConnection.class.getName();
+    private static final String SIMPLE_CONNECTION = net.jforum.db.SimpleConnection.class.getName();
+    private static final String DATASOURCE_CONNECTION = net.jforum.db.DataSourceConnection.class.getName();
 
     public void welcome()
 	{
@@ -780,7 +780,7 @@ public class InstallAction extends Command
 	}
 	
 	/** 
-	 * @see net.jforum.Command#process(net.jforum.core.context.RequestContext, net.jforum.core.context.ResponseContext, freemarker.template.SimpleHash) 
+	 * @see net.jforum.Command#process(net.jforum.context.RequestContext, net.jforum.context.ResponseContext, freemarker.template.SimpleHash) 
      * @param request AWebContextRequest     * @param response HttpServletResponse
      * @param context SimpleHash
 	 */

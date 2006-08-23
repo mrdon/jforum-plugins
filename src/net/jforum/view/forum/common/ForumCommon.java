@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -65,7 +65,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumCommon.java,v 1.14 2006/08/20 12:19:17 sergemaslyukov Exp $
+ * @version $Id: ForumCommon.java,v 1.15 2006/08/23 02:13:56 rafaelsteil Exp $
  */
 public class ForumCommon 
 {

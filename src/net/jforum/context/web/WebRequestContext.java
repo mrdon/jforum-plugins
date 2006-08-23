@@ -40,7 +40,7 @@
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.core.context.web;
+package net.jforum.context.web;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,11 +54,11 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
-import net.jforum.core.UrlPattern;
-import net.jforum.core.UrlPatternCollection;
-import net.jforum.core.context.JForumContext;
-import net.jforum.core.context.RequestContext;
-import net.jforum.core.context.SessionContext;
+import net.jforum.UrlPattern;
+import net.jforum.UrlPatternCollection;
+import net.jforum.context.JForumContext;
+import net.jforum.context.RequestContext;
+import net.jforum.context.SessionContext;
 import net.jforum.exceptions.MultipartHandlingException;
 import net.jforum.util.legacy.commons.fileupload.FileItem;
 import net.jforum.util.legacy.commons.fileupload.FileUploadException;
@@ -70,7 +70,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: WebRequestContext.java,v 1.1 2006/08/20 22:47:33 rafaelsteil Exp $
+ * @version $Id: WebRequestContext.java,v 1.1 2006/08/23 02:13:58 rafaelsteil Exp $
  */
 public class WebRequestContext extends HttpServletRequestWrapper implements RequestContext
 {

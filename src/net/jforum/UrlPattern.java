@@ -40,7 +40,7 @@
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.core;
+package net.jforum;
 
 /**
  * URL Patterns keeper.
@@ -86,7 +86,7 @@ package net.jforum.core;
  * <i>myModule.myAction.0 = </i><br><br>
  *
  * @author Rafael Steil
- * @version $Id: UrlPattern.java,v 1.1 2006/08/20 22:47:54 rafaelsteil Exp $
+ * @version $Id: UrlPattern.java,v 1.1 2006/08/23 02:13:49 rafaelsteil Exp $
  */
 public class UrlPattern
 {

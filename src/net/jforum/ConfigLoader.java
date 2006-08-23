@@ -51,7 +51,6 @@ import java.util.Properties;
 
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
-import net.jforum.core.UrlPatternCollection;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.exceptions.CacheEngineStartupException;
 import net.jforum.summary.SummaryScheduler;
@@ -69,7 +68,7 @@ import org.quartz.SchedulerException;
  * General utilities methods for loading configurations for JForum.
  * 
  * @author Rafael Steil
- * @version $Id: ConfigLoader.java,v 1.23 2006/08/20 22:47:25 rafaelsteil Exp $
+ * @version $Id: ConfigLoader.java,v 1.24 2006/08/23 02:13:49 rafaelsteil Exp $
  */
 public class ConfigLoader 
 {

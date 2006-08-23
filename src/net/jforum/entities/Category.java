@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -72,7 +72,7 @@ import net.jforum.util.ForumOrderComparator;
  * to the user who make the call tho the method. 
  * 
  * @author Rafael Steil
- * @version $Id: Category.java,v 1.20 2006/08/20 12:19:08 sergemaslyukov Exp $
+ * @version $Id: Category.java,v 1.21 2006/08/23 02:13:46 rafaelsteil Exp $
  */
 public class Category  implements Serializable
 {

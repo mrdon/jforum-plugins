@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
 
  * Redistribution and use in source and binary forms, 
@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  * 
- * $Id: AbstractWorker.java,v 1.8 2005/07/26 04:01:15 diegopires Exp $
+ * $Id: AbstractWorker.java,v 1.9 2006/08/23 02:13:50 rafaelsteil Exp $
  */
  package net.jforum.util.concurrent.executor;
 

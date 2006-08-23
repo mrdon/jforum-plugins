@@ -39,20 +39,21 @@
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.core;
+package net.jforum;
 
 import java.util.HashMap;
+import java.util.Map;
 
 
 /**
  * Keeps a collection of <code>UrlPattern</code> objects.
  *
  * @author Rafael Steil
- * @version $Id: UrlPatternCollection.java,v 1.1 2006/08/20 22:47:54 rafaelsteil Exp $
+ * @version $Id: UrlPatternCollection.java,v 1.1 2006/08/23 02:13:49 rafaelsteil Exp $
  */
 public class UrlPatternCollection
 {
-    private static HashMap patternsMap = new HashMap();
+    private static Map patternsMap = new HashMap();
 
     /**
      * Try to find a <code>UrlPattern</code> by its name.

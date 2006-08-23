@@ -40,10 +40,11 @@
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.core.context;
+package net.jforum.context;
 
 
 import javax.servlet.http.Cookie;
+
 
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
