@@ -36,86 +36,78 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * This file creation date: 25/08/2004 23:32:20
+ * Created on 30/11/2005 17:07:51
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.db;
+package net.jforum;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 
 import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.mchange.v2.c3p0.DataSources;
+
 /**
- * Non-pooled connection implementation.
- * This class will ask a new conneciton to the database on every
- * <code>getConnection()</code> class. Uses of this class include
- * systems where a connection pool is not permited or the 
- * connections' life time is too short, not justifying to have
- * a connection pool.
- * 
  * @author Rafael Steil
- * @version $Id: SimpleConnection.java,v 1.1 2006/08/23 02:13:44 rafaelsteil Exp $
+ * @version $Id: C3P0PooledConnection.java,v 1.4 2006/08/23 02:24:06 rafaelsteil Exp $
  */
-public class SimpleConnection extends DBConnection 
+public class C3P0PooledConnection extends DBConnection
 {
-	/** 
-	 * @see net.jforum.Connection#init()
+	private ComboPooledDataSource ds;
+	
+	/**
+	 * 
+	 * @see net.jforum.DBConnection#init()
 	 */
-	public void init() throws Exception 
+	public void init() throws Exception
 	{
-		try {
-			Class.forName(SystemGlobals.getValue(ConfigKeys.DATABASE_CONNECTION_DRIVER));
-			
-			// Try to validate the connection url
-			Connection conn = this.getConnection();
-			if (conn != null) {
-				this.releaseConnection(conn);
-			}
-			
-			this.isDatabaseUp = true;
-		}
-		catch (Exception e) {
-			this.isDatabaseUp = false;
-			throw e;
-		}
+		this.ds = new ComboPooledDataSource();
+		this.ds.setDriverClass(SystemGlobals.getValue(ConfigKeys.DATABASE_CONNECTION_DRIVER));
+		this.ds.setJdbcUrl(SystemGlobals.getValue(ConfigKeys.DATABASE_CONNECTION_STRING));
+		this.ds.setMinPoolSize(SystemGlobals.getIntValue(ConfigKeys.DATABASE_POOL_MIN));
+		this.ds.setMaxPoolSize(SystemGlobals.getIntValue(ConfigKeys.DATABASE_POOL_MAX));
+		this.ds.setIdleConnectionTestPeriod(SystemGlobals.getIntValue(ConfigKeys.DATABASE_PING_DELAY));
 	}
 
-	/** 
-	 * @see net.jforum.Connection#getConnection()
+	/**
+	 * @see net.jforum.DBConnection#getConnection()
 	 */
 	public Connection getConnection()
 	{
 		try {
-			return DriverManager.getConnection(SystemGlobals.getValue(ConfigKeys.DATABASE_CONNECTION_STRING));
+			return this.ds.getConnection();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new DatabaseException(e);
 		}
 	}
 
-	/** 
-	 * @see net.jforum.Connection#releaseConnection(java.sql.Connection)
+	/**
+	 * @see net.jforum.DBConnection#releaseConnection(java.sql.Connection)
 	 */
 	public void releaseConnection(Connection conn)
 	{
         if (conn==null) {
             return;
         }
-		try {
+
+        try {
 			conn.close();
 		}
 		catch (Exception e) {
-            //catch error of close of connection
-        }
+			e.printStackTrace();
+		}
 	}
-	
-	/** 
-	 * @see net.jforum.db.DBConnection#realReleaseAllConnections()
+
+	/**
+	 * @see net.jforum.DBConnection#realReleaseAllConnections()
 	 */
-	public void realReleaseAllConnections() throws Exception {}
+	public void realReleaseAllConnections() throws Exception
+	{
+		DataSources.destroy(this.ds);
+	}
 }

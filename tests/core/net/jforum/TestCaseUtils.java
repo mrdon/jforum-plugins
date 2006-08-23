@@ -46,7 +46,6 @@ import java.io.File;
 import java.io.IOException;
 
 import net.jforum.dao.DataAccessDriver;
-import net.jforum.db.DBConnection;
 import net.jforum.entities.UserSession;
 import net.jforum.http.FakeActionServletRequest;
 import net.jforum.security.PermissionControl;
@@ -63,7 +62,7 @@ import freemarker.template.Configuration;
  * General utilities for the test cases.
  * 
  * @author Rafael Steil
- * @version $Id: TestCaseUtils.java,v 1.17 2006/08/23 02:13:52 rafaelsteil Exp $
+ * @version $Id: TestCaseUtils.java,v 1.18 2006/08/23 02:24:07 rafaelsteil Exp $
  */
 public class TestCaseUtils
 {

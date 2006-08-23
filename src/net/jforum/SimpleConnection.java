@@ -1,11 +1,11 @@
 /*
  * Copyright (c) JForum Team
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -36,72 +36,86 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on 13/11/2004 01:53:12
+ * This file creation date: 25/08/2004 23:32:20
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 
-import org.apache.log4j.Logger;
-
-import net.jforum.dao.CategoryDAO;
-import net.jforum.dao.ConfigDAO;
-import net.jforum.dao.DataAccessDriver;
-import net.jforum.dao.ForumDAO;
 import net.jforum.exceptions.DatabaseException;
-import net.jforum.exceptions.RepositoryStartupException;
-import net.jforum.repository.ForumRepository;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
+ * Non-pooled connection implementation.
+ * This class will ask a new conneciton to the database on every
+ * <code>getConnection()</code> class. Uses of this class include
+ * systems where a connection pool is not permited or the 
+ * connections' life time is too short, not justifying to have
+ * a connection pool.
+ * 
  * @author Rafael Steil
- * @version $Id: ForumStartup.java,v 1.16 2006/08/23 02:24:06 rafaelsteil Exp $
+ * @version $Id: SimpleConnection.java,v 1.15 2006/08/23 02:24:05 rafaelsteil Exp $
  */
-public class ForumStartup 
+public class SimpleConnection extends DBConnection 
 {
-	
-	private static final Logger log = Logger.getLogger(ForumStartup.class);
-	
-	/**
-	 * Starts the database implementation
-	 * @return <code>true</code> if everthing were ok
-	 * @throws DatabaseException if something were wrong
+	/** 
+	 * @see net.jforum.Connection#init()
 	 */
-	public static boolean startDatabase()
+	public void init() throws Exception 
 	{
 		try {
-			if (DBConnection.createInstance()) {
-				DBConnection.getImplementation().init();
-				
-				// Check if we're in fact up and running
-				Connection conn = DBConnection.getImplementation().getConnection();
-				DBConnection.getImplementation().releaseConnection(conn);
+			Class.forName(SystemGlobals.getValue(ConfigKeys.DATABASE_CONNECTION_DRIVER));
+			
+			// Try to validate the connection url
+			Connection conn = this.getConnection();
+			if (conn != null) {
+				this.releaseConnection(conn);
 			}
+			
+			this.isDatabaseUp = true;
 		}
 		catch (Exception e) {
-			throw new DatabaseException("Error while trying to start the database: " + e, e);
+			this.isDatabaseUp = false;
+			throw e;
 		}
-		
-		return true;
 	}
-	
-	/**
-	 * Starts the cache control for forums and categories.
-	 * @throws RepositoryStartupException is something were wrong.
+
+	/** 
+	 * @see net.jforum.Connection#getConnection()
 	 */
-	public static void startForumRepository()
+	public Connection getConnection()
 	{
 		try {
-			ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
-			CategoryDAO cm = DataAccessDriver.getInstance().newCategoryDAO();
-			ConfigDAO configModel = DataAccessDriver.getInstance().newConfigDAO();
-
-			ForumRepository.start(fm, cm, configModel);
+			return DriverManager.getConnection(SystemGlobals.getValue(ConfigKeys.DATABASE_CONNECTION_STRING));
 		}
 		catch (Exception e) {
-			log.error("Unable to bootstrap JForum repository.", e);
-			throw new RepositoryStartupException("Error while trying to start ForumRepository: " + e, e);
+			e.printStackTrace();
+			throw new DatabaseException(e);
 		}
 	}
+
+	/** 
+	 * @see net.jforum.Connection#releaseConnection(java.sql.Connection)
+	 */
+	public void releaseConnection(Connection conn)
+	{
+        if (conn==null) {
+            return;
+        }
+		try {
+			conn.close();
+		}
+		catch (Exception e) {
+            //catch error of close of connection
+        }
+	}
+	
+	/** 
+	 * @see net.jforum.DBConnection#realReleaseAllConnections()
+	 */
+	public void realReleaseAllConnections() throws Exception {}
 }

@@ -36,45 +36,47 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on 30/11/2005 17:07:51
+ * Created on Jan 7, 2005 7:44:40 PM
+ *
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.db;
+package net.jforum;
 
 import java.sql.Connection;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
 
 import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
-import com.mchange.v2.c3p0.DataSources;
-
 /**
+ * DataSource connection implementation for JForum.
+ * The datasourcename should be set in the key 
+ * <code>database.datasource.name</code> at 
+ * SystemGlobals.properties.
+ * 
  * @author Rafael Steil
- * @version $Id: C3P0PooledConnection.java,v 1.1 2006/08/23 02:13:45 rafaelsteil Exp $
+ * @version $Id: DataSourceConnection.java,v 1.10 2006/08/23 02:24:05 rafaelsteil Exp $
  */
-public class C3P0PooledConnection extends DBConnection
+public class DataSourceConnection extends DBConnection
 {
-	private ComboPooledDataSource ds;
+	private DataSource ds;
 	
 	/**
-	 * 
-	 * @see net.jforum.db.DBConnection#init()
+	 * @see net.jforum.DBConnection#init()
 	 */
-	public void init() throws Exception
+	public void init() throws Exception 
 	{
-		this.ds = new ComboPooledDataSource();
-		this.ds.setDriverClass(SystemGlobals.getValue(ConfigKeys.DATABASE_CONNECTION_DRIVER));
-		this.ds.setJdbcUrl(SystemGlobals.getValue(ConfigKeys.DATABASE_CONNECTION_STRING));
-		this.ds.setMinPoolSize(SystemGlobals.getIntValue(ConfigKeys.DATABASE_POOL_MIN));
-		this.ds.setMaxPoolSize(SystemGlobals.getIntValue(ConfigKeys.DATABASE_POOL_MAX));
-		this.ds.setIdleConnectionTestPeriod(SystemGlobals.getIntValue(ConfigKeys.DATABASE_PING_DELAY));
+		Context context = new InitialContext();
+		this.ds = (DataSource)context.lookup(SystemGlobals.getValue(
+				ConfigKeys.DATABASE_DATASOURCE_NAME));
 	}
-
 	/**
-	 * @see net.jforum.db.DBConnection#getConnection()
+	 * @see net.jforum.DBConnection#getConnection()
 	 */
 	public Connection getConnection()
 	{
@@ -82,32 +84,29 @@ public class C3P0PooledConnection extends DBConnection
 			return this.ds.getConnection();
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			throw new DatabaseException(e);
 		}
 	}
 
 	/**
-	 * @see net.jforum.db.DBConnection#releaseConnection(java.sql.Connection)
+	 * @see net.jforum.DBConnection#releaseConnection(java.sql.Connection)
 	 */
 	public void releaseConnection(Connection conn)
 	{
         if (conn==null) {
             return;
         }
-
-        try {
+		try {
 			conn.close();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
-		}
+            // catch error of close of connection
+        }
 	}
 
 	/**
-	 * @see net.jforum.db.DBConnection#realReleaseAllConnections()
+	 * @see net.jforum.DBConnection#realReleaseAllConnections()
 	 */
-	public void realReleaseAllConnections() throws Exception
-	{
-		DataSources.destroy(this.ds);
-	}
+	public void realReleaseAllConnections() throws Exception {}
 }

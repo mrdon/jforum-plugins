@@ -59,7 +59,6 @@ import net.jforum.context.ResponseContext;
 import net.jforum.context.web.WebRequestContext;
 import net.jforum.context.web.WebResponseContext;
 import net.jforum.dao.DatabaseWorkarounder;
-import net.jforum.db.DBConnection;
 import net.jforum.exceptions.ExceptionWriter;
 import net.jforum.exceptions.ForumStartupException;
 import net.jforum.repository.ModulesRepository;
@@ -78,7 +77,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.98 2006/08/23 02:13:49 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.99 2006/08/23 02:24:05 rafaelsteil Exp $
  */
 public class JForum extends JForumBaseServlet 
 {

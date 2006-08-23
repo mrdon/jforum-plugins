@@ -59,9 +59,6 @@ import java.util.Properties;
 import net.jforum.*;
 import net.jforum.context.RequestContext;
 import net.jforum.context.ResponseContext;
-import net.jforum.db.DBConnection;
-import net.jforum.db.DataSourceConnection;
-import net.jforum.db.SimpleConnection;
 import net.jforum.entities.UserSession;
 import net.jforum.util.FileMonitor;
 import net.jforum.util.I18n;
@@ -82,15 +79,15 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.55 2006/08/23 02:13:57 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.56 2006/08/23 02:24:07 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
 	private static Logger logger = Logger.getLogger(InstallAction.class);
 
-    private static final String POOLED_CONNECTION = net.jforum.db.PooledConnection.class.getName();
-    private static final String SIMPLE_CONNECTION = net.jforum.db.SimpleConnection.class.getName();
-    private static final String DATASOURCE_CONNECTION = net.jforum.db.DataSourceConnection.class.getName();
+    private static final String POOLED_CONNECTION = net.jforum.PooledConnection.class.getName();
+    private static final String SIMPLE_CONNECTION = net.jforum.SimpleConnection.class.getName();
+    private static final String DATASOURCE_CONNECTION = net.jforum.DataSourceConnection.class.getName();
 
     public void welcome()
 	{

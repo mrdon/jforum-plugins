@@ -40,7 +40,7 @@
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.db;
+package net.jforum;
 
 import java.sql.Connection;
 
@@ -57,7 +57,7 @@ import org.apache.log4j.Logger;
  * which opens a new connection on every request.  
  * 
  * @author Rafael Steil
- * @version $Id: DBConnection.java,v 1.1 2006/08/23 02:13:45 rafaelsteil Exp $
+ * @version $Id: DBConnection.java,v 1.14 2006/08/23 02:24:06 rafaelsteil Exp $
  */
 public abstract class DBConnection 
 {

@@ -46,11 +46,11 @@ import java.io.FileInputStream;
 import java.sql.Connection;
 import java.util.Properties;
 
+import net.jforum.DBConnection;
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ScheduledSearchIndexerDAO;
-import net.jforum.db.DBConnection;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -61,7 +61,7 @@ import org.quartz.JobExecutionException;
 
 /**
  * @author Rafael Steil
- * @version $Id: QuartzSearchIndexerJob.java,v 1.10 2006/08/23 02:13:55 rafaelsteil Exp $
+ * @version $Id: QuartzSearchIndexerJob.java,v 1.11 2006/08/23 02:24:07 rafaelsteil Exp $
  */
 public class QuartzSearchIndexerJob implements Job, Cacheable
 {

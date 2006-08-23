@@ -36,77 +36,18 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Jan 7, 2005 7:44:40 PM
- *
+ * This file creation date: Mar 3, 2003 / 14:43:35 AM
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.db;
 
-import java.sql.Connection;
-
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.sql.DataSource;
-
-import net.jforum.exceptions.DatabaseException;
-import net.jforum.util.preferences.ConfigKeys;
-import net.jforum.util.preferences.SystemGlobals;
+package net.jforum;
 
 /**
- * DataSource connection implementation for JForum.
- * The datasourcename should be set in the key 
- * <code>database.datasource.name</code> at 
- * SystemGlobals.properties.
+ * This call exists only for backward compatiblity.
+ * It just extends {@link C3P0PooledConnection}
  * 
  * @author Rafael Steil
- * @version $Id: DataSourceConnection.java,v 1.1 2006/08/23 02:13:45 rafaelsteil Exp $
+ * @version $Id: PooledConnection.java,v 1.21 2006/08/23 02:24:05 rafaelsteil Exp $
  */
-public class DataSourceConnection extends DBConnection
-{
-	private DataSource ds;
-	
-	/**
-	 * @see net.jforum.db.DBConnection#init()
-	 */
-	public void init() throws Exception 
-	{
-		Context context = new InitialContext();
-		this.ds = (DataSource)context.lookup(SystemGlobals.getValue(
-				ConfigKeys.DATABASE_DATASOURCE_NAME));
-	}
-	/**
-	 * @see net.jforum.db.DBConnection#getConnection()
-	 */
-	public Connection getConnection()
-	{
-		try {
-			return this.ds.getConnection();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			throw new DatabaseException(e);
-		}
-	}
-
-	/**
-	 * @see net.jforum.db.DBConnection#releaseConnection(java.sql.Connection)
-	 */
-	public void releaseConnection(Connection conn)
-	{
-        if (conn==null) {
-            return;
-        }
-		try {
-			conn.close();
-		}
-		catch (Exception e) {
-            // catch error of close of connection
-        }
-	}
-
-	/**
-	 * @see net.jforum.db.DBConnection#realReleaseAllConnections()
-	 */
-	public void realReleaseAllConnections() throws Exception {}
-}
+public class PooledConnection extends C3P0PooledConnection {}
