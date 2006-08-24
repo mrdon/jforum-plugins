@@ -50,6 +50,7 @@ import java.util.Map;
 import net.jforum.JForumExecutionContext;
 import net.jforum.dao.UserDAO;
 import net.jforum.entities.User;
+import net.jforum.exceptions.ForumException;
 import net.jforum.util.MD5;
 import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.SystemGlobals;
@@ -61,7 +62,7 @@ import org.apache.log4j.Logger;
  * <i>jforum_users</i>. 
  * 
  * @author Rafael Steil
- * @version $Id: DefaultLoginAuthenticator.java,v 1.8 2006/08/20 22:47:43 rafaelsteil Exp $
+ * @version $Id: DefaultLoginAuthenticator.java,v 1.9 2006/08/24 01:07:04 rafaelsteil Exp $
  */
 public class DefaultLoginAuthenticator implements LoginAuthenticator
 {
@@ -82,36 +83,35 @@ public class DefaultLoginAuthenticator implements LoginAuthenticator
 	 */
 	public User validateLogin(String username, String password, Map extraParams)
 	{
-        User user = null;
-        ResultSet rs=null;
+		User user = null;
+		ResultSet rs=null;
 		PreparedStatement p=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(
-                    SystemGlobals.getSql("UserModel.login"));
-            p.setString(1, username);
-            p.setString(2, MD5.crypt(password));
+		
+		try 
+		{
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("UserModel.login"));
+			p.setString(1, username);
+			p.setString(2, MD5.crypt(password));
 
-            rs = p.executeQuery();
-            if (rs.next() && rs.getInt("user_id") > 0) {
-                user = this.userModel.selectById(rs.getInt("user_id"));
-            }
-        }
-        catch (SQLException e)
-        {
-            String es = "Error update()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        finally
-        {
-            DbUtils.close(rs, p);
-        }
+			rs = p.executeQuery();
+			if (rs.next() && rs.getInt("user_id") > 0) {
+				user = this.userModel.selectById(rs.getInt("user_id"));
+			}
+		}
+		catch (SQLException e)
+		{
+			throw new ForumException(e);
+		}
+		finally
+		{
+			DbUtils.close(rs, p);
+		}
 
-        if (user != null && !user.isDeleted() && (user.getActivationKey() == null || user.isActive())) {
+		if (user != null && !user.isDeleted() && (user.getActivationKey() == null || user.isActive())) {
 			return user;
 		}
-		
+
 		return null;
 	}
 }

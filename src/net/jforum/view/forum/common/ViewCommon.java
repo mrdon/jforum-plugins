@@ -44,25 +44,23 @@ package net.jforum.view.forum.common;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 
-import net.jforum.Command;
 import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
 import net.jforum.entities.User;
-import net.jforum.exceptions.RequestEmptyException;
 import net.jforum.repository.BBCodeRepository;
-import net.jforum.repository.ModulesRepository;
 import net.jforum.repository.SmiliesRepository;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
-import freemarker.template.SimpleHash;
+
 import org.apache.log4j.Logger;
+
+import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.22 2006/08/20 22:47:50 rafaelsteil Exp $
+ * @version $Id: ViewCommon.java,v 1.23 2006/08/24 01:07:04 rafaelsteil Exp $
  */
 public final class ViewCommon
 {
@@ -165,49 +163,6 @@ public final class ViewCommon
 		return (SessionFacade.getAttribute(ConfigKeys.REQUEST_DUMP) != null);
 	}
 	
-	/**
-	 * Reprocess a request. 
-	 * The request data should be in the session, held by the key
-	 * <code>ConfigKeys.REQUEST_DUMP</code> and the value as
-	 * a <code>java.util.Map</code>. Usual behaviour is to have the return
-	 * of @link net.jforum.web_context.WebContextRequest#dumpRequest().
-	 */
-	public static void reprocessRequest()
-	{
-		Map data = (Map)SessionFacade.getAttribute(ConfigKeys.REQUEST_DUMP);
-		if (data == null) {
-			throw new RequestEmptyException("A call to ViewCommon#reprocessRequest() was made, but no data found");
-		}
-		
-		String module = (String)data.get("module");
-		String action = (String)data.get("action");
-		
-		if (module == null || action == null) {
-			throw new RequestEmptyException("A call to ViewCommon#reprocessRequest() was made, "
-				+ "but no module or action name was found");
-		}
-		
-		JForumExecutionContext.getRequest().restoreDump(data);
-		SessionFacade.removeAttribute(ConfigKeys.REQUEST_DUMP);
-		
-		String moduleClass = ModulesRepository.getModuleClass(module);
-
-        Command command;
-        try
-        {
-            command = ((Command) Class.forName(moduleClass).newInstance());
-        }
-        catch (Exception e)
-        {
-            String es = "Error reprocessRequest()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-
-        command.process(JForumExecutionContext.getRequest(),
-				JForumExecutionContext.getResponse(), JForumExecutionContext.getTemplateContext());
-	}
-
 	public static String toUtf8String(String s)
 	{
 		StringBuffer sb = new StringBuffer();

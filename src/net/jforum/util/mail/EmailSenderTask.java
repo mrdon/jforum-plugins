@@ -42,12 +42,13 @@
  */
 package net.jforum.util.mail;
 
+import net.jforum.exceptions.ForumException;
 import net.jforum.util.concurrent.Task;
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: EmailSenderTask.java,v 1.9 2006/08/23 02:13:58 rafaelsteil Exp $
+ * @version $Id: EmailSenderTask.java,v 1.10 2006/08/24 01:07:03 rafaelsteil Exp $
  */
 public class EmailSenderTask implements Task 
 {
@@ -65,20 +66,17 @@ public class EmailSenderTask implements Task
 	 */
 	public Object execute()
 	{
-        try
-        {
-            if (this.spammer.dispatchMessages()) {
-                return "SUCCESS";
-            }
+		try
+		{
+			if (this.spammer.dispatchMessages()) {
+				return "SUCCESS";
+			}
 
-            return "FAILURE";
-        }
-        catch (Exception e)
-        {
-            String es = "Error execute()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-    }
-
+			return "FAILURE";
+		}
+		catch (Exception e)
+		{
+			throw new ForumException(e);
+		}
+	}
 }

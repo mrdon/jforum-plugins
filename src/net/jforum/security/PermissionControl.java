@@ -44,29 +44,25 @@ package net.jforum.security;
 
 import java.io.Serializable;
 
-import net.jforum.dao.security.SecurityDAO;
+import net.jforum.dao.GroupSecurityDAO;
 
 /**
- * Methods and properties for all classes that need make use of security
- * actions.  
+ * Methods and properties for all classes that need make use of security actions.  
  * 
  * @author Rafael Steil
- * @version $Id: PermissionControl.java,v 1.17 2006/08/20 22:47:34 rafaelsteil Exp $
+ * @version $Id: PermissionControl.java,v 1.18 2006/08/24 01:07:02 rafaelsteil Exp $
  */
 public class PermissionControl implements Serializable
 {
-	public static final int ROLE_DENY = 0;
-	public static final int ROLE_ALLOW = 1;
-
 	private RoleCollection roles;
-	private SecurityDAO smodel;
+	private GroupSecurityDAO smodel;
 	
 	public void setRoles(RoleCollection roles)
 	{
 		this.roles = roles;
 	}
 	
-	public void setSecurityModel(SecurityDAO smodel)
+	public void setSecurityModel(GroupSecurityDAO smodel)
 	{
 		this.smodel = smodel;
 	}
@@ -109,8 +105,7 @@ public class PermissionControl implements Serializable
 	 */
 	public boolean canAccess(String roleName) 
 	{
-		Role role = this.roles.get(roleName);
-		return (role != null && role.getType() == PermissionControl.ROLE_ALLOW);
+		return this.roles.containsKey(roleName);
 	}
 	
 	/** 
@@ -122,14 +117,11 @@ public class PermissionControl implements Serializable
 	public boolean canAccess(String roleName, String roleValue) 
 	{
 		Role role = this.roles.get(roleName);
+		
 		if (role == null) {
 			return false;
 		}
 
-		RoleValue rv = new RoleValue();
-		rv.setType(PermissionControl.ROLE_ALLOW);
-		rv.setValue(roleValue);
-
-		return role.getValues().contains(rv);
+		return role.getValues().contains(new RoleValue(roleValue));
 	}
 }

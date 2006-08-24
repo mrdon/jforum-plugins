@@ -60,6 +60,7 @@ import net.jforum.*;
 import net.jforum.context.RequestContext;
 import net.jforum.context.ResponseContext;
 import net.jforum.entities.UserSession;
+import net.jforum.exceptions.ForumException;
 import net.jforum.util.FileMonitor;
 import net.jforum.util.I18n;
 import net.jforum.util.MD5;
@@ -79,7 +80,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.56 2006/08/23 02:24:07 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.57 2006/08/24 01:06:55 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -352,9 +353,7 @@ public class InstallAction extends Command
         }
         catch (Exception e)
         {
-            String es = "Error importTablesData()";
-            logger.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new ForumException(e);
         }
     }
 	
@@ -509,9 +508,7 @@ public class InstallAction extends Command
         }
         catch (IOException e)
         {
-            String es = "Error configureJDBCConnection()";
-            logger.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new ForumException(e);
         }
 
         this.handleDatabasePort(p, port);

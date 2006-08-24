@@ -42,6 +42,8 @@
  */
 package net.jforum.util.image;
 
+import net.jforum.exceptions.ForumException;
+
 import org.apache.log4j.Logger;
 
 import java.awt.Dimension;
@@ -67,7 +69,7 @@ import javax.imageio.stream.ImageOutputStream;
  * can read from. GIF images will be saved as PNG. 
  * 
  * @author Rafael Steil
- * @version $Id: ImageUtils.java,v 1.18 2006/08/20 22:47:56 rafaelsteil Exp $
+ * @version $Id: ImageUtils.java,v 1.19 2006/08/24 01:07:07 rafaelsteil Exp $
  */
 public class ImageUtils
 {
@@ -89,17 +91,15 @@ public class ImageUtils
 	 */
 	public static BufferedImage resizeImage(String imgName, int type, int maxWidth, int maxHeight) 
 	{
-        try
-        {
-            return resizeImage(ImageIO.read(new File(imgName)), type, maxWidth, maxHeight);
-        }
-        catch (IOException e)
-        {
-            String es = "Error resizeImage()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-    }
+		try
+		{
+			return resizeImage(ImageIO.read(new File(imgName)), type, maxWidth, maxHeight);
+		}
+		catch (IOException e)
+		{
+			throw new ForumException(e);
+		}
+	}
 	
 	/**
 	 * Resizes an image. 
@@ -146,17 +146,15 @@ public class ImageUtils
 	 */
 	public static boolean saveImage(BufferedImage image, String toFileName, int type)
 	{
-        try
-        {
-            return ImageIO.write(image, type == IMAGE_JPEG ? "jpg" : "png", new File(toFileName));
-        }
-        catch (IOException e)
-        {
-            String es = "Error saveImage()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-    }
+		try
+		{
+			return ImageIO.write(image, type == IMAGE_JPEG ? "jpg" : "png", new File(toFileName));
+		}
+		catch (IOException e)
+		{
+			throw new ForumException(e);
+		}
+	}
 	
 	/**
 	 * Compress and save an image to the disk.
@@ -169,37 +167,35 @@ public class ImageUtils
 	 */
 	public static void saveCompressedImage(BufferedImage image, String toFileName, int type)
 	{
-        try
-        {
-            if (type == IMAGE_PNG) {
-                throw new UnsupportedOperationException("PNG compression not implemented");
-            }
+		try
+		{
+			if (type == IMAGE_PNG) {
+				throw new UnsupportedOperationException("PNG compression not implemented");
+			}
 
-            Iterator iter = ImageIO.getImageWritersByFormatName("jpg");
-            ImageWriter writer;
-            writer = (ImageWriter)iter.next();
+			Iterator iter = ImageIO.getImageWritersByFormatName("jpg");
+			ImageWriter writer;
+			writer = (ImageWriter)iter.next();
 
-            ImageOutputStream ios = ImageIO.createImageOutputStream(new File(toFileName));
-            writer.setOutput(ios);
+			ImageOutputStream ios = ImageIO.createImageOutputStream(new File(toFileName));
+			writer.setOutput(ios);
 
-            ImageWriteParam iwparam = new JPEGImageWriteParam(Locale.getDefault());
+			ImageWriteParam iwparam = new JPEGImageWriteParam(Locale.getDefault());
 
-            iwparam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-            iwparam.setCompressionQuality(0.7F);
+			iwparam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+			iwparam.setCompressionQuality(0.7F);
 
-            writer.write(null, new IIOImage(image, null, null), iwparam);
+			writer.write(null, new IIOImage(image, null, null), iwparam);
 
-            ios.flush();
-            writer.dispose();
-            ios.close();
-        }
-        catch (IOException e)
-        {
-            String es = "Error saveCompressedImage()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-    }
+			ios.flush();
+			writer.dispose();
+			ios.close();
+		}
+		catch (IOException e)
+		{
+			throw new ForumException(e);
+		}
+	}
 	
 	/**
 	 * Creates a <code>BufferedImage</code> from an <code>Image</code>. 

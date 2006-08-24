@@ -53,6 +53,7 @@ import java.util.List;
 import java.util.Properties;
 
 import net.jforum.ConfigLoader;
+import net.jforum.exceptions.ForumException;
 
 import org.apache.log4j.Logger;
 
@@ -69,7 +70,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author Pieter Olivier
- * @version $Id: SystemGlobals.java,v 1.27 2006/08/20 22:47:37 rafaelsteil Exp $
+ * @version $Id: SystemGlobals.java,v 1.28 2006/08/24 01:07:06 rafaelsteil Exp $
  */
 public class SystemGlobals implements VariableStore
 {
@@ -157,20 +158,18 @@ public class SystemGlobals implements VariableStore
 	 */
 	public static void loadDefaults()
 	{
-        try
-        {
-            FileInputStream input = new FileInputStream(globals.defaultConfig);
-            globals.defaults.load(input);
-            input.close();
-            globals.expander.clearCache();
-        }
-        catch (IOException e)
-        {
-            String es = "Error loadDefaults()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-    }
+		try
+		{
+			FileInputStream input = new FileInputStream(globals.defaultConfig);
+			globals.defaults.load(input);
+			input.close();
+			globals.expander.clearCache();
+		}
+		catch (IOException e)
+		{
+			throw new ForumException(e);
+		}
+	}
 	
 	/**
 	 * Merge additional configuration defaults
@@ -184,20 +183,18 @@ public class SystemGlobals implements VariableStore
 			return;
 		}
 
-        try
-        {
-            FileInputStream input = new FileInputStream(file);
-            globals.installation.load(input);
-            input.close();
-        }
-        catch (IOException e)
-        {
-            String es = "Error loadAdditionalDefaults()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
+		try
+		{
+			FileInputStream input = new FileInputStream(file);
+			globals.installation.load(input);
+			input.close();
+		}
+		catch (IOException e)
+		{
+			throw new ForumException(e);
+		}
 
-        if (!additionalDefaultsList.contains(file)) {
+		if (!additionalDefaultsList.contains(file)) {
 			additionalDefaultsList.add(file);
 		}
 	}
@@ -215,20 +212,18 @@ public class SystemGlobals implements VariableStore
 		// our new keys. 
 		Properties p = new Properties();
 		p.putAll(globals.installation);
-        try
-        {
-            FileOutputStream out = new FileOutputStream(globals.installationConfig);
-            p.store(out, "Installation specific configuration options");
-            out.close();
-        }
-        catch (IOException e)
-        {
-            String es = "Error add()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
+		try
+		{
+			FileOutputStream out = new FileOutputStream(globals.installationConfig);
+			p.store(out, "Installation specific configuration options");
+			out.close();
+		}
+		catch (IOException e)
+		{
+			throw new ForumException(e);
+		}
 
-        ConfigLoader.listenInstallationConfig();
+		ConfigLoader.listenInstallationConfig();
 	}
 
 	/**
@@ -343,17 +338,15 @@ public class SystemGlobals implements VariableStore
 	 **/
 	public static void loadQueries(String queryFile)
 	{
-        try
-        {
-            queries.load(new FileInputStream(queryFile));
-        }
-        catch (IOException e)
-        {
-            String es = "Error loadQueries()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-    }
+		try
+		{
+			queries.load(new FileInputStream(queryFile));
+		}
+		catch (IOException e)
+		{
+			throw new ForumException(e);
+		}
+	}
 
 	/**
 	 * Gets some SQL statement.

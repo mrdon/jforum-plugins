@@ -55,6 +55,8 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import net.jforum.JForumExecutionContext;
+import net.jforum.exceptions.DatabaseException;
+import net.jforum.exceptions.ForumException;
 import net.jforum.util.FormSelectedData;
 import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.SystemGlobals;
@@ -70,7 +72,7 @@ import org.apache.log4j.Logger;
  * Manipulates XML permission control file definition 
  * 
  * @author Rafael Steil
- * @version $Id: XMLPermissionControl.java,v 1.15 2006/08/20 22:47:35 rafaelsteil Exp $
+ * @version $Id: XMLPermissionControl.java,v 1.16 2006/08/24 01:07:02 rafaelsteil Exp $
  */
 public class XMLPermissionControl extends DefaultHandler 
 {
@@ -152,9 +154,7 @@ public class XMLPermissionControl extends DefaultHandler
         }
         catch (Exception e)
         {
-            String es = "Error loadConfigurations()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new ForumException(e);
         }
     }
 
@@ -209,6 +209,7 @@ public class XMLPermissionControl extends DefaultHandler
 			if (refName != null) {
                 ResultSet rs = null;
                 PreparedStatement p = null;
+                
 				try {
 					p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql(atts.getValue("queryName")));
 					rs = p.executeQuery();
@@ -225,9 +226,7 @@ public class XMLPermissionControl extends DefaultHandler
 					this.queries.put(refName, l);
 				}
 				catch (Exception e) {
-                    String es = "Error startElement()";
-                    log.error(es, e);
-                    throw new RuntimeException(es, e);
+                    throw new DatabaseException(e);
 				}
 				finally {
                     DbUtils.close(rs, p);
@@ -250,13 +249,7 @@ public class XMLPermissionControl extends DefaultHandler
 					String id = Integer.toString(data.getId());
 					RoleValue rv = roleValues.get(id);
 
-					this.permissionData.add(
-						new FormSelectedData(
-							data.getName(), 
-							id,
-							rv != null && rv.getType() == PermissionControl.ROLE_DENY
-						)
-					);
+					this.permissionData.add(new FormSelectedData(data.getName(), id, rv == null));
 				}
 			}
 		}
@@ -270,12 +263,10 @@ public class XMLPermissionControl extends DefaultHandler
 				}
 			}
 			else {
-				// TODO: Implement this
 				throw new UnsupportedOperationException("'option' tag with 'multiple' attribute support not yet implemented");
 			}
 			
 			this.permissionData.add(new FormSelectedData(atts.getValue("description"), atts.getValue("value"), selected));
 		}
 	}
-
 }

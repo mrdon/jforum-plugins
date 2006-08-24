@@ -49,6 +49,7 @@ import net.jforum.dao.CategoryDAO;
 import net.jforum.dao.ConfigDAO;
 import net.jforum.dao.ForumDAO;
 import net.jforum.dao.GroupDAO;
+import net.jforum.dao.GroupSecurityDAO;
 import net.jforum.dao.KarmaDAO;
 import net.jforum.dao.MailIntegrationDAO;
 import net.jforum.dao.ModerationDAO;
@@ -65,11 +66,10 @@ import net.jforum.dao.TreeGroupDAO;
 import net.jforum.dao.UserDAO;
 import net.jforum.dao.UserSessionDAO;
 import net.jforum.dao.generic.security.GenericGroupSecurityDAO;
-import net.jforum.dao.security.GroupSecurityDAO;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericDataAccessDriver.java,v 1.6 2006/08/22 02:05:26 rafaelsteil Exp $
+ * @version $Id: GenericDataAccessDriver.java,v 1.7 2006/08/24 01:07:03 rafaelsteil Exp $
  */
 public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver 
 {
@@ -202,7 +202,7 @@ public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver
 	/** 
 	 * @see net.jforum.dao.DataAccessDriver#newGroupSecurityDAO()
 	 */
-	public net.jforum.dao.security.GroupSecurityDAO newGroupSecurityDAO() 
+	public net.jforum.dao.GroupSecurityDAO newGroupSecurityDAO() 
 	{
 		return groupSecurityDao;
 	}

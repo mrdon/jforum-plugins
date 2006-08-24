@@ -42,6 +42,8 @@
  */
 package net.jforum.view.install;
 
+import net.jforum.exceptions.ForumException;
+
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
@@ -51,7 +53,7 @@ import java.util.List;
 
 /**
  * @author Rafael Steil
- * @version $Id: ParseDBStructFile.java,v 1.5 2006/08/20 22:47:53 rafaelsteil Exp $
+ * @version $Id: ParseDBStructFile.java,v 1.6 2006/08/24 01:06:55 rafaelsteil Exp $
  */
 public class ParseDBStructFile
 {
@@ -119,9 +121,7 @@ public class ParseDBStructFile
 		}
         catch (Exception e)
         {
-            String es = "Error add()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
+            throw new ForumException(e);
         }
         finally {
 			if (reader != null) {

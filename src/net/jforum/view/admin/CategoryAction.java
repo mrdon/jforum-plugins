@@ -47,7 +47,7 @@ import java.util.List;
 
 import net.jforum.dao.CategoryDAO;
 import net.jforum.dao.DataAccessDriver;
-import net.jforum.dao.security.GroupSecurityDAO;
+import net.jforum.dao.GroupSecurityDAO;
 import net.jforum.entities.Category;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.SecurityRepository;
@@ -66,7 +66,7 @@ import net.jforum.view.admin.common.ModerationCommon;
  * ViewHelper for category administration.
  * 
  * @author Rafael Steil
- * @version $Id: CategoryAction.java,v 1.23 2006/08/20 12:19:14 sergemaslyukov Exp $
+ * @version $Id: CategoryAction.java,v 1.24 2006/08/24 01:07:03 rafaelsteil Exp $
  */
 public class CategoryAction extends AdminCommand 
 {
@@ -167,7 +167,6 @@ public class CategoryAction extends AdminCommand
 				RoleValueCollection roleValues = new RoleValueCollection();
 				
 				RoleValue rv = new RoleValue();
-				rv.setType(PermissionControl.ROLE_ALLOW);
 				rv.setValue(Integer.toString(categoryId));
 				
 				roleValues.add(rv);

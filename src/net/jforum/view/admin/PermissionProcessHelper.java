@@ -56,16 +56,16 @@ import net.jforum.security.RoleValueCollection;
 
 /**
  * @author Rafael Steil
- * @version $Id: PermissionProcessHelper.java,v 1.18 2006/08/23 02:13:36 rafaelsteil Exp $
+ * @version $Id: PermissionProcessHelper.java,v 1.19 2006/08/24 01:07:02 rafaelsteil Exp $
  */
 class PermissionProcessHelper 
 {
 	private PermissionControl pc;
-	private int id;
+	private int groupId;
 	
 	public PermissionProcessHelper(PermissionControl pc, int id)
 	{
-		this.id = id;
+		this.groupId = id;
 		this.pc = pc;
 		
 		this.init();
@@ -82,45 +82,36 @@ class PermissionProcessHelper
 			if (paramName.startsWith("perm_")) {
 				if (paramName.endsWith("$single")) {
 					String paramValue = request.getParameter(paramName);
+					
+					if (paramValue.equals("deny")) {
+						continue;
+					}
 
 					paramName = paramName.substring(0, paramName.indexOf('$'));
 					
 					Role role = new Role();
 					role.setName(paramName);
 					
-					if (paramValue.equals("deny")) {
-						role.setType(PermissionControl.ROLE_DENY);
-					}
-					else {
-						role.setType(PermissionControl.ROLE_ALLOW);
-					}
-					
-					this.pc.addRole(this.id, role);
+					this.pc.addRole(this.groupId, role);
 				}
 				else {
 					String[] paramValues = request.getParameterValues(paramName);
 					RoleValueCollection roleValues = new RoleValueCollection();
-
-					if (!"all".equals(paramValues[0])) {
-						// Deny
-						for (int i = 0; i < paramValues.length; i++) {
-							roleValues.add(this.createRoleValue(paramValues[i], PermissionControl.ROLE_DENY));
-						}
-						
-						// Allow
+					
+					if ("all".equals(paramValues[0])) {
+						this.addRoleValues(roleValues, this.getSplitedValues("all" + paramName));
+					}
+					else {
 						List allowList = new ArrayList(Arrays.asList(this.getSplitedValues("all" + paramName))); 
 						allowList.removeAll(Arrays.asList(paramValues));
 						
-						this.addRoleValues(roleValues, allowList.toArray(), PermissionControl.ROLE_ALLOW);
-					}
-					else {
-						this.addRoleValues(roleValues, this.getSplitedValues("all" + paramName), 
-							PermissionControl.ROLE_ALLOW);
+						this.addRoleValues(roleValues, allowList.toArray());
 					}
 					
 					Role role = new Role();
 					role.setName(paramName);
-					this.pc.addRole(this.id, role, roleValues);
+					
+					this.pc.addRole(this.groupId, role, roleValues);
 				}
 			}
 		}
@@ -142,7 +133,7 @@ class PermissionProcessHelper
 		return returnValues;
 	}
 	
-	private void addRoleValues(RoleValueCollection roleValues, Object[] allValues, int permissionType)
+	private void addRoleValues(RoleValueCollection roleValues, Object[] allValues)
 	{
 		for (int i = 0; i < allValues.length; i++) {
 			String value = (String)allValues[i];
@@ -151,22 +142,12 @@ class PermissionProcessHelper
 				continue;
 			}
 
-			roleValues.add(this.createRoleValue((String)allValues[i], permissionType));
+			roleValues.add(new RoleValue((String)allValues[i]));
 		}
-	}
-	
-	private RoleValue createRoleValue(String value, int type)
-	{
-		RoleValue rv = new RoleValue();
-		
-		rv.setType(type);
-		rv.setValue(value);
-		
-		return rv;
 	}
 	
 	private void init()
 	{
-		this.pc.deleteAllRoles(this.id);
+		this.pc.deleteAllRoles(this.groupId);
 	}
 }

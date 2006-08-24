@@ -55,6 +55,7 @@ import net.jforum.context.RequestContext;
 import net.jforum.context.ResponseContext;
 import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
+import net.jforum.exceptions.ForumException;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.TopicRepository;
 import net.jforum.util.I18n;
@@ -68,7 +69,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ConfigAction.java,v 1.18 2006/08/23 02:13:36 rafaelsteil Exp $
+ * @version $Id: ConfigAction.java,v 1.19 2006/08/24 01:07:02 rafaelsteil Exp $
  */
 public class ConfigAction extends AdminCommand 
 {
@@ -96,18 +97,16 @@ public class ConfigAction extends AdminCommand
 		}
 
 		Properties locales = new Properties();
-        try
-        {
-            locales.load(new FileInputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
-                            + "/languages/locales.properties"));
-        }
-        catch (IOException e)
-        {
-            String es = "Error list()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        List localesList = new ArrayList();
+		try
+		{
+			locales.load(new FileInputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
+				+ "/languages/locales.properties"));
+		}
+		catch (IOException e)
+		{
+			throw new ForumException(e);
+		}
+		List localesList = new ArrayList();
 
 		for (Enumeration e = locales.keys(); e.hasMoreElements();) {
 			localesList.add(e.nextElement());

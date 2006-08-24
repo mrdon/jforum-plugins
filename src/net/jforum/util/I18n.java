@@ -53,6 +53,7 @@ import java.util.Properties;
 
 import net.jforum.SessionFacade;
 import net.jforum.entities.UserSession;
+import net.jforum.exceptions.ForumException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -64,7 +65,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: I18n.java,v 1.32 2006/08/20 22:47:42 rafaelsteil Exp $
+ * @version $Id: I18n.java,v 1.33 2006/08/24 01:07:06 rafaelsteil Exp $
  */
 public class I18n
 {
@@ -120,17 +121,15 @@ public class I18n
 
 	private static void loadLocales()
 	{
-        try
-        {
-            localeNames.load(new FileInputStream(baseDir + SystemGlobals.getValue(ConfigKeys.LOCALES_NAMES)));
-        }
-        catch (IOException e)
-        {
-            String es = "Error loadLocales()";
-            logger.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-    }
+		try
+		{
+			localeNames.load(new FileInputStream(baseDir + SystemGlobals.getValue(ConfigKeys.LOCALES_NAMES)));
+		}
+		catch (IOException e)
+		{
+			throw new ForumException(e);
+		}
+	}
 
 	static void load(String localeName, String mergeWith)
 	{
@@ -157,17 +156,15 @@ public class I18n
 			p.putAll((Properties) messagesMap.get(mergeWith));
 		}
 
-        try
-        {
-            p.load(new FileInputStream(baseDir + localeNames.getProperty(localeName)));
-        }
-        catch (IOException e)
-        {
-            String es = "Error load()";
-            logger.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        messagesMap.put(localeName, p);
+		try
+		{
+			p.load(new FileInputStream(baseDir + localeNames.getProperty(localeName)));
+		}
+		catch (IOException e)
+		{
+			throw new ForumException(e);
+		}
+		messagesMap.put(localeName, p);
 
 		watchForChanges(localeName);
 	}
@@ -219,14 +216,11 @@ public class I18n
 	/**
 	 * Gets a I18N (internationalized) message.
 	 * 
-	 * @param localeName
-	 *            The locale name to retrieve the messages from
-	 * @param messageName
-	 *            The message name to retrieve. Must be a valid entry into the file specified by
-	 *            <code>i18n.file</code> property.
-	 * @param params
-	 *            Parameters needed by some messages. The messages with extra parameters are
-	 *            formated according to {@link java.text.MessageFormat}specification
+	 * @param localeName The locale name to retrieve the messages from
+	 * @param messageName The message name to retrieve. Must be a valid entry into the file specified by
+	 * <code>i18n.file</code> property.
+	 * @param params Parameters needed by some messages. The messages with extra parameters are
+	 * formated according to {@link java.text.MessageFormat}specification
 	 * @return String With the message
 	 */
 	public static String getMessage(String localeName, String messageName, Object params[])
@@ -244,6 +238,7 @@ public class I18n
 	{
 		String lang = "";
 		UserSession us = SessionFacade.getUserSession();
+		
 		if (us != null && us.getLang() != null) {
 			lang = us.getLang();
 		}

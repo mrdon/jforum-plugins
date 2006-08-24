@@ -44,6 +44,7 @@ package net.jforum;
 
 import net.jforum.context.RequestContext;
 import net.jforum.context.ResponseContext;
+import net.jforum.exceptions.ForumException;
 import net.jforum.exceptions.TemplateNotFoundException;
 import net.jforum.repository.Tpl;
 import net.jforum.util.preferences.ConfigKeys;
@@ -61,7 +62,7 @@ import java.io.IOException;
  * presentation actions must extend this class. 
  * 
  * @author Rafael Steil
- * @version $Id: Command.java,v 1.23 2006/08/23 02:13:49 rafaelsteil Exp $
+ * @version $Id: Command.java,v 1.24 2006/08/24 01:06:56 rafaelsteil Exp $
  */
 public abstract class Command 
 {
@@ -121,9 +122,7 @@ public abstract class Command
 			}
 			catch (Exception e)
             {
-                String es = "Error process()";
-                log.error(es, e);
-                throw new RuntimeException(es, e);
+                throw new ForumException(e);
 			}
 		}
 		
@@ -142,17 +141,13 @@ public abstract class Command
 			throw new TemplateNotFoundException("Template for action " + action + " is not defined");
 		}
 
-        try
-        {
+        try {
             return JForumExecutionContext.templateConfig().getTemplate(
                     new StringBuffer(SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR)).
                     append('/').append(this.templateName).toString());
         }
-        catch (IOException e)
-        {
-            String es = "Error process()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
+        catch (IOException e) {
+            throw new ForumException( e);
         }
     }
 }

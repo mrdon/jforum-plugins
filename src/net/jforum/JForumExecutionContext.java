@@ -49,6 +49,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.context.RequestContext;
 import net.jforum.context.ResponseContext;
+import net.jforum.exceptions.ForumException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -62,7 +63,7 @@ import freemarker.template.SimpleHash;
  * Data execution context. 
  * 
  * @author Rafael Steil
- * @version $Id: JForumExecutionContext.java,v 1.7 2006/08/23 02:24:06 rafaelsteil Exp $
+ * @version $Id: JForumExecutionContext.java,v 1.8 2006/08/24 01:06:56 rafaelsteil Exp $
  */
 public class JForumExecutionContext
 {
@@ -287,19 +288,18 @@ public class JForumExecutionContext
     /**
      * Send UNAUTHORIZED to the browser and ask user to login via basic authentication
      */
-    public static void requestBasicAuthentication()  {
-        getResponse().addHeader("WWW-Authenticate", "Basic realm=\"JForum\"");
-        try
-        {
-            getResponse().sendError(HttpServletResponse.SC_UNAUTHORIZED);
-        }
-        catch (IOException e)
-        {
-            String es = "Error add()";
-            logger.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-        enableCustomContent(true);
+	public static void requestBasicAuthentication()  
+	{
+		getResponse().addHeader("WWW-Authenticate", "Basic realm=\"JForum\"");
+		
+		try {
+			getResponse().sendError(HttpServletResponse.SC_UNAUTHORIZED);
+		}
+		catch (IOException e) {
+			throw new ForumException(e);
+		}
+		
+		enableCustomContent(true);
     }
 	
 	/**

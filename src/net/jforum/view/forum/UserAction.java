@@ -56,6 +56,7 @@ import net.jforum.dao.UserSessionDAO;
 import net.jforum.entities.Bookmark;
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
+import net.jforum.exceptions.ForumException;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.RankingRepository;
 import net.jforum.repository.SecurityRepository;
@@ -77,7 +78,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.75 2006/08/23 02:13:53 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.76 2006/08/24 01:06:59 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -435,9 +436,6 @@ public class UserAction extends Command
 						this.request.getParameter("returnPath"));
 			}
 		} 
-		else if (ViewCommon.needReprocessRequest()) {
-			ViewCommon.reprocessRequest();
-		}
 		else if (this.request.getParameter("returnPath") != null) {
 			JForumExecutionContext.setRedirect(this.request.getParameter("returnPath"));
 		}
@@ -454,27 +452,25 @@ public class UserAction extends Command
     }
 
     private boolean parseBasicAuthentication()  {
-        if (hasBasicAuthentication(request)) {
-            String auth = request.getHeader("Authorization");
-            String decoded;
-            try
-            {
-                decoded = new String(new sun.misc.BASE64Decoder().decodeBuffer(auth.substring(6)));
-            }
-            catch (IOException e)
-            {
-                String es = "Error add()";
-                logger.error(es, e);
-                throw new RuntimeException(es, e);
-            }
-            int p = decoded.indexOf(':');
-            if (p != -1) {
-                request.setAttribute("username", decoded.substring(0, p));
-                request.setAttribute("password", decoded.substring(p + 1));
-                return true;
-            }
-        }
-        return false;
+    	if (hasBasicAuthentication(request)) {
+    		String auth = request.getHeader("Authorization");
+    		String decoded;
+    		try
+    		{
+    			decoded = new String(new sun.misc.BASE64Decoder().decodeBuffer(auth.substring(6)));
+    		}
+    		catch (IOException e)
+    		{
+    			throw new ForumException(e);
+    		}
+    		int p = decoded.indexOf(':');
+    		if (p != -1) {
+    			request.setAttribute("username", decoded.substring(0, p));
+    			request.setAttribute("password", decoded.substring(p + 1));
+    			return true;
+    		}
+    	}
+    	return false;
     }
 
     private User validateLogin(String name, String password)

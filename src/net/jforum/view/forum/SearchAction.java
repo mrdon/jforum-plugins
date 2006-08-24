@@ -59,6 +59,7 @@ import net.jforum.dao.SearchDAO;
 import net.jforum.dao.SearchData;
 import net.jforum.entities.Forum;
 import net.jforum.entities.Topic;
+import net.jforum.exceptions.ForumException;
 import net.jforum.repository.ForumRepository;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
@@ -71,7 +72,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.31 2006/08/23 02:13:53 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.32 2006/08/24 01:07:00 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -257,27 +258,25 @@ public class SearchAction extends Command
 		}
 		else {
 			String[] p = persistData.split("&");
-			
+
 			for (int i = 0; i < p.length; i++) {
 				String[] v = p[i].split("=");
-				
+
 				String name = (String)fieldsMap.get(v[0]);
 				if (name != null) {
 					Field field;
-                    try
-                    {
-                        field = this.getClass().getDeclaredField(name);
-                        if (field != null && v[1] != null && !v[1].equals("")) {
-                            field.set(this, v[1]);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        String es = "Error add()";
-                        log.error(es, e);
-                        throw new RuntimeException(es, e);
-                    }
-                }
+					try
+					{
+						field = this.getClass().getDeclaredField(name);
+						if (field != null && v[1] != null && !v[1].equals("")) {
+							field.set(this, v[1]);
+						}
+					}
+					catch (Exception e)
+					{
+						throw new ForumException(e);
+					}
+				}
 			}
 		}
 
@@ -285,37 +284,37 @@ public class SearchAction extends Command
 		path.append(this.request.getContextPath()).append("/jforum").append( 
 				SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)).append(
 				"?module=search&action=search&clean=1");
-		
+
 		if (this.forum != null) { 
 			path.append("&search_forum=").append(this.forum); 
 		}
-		
+
 		if (this.searchTerms != null) { 
 			path.append("&search_terms=").append(this.searchTerms); 
 		}
-		
+
 		if (this.category != null) {
 			path.append("&search_cat=").append(this.category);
 		}
-		
+
 		if (this.sortDir != null) {
 			path.append("&sort_dir=").append(this.sortDir);
 		}
-		
+
 		if (this.sortBy != null) {
 			path.append("&sort_by=").append(this.sortBy);
 		}
-		
+
 		if (this.kw != null) {
 			path.append("&search_keywords=").append(this.kw);
 		}
-		
+
 		if (this.postTime != null) {
 			path.append("&post_time=").append(this.postTime);
 		}
-		
+
 		path.append("&start=").append(ViewCommon.getStartPage());
-		
+
 		return path.toString();
 	}
 	

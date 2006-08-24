@@ -73,7 +73,7 @@ import org.apache.log4j.Logger;
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.28 2006/08/23 02:13:50 rafaelsteil Exp $
+ * @version $Id: ControllerUtils.java,v 1.29 2006/08/24 01:06:56 rafaelsteil Exp $
  */
 public class ControllerUtils
 {
@@ -292,19 +292,18 @@ public class ControllerUtils
 			SessionFacade.setAttribute(ConfigKeys.TOPICS_TRACKING, new HashMap());
 		}
 		else if (ConfigKeys.TYPE_SSO.equals(SystemGlobals.getValue(ConfigKeys.AUTHENTICATION_TYPE))) {
-            SSO sso;
-            try
-            {
-                sso = (SSO) Class.forName(SystemGlobals.getValue(ConfigKeys.SSO_IMPLEMENTATION)).newInstance();
-            }
-            catch (Exception e)
-            {
-                String es = "Error add()";
-                log.error(es, e);
-                throw new RuntimeException(es, e);
-            }
+			SSO sso;
+			
+			try
+			{
+				sso = (SSO) Class.forName(SystemGlobals.getValue(ConfigKeys.SSO_IMPLEMENTATION)).newInstance();
+			}
+			catch (Exception e)
+			{
+				throw new ForumException(e);
+			}
 
-            // If SSO, then check if the session is valid
+			// If SSO, then check if the session is valid
 			if (!sso.isSessionValid(userSession, request)) {
 				SessionFacade.remove(userSession.getSessionId());
 				refreshSession();

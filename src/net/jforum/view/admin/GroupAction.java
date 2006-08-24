@@ -47,7 +47,7 @@ import java.util.List;
 
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.GroupDAO;
-import net.jforum.dao.security.GroupSecurityDAO;
+import net.jforum.dao.GroupSecurityDAO;
 import net.jforum.entities.Group;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.RolesRepository;
@@ -64,7 +64,7 @@ import net.jforum.util.preferences.TemplateKeys;
  * ViewHelper class for group administration.
  * 
  * @author Rafael Steil
- * @version $Id: GroupAction.java,v 1.21 2006/08/20 22:47:45 rafaelsteil Exp $
+ * @version $Id: GroupAction.java,v 1.22 2006/08/24 01:07:03 rafaelsteil Exp $
  */
 public class GroupAction extends AdminCommand 
 {

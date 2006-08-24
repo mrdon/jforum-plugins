@@ -42,7 +42,6 @@
  */
 package net.jforum.dao;
 
-import net.jforum.dao.security.GroupSecurityDAO;
 
 /**
  * The class that every driver class must implement.
@@ -58,7 +57,7 @@ import net.jforum.dao.security.GroupSecurityDAO;
  * analise, look at <code>net.jforum.drivers.generic</code> package.
  * 
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.12 2006/08/22 02:05:24 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.13 2006/08/24 01:06:54 rafaelsteil Exp $
  */
 public abstract class DataAccessDriver 
 {
@@ -176,7 +175,7 @@ public abstract class DataAccessDriver
 	public abstract SearchIndexerDAO newSearchIndexerDAO();
 	
 	/**
-	 * Gets a {@link net.jforum.dao.security.GroupSecurityDAO} instance
+	 * Gets a {@link net.jforum.dao.GroupSecurityDAO} instance
 	 * 
 	 * @return <code>net.jforum.model.security.GroupSecurityModel</code> instance
 	 */

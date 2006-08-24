@@ -49,7 +49,7 @@ import java.util.LinkedHashSet;
 
 /**
  * @author Rafael Steil
- * @version $Id: RoleValueCollection.java,v 1.8 2006/08/20 22:47:34 rafaelsteil Exp $
+ * @version $Id: RoleValueCollection.java,v 1.9 2006/08/24 01:07:01 rafaelsteil Exp $
  */
 public class RoleValueCollection extends LinkedHashSet implements Serializable 
 {
@@ -99,6 +99,7 @@ public class RoleValueCollection extends LinkedHashSet implements Serializable
 	public boolean addAll(Collection c) 
 	{
 		boolean status = true;
+		
 		for (Iterator iter = c.iterator(); iter.hasNext(); ) {
 			status = this.add(iter.next());
 		}

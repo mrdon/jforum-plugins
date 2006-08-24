@@ -100,7 +100,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.151 2006/08/20 22:47:40 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.152 2006/08/24 01:07:00 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -1326,74 +1326,72 @@ public class PostAction extends Command
 	
 	public void downloadAttach()
 	{
-        try
-        {
-            if ((SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED) &&
-                    !SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD))
-                    || (!SessionFacade.isLogged() && !SystemGlobals.getBoolValue(ConfigKeys.ATTACHMENTS_ANONYMOUS))) {
-                this.setTemplateName(TemplateKeys.POSTS_CANNOT_DOWNLOAD);
-                this.context.put("message", I18n.getMessage("Attachments.featureDisabled"));
-                return;
-            }
+		try
+		{
+			if ((SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED) &&
+					!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD))
+					|| (!SessionFacade.isLogged() && !SystemGlobals.getBoolValue(ConfigKeys.ATTACHMENTS_ANONYMOUS))) {
+				this.setTemplateName(TemplateKeys.POSTS_CANNOT_DOWNLOAD);
+				this.context.put("message", I18n.getMessage("Attachments.featureDisabled"));
+				return;
+			}
 
-            int id = this.request.getIntParameter("attach_id");
+			int id = this.request.getIntParameter("attach_id");
 
-            AttachmentDAO am = DataAccessDriver.getInstance().newAttachmentDAO();
-            Attachment a = am.selectAttachmentById(id);
+			AttachmentDAO am = DataAccessDriver.getInstance().newAttachmentDAO();
+			Attachment a = am.selectAttachmentById(id);
 
-            String filename = SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR)
-                + "/"
-                + a.getInfo().getPhysicalFilename();
+			String filename = SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR)
+				+ "/"
+				+ a.getInfo().getPhysicalFilename();
 
-            if (!new File(filename).exists()) {
-                this.setTemplateName(TemplateKeys.POSTS_ATTACH_NOTFOUND);
-                this.context.put("message", I18n.getMessage("Attachments.notFound"));
-                return;
-            }
+			if (!new File(filename).exists()) {
+				this.setTemplateName(TemplateKeys.POSTS_ATTACH_NOTFOUND);
+				this.context.put("message", I18n.getMessage("Attachments.notFound"));
+				return;
+			}
 
-            a.getInfo().setDownloadCount(a.getInfo().getDownloadCount() + 1);
-            am.updateAttachment(a);
+			a.getInfo().setDownloadCount(a.getInfo().getDownloadCount() + 1);
+			am.updateAttachment(a);
 
-            FileInputStream fis = new FileInputStream(filename);
-            OutputStream os = response.getOutputStream();
+			FileInputStream fis = new FileInputStream(filename);
+			OutputStream os = response.getOutputStream();
 
-            if (am.isPhysicalDownloadMode(a.getInfo().getExtension().getExtensionGroupId())) {
-                this.response.setContentType("application/octet-stream");
-            }
-            else {
-                this.response.setContentType(a.getInfo().getMimetype());
-            }
+			if (am.isPhysicalDownloadMode(a.getInfo().getExtension().getExtensionGroupId())) {
+				this.response.setContentType("application/octet-stream");
+			}
+			else {
+				this.response.setContentType(a.getInfo().getMimetype());
+			}
 
-            if (this.request.getHeader("User-Agent").indexOf("Firefox") != -1) {
-                this.response.setHeader("Content-Disposition", "attachment; filename=\""
-                    + new String(a.getInfo().getRealFilename().getBytes(SystemGlobals.getValue(ConfigKeys.ENCODING)),
-                        SystemGlobals.getValue(ConfigKeys.DEFAULT_CONTAINER_ENCODING)) + "\";");
-            }
-            else {
-                this.response.setHeader("Content-Disposition", "attachment; filename=\""
-                    + ViewCommon.toUtf8String(a.getInfo().getRealFilename()) + "\";");
-            }
+			if (this.request.getHeader("User-Agent").indexOf("Firefox") != -1) {
+				this.response.setHeader("Content-Disposition", "attachment; filename=\""
+					+ new String(a.getInfo().getRealFilename().getBytes(SystemGlobals.getValue(ConfigKeys.ENCODING)),
+						SystemGlobals.getValue(ConfigKeys.DEFAULT_CONTAINER_ENCODING)) + "\";");
+			}
+			else {
+				this.response.setHeader("Content-Disposition", "attachment; filename=\""
+					+ ViewCommon.toUtf8String(a.getInfo().getRealFilename()) + "\";");
+			}
 
-            this.response.setContentLength((int)a.getInfo().getFilesize());
+			this.response.setContentLength((int)a.getInfo().getFilesize());
 
-            int c;
-            byte[] b = new byte[4096];
-            while ((c = fis.read(b)) != -1) {
-                os.write(b, 0, c);
-            }
+			int c;
+			byte[] b = new byte[4096];
+			while ((c = fis.read(b)) != -1) {
+				os.write(b, 0, c);
+			}
 
-            fis.close();
-            os.close();
+			fis.close();
+			os.close();
 
-            JForumExecutionContext.enableCustomContent(true);
-        }
-        catch (IOException e)
-        {
-            String es = "Error downloadAttach()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-    }
+			JForumExecutionContext.enableCustomContent(true);
+		}
+		catch (IOException e)
+		{
+			throw new ForumException(e);
+		}
+	}
 	
 	private void topicLocked() {
 		this.setTemplateName(TemplateKeys.POSTS_TOPIC_LOCKED);

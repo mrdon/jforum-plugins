@@ -51,6 +51,7 @@ import java.util.Map;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import net.jforum.exceptions.ForumException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -63,7 +64,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * @author Rafael Steil
- * @version $Id: BBCodeHandler.java,v 1.17 2006/08/20 22:47:49 rafaelsteil Exp $
+ * @version $Id: BBCodeHandler.java,v 1.18 2006/08/24 01:07:04 rafaelsteil Exp $
  */
 public class BBCodeHandler extends DefaultHandler implements Serializable
 {
@@ -79,34 +80,31 @@ public class BBCodeHandler extends DefaultHandler implements Serializable
 	
 	public BBCodeHandler parse()
 	{
-        try
-        {
-            SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-            BBCodeHandler bbParser = new BBCodeHandler();
+		try
+		{
+			SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+			BBCodeHandler bbParser = new BBCodeHandler();
 
-            String path = SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
-                + "/bb_config.xml";
+			String path = SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/bb_config.xml";
 
-            File fileInput = new File(path);
+			File fileInput = new File(path);
 
-            if (fileInput.exists()) {
-                parser.parse(fileInput, bbParser);
-            }
-            else {
-                InputSource input = new InputSource(path);
-                parser.parse(input, bbParser);
-            }
+			if (fileInput.exists()) {
+				parser.parse(fileInput, bbParser);
+			}
+			else {
+				InputSource input = new InputSource(path);
+				parser.parse(input, bbParser);
+			}
 
-            return bbParser;
-        }
-        catch (Exception e)
-        {
-            String es = "Error parse()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-    }
-	
+			return bbParser;
+		}
+		catch (Exception e)
+		{
+			throw new ForumException(e);
+		}
+	}
+
 	public void addBb(BBCode bb)
 	{
 		if (bb.alwaysProcess()) {

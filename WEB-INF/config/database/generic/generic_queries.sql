@@ -116,7 +116,8 @@ UserModel.removeFromGroup = DELETE FROM jforum_user_groups WHERE user_id = ? AND
 
 UserModel.selectGroups = SELECT ug.group_id, g.group_name FROM jforum_user_groups ug, jforum_groups g \
 	WHERE ug.group_id = g.group_id \
-	AND ug.user_id = ?
+	AND ug.user_id = ? \
+	ORDER BY g.group_id
 
 UserModel.saveNewPassword = UPDATE jforum_users SET user_password = ? WHERE user_email = ?
 UserModel.validateLostPasswordHash = SELECT COUNT(1) AS valid FROM jforum_users WHERE security_hash = ? AND user_email = ?
@@ -434,16 +435,17 @@ TreeGroup.selectGroup = SELECT group_id, group_name FROM jforum_groups WHERE par
 PermissionControl.deleteAllRoleValues = DELETE FROM jforum_role_values WHERE role_id IN (SELECT role_id FROM jforum_roles WHERE group_id = ?)
 
 PermissionControl.deleteAllGroupRoles = DELETE FROM jforum_roles WHERE group_id = ?
-PermissionControl.deleteGroupRole = DELETE FROM jforum_roles WHERE group_id = ? AND name = ?
-PermissionControl.addGroupRole = INSERT INTO jforum_roles ( group_id, name, role_type ) VALUES (?, ?, ?)
-PermissionControl.addRoleValues = INSERT INTO jforum_role_values (role_id, role_value, role_type ) VALUES (?, ?, ?)
+PermissionControl.addGroupRole = INSERT INTO jforum_roles (group_id, name) VALUES (?, ?)
+PermissionControl.addRoleValues = INSERT INTO jforum_role_values (role_id, role_value) VALUES (?, ?)
 PermissionControl.getRoleIdByName = SELECT role_id FROM jforum_roles WHERE name = ? AND group_id = ?
 
-PermissionControl.loadGroupRoles = SELECT r.role_id, r.name, rv.role_value, rv.role_type AS rv_type, r.role_type \
-	FROM jforum_roles r \
-	LEFT JOIN jforum_role_values rv ON rv.role_id = r.role_id \
-	WHERE r.group_id = ? \
-	ORDER BY r.role_id
+PermissionControl.loadGroupRoles = SELECT r.name, 0 FROM jforum_roles r WHERE r.group_id IN (#IN#) \
+	UNION \
+	SELECT r.name, rv.role_value \
+	FROM jforum_roles r, jforum_role_values rv \
+	WHERE r.role_id = rv.role_id  \
+	AND r.group_id IN (#IN#) \
+	ORDER BY name
 
 # #############
 # TopicListing

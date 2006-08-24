@@ -42,12 +42,10 @@
  */
 package net.jforum.exceptions;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumException.java,v 1.7 2006/08/23 02:13:38 rafaelsteil Exp $
+ * @version $Id: ForumException.java,v 1.8 2006/08/24 01:07:06 rafaelsteil Exp $
  */
 public class ForumException extends RuntimeException
 {
@@ -56,18 +54,15 @@ public class ForumException extends RuntimeException
 		super(message);
 	}
 	
-	public ForumException(String message, Throwable t)
+	public ForumException(Throwable t)
 	{
-		this(message + " - " + buildStackTrace(t));
+		super(t);
+		this.setStackTrace(t.getStackTrace());
 	}
 	
-	protected static String buildStackTrace(Throwable t)
+	public ForumException(String message, Throwable t)
 	{
-		StringWriter strWriter = new StringWriter();
-		PrintWriter writer = new PrintWriter(strWriter);
-		t.printStackTrace(writer);		
-		writer.close();
-		
-		return strWriter.toString();
+		super(message, t);
+		this.setStackTrace(t.getStackTrace());
 	}
 }

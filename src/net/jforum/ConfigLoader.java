@@ -53,6 +53,7 @@ import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.exceptions.CacheEngineStartupException;
+import net.jforum.exceptions.ForumException;
 import net.jforum.summary.SummaryScheduler;
 import net.jforum.util.FileMonitor;
 import net.jforum.util.preferences.ConfigKeys;
@@ -68,7 +69,7 @@ import org.quartz.SchedulerException;
  * General utilities methods for loading configurations for JForum.
  * 
  * @author Rafael Steil
- * @version $Id: ConfigLoader.java,v 1.24 2006/08/23 02:13:49 rafaelsteil Exp $
+ * @version $Id: ConfigLoader.java,v 1.25 2006/08/24 01:06:56 rafaelsteil Exp $
  */
 public class ConfigLoader 
 {
@@ -101,46 +102,35 @@ public class ConfigLoader
 	 */
 	public static Properties loadModulesMapping(String baseConfigDir)
 	{
-        try
-        {
-            Properties modulesMapping = new Properties();
-            modulesMapping.load(new FileInputStream(baseConfigDir + "/modulesMapping.properties"));
+		try {
+			Properties modulesMapping = new Properties();
+			modulesMapping.load(new FileInputStream(baseConfigDir + "/modulesMapping.properties"));
 
-            return modulesMapping;
-        }
-        catch (IOException e)
-        {
-            String es = "Error loadModulesMapping()";
-            logger.error(es, e);
-            throw new RuntimeException(es, e);
-        }
+			return modulesMapping;
+		}
+		catch (IOException e) {
+			throw new ForumException( e);
+		}
     }
 	
 	/**
 	 * Load url patterns.
 	 * The method tries to load url patterns from <i>WEB-INF/config/urlPattern.properties</i>
 	 */
-	public static void loadUrlPatterns()  {
-        try
-        {
-            Properties p = new Properties();
-            p.load(new FileInputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
-                + "/urlPattern.properties"));
+	public static void loadUrlPatterns()  
+	{
+		try {
+			Properties p = new Properties();
+			p.load(new FileInputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/urlPattern.properties"));
 
-            Iterator iter = p.entrySet().iterator();
-            while (iter.hasNext()) {
-                Map.Entry entry = (Map.Entry) iter.next();
-
-                UrlPatternCollection.addPattern((String)entry.getKey(), (String)entry.getValue());
-            }
-        }
-        catch (IOException e)
-        {
-            String es = "Error add()";
-            logger.error(es, e);
-            throw new RuntimeException(es, e);
-
-        }
+			for (Iterator iter = p.entrySet().iterator(); iter.hasNext(); ) {
+				Map.Entry entry = (Map.Entry) iter.next();
+				UrlPatternCollection.addPattern((String)entry.getKey(), (String)entry.getValue());
+			}
+		}
+		catch (IOException e) {
+			throw new ForumException(e);
+		}
     }
 	
 	/**
@@ -183,24 +173,19 @@ public class ConfigLoader
 	
 	public static void loadDaoImplementation()
 	{
+		// Start the dao.driver implementation
+		String driver = SystemGlobals.getValue(ConfigKeys.DAO_DRIVER);
 
-        // Start the dao.driver implementation
-        String driver = SystemGlobals.getValue(ConfigKeys.DAO_DRIVER);
-        
-        logger.info("Loading JDBC driver " + driver);
+		logger.info("Loading JDBC driver " + driver);
 
-        try
-        {
-            Class c = Class.forName(driver);
-            DataAccessDriver d = (DataAccessDriver)c.newInstance();
-            DataAccessDriver.init(d);
-        }
-        catch (Exception e)
-        {
-            String es = "Error loadDaoImplementation()";
-            logger.error(es, e);
-            throw new RuntimeException(es, e);
-        }
+		try {
+			Class c = Class.forName(driver);
+			DataAccessDriver d = (DataAccessDriver)c.newInstance();
+			DataAccessDriver.init(d);
+		}
+		catch (Exception e) {
+			throw new ForumException(e);
+		}
     }
 	
 	public static void startCacheEngine()

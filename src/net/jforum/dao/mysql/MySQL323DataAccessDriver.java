@@ -42,8 +42,8 @@
  */
 package net.jforum.dao.mysql;
 
+import net.jforum.dao.GroupSecurityDAO;
 import net.jforum.dao.mysql.security.MySQL323GroupSecurityDAO;
-import net.jforum.dao.security.GroupSecurityDAO;
 
 public class MySQL323DataAccessDriver extends MysqlDataAccessDriver
 {

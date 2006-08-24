@@ -46,12 +46,13 @@ import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import net.jforum.exceptions.ForumException;
 import net.jforum.util.legacy.commons.fileupload.FileItem;
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UploadUtils.java,v 1.11 2006/08/20 22:47:50 rafaelsteil Exp $
+ * @version $Id: UploadUtils.java,v 1.12 2006/08/24 01:07:04 rafaelsteil Exp $
  */
 public class UploadUtils
 {
@@ -78,46 +79,44 @@ public class UploadUtils
 	{
 		BufferedInputStream inputStream = null;
 		FileOutputStream outputStream = null;
-		
+
 		try {
 			inputStream = new BufferedInputStream(this.item.getInputStream());
 			outputStream = new FileOutputStream(filename);
-			
+
 			int c;
 			byte[] b = new byte[4096];
 			while ((c = inputStream.read(b)) != -1) {
 				outputStream.write(b, 0, c);
 			}
 		}
-        catch (IOException e)
-        {
-            String es = "Error saveUploadedFile()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
+		catch (IOException e)
+		{
+			throw new ForumException(e);
+		}
 		finally {
 			if (outputStream != null) {
-                try
-                {
-                    outputStream.flush();
-                    outputStream.close();
-                }
-                catch (IOException e)
-                {
-                    // catch close exception
-                }
-            }
-			
+				try
+				{
+					outputStream.flush();
+					outputStream.close();
+				}
+				catch (IOException e)
+				{
+					// catch close exception
+				}
+			}
+
 			if (inputStream != null) {
-                try
-                {
-                    inputStream.close();
-                }
-                catch (IOException e)
-                {
-                    // catch close exception
-                }
-            }
+				try
+				{
+					inputStream.close();
+				}
+				catch (IOException e)
+				{
+					// catch close exception
+				}
+			}
 		}
 	}
 }

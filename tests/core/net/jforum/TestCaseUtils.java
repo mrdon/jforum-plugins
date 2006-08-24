@@ -62,7 +62,7 @@ import freemarker.template.Configuration;
  * General utilities for the test cases.
  * 
  * @author Rafael Steil
- * @version $Id: TestCaseUtils.java,v 1.18 2006/08/23 02:24:07 rafaelsteil Exp $
+ * @version $Id: TestCaseUtils.java,v 1.19 2006/08/24 01:07:05 rafaelsteil Exp $
  */
 public class TestCaseUtils
 {
@@ -158,10 +158,7 @@ public class TestCaseUtils
 		role.setName(SecurityConstants.PERM_CATEGORY);
 		
 		for (int i = 0; i < categoryIds.length; i++) {
-			RoleValue rv = new RoleValue();
-			rv.setType(categoryRights[i]);
-			rv.setValue(Integer.toString(categoryIds[i]));
-			
+			RoleValue rv = new RoleValue(Integer.toString(categoryIds[i]));
 			role.getValues().add(rv);
 		}
 		
@@ -173,9 +170,7 @@ public class TestCaseUtils
 		role.setName(SecurityConstants.PERM_FORUM);
 		
 		for (int i = 0; i < forumIds.length; i++) {
-			RoleValue rv = new RoleValue();
-			rv.setType(forumRights[i]);
-			rv.setValue(Integer.toString(forumIds[i]));
+			RoleValue rv = new RoleValue(Integer.toString(forumIds[i]));
 			
 			role.getValues().add(rv);
 		}

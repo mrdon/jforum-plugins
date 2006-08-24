@@ -42,6 +42,7 @@
  */
 package net.jforum.util.concurrent.executor;
 
+import net.jforum.exceptions.ForumException;
 import net.jforum.util.concurrent.Executor;
 import net.jforum.util.concurrent.Queue;
 import net.jforum.util.concurrent.Result;
@@ -54,7 +55,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rodrigo Kumpera
- * @version $Id: QueuedExecutor.java,v 1.14 2006/08/23 02:13:50 rafaelsteil Exp $
+ * @version $Id: QueuedExecutor.java,v 1.15 2006/08/24 01:07:05 rafaelsteil Exp $
  */
 public class QueuedExecutor implements Executor 
 {
@@ -95,20 +96,18 @@ public class QueuedExecutor implements Executor
 	public void execute(Task task)
 	{
 		if (SystemGlobals.getBoolValue(ConfigKeys.BACKGROUND_TASKS)) {
-            try
-            {
-                queue.put(task);
-            }
-            catch (InterruptedException e)
-            {
-                String es = "Error execute()";
-                logger.error(es, e);
-                throw new RuntimeException(es, e);
-            }
-            synchronized(lock) {
+			try
+			{
+				queue.put(task);
+			}
+			catch (InterruptedException e)
+			{
+				throw new ForumException(e);
+			}
+			synchronized(lock) {
 				if(currentThread == null) {
 					logger.info("Creating a new thread...");
-					
+
 					currentThread = new Thread(new WorkerThread(), "jforum");
 					currentThread.setDaemon(true);
 					currentThread.start();	

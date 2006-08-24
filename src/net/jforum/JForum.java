@@ -77,12 +77,11 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.99 2006/08/23 02:24:05 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.100 2006/08/24 01:06:55 rafaelsteil Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
 	private static boolean isDatabaseUp;
-//	private static Logger logger = Logger.getLogger(JForum.class);
 	
 	/**
 	 * @see javax.servlet.Servlet#init(javax.servlet.ServletConfig)
@@ -167,10 +166,10 @@ public class JForum extends JForumBaseServlet
 			SecurityRepository.load(SessionFacade.getUserSession().getUserId());
 			
 			request.setJForumContext(new JForumContext(request.getContextPath(), 
-					SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION),
-					request,
-					response,
-					SessionFacade.getUserSession().isBot()));
+				SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION),
+				request,
+				response,
+				SessionFacade.getUserSession().isBot()));
 			
 			utils.prepareTemplateContext(context, request.getJForumContext());
 

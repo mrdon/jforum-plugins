@@ -46,15 +46,12 @@ import java.io.Serializable;
 
 /**
  * @author Rafael Steil
- * @version $Id: Role.java,v 1.8 2006/08/20 22:47:34 rafaelsteil Exp $
+ * @version $Id: Role.java,v 1.9 2006/08/24 01:07:02 rafaelsteil Exp $
  */
 public class Role implements Serializable
 {
 	private int id;
-	private int groupId;
-	private int userId;
 	private String name;
-	private int type;
 	private RoleValueCollection roleValues = new RoleValueCollection();
 	
 	public void setId(int id)
@@ -62,24 +59,9 @@ public class Role implements Serializable
 		this.id = id;
 	}
 	
-	public void setGroupId(int groupId)
-	{
-		this.groupId = groupId;
-	}
-	
-	public void setUserId(int userId)
-	{
-		this.userId = userId;
-	}
-	
 	public void setName(String name)
 	{
 		this.name = name;
-	}
-	
-	public void setType(int type)
-	{
-		this.type = type;
 	}
 	
 	public int getId()
@@ -87,24 +69,9 @@ public class Role implements Serializable
 		return this.id;
 	}
 	
-	public int getGroupId()
-	{
-		return this.groupId;
-	}
-	
-	public int getUserId()
-	{
-		return this.userId;
-	}
-	
 	public String getName()
 	{
 		return this.name;
-	}
-	
-	public int getType()
-	{
-		return this.type;
 	}
 	
 	public RoleValueCollection getValues()
@@ -117,6 +84,10 @@ public class Role implements Serializable
 	 */
 	public boolean equals(Object o) 
 	{
+		if (o == this) {
+			return true;
+		}
+		
 		if (!(o instanceof Role)) {
 			return false;
 		}
@@ -137,7 +108,6 @@ public class Role implements Serializable
 	 */
 	public String toString() 
 	{
-		return "[name=" + this.name + ", type=" + this.type + ", values=(" + this.roleValues + ")]";
+		return "[name=" + this.name + ", values=(" + this.roleValues + ")]";
 	}
-
 }

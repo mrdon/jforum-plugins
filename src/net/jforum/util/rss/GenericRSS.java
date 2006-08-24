@@ -45,6 +45,7 @@ package net.jforum.util.rss;
 import java.io.StringWriter;
 
 import net.jforum.JForumExecutionContext;
+import net.jforum.exceptions.ForumException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -55,7 +56,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericRSS.java,v 1.8 2006/08/20 22:47:48 rafaelsteil Exp $
+ * @version $Id: GenericRSS.java,v 1.9 2006/08/24 01:07:07 rafaelsteil Exp $
  */
 public class GenericRSS implements RSSAware 
 {
@@ -70,25 +71,23 @@ public class GenericRSS implements RSSAware
 	
 	public String createRSS()
 	{
-        try
-        {
-            Template t = JForumExecutionContext.templateConfig().getTemplate(SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR)
-                    + "/rss_template.htm");
-            StringWriter sw = new StringWriter();
+		try
+		{
+			Template t = JForumExecutionContext.templateConfig().getTemplate(SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR)
+					+ "/rss_template.htm");
+			StringWriter sw = new StringWriter();
 
-            SimpleHash templateContext = JForumExecutionContext.getTemplateContext();
+			SimpleHash templateContext = JForumExecutionContext.getTemplateContext();
 
-            templateContext.put("encoding", SystemGlobals.getValue(ConfigKeys.ENCODING));
-            templateContext.put("rss", this.rss);
-            t.process(templateContext, sw);
+			templateContext.put("encoding", SystemGlobals.getValue(ConfigKeys.ENCODING));
+			templateContext.put("rss", this.rss);
+			t.process(templateContext, sw);
 
-            return sw.toString();
-        }
-        catch (Exception e)
-        {
-            String es = "Error add()";
-            log.error(es, e);
-            throw new RuntimeException(es, e);
-        }
-    }
+			return sw.toString();
+		}
+		catch (Exception e)
+		{
+			throw new ForumException(e);
+		}
+	}
 }

@@ -44,11 +44,12 @@ package net.jforum.repository;
 
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
+import net.jforum.dao.generic.security.SecurityCommon;
 import net.jforum.security.RoleCollection;
 
 /**
  * @author Rafael Steil
- * @version $Id: RolesRepository.java,v 1.5 2006/08/20 22:47:38 rafaelsteil Exp $
+ * @version $Id: RolesRepository.java,v 1.6 2006/08/24 01:07:05 rafaelsteil Exp $
  */
 public class RolesRepository implements Cacheable
 {
@@ -71,6 +72,7 @@ public class RolesRepository implements Cacheable
 	 */
 	public static RoleCollection getGroupRoles(int groupId)
 	{
+		// TODO
 		return (RoleCollection)cache.get(FQN, Integer.toString(groupId));
 	}
 	
@@ -89,39 +91,17 @@ public class RolesRepository implements Cacheable
 	 */
 	public static RoleCollection getGroupRoles(int[] ids)
 	{
-		return (RoleCollection)cache.get(FQN, makeId(ids));
-	}
-	
-	private static String makeId(int[] ids)
-	{
-		String id = "";
-		
-		for (int i = 0; i < ids.length; i++) {
-			id += ids[i];
-		}
-		
-		return id;
+		return (RoleCollection)cache.get(FQN, SecurityCommon.groupIdAsString(ids));
 	}
 	
 	/**
 	 * Adds merged roles to the cache.
 	 * 
-	 * @param ids The ids of the groups 
+	 * @param groupIds The ids of the groups 
 	 * @param roles The merges roles to add 
 	 */
-	public static void addMergedGroupRoles(int[] ids, RoleCollection roles)
+	public static void addGroupRoles(int[] groupIds, RoleCollection roles)
 	{
-		cache.add(FQN, makeId(ids), roles);
-	}
-
-	/**
-	 * Adds the roles of a group to the cache.
-	 * 
-	 * @param groupId The group id
-	 * @param roles The group's roles
-	 */
-	public static void addGroupRoles(int groupId, RoleCollection roles)
-	{
-		cache.add(FQN, Integer.toString(groupId), roles);
+		cache.add(FQN, SecurityCommon.groupIdAsString(groupIds), roles);
 	}
 }

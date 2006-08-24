@@ -47,8 +47,8 @@ import net.jforum.SessionFacade;
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
 import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.GroupSecurityDAO;
 import net.jforum.dao.UserDAO;
-import net.jforum.dao.security.GroupSecurityDAO;
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
 import net.jforum.exceptions.SecurityLoadException;
@@ -58,7 +58,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityRepository.java,v 1.22 2006/08/20 22:47:38 rafaelsteil Exp $
+ * @version $Id: SecurityRepository.java,v 1.23 2006/08/24 01:07:05 rafaelsteil Exp $
  */
 public class SecurityRepository implements Cacheable
 {
@@ -189,9 +189,10 @@ public class SecurityRepository implements Cacheable
 	public static boolean canAccess(String roleName, String value)
 	{
 		UserSession us = SessionFacade.getUserSession();
+		
 		if (us == null) {
 			logger.warn("Found null userSession. Going anonymous. Session id #" 
-					+ JForumExecutionContext.getRequest().getWebSession().getId());
+				+ JForumExecutionContext.getRequest().getWebSession().getId());
 			us = new UserSession();
 			us.makeAnonymous();
 		}

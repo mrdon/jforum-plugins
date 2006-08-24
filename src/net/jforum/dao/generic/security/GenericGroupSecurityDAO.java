@@ -45,12 +45,12 @@ package net.jforum.dao.generic.security;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 import net.jforum.JForumExecutionContext;
+import net.jforum.dao.GroupSecurityDAO;
 import net.jforum.dao.generic.AutoKeys;
 import net.jforum.entities.Group;
 import net.jforum.entities.User;
@@ -60,15 +60,14 @@ import net.jforum.security.Role;
 import net.jforum.security.RoleCollection;
 import net.jforum.security.RoleValue;
 import net.jforum.security.RoleValueCollection;
-import net.jforum.security.UserSecurityHelper;
 import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericGroupSecurityDAO.java,v 1.11 2006/08/23 02:13:49 rafaelsteil Exp $
+ * @version $Id: GenericGroupSecurityDAO.java,v 1.12 2006/08/24 01:06:59 rafaelsteil Exp $
  */
-public class GenericGroupSecurityDAO extends AutoKeys implements net.jforum.dao.security.GroupSecurityDAO
+public class GenericGroupSecurityDAO extends AutoKeys implements GroupSecurityDAO
 {
 	/**
 	 * @see net.jforum.dao.security.SecurityDAO#deleteAllRoles(int)
@@ -76,6 +75,7 @@ public class GenericGroupSecurityDAO extends AutoKeys implements net.jforum.dao.
 	public void deleteAllRoles(int id)
 	{
 		PreparedStatement p = null;
+		
 		try {
 			p = JForumExecutionContext.getConnection().prepareStatement(
 					SystemGlobals.getSql("PermissionControl.deleteAllRoleValues"));
@@ -87,27 +87,6 @@ public class GenericGroupSecurityDAO extends AutoKeys implements net.jforum.dao.
 			p = JForumExecutionContext.getConnection().prepareStatement(
 					SystemGlobals.getSql("PermissionControl.deleteAllGroupRoles"));
 			p.setInt(1, id);
-			p.executeUpdate();
-		}
-		catch (SQLException e) {
-			throw new DatabaseException(e);
-		}
-		finally {
-			DbUtils.close(p);
-		}
-	}
-
-	/**
-	 * @see net.jforum.dao.security.SecurityDAO#deleteRole(int, java.lang.String)
-	 */
-	public void deleteRole(int id, String roleName)
-	{
-		PreparedStatement p = null;
-		try {
-			p = JForumExecutionContext.getConnection().prepareStatement(
-					SystemGlobals.getSql("PermissionControl.deleteGroupRole"));
-			p.setString(1, roleName);
-			p.setInt(2, id);
 			p.executeUpdate();
 		}
 		catch (SQLException e) {
@@ -140,23 +119,29 @@ public class GenericGroupSecurityDAO extends AutoKeys implements net.jforum.dao.
 	/**
 	 * @see net.jforum.dao.security.SecurityDAO#loadRoles(int)
 	 */
-	public RoleCollection loadRoles(int id)
+	public RoleCollection loadRoles(int groupId)
 	{
-		return SecurityCommon.processLoadRoles(SystemGlobals.getSql("PermissionControl.loadGroupRoles"), id);
+		return this.loadRoles(new int[] { groupId });
+	}
+	
+	private RoleCollection loadRoles(int[] groupIds)
+	{
+		return SecurityCommon.loadRoles(SystemGlobals.getSql("PermissionControl.loadGroupRoles"), groupIds);
 	}
 
 	/**
-	 * @see net.jforum.dao.security.SecurityDAO#addRoleValue(int, Role, RoleValueCollection)
+	 * @see net.jforum.dao.GroupSecurityDAO#addRoleValue(int, net.jforum.security.Role, net.jforum.security.RoleValueCollection)
 	 */
-	public void addRoleValue(int id, Role role, RoleValueCollection rvc)
+	public void addRoleValue(int groupId, Role role, RoleValueCollection rvc)
 	{
 		PreparedStatement p = null;
 		ResultSet rs = null;
+		
 		try {
 			p = JForumExecutionContext.getConnection().prepareStatement(
 					SystemGlobals.getSql("PermissionControl.getRoleIdByName"));
 			p.setString(1, role.getName());
-			p.setInt(2, id);
+			p.setInt(2, groupId);
 
 			int roleId = -1;
 
@@ -171,7 +156,7 @@ public class GenericGroupSecurityDAO extends AutoKeys implements net.jforum.dao.
 			p = null;
 
 			if (roleId == -1) {
-				this.addRole(id, role, rvc);
+				this.addRole(groupId, role, rvc);
 			}
 			else {
 				p = JForumExecutionContext.getConnection().prepareStatement(
@@ -181,7 +166,6 @@ public class GenericGroupSecurityDAO extends AutoKeys implements net.jforum.dao.
 				for (Iterator iter = rvc.iterator(); iter.hasNext();) {
 					RoleValue rv = (RoleValue) iter.next();
 					p.setString(2, rv.getValue());
-					p.setInt(3, rv.getType());
 					p.executeUpdate();
 				}
 			}
@@ -194,14 +178,12 @@ public class GenericGroupSecurityDAO extends AutoKeys implements net.jforum.dao.
 		}
 	}
 
+	/**
+	 * @see net.jforum.dao.GroupSecurityDAO#loadRolesByUserGroups(net.jforum.entities.User)
+	 */
 	public RoleCollection loadRolesByUserGroups(User user)
 	{
 		List groups = user.getGroupsList();
-
-		// For single group, we don't need to check for merged roles
-		if (groups.size() == 1) {
-			return (RoleCollection) this.loadGroupRoles(groups).get(0);
-		}
 
 		// When the user is associated to more than one group, we
 		// should check the merged roles
@@ -211,42 +193,11 @@ public class GenericGroupSecurityDAO extends AutoKeys implements net.jforum.dao.
 
 		// Not cached yet? then do it now
 		if (groupRoles == null) {
-			List l = this.loadGroupRoles(groups);
-
-			groupRoles = new RoleCollection();
-			UserSecurityHelper.mergeUserGroupRoles(groupRoles, l);
-
-			RolesRepository.addMergedGroupRoles(groupIds, groupRoles);
+			groupRoles = this.loadRoles(groupIds);
+			RolesRepository.addGroupRoles(groupIds, groupRoles);
 		}
 
 		return groupRoles;
-	}
-
-	/**
-	 * Load roles from the groups.
-	 * 
-	 * @param groups
-	 *            The groups to load the roles
-	 * @return List
-	 */
-	private List loadGroupRoles(List groups)
-	{
-		List groupRolesList = new ArrayList();
-
-		for (Iterator iter = groups.iterator(); iter.hasNext();) {
-			Group g = (Group) iter.next();
-
-			RoleCollection roles = RolesRepository.getGroupRoles(g.getId());
-
-			if (roles == null) {
-				roles = this.loadRoles(g.getId());
-				RolesRepository.addGroupRoles(g.getId(), roles);
-			}
-
-			groupRolesList.add(roles);
-		}
-
-		return groupRolesList;
 	}
 
 	private int[] getSortedGroupIds(List groups)
@@ -255,12 +206,11 @@ public class GenericGroupSecurityDAO extends AutoKeys implements net.jforum.dao.
 		int i = 0;
 
 		for (Iterator iter = groups.iterator(); iter.hasNext();) {
-			groupsIds[i++] = ((Group) iter.next()).getId();
+			groupsIds[i++] = ((Group)iter.next()).getId();
 		}
 
 		Arrays.sort(groupsIds);
 
 		return groupsIds;
 	}
-
 }

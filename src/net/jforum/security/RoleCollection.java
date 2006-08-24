@@ -48,7 +48,7 @@ import java.util.LinkedHashMap;
 
 /**
  * @author Rafael Steil
- * @version $Id: RoleCollection.java,v 1.10 2006/08/20 22:47:35 rafaelsteil Exp $
+ * @version $Id: RoleCollection.java,v 1.11 2006/08/24 01:07:02 rafaelsteil Exp $
  */
 public class RoleCollection extends LinkedHashMap implements Serializable
 {
@@ -77,10 +77,9 @@ public class RoleCollection extends LinkedHashMap implements Serializable
 		StringBuffer sb = new StringBuffer(512);
 		
 		for (Iterator iter = this.values().iterator(); iter.hasNext(); ) {
-			sb.append(iter.next()).append("\n");
+			sb.append(iter.next()).append('\n');
 		}
 		
 		return sb.toString();
 	}
-
 }

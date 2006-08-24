@@ -48,8 +48,8 @@ import java.util.List;
 import net.jforum.dao.CategoryDAO;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
+import net.jforum.dao.GroupSecurityDAO;
 import net.jforum.dao.TopicDAO;
-import net.jforum.dao.security.GroupSecurityDAO;
 import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
 import net.jforum.repository.ForumRepository;
@@ -66,7 +66,7 @@ import net.jforum.view.admin.common.ModerationCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.27 2006/08/20 22:47:45 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.28 2006/08/24 01:07:02 rafaelsteil Exp $
  */
 public class ForumAction extends AdminCommand 
 {
@@ -275,7 +275,6 @@ public class ForumAction extends AdminCommand
 			RoleValueCollection roleValues = new RoleValueCollection();
 			
 			RoleValue rv = new RoleValue();
-			rv.setType(allow ? PermissionControl.ROLE_ALLOW : PermissionControl.ROLE_DENY);
 			rv.setValue(Integer.toString(forumId));
 			roleValues.add(rv);
 			
