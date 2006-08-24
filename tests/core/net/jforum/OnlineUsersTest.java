@@ -6,8 +6,14 @@ package net.jforum;
 import junit.framework.TestCase;
 import net.jforum.cache.DefaultCacheEngine;
 import net.jforum.context.web.WebRequestContext;
+import net.jforum.context.web.WebResponseContext;
+import net.jforum.context.RequestContext;
+import net.jforum.context.ResponseContext;
+import net.jforum.context.ForumContext;
+import net.jforum.context.JForumContext;
 import net.jforum.entities.UserSession;
 import net.jforum.http.FakeHttpRequest;
+import net.jforum.http.FakeHttpResponse;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -15,7 +21,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * Test {@link net.jforum.SessionFacade} methods for online users
  * 
  * @author Rafael Steil
- * @version $Id: OnlineUsersTest.java,v 1.8 2006/08/23 02:13:52 rafaelsteil Exp $
+ * @version $Id: OnlineUsersTest.java,v 1.9 2006/08/24 21:03:00 sergemaslyukov Exp $
  */
 public class OnlineUsersTest extends TestCase
 {
@@ -25,9 +31,19 @@ public class OnlineUsersTest extends TestCase
 	{
 		new SessionFacade().setCacheEngine(new DefaultCacheEngine());
 		
-		JForumExecutionContext ex = JForumExecutionContext.get();
-		ex.setRequest(new WebRequestContext(new FakeHttpRequest()));
-		
+        RequestContext requestContext = new WebRequestContext(new FakeHttpRequest());
+        ResponseContext responseContext = new WebResponseContext(new FakeHttpResponse());
+
+        ForumContext forumContext = new JForumContext(
+            requestContext.getContextPath(),
+            SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION),
+            requestContext,
+            responseContext,
+            false
+        );
+        JForumExecutionContext ex = JForumExecutionContext.get();
+        ex.setForumContext( forumContext );
+
 		JForumExecutionContext.set(ex);
 		
 		SystemGlobals.setValue(ConfigKeys.ANONYMOUS_USER_ID, Integer.toString(ANONYMOUS));

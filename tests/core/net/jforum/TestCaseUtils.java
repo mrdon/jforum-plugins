@@ -56,13 +56,15 @@ import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.context.ForumContext;
+import net.jforum.context.JForumContext;
 import freemarker.template.Configuration;
 
 /**
  * General utilities for the test cases.
  * 
  * @author Rafael Steil
- * @version $Id: TestCaseUtils.java,v 1.19 2006/08/24 01:07:05 rafaelsteil Exp $
+ * @version $Id: TestCaseUtils.java,v 1.20 2006/08/24 21:03:00 sergemaslyukov Exp $
  */
 public class TestCaseUtils
 {
@@ -135,10 +137,18 @@ public class TestCaseUtils
 	
 	public static void createThreadLocalData(int defaultUserId) throws IOException
 	{
+        FakeActionServletRequest servletRequest = new FakeActionServletRequest();
 		JForumExecutionContext ex = JForumExecutionContext.get();
-		ex.setRequest(new FakeActionServletRequest());
-		
-		JForumExecutionContext.set(ex);
+        ForumContext forumContext = new JForumContext(
+            servletRequest.getContextPath(),
+            SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION),
+            servletRequest,
+            null,
+            false
+        );
+        ex.setForumContext(forumContext);
+
+        JForumExecutionContext.set(ex);
 		
 		UserSession us = new UserSession();
 		us.setUserId(defaultUserId);

@@ -78,7 +78,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.76 2006/08/24 01:06:59 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.77 2006/08/24 21:03:00 sergemaslyukov Exp $
  */
 public class UserAction extends Command 
 {
@@ -307,8 +307,8 @@ public class UserAction extends Command
 				DataAccessDriver.getInstance().newUserDAO().selectById(userId));
 		ForumRepository.incrementTotalUsers();
 
-		String profilePage = JForumExecutionContext.getRequest().getJForumContext().encodeURL("/user/edit/" + userId);
-		String homePage = JForumExecutionContext.getRequest().getJForumContext().encodeURL("/forums/list");
+		String profilePage = JForumExecutionContext.getForumContext().encodeURL("/user/edit/" + userId);
+		String homePage = JForumExecutionContext.getForumContext().encodeURL("/forums/list");
 
 		String message = I18n.getMessage("User.RegistrationCompleteMessage", 
 				new Object[] { profilePage, homePage });
@@ -357,7 +357,6 @@ public class UserAction extends Command
 
 				SessionFacade.makeLogged();
 				
-				UserSession tmpUs = null;
 				String sessionId = SessionFacade.isUserInSession(user.getId());
 				
 				UserSession userSession = new UserSession(SessionFacade.getUserSession());
@@ -371,6 +370,7 @@ public class UserAction extends Command
 
 				// Check if the user is returning to the system
 				// before its last session has expired ( hypothesis )
+                UserSession tmpUs;
 				if (sessionId != null && currentUs != null) {
 					// Write its old session data
 					SessionFacade.storeSessionData(sessionId, JForumExecutionContext.getConnection());

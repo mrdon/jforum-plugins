@@ -77,7 +77,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.101 2006/08/24 01:39:57 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.102 2006/08/24 21:02:57 sergemaslyukov Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
@@ -127,6 +127,7 @@ public class JForum extends JForumBaseServlet
 	public void service(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException
 	{
 		Writer out = null;
+		JForumContext forumContext = null;
 		RequestContext request = null;
 		ResponseContext response = null;
 		String encoding = SystemGlobals.getValue(ConfigKeys.ENCODING);
@@ -138,9 +139,6 @@ public class JForum extends JForumBaseServlet
 			request = new WebRequestContext(req);
             response = new WebResponseContext(res);
 
-			ex.setRequest(request);
-			ex.setResponse(response);
-
 			if (!isDatabaseUp) {
 				synchronized (this) {
 					if (!isDatabaseUp) {
@@ -148,9 +146,16 @@ public class JForum extends JForumBaseServlet
 					}
 				}
 			}
-			
-			JForumExecutionContext.set(ex);
-			
+
+            forumContext = new JForumContext(request.getContextPath(),
+                SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION),
+                request,
+                response
+            );
+            ex.setForumContext(forumContext);
+
+            JForumExecutionContext.set(ex);
+
 			// Setup stuff
 			SimpleHash context = JForumExecutionContext.getTemplateContext();
 			
@@ -161,14 +166,9 @@ public class JForum extends JForumBaseServlet
 			
 			// Process security data
 			SecurityRepository.load(SessionFacade.getUserSession().getUserId());
-			
-			request.setJForumContext(new JForumContext(request.getContextPath(), 
-				SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION),
-				request,
-				response,
-				SessionFacade.getUserSession().isBot()));
-			
-			utils.prepareTemplateContext(context, request.getJForumContext());
+
+
+			utils.prepareTemplateContext(context, forumContext);
 
 			String module = request.getModule();
 			
@@ -239,7 +239,7 @@ public class JForum extends JForumBaseServlet
 			JForumExecutionContext.finish();
 			
 			if (redirectTo != null) {
-				if(request.getJForumContext().isEncodingDisabled()) {
+				if(forumContext!=null && forumContext.isEncodingDisabled()) {
 					response.sendRedirect(redirectTo);
 				} 
 				else {

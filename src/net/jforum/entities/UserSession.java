@@ -63,7 +63,7 @@ import com.octo.captcha.image.ImageCaptcha;
  * Stores information about user's session.
  * 
  * @author Rafael Steil
- * @version $Id: UserSession.java,v 1.32 2006/08/20 22:47:35 rafaelsteil Exp $
+ * @version $Id: UserSession.java,v 1.33 2006/08/24 21:03:01 sergemaslyukov Exp $
  */
 public class UserSession implements Serializable
 {
@@ -431,13 +431,17 @@ public class UserSession implements Serializable
 	}
 	
 	/**
+     * @deprecated use JForumExecutionContext.getForumContext().isBot() instead
+     *
+     *
 	 * Checks if it's a bot
 	 * @return <code>true</code> if this user session is from any robot
 	 */
 	public boolean isBot()
 	{
-		return Boolean.TRUE.equals(JForumExecutionContext.getRequest().getAttribute(ConfigKeys.IS_BOT));
-	}
+//        return Boolean.TRUE.equals(JForumExecutionContext.getRequest().getAttribute(ConfigKeys.IS_BOT));
+        return JForumExecutionContext.getForumContext().isBot();
+    }
 	
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)

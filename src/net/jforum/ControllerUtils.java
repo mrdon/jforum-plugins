@@ -48,9 +48,9 @@ import java.util.HashMap;
 
 import javax.servlet.http.Cookie;
 
-import net.jforum.context.JForumContext;
 import net.jforum.context.RequestContext;
 import net.jforum.context.SessionContext;
+import net.jforum.context.ForumContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.UserDAO;
 import net.jforum.dao.UserSessionDAO;
@@ -73,7 +73,7 @@ import org.apache.log4j.Logger;
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.29 2006/08/24 01:06:56 rafaelsteil Exp $
+ * @version $Id: ControllerUtils.java,v 1.30 2006/08/24 21:02:57 sergemaslyukov Exp $
  */
 public class ControllerUtils
 {
@@ -85,7 +85,7 @@ public class ControllerUtils
 	 * @param context SimpleHash The context to use
      * @param jforumContext JForumContext
 	 */
-	public void prepareTemplateContext(SimpleHash context, JForumContext jforumContext)
+	public void prepareTemplateContext(SimpleHash context, ForumContext jforumContext)
 	{
 		RequestContext request = JForumExecutionContext.getRequest();
 		
@@ -273,7 +273,7 @@ public class ControllerUtils
 			userSession.setIp(request.getRemoteAddr());
 			SessionFacade.makeUnlogged();
 
-			if (!userSession.isBot()) {
+			if (!JForumExecutionContext.getForumContext().isBot()) {
 				// Non-SSO authentications can use auto login
 				if (!ConfigKeys.TYPE_SSO.equals(SystemGlobals.getValue(ConfigKeys.AUTHENTICATION_TYPE))) {
 					if (SystemGlobals.getBoolValue(ConfigKeys.AUTO_LOGIN_ENABLED)) {

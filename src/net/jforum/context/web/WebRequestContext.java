@@ -56,9 +56,9 @@ import javax.servlet.http.HttpServletRequestWrapper;
 
 import net.jforum.UrlPattern;
 import net.jforum.UrlPatternCollection;
-import net.jforum.context.JForumContext;
 import net.jforum.context.RequestContext;
 import net.jforum.context.SessionContext;
+import net.jforum.context.ForumContext;
 import net.jforum.exceptions.MultipartHandlingException;
 import net.jforum.util.legacy.commons.fileupload.FileItem;
 import net.jforum.util.legacy.commons.fileupload.FileUploadException;
@@ -70,12 +70,12 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: WebRequestContext.java,v 1.1 2006/08/23 02:13:58 rafaelsteil Exp $
+ * @version $Id: WebRequestContext.java,v 1.2 2006/08/24 21:03:01 sergemaslyukov Exp $
  */
 public class WebRequestContext extends HttpServletRequestWrapper implements RequestContext
 {
 	private Map query;
-	private JForumContext jforumContext;
+//	private ForumContext jforumContext;
 	
 	/**
 	 * Default constructor.
@@ -400,14 +400,5 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 	{
 		return this.query.get(parameter);
 	}
-	
-	public JForumContext getJForumContext()
-	{
-		return this.jforumContext;
-	}
-	
-	public void setJForumContext(JForumContext jforumcontext)
-	{
-		this.jforumContext = jforumcontext;
-	}
+
 }

@@ -54,6 +54,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.jforum.context.JForumContext;
 import net.jforum.context.RequestContext;
 import net.jforum.context.ResponseContext;
+import net.jforum.context.ForumContext;
 import net.jforum.context.web.WebRequestContext;
 import net.jforum.context.web.WebResponseContext;
 import net.jforum.exceptions.ExceptionWriter;
@@ -66,7 +67,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallServlet.java,v 1.26 2006/08/23 02:13:50 rafaelsteil Exp $
+ * @version $Id: InstallServlet.java,v 1.27 2006/08/24 21:02:57 sergemaslyukov Exp $
  */
 public class InstallServlet extends JForumBaseServlet
 {
@@ -84,8 +85,6 @@ public class InstallServlet extends JForumBaseServlet
 	public void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
 	{
 		try {
-			JForumExecutionContext ex = JForumExecutionContext.get();
-			
 			String encoding = SystemGlobals.getValue(ConfigKeys.ENCODING);
 			req.setCharacterEncoding(encoding);
 			
@@ -94,14 +93,18 @@ public class InstallServlet extends JForumBaseServlet
 			ResponseContext response = new WebResponseContext(res);
 
 			request.setCharacterEncoding(encoding);
-			request.setJForumContext(new JForumContext(request.getContextPath(), 
-			   SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION),
-			   request,
-			   response,
-			   false));
-			
-			ex.setResponse(response);
-			ex.setRequest(request);
+
+            JForumExecutionContext ex = JForumExecutionContext.get();
+
+            ForumContext forumContext = new JForumContext(
+                request.getContextPath(),
+                SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION),
+                request,
+                response,
+                false
+            );
+
+            ex.setForumContext(forumContext);
 	
 			// Assigns the information to user's thread 
 			JForumExecutionContext.set(ex);
@@ -115,7 +118,7 @@ public class InstallServlet extends JForumBaseServlet
 			context.put("I18n", I18n.getInstance());
 			context.put("encoding", encoding);
 			context.put("extension", SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
-			context.put("JForumContext", request.getJForumContext());
+			context.put("JForumContext", forumContext);
 			
 			if (SystemGlobals.getBoolValue(ConfigKeys.INSTALLED)) {
 				JForumExecutionContext.setRedirect(request.getContextPath() 

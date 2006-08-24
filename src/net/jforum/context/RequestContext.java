@@ -388,10 +388,6 @@ public interface RequestContext
 	 */
 	public String getModule();
 
-	public void setJForumContext(JForumContext jforumcontext);
-
-	public JForumContext getJForumContext();
-
 	/**
 	 * Adds a new parameter to the request.
 	 * 
@@ -399,7 +395,7 @@ public interface RequestContext
 	 * method to the job.
 	 * 
 	 * @param name Parameter name
-	 * @param valu Parameter value
+	 * @param value Parameter value
 	 */
 	public void addParameter(String name, Object value);
 

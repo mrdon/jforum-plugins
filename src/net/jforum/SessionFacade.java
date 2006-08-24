@@ -60,7 +60,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.36 2006/08/23 02:24:06 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.37 2006/08/24 21:02:57 sergemaslyukov Exp $
  */
 public class SessionFacade implements Cacheable
 {
@@ -122,7 +122,7 @@ public class SessionFacade implements Cacheable
 		synchronized (FQN) {
 			cache.add(FQN, us.getSessionId(), us);
 			
-			if (!us.isBot()) {
+			if (!JForumExecutionContext.getForumContext().isBot()) {
 				if (us.getUserId() != SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID)) {
 					changeUserCount(LOGGED_COUNT, true);
 					cache.add(FQN_LOGGED, us.getSessionId(), us);

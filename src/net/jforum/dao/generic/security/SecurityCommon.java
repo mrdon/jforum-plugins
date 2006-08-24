@@ -62,7 +62,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityCommon.java,v 1.10 2006/08/24 02:14:49 rafaelsteil Exp $
+ * @version $Id: SecurityCommon.java,v 1.11 2006/08/24 21:03:00 sergemaslyukov Exp $
  */
 public class SecurityCommon
 {
@@ -151,7 +151,7 @@ public class SecurityCommon
 	 * explanation about this method. The working way is the same.
 	 * 
 	 * @param sql The SQL statement to execute
-	 * @param id The ID do insert. May be user's or group's id, depending of the situation ( the caller )
+	 * @param groupIds The ID do insert. May be user's or group's id, depending of the situation ( the caller )
 	 * @return A <code>RoleCollection</code> collection with the roles processed.
 	 */
 	public static RoleCollection loadRoles(String sql, int[] groupIds)

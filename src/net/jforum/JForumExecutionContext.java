@@ -49,6 +49,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.jforum.context.RequestContext;
 import net.jforum.context.ResponseContext;
+import net.jforum.context.ForumContext;
 import net.jforum.exceptions.ForumException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -63,7 +64,7 @@ import freemarker.template.SimpleHash;
  * Data execution context. 
  * 
  * @author Rafael Steil
- * @version $Id: JForumExecutionContext.java,v 1.8 2006/08/24 01:06:56 rafaelsteil Exp $
+ * @version $Id: JForumExecutionContext.java,v 1.9 2006/08/24 21:02:57 sergemaslyukov Exp $
  */
 public class JForumExecutionContext
 {
@@ -72,8 +73,7 @@ public class JForumExecutionContext
 	private static Configuration templateConfig;
 	
 	private Connection conn;
-    private RequestContext request;
-    private ResponseContext response;
+    private ForumContext forumContext;
     private SimpleHash context = new SimpleHash(ObjectWrapper.BEANS_WRAPPER);
     private String redirectTo;
     private String contentType;
@@ -174,39 +174,31 @@ public class JForumExecutionContext
 	    
 		return c; 
 	}
-	
-	/**
-	 * Sets a request to the execution context.
-	 * @param request The request to set
-	 */
-	public void setRequest(RequestContext request)
-	{
-		this.request = request;
-	}
 
-	/**
+    public static ForumContext getForumContext()
+    {
+        return ((JForumExecutionContext)userData.get()).forumContext;
+    }
+
+    public void setForumContext(ForumContext forumContext)
+    {
+        this.forumContext = forumContext;
+    }
+
+    /**
 	 * Gets the current thread's request
 	 * @return WebContextRequest
 	 */
 	public static RequestContext getRequest() {
-		return ((JForumExecutionContext)userData.get()).request;
+		return getForumContext().getRequest();
 	}
 	
-	/**
-	 * Sets the reponse to the execution context.
-	 * @param response The response to set
-	 */
-	public void setResponse(ResponseContext response)
-	{
-		this.response = response;
-	}
-
 	/**
 	 * Gets the current thread's response
 	 * @return HttpServletResponse
 	 */
 	public static ResponseContext getResponse() {
-		return ((JForumExecutionContext)userData.get()).response;
+		return getForumContext().getResponse();
 	}
 
 	/**
