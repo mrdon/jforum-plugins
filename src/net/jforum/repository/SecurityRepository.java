@@ -58,7 +58,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityRepository.java,v 1.23 2006/08/24 01:07:05 rafaelsteil Exp $
+ * @version $Id: SecurityRepository.java,v 1.24 2006/08/24 01:39:57 rafaelsteil Exp $
  */
 public class SecurityRepository implements Cacheable
 {
@@ -142,6 +142,7 @@ public class SecurityRepository implements Cacheable
 	public static PermissionControl load(User user, boolean force)
 	{
 		String userId = Integer.toString(user.getId());
+		
 		if (force || cache.get(FQN, userId) == null) {
 			PermissionControl pc = new PermissionControl();
 			
