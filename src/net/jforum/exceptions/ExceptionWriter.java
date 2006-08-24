@@ -58,7 +58,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ExceptionWriter.java,v 1.11 2006/08/20 22:47:23 rafaelsteil Exp $
+ * @version $Id: ExceptionWriter.java,v 1.12 2006/08/24 02:14:49 rafaelsteil Exp $
  */
 public class ExceptionWriter
 {
@@ -73,10 +73,13 @@ public class ExceptionWriter
 		
 		try {
 			logger.error(strWriter);
+
 			String message = "";
+			Throwable cause = t.getCause();
 			
-			if (t.getCause() != null) {
-				message = t.getCause().getMessage();
+			while (cause != null) {
+				message = cause.getMessage();
+				cause = cause.getCause();
 			}
 			
 			if (message == null || message.equals("")) {
@@ -88,8 +91,7 @@ public class ExceptionWriter
 			}
 
 			boolean canViewStackTrace = !SystemGlobals.getBoolValue(ConfigKeys.STACKTRACE_MODERATORS_ONLY)
-					|| (SessionFacade.isLogged() 
-					&& SessionFacade.getUserSession().isModerator());
+				|| (SessionFacade.isLogged() && SessionFacade.getUserSession().isModerator());
 			
 			String filter = "[<>]";
 			String stackTrace = canViewStackTrace

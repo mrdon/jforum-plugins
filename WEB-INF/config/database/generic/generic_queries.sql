@@ -248,9 +248,7 @@ ForumModel.getModeratorList = SELECT g.group_id AS id, g.group_name AS name \
 		AND r.role_id = rv.role_id \
 		AND r.name = 'perm_moderation_forums' \
 		AND rv.role_value = ? \
-		AND rv.role_type = 1 \
 		AND r2.name = 'perm_moderation' \
-		AND r2.role_type = 1 \
 		AND r2.group_id = g.group_id 		
 
 ForumModel.totalMessages = SELECT COUNT(1) as total_messages FROM jforum_posts
@@ -439,7 +437,7 @@ PermissionControl.addGroupRole = INSERT INTO jforum_roles (group_id, name) VALUE
 PermissionControl.addRoleValues = INSERT INTO jforum_role_values (role_id, role_value) VALUES (?, ?)
 PermissionControl.getRoleIdByName = SELECT role_id FROM jforum_roles WHERE name = ? AND group_id = ?
 
-PermissionControl.loadGroupRoles = SELECT r.name, 0 FROM jforum_roles r WHERE r.group_id IN (#IN#) \
+PermissionControl.loadGroupRoles = SELECT r.name, 0 AS role_value FROM jforum_roles r WHERE r.group_id IN (#IN#) \
 	UNION \
 	SELECT r.name, rv.role_value \
 	FROM jforum_roles r, jforum_role_values rv \

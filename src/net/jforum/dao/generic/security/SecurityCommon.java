@@ -62,7 +62,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityCommon.java,v 1.9 2006/08/24 01:06:59 rafaelsteil Exp $
+ * @version $Id: SecurityCommon.java,v 1.10 2006/08/24 02:14:49 rafaelsteil Exp $
  */
 public class SecurityCommon
 {
@@ -167,30 +167,26 @@ public class SecurityCommon
 			p = JForumExecutionContext.getConnection().prepareStatement(sql);
 
 			Role r = null;
-			int lastId = -1;
+			String lastName = null;
 
 			rs = p.executeQuery();
 			while (rs.next()) {
-				if (rs.getInt("role_id") != lastId) {
+				String currentName = rs.getString("name");
+				
+				if (!currentName.equals(lastName)) {
 					if (r != null) {
 						rc.add(r);
 					}
 
 					r = new Role();
-
 					r.setName(rs.getString("name"));
-					r.setId(rs.getInt("role_id"));
 
-					lastId = r.getId();
+					lastName = currentName;
 				}
 
-				String role = rs.getString("role_value");
-				if (!rs.wasNull() && StringUtils.isNotBlank(role)) {
-					RoleValue rv = new RoleValue();
-					rv.setRoleId(r.getId());
-					rv.setValue(role);
-
-					r.getValues().add(rv);
+				String roleValue = rs.getString("role_value");
+				if (!rs.wasNull() && StringUtils.isNotBlank(roleValue)) {
+					r.getValues().add(new RoleValue(roleValue));
 				}
 			}
 
@@ -212,9 +208,11 @@ public class SecurityCommon
 	{
 		StringBuffer sb = new StringBuffer();
 		
-		for (int i = 0; i < ids.length; i++) {
+		for (int i = 0; i < ids.length - 1; i++) {
 			sb.append(ids[i]).append(',');
 		}
+		
+		sb.append(ids[ids.length - 1]);
 		
 		return sb.toString();
 	}
