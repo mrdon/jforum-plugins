@@ -15,7 +15,7 @@ import org.quartz.JobExecutionException;
 
 /**
  * @author Rafael Steil
- * @version $Id: POPListener.java,v 1.1 2006/08/22 02:05:25 rafaelsteil Exp $
+ * @version $Id: POPListener.java,v 1.2 2006/08/27 01:21:49 rafaelsteil Exp $
  */
 public class POPListener implements Job
 {
@@ -36,6 +36,9 @@ public class POPListener implements Job
 			finally {
 				connector.closeConnection();
 			}
+			
+			POPPostAction action = new POPPostAction();
+			action.insertMessages(parser);
 		}
 	}
 }

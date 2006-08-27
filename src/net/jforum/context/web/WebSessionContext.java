@@ -50,11 +50,11 @@ import java.util.Enumeration;
 
 /**
  * @author: SergeMaslyukov 
- * @version $Id: WebSessionContext.java,v 1.1 2006/08/23 02:13:58 rafaelsteil Exp $
+ * @version $Id: WebSessionContext.java,v 1.2 2006/08/27 01:21:53 rafaelsteil Exp $
  */
 public class WebSessionContext implements SessionContext
 {
-	private HttpSession httpSession = null;
+	private HttpSession httpSession;
 
 	public WebSessionContext(HttpSession httpSession)
 	{

@@ -46,19 +46,19 @@ import java.util.Enumeration;
 
 /**
  * @author SergeMaslyukov 
- * @version $Id: SessionContext.java,v 1.1 2006/08/23 02:13:47 rafaelsteil Exp $
+ * @version $Id: SessionContext.java,v 1.2 2006/08/27 01:21:41 rafaelsteil Exp $
  */
 public interface SessionContext
 {
-	void setAttribute(String name, Object value);
+	public void setAttribute(String name, Object value);
 
-	void removeAttribute(String name);
+	public 	void removeAttribute(String name);
 
-	Object getAttribute(String name);
+	public Object getAttribute(String name);
 
-	String getId();
+	public String getId();
 
-	Enumeration getAttributeNames();
+	public Enumeration getAttributeNames();
 
-	void invalidate();
+	public void invalidate();
 }

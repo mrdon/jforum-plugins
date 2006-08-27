@@ -44,38 +44,35 @@ package net.jforum.context;
 
 import net.jforum.util.preferences.ConfigKeys;
 
-
 /**
  * @author Marc Wick
- * @version $Id: JForumContext.java,v 1.2 2006/08/24 21:02:59 sergemaslyukov Exp $
+ * @version $Id: JForumContext.java,v 1.3 2006/08/27 01:21:43 rafaelsteil Exp $
  */
 public class JForumContext implements ForumContext
 {
 	private String contextPath;
 	private String servletExtension;
-
 	private RequestContext request;
 	private ResponseContext response;
-
 	private boolean isEncodingDisabled;
 	private boolean isBot;
 
-	public JForumContext(String contextPath, String servletExtension, RequestContext request,
-			ResponseContext response)
+	public JForumContext(String contextPath, String servletExtension, 
+			RequestContext request,ResponseContext response)
 	{
-        this.contextPath = contextPath;
-        this.servletExtension = servletExtension;
-        this.request = request;
-        this.response = response;
+		this.contextPath = contextPath;
+		this.servletExtension = servletExtension;
+		this.request = request;
+		this.response = response;
 
-        Boolean isBotObject = (Boolean)request.getAttribute(ConfigKeys.IS_BOT);
-        this.isBot = (isBotObject!=null && isBotObject.booleanValue()); 
+		Boolean isBotObject = (Boolean) request.getAttribute(ConfigKeys.IS_BOT);
+		this.isBot = (isBotObject != null && isBotObject.booleanValue());
 
-        this.isEncodingDisabled = isBot;
-    }
+		this.isEncodingDisabled = isBot;
+	}
 
-    public JForumContext(String contextPath, String servletExtension, RequestContext request,
-			ResponseContext response, boolean isEncodingDisabled)
+	public JForumContext(String contextPath, String servletExtension, 
+			RequestContext request, ResponseContext response, boolean isEncodingDisabled)
 	{
 		this.contextPath = contextPath;
 		this.servletExtension = servletExtension;
@@ -83,15 +80,16 @@ public class JForumContext implements ForumContext
 		this.response = response;
 		this.isEncodingDisabled = isEncodingDisabled;
 
-        Boolean isBotObject = (Boolean)request.getAttribute(ConfigKeys.IS_BOT);
-        this.isBot = (isBotObject!=null && isBotObject.booleanValue());
+		Boolean isBotObject = (Boolean) request.getAttribute(ConfigKeys.IS_BOT);
+		this.isBot = (isBotObject != null && isBotObject.booleanValue());
 	}
 
-    public boolean isBot() {
-        return isBot;
-    }
+	public boolean isBot()
+	{
+		return isBot;
+	}
 
-    public String encodeURL(String url)
+	public String encodeURL(String url)
 	{
 		return this.encodeURL(url, servletExtension);
 	}
@@ -112,14 +110,13 @@ public class JForumContext implements ForumContext
 		return this.isEncodingDisabled;
 	}
 
+	public RequestContext getRequest()
+	{
+		return request;
+	}
 
-    public RequestContext getRequest()
-    {
-        return request;
-    }
-
-    public ResponseContext getResponse()
-    {
-        return response;
-    }
+	public ResponseContext getResponse()
+	{
+		return response;
+	}
 }

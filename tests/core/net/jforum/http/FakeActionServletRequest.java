@@ -45,13 +45,12 @@ package net.jforum.http;
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import net.jforum.context.web.WebRequestContext;
 
 /**
  * @author Rafael Steil
- * @version $Id: FakeActionServletRequest.java,v 1.6 2006/08/23 02:13:48 rafaelsteil Exp $
+ * @version $Id: FakeActionServletRequest.java,v 1.7 2006/08/27 01:21:59 rafaelsteil Exp $
  */
 public class FakeActionServletRequest extends WebRequestContext
 {
@@ -59,12 +58,5 @@ public class FakeActionServletRequest extends WebRequestContext
 	
 	public FakeActionServletRequest() throws IOException {
 		super(request);
-	}
-	
-	/** 
-	 * @see javax.servlet.http.HttpServletRequestWrapper#getSession()
-	 */
-	public HttpSession getSession() {
-		return request.getSession();
 	}
 }

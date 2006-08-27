@@ -80,7 +80,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.57 2006/08/24 01:06:55 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.58 2006/08/27 01:22:00 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -128,7 +128,7 @@ public class InstallAction extends Command
 	
 	private String getFromSession(String key)
 	{
-		return (String)this.request.getWebSession().getAttribute(key);
+		return (String)this.request.getSessionContext().getAttribute(key);
 	}
 	
 	private void error()
@@ -235,7 +235,7 @@ public class InstallAction extends Command
 		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
         SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
         
-        SessionFacade.remove(this.request.getWebSession().getId());
+        SessionFacade.remove(this.request.getSessionContext().getId());
 	}
 	
 	private void doFinalSteps()
@@ -752,7 +752,7 @@ public class InstallAction extends Command
 	
 	private void addToSessionAndContext(String key, String value)
 	{
-		this.request.getWebSession().setAttribute(key, value);
+		this.request.getSessionContext().setAttribute(key, value);
 		this.context.put(key, value);
 	}
 	

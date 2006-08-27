@@ -58,7 +58,6 @@ import net.jforum.UrlPattern;
 import net.jforum.UrlPatternCollection;
 import net.jforum.context.RequestContext;
 import net.jforum.context.SessionContext;
-import net.jforum.context.ForumContext;
 import net.jforum.exceptions.MultipartHandlingException;
 import net.jforum.util.legacy.commons.fileupload.FileItem;
 import net.jforum.util.legacy.commons.fileupload.FileUploadException;
@@ -70,12 +69,11 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: WebRequestContext.java,v 1.2 2006/08/24 21:03:01 sergemaslyukov Exp $
+ * @version $Id: WebRequestContext.java,v 1.3 2006/08/27 01:21:52 rafaelsteil Exp $
  */
 public class WebRequestContext extends HttpServletRequestWrapper implements RequestContext
 {
 	private Map query;
-//	private ForumContext jforumContext;
 	
 	/**
 	 * Default constructor.
@@ -165,11 +163,11 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 		}
 	}
 
-    public SessionContext getWebSession(boolean create) {
-        return new WebSessionContext(this.getSession(create));
+    public SessionContext getSessionContext(boolean create) {
+        return new WebSessionContext(this.getSession(true));
     }
 
-    public SessionContext getWebSession() {
+    public SessionContext getSessionContext() {
         return new WebSessionContext(this.getSession());
     }
 
@@ -284,29 +282,6 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 	}
 	
 	/**
-	 * Gets all parameters of the current request. 
-	 * 
-	 * @return <code>java.util.Map</code> with all request
-	 * data.
-	 */
-	public Map dumpRequest()
-	{
-		return this.query;
-	}
-	
-	/**
-	 * Restores a request "dump".
-	 * 
-	 * @param query A <code>java.util.Map</code> with all request
-	 * data. Usually it will be the result of a previous call
-	 * to @link #dumpRequest() 
-	 */
-	public void restoreDump(Map query)
-	{
-		this.query = query;
-	}
-	
-	/**
 	 * Gets some request parameter as <code>Object</code>.
 	 * This method may be used when you have to get some value
 	 * of a <i>multipart/form-data</i> request, like a image
@@ -400,5 +375,4 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 	{
 		return this.query.get(parameter);
 	}
-
 }

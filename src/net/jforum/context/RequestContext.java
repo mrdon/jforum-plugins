@@ -43,12 +43,10 @@
 package net.jforum.context;
 
 
-import javax.servlet.http.Cookie;
-
-
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
-import java.util.Map;
+
+import javax.servlet.http.Cookie;
 
 /**
  * User: SergeMaslyukov Date: 20.08.2006 Time: 17:18:03 <p/> $Id: WebContextRequest.java,v 1.1
@@ -242,20 +240,20 @@ public interface RequestContext
 	 * @return the <code>HttpSession</code> associated with this request or <code>null</code> if
 	 * <code>create</code> is <code>false</code> and the request has no valid session
 	 * 
-	 * @see #getWebSession()
+	 * @see #getSessionContext()
 	 */
 
-	public SessionContext getWebSession(boolean create);
+	public SessionContext getSessionContext(boolean create);
 
 	/**
 	 * Returns the current session associated with this request, or if the request does not have a
 	 * session, creates one.
 	 * 
 	 * @return the <code>HttpSession</code> associated with this request
-	 * @see #getWebSession(boolean)
+	 * @see #getSessionContext(boolean)
 	 */
 
-	public SessionContext getWebSession();
+	public SessionContext getSessionContext();
 
 	/**
 	 * Returns the portion of the request URI that indicates the context of the request. The context
@@ -407,20 +405,4 @@ public interface RequestContext
 	 * @return Object
 	 */
 	public Object getObjectParameter(String parameter);
-
-	/**
-	 * Restores a request "dump".
-	 * 
-	 * @param query A <code>java.util.Map</code> with all request data. Usually it will be the
-	 * result of a previous call to
-	 * @link #dumpRequest()
-	 */
-	public void restoreDump(Map query);
-
-	/**
-	 * Gets all parameters of the current request.
-	 * 
-	 * @return <code>java.util.Map</code> with all request data.
-	 */
-	public Map dumpRequest();
 }

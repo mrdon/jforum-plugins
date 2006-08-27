@@ -58,7 +58,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityRepository.java,v 1.24 2006/08/24 01:39:57 rafaelsteil Exp $
+ * @version $Id: SecurityRepository.java,v 1.25 2006/08/27 01:22:02 rafaelsteil Exp $
  */
 public class SecurityRepository implements Cacheable
 {
@@ -193,7 +193,7 @@ public class SecurityRepository implements Cacheable
 		
 		if (us == null) {
 			logger.warn("Found null userSession. Going anonymous. Session id #" 
-				+ JForumExecutionContext.getRequest().getWebSession().getId());
+				+ JForumExecutionContext.getRequest().getSessionContext().getId());
 			us = new UserSession();
 			us.makeAnonymous();
 		}

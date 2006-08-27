@@ -73,7 +73,7 @@ import org.apache.log4j.Logger;
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.30 2006/08/24 21:02:57 sergemaslyukov Exp $
+ * @version $Id: ControllerUtils.java,v 1.31 2006/08/27 01:21:55 rafaelsteil Exp $
  */
 public class ControllerUtils
 {
@@ -231,7 +231,7 @@ public class ControllerUtils
 				SSOUtils utils = new SSOUtils();
 
 				if (!utils.userExists(username)) {
-					SessionContext session = JForumExecutionContext.getRequest().getWebSession();
+					SessionContext session = JForumExecutionContext.getRequest().getSessionContext();
 
 					String email = (String) session.getAttribute(SystemGlobals.getValue(ConfigKeys.SSO_EMAIL_ATTRIBUTE));
 					String password = (String) session.getAttribute(SystemGlobals.getValue(ConfigKeys.SSO_PASSWORD_ATTRIBUTE));
@@ -269,7 +269,7 @@ public class ControllerUtils
 		if (userSession == null) {
 			userSession = new UserSession();
 			userSession.registerBasicInfo();
-			userSession.setSessionId(request.getWebSession().getId());
+			userSession.setSessionId(request.getSessionContext().getId());
 			userSession.setIp(request.getRemoteAddr());
 			SessionFacade.makeUnlogged();
 
