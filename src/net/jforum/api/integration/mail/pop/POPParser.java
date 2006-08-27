@@ -10,7 +10,7 @@ import javax.mail.Message;
 
 /**
  * @author Rafael Steil
- * @version $Id: POPParser.java,v 1.1 2006/08/22 02:05:25 rafaelsteil Exp $
+ * @version $Id: POPParser.java,v 1.2 2006/08/27 01:50:22 rafaelsteil Exp $
  */
 public class POPParser
 {
@@ -23,5 +23,10 @@ public class POPParser
 		for (int i = 0; i < messages.length; i++) {
 			this.messages.add(new POPMessage(messages[i]));
 		}
+	}
+	
+	public List getMessages()
+	{
+		return this.messages;
 	}
 }
