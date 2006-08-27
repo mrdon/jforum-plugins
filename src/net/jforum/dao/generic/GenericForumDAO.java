@@ -73,7 +73,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * @author Vanessa Sabino
  * @author socialnetwork@gmail.com, adding "watch forum" methods.
  * 
- * @version $Id: GenericForumDAO.java,v 1.27 2006/08/23 02:13:41 rafaelsteil Exp $
+ * @version $Id: GenericForumDAO.java,v 1.28 2006/08/27 17:24:41 rafaelsteil Exp $
  */
 public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 {
@@ -82,7 +82,6 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 	 */
 	public Forum selectById(int forumId)
 	{
-
 		PreparedStatement p = null;
 		ResultSet rs = null;
 		try {
@@ -132,11 +131,11 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 					SystemGlobals.getSql("ForumModel.countForumPosts"));
 			p.setInt(1, forumId);
 			rs = p.executeQuery();
-			rs.next();
 
 			if (rs.next()) {
 				return rs.getInt(1);
 			}
+			
 			return 0;
 		}
 		catch (SQLException e) {
@@ -196,7 +195,6 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 		related.setOrder(forum.getOrder());
 		forum.setOrder(tmpOrder);
 
-		// ********
 		PreparedStatement p = null;
 		try {
 			p = JForumExecutionContext.getConnection()
@@ -207,7 +205,6 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 			p.close();
 			p = null;
 
-			// ********
 			p = JForumExecutionContext.getConnection()
 					.prepareStatement(SystemGlobals.getSql("ForumModel.setOrderById"));
 			p.setInt(1, related.getOrder());
@@ -259,8 +256,6 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 			p.setInt(4, forum.isModerated() ? 1 : 0);
 			p.setInt(5, forum.getId());
 
-			// Order, TotalTopics and LastPostId must be updated using the
-			// respective methods
 			p.executeUpdate();
 		}
 		catch (SQLException e) {
@@ -339,8 +334,6 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 	}
 
 	/**
-	 * // TODO implement this or delete javadoc
-	 * 
 	 * @see net.jforum.dao.ForumDAO#setTotalTopics(int)
 	 */
 	public void incrementTotalTopics(int forumId, int count)
@@ -362,8 +355,6 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 	}
 
 	/**
-	 * // TODO implement this or delete javadoc
-	 * 
 	 * @see net.jforum.dao.ForumDAO#setTotalTopics(int)
 	 */
 	public void decrementTotalTopics(int forumId, int count)
@@ -532,7 +523,6 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 			p = JForumExecutionContext.getConnection().prepareStatement(
 					SystemGlobals.getSql("ForumModel.totalMessages"));
 			rs = p.executeQuery();
-			rs.next();
 
 			if (rs.next()) {
 				return rs.getInt("total_messages");
@@ -920,8 +910,7 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 	/**
 	 * Remove all subscriptions on a forum, such as when a forum is locked. It is not used now.
 	 * 
-	 * @param forumId
-	 *            int
+	 * @param forumId int
 	 */
 	public void removeSubscriptionByForum(int forumId)
 	{
