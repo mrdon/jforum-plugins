@@ -48,7 +48,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.91 2006/08/20 22:47:37 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.92 2006/08/28 23:22:29 rafaelsteil Exp $
 */
 
 public class ConfigKeys 
@@ -127,7 +127,6 @@ public class ConfigKeys
 
 	public static final String VERSION = "version";
 	public static final String BACKGROUND_TASKS = "background.tasks";
-	public static final String REQUEST_DUMP = "request.dump";
 
 	public static final String FORUM_LINK = "forum.link";
 	public static final String HOMEPAGE_LINK = "homepage.link";
@@ -264,6 +263,7 @@ public class ConfigKeys
     
     public static final String STACKTRACE_MODERATORS_ONLY = "stacktrace.moderators.only";
     public static final String JFORUM_VERSION_URL = "jforum.version.url";
+	public static final String REQUEST_IGNORE_CAPTCHA = "request.ignore.captcha";
     
 	private ConfigKeys() {}
 }

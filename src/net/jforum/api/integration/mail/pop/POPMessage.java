@@ -24,7 +24,7 @@ import net.jforum.exceptions.MailException;
 /**
  * Represents a pop message. 
  * @author Rafael Steil
- * @version $Id: POPMessage.java,v 1.2 2006/08/27 01:21:50 rafaelsteil Exp $
+ * @version $Id: POPMessage.java,v 1.3 2006/08/28 23:22:28 rafaelsteil Exp $
  */
 public class POPMessage
 {
@@ -39,6 +39,7 @@ public class POPMessage
 	private String references;
 	private String inReplyTo;
 	private String contentType;
+	private String listEmail;
 	private Date sendDate;
 	private Map headers;
 	
@@ -62,7 +63,8 @@ public class POPMessage
 			this.message = message.getContent();
 			this.contentType = message.getContentType();
 			this.sender = ((InternetAddress)message.getFrom()[0]).getAddress();
-			
+			this.listEmail = ((InternetAddress)message.getAllRecipients()[0]).getAddress();
+				
 			if (message.getReplyTo().length > 0) {
 				this.replyTo = ((InternetAddress)message.getReplyTo()[0]).getAddress();
 			}
@@ -128,6 +130,11 @@ public class POPMessage
 				if (is != null) { try { is.close(); } catch (Exception e) {} }
 			}
 		}
+	}
+	
+	public String getListEmail()
+	{
+		return this.listEmail;
 	}
 
 	/**

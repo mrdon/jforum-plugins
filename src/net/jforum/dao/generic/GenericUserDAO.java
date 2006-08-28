@@ -53,6 +53,7 @@ import java.util.List;
 
 import net.jforum.JForumExecutionContext;
 import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.UserDAO;
 import net.jforum.entities.Group;
 import net.jforum.entities.KarmaStatus;
 import net.jforum.entities.User;
@@ -64,9 +65,9 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericUserDAO.java,v 1.22 2006/08/23 02:13:42 rafaelsteil Exp $
+ * @version $Id: GenericUserDAO.java,v 1.23 2006/08/28 23:22:28 rafaelsteil Exp $
  */
-public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
+public class GenericUserDAO extends AutoKeys implements UserDAO
 {
 	private static LoginAuthenticator loginAuthenticator;
 
@@ -1061,5 +1062,36 @@ public class GenericUserDAO extends AutoKeys implements net.jforum.dao.UserDAO
 		finally {
 			DbUtils.close(rs, p);
 		}
+	}
+	
+	/**
+	 * @see net.jforum.dao.UserDAO#findByEmail(java.lang.String)
+	 */
+	public User findByEmail(String email)
+	{
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		
+		User u = null;
+		
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("UserModel.findByEmail"));
+			p.setString(1, email);
+			rs = p.executeQuery();
+			
+			if (rs.next()) {
+				u = new User();
+				fillUserFromResultSet(u, rs);
+			}
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+		
+		return u;
 	}
 }

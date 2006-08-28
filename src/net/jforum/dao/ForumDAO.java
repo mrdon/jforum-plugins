@@ -56,7 +56,7 @@ import net.jforum.entities.LastPostInfo;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: ForumDAO.java,v 1.11 2006/08/20 22:47:22 rafaelsteil Exp $
+ * @version $Id: ForumDAO.java,v 1.12 2006/08/28 23:22:27 rafaelsteil Exp $
  */
 public interface ForumDAO 
 {
@@ -266,5 +266,10 @@ public interface ForumDAO
 	 */
 	public void removeSubscriptionByForum(int forumId) ;
 
-	
+	/**
+	 * Given an email address, finds the forum Id
+	 * @param listEmail the email of the forum
+	 * @return the forum id of the given email, or 0 if not found
+	 */
+	public int discoverForumId(String listEmail);
 }

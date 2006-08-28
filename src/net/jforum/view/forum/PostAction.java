@@ -100,7 +100,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.153 2006/08/27 01:22:03 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.154 2006/08/28 23:22:29 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -1003,7 +1003,8 @@ public class PostAction extends Command
 			p.setSubject(t.getTitle());
 		}
 		
-		boolean needCaptcha = SystemGlobals.getBoolValue(ConfigKeys.CAPTCHA_POSTS);
+		boolean needCaptcha = SystemGlobals.getBoolValue(ConfigKeys.CAPTCHA_POSTS)
+			&& request.getSessionContext().getAttribute(ConfigKeys.REQUEST_IGNORE_CAPTCHA) == null;
 		
 		if (needCaptcha) {
 			if (!us.validateCaptchaResponse(this.request.getParameter("captcha_anwser"))) {

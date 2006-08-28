@@ -46,7 +46,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import net.jforum.JForumExecutionContext;
-import net.jforum.SessionFacade;
 import net.jforum.entities.User;
 import net.jforum.repository.BBCodeRepository;
 import net.jforum.repository.SmiliesRepository;
@@ -60,7 +59,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.23 2006/08/24 01:07:04 rafaelsteil Exp $
+ * @version $Id: ViewCommon.java,v 1.24 2006/08/28 23:22:27 rafaelsteil Exp $
  */
 public final class ViewCommon
 {
@@ -149,18 +148,6 @@ public final class ViewCommon
 		}
 		
 		return forumLink;
-	}
-
-	/**
-	 * Checks if some request needs to be reprocessed. 
-	 * This is likely to happen when @link net.jforum.web_context.WebContextRequest#dumpRequest()
-	 * is stored in the session. 
-	 * 
-	 * @return <code>true</code> of <code>false</code>, depending of the status.
-	 */
-	public static boolean needReprocessRequest()
-	{
-		return (SessionFacade.getAttribute(ConfigKeys.REQUEST_DUMP) != null);
 	}
 	
 	public static String toUtf8String(String s)

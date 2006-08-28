@@ -54,7 +54,7 @@ import net.jforum.entities.User;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: UserDAO.java,v 1.8 2006/08/20 22:47:22 rafaelsteil Exp $
+ * @version $Id: UserDAO.java,v 1.9 2006/08/28 23:22:27 rafaelsteil Exp $
  */
 public interface UserDAO 
 {
@@ -370,4 +370,11 @@ public interface UserDAO
 	 * @return String
 	 */
 	public String getUserAuthHash(int userId) ;
+
+	/**
+	 * Finds a user by its email address
+	 * @param email the email address to search
+	 * @return the user instance if a match is found, or null otherwise
+	 */
+	public User findByEmail(String email);
 }

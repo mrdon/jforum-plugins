@@ -73,6 +73,7 @@ UserModel.rankingId = UPDATE jforum_users SET rank_id = ? WHERE user_id = ?
 UserModel.activeStatus = UPDATE jforum_users SET user_active = ? WHERE user_id = ?
 UserModel.addNew = INSERT INTO jforum_users (username, user_password, user_email, user_regdate, user_actkey) VALUES (?, ?, ?, ?, ?)
 UserModel.findByName = SELECT user_id, username, user_email, deleted FROM jforum_users WHERE UPPER(username) LIKE UPPER(?)
+UserModel.findByEmail = SELECT * FROM jforum_users WHERE LOWER(user_email) = LOWER(?)
 UserModel.selectByName = SELECT * FROM jforum_users WHERE LOWER(username) = LOWER(?)
 UserModel.addNewWithId = INSERT INTO jforum_users (username, user_password, user_email, user_regdate, user_actkey, user_id) VALUES (?, ?, ?, ?, ?, ?)
 
@@ -219,7 +220,7 @@ ForumModel.selectAllForPermissions = SELECT forum_id, forum_name FROM jforum_for
 
 ForumModel.statsFirstPostTime = SELECT MIN(post_time) FROM jforum_posts WHERE post_time > 0
 ForumModel.statsFirstRegisteredUserTime = SELECT MIN(user_regdate) FROM jforum_users WHERE user_regdate > 0
-
+ForumModel.discoverForumId = SELECT forum_id FROM jforum_forums WHERE forum_email = ?
 ForumModel.countForumPosts = SELECT COUNT(1) FROM jforum_posts WHERE forum_id = ?
 ForumModel.setModerated = UPDATE jforum_forums SET moderated = ? WHERE categories_id = ?
 ForumModel.delete = DELETE FROM jforum_forums WHERE forum_id = ?

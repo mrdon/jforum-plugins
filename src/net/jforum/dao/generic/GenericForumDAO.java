@@ -73,7 +73,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * @author Vanessa Sabino
  * @author socialnetwork@gmail.com, adding "watch forum" methods.
  * 
- * @version $Id: GenericForumDAO.java,v 1.28 2006/08/27 17:24:41 rafaelsteil Exp $
+ * @version $Id: GenericForumDAO.java,v 1.29 2006/08/28 23:22:28 rafaelsteil Exp $
  */
 public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 {
@@ -929,5 +929,35 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 			DbUtils.close(p);
 		}
 
+	}
+	
+	/**
+	 * @see net.jforum.dao.ForumDAO#discoverForumId(java.lang.String)
+	 */
+	public int discoverForumId(String listEmail)
+	{
+		int forumId = 0;
+		
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+				SystemGlobals.getSql("ForumModel.discoverForumId"));
+			p.setString(1, listEmail);
+			rs = p.executeQuery();
+			
+			if (rs.next()) {
+				forumId = rs.getInt(1);
+			}
+		}
+		catch (SQLException e) {
+			
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+		
+		return forumId;
 	}
 }
