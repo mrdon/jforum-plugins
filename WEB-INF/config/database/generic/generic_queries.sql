@@ -220,7 +220,7 @@ ForumModel.selectAllForPermissions = SELECT forum_id, forum_name FROM jforum_for
 
 ForumModel.statsFirstPostTime = SELECT MIN(post_time) FROM jforum_posts WHERE post_time > 0
 ForumModel.statsFirstRegisteredUserTime = SELECT MIN(user_regdate) FROM jforum_users WHERE user_regdate > 0
-ForumModel.discoverForumId = SELECT forum_id FROM jforum_forums WHERE forum_email = ?
+ForumModel.discoverForumId = SELECT forum_id FROM jforum_mail_integration WHERE forum_email = ?
 ForumModel.countForumPosts = SELECT COUNT(1) FROM jforum_posts WHERE forum_id = ?
 ForumModel.setModerated = UPDATE jforum_forums SET moderated = ? WHERE categories_id = ?
 ForumModel.delete = DELETE FROM jforum_forums WHERE forum_id = ?
@@ -712,3 +712,7 @@ SummaryDAO.selectPosts = SELECT p.post_id, p.topic_id, p.forum_id, p.user_id, po
 	AND status = 1 \
 	AND t.topic_time BETWEEN ? AND ? \
 	ORDER BY post_time DESC 
+###################
+# MailIntegration
+###################
+MailIntegration.findAll = SELECT * FROM jforum_mail_integration

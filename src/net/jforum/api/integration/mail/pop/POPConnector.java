@@ -18,7 +18,7 @@ import net.jforum.exceptions.MailException;
  * Handles the connection to the POP server.
  * 
  * @author Rafael Steil
- * @version $Id: POPConnector.java,v 1.1 2006/08/22 02:05:25 rafaelsteil Exp $
+ * @version $Id: POPConnector.java,v 1.2 2006/08/29 02:32:29 rafaelsteil Exp $
  */
 public class POPConnector
 {
@@ -89,7 +89,18 @@ public class POPConnector
 	 */
 	public void closeConnection()
 	{
-		this.markAllMessagesAsDeleted();
+		this.closeConnection(true);
+	}
+	
+	/**
+	 * Closes the connection to the pop server.
+	 * @param deleteAll If true, all messages are flaged for deletion
+	 */
+	public void closeConnection(boolean deleteAll)
+	{
+		if (deleteAll) {
+			this.markAllMessagesAsDeleted();
+		}
 		
 		if (this.folder != null) try { this.folder.close(true); } catch (Exception e) {}
 		if (this.store != null) try { this.store.close(); } catch (Exception e) {}

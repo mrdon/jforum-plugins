@@ -7,6 +7,8 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
+import freemarker.template.SimpleHash;
+
 import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
 import net.jforum.context.JForumContext;
@@ -18,10 +20,11 @@ import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
 import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.view.forum.PostAction;
 
 /**
  * @author Rafael Steil
- * @version $Id: POPPostAction.java,v 1.3 2006/08/28 23:22:28 rafaelsteil Exp $
+ * @version $Id: POPPostAction.java,v 1.4 2006/08/29 02:32:29 rafaelsteil Exp $
  */
 public class POPPostAction
 {
@@ -79,12 +82,15 @@ public class POPPostAction
 	private void insertMessage(POPMessage m, User user)
 	{
 		this.addDataToRequest(m, user);
+		
+		PostAction postAction = new PostAction(JForumExecutionContext.getRequest(), new SimpleHash());
+		postAction.insertSave();
 	}
 	
 	private void addDataToRequest(POPMessage m, User user)
 	{
 		RequestContext request = JForumExecutionContext.getRequest();
-		request.addParameter("forumId", Integer.toString(this.discoverForumId(m.getListEmail())));
+		request.addParameter("forum_id", Integer.toString(this.discoverForumId(m.getListEmail())));
 		request.addParameter("topic_type", Integer.toString(Topic.TYPE_NORMAL));
 		request.addParameter("quick", "1");
 		request.addParameter("subject", m.getSubject());

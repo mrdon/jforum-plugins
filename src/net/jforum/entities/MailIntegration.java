@@ -5,12 +5,13 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
- * @version $Id: MailIntegration.java,v 1.1 2006/08/22 02:05:24 rafaelsteil Exp $
+ * @version $Id: MailIntegration.java,v 1.2 2006/08/29 02:32:30 rafaelsteil Exp $
  */
 public class MailIntegration
 {
 	private int forumId;
 	private int popPort;
+	private String forumEmail;
 	private String popHost;
 	private String popUsername;
 	private String popPassword;
@@ -93,5 +94,21 @@ public class MailIntegration
 	public void setPopUsername(String popUsername)
 	{
 		this.popUsername = popUsername;
+	}
+
+	/**
+	 * @return the forumEmail
+	 */
+	public String getForumEmail()
+	{
+		return this.forumEmail;
+	}
+
+	/**
+	 * @param forumEmail the forumEmail to set
+	 */
+	public void setForumEmail(String forumEmail)
+	{
+		this.forumEmail = forumEmail;
 	}
 }

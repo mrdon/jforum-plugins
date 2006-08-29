@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -46,25 +46,16 @@ import java.io.File;
 import java.io.IOException;
 
 import net.jforum.dao.DataAccessDriver;
-import net.jforum.entities.UserSession;
-import net.jforum.http.FakeActionServletRequest;
-import net.jforum.security.PermissionControl;
-import net.jforum.security.Role;
-import net.jforum.security.RoleCollection;
-import net.jforum.security.RoleValue;
-import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.context.ForumContext;
-import net.jforum.context.JForumContext;
 import freemarker.template.Configuration;
 
 /**
  * General utilities for the test cases.
  * 
  * @author Rafael Steil
- * @version $Id: TestCaseUtils.java,v 1.20 2006/08/24 21:03:00 sergemaslyukov Exp $
+ * @version $Id: TestCaseUtils.java,v 1.21 2006/08/29 02:32:35 rafaelsteil Exp $
  */
 public class TestCaseUtils
 {
@@ -133,62 +124,5 @@ public class TestCaseUtils
         JForumExecutionContext.setTemplateConfig(templateCfg);
 
 		I18n.load();
-	}
-	
-	public static void createThreadLocalData(int defaultUserId) throws IOException
-	{
-        FakeActionServletRequest servletRequest = new FakeActionServletRequest();
-		JForumExecutionContext ex = JForumExecutionContext.get();
-        ForumContext forumContext = new JForumContext(
-            servletRequest.getContextPath(),
-            SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION),
-            servletRequest,
-            null,
-            false
-        );
-        ex.setForumContext(forumContext);
-
-        JForumExecutionContext.set(ex);
-		
-		UserSession us = new UserSession();
-		us.setUserId(defaultUserId);
-		
-		SessionFacade.add(us);
-	}
-	
-	public static PermissionControl createForumCategoryPermissionControl(int[] categoryIds, int[] categoryRights, 
-			int[] forumIds, int[] forumRights)
-	{
-		PermissionControl pc = new PermissionControl();
-		RoleCollection rc = new RoleCollection();
-		
-		// Category
-		Role role = new Role();
-		role.setId(1);
-		role.setName(SecurityConstants.PERM_CATEGORY);
-		
-		for (int i = 0; i < categoryIds.length; i++) {
-			RoleValue rv = new RoleValue(Integer.toString(categoryIds[i]));
-			role.getValues().add(rv);
-		}
-		
-		rc.add(role);
-		
-		// Forums
-		role = new Role();
-		role.setId(2);
-		role.setName(SecurityConstants.PERM_FORUM);
-		
-		for (int i = 0; i < forumIds.length; i++) {
-			RoleValue rv = new RoleValue(Integer.toString(forumIds[i]));
-			
-			role.getValues().add(rv);
-		}
-		
-		rc.add(role);
-
-		pc.setRoles(rc);
-		
-		return pc;
 	}
 }

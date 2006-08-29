@@ -57,6 +57,7 @@ import java.util.Map;
 import net.jforum.Command;
 import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
+import net.jforum.context.RequestContext;
 import net.jforum.dao.AttachmentDAO;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
@@ -98,13 +99,23 @@ import net.jforum.view.forum.common.ViewCommon;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import freemarker.template.SimpleHash;
+
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.154 2006/08/28 23:22:29 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.155 2006/08/29 02:32:38 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
     private static final Logger log = Logger.getLogger(PostAction.class);
+    
+    public PostAction() {}
+    
+    public PostAction(RequestContext request, SimpleHash templateContext)
+    {
+    	super.context = templateContext;
+    	super.request = request;
+    }
 
 	public void list()
 	{

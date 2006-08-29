@@ -69,7 +69,7 @@ import net.jforum.dao.generic.security.GenericGroupSecurityDAO;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericDataAccessDriver.java,v 1.7 2006/08/24 01:07:03 rafaelsteil Exp $
+ * @version $Id: GenericDataAccessDriver.java,v 1.8 2006/08/29 02:32:33 rafaelsteil Exp $
  */
 public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver 
 {
@@ -95,6 +95,7 @@ public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver
 	private static ScheduledSearchIndexerDAO ssiDao = new GenericScheduledSearchIndexerDAO();
 	private static BannerDAO bannerDao = new GenericBannerDAO();
     private static SummaryDAO summaryDao = new GenericSummaryDAO();
+    private static MailIntegrationDAO mailIntegrationDao = new GenericMailIntegrationDAO();
 
 	/**
      * TODO implement this method or delete this javadoc
@@ -292,6 +293,6 @@ public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver
      */
     public MailIntegrationDAO newMailIntegrationDAO()
     {
-    	return null;
+    	return mailIntegrationDao;
     }
 }

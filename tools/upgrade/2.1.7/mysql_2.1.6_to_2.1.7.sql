@@ -9,6 +9,7 @@ ALTER TABLE jforum_role_values DROP COLUMN role_type;
 
 CREATE TABLE jforum_mail_integration (
 	forum_id INT NOT NULL,
+	forum_email VARCHAR(100) NOT NULL,
 	pop_username VARCHAR(100) NOT NULL,
 	pop_password VARCHAR(100) NOT NULL,
 	pop_host VARCHAR(100) NOT NULL,

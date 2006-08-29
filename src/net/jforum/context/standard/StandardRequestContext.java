@@ -54,7 +54,7 @@ import net.jforum.context.SessionContext;
 /**
  * Request context non-dependent of HTTP 
  * @author Rafael Steil
- * @version $Id: StandardRequestContext.java,v 1.1 2006/08/27 01:21:45 rafaelsteil Exp $
+ * @version $Id: StandardRequestContext.java,v 1.2 2006/08/29 02:32:29 rafaelsteil Exp $
  */
 public class StandardRequestContext implements RequestContext
 {
@@ -150,7 +150,8 @@ public class StandardRequestContext implements RequestContext
 	 */
 	public String getParameter(String name)
 	{
-		return this.data.get(name).toString();
+		Object value = this.data.get(name);
+		return value != null ? value.toString() : null;
 	}
 
 	/**
