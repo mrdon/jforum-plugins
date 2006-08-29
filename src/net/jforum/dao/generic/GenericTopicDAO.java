@@ -72,7 +72,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTopicDAO.java,v 1.16 2006/08/23 02:13:42 rafaelsteil Exp $
+ * @version $Id: GenericTopicDAO.java,v 1.17 2006/08/29 00:57:50 rafaelsteil Exp $
  */
 public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 {
@@ -1031,7 +1031,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 				p = null;
 
 				int index = sql.indexOf(":ids:");
-				sql.replace(index, index + 5, sb.substring(0, sb.length() - 1));
+				if (index > -1) {
+					sql.replace(index, index + 5, sb.substring(0, sb.length() - 1));
+				}
 
 				p = JForumExecutionContext.getConnection().prepareStatement(sql.toString());
 			}
