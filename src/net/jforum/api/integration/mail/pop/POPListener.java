@@ -15,10 +15,12 @@ import org.quartz.JobExecutionException;
 
 /**
  * @author Rafael Steil
- * @version $Id: POPListener.java,v 1.3 2006/08/29 02:32:29 rafaelsteil Exp $
+ * @version $Id: POPListener.java,v 1.4 2006/08/31 02:12:24 rafaelsteil Exp $
  */
 public class POPListener implements Job
 {
+	protected POPConnector connector = new POPConnector();
+	
 	public void execute(JobExecutionContext jobContext) throws JobExecutionException
 	{
 		List integrationList = DataAccessDriver.getInstance().newMailIntegrationDAO().findAll();
@@ -27,7 +29,7 @@ public class POPListener implements Job
 		for (Iterator iter = integrationList.iterator(); iter.hasNext(); ) {
 			MailIntegration integration = (MailIntegration)iter.next();
 			
-			POPConnector connector = new POPConnector(integration);
+			connector.setMailIntegration(integration);
 			
 			try {
 				connector.openConnection();

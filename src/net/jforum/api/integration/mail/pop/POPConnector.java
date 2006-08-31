@@ -18,7 +18,7 @@ import net.jforum.exceptions.MailException;
  * Handles the connection to the POP server.
  * 
  * @author Rafael Steil
- * @version $Id: POPConnector.java,v 1.2 2006/08/29 02:32:29 rafaelsteil Exp $
+ * @version $Id: POPConnector.java,v 1.3 2006/08/31 02:12:24 rafaelsteil Exp $
  */
 public class POPConnector
 {
@@ -28,11 +28,10 @@ public class POPConnector
 	private Message[] messages;
 	
 	/**
-	 * Creates a new instance
 	 * @param mailIntegration the {@link MailIntegration} instance with 
 	 * all the information necessary to connect to the pop server
 	 */
-	public POPConnector(MailIntegration mailIntegration)
+	public void setMailIntegration(MailIntegration mailIntegration)
 	{
 		this.mailIntegration = mailIntegration;
 	}

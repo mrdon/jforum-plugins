@@ -12,7 +12,7 @@ import junit.framework.TestCase;
 
 /**
  * @author Rafael Steil
- * @version $Id: POPListenerTestCase.java,v 1.1 2006/08/29 02:32:36 rafaelsteil Exp $
+ * @version $Id: POPListenerTestCase.java,v 1.2 2006/08/31 02:12:23 rafaelsteil Exp $
  */
 public class POPListenerTestCase extends TestCase
 {
@@ -26,7 +26,7 @@ public class POPListenerTestCase extends TestCase
 		RankingRepository.loadRanks();
 		SmiliesRepository.loadSmilies();
 		
-		POPListener listener = new POPListener();
+		POPListener listener = new POPListenerMock();
 		listener.execute(null);
 	}
 }
