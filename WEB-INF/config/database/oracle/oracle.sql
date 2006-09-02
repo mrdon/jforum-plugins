@@ -54,8 +54,7 @@ UserModel.selectAllByGroup = SELECT * FROM ( \
 # ################
 # PermissionControl
 # ################
-PermissionControl.addGroupRole = INSERT INTO jforum_roles (role_id, group_id, name, role_type ) VALUES (jforum_roles_seq.nextval, ?, ?, ?)
-PermissionControl.addUserRole = INSERT INTO jforum_roles (role_id, user_id, name, role_type ) VALUES (jforum_roles_seq.nextval, ?, ?, ?)
+PermissionControl.addGroupRole = INSERT INTO jforum_roles (role_id, group_id, name) VALUES (jforum_roles_seq.nextval, ?, ?)
 
 # #############
 # PostModel
