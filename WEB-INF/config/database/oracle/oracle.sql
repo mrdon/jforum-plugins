@@ -23,7 +23,6 @@ ConfigModel.insert = INSERT INTO jforum_config (config_id, config_name, config_v
 # ##########
 UserModel.addNew = INSERT INTO jforum_users (user_id, username, user_password, user_email, user_regdate, user_actkey) VALUES (jforum_users_seq.nextval, ?, ?, ?, ?, ?)
 
-
 UserModel.selectAllByLimit = SELECT * FROM ( \
         SELECT user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail, ROW_NUMBER() OVER(ORDER BY user_id) - 1 LINENUM  \
         FROM jforum_users ORDER BY username \
@@ -50,11 +49,6 @@ UserModel.selectAllByGroup = SELECT * FROM ( \
 	WHERE u.user_id = ug.user_id \
 	AND ug.group_id = ? \
 	ORDER BY username ) WHERE LINENUM >= ? AND LINENUM <= ?
-
-# ################
-# PermissionControl
-# ################
-PermissionControl.addGroupRole = INSERT INTO jforum_roles (role_id, group_id, name) VALUES (jforum_roles_seq.nextval, ?, ?)
 
 # #############
 # PostModel
@@ -231,12 +225,8 @@ SmiliesModel.lastGeneratedSmilieId = SELECT jforum_smilies_seq.currval FROM DUAL
 # ##################
 # PermissionControl
 # ##################
+PermissionControl.addGroupRole = INSERT INTO jforum_roles (role_id, group_id, name) VALUES (jforum_roles_seq.nextval, ?, ?)
 PermissionControl.lastGeneratedRoleId = SELECT jforum_roles_seq.currval FROM DUAL
-
-PermissionControl.loadGroupRoles = SELECT r.role_id, r.name, rv.role_value, rv.role_type AS rv_type, r.role_type \
-	FROM jforum_roles r, jforum_role_values rv \
-	WHERE rv.role_id(+) = r.role_id AND r.group_id = ? \
-	ORDER BY r.role_id 
 
 # ##############
 # CategoryModel
