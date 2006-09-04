@@ -3,6 +3,7 @@
  */
 package net.jforum.api.integration.mail.pop;
 
+import java.util.HashMap;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
@@ -14,6 +15,7 @@ import net.jforum.SessionFacade;
 import net.jforum.context.JForumContext;
 import net.jforum.context.RequestContext;
 import net.jforum.context.standard.StandardRequestContext;
+import net.jforum.context.standard.StandardSessionContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
 import net.jforum.entities.Topic;
@@ -24,7 +26,7 @@ import net.jforum.view.forum.PostAction;
 
 /**
  * @author Rafael Steil
- * @version $Id: POPPostAction.java,v 1.4 2006/08/29 02:32:29 rafaelsteil Exp $
+ * @version $Id: POPPostAction.java,v 1.5 2006/09/04 01:00:07 rafaelsteil Exp $
  */
 public class POPPostAction
 {
@@ -43,9 +45,13 @@ public class POPPostAction
 			
 			JForumExecutionContext.set(ex);
 			
+			SessionFacade.setAttribute(ConfigKeys.TOPICS_TRACKING, new HashMap());
+			
 			for (Iterator iter = parser.getMessages().iterator(); iter.hasNext(); ) {
 				POPMessage m = (POPMessage)iter.next();
 				String sessionId = ms + m.getSender() + counter++;
+				
+				request.getSessionContext().setAttribute(StandardSessionContext.SESSION_ID, sessionId);
 				
 				User user = this.findUser(m.getSender());
 				
@@ -107,7 +113,6 @@ public class POPPostAction
 		if (!user.isHtmlEnabled()) {
 			request.addParameter("disable_html", "on");
 		}
-		
 	}
 	
 	private int discoverForumId(String listEmail)

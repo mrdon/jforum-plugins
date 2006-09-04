@@ -24,7 +24,7 @@ import net.jforum.exceptions.MailException;
 /**
  * Represents a pop message. 
  * @author Rafael Steil
- * @version $Id: POPMessage.java,v 1.3 2006/08/28 23:22:28 rafaelsteil Exp $
+ * @version $Id: POPMessage.java,v 1.4 2006/09/04 01:00:07 rafaelsteil Exp $
  */
 public class POPMessage
 {
@@ -109,6 +109,7 @@ public class POPMessage
 			
 			try {
 				is = messagePart.getInputStream();
+				is.reset();
 				reader = new BufferedReader(
 					new InputStreamReader(is));
 				

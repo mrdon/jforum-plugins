@@ -51,12 +51,12 @@ import net.jforum.context.SessionContext;
 /**
  * Session Context non-dependent of HTTP requests
  * @author Rafael Steil
- * @version $Id: StandardSessionContext.java,v 1.1 2006/08/27 01:21:46 rafaelsteil Exp $
+ * @version $Id: StandardSessionContext.java,v 1.2 2006/09/04 01:00:07 rafaelsteil Exp $
  */
 public class StandardSessionContext implements SessionContext
 {
 	private static Random random = new Random();
-	private static String SESSION_ID = "__sessionId";
+	public static String SESSION_ID = "__sessionId";
 	private Hashtable data;
 	
 	public StandardSessionContext()
