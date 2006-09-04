@@ -25,11 +25,11 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: POPListenerTestCase.java,v 1.3 2006/09/04 01:00:07 rafaelsteil Exp $
+ * @version $Id: POPListenerTestCase.java,v 1.4 2006/09/04 23:30:51 rafaelsteil Exp $
  */
 public class POPListenerTestCase extends TestCase
 {
-	public void testAll() throws Exception
+	public void testSimple() throws Exception
 	{
 		TestCaseUtils.loadEnvironment();
 		TestCaseUtils.initDatabaseImplementation();
