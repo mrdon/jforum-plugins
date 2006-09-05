@@ -716,3 +716,8 @@ SummaryDAO.selectPosts = SELECT p.post_id, p.topic_id, p.forum_id, p.user_id, po
 # MailIntegration
 ###################
 MailIntegration.findAll = SELECT * FROM jforum_mail_integration
+
+############
+# ApiModel
+############
+ApiModel.isValid = SELECT 1 FROM jforum_api WHERE api_key = ? AND api_hash = ?

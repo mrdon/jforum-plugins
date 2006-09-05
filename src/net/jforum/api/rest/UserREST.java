@@ -1,7 +1,7 @@
 /*
  * Created on 04/09/2006 21:23:22
  */
-package net.jforum.api.user;
+package net.jforum.api.rest;
 
 import java.util.List;
 
@@ -16,9 +16,9 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAPI.java,v 1.1 2006/09/05 00:53:28 rafaelsteil Exp $
+ * @version $Id: UserREST.java,v 1.1 2006/09/05 01:20:09 rafaelsteil Exp $
  */
-public class UserAPI extends Command
+public class UserREST extends Command
 {
 	/**
 	 * List all users
@@ -26,6 +26,8 @@ public class UserAPI extends Command
 	public void list()
 	{
 		try {
+			this.authenticate();
+			
 			UserDAO dao = DataAccessDriver.getInstance().newUserDAO();
 			List users = dao.selectAll();
 		
@@ -38,9 +40,15 @@ public class UserAPI extends Command
 		}
 	}
 	
+	/**
+	 * Creates a new user.
+	 * Required parameters ara "username", "email" and "password".
+	 */
 	public void insert()
 	{
 		try {
+			this.authenticate();
+			
 			String username = this.requiredRequestParameter("username");
 			String email = this.requiredRequestParameter("email");
 			String password = this.requiredRequestParameter("password");
@@ -80,6 +88,12 @@ public class UserAPI extends Command
 		}
 	}
 	
+	/**
+	 * Retrieves a parameter from the request and ensures it exists
+	 * @param paramName the parameter name to retrieve its value
+	 * @return the parameter value
+	 * @throws APIException if the parameter is not found or its value is empty
+	 */
 	private String requiredRequestParameter(String paramName)
 	{
 		String value = this.request.getParameter(paramName);
@@ -89,5 +103,20 @@ public class UserAPI extends Command
 		}
 		
 		return value;
+	}
+
+	/**
+	 * Tries to authenticate the user accessing the API
+	 * @throws APIException if the authentication fails
+	 */
+	private void authenticate()
+	{
+		String apiKey = this.requiredRequestParameter("api_key");
+		String apiHash = this.requiredRequestParameter("api_hash");
+		
+		RESTAuthentication auth = new RESTAuthentication();
+		if (!auth.validateApiKey(apiKey, apiHash)) {
+			throw new APIException("The provided API authentication information is not valid");
+		}
 	}
 }

@@ -16,3 +16,10 @@ CREATE TABLE jforum_mail_integration (
 	pop_port INT DEFAULT 110,
 	KEY(forum_id)
 ) TYPE=InnoDB;
+
+CREATE TABLE jforum_api (
+	api_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	api_key VARCHAR(32) NOT NULL,
+	api_validity DATETIME NOT NULL,
+	api_hash VARCHAR(32) NOT NULL
+);

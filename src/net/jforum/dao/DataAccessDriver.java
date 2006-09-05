@@ -57,7 +57,7 @@ package net.jforum.dao;
  * analise, look at <code>net.jforum.drivers.generic</code> package.
  * 
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.13 2006/08/24 01:06:54 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.14 2006/09/05 01:20:08 rafaelsteil Exp $
  */
 public abstract class DataAccessDriver 
 {
@@ -256,4 +256,11 @@ public abstract class DataAccessDriver
      * @return <code>net.jforum.dao.MailIntegrationDAO</code> instance.
      */
     public abstract MailIntegrationDAO newMailIntegrationDAO();
+
+    /**
+     * Gets a {@link net.jforum.dao.ApiDAO} instance.
+     *
+     * @return <code>net.jforum.dao.ApiDAO</code> instance.
+     */
+	public abstract ApiDAO newApiDAO();
 }
