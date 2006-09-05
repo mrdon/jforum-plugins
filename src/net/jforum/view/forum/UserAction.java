@@ -78,7 +78,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.77 2006/08/24 21:03:00 sergemaslyukov Exp $
+ * @version $Id: UserAction.java,v 1.78 2006/09/05 00:53:34 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -194,8 +194,6 @@ public class UserAction extends Command
 		if (username != null) {
 			username = username.trim();
 		}
-
-        // TODO username at this point can be null. NPE possible
 
         if (!error && username.length() > SystemGlobals.getIntValue(ConfigKeys.USERNAME_MAX_LENGTH)) {
 			this.context.put("error", I18n.getMessage("User.usernameTooBig"));
