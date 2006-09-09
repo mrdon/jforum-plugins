@@ -46,7 +46,7 @@ import net.jforum.util.preferences.ConfigKeys;
 
 /**
  * @author Marc Wick
- * @version $Id: JForumContext.java,v 1.3 2006/08/27 01:21:43 rafaelsteil Exp $
+ * @version $Id: JForumContext.java,v 1.4 2006/09/09 21:32:37 rafaelsteil Exp $
  */
 public class JForumContext implements ForumContext
 {
@@ -58,7 +58,7 @@ public class JForumContext implements ForumContext
 	private boolean isBot;
 
 	public JForumContext(String contextPath, String servletExtension, 
-			RequestContext request,ResponseContext response)
+			RequestContext request, ResponseContext response)
 	{
 		this.contextPath = contextPath;
 		this.servletExtension = servletExtension;

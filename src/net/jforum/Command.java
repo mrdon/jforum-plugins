@@ -62,7 +62,7 @@ import java.io.IOException;
  * presentation actions must extend this class. 
  * 
  * @author Rafael Steil
- * @version $Id: Command.java,v 1.24 2006/08/24 01:06:56 rafaelsteil Exp $
+ * @version $Id: Command.java,v 1.25 2006/09/09 21:32:36 rafaelsteil Exp $
  */
 public abstract class Command 
 {
@@ -100,7 +100,6 @@ public abstract class Command
 	
 	/**
 	 * Process and manipulate a requisition.
-	 * @param context TODO
 	 * @return <code>Template</code> reference
      * @param request WebContextRequest
      * @param response WebContextResponse

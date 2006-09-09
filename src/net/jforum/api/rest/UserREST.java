@@ -5,7 +5,13 @@ package net.jforum.api.rest;
 
 import java.util.List;
 
+import freemarker.template.SimpleHash;
+import freemarker.template.Template;
+
 import net.jforum.Command;
+import net.jforum.JForumExecutionContext;
+import net.jforum.context.RequestContext;
+import net.jforum.context.ResponseContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.UserDAO;
 import net.jforum.entities.User;
@@ -13,10 +19,11 @@ import net.jforum.exceptions.APIException;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserREST.java,v 1.1 2006/09/05 01:20:09 rafaelsteil Exp $
+ * @version $Id: UserREST.java,v 1.2 2006/09/09 21:32:37 rafaelsteil Exp $
  */
 public class UserREST extends Command
 {
@@ -31,11 +38,11 @@ public class UserREST extends Command
 			UserDAO dao = DataAccessDriver.getInstance().newUserDAO();
 			List users = dao.selectAll();
 		
-			this.setTemplateName("api/users.xml");
+			this.setTemplateName(TemplateKeys.API_USER_LIST);
 			this.context.put("users", users);
 		}
 		catch (Exception e) {
-			this.setTemplateName("api/response_message.xml");
+			this.setTemplateName(TemplateKeys.API_ERROR);
 			this.context.put("exception", e);
 		}
 	}
@@ -79,11 +86,11 @@ public class UserREST extends Command
 			
 			int userId = dao.addNew(user);
 			
-			this.setTemplateName("api/user_added.xml");
+			this.setTemplateName(TemplateKeys.API_USER_INSERT);
 			this.context.put("userId", new Integer(userId));
 		}
 		catch (Exception e) {
-			this.setTemplateName("api/response_message.xml");
+			this.setTemplateName(TemplateKeys.API_ERROR);
 			this.context.put("exception", e);
 		}
 	}
@@ -115,8 +122,15 @@ public class UserREST extends Command
 		String apiHash = this.requiredRequestParameter("api_hash");
 		
 		RESTAuthentication auth = new RESTAuthentication();
+		
 		if (!auth.validateApiKey(apiKey, apiHash)) {
 			throw new APIException("The provided API authentication information is not valid");
 		}
+	}
+	
+	public Template process(RequestContext request, ResponseContext response, SimpleHash context)
+	{
+		JForumExecutionContext.setContentType("text/xml");
+		return super.process(request, response, context);
 	}
 }

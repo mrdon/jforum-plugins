@@ -18,12 +18,12 @@ import net.jforum.api.rest.RESTAuthentication;
 
 /**
  * @author Rafael Steil
- * @version $Id: RESTAuthenticationTestCase.java,v 1.1 2006/09/09 20:46:24 rafaelsteil Exp $
+ * @version $Id: RESTAuthenticationTestCase.java,v 1.2 2006/09/09 21:32:36 rafaelsteil Exp $
  */
 public class RESTAuthenticationTestCase extends TestCase
 {
-	private static String API_KEY = "api.key.test";
-	private static String API_HASH = "api.hash.test";
+	public static final String API_KEY = "api.key.test";
+	public static final String API_HASH = "api.hash.test";
 	
 	private Connection connection;
 	
