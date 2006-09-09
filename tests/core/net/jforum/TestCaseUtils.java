@@ -55,7 +55,7 @@ import freemarker.template.Configuration;
  * General utilities for the test cases.
  * 
  * @author Rafael Steil
- * @version $Id: TestCaseUtils.java,v 1.21 2006/08/29 02:32:35 rafaelsteil Exp $
+ * @version $Id: TestCaseUtils.java,v 1.22 2006/09/09 20:46:25 rafaelsteil Exp $
  */
 public class TestCaseUtils
 {
@@ -77,8 +77,7 @@ public class TestCaseUtils
 	 */
 	public static void initDatabaseImplementation() throws Exception
 	{
-		SystemGlobals.loadAdditionalDefaults(
-				SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
+		SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
 		
 		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
         SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
@@ -89,7 +88,6 @@ public class TestCaseUtils
         DataAccessDriver d = (DataAccessDriver)c.newInstance();
         DataAccessDriver.init(d);
         
-        
         DBConnection.createInstance();
 		DBConnection.getImplementation().init();
 	}
@@ -98,8 +96,7 @@ public class TestCaseUtils
 	{
 		if (utils.rootDir == null) {
 			utils.rootDir = utils.getClass().getResource("/").getPath();
-			utils.rootDir = utils.rootDir.substring(0, utils.rootDir.length()
-							- "/WEB-INF/classes".length());
+			utils.rootDir = utils.rootDir.substring(0, utils.rootDir.length() - "/WEB-INF/classes".length());
 		}
 		
 		return utils.rootDir;
@@ -112,8 +109,7 @@ public class TestCaseUtils
 				+ "/WEB-INF/config/SystemGlobals.properties");
 		
 		if (new File(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG)).exists()) {
-        	SystemGlobals.loadAdditionalDefaults(
-        					SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG));
+        	SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG));
         }
 		
 		// Configure the template engine

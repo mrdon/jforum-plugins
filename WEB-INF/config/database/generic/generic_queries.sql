@@ -438,7 +438,7 @@ PermissionControl.addGroupRole = INSERT INTO jforum_roles (group_id, name) VALUE
 PermissionControl.addRoleValues = INSERT INTO jforum_role_values (role_id, role_value) VALUES (?, ?)
 PermissionControl.getRoleIdByName = SELECT role_id FROM jforum_roles WHERE name = ? AND group_id = ?
 
-PermissionControl.loadGroupRoles = SELECT r.name, 0 AS role_value FROM jforum_roles r WHERE r.group_id IN (#IN#) \
+PermissionControl.loadGroupRoles = SELECT r.name, '0' AS role_value FROM jforum_roles r WHERE r.group_id IN (#IN#) \
 	UNION \
 	SELECT r.name, rv.role_value \
 	FROM jforum_roles r, jforum_role_values rv \

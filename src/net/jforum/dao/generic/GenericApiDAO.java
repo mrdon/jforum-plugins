@@ -14,7 +14,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericApiDAO.java,v 1.1 2006/09/05 01:20:07 rafaelsteil Exp $
+ * @version $Id: GenericApiDAO.java,v 1.2 2006/09/09 20:46:24 rafaelsteil Exp $
  */
 public class GenericApiDAO implements ApiDAO
 {
@@ -33,6 +33,8 @@ public class GenericApiDAO implements ApiDAO
 				SystemGlobals.getSql("ApiModel.isValid"));
 			p.setString(1, apiKey);
 			p.setString(2, apiHash);
+			
+			rs = p.executeQuery();
 			
 			status = rs.next();
 		}
