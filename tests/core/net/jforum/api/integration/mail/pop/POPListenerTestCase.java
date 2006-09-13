@@ -6,6 +6,9 @@ package net.jforum.api.integration.mail.pop;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.List;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -17,33 +20,67 @@ import javax.mail.internet.MimeMessage;
 import junit.framework.TestCase;
 import net.jforum.ConfigLoader;
 import net.jforum.ForumStartup;
+import net.jforum.JForumExecutionContext;
 import net.jforum.TestCaseUtils;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.PostDAO;
+import net.jforum.entities.Post;
+import net.jforum.entities.User;
 import net.jforum.repository.RankingRepository;
 import net.jforum.repository.SmiliesRepository;
+import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: POPListenerTestCase.java,v 1.4 2006/09/04 23:30:51 rafaelsteil Exp $
+ * @version $Id: POPListenerTestCase.java,v 1.5 2006/09/13 01:28:50 rafaelsteil Exp $
  */
 public class POPListenerTestCase extends TestCase
 {
+	private static boolean started;
+	
+	/**
+	 * A single and simple message
+	 */
 	public void testSimple() throws Exception
 	{
-		TestCaseUtils.loadEnvironment();
-		TestCaseUtils.initDatabaseImplementation();
-		ConfigLoader.startCacheEngine();
-		
-		ForumStartup.startForumRepository();
-		RankingRepository.loadRanks();
-		SmiliesRepository.loadSmilies();
-		
-		SystemGlobals.setValue(ConfigKeys.SEARCH_INDEXING_ENABLED, "false");
+		int beforeTopicId = this.maxTopicId();
 		
 		POPListener listener = new POPListenerMock();
-		((POPConnectorMock)listener.getConnector()).setMessages(this.createMessages());
+		
+		String sender = "ze@zinho.com";
+		String subject = "Mail Message 1";
+		String forumAddress = "forum_test@jforum.testcase";
+		String contents = "Mail message contents 1";
+		
+		((POPConnectorMock)listener.getConnector()).setMessages(new Message[] {
+				this.newMessageMock(sender, subject, forumAddress, contents)
+		});
+		
 		listener.execute(null);
+		
+		int afterTopicId = this.maxTopicId();
+		
+		assertTrue("The message was not inserted", afterTopicId > beforeTopicId);
+		this.assertPost(afterTopicId, sender, subject, contents);
+	}
+	
+	private void assertPost(int topicId, String sender, String subject, String contents)
+	{
+		PostDAO postDAO = DataAccessDriver.getInstance().newPostDAO();
+		List posts = postDAO.selectAllByTopic(topicId);
+		
+		assertTrue("There should be exactly one post", posts.size() == 1);
+		
+		Post p = (Post)posts.get(0);
+		
+		User user = DataAccessDriver.getInstance().newUserDAO().selectById(p.getUserId());
+		assertNotNull("User should not be null", user);
+		
+		assertEquals("sender", sender, user.getEmail());
+		assertEquals("subject", subject, p.getSubject());
+		assertEquals("text", contents, p.getText());
 	}
 	
 	private Message[] createMessages() throws Exception
@@ -51,6 +88,33 @@ public class POPListenerTestCase extends TestCase
 		return new Message[] {
 				this.newMessageMock("ze@zinho.com", "Mail Message 1", "forum_test@jforum.testcase", "Mail message contents 1")
 		};
+	}
+	
+	/**
+	 * Gets the latest topic id existent
+	 * @return the topic id, or -1 if something went wrong
+	 * @throws Exception
+	 */
+	private int maxTopicId() throws Exception
+	{
+		int topicId = -1;
+		
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement("select max(topic_id) from jforum_topics");
+			rs = p.executeQuery();
+			
+			if (rs.next()) {
+				topicId = rs.getInt(1);
+			}
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+		
+		return topicId;
 	}
 	
 	private MessageMock newMessageMock(String sender, String subject, String listEmail, 
@@ -63,6 +127,26 @@ public class POPListenerTestCase extends TestCase
 		m.setSubject(subject);
 		
 		return m;
+	}
+	
+	/**
+	 * @see junit.framework.TestCase#setUp()
+	 */
+	protected void setUp() throws Exception
+	{
+		if (!started) {
+			TestCaseUtils.loadEnvironment();
+			TestCaseUtils.initDatabaseImplementation();
+			ConfigLoader.startCacheEngine();
+			
+			ForumStartup.startForumRepository();
+			RankingRepository.loadRanks();
+			SmiliesRepository.loadSmilies();
+			
+			SystemGlobals.setValue(ConfigKeys.SEARCH_INDEXING_ENABLED, "false");
+			
+			started = true;
+		}
 	}
 	
 	private static class MessageMock extends MimeMessage

@@ -65,7 +65,7 @@ import net.jforum.util.search.SearchFacade;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericPostDAO.java,v 1.17 2006/08/23 02:13:41 rafaelsteil Exp $
+ * @version $Id: GenericPostDAO.java,v 1.18 2006/09/13 01:28:48 rafaelsteil Exp $
  */
 public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 {
@@ -357,10 +357,10 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 		List l = new ArrayList();
 
 		String sql = SystemGlobals.getSql("PostModel.selectAllByTopicByLimit");
-		sql = sql.replaceAll(":fids:", ForumRepository.getListAllowedForums());
 
 		PreparedStatement p = null;
 		ResultSet rs = null;
+		
 		try {
 			p = JForumExecutionContext.getConnection().prepareStatement(sql);
 			p.setInt(1, topicId);

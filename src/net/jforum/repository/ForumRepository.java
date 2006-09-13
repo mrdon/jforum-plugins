@@ -85,7 +85,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.54 2006/08/20 22:47:38 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.55 2006/09/13 01:28:47 rafaelsteil Exp $
  */
 public class ForumRepository implements Cacheable
 {
@@ -251,8 +251,7 @@ public class ForumRepository implements Cacheable
 			categoriesSet = (Set)cache.get(FQN, CATEGORIES_SET);
 			
 			if (categoriesSet == null) {
-				throw new CategoryNotFoundException("Could not find all categories. There must be a problem "
-						+ "with the cache");
+				throw new CategoryNotFoundException("Could not find all categories. There must be a problem with the cache");
 			}
 		}
 		
