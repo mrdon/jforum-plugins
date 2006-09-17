@@ -1,7 +1,7 @@
 2.1.6
 Fixed a set of small bugs that may interfer on the good working of the board: 
 <ul>
-	<li> Connection Poll causes exception when idle for a while
+	<li> Connection Pool causes exception when idle for a while
 	<li> XSS on some special circumstances
 	<li> BBCode print tags localization
 	<li> Mail templates now uses "forum name" instead of "JForum.net"
