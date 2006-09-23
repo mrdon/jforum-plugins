@@ -34,7 +34,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: POPListenerTestCase.java,v 1.5 2006/09/13 01:28:50 rafaelsteil Exp $
+ * @version $Id: POPListenerTestCase.java,v 1.6 2006/09/23 12:34:29 rafaelsteil Exp $
  */
 public class POPListenerTestCase extends TestCase
 {
@@ -81,13 +81,6 @@ public class POPListenerTestCase extends TestCase
 		assertEquals("sender", sender, user.getEmail());
 		assertEquals("subject", subject, p.getSubject());
 		assertEquals("text", contents, p.getText());
-	}
-	
-	private Message[] createMessages() throws Exception
-	{
-		return new Message[] {
-				this.newMessageMock("ze@zinho.com", "Mail Message 1", "forum_test@jforum.testcase", "Mail message contents 1")
-		};
 	}
 	
 	/**
