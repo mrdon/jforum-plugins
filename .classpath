@@ -25,6 +25,6 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/commons-lang-2.1.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/mysql-connector-java-3.1.12-bin.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="WEB-INF/lib/c3p0-0.9.1-pre9.jar"/>
+	<classpathentry sourcepath="G:/Downloads/java/c3p0-0.9.1-pre9.src/src" kind="lib" path="WEB-INF/lib/c3p0-0.9.1-pre9.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>

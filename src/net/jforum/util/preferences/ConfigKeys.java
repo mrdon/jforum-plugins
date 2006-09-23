@@ -48,7 +48,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.93 2006/09/05 01:20:10 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.94 2006/09/23 15:32:17 rafaelsteil Exp $
 */
 
 public class ConfigKeys 
@@ -83,6 +83,7 @@ public class ConfigKeys
 	public static final String DATABASE_MYSQL_ENCODING = "mysql.encoding";
 	public static final String DATABASE_AUTO_KEYS = "database.support.autokeys";
 	public static final String DATABASE_SUPPORT_SUBQUERIES = "database.support_subqueries";
+	public static final String C3P0_EXTRA_PARAMS = "c3p0.extra.params";
 	
 	public static final String AUTHENTICATION_TYPE = "authentication.type";
 	public static final String SSO_IMPLEMENTATION = "sso.implementation";
