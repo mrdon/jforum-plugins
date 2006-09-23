@@ -42,6 +42,7 @@
  */
 package net.jforum;
 
+import java.lang.reflect.Method;
 import java.sql.Connection;
 
 import net.jforum.exceptions.DatabaseException;
@@ -53,7 +54,7 @@ import com.mchange.v2.c3p0.DataSources;
 
 /**
  * @author Rafael Steil
- * @version $Id: C3P0PooledConnection.java,v 1.4 2006/08/23 02:24:06 rafaelsteil Exp $
+ * @version $Id: C3P0PooledConnection.java,v 1.5 2006/09/23 15:32:17 rafaelsteil Exp $
  */
 public class C3P0PooledConnection extends DBConnection
 {
@@ -66,13 +67,67 @@ public class C3P0PooledConnection extends DBConnection
 	public void init() throws Exception
 	{
 		this.ds = new ComboPooledDataSource();
+		
 		this.ds.setDriverClass(SystemGlobals.getValue(ConfigKeys.DATABASE_CONNECTION_DRIVER));
 		this.ds.setJdbcUrl(SystemGlobals.getValue(ConfigKeys.DATABASE_CONNECTION_STRING));
 		this.ds.setMinPoolSize(SystemGlobals.getIntValue(ConfigKeys.DATABASE_POOL_MIN));
 		this.ds.setMaxPoolSize(SystemGlobals.getIntValue(ConfigKeys.DATABASE_POOL_MAX));
 		this.ds.setIdleConnectionTestPeriod(SystemGlobals.getIntValue(ConfigKeys.DATABASE_PING_DELAY));
+		
+		this.extraParams();
 	}
-
+	
+	private void extraParams()
+	{
+		String extra = SystemGlobals.getValue(ConfigKeys.C3P0_EXTRA_PARAMS);
+		
+		if (extra != null && extra.trim().length() > 0) {
+			String[] p = extra.split(";");
+			
+			for (int i = 0; i < p.length; i++) {
+				String[] kv = p[i].trim().split("=");
+				
+				if (kv.length == 2) {
+					this.invokeSetter(kv[0], kv[1]);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Huge hack to invoke methods without the need of an external configuration file
+	 * and whithout knowing the argument's type
+	 */
+	private void invokeSetter(String propertyName, String value)
+	{
+		try {
+			String setter = "set" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
+			
+			Method[] methods = this.ds.getClass().getMethods();
+			
+			for (int i = 0; i < methods.length; i++) {
+				Method method = methods[i];
+				
+				if (method.getName().endsWith(setter)) {
+					Class[] paramTypes = method.getParameterTypes();
+					
+					if (paramTypes[0] == String.class) {
+						method.invoke(this.ds, new Object[] { value });
+					}
+					else if (paramTypes[0] == int.class) {
+						method.invoke(this.ds, new Object[] { new Integer(value) });
+					}
+					else if (paramTypes[0] == boolean.class) {
+						method.invoke(this.ds, new Object[] { new Boolean(value) });
+					}
+				}
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * @see net.jforum.DBConnection#getConnection()
 	 */
