@@ -45,10 +45,20 @@ package net.jforum.dao.mysql.security;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.Statement;
 
 import net.jforum.JForumExecutionContext;
 import net.jforum.dao.generic.security.GenericGroupSecurityDAO;
+import net.jforum.dao.generic.security.SecurityCommon;
 import net.jforum.exceptions.DatabaseException;
+import net.jforum.security.RoleCollection;
 import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -56,10 +66,59 @@ import net.jforum.util.preferences.SystemGlobals;
  * Mysq 3.23 hacks based on Andy's work
  * 
  * @author Rafael Steil
- * @version $Id: MySQL323GroupSecurityDAO.java,v 1.7 2006/08/23 02:13:54 rafaelsteil Exp $
+ * @version $Id: MySQL323GroupSecurityDAO.java,v 1.8 2006/09/24 16:10:13 rafaelsteil Exp $
  */
 public class MySQL323GroupSecurityDAO extends GenericGroupSecurityDAO
-{
+{	
+	/**
+	 * @see net.jforum.dao.generic.security.GenericGroupSecurityDAO#loadRoles(int[])
+	 */
+	protected RoleCollection loadRoles(int[] groupIds)
+	{
+		String groupIdAsString = SecurityCommon.groupIdAsString(groupIds);
+
+		RoleCollection roleCollection = new RoleCollection();
+		
+		PreparedStatement rolesP = null;
+		PreparedStatement roleValuesP = null;
+		ResultSet roles = null;
+		ResultSet roleValues = null;
+		
+		try {
+			// Roles
+			String sql = this.sqlWithGroups("PermissionControl.getRoles", groupIdAsString);
+
+			rolesP = JForumExecutionContext.getConnection().prepareStatement(sql);
+			roles = rolesP.executeQuery();
+			
+			// RoleValues
+			sql = this.sqlWithGroups("PermissionControl.getRoleValues", groupIdAsString);
+
+			roleValuesP = JForumExecutionContext.getConnection().prepareStatement(sql);
+			roleValues = roleValuesP.executeQuery();
+			
+			MySQL323RoleResultSet mergedRs = new MySQL323RoleResultSet(0, 0, null, null);
+			mergedRs.merge(roles, roleValues);
+			
+			roleCollection = SecurityCommon.loadRoles(mergedRs);
+		}
+		catch (Exception e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(roles, rolesP);
+			DbUtils.close(roleValues, roleValuesP);
+		}
+		
+		return roleCollection;
+	}
+	
+	private String sqlWithGroups(String queryName, String groups)
+	{
+		String sql = SystemGlobals.getSql(queryName);
+		return sql.replaceAll("#IN#", groups);
+	}
+	
 	/**
 	 * @see net.jforum.dao.security.SecurityDAO#deleteAllRoles(int)
 	 */
@@ -67,6 +126,7 @@ public class MySQL323GroupSecurityDAO extends GenericGroupSecurityDAO
 	{
 		PreparedStatement p = null;
 		try {
+			// First, get the set of role ids
 			p = JForumExecutionContext.getConnection().prepareStatement(
 					SystemGlobals.getSql("PermissionControl.getRoleIdsByGroup"));
 			p.setInt(1, id);
@@ -74,14 +134,18 @@ public class MySQL323GroupSecurityDAO extends GenericGroupSecurityDAO
 			String roleIds = this.getCsvIdList(p);
 
 			p.close();
-			p = null;
 
-			if (roleIds.length() == 0) {
-				return;
+			if (roleIds.length() > 0) {
+				// Then remove all matching values
+				p = this.getStatementForCsv(SystemGlobals.getSql("PermissionControl.deleteRoleValuesByRoleId"), roleIds);
+				p.executeUpdate();
+				p.close();
 			}
-
-			p = this.getStatementForCsv(SystemGlobals.getSql("PermissionControl.deleteRoleValuesByRoleId"), roleIds);
-
+			
+			// Now delete the group roles 
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("PermissionControl.deleteAllGroupRoles"));
+			p.setInt(1, id);
 			p.executeUpdate();
 		}
 		catch (SQLException e) {
@@ -132,4 +196,71 @@ public class MySQL323GroupSecurityDAO extends GenericGroupSecurityDAO
 
 		return sb.toString();
 	}
+	
+	private static class MySQL323RoleResultSet extends com.mysql.jdbc.ResultSet
+	{
+		private Map currentEntry;
+		private Iterator dataIterator;
+		private List data = new ArrayList();
+		
+		public MySQL323RoleResultSet(long updateCount, long updateId, Connection connection, Statement statement)
+		{
+			super(updateCount, updateId, connection, statement);
+		}
+		
+		public void merge(ResultSet roles, ResultSet roleValues) throws SQLException
+		{
+			this.fillDataFromRs(roles);
+			this.fillDataFromRs(roleValues);
+			
+			this.dataIterator = this.data.iterator();
+		}
+		
+		private void fillDataFromRs(ResultSet rs) throws SQLException
+		{
+			while (rs.next()) {
+				Map m = new HashMap();
+				
+				m.put("name", rs.getString("name"));
+				m.put("role_value", rs.getString("role_value"));
+				
+				this.data.add(m);
+			}
+		}
+		
+		/**
+		 * @see com.mysql.jdbc.ResultSet#next()
+		 */
+		public boolean next() throws SQLException
+		{
+			boolean hasNext = this.dataIterator.hasNext();
+			
+			if (hasNext) {
+				this.currentEntry = (Map)this.dataIterator.next();
+			}
+			
+			return hasNext;
+		}
+		
+		/**
+		 * @see com.mysql.jdbc.ResultSet#getString(java.lang.String)
+		 */
+		public String getString(String column) throws SQLException
+		{
+			return (String)this.currentEntry.get(column);
+		}
+		
+		/**
+		 * Always returns false
+		 */
+		public boolean wasNull() throws SQLException
+		{
+			return false;
+		}
+
+		/**
+		 * Does nothing
+		 */
+		public void close() throws SQLException {}
+	} 
 }

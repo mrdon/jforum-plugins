@@ -62,7 +62,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityCommon.java,v 1.11 2006/08/24 21:03:00 sergemaslyukov Exp $
+ * @version $Id: SecurityCommon.java,v 1.12 2006/09/24 16:10:14 rafaelsteil Exp $
  */
 public class SecurityCommon
 {
@@ -150,26 +150,19 @@ public class SecurityCommon
 	 * See {@link PermissionControl#executeAddRole(String, int, String, RoleValueCollection)} for
 	 * explanation about this method. The working way is the same.
 	 * 
-	 * @param sql The SQL statement to execute
-	 * @param groupIds The ID do insert. May be user's or group's id, depending of the situation ( the caller )
+	 * @param rs The ResultSet containing the data to be fetched. This method does not
+	 * free the resultset after it finished using it, so it's responsability of the 
+	 * caller to do such task.
 	 * @return A <code>RoleCollection</code> collection with the roles processed.
 	 */
-	public static RoleCollection loadRoles(String sql, int[] groupIds)
+	public static RoleCollection loadRoles(ResultSet rs)
 	{
 		RoleCollection rc = new RoleCollection();
 
-		PreparedStatement p = null;
-		ResultSet rs = null;
-		
 		try {
-			sql = sql.replaceAll("#IN#", groupIdAsString(groupIds));
-			
-			p = JForumExecutionContext.getConnection().prepareStatement(sql);
-
 			Role r = null;
 			String lastName = null;
 
-			rs = p.executeQuery();
 			while (rs.next()) {
 				String currentName = rs.getString("name");
 				
@@ -185,6 +178,7 @@ public class SecurityCommon
 				}
 
 				String roleValue = rs.getString("role_value");
+
 				if (!rs.wasNull() && StringUtils.isNotBlank(roleValue)) {
 					r.getValues().add(new RoleValue(roleValue));
 				}
@@ -198,9 +192,6 @@ public class SecurityCommon
 		}
 		catch (SQLException e) {
 			throw new DatabaseException(e);
-		}
-		finally {
-			DbUtils.close(rs, p);
 		}
 	}
 	

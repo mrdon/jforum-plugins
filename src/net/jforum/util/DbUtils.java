@@ -42,48 +42,19 @@
  */
 package net.jforum.util;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * @author SergeMaslyukov
- * @version $Id: DbUtils.java,v 1.2 2006/08/20 22:47:42 rafaelsteil Exp $
+ * General utility methods to close statements and resultsets
+ * 
+ * @author Serge Maslyukov
+ * @version $Id: DbUtils.java,v 1.3 2006/09/24 16:10:14 rafaelsteil Exp $
  */
 public class DbUtils
 {
-	public static void close(final Connection conn)
-	{
-		if (conn == null) {
-			return;
-		}
-
-		try {
-			conn.rollback();
-		}
-		catch (Exception e) { }
-
-		try {
-			conn.close();
-		}
-		catch (Exception e) { }
-	}
-
-	public static void close(final Connection conn, final ResultSet rs, final PreparedStatement ps)
-	{
-		close(rs, ps);
-		close(conn);
-	}
-
-	public static void close(final Connection conn, final PreparedStatement ps)
-	{
-		close(ps);
-		close(conn);
-	}
-
-	public static void close(final ResultSet rs, final Statement st)
+	public static void close(ResultSet rs, Statement st)
 	{
 		if (rs != null) {
 			try {
@@ -101,7 +72,7 @@ public class DbUtils
 		}
 	}
 
-	public static void close(final ResultSet rs)
+	public static void close(ResultSet rs)
 	{
 		if (rs != null) {
 			try {
@@ -111,7 +82,7 @@ public class DbUtils
 		}
 	}
 
-	public static void close(final Statement st)
+	public static void close(Statement st)
 	{
 		if (st != null) {
 			try {

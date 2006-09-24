@@ -65,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericGroupSecurityDAO.java,v 1.12 2006/08/24 01:06:59 rafaelsteil Exp $
+ * @version $Id: GenericGroupSecurityDAO.java,v 1.13 2006/09/24 16:10:14 rafaelsteil Exp $
  */
 public class GenericGroupSecurityDAO extends AutoKeys implements GroupSecurityDAO
 {
@@ -124,9 +124,30 @@ public class GenericGroupSecurityDAO extends AutoKeys implements GroupSecurityDA
 		return this.loadRoles(new int[] { groupId });
 	}
 	
-	private RoleCollection loadRoles(int[] groupIds)
+	protected RoleCollection loadRoles(int[] groupIds)
 	{
-		return SecurityCommon.loadRoles(SystemGlobals.getSql("PermissionControl.loadGroupRoles"), groupIds);
+		String sql = SystemGlobals.getSql("PermissionControl.loadGroupRoles");
+		sql = sql.replaceAll("#IN#", SecurityCommon.groupIdAsString(groupIds));
+		
+		RoleCollection roles = new RoleCollection();
+		
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(sql);
+			rs = p.executeQuery();
+			
+			roles = SecurityCommon.loadRoles(rs);
+		}
+		catch (Exception e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+		
+		return roles;
 	}
 
 	/**
