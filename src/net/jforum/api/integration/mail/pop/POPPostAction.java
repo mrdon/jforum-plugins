@@ -26,7 +26,7 @@ import net.jforum.view.forum.PostAction;
 
 /**
  * @author Rafael Steil
- * @version $Id: POPPostAction.java,v 1.6 2006/09/25 02:16:38 rafaelsteil Exp $
+ * @version $Id: POPPostAction.java,v 1.7 2006/09/25 02:37:06 rafaelsteil Exp $
  */
 public class POPPostAction
 {
@@ -85,6 +85,11 @@ public class POPPostAction
 		}
 	}
 	
+	/**
+	 * Calls {@link PostAction#insertSave()}
+	 * @param m the mail message
+	 * @param user the user who's sent the message
+	 */
 	private void insertMessage(POPMessage m, User user)
 	{
 		this.addDataToRequest(m, user);
@@ -93,6 +98,11 @@ public class POPPostAction
 		postAction.insertSave();
 	}
 	
+	/**
+	 * Extracts information from a mail message and adds it to the request context
+	 * @param m the mail message
+	 * @param user the user who's sending the message
+	 */
 	private void addDataToRequest(POPMessage m, User user)
 	{
 		RequestContext request = JForumExecutionContext.getRequest(); 
@@ -122,6 +132,11 @@ public class POPPostAction
 		}
 	}
 	
+	/**
+	 * Tries to extract message relationship from the headers
+	 * @param m the message to extract headers from
+	 * @return the topic id, if found, or 0 (zero) othwerwise
+	 */
 	private int discoverTopicId(POPMessage m)
 	{
 		int topicId = 0;
@@ -135,12 +150,22 @@ public class POPPostAction
 		return topicId;
 	}
 	
+	/**
+	 * Given an email address, finds the forum instance associated to it
+	 * @param listEmail the forum's email address to search for
+	 * @return the forum's id, or 0 (zero) if nothing was found
+	 */
 	private int discoverForumId(String listEmail)
 	{
 		ForumDAO dao = DataAccessDriver.getInstance().newForumDAO();
 		return dao.discoverForumId(listEmail);
 	}
 	
+	/**
+	 * Finds an user by his email address
+	 * @param email the email address to use in the search
+	 * @return the matching record, or null if nothing was found
+	 */
 	private User findUser(String email)
 	{
 		return DataAccessDriver.getInstance().newUserDAO().findByEmail(email);
