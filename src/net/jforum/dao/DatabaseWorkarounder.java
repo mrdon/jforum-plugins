@@ -60,7 +60,7 @@ import org.apache.log4j.Logger;
  * Try to fix some database configuration problems.
  * This class will much likely do some checks only for mysql.
  * @author Rafael Steil
- * @version $Id: DatabaseWorkarounder.java,v 1.7 2006/08/21 22:47:55 rafaelsteil Exp $
+ * @version $Id: DatabaseWorkarounder.java,v 1.8 2006/09/25 00:00:43 rafaelsteil Exp $
  */
 public class DatabaseWorkarounder
 {
@@ -108,7 +108,30 @@ public class DatabaseWorkarounder
 		Properties p = this.loadSqlQueries();
 		
 		if (p != null) {
-			if (p.size() == 0 || p.getProperty("PermissionControl.deleteRoleValuesByRoleId") == null) {
+			String[] necessaryKeys = { 
+				"PermissionControl.deleteRoleValuesByRoleId",
+				"PermissionControl.getRoleIdsByGroup",
+				"PermissionControl.getRoles",
+				"PermissionControl.getRoleValues"
+			};
+			
+			boolean shouldUpdate = false;
+			
+			if (p.size() == 0) {
+				shouldUpdate = true;
+			}
+			else {
+				for (int i = 0; i < necessaryKeys.length; i++) {
+					String key = necessaryKeys[i];
+					
+					if (p.getProperty(key) == null) {
+						shouldUpdate = true;
+						break;
+					}
+				}
+			}
+			
+			if (shouldUpdate) {
 				String path = this.buildPath("mysql_323.sql");
 				
 				FileInputStream fis = new FileInputStream(path);

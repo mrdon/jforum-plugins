@@ -1,18 +1,15 @@
 <?xml version="1.0"?>
 <!-- ********************************************************************* -->
 <!-- Ant build script for JForum -->
-<!-- Author: Cloves Carneiro Jr - ccarneiroj AT yahoo.ca -->
-<!-- Author:  Rafael Steil -->
 <!-- ********************************************************************* -->
 
 <project name="JForum" default="compile" basedir=".">
-
 	<!-- project properties -->
 	<property file="build.properties" />
 	<property name="projectname" value="JForum" />
-	<property name="author" value="Rafael Steil" />
-	<property name="copyright" value="JForum Team 2003,2004,2005" />
-	<property name="version" value="2.1" />
+	<property name="author" value="JForum Team - http://www.jforum.net/team.jsp"/>
+	<property name="copyright" value="(c) JForum Team"/>
+	<property name="version" value="2.1.7" />
 	<property name="jarname" value="jforum" />
 
 	<property name="compile.debug" value="true" />
@@ -49,10 +46,10 @@
 		Key Targets:
              all - Build all: compile
 		 compile - Guess what happens here!?
-           clean - Blow away all code and all byte code - TO DO
+           clean - Blow away all code and all bytecode - TODO
          rebuild - Clean and build all
-         javadoc - Run javadoc against code - TO DO
-           usage - Print this help text...
+         javadoc - Run javadoc against code - TODO
+           usage - Print this help text
 		</echo>
 	</target>
 
@@ -100,15 +97,19 @@
 		<mkdir dir="${classes}" />
 
 		<!-- Compile the java code from ${src} into ${classes} -->
-		<javac srcdir="${src}" destdir="${classes}" debug="${compile.debug}" deprecation="${compile.deprecation}" source="${compile.source}" target="${compile.target}" optimize="${compile.optimize}">
+		<javac srcdir="${src}" destdir="${classes}" 
+			debug="${compile.debug}" 
+			deprecation="${compile.deprecation}" 
+			source="${compile.source}" 
+			target="${compile.target}" 
+			optimize="${compile.optimize}">
 			<classpath>
 				<path refid="base.path" />
 			</classpath>
 		</javac>
 	</target>
-
-	<target name="init" description="Create the dist directory structure used by compile and copy the deployment
-		descriptors into it">
+		
+	<target name="init" description="Create the dist directory structure and copy the deployment descriptors into it">
 		<antcall target="splash" />
 		<mkdir dir="${dist}" />
 		<mkdir dir="${dist}/WEB-INF" />
