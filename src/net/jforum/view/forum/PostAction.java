@@ -103,7 +103,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.155 2006/08/29 02:32:38 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.156 2006/09/25 02:16:46 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -122,8 +122,6 @@ public class PostAction extends Command
 		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
 		PollDAO pollDao = DataAccessDriver.getInstance().newPollDAO();
 
-        //TODO um not user. remove or use?
-        UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 
 		UserSession us = SessionFacade.getUserSession();
@@ -1139,7 +1137,7 @@ public class PostAction extends Command
 					TopicsCommon.notifyUsers(t, topicDao);
 				}
 				else {
-					//notify "forum new topic" users
+					// Notify "forum new topic" users
 					ForumCommon.notifyUsers(forum, t, forumDao);
 				}
 				

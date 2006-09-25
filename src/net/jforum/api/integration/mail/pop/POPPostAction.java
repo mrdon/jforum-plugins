@@ -26,7 +26,7 @@ import net.jforum.view.forum.PostAction;
 
 /**
  * @author Rafael Steil
- * @version $Id: POPPostAction.java,v 1.5 2006/09/04 01:00:07 rafaelsteil Exp $
+ * @version $Id: POPPostAction.java,v 1.6 2006/09/25 02:16:38 rafaelsteil Exp $
  */
 public class POPPostAction
 {
@@ -95,12 +95,19 @@ public class POPPostAction
 	
 	private void addDataToRequest(POPMessage m, User user)
 	{
-		RequestContext request = JForumExecutionContext.getRequest();
+		RequestContext request = JForumExecutionContext.getRequest(); 
+		
 		request.addParameter("forum_id", Integer.toString(this.discoverForumId(m.getListEmail())));
 		request.addParameter("topic_type", Integer.toString(Topic.TYPE_NORMAL));
 		request.addParameter("quick", "1");
 		request.addParameter("subject", m.getSubject());
 		request.addParameter("message", m.getMessage());
+		
+		int topicId = this.discoverTopicId(m);
+		
+		if (topicId > 0) {
+			request.addParameter("topic_id", Integer.toString(topicId));
+		}
 		
 		if (!user.isBbCodeEnabled()) {
 			request.addParameter("disable_bbcode", "on");
@@ -113,6 +120,19 @@ public class POPPostAction
 		if (!user.isHtmlEnabled()) {
 			request.addParameter("disable_html", "on");
 		}
+	}
+	
+	private int discoverTopicId(POPMessage m)
+	{
+		int topicId = 0;
+		
+		String inReplyTo = m.getInReplyTo();
+		
+		if (inReplyTo != null) {
+			topicId = InReplyTo.parse(inReplyTo).getTopicId();
+		}
+		
+		return topicId;
 	}
 	
 	private int discoverForumId(String listEmail)

@@ -34,7 +34,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: POPListenerTestCase.java,v 1.6 2006/09/23 12:34:29 rafaelsteil Exp $
+ * @version $Id: POPListenerTestCase.java,v 1.7 2006/09/25 02:16:44 rafaelsteil Exp $
  */
 public class POPListenerTestCase extends TestCase
 {
@@ -55,7 +55,7 @@ public class POPListenerTestCase extends TestCase
 		String contents = "Mail message contents 1";
 		
 		((POPConnectorMock)listener.getConnector()).setMessages(new Message[] {
-				this.newMessageMock(sender, subject, forumAddress, contents)
+			this.newMessageMock(sender, subject, forumAddress, contents)
 		});
 		
 		listener.execute(null);
@@ -64,6 +64,16 @@ public class POPListenerTestCase extends TestCase
 		
 		assertTrue("The message was not inserted", afterTopicId > beforeTopicId);
 		this.assertPost(afterTopicId, sender, subject, contents);
+	}
+	
+	/**
+	 * Sends an invalid In-Reply-To header, which should cause the system
+	 * to create a new topic, instead of adding the message as a reply
+	 * to something else. 
+	 */
+	public void testInReplyToIncorrectShouldCreateNewTopic()
+	{
+		
 	}
 	
 	private void assertPost(int topicId, String sender, String subject, String contents)

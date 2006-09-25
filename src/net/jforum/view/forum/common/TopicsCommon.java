@@ -77,7 +77,7 @@ import freemarker.template.SimpleHash;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.32 2006/08/20 22:47:49 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.33 2006/09/25 02:16:41 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
@@ -232,7 +232,7 @@ public class TopicsCommon
 				// subscribed to the topic
 				if (usersToNotify != null && usersToNotify.size() > 0) {
 					QueuedExecutor.getInstance().execute(
-							new EmailSenderTask(new TopicSpammer(t, usersToNotify)));
+						new EmailSenderTask(new TopicSpammer(t, usersToNotify)));
 				}
 			}
 			catch (Exception e) {

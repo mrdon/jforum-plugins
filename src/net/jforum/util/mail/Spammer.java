@@ -70,7 +70,7 @@ import freemarker.template.Template;
  * each user.
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.23 2006/08/20 22:47:51 rafaelsteil Exp $
+ * @version $Id: Spammer.java,v 1.24 2006/09/25 02:16:37 rafaelsteil Exp $
  */
 public class Spammer
 {
@@ -148,6 +148,7 @@ public class Spammer
                     Transport transport = Spammer.getSession().getTransport("smtp");
 
                         String host = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_HOST);
+                        
                         if (host != null) {
                             int colon = host.indexOf(':');
                             if (colon > 0) {
@@ -161,6 +162,7 @@ public class Spammer
 
                     if (transport.isConnected()) {
                         Address[] addresses = message.getAllRecipients();
+                        
                         for (int i = 0; i < addresses.length; i++) {
                             // Tricks and tricks
                             message.setRecipient(Message.RecipientType.TO, addresses[i]);

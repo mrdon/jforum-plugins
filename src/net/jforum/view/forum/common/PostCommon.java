@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.36 2006/08/23 02:13:56 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.37 2006/09/25 02:16:42 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -210,7 +210,12 @@ public class PostCommon
 			Smilie s = (Smilie) iter.next();
 			int pos = text.indexOf(s.getCode());
 			
-			while (pos > -1) {
+			// The counter is used as prevention, in case
+			// the while loop turns into an always true 
+			// expression, for any reason
+			int count = 0;
+			
+			while (pos > -1 && count++ < 500) {
 				text.replace(pos, pos + s.getCode().length(), s.getUrl());
 				pos = text.indexOf(s.getCode());
 			}

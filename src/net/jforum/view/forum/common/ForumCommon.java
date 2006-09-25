@@ -65,7 +65,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumCommon.java,v 1.15 2006/08/23 02:13:56 rafaelsteil Exp $
+ * @version $Id: ForumCommon.java,v 1.16 2006/09/25 02:16:40 rafaelsteil Exp $
  */
 public class ForumCommon 
 {
@@ -186,7 +186,7 @@ public class ForumCommon
 				// subscribed to the topic
 				if (usersToNotify != null && usersToNotify.size() > 0) {
 					QueuedExecutor.getInstance().execute(
-							new EmailSenderTask(new ForumSpammer(f, t, usersToNotify)));
+						new EmailSenderTask(new ForumSpammer(f, t, usersToNotify)));
 				}
 			}
 			catch (Exception e) {
