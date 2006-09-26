@@ -36,7 +36,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: POPListenerTestCase.java,v 1.9 2006/09/26 02:12:15 rafaelsteil Exp $
+ * @version $Id: POPListenerTestCase.java,v 1.10 2006/09/26 02:32:26 rafaelsteil Exp $
  */
 public class POPListenerTestCase extends TestCase
 {
@@ -86,6 +86,8 @@ public class POPListenerTestCase extends TestCase
 				t.setForumId(2);
 				
 				dao.delete(t);
+				
+				JForumExecutionContext.finish();
 			}
 			catch (Exception e) {
 				e.printStackTrace();				
