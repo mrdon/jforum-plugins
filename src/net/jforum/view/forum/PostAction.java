@@ -103,7 +103,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.156 2006/09/25 02:16:46 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.157 2006/09/26 02:12:16 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -942,17 +942,26 @@ public class PostAction extends Command
 				t = topicDao.selectById(topicId);
 			}
 			
-			if (!TopicsCommon.isTopicAccessible(t.getForumId())) {
-				return;
+			// Could not find the topic. The topicId sent was invalid
+			if (t == null || t.getId() == 0) {
+				newTopic = true;
 			}
-
-			// Cannot insert new messages on locked topics
-			if (t.getStatus() == Topic.STATUS_LOCKED) {
-				this.topicLocked();
-				return;
+			else {
+				if (!TopicsCommon.isTopicAccessible(t.getForumId())) {
+					return;
+				}
+	
+				// Cannot insert new messages on locked topics
+				if (t.getStatus() == Topic.STATUS_LOCKED) {
+					this.topicLocked();
+					return;
+				}
 			}
 		}
-		else {
+		
+		// We don't use "else if" here because there is a possibility of the
+		// checking above set the newTopic var to true
+		if (newTopic) {
 			if (this.isReplyOnly(forumId)) {
 				this.replyOnly();
 				return;

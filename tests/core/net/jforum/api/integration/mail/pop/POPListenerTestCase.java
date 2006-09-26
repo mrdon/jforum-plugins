@@ -36,7 +36,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: POPListenerTestCase.java,v 1.8 2006/09/25 02:37:08 rafaelsteil Exp $
+ * @version $Id: POPListenerTestCase.java,v 1.9 2006/09/26 02:12:15 rafaelsteil Exp $
  */
 public class POPListenerTestCase extends TestCase
 {
@@ -87,7 +87,9 @@ public class POPListenerTestCase extends TestCase
 				
 				dao.delete(t);
 			}
-			catch (Exception e) {}
+			catch (Exception e) {
+				e.printStackTrace();				
+			}
 		}
 	}
 	
@@ -99,7 +101,7 @@ public class POPListenerTestCase extends TestCase
 	 */
 	public void testInReplyToIncorrectShouldCreateNewTopic() throws Exception
 	{
-		
+		this.insertNewTopic(InReplyTo.build(999999, 888888));
 	}
 	
 	private void assertPost(int topicId, String sender, String subject, String contents)

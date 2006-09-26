@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  * Represents the In-Reply-To mail header, as well utility methods.
  * 
  * @author Rafael Steil
- * @version $Id: InReplyTo.java,v 1.2 2006/09/25 02:37:07 rafaelsteil Exp $
+ * @version $Id: InReplyTo.java,v 1.3 2006/09/26 02:12:14 rafaelsteil Exp $
  */
 public class InReplyTo
 {
@@ -37,11 +37,13 @@ public class InReplyTo
 	public static String build(int topicId, int forumId)
 	{
 		return new StringBuffer()
+			.append('<')
 			.append(topicId)
 			.append('.')
 			.append(forumId)
 			.append("@jforum")
 			.append(random.nextInt(999999))
+			.append('>')
 			.toString();
 	}
 	
@@ -56,7 +58,7 @@ public class InReplyTo
 		
 		if (header != null) {
 			// <topicId.forumId@host>
-			Matcher matcher = Pattern.compile("(?i)<(.*)\\.(.*)@").matcher(header);
+			Matcher matcher = Pattern.compile("<(.*)\\.(.*?[^@])[@]?").matcher(header);
 			
 			if (matcher.matches()) {
 				String s = matcher.group(1);
