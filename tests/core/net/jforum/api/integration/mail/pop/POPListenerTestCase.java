@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Date;
 import java.util.List;
 
 import javax.mail.Message;
@@ -36,7 +37,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: POPListenerTestCase.java,v 1.10 2006/09/26 02:32:26 rafaelsteil Exp $
+ * @version $Id: POPListenerTestCase.java,v 1.11 2006/09/26 03:23:35 rafaelsteil Exp $
  */
 public class POPListenerTestCase extends TestCase
 {
@@ -47,19 +48,108 @@ public class POPListenerTestCase extends TestCase
 	 */
 	public void testSimple() throws Exception
 	{
-		this.insertNewTopic(null);
+		int beforeTopicId = this.maxTopicId();
+		
+		String sender = "ze@zinho.com";
+		String subject = "Mail Message " + new Date();
+		String forumAddress = "forum_test@jforum.testcase";
+		String contents = "Mail message contents " + new Date();
+		
+		this.sendMessage(sender, subject, forumAddress, contents, null);
+		
+		int afterTopicId = this.maxTopicId();
+		
+		assertTrue("The message was not inserted", afterTopicId > beforeTopicId);
+		
+		try {
+			this.assertPost(afterTopicId, sender, subject, contents);
+		}
+		finally {
+			this.deleteTopic(afterTopicId);
+		}
 	}
-
-	private void insertNewTopic(String inReplyTo) throws Exception
+	
+	/**
+	 * Sends an invalid In-Reply-To header, which should cause the system
+	 * to create a new topic, instead of adding the message as a reply
+	 * to something else. 
+	 */
+	public void testInReplyToIncorrectShouldCreateNewTopic() throws Exception
 	{
 		int beforeTopicId = this.maxTopicId();
 		
-		POPListener listener = new POPListenerMock();
+		String sender = "ze@zinho.com";
+		String subject = "Mail Message " + new Date();
+		String forumAddress = "forum_test@jforum.testcase";
+		String contents = "Mail message contents " + new Date();
+		
+		this.sendMessage(sender, subject, forumAddress, contents, InReplyTo.build(999999, 888888));
+		
+		int afterTopicId = this.maxTopicId();
+		
+		assertTrue("The message was not inserted", afterTopicId > beforeTopicId);
+		
+		try {
+			this.assertPost(afterTopicId, sender, subject, contents);
+		}
+		finally {
+			this.deleteTopic(afterTopicId);
+		}
+	}
+	
+	/**
+	 * Create a new topic, then send a message with the In-Reply-To header, 
+	 * which should create an answer to the previously created topic
+	 * @throws Exception
+	 */
+	public void testInReplyToCreateNewTopicThenReply() throws Exception
+	{
+		int beforeTopicId = this.maxTopicId();
 		
 		String sender = "ze@zinho.com";
-		String subject = "Mail Message 1";
+		String subject = "Mail Message " + new Date();
 		String forumAddress = "forum_test@jforum.testcase";
-		String contents = "Mail message contents 1";
+		String contents = "Mail message contents " + new Date();
+		
+		this.sendMessage(sender, subject, forumAddress, contents, null);
+		
+		int afterTopicId = this.maxTopicId();
+		
+		assertTrue("The message was not inserted", afterTopicId > beforeTopicId);
+		
+		try {
+			this.assertPost(afterTopicId, sender, subject, contents);
+			
+			// Ok, now send a new message, replying to the previously topic
+			subject = "Reply subject for topic " + afterTopicId;
+			contents = "Changed contents, replying tpoic " + afterTopicId;
+			
+			this.sendMessage(sender, subject, forumAddress, contents, InReplyTo.build(afterTopicId, 999999));
+			
+			assertTrue("A new message was created, instead of a reply", afterTopicId == maxTopicId());
+			
+			PostDAO postDAO = DataAccessDriver.getInstance().newPostDAO();
+			List posts = postDAO.selectAllByTopic(afterTopicId);
+			
+			assertTrue("There should be two posts", posts.size() == 2);
+			
+			// The first message was already validated
+			Post p = (Post)posts.get(1);
+			User user = DataAccessDriver.getInstance().newUserDAO().selectById(p.getUserId());
+
+			assertNotNull("User should not be null", user);
+			assertEquals("sender", sender, user.getEmail());
+			assertEquals("subject", subject, p.getSubject());
+			assertEquals("text", contents, p.getText());
+		}
+		finally {
+			this.deleteTopic(afterTopicId);
+		}
+	}
+	
+	private void sendMessage(String sender, String subject, String forumAddress, String contents, String inReplyTo) throws Exception
+	{
+		POPListener listener = new POPListenerMock();
 		
 		MimeMessageMock message = this.newMessageMock(sender, subject, forumAddress, contents);
 		
@@ -70,42 +160,15 @@ public class POPListenerTestCase extends TestCase
 		((POPConnectorMock)listener.getConnector()).setMessages(new Message[] { message });
 		
 		listener.execute(null);
-		
-		int afterTopicId = this.maxTopicId();
-		
-		assertTrue("The message was not inserted", afterTopicId > beforeTopicId);
-		
-		try {
-			this.assertPost(afterTopicId, sender, subject, contents);
-		}
-		finally {
-			try {
-				TopicDAO dao = DataAccessDriver.getInstance().newTopicDAO();
-				
-				Topic t = new Topic(afterTopicId);
-				t.setForumId(2);
-				
-				dao.delete(t);
-				
-				JForumExecutionContext.finish();
-			}
-			catch (Exception e) {
-				e.printStackTrace();				
-			}
-		}
 	}
-	
 	
 	/**
-	 * Sends an invalid In-Reply-To header, which should cause the system
-	 * to create a new topic, instead of adding the message as a reply
-	 * to something else. 
+	 * Asserts the post instance, after execution some part of the testcase
+	 * @param topicId the topic's id of the new message
+	 * @param sender the matching sender email
+	 * @param subject the matching subject
+	 * @param contents the matching message contents
 	 */
-	public void testInReplyToIncorrectShouldCreateNewTopic() throws Exception
-	{
-		this.insertNewTopic(InReplyTo.build(999999, 888888));
-	}
-	
 	private void assertPost(int topicId, String sender, String subject, String contents)
 	{
 		PostDAO postDAO = DataAccessDriver.getInstance().newPostDAO();
@@ -148,6 +211,27 @@ public class POPListenerTestCase extends TestCase
 		}
 		
 		return topicId;
+	}
+
+	/**
+	 * Deletes a topic
+	 * @param topicId the topic's id to delete
+	 */
+	private void deleteTopic(int topicId)
+	{
+		try {
+			TopicDAO dao = DataAccessDriver.getInstance().newTopicDAO();
+			
+			Topic t = new Topic(topicId);
+			t.setForumId(2);
+			
+			dao.delete(t);
+			
+			JForumExecutionContext.finish();
+		}
+		catch (Exception e) {
+			e.printStackTrace();				
+		}
 	}
 	
 	private MimeMessageMock newMessageMock(String sender, String subject, String listEmail, 
