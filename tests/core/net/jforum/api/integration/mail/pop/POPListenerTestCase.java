@@ -37,7 +37,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: POPListenerTestCase.java,v 1.11 2006/09/26 03:23:35 rafaelsteil Exp $
+ * @version $Id: POPListenerTestCase.java,v 1.12 2006/09/26 03:27:13 rafaelsteil Exp $
  */
 public class POPListenerTestCase extends TestCase
 {
@@ -147,6 +147,17 @@ public class POPListenerTestCase extends TestCase
 		}
 	}
 	
+	/**
+	 * Emulates the action of sending an email.
+	 * 
+	 * @param sender The sender's email. Should exist in the database
+	 * @param subject the subject
+	 * @param forumAddress the address of the target forum. There should be a matching
+	 * record in jforum_mail_integration
+	 * @param contents the message itself
+	 * @param inReplyTo the In-Reply-To header, as built by {@link InReplyTo}. Can be null
+	 * @throws Exception
+	 */
 	private void sendMessage(String sender, String subject, String forumAddress, String contents, String inReplyTo) throws Exception
 	{
 		POPListener listener = new POPListenerMock();
