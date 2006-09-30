@@ -48,7 +48,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.94 2006/09/23 15:32:17 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.95 2006/09/30 00:33:25 rafaelsteil Exp $
 */
 
 public class ConfigKeys 
@@ -180,12 +180,22 @@ public class ConfigKeys
 	public static final String MAIL_NEW_PM_SUBJECT = "mail.newPm.subject";
 	public static final String MAIL_NEW_PM_MESSAGE_FILE = "mail.newPm.messageFile";
 	public static final String MAIL_MESSSAGE_FORMAT = "mail.messageFormat";
+	
 	public static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
 	public static final String MAIL_SMTP_HOST = "mail.smtp.host";
 	public static final String MAIL_SMTP_PORT = "mail.smtp.port";
+	
+	public static final String MAIL_SMTP_SSL_AUTH = "mail.smtps.auth";
+	public static final String MAIL_SMTP_SSL_HOST = "mail.smtps.host";
+	public static final String MAIL_SMTP_SSL_PORT = "mail.smtps.port";
+	public static final String MAIL_SMTP_SSL_LOCALHOST = "mail.smtps.localhost";
+	
+	public static final String MAIL_SMTP_SSL = "mail.smtp.ssl";
+	
 	public static final String MAIL_SMTP_LOCALHOST = "mail.smtp.localhost";
 	public static final String MAIL_SMTP_USERNAME = "mail.smtp.username";
 	public static final String MAIL_SMTP_PASSWORD = "mail.smtp.password";
+	
 	public static final String MAIL_USER_EMAIL_AUTH = "mail.user.email.auth";
 	public static final String MAIL_ACTIVATION_KEY_MESSAGE_FILE = "mail.activationKey.messageFile";
 	public static final String MAIL_ACTIVATION_KEY_SUBJECT = "mail.activationKey.subject";

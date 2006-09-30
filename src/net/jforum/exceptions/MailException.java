@@ -44,13 +44,19 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: MailException.java,v 1.2 2006/08/22 02:05:23 rafaelsteil Exp $
+ * @version $Id: MailException.java,v 1.3 2006/09/30 00:33:24 rafaelsteil Exp $
  */
 public class MailException extends RuntimeException
 {
 	public MailException(Throwable t)
 	{
 		super(t);
+		this.setStackTrace(t.getStackTrace());
+	}
+	
+	public MailException(String message, Throwable t)
+	{
+		super(message, t);
 		this.setStackTrace(t.getStackTrace());
 	}
 }

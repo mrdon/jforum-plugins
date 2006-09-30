@@ -57,9 +57,11 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import net.jforum.JForumExecutionContext;
+import net.jforum.exceptions.MailException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import freemarker.template.SimpleHash;
@@ -70,7 +72,7 @@ import freemarker.template.Template;
  * each user.
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.24 2006/09/25 02:16:37 rafaelsteil Exp $
+ * @version $Id: Spammer.java,v 1.25 2006/09/30 00:33:24 rafaelsteil Exp $
  */
 public class Spammer
 {
@@ -86,38 +88,28 @@ public class Spammer
 	private static String password;
 	private MimeMessage message;
 	private String messageText;
-
-	protected Spammer() throws EmailException
+	
+	protected Spammer() throws MailException
 	{
-		String host = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_HOST);
+		boolean ssl = SystemGlobals.getBoolValue(ConfigKeys.MAIL_SMTP_SSL);
 		
-		if (host != null) {
-			int colon = host.indexOf(':');
+		String hostProperty = this.hostProperty(ssl);
+		String portProperty = this.portProperty(ssl);
+		String authProperty = this.authProperty(ssl);
+		String localhostProperty = this.localhostProperty(ssl);
+		
+		mailProps.put(hostProperty, SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_HOST));
+		mailProps.put(portProperty, SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_PORT));
 
-			if (colon > 0) {
-				mailProps.put("mail.smtp.host", host.substring(0, colon));
-				mailProps.put("mail.smtp.port", String.valueOf(host.substring(colon + 1)));
-			}
-			else {
-				mailProps.put("mail.smtp.host", SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_HOST));
-			}
-			
-			String port = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_PORT);
-			
-			if (port != null) {
-				mailProps.put("mail.smtp.port", port);
-			}
-			
-			String localhost = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_LOCALHOST);
-			
-			if (localhost != null && localhost.trim().length() > 0) {
-				mailProps.put("mail.smtp.localhost", localhost);
-			}
+		String localhost = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_LOCALHOST);
+		
+		if (localhost != null && localhost.trim().length() > 0) {
+			mailProps.put(localhostProperty, localhost);
 		}
 		
 		mailProps.put("mail.mime.address.strict", "false");
 		mailProps.put("mail.mime.charset", SystemGlobals.getValue(ConfigKeys.MAIL_CHARSET));
-		mailProps.put("mail.smtp.auth", SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_AUTH));
+		mailProps.put(authProperty, SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_AUTH));
 
 		username = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_USERNAME);
 		password = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_PASSWORD);
@@ -129,52 +121,41 @@ public class Spammer
 		session = Session.getDefaultInstance(mailProps);
 	}
 
-	public static Session getSession()
-	{
-		return session;
-	}
-
-	public final Message getMesssage()
-	{
-		return this.message;
-	}
-
 	public boolean dispatchMessages()
 	{
         try
         {
             if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_SMTP_AUTH)) {
-                if (username != null && !username.equals("") && password != null && !password.equals("")) {
-                    Transport transport = Spammer.getSession().getTransport("smtp");
-
-                        String host = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_HOST);
-                        
-                        if (host != null) {
-                            int colon = host.indexOf(':');
-                            if (colon > 0) {
-                                transport.connect(host.substring(0, colon), Integer.parseInt(host.substring(colon + 1)),
-                                        username, password);
-                            }
-                            else {
-                                transport.connect(host, username, password);
-                            }
-                        }
-
-                    if (transport.isConnected()) {
-                        Address[] addresses = message.getAllRecipients();
-                        
-                        for (int i = 0; i < addresses.length; i++) {
-                            // Tricks and tricks
-                            message.setRecipient(Message.RecipientType.TO, addresses[i]);
-                            transport.sendMessage(message, new Address[] { addresses[i] });
-                        }
+                if (!StringUtils.isAlpha(username) && !StringUtils.isEmpty(password)) {
+                	boolean ssl = SystemGlobals.getBoolValue(ConfigKeys.MAIL_SMTP_SSL);
+                	
+                    Transport transport = Spammer.getSession().getTransport(ssl ? "smtps" : "smtp");
+                    
+                    try {
+	                    String host = SystemGlobals.getValue(this.hostProperty(ssl));
+	                    transport.connect(host, username, password);
+	
+	                    if (transport.isConnected()) {
+	                        Address[] addresses = message.getAllRecipients();
+	                        
+	                        for (int i = 0; i < addresses.length; i++) {
+	                            message.setRecipient(Message.RecipientType.TO, addresses[i]);
+	                            transport.sendMessage(message, new Address[] { addresses[i] });
+	                        }
+	                    }
                     }
-
-                    transport.close();
+                    catch (Exception e) {
+                    	throw new MailException(e);
+                    }
+                    finally {
+                    	try { transport.close(); }
+                    	catch (Exception e) {}
+                    }
                 }
             }
             else {
                 Address[] addresses = message.getAllRecipients();
+                
                 for (int i = 0; i < addresses.length; i++) {
                     message.setRecipient(Message.RecipientType.TO, addresses[i]);
                     Transport.send(message, new Address[] { addresses[i] });
@@ -182,14 +163,14 @@ public class Spammer
             }
         }
         catch (MessagingException e) {
-            throw new EmailException("Error dispatch message.", e);
+            throw new MailException("Error dispatch message.", e);
         }
 
         return true;
 	}
 
 	protected final void prepareMessage(List addresses, SimpleHash params, String subject, String messageFile)
-			throws EmailException
+			throws MailException
 	{
 		this.message = new MimeMessage(session);
 		
@@ -222,7 +203,7 @@ public class Spammer
 		}
 		catch (Exception e) {
 			logger.warn(e);
-			throw new EmailException(e);
+			throw new MailException(e);
 		}
 	}
 	
@@ -261,5 +242,43 @@ public class Spammer
 	public String getMessageBody()
 	{
 		return this.messageText;
+	}
+
+	private String localhostProperty(boolean ssl)
+	{
+		return ssl 
+			? ConfigKeys.MAIL_SMTP_SSL_LOCALHOST
+			: ConfigKeys.MAIL_SMTP_LOCALHOST;
+	}
+
+	private String authProperty(boolean ssl)
+	{
+		return ssl 
+			? ConfigKeys.MAIL_SMTP_SSL_AUTH
+			: ConfigKeys.MAIL_SMTP_AUTH;
+	}
+
+	private String portProperty(boolean ssl)
+	{
+		return ssl 
+			? ConfigKeys.MAIL_SMTP_SSL_PORT
+			: ConfigKeys.MAIL_SMTP_PORT;
+	}
+
+	private String hostProperty(boolean ssl)
+	{
+		return ssl 
+			? ConfigKeys.MAIL_SMTP_SSL_HOST
+			: ConfigKeys.MAIL_SMTP_HOST;
+	}
+	
+	public static Session getSession()
+	{
+		return session;
+	}
+
+	public final Message getMesssage()
+	{
+		return this.message;
 	}
 }

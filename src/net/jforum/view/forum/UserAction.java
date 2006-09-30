@@ -42,13 +42,16 @@
  */
 package net.jforum.view.forum;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.io.IOException;
 
-import net.jforum.*;
+import net.jforum.Command;
+import net.jforum.ControllerUtils;
+import net.jforum.JForumExecutionContext;
+import net.jforum.SessionFacade;
 import net.jforum.context.RequestContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.UserDAO;
@@ -57,6 +60,7 @@ import net.jforum.entities.Bookmark;
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
 import net.jforum.exceptions.ForumException;
+import net.jforum.exceptions.MailException;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.RankingRepository;
 import net.jforum.repository.SecurityRepository;
@@ -65,7 +69,6 @@ import net.jforum.util.I18n;
 import net.jforum.util.MD5;
 import net.jforum.util.concurrent.executor.QueuedExecutor;
 import net.jforum.util.mail.ActivationKeySpammer;
-import net.jforum.util.mail.EmailException;
 import net.jforum.util.mail.EmailSenderTask;
 import net.jforum.util.mail.LostPasswordSpammer;
 import net.jforum.util.preferences.ConfigKeys;
@@ -78,7 +81,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.78 2006/09/05 00:53:34 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.79 2006/09/30 00:33:25 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -607,7 +610,7 @@ public class UserAction extends Command
 					new EmailSenderTask(new LostPasswordSpammer(user, 
 							SystemGlobals.getValue(ConfigKeys.MAIL_LOST_PASSWORD_SUBJECT))));
 		} 
-		catch (EmailException e) {
+		catch (MailException e) {
 			logger.warn("Error while sending email: " + e);
 		}
 
