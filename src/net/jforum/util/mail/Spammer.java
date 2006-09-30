@@ -72,7 +72,7 @@ import freemarker.template.Template;
  * each user.
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.25 2006/09/30 00:33:24 rafaelsteil Exp $
+ * @version $Id: Spammer.java,v 1.26 2006/09/30 03:56:24 rafaelsteil Exp $
  */
 public class Spammer
 {
@@ -80,12 +80,13 @@ public class Spammer
 
 	private static int MESSAGE_HTML = 0;
 	private static int MESSAGE_TEXT = 1;
-
-	private Properties mailProps = new Properties();
+	
 	private static int messageFormat;
 	private static Session session;
 	private static String username;
 	private static String password;
+	
+	private Properties mailProps = new Properties();
 	private MimeMessage message;
 	private String messageText;
 	
@@ -126,13 +127,13 @@ public class Spammer
         try
         {
             if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_SMTP_AUTH)) {
-                if (!StringUtils.isAlpha(username) && !StringUtils.isEmpty(password)) {
+                if (!StringUtils.isEmpty(username) && !StringUtils.isEmpty(password)) {
                 	boolean ssl = SystemGlobals.getBoolValue(ConfigKeys.MAIL_SMTP_SSL);
                 	
                     Transport transport = Spammer.getSession().getTransport(ssl ? "smtps" : "smtp");
                     
                     try {
-	                    String host = SystemGlobals.getValue(this.hostProperty(ssl));
+	                    String host = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_HOST);
 	                    transport.connect(host, username, password);
 	
 	                    if (transport.isConnected()) {
@@ -218,10 +219,9 @@ public class Spammer
 	protected String getMessageText(SimpleHash params, String messageFile) throws Exception
 	{
 		String templateEncoding = SystemGlobals.getValue(ConfigKeys.MAIL_TEMPLATE_ENCODING);
-		
 		StringWriter sWriter = new StringWriter();
-		
 		Template template;
+
 		if (templateEncoding == null || "".equals(templateEncoding.trim())) {
 			template = JForumExecutionContext.templateConfig().getTemplate(messageFile);
 		}
