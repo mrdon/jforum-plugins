@@ -63,7 +63,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationAction.java,v 1.25 2006/08/23 02:13:36 rafaelsteil Exp $
+ * @version $Id: ModerationAction.java,v 1.26 2006/10/01 15:45:59 rafaelsteil Exp $
  */
 public class ModerationAction extends AdminCommand
 {
@@ -156,7 +156,7 @@ public class ModerationAction extends AdminCommand
 							tm, DataAccessDriver.getInstance().newForumDAO());
 					
 					ForumRepository.updateForumStats(t, u, p);
-					TopicsCommon.notifyUsers(t, tm);
+					TopicsCommon.notifyUsers(t, p);
 					
 					udao.incrementPosts(p.getUserId());
 					

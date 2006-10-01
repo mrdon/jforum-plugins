@@ -103,7 +103,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.157 2006/09/26 02:12:16 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.158 2006/10/01 15:45:59 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -1143,7 +1143,7 @@ public class PostAction extends Command
 				// Updates forum stats, cache and etc
 				if (!newTopic) {
 					t.setTotalReplies(t.getTotalReplies() + 1);
-					TopicsCommon.notifyUsers(t, topicDao);
+					TopicsCommon.notifyUsers(t, p);
 				}
 				else {
 					// Notify "forum new topic" users

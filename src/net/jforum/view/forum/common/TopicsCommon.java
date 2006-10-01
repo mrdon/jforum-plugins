@@ -54,6 +54,7 @@ import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
 import net.jforum.dao.TopicDAO;
 import net.jforum.entities.Forum;
+import net.jforum.entities.Post;
 import net.jforum.entities.Topic;
 import net.jforum.entities.UserSession;
 import net.jforum.repository.ForumRepository;
@@ -64,7 +65,7 @@ import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.concurrent.executor.QueuedExecutor;
 import net.jforum.util.mail.EmailSenderTask;
-import net.jforum.util.mail.TopicSpammer;
+import net.jforum.util.mail.TopicReplySpammer;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.view.forum.ModerationHelper;
@@ -77,7 +78,7 @@ import freemarker.template.SimpleHash;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.33 2006/09/25 02:16:41 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.34 2006/10/01 15:45:57 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
@@ -220,19 +221,20 @@ public class TopicsCommon
 	 * Sends a "new post" notification message to all users watching the topic.
 	 * 
 	 * @param t The changed topic
-	 * @param tm A TopicModel instance
+	 * @param p The new message
 	 */
-	public static void notifyUsers(Topic t, TopicDAO tm)
+	public static void notifyUsers(Topic t, Post p)
 	{
 		if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_NOTIFY_ANSWERS)) {
 			try {
-				List usersToNotify = tm.notifyUsers(t);
+				TopicDAO dao = DataAccessDriver.getInstance().newTopicDAO();
+				List usersToNotify = dao.notifyUsers(t);
 
 				// we only have to send an email if there are users
 				// subscribed to the topic
 				if (usersToNotify != null && usersToNotify.size() > 0) {
 					QueuedExecutor.getInstance().execute(
-						new EmailSenderTask(new TopicSpammer(t, usersToNotify)));
+						new EmailSenderTask(new TopicReplySpammer(t, p, usersToNotify)));
 				}
 			}
 			catch (Exception e) {

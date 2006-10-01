@@ -57,7 +57,7 @@ import net.jforum.entities.UserSession;
 import net.jforum.repository.ForumRepository;
 import net.jforum.util.concurrent.executor.QueuedExecutor;
 import net.jforum.util.mail.EmailSenderTask;
-import net.jforum.util.mail.ForumSpammer;
+import net.jforum.util.mail.ForumNewTopicSpammer;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -65,7 +65,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumCommon.java,v 1.16 2006/09/25 02:16:40 rafaelsteil Exp $
+ * @version $Id: ForumCommon.java,v 1.17 2006/10/01 15:45:57 rafaelsteil Exp $
  */
 public class ForumCommon 
 {
@@ -186,7 +186,7 @@ public class ForumCommon
 				// subscribed to the topic
 				if (usersToNotify != null && usersToNotify.size() > 0) {
 					QueuedExecutor.getInstance().execute(
-						new EmailSenderTask(new ForumSpammer(f, t, usersToNotify)));
+						new EmailSenderTask(new ForumNewTopicSpammer(f, t, usersToNotify)));
 				}
 			}
 			catch (Exception e) {

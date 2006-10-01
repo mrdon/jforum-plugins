@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.jforum.entities.Forum;
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.util.preferences.ConfigKeys;
@@ -56,11 +57,11 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicSpammer.java,v 1.19 2006/08/20 22:47:51 rafaelsteil Exp $
+ * @version $Id: ForumNewTopicSpammer.java,v 1.1 2006/10/01 15:45:58 rafaelsteil Exp $
  */
-public class TopicSpammer extends Spammer 
+public class ForumNewTopicSpammer extends Spammer 
 {
-	public TopicSpammer(Topic topic, List users)
+	public ForumNewTopicSpammer(Forum forum, Topic topic, List users)
 	{
 		// Prepare the users. In this current version, the email
 		// is not personalized, so then we'll just use his address
@@ -72,19 +73,11 @@ public class TopicSpammer extends Spammer
 		}
 		
 		// Make the topic url
-		StringBuffer page = new StringBuffer();
-		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
-		
-		if (topic.getTotalReplies() >= postsPerPage) {
-			page.append(((topic.getTotalReplies() / postsPerPage)) * postsPerPage).append('/');
-		}
-		
 		String forumLink = ViewCommon.getForumLink();
-		
+
 		StringBuffer path = new StringBuffer(128)
 			.append(forumLink)
 			.append("posts/list/")
-			.append(page.toString())
 			.append(topic.getId()) 
 			.append(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION))
 			.append('#')
@@ -92,18 +85,18 @@ public class TopicSpammer extends Spammer
 		
 		StringBuffer unwatch = new StringBuffer(128)
 			.append(forumLink)
-			.append("posts/unwatch/")
-			.append(topic.getId())
+			.append("forums/unwatchForum/")
+			.append(forum.getId())
 			.append(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		
 		SimpleHash params = new SimpleHash();
 		params.put("topic", topic);
 		params.put("path", path.toString());
-		params.put("forumLink", forumLink);
+		params.put("forumLink", forumLink.toString());
 		params.put("unwatch", unwatch.toString());
 		
 		super.prepareMessage(recipients, params,
-			MessageFormat.format(SystemGlobals.getValue(ConfigKeys.MAIL_NEW_ANSWER_SUBJECT), new Object[] { topic.getTitle() }),
-			SystemGlobals.getValue(ConfigKeys.MAIL_NEW_ANSWER_MESSAGE_FILE));
+			MessageFormat.format(SystemGlobals.getValue(ConfigKeys.MAIL_NEW_TOPIC_SUBJECT), new Object[] { topic.getTitle() }),
+			SystemGlobals.getValue(ConfigKeys.MAIL_NEW_TOPIC_MESSAGE_FILE));
 	}
 }
