@@ -11,11 +11,5 @@ If you no longer want to receive notifications for this topic, please access the
 
 ${unwatch}
 <#else>
-<p>
-	${message}
-	</p>
-	---------
-	<br>
-	Read this topic online: ${path}<br>
-	Unsubsribe to this topic: ${unwatch}<br>
+<#include "mailNewReplyWithContents.htm"/>
 </#if>
