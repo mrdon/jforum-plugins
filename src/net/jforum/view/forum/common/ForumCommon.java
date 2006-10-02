@@ -48,10 +48,12 @@ import java.util.List;
 import java.util.Map;
 
 import net.jforum.SessionFacade;
+import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
 import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
 import net.jforum.entities.LastPostInfo;
+import net.jforum.entities.Post;
 import net.jforum.entities.Topic;
 import net.jforum.entities.UserSession;
 import net.jforum.repository.ForumRepository;
@@ -65,7 +67,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumCommon.java,v 1.17 2006/10/01 15:45:57 rafaelsteil Exp $
+ * @version $Id: ForumCommon.java,v 1.18 2006/10/02 02:15:36 rafaelsteil Exp $
  */
 public class ForumCommon 
 {
@@ -174,19 +176,20 @@ public class ForumCommon
 	 * 
 	 * @param f The Forum changed
 	 * @param t The new topic
-	 * @param tm A ForumModel instance
+	 * @param post TODO
 	 */
-	public static void notifyUsers(Forum f, Topic t, ForumDAO tm)
+	public static void notifyUsers(Forum f, Topic t, Post post)
 	{
 		if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_NOTIFY_ANSWERS)) {
 			try {
-				List usersToNotify = tm.notifyUsers(f);
+				ForumDAO dao = DataAccessDriver.getInstance().newForumDAO();
+				List usersToNotify = dao.notifyUsers(f);
 
 				// we only have to send an email if there are users
 				// subscribed to the topic
 				if (usersToNotify != null && usersToNotify.size() > 0) {
 					QueuedExecutor.getInstance().execute(
-						new EmailSenderTask(new ForumNewTopicSpammer(f, t, usersToNotify)));
+						new EmailSenderTask(new ForumNewTopicSpammer(f, t, post, usersToNotify)));
 				}
 			}
 			catch (Exception e) {

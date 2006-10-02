@@ -103,7 +103,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.158 2006/10/01 15:45:59 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.159 2006/10/02 02:15:37 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -1147,7 +1147,7 @@ public class PostAction extends Command
 				}
 				else {
 					// Notify "forum new topic" users
-					ForumCommon.notifyUsers(forum, t, forumDao);
+					ForumCommon.notifyUsers(forum, t, p);
 				}
 				
 				t.setTotalViews(t.getTotalViews() + 1);

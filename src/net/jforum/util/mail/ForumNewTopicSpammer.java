@@ -48,55 +48,94 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.jforum.entities.Forum;
+import net.jforum.entities.Post;
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.view.forum.common.PostCommon;
 import net.jforum.view.forum.common.ViewCommon;
 import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumNewTopicSpammer.java,v 1.1 2006/10/01 15:45:58 rafaelsteil Exp $
+ * @version $Id: ForumNewTopicSpammer.java,v 1.2 2006/10/02 02:15:36 rafaelsteil Exp $
  */
 public class ForumNewTopicSpammer extends Spammer 
 {
-	public ForumNewTopicSpammer(Forum forum, Topic topic, List users)
+	public ForumNewTopicSpammer(Forum forum, Topic topic, Post post, List users)
 	{
 		// Prepare the users. In this current version, the email
 		// is not personalized, so then we'll just use his address
+		List recipients = this.usersAsList(users);
+		
+		String forumLink = ViewCommon.getForumLink();
+		String path = this.postLink(topic, forumLink);
+		String unwatch = this.unwatchLink(forum, forumLink);
+		
+		SimpleHash params = new SimpleHash();
+		params.put("topic", topic);
+		params.put("path", path);
+		params.put("forumLink", forumLink);
+		params.put("unwatch", unwatch);
+		
+		boolean includeMessage = SystemGlobals.getBoolValue(ConfigKeys.MAIL_NEW_ANSWER_INCLUDE_MESSAGE);
+
+		if (post != null && includeMessage) {
+			post = PostCommon.preparePostForDisplay(post);
+			params.put("message", post.getText());
+		}
+		
+		super.prepareMessage(recipients, params,
+			MessageFormat.format(SystemGlobals.getValue(ConfigKeys.MAIL_NEW_TOPIC_SUBJECT), new Object[] { topic.getTitle() }),
+			SystemGlobals.getValue(ConfigKeys.MAIL_NEW_TOPIC_MESSAGE_FILE));
+	}
+
+	/**
+	 * @param users
+	 * @return
+	 */
+	private List usersAsList(List users)
+	{
 		List recipients = new ArrayList();
 		for (Iterator iter = users.iterator(); iter.hasNext(); ) {
 			User u = (User)iter.next();
-			
 			recipients.add(u.getEmail());
 		}
-		
-		// Make the topic url
-		String forumLink = ViewCommon.getForumLink();
+		return recipients;
+	}
 
-		StringBuffer path = new StringBuffer(128)
+	/**
+	 * @param forum
+	 * @param forumLink
+	 * @return
+	 */
+	private String unwatchLink(Forum forum, String forumLink)
+	{
+		String unwatch = new StringBuffer(128)
+			.append(forumLink)
+			.append("forums/unwatchForum/")
+			.append(forum.getId())
+			.append(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION))
+			.toString();
+		return unwatch;
+	}
+
+	/**
+	 * @param topic
+	 * @param forumLink
+	 * @return
+	 */
+	private String postLink(Topic topic, String forumLink)
+	{
+		String path = new StringBuffer(128)
 			.append(forumLink)
 			.append("posts/list/")
 			.append(topic.getId()) 
 			.append(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION))
 			.append('#')
-			.append(topic.getLastPostId());
-		
-		StringBuffer unwatch = new StringBuffer(128)
-			.append(forumLink)
-			.append("forums/unwatchForum/")
-			.append(forum.getId())
-			.append(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
-		
-		SimpleHash params = new SimpleHash();
-		params.put("topic", topic);
-		params.put("path", path.toString());
-		params.put("forumLink", forumLink.toString());
-		params.put("unwatch", unwatch.toString());
-		
-		super.prepareMessage(recipients, params,
-			MessageFormat.format(SystemGlobals.getValue(ConfigKeys.MAIL_NEW_TOPIC_SUBJECT), new Object[] { topic.getTitle() }),
-			SystemGlobals.getValue(ConfigKeys.MAIL_NEW_TOPIC_MESSAGE_FILE));
+			.append(topic.getLastPostId())
+			.toString();
+		return path;
 	}
 }
