@@ -1,4 +1,5 @@
 <#setting number_format = "#"/>
+<#if !message?exists>
 Hi, 
 
 You received this email because the topic "${topic.title}" has received an answer since your last visit. 
@@ -9,3 +10,12 @@ ${path}
 If you no longer want to receive notifications for this topic, please access the URL
 
 ${unwatch}
+<#else>
+<p>
+	${message}
+	</p>
+	---------
+	<br>
+	Read this topic online: ${path}<br>
+	Unsubsribe to this topic: ${unwatch}<br>
+</#if>
