@@ -36,48 +36,51 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * This file creation date: 19/04/2004 - 21:11:42
+ * Created on 03/10/2006 22:46:37
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.util.mail;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.jforum.entities.User;
-import net.jforum.util.preferences.ConfigKeys;
-import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.view.forum.common.ViewCommon;
-import freemarker.template.SimpleHash;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.internet.MimeMessage;
 
 /**
+ * A {@link MimeMessage} implementation where it's possible 
+ * to correctly set the Message-ID header.
+ * 
  * @author Rafael Steil
- * @version $Id: LostPasswordSpammer.java,v 1.15 2006/10/04 02:51:12 rafaelsteil Exp $
+ * @version $Id: IdentifiableMimeMessage.java,v 1.1 2006/10/04 02:51:12 rafaelsteil Exp $
  */
-public class LostPasswordSpammer extends Spammer
+public class IdentifiableMimeMessage extends MimeMessage
 {
-	public LostPasswordSpammer(User user, String mailTitle) 
+	private String messageId;
+	
+	public IdentifiableMimeMessage(Session session)
 	{
-		String forumLink = ViewCommon.getForumLink();
-
-		String url = new StringBuffer()
-			.append(forumLink)
-			.append("user/recoverPassword/")
-			.append(user.getActivationKey()) 
-			.append(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION))
-			.toString();
-		
-		SimpleHash params = new SimpleHash();
-		params.put("url", url);
-		params.put("user", user);
-
-		List recipients = new ArrayList();
-		recipients.add(user);
-		
-		this.setUsers(recipients);
-
-		super.prepareMessage(params, mailTitle, 
-			SystemGlobals.getValue(ConfigKeys.MAIL_LOST_PASSWORD_MESSAGE_FILE));
+		super(session);
+	}
+	
+	/**
+	 * Sets the Message-ID header for this message
+	 * @param messageId the Message-ID
+	 */
+	public void setMessageId(String messageId)
+	{
+		this.messageId = messageId;
+	}
+	
+	/**
+	 * @see javax.mail.internet.MimeMessage#updateMessageID()
+	 */
+	protected void updateMessageID() throws MessagingException 
+	{
+		if (this.messageId != null) {
+			this.addHeader("Message-ID", this.messageId);
+		}
+		else {
+			super.updateMessageID();
+		}
 	}
 }

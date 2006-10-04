@@ -43,13 +43,11 @@
 package net.jforum.util.mail;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
+import net.jforum.api.integration.mail.pop.MessageId;
 import net.jforum.entities.Post;
 import net.jforum.entities.Topic;
-import net.jforum.entities.User;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.view.forum.common.PostCommon;
@@ -59,7 +57,7 @@ import freemarker.template.SimpleHash;
 /**
  * Notify users of replies to existing topics
  * @author Rafael Steil
- * @version $Id: TopicReplySpammer.java,v 1.1 2006/10/01 15:45:58 rafaelsteil Exp $
+ * @version $Id: TopicReplySpammer.java,v 1.2 2006/10/04 02:51:12 rafaelsteil Exp $
  */
 public class TopicReplySpammer extends Spammer 
 {
@@ -72,10 +70,6 @@ public class TopicReplySpammer extends Spammer
 	 */
 	public TopicReplySpammer(Topic topic, Post post, List users)
 	{
-		// Prepare the users. Currently, the sent email message
-		// is not personalized, so then we'll just use his address
-		List recipients = this.usersAsList(users);
-		
 		// Make the topic url
 		StringBuffer page = new StringBuffer();
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
@@ -96,6 +90,9 @@ public class TopicReplySpammer extends Spammer
 		params.put("forumLink", forumLink);
 		params.put("unwatch", unwatch);
 		
+		this.setMessageId(MessageId.buildMessageId(post.getId(), topic.getId(), topic.getForumId()));
+		this.setUsers(users);
+		
 		boolean includeMessage = SystemGlobals.getBoolValue(ConfigKeys.MAIL_NEW_ANSWER_INCLUDE_MESSAGE);
 
 		if (post != null && includeMessage) {
@@ -103,26 +100,13 @@ public class TopicReplySpammer extends Spammer
 			params.put("message", post.getText());
 		}
 		
-		super.prepareMessage(recipients, params,
+		if (topic.getFirstPostId() != post.getId()) {
+			this.setInReplyTo(MessageId.buildInReplyTo(topic));
+		}
+		
+		this.prepareMessage(params,
 			MessageFormat.format(SystemGlobals.getValue(ConfigKeys.MAIL_NEW_ANSWER_SUBJECT), new Object[] { topic.getTitle() }),
 			SystemGlobals.getValue(ConfigKeys.MAIL_NEW_ANSWER_MESSAGE_FILE));
-	}
-
-	/**
-	 * Given a list of {@link User} instances, extract the 
-	 * email addresses and add to another list
-	 * @param users the user instances
-	 * @return a list containing the email addresses
-	 */
-	private List usersAsList(List users)
-	{
-		List recipients = new ArrayList();
-		 
-		for (Iterator iter = users.iterator(); iter.hasNext(); ) {
-			User u = (User)iter.next();
-			recipients.add(u.getEmail());
-		}
-		return recipients;
 	}
 
 	/**

@@ -53,7 +53,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageSpammer.java,v 1.6 2006/08/20 22:47:51 rafaelsteil Exp $
+ * @version $Id: PrivateMessageSpammer.java,v 1.7 2006/10/04 02:51:11 rafaelsteil Exp $
  */
 public class PrivateMessageSpammer extends Spammer
 {
@@ -63,18 +63,22 @@ public class PrivateMessageSpammer extends Spammer
 			return;
 		}
 		
-		String forumLink = ViewCommon.getForumLink();
-		
-		forumLink += "pm/inbox" + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
+		String forumLink = new StringBuffer()
+			.append(ViewCommon.getForumLink())
+			.append("pm/inbox")
+			.append(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION))
+			.toString();
 		
 		SimpleHash params = new SimpleHash();
 		params.put("path", forumLink);
 		params.put("user", user);
 		
 		List recipients = new ArrayList();
-		recipients.add(user.getEmail());
+		recipients.add(user);
 		
-		super.prepareMessage(recipients, params, 
+		this.setUsers(recipients);
+		
+		super.prepareMessage(params, 
 			SystemGlobals.getValue(ConfigKeys.MAIL_NEW_PM_SUBJECT),
 			SystemGlobals.getValue(ConfigKeys.MAIL_NEW_PM_MESSAGE_FILE));
 	}

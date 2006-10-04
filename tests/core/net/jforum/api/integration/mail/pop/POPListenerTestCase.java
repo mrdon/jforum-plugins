@@ -37,7 +37,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: POPListenerTestCase.java,v 1.12 2006/09/26 03:27:13 rafaelsteil Exp $
+ * @version $Id: POPListenerTestCase.java,v 1.13 2006/10/04 02:51:13 rafaelsteil Exp $
  */
 public class POPListenerTestCase extends TestCase
 {
@@ -83,7 +83,7 @@ public class POPListenerTestCase extends TestCase
 		String forumAddress = "forum_test@jforum.testcase";
 		String contents = "Mail message contents " + new Date();
 		
-		this.sendMessage(sender, subject, forumAddress, contents, InReplyTo.build(999999, 888888));
+		this.sendMessage(sender, subject, forumAddress, contents, MessageId.buildMessageId(7777, 999999, 888888));
 		
 		int afterTopicId = this.maxTopicId();
 		
@@ -124,7 +124,7 @@ public class POPListenerTestCase extends TestCase
 			subject = "Reply subject for topic " + afterTopicId;
 			contents = "Changed contents, replying tpoic " + afterTopicId;
 			
-			this.sendMessage(sender, subject, forumAddress, contents, InReplyTo.build(afterTopicId, 999999));
+			this.sendMessage(sender, subject, forumAddress, contents, MessageId.buildMessageId(7777, afterTopicId, 999999));
 			
 			assertTrue("A new message was created, instead of a reply", afterTopicId == maxTopicId());
 			
@@ -155,7 +155,7 @@ public class POPListenerTestCase extends TestCase
 	 * @param forumAddress the address of the target forum. There should be a matching
 	 * record in jforum_mail_integration
 	 * @param contents the message itself
-	 * @param inReplyTo the In-Reply-To header, as built by {@link InReplyTo}. Can be null
+	 * @param inReplyTo the In-Reply-To header, as built by {@link MessageId}. Can be null
 	 * @throws Exception
 	 */
 	private void sendMessage(String sender, String subject, String forumAddress, String contents, String inReplyTo) throws Exception

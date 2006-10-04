@@ -42,12 +42,15 @@
  */
 package net.jforum.summary;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.SummaryDAO;
+import net.jforum.entities.User;
 import net.jforum.util.mail.Spammer;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -64,7 +67,7 @@ import freemarker.template.SimpleHash;
  * @see net.jforum.summary.SummaryScheduler
  * 
  * @author Franklin S. Dattein (<a href="mailto:franklin@hp.com">franklin@hp.com</a>)
- * @version $Id: SummaryModel.java,v 1.8 2006/08/20 22:47:55 rafaelsteil Exp $
+ * @version $Id: SummaryModel.java,v 1.9 2006/10/04 02:51:13 rafaelsteil Exp $
  */
 public class SummaryModel extends Spammer
 {
@@ -96,9 +99,27 @@ public class SummaryModel extends Spammer
 		params.put("url", forumLink);
 
 		String subject = SystemGlobals.getValue(ConfigKeys.MAIL_SUMMARY_SUBJECT);
+		
+		this.setUsers(this.recipientsAsUsers(recipients));
 
-		this.prepareMessage(recipients, params, subject, SystemGlobals.getValue(ConfigKeys.MAIL_SUMMARY_FILE));
+		this.prepareMessage(params, subject, SystemGlobals.getValue(ConfigKeys.MAIL_SUMMARY_FILE));
 		super.dispatchMessages();
+	}
+	
+	private List recipientsAsUsers(List recipients)
+	{
+		List l = new ArrayList();
+		
+		for (Iterator iter = recipients.iterator(); iter.hasNext(); ) {
+			String email = (String)iter.next();
+			
+			User u = new User();
+			u.setEmail(email);
+			
+			l.add(u);
+		}
+		
+		return l;
 	}
 
 	/**

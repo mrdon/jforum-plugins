@@ -52,7 +52,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author James Young
- * @version $Id: ActivationKeySpammer.java,v 1.8 2006/08/20 22:47:51 rafaelsteil Exp $
+ * @version $Id: ActivationKeySpammer.java,v 1.9 2006/10/04 02:51:11 rafaelsteil Exp $
  */
 public class ActivationKeySpammer extends Spammer
 {
@@ -61,18 +61,25 @@ public class ActivationKeySpammer extends Spammer
 		//gets the url to the forum.
 		String forumLink = ViewCommon.getForumLink();
 
-		String url =  forumLink + "user/activateAccount/" + u.getActivationKey() 
-			+ "/" + u.getId() 
-			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
+		String url = new StringBuffer()
+			.append(forumLink) 
+			.append("user/activateAccount/") 
+			.append(u.getActivationKey()) 
+			.append('/')
+			.append(u.getId()) 
+			.append(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION))
+			.toString();
 		
 		SimpleHash params = new SimpleHash();
 		params.put("url", url);
 		params.put("user", u);
-
+		
 		List recipients = new ArrayList();
-		recipients.add(u.getEmail());
+		recipients.add(u);
+		
+		this.setUsers(recipients);
 
-		super.prepareMessage(recipients, params, SystemGlobals.getValue(ConfigKeys.MAIL_ACTIVATION_KEY_SUBJECT), 
+		this.prepareMessage(params, SystemGlobals.getValue(ConfigKeys.MAIL_ACTIVATION_KEY_SUBJECT), 
 				SystemGlobals.getValue(ConfigKeys.MAIL_ACTIVATION_KEY_MESSAGE_FILE));
 	}
 }

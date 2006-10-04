@@ -26,7 +26,7 @@ import net.jforum.view.forum.PostAction;
 
 /**
  * @author Rafael Steil
- * @version $Id: POPPostAction.java,v 1.7 2006/09/25 02:37:06 rafaelsteil Exp $
+ * @version $Id: POPPostAction.java,v 1.8 2006/10/04 02:51:12 rafaelsteil Exp $
  */
 public class POPPostAction
 {
@@ -144,7 +144,7 @@ public class POPPostAction
 		String inReplyTo = m.getInReplyTo();
 		
 		if (inReplyTo != null) {
-			topicId = InReplyTo.parse(inReplyTo).getTopicId();
+			topicId = MessageId.parse(inReplyTo).getTopicId();
 		}
 		
 		return topicId;

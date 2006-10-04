@@ -43,14 +43,11 @@
 package net.jforum.util.mail;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import net.jforum.entities.Forum;
 import net.jforum.entities.Post;
 import net.jforum.entities.Topic;
-import net.jforum.entities.User;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.view.forum.common.PostCommon;
@@ -59,16 +56,12 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumNewTopicSpammer.java,v 1.2 2006/10/02 02:15:36 rafaelsteil Exp $
+ * @version $Id: ForumNewTopicSpammer.java,v 1.3 2006/10/04 02:51:12 rafaelsteil Exp $
  */
 public class ForumNewTopicSpammer extends Spammer 
 {
 	public ForumNewTopicSpammer(Forum forum, Topic topic, Post post, List users)
 	{
-		// Prepare the users. In this current version, the email
-		// is not personalized, so then we'll just use his address
-		List recipients = this.usersAsList(users);
-		
 		String forumLink = ViewCommon.getForumLink();
 		String path = this.postLink(topic, forumLink);
 		String unwatch = this.unwatchLink(forum, forumLink);
@@ -80,29 +73,16 @@ public class ForumNewTopicSpammer extends Spammer
 		params.put("unwatch", unwatch);
 		
 		boolean includeMessage = SystemGlobals.getBoolValue(ConfigKeys.MAIL_NEW_ANSWER_INCLUDE_MESSAGE);
+		this.setUsers(users);
 
 		if (post != null && includeMessage) {
 			post = PostCommon.preparePostForDisplay(post);
 			params.put("message", post.getText());
 		}
 		
-		super.prepareMessage(recipients, params,
+		super.prepareMessage(params,
 			MessageFormat.format(SystemGlobals.getValue(ConfigKeys.MAIL_NEW_TOPIC_SUBJECT), new Object[] { topic.getTitle() }),
 			SystemGlobals.getValue(ConfigKeys.MAIL_NEW_TOPIC_MESSAGE_FILE));
-	}
-
-	/**
-	 * @param users
-	 * @return
-	 */
-	private List usersAsList(List users)
-	{
-		List recipients = new ArrayList();
-		for (Iterator iter = users.iterator(); iter.hasNext(); ) {
-			User u = (User)iter.next();
-			recipients.add(u.getEmail());
-		}
-		return recipients;
 	}
 
 	/**

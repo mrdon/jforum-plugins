@@ -43,6 +43,7 @@
 package net.jforum.util.mail;
 
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -57,6 +58,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import net.jforum.JForumExecutionContext;
+import net.jforum.entities.User;
 import net.jforum.exceptions.MailException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -68,11 +70,10 @@ import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
 /**
- * Dispatch emails to the world. TODO: should do some refactoring to send a personalized email to
- * each user.
+ * Dispatch emails to the world. 
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.26 2006/09/30 03:56:24 rafaelsteil Exp $
+ * @version $Id: Spammer.java,v 1.27 2006/10/04 02:51:12 rafaelsteil Exp $
  */
 public class Spammer
 {
@@ -88,7 +89,10 @@ public class Spammer
 	
 	private Properties mailProps = new Properties();
 	private MimeMessage message;
+	private List users = new ArrayList();
 	private String messageText;
+	private String messageId;
+	private String inReplyTo;
 	
 	protected Spammer() throws MailException
 	{
@@ -104,7 +108,7 @@ public class Spammer
 
 		String localhost = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_LOCALHOST);
 		
-		if (localhost != null && localhost.trim().length() > 0) {
+		if (!StringUtils.isEmpty(localhost)) {
 			mailProps.put(localhostProperty, localhost);
 		}
 		
@@ -137,11 +141,13 @@ public class Spammer
 	                    transport.connect(host, username, password);
 	
 	                    if (transport.isConnected()) {
-	                        Address[] addresses = message.getAllRecipients();
-	                        
-	                        for (int i = 0; i < addresses.length; i++) {
-	                            message.setRecipient(Message.RecipientType.TO, addresses[i]);
-	                            transport.sendMessage(message, new Address[] { addresses[i] });
+	                        for (Iterator userIter = this.users.iterator(); userIter.hasNext(); ) {
+	                        	User user = (User)userIter.next();
+	                        	
+	                        	Address address = new InternetAddress(user.getEmail());
+	                        	
+	                        	message.setRecipient(Message.RecipientType.TO, address);
+	                            transport.sendMessage(message, new Address[] { address });
 	                        }
 	                    }
                     }
@@ -164,27 +170,44 @@ public class Spammer
             }
         }
         catch (MessagingException e) {
-            throw new MailException("Error dispatch message.", e);
+            throw new MailException("Error while dispatching the message.", e);
         }
 
         return true;
 	}
 
-	protected final void prepareMessage(List addresses, SimpleHash params, String subject, String messageFile)
+	/**
+	 * Prepares the mail message for sending.
+	 * 
+	 * @param addresses The list of email addresses that will receive the notification
+	 * @param params the parameters to pass to the mail message template
+	 * @param subject the subject of the email
+	 * @param messageFile the path to the mail message template
+	 * @throws MailException
+	 */
+	protected void prepareMessage(SimpleHash params, String subject, String messageFile)
 			throws MailException
 	{
-		this.message = new MimeMessage(session);
+		if (this.messageId != null) {
+			this.message = new IdentifiableMimeMessage(session);
+			((IdentifiableMimeMessage)this.message).setMessageId(this.messageId);
+		}
+		else {
+			this.message = new MimeMessage(session);
+		}
 		
 		params.put("forumName", SystemGlobals.getValue(ConfigKeys.FORUM_NAME));
 
 		try {
-			InternetAddress[] recipients = new InternetAddress[addresses.size()];
-
 			String charset = SystemGlobals.getValue(ConfigKeys.MAIL_CHARSET);
 
 			this.message.setSentDate(new Date());
 			this.message.setFrom(new InternetAddress(SystemGlobals.getValue(ConfigKeys.MAIL_SENDER)));
 			this.message.setSubject(subject, charset);
+			
+			if (this.inReplyTo != null) {
+				this.message.addHeader("In-Reply-To", this.inReplyTo);
+			}
 
 			this.messageText = this.getMessageText(params, messageFile);
 
@@ -194,18 +217,25 @@ public class Spammer
 			else {
 				this.message.setText(this.messageText, charset);
 			}
-
-			int i = 0;
-			for (Iterator iter = addresses.iterator(); iter.hasNext(); i++) {
-				recipients[i] = new InternetAddress((String) iter.next());
-			}
-
-			this.message.setRecipients(Message.RecipientType.TO, recipients);
 		}
 		catch (Exception e) {
-			logger.warn(e);
 			throw new MailException(e);
 		}
+	}
+	
+	protected void setMessageId(String messageId)
+	{
+		this.messageId = messageId;
+	}
+	
+	protected void setInReplyTo(String inReplyTo)
+	{
+		this.inReplyTo = inReplyTo;
+	}
+	
+	protected void setUsers(List users)
+	{
+		this.users = users;
 	}
 	
 	/**
@@ -236,7 +266,6 @@ public class Spammer
 
 	/**
 	 * Gets the email body
-	 * 
 	 * @return String with the email body that will be sent to the user
 	 */
 	public String getMessageBody()
