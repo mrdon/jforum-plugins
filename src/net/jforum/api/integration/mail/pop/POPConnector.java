@@ -13,12 +13,14 @@ import javax.mail.Flags.Flag;
 
 import net.jforum.entities.MailIntegration;
 import net.jforum.exceptions.MailException;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * Handles the connection to the POP server.
  * 
  * @author Rafael Steil
- * @version $Id: POPConnector.java,v 1.3 2006/08/31 02:12:24 rafaelsteil Exp $
+ * @version $Id: POPConnector.java,v 1.4 2006/10/05 02:00:23 rafaelsteil Exp $
  */
 public class POPConnector
 {
@@ -59,10 +61,10 @@ public class POPConnector
 	public void openConnection()
 	{
 		try {
-			Properties p = new Properties();
-			Session session = Session.getDefaultInstance(p);
+			Session session = Session.getDefaultInstance(new Properties());
 			
-			this.store = session.getStore("pop3");
+			this.store = session.getStore(this.mailIntegration.isSSL() ? "pop3s" : "pop3");
+
 			this.store.connect(this.mailIntegration.getPopHost(), 
 					this.mailIntegration.getPopPort(), 
 					this.mailIntegration.getPopUsername(),
@@ -71,7 +73,7 @@ public class POPConnector
 			this.folder = this.store.getFolder("INBOX");
 			
 			if (folder == null) {
-				throw new Exception("No INBOX");
+				throw new Exception("No Inbox");
 			}
 			
 			this.folder.open(Folder.READ_WRITE);
@@ -88,7 +90,8 @@ public class POPConnector
 	 */
 	public void closeConnection()
 	{
-		this.closeConnection(true);
+		boolean deleteMessages = !SystemGlobals.getBoolValue(ConfigKeys.MAIL_POP3_DEBUG_KEEP_MESSAGES);
+		this.closeConnection(deleteMessages);
 	}
 	
 	/**
@@ -101,7 +104,7 @@ public class POPConnector
 			this.markAllMessagesAsDeleted();
 		}
 		
-		if (this.folder != null) try { this.folder.close(true); } catch (Exception e) {}
+		if (this.folder != null) try { this.folder.close(false); } catch (Exception e) {}
 		if (this.store != null) try { this.store.close(); } catch (Exception e) {}
 	}
 	

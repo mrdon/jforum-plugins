@@ -51,7 +51,7 @@ import net.jforum.entities.Topic;
  * Represents the In-Reply-To and Message-ID mail header.
  * 
  * @author Rafael Steil
- * @version $Id: MessageId.java,v 1.1 2006/10/04 02:51:12 rafaelsteil Exp $
+ * @version $Id: MessageId.java,v 1.2 2006/10/05 02:00:23 rafaelsteil Exp $
  */
 public class MessageId
 {
@@ -111,7 +111,7 @@ public class MessageId
 	 */
 	public static MessageId parse(String header)
 	{
-		MessageId irt = new MessageId();
+		MessageId messageId = new MessageId();
 		
 		if (header != null) {
 			// <postId.topicId.forumId@host>
@@ -121,12 +121,12 @@ public class MessageId
 				String s = matcher.group(2);
 				
 				try {
-					irt.topicId = Integer.parseInt(s);
+					messageId.topicId = Integer.parseInt(s);
 				}
 				catch (Exception e) { }
 			}
 		}
 		
-		return irt;
+		return messageId;
 	}
 }

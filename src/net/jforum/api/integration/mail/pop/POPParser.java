@@ -8,20 +8,27 @@ import java.util.List;
 
 import javax.mail.Message;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author Rafael Steil
- * @version $Id: POPParser.java,v 1.2 2006/08/27 01:50:22 rafaelsteil Exp $
+ * @version $Id: POPParser.java,v 1.3 2006/10/05 02:00:23 rafaelsteil Exp $
  */
 public class POPParser
 {
+	private static Logger logger = Logger.getLogger(POPParser.class);
+	
 	private List messages = new ArrayList();
 	
 	public void parseMessages(POPConnector connector)
 	{
-		Message[] messages = connector.listMessages();
+		Message[] connectorMessages = connector.listMessages();
 		
-		for (int i = 0; i < messages.length; i++) {
-			this.messages.add(new POPMessage(messages[i]));
+		for (int i = 0; i < connectorMessages.length; i++) {
+			POPMessage message = new POPMessage(connectorMessages[i]);
+			this.messages.add(message);
+			
+			logger.debug("Retrieved message " + message);
 		}
 	}
 	

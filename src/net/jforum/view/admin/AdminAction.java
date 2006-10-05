@@ -52,6 +52,7 @@ import java.net.URLConnection;
 import net.jforum.Command;
 import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
+import net.jforum.api.integration.mail.pop.POPListener;
 import net.jforum.context.RequestContext;
 import net.jforum.context.ResponseContext;
 import net.jforum.dao.DataAccessDriver;
@@ -69,7 +70,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: AdminAction.java,v 1.19 2006/08/23 02:13:36 rafaelsteil Exp $
+ * @version $Id: AdminAction.java,v 1.20 2006/10/05 02:00:24 rafaelsteil Exp $
  */
 public class AdminAction extends Command {
 
@@ -124,6 +125,12 @@ public class AdminAction extends Command {
 			
 			this.checkBoardVersion();
 		}
+	}
+	
+	public void fetchMail() throws Exception
+	{
+		new POPListener().execute(null);
+		this.main();
 	}
 	
 	private void checkBoardVersion()

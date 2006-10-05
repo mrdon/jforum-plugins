@@ -597,6 +597,7 @@ CREATE TABLE jforum_mail_integration (
 	pop_password VARCHAR(100) NOT NULL,
 	pop_host VARCHAR(100) NOT NULL,
 	pop_port INT DEFAULT 110,
+	pop_ssl INT DEFAULT 0,
 	KEY(forum_id)
 ) TYPE=InnoDB;
 

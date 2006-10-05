@@ -18,7 +18,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericMailIntegrationDAO.java,v 1.1 2006/08/29 02:32:32 rafaelsteil Exp $
+ * @version $Id: GenericMailIntegrationDAO.java,v 1.2 2006/10/05 02:00:24 rafaelsteil Exp $
  */
 public class GenericMailIntegrationDAO implements MailIntegrationDAO
 {
@@ -79,6 +79,7 @@ public class GenericMailIntegrationDAO implements MailIntegrationDAO
 		mi.setPopPassword(rs.getString("pop_password"));
 		mi.setPopPort(rs.getInt("pop_port"));
 		mi.setPopUsername(rs.getString("pop_username"));
+		mi.setSSL(rs.getInt("pop_ssl") == 1);
 		
 		return mi;
 	}
