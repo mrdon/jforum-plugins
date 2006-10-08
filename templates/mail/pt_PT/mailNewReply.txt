@@ -1,4 +1,5 @@
 <#setting number_format = "#"/>
+<#if !message?exists>
 Olá,
 
 Recebeu este e-mail porque o tópico "${topic.title}" recebeu uma nova resposta desde a sua última visita.
@@ -9,3 +10,6 @@ ${path}
 Se desejar parar de receber notificações para este tópico, clique no link abaixo:
 
 ${unwatch}
+<#else>
+<#include "mailNewReplyWithContents.htm"/>
+</#if>

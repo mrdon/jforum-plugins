@@ -5,4 +5,4 @@ Por favor, use o link abaixo para finalizar o seu registo:
 
 ${url}
 
-O seu username é: ${user.username}
+Lembre-se: o seu username é: ${user.username}
