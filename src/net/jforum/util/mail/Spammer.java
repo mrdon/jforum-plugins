@@ -73,14 +73,14 @@ import freemarker.template.Template;
  * Dispatch emails to the world. 
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.27 2006/10/04 02:51:12 rafaelsteil Exp $
+ * @version $Id: Spammer.java,v 1.28 2006/10/09 00:54:09 rafaelsteil Exp $
  */
 public class Spammer
 {
 	private static final Logger logger = Logger.getLogger(Spammer.class);
 
-	private static int MESSAGE_HTML = 0;
-	private static int MESSAGE_TEXT = 1;
+	private static final int MESSAGE_HTML = 0;
+	private static final int MESSAGE_TEXT = 1;
 	
 	private static int messageFormat;
 	private static Session session;
@@ -90,9 +90,11 @@ public class Spammer
 	private Properties mailProps = new Properties();
 	private MimeMessage message;
 	private List users = new ArrayList();
-	private String messageText;
 	private String messageId;
 	private String inReplyTo;
+	private boolean needCustomization;
+	private SimpleHash templateParams;
+	private Template template;
 	
 	protected Spammer() throws MailException
 	{
@@ -144,10 +146,17 @@ public class Spammer
 	                        for (Iterator userIter = this.users.iterator(); userIter.hasNext(); ) {
 	                        	User user = (User)userIter.next();
 	                        	
+	                        	if (this.needCustomization) {
+	                        		this.templateParams.put("user", user);
+	                        		
+	                        		String text = this.processTemplate();
+	                        		this.defineMessageText(text);
+	                        	}
+	                        	
 	                        	Address address = new InternetAddress(user.getEmail());
 	                        	
-	                        	message.setRecipient(Message.RecipientType.TO, address);
-	                            transport.sendMessage(message, new Address[] { address });
+	                        	this.message.setRecipient(Message.RecipientType.TO, address);
+	                            transport.sendMessage(this.message, new Address[] { address });
 	                        }
 	                    }
                     }
@@ -155,17 +164,16 @@ public class Spammer
                     	throw new MailException(e);
                     }
                     finally {
-                    	try { transport.close(); }
-                    	catch (Exception e) {}
+                    	try { transport.close(); } catch (Exception e) {}
                     }
                 }
             }
             else {
-                Address[] addresses = message.getAllRecipients();
+                Address[] addresses = this.message.getAllRecipients();
                 
                 for (int i = 0; i < addresses.length; i++) {
-                    message.setRecipient(Message.RecipientType.TO, addresses[i]);
-                    Transport.send(message, new Address[] { addresses[i] });
+                	this.message.setRecipient(Message.RecipientType.TO, addresses[i]);
+                    Transport.send(this.message, new Address[] { addresses[i] });
                 }
             }
         }
@@ -179,14 +187,11 @@ public class Spammer
 	/**
 	 * Prepares the mail message for sending.
 	 * 
-	 * @param addresses The list of email addresses that will receive the notification
-	 * @param params the parameters to pass to the mail message template
 	 * @param subject the subject of the email
 	 * @param messageFile the path to the mail message template
 	 * @throws MailException
 	 */
-	protected void prepareMessage(SimpleHash params, String subject, String messageFile)
-			throws MailException
+	protected void prepareMessage(String subject, String messageFile) throws MailException
 	{
 		if (this.messageId != null) {
 			this.message = new IdentifiableMimeMessage(session);
@@ -196,31 +201,110 @@ public class Spammer
 			this.message = new MimeMessage(session);
 		}
 		
-		params.put("forumName", SystemGlobals.getValue(ConfigKeys.FORUM_NAME));
+		this.templateParams.put("forumName", SystemGlobals.getValue(ConfigKeys.FORUM_NAME));
 
 		try {
-			String charset = SystemGlobals.getValue(ConfigKeys.MAIL_CHARSET);
-
 			this.message.setSentDate(new Date());
 			this.message.setFrom(new InternetAddress(SystemGlobals.getValue(ConfigKeys.MAIL_SENDER)));
-			this.message.setSubject(subject, charset);
+			this.message.setSubject(subject, SystemGlobals.getValue(ConfigKeys.MAIL_CHARSET));
 			
 			if (this.inReplyTo != null) {
 				this.message.addHeader("In-Reply-To", this.inReplyTo);
 			}
+			
+			this.createTemplate(messageFile);
+			this.needCustomization = this.isCustomizationNeeded();
 
-			this.messageText = this.getMessageText(params, messageFile);
-
-			if (messageFormat == MESSAGE_HTML) {
-				this.message.setContent(this.messageText, "text/html; charset=" + charset);
-			}
-			else {
-				this.message.setText(this.messageText, charset);
+			// If we don't need to customize any part of the message, 
+			// then build the generic text right now
+			if (!this.needCustomization) {
+				String text = this.processTemplate();
+				this.defineMessageText(text);
 			}
 		}
 		catch (Exception e) {
 			throw new MailException(e);
 		}
+	}
+	
+	/**
+	 * Set the text contents of the email we're sending
+	 * @param text the text to set
+	 * @throws MessagingException
+	 */
+	private void defineMessageText(String text) throws MessagingException
+	{
+		String charset = SystemGlobals.getValue(ConfigKeys.MAIL_CHARSET);
+		
+		if (messageFormat == MESSAGE_HTML) {
+			this.message.setContent(text, "text/html; charset=" + charset);
+		}
+		else {
+			this.message.setText(text, charset);
+		}
+	}
+	
+	/**
+	 * Gets the message text to send in the email.
+	 * 
+	 * @param messageFile The optional message file to load the text. 
+	 * @return The email message text
+	 * @throws Exception
+	 */
+	protected void createTemplate(String messageFile) throws Exception
+	{
+		String templateEncoding = SystemGlobals.getValue(ConfigKeys.MAIL_TEMPLATE_ENCODING);
+
+		if (templateEncoding == null || "".equals(templateEncoding.trim())) {
+			this.template = JForumExecutionContext.templateConfig().getTemplate(messageFile);
+		}
+		else {
+			this.template = JForumExecutionContext.templateConfig().getTemplate(messageFile, templateEncoding);
+		}
+	}
+
+	/**
+	 * Merge the template data, creating the final content.
+	 * This method should only be called after {@link #createTemplate(String)}
+	 * and {@link #setTemplateParams(SimpleHash)}
+	 * 
+	 * @return the generated content
+	 * @throws Exception
+	 */
+	private String processTemplate() throws Exception
+	{
+		StringWriter writer = new StringWriter();
+		this.template.process(this.templateParams, writer);
+		return writer.toString();
+	}
+	
+	/**
+	 * Set the parameters for the template being processed
+	 * @param params the parameters to the template
+	 */
+	protected void setTemplateParams(SimpleHash params)
+	{
+		this.templateParams = params;
+	}
+	
+	/**
+	 * Check if we have to send customized emails
+	 * @return true if there is a need for customized emails
+	 */
+	private boolean isCustomizationNeeded()
+	{
+		boolean need = false;
+		
+		for (Iterator iter = this.users.iterator(); iter.hasNext(); ) {
+			User user = (User)iter.next();
+
+			if (user.notifyText()) {
+				need = true;
+				break;
+			}
+		}
+		
+		return need;
 	}
 	
 	protected void setMessageId(String messageId)
@@ -236,41 +320,6 @@ public class Spammer
 	protected void setUsers(List users)
 	{
 		this.users = users;
-	}
-	
-	/**
-	 * Gets the message text to send in the email.
-	 * 
-	 * @param params The optional params. If no need of any, just pass null
-	 * @param messageFile The optional message file to load the text. 
-	 * @return The email message text
-	 * @throws Exception
-	 */
-	protected String getMessageText(SimpleHash params, String messageFile) throws Exception
-	{
-		String templateEncoding = SystemGlobals.getValue(ConfigKeys.MAIL_TEMPLATE_ENCODING);
-		StringWriter sWriter = new StringWriter();
-		Template template;
-
-		if (templateEncoding == null || "".equals(templateEncoding.trim())) {
-			template = JForumExecutionContext.templateConfig().getTemplate(messageFile);
-		}
-		else {
-			template = JForumExecutionContext.templateConfig().getTemplate(messageFile, templateEncoding);
-		}
-		
-		template.process(params, sWriter);
-		
-		return sWriter.toString();
-	}
-
-	/**
-	 * Gets the email body
-	 * @return String with the email body that will be sent to the user
-	 */
-	public String getMessageBody()
-	{
-		return this.messageText;
 	}
 
 	private String localhostProperty(boolean ssl)

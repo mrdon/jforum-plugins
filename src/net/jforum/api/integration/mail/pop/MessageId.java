@@ -42,6 +42,7 @@
  */
 package net.jforum.api.integration.mail.pop;
 
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,10 +52,11 @@ import net.jforum.entities.Topic;
  * Represents the In-Reply-To and Message-ID mail header.
  * 
  * @author Rafael Steil
- * @version $Id: MessageId.java,v 1.2 2006/10/05 02:00:23 rafaelsteil Exp $
+ * @version $Id: MessageId.java,v 1.3 2006/10/09 00:54:08 rafaelsteil Exp $
  */
 public class MessageId
 {
+	private static final Random random = new Random(System.currentTimeMillis());
 	private int topicId;
 	
 	/**
@@ -69,7 +71,7 @@ public class MessageId
 	
 	/**
 	 * Constructs the Message-ID header.
-	 * The form is "&lt;postId.topicId.forumId@jforum&gt;".
+	 * The form is "&lt;postId.topicId.forumId.randomNumber@jforum&gt;".
 	 * 
 	 * @param postId the post id of this message
 	 * @param topicId the topic id of this message
@@ -85,13 +87,16 @@ public class MessageId
 			.append(topicId)
 			.append('.')
 			.append(forumId)
+			.append('.')
+			.append(System.currentTimeMillis())
+			.append(random.nextDouble() * 999999999)
 			.append("@jforum>")
 			.toString();
 	}
 
 	/**
 	 * Constructs the In-Reply-To header.
-	 * The form is "&lt;topicFirstPostId.topicId.forumId@jforum&gt;".
+	 * The form is "&lt;topicFirstPostId.topicId.forumId.randomNumber@jforum&gt;".
 	 *  
 	 * @param topic The topic we're replying to. If should have at least the
 	 * values for {@link Topic#getFirstPostId()}, {@link Topic#getId()}
@@ -114,8 +119,8 @@ public class MessageId
 		MessageId messageId = new MessageId();
 		
 		if (header != null) {
-			// <postId.topicId.forumId@host>
-			Matcher matcher = Pattern.compile("<(.*)\\.(.*)\\.(.*)@.*>").matcher(header);
+			// <postId.topicId.forumId.randomNumber@host>
+			Matcher matcher = Pattern.compile("<(.*)\\.(.*)\\.(.*)\\.(.*)@.*>").matcher(header);
 			
 			if (matcher.matches()) {
 				String s = matcher.group(2);

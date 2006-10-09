@@ -53,7 +53,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: LostPasswordSpammer.java,v 1.15 2006/10/04 02:51:12 rafaelsteil Exp $
+ * @version $Id: LostPasswordSpammer.java,v 1.16 2006/10/09 00:54:09 rafaelsteil Exp $
  */
 public class LostPasswordSpammer extends Spammer
 {
@@ -76,8 +76,9 @@ public class LostPasswordSpammer extends Spammer
 		recipients.add(user);
 		
 		this.setUsers(recipients);
+		this.setTemplateParams(params);
 
-		super.prepareMessage(params, mailTitle, 
+		super.prepareMessage(mailTitle, 
 			SystemGlobals.getValue(ConfigKeys.MAIL_LOST_PASSWORD_MESSAGE_FILE));
 	}
 }

@@ -73,7 +73,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * @author Vanessa Sabino
  * @author socialnetwork@gmail.com, adding "watch forum" methods.
  * 
- * @version $Id: GenericForumDAO.java,v 1.29 2006/08/28 23:22:28 rafaelsteil Exp $
+ * @version $Id: GenericForumDAO.java,v 1.30 2006/10/09 00:54:10 rafaelsteil Exp $
  */
 public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 {
@@ -810,6 +810,7 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 
 		PreparedStatement p = null;
 		ResultSet rs = null;
+		
 		try {
 			p = JForumExecutionContext.getConnection().prepareStatement(
 					SystemGlobals.getSql("ForumModel.notifyUsers"));
@@ -819,8 +820,8 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 			p.setInt(3, anonUser); // don't notify the anonimous user
 
 			rs = p.executeQuery();
-
 			List users = new ArrayList();
+			
 			while (rs.next()) {
 				User user = new User();
 
@@ -828,6 +829,8 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 				user.setEmail(rs.getString("user_email"));
 				user.setUsername(rs.getString("username"));
 				user.setLang(rs.getString("user_lang"));
+				user.setNotifyAlways(rs.getInt("user_notify_always") == 1);
+				user.setNotifyText(rs.getInt("user_notify_text") == 1);
 
 				users.add(user);
 			}

@@ -26,7 +26,7 @@ import net.jforum.view.forum.PostAction;
 
 /**
  * @author Rafael Steil
- * @version $Id: POPPostAction.java,v 1.8 2006/10/04 02:51:12 rafaelsteil Exp $
+ * @version $Id: POPPostAction.java,v 1.9 2006/10/09 00:54:08 rafaelsteil Exp $
  */
 public class POPPostAction
 {
@@ -56,8 +56,7 @@ public class POPPostAction
 				User user = this.findUser(m.getSender());
 				
 				if (user == null) {
-					// TODO: now what?
-					logger.warn("Could not find user. Email is " + m.getSender());
+					logger.warn("Could not find user with email " + m.getSender() + ". Ignoring his message.");
 					continue;
 				}
 				

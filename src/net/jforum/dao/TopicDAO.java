@@ -47,6 +47,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.jforum.entities.Topic;
+import net.jforum.entities.User;
 
 /**
 * Model interface for {@link net.jforum.entities.Topic}.
@@ -56,7 +57,7 @@ import net.jforum.entities.Topic;
  * select some specific data.
  *
  * @author Rafael Steil
- * @version $Id: TopicDAO.java,v 1.11 2006/08/20 22:47:22 rafaelsteil Exp $
+ * @version $Id: TopicDAO.java,v 1.12 2006/10/09 00:54:13 rafaelsteil Exp $
  */
 public interface TopicDAO 
 {
@@ -214,7 +215,14 @@ public interface TopicDAO
 	public List notifyUsers(Topic topic) ;
 	
 	/**
-	 * Subscribe the user for notification of new post on the topic
+	 * Subscribe a set of users for notification of new post in the topic
+	 * @param topicId the topic id
+	 * @param users the relation of {@link User} instances to subscribe
+	 */
+	public void subscribeUsers(int topicId, List users);
+	
+	/**
+	 * Subscribe the user for notification of new post in the topic
 	 *  
 	 * @param topicId The topic id
 	 * @param userId The user id

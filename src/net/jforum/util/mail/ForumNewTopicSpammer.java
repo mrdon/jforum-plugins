@@ -56,7 +56,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumNewTopicSpammer.java,v 1.3 2006/10/04 02:51:12 rafaelsteil Exp $
+ * @version $Id: ForumNewTopicSpammer.java,v 1.4 2006/10/09 00:54:09 rafaelsteil Exp $
  */
 public class ForumNewTopicSpammer extends Spammer 
 {
@@ -72,16 +72,19 @@ public class ForumNewTopicSpammer extends Spammer
 		params.put("forumLink", forumLink);
 		params.put("unwatch", unwatch);
 		
-		boolean includeMessage = SystemGlobals.getBoolValue(ConfigKeys.MAIL_NEW_ANSWER_INCLUDE_MESSAGE);
 		this.setUsers(users);
-
-		if (post != null && includeMessage) {
+		
+		if (post != null) {
 			post = PostCommon.preparePostForDisplay(post);
 			params.put("message", post.getText());
 		}
 		
-		super.prepareMessage(params,
-			MessageFormat.format(SystemGlobals.getValue(ConfigKeys.MAIL_NEW_TOPIC_SUBJECT), new Object[] { topic.getTitle() }),
+		this.setTemplateParams(params);
+		
+		String subject = SystemGlobals.getValue(ConfigKeys.MAIL_NEW_TOPIC_SUBJECT);
+		
+		super.prepareMessage(
+			MessageFormat.format(subject, new Object[] { topic.getTitle() }),
 			SystemGlobals.getValue(ConfigKeys.MAIL_NEW_TOPIC_MESSAGE_FILE));
 	}
 

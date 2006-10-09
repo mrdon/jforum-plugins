@@ -48,7 +48,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.97 2006/10/05 02:00:25 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.98 2006/10/09 00:54:11 rafaelsteil Exp $
 */
 
 public class ConfigKeys 
@@ -176,7 +176,6 @@ public class ConfigKeys
 	public static final String MAIL_CHARSET = "mail.charset";
 	public static final String MAIL_TEMPLATE_ENCODING = "mail.template.encoding";
 	public static final String MAIL_NEW_ANSWER_MESSAGE_FILE = "mail.newAnswer.messageFile";
-	public static final String MAIL_NEW_ANSWER_INCLUDE_MESSAGE = "mail.newAnswer.includeMessage";
 	public static final String MAIL_NEW_ANSWER_SUBJECT = "mail.newAnswer.subject";
 	public static final String MAIL_NEW_PM_SUBJECT = "mail.newPm.subject";
 	public static final String MAIL_NEW_PM_MESSAGE_FILE = "mail.newPm.messageFile";

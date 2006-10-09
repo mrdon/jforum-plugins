@@ -72,7 +72,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTopicDAO.java,v 1.17 2006/08/29 00:57:50 rafaelsteil Exp $
+ * @version $Id: GenericTopicDAO.java,v 1.18 2006/10/09 00:54:10 rafaelsteil Exp $
  */
 public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 {
@@ -569,6 +569,7 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
+		
 		try {
 			stmt = JForumExecutionContext.getConnection().prepareStatement(
 					SystemGlobals.getSql("TopicModel.notifyUsers"));
@@ -580,6 +581,7 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 			rs = stmt.executeQuery();
 
 			List users = new ArrayList();
+			
 			while (rs.next()) {
 				User user = new User();
 
@@ -587,17 +589,17 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 				user.setEmail(rs.getString("user_email"));
 				user.setUsername(rs.getString("username"));
 				user.setLang(rs.getString("user_lang"));
+				user.setNotifyText(rs.getInt("user_notify_text") == 1);
 
 				users.add(user);
 			}
+			
 			rs.close();
-			rs = null;
 			stmt.close();
-			stmt = null;
 
 			// Set read status to false
 			stmt = JForumExecutionContext.getConnection().prepareStatement(
-					SystemGlobals.getSql("TopicModel.markAllAsUnread"));
+				SystemGlobals.getSql("TopicModel.markAllAsUnread"));
 			stmt.setInt(1, topic.getId());
 			stmt.setInt(2, posterId); // don't notify the poster
 			stmt.setInt(3, anonUser); // don't notify the anonimous user
@@ -613,21 +615,26 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 			DbUtils.close(rs, stmt);
 		}
 	}
-
+	
 	/**
-	 * @see net.jforum.dao.TopicDAO#subscribeUser(int, int)
+	 * @see net.jforum.dao.TopicDAO#subscribeUsers(int, java.util.List)
 	 */
-	public void subscribeUser(int topicId, int userId)
+	public void subscribeUsers(int topicId, List users)
 	{
 		PreparedStatement p = null;
+		
 		try {
 			p = JForumExecutionContext.getConnection().prepareStatement(
 					SystemGlobals.getSql("TopicModel.subscribeUser"));
 
 			p.setInt(1, topicId);
-			p.setInt(2, userId);
-
-			p.executeUpdate();
+			
+			for (Iterator iter = users.iterator(); iter.hasNext(); ) {
+				int userId = ((User)iter.next()).getId();
+				
+				p.setInt(2, userId);
+				p.executeUpdate();
+			}
 		}
 		catch (SQLException e) {
 			throw new DatabaseException(e);
@@ -635,6 +642,20 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 		finally {
 			DbUtils.close(p);
 		}
+	}
+
+	/**
+	 * @see net.jforum.dao.TopicDAO#subscribeUser(int, int)
+	 */
+	public void subscribeUser(int topicId, int userId)
+	{
+		User user = new User();
+		user.setId(userId);
+		
+		List l = new ArrayList();
+		l.add(user);
+		
+		this.subscribeUsers(topicId, l);
 	}
 
 	/**

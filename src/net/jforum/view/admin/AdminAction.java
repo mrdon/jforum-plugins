@@ -70,7 +70,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: AdminAction.java,v 1.20 2006/10/05 02:00:24 rafaelsteil Exp $
+ * @version $Id: AdminAction.java,v 1.21 2006/10/09 00:54:08 rafaelsteil Exp $
  */
 public class AdminAction extends Command {
 
@@ -129,7 +129,17 @@ public class AdminAction extends Command {
 	
 	public void fetchMail() throws Exception
 	{
-		new POPListener().execute(null);
+		new Thread(new Runnable() {
+			public void run() {
+				try {
+					new POPListener().execute(null);
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
+		
 		this.main();
 	}
 	
@@ -201,20 +211,11 @@ public class AdminAction extends Command {
 		}
 		finally {
 			if (is != null) {
-				try {
-                    is.close();
-                }
-                catch (Exception e) {
-                    // catch error of in strean
-                }
+				try {  is.close(); } catch (Exception e) {}
 			}
+			
 			if (os != null) {
-				try {
-                    os.close();
-                }
-                catch (Exception e) {
-                    // catch error of in strean
-                }
+				try { os.close(); } catch (Exception e) {}
 			}
 		}
 		

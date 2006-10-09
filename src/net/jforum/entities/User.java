@@ -40,7 +40,7 @@
  * The JForum Project
  * http://www.jforum.net 
  * 
- * $Id: User.java,v 1.19 2006/08/20 22:47:35 rafaelsteil Exp $
+ * $Id: User.java,v 1.20 2006/10/09 00:54:11 rafaelsteil Exp $
  */
 package net.jforum.entities;
 
@@ -81,6 +81,8 @@ public class User implements Serializable
 	private boolean viewOnlineEnabled = true;
 	private boolean notifyPrivateMessagesEnabled = true;
 	private boolean notifyOnMessagesEnabled = true;
+	private boolean notifyAlways;
+	private boolean notifyText;
 	private String username;
 	private String password;
 	private Date lastVisit;
@@ -866,5 +868,37 @@ public class User implements Serializable
 	 */
 	public void setBiography(String biography) {
 		this.biography = biography;
+	}
+
+	/**
+	 * @return the notifyAlways
+	 */
+	public boolean notifyAlways()
+	{
+		return this.notifyAlways;
+	}
+
+	/**
+	 * @return the notifyText
+	 */
+	public boolean notifyText()
+	{
+		return this.notifyText;
+	}
+
+	/**
+	 * @param notifyAlways the notifyAlways to set
+	 */
+	public void setNotifyAlways(boolean notifyAlways)
+	{
+		this.notifyAlways = notifyAlways;
+	}
+
+	/**
+	 * @param notifyText the notifyText to set
+	 */
+	public void setNotifyText(boolean notifyText)
+	{
+		this.notifyText = notifyText;
 	}
 }

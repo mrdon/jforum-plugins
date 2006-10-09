@@ -50,11 +50,13 @@ import java.util.Map;
 import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
+import net.jforum.dao.TopicDAO;
 import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
 import net.jforum.entities.LastPostInfo;
 import net.jforum.entities.Post;
 import net.jforum.entities.Topic;
+import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
 import net.jforum.repository.ForumRepository;
 import net.jforum.util.concurrent.executor.QueuedExecutor;
@@ -67,7 +69,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumCommon.java,v 1.18 2006/10/02 02:15:36 rafaelsteil Exp $
+ * @version $Id: ForumCommon.java,v 1.19 2006/10/09 00:54:12 rafaelsteil Exp $
  */
 public class ForumCommon 
 {
@@ -176,7 +178,7 @@ public class ForumCommon
 	 * 
 	 * @param f The Forum changed
 	 * @param t The new topic
-	 * @param post TODO
+	 * @param post the newly created message
 	 */
 	public static void notifyUsers(Forum f, Topic t, Post post)
 	{
@@ -188,6 +190,10 @@ public class ForumCommon
 				// we only have to send an email if there are users
 				// subscribed to the topic
 				if (usersToNotify != null && usersToNotify.size() > 0) {
+					// Subscribe all users for further notifications in the new topic 
+					TopicDAO topicDao = DataAccessDriver.getInstance().newTopicDAO();
+					topicDao.subscribeUsers(t.getId(), filterNotifyAlways(usersToNotify));
+					
 					QueuedExecutor.getInstance().execute(
 						new EmailSenderTask(new ForumNewTopicSpammer(f, t, post, usersToNotify)));
 				}
@@ -196,5 +202,26 @@ public class ForumCommon
 				logger.warn("Error while sending notification emails: " + e);
 			}
 		}
+	}
+	
+	/**
+	 * Given a list of {@link User} instances, return only the ones
+	 * with {@link User#notifyAlways()} equals true
+	 * @param users the list of users to check
+	 * @return a new list containing only users with {@link User#notifyAlways()} equals true
+	 */
+	private static List filterNotifyAlways(List users)
+	{
+		List l = new ArrayList();
+		
+		for (Iterator iter = users.iterator(); iter.hasNext(); ) {
+			User user = (User)iter.next();
+			
+			if (user.notifyAlways()) {
+				l.add(user);
+			}
+		}
+		
+		return l;
 	}
 }

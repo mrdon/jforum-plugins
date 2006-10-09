@@ -69,7 +69,6 @@ DROP TABLE IF EXISTS jforum_forums_watch;
 CREATE TABLE jforum_forums_watch (
   forum_id INT NOT NULL,
   user_id INT NOT NULL,
-  is_read tinyint(1) DEFAULT 1,
   INDEX idx_fw_forum (forum_id),
   INDEX idx_fw_user (user_id)
 ) TYPE=InnoDB;
@@ -312,6 +311,8 @@ CREATE TABLE jforum_users (
   user_allow_pm tinyint(1) default '1',
   user_allow_viewonline tinyint(1) default '1',
   user_notify tinyint(1) default '1',
+  user_notify_always tinyint(1) default '0',
+  user_notify_text tinyint(1) default '0',
   user_notify_pm tinyint(1) default '1',
   user_popup_pm tinyint(1) default '1',
   rank_id INT default '1',

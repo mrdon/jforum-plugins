@@ -57,7 +57,7 @@ import freemarker.template.SimpleHash;
 /**
  * Notify users of replies to existing topics
  * @author Rafael Steil
- * @version $Id: TopicReplySpammer.java,v 1.2 2006/10/04 02:51:12 rafaelsteil Exp $
+ * @version $Id: TopicReplySpammer.java,v 1.3 2006/10/09 00:54:09 rafaelsteil Exp $
  */
 public class TopicReplySpammer extends Spammer 
 {
@@ -93,9 +93,7 @@ public class TopicReplySpammer extends Spammer
 		this.setMessageId(MessageId.buildMessageId(post.getId(), topic.getId(), topic.getForumId()));
 		this.setUsers(users);
 		
-		boolean includeMessage = SystemGlobals.getBoolValue(ConfigKeys.MAIL_NEW_ANSWER_INCLUDE_MESSAGE);
-
-		if (post != null && includeMessage) {
+		if (post != null) {
 			post = PostCommon.preparePostForDisplay(post);
 			params.put("message", post.getText());
 		}
@@ -104,8 +102,11 @@ public class TopicReplySpammer extends Spammer
 			this.setInReplyTo(MessageId.buildInReplyTo(topic));
 		}
 		
-		this.prepareMessage(params,
-			MessageFormat.format(SystemGlobals.getValue(ConfigKeys.MAIL_NEW_ANSWER_SUBJECT), new Object[] { topic.getTitle() }),
+		this.setTemplateParams(params);
+		String subject = SystemGlobals.getValue(ConfigKeys.MAIL_NEW_ANSWER_SUBJECT);
+
+		this.prepareMessage(
+			MessageFormat.format(subject, new Object[] { topic.getTitle() }),
 			SystemGlobals.getValue(ConfigKeys.MAIL_NEW_ANSWER_MESSAGE_FILE));
 	}
 

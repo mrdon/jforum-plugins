@@ -53,7 +53,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageSpammer.java,v 1.7 2006/10/04 02:51:11 rafaelsteil Exp $
+ * @version $Id: PrivateMessageSpammer.java,v 1.8 2006/10/09 00:54:09 rafaelsteil Exp $
  */
 public class PrivateMessageSpammer extends Spammer
 {
@@ -77,9 +77,9 @@ public class PrivateMessageSpammer extends Spammer
 		recipients.add(user);
 		
 		this.setUsers(recipients);
+		this.setTemplateParams(params);
 		
-		super.prepareMessage(params, 
-			SystemGlobals.getValue(ConfigKeys.MAIL_NEW_PM_SUBJECT),
+		super.prepareMessage(SystemGlobals.getValue(ConfigKeys.MAIL_NEW_PM_SUBJECT),
 			SystemGlobals.getValue(ConfigKeys.MAIL_NEW_PM_MESSAGE_FILE));
 	}
 }

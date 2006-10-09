@@ -59,7 +59,7 @@ import freemarker.template.SimpleHash;
  * General AJAX utility methods. 
  * 
  * @author Rafael Steil
- * @version $Id: AjaxUtils.java,v 1.9 2006/10/04 02:51:14 rafaelsteil Exp $
+ * @version $Id: AjaxUtils.java,v 1.10 2006/10/09 00:54:12 rafaelsteil Exp $
  */
 public class AjaxUtils
 {
@@ -102,7 +102,7 @@ public class AjaxUtils
 				
 				this.setUsers(l);
 				
-				this.prepareMessage(new SimpleHash(), "JForum Test Mail", null);
+				this.prepareMessage("JForum Test Mail", null);
 			}
 			
 			protected String getMessageText(SimpleHash params, String messageFile) throws Exception {

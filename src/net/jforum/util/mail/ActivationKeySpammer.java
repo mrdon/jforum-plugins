@@ -52,7 +52,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author James Young
- * @version $Id: ActivationKeySpammer.java,v 1.9 2006/10/04 02:51:11 rafaelsteil Exp $
+ * @version $Id: ActivationKeySpammer.java,v 1.10 2006/10/09 00:54:09 rafaelsteil Exp $
  */
 public class ActivationKeySpammer extends Spammer
 {
@@ -78,8 +78,9 @@ public class ActivationKeySpammer extends Spammer
 		recipients.add(u);
 		
 		this.setUsers(recipients);
+		this.setTemplateParams(params);
 
-		this.prepareMessage(params, SystemGlobals.getValue(ConfigKeys.MAIL_ACTIVATION_KEY_SUBJECT), 
+		this.prepareMessage(SystemGlobals.getValue(ConfigKeys.MAIL_ACTIVATION_KEY_SUBJECT), 
 				SystemGlobals.getValue(ConfigKeys.MAIL_ACTIVATION_KEY_MESSAGE_FILE));
 	}
 }
