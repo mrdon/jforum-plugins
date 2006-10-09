@@ -52,7 +52,7 @@ import net.jforum.entities.Topic;
  * Represents the In-Reply-To and Message-ID mail header.
  * 
  * @author Rafael Steil
- * @version $Id: MessageId.java,v 1.3 2006/10/09 00:54:08 rafaelsteil Exp $
+ * @version $Id: MessageId.java,v 1.4 2006/10/09 03:05:54 rafaelsteil Exp $
  */
 public class MessageId
 {
@@ -89,7 +89,7 @@ public class MessageId
 			.append(forumId)
 			.append('.')
 			.append(System.currentTimeMillis())
-			.append(random.nextDouble() * 999999999)
+			.append(random.nextInt(999999999))
 			.append("@jforum>")
 			.toString();
 	}
@@ -120,7 +120,7 @@ public class MessageId
 		
 		if (header != null) {
 			// <postId.topicId.forumId.randomNumber@host>
-			Matcher matcher = Pattern.compile("<(.*)\\.(.*)\\.(.*)\\.(.*)@.*>").matcher(header);
+			Matcher matcher = Pattern.compile("<(.*?)\\.(.*?)\\.(.*?)\\.(.*?)@.*>").matcher(header);
 			
 			if (matcher.matches()) {
 				String s = matcher.group(2);
