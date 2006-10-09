@@ -1,5 +1,9 @@
 <#setting number_format = "#"/>
-<#if (!message?exists || (user?exists && !user.notifyText))>
+<#assign hasMessageContents = message?exists/>
+<#if hasMessageContents>
+	<#assign hasMessageContents = user?exists && user.notifyText()/>
+</#if>
+<#if !hasMessageContents>
 Hi, 
 
 You received this email because the topic "${topic.title}" has received an answer since your last visit. 
