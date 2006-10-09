@@ -196,6 +196,32 @@ function validateForm()
 						<span class="gen">${I18n.getMessage("User.no")}</span>
 					</td>
 				</tr>
+
+				<tr>
+					<td class="row1">
+						<span class="gen">${I18n.getMessage("User.notifyAlways")}:</span><br/>
+						<span class="gensmall">${I18n.getMessage("User.notifyAlwaysDescription")}</span>
+					</td>
+					<td class="row2">
+						<input type="radio" <#if u.notifyAlways()>checked="checked"</#if> value="1" name="notify_always" /> 
+						<span class="gen">${I18n.getMessage("User.yes")}</span>&nbsp;&nbsp; 
+						<input type="radio" value="0" <#if u.notifyAlways() == false>checked="checked"</#if>  name="notify_always" /> 
+						<span class="gen">${I18n.getMessage("User.no")}</span>
+					</td>
+				</tr>
+
+				<tr>
+					<td class="row1">
+						<span class="gen">${I18n.getMessage("User.notifyText")}:</span>
+					</td>
+					<td class="row2">
+						<input type="radio" <#if u.notifyText()>checked="checked"</#if> value="1" name="notify_text" /> 
+						<span class="gen">${I18n.getMessage("User.yes")}</span>&nbsp;&nbsp; 
+						<input type="radio" value="0" <#if u.notifyText() == false>checked="checked"</#if>  name="notify_text" /> 
+						<span class="gen">${I18n.getMessage("User.no")}</span>
+					</td>
+				</tr>
+
 				<tr>
 					<td class="row1"><span class="gen">${I18n.getMessage("User.privateMessagesNotify")}:</span></td>
 					<td class="row2">
@@ -205,6 +231,7 @@ function validateForm()
 						<span class="gen">${I18n.getMessage("User.no")}</span>
 					</td>
 				</tr>
+				
 				<tr>
 					<td class="row1"><span class="gen">${I18n.getMessage("User.alwaysAttachSignature")}:</span></td>
 					<td class="row2">
@@ -234,7 +261,7 @@ function validateForm()
 					</td>
 				</tr>
 
-								<tr>
+				<tr>
 					<td class="row1"><span class="gen">${I18n.getMessage("User.allowSmilies")}:</span></td>
 					<td class="row2">
 						<input type="radio" value="1" <#if u.isSmiliesEnabled()>checked="checked"</#if> name="allowsmilies" /> 

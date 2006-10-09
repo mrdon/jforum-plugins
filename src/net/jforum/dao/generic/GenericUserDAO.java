@@ -65,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericUserDAO.java,v 1.23 2006/08/28 23:22:28 rafaelsteil Exp $
+ * @version $Id: GenericUserDAO.java,v 1.24 2006/10/09 03:23:46 rafaelsteil Exp $
  */
 public class GenericUserDAO extends AutoKeys implements UserDAO
 {
@@ -197,6 +197,8 @@ public class GenericUserDAO extends AutoKeys implements UserDAO
 		u.setKarma(new KarmaStatus(u.getId(), rs.getDouble("user_karma")));
 		u.setNotifyPrivateMessagesEnabled(rs.getInt("user_notify_pm") == 1);
 		u.setDeleted(rs.getInt("deleted"));
+		u.setNotifyAlways(rs.getInt("user_notify_always") == 1);
+		u.setNotifyText(rs.getInt("user_notify_text") == 1);
 
 		String actkey = rs.getString("user_actkey");
 		u.setActivationKey(actkey == null || "".equals(actkey) ? null : actkey);
@@ -266,7 +268,9 @@ public class GenericUserDAO extends AutoKeys implements UserDAO
 			}
 
 			p.setTimestamp(28, new Timestamp(user.getLastVisit().getTime()));
-			p.setInt(29, user.getId());
+			p.setInt(29, user.notifyAlways() ? 1 : 0);
+			p.setInt(30, user.notifyText() ? 1 : 0);
+			p.setInt(31, user.getId());
 
 			p.executeUpdate();
 		}

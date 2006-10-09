@@ -65,7 +65,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserCommon.java,v 1.20 2006/08/23 02:13:56 rafaelsteil Exp $
+ * @version $Id: UserCommon.java,v 1.21 2006/10/09 03:23:46 rafaelsteil Exp $
  */
 public class UserCommon 
 {
@@ -114,6 +114,8 @@ public class UserCommon
 		u.setLang(request.getParameter("language"));
 		u.setBbCodeEnabled("1".equals(request.getParameter("allowbbcode")));
 		u.setSmiliesEnabled("1".equals(request.getParameter("allowsmilies")));
+		u.setNotifyAlways("1".equals(request.getParameter("notify_always")));
+		u.setNotifyText("1".equals(request.getParameter("notify_text")));
 		
 		String website = SafeHtml.makeSafe(request.getParameter("website"));
 		if (website != null && !"".equals(website.trim()) && !website.toLowerCase().startsWith("http://")) {
