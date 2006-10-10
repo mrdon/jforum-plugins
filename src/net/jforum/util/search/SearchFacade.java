@@ -51,7 +51,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchFacade.java,v 1.6 2006/08/20 22:47:22 rafaelsteil Exp $
+ * @version $Id: SearchFacade.java,v 1.7 2006/10/10 00:40:54 rafaelsteil Exp $
  */
 public class SearchFacade
 {
@@ -72,7 +72,7 @@ public class SearchFacade
 				searchManager = (SearchManager)Class.forName(clazz).newInstance();
 			}
 			catch (Exception e) {
-				e.printStackTrace();
+				logger.warn(e.toString(), e);
 				throw new SearchInstantiationException("Error while tring to start the search manager: " + e);
 			}
 			

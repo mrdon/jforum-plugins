@@ -57,7 +57,7 @@ import org.quartz.impl.StdSchedulerFactory;
 
 /**
  * @author Rafael Steil
- * @version $Id: QuartzSearchManager.java,v 1.6 2006/08/20 22:47:44 rafaelsteil Exp $
+ * @version $Id: QuartzSearchManager.java,v 1.7 2006/10/10 00:40:54 rafaelsteil Exp $
  */
 public class QuartzSearchManager implements SearchManager
 {
@@ -69,9 +69,8 @@ public class QuartzSearchManager implements SearchManager
 	public void init()
 	{
 		try {
-			String filename = SystemGlobals.getValue(ConfigKeys.SEARCH_INDEXER_QUARTZ_CONFIG);
+			String filename = SystemGlobals.getValue(ConfigKeys.QUARTZ_CONFIG);
 			
-			SystemGlobals.loadAdditionalDefaults(filename);
 			String cronExpression = SystemGlobals.getValue(
 					ConfigKeys.QUARTZ_CONTEXT + ConfigKeys.SEARCH_INDEXER_CRON_EXPRESSON);
 			

@@ -48,7 +48,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.98 2006/10/09 00:54:11 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.99 2006/10/10 00:40:55 rafaelsteil Exp $
 */
 
 public class ConfigKeys 
@@ -182,6 +182,7 @@ public class ConfigKeys
 	public static final String MAIL_MESSSAGE_FORMAT = "mail.messageFormat";
 	
 	public static final String MAIL_POP3_DEBUG_KEEP_MESSAGES = "mail.pop3.debug.keep.messages";
+	public static final String MAIL_POP3_INTEGRATION_ENABLED = "mail.pop3.integration.enabled";
 	
 	public static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
 	public static final String MAIL_SMTP_HOST = "mail.smtp.host";
@@ -234,10 +235,11 @@ public class ConfigKeys
 	public static final String REGISTRATION_ENABLED = "registration.enabled";
 	public static final String USERNAME_MAX_LENGTH = "username.max.length";
 
+	public static final String QUARTZ_CONFIG = "quartz.config";
+	
 	public static final String QUARTZ_CONTEXT = "org.quartz.context.";
 	public static final String SEARCH_INDEXING_ENABLED = "search.indexing.enabled";
 	public static final String SEARCH_INDEXER_IMPLEMENTATION = "search.indexer.implementation";
-	public static final String SEARCH_INDEXER_QUARTZ_CONFIG = "search.indexer.quartz.config";
 	public static final String SEARCH_INDEXER_CRON_EXPRESSON = "indexer.cron.expression";
 	public static final String SEARCH_LAST_POST_ID = "last.post.id";
 	public static final String SEARCH_INDEXER_STEP = "indexer.step";

@@ -61,7 +61,7 @@ import org.quartz.JobExecutionException;
 
 /**
  * @author Rafael Steil
- * @version $Id: QuartzSearchIndexerJob.java,v 1.11 2006/08/23 02:24:07 rafaelsteil Exp $
+ * @version $Id: QuartzSearchIndexerJob.java,v 1.12 2006/10/10 00:40:54 rafaelsteil Exp $
  */
 public class QuartzSearchIndexerJob implements Job, Cacheable
 {
@@ -125,7 +125,7 @@ public class QuartzSearchIndexerJob implements Job, Cacheable
 	
 	private Properties loadConfig()
 	{
-		String filename = SystemGlobals.getValue(ConfigKeys.SEARCH_INDEXER_QUARTZ_CONFIG);
+		String filename = SystemGlobals.getValue(ConfigKeys.QUARTZ_CONFIG);
 		
 		try {
 			Properties p = new Properties();

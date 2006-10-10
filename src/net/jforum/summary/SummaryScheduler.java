@@ -62,15 +62,13 @@ import org.quartz.impl.StdSchedulerFactory;
  * @see net.jforum.summary.SummaryJob
  * 
  * @author Franklin S. Dattein (<a href="mailto:franklin@portaljava.com">franklin@portaljava.com</a>)
- * @version $Id: SummaryScheduler.java,v 1.5 2006/08/20 22:47:56 rafaelsteil Exp $
+ * @version $Id: SummaryScheduler.java,v 1.6 2006/10/10 00:40:53 rafaelsteil Exp $
  */
 public class SummaryScheduler
 {
 	private static Scheduler scheduler;
-
 	private static Logger logger = Logger.getLogger(SummaryScheduler.class);
-
-	private static boolean isStarted = false;
+	private static boolean isStarted;
 
 	/**
 	 * Starts the summary Job. Conditions to start: Is not started yet and is enabled on the file
@@ -82,12 +80,10 @@ public class SummaryScheduler
 	 */
 	public static void startJob() throws SchedulerException
 	{
-		boolean isEnabled = new Boolean(SystemGlobals.getValue(ConfigKeys.SUMMARY_IS_ENABLED)).booleanValue();
+		boolean isEnabled = SystemGlobals.getBoolValue(ConfigKeys.SUMMARY_IS_ENABLED);
 		
 		if (!isStarted && isEnabled) {
-			String filename = SystemGlobals.getValue(ConfigKeys.SEARCH_INDEXER_QUARTZ_CONFIG);
-
-			SystemGlobals.loadAdditionalDefaults(filename);
+			String filename = SystemGlobals.getValue(ConfigKeys.QUARTZ_CONFIG);
 
 			String cronExpression = SystemGlobals.getValue("org.quartz.context.summary.cron.expression");
 			scheduler = new StdSchedulerFactory(filename).getScheduler();

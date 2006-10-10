@@ -65,7 +65,7 @@ import freemarker.template.Configuration;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumBaseServlet.java,v 1.20 2006/08/20 22:47:24 rafaelsteil Exp $
+ * @version $Id: JForumBaseServlet.java,v 1.21 2006/10/10 00:40:54 rafaelsteil Exp $
  */
 public class JForumBaseServlet extends HttpServlet
 {
@@ -78,11 +78,15 @@ public class JForumBaseServlet extends HttpServlet
 		try {
 			SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
 			SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
+			
+			String filename = SystemGlobals.getValue(ConfigKeys.QUARTZ_CONFIG);
+			SystemGlobals.loadAdditionalDefaults(filename);
 
 			ConfigLoader.loadDaoImplementation();
 			ConfigLoader.listenForChanges();
 			ConfigLoader.startSearchIndexer();
 			ConfigLoader.startSummaryJob();
+			ConfigLoader.startPop3Integration();
 		}
 		catch (Exception e) {
 			throw new ForumStartupException("Error while starting JForum", e);

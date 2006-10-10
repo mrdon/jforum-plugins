@@ -49,6 +49,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
+import net.jforum.api.integration.mail.pop.POPJobStarter;
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
 import net.jforum.dao.DataAccessDriver;
@@ -69,7 +70,7 @@ import org.quartz.SchedulerException;
  * General utilities methods for loading configurations for JForum.
  * 
  * @author Rafael Steil
- * @version $Id: ConfigLoader.java,v 1.25 2006/08/24 01:06:56 rafaelsteil Exp $
+ * @version $Id: ConfigLoader.java,v 1.26 2006/10/10 00:40:54 rafaelsteil Exp $
  */
 public class ConfigLoader 
 {
@@ -240,5 +241,10 @@ public class ConfigLoader
 	 */
 	public static void startSummaryJob() throws SchedulerException {
 		SummaryScheduler.startJob();
+	}
+	
+	public static void startPop3Integration() throws SchedulerException
+	{
+		POPJobStarter.startJob();
 	}
 }
