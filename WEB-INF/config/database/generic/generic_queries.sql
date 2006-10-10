@@ -717,6 +717,10 @@ SummaryDAO.selectPosts = SELECT p.post_id, p.topic_id, p.forum_id, p.user_id, po
 # MailIntegration
 ###################
 MailIntegration.findAll = SELECT * FROM jforum_mail_integration
+MailIntegration.find = SELECT * FROM jforum_mail_integration WHERE forum_id = ?
+MailIntegration.delete = DELETE FROM jforum_mail_integration WHERE forum_id = ?
+MailIntegration.add = INSERT INTO jforum_mail_integration (forum_id, forum_email, pop_host, pop_username, pop_password, pop_port, pop_ssl) VALUES (?, ?, ?, ?, ?, ?, ?)
+MailIntegration.update = UPDATE jforum_mail_integration SET forum_id = ?, forum_email = ?, pop_host = ?, pop_username = ?, pop_password = ?, pop_port = ?, pop_ssl = ? WHERE forum_id = ?
 
 ############
 # ApiModel

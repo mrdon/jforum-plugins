@@ -18,26 +18,80 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericMailIntegrationDAO.java,v 1.2 2006/10/05 02:00:24 rafaelsteil Exp $
+ * @version $Id: GenericMailIntegrationDAO.java,v 1.3 2006/10/10 00:19:09 rafaelsteil Exp $
  */
 public class GenericMailIntegrationDAO implements MailIntegrationDAO
 {
+	/**
+	 * @see net.jforum.dao.MailIntegrationDAO#add(net.jforum.entities.MailIntegration)
+	 */
 	public void add(MailIntegration integration)
 	{
-		// TODO Auto-generated method stub
-
+		PreparedStatement p = null;
+		
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+				SystemGlobals.getSql("MailIntegration.add"));
+			this.prepareForSave(integration, p);
+			p.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
 	}
-
+	
+	/**
+	 * @see net.jforum.dao.MailIntegrationDAO#delete(int)
+	 */
 	public void delete(int forumId)
 	{
-		// TODO Auto-generated method stub
-
+		PreparedStatement p = null;
+		
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+				SystemGlobals.getSql("MailIntegration.delete"));
+			p.setInt(1, forumId);
+			p.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
 	}
 
+	/**
+	 * @see net.jforum.dao.MailIntegrationDAO#find(int)
+	 */
 	public MailIntegration find(int forumId)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		MailIntegration m = null;
+		
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("MailIntegration.find"));
+			p.setInt(1, forumId);
+			rs = p.executeQuery();
+			
+			if (rs.next()) {
+				m = this.buildMailIntegration(rs);
+			}
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+		
+		return m;
 	}
 
 	/**
@@ -68,6 +122,30 @@ public class GenericMailIntegrationDAO implements MailIntegrationDAO
 		
 		return l;
 	}
+
+	/**
+	 * @see net.jforum.dao.MailIntegrationDAO#update(net.jforum.entities.MailIntegration)
+	 */
+	public void update(MailIntegration integration)
+	{
+		PreparedStatement p = null;
+		
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+				SystemGlobals.getSql("MailIntegration.update"));
+			
+			this.prepareForSave(integration, p);
+			p.setInt(8, integration.getForumId());
+			
+			p.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
 	
 	private MailIntegration buildMailIntegration(ResultSet rs) throws SQLException
 	{
@@ -84,9 +162,20 @@ public class GenericMailIntegrationDAO implements MailIntegrationDAO
 		return mi;
 	}
 
-	public void update(MailIntegration integration)
+	/**
+	 * Given a PreparedStatement, fill its values with the data of a MailIntegration instance
+	 * @param integration the data to fill the statement
+	 * @param p the statement to be filled
+	 * @throws SQLException
+	 */
+	private void prepareForSave(MailIntegration integration, PreparedStatement p) throws SQLException
 	{
-		// TODO Auto-generated method stub
-
+		p.setInt(1, integration.getForumId());
+		p.setString(2, integration.getForumEmail());
+		p.setString(3, integration.getPopHost());
+		p.setString(4, integration.getPopUsername());
+		p.setString(5, integration.getPopPassword());
+		p.setInt(6, integration.getPopPort());
+		p.setInt(7, integration.isSSL() ? 1 : 0);
 	}
 }

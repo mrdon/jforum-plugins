@@ -49,12 +49,14 @@ import net.jforum.dao.CategoryDAO;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
 import net.jforum.dao.GroupSecurityDAO;
+import net.jforum.dao.MailIntegrationDAO;
 import net.jforum.dao.TopicDAO;
 import net.jforum.entities.Category;
 import net.jforum.entities.Forum;
+import net.jforum.entities.MailIntegration;
 import net.jforum.repository.ForumRepository;
-import net.jforum.repository.SecurityRepository;
 import net.jforum.repository.RolesRepository;
+import net.jforum.repository.SecurityRepository;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.Role;
 import net.jforum.security.RoleValue;
@@ -66,7 +68,7 @@ import net.jforum.view.admin.common.ModerationCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.28 2006/08/24 01:07:02 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.29 2006/10/10 00:19:09 rafaelsteil Exp $
  */
 public class ForumAction extends AdminCommand 
 {
@@ -93,19 +95,26 @@ public class ForumAction extends AdminCommand
 	// Edit
 	public void edit()
 	{
+		int forumId = this.request.getIntParameter("forum_id");
+		ForumDAO forumDao = DataAccessDriver.getInstance().newForumDAO();
+		
 		CategoryDAO cm = DataAccessDriver.getInstance().newCategoryDAO();
 		
-		this.context.put("forum", DataAccessDriver.getInstance().newForumDAO().selectById(
-				this.request.getIntParameter("forum_id")));
-		this.context.put("categories", cm.selectAll());
 		this.setTemplateName(TemplateKeys.FORUM_ADMIN_EDIT);
+		this.context.put("categories", cm.selectAll());
 		this.context.put("action", "editSave");
+		this.context.put("forum", forumDao.selectById(forumId));
+		
+		// Mail Integration
+		MailIntegrationDAO integrationDao = DataAccessDriver.getInstance().newMailIntegrationDAO();
+		this.context.put("mailIntegration", integrationDao.find(forumId));
 	}
 	
-	//  Save information
 	public void editSave()
 	{
-		Forum f = new Forum(ForumRepository.getForum(this.request.getIntParameter("forum_id")));
+		ForumDAO forumDao = DataAccessDriver.getInstance().newForumDAO();
+		Forum f = forumDao.selectById(this.request.getIntParameter("forum_id"));
+		
 		boolean moderated = f.isModerated();
 		int categoryId = f.getCategoryId();
 		
@@ -114,7 +123,7 @@ public class ForumAction extends AdminCommand
 		f.setName(this.request.getParameter("forum_name"));
 		f.setModerated("1".equals(this.request.getParameter("moderate")));
 
-		DataAccessDriver.getInstance().newForumDAO().update(f);
+		forumDao.update(f);
 
 		if (moderated != f.isModerated()) {
 			new ModerationCommon().setTopicModerationStatus(f.getId(), f.isModerated());
@@ -131,7 +140,46 @@ public class ForumAction extends AdminCommand
 			ForumRepository.reloadForum(f.getId());
 		}
 		
+		this.handleMailIntegration();
+		
 		this.list();
+	}
+	
+	private void handleMailIntegration()
+	{
+		int forumId = this.request.getIntParameter("forum_id");
+		MailIntegrationDAO dao = DataAccessDriver.getInstance().newMailIntegrationDAO();
+		
+		if (!"1".equals(this.request.getParameter("mail_integration"))) {
+			dao.delete(forumId);
+		}
+		else {
+			boolean exists = dao.find(forumId) != null;
+			
+			MailIntegration m = this.fillMailIntegrationFromRequest();
+			
+			if (exists) {
+				dao.update(m);
+			}
+			else {
+				dao.add(m);
+			}
+		}
+	}
+	
+	private MailIntegration fillMailIntegrationFromRequest()
+	{
+		MailIntegration m = new MailIntegration();
+		
+		m.setForumId(this.request.getIntParameter("forum_id"));
+		m.setForumEmail(this.request.getParameter("forum_email"));
+		m.setPopHost(this.request.getParameter("pop_host"));
+		m.setPopUsername(this.request.getParameter("pop_username"));
+		m.setPopPassword(this.request.getParameter("pop_password"));
+		m.setPopPort(this.request.getIntParameter("pop_port"));
+		m.setSSL("1".equals(this.request.getParameter("requires_ssl")));
+		
+		return m;
 	}
 	
 	public void up()
@@ -261,6 +309,8 @@ public class ForumAction extends AdminCommand
 		
 		SecurityRepository.clean();
 		RolesRepository.clear();
+		
+		this.handleMailIntegration();
 
 		this.list();
 	}
