@@ -5,7 +5,7 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
- * @version $Id: MailIntegration.java,v 1.3 2006/10/05 02:00:24 rafaelsteil Exp $
+ * @version $Id: MailIntegration.java,v 1.4 2006/10/10 01:59:55 rafaelsteil Exp $
  */
 public class MailIntegration
 {
@@ -121,5 +121,20 @@ public class MailIntegration
 	public boolean isSSL()
 	{
 		return this.ssl;
+	}
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return new StringBuffer()
+			.append('[')
+			.append("email=").append(this.forumEmail)
+			.append(", host=").append(this.popHost)
+			.append(", port=").append(this.popPort)
+			.append(", ssl=").append(this.ssl)
+			.append(']')
+			.toString();
 	}
 }

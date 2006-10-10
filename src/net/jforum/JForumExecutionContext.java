@@ -64,7 +64,7 @@ import freemarker.template.SimpleHash;
  * Data execution context. 
  * 
  * @author Rafael Steil
- * @version $Id: JForumExecutionContext.java,v 1.9 2006/08/24 21:02:57 sergemaslyukov Exp $
+ * @version $Id: JForumExecutionContext.java,v 1.10 2006/10/10 01:59:55 rafaelsteil Exp $
  */
 public class JForumExecutionContext
 {
@@ -158,8 +158,6 @@ public class JForumExecutionContext
 		
 		if (validate && c == null) {
 			c = DBConnection.getImplementation().getConnection();
-			
-			logger.debug("Getting a connection for the request: " + c);
 			
 			try {
 				c.setAutoCommit(!SystemGlobals.getBoolValue(ConfigKeys.DATABASE_USE_TRANSACTIONS));
