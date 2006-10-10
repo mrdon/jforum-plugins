@@ -18,19 +18,18 @@ import net.jforum.api.rest.RESTAuthentication;
 
 /**
  * @author Rafael Steil
- * @version $Id: RESTAuthenticationTestCase.java,v 1.2 2006/09/09 21:32:36 rafaelsteil Exp $
+ * @version $Id: RESTAuthenticationTestCase.java,v 1.3 2006/10/10 00:49:02 rafaelsteil Exp $
  */
 public class RESTAuthenticationTestCase extends TestCase
 {
 	public static final String API_KEY = "api.key.test";
-	public static final String API_HASH = "api.hash.test";
 	
 	private Connection connection;
 	
 	public void testInvalid() throws Exception
 	{
 		RESTAuthentication auth = new RESTAuthentication();
-		boolean isValid = auth.validateApiKey("1", "2");
+		boolean isValid = auth.validateApiKey("1");
 		
 		assertFalse("The api key should not be valid", isValid);
 	}
@@ -38,7 +37,7 @@ public class RESTAuthenticationTestCase extends TestCase
 	public void testValid() throws Exception
 	{
 		RESTAuthentication auth = new RESTAuthentication();
-		boolean isValid = auth.validateApiKey(API_KEY, API_HASH);
+		boolean isValid = auth.validateApiKey(API_KEY);
 		
 		assertTrue("The api key should be valid", isValid);
 	}
@@ -60,11 +59,10 @@ public class RESTAuthenticationTestCase extends TestCase
 		
 		try {
 			p = JForumExecutionContext.getConnection()
-				.prepareStatement("INSERT INTO jforum_api (api_key, api_hash, api_validity) "
-						+ " VALUES (?, ?, ?)");
+				.prepareStatement("INSERT INTO jforum_api (api_key, api_validity) "
+						+ " VALUES (?, ?)");
 			p.setString(1, API_KEY);
-			p.setString(2, API_HASH);
-			p.setTimestamp(3, new Timestamp(validity.getTime()));
+			p.setTimestamp(2, new Timestamp(validity.getTime()));
 			p.executeUpdate();
 		}
 		finally {
@@ -81,9 +79,8 @@ public class RESTAuthenticationTestCase extends TestCase
 		
 		try {
 			p = JForumExecutionContext.getConnection()
-				.prepareStatement("DELETE FROM jforum_api WHERE api_key = ? AND api_hash = ?");
+				.prepareStatement("DELETE FROM jforum_api WHERE api_key = ?");
 			p.setString(1, API_KEY);
-			p.setString(2, API_HASH);
 			p.executeUpdate();
 		}
 		finally {

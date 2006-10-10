@@ -14,14 +14,14 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericApiDAO.java,v 1.2 2006/09/09 20:46:24 rafaelsteil Exp $
+ * @version $Id: GenericApiDAO.java,v 1.3 2006/10/10 00:49:03 rafaelsteil Exp $
  */
 public class GenericApiDAO implements ApiDAO
 {
 	/**
-	 * @see net.jforum.dao.ApiDAO#isValid(java.lang.String, java.lang.String)
+	 * @see net.jforum.dao.ApiDAO#isValid(java.lang.String)
 	 */
-	public boolean isValid(String apiKey, String apiHash)
+	public boolean isValid(String apiKey)
 	{
 		boolean status = false;
 		
@@ -32,10 +32,8 @@ public class GenericApiDAO implements ApiDAO
 			p = JForumExecutionContext.getConnection().prepareStatement(
 				SystemGlobals.getSql("ApiModel.isValid"));
 			p.setString(1, apiKey);
-			p.setString(2, apiHash);
 			
 			rs = p.executeQuery();
-			
 			status = rs.next();
 		}
 		catch (Exception e) {

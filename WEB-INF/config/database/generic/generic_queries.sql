@@ -725,4 +725,4 @@ MailIntegration.update = UPDATE jforum_mail_integration SET forum_id = ?, forum_
 ############
 # ApiModel
 ############
-ApiModel.isValid = SELECT 1 FROM jforum_api WHERE api_key = ? AND api_hash = ?
+ApiModel.isValid = SELECT 1 FROM jforum_api WHERE api_key = ?

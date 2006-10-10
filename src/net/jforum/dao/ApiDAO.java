@@ -5,15 +5,14 @@ package net.jforum.dao;
 
 /**
  * @author Rafael Steil
- * @version $Id: ApiDAO.java,v 1.1 2006/09/05 01:20:09 rafaelsteil Exp $
+ * @version $Id: ApiDAO.java,v 1.2 2006/10/10 00:49:04 rafaelsteil Exp $
  */
 public interface ApiDAO
 {
 	/**
 	 * Check if the given API authentication information is valid.
 	 * @param apiKey the api key
-	 * @param apiHash the api hash
 	 * @return <code>true</code> if the information is correct
 	 */
-	public boolean isValid(String apiKey, String apiHash);
+	public boolean isValid(String apiKey);
 }

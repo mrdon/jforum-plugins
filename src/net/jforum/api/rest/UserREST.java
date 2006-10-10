@@ -23,7 +23,7 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserREST.java,v 1.2 2006/09/09 21:32:37 rafaelsteil Exp $
+ * @version $Id: UserREST.java,v 1.3 2006/10/10 00:49:04 rafaelsteil Exp $
  */
 public class UserREST extends Command
 {
@@ -119,11 +119,10 @@ public class UserREST extends Command
 	private void authenticate()
 	{
 		String apiKey = this.requiredRequestParameter("api_key");
-		String apiHash = this.requiredRequestParameter("api_hash");
 		
 		RESTAuthentication auth = new RESTAuthentication();
 		
-		if (!auth.validateApiKey(apiKey, apiHash)) {
+		if (!auth.validateApiKey(apiKey)) {
 			throw new APIException("The provided API authentication information is not valid");
 		}
 	}

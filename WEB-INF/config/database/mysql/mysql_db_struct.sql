@@ -598,7 +598,7 @@ CREATE TABLE jforum_mail_integration (
 	pop_password VARCHAR(100) NOT NULL,
 	pop_host VARCHAR(100) NOT NULL,
 	pop_port INT DEFAULT 110,
-	pop_ssl INT DEFAULT 0,
+	pop_ssl TINYINT DEFAULT '0',
 	KEY(forum_id)
 ) TYPE=InnoDB;
 
@@ -610,6 +610,5 @@ DROP TABLE IF EXISTS jforum_api;
 CREATE TABLE jforum_api (
 	api_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	api_key VARCHAR(32) NOT NULL,
-	api_validity DATETIME NOT NULL,
-	api_hash VARCHAR(32) NOT NULL
+	api_validity DATETIME NOT NULL
 );
