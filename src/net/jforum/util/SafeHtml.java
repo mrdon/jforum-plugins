@@ -67,7 +67,7 @@ import org.htmlparser.nodes.TextNode;
  * <li>http://quickwired.com/kallahar/smallprojects/php_xss_filter_function.php
  * <br>
  * @author Rafael Steil
- * @version $Id: SafeHtml.java,v 1.17 2006/08/20 22:47:42 rafaelsteil Exp $
+ * @version $Id: SafeHtml.java,v 1.18 2006/10/12 06:11:47 rafaelsteil Exp $
  */
 public class SafeHtml 
 {
@@ -174,7 +174,7 @@ public class SafeHtml
 				}
 				
 				if (!welcomeAttributes.contains(name) 
-					|| (name.length() >= 2 && name.charAt(0) == 'o' && name.charAt(1) == 'n')) {
+					|| (name.length() >= 2 && name.charAt(0) == 'O' && name.charAt(1) == 'N')) {
 					continue;
 				}
 				
@@ -186,7 +186,9 @@ public class SafeHtml
 				}
 				
 				if (("HREF".equals(name) || "SRC".equals(name))) {
-					if (!value.startsWith("http://") && !value.startsWith("https://")) {
+					if (!value.startsWith("http://") 
+						&& !value.startsWith("https://")
+						&& !value.startsWith("mailto:")) {
 						continue;
 					}
 				}

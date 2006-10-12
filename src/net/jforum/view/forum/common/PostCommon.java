@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.37 2006/09/25 02:16:42 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.38 2006/10/12 06:11:48 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -103,12 +103,13 @@ public class PostCommon
 		ViewCommon.replaceAll(text, "\n", "<br/> ");
 		
 		p.setText(text.toString());
-		p.setText(alwaysProcess(p.getText(), BBCodeRepository.getBBCollection().getAlwaysProcessList()));
 
 		// Then, search for bb codes
 		if (p.isBbCodeEnabled()) {
 			p.setText(PostCommon.processText(p.getText()));
 		}
+		
+		p.setText(alwaysProcess(p.getText(), BBCodeRepository.getBBCollection().getAlwaysProcessList()));
 
 		// Smilies...
 		if (p.isSmiliesEnabled()) {
