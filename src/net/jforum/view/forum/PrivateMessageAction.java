@@ -66,7 +66,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.37 2006/08/20 22:47:40 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.38 2006/10/15 22:49:50 rafaelsteil Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -306,7 +306,12 @@ public class PrivateMessageAction extends Command
 			if (pm.getType() == PrivateMessageType.NEW) {
 				pm.setType(PrivateMessageType.READ);
 				DataAccessDriver.getInstance().newPrivateMessageDAO().updateType(pm);
-				us.setPrivateMessages(us.getPrivateMessages() - 1);
+				
+				int totalMessages = us.getPrivateMessages();
+
+				if (totalMessages > 0) {
+					us.setPrivateMessages(totalMessages - 1);
+				}
 			}
 			
 			User u = pm.getFromUser();
