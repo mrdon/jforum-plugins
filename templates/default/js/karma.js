@@ -15,12 +15,12 @@
 	function karmaPointsCombo(postId)
 	{
 		document.write('<select name="karma" onchange="karmaVote(this,' + postId + ')">');
-		document.write('	<option value="">${I18n.getMessage("Karma.rateMessage")}</option>');
-		document.write('	<option value="1">1</option>');
-		document.write('	<option value="2">2</option>');
-		document.write('	<option value="3">3</option>');
-		document.write('	<option value="4">4</option>');
-		document.write('	<option value="5">5</option>');
+		document.write('<option value="">${I18n.getMessage("Karma.rateMessage")}</option>');
+
+		for (var i = ${karmaMin}; i <= ${karmaMax}; i++) {
+			document.write('<option value="' + i + '">' + i + '</option>');
+		}
+
 		document.write('</select>');
 	}
 </#if>

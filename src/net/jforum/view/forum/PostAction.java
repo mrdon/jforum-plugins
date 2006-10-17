@@ -103,7 +103,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.159 2006/10/02 02:15:37 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.160 2006/10/17 22:11:29 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -224,6 +224,8 @@ public class PostAction extends Command
 		this.context.put("rank", new RankingRepository());
 		this.context.put("posts", helperList);
 		this.context.put("forum", forum);
+		this.context.put("karmaMin", new Integer(SystemGlobals.getValue(ConfigKeys.KARMA_MIN_POINTS)));
+		this.context.put("karmaMax", new Integer(SystemGlobals.getValue(ConfigKeys.KARMA_MAX_POINTS)));
 		
 		Map topicPosters = tm.topicPosters(topic.getId());
 		
