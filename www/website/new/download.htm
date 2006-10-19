@@ -7,16 +7,19 @@
 <title>JForum - Powering communities</title>
 <!-- InstanceEndEditable -->
 <!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable -->
+<script type="text/javascript" src="swfobject.js"></script>
 </head>
 
 <body class="main">
 <table border="0" align="center" cellpadding="0" cellspacing="0">
 	<tr>
-		<td colspan="5" align="center"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0" width="766" height="206">
-			<param name="movie" value="header.swf">
-			<param name="quality" value="high">
-			<embed src="header.swf" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="766" height="206"></embed>
-		</object></td>
+		<td colspan="5" align="center">
+		<div id="flash_contents"></div>
+		<script type="text/javascript">
+		var flash = new SWFObject("header.swf", "jforum_header", "766", "206", "8");
+		flash.write("flash_contents");
+		</script>
+	</td>
 	</tr>
 	<tr>
 		<td width="11" rowspan="3">&nbsp;</td>
@@ -116,11 +119,11 @@
 								<td width="100%" valign="top">
 									<div style="padding:0px 10px">
 										<img src="images/bt_downloadnow.gif">
-										<div><img src="images/hr.gif" width="263" height="10"></div>
+										<div><img src="images/hr.gif" width="100%" height="10"></div>
 										<p>Thank you for downloading JForum. Don't forget to check out the <a href="install.jsp" class="blue">installation instructions</a>. </p>
 										<p>We would love to hear from you. Leave a <a href="feedback.jsp" class="blue">feedback</a> when possible. </p>
 										<div style="padding-top:10px"><img src="images/bt_license.gif"></div>
-										<div><img src="images/hr.gif" width="263" height="10"></div>
+										<div><img src="images/hr.gif" width="100%" height="10"></div>
 										<p>
 											The current version of JForum is the result of years of work of many people, who have
 											spent thousands of hours developing the software.											</p>
@@ -129,7 +132,7 @@
 											which basically states that you can use and customize JForum without any cost. </p>
 										<p>Although, you are required to maintain full credits to the project, and we sincerely ask you to link back to us whenever possible. </p>
 										<div style="padding-top:10px"><img src="images/bt_files.gif"></div>
-										<div><img src="images/hr.gif" width="263" height="10"></div>
+										<div><img src="images/hr.gif" width="100%" height="10"></div>
 										<p><img src="images/orange_arrow.jpg" width="8" height="6">&nbsp;<a href="download-latest.jsp" class="blue">Click here to download JForum 2.1.7 </a></p>
 										<p><img src="images/orange_arrow.jpg" width="8" height="6">&nbsp;<a href="download-source.jsp" class="blue">Download the source code </a></p>
 									</div>

@@ -16,6 +16,8 @@ body {margin:0px; padding:0px; background:URL(images/top_line.gif); background-r
 .text{font-family:Tahoma; font-size:10px;  color:#737373; line-height:13px}
 .th-header { font-weight: bold; background-color: #027398; color: #ffffff; }
 .fields { font-family: verdana; background-color: #ffffff; }
+img { border:0px; }
+
 .blue-title {
 	color: #027398;
 	font-size: 14px;
