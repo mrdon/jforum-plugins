@@ -1,0 +1,20 @@
+</td>
+				<td background="$xwiki.getSkinFile("cb_right_line.gif")">&nbsp;</td>
+			</tr>
+			<tr>
+				<td><img src="$xwiki.getSkinFile("cb_lower_left_corner.gif")" width="15" height="15"></td>
+				<td><img src="$xwiki.getSkinFile("cb_lower_line.gif")" width="497" height="15"></td>
+				<td><img src="$xwiki.getSkinFile("cb_lower_right_corner.gif")" width="15" height="15"></td>
+			</tr>
+		</table></td>
+	</tr>
+	<tr>
+		<td valign="top" class="menu">&nbsp;</td>
+		<td>&nbsp;</td>
+		<td align="center" class="menu">
+			<div style="padding-top:5px; padding-bottom:30px;">
+				<b>Home</b> | <b>Download</b> | <b>Support</b> | <b>Forum</b> | <b>Development</b> | <b>Contact</b> 
+			</div>
+		</td>
+	</tr>
+</table>

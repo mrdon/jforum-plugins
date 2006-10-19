@@ -1,0 +1,20 @@
+#if($context.getMode()==0)
+<html>
+<head>
+<title>
+#set( $title = $!xwiki.getWebPreference("title"))
+#if ( $title != "")
+$xwiki.parseContent($title)
+#else
+JForum . $!doc.web . $!doc.name
+#end
+</title>
+<meta http-equiv="Content-Type" content="text/html; charset=$xwiki.encoding" />
+#template("stylesheets.vm")
+<script type="text/javascript" src="$xwiki.getSkinFile("skin.js")"></script>
+</head>
+<body>
+#else
+#template("stylesheets2.vm")
+<script type="text/javascript" src="$xwiki.getSkinFile("skin.js")"></script>
+#end

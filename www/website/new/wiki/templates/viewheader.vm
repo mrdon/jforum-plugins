@@ -1,0 +1,106 @@
+#if($xwiki.exists("XWiki.MaintenanceInfo"))
+	#set($maintenanceinfo = "XWiki.MaintenanceInfo")
+#else
+	#if($xwiki.exists("xwiki:XWiki.MaintenanceInfo"))
+		#set($maintenanceinfo = "xwiki:XWiki.MaintenanceInfo")
+	#end
+#end
+
+#set($hasedit = $xwiki.hasAccessLevel("edit"))
+#set($hasadmin = $xwiki.hasAdminRights())
+#set($isReadOnly = $xwiki.isReadOnly())
+
+<div class="xwiki${xwikimode}a" id="xwikinav_header">
+<div id="xwikiwebusermenu">
+<span id="xwikiwebusermenutitle">$msg.get("webusermenu")</span>
+$!xwiki.parseContent($!xwiki.getWebPreference("menu"))
+</div>
+<div id="xwikieditmenu">
+
+#if ($hasedit)
+	#set($editparams="")
+	
+	#if($doc.content.indexOf("includeForm(")!=-1)
+		#set($editaction = "inline")
+	#else
+		#set($editaction = "edit")
+		
+		#if($xwiki.getUserPreference("editor")=="Wysiwyg")
+			#set($editparams="xpage=htmlarea")
+		#end
+	#end
+
+	#if ($request.rev)
+		#set($revparams="rev=${request.rev}")
+	#end
+
+	<a href="$doc.getURL($editaction,$editparams)" class="img">
+	<img src="$xwiki.getSkinFile("editPage.gif")" alt="$msg.get("editpage")" />
+	$msg.get("editpage")</a>
+	<span class="xwikisep"> | </span>
+#end
+
+#if($hasedit)
+	<a href="$doc.getURL("attach")" class="img">
+	<img src="$xwiki.getSkinFile("addFile.gif")" alt="$msg.get("addattachment")"/>
+	$msg.get("addattachment") ($doc.getAttachmentList().size())</a>
+	<span class="xwikisep"> | </span>
+#end
+
+<span class="xwikisep"> | </span>
+<div id="xwikimoreactions">
+<div id="xwikimoreactionstitle"><a href="" onclick="showhide('xwikimoreactionsitems'); return false;">$msg.get("more")</a></div>
+
+#macro(xwikiitem $url $msgname)
+	<span class="xwikimoreactionitem"><a href="$url">$msg.get($msgname)</a></span><span class="xwikisep"> | </span>
+#end
+
+<div id="xwikimoreactionsitems">
+<div class="xwikimenutitle">$msg.get("view")</div>
+#xwikiitem($doc.getURL("view","xpage=code&$!{revparams}") "raw")
+#xwikiitem($doc.getExternalURL("view","xpage=xml&$!{revparams}") "xml")
+#if($hasedit)
+	<div class="xwikimenutitle">$msg.get("edit")</div>
+	#if (!$isReadOnly)
+		#xwikiitem($doc.getURL("edit") "editcontent")
+	#end
+
+	#if (!$isReadOnly))
+		#xwikiitem($doc.getURL("inline") "editinline")
+		#xwikiitem($doc.getURL("edit", "xpage=editobject") "editobject")
+	#end
+
+	#if(($hasadmin||($context.user.equals($doc.creator))) && !$isReadOnly)
+		#xwikiitem($doc.getURL("delete") "delete")
+	#end
+
+	#if (!$isReadOnly)
+		#xwikiitem($doc.getURL("edit", "xpage=editrights") "editrights")
+	#end
+#end
+
+#if($hasadmin && !$isReadOnly)
+	<div class="xwikimenutitle">$msg.get("admin")</div>
+	#xwikiitem($xwiki.getURL("${doc.web}.WebHome", "view") "space")
+	#xwikiitem($xwiki.getURL("${doc.web}.WebPreferences", "edit", "xpage=editprefs") "webprefs")
+	#xwikiitem($xwiki.getURL("${doc.web}.WebPreferences", "edit" , "xpage=editrights&global=1") "webrights")
+	#xwikiitem($xwiki.getURL("XWiki.XWikiPreferences", "edit", "xpage=editprefs") "xwikiprefs")
+	#xwikiitem($xwiki.getURL("XWiki.XWikiPreferences", "edit", "xpage=editrights&global=1") "xwikirights")
+	#xwikiitem($doc.getURL("edit", "xpage=editclass") "classeditor")
+#end
+
+<div class="xwikimenutitle">$msg.get("help")</div>
+#xwikiitem($xwiki.getURL("Doc.WebHome", "view") "xwikidoc")
+#xwikiitem($xwiki.getURL("Doc.XWikiSyntax", "view") "xwikisyntax")
+</div>
+</div>
+</div>
+<div id="xwikilanguagemenu">
+</div>
+
+#if($maintenanceinfo)
+	<div id="xwikimessage">
+	$xwiki.includeForm("$maintenanceinfo",false)
+	</div>
+#end
+</div>

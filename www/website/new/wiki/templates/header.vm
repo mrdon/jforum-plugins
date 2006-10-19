@@ -1,0 +1,111 @@
+<style type="text/css">
+<!--
+.style2 {
+	color: #027398;
+	font-size: 14px;
+}
+-->
+</style>
+<!-- JForum -->
+<table border="0" align="center" cellpadding="0" cellspacing="0">
+	<tr>
+		<td colspan="5"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0" width="766" height="206">
+			<param name="movie" value="$xwiki.getSkinFile("header.swf")">
+			<param name="quality" value="high">
+			<embed src="$xwiki.getSkinFile("header.swf")" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="766" height="206"></embed>
+		</object></td>
+	</tr>
+	<tr>
+		<td width="11" rowspan="3">&nbsp;</td>
+		<td colspan="3">&nbsp;</td>
+		<td width="11" rowspan="3">&nbsp;</td>
+	</tr>
+	<tr>
+		<td valign="top"><table width="214" border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td><table width="214" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td colspan="3"><img src="$xwiki.getSkinFile("dl_version.gif")" width="214" height="48"></td>
+						</tr>
+					<tr>
+						<td colspan="3" background="$xwiki.getSkinFile("dl_bg.gif")" valign="top" width="214">
+							<table border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td valign="top"><div style="padding:10px;"><img src="$xwiki.getSkinFile("product_box.gif")"></div></td>
+									<td valign="top">
+										<div style="padding:10px;" class="white">
+											Many improvements were made, and bugs were fixed.
+										</div>
+										<div style="padding-top:5px;" class="white"><strong><a href="#" class="white">Details</a> | <a href="#" class="white">Download</a></strong></div>
+										<div style="padding-top:5px; padding-bottom: 5px;"><a href="download.htm"><img src="$xwiki.getSkinFile("dl_now.gif")" border="0"></a></div>
+									</td>
+								</tr>
+							</table>
+
+						</td>
+					</tr>
+					<tr>
+						<td width="10"><img src="$xwiki.getSkinFile("dl_lower_left_corner.gif")" width="10" height="11"></td>
+						<td><img src="$xwiki.getSkinFile("dl_lower_line.gif")" width="194" height="11"></td>
+						<td width="10"><img src="$xwiki.getSkinFile("dl_lower_right_corner.gif")" width="10" height="11"></td>
+					</tr>
+				</table></td>
+			</tr>
+			<tr>
+				<td><table width="214" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td width="10"><img src="$xwiki.getSkinFile("pl_top_left_corner.gif")" width="10" height="10"></td>
+						<td><img src="$xwiki.getSkinFile("pl_top_line.gif")" width="194" height="10"></td>
+						<td width="10"><img src="$xwiki.getSkinFile("pl_top_right_corner.gif")" width="10" height="10"></td>
+					</tr>
+					<tr>
+						<td background="$xwiki.getSkinFile("pl_left_line.gif")">&nbsp;</td>
+						<td bgcolor="#3F3F3F">
+							<div style="padding:5px 0px;"><img src="$xwiki.getSkinFile("bt_pl.gif")"></div>
+							<div style="padding-top:5px; padding-left:10px;" class="white">
+								<ul class="ul">
+									<li class="li"><a href="#" class="white">How do I install JForum?</a>
+									<li class="li"><a href="#" class="white">How to contribute</a>
+									<li class="li"><a href="#" class="white">Getting help</a>
+									<li class="li"><a href="#" class="white">Support the project</a>
+								</ul>
+							</div>
+						</td>
+						<td background="$xwiki.getSkinFile("pl_right_line.gif")">&nbsp;</td>
+					</tr>
+					<tr>
+						<td><img src="$xwiki.getSkinFile("pl_lower_left_corner.gif")" width="10" height="9"></td>
+						<td><img src="$xwiki.getSkinFile("pl_lower_line.gif")" width="194" height="9"></td>
+						<td><img src="$xwiki.getSkinFile("pl_lower_right_corner.gif")" width="10" height="9"></td>
+					</tr>
+				</table></td>
+			</tr>
+			<tr>
+				<td><table width="214" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td>&nbsp;</td>
+					</tr>
+				</table></td>
+			</tr>
+		</table>
+		
+		<div class="menu" style="padding-left:10px; ">
+			© <b>JForum Team</b><br>
+			Latest version is 2.1.7 <br>
+			Meet the team <br>
+		</div>
+		
+		
+		</td>
+		<td width="4" valign="top">&nbsp;</td>
+		<td valign="top"><table width="527" border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td width="15"><img src="$xwiki.getSkinFile("cb_left_top_corner.gif")" width="15" height="15"></td>
+				<td><img src="$xwiki.getSkinFile("cb_top_line.gif")" width="497" height="15"></td>
+				<td width="15"><img src="$xwiki.getSkinFile("cb_right_top_corner.gif")" width="15" height="15"></td>
+			</tr>
+			<tr>
+				<td background="$xwiki.getSkinFile("cb_left_line.gif")">&nbsp;</td>
+				<td bgcolor="#FFFFFf"" width="497"><!-- InstanceBeginEditable name="MainContent" -->
+
+<!-- FIM JForum -->

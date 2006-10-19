@@ -1,0 +1,32 @@
+#set($showactions=1)
+#template("editheader.vm")
+#if($message)
+<div id="xwikimessage">
+$message
+</div>
+#end
+#set($xredirect=$!request.getParameter("xredirect"))
+<form id="edit" method="post" action="$doc.getURL("preview")">
+<p>
+<input type="hidden" name="xredirect" value="$!xredirect" />
+<input type="hidden" name="template" value="$!tdoc.template" />
+<input type="hidden" name="language" value="$!tdoc.language" />
+#set($force = $!request.get("force"))
+#if (($tdoc.getLocked()==true)&&(!$force))
+<p>
+$msg.get("doclockedby"): $xwiki.getLocalUserName($doc.getLockingUser()).
+<br />
+<a href="$doc.getURL("inline", "template=$!tdoc.template&xredirect=$!xredirect&language=$!tdoc.language&force=1")">$msg.get("forcelock")
+</p>
+#else
+#foreach($class in $doc.xWikiClasses)
+#set( $nb = $doc.getObjectNumbers("${class.name}"))
+<input type="hidden" name="${class.name}_nb" value="$nb" />
+#end
+</p>
+<div id="xwikicontent">
+$cdoc.getRenderedContent()
+</div>
+#end
+</form>
+#template("editfooter.vm")
