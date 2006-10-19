@@ -1,15 +1,15 @@
-ALTER TABLE jforum_users ADD COLUMN user_authhash VARCHAR(32);
-ALTER TABLE jforum_users ADD COLUMN user_notify_always TINYINT(1) DEFAULT '0';
-ALTER TABLE jforum_users ADD COLUMN user_notify_text TINYINT(1) DEFAULT '0';
+ALTER TABLE jforum_users ADD user_authhash VARCHAR(32);
+ALTER TABLE jforum_users ADD user_notify_always INTEGER DEFAULT '0';
+ALTER TABLE jforum_users ADD user_notify_text INTEGER DEFAULT '0';
 
-ALTER TABLE jforum_forums_watch DROP COLUMN is_read;
+ALTER TABLE jforum_forums_watch DROP is_read;
 
 DELETE FROM jforum_roles WHERE name <> 'perm_administration';
 DELETE FROM jforum_roles WHERE role_type = 0;
 DELETE FROM jforum_role_values;
 
-ALTER TABLE jforum_roles DROP COLUMN role_type;
-ALTER TABLE jforum_role_values DROP COLUMN role_type;
+ALTER TABLE jforum_roles DROP role_type;
+ALTER TABLE jforum_role_values DROP role_type;
 
 DELETE FROM jforum_smilies WHERE code IN (':)', ':-)', ':D', ':-D', ':(', ':mrgreen:', ':-o', ':shock:', ':?:', '8)', ':lol:', ':x', ':P', ':-P', ':oops:', ':cry:', ':evil:', ':twisted:', ':roll:', ':wink:', ';)', ';-)', ':!:', ':?', ':idea:', ':arrow:', ':-(', ':hunf:', ':XD:', ':thumbup:', ':thumbdown:', ':|');
 
@@ -47,18 +47,19 @@ INSERT INTO jforum_smilies (code, url, disk_name) VALUES (':thumbdown:', '<img s
 INSERT INTO jforum_smilies (code, url, disk_name) VALUES (':|', '<img src=\"#CONTEXT#/images/smilies/1cfd6e2a9a2c0cf8e74b49b35e2e46c7.gif\" />', '1cfd6e2a9a2c0cf8e74b49b35e2e46c7.gif');
 
 CREATE TABLE jforum_mail_integration (
-	forum_id INT NOT NULL,
+	forum_id INTEGER NOT NULL,
 	forum_email VARCHAR(100) NOT NULL,
 	pop_username VARCHAR(100) NOT NULL,
 	pop_password VARCHAR(100) NOT NULL,
 	pop_host VARCHAR(100) NOT NULL,
-	pop_port INT DEFAULT 110,
-	pop_ssl TINYINT(1) DEFAULT '0',
-	KEY(forum_id)
-) TYPE=InnoDB;
+	pop_port INTEGER DEFAULT 110,
+	pop_ssl INTEGER DEFAULT 0
+);
+CREATE INDEX idx_mailint_forum ON jforum_forums(forum_id);
 
+CREATE SEQUENCE jforum_api_seq;
 CREATE TABLE jforum_api (
-	api_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	api_id INTEGER NOT NULL PRIMARY KEY DEFAULT NEXTVAL('jforum_api_seq'),
 	api_key VARCHAR(32) NOT NULL,
-	api_validity DATETIME NOT NULL
-) TYPE=InnoDB;
+	api_validity TIMESTAMP NOT NULL
+);
