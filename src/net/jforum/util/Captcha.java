@@ -77,7 +77,7 @@ import com.octo.captcha.image.gimpy.GimpyFactory;
 
 /**
  * @author James Yong
- * @version $Id: Captcha.java,v 1.10 2006/08/20 22:47:42 rafaelsteil Exp $
+ * @version $Id: Captcha.java,v 1.11 2006/10/21 13:06:40 rafaelsteil Exp $
  */
 public class Captcha extends ListImageCaptchaEngine
 {
@@ -127,8 +127,10 @@ public class Captcha extends ListImageCaptchaEngine
 
 		this.backgroundGeneratorList.add(new GradientBackgroundGenerator(new Integer(width), 
 				new Integer(height), Color.BLACK, Color.GRAY));
+		this.backgroundGeneratorList.add(new GradientBackgroundGenerator(new Integer(width), 
+				new Integer(height), Color.WHITE, Color.RED));
 		this.backgroundGeneratorList.add(new FunkyBackgroundGenerator(new Integer(250), new Integer(50)));
-
+		
 		this.textPasterList.add(new RandomTextPaster(new Integer(minWords), new Integer(maxWords), Color.RED));
 		this.textPasterList.add(new RandomTextPaster(new Integer(minWords), new Integer(maxWords), Color.ORANGE));
 		this.textPasterList.add(new RandomTextPaster(new Integer(minWords), new Integer(maxWords), Color.BLUE));

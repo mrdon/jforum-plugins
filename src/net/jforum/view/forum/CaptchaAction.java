@@ -44,11 +44,12 @@ package net.jforum.view.forum;
 
 import net.jforum.Command;
 import net.jforum.JForumExecutionContext;
+import net.jforum.SessionFacade;
 import net.jforum.util.Captcha;
 
 /**
  * @author Rafael Steil
- * @version $Id: CaptchaAction.java,v 1.7 2006/08/20 22:47:39 rafaelsteil Exp $
+ * @version $Id: CaptchaAction.java,v 1.8 2006/10/21 13:06:40 rafaelsteil Exp $
  */
 public class CaptchaAction extends Command
 {
@@ -57,6 +58,12 @@ public class CaptchaAction extends Command
 		JForumExecutionContext.enableCustomContent(true);
 		JForumExecutionContext.setContentType("image/jpg");
 		Captcha.getInstance().writeCaptchaImage();
+	}
+	
+	public void regenerate() 
+	{
+		SessionFacade.getUserSession().createNewCaptcha();
+		this.generate();
 	}
 	
 	/**
