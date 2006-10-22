@@ -66,10 +66,8 @@ import net.jforum.repository.RankingRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.repository.SmiliesRepository;
 import net.jforum.util.I18n;
-import net.jforum.util.MD5;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
@@ -77,7 +75,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.104 2006/10/22 16:43:29 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.105 2006/10/22 17:11:26 rafaelsteil Exp $
  */
 public class JForum extends JForumBaseServlet 
 {

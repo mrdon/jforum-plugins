@@ -1,4 +1,25 @@
 <#include "header.htm"/>
+<script type="text/javascript">
+function validateForm(f)
+{
+	if (f.user_id.value == "") {
+		alert("${I18n.getMessage("ActivateAccount.fillUserId")}");
+		f.user_id.focus();
+		
+		return false;
+	}
+
+	if (f.hash.value == "") {
+		alert("${I18n.getMessage("ActivateAccount.fillHash")}");
+		f.hash.focus();
+		
+		return false;
+	}
+
+	return true;
+}
+</script>
+
 <form id="formregister" accept-charset="${encoding}" name="formactivate" action="${JForumContext.encodeURL("/jforum")}" method="post" onsubmit="return validateForm(this);">
 <input type="hidden" name="action" value="activateAccount" />
 <input type="hidden" name="module" value="user" />
@@ -13,7 +34,7 @@
 		
 <table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
 	<tr>
-		<th class="thhead" valign="middle" colspan="2" height="25">${I18n.getMessage("User.registerInformation")}</th>
+		<th class="thhead" valign="middle" colspan="2" height="25">${I18n.getMessage("ActivateAccount.title")}</th>
 	</tr>
         
 	<tr>
@@ -21,41 +42,14 @@
 	</tr>
         
 	<tr>
-		<td class="row1" width="38%"><span class="gen">${I18n.getMessage("User.user")}: *</span></td>
-		<td class="row2"><input class="post" type="text" style="WIDTH: 200px" maxlength="25" size="25" name="username" value="${username?default("")?html}"/></td>
+		<td class="row1" width="38%"><span class="gen">${I18n.getMessage("ActivateAccount.userId")}: *</span></td>
+		<td class="row2"><input class="post" type="text" style="WIDTH: 200px" maxlength="25" size="25" name="user_id"/></td>
 	</tr>
         
 	<tr>
-		<td class="row1"><span class="gen">${I18n.getMessage("User.emailAddress")}: *</span></td>
-		<td class="row2"><input class="post" type="text" style="WIDTH: 200px" maxlength="255" size="25" name="email" value="${email?default("")?html}"/></td>
+		<td class="row1"><span class="gen">${I18n.getMessage("ActivateAccount.hash")}: *</span></td>
+		<td class="row2"><input class="post" type="text" style="WIDTH: 200px" maxlength="255" size="25" name="hash"/></td>
 	</tr>
-        
-	<tr>
-		<td class="row1"><span class="gen">${I18n.getMessage("User.password")}: *</span></td>
-		<td class="row2"><input name="password" type="password" class="post" id="password" style="WIDTH: 200px" size="25" maxlength="100" /> </td>
-	</tr>
-        
-	<tr>
-		<td class="row1"><span class="gen">${I18n.getMessage("User.confirmPassword")}: * </span></td>
-		<td class="row2"><input class="post" style="WIDTH: 200px" type="password" maxlength="100" size="25" name="password_confirm" /> </td>
-	</tr>
-
-	<#if captcha_reg?exists>
-		<tr>
-			<td class="row1" width="38%"><span class="gen">${I18n.getMessage("User.captchaResponse")}: *</span></td>
-			<td class="row2">
-				<input class="post" style="WIDTH: 200px; font-weight: bold;" maxlength="25" size="25" name="captchaResponse" /> 
-				<p><img src="${JForumContext.encodeURL("/captcha/generate/${timestamp}")}" border="0" align="top" alt="Captcha unavailable" id="captcha_img"/></p>
-				<span class="gensmall">${I18n.getMessage("User.hardCaptchaPart1")} <a href="#newCaptcha" onClick="newCaptcha()"><b>${I18n.getMessage("User.hardCaptchaPart2")}</b></a></span>
-			</td>
-		</tr>
-	</#if>
-						
-	<#if error?exists>
-	<tr>
-		<td class="row2" colspan="2" align="center"><span class="gen"><font color="#ff0000"><b>${error}</b></font></span></td>
-	</tr>
-	</#if>
         
 	<tr align="center">
 		<td class="catbottom" colspan="2" height="28">

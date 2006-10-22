@@ -59,8 +59,10 @@
 				</tr>
 
 				<tr align="center">
-					<td colspan="2">
-						<span class="gensmall"><a id="lostpassword" class="gensmall" href="${JForumContext.encodeURL("/user/lostPassword")}">${I18n.getMessage("Login.lostPassword")}</a></span>
+					<td colspan="2" class="gensmall">
+						<a href="${JForumContext.encodeURL("/user/lostPassword")}">${I18n.getMessage("Login.lostPassword")}</a>
+						 | 
+						<a href="${JForumContext.encodeURL("/user/activateManual")}">${I18n.getMessage("ActivateAccount.activate")}</a>
 					</td>
 				</tr>
 			</table>

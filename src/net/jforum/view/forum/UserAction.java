@@ -85,7 +85,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.81 2006/10/22 16:43:34 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.82 2006/10/22 17:11:26 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -351,7 +351,12 @@ public class UserAction extends Command
 		} 
 		else {
 			this.setTemplateName(TemplateKeys.USER_INVALID_ACTIVATION);
-			this.context.put("message", I18n.getMessage("User.invalidActivationKey"));
+			this.context.put("message", I18n.getMessage("User.invalidActivationKey", 
+				new Object[] { this.request.getContextPath()
+					+ "/user/activateManual"
+					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) 
+				}
+			));
 		}
 
 	}
@@ -376,8 +381,8 @@ public class UserAction extends Command
 
 		// Finalizing.. show to user the congrats page
 		JForumExecutionContext.setRedirect(this.request.getContextPath()
-				+ "/user/registrationComplete"
-				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+			+ "/user/registrationComplete"
+			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 	}
 
 	public void registrationComplete()
