@@ -73,7 +73,6 @@
 								<form action="${JForumContext.encodeURL("/jforum")}" method="post">
 									<input type="hidden" name="action" value="vote" />
 									<input type="hidden" name="module" value="${moduleName}" />
-									<input type="hidden" name="securityHash" value="${securityHash}" />
 									<input type="hidden" name="poll_id" value="${poll.id}" />
 									<input type="hidden" name="topic_id" value="${topic.id}" />
 									<div class="poll">
@@ -243,7 +242,6 @@
 				<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="post" id="post" onsubmit="return validatePostForm(this);" enctype="multipart/form-data" accept-charset="${encoding}">
 					<input type="hidden" name="action" value="insertSave" />
 					<input type="hidden" name="module" value="posts" />
-					<input type="hidden" name="securityHash" value="${securityHash}" />
 					<input type="hidden" name="forum_id" value="${forum.id}" />
 					<input type="hidden" name="start" value="${start?default("")}" />
 					<input type="hidden" name="topic_id" value="${topic.id}" />
@@ -278,7 +276,6 @@
 					<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="formModeration" id="formModeration">
 					<input type="hidden" name="action" value="doModeration" />
 					<input type="hidden" name="module" value="moderation" />
-					<input type="hidden" name="securityHash" value="${securityHash}" />
 					<input type="hidden" name="returnUrl" value="${JForumContext.encodeURL("/${moduleName}/${action}/${start}/${topic.id}")}" />
 					<input type="hidden" name="forum_id" value="${topic.forumId}" />
 					<input type="hidden" name="topic_id" value="${topic.id}" />

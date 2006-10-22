@@ -52,7 +52,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author James Young
- * @version $Id: ActivationKeySpammer.java,v 1.10 2006/10/09 00:54:09 rafaelsteil Exp $
+ * @version $Id: ActivationKeySpammer.java,v 1.11 2006/10/22 16:43:34 rafaelsteil Exp $
  */
 public class ActivationKeySpammer extends Spammer
 {
@@ -70,9 +70,16 @@ public class ActivationKeySpammer extends Spammer
 			.append(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION))
 			.toString();
 		
+		String manualUrl = new StringBuffer()
+			.append(forumLink)
+			.append("user/activateManual/") 
+			.append(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION))
+			.toString();
+		
 		SimpleHash params = new SimpleHash();
 		params.put("url", url);
 		params.put("user", u);
+		params.put("manualUrl", manualUrl);
 		
 		List recipients = new ArrayList();
 		recipients.add(u);

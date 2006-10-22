@@ -76,7 +76,6 @@
 				<form action="${JForumContext.encodeURL("/jforum")}" method="post" accept-charset="${encoding}">
 				<input type="hidden" name="action" value="approveMessages" />
 				<input type="hidden" name="module" value="${moduleName}" />
-				<input type="hidden" name="securityHash" value="${securityHash}" />
 				<input type="hidden" name="forum_id" value="${forum.id}" />
 
 				<table width="70%"class="forumline" align="center" cellspacing="1" cellpadding="4">
@@ -146,7 +145,6 @@
 				<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="form1" id="form1" accept-charset="${encoding}">
 				<input type="hidden" name="action" value="doModeration" />
 				<input type="hidden" name="module" value="moderation" />
-				<input type="hidden" name="securityHash" value="${securityHash}" />
 				<input type="hidden" name="returnUrl" value="${JForumContext.encodeURL("/${moduleName}/${action}/${start}/${forum.id}")}" />
 				<input type="hidden" name="forum_id" value="${forum.id}" />
 			</#if>

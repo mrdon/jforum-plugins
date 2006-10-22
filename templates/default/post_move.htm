@@ -16,7 +16,6 @@ function validateSelectedForum()
 
 <form action="${contextPath}/jforum${extension}" method="post" name="form1" id="form1" onsubmit="return validateSelectedForum();" accept-charset="${encoding}">
 <input type="hidden" name="action" value="moveTopic" />
-<input type="hidden" name="securityHash" value="${securityHash}" />
 <input type="hidden" name="module" value="${moduleName}" />
 <input type="hidden" name="returnUrl" value="${returnUrl?if_exists}" />
 <input type="hidden" name="topics" value="${topics}" />

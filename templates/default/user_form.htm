@@ -21,7 +21,6 @@ function validateForm()
 <form action="${JForumContext.encodeURL("/jforum")}" method="post" enctype="multipart/form-data" name="post" id="post" accept-charset="${encoding}" onsubmit="return validateForm();">
 <input type="hidden" name="action" value="${action}" />
 <input type="hidden" name="module" value="${moduleName}" />
-<input type="hidden" name="securityHash" value="${securityHash}" />
 
 <input type="hidden" name="user_id" value="${u.id}" />
 

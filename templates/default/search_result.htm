@@ -42,7 +42,6 @@
 	<form accept-charset="${encoding}" action="${contextPath}/jforum${extension}" method="post" name="form1">
 	<input type="hidden" name="action" value="doModeration" />
 	<input type="hidden" name="module" value="${moduleName}" />
-	<input type="hidden" name="securityHash" value="${securityHash}" />
 	<input type="hidden" name="start" value="${thisPage}" />
 	<#assign mp = pagination.moderationParams("")/>
 	<input type="hidden" name="persistData" value="${mp}" />

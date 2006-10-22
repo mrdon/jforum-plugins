@@ -1,51 +1,7 @@
 <#include "header.htm"/>
-<script type="text/javascript">
-function validateRegistrationForm(f)
-{
-	if (f.username.value == "") {
-		alert("${I18n.getMessage("User.fillUsername")}");
-		f.username.focus();
-		
-		return false;
-	}
-	
-	if (f.email.value == "") {
-		alert("${I18n.getMessage("User.fillEmail")}");
-		f.email.focus();
-		
-		return false;
-	}
-	
-	if (f.password.value == "") {
-		alert("${I18n.getMessage("User.fillPassword")}");
-		f.password.focus();
-		
-		return false;
-	}
-	
-	if (f.password_confirm.value == "") {
-		alert("${I18n.getMessage("User.fillPasswordConfirmation")}");
-		f.password_confirm.focus();
-		
-		return false;
-	}
-	
-	if (f.password.value != f.password_confirm.value) {
-		alert("${I18n.getMessage("User.passwordNotMatch")}");
-		return false;
-	}
-	
-	return true;
-}
-
-function newCaptcha()
-{
-	document.getElementById("captcha_img").src = "${contextPath}/jforum${extension}?module=captcha&action=regenerate&timestamp=" + new Date().getTime();
-}
-</script>
-<form id="formregister" accept-charset="${encoding}" name="formregister" action="${JForumContext.encodeURL("/jforum")}" method="post" onsubmit="return validateRegistrationForm(this);">
-<input type="hidden" name="action" value="${action}" />
-<input type="hidden" name="module" value="${moduleName}" />
+<form id="formregister" accept-charset="${encoding}" name="formactivate" action="${JForumContext.encodeURL("/jforum")}" method="post" onsubmit="return validateForm(this);">
+<input type="hidden" name="action" value="activateAccount" />
+<input type="hidden" name="module" value="user" />
 
 <table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
 	<tr>

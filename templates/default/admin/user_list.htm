@@ -15,7 +15,6 @@
 			${I18n.getMessage("User.searchByUsername")}: 
 			<input type="hidden" name="action" value="search" />
 			<input type="hidden" name="module" value="${moduleName}" />
-			<input type="hidden" name="securityHash" value="${securityHash}" />
 
 			<input type="text" name="username" value="${search?default("")}" />&nbsp;
 			${I18n.getMessage("User.searchByGroup")}: 
@@ -29,7 +28,6 @@
 	<form accept-charset="${encoding}" name="form" action="${JForumContext.encodeURL("/jforum")}" method="post">
 	<input type="hidden" name="action" value="delete" />
 	<input type="hidden" name="module" value="${moduleName}" />
-	<input type="hidden" name="securityHash" value="${securityHash}" />
 	<input type="hidden" name="start" value="${start}" />
   
 	<tr>

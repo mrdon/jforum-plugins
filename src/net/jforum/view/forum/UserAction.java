@@ -85,7 +85,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.80 2006/10/22 02:06:38 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.81 2006/10/22 16:43:34 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -342,19 +342,23 @@ public class UserAction extends Command
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		User u = um.selectById(userId);
 
-		boolean isOk = um.validateActivationKeyHash(userId, hash);
-		if (isOk) {
-			// make account active
+		boolean isValid = um.validateActivationKeyHash(userId, hash);
+		
+		if (isValid) {
+			// Activate the account
 			um.writeUserActive(userId);
 			this.logNewRegisteredUserIn(userId, u);
 		} 
 		else {
-            String message;
-			message = I18n.getMessage("User.invalidActivationKey");
 			this.setTemplateName(TemplateKeys.USER_INVALID_ACTIVATION);
-			this.context.put("message", message);
+			this.context.put("message", I18n.getMessage("User.invalidActivationKey"));
 		}
 
+	}
+	
+	public void activateManual()
+	{
+		this.setTemplateName(TemplateKeys.ACTIVATE_ACCOUNT_MANUAL);
 	}
 
 	private void logNewRegisteredUserIn(int userId, User u) 

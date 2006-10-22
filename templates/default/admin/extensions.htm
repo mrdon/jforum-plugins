@@ -9,7 +9,6 @@
 	<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum${extension}" method="post">
 	<input type="hidden" name="action" value="extensionsSave" />
 	<input type="hidden" name="module" value="${moduleName}" />
-	<input type="hidden" name="securityHash" value="${securityHash}" />
 	<!-- Add new -->
 	<tr>
 		<th class="thleft">&nbsp;${I18n.getMessage("AdminAttachments.extension")}&nbsp;</th>
@@ -58,7 +57,6 @@
 		<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum${extension}" method="post">
 		<input type="hidden" name="action" value="extensionsUpdate" />
 		<input type="hidden" name="module" value="${moduleName}" />
-		<input type="hidden" name="securityHash" value="${securityHash}" />
 		<input type="hidden" name="total_records" value="${extensions.size()}"/>
 
 		<tr>
