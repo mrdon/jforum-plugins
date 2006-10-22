@@ -42,6 +42,10 @@
  */
 package net.jforum.view.forum;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
@@ -81,7 +85,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.79 2006/09/30 00:33:25 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.80 2006/10/22 02:06:38 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -142,8 +146,8 @@ public class UserAction extends Command
 		this.setTemplateName(TemplateKeys.USER_REGISTRATION_DISABLED);
 		this.context.put("message", I18n.getMessage("User.registrationDisabled"));
 	}
-
-	public void insert() 
+	
+	private void insert(boolean hasErrors)
 	{
 		int userId = SessionFacade.getUserSession().getUserId();
 
@@ -153,19 +157,93 @@ public class UserAction extends Command
 			this.registrationDisabled();
 			return;
 		}
+		
+		if (!hasErrors && SystemGlobals.getBoolValue(ConfigKeys.AGREEMENT_SHOW) && !this.agreementAccepted()) {
+			this.setTemplateName(TemplateKeys.AGREEMENT_LIST);
+			this.context.put("agreementContents", this.agreementContents());
+			return;
+		}
 
 		this.setTemplateName(TemplateKeys.USER_INSERT);
 		this.context.put("action", "insertSave");
 		this.context.put("username", this.request.getParameter("username"));
 		this.context.put("email", this.request.getParameter("email"));
 		this.context.put("pageTitle", I18n.getMessage("ForumBase.register"));
-
 		
 		if (SystemGlobals.getBoolValue(ConfigKeys.CAPTCHA_REGISTRATION)){
 			// Create a new image captcha
 			SessionFacade.getUserSession().createNewCaptcha();
 			this.context.put("captcha_reg", true);
 		}
+
+		SessionFacade.removeAttribute(ConfigKeys.AGREEMENT_ACCEPTED);
+	}
+
+	public void insert() 
+	{
+		this.insert(false);
+	}
+	
+	public void acceptAgreement()
+	{
+		SessionFacade.setAttribute(ConfigKeys.AGREEMENT_ACCEPTED, "1");
+		JForumExecutionContext.setRedirect(this.request.getContextPath()
+			+ "/user/insert"
+			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+	}
+	
+	private String agreementContents()
+	{
+		StringBuffer contents = new StringBuffer();
+		
+		BufferedReader reader = null;
+		FileReader fileReader = null;
+		
+		
+		try {
+			String directory = new StringBuffer()
+				.append(SystemGlobals.getApplicationPath()) 
+				.append(SystemGlobals.getValue(ConfigKeys.AGREEMENT_FILES_PATH)) 
+				.append('/')
+				.toString();
+
+			String filename = "terms_" + SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT) + ".txt";
+			
+			File file = new File(directory + filename);
+			
+			if (!file.exists()) {
+				filename = SystemGlobals.getValue(ConfigKeys.AGREEMENT_DEFAULT_FILE);
+				file = new File(directory + filename);
+				
+				if (!file.exists()) {
+					throw new FileNotFoundException("Could not locate any terms agreement file");
+				}
+			}
+			
+			reader = new BufferedReader(new FileReader(file));
+			
+			char[] buffer = new char[2048];
+			int c = 0;
+			
+			while ((c = reader.read(buffer, 0, buffer.length)) > -1) {
+				contents.append(buffer, 0, c);
+			}
+		}
+		catch (Exception e) {
+			logger.warn("Failed to read agreement data: " + e, e);
+			contents = new StringBuffer(I18n.getMessage("User.agreement.noAgreement"));
+		}
+		finally {
+			if (fileReader != null) { try { fileReader.close(); } catch (Exception e) {} }
+			if (reader != null) { try { reader.close(); } catch (Exception e) {} }
+		}
+		
+		return contents.toString();
+	}
+	
+	private boolean agreementAccepted()
+	{
+		return "1".equals(SessionFacade.getAttribute(ConfigKeys.AGREEMENT_ACCEPTED));
 	}
 
 	public void insertSave()
@@ -219,8 +297,7 @@ public class UserAction extends Command
 		}
 
 		if (error) {
-			this.insert();
-
+			this.insert(true);
 			return;
 		}
 
@@ -242,7 +319,6 @@ public class UserAction extends Command
 			} 
 			catch (Exception e) {
 				logger.warn("Error while trying to send an email: " + e);
-				e.printStackTrace();
 			}
 
 			this.setTemplateName(TemplateKeys.USER_INSERT_ACTIVATE_MAIL);

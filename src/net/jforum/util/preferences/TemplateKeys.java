@@ -44,7 +44,7 @@ package net.jforum.util.preferences;
 
 /**
  * @author Rafael Steil
- * @version $Id: TemplateKeys.java,v 1.15 2006/09/09 21:32:37 rafaelsteil Exp $
+ * @version $Id: TemplateKeys.java,v 1.16 2006/10/22 02:07:41 rafaelsteil Exp $
  */
 public class TemplateKeys
 {
@@ -187,4 +187,5 @@ public class TemplateKeys
 	public static final String API_USER_LIST = "api.user.list";
 	public static final String API_USER_INSERT = "api.user.insert";
 	public static final String API_ERROR = "api.error";
+	public static final String AGREEMENT_LIST = "agreement.list";
 }
