@@ -2,6 +2,9 @@ ALTER TABLE jforum_users ADD COLUMN user_authhash VARCHAR(32);
 ALTER TABLE jforum_users ADD COLUMN user_notify_always TINYINT(1) DEFAULT '0';
 ALTER TABLE jforum_users ADD COLUMN user_notify_text TINYINT(1) DEFAULT '0';
 
+ALTER TABLE jforum_search_topics ADD KEY (session_id);
+ALTER TABLE jforum_search_results ADD KEY (session_id);
+
 ALTER TABLE jforum_forums_watch DROP COLUMN is_read;
 
 DELETE FROM jforum_roles WHERE name <> 'perm_administration';
@@ -45,20 +48,3 @@ INSERT INTO jforum_smilies (code, url, disk_name) VALUES (':XD:', '<img src=\"#C
 INSERT INTO jforum_smilies (code, url, disk_name) VALUES (':thumbup:', '<img src=\"#CONTEXT#/images/smilies/e8a506dc4ad763aca51bec4ca7dc8560.gif\" />', 'e8a506dc4ad763aca51bec4ca7dc8560.gif');
 INSERT INTO jforum_smilies (code, url, disk_name) VALUES (':thumbdown:', '<img src=\"#CONTEXT#/images/smilies/e78feac27fa924c4d0ad6cf5819f3554.gif\" />', 'e78feac27fa924c4d0ad6cf5819f3554.gif');
 INSERT INTO jforum_smilies (code, url, disk_name) VALUES (':|', '<img src=\"#CONTEXT#/images/smilies/1cfd6e2a9a2c0cf8e74b49b35e2e46c7.gif\" />', '1cfd6e2a9a2c0cf8e74b49b35e2e46c7.gif');
-
-CREATE TABLE jforum_mail_integration (
-	forum_id INT NOT NULL,
-	forum_email VARCHAR(100) NOT NULL,
-	pop_username VARCHAR(100) NOT NULL,
-	pop_password VARCHAR(100) NOT NULL,
-	pop_host VARCHAR(100) NOT NULL,
-	pop_port INT DEFAULT 110,
-	pop_ssl TINYINT(1) DEFAULT '0',
-	KEY(forum_id)
-) TYPE=InnoDB;
-
-CREATE TABLE jforum_api (
-	api_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-	api_key VARCHAR(32) NOT NULL,
-	api_validity DATETIME NOT NULL
-) TYPE=InnoDB;

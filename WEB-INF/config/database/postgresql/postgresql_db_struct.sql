@@ -406,7 +406,7 @@ CREATE TABLE jforum_search_results (
   search_time TIMESTAMP
 );
 CREATE INDEX idx_sr_topic ON jforum_search_results(topic_id);
-
+CREATE INDEX idx_sr_session ON jforum_search_results(session_id);
 
 CREATE TABLE jforum_search_topics (
   topic_id INTEGER NOT NULL,
@@ -431,7 +431,7 @@ CREATE INDEX idx_st_forum ON jforum_search_topics(forum_id);
 CREATE INDEX idx_st_user ON jforum_search_topics(user_id);
 CREATE INDEX idx_st_fp ON jforum_search_topics(topic_first_post_id);
 CREATE INDEX idx_st_lp ON jforum_search_topics(topic_last_post_id);
-
+CREATE INDEX idx_st_session ON jforum_search_topics(session_id);
 --
 -- Table structure for table 'jforum_karma'
 --

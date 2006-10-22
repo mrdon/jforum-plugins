@@ -202,14 +202,6 @@ SearchModel.getPostsToIndex = SELECT * FROM ( \
 	) \
 	WHERE LINENUM >= ? AND LINENUM < ?
 
-#
-# The construction ((SYSDATE - time_field)*24) > 1.0 mean following:
-# (SYSDATE - time_field) return days. E.q if delta is 20 minuts it return 0.0125. If multyply on 24, that it would be hours - 0.3
-# So, ((SYSDATE - time_field)*24) > 1.0 totally mean 'delta' > 1 hour   
-#
-SearchModel.cleanSearchResults = DELETE FROM jforum_search_results WHERE session_id = ? OR ((SYSDATE - search_time)*24) > 1.0
-SearchModel.cleanSearchTopics = DELETE FROM jforum_search_topics WHERE session_id = ? OR ((SYSDATE - search_time)*24) > 1.0
-
 SearchModel.searchByTime = INSERT INTO jforum_search_results (topic_id, session_id, search_time) SELECT DISTINCT t.topic_id, ?, SYSDATE FROM jforum_topics t, jforum_posts p \
 	WHERE t.topic_id = p.topic_id \
 	AND t.forum_id IN(:fids:) \

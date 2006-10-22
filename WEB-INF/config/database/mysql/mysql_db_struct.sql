@@ -424,7 +424,8 @@ CREATE TABLE jforum_search_results (
   topic_id INT NOT NULL,
   session_id VARCHAR(50),
   search_time DATETIME,
-  KEY (topic_id)
+  KEY (topic_id),
+  KEY(session_id)
 ) TYPE=InnoDB;
 
 
@@ -445,11 +446,12 @@ CREATE TABLE jforum_search_topics (
   moderated INT default '0',
   session_id varchar(50),
   search_time datetime,
-  KEY  (topic_id),
+  KEY (topic_id),
   KEY (forum_id),
-  KEY(user_id),
-  KEY(topic_first_post_id),
-  KEY(topic_last_post_id)
+  KEY (user_id),
+  KEY (topic_first_post_id),
+  KEY (topic_last_post_id),
+  KEY (session_id)
 ) TYPE=InnoDB;
 
 --

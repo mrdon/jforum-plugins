@@ -1,6 +1,9 @@
 ALTER TABLE jforum_users ADD user_authhash VARCHAR(32);
-ALTER TABLE jforum_users ADD user_notify_always INTEGER DEFAULT '0';
-ALTER TABLE jforum_users ADD user_notify_text INTEGER DEFAULT '0';
+ALTER TABLE jforum_users ADD user_notify_always INTEGER DEFAULT 0;
+ALTER TABLE jforum_users ADD user_notify_text INTEGER DEFAULT 0;
+
+CREATE INDEX idx_st_session ON jforum_search_topics(session_id);
+CREATE INDEX idx_sr_session ON jforum_search_results(session_id);
 
 ALTER TABLE jforum_forums_watch DROP is_read;
 
@@ -45,21 +48,3 @@ INSERT INTO jforum_smilies (code, url, disk_name) VALUES (':XD:', '<img src=\"#C
 INSERT INTO jforum_smilies (code, url, disk_name) VALUES (':thumbup:', '<img src=\"#CONTEXT#/images/smilies/e8a506dc4ad763aca51bec4ca7dc8560.gif\" />', 'e8a506dc4ad763aca51bec4ca7dc8560.gif');
 INSERT INTO jforum_smilies (code, url, disk_name) VALUES (':thumbdown:', '<img src=\"#CONTEXT#/images/smilies/e78feac27fa924c4d0ad6cf5819f3554.gif\" />', 'e78feac27fa924c4d0ad6cf5819f3554.gif');
 INSERT INTO jforum_smilies (code, url, disk_name) VALUES (':|', '<img src=\"#CONTEXT#/images/smilies/1cfd6e2a9a2c0cf8e74b49b35e2e46c7.gif\" />', '1cfd6e2a9a2c0cf8e74b49b35e2e46c7.gif');
-
-CREATE TABLE jforum_mail_integration (
-	forum_id INTEGER NOT NULL,
-	forum_email VARCHAR(100) NOT NULL,
-	pop_username VARCHAR(100) NOT NULL,
-	pop_password VARCHAR(100) NOT NULL,
-	pop_host VARCHAR(100) NOT NULL,
-	pop_port INTEGER DEFAULT 110,
-	pop_ssl INTEGER DEFAULT 0
-);
-CREATE INDEX idx_mailint_forum ON jforum_forums(forum_id);
-
-CREATE SEQUENCE jforum_api_seq;
-CREATE TABLE jforum_api (
-	api_id INTEGER NOT NULL PRIMARY KEY DEFAULT NEXTVAL('jforum_api_seq'),
-	api_key VARCHAR(32) NOT NULL,
-	api_validity TIMESTAMP NOT NULL
-);

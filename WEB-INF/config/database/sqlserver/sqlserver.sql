@@ -277,10 +277,6 @@ SearchModel.getPostsToIndex = \
 
 SearchModel.lastGeneratedWordId = SELECT IDENT_CURRENT('jforum_search_words') AS word_id 
 
-SearchModel.cleanSearchResults = DELETE FROM jforum_search_results WHERE session_id = ? OR search_time < DATEADD(HOUR, -1, getdate())
-SearchModel.cleanSearchTopics = DELETE FROM jforum_search_topics WHERE session_id = ? OR search_time < DATEADD(HOUR, -1, getdate())
-
-
 SearchModel.insertTopicsIds = INSERT INTO jforum_search_results ( topic_id, session_id, search_time ) \
 									SELECT DISTINCT t.topic_id, ?, GETDATE() FROM jforum_topics t, jforum_posts p \
 									WHERE t.topic_id = p.topic_id \
