@@ -6,7 +6,9 @@ li {background:url(/xwiki/skins/default/pointer.gif) left no-repeat;padding:0 0 
 .ul-orange {margin:0; padding:0; list-style:none; line-height:15px}
 .ul-orange li {background:url(/xwiki/skins/default/orange_arrow.gif) left no-repeat;padding: 0 0 2px 15px;}
 
-body {margin:0px; padding:0px; background:URL(/xwiki/skins/default/top_line.gif); background-repeat:repeat-x;background-color:#313131}
+body {margin:0px; padding:0px; background:URL(/xwiki/skins/default/top_line.gif); background-repeat:repeat-x;background-color:#313131; }
+
+div { font-family: Tahoma; font-size: 11px; }
 
 .white{font-family:Tahoma; font-size:11px;  color:#FFFFFF;}
 .menu{font-family:Tahoma; font-size:11px;  color:#C2C2C2;}

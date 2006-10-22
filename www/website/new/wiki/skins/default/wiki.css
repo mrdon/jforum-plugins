@@ -1,6 +1,4 @@
-
-.heading-1, .heading-1-1,
-.heading-1-1-1, .heading-1-1-1-1 {
+.heading-1, .heading-1-1, .heading-1-1-1, .heading-1-1-1-1 {
   color: #222222;
   background-color: inherit;
   margin: 3px;
@@ -19,11 +17,10 @@
 
 .heading-1-1 {
   margin-top: 10px;
-  font-size: 17px;
-  color: #009255;
+  font-size: 14px;
+  color: #027398;
   border-bottom: 1px solid;
-  border-color: #009255;
-  background-color: #CCFF80;
+  border-color: #027398;
 }
 
 .heading-1-1-1 {
@@ -40,7 +37,6 @@
   left: 0px;
   font-size: 13px;
 }
-
 
 .quote {
   font-style: italic;
@@ -156,6 +152,9 @@ ol.HEBREW { list-style-type: hebrew; }
 .wikicreatelink {
   text-decoration: none;
 }
+
+.wikiexternallink a { font-family:Tahoma; font-size:11px;  color:#007A97; line-height:13px; }
+.wikilink a { font-family:Tahoma; font-size:11px;  color:#007A97; line-height:13px }
 
 .wikicreatelinktext {
   text-decoration: underline;

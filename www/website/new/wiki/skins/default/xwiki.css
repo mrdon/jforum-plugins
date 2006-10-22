@@ -1,8 +1,6 @@
-
 @import url(layout.css);
 @import url(presentation.css);
 @import url(elements.css);
-
 
 #xwikibanner, #xwikiheader, #xwikifooter {
     display: block;
