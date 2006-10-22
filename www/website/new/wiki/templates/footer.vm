@@ -3,7 +3,7 @@
 			</tr>
 			<tr>
 				<td><img src="$xwiki.getSkinFile("cb_lower_left_corner.gif")" width="15" height="15"></td>
-				<td><img src="$xwiki.getSkinFile("cb_lower_line.gif")" width="497" height="15"></td>
+				<td height="15" background="$xwiki.getSkinFile("cb_lower_line.gif")"></td>
 				<td><img src="$xwiki.getSkinFile("cb_lower_right_corner.gif")" width="15" height="15"></td>
 			</tr>
 		</table></td>
