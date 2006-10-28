@@ -596,6 +596,7 @@ CREATE TABLE jforum_banner (
 DROP TABLE IF EXISTS jforum_mail_integration;
 CREATE TABLE jforum_mail_integration (
 	forum_id INT NOT NULL,
+	forum_email VARCHAR(100) NOT NULL,
 	pop_username VARCHAR(100) NOT NULL,
 	pop_password VARCHAR(100) NOT NULL,
 	pop_host VARCHAR(100) NOT NULL,
