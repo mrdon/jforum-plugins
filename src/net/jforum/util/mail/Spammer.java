@@ -73,7 +73,7 @@ import freemarker.template.Template;
  * Dispatch emails to the world. 
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.28 2006/10/09 00:54:09 rafaelsteil Exp $
+ * @version $Id: Spammer.java,v 1.29 2006/10/28 12:41:55 rafaelsteil Exp $
  */
 public class Spammer
 {
@@ -271,7 +271,7 @@ public class Spammer
 	 * @return the generated content
 	 * @throws Exception
 	 */
-	private String processTemplate() throws Exception
+	protected String processTemplate() throws Exception
 	{
 		StringWriter writer = new StringWriter();
 		this.template.process(this.templateParams, writer);

@@ -34,7 +34,9 @@ function testEmail()
 
 		AjaxUtils.sendTestMail(document.getElementById("sender").value,
 			document.getElementById("host").value,
+			document.getElementById("port").value,
 			document.getElementById("auth").value,
+			document.getElementById("ssl").value,
 			document.getElementById("username").value,
 			document.getElementById("password").value,
 			document.getElementById("address").value,
@@ -268,6 +270,10 @@ function emailStatus(message)
 	<td class='row2' width="38%"><span class='gen'><input type="text" size="30"name="p_mail.smtp.host" id="host" value="${config.getProperty("mail.smtp.host")}" /></span></td>
 </tr>
 <tr>
+	<td class='row2' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.MailPort")}</span></td>
+	<td class='row2' width="38%"><span class='gen'><input type="text" size="30"name="p_mail.smtp.port" id="port" value="${config.getProperty("mail.smtp.port")}" /></span></td>
+</tr>
+<tr>
 	<td class='row1' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.SmtpAuth")}</span></td>
 	<td class='row1' width="38%">
 		<select name="p_mail.smtp.auth" id="auth">
@@ -277,18 +283,27 @@ function emailStatus(message)
 	</td>
 </tr>
 <tr>
+	<td class='row1' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.MailSSL")}</span></td>
+	<td class='row1' width="38%">
+		<select name="p_mail.smtp.ssl" id="ssl">
+			<option value="false" <#if config.getProperty("mail.smtp.ssl") == "false">selected</#if>>${I18n.getMessage("False")}</option>
+			<option value="true" <#if config.getProperty("mail.smtp.ssl") == "true">selected</#if>>${I18n.getMessage("True")}</option>
+		</select>
+	</td>
+</tr>
+<tr>
 	<td class='row2' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.SmtpUsername")}</span></td>
 	<td class='row2' width="38%"><span class='gen'><input type="text" size="30"name="p_mail.smtp.username" id="username" value="${config.getProperty("mail.smtp.username")}" /></span></td>
 </tr>
 <tr>
 	<td class='row1' width="38%"><span class='gen'>${I18n.getMessage("Config.Form.SmtpPassword")}</span></td>
-	<td class='row1' width="38%"><span class='gen'><input type="password" name="p_mail.smtp.password" id="password" value="${config.getProperty("mail.smtp.password")}" /></span></td>
+	<td class='row1' width="38%"><span class='gen'><input type="text" name="p_mail.smtp.password" id="password" value="${config.getProperty("mail.smtp.password")}" /></span></td>
 </tr>
 <tr>
 	<td class='row1' width="38%"><span class='gen'><font color="#ff0000">${I18n.getMessage("Config.Form.SmtpTest")}</font></span></td>
 	<td class='row1' width="38%">
 		<span class='gen'>E-mail: </span> <input type="text" id="address">&nbsp;
-		<input type="button" value="${I18n.getMessage("Config.Form.SmtpTest")}" class="mainoption" id="mailButton" onClick="testEmail()">
+		<input type="button" value="${I18n.getMessage("Config.Form.SmtpTest")}" class="mainoption" id="mailButton" onClick="testEmail();">
 	</td>
 </tr>
 <!-- Topic answer -->

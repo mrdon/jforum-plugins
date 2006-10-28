@@ -59,7 +59,7 @@ import freemarker.template.SimpleHash;
  * General AJAX utility methods. 
  * 
  * @author Rafael Steil
- * @version $Id: AjaxUtils.java,v 1.10 2006/10/09 00:54:12 rafaelsteil Exp $
+ * @version $Id: AjaxUtils.java,v 1.11 2006/10/28 12:41:56 rafaelsteil Exp $
  */
 public class AjaxUtils
 {
@@ -73,8 +73,8 @@ public class AjaxUtils
 	 * @param to the recipient
 	 * @return The status message
 	 */
-	public static String sendTestMail(String sender, String host, String auth, 
-			String  username, String password, String to)
+	public static String sendTestMail(String sender, String host, String port, String auth, 
+		String ssl, String  username, String password, String to)
 	{
 		// Save the current values
 		String originalHost = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_HOST);
@@ -82,6 +82,8 @@ public class AjaxUtils
 		String originalUsername = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_USERNAME);
 		String originalPassword = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_PASSWORD);
 		String originalSender = SystemGlobals.getValue(ConfigKeys.MAIL_SENDER);
+		String originalSSL = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_SSL);
+		String originalPort = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_PORT);
 		
 		// Now put the new ones
 		SystemGlobals.setValue(ConfigKeys.MAIL_SMTP_HOST, host);
@@ -89,6 +91,8 @@ public class AjaxUtils
 		SystemGlobals.setValue(ConfigKeys.MAIL_SMTP_USERNAME, username);
 		SystemGlobals.setValue(ConfigKeys.MAIL_SMTP_PASSWORD, password);
 		SystemGlobals.setValue(ConfigKeys.MAIL_SENDER, sender);
+		SystemGlobals.setValue(ConfigKeys.MAIL_SMTP_SSL, ssl);
+		SystemGlobals.setValue(ConfigKeys.MAIL_SMTP_PORT, port);
 		
 		// Send the test mail
 		class TestSpammer extends Spammer {
@@ -102,12 +106,15 @@ public class AjaxUtils
 				
 				this.setUsers(l);
 				
+				this.setTemplateParams(new SimpleHash());
 				this.prepareMessage("JForum Test Mail", null);
 			}
 			
-			protected String getMessageText(SimpleHash params, String messageFile) throws Exception {
+			protected String processTemplate() throws Exception {
 				return ("Test mail from JForum Admin Panel. Sent at " + new Date());
 			}
+			
+			protected void createTemplate(String messageFile) throws Exception {}
 		}
 		
 		Spammer s = new TestSpammer(to);
@@ -125,6 +132,8 @@ public class AjaxUtils
 			SystemGlobals.setValue(ConfigKeys.MAIL_SMTP_USERNAME, originalUsername);
 			SystemGlobals.setValue(ConfigKeys.MAIL_SMTP_PASSWORD, originalPassword);
 			SystemGlobals.setValue(ConfigKeys.MAIL_SENDER, originalSender);
+			SystemGlobals.setValue(ConfigKeys.MAIL_SMTP_SSL, originalSSL);
+			SystemGlobals.setValue(ConfigKeys.MAIL_SMTP_PORT, originalPort);
 		}
 		
 		return "OK";

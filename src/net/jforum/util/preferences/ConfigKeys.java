@@ -48,7 +48,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.100 2006/10/22 02:07:47 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.101 2006/10/28 12:41:56 rafaelsteil Exp $
 */
 
 public class ConfigKeys 
@@ -227,7 +227,6 @@ public class ConfigKeys
 	public static final String ATTACHMENTS_IMAGES_MAX_THUMB_H = "attachments.images.thumb.maxsize.h";
 	public static final String ATTACHMENTS_IMAGES_THUMB_BOX_SHOW = "attachments.images.thumb.box.show";
 	public static final String ATTACHMENTS_ICON = "attachments.icon";
-	public static final String ATTACHMENTS_DOWNLOAD_MODE = "attachments.download.mode";
 	public static final String ATTACHMENTS_STORE_DIR = "attachments.store.dir";
 	public static final String ATTACHMENTS_UPLOAD_DIR = "attachments.upload.dir";
 	public static final String ATTACHMENTS_ANONYMOUS = "attachments.anonymous";
