@@ -1,16 +1,12 @@
 <%@ taglib uri="/WEB-INF/jspwiki.tld" prefix="wiki" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html><!-- InstanceBegin template="/Templates/base_template.dwt" codeOutsideHTMLIsLocked="false" -->
+<html>
 <head>
-<!--<base href="<wiki:BaseURL />">-->
-<base href="http://localhost:8080/wiki/">
+<base href="<wiki:BaseURL/>">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link href="templates/jforum/wiki.css" rel="stylesheet" type="text/css">
 <link href="style_jforum.css" rel="stylesheet" type="text/css">
-<!-- InstanceBeginEditable name="doctitle" -->
 <title><wiki:Variable var="applicationname" />: <wiki:PageName /></title>
-<!-- InstanceEndEditable -->
-<!-- InstanceBeginEditable name="head" -->
-<!-- InstanceEndEditable -->
 <script type="text/javascript" src="swfobject.js"></script>
 </head>
 
@@ -72,12 +68,22 @@
 						<td background="images/pl_left_line.gif">&nbsp;</td>
 						<td bgcolor="#3F3F3F">
 							<div style="padding:5px 0px;"><img src="images/bt_pl.gif"></div>
-							<div style="padding-top:5px; padding-left:10px;" class="white">
+							<div style="padding-top:5px; padding-left:10px;" class="white wiki-menu">
 								<ul class="ul">
 									<li class="li"><a href="#" class="white">How do I install JForum?</a>
 									<li class="li"><a href="#" class="white">How to contribute</a>
 									<li class="li"><a href="#" class="white">Getting help</a>
 									<li class="li"><a href="#" class="white">Support the project</a>
+
+									<wiki:UserCheck status="notAuthenticated">
+										<li class="li"><span class="white"><wiki:Link jsp="Login.jsp">Log in - Wiki</wiki:Link></span>
+									</wiki:UserCheck>
+
+									<wiki:Permission permission="edit">
+										<li class="li"><wiki:EditLink>Edit page - Wiki</wiki:EditLink>
+										<li class="li"><a href="<wiki:UploadLink format='url' />">Attach File</a>
+										<li class="li"><wiki:Link jsp="Logout.jsp">Log out</wiki:Link>
+									</wiki:Permission>
 								</ul>
 							</div>
 						</td>
@@ -117,7 +123,9 @@
 			<tr>
 				<td background="images/cb_left_line.gif">&nbsp;</td>
 				<td bgcolor="#FFFFFF" width="100%">
-					<wiki:Content/>
+					<div id="wiki-contents">
+						<wiki:Content/>
+					</div>
 				</td>
 				<td background="images/cb_right_line.gif">&nbsp;</td>
 			</tr>
@@ -138,4 +146,4 @@
 	</tr>
 </table>
 </body>
-<!-- InstanceEnd --></html>
+</html>

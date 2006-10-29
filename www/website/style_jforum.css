@@ -8,6 +8,9 @@ li {background:url(images/pointer.gif) left no-repeat;padding:0 0 0 15px;}
 
 body {margin:0px; padding:0px; background:URL(images/top_line.gif); background-repeat:repeat-x;background-color:#313131}
 
+a {font-family:Tahoma; font-size:11px;  color:#007A97; line-height:13px}
+.wiki-menu a {font-family:Tahoma; font-size:11px;  color:#FFFFFF;}
+
 .white{font-family:Tahoma; font-size:11px;  color:#FFFFFF;}
 .menu{font-family:Tahoma; font-size:11px;  color:#C2C2C2;}
 .policy{font-family:Tahoma; font-size:11px;  color:#9C9C9C;}
