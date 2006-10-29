@@ -1,5 +1,6 @@
 upload
 work
+bin
 build
 dist
 .tomcatplugin
@@ -11,6 +12,4 @@ jforum.iml
 jforum.ipr
 jforum.iws
 teste.htm
-
-bin
 *.jsp
