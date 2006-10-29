@@ -5,10 +5,10 @@ package net.jforum.wiki.plugins;
 
 /**
  * @author Rafael Steil
- * @version $Id: Warning.java,v 1.1 2006/10/29 15:36:47 rafaelsteil Exp $
+ * @version $Id: Warning.java,v 1.2 2006/10/29 17:14:10 rafaelsteil Exp $
  */
 public class Warning extends InformationPlugin {
 	public Warning() {
-		super("warning.gif", "warningMacro");
+		super("error.gif", "warningMacro");
 	}
 }
