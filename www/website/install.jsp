@@ -72,6 +72,8 @@
 							<div style="padding:5px 0px;"><img src="images/bt_pl.gif"></div>
 							<div style="padding-top:5px; padding-left:10px;" class="white wiki-menu">
 								<ul class="ul">
+									<li class="li"><a href="/index.jsp" class="white">Home</a>
+									<li class="li"><a href="/community.jsp" class="white">Forum</a>
 									<li class="li"><a href="#" class="white">How do I install JForum?</a>
 									<li class="li"><a href="#" class="white">How to contribute</a>
 									<li class="li"><a href="#" class="white">Getting help</a>

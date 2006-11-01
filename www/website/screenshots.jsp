@@ -1,7 +1,8 @@
 <%@ taglib uri="/WEB-INF/jspwiki.tld" prefix="wiki" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html><!-- InstanceBegin template="/Templates/base_template.dwt" codeOutsideHTMLIsLocked="false" -->
+<html><!-- InstanceBegin template="/Templates/base_template.dwt" codeOutsideHTMLIsLocked="true" -->
 <head>
+
 <base href="<wiki:BaseURL/>">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="style_jforum.css" rel="stylesheet" type="text/css">
@@ -78,11 +79,15 @@ function show_big(image)
 							<div style="padding:5px 0px;"><img src="images/bt_pl.gif"></div>
 							<div style="padding-top:5px; padding-left:10px;" class="white wiki-menu">
 								<ul class="ul">
+									<li class="li"><a href="/home.jsp" class="white">Home</a>
+									<li class="li"><a href="/community.jsp" class="white">Forum</a>
+									<li class="li"><a href="/Wiki.jsp" class="white">Documentation</a>
 									<li class="li"><a href="#" class="white">How do I install JForum?</a>
 									<li class="li"><a href="#" class="white">How to contribute</a>
 									<li class="li"><a href="#" class="white">Getting help</a>
 									<li class="li"><a href="#" class="white">Support the project</a>
 									
+									<!--
 									<wiki:UserCheck status="notAuthenticated">
 										<li class="li"><span class="white"><wiki:Link jsp="Login.jsp">Log in - Wiki</wiki:Link></span>
 									</wiki:UserCheck>
@@ -92,6 +97,7 @@ function show_big(image)
 										<li class="li"><a href="<wiki:UploadLink format='url' />">Attach File</a>
 										<li class="li"><wiki:Link jsp="Logout.jsp">Log out</wiki:Link>
 									</wiki:Permission>
+									-->
 								</ul>
 							</div>
 						</td>
@@ -116,7 +122,7 @@ function show_big(image)
 		<div class="menu" style="padding-left:10px; ">
 			© <b>JForum Team</b><br>
 			Latest version is 2.1.7 <br>
-			Meet the team <br>
+			<a href="/team.jsp" class="white">Meet the team</a> <br>
 		</div>
 		
 		
@@ -206,7 +212,7 @@ function show_big(image)
 		<td>&nbsp;</td>
 		<td align="center" class="menu">
 			<div style="padding-top:5px; padding-bottom:30px;">
-				<b><a href="/index.jsp" class="white">Home</a></b> | <b><a class="white" href="/download.jsp">Download</a></b> | <b><a class="white" href="/support.jsp">Support</a></b> | <b><a href="/community.jsp" class="white">Forum</a></b> | <b><a href="/development.jsp" class="white">Development</a></b> | <b><a href="/contact.jsp" class="white">Contact</a></b>			</div>
+				<b><a href="/home.jsp" class="white">Home</a></b> | <b><a class="white" href="/download.jsp">Download</a></b> | <b><a class="white" href="/support.jsp">Support</a></b> | <b><a href="/community.jsp" class="white">Forum</a></b> | <b><a href="/development.jsp" class="white">Development</a></b> | <b><a href="/contact.jsp" class="white">Contact</a></b>			</div>
 		</td>
 	</tr>
 </table>

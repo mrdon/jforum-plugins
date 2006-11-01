@@ -1,15 +1,15 @@
 <%@ taglib uri="/WEB-INF/jspwiki.tld" prefix="wiki" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html><!-- InstanceBegin template="/Templates/base_template.dwt" codeOutsideHTMLIsLocked="false" -->
+<html><!-- InstanceBegin template="/Templates/base_template.dwt" codeOutsideHTMLIsLocked="true" -->
 <head>
+
 <base href="<wiki:BaseURL/>">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="style_jforum.css" rel="stylesheet" type="text/css">
 <!-- InstanceBeginEditable name="doctitle" -->
 <title>JForum - Powering communities</title>
 <!-- InstanceEndEditable -->
-<!-- InstanceBeginEditable name="head" -->
-<!-- InstanceEndEditable -->
+<!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable -->
 <script type="text/javascript" src="swfobject.js"></script>
 </head>
 
@@ -73,11 +73,15 @@
 							<div style="padding:5px 0px;"><img src="images/bt_pl.gif"></div>
 							<div style="padding-top:5px; padding-left:10px;" class="white wiki-menu">
 								<ul class="ul">
+									<li class="li"><a href="/home.jsp" class="white">Home</a>
+									<li class="li"><a href="/community.jsp" class="white">Forum</a>
+									<li class="li"><a href="/Wiki.jsp" class="white">Documentation</a>
 									<li class="li"><a href="#" class="white">How do I install JForum?</a>
 									<li class="li"><a href="#" class="white">How to contribute</a>
 									<li class="li"><a href="#" class="white">Getting help</a>
 									<li class="li"><a href="#" class="white">Support the project</a>
 									
+									<!--
 									<wiki:UserCheck status="notAuthenticated">
 										<li class="li"><span class="white"><wiki:Link jsp="Login.jsp">Log in - Wiki</wiki:Link></span>
 									</wiki:UserCheck>
@@ -87,6 +91,7 @@
 										<li class="li"><a href="<wiki:UploadLink format='url' />">Attach File</a>
 										<li class="li"><wiki:Link jsp="Logout.jsp">Log out</wiki:Link>
 									</wiki:Permission>
+									-->
 								</ul>
 							</div>
 						</td>
@@ -111,7 +116,7 @@
 		<div class="menu" style="padding-left:10px; ">
 			© <b>JForum Team</b><br>
 			Latest version is 2.1.7 <br>
-			Meet the team <br>
+			<a href="/team.jsp" class="white">Meet the team</a> <br>
 		</div>
 		
 		
@@ -126,96 +131,28 @@
 			<tr>
 				<td background="images/cb_left_line.gif">&nbsp;</td>
 				<td bgcolor="#FFFFFF" width="100%"><!-- InstanceBeginEditable name="MainContent" -->
-					<div style="padding:0px 10px">
-						<img src="images/bt_features.gif">
-						<div><img src="images/hr.gif" width="100%" height="5"></div>
-						<p>JForum has a growing number of features, with a lot more being asked and developed each day. Here you will find a list of the
-						most useful and common features currently available.</p>
-						
-						<!-- Installation -->
-						<div class="blue-title">Installation</div>
-						<div><img src="images/hr.gif" width="100%" height="5"></div>
-						<ul class="ul-orange">
-							<li>Easy installation through graphical web interface </li>
-						</ul>
-						
-						<!-- General -->
-						<div class="blue-title">General</div>
-						<div><img src="images/hr.gif" width="100%" height="5"></div>
-						<ul class="ul-orange">
-							<li>Unlimited forums, categories, and topics</li>
-							<li>Support for several popular databases, including MySQL, PostgreSQL, Oracle and HSQLDB</li>
-							<li>Karma - Rate messages and users</li>
-							<li>Bookmarks - save your favourite threads and share with other users</li>
-							<li>Easy migration from phpBB </li>
-							<li>Friendly URLs (no more long and hard-to-remember links!)</li>
-							<li>Listing of currently online users</li>
-							<li>Listing of the Most Recent topics from the whole forum</li>
-							<li>Fast and scalable, perfect for busy sites - unlike most message board systems, JForum caches frequently accessed data to avoid excessive querying of the database</li>
-						</ul>
-						
-						<!-- Posting Messages -->
-						<div class="blue-title">Posting Messages</div>
-						<div><img src="images/hr.gif" width="100%" height="5"></div>
-						<ul class="ul-orange">
-							<li>File Attachments, with fully customizable options</li>
-							<li>HTML and BBCode support</li>
-							<li>Automatic parsing of links in messages</li>
-							<li>Integrated private message system</li>
-							<li>Email notifications for topics on private messages</li>
-							<li>Unlimited emoticons, easily administered via a configuration panel</li>
-							<li>RSS syndication</li>
-							<li>Sticky topics and announcements</li>
-							<li>Post preview</li>
-						</ul>
-						
-						<!-- Moderation -->
-						<div class="blue-title">Moderation</div>
-						<div><img src="images/hr.gif" width="100%" height="5"></div>
-						<ul class="ul-orange">
-							<li>Easy to moderate</li>
-							<li>Moderated Categories and Forums - Administrators may allow new messages be posted only after the approval of some moderator or administrator </li>
-							<li>Topics can be locked/unlocked and moved between forums</li>
-							<li>Topics can be moved between forums</li>
-						</ul>
-						
-						<!-- Permissions & Security -->
-						<div class="blue-title">Permissions & Security</div>
-						<div><img src="images/hr.gif" width="100%" height="5"></div>
-						<ul class="ul-orange">
-							<li>Read-only forums - Forums where is not possible to post new messages, just reading </li>
-							<li>Reply-only forums - Forums where only reply to existing posts are allowed</li>
-							<li>Robust security system</li>
-							<li>Forum moderators can be granted varying levels of control</li>
-							<li>Advanced HTML filter, for increased security</li>
-						</ul>
-						
-						<!-- Customization & Extensiblity -->
-						<div class="blue-title">Customization & Extensiblity</div>
-						<div><img src="images/hr.gif" width="100%" height="5"></div>
-						<ul class="ul-orange">
-							<li>Easy and fast development for any other data source</li>
-							<li>Familiar and attractive layout</li>
-							<li>Highly customized permission control, allowing fine control over access to any forum and category, by group and by user</li>
-							<li>Easy to support new bbtags via a XML configuration file</li>
-							<li>Uses the simple and powerful Freemarker templating system which allows unlimited control over layout and theming</li>
-							<li>Supports individual themes/templates for users</li>
-							<li>Support for different languages; easy to add new languages</li>
-						</ul>
-						
-						<!-- Users -->
-						<div class="blue-title">Users</div>
-						<div><img src="images/hr.gif" width="100%" height="5"></div>
-						<ul class="ul-orange">
-							<li>Member Listing</li>
-							<li>User defined avatars</li>
-							<li>User banning</li>
-							<li>Unlimited users, groups, and groups per user</li>
-							<li>User profile</li>
-							<li>User ranks</li>
-							<li>Language preferences may be set on a per user basis</li>
-							<li>Remembers last read messages and tracks new posts</li>
-						</ul>
+					<div style="padding:10px;"> <img src="images/bw_whatis.gif">
+							<div><img src="images/hr.gif" width="470" height="10"></div>
+						<div style="padding-top:10px;">
+								<div style="float:right; padding-left:5px;"> <img src="images/thumb1.gif">
+										<div><img src="images/thumb2.gif"></div>
+								</div>
+							<p>JForum is a powerful and robust discussion board system implemented in Javatm. It provides an attractive interface, 
+								an efficient forum engine, an easy to use administrative panel, an advanced permission control system and much more. </p>
+							<p>Built from the ground up around a MVC framework, it can be deployed on any servlet container or Application Server, 
+								such as Tomcat, Resin and JBoss. Its clean design and implementation make JForum easy to customize and extend. </p>
+							<p>Best of all, JForum is freely available under the BSD Open Source license.</p>
+							<p>If you or your company are searching for a serious and robust Forum Software, JForum is the right choice. </p>
+							<div style="padding-top:10px;"><img src="images/orange_arrow.jpg">&nbsp;&nbsp;<a href="#" class="blue">Read more</a></div>
+						</div>
+						<!-- Key features -->
+							<div style="padding-top:10px"> <img src="images/key_features.gif">
+									<div><img src="images/hr.gif" width="200" height="10"></div>
+								<div style="padding-top: 20px;"> <img src="images/bt_fast.jpg" align="middle"> <a href="#" class="blue">Fast. Really fast.</a> <img style="padding-left:100px;" src="images/bt_language.jpg" align="middle"> <a href="#" class="blue">Multi language support</a> </div>
+								<div style="padding-top: 20px;"> <img src="images/bt_customizable.jpg" align="middle"> <a href="#" class="blue">Customizable user interface</a> <img style="padding-left:51px;" src="images/bt_database.jpg" align="middle"> <a href="#" class="blue">Multi database</a> </div>
+								<div style="padding-top: 20px;"> <img src="images/bt_secure.jpg" align="middle"> <a href="#" class="blue">Very secure</a> <img style="padding-left:128px;" src="images/bt_opensource.jpg" align="middle"> <a href="#" class="blue">Open Source</a> </div>
+								<div style="padding-top: 20px;"> <img src="images/bt_fullfeature.jpg" align="middle"> <a href="#" class="blue"><b>See the compleate feature list here</b></a> </div>
+							</div>
 					</div>
 				<!-- InstanceEndEditable --></td>
 				<td background="images/cb_right_line.gif">&nbsp;</td>
@@ -232,7 +169,7 @@
 		<td>&nbsp;</td>
 		<td align="center" class="menu">
 			<div style="padding-top:5px; padding-bottom:30px;">
-				<b><a href="/index.jsp" class="white">Home</a></b> | <b><a class="white" href="/download.jsp">Download</a></b> | <b><a class="white" href="/support.jsp">Support</a></b> | <b><a href="/community.jsp" class="white">Forum</a></b> | <b><a href="/development.jsp" class="white">Development</a></b> | <b><a href="/contact.jsp" class="white">Contact</a></b>			</div>
+				<b><a href="/home.jsp" class="white">Home</a></b> | <b><a class="white" href="/download.jsp">Download</a></b> | <b><a class="white" href="/support.jsp">Support</a></b> | <b><a href="/community.jsp" class="white">Forum</a></b> | <b><a href="/development.jsp" class="white">Development</a></b> | <b><a href="/contact.jsp" class="white">Contact</a></b>			</div>
 		</td>
 	</tr>
 </table>
