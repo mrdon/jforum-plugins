@@ -1,0 +1,47 @@
+!!! Fetching JForum from CVS
+JForum development files are hosted by [Java.net|http://java.net]. Project page is [http://jforum.dev.java.net]. Below you will find a table with the necessary information to anonymously fetch JForum from the CVS:
+
+||Property||Value
+|__Host__|_cvs.dev.java.net_
+|__Path__| 	_/cvs_
+|__Server Type__| 	_pserver_
+|__Username__ |	_guest_
+|__Module__ |	_jforum_
+
+h3. Using a command line CVS client
+* cvs -d :pserver:''guest''@cvs.dev.java.net:/cvs login
+
+followed by
+
+* cvs -d :pserver:''guest''@cvs.dev.java.net:/cvs checkout ''jforum''
+
+For more information about CVS access via command line tools, please read [https://www.dev.java.net/scdocs/ddUsingCVS_command-line]
+
+!! Using WinCVS
+To use [WinCVS|http://www.wincvs.org] to check out your own set of source code files, you must first set up the correct cvs root using the following steps.
+
+# Launch WinCvs and select ''Admin - Preferences''. Enter the CVSroot: '':pserver:guest@cvs.dev.java.net:/cvs'' and click OK.
+# If this is your first cvs checkout, create a folder in Windows Explorer to hold all of your cvs project folders. Then create a subfolder for this project. (You may even want to create separate subfolders for each module if you're working in more than one.)
+# In WinCvs, select ''Admin - Login'' and enter your CVS password.
+# Click on the left window in the program and select a folder. Then select ''Create - Checkout Module''. Select the project folder you created earlier.
+# Enter the project module name and click OK. You should see a scrolling list of filenames as these are created in your folder(s).
+# Repeat the module creation process for each additional cvs module you wish to check out.
+
+For more information, please read [https://www.dev.java.net/scdocs/ddUsingWinCvs]
+
+!! Using Eclipse
+[Eclipse|http://www.eclipse.org] is one of the most known and used Java IDEs in the market. Here's how to import JForum from the CVS:
+
+# In the ''Resource'' or ''Java'' Perspective, right click and choose ''Import''
+# The ''Import / Export'' window will open. Choose ''CVS -> Project from CVS''. Click ''Next''
+# The next step asks you which CVS repository configuration to use. If you already have set up java.net there, choose it from the list (''Use existing repository location''). Otherwise, select ''Create new new repository location''. If you opt to create a new repository, the next step will ask you for the settings. Fill all asked fields and click ''Next''
+# Now there is the ''Select Module'' step. Check ''Use specified Module name'' and put ''jforum'' there. Please make sure to __write ''jforum'' in lowercase__. Click ''Next''
+# Now, in the ''Check out As'' window, select ''Check out as project in the Workspace'', fill the project name, and click ''Next''
+# Next step will ask you where to store the files. You can accept the suggested path or enter a new value. Click ''Next''
+# In the ''Select Tag'' window, click ''Head'' and then click on the ''Finish'' button.
+# That's all. Now you're ready to start developing JForum
+
+!! Building
+After you'd successfully downloaded the source code, it's time to [set up your building environment|Building]
+
+''Parts of the text of this page are from [https://jforum.dev.java.net/servlets/ProjectSource]''
