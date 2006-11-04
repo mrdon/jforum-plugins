@@ -49,8 +49,8 @@ function show_big(image)
 										<div style="padding:10px;" class="white">
 											Many improvements were made, and bugs were fixed.
 										</div>
-										<div style="padding-top:5px;" class="white"><strong><a href="#" class="white">Details</a> | <a href="#" class="white">Download</a></strong></div>
-										<div style="padding-top:5px; padding-bottom: 5px;"><a href="download.htm"><img src="images/dl_now.gif" border="0"></a></div>
+										<div style="padding-top:5px;" class="white"><strong><a href="/download.jsp" class="white">Details</a> | <a href="/download.jsp" class="white">Download</a></strong></div>
+										<div style="padding-top:5px; padding-bottom: 5px;"><a href="download.jsp"><img src="images/dl_now.gif" border="0"></a></div>
 									</td>
 								</tr>
 							</table>
