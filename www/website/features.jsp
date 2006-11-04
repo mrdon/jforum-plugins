@@ -1,4 +1,3 @@
-<%@ taglib uri="/WEB-INF/jspwiki.tld" prefix="wiki" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html><!-- InstanceBegin template="/Templates/base_template.dwt" codeOutsideHTMLIsLocked="true" -->
 <head>
@@ -81,18 +80,6 @@
 									<li class="li"><a href="#" class="white">How to contribute</a>
 									<li class="li"><a href="#" class="white">Getting help</a>
 									<li class="li"><a href="#" class="white">Support the project</a>
-									
-									<!--
-									<wiki:UserCheck status="notAuthenticated">
-										<li class="li"><span class="white"><wiki:Link jsp="Login.jsp">Log in - Wiki</wiki:Link></span>
-									</wiki:UserCheck>
-
-									<wiki:Permission permission="edit">
-										<li class="li"><wiki:EditLink>Edit page - Wiki</wiki:EditLink>
-										<li class="li"><a href="<wiki:UploadLink format='url' />">Attach File</a>
-										<li class="li"><wiki:Link jsp="Logout.jsp">Log out</wiki:Link>
-									</wiki:Permission>
-									-->
 								</ul>
 							</div>
 						</td>

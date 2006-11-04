@@ -322,6 +322,8 @@ CREATE TABLE jforum_users (
   security_hash VARCHAR(32),
   user_karma NUMERIC(10,2),
   user_authhash VARCHAR(32),
+  user_notify_always INTEGER DEFAULT 0,
+  user_notify_text INTEGER DEFAULT 0,
   PRIMARY KEY  (user_id)
 );
 
