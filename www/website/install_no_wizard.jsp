@@ -7,7 +7,16 @@
 <!-- InstanceBeginEditable name="doctitle" -->
 <title>JForum - Powering communities</title>
 <!-- InstanceEndEditable -->
-<!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable -->
+<!-- InstanceBeginEditable name="head" -->
+<style type="text/css">
+<!--
+.style1 {
+	color: #ff0000;
+	font-weight: bold;
+}
+-->
+</style>
+<!-- InstanceEndEditable -->
 <script type="text/javascript" src="swfobject.js"></script>
 </head>
 
@@ -124,8 +133,7 @@
 						
 						<p><i>For automated installation, check the <a class="blue" href="install.jsp">Installation & configuration - Wizard</a> section.</i></p>
 						<p>Note: These instructions are for the installation of JForum, release version 2.1.7. 
-								Some of the steps here described may not be valid for older versions, which are no longer supported.
-						</p>
+								Some of the steps here described may not be valid for older versions, which are no longer supported.						</p>
 						
 						<!-- Downloading -->
 						<div class="blue-title">Downloading JForum</div>
@@ -137,12 +145,10 @@
 						<div><img src="images/hr.gif" width="100%" height="5"></div>
 						<p>
 							After the download, unpack the .ZIP file into your webapp's directory (or anyplace you want to put it). A directory named 
-							<i>JForum-&lt;release&gt;</i> will be created, where &lt;release&gt; is the version, which may be "2.0", "2.1.7" etc... this it just for easy version identification. 
-						</p>
+							<i>JForum-&lt;release&gt;</i> will be created, where &lt;release&gt; is the version, which may be "2.0", "2.1.7" etc... this it just for easy version identification.						</p>
 						<p>
 							You can rename the directory if you want. The next step you should do is register the JForum application within your Servlet Container, 
-							like <a href="http://jakarta.apache.org/tomcat" class="blue">Tomcat</a>. This document will use the context name "jforum", but of course you can use any name you want.
-						</p>
+							like <a href="http://jakarta.apache.org/tomcat" class="blue">Tomcat</a>. This document will use the context name "jforum", but of course you can use any name you want.						</p>
 						
 						<!-- Configuring -->
 						<!-- Downloading -->
@@ -179,8 +185,7 @@
 										<td align="center">Oracle</td>
 										<td>oracle</td>
 									</tr>
-								</table>
-							</td>
+								</table>							</td>
 						</tr>
 					</table>
 					
@@ -215,7 +220,7 @@
 					<p>Edit the file <i>WEB-INF/config/database/&lt;DBNAME&gt;/&lt;DBNAME&gt;.properties</i>, where <i>&lt;DBNAME&gt;</i> is the database name you are using - for instance, mysql, postgresql or hsqldb. In this file there are some options you should change, according to the table below: </p>
 					<table align="center">
 						<tr>
-							<td><table bgcolor="#3aa315" cellspacing="2" width="100%" align="center">
+							<td><table bgcolor="#3aa315" cellspacing="2" width="70%" align="center">
 									<tr>
 										<th class="th-header">Key Name</th>
 										<th class="th-header">key Value description</th>
@@ -239,12 +244,36 @@
 							</table></td>
 						</tr>
 					</table>
-					<p>&nbsp;</p>
-					<!-- Administering -->
-					<div class="blue-title">Administering the Forum</div>
+
+					<p>The other properties you may leave with the default values if you don't know what to put. </p>
+
+					<div class="blue-title">Note for MySQL users</div>
 					<div><img src="images/hr.gif" width="100%" height="5"></div>
-					<p>Now you can login as <b>Admin</b> / &lt;the_password_you_set&gt; and click in the link "Admin Control Panel", at the end of the page. There you will be able to create Categories, Forums, Groups, and Users.
-Don't forget to give write access to the webserver's user to the directories "images" and "tmp" ( as well from its subdiretories, if any ).</p>
+					If you're going to use MySQL 4.1 or newer, please pay attention to the fact that starting from this version (the mysql version, not JForum) many architectural changes were made. By default, now the system runs using the UTF-8 character set (previous versions lack support for it), and it may result in some problems depending the way you configured JForum to connect to MySQL. Regular installations will opt to use unicode and UTF-8 as character encoding, but, when using MySQL 4.1+, you shoudl avoid id.
+To do that, open the file mysql.properties and change the value of the keys "mysql.encoding" and "mysql.unicode" to empty (eg, mysql.unicode= ).
+					
+					<div class="blue-title">Creating the database tables</div>
+					<div><img src="images/hr.gif" width="100%" height="5"></div>
+					The next step is to create the tables. To do that, use the import script named "&lt;DBNAME&gt;_db_struct.sql", placed at WEB-INF/config/database/&lt;DBNAME&gt;. This script will create all necessary tables to run JForum. The script were tested and should work with no problem at all.
+Also, please keep in mind that if you are upgrading JForum you need to take a look to see if a migration script exists. Look in the file named "Readme.txt" in the root directory to see.
+
+					<div class="blue-title">Populating the tables</div>
+					<div><img src="images/hr.gif" width="100%" height="5"></div>
+					Now it is time to run the script to populate the database tables. To do that, use the script named "&lt;DBNAME&gt;_data_dump.sql", also located at WEB-INF/config/database/&lt;DBNAME&gt;. One more time, you should have no problems with this step. If you do, please remember to inform the error message, as well the database name and version you're using.
+					
+					<div class="blue-title">Renaming files</div>
+					<div><img src="images/hr.gif" width="100%" height="5"></div>
+					Now, look for a file named new_rename.htm in the root directoy. If it exists, rename it to index.htm (delete the existing index.htm first). This will make browsers to be redirected to the forum when acessing the context path's root.
+
+					<div class="blue-title">Security Information and Considerations</div>
+					<div><img src="images/hr.gif" width="100%" height="5"></div>
+					<li class="style1">Remove the line "<i>install = net.jforum.view.install.InstallAction</i>" from the file WEB-INF/config/modulesMapping.properties</li>
+					<li>JForum uses a servlet mapping to invoke the pages. This mapping is *.page, and is already properly configured at WEB-INF/web.xml. If you are running JForum on a ISPs which have Apache HTTPD in front of Tomcat, you may need to contact their Technical Support and ask them to explicity enable the mapping for you. </li>
+					<li>The directory "images", "tmp" and "WEB-INF" ( e its sub-directories ) should have write permission to the user who runs the web server. You'll get nasty exceptions if there is no write permission. In the same way, if you're going to use the file attachments support, the directoy you'd chosen to store the files ("uploads" by default) should also be writable.</li>
+					<li>The administration interface is accessible via the link Admin Control Panel, located in the bottom of the main page. You will only see this link if you are logged as Administrator. See above the default password for the admin user:
+					<br><br>
+					The username is Admin and the password is admin </li>
+					<li>This step is <b>HIGHLY</b> recommended: Open the file<i> WEB-INF/config/SystemGlobals.properties</i> and search for a key named user.hash.sequence. There is already a default value to the key, but is <b>VERY RECOMMENDED</b> that you change the value. It may be anything, and you won't need to remember the value. You can just change one or other char, insert some more... just type there some numbers and random characters, and then save the file. This value will be used to enhance the security of your JForum installation, and you will just need to do this step once.</li>
 				</div>
 				<!-- InstanceEndEditable --></td>
 				<td background="images/cb_right_line.gif">&nbsp;</td>
