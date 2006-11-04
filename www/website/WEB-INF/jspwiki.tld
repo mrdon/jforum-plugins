@@ -41,11 +41,33 @@
     <bodycontent>empty</bodycontent>
     <attribute>
        <name>maxpages</name>
-       <required>false</required><!-- the default value is 10 -->
+       <required>false</required>
     </attribute>
     <attribute>
        <name>separator</name>
-       <required>false</required><!-- the default value is " | " -->
+       <required>false</required>
+    </attribute>
+	    <attribute>
+       <name>trailType</name>
+       <required>false</required>
+    </attribute>
+  </tag>
+
+   <tag>
+    <name>Trail</name>
+    <tagclass>net.jforum.wiki.tags.TrailTag</tagclass>
+    <bodycontent>empty</bodycontent>
+    <attribute>
+       <name>maxpages</name>
+       <required>false</required>
+    </attribute>
+    <attribute>
+       <name>separator</name>
+       <required>false</required>
+    </attribute>
+	    <attribute>
+       <name>trailType</name>
+       <required>false</required>
     </attribute>
   </tag>
 

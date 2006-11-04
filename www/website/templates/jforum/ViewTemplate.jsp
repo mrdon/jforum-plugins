@@ -126,7 +126,8 @@
 			<tr>
 				<td background="images/cb_left_line.gif">&nbsp;</td>
 				<td bgcolor="#FFFFFF" width="100%">
-					<div id="wiki-contents">
+					<div class="wiki-contents">
+						<div><wiki:Trail trailType="visit" separator=" > "/></div>
 						<wiki:Content/>
 					</div>
 				</td>

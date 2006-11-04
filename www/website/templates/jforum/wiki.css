@@ -2,7 +2,7 @@
    000 Page blocks and divs
    ---------------------------------------------------- */
 
-ul {margin:0; padding:0; list-style:square; line-height:16px}
+ul {margin-left:30px; padding: 0; list-style:square; line-height:16px}
 li {padding:5px 0 0 5px;}
    
 /* +++ 030 LAYOUT of main ID blocks +++ */
@@ -90,13 +90,8 @@ h2 {
 .wiki-contents h5                       { font-size: 1.0em; font-weight: bold; margin: 1.2em 0em .8em 0em; }
 .wiki-contents h6                       { font-size: 0.8em; font-weight: bold; margin: 1.2em 0em .8em 0em; }
 .wiki-contents p                        { margin: .75em 0 1em 0; }
-strong, b                { font-weight: bold;	}
 
 /* +++ 220 Lists and bullets +++ */
-.wiki-contents ol,ul                    { margin: 0.8em 0 0.8em 1.25em; }
-.wiki-contents ul                       { padding-left: 1.5em; }
-.wiki-contents li                       { margin: 0.6em 0.75em; }
-.wiki-contents li > p                   { margin-top: 0.2em; }
 
 .wiki-contents dl dt                    { font-weight: bold; font-size: 1.2em; }
 .wiki-contents dl dd                    { margin-left: 3em; }
