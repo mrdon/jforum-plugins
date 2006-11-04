@@ -1,8 +1,7 @@
-<%@ taglib uri="/WEB-INF/jspwiki.tld" prefix="wiki" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html><!-- InstanceBegin template="/Templates/base_template.dwt" codeOutsideHTMLIsLocked="false" -->
+<html><!-- InstanceBegin template="/Templates/base_template.dwt" codeOutsideHTMLIsLocked="true" -->
 <head>
-<base href="<wiki:BaseURL/>">
+
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="style_jforum.css" rel="stylesheet" type="text/css">
 <!-- InstanceBeginEditable name="doctitle" -->
@@ -74,20 +73,11 @@
 								<ul class="ul">
 									<li class="li"><a href="/index.jsp" class="white">Home</a>
 									<li class="li"><a href="/community.jsp" class="white">Forum</a>
+									<li class="li"><a href="/Wiki.jsp" class="white">Documentation</a>
 									<li class="li"><a href="#" class="white">How do I install JForum?</a>
 									<li class="li"><a href="#" class="white">How to contribute</a>
 									<li class="li"><a href="#" class="white">Getting help</a>
 									<li class="li"><a href="#" class="white">Support the project</a>
-									
-									<wiki:UserCheck status="notAuthenticated">
-										<li class="li"><span class="white"><wiki:Link jsp="Login.jsp">Log in - Wiki</wiki:Link></span>
-									</wiki:UserCheck>
-
-									<wiki:Permission permission="edit">
-										<li class="li"><wiki:EditLink>Edit page - Wiki</wiki:EditLink>
-										<li class="li"><a href="<wiki:UploadLink format='url' />">Attach File</a>
-										<li class="li"><wiki:Link jsp="Logout.jsp">Log out</wiki:Link>
-									</wiki:Permission>
 								</ul>
 							</div>
 						</td>
@@ -112,7 +102,7 @@
 		<div class="menu" style="padding-left:10px; ">
 			© <b>JForum Team</b><br>
 			Latest version is 2.1.7 <br>
-			Meet the team <br>
+			<a href="/team.jsp" class="white">Meet the team</a> <br>
 		</div>
 		
 		
@@ -141,12 +131,12 @@
 						
 						<!-- Downloading -->
 						<div class="blue-title">Downloading JForum</div>
-						<div><img src="images/hr.gif" width="470" height="5"></div>
+						<div><img src="images/hr.gif" width="100%" height="5"></div>
 						<p>To get JForum, go to the <a class="blue" href="download.jsp">download page</a> and get the latest version.</p>
 						
 						<!-- Unpacking -->
 						<div class="blue-title">Unpacking</div>
-						<div><img src="images/hr.gif" width="470" height="5"></div>
+						<div><img src="images/hr.gif" width="100%" height="5"></div>
 						<p>
 							After the download, unpack the .ZIP file into your webapp's directory (or anyplace you want to put it). A directory named 
 							<i>JForum-&lt;release&gt;</i> will be created, where &lt;release&gt; is the version, which may be "2.0", "2.1.7" etc... this it just for easy version identification. 
@@ -159,7 +149,7 @@
 						<!-- Configuring -->
 						<!-- Downloading -->
 						<div class="blue-title">Configuring</div>
-						<div><img src="images/hr.gif" width="470" height="5"></div>
+						<div><img src="images/hr.gif" width="100%" height="5"></div>
 						<p>Next, point your browser to the following address: </p>
 						<p><a href="http://localhost:8080/jforum/" class="blue">http://localhost:8080/<b>jforum/</b></a></p>
 						<p>The bold text, "jforum", is the context's name. If you changed the context name you will need to change it here too. 
@@ -301,7 +291,7 @@
 					
 					<!-- Administering -->
 					<div class="blue-title">Administering the Forum</div>
-					<div><img src="images/hr.gif" width="470" height="5"></div>
+					<div><img src="images/hr.gif" width="100%" height="5"></div>
 					<p>Now you can login as <b>Admin</b> / &lt;the_password_you_set&gt; and click in the link "Admin Control Panel", at the end of the page. There you will be able to create Categories, Forums, Groups, and Users.
 Don't forget to give write access to the webserver's user to the directories "images" and "tmp" ( as well from its subdiretories, if any ).</p>
 				</div>

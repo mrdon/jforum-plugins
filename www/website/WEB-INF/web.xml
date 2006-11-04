@@ -50,7 +50,7 @@
    </filter-mapping>
    <filter-mapping>
        <filter-name>WikiJSPFilter</filter-name>
-       <url-pattern>/wiki/*</url-pattern>
+       <url-pattern>/doc/*</url-pattern>
    </filter-mapping>
    <filter-mapping>
        <filter-name>WikiJSPFilter</filter-name>
@@ -157,7 +157,7 @@
 
    <servlet-mapping>
        <servlet-name>WikiServlet</servlet-name>
-       <url-pattern>/wiki/*</url-pattern>
+       <url-pattern>/doc/*</url-pattern>
    </servlet-mapping>
 
    <!-- Remove to enable WebDav. EXPERIMENTAL FEATURE!

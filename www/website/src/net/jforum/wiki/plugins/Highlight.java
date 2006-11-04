@@ -11,7 +11,7 @@ import com.ecyrd.jspwiki.plugin.WikiPlugin;
 
 /**
  * @author Rafael Steil
- * @version $Id: Highlight.java,v 1.1 2006/10/29 15:36:47 rafaelsteil Exp $
+ * @version $Id: Highlight.java,v 1.2 2006/11/04 04:13:34 rafaelsteil Exp $
  */
 public class Highlight implements WikiPlugin {
 	private static final String BODY = "_cmdline";
@@ -27,7 +27,7 @@ public class Highlight implements WikiPlugin {
 		if (text == null) {
 			text = "";
 		}
-			
+		
 		sb.append("<table class='highlightMacro' cellpadding='1' width='85%'>")
 		.append("<tr>")
 		.append("<td>");

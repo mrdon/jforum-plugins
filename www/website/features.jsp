@@ -2,7 +2,6 @@
 <html><!-- InstanceBegin template="/Templates/base_template.dwt" codeOutsideHTMLIsLocked="true" -->
 <head>
 
-<base href="<wiki:BaseURL/>">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="style_jforum.css" rel="stylesheet" type="text/css">
 <!-- InstanceBeginEditable name="doctitle" -->
@@ -73,7 +72,7 @@
 							<div style="padding:5px 0px;"><img src="images/bt_pl.gif"></div>
 							<div style="padding-top:5px; padding-left:10px;" class="white wiki-menu">
 								<ul class="ul">
-									<li class="li"><a href="/home.jsp" class="white">Home</a>
+									<li class="li"><a href="/index.jsp" class="white">Home</a>
 									<li class="li"><a href="/community.jsp" class="white">Forum</a>
 									<li class="li"><a href="/Wiki.jsp" class="white">Documentation</a>
 									<li class="li"><a href="#" class="white">How do I install JForum?</a>
@@ -225,7 +224,7 @@
 		<td>&nbsp;</td>
 		<td align="center" class="menu">
 			<div style="padding-top:5px; padding-bottom:30px;">
-				<b><a href="/home.jsp" class="white">Home</a></b> | <b><a class="white" href="/download.jsp">Download</a></b> | <b><a class="white" href="/support.jsp">Support</a></b> | <b><a href="/community.jsp" class="white">Forum</a></b> | <b><a href="/development.jsp" class="white">Development</a></b> | <b><a href="/contact.jsp" class="white">Contact</a></b>			</div>
+				<b><a href="/index.jsp" class="white">Home</a></b> | <b><a class="white" href="/download.jsp">Download</a></b> | <b><a class="white" href="/support.jsp">Support</a></b> | <b><a href="/community.jsp" class="white">Forum</a></b> | <b><a href="/development.jsp" class="white">Development</a></b> | <b><a href="/contact.jsp" class="white">Contact</a></b>			</div>
 		</td>
 	</tr>
 </table>

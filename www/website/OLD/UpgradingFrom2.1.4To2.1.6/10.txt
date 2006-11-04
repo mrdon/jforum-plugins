@@ -1,4 +1,4 @@
-!!! Upgrading from version 2.1.4 to 2.1.6
+!!! Upgradig from version 2.1.4 to 2.1.6
 
 Upgrading from JForum version ''2.1.4'' to version ''2.1.6'' is very simple. 
 
