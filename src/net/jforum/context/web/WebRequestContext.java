@@ -50,6 +50,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -69,7 +70,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: WebRequestContext.java,v 1.3 2006/08/27 01:21:52 rafaelsteil Exp $
+ * @version $Id: WebRequestContext.java,v 1.4 2006/11/05 16:38:11 rafaelsteil Exp $
  */
 public class WebRequestContext extends HttpServletRequestWrapper implements RequestContext
 {
@@ -374,5 +375,41 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 	public Object getObjectRequestParameter(String parameter)
 	{
 		return this.query.get(parameter);
+	}
+	
+	/**
+	 * @see javax.servlet.ServletRequestWrapper#getRemoteAddr()
+	 */
+	public String getRemoteAddr()
+	{
+		// We look if the request is forwarded
+		// If it is not call the older function.
+        String ip = super.getHeader("x-forwarded-for");
+        
+        if (ip != null) {
+        	// Process the IP to keep the last IP (real ip of the computer on the net)
+            StringTokenizer tokenizer = new StringTokenizer(ip, ",");
+
+            // Ignore all tokens, except the last one
+            for (int i = 0; i < tokenizer.countTokens() -1 ; i++) {
+            	tokenizer.nextElement();
+            }
+            
+            ip = tokenizer.nextToken().trim();
+            
+            if (ip.equals("")) {
+            	ip = null;
+            }
+        }
+        else {
+        	ip = super.getRemoteAddr();
+        }
+        
+        // If the ip is still null, we put 0.0.0.0 to avoid null values
+        if (ip == null) {
+        	ip = "0.0.0.0";
+        }
+        
+        return ip;
 	}
 }
