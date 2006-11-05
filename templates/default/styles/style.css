@@ -77,14 +77,13 @@ th.thcornerr { border-top-width: 1px; border-left-width: 0px; border-bottom-widt
 
 blockquote, .code, pre  {
 	font-size: 11px; color: #444444; font-family: verdana, arial, helvetica, sans-serif; background-color: #f3f5ff;
-	border: #01336b 1px solid; padding-left: 5px;
-	overflow: auto; width: 95%;
+	border: #01336b 1px dashed; padding-left: 5px;
 }
 
 .pre-error { font-size: 1em; color: #000000; font-family: verdana, arial, helvetica, sans-serif; background-color: #fafafa; border: 0; padding-left: 0; }
 
 cite { font-weight: bold; font-style: italic; font-size: 11px; }
-pre { font-family: courier, 'courier new', sans-serif;  }
+pre { font-family: courier, 'courier new', sans-serif; border-style: solid;  }
 
 .copyright { font-size: 10px; color: #444444; font-family: verdana, arial, helvetica, sans-serif; letter-spacing: -1px }
 
