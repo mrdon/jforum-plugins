@@ -68,7 +68,7 @@ import net.jforum.view.admin.common.ModerationCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.29 2006/10/10 00:19:09 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.30 2006/11/05 12:46:55 rafaelsteil Exp $
  */
 public class ForumAction extends AdminCommand 
 {
@@ -140,7 +140,7 @@ public class ForumAction extends AdminCommand
 			ForumRepository.reloadForum(f.getId());
 		}
 		
-		this.handleMailIntegration();
+		//this.handleMailIntegration();
 		
 		this.list();
 	}
@@ -310,7 +310,7 @@ public class ForumAction extends AdminCommand
 		SecurityRepository.clean();
 		RolesRepository.clear();
 		
-		this.handleMailIntegration();
+		//this.handleMailIntegration();
 
 		this.list();
 	}

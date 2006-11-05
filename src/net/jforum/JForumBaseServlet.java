@@ -65,7 +65,7 @@ import freemarker.template.Configuration;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumBaseServlet.java,v 1.21 2006/10/10 00:40:54 rafaelsteil Exp $
+ * @version $Id: JForumBaseServlet.java,v 1.22 2006/11/05 12:46:56 rafaelsteil Exp $
  */
 public class JForumBaseServlet extends HttpServlet
 {
@@ -86,7 +86,7 @@ public class JForumBaseServlet extends HttpServlet
 			ConfigLoader.listenForChanges();
 			ConfigLoader.startSearchIndexer();
 			ConfigLoader.startSummaryJob();
-			ConfigLoader.startPop3Integration();
+			//ConfigLoader.startPop3Integration();
 		}
 		catch (Exception e) {
 			throw new ForumStartupException("Error while starting JForum", e);
