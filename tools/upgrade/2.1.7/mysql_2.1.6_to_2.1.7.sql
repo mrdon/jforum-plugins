@@ -1,6 +1,7 @@
 ALTER TABLE jforum_users ADD COLUMN user_authhash VARCHAR(32);
 ALTER TABLE jforum_users ADD COLUMN user_notify_always TINYINT(1) DEFAULT '0';
 ALTER TABLE jforum_users ADD COLUMN user_notify_text TINYINT(1) DEFAULT '0';
+ALTER TABLE jforum_users CHANGE user_karma user_karma DOUBLE;
 
 ALTER TABLE jforum_search_topics ADD KEY (session_id);
 ALTER TABLE jforum_search_results ADD KEY (session_id);
