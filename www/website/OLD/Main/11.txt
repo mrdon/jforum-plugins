@@ -8,7 +8,7 @@ Keep in touch for updates.
 }]
 
 # [Introduction]
-## [Features|http://www.jforum.net/features.jsp]
+## [Features|features]
 # [Installation and Upgrading|http://www.jforum.net/install.jsp]
 ## [New JForum install|http://www.jforum.net/install.jsp]
 ## [Manual Installation|http://www.jforum.net/install_no_wizard.jsp]

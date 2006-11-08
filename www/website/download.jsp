@@ -74,10 +74,10 @@
 									<li class="li"><a href="/index.jsp" class="white">Home</a>
 									<li class="li"><a href="/community.jsp" class="white">Forum</a>
 									<li class="li"><a href="/Wiki.jsp" class="white">Documentation</a>
-									<li class="li"><a href="#" class="white">How do I install JForum?</a>
-									<li class="li"><a href="#" class="white">How to contribute</a>
-									<li class="li"><a href="#" class="white">Getting help</a>
-									<li class="li"><a href="#" class="white">Support the project</a>
+									<li class="li"><a href="/install.jsp" class="white">How do I install JForum?</a>
+									<li class="li"><a href="/doc/HowToContribute" class="white">How to contribute</a>
+									<li class="li"><a href="/Wiki.jsp" class="white">Getting help</a>
+									<li class="li"><a href="/doc/SupportTheProject" class="white">Support the project</a>
 								</ul>
 							</div>
 						</td>
@@ -160,12 +160,12 @@
 											<div style="padding-top:10px"><img src="images/ic_upgrading.gif"></div>
 											<div>
 												<img src="images/orange_arrow.jpg"> Upgrade from previous versions of JForum is very easy and painless. We always work hard to make the process the easiest possible. 
-												<p>If you are going to upgrade your JForum installation, check out the instructions here. </p>
+												<p>If you are going to upgrade your JForum installation,<a href="/doc/Upgrade"> check out the instructions here</a>. </p>
 											</div>
 											
 											<div style="padding-top:10px"><img src="images/ic_bugs.gif"></div>
 											<div>
-												<img src="images/orange_arrow.jpg"> If you ran into a problem, check out our bug reporting tool. The forums are a good place to ask for information as well. </div>
+												<img src="images/orange_arrow.jpg"> If you ran into a problem,<a href="/doc/Jira"> check out our bug reporting tool</a>. The <a href="/community.jsp">forums</a> are a good place to ask for information as well. </div>
 										</td>
 										<td background="images/ic_right_line.gif">&nbsp;</td>
 									</tr>

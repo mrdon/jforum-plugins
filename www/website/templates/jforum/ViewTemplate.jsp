@@ -73,10 +73,10 @@
 									<li class="li"><a href="/index.jsp" class="white">Home</a>
 									<li class="li"><a href="/community.jsp" class="white">Forum</a>
 									<li class="li"><a href="/Wiki.jsp" class="white">Documentation</a>
-									<li class="li"><a href="#" class="white">How do I install JForum?</a>
-									<li class="li"><a href="#" class="white">How to contribute</a>
-									<li class="li"><a href="#" class="white">Getting help</a>
-									<li class="li"><a href="#" class="white">Support the project</a>
+									<li class="li"><a href="/install.jsp" class="white">How do I install JForum?</a>
+									<li class="li"><a href="/doc/HowToContribute" class="white">How to contribute</a>
+									<li class="li"><a href="/Wiki.jsp" class="white">Getting help</a>
+									<li class="li"><a href="/doc/SupportTheProject" class="white">Support the project</a>
 
 									<wiki:UserCheck status="notAuthenticated">
 										<li class="li"><span class="white"><wiki:Link jsp="Login.jsp">Log in - Wiki</wiki:Link></span>
