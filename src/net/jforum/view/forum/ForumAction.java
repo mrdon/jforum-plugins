@@ -74,7 +74,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.55 2006/08/20 22:47:39 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.56 2006/11/12 15:08:07 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -139,9 +139,9 @@ public class ForumAction extends Command
 		this.context.put("userSessions", onlineUsersList);
 		this.context.put("usersOnline", I18n.getMessage("ForumListing.numberOfUsersOnline", 
 			new Object[] {
-					   new Integer(totalUsers),
-					   new Integer(registeredSize),
-					   new Integer(anonymousSize)
+				   new Integer(totalUsers),
+				   new Integer(registeredSize),
+				   new Integer(anonymousSize)
 			}));
 		
 		// Most users ever online
@@ -155,7 +155,7 @@ public class ForumAction extends Command
 		}
 		
 		this.context.put("mostUsersEverOnline", I18n.getMessage("ForumListing.mostUsersEverOnline",
-				new String[] { Integer.toString(mostUsersEverOnline.getTotal()), mostUsersEverOnline.getDate() }));
+			new String[] { Integer.toString(mostUsersEverOnline.getTotal()), mostUsersEverOnline.getDate() }));
 	}
 	
 	public void moderation()

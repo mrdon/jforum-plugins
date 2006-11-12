@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <!-- ********************************************************************* -->
 <!-- Ant build script for JForum -->
+<!-- Version: $Id: build.xml,v 1.15 2006/11/12 15:08:07 rafaelsteil Exp $
 <!-- ********************************************************************* -->
 
 <project name="JForum" default="compile" basedir=".">

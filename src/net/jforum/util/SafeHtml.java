@@ -67,7 +67,7 @@ import org.htmlparser.nodes.TextNode;
  * <li>http://quickwired.com/kallahar/smallprojects/php_xss_filter_function.php
  * <br>
  * @author Rafael Steil
- * @version $Id: SafeHtml.java,v 1.19 2006/11/12 13:00:33 rafaelsteil Exp $
+ * @version $Id: SafeHtml.java,v 1.20 2006/11/12 15:08:08 rafaelsteil Exp $
  */
 public class SafeHtml 
 {
@@ -226,7 +226,7 @@ public class SafeHtml
 		}
 		
 		for (Iterator iter = allowedProtocols.iterator(); iter.hasNext(); ) {
-			String protocol = (String)iter.next();
+			String protocol = iter.next().toString().toLowerCase();
 			
 			if (href.startsWith(protocol)) {
 				return true;

@@ -85,7 +85,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.55 2006/09/13 01:28:47 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.56 2006/11/12 15:08:06 rafaelsteil Exp $
  */
 public class ForumRepository implements Cacheable
 {
@@ -691,6 +691,7 @@ public class ForumRepository implements Cacheable
 	{
 		ConfigDAO cm = DataAccessDriver.getInstance().newConfigDAO();
 		Config config = cm.selectByName(ConfigKeys.MOST_USERS_EVER_ONLINE);
+		
 		if (config == null) {
 			// Total
 			config = new Config();
