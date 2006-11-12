@@ -34,6 +34,8 @@ p, td { font-size: 11px; }
 	<p style="color: green">${I18n.getMessage("Admin.welcome.upToDateVersion")}</p>
 </#if>
 
+<#if developmentVersion> <p style="color: red"><b>Warning: This is a development version of JForum. Please check out the latest <a href="http://www.jforum.net/development.jsp" target="_blank">CVS HEAD</a> for updates.</b></p> </#if>
+
 <#if installModuleExists>
 	<h1>${I18n.getMessage("Admin.welcome.securityWarning")}</h1>
 	<p style="color:red">${I18n.getMessage("Admin.welcome.enabledInstallation")}</p>

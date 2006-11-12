@@ -70,7 +70,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: AdminAction.java,v 1.21 2006/10/09 00:54:08 rafaelsteil Exp $
+ * @version $Id: AdminAction.java,v 1.22 2006/11/12 13:54:05 rafaelsteil Exp $
  */
 public class AdminAction extends Command {
 
@@ -167,6 +167,10 @@ public class AdminAction extends Command {
 		String[] currentParts = current.split("\\.");
 		String[] latestParts = latest.split("\\.");
 		
+		if (currentParts[2].indexOf('-') > -1) {
+			currentParts[2] = currentParts[2].substring(0, currentParts[2].indexOf('-'));
+		}
+		
 		if (Integer.parseInt(latestParts[2]) > Integer.parseInt(currentParts[2]) // Revision
 			|| Integer.parseInt(latestParts[1]) > Integer.parseInt(currentParts[1]) // Minor
 			|| Integer.parseInt(latestParts[0]) > Integer.parseInt(currentParts[0])) { // Major
@@ -178,6 +182,7 @@ public class AdminAction extends Command {
 		
 		this.context.put("latestVersion", latest);
 		this.context.put("currentVersion", current);
+		this.context.put("developmentVersion", current.indexOf("-dev") > -1);
 	}
 	
 	private String readVersionFromSocket()
