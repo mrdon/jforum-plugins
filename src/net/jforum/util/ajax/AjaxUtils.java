@@ -59,7 +59,7 @@ import freemarker.template.SimpleHash;
  * General AJAX utility methods. 
  * 
  * @author Rafael Steil
- * @version $Id: AjaxUtils.java,v 1.11 2006/10/28 12:41:56 rafaelsteil Exp $
+ * @version $Id: AjaxUtils.java,v 1.12 2006/11/12 15:58:15 rafaelsteil Exp $
  */
 public class AjaxUtils
 {
@@ -146,11 +146,11 @@ public class AjaxUtils
 	 */
 	public static Post previewPost(Post p)
 	{
-		p = PostCommon.preparePostForDisplay(p);
-		
 		if (p.isHtmlEnabled()) {
 			p.setText(SafeHtml.makeSafe(p.getText()));
 		}
+		
+		p = PostCommon.preparePostForDisplay(p);
 		
 		return p;
 	}

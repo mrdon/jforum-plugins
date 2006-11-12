@@ -80,7 +80,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.58 2006/08/27 01:22:00 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.59 2006/11/12 15:58:14 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -532,15 +532,11 @@ public class InstallAction extends Command
 		}
 		finally {
 			if (fos != null) {
-                try
-                {
-                    fos.close();
-                }
-                catch (IOException e)
-                {
-                    //catch close outputStream
-                }
-            }
+				try {
+					fos.close();
+				}
+				catch (IOException e) { }
+			}
 		}
 		
 		// Proceed to SystemGlobals / jforum-custom.conf configuration
