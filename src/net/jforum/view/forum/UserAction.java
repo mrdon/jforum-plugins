@@ -85,7 +85,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.82 2006/10/22 17:11:26 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.83 2006/11/12 16:50:18 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -725,14 +725,15 @@ public class UserAction extends Command
 
 		String message;
 		boolean isOk = DataAccessDriver.getInstance().newUserDAO().validateLostPasswordHash(email, hash);
+		
 		if (isOk) {
 			String password = this.request.getParameter("newPassword");
 			DataAccessDriver.getInstance().newUserDAO().saveNewPassword(MD5.crypt(password), email);
 
 			message = I18n.getMessage("PasswordRecovery.ok",
-					new String[] { this.request.getContextPath()
-							+ "/user/login"
-							+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) });
+				new String[] { this.request.getContextPath()
+					+ "/user/login"
+					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) });
 		} 
 		else {
 			message = I18n.getMessage("PasswordRecovery.invalidData");

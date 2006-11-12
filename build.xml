@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!-- ********************************************************************* -->
 <!-- Ant build script for JForum -->
-<!-- Version: $Id: build.xml,v 1.16 2006/11/12 16:50:16 rafaelsteil Exp $  -->
+<!-- Version: $Id: build.xml,v 1.17 2006/11/12 16:57:24 rafaelsteil Exp $  -->
 <!-- ********************************************************************* -->
 
 <project name="JForum" default="compile" basedir=".">
@@ -115,7 +115,7 @@
 				<include name="templates/**/*" />
 				<include name="tmp/**/*" />
 				<include name="upload/*.txt" />
-				<include name="index.htm" />
+				<include name="*.htm" />
 				<include name="__index.redirect" />
 			</fileset>
 			<webinf dir="${web.dir}/WEB-INF">
