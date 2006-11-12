@@ -80,7 +80,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.59 2006/11/12 15:58:14 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.60 2006/11/12 17:53:09 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -113,6 +113,7 @@ public class InstallAction extends Command
 	private void checkLanguage()
 	{
 		String lang = this.request.getParameter("l");
+		
 		if (lang == null || !I18n.languageExists(lang)) {
 			return;
 		}
@@ -148,7 +149,9 @@ public class InstallAction extends Command
 		
 		if (!"passed".equals(this.getFromSession("configureDatabase"))) {
 			logger.info("Going to configure the database...");
+			
 			conn = this.configureDatabase();
+			
 			if (conn == null) {
 				this.context.put("message", I18n.getMessage("Install.databaseError"));
 				this.error();
@@ -264,23 +267,22 @@ public class InstallAction extends Command
 		
 		try {
 			// Index renaming
-			String index = SystemGlobals.getApplicationPath() + "/index.htm";
-			File indexFile = new File(index);
+			String rootDirPath = SystemGlobals.getApplicationPath();
+			File rootDir = new File(rootDirPath);
 			
-			if (indexFile.canWrite()) {
-				String newIndex = SystemGlobals.getApplicationPath() + "/__index.redirect";
+			if (rootDir.canWrite()) {
+				String newIndex = rootDirPath + "/__index.redirect";
 				File newIndexFile = new File(newIndex);
 				
 				if (newIndexFile.exists()) {
-					indexFile.delete();
-					newIndexFile.renameTo(indexFile);
+					newIndexFile.renameTo(new File(rootDirPath + "/index.htm"));
 				}
 				
 				this.addToSessionAndContext("indexFixed", "true");
 			}
 		}
 		catch (Exception e) {
-			logger.warn("Error while renaming index.htm: " + e, e);
+			logger.warn("Error while creating index.htm: " + e, e);
 		}
 	}
 	
@@ -292,7 +294,7 @@ public class InstallAction extends Command
 		SystemGlobals.setValue(ConfigKeys.FORUM_LINK, this.getFromSession("forumLink"));
 		SystemGlobals.setValue(ConfigKeys.HOMEPAGE_LINK, this.getFromSession("siteLink"));
 		SystemGlobals.setValue(ConfigKeys.I18N_DEFAULT, this.getFromSession("language"));
-		//SystemGlobals.setValue(ConfigKeys.INSTALLED, "true");
+		SystemGlobals.setValue(ConfigKeys.INSTALLED, "true");
 		SystemGlobals.saveInstallation();
 		
 		this.restartSystemGlobals();
@@ -460,7 +462,7 @@ public class InstallAction extends Command
 	
 	private boolean canWriteToIndex()
 	{
-		return new File(SystemGlobals.getApplicationPath() + "/index.htm").canWrite();
+		return new File(SystemGlobals.getApplicationPath() + "/__index.redirect").canWrite();
 	}
 	
 	private void handleDatabasePort(Properties p, String port)
