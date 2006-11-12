@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!-- ********************************************************************* -->
 <!-- Ant build script for JForum -->
-<!-- Version: $Id: build.xml,v 1.17 2006/11/12 16:57:24 rafaelsteil Exp $  -->
+<!-- Version: $Id: build.xml,v 1.18 2006/11/12 17:24:38 rafaelsteil Exp $  -->
 <!-- ********************************************************************* -->
 
 <project name="JForum" default="compile" basedir=".">
@@ -32,6 +32,7 @@
 	<property name="classes.dir" value="${build.dir}/classes" />
 	<property name="tomcat.home" value="/java/Tomcat5.5.9" />
 	<property name="deploy.dir" value="${tomcat.home}/webapps" />
+	<property name="deploy.dev.dir" value="${dist.dir}/jforum-test" />
 	<property name="web.dir" value="." />
 
 	<path id="base.path">
@@ -102,11 +103,6 @@
 	<!-- Dist -->
 	<target name="dist" depends="compile" description="Generates the distribution file">
 		<antcall target="splash" />
-		
-		<echo>
-			TEste
-		</echo>
-
 		<war destfile="${dist.dir}/${warfile}" webxml="${web.dir}/WEB-INF/web.xml">
 			<fileset dir="${web.dir}">
 				<include name="images/avatar/*.txt" />
@@ -114,9 +110,12 @@
 				<include name="images/transp.gif" />
 				<include name="templates/**/*" />
 				<include name="tmp/**/*" />
+				<include name="upgrade/**/*" />
 				<include name="upload/*.txt" />
 				<include name="*.htm" />
+				<include name="install.jsp"/>
 				<include name="__index.redirect" />
+				<exclude name="index.htm"/>
 			</fileset>
 			<webinf dir="${web.dir}/WEB-INF">
 				<include name="*.xml" />
@@ -138,6 +137,11 @@
 	<!-- Deploy -->
 	<target name="deploy" depends="dist" description="Copies WAR File into your Container">
 		<copy file="${dist.dir}/${warfile}" todir="${deploy.dir}" />
+	</target>
+	
+	<!-- Deploy Dev -->
+	<target name="deploy-dev" depends="dist" description="Deploys JForum to a development dir">
+		<unzip dest="${deploy.dev.dir}" src="${dist.dir}/${warfile}"></unzip>
 	</target>
 
 	<!-- Undeploy -->
