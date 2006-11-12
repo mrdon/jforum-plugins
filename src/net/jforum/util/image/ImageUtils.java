@@ -43,7 +43,6 @@
 package net.jforum.util.image;
 
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
@@ -60,7 +59,6 @@ import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
 import javax.imageio.stream.ImageOutputStream;
 
 import net.jforum.exceptions.ForumException;
-import net.jforum.util.preferences.SystemGlobals;
 
 import org.apache.log4j.Logger;
 
@@ -69,7 +67,7 @@ import org.apache.log4j.Logger;
  * read from. GIF images will be saved as PNG.
  * 
  * @author Rafael Steil
- * @version $Id: ImageUtils.java,v 1.20 2006/11/08 01:33:26 rafaelsteil Exp $
+ * @version $Id: ImageUtils.java,v 1.21 2006/11/12 13:25:23 rafaelsteil Exp $
  */
 public class ImageUtils
 {
@@ -86,14 +84,10 @@ public class ImageUtils
 	/**
 	 * Resizes an image
 	 * 
-	 * @param imgName
-	 *            The image name to resize. Must be the complet path to the file
-	 * @param type
-	 *            int
-	 * @param maxWidth
-	 *            The image's max width
-	 * @param maxHeight
-	 *            The image's max height
+	 * @param imgName The image name to resize. Must be the complet path to the file
+	 * @param type int
+	 * @param maxWidth The image's max width
+	 * @param maxHeight The image's max height
 	 * @return A resized <code>BufferedImage</code>
 	 */
 	public static BufferedImage resizeImage(String imgName, int type, int maxWidth, int maxHeight)
@@ -122,7 +116,6 @@ public class ImageUtils
 	public static BufferedImage resizeImage(BufferedImage image, int type, int maxWidth, int maxHeight)
 	{
 		Dimension largestDimension = new Dimension(maxWidth, maxHeight);
-		boolean headless = new Boolean(SystemGlobals.getValue("headless")).booleanValue();
 
 		// Original size
 		int imageWidth = image.getWidth(null);
@@ -142,10 +135,6 @@ public class ImageUtils
 			imageHeight = largestDimension.height;
 		}
 
-		if (!headless) {
-			return createBufferedImage(image, type, imageWidth, imageHeight);
-		}
-		
 		return createHeadlessSmoothBufferedImage(image, type, imageWidth, imageHeight);
 	}
 
@@ -204,33 +193,6 @@ public class ImageUtils
 		catch (IOException e) {
 			throw new ForumException(e);
 		}
-	}
-
-	/**
-	 * Creates a <code>BufferedImage</code> from an <code>Image</code>.
-	 * 
-	 * @param image The image to convert
-	 * @param w The desired image width
-	 * @param h The desired image height
-	 * @return The converted image
-	 * @param type int
-	 */
-	public static BufferedImage createBufferedImage(BufferedImage image, int type, int w, int h)
-	{
-		if (type == ImageUtils.IMAGE_PNG && hasAlpha(image)) {
-			type = BufferedImage.TYPE_INT_ARGB;
-		}
-		else {
-			type = BufferedImage.TYPE_INT_RGB;
-		}
-
-		BufferedImage bi = new BufferedImage(w, h, type);
-
-		Graphics g = bi.createGraphics();
-		g.drawImage(image, 0, 0, w, h, null);
-		g.dispose();
-
-		return bi;
 	}
 
 	/**
@@ -346,9 +308,9 @@ public class ImageUtils
 		int blue2 = (value2 & 0x000000FF);
 
 		int rgb = ((int) (alpha1 * (1.0 - distance) + alpha2 * distance) << 24)
-				| ((int) (red1 * (1.0 - distance) + red2 * distance) << 16)
-				| ((int) (green1 * (1.0 - distance) + green2 * distance) << 8)
-				| (int) (blue1 * (1.0 - distance) + blue2 * distance);
+			| ((int) (red1 * (1.0 - distance) + red2 * distance) << 16)
+			| ((int) (green1 * (1.0 - distance) + green2 * distance) << 8)
+			| (int) (blue1 * (1.0 - distance) + blue2 * distance);
 
 		return rgb;
 	}

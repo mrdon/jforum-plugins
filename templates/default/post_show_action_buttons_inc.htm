@@ -11,7 +11,7 @@
 			<script type="text/javascript">writeStars(${post.karma.karmaPoints}, ${post.id});</script>
 		</#if>
 
-		<#if topic.status != STATUS_LOCKED>
+		<#if topic.status != STATUS_LOCKED && !readonly>
 			<a href="${JForumContext.encodeURL("/posts/quote/${start}/${post.id}")}" rel="nofollow" class="icon_quote"><img src="${contextPath}/images/transp.gif" alt="" /></a>
 		</#if>
 
