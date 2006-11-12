@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!-- ********************************************************************* -->
 <!-- Ant build script for JForum -->
-<!-- Version: $Id: build.xml,v 1.15 2006/11/12 15:08:07 rafaelsteil Exp $
+<!-- Version: $Id: build.xml,v 1.16 2006/11/12 16:50:16 rafaelsteil Exp $  -->
 <!-- ********************************************************************* -->
 
 <project name="JForum" default="compile" basedir=".">
@@ -43,10 +43,12 @@
 		</fileset>
 	</path>
 
+	<!-- Splash -->
 	<target name="splash" unless="hide.splash">
 		<splash />
 	</target>
 
+	<!-- Init -->
 	<target name="init">
 		<tstamp>
 			<format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
@@ -56,12 +58,14 @@
 		<mkdir dir="${classes.dir}" />
 	</target>
 
+	<!-- Clean -->
 	<target name="clean" description="clean-up">
 		<delete dir="${dist.dir}" />
 		<delete dir="${build.dir}" />
 		<delete dir="${api.dir}" />
 	</target>
 
+	<!-- Java Docs -->
 	<target name="javadocs" description="Generates the API documentation">
 		<javadoc bottom="${project.name} by ${author} - ${copyright}"
 		         packagenames="${javadoc.packages}"
@@ -79,11 +83,12 @@
 		</javadoc>
 	</target>
 
+	<!-- Compile -->
 	<target name="compile" depends="init" description="Compiles the source code">
 		<javac fork="true"
 		       debug="true"
 		       optimize="false"
-		       deprecation="true"
+		       deprecation="false"
 		       source="1.4"
 		       target="1.4"
 		       srcdir="${src.dir}"
@@ -94,24 +99,34 @@
 		</javac>
 	</target>
 
+	<!-- Dist -->
 	<target name="dist" depends="compile" description="Generates the distribution file">
 		<antcall target="splash" />
+		
+		<echo>
+			TEste
+		</echo>
 
 		<war destfile="${dist.dir}/${warfile}" webxml="${web.dir}/WEB-INF/web.xml">
 			<fileset dir="${web.dir}">
-				<include name="images/**/*" />
+				<include name="images/avatar/*.txt" />
+				<include name="images/smilies/*" />
+				<include name="images/transp.gif" />
 				<include name="templates/**/*" />
 				<include name="tmp/**/*" />
-				<include name="upload/**/*" />
+				<include name="upload/*.txt" />
 				<include name="index.htm" />
-				<include name="latest_version.txt" />
+				<include name="__index.redirect" />
 			</fileset>
 			<webinf dir="${web.dir}/WEB-INF">
 				<include name="*.xml" />
 				<include name="config/**/*" />
 				<exclude name="web.xml" />
 			</webinf>
-			<lib dir="${project.libs}" />
+			<lib dir="${project.libs}">
+				<exclude name="jboss*.jar"/>
+				<exclude name="jgroups*.jar"/>
+			</lib>
 			<classes dir="${classes.dir}" />
 			<manifest>
 				<attribute name="Implementation-Version" value="${version}" />
@@ -120,10 +135,12 @@
 		</war>
 	</target>
 
+	<!-- Deploy -->
 	<target name="deploy" depends="dist" description="Copies WAR File into your Container">
 		<copy file="${dist.dir}/${warfile}" todir="${deploy.dir}" />
 	</target>
 
+	<!-- Undeploy -->
 	<target name="undeploy" description="Undeploy WAR Module from Tomcat">
 		<delete file="${deploy.dir}/${warfile}" />
 		<delete dir="${deploy.dir}/${warfile}" />
