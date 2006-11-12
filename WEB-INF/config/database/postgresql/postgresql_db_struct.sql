@@ -94,8 +94,7 @@ CREATE SEQUENCE jforum_roles_seq;
 CREATE TABLE jforum_roles (
   role_id INT NOT NULL PRIMARY KEY DEFAULT NEXTVAL('jforum_roles_seq'),
   group_id INTEGER DEFAULT 0,
-  name VARCHAR(255) NOT NULL,
-  role_type INTEGER DEFAULT 1
+  name VARCHAR(255) NOT NULL
 );
 CREATE INDEX idx_roles_group ON jforum_roles(group_id);
 CREATE INDEX idx_roles_name ON jforum_roles(name);
@@ -105,8 +104,7 @@ CREATE INDEX idx_roles_name ON jforum_roles(name);
 --
 CREATE TABLE jforum_role_values (
   role_id INT NOT NULL,
-  role_value VARCHAR(255),
-  role_type INTEGER DEFAULT 1
+  role_value VARCHAR(255)
 );
 CREATE INDEX idx_rv_role ON jforum_role_values(role_id);
 

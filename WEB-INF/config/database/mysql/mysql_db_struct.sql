@@ -104,7 +104,6 @@ CREATE TABLE jforum_roles (
   role_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   group_id INT default '0',
   name varchar(255) NOT NULL,
-  role_type TINYINT(1) DEFAULT 1,
   INDEX idx_group (group_id),
   INDEX idx_name (name)
 ) TYPE=InnoDB;
@@ -116,7 +115,6 @@ DROP TABLE IF EXISTS jforum_role_values;
 CREATE TABLE jforum_role_values (
   role_id INT NOT NULL,
   role_value VARCHAR(255),
-  role_type TINYINT(1) DEFAULT 1,
   INDEX idx_role(role_id)
 ) TYPE=InnoDB;
 

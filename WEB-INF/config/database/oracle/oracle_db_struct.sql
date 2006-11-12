@@ -120,7 +120,6 @@ CREATE TABLE jforum_roles (
   role_id NUMBER(10) NOT NULL,
   group_id NUMBER(10) DEFAULT 0,
   name VARCHAR2(255) NOT NULL,
-  role_type NUMBER(10) DEFAULT 1,
   PRIMARY KEY (role_id)
 );
 
@@ -132,8 +131,7 @@ CREATE INDEX idx_roles_name ON jforum_roles(name);
 --
 CREATE TABLE jforum_role_values (
   role_id NUMBER(10) NOT NULL,
-  role_value VARCHAR2(255),
-  role_type NUMBER(10) DEFAULT 1
+  role_value VARCHAR2(255)
 );
 CREATE INDEX idx_rv_role ON jforum_role_values(role_id);
 

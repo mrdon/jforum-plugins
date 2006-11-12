@@ -2,14 +2,13 @@
 -- General Grop
 INSERT INTO jforum_groups ( group_id, group_name, group_description ) VALUES (jforum_groups_seq.nextval, 'General', 'General Users');
 
-INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_administration', 0);
-INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_moderation', 0);
-INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_moderation_post_remove', 0);
-INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_moderation_post_edit', 0);
-INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_moderation_topic_move', 0);
-INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_moderation_topic_lockUnlock', 0);
-INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_vote', 1);
-INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_create_poll', 0);
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_vote');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_karma_enabled');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_anonymous_post');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_create_poll');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_bookmarks_enabled');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_attachments_enabled');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_attachments_download');
 
 --
 --  Users from General Group
@@ -20,15 +19,20 @@ INSERT INTO jforum_user_groups (group_id, user_id) VALUES (jforum_groups_seq.cur
 --  Admin Group
 INSERT INTO jforum_groups ( group_id, group_name, group_description ) VALUES (jforum_groups_seq.nextval, 'Administration', 'Admin Users');
 
-INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_administration', 1);
-INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_moderation', 1);
-INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_moderation_post_remove', 1);
-INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_moderation_post_edit', 1);
-INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_moderation_topic_move', 1);
-INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_moderation_topic_lockUnlock', 1);
-INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_create_sticky_announcement_topics', 1);
-INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_vote', 1);
-INSERT INTO jforum_roles (role_id, group_id, name, role_type) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_create_poll', 1);
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_administration');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_moderation');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_moderation_post_remove');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_moderation_post_edit');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_moderation_topic_move');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_moderation_topic_lockUnlock');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_moderation_approve_messages');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_create_sticky_announcement_topics');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_vote');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_create_poll');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_karma_enabled');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_bookmarks_enabled');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_attachments_enabled');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (jforum_roles_seq.nextval, jforum_groups_seq.currval, 'perm_attachments_download');
 
 -- 
 --  Users from Admin Group

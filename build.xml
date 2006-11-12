@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!-- ********************************************************************* -->
 <!-- Ant build script for JForum -->
-<!-- Version: $Id: build.xml,v 1.18 2006/11/12 17:24:38 rafaelsteil Exp $  -->
+<!-- Version: $Id: build.xml,v 1.19 2006/11/12 19:16:24 rafaelsteil Exp $  -->
 <!-- ********************************************************************* -->
 
 <project name="JForum" default="compile" basedir=".">
@@ -102,7 +102,6 @@
 
 	<!-- Dist -->
 	<target name="dist" depends="compile" description="Generates the distribution file">
-		<antcall target="splash" />
 		<war destfile="${dist.dir}/${warfile}" webxml="${web.dir}/WEB-INF/web.xml">
 			<fileset dir="${web.dir}">
 				<include name="images/avatar/*.txt" />
@@ -121,6 +120,8 @@
 				<include name="*.xml" />
 				<include name="config/**/*" />
 				<exclude name="web.xml" />
+				<exclude name="config/jforum-custom.conf"/>
+				<exclude name="config/jboss-*.xml"/>
 			</webinf>
 			<lib dir="${project.libs}">
 				<exclude name="jboss*.jar"/>
