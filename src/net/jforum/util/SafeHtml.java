@@ -67,31 +67,36 @@ import org.htmlparser.nodes.TextNode;
  * <li>http://quickwired.com/kallahar/smallprojects/php_xss_filter_function.php
  * <br>
  * @author Rafael Steil
- * @version $Id: SafeHtml.java,v 1.18 2006/10/12 06:11:47 rafaelsteil Exp $
+ * @version $Id: SafeHtml.java,v 1.19 2006/11/12 13:00:33 rafaelsteil Exp $
  */
 public class SafeHtml 
 {
 	private static final Logger logger = Logger.getLogger(SafeHtml.class);
 	private static Set welcomeTags;
 	private static Set welcomeAttributes;
+	private static Set allowedProtocols;
 	
 	static {
 		welcomeTags = new HashSet();
 		welcomeAttributes = new HashSet();
+		allowedProtocols = new HashSet();
 		
 		splitAndTrim(ConfigKeys.HTML_TAGS_WELCOME, welcomeTags);
 		splitAndTrim(ConfigKeys.HTML_ATTRIBUTES_WELCOME, welcomeAttributes);
+		splitAndTrim(ConfigKeys.HTML_LINKS_ALLOW_PROTOCOLS, allowedProtocols);
 	}
 	
 	public SafeHtml() {}
 	
 	private static void splitAndTrim(String s, Set data)
 	{
-        String s1 = SystemGlobals.getValue(s);
-        if (s1==null) {
-            return;
-        }
-        String[] tags = s1.toUpperCase().split(",");
+		String s1 = SystemGlobals.getValue(s);
+		
+		if (s1 == null) {
+			return;
+		}
+		
+		String[] tags = s1.toUpperCase().split(",");
 
 		for (int i = 0; i < tags.length; i++) {
 			data.add(tags[i].trim());
@@ -186,9 +191,7 @@ public class SafeHtml
 				}
 				
 				if (("HREF".equals(name) || "SRC".equals(name))) {
-					if (!value.startsWith("http://") 
-						&& !value.startsWith("https://")
-						&& !value.startsWith("mailto:")) {
+					if (!this.isHrefValid(value)) {
 						continue;
 					}
 				}
@@ -212,6 +215,25 @@ public class SafeHtml
 		}
 		
 		tag.setAttributesEx(newAttributes);
+	}
+	
+	private boolean isHrefValid(String href) 
+	{
+		if (SystemGlobals.getBoolValue(ConfigKeys.HTML_LINKS_ALLOW_RELATIVE)
+			&& href.length() > 0 
+			&& href.charAt(0) == '/') {
+			return true;
+		}
+		
+		for (Iterator iter = allowedProtocols.iterator(); iter.hasNext(); ) {
+			String protocol = (String)iter.next();
+			
+			if (href.startsWith(protocol)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	/**
