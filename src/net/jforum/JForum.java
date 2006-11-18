@@ -47,6 +47,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -75,11 +77,12 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.105 2006/10/22 17:11:26 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.106 2006/11/18 21:26:14 rafaelsteil Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
 	private static boolean isDatabaseUp;
+	private static Map modulesCache = new HashMap();
 	
 	/**
 	 * @see javax.servlet.Servlet#init(javax.servlet.ServletConfig)
@@ -165,7 +168,6 @@ public class JForum extends JForumBaseServlet
 			// Process security data
 			SecurityRepository.load(SessionFacade.getUserSession().getUserId());
 
-
 			utils.prepareTemplateContext(context, forumContext);
 
 			String module = request.getModule();
@@ -184,7 +186,7 @@ public class JForum extends JForumBaseServlet
 		
 			if (moduleClass != null) {
 				// Here we go, baby
-				Command c = (Command)Class.forName(moduleClass).newInstance();
+				Command c = this.retrieveCommand(moduleClass);
 				Template template = c.process(request, response, context);
 
 				if (JForumExecutionContext.getRedirectTo() == null) {
@@ -244,6 +246,30 @@ public class JForum extends JForumBaseServlet
 				}
 			}
 		}		
+	}
+	
+	private Command retrieveCommand(String moduleClass) throws Exception
+	{
+		Command c;
+		
+		if (modulesCache.containsKey(moduleClass)) {
+			c = (Command)modulesCache.get(moduleClass);
+		}
+		else {
+			// Ok, there isn't yet a cache for the requested module.
+			// Instantiate it, add to cache and return
+			synchronized (modulesCache) {
+				if (modulesCache.containsKey(moduleClass)) {
+					c = (Command)modulesCache.get(moduleClass);
+				}
+				else {
+					c = (Command)Class.forName(moduleClass).newInstance();
+					modulesCache.put(moduleClass, c);
+				}
+			}
+		}
+		
+		return c;
 	}
 	
 	/** 
