@@ -6,6 +6,7 @@
 <link href="style_jforum.css" rel="stylesheet" type="text/css">
 <!-- InstanceBeginEditable name="doctitle" -->
 <title>JForum - Powering communities</title>
+<script type="text/javascript" src="scripts/jforum.js"></script>
 <!-- InstanceEndEditable -->
 <!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable -->
 <script type="text/javascript" src="swfobject.js"></script>
@@ -124,18 +125,44 @@
 									<div style="padding:0px 10px">
 										<img src="images/bw_whatis.gif">
 										<div><img src="images/hr.gif" width="100%" height="10"></div>
-										<div style="padding-top:10px;">
-											<p>JForum is a powerful and robust discussion board system implemented in Javatm. It provides an attractive interface, 
-												an efficient forum engine, an easy to use administrative panel, an advanced permission control system and much more. </p>
-											<p>Built from the ground up around a MVC framework, it can be deployed on any servlet container or Application Server, 
-												such as Tomcat, Resin and JBoss. Its clean design and implementation make JForum easy to customize and extend. </p>
-											<p>Best of all, JForum is freely available under the BSD Open Source license.</p>
-											<p>If you or your company are searching for a serious and robust Forum Software, JForum is the right choice. </p>
-										</div>
+										<p>JForum is a powerful and robust discussion board system implemented in Java<sup>tm</sup>. It provides an attractive interface, 
+											an efficient forum engine, an easy to use administrative panel, an advanced permission control system and much more. </p>
+										<p>Built from the ground up around a MVC framework, it can be deployed on any servlet container or Application Server, 
+											such as Tomcat, Resin and JBoss. Its clean design and implementation make JForum easy to customize and extend. </p>
+										<p>Best of all, JForum is freely available under the BSD Open Source license.</p>
+										<p>If you or your company are searching for a serious and robust Forum Software, JForum is the right choice. </p>
 										
 										<div>
 											<img src="images/bt_screenshots.gif">
 											<div><img src="images/hr.gif" width="100%" height="10"></div>
+											<p>Here is how JForum looks. Click on the images to see a larger version. Don't forget to 
+											see the <a href="/screenshots.jsp">complete screenshots listing</a>.</p>
+											<table width="100%">
+												<tr>
+													<td width="50%" align="center" valign="top">
+														<a href="#big" onClick="show_big('posting_messages_b.jpg');"><img src="screenshots/posting_messages_s.jpg" border="0"></a>
+														<br>
+														Writing a message
+													</td>
+													<td width="50%" align="center" valign="top">
+														<a href="#big" onClick="show_big('reading_messages_b.jpg');"><img src="screenshots/reading_messages_s.jpg" border="0"></a>
+														<br>
+														Reading a specific message
+													</td>
+												</tr>
+												<tr>
+													<td width="50%" align="center" valign="top">
+														<a href="#big" onClick="show_big('topic_listing_b.jpg');"><img src="screenshots/topic_listing_s.jpg" border="0"></a>
+														<br>
+														Listing of topics of some forum
+													</td>
+													<td width="50%" align="center" valign="top">
+														<a href="#big" onClick="show_big('attaching_files_b.jpg');"><img src="screenshots/attaching_files_s.jpg" border="0"></a>
+														<br>
+														Adding attachments
+													</td>
+												</tr>
+											</table>
 										</div>
 									</div>
 								</td>

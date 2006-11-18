@@ -6,12 +6,7 @@
 <link href="style_jforum.css" rel="stylesheet" type="text/css">
 <!-- InstanceBeginEditable name="doctitle" -->
 <title>JForum - Powering communities</title>
-<script type="text/javascript">
-function show_big(image)
-{
-	window.open('screenshots/' + image, 'screenshot' + image);
-}
-</script>
+<script type="text/javascript" src="scripts/jforum.js"></script>
 <!-- InstanceEndEditable -->
 <!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable -->
 <script type="text/javascript" src="swfobject.js"></script>
