@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!-- ********************************************************************* -->
 <!-- Ant build script for JForum -->
-<!-- Version: $Id: build.xml,v 1.20 2006/11/19 00:04:21 Silenius Exp $  -->
+<!-- Version: $Id: build.xml,v 1.21 2006/11/19 00:38:31 Silenius Exp $  -->
 <!-- ********************************************************************* -->
 
 <project name="JForum" default="compile" basedir=".">
@@ -119,6 +119,7 @@
 				<exclude name="config/jboss-*.xml" />
 			</webinf>
 			<lib dir="${project.libs}">
+				<exclude name="log4j*.jar" />
 				<exclude name="jboss*.jar" />
 				<exclude name="jgroups*.jar" />
 			</lib>
