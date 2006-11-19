@@ -90,6 +90,37 @@
 					</tr>
 				</table></td>
 			</tr>
+			
+			<tr>
+				<td>
+					<table width="214" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td colspan="3"><img src="images/beta_releases.gif"></td>
+						</tr>
+					<tr>
+						<td colspan="3" background="images/beta_stripes.gif" valign="top" width="214">
+							<table border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td valign="top">
+										<div class="white" style="padding:10px">
+											Do you like do live on the fast lane? Can't  wait until the next version to test the latest features? Want to 
+											help developing JForum? Then you must check out the beta releases. 
+										</div>
+										<div style="padding-top:5px; padding-bottom: 5px; padding-left:73px;"><a href="download.jsp"><img src="images/goto_beta.gif" border="0"></a></div>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td width="15"><img src="images/beta_lower_left_corner.gif" width="15" height="15"></td>
+						<td height="15"><img src="images/beta_lower_line.gif" width="184" height="15"></td>
+						<td width="15"><img src="images/beta_lower_right_corner.gif" width="15" height="15"></td>
+					</tr>
+				</table>
+				</td>
+			</tr>
+			
 			<tr>
 				<td><table width="214" border="0" cellspacing="0" cellpadding="0">
 					<tr>
@@ -101,7 +132,7 @@
 		
 		<div class="menu" style="padding-left:10px; ">
 			© <b>JForum Team</b><br>
-			Latest version is 2.1.7 <br>
+			Latest version is 2.1.6 <br>
 			<a href="/team.jsp" class="white">Meet the team</a> <br>
 		</div>
 		
@@ -137,7 +168,7 @@
 										<p>Although, you are required to maintain full credits to the project, and we sincerely ask you to link back to us whenever possible. </p>
 										<div style="padding-top:10px"><img src="images/bt_files.gif"></div>
 										<div><img src="images/hr.gif" width="100%" height="10"></div>
-										<p><img src="images/orange_arrow.jpg" width="8" height="6">&nbsp;<a href="download-latest.jsp" class="blue">Click here to download JForum 2.1.7 </a></p>
+										<p><img src="images/orange_arrow.jpg" width="8" height="6">&nbsp;<a href="download-latest.jsp" class="blue">Click here to download JForum 2.1.6 </a></p>
 										<p><img src="images/orange_arrow.jpg" width="8" height="6">&nbsp;<a href="download-source.jsp" class="blue">Download the source code </a></p>
 									</div>
 								</td>
@@ -193,7 +224,7 @@
 		<td>&nbsp;</td>
 		<td align="center" class="menu">
 			<div style="padding-top:5px; padding-bottom:30px;">
-				<b><a href="/index.jsp" class="white">Home</a></b> | <b><a class="white" href="/download.jsp">Download</a></b> | <b><a class="white" href="/screenshots.jsp">Screenshots</a></b> | <b><a href="/community.jsp" class="white">Forum</a></b> | <b><a href="/development.jsp" class="white">Developers</a></b> | <b><a href="/contact.jsp" class="white">Contact</a></b>			</div>
+				<b><a href="/index.jsp" class="white">Home</a></b> | <b><a class="white" href="/download.jsp">Download</a></b> | <b><a class="white" href="/screenshots.jsp">Screenshots</a></b> | <b><a href="/community.jsp" class="white">Forum</a></b> | <b><a href="/development.jsp" class="white">Developers</a></b> <!-- | <b><a href="/contact.jsp" class="white">Contact</a></b>	-->		</div>
 		</td>
 	</tr>
 </table>

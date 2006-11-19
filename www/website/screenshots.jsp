@@ -91,6 +91,37 @@
 					</tr>
 				</table></td>
 			</tr>
+			
+			<tr>
+				<td>
+					<table width="214" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td colspan="3"><img src="images/beta_releases.gif"></td>
+						</tr>
+					<tr>
+						<td colspan="3" background="images/beta_stripes.gif" valign="top" width="214">
+							<table border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td valign="top">
+										<div class="white" style="padding:10px">
+											Do you like do live on the fast lane? Can't  wait until the next version to test the latest features? Want to 
+											help developing JForum? Then you must check out the beta releases. 
+										</div>
+										<div style="padding-top:5px; padding-bottom: 5px; padding-left:73px;"><a href="download.jsp"><img src="images/goto_beta.gif" border="0"></a></div>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td width="15"><img src="images/beta_lower_left_corner.gif" width="15" height="15"></td>
+						<td height="15"><img src="images/beta_lower_line.gif" width="184" height="15"></td>
+						<td width="15"><img src="images/beta_lower_right_corner.gif" width="15" height="15"></td>
+					</tr>
+				</table>
+				</td>
+			</tr>
+			
 			<tr>
 				<td><table width="214" border="0" cellspacing="0" cellpadding="0">
 					<tr>
@@ -102,7 +133,7 @@
 		
 		<div class="menu" style="padding-left:10px; ">
 			© <b>JForum Team</b><br>
-			Latest version is 2.1.7 <br>
+			Latest version is 2.1.6 <br>
 			<a href="/team.jsp" class="white">Meet the team</a> <br>
 		</div>
 		
@@ -123,58 +154,65 @@
 					<div><img src="images/hr.gif" width="100%" height="10"></div>
 					<p>Here are some screenshots of JForum. Click on the images to see a larger version.</p>
 					
-					<table cellspacing="10" width="100%">
+					<table width="100%" cellspacing="2">
 						<tr>
 							<td valign="top" width="33%">
-								<a href="#big" onclick="show_big('forum_listing_b.jpg');"><img src="screenshots/forum_listing_s.jpg"></a><br>
-								Main forum page, listing all categories and forums available to the user, as well information about the last message of each forum
+								<a href="#big" onclick="show_big('forum_listing_b.jpg');"><img src="screenshots/forum_listing_s.jpg"></a>
+								
 							</td>
 							<td valign="top" width="33%">
-								<a href="#big" onclick="show_big('topic_listing_b.jpg');"><img src="screenshots/topic_listing_s.jpg"></a><br>
-								Topic listing page, showing the first page of topics of some forum
+								<a href="#big" onclick="show_big('topic_listing_b.jpg');"><img src="screenshots/topic_listing_s.jpg"></a>
 							</td>
 		
 							<td valign="top" width="33%">
-								<a href="#big" onclick="show_big('posting_messages_b.jpg');"><img src="screenshots/posting_messages_s.jpg"></a><br>
-								Posting a new message. Note the text formating options and the "Attach Files" button
+								<a href="#big" onclick="show_big('posting_messages_b.jpg');"><img src="screenshots/posting_messages_s.jpg"></a>
 							</td>
+						</tr>
+						
+						<tr>
+							<td>Main forum page, listing all categories and forums available to the user, as well information about the last message of each forum</td>
+							<td>Topic listing page, showing the first page of topics of some forum</td>
+							<td>Posting a new message. Note the text formating options and the "Attach Files" button</td>
 						</tr>
 		
 						<tr><td colspan="3">&nbsp;</td></tr>
 		
 						<tr>
 							<td valign="top">
-		
-								<a href="#big" onclick="show_big('reading_messages_b.jpg');"><img src="screenshots/reading_messages_s.jpg"></a><br>
-								Reading a topic
+								<a href="#big" onclick="show_big('reading_messages_b.jpg');"><img src="screenshots/reading_messages_s.jpg"></a>
 							</td>
 							<td valign="top">
-								<a href="#big" onclick="show_big('config_form_b.jpg');"><img src="screenshots/config_form_s.jpg"></a><br>
-								Board configuration options in the Administration Panel
+								<a href="#big" onclick="show_big('config_form_b.jpg');"><img src="screenshots/config_form_s.jpg"></a>
 							</td>
 							<td valign="top">
-								<a href="#big" onclick="show_big('online_users_b.jpg');"><img src="screenshots/online_users_s.jpg"></a><br>
-								Information about current online users
-							</td>
-		
+								<a href="#big" onclick="show_big('member_listing_b.jpg');"><img src="screenshots/member_listing_s.jpg"></a> </td>
+						</tr>
+						
+						<tr>
+							<td>Reading a topic</td>
+							<td>Board configuration options in the Administration Panel</td>
+							<td>Listing of registered members</td>
 						</tr>
 		
 						<tr><td colspan="3">&nbsp;</td></tr>
 		
 						<tr>
 							<td valign="top">
-								<a href="#big" onclick="show_big('attaching_files_b.jpg');"><img src="screenshots/attaching_files_s.jpg"></a><br>
-								Attaching files to the message
+								<a href="#big" onclick="show_big('attaching_files_b.jpg');"><img src="screenshots/attaching_files_s.jpg"></a>
 							</td>
 							<td valign="top">
 		
-								<a href="#big" onclick="show_big('post_attach_b.jpg');"><img src="screenshots/post_attach_s.jpg"></a><br>
-								Message displaying the File Download box of an attached file
+								<a href="#big" onclick="show_big('post_attach_b.jpg');"><img src="screenshots/post_attach_s.jpg"></a>
 							</td>
 							<td valign="top">
-								<a href="#big" onclick="show_big('member_listing_b.jpg');"><img src="screenshots/member_listing_s.jpg"></a><br>
-								Listing of registered members
-							</td>
+								<a href="#big" onclick="show_big('member_listing_b.jpg');"></a>
+								<a href="#big" onclick="show_big('online_users_b.jpg');"><img src="screenshots/online_users_s.jpg"></a></td>
+						</tr>
+						
+						<tr>
+							<td>Attaching files to the message</td>
+							<td>Message displaying the File Download box of an attached file</td>
+							<td>Information about current online users</td>
 						</tr>
 					</table>
 				</div>
@@ -193,7 +231,7 @@
 		<td>&nbsp;</td>
 		<td align="center" class="menu">
 			<div style="padding-top:5px; padding-bottom:30px;">
-				<b><a href="/index.jsp" class="white">Home</a></b> | <b><a class="white" href="/download.jsp">Download</a></b> | <b><a class="white" href="/screenshots.jsp">Screenshots</a></b> | <b><a href="/community.jsp" class="white">Forum</a></b> | <b><a href="/development.jsp" class="white">Developers</a></b> | <b><a href="/contact.jsp" class="white">Contact</a></b>			</div>
+				<b><a href="/index.jsp" class="white">Home</a></b> | <b><a class="white" href="/download.jsp">Download</a></b> | <b><a class="white" href="/screenshots.jsp">Screenshots</a></b> | <b><a href="/community.jsp" class="white">Forum</a></b> | <b><a href="/development.jsp" class="white">Developers</a></b> <!-- | <b><a href="/contact.jsp" class="white">Contact</a></b>	-->		</div>
 		</td>
 	</tr>
 </table>

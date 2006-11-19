@@ -91,6 +91,37 @@
 					</tr>
 				</table></td>
 			</tr>
+			
+			<tr>
+				<td>
+					<table width="214" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td colspan="3"><img src="images/beta_releases.gif"></td>
+						</tr>
+					<tr>
+						<td colspan="3" background="images/beta_stripes.gif" valign="top" width="214">
+							<table border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td valign="top">
+										<div class="white" style="padding:10px">
+											Do you like do live on the fast lane? Can't  wait until the next version to test the latest features? Want to 
+											help developing JForum? Then you must check out the beta releases. 
+										</div>
+										<div style="padding-top:5px; padding-bottom: 5px; padding-left:73px;"><a href="download.jsp"><img src="images/goto_beta.gif" border="0"></a></div>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td width="15"><img src="images/beta_lower_left_corner.gif" width="15" height="15"></td>
+						<td height="15"><img src="images/beta_lower_line.gif" width="184" height="15"></td>
+						<td width="15"><img src="images/beta_lower_right_corner.gif" width="15" height="15"></td>
+					</tr>
+				</table>
+				</td>
+			</tr>
+			
 			<tr>
 				<td><table width="214" border="0" cellspacing="0" cellpadding="0">
 					<tr>
@@ -102,7 +133,7 @@
 		
 		<div class="menu" style="padding-left:10px; ">
 			© <b>JForum Team</b><br>
-			Latest version is 2.1.7 <br>
+			Latest version is 2.1.6 <br>
 			<a href="/team.jsp" class="white">Meet the team</a> <br>
 		</div>
 		
@@ -139,27 +170,42 @@
 											see the <a href="/screenshots.jsp">complete screenshots listing</a>.</p>
 											<table width="100%">
 												<tr>
-													<td width="50%" align="center" valign="top">
+													<td width="50%" align="left" valign="top">
 														<a href="#big" onClick="show_big('posting_messages_b.jpg');"><img src="screenshots/posting_messages_s.jpg" border="0"></a>
-														<br>
-														Writing a message
 													</td>
-													<td width="50%" align="center" valign="top">
+													<td width="50%" valign="top">
 														<a href="#big" onClick="show_big('reading_messages_b.jpg');"><img src="screenshots/reading_messages_s.jpg" border="0"></a>
-														<br>
-														Reading a specific message
 													</td>
 												</tr>
+												
 												<tr>
-													<td width="50%" align="center" valign="top">
-														<a href="#big" onClick="show_big('topic_listing_b.jpg');"><img src="screenshots/topic_listing_s.jpg" border="0"></a>
-														<br>
-														Listing of topics of some forum
+													<td>
+														<img src="images/orange_arrow.gif"> Writing a message
 													</td>
-													<td width="50%" align="center" valign="top">
+													<td>
+														<img src="images/orange_arrow.gif"> Reading a specific message
+													</td>
+												</tr>
+												
+												<tr>
+													<td colspan="2">&nbsp;</td>
+												</tr>
+												
+												<tr>
+													<td width="50%" valign="top">
+														<a href="#big" onClick="show_big('topic_listing_b.jpg');"><img src="screenshots/topic_listing_s.jpg" border="0"></a>
+													</td>
+													<td width="50%" valign="top">
 														<a href="#big" onClick="show_big('attaching_files_b.jpg');"><img src="screenshots/attaching_files_s.jpg" border="0"></a>
-														<br>
-														Adding attachments
+													</td>
+												</tr>
+												
+												<tr>
+													<td>
+														<img src="images/orange_arrow.gif"> Listing of topics of some forum
+													</td>
+													<td>
+														<img src="images/orange_arrow.gif"> Adding attachments
 													</td>
 												</tr>
 											</table>
@@ -212,7 +258,7 @@
 		<td>&nbsp;</td>
 		<td align="center" class="menu">
 			<div style="padding-top:5px; padding-bottom:30px;">
-				<b><a href="/index.jsp" class="white">Home</a></b> | <b><a class="white" href="/download.jsp">Download</a></b> | <b><a class="white" href="/screenshots.jsp">Screenshots</a></b> | <b><a href="/community.jsp" class="white">Forum</a></b> | <b><a href="/development.jsp" class="white">Developers</a></b> | <b><a href="/contact.jsp" class="white">Contact</a></b>			</div>
+				<b><a href="/index.jsp" class="white">Home</a></b> | <b><a class="white" href="/download.jsp">Download</a></b> | <b><a class="white" href="/screenshots.jsp">Screenshots</a></b> | <b><a href="/community.jsp" class="white">Forum</a></b> | <b><a href="/development.jsp" class="white">Developers</a></b> <!-- | <b><a href="/contact.jsp" class="white">Contact</a></b>	-->		</div>
 		</td>
 	</tr>
 </table>
