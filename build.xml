@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!-- ********************************************************************* -->
 <!-- Ant build script for JForum -->
-<!-- Version: $Id: build.xml,v 1.19 2006/11/12 19:16:24 rafaelsteil Exp $  -->
+<!-- Version: $Id: build.xml,v 1.20 2006/11/19 00:04:21 Silenius Exp $  -->
 <!-- ********************************************************************* -->
 
 <project name="JForum" default="compile" basedir=".">
@@ -43,11 +43,6 @@
 			<include name="**/*.jar" />
 		</fileset>
 	</path>
-
-	<!-- Splash -->
-	<target name="splash" unless="hide.splash">
-		<splash />
-	</target>
 
 	<!-- Init -->
 	<target name="init">
@@ -112,20 +107,20 @@
 				<include name="upgrade/**/*" />
 				<include name="upload/*.txt" />
 				<include name="*.htm" />
-				<include name="install.jsp"/>
+				<include name="install.jsp" />
 				<include name="__index.redirect" />
-				<exclude name="index.htm"/>
+				<exclude name="index.htm" />
 			</fileset>
 			<webinf dir="${web.dir}/WEB-INF">
 				<include name="*.xml" />
 				<include name="config/**/*" />
 				<exclude name="web.xml" />
-				<exclude name="config/jforum-custom.conf"/>
-				<exclude name="config/jboss-*.xml"/>
+				<exclude name="config/jforum-custom.conf" />
+				<exclude name="config/jboss-*.xml" />
 			</webinf>
 			<lib dir="${project.libs}">
-				<exclude name="jboss*.jar"/>
-				<exclude name="jgroups*.jar"/>
+				<exclude name="jboss*.jar" />
+				<exclude name="jgroups*.jar" />
 			</lib>
 			<classes dir="${classes.dir}" />
 			<manifest>
@@ -139,10 +134,10 @@
 	<target name="deploy" depends="dist" description="Copies WAR File into your Container">
 		<copy file="${dist.dir}/${warfile}" todir="${deploy.dir}" />
 	</target>
-	
+
 	<!-- Deploy Dev -->
 	<target name="deploy-dev" depends="dist" description="Deploys JForum to a development dir">
-		<unzip dest="${deploy.dev.dir}" src="${dist.dir}/${warfile}"></unzip>
+		<unwar dest="${deploy.dev.dir}" src="${dist.dir}/${warfile}" />
 	</target>
 
 	<!-- Undeploy -->
