@@ -1,11 +1,9 @@
-\\
+!!! Upgrading from version 2.1.6 to 2.17 (beta)
 
 [{Warning title='Beta version'
 
-Please note that JForum 2.1.7 is still under [development |http://www.jforum.net/beta.jsp].
+Please note that JForum 2.1.7 is still under development [beta|http://www.jforum.net/beta.jsp].
 }]
-
-!!! Upgrading from version 2.1.6 to 2.17 (beta)
 
 Upgrading from JForum version 2.1.6 to version 2.1.7 is very simple. All you have to do is to carefuly follow the steps here described. 
 

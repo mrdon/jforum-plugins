@@ -1,6 +1,6 @@
-ul {margin:0; padding:0; list-style:none; line-height:16px}
+ul {margin:0; padding:0; list-style:square; line-height:16px; padding-left:15px;}
 .ul {margin:0; padding:0; list-style:none; line-height:15px}
-/*li {background:url(images/pointer.gif) left no-repeat;padding:0 0 0 15px;}*/
+li {left no-repeat;}
 .li {background:url(images/green_arrow.gif) left no-repeat;padding:0 0 0 10px;}
 
 .ul-orange {margin:0; padding:0; list-style:none; line-height:15px}

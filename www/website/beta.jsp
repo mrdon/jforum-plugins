@@ -7,8 +7,7 @@
 <!-- InstanceBeginEditable name="doctitle" -->
 <title>JForum - Powering communities</title>
 <!-- InstanceEndEditable -->
-<!-- InstanceBeginEditable name="head" -->
-<!-- InstanceEndEditable -->
+<!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable -->
 <script type="text/javascript" src="swfobject.js"></script>
 </head>
 
@@ -152,98 +151,44 @@
 			<tr>
 				<td background="images/cb_left_line.gif">&nbsp;</td>
 				<td bgcolor="#FFFFFF" width="100%"><!-- InstanceBeginEditable name="MainContent" -->
-					<div style="padding:0px 10px">
-						<img src="images/bt_features.gif">
-						<div><img src="images/hr.gif" width="100%" height="5"></div>
+					<div style="padding:10px; height:496px;" >
+						<img src="images/bt_beta.gif">
+						<div><img src="images/hr.gif" width="100%" height="10"></div>
+						
 						<p>
-							JForum has a growing number of features, with a lot more being asked and developed each day. Here you will find a list of the
-							most useful and common features currently available. Also, take a look <a href="/screenshots.jsp">at some screenshots</a>.
+							The beta releases of JForum allow you to check out the latest available features and improvements, giving you a good
+							idea of what's comming next. As the name implies, a <i>beta relaese</i> is still under development, and it is possible
+							that you may find a feature that's not finished yet, for example.
 						</p>
 						
-						<!-- Installation -->
-						<div class="blue-title">Installation</div>
-						<div><img src="images/hr.gif" width="100%" height="5"></div>
-						<ul class="ul-orange">
-							<li>Easy installation through graphical web interface </li>
-						</ul>
+						<p>
+							Also, the beta release <b>does not have the web installer enabled</b>, so you have to <a href="/install_no_wizard.jsp">install it manually</a>. Other
+							advices and upgrade instructions are available at <a href="/doc/InstallingTheLatestBetaRelease">Installing the latest beta release</a>.
+						</p>
 						
-						<!-- General -->
-						<div class="blue-title">General</div>
+						<div class="blue-title">Downloading the beta</div>
 						<div><img src="images/hr.gif" width="100%" height="5"></div>
-						<ul class="ul-orange">
-							<li>Unlimited forums, categories, and topics</li>
-							<li>Support for several popular databases, including MySQL, PostgreSQL, Oracle and HSQLDB</li>
-							<li>Karma - Rate messages and users</li>
-							<li>Bookmarks - save your favourite threads and share with other users</li>
-							<li>Easy migration from phpBB </li>
-							<li>Friendly URLs (no more long and hard-to-remember links!)</li>
-							<li>Listing of currently online users</li>
-							<li>Listing of the Most Recent topics from the whole forum</li>
-							<li>Fast and scalable, perfect for busy sites - unlike most message board systems, JForum caches frequently accessed data to avoid excessive querying of the database</li>
-						</ul>
+						<p><img src="images/orange_arrow.jpg" width="8" height="6">&nbsp;<a href="/beta/latest_dev.jsp" class="blue">Click here to download the latest beta of JForum</a></p>
 						
-						<!-- Posting Messages -->
-						<div class="blue-title">Posting Messages</div>
-						<div><img src="images/hr.gif" width="100%" height="5"></div>
-						<ul class="ul-orange">
-							<li>File Attachments, with fully customizable options</li>
-							<li>HTML and BBCode support</li>
-							<li>Automatic parsing of links in messages</li>
-							<li>Integrated private message system</li>
-							<li>Email notifications for topics on private messages</li>
-							<li>Unlimited emoticons, easily administered via a configuration panel</li>
-							<li>RSS syndication</li>
-							<li>Sticky topics and announcements</li>
-							<li>Post preview</li>
-						</ul>
+						<p>
+							Please keep in mind that beta releases are not destined to final users, but in fact to those who want to take advantage of a new feature or buf fix.
+						</p>
 						
-						<!-- Moderation -->
-						<div class="blue-title">Moderation</div>
-						<div><img src="images/hr.gif" width="100%" height="5"></div>
-						<ul class="ul-orange">
-							<li>Easy to moderate</li>
-							<li>Moderated Categories and Forums - Administrators may allow new messages be posted only after the approval of some moderator or administrator </li>
-							<li>Topics can be locked/unlocked and moved between forums</li>
-							<li>Topics can be moved between forums</li>
-						</ul>
+						<p>
+							<b><img src="images/orange_arrow.jpg" width="8" height="6">&nbsp;If you are a developer wanting to help JForum, please check the <a href="/development.jsp">development</a> section.</b>
+						</p>
 						
-						<!-- Permissions & Security -->
-						<div class="blue-title">Permissions & Security</div>
+						<div class="blue-title">Running the upgrade scripts / updating the database schema</div>
 						<div><img src="images/hr.gif" width="100%" height="5"></div>
-						<ul class="ul-orange">
-							<li>Read-only forums - Forums where is not possible to post new messages, just reading </li>
-							<li>Reply-only forums - Forums where only reply to existing posts are allowed</li>
-							<li>Robust security system</li>
-							<li>Forum moderators can be granted varying levels of control</li>
-							<li>Advanced HTML filter, for increased security</li>
-						</ul>
+						<p>
+							Each new release of JForum may require changes to the database schema, due to changes in the object model. The <i>upgrade scripts</i> are usually located
+							in the directory <i>upgrade/&lt;version&gt;</i>, and all you have to do is to run it on your database. Don't forget to first make a backup of your current
+							database, in order to not lose anything. 
+						</p>
 						
-						<!-- Customization & Extensiblity -->
-						<div class="blue-title">Customization & Extensiblity</div>
-						<div><img src="images/hr.gif" width="100%" height="5"></div>
-						<ul class="ul-orange">
-							<li>Easy and fast development for any other data source</li>
-							<li>Familiar and attractive layout</li>
-							<li>Highly customized permission control, allowing fine control over access to any forum and category, by group and by user</li>
-							<li>Easy to support new bbtags via a XML configuration file</li>
-							<li>Uses the simple and powerful Freemarker templating system which allows unlimited control over layout and theming</li>
-							<li>Supports individual themes/templates for users</li>
-							<li>Support for different languages; easy to add new languages</li>
-						</ul>
-						
-						<!-- Users -->
-						<div class="blue-title">Users</div>
-						<div><img src="images/hr.gif" width="100%" height="5"></div>
-						<ul class="ul-orange">
-							<li>Member Listing</li>
-							<li>User defined avatars</li>
-							<li>User banning</li>
-							<li>Unlimited users, groups, and groups per user</li>
-							<li>User profile</li>
-							<li>User ranks</li>
-							<li>Language preferences may be set on a per user basis</li>
-							<li>Remembers last read messages and tracks new posts</li>
-						</ul>
+						<p>
+							For more detailed beta installining instructions, check the page <a href="/doc/UpgradingFrom2.1.6To2.1.7">installing the latest beta release</a>.
+						</p>
 					</div>
 				<!-- InstanceEndEditable --></td>
 				<td background="images/cb_right_line.gif">&nbsp;</td>

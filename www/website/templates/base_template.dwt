@@ -41,7 +41,7 @@
 									<td valign="top"><div style="padding:10px;"><img src="../images/product_box.gif"></div></td>
 									<td valign="top">
 										<div style="padding:10px;" class="white">
-											Many improvements were made, and bugs were fixed.
+											Download the latest version now.
 										</div>
 										<div style="padding-top:5px;" class="white"><strong><a href="/download.jsp" class="white">Details</a> | <a href="/download.jsp" class="white">Download</a></strong></div>
 										<div style="padding-top:5px; padding-bottom: 5px;"><a href="../download.jsp"><img src="../images/dl_now.gif" border="0"></a></div>
@@ -102,11 +102,14 @@
 							<table border="0" cellspacing="0" cellpadding="0">
 								<tr>
 									<td valign="top">
-										<div class="white" style="padding:10px">
-											Do you like to live on the fast lane? Can't  wait until the next version to test the latest features? Want to 
-											help developing JForum? Then you must check out the beta releases. 
-										</div>
-										<div style="padding-top:5px; padding-bottom: 5px; padding-left:73px;"><a href="../download.jsp"><img src="../images/goto_beta.gif" border="0"></a></div>
+										<div style="padding:10px">
+											<ul class="white">
+												<li>Do you like to live on the fast lane?</li>
+												<li>Can't  wait until the next version to test the latest features?</li>
+										 		<li>Want to help developing JForum? </li>
+												<li>Then you must check out the beta releases</li>
+											</ul>
+										<div style="padding-top:5px; padding-bottom: 5px; padding-left:73px;"><a href="../beta.jsp"><img src="../images/goto_beta.gif" border="0"></a></div>
 									</td>
 								</tr>
 							</table>
@@ -133,7 +136,7 @@
 		<div class="menu" style="padding-left:10px; ">
 			© <b>JForum Team</b><br>
 			Latest version is 2.1.6 <br>
-			<a href="/team.jsp" class="white">Meet the team</a> <br>
+			<a href="/doc/Team" class="white">Meet the team</a> <br>
 		</div>
 		
 		

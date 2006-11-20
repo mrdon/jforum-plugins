@@ -2,7 +2,8 @@
    000 Page blocks and divs
    ---------------------------------------------------- */
 
-ul {margin-left:30px; padding: 0; list-style:square; line-height:16px}
+ul {margin:0; padding:0; list-style:square; line-height:16px; padding-left:15px;}
+.li-beta {left no-repeat; padding:0px;}
 li {padding:5px 0 0 5px;}
    
 /* +++ 030 LAYOUT of main ID blocks +++ */
