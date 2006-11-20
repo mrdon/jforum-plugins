@@ -190,7 +190,7 @@ CREATE TABLE jforum_ranks (
 --
 
 CREATE TABLE jforum_sessions (
-  session_id VARCHAR(50) NOT NULL DEFAULT '',
+  session_id VARCHAR(150) NOT NULL DEFAULT '',
   session_user_id INTEGER NOT NULL DEFAULT 0,
   session_start timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   session_time int NOT NULL DEFAULT 0,
@@ -402,7 +402,7 @@ CREATE INDEX idx_swm_title ON jforum_search_wordmatch(title_match);
 --
 CREATE TABLE jforum_search_results (
   topic_id INT NOT NULL,
-  session_id VARCHAR(50),
+  session_id VARCHAR(150),
   search_time TIMESTAMP
 );
 CREATE INDEX idx_sr_topic ON jforum_search_results(topic_id);
@@ -422,7 +422,7 @@ CREATE TABLE jforum_search_topics (
   topic_first_post_id INTEGER DEFAULT 0,
   topic_last_post_id INTEGER NOT NULL DEFAULT 0,
   moderated INTEGER DEFAULT 0,
-  session_id VARCHAR(50),
+  session_id VARCHAR(150),
   search_time TIMESTAMP
 );
 

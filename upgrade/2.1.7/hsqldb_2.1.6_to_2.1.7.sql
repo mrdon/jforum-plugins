@@ -5,6 +5,10 @@ ALTER TABLE jforum_users ADD user_notify_text INT DEFAULT 0;
 CREATE INDEX idx_st_session ON jforum_search_topics(session_id);
 CREATE INDEX idx_sr_session ON jforum_search_results(session_id);
 
+ALTER TABLE jforum_sessions ALTER COLUMN session_id VARCHAR(150);
+ALTER TABLE jforum_search_results ALTER COLUMN session_id VARCHAR(150);
+ALTER TABLE jforum_search_topics ALTER COLUMN session_id VARCHAR(150);
+
 ALTER TABLE jforum_forums_watch DROP COLUMN is_read;
 
 DELETE FROM jforum_roles WHERE name <> 'perm_administration';
