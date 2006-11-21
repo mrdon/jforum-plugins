@@ -2,7 +2,7 @@
 # UserModel
 # ##########
 UserModel.selectAllByLimit = SELECT user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail \
-	FROM jforum_users ORDER BY user_id LIMIT ? OFFSET ?
+	FROM jforum_users ORDER BY user_id OFFSET ? LIMIT ?
 
 UserModel.lastGeneratedUserId = SELECT CURRVAL('jforum_users_seq')
 
@@ -18,7 +18,7 @@ UserModel.selectAllByGroup = SELECT user_email, u.user_id, user_posts, user_regd
 	WHERE u.user_id = ug.user_id \
 	AND ug.group_id = ? \
 	ORDER BY user_id \
-	LIMIT ? OFFSET ?
+	OFFSET ? LIMIT ?
 
 # #############
 # PostModel
@@ -33,7 +33,7 @@ PostModel.selectAllByTopicByLimit = SELECT p.post_id, topic_id, forum_id, p.user
 	AND p.user_id = u.user_id \
 	AND p.need_moderate = 0 \
 	ORDER BY post_time ASC \
-	LIMIT ? OFFSET ?
+	OFFSET ? LIMIT ?
 
 PostModel.selectByUserByLimit = SELECT p.post_id, topic_id, forum_id, p.user_id, post_time, poster_ip, enable_bbcode, p.attach, \
 	enable_html, enable_smilies, enable_sig, post_edit_time, post_edit_count, status, pt.post_subject, pt.post_text, username, p.need_moderate \
@@ -44,7 +44,7 @@ PostModel.selectByUserByLimit = SELECT p.post_id, topic_id, forum_id, p.user_id,
 	AND p.need_moderate = 0 \
 	AND forum_id IN(:fids:) \
 	ORDER BY post_time DESC \
-	LIMIT ? OFFSET ?
+	OFFSET ? LIMIT ?
 
 # ##########
 # PollModel
@@ -65,7 +65,7 @@ TopicModel.selectAllByForumByLimit = SELECT t.*, p.user_id AS last_user_id, p.po
 	AND p.post_id = t.topic_last_post_id \
 	AND p.need_moderate = 0 \
 	ORDER BY t.topic_type DESC, t.topic_last_post_id DESC \
-	LIMIT ? OFFSET ?
+	OFFSET ? LIMIT ?
 
 TopicModel.selectByUserByLimit = SELECT t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \
 	FROM jforum_topics t, jforum_posts p \
@@ -74,7 +74,7 @@ TopicModel.selectByUserByLimit = SELECT t.*, p.user_id AS last_user_id, p.post_t
 	AND p.need_moderate = 0 \
 	AND t.forum_id IN(:fids:) \
 	ORDER BY t.topic_last_post_id DESC \
-	LIMIT ? OFFSET ?
+	OFFSET ? LIMIT ?
 		
 TopicModel.lastGeneratedTopicId = SELECT CURRVAL('jforum_topics_seq')
 
@@ -94,7 +94,7 @@ SearchModel.getPostsToIndex = SELECT p.post_id, pt.post_text, pt.post_subject \
 	FROM jforum_posts p, jforum_posts_text pt \
 	WHERE p.post_id = pt.post_id \
 	AND p.post_id BETWEEN ? AND ? \
-	LIMIT ? OFFSET ?
+	OFFSET ? LIMIT ?
 
 # #############
 # SmiliesModel

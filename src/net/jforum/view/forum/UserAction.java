@@ -85,7 +85,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.83 2006/11/12 16:50:18 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.84 2006/11/21 22:12:51 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -288,6 +288,11 @@ public class UserAction extends Command
 
 		if (!error && um.isUsernameRegistered(username)) {
 			this.context.put("error", I18n.getMessage("UsernameExists"));
+			error = true;
+		}
+		
+		if (!error && um.findByEmail(this.request.getParameter("email")) != null) {
+			this.context.put("error", I18n.getMessage("User.emailExists"));
 			error = true;
 		}
 		

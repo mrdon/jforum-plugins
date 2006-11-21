@@ -43,27 +43,20 @@
 package net.jforum.dao.hsqldb;
 
 import net.jforum.dao.PostDAO;
-import net.jforum.dao.ScheduledSearchIndexerDAO;
 import net.jforum.dao.TopicDAO;
 import net.jforum.dao.UserDAO;
-import net.jforum.dao.postgresql.PostgresqlDataAccessDriver;
+import net.jforum.dao.generic.GenericDataAccessDriver;
 
 /**
  * @author Marc Wick
- * @version $Id: HsqldbDataAccessDriver.java,v 1.8 2006/08/20 22:47:47 rafaelsteil Exp $
+ * @version $Id: HsqldbDataAccessDriver.java,v 1.9 2006/11/21 22:07:57 rafaelsteil Exp $
  */
-public class HsqldbDataAccessDriver extends PostgresqlDataAccessDriver 
+public class HsqldbDataAccessDriver extends GenericDataAccessDriver 
 {
 	private static PostDAO postDao = new HsqldbPostDAO();
 	private static UserDAO userDao = new HsqldbUserDAO();
 	private static TopicDAO topicDao = new HsqldbTopicDAO();
-	private static ScheduledSearchIndexerDAO ssdao = new HsqldbScheduledSearchIndexerDAO();
 	
-	public ScheduledSearchIndexerDAO newScheduledSearchIndexerDAO()
-	{
-		return ssdao;
-	}
-
 	/**
 	 * @see net.jforum.dao.DataAccessDriver#newPostDAO()
 	 */

@@ -36,7 +36,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * This file creation date: 24/05/2004 / 12:01 PM
+ * Created on 29/05/2004 00:12:37
  * The JForum Project
  * http://www.jforum.net
  */
@@ -44,35 +44,6 @@ package net.jforum.dao.postgresql;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostgresqlDataAccessDriver.java,v 1.8 2006/08/23 02:13:51 rafaelsteil Exp $
+ * @version $Id: PostgresqlDataAccessDriver.java,v 1.9 2006/11/21 22:07:59 rafaelsteil Exp $
  */
-public class PostgresqlDataAccessDriver extends net.jforum.dao.generic.GenericDataAccessDriver
-{
-	private static PostgresqlPostDAO postDao = new PostgresqlPostDAO();
-	private static PostgresqlTopicDAO topicDao = new PostgresqlTopicDAO();
-	private static PostgresqlUserDAO userDao = new PostgresqlUserDAO();
-
-	/** 
-	 * @see net.jforum.dao.DataAccessDriver#newPostDAO()
-	 */
-	public net.jforum.dao.PostDAO newPostDAO()
-	{
-		return postDao;
-	}
-
-	/** 
-	 * @see net.jforum.dao.DataAccessDriver#newTopicDAO()
-	 */
-	public net.jforum.dao.TopicDAO newTopicDAO()
-	{
-		return topicDao;
-	}
-	
-	/** 
-	 * @see net.jforum.dao.DataAccessDriver#newUserDAO()
-	 */
-	public net.jforum.dao.UserDAO newUserDAO()
-	{
-		return userDao;
-	}	
-}
+public class PostgresqlDataAccessDriver extends net.jforum.dao.generic.GenericDataAccessDriver {}
