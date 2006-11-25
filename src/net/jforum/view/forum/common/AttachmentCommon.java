@@ -80,7 +80,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.32 2006/08/23 02:13:56 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.33 2006/11/25 19:24:34 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {
@@ -248,7 +248,7 @@ public class AttachmentCommon
 	}
 	
 	private boolean shouldCreateThumb(Attachment a) {
-		String extension = a.getInfo().getExtension().getExtension();
+		String extension = a.getInfo().getExtension().getExtension().toLowerCase();
 		
 		return SystemGlobals.getBoolValue(ConfigKeys.ATTACHMENTS_IMAGES_CREATE_THUMB)
 			&& ("jpg".equals(extension) || "jpeg".equals(extension) 

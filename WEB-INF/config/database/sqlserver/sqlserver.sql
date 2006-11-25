@@ -13,7 +13,7 @@ UserModel.selectById = SELECT COUNT(pm.privmsgs_to_userid) AS private_messages, 
 								u.user_session_page, u.user_lastvisit, u.user_regdate, u.user_level, u.user_posts, u.user_timezone, u.user_style, \
 								u.user_lang, u.user_dateformat, u.user_new_privmsg, u.user_unread_privmsg, u.user_last_privmsg, u.user_emailtime, \
 								u.user_viewemail, u.user_attachsig, u.user_allowhtml, u.user_allowbbcode, u.user_allowsmilies, u.user_allowavatar, \
-								u.user_allow_pm, u.user_allow_viewonline, u.user_notify, u.user_notify_pm, u.user_popup_pm, u.rank_id, u.user_avatar, \
+								u.user_allow_pm, u.user_allow_viewonline, u.user_notify_always, u.user_notify_text, u.user_notify, u.user_notify_pm, u.user_popup_pm, u.rank_id, u.user_avatar, \
 								u.user_avatar_type, u.user_email, u.user_icq, u.user_website, u.user_from, CAST(u.user_sig as varchar) as user_sig , u.user_sig_bbcode_uid, \
 								u.user_aim, u.user_yim, u.user_msnm, u.user_occ, u.user_interests, CAST(u.user_biography as varchar) as user_biography, u.user_actkey, u.gender, u.themes_id, u.deleted, \
 								u.user_viewonline, u.security_hash, u.user_karma \
@@ -24,7 +24,7 @@ UserModel.selectById = SELECT COUNT(pm.privmsgs_to_userid) AS private_messages, 
 								u.user_session_page, u.user_lastvisit, u.user_regdate, u.user_level, u.user_posts, u.user_timezone, u.user_style, \
 								u.user_lang, u.user_dateformat, u.user_new_privmsg, u.user_unread_privmsg, u.user_last_privmsg, u.user_emailtime, \
 								u.user_viewemail, u.user_attachsig, u.user_allowhtml, u.user_allowbbcode, u.user_allowsmilies, u.user_allowavatar, \
-								u.user_allow_pm, u.user_allow_viewonline, u.user_notify, u.user_notify_pm, u.user_popup_pm, u.rank_id, u.user_avatar, \
+								u.user_allow_pm, u.user_allow_viewonline, u.user_notify_always, u.user_notify_text, u.user_notify, u.user_notify_pm, u.user_popup_pm, u.rank_id, u.user_avatar, \
 								u.user_avatar_type, u.user_email, u.user_icq, u.user_website, u.user_from, CAST(u.user_sig as varchar), u.user_sig_bbcode_uid, \
 								u.user_aim, u.user_yim, u.user_msnm, u.user_occ, u.user_interests, CAST(u.user_biography as varchar), u.user_actkey, u.gender, u.themes_id, u.deleted, \
 								u.user_viewonline, u.security_hash, u.user_karma

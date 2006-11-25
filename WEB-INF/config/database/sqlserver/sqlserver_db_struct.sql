@@ -345,6 +345,8 @@ CREATE TABLE [jforum_users] (
 	[user_allowavatar] [tinyint] DEFAULT (1) NULL ,
 	[user_allow_pm] [tinyint] DEFAULT (1) NULL ,
 	[user_allow_viewonline] [tinyint] DEFAULT (1) NULL ,
+	[user_notify_always] [tinyint] DEFAULT (0) NULL ,
+	[user_notify_text] [tinyint] DEFAULT (0) NULL ,
 	[user_notify] [tinyint] DEFAULT (1) NULL ,
 	[user_notify_pm] [tinyint] DEFAULT (1) NULL ,
 	[user_popup_pm] [tinyint] DEFAULT (1) NULL ,
