@@ -1,9 +1,17 @@
+# ####################################
+# @author ??? (original coding)
+# @author Dirk Rasmussen - d.rasmussen@bevis.de (modifs for MS SqlServer 2005)
+# @see net.jforum.dao.sqlserver.SqlServerUserDAO.class
+# @see net.jforum.dao.sqlserver.SqlServerTopicDAO..class
+# @see net.jforum.dao.sqlserver.SqlServerPostDAO.class
+# @version $Id$
+# ####################################
+
+# #############
 # GenericModel
 # #############
 
 GenericModel.selectByLimit = SELECT TOP
-
-
 
 # #############
 # UserModel
@@ -31,15 +39,17 @@ UserModel.selectById = SELECT COUNT(pm.privmsgs_to_userid) AS private_messages, 
 								
 UserModel.lastUserRegistered = SELECT TOP 1 user_id, username FROM jforum_users ORDER BY user_regdate DESC
 UserModel.lastGeneratedUserId = SELECT IDENT_CURRENT('jforum_users') AS user_id
-UserModel.selectAllByLimit = user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail FROM jforum_users ORDER BY username
-
+UserModel.selectAllByLimit = SELECT * \
+	FROM ( SELECT ROW_NUMBER() OVER (ORDER BY username ASC) AS rownumber, \
+	user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail \
+	FROM jforum_users ) AS tmp \
+	WHERE rownumber BETWEEN ? and ?
 
 # #############
 # GroupModel
 # #############
 
 GroupModel.lastGeneratedGroupId = SELECT IDENT_CURRENT('jforum_groups') AS group_id
-
 
 # #############
 # ForumModel
@@ -53,29 +63,32 @@ ForumModel.selectAll =  SELECT f.forum_id, f.categories_id, f.forum_name, f.foru
 						LEFT JOIN jforum_posts p \
 						ON p.topic_id = t.topic_id \
 						GROUP BY f.forum_id, f.categories_id, f.forum_name, f.forum_desc, f.forum_order, f.forum_topics, f.forum_last_post_id, f.moderated 
-
-						
+					
 # #############
 # CategoryModel
 # #############
+
 CategoryModel.lastGeneratedCategoryId = SELECT IDENT_CURRENT('jforum_categories') AS categories_id 
 
 # #############
 # PostModel
 # #############
+
 PostModel.lastGeneratedPostId = SELECT IDENT_CURRENT('jforum_posts') AS post_id
 
 PostModel.addNewPost = INSERT INTO jforum_posts (topic_id, forum_id, user_id, post_time, poster_ip, enable_bbcode, enable_html, enable_smilies, enable_sig, post_edit_time, need_moderate) \
 	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, GETDATE(), ?)
 
-PostModel.selectAllByTopicByLimit = SELECT p.post_id, topic_id, forum_id, p.user_id, post_time, poster_ip, enable_bbcode, p.attach, \
+PostModel.selectAllByTopicByLimit = SELECT * \
+	FROM ( SELECT ROW_NUMBER() OVER (ORDER BY post_time ASC) AS rownumber, \
+	p.post_id, topic_id, forum_id, p.user_id, post_time, poster_ip, enable_bbcode, p.attach, \
 	enable_html, enable_smilies, enable_sig, post_edit_time, post_edit_count, status, pt.post_subject, pt.post_text, username, p.need_moderate \
 	FROM jforum_posts p, jforum_posts_text pt, jforum_users u \
 	WHERE p.post_id = pt.post_id \
 	AND topic_id = ? \
 	AND p.user_id = u.user_id \
-	AND p.need_moderate = 0 \
-	ORDER BY post_time ASC
+	AND p.need_moderate = 0 ) AS tmp \
+	WHERE rownumber between ? and ?
 	
 # #############
 # ForumModel
@@ -90,32 +103,35 @@ ForumModel.selectById = SELECT f.*, COUNT(p.post_id) AS total_posts \
 	      f.forum_name, f.forum_desc, f.forum_order, \
 	      f.forum_topics, f.forum_last_post_id, f.moderated
 
-
 ForumModel.lastGeneratedForumId = SELECT IDENT_CURRENT('jforum_forums') AS forum_id
-
-
 
 # #############
 # TopicModel
 # #############
-TopicModel.selectAllByForumByLimit = SELECT t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \
+
+TopicModel.selectAllByForumByLimit = SELECT * \
+	FROM ( SELECT ROW_NUMBER() OVER (ORDER BY t.topic_type DESC, t.topic_last_post_id DESC) AS rownumber, \
+	t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \
 	FROM jforum_topics t, jforum_posts p \
 	WHERE t.forum_id = ? \
 	AND p.post_id = t.topic_last_post_id \
-	AND p.need_moderate = 0 \
-	ORDER BY t.topic_type DESC, t.topic_last_post_id DESC
+	AND p.need_moderate = 0 ) AS tmp \
+	WHERE rownumber between ? and ?
 	
-TopicModel.selectRecentTopicsByLimit = SELECT t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \
+TopicModel.selectRecentTopicsByLimit = SELECT * \
+	FROM ( SELECT ROW_NUMBER() OVER (ORDER BY t.topic_last_post_id DESC) AS rownumber, \
+	t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \
 	FROM jforum_topics t, jforum_posts p \
 	WHERE p.post_id = t.topic_last_post_id \
-	AND p.need_moderate = 0 \
-	ORDER BY topic_last_post_id DESC
+	AND p.need_moderate = 0 ) AS tmp \
+	WHERE rownumber <= ?
 	
 TopicModel.lastGeneratedTopicId = SELECT IDENT_CURRENT('jforum_topics') AS topic_id 
 
 # #############
 # PrivateMessagesModel
 # #############
+
 PrivateMessagesModel.lastGeneratedPmId = SELECT IDENT_CURRENT('jforum_privmsgs') AS privmsgs_id 
 
 PrivateMessageModel.selectById = SELECT p.privmsgs_id, p.privmsgs_type, p.privmsgs_subject, p.privmsgs_from_userid, p.privmsgs_to_userid, \
@@ -126,6 +142,7 @@ PrivateMessageModel.selectById = SELECT p.privmsgs_id, p.privmsgs_type, p.privms
 # #############
 # SearchModel
 # #############
+
 SearchModel.lastGeneratedWordId = SELECT IDENT_CURRENT('jforum_search_words') AS word_id 
 
 SearchModel.cleanSearchResults = DELETE FROM jforum_search_results WHERE session_id = ? OR search_time < DATEADD(HOUR, -1, getdate())
@@ -136,7 +153,6 @@ SearchModel.insertTopicsIds = INSERT INTO jforum_search_results ( topic_id, sess
 									SELECT DISTINCT t.topic_id, ?, GETDATE() FROM jforum_topics t, jforum_posts p \
 									WHERE t.topic_id = p.topic_id \
 									AND p.post_id IN (:posts:)
-
 
 SearchModel.searchByTime = INSERT INTO jforum_search_results (topic_id, session_id, search_time) SELECT DISTINCT t.topic_id, ?, GETDATE() FROM jforum_topics t, jforum_posts p \
 	WHERE t.topic_id = p.topic_id \
@@ -155,7 +171,6 @@ SearchModel.selectTopicData = INSERT INTO jforum_search_topics (topic_id, forum_
 # #############
 
 SmiliesModel.lastGeneratedSmilieId = SELECT IDENT_CURRENT('jforum_smilies') AS smilie_id 
-
 
 # #############
 # PermissionControl

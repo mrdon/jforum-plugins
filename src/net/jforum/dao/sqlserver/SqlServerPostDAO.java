@@ -58,10 +58,14 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerPostDAO.java,v 1.10 2006/08/23 02:13:54 rafaelsteil Exp $
+ * @author Dirk Rasmussen - d.rasmussen@bevis.de (2006/11/27, modifs for MS SqlServer 2005)
+ * @see WEB-INF\config\database\sqlserver\sqlserver.sql (2006/11/27, MS SqlServer 2005 specific version!)
+ * @version $Id: SqlServerPostDAO.java,v 1.11 2006/11/28 01:43:06 rafaelsteil Exp $
  */
 public class SqlServerPostDAO extends net.jforum.dao.generic.GenericPostDAO
 {
+	private static final Logger logger = Logger.getLogger(SqlServerPostDAO.class);
+
 	/**
 	 * @see net.jforum.dao.PostDAO#selectById(int)
 	 */
@@ -69,8 +73,14 @@ public class SqlServerPostDAO extends net.jforum.dao.generic.GenericPostDAO
 	{
 		PreparedStatement p = null;
 		ResultSet rs = null;
+		String sqlStmnt = SystemGlobals.getSql("PostModel.selectById");
+
 		try {
-			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.selectById"),
+			if (logger.isDebugEnabled())
+			{
+				logger.debug("selectById("+postId+")..., sqlStmnt="+sqlStmnt);
+			}
+			p = JForumExecutionContext.getConnection().prepareStatement(sqlStmnt,
 					ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			p.setInt(1, postId);
 
@@ -85,6 +95,7 @@ public class SqlServerPostDAO extends net.jforum.dao.generic.GenericPostDAO
 			return post;
 		}
 		catch (SQLException e) {
+			logger.error(sqlStmnt, e);
 			throw new DatabaseException(e);
 		}
 		finally {
@@ -99,18 +110,21 @@ public class SqlServerPostDAO extends net.jforum.dao.generic.GenericPostDAO
 	{
 		List l = new ArrayList();
 
-		String top = SystemGlobals.getSql("GenericModel.selectByLimit");
-		String sql = top + " " + count + " " + SystemGlobals.getSql("PostModel.selectAllByTopicByLimit1") + " " + top
-				+ " " + startFrom + " " + SystemGlobals.getSql("PostModel.selectAllByTopicByLimit2");
-
 		PreparedStatement p = null;
 		ResultSet rs = null;
+		String sqlStmnt = SystemGlobals.getSql("PostModel.selectAllByTopicByLimit");
+
 		try {
-			p = JForumExecutionContext.getConnection().prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE,
-					ResultSet.CONCUR_UPDATABLE);
-			Logger.getLogger(this.getClass()).debug(sql);
+			if (logger.isDebugEnabled())
+			{
+				logger.debug("selectAllByTopicByLimit("+topicId+","+startFrom+","+count+")..., sqlStmnt="+sqlStmnt);
+			}
+			p = JForumExecutionContext.getConnection().prepareStatement(sqlStmnt,
+					ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
 			p.setInt(1, topicId);
-			p.setInt(2, topicId);
+			p.setInt(2, startFrom);
+			p.setInt(3, startFrom+count);
 
 			rs = p.executeQuery();
 
@@ -121,6 +135,7 @@ public class SqlServerPostDAO extends net.jforum.dao.generic.GenericPostDAO
 			return l;
 		}
 		catch (SQLException e) {
+			logger.error(sqlStmnt, e);
 			throw new DatabaseException(e);
 		}
 		finally {

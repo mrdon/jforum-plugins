@@ -51,32 +51,43 @@ import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.SystemGlobals;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerTopicDAO.java,v 1.11 2006/08/23 02:13:54 rafaelsteil Exp $
+ * @author Dirk Rasmussen - d.rasmussen@bevis.de (2006/11/27, modifs for MS SqlServer 2005)
+ * @see WEB-INF\config\database\sqlserver\sqlserver.sql (2006/11/27, MS SqlServer 2005 specific version!)
+ * @version $Id: SqlServerTopicDAO.java,v 1.12 2006/11/28 01:43:03 rafaelsteil Exp $
  */
 public class SqlServerTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 {
+	private static final Logger logger = Logger.getLogger(SqlServerTopicDAO.class);
+
 	/**
 	 * @see net.jforum.dao.TopicDAO#selectAllByForumByLimit(int, int, int)
 	 */
 	public List selectAllByForumByLimit(int forumId, int startFrom, int count)
 	{
-		String top = SystemGlobals.getSql("GenericModel.selectByLimit");
-
 		PreparedStatement p = null;
+		String sqlStmnt = SystemGlobals.getSql("TopicModel.selectAllByForumByLimit");
+
 		try {
-			p = JForumExecutionContext.getConnection().prepareStatement(
-					(top + " " + count + " " + SystemGlobals.getSql("TopicModel.selectAllByForumByLimit1") + " " + top
-							+ " " + startFrom + " " + SystemGlobals.getSql("TopicModel.selectAllByForumByLimit2")));
+			if (logger.isDebugEnabled())
+			{
+				logger.debug("selectAllByForumByLimit("+forumId+","+startFrom+","+count+")..., sqlStmnt="+sqlStmnt);
+			}
+			p = JForumExecutionContext.getConnection().prepareStatement(sqlStmnt);
+
 			p.setInt(1, forumId);
-			p.setInt(2, forumId);
+			p.setInt(2, startFrom);
+			p.setInt(3, startFrom+count);
 
 			List list = super.fillTopicsData(p);
 			p = null;
 			return list;
 		}
 		catch (SQLException e) {
+			logger.error(sqlStmnt, e);
 			throw new DatabaseException(e);
 		}
 		finally {
@@ -90,16 +101,24 @@ public class SqlServerTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 	public List selectRecentTopics(int limit)
 	{
 		PreparedStatement p = null;
+		String sqlStmnt = SystemGlobals.getSql("TopicModel.selectRecentTopicsByLimit");
+
 		try {
-			p = JForumExecutionContext.getConnection().prepareStatement(
-					SystemGlobals.getSql("GenericModel.selectByLimit") + " " + limit + " "
-							+ SystemGlobals.getSql("TopicModel.selectRecentTopicsByLimit"));
+			if (logger.isDebugEnabled())
+			{
+				logger.debug("selectRecentTopics("+limit+")..., sqlStmnt="+sqlStmnt);
+			}
+
+			p = JForumExecutionContext.getConnection().prepareStatement(sqlStmnt);
+
+			p.setInt(1, limit );
 
 			List list = this.fillTopicsData(p);
 			p = null;
 			return list;
 		}
 		catch (SQLException e) {
+			logger.error(sqlStmnt, e);
 			throw new DatabaseException(e);
 		}
 		finally {

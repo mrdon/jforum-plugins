@@ -52,12 +52,19 @@ import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.SystemGlobals;
 
+import org.apache.log4j.Logger;
+
+
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @version $Id: SqlServerUserDAO.java,v 1.9 2006/08/23 02:13:54 rafaelsteil Exp $
+ * @author Dirk Rasmussen - d.rasmussen@bevis.de (2006/11/27, modifs for MS SqlServer 2005)
+ * @see WEB-INF\config\database\sqlserver\sqlserver.sql (2006/11/27, MS SqlServer 2005 specific version!)
+ * @version $Id: SqlServerUserDAO.java,v 1.10 2006/11/28 01:43:05 rafaelsteil Exp $
  */
 public class SqlServerUserDAO extends net.jforum.dao.generic.GenericUserDAO
 {
+	private static final Logger logger = Logger.getLogger(SqlServerUserDAO.class);
+
 	/**
 	 * @see net.jforum.dao.UserDAO#selectAll(int, int)
 	 */
@@ -65,18 +72,26 @@ public class SqlServerUserDAO extends net.jforum.dao.generic.GenericUserDAO
 	{
 		PreparedStatement p = null;
 		ResultSet rs = null;
+		String sqlStmnt = null;
 
 		try {
 			if (count > 0) {
-				p = JForumExecutionContext.getConnection().prepareStatement(
-						SystemGlobals.getSql("GenericModel.selectByLimit") + " " + count + " "
-								+ SystemGlobals.getSql("UserModel.selectAllByLimit"));
+				sqlStmnt = SystemGlobals.getSql("UserModel.selectAllByLimit");
+				if (logger.isDebugEnabled())
+				{
+					logger.debug("selectAll("+startFrom+","+count+")..., sqlStmnt="+sqlStmnt);
+				}
+				p = JForumExecutionContext.getConnection().prepareStatement(sqlStmnt);
 				p.setInt(1, startFrom);
-				p.setInt(2, count);
+				p.setInt(2, startFrom+count);
 			}
 			else {
-				p = JForumExecutionContext.getConnection()
-						.prepareStatement(SystemGlobals.getSql("UserModel.selectAll"));
+				sqlStmnt = SystemGlobals.getSql("UserModel.selectAll");
+				if (logger.isDebugEnabled())
+				{
+					logger.debug("selectAll("+startFrom+","+count+")..., sqlStmnt="+sqlStmnt);
+				}
+				p = JForumExecutionContext.getConnection().prepareStatement(sqlStmnt);
 			}
 
 			rs = p.executeQuery();
@@ -84,6 +99,7 @@ public class SqlServerUserDAO extends net.jforum.dao.generic.GenericUserDAO
 			return super.processSelectAll(rs);
 		}
 		catch (SQLException e) {
+			logger.error(sqlStmnt, e);
 			throw new DatabaseException(e);
 		}
 		finally {
