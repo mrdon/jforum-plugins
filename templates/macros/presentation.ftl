@@ -105,7 +105,7 @@
 		document.formModeration.submit();
 	}
 	</script>
-	<#if isModerator>
+	<#if isModerator || isAdmin>
 		<#if can_remove_posts?default(false)>
 			<a href="javascript:deleteTopic();"><img class="icon_topic_delete" src="${contextPath}/images/transp.gif" title="${I18n.getMessage("Delete")}" alt="" /></a>
 		</#if>

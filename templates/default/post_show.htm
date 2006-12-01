@@ -272,7 +272,7 @@
 				</tr>
 				</#if>
 				
-				<#if isModerator>
+				<#if isModerator || isAdmin>
 					<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="formModeration" id="formModeration">
 					<input type="hidden" name="action" value="doModeration" />
 					<input type="hidden" name="module" value="moderation" />

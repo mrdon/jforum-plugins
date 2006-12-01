@@ -103,7 +103,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.161 2006/11/04 01:33:41 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.162 2006/12/01 23:42:42 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -320,10 +320,7 @@ public class PostAction extends Command
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 
-        // TODO us and anonymousUser not used. remove or use?
         UserSession us = SessionFacade.getUserSession();
-		int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
-		
 		User u = um.selectById(this.request.getIntParameter("user_id"));
 		
 		if (u.getId() == 0) {
@@ -387,6 +384,8 @@ public class PostAction extends Command
 		this.context.put("forums", forums);
 		this.context.put("u", u);
 		this.context.put("pageTitle", I18n.getMessage("PostShow.userPosts") + " " + u.getUsername());
+		this.context.put("karmaMin", new Integer(SystemGlobals.getValue(ConfigKeys.KARMA_MIN_POINTS)));
+		this.context.put("karmaMax", new Integer(SystemGlobals.getValue(ConfigKeys.KARMA_MAX_POINTS)));
 		
 		ViewCommon.contextToPagination(start, totalMessages, count);
 	}

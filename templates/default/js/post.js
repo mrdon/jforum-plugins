@@ -280,7 +280,15 @@ function previewCallback(post)
 	document.getElementById("previewMessage").innerHTML = post.text;
 
 	document.getElementById("previewTable").style.display = '';
-	document.location = "#preview";
+
+	var s = document.location.toString();
+	var index = s.indexOf("#preview");
+
+	if (index > -1) {
+		s = s.substring(0, index);
+	}
+
+	document.location = s + "#preview";
 }
 
 
