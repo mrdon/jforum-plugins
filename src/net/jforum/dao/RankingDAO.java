@@ -54,7 +54,7 @@ import net.jforum.entities.Ranking;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: RankingDAO.java,v 1.6 2006/08/23 02:13:34 rafaelsteil Exp $
+ * @version $Id: RankingDAO.java,v 1.7 2006/12/02 03:19:54 rafaelsteil Exp $
  */
 public interface RankingDAO 
 {
@@ -97,4 +97,10 @@ public interface RankingDAO
 	 * @param ranking Reference to a valid and configured <code>Ranking</code> object
 	 */
 	public void addNew(Ranking ranking) ;
+
+	/**
+	 * Return all special rankings
+	 * @return
+	 */
+	public List selectSpecials();
 }

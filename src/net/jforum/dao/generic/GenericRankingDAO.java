@@ -56,7 +56,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericRankingDAO.java,v 1.8 2006/08/23 02:13:43 rafaelsteil Exp $
+ * @version $Id: GenericRankingDAO.java,v 1.9 2006/12/02 03:19:44 rafaelsteil Exp $
  */
 public class GenericRankingDAO implements net.jforum.dao.RankingDAO
 {
@@ -75,12 +75,9 @@ public class GenericRankingDAO implements net.jforum.dao.RankingDAO
 			p.setInt(1, rankingId);
 
 			rs = p.executeQuery();
+			
 			if (rs.next()) {
-				ranking.setId(rankingId);
-				ranking.setTitle(rs.getString("rank_title"));
-				ranking.setImage(rs.getString("rank_image"));
-				ranking.setMin(rs.getInt("rank_min"));
-				ranking.setSpecial(rs.getInt("rank_special"));
+				ranking = this.buildRanking(rs);
 			}
 
 			return ranking;
@@ -106,14 +103,7 @@ public class GenericRankingDAO implements net.jforum.dao.RankingDAO
 			rs = p.executeQuery();
 
 			while (rs.next()) {
-				Ranking ranking = new Ranking();
-
-				ranking.setId(rs.getInt("rank_id"));
-				ranking.setTitle(rs.getString("rank_title"));
-				ranking.setImage(rs.getString("rank_image"));
-				ranking.setMin(rs.getInt("rank_min"));
-				ranking.setSpecial(rs.getInt("rank_special"));
-
+				Ranking ranking = buildRanking(rs);
 				l.add(ranking);
 			}
 
@@ -158,7 +148,7 @@ public class GenericRankingDAO implements net.jforum.dao.RankingDAO
 
 			p.setString(1, ranking.getTitle());
 			p.setString(2, ranking.getImage());
-			p.setInt(3, ranking.getSpecial());
+			p.setInt(3, ranking.isSpecial() ? 1 : 0);
 			p.setInt(4, ranking.getMin());
 			p.setInt(5, ranking.getId());
 
@@ -183,6 +173,7 @@ public class GenericRankingDAO implements net.jforum.dao.RankingDAO
 
 			p.setString(1, ranking.getTitle());
 			p.setInt(2, ranking.getMin());
+			p.setInt(3, ranking.isSpecial() ? 1 : 0);
 
 			p.executeUpdate();
 		}
@@ -192,5 +183,44 @@ public class GenericRankingDAO implements net.jforum.dao.RankingDAO
 		finally {
 			DbUtils.close(p);
 		}
+	}
+	
+	public List selectSpecials()
+	{
+		List l = new ArrayList();
+		
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("RankingModel.selectSpecials"));
+			rs = p.executeQuery();
+
+			while (rs.next()) {
+				Ranking ranking = this.buildRanking(rs);
+				l.add(ranking);
+			}
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+		
+		return l;
+	}
+
+	private Ranking buildRanking(ResultSet rs) throws SQLException
+	{
+		Ranking ranking = new Ranking();
+
+		ranking.setId(rs.getInt("rank_id"));
+		ranking.setTitle(rs.getString("rank_title"));
+		ranking.setImage(rs.getString("rank_image"));
+		ranking.setMin(rs.getInt("rank_min"));
+		ranking.setSpecial(rs.getInt("rank_special") == 1);
+		
+		return ranking;
 	}
 }

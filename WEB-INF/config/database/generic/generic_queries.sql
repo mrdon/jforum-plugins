@@ -25,10 +25,11 @@ CategoryModel.getMaxOrder = SELECT MAX(display_order) FROM jforum_categories
 # RankingModel
 # #############
 RankingModel.selectById = SELECT * FROM jforum_ranks WHERE rank_id = ?
+RankingModel.selectSpecials = SELECT * FROM jforum_ranks WHERE rank_special = 1
 RankingModel.selectAll = SELECT * FROM jforum_ranks ORDER BY rank_min
 RankingModel.delete = DELETE FROM jforum_ranks WHERE rank_id = ?
 RankingModel.update = UPDATE jforum_ranks SET rank_title = ?, rank_image = ?, rank_special = ?, rank_min = ? WHERE rank_id = ?
-RankingModel.addNew = INSERT INTO jforum_ranks ( rank_title, rank_min ) VALUES ( ?, ? )
+RankingModel.addNew = INSERT INTO jforum_ranks ( rank_title, rank_min, rank_special) VALUES ( ?, ?, ? )
 
 # #############
 # ConfigModel
@@ -106,7 +107,8 @@ UserModel.update = UPDATE jforum_users SET user_aim = ?, \
 	user_biography = ?, \
 	user_lastvisit = ?, \
 	user_notify_always = ?, \
-	user_notify_text = ? \
+	user_notify_text = ?, \
+	rank_id = ? \
 	WHERE user_id = ?
 	
 UserModel.lastUserRegistered = SELECT user_id, username FROM jforum_users ORDER BY user_regdate DESC LIMIT 1

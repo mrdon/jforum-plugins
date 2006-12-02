@@ -85,7 +85,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.84 2006/11/21 22:12:51 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.85 2006/12/02 03:19:46 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -112,7 +112,7 @@ public class UserAction extends Command
 
 			this.context.put("u", u);
 			this.context.put("action", "editSave");
-			this.context.put("pageTitle", I18n.getMessage("UserProfile.profileFor")+" "+u.getUsername());
+			this.context.put("pageTitle", I18n.getMessage("UserProfile.profileFor") + " " + u.getUsername());
 			this.setTemplateName(TemplateKeys.USER_EDIT);
 		} 
 	}

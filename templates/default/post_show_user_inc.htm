@@ -7,7 +7,11 @@
 
 <span class="gensmall">
 <#if post.userId != 1>
-	${rank.getRankTitle(user.totalPosts)}
+	<#if (user.rankId > 1)>
+		${rank.getRankTitleById(user.rankId)}
+	<#else>
+		${rank.getRankTitle(user.totalPosts)}
+	</#if>
 	<br />
 </#if>
 

@@ -63,7 +63,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.31 2006/08/20 22:47:45 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.32 2006/12/02 03:19:51 rafaelsteil Exp $
  */
 public class UserAction extends AdminCommand 
 {
@@ -149,9 +149,10 @@ public class UserAction extends AdminCommand
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		User u = um.selectById(userId);
 		
+		this.setTemplateName(TemplateKeys.USER_ADMIN_EDIT);
 		this.context.put("u", u);
 		this.context.put("action", "editSave");		
-		this.setTemplateName(TemplateKeys.USER_ADMIN_EDIT);
+		this.context.put("specialRanks", DataAccessDriver.getInstance().newRankingDAO().selectSpecials());
 		this.context.put("admin", true);
 	}
 	

@@ -1,4 +1,6 @@
 <#include "header.htm"/>
+<#assign admin = admin?default(false)/>
+
 <script type="text/javascript">
 <!--
 function validateForm()
@@ -104,10 +106,6 @@ function validateForm()
 				</tr>
 
 				<tr>
-					<td class="catsides" colspan="2" height="28">&nbsp;</td>
-				</tr>
-
-				<tr>
 					<th class="thsides" valign="middle" colspan="2" height="25">${I18n.getMessage("User.preferencesInfo")}</th>
 				</tr>
 
@@ -158,9 +156,6 @@ function validateForm()
 						<span class="gensmall">${I18n.getMessage("User.signatureDef")}</span><br />
 					</td>
 					<td class="row2"><textarea class="post" style="WIDTH: 300px" name="signature" rows="6" cols="30">${u.signature?default("")}</textarea> </td>
-				</tr>
-				<tr>
-					<td class="catsides" colspan="2" height="28">&nbsp;</td>
 				</tr>
 				<tr>
 					<th class="thsides" valign="middle" colspan="2" height="25">${I18n.getMessage("User.preferences")}</th>
@@ -292,9 +287,22 @@ function validateForm()
 						</select>
 					</td>
 				</tr>
-				<tr>
-					<td class="catsides" colspan="2" height="28">&nbsp;</td>
-				</tr>
+
+				<#if admin>
+					<tr>
+						<td class="row1"><span class="gen">${I18n.getMessage("User.specialRanking")}:</span></td>
+						<td class="row2">
+							<select name="rank_special">
+								<option value="-1">${I18n.getMessage("User.noSpecialRanking")}</option>
+
+								<#list specialRanks as rank>
+									<option value="${rank.id}" <#if rank.id == u.rankId>selected</#if>>${rank.title}</option>
+								</#list>
+							</select>
+						</td>
+					</tr>
+				</#if>
+
 				<tr>
 					<th class="thsides" valign="middle" colspan="2" height="12">${I18n.getMessage("User.avatarControlPanel")}</th>
 				</tr>

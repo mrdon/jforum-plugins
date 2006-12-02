@@ -65,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericUserDAO.java,v 1.24 2006/10/09 03:23:46 rafaelsteil Exp $
+ * @version $Id: GenericUserDAO.java,v 1.25 2006/12/02 03:19:45 rafaelsteil Exp $
  */
 public class GenericUserDAO extends AutoKeys implements UserDAO
 {
@@ -270,7 +270,8 @@ public class GenericUserDAO extends AutoKeys implements UserDAO
 			p.setTimestamp(28, new Timestamp(user.getLastVisit().getTime()));
 			p.setInt(29, user.notifyAlways() ? 1 : 0);
 			p.setInt(30, user.notifyText() ? 1 : 0);
-			p.setInt(31, user.getId());
+			p.setInt(31, user.getRankId());
+			p.setInt(32, user.getId());
 
 			p.executeUpdate();
 		}

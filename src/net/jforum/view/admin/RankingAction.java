@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -51,7 +51,7 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: RankingAction.java,v 1.10 2006/08/20 12:19:14 sergemaslyukov Exp $
+ * @version $Id: RankingAction.java,v 1.11 2006/12/02 03:19:51 rafaelsteil Exp $
  */
 public class RankingAction extends AdminCommand 
 {
@@ -72,10 +72,10 @@ public class RankingAction extends AdminCommand
 	// Edit
 	public void edit()
 	{
-		this.context.put("rank", DataAccessDriver.getInstance().newRankingDAO().selectById(
-				this.request.getIntParameter("ranking_id")));
 		this.setTemplateName(TemplateKeys.RANKING_EDIT);
 		this.context.put("action", "editSave");
+		this.context.put("rank", DataAccessDriver.getInstance().newRankingDAO().selectById(
+			this.request.getIntParameter("ranking_id")));
 	}
 	
 	//  Save information
@@ -83,10 +83,14 @@ public class RankingAction extends AdminCommand
 	{
 		Ranking r = new Ranking();
 		r.setTitle(this.request.getParameter("rank_title"));
-		r.setMin(this.request.getIntParameter("rank_min"));
 		r.setId(this.request.getIntParameter("rank_id"));
 		
-		// TODO: needs to add support to images 
+		boolean special = "1".equals(this.request.getParameter("rank_special"));
+		r.setSpecial(special);
+		
+		if (!special) {
+			r.setMin(this.request.getIntParameter("rank_min"));
+		}
 		
 		DataAccessDriver.getInstance().newRankingDAO().update(r);
 		RankingRepository.loadRanks();	
@@ -114,10 +118,18 @@ public class RankingAction extends AdminCommand
 	{
 		Ranking r = new Ranking();
 		r.setTitle(this.request.getParameter("rank_title"));
-		r.setMin(this.request.getIntParameter("rank_min"));
 		
-		// TODO: need to add support to images
+		boolean special = "1".equals(this.request.getParameter("rank_special"));
+		r.setSpecial(special);
+		
+		if (!special) {
+			r.setMin(this.request.getIntParameter("rank_min"));			
+		}
+		
 		DataAccessDriver.getInstance().newRankingDAO().addNew(r);
+		
+		RankingRepository.loadRanks();
+		
 		this.list();
 	}
 }

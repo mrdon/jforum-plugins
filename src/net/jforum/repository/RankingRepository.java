@@ -54,7 +54,7 @@ import net.jforum.exceptions.RankingLoadException;
 
 /**
  * @author Rafael Steil
- * @version $Id: RankingRepository.java,v 1.11 2006/08/23 02:13:48 rafaelsteil Exp $
+ * @version $Id: RankingRepository.java,v 1.12 2006/12/02 03:19:52 rafaelsteil Exp $
  */
 public class RankingRepository implements Cacheable
 {
@@ -97,6 +97,7 @@ public class RankingRepository implements Cacheable
 		Ranking lastRank = new Ranking();
 
 		List entries = (List)cache.get(FQN, ENTRIES);
+		
 		for (Iterator iter = entries.iterator(); iter.hasNext(); ) {
 			Ranking r = (Ranking)iter.next();
 			
@@ -113,4 +114,21 @@ public class RankingRepository implements Cacheable
 		return lastRank.getTitle();
 	}
 
+	public static String getRankTitleById(int rankId)
+	{
+		Ranking r = new Ranking();
+		r.setId(rankId);
+		
+		List l = (List)cache.get(FQN, ENTRIES);
+		int index = l.indexOf(r);
+		
+		if (index > -1) {
+			r = (Ranking)l.get(index);
+		}
+		else {
+			r.setTitle("");
+		}
+		
+		return r.getTitle();
+	}
 }

@@ -65,7 +65,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserCommon.java,v 1.21 2006/10/09 03:23:46 rafaelsteil Exp $
+ * @version $Id: UserCommon.java,v 1.22 2006/12/02 03:19:54 rafaelsteil Exp $
  */
 public class UserCommon 
 {
@@ -93,6 +93,11 @@ public class UserCommon
 			if (username != null) {
 				u.setUsername(username.trim());
 			}
+			
+			u.setRankId(request.getIntParameter("rank_special"));
+		}
+		else {
+			u.setRankId(-1);
 		}
 		
 		u.setId(userId);

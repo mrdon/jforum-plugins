@@ -11,7 +11,7 @@ CategoryModel.addNew = INSERT INTO jforum_categories (categories_id, title, disp
 # #############
 # RankingModel
 # #############
-RankingModel.addNew = INSERT INTO jforum_ranks (rank_id, rank_title, rank_min ) VALUES (jforum_ranks_seq.nextval, ?, ? )
+RankingModel.addNew = INSERT INTO jforum_ranks (rank_id, rank_title, rank_min, rank_special ) VALUES (jforum_ranks_seq.nextval, ?, ?, ? )
 
 # #############
 # ConfigModel
