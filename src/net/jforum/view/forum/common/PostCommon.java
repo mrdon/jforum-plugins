@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.38 2006/10/12 06:11:48 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.39 2006/12/02 00:59:41 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -99,10 +99,11 @@ public class PostCommon
 			ViewCommon.replaceAll(text, ">", "&gt;");
 		}
 		
-		// DO NOT remove the trailing blank space
+		// DO NOT remove the trailing blank space, as it would 
+		// cause some problems with the regular expressions
 		ViewCommon.replaceAll(text, "\n", "<br/> ");
 		
-		p.setText(text.toString());
+		p.setText(SafeHtml.avoidJavascript(text.toString()));
 
 		// Then, search for bb codes
 		if (p.isBbCodeEnabled()) {
@@ -116,8 +117,6 @@ public class PostCommon
 			p.setText(processSmilies(new StringBuffer(p.getText()), SmiliesRepository.getSmilies()));
 		}
 		
-		p.setText(SafeHtml.avoidJavascript(p.getText()));
-
 		return p;
 	}
 	
