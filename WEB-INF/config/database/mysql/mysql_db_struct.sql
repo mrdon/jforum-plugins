@@ -11,11 +11,12 @@
 DROP TABLE IF EXISTS jforum_banlist;
 CREATE TABLE jforum_banlist (
   banlist_id INT NOT NULL auto_increment,
-  user_id INT NOT NULL default '0',
-  banlist_ip varchar(8) NOT NULL default '',
+  user_id INT NOT NULL,
+  banlist_ip varchar(15) NOT NULL,
   banlist_email varchar(255) default NULL,
   PRIMARY KEY  (banlist_id),
-  INDEX idx_user (user_id)
+  INDEX idx_user (user_id),
+  INDEX (banlist_ip)
 ) TYPE=InnoDB;
 
 --
