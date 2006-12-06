@@ -47,6 +47,7 @@ import java.util.List;
 import net.jforum.Command;
 import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.PrivateMessageDAO;
 import net.jforum.dao.UserDAO;
 import net.jforum.entities.Post;
 import net.jforum.entities.PrivateMessage;
@@ -66,7 +67,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.38 2006/10/15 22:49:50 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.39 2006/12/06 21:56:27 rafaelsteil Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -82,9 +83,9 @@ public class PrivateMessageAction extends Command
 		
 		List pmList = DataAccessDriver.getInstance().newPrivateMessageDAO().selectFromInbox(user);
 
+		this.setTemplateName(TemplateKeys.PM_INBOX);
 		this.context.put("inbox", true);
 		this.context.put("pmList", pmList);
-		this.setTemplateName(TemplateKeys.PM_INBOX);
 		this.context.put("pageTitle", I18n.getMessage("ForumBase.privateMessages")+" "+I18n.getMessage("PrivateMessage.inbox"));
 		this.putTypes();		
 	}
@@ -342,23 +343,42 @@ public class PrivateMessageAction extends Command
 		String ids[] = this.request.getParameterValues("id");
 		
 		if (ids != null && ids.length > 0) {
-			PrivateMessage[] pm = new PrivateMessage[ids.length];
+			PrivateMessage[] deleteList = new PrivateMessage[ids.length];
+			
 			User u = new User();
-			u.setId(SessionFacade.getUserSession().getUserId());
+			UserSession userSession = SessionFacade.getUserSession();
+			u.setId(userSession.getUserId());
 	
+			int unreadCount = 0;
+			PrivateMessageDAO dao = DataAccessDriver.getInstance().newPrivateMessageDAO();
+			
 			for (int i = 0; i < ids.length; i++) {
-				pm[i] = new PrivateMessage();
-				pm[i].setFromUser(u);
-				pm[i].setId(Integer.parseInt(ids[i]));
+				PrivateMessage pm = dao.selectById(new PrivateMessage(Integer.parseInt(ids[i])));
+				
+				if (pm.getType() == PrivateMessageType.NEW) {
+					unreadCount++;
+				}
+				
+				deleteList[i] = pm;
 			}
 			
-			DataAccessDriver.getInstance().newPrivateMessageDAO().delete(pm);
+			dao.delete(deleteList);
+			
+			// Subtracts the number of delete messages
+			int total = userSession.getPrivateMessages() - unreadCount;
+			
+			if (total < 0) {
+				total = 0;
+			}
+			
+			userSession.setPrivateMessages(total);
 		}
 		
 		this.setTemplateName(TemplateKeys.PM_DELETE);
 		this.context.put("message", I18n.getMessage("PrivateMessage.deleteDone", 
-						new String[] { this.request.getContextPath() + "/pm/inbox"
-										+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) }));
+			new String[] { this.request.getContextPath() 
+				+ "/pm/inbox"
+				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) }));
 	}
 	
 	public void reply()

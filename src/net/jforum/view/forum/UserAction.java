@@ -85,7 +85,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.85 2006/12/02 03:19:46 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.86 2006/12/06 21:56:25 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -427,8 +427,8 @@ public class UserAction extends Command
 			User user = this.validateLogin(username, password);
 
 			if (user != null) {
-				// NOTE: here we only want to set the redirect location if it hasn't already been
-				// set.  This will give the LoginAuthenticator a chance to set the redirect location.
+				// Note: here we only want to set the redirect location if it hasn't already been
+				// set. This will give the LoginAuthenticator a chance to set the redirect location.
 				if (JForumExecutionContext.getRedirectTo() == null) {
 					String forwaredHost = request.getHeader("X-Forwarded-Host");
 					

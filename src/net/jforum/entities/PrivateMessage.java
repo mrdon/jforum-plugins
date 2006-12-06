@@ -45,7 +45,7 @@ package net.jforum.entities;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessage.java,v 1.5 2006/08/23 02:13:46 rafaelsteil Exp $
+ * @version $Id: PrivateMessage.java,v 1.6 2006/12/06 21:56:28 rafaelsteil Exp $
  */
 public class PrivateMessage 
 {
@@ -55,6 +55,12 @@ public class PrivateMessage
 	private User toUser;
 	private Post post;
 	private String formatedDate;
+	
+	public PrivateMessage() { }
+	
+	public PrivateMessage(int id) {
+		this.id = id;
+	}
 	
 	/**
 	 * @return Returns the fromUser.
