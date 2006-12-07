@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003, 2004 Rafael Steil
+ * Copyright (c) JForum Team
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -66,7 +66,7 @@ import net.jforum.view.admin.common.ModerationCommon;
  * ViewHelper for category administration.
  * 
  * @author Rafael Steil
- * @version $Id: CategoryAction.java,v 1.24 2006/08/24 01:07:03 rafaelsteil Exp $
+ * @version $Id: CategoryAction.java,v 1.25 2006/12/07 23:34:04 rafaelsteil Exp $
  */
 public class CategoryAction extends AdminCommand 
 {

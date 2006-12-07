@@ -44,6 +44,7 @@ package net.jforum.dao.generic;
 
 import net.jforum.dao.ApiDAO;
 import net.jforum.dao.AttachmentDAO;
+import net.jforum.dao.BanlistDAO;
 import net.jforum.dao.BannerDAO;
 import net.jforum.dao.BookmarkDAO;
 import net.jforum.dao.CategoryDAO;
@@ -70,7 +71,7 @@ import net.jforum.dao.generic.security.GenericGroupSecurityDAO;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericDataAccessDriver.java,v 1.9 2006/09/05 01:20:07 rafaelsteil Exp $
+ * @version $Id: GenericDataAccessDriver.java,v 1.10 2006/12/07 23:34:05 rafaelsteil Exp $
  */
 public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver 
 {
@@ -98,6 +99,7 @@ public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver
     private static SummaryDAO summaryDao = new GenericSummaryDAO();
     private static MailIntegrationDAO mailIntegrationDao = new GenericMailIntegrationDAO();
     private static ApiDAO apiDAO = new GenericApiDAO();
+    private static BanlistDAO banlistDao = new GenericBanlistDAO();
 
 	/**
      * TODO implement this method or delete this javadoc
@@ -304,5 +306,13 @@ public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver
     public ApiDAO newApiDAO()
     {
     	return apiDAO;
+    }
+    
+    /**
+     * @see net.jforum.dao.DataAccessDriver#newBanlistDAO()
+     */
+    public BanlistDAO newBanlistDAO()
+    {
+    	return banlistDao;
     }
 }

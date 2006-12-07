@@ -43,6 +43,7 @@
 package net.jforum.dao;
 
 
+
 /**
  * The class that every driver class must implement.
  * JForum implementation provides a simple and extremely
@@ -57,7 +58,7 @@ package net.jforum.dao;
  * analise, look at <code>net.jforum.drivers.generic</code> package.
  * 
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.14 2006/09/05 01:20:08 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.15 2006/12/07 23:34:04 rafaelsteil Exp $
  */
 public abstract class DataAccessDriver 
 {
@@ -263,4 +264,6 @@ public abstract class DataAccessDriver
      * @return <code>net.jforum.dao.ApiDAO</code> instance.
      */
 	public abstract ApiDAO newApiDAO();
+
+	public abstract BanlistDAO newBanlistDAO();
 }
