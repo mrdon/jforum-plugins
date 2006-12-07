@@ -120,3 +120,8 @@ AttachmentModel.lastGeneratedAttachmentId = SELECT CURRVAL('jforum_attach_seq')
 # UserModel
 # ##########
 UserModel.login = SELECT user_id FROM jforum_users WHERE lower(username) = lower(?) AND user_password = ?
+
+# ###############
+# BanlistModel
+# ###############
+BanlistModel.lastGeneratedBanlistId = SELECT CURRVAL('jforum_banlist_seq')

@@ -728,3 +728,9 @@ MailIntegration.update = UPDATE jforum_mail_integration SET forum_id = ?, forum_
 # ApiModel
 ############
 ApiModel.isValid = SELECT 1 FROM jforum_api WHERE api_key = ?
+
+# ###############
+# BanlistModel
+# ###############
+BanlistModel.delete = DELETE FROM jforum_banlist WHERE banlist_id = ?
+BanlistModel.insert = INSERT INTO jforum_banlist (user_id, banlist_ip, banlist_email) VALUES (?, ?, ?)
