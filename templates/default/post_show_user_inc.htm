@@ -17,7 +17,9 @@
 
 <#if (user.avatar?exists && user.avatar?length > 0)>
 	<#if user.isExternalAvatar() || user.avatar.startsWith("http://")>
-		<img src="${user.avatar?html}" border="0" alt="[Avatar]" />
+		<#if avatarAllowExternalUrl>
+			<img src="${user.avatar?html}" border="0" alt="[Avatar]" />
+		</#if>
 	<#else>
 		<img src="${contextPath}/images/avatar/${user.avatar}" border="0" alt="[Avatar]" /><br />
 	</#if>

@@ -85,7 +85,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.86 2006/12/06 21:56:25 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.87 2006/12/08 21:48:04 lazee Exp $
  */
 public class UserAction extends Command 
 {
@@ -113,6 +113,7 @@ public class UserAction extends Command
 			this.context.put("u", u);
 			this.context.put("action", "editSave");
 			this.context.put("pageTitle", I18n.getMessage("UserProfile.profileFor") + " " + u.getUsername());
+			this.context.put("avatarAllowExternalUrl", SystemGlobals.getBoolValue(ConfigKeys.AVATAR_ALLOW_EXTERNAL_URL));
 			this.setTemplateName(TemplateKeys.USER_EDIT);
 		} 
 	}
@@ -585,6 +586,7 @@ public class UserAction extends Command
 			this.context.put("karmaEnabled", SecurityRepository.canAccess(SecurityConstants.PERM_KARMA_ENABLED));
 			this.context.put("rank", new RankingRepository());
 			this.context.put("u", u);
+			this.context.put("avatarAllowExternalUrl", SystemGlobals.getBoolValue(ConfigKeys.AVATAR_ALLOW_EXTERNAL_URL));
 			
 			int loggedId = SessionFacade.getUserSession().getUserId();
 			int count = 0;

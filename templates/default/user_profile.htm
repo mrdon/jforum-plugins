@@ -27,7 +27,9 @@
 		<td class="row1" valign="top" align="center" height="6">
 			<#if (u.avatar?exists && u.avatar?length > 0)>
 				<#if u.isExternalAvatar() || u.avatar.startsWith("http://")>
-					<img src="${u.avatar}" border="0">
+					<#if avatarAllowExternalUrl>
+						<img src="${u.avatar}" border="0">
+					</#if>
 				<#else>
 					<img src="${contextPath}/images/avatar/${u.avatar}" border="0" /><br />
 				</#if>

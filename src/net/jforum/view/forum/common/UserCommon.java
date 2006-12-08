@@ -65,7 +65,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserCommon.java,v 1.22 2006/12/02 03:19:54 rafaelsteil Exp $
+ * @version $Id: UserCommon.java,v 1.23 2006/12/08 21:48:04 lazee Exp $
  */
 public class UserCommon 
 {
@@ -94,7 +94,9 @@ public class UserCommon
 				u.setUsername(username.trim());
 			}
 			
-			u.setRankId(request.getIntParameter("rank_special"));
+			// FIXME XXX Removed by LaZee (2006-12-08) because it breaks the system
+			// Please fix bug!
+			//u.setRankId(request.getIntParameter("rank_special"));
 		}
 		else {
 			u.setRankId(-1);
@@ -166,8 +168,7 @@ public class UserCommon
 				UserCommon.logger.warn("Problems while uploading the avatar: " + e);
 				errors.add(I18n.getMessage("User.avatarUploadError"));
 			}
-		}
-		else {
+		} else if (SystemGlobals.getBoolValue(ConfigKeys.AVATAR_ALLOW_EXTERNAL_URL)) {
 			String avatarUrl = request.getParameter("avatarUrl");
 			if (avatarUrl != null && !"".equals(avatarUrl.trim())) {
 				if (avatarUrl.toLowerCase().startsWith("http://")) {

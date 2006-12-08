@@ -353,10 +353,12 @@ function validateForm()
 					<td class="row2"><input style="WIDTH: 200px;" type="file" name="avatar" /></td>
 				</tr>
 
-				<tr>
-					<td class="row1"><span class="gen">${I18n.getMessage("User.avatarExternal")}:</span></td>
-					<td class="row2"><input class="post" style="WIDTH: 200px" type="text" name="avatarUrl" value="<#if u.isExternalAvatar()>${u.avatar?default("")?html}</#if>"/></td>
-				</tr>
+				<#if avatarAllowExternalUrl>
+					<tr>
+						<td class="row1"><span class="gen">${I18n.getMessage("User.avatarExternal")}:</span></td>
+						<td class="row2"><input class="post" style="WIDTH: 200px" type="text" name="avatarUrl" value="<#if u.isExternalAvatar()>${u.avatar?default("")?html}</#if>"/></td>
+					</tr>
+				</#if>
 
 				<tr>
 					<td class="catbottom" align="center" colspan="2" height="28">
