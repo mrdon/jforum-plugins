@@ -61,11 +61,12 @@ import net.jforum.util.legacy.commons.fileupload.FileItem;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserCommon.java,v 1.24 2006/12/09 02:23:32 rafaelsteil Exp $
+ * @version $Id: UserCommon.java,v 1.25 2006/12/09 02:32:10 rafaelsteil Exp $
  */
 public class UserCommon 
 {
@@ -122,7 +123,7 @@ public class UserCommon
 		u.setNotifyText("1".equals(request.getParameter("notify_text")));
 		
 		String website = SafeHtml.makeSafe(request.getParameter("website"));
-		if (website != null && !"".equals(website.trim()) && !website.toLowerCase().startsWith("http://")) {
+		if (!StringUtils.isEmpty(website) && !website.toLowerCase().startsWith("http://")) {
 			website = "http://" + website;
 		}
 	
@@ -167,7 +168,7 @@ public class UserCommon
 			}
 		} else if (SystemGlobals.getBoolValue(ConfigKeys.AVATAR_ALLOW_EXTERNAL_URL)) {
 			String avatarUrl = request.getParameter("avatarUrl");
-			if (avatarUrl != null && !"".equals(avatarUrl.trim())) {
+			if (!StringUtils.isEmpty(avatarUrl)) {
 				if (avatarUrl.toLowerCase().startsWith("http://")) {
 					u.setAvatar(avatarUrl);
 				}
@@ -208,15 +209,21 @@ public class UserCommon
 		
 		if (type != ImageUtils.IMAGE_UNKNOWN) {
 			String avatarTmpFileName = SystemGlobals.getApplicationPath() 
-				+ "/images/avatar/" + fileName + "_tmp." + extension;
+				+ "/images/avatar/" 
+				+ fileName 
+				+ "_tmp." 
+				+ extension;
 			
 			// We cannot handle gifs
 			if (extension.toLowerCase().equals("gif")) {
 				extension = "png";
 			}
 	
-			String avatarFinalFileName = SystemGlobals.getApplicationPath() + 
-				"/images/avatar/" + fileName + "." + extension;
+			String avatarFinalFileName = SystemGlobals.getApplicationPath() 
+				+ "/images/avatar/" 
+				+ fileName 
+				+ "." 
+				+ extension;
 	
 			uploadUtils.saveUploadedFile(avatarTmpFileName);
 			
