@@ -73,7 +73,7 @@ import freemarker.template.Template;
  * Dispatch emails to the world. 
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.30 2006/12/09 01:00:18 rafaelsteil Exp $
+ * @version $Id: Spammer.java,v 1.31 2006/12/09 01:23:09 rafaelsteil Exp $
  */
 public class Spammer
 {
@@ -125,7 +125,7 @@ public class Spammer
 			? MESSAGE_HTML
 			: MESSAGE_TEXT;
 
-		session = Session.getDefaultInstance(mailProps);
+		this.session = Session.getInstance(mailProps);
 	}
 
 	public boolean dispatchMessages()
