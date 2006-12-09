@@ -65,7 +65,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserCommon.java,v 1.23 2006/12/08 21:48:04 lazee Exp $
+ * @version $Id: UserCommon.java,v 1.24 2006/12/09 02:23:32 rafaelsteil Exp $
  */
 public class UserCommon 
 {
@@ -94,12 +94,9 @@ public class UserCommon
 				u.setUsername(username.trim());
 			}
 			
-			// FIXME XXX Removed by LaZee (2006-12-08) because it breaks the system
-			// Please fix bug!
-			//u.setRankId(request.getIntParameter("rank_special"));
-		}
-		else {
-			u.setRankId(-1);
+			if (request.getParameter("rank_special") != null) {
+				u.setRankId(request.getIntParameter("rank_special"));
+			}
 		}
 		
 		u.setId(userId);
