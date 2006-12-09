@@ -73,7 +73,7 @@ import freemarker.template.Template;
  * Dispatch emails to the world. 
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.29 2006/10/28 12:41:55 rafaelsteil Exp $
+ * @version $Id: Spammer.java,v 1.30 2006/12/09 01:00:18 rafaelsteil Exp $
  */
 public class Spammer
 {
@@ -83,9 +83,9 @@ public class Spammer
 	private static final int MESSAGE_TEXT = 1;
 	
 	private static int messageFormat;
-	private static Session session;
-	private static String username;
-	private static String password;
+	private Session session;
+	private String username;
+	private String password;
 	
 	private Properties mailProps = new Properties();
 	private MimeMessage message;
@@ -136,7 +136,7 @@ public class Spammer
                 if (!StringUtils.isEmpty(username) && !StringUtils.isEmpty(password)) {
                 	boolean ssl = SystemGlobals.getBoolValue(ConfigKeys.MAIL_SMTP_SSL);
                 	
-                    Transport transport = Spammer.getSession().getTransport(ssl ? "smtps" : "smtp");
+                    Transport transport = this.session.getTransport(ssl ? "smtps" : "smtp");
                     
                     try {
 	                    String host = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_HOST);
@@ -169,16 +169,18 @@ public class Spammer
                 }
             }
             else {
-                Address[] addresses = this.message.getAllRecipients();
-                
-                for (int i = 0; i < addresses.length; i++) {
-                	this.message.setRecipient(Message.RecipientType.TO, addresses[i]);
-                    Transport.send(this.message, new Address[] { addresses[i] });
+                for (Iterator iter = this.users.iterator(); iter.hasNext();) {
+                	User user = (User)iter.next();
+                	
+                	Address address = new InternetAddress(user.getEmail());
+                	
+                	this.message.setRecipient(Message.RecipientType.TO,address);
+                    Transport.send(this.message, new Address[] { address });
                 }
             }
         }
         catch (MessagingException e) {
-            throw new MailException("Error while dispatching the message.", e);
+            throw new MailException("Error while dispatching the message." + e.toString(), e);
         }
 
         return true;
@@ -255,7 +257,7 @@ public class Spammer
 	{
 		String templateEncoding = SystemGlobals.getValue(ConfigKeys.MAIL_TEMPLATE_ENCODING);
 
-		if (templateEncoding == null || "".equals(templateEncoding.trim())) {
+		if (StringUtils.isEmpty(templateEncoding)) {
 			this.template = JForumExecutionContext.templateConfig().getTemplate(messageFile);
 		}
 		else {
@@ -348,15 +350,5 @@ public class Spammer
 		return ssl 
 			? ConfigKeys.MAIL_SMTP_SSL_HOST
 			: ConfigKeys.MAIL_SMTP_HOST;
-	}
-	
-	public static Session getSession()
-	{
-		return session;
-	}
-
-	public final Message getMesssage()
-	{
-		return this.message;
 	}
 }
