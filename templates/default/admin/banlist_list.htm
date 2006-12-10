@@ -10,17 +10,39 @@
 	</tr>
 
 	<tr>
-		<td class='row2' align="center"><span class='gen'><b>${I18n.getMessage("Banlist.Username")}</b></span></td>
-		<td class='row2' align="center"><span class='gen'><b>${I18n.getMessage("Banlist.Email")}</b></span></td>
-		<td class='row2' align="center"><span class='gen'><b>${I18n.getMessage("Banlist.IP")}</b></span></td>
+		<td class='row2' align="center"><span class='gen'><b>${I18n.getMessage("Banlist.Type")}</b></span></td>
+		<td class='row2' align="center"><span class='gen'><b>${I18n.getMessage("Banlist.Value")}</b></span></td>
 		<td class='row2' align="center"><span class='gen'><b>${I18n.getMessage("Delete")}</b></span></td>
 	</tr>
 
 	<#list banlist as b>
 		<tr>
-			<td class="row1" align="center"><span class="gen">${b.userId}</span></td>
-			<td class="row1" align="center"><span class="gen">${b.email?default("")}</span></td>
-			<td class="row1" align="center"><span class="gen">${b.ip?default("")}</span></td>
+			<td class="row1" align="center">
+				<span class="gen">
+					<#if b.email?exists>
+						${I18n.getMessage("Banlist.Email")}
+					<#elseif b.ip?exists>
+						${I18n.getMessage("Banlist.IP")}
+					<#elseif (b.userId > 0)>
+						${I18n.getMessage("Banlist.UserId")}
+					<#else>
+						${I18n.getMessage("Banlist.Unknown")}
+					</#if>
+				</span>
+			</td>
+			<td class="row1" align="center">
+				<span class="gen">
+					<#if b.email?exists>
+						${b.email}
+					<#elseif b.ip?exists>
+						${b.ip}
+					<#elseif (b.userId > 0)>
+						${b.userId}
+					<#else>
+						${I18n.getMessage("Banlist.Unknown")}
+					</#if>
+				</span>
+			</td>
 			<td class="row1" align="center"><input type="checkbox" name="banlist_id" value="${b.id}"></TD>
 		</tr>
 	</#list>

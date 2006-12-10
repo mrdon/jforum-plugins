@@ -44,15 +44,41 @@ package net.jforum.view.admin;
 
 import java.util.List;
 
+import net.jforum.dao.BanlistDAO;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: BanlistAction.java,v 1.1 2006/12/07 23:34:04 rafaelsteil Exp $
+ * @version $Id: BanlistAction.java,v 1.2 2006/12/10 17:47:50 rafaelsteil Exp $
  */
 public class BanlistAction extends AdminCommand
 {
+	public void insert()
+	{
+	}
+	
+	public void insertSave()
+	{
+		
+	}
+	
+	public void delete() 
+	{
+		String[] banlist = this.request.getParameterValues("banlist_id");
+		
+		if (banlist != null && banlist.length > 0) {
+			BanlistDAO dao = DataAccessDriver.getInstance().newBanlistDAO();
+			
+			for (int i = 0; i < banlist.length; i++) {
+				int current = Integer.parseInt(banlist[i]);
+				dao.delete(current);
+			}
+		}
+		
+		this.list();
+	}
+	
 	/**
 	 * @see net.jforum.Command#list()
 	 */

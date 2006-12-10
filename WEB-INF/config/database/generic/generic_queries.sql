@@ -734,3 +734,4 @@ ApiModel.isValid = SELECT 1 FROM jforum_api WHERE api_key = ?
 # ###############
 BanlistModel.delete = DELETE FROM jforum_banlist WHERE banlist_id = ?
 BanlistModel.insert = INSERT INTO jforum_banlist (user_id, banlist_ip, banlist_email) VALUES (?, ?, ?)
+BanlistModel.selectAll = SELECT * FROM jforum_banlist ORDER BY banlist_id
