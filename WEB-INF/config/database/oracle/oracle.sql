@@ -257,3 +257,4 @@ AttachmentModel.addAttachmentInfo = INSERT INTO jforum_attach_desc (attach_desc_
 # BanlistModel
 # ###############
 BanlistModel.lastGeneratedBanlistId = SELECT jforum_banlist_seq.currval FROM dual
+BanlistModel.insert = INSERT INTO jforum_banlist (banlist_id, user_id, banlist_ip, banlist_email) VALUES (jforum_banlist_seq.nextval, ?, ?, ?)

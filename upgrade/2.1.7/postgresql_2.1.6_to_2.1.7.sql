@@ -1,3 +1,13 @@
+CREATE TABLE jforum_banlist (
+  banlist_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_banlist_seq'),
+  user_id INTEGER DEFAULT 0,
+  banlist_ip VARCHAR(20),
+  banlist_email VARCHAR(255),
+  PRIMARY KEY  (banlist_id)
+);
+CREATE INDEX idx_banlist_ip ON jforum_banlist(banlist_ip);
+CREATE INDEX idx_banlist_email ON jforum_banlist(banlist_email);
+
 ALTER TABLE jforum_users ADD user_authhash VARCHAR(32);
 ALTER TABLE jforum_users ADD user_notify_always INTEGER DEFAULT 0;
 ALTER TABLE jforum_users ADD user_notify_text INTEGER DEFAULT 0;

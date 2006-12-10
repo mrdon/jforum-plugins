@@ -35,86 +35,78 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
- *
- * Created on 07/12/2006 21:24:12
+ * 
+ * Created on 10/12/2006 19:12:49
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.view.admin;
+package net.jforum.repository;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
-
-import net.jforum.dao.BanlistDAO;
-import net.jforum.dao.DataAccessDriver;
+import net.jforum.cache.CacheEngine;
+import net.jforum.cache.Cacheable;
 import net.jforum.entities.Banlist;
-import net.jforum.exceptions.ForumException;
-import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: BanlistAction.java,v 1.3 2006/12/10 22:46:12 rafaelsteil Exp $
+ * @version $Id: BanlistRepository.java,v 1.1 2006/12/10 22:46:13 rafaelsteil Exp $
  */
-public class BanlistAction extends AdminCommand
+public class BanlistRepository implements Cacheable
 {
-	public void insert()
-	{
-		this.setTemplateName(TemplateKeys.BANLIST_INSERT);
-	}
-	
-	public void insertSave()
-	{
-		String type = this.request.getParameter("type");
-		String value = this.request.getParameter("value");
-		
-		if (!StringUtils.isEmpty(type) && !StringUtils.isEmpty(value)) {
-			Banlist b = new Banlist();
-			
-			if ("email".equals(type)) {
-				b.setEmail(value);
-			}
-			else if ("user".equals(type)) {
-				b.setUserId(Integer.parseInt(value));
-			}
-			else if ("ip".equals(type)) {
-				b.setIp(value);
-			}
-			else {
-				throw new ForumException("Unknown banlist type");
-			}
-			
-			BanlistDAO dao = DataAccessDriver.getInstance().newBanlistDAO();
-			dao.insert(b);
-		}
-		
-		this.list();
-	}
-	
-	public void delete() 
-	{
-		String[] banlist = this.request.getParameterValues("banlist_id");
-		
-		if (banlist != null && banlist.length > 0) {
-			BanlistDAO dao = DataAccessDriver.getInstance().newBanlistDAO();
-			
-			for (int i = 0; i < banlist.length; i++) {
-				int current = Integer.parseInt(banlist[i]);
-				dao.delete(current);
-			}
-		}
-		
-		this.list();
-	}
+	private static CacheEngine cache;
+	private static final String FQN = "banlist";
+	private static final String BANLIST = "banlistCollection";
 	
 	/**
-	 * @see net.jforum.Command#list()
+	 * @see net.jforum.cache.Cacheable#setCacheEngine(net.jforum.cache.CacheEngine)
 	 */
-	public void list()
+	public void setCacheEngine(CacheEngine engine)
 	{
-		this.setTemplateName(TemplateKeys.BANLIST_LIST);
+		cache = engine;
+	}
+	
+	public boolean shouldBan(Banlist b) {
+		boolean status = false;
 		
-		List l = DataAccessDriver.getInstance().newBanlistDAO().selectAll();
-		this.context.put("banlist", l);
+		for (Iterator iter = banlist().values().iterator(); iter.hasNext(); ) {
+			Banlist current = (Banlist)iter.next();
+		}
+		
+		return status;
+	}
+
+	public static void add(Banlist b)
+	{
+		Map m = banlist();
+		m.put(new Integer(b.getId()), b);
+		
+		cache.add(FQN, BANLIST, m);
+	}
+	
+	public static void remove(int banlistId)
+	{
+		Map m = banlist();
+		
+		Integer key = new Integer(banlistId);
+		
+		if (m.containsKey(key)) {
+			m.remove(key);
+		}
+		
+		cache.add(FQN, BANLIST, m);
+	}
+	
+	private static Map banlist()
+	{
+		Map m = (Map)cache.get(FQN, BANLIST);
+		
+		if (m == null) {
+			m = new HashMap();
+		}
+		
+		return m;
 	}
 }

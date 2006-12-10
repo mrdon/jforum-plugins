@@ -1,3 +1,14 @@
+DROP TABLE IF EXISTS jforum_banlist;
+CREATE TABLE jforum_banlist (
+  banlist_id INT NOT NULL auto_increment,
+  user_id INT,
+  banlist_ip varchar(15),
+  banlist_email varchar(255),
+  PRIMARY KEY  (banlist_id),
+  INDEX idx_user (user_id),
+  INDEX (banlist_ip)
+) TYPE=InnoDB;
+
 ALTER TABLE jforum_users ADD COLUMN user_authhash VARCHAR(32);
 ALTER TABLE jforum_users ADD COLUMN user_notify_always TINYINT(1) DEFAULT '0';
 ALTER TABLE jforum_users ADD COLUMN user_notify_text TINYINT(1) DEFAULT '0';

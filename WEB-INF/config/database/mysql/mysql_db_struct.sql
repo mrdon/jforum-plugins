@@ -11,9 +11,9 @@
 DROP TABLE IF EXISTS jforum_banlist;
 CREATE TABLE jforum_banlist (
   banlist_id INT NOT NULL auto_increment,
-  user_id INT NOT NULL,
-  banlist_ip varchar(15) NOT NULL,
-  banlist_email varchar(255) default NULL,
+  user_id INT,
+  banlist_ip varchar(15),
+  banlist_email varchar(255),
   PRIMARY KEY  (banlist_id),
   INDEX idx_user (user_id),
   INDEX (banlist_ip)

@@ -43,10 +43,13 @@
 package net.jforum.entities;
 
 import java.io.Serializable;
+import java.util.StringTokenizer;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Rafael Steil
- * @version $Id: Banlist.java,v 1.1 2006/12/07 23:21:30 rafaelsteil Exp $
+ * @version $Id: Banlist.java,v 1.2 2006/12/10 22:46:13 rafaelsteil Exp $
  */
 public class Banlist implements Serializable
 {
@@ -117,5 +120,70 @@ public class Banlist implements Serializable
 	public void setEmail(String email)
 	{
 		this.email = email;
+	}
+	
+	public boolean matches(Banlist b)
+	{
+		boolean status = false;
+		
+		if (b.getUserId() == this.getUserId() 
+			|| StringUtils.equalsIgnoreCase(b.getEmail(), this.getEmail())) {
+			status = true;
+		}
+		else if (!StringUtils.isEmpty(b.getIp()) && !StringUtils.isEmpty(this.getIp()))  {
+			if (b.getIp().equalsIgnoreCase(this.getIp())) {
+				status = true;
+			}
+			else {
+				status = this.matchIp(b);
+			}
+		}
+		
+		return status;
+	}
+
+	private boolean matchIp(Banlist b)
+	{
+		boolean status = false;
+		
+		StringTokenizer userToken = new StringTokenizer(b.getIp(), ".");
+		StringTokenizer thisToken = new StringTokenizer(this.getIp(), ".");
+		
+		if (userToken.countTokens() == thisToken.countTokens()) {
+			String[] userValues = this.tokenizerAsArray(userToken);
+			String[] thisValues = this.tokenizerAsArray(thisToken);
+			
+			status = this.compareIpValues(userValues, thisValues);
+		}
+		return status;
+	}
+
+	private boolean compareIpValues(String[] userValues, String[] thisValues)
+	{
+		boolean helperStatus = true;
+		boolean onlyStars = true;
+		
+		for (int i = 0; i < thisValues.length; i++) {
+			if (thisValues[i].charAt(0) != '*') {
+				onlyStars = false;
+				
+				if (!thisValues[i].equals(userValues[i])) {
+					helperStatus = false;
+				}
+			}
+		}
+		
+		return helperStatus && !onlyStars;
+	}
+
+	private String[] tokenizerAsArray(StringTokenizer token)
+	{
+		String[] values = new String[token.countTokens()];
+		
+		for (int i = 0; token.hasMoreTokens(); i++) {
+			values[i] = token.nextToken();
+		}
+		
+		return values;
 	}
 }

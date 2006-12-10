@@ -6,13 +6,15 @@ CREATE SEQUENCE jforum_banlist_seq
     START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
     CACHE 200 ORDER;
 CREATE TABLE jforum_banlist (
-    banlist_id NUMBER(10) NOT NULL,
+    banlist_id NUMBER(10),
     user_id NUMBER(10) DEFAULT 0,
-    banlist_ip VARCHAR2(20) DEFAULT ' ' NOT NULL,
+    banlist_ip VARCHAR2(20),
     banlist_email VARCHAR2(255) NOT NULL,
     PRIMARY KEY(banlist_id)
 );
 CREATE INDEX idx_banlist_user ON jforum_banlist(user_id);
+CREATE INDEX idx_banlist_ip ON jforum_banlist(banlist_ip);
+CREATE INDEX idx_banlist_email ON jforum_banlist(banlist_email);
 
 --
 -- Table structure for table 'jforum_categories'
