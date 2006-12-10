@@ -49,7 +49,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Rafael Steil
- * @version $Id: Banlist.java,v 1.2 2006/12/10 22:46:13 rafaelsteil Exp $
+ * @version $Id: Banlist.java,v 1.3 2006/12/10 23:08:21 rafaelsteil Exp $
  */
 public class Banlist implements Serializable
 {
@@ -126,8 +126,7 @@ public class Banlist implements Serializable
 	{
 		boolean status = false;
 		
-		if (b.getUserId() == this.getUserId() 
-			|| StringUtils.equalsIgnoreCase(b.getEmail(), this.getEmail())) {
+		if (this.matchesUserId(b) || this.matchesEmail(b)) {
 			status = true;
 		}
 		else if (!StringUtils.isEmpty(b.getIp()) && !StringUtils.isEmpty(this.getIp()))  {
@@ -140,6 +139,16 @@ public class Banlist implements Serializable
 		}
 		
 		return status;
+	}
+
+	private boolean matchesEmail(Banlist b)
+	{
+		return (!StringUtils.isEmpty(b.getEmail()) && b.getEmail().equals(this.getEmail()));
+	}
+
+	private boolean matchesUserId(Banlist b)
+	{
+		return b.getUserId() > 0 && this.getUserId() > 0 && b.getUserId() == this.getUserId();
 	}
 
 	private boolean matchIp(Banlist b)
