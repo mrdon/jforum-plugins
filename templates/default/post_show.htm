@@ -132,7 +132,7 @@
 						</td>
 		
 						<!-- Message -->
-						<td class="${rowColor}" valign="top">
+						<td class="${rowColor}" valign="top" id="post_text_${post.id}">
 							<span class="postbody">${post.text}</span>
 
 							<!-- Attachments -->
@@ -161,7 +161,19 @@
 					</tr>
 				</#list>
 				<!-- END OF POST LISTING -->
-			
+
+				<script type="text/javascript">
+				var elements = document.getElementsByTagName("pre");
+
+				for (var i = 0; i < elements.length; i++) {
+					var current = elements[i];
+
+					if (current.bbCodeId == "pre-code" && current.clientWidth == 0) {
+						current.style.width = document.body.clientWidth - 250 + "px";
+					}
+				}
+				</script>
+		
 				<tr align="center">
 					<td class="catbottom" colspan="2" height="28">
 						<table cellspacing="0" cellpadding="0" border="0">
