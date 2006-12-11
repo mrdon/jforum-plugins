@@ -44,7 +44,7 @@ package net.jforum.util.preferences;
 
 /**
  * @author Rafael Steil
- * @version $Id: TemplateKeys.java,v 1.19 2006/12/10 22:46:14 rafaelsteil Exp $
+ * @version $Id: TemplateKeys.java,v 1.20 2006/12/11 00:44:51 rafaelsteil Exp $
  */
 public class TemplateKeys
 {
@@ -53,6 +53,7 @@ public class TemplateKeys
 	public static final String FORUMS_LIST = "forums.list";
 	public static final String FORUMS_SHOW = "forums.show";
 	public static final String FORUMS_PING = "forums.ping";
+	public static final String FORUMS_BANNED = "forums.banned";
 
 	public static final String BOOKMARKS_ADD_FORUM = "bookmarks.add.forum";
 	public static final String BOOKMARS_ADD_TOPIC = "bookmars.add.topic";
@@ -73,7 +74,7 @@ public class TemplateKeys
 	public static final String MODERATION_DENIED = "moderation.denied";
 
 	public static final String POSTS_LIST = "posts.list";
-        public static final String POSTS_USER_POSTS_LIST = "posts.userposts.list";
+	public static final String POSTS_USER_POSTS_LIST = "posts.userposts.list";
 	public static final String POSTS_REVIEW = "posts.review";
 	public static final String POSTS_TOPIC_NOT_FOUND = "posts.topic.not.found";
 	public static final String POSTS_POST_NOT_FOUND = "posts.post.not.found";

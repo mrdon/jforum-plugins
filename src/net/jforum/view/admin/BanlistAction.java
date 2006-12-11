@@ -50,11 +50,12 @@ import net.jforum.dao.BanlistDAO;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.entities.Banlist;
 import net.jforum.exceptions.ForumException;
+import net.jforum.repository.BanlistRepository;
 import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: BanlistAction.java,v 1.3 2006/12/10 22:46:12 rafaelsteil Exp $
+ * @version $Id: BanlistAction.java,v 1.4 2006/12/11 00:44:51 rafaelsteil Exp $
  */
 public class BanlistAction extends AdminCommand
 {
@@ -86,6 +87,8 @@ public class BanlistAction extends AdminCommand
 			
 			BanlistDAO dao = DataAccessDriver.getInstance().newBanlistDAO();
 			dao.insert(b);
+			
+			BanlistRepository.add(b);
 		}
 		
 		this.list();
@@ -101,6 +104,8 @@ public class BanlistAction extends AdminCommand
 			for (int i = 0; i < banlist.length; i++) {
 				int current = Integer.parseInt(banlist[i]);
 				dao.delete(current);
+				
+				BanlistRepository.remove(current);
 			}
 		}
 		

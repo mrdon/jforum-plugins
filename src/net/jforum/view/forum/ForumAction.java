@@ -74,7 +74,7 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.56 2006/11/12 15:08:07 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.57 2006/12/11 00:44:50 rafaelsteil Exp $
  */
 public class ForumAction extends Command 
 {
@@ -318,6 +318,12 @@ public class ForumAction extends Command
 		this.watchForum(DataAccessDriver.getInstance().newForumDAO(), forumId, userId);
 
 		JForumExecutionContext.setRedirect(this.redirectLinkToShowAction(forumId));
+	}
+	
+	public void banned()
+	{
+		this.setTemplateName(TemplateKeys.FORUMS_BANNED);
+		this.context.put("message", I18n.getMessage("ForumBanned.banned"));
 	}
 	
 	private String redirectLinkToShowAction(int forumId)

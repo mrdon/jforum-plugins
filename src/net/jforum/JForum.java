@@ -61,8 +61,10 @@ import net.jforum.context.ResponseContext;
 import net.jforum.context.web.WebRequestContext;
 import net.jforum.context.web.WebResponseContext;
 import net.jforum.dao.DatabaseWorkarounder;
+import net.jforum.entities.Banlist;
 import net.jforum.exceptions.ExceptionWriter;
 import net.jforum.exceptions.ForumStartupException;
+import net.jforum.repository.BanlistRepository;
 import net.jforum.repository.ModulesRepository;
 import net.jforum.repository.RankingRepository;
 import net.jforum.repository.SecurityRepository;
@@ -77,7 +79,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.106 2006/11/18 21:26:14 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.107 2006/12/11 00:44:50 rafaelsteil Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
@@ -112,6 +114,7 @@ public class JForum extends JForumBaseServlet
 			ForumStartup.startForumRepository();
 			RankingRepository.loadRanks();
 			SmiliesRepository.loadSmilies();
+			BanlistRepository.loadBanlist();
 		}
 		catch (Throwable e) {
             e.printStackTrace();
@@ -140,13 +143,7 @@ public class JForum extends JForumBaseServlet
 			request = new WebRequestContext(req);
             response = new WebResponseContext(res);
 
-			if (!isDatabaseUp) {
-				synchronized (this) {
-					if (!isDatabaseUp) {
-						isDatabaseUp = ForumStartup.startDatabase();
-					}
-				}
-			}
+			this.checkDatabaseStatus();
 
             forumContext = new JForumContext(request.getContextPath(),
                 SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION),
@@ -177,77 +174,130 @@ public class JForum extends JForumBaseServlet
 				? ModulesRepository.getModuleClass(module) 
 				: null;
 			
-			context.put("moduleName", module);
-			context.put("action", request.getAction());
-			context.put("language", I18n.getUserLanguage());
-			context.put("session", SessionFacade.getUserSession());
-			context.put("request", req);
-			context.put("response", response);
-		
-			if (moduleClass != null) {
-				// Here we go, baby
-				Command c = this.retrieveCommand(moduleClass);
-				Template template = c.process(request, response, context);
-
-				if (JForumExecutionContext.getRedirectTo() == null) {
-					String contentType = JForumExecutionContext.getContentType();
-					
-					if (contentType == null) {
-						contentType = "text/html; charset=" + encoding;
-					}
-					
-					response.setContentType(contentType);
-					
-					// Binary content are expected to be fully 
-					// handled in the action, including outputstream
-					// manipulation
-					if (!JForumExecutionContext.isCustomContent()) {
-						out = new BufferedWriter(new OutputStreamWriter(response.getOutputStream(), encoding));
-						template.process(JForumExecutionContext.getTemplateContext(), out);
-						out.flush();
-					}
-				}
-			}
-			else {
+			if (moduleClass == null) {
 				// Module not found, send 404 not found response
 				response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			}
+			else {
+				boolean shouldBan = this.shouldBan(request.getRemoteAddr());
+				
+				if (!shouldBan) {
+					context.put("moduleName", module);
+					context.put("action", request.getAction());
+				}
+				else {
+					context.put("moduleName", "forums");
+					context.put("action", "banned");
+				}
+				
+				if (shouldBan && SystemGlobals.getBoolValue(ConfigKeys.BANLIST_SEND_403FORBIDDEN)) {
+					response.sendError(HttpServletResponse.SC_FORBIDDEN);
+				}
+				else {
+					context.put("language", I18n.getUserLanguage());
+					context.put("session", SessionFacade.getUserSession());
+					context.put("request", req);
+					context.put("response", response);
+					
+					out = this.processCommand(out, request, response, encoding, context, moduleClass);
+				}
+			}
 		}
 		catch (Exception e) {
-			JForumExecutionContext.enableRollback();
+			this.handleException(out, response, encoding, e);
+		}
+		finally {
+			this.handleFinally(out, forumContext, response);
+		}		
+	}
+
+	private Writer processCommand(Writer out, RequestContext request, ResponseContext response, 
+			String encoding, SimpleHash context, String moduleClass) throws Exception
+	{
+		// Here we go, baby
+		Command c = this.retrieveCommand(moduleClass);
+		Template template = c.process(request, response, context);
+
+		if (JForumExecutionContext.getRedirectTo() == null) {
+			String contentType = JForumExecutionContext.getContentType();
 			
-			if (e.toString().indexOf("ClientAbortException") == -1) {
-				response.setContentType("text/html; charset=" + encoding);
-				if (out != null) {
-					new ExceptionWriter().handleExceptionData(e, out);
-				}
-				else {
-					new ExceptionWriter().handleExceptionData(e, new BufferedWriter(new OutputStreamWriter(response.getOutputStream())));
+			if (contentType == null) {
+				contentType = "text/html; charset=" + encoding;
+			}
+			
+			response.setContentType(contentType);
+			
+			// Binary content are expected to be fully 
+			// handled in the action, including outputstream
+			// manipulation
+			if (!JForumExecutionContext.isCustomContent()) {
+				out = new BufferedWriter(new OutputStreamWriter(response.getOutputStream(), encoding));
+				template.process(JForumExecutionContext.getTemplateContext(), out);
+				out.flush();
+			}
+		}
+		
+		return out;
+	}
+
+	private void checkDatabaseStatus()
+	{
+		if (!isDatabaseUp) {
+			synchronized (this) {
+				if (!isDatabaseUp) {
+					isDatabaseUp = ForumStartup.startDatabase();
 				}
 			}
 		}
-		finally {
-			try {
-				if (out != null) { out.close(); }
+	}
+
+	private void handleFinally(Writer out, JForumContext forumContext, ResponseContext response) throws IOException
+	{
+		try {
+			if (out != null) { out.close(); }
+		}
+		catch (Exception e) {
+		    // catch close error 
+		}
+		
+		String redirectTo = JForumExecutionContext.getRedirectTo();
+		JForumExecutionContext.finish();
+		
+		if (redirectTo != null) {
+			if(forumContext!=null && forumContext.isEncodingDisabled()) {
+				response.sendRedirect(redirectTo);
+			} 
+			else {
+				response.sendRedirect(response.encodeRedirectURL(redirectTo));
 			}
-			catch (Exception e) {
-                // catch close error 
-            }
-			
-			String redirectTo = JForumExecutionContext.getRedirectTo();
-			JForumExecutionContext.finish();
-			
-			if (redirectTo != null) {
-				if(forumContext!=null && forumContext.isEncodingDisabled()) {
-					response.sendRedirect(redirectTo);
-				} 
-				else {
-					response.sendRedirect(response.encodeRedirectURL(redirectTo));
-				}
+		}
+	}
+
+	private void handleException(Writer out, ResponseContext response, String encoding, Exception e) throws IOException
+	{
+		JForumExecutionContext.enableRollback();
+		
+		if (e.toString().indexOf("ClientAbortException") == -1) {
+			response.setContentType("text/html; charset=" + encoding);
+			if (out != null) {
+				new ExceptionWriter().handleExceptionData(e, out);
 			}
-		}		
+			else {
+				new ExceptionWriter().handleExceptionData(e, new BufferedWriter(new OutputStreamWriter(response.getOutputStream())));
+			}
+		}
 	}
 	
+	private boolean shouldBan(String ip)
+	{
+		Banlist b = new Banlist();
+		
+		b.setUserId(SessionFacade.getUserSession().getUserId());
+		b.setIp(ip);
+		
+		return BanlistRepository.shouldBan(b);
+	}
+
 	private Command retrieveCommand(String moduleClass) throws Exception
 	{
 		Command c;
@@ -283,8 +333,6 @@ public class JForum extends JForumBaseServlet
 			DBConnection.getImplementation().realReleaseAllConnections();
 			ConfigLoader.stopCacheEngine();
 		}
-		catch (Exception e) {
-            // catch destroy error
-        }
+		catch (Exception e) { }
 	}
 }

@@ -44,15 +44,18 @@ package net.jforum.repository;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
+import net.jforum.dao.BanlistDAO;
+import net.jforum.dao.DataAccessDriver;
 import net.jforum.entities.Banlist;
 
 /**
  * @author Rafael Steil
- * @version $Id: BanlistRepository.java,v 1.1 2006/12/10 22:46:13 rafaelsteil Exp $
+ * @version $Id: BanlistRepository.java,v 1.2 2006/12/11 00:44:50 rafaelsteil Exp $
  */
 public class BanlistRepository implements Cacheable
 {
@@ -68,11 +71,16 @@ public class BanlistRepository implements Cacheable
 		cache = engine;
 	}
 	
-	public boolean shouldBan(Banlist b) {
+	public static boolean shouldBan(Banlist b) {
 		boolean status = false;
 		
 		for (Iterator iter = banlist().values().iterator(); iter.hasNext(); ) {
 			Banlist current = (Banlist)iter.next();
+			
+			if (current.matches(b)) {
+				status = true;
+				break;
+			}
 		}
 		
 		return status;
@@ -108,5 +116,15 @@ public class BanlistRepository implements Cacheable
 		}
 		
 		return m;
+	}
+	
+	public static void loadBanlist() 
+	{
+		BanlistDAO dao = DataAccessDriver.getInstance().newBanlistDAO();
+		List banlist = dao.selectAll();
+		
+		for (Iterator iter = banlist.iterator(); iter.hasNext(); ) {
+			BanlistRepository.add((Banlist)iter.next());
+		}
 	}
 }

@@ -48,7 +48,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.103 2006/12/08 21:48:04 lazee Exp $
+* @version $Id: ConfigKeys.java,v 1.104 2006/12/11 00:44:51 rafaelsteil Exp $
 */
 
 public class ConfigKeys 
@@ -287,6 +287,7 @@ public class ConfigKeys
 	public static final String REQUEST_IGNORE_CAPTCHA = "request.ignore.captcha";
 	
 	public static final String API_SECURITY_KEY = "api.security.key";
+	public static final String BANLIST_SEND_403FORBIDDEN = "banlist.send.403forbidden";
     
 	private ConfigKeys() {}
 }
