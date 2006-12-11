@@ -79,7 +79,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.107 2006/12/11 00:44:50 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.108 2006/12/11 00:57:10 rafaelsteil Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
@@ -186,8 +186,9 @@ public class JForum extends JForumBaseServlet
 					context.put("action", request.getAction());
 				}
 				else {
+					moduleClass = ModulesRepository.getModuleClass("forums");
 					context.put("moduleName", "forums");
-					context.put("action", "banned");
+					((WebRequestContext)request).changeAction("banned");
 				}
 				
 				if (shouldBan && SystemGlobals.getBoolValue(ConfigKeys.BANLIST_SEND_403FORBIDDEN)) {

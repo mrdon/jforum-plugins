@@ -70,7 +70,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: WebRequestContext.java,v 1.4 2006/11/05 16:38:11 rafaelsteil Exp $
+ * @version $Id: WebRequestContext.java,v 1.5 2006/12/11 00:57:10 rafaelsteil Exp $
  */
 public class WebRequestContext extends HttpServletRequestWrapper implements RequestContext
 {
@@ -339,6 +339,17 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 	public String getAction()
 	{
 		return this.getParameter("action");
+	}
+	
+	public void changeAction(String newAction)
+	{
+		if (this.query.containsKey("action")) {
+			this.query.remove("action");
+			this.query.put("action", newAction);
+		}
+		else {
+			this.addParameter("action", newAction);
+		}
 	}
 	
 	/**
