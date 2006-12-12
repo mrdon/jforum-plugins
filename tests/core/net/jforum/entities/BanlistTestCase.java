@@ -5,7 +5,7 @@ import junit.framework.TestCase;
 
 /**
  * @author Rafael Steil
- * @version $Id: BanlistTestCase.java,v 1.1 2006/12/10 23:08:21 rafaelsteil Exp $
+ * @version $Id: BanlistTestCase.java,v 1.1 2006/12/12 00:44:50 rafaelsteil Exp $
  */
 public class BanlistTestCase extends TestCase {
 	public void testMatchIpUsingOnlyStarsExpectsFalse() {
