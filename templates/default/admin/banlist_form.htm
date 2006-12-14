@@ -1,4 +1,4 @@
-<style type=text/css>@import url( ${contextPath}/templates/${templateName}/admin/style.css );</style>
+<#include "header.htm"/>
 
 <form accept-charset="${encoding}" name="form" action="${contextPath}/jforum${extension}" method="post">
 <input type="hidden" name="action" value="insertSave">
@@ -32,5 +32,6 @@
 <TD class="catbottom" colSpan=2 height=28>
 <INPUT class=mainoption type=submit value="${I18n.getMessage("Rank.Form.ClickToUpdate")}" name=submit>
 </TD>
-</TR><</TABLE>
+</TR></TABLE>
 </FORM>
+<#include "bottom.htm"/>
