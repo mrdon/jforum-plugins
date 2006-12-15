@@ -63,7 +63,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.32 2006/12/02 03:19:51 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.33 2006/12/15 12:46:11 lazee Exp $
  */
 public class UserAction extends AdminCommand 
 {
@@ -153,6 +153,7 @@ public class UserAction extends AdminCommand
 		this.context.put("u", u);
 		this.context.put("action", "editSave");		
 		this.context.put("specialRanks", DataAccessDriver.getInstance().newRankingDAO().selectSpecials());
+		this.context.put("avatarAllowExternalUrl", SystemGlobals.getBoolValue(ConfigKeys.AVATAR_ALLOW_EXTERNAL_URL));
 		this.context.put("admin", true);
 	}
 	
