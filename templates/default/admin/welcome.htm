@@ -34,7 +34,7 @@ p, td { font-size: 11px; }
 	<p style="color: green">${I18n.getMessage("Admin.welcome.upToDateVersion")}</p>
 </#if>
 
-<#if developmentVersion> <p style="color: red"><b>Warning: This is a development version of JForum. Please check out the latest <a href="http://www.jforum.net/development.jsp" target="_blank">CVS HEAD</a> for updates.</b></p> </#if>
+<#if developmentVersion> <p style="color: red"><b>${I18n.getMessage("Admin.welcome.warning")}</b></p> </#if>
 
 <#if installModuleExists>
 	<h1>${I18n.getMessage("Admin.welcome.securityWarning")}</h1>
@@ -80,7 +80,7 @@ p, td { font-size: 11px; }
 <div <#if (sessions.size() > 10)>style="overflow: auto; width: 100%; height: 280px;"</#if>>
 <table width="100%" cellpadding="4" cellspacing="1" border="0" class="forumline">
 	<tr>
-		<th width="20%" class="thCornerL" height="25">&nbsp;Username&nbsp;</th>
+		<th width="20%" class="thCornerL" height="25">&nbsp;${I18n.getMessage("Login.user")}&nbsp;</th>
 		<th width="20%" height="25" class="thTop">&nbsp;${I18n.getMessage("Admin.welcome.logIn")}&nbsp;</th>
 		<th width="20%" class="thTop">&nbsp;${I18n.getMessage("Admin.welcome.lastUpdated")}&nbsp;</th>
 		<th width="20%" height="25" class="thCornerR">&nbsp;${I18n.getMessage("Admin.welcome.ipAddress")}&nbsp;</th>

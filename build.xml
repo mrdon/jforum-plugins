@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!-- ********************************************************************* -->
 <!-- Ant build script for JForum -->
-<!-- Version: $Id: build.xml,v 1.22 2006/12/10 21:39:02 Silenius Exp $  -->
+<!-- Version: $Id: build.xml,v 1.23 2006/12/17 15:12:58 Silenius Exp $  -->
 <!-- ********************************************************************* -->
 
 <project name="JForum" default="compile" basedir=".">
@@ -99,14 +99,15 @@
 	<target name="dist" depends="compile" description="Generates the distribution file">
 		<war destfile="${dist.dir}/${warfile}" webxml="${web.dir}/WEB-INF/web.xml">
 			<fileset dir="${web.dir}">
-				<include name="images/avatar/*.txt" />
+				<include name="images/avatar/*" />
 				<include name="images/smilies/*" />
 				<include name="images/transp.gif" />
 				<include name="templates/**/*" />
 				<include name="tmp/**/*" />
 				<include name="upgrade/**/*" />
-				<include name="upload/*.txt" />
+				<include name="upload/*" />
 				<include name="*.htm" />
+				<include name="*.txt" />
 			</fileset>
 			<webinf dir="${web.dir}/WEB-INF">
 				<include name="*.xml" />
