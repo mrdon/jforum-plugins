@@ -1,6 +1,3 @@
-input, textarea, select { border-top-width: 1px; border-left-width: 1px; border-bottom-width: 1px; border-right-width: 1px }
-input { text-indent: 2px; }
-.postbody { line-height: 18px }
 img { border: 0px; }
 font, th, td, p { font-family: verdana, arial, helvetica, sans-serif; }
 
@@ -24,10 +21,9 @@ td.row1sticky { background-color: #efefef; }
 td.row2announce { background-color: #dee3e7; }
 td.row2sticky { background-color: #dee3e7; }
 td.row3announce { background-color: #d1d7dc; }
-
 td.row3sticky { background-color: #d1d7dc; }
-
 td.rowpic { background-image:  url(../images/cellpic2.jpg); background-repeat: repeat-y; background-color: #ffffff }
+
 th { font-weight: bold; font-size: 11px; background-image:  url(../images/cellpic3.gif); color: #ffa34f; height: 25px; background-color: #01336b }
 td.cat { border-right: #ffffff solid; border-top: #ffffff solid; background-image:  url(../images/cellpic1.gif); border-left: #ffffff solid; border-bottom: #ffffff solid; height: 28px; background-color: #dfdfdf }
 td.cathead { border-right: #ffffff solid; border-top: #ffffff solid; background-image:  url(../images/cellpic1.gif); border-left: #ffffff solid; border-bottom: #ffffff solid; height: 28px; background-color: #dfdfdf }
@@ -95,11 +91,9 @@ pre { font-family: courier, 'courier new', sans-serif; border-style: solid;  }
 .postinfo .subject { float: left; }
 .postinfo .action { float: right; }
 
-
 a.copyright { color: #444444; text-decoration: none; }
 a.copyright:hover { color: #000000; text-decoration: underline; }
-input, textarea, select { border-left-color: #000000; border-bottom-color: #000000; font: 11px verdana, arial, helvetica, sans-serif; color: #000000; border-top-color: #000000; border-right-color: #000000; }
-
+input, textarea, select { border-left-color: #000000; border-bottom-color: #000000; font: 11px verdana, arial, helvetica, sans-serif; color: #000000; border-top-color: #000000; border-right-color: #000000; border-top-width: 1px; border-left-width: 1px; border-bottom-width: 1px; border-right-width: 1px; }
 input { text-indent: 2px; }
 input.button { font-size: 11px; color: #000000; font-family: verdana, arial, helvetica, sans-serif; background-color: #fafafa; }
 input.mainoption { font-weight: bold; background-color: #fafafa; }
