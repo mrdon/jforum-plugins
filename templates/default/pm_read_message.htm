@@ -42,20 +42,20 @@
 								<th class="thhead" nowrap="nowrap" colspan="3">${I18n.getMessage("PrivateMessage.inboxMessage")}</th>
 							</tr>
 							<tr>
-								<td class="row2"><span class="genmed">${I18n.getMessage("PrivateMessage.from")}:</span></td>
-								<td class="row2" width="100%" colspan="2"><span class="genmed"><a class="nav" href="${JForumContext.encodeURL("/user/profile/${pm.fromUser.id}")}">${pm.fromUser.username}</a></span></td>
+								<td class="row2" width="10%"><span class="genmed">${I18n.getMessage("PrivateMessage.from")}:</span></td>
+								<td class="row2" colspan="2"><span class="genmed"><a class="nav" href="${JForumContext.encodeURL("/user/profile/${pm.fromUser.id}")}">${pm.fromUser.username}</a></span></td>
 							</tr>
 							<tr>
-								<td class="row2"><span class="genmed">${I18n.getMessage("PrivateMessage.to")}:</span></td>
-								<td class="row2" width="100%" colspan="2"><span class="genmed"><a class="nav" href="${JForumContext.encodeURL("/user/profile/${pm.toUser.id}")}">${pm.toUser.username}</a></span></td>
+								<td class="row2" width="10%"><span class="genmed">${I18n.getMessage("PrivateMessage.to")}:</span></td>
+								<td class="row2" colspan="2"><span class="genmed"><a class="nav" href="${JForumContext.encodeURL("/user/profile/${pm.toUser.id}")}">${pm.toUser.username}</a></span></td>
 							</tr>
 							<tr>
-								<td class="row2"><span class="genmed">${I18n.getMessage("PrivateMessage.date")}:</span></td>
-								<td class="row2" width="100%" colspan="2"><span class="genmed">${pm.formatedDate}</span></td>
+								<td class="row2" width="10%"><span class="genmed">${I18n.getMessage("PrivateMessage.date")}:</span></td>
+								<td class="row2" colspan="2"><span class="genmed">${pm.formatedDate}</span></td>
 							</tr>
 							<tr>
-								<td class="row2"><span class="genmed">${I18n.getMessage("PrivateMessage.subject")}:</span></td>
-								<td class="row2" width="100%"><span class="genmed">${pm.post.subject}</span></td>
+								<td class="row2" width="10%"><span class="genmed">${I18n.getMessage("PrivateMessage.subject")}:</span></td>
+								<td class="row2"><span class="genmed">${pm.post.subject}</span></td>
 								<td class="row2" nowrap="nowrap" align="right">
 									<a href="${JForumContext.encodeURL("/pm/quote/${pm.id}")}" class="icon_quote"><img src="${contextPath}/images/transp.gif" alt="" /></a>
 								</td>
