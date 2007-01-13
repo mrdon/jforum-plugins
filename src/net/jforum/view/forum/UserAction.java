@@ -85,7 +85,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.87 2006/12/08 21:48:04 lazee Exp $
+ * @version $Id: UserAction.java,v 1.88 2007/01/13 09:10:04 andowson Exp $
  */
 public class UserAction extends Command 
 {
@@ -264,6 +264,7 @@ public class UserAction extends Command
 
 		String username = this.request.getParameter("username");
 		String password = this.request.getParameter("password");
+		String email = this.request.getParameter("email");
 		String captchaResponse = this.request.getParameter("captchaResponse");
 
 		boolean error = false;
@@ -292,8 +293,8 @@ public class UserAction extends Command
 			error = true;
 		}
 		
-		if (!error && um.findByEmail(this.request.getParameter("email")) != null) {
-			this.context.put("error", I18n.getMessage("User.emailExists"));
+		if (!error && um.findByEmail(email) != null) {
+			this.context.put("error", I18n.getMessage("User.emailExists", new String[] { email }));
 			error = true;
 		}
 		
@@ -309,7 +310,7 @@ public class UserAction extends Command
 
 		u.setUsername(username);
 		u.setPassword(MD5.crypt(password));
-		u.setEmail(this.request.getParameter("email"));
+		u.setEmail(email);
 
 		if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_USER_EMAIL_AUTH)) {
 			u.setActivationKey(MD5.crypt(username + System.currentTimeMillis()));
