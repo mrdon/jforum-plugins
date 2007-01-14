@@ -1,3 +1,6 @@
+DROP SEQUENCE jforum_banlist_seq;
+DROP TABLE jforum_banlist;
+CREATE SEQUENCE jforum_banlist_seq;
 CREATE TABLE jforum_banlist (
   banlist_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_banlist_seq'),
   user_id INTEGER DEFAULT 0,
@@ -5,12 +8,15 @@ CREATE TABLE jforum_banlist (
   banlist_email VARCHAR(255),
   PRIMARY KEY  (banlist_id)
 );
+CREATE INDEX idx_banlist_user ON jforum_banlist(user_id);
 CREATE INDEX idx_banlist_ip ON jforum_banlist(banlist_ip);
 CREATE INDEX idx_banlist_email ON jforum_banlist(banlist_email);
 
 ALTER TABLE jforum_users ADD user_authhash VARCHAR(32);
-ALTER TABLE jforum_users ADD user_notify_always INTEGER DEFAULT 0;
-ALTER TABLE jforum_users ADD user_notify_text INTEGER DEFAULT 0;
+ALTER TABLE jforum_users ADD user_notify_always INTEGER;
+ALTER TABLE jforum_users ALTER COLUMN user_notify_always SET DEFAULT 0;
+ALTER TABLE jforum_users ADD user_notify_text INTEGER;
+ALTER TABLE jforum_users ALTER COLUMN user_notify_text SET DEFAULT 0;
 
 CREATE INDEX idx_st_session ON jforum_search_topics(session_id);
 CREATE INDEX idx_sr_session ON jforum_search_results(session_id);
