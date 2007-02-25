@@ -48,7 +48,7 @@ import net.jforum.entities.User;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageDAO.java,v 1.6 2006/08/23 02:13:33 rafaelsteil Exp $
+ * @version $Id: PrivateMessageDAO.java,v 1.7 2007/02/25 13:48:34 rafaelsteil Exp $
  */
 public interface PrivateMessageDAO
 {
@@ -65,8 +65,9 @@ public interface PrivateMessageDAO
 	 * id and the owner user id.
 	 * 
 	 * @param pm PrivateMessage[]
+	 * @param userId TODO
 	 */
-	public void delete(PrivateMessage[] pm) ;
+	public void delete(PrivateMessage[] pm, int userId) ;
 	
 	/**
 	 * Update the type of some private message.

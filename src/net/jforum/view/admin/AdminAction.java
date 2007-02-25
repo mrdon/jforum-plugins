@@ -70,7 +70,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: AdminAction.java,v 1.22 2006/11/12 13:54:05 rafaelsteil Exp $
+ * @version $Id: AdminAction.java,v 1.23 2007/02/25 13:48:34 rafaelsteil Exp $
  */
 public class AdminAction extends Command {
 
@@ -148,6 +148,7 @@ public class AdminAction extends Command {
 		String data = this.readVersionFromSocket();
 		
 		if (data == null || data.trim().length() == 0) {
+			this.context.put("developmentVersion", false);
 			return;
 		}
 		

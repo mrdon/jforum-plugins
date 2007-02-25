@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!-- ********************************************************************* -->
 <!-- Ant build script for JForum -->
-<!-- Version: $Id: build.xml,v 1.23 2006/12/17 15:12:58 Silenius Exp $  -->
+<!-- Version: $Id: build.xml,v 1.24 2007/02/25 13:52:45 rafaelsteil Exp $  -->
 <!-- ********************************************************************* -->
 
 <project name="JForum" default="compile" basedir=".">
@@ -17,8 +17,8 @@
 	<property name="project.title" value="JForum API" />
 	<property name="author" value="JForum Team - http://www.jforum.net/team.jsp" />
 	<property name="copyright" value="(c) JForum Team" />
-	<property name="version" value="2.1.7" />
-	<property name="filename" value="jforum" />
+	<property name="version" value="2.1.7-b3" />
+	<property name="filename" value="jforum-${version}" />
 	<property name="warfile" value="${filename}.war" />
 	<property name="javadoc.packages" value="net.jforum.*" />
 
@@ -108,6 +108,7 @@
 				<include name="upload/*" />
 				<include name="*.htm" />
 				<include name="*.txt" />
+				<include name="*.jsp" />
 			</fileset>
 			<webinf dir="${web.dir}/WEB-INF">
 				<include name="*.xml" />
@@ -117,7 +118,6 @@
 				<exclude name="config/jboss-*.xml" />
 			</webinf>
 			<lib dir="${project.libs}">
-				<exclude name="log4j*.jar" />
 				<exclude name="jboss*.jar" />
 				<exclude name="jgroups*.jar" />
 			</lib>

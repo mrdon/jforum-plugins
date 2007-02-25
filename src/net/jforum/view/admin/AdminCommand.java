@@ -50,14 +50,17 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: AdminCommand.java,v 1.10 2006/08/23 02:13:36 rafaelsteil Exp $
+ * @version $Id: AdminCommand.java,v 1.11 2007/02/25 13:48:34 rafaelsteil Exp $
  */
 public abstract class AdminCommand extends Command
 {
 	public Template process(RequestContext request, ResponseContext response,
 			SimpleHash context)
 	{
-		new AdminAction().checkAdmin();
+		if (!new AdminAction().checkAdmin()) {
+			this.ignoreAction();
+		}
+
 		return super.process(request, response, context);
 	}
 }

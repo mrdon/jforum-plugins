@@ -85,7 +85,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.88 2007/01/13 09:10:04 andowson Exp $
+ * @version $Id: UserAction.java,v 1.89 2007/02/25 13:48:33 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -440,11 +440,12 @@ public class UserAction extends Command
 							+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));						
 					}
 					else {
-						JForumExecutionContext.setRedirect(this.request.getScheme() 
-							+ "://" 
+						JForumExecutionContext.setRedirect(this.request.getScheme()
+							+ "://"
 							+ forwaredHost
+							+ this.request.getContextPath()
 							+ "/forums/list"
-							+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+							+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)); 
 					}
 				}
 
