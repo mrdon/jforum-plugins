@@ -85,7 +85,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.56 2006/11/12 15:08:06 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.57 2007/03/01 01:39:23 rafaelsteil Exp $
  */
 public class ForumRepository implements Cacheable
 {
@@ -678,7 +678,20 @@ public class ForumRepository implements Cacheable
 	 */
 	public static MostUsersEverOnline getMostUsersEverOnline()
 	{
-		return (MostUsersEverOnline)cache.get(FQN, MOST_USERS_ONLINE);
+		MostUsersEverOnline online = (MostUsersEverOnline)cache.get(FQN, MOST_USERS_ONLINE);
+		
+		if (online == null) {
+			synchronized (MOST_USERS_ONLINE) {
+				online = (MostUsersEverOnline)cache.get(FQN, MOST_USERS_ONLINE);
+				
+				if (online == null) {
+					online = instance.loadMostUsersEverOnline(
+						DataAccessDriver.getInstance().newConfigDAO());
+				}
+			}
+		}
+		
+		return online;
 	}
 	
 	/**
@@ -792,7 +805,7 @@ public class ForumRepository implements Cacheable
 		cache.add(FQN, CATEGORIES_SET, categoriesSet);
 	}
 	
-	private void loadMostUsersEverOnline(ConfigDAO cm) 
+	private MostUsersEverOnline loadMostUsersEverOnline(ConfigDAO cm) 
 	{
 		Config config = cm.selectByName(ConfigKeys.MOST_USERS_EVER_ONLINE);
 		MostUsersEverOnline mostUsersEverOnline = new MostUsersEverOnline();
@@ -807,6 +820,8 @@ public class ForumRepository implements Cacheable
 		}
 		
 		cache.add(FQN, MOST_USERS_ONLINE, mostUsersEverOnline);
+		
+		return mostUsersEverOnline;
 	}
 
 
