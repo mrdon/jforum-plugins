@@ -50,14 +50,15 @@ import net.jforum.JForumExecutionContext;
 import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.repository.ForumRepository;
 
 import org.apache.log4j.Logger;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @author Dirk Rasmussen - d.rasmussen@bevis.de (2006/11/27, modifs for MS SqlServer 2005)
- * @see WEB-INF\config\database\sqlserver\sqlserver.sql (2006/11/27, MS SqlServer 2005 specific version!)
- * @version $Id: SqlServerTopicDAO.java,v 1.12 2006/11/28 01:43:03 rafaelsteil Exp $
+ * @author Dirk Rasmussen - d.rasmussen@bevis.de (2007/02/19, modifs for MS SqlServer 2005)
+ * @see WEB-INF\config\database\sqlserver\sqlserver.sql (2007/02/19, MS SqlServer 2005 specific version!)
+ * @version $Id: SqlServerTopicDAO.java,v 1.13 2007/03/03 18:33:46 rafaelsteil Exp $
  */
 public class SqlServerTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 {
@@ -70,12 +71,12 @@ public class SqlServerTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 	{
 		PreparedStatement p = null;
 		String sqlStmnt = SystemGlobals.getSql("TopicModel.selectAllByForumByLimit");
+		if (logger.isDebugEnabled())
+		{
+			logger.debug("selectAllByForumByLimit("+forumId+","+startFrom+","+count+")..., sqlStmnt="+sqlStmnt);
+		}
 
 		try {
-			if (logger.isDebugEnabled())
-			{
-				logger.debug("selectAllByForumByLimit("+forumId+","+startFrom+","+count+")..., sqlStmnt="+sqlStmnt);
-			}
 			p = JForumExecutionContext.getConnection().prepareStatement(sqlStmnt);
 
 			p.setInt(1, forumId);
@@ -102,13 +103,12 @@ public class SqlServerTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 	{
 		PreparedStatement p = null;
 		String sqlStmnt = SystemGlobals.getSql("TopicModel.selectRecentTopicsByLimit");
+		if (logger.isDebugEnabled())
+		{
+			logger.debug("selectRecentTopics("+limit+")..., sqlStmnt="+sqlStmnt);
+		}
 
 		try {
-			if (logger.isDebugEnabled())
-			{
-				logger.debug("selectRecentTopics("+limit+")..., sqlStmnt="+sqlStmnt);
-			}
-
 			p = JForumExecutionContext.getConnection().prepareStatement(sqlStmnt);
 
 			p.setInt(1, limit );
@@ -125,4 +125,37 @@ public class SqlServerTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 			DbUtils.close(p);
 		}
 	}
+
+	/**
+	 * @see net.jforum.dao.TopicDAO#selectByUserByLimit(int, int, int)
+	 */
+	public List selectByUserByLimit(int userId, int startFrom, int count)
+	{
+		PreparedStatement p = null;
+		String sqlStmnt = SystemGlobals.getSql("TopicModel.selectByUserByLimit");
+		sqlStmnt = sqlStmnt.replaceAll(":fids:", ForumRepository.getListAllowedForums());
+		if (logger.isDebugEnabled())
+		{
+			logger.debug("selectByUserByLimit("+userId+","+startFrom+","+count+")..., sqlStmnt="+sqlStmnt);
+		}
+
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(sqlStmnt);
+
+			p.setInt(1, userId);
+			p.setInt(2, startFrom);
+			p.setInt(3, count);
+
+			List list = this.fillTopicsData(p);
+			p = null;
+			return list;
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
+
 }

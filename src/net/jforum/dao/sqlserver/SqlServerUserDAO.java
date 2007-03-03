@@ -57,9 +57,9 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
- * @author Dirk Rasmussen - d.rasmussen@bevis.de (2006/11/27, modifs for MS SqlServer 2005)
- * @see WEB-INF\config\database\sqlserver\sqlserver.sql (2006/11/27, MS SqlServer 2005 specific version!)
- * @version $Id: SqlServerUserDAO.java,v 1.10 2006/11/28 01:43:05 rafaelsteil Exp $
+ * @author Dirk Rasmussen - d.rasmussen@bevis.de (2007/02/19, modifs for MS SqlServer 2005)
+ * @see WEB-INF\config\database\sqlserver\sqlserver.sql (2007/02/19, MS SqlServer 2005 specific version!)
+ * @version $Id: SqlServerUserDAO.java,v 1.11 2007/03/03 18:33:45 rafaelsteil Exp $
  */
 public class SqlServerUserDAO extends net.jforum.dao.generic.GenericUserDAO
 {
@@ -106,6 +106,38 @@ public class SqlServerUserDAO extends net.jforum.dao.generic.GenericUserDAO
 			DbUtils.close(rs, p);
 		}
 	}
+
+	/**
+	 * @see net.jforum.dao.UserDAO#selectAllByGroup(int, int, int)
+	 */
+	public List selectAllByGroup(int groupId, int startFrom, int count)
+	{
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		String sqlStmnt = SystemGlobals.getSql("UserModel.selectAllByGroup");
+		if (logger.isDebugEnabled())
+		{
+			logger.debug("selectAllByGroup("+groupId+","+startFrom+","+count+")..., sqlStmnt="+sqlStmnt);
+		}
+
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(sqlStmnt);
+			p.setInt(1, groupId);
+			p.setInt(2, startFrom);
+			p.setInt(3, count);
+
+			rs = p.executeQuery();
+
+			return this.processSelectAll(rs);
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+	}
+
 
 	/**
 	 * @see net.jforum.dao.UserDAO#selectAllWithKarma(int, int)

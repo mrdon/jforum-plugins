@@ -1,11 +1,11 @@
 /*
  * Copyright (c) JForum Team
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -36,73 +36,72 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on 29/05/2004 00:12:37
+ * Created on Mar 11, 2005 5:33:54 PM
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.dao.sqlserver;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.SearchIndexerDAO;
+import net.jforum.entities.Post;
+import net.jforum.exceptions.DatabaseException;
+import net.jforum.util.DbUtils;
+import net.jforum.util.preferences.SystemGlobals;
+
+import org.apache.log4j.Logger;
+
 /**
- * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
+ * @author Rafael Steil
  * @author Dirk Rasmussen - d.rasmussen@bevis.de (2007/02/19, modifs for MS SqlServer 2005)
  * @see WEB-INF\config\database\sqlserver\sqlserver.sql (2007/02/19, MS SqlServer 2005 specific version!)
- * @version $Id: SqlServerDataAccessDriver.java,v 1.8 2007/03/03 18:33:45 rafaelsteil Exp $
+ * @version $Id: SqlServerScheduledSearchIndexerDAO.java,v 1.1 2007/03/03 18:33:45 rafaelsteil Exp $
  */
-public class SqlServerDataAccessDriver extends net.jforum.dao.generic.GenericDataAccessDriver
+public class SqlServerScheduledSearchIndexerDAO extends net.jforum.dao.generic.GenericScheduledSearchIndexerDAO
 {
-	private static SqlServerPostDAO postDao = new SqlServerPostDAO();
-	private static SqlServerTopicDAO topicDao = new SqlServerTopicDAO();
-	private static SqlServerUserDAO userDao = new SqlServerUserDAO();
-	private static SqlServerPrivateMessageDAO pmDao = new SqlServerPrivateMessageDAO();
-	private static SqlServerKarmaDAO karmaDao = new SqlServerKarmaDAO();
-	private static SqlServerScheduledSearchIndexerDAO ssiDao = new SqlServerScheduledSearchIndexerDAO();
+	private static Logger logger = Logger.getLogger(SqlServerScheduledSearchIndexerDAO.class);
 
-	/** 
-	 * @see net.jforum.dao.DataAccessDriver#newPostDAO()
-	 */
-	public net.jforum.dao.PostDAO newPostDAO()
+	public List getPosts(int start, int count, int minPostId, int maxPostId, Connection conn)
 	{
-		return postDao;
-	}
+		List l = new ArrayList();
 
-	/** 
-	 * @see net.jforum.dao.DataAccessDriver#newTopicDAO()
-	 */
-	public net.jforum.dao.TopicDAO newTopicDAO()
-	{
-		return topicDao;
-	}
-	
-	/** 
-	 * @see net.jforum.dao.DataAccessDriver#newUserDAO()
-	 */
-	public net.jforum.dao.UserDAO newUserDAO()
-	{
-		return userDao;
-	}
-	
-	/** 
-	 * @see net.jforum.dao.DataAccessDriver#newPrivateMessageDAO()
-	 */
-	public net.jforum.dao.PrivateMessageDAO newPrivateMessageDAO()
-	{
-		return pmDao;
-	}
-	
-	/** 
-	 * @see net.jforum.dao.DataAccessDriver#newKarmaDAO()
-	 */
-	public net.jforum.dao.KarmaDAO newKarmaDAO()
-	{
-		return karmaDao;
-	}
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		String sqlStmnt = SystemGlobals.getSql("SearchModel.getPostsToIndex");
+		if (logger.isDebugEnabled())
+		{
+			logger.debug("getPosts("+start+","+count+","+minPostId+","+maxPostId+")..., sqlStmnt="+sqlStmnt);
+		}
 
-	/**
-	 * @see net.jforum.dao.DataAccessDriver#newScheduledSearchIndexerDAO()
-	 */
-	public net.jforum.dao.ScheduledSearchIndexerDAO newScheduledSearchIndexerDAO()
-	{
-		return ssiDao;
+		try {
+			p = conn.prepareStatement(sqlStmnt);
+
+			p.setInt(1, minPostId);
+			p.setInt(2, maxPostId);
+			p.setInt(3, start);
+			p.setInt(4, count);
+
+			rs = p.executeQuery();
+			while (rs.next()) {
+				l.add(this.makePost(rs));
+			}
+
+			return l;
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
 	}
 
 }

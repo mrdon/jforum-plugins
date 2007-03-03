@@ -40,9 +40,18 @@ UserModel.selectById = SELECT COUNT(pm.privmsgs_to_userid) AS private_messages, 
 UserModel.lastUserRegistered = SELECT TOP 1 user_id, username FROM jforum_users ORDER BY user_regdate DESC
 UserModel.lastGeneratedUserId = SELECT IDENT_CURRENT('jforum_users') AS user_id
 UserModel.selectAllByLimit = SELECT * \
-	FROM ( SELECT ROW_NUMBER() OVER (ORDER BY username ASC) AS rownumber, \
+	FROM ( SELECT ROW_NUMBER() OVER (ORDER BY user_id ASC) AS rownumber, \
 	user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail \
 	FROM jforum_users ) AS tmp \
+	WHERE rownumber BETWEEN ? and ?
+
+UserModel.selectAllByGroup = SELECT * \
+	FROM ( SELECT ROW_NUMBER() OVER (ORDER BY user_id ASC) AS rownumber, \
+	user_email, u.user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, \
+	user_website, user_viewemail \
+	FROM jforum_users u, jforum_user_groups ug \
+	WHERE u.user_id = ug.user_id \
+	AND ug.group_id = ? ) AS tmp \
 	WHERE rownumber BETWEEN ? and ?
 
 # #############
@@ -89,6 +98,19 @@ PostModel.selectAllByTopicByLimit = SELECT * \
 	AND p.user_id = u.user_id \
 	AND p.need_moderate = 0 ) AS tmp \
 	WHERE rownumber between ? and ?
+
+PostModel.selectByUserByLimit = SELECT * \
+	FROM ( SELECT ROW_NUMBER() OVER (ORDER BY post_time ASC) AS rownumber, \
+	p.post_id, topic_id, forum_id, p.user_id, post_time, poster_ip, enable_bbcode, p.attach, \
+	enable_html, enable_smilies, enable_sig, post_edit_time, post_edit_count, status, pt.post_subject, pt.post_text, username, p.need_moderate \
+	FROM jforum_posts p, jforum_posts_text pt, jforum_users u \
+	WHERE p.post_id = pt.post_id \
+	AND p.user_id = u.user_id \
+	AND p.user_id = ? \
+	AND p.need_moderate = 0 \
+	AND forum_id IN(:fids:) ) AS tmp \
+	WHERE rownumber between ? and ?
+
 	
 # #############
 # ForumModel
@@ -125,6 +147,16 @@ TopicModel.selectRecentTopicsByLimit = SELECT * \
 	WHERE p.post_id = t.topic_last_post_id \
 	AND p.need_moderate = 0 ) AS tmp \
 	WHERE rownumber <= ?
+
+TopicModel.selectByUserByLimit = SELECT * \
+	FROM ( SELECT ROW_NUMBER() OVER (ORDER BY t.topic_last_post_id DESC) AS rownumber, \
+	t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \
+	FROM jforum_topics t, jforum_posts p \
+	WHERE p.post_id = t.topic_last_post_id \
+	AND t.user_id = ? \
+	AND p.need_moderate = 0 \
+	AND t.forum_id IN(:fids:)AS tmp \
+	WHERE rownumber between ? and ?
 	
 TopicModel.lastGeneratedTopicId = SELECT IDENT_CURRENT('jforum_topics') AS topic_id 
 
@@ -165,6 +197,14 @@ SearchModel.selectTopicData = INSERT INTO jforum_search_topics (topic_id, forum_
 	FROM jforum_topics t, jforum_search_results s \
 	WHERE t.topic_id = s.topic_id \
 	AND s.session_id = ?
+
+SearchModel.getPostsToIndex = SELECT * \
+	FROM ( SELECT ROW_NUMBER() OVER (ORDER BY p.post_id ASC) AS rownumber, \
+	p.post_id, pt.post_text, pt.post_subject \
+	FROM jforum_posts p, jforum_posts_text pt \
+	WHERE p.post_id = pt.post_id \
+	AND p.post_id BETWEEN ? AND ? ) AS tmp \
+	WHERE rownumber between ? and ?
 
 # #############
 # SmiliesModel
