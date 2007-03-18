@@ -56,7 +56,7 @@ import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
 import net.jforum.repository.SmiliesRepository;
 import net.jforum.util.I18n;
-import net.jforum.util.concurrent.executor.QueuedExecutor;
+import net.jforum.util.concurrent.Executor;
 import net.jforum.util.mail.EmailSenderTask;
 import net.jforum.util.mail.PrivateMessageSpammer;
 import net.jforum.util.preferences.ConfigKeys;
@@ -67,7 +67,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.40 2007/02/25 13:48:33 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.41 2007/03/18 16:56:55 rafaelsteil Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -230,8 +230,9 @@ public class PrivateMessageAction extends Command
 			
 			this.setTemplateName(TemplateKeys.PM_SENDSAVE);
 			this.context.put("message", I18n.getMessage("PrivateMessage.messageSent", 
-							new String[] { this.request.getContextPath() +"/pm/inbox"
-											+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)}));
+				new String[] { this.request.getContextPath() 
+					+ "/pm/inbox"
+					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)}));
 			
 			// If the target user if in the forum, then increments its 
 			// private messate count
@@ -241,15 +242,10 @@ public class PrivateMessageAction extends Command
 				us.setPrivateMessages(us.getPrivateMessages() + 1);
 			}
 			
-			if (toUser.getEmail() != null && toUser.getEmail().trim().length() > 0) {
-				if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_NOTIFY_ANSWERS)) {
-					try {
-						QueuedExecutor.getInstance().execute(new EmailSenderTask(new PrivateMessageSpammer(toUser)));
-					}
-					catch (Exception e) {
-						System.out.println(e);
-					}
-				}
+			if (toUser.getEmail() != null 
+				&& toUser.getEmail().trim().length() > 0
+				&& SystemGlobals.getBoolValue(ConfigKeys.MAIL_NOTIFY_ANSWERS)) {
+				Executor.execute(new EmailSenderTask(new PrivateMessageSpammer(toUser)));
 			}
 		}
 		else {

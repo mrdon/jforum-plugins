@@ -47,21 +47,17 @@ import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.SearchIndexerDAO;
 import net.jforum.entities.Post;
 import net.jforum.exceptions.SearchException;
-import net.jforum.util.concurrent.executor.QueuedExecutor;
+import net.jforum.util.concurrent.Executor;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.search.SearchManager;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author Rafael Steil
- * @version $Id: SimpleSearchManager.java,v 1.8 2006/08/20 22:47:46 rafaelsteil Exp $
+ * @version $Id: SimpleSearchManager.java,v 1.9 2007/03/18 16:56:55 rafaelsteil Exp $
  */
 public class SimpleSearchManager implements SearchManager
 {
-	private static Logger logger = Logger.getLogger(SimpleSearchManager.class);
-	
 	/**
 	 * @see net.jforum.util.search.SearchManager#init()
 	 */
@@ -73,12 +69,7 @@ public class SimpleSearchManager implements SearchManager
 	public void index(Post post)
 	{
 		if (SystemGlobals.getBoolValue(ConfigKeys.BACKGROUND_TASKS)) {
-			try {
-				QueuedExecutor.getInstance().execute(new MessageIndexerTask(post));
-			}
-			catch (Exception e) {
-				logger.error("Error while running the search task", e);
-			}
+				Executor.execute(new MessageIndexerTask(post));
 		}
 		else {
 			try {
@@ -87,7 +78,7 @@ public class SimpleSearchManager implements SearchManager
 				indexer.insertSearchWords(post);
 			}
 			catch (Exception e) {
-				throw new SearchException("Error while indexing a message", e);
+				throw new SearchException("Error while indexing a message" + e, e);
 			}
 		}
 	}

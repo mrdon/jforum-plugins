@@ -48,44 +48,42 @@ import net.jforum.DBConnection;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.SearchIndexerDAO;
 import net.jforum.entities.Post;
-import net.jforum.util.concurrent.Task;
 
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: MessageIndexerTask.java,v 1.9 2006/08/23 02:24:06 rafaelsteil Exp $
+ * @version $Id: MessageIndexerTask.java,v 1.10 2007/03/18 16:56:55 rafaelsteil Exp $
  */
-public class MessageIndexerTask implements Task
+public class MessageIndexerTask implements Runnable
 {
 	private static Logger logger = Logger.getLogger(MessageIndexerTask.class);
+
 	private Post post;
-	
+
 	public MessageIndexerTask(Post post)
 	{
 		this.post = post;
 	}
 
 	/**
-	 * @see net.jforum.util.concurrent.Task#execute()
+	 * @see java.lang.Runnable#run()
 	 */
-	public Object execute()
+	public void run()
 	{
-        Connection conn=null;
+		Connection conn = null;
+
 		try {
-            conn = DBConnection.getImplementation().getConnection();
+			conn = DBConnection.getImplementation().getConnection();
 			SearchIndexerDAO indexer = DataAccessDriver.getInstance().newSearchIndexerDAO();
 			indexer.setConnection(conn);
 			indexer.insertSearchWords(this.post);
 		}
 		catch (Exception e) {
 			logger.warn("Error while indexing a post: " + e);
-			e.printStackTrace();
 		}
 		finally {
-            DBConnection.getImplementation().releaseConnection(conn);
+			DBConnection.getImplementation().releaseConnection(conn);
 		}
-		
-		return null;
 	}
 }

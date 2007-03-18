@@ -59,7 +59,7 @@ import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
 import net.jforum.repository.ForumRepository;
-import net.jforum.util.concurrent.executor.QueuedExecutor;
+import net.jforum.util.concurrent.Executor;
 import net.jforum.util.mail.EmailSenderTask;
 import net.jforum.util.mail.ForumNewTopicSpammer;
 import net.jforum.util.preferences.ConfigKeys;
@@ -69,7 +69,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumCommon.java,v 1.19 2006/10/09 00:54:12 rafaelsteil Exp $
+ * @version $Id: ForumCommon.java,v 1.20 2007/03/18 16:56:58 rafaelsteil Exp $
  */
 public class ForumCommon 
 {
@@ -194,8 +194,9 @@ public class ForumCommon
 					TopicDAO topicDao = DataAccessDriver.getInstance().newTopicDAO();
 					topicDao.subscribeUsers(t.getId(), filterNotifyAlways(usersToNotify));
 					
-					QueuedExecutor.getInstance().execute(
-						new EmailSenderTask(new ForumNewTopicSpammer(f, t, post, usersToNotify)));
+					Executor.execute(
+						new EmailSenderTask(
+							new ForumNewTopicSpammer(f, t, post, usersToNotify)));
 				}
 			}
 			catch (Exception e) {

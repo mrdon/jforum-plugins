@@ -63,7 +63,7 @@ import net.jforum.repository.TopicRepository;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
-import net.jforum.util.concurrent.executor.QueuedExecutor;
+import net.jforum.util.concurrent.Executor;
 import net.jforum.util.mail.EmailSenderTask;
 import net.jforum.util.mail.TopicReplySpammer;
 import net.jforum.util.preferences.ConfigKeys;
@@ -78,7 +78,7 @@ import freemarker.template.SimpleHash;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.35 2007/02/25 13:48:34 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.36 2007/03/18 16:56:58 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
@@ -227,19 +227,13 @@ public class TopicsCommon
 	public static void notifyUsers(Topic t, Post p)
 	{
 		if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_NOTIFY_ANSWERS)) {
-			try {
-				TopicDAO dao = DataAccessDriver.getInstance().newTopicDAO();
-				List usersToNotify = dao.notifyUsers(t);
+			TopicDAO dao = DataAccessDriver.getInstance().newTopicDAO();
+			List usersToNotify = dao.notifyUsers(t);
 
-				// we only have to send an email if there are users
-				// subscribed to the topic
-				if (usersToNotify != null && usersToNotify.size() > 0) {
-					QueuedExecutor.getInstance().execute(
-						new EmailSenderTask(new TopicReplySpammer(t, p, usersToNotify)));
-				}
-			}
-			catch (Exception e) {
-				logger.warn("Error while sending notification emails: " + e);
+			// We only have to send an email if there are users
+			// subscribed to the topic
+			if (usersToNotify != null && usersToNotify.size() > 0) {
+				Executor.execute(new EmailSenderTask(new TopicReplySpammer(t, p, usersToNotify)));
 			}
 		}
 	}
@@ -289,8 +283,6 @@ public class TopicsCommon
 	public static void deleteTopic(int topicId, int forumId, boolean fromModeration)
 	{
 		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
-        //TODO use or delete
-        //ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
 		
 		Topic topic = new Topic();
 		topic.setId(topicId);

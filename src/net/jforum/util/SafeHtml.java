@@ -67,7 +67,7 @@ import org.htmlparser.nodes.TextNode;
  * <li>http://quickwired.com/kallahar/smallprojects/php_xss_filter_function.php
  * <br>
  * @author Rafael Steil
- * @version $Id: SafeHtml.java,v 1.20 2006/11/12 15:08:08 rafaelsteil Exp $
+ * @version $Id: SafeHtml.java,v 1.21 2007/03/18 16:56:56 rafaelsteil Exp $
  */
 public class SafeHtml 
 {
@@ -128,11 +128,11 @@ public class SafeHtml
 					node.setText(tmp.toString());
 				}
 			}
-			else if (onlyEvaluateJs) {
+			else if (onlyEvaluateJs && node instanceof Tag) {
 				this.checkAndValidateAttributes((Tag)node);
 			}
 			
-			if (isTextNode || onlyEvaluateJs || this.isTagWelcome(node)) {
+			if (isTextNode || onlyEvaluateJs || (node instanceof Tag && this.isTagWelcome(node))) {
 				sb.append(node.toHtml());
 			}
 			else {

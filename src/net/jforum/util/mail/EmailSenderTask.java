@@ -42,41 +42,24 @@
  */
 package net.jforum.util.mail;
 
-import net.jforum.exceptions.ForumException;
-import net.jforum.util.concurrent.Task;
-import org.apache.log4j.Logger;
-
 /**
  * @author Rafael Steil
- * @version $Id: EmailSenderTask.java,v 1.10 2006/08/24 01:07:03 rafaelsteil Exp $
+ * @version $Id: EmailSenderTask.java,v 1.11 2007/03/18 16:56:55 rafaelsteil Exp $
  */
-public class EmailSenderTask implements Task 
+public class EmailSenderTask implements Runnable
 {
-    private static final Logger log = Logger.getLogger(EmailSenderTask.class);
-
 	private final Spammer spammer;
-	
+
 	public EmailSenderTask(Spammer spammer)
 	{
 		this.spammer = spammer;
 	}
-	
-	/** 
-	 * @see net.jforum.util.concurrent.Task#execute()
-	 */
-	public Object execute()
-	{
-		try
-		{
-			if (this.spammer.dispatchMessages()) {
-				return "SUCCESS";
-			}
 
-			return "FAILURE";
-		}
-		catch (Exception e)
-		{
-			throw new ForumException(e);
-		}
+	/**
+	 * @see java.lang.Runnable#run()
+	 */
+	public void run()
+	{
+		this.spammer.dispatchMessages();
 	}
 }

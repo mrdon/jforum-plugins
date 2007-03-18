@@ -73,7 +73,7 @@ import freemarker.template.Template;
  * Dispatch emails to the world. 
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.31 2006/12/09 01:23:09 rafaelsteil Exp $
+ * @version $Id: Spammer.java,v 1.32 2007/03/18 16:56:55 rafaelsteil Exp $
  */
 public class Spammer
 {
@@ -147,10 +147,7 @@ public class Spammer
 	                        	User user = (User)userIter.next();
 	                        	
 	                        	if (this.needCustomization) {
-	                        		this.templateParams.put("user", user);
-	                        		
-	                        		String text = this.processTemplate();
-	                        		this.defineMessageText(text);
+	                        		this.defineUserMessage(user);
 	                        	}
 	                        	
 	                        	Address address = new InternetAddress(user.getEmail());
@@ -172,6 +169,10 @@ public class Spammer
                 for (Iterator iter = this.users.iterator(); iter.hasNext();) {
                 	User user = (User)iter.next();
                 	
+                	if (this.needCustomization) {
+                		this.defineUserMessage(user);
+                	}
+                	
                 	Address address = new InternetAddress(user.getEmail());
                 	
                 	this.message.setRecipient(Message.RecipientType.TO,address);
@@ -180,10 +181,24 @@ public class Spammer
             }
         }
         catch (MessagingException e) {
-            throw new MailException("Error while dispatching the message." + e.toString(), e);
+            logger.error("Error while dispatching the message." + e, e);
         }
 
         return true;
+	}
+
+	private void defineUserMessage(User user)
+	{
+		try {
+			this.templateParams.put("user", user);
+			
+			String text = this.processTemplate();
+			
+			this.defineMessageText(text);
+		}
+		catch (Exception e) {
+			throw new MailException(e);
+		}
 	}
 
 	/**
@@ -242,7 +257,7 @@ public class Spammer
 			this.message.setContent(text, "text/html; charset=" + charset);
 		}
 		else {
-			this.message.setText(text, charset);
+			this.message.setText(text);
 		}
 	}
 	

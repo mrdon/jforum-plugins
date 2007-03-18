@@ -46,13 +46,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.jforum.dao.DataAccessDriver;
-import net.jforum.dao.SearchIndexerDAO;
-import net.jforum.entities.Post;
 import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.SystemGlobals;
@@ -63,7 +59,7 @@ import org.apache.log4j.Logger;
  * @author Rafael Steil
  * @author Dirk Rasmussen - d.rasmussen@bevis.de (2007/02/19, modifs for MS SqlServer 2005)
  * @see WEB-INF\config\database\sqlserver\sqlserver.sql (2007/02/19, MS SqlServer 2005 specific version!)
- * @version $Id: SqlServerScheduledSearchIndexerDAO.java,v 1.1 2007/03/03 18:33:45 rafaelsteil Exp $
+ * @version $Id: SqlServerScheduledSearchIndexerDAO.java,v 1.2 2007/03/18 16:56:57 rafaelsteil Exp $
  */
 public class SqlServerScheduledSearchIndexerDAO extends net.jforum.dao.generic.GenericScheduledSearchIndexerDAO
 {
@@ -76,6 +72,7 @@ public class SqlServerScheduledSearchIndexerDAO extends net.jforum.dao.generic.G
 		PreparedStatement p = null;
 		ResultSet rs = null;
 		String sqlStmnt = SystemGlobals.getSql("SearchModel.getPostsToIndex");
+		
 		if (logger.isDebugEnabled())
 		{
 			logger.debug("getPosts("+start+","+count+","+minPostId+","+maxPostId+")..., sqlStmnt="+sqlStmnt);

@@ -64,14 +64,13 @@ import net.jforum.entities.Bookmark;
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
 import net.jforum.exceptions.ForumException;
-import net.jforum.exceptions.MailException;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.RankingRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.MD5;
-import net.jforum.util.concurrent.executor.QueuedExecutor;
+import net.jforum.util.concurrent.Executor;
 import net.jforum.util.mail.ActivationKeySpammer;
 import net.jforum.util.mail.EmailSenderTask;
 import net.jforum.util.mail.LostPasswordSpammer;
@@ -85,7 +84,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.89 2007/02/25 13:48:33 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.90 2007/03/18 16:56:55 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -319,14 +318,7 @@ public class UserAction extends Command
 		int newUserId = um.addNew(u);
 
 		if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_USER_EMAIL_AUTH)) {
-			try {
-				// Send an email to new user
-				QueuedExecutor.getInstance().execute(
-					new EmailSenderTask(new ActivationKeySpammer(u)));
-			} 
-			catch (Exception e) {
-				logger.warn("Error while trying to send an email: " + e);
-			}
+			Executor.execute(new EmailSenderTask(new ActivationKeySpammer(u)));
 
 			this.setTemplateName(TemplateKeys.USER_INSERT_ACTIVATE_MAIL);
 			this.context.put("message", I18n.getMessage("User.GoActivateAccountMessage"));
@@ -698,15 +690,10 @@ public class UserAction extends Command
 			this.lostPassword();
 			return;
 		}
-
-		try {
-			QueuedExecutor.getInstance().execute(
-					new EmailSenderTask(new LostPasswordSpammer(user, 
-							SystemGlobals.getValue(ConfigKeys.MAIL_LOST_PASSWORD_SUBJECT))));
-		} 
-		catch (MailException e) {
-			logger.warn("Error while sending email: " + e);
-		}
+		
+		Executor.execute(new EmailSenderTask(
+				new LostPasswordSpammer(user, 
+					SystemGlobals.getValue(ConfigKeys.MAIL_LOST_PASSWORD_SUBJECT))));
 
 		this.setTemplateName(TemplateKeys.USER_LOSTPASSWORD_SEND);
 		this.context.put("message", I18n.getMessage(

@@ -1,11 +1,11 @@
 /*
  * Copyright (c) JForum Team
  * All rights reserved.
-
+ * 
  * Redistribution and use in source and binary forms, 
  * with or without modification, are permitted provided 
  * that the following conditions are met:
-
+ * 
  * 1) Redistributions of source code must retain the above 
  * copyright notice, this list of conditions and the 
  * following  disclaimer.
@@ -36,31 +36,37 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * This file creation date: Jan 27, 2004
- * net.jforum.util.concurrent.Executor.java
+ * Created on 17/03/2007 20:36:18
  * The JForum Project
  * http://www.jforum.net
- * 
- * $Id: Executor.java,v 1.5 2006/08/23 02:13:43 rafaelsteil Exp $
  */
-
 package net.jforum.util.concurrent;
 
-/** 
- * Interface for objects that execute Tasks objects.
- * An executor can use any stategy to execute a given Task.
- * 
- * @author Rodrigo Kumpera
+import org.apache.log4j.Logger;
+
+import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
+
+/**
+ * @author Rafael Steil
+ * @version $Id: Executor.java,v 1.6 2007/03/18 16:56:56 rafaelsteil Exp $
  */
-public interface Executor 
-{	
-	/**
-	 * Puts the given task on the execution queue.
-	 * */
-	void execute(Task task) throws InterruptedException;
+public class Executor
+{
+	private static Logger logger = Logger.getLogger(Executor.class);
+	private static PooledExecutor executor = new PooledExecutor(5);
 	
-	/**
-	 * Puts the given talk on the execution queue and returns a Result object.
-	 * */
-	Result executeWithResult(Task task) throws InterruptedException;
+	static {
+		executor.setMinimumPoolSize(2);
+		executor.setMaximumPoolSize(10);
+		executor.setKeepAliveTime(1000 * 60 * 10);
+	}
+	
+	public static void execute(Runnable runnable) {
+		try {
+			executor.execute(runnable);
+		}
+		catch (Exception e) {
+			logger.error("Exception while running task: " + e, e);
+		}
+	}
 }

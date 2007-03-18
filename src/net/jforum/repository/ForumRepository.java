@@ -85,7 +85,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * To start the repository, call the method <code>start(ForumModel, CategoryModel)</code>
  * 
  * @author Rafael Steil
- * @version  $Id: ForumRepository.java,v 1.57 2007/03/01 01:39:23 rafaelsteil Exp $
+ * @version  $Id: ForumRepository.java,v 1.58 2007/03/18 16:56:54 rafaelsteil Exp $
  */
 public class ForumRepository implements Cacheable
 {
@@ -256,9 +256,9 @@ public class ForumRepository implements Cacheable
 		}
 		
 		for (Iterator iter = categoriesSet.iterator(); iter.hasNext(); ) {
-			Category c = (Category)iter.next();
+			Category c = getCategory(pc, ((Category)iter.next()).getId());
 			
-			if (isCategoryAccessible(pc, c.getId())) {
+			if (c != null) {
 				l.add(c);
 			}
 		}

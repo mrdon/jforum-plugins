@@ -80,7 +80,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.33 2006/11/25 19:24:34 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.34 2007/03/18 16:56:58 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {
@@ -378,7 +378,7 @@ public class AttachmentCommon
 		new File(SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR) + "/" + dir).mkdirs();
 		
 		return dir
-			.append(MD5.crypt(a.getRealFilename() + a.getUploadTime()))
+			.append(MD5.crypt(a.getRealFilename() + System.currentTimeMillis()))
 			.append('_')
 			.append(SessionFacade.getUserSession().getUserId())
 			.append('.')
