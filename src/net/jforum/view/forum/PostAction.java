@@ -103,7 +103,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.164 2007/02/25 13:48:33 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.165 2007/03/18 20:20:24 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -1141,15 +1141,16 @@ public class PostAction extends Command
 	
 				JForumExecutionContext.setRedirect(path.toString());
 				
-				// Updates forum stats, cache and etc
-				if (!newTopic) {
-					t.setTotalReplies(t.getTotalReplies() + 1);
-					TopicsCommon.notifyUsers(t, p);
-				}
-				else {
+				if (newTopic) {
 					// Notify "forum new topic" users
 					ForumCommon.notifyUsers(forum, t, p);
 				}
+				else {
+					t.setTotalReplies(t.getTotalReplies() + 1);
+					TopicsCommon.notifyUsers(t, p);
+				}
+				
+				// Updates forum stats, cache and etc
 				
 				t.setTotalViews(t.getTotalViews() + 1);
 				
