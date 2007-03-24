@@ -51,7 +51,7 @@
 
 		<init-param>
 			<param-name>configJForum</param-name>
-			<param-value>WEB-INF/dwr-jforum.xml</param-value>
+			<param-value>/WEB-INF/dwr-jforum.xml</param-value>
 		</init-param>
 
 		<init-param>
