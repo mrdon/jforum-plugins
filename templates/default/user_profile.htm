@@ -37,8 +37,8 @@
 			<span class="postdetails">
 				${I18n.getMessage("PostShow.ranking")}: 
 				
-				<#if (u.rankId > 1)>
-					${rank.getRankTitleById(u.rankId)}
+				<#if (u.rankId > 0)>
+					${rank.getRankTitleById(u.rankId, u.totalPosts)}
 				<#else>
 					${rank.getRankTitle(u.totalPosts)}
 				</#if>

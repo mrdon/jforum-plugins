@@ -356,7 +356,7 @@ CREATE TABLE jforum_users (
   user_notify NUMBER(10) DEFAULT 1,
   user_notify_pm NUMBER(10) DEFAULT 1,
   user_popup_pm NUMBER(10) DEFAULT 1,
-  rank_id NUMBER(10) DEFAULT 1,
+  rank_id NUMBER(10) DEFAULT 0,
   user_avatar VARCHAR2(100) DEFAULT NULL,
   user_avatar_type NUMBER(10) DEFAULT 0 NOT NULL,
   user_email VARCHAR2(255) DEFAULT ' ' NOT NULL,

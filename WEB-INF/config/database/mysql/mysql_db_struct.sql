@@ -314,7 +314,7 @@ CREATE TABLE jforum_users (
   user_notify_text tinyint(1) default '0',
   user_notify_pm tinyint(1) default '1',
   user_popup_pm tinyint(1) default '1',
-  rank_id INT default '1',
+  rank_id INT default 0,
   user_avatar varchar(100) default NULL,
   user_avatar_type tinyint(4) NOT NULL default '0',
   user_email varchar(255) NOT NULL default '',

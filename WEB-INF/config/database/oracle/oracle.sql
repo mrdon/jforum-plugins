@@ -21,7 +21,7 @@ ConfigModel.insert = INSERT INTO jforum_config (config_id, config_name, config_v
 # ##########
 # UserModel
 # ##########
-UserModel.addNew = INSERT INTO jforum_users (user_id, username, user_password, user_email, user_regdate, user_actkey) VALUES (jforum_users_seq.nextval, ?, ?, ?, ?, ?)
+UserModel.addNew = INSERT INTO jforum_users (user_id, username, user_password, user_email, user_regdate, user_actkey, user_rank) VALUES (jforum_users_seq.nextval, ?, ?, ?, ?, ?, 0)
 
 UserModel.selectAllByLimit = SELECT * FROM ( \
         SELECT user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail, ROW_NUMBER() OVER(ORDER BY user_id) - 1 LINENUM  \

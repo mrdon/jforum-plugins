@@ -219,16 +219,6 @@ SmiliesModel.lastGeneratedSmilieId = SELECT IDENT_CURRENT('jforum_smilies') AS s
 PermissionControl.lastGeneratedRoleId = SELECT IDENT_CURRENT('jforum_roles') AS role_id 
 
 # #############
-# PublishUserModel
-# #############
-
-PublishUserModel.selectById = SELECT mmpublish_user_uuid FROM jforum_mmpublish_users WHERE jforum_user_id = ?
-PublishUserModel.deleteFromId = DELETE FROM jforum_mmpublish_users WHERE jforum_user_id = ?
-PublishUserModel.deleteFromUuid = DELETE FROM jforum_mmpublish_users WHERE mmpublish_user_uuid = ?
-PublishUserModel.update = UPDATE jforum_mmpublish_users SET mmpublish_user_uuid = ? WHERE jforum_user_id = ?
-PublishUserModel.addNew = INSERT INTO jforum_mmpublish_users (jforum_user_id, mmpublish_user_uuid) VALUES(?,?)
-
-# #############
 # KarmaModel
 # #############
 
