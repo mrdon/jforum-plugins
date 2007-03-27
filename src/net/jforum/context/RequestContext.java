@@ -45,6 +45,7 @@ package net.jforum.context;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
+import java.util.Locale;
 
 import javax.servlet.http.Cookie;
 
@@ -405,4 +406,12 @@ public interface RequestContext
 	 * @return Object
 	 */
 	public Object getObjectParameter(String parameter);
+	
+	/**
+	 * Gets user browser's locale. This method may be used during first installation to
+	 * automatically switch to corresponding language I18N resource.
+	 * 
+	 * @return Locale
+	 */
+	public Locale getLocale();
 }

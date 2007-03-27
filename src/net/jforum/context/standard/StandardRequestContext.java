@@ -45,6 +45,7 @@ package net.jforum.context.standard;
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Locale;
 
 import javax.servlet.http.Cookie;
 
@@ -54,7 +55,7 @@ import net.jforum.context.SessionContext;
 /**
  * Request context non-dependent of HTTP 
  * @author Rafael Steil
- * @version $Id: StandardRequestContext.java,v 1.2 2006/08/29 02:32:29 rafaelsteil Exp $
+ * @version $Id: StandardRequestContext.java,v 1.3 2007/03/27 15:20:10 andowson Exp $
  */
 public class StandardRequestContext implements RequestContext
 {
@@ -263,4 +264,9 @@ public class StandardRequestContext implements RequestContext
 	 * This method does nothing 
 	 */
 	public void setCharacterEncoding(String env) throws UnsupportedEncodingException {}
+
+	public Locale getLocale() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

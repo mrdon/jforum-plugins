@@ -46,7 +46,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -54,24 +53,31 @@ import java.sql.Statement;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
-import net.jforum.*;
+import net.jforum.Command;
+import net.jforum.ConfigLoader;
+import net.jforum.DBConnection;
+import net.jforum.DataSourceConnection;
+import net.jforum.JForumExecutionContext;
+import net.jforum.SessionFacade;
+import net.jforum.SimpleConnection;
 import net.jforum.context.RequestContext;
 import net.jforum.context.ResponseContext;
 import net.jforum.entities.UserSession;
 import net.jforum.exceptions.ForumException;
+import net.jforum.util.DbUtils;
 import net.jforum.util.FileMonitor;
 import net.jforum.util.I18n;
 import net.jforum.util.MD5;
-import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.SystemGlobalsListener;
 import net.jforum.util.preferences.TemplateKeys;
 
-import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
@@ -80,7 +86,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.61 2007/02/25 13:48:35 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.62 2007/03/27 15:20:09 andowson Exp $
  */
 public class InstallAction extends Command
 {
@@ -114,7 +120,11 @@ public class InstallAction extends Command
 	{
 		String lang = this.request.getParameter("l");
 		
-		if (lang == null || !I18n.languageExists(lang)) {
+		if (lang == null) {
+			Locale locale = this.request.getLocale();
+			lang = locale.getLanguage();
+		}	
+		if	(!I18n.languageExists(lang)) {
 			return;
 		}
 		
@@ -422,9 +432,8 @@ public class InstallAction extends Command
 	private boolean checkForWritableDir()
 	{
 		boolean canWriteToWebInf = this.canWriteToWebInf();
-		boolean canWriteToIndex = this.canWriteToIndex();
 		
-		if (!canWriteToWebInf || !canWriteToIndex) {
+		if (!canWriteToWebInf) {
 			this.context.put("message", I18n.getMessage("Install.noWritePermission"));
 			this.context.put("tryAgain", true);
 			this.error();
@@ -437,12 +446,6 @@ public class InstallAction extends Command
 	private boolean canWriteToWebInf()
 	{
 		return new File(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/modulesMapping.properties").canWrite();
-	}
-	
-	
-	private boolean canWriteToIndex()
-	{
-		return new File(SystemGlobals.getApplicationPath() + "/__index.redirect").canWrite();
 	}
 	
 	private void handleDatabasePort(Properties p, String port)
@@ -530,16 +533,6 @@ public class InstallAction extends Command
 			
 			logger.info("Updating key " + key + " with value " + value);
 		}
-	}
-	
-	private void copyFile(String from, String to) throws Exception
-	{
-		FileChannel source = new FileInputStream(new File(from)).getChannel();
-		FileChannel dest =  new FileOutputStream(new File(to)).getChannel();
-		
-		source.transferTo(0, source.size(), dest);
-		source.close();
-		dest.close();
 	}
 	
 	private Connection configureDatabase()
@@ -682,9 +675,7 @@ public class InstallAction extends Command
 		this.addToSessionAndContext("createTables", null);
 		this.addToSessionAndContext("importTablesData", null);
 		
-		this.context.put("canWriteToWebInf", this.canWriteToWebInf());
-		this.context.put("canWriteToIndex", this.canWriteToIndex());
-		
+		this.context.put("canWriteToWebInf", this.canWriteToWebInf());		
 		this.context.put("moduleAction", "install_check_info.htm");
 	}
 	
