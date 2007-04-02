@@ -38,4 +38,9 @@
 		<priority value="info"/>
 		<appender-ref ref="jforum-stdout"/>		
 	</category>
+
+	<category name="com.mchange">
+		<priority value="info" />
+		<appender-ref ref="jforum-stdout" />
+	</category>
 </log4j:configuration>
