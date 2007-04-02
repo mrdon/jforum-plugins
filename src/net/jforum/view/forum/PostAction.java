@@ -103,7 +103,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.165 2007/03/18 20:20:24 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.166 2007/04/02 17:14:42 andowson Exp $
  */
 public class PostAction extends Command 
 {
@@ -1303,6 +1303,7 @@ public class PostAction extends Command
 		
 		PostRepository.remove(t.getId(), p.getId());
 		TopicRepository.loadMostRecentTopics();
+		TopicRepository.loadHottestTopics();
 		ForumRepository.reloadForum(p.getForumId());
 	}
 

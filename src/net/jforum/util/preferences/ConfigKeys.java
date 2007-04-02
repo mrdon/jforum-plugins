@@ -48,7 +48,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.104 2006/12/11 00:44:51 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.105 2007/04/02 17:14:44 andowson Exp $
 */
 
 public class ConfigKeys 
@@ -150,6 +150,7 @@ public class ConfigKeys
 	public static final String POST_PER_PAGE = "postsPerPage";
 	public static final String USERS_PER_PAGE = "usersPerPage";
 	public static final String RECENT_TOPICS = "topic.recent";
+	public static final String HOTTEST_TOPICS = "topic.hottest";
 	public static final String POSTS_CACHE_SIZE = "posts.cache.size";
 	public static final String POSTS_CACHE_ENABLED = "posts.cache.enabled";
 

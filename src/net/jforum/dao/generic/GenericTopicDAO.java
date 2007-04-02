@@ -72,7 +72,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTopicDAO.java,v 1.19 2007/02/25 13:48:32 rafaelsteil Exp $
+ * @version $Id: GenericTopicDAO.java,v 1.20 2007/04/02 17:14:45 andowson Exp $
  */
 public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 {
@@ -887,6 +887,29 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 		}
 	}
 
+	/**
+	 * @see net.jforum.dao.TopicDAO#selectHottestTopics(int)
+	 */
+	public List selectHottestTopics(int limit)
+	{
+	    PreparedStatement p = null;
+	    try {
+	        p = JForumExecutionContext.getConnection().prepareStatement(
+	                SystemGlobals.getSql("TopicModel.selectHottestTopicsByLimit"));
+	        p.setInt(1, limit);
+	  
+	        List list = this.fillTopicsData(p);
+	        p = null;
+	        return list;
+	    }
+	    catch (SQLException e) {
+	        throw new DatabaseException(e);
+	    }
+	    finally {
+	        DbUtils.close(p);
+	    }
+	}
+	
 	/**
 	 * @see net.jforum.dao.TopicDAO#setFirstPostId(int, int)
 	 */

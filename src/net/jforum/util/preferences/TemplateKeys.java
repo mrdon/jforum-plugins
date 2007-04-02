@@ -44,7 +44,7 @@ package net.jforum.util.preferences;
 
 /**
  * @author Rafael Steil
- * @version $Id: TemplateKeys.java,v 1.20 2006/12/11 00:44:51 rafaelsteil Exp $
+ * @version $Id: TemplateKeys.java,v 1.21 2007/04/02 17:14:43 andowson Exp $
  */
 public class TemplateKeys
 {
@@ -105,6 +105,9 @@ public class TemplateKeys
 
 	public static final String RECENT_LIST = "recent.list";
 	public static final String RECENT_USER_TOPICS_SHOW = "recent.usertopics.show";
+	
+	public static final String HOTTEST_LIST = "hottest.list";
+	public static final String HOTTEST_USER_TOPICS_SHOW = "hottest.usertopics.show";
 
 	public static final String SEARCH_FILTERS = "search.filters";
 	public static final String SEARCH_SEARCH = "search.search";

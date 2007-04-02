@@ -68,7 +68,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationHelper.java,v 1.31 2006/11/12 19:58:12 rafaelsteil Exp $
+ * @version $Id: ModerationHelper.java,v 1.32 2007/04/02 17:14:42 andowson Exp $
  */
 public class ModerationHelper 
 {
@@ -261,6 +261,7 @@ public class ModerationHelper
 				TopicRepository.clearCache(toForumId);
 				
 				TopicRepository.loadMostRecentTopics();
+				TopicRepository.loadHottestTopics();
 			}
 		}
 		

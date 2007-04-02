@@ -353,6 +353,13 @@ TopicModel.selectRecentTopicsByLimit = SELECT t.*, p.user_id AS last_user_id, p.
 	ORDER BY topic_last_post_id DESC \
 	LIMIT ?
 
+TopicModel.selectHottestTopicsByLimit = SELECT t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \
+    FROM jforum_topics t, jforum_posts p \
+    WHERE p.post_id = t.topic_last_post_id \
+    AND p.need_moderate = 0 \
+    ORDER BY topic_views DESC \
+    LIMIT ?
+    
 TopicModel.getUserInformation = SELECT user_id, username FROM jforum_users WHERE user_id IN (#ID#)
 
 TopicModel.selectByUserByLimit = SELECT t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \

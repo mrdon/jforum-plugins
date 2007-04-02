@@ -57,7 +57,7 @@ import net.jforum.entities.User;
  * select some specific data.
  *
  * @author Rafael Steil
- * @version $Id: TopicDAO.java,v 1.12 2006/10/09 00:54:13 rafaelsteil Exp $
+ * @version $Id: TopicDAO.java,v 1.13 2007/04/02 17:14:45 andowson Exp $
  */
 public interface TopicDAO 
 {
@@ -278,6 +278,14 @@ public interface TopicDAO
      * @return List
 	 */
 	public List selectRecentTopics (int limit) ;
+
+	/**
+	 * Selects hottest topics
+	 *
+	 * @param limit The number of topics to retrieve
+	    * @return List
+	 */
+	public List selectHottestTopics (int limit) ;
 	
 	/**
 	 * Sets the ID of the first post of the topic

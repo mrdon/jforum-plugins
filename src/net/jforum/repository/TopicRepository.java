@@ -65,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: TopicRepository.java,v 1.30 2006/08/20 22:47:38 rafaelsteil Exp $
+ * @version $Id: TopicRepository.java,v 1.31 2007/04/02 17:14:45 andowson Exp $
  */
 public class TopicRepository implements Cacheable
 {
@@ -73,6 +73,7 @@ public class TopicRepository implements Cacheable
 	
 	private static final String FQN = "topics";
 	private static final String RECENT = "recent";
+	private static final String HOTTEST = "hottest";
 	private static final String FQN_FORUM = FQN + "/byforum";
 	private static final String RELATION = "relation";
 	private static final String FQN_LOADED = FQN + "/loaded";
@@ -136,6 +137,22 @@ public class TopicRepository implements Cacheable
 	}	
 
 	/**
+	 * Get all cached hottest topics.
+	 *
+	 */
+	public static List getHottestTopics()
+	{   
+	    List l = (List)cache.get(FQN, HOTTEST);
+	       
+	    if (l == null || l.size() == 0
+	        || !SystemGlobals.getBoolValue(ConfigKeys.TOPIC_CACHE_ENABLED)) {
+	        l = loadHottestTopics();
+	    }
+	    
+	    return new ArrayList(l);
+	}
+	
+	/**
 	 * Add recent topics to the cache
 	 */
 	public static List loadMostRecentTopics()
@@ -148,6 +165,21 @@ public class TopicRepository implements Cacheable
 		
 		return l;
 	}
+
+	/**
+	 * Add hottest topics to the cache
+	 */
+	public static List loadHottestTopics()
+	{
+	    TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
+	    int limit = SystemGlobals.getIntValue(ConfigKeys.HOTTEST_TOPICS);
+	    
+	    List l = tm.selectHottestTopics(limit);
+	    cache.add(FQN, HOTTEST, new LinkedList(l));
+	    
+	    return l;
+	}
+	
 	/**
 	 * Add topics to the cache
 	 * 

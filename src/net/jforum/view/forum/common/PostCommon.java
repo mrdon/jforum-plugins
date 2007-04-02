@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.39 2006/12/02 00:59:41 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.40 2007/04/02 17:14:43 andowson Exp $
  */
 public class PostCommon
 {
@@ -120,7 +120,7 @@ public class PostCommon
 		return p;
 	}
 	
-	public  static String alwaysProcess(String text, Collection bbList)
+	public static String alwaysProcess(String text, Collection bbList)
 	{
 		for (Iterator iter = bbList.iterator(); iter.hasNext(); ) {
 			BBCode bb = (BBCode)iter.next();
