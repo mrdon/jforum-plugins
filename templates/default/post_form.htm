@@ -149,7 +149,11 @@ function validatePostForm(f)
 						<b>
 						<#if forum?exists>
 							<#if (topic?exists && topic.id > -1)>
-								${I18n.getMessage("PostForm.reply")} "${topic.title}"
+							    <#if isEdit>
+							    	${I18n.getMessage("PostForm.edit")} "${topic.title}"
+							    <#else>
+									${I18n.getMessage("PostForm.reply")} "${topic.title}"
+								</#if>
 							<#else>
 								${I18n.getMessage("PostForm.title")}
 							</#if>
