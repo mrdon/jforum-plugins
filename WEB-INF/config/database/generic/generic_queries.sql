@@ -285,7 +285,7 @@ ForumModel.notifyUsers = SELECT u.user_id, u.username, u.user_lang, u.user_email
 # #############
 # TopicModel
 # #############
-TopicModel.selectById = SELECT t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \
+TopicModel.selectById = SELECT t.*, p.user_id AS last_user_id, p.post_time, p.attach AS attach \
 	FROM jforum_topics t, jforum_posts p \
 	WHERE t.topic_id = ? \
 	AND p.post_id = t.topic_last_post_id
@@ -294,7 +294,7 @@ TopicModel.selectRaw = SELECT topic_id, forum_id, topic_title, user_id, topic_vi
 	topic_first_post_id, topic_last_post_id, moderated, topic_time \
 	FROM jforum_topics WHERE topic_id = ?
 
-TopicModel.selectAllByForumByLimit = SELECT t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \
+TopicModel.selectAllByForumByLimit = SELECT t.*, p.user_id AS last_user_id, p.post_time, p.attach AS attach \
 	FROM jforum_topics t, jforum_posts p \
 	WHERE t.forum_id = ? \
 	AND p.post_id = t.topic_last_post_id \
@@ -346,14 +346,14 @@ TopicModel.notifyUsers = SELECT u.user_id, u.username, u.user_lang, u.user_email
 TopicModel.markAllAsUnread = UPDATE jforum_topics_watch SET is_read = '0' WHERE topic_id = ? AND user_id NOT IN (?, ?)
 TopicModel.lockUnlock = UPDATE jforum_topics SET topic_status = ? WHERE topic_id = ?
 
-TopicModel.selectRecentTopicsByLimit = SELECT t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \
+TopicModel.selectRecentTopicsByLimit = SELECT t.*, p.user_id AS last_user_id, p.post_time, p.attach AS attach \
 	FROM jforum_topics t, jforum_posts p \
 	WHERE p.post_id = t.topic_last_post_id \
 	AND p.need_moderate = 0 \
 	ORDER BY topic_last_post_id DESC \
 	LIMIT ?
 
-TopicModel.selectHottestTopicsByLimit = SELECT t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \
+TopicModel.selectHottestTopicsByLimit = SELECT t.*, p.user_id AS last_user_id, p.post_time, p.attach AS attach \
     FROM jforum_topics t, jforum_posts p \
     WHERE p.post_id = t.topic_last_post_id \
     AND p.need_moderate = 0 \
@@ -362,7 +362,7 @@ TopicModel.selectHottestTopicsByLimit = SELECT t.*, p.user_id AS last_user_id, p
     
 TopicModel.getUserInformation = SELECT user_id, username FROM jforum_users WHERE user_id IN (#ID#)
 
-TopicModel.selectByUserByLimit = SELECT t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \
+TopicModel.selectByUserByLimit = SELECT t.*, p.user_id AS last_user_id, p.post_time, p.attach AS attach \
 	FROM jforum_topics t, jforum_posts p \
 	WHERE p.post_id = t.topic_last_post_id \
 	AND t.user_id = ? \
@@ -380,7 +380,7 @@ TopicModel.totalTopics = SELECT COUNT(1) FROM jforum_topics
 # ############
 # SearchModel
 # ############
-SearchModel.searchBase = SELECT t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \
+SearchModel.searchBase = SELECT t.*, p.user_id AS last_user_id, p.post_time, p.attach AS attach \
 	FROM jforum_search_topics t, jforum_posts p :table_category: \
 	WHERE p.post_id = t.topic_last_post_id \
 	AND t.session_id = ? \

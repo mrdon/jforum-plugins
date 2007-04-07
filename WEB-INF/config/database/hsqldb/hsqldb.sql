@@ -62,14 +62,14 @@ ForumModel.lastGeneratedForumId = SELECT MAX(forum_id) from jforum_forums
 # #############
 # TopicModel
 # #############
-TopicModel.selectAllByForumByLimit = SELECT LIMIT ? ? t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \
+TopicModel.selectAllByForumByLimit = SELECT LIMIT ? ? t.*, p.user_id AS last_user_id, p.post_time, p.attach AS attach \
 	FROM jforum_topics t, jforum_posts p \
 	WHERE t.forum_id = ? \
 	AND p.post_id = t.topic_last_post_id \
 	AND p.need_moderate = 0 \
 	ORDER BY t.topic_type DESC, t.topic_last_post_id DESC
 
-TopicModel.selectRecentTopicsByLimit = SELECT LIMIT 0 ? t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \
+TopicModel.selectRecentTopicsByLimit = SELECT LIMIT 0 ? t.*, p.user_id AS last_user_id, p.post_time, p.attach AS attach \
 	FROM jforum_topics t, jforum_posts p \
 	WHERE p.post_id = t.topic_last_post_id \
 	AND t.user_id = ? \
@@ -78,7 +78,7 @@ TopicModel.selectRecentTopicsByLimit = SELECT LIMIT 0 ? t.*, p.user_id AS last_u
 	
 TopicModel.lastGeneratedTopicId = SELECT MAX(topic_id) from jforum_topics
 
-TopicModel.selectByUserByLimit = SELECT LIMIT ? ? t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \
+TopicModel.selectByUserByLimit = SELECT LIMIT ? ? t.*, p.user_id AS last_user_id, p.post_time, p.attach AS attach \
 	FROM jforum_topics t, jforum_posts p \
 	WHERE p.post_id = t.topic_last_post_id \
 	AND t.user_id = ? \

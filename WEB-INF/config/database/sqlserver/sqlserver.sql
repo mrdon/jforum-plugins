@@ -133,7 +133,7 @@ ForumModel.lastGeneratedForumId = SELECT IDENT_CURRENT('jforum_forums') AS forum
 
 TopicModel.selectAllByForumByLimit = SELECT * \
 	FROM ( SELECT ROW_NUMBER() OVER (ORDER BY t.topic_type DESC, t.topic_last_post_id DESC) AS rownumber, \
-	t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \
+	t.*, p.user_id AS last_user_id, p.post_time, p.attach AS attach \
 	FROM jforum_topics t, jforum_posts p \
 	WHERE t.forum_id = ? \
 	AND p.post_id = t.topic_last_post_id \
@@ -142,7 +142,7 @@ TopicModel.selectAllByForumByLimit = SELECT * \
 	
 TopicModel.selectRecentTopicsByLimit = SELECT * \
 	FROM ( SELECT ROW_NUMBER() OVER (ORDER BY t.topic_last_post_id DESC) AS rownumber, \
-	t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \
+	t.*, p.user_id AS last_user_id, p.post_time, p.attach AS attach \
 	FROM jforum_topics t, jforum_posts p \
 	WHERE p.post_id = t.topic_last_post_id \
 	AND p.need_moderate = 0 ) AS tmp \
@@ -150,7 +150,7 @@ TopicModel.selectRecentTopicsByLimit = SELECT * \
 
 TopicModel.selectByUserByLimit = SELECT * \
 	FROM ( SELECT ROW_NUMBER() OVER (ORDER BY t.topic_last_post_id DESC) AS rownumber, \
-	t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach \
+	t.*, p.user_id AS last_user_id, p.post_time, p.attach AS attach \
 	FROM jforum_topics t, jforum_posts p \
 	WHERE p.post_id = t.topic_last_post_id \
 	AND t.user_id = ? \
