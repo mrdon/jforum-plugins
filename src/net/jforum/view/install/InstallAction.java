@@ -86,7 +86,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.63 2007/03/28 00:08:29 andowson Exp $
+ * @version $Id: InstallAction.java,v 1.64 2007/04/12 02:11:54 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -252,18 +252,24 @@ public class InstallAction extends Command
 	
 	private void doFinalSteps()
 	{
+		FileInputStream fis = null;
+		FileOutputStream fos = null;
+		
 		try {
 			// Modules Mapping
 			String modulesMapping = SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/modulesMapping.properties";
 			
 			if (new File(modulesMapping).canWrite()) {
 				Properties p = new Properties();
-				p.load(new FileInputStream(modulesMapping));
+				fis = new FileInputStream(modulesMapping);
+				p.load(fis);
 				
 				if (p.containsKey("install")) {
 					p.remove("install");
 
-					p.store(new FileOutputStream(modulesMapping), "Modified by JForum Installer");
+					fos = new FileOutputStream(modulesMapping);
+					
+					p.store(fos, "Modified by JForum Installer");
 					ConfigLoader.loadModulesMapping(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR));
 				}
 				
@@ -272,6 +278,15 @@ public class InstallAction extends Command
 		}
 		catch (Exception e) {
 			logger.warn("Error while working on modulesMapping.properties: " + e);
+		}
+		finally {
+			if (fis != null) {
+				try { fis.close(); } catch (Exception e) {}
+			}
+			
+			if (fos != null) {
+				try { fos.close(); } catch (Exception e) {}
+			}
 		}
 	}
 	
@@ -486,13 +501,19 @@ public class InstallAction extends Command
 			+ "/database/" + type + "/" + type + ".properties";
 		
 		Properties p = new Properties();
-        try
-        {
-            p.load(new FileInputStream(dbConfigFilePath));
+		FileInputStream fis = null;
+		
+		try {
+            fis = new FileInputStream(dbConfigFilePath);
+			p.load(fis);
         }
-        catch (IOException e)
-        {
+        catch (IOException e) {
             throw new ForumException(e);
+        }
+        finally {
+        	if (fis != null) {
+        		try { fis.close(); } catch (Exception e) {}
+        	}
         }
 
         this.handleDatabasePort(p, port);

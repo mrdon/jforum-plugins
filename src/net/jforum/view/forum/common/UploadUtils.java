@@ -52,7 +52,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UploadUtils.java,v 1.12 2006/08/24 01:07:04 rafaelsteil Exp $
+ * @version $Id: UploadUtils.java,v 1.13 2007/04/12 02:11:55 rafaelsteil Exp $
  */
 public class UploadUtils
 {
@@ -82,7 +82,6 @@ public class UploadUtils
 
 		try {
 			inputStream = new BufferedInputStream(this.item.getInputStream());
-			outputStream = new FileOutputStream(filename);
 
 			int c;
 			byte[] b = new byte[4096];

@@ -57,7 +57,7 @@ import freemarker.template.SimpleHash;
 /**
  * Notify users of replies to existing topics
  * @author Rafael Steil
- * @version $Id: TopicReplySpammer.java,v 1.3 2006/10/09 00:54:09 rafaelsteil Exp $
+ * @version $Id: TopicReplySpammer.java,v 1.4 2007/04/12 02:11:54 rafaelsteil Exp $
  */
 public class TopicReplySpammer extends Spammer 
 {
@@ -90,13 +90,14 @@ public class TopicReplySpammer extends Spammer
 		params.put("forumLink", forumLink);
 		params.put("unwatch", unwatch);
 		
-		this.setMessageId(MessageId.buildMessageId(post.getId(), topic.getId(), topic.getForumId()));
-		this.setUsers(users);
-		
 		if (post != null) {
+			this.setMessageId(MessageId.buildMessageId(post.getId(), topic.getId(), topic.getForumId()));
+			
 			post = PostCommon.preparePostForDisplay(post);
 			params.put("message", post.getText());
 		}
+		
+		this.setUsers(users);
 		
 		if (topic.getFirstPostId() != post.getId()) {
 			this.setInReplyTo(MessageId.buildInReplyTo(topic));

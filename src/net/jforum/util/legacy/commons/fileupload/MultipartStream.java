@@ -19,6 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 
 /**
@@ -80,7 +81,7 @@ import java.io.UnsupportedEncodingException;
  * @author <a href="mailto:martinc@apache.org">Martin Cooper</a>
  * @author Sean C. Sullivan
  *
- * @version $Id: MultipartStream.java,v 1.3 2005/07/26 03:04:59 rafaelsteil Exp $
+ * @version $Id: MultipartStream.java,v 1.4 2007/04/12 02:11:54 rafaelsteil Exp $
  */
 public class MultipartStream {
 
@@ -720,8 +721,8 @@ public class MultipartStream {
      * Thrown to indicate that the input stream fails to follow the
      * required syntax.
      */
-    public class MalformedStreamException
-        extends IOException {
+    public static class MalformedStreamException
+        extends IOException implements Serializable {
         /**
          * Constructs a <code>MalformedStreamException</code> with no
          * detail message.
@@ -745,8 +746,8 @@ public class MultipartStream {
     /**
      * Thrown upon attempt of setting an invalid boundary token.
      */
-    public class IllegalBoundaryException
-        extends IOException {
+    public static class IllegalBoundaryException
+        extends IOException implements Serializable {
         /**
          * Constructs an <code>IllegalBoundaryException</code> with no
          * detail message.

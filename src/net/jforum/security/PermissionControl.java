@@ -47,77 +47,83 @@ import java.io.Serializable;
 import net.jforum.dao.GroupSecurityDAO;
 
 /**
- * Methods and properties for all classes that need make use of security actions.  
+ * Methods and properties for all classes that need make use of security actions.
  * 
  * @author Rafael Steil
- * @version $Id: PermissionControl.java,v 1.18 2006/08/24 01:07:02 rafaelsteil Exp $
+ * @version $Id: PermissionControl.java,v 1.19 2007/04/12 02:11:55 rafaelsteil Exp $
  */
 public class PermissionControl implements Serializable
 {
 	private RoleCollection roles;
-	private GroupSecurityDAO smodel;
-	
+
+	private transient GroupSecurityDAO smodel;
+
 	public void setRoles(RoleCollection roles)
 	{
 		this.roles = roles;
 	}
-	
+
 	public void setSecurityModel(GroupSecurityDAO smodel)
 	{
 		this.smodel = smodel;
 	}
-	
+
 	public void addRole(int id, Role role)
 	{
 		this.smodel.addRole(id, role);
 	}
-	
-	public void addRole(int id, Role role, RoleValueCollection roleValues) 
+
+	public void addRole(int id, Role role, RoleValueCollection roleValues)
 	{
 		this.smodel.addRole(id, role, roleValues);
 	}
-	
+
 	public void addRoleValue(int id, Role role, RoleValueCollection roleValues)
 	{
 		this.smodel.addRoleValue(id, role, roleValues);
 	}
-	
-	public void deleteAllRoles(int id) 
+
+	public void deleteAllRoles(int id)
 	{
 		this.smodel.deleteAllRoles(id);
 	}
-	
+
 	/**
 	 * Gets a role.
 	 * 
-	 * @param roleName The role's name
-	 * @return A <code>Role</code> object if the role was found, or <code>null</code> if not found.
+	 * @param roleName
+	 *            The role's name
+	 * @return A <code>Role</code> object if the role was found, or <code>null</code> if not
+	 *         found.
 	 */
 	public Role getRole(String roleName)
 	{
 		return this.roles.get(roleName);
 	}
-	
-	/** 
+
+	/**
 	 * @see net.jforum.security.PermissionControl#canAccess(java.lang.String)
-     * @param roleName String
-     * @return boolean
+	 * @param roleName
+	 *            String
+	 * @return boolean
 	 */
-	public boolean canAccess(String roleName) 
+	public boolean canAccess(String roleName)
 	{
 		return this.roles.containsKey(roleName);
 	}
-	
-	/** 
+
+	/**
 	 * @see net.jforum.security.PermissionControl#canAccess(java.lang.String, java.lang.String)
-     * @return boolean
-     * @param roleName String
-     * @param roleValue String
+	 * @return boolean
+	 * @param roleName
+	 *            String
+	 * @param roleValue
+	 *            String
 	 */
-	public boolean canAccess(String roleName, String roleValue) 
+	public boolean canAccess(String roleName, String roleValue)
 	{
 		Role role = this.roles.get(roleName);
-		
+
 		if (role == null) {
 			return false;
 		}

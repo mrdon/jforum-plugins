@@ -66,7 +66,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: I18n.java,v 1.34 2007/02/25 13:48:35 rafaelsteil Exp $
+ * @version $Id: I18n.java,v 1.35 2007/04/12 02:11:53 rafaelsteil Exp $
  */
 public class I18n
 {
@@ -132,11 +132,19 @@ public class I18n
 
 	private static void loadLocales()
 	{
+		FileInputStream fis = null;
+		
 		try {
-			localeNames.load(new FileInputStream(baseDir + SystemGlobals.getValue(ConfigKeys.LOCALES_NAMES)));
+			fis = new FileInputStream(baseDir + SystemGlobals.getValue(ConfigKeys.LOCALES_NAMES));
+			localeNames.load(fis);
 		}
 		catch (IOException e) {
 			throw new ForumException(e);
+		}
+		finally {
+			if (fis != null) {
+				try { fis.close(); } catch (Exception e) {}
+			}
 		}
 	}
 
@@ -164,6 +172,8 @@ public class I18n
 
 			p.putAll((Properties) messagesMap.get(mergeWith));
 		}
+		
+		FileInputStream fis = null;
 
 		try {
 			String filename = baseDir + localeNames.getProperty(localeName);
@@ -173,10 +183,16 @@ public class I18n
 				filename = baseDir + localeNames.getProperty(SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT_ADMIN));
 			}
 			
-			p.load(new FileInputStream(filename));
+			fis = new FileInputStream(filename);
+			p.load(fis);
 		}
 		catch (IOException e) {
 			throw new ForumException(e);
+		}
+		finally {
+			if (fis != null) {
+				try { fis.close(); } catch (Exception e) {}
+			}
 		}
 		
 		messagesMap.put(localeName, p);

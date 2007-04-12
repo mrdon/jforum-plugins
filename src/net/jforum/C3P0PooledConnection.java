@@ -54,7 +54,7 @@ import com.mchange.v2.c3p0.DataSources;
 
 /**
  * @author Rafael Steil
- * @version $Id: C3P0PooledConnection.java,v 1.6 2006/09/23 15:34:05 rafaelsteil Exp $
+ * @version $Id: C3P0PooledConnection.java,v 1.7 2007/04/12 02:11:52 rafaelsteil Exp $
  */
 public class C3P0PooledConnection extends DBConnection
 {
@@ -118,7 +118,7 @@ public class C3P0PooledConnection extends DBConnection
 						method.invoke(this.ds, new Object[] { new Integer(value) });
 					}
 					else if (paramTypes[0] == boolean.class) {
-						method.invoke(this.ds, new Object[] { new Boolean(value) });
+						method.invoke(this.ds, new Object[] { Boolean.valueOf(value) });
 					}
 				}
 			}

@@ -52,7 +52,7 @@ import net.jforum.exceptions.ConfigLoadException;
 
 /**
  * @author Rafael Steil
- * @version $Id: Tpl.java,v 1.6 2006/08/20 22:47:38 rafaelsteil Exp $
+ * @version $Id: Tpl.java,v 1.7 2007/04/12 02:11:54 rafaelsteil Exp $
  */
 public class Tpl implements Cacheable
 {
@@ -77,9 +77,12 @@ public class Tpl implements Cacheable
 	 */
 	public static void load(String filename)
 	{
+		FileInputStream fis = null;
+		
 		try {
 			Properties p = new Properties();
-			p.load(new FileInputStream(filename));
+			fis = new FileInputStream(filename);
+			p.load(fis);
 			
 			for (Iterator iter = p.keySet().iterator(); iter.hasNext(); ) {
 				String key = (String)iter.next();
@@ -90,6 +93,11 @@ public class Tpl implements Cacheable
 		catch (Exception e) {
 			e.printStackTrace();
 			throw new ConfigLoadException("Error while trying to load " + filename + ": " + e);
+		}
+		finally {
+			if (fis != null) {
+				try { fis.close(); } catch (Exception e) {}
+			}
 		}
 	}
 	

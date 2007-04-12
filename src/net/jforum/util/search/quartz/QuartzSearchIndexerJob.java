@@ -61,7 +61,7 @@ import org.quartz.JobExecutionException;
 
 /**
  * @author Rafael Steil
- * @version $Id: QuartzSearchIndexerJob.java,v 1.12 2006/10/10 00:40:54 rafaelsteil Exp $
+ * @version $Id: QuartzSearchIndexerJob.java,v 1.13 2007/04/12 02:11:55 rafaelsteil Exp $
  */
 public class QuartzSearchIndexerJob implements Job, Cacheable
 {
@@ -126,16 +126,23 @@ public class QuartzSearchIndexerJob implements Job, Cacheable
 	private Properties loadConfig()
 	{
 		String filename = SystemGlobals.getValue(ConfigKeys.QUARTZ_CONFIG);
+		FileInputStream fis = null;
 		
 		try {
 			Properties p = new Properties();
-			p.load(new FileInputStream(filename));
+			fis = new FileInputStream(filename);
+			p.load(fis);
 
 			return p;
 		}
 		catch (Exception e) {
 			logger.warn("Failed to load " + filename + ": " + e, e);
 			return null;
+		}
+		finally {
+			if (fis != null) {
+				try { fis.close(); } catch (Exception e) {}
+			}
 		}
 	}
 }

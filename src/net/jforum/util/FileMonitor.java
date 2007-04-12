@@ -54,7 +54,7 @@ import org.apache.log4j.Logger;
  * Monitor class for file changes.
  * 
  * @author Rafael Steil
- * @version $Id: FileMonitor.java,v 1.8 2005/07/26 03:05:25 rafaelsteil Exp $
+ * @version $Id: FileMonitor.java,v 1.9 2007/04/12 02:11:53 rafaelsteil Exp $
  */
 public class FileMonitor
 {
@@ -105,7 +105,7 @@ public class FileMonitor
 		}
 	}
 	
-	private class FileMonitorTask extends TimerTask {
+	private static class FileMonitorTask extends TimerTask {
 		private FileChangeListener listener;
 		private String filename;
 		private File monitoredFile;

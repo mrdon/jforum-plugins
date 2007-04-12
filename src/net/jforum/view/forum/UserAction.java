@@ -84,7 +84,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.90 2007/03/18 16:56:55 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.91 2007/04/12 02:11:53 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -198,8 +198,7 @@ public class UserAction extends Command
 		
 		BufferedReader reader = null;
 		FileReader fileReader = null;
-		
-		
+
 		try {
 			String directory = new StringBuffer()
 				.append(SystemGlobals.getApplicationPath()) 
@@ -220,7 +219,8 @@ public class UserAction extends Command
 				}
 			}
 			
-			reader = new BufferedReader(new FileReader(file));
+			fileReader = new FileReader(file);
+			reader = new BufferedReader(fileReader);
 			
 			char[] buffer = new char[2048];
 			int c = 0;

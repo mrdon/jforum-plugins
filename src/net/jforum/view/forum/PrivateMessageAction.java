@@ -67,7 +67,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.41 2007/03/18 16:56:55 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.42 2007/04/12 02:11:53 rafaelsteil Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -184,9 +184,6 @@ public class PrivateMessageAction extends Command
 		String toUserIdStr = this.request.getParameter("toUserId");
 		String toUsername = this.request.getParameter("toUsername");
 
-        // TODO userEmail is not used. Remove or use
-        String userEmail;
-
 		int toUserId = -1;
 		
 		// If we don't have an user id, then probably the user
@@ -197,7 +194,6 @@ public class PrivateMessageAction extends Command
 			if (l.size() > 0) {
 				User u = (User)l.get(0);
 				toUserId = u.getId();
-				userEmail = u.getEmail();
 			}
 		}
 		else {

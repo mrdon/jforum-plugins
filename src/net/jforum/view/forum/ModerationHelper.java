@@ -68,7 +68,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationHelper.java,v 1.32 2007/04/02 17:14:42 andowson Exp $
+ * @version $Id: ModerationHelper.java,v 1.33 2007/04/12 02:11:53 rafaelsteil Exp $
  */
 public class ModerationHelper 
 {
@@ -252,8 +252,6 @@ public class ModerationHelper
 				
 				DataAccessDriver.getInstance().newForumDAO().moveTopics(topics.split(","), fromForumId, toForumId);
 
-                Forum fromForum = ForumRepository.getForum(fromForumId);
-				
 				ForumRepository.reloadForum(fromForumId);
 				ForumRepository.reloadForum(toForumId);
 				

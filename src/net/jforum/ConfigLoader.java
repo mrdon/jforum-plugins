@@ -70,7 +70,7 @@ import org.quartz.SchedulerException;
  * General utilities methods for loading configurations for JForum.
  * 
  * @author Rafael Steil
- * @version $Id: ConfigLoader.java,v 1.26 2006/10/10 00:40:54 rafaelsteil Exp $
+ * @version $Id: ConfigLoader.java,v 1.27 2007/04/12 02:11:52 rafaelsteil Exp $
  */
 public class ConfigLoader 
 {
@@ -103,14 +103,22 @@ public class ConfigLoader
 	 */
 	public static Properties loadModulesMapping(String baseConfigDir)
 	{
+		FileInputStream fis = null;
+		
 		try {
 			Properties modulesMapping = new Properties();
-			modulesMapping.load(new FileInputStream(baseConfigDir + "/modulesMapping.properties"));
+			fis = new FileInputStream(baseConfigDir + "/modulesMapping.properties");
+			modulesMapping.load(fis);
 
 			return modulesMapping;
 		}
 		catch (IOException e) {
 			throw new ForumException( e);
+		}
+		finally {
+			if (fis != null) {
+				try { fis.close(); } catch (Exception e) {}
+			}
 		}
     }
 	
@@ -120,9 +128,12 @@ public class ConfigLoader
 	 */
 	public static void loadUrlPatterns()  
 	{
+		FileInputStream fis = null;
+		
 		try {
 			Properties p = new Properties();
-			p.load(new FileInputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/urlPattern.properties"));
+			fis = new FileInputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/urlPattern.properties");
+			p.load(fis);
 
 			for (Iterator iter = p.entrySet().iterator(); iter.hasNext(); ) {
 				Map.Entry entry = (Map.Entry) iter.next();
@@ -131,6 +142,11 @@ public class ConfigLoader
 		}
 		catch (IOException e) {
 			throw new ForumException(e);
+		}
+		finally {
+			if (fis != null) {
+				try { fis.close(); } catch (Exception e) {}
+			}
 		}
     }
 	

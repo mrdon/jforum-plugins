@@ -70,7 +70,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author Pieter Olivier
- * @version $Id: SystemGlobals.java,v 1.28 2006/08/24 01:07:06 rafaelsteil Exp $
+ * @version $Id: SystemGlobals.java,v 1.29 2007/04/12 02:11:55 rafaelsteil Exp $
  */
 public class SystemGlobals implements VariableStore
 {
@@ -338,13 +338,19 @@ public class SystemGlobals implements VariableStore
 	 **/
 	public static void loadQueries(String queryFile)
 	{
-		try
-		{
-			queries.load(new FileInputStream(queryFile));
+		FileInputStream fis = null;
+		
+		try {
+			fis = new FileInputStream(queryFile);
+			queries.load(fis);
 		}
-		catch (IOException e)
-		{
+		catch (IOException e) {
 			throw new ForumException(e);
+		}
+		finally {
+			if (fis != null) {
+				try { fis.close(); } catch (Exception e) {}
+			}
 		}
 	}
 

@@ -69,7 +69,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ConfigAction.java,v 1.19 2006/08/24 01:07:02 rafaelsteil Exp $
+ * @version $Id: ConfigAction.java,v 1.20 2007/04/12 02:11:53 rafaelsteil Exp $
  */
 public class ConfigAction extends AdminCommand 
 {
@@ -97,15 +97,23 @@ public class ConfigAction extends AdminCommand
 		}
 
 		Properties locales = new Properties();
-		try
-		{
-			locales.load(new FileInputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
-				+ "/languages/locales.properties"));
+		
+		FileInputStream fis = null;
+		
+		try {
+			fis = new FileInputStream(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
+				+ "/languages/locales.properties");
+			locales.load(fis);
 		}
-		catch (IOException e)
-		{
+		catch (IOException e) {
 			throw new ForumException(e);
 		}
+		finally {
+			if (fis != null) {
+				try { fis.close(); } catch (Exception e) {}
+			}
+		}
+		
 		List localesList = new ArrayList();
 
 		for (Enumeration e = locales.keys(); e.hasMoreElements();) {

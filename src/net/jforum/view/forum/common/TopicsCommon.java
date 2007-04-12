@@ -78,12 +78,10 @@ import freemarker.template.SimpleHash;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.37 2007/04/02 17:14:43 andowson Exp $
+ * @version $Id: TopicsCommon.java,v 1.38 2007/04/12 02:11:55 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
-	private static Logger logger = Logger.getLogger(TopicsCommon.class);
-	
 	/**
 	 * List all first 'n' topics of a given forum.
 	 * This method returns no more than <code>ConfigKeys.TOPICS_PER_PAGE</code>

@@ -60,7 +60,7 @@ import org.apache.log4j.Logger;
  * Try to fix some database configuration problems.
  * This class will much likely do some checks only for mysql.
  * @author Rafael Steil
- * @version $Id: DatabaseWorkarounder.java,v 1.8 2006/09/25 00:00:43 rafaelsteil Exp $
+ * @version $Id: DatabaseWorkarounder.java,v 1.9 2007/04/12 02:11:56 rafaelsteil Exp $
  */
 public class DatabaseWorkarounder
 {
@@ -235,10 +235,18 @@ public class DatabaseWorkarounder
 		File f = new File(sqlQueries);
 		
 		Properties p = new Properties();
-		p.load(new FileInputStream(f));
 		
-		if (f.canWrite()) {
-			return p;
+		FileInputStream fis = new FileInputStream(f);
+		
+		try {
+			p.load(fis);
+			
+			if (f.canWrite()) {
+				return p;
+			}
+		}
+		finally {
+			try { fis.close(); } catch (Exception e) {}
 		}
 		
 		logger.warn("Cannot overwrite" + sqlQueries + " file. Insuficient privileges");

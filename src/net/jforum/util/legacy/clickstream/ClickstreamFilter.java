@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
  * 
  * @author <a href="plightbo@hotmail.com">Patrick Lightbody</a>
  * @author Rafael Steil (little hacks for JForum)
- * @version $Id: ClickstreamFilter.java,v 1.4 2005/07/26 03:05:03 rafaelsteil Exp $
+ * @version $Id: ClickstreamFilter.java,v 1.5 2007/04/12 02:11:55 rafaelsteil Exp $
  */
 public class ClickstreamFilter implements Filter
 {
@@ -52,7 +52,7 @@ public class ClickstreamFilter implements Filter
 				log.info("Found a bot: " + bot);
 			}
 			
-			request.setAttribute(ConfigKeys.IS_BOT, new Boolean(bot != null));
+			request.setAttribute(ConfigKeys.IS_BOT, Boolean.valueOf(bot != null));
 		}
 		
 		// Pass the request on

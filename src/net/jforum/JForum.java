@@ -79,12 +79,11 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.109 2007/02/25 13:48:35 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.110 2007/04/12 02:11:52 rafaelsteil Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
 	private static boolean isDatabaseUp;
-	private static Map modulesCache = new HashMap();
 	
 	/**
 	 * @see javax.servlet.Servlet#init(javax.servlet.ServletConfig)

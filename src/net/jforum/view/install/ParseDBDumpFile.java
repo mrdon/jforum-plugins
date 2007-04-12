@@ -50,7 +50,7 @@ import java.util.List;
 
 /**
  * @author Rafael Steil
- * @version $Id: ParseDBDumpFile.java,v 1.4 2006/08/20 22:47:54 rafaelsteil Exp $
+ * @version $Id: ParseDBDumpFile.java,v 1.5 2007/04/12 02:11:54 rafaelsteil Exp $
  */
 public class ParseDBDumpFile
 {
@@ -62,7 +62,6 @@ public class ParseDBDumpFile
 		
 		try {
 			reader = new BufferedReader(new FileReader(filename));
-			StringBuffer sb = new StringBuffer(512);
 			String line = null;
 			
 			while ((line = reader.readLine()) != null) {
