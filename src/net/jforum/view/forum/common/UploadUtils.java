@@ -52,7 +52,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UploadUtils.java,v 1.13 2007/04/12 02:11:55 rafaelsteil Exp $
+ * @version $Id: UploadUtils.java,v 1.14 2007/04/15 05:28:58 rafaelsteil Exp $
  */
 public class UploadUtils
 {
@@ -82,39 +82,31 @@ public class UploadUtils
 
 		try {
 			inputStream = new BufferedInputStream(this.item.getInputStream());
-
+			outputStream = new FileOutputStream(filename);
+			
 			int c;
 			byte[] b = new byte[4096];
 			while ((c = inputStream.read(b)) != -1) {
 				outputStream.write(b, 0, c);
 			}
 		}
-		catch (IOException e)
-		{
+		catch (IOException e) {
 			throw new ForumException(e);
 		}
 		finally {
 			if (outputStream != null) {
-				try
-				{
+				try {
 					outputStream.flush();
 					outputStream.close();
 				}
-				catch (IOException e)
-				{
-					// catch close exception
-				}
+				catch (IOException e) { }
 			}
 
 			if (inputStream != null) {
-				try
-				{
+				try {
 					inputStream.close();
 				}
-				catch (IOException e)
-				{
-					// catch close exception
-				}
+				catch (IOException e) { }
 			}
 		}
 	}
