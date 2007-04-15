@@ -10,7 +10,7 @@ import net.jforum.view.forum.common.PostCommon;
  * An helper class that holds changes made to the pool.
  * 
  * @author Rafael Steil
- * @version $Id: PollChanges.java,v 1.2 2005/12/27 22:57:32 rafaelsteil Exp $
+ * @version $Id: PollChanges.java,v 1.3 2007/04/15 08:11:38 andowson Exp $
  */
 public class PollChanges {
 	private List deletedOptions = new ArrayList();
@@ -79,9 +79,10 @@ public class PollChanges {
 		List firstOptions = first.getOptions();
 		List secondOptions = second.getOptions();
 		
-		int firstSize = firstOptions.size();
-		int secondSize = secondOptions.size();
-		int maxCount = Math.min(firstSize, secondSize);
+        //TODO To be deleted?
+		//int firstSize = firstOptions.size();
+		//int secondSize = secondOptions.size();
+		//int maxCount = Math.min(firstSize, secondSize);
 		
 		// Search for changes in existing options
 		for (Iterator iter = firstOptions.iterator(); iter.hasNext(); ) {

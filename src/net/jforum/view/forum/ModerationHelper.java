@@ -51,7 +51,6 @@ import net.jforum.context.RequestContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
 import net.jforum.dao.TopicDAO;
-import net.jforum.entities.Forum;
 import net.jforum.entities.Topic;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.PostRepository;
@@ -68,7 +67,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationHelper.java,v 1.33 2007/04/12 02:11:53 rafaelsteil Exp $
+ * @version $Id: ModerationHelper.java,v 1.34 2007/04/15 08:11:38 andowson Exp $
  */
 public class ModerationHelper 
 {

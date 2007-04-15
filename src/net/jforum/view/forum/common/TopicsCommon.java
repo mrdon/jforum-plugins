@@ -70,15 +70,13 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.view.forum.ModerationHelper;
 
-import org.apache.log4j.Logger;
-
 import freemarker.template.SimpleHash;
 
 /**
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.38 2007/04/12 02:11:55 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.39 2007/04/15 08:11:38 andowson Exp $
  */
 public class TopicsCommon 
 {

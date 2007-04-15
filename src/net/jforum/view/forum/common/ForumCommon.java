@@ -67,7 +67,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumCommon.java,v 1.21 2007/03/18 20:20:25 rafaelsteil Exp $
+ * @version $Id: ForumCommon.java,v 1.22 2007/04/15 08:11:38 andowson Exp $
  */
 public class ForumCommon 
 {
@@ -123,7 +123,7 @@ public class ForumCommon
 
         // TODO at this position us may null and NPE possible
         // Do not check for unread posts if the user is not logged in
-		checkUnreadPosts = checkUnreadPosts && (us.getUserId() != anonymousUserId);
+		checkUnreadPosts = checkUnreadPosts && (userId != anonymousUserId);
 
 		List categories = ForumRepository.getAllCategories(userId);
 		
@@ -137,7 +137,7 @@ public class ForumCommon
 			
 			for (Iterator tmpIterator = c.getForums().iterator(); tmpIterator.hasNext(); ) {
 				Forum f = (Forum)tmpIterator.next();
-				ForumCommon.checkUnreadPosts(f, tracking, us.getLastVisit().getTime());
+				ForumCommon.checkUnreadPosts(f, tracking, lastVisit);
 			}
 			
 			returnCategories.add(c);
