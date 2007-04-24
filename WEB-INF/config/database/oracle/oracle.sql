@@ -146,14 +146,6 @@ TopicModel.selectRecentTopicsByLimit = SELECT * FROM ( \
 	) \
 	WHERE LINENUM < ?
 
-TopicModel.notifyUsers = SELECT u.user_id AS user_id, u.username AS username, \
-	u.user_lang AS user_lang, u.user_email AS user_email \
-	FROM jforum_topics_watch tw, jforum_users u \
-	WHERE   tw.user_id = u.user_id AND \
-	        tw.topic_id = ? \
-	AND tw.is_read = 1 \
-	AND u.user_id NOT IN ( ?, ? )
-
 TopicModel.lastGeneratedTopicId = SELECT jforum_topics_seq.currval FROM DUAL
 
 TopicModel.topicPosters = SELECT user_id, username, user_karma, user_avatar, user_allowavatar, user_regdate, user_posts, user_icq, \
