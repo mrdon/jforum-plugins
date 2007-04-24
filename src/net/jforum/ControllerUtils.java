@@ -73,7 +73,7 @@ import org.apache.log4j.Logger;
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.32 2007/02/25 13:48:35 rafaelsteil Exp $
+ * @version $Id: ControllerUtils.java,v 1.33 2007/04/24 02:19:45 rafaelsteil Exp $
  */
 public class ControllerUtils
 {
@@ -130,7 +130,8 @@ public class ControllerUtils
 
 		if (hashCookie != null && cookie != null
 				&& !cookie.getValue().equals(SystemGlobals.getValue(ConfigKeys.ANONYMOUS_USER_ID))
-				&& autoLoginCookie != null && "1".equals(autoLoginCookie.getValue())) {
+				&& autoLoginCookie != null 
+				&& "1".equals(autoLoginCookie.getValue())) {
 			String uid = cookie.getValue();
 			String uidHash = hashCookie.getValue();
 
@@ -151,7 +152,7 @@ public class ControllerUtils
 					
 					User user = userDao.selectById(userId);
 	
-					if (user == null || user.getId() != userId) {
+					if (user == null || user.getId() != userId || user.isDeleted()) {
 						userSession.makeAnonymous();
 						return false;
 					}

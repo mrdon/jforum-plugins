@@ -47,6 +47,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.sql.Connection;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -76,7 +77,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.111 2007/04/15 08:11:38 andowson Exp $
+ * @version $Id: JForum.java,v 1.112 2007/04/24 02:19:45 rafaelsteil Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
