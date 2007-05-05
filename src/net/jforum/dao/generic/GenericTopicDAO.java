@@ -72,7 +72,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTopicDAO.java,v 1.20 2007/04/02 17:14:45 andowson Exp $
+ * @version $Id: GenericTopicDAO.java,v 1.21 2007/05/05 11:58:34 rafaelsteil Exp $
  */
 public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 {
@@ -676,7 +676,7 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 
 			rs = stmt.executeQuery();
 
-			return rs.next();
+			return rs.next() && rs.getInt(1) > 0;
 		}
 		catch (SQLException e) {
 			throw new DatabaseException(e);
@@ -734,21 +734,23 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 	 */
 	public void updateReadStatus(int topicId, int userId, boolean read)
 	{
-		PreparedStatement p = null;
-		try {
-			p = JForumExecutionContext.getConnection().prepareStatement(
-					SystemGlobals.getSql("TopicModel.updateReadStatus"));
-			p.setInt(1, read ? 1 : 0);
-			p.setInt(2, topicId);
-			p.setInt(3, userId);
-
-			p.executeUpdate();
-		}
-		catch (SQLException e) {
-			throw new DatabaseException(e);
-		}
-		finally {
-			DbUtils.close(p);
+		if (this.isUserSubscribed(topicId, userId)) {
+			PreparedStatement p = null;
+			try {
+				p = JForumExecutionContext.getConnection().prepareStatement(
+						SystemGlobals.getSql("TopicModel.updateReadStatus"));
+				p.setInt(1, read ? 1 : 0);
+				p.setInt(2, topicId);
+				p.setInt(3, userId);
+	
+				p.executeUpdate();
+			}
+			catch (SQLException e) {
+				throw new DatabaseException(e);
+			}
+			finally {
+				DbUtils.close(p);
+			}
 		}
 	}
 

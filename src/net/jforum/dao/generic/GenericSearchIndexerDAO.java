@@ -65,7 +65,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericSearchIndexerDAO.java,v 1.16 2006/08/23 02:13:42 rafaelsteil Exp $
+ * @version $Id: GenericSearchIndexerDAO.java,v 1.17 2007/05/05 11:58:34 rafaelsteil Exp $
  */
 public class GenericSearchIndexerDAO extends AutoKeys implements net.jforum.dao.SearchIndexerDAO
 {
@@ -88,12 +88,14 @@ public class GenericSearchIndexerDAO extends AutoKeys implements net.jforum.dao.
 		int minWordSize = SystemGlobals.getIntValue(ConfigKeys.SEARCH_MIN_WORD_SIZE);
 		int maxWordSize = SystemGlobals.getIntValue(ConfigKeys.SEARCH_MAX_WORD_SIZE);
 		int searchMaxWordsMessage = SystemGlobals.getIntValue(ConfigKeys.SEARCH_MAX_WORDS_MESSAGE);
+		
 		String wordFilterRegex = SystemGlobals.getValue(ConfigKeys.SEARCH_WORD_FILTER_REGEX);
 		StringBuffer sb = new StringBuffer(512);
 
 		// Allow for a set of words to be excluded from indexing...
 		String excludeWordsString = SystemGlobals.getValue("search.exclude.words");
 		Set excludeWords = new HashSet();
+		
 		if (excludeWordsString != null) {
 			String[] words = excludeWordsString.split(",");
 			for (int i = 0; words != null && i < words.length; i++) {
@@ -112,7 +114,7 @@ public class GenericSearchIndexerDAO extends AutoKeys implements net.jforum.dao.
 				String text = new StringBuffer(p.getText()).append(" ").append(p.getSubject()).toString();
 
 				text = text.toLowerCase().replaceAll(
-						"[\\.\\\\\\/~\\^\\&\\(\\)\\-_+=!@;#\\$%\"\'\\[\\]\\{\\}\\?<\\:>,\\*\n\r\t]", " ");
+					"[\\.\\\\\\/~\\^\\&\\(\\)\\-_+=!@;#\\$%\"\'\\[\\]\\{\\}\\?<\\:>,\\*\n\r\t]", " ");
 
 				Set allWords = new HashSet();
 
@@ -131,8 +133,9 @@ public class GenericSearchIndexerDAO extends AutoKeys implements net.jforum.dao.
 						w = w.substring(0, maxWordSize);
 					}
 
-					if (!allWords.contains(w) && !excludeWords.contains(w)
-							&& (wordFilterRegex == null || w.matches(wordFilterRegex))) {
+					if (!allWords.contains(w) 
+						&& !excludeWords.contains(w)
+						&& (wordFilterRegex == null || w.matches(wordFilterRegex))) {
 						allWords.add(w);
 						sb.append('\'').append(w).append('\'').append(",");
 					}
@@ -145,22 +148,23 @@ public class GenericSearchIndexerDAO extends AutoKeys implements net.jforum.dao.
 
 				Statement s = null;
 				ResultSet rs = null;
-				List newWords;
+				List existingWords;
+				
 				try {
 					s = this.conn.createStatement();
 					rs = s.executeQuery(sql);
 
-					newWords = new ArrayList();
+					existingWords = new ArrayList();
 
 					while (rs.next()) {
-						newWords.add(rs.getString("word"));
+						existingWords.add(rs.getString("word"));
 					}
 				}
 				finally {
 					DbUtils.close(rs, s);
 				}
 
-				allWords.removeAll(newWords);
+				allWords.removeAll(existingWords);
 
 				// Insert the remaining words
 				for (Iterator witer = allWords.iterator(); witer.hasNext();) {
