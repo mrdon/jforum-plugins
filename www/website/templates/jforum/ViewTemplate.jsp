@@ -43,7 +43,7 @@
 											Many improvements were made, and bugs were fixed.
 										</div>
 										<div style="padding-top:5px;" class="white"><strong><a href="/download.jsp" class="white">Details</a> | <a href="/download.jsp" class="white">Download</a></strong></div>
-										<div style="padding-top:5px; padding-bottom: 5px;"><a href="download.jsp"><img src="images/dl_now.gif" border="0"></a></div>
+										<div style="padding-top:5px; padding-bottom: 5px;"><a href="/download.jsp"><img src="images/dl_now.gif" border="0"></a></div>
 									</td>
 								</tr>
 							</table>
@@ -57,6 +57,36 @@
 					</tr>
 				</table></td>
 			</tr>
+			
+			<tr>
+				<td>
+					<table width="214" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td colspan="3"><img src="images/contribute.gif" width="214" height="48"></td>
+					  </tr>
+					<tr>
+						<td colspan="3" background="images/contribute_bg.gif" valign="top" width="214">
+							<table border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td valign="top">
+										<div style="padding:10px">
+											<ul class="white">
+												<li>Is JForum useful for you?
+											Please consider helping this project.</li>
+											</ul>
+										<div style="padding-top:5px; padding-bottom: 5px; padding-left:59px;"><a href="/contribute.jsp"><img src="images/make_donation.gif" border="0"></a></div>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3"><img src="images/contribute_lower.gif"></td>
+					</tr>
+				</table>
+				</td>
+			</tr>
+			
 			<tr>
 				<td><table width="214" border="0" cellspacing="0" cellpadding="0">
 					<tr>
@@ -76,7 +106,6 @@
 									<li class="li"><a href="/install.jsp" class="white">How do I install JForum?</a>
 									<li class="li"><a href="/doc/HowToContribute" class="white">How to contribute</a>
 									<li class="li"><a href="/Wiki.jsp" class="white">Getting help</a>
-									<li class="li"><a href="/doc/SupportTheProject" class="white">Support the project</a>
 
 									<wiki:UserCheck status="notAuthenticated">
 										<li class="li"><span class="white"><wiki:Link jsp="Login.jsp">Log in - Wiki</wiki:Link></span>
@@ -101,39 +130,6 @@
 			</tr>
 			
 			<tr>
-				<td>
-					<table width="214" border="0" cellspacing="0" cellpadding="0">
-					<tr>
-						<td colspan="3"><img src="images/beta_releases.gif"></td>
-						</tr>
-					<tr>
-						<td colspan="3" background="images/beta_stripes.gif" valign="top" width="214">
-							<table border="0" cellspacing="0" cellpadding="0">
-								<tr>
-									<td valign="top">
-										<div style="padding:10px">
-											<ul class="white">
-												<li class="li-beta">Do you like to live on the fast lane?</li>
-												<li class="li-beta">Can't  wait until the next version to test the latest features?</li>
-										 		<li class="li-beta">Want to help developing JForum? </li>
-												<li class="li-beta">Then you must check out the beta releases</li>
-											</ul>
-										<div style="padding-top:5px; padding-bottom: 5px; padding-left:73px;"><a href="../beta.jsp"><img src="images/goto_beta.gif" border="0"></a></div>
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-					<tr>
-						<td width="15"><img src="images/beta_lower_left_corner.gif" width="15" height="15"></td>
-						<td height="15"><img src="images/beta_lower_line.gif" width="184" height="15"></td>
-						<td width="15"><img src="images/beta_lower_right_corner.gif" width="15" height="15"></td>
-					</tr>
-				</table>
-				</td>
-			</tr>
-			
-			<tr>
 				<td><table width="214" border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td>&nbsp;</td>
@@ -143,8 +139,8 @@
 		</table>
 		
 		<div class="menu" style="padding-left:10px; ">
-			© <b>JForum Team</b><br>
-			Latest version is 2.1.6 <br>
+			&copy; <b>JForum Team</b><br>
+			Latest version is 2.1.7 <br>
 			<a href="/doc/Team" class="white">Meet the team</a> <br>
 		</div>
 		
@@ -184,4 +180,10 @@
 	</tr>
 </table>
 </body>
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-132222-3";
+urchinTracker();
+</script>
 </html>

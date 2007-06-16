@@ -147,11 +147,11 @@
 			<tr>
 				<td background="images/cb_left_line.gif">&nbsp;</td>
 				<td bgcolor="#FFFFFF" width="100%"><!-- InstanceBeginEditable name="MainContent" -->
-					<div style="padding-top:10px; height:496px;">
+					<div style="padding-top:10px;">
 						<table border="0" cellspacing="0" cellpadding="0">
 							<tr>
 								<td width="100%" valign="top">
-									<div style="padding:0px 10px">
+								  <div style="padding:0px 10px">
 										<img src="images/bt_downloadnow.gif">
 										<div><img src="images/hr.gif" width="100%" height="10"></div>
 										<p>Thank you for downloading JForum. Don't forget to check out the <a href="install.jsp" class="blue">installation instructions</a>. </p>
@@ -167,9 +167,13 @@
 										<p>Although, you are required to maintain full credits to the project, and we sincerely ask you to link back to us whenever possible. </p>
 										<div style="padding-top:10px"><img src="images/bt_files.gif"></div>
 										<div><img src="images/hr.gif" width="100%" height="10"></div>
-										<p><img src="images/orange_arrow.jpg" width="8" height="6">&nbsp;<a href="download-latest.jsp" class="blue">Click here to download JForum 2.1.6 </a></p>
+										<p><img src="images/orange_arrow.jpg" width="8" height="6">&nbsp;<a href="download-latest.jsp" class="blue">Click here to download JForum 2.1.7 </a></p>
 										<p><img src="images/orange_arrow.jpg" width="8" height="6">&nbsp;<a href="download-source.jsp" class="blue">Download the source code </a></p>
-									</div>
+										
+										<div><img src="images/hr.gif" height="10" width="100%"></div>
+										<h2 style="color: rgb(58, 163, 21); font-weight: normal;">Support JForum - Help the Project</h2>
+									  <strong>Please consider helping this project. <a href="contribute.jsp"><img src="images/make_donation.gif" border="0"></a></strong>
+									  <p>&nbsp;</p>
 								</td>
 								<td width="198" valign="top"><table width="198" border="0" cellspacing="0" cellpadding="0">
 									<tr>
@@ -227,5 +231,11 @@
 		</td>
 	</tr>
 </table>
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-132222-3";
+urchinTracker();
+</script>
 </body>
 <!-- InstanceEnd --></html>
