@@ -147,45 +147,119 @@
 			<tr>
 				<td background="images/cb_left_line.gif">&nbsp;</td>
 				<td bgcolor="#FFFFFF" width="100%"><!-- InstanceBeginEditable name="MainContent" -->
-					<div style="padding:10px; height:496px;" >
-						<img src="images/bt_beta.gif">
-						<div><img src="images/hr.gif" width="100%" height="10"></div>
-						
+				
+				<div style="padding: 10px;">
+						<h2 style="color: rgb(58, 163, 21); font-weight: normal;">Support JForum - Help the Project</h2>
+						<div><img src="images/hr.gif" height="10" width="100%"></div>
+
 						<p>
-							The beta releases of JForum allow you to check out the latest available features and improvements, giving you a good
-							idea of what's comming next. As the name implies, a <i>beta relaese</i> is still under development, and it is possible
-							that you may find a feature that's not finished yet, for example.
+							This project is Free Software, Open Source, and mantained in the developer's free time. </p><p>
+
+							If it helped you, please consider helping this project - especially with some small <strong>donation</strong>.
+						</p>
+
+						<p>
+							There are many ways to contribute to this project:
+						</p>
+
+						<p>
+							</p><ul class="ul-orange">
+								<li> <strong>Tell</strong> others about it</li>
+								<li> <strong>Write</strong> something on your Site about it</li>
+								<li> Improve this <strong>Site</strong> with some specific instruction, translation to your language, documentation...</li>
+								<li> Help with translations, tutorials, suggestions, patches...</li>
+								<li> If it helped your work, please consider some small <strong>donation</strong> via Paypal </li>
+							</ul>
+						
+
+						<p>
+							</p><div class="donation">	
+								<span class="donation">Donate any amount via Paypal</span>	
+
+								<form method="post" action="https://www.paypal.com/cgi-bin/webscr">		
+									<input name="cmd" value="_xclick" type="hidden">
+
+									<input name="business" value="jforum@jforum.net" type="hidden">
+									<input name="item_name" value="JForum Project" type="hidden">
+									<input name="page_style" value="PayPal" type="hidden">
+									<input name="no_shipping" value="1" type="hidden">
+									<input name="return" value="http://www.jforum.net/donations/thankyou.jsp" type="hidden">
+									<input name="cancel_return" value="http://www.jforum.net/donations/seeyou.jsp" type="hidden">
+									<input name="currency_code" value="USD" type="hidden">
+									<input name="tax" value="0" type="hidden">
+									<input name="lc" value="US" type="hidden">
+
+									<input name="bn" value="PP-DonationsBF" type="hidden">
+									<img alt="" src="https://www.paypal.com/en_US/i/scr/pixel.gif" border="0" height="1" width="1">
+									<input size="6" maxlength="30" name="amount" type="text">		
+									
+									<select style="display: inline;" name="currency_code">		
+										<option selected="selected" value="USD">$ (USD)</option>		
+										<option value="EUR">€ (EUR)</option>		
+										<option value="GBP">£ (GBP)</option>		
+										<option value="CAD">$ (CAD)</option>		
+										<option value="AUD">$ (AUD)</option>		
+										<option value="JPY">¥ (JPY)</option>		
+									</select>		
+
+									<input value="Donate Now" type="submit">	
+								</form>
+
+							</div>
+						
+
+						<p>
+							<i>You don't need to have a PayPal account to donate to JForum!</i>
+						</p>
+
+						<div class="blue-title">PayPal</div>
+						<div><img src="images/hr.gif" height="5" width="100%"></div>
+						<p>
+
+							We use PayPal to get donations. You can use PayPal too to make payments and receive money. 
+							If you don't have a PayPal account, you can sign up by clicking the link below and help the JForum Project. 
+						</p>
+
+						<p>
+							<img src="http://images.paypal.com/en_US/i/bnr/paypal_mrb_banner.gif">
+						</p>
+						
+						<div class="blue-title">Why supporting this project is a good thing</div>
+						<div><img src="images/hr.gif" height="5" width="100%"></div>
+						<p>
+						The JForum Project started four years ago as a completely free and open source program, initially entirely developed on my (Rafael Steil) free time. Today, with the help of some very valuable people, I can spend more time on JForum, to improve it and implement new features (lot’s of things, requested either on the <a href="/community.jsp">forums</a> or registered in the <a href="/jira">bug tracker</a>).
 						</p>
 						
 						<p>
-							Also, the beta release <b>does not have the web installer enabled</b>, so you have to <a href="/install_no_wizard.jsp">install it manually</a>. Other
-							advices and upgrade instructions are available at <a href="/doc/InstallingTheLatestBetaRelease">Installing the latest beta release</a>.
-						</p>
-						
-						<div class="blue-title">Downloading the beta</div>
-						<div><img src="images/hr.gif" width="100%" height="5"></div>
-						<p><img src="images/orange_arrow.jpg" width="8" height="6">&nbsp;<a href="/beta/latest_dev.jsp" class="blue">Click here to download the latest beta of JForum</a></p>
-						
-						<p>
-							Please keep in mind that beta releases are not destined to final users, but in fact to those who want to take advantage of a new feature or buf fix.
+						That’s why I’m asking you to financially support this work. I love open source. I love to use good products without having to pay for it too. But when I see some program that is valuable to my work, that helps me making money, I think it’s a good idea to support this project.
 						</p>
 						
 						<p>
-							<b><img src="images/orange_arrow.jpg" width="8" height="6">&nbsp;If you are a developer wanting to help JForum, please check the <a href="/development.jsp">development</a> section.</b>
-						</p>
-						
-						<div class="blue-title">Running the upgrade scripts / updating the database schema</div>
-						<div><img src="images/hr.gif" width="100%" height="5"></div>
-						<p>
-							Each new release of JForum may require changes to the database schema, due to changes in the object model. The <i>upgrade scripts</i> are usually located
-							in the directory <i>upgrade/&lt;version&gt;</i>, and all you have to do is to run it on your database. Don't forget to first make a backup of your current
-							database, in order to not lose anything. 
+						Reasons to support open projects: Because open source is cool? Yes. To thanks for a great tool? Yes. To help a small project created by one single developer? Yes. To help the project evolve because this will help my work and my earnings? Yes! Also, as the project grows more and more, it would be great to, sometimes, reward some of the great people who help JForum.
 						</p>
 						
 						<p>
-							For more detailed beta installining instructions, check the page <a href="/doc/UpgradingFrom2.1.6To2.1.7">installing the latest beta release</a>.
+						So, that’s what I’m asking you: if JForum helps your work, saves your time (time is money, remember?) and increase your earnings, support this project. The simpler way is to make any small donation via PayPal. 
 						</p>
+						
+						<p>
+						JForum has grown a lot every day, since four years ago, what is a great thing. But it was never my intention to fully work on this tool, so I still develop JForum on my free time. Lately, I’m spending a lot of time on it, specially to make JForum 3 a reality, to help users, to improve the program, to research about better solutions. So, your support is very welcome!
+						</p>
+						
+						<p>
+						Thanks! Rafael Steil - JForum creator. 
+						</p>
+						
+						<p>
+						————–
+						</p>
+						
+						<p>
+						And, of course, a very very special thanks for people that support this project not with money, but with work. Testers, translators, forum visitors and people that wrote about it all over the Internet. Thanks!
+						</p>
+
 					</div>
+				
 				<!-- InstanceEndEditable --></td>
 				<td background="images/cb_right_line.gif">&nbsp;</td>
 			</tr>

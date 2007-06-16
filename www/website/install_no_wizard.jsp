@@ -42,7 +42,7 @@
 				<td><table width="214" border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td colspan="3"><img src="images/dl_version.gif" width="214" height="48"></td>
-						</tr>
+				  </tr>
 					<tr>
 						<td colspan="3" background="images/dl_bg.gif" valign="top" width="214">
 							<table border="0" cellspacing="0" cellpadding="0">
@@ -67,6 +67,36 @@
 					</tr>
 				</table></td>
 			</tr>
+			
+			<tr>
+				<td>
+					<table width="214" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td colspan="3"><img src="images/contribute.gif" width="214" height="48"></td>
+					  </tr>
+					<tr>
+						<td colspan="3" background="images/contribute_bg.gif" valign="top" width="214">
+							<table border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td valign="top">
+										<div style="padding:10px">
+											<ul class="white">
+												<li>Is JForum useful for you?
+											Please consider helping this project.</li>
+											</ul>
+										<div style="padding-top:5px; padding-bottom: 5px; padding-left:59px;"><a href="contribute.jsp"><img src="images/make_donation.gif" border="0"></a></div>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3"><img src="images/contribute_lower.gif"></td>
+					</tr>
+				</table>
+				</td>
+			</tr>
+			
 			<tr>
 				<td><table width="214" border="0" cellspacing="0" cellpadding="0">
 					<tr>
@@ -87,7 +117,6 @@
 									<li class="li"><a href="/install.jsp" class="white">How do I install JForum?</a>
 									<li class="li"><a href="/doc/HowToContribute" class="white">How to contribute</a>
 									<li class="li"><a href="/Wiki.jsp" class="white">Getting help</a>
-									<li class="li"><a href="/doc/SupportTheProject" class="white">Support the project</a>
 								</ul>
 							</div>
 						</td>
@@ -102,39 +131,6 @@
 			</tr>
 			
 			<tr>
-				<td>
-					<table width="214" border="0" cellspacing="0" cellpadding="0">
-					<tr>
-						<td colspan="3"><img src="images/beta_releases.gif"></td>
-						</tr>
-					<tr>
-						<td colspan="3" background="images/beta_stripes.gif" valign="top" width="214">
-							<table border="0" cellspacing="0" cellpadding="0">
-								<tr>
-									<td valign="top">
-										<div style="padding:10px">
-											<ul class="white">
-												<li>Do you like to live on the fast lane?</li>
-												<li>Can't  wait until the next version to test the latest features?</li>
-										 		<li>Want to help developing JForum? </li>
-												<li>Then you must check out the beta releases</li>
-											</ul>
-										<div style="padding-top:5px; padding-bottom: 5px; padding-left:73px;"><a href="beta.jsp"><img src="images/goto_beta.gif" border="0"></a></div>
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-					<tr>
-						<td width="15"><img src="images/beta_lower_left_corner.gif" width="15" height="15"></td>
-						<td height="15"><img src="images/beta_lower_line.gif" width="184" height="15"></td>
-						<td width="15"><img src="images/beta_lower_right_corner.gif" width="15" height="15"></td>
-					</tr>
-				</table>
-				</td>
-			</tr>
-			
-			<tr>
 				<td><table width="214" border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td>&nbsp;</td>
@@ -143,9 +139,8 @@
 			</tr>
 		</table>
 		
-		<div class="menu" style="padding-left:10px; ">
-			© <b>JForum Team</b><br>
-			Latest version is 2.1.6 <br>
+		<div class="menu" style="padding-left:10px; ">&copy; <b>JForum Team</b><br>
+			Latest version is 2.1.7 <br>
 			<a href="/doc/Team" class="white">Meet the team</a> <br>
 		</div>
 		
