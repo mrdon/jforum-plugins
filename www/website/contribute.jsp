@@ -221,7 +221,7 @@
 						</p>
 
 						<p>
-							<img src="http://images.paypal.com/en_US/i/bnr/paypal_mrb_banner.gif">
+							<!-- Begin PayPal Logo --><A HREF="https://www.paypal.com/row/mrb/pal=J42U2B8TU999G" target="_blank"><IMG  SRC="http://images.paypal.com/en_US/i/bnr/paypal_mrb_banner.gif" BORDER="0" ALT="Sign up for PayPal and start accepting credit card payments instantly."></A><!-- End PayPal Logo -->
 						</p>
 						
 						<div class="blue-title">Why supporting this project is a good thing</div>
