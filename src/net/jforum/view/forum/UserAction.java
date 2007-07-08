@@ -84,7 +84,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.91 2007/04/12 02:11:53 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.92 2007/07/08 14:11:42 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -423,28 +423,11 @@ public class UserAction extends Command
 			if (user != null) {
 				// Note: here we only want to set the redirect location if it hasn't already been
 				// set. This will give the LoginAuthenticator a chance to set the redirect location.
-				if (JForumExecutionContext.getRedirectTo() == null) {
-					String forwaredHost = request.getHeader("X-Forwarded-Host");
-					
-					if (forwaredHost == null) {
-						JForumExecutionContext.setRedirect(this.request.getContextPath()
-							+ "/forums/list"
-							+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));						
-					}
-					else {
-						JForumExecutionContext.setRedirect(this.request.getScheme()
-							+ "://"
-							+ forwaredHost
-							+ this.request.getContextPath()
-							+ "/forums/list"
-							+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)); 
-					}
-				}
+				this.buildSucessfulLoginRedirect();
 
 				SessionFacade.makeLogged();
 				
 				String sessionId = SessionFacade.isUserInSession(user.getId());
-				
 				UserSession userSession = new UserSession(SessionFacade.getUserSession());
 				
 				// Remove the "guest" session
@@ -527,6 +510,28 @@ public class UserAction extends Command
 		}
 	}
 
+	private void buildSucessfulLoginRedirect()
+	{
+		if (JForumExecutionContext.getRedirectTo() == null) {
+			String forwaredHost = request.getHeader("X-Forwarded-Host");
+			
+			if (forwaredHost == null 
+					|| SystemGlobals.getBoolValue(ConfigKeys.LOGIN_IGNORE_XFORWARDEDHOST)) {
+				JForumExecutionContext.setRedirect(this.request.getContextPath()
+					+ "/forums/list"
+					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));						
+			}
+			else {
+				JForumExecutionContext.setRedirect(this.request.getScheme()
+					+ "://"
+					+ forwaredHost
+					+ this.request.getContextPath()
+					+ "/forums/list"
+					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)); 
+			}
+		}
+	}
+
     public void validateLogin(RequestContext request)  {
         this.request = request;
         validateLogin();
@@ -537,27 +542,29 @@ public class UserAction extends Command
         return (auth != null && auth.startsWith("Basic "));
     }
 
-    private boolean parseBasicAuthentication()  {
-    	if (hasBasicAuthentication(request)) {
-    		String auth = request.getHeader("Authorization");
-    		String decoded;
-    		try
-    		{
-    			decoded = new String(new sun.misc.BASE64Decoder().decodeBuffer(auth.substring(6)));
-    		}
-    		catch (IOException e)
-    		{
-    			throw new ForumException(e);
-    		}
-    		int p = decoded.indexOf(':');
-    		if (p != -1) {
-    			request.setAttribute("username", decoded.substring(0, p));
-    			request.setAttribute("password", decoded.substring(p + 1));
-    			return true;
-    		}
-    	}
-    	return false;
-    }
+    private boolean parseBasicAuthentication()
+	{
+		if (hasBasicAuthentication(request)) {
+			String auth = request.getHeader("Authorization");
+			String decoded;
+			
+			try {
+				decoded = new String(new sun.misc.BASE64Decoder().decodeBuffer(auth.substring(6)));
+			}
+			catch (IOException e) {
+				throw new ForumException(e);
+			}
+			
+			int p = decoded.indexOf(':');
+			
+			if (p != -1) {
+				request.setAttribute("username", decoded.substring(0, p));
+				request.setAttribute("password", decoded.substring(p + 1));
+				return true;
+			}
+		}
+		return false;
+	}
 
     private User validateLogin(String name, String password)
 	{
@@ -635,6 +642,13 @@ public class UserAction extends Command
 		
 		if (this.request.getParameter("returnPath") != null) {
 			this.context.put("returnPath", this.request.getParameter("returnPath"));
+		}
+		else if (!SystemGlobals.getBoolValue(ConfigKeys.LOGIN_IGNORE_REFERER)) {
+			String referer = this.request.getHeader("Referer");
+			
+			if (referer != null) {
+				this.context.put("returnPath", referer);
+			}
 		}
 
 		this.context.put("pageTitle", I18n.getMessage("ForumBase.login"));

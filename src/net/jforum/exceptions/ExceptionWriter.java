@@ -58,7 +58,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ExceptionWriter.java,v 1.12 2006/08/24 02:14:49 rafaelsteil Exp $
+ * @version $Id: ExceptionWriter.java,v 1.13 2007/07/08 14:11:41 rafaelsteil Exp $
  */
 public class ExceptionWriter
 {
@@ -78,7 +78,7 @@ public class ExceptionWriter
 			Throwable cause = t.getCause();
 			
 			while (cause != null) {
-				message = cause.getMessage();
+				message = cause.toString();
 				cause = cause.getCause();
 			}
 			

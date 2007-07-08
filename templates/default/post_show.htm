@@ -141,6 +141,10 @@
 
 								<#include "post_show_attachments_inc.htm"/>
 							</#if>
+
+							<#if (post.editCount > 0)>
+								<p><i><span class="gensmall">${I18n.getMessage("PostShow.editCount", [post.editCount, post.editTime?default("Unknown")])}</span></i></p>
+							</#if>
 						</td>
 					</tr>
 

@@ -65,7 +65,7 @@ import net.jforum.util.search.SearchFacade;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericPostDAO.java,v 1.18 2006/09/13 01:28:48 rafaelsteil Exp $
+ * @version $Id: GenericPostDAO.java,v 1.19 2007/07/08 14:11:43 rafaelsteil Exp $
  */
 public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 {
@@ -105,6 +105,7 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 		post.setTopicId(rs.getInt("topic_id"));
 		post.setForumId(rs.getInt("forum_id"));
 		post.setUserId(rs.getInt("user_id"));
+		
 		Timestamp postTime = rs.getTimestamp("post_time");
 		post.setTime(new Date(postTime.getTime()));
 		post.setUserIp(rs.getString("poster_ip"));
@@ -113,6 +114,10 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 		post.setSmiliesEnabled(rs.getInt("enable_smilies") > 0);
 		post.setSignatureEnabled(rs.getInt("enable_sig") > 0);
 		post.setEditCount(rs.getInt("post_edit_count"));
+		
+		Timestamp editTime = rs.getTimestamp("post_edit_time");
+		post.setEditTime(editTime != null ? new Date(editTime.getTime()) : null);
+		
 		post.setSubject(rs.getString("post_subject"));
 		post.setText(this.getPostTextFromResultSet(rs));
 		post.setPostUsername(rs.getString("username"));

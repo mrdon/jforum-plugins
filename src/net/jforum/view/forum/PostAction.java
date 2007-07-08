@@ -103,7 +103,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.166 2007/04/02 17:14:42 andowson Exp $
+ * @version $Id: PostAction.java,v 1.167 2007/07/08 14:11:41 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -838,9 +838,6 @@ public class PostAction extends Command
 				}
 				
 				topicDao.update(t);
-				
-                //TODO u not user. remove or use?
-				//User u = DataAccessDriver.getInstance().newUserDAO().selectById(p.getUserId());
 				
 				if (changeType) {
 					TopicRepository.addTopic(t);

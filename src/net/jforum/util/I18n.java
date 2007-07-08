@@ -60,13 +60,15 @@ import net.jforum.util.preferences.SystemGlobals;
 
 import org.apache.log4j.Logger;
 
+import freemarker.template.SimpleSequence;
+
 /**
  * I18n (Internationalization) class implementation. Does nothing of special, just loads the
  * messages into memory and provides a static method to acess them.
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: I18n.java,v 1.35 2007/04/12 02:11:53 rafaelsteil Exp $
+ * @version $Id: I18n.java,v 1.36 2007/07/08 14:11:43 rafaelsteil Exp $
  */
 public class I18n
 {
@@ -264,10 +266,8 @@ public class I18n
 
 	/**
 	 * @see #getMessage(String, String, Object[])
-	 * @param messageName
-	 *            String
-	 * @param params
-	 *            Object
+	 * @param messageName String
+	 * @param params Object
 	 * @return String
 	 */
 	public static String getMessage(String messageName, Object params[])
@@ -284,6 +284,16 @@ public class I18n
 		}
 
 		return getMessage(lang, messageName, params);
+	}
+	
+	public static String getMessage(String messageName, SimpleSequence params)
+	{
+		try {
+			return getMessage(messageName, params.toList().toArray());
+		}
+		catch (Exception e) {
+			throw new ForumException(e);
+		}
 	}
 
 	/**

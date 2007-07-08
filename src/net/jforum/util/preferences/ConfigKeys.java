@@ -48,7 +48,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.106 2007/04/24 02:52:52 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.107 2007/07/08 14:11:44 rafaelsteil Exp $
 */
 
 public class ConfigKeys 
@@ -289,6 +289,9 @@ public class ConfigKeys
 	
 	public static final String API_SECURITY_KEY = "api.security.key";
 	public static final String BANLIST_SEND_403FORBIDDEN = "banlist.send.403forbidden";
+	
+	public static final String LOGIN_IGNORE_XFORWARDEDHOST = "login.ignore.xforwardedhost";
+	public static final String LOGIN_IGNORE_REFERER = "login.ignore.referer";
     
 	private ConfigKeys() {}
 }
