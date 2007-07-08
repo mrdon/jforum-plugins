@@ -154,7 +154,13 @@
 							</#if>
 
 							<#if (post.editCount > 0)>
-								<p><i><span class="gensmall">${I18n.getMessage("PostShow.editCount", [post.editCount, post.editTime?default("Unknown")])}</span></i></p>
+								<#if post.editCount == 1>
+									<#assign editCountMessage = "PostShow.editCountSingle"/>
+								<#else>
+									<#assign editCountMessage = "PostShow.editCountMany"/>
+								</#if>
+
+								<p><i><span class="gensmall">${I18n.getMessage(editCountMessage, [post.editCount, post.editTime?default("Unknown")])}</span></i></p>
 							</#if>
 						</td>
 					</tr>

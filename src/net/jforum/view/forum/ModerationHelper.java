@@ -71,7 +71,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationHelper.java,v 1.38 2007/07/08 19:47:12 rafaelsteil Exp $
+ * @version $Id: ModerationHelper.java,v 1.39 2007/07/08 19:58:33 rafaelsteil Exp $
  */
 public class ModerationHelper 
 {
@@ -326,7 +326,6 @@ public class ModerationHelper
 			this.denied();
 		}
 		else {
-			this.logActivity();
 			this.moderationDone(successUrl);
 		}
 		
