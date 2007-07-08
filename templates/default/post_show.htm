@@ -10,9 +10,20 @@
 <#include "js/utils.js"/>
 
 <#if canRemove || isModerator || isAdmin>
-	function confirmDelete()
+	function confirmDelete(postId)
 	{
 		if (confirm("${I18n.getMessage("Moderation.ConfirmPostDelete")}")) {
+			var reason = prompt("Moderation.changeReason");
+
+			if (reason == null || reason == "") {
+				alert("${I18n.getMessage("ModerationLog.reasonIsEmpty")}");
+				return false;
+			}
+			else {
+				var link = document.getElementById("delete" + postId);
+				link.href += "&log_description=" + reason + "&log_type=1";
+			}
+
 			return true;
 		}
 		

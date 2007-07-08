@@ -103,7 +103,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.167 2007/07/08 14:11:41 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.168 2007/07/08 19:02:44 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -637,6 +637,7 @@ public class PostAction extends Command
 			this.context.put("topic", topic);
 			this.context.put("poll", poll);
 			this.context.put("pageTitle", I18n.getMessage("PostShow.messageTitle") + " " + p.getSubject());
+			this.context.put("isModerator", isModerator);
 			this.context.put("start", this.request.getParameter("start"));
 			this.context.put("htmlAllowed", SecurityRepository.canAccess(SecurityConstants.PERM_HTML_DISABLED, 
 					Integer.toString(topic.getForumId())));
@@ -738,8 +739,13 @@ public class PostAction extends Command
 		PostDAO postDao = DataAccessDriver.getInstance().newPostDAO();
 		PollDAO pollDao = DataAccessDriver.getInstance().newPollDAO();
 		TopicDAO topicDao = DataAccessDriver.getInstance().newTopicDAO();
+		
+		boolean isModerator = SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_EDIT);
 
 		Post p = postDao.selectById(this.request.getIntParameter("post_id"));
+		
+		String originalMessage = p.getText();
+		
 		p = PostCommon.fillPostFromRequest(p, true);
 
 		// The user wants to preview the message before posting it?
@@ -845,6 +851,12 @@ public class PostAction extends Command
 				else {
 					TopicRepository.updateTopic(t);
 				}
+			}
+			
+			if (isModerator && p.getUserId() != SessionFacade.getUserSession().getUserId()) {
+				ModerationHelper helper = new ModerationHelper();
+				this.request.addParameter("log_original_message", originalMessage);
+				helper.logActivity();
 			}
 
 			if (this.request.getParameter("notify") == null) {
@@ -1297,6 +1309,9 @@ public class PostAction extends Command
 				+ p.getForumId()
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		}
+		
+		this.request.addParameter("log_original_message", p.getText());
+		new ModerationHelper().logActivity();
 		
 		PostRepository.remove(t.getId(), p.getId());
 		TopicRepository.loadMostRecentTopics();

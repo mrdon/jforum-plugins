@@ -20,7 +20,7 @@
 		</#if>
 
 		<#if canRemove>
-			<a href="${JForumContext.encodeURL("/jforum${extension}?module=${moduleName}&amp;action=delete&amp;post_id=${post.id}&amp;start=${start}","")}" onclick="return confirmDelete();"><img src="${contextPath}/templates/${templateName}/images/icon_delete.gif" alt="[Delete]" /></a>  
+			<a href="${JForumContext.encodeURL("/jforum${extension}?module=${moduleName}&amp;action=delete&amp;post_id=${post.id}&amp;start=${start}","")}" id="delete${post.id}" onclick="return confirmDelete(${post.id});"><img src="${contextPath}/templates/${templateName}/images/icon_delete.gif" alt="[Delete]" /></a>  
 		</#if>
 
 		<a class="nav" href="#top"><img src="${contextPath}/templates/${templateName}/images/icon_up.gif" alt="[Up]" /></a>

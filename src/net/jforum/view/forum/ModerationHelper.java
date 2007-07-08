@@ -47,11 +47,15 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.jforum.JForumExecutionContext;
+import net.jforum.SessionFacade;
 import net.jforum.context.RequestContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
+import net.jforum.dao.ModerationLogDAO;
 import net.jforum.dao.TopicDAO;
+import net.jforum.entities.ModerationLog;
 import net.jforum.entities.Topic;
+import net.jforum.entities.User;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.PostRepository;
 import net.jforum.repository.SecurityRepository;
@@ -67,7 +71,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationHelper.java,v 1.36 2007/07/08 14:11:42 rafaelsteil Exp $
+ * @version $Id: ModerationHelper.java,v 1.37 2007/07/08 19:02:44 rafaelsteil Exp $
  */
 public class ModerationHelper 
 {
@@ -118,11 +122,33 @@ public class ModerationHelper
 		if (status == ModerationHelper.FAILURE) {
 			this.denied();
 		}
-		else if (status == ModerationHelper.SUCCESS && returnUrl != null) {
-			JForumExecutionContext.setRedirect(returnUrl);
+		else if (status == ModerationHelper.SUCCESS) {
+			this.logActivity();
+			
+			if (returnUrl != null) {
+				JForumExecutionContext.setRedirect(returnUrl);
+			}
 		}
 		
 		return status;
+	}
+	
+	public void logActivity()
+	{
+		RequestContext request = JForumExecutionContext.getRequest();
+		
+		ModerationLog log = new ModerationLog();
+		
+		User user = new User();
+		user.setId(SessionFacade.getUserSession().getUserId());
+		log.setUser(user);
+		
+		log.setDescription(request.getParameter("log_description"));
+		log.setOriginalMessage(request.getParameter("log_original_message"));
+		log.setType(request.getIntParameter("log_type"));
+		
+		ModerationLogDAO dao = DataAccessDriver.getInstance().newModerationLogDAO();
+		dao.add(log);
 	}
 	
 	public int doModeration() 
@@ -266,6 +292,7 @@ public class ModerationHelper
 			this.denied();
 		}
 		else {
+			this.logActivity();
 			this.moderationDone(successUrl);
 		}
 		

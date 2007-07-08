@@ -1,25 +1,15 @@
 <#include "header.htm"/>
-<script type="text/javascript">
-<!--
-function validateSelectedForum()
-{
-	var f = document.form1.to_forum;
-	if (f[f.selectedIndex].value == "-1") {
-		alert("${I18n.getMessage("Moderation.InvalidForum")}");
-		return false;
-	}
-	
-	return true;
-}
--->
-</script>
 
-<form action="${contextPath}/jforum${extension}" method="post" name="form1" id="form1" onsubmit="return validateSelectedForum();" accept-charset="${encoding}">
+<script type="text/JavaScript" src="${JForumContext.encodeURL("/js/list/moderation")}"></script>
+
+<form action="${contextPath}/jforum${extension}" method="post" name="form1" id="form1" onsubmit="return askModerationReason();" accept-charset="${encoding}">
 <input type="hidden" name="action" value="moveTopic" />
 <input type="hidden" name="module" value="${moduleName}" />
 <input type="hidden" name="returnUrl" value="${returnUrl?if_exists}" />
 <input type="hidden" name="topics" value="${topics}" />
 <input type="hidden" name="forum_id" value="${forum_id}" />
+<input type="hidden" name="log_type" value="0">
+<input type="hidden" name="log_description">
 
 <table width="100%" cellspacing="0" cellpadding="10" border="0" align="center">
 	<tr>
@@ -49,13 +39,11 @@ function validateSelectedForum()
 									${I18n.getMessage("PostForm.moveToForum")}
 									<select name="to_forum">
 										<#list allCategories as category>
-											<option value="-1">&nbsp;</option>
-											<option value="-1">${category.name}</option>
-											<option value="-1">-------------</option>
-											
-											<#list category.getForums() as forum>
-												<option value="${forum.id}">&nbsp;&nbsp;${forum.name}</option>
-											</#list>
+											<optgroup label="${category.name}">
+												<#list category.getForums() as forum>
+													<option value="${forum.id}">&nbsp;&nbsp;${forum.name}</option>
+												</#list>
+											</optgroup>
 										</#list>
 									</select>
 									</span>
@@ -78,7 +66,7 @@ function validateSelectedForum()
 							<tr>
 								<td align="center">
 									<a class="nav" href="${contextPath}/forums/list${extension}">${I18n.getMessage("ForumListing.forumIndex")}</a>
-									- <a class="nav" href="#" onclick="history.go(-1)">${I18n.getMessage("previousPage")}</a>
+									- <a class="nav" href="javascript:history.go(-1)">${I18n.getMessage("previousPage")}</a>
 								</td>
 							</tr>
 						</table>

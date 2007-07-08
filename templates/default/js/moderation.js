@@ -20,11 +20,41 @@ function verifyModerationCheckedTopics()
 
 function validateModerationDelete()
 {
-	if (verifyModerationCheckedTopics() && confirm("${I18n.getMessage("Moderation.ConfirmDelete")}")) {
-		return true;
+	var status = verifyModerationCheckedTopics()
+		&& confirm("${I18n.getMessage("Moderation.ConfirmDelete")}")
+		&& askModerationReason();
+
+	if (status) {
+		document.form1.log_type.value = "1";
 	}
+
+	return status;
+}
+
+function lockUnlock() 
+{
+	var status = verifyModerationCheckedTopics() && askModerationReason();
 	
-	return false;
+	if (status) {
+		document.form1.log_type.value = "3";
+	}
+
+	return status;
+}
+
+function askModerationReason() 
+{
+	var message = prompt("${I18n.getMessage("ModerationLog.changeReason")}");
+
+	if (message == null || message == "") {
+		alert("${I18n.getMessage("ModerationLog.reasonIsEmpty")}");
+		return false;
+	}
+	else {
+		document.form1.log_description.value = message;
+	}
+
+	return true;
 }
 
 var oldClasses = {}

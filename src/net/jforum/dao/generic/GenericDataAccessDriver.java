@@ -55,6 +55,7 @@ import net.jforum.dao.GroupSecurityDAO;
 import net.jforum.dao.KarmaDAO;
 import net.jforum.dao.MailIntegrationDAO;
 import net.jforum.dao.ModerationDAO;
+import net.jforum.dao.ModerationLogDAO;
 import net.jforum.dao.PollDAO;
 import net.jforum.dao.PostDAO;
 import net.jforum.dao.PrivateMessageDAO;
@@ -71,7 +72,7 @@ import net.jforum.dao.generic.security.GenericGroupSecurityDAO;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericDataAccessDriver.java,v 1.10 2006/12/07 23:34:05 rafaelsteil Exp $
+ * @version $Id: GenericDataAccessDriver.java,v 1.11 2007/07/08 19:02:45 rafaelsteil Exp $
  */
 public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver 
 {
@@ -100,6 +101,7 @@ public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver
     private static MailIntegrationDAO mailIntegrationDao = new GenericMailIntegrationDAO();
     private static ApiDAO apiDAO = new GenericApiDAO();
     private static BanlistDAO banlistDao = new GenericBanlistDAO();
+    private static ModerationLogDAO moderationLogDao = new GenericModerationLogDAO();
 
 	/**
      * TODO implement this method or delete this javadoc
@@ -314,5 +316,10 @@ public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver
     public BanlistDAO newBanlistDAO()
     {
     	return banlistDao;
+    }
+    
+    public ModerationLogDAO newModerationLogDAO()
+    {
+    	return moderationLogDao;
     }
 }

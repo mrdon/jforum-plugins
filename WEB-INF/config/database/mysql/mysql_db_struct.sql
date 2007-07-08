@@ -613,4 +613,18 @@ CREATE TABLE jforum_api (
 	api_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	api_key VARCHAR(32) NOT NULL,
 	api_validity DATETIME NOT NULL
-);
+) TYPE=InnoDB;
+
+--
+-- Table structure for table 'jforum_moderation_log'
+-- 
+DROP TABLE IF EXISTS jforum_moderation_log;
+CREATE TABLE jforum_moderation_log (
+	log_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	user_id INT NOT NULL,
+	log_description TEXT NOT NULL,
+	log_original_message TEXT,
+	log_date DATETIME NOT NULL,
+	log_type TINYINT DEFAULT 0,
+	KEY(user_id)
+) TYPE=InnoDB;
