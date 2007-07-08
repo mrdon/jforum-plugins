@@ -46,11 +46,13 @@ import java.util.Date;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationLog.java,v 1.1 2007/07/08 19:02:45 rafaelsteil Exp $
+ * @version $Id: ModerationLog.java,v 1.2 2007/07/08 19:47:12 rafaelsteil Exp $
  */
 public class ModerationLog
 {
 	private int id;
+	private int postId;
+	private int topicId;
 	private User user;
 	private String description;
 	private String originalMessage;
@@ -151,4 +153,38 @@ public class ModerationLog
 	{
 		this.type = type;
 	}
+
+	/**
+	 * @return the postId
+	 */
+	public int getPostId()
+	{
+		return this.postId;
+	}
+
+	/**
+	 * @return the topicId
+	 */
+	public int getTopicId()
+	{
+		return this.topicId;
+	}
+
+	/**
+	 * @param postId the postId to set
+	 */
+	public void setPostId(int postId)
+	{
+		this.postId = postId;
+	}
+
+	/**
+	 * @param topicId the topicId to set
+	 */
+	public void setTopicId(int topicId)
+	{
+		this.topicId = topicId;
+	}
+	
+	
 }

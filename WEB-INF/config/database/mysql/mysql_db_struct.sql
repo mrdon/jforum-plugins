@@ -626,5 +626,9 @@ CREATE TABLE jforum_moderation_log (
 	log_original_message TEXT,
 	log_date DATETIME NOT NULL,
 	log_type TINYINT DEFAULT 0,
+	post_id INT,
+	topic_id INT,
 	KEY(user_id)
+	KEY(post_id),
+	KEY(topic_id)
 ) TYPE=InnoDB;

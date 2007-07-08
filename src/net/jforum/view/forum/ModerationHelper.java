@@ -71,7 +71,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationHelper.java,v 1.37 2007/07/08 19:02:44 rafaelsteil Exp $
+ * @version $Id: ModerationHelper.java,v 1.38 2007/07/08 19:47:12 rafaelsteil Exp $
  */
 public class ModerationHelper 
 {
@@ -122,18 +122,26 @@ public class ModerationHelper
 		if (status == ModerationHelper.FAILURE) {
 			this.denied();
 		}
-		else if (status == ModerationHelper.SUCCESS) {
-			this.logActivity();
-			
-			if (returnUrl != null) {
-				JForumExecutionContext.setRedirect(returnUrl);
-			}
+		else if (status == ModerationHelper.SUCCESS && returnUrl != null) {
+			JForumExecutionContext.setRedirect(returnUrl);
 		}
 		
 		return status;
 	}
 	
 	public void logActivity()
+	{
+		ModerationLog log = this.buildModerationLogFromRequest();
+		this.saveModerationLog(log);
+	}
+	
+	private void saveModerationLog(ModerationLog log)
+	{
+		ModerationLogDAO dao = DataAccessDriver.getInstance().newModerationLogDAO();
+		dao.add(log);
+	}
+	
+	private ModerationLog buildModerationLogFromRequest()
 	{
 		RequestContext request = JForumExecutionContext.getRequest();
 		
@@ -147,8 +155,15 @@ public class ModerationHelper
 		log.setOriginalMessage(request.getParameter("log_original_message"));
 		log.setType(request.getIntParameter("log_type"));
 		
-		ModerationLogDAO dao = DataAccessDriver.getInstance().newModerationLogDAO();
-		dao.add(log);
+		if (request.getParameter("post_id") != null) {
+			log.setPostId(request.getIntParameter("post_id"));
+		}
+		
+		if (request.getParameter("topic_id") != null) {
+			log.setTopicId(request.getIntParameter("topic_id"));
+		}
+		
+		return log;
 	}
 	
 	public int doModeration() 
@@ -166,8 +181,13 @@ public class ModerationHelper
 		List topicsToDelete = new ArrayList();
 		
 		if (topics != null && topics.length > 0) {
+			ModerationLog log = this.buildModerationLogFromRequest();
+			
 			for (int i = 0; i < topics.length; i++) {
 				Topic t = tm.selectRaw(Integer.parseInt(topics[i]));
+				
+				log.setTopicId(t.getId());
+				this.saveModerationLog(log);
 				
 				if (!forumsList.contains(new Integer(t.getForumId()))) {
 					forumsList.add(new Integer(t.getForumId()));
@@ -208,9 +228,13 @@ public class ModerationHelper
 		
 		if (topics != null && topics.length > 0) {
 			int[] ids = new int[topics.length];
+			
+			ModerationLog log = this.buildModerationLogFromRequest();
 
 			for (int i = 0; i < topics.length; i++) {
 				ids[i] = Integer.parseInt(topics[i]);
+				log.setTopicId(ids[i]);
+				this.saveModerationLog(log);
 			}
 			
 			DataAccessDriver.getInstance().newTopicDAO().lockUnlock(ids, status);
@@ -275,7 +299,17 @@ public class ModerationHelper
 				int fromForumId = Integer.parseInt(request.getParameter("forum_id"));
 				int toForumId = Integer.parseInt(request.getParameter("to_forum"));
 				
-				DataAccessDriver.getInstance().newForumDAO().moveTopics(topics.split(","), fromForumId, toForumId);
+				String[] topicList = topics.split(",");
+				
+				DataAccessDriver.getInstance().newForumDAO().moveTopics(topicList, fromForumId, toForumId);
+				
+				ModerationLog log = this.buildModerationLogFromRequest();
+				
+				for (int i = 0; i < topicList.length; i++) {
+					int topicId = Integer.parseInt(topicList[i]);
+					log.setTopicId(topicId);
+					this.saveModerationLog(log);
+				}
 
 				ForumRepository.reloadForum(fromForumId);
 				ForumRepository.reloadForum(toForumId);
