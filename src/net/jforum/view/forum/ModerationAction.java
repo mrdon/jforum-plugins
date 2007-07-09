@@ -42,13 +42,32 @@
  */
 package net.jforum.view.forum;
 
+import java.util.Iterator;
+import java.util.List;
+
 import net.jforum.Command;
 import net.jforum.JForumExecutionContext;
+import net.jforum.SessionFacade;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.ModerationLogDAO;
+import net.jforum.dao.PostDAO;
+import net.jforum.dao.TopicDAO;
+import net.jforum.entities.ModerationLog;
+import net.jforum.entities.Post;
+import net.jforum.entities.Topic;
+import net.jforum.repository.ForumRepository;
+import net.jforum.repository.SecurityRepository;
+import net.jforum.security.SecurityConstants;
+import net.jforum.util.I18n;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
+import net.jforum.view.forum.common.PostCommon;
+import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationAction.java,v 1.4 2006/08/20 22:47:39 rafaelsteil Exp $
+ * @version $Id: ModerationAction.java,v 1.5 2007/07/09 00:45:06 rafaelsteil Exp $
  */
 public class ModerationAction extends Command
 {
@@ -59,6 +78,69 @@ public class ModerationAction extends Command
 	public void list()
 	{
 		throw new UnsupportedOperationException();
+	}
+	
+	public void showActivityLog() 
+	{
+		if (!SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_LOG)) {
+			this.denied();
+			return;
+		}
+		
+		ModerationLogDAO dao = DataAccessDriver.getInstance().newModerationLogDAO();
+		
+		int start = ViewCommon.getStartPage();
+		int recordsPerPage = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
+		
+		List list = dao.selectAll(start, recordsPerPage);
+		boolean canAccessFullModerationLog = SecurityRepository.canAccess(SecurityConstants.PERM_FULL_MODERATION_LOG);
+		
+		// Check if the the current user has access to the moderated topics / posts
+		int userId = SessionFacade.getUserSession().getUserId();
+		
+		PostDAO postDao = DataAccessDriver.getInstance().newPostDAO();
+		TopicDAO topicDao = DataAccessDriver.getInstance().newTopicDAO();
+		
+		for (Iterator iter = list.iterator(); iter.hasNext();) {
+			ModerationLog log = (ModerationLog)iter.next();
+			
+			if (log.getPostId() > 0) {
+				Post post = postDao.selectById(log.getPostId());
+				
+				if (post.getId() > 0 && ForumRepository.getForum(post.getForumId()) == null) {
+					iter.remove();
+					continue;
+				}
+			}
+			else if (log.getTopicId() > 0) {
+				Topic topic = topicDao.selectRaw(log.getTopicId());
+				
+				if (topic.getId() > 0 && ForumRepository.getForum(topic.getForumId()) == null) {
+					iter.remove();
+					continue;
+				}
+			}
+			
+			if (log.getOriginalMessage() != null && canAccessFullModerationLog) {
+				Post post = new Post();
+				post.setText(log.getOriginalMessage());
+				
+				log.setOriginalMessage(PostCommon.preparePostForDisplay(post).getText());
+			}
+		}
+		
+		this.setTemplateName(TemplateKeys.MODERATION_SHOW_ACTIVITY_LOG);
+		this.context.put("activityLog", list);
+		this.context.put("canAccessFullModerationLog", canAccessFullModerationLog);
+		
+		int totalRecords = dao.totalRecords();
+		
+		ViewCommon.contextToPagination(start, totalRecords, recordsPerPage);
+	}
+	
+	private void denied() {
+		this.setTemplateName(TemplateKeys.MODERATION_LOG_DENIED);
+		this.context.put("message", I18n.getMessage("ModerationLog.denied"));
 	}
 	
 	public void doModeration()

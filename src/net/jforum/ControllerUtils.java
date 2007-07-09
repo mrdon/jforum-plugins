@@ -73,7 +73,7 @@ import org.apache.log4j.Logger;
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.33 2007/04/24 02:19:45 rafaelsteil Exp $
+ * @version $Id: ControllerUtils.java,v 1.34 2007/07/09 00:45:07 rafaelsteil Exp $
  */
 public class ControllerUtils
 {
@@ -108,6 +108,7 @@ public class ControllerUtils
 		context.put("homepageLink", SystemGlobals.getValue(ConfigKeys.HOMEPAGE_LINK));
 		context.put("encoding", SystemGlobals.getValue(ConfigKeys.ENCODING));
 		context.put("bookmarksEnabled", SecurityRepository.canAccess(SecurityConstants.PERM_BOOKMARKS_ENABLED));
+		context.put("canAccessModerationLog", SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_LOG));
 		context.put("JForumContext", jforumContext);
 		context.put("timestamp", new Long(System.currentTimeMillis()));
 	}

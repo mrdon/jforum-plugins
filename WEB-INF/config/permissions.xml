@@ -111,6 +111,21 @@
 			<option value="allow" description="Yes"/>
 		</permission>
 	</section>
+
+	<!-- Misc -->
+	<section id="misc_section" title="Misc / General permissions">
+		<!-- Activate moderation log -->
+		<permission id="perm_moderation_log" title="Can see Moderation Activity Log" type="single">
+			<option value="deny" description="No"/>
+			<option value="allow" description="Yes"/>
+		</permission>
+	
+		<!-- Full Moderation -->
+		<permission id="perm_full_moderation_log" title="Can see &lt;strong&gt;full&lt;/strong&gt; Moderation Activity Log" type="single">
+			<option value="deny" description="No"/>
+			<option value="allow" description="Yes"/>
+		</permission>
+	</section>
 	
 	<!-- Moderation -->
 	<section id="moderation_section" title="Moderation">

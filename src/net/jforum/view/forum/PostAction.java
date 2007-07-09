@@ -103,7 +103,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.168 2007/07/08 19:02:44 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.169 2007/07/09 00:45:06 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -260,12 +260,22 @@ public class PostAction extends Command
 	{
 		int postId = this.request.getIntParameter("post_id");
 		
-		PostDAO pdao = DataAccessDriver.getInstance().newPostDAO();
+		PostDAO dao = DataAccessDriver.getInstance().newPostDAO();
 		
-		int count = pdao.countPreviousPosts(postId);
+		int count = dao.countPreviousPosts(postId);
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 		
-		int topicId = this.request.getIntParameter("topic_id");
+		int topicId = 0;
+		
+		if (this.request.getParameter("topic_id") != null) {
+			topicId = this.request.getIntParameter("topic_id");
+		}
+		
+		if (topicId == 0) {
+			Post post = dao.selectById(postId);
+			topicId = post.getTopicId();
+		}
+		
 		String page = "";
 		
 		if (count > postsPerPage) {
@@ -320,8 +330,6 @@ public class PostAction extends Command
 		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
 		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 
-		// TODO To be deleted?
-        //UserSession us = SessionFacade.getUserSession();
 		User u = um.selectById(this.request.getIntParameter("user_id"));
 		
 		if (u.getId() == 0) {

@@ -45,9 +45,15 @@ Modifications by JForum Team
 									<img src="${contextPath}/templates/${templateName}/images/icon_mini_members.gif" alt="[Members]" />&nbsp;
 									<a id="latest2" class="mainmenu" href="${JForumContext.encodeURL("/user/list")}">${I18n.getMessage("ForumBase.usersList")}</a> &nbsp;
 									<span class="mainmenu"> <img src="${contextPath}/templates/${templateName}/images/icon_mini_groups.gif" alt="[Groups]" />&nbsp;<a id="backtosite" class="mainmenu" href="${homepageLink}">${I18n.getMessage("ForumBase.backToSite")}</a>&nbsp;
+									
+									<br>
+
+									<#if canAccessModerationLog?default(false)>
+										<img src="${contextPath}/templates/${templateName}/images/icon_mini_members.gif" alt="[Moderation Log]" />
+										<a id="latest" class="mainmenu" href="${JForumContext.encodeURL("/moderation/showActivityLog")}">${I18n.getMessage("ModerationLog.moderationLog")}</a> &nbsp;
+									</#if>
 
 									<#if logged>
-										<br/>
 										<a id="myprofile" class="mainmenu" href="${JForumContext.encodeURL("/user/edit/${session.userId}")}"><img src="${contextPath}/templates/${templateName}/images/icon_mini_profile.gif" border="0" alt="[Profile]" /> ${I18n.getMessage("ForumBase.profile")}</a>&nbsp; 
 										<#if bookmarksEnabled>
 											<a class="mainmenu" href="${JForumContext.encodeURL("/bookmarks/list/${session.userId}")}"><img src="${contextPath}/templates/${templateName}/images/icon_minipost.gif" alt="[Post]" />${I18n.getMessage("Bookmarks.myBag")}</a>&nbsp;
@@ -67,10 +73,11 @@ Modifications by JForum Team
 									</#if>
 	
 									<#if !logged && !sso>
-										<br/>
 										<a id="register" class="mainmenu" href="${JForumContext.encodeURL("/user/insert")}"><img src="${contextPath}/templates/${templateName}/images/icon_mini_register.gif" border="0" alt="[Register]" /> ${I18n.getMessage("ForumBase.register")}</a>&nbsp;/&nbsp;</span>
 										<a id="login" class="mainmenu" href="${JForumContext.encodeURL("/user/login")}"><img src="${contextPath}/templates/${templateName}/images/icon_mini_login.gif" border="0" alt="[Login]" /> ${I18n.getMessage("ForumBase.login")}</a>&nbsp; </span>
 									</#if>
+
+									
 								</td>
 							</tr>
 						</table>

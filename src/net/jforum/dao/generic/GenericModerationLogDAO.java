@@ -126,7 +126,7 @@ public class GenericModerationLogDAO extends AutoKeys implements ModerationLogDA
 		log.setDescription(rs.getString("log_description"));
 		log.setOriginalMessage(rs.getString("log_original_message"));
 		log.setType(rs.getInt("log_type"));
-		log.setDate(new Date(rs.getTime("log_date").getTime()));
+		log.setDate(new Date(rs.getTimestamp("log_date").getTime()));
 		log.setPostId(rs.getInt("post_id"));
 		log.setTopicId(rs.getInt("topic_id"));
 		
@@ -137,5 +137,32 @@ public class GenericModerationLogDAO extends AutoKeys implements ModerationLogDA
 		log.setUser(user);
 		
 		return log;
+	}
+	
+	public int totalRecords()
+	{
+		int total = 0;
+		
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+				SystemGlobals.getSql("ModerationLog.totalRecords"));
+
+			rs = p.executeQuery();
+			
+			if (rs.next()) {
+				total = rs.getInt(1);
+			}
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+		
+		return total;
 	}
 }

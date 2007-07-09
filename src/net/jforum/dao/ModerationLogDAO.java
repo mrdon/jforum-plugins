@@ -50,4 +50,5 @@ public interface ModerationLogDAO
 {
 	public void add(ModerationLog log);
 	public List selectAll(int start, int count);
+	public int totalRecords();
 }
