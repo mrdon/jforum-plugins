@@ -629,6 +629,4 @@ CREATE TABLE jforum_moderation_log (
 	post_id INT,
 	topic_id INT,
 	KEY(user_id)
-	KEY(post_id),
-	KEY(topic_id)
 ) TYPE=InnoDB;

@@ -55,7 +55,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Dmitriy Kiriy
- * @version $Id: OraclePostDAO.java,v 1.10 2006/08/23 02:13:55 rafaelsteil Exp $
+ * @version $Id: OraclePostDAO.java,v 1.11 2007/07/09 02:04:15 rafaelsteil Exp $
  */
 public class OraclePostDAO extends net.jforum.dao.generic.GenericPostDAO
 {
@@ -73,8 +73,8 @@ public class OraclePostDAO extends net.jforum.dao.generic.GenericPostDAO
 			p.executeUpdate();
 			p.close();
 
-			OracleUtils.writeBlobUTF16BinaryStream(SystemGlobals.getSql("PostModel.addNewPostTextField"), post.getId(),
-					post.getText());
+			OracleUtils.writeBlobUTF16BinaryStream(SystemGlobals.getSql("PostModel.addNewPostTextField"), 
+				post.getId(), post.getText());
 		}
 		finally {
 			DbUtils.close(p);
@@ -96,8 +96,8 @@ public class OraclePostDAO extends net.jforum.dao.generic.GenericPostDAO
 
 			p.executeUpdate();
 
-			OracleUtils.writeBlobUTF16BinaryStream(SystemGlobals.getSql("PostModel.addNewPostTextField"), post.getId(),
-					post.getText());
+			OracleUtils.writeBlobUTF16BinaryStream(SystemGlobals.getSql("PostModel.addNewPostTextField"), 
+				post.getId(), post.getText());
 		}
 		catch (SQLException e) {
 			throw new DatabaseException(e);

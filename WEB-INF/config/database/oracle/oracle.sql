@@ -250,3 +250,13 @@ AttachmentModel.addAttachmentInfo = INSERT INTO jforum_attach_desc (attach_desc_
 # ###############
 BanlistModel.lastGeneratedBanlistId = SELECT jforum_banlist_seq.currval FROM dual
 BanlistModel.insert = INSERT INTO jforum_banlist (banlist_id, user_id, banlist_ip, banlist_email) VALUES (jforum_banlist_seq.nextval, ?, ?, ?)
+
+# ################
+# ModerationLog
+# ################
+ModerationLog.lastGeneratedModerationLogId = SELECT jforum_moderation_log_seq.currval FROM dual
+ModerationLog.selectAll = SELECT * FROM ( \
+	SELECT l.*, u.username, ROW_NUMBER() OVER(ORDER BY l.log_id DESC) -1 LINENUM \
+	FROM jforum_moderation_log l, jforum_users u WHERE l.user_id = u.user_id ORDER BY log_id DESC
+	) \
+	WHERE LINENUM >= ? AND LINENUM < ?

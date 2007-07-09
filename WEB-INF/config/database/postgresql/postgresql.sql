@@ -125,3 +125,9 @@ UserModel.login = SELECT user_id FROM jforum_users WHERE lower(username) = lower
 # BanlistModel
 # ###############
 BanlistModel.lastGeneratedBanlistId = SELECT CURRVAL('jforum_banlist_seq')
+
+# ################
+# ModerationLog
+# ################
+ModerationLog.lastGeneratedModerationLogId = SELECT CURRVAL('jforum_moderation_log_seq')
+ModerationLog.selectAll = SELECT l.*, u.username FROM jforum_moderation_log l, jforum_users u WHERE l.user_id = u.user_id ORDER BY log_id DESC OFFSET ? LIMIT ?

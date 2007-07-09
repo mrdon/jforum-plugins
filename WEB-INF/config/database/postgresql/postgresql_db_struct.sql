@@ -585,3 +585,21 @@ CREATE TABLE jforum_banner (
 	banner_height INTEGER NOT NULL DEFAULT 0,
 	PRIMARY KEY(banner_id)
 );
+
+--
+-- Table structure for table 'jforum_moderation_log'
+-- 
+CREATE SEQUENCE jforum_moderation_log_seq;
+CREATE TABLE jforum_moderation_log (
+	log_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_banner_seq'),
+	user_id INTEGER NOT NULL,
+	log_description TEXT NOT NULL,
+	log_original_message TEXT,
+	log_date TIMESTAMP NOT NULL,
+	log_type INTEGER DEFAULT 0,
+	post_id INTEGER,
+	PRIMARY KEY(log_id),
+	topic_id INTEGER
+);
+
+CREATE INDEX idx_ml_user ON jforum_moderation_log(user_id);

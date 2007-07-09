@@ -691,3 +691,25 @@ CREATE TABLE jforum_banner (
 	banner_height NUMBER(5) DEFAULT 0 NOT NULL,
 	PRIMARY KEY(banner_id)
 );
+
+--
+-- Table structure for table 'jforum_moderation_log'
+-- 
+CREATE SEQUENCE jforum_moderation_log_seq 
+	INCREMENT BY 1
+	START WITH 1 MAXVALUE 2.0E9 MINVALUE 1 NOCYCLE
+	CACHE 200 ORDER;
+
+CREATE TABLE jforum_moderation_log (
+	log_id NUMBER(10) NOT NULL
+	user_id NUMBER(10) NOT NULL,
+	log_description BLOB NOT NULL,
+	log_original_message BLOB,
+	log_date DATE NOT NULL,
+	log_type NUMBER(1) DEFAULT 0,
+	post_id NUMBER(10),
+	topic_id NUMBER(10),
+	PRIMARY KEY(log_id)
+);
+
+CREATE INDEX idx_ml_user ON jforum_moderation_log(user_id);

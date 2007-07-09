@@ -233,3 +233,13 @@ KarmaModel.getMostRatedUserByPeriod = u.user_id, u.username, SUM(points) AS tota
 	GROUP BY u.user_id, u.username, user_karma
 									  
 KarmaModel.getMostRaterUserByPeriod = NO
+
+# ################
+# ModerationLog
+# ################
+ModerationLog.lastGeneratedModerationLogId = SELECT IDENT_CURRENT('jforum_moderation_log') AS log_id
+ModerationLog.selectAll = SELECT * FROM ( \
+	SELECT l.*, u.username, ROW_NUMBER() OVER(ORDER BY l.log_id DESC) -1 LINENUM \
+	FROM jforum_moderation_log l, jforum_users u WHERE l.user_id = u.user_id ORDER BY log_id DESC
+	) \
+	WHERE LINENUM >= ? AND LINENUM < ?

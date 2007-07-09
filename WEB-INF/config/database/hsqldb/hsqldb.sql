@@ -122,3 +122,9 @@ CategoryModel.lastGeneratedCategoryId = SELECT max(categories_id) from jforum_ca
 # AttachmentModel
 # ################
 AttachmentModel.lastGeneratedAttachmentId = SELECT MAX(attach_id) FROM jforum_attach
+
+# ################
+# ModerationLog
+# ################
+ModerationLog.lastGeneratedModerationLogId = SELECT MAX(log_id) FROM jforum_moderation_log
+ModerationLog.selectAll = SELECT LIMIT ? ? l.*, u.username FROM jforum_moderation_log l, jforum_users u WHERE l.user_id = u.user_id ORDER BY log_id DESC 
