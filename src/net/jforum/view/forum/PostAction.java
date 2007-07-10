@@ -104,7 +104,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.170 2007/07/10 01:04:31 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.171 2007/07/10 01:55:50 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -1065,7 +1065,7 @@ public class PostAction extends Command
 			try {
 				attachments.preProcess();
 			}
-			catch (AttachmentSizeTooBigException e) {
+			catch (AttachmentException e) {
 				JForumExecutionContext.enableRollback();
 				p.setText(this.request.getParameter("message"));
 				p.setId(0);
