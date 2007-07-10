@@ -77,7 +77,6 @@ import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
 import net.jforum.exceptions.AttachmentException;
-import net.jforum.exceptions.AttachmentSizeTooBigException;
 import net.jforum.exceptions.ForumException;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.PostRepository;
@@ -104,7 +103,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.171 2007/07/10 01:55:50 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.172 2007/07/10 01:56:10 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {

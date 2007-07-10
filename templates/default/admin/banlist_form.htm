@@ -1,6 +1,17 @@
+<script type="text/javascript">
+function validateForm(f)
+{
+	if (f.type.selectedIndex == 2 && isNaN(f.value.value)) {
+		alert("${I18n.getMessage("Banlist.invalidUserId")}");
+		return false;
+	}
+
+	return true;
+}
+</script>
 <style type="text/css">@import url( ${contextPath}/templates/${templateName}/admin/style.css );</style>
 
-<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum${extension}" method="post">
+<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum${extension}" method="post" onSubmit="return validateForm(this);">
 <input type="hidden" name="action" value="insertSave">
 <input type="hidden" name="module" value="${moduleName}">
 

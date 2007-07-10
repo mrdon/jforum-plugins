@@ -73,7 +73,7 @@ import org.apache.log4j.Logger;
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.34 2007/07/09 00:45:07 rafaelsteil Exp $
+ * @version $Id: ControllerUtils.java,v 1.35 2007/07/10 01:55:50 rafaelsteil Exp $
  */
 public class ControllerUtils
 {
@@ -359,8 +359,15 @@ public class ControllerUtils
 	 */
 	public static void addCookie(String name, String value)
 	{
+		int maxAge = 3600 * 24 * 365;
+		
+		if (value == null) {
+			maxAge = 0;
+			value = "";
+		}
+		
 		Cookie cookie = new Cookie(name, value);
-		cookie.setMaxAge(3600 * 24 * 365);
+		cookie.setMaxAge(maxAge);
 		cookie.setPath("/");
 
 		JForumExecutionContext.getResponse().addCookie(cookie);

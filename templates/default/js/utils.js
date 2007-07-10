@@ -20,7 +20,7 @@ function writeStars(q, postId)
 
 function addBookmark(relationType, relationId)
 {
-	var w = window.open('${JForumContext.encodeURL("/bookmarks/insert/' + relationType + '/' + relationId + '")}', 'bookmark_add', 'width="700", height="200", scrollbars="no"');
+	var w = window.open('${JForumContext.encodeURL("/bookmarks/insert/' + relationType + '/' + relationId + '")}', 'bookmark_add', 'width=700, height=200, scrollbars=auto, resizable=true');
 	w.focus();
 }
 

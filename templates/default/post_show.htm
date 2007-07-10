@@ -96,7 +96,7 @@
 										</#list>
 										</table>
 										<input type="submit" value="${I18n.getMessage("PostShow.pollVote")}"></input><br/>
-										<span class="gensmall" align="center"><a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&amp;action=list&amp;topic_id=${topic.id}&amp;viewResults=true", "")}">View Results</a></span>
+										<span class="gensmall" align="center"><a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&amp;action=list&amp;topic_id=${topic.id}&amp;viewResults=true", "")}">${I18n.getMessage("PostShow.showPollResults")}</a></span>
 									</div>
 								</form>
 							<#else>
