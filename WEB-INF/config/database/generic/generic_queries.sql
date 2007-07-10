@@ -748,6 +748,9 @@ BanlistModel.selectAll = SELECT * FROM jforum_banlist ORDER BY banlist_id
 # ################
 # ModerationLog
 # ################
-ModerationLog.addNew = INSERT INTO jforum_moderation_log (user_id, log_description, log_original_message, log_date, log_type, post_id, topic_id) VALUES (?, ?, ?, ?, ?, ?, ?)
-ModerationLog.selectAll = SELECT l.*, u.username FROM jforum_moderation_log l, jforum_users u WHERE l.user_id = u.user_id ORDER BY log_id DESC LIMIT ?, ? 
+ModerationLog.addNew = INSERT INTO jforum_moderation_log (user_id, log_description, log_original_message, log_date, log_type, post_id, topic_id, post_user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 ModerationLog.totalRecords = SELECT COUNT(log_id) FROM jforum_moderation_log
+
+ModerationLog.selectAll = SELECT l.*, u.username, u2.username AS poster_username FROM jforum_moderation_log l, jforum_users u \
+	LEFT JOIN jforum_users u2 ON u2.user_id = l.post_user_id \
+	WHERE l.user_id = u.user_id ORDER BY log_id DESC LIMIT ?, ?

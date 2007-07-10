@@ -71,7 +71,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationHelper.java,v 1.39 2007/07/08 19:58:33 rafaelsteil Exp $
+ * @version $Id: ModerationHelper.java,v 1.40 2007/07/10 01:04:31 rafaelsteil Exp $
  */
 public class ModerationHelper 
 {
@@ -129,19 +129,13 @@ public class ModerationHelper
 		return status;
 	}
 	
-	public void logActivity()
-	{
-		ModerationLog log = this.buildModerationLogFromRequest();
-		this.saveModerationLog(log);
-	}
-	
-	private void saveModerationLog(ModerationLog log)
+	public void saveModerationLog(ModerationLog log)
 	{
 		ModerationLogDAO dao = DataAccessDriver.getInstance().newModerationLogDAO();
 		dao.add(log);
 	}
 	
-	private ModerationLog buildModerationLogFromRequest()
+	public ModerationLog buildModerationLogFromRequest()
 	{
 		RequestContext request = JForumExecutionContext.getRequest();
 		
@@ -187,6 +181,8 @@ public class ModerationHelper
 				Topic t = tm.selectRaw(Integer.parseInt(topics[i]));
 				
 				log.setTopicId(t.getId());
+				log.setPosterUser(t.getPostedBy());
+				
 				this.saveModerationLog(log);
 				
 				if (!forumsList.contains(new Integer(t.getForumId()))) {

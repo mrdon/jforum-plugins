@@ -72,7 +72,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTopicDAO.java,v 1.21 2007/05/05 11:58:34 rafaelsteil Exp $
+ * @version $Id: GenericTopicDAO.java,v 1.22 2007/07/10 01:04:30 rafaelsteil Exp $
  */
 public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 {
@@ -499,6 +499,11 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 		t.setForumId(rs.getInt("forum_id"));
 		t.setModerated(rs.getInt("moderated") == 1);
 		t.setVoteId(rs.getInt("topic_vote_id"));
+		
+		User user = new User();
+		user.setId(rs.getInt("user_id"));
+		
+		t.setPostedBy(user);
 
 		return t;
 	}

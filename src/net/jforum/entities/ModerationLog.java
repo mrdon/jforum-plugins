@@ -46,7 +46,7 @@ import java.util.Date;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationLog.java,v 1.2 2007/07/08 19:47:12 rafaelsteil Exp $
+ * @version $Id: ModerationLog.java,v 1.3 2007/07/10 01:04:31 rafaelsteil Exp $
  */
 public class ModerationLog
 {
@@ -54,6 +54,7 @@ public class ModerationLog
 	private int postId;
 	private int topicId;
 	private User user;
+	private User posterUser = new User();
 	private String description;
 	private String originalMessage;
 	private Date date;
@@ -185,6 +186,20 @@ public class ModerationLog
 	{
 		this.topicId = topicId;
 	}
-	
-	
+
+	/**
+	 * @return the posterUser
+	 */
+	public User getPosterUser()
+	{
+		return this.posterUser;
+	}
+
+	/**
+	 * @param posterUser the posterUser to set
+	 */
+	public void setPosterUser(User posterUser)
+	{
+		this.posterUser = posterUser;
+	}
 }

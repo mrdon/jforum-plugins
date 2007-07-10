@@ -68,6 +68,7 @@ import net.jforum.dao.TopicDAO;
 import net.jforum.dao.UserDAO;
 import net.jforum.entities.Attachment;
 import net.jforum.entities.Forum;
+import net.jforum.entities.ModerationLog;
 import net.jforum.entities.Poll;
 import net.jforum.entities.PollChanges;
 import net.jforum.entities.Post;
@@ -103,7 +104,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.169 2007/07/09 00:45:06 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.170 2007/07/10 01:04:31 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -864,7 +865,9 @@ public class PostAction extends Command
 			if (isModerator && p.getUserId() != SessionFacade.getUserSession().getUserId()) {
 				ModerationHelper helper = new ModerationHelper();
 				this.request.addParameter("log_original_message", originalMessage);
-				helper.logActivity();
+				ModerationLog log = helper.buildModerationLogFromRequest();
+				log.getPosterUser().setId(p.getUserId());
+				helper.saveModerationLog(log);
 			}
 
 			if (this.request.getParameter("notify") == null) {
@@ -1319,7 +1322,10 @@ public class PostAction extends Command
 		}
 		
 		this.request.addParameter("log_original_message", p.getText());
-		new ModerationHelper().logActivity();
+		ModerationHelper moderationHelper = new ModerationHelper();
+		ModerationLog moderationLog = moderationHelper.buildModerationLogFromRequest();
+		moderationLog.getPosterUser().setId(p.getUserId());
+		moderationHelper.saveModerationLog(moderationLog);
 		
 		PostRepository.remove(t.getId(), p.getId());
 		TopicRepository.loadMostRecentTopics();

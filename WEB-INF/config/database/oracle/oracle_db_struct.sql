@@ -709,7 +709,9 @@ CREATE TABLE jforum_moderation_log (
 	log_type NUMBER(1) DEFAULT 0,
 	post_id NUMBER(10),
 	topic_id NUMBER(10),
+	post_user_id NUMBER(10),
 	PRIMARY KEY(log_id)
 );
 
 CREATE INDEX idx_ml_user ON jforum_moderation_log(user_id);
+CREATE INDEX idx_ml_post_user ON jforum_moderation_log(post_user_id);
