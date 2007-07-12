@@ -591,7 +591,7 @@ CREATE TABLE jforum_banner (
 -- 
 CREATE SEQUENCE jforum_moderation_log_seq;
 CREATE TABLE jforum_moderation_log (
-	log_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_banner_seq'),
+	log_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_moderation_log_seq'),
 	user_id INTEGER NOT NULL,
 	log_description TEXT NOT NULL,
 	log_original_message TEXT,
@@ -600,7 +600,7 @@ CREATE TABLE jforum_moderation_log (
 	post_id INTEGER,
 	topic_id INTEGER,
 	post_user_id INTEGER,
-	PRIMARY KEY(log_id),
+	PRIMARY KEY(log_id)
 );
 
 CREATE INDEX idx_ml_user ON jforum_moderation_log(user_id);
