@@ -13,7 +13,7 @@
 	function confirmDelete(postId)
 	{
 		if (confirm("${I18n.getMessage("Moderation.ConfirmPostDelete")}")) {
-			var reason = prompt("Moderation.changeReason");
+			var reason = prompt("${I18n.getMessage("ModerationLog.changeReason")}");
 
 			if (reason == null || reason == "") {
 				alert("${I18n.getMessage("ModerationLog.reasonIsEmpty")}");
@@ -21,7 +21,7 @@
 			}
 			else {
 				var link = document.getElementById("delete" + postId);
-				link.href += "&log_description=" + reason + "&log_type=1";
+				link.href += "&log_description=" + encodeURIComponent(reason) + "&log_type=1";
 			}
 
 			return true;
