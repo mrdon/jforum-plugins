@@ -65,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * 
  * @author Rafael Steil
  * @author James Yong
- * @version $Id: TopicRepository.java,v 1.31 2007/04/02 17:14:45 andowson Exp $
+ * @version $Id: TopicRepository.java,v 1.32 2007/07/16 15:05:52 rafaelsteil Exp $
  */
 public class TopicRepository implements Cacheable
 {
@@ -155,7 +155,7 @@ public class TopicRepository implements Cacheable
 	/**
 	 * Add recent topics to the cache
 	 */
-	public static List loadMostRecentTopics()
+	public synchronized static List loadMostRecentTopics()
 	{
 		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 		int limit = SystemGlobals.getIntValue(ConfigKeys.RECENT_TOPICS);
@@ -169,7 +169,7 @@ public class TopicRepository implements Cacheable
 	/**
 	 * Add hottest topics to the cache
 	 */
-	public static List loadHottestTopics()
+	public synchronized static List loadHottestTopics()
 	{
 	    TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 	    int limit = SystemGlobals.getIntValue(ConfigKeys.HOTTEST_TOPICS);

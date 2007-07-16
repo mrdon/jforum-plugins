@@ -75,7 +75,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.58 2007/02/25 13:48:33 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.59 2007/07/16 15:05:52 rafaelsteil Exp $
  */
 public class ForumAction extends Command
 {
@@ -188,8 +188,8 @@ public class ForumAction extends Command
 		boolean isLogged = SessionFacade.isLogged();
 		boolean isModerator = userSession.isModerator(forumId);
 
-		boolean canApproveMessages = (isLogged && isModerator && SecurityRepository
-		        .canAccess(SecurityConstants.PERM_MODERATION_APPROVE_MESSAGES));
+		boolean canApproveMessages = (isLogged && isModerator 
+			&& SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_APPROVE_MESSAGES));
 
 		Map topicsToApprove = new HashMap();
 

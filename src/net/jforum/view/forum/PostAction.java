@@ -103,7 +103,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.172 2007/07/10 01:56:10 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.173 2007/07/16 15:05:51 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -246,7 +246,6 @@ public class PostAction extends Command
 
 		this.context.put("isModerator", us.isModerator(topic.getForumId()));
 
-		// Pagination
 		ViewCommon.contextToPagination(start, topic.getTotalReplies() + 1, count);
 		
 		TopicsCommon.topicListingBase();

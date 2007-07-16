@@ -76,10 +76,12 @@ import freemarker.template.SimpleHash;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.39 2007/04/15 08:11:38 andowson Exp $
+ * @version $Id: TopicsCommon.java,v 1.40 2007/07/16 15:05:53 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
+	private static final Object MUTEXT = new Object();
+	
 	/**
 	 * List all first 'n' topics of a given forum.
 	 * This method returns no more than <code>ConfigKeys.TOPICS_PER_PAGE</code>
@@ -100,8 +102,12 @@ public class TopicsCommon
 			topics = TopicRepository.getTopics(forumId);
 
 			if (topics.size() == 0 || !TopicRepository.isLoaded(forumId)) {
-				topics = tm.selectAllByForumByLimit(forumId, start, topicsPerPage);
-				TopicRepository.addAll(forumId, topics);
+				synchronized (MUTEXT) {
+					if (topics.size() == 0 || !TopicRepository.isLoaded(forumId)) {
+						topics = tm.selectAllByForumByLimit(forumId, start, topicsPerPage);
+						TopicRepository.addAll(forumId, topics);
+					}
+				}
 			}
 		}
 		else {
@@ -246,7 +252,7 @@ public class TopicsCommon
 	 * @param fm ForumDAO A ForumModel instance
      * @param firstPost boolean
 	 */
-	public static void updateBoardStatus(Topic t, int lastPostId, boolean firstPost, TopicDAO tm, ForumDAO fm)
+	public static synchronized void updateBoardStatus(Topic t, int lastPostId, boolean firstPost, TopicDAO tm, ForumDAO fm)
 	{
 		t.setLastPostId(lastPostId);
 		tm.update(t);
@@ -273,10 +279,10 @@ public class TopicsCommon
 	 * clear the entry frm the cache and update the last 
 	 * post info for the associated forum.
 	 * @param topicId The topic id to remove
-	 * @param fromModeration boolean TODO
+	 * @param fromModeration boolean 
      * @param forumId int
 	 */
-	public static void deleteTopic(int topicId, int forumId, boolean fromModeration)
+	public static synchronized void deleteTopic(int topicId, int forumId, boolean fromModeration)
 	{
 		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
 		
@@ -289,6 +295,7 @@ public class TopicsCommon
 		if (!fromModeration) {
 			// Updates the Recent Topics if it contains this topic
 			TopicRepository.loadMostRecentTopics();
+			
             // Updates the Hottest Topics if it contains this topic
 			TopicRepository.loadHottestTopics();
 			TopicRepository.clearCache(forumId);

@@ -25,7 +25,10 @@
 			<table class="forumline gen" cellspacing="1" cellpadding="4" width="100%" border="0">
 				<tr>
 					<th class="thtop" align="center">${I18n.getMessage("ModerationLog.date")}</th>
-					<th class="thtop" align="center" height="25">${I18n.getMessage("ModerationLog.moderator")}</th>
+
+					<#if canAccessFullModerationLog>
+						<th class="thtop" align="center" height="25">${I18n.getMessage("ModerationLog.moderator")}</th>
+					</#if>
 					<th class="thtop" align="center" height="25">${I18n.getMessage("ModerationLog.user")}</th>
 					<th class="thtop" align="center">${I18n.getMessage("ModerationLog.type")}</th>
 					<th class="thtop" align="center">${I18n.getMessage("ModerationLog.description")}</th>
@@ -40,9 +43,12 @@
 				<#list activityLog as log>
 				<tr>
 					<td class="row2" valign="top" align="center">${log.date?datetime}</td>
-					<td class="row1" valign="top" align="center" nowrap="nowrap">
-						<a href="${JForumContext.encodeURL("/user/profile/${log.user.id}")}">${log.user.username}</a>
-					</td>
+
+					<#if canAccessFullModerationLog>
+						<td class="row1" valign="top" align="center" nowrap="nowrap">
+							<a href="${JForumContext.encodeURL("/user/profile/${log.user.id}")}">${log.user.username}</a>
+						</td>
+					</#if>
 					<td class="row1" valign="top" align="center" nowrap="nowrap">
 						<#if log.posterUser.username?exists>
 							<a href="${JForumContext.encodeURL("/user/profile/${log.posterUser.id}")}">${log.posterUser.username}</a>
