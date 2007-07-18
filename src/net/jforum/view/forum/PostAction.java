@@ -103,7 +103,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.173 2007/07/16 15:05:51 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.174 2007/07/18 23:31:36 andowson Exp $
  */
 public class PostAction extends Command 
 {
@@ -1375,13 +1375,17 @@ public class PostAction extends Command
 		try
 		{
 			if ((SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED) &&
-					!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD))
-					|| (!SessionFacade.isLogged() && !SystemGlobals.getBoolValue(ConfigKeys.ATTACHMENTS_ANONYMOUS))) {
+					!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD))) {
 				this.setTemplateName(TemplateKeys.POSTS_CANNOT_DOWNLOAD);
 				this.context.put("message", I18n.getMessage("Attachments.featureDisabled"));
 				return;
 			}
-
+            // If anonymous download are not allowed, redirect them to the login page, instead of an error message
+			if (!SessionFacade.isLogged() && !SystemGlobals.getBoolValue(ConfigKeys.ATTACHMENTS_ANONYMOUS)) {   
+			    this.setTemplateName(ViewCommon.contextToLogin());   
+			    return;   
+			}
+			
 			int id = this.request.getIntParameter("attach_id");
 
 			AttachmentDAO am = DataAccessDriver.getInstance().newAttachmentDAO();
