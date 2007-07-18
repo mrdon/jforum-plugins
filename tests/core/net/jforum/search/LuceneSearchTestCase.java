@@ -23,44 +23,45 @@ import org.apache.lucene.store.RAMDirectory;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchTestCase.java,v 1.1 2007/07/18 17:54:28 rafaelsteil Exp $
+ * @version $Id: LuceneSearchTestCase.java,v 1.1 2007/07/18 20:19:34 rafaelsteil Exp $
  */
 public class LuceneSearchTestCase extends TestCase
 {
+	private static class ObjectMother
+	{
+		public static Document createPost(String subject)
+		{
+			Post p = new Post();
+			p.setSubject(subject);
+			
+			Document doc = new Document();
+			doc.add(new Field("subject", subject, Store.YES, Index.TOKENIZED));
+			
+			return doc;
+		}
+	}
+	
 	private Directory directory;
-
-	public void testAddPost() throws Exception
+	
+	public void testSearchByTitleExpectTwoResults() throws Exception
 	{
-		Post p = new Post();
-		p.setTopicId(1);
-		p.setId(1);
-		p.setSubject("post 1");
-		p.setText("some post contents");
+		this.write(ObjectMother.createPost("java"));
+		this.write(ObjectMother.createPost("javalandia"));
+		this.write(ObjectMother.createPost("rails"));
 		
-		this.write(this.createDocument(p));
+		Hits hits = this.search("java");
 		
+		Assert.assertEquals(2, hits.length());
+		Assert.assertEquals("java", hits.doc(0).get("title"));
+		Assert.assertEquals("javalandia", hits.doc(1).get("title"));
+	}
+	
+	private Hits search(String term) throws Exception
+	{
 		IndexSearcher search = new IndexSearcher(this.directory);
-		Hits hits = search.search(new TermQuery(new Term("title", "post")));
-		
-		Assert.assertEquals(1, hits.length());
-		Assert.assertEquals("post 1", hits.doc(0).get("title"));
-		Assert.assertEquals(1, Integer.parseInt(hits.doc(0).get("id")));
-		Assert.assertEquals("some post contents", hits.doc(0).get("text"));
+		return search.search(new TermQuery(new Term("subject", term)));
 	}
-	
-	private Document createDocument(Post p)
-	{
-		Document d = new Document();
-		
-		d.add(new Field("id", String.valueOf(p.getId()), Store.YES, Index.UN_TOKENIZED));
-		d.add(new Field("topic", String.valueOf(p.getTopicId()), Store.YES, Index.UN_TOKENIZED));
-		d.add(new Field("forum", String.valueOf(p.getForumId()), Store.YES, Index.UN_TOKENIZED));
-		d.add(new Field("title", p.getSubject(), Store.YES, Index.TOKENIZED));
-		d.add(new Field("text", p.getText(), Store.YES, Index.TOKENIZED));
-		
-		return d;
-	}
-	
+
 	private void write(Document doc) throws Exception
 	{
 		IndexWriter writer = new IndexWriter(this.directory, this.newAnalyzer());
