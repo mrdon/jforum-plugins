@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005 Rafael Steil
+ * Copyright (c) Rafael Steil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, 
@@ -49,7 +49,7 @@ import net.jforum.entities.Post;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchIndexerDAO.java,v 1.5 2006/08/20 12:19:02 sergemaslyukov Exp $
+ * @version $Id: SearchIndexerDAO.java,v 1.6 2007/07/18 17:54:29 rafaelsteil Exp $
  */
 public interface SearchIndexerDAO
 {
