@@ -67,7 +67,7 @@ import org.apache.lucene.store.RAMDirectory;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchIndexer.java,v 1.5 2007/07/19 03:25:23 rafaelsteil Exp $
+ * @version $Id: LuceneSearchIndexer.java,v 1.6 2007/07/19 03:53:01 rafaelsteil Exp $
  */
 public class LuceneSearchIndexer implements SearchIndexerDAO
 {
@@ -129,7 +129,7 @@ public class LuceneSearchIndexer implements SearchIndexerDAO
 	{
 		synchronized (MUTEX) {
 			try {
-				IndexWriter writer = new IndexWriter(this.directory, this.analyzer);
+				IndexWriter writer = new IndexWriter(this.directory, this.analyzer, true);
 				
 				for (Iterator iter = posts.iterator(); iter.hasNext(); ) {
 					Post post = (Post)iter.next();
