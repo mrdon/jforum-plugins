@@ -67,7 +67,7 @@ import org.apache.lucene.store.RAMDirectory;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchIndexer.java,v 1.4 2007/07/19 02:36:38 rafaelsteil Exp $
+ * @version $Id: LuceneSearchIndexer.java,v 1.5 2007/07/19 03:25:23 rafaelsteil Exp $
  */
 public class LuceneSearchIndexer implements SearchIndexerDAO
 {
@@ -200,7 +200,7 @@ public class LuceneSearchIndexer implements SearchIndexerDAO
 	private void notifyNewDocumentAdded()
 	{
 		for (Iterator iter = this.newDocumentAddedList.iterator(); iter.hasNext(); ) {
-			((NewDocumentAdded)iter.next()).newDocument();
+			((NewDocumentAdded)iter.next()).newDocumentAdded();
 		}
 	}
 	

@@ -14,7 +14,7 @@ import net.jforum.entities.Post;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchTestCase.java,v 1.5 2007/07/19 02:36:38 rafaelsteil Exp $
+ * @version $Id: LuceneSearchTestCase.java,v 1.6 2007/07/19 03:25:23 rafaelsteil Exp $
  */
 public class LuceneSearchTestCase extends TestCase
 {
@@ -54,7 +54,7 @@ public class LuceneSearchTestCase extends TestCase
 		final HitTest hitTest = new HitTest();
 		
 		this.indexer.watchNewDocuDocumentAdded(new NewDocumentAdded() {
-			public void newDocument() {
+			public void newDocumentAdded() {
 				hitTest.value = true;
 			}
 		});

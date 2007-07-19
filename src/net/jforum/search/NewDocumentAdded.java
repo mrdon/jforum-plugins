@@ -45,9 +45,9 @@ package net.jforum.search;
 
 /**
  * @author Rafael Steil
- * @version $Id: NewDocumentAdded.java,v 1.1 2007/07/18 21:02:25 rafaelsteil Exp $
+ * @version $Id: NewDocumentAdded.java,v 1.2 2007/07/19 03:25:23 rafaelsteil Exp $
  */
 public interface NewDocumentAdded
 {
-	public void newDocument();
+	public void newDocumentAdded();
 }
