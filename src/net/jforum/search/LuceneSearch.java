@@ -60,9 +60,9 @@ import net.jforum.exceptions.SearchException;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.1 2007/07/19 01:38:03 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.2 2007/07/19 02:36:38 rafaelsteil Exp $
  */
-public class LuceneSearch implements SearchDAO
+public class LuceneSearch implements SearchDAO, NewDocumentAdded
 {
 	private IndexSearcher search;
 	private Directory directory;
@@ -76,6 +76,20 @@ public class LuceneSearch implements SearchDAO
 	private void openSearch() throws Exception
 	{
 		this.search = new IndexSearcher(this.directory);
+	}
+	
+	/**
+	 * @see net.jforum.search.NewDocumentAdded#newDocument()
+	 */
+	public void newDocument()
+	{
+		try {
+			this.search.close();
+			this.openSearch();
+		}
+		catch (Exception e) {
+			throw new SearchException(e);
+		}
 	}
 	
 	/**

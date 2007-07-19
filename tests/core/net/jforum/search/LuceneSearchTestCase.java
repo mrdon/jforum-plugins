@@ -14,7 +14,7 @@ import net.jforum.entities.Post;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchTestCase.java,v 1.4 2007/07/19 01:38:03 rafaelsteil Exp $
+ * @version $Id: LuceneSearchTestCase.java,v 1.5 2007/07/19 02:36:38 rafaelsteil Exp $
  */
 public class LuceneSearchTestCase extends TestCase
 {
@@ -25,14 +25,12 @@ public class LuceneSearchTestCase extends TestCase
 	{
 		List l = new ArrayList();
 		
-		Post p1 = new Post();
-		p1.setTime(new Date());
+		Post p1 = this.newPost();
 		p1.setForumId(1);
 		
 		l.add(p1);
 		
-		Post p2 = new Post();
-		p2.setTime(new Date());
+		Post p2 = this.newPost();
 		p2.setForumId(2);
 		
 		l.add(p2);
@@ -66,6 +64,18 @@ public class LuceneSearchTestCase extends TestCase
 		Assert.assertTrue(hitTest.value);
 	}
 	
+	private Post newPost() 
+	{
+		Post p = new Post();
+		
+		p.setText("");
+		p.setTime(new Date());
+		p.setSubject("");
+		p.setPostUsername("");
+		
+		return p;
+	}
+	
 	protected void setUp() throws Exception
 	{
 		this.indexer = new LuceneSearchIndexer();
@@ -73,5 +83,7 @@ public class LuceneSearchTestCase extends TestCase
 		
 		this.search = new LuceneSearch();
 		this.search.setDirectory(this.indexer.directoryImplementation());
+		
+		this.indexer.watchNewDocuDocumentAdded(this.search);
 	}
 }

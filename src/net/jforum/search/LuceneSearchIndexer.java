@@ -67,7 +67,7 @@ import org.apache.lucene.store.RAMDirectory;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchIndexer.java,v 1.3 2007/07/19 01:38:03 rafaelsteil Exp $
+ * @version $Id: LuceneSearchIndexer.java,v 1.4 2007/07/19 02:36:38 rafaelsteil Exp $
  */
 public class LuceneSearchIndexer implements SearchIndexerDAO
 {
@@ -149,6 +149,7 @@ public class LuceneSearchIndexer implements SearchIndexerDAO
 			}
 			catch (Exception e) {
 				logger.error(e.toString(), e);
+				e.printStackTrace();
 			}
 		}
 	}
@@ -160,6 +161,7 @@ public class LuceneSearchIndexer implements SearchIndexerDAO
 		}
 		catch (Exception e) {
 			logger.error(e.toString(), e);
+			e.printStackTrace();
 		}
 	}
 	
@@ -201,7 +203,7 @@ public class LuceneSearchIndexer implements SearchIndexerDAO
 			((NewDocumentAdded)iter.next()).newDocument();
 		}
 	}
-
+	
 	/**
 	 * @see net.jforum.dao.SearchIndexerDAO#insertSearchWords(net.jforum.entities.Post)
 	 */
