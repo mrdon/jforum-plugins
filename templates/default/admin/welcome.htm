@@ -99,13 +99,13 @@ p, td { font-size: 11px; }
 				<td width="20%" class="${row}">&nbsp;<span class="gen"><a href="${contextPath}/jforum${extension}?module=adminUsers&action=edit&id=${s.userId}" class="gen">${s.username}</a></span>&nbsp;</td>
 				<td width="20%" align="center" class="${row}">&nbsp;<span class="gen">${s.startTime?time}</span>&nbsp;</td>
 				<td width="20%" align="center" nowrap="nowrap" class="${row}">&nbsp;<span class="gen">${s.sessionLastUpdate()?time}</span>&nbsp;</td>
-				<td width="20%" class="${row}">&nbsp;<span class="gen"><a href="http://network-tools.com/default.asp?host=${s.ip?default("Unknown")}" class="gen" target="_blank">${s.ip?default("Unknown")}</a></span>&nbsp;</td>
+				<td width="20%" class="${row}">&nbsp;<span class="gen"><a href="http://whois.domaintools.com/${s.ip?default("Unknown")}" class="gen" target="_blank">${s.ip?default("Unknown")}</a></span>&nbsp;</td>
 			</tr>
 		</#if>
 	</#list>
 
   <tr>
-	<td colspan="5" height="1" class="row3"><img src="../templates/subSilver/images/spacer.gif" width="1" height="1" alt="."></td>
+	<td colspan="5" height="1" class="row3"><img src="${contextPath}/templates/${templateName}/images/spacer.gif" width="1" height="1" alt="."></td>
   </tr>
 </table>
 </div>
