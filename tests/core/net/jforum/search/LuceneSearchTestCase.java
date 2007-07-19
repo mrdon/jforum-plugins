@@ -12,9 +12,23 @@ import junit.framework.TestCase;
 import net.jforum.dao.SearchData;
 import net.jforum.entities.Post;
 
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Field.Index;
+import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.Hits;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.RAMDirectory;
+
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchTestCase.java,v 1.9 2007/07/19 17:22:14 rafaelsteil Exp $
+ * @version $Id: LuceneSearchTestCase.java,v 1.8 2007/07/19 17:21:02 rafaelsteil Exp $
  */
 public class LuceneSearchTestCase extends TestCase
 {
