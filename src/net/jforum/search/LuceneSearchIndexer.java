@@ -50,21 +50,24 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.jforum.dao.SearchIndexerDAO;
+import net.jforum.entities.Post;
+
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Field.Index;
+import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 
-import net.jforum.dao.SearchIndexerDAO;
-import net.jforum.entities.Post;
-import net.jforum.exceptions.ForumException;
-
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchIndexer.java,v 1.1 2007/07/18 21:02:25 rafaelsteil Exp $
+ * @version $Id: LuceneSearchIndexer.java,v 1.2 2007/07/19 00:11:14 rafaelsteil Exp $
  */
 public class LuceneSearchIndexer implements SearchIndexerDAO
 {
@@ -72,28 +75,25 @@ public class LuceneSearchIndexer implements SearchIndexerDAO
 	private static final Object MUTEX = new Object();
 	
 	private Directory directory;
-	private Analyzer analyzer;
+	private Analyzer analyzer = new StandardAnalyzer();
 	private List newDocumentAddedList = new ArrayList();
 	
-	public void useRAMDirectory()
+	public void useRAMDirectory() throws Exception
 	{
 		this.directory = new RAMDirectory();
+		IndexWriter writer = new IndexWriter(this.directory, this.analyzer, true);
+		writer.close();
 	}
 	
-	public void useFSDirectory(String indexWritePath)
+	public void useFSDirectory(String indexWritePath) throws Exception
 	{
-		try {
-			File indexDirectory = new File(indexWritePath);
-			
-			if (!indexDirectory.exists()) {
-				this.createIndexDirectory(indexDirectory);
-			}
-			
-			this.directory = FSDirectory.getDirectory(indexDirectory);
+		File indexDirectory = new File(indexWritePath);
+		
+		if (!indexDirectory.exists()) {
+			this.createIndexDirectory(indexDirectory);
 		}
-		catch (IOException e) {
-			throw new ForumException(e);
-		}
+		
+		this.directory = FSDirectory.getDirectory(indexDirectory);
 	}
 	
 	public void watchNewDocuDocumentAdded(NewDocumentAdded newDoc)
@@ -124,7 +124,7 @@ public class LuceneSearchIndexer implements SearchIndexerDAO
 	{
 		synchronized (MUTEX) {
 			try {
-				IndexWriter writer = new IndexWriter(this.directory, this.analyzer, false);
+				IndexWriter writer = new IndexWriter(this.directory, this.analyzer);
 				
 				for (Iterator iter = posts.iterator(); iter.hasNext(); ) {
 					Post post = (Post)iter.next();
@@ -176,6 +176,16 @@ public class LuceneSearchIndexer implements SearchIndexerDAO
 	private Document createDocument(Post p)
 	{
 		Document d = new Document();
+		
+		d.add(new Field(SearchFields.Keyword.POST_ID, String.valueOf(p.getId()), Store.YES, Index.UN_TOKENIZED));
+		d.add(new Field(SearchFields.Keyword.FORUM_ID, String.valueOf(p.getForumId()), Store.YES, Index.UN_TOKENIZED));
+		d.add(new Field(SearchFields.Keyword.TOPIC_ID, String.valueOf(p.getTopicId()), Store.YES, Index.UN_TOKENIZED));
+		d.add(new Field(SearchFields.Keyword.USER_ID, String.valueOf(p.getUserId()), Store.YES, Index.UN_TOKENIZED));
+		
+		d.add(new Field(SearchFields.Indexed.DATE, p.getTime().toString(), Store.NO, Index.TOKENIZED));
+		d.add(new Field(SearchFields.Indexed.SUBJECT, p.getSubject(), Store.NO, Index.TOKENIZED));
+		d.add(new Field(SearchFields.Indexed.CONTENTS, p.getText(), Store.NO, Index.TOKENIZED));
+		d.add(new Field(SearchFields.Indexed.USERNAME, p.getPostUsername(), Store.NO, Index.TOKENIZED));
 		
 		return d;
 	}
