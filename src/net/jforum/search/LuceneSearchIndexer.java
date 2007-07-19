@@ -67,7 +67,7 @@ import org.apache.lucene.store.RAMDirectory;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchIndexer.java,v 1.2 2007/07/19 00:11:14 rafaelsteil Exp $
+ * @version $Id: LuceneSearchIndexer.java,v 1.3 2007/07/19 01:38:03 rafaelsteil Exp $
  */
 public class LuceneSearchIndexer implements SearchIndexerDAO
 {
@@ -94,6 +94,11 @@ public class LuceneSearchIndexer implements SearchIndexerDAO
 		}
 		
 		this.directory = FSDirectory.getDirectory(indexDirectory);
+	}
+	
+	public Directory directoryImplementation()
+	{
+		return this.directory;
 	}
 	
 	public void watchNewDocuDocumentAdded(NewDocumentAdded newDoc)

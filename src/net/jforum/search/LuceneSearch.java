@@ -36,26 +36,80 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Mar 11, 2005 12:30:01 PM
+ * Created on 18/07/2007 22:05:37
+ * 
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.exceptions;
+package net.jforum.search;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.lucene.document.Document;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.Hits;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.store.Directory;
+
+import net.jforum.dao.SearchDAO;
+import net.jforum.dao.SearchData;
+import net.jforum.entities.Forum;
+import net.jforum.exceptions.SearchException;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchException.java,v 1.6 2007/07/19 01:38:02 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.1 2007/07/19 01:38:03 rafaelsteil Exp $
  */
-public class SearchException extends RuntimeException
+public class LuceneSearch implements SearchDAO
 {
-	public SearchException(Throwable t)
+	private IndexSearcher search;
+	private Directory directory;
+	
+	public void setDirectory(Directory directory) throws Exception
 	{
-		super(t);
-		this.setStackTrace(t.getStackTrace());
+		this.directory = directory;
+		this.openSearch();
 	}
 	
-	public SearchException(String message, Throwable t)
+	private void openSearch() throws Exception
 	{
-		super(message, t);
+		this.search = new IndexSearcher(this.directory);
 	}
+	
+	/**
+	 * @see net.jforum.dao.SearchDAO#search(net.jforum.dao.SearchData)
+	 */
+	public List search(SearchData sd)
+	{
+		List l = new ArrayList();
+		
+		try {
+			Hits hits = null;
+			
+			if (sd.getForumId() > 0) {
+				hits = this.search.search(new TermQuery(
+					new Term(SearchFields.Keyword.FORUM_ID, String.valueOf(sd.getForumId()))));
+			}
+			
+			if (hits != null && hits.length() > 0) {
+				int total = hits.length(); 
+				
+				for (int i = 0; i < total; i++) {
+					Document doc = hits.doc(i);
+					
+					SearchResult result = new SearchResult(null, null, null, 
+						new Forum(Integer.parseInt(doc.get(SearchFields.Keyword.FORUM_ID))), null);
+				}
+			}
+		}
+		catch (Exception e) {
+			throw new SearchException(e);
+		}
+		
+		return l;
+	}
+	
+	public void cleanSearch() { }
 }

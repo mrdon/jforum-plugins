@@ -9,15 +9,17 @@ import java.util.List;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
+import net.jforum.dao.SearchData;
 import net.jforum.entities.Post;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchTestCase.java,v 1.3 2007/07/19 00:17:36 rafaelsteil Exp $
+ * @version $Id: LuceneSearchTestCase.java,v 1.4 2007/07/19 01:38:03 rafaelsteil Exp $
  */
 public class LuceneSearchTestCase extends TestCase
 {
 	private LuceneSearchIndexer indexer;
+	private LuceneSearch search;
 	
 	public void testIndexTwoDifferentForumsSearchOneExpectOneResult()
 	{
@@ -37,7 +39,12 @@ public class LuceneSearchTestCase extends TestCase
 		
 		this.indexer.insertSearchWords(l);
 		
+		SearchData sd = new SearchData();
+		sd.setForumId(1);
 		
+		List results = this.search.search(sd);
+		
+		Assert.assertEquals(1, results.size());
 	}
 	
 	public void testWatchNewDocumentAddedExpectOneNotification()
@@ -63,5 +70,8 @@ public class LuceneSearchTestCase extends TestCase
 	{
 		this.indexer = new LuceneSearchIndexer();
 		this.indexer.useRAMDirectory();
+		
+		this.search = new LuceneSearch();
+		this.search.setDirectory(this.indexer.directoryImplementation());
 	}
 }
