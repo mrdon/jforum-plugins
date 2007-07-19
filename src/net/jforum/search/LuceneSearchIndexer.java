@@ -67,7 +67,7 @@ import org.apache.lucene.store.RAMDirectory;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchIndexer.java,v 1.6 2007/07/19 03:53:01 rafaelsteil Exp $
+ * @version $Id: LuceneSearchIndexer.java,v 1.7 2007/07/19 17:21:01 rafaelsteil Exp $
  */
 public class LuceneSearchIndexer implements SearchIndexerDAO
 {
@@ -128,8 +128,10 @@ public class LuceneSearchIndexer implements SearchIndexerDAO
 	public void insertSearchWords(List posts)
 	{
 		synchronized (MUTEX) {
+			IndexWriter writer = null;
+			
 			try {
-				IndexWriter writer = new IndexWriter(this.directory, this.analyzer, true);
+				writer = new IndexWriter(this.directory, this.analyzer);
 				
 				for (Iterator iter = posts.iterator(); iter.hasNext(); ) {
 					Post post = (Post)iter.next();
@@ -141,15 +143,21 @@ public class LuceneSearchIndexer implements SearchIndexerDAO
 						logger.debug("Indexing post #" + post.getId());
 					}
 				}
-				
-				writer.flush();
-				writer.close();
-				
-				this.notifyNewDocumentAdded();
 			}
 			catch (Exception e) {
 				logger.error(e.toString(), e);
 				e.printStackTrace();
+			}
+			finally {
+				if (writer != null) {
+					try {
+						writer.flush();
+						writer.close();
+						
+						this.notifyNewDocumentAdded();
+					}
+					catch (Exception e) {}
+				}
 			}
 		}
 	}

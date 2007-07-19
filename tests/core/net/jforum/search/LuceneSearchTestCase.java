@@ -12,45 +12,14 @@ import junit.framework.TestCase;
 import net.jforum.dao.SearchData;
 import net.jforum.entities.Post;
 
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.Field.Index;
-import org.apache.lucene.document.Field.Store;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.search.Hits;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.RAMDirectory;
-
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchTestCase.java,v 1.7 2007/07/19 03:53:01 rafaelsteil Exp $
+ * @version $Id: LuceneSearchTestCase.java,v 1.9 2007/07/19 17:22:14 rafaelsteil Exp $
  */
 public class LuceneSearchTestCase extends TestCase
 {
 	private LuceneSearchIndexer indexer;
 	private LuceneSearch search;
-	
-	public void testX() throws Exception
-	{
-		Directory dir = new RAMDirectory();
-		IndexWriter writer = new IndexWriter(dir, new StandardAnalyzer());
-		
-		Document d = new Document();
-		d.add(new Field("forum.id", "1", Store.YES, Index.UN_TOKENIZED));
-		
-		writer.addDocument(d);
-		
-		writer.close();
-		
-		IndexSearcher search = new IndexSearcher(dir);
-		Hits hits = search.search(new TermQuery(new Term("forum.id", "1")));
-		
-		Assert.assertEquals(1, hits.length());
-	}
 	
 	public void testIndexTwoDifferentForumsSearchOneExpectOneResult()
 	{

@@ -60,7 +60,7 @@ import net.jforum.exceptions.SearchException;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.4 2007/07/19 03:53:01 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.5 2007/07/19 17:21:01 rafaelsteil Exp $
  */
 public class LuceneSearch implements SearchDAO, NewDocumentAdded
 {
@@ -100,7 +100,6 @@ public class LuceneSearch implements SearchDAO, NewDocumentAdded
 		List l = new ArrayList();
 		
 		try {
-			this.newDocumentAdded();
 			Hits hits = null;
 			
 			if (sd.getForumId() > 0) {
@@ -116,6 +115,8 @@ public class LuceneSearch implements SearchDAO, NewDocumentAdded
 					
 					SearchResult result = new SearchResult(null, null, null, 
 						new Forum(Integer.parseInt(doc.get(SearchFields.Keyword.FORUM_ID))), null);
+					
+					l.add(result);
 				}
 			}
 		}
