@@ -67,7 +67,7 @@ import org.apache.lucene.store.RAMDirectory;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchIndexer.java,v 1.8 2007/07/23 15:21:39 rafaelsteil Exp $
+ * @version $Id: LuceneSearchIndexer.java,v 1.9 2007/07/23 16:28:02 rafaelsteil Exp $
  */
 public class LuceneSearchIndexer implements SearchIndexerDAO
 {
@@ -142,7 +142,7 @@ public class LuceneSearchIndexer implements SearchIndexerDAO
 					this.optimize(writer);
 					
 					if (logger.isDebugEnabled()) {
-						logger.debug("Indexed post #" + post.getId());
+						logger.debug("Indexed " + document);
 					}
 				}
 			}
@@ -191,8 +191,8 @@ public class LuceneSearchIndexer implements SearchIndexerDAO
 		
 		// We add the subject and message text together because, when searching, we only care about the 
 		// matches, not where it was performed. The real subject and contents will be fetched from the database
-		d.add(new Field(SearchFields.Indexed.CONTENTS, p.getSubject() + " " + p.getText(), Store.NO, Index.TOKENIZED));
-		d.add(new Field(SearchFields.Indexed.USERNAME, p.getPostUsername(), Store.NO, Index.TOKENIZED));
+		d.add(new Field(SearchFields.Indexed.CONTENTS, p.getSubject() + " " + p.getText(), Store.YES, Index.TOKENIZED));
+		d.add(new Field(SearchFields.Indexed.USERNAME, p.getPostUsername(), Store.YES, Index.TOKENIZED));
 		
 		return d;
 	}

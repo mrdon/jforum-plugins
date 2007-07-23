@@ -62,7 +62,7 @@ import org.apache.lucene.store.Directory;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.8 2007/07/23 15:36:26 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.9 2007/07/23 16:28:02 rafaelsteil Exp $
  */
 public class LuceneSearch implements SearchDAO, NewDocumentAdded
 {
@@ -142,13 +142,15 @@ public class LuceneSearch implements SearchDAO, NewDocumentAdded
 		String[] keywords = sd.getKeywords();
 		
 		if (keywords.length > 0) {
-			sb.append(" +(")
+			sb.append(" (")
 				.append(SearchFields.Indexed.CONTENTS)
 				.append(':');
 			
-			for (int i = 0; i < keywords.length; i++) {
-				sb.append(keywords[i]).append(' ');
+			for (int i = 0; i < keywords.length - 1; i++) {
+				sb.append(keywords[i]).append(" AND ");
 			}
+			
+			sb.append(keywords[keywords.length - 1]);
 			
 			sb.append(") ");
 		}
