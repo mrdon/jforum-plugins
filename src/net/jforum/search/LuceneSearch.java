@@ -62,7 +62,7 @@ import org.apache.lucene.store.Directory;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.6 2007/07/23 15:21:39 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.7 2007/07/23 15:34:50 rafaelsteil Exp $
  */
 public class LuceneSearch implements SearchDAO, NewDocumentAdded
 {
@@ -111,7 +111,21 @@ public class LuceneSearch implements SearchDAO, NewDocumentAdded
 					.append(SearchFields.Keyword.FORUM_ID)
 					.append(':')
 					.append(sd.getForumId())
-					.append(')');
+					.append(") ");
+			}
+			
+			String[] keywords = sd.getKeywords();
+			
+			if (keywords.length > 0) {
+				sb.append(" +(")
+					.append(SearchFields.Indexed.CONTENTS)
+					.append(':');
+				
+				for (int i = 0; i < keywords.length; i++) {
+					sb.append(keywords[i]);
+				}
+				
+				sb.append(") ");
 			}
 			
 			Query query = new QueryParser("", new StandardAnalyzer()).parse(sb.toString());
