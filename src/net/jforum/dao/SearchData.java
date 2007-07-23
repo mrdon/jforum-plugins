@@ -46,7 +46,7 @@ import java.util.Date;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchData.java,v 1.9 2006/08/20 22:47:22 rafaelsteil Exp $
+ * @version $Id: SearchData.java,v 1.10 2007/07/23 15:21:39 rafaelsteil Exp $
  */
 public class SearchData 
 {
@@ -59,7 +59,6 @@ public class SearchData
 	private boolean searchStarted;
 	
 	private int forumId;
-	private int categoryId;
 	
 	private Date time;
 	
@@ -91,11 +90,6 @@ public class SearchData
 	public void setSearchStarted(boolean started)
 	{
 		this.searchStarted = started;
-	}
-	
-	public void setCategoryId(int categoryId)
-	{
-		this.categoryId = categoryId;
 	}
 	
 	public void setOrderBy(String orderBy)
@@ -130,11 +124,6 @@ public class SearchData
 	public int getForumId()
 	{
 		return this.forumId;
-	}
-	
-	public int getCategoryId()
-	{
-		return this.categoryId;
 	}
 	
 	public String getOrderBy()

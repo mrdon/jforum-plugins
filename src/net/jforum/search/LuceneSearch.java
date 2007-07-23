@@ -46,24 +46,28 @@ package net.jforum.search;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.lucene.document.Document;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.search.Hits;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.store.Directory;
-
 import net.jforum.dao.SearchDAO;
 import net.jforum.dao.SearchData;
 import net.jforum.entities.Forum;
 import net.jforum.exceptions.SearchException;
 
+import org.apache.log4j.Logger;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.Hits;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.store.Directory;
+
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.5 2007/07/19 17:21:01 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.6 2007/07/23 15:21:39 rafaelsteil Exp $
  */
 public class LuceneSearch implements SearchDAO, NewDocumentAdded
 {
+	private static final Logger logger = Logger.getLogger(LuceneSearch.class);
+	
 	private IndexSearcher search;
 	private Directory directory;
 	
@@ -100,13 +104,24 @@ public class LuceneSearch implements SearchDAO, NewDocumentAdded
 		List l = new ArrayList();
 		
 		try {
-			Hits hits = null;
+			StringBuffer sb = new StringBuffer(256);
 			
 			if (sd.getForumId() > 0) {
-				hits = this.search.search(new TermQuery(
-					new Term(SearchFields.Keyword.FORUM_ID, String.valueOf(sd.getForumId()))));
+				sb.append("+(")
+					.append(SearchFields.Keyword.FORUM_ID)
+					.append(':')
+					.append(sd.getForumId())
+					.append(')');
 			}
 			
+			Query query = new QueryParser("", new StandardAnalyzer()).parse(sb.toString());
+			
+			if (logger.isDebugEnabled()) {
+				logger.debug("Generated query: " + query);
+			}
+			
+			Hits hits = this.search.search(query);
+			 			
 			if (hits != null && hits.length() > 0) {
 				int total = hits.length(); 
 				

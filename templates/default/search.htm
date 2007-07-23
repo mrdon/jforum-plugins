@@ -23,11 +23,10 @@
 				<p><span class="genmed">
 				<input class="post" style="WIDTH: 300px" size="30" name="search_keywords" />
 				<br /><br />
-				<input name="search_terms" type="radio" value="all" checked="checked" /> 
-				${I18n.getMessage("Search.allTerms")}
+				<input name="search_terms" type="radio" value="all" checked="checked" id="all_terms"/><label for="all_terms">${I18n.getMessage("Search.allTerms")}</label>
 				</span>
 				<br />
-				<span class="genmed"><input type="radio" value="any" name="search_terms" />${I18n.getMessage("Search.anyTerm")}</span>
+				<span class="genmed"><input type="radio" value="any" name="search_terms" id="any_term"/><label for="any_term">${I18n.getMessage("Search.anyTerm")}</label></span>
 				</p>
 			</td>
         </tr>
@@ -42,15 +41,17 @@
 				<select class="post" name="search_forum">
 					<option value="" selected="selected">${I18n.getMessage("Search.allAvailable")}</option>
 					<#list categories as c>
-						<#list c.getForums() as f>
-		  					<option value="${f.id}">${f.name}</option>
-						</#list>
+						<optgroup label="${c.name}">
+							<#list c.getForums() as f>
+								<option value="${f.id}">${f.name}</option>
+							</#list>
+						</optgroup>
 					</#list>
 				</select>
 				</span>
 			</td>
-			<td class="row1" align="right" rowspan="2"><span class="gen">${I18n.getMessage("Search.orderBy")}:&nbsp;</span></td>
-			<td class="row2" valign="middle" nowrap="nowrap" rowspan="2">
+			<td class="row1" align="right"><span class="gen">${I18n.getMessage("Search.orderBy")}:&nbsp;</span></td>
+			<td class="row2" valign="middle" nowrap="nowrap">
 				<span class="genmed">
 				<select class="post" name="sort_by">
 					<option value="time" selected="selected">${I18n.getMessage("Search.postDate")}</option>
@@ -61,21 +62,8 @@
 					<option value="forum">${I18n.getMessage("Search.forum")}</option>
 				</select>
 				<br />
-				<input type="radio" value="ASC" name="sort_dir" /> ${I18n.getMessage("Search.ascending")}<br />
-				<input type="radio" checked="checked" value="DESC" name="sort_dir" /> ${I18n.getMessage("Search.descending")}
-				</span>
-			</td>
-		</tr>
-		<tr>
-			<td class="row1" align="right"><span class="gen">${I18n.getMessage("Search.category")}:&nbsp;</span></td>
-			<td class="row2">
-				<span class="genmed">
-				<select class="post" name="search_cat">
-					<option value="" selected="selected">${I18n.getMessage("Search.allAvailable")}</option>
-					<#list categories as c>
-		  				<option value="${c.id}">${c.name}</option>
-					</#list>
-				</select>
+				<input type="radio" value="ASC" name="sort_dir" id="sort_asc"/><label for="sort_asc">${I18n.getMessage("Search.ascending")}</label><br />
+				<input type="radio" checked="checked" value="DESC" name="sort_dir" id="sort_desc"/><label for="sort_desc">${I18n.getMessage("Search.descending")}</label>
 				</span>
 			</td>
 		</tr>

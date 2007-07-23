@@ -72,7 +72,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.32 2006/08/24 01:07:00 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.33 2007/07/23 15:21:38 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -80,7 +80,6 @@ public class SearchAction extends Command
 
 	private String searchTerms;
 	private String forum;
-	private String category;
 	private String sortBy;
 	private String sortDir;
 	private String kw;
@@ -93,7 +92,6 @@ public class SearchAction extends Command
 	static {
 		fieldsMap.put("search_terms", "searchTerms");
 		fieldsMap.put("search_forum", "forum");
-		fieldsMap.put("search_cat", "catgory");
 		fieldsMap.put("sort_by", "sortBy");
 		fieldsMap.put("sort_dir", "sortDir");
 		fieldsMap.put("search_keywords", "kw");
@@ -126,7 +124,6 @@ public class SearchAction extends Command
 	{
 		this.searchTerms = this.addSlashes(this.request.getParameter("search_terms"));
 		this.forum = this.addSlashes(this.request.getParameter("search_forum"));
-		this.category = this.addSlashes(this.request.getParameter("search_cat"));
 		
 		this.sortBy = (String)sortByMap.get(this.addSlashes(this.request.getParameter("sort_by")));
 		
@@ -170,10 +167,6 @@ public class SearchAction extends Command
 			sd.setForumId(Integer.parseInt(forum));
 		}
 		
-		if (category != null && !category.equals("")) {
-			sd.setCategoryId(Integer.parseInt(category));
-		}
-		
 		int start = ViewCommon.getStartPage();
 		int recordsPerPage = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
 		
@@ -201,7 +194,6 @@ public class SearchAction extends Command
 		this.context.put("kw", kw);
 		this.context.put("terms", searchTerms);
 		this.context.put("forum", forum);
-		this.context.put("category", category);
 		this.context.put("orderField", sortBy);
 		this.context.put("orderBy", sortDir);
 		this.context.put("author", author);
@@ -291,10 +283,6 @@ public class SearchAction extends Command
 
 		if (this.searchTerms != null) { 
 			path.append("&search_terms=").append(this.searchTerms); 
-		}
-
-		if (this.category != null) {
-			path.append("&search_cat=").append(this.category);
 		}
 
 		if (this.sortDir != null) {

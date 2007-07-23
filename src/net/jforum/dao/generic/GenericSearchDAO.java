@@ -66,7 +66,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericSearchDAO.java,v 1.19 2006/08/23 02:13:43 rafaelsteil Exp $
+ * @version $Id: GenericSearchDAO.java,v 1.20 2007/07/23 15:21:40 rafaelsteil Exp $
  */
 public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 {
@@ -95,16 +95,6 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 
 			if (sd.getForumId() != 0) {
 				criterias.append(" AND t.forum_id = ").append(sd.getForumId());
-			}
-
-			if (sd.getCategoryId() != 0) {
-				sql = sql.replaceAll(":table_category:", ", jforum_forums f");
-
-				criterias.append(" AND f.categories_id = ").append(sd.getCategoryId());
-				criterias.append(" AND t.forum_id = f.forum_id");
-			}
-			else {
-				sql = sql.replaceAll(":table_category:", "");
 			}
 
 			if (sd.getOrderByField() == null || sd.getOrderByField().equals("")) {

@@ -7,33 +7,53 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.xml.DOMConfigurator;
+
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import net.jforum.dao.SearchData;
 import net.jforum.entities.Post;
 
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.Field.Index;
-import org.apache.lucene.document.Field.Store;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.search.Hits;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.RAMDirectory;
-
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchTestCase.java,v 1.8 2007/07/19 17:21:02 rafaelsteil Exp $
+ * @version $Id: LuceneSearchTestCase.java,v 1.10 2007/07/23 15:21:40 rafaelsteil Exp $
  */
 public class LuceneSearchTestCase extends TestCase
 {
+	private static boolean logInitialized;
 	private LuceneSearchIndexer indexer;
 	private LuceneSearch search;
+	
+	public void testIndexThreePostsSearchSubjectExpectOneResult()
+	{
+		List l = new ArrayList();
+		
+		// 1
+		Post p = this.newPost();
+		p.setSubject("java");
+		l.add(p);
+		
+		// 2
+		p = this.newPost();
+		p.setSubject("something else");
+		l.add(p);
+		
+		// 3
+		p = this.newPost();
+		p.setSubject("debug");
+		l.add(p);
+		
+		this.indexer.insertSearchWords(l);
+		
+		// Search
+		SearchData sd = new SearchData();
+		sd.setKeywords("java");
+		
+		List results = this.search.search(sd);
+		
+		Assert.assertEquals(1, results.size());
+		Assert.assertEquals("java", ((SearchResult)results.get(0)).getSubject());
+	}
 	
 	public void testIndexTwoDifferentForumsSearchOneExpectOneResult()
 	{
@@ -92,6 +112,11 @@ public class LuceneSearchTestCase extends TestCase
 	
 	protected void setUp() throws Exception
 	{
+		if (!logInitialized) {
+			DOMConfigurator.configure(this.getClass().getResource("/log4j.xml"));
+			logInitialized = true;
+		}
+		
 		this.indexer = new LuceneSearchIndexer();
 		this.indexer.useRAMDirectory();
 		

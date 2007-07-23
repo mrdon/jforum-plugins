@@ -67,7 +67,7 @@ import org.apache.lucene.store.RAMDirectory;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchIndexer.java,v 1.7 2007/07/19 17:21:01 rafaelsteil Exp $
+ * @version $Id: LuceneSearchIndexer.java,v 1.8 2007/07/23 15:21:39 rafaelsteil Exp $
  */
 public class LuceneSearchIndexer implements SearchIndexerDAO
 {
@@ -136,17 +136,18 @@ public class LuceneSearchIndexer implements SearchIndexerDAO
 				for (Iterator iter = posts.iterator(); iter.hasNext(); ) {
 					Post post = (Post)iter.next();
 					
-					this.write(writer, this.createDocument(post));
+					Document document = this.createDocument(post);
+					writer.addDocument(document);
+					
 					this.optimize(writer);
 					
 					if (logger.isDebugEnabled()) {
-						logger.debug("Indexing post #" + post.getId());
+						logger.debug("Indexed post #" + post.getId());
 					}
 				}
 			}
 			catch (Exception e) {
 				logger.error(e.toString(), e);
-				e.printStackTrace();
 			}
 			finally {
 				if (writer != null) {
@@ -159,17 +160,6 @@ public class LuceneSearchIndexer implements SearchIndexerDAO
 					catch (Exception e) {}
 				}
 			}
-		}
-	}
-	
-	private void write(IndexWriter writer, Document document) throws Exception
-	{
-		try {
-			writer.addDocument(document);
-		}
-		catch (Exception e) {
-			logger.error(e.toString(), e);
-			e.printStackTrace();
 		}
 	}
 	
@@ -198,8 +188,10 @@ public class LuceneSearchIndexer implements SearchIndexerDAO
 		d.add(new Field(SearchFields.Keyword.USER_ID, String.valueOf(p.getUserId()), Store.YES, Index.UN_TOKENIZED));
 		
 		d.add(new Field(SearchFields.Indexed.DATE, p.getTime().toString(), Store.NO, Index.TOKENIZED));
-		d.add(new Field(SearchFields.Indexed.SUBJECT, p.getSubject(), Store.NO, Index.TOKENIZED));
-		d.add(new Field(SearchFields.Indexed.CONTENTS, p.getText(), Store.NO, Index.TOKENIZED));
+		
+		// We add the subject and message text together because, when searching, we only care about the 
+		// matches, not where it was performed. The real subject and contents will be fetched from the database
+		d.add(new Field(SearchFields.Indexed.CONTENTS, p.getSubject() + " " + p.getText(), Store.NO, Index.TOKENIZED));
 		d.add(new Field(SearchFields.Indexed.USERNAME, p.getPostUsername(), Store.NO, Index.TOKENIZED));
 		
 		return d;
