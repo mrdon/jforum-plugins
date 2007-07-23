@@ -16,7 +16,7 @@ import net.jforum.entities.Post;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchTestCase.java,v 1.13 2007/07/23 16:56:14 rafaelsteil Exp $
+ * @version $Id: LuceneSearchTestCase.java,v 1.14 2007/07/23 17:35:52 rafaelsteil Exp $
  */
 public class LuceneSearchTestCase extends TestCase
 {
@@ -25,7 +25,53 @@ public class LuceneSearchTestCase extends TestCase
 	private LuceneSearchIndexer indexer;
 	private LuceneSearch search;
 	
+	public void testFivePostsInTwoForumsSearchOneForumAndTwoValidTermsAndOneInvalidTermExpectThreeResults()
+	{
+		List l = this.createThreePosts();
+		((Post)l.get(0)).setForumId(1);
+		((Post)l.get(1)).setForumId(2);
+		((Post)l.get(2)).setForumId(1);
+		
+		// Post 4
+		Post p = this.newPost();
+		p.setText("It introduces you to searching, sorting, filtering and highlighting [...]");
+		p.setForumId(1);
+		l.add(p);
+		
+		// Post 5
+		p = this.newPost();
+		p.setText("How to integrate lucene into your applications");
+		p.setForumId(2);
+		l.add(p);
+		
+		this.indexer.insertSearchWords(l);
+		
+		// Search
+		SearchArgs args = new SearchArgs();
+		args.setForumId(1);
+		args.setKeywords("open lucene xpto authoritative");
+		
+		List results = this.search.search(args);
+		
+		Assert.assertEquals(3, results.size());
+	}
+	
 	public void testORExpressionUsingThreePostsSearchTwoTermsExpectThreeResults()
+	{
+		List l = this.createThreePosts();
+		
+		this.indexer.insertSearchWords(l);
+		
+		// Search
+		SearchArgs args = new SearchArgs();
+		args.setKeywords("open lucene");
+		
+		List results = this.search.search(args);
+		
+		Assert.assertEquals(3, results.size());
+	}
+
+	private List createThreePosts()
 	{
 		List l = new ArrayList();
 		
@@ -43,16 +89,7 @@ public class LuceneSearchTestCase extends TestCase
 		p = this.newPost();
 		p.setText("Powers search in surprising places [...] open to everyone");
 		l.add(p);
-		
-		this.indexer.insertSearchWords(l);
-		
-		// Search
-		SearchArgs args = new SearchArgs();
-		args.setKeywords("open lucene");
-		
-		List results = this.search.search(args);
-		
-		Assert.assertEquals(3, results.size());
+		return l;
 	}
 	
 	public void testANDExpressionUsingTwoPostsWithOneCommonWordSearchTwoTermsExpectOneResult()
