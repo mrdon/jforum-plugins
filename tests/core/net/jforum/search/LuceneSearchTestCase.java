@@ -17,7 +17,7 @@ import net.jforum.entities.Post;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchTestCase.java,v 1.15 2007/07/23 19:46:37 rafaelsteil Exp $
+ * @version $Id: LuceneSearchTestCase.java,v 1.16 2007/07/23 23:28:33 rafaelsteil Exp $
  */
 public class LuceneSearchTestCase extends TestCase
 {
@@ -34,11 +34,15 @@ public class LuceneSearchTestCase extends TestCase
 		((Post)l.get(1)).setForumId(2);
 		((Post)l.get(2)).setForumId(1);
 		
+		this.indexer.index((Post)l.get(0));
+		this.indexer.index((Post)l.get(1));
+		this.indexer.index((Post)l.get(2));
+		
 		// Post 4
 		Post p = this.newPost();
 		p.setText("It introduces you to searching, sorting, filtering and highlighting [...]");
 		p.setForumId(1);
-		l.add(p);
+		this.indexer.index(p);
 		
 		// Post 5
 		p = this.newPost();
@@ -46,7 +50,7 @@ public class LuceneSearchTestCase extends TestCase
 		p.setForumId(2);
 		l.add(p);
 		
-		this.indexer.insertSearchWords(l);
+		this.indexer.index(p);
 		
 		// Search
 		SearchArgs args = new SearchArgs();
@@ -62,7 +66,9 @@ public class LuceneSearchTestCase extends TestCase
 	{
 		List l = this.createThreePosts();
 		
-		this.indexer.insertSearchWords(l);
+		this.indexer.index((Post)l.get(0));
+		this.indexer.index((Post)l.get(1));
+		this.indexer.index((Post)l.get(2));
 		
 		// Search
 		SearchArgs args = new SearchArgs();
@@ -91,24 +97,21 @@ public class LuceneSearchTestCase extends TestCase
 		p = this.newPost();
 		p.setText("Powers search in surprising places [...] open to everyone");
 		l.add(p);
+		
 		return l;
 	}
 	
 	public void testANDExpressionUsingTwoPostsWithOneCommonWordSearchTwoTermsExpectOneResult()
 	{
-		List l = new ArrayList();
-		
 		// 1
 		Post p = this.newPost();
 		p.setText("a regular text with some magic word");
-		l.add(p);
+		this.indexer.index(p);
 		
 		// 2
 		p = this.newPost();
 		p.setText("say shazan to see the magic happen");
-		l.add(p);
-		
-		this.indexer.insertSearchWords(l);
+		this.indexer.index(p);
 		
 		// Search
 		SearchArgs args = new SearchArgs();
@@ -122,24 +125,20 @@ public class LuceneSearchTestCase extends TestCase
 	
 	public void testThreePostsSearchContentsExpectOneResult()
 	{
-		List l = new ArrayList();
-		
 		// 1
 		Post p = this.newPost();
 		p.setSubject("java");
-		l.add(p);
+		this.indexer.index(p);
 		
 		// 2
 		p = this.newPost();
 		p.setSubject("something else");
-		l.add(p);
+		this.indexer.index(p);
 		
 		// 3
 		p = this.newPost();
 		p.setSubject("debug");
-		l.add(p);
-		
-		this.indexer.insertSearchWords(l);
+		this.indexer.index(p);
 		
 		// Search
 		SearchArgs args = new SearchArgs();
@@ -152,19 +151,13 @@ public class LuceneSearchTestCase extends TestCase
 	
 	public void testTwoDifferentForumsSearchOneExpectOneResult()
 	{
-		List l = new ArrayList();
-		
 		Post p1 = this.newPost();
 		p1.setForumId(1);
-		
-		l.add(p1);
+		this.indexer.index(p1);
 		
 		Post p2 = this.newPost();
 		p2.setForumId(2);
-		
-		l.add(p2);
-		
-		this.indexer.insertSearchWords(l);
+		this.indexer.index(p2);
 		
 		SearchArgs args = new SearchArgs();
 		args.setForumId(1);
@@ -172,25 +165,6 @@ public class LuceneSearchTestCase extends TestCase
 		List results = this.search.search(args);
 		
 		Assert.assertEquals(1, results.size());
-	}
-	
-	public void testWatchNewDocumentAddedExpectOneNotification()
-	{
-		class HitTest {
-			boolean value;
-		}
-		
-		final HitTest hitTest = new HitTest();
-		
-		this.indexer.watchNewDocuDocumentAdded(new NewDocumentAdded() {
-			public void newDocumentAdded() {
-				hitTest.value = true;
-			}
-		});
-		
-		this.indexer.insertSearchWords(new ArrayList());
-		
-		Assert.assertTrue(hitTest.value);
 	}
 	
 	private Post newPost() 

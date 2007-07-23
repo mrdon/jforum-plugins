@@ -61,7 +61,7 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneStatsAction.java,v 1.2 2007/07/23 23:02:42 rafaelsteil Exp $
+ * @version $Id: LuceneStatsAction.java,v 1.3 2007/07/23 23:28:33 rafaelsteil Exp $
  */
 public class LuceneStatsAction extends AdminCommand
 {
@@ -73,9 +73,11 @@ public class LuceneStatsAction extends AdminCommand
 		this.setTemplateName(TemplateKeys.SEARCH_STATS_ADMIN_LIST);
 	}
 	
-	public void createIndex()
+	public void createIndex() throws Exception
 	{
-		
+		this.settings().createIndexDirectory(
+			new File(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH)));
+		this.reindex();
 	}
 	
 	public void reindex()
@@ -107,7 +109,8 @@ public class LuceneStatsAction extends AdminCommand
 	private boolean isSearchEngineLucene()
 	{
 		return LuceneSearchIndexer.class.getName()
-			.equals(SystemGlobals.getValue(ConfigKeys.SEARCH_INDEXER_IMPLEMENTATION));
+			.equals(SystemGlobals.getValue(ConfigKeys.SEARCH_INDEXER_IMPLEMENTATION))
+			|| this.settings() == null;
 	}
 	
 	private LuceneSettings settings()

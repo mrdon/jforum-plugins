@@ -48,10 +48,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.jforum.dao.SearchIndexerDAO;
 import net.jforum.entities.Post;
+import net.jforum.exceptions.ForumException;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.search.SearchManager;
 
 import org.apache.log4j.Logger;
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;
@@ -60,9 +64,9 @@ import org.apache.lucene.index.IndexWriter;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchIndexer.java,v 1.11 2007/07/23 19:46:36 rafaelsteil Exp $
+ * @version $Id: LuceneSearchIndexer.java,v 1.12 2007/07/23 23:28:33 rafaelsteil Exp $
  */
-public class LuceneSearchIndexer implements SearchIndexerDAO
+public class LuceneSearchIndexer implements SearchManager
 {
 	private static final Logger logger = Logger.getLogger(LuceneSearchIndexer.class);
 	private static final Object MUTEX = new Object();
@@ -79,11 +83,28 @@ public class LuceneSearchIndexer implements SearchIndexerDAO
 	{
 		this.newDocumentAddedList.add(newDoc);
 	}
+
+	/**
+	 * @see net.jforum.util.search.SearchManager#init()
+	 */
+	public void init()
+	{
+		try {
+			Analyzer analyzer = (Analyzer)Class.forName(SystemGlobals.getValue(
+				ConfigKeys.LUCENE_ANALYZER)).newInstance();
+			
+			this.setSettings(new LuceneSettings(analyzer));
+			this.settings.useFSDirectory(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH));
+		}
+		catch (Exception e) {
+			throw new ForumException(e);
+		}
+	}
 	
 	/**
-	 * @see net.jforum.dao.SearchIndexerDAO#insertSearchWords(java.util.List)
+	 * @see net.jforum.util.search.SearchManager#index(net.jforum.entities.Post)
 	 */
-	public void insertSearchWords(List posts)
+	public void index(Post post)
 	{
 		synchronized (MUTEX) {
 			IndexWriter writer = null;
@@ -91,17 +112,13 @@ public class LuceneSearchIndexer implements SearchIndexerDAO
 			try {
 				writer = new IndexWriter(this.settings.directory(), this.settings.analyzer());
 				
-				for (Iterator iter = posts.iterator(); iter.hasNext(); ) {
-					Post post = (Post)iter.next();
-					
-					Document document = this.createDocument(post);
-					writer.addDocument(document);
-					
-					this.optimize(writer);
-					
-					if (logger.isDebugEnabled()) {
-						logger.debug("Indexed " + document);
-					}
+				Document document = this.createDocument(post);
+				writer.addDocument(document);
+				
+				this.optimize(writer);
+				
+				if (logger.isDebugEnabled()) {
+					logger.debug("Indexed " + document);
 				}
 			}
 			catch (Exception e) {
@@ -160,16 +177,6 @@ public class LuceneSearchIndexer implements SearchIndexerDAO
 		for (Iterator iter = this.newDocumentAddedList.iterator(); iter.hasNext(); ) {
 			((NewDocumentAdded)iter.next()).newDocumentAdded();
 		}
-	}
-	
-	/**
-	 * @see net.jforum.dao.SearchIndexerDAO#insertSearchWords(net.jforum.entities.Post)
-	 */
-	public void insertSearchWords(Post post)
-	{
-		List l = new ArrayList();
-		l.add(post);
-		this.insertSearchWords(l);
 	}
 
 	/**
