@@ -46,7 +46,7 @@ import java.util.Date;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchData.java,v 1.10 2007/07/23 15:21:39 rafaelsteil Exp $
+ * @version $Id: SearchData.java,v 1.11 2007/07/23 15:34:50 rafaelsteil Exp $
  */
 public class SearchData 
 {
@@ -104,7 +104,7 @@ public class SearchData
 	
 	public String[] getKeywords()
 	{
-		if (this.keywords == null) {
+		if (this.keywords == null || this.keywords.trim().length() == 0) {
 			return new String[] {};
 		}
 

@@ -62,7 +62,7 @@ import org.apache.lucene.store.Directory;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.7 2007/07/23 15:34:50 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.8 2007/07/23 15:36:26 rafaelsteil Exp $
  */
 public class LuceneSearch implements SearchDAO, NewDocumentAdded
 {
@@ -106,27 +106,8 @@ public class LuceneSearch implements SearchDAO, NewDocumentAdded
 		try {
 			StringBuffer sb = new StringBuffer(256);
 			
-			if (sd.getForumId() > 0) {
-				sb.append("+(")
-					.append(SearchFields.Keyword.FORUM_ID)
-					.append(':')
-					.append(sd.getForumId())
-					.append(") ");
-			}
-			
-			String[] keywords = sd.getKeywords();
-			
-			if (keywords.length > 0) {
-				sb.append(" +(")
-					.append(SearchFields.Indexed.CONTENTS)
-					.append(':');
-				
-				for (int i = 0; i < keywords.length; i++) {
-					sb.append(keywords[i]);
-				}
-				
-				sb.append(") ");
-			}
+			this.filterByForum(sd, sb);
+			this.filterByKeywords(sd, sb);
 			
 			Query query = new QueryParser("", new StandardAnalyzer()).parse(sb.toString());
 			
@@ -154,6 +135,34 @@ public class LuceneSearch implements SearchDAO, NewDocumentAdded
 		}
 		
 		return l;
+	}
+
+	private void filterByKeywords(SearchData sd, StringBuffer sb)
+	{
+		String[] keywords = sd.getKeywords();
+		
+		if (keywords.length > 0) {
+			sb.append(" +(")
+				.append(SearchFields.Indexed.CONTENTS)
+				.append(':');
+			
+			for (int i = 0; i < keywords.length; i++) {
+				sb.append(keywords[i]).append(' ');
+			}
+			
+			sb.append(") ");
+		}
+	}
+
+	private void filterByForum(SearchData sd, StringBuffer sb)
+	{
+		if (sd.getForumId() > 0) {
+			sb.append("+(")
+				.append(SearchFields.Keyword.FORUM_ID)
+				.append(':')
+				.append(sd.getForumId())
+				.append(") ");
+		}
 	}
 	
 	public void cleanSearch() { }

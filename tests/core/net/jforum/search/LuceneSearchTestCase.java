@@ -16,7 +16,7 @@ import net.jforum.entities.Post;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchTestCase.java,v 1.10 2007/07/23 15:21:40 rafaelsteil Exp $
+ * @version $Id: LuceneSearchTestCase.java,v 1.11 2007/07/23 15:34:50 rafaelsteil Exp $
  */
 public class LuceneSearchTestCase extends TestCase
 {
@@ -24,7 +24,7 @@ public class LuceneSearchTestCase extends TestCase
 	private LuceneSearchIndexer indexer;
 	private LuceneSearch search;
 	
-	public void testIndexThreePostsSearchSubjectExpectOneResult()
+	public void testIndexThreePostsSearchContentsExpectOneResult()
 	{
 		List l = new ArrayList();
 		
@@ -52,7 +52,6 @@ public class LuceneSearchTestCase extends TestCase
 		List results = this.search.search(sd);
 		
 		Assert.assertEquals(1, results.size());
-		Assert.assertEquals("java", ((SearchResult)results.get(0)).getSubject());
 	}
 	
 	public void testIndexTwoDifferentForumsSearchOneExpectOneResult()
