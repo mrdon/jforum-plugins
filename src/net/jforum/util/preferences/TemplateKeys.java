@@ -44,7 +44,7 @@ package net.jforum.util.preferences;
 
 /**
  * @author Rafael Steil
- * @version $Id: TemplateKeys.java,v 1.22 2007/07/09 00:45:06 rafaelsteil Exp $
+ * @version $Id: TemplateKeys.java,v 1.23 2007/07/23 18:32:52 rafaelsteil Exp $
  */
 public class TemplateKeys
 {
@@ -198,4 +198,6 @@ public class TemplateKeys
 	public static final String BANLIST_INSERT = "banlist.insert";
 	public static final String MODERATION_SHOW_ACTIVITY_LOG = "moderation.show.activity.log";
 	public static final String MODERATION_LOG_DENIED = "moderation.log.denied";
+	
+	public static final String SEARCH_STATS_ADMIN_LIST = "search.stats.admin.list";
 }
