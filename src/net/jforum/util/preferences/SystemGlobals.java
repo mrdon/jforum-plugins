@@ -70,7 +70,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author Pieter Olivier
- * @version $Id: SystemGlobals.java,v 1.29 2007/04/12 02:11:55 rafaelsteil Exp $
+ * @version $Id: SystemGlobals.java,v 1.30 2007/07/23 23:02:42 rafaelsteil Exp $
  */
 public class SystemGlobals implements VariableStore
 {
@@ -141,6 +141,16 @@ public class SystemGlobals implements VariableStore
 	{
 		globals.installation.put(field, value);
 		globals.expander.clearCache();
+	}
+	
+	public static void setObjectValue(String field, Object value)
+	{
+		globals.installation.put(field, value);
+	}
+	
+	public static Object getObjectValue(String field)
+	{
+		return globals.installation.get(field);
 	}
 
 	/**

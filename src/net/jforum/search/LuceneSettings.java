@@ -54,7 +54,7 @@ import org.apache.lucene.store.RAMDirectory;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSettings.java,v 1.1 2007/07/23 19:46:36 rafaelsteil Exp $
+ * @version $Id: LuceneSettings.java,v 1.2 2007/07/23 23:02:43 rafaelsteil Exp $
  */
 public class LuceneSettings
 {
@@ -84,7 +84,7 @@ public class LuceneSettings
 		this.directory = FSDirectory.getDirectory(indexDirectory);
 	}
 	
-	private void createIndexDirectory(File directory) throws IOException 
+	public void createIndexDirectory(File directory) throws IOException 
 	{
 		FSDirectory fsDir = FSDirectory.getDirectory(directory);
 		IndexWriter writer = new IndexWriter(fsDir, this.analyzer, true);

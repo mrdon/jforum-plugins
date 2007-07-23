@@ -56,14 +56,31 @@
 				</tr>
 
 				<tr>
-					<td class="row1"><p><a id="smilies" class="genmed" href="${contextPath}/adminSearchStats/list${extension}" target="main">${I18n.getMessage("Admin.search")}</a></p></td>
+					<td class="row1">
+						<table width="100%" cellspacing="0" cellpadding="0">
+							<tr>
+								<td colspan="2" class="genmed">
+									<a href="${contextPath}/adminSearchStats/list${extension}" target="main">${I18n.getMessage("Admin.search")}</a>
+								</td>
+							</tr>
+							<tr>
+								<td width="20px">&nbsp;</td>
+								<td>
+									<a class="gensmall" href="${contextPath}/jforum${extension}?module=adminSearchStats&action=reindex" target="main">${I18n.getMessage("SearchStats.ReIndex")}</a>
+								</td>
+							</tr>
+						</table>
+					</td>
 				</tr>
 
 				<tr>
 					<td class="row1">
-						<p></p>
 						<table width="100%" cellspacing="0" cellpadding="0">
-							<tr><td colspan="2"><span class="genmed">${I18n.getMessage("Admin.attachments")}</span></td></tr>
+							<tr>
+								<td colspan="2" class="genmed">
+									${I18n.getMessage("Admin.attachments")}
+								</td>
+							</tr>
 							<tr>
 								<td width="20px">&nbsp;</td>
 								<td>
@@ -95,11 +112,6 @@
 						
 					</td>
 				</tr>
-				<!--
-				<tr>
-					<td class="row1"><p><a id="banners" class="genmed" href="${contextPath}/adminBanner/list${extension}" target="main">${I18n.getMessage("Admin.banners")}</a></p></td>
-				</tr>
-				-->
 
 				<tr>
 					<td class="row1"><p><a id="configurations" class="genmed" href="${contextPath}/adminCache/list${extension}" target="main">${I18n.getMessage("Admin.cache")}</a></p></td>

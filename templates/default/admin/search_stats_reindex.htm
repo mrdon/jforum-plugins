@@ -1,0 +1,30 @@
+<style type="text/css">@import url( ${contextPath}/templates/${templateName}/admin/style.css );</style>
+
+<table class="forumline" cellspacing="1" cellpadding="3" width="100%">
+	<tr>
+		<th class="thhead" colspan="5">${I18n.getMessage("SearchStats.ReIndex")}</th>
+	</tr>
+
+	<tr>
+		<td class="genmed">
+			Total posts in the database: ${totalMessages}
+		</td>
+	</tr>
+
+	<tr>
+		<td class="genmed">
+			Index location: ${indexLocation}
+		</td>
+	</tr>
+
+	<tr>
+		<td class="genmed">
+			Index exists: 
+			<#if indexExists>
+				Yes
+			<#else>
+				No. <a href="${contextPath}/jforum${extension}?module=${moduleName}&action=createIndex">Create index now.</a>
+			</#if>
+		</td>
+	</tr>
+</table>

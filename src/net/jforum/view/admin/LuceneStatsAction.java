@@ -43,11 +43,25 @@
  */
 package net.jforum.view.admin;
 
+import java.io.File;
+
+import org.apache.lucene.index.IndexReader;
+
+import freemarker.template.SimpleHash;
+import freemarker.template.Template;
+
+import net.jforum.context.RequestContext;
+import net.jforum.context.ResponseContext;
+import net.jforum.repository.ForumRepository;
+import net.jforum.search.LuceneSearchIndexer;
+import net.jforum.search.LuceneSettings;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneStatsAction.java,v 1.1 2007/07/23 18:32:52 rafaelsteil Exp $
+ * @version $Id: LuceneStatsAction.java,v 1.2 2007/07/23 23:02:42 rafaelsteil Exp $
  */
 public class LuceneStatsAction extends AdminCommand
 {
@@ -57,5 +71,47 @@ public class LuceneStatsAction extends AdminCommand
 	public void list()
 	{
 		this.setTemplateName(TemplateKeys.SEARCH_STATS_ADMIN_LIST);
+	}
+	
+	public void createIndex()
+	{
+		
+	}
+	
+	public void reindex()
+	{
+		File indexDir = new File(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH));
+		
+		this.setTemplateName(TemplateKeys.SEARCH_STATS_REINDEX);
+		
+		this.context.put("indexExists", IndexReader.indexExists(indexDir));
+		this.context.put("indexLocation", indexDir.getAbsolutePath());
+		this.context.put("totalMessages", new Integer(ForumRepository.getTotalMessages()));
+	}
+	
+	public void luceneNotEnabled()
+	{
+		this.setTemplateName(TemplateKeys.SEARCH_STATS_NOT_ENABLED);
+	}
+	
+	public Template process(RequestContext request, ResponseContext response, SimpleHash context)
+	{
+		if (!this.isSearchEngineLucene()) {
+			this.ignoreAction();
+			this.luceneNotEnabled();
+		}
+		
+		return super.process(request, response, context);
+	}
+	
+	private boolean isSearchEngineLucene()
+	{
+		return LuceneSearchIndexer.class.getName()
+			.equals(SystemGlobals.getValue(ConfigKeys.SEARCH_INDEXER_IMPLEMENTATION));
+	}
+	
+	private LuceneSettings settings()
+	{
+		return (LuceneSettings)SystemGlobals.getObjectValue(ConfigKeys.LUCENE_SETTINGS);
 	}
 }
