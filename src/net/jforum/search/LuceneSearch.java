@@ -46,8 +46,8 @@ package net.jforum.search;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.jforum.dao.SearchDAO;
 import net.jforum.dao.SearchArgs;
+import net.jforum.dao.SearchDAO;
 import net.jforum.entities.Forum;
 import net.jforum.exceptions.SearchException;
 
@@ -58,28 +58,27 @@ import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.store.Directory;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.11 2007/07/23 16:56:13 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.12 2007/07/23 19:46:36 rafaelsteil Exp $
  */
 public class LuceneSearch implements SearchDAO, NewDocumentAdded
 {
 	private static final Logger logger = Logger.getLogger(LuceneSearch.class);
 	
 	private IndexSearcher search;
-	private Directory directory;
+	private LuceneSettings settings;
 	
-	public void setDirectory(Directory directory) throws Exception
+	public void setSettings(LuceneSettings settings) throws Exception
 	{
-		this.directory = directory;
+		this.settings = settings;
 		this.openSearch();
 	}
 	
 	private void openSearch() throws Exception
 	{
-		this.search = new IndexSearcher(this.directory);
+		this.search = new IndexSearcher(this.settings.directory());
 	}
 	
 	/**

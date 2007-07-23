@@ -43,8 +43,6 @@
  */
 package net.jforum.search;
 
-import java.io.File;
-import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -54,72 +52,32 @@ import net.jforum.dao.SearchIndexerDAO;
 import net.jforum.entities.Post;
 
 import org.apache.log4j.Logger;
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.store.RAMDirectory;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchIndexer.java,v 1.10 2007/07/23 16:32:31 rafaelsteil Exp $
+ * @version $Id: LuceneSearchIndexer.java,v 1.11 2007/07/23 19:46:36 rafaelsteil Exp $
  */
 public class LuceneSearchIndexer implements SearchIndexerDAO
 {
 	private static final Logger logger = Logger.getLogger(LuceneSearchIndexer.class);
 	private static final Object MUTEX = new Object();
 	
-	private Directory directory;
-	private Analyzer analyzer = new StandardAnalyzer();
+	private LuceneSettings settings;
 	private List newDocumentAddedList = new ArrayList();
 	
-	public void useRAMDirectory() throws Exception
+	public void setSettings(LuceneSettings settings)
 	{
-		this.directory = new RAMDirectory();
-		IndexWriter writer = new IndexWriter(this.directory, this.analyzer, true);
-		writer.close();
-	}
-	
-	public void useFSDirectory(String indexWritePath) throws Exception
-	{
-		File indexDirectory = new File(indexWritePath);
-		
-		if (!indexDirectory.exists()) {
-			this.createIndexDirectory(indexDirectory);
-		}
-		
-		this.directory = FSDirectory.getDirectory(indexDirectory);
-	}
-	
-	public Directory directoryImplementation()
-	{
-		return this.directory;
+		this.settings = settings;
 	}
 	
 	public void watchNewDocuDocumentAdded(NewDocumentAdded newDoc)
 	{
 		this.newDocumentAddedList.add(newDoc);
-	}
-	
-	private void createIndexDirectory(File directory) throws IOException 
-	{
-		logger.info("Creating new index search directory");
-		
-		FSDirectory fsDir = FSDirectory.getDirectory(directory);
-		IndexWriter writer = new IndexWriter(fsDir, this.analyzer, true);
-		writer.close();
-		
-		logger.info("Search index directory created");
-	}
-	
-	public void setAnalyzer(Analyzer analyzer)
-	{
-		this.analyzer = analyzer;
 	}
 	
 	/**
@@ -131,7 +89,7 @@ public class LuceneSearchIndexer implements SearchIndexerDAO
 			IndexWriter writer = null;
 			
 			try {
-				writer = new IndexWriter(this.directory, this.analyzer);
+				writer = new IndexWriter(this.settings.directory(), this.settings.analyzer());
 				
 				for (Iterator iter = posts.iterator(); iter.hasNext(); ) {
 					Post post = (Post)iter.next();

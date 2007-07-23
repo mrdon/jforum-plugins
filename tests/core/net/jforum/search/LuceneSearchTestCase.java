@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.xml.DOMConfigurator;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -16,14 +17,15 @@ import net.jforum.entities.Post;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchTestCase.java,v 1.14 2007/07/23 17:35:52 rafaelsteil Exp $
+ * @version $Id: LuceneSearchTestCase.java,v 1.15 2007/07/23 19:46:37 rafaelsteil Exp $
  */
 public class LuceneSearchTestCase extends TestCase
 {
 	private static boolean logInitialized;
 	
-	private LuceneSearchIndexer indexer;
 	private LuceneSearch search;
+	private LuceneSettings settings;
+	private LuceneSearchIndexer indexer;
 	
 	public void testFivePostsInTwoForumsSearchOneForumAndTwoValidTermsAndOneInvalidTermExpectThreeResults()
 	{
@@ -210,11 +212,14 @@ public class LuceneSearchTestCase extends TestCase
 			logInitialized = true;
 		}
 		
+		this.settings = new LuceneSettings(new StandardAnalyzer());
+		this.settings.useRAMDirectory();
+		
 		this.indexer = new LuceneSearchIndexer();
-		this.indexer.useRAMDirectory();
+		this.indexer.setSettings(this.settings);
 		
 		this.search = new LuceneSearch();
-		this.search.setDirectory(this.indexer.directoryImplementation());
+		this.search.setSettings(this.settings);
 		
 		this.indexer.watchNewDocuDocumentAdded(this.search);
 	}

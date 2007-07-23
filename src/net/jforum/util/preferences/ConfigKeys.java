@@ -48,7 +48,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.107 2007/07/08 14:11:44 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.108 2007/07/23 19:46:37 rafaelsteil Exp $
 */
 
 public class ConfigKeys 
@@ -292,6 +292,9 @@ public class ConfigKeys
 	
 	public static final String LOGIN_IGNORE_XFORWARDEDHOST = "login.ignore.xforwardedhost";
 	public static final String LOGIN_IGNORE_REFERER = "login.ignore.referer";
+	
+	public static final String LUCENE_ANALYZER = "lucene.analyzer";
+	public static final String LUCENE_INDEX_WRITE_PATH = "lucene.index.write.path";
     
 	private ConfigKeys() {}
 }
