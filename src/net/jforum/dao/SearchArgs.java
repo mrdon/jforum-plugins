@@ -46,16 +46,16 @@ import java.util.Date;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchData.java,v 1.11 2007/07/23 15:34:50 rafaelsteil Exp $
+ * @version $Id: SearchArgs.java,v 1.1 2007/07/23 16:56:13 rafaelsteil Exp $
  */
-public class SearchData 
+public class SearchArgs 
 {
 	private String keywords = "";
 	private String author;
 	private String orderBy = "ASC";
 	private String orderByField;
 	
-	private boolean useAllWords;
+	private boolean matchAllKeywords;
 	private boolean searchStarted;
 	
 	private int forumId;
@@ -67,9 +67,9 @@ public class SearchData
 		this.keywords = keywords;
 	}
 	
-	public void setUseAllWords(boolean b)
+	public void matchAllKeywords()
 	{
-		this.useAllWords = b;
+		this.matchAllKeywords = true;
 	}
 	
 	public void setAuthor(String author)
@@ -111,9 +111,9 @@ public class SearchData
 		return this.keywords.split(" ");
 	}
 	
-	public boolean getUseAllWords()
+	public boolean shouldMatchAllKeywords()
 	{
-		return this.useAllWords;
+		return this.matchAllKeywords;
 	}
 	
 	public String getAuthor()

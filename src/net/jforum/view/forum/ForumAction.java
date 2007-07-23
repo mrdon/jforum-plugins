@@ -55,7 +55,7 @@ import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
 import net.jforum.dao.ModerationDAO;
-import net.jforum.dao.SearchData;
+import net.jforum.dao.SearchArgs;
 import net.jforum.entities.Forum;
 import net.jforum.entities.MostUsersEverOnline;
 import net.jforum.entities.Topic;
@@ -75,7 +75,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.59 2007/07/16 15:05:52 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.60 2007/07/23 16:56:13 rafaelsteil Exp $
  */
 public class ForumAction extends Command
 {
@@ -255,7 +255,7 @@ public class ForumAction extends Command
 	// Mark all topics as read
 	public void readAll()
 	{
-		SearchData sd = new SearchData();
+		SearchArgs sd = new SearchArgs();
 		sd.setTime(SessionFacade.getUserSession().getLastVisit());
 
 		String forumId = this.request.getParameter("forum_id");

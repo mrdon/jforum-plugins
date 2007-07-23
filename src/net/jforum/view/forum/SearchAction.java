@@ -56,7 +56,7 @@ import net.jforum.context.RequestContext;
 import net.jforum.context.ResponseContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.SearchDAO;
-import net.jforum.dao.SearchData;
+import net.jforum.dao.SearchArgs;
 import net.jforum.entities.Forum;
 import net.jforum.entities.Topic;
 import net.jforum.exceptions.ForumException;
@@ -72,7 +72,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.33 2007/07/23 15:21:38 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.34 2007/07/23 16:56:13 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -146,25 +146,22 @@ public class SearchAction extends Command
 	{
 		this.getSearchFields();
 		
-		SearchData sd = new SearchData();
-		sd.setKeywords(kw);
-		sd.setAuthor(author);
-		sd.setOrderByField(sortBy);
-		sd.setOrderBy(sortDir);
+		SearchArgs args = new SearchArgs();
+		args.setKeywords(kw);
+		args.setAuthor(author);
+		args.setOrderByField(sortBy);
+		args.setOrderBy(sortDir);
 		
 		if (postTime != null) {
-			sd.setTime(new Date(Long.parseLong(postTime)));		    
+			args.setTime(new Date(Long.parseLong(postTime)));		    
 		}
 		
-		if (searchTerms != null) {
-			sd.setUseAllWords(!searchTerms.equals("any"));
-		}
-		else {
-			sd.setUseAllWords(true);
+		if (searchTerms != null && !searchTerms.equals("any")) {
+			args.matchAllKeywords();
 		}
 		
 		if (forum != null && !forum.equals("")) {
-			sd.setForumId(Integer.parseInt(forum));
+			args.setForumId(Integer.parseInt(forum));
 		}
 		
 		int start = ViewCommon.getStartPage();
@@ -177,10 +174,10 @@ public class SearchAction extends Command
 			sm.cleanSearch();
 		}
 		else {
-			sd.setSearchStarted(true);
+			args.setSearchStarted(true);
 		}
 		
-		List allTopics = this.onlyAllowedData(sm.search(sd));
+		List allTopics = this.onlyAllowedData(sm.search(args));
 		int totalTopics = allTopics.size();
 		int sublistLimit = recordsPerPage + start > totalTopics ? totalTopics : recordsPerPage + start;
 		

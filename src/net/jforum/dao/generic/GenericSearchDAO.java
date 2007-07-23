@@ -55,7 +55,7 @@ import java.util.Set;
 
 import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
-import net.jforum.dao.SearchData;
+import net.jforum.dao.SearchArgs;
 import net.jforum.exceptions.DatabaseException;
 import net.jforum.repository.ForumRepository;
 import net.jforum.util.DbUtils;
@@ -66,16 +66,16 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericSearchDAO.java,v 1.20 2007/07/23 15:21:40 rafaelsteil Exp $
+ * @version $Id: GenericSearchDAO.java,v 1.21 2007/07/23 16:56:13 rafaelsteil Exp $
  */
 public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 {
 	private static final Logger log = Logger.getLogger(GenericSearchDAO.class);
 
 	/**
-	 * @see net.jforum.dao.SearchDAO#search(net.jforum.dao.SearchData)
+	 * @see net.jforum.dao.SearchDAO#search(net.jforum.dao.SearchArgs)
 	 */
-	public List search(SearchData sd)
+	public List search(SearchArgs sd)
 	{
 		PreparedStatement p = null;
 		try {
@@ -122,7 +122,7 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 	}
 
 	// Find topics by time
-	private void topicsByTime(SearchData sd) throws SQLException
+	private void topicsByTime(SearchArgs sd) throws SQLException
 	{
 		PreparedStatement p = null;
 		try {
@@ -141,7 +141,7 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 	}
 
 	// Given a set of keywords, find the topics
-	private void topicsByKeyword(SearchData sd)
+	private void topicsByKeyword(SearchArgs sd)
 	{
 		boolean isLike = "like".equals(SystemGlobals.getValue(ConfigKeys.SEARCH_WORD_MATCHING).trim());
 
@@ -199,7 +199,7 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 			// If it is AND, then we want only the ids common to all words
 			Set postsIds = null;
 
-			if (sd.getUseAllWords()) {
+			if (sd.shouldMatchAllKeywords()) {
 				for (Iterator iter = eachWordMap.values().iterator(); iter.hasNext();) {
 					if (postsIds == null) {
 						postsIds = new HashSet(eachWordMap.values().size());

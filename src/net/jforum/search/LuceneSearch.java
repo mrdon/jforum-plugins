@@ -47,7 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.jforum.dao.SearchDAO;
-import net.jforum.dao.SearchData;
+import net.jforum.dao.SearchArgs;
 import net.jforum.entities.Forum;
 import net.jforum.exceptions.SearchException;
 
@@ -62,7 +62,7 @@ import org.apache.lucene.store.Directory;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.10 2007/07/23 16:32:31 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.11 2007/07/23 16:56:13 rafaelsteil Exp $
  */
 public class LuceneSearch implements SearchDAO, NewDocumentAdded
 {
@@ -97,9 +97,9 @@ public class LuceneSearch implements SearchDAO, NewDocumentAdded
 	}
 	
 	/**
-	 * @see net.jforum.dao.SearchDAO#search(net.jforum.dao.SearchData)
+	 * @see net.jforum.dao.SearchDAO#search(net.jforum.dao.SearchArgs)
 	 */
-	public List search(SearchData sd)
+	public List search(SearchArgs sd)
 	{
 		List l = new ArrayList();
 		
@@ -137,12 +137,16 @@ public class LuceneSearch implements SearchDAO, NewDocumentAdded
 		return l;
 	}
 
-	private void filterByKeywords(SearchData sd, StringBuffer sb)
+	private void filterByKeywords(SearchArgs sd, StringBuffer sb)
 	{
 		String[] keywords = sd.getKeywords();
 		
 		for (int i = 0; i < keywords.length; i++) {
-			sb.append(" +(")
+			if (sd.shouldMatchAllKeywords()) {
+				sb.append(" +");
+			}
+			
+			sb.append('(')
 			.append(SearchFields.Indexed.CONTENTS)
 			.append(':')
 			.append(keywords[i])
@@ -150,7 +154,7 @@ public class LuceneSearch implements SearchDAO, NewDocumentAdded
 		}
 	}
 
-	private void filterByForum(SearchData sd, StringBuffer sb)
+	private void filterByForum(SearchArgs sd, StringBuffer sb)
 	{
 		if (sd.getForumId() > 0) {
 			sb.append("+(")
