@@ -16,13 +16,39 @@ import net.jforum.entities.Post;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchTestCase.java,v 1.11 2007/07/23 15:34:50 rafaelsteil Exp $
+ * @version $Id: LuceneSearchTestCase.java,v 1.12 2007/07/23 16:28:02 rafaelsteil Exp $
  */
 public class LuceneSearchTestCase extends TestCase
 {
 	private static boolean logInitialized;
+	
 	private LuceneSearchIndexer indexer;
 	private LuceneSearch search;
+	
+	public void testIndexTwoPostsWithOneCommonWordSearchCommonWordExpectOneResult()
+	{
+		List l = new ArrayList();
+		
+		// 1
+		Post p = this.newPost();
+		p.setText("a regular text with some magic word");
+		l.add(p);
+		
+		// 2
+		p = this.newPost();
+		p.setText("say shazan to see the magic happen");
+		l.add(p);
+		
+		this.indexer.insertSearchWords(l);
+		
+		// Search
+		SearchData sd = new SearchData();
+		sd.setKeywords("magic regular");
+		
+		List results = this.search.search(sd);
+		
+		Assert.assertEquals(1, results.size());
+	}
 	
 	public void testIndexThreePostsSearchContentsExpectOneResult()
 	{
