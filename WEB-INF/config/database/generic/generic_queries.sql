@@ -433,6 +433,11 @@ SearchModel.getPostsToIndex = SELECT p.post_id, pt.post_text, pt.post_subject \
 	AND p.post_id BETWEEN ? AND ? \
 	LIMIT ?, ?
 
+SearchModel.getPostsToIndexForLucene = SELECT p.post_id, p.forum_id, p.topic_id, p.user_id, p.post_time, pt.post_text, pt.post_subject \
+	FROM jforum_posts p, jforum_posts_text pt \
+	WHERE p.post_id = pt.post_id \
+	LIMIT ?, ?
+
 # ##########
 # TreeGroup
 # ##########

@@ -7,7 +7,7 @@
 
 	<tr>
 		<td class="genmed">
-			Total posts in the database: ${totalMessages}
+			Total messages in the database: ${totalMessages}
 		</td>
 	</tr>
 
@@ -21,9 +21,9 @@
 		<td class="genmed">
 			Index exists: 
 			<#if indexExists>
-				Yes
+				Yes. <a href="${contextPath}/jforum${extension}?module=${moduleName}&action=reconstructIndexFromScratch">Re-Index all messages.</a>
 			<#else>
-				No. <a href="${contextPath}/jforum${extension}?module=${moduleName}&action=createIndex">Create index now.</a>
+				No. <a href="${contextPath}/jforum${extension}?module=${moduleName}&action=createIndexDirectory">Create index now.</a>
 			</#if>
 		</td>
 	</tr>

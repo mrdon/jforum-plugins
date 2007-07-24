@@ -44,6 +44,8 @@
 package net.jforum.view.admin;
 
 import java.io.File;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.lucene.index.IndexReader;
 
@@ -52,16 +54,20 @@ import freemarker.template.Template;
 
 import net.jforum.context.RequestContext;
 import net.jforum.context.ResponseContext;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.LuceneDAO;
+import net.jforum.entities.Post;
 import net.jforum.repository.ForumRepository;
 import net.jforum.search.LuceneSearchIndexer;
 import net.jforum.search.LuceneSettings;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
+import net.jforum.util.search.SearchFacade;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneStatsAction.java,v 1.3 2007/07/23 23:28:33 rafaelsteil Exp $
+ * @version $Id: LuceneStatsAction.java,v 1.4 2007/07/24 14:43:07 rafaelsteil Exp $
  */
 public class LuceneStatsAction extends AdminCommand
 {
@@ -73,14 +79,36 @@ public class LuceneStatsAction extends AdminCommand
 		this.setTemplateName(TemplateKeys.SEARCH_STATS_ADMIN_LIST);
 	}
 	
-	public void createIndex() throws Exception
+	public void createIndexDirectory() throws Exception
 	{
 		this.settings().createIndexDirectory(
 			new File(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH)));
-		this.reindex();
+		this.reindexMain();
 	}
 	
-	public void reindex()
+	public void reconstructIndexFromScratch()
+	{
+		LuceneDAO dao = DataAccessDriver.getInstance().newLuceneDAO();
+		int start = 0;
+		int howMany = 20;
+		boolean hasMorePosts = true;
+		
+		while (hasMorePosts) {
+			List l = dao.getPostsToIndex(start, howMany);
+			
+			for (Iterator iter = l.iterator(); iter.hasNext(); ) {
+				Post p = (Post)iter.next();
+				SearchFacade.index(p);
+			}
+			
+			start += howMany;
+			hasMorePosts = l.size() > 0;
+		}
+		
+		this.reindexMain();
+	}
+	
+	public void reindexMain()
 	{
 		File indexDir = new File(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH));
 		

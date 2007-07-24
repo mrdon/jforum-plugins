@@ -58,7 +58,7 @@ package net.jforum.dao;
  * analise, look at <code>net.jforum.drivers.generic</code> package.
  * 
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.16 2007/07/08 19:02:45 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.17 2007/07/24 14:43:08 rafaelsteil Exp $
  */
 public abstract class DataAccessDriver 
 {
@@ -268,4 +268,6 @@ public abstract class DataAccessDriver
 	public abstract BanlistDAO newBanlistDAO();
 	
 	public abstract ModerationLogDAO newModerationLogDAO();
+	
+	public abstract LuceneDAO newLuceneDAO();
 }

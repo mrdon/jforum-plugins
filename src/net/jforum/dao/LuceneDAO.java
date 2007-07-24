@@ -36,31 +36,20 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on 18/07/2007 20:58:43
+ * Created on 24/07/2007 10:25:39
  * 
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.search;
+package net.jforum.dao;
+
+import java.util.List;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchFields.java,v 1.3 2007/07/24 14:43:08 rafaelsteil Exp $
+ * @version $Id: LuceneDAO.java,v 1.1 2007/07/24 14:43:08 rafaelsteil Exp $
  */
-public final class SearchFields
+public interface LuceneDAO
 {
-	public static final class Keyword
-	{
-		public static final String POST_ID = "post.id";
-		public static final String TOPIC_ID = "topic.id";
-		public static final String FORUM_ID = "forum.id";
-		public static final String USER_ID = "user.id";
-		public static final String CATEGORY_ID = "category.id";
-	}
-	
-	public static final class Indexed
-	{
-		public static final String DATE = "date";
-		public static final String CONTENTS = "contents";
-	}
+	public List getPostsToIndex(int from, int howMany);
 }

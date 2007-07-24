@@ -53,6 +53,7 @@ import net.jforum.dao.ForumDAO;
 import net.jforum.dao.GroupDAO;
 import net.jforum.dao.GroupSecurityDAO;
 import net.jforum.dao.KarmaDAO;
+import net.jforum.dao.LuceneDAO;
 import net.jforum.dao.MailIntegrationDAO;
 import net.jforum.dao.ModerationDAO;
 import net.jforum.dao.ModerationLogDAO;
@@ -72,7 +73,7 @@ import net.jforum.dao.generic.security.GenericGroupSecurityDAO;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericDataAccessDriver.java,v 1.11 2007/07/08 19:02:45 rafaelsteil Exp $
+ * @version $Id: GenericDataAccessDriver.java,v 1.12 2007/07/24 14:43:08 rafaelsteil Exp $
  */
 public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver 
 {
@@ -102,9 +103,9 @@ public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver
     private static ApiDAO apiDAO = new GenericApiDAO();
     private static BanlistDAO banlistDao = new GenericBanlistDAO();
     private static ModerationLogDAO moderationLogDao = new GenericModerationLogDAO();
+    private static LuceneDAO luceneDao = new GenericLuceneDAO();
 
 	/**
-     * TODO implement this method or delete this javadoc
 	 * @see net.jforum.dao.DataAccessDriver#getForumModel()
 	 */
 	public net.jforum.dao.ForumDAO newForumDAO() 
@@ -113,7 +114,6 @@ public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver
 	}
 
 	/**
-     * TODO implement this method or delete this javadoc
 	 * @see net.jforum.dao.DataAccessDriver#getGroupModel()
 	 */
 	public net.jforum.dao.GroupDAO newGroupDAO() 
@@ -122,7 +122,6 @@ public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver
 	}
 
 	/**
-     * TODO implement this method or delete this javadoc
 	 * @see net.jforum.dao.DataAccessDriver#getPostModel()
 	 */
 	public net.jforum.dao.PostDAO newPostDAO() 
@@ -131,7 +130,6 @@ public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver
 	}
 
 	/**
-     * TODO implement this method or delete this javadoc
 	 * @see net.jforum.dao.DataAccessDriver#getPollModel()
 	 */
 	public net.jforum.dao.PollDAO newPollDAO() 
@@ -140,7 +138,6 @@ public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver
 	}
 
 	/**
-     * TODO implement this method or delete this javadoc
 	 * @see net.jforum.dao.DataAccessDriver#getRankingModel()
 	 */
 	public net.jforum.dao.RankingDAO newRankingDAO() 
@@ -149,7 +146,6 @@ public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver
 	}
 
 	/**
-     * TODO implement this method or delete this javadoc
 	 * @see net.jforum.dao.DataAccessDriver#getTopicModel()
 	 */
 	public net.jforum.dao.TopicDAO newTopicDAO() 
@@ -158,7 +154,6 @@ public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver
 	}
 
 	/**
-     * TODO implement this method or delete this javadoc
 	 * @see net.jforum.dao.DataAccessDriver#getUserModel()
 	 */
 	public net.jforum.dao.UserDAO newUserDAO() 
@@ -318,8 +313,19 @@ public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver
     	return banlistDao;
     }
     
+    /**
+     * @see net.jforum.dao.DataAccessDriver#newModerationLogDAO()
+     */
     public ModerationLogDAO newModerationLogDAO()
     {
     	return moderationLogDao;
+    }
+    
+    /**
+     * @see net.jforum.dao.DataAccessDriver#newLuceneDAO()
+     */
+    public LuceneDAO newLuceneDAO()
+    {
+    	return luceneDao;
     }
 }

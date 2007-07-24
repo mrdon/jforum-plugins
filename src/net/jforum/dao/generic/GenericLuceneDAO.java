@@ -36,31 +36,77 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on 18/07/2007 20:58:43
+ * Created on 24/07/2007 10:27:23
  * 
- * The JForum Project
+  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.search;
+package net.jforum.dao.generic;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import net.jforum.JForumExecutionContext;
+import net.jforum.dao.LuceneDAO;
+import net.jforum.entities.Post;
+import net.jforum.exceptions.DatabaseException;
+import net.jforum.util.DbUtils;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchFields.java,v 1.3 2007/07/24 14:43:08 rafaelsteil Exp $
+ * @version $Id: GenericLuceneDAO.java,v 1.1 2007/07/24 14:43:08 rafaelsteil Exp $
  */
-public final class SearchFields
+public class GenericLuceneDAO implements LuceneDAO
 {
-	public static final class Keyword
+	/**
+	 * @see net.jforum.dao.LuceneDAO#getPostsToIndex(int, int)
+	 */
+	public List getPostsToIndex(int from, int howMany)
 	{
-		public static final String POST_ID = "post.id";
-		public static final String TOPIC_ID = "topic.id";
-		public static final String FORUM_ID = "forum.id";
-		public static final String USER_ID = "user.id";
-		public static final String CATEGORY_ID = "category.id";
+		List l = new ArrayList();
+		
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+					SystemGlobals.getSql("SearchModel.getPostsToIndexForLucene"));
+			p.setInt(1, from);
+			p.setInt(2, howMany);
+
+			rs = p.executeQuery();
+			
+			while (rs.next()) {
+				l.add(this.makePost(rs));
+			}
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+		
+		return l;
 	}
 	
-	public static final class Indexed
+	private Post makePost(ResultSet rs) throws SQLException
 	{
-		public static final String DATE = "date";
-		public static final String CONTENTS = "contents";
+		Post p = new Post();
+		
+		p.setId(rs.getInt("post_id"));
+		p.setForumId(rs.getInt("forum_id"));
+		p.setTopicId(rs.getInt("topic_id"));
+		p.setUserId(rs.getInt("user_id"));
+		p.setTime(new Date(rs.getTimestamp("post_time").getTime()));
+		p.setText(rs.getString("post_text"));
+		p.setSubject(rs.getString("post_subject"));
+		
+		return p;
 	}
 }

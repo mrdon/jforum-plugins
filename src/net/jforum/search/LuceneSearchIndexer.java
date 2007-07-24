@@ -64,7 +64,7 @@ import org.apache.lucene.index.IndexWriter;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchIndexer.java,v 1.12 2007/07/23 23:28:33 rafaelsteil Exp $
+ * @version $Id: LuceneSearchIndexer.java,v 1.13 2007/07/24 14:43:08 rafaelsteil Exp $
  */
 public class LuceneSearchIndexer implements SearchManager
 {
@@ -167,7 +167,6 @@ public class LuceneSearchIndexer implements SearchManager
 		// We add the subject and message text together because, when searching, we only care about the 
 		// matches, not where it was performed. The real subject and contents will be fetched from the database
 		d.add(new Field(SearchFields.Indexed.CONTENTS, p.getSubject() + " " + p.getText(), Store.NO, Index.TOKENIZED));
-		d.add(new Field(SearchFields.Indexed.USERNAME, p.getPostUsername(), Store.NO, Index.TOKENIZED));
 		
 		return d;
 	}
