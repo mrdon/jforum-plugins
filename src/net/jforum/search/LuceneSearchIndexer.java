@@ -43,19 +43,13 @@
  */
 package net.jforum.search;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import net.jforum.entities.Post;
-import net.jforum.exceptions.ForumException;
-import net.jforum.util.preferences.ConfigKeys;
-import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.util.search.SearchManager;
 
 import org.apache.log4j.Logger;
-import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;
@@ -64,9 +58,9 @@ import org.apache.lucene.index.IndexWriter;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchIndexer.java,v 1.13 2007/07/24 14:43:08 rafaelsteil Exp $
+ * @version $Id: LuceneSearchIndexer.java,v 1.14 2007/07/24 15:55:52 rafaelsteil Exp $
  */
-public class LuceneSearchIndexer implements SearchManager
+public class LuceneSearchIndexer
 {
 	private static final Logger logger = Logger.getLogger(LuceneSearchIndexer.class);
 	private static final Object MUTEX = new Object();
@@ -82,23 +76,6 @@ public class LuceneSearchIndexer implements SearchManager
 	public void watchNewDocuDocumentAdded(NewDocumentAdded newDoc)
 	{
 		this.newDocumentAddedList.add(newDoc);
-	}
-
-	/**
-	 * @see net.jforum.util.search.SearchManager#init()
-	 */
-	public void init()
-	{
-		try {
-			Analyzer analyzer = (Analyzer)Class.forName(SystemGlobals.getValue(
-				ConfigKeys.LUCENE_ANALYZER)).newInstance();
-			
-			this.setSettings(new LuceneSettings(analyzer));
-			this.settings.useFSDirectory(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH));
-		}
-		catch (Exception e) {
-			throw new ForumException(e);
-		}
 	}
 	
 	/**
@@ -177,9 +154,4 @@ public class LuceneSearchIndexer implements SearchManager
 			((NewDocumentAdded)iter.next()).newDocumentAdded();
 		}
 	}
-
-	/**
-	 * Does nothing
-	 */
-	public void setConnection(Connection conn) { }
 }

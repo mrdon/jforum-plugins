@@ -36,72 +36,69 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Mar 11, 2005 12:01:47 PM
+ * Created on 24/07/2007 12:23:05
+ * 
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.util.search;
+package net.jforum.search;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.lucene.analysis.Analyzer;
 
 import net.jforum.dao.SearchArgs;
 import net.jforum.entities.Post;
-import net.jforum.exceptions.SearchInstantiationException;
+import net.jforum.exceptions.ForumException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-
-import org.apache.log4j.Logger;
+import net.jforum.util.search.SearchManager;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchFacade.java,v 1.8 2007/07/24 15:55:51 rafaelsteil Exp $
+ * @version $Id: LuceneSearchManager.java,v 1.1 2007/07/24 15:55:52 rafaelsteil Exp $
  */
-public class SearchFacade
+public class LuceneSearchManager implements SearchManager
 {
-	private static SearchManager searchManager;
-	private static Logger logger = Logger.getLogger(SearchFacade.class);
+	private LuceneSearch search;
+	private LuceneSettings settings;
+	private LuceneSearchIndexer indexer;
 	
-	public static void init()
+	/**
+	 * @see net.jforum.util.search.SearchManager#init()
+	 */
+	public void init()
 	{
-		if (!SystemGlobals.getBoolValue(ConfigKeys.SEARCH_INDEXING_ENABLED)) {
-			logger.info("Search indexing is disabled. Will try to create a SearchManager "
-				+ "instance for runtime configuration changes");
-		}
+		this.indexer = new LuceneSearchIndexer();
+		this.search = new LuceneSearch();
 		
-		String clazz = SystemGlobals.getValue(ConfigKeys.SEARCH_INDEXER_IMPLEMENTATION);
-		
-		if (clazz == null || "".equals(clazz)) {
-			logger.info(ConfigKeys.SEARCH_INDEXER_IMPLEMENTATION + " is not defined. Skipping.");
-		}
-		else {
-			try {
-				searchManager = (SearchManager)Class.forName(clazz).newInstance();
-			}
-			catch (Exception e) {
-				logger.warn(e.toString(), e);
-				throw new SearchInstantiationException("Error while tring to start the search manager: " + e);
-			}
+		try {
+			Analyzer analyzer = (Analyzer)Class.forName(SystemGlobals.getValue(
+				ConfigKeys.LUCENE_ANALYZER)).newInstance();
 			
-			searchManager.init();
+			this.settings = new LuceneSettings(analyzer);
+			this.settings.useFSDirectory(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH));
+			
+			this.indexer.setSettings(this.settings);
+			this.search.setSettings(this.settings);
+		}
+		catch (Exception e) {
+			throw new ForumException(e);
 		}
 	}
 	
-	public static void index(Post post)
+	/**
+	 * @see net.jforum.util.search.SearchManager#index(net.jforum.entities.Post)
+	 */
+	public void index(Post post)
 	{
-		if (SystemGlobals.getBoolValue(ConfigKeys.SEARCH_INDEXING_ENABLED)) {
-			searchManager.index(post);
-		}
 	}
-	
-	public static List search(SearchArgs args)
+
+	/**
+	 * @see net.jforum.util.search.SearchManager#search(net.jforum.dao.SearchArgs)
+	 */
+	public List search(SearchArgs args)
 	{
-		List l = new ArrayList();
-		
-		if (SystemGlobals.getBoolValue(ConfigKeys.SEARCH_INDEXING_ENABLED)) {
-			l = searchManager.search(args);
-		}
-		
-		return l;
+		return null;
 	}
 }

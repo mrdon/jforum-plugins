@@ -36,61 +36,19 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Mar 11, 2005 11:45:30 AM
+ * Created on 24/07/2007 12:26:31
+ * 
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.util.search.simple;
+package net.jforum.search;
 
-import java.util.List;
-
-import net.jforum.JForumExecutionContext;
-import net.jforum.dao.DataAccessDriver;
-import net.jforum.dao.SearchArgs;
-import net.jforum.dao.SearchIndexerDAO;
-import net.jforum.entities.Post;
-import net.jforum.exceptions.SearchException;
-import net.jforum.util.concurrent.Executor;
-import net.jforum.util.preferences.ConfigKeys;
-import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.util.search.SearchManager;
 
 /**
  * @author Rafael Steil
- * @version $Id: SimpleSearchManager.java,v 1.10 2007/07/24 15:55:53 rafaelsteil Exp $
+ * @version $Id: Trste.java,v 1.1 2007/07/24 15:55:52 rafaelsteil Exp $
  */
-public class SimpleSearchManager implements SearchManager
+public class Trste
 {
-	/**
-	 * @see net.jforum.util.search.SearchManager#init()
-	 */
-	public void init() {}
 
-	/**
-	 * @see net.jforum.util.search.SearchManager#index(net.jforum.entities.Post)
-	 */
-	public void index(Post post)
-	{
-		if (SystemGlobals.getBoolValue(ConfigKeys.BACKGROUND_TASKS)) {
-				Executor.execute(new MessageIndexerTask(post));
-		}
-		else {
-			try {
-				SearchIndexerDAO indexer = DataAccessDriver.getInstance().newSearchIndexerDAO();
-				indexer.setConnection(JForumExecutionContext.getConnection());
-				indexer.insertSearchWords(post);
-			}
-			catch (Exception e) {
-				throw new SearchException("Error while indexing a message" + e, e);
-			}
-		}
-	}
-	
-	/**
-	 * @see net.jforum.util.search.SearchManager#search(net.jforum.dao.SearchArgs)
-	 */
-	public List search(SearchArgs args)
-	{
-		return DataAccessDriver.getInstance().newSearchDAO().search(args);
-	}
 }

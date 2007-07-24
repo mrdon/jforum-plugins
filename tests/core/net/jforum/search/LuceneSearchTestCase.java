@@ -17,7 +17,7 @@ import net.jforum.entities.Post;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchTestCase.java,v 1.16 2007/07/23 23:28:33 rafaelsteil Exp $
+ * @version $Id: LuceneSearchTestCase.java,v 1.17 2007/07/24 15:55:52 rafaelsteil Exp $
  */
 public class LuceneSearchTestCase extends TestCase
 {
@@ -26,6 +26,12 @@ public class LuceneSearchTestCase extends TestCase
 	private LuceneSearch search;
 	private LuceneSettings settings;
 	private LuceneSearchIndexer indexer;
+	
+	public void testFilterInacessibleForums()
+	{
+		// TODO
+		Assert.assertTrue(false);
+	}
 	
 	public void testFivePostsInTwoForumsSearchOneForumAndTwoValidTermsAndOneInvalidTermExpectThreeResults()
 	{

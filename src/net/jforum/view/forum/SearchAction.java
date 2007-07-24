@@ -54,8 +54,6 @@ import net.jforum.Command;
 import net.jforum.JForumExecutionContext;
 import net.jforum.context.RequestContext;
 import net.jforum.context.ResponseContext;
-import net.jforum.dao.DataAccessDriver;
-import net.jforum.dao.SearchDAO;
 import net.jforum.dao.SearchArgs;
 import net.jforum.entities.Forum;
 import net.jforum.entities.Topic;
@@ -65,14 +63,17 @@ import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
+import net.jforum.util.search.SearchFacade;
 import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
-import freemarker.template.SimpleHash;
+
 import org.apache.log4j.Logger;
+
+import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.34 2007/07/23 16:56:13 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.35 2007/07/24 15:55:51 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -147,6 +148,7 @@ public class SearchAction extends Command
 		this.getSearchFields();
 		
 		SearchArgs args = new SearchArgs();
+		
 		args.setKeywords(kw);
 		args.setAuthor(author);
 		args.setOrderByField(sortBy);
@@ -167,17 +169,11 @@ public class SearchAction extends Command
 		int start = ViewCommon.getStartPage();
 		int recordsPerPage = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
 		
-		SearchDAO sm = DataAccessDriver.getInstance().newSearchDAO();
-
-		// Clean the search
-		if (this.request.getParameter("clean") != null) {
-			sm.cleanSearch();
-		}
-		else {
-			args.setSearchStarted(true);
-		}
+		args.setSearchStarted(this.request.getParameter("clean") == null);
 		
-		List allTopics = this.onlyAllowedData(sm.search(args));
+		List results = SearchFacade.search(args);
+		List allTopics = this.onlyAllowedData(results);
+		
 		int totalTopics = allTopics.size();
 		int sublistLimit = recordsPerPage + start > totalTopics ? totalTopics : recordsPerPage + start;
 		

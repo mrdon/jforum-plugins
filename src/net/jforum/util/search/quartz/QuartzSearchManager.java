@@ -42,6 +42,10 @@
  */
 package net.jforum.util.search.quartz;
 
+import java.util.List;
+
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.SearchArgs;
 import net.jforum.entities.Post;
 import net.jforum.exceptions.SearchInstantiationException;
 import net.jforum.util.preferences.ConfigKeys;
@@ -57,7 +61,7 @@ import org.quartz.impl.StdSchedulerFactory;
 
 /**
  * @author Rafael Steil
- * @version $Id: QuartzSearchManager.java,v 1.7 2006/10/10 00:40:54 rafaelsteil Exp $
+ * @version $Id: QuartzSearchManager.java,v 1.8 2007/07/24 15:55:51 rafaelsteil Exp $
  */
 public class QuartzSearchManager implements SearchManager
 {
@@ -92,6 +96,14 @@ public class QuartzSearchManager implements SearchManager
 				throw new SearchInstantiationException("Error while trying to start " + this.getClass().getName() + ": " + e);
 			}
 		}
+	}
+	
+	/**
+	 * @see net.jforum.util.search.SearchManager#search(net.jforum.dao.SearchArgs)
+	 */
+	public List search(SearchArgs args)
+	{
+		return DataAccessDriver.getInstance().newSearchDAO().search(args);
 	}
 
 	/**

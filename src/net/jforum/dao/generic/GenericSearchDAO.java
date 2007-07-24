@@ -66,7 +66,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericSearchDAO.java,v 1.21 2007/07/23 16:56:13 rafaelsteil Exp $
+ * @version $Id: GenericSearchDAO.java,v 1.22 2007/07/24 15:55:52 rafaelsteil Exp $
  */
 public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 {
@@ -81,6 +81,8 @@ public class GenericSearchDAO implements net.jforum.dao.SearchDAO
 		try {
 			// Check for the search cache
 			if (!sd.getSearchStarted()) {
+				this.cleanSearch();
+
 				if (sd.getTime() == null) {
 					this.topicsByKeyword(sd);
 				}

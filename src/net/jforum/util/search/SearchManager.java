@@ -42,11 +42,14 @@
  */
 package net.jforum.util.search;
 
+import java.util.List;
+
+import net.jforum.dao.SearchArgs;
 import net.jforum.entities.Post;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchManager.java,v 1.5 2006/08/20 22:47:21 rafaelsteil Exp $
+ * @version $Id: SearchManager.java,v 1.6 2007/07/24 15:55:51 rafaelsteil Exp $
  */
 public interface SearchManager
 {
@@ -65,4 +68,6 @@ public interface SearchManager
 	 * @param post The message to index.
 	 */
 	public void index(Post post);
+	
+	public List search(SearchArgs args);
 }
