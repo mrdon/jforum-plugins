@@ -73,7 +73,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.36 2007/07/24 16:49:52 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.37 2007/07/24 16:59:44 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -175,7 +175,10 @@ public class SearchAction extends Command
 		List allTopics = this.onlyAllowedData(results);
 		
 		int totalTopics = allTopics.size();
-		int sublistLimit = recordsPerPage + start > totalTopics ? totalTopics : recordsPerPage + start;
+		
+		int sublistLimit = recordsPerPage + start > totalTopics 
+			? totalTopics 
+			: recordsPerPage + start;
 		
 		this.setTemplateName(TemplateKeys.SEARCH_SEARCH);
 		
@@ -191,12 +194,11 @@ public class SearchAction extends Command
 		this.context.put("orderBy", sortDir);
 		this.context.put("author", author);
 		this.context.put("postTime", postTime);
+		this.context.put("pageTitle", I18n.getMessage("ForumBase.search"));
 		this.context.put("openModeration", "1".equals(this.request.getParameter("openModeration")));
 		this.context.put("postsPerPage", new Integer(SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE)));
 		
 		ViewCommon.contextToPagination(start, totalTopics, recordsPerPage);
-		
-		this.context.put("pageTitle", I18n.getMessage("ForumBase.search"));
 		TopicsCommon.topicListingBase();
 	}
 	
