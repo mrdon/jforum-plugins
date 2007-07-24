@@ -56,9 +56,9 @@ import net.jforum.context.RequestContext;
 import net.jforum.context.ResponseContext;
 import net.jforum.dao.SearchArgs;
 import net.jforum.entities.Forum;
-import net.jforum.entities.Topic;
 import net.jforum.exceptions.ForumException;
 import net.jforum.repository.ForumRepository;
+import net.jforum.search.SearchResult;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -73,7 +73,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.35 2007/07/24 15:55:51 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.36 2007/07/24 16:49:52 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -200,16 +200,26 @@ public class SearchAction extends Command
 		TopicsCommon.topicListingBase();
 	}
 	
-	private List onlyAllowedData(List topics)
+	private List onlyAllowedData(List results)
 	{
 		List l = new ArrayList();
 		
-		for (Iterator iter = topics.iterator(); iter.hasNext(); ) {
-			Topic t = (Topic)iter.next();
-			Forum f = ForumRepository.getForum(t.getForumId());
+		Map fetchedForums = new HashMap();
+		
+		for (Iterator iter = results.iterator(); iter.hasNext(); ) {
+			SearchResult currentResult = (SearchResult)iter.next();
 			
-			if (f != null && ForumRepository.isCategoryAccessible(f.getCategoryId())) {
-				l.add(t);
+			Integer forumId = new Integer(currentResult.getForum().getId());
+			Boolean status = (Boolean)fetchedForums.get(forumId);
+			
+			if (status == null) {
+				Forum f = ForumRepository.getForum(currentResult.getForum().getId());
+				status = new Boolean(f != null);
+				fetchedForums.put(forumId, status);
+			}
+			
+			if (status.booleanValue()) {
+				l.add(currentResult);
 			}
 		}
 		
@@ -250,25 +260,26 @@ public class SearchAction extends Command
 				String name = (String)fieldsMap.get(v[0]);
 				if (name != null) {
 					Field field;
-					try
-					{
+					
+					try {
 						field = this.getClass().getDeclaredField(name);
+						
 						if (field != null && v[1] != null && !v[1].equals("")) {
 							field.set(this, v[1]);
 						}
 					}
-					catch (Exception e)
-					{
+					catch (Exception e) {
 						throw new ForumException(e);
 					}
 				}
 			}
 		}
 
-		StringBuffer path = new StringBuffer(512);
-		path.append(this.request.getContextPath()).append("/jforum").append( 
-				SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)).append(
-				"?module=search&action=search&clean=1");
+		StringBuffer path = new StringBuffer(512)
+			.append(this.request.getContextPath())
+			.append("/jforum")
+			.append(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION))
+			.append("?module=search&action=search&clean=1");
 
 		if (this.forum != null) { 
 			path.append("&search_forum=").append(this.forum); 

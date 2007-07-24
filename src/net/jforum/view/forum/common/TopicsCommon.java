@@ -76,7 +76,7 @@ import freemarker.template.SimpleHash;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.40 2007/07/16 15:05:53 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.41 2007/07/24 16:49:52 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
@@ -152,8 +152,7 @@ public class TopicsCommon
 			else {
 				read = true;
 			}
-					
-			
+
 			if (t.getTotalReplies() + 1 > postsPerPage) {
 				t.setPaginate(true);
 				t.setTotalPages(new Double(Math.floor(t.getTotalReplies() / postsPerPage)));
