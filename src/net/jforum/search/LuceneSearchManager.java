@@ -56,7 +56,7 @@ import net.jforum.util.search.SearchManager;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchManager.java,v 1.1 2007/07/24 15:55:52 rafaelsteil Exp $
+ * @version $Id: LuceneSearchManager.java,v 1.2 2007/07/24 16:23:36 rafaelsteil Exp $
  */
 public class LuceneSearchManager implements SearchManager
 {
@@ -92,6 +92,7 @@ public class LuceneSearchManager implements SearchManager
 	 */
 	public void index(Post post)
 	{
+		this.indexer.index(post);
 	}
 
 	/**
@@ -99,6 +100,6 @@ public class LuceneSearchManager implements SearchManager
 	 */
 	public List search(SearchArgs args)
 	{
-		return null;
+		return this.search.search(args);
 	}
 }

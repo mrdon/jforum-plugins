@@ -61,7 +61,7 @@ import org.apache.lucene.search.Query;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.12 2007/07/23 19:46:36 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.13 2007/07/24 16:23:36 rafaelsteil Exp $
  */
 public class LuceneSearch implements SearchDAO, NewDocumentAdded
 {
@@ -98,15 +98,15 @@ public class LuceneSearch implements SearchDAO, NewDocumentAdded
 	/**
 	 * @see net.jforum.dao.SearchDAO#search(net.jforum.dao.SearchArgs)
 	 */
-	public List search(SearchArgs sd)
+	public List search(SearchArgs args)
 	{
 		List l = new ArrayList();
 		
 		try {
 			StringBuffer sb = new StringBuffer(256);
 			
-			this.filterByForum(sd, sb);
-			this.filterByKeywords(sd, sb);
+			this.filterByForum(args, sb);
+			this.filterByKeywords(args, sb);
 			
 			Query query = new QueryParser("", new StandardAnalyzer()).parse(sb.toString());
 			
@@ -155,6 +155,8 @@ public class LuceneSearch implements SearchDAO, NewDocumentAdded
 
 	private void filterByForum(SearchArgs sd, StringBuffer sb)
 	{
+		// TODO: Remove those forums that the current user doesn't
+		// have permissions to see
 		if (sd.getForumId() > 0) {
 			sb.append("+(")
 				.append(SearchFields.Keyword.FORUM_ID)
