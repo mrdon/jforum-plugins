@@ -49,6 +49,9 @@ import java.util.List;
 import net.jforum.dao.SearchArgs;
 import net.jforum.dao.SearchDAO;
 import net.jforum.entities.Forum;
+import net.jforum.entities.Post;
+import net.jforum.entities.Topic;
+import net.jforum.entities.User;
 import net.jforum.exceptions.SearchException;
 
 import org.apache.log4j.Logger;
@@ -61,7 +64,7 @@ import org.apache.lucene.search.Query;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.13 2007/07/24 16:23:36 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.14 2007/07/25 03:08:14 rafaelsteil Exp $
  */
 public class LuceneSearch implements SearchDAO, NewDocumentAdded
 {
@@ -122,8 +125,17 @@ public class LuceneSearch implements SearchDAO, NewDocumentAdded
 				for (int i = 0; i < total; i++) {
 					Document doc = hits.doc(i);
 					
-					SearchResult result = new SearchResult(null, null, null, 
-						new Forum(Integer.parseInt(doc.get(SearchFields.Keyword.FORUM_ID))), null);
+					Forum forum = new Forum(Integer.parseInt(doc.get(SearchFields.Keyword.FORUM_ID)));
+					Post post = new Post(Integer.parseInt(doc.get(SearchFields.Keyword.POST_ID)));
+					Topic topic = new Topic(Integer.parseInt(doc.get(SearchFields.Keyword.TOPIC_ID)));
+					User user = new User(Integer.parseInt(doc.get(SearchFields.Keyword.USER_ID)));
+					
+					SearchResult result = new SearchResult();
+					
+					result.setAuthor(user);
+					result.setForum(forum);
+					result.setTopic(topic);
+					result.setPost(post);
 					
 					l.add(result);
 				}

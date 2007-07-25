@@ -40,7 +40,7 @@
  * The JForum Project
  * http://www.jforum.net 
  * 
- * $Id: User.java,v 1.20 2006/10/09 00:54:11 rafaelsteil Exp $
+ * $Id: User.java,v 1.21 2007/07/25 03:08:15 rafaelsteil Exp $
  */
 package net.jforum.entities;
 
@@ -114,6 +114,11 @@ public class User implements Serializable
 	private String firstName;
 	private String lastName;
 	private Map extra = new HashMap();
+	
+	public User(int userId)
+	{
+		this.id = userId;
+	}
 	
 	/**
 	 * Default Constructor

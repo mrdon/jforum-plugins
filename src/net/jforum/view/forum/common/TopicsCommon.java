@@ -43,7 +43,6 @@
 package net.jforum.view.forum.common;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -69,14 +68,13 @@ import net.jforum.util.mail.TopicReplySpammer;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.view.forum.ModerationHelper;
-
 import freemarker.template.SimpleHash;
 
 /**
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.41 2007/07/24 16:49:52 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.42 2007/07/25 03:08:15 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
@@ -134,7 +132,7 @@ public class TopicsCommon
 		int hotBegin = SystemGlobals.getIntValue(ConfigKeys.HOT_TOPIC_BEGIN);
 
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
-		Map topicsTracking = (HashMap)SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING);
+		Map topicsTracking = (Map)SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING);
 		List newTopics = new ArrayList(topics.size());
 		
 		boolean checkUnread = (userSession.getUserId() 

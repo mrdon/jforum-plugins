@@ -51,7 +51,7 @@ import net.jforum.view.forum.common.ViewCommon;
  * Represents every message post in the system.
  * 
  * @author Rafael Steil
- * @version $Id: Post.java,v 1.14 2005/10/02 19:06:41 rafaelsteil Exp $
+ * @version $Id: Post.java,v 1.15 2007/07/25 03:08:15 rafaelsteil Exp $
  */
 public class Post implements Serializable 
 {
@@ -77,6 +77,11 @@ public class Post implements Serializable
 	private boolean moderate;
 
 	public Post() { }
+	
+	public Post(int postId)
+	{
+		this.id = postId;
+	}
 	
 	/**
 	 * Copy constructor

@@ -46,29 +46,23 @@ package net.jforum.search;
 import java.util.Date;
 
 import net.jforum.entities.Forum;
+import net.jforum.entities.Post;
+import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchResult.java,v 1.1 2007/07/19 00:17:35 rafaelsteil Exp $
+ * @version $Id: SearchResult.java,v 1.2 2007/07/25 03:08:14 rafaelsteil Exp $
  */
 public class SearchResult
 {
-	private String subject;
-	private User user;
-	private Forum forum;
+	private User author;
 	private Date date;
+	private Forum forum;
+	private Topic topic;
+	private Post post;
+	private String subject;
 	private String contents;
-	
-	public SearchResult(String subject, String contents, 
-		User user, Forum forum, Date date)
-	{
-		this.subject = subject;
-		this.contents = contents;
-		this.user = user;
-		this.forum = forum;
-		this.date = date;
-	}
 	
 	/**
 	 * @return the subject
@@ -81,9 +75,9 @@ public class SearchResult
 	/**
 	 * @return the user
 	 */
-	public User getUser()
+	public User getAuthor()
 	{
-		return this.user;
+		return this.author;
 	}
 	
 	/**
@@ -108,5 +102,77 @@ public class SearchResult
 	public String getContents()
 	{
 		return this.contents;
+	}
+
+	/**
+	 * @param author the author to set
+	 */
+	public void setAuthor(User author)
+	{
+		this.author = author;
+	}
+
+	/**
+	 * @param date the date to set
+	 */
+	public void setDate(Date date)
+	{
+		this.date = date;
+	}
+
+	/**
+	 * @param forum the forum to set
+	 */
+	public void setForum(Forum forum)
+	{
+		this.forum = forum;
+	}
+
+	/**
+	 * @param subject the subject to set
+	 */
+	public void setSubject(String subject)
+	{
+		this.subject = subject;
+	}
+
+	/**
+	 * @param contents the contents to set
+	 */
+	public void setContents(String contents)
+	{
+		this.contents = contents;
+	}
+
+	/**
+	 * @return the topic
+	 */
+	public Topic getTopic()
+	{
+		return this.topic;
+	}
+
+	/**
+	 * @param topic the topic to set
+	 */
+	public void setTopic(Topic topic)
+	{
+		this.topic = topic;
+	}
+
+	/**
+	 * @return the post
+	 */
+	public Post getPost()
+	{
+		return this.post;
+	}
+
+	/**
+	 * @param post the post to set
+	 */
+	public void setPost(Post post)
+	{
+		this.post = post;
 	}
 }
