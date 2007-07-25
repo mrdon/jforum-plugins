@@ -56,40 +56,37 @@
 				<#assign mp = pagination.moderationParams("")/>
 				<input type="hidden" name="persistData" value="${mp}" />
 			</#if>
-		
-			<table class="forumline" cellspacing="1" cellpadding="4" width="100%" border="0">
-				<tr>
-					<th class="thcornerl" nowrap="nowrap" align="center" height="25" width="20">&nbsp;</th>
-					<th class="thcornerl" nowrap="nowrap" align="center" height="25">&nbsp;${I18n.getMessage("Forums.Form.ForumName")}&nbsp;</th>
-					<th class="thcornerl" nowrap="nowrap" align="center" height="25">&nbsp;${I18n.getMessage("ForumIndex.topics")}&nbsp;</th>
-					<th class="thtop" nowrap="nowrap" align="center" width="50">&nbsp;${I18n.getMessage("ForumIndex.answers")}&nbsp;</th>
-					<th class="thtop" nowrap="nowrap" align="center" width="100">&nbsp;${I18n.getMessage("ForumIndex.author")}&nbsp;</th>
-					<th class="thtop" nowrap="nowrap" align="center" width="50">&nbsp;${I18n.getMessage("ForumIndex.views")}&nbsp;</th>
-					<th class="thcornerr" nowrap="nowrap" align="center" width="150">&nbsp;${I18n.getMessage("ForumIndex.lastMessage")}&nbsp;</th>
-					<#if moderator && openModeration?default(false)>
-						<th class="thcornerr" nowrap="nowrap" align="center">&nbsp;${I18n.getMessage("ForumIndex.moderation")}&nbsp;</th>
-					</#if>
-				</tr>
 
-				<!-- RESULT LISTING -->
+			<table class="forumline" cellspacing="1" cellpadding="4" width="100%" border="0">
 				<#list results as result>
 					<#assign forum = fr.getForum(result.post.forumId)/>
 
 					<tr>
-						<td class="row1" valign="middle" align="center" width="20">
-							X
+						<td class="row1">
+							<#assign postUrl = JForumContext.encodeURL("/posts/preList/${result.post.topicId}/${result.post.id}")/>
+
+							<span class="gen">
+								<strong>
+									<a href="${postUrl}">${result.post.subject}</a>
+								</strong>, 
+								posted on <a href="${JForumContext.encodeURL("/forums/list/${forum.id}")}">${forum.name}</a>, 
+								at ${result.post.time?datetime}, 
+								by <a href="${JForumContext.encodeURL("/user/profile/${result.post.userId}")}">${result.post.postUsername}</a>
+
+								<br/>
+								<a href="${postUrl}">View message</a>
+							</span>
+
+							<p>
+								<div style="background-color: #fff;" class="gen">
+									${result.post.text}<br/><br/>
+								</div>
+							</p>
 						</td>
 					</tr>
 				</#list>
-				<!-- END OF RESULT LISTING -->
-				
-				<tr>
-					<td class="catbottom" valign="middle" align="right" colspan="<#if moderator && openModeration?default(false)>8<#else>7</#if>" height="28">&nbsp;
-						<@presentation.moderationButtons/>
-					</td>
-				</tr>
 			</table>
-		
+
 			<#if moderator>
 				</form>
 			</#if>
