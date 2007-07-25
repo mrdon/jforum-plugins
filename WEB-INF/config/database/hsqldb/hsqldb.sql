@@ -91,6 +91,18 @@ TopicModel.selectByUserByLimit = SELECT LIMIT ? ? t.*, p.user_id AS last_user_id
 # #####################
 PrivateMessagesModel.lastGeneratedPmId = SELECT max(privmsgs_id) from jforum_privmsgs
 
+# ############
+# SearchModel
+# ############
+SearchModel.searchByWord = SELECT post_id FROM jforum_search_wordmatch wm, jforum_search_words w \
+	WHERE wm.word_id = w.word_id \
+	AND LCASE(w.word) = LCASE(?)
+	
+SearchModel.getPostsToIndex = SELECT LIMIT ? ? p.post_id, pt.post_text, pt.post_subject \
+	FROM jforum_posts p, jforum_posts_text pt \
+	WHERE p.post_id = pt.post_id \
+	AND p.post_id BETWEEN ? AND ?
+
 # #############
 # SmiliesModel
 # #############

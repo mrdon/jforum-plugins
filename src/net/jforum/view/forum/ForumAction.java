@@ -76,7 +76,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.61 2007/07/25 19:53:04 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.62 2007/07/25 20:07:11 rafaelsteil Exp $
  */
 public class ForumAction extends Command
 {
@@ -301,13 +301,12 @@ public class ForumAction extends Command
 		}
 
 		JForumExecutionContext.setRedirect(this.request.getContextPath() + "/forums/show/"
-		        + this.request.getParameter("forum_id") + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+			+ this.request.getParameter("forum_id") + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 	}
 
 	/**
 	 * Action when users click on "watch this forum"
 	 * It gets teh forum_id and userId, and put them into a watch_forum table in the database;
-	 * To do: may need change other codes to "create/update" the new table.
 	 */
 	public void watchForum()
 	{

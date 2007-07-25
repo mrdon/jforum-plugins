@@ -376,6 +376,65 @@ CREATE TABLE jforum_words (
 );
 
 --
+-- Table structure for table 'jforum_search_words'
+--
+CREATE SEQUENCE jforum_search_words_seq;
+CREATE TABLE jforum_search_words (
+  word_id INT NOT NULL PRIMARY KEY DEFAULT NEXTVAL('jforum_search_words_seq'),
+  word VARCHAR(100) NOT NULL,
+  word_hash INT
+);
+CREATE INDEX idx_sw_word ON jforum_search_words(word);
+CREATE INDEX idx_sw_hash ON jforum_search_words(word_hash);
+
+-- 
+-- Table structure for table 'jforum_search_wordmatch'
+--
+CREATE TABLE jforum_search_wordmatch (
+  post_id INT NOT NULL,
+  word_id INT NOT NULL,
+  title_match INTEGER DEFAULT 0
+);
+CREATE INDEX idx_swm_post ON jforum_search_wordmatch(post_id);
+CREATE INDEX idx_swm_word ON jforum_search_wordmatch(word_id);
+CREATE INDEX idx_swm_title ON jforum_search_wordmatch(title_match);
+
+--
+-- Table structure for table 'jforum_search_results'
+--
+CREATE TABLE jforum_search_results (
+  topic_id INT NOT NULL,
+  session_id VARCHAR(150),
+  search_time TIMESTAMP
+);
+CREATE INDEX idx_sr_topic ON jforum_search_results(topic_id);
+CREATE INDEX idx_sr_session ON jforum_search_results(session_id);
+
+CREATE TABLE jforum_search_topics (
+  topic_id INTEGER NOT NULL,
+  forum_id INTEGER NOT NULL DEFAULT 0,
+  topic_title VARCHAR(100) NOT NULL DEFAULT '',
+  user_id INTEGER NOT NULL DEFAULT 0,
+  topic_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  topic_views INTEGER DEFAULT 1,
+  topic_replies INTEGER DEFAULT 0,
+  topic_status INTEGER DEFAULT 0,
+  topic_vote_id INTEGER DEFAULT 0,
+  topic_type INTEGER DEFAULT 0,
+  topic_first_post_id INTEGER DEFAULT 0,
+  topic_last_post_id INTEGER NOT NULL DEFAULT 0,
+  moderated INTEGER DEFAULT 0,
+  session_id VARCHAR(150),
+  search_time TIMESTAMP
+);
+
+CREATE INDEX idx_st_topic ON jforum_search_topics(topic_id);
+CREATE INDEX idx_st_forum ON jforum_search_topics(forum_id);
+CREATE INDEX idx_st_user ON jforum_search_topics(user_id);
+CREATE INDEX idx_st_fp ON jforum_search_topics(topic_first_post_id);
+CREATE INDEX idx_st_lp ON jforum_search_topics(topic_last_post_id);
+CREATE INDEX idx_st_session ON jforum_search_topics(session_id);
+--
 -- Table structure for table 'jforum_karma'
 --
 CREATE SEQUENCE jforum_karma_seq;

@@ -391,6 +391,69 @@ CREATE TABLE jforum_words (
 ) TYPE=InnoDB;
 
 --
+-- Table structure for table 'jforum_search_words'
+--
+DROP TABLE IF EXISTS jforum_search_words;
+CREATE TABLE jforum_search_words (
+  word_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  word VARCHAR(100) NOT NULL,
+  word_hash INT,
+  KEY(word),
+  KEY(word_hash)
+) TYPE=InnoDB;
+
+-- 
+-- Table structure for table 'jforum_search_wordmatch'
+--
+DROP TABLE IF EXISTS jforum_search_wordmatch;
+CREATE TABLE jforum_search_wordmatch (
+  post_id INT NOT NULL,
+  word_id INT NOT NULL,
+  title_match TINYINT(1) DEFAULT '0',
+  KEY(post_id),
+  KEY(word_id),
+  KEY(title_match)
+) TYPE=InnoDB;
+
+--
+-- Table structure for table 'jforum_search_results'
+--
+DROP TABLE IF EXISTS jforum_search_results;
+CREATE TABLE jforum_search_results (
+  topic_id INT NOT NULL,
+  session_id VARCHAR(150),
+  search_time DATETIME,
+  KEY (topic_id),
+  KEY(session_id)
+) TYPE=InnoDB;
+
+
+DROP TABLE IF EXISTS jforum_search_topics;
+CREATE TABLE jforum_search_topics (
+  topic_id INT NOT NULL,
+  forum_id INT NOT NULL default '0',
+  topic_title varchar(100) NOT NULL default '',
+  user_id INT NOT NULL default '0',
+  topic_time datetime default null,
+  topic_views INT default '1',
+  topic_replies INT default '0',
+  topic_status tinyint(3) default '0',
+  topic_vote_id INT NOT NULL default '0',
+  topic_type tinyint(3) default '0',
+  topic_first_post_id INT default '0',
+  topic_last_post_id INT NOT NULL default '0',
+  moderated INT default '0',
+  session_id varchar(150),
+  search_time datetime,
+  KEY (topic_id),
+  KEY (forum_id),
+  KEY (user_id),
+  KEY (topic_first_post_id),
+  KEY (topic_last_post_id),
+  KEY (session_id)
+) TYPE=InnoDB;
+
+--
 -- Table structure for table 'jforum_karma'
 --
 DROP TABLE IF EXISTS jforum_karma;
