@@ -47,9 +47,11 @@ import java.util.List;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneDAO.java,v 1.1 2007/07/24 14:43:08 rafaelsteil Exp $
+ * @version $Id: LuceneDAO.java,v 1.2 2007/07/25 17:44:32 rafaelsteil Exp $
  */
 public interface LuceneDAO
 {
 	public List getPostsToIndex(int from, int howMany);
+	
+	public List getPostsData(int[] postIds);
 }

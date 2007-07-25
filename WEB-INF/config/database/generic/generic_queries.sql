@@ -438,6 +438,12 @@ SearchModel.getPostsToIndexForLucene = SELECT p.post_id, p.forum_id, p.topic_id,
 	WHERE p.post_id = pt.post_id \
 	LIMIT ?, ?
 
+SearchModel.getPostsDataForLucene = SELECT p.post_id, p.forum_id, p.topic_id, p.user_id, u.username, p.post_time, pt.post_text, pt.post_subject \
+	FROM jforum_posts p, jforum_posts_text pt, jforum_users u \
+	WHERE p.post_id = pt.post_id \
+	AND p.user_id = u.user_Id \
+	AND p.post_id IN (:posts:)
+
 # ##########
 # TreeGroup
 # ##########

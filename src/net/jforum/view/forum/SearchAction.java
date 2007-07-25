@@ -73,7 +73,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.38 2007/07/25 03:08:13 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.39 2007/07/25 17:44:32 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -172,7 +172,7 @@ public class SearchAction extends Command
 		args.setSearchStarted(this.request.getParameter("clean") == null);
 		
 		List results = SearchFacade.search(args);
-		List allTopics = this.onlyAllowedData(results);
+		List allTopics = results; //this.onlyAllowedData(results);
 		
 		int totalTopics = allTopics.size();
 		

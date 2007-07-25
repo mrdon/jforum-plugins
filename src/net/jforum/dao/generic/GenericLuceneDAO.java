@@ -38,7 +38,7 @@
  * 
  * Created on 24/07/2007 10:27:23
  * 
-  * The JForum Project
+ * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.dao.generic;
@@ -59,7 +59,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericLuceneDAO.java,v 1.1 2007/07/24 14:43:08 rafaelsteil Exp $
+ * @version $Id: GenericLuceneDAO.java,v 1.2 2007/07/25 17:44:33 rafaelsteil Exp $
  */
 public class GenericLuceneDAO implements LuceneDAO
 {
@@ -75,7 +75,7 @@ public class GenericLuceneDAO implements LuceneDAO
 		
 		try {
 			p = JForumExecutionContext.getConnection().prepareStatement(
-					SystemGlobals.getSql("SearchModel.getPostsToIndexForLucene"));
+				SystemGlobals.getSql("SearchModel.getPostsToIndexForLucene"));
 			p.setInt(1, from);
 			p.setInt(2, howMany);
 
@@ -93,6 +93,53 @@ public class GenericLuceneDAO implements LuceneDAO
 		}
 		
 		return l;
+	}
+	
+	/**
+	 * @see net.jforum.dao.LuceneDAO#getPostsData(int[])
+	 */
+	public List getPostsData(int[] postIds)
+	{
+		List l = new ArrayList();
+		
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		
+		try {
+			String sql = SystemGlobals.getSql("SearchModel.getPostsDataForLucene");
+			sql = sql.replaceAll(":posts:", this.buildInClause(postIds));
+			
+			p = JForumExecutionContext.getConnection().prepareStatement(sql);
+			rs = p.executeQuery();
+			
+			while (rs.next()) {
+				Post post = this.makePost(rs);
+				post.setPostUsername(rs.getString("username"));
+				
+				l.add(post);
+			}
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+		
+		return l;
+	}
+	
+	private String buildInClause(int[] postIds)
+	{
+		StringBuffer sb = new StringBuffer(128);
+		
+		for (int i = 0; i < postIds.length - 1; i++) {
+			sb.append(postIds[i]).append(',');
+		}
+		
+		sb.append(postIds[postIds.length - 1]);
+		
+		return sb.toString();
 	}
 	
 	private Post makePost(ResultSet rs) throws SQLException

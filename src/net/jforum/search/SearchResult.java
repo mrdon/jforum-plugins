@@ -48,15 +48,13 @@ import java.util.Date;
 import net.jforum.entities.Forum;
 import net.jforum.entities.Post;
 import net.jforum.entities.Topic;
-import net.jforum.entities.User;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchResult.java,v 1.2 2007/07/25 03:08:14 rafaelsteil Exp $
+ * @version $Id: SearchResult.java,v 1.3 2007/07/25 17:44:33 rafaelsteil Exp $
  */
 public class SearchResult
 {
-	private User author;
 	private Date date;
 	private Forum forum;
 	private Topic topic;
@@ -70,14 +68,6 @@ public class SearchResult
 	public String getSubject()
 	{
 		return this.subject;
-	}
-	
-	/**
-	 * @return the user
-	 */
-	public User getAuthor()
-	{
-		return this.author;
 	}
 	
 	/**
@@ -102,14 +92,6 @@ public class SearchResult
 	public String getContents()
 	{
 		return this.contents;
-	}
-
-	/**
-	 * @param author the author to set
-	 */
-	public void setAuthor(User author)
-	{
-		this.author = author;
 	}
 
 	/**

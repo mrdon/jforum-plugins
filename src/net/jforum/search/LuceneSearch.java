@@ -44,14 +44,13 @@
 package net.jforum.search;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.SearchArgs;
 import net.jforum.dao.SearchDAO;
-import net.jforum.entities.Forum;
 import net.jforum.entities.Post;
-import net.jforum.entities.Topic;
-import net.jforum.entities.User;
 import net.jforum.exceptions.SearchException;
 
 import org.apache.log4j.Logger;
@@ -64,7 +63,7 @@ import org.apache.lucene.search.Query;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.14 2007/07/25 03:08:14 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.15 2007/07/25 17:44:33 rafaelsteil Exp $
  */
 public class LuceneSearch implements SearchDAO, NewDocumentAdded
 {
@@ -120,21 +119,20 @@ public class LuceneSearch implements SearchDAO, NewDocumentAdded
 			Hits hits = this.search.search(query);
 			 			
 			if (hits != null && hits.length() > 0) {
-				int total = hits.length(); 
+				int total = hits.length();
+				int[] postIds = new int[total];
 				
 				for (int i = 0; i < total; i++) {
 					Document doc = hits.doc(i);
-					
-					Forum forum = new Forum(Integer.parseInt(doc.get(SearchFields.Keyword.FORUM_ID)));
-					Post post = new Post(Integer.parseInt(doc.get(SearchFields.Keyword.POST_ID)));
-					Topic topic = new Topic(Integer.parseInt(doc.get(SearchFields.Keyword.TOPIC_ID)));
-					User user = new User(Integer.parseInt(doc.get(SearchFields.Keyword.USER_ID)));
+					postIds[i] = Integer.parseInt(doc.get(SearchFields.Keyword.POST_ID));
+				}
+				
+				List posts = DataAccessDriver.getInstance().newLuceneDAO().getPostsData(postIds);
+				
+				for (Iterator iter = posts.iterator(); iter.hasNext(); ) {
+					Post post = (Post)iter.next();
 					
 					SearchResult result = new SearchResult();
-					
-					result.setAuthor(user);
-					result.setForum(forum);
-					result.setTopic(topic);
 					result.setPost(post);
 					
 					l.add(result);
