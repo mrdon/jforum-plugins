@@ -36,31 +36,20 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Mar 11, 2005 12:30:01 PM
+ * This file creation date: 25/02/2004 - 19:27:19
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.exceptions;
+package net.jforum.dao;
+
+import java.util.List;
+
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchException.java,v 1.7 2007/07/25 22:45:31 rafaelsteil Exp $
+ * @version $Id: SearchDAO.java,v 1.9 2007/07/25 22:45:31 rafaelsteil Exp $
  */
-public class SearchException extends RuntimeException
+public interface SearchDAO 
 {
-	public SearchException(String message)
-	{
-		super(message);
-	}
-	
-	public SearchException(Throwable t)
-	{
-		super(t);
-		this.setStackTrace(t.getStackTrace());
-	}
-	
-	public SearchException(String message, Throwable t)
-	{
-		super(message, t);
-	}
+	public List search(SearchArgs args) ;
 }

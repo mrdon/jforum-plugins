@@ -58,7 +58,6 @@ import net.jforum.dao.SearchArgs;
 import net.jforum.entities.Forum;
 import net.jforum.exceptions.ForumException;
 import net.jforum.repository.ForumRepository;
-import net.jforum.search.SearchFacade;
 import net.jforum.search.SearchResult;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
@@ -73,7 +72,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.41 2007/07/25 19:53:04 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.42 2007/07/25 22:45:30 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -105,10 +104,10 @@ public class SearchAction extends Command
 		sortByMap.put("forum", "t.forum_id");
 	}
 	
-	public SearchAction() {}
+	public SearchAction() { }
 	
-	public SearchAction(RequestContext request, ResponseContext response,
-			SimpleHash context) {
+	public SearchAction(RequestContext request, ResponseContext response, SimpleHash context) 
+	{
 		this.request = request;
 		this.response = response;
 		this.context = context;
@@ -143,10 +142,57 @@ public class SearchAction extends Command
 		this.postTime = this.addSlashes(this.request.getParameter("post_time"));
 	}
 	
+	public void newMessages()
+	{
+		this.search(new NewMessagesSearchOperation());
+	}
+	
 	public void search()
 	{
+		this.search(new ContentSearchOperation());
+	}
+	
+	private void search(SearchOperation operation)
+	{
 		this.getSearchFields();
+
+		SearchArgs args = this.buildSearchArgs();
 		
+		int start = ViewCommon.getStartPage();
+		int recordsPerPage = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
+		
+		operation.performSearch(args);
+		
+		int totalRecords = operation.totalRecords();
+		
+		int sublistLimit = recordsPerPage + start > totalRecords 
+			? totalRecords 
+			: recordsPerPage + start;
+		
+		operation.prepareForDisplay(start, sublistLimit);
+		
+		this.setTemplateName(operation.viewTemplate());
+		
+		this.context.put("results", operation.results());
+		this.context.put("categories", ForumRepository.getAllCategories());
+		this.context.put("kw", kw);
+		this.context.put("fr", new ForumRepository());
+		this.context.put("terms", searchTerms);
+		this.context.put("forum", forum);
+		this.context.put("orderField", sortBy);
+		this.context.put("orderBy", sortDir);
+		this.context.put("author", author);
+		this.context.put("postTime", postTime);
+		this.context.put("pageTitle", I18n.getMessage("ForumBase.search"));
+		this.context.put("openModeration", "1".equals(this.request.getParameter("openModeration")));
+		this.context.put("postsPerPage", new Integer(SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE)));
+		
+		ViewCommon.contextToPagination(start, totalRecords, recordsPerPage);
+		TopicsCommon.topicListingBase();
+	}
+
+	private SearchArgs buildSearchArgs()
+	{
 		SearchArgs args = new SearchArgs();
 		
 		args.setKeywords(kw);
@@ -166,40 +212,9 @@ public class SearchAction extends Command
 			args.setForumId(Integer.parseInt(forum));
 		}
 		
-		int start = ViewCommon.getStartPage();
-		int recordsPerPage = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
-		
 		args.setSearchStarted(this.request.getParameter("clean") == null);
 		
-		List results = SearchFacade.search(args);
-		List allTopics = results; //this.onlyAllowedData(results);
-		
-		int totalTopics = allTopics.size();
-		
-		int sublistLimit = recordsPerPage + start > totalTopics 
-			? totalTopics 
-			: recordsPerPage + start;
-		
-		this.setTemplateName(TemplateKeys.SEARCH_SEARCH);
-		
-		this.context.put("fr", new ForumRepository());
-		
-		this.context.put("results", allTopics.subList(start, sublistLimit));
-		this.context.put("categories", ForumRepository.getAllCategories());
-		
-		this.context.put("kw", kw);
-		this.context.put("terms", searchTerms);
-		this.context.put("forum", forum);
-		this.context.put("orderField", sortBy);
-		this.context.put("orderBy", sortDir);
-		this.context.put("author", author);
-		this.context.put("postTime", postTime);
-		this.context.put("pageTitle", I18n.getMessage("ForumBase.search"));
-		this.context.put("openModeration", "1".equals(this.request.getParameter("openModeration")));
-		this.context.put("postsPerPage", new Integer(SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE)));
-		
-		ViewCommon.contextToPagination(start, totalTopics, recordsPerPage);
-		TopicsCommon.topicListingBase();
+		return args;
 	}
 	
 	private List onlyAllowedData(List results)

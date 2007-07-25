@@ -36,31 +36,48 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Mar 11, 2005 12:30:01 PM
+ * Created on 25/07/2007 19:36:18
+ * 
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.exceptions;
+package net.jforum.view.forum;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.jforum.dao.SearchArgs;
+import net.jforum.search.SearchFacade;
+import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchException.java,v 1.7 2007/07/25 22:45:31 rafaelsteil Exp $
+ * @version $Id: ContentSearchOperation.java,v 1.1 2007/07/25 22:45:30 rafaelsteil Exp $
  */
-public class SearchException extends RuntimeException
+public class ContentSearchOperation implements SearchOperation
 {
-	public SearchException(String message)
-	{
-		super(message);
-	}
+private List results = new ArrayList();
 	
-	public SearchException(Throwable t)
+	public void performSearch(SearchArgs args)
 	{
-		super(t);
-		this.setStackTrace(t.getStackTrace());
+		this.results = SearchFacade.search(args);
 	}
-	
-	public SearchException(String message, Throwable t)
+	public void prepareForDisplay(int from, int count)
 	{
-		super(message, t);
+	}
+
+	public List results()
+	{
+		return this.results;
+	}
+
+	public int totalRecords()
+	{
+		return this.results.size();
+	}
+
+	public String viewTemplate()
+	{
+		return TemplateKeys.SEARCH_SEARCH;
 	}
 }

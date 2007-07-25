@@ -70,7 +70,7 @@ import org.quartz.SchedulerException;
  * General utilities methods for loading configurations for JForum.
  * 
  * @author Rafael Steil
- * @version $Id: ConfigLoader.java,v 1.28 2007/07/25 19:53:04 rafaelsteil Exp $
+ * @version $Id: ConfigLoader.java,v 1.29 2007/07/25 22:45:30 rafaelsteil Exp $
  */
 public class ConfigLoader 
 {
@@ -163,14 +163,14 @@ public class ConfigLoader
 		if (fileChangesDelay > 0) {
 			// Queries
 			FileMonitor.getInstance().addFileChangeListener(new QueriesFileListener(),
-					SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC), fileChangesDelay);
+				SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC), fileChangesDelay);
 
 			FileMonitor.getInstance().addFileChangeListener(new QueriesFileListener(),
-					SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER), fileChangesDelay);
+				SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER), fileChangesDelay);
 
 			// System Properties
 			FileMonitor.getInstance().addFileChangeListener(new SystemGlobalsListener(),
-					SystemGlobals.getValue(ConfigKeys.DEFAULT_CONFIG), fileChangesDelay);
+				SystemGlobals.getValue(ConfigKeys.DEFAULT_CONFIG), fileChangesDelay);
 
 			ConfigLoader.listenInstallationConfig();
         }

@@ -76,7 +76,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.62 2007/07/25 20:07:11 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.63 2007/07/25 22:45:30 rafaelsteil Exp $
  */
 public class ForumAction extends Command
 {
@@ -290,7 +290,9 @@ public class ForumAction extends Command
 		this.request.addParameter("sort_by", "t." + SystemGlobals.getValue(ConfigKeys.TOPIC_TIME_FIELD));
 		this.request.addParameter("sort_dir", "DESC");
 
-		new SearchAction(this.request, this.response, this.context).search();
+		SearchAction searchAction = new SearchAction(this.request, this.response, this.context);
+		searchAction.newMessages();
+		
 		this.setTemplateName(TemplateKeys.SEARCH_NEW_MESSAGES);
 	}
 
@@ -329,7 +331,7 @@ public class ForumAction extends Command
 		int start = ViewCommon.getStartPage();
 
 		return this.request.getContextPath() + "/forums/show/" + (start > 0 ? start + "/" : "") + forumId
-		        + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
+			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION);
 	}
 
 	/**

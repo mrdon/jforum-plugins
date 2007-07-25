@@ -58,7 +58,7 @@ package net.jforum.dao;
  * analise, look at <code>net.jforum.drivers.generic</code> package.
  * 
  * @author Rafael Steil
- * @version $Id: DataAccessDriver.java,v 1.18 2007/07/25 19:53:06 rafaelsteil Exp $
+ * @version $Id: DataAccessDriver.java,v 1.19 2007/07/25 22:45:31 rafaelsteil Exp $
  */
 public abstract class DataAccessDriver 
 {
@@ -160,6 +160,13 @@ public abstract class DataAccessDriver
 	 * @return <code>net.jforum.model.SmilieModel</code> instance.
 	 */
 	public abstract SmilieDAO newSmilieDAO();
+	
+	/**
+	 * Gets a {@link net.jforum.dao.SearchDAO} instance
+	 * 
+	 * @return <code>net.jforum.model.SearchModel</code> instance
+	 */
+	public abstract SearchDAO newSearchDAO();
 	
 	/**
 	 * Gets a {@link net.jforum.dao.SearchIndexerDAO} instance

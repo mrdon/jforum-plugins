@@ -36,31 +36,53 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Mar 11, 2005 12:30:01 PM
+ * Created on 25/07/2007 19:32:52
+ * 
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.exceptions;
+package net.jforum.view.forum;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.SearchArgs;
+import net.jforum.dao.SearchDAO;
+import net.jforum.util.preferences.TemplateKeys;
+import net.jforum.view.forum.common.TopicsCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchException.java,v 1.7 2007/07/25 22:45:31 rafaelsteil Exp $
+ * @version $Id: NewMessagesSearchOperation.java,v 1.1 2007/07/25 22:45:31 rafaelsteil Exp $
  */
-public class SearchException extends RuntimeException
+public class NewMessagesSearchOperation implements SearchOperation
 {
-	public SearchException(String message)
+	private List results = new ArrayList();
+	
+	public void performSearch(SearchArgs args)
 	{
-		super(message);
+		SearchDAO dao = DataAccessDriver.getInstance().newSearchDAO();
+		this.results = dao.search(args);
+	}
+
+	public void prepareForDisplay(int from, int count)
+	{
+		this.results = TopicsCommon.prepareTopics(this.results.subList(from, count));
+	}
+
+	public List results()
+	{
+		return this.results;
+	}
+
+	public int totalRecords()
+	{
+		return this.results.size();
 	}
 	
-	public SearchException(Throwable t)
+	public String viewTemplate()
 	{
-		super(t);
-		this.setStackTrace(t.getStackTrace());
-	}
-	
-	public SearchException(String message, Throwable t)
-	{
-		super(message, t);
+		return TemplateKeys.SEARCH_NEW_MESSAGES;
 	}
 }
