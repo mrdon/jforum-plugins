@@ -58,10 +58,11 @@ import net.jforum.dao.ModerationDAO;
 import net.jforum.dao.SearchArgs;
 import net.jforum.entities.Forum;
 import net.jforum.entities.MostUsersEverOnline;
-import net.jforum.entities.Topic;
 import net.jforum.entities.UserSession;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.SecurityRepository;
+import net.jforum.search.SearchFacade;
+import net.jforum.search.SearchResult;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
@@ -75,7 +76,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.60 2007/07/23 16:56:13 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.61 2007/07/25 19:53:04 rafaelsteil Exp $
  */
 public class ForumAction extends Command
 {
@@ -255,23 +256,21 @@ public class ForumAction extends Command
 	// Mark all topics as read
 	public void readAll()
 	{
-		SearchArgs sd = new SearchArgs();
-		sd.setTime(SessionFacade.getUserSession().getLastVisit());
+		SearchArgs args = new SearchArgs();
+		args.setTime(SessionFacade.getUserSession().getLastVisit());
 
 		String forumId = this.request.getParameter("forum_id");
 		if (forumId != null) {
-			sd.setForumId(Integer.parseInt(forumId));
+			args.setForumId(Integer.parseInt(forumId));
 		}
 
-		List allTopics = DataAccessDriver.getInstance().newSearchDAO().search(sd);
+		List allTopics = SearchFacade.search(args);
+		
 		for (Iterator iter = allTopics.iterator(); iter.hasNext();) {
-			Topic t = (Topic)iter.next();
+			SearchResult result = (SearchResult)iter.next();
 			
-			//((Map)SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(t.getId()), 
-			//	new Long(t.getLastPostDate().getTime()));
-			
-			((Map)SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(t.getId()), 
-					new Long(System.currentTimeMillis()));						
+			((Map)SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(result.getPost().getTopicId()), 
+				new Long(System.currentTimeMillis()));						
 		}
 
 		if (forumId != null) {

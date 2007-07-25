@@ -172,41 +172,6 @@ PrivateMessageModel.selectById = SELECT p.privmsgs_id, p.privmsgs_type, p.privms
 									WHERE p.privmsgs_id = pt.privmsgs_id AND p.privmsgs_id = ?
 
 # #############
-# SearchModel
-# #############
-
-SearchModel.lastGeneratedWordId = SELECT IDENT_CURRENT('jforum_search_words') AS word_id 
-
-SearchModel.cleanSearchResults = DELETE FROM jforum_search_results WHERE session_id = ? OR search_time < DATEADD(HOUR, -1, getdate())
-SearchModel.cleanSearchTopics = DELETE FROM jforum_search_topics WHERE session_id = ? OR search_time < DATEADD(HOUR, -1, getdate())
-
-
-SearchModel.insertTopicsIds = INSERT INTO jforum_search_results ( topic_id, session_id, search_time ) \
-									SELECT DISTINCT t.topic_id, ?, GETDATE() FROM jforum_topics t, jforum_posts p \
-									WHERE t.topic_id = p.topic_id \
-									AND p.post_id IN (:posts:)
-
-SearchModel.searchByTime = INSERT INTO jforum_search_results (topic_id, session_id, search_time) SELECT DISTINCT t.topic_id, ?, GETDATE() FROM jforum_topics t, jforum_posts p \
-	WHERE t.topic_id = p.topic_id \
-	AND p.post_time > ?
-	
-SearchModel.selectTopicData = INSERT INTO jforum_search_topics (topic_id, forum_id, topic_title, user_id, topic_time, \
-	topic_views, topic_status, topic_replies, topic_vote_id, topic_type, topic_first_post_id, topic_last_post_id, moderated, session_id, search_time) \
-	SELECT t.topic_id, t.forum_id, t.topic_title, t.user_id, t.topic_time, \
-	t.topic_views, t.topic_status, t.topic_replies, t.topic_vote_id, t.topic_type, t.topic_first_post_id, t.topic_last_post_id, t.moderated, ?, GETDATE() \
-	FROM jforum_topics t, jforum_search_results s \
-	WHERE t.topic_id = s.topic_id \
-	AND s.session_id = ?
-
-SearchModel.getPostsToIndex = SELECT * \
-	FROM ( SELECT ROW_NUMBER() OVER (ORDER BY p.post_id ASC) AS rownumber, \
-	p.post_id, pt.post_text, pt.post_subject \
-	FROM jforum_posts p, jforum_posts_text pt \
-	WHERE p.post_id = pt.post_id \
-	AND p.post_id BETWEEN ? AND ? ) AS tmp \
-	WHERE rownumber between ? and ?
-
-# #############
 # SmiliesModel
 # #############
 

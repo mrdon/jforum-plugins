@@ -55,13 +55,13 @@ import net.jforum.cache.Cacheable;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.exceptions.CacheEngineStartupException;
 import net.jforum.exceptions.ForumException;
+import net.jforum.search.SearchFacade;
 import net.jforum.summary.SummaryScheduler;
 import net.jforum.util.FileMonitor;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.QueriesFileListener;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.SystemGlobalsListener;
-import net.jforum.util.search.SearchFacade;
 
 import org.apache.log4j.Logger;
 import org.quartz.SchedulerException;
@@ -70,7 +70,7 @@ import org.quartz.SchedulerException;
  * General utilities methods for loading configurations for JForum.
  * 
  * @author Rafael Steil
- * @version $Id: ConfigLoader.java,v 1.27 2007/04/12 02:11:52 rafaelsteil Exp $
+ * @version $Id: ConfigLoader.java,v 1.28 2007/07/25 19:53:04 rafaelsteil Exp $
  */
 public class ConfigLoader 
 {

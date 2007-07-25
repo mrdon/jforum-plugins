@@ -57,15 +57,15 @@ import net.jforum.dao.DataAccessDriver;
 import net.jforum.entities.Post;
 import net.jforum.exceptions.DatabaseException;
 import net.jforum.repository.ForumRepository;
+import net.jforum.search.SearchFacade;
 import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.util.search.SearchFacade;
 
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericPostDAO.java,v 1.19 2007/07/08 14:11:43 rafaelsteil Exp $
+ * @version $Id: GenericPostDAO.java,v 1.20 2007/07/25 19:53:06 rafaelsteil Exp $
  */
 public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 {

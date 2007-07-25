@@ -36,78 +36,72 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Mar 11, 2005 11:52:24 AM
+ * Created on Mar 11, 2005 12:01:47 PM
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.util.search.quartz;
+package net.jforum.search;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.SearchArgs;
 import net.jforum.entities.Post;
 import net.jforum.exceptions.SearchInstantiationException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-import net.jforum.util.search.SearchManager;
 
 import org.apache.log4j.Logger;
-import org.quartz.CronTrigger;
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.Trigger;
-import org.quartz.impl.StdSchedulerFactory;
 
 /**
  * @author Rafael Steil
- * @version $Id: QuartzSearchManager.java,v 1.8 2007/07/24 15:55:51 rafaelsteil Exp $
+ * @version $Id: SearchFacade.java,v 1.1 2007/07/25 19:53:06 rafaelsteil Exp $
  */
-public class QuartzSearchManager implements SearchManager
+public class SearchFacade
 {
-	private static Logger logger = Logger.getLogger(QuartzSearchManager.class);
-	private static Scheduler scheduler;
-	/**
-	 * @see net.jforum.util.search.SearchManager#init()
-	 */
-	public void init()
+	private static SearchManager searchManager;
+	private static Logger logger = Logger.getLogger(SearchFacade.class);
+	
+	public static void init()
 	{
-		try {
-			String filename = SystemGlobals.getValue(ConfigKeys.QUARTZ_CONFIG);
-			
-			String cronExpression = SystemGlobals.getValue(
-					ConfigKeys.QUARTZ_CONTEXT + ConfigKeys.SEARCH_INDEXER_CRON_EXPRESSON);
-			
-			scheduler = new StdSchedulerFactory(filename).getScheduler();
-			Trigger trigger = new CronTrigger(QuartzSearchIndexerJob.class.getName(), 
-					"indexer", 
-					cronExpression);
-			
-			logger.info("Starting quartz search manager using expression " + cronExpression);
-			
-			scheduler.scheduleJob(new JobDetail(QuartzSearchIndexerJob.class.getName(), 
-					"indexer", 
-					QuartzSearchIndexerJob.class), 
-				trigger);
-			scheduler.start();
+		if (!SystemGlobals.getBoolValue(ConfigKeys.SEARCH_INDEXING_ENABLED)) {
+			logger.info("Search indexing is disabled. Will try to create a SearchManager "
+				+ "instance for runtime configuration changes");
 		}
-		catch (Exception e) {
-			if (e.toString().indexOf("org.quartz.ObjectAlreadyExistsException") == -1) {
-				throw new SearchInstantiationException("Error while trying to start " + this.getClass().getName() + ": " + e);
+		
+		String clazz = SystemGlobals.getValue(ConfigKeys.SEARCH_INDEXER_IMPLEMENTATION);
+		
+		if (clazz == null || "".equals(clazz)) {
+			logger.info(ConfigKeys.SEARCH_INDEXER_IMPLEMENTATION + " is not defined. Skipping.");
+		}
+		else {
+			try {
+				searchManager = (SearchManager)Class.forName(clazz).newInstance();
 			}
+			catch (Exception e) {
+				logger.warn(e.toString(), e);
+				throw new SearchInstantiationException("Error while tring to start the search manager: " + e);
+			}
+			
+			searchManager.init();
 		}
 	}
 	
-	/**
-	 * @see net.jforum.util.search.SearchManager#search(net.jforum.dao.SearchArgs)
-	 */
-	public List search(SearchArgs args)
+	public static void index(Post post)
 	{
-		return DataAccessDriver.getInstance().newSearchDAO().search(args);
+		if (SystemGlobals.getBoolValue(ConfigKeys.SEARCH_INDEXING_ENABLED)) {
+			searchManager.index(post);
+		}
 	}
-
-	/**
-	 * @see net.jforum.util.search.SearchManager#index(net.jforum.entities.Post)
-	 */
-	public void index(Post post) {}
+	
+	public static List search(SearchArgs args)
+	{
+		List l = new ArrayList();
+		
+		if (SystemGlobals.getBoolValue(ConfigKeys.SEARCH_INDEXING_ENABLED)) {
+			l = searchManager.search(args);
+		}
+		
+		return l;
+	}
 }

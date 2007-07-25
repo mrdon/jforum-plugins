@@ -36,72 +36,38 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Mar 11, 2005 12:01:47 PM
+ * Created on Mar 11, 2005 11:38:27 AM
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.util.search;
+package net.jforum.search;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import net.jforum.dao.SearchArgs;
 import net.jforum.entities.Post;
-import net.jforum.exceptions.SearchInstantiationException;
-import net.jforum.util.preferences.ConfigKeys;
-import net.jforum.util.preferences.SystemGlobals;
-
-import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchFacade.java,v 1.8 2007/07/24 15:55:51 rafaelsteil Exp $
+ * @version $Id: SearchManager.java,v 1.1 2007/07/25 19:53:06 rafaelsteil Exp $
  */
-public class SearchFacade
+public interface SearchManager
 {
-	private static SearchManager searchManager;
-	private static Logger logger = Logger.getLogger(SearchFacade.class);
+	/**
+	 * Inits the search manager (load configurations etc)
+	 */
+	public void init();
 	
-	public static void init()
-	{
-		if (!SystemGlobals.getBoolValue(ConfigKeys.SEARCH_INDEXING_ENABLED)) {
-			logger.info("Search indexing is disabled. Will try to create a SearchManager "
-				+ "instance for runtime configuration changes");
-		}
-		
-		String clazz = SystemGlobals.getValue(ConfigKeys.SEARCH_INDEXER_IMPLEMENTATION);
-		
-		if (clazz == null || "".equals(clazz)) {
-			logger.info(ConfigKeys.SEARCH_INDEXER_IMPLEMENTATION + " is not defined. Skipping.");
-		}
-		else {
-			try {
-				searchManager = (SearchManager)Class.forName(clazz).newInstance();
-			}
-			catch (Exception e) {
-				logger.warn(e.toString(), e);
-				throw new SearchInstantiationException("Error while tring to start the search manager: " + e);
-			}
-			
-			searchManager.init();
-		}
-	}
+	/**
+	 * Index a message. 
+	 * The real behaviou of this method will 
+	 * differ from implementation to implementation. It
+	 * may index the post immediately or schedule it for
+	 * indexing when system load is low. 
+	 * 
+	 * @param post The message to index.
+	 */
+	public void index(Post post);
 	
-	public static void index(Post post)
-	{
-		if (SystemGlobals.getBoolValue(ConfigKeys.SEARCH_INDEXING_ENABLED)) {
-			searchManager.index(post);
-		}
-	}
-	
-	public static List search(SearchArgs args)
-	{
-		List l = new ArrayList();
-		
-		if (SystemGlobals.getBoolValue(ConfigKeys.SEARCH_INDEXING_ENABLED)) {
-			l = searchManager.search(args);
-		}
-		
-		return l;
-	}
+	public List search(SearchArgs args);
 }

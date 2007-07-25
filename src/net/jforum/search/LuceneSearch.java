@@ -49,7 +49,6 @@ import java.util.List;
 
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.SearchArgs;
-import net.jforum.dao.SearchDAO;
 import net.jforum.entities.Post;
 import net.jforum.exceptions.SearchException;
 
@@ -63,9 +62,9 @@ import org.apache.lucene.search.Query;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.15 2007/07/25 17:44:33 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.16 2007/07/25 19:53:06 rafaelsteil Exp $
  */
-public class LuceneSearch implements SearchDAO, NewDocumentAdded
+public class LuceneSearch implements NewDocumentAdded
 {
 	private static final Logger logger = Logger.getLogger(LuceneSearch.class);
 	
@@ -175,6 +174,4 @@ public class LuceneSearch implements SearchDAO, NewDocumentAdded
 				.append(") ");
 		}
 	}
-	
-	public void cleanSearch() { }
 }

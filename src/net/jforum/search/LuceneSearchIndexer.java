@@ -58,7 +58,7 @@ import org.apache.lucene.index.IndexWriter;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchIndexer.java,v 1.14 2007/07/24 15:55:52 rafaelsteil Exp $
+ * @version $Id: LuceneSearchIndexer.java,v 1.15 2007/07/25 19:53:06 rafaelsteil Exp $
  */
 public class LuceneSearchIndexer
 {
@@ -79,7 +79,7 @@ public class LuceneSearchIndexer
 	}
 	
 	/**
-	 * @see net.jforum.util.search.SearchManager#index(net.jforum.entities.Post)
+	 * @see net.jforum.search.SearchManager#index(net.jforum.entities.Post)
 	 */
 	public void index(Post post)
 	{

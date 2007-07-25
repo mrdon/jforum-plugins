@@ -60,14 +60,14 @@ import net.jforum.entities.Post;
 import net.jforum.repository.ForumRepository;
 import net.jforum.search.LuceneSearchIndexer;
 import net.jforum.search.LuceneSettings;
+import net.jforum.search.SearchFacade;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
-import net.jforum.util.search.SearchFacade;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneStatsAction.java,v 1.4 2007/07/24 14:43:07 rafaelsteil Exp $
+ * @version $Id: LuceneStatsAction.java,v 1.5 2007/07/25 19:53:07 rafaelsteil Exp $
  */
 public class LuceneStatsAction extends AdminCommand
 {

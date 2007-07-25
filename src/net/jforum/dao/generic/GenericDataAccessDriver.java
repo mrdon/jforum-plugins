@@ -62,7 +62,6 @@ import net.jforum.dao.PostDAO;
 import net.jforum.dao.PrivateMessageDAO;
 import net.jforum.dao.RankingDAO;
 import net.jforum.dao.ScheduledSearchIndexerDAO;
-import net.jforum.dao.SearchDAO;
 import net.jforum.dao.SmilieDAO;
 import net.jforum.dao.SummaryDAO;
 import net.jforum.dao.TopicDAO;
@@ -73,7 +72,7 @@ import net.jforum.dao.generic.security.GenericGroupSecurityDAO;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericDataAccessDriver.java,v 1.12 2007/07/24 14:43:08 rafaelsteil Exp $
+ * @version $Id: GenericDataAccessDriver.java,v 1.13 2007/07/25 19:53:05 rafaelsteil Exp $
  */
 public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver 
 {
@@ -85,7 +84,6 @@ public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver
 	private static UserDAO userDao = new GenericUserDAO();
 	private static TreeGroupDAO treeGroupDao = new GenericTreeGroupDAO();
 	private static SmilieDAO smilieDao = new GenericSmilieDAO();
-	private static SearchDAO searchDao = new GenericSearchDAO();
 	private static GroupSecurityDAO groupSecurityDao = new GenericGroupSecurityDAO();
 	private static PrivateMessageDAO privateMessageDao = new GenericPrivateMessageDAO();
 	private static UserSessionDAO userSessionDao = new GenericUserSessionDAO();
@@ -183,14 +181,6 @@ public class GenericDataAccessDriver extends net.jforum.dao.DataAccessDriver
 	public net.jforum.dao.SmilieDAO newSmilieDAO() 
 	{
 		return smilieDao;
-	}
-	
-	/** 
-	 * @see net.jforum.dao.DataAccessDriver#newSearchDAO()
-	 */
-	public net.jforum.dao.SearchDAO newSearchDAO() 
-	{
-		return searchDao;
 	}
 	
 	/** 
