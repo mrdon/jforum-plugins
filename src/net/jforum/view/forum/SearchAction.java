@@ -73,7 +73,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.39 2007/07/25 17:44:32 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.40 2007/07/25 18:24:59 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -184,7 +184,7 @@ public class SearchAction extends Command
 		
 		this.context.put("fr", new ForumRepository());
 		
-		this.context.put("topics", allTopics.subList(start, sublistLimit));
+		this.context.put("results", allTopics.subList(start, sublistLimit));
 		this.context.put("categories", ForumRepository.getAllCategories());
 		
 		this.context.put("kw", kw);
