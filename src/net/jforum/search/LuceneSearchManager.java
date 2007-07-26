@@ -55,7 +55,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchManager.java,v 1.3 2007/07/25 19:53:06 rafaelsteil Exp $
+ * @version $Id: LuceneSearchManager.java,v 1.4 2007/07/26 01:59:05 rafaelsteil Exp $
  */
 public class LuceneSearchManager implements SearchManager
 {
@@ -80,7 +80,10 @@ public class LuceneSearchManager implements SearchManager
 			
 			this.indexer.setSettings(this.settings);
 			this.search.setSettings(this.settings);
+			
+			this.indexer.watchNewDocuDocumentAdded(this.search);
 		}
+		
 		catch (Exception e) {
 			throw new ForumException(e);
 		}

@@ -84,6 +84,7 @@ import net.jforum.repository.RankingRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.repository.SmiliesRepository;
 import net.jforum.repository.TopicRepository;
+import net.jforum.search.SearchFacade;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
@@ -103,7 +104,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.175 2007/07/19 17:21:03 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.176 2007/07/26 01:59:05 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -801,7 +802,7 @@ public class PostAction extends Command
 			attachments.editAttachments(p.getId(), p.getForumId());
 			attachments.insertAttachments(p);
 
-			// Updates the topic title
+			// The first message (the one which originated the topic) was changed
 			if (t.getFirstPostId() == p.getId()) {
 				t.setTitle(p.getSubject());
 				
@@ -859,6 +860,8 @@ public class PostAction extends Command
 					TopicRepository.updateTopic(t);
 				}
 			}
+			
+			SearchFacade.index(p);
 			
 			if (isModerator && p.getUserId() != SessionFacade.getUserSession().getUserId()) {
 				ModerationHelper helper = new ModerationHelper();
