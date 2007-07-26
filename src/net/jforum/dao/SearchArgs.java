@@ -46,7 +46,7 @@ import java.util.Date;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchArgs.java,v 1.1 2007/07/23 16:56:13 rafaelsteil Exp $
+ * @version $Id: SearchArgs.java,v 1.2 2007/07/26 02:14:00 rafaelsteil Exp $
  */
 public class SearchArgs 
 {
@@ -108,7 +108,7 @@ public class SearchArgs
 			return new String[] {};
 		}
 
-		return this.keywords.split(" ");
+		return this.keywords.trim().split(" ");
 	}
 	
 	public boolean shouldMatchAllKeywords()

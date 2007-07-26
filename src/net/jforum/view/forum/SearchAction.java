@@ -72,7 +72,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.42 2007/07/25 22:45:30 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.43 2007/07/26 02:13:59 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -175,7 +175,7 @@ public class SearchAction extends Command
 		
 		this.context.put("results", operation.results());
 		this.context.put("categories", ForumRepository.getAllCategories());
-		this.context.put("kw", kw);
+		this.context.put("kw", kw.trim());
 		this.context.put("fr", new ForumRepository());
 		this.context.put("terms", searchTerms);
 		this.context.put("forum", forum);
@@ -195,7 +195,7 @@ public class SearchAction extends Command
 	{
 		SearchArgs args = new SearchArgs();
 		
-		args.setKeywords(kw);
+		args.setKeywords(kw != null ? kw.trim() : "");
 		args.setAuthor(author);
 		args.setOrderByField(sortBy);
 		args.setOrderBy(sortDir);
