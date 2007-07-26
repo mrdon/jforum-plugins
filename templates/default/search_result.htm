@@ -1,6 +1,7 @@
 <#include "header.htm"/>
 
 <script type="text/javascript" src="${JForumContext.encodeURL("/js/list/moderation")}"></script>
+<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/highlight.js?${startupTime}"></script>
 
 <#import "../macros/pagination.ftl" as topicPagination>
 <#import "../macros/search_pagination.ftl" as pagination>
@@ -25,7 +26,11 @@
 						<br/>
 					</td>
 					<td valign="bottom" nowrap="nowrap" align="right">
-						<@pagination.searchPagination kw?default(""), terms?default(""), forum?default(""), category?default(""), orderField?default(""), orderBy?default(""), author?default(""), postTime?default("")/>
+						<#assign paginationLinks>
+							<@pagination.searchPagination kw?default(""), terms?default(""), forum?default(""), category?default(""), orderField?default(""), orderBy?default(""), author?default(""), postTime?default("")/>
+						</#assign>
+
+						${paginationLinks}
 					</td>
 				</tr>
 				<tr>
@@ -58,50 +63,58 @@
 			</#if>
 
 			<table class="forumline" cellspacing="1" cellpadding="4" width="100%" border="0">
-				<#list results as result>
-					<#assign forum = fr.getForum(result.post.forumId)/>
-
+				<#if results.size() == 0>
 					<tr>
-						<td class="row1">
-							<#assign postUrl = JForumContext.encodeURL("/posts/preList/${result.post.topicId}/${result.post.id}")/>
-
-							<span class="gen">
-								<img class="icon_folder" src="${contextPath}/images/transp.gif" alt=""/>
-
-								<strong>
-									<a href="${postUrl}">${result.post.subject}</a>
-								</strong>, 
-								posted on <a href="${JForumContext.encodeURL("/forums/list/${forum.id}")}">${forum.name}</a>, 
-								at ${result.post.time?datetime}, 
-								by <a href="${JForumContext.encodeURL("/user/profile/${result.post.userId}")}">${result.post.postUsername}</a>
-
-								<br/>
-								<a href="${postUrl}">View message</a>
-							</span>
-
-							<p>
-								<div style="background-color: #fff;" class="gen">
-									${result.post.text}<br/><br/>
-								</div>
-							</p>
+						<td class="gen">
+							No results were found. <a href="${JForumContext.encodeURL("/search/filters")}">Click here</a> to make a new search.
 						</td>
 					</tr>
-				</#list>
+				<#else>
+					<#list results as result>
+						<#assign forum = fr.getForum(result.post.forumId)/>
+
+						<tr>
+							<td class="row1">
+								<#assign postUrl = JForumContext.encodeURL("/posts/preList/${result.post.topicId}/${result.post.id}")/>
+
+								<span class="gen">
+									<img class="icon_folder" src="${contextPath}/images/transp.gif" alt=""/>
+
+									<strong>
+										<a href="${postUrl}">${result.post.subject}</a>
+									</strong>, 
+									posted on <a href="${JForumContext.encodeURL("/forums/list/${forum.id}")}">${forum.name}</a>, 
+									at ${result.post.time?datetime}, 
+									by <a href="${JForumContext.encodeURL("/user/profile/${result.post.userId}")}">${result.post.postUsername}</a>
+
+									<br/>
+									<a href="${postUrl}">View message</a>
+								</span>
+
+								<p>
+									<div style="background-color: #fff;" class="gen">
+										${result.post.text}<br/><br/>
+									</div>
+								</p>
+							</td>
+						</tr>
+					</#list>
+				</#if>
 			</table>
 
 			<#if moderator>
 				</form>
 			</#if>
-		
+
 			<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
 				<tr>
 					<td align="left" valign="middle">
-						<span class="nav">&nbsp;&nbsp;&nbsp;
+						<span class="nav">
 		  					<a class="nav" href="${contextPath}/forums/list${extension}">${I18n.getMessage("ForumListing.forumIndex")}</a>
 						</span>
 					</td>
 					<td valign="middle" nowrap="nowrap" align="right">
-						<@pagination.searchPagination kw?default(""), terms?default(""), forum?default(""), category?default(""), orderField?default(""), orderBy?default(""), author?default(""), postTime?default("")/>
+						${paginationLinks}
 					</td>
 				</tr>
 				<tr>
@@ -141,5 +154,11 @@
 		</td>
 	</tr>
 </table>
+
+<script type="text/javascript">
+try {
+	highlightSearchTerms("${kw}", false, true);
+} catch (e) {}
+</script>
 
 <#include "bottom.htm"/>

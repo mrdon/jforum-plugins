@@ -146,12 +146,11 @@
                 <td nowrap="nowrap"><form action="" accept-charset="${encoding}" name="f"><span class="gensmall">${I18n.getMessage("ForumIndex.goTo")}:&nbsp;<select onchange="if(this.options[this.selectedIndex].value != -1){ document.location = '${contextPath}/forums/show/'+ this.options[this.selectedIndex].value +'${extension}'; }" name="select">
 				<option value="-1" selected="selected">${I18n.getMessage("ForumIndex.goToSelectAForum")}</option>				
 				<#list categories as category>
-					<option value="-1">&nbsp;</option>
-					<option value="-1">${category.name}</option>
-					<option value="-1">-------------</option>
-					<#list category.getForums() as forum>
-					<option value="${forum.id}">${forum.name}</option>
-					</#list>
+					<optgroup label="${category.name}">
+						<#list category.getForums() as forum>
+						<option value="${forum.id}">${forum.name}</option>
+						</#list>
+					</optgroup>
 				</#list>
 				</select>				  
 				  &nbsp;
