@@ -54,16 +54,18 @@ import org.apache.lucene.store.RAMDirectory;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSettings.java,v 1.2 2007/07/23 23:02:43 rafaelsteil Exp $
+ * @version $Id: LuceneSettings.java,v 1.3 2007/07/26 16:08:32 rafaelsteil Exp $
  */
 public class LuceneSettings
 {
 	private Analyzer analyzer;
 	private Directory directory;
+	private int fragments;
 	
-	public LuceneSettings(Analyzer analyzer)
+	public LuceneSettings(Analyzer analyzer, int fragments)
 	{
 		this.analyzer = analyzer;
+		this.fragments = fragments;
 	}
 	
 	public void useRAMDirectory() throws Exception
@@ -99,5 +101,10 @@ public class LuceneSettings
 	public Analyzer analyzer()
 	{
 		return this.analyzer;
+	}
+	
+	public int fragments()
+	{
+		return this.fragments;
 	}
 }

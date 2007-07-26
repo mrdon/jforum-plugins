@@ -55,7 +55,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchManager.java,v 1.4 2007/07/26 01:59:05 rafaelsteil Exp $
+ * @version $Id: LuceneSearchManager.java,v 1.5 2007/07/26 16:08:32 rafaelsteil Exp $
  */
 public class LuceneSearchManager implements SearchManager
 {
@@ -75,7 +75,8 @@ public class LuceneSearchManager implements SearchManager
 			Analyzer analyzer = (Analyzer)Class.forName(SystemGlobals.getValue(
 				ConfigKeys.LUCENE_ANALYZER)).newInstance();
 			
-			this.settings = new LuceneSettings(analyzer);
+			this.settings = new LuceneSettings(analyzer, 
+				SystemGlobals.getIntValue(ConfigKeys.LUCENE_HIGHLIGHTER_FRAGMENTS));
 			this.settings.useFSDirectory(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH));
 			
 			this.indexer.setSettings(this.settings);

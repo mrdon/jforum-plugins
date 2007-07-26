@@ -43,6 +43,8 @@
  */
 package net.jforum.search;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -53,16 +55,20 @@ import net.jforum.entities.Post;
 import net.jforum.exceptions.SearchException;
 
 import org.apache.log4j.Logger;
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.highlight.Highlighter;
+import org.apache.lucene.search.highlight.QueryScorer;
+import org.apache.lucene.search.highlight.Scorer;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.16 2007/07/25 19:53:06 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.17 2007/07/26 16:08:32 rafaelsteil Exp $
  */
 public class LuceneSearch implements NewDocumentAdded
 {
@@ -126,20 +132,46 @@ public class LuceneSearch implements NewDocumentAdded
 					postIds[i] = Integer.parseInt(doc.get(SearchFields.Keyword.POST_ID));
 				}
 				
-				List posts = DataAccessDriver.getInstance().newLuceneDAO().getPostsData(postIds);
-				
-				for (Iterator iter = posts.iterator(); iter.hasNext(); ) {
-					Post post = (Post)iter.next();
-					
-					SearchResult result = new SearchResult();
-					result.setPost(post);
-					
-					l.add(result);
-				}
+				l = this.retrieveRealPosts(postIds, query);
 			}
 		}
 		catch (Exception e) {
 			throw new SearchException(e);
+		}
+		
+		return l;
+	}
+
+	private List retrieveRealPosts(int[] postIds, Query query) throws IOException
+	{
+		List l = new ArrayList();
+		
+		List posts = DataAccessDriver.getInstance().newLuceneDAO().getPostsData(postIds);
+		
+		for (Iterator iter = posts.iterator(); iter.hasNext(); ) {
+			Post post = (Post)iter.next();
+			
+			Scorer scorer = new QueryScorer(query);
+			Highlighter highlighter = new Highlighter(scorer);
+			
+			TokenStream tokenStream = this.settings.analyzer().tokenStream(
+				SearchFields.Indexed.CONTENTS,new StringReader(post.getText()));
+			
+			String[] fragments = highlighter.getBestFragments(tokenStream, post.getText(), 4);
+			StringBuffer contents = new StringBuffer(256);
+			
+			for (int i = 0; i < fragments.length - 1; i++) {
+				contents.append(fragments[i]).append(" [...] ");
+			}
+			
+			contents.append(fragments[fragments.length - 1]);
+			
+			post.setText(contents.toString());
+			
+			SearchResult result = new SearchResult();
+			result.setPost(post);
+			
+			l.add(result);
 		}
 		
 		return l;

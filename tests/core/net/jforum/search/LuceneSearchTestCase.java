@@ -17,7 +17,7 @@ import net.jforum.entities.Post;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchTestCase.java,v 1.17 2007/07/24 15:55:52 rafaelsteil Exp $
+ * @version $Id: LuceneSearchTestCase.java,v 1.18 2007/07/26 16:08:33 rafaelsteil Exp $
  */
 public class LuceneSearchTestCase extends TestCase
 {
@@ -192,7 +192,7 @@ public class LuceneSearchTestCase extends TestCase
 			logInitialized = true;
 		}
 		
-		this.settings = new LuceneSettings(new StandardAnalyzer());
+		this.settings = new LuceneSettings(new StandardAnalyzer(), 1);
 		this.settings.useRAMDirectory();
 		
 		this.indexer = new LuceneSearchIndexer();
