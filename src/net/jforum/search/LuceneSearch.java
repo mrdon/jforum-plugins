@@ -43,34 +43,25 @@
  */
 package net.jforum.search;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import net.jforum.dao.SearchArgs;
-import net.jforum.entities.Post;
 import net.jforum.exceptions.SearchException;
 
 import org.apache.log4j.Logger;
-import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
-import org.apache.lucene.search.highlight.Highlighter;
-import org.apache.lucene.search.highlight.QueryScorer;
-import org.apache.lucene.search.highlight.Scorer;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.21 2007/07/27 15:57:06 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.22 2007/07/27 18:19:33 rafaelsteil Exp $
  */
 public class LuceneSearch implements NewDocumentAdded
 {
@@ -78,10 +69,16 @@ public class LuceneSearch implements NewDocumentAdded
 	
 	private IndexSearcher search;
 	private LuceneSettings settings;
+	private LuceneResultCollector contentCollector;
+	private LuceneResultCollector newMessagesCollector;
 	
 	public void setSettings(LuceneSettings settings) throws Exception
 	{
 		this.settings = settings;
+		
+		this.contentCollector = new LuceneContentCollector(settings);
+		this.newMessagesCollector = new LuceneNewMessagesCollector(settings);
+		
 		this.openSearch();
 	}
 	
@@ -109,6 +106,16 @@ public class LuceneSearch implements NewDocumentAdded
 	 */
 	public List search(SearchArgs args)
 	{
+		return this.performSearch(args, this.contentCollector);
+	}
+	
+	public List newMessages(SearchArgs args)
+	{
+		return this.performSearch(args, this.newMessagesCollector);
+	}
+
+	private List performSearch(SearchArgs args, LuceneResultCollector resultCollector)
+	{
 		List l = new ArrayList();
 		
 		try {
@@ -125,55 +132,13 @@ public class LuceneSearch implements NewDocumentAdded
 			}
 			
 			Hits hits = this.search.search(query, Sort.RELEVANCE);
-			 			
+
 			if (hits != null && hits.length() > 0) {
-				int total = hits.length();
-				int[] postIds = new int[total];
-				
-				for (int i = 0; i < total; i++) {
-					Document doc = hits.doc(i);
-					postIds[i] = Integer.parseInt(doc.get(SearchFields.Keyword.POST_ID));
-				}
-				
-				l = this.retrieveRealPosts(postIds, query);
+				l = resultCollector.collect(hits, query);
 			}
 		}
 		catch (Exception e) {
 			throw new SearchException(e);
-		}
-		
-		return l;
-	}
-
-	private List retrieveRealPosts(int[] postIds, Query query) throws IOException
-	{
-		List l = new ArrayList();
-		
-		List posts = this.settings.dataAccessDriver().newLuceneDAO().getPostsData(postIds);
-		
-		for (Iterator iter = posts.iterator(); iter.hasNext(); ) {
-			Post post = (Post)iter.next();
-			
-			Scorer scorer = new QueryScorer(query);
-			Highlighter highlighter = new Highlighter(scorer);
-			
-			TokenStream tokenStream = this.settings.analyzer().tokenStream(
-				SearchFields.Indexed.CONTENTS, new StringReader(post.getText()));
-			
-			String[] fragments = highlighter.getBestFragments(tokenStream, post.getText(), 
-				this.settings.numberOfFragments());
-			StringBuffer contents = new StringBuffer(256);
-			
-			for (int i = 0; i < fragments.length; i++) {
-				contents.append(fragments[i]);
-			}
-			
-			post.setText(contents.toString());
-			
-			SearchResult result = new SearchResult();
-			result.setPost(post);
-			
-			l.add(result);
 		}
 		
 		return l;
