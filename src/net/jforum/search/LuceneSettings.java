@@ -46,6 +46,8 @@ package net.jforum.search;
 import java.io.File;
 import java.io.IOException;
 
+import net.jforum.dao.DataAccessDriver;
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.Directory;
@@ -54,18 +56,20 @@ import org.apache.lucene.store.RAMDirectory;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSettings.java,v 1.4 2007/07/27 01:32:29 rafaelsteil Exp $
+ * @version $Id: LuceneSettings.java,v 1.5 2007/07/27 15:42:56 rafaelsteil Exp $
  */
 public class LuceneSettings
 {
 	private Analyzer analyzer;
 	private Directory directory;
+	private DataAccessDriver dataAccessDriver;
 	private int fragments;
 	
-	public LuceneSettings(Analyzer analyzer, int fragments)
+	public LuceneSettings(Analyzer analyzer, int fragments, DataAccessDriver dataAccessDriver)
 	{
 		this.analyzer = analyzer;
 		this.fragments = fragments;
+		this.dataAccessDriver = dataAccessDriver;
 	}
 	
 	public void useRAMDirectory() throws Exception
@@ -106,5 +110,10 @@ public class LuceneSettings
 	public int numberOfFragments()
 	{
 		return this.fragments;
+	}
+	
+	public DataAccessDriver dataAccessDriver()
+	{
+		return this.dataAccessDriver;
 	}
 }

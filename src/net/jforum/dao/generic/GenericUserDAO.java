@@ -58,6 +58,7 @@ import net.jforum.entities.Group;
 import net.jforum.entities.KarmaStatus;
 import net.jforum.entities.User;
 import net.jforum.exceptions.DatabaseException;
+import net.jforum.exceptions.ForumException;
 import net.jforum.sso.LoginAuthenticator;
 import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.ConfigKeys;
@@ -65,7 +66,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericUserDAO.java,v 1.25 2006/12/02 03:19:45 rafaelsteil Exp $
+ * @version $Id: GenericUserDAO.java,v 1.26 2007/07/27 15:42:56 rafaelsteil Exp $
  */
 public class GenericUserDAO extends AutoKeys implements UserDAO
 {
@@ -73,15 +74,11 @@ public class GenericUserDAO extends AutoKeys implements UserDAO
 
 	public GenericUserDAO()
 	{
-		String className = SystemGlobals.getValue(ConfigKeys.LOGIN_AUTHENTICATOR);
-
-		try {
-			loginAuthenticator = (LoginAuthenticator) Class.forName(className).newInstance();
+		loginAuthenticator = (LoginAuthenticator)SystemGlobals.getObjectValue(
+			ConfigKeys.LOGIN_AUTHENTICATOR_INSTANCE);
+		
+		if (loginAuthenticator != null) {
 			loginAuthenticator.setUserModel(this);
-		}
-		catch (Exception e) {
-			throw new DatabaseException("Error while trying to instantiate a " + "login.authenticator instance ("
-				+ className + "): " + e);
 		}
 	}
 
@@ -702,6 +699,10 @@ public class GenericUserDAO extends AutoKeys implements UserDAO
 	 */
 	public User validateLogin(String username, String password)
 	{
+		if (loginAuthenticator == null) {
+			throw new ForumException("There is no login.authenticator configured. Check your login.authenticator configuration key.");
+		}
+		
 		return loginAuthenticator.validateLogin(username, password, null);
 	}
 

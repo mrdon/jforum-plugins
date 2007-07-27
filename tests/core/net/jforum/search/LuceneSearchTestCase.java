@@ -1,23 +1,67 @@
 /*
+ * Copyright (c) JForum Team
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, 
+ * with or without modification, are permitted provided 
+ * that the following conditions are met:
+ * 
+ * 1) Redistributions of source code must retain the above 
+ * copyright notice, this list of conditions and the 
+ * following  disclaimer.
+ * 2)  Redistributions in binary form must reproduce the 
+ * above copyright notice, this list of conditions and 
+ * the following disclaimer in the documentation and/or 
+ * other materials provided with the distribution.
+ * 3) Neither the name of "Rafael Steil" nor 
+ * the names of its contributors may be used to endorse 
+ * or promote products derived from this software without 
+ * specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT 
+ * HOLDERS AND CONTRIBUTORS "AS IS" AND ANY 
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, 
+ * BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL 
+ * THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE 
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, 
+ * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER 
+ * IN CONTRACT, STRICT LIABILITY, OR TORT 
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
+ * 
  * Created on 18/07/2007 14:03:15
+ * 
+ * The JForum Project
+ * http://www.jforum.net
  */
 package net.jforum.search;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+
+import junit.framework.Assert;
+import junit.framework.TestCase;
+import net.jforum.dao.LuceneDAO;
+import net.jforum.dao.SearchArgs;
+import net.jforum.dao.generic.GenericDataAccessDriver;
+import net.jforum.dao.generic.GenericLuceneDAO;
+import net.jforum.entities.Post;
 
 import org.apache.log4j.xml.DOMConfigurator;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
-import net.jforum.dao.SearchArgs;
-import net.jforum.entities.Post;
-
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchTestCase.java,v 1.20 2007/07/27 14:44:01 rafaelsteil Exp $
+ * @version $Id: LuceneSearchTestCase.java,v 1.21 2007/07/27 15:42:57 rafaelsteil Exp $
  */
 public class LuceneSearchTestCase extends TestCase
 {
@@ -27,10 +71,24 @@ public class LuceneSearchTestCase extends TestCase
 	private LuceneSettings settings;
 	private LuceneIndexer indexer;
 	
-	public void testFilterInacessibleForums()
+	public void testFilterByDateRangeIndexThreePostsExpectTwoResults()
 	{
-		// TODO
-		Assert.assertTrue(false);
+		List l = this.createThreePosts();
+		((Post)l.get(0)).setTime(new GregorianCalendar(2007, 7, 27, 8, 55, 17).getTime());
+		((Post)l.get(1)).setTime(new GregorianCalendar(2007, 7, 27, 13, 34, 1).getTime());
+		((Post)l.get(2)).setTime(new GregorianCalendar(2007, 7, 27, 5, 1, 9).getTime());
+		
+		this.indexer.create((Post)l.get(0));
+		this.indexer.create((Post)l.get(1));
+		this.indexer.create((Post)l.get(2));
+		
+		// Search
+		SearchArgs args = new SearchArgs();
+		args.setTime(new GregorianCalendar(2007, 7, 27, 8, 10, 15).getTime());
+
+		List results = this.search.search(args);
+		
+		Assert.assertEquals(2, results.size());
 	}
 	
 	public void testFivePostsInTwoForumsSearchOneForumAndTwoValidTermsAndOneInvalidTermExpectThreeResults()
@@ -192,7 +250,10 @@ public class LuceneSearchTestCase extends TestCase
 			logInitialized = true;
 		}
 		
-		this.settings = new LuceneSettings(new StandardAnalyzer(), 1);
+		this.settings = new LuceneSettings(new StandardAnalyzer(), 
+			1, 
+			new FakeDataAccessDriver());
+		
 		this.settings.useRAMDirectory();
 		
 		this.indexer = new LuceneIndexer();
@@ -202,5 +263,26 @@ public class LuceneSearchTestCase extends TestCase
 		this.search.setSettings(this.settings);
 		
 		this.indexer.watchNewDocuDocumentAdded(this.search);
+	}
+	
+	private static class FakeDataAccessDriver extends GenericDataAccessDriver
+	{
+		public LuceneDAO newLuceneDAO() 
+		{
+			return new GenericLuceneDAO() {
+				public List getPostsData(int[] postIds) {
+					List l = new ArrayList();
+					
+					for (int i = 0; i < postIds.length; i++) {
+						Post p = new Post(postIds[i]);
+						p.setText("");
+						
+						l.add(p);
+					}
+					
+					return l;
+				}
+			};
+		}
 	}
 }

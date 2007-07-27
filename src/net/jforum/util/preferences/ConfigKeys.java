@@ -48,7 +48,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.110 2007/07/26 16:08:34 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.111 2007/07/27 15:42:57 rafaelsteil Exp $
 */
 
 public class ConfigKeys 
@@ -88,6 +88,7 @@ public class ConfigKeys
 	public static final String AUTHENTICATION_TYPE = "authentication.type";
 	public static final String SSO_IMPLEMENTATION = "sso.implementation";
 	public static final String LOGIN_AUTHENTICATOR = "login.authenticator";
+	public static final String LOGIN_AUTHENTICATOR_INSTANCE = "login.authenticator.instance";
 	public static final String TYPE_DEFAULT = "default";
 	public static final String TYPE_SSO = "sso";
 	public static final String AUTO_LOGIN_ENABLED = "auto.login.enabled";

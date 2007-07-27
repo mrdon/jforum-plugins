@@ -45,17 +45,18 @@ package net.jforum.search;
 
 import java.util.List;
 
-import org.apache.lucene.analysis.Analyzer;
-
+import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.SearchArgs;
 import net.jforum.entities.Post;
 import net.jforum.exceptions.ForumException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
+import org.apache.lucene.analysis.Analyzer;
+
 /**
  * @author Rafael Steil
- * @version $Id: LuceneManager.java,v 1.1 2007/07/27 14:44:01 rafaelsteil Exp $
+ * @version $Id: LuceneManager.java,v 1.2 2007/07/27 15:42:56 rafaelsteil Exp $
  */
 public class LuceneManager implements SearchManager
 {
@@ -76,7 +77,9 @@ public class LuceneManager implements SearchManager
 				ConfigKeys.LUCENE_ANALYZER)).newInstance();
 			
 			this.settings = new LuceneSettings(analyzer, 
-				SystemGlobals.getIntValue(ConfigKeys.LUCENE_HIGHLIGHTER_FRAGMENTS));
+				SystemGlobals.getIntValue(ConfigKeys.LUCENE_HIGHLIGHTER_FRAGMENTS), 
+				DataAccessDriver.getInstance());
+			
 			this.settings.useFSDirectory(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH));
 			
 			this.indexer.setSettings(this.settings);

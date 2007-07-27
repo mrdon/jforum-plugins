@@ -56,6 +56,7 @@ import net.jforum.dao.DataAccessDriver;
 import net.jforum.exceptions.CacheEngineStartupException;
 import net.jforum.exceptions.ForumException;
 import net.jforum.search.SearchFacade;
+import net.jforum.sso.LoginAuthenticator;
 import net.jforum.summary.SummaryScheduler;
 import net.jforum.util.FileMonitor;
 import net.jforum.util.preferences.ConfigKeys;
@@ -70,7 +71,7 @@ import org.quartz.SchedulerException;
  * General utilities methods for loading configurations for JForum.
  * 
  * @author Rafael Steil
- * @version $Id: ConfigLoader.java,v 1.29 2007/07/25 22:45:30 rafaelsteil Exp $
+ * @version $Id: ConfigLoader.java,v 1.30 2007/07/27 15:42:56 rafaelsteil Exp $
  */
 public class ConfigLoader 
 {
@@ -121,6 +122,20 @@ public class ConfigLoader
 			}
 		}
     }
+	
+	public static void createLoginAuthenticator()
+	{
+		String className = SystemGlobals.getValue(ConfigKeys.LOGIN_AUTHENTICATOR);
+
+		try {
+			LoginAuthenticator loginAuthenticator = (LoginAuthenticator) Class.forName(className).newInstance();
+			SystemGlobals.setObjectValue(ConfigKeys.LOGIN_AUTHENTICATOR_INSTANCE, loginAuthenticator);
+		}
+		catch (Exception e) {
+			throw new ForumException("Error while trying to create a login.authenticator instance ("
+				+ className + "): " + e, e);
+		}
+	}
 	
 	/**
 	 * Load url patterns.

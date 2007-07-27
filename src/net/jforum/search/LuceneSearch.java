@@ -49,7 +49,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.SearchArgs;
 import net.jforum.entities.Post;
 import net.jforum.exceptions.SearchException;
@@ -62,13 +61,14 @@ import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.highlight.Highlighter;
 import org.apache.lucene.search.highlight.QueryScorer;
 import org.apache.lucene.search.highlight.Scorer;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.19 2007/07/27 13:55:48 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.20 2007/07/27 15:42:56 rafaelsteil Exp $
  */
 public class LuceneSearch implements NewDocumentAdded
 {
@@ -121,7 +121,7 @@ public class LuceneSearch implements NewDocumentAdded
 				logger.debug("Generated query: " + query);
 			}
 			
-			Hits hits = this.search.search(query);
+			Hits hits = this.search.search(query, Sort.RELEVANCE);
 			 			
 			if (hits != null && hits.length() > 0) {
 				int total = hits.length();
@@ -146,7 +146,7 @@ public class LuceneSearch implements NewDocumentAdded
 	{
 		List l = new ArrayList();
 		
-		List posts = DataAccessDriver.getInstance().newLuceneDAO().getPostsData(postIds);
+		List posts = this.settings.dataAccessDriver().newLuceneDAO().getPostsData(postIds);
 		
 		for (Iterator iter = posts.iterator(); iter.hasNext(); ) {
 			Post post = (Post)iter.next();
@@ -155,17 +155,15 @@ public class LuceneSearch implements NewDocumentAdded
 			Highlighter highlighter = new Highlighter(scorer);
 			
 			TokenStream tokenStream = this.settings.analyzer().tokenStream(
-				SearchFields.Indexed.CONTENTS,new StringReader(post.getText()));
+				SearchFields.Indexed.CONTENTS, new StringReader(post.getText()));
 			
 			String[] fragments = highlighter.getBestFragments(tokenStream, post.getText(), 
 				this.settings.numberOfFragments());
 			StringBuffer contents = new StringBuffer(256);
 			
-			for (int i = 0; i < fragments.length - 1; i++) {
-				contents.append(fragments[i]).append(" [...] ");
+			for (int i = 0; i < fragments.length; i++) {
+				contents.append(fragments[i]);
 			}
-			
-			contents.append(fragments[fragments.length - 1]);
 			
 			post.setText(contents.toString());
 			
