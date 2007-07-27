@@ -68,7 +68,7 @@ import org.apache.lucene.search.highlight.Scorer;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.17 2007/07/26 16:08:32 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.18 2007/07/27 01:32:59 rafaelsteil Exp $
  */
 public class LuceneSearch implements NewDocumentAdded
 {
@@ -157,7 +157,8 @@ public class LuceneSearch implements NewDocumentAdded
 			TokenStream tokenStream = this.settings.analyzer().tokenStream(
 				SearchFields.Indexed.CONTENTS,new StringReader(post.getText()));
 			
-			String[] fragments = highlighter.getBestFragments(tokenStream, post.getText(), 4);
+			String[] fragments = highlighter.getBestFragments(tokenStream, post.getText(), 
+				this.settings.numberOfFragments());
 			StringBuffer contents = new StringBuffer(256);
 			
 			for (int i = 0; i < fragments.length - 1; i++) {

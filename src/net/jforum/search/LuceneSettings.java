@@ -54,7 +54,7 @@ import org.apache.lucene.store.RAMDirectory;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSettings.java,v 1.3 2007/07/26 16:08:32 rafaelsteil Exp $
+ * @version $Id: LuceneSettings.java,v 1.4 2007/07/27 01:32:29 rafaelsteil Exp $
  */
 public class LuceneSettings
 {
@@ -103,7 +103,7 @@ public class LuceneSettings
 		return this.analyzer;
 	}
 	
-	public int fragments()
+	public int numberOfFragments()
 	{
 		return this.fragments;
 	}
