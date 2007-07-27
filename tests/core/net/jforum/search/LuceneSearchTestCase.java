@@ -61,7 +61,7 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchTestCase.java,v 1.21 2007/07/27 15:42:57 rafaelsteil Exp $
+ * @version $Id: LuceneSearchTestCase.java,v 1.22 2007/07/27 16:06:46 rafaelsteil Exp $
  */
 public class LuceneSearchTestCase extends TestCase
 {
@@ -74,9 +74,9 @@ public class LuceneSearchTestCase extends TestCase
 	public void testFilterByDateRangeIndexThreePostsExpectTwoResults()
 	{
 		List l = this.createThreePosts();
-		((Post)l.get(0)).setTime(new GregorianCalendar(2007, 7, 27, 8, 55, 17).getTime());
-		((Post)l.get(1)).setTime(new GregorianCalendar(2007, 7, 27, 13, 34, 1).getTime());
-		((Post)l.get(2)).setTime(new GregorianCalendar(2007, 7, 27, 5, 1, 9).getTime());
+		((Post)l.get(0)).setTime(new GregorianCalendar(2000, 6, 27, 8, 55, 17).getTime());
+		((Post)l.get(1)).setTime(new GregorianCalendar(2000, 6, 27, 13, 34, 1).getTime());
+		((Post)l.get(2)).setTime(new GregorianCalendar(2000, 6, 27, 5, 1, 9).getTime());
 		
 		this.indexer.create((Post)l.get(0));
 		this.indexer.create((Post)l.get(1));
@@ -84,7 +84,7 @@ public class LuceneSearchTestCase extends TestCase
 		
 		// Search
 		SearchArgs args = new SearchArgs();
-		args.setTime(new GregorianCalendar(2007, 7, 27, 8, 10, 15).getTime());
+		args.setTime(new GregorianCalendar(2000, 6, 27, 8, 10, 15).getTime());
 
 		List results = this.search.search(args);
 		
