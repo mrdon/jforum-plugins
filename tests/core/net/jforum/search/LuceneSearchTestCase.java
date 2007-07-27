@@ -50,18 +50,17 @@ import java.util.List;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
-import net.jforum.dao.LuceneDAO;
 import net.jforum.dao.SearchArgs;
-import net.jforum.dao.generic.GenericDataAccessDriver;
-import net.jforum.dao.generic.GenericLuceneDAO;
 import net.jforum.entities.Post;
 
 import org.apache.log4j.xml.DOMConfigurator;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.search.Hits;
+import org.apache.lucene.search.Query;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchTestCase.java,v 1.22 2007/07/27 16:06:46 rafaelsteil Exp $
+ * @version $Id: LuceneSearchTestCase.java,v 1.23 2007/07/27 18:39:49 rafaelsteil Exp $
  */
 public class LuceneSearchTestCase extends TestCase
 {
@@ -250,39 +249,29 @@ public class LuceneSearchTestCase extends TestCase
 			logInitialized = true;
 		}
 		
-		this.settings = new LuceneSettings(new StandardAnalyzer(), 
-			1, 
-			new FakeDataAccessDriver());
+		this.settings = new LuceneSettings(new StandardAnalyzer(), 1);
 		
 		this.settings.useRAMDirectory();
 		
-		this.indexer = new LuceneIndexer();
-		this.indexer.setSettings(this.settings);
-		
-		this.search = new LuceneSearch();
-		this.search.setSettings(this.settings);
+		this.indexer = new LuceneIndexer(this.settings);
+		this.search = new LuceneSearch(this.settings, 
+			new FakeContentResultCollector(), null);
 		
 		this.indexer.watchNewDocuDocumentAdded(this.search);
 	}
 	
-	private static class FakeDataAccessDriver extends GenericDataAccessDriver
+	private static class FakeContentResultCollector implements LuceneResultCollector
 	{
-		public LuceneDAO newLuceneDAO() 
+		public List collect(Hits hits, Query query)
 		{
-			return new GenericLuceneDAO() {
-				public List getPostsData(int[] postIds) {
-					List l = new ArrayList();
-					
-					for (int i = 0; i < postIds.length; i++) {
-						Post p = new Post(postIds[i]);
-						p.setText("");
-						
-						l.add(p);
-					}
-					
-					return l;
-				}
-			};
+			List l = new ArrayList();
+			
+			for (int i = 0; i < hits.length(); i++) {
+				// We really don't care about the results, only how many they are
+				l.add(""); 
+			}
+			
+			return l;
 		}
 	}
 }

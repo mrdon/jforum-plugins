@@ -45,7 +45,6 @@ package net.jforum.search;
 
 import java.util.List;
 
-import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.SearchArgs;
 import net.jforum.entities.Post;
 import net.jforum.exceptions.ForumException;
@@ -56,7 +55,7 @@ import org.apache.lucene.analysis.Analyzer;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneManager.java,v 1.2 2007/07/27 15:42:56 rafaelsteil Exp $
+ * @version $Id: LuceneManager.java,v 1.3 2007/07/27 18:39:48 rafaelsteil Exp $
  */
 public class LuceneManager implements SearchManager
 {
@@ -69,21 +68,20 @@ public class LuceneManager implements SearchManager
 	 */
 	public void init()
 	{
-		this.indexer = new LuceneIndexer();
-		this.search = new LuceneSearch();
-		
 		try {
 			Analyzer analyzer = (Analyzer)Class.forName(SystemGlobals.getValue(
 				ConfigKeys.LUCENE_ANALYZER)).newInstance();
 			
 			this.settings = new LuceneSettings(analyzer, 
-				SystemGlobals.getIntValue(ConfigKeys.LUCENE_HIGHLIGHTER_FRAGMENTS), 
-				DataAccessDriver.getInstance());
+				SystemGlobals.getIntValue(ConfigKeys.LUCENE_HIGHLIGHTER_FRAGMENTS));
 			
 			this.settings.useFSDirectory(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH));
 			
-			this.indexer.setSettings(this.settings);
-			this.search.setSettings(this.settings);
+			this.indexer = new LuceneIndexer(this.settings);
+			
+			this.search = new LuceneSearch(this.settings, 
+				new LuceneContentCollector(this.settings),
+				new LuceneNewMessagesCollector(this.settings));
 			
 			this.indexer.watchNewDocuDocumentAdded(this.search);
 		}

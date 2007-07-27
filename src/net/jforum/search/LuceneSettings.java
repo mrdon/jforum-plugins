@@ -48,8 +48,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import net.jforum.dao.DataAccessDriver;
-
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.Directory;
@@ -58,20 +56,18 @@ import org.apache.lucene.store.RAMDirectory;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSettings.java,v 1.6 2007/07/27 15:57:06 rafaelsteil Exp $
+ * @version $Id: LuceneSettings.java,v 1.7 2007/07/27 18:39:48 rafaelsteil Exp $
  */
 public class LuceneSettings
 {
 	private Analyzer analyzer;
 	private Directory directory;
-	private DataAccessDriver dataAccessDriver;
 	private int fragments;
 	
-	public LuceneSettings(Analyzer analyzer, int fragments, DataAccessDriver dataAccessDriver)
+	public LuceneSettings(Analyzer analyzer, int fragments)
 	{
 		this.analyzer = analyzer;
 		this.fragments = fragments;
-		this.dataAccessDriver = dataAccessDriver;
 	}
 	
 	public void useRAMDirectory() throws Exception
@@ -112,11 +108,6 @@ public class LuceneSettings
 	public int numberOfFragments()
 	{
 		return this.fragments;
-	}
-	
-	public DataAccessDriver dataAccessDriver()
-	{
-		return this.dataAccessDriver;
 	}
 	
 	public String formatDateTime(Date date)

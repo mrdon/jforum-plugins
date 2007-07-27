@@ -43,6 +43,7 @@
  */
 package net.jforum.search;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,7 +62,7 @@ import org.apache.lucene.search.Sort;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.22 2007/07/27 18:19:33 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.23 2007/07/27 18:39:48 rafaelsteil Exp $
  */
 public class LuceneSearch implements NewDocumentAdded
 {
@@ -72,19 +73,15 @@ public class LuceneSearch implements NewDocumentAdded
 	private LuceneResultCollector contentCollector;
 	private LuceneResultCollector newMessagesCollector;
 	
-	public void setSettings(LuceneSettings settings) throws Exception
+	public LuceneSearch(LuceneSettings settings, 
+		LuceneResultCollector contentCollector, 
+		LuceneResultCollector newMessagesCollector)
 	{
 		this.settings = settings;
-		
-		this.contentCollector = new LuceneContentCollector(settings);
-		this.newMessagesCollector = new LuceneNewMessagesCollector(settings);
+		this.contentCollector = contentCollector;
+		this.newMessagesCollector = newMessagesCollector;
 		
 		this.openSearch();
-	}
-	
-	private void openSearch() throws Exception
-	{
-		this.search = new IndexSearcher(this.settings.directory());
 	}
 	
 	/**
@@ -190,6 +187,16 @@ public class LuceneSearch implements NewDocumentAdded
 				.append(':')
 				.append(args.getForumId())
 				.append(") ");
+		}
+	}
+	
+	private void openSearch()
+	{
+		try {
+			this.search = new IndexSearcher(this.settings.directory());
+		}
+		catch (IOException e) {
+			throw new SearchException(e.toString(), e);
 		}
 	}
 }

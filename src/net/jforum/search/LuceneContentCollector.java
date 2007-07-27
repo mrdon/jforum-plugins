@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.jforum.dao.DataAccessDriver;
 import net.jforum.entities.Post;
 import net.jforum.exceptions.ForumException;
 
@@ -62,7 +63,7 @@ import org.apache.lucene.search.highlight.Scorer;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneContentCollector.java,v 1.1 2007/07/27 18:19:33 rafaelsteil Exp $
+ * @version $Id: LuceneContentCollector.java,v 1.2 2007/07/27 18:39:48 rafaelsteil Exp $
  */
 public class LuceneContentCollector implements LuceneResultCollector
 {
@@ -95,7 +96,7 @@ public class LuceneContentCollector implements LuceneResultCollector
 	{
 		List l = new ArrayList();
 		
-		List posts = this.settings.dataAccessDriver().newLuceneDAO().getPostsData(postIds);
+		List posts = DataAccessDriver.getInstance().newLuceneDAO().getPostsData(postIds);
 		
 		for (Iterator iter = posts.iterator(); iter.hasNext(); ) {
 			Post post = (Post)iter.next();

@@ -66,7 +66,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericUserDAO.java,v 1.26 2007/07/27 15:42:56 rafaelsteil Exp $
+ * @version $Id: GenericUserDAO.java,v 1.27 2007/07/27 18:39:48 rafaelsteil Exp $
  */
 public class GenericUserDAO extends AutoKeys implements UserDAO
 {
@@ -77,9 +77,11 @@ public class GenericUserDAO extends AutoKeys implements UserDAO
 		loginAuthenticator = (LoginAuthenticator)SystemGlobals.getObjectValue(
 			ConfigKeys.LOGIN_AUTHENTICATOR_INSTANCE);
 		
-		if (loginAuthenticator != null) {
-			loginAuthenticator.setUserModel(this);
+		if (loginAuthenticator == null) {
+			throw new ForumException("There is no login.authenticator configured. Check your login.authenticator configuration key.");
 		}
+		
+		loginAuthenticator.setUserModel(this);
 	}
 
 	/**
@@ -699,10 +701,6 @@ public class GenericUserDAO extends AutoKeys implements UserDAO
 	 */
 	public User validateLogin(String username, String password)
 	{
-		if (loginAuthenticator == null) {
-			throw new ForumException("There is no login.authenticator configured. Check your login.authenticator configuration key.");
-		}
-		
 		return loginAuthenticator.validateLogin(username, password, null);
 	}
 

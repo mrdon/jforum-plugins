@@ -61,17 +61,16 @@ import org.apache.lucene.index.Term;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneIndexer.java,v 1.2 2007/07/27 15:57:06 rafaelsteil Exp $
+ * @version $Id: LuceneIndexer.java,v 1.3 2007/07/27 18:39:48 rafaelsteil Exp $
  */
 public class LuceneIndexer
 {
 	private static final Logger logger = Logger.getLogger(LuceneIndexer.class);
-	private static final Object MUTEX = new Object();
 	
 	private LuceneSettings settings;
 	private List newDocumentAddedList = new ArrayList();
 	
-	public void setSettings(LuceneSettings settings)
+	public LuceneIndexer(LuceneSettings settings)
 	{
 		this.settings = settings;
 	}
