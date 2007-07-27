@@ -58,7 +58,7 @@ import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.LuceneDAO;
 import net.jforum.entities.Post;
 import net.jforum.repository.ForumRepository;
-import net.jforum.search.LuceneSearchIndexer;
+import net.jforum.search.LuceneIndexer;
 import net.jforum.search.LuceneSettings;
 import net.jforum.search.SearchFacade;
 import net.jforum.util.preferences.ConfigKeys;
@@ -67,7 +67,7 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneStatsAction.java,v 1.6 2007/07/27 13:55:48 rafaelsteil Exp $
+ * @version $Id: LuceneStatsAction.java,v 1.7 2007/07/27 14:44:00 rafaelsteil Exp $
  */
 public class LuceneStatsAction extends AdminCommand
 {
@@ -136,7 +136,7 @@ public class LuceneStatsAction extends AdminCommand
 	
 	private boolean isSearchEngineLucene()
 	{
-		return LuceneSearchIndexer.class.getName()
+		return LuceneIndexer.class.getName()
 			.equals(SystemGlobals.getValue(ConfigKeys.SEARCH_INDEXER_IMPLEMENTATION))
 			|| this.settings() == null;
 	}

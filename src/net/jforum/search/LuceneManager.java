@@ -55,20 +55,20 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchManager.java,v 1.6 2007/07/27 13:55:48 rafaelsteil Exp $
+ * @version $Id: LuceneManager.java,v 1.1 2007/07/27 14:44:01 rafaelsteil Exp $
  */
-public class LuceneSearchManager implements SearchManager
+public class LuceneManager implements SearchManager
 {
 	private LuceneSearch search;
 	private LuceneSettings settings;
-	private LuceneSearchIndexer indexer;
+	private LuceneIndexer indexer;
 	
 	/**
 	 * @see net.jforum.search.SearchManager#init()
 	 */
 	public void init()
 	{
-		this.indexer = new LuceneSearchIndexer();
+		this.indexer = new LuceneIndexer();
 		this.search = new LuceneSearch();
 		
 		try {
