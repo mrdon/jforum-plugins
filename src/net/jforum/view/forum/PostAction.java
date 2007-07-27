@@ -104,7 +104,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.176 2007/07/26 01:59:05 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.177 2007/07/27 13:55:48 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -861,7 +861,7 @@ public class PostAction extends Command
 				}
 			}
 			
-			SearchFacade.index(p);
+			SearchFacade.update(p);
 			
 			if (isModerator && p.getUserId() != SessionFacade.getUserSession().getUserId()) {
 				ModerationHelper helper = new ModerationHelper();

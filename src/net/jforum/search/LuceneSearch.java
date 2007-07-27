@@ -68,7 +68,7 @@ import org.apache.lucene.search.highlight.Scorer;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.18 2007/07/27 01:32:59 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.19 2007/07/27 13:55:48 rafaelsteil Exp $
  */
 public class LuceneSearch implements NewDocumentAdded
 {
@@ -198,7 +198,7 @@ public class LuceneSearch implements NewDocumentAdded
 	private void filterByForum(SearchArgs sd, StringBuffer sb)
 	{
 		// TODO: Remove those forums that the current user doesn't
-		// have permissions to see
+		// have permissions to access
 		if (sd.getForumId() > 0) {
 			sb.append("+(")
 				.append(SearchFields.Keyword.FORUM_ID)

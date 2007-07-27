@@ -17,7 +17,7 @@ import net.jforum.entities.Post;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchTestCase.java,v 1.18 2007/07/26 16:08:33 rafaelsteil Exp $
+ * @version $Id: LuceneSearchTestCase.java,v 1.19 2007/07/27 13:55:49 rafaelsteil Exp $
  */
 public class LuceneSearchTestCase extends TestCase
 {
@@ -40,15 +40,15 @@ public class LuceneSearchTestCase extends TestCase
 		((Post)l.get(1)).setForumId(2);
 		((Post)l.get(2)).setForumId(1);
 		
-		this.indexer.index((Post)l.get(0));
-		this.indexer.index((Post)l.get(1));
-		this.indexer.index((Post)l.get(2));
+		this.indexer.create((Post)l.get(0));
+		this.indexer.create((Post)l.get(1));
+		this.indexer.create((Post)l.get(2));
 		
 		// Post 4
 		Post p = this.newPost();
 		p.setText("It introduces you to searching, sorting, filtering and highlighting [...]");
 		p.setForumId(1);
-		this.indexer.index(p);
+		this.indexer.create(p);
 		
 		// Post 5
 		p = this.newPost();
@@ -56,7 +56,7 @@ public class LuceneSearchTestCase extends TestCase
 		p.setForumId(2);
 		l.add(p);
 		
-		this.indexer.index(p);
+		this.indexer.create(p);
 		
 		// Search
 		SearchArgs args = new SearchArgs();
@@ -72,9 +72,9 @@ public class LuceneSearchTestCase extends TestCase
 	{
 		List l = this.createThreePosts();
 		
-		this.indexer.index((Post)l.get(0));
-		this.indexer.index((Post)l.get(1));
-		this.indexer.index((Post)l.get(2));
+		this.indexer.create((Post)l.get(0));
+		this.indexer.create((Post)l.get(1));
+		this.indexer.create((Post)l.get(2));
 		
 		// Search
 		SearchArgs args = new SearchArgs();
@@ -112,12 +112,12 @@ public class LuceneSearchTestCase extends TestCase
 		// 1
 		Post p = this.newPost();
 		p.setText("a regular text with some magic word");
-		this.indexer.index(p);
+		this.indexer.create(p);
 		
 		// 2
 		p = this.newPost();
 		p.setText("say shazan to see the magic happen");
-		this.indexer.index(p);
+		this.indexer.create(p);
 		
 		// Search
 		SearchArgs args = new SearchArgs();
@@ -134,17 +134,17 @@ public class LuceneSearchTestCase extends TestCase
 		// 1
 		Post p = this.newPost();
 		p.setSubject("java");
-		this.indexer.index(p);
+		this.indexer.create(p);
 		
 		// 2
 		p = this.newPost();
 		p.setSubject("something else");
-		this.indexer.index(p);
+		this.indexer.create(p);
 		
 		// 3
 		p = this.newPost();
 		p.setSubject("debug");
-		this.indexer.index(p);
+		this.indexer.create(p);
 		
 		// Search
 		SearchArgs args = new SearchArgs();
@@ -159,11 +159,11 @@ public class LuceneSearchTestCase extends TestCase
 	{
 		Post p1 = this.newPost();
 		p1.setForumId(1);
-		this.indexer.index(p1);
+		this.indexer.create(p1);
 		
 		Post p2 = this.newPost();
 		p2.setForumId(2);
-		this.indexer.index(p2);
+		this.indexer.create(p2);
 		
 		SearchArgs args = new SearchArgs();
 		args.setForumId(1);

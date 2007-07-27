@@ -65,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericPostDAO.java,v 1.20 2007/07/25 19:53:06 rafaelsteil Exp $
+ * @version $Id: GenericPostDAO.java,v 1.21 2007/07/27 13:55:48 rafaelsteil Exp $
  */
 public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 {
@@ -233,7 +233,7 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 		this.updatePostsTable(post);
 		this.updatePostsTextTable(post);
 
-		SearchFacade.index(post);
+		SearchFacade.create(post);
 	}
 
 	protected void updatePostsTextTable(Post post)
@@ -292,7 +292,7 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 			this.addNewPostText(post);
 
 			// Search
-			SearchFacade.index(post);
+			SearchFacade.create(post);
 
 			return post.getId();
 		}

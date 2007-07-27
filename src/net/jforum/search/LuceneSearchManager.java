@@ -55,7 +55,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchManager.java,v 1.5 2007/07/26 16:08:32 rafaelsteil Exp $
+ * @version $Id: LuceneSearchManager.java,v 1.6 2007/07/27 13:55:48 rafaelsteil Exp $
  */
 public class LuceneSearchManager implements SearchManager
 {
@@ -91,11 +91,19 @@ public class LuceneSearchManager implements SearchManager
 	}
 	
 	/**
-	 * @see net.jforum.search.SearchManager#index(net.jforum.entities.Post)
+	 * @see net.jforum.search.SearchManager#create(net.jforum.entities.Post)
 	 */
-	public void index(Post post)
+	public void create(Post post)
 	{
-		this.indexer.index(post);
+		this.indexer.create(post);
+	}
+	
+	/**
+	 * @see net.jforum.search.SearchManager#update(net.jforum.entities.Post)
+	 */
+	public void update(Post post)
+	{
+		this.indexer.update(post);
 	}
 
 	/**

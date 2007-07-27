@@ -43,6 +43,7 @@
  */
 package net.jforum.search;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -54,11 +55,13 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.Term;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchIndexer.java,v 1.15 2007/07/25 19:53:06 rafaelsteil Exp $
+ * @version $Id: LuceneSearchIndexer.java,v 1.16 2007/07/27 13:55:48 rafaelsteil Exp $
  */
 public class LuceneSearchIndexer
 {
@@ -78,39 +81,57 @@ public class LuceneSearchIndexer
 		this.newDocumentAddedList.add(newDoc);
 	}
 	
-	/**
-	 * @see net.jforum.search.SearchManager#index(net.jforum.entities.Post)
-	 */
-	public void index(Post post)
+	public synchronized void create(Post post)
 	{
-		synchronized (MUTEX) {
-			IndexWriter writer = null;
+		IndexWriter writer = null;
+		
+		try {
+			writer = new IndexWriter(this.settings.directory(), this.settings.analyzer());
 			
-			try {
-				writer = new IndexWriter(this.settings.directory(), this.settings.analyzer());
-				
-				Document document = this.createDocument(post);
-				writer.addDocument(document);
-				
-				this.optimize(writer);
-				
-				if (logger.isDebugEnabled()) {
-					logger.debug("Indexed " + document);
-				}
+			Document document = this.createDocument(post);
+			writer.addDocument(document);
+			
+			this.optimize(writer);
+			
+			if (logger.isDebugEnabled()) {
+				logger.debug("Indexed " + document);
 			}
-			catch (Exception e) {
-				logger.error(e.toString(), e);
-			}
-			finally {
-				if (writer != null) {
-					try {
-						writer.flush();
-						writer.close();
-						
-						this.notifyNewDocumentAdded();
-					}
-					catch (Exception e) {}
+		}
+		catch (Exception e) {
+			logger.error(e.toString(), e);
+		}
+		finally {
+			if (writer != null) {
+				try {
+					writer.flush();
+					writer.close();
+					
+					this.notifyNewDocumentAdded();
 				}
+				catch (Exception e) {}
+			}
+		}
+	}
+	
+	public synchronized void update(Post post)
+	{
+		IndexReader reader = null;
+		
+		try {
+			reader = IndexReader.open(this.settings.directory());
+			reader.deleteDocuments(new Term(SearchFields.Keyword.POST_ID, String.valueOf(post.getId())));
+			
+			this.create(post);
+		}
+		catch (IOException e) {
+			logger.error(e.toString(), e);
+		}
+		finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				}
+				catch (Exception e) {}
 			}
 		}
 	}

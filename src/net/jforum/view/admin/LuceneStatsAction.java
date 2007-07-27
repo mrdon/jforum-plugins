@@ -67,7 +67,7 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneStatsAction.java,v 1.5 2007/07/25 19:53:07 rafaelsteil Exp $
+ * @version $Id: LuceneStatsAction.java,v 1.6 2007/07/27 13:55:48 rafaelsteil Exp $
  */
 public class LuceneStatsAction extends AdminCommand
 {
@@ -98,7 +98,7 @@ public class LuceneStatsAction extends AdminCommand
 			
 			for (Iterator iter = l.iterator(); iter.hasNext(); ) {
 				Post p = (Post)iter.next();
-				SearchFacade.index(p);
+				SearchFacade.create(p);
 			}
 			
 			start += howMany;

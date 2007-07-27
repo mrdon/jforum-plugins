@@ -49,25 +49,15 @@ import net.jforum.entities.Post;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchManager.java,v 1.1 2007/07/25 19:53:06 rafaelsteil Exp $
+ * @version $Id: SearchManager.java,v 1.2 2007/07/27 13:55:48 rafaelsteil Exp $
  */
 public interface SearchManager
 {
-	/**
-	 * Inits the search manager (load configurations etc)
-	 */
 	public void init();
 	
-	/**
-	 * Index a message. 
-	 * The real behaviou of this method will 
-	 * differ from implementation to implementation. It
-	 * may index the post immediately or schedule it for
-	 * indexing when system load is low. 
-	 * 
-	 * @param post The message to index.
-	 */
-	public void index(Post post);
+	public void create(Post post);
+	
+	public void update(Post post);
 	
 	public List search(SearchArgs args);
 }

@@ -55,7 +55,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchFacade.java,v 1.1 2007/07/25 19:53:06 rafaelsteil Exp $
+ * @version $Id: SearchFacade.java,v 1.2 2007/07/27 13:55:48 rafaelsteil Exp $
  */
 public class SearchFacade
 {
@@ -87,10 +87,17 @@ public class SearchFacade
 		}
 	}
 	
-	public static void index(Post post)
+	public static void create(Post post)
 	{
 		if (SystemGlobals.getBoolValue(ConfigKeys.SEARCH_INDEXING_ENABLED)) {
-			searchManager.index(post);
+			searchManager.create(post);
+		}
+	}
+	
+	public static void update(Post post) 
+	{
+		if (SystemGlobals.getBoolValue(ConfigKeys.SEARCH_INDEXING_ENABLED)) {
+			searchManager.update(post);
 		}
 	}
 	
