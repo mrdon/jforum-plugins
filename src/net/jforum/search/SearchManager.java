@@ -49,7 +49,7 @@ import net.jforum.entities.Post;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchManager.java,v 1.2 2007/07/27 13:55:48 rafaelsteil Exp $
+ * @version $Id: SearchManager.java,v 1.3 2007/07/27 18:48:36 rafaelsteil Exp $
  */
 public interface SearchManager
 {
@@ -60,4 +60,6 @@ public interface SearchManager
 	public void update(Post post);
 	
 	public List search(SearchArgs args);
+	
+	public List newMessages(SearchArgs args);
 }

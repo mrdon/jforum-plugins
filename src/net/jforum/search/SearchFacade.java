@@ -55,7 +55,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchFacade.java,v 1.2 2007/07/27 13:55:48 rafaelsteil Exp $
+ * @version $Id: SearchFacade.java,v 1.3 2007/07/27 18:48:36 rafaelsteil Exp $
  */
 public class SearchFacade
 {
@@ -64,7 +64,7 @@ public class SearchFacade
 	
 	public static void init()
 	{
-		if (!SystemGlobals.getBoolValue(ConfigKeys.SEARCH_INDEXING_ENABLED)) {
+		if (!isSearchEnabled()) {
 			logger.info("Search indexing is disabled. Will try to create a SearchManager "
 				+ "instance for runtime configuration changes");
 		}
@@ -89,14 +89,14 @@ public class SearchFacade
 	
 	public static void create(Post post)
 	{
-		if (SystemGlobals.getBoolValue(ConfigKeys.SEARCH_INDEXING_ENABLED)) {
+		if (isSearchEnabled()) {
 			searchManager.create(post);
 		}
 	}
 	
 	public static void update(Post post) 
 	{
-		if (SystemGlobals.getBoolValue(ConfigKeys.SEARCH_INDEXING_ENABLED)) {
+		if (isSearchEnabled()) {
 			searchManager.update(post);
 		}
 	}
@@ -105,10 +105,26 @@ public class SearchFacade
 	{
 		List l = new ArrayList();
 		
-		if (SystemGlobals.getBoolValue(ConfigKeys.SEARCH_INDEXING_ENABLED)) {
+		if (isSearchEnabled()) {
 			l = searchManager.search(args);
 		}
 		
 		return l;
+	}
+	
+	public static List newMessages(SearchArgs args)
+	{
+		List l = new ArrayList();
+		
+		if (isSearchEnabled()) {
+			l = searchManager.newMessages(args);
+		}
+		
+		return l;
+	}
+
+	private static boolean isSearchEnabled()
+	{
+		return SystemGlobals.getBoolValue(ConfigKeys.SEARCH_INDEXING_ENABLED);
 	}
 }

@@ -63,7 +63,7 @@ import org.apache.lucene.search.highlight.Scorer;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneContentCollector.java,v 1.2 2007/07/27 18:39:48 rafaelsteil Exp $
+ * @version $Id: LuceneContentCollector.java,v 1.3 2007/07/27 18:48:36 rafaelsteil Exp $
  */
 public class LuceneContentCollector implements LuceneResultCollector
 {
@@ -74,6 +74,9 @@ public class LuceneContentCollector implements LuceneResultCollector
 		this.settings = settings;
 	}
 	
+	/**
+	 * @see net.jforum.search.LuceneResultCollector#collect(org.apache.lucene.search.Hits, org.apache.lucene.search.Query)
+	 */
 	public List collect(Hits hits, Query query)
 	{
 		try {

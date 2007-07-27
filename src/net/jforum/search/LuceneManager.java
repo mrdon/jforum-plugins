@@ -55,7 +55,7 @@ import org.apache.lucene.analysis.Analyzer;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneManager.java,v 1.3 2007/07/27 18:39:48 rafaelsteil Exp $
+ * @version $Id: LuceneManager.java,v 1.4 2007/07/27 18:48:36 rafaelsteil Exp $
  */
 public class LuceneManager implements SearchManager
 {
@@ -113,5 +113,13 @@ public class LuceneManager implements SearchManager
 	public List search(SearchArgs args)
 	{
 		return this.search.search(args);
+	}
+	
+	/**
+	 * @see net.jforum.search.SearchManager#newMessages(net.jforum.dao.SearchArgs)
+	 */
+	public List newMessages(SearchArgs args)
+	{
+		return this.search.newMessages(args);
 	}
 }
