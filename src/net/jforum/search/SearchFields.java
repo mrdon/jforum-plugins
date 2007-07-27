@@ -45,7 +45,7 @@ package net.jforum.search;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchFields.java,v 1.3 2007/07/24 14:43:08 rafaelsteil Exp $
+ * @version $Id: SearchFields.java,v 1.4 2007/07/27 15:57:06 rafaelsteil Exp $
  */
 public final class SearchFields
 {
@@ -56,11 +56,11 @@ public final class SearchFields
 		public static final String FORUM_ID = "forum.id";
 		public static final String USER_ID = "user.id";
 		public static final String CATEGORY_ID = "category.id";
+		public static final String DATE = "date";
 	}
 	
 	public static final class Indexed
 	{
-		public static final String DATE = "date";
 		public static final String CONTENTS = "contents";
 	}
 }

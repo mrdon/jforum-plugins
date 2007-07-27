@@ -44,9 +44,7 @@
 package net.jforum.search;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -63,7 +61,7 @@ import org.apache.lucene.index.Term;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneIndexer.java,v 1.1 2007/07/27 14:44:01 rafaelsteil Exp $
+ * @version $Id: LuceneIndexer.java,v 1.2 2007/07/27 15:57:06 rafaelsteil Exp $
  */
 public class LuceneIndexer
 {
@@ -161,19 +159,13 @@ public class LuceneIndexer
 		d.add(new Field(SearchFields.Keyword.FORUM_ID, String.valueOf(p.getForumId()), Store.YES, Index.UN_TOKENIZED));
 		d.add(new Field(SearchFields.Keyword.TOPIC_ID, String.valueOf(p.getTopicId()), Store.YES, Index.UN_TOKENIZED));
 		d.add(new Field(SearchFields.Keyword.USER_ID, String.valueOf(p.getUserId()), Store.YES, Index.UN_TOKENIZED));
-		
-		d.add(new Field(SearchFields.Indexed.DATE, this.formatDateTime(p.getTime()), Store.NO, Index.UN_TOKENIZED));
+		d.add(new Field(SearchFields.Keyword.DATE, this.settings.formatDateTime(p.getTime()), Store.YES, Index.UN_TOKENIZED));
 		
 		// We add the subject and message text together because, when searching, we only care about the 
 		// matches, not where it was performed. The real subject and contents will be fetched from the database
 		d.add(new Field(SearchFields.Indexed.CONTENTS, p.getSubject() + " " + p.getText(), Store.NO, Index.TOKENIZED));
 		
 		return d;
-	}
-	
-	private String formatDateTime(Date date)
-	{
-		return new SimpleDateFormat("yyyyMMddHHmmss").format(date);
 	}
 	
 	private void notifyNewDocumentAdded()

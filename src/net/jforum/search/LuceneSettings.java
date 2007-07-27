@@ -45,6 +45,8 @@ package net.jforum.search;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import net.jforum.dao.DataAccessDriver;
 
@@ -56,7 +58,7 @@ import org.apache.lucene.store.RAMDirectory;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSettings.java,v 1.5 2007/07/27 15:42:56 rafaelsteil Exp $
+ * @version $Id: LuceneSettings.java,v 1.6 2007/07/27 15:57:06 rafaelsteil Exp $
  */
 public class LuceneSettings
 {
@@ -115,5 +117,10 @@ public class LuceneSettings
 	public DataAccessDriver dataAccessDriver()
 	{
 		return this.dataAccessDriver;
+	}
+	
+	public String formatDateTime(Date date)
+	{
+		return new SimpleDateFormat("yyyyMMddHHmmss").format(date);
 	}
 }

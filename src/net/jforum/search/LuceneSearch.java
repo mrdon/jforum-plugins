@@ -45,7 +45,9 @@ package net.jforum.search;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -68,7 +70,7 @@ import org.apache.lucene.search.highlight.Scorer;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.20 2007/07/27 15:42:56 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.21 2007/07/27 15:57:06 rafaelsteil Exp $
  */
 public class LuceneSearch implements NewDocumentAdded
 {
@@ -110,12 +112,13 @@ public class LuceneSearch implements NewDocumentAdded
 		List l = new ArrayList();
 		
 		try {
-			StringBuffer sb = new StringBuffer(256);
+			StringBuffer criteria = new StringBuffer(256);
 			
-			this.filterByForum(args, sb);
-			this.filterByKeywords(args, sb);
+			this.filterByForum(args, criteria);
+			this.filterByKeywords(args, criteria);
+			this.filterByDateRange(args, criteria);
 			
-			Query query = new QueryParser("", new StandardAnalyzer()).parse(sb.toString());
+			Query query = new QueryParser("", new StandardAnalyzer()).parse(criteria.toString());
 			
 			if (logger.isDebugEnabled()) {
 				logger.debug("Generated query: " + query);
@@ -175,17 +178,36 @@ public class LuceneSearch implements NewDocumentAdded
 		
 		return l;
 	}
-
-	private void filterByKeywords(SearchArgs sd, StringBuffer sb)
+	
+	private void filterByDateRange(SearchArgs args, StringBuffer criteria)
 	{
-		String[] keywords = sd.getKeywords();
+		if (args.getTime() != null) {
+			criteria.append('(')
+			.append(SearchFields.Keyword.DATE)
+			.append(": [")
+			.append(this.settings.formatDateTime(args.getTime()))
+			.append(" TO ")
+			.append(this.settings.formatDateTime(new Date()))
+			.append(']')
+			.append(')');
+		}
+	}
+	
+	private String formatDateTime(Date date)
+	{
+		return new SimpleDateFormat("yyyyMMddHHmmss").format(date);
+	}
+
+	private void filterByKeywords(SearchArgs args, StringBuffer criteria)
+	{
+		String[] keywords = args.getKeywords();
 		
 		for (int i = 0; i < keywords.length; i++) {
-			if (sd.shouldMatchAllKeywords()) {
-				sb.append(" +");
+			if (args.shouldMatchAllKeywords()) {
+				criteria.append(" +");
 			}
 			
-			sb.append('(')
+			criteria.append('(')
 			.append(SearchFields.Indexed.CONTENTS)
 			.append(':')
 			.append(keywords[i])
@@ -193,15 +215,15 @@ public class LuceneSearch implements NewDocumentAdded
 		}
 	}
 
-	private void filterByForum(SearchArgs sd, StringBuffer sb)
+	private void filterByForum(SearchArgs args, StringBuffer criteria)
 	{
 		// TODO: Remove those forums that the current user doesn't
 		// have permissions to access
-		if (sd.getForumId() > 0) {
-			sb.append("+(")
+		if (args.getForumId() > 0) {
+			criteria.append("+(")
 				.append(SearchFields.Keyword.FORUM_ID)
 				.append(':')
-				.append(sd.getForumId())
+				.append(args.getForumId())
 				.append(") ");
 		}
 	}
