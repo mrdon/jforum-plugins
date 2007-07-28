@@ -51,7 +51,7 @@ import net.jforum.entities.Banner;
 
 /**
  * @author Samuel Yung
- * @version $Id: BannerCommon.java,v 1.7 2006/08/23 02:13:56 rafaelsteil Exp $
+ * @version $Id: BannerCommon.java,v 1.8 2007/07/28 14:17:09 rafaelsteil Exp $
  */
 public class BannerCommon
 {
@@ -71,11 +71,7 @@ public class BannerCommon
      */
     public boolean canBannerDisplay(int bannerId)
 	{
-		boolean result = true;
-
-                // todo
-
-		return result;
+    	return true;
 	}
 
 	/**

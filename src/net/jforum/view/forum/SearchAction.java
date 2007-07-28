@@ -65,19 +65,14 @@ import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
 import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
-
-import org.apache.log4j.Logger;
-
 import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.45 2007/07/28 14:00:23 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.46 2007/07/28 14:17:09 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
-    private static final Logger log = Logger.getLogger(SearchAction.class);
-
 	private String searchTerms;
 	private String forum;
 	private String sortBy;

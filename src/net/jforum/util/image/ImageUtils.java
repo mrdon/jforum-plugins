@@ -60,25 +60,18 @@ import javax.imageio.stream.ImageOutputStream;
 
 import net.jforum.exceptions.ForumException;
 
-import org.apache.log4j.Logger;
-
 /**
  * Utilities methods for image manipulation. It does not support writting of GIF images, but it can
  * read from. GIF images will be saved as PNG.
  * 
  * @author Rafael Steil
- * @version $Id: ImageUtils.java,v 1.21 2006/11/12 13:25:23 rafaelsteil Exp $
+ * @version $Id: ImageUtils.java,v 1.22 2007/07/28 14:17:12 rafaelsteil Exp $
  */
 public class ImageUtils
 {
-	private final static Logger log = Logger.getLogger(ImageUtils.class);
-
 	public static final int IMAGE_UNKNOWN = -1;
-
 	public static final int IMAGE_JPEG = 0;
-
 	public static final int IMAGE_PNG = 1;
-
 	public static final int IMAGE_GIF = 2;
 
 	/**

@@ -47,7 +47,6 @@ import java.util.List;
 
 import net.jforum.Command;
 import net.jforum.JForumExecutionContext;
-import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ModerationLogDAO;
 import net.jforum.dao.PostDAO;
@@ -67,7 +66,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationAction.java,v 1.5 2007/07/09 00:45:06 rafaelsteil Exp $
+ * @version $Id: ModerationAction.java,v 1.6 2007/07/28 14:17:09 rafaelsteil Exp $
  */
 public class ModerationAction extends Command
 {
@@ -94,9 +93,6 @@ public class ModerationAction extends Command
 		
 		List list = dao.selectAll(start, recordsPerPage);
 		boolean canAccessFullModerationLog = SecurityRepository.canAccess(SecurityConstants.PERM_FULL_MODERATION_LOG);
-		
-		// Check if the the current user has access to the moderated topics / posts
-		int userId = SessionFacade.getUserSession().getUserId();
 		
 		PostDAO postDao = DataAccessDriver.getInstance().newPostDAO();
 		TopicDAO topicDao = DataAccessDriver.getInstance().newTopicDAO();

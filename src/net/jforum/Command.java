@@ -42,6 +42,8 @@
  */
 package net.jforum;
 
+import java.io.IOException;
+
 import net.jforum.context.RequestContext;
 import net.jforum.context.ResponseContext;
 import net.jforum.exceptions.ForumException;
@@ -52,9 +54,6 @@ import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
-import org.apache.log4j.Logger;
-
-import java.io.IOException;
 
 /**
  * <code>Command</code> Pattern implementation.
@@ -62,12 +61,10 @@ import java.io.IOException;
  * presentation actions must extend this class. 
  * 
  * @author Rafael Steil
- * @version $Id: Command.java,v 1.26 2007/02/25 13:48:35 rafaelsteil Exp $
+ * @version $Id: Command.java,v 1.27 2007/07/28 14:17:11 rafaelsteil Exp $
  */
 public abstract class Command 
 {
-    private static final Logger log = Logger.getLogger(Command.class);
-
 	private static Class[] NO_ARGS_CLASS = new Class[0];
 	private static Object[] NO_ARGS_OBJECT = new Object[0];
 	

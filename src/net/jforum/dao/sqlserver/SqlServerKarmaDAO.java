@@ -62,6 +62,6 @@ public class SqlServerKarmaDAO extends net.jforum.dao.generic.GenericKarmaDAO
 				+ SystemGlobals.getSql("KarmaModel.getMostRatedUserByPeriod");
         sql += " ORDER BY " + orderField + " DESC";
 		
-		return super.getMostRatedUserByPeriod(sql, start, firstPeriod, lastPeriod, orderField);
+		return super.getMostRatedUserByPeriod(sql, firstPeriod, lastPeriod);
 	}
 }

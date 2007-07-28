@@ -48,9 +48,9 @@ import java.util.HashMap;
 
 import javax.servlet.http.Cookie;
 
+import net.jforum.context.ForumContext;
 import net.jforum.context.RequestContext;
 import net.jforum.context.SessionContext;
-import net.jforum.context.ForumContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.UserDAO;
 import net.jforum.dao.UserSessionDAO;
@@ -67,18 +67,15 @@ import net.jforum.util.MD5;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import freemarker.template.SimpleHash;
-import org.apache.log4j.Logger;
 
 /**
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.35 2007/07/10 01:55:50 rafaelsteil Exp $
+ * @version $Id: ControllerUtils.java,v 1.36 2007/07/28 14:17:11 rafaelsteil Exp $
  */
 public class ControllerUtils
 {
-    private static final Logger log = Logger.getLogger(ControllerUtils.class);
-
 	/**
 	 * Setup common variables used by almost all templates.
 	 * 

@@ -68,7 +68,7 @@ import net.jforum.view.admin.common.ModerationCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.31 2006/11/21 22:14:33 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.32 2007/07/28 14:17:10 rafaelsteil Exp $
  */
 public class ForumAction extends AdminCommand 
 {
@@ -271,40 +271,40 @@ public class ForumAction extends AdminCommand
 		// Access
 		String[] groups = this.request.getParameterValues("groupsAccess");
 		if (groups != null) {
-			this.addRole(pc, SecurityConstants.PERM_FORUM, f.getId(), groups, false);
+			this.addRole(pc, SecurityConstants.PERM_FORUM, f.getId(), groups);
 		}
 		else {
-			this.addRole(pc, SecurityConstants.PERM_FORUM, f.getId(), allGroups, true);
+			this.addRole(pc, SecurityConstants.PERM_FORUM, f.getId(), allGroups);
 		}
 		
 		// Anonymous posts
 		groups = this.request.getParameterValues("groupsAnonymous");
 		if (groups != null) {
-			this.addRole(pc, SecurityConstants.PERM_ANONYMOUS_POST, f.getId(), groups, false);
+			this.addRole(pc, SecurityConstants.PERM_ANONYMOUS_POST, f.getId(), groups);
 		}
 		else {
-			this.addRole(pc, SecurityConstants.PERM_ANONYMOUS_POST, f.getId(), allGroups, true);
+			this.addRole(pc, SecurityConstants.PERM_ANONYMOUS_POST, f.getId(), allGroups);
 		}
 		
 		// Read-only
 		groups = this.request.getParameterValues("groupsReadOnly");
 		if (groups != null) {
-			this.addRole(pc, SecurityConstants.PERM_READ_ONLY_FORUMS, f.getId(), groups, false);
+			this.addRole(pc, SecurityConstants.PERM_READ_ONLY_FORUMS, f.getId(), groups);
 		}
 		else {
-			this.addRole(pc, SecurityConstants.PERM_READ_ONLY_FORUMS, f.getId(), allGroups, true);
+			this.addRole(pc, SecurityConstants.PERM_READ_ONLY_FORUMS, f.getId(), allGroups);
 		}
 		
 		// Reply-only
-		this.addRole(pc, SecurityConstants.PERM_REPLY_ONLY, f.getId(), allGroups, true);
+		this.addRole(pc, SecurityConstants.PERM_REPLY_ONLY, f.getId(), allGroups);
 		
 		// HTML
 		groups = this.request.getParameterValues("groupsHtml");
 		if (groups != null) {
-			this.addRole(pc, SecurityConstants.PERM_HTML_DISABLED, f.getId(), groups, false);
+			this.addRole(pc, SecurityConstants.PERM_HTML_DISABLED, f.getId(), groups);
 		}
 		else {
-			this.addRole(pc, SecurityConstants.PERM_HTML_DISABLED, f.getId(), allGroups, true);
+			this.addRole(pc, SecurityConstants.PERM_HTML_DISABLED, f.getId(), allGroups);
 		}
 		
 		SecurityRepository.clean();
@@ -315,7 +315,7 @@ public class ForumAction extends AdminCommand
 		this.list();
 	}
 	
-	private void addRole(PermissionControl pc, String roleName, int forumId, String[] groups, boolean allow) 
+	private void addRole(PermissionControl pc, String roleName, int forumId, String[] groups) 
 	{
 		Role role = new Role();
 		role.setName(roleName);

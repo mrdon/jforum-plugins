@@ -55,16 +55,12 @@ import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.DbUtils;
 import oracle.sql.BLOB;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author Dmitriy Kiriy
- * @version $Id: OracleUtils.java,v 1.12 2006/08/23 02:13:55 rafaelsteil Exp $
+ * @version $Id: OracleUtils.java,v 1.13 2007/07/28 14:17:12 rafaelsteil Exp $
  */
 public class OracleUtils
 {
-	private final static Logger log = Logger.getLogger(OracleUtils.class);
-
 	public static String readBlobUTF16BinaryStream(ResultSet rs, String fieldName) throws SQLException
 	{
 		try {
@@ -72,11 +68,15 @@ public class OracleUtils
 
 			InputStream is = clob.getBinaryStream();
 			StringBuffer sb = new StringBuffer();
+			
 			int readedBytes;
 			int bufferSize = 4096;
+			
 			do {
 				byte[] bytes = new byte[bufferSize];
+				
 				readedBytes = is.read(bytes);
+				
 				if (readedBytes > 0) {
 					String readed = new String(bytes, 0, readedBytes, "UTF-16");
 					sb.append(readed);
@@ -89,7 +89,6 @@ public class OracleUtils
 		catch (IOException e) {
 			throw new DatabaseException(e);
 		}
-
 	}
 
 	/**

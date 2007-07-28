@@ -73,7 +73,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * @author Vanessa Sabino
  * @author socialnetwork@gmail.com, adding "watch forum" methods.
  * 
- * @version $Id: GenericForumDAO.java,v 1.30 2006/10/09 00:54:10 rafaelsteil Exp $
+ * @version $Id: GenericForumDAO.java,v 1.31 2007/07/28 14:17:10 rafaelsteil Exp $
  */
 public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 {
@@ -178,7 +178,7 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 	 */
 	public Forum setOrderUp(Forum forum, Forum related)
 	{
-		return this.changeForumOrder(forum, related, true);
+		return this.changeForumOrder(forum, related);
 	}
 
 	/**
@@ -186,10 +186,10 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 	 */
 	public Forum setOrderDown(Forum forum, Forum related)
 	{
-		return this.changeForumOrder(forum, related, false);
+		return this.changeForumOrder(forum, related);
 	}
 
-	private Forum changeForumOrder(Forum forum, Forum related, boolean up)
+	private Forum changeForumOrder(Forum forum, Forum related)
 	{
 		int tmpOrder = related.getOrder();
 		related.setOrder(forum.getOrder());

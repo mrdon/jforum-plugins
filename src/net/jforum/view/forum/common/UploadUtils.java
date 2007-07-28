@@ -48,16 +48,13 @@ import java.io.IOException;
 
 import net.jforum.exceptions.ForumException;
 import net.jforum.util.legacy.commons.fileupload.FileItem;
-import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UploadUtils.java,v 1.14 2007/04/15 05:28:58 rafaelsteil Exp $
+ * @version $Id: UploadUtils.java,v 1.15 2007/07/28 14:17:09 rafaelsteil Exp $
  */
 public class UploadUtils
 {
-    private static Logger log = Logger.getLogger(AttachmentCommon.class);
-
 	private FileItem item;
 	private String extension = "";
 	

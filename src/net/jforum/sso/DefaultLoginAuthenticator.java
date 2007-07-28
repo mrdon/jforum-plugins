@@ -51,10 +51,9 @@ import net.jforum.JForumExecutionContext;
 import net.jforum.dao.UserDAO;
 import net.jforum.entities.User;
 import net.jforum.exceptions.ForumException;
-import net.jforum.util.MD5;
 import net.jforum.util.DbUtils;
+import net.jforum.util.MD5;
 import net.jforum.util.preferences.SystemGlobals;
-import org.apache.log4j.Logger;
 
 /**
  * Default login authenticator for JForum.
@@ -62,12 +61,10 @@ import org.apache.log4j.Logger;
  * <i>jforum_users</i>. 
  * 
  * @author Rafael Steil
- * @version $Id: DefaultLoginAuthenticator.java,v 1.9 2006/08/24 01:07:04 rafaelsteil Exp $
+ * @version $Id: DefaultLoginAuthenticator.java,v 1.10 2007/07/28 14:17:10 rafaelsteil Exp $
  */
 public class DefaultLoginAuthenticator implements LoginAuthenticator
 {
-    private final static Logger log = Logger.getLogger(DefaultLoginAuthenticator.class);
-
 	private UserDAO userModel;
 
 	/**

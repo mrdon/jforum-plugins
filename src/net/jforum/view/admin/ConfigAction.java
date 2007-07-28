@@ -62,19 +62,14 @@ import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
-
-import org.apache.log4j.Logger;
-
 import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ConfigAction.java,v 1.20 2007/04/12 02:11:53 rafaelsteil Exp $
+ * @version $Id: ConfigAction.java,v 1.21 2007/07/28 14:17:10 rafaelsteil Exp $
  */
 public class ConfigAction extends AdminCommand 
 {
-    private static final Logger log = Logger.getLogger(ConfigAction.class);
-
 	public ConfigAction() {}
 	
 	public ConfigAction(RequestContext request,

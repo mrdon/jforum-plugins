@@ -55,17 +55,10 @@ import org.apache.lucene.search.Query;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneNewMessagesCollector.java,v 1.3 2007/07/28 14:00:23 rafaelsteil Exp $
+ * @version $Id: LuceneNewMessagesCollector.java,v 1.4 2007/07/28 14:17:12 rafaelsteil Exp $
  */
 public class LuceneNewMessagesCollector implements LuceneResultCollector
 {
-	private LuceneSettings settings;
-	
-	public LuceneNewMessagesCollector(LuceneSettings settings)
-	{
-		this.settings = settings;
-	}
-	
 	public List collect(Hits hits, Query query)
 	{
 		try {

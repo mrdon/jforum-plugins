@@ -11,7 +11,6 @@
 	<#assign baseUrl = "openModeration="+ open/>
 	
 	<#if (forum?default("")?length > 0)><#assign baseUrl = baseUrl +"&amp;search_forum="+ forum/></#if>
-	<#if (category?default("")?length > 0)><#assign baseUrl = baseUrl +"&amp;search_cat="+ category/></#if>
 	<#if (kw?default("")?length > 0)><#assign baseUrl = baseUrl +"&amp;search_keywords="+ kw/></#if>
 	<#if (author?default("")?length > 0)><#assign baseUrl = baseUrl +"&amp;search_author="+ author/></#if>
 	<#if (terms?default("")?length > 0)><#assign baseUrl = baseUrl +"&amp;search_terms="+ terms/></#if>
@@ -22,7 +21,7 @@
 	<#return baseUrl/>
 </#function>
 
-<#macro searchPagination kw terms forum category orderField orderBy author postTime>
+<#macro searchPagination kw terms forum orderField orderBy author postTime>
 	<#assign baseUrl = contextPath +"/jforum" + extension + "?module=search&amp;action=search&amp;"/>
 	<#assign baseUrl = baseUrl + moderationParams("")/>
 

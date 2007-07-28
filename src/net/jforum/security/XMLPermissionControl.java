@@ -57,8 +57,8 @@ import javax.xml.parsers.SAXParserFactory;
 import net.jforum.JForumExecutionContext;
 import net.jforum.exceptions.DatabaseException;
 import net.jforum.exceptions.ForumException;
-import net.jforum.util.FormSelectedData;
 import net.jforum.util.DbUtils;
+import net.jforum.util.FormSelectedData;
 import net.jforum.util.preferences.SystemGlobals;
 
 import org.xml.sax.Attributes;
@@ -66,27 +66,20 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
-import org.apache.log4j.Logger;
 
 /**
  * Manipulates XML permission control file definition 
  * 
  * @author Rafael Steil
- * @version $Id: XMLPermissionControl.java,v 1.16 2006/08/24 01:07:02 rafaelsteil Exp $
+ * @version $Id: XMLPermissionControl.java,v 1.17 2007/07/28 14:17:12 rafaelsteil Exp $
  */
 public class XMLPermissionControl extends DefaultHandler 
 {
-    private static final Logger log = Logger.getLogger(XMLPermissionControl.class);
-    
     private PermissionSection section;
-
 	private PermissionControl pc;
-	
 	private List listSections;
 	private List permissionData;
-	
 	private Map queries;
-	
 	private String permissionName;
 	private String permissionId;
 	private String permissionType;

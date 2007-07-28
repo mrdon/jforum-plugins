@@ -51,7 +51,7 @@ import net.jforum.repository.ForumRepository;
  * Represents a specific forum.
  * 
  * @author Rafael Steil
- * @version $Id: Forum.java,v 1.12 2006/08/20 22:47:36 rafaelsteil Exp $
+ * @version $Id: Forum.java,v 1.13 2007/07/28 14:17:09 rafaelsteil Exp $
  */
 public class Forum implements Serializable
 {
@@ -66,7 +66,6 @@ public class Forum implements Serializable
 	private boolean moderated;
 	private boolean unread;
 	private LastPostInfo lpi;
-	private List moderatorList;
 
 	public Forum() { }
 	
@@ -87,7 +86,6 @@ public class Forum implements Serializable
 		this.totalTopics = f.getTotalTopics();
 		this.unread = f.getUnread();
 		this.lpi = f.getLastPostInfo();
-		this.moderatorList = f.getModeratorList();
 	}
 	
 	public void setLastPostInfo(LastPostInfo lpi) {

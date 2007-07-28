@@ -55,7 +55,6 @@ import net.jforum.exceptions.ForumException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
-import org.apache.log4j.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -64,12 +63,10 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * @author Rafael Steil
- * @version $Id: BBCodeHandler.java,v 1.18 2006/08/24 01:07:04 rafaelsteil Exp $
+ * @version $Id: BBCodeHandler.java,v 1.19 2007/07/28 14:17:09 rafaelsteil Exp $
  */
 public class BBCodeHandler extends DefaultHandler implements Serializable
 {
-    private static final Logger log = Logger.getLogger(BBCodeHandler.class);
-
 	private Map bbMap = new LinkedHashMap();
 	private Map alwaysProcessMap = new LinkedHashMap();
 	private String tagName = "";

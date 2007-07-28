@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericKarmaDAO.java,v 1.10 2006/08/23 02:13:42 rafaelsteil Exp $
+ * @version $Id: GenericKarmaDAO.java,v 1.11 2007/07/28 14:17:10 rafaelsteil Exp $
  */
 public class GenericKarmaDAO implements net.jforum.dao.KarmaDAO
 {
@@ -346,19 +346,17 @@ public class GenericKarmaDAO implements net.jforum.dao.KarmaDAO
 		String sql = SystemGlobals.getSql("KarmaModel.getMostRatedUserByPeriod");
 		sql += " ORDER BY " + orderField + " DESC";
 
-		return this.getMostRatedUserByPeriod(sql, start, firstPeriod, lastPeriod, orderField);
+		return this.getMostRatedUserByPeriod(sql, firstPeriod, lastPeriod);
 	}
 
 	/**
 	 * 
 	 * @param sql String
-	 * @param start int
 	 * @param firstPeriod Date
 	 * @param lastPeriod Date
-	 * @param orderField String
 	 * @return List
 	 */
-	protected List getMostRatedUserByPeriod(String sql, int start, Date firstPeriod, Date lastPeriod, String orderField)
+	protected List getMostRatedUserByPeriod(String sql, Date firstPeriod, Date lastPeriod)
 	{
 		if (firstPeriod.after(lastPeriod)) {
 			throw new DatabaseException("First Date needs to be before the Last Date");
@@ -366,6 +364,7 @@ public class GenericKarmaDAO implements net.jforum.dao.KarmaDAO
 
 		PreparedStatement p = null;
 		ResultSet rs = null;
+		
 		try {
 			p = JForumExecutionContext.getConnection().prepareStatement(sql);
 			p.setTimestamp(1, new Timestamp(firstPeriod.getTime()));

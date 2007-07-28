@@ -27,7 +27,7 @@
 					</td>
 					<td valign="bottom" nowrap="nowrap" align="right">
 						<#assign paginationLinks>
-							<@pagination.searchPagination kw?default(""), terms?default(""), forum?default(""), category?default(""), orderField?default(""), orderBy?default(""), author?default(""), postTime?default("")/>
+							<@pagination.searchPagination kw?default(""), terms?default(""), forum?default(""), orderField?default(""), orderBy?default(""), author?default(""), postTime?default("")/>
 						</#assign>
 
 						${paginationLinks}
@@ -70,22 +70,20 @@
 						</td>
 					</tr>
 				<#else>
-					<#list results as result>
-						<#assign forum = fr.getForum(result.post.forumId)/>
-
+					<#list results as post>
 						<tr>
 							<td class="row1">
-								<#assign postUrl = JForumContext.encodeURL("/posts/preList/${result.post.topicId}/${result.post.id}")/>
+								<#assign postUrl = JForumContext.encodeURL("/posts/preList/${post.topicId}/${post.id}")/>
 
 								<span class="gen">
 									<img class="icon_folder" src="${contextPath}/images/transp.gif" alt=""/>
 
 									<strong>
-										<a href="${postUrl}">${result.post.subject}</a>
+										<a href="${postUrl}">${post.subject}</a>
 									</strong>, 
-									posted on <a href="${JForumContext.encodeURL("/forums/list/${forum.id}")}">${forum.name}</a>, 
-									at ${result.post.time?datetime}, 
-									by <a href="${JForumContext.encodeURL("/user/profile/${result.post.userId}")}">${result.post.postUsername}</a>
+									posted on <a href="${JForumContext.encodeURL("/forums/list/${post.forum.id}")}">${post.forum.name}</a>, 
+									at ${post.time?datetime}, 
+									by <a href="${JForumContext.encodeURL("/user/profile/${post.userId}")}">${post.postUsername}</a>
 
 									<br/>
 									<a href="${postUrl}">View message</a>
@@ -93,7 +91,7 @@
 
 								<p>
 									<div style="background-color: #fff;" class="gen">
-										${result.post.text}<br/><br/>
+										${post.text}<br/><br/>
 									</div>
 								</p>
 							</td>
@@ -157,7 +155,7 @@
 
 <script type="text/javascript">
 try {
-	highlightSearchTerms("${kw}", false, true);
+	highlightSearchTerms("${kw?default("")}", false, true);
 } catch (e) {}
 </script>
 

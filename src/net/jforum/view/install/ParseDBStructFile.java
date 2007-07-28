@@ -42,23 +42,19 @@
  */
 package net.jforum.view.install;
 
-import net.jforum.exceptions.ForumException;
-
-import org.apache.log4j.Logger;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.jforum.exceptions.ForumException;
+
 /**
  * @author Rafael Steil
- * @version $Id: ParseDBStructFile.java,v 1.6 2006/08/24 01:06:55 rafaelsteil Exp $
+ * @version $Id: ParseDBStructFile.java,v 1.7 2007/07/28 14:17:13 rafaelsteil Exp $
  */
 public class ParseDBStructFile
 {
-    private static final Logger log = Logger.getLogger(ParseDBStructFile.class);
-    
     public static List parse(String filename)
 	{
 		List statements = new ArrayList();

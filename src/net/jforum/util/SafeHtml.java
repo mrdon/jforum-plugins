@@ -52,7 +52,6 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.view.forum.common.ViewCommon;
 
-import org.apache.log4j.Logger;
 import org.htmlparser.Attribute;
 import org.htmlparser.Node;
 import org.htmlparser.Tag;
@@ -67,11 +66,10 @@ import org.htmlparser.nodes.TextNode;
  * <li>http://quickwired.com/kallahar/smallprojects/php_xss_filter_function.php
  * <br>
  * @author Rafael Steil
- * @version $Id: SafeHtml.java,v 1.21 2007/03/18 16:56:56 rafaelsteil Exp $
+ * @version $Id: SafeHtml.java,v 1.22 2007/07/28 14:17:11 rafaelsteil Exp $
  */
 public class SafeHtml 
 {
-	private static final Logger logger = Logger.getLogger(SafeHtml.class);
 	private static Set welcomeTags;
 	private static Set welcomeAttributes;
 	private static Set allowedProtocols;

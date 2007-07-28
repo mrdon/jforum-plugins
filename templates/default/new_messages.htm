@@ -18,8 +18,11 @@
 		 <br/>
             </td>
           <td valign="bottom" nowrap="nowrap" align="right">
-		  
-		  <@pagination.searchPagination kw?default(""), terms?default(""), forum?default(""), category?default(""), orderField?default(""), orderBy?default(""), author?default(""), postTime?default("")/>
+			<#assign paginationLinks>
+				<@pagination.searchPagination kw?default(""), terms?default(""), forum?default(""), orderField?default(""), orderBy?default(""), author?default(""), postTime?default("")/>
+			</#assign>
+
+			${paginationLinks}
 		  </td></tr>
         <tr>
           <td align="left" valign="middle">		  
@@ -50,9 +53,9 @@
 		
    <table class="forumline" cellspacing="1" cellpadding="4" width="100%" border="0">
         <tr>
-          <th class="thcornerl" nowrap="nowrap" align="center" height="25" width="20">&nbsp;</th>
-          <th class="thcornerl" nowrap="nowrap" align="center" height="25">&nbsp;${I18n.getMessage("Forums.Form.ForumName")}&nbsp;</th>
-          <th class="thcornerl" nowrap="nowrap" align="center" height="25">&nbsp;${I18n.getMessage("ForumIndex.topics")}&nbsp;</th>
+          <th class="thcornerl" nowrap="nowrap" align="center" width="20">&nbsp;</th>
+          <th class="thcornerl" nowrap="nowrap" align="center">&nbsp;${I18n.getMessage("Forums.Form.ForumName")}&nbsp;</th>
+          <th class="thcornerl" nowrap="nowrap" align="center">&nbsp;${I18n.getMessage("ForumIndex.topics")}&nbsp;</th>
           <th class="thtop" nowrap="nowrap" align="center" width="50">&nbsp;${I18n.getMessage("ForumIndex.answers")}&nbsp;</th>
           <th class="thtop" nowrap="nowrap" align="center" width="100">&nbsp;${I18n.getMessage("ForumIndex.author")}&nbsp;</th>
           <th class="thtop" nowrap="nowrap" align="center" width="50">&nbsp;${I18n.getMessage("ForumIndex.views")}&nbsp;</th>
@@ -129,7 +132,7 @@
 		  	<a class="nav" href="${contextPath}/forums/list${extension}">${I18n.getMessage("ForumListing.forumIndex")}</a></span></td>
           <td valign="middle" nowrap="nowrap" align="right">
 		  
-		  <@pagination.searchPagination kw?default(""), terms?default(""), forum?default(""), category?default(""), orderField?default(""), orderBy?default(""), author?default(""), postTime?default("")/>
+		  ${paginationLinks}
 		  
 		  </td>
         </tr>

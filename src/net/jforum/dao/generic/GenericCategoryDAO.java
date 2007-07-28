@@ -56,7 +56,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericCategoryDAO.java,v 1.8 2006/08/23 02:13:43 rafaelsteil Exp $
+ * @version $Id: GenericCategoryDAO.java,v 1.9 2007/07/28 14:17:10 rafaelsteil Exp $
  */
 public class GenericCategoryDAO extends AutoKeys implements net.jforum.dao.CategoryDAO
 {
@@ -236,7 +236,7 @@ public class GenericCategoryDAO extends AutoKeys implements net.jforum.dao.Categ
 	 */
 	public void setOrderUp(Category category, Category relatedCategory)
 	{
-		this.setOrder(category, relatedCategory, true);
+		this.setOrder(category, relatedCategory);
 	}
 
 	/**
@@ -244,24 +244,21 @@ public class GenericCategoryDAO extends AutoKeys implements net.jforum.dao.Categ
 	 */
 	public void setOrderDown(Category category, Category relatedCategory)
 	{
-		this.setOrder(category, relatedCategory, false);
+		this.setOrder(category, relatedCategory);
 	}
 
 	/**
-	 * TODO parameter 'up' not used - must be removed or used
-	 * 
 	 * @param category Category
 	 * @param otherCategory Category
-	 * @param up boolean
 	 */
-	private void setOrder(Category category, Category otherCategory, boolean up)
+	private void setOrder(Category category, Category otherCategory)
 	{
 		int tmpOrder = otherCategory.getOrder();
 		otherCategory.setOrder(category.getOrder());
 		category.setOrder(tmpOrder);
 
-		// *********
 		PreparedStatement p = null;
+		
 		try {
 			p = JForumExecutionContext.getConnection().prepareStatement(
 					SystemGlobals.getSql("CategoryModel.setOrderById"));
@@ -271,7 +268,6 @@ public class GenericCategoryDAO extends AutoKeys implements net.jforum.dao.Categ
 			p.close();
 			p = null;
 
-			// *********
 			p = JForumExecutionContext.getConnection().prepareStatement(
 					SystemGlobals.getSql("CategoryModel.setOrderById"));
 			p.setInt(1, category.getOrder());

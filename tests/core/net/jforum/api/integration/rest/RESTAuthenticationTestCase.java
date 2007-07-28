@@ -3,7 +3,6 @@
  */
 package net.jforum.api.integration.rest;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -18,13 +17,11 @@ import net.jforum.api.rest.RESTAuthentication;
 
 /**
  * @author Rafael Steil
- * @version $Id: RESTAuthenticationTestCase.java,v 1.3 2006/10/10 00:49:02 rafaelsteil Exp $
+ * @version $Id: RESTAuthenticationTestCase.java,v 1.4 2007/07/28 14:17:11 rafaelsteil Exp $
  */
 public class RESTAuthenticationTestCase extends TestCase
 {
 	public static final String API_KEY = "api.key.test";
-	
-	private Connection connection;
 	
 	public void testInvalid() throws Exception
 	{

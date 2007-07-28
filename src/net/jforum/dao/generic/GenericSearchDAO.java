@@ -57,16 +57,12 @@ import net.jforum.repository.ForumRepository;
 import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.SystemGlobals;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author Rafael Steil
- * @version $Id: GenericSearchDAO.java,v 1.24 2007/07/25 22:45:32 rafaelsteil Exp $
+ * @version $Id: GenericSearchDAO.java,v 1.25 2007/07/28 14:17:10 rafaelsteil Exp $
  */
 public class GenericSearchDAO implements SearchDAO
 {
-	private static final Logger log = Logger.getLogger(GenericSearchDAO.class);
-
 	/**
 	 * @see net.jforum.dao.SearchDAO#search(net.jforum.dao.SearchArgs)
 	 */

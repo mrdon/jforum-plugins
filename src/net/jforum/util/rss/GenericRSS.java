@@ -48,20 +48,15 @@ import net.jforum.JForumExecutionContext;
 import net.jforum.exceptions.ForumException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
-
-import org.apache.log4j.Logger;
-
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericRSS.java,v 1.9 2006/08/24 01:07:07 rafaelsteil Exp $
+ * @version $Id: GenericRSS.java,v 1.10 2007/07/28 14:17:13 rafaelsteil Exp $
  */
 public class GenericRSS implements RSSAware 
 {
-    private static final Logger log = Logger.getLogger(GenericRSS.class);
-
 	private RSS rss;
 	
 	protected void setRSS(RSS rss) 

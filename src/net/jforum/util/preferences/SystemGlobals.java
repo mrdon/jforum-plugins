@@ -70,12 +70,10 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author Pieter Olivier
- * @version $Id: SystemGlobals.java,v 1.30 2007/07/23 23:02:42 rafaelsteil Exp $
+ * @version $Id: SystemGlobals.java,v 1.31 2007/07/28 14:17:11 rafaelsteil Exp $
  */
 public class SystemGlobals implements VariableStore
 {
-    private final static Logger log = Logger.getLogger(SystemGlobals.class);
-
 	private static SystemGlobals globals = new SystemGlobals();
 
 	private String defaultConfig;
