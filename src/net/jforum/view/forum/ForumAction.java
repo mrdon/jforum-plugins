@@ -43,6 +43,7 @@
 package net.jforum.view.forum;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -76,7 +77,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.63 2007/07/25 22:45:30 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.64 2007/07/28 02:48:58 rafaelsteil Exp $
  */
 public class ForumAction extends Command
 {
@@ -285,7 +286,10 @@ public class ForumAction extends Command
 	// Messages since last visit
 	public void newMessages()
 	{
-		this.request.addParameter("post_time", Long.toString(SessionFacade.getUserSession().getLastVisit().getTime()));
+		//this.request.addParameter("post_time", Long.toString(SessionFacade.getUserSession().getLastVisit().getTime()));
+		Date date = new GregorianCalendar(2007, 1, 1).getTime();
+		this.request.addParameter("post_time", Long.toString(date.getTime()));
+		
 		this.request.addParameter("clean", "true");
 		this.request.addParameter("sort_by", "t." + SystemGlobals.getValue(ConfigKeys.TOPIC_TIME_FIELD));
 		this.request.addParameter("sort_dir", "DESC");
