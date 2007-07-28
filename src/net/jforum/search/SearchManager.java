@@ -44,12 +44,11 @@ package net.jforum.search;
 
 import java.util.List;
 
-import net.jforum.dao.SearchArgs;
 import net.jforum.entities.Post;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchManager.java,v 1.3 2007/07/27 18:48:36 rafaelsteil Exp $
+ * @version $Id: SearchManager.java,v 1.4 2007/07/28 20:07:17 rafaelsteil Exp $
  */
 public interface SearchManager
 {

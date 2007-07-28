@@ -83,19 +83,6 @@ TopicModel.lastGeneratedTopicId = SELECT CURRVAL('jforum_topics_seq')
 # #####################
 PrivateMessagesModel.lastGeneratedPmId = SELECT CURRVAL('jforum_privmsgs_seq')
 
-# ############
-# SearchModel
-# ############
-SearchModel.insertTopicsIds = INSERT INTO jforum_search_results ( topic_id, session_id, search_time ) SELECT DISTINCT t.topic_id, ?::varchar, NOW() FROM jforum_topics t, jforum_posts p \
-	WHERE t.topic_id = p.topic_id \
-	AND p.post_id IN (:posts:)
-	
-SearchModel.getPostsToIndex = SELECT p.post_id, pt.post_text, pt.post_subject \
-	FROM jforum_posts p, jforum_posts_text pt \
-	WHERE p.post_id = pt.post_id \
-	AND p.post_id BETWEEN ? AND ? \
-	OFFSET ? LIMIT ?
-
 # #############
 # SmiliesModel
 # #############

@@ -165,40 +165,6 @@ PrivateMessagesModel.addText = INSERT INTO jforum_privmsgs_text ( privmsgs_id, p
 PrivateMessagesModel.addTextField = SELECT privmsgs_text from jforum_privmsgs_text WHERE privmsgs_id = ? FOR UPDATE
 PrivateMessagesModel.lastGeneratedPmId = SELECT jforum_privmsgs_seq.currval FROM DUAL
 
-# ############
-# SearchModel
-# ############
-SearchModel.insertWords = INSERT INTO jforum_search_words (word_id, word, word_hash) VALUES (jforum_search_words_seq.nextval, ?, ?)
-
-SearchModel.insertTopicsIds = INSERT INTO jforum_search_results ( topic_id, session_id, search_time ) SELECT DISTINCT t.topic_id, ?, sysdate FROM jforum_topics t, jforum_posts p \
-	WHERE t.topic_id = p.topic_id \
-	AND p.post_id IN (:posts:)
-
-SearchModel.selectTopicData = INSERT INTO jforum_search_topics (topic_id, forum_id, topic_title, user_id, topic_time, \
-	topic_views, topic_status, topic_replies, topic_vote_id, topic_type, topic_first_post_id, topic_last_post_id, moderated, session_id, search_time) \
-	SELECT t.topic_id, t.forum_id, t.topic_title, t.user_id, t.topic_time, \
-	t.topic_views, t.topic_status, t.topic_replies, t.topic_vote_id, t.topic_type, t.topic_first_post_id, t.topic_last_post_id, t.moderated, ?, sysdate \
-	FROM jforum_topics t, jforum_search_results s \
-	WHERE t.topic_id = s.topic_id \
-	AND s.session_id = ?
-
-SearchModel.lastGeneratedWordId = SELECT jforum_search_words_seq.currval FROM DUAL
-
-SearchModel.getPostsToIndex = SELECT * FROM ( \
-		SELECT p.post_id, pt.post_text, pt.post_subject,  \
-		ROW_NUMBER() OVER(ORDER BY p.post_id ASC) - 1 LINENUM \
-		FROM jforum_posts p, jforum_posts_text pt \
-		WHERE p.post_id = pt.post_id \
-		AND p.post_id BETWEEN ? AND ? \
-		ORDER BY p.post_id ASC \
-	) \
-	WHERE LINENUM >= ? AND LINENUM < ?
-
-SearchModel.searchByTime = INSERT INTO jforum_search_results (topic_id, session_id, search_time) SELECT DISTINCT t.topic_id, ?, SYSDATE FROM jforum_topics t, jforum_posts p \
-	WHERE t.topic_id = p.topic_id \
-	AND t.forum_id IN(:fids:) \
-	AND p.post_time > ?
-
 # #############
 # SmiliesModel
 # #############

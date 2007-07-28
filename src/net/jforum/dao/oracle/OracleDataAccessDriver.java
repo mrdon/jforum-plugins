@@ -46,7 +46,7 @@ import net.jforum.dao.ModerationDAO;
 
 /**
  * @author Dmitriy Kiriy
- * @version $Id: OracleDataAccessDriver.java,v 1.8 2006/08/20 22:47:32 rafaelsteil Exp $
+ * @version $Id: OracleDataAccessDriver.java,v 1.9 2007/07/28 20:07:18 rafaelsteil Exp $
  */
 public class OracleDataAccessDriver extends net.jforum.dao.generic.GenericDataAccessDriver
 {
@@ -54,7 +54,6 @@ public class OracleDataAccessDriver extends net.jforum.dao.generic.GenericDataAc
 	private static OracleTopicDAO topicDao = new OracleTopicDAO();
 	private static OracleUserDAO userDao = new OracleUserDAO();
 	private static OraclePrivateMessageDAO pmDao = new OraclePrivateMessageDAO();
-	private static OracleScheduledSearchIndexerDAO ssiDao = new OracleScheduledSearchIndexerDAO();
 	private static OracleModerationDAO moderationDao = new OracleModerationDAO();
 	
 	/**
@@ -95,13 +94,5 @@ public class OracleDataAccessDriver extends net.jforum.dao.generic.GenericDataAc
 	public net.jforum.dao.PrivateMessageDAO newPrivateMessageDAO()
 	{
 		return pmDao;
-	}
-	
-	/**
-	 * @see net.jforum.dao.DataAccessDriver#newScheduledSearchIndexerDAO()
-	 */
-	public net.jforum.dao.ScheduledSearchIndexerDAO newScheduledSearchIndexerDAO()
-	{
-		return ssiDao;
 	}
 }

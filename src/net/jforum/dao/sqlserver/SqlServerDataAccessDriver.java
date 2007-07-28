@@ -46,7 +46,7 @@ package net.jforum.dao.sqlserver;
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
  * @author Dirk Rasmussen - d.rasmussen@bevis.de (2007/02/19, modifs for MS SqlServer 2005)
  * @see WEB-INF\config\database\sqlserver\sqlserver.sql (2007/02/19, MS SqlServer 2005 specific version!)
- * @version $Id: SqlServerDataAccessDriver.java,v 1.8 2007/03/03 18:33:45 rafaelsteil Exp $
+ * @version $Id: SqlServerDataAccessDriver.java,v 1.9 2007/07/28 20:07:18 rafaelsteil Exp $
  */
 public class SqlServerDataAccessDriver extends net.jforum.dao.generic.GenericDataAccessDriver
 {
@@ -55,7 +55,6 @@ public class SqlServerDataAccessDriver extends net.jforum.dao.generic.GenericDat
 	private static SqlServerUserDAO userDao = new SqlServerUserDAO();
 	private static SqlServerPrivateMessageDAO pmDao = new SqlServerPrivateMessageDAO();
 	private static SqlServerKarmaDAO karmaDao = new SqlServerKarmaDAO();
-	private static SqlServerScheduledSearchIndexerDAO ssiDao = new SqlServerScheduledSearchIndexerDAO();
 
 	/** 
 	 * @see net.jforum.dao.DataAccessDriver#newPostDAO()
@@ -96,13 +95,4 @@ public class SqlServerDataAccessDriver extends net.jforum.dao.generic.GenericDat
 	{
 		return karmaDao;
 	}
-
-	/**
-	 * @see net.jforum.dao.DataAccessDriver#newScheduledSearchIndexerDAO()
-	 */
-	public net.jforum.dao.ScheduledSearchIndexerDAO newScheduledSearchIndexerDAO()
-	{
-		return ssiDao;
-	}
-
 }

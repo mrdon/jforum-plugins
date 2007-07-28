@@ -50,7 +50,6 @@ import java.util.List;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
-import net.jforum.dao.SearchArgs;
 import net.jforum.entities.Post;
 
 import org.apache.log4j.xml.DOMConfigurator;
@@ -60,7 +59,7 @@ import org.apache.lucene.search.Query;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchTestCase.java,v 1.24 2007/07/28 02:37:33 rafaelsteil Exp $
+ * @version $Id: LuceneSearchTestCase.java,v 1.25 2007/07/28 20:07:19 rafaelsteil Exp $
  */
 public class LuceneSearchTestCase extends TestCase
 {

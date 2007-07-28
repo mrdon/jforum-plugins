@@ -388,34 +388,6 @@ TopicModel.totalTopics = SELECT COUNT(1) FROM jforum_topics
 # ############
 # SearchModel
 # ############
-SearchModel.searchBase = SELECT t.*, p.user_id AS last_user_id, p.post_time, p.attach AS attach \
-	FROM jforum_search_topics t, jforum_posts p \
-	WHERE p.post_id = t.topic_last_post_id \
-	AND t.session_id = ? \
-	AND t.forum_id IN(:fids:) \
-	:criterias: \
-	ORDER BY :orderByField: :orderBy:
-	
-SearchModel.insertTopicsIds = INSERT INTO jforum_search_results ( topic_id, session_id, search_time ) SELECT DISTINCT t.topic_id, ?, NOW() FROM jforum_topics t, jforum_posts p \
-	WHERE t.topic_id = p.topic_id AND t.forum_id IN(:fids:) \
-	AND p.post_id IN (:posts:)
-	
-SearchModel.selectTopicData = INSERT INTO jforum_search_topics (topic_id, forum_id, topic_title, user_id, topic_time, \
-	topic_views, topic_status, topic_replies, topic_vote_id, topic_type, topic_first_post_id, topic_last_post_id, moderated, session_id, search_time) \
-	SELECT t.topic_id, t.forum_id, t.topic_title, t.user_id, t.topic_time, \
-	t.topic_views, t.topic_status, t.topic_replies, t.topic_vote_id, t.topic_type, t.topic_first_post_id, t.topic_last_post_id, t.moderated, ?, NOW() \
-	FROM jforum_topics t, jforum_search_results s \
-	WHERE t.topic_id = s.topic_id \
-	AND s.session_id = ?
-	
-SearchModel.cleanSearchResults = DELETE FROM jforum_search_results WHERE session_id = ?
-SearchModel.cleanSearchTopics = DELETE FROM jforum_search_topics WHERE session_id = ?
-	
-SearchModel.searchByTime = INSERT INTO jforum_search_results (topic_id, session_id, search_time) SELECT DISTINCT t.topic_id, ?, NOW() FROM jforum_topics t, jforum_posts p \
-	WHERE t.topic_id = p.topic_id \
-	AND t.forum_id IN(:fids:) \
-	AND p.post_time > ?
-
 SearchModel.getPostsToIndexForLucene = SELECT p.post_id, p.forum_id, p.topic_id, p.user_id, p.post_time, pt.post_text, pt.post_subject \
 	FROM jforum_posts p, jforum_posts_text pt \
 	WHERE p.post_id = pt.post_id \

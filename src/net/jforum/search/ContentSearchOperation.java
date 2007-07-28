@@ -46,13 +46,12 @@ package net.jforum.search;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.jforum.dao.SearchArgs;
 import net.jforum.entities.Post;
 import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: ContentSearchOperation.java,v 1.2 2007/07/28 19:59:51 rafaelsteil Exp $
+ * @version $Id: ContentSearchOperation.java,v 1.3 2007/07/28 20:07:17 rafaelsteil Exp $
  */
 public class ContentSearchOperation extends SearchOperation
 {

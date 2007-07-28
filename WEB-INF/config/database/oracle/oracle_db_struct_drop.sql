@@ -30,17 +30,6 @@ DROP TABLE jforum_bookmarks;
 DROP SEQUENCE jforum_karma_seq;
 DROP TABLE jforum_karma;
 
--- Table structure for table 'jforum_search_results'
-DROP TABLE jforum_search_results;
-DROP TABLE jforum_search_topics;
-
--- Table structure for table 'jforum_search_wordmatch'
-DROP TABLE jforum_search_wordmatch;
-
--- Table structure for table 'jforum_search_words'
-DROP SEQUENCE jforum_search_words_seq;
-DROP TABLE jforum_search_words;
-
 -- Table structure for table 'jforum_words'
 DROP SEQUENCE jforum_words_seq;
 DROP TABLE jforum_words;

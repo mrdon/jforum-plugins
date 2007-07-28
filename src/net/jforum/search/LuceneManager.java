@@ -45,7 +45,6 @@ package net.jforum.search;
 
 import java.util.List;
 
-import net.jforum.dao.SearchArgs;
 import net.jforum.entities.Post;
 import net.jforum.exceptions.ForumException;
 import net.jforum.util.preferences.ConfigKeys;
@@ -55,7 +54,7 @@ import org.apache.lucene.analysis.Analyzer;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneManager.java,v 1.5 2007/07/28 14:17:12 rafaelsteil Exp $
+ * @version $Id: LuceneManager.java,v 1.6 2007/07/28 20:07:17 rafaelsteil Exp $
  */
 public class LuceneManager implements SearchManager
 {
@@ -108,7 +107,7 @@ public class LuceneManager implements SearchManager
 	}
 
 	/**
-	 * @see net.jforum.search.SearchManager#search(net.jforum.dao.SearchArgs)
+	 * @see net.jforum.search.SearchManager#search(net.jforum.search.SearchArgs)
 	 */
 	public List search(SearchArgs args)
 	{
@@ -116,7 +115,7 @@ public class LuceneManager implements SearchManager
 	}
 	
 	/**
-	 * @see net.jforum.search.SearchManager#newMessages(net.jforum.dao.SearchArgs)
+	 * @see net.jforum.search.SearchManager#newMessages(net.jforum.search.SearchArgs)
 	 */
 	public List newMessages(SearchArgs args)
 	{

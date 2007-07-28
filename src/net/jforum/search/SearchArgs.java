@@ -40,13 +40,13 @@
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.dao;
+package net.jforum.search;
 
 import java.util.Date;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchArgs.java,v 1.2 2007/07/26 02:14:00 rafaelsteil Exp $
+ * @version $Id: SearchArgs.java,v 1.1 2007/07/28 20:07:17 rafaelsteil Exp $
  */
 public class SearchArgs 
 {

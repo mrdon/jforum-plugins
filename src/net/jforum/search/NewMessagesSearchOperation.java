@@ -46,14 +46,13 @@ package net.jforum.search;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.jforum.dao.SearchArgs;
 import net.jforum.entities.Topic;
 import net.jforum.util.preferences.TemplateKeys;
 import net.jforum.view.forum.common.TopicsCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: NewMessagesSearchOperation.java,v 1.2 2007/07/28 19:59:51 rafaelsteil Exp $
+ * @version $Id: NewMessagesSearchOperation.java,v 1.3 2007/07/28 20:07:17 rafaelsteil Exp $
  */
 public class NewMessagesSearchOperation extends SearchOperation
 {

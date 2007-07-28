@@ -56,13 +56,13 @@ import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
 import net.jforum.dao.ModerationDAO;
-import net.jforum.dao.SearchArgs;
 import net.jforum.entities.Forum;
 import net.jforum.entities.MostUsersEverOnline;
 import net.jforum.entities.Post;
 import net.jforum.entities.UserSession;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.SecurityRepository;
+import net.jforum.search.SearchArgs;
 import net.jforum.search.SearchFacade;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
@@ -77,7 +77,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.65 2007/07/28 14:00:23 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.66 2007/07/28 20:07:17 rafaelsteil Exp $
  */
 public class ForumAction extends Command
 {

@@ -48,7 +48,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import net.jforum.dao.SearchArgs;
 import net.jforum.exceptions.SearchException;
 
 import org.apache.log4j.Logger;
@@ -61,7 +60,7 @@ import org.apache.lucene.search.Sort;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.25 2007/07/28 14:00:23 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.26 2007/07/28 20:07:17 rafaelsteil Exp $
  */
 public class LuceneSearch implements NewDocumentAdded
 {
@@ -98,7 +97,7 @@ public class LuceneSearch implements NewDocumentAdded
 	}
 	
 	/**
-	 * @see net.jforum.dao.SearchDAO#search(net.jforum.dao.SearchArgs)
+	 * @see net.jforum.dao.SearchDAO#search(net.jforum.search.SearchArgs)
 	 */
 	public List search(SearchArgs args)
 	{

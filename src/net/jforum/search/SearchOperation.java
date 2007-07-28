@@ -49,13 +49,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import net.jforum.dao.SearchArgs;
 import net.jforum.entities.Forum;
 import net.jforum.repository.ForumRepository;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchOperation.java,v 1.2 2007/07/28 19:59:51 rafaelsteil Exp $
+ * @version $Id: SearchOperation.java,v 1.3 2007/07/28 20:07:17 rafaelsteil Exp $
  */
 public abstract class SearchOperation
 {

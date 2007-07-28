@@ -45,7 +45,6 @@ package net.jforum.search;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.jforum.dao.SearchArgs;
 import net.jforum.entities.Post;
 import net.jforum.exceptions.SearchInstantiationException;
 import net.jforum.util.preferences.ConfigKeys;
@@ -55,7 +54,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchFacade.java,v 1.3 2007/07/27 18:48:36 rafaelsteil Exp $
+ * @version $Id: SearchFacade.java,v 1.4 2007/07/28 20:07:17 rafaelsteil Exp $
  */
 public class SearchFacade
 {

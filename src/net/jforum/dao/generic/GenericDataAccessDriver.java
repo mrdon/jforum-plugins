@@ -62,9 +62,6 @@ import net.jforum.dao.PollDAO;
 import net.jforum.dao.PostDAO;
 import net.jforum.dao.PrivateMessageDAO;
 import net.jforum.dao.RankingDAO;
-import net.jforum.dao.ScheduledSearchIndexerDAO;
-import net.jforum.dao.SearchDAO;
-import net.jforum.dao.SearchIndexerDAO;
 import net.jforum.dao.SmilieDAO;
 import net.jforum.dao.SummaryDAO;
 import net.jforum.dao.TopicDAO;
@@ -75,7 +72,7 @@ import net.jforum.dao.generic.security.GenericGroupSecurityDAO;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericDataAccessDriver.java,v 1.15 2007/07/27 15:42:56 rafaelsteil Exp $
+ * @version $Id: GenericDataAccessDriver.java,v 1.16 2007/07/28 20:07:18 rafaelsteil Exp $
  */
 public class GenericDataAccessDriver extends DataAccessDriver 
 {
@@ -87,7 +84,6 @@ public class GenericDataAccessDriver extends DataAccessDriver
 	private static UserDAO userDao = new GenericUserDAO();
 	private static TreeGroupDAO treeGroupDao = new GenericTreeGroupDAO();
 	private static SmilieDAO smilieDao = new GenericSmilieDAO();
-	private static SearchDAO searchDao = new GenericSearchDAO();
 	private static GroupSecurityDAO groupSecurityDao = new GenericGroupSecurityDAO();
 	private static PrivateMessageDAO privateMessageDao = new GenericPrivateMessageDAO();
 	private static UserSessionDAO userSessionDao = new GenericUserSessionDAO();
@@ -98,7 +94,6 @@ public class GenericDataAccessDriver extends DataAccessDriver
 	private static ForumDAO forumDao = new GenericForumDAO();
 	private static CategoryDAO categoryDao = new GenericCategoryDAO();
 	private static ConfigDAO configDao = new GenericConfigDAO();
-	private static ScheduledSearchIndexerDAO ssiDao = new GenericScheduledSearchIndexerDAO();
 	private static BannerDAO bannerDao = new GenericBannerDAO();
     private static SummaryDAO summaryDao = new GenericSummaryDAO();
     private static MailIntegrationDAO mailIntegrationDao = new GenericMailIntegrationDAO();
@@ -188,22 +183,6 @@ public class GenericDataAccessDriver extends DataAccessDriver
 	}
 	
 	/** 
-	 * @see net.jforum.dao.DataAccessDriver#newSearchDAO()
-	 */
-	public SearchDAO newSearchDAO() 
-	{
-		return searchDao;
-	}
-	
-	/** 
-	 * @see net.jforum.dao.DataAccessDriver#newSearchIndexerDAO()
-	 */
-	public SearchIndexerDAO newSearchIndexerDAO() 
-	{
-		return new GenericSearchIndexerDAO();
-	}
-	
-	/** 
 	 * @see net.jforum.dao.DataAccessDriver#newGroupSecurityDAO()
 	 */
 	public GroupSecurityDAO newGroupSecurityDAO() 
@@ -265,14 +244,6 @@ public class GenericDataAccessDriver extends DataAccessDriver
 	public ModerationDAO newModerationDAO()
 	{
 		return moderationDao;
-	}
-	
-	/**
-	 * @see net.jforum.dao.DataAccessDriver#newScheduledSearchIndexerDAO()
-	 */
-	public ScheduledSearchIndexerDAO newScheduledSearchIndexerDAO()
-	{
-		return ssiDao;
 	}
 
     /**
