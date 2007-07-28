@@ -138,7 +138,9 @@ UserModel.getUsername = SELECT username FROM jforum_users WHERE user_id = ?
 # #############
 PostModel.countPreviousPosts = SELECT COUNT(p2.post_id) AS prev_posts \
 	FROM jforum_posts p, jforum_posts p2 \
-	WHERE p.post_id = ? AND p2.topic_id = p.topic_id AND p2.post_id <= ?
+	WHERE p.post_id = ? \
+	AND p2.topic_id = p.topic_id \
+	AND p2.post_id <= ?
 
 PostModel.selectById = SELECT p.post_id, topic_id, forum_id, p.user_id, post_time, poster_ip, enable_bbcode, enable_html, \
 	enable_smilies, enable_sig, post_edit_time, post_edit_count, status, pt.post_subject, pt.post_text, username, p.attach, p.need_moderate \
@@ -180,7 +182,6 @@ PostModel.selectByUserByLimit = SELECT p.post_id, topic_id, forum_id, p.user_id,
 	LIMIT ?, ?
 
 PostModel.countUserPosts = SELECT COUNT(1) AS total FROM jforum_posts where user_id = ? AND forum_id IN (:fids:) AND need_moderate = 0
-	
 	
 PostModel.setForumByTopic = UPDATE jforum_posts SET forum_id = ? WHERE topic_id = ?
 PostModel.deleteByTopic = SELECT post_id, user_id FROM jforum_posts WHERE topic_id = ?
@@ -248,13 +249,13 @@ ForumModel.lastPostInfo = SELECT post_time, p.topic_id, t.topic_replies, post_id
 	AND p.user_id = u.user_id
 
 ForumModel.getModeratorList = SELECT g.group_id AS id, g.group_name AS name \
-		FROM jforum_groups g, jforum_roles r, jforum_role_values rv, jforum_roles r2 \
-		WHERE g.group_id = r.group_id \
-		AND r.role_id = rv.role_id \
-		AND r.name = 'perm_moderation_forums' \
-		AND rv.role_value = ? \
-		AND r2.name = 'perm_moderation' \
-		AND r2.group_id = g.group_id 		
+	FROM jforum_groups g, jforum_roles r, jforum_role_values rv, jforum_roles r2 \
+	WHERE g.group_id = r.group_id \
+	AND r.role_id = rv.role_id \
+	AND r.name = 'perm_moderation_forums' \
+	AND rv.role_value = ? \
+	AND r2.name = 'perm_moderation' \
+	AND r2.group_id = g.group_id 		
 
 ForumModel.totalMessages = SELECT COUNT(1) as total_messages FROM jforum_posts
 ForumModel.getMaxPostId = SELECT MAX(post_id) AS post_id FROM jforum_posts WHERE forum_id = ?
@@ -352,6 +353,13 @@ TopicModel.selectRecentTopicsByLimit = SELECT t.*, p.user_id AS last_user_id, p.
 	AND p.need_moderate = 0 \
 	ORDER BY topic_last_post_id DESC \
 	LIMIT ?
+
+TopicModel.selectForNewMessages = SELECT t.*, p.user_id AS last_user_id, p.post_time, p.attach AS attach \
+	FROM jforum_topics t, jforum_posts p \
+	WHERE t.topic_id IN (:topicIds:) \
+	AND p.need_moderate = 0 \
+	AND p.post_id = t.topic_last_post_id \
+	ORDER BY topic_last_post_id DESC
 
 TopicModel.selectHottestTopicsByLimit = SELECT t.*, p.user_id AS last_user_id, p.post_time, p.attach AS attach \
     FROM jforum_topics t, jforum_posts p \

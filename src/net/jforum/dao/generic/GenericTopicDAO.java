@@ -72,7 +72,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTopicDAO.java,v 1.22 2007/07/10 01:04:30 rafaelsteil Exp $
+ * @version $Id: GenericTopicDAO.java,v 1.23 2007/07/28 02:37:32 rafaelsteil Exp $
  */
 public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 {
@@ -781,6 +781,39 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 			DbUtils.close(p);
 		}
 	}
+	
+	/**
+	 * @see net.jforum.dao.TopicDAO#newMessages(int[])
+	 */
+	public List newMessages(int[] topicIds)
+	{
+		PreparedStatement p = null;
+		
+		try {
+			String sql = SystemGlobals.getSql("TopicModel.selectForNewMessages");
+			
+			StringBuffer sb = new StringBuffer();
+			
+			for (int i = 0; i < topicIds.length - 1; i++) {
+				sb.append(topicIds[i]).append(',');
+			}
+			
+			sb.append(topicIds[topicIds.length - 1]);
+			
+			sql = sql.replaceAll(":topicIds:", sb.toString());
+			
+			p = JForumExecutionContext.getConnection().prepareStatement(sql);
+
+			List list = this.fillTopicsData(p);
+			return list;
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
+	}
 
 	/**
 	 * Fills all topic data. The method will try to get all fields from the topics table, as well
@@ -794,8 +827,8 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 	public List fillTopicsData(PreparedStatement p)
 	{
 		List l = new ArrayList();
-
 		ResultSet rs = null;
+		
 		try {
 			rs = p.executeQuery();
 

@@ -60,7 +60,7 @@ import org.apache.lucene.search.Query;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchTestCase.java,v 1.23 2007/07/27 18:39:49 rafaelsteil Exp $
+ * @version $Id: LuceneSearchTestCase.java,v 1.24 2007/07/28 02:37:33 rafaelsteil Exp $
  */
 public class LuceneSearchTestCase extends TestCase
 {
@@ -73,6 +73,7 @@ public class LuceneSearchTestCase extends TestCase
 	public void testFilterByDateRangeIndexThreePostsExpectTwoResults()
 	{
 		List l = this.createThreePosts();
+		
 		((Post)l.get(0)).setTime(new GregorianCalendar(2000, 6, 27, 8, 55, 17).getTime());
 		((Post)l.get(1)).setTime(new GregorianCalendar(2000, 6, 27, 13, 34, 1).getTime());
 		((Post)l.get(2)).setTime(new GregorianCalendar(2000, 6, 27, 5, 1, 9).getTime());
@@ -85,7 +86,7 @@ public class LuceneSearchTestCase extends TestCase
 		SearchArgs args = new SearchArgs();
 		args.setTime(new GregorianCalendar(2000, 6, 27, 8, 10, 15).getTime());
 
-		List results = this.search.search(args);
+		List results = this.search.newMessages(args);
 		
 		Assert.assertEquals(2, results.size());
 	}
@@ -254,13 +255,15 @@ public class LuceneSearchTestCase extends TestCase
 		this.settings.useRAMDirectory();
 		
 		this.indexer = new LuceneIndexer(this.settings);
+		
 		this.search = new LuceneSearch(this.settings, 
-			new FakeContentResultCollector(), null);
+			new FakeResultCollector(), 
+			new FakeResultCollector());
 		
 		this.indexer.watchNewDocuDocumentAdded(this.search);
 	}
 	
-	private static class FakeContentResultCollector implements LuceneResultCollector
+	private static class FakeResultCollector implements LuceneResultCollector
 	{
 		public List collect(Hits hits, Query query)
 		{

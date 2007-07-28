@@ -46,15 +46,14 @@ package net.jforum.view.forum;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.SearchArgs;
-import net.jforum.dao.SearchDAO;
+import net.jforum.search.SearchFacade;
 import net.jforum.util.preferences.TemplateKeys;
 import net.jforum.view.forum.common.TopicsCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: NewMessagesSearchOperation.java,v 1.1 2007/07/25 22:45:31 rafaelsteil Exp $
+ * @version $Id: NewMessagesSearchOperation.java,v 1.2 2007/07/28 02:37:34 rafaelsteil Exp $
  */
 public class NewMessagesSearchOperation implements SearchOperation
 {
@@ -62,8 +61,7 @@ public class NewMessagesSearchOperation implements SearchOperation
 	
 	public void performSearch(SearchArgs args)
 	{
-		SearchDAO dao = DataAccessDriver.getInstance().newSearchDAO();
-		this.results = dao.search(args);
+		this.results = SearchFacade.newMessages(args);
 	}
 
 	public void prepareForDisplay(int from, int count)

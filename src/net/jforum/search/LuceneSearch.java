@@ -44,7 +44,6 @@
 package net.jforum.search;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -62,7 +61,7 @@ import org.apache.lucene.search.Sort;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.23 2007/07/27 18:39:48 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.24 2007/07/28 02:37:33 rafaelsteil Exp $
  */
 public class LuceneSearch implements NewDocumentAdded
 {
@@ -155,11 +154,6 @@ public class LuceneSearch implements NewDocumentAdded
 		}
 	}
 	
-	private String formatDateTime(Date date)
-	{
-		return new SimpleDateFormat("yyyyMMddHHmmss").format(date);
-	}
-
 	private void filterByKeywords(SearchArgs args, StringBuffer criteria)
 	{
 		String[] keywords = args.getKeywords();

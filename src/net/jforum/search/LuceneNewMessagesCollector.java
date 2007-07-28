@@ -43,14 +43,21 @@
  */
 package net.jforum.search;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.entities.Topic;
+import net.jforum.exceptions.SearchException;
+
+import org.apache.lucene.document.Document;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.Query;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneNewMessagesCollector.java,v 1.1 2007/07/27 18:19:34 rafaelsteil Exp $
+ * @version $Id: LuceneNewMessagesCollector.java,v 1.2 2007/07/28 02:37:33 rafaelsteil Exp $
  */
 public class LuceneNewMessagesCollector implements LuceneResultCollector
 {
@@ -63,6 +70,35 @@ public class LuceneNewMessagesCollector implements LuceneResultCollector
 	
 	public List collect(Hits hits, Query query)
 	{
-		return null;
+		try {
+			int[] topicIds = new int[hits.length()];
+			
+			for (int i = 0; i < hits.length(); i++) {
+				Document doc = hits.doc(i);
+				topicIds[i] = Integer.parseInt(doc.get(SearchFields.Keyword.TOPIC_ID));
+			}
+			
+			return this.retrieveRealTopics(topicIds);
+		}
+		catch (Exception e) {
+			throw new SearchException(e.toString(), e);
+		}
+	}
+
+	private List retrieveRealTopics(int[] topicIds)
+	{
+		List l = new ArrayList();
+		List topics = DataAccessDriver.getInstance().newTopicDAO().newMessages(topicIds);
+		
+		for (Iterator iter = topics.iterator(); iter.hasNext();) {
+			Topic topic = (Topic) iter.next();
+			
+			SearchResult result = new SearchResult();
+			result.setTopic(topic);
+			
+			l.add(result);
+		}
+		
+		return l;
 	}
 }

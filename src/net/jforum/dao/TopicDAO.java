@@ -57,7 +57,7 @@ import net.jforum.entities.User;
  * select some specific data.
  *
  * @author Rafael Steil
- * @version $Id: TopicDAO.java,v 1.13 2007/04/02 17:14:45 andowson Exp $
+ * @version $Id: TopicDAO.java,v 1.14 2007/07/28 02:37:33 rafaelsteil Exp $
  */
 public interface TopicDAO 
 {
@@ -327,4 +327,6 @@ public interface TopicDAO
 	 * data filled
 	 */
 	public Map topicPosters(int topicId) ;
+	
+	public List newMessages(int[] topicIds);
 }
