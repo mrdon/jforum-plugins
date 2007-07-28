@@ -43,12 +43,12 @@
  */
 package net.jforum.search;
 
-import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
@@ -56,7 +56,7 @@ import org.apache.lucene.store.RAMDirectory;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSettings.java,v 1.7 2007/07/27 18:39:48 rafaelsteil Exp $
+ * @version $Id: LuceneSettings.java,v 1.8 2007/07/28 13:18:14 rafaelsteil Exp $
  */
 public class LuceneSettings
 {
@@ -77,20 +77,18 @@ public class LuceneSettings
 		writer.close();
 	}
 	
-	public void useFSDirectory(String indexWritePath) throws Exception
+	public void useFSDirectory(String indexDirectory) throws Exception
 	{
-		File indexDirectory = new File(indexWritePath);
-		
-		if (!indexDirectory.exists()) {
+		if (!IndexReader.indexExists(indexDirectory)) {
 			this.createIndexDirectory(indexDirectory);
 		}
 		
 		this.directory = FSDirectory.getDirectory(indexDirectory);
 	}
 	
-	public void createIndexDirectory(File directory) throws IOException 
+	public void createIndexDirectory(String directoryPath) throws IOException 
 	{
-		FSDirectory fsDir = FSDirectory.getDirectory(directory);
+		FSDirectory fsDir = FSDirectory.getDirectory(directoryPath);
 		IndexWriter writer = new IndexWriter(fsDir, this.analyzer, true);
 		writer.close();
 	}

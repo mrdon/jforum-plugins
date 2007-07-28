@@ -67,7 +67,7 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneStatsAction.java,v 1.7 2007/07/27 14:44:00 rafaelsteil Exp $
+ * @version $Id: LuceneStatsAction.java,v 1.8 2007/07/28 13:18:14 rafaelsteil Exp $
  */
 public class LuceneStatsAction extends AdminCommand
 {
@@ -82,7 +82,7 @@ public class LuceneStatsAction extends AdminCommand
 	public void createIndexDirectory() throws Exception
 	{
 		this.settings().createIndexDirectory(
-			new File(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH)));
+			SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH));
 		this.reindexMain();
 	}
 	
