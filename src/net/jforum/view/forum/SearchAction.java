@@ -43,11 +43,8 @@
 package net.jforum.view.forum;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import net.jforum.Command;
@@ -55,13 +52,11 @@ import net.jforum.JForumExecutionContext;
 import net.jforum.context.RequestContext;
 import net.jforum.context.ResponseContext;
 import net.jforum.dao.SearchArgs;
-import net.jforum.entities.Forum;
 import net.jforum.exceptions.ForumException;
 import net.jforum.repository.ForumRepository;
 import net.jforum.search.ContentSearchOperation;
 import net.jforum.search.NewMessagesSearchOperation;
 import net.jforum.search.SearchOperation;
-import net.jforum.search.SearchPost;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -72,7 +67,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.47 2007/07/28 14:49:15 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.48 2007/07/28 19:59:51 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -171,7 +166,7 @@ public class SearchAction extends Command
 		
 		this.setTemplateName(operation.viewTemplate());
 		
-		this.context.put("results", operation.results());
+		this.context.put("results", operation.filterResults(operation.results()));
 		this.context.put("categories", ForumRepository.getAllCategories());
 		this.context.put("kw", kw != null ? kw.trim() : "");
 		this.context.put("fr", new ForumRepository());
@@ -215,32 +210,7 @@ public class SearchAction extends Command
 		return args;
 	}
 	
-	private List filterResults(List results)
-	{
-		List l = new ArrayList();
-		
-		Map forums = new HashMap();
-		
-		for (Iterator iter = results.iterator(); iter.hasNext(); ) {
-			SearchPost post = (SearchPost)iter.next();
-			
-			Integer forumId = new Integer(post.getForumId());
-			ForumFilterResult status = (ForumFilterResult)forums.get(forumId);
-			
-			if (status == null) {
-				Forum f = ForumRepository.getForum(post.getForumId());
-				status = new ForumFilterResult(f);
-				forums.put(forumId, status);
-			}
-			
-			if (status.isValid()) {
-				post.setForum(status.getForum());
-				l.add(post);
-			}
-		}
-		
-		return l;
-	}
+	
 	
 	public void doModeration()
 	{
@@ -342,25 +312,5 @@ public class SearchAction extends Command
 	public void list()  
 	{
 		this.filters();
-	}
-	
-	private static class ForumFilterResult
-	{
-		private Forum forum;
-		
-		public ForumFilterResult(Forum forum)
-		{
-			this.forum = forum;
-		}
-		
-		public Forum getForum() 
-		{
-			return this.forum;
-		}
-		
-		public boolean isValid()
-		{
-			return this.forum != null;
-		}
 	}
 }

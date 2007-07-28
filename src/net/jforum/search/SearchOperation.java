@@ -43,19 +43,77 @@
  */
 package net.jforum.search;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import net.jforum.dao.SearchArgs;
+import net.jforum.entities.Forum;
+import net.jforum.repository.ForumRepository;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchOperation.java,v 1.1 2007/07/28 14:49:15 rafaelsteil Exp $
+ * @version $Id: SearchOperation.java,v 1.2 2007/07/28 19:59:51 rafaelsteil Exp $
  */
-public interface SearchOperation
+public abstract class SearchOperation
 {
-	public void performSearch(SearchArgs args);
-	public int totalRecords();
-	public void prepareForDisplay(int from, int count);
-	public List results();
-	public String viewTemplate();
+	public abstract void performSearch(SearchArgs args);
+	public abstract int totalRecords();
+	public abstract void prepareForDisplay(int from, int count);
+	public abstract List results();
+	public abstract String viewTemplate();
+	protected abstract int extractForumId(Object value);
+	
+	public final List filterResults(List results)
+	{
+		List l = new ArrayList();
+		
+		Map forums = new HashMap();
+		
+		for (Iterator iter = results.iterator(); iter.hasNext(); ) {
+			Object currentObject = iter.next();
+			
+			Integer forumId = new Integer(this.extractForumId(currentObject));
+			ForumFilterResult status = (ForumFilterResult)forums.get(forumId);
+			
+			if (status == null) {
+				Forum f = ForumRepository.getForum(forumId.intValue());
+				status = new ForumFilterResult(f);
+				forums.put(forumId, status);
+			}
+			
+			if (status.isValid()) {
+				// TODO: decouple
+				if (currentObject instanceof SearchPost) {
+					((SearchPost)currentObject).setForum(status.getForum());
+				}
+				
+				l.add(currentObject);
+			}
+		}
+		
+		return l;
+	}
+	
+	private static class ForumFilterResult
+	{
+		private Forum forum;
+		
+		public ForumFilterResult(Forum forum)
+		{
+			this.forum = forum;
+		}
+		
+		public Forum getForum() 
+		{
+			return this.forum;
+		}
+		
+		public boolean isValid()
+		{
+			return this.forum != null;
+		}
+	}
 }

@@ -47,14 +47,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.jforum.dao.SearchArgs;
+import net.jforum.entities.Topic;
 import net.jforum.util.preferences.TemplateKeys;
 import net.jforum.view.forum.common.TopicsCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: NewMessagesSearchOperation.java,v 1.1 2007/07/28 14:49:15 rafaelsteil Exp $
+ * @version $Id: NewMessagesSearchOperation.java,v 1.2 2007/07/28 19:59:51 rafaelsteil Exp $
  */
-public class NewMessagesSearchOperation implements SearchOperation
+public class NewMessagesSearchOperation extends SearchOperation
 {
 	private List results = new ArrayList();
 	
@@ -81,5 +82,10 @@ public class NewMessagesSearchOperation implements SearchOperation
 	public String viewTemplate()
 	{
 		return TemplateKeys.SEARCH_NEW_MESSAGES;
+	}
+	
+	public int extractForumId(Object value)
+	{
+		return ((Topic)value).getForumId();
 	}
 }

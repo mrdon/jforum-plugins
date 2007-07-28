@@ -62,7 +62,7 @@ import org.apache.lucene.search.highlight.Scorer;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneContentCollector.java,v 1.4 2007/07/28 14:00:23 rafaelsteil Exp $
+ * @version $Id: LuceneContentCollector.java,v 1.5 2007/07/28 19:59:51 rafaelsteil Exp $
  */
 public class LuceneContentCollector implements LuceneResultCollector
 {
@@ -113,6 +113,12 @@ public class LuceneContentCollector implements LuceneResultCollector
 			
 			for (int i = 0; i < fragments.length; i++) {
 				contents.append(fragments[i]);
+			}
+			
+			if (contents.length() == 0) {
+				contents.append(post.getText().length() >= 128
+					? post.getText().substring(0, 128)
+					: post.getText());
 			}
 			
 			post.setText(contents.toString());

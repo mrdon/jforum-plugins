@@ -47,13 +47,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.jforum.dao.SearchArgs;
+import net.jforum.entities.Post;
 import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: ContentSearchOperation.java,v 1.1 2007/07/28 14:49:15 rafaelsteil Exp $
+ * @version $Id: ContentSearchOperation.java,v 1.2 2007/07/28 19:59:51 rafaelsteil Exp $
  */
-public class ContentSearchOperation implements SearchOperation
+public class ContentSearchOperation extends SearchOperation
 {
 private List results = new ArrayList();
 	
@@ -78,5 +79,10 @@ private List results = new ArrayList();
 	public String viewTemplate()
 	{
 		return TemplateKeys.SEARCH_SEARCH;
+	}
+	
+	public int extractForumId(Object value)
+	{
+		return ((Post)value).getForumId();
 	}
 }
