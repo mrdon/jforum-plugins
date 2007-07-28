@@ -36,37 +36,33 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on 25/07/2007 19:32:52
+ * Created on 25/07/2007 19:36:18
  * 
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.view.forum;
+package net.jforum.search;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import net.jforum.dao.SearchArgs;
-import net.jforum.search.SearchFacade;
 import net.jforum.util.preferences.TemplateKeys;
-import net.jforum.view.forum.common.TopicsCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: NewMessagesSearchOperation.java,v 1.2 2007/07/28 02:37:34 rafaelsteil Exp $
+ * @version $Id: ContentSearchOperation.java,v 1.1 2007/07/28 14:49:15 rafaelsteil Exp $
  */
-public class NewMessagesSearchOperation implements SearchOperation
+public class ContentSearchOperation implements SearchOperation
 {
-	private List results = new ArrayList();
+private List results = new ArrayList();
 	
 	public void performSearch(SearchArgs args)
 	{
-		this.results = SearchFacade.newMessages(args);
+		this.results = SearchFacade.search(args);
 	}
-
 	public void prepareForDisplay(int from, int count)
 	{
-		this.results = TopicsCommon.prepareTopics(this.results.subList(from, count));
 	}
 
 	public List results()
@@ -78,9 +74,9 @@ public class NewMessagesSearchOperation implements SearchOperation
 	{
 		return this.results.size();
 	}
-	
+
 	public String viewTemplate()
 	{
-		return TemplateKeys.SEARCH_NEW_MESSAGES;
+		return TemplateKeys.SEARCH_SEARCH;
 	}
 }

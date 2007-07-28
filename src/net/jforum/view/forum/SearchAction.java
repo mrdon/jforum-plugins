@@ -58,6 +58,9 @@ import net.jforum.dao.SearchArgs;
 import net.jforum.entities.Forum;
 import net.jforum.exceptions.ForumException;
 import net.jforum.repository.ForumRepository;
+import net.jforum.search.ContentSearchOperation;
+import net.jforum.search.NewMessagesSearchOperation;
+import net.jforum.search.SearchOperation;
 import net.jforum.search.SearchPost;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
@@ -69,7 +72,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.46 2007/07/28 14:17:09 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.47 2007/07/28 14:49:15 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {

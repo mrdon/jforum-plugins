@@ -41,7 +41,7 @@
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.view.forum;
+package net.jforum.search;
 
 import java.util.List;
 
@@ -49,7 +49,7 @@ import net.jforum.dao.SearchArgs;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchOperation.java,v 1.1 2007/07/25 22:45:30 rafaelsteil Exp $
+ * @version $Id: SearchOperation.java,v 1.1 2007/07/28 14:49:15 rafaelsteil Exp $
  */
 public interface SearchOperation
 {
