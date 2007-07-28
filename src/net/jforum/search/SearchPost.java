@@ -36,125 +36,31 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on 18/07/2007 21:11:46
+ * Created on 28/07/2007 10:50:37
  * 
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.search;
 
-import java.util.Date;
-
 import net.jforum.entities.Forum;
 import net.jforum.entities.Post;
-import net.jforum.entities.Topic;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchResult.java,v 1.3 2007/07/25 17:44:33 rafaelsteil Exp $
+ * @version $Id: SearchPost.java,v 1.1 2007/07/28 14:00:23 rafaelsteil Exp $
  */
-public class SearchResult
+public class SearchPost extends Post
 {
-	private Date date;
 	private Forum forum;
-	private Topic topic;
-	private Post post;
-	private String subject;
-	private String contents;
 	
-	/**
-	 * @return the subject
-	 */
-	public String getSubject()
-	{
-		return this.subject;
-	}
-	
-	/**
-	 * @return the forum
-	 */
-	public Forum getForum()
-	{
-		return this.forum;
-	}
-	
-	/**
-	 * @return the date
-	 */
-	public Date getDate()
-	{
-		return this.date;
-	}
-
-	/**
-	 * @return the contents
-	 */
-	public String getContents()
-	{
-		return this.contents;
-	}
-
-	/**
-	 * @param date the date to set
-	 */
-	public void setDate(Date date)
-	{
-		this.date = date;
-	}
-
-	/**
-	 * @param forum the forum to set
-	 */
 	public void setForum(Forum forum)
 	{
 		this.forum = forum;
 	}
-
-	/**
-	 * @param subject the subject to set
-	 */
-	public void setSubject(String subject)
+	
+	public Forum getForum()
 	{
-		this.subject = subject;
-	}
-
-	/**
-	 * @param contents the contents to set
-	 */
-	public void setContents(String contents)
-	{
-		this.contents = contents;
-	}
-
-	/**
-	 * @return the topic
-	 */
-	public Topic getTopic()
-	{
-		return this.topic;
-	}
-
-	/**
-	 * @param topic the topic to set
-	 */
-	public void setTopic(Topic topic)
-	{
-		this.topic = topic;
-	}
-
-	/**
-	 * @return the post
-	 */
-	public Post getPost()
-	{
-		return this.post;
-	}
-
-	/**
-	 * @param post the post to set
-	 */
-	public void setPost(Post post)
-	{
-		this.post = post;
+		return this.forum;
 	}
 }

@@ -54,12 +54,13 @@ import net.jforum.JForumExecutionContext;
 import net.jforum.dao.LuceneDAO;
 import net.jforum.entities.Post;
 import net.jforum.exceptions.DatabaseException;
+import net.jforum.search.SearchPost;
 import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericLuceneDAO.java,v 1.2 2007/07/25 17:44:33 rafaelsteil Exp $
+ * @version $Id: GenericLuceneDAO.java,v 1.3 2007/07/28 14:00:23 rafaelsteil Exp $
  */
 public class GenericLuceneDAO implements LuceneDAO
 {
@@ -144,7 +145,7 @@ public class GenericLuceneDAO implements LuceneDAO
 	
 	private Post makePost(ResultSet rs) throws SQLException
 	{
-		Post p = new Post();
+		Post p = new SearchPost();
 		
 		p.setId(rs.getInt("post_id"));
 		p.setForumId(rs.getInt("forum_id"));

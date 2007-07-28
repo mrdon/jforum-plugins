@@ -58,7 +58,7 @@ import net.jforum.dao.SearchArgs;
 import net.jforum.entities.Forum;
 import net.jforum.exceptions.ForumException;
 import net.jforum.repository.ForumRepository;
-import net.jforum.search.SearchResult;
+import net.jforum.search.SearchPost;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -72,7 +72,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.44 2007/07/28 02:48:58 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.45 2007/07/28 14:00:23 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -217,26 +217,27 @@ public class SearchAction extends Command
 		return args;
 	}
 	
-	private List onlyAllowedData(List results)
+	private List filterResults(List results)
 	{
 		List l = new ArrayList();
 		
-		Map fetchedForums = new HashMap();
+		Map forums = new HashMap();
 		
 		for (Iterator iter = results.iterator(); iter.hasNext(); ) {
-			SearchResult currentResult = (SearchResult)iter.next();
+			SearchPost post = (SearchPost)iter.next();
 			
-			Integer forumId = new Integer(currentResult.getForum().getId());
-			Boolean status = (Boolean)fetchedForums.get(forumId);
+			Integer forumId = new Integer(post.getForumId());
+			ForumFilterResult status = (ForumFilterResult)forums.get(forumId);
 			
 			if (status == null) {
-				Forum f = ForumRepository.getForum(currentResult.getForum().getId());
-				status = new Boolean(f != null);
-				fetchedForums.put(forumId, status);
+				Forum f = ForumRepository.getForum(post.getForumId());
+				status = new ForumFilterResult(f);
+				forums.put(forumId, status);
 			}
 			
-			if (status.booleanValue()) {
-				l.add(currentResult);
+			if (status.isValid()) {
+				post.setForum(status.getForum());
+				l.add(post);
 			}
 		}
 		
@@ -343,5 +344,25 @@ public class SearchAction extends Command
 	public void list()  
 	{
 		this.filters();
+	}
+	
+	private static class ForumFilterResult
+	{
+		private Forum forum;
+		
+		public ForumFilterResult(Forum forum)
+		{
+			this.forum = forum;
+		}
+		
+		public Forum getForum() 
+		{
+			return this.forum;
+		}
+		
+		public boolean isValid()
+		{
+			return this.forum != null;
+		}
 	}
 }

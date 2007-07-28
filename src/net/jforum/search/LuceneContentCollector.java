@@ -45,7 +45,6 @@ package net.jforum.search;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -63,7 +62,7 @@ import org.apache.lucene.search.highlight.Scorer;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneContentCollector.java,v 1.3 2007/07/27 18:48:36 rafaelsteil Exp $
+ * @version $Id: LuceneContentCollector.java,v 1.4 2007/07/28 14:00:23 rafaelsteil Exp $
  */
 public class LuceneContentCollector implements LuceneResultCollector
 {
@@ -97,8 +96,6 @@ public class LuceneContentCollector implements LuceneResultCollector
 
 	private List retrieveRealPosts(int[] postIds, Query query) throws IOException
 	{
-		List l = new ArrayList();
-		
 		List posts = DataAccessDriver.getInstance().newLuceneDAO().getPostsData(postIds);
 		
 		for (Iterator iter = posts.iterator(); iter.hasNext(); ) {
@@ -119,13 +116,8 @@ public class LuceneContentCollector implements LuceneResultCollector
 			}
 			
 			post.setText(contents.toString());
-			
-			SearchResult result = new SearchResult();
-			result.setPost(post);
-			
-			l.add(result);
 		}
 		
-		return l;
+		return posts;
 	}
 }

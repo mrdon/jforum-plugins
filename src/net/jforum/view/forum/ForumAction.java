@@ -59,11 +59,11 @@ import net.jforum.dao.ModerationDAO;
 import net.jforum.dao.SearchArgs;
 import net.jforum.entities.Forum;
 import net.jforum.entities.MostUsersEverOnline;
+import net.jforum.entities.Post;
 import net.jforum.entities.UserSession;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.search.SearchFacade;
-import net.jforum.search.SearchResult;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
@@ -77,7 +77,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.64 2007/07/28 02:48:58 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.65 2007/07/28 14:00:23 rafaelsteil Exp $
  */
 public class ForumAction extends Command
 {
@@ -268,9 +268,9 @@ public class ForumAction extends Command
 		List allTopics = SearchFacade.search(args);
 		
 		for (Iterator iter = allTopics.iterator(); iter.hasNext();) {
-			SearchResult result = (SearchResult)iter.next();
+			Post post = (Post)iter.next();
 			
-			((Map)SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(result.getPost().getTopicId()), 
+			((Map)SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(post.getTopicId()), 
 				new Long(System.currentTimeMillis()));						
 		}
 
