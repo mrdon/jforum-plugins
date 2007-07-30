@@ -44,14 +44,16 @@
 package net.jforum.search;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import net.jforum.entities.Post;
 import net.jforum.util.preferences.TemplateKeys;
+import net.jforum.view.forum.common.PostCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ContentSearchOperation.java,v 1.5 2007/07/30 14:06:44 rafaelsteil Exp $
+ * @version $Id: ContentSearchOperation.java,v 1.6 2007/07/30 14:25:39 rafaelsteil Exp $
  */
 public class ContentSearchOperation extends SearchOperation
 {
@@ -65,8 +67,12 @@ private List results = new ArrayList();
 		
 		return searchResult;
 	}
+	
 	public void prepareForDisplay()
 	{
+		for (Iterator iter = this.results.iterator(); iter.hasNext(); ) {
+			PostCommon.preparePostForDisplay((Post)iter.next());
+		}
 	}
 
 	public List results()

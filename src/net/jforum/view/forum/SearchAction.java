@@ -65,7 +65,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.54 2007/07/30 14:06:44 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.55 2007/07/30 14:25:39 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -140,7 +140,7 @@ public class SearchAction extends Command
 				(Date)this.request.getObjectParameter("to_date"));		    
 		}
 
-		if ("all_terms".equals(args.getMatchType())) {
+		if ("all".equals(args.getMatchType())) {
 			args.matchAllKeywords();
 		}
 		

@@ -60,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericLuceneDAO.java,v 1.3 2007/07/28 14:00:23 rafaelsteil Exp $
+ * @version $Id: GenericLuceneDAO.java,v 1.4 2007/07/30 14:25:39 rafaelsteil Exp $
  */
 public class GenericLuceneDAO implements LuceneDAO
 {
@@ -153,7 +153,14 @@ public class GenericLuceneDAO implements LuceneDAO
 		p.setUserId(rs.getInt("user_id"));
 		p.setTime(new Date(rs.getTimestamp("post_time").getTime()));
 		p.setText(rs.getString("post_text"));
-		p.setSubject(rs.getString("post_subject"));
+		
+		String subject = rs.getString("post_subject");
+		
+		if (subject == null || subject.trim().length() == 0) {
+			subject = rs.getString("topic_title");
+		}
+		
+		p.setSubject(subject);
 		
 		return p;
 	}
