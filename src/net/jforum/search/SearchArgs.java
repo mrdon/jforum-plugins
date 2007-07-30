@@ -44,23 +44,55 @@ package net.jforum.search;
 
 import java.util.Date;
 
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
+
 /**
  * @author Rafael Steil
- * @version $Id: SearchArgs.java,v 1.1 2007/07/28 20:07:17 rafaelsteil Exp $
+ * @version $Id: SearchArgs.java,v 1.2 2007/07/30 02:16:39 rafaelsteil Exp $
  */
 public class SearchArgs 
 {
-	private String keywords = "";
-	private String author;
-	private String orderBy = "ASC";
-	private String orderByField;
-	
+	private String keywords;
+	private int author;
+	private String orderDir = "DESC";
+	private String orderBy;
 	private boolean matchAllKeywords;
-	private boolean searchStarted;
-	
 	private int forumId;
+	private int startFrom;
+	private Date fromDate;
+	private Date toDate;
 	
-	private Date time;
+	public void setDateRange(Date fromDate, Date toDate)
+	{
+		this.fromDate = fromDate;
+		this.toDate = toDate;
+	}
+	
+	public Date getFromDate()
+	{
+		return this.fromDate;
+	}
+	
+	public Date getToDate()
+	{
+		return this.toDate;
+	}
+	
+	public int fetchCount()
+	{
+		return SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
+	}
+	
+	public void startFetchingAtRecord(int startFrom)
+	{
+		this.startFrom = startFrom;
+	}
+	
+	public int startFrom()
+	{
+		return this.startFrom;
+	}
 	
 	public void setKeywords(String keywords)
 	{
@@ -72,7 +104,7 @@ public class SearchArgs
 		this.matchAllKeywords = true;
 	}
 	
-	public void setAuthor(String author)
+	public void setAuthor(int author)
 	{
 		this.author = author;
 	}
@@ -82,24 +114,14 @@ public class SearchArgs
 		this.forumId = forumId;
 	}
 	
-	public void setOrderByField(String f)
-	{
-		this.orderByField = f;
-	}
-	
-	public void setSearchStarted(boolean started)
-	{
-		this.searchStarted = started;
-	}
-	
 	public void setOrderBy(String orderBy)
 	{
-		this.orderBy = (orderBy == null ? "ASC" : orderBy);
+		this.orderBy = orderBy;
 	}
 	
-	public void setTime(Date time) 
+	public void setOrderDir(String orderDir)
 	{
-		this.time = time;
+		this.orderDir = orderDir;
 	}
 	
 	public String[] getKeywords()
@@ -116,7 +138,7 @@ public class SearchArgs
 		return this.matchAllKeywords;
 	}
 	
-	public String getAuthor()
+	public int getAuthor()
 	{
 		return this.author;
 	}
@@ -126,27 +148,17 @@ public class SearchArgs
 		return this.forumId;
 	}
 	
-	public String getOrderBy()
+	public String getOrderDir()
 	{
-		if (!"ASC".equals(this.orderBy) && !"DESC".equals(this.orderBy)) {
-			return "ASC";
+		if (!"ASC".equals(this.orderDir) && !"DESC".equals(this.orderDir)) {
+			return "DESC";
 		}
 
+		return this.orderDir;
+	}
+	
+	public String getOrderBy()
+	{
 		return this.orderBy;
-	}
-	
-	public String getOrderByField()
-	{
-		return this.orderByField;
-	}
-	
-	public Date getTime()
-	{
-		return this.time;
-	}
-	
-	public boolean getSearchStarted()
-	{
-		return this.searchStarted;
 	}
 }

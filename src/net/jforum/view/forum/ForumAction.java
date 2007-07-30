@@ -60,6 +60,7 @@ import net.jforum.entities.Forum;
 import net.jforum.entities.MostUsersEverOnline;
 import net.jforum.entities.Post;
 import net.jforum.entities.UserSession;
+import net.jforum.exceptions.ForumException;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.search.SearchArgs;
@@ -77,7 +78,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.66 2007/07/28 20:07:17 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.67 2007/07/30 02:16:38 rafaelsteil Exp $
  */
 public class ForumAction extends Command
 {
@@ -257,8 +258,11 @@ public class ForumAction extends Command
 	// Mark all topics as read
 	public void readAll()
 	{
+		if (true) {
+			throw new ForumException("Fix this. Should use the new lucene architecture");
+		}
+		
 		SearchArgs args = new SearchArgs();
-		args.setTime(SessionFacade.getUserSession().getLastVisit());
 
 		String forumId = this.request.getParameter("forum_id");
 		if (forumId != null) {
@@ -288,10 +292,8 @@ public class ForumAction extends Command
 	{
 		//this.request.addParameter("post_time", Long.toString(SessionFacade.getUserSession().getLastVisit().getTime()));
 		Date date = new GregorianCalendar(2007, 1, 1).getTime();
-		this.request.addParameter("post_time", Long.toString(date.getTime()));
-		
-		this.request.addParameter("clean", "true");
-		this.request.addParameter("sort_by", "t." + SystemGlobals.getValue(ConfigKeys.TOPIC_TIME_FIELD));
+		this.request.addParameter("from_date", date);
+		this.request.addParameter("to_date", new Date());
 		this.request.addParameter("sort_dir", "DESC");
 
 		SearchAction searchAction = new SearchAction(this.request, this.response, this.context);

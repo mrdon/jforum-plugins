@@ -27,7 +27,7 @@
 					</td>
 					<td valign="bottom" nowrap="nowrap" align="right">
 						<#assign paginationLinks>
-							<@pagination.searchPagination kw?default(""), terms?default(""), forum?default(""), orderField?default(""), orderBy?default(""), author?default(""), postTime?default("")/>
+							<@pagination.searchPagination kw?default(""), matchType?default(""), forum?default(""), orderField?default(""), orderBy?default(""), author?default(""), postTime?default("")/>
 						</#assign>
 
 						${paginationLinks}

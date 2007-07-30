@@ -59,7 +59,7 @@ import org.apache.lucene.search.Query;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchTestCase.java,v 1.25 2007/07/28 20:07:19 rafaelsteil Exp $
+ * @version $Id: LuceneSearchTestCase.java,v 1.26 2007/07/30 02:16:40 rafaelsteil Exp $
  */
 public class LuceneSearchTestCase extends TestCase
 {
@@ -83,7 +83,7 @@ public class LuceneSearchTestCase extends TestCase
 		
 		// Search
 		SearchArgs args = new SearchArgs();
-		args.setTime(new GregorianCalendar(2000, 6, 27, 8, 10, 15).getTime());
+		args.setDateRange(new GregorianCalendar(2000, 6, 27, 8, 10, 15).getTime(), new Date());
 
 		List results = this.search.newMessages(args);
 		

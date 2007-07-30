@@ -45,7 +45,6 @@ package net.jforum.search;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import net.jforum.exceptions.SearchException;
@@ -60,7 +59,7 @@ import org.apache.lucene.search.Sort;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.26 2007/07/28 20:07:17 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.27 2007/07/30 02:16:39 rafaelsteil Exp $
  */
 public class LuceneSearch implements NewDocumentAdded
 {
@@ -141,13 +140,13 @@ public class LuceneSearch implements NewDocumentAdded
 	
 	private void filterByDateRange(SearchArgs args, StringBuffer criteria)
 	{
-		if (args.getTime() != null) {
+		if (args.getFromDate() != null) {
 			criteria.append('(')
 			.append(SearchFields.Keyword.DATE)
 			.append(": [")
-			.append(this.settings.formatDateTime(args.getTime()))
+			.append(this.settings.formatDateTime(args.getFromDate()))
 			.append(" TO ")
-			.append(this.settings.formatDateTime(new Date()))
+			.append(this.settings.formatDateTime(args.getToDate()))
 			.append(']')
 			.append(')');
 		}

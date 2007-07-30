@@ -42,10 +42,7 @@
  */
 package net.jforum.view.forum;
 
-import java.lang.reflect.Field;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import net.jforum.Command;
 import net.jforum.JForumExecutionContext;
@@ -67,36 +64,10 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.49 2007/07/28 20:07:17 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.50 2007/07/30 02:16:38 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
-	private String searchTerms;
-	private String forum;
-	private String sortBy;
-	private String sortDir;
-	private String kw;
-	private String author;
-	private String postTime;
-	
-	private static Map fieldsMap = new HashMap();
-	private static Map sortByMap = new HashMap();
-	
-	static {
-		fieldsMap.put("search_terms", "searchTerms");
-		fieldsMap.put("search_forum", "forum");
-		fieldsMap.put("sort_by", "sortBy");
-		fieldsMap.put("sort_dir", "sortDir");
-		fieldsMap.put("search_keywords", "kw");
-		fieldsMap.put("search_author", "author");
-		fieldsMap.put("post_time", "postTime");
-		
-		sortByMap.put("time", "p.post_time");
-		sortByMap.put("title", "t.topic_title");
-		sortByMap.put("username", "u.username");
-		sortByMap.put("forum", "t.forum_id");
-	}
-	
 	public SearchAction() { }
 	
 	public SearchAction(RequestContext request, ResponseContext response, SimpleHash context) 
@@ -113,28 +84,6 @@ public class SearchAction extends Command
 		this.context.put("pageTitle", I18n.getMessage("ForumBase.search"));
 	}
 	
-	private void getSearchFields()
-	{
-		this.searchTerms = this.addSlashes(this.request.getParameter("search_terms"));
-		this.forum = this.addSlashes(this.request.getParameter("search_forum"));
-		
-		this.sortBy = (String)sortByMap.get(this.addSlashes(this.request.getParameter("sort_by")));
-		
-		if (this.sortBy == null) {
-			this.sortBy = (String)sortByMap.get("time");
-		}
-		
-		this.sortDir = this.addSlashes(this.request.getParameter("sort_dir"));
-		
-		if (!"ASC".equals(this.sortDir) && !"DESC".equals(this.sortDir)) {
-			this.sortDir = "DESC";
-		}
-		
-		this.kw = this.addSlashes(this.request.getParameter("search_keywords"));
-		this.author = this.addSlashes(this.request.getParameter("search_author"));
-		this.postTime = this.addSlashes(this.request.getParameter("post_time"));
-	}
-	
 	public void newMessages()
 	{
 		this.search(new NewMessagesSearchOperation());
@@ -147,8 +96,6 @@ public class SearchAction extends Command
 	
 	private void search(SearchOperation operation)
 	{
-		this.getSearchFields();
-
 		SearchArgs args = this.buildSearchArgs();
 		
 		int start = ViewCommon.getStartPage();
@@ -168,14 +115,8 @@ public class SearchAction extends Command
 		
 		this.context.put("results", operation.filterResults(operation.results()));
 		this.context.put("categories", ForumRepository.getAllCategories());
-		this.context.put("kw", kw != null ? kw.trim() : "");
+		this.context.put("searchArgs", args);
 		this.context.put("fr", new ForumRepository());
-		this.context.put("terms", searchTerms);
-		this.context.put("forum", forum);
-		this.context.put("orderField", sortBy);
-		this.context.put("orderBy", sortDir);
-		this.context.put("author", author);
-		this.context.put("postTime", postTime);
 		this.context.put("pageTitle", I18n.getMessage("ForumBase.search"));
 		this.context.put("openModeration", "1".equals(this.request.getParameter("openModeration")));
 		this.context.put("postsPerPage", new Integer(SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE)));
@@ -183,34 +124,32 @@ public class SearchAction extends Command
 		ViewCommon.contextToPagination(start, totalRecords, recordsPerPage);
 		TopicsCommon.topicListingBase();
 	}
-
+	
 	private SearchArgs buildSearchArgs()
 	{
 		SearchArgs args = new SearchArgs();
 		
-		args.setKeywords(kw != null ? kw.trim() : "");
-		args.setAuthor(author);
-		args.setOrderByField(sortBy);
-		args.setOrderBy(sortDir);
+		args.setKeywords(this.request.getParameter("search_keywords"));
+		args.setAuthor(this.request.getIntParameter("search_author"));
+		args.setOrderBy(this.request.getParameter("sort_by"));
+		args.setOrderDir(this.request.getParameter("sort_dir"));
 		
-		if (postTime != null) {
-			args.setTime(new Date(Long.parseLong(postTime)));		    
+		if (this.request.getObjectParameter("from_date") != null
+			&& this.request.getObjectParameter("to_date") != null) {
+			args.setDateRange((Date)this.request.getObjectParameter("from_date"), 
+				(Date)this.request.getObjectParameter("to_date"));		    
 		}
-		
-		if (searchTerms != null && !searchTerms.equals("any")) {
+
+		if ("all_terms".equals(this.request.getParameter("match_type"))) {
 			args.matchAllKeywords();
 		}
 		
-		if (forum != null && !forum.equals("")) {
-			args.setForumId(Integer.parseInt(forum));
+		if (this.request.getParameter("forum") != null) {
+			args.setForumId(this.request.getIntParameter("forum"));
 		}
-		
-		args.setSearchStarted(this.request.getParameter("clean") == null);
 		
 		return args;
 	}
-	
-	
 	
 	public void doModeration()
 	{
@@ -233,6 +172,9 @@ public class SearchAction extends Command
 	
 	private String makeRedirect()
 	{
+		throw new ForumException("Fix this");
+		
+		/*
 		String persistData = this.request.getParameter("persistData");
 		if (persistData == null) {
 			this.getSearchFields();
@@ -283,27 +225,18 @@ public class SearchAction extends Command
 			path.append("&sort_by=").append(this.sortBy);
 		}
 
-		if (this.kw != null) {
-			path.append("&search_keywords=").append(this.kw);
+		if (this.keywords != null) {
+			path.append("&search_keywords=").append(this.keywords);
 		}
 
-		if (this.postTime != null) {
-			path.append("&post_time=").append(this.postTime);
+		if (this.fromDate != null) {
+			path.append("&post_time=").append(this.fromDate);
 		}
 
 		path.append("&start=").append(ViewCommon.getStartPage());
 
 		return path.toString();
-	}
-	
-	private String addSlashes(String s)
-	{
-		if (s != null) {
-			s = s.replaceAll("'", "\\'");
-			s = s.replaceAll("\"", "\\\"");
-		}
-		
-		return s;
+		*/
 	}
 	
 	/** 
