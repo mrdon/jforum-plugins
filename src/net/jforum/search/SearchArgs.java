@@ -49,7 +49,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchArgs.java,v 1.4 2007/07/30 14:06:44 rafaelsteil Exp $
+ * @version $Id: SearchArgs.java,v 1.5 2007/07/30 21:59:21 rafaelsteil Exp $
  */
 public class SearchArgs 
 {
@@ -146,7 +146,11 @@ public class SearchArgs
 	
 	public String rawKeywords()
 	{
-		return this.keywords;
+		if (this.keywords == null) {
+			return "";
+		}
+		
+		return this.keywords.trim();
 	}
 	
 	public boolean shouldMatchAllKeywords()

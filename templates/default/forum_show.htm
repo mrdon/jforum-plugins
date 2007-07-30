@@ -3,6 +3,7 @@
 <#import "../macros/presentation.ftl" as presentation/>
 
 <link rel="alternate" type="application/rss+xml" title="RSS" href="${JForumContext.encodeURL("/rss/forumTopics/${forum.id}")}" />
+<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/overlay.js"></script>
 
 <#if moderator>
 	<script type="text/JavaScript" src="${JForumContext.encodeURL("/js/list/moderation")}"></script>
@@ -45,14 +46,14 @@
 						</#if>
 					</td>
 				</tr>
+			</table>
 
+			<table cellspacing="2" cellpadding="2" width="100%" align="center">
 				<tr>
 					<#if !readonly && !replyOnly>
 						<td valign="middle" align="left" width="50">
 							<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&amp;action=insert&amp;forum_id=${forum.id}", "")}" rel="nofollow" class="icon_new_topic"><img src="${contextPath}/images/transp.gif" alt="" /></a>
 						</td>
-					<#else>
-						<#assign colspan = "2"/>
 					</#if>
 
 					<form accept-charset="${encoding}" action="${JForumContext.encodeURL("/jforum")}" method="get" id="formSearch" name="formSearch">
@@ -61,14 +62,14 @@
 					<input type="hidden" name="forum" value="${forum.id}">
 					<input type="hidden" name="match_type" value="all">
 
-					<td class="nav" valign="middle" align="left" width="100%" colspan="${colspan?default("")}">
+					<td class="nav" valign="middle" align="left" colspan="${colspan?default("")}">
 						<input type="text" onblur="if (this.value == '') this.value = 'Search this forum...';" onclick="if (this.value == 'Search this forum...') this.value = '';" value="Search this forum..." size="20" name="search_keywords" class="inputSearchForum"/>
 						<input type="submit" value="Search" class="liteoption">
 					</td>
 
 					</form>
 
-					<td class="nav" valign="bottom" nowrap="nowrap" align="right">
+					<td class="nav" nowrap="nowrap" align="right">
 		  				<#assign paginationData><@pagination.doPagination action, forum.id/></#assign>
 						${paginationData}
 					</td>
@@ -254,12 +255,12 @@
 						<#assign colspan = "2"/>
 					</#if>
 
-					<td valign="middle"  align="left" width="100%" colspan="${colspan?default("0")}">
+					<td valign="middle"  align="left" colspan="${colspan?default("0")}">
 						<span class="nav">
 						<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a> &raquo;  <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name?html}</a></span>
 					</td>
 
-					<td valign="middle"  nowrap="nowrap" align="right">${paginationData}</td>
+					<td nowrap="nowrap" align="right" class="nav">${paginationData}</td>
 				</tr>
 
 				<tr>

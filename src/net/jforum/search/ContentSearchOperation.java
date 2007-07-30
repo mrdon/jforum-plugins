@@ -53,7 +53,7 @@ import net.jforum.view.forum.common.PostCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ContentSearchOperation.java,v 1.6 2007/07/30 14:25:39 rafaelsteil Exp $
+ * @version $Id: ContentSearchOperation.java,v 1.7 2007/07/30 21:59:21 rafaelsteil Exp $
  */
 public class ContentSearchOperation extends SearchOperation
 {
@@ -61,7 +61,9 @@ private List results = new ArrayList();
 	
 	public SearchResult performSearch(SearchArgs args)
 	{
-		SearchResult searchResult = SearchFacade.search(args);
+		SearchResult searchResult = args.getKeywords().length > 0
+			? SearchFacade.search(args)
+			: new SearchResult(new ArrayList(), 0);
 		
 		this.results = searchResult.records();
 		

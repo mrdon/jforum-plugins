@@ -147,3 +147,67 @@ table.attachtable	{ font: normal 12px verdana, arial, helvetica, sans-serif; col
 .icon_edit img { background-image: url(../images/en_US/icon_edit.gif); width: 59px; height: 18px; }
 .icon_profile img { background-image: url(../images/en_US/icon_profile.gif); width: 59px; height: 18px; }
 .icon_pm img { background-image: url(../images/en_US/icon_pm.gif); width: 59px; height: 18px; }
+
+
+
+/*CSS Sabrosus style pagination*/
+.pagination {
+	padding:3px;
+	margin:3px;
+	font-size: 10px;
+	font-weight: bold;
+}
+
+.pagination a {
+	padding: 2px 5px 2px 5px;
+	margin-right: 2px;
+	border: 1px solid #9aafe5;
+	text-decoration: none; 
+	color: #2e6ab1;
+}
+.pagination a:hover, .pagination a:active {
+	border: 1px solid #dd6900;
+	color: #000;
+	background-color: lightyellow;
+	text-decoration: none;
+}
+.pagination .current {
+	padding: 2px 5px 2px 5px;
+	margin-right: 2px;
+	border: 1px solid navy;
+	font-weight: bold;
+	background-color: #2e6ab1;
+	color: #FFF;
+}
+.pagination .disabled {
+	padding: 2px 5px 2px 5px;
+	margin-right: 2px;
+	border: 1px solid #929292;
+	color: #929292;
+}
+
+#goToBox {
+	position:absolute; 
+	display:none; 
+	border: 1px solid black;
+	background-color: #fafafa; 
+	padding: 2px;
+}
+
+#goToBox .title {
+	padding: 1px;
+	background-color: #dd6900;
+	text-align: center;
+	font-weight: bold;
+	font-size: 10px;
+	color: #fff;
+}
+
+#goToBox .form {
+	padding: 5px;
+	text-align: left;
+}
+
+#goToBox .form input {
+	font-weight: bold;
+}
