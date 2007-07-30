@@ -55,17 +55,19 @@ import org.apache.lucene.search.Query;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneNewMessagesCollector.java,v 1.5 2007/07/30 02:59:42 rafaelsteil Exp $
+ * @version $Id: LuceneNewMessagesCollector.java,v 1.6 2007/07/30 18:03:22 rafaelsteil Exp $
  */
 public class LuceneNewMessagesCollector implements LuceneResultCollector
 {
 	public List collect(SearchArgs args, Hits hits, Query query)
 	{
 		try {
-			int[] topicIds = new int[hits.length()];
+			int[] topicIds = new int[Math.min(args.fetchCount(), hits.length())];
 			
-			for (int i = 0; i < hits.length(); i++) {
-				Document doc = hits.doc(i);
+			for (int docIndex = 0, i = 0; 
+				docIndex < args.startFrom() + args.fetchCount() && docIndex < hits.length(); 
+				docIndex++, i++) {
+				Document doc = hits.doc(docIndex);
 				topicIds[i] = Integer.parseInt(doc.get(SearchFields.Keyword.TOPIC_ID));
 			}
 			

@@ -78,7 +78,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.69 2007/07/30 18:03:21 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.70 2007/07/30 18:05:08 rafaelsteil Exp $
  */
 public class ForumAction extends Command
 {
@@ -290,9 +290,7 @@ public class ForumAction extends Command
 	// Messages since last visit
 	public void newMessages()
 	{
-		Date date = new GregorianCalendar(2004, 6, 20).getTime();
-		//this.request.addParameter("from_date", SessionFacade.getUserSession().getLastVisit());
-		this.request.addParameter("from_date", date);
+		this.request.addParameter("from_date", SessionFacade.getUserSession().getLastVisit());
 		this.request.addParameter("to_date", new Date());
 		this.request.addParameter("sort_dir", "DESC");
 

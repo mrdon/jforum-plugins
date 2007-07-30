@@ -14,33 +14,19 @@
 			<table cellspacing="2" cellpadding="2" width="100%" align="center">
 				<tr>
 					<td valign="bottom" align="left" colspan="2">
+						<a class="maintitle" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a> &raquo;
 						<a class="maintitle" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name?html}</a>
+
 						<#if rssEnabled>
 							<a href="${JForumContext.encodeURL("/rss/forumTopics/${forum.id}")}"><img src="${contextPath}/templates/${templateName}/images/xml_button.gif" border="0" alt="[XML]" /></a>
 							<br />
 						</#if>
 					</td>
 
-					<td valign="middle"  nowrap="nowrap" align="right"><#assign paginationData><@pagination.doPagination action, forum.id/></#assign>${paginationData}</td>
-				</tr>
-
-				<tr>
-					<#if !readonly && !replyOnly>
-						<td valign="middle" align="left" width="50">
-							<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&amp;action=insert&amp;forum_id=${forum.id}", "")}" rel="nofollow" class="icon_new_topic"><img src="${contextPath}/images/transp.gif" alt="" /></a>
-						</td>
-					<#else>
-						<#assign colspan = "2"/>
-					</#if>
-
-					<td class="nav" valign="middle" align="left" width="100%" colspan="${colspan?default("")}">
-						<span class="nav"><a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a> -&gt; <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name?html}</a></span>
-                                        </td>
-
-					<td class="nav" valign="bottom" nowrap="nowrap" align="right">
-		  				<span class="gensmall">
-						&nbsp;
-						<a href="${JForumContext.encodeURL("/forums/readAll/${forum.id}")}">${I18n.getMessage("ForumIndex.setAllTopicsAsRead")}</a>
+					<td valign="middle"  nowrap="nowrap" align="right" class="gensmall">
+						<#if logged>
+							<a href="${JForumContext.encodeURL("/forums/readAll/${forum.id}")}">${I18n.getMessage("ForumIndex.setAllTopicsAsRead")}</a>
+						</#if>
 
 						<#if moderator>
 							<br />
@@ -57,7 +43,34 @@
 								<a href="${contextPath}/forums/moderation/<#if (start > 0)>${start}/</#if>${forum.id}${extension}">${I18n.getMessage("Moderation.OpenModeration")}</a>
 							</#if>
 						</#if>
-						</span>
+					</td>
+				</tr>
+
+				<tr>
+					<#if !readonly && !replyOnly>
+						<td valign="middle" align="left" width="50">
+							<a href="${JForumContext.encodeURL("/jforum${extension}?module=posts&amp;action=insert&amp;forum_id=${forum.id}", "")}" rel="nofollow" class="icon_new_topic"><img src="${contextPath}/images/transp.gif" alt="" /></a>
+						</td>
+					<#else>
+						<#assign colspan = "2"/>
+					</#if>
+
+					<form accept-charset="${encoding}" action="${JForumContext.encodeURL("/jforum")}" method="get" id="formSearch" name="formSearch">
+					<input type="hidden" name="module" value="search"/>
+					<input type="hidden" name="action" value="search"/>
+					<input type="hidden" name="forum" value="${forum.id}">
+					<input type="hidden" name="match_type" value="all">
+
+					<td class="nav" valign="middle" align="left" width="100%" colspan="${colspan?default("")}">
+						<input type="text" onblur="if (this.value == '') this.value = 'Search this forum...';" onclick="if (this.value == 'Search this forum...') this.value = '';" value="Search this forum..." size="20" name="search_keywords" class="inputSearchForum"/>
+						<input type="submit" value="Search" class="liteoption">
+					</td>
+
+					</form>
+
+					<td class="nav" valign="bottom" nowrap="nowrap" align="right">
+		  				<#assign paginationData><@pagination.doPagination action, forum.id/></#assign>
+						${paginationData}
 					</td>
 				</tr>
 			</table>
@@ -243,7 +256,7 @@
 
 					<td valign="middle"  align="left" width="100%" colspan="${colspan?default("0")}">
 						<span class="nav">
-						<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a> -&gt;  <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name?html}</a></span>
+						<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a> &raquo;  <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name?html}</a></span>
 					</td>
 
 					<td valign="middle"  nowrap="nowrap" align="right">${paginationData}</td>
