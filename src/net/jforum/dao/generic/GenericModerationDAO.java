@@ -63,7 +63,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericModerationDAO.java,v 1.8 2006/08/23 02:13:42 rafaelsteil Exp $
+ * @version $Id: GenericModerationDAO.java,v 1.9 2007/07/30 16:31:29 rafaelsteil Exp $
  */
 public class GenericModerationDAO implements ModerationDAO
 {
@@ -95,54 +95,59 @@ public class GenericModerationDAO implements ModerationDAO
 	public Map topicsByForum(int forumId)
 	{
 		Map m = new HashMap();
-		
-		PreparedStatement p=null;
-        ResultSet rs=null;
-        try
-        {
-            p = JForumExecutionContext.getConnection().prepareStatement(
-                    SystemGlobals.getSql("ModerationModel.topicsByForum"));
-            p.setInt(1, forumId);
 
-            int lastId = 0;
-            TopicModerationInfo info = null;
+		PreparedStatement p = null;
+		ResultSet rs = null;
 
-            rs = p.executeQuery();
-            while (rs.next()) {
-                int id = rs.getInt("topic_id");
-                if (id != lastId) {
-                    lastId = id;
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+				SystemGlobals.getSql("ModerationModel.topicsByForum"));
+			p.setInt(1, forumId);
 
-                    if (info != null) {
-                        m.put(new Integer(info.getTopicId()), info);
-                    }
+			int lastId = 0;
+			TopicModerationInfo info = null;
+			
+			rs = p.executeQuery();
+			
+			while (rs.next()) {
+				int id = rs.getInt("topic_id");
+				
+				if (id != lastId) {
+					lastId = id;
 
-                    info = new TopicModerationInfo();
-                    info.setTopicId(id);
-                    info.setTopicReplies(rs.getInt("topic_replies"));
-                    info.setTopicTitle(rs.getString("topic_title"));
-                }
+					if (info != null) {
+						m.put(new Integer(info.getTopicId()), info);
+					}
 
-                // TODO object info can be null at this line and NPE possible
-                info.addPost(this.getPost(rs));
-            }
+					info = new TopicModerationInfo();
+					info.setTopicId(id);
+					info.setTopicReplies(rs.getInt("topic_replies"));
+					info.setTopicTitle(rs.getString("topic_title"));
+				}
 
-            if (info != null) {
-                m.put(new Integer(info.getTopicId()), info);
-            }
-            return m;
-        }
-        catch (SQLException e) {
-            throw new DatabaseException(e);
-        }
-        finally {
-            DbUtils.close(rs, p);
-        }
+				if (info != null) {
+					info.addPost(this.getPost(rs));
+				}
+			}
+
+			if (info != null) {
+				m.put(new Integer(info.getTopicId()), info);
+			}
+			
+			return m;
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
     }
 	
 	protected Post getPost(ResultSet rs) throws SQLException
 	{
 		Post p = new Post();
+		
 		p.setPostUsername(rs.getString("username"));
 		p.setId(rs.getInt("post_id"));
 		p.setUserId(rs.getInt("user_id"));
@@ -168,41 +173,43 @@ public class GenericModerationDAO implements ModerationDAO
 		List l = new ArrayList();
 		int lastId = 0;
 		ModerationPendingInfo info = null;
-		Statement s=null;
-        ResultSet rs=null;
-        try
-        {
-            s = JForumExecutionContext.getConnection().createStatement();
+		Statement s = null;
+		ResultSet rs = null;
+		
+		try {
+			s = JForumExecutionContext.getConnection().createStatement();
+			rs = s.executeQuery(SystemGlobals.getSql("ModerationModel.categoryPendingModeration"));
+			
+			while (rs.next()) {
+				int id = rs.getInt("categories_id");
+				
+				if (id != lastId) {
+					lastId = id;
 
-            rs = s.executeQuery(SystemGlobals.getSql("ModerationModel.categoryPendingModeration"));
-            while (rs.next()) {
-                int id = rs.getInt("categories_id");
-                if (id != lastId) {
-                    lastId = id;
+					if (info != null) {
+						l.add(info);
+					}
 
-                    if (info != null) {
-                        l.add(info);
-                    }
+					info = new ModerationPendingInfo();
+					info.setCategoryName(rs.getString("title"));
+					info.setCategoryId(id);
+				}
 
-                    info = new ModerationPendingInfo();
-                    info.setCategoryName(rs.getString("title"));
-                    info.setCategoryId(id);
-                }
+				if (info != null) {
+					info.addInfo(rs.getString("forum_name"), rs.getInt("forum_id"), rs.getInt("total"));
+				}
+			}
 
-                // TODO object info can be null at this line and NPE possible
-                info.addInfo(rs.getString("forum_name"), rs.getInt("forum_id"), rs.getInt("total"));
-            }
+			if (info != null) {
+				l.add(info);
+			}
 
-            if (info != null) {
-                l.add(info);
-            }
-
-            return l;
-        }
-        catch (SQLException e) {
-            throw new DatabaseException(e);
-        }
-        finally {
+			return l;
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
             DbUtils.close(rs, s);
         }
     }

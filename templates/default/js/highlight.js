@@ -10,7 +10,7 @@ function doHighlight(bodyText, searchTerm, highlightStartTag, highlightEndTag)
 {
   // the highlightStartTag and highlightEndTag parameters are optional
   if ((!highlightStartTag) || (!highlightEndTag)) {
-    highlightStartTag = "<font style='color:blue; background-color:yellow;'>";
+    highlightStartTag = "<font style='background-color:#FFFABF;'>";
     highlightEndTag = "</font>";
   }
   

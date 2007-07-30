@@ -143,7 +143,8 @@ CREATE TABLE jforum_posts (
   PRIMARY KEY  (post_id),
   KEY (user_id),
   KEY (topic_id),
-  KEY (forum_id)
+  KEY (forum_id),
+  INDEX (need_moderate)
 ) TYPE=InnoDB;
 
 --
