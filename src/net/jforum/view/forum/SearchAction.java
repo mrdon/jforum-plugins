@@ -54,6 +54,7 @@ import net.jforum.search.ContentSearchOperation;
 import net.jforum.search.NewMessagesSearchOperation;
 import net.jforum.search.SearchArgs;
 import net.jforum.search.SearchOperation;
+import net.jforum.search.SearchResult;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
@@ -64,7 +65,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.53 2007/07/30 03:31:18 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.54 2007/07/30 14:06:44 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -101,7 +102,7 @@ public class SearchAction extends Command
 		int start = args.startFrom();
 		int recordsPerPage = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
 		
-		operation.performSearch(args);
+		SearchResult searchResult = operation.performSearch(args);
 		operation.prepareForDisplay();
 		
 		this.setTemplateName(operation.viewTemplate());
@@ -114,7 +115,7 @@ public class SearchAction extends Command
 		this.context.put("openModeration", "1".equals(this.request.getParameter("openModeration")));
 		this.context.put("postsPerPage", new Integer(SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE)));
 		
-		ViewCommon.contextToPagination(start, operation.totalRecords(), recordsPerPage);
+		ViewCommon.contextToPagination(start, searchResult.numberOfHits(), recordsPerPage);
 		TopicsCommon.topicListingBase();
 	}
 	
@@ -131,6 +132,7 @@ public class SearchAction extends Command
 		args.setOrderBy(this.request.getParameter("sort_by"));
 		args.setOrderDir(this.request.getParameter("sort_dir"));
 		args.startFetchingAtRecord(ViewCommon.getStartPage());
+		args.setMatchType(this.request.getParameter("match_type"));
 		
 		if (this.request.getObjectParameter("from_date") != null
 			&& this.request.getObjectParameter("to_date") != null) {
@@ -138,7 +140,7 @@ public class SearchAction extends Command
 				(Date)this.request.getObjectParameter("to_date"));		    
 		}
 
-		if ("all_terms".equals(this.request.getParameter("match_type"))) {
+		if ("all_terms".equals(args.getMatchType())) {
 			args.matchAllKeywords();
 		}
 		

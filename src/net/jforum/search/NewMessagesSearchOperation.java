@@ -52,15 +52,19 @@ import net.jforum.view.forum.common.TopicsCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: NewMessagesSearchOperation.java,v 1.4 2007/07/30 03:10:32 rafaelsteil Exp $
+ * @version $Id: NewMessagesSearchOperation.java,v 1.5 2007/07/30 14:06:44 rafaelsteil Exp $
  */
 public class NewMessagesSearchOperation extends SearchOperation
 {
 	private List results = new ArrayList();
 	
-	public void performSearch(SearchArgs args)
+	public SearchResult performSearch(SearchArgs args)
 	{
-		this.results = SearchFacade.newMessages(args).records();
+		SearchResult searchResult = SearchFacade.newMessages(args);
+		
+		this.results = searchResult.records();
+		
+		return searchResult;
 	}
 
 	public void prepareForDisplay()

@@ -9,15 +9,14 @@
 	</#if>
 	
 	<#assign baseUrl = "openModeration="+ open/>
-	
-	<#if (forum?default("")?length > 0)><#assign baseUrl = baseUrl +"&amp;search_forum="+ forum/></#if>
-	<#if (kw?default("")?length > 0)><#assign baseUrl = baseUrl +"&amp;search_keywords="+ kw/></#if>
-	<#if (author?default("")?length > 0)><#assign baseUrl = baseUrl +"&amp;search_author="+ author/></#if>
-	<#if (matchType?default("")?length > 0)><#assign baseUrl = baseUrl +"&amp;match_type="+ terms/></#if>
-	<#if (orderBy?default("")?length > 0)><#assign baseUrl = baseUrl +"&amp;sort_dir="+ orderBy/></#if>
-	<#if (orderField?default("")?length > 0)><#assign baseUrl = baseUrl +"&amp;sort_by="+ orderField/></#if>
-	<#if (postTime?default("")?length > 0)><#assign baseUrl = baseUrl +"&amp;post_time="+ postTime/></#if>
-	
+
+	<#if (searchArgs.keywords?size > 0)><#assign baseUrl = baseUrl +"&amp;search_keywords="+ searchArgs.rawKeywords()/></#if>
+	<#if (searchArgs.forumId > 0)><#assign baseUrl = baseUrl +"&amp;search_forum="+ searchArgs.forumId/></#if>
+	<#if (searchArgs.author > 0)><#assign baseUrl = baseUrl +"&amp;search_author="+ searchArgs.author/></#if>
+	<#if (searchArgs.matchType?default("")?length > 0)><#assign baseUrl = baseUrl +"&amp;match_type="+ searchArgs.matchType/></#if>
+	<#if (searchArgs.orderDir?default("")?length > 0)><#assign baseUrl = baseUrl +"&amp;sort_dir="+ searchArgs.orderDir/></#if>
+	<#if (searchArgs.orderBy?default("")?length > 0)><#assign baseUrl = baseUrl +"&amp;sort_by="+ searchArgs.orderBy/></#if>
+
 	<#return baseUrl/>
 </#function>
 

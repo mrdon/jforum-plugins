@@ -49,7 +49,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchArgs.java,v 1.3 2007/07/30 02:59:42 rafaelsteil Exp $
+ * @version $Id: SearchArgs.java,v 1.4 2007/07/30 14:06:44 rafaelsteil Exp $
  */
 public class SearchArgs 
 {
@@ -62,6 +62,17 @@ public class SearchArgs
 	private int initialRecord;
 	private Date fromDate;
 	private Date toDate;
+	private String matchType;
+	
+	public void setMatchType(String matchType)
+	{
+		this.matchType = matchType;
+	}
+	
+	public String getMatchType()
+	{
+		return this.matchType;
+	}
 	
 	public void setDateRange(Date fromDate, Date toDate)
 	{
@@ -131,6 +142,11 @@ public class SearchArgs
 		}
 
 		return this.keywords.trim().split(" ");
+	}
+	
+	public String rawKeywords()
+	{
+		return this.keywords;
 	}
 	
 	public boolean shouldMatchAllKeywords()

@@ -51,15 +51,19 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: ContentSearchOperation.java,v 1.4 2007/07/30 03:10:32 rafaelsteil Exp $
+ * @version $Id: ContentSearchOperation.java,v 1.5 2007/07/30 14:06:44 rafaelsteil Exp $
  */
 public class ContentSearchOperation extends SearchOperation
 {
 private List results = new ArrayList();
 	
-	public void performSearch(SearchArgs args)
+	public SearchResult performSearch(SearchArgs args)
 	{
-		this.results = SearchFacade.search(args).records();
+		SearchResult searchResult = SearchFacade.search(args);
+		
+		this.results = searchResult.records();
+		
+		return searchResult;
 	}
 	public void prepareForDisplay()
 	{

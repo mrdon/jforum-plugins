@@ -62,7 +62,7 @@ import org.apache.lucene.search.highlight.Scorer;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneContentCollector.java,v 1.7 2007/07/30 03:31:18 rafaelsteil Exp $
+ * @version $Id: LuceneContentCollector.java,v 1.8 2007/07/30 14:06:44 rafaelsteil Exp $
  */
 public class LuceneContentCollector implements LuceneResultCollector
 {
@@ -81,8 +81,10 @@ public class LuceneContentCollector implements LuceneResultCollector
 		try {
 			int[] postIds = new int[Math.min(args.fetchCount(), hits.length())];
 			
-			for (int i = args.startFrom(); i < args.startFrom() + args.fetchCount() && i < postIds.length; i++) {
-				Document doc = hits.doc(i);
+			for (int docIndex = args.startFrom(), i = 0; 
+				docIndex < args.startFrom() + args.fetchCount() && docIndex < hits.length(); 
+				docIndex++, i++) {
+				Document doc = hits.doc(docIndex);
 				postIds[i] = Integer.parseInt(doc.get(SearchFields.Keyword.POST_ID));
 			}
 			
