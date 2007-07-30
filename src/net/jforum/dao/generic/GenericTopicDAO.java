@@ -72,7 +72,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTopicDAO.java,v 1.23 2007/07/28 02:37:32 rafaelsteil Exp $
+ * @version $Id: GenericTopicDAO.java,v 1.24 2007/07/30 14:58:44 rafaelsteil Exp $
  */
 public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 {
@@ -1085,45 +1085,34 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 	public Map topicPosters(int topicId)
 	{
 		Map m = new HashMap();
+		
 		PreparedStatement p = null;
 		ResultSet rs = null;
 
 		try {
 			StringBuffer sql = new StringBuffer(SystemGlobals.getSql("TopicModel.topicPosters"));
 
-			if (SystemGlobals.getBoolValue(ConfigKeys.DATABASE_SUPPORT_SUBQUERIES)) {
-				int index = sql.indexOf(":ids:");
-				sql.replace(index, index + 5, SystemGlobals.getSql("TopicModel.distinctPosters"));
+			p = JForumExecutionContext.getConnection().prepareStatement(
+				SystemGlobals.getSql("TopicModel.distinctPosters"));
+			p.setInt(1, topicId);
 
-				p = JForumExecutionContext.getConnection().prepareStatement(sql.toString());
-				p.setInt(1, topicId);
-			}
-			else {
-				p = JForumExecutionContext.getConnection().prepareStatement(
-						SystemGlobals.getSql("TopicModel.distinctPosters"));
-				p.setInt(1, topicId);
+			rs = p.executeQuery();
 
-				rs = p.executeQuery();
+			StringBuffer sb = new StringBuffer();
 
-				StringBuffer sb = new StringBuffer();
-
-				while (rs.next()) {
-					sb.append(rs.getInt("user_id")).append(',');
-				}
-
-				rs.close();
-				rs = null;
-				p.close();
-				p = null;
-
-				int index = sql.indexOf(":ids:");
-				if (index > -1) {
-					sql.replace(index, index + 5, sb.substring(0, sb.length() - 1));
-				}
-
-				p = JForumExecutionContext.getConnection().prepareStatement(sql.toString());
+			while (rs.next()) {
+				sb.append(rs.getInt("user_id")).append(',');
 			}
 
+			rs.close();
+			p.close();
+
+			int index = sql.indexOf(":ids:");
+			if (index > -1) {
+				sql.replace(index, index + 5, sb.substring(0, sb.length() - 1));
+			}
+
+			p = JForumExecutionContext.getConnection().prepareStatement(sql.toString());
 			rs = p.executeQuery();
 
 			while (rs.next()) {
@@ -1150,6 +1139,7 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 
 				m.put(new Integer(u.getId()), u);
 			}
+			
 			return m;
 		}
 		catch (SQLException e) {

@@ -104,7 +104,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.177 2007/07/27 13:55:48 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.178 2007/07/30 14:58:45 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -119,10 +119,10 @@ public class PostAction extends Command
 
 	public void list()
 	{
-		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
+		PostDAO postDao = DataAccessDriver.getInstance().newPostDAO();
 		PollDAO pollDao = DataAccessDriver.getInstance().newPollDAO();
 
-		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
+		TopicDAO topicDao = DataAccessDriver.getInstance().newTopicDAO();
 
 		UserSession us = SessionFacade.getUserSession();
 		int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
@@ -133,7 +133,7 @@ public class PostAction extends Command
 		Topic topic = TopicRepository.getTopic(new Topic(topicId));
 		
 		if (topic == null) {
-			topic = tm.selectById(topicId);
+			topic = topicDao.selectById(topicId);
 		}
 
 		// The topic exists?
@@ -165,7 +165,7 @@ public class PostAction extends Command
 			canEdit = true;
 		}
 
-		List helperList = PostCommon.topicPosts(pm, canEdit, us.getUserId(), topic.getId(), start, count);
+		List helperList = PostCommon.topicPosts(postDao, canEdit, us.getUserId(), topic.getId(), start, count);
 		
 		// Ugly assumption:
 		// Is moderation pending for the topic?
@@ -176,7 +176,7 @@ public class PostAction extends Command
 
 		// Set the topic status as read
 		if (logged) {
-			tm.updateReadStatus(topic.getId(), us.getUserId(), true);
+			topicDao.updateReadStatus(topic.getId(), us.getUserId(), true);
 		}
 
 		boolean canVoteOnPoll = logged && SecurityRepository.canAccess(SecurityConstants.PERM_VOTE);
@@ -191,7 +191,7 @@ public class PostAction extends Command
 			}
 		}
 		
-		tm.incrementTotalViews(topic.getId());
+		topicDao.incrementTotalViews(topic.getId());
 		topic.setTotalViews(topic.getTotalViews() + 1);
 
 		if (us.getUserId() != anonymousUser) {
@@ -228,7 +228,7 @@ public class PostAction extends Command
 		this.context.put("karmaMax", new Integer(SystemGlobals.getValue(ConfigKeys.KARMA_MAX_POINTS)));
 		this.context.put("avatarAllowExternalUrl", SystemGlobals.getBoolValue(ConfigKeys.AVATAR_ALLOW_EXTERNAL_URL));
 		
-		Map topicPosters = tm.topicPosters(topic.getId());
+		Map topicPosters = topicDao.topicPosters(topic.getId());
 		
 		for (Iterator iter = topicPosters.values().iterator(); iter.hasNext(); ) {
 			ViewCommon.prepareUserSignature((User)iter.next());
@@ -237,7 +237,7 @@ public class PostAction extends Command
 		this.context.put("users", topicPosters);
 		this.context.put("anonymousPosts", pc.canAccess(SecurityConstants.PERM_ANONYMOUS_POST, 
 				Integer.toString(topic.getForumId())));
-		this.context.put("watching", tm.isUserSubscribed(topicId, SessionFacade.getUserSession().getUserId()));
+		this.context.put("watching", topicDao.isUserSubscribed(topicId, SessionFacade.getUserSession().getUserId()));
 		this.context.put("pageTitle", topic.getTitle());
 		this.context.put("isAdmin", pc.canAccess(SecurityConstants.PERM_ADMINISTRATION));
 		this.context.put("readonly", !pc.canAccess(SecurityConstants.PERM_READ_ONLY_FORUMS, 
