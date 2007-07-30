@@ -43,6 +43,7 @@
  */
 package net.jforum.search;
 
+import java.io.File;
 import java.util.List;
 
 import net.jforum.entities.Post;
@@ -54,7 +55,7 @@ import org.apache.lucene.analysis.Analyzer;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneManager.java,v 1.6 2007/07/28 20:07:17 rafaelsteil Exp $
+ * @version $Id: LuceneManager.java,v 1.7 2007/07/30 01:16:15 rafaelsteil Exp $
  */
 public class LuceneManager implements SearchManager
 {
@@ -68,6 +69,8 @@ public class LuceneManager implements SearchManager
 	public void init()
 	{
 		try {
+			this.removeLockFile();
+			
 			Analyzer analyzer = (Analyzer)Class.forName(SystemGlobals.getValue(
 				ConfigKeys.LUCENE_ANALYZER)).newInstance();
 			
@@ -87,6 +90,16 @@ public class LuceneManager implements SearchManager
 		
 		catch (Exception e) {
 			throw new ForumException(e);
+		}
+	}
+	
+	private void removeLockFile()
+	{
+		File lockFile = new File(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH) 
+			+ "/write.lock");
+		
+		if (lockFile.exists()) {
+			lockFile.delete();
 		}
 	}
 	

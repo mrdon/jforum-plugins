@@ -29,7 +29,7 @@
 	</category>
 
 	<category name="net.jforum">
-		<priority value="debug" />
+		<priority value="info" />
 		<appender-ref ref="jforum.log" />
 		<appender-ref ref="jforum-stdout" />
 	</category>

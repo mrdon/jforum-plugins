@@ -52,6 +52,7 @@ import org.apache.lucene.index.IndexReader;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
+import net.jforum.JForumExecutionContext;
 import net.jforum.context.RequestContext;
 import net.jforum.context.ResponseContext;
 import net.jforum.dao.DataAccessDriver;
@@ -67,7 +68,7 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneStatsAction.java,v 1.8 2007/07/28 13:18:14 rafaelsteil Exp $
+ * @version $Id: LuceneStatsAction.java,v 1.9 2007/07/30 01:16:13 rafaelsteil Exp $
  */
 public class LuceneStatsAction extends AdminCommand
 {
@@ -88,22 +89,38 @@ public class LuceneStatsAction extends AdminCommand
 	
 	public void reconstructIndexFromScratch()
 	{
-		LuceneDAO dao = DataAccessDriver.getInstance().newLuceneDAO();
-		int start = 0;
-		int howMany = 20;
-		boolean hasMorePosts = true;
-		
-		while (hasMorePosts) {
-			List l = dao.getPostsToIndex(start, howMany);
-			
-			for (Iterator iter = l.iterator(); iter.hasNext(); ) {
-				Post p = (Post)iter.next();
-				SearchFacade.create(p);
+		Runnable indexingJob = new Runnable() {		
+			public void run()
+			{
+				LuceneDAO dao = DataAccessDriver.getInstance().newLuceneDAO();
+				int start = 0;
+				int howMany = 20;
+				boolean hasMorePosts = true;
+				
+				while (hasMorePosts) {
+					try {
+						JForumExecutionContext ex = JForumExecutionContext.get();
+						JForumExecutionContext.set(ex);
+						
+						List l = dao.getPostsToIndex(start, howMany);
+						
+						for (Iterator iter = l.iterator(); iter.hasNext(); ) {
+							Post p = (Post)iter.next();
+							SearchFacade.create(p);
+						}
+						
+						start += howMany;
+						hasMorePosts = l.size() > 0;
+					}
+					finally {
+						JForumExecutionContext.finish();
+					}
+				}
 			}
-			
-			start += howMany;
-			hasMorePosts = l.size() > 0;
-		}
+		};
+		
+		Thread thread = new Thread(indexingJob);
+		thread.start();
 		
 		this.reindexMain();
 	}

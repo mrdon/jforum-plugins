@@ -61,7 +61,7 @@ import org.apache.lucene.index.Term;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneIndexer.java,v 1.3 2007/07/27 18:39:48 rafaelsteil Exp $
+ * @version $Id: LuceneIndexer.java,v 1.4 2007/07/30 01:16:15 rafaelsteil Exp $
  */
 public class LuceneIndexer
 {
@@ -138,8 +138,8 @@ public class LuceneIndexer
 	private void optimize(IndexWriter writer) throws Exception
 	{
 		if (writer.docCount() % 100 == 0) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Optimizing indexes. Current number of documents is " + writer.docCount());
+			if (logger.isInfoEnabled()) {
+				logger.info("Optimizing indexes. Current number of documents is " + writer.docCount());
 			}
 			
 			writer.optimize();
