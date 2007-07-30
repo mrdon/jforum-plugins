@@ -45,10 +45,8 @@ package net.jforum.view.forum;
 import java.util.Date;
 
 import net.jforum.Command;
-import net.jforum.JForumExecutionContext;
 import net.jforum.context.RequestContext;
 import net.jforum.context.ResponseContext;
-import net.jforum.exceptions.ForumException;
 import net.jforum.repository.ForumRepository;
 import net.jforum.search.ContentSearchOperation;
 import net.jforum.search.NewMessagesSearchOperation;
@@ -65,7 +63,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.55 2007/07/30 14:25:39 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.56 2007/07/30 15:39:26 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -149,94 +147,6 @@ public class SearchAction extends Command
 		}
 		
 		return args;
-	}
-	
-	public void doModeration()
-	{
-		new ModerationHelper().doModeration(this.makeRedirect());
-		
-		if (JForumExecutionContext.getRequest().getParameter("topicMove") != null) {
-			this.setTemplateName(TemplateKeys.MODERATION_MOVE_TOPICS);
-		}
-	}
-	
-	public void moveTopic()
-	{
-		new ModerationHelper().moveTopicsSave(this.makeRedirect());
-	}
-	
-	public void moderationDone()
-	{
-		this.setTemplateName(new ModerationHelper().moderationDone(this.makeRedirect()));
-	}
-	
-	private String makeRedirect()
-	{
-		throw new ForumException("Fix this");
-		
-		/*
-		String persistData = this.request.getParameter("persistData");
-		if (persistData == null) {
-			this.getSearchFields();
-		}
-		else {
-			String[] p = persistData.split("&");
-
-			for (int i = 0; i < p.length; i++) {
-				String[] v = p[i].split("=");
-
-				String name = (String)fieldsMap.get(v[0]);
-				if (name != null) {
-					Field field;
-					
-					try {
-						field = this.getClass().getDeclaredField(name);
-						
-						if (field != null && v[1] != null && !v[1].equals("")) {
-							field.set(this, v[1]);
-						}
-					}
-					catch (Exception e) {
-						throw new ForumException(e);
-					}
-				}
-			}
-		}
-
-		StringBuffer path = new StringBuffer(512)
-			.append(this.request.getContextPath())
-			.append("/jforum")
-			.append(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION))
-			.append("?module=search&action=search&clean=1");
-
-		if (this.forum != null) { 
-			path.append("&search_forum=").append(this.forum); 
-		}
-
-		if (this.searchTerms != null) { 
-			path.append("&search_terms=").append(this.searchTerms); 
-		}
-
-		if (this.sortDir != null) {
-			path.append("&sort_dir=").append(this.sortDir);
-		}
-
-		if (this.sortBy != null) {
-			path.append("&sort_by=").append(this.sortBy);
-		}
-
-		if (this.keywords != null) {
-			path.append("&search_keywords=").append(this.keywords);
-		}
-
-		if (this.fromDate != null) {
-			path.append("&post_time=").append(this.fromDate);
-		}
-
-		path.append("&start=").append(ViewCommon.getStartPage());
-
-		return path.toString();
-		*/
 	}
 	
 	/** 
