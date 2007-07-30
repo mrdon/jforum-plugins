@@ -78,7 +78,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.67 2007/07/30 02:16:38 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.68 2007/07/30 03:10:32 rafaelsteil Exp $
  */
 public class ForumAction extends Command
 {
@@ -269,7 +269,7 @@ public class ForumAction extends Command
 			args.setForumId(Integer.parseInt(forumId));
 		}
 
-		List allTopics = SearchFacade.search(args);
+		List allTopics = SearchFacade.search(args).records();
 		
 		for (Iterator iter = allTopics.iterator(); iter.hasNext();) {
 			Post post = (Post)iter.next();

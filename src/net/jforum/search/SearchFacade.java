@@ -43,7 +43,6 @@
 package net.jforum.search;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import net.jforum.entities.Post;
 import net.jforum.exceptions.SearchInstantiationException;
@@ -54,7 +53,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchFacade.java,v 1.4 2007/07/28 20:07:17 rafaelsteil Exp $
+ * @version $Id: SearchFacade.java,v 1.5 2007/07/30 03:10:33 rafaelsteil Exp $
  */
 public class SearchFacade
 {
@@ -100,26 +99,18 @@ public class SearchFacade
 		}
 	}
 	
-	public static List search(SearchArgs args)
+	public static SearchResult search(SearchArgs args)
 	{
-		List l = new ArrayList();
-		
-		if (isSearchEnabled()) {
-			l = searchManager.search(args);
-		}
-		
-		return l;
+		return isSearchEnabled()
+			? searchManager.search(args)
+			: new SearchResult(new ArrayList(), 0);
 	}
 	
-	public static List newMessages(SearchArgs args)
+	public static SearchResult newMessages(SearchArgs args)
 	{
-		List l = new ArrayList();
-		
-		if (isSearchEnabled()) {
-			l = searchManager.newMessages(args);
-		}
-		
-		return l;
+		return isSearchEnabled()
+			? searchManager.newMessages(args)
+			: new SearchResult(new ArrayList(), 0);
 	}
 
 	private static boolean isSearchEnabled()

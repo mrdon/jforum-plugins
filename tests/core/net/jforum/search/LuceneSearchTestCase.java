@@ -59,7 +59,7 @@ import org.apache.lucene.search.Query;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchTestCase.java,v 1.27 2007/07/30 02:59:42 rafaelsteil Exp $
+ * @version $Id: LuceneSearchTestCase.java,v 1.28 2007/07/30 03:10:33 rafaelsteil Exp $
  */
 public class LuceneSearchTestCase extends TestCase
 {
@@ -85,7 +85,7 @@ public class LuceneSearchTestCase extends TestCase
 		SearchArgs args = new SearchArgs();
 		args.setDateRange(new GregorianCalendar(2000, 6, 27, 8, 10, 15).getTime(), new Date());
 
-		List results = this.search.newMessages(args);
+		List results = this.search.newMessages(args).records();
 		
 		Assert.assertEquals(2, results.size());
 	}
@@ -120,7 +120,7 @@ public class LuceneSearchTestCase extends TestCase
 		args.setForumId(1);
 		args.setKeywords("open lucene xpto authoritative");
 		
-		List results = this.search.search(args);
+		List results = this.search.search(args).records();
 		
 		Assert.assertEquals(3, results.size());
 	}
@@ -137,7 +137,7 @@ public class LuceneSearchTestCase extends TestCase
 		SearchArgs args = new SearchArgs();
 		args.setKeywords("open lucene");
 		
-		List results = this.search.search(args);
+		List results = this.search.search(args).records();
 		
 		Assert.assertEquals(3, results.size());
 	}
@@ -181,7 +181,7 @@ public class LuceneSearchTestCase extends TestCase
 		args.matchAllKeywords();
 		args.setKeywords("magic regular");
 		
-		List results = this.search.search(args);
+		List results = this.search.search(args).records();
 		
 		Assert.assertEquals(1, results.size());
 	}
@@ -207,7 +207,7 @@ public class LuceneSearchTestCase extends TestCase
 		SearchArgs args = new SearchArgs();
 		args.setKeywords("java");
 		
-		List results = this.search.search(args);
+		List results = this.search.search(args).records();
 		
 		Assert.assertEquals(1, results.size());
 	}
@@ -225,7 +225,7 @@ public class LuceneSearchTestCase extends TestCase
 		SearchArgs args = new SearchArgs();
 		args.setForumId(1);
 		
-		List results = this.search.search(args);
+		List results = this.search.search(args).records();
 		
 		Assert.assertEquals(1, results.size());
 	}

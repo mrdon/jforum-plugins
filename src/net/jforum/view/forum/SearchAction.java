@@ -64,7 +64,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.51 2007/07/30 02:59:41 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.52 2007/07/30 03:10:32 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -102,14 +102,7 @@ public class SearchAction extends Command
 		int recordsPerPage = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
 		
 		operation.performSearch(args);
-		
-		int totalRecords = operation.totalRecords();
-		
-		int sublistLimit = recordsPerPage + start > totalRecords 
-			? totalRecords 
-			: recordsPerPage + start;
-		
-		operation.prepareForDisplay(start, sublistLimit);
+		operation.prepareForDisplay();
 		
 		this.setTemplateName(operation.viewTemplate());
 		
@@ -121,7 +114,7 @@ public class SearchAction extends Command
 		this.context.put("openModeration", "1".equals(this.request.getParameter("openModeration")));
 		this.context.put("postsPerPage", new Integer(SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE)));
 		
-		ViewCommon.contextToPagination(start, totalRecords, recordsPerPage);
+		ViewCommon.contextToPagination(start, operation.totalRecords(), recordsPerPage);
 		TopicsCommon.topicListingBase();
 	}
 	

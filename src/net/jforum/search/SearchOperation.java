@@ -54,13 +54,13 @@ import net.jforum.repository.ForumRepository;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchOperation.java,v 1.3 2007/07/28 20:07:17 rafaelsteil Exp $
+ * @version $Id: SearchOperation.java,v 1.4 2007/07/30 03:10:33 rafaelsteil Exp $
  */
 public abstract class SearchOperation
 {
 	public abstract void performSearch(SearchArgs args);
 	public abstract int totalRecords();
-	public abstract void prepareForDisplay(int from, int count);
+	public abstract void prepareForDisplay();
 	public abstract List results();
 	public abstract String viewTemplate();
 	protected abstract int extractForumId(Object value);

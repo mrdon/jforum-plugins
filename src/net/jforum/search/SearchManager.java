@@ -42,13 +42,11 @@
  */
 package net.jforum.search;
 
-import java.util.List;
-
 import net.jforum.entities.Post;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchManager.java,v 1.4 2007/07/28 20:07:17 rafaelsteil Exp $
+ * @version $Id: SearchManager.java,v 1.5 2007/07/30 03:10:33 rafaelsteil Exp $
  */
 public interface SearchManager
 {
@@ -58,7 +56,7 @@ public interface SearchManager
 	
 	public void update(Post post);
 	
-	public List search(SearchArgs args);
+	public SearchResult search(SearchArgs args);
 	
-	public List newMessages(SearchArgs args);
+	public SearchResult newMessages(SearchArgs args);
 }

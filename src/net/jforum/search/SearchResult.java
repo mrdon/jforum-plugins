@@ -36,55 +36,37 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on 25/07/2007 19:32:52
+ * Created on 29/07/2007 23:57:58
  * 
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.search;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import net.jforum.entities.Topic;
-import net.jforum.util.preferences.TemplateKeys;
-import net.jforum.view.forum.common.TopicsCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: NewMessagesSearchOperation.java,v 1.4 2007/07/30 03:10:32 rafaelsteil Exp $
+ * @version $Id: SearchResult.java,v 1.5 2007/07/30 03:10:32 rafaelsteil Exp $
  */
-public class NewMessagesSearchOperation extends SearchOperation
+public class SearchResult
 {
-	private List results = new ArrayList();
+	private List records;
+	private int numberOfHits;
 	
-	public void performSearch(SearchArgs args)
+	public SearchResult(List records, int numberOfHits)
 	{
-		this.results = SearchFacade.newMessages(args).records();
-	}
-
-	public void prepareForDisplay()
-	{
-		this.results = TopicsCommon.prepareTopics(this.results);
-	}
-
-	public List results()
-	{
-		return this.results;
-	}
-
-	public int totalRecords()
-	{
-		return this.results.size();
+		this.records = records;
+		this.numberOfHits = numberOfHits;
 	}
 	
-	public String viewTemplate()
+	public List records()
 	{
-		return TemplateKeys.SEARCH_NEW_MESSAGES;
+		return this.records;
 	}
 	
-	public int extractForumId(Object value)
+	public int numberOfHits()
 	{
-		return ((Topic)value).getForumId();
+		return this.numberOfHits;
 	}
 }

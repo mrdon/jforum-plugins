@@ -45,7 +45,6 @@ package net.jforum.search;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import net.jforum.exceptions.SearchException;
 
@@ -59,7 +58,7 @@ import org.apache.lucene.search.Sort;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.28 2007/07/30 02:59:42 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.29 2007/07/30 03:10:33 rafaelsteil Exp $
  */
 public class LuceneSearch implements NewDocumentAdded
 {
@@ -98,19 +97,19 @@ public class LuceneSearch implements NewDocumentAdded
 	/**
 	 * @see net.jforum.dao.SearchDAO#search(net.jforum.search.SearchArgs)
 	 */
-	public List search(SearchArgs args)
+	public SearchResult search(SearchArgs args)
 	{
 		return this.performSearch(args, this.contentCollector);
 	}
 	
-	public List newMessages(SearchArgs args)
+	public SearchResult newMessages(SearchArgs args)
 	{
 		return this.performSearch(args, this.newMessagesCollector);
 	}
 
-	private List performSearch(SearchArgs args, LuceneResultCollector resultCollector)
+	private SearchResult performSearch(SearchArgs args, LuceneResultCollector resultCollector)
 	{
-		List l = new ArrayList();
+		SearchResult result;
 		
 		try {
 			StringBuffer criteria = new StringBuffer(256);
@@ -128,14 +127,17 @@ public class LuceneSearch implements NewDocumentAdded
 			Hits hits = this.search.search(query, Sort.RELEVANCE);
 
 			if (hits != null && hits.length() > 0) {
-				l = resultCollector.collect(args, hits, query);
+				result = new SearchResult(resultCollector.collect(args, hits, query), hits.length());
+			}
+			else {
+				result = new SearchResult(new ArrayList(), 0);
 			}
 		}
 		catch (Exception e) {
 			throw new SearchException(e);
 		}
 		
-		return l;
+		return result;
 	}
 	
 	private void filterByDateRange(SearchArgs args, StringBuffer criteria)
