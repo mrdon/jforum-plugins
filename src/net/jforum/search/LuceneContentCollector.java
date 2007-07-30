@@ -62,7 +62,7 @@ import org.apache.lucene.search.highlight.Scorer;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneContentCollector.java,v 1.6 2007/07/30 02:59:42 rafaelsteil Exp $
+ * @version $Id: LuceneContentCollector.java,v 1.7 2007/07/30 03:31:18 rafaelsteil Exp $
  */
 public class LuceneContentCollector implements LuceneResultCollector
 {
@@ -105,22 +105,9 @@ public class LuceneContentCollector implements LuceneResultCollector
 			
 			TokenStream tokenStream = this.settings.analyzer().tokenStream(
 				SearchFields.Indexed.CONTENTS, new StringReader(post.getText()));
-			
-			String[] fragments = highlighter.getBestFragments(tokenStream, post.getText(), 
-				this.settings.numberOfFragments());
-			StringBuffer contents = new StringBuffer(256);
-			
-			for (int i = 0; i < fragments.length; i++) {
-				contents.append(fragments[i]);
-			}
-			
-			if (contents.length() == 0) {
-				contents.append(post.getText().length() >= 128
-					? post.getText().substring(0, 128)
-					: post.getText());
-			}
-			
-			post.setText(contents.toString());
+
+			String fragment = highlighter.getBestFragment(tokenStream, post.getText());
+			post.setText(fragment != null ? fragment : post.getText());
 		}
 		
 		return posts;

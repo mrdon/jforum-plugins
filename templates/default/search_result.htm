@@ -155,7 +155,11 @@
 
 <script type="text/javascript">
 try {
-	highlightSearchTerms("${kw?default("")}", false, true);
+	var kw = "${kw?default("")}";
+
+	if (kw.length > 0) {
+		highlightSearchTerms(kw, false, true);
+	}
 } catch (e) {}
 </script>
 
