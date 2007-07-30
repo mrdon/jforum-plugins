@@ -64,7 +64,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.50 2007/07/30 02:16:38 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.51 2007/07/30 02:59:41 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -98,7 +98,7 @@ public class SearchAction extends Command
 	{
 		SearchArgs args = this.buildSearchArgs();
 		
-		int start = ViewCommon.getStartPage();
+		int start = args.startFrom();
 		int recordsPerPage = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
 		
 		operation.performSearch(args);
@@ -133,6 +133,7 @@ public class SearchAction extends Command
 		args.setAuthor(this.request.getIntParameter("search_author"));
 		args.setOrderBy(this.request.getParameter("sort_by"));
 		args.setOrderDir(this.request.getParameter("sort_dir"));
+		args.startFetchingAtRecord(ViewCommon.getStartPage());
 		
 		if (this.request.getObjectParameter("from_date") != null
 			&& this.request.getObjectParameter("to_date") != null) {

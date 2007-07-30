@@ -50,9 +50,9 @@ import org.apache.lucene.search.Query;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneResultCollector.java,v 1.1 2007/07/27 18:19:33 rafaelsteil Exp $
+ * @version $Id: LuceneResultCollector.java,v 1.2 2007/07/30 02:59:42 rafaelsteil Exp $
  */
 public interface LuceneResultCollector
 {
-	public List collect(Hits hits, Query query);
+	public List collect(SearchArgs args, Hits hits, Query query);
 }

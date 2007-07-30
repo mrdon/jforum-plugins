@@ -49,7 +49,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchArgs.java,v 1.2 2007/07/30 02:16:39 rafaelsteil Exp $
+ * @version $Id: SearchArgs.java,v 1.3 2007/07/30 02:59:42 rafaelsteil Exp $
  */
 public class SearchArgs 
 {
@@ -59,7 +59,7 @@ public class SearchArgs
 	private String orderBy;
 	private boolean matchAllKeywords;
 	private int forumId;
-	private int startFrom;
+	private int initialRecord;
 	private Date fromDate;
 	private Date toDate;
 	
@@ -84,14 +84,14 @@ public class SearchArgs
 		return SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
 	}
 	
-	public void startFetchingAtRecord(int startFrom)
+	public void startFetchingAtRecord(int initialRecord)
 	{
-		this.startFrom = startFrom;
+		this.initialRecord = initialRecord;
 	}
 	
 	public int startFrom()
 	{
-		return this.startFrom;
+		return this.initialRecord;
 	}
 	
 	public void setKeywords(String keywords)

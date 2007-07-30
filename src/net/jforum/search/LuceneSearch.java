@@ -59,7 +59,7 @@ import org.apache.lucene.search.Sort;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.27 2007/07/30 02:16:39 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.28 2007/07/30 02:59:42 rafaelsteil Exp $
  */
 public class LuceneSearch implements NewDocumentAdded
 {
@@ -128,7 +128,7 @@ public class LuceneSearch implements NewDocumentAdded
 			Hits hits = this.search.search(query, Sort.RELEVANCE);
 
 			if (hits != null && hits.length() > 0) {
-				l = resultCollector.collect(hits, query);
+				l = resultCollector.collect(args, hits, query);
 			}
 		}
 		catch (Exception e) {
