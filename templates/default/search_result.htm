@@ -1,6 +1,5 @@
 <#include "header.htm"/>
 
-<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/highlight.js?${startupTime}"></script>
 <script type="text/javascript" src="${contextPath}/templates/${templateName}/js/pagination.js?${startupTime}"></script>
 
 <#import "../macros/pagination.ftl" as topicPagination>
@@ -130,15 +129,5 @@
 		</td>
 	</tr>
 </table>
-
-<script type="text/javascript">
-try {
-	var kw = "${searchArgs.rawKeywords()?default("")}";
-
-	if (kw.length > 0) {
-		highlightSearchTerms(kw, false, true);
-	}
-} catch (e) {}
-</script>
 
 <#include "bottom.htm"/>
