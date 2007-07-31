@@ -43,7 +43,6 @@
  */
 package net.jforum.search;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import net.jforum.dao.DataAccessDriver;
@@ -56,43 +55,24 @@ import org.apache.lucene.search.Query;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneNewMessagesCollector.java,v 1.7 2007/07/31 01:56:24 rafaelsteil Exp $
+ * @version $Id: LuceneNewMessagesCollector.java,v 1.8 2007/07/31 02:14:20 rafaelsteil Exp $
  */
 public class LuceneNewMessagesCollector implements LuceneResultCollector
 {
 	public List collect(SearchArgs args, Hits hits, Query query)
 	{
 		try {
-			List topicIds = new ArrayList();
+			int[] topicIds = new int[Math.min(args.fetchCount(), hits.length())];
 			
-			long start = System.currentTimeMillis();
-			int x = 0;
-			
-			for (int i = 0; i < hits.length(); i++) {
-				Document doc = hits.doc(i);
-				x = Integer.parseInt(doc.get("topic.id"));
-			}
-			
-			long end = System.currentTimeMillis();
-			
-			System.out.println("**** TOTAL: " + (end - start));
-
-			/*
-			for (int docIndex = args.startFrom(); 
+			for (int docIndex = args.startFrom(), i = 0; 
 				docIndex < args.startFrom() + args.fetchCount() && docIndex < hits.length(); 
-				docIndex++) {
-
+				docIndex++, i++) {
 				Document doc = hits.doc(docIndex);
-				Integer currentId = new Integer(doc.get(SearchFields.Keyword.TOPIC_ID));
-				
-				if (topicIds.contains(currentId)) {
-					topicIds.add(currentId);
-				}
+				topicIds[i] = Integer.parseInt(doc.get(SearchFields.Keyword.TOPIC_ID));
 			}
 			
 			TopicDAO topicDao = DataAccessDriver.getInstance().newTopicDAO();
-			return topicDao.newMessages(topicIds);*/
-			return new ArrayList();
+			return topicDao.newMessages(topicIds);
 		}
 		catch (Exception e) {
 			throw new SearchException(e.toString(), e);
