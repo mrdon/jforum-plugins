@@ -73,7 +73,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.72 2007/07/31 13:52:47 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.73 2007/07/31 15:54:07 rafaelsteil Exp $
  */
 public class ForumAction extends Command
 {
@@ -89,10 +89,10 @@ public class ForumAction extends Command
 		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
 
 		this.context.put("totalMessages", I18n.getMessage("ForumListing.totalMessagesInfo", new Object[] { new Integer(
-		        ForumRepository.getTotalMessages()) }));
+			ForumRepository.getTotalMessages()) }));
 
-		this.context.put("totalUsers", I18n.getMessage("ForumListing.registeredUsers", new Object[] { ForumRepository
-		        .totalUsers() }));
+		this.context.put("totalUsers", I18n.getMessage("ForumListing.registeredUsers", 
+			new Object[] { ForumRepository .totalUsers() }));
 		this.context.put("lastUser", ForumRepository.lastRegisteredUser());
 
 		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
@@ -100,7 +100,7 @@ public class ForumAction extends Command
 		this.context.put("now", df.format(gc.getTime()));
 
 		this.context.put("lastVisit", df.format(SessionFacade.getUserSession().getLastVisit()));
-		this.context.put("fir", new ForumRepository());
+		this.context.put("forumRepository", new ForumRepository());
 
 		// Online Users
 		this.context.put("totalOnlineUsers", new Integer(SessionFacade.size()));
@@ -137,7 +137,7 @@ public class ForumAction extends Command
 
 		this.context.put("userSessions", onlineUsersList);
 		this.context.put("usersOnline", I18n.getMessage("ForumListing.numberOfUsersOnline", new Object[] {
-		        new Integer(totalUsers), new Integer(registeredSize), new Integer(anonymousSize) }));
+			new Integer(totalUsers), new Integer(registeredSize), new Integer(anonymousSize) }));
 
 		// Most users ever online
 		MostUsersEverOnline mostUsersEverOnline = ForumRepository.getMostUsersEverOnline();
@@ -150,7 +150,7 @@ public class ForumAction extends Command
 		}
 
 		this.context.put("mostUsersEverOnline", I18n.getMessage("ForumListing.mostUsersEverOnline", new String[] {
-		        Integer.toString(mostUsersEverOnline.getTotal()), mostUsersEverOnline.getDate() }));
+			Integer.toString(mostUsersEverOnline.getTotal()), mostUsersEverOnline.getDate() }));
 	}
 
 	public void moderation()

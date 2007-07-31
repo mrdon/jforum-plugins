@@ -65,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericPostDAO.java,v 1.21 2007/07/27 13:55:48 rafaelsteil Exp $
+ * @version $Id: GenericPostDAO.java,v 1.22 2007/07/31 15:56:55 rafaelsteil Exp $
  */
 public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 {
@@ -159,7 +159,6 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 	{
 		PreparedStatement post = null;
 		PreparedStatement text = null;
-		PreparedStatement search = null;
 
 		try {
 			post = JForumExecutionContext.getConnection()
@@ -168,18 +167,13 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 			text = JForumExecutionContext.getConnection().prepareStatement(
 					SystemGlobals.getSql("PostModel.deletePostText"));
 
-			search = JForumExecutionContext.getConnection().prepareStatement(
-					SystemGlobals.getSql("PostModel.deleteWordMatch"));
-
 			for (Iterator iter = posts.iterator(); iter.hasNext();) {
 				Post p = (Post) iter.next();
 
 				post.setInt(1, p.getId());
 				text.setInt(1, p.getId());
-				search.setInt(1, p.getId());
 
 				text.executeUpdate();
-				search.executeUpdate();
 				post.executeUpdate();
 			}
 		}
@@ -189,7 +183,6 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 		finally {
 			DbUtils.close(post);
 			DbUtils.close(text);
-			DbUtils.close(search);
 		}
 	}
 

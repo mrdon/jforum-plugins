@@ -38,7 +38,7 @@
 					</tr>
 
 					<#list category.getForums() as forum>
-					<#assign lpi = fir.getLastPostInfo(forum.id)/>
+					<#assign lpi = forumRepository.getLastPostInfo(forum.id)/>
 					<tr>
 						<td class="row1" valign="middle" align="center" height="50">
 						<#if forum.unread>
@@ -53,7 +53,7 @@
 								${forum.description?default("")}
 								<#if forum.isModerated()><br />
 								${I18n.getMessage("ForumIndex.moderators")}
-								<#assign moderators = fir.getModeratorList(forum.id)/>
+								<#assign moderators = forumRepository.getModeratorList(forum.id)/>
 								<#list moderators as m>
 								  <a href="${JForumContext.encodeURL("/user/listGroup/${m.id}")}">${m.name?html}</a>
 								</#list>
