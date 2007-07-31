@@ -1,9 +1,10 @@
 <#include "header.htm"/>
+
 <#import "../macros/pagination.ftl" as pagination>
 <#import "../macros/presentation.ftl" as presentation/>
 
 <link rel="alternate" type="application/rss+xml" title="RSS" href="${JForumContext.encodeURL("/rss/forumTopics/${forum.id}")}" />
-<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/overlay.js"></script>
+<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/pagination.js?${startupTime}"></script>
 
 <#if moderator>
 	<script type="text/JavaScript" src="${JForumContext.encodeURL("/js/list/moderation")}"></script>
@@ -63,8 +64,8 @@
 					<input type="hidden" name="match_type" value="all">
 
 					<td class="nav" valign="middle" align="left" colspan="${colspan?default("")}">
-						<input type="text" onblur="if (this.value == '') this.value = 'Search this forum...';" onclick="if (this.value == 'Search this forum...') this.value = '';" value="Search this forum..." size="20" name="search_keywords" class="inputSearchForum"/>
-						<input type="submit" value="Search" class="liteoption">
+						<input type="text" onblur="if (this.value == '') this.value = '${I18n.getMessage("ForumIndex.searchThisForum")}...';" onclick="if (this.value == '${I18n.getMessage("ForumIndex.searchThisForum")}...') this.value = '';" value="${I18n.getMessage("ForumIndex.searchThisForum")}..." size="20" name="search_keywords" class="inputSearchForum"/>
+						<input type="submit" value="${I18n.getMessage("ForumBase.search")}" class="liteoption">
 					</td>
 
 					</form>
@@ -240,10 +241,11 @@
 				<tr>
 					<td class="catbottom" valign="middle"  align="right" colspan="<#if moderator && openModeration?default(false)>7<#else>6</#if>" height="28">
 						&nbsp;<@presentation.moderationButtons/>
+						<#if moderator></form></#if>
 					</td>
 				</tr>
 			</table>
-				<#if moderator></form></#if>
+				
 
 			<table cellspacing="2" cellpadding="2" width="100%" align="center" border="0">
 				<tr>

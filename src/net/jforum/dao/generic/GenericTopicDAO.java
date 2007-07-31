@@ -72,7 +72,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTopicDAO.java,v 1.24 2007/07/30 14:58:44 rafaelsteil Exp $
+ * @version $Id: GenericTopicDAO.java,v 1.25 2007/07/31 01:56:22 rafaelsteil Exp $
  */
 public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 {
@@ -783,22 +783,30 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 	}
 	
 	/**
-	 * @see net.jforum.dao.TopicDAO#newMessages(int[])
+	 * @see net.jforum.dao.TopicDAO#newMessages(List)
 	 */
-	public List newMessages(int[] topicIds)
+	public List newMessages(List topicIds)
 	{
+		if (topicIds.size() == 0) {
+			return new ArrayList();
+		}
+		
 		PreparedStatement p = null;
 		
 		try {
 			String sql = SystemGlobals.getSql("TopicModel.selectForNewMessages");
 			
 			StringBuffer sb = new StringBuffer();
+
+			int counter = 0;
 			
-			for (int i = 0; i < topicIds.length - 1; i++) {
-				sb.append(topicIds[i]).append(',');
+			for (Iterator iter = topicIds.iterator(); iter.hasNext(); counter++) {
+				sb.append(iter.next());
+				
+				if (counter + 1 < topicIds.size()) {
+					sb.append(',');
+				}
 			}
-			
-			sb.append(topicIds[topicIds.length - 1]);
 			
 			sql = sql.replaceAll(":topicIds:", sb.toString());
 			

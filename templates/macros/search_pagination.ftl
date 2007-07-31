@@ -12,69 +12,99 @@
 </#function>
 
 <#macro searchPagination>
-	<#assign baseUrl = contextPath +"/jforum" + extension + "?module=search&amp;action=search"/>
-	<#assign baseUrl = baseUrl + moderationParams()/>
-
 	<#if (totalRecords > recordsPerPage)>
-		<span class="gensmall"><b>${I18n.getMessage("goToPage")}:
+		<#assign baseUrl = contextPath +"/jforum" + extension + "?module=search&amp;action=search"/>
+		<#assign baseUrl = baseUrl + moderationParams()/>
 
-		<#assign numberOfActiveLinks = 7/>
-		<#assign numberOfSideLinks = 3/>
+		<div class="pagination">
+		<#assign link = ""/>
 
+		<#-- ------------- -->
+		<#-- Previous page -->
+		<#-- ------------- -->
 		<#if (thisPage > 1)>
 			<#assign start = (thisPage - 2) * recordsPerPage/>
-			<a href="${baseUrl}&amp;start=${start}">${I18n.getMessage("previous")}</a>&nbsp;
+			<a href="${baseUrl}&amp;start=${start}">&#9668;</a>
 		</#if>
 
-		<#if (totalPages > numberOfActiveLinks)>
-			<#if (thisPage <= numberOfSideLinks)>
-				<#assign startPageAt = 1/>
-				<#assign stopPageAt = numberOfActiveLinks/>
+		<#if (totalPages > 10)>
+			<#-- ------------------------------ -->
+			<#-- Always write the first 3 links -->
+			<#-- ------------------------------ -->
+			<#list 1 .. 3 as page>
+				<@pageLink page, baseUrl/>
+			</#list>
+
+			<#-- ------------------ -->
+			<#-- Intermediate links -->
+			<#-- ------------------ -->
+			<#if (thisPage > 1 && thisPage < totalPages)>
+				<#if (thisPage > 5)><span class="gensmall">...</span></#if>
+
+				<#if (thisPage > 4)>
+					<#assign min = thisPage - 1/>
+				<#else>
+					<#assign min = 4/>
+				</#if>
+
+				<#if (thisPage < totalPages - 4)>
+					<#assign max = thisPage + 2/>
+				<#else>
+					<#assign max = totalPages - 2/>
+				</#if>
+
+				<#if (max >= min + 1)>
+					<#list min .. max - 1 as page>
+						<@pageLink page, baseUrl/>
+					</#list>
+				</#if>
+
+				<#if (thisPage < totalPages - 4)><span class="gensmall">...</span></#if>
 			<#else>
-				<#assign startPageAt = (thisPage - numberOfSideLinks) >
-				<#if (thisPage >= (totalPages - numberOfSideLinks)) >
-					<#assign startPageAt = (totalPages - (numberOfActiveLinks - 1))/>
-				</#if>
-				
-				<#assign stopPageAt = startPageAt + (numberOfActiveLinks - 1)/>
+				<span class="gensmall">...</span>
 			</#if>
 
-			<#if (startPageAt > 1) >
-				...
-			</#if>
-
-			<#list startPageAt .. stopPageAt as page >
-				<#assign start = recordsPerPage * (page-1) >
-
-				<#if thisPage == page>
-					${page}
-				<#else>
-					<a href="${baseUrl}&amp;start=${start}">${page}</a>
-				</#if>
-				<#if (page < totalPages) >,</#if>
+			<#-- ---------------------- -->
+			<#-- Write the last 3 links -->
+			<#-- ---------------------- -->
+			<#list totalPages - 2 .. totalPages as page>
+				<@pageLink page, baseUrl/>
 			</#list>
-			
-			<#if (stopPageAt < totalPages)>
-				...
-			</#if>
 		<#else>
-			<#list 1 .. totalPages as page >
-				<#assign start = recordsPerPage * (page - 1)/>
-
-				<#if thisPage == page>
-					${page}
-				<#else>
-					<a href="${baseUrl}&amp;start=${start}">${page}</a>
-				</#if>
-				<#if (page < totalPages) >,</#if>
+			<#list 1 .. totalPages as page>
+				<@pageLink page, baseUrl/>
 			</#list>
 		</#if>
 
-		<#if thisPage < totalPages >
+		<#-- ------------- -->
+		<#-- Next page -->
+		<#-- ------------- -->
+		<#if (thisPage < totalPages)>
 			<#assign start = thisPage * recordsPerPage/>
-			&nbsp;<a href="${baseUrl}&amp;start=${start}">${I18n.getMessage("next")}</a>
+			<a href="${baseUrl}&amp;start=${start}">&#9658;</a>
 		</#if>
-		</b>
-	</span>
+
+		<a href="#goto" onClick="return overlay(this, 'goToBox', 'rightbottom');">${I18n.getMessage("ForumIndex.goToGo")}</a>
+		<div id="goToBox">
+			<div class="title">${I18n.getMessage("goToPage")}...</div>
+			<div class="form">
+				<input type="text" style="width: 50px;" id="pageToGo">
+				<input type="button" value=" ${I18n.getMessage("ForumIndex.goToGo")} " onClick="goToAnotherPageSearch(${totalPages}, ${recordsPerPage}, '${baseUrl}');">
+				<input type="button" value="${I18n.getMessage("cancel")}" onClick="document.getElementById('goToBox').style.display = 'none';">
+			</div>
+		</div>
+
+		</div>
 	</#if>
+</#macro>
+
+<#macro pageLink page baseUrl>
+	<#assign start = recordsPerPage * (page - 1)/>
+	<#if page != thisPage>
+		<#assign link><a href="${baseUrl}&amp;start=${start}">${page}</a></#assign>
+	<#else>
+		<#assign link><span class="current">${page}</span></#assign>
+	</#if>
+
+	${link}
 </#macro>

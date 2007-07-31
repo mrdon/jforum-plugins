@@ -1,8 +1,9 @@
 <#include "header.htm"/>
 
-<#import "../macros/pagination.ftl" as topicPagination>
-<#import "../macros/search_pagination.ftl" as pagination>
+<#import "../macros/pagination.ftl" as pagination>
 <#import "../macros/presentation.ftl" as presentation/>
+
+<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/pagination.js?${startupTime}"></script>
 
 <table cellspacing="0" cellpadding="10" width="100%" align="center" border="0">
 	<tr>
@@ -23,7 +24,7 @@
 
 					<td valign="bottom" nowrap="nowrap" align="right">
 						<#assign paginationLinks>
-							<@pagination.searchPagination/>
+							<@pagination.doPagination action/>
 						</#assign>
 
 						${paginationLinks}
@@ -59,7 +60,7 @@
 							<#if topic.paginate>
 								<span class="gensmall">
 									<br/>
-									<@topicPagination.littlePostPagination topic.id, postsPerPage, topic.totalReplies/>
+									<@pagination.littlePostPagination topic.id, postsPerPage, topic.totalReplies/>
 								</span>
 							</#if>
 						</td>

@@ -51,6 +51,7 @@ import net.jforum.exceptions.SearchException;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
@@ -58,11 +59,12 @@ import org.apache.lucene.search.Sort;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.29 2007/07/30 03:10:33 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.30 2007/07/31 01:56:24 rafaelsteil Exp $
  */
 public class LuceneSearch implements NewDocumentAdded
 {
 	private static final Logger logger = Logger.getLogger(LuceneSearch.class);
+	private static final Filter DISTINCT_TOPICS_FILTER = new DistinctTopicsFilter();
 	
 	private IndexSearcher search;
 	private LuceneSettings settings;
@@ -99,15 +101,15 @@ public class LuceneSearch implements NewDocumentAdded
 	 */
 	public SearchResult search(SearchArgs args)
 	{
-		return this.performSearch(args, this.contentCollector);
+		return this.performSearch(args, this.contentCollector, null);
 	}
 	
 	public SearchResult newMessages(SearchArgs args)
 	{
-		return this.performSearch(args, this.newMessagesCollector);
+		return this.performSearch(args, this.newMessagesCollector, DISTINCT_TOPICS_FILTER);
 	}
 
-	private SearchResult performSearch(SearchArgs args, LuceneResultCollector resultCollector)
+	private SearchResult performSearch(SearchArgs args, LuceneResultCollector resultCollector, Filter filter)
 	{
 		SearchResult result;
 		
@@ -124,7 +126,9 @@ public class LuceneSearch implements NewDocumentAdded
 				logger.debug("Generated query: " + query);
 			}
 			
-			Hits hits = this.search.search(query, Sort.RELEVANCE);
+			Hits hits = filter == null ? 
+				this.search.search(query, Sort.RELEVANCE)
+				: this.search.search(query, filter, Sort.RELEVANCE);
 
 			if (hits != null && hits.length() > 0) {
 				result = new SearchResult(resultCollector.collect(args, hits, query), hits.length());

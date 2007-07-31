@@ -60,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericLuceneDAO.java,v 1.5 2007/07/30 15:39:27 rafaelsteil Exp $
+ * @version $Id: GenericLuceneDAO.java,v 1.6 2007/07/31 01:56:22 rafaelsteil Exp $
  */
 public class GenericLuceneDAO implements LuceneDAO
 {
@@ -101,6 +101,10 @@ public class GenericLuceneDAO implements LuceneDAO
 	 */
 	public List getPostsData(int[] postIds)
 	{
+		if (postIds.length == 0) {
+			return new ArrayList();
+		}
+		
 		List l = new ArrayList();
 		
 		PreparedStatement p = null;

@@ -36,66 +36,46 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on 27/07/2007 15:11:21
+ * Created on 30/07/2007 22:32:21
  * 
  * The JForum Project
  * http://www.jforum.net
  */
 package net.jforum.search;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.jforum.dao.DataAccessDriver;
-import net.jforum.dao.TopicDAO;
-import net.jforum.exceptions.SearchException;
+import java.io.IOException;
+import java.util.BitSet;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.lucene.document.Document;
-import org.apache.lucene.search.Hits;
-import org.apache.lucene.search.Query;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.search.Filter;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneNewMessagesCollector.java,v 1.7 2007/07/31 01:56:24 rafaelsteil Exp $
+ * @version $Id: DistinctTopicsFilter.java,v 1.1 2007/07/31 01:56:24 rafaelsteil Exp $
  */
-public class LuceneNewMessagesCollector implements LuceneResultCollector
+public class DistinctTopicsFilter extends Filter
 {
-	public List collect(SearchArgs args, Hits hits, Query query)
+	/**
+	 * @see org.apache.lucene.search.Filter#bits(org.apache.lucene.index.IndexReader)
+	 */
+	public BitSet bits(IndexReader reader) throws IOException
 	{
-		try {
-			List topicIds = new ArrayList();
+		BitSet bits = new BitSet(reader.maxDoc());
+		Set topics = new HashSet();
+		
+		for (int i = 0; i < reader.maxDoc(); i++) {
+			Document doc = reader.document(i);
+			String topicId = doc.get(SearchFields.Keyword.TOPIC_ID);
 			
-			long start = System.currentTimeMillis();
-			int x = 0;
-			
-			for (int i = 0; i < hits.length(); i++) {
-				Document doc = hits.doc(i);
-				x = Integer.parseInt(doc.get("topic.id"));
+			if (!topics.contains(topicId)) {
+				bits.set(i);
+				topics.add(topicId);
 			}
-			
-			long end = System.currentTimeMillis();
-			
-			System.out.println("**** TOTAL: " + (end - start));
-
-			/*
-			for (int docIndex = args.startFrom(); 
-				docIndex < args.startFrom() + args.fetchCount() && docIndex < hits.length(); 
-				docIndex++) {
-
-				Document doc = hits.doc(docIndex);
-				Integer currentId = new Integer(doc.get(SearchFields.Keyword.TOPIC_ID));
-				
-				if (topicIds.contains(currentId)) {
-					topicIds.add(currentId);
-				}
-			}
-			
-			TopicDAO topicDao = DataAccessDriver.getInstance().newTopicDAO();
-			return topicDao.newMessages(topicIds);*/
-			return new ArrayList();
 		}
-		catch (Exception e) {
-			throw new SearchException(e.toString(), e);
-		}
+		
+		return bits;
 	}
 }

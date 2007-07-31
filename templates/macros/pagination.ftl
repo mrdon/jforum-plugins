@@ -116,13 +116,13 @@
 			<a href="${contextPath}/${moduleName}/${action}<#if (start > 0)>/${start}</#if><#if (id > -1)>/${id}</#if>${extension}">&#9658;</a>
 		</#if>
 
-		<a href="#goto" onClick="return overlay(this, 'goToBox', 'rightbottom');">Go</a>
+		<a href="#goto" onClick="return overlay(this, 'goToBox', 'rightbottom');">${I18n.getMessage("ForumIndex.goToGo")}</a>
 		<div id="goToBox">
-			<div class="title">Go to page...</div>
+			<div class="title">${I18n.getMessage("goToPage")}...</div>
 			<div class="form">
 				<input type="text" style="width: 50px;" id="pageToGo">
-				<input type="button" value=" Go " onClick="goToAnotherPage(${totalPages}, ${recordsPerPage}, '${contextPath}', '${moduleName}', '${action}', ${id}, '${extension}');">
-				<input type="button" value="Cancel" onClick="document.getElementById('goToBox').style.display = 'none';">
+				<input type="button" value=" ${I18n.getMessage("ForumIndex.goToGo")} " onClick="goToAnotherPage(${totalPages}, ${recordsPerPage}, '${contextPath}', '${moduleName}', '${action}', ${id}, '${extension}');">
+				<input type="button" value="${I18n.getMessage("cancel")}" onClick="document.getElementById('goToBox').style.display = 'none';">
 			</div>
 		</div>
 

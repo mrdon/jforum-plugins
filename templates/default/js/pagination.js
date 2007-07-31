@@ -37,6 +37,24 @@ function goToAnotherPage(max, recordsPerPage, contextPath, moduleName, action, i
 	var page = document.getElementById("pageToGo").value * 1;
 
 	if (!isNaN(page) && page <= max && page > 0) {
-		document.location = contextPath + "/" + moduleName + "/" + action + "/" + ((page - 1) * recordsPerPage) + "/" + id + extension;
+		var path = contextPath + "/" + moduleName + "/" + action + "/" + ((page - 1) * recordsPerPage) + "/";
+		
+		if (id == -1) {
+			path += extension;
+		}
+		else {
+			path += id + extension;
+		}
+
+		document.location = path;
+	}
+}
+
+function goToAnotherPageSearch(max, recordsPerPage, baseUrl)
+{
+	var page = document.getElementById("pageToGo").value * 1;
+
+	if (!isNaN(page) && page <= max && page > 0) {
+		document.location = baseUrl + "&start=" + ((page - 1) * recordsPerPage);
 	}
 }

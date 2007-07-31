@@ -59,7 +59,7 @@ import org.apache.lucene.search.Query;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchTestCase.java,v 1.28 2007/07/30 03:10:33 rafaelsteil Exp $
+ * @version $Id: LuceneSearchTestCase.java,v 1.29 2007/07/31 01:56:26 rafaelsteil Exp $
  */
 public class LuceneSearchTestCase extends TestCase
 {
@@ -69,13 +69,28 @@ public class LuceneSearchTestCase extends TestCase
 	private LuceneSettings settings;
 	private LuceneIndexer indexer;
 	
+	public void testDistinctTopicsFilterAddThreePostsInTwoCommonTopicsExpectOneResult()
+	{
+		List l = this.createThreePostsForNewMessagesTest();
+		
+		((Post)l.get(1)).setTopicId(1);
+		
+		this.indexer.create((Post)l.get(0));
+		this.indexer.create((Post)l.get(1));
+		this.indexer.create((Post)l.get(2));
+
+		// Search
+		SearchArgs args = new SearchArgs();
+		args.setDateRange(new GregorianCalendar(2000, 6, 27, 8, 10, 15).getTime(), new Date());
+		
+		List results = this.search.newMessages(args).records();
+		
+		Assert.assertEquals(1, results.size());
+	}
+	
 	public void testFilterByDateRangeIndexThreePostsExpectTwoResults()
 	{
-		List l = this.createThreePosts();
-		
-		((Post)l.get(0)).setTime(new GregorianCalendar(2000, 6, 27, 8, 55, 17).getTime());
-		((Post)l.get(1)).setTime(new GregorianCalendar(2000, 6, 27, 13, 34, 1).getTime());
-		((Post)l.get(2)).setTime(new GregorianCalendar(2000, 6, 27, 5, 1, 9).getTime());
+		List l = this.createThreePostsForNewMessagesTest();
 		
 		this.indexer.create((Post)l.get(0));
 		this.indexer.create((Post)l.get(1));
@@ -88,6 +103,22 @@ public class LuceneSearchTestCase extends TestCase
 		List results = this.search.newMessages(args).records();
 		
 		Assert.assertEquals(2, results.size());
+	}
+
+	private List createThreePostsForNewMessagesTest()
+	{
+		List l = this.createThreePosts();
+		
+		((Post)l.get(0)).setTime(new GregorianCalendar(2000, 6, 27, 8, 55, 17).getTime());
+		((Post)l.get(0)).setTopicId(1);
+		
+		((Post)l.get(1)).setTime(new GregorianCalendar(2000, 6, 27, 13, 34, 1).getTime());
+		((Post)l.get(1)).setTopicId(2);
+		
+		((Post)l.get(2)).setTime(new GregorianCalendar(2000, 6, 27, 5, 1, 9).getTime());
+		((Post)l.get(2)).setTopicId(3);
+		
+		return l;
 	}
 	
 	public void testFivePostsInTwoForumsSearchOneForumAndTwoValidTermsAndOneInvalidTermExpectThreeResults()
