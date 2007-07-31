@@ -74,7 +74,7 @@ import freemarker.template.SimpleHash;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.44 2007/07/31 13:56:17 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.43 2007/07/31 13:52:47 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
@@ -143,13 +143,12 @@ public class TopicsCommon
 			Topic t = (Topic)iter.next();
 			
 			boolean read = false;
-			boolean isReadByForum = false;
 			long lastPostTime = t.getLastPostDate().getTime();
 			
-			if (topicReadTimeByForum != null) {
-				Long currentForumTime = (Long)topicReadTimeByForum.get(new Integer(t.getForumId()));
-				isReadByForum = currentForumTime != null && lastPostTime < currentForumTime.longValue();
-			}
+			Long currentForumTime = (Long)topicReadTimeByForum.get(new Integer(t.getForumId()));
+			boolean isReadByForum = topicReadTimeByForum != null
+				&& currentForumTime != null
+				&& lastPostTime < currentForumTime.longValue();
 			
 			boolean isTopicTimeOlder = !isReadByForum && lastPostTime <= lastVisit;
 			
