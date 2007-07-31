@@ -48,7 +48,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.112 2007/07/30 02:16:40 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.113 2007/07/31 13:52:48 rafaelsteil Exp $
 */
 
 public class ConfigKeys 
@@ -122,7 +122,8 @@ public class ConfigKeys
 	public static final String ANONYMOUS_USER_ID = "anonymous.userId";
 	public static final String DEFAULT_USER_GROUP = "defaultUserGroup";
 	public static final String USER_HASH_SEQUENCE = "user.hash.sequence";
-	public static final String TOPICS_TRACKING = "topics.tracking";
+	public static final String TOPICS_READ_TIME = "topics.tracking";
+	public static final String TOPICS_READ_TIME_BY_FORUM = "topics.tracking.byforum";
 	
 	public static final String TOPIC_CACHE_ENABLED = "topic.cache.enabled";
 	public static final String SECURITY_CACHE_ENABLED = "security.cache.enabled";

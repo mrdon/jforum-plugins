@@ -84,7 +84,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.92 2007/07/08 14:11:42 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.93 2007/07/31 13:52:47 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -486,7 +486,7 @@ public class UserAction extends Command
 				}
 				
 				SessionFacade.add(userSession);
-				SessionFacade.setAttribute(ConfigKeys.TOPICS_TRACKING, new HashMap());
+				SessionFacade.setAttribute(ConfigKeys.TOPICS_READ_TIME, new HashMap());
 				ControllerUtils.addCookie(SystemGlobals.getValue(ConfigKeys.COOKIE_NAME_DATA), 
 					Integer.toString(user.getId()));
 

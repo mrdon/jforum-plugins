@@ -74,7 +74,7 @@ import freemarker.template.SimpleHash;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.42 2007/07/25 03:08:15 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.44 2007/07/31 13:56:17 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
@@ -130,25 +130,39 @@ public class TopicsCommon
 
 		long lastVisit = userSession.getLastVisit().getTime();
 		int hotBegin = SystemGlobals.getIntValue(ConfigKeys.HOT_TOPIC_BEGIN);
-
 		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
-		Map topicsTracking = (Map)SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING);
+		
 		List newTopics = new ArrayList(topics.size());
+		Map topicsReadTime = SessionFacade.getTopicsReadTime();
+		Map topicReadTimeByForum = SessionFacade.getTopicsReadTimeByForum();
 		
 		boolean checkUnread = (userSession.getUserId() 
 			!= SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID));
 		
 		for (Iterator iter = topics.iterator(); iter.hasNext(); ) {
-			boolean read = false;
 			Topic t = (Topic)iter.next();
-
-			if (checkUnread && t.getLastPostDate().getTime() > lastVisit) {
-				if (topicsTracking.containsKey(new Integer(t.getId()))) {
-					read = (((Long)topicsTracking.get(new Integer(t.getId()))).longValue() > t.getLastPostDate().getTime());
-				}
+			
+			boolean read = false;
+			boolean isReadByForum = false;
+			long lastPostTime = t.getLastPostDate().getTime();
+			
+			if (topicReadTimeByForum != null) {
+				Long currentForumTime = (Long)topicReadTimeByForum.get(new Integer(t.getForumId()));
+				isReadByForum = currentForumTime != null && lastPostTime < currentForumTime.longValue();
+			}
+			
+			boolean isTopicTimeOlder = !isReadByForum && lastPostTime <= lastVisit;
+			
+			if (!checkUnread || isReadByForum || isTopicTimeOlder) {
+				read = true;
 			}
 			else {
-				read = true;
+				Integer topicId = new Integer(t.getId());
+				Long currentTopicTime = (Long)topicsReadTime.get(topicId);
+				
+				if (currentTopicTime != null) {
+					read = currentTopicTime.longValue() > lastPostTime;
+				}
 			}
 
 			if (t.getTotalReplies() + 1 > postsPerPage) {
@@ -281,13 +295,13 @@ public class TopicsCommon
 	 */
 	public static synchronized void deleteTopic(int topicId, int forumId, boolean fromModeration)
 	{
-		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
+		TopicDAO topicDao = DataAccessDriver.getInstance().newTopicDAO();
 		
 		Topic topic = new Topic();
 		topic.setId(topicId);
 		topic.setForumId(forumId);
 
-		tm.delete(topic);
+		topicDao.delete(topic);
 
 		if (!fromModeration) {
 			// Updates the Recent Topics if it contains this topic
@@ -296,7 +310,7 @@ public class TopicsCommon
             // Updates the Hottest Topics if it contains this topic
 			TopicRepository.loadHottestTopics();
 			TopicRepository.clearCache(forumId);
-			tm.removeSubscriptionByTopic(topicId);
+			topicDao.removeSubscriptionByTopic(topicId);
 		}
 	}
 }

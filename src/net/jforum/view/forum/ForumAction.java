@@ -46,7 +46,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -58,13 +57,9 @@ import net.jforum.dao.ForumDAO;
 import net.jforum.dao.ModerationDAO;
 import net.jforum.entities.Forum;
 import net.jforum.entities.MostUsersEverOnline;
-import net.jforum.entities.Post;
 import net.jforum.entities.UserSession;
-import net.jforum.exceptions.ForumException;
 import net.jforum.repository.ForumRepository;
 import net.jforum.repository.SecurityRepository;
-import net.jforum.search.SearchArgs;
-import net.jforum.search.SearchFacade;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
@@ -78,7 +73,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.71 2007/07/31 01:56:26 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.72 2007/07/31 13:52:47 rafaelsteil Exp $
  */
 public class ForumAction extends Command
 {
@@ -258,24 +253,17 @@ public class ForumAction extends Command
 	// Mark all topics as read
 	public void readAll()
 	{
-		if (true) {
-			throw new ForumException("Fix this. Should use the new lucene architecture");
-		}
-		
-		SearchArgs args = new SearchArgs();
-
 		String forumId = this.request.getParameter("forum_id");
-		if (forumId != null) {
-			args.setForumId(Integer.parseInt(forumId));
-		}
-
-		List allTopics = SearchFacade.search(args).records();
 		
-		for (Iterator iter = allTopics.iterator(); iter.hasNext();) {
-			Post post = (Post)iter.next();
+		if (forumId != null) {
+			Map tracking = SessionFacade.getTopicsReadTimeByForum();
 			
-			((Map)SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(post.getTopicId()), 
-				new Long(System.currentTimeMillis()));						
+			if (tracking == null) {
+				tracking = new HashMap();
+			}
+			
+			tracking.put(new Integer(forumId), new Long(System.currentTimeMillis()));
+			SessionFacade.setAttribute(ConfigKeys.TOPICS_READ_TIME_BY_FORUM, tracking);
 		}
 
 		if (forumId != null) {
@@ -283,17 +271,15 @@ public class ForumAction extends Command
 		}
 		else {
 			JForumExecutionContext.setRedirect(this.request.getContextPath() + "/forums/list"
-			        + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+		        + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		}
 	}
 
 	// Messages since last visit
 	public void newMessages()
 	{
-		//this.request.addParameter("from_date", SessionFacade.getUserSession().getLastVisit());
-		this.request.addParameter("from_date", new GregorianCalendar(2005, 4, 1).getTime());
+		this.request.addParameter("from_date", SessionFacade.getUserSession().getLastVisit());
 		this.request.addParameter("to_date", new Date());
-		this.request.addParameter("sort_dir", "DESC");
 
 		SearchAction searchAction = new SearchAction(this.request, this.response, this.context);
 		searchAction.newMessages();

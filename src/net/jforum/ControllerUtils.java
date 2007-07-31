@@ -72,7 +72,7 @@ import freemarker.template.SimpleHash;
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.36 2007/07/28 14:17:11 rafaelsteil Exp $
+ * @version $Id: ControllerUtils.java,v 1.37 2007/07/31 13:52:47 rafaelsteil Exp $
  */
 public class ControllerUtils
 {
@@ -288,7 +288,6 @@ public class ControllerUtils
 			}
 
 			SessionFacade.add(userSession);
-			SessionFacade.setAttribute(ConfigKeys.TOPICS_TRACKING, new HashMap());
 		}
 		else if (ConfigKeys.TYPE_SSO.equals(SystemGlobals.getValue(ConfigKeys.AUTHENTICATION_TYPE))) {
 			SSO sso;

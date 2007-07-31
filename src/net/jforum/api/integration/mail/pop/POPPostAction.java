@@ -26,7 +26,7 @@ import net.jforum.view.forum.PostAction;
 
 /**
  * @author Rafael Steil
- * @version $Id: POPPostAction.java,v 1.9 2006/10/09 00:54:08 rafaelsteil Exp $
+ * @version $Id: POPPostAction.java,v 1.10 2007/07/31 13:52:47 rafaelsteil Exp $
  */
 public class POPPostAction
 {
@@ -45,7 +45,7 @@ public class POPPostAction
 			
 			JForumExecutionContext.set(ex);
 			
-			SessionFacade.setAttribute(ConfigKeys.TOPICS_TRACKING, new HashMap());
+			SessionFacade.setAttribute(ConfigKeys.TOPICS_READ_TIME, new HashMap());
 			
 			for (Iterator iter = parser.getMessages().iterator(); iter.hasNext(); ) {
 				POPMessage m = (POPMessage)iter.next();

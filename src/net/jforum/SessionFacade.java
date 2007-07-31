@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import net.jforum.cache.CacheEngine;
 import net.jforum.cache.Cacheable;
@@ -60,7 +61,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.38 2006/08/27 01:21:57 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.39 2007/07/31 13:52:47 rafaelsteil Exp $
  */
 public class SessionFacade implements Cacheable
 {
@@ -381,6 +382,33 @@ public class SessionFacade implements Cacheable
 	public static void makeUnlogged()
 	{
 		SessionFacade.removeAttribute(ConfigKeys.LOGGED);
+	}
+	
+	/**
+	 * Returns a map containing information about read time of a set of topics.
+	 * @return a map where the key is the topicId represented as an Integer, and the
+	 * value is a Long representing the read time of such topic. 
+	 */
+	public static Map getTopicsReadTime()
+	{
+		Map tracking = (Map)getAttribute(ConfigKeys.TOPICS_READ_TIME);
+		
+		if (tracking == null) {
+			tracking = new HashMap();
+			setAttribute(ConfigKeys.TOPICS_READ_TIME, tracking);
+		}
+		
+		return tracking;
+	}
+	
+	/**
+	 * Returns a map with "all topics read" flags for some forum 
+	 * @return a map where the key is the forum id represented as an Integer, 
+	 * and the value is a Long representing the read time to be used in the verifications.
+	 */
+	public static Map getTopicsReadTimeByForum()
+	{
+		return (Map)getAttribute(ConfigKeys.TOPICS_READ_TIME_BY_FORUM);
 	}
 
 	/**

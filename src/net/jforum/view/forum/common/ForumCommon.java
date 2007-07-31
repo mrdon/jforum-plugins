@@ -67,7 +67,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumCommon.java,v 1.22 2007/04/15 08:11:38 andowson Exp $
+ * @version $Id: ForumCommon.java,v 1.23 2007/07/31 13:52:48 rafaelsteil Exp $
  */
 public class ForumCommon 
 {
@@ -155,7 +155,7 @@ public class ForumCommon
 	{
 		return getAllCategoriesAndForums(SessionFacade.getUserSession(), 
 				SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID), 
-				(Map)SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING), 
+				SessionFacade.getTopicsReadTime(), 
 				checkUnreadPosts);
 	}
 	

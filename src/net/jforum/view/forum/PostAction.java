@@ -104,7 +104,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.178 2007/07/30 14:58:45 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.179 2007/07/31 13:52:46 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -195,8 +195,8 @@ public class PostAction extends Command
 		topic.setTotalViews(topic.getTotalViews() + 1);
 
 		if (us.getUserId() != anonymousUser) {
-			((Map)SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(topic.getId()),
-					new Long(System.currentTimeMillis()));
+			SessionFacade.getTopicsReadTime().put(new Integer(topic.getId()),
+				new Long(System.currentTimeMillis()));
 		}
 		
 		boolean karmaEnabled = SecurityRepository.canAccess(SecurityConstants.PERM_KARMA_ENABLED);
@@ -1183,7 +1183,7 @@ public class PostAction extends Command
 				int anonymousUser = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 				
 				if (u.getId() != anonymousUser) {
-					((Map) SessionFacade.getAttribute(ConfigKeys.TOPICS_TRACKING)).put(new Integer(t.getId()),
+					SessionFacade.getTopicsReadTime().put(new Integer(t.getId()),
 						new Long(p.getTime().getTime()));
 				}
 				
