@@ -141,39 +141,7 @@
 			<table cellspacing="0" cellpadding="0" width="100%" align="center" border="0">
 				<tr>
 					<td valign="top" align="left">
-						<table cellspacing="3" cellpadding="0" border="0">
-							<tr>
-								<td align="left" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_new.gif" alt="[New Folder]"/></td>
-								<td class="gensmall">${I18n.getMessage("ForumIndex.newMessages")}</td>
-								<td>&nbsp;&nbsp;</td>
-								<td align="center" width="20"><img src="${contextPath}/templates/${templateName}/images/folder.gif" alt="[Folder]" /></td>
-								<td class="gensmall">${I18n.getMessage("ForumIndex.noNewMessages")}</td>
-								<td>&nbsp;&nbsp;</td>
-								<td align="center" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_announce.gif" alt="[Announce]"/></td>
-								<td class="gensmall">${I18n.getMessage("ForumIndex.announce")}</td>
-							</tr>
-							
-							<tr>
-								<td align="center" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_new_hot.gif" alt="[New Hot]" /></td>
-								<td class="gensmall">${I18n.getMessage("ForumIndex.newMessagesHot")}</td>
-								<td>&nbsp;&nbsp;</td>
-								<td align="center" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_hot.gif" alt="[Hot]" /></td>
-								<td class="gensmall">${I18n.getMessage("ForumIndex.noNewMessagesHot")}</td>
-								<td>&nbsp;&nbsp;</td>
-								<td align="center" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_sticky.gif" alt="[Sticky]" /></td>
-								<td class="gensmall">${I18n.getMessage("ForumIndex.sticky")}</td>
-							</tr>
-
-							<tr>
-								<td align="center" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_lock_new.gif" alt="[New Lock]" /></td>
-								<td class="gensmall">${I18n.getMessage("ForumIndex.newMessagesBlocked")}</td>
-								<td>&nbsp;&nbsp;</td>
-								<td align="center" width="20"><img src="${contextPath}/templates/${templateName}/images/folder_lock.gif" alt="[Lock]" /></td>
-								<td class="gensmall">${I18n.getMessage("ForumIndex.noNewMessagesBlocked")}</td>
-								<td>&nbsp;&nbsp;</td>
-								<td colspan="2"></td>
-							</tr>
-						</table>
+						<#include "folder_descriptions.htm"/>
 					</td>
 					<td align="right">&nbsp;</td>
 				</tr>

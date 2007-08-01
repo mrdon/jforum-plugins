@@ -72,7 +72,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTopicDAO.java,v 1.26 2007/07/31 02:14:20 rafaelsteil Exp $
+ * @version $Id: GenericTopicDAO.java,v 1.27 2007/08/01 22:09:02 rafaelsteil Exp $
  */
 public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 {
@@ -407,15 +407,15 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 		String sql = SystemGlobals.getSql("TopicModel.selectAllByForumByLimit");
 
 		PreparedStatement p = null;
+
 		try {
 			p = JForumExecutionContext.getConnection().prepareStatement(sql);
 			p.setInt(1, forumId);
-			p.setInt(2, startFrom);
-			p.setInt(3, count);
+			p.setInt(2, forumId);
+			p.setInt(3, startFrom);
+			p.setInt(4, count);
 
-			List list = this.fillTopicsData(p);
-			p = null;
-			return list;
+			return this.fillTopicsData(p);
 		}
 		catch (SQLException e) {
 			throw new DatabaseException(e);
@@ -499,6 +499,7 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 		t.setForumId(rs.getInt("forum_id"));
 		t.setModerated(rs.getInt("moderated") == 1);
 		t.setVoteId(rs.getInt("topic_vote_id"));
+		t.setMovedId(rs.getInt("topic_moved_id"));
 		
 		User user = new User();
 		user.setId(rs.getInt("user_id"));

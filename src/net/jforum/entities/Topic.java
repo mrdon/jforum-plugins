@@ -49,7 +49,7 @@ import java.util.Date;
  * Represents every topic in the forum.
  * 
  * @author Rafael Steil
- * @version $Id: Topic.java,v 1.17 2006/08/20 22:47:36 rafaelsteil Exp $
+ * @version $Id: Topic.java,v 1.18 2007/08/01 22:09:03 rafaelsteil Exp $
  */
 public class Topic implements Serializable
 {
@@ -69,6 +69,7 @@ public class Topic implements Serializable
 	private int firstPostId;
 	private int lastPostId;	
 	private int voteId;
+	private int movedId;
 	
 	private boolean read = true;
 	private boolean moderated;
@@ -422,5 +423,21 @@ public class Topic implements Serializable
 	public String toString()
 	{
 		return "[" + this.id + ", " + this.title + "]";
+	}
+
+	/**
+	 * @return the movedId
+	 */
+	public int getMovedId()
+	{
+		return this.movedId;
+	}
+
+	/**
+	 * @param movedId the movedId to set
+	 */
+	public void setMovedId(int movedId)
+	{
+		this.movedId = movedId;
 	}
 }

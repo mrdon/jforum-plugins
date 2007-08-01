@@ -257,12 +257,14 @@ CREATE TABLE jforum_topics (
   topic_type tinyint(3) default '0',
   topic_first_post_id INT default '0',
   topic_last_post_id INT NOT NULL default '0',
+  topic_moved_id INT DEFAULT 0,
   moderated TINYINT(1) DEFAULT '0',
   PRIMARY KEY  (topic_id),
   KEY (forum_id),
   KEY(user_id),
   KEY(topic_first_post_id),
-  KEY(topic_last_post_id)
+  KEY(topic_last_post_id),
+  KEY(topic_moved_id)
 ) TYPE=InnoDB;
 
 --

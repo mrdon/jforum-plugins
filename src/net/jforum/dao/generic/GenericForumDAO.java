@@ -73,7 +73,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * @author Vanessa Sabino
  * @author socialnetwork@gmail.com, adding "watch forum" methods.
  * 
- * @version $Id: GenericForumDAO.java,v 1.31 2007/07/28 14:17:10 rafaelsteil Exp $
+ * @version $Id: GenericForumDAO.java,v 1.32 2007/08/01 22:09:02 rafaelsteil Exp $
  */
 public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 {
@@ -605,9 +605,11 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 		try {
 			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("ForumModel.moveTopics"));
 			t = JForumExecutionContext.getConnection().prepareStatement(
-					SystemGlobals.getSql("PostModel.setForumByTopic"));
+				SystemGlobals.getSql("PostModel.setForumByTopic"));
 
 			p.setInt(1, toForumId);
+			p.setInt(2, fromForumId);
+			
 			t.setInt(1, toForumId);
 
 			TopicDAO tdao = DataAccessDriver.getInstance().newTopicDAO();
@@ -616,7 +618,7 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 
 			for (int i = 0; i < topics.length; i++) {
 				int topicId = Integer.parseInt(topics[i]);
-				p.setInt(2, topicId);
+				p.setInt(3, topicId);
 				t.setInt(2, topicId);
 
 				p.executeUpdate();

@@ -258,7 +258,7 @@ ForumModel.getModeratorList = SELECT g.group_id AS id, g.group_name AS name \
 
 ForumModel.totalMessages = SELECT COUNT(1) as total_messages FROM jforum_posts
 ForumModel.getMaxPostId = SELECT MAX(post_id) AS post_id FROM jforum_posts WHERE forum_id = ?
-ForumModel.moveTopics = UPDATE jforum_topics SET forum_id = ? WHERE topic_id = ?
+ForumModel.moveTopics = UPDATE jforum_topics SET forum_id = ?, topic_moved_id = ? WHERE topic_id = ?
 ForumModel.checkUnreadTopics = SELECT MAX(post_time), topic_id FROM jforum_posts WHERE forum_id = ? AND post_time > ? GROUP BY topic_id
 ForumModel.latestTopicIdForfix = SELECT MAX(topic_id) AS topic_id FROM jforum_posts WHERE forum_id = ?
 ForumModel.fixLatestPostData = UPDATE jforum_topics SET topic_last_post_id = ? WHERE topic_id = ?
@@ -291,12 +291,12 @@ TopicModel.selectById = SELECT t.*, p.user_id AS last_user_id, p.post_time, p.at
 	AND p.post_id = t.topic_last_post_id
 	
 TopicModel.selectRaw = SELECT topic_id, forum_id, topic_title, user_id, topic_views, topic_replies, topic_status, topic_vote_id, topic_type, \
-	topic_first_post_id, topic_last_post_id, moderated, topic_time \
+	topic_first_post_id, topic_last_post_id, moderated, topic_time, topic_moved_id \
 	FROM jforum_topics WHERE topic_id = ?
 
 TopicModel.selectAllByForumByLimit = SELECT t.*, p.user_id AS last_user_id, p.post_time, p.attach AS attach \
 	FROM jforum_topics t, jforum_posts p \
-	WHERE t.forum_id = ? \
+	WHERE (t.forum_id = ? OR t.topic_moved_id = ?) \
 	AND p.post_id = t.topic_last_post_id \
 	AND p.need_moderate = 0 \
 	ORDER BY t.topic_type DESC, t.topic_last_post_id DESC \

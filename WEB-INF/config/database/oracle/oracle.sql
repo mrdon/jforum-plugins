@@ -131,7 +131,7 @@ TopicModel.selectAllByForumByLimit = SELECT * FROM ( \
        SELECT t.*, p.user_id AS last_user_id, p.post_time, 0 AS attach,  \
        ROW_NUMBER() OVER(ORDER BY topic_type DESC, topic_last_post_id DESC) - 1 LINENUM \
        FROM jforum_topics t, jforum_posts p \
-       WHERE t.forum_id = ? \
+       WHERE (t.forum_id = ? OR t.topic_moved_id = ?) \
        AND p.post_id = t.topic_last_post_id \
        AND p.need_moderate = 0 \
 	) \

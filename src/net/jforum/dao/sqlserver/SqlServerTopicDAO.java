@@ -58,7 +58,7 @@ import org.apache.log4j.Logger;
  * @author Andre de Andrade da Silva - andre.de.andrade@gmail.com
  * @author Dirk Rasmussen - d.rasmussen@bevis.de (2007/02/19, modifs for MS SqlServer 2005)
  * @see WEB-INF\config\database\sqlserver\sqlserver.sql (2007/02/19, MS SqlServer 2005 specific version!)
- * @version $Id: SqlServerTopicDAO.java,v 1.13 2007/03/03 18:33:46 rafaelsteil Exp $
+ * @version $Id: SqlServerTopicDAO.java,v 1.14 2007/08/01 22:09:02 rafaelsteil Exp $
  */
 public class SqlServerTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 {
@@ -80,8 +80,9 @@ public class SqlServerTopicDAO extends net.jforum.dao.generic.GenericTopicDAO
 			p = JForumExecutionContext.getConnection().prepareStatement(sqlStmnt);
 
 			p.setInt(1, forumId);
-			p.setInt(2, startFrom);
-			p.setInt(3, startFrom+count);
+			p.setInt(2, forumId);
+			p.setInt(3, startFrom);
+			p.setInt(4, startFrom+count);
 
 			List list = super.fillTopicsData(p);
 			p = null;

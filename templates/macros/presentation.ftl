@@ -2,38 +2,42 @@
 <#-- Displays the topic folder image by its status -->
 <#-- ********************************************* -->
 <#macro folderImage topic>
-	<#if topic.read>
-		<#if topic.status == STATUS_UNLOCKED>
-			<#if topic.type == TOPIC_ANNOUNCE>
-				<img class="icon_folder_announce" src="${contextPath}/images/transp.gif" alt="" />
-			<#elseif topic.type == TOPIC_STICKY>
-				<img class="icon_folder_sticky" src="${contextPath}/images/transp.gif" alt="" />
-			<#else>
-				<#if topic.isHot()>
-					<img class="icon_folder_hot" src="${contextPath}/images/transp.gif" alt="" />
+	<#if topic.movedId == 0 || topic.forumId == forum.id>
+		<#if topic.read>
+			<#if topic.status == STATUS_UNLOCKED>
+				<#if topic.type == TOPIC_ANNOUNCE>
+					<img class="icon_folder_announce" src="${contextPath}/images/transp.gif" alt="" />
+				<#elseif topic.type == TOPIC_STICKY>
+					<img class="icon_folder_sticky" src="${contextPath}/images/transp.gif" alt="" />
 				<#else>
-					<img class="icon_folder" src="${contextPath}/images/transp.gif" alt="" />
+					<#if topic.isHot()>
+						<img class="icon_folder_hot" src="${contextPath}/images/transp.gif" alt="" />
+					<#else>
+						<img class="icon_folder" src="${contextPath}/images/transp.gif" alt="" />
+					</#if>
 				</#if>
+			<#else>
+				<img class="icon_folder_lock" src="${contextPath}/images/transp.gif" alt="" />
 			</#if>
 		<#else>
-			<img class="icon_folder_lock" src="${contextPath}/images/transp.gif" alt="" />
+			<#if topic.status == STATUS_UNLOCKED>
+				<#if topic.type == TOPIC_ANNOUNCE>
+					<img class="icon_folder_announce_new" src="${contextPath}/images/transp.gif" alt="" />
+				<#elseif topic.type == TOPIC_STICKY>
+					<img class="icon_folder_sticky_new" src="${contextPath}/images/transp.gif" alt="" />
+				<#else>
+					<#if topic.isHot()>
+						<img class="icon_folder_new_hot" src="${contextPath}/images/transp.gif" alt="" />
+					<#else>
+						<img class="icon_folder_new" src="${contextPath}/images/transp.gif" alt="" />
+					</#if>
+				</#if>
+			<#else>
+				<img class="icon_folder_lock_new" src="${contextPath}/images/transp.gif" alt="" />
+			</#if>
 		</#if>
 	<#else>
-		<#if topic.status == STATUS_UNLOCKED>
-			<#if topic.type == TOPIC_ANNOUNCE>
-				<img class="icon_folder_announce_new" src="${contextPath}/images/transp.gif" alt="" />
-			<#elseif topic.type == TOPIC_STICKY>
-				<img class="icon_folder_sticky_new" src="${contextPath}/images/transp.gif" alt="" />
-			<#else>
-				<#if topic.isHot()>
-					<img class="icon_folder_new_hot" src="${contextPath}/images/transp.gif" alt="" />
-				<#else>
-					<img class="icon_folder_new" src="${contextPath}/images/transp.gif" alt="" />
-				</#if>
-			</#if>
-		<#else>
-			<img class="icon_folder_lock_new" src="${contextPath}/images/transp.gif" alt="" />
-		</#if>
+		<img class="icon_topic_move" src="${contextPath}/images/transp.gif" alt="" />
 	</#if>
 </#macro>
 
