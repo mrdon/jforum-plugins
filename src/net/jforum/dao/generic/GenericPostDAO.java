@@ -65,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericPostDAO.java,v 1.22 2007/07/31 15:56:55 rafaelsteil Exp $
+ * @version $Id: GenericPostDAO.java,v 1.23 2007/08/01 22:30:04 rafaelsteil Exp $
  */
 public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 {
@@ -444,8 +444,6 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 	}
 
 	/**
-	 * TODO implement this method or delete this javadoc
-	 * 
 	 * @see net.jforum.model.PostModel#countPreviousPosts(int)
 	 */
 	public int countPreviousPosts(int postId)

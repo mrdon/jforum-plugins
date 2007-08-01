@@ -49,7 +49,7 @@ import net.jforum.entities.Config;
 
 /**
  * @author Rafael Steil
- * @version $Id: ConfigModelDummy.java,v 1.5 2006/08/20 12:19:18 sergemaslyukov Exp $
+ * @version $Id: ConfigModelDummy.java,v 1.6 2007/08/01 22:30:05 rafaelsteil Exp $
  */
 public class ConfigModelDummy implements ConfigDAO
 {
@@ -58,7 +58,7 @@ public class ConfigModelDummy implements ConfigDAO
 	 * @see net.jforum.dao.ConfigDAO#insert(net.jforum.entities.Config)
 	 */
 	public void insert(Config config) 	{
-		// TODO Auto-generated method stub
+		
 
 	}
 
@@ -67,7 +67,7 @@ public class ConfigModelDummy implements ConfigDAO
 	 */
 	public void update(Config config)
 	{
-		// TODO Auto-generated method stub
+		
 
 	}
 
@@ -76,7 +76,7 @@ public class ConfigModelDummy implements ConfigDAO
 	 */
 	public void delete(Config config)
 	{
-		// TODO Auto-generated method stub
+		
 
 	}
 
@@ -85,7 +85,7 @@ public class ConfigModelDummy implements ConfigDAO
 	 */
 	public List selectAll()
 	{
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -94,7 +94,7 @@ public class ConfigModelDummy implements ConfigDAO
 	 */
 	public Config selectByName(String name) 
 	{
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 

@@ -44,7 +44,6 @@
 package net.jforum;
 
 import java.util.Date;
-import java.util.HashMap;
 
 import javax.servlet.http.Cookie;
 
@@ -72,7 +71,7 @@ import freemarker.template.SimpleHash;
  * Common methods used by the controller.
  * 
  * @author Rafael Steil
- * @version $Id: ControllerUtils.java,v 1.37 2007/07/31 13:52:47 rafaelsteil Exp $
+ * @version $Id: ControllerUtils.java,v 1.38 2007/08/01 22:30:06 rafaelsteil Exp $
  */
 public class ControllerUtils
 {

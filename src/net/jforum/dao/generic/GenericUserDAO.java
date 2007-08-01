@@ -66,7 +66,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericUserDAO.java,v 1.27 2007/07/27 18:39:48 rafaelsteil Exp $
+ * @version $Id: GenericUserDAO.java,v 1.28 2007/08/01 22:30:03 rafaelsteil Exp $
  */
 public class GenericUserDAO extends AutoKeys implements UserDAO
 {
@@ -385,8 +385,6 @@ public class GenericUserDAO extends AutoKeys implements UserDAO
 	}
 
 	/**
-	 * TODO implement this method or delete javadoc
-	 * 
 	 * @see net.jforum.dao.UserDAO#incrementRanking(int)
 	 */
 	public void setRanking(int userId, int rankingId)

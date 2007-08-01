@@ -104,7 +104,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.180 2007/08/01 18:56:57 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.181 2007/08/01 22:30:03 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -401,11 +401,8 @@ public class PostAction extends Command
 
 	public void review()
 	{
-		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
-
-        //TODO um not user. remove or use?
-		// UserDAO um = DataAccessDriver.getInstance().newUserDAO();
-		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
+		PostDAO postDao = DataAccessDriver.getInstance().newPostDAO();
+		TopicDAO topicDao = DataAccessDriver.getInstance().newTopicDAO();
 
 		int userId = SessionFacade.getUserSession().getUserId();
 		int topicId = this.request.getIntParameter("topic_id");
@@ -413,7 +410,7 @@ public class PostAction extends Command
 		Topic topic = TopicRepository.getTopic(new Topic(topicId));
 		
 		if (topic == null) {
-			topic = tm.selectById(topicId);
+			topic = topicDao.selectById(topicId);
 		}
 
 		if (!TopicsCommon.isTopicAccessible(topic.getForumId())) {
@@ -423,8 +420,8 @@ public class PostAction extends Command
 		int count = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
 		int start = ViewCommon.getStartPage();
 
-		Map usersMap = tm.topicPosters(topic.getId());
-		List helperList = PostCommon.topicPosts(pm, false, userId, topic.getId(), start, count);
+		Map usersMap = topicDao.topicPosters(topic.getId());
+		List helperList = PostCommon.topicPosts(postDao, false, userId, topic.getId(), start, count);
 		Collections.reverse(helperList);
 
 		this.setTemplateName(SystemGlobals.getValue(ConfigKeys.TEMPLATE_DIR) + "/empty.htm");

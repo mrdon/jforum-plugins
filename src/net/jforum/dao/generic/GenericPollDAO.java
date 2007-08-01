@@ -60,7 +60,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author David Almilli
- * @version $Id: GenericPollDAO.java,v 1.8 2006/08/23 02:13:42 rafaelsteil Exp $
+ * @version $Id: GenericPollDAO.java,v 1.9 2007/08/01 22:30:03 rafaelsteil Exp $
  */
 public class GenericPollDAO extends AutoKeys implements PollDAO
 {
@@ -230,8 +230,6 @@ public class GenericPollDAO extends AutoKeys implements PollDAO
 	}
 
 	/**
-	 * TODO implement this method or delete javadoc
-	 * 
 	 * @see net.jforum.dao.PollDAO#hasVotedOnPoll(int, int)
 	 */
 	public boolean hasUserVotedOnPoll(int pollId, int userId)

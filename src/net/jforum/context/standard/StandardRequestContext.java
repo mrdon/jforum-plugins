@@ -55,7 +55,7 @@ import net.jforum.context.SessionContext;
 /**
  * Request context non-dependent of HTTP 
  * @author Rafael Steil
- * @version $Id: StandardRequestContext.java,v 1.3 2007/03/27 15:20:10 andowson Exp $
+ * @version $Id: StandardRequestContext.java,v 1.4 2007/08/01 22:30:05 rafaelsteil Exp $
  */
 public class StandardRequestContext implements RequestContext
 {
@@ -85,7 +85,7 @@ public class StandardRequestContext implements RequestContext
 	 */
 	public String getAction()
 	{
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -134,7 +134,7 @@ public class StandardRequestContext implements RequestContext
 	 */
 	public String getModule()
 	{
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -184,7 +184,7 @@ public class StandardRequestContext implements RequestContext
 	 */
 	public String getRemoteAddr()
 	{
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -266,7 +266,7 @@ public class StandardRequestContext implements RequestContext
 	public void setCharacterEncoding(String env) throws UnsupportedEncodingException {}
 
 	public Locale getLocale() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 }

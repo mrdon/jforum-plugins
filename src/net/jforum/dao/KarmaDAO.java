@@ -52,7 +52,7 @@ import net.jforum.entities.User;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaDAO.java,v 1.6 2006/08/23 02:13:34 rafaelsteil Exp $
+ * @version $Id: KarmaDAO.java,v 1.7 2007/08/01 22:30:04 rafaelsteil Exp $
  */
 public interface KarmaDAO
 {
@@ -114,7 +114,7 @@ public interface KarmaDAO
 	/**
 	 * Gets the votes the user made on some topic.
 	 * @param topicId The topic id.
-	 * @param userId TODO
+	 * @param userId 
 	 * 
 	 * @return A <code>java.util.Map</code>, where the key is the post id and the
 	 * value id the rate made by the user.

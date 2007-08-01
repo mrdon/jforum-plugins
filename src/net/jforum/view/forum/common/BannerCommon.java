@@ -51,7 +51,7 @@ import net.jforum.entities.Banner;
 
 /**
  * @author Samuel Yung
- * @version $Id: BannerCommon.java,v 1.8 2007/07/28 14:17:09 rafaelsteil Exp $
+ * @version $Id: BannerCommon.java,v 1.9 2007/08/01 22:30:05 rafaelsteil Exp $
  */
 public class BannerCommon
 {
@@ -125,7 +125,6 @@ public class BannerCommon
 			weightFrom = weightTo;
 		}
 
-        // TODO at this position result can be null and NPE possible
         // increment views by 1
 		result.setViews(result.getViews() + 1);
 		dao.update(result);

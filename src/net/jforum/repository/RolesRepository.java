@@ -49,7 +49,7 @@ import net.jforum.security.RoleCollection;
 
 /**
  * @author Rafael Steil
- * @version $Id: RolesRepository.java,v 1.6 2006/08/24 01:07:05 rafaelsteil Exp $
+ * @version $Id: RolesRepository.java,v 1.7 2007/08/01 22:30:05 rafaelsteil Exp $
  */
 public class RolesRepository implements Cacheable
 {
@@ -72,7 +72,6 @@ public class RolesRepository implements Cacheable
 	 */
 	public static RoleCollection getGroupRoles(int groupId)
 	{
-		// TODO
 		return (RoleCollection)cache.get(FQN, Integer.toString(groupId));
 	}
 	

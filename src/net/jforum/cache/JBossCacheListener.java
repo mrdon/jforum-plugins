@@ -10,7 +10,7 @@ import org.jgroups.View;
 
 /**
  * @author Rafael Steil
- * @version $Id: JBossCacheListener.java,v 1.3 2005/07/26 03:04:53 rafaelsteil Exp $
+ * @version $Id: JBossCacheListener.java,v 1.4 2007/08/01 22:30:06 rafaelsteil Exp $
  */
 public class JBossCacheListener implements TreeCacheListener
 {
@@ -40,7 +40,6 @@ public class JBossCacheListener implements TreeCacheListener
 	public void nodeModified(Fqn fqn)
 	{
 		if (CacheEngine.NOTIFICATION.startsWith((String)fqn.get(0))) {
-			// TODO
 		}
 	}
 

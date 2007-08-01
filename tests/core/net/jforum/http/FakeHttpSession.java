@@ -52,7 +52,7 @@ import javax.servlet.http.HttpSessionContext;
 
 /**
  * @author Rafael Steil
- * @version $Id: FakeHttpSession.java,v 1.4 2005/07/26 03:06:04 rafaelsteil Exp $
+ * @version $Id: FakeHttpSession.java,v 1.5 2007/08/01 22:30:04 rafaelsteil Exp $
  */
 public class FakeHttpSession implements HttpSession 
 {
@@ -62,7 +62,7 @@ public class FakeHttpSession implements HttpSession
 	 * @see javax.servlet.http.HttpSession#getCreationTime()
 	 */
 	public long getCreationTime() {
-		// TODO Auto-generated method stub
+		
 		return 0;
 	}
 
@@ -77,7 +77,7 @@ public class FakeHttpSession implements HttpSession
 	 * @see javax.servlet.http.HttpSession#getLastAccessedTime()
 	 */
 	public long getLastAccessedTime() {
-		// TODO Auto-generated method stub
+		
 		return 0;
 	}
 
@@ -85,7 +85,7 @@ public class FakeHttpSession implements HttpSession
 	 * @see javax.servlet.http.HttpSession#getServletContext()
 	 */
 	public ServletContext getServletContext() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -93,19 +93,19 @@ public class FakeHttpSession implements HttpSession
 	 * @see javax.servlet.http.HttpSession#setMaxInactiveInterval(int)
 	 */
 	public void setMaxInactiveInterval(int arg0) {
-		// TODO Auto-generated method stub
+		
 	}
 
 	/** 
 	 * @see javax.servlet.http.HttpSession#getMaxInactiveInterval()
 	 */
 	public int getMaxInactiveInterval() {
-		// TODO Auto-generated method stub
+		
 		return 0;
 	}
 
 	public HttpSessionContext getSessionContext() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -117,7 +117,7 @@ public class FakeHttpSession implements HttpSession
 	}
 
 	public Object getValue(String arg0) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -125,12 +125,12 @@ public class FakeHttpSession implements HttpSession
 	 * @see javax.servlet.http.HttpSession#getAttributeNames()
 	 */
 	public Enumeration getAttributeNames() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	public String[] getValueNames() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -142,7 +142,7 @@ public class FakeHttpSession implements HttpSession
 	}
 
 	public void putValue(String arg0, Object arg1) {
-		// TODO Auto-generated method stub
+		
 	}
 
 	/** 
@@ -153,21 +153,21 @@ public class FakeHttpSession implements HttpSession
 	}
 
 	public void removeValue(String arg0) {
-		// TODO Auto-generated method stub
+		
 	}
 
 	/** 
 	 * @see javax.servlet.http.HttpSession#invalidate()
 	 */
 	public void invalidate() {
-		// TODO Auto-generated method stub
+		
 	}
 
 	/** 
 	 * @see javax.servlet.http.HttpSession#isNew()
 	 */
 	public boolean isNew() {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 }

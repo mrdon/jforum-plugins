@@ -63,7 +63,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: KarmaAction.java,v 1.20 2006/08/20 22:47:39 rafaelsteil Exp $
+ * @version $Id: KarmaAction.java,v 1.21 2007/08/01 22:30:03 rafaelsteil Exp $
  */
 public class KarmaAction extends Command
 {
@@ -153,84 +153,4 @@ public class KarmaAction extends Command
 		this.setTemplateName(TemplateKeys.KARMA_LIST);
 		this.context.put("message", I18n.getMessage("invalidAction"));
 	}
-
-	/**
-	 * TODO: Make dynamic data format TODO: refactoring here to remove the duplicated code with the
-	 * method above. Performs a search over the users votes between two dates.
-	 * FIXME: "order_by" should not come from the HTML form representing the real db column name
-	 * 
-	 */
-	/*
-	public void searchByPeriod() 
-	{
-		SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy");
-		Date firstPeriod, lastPeriod;
-		if ("".equals(this.request.getParameter("first_date"))) {
-			firstPeriod = formater.parse("01/01/1970");// extreme date
-		}
-		else {
-			firstPeriod = formater.parse(this.request.getParameter("first_date"));
-		}
-		if ("".equals(this.request.getParameter("last_date"))) {
-			lastPeriod = new Date();// now
-		}
-		else {
-			lastPeriod = formater.parse(this.request.getParameter("last_date"));
-		}
-
-		String orderField;
-		if ("".equals(this.request.getParameter("order_by"))) {
-			orderField = "total";
-		}
-		else {
-			orderField = this.request.getParameter("order_by");
-		}
-
-		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
-		// Load all users with your karma
-		List users = DataAccessDriver.getInstance().newKarmaDAO().getMostRatedUserByPeriod(usersPerPage, firstPeriod,
-				lastPeriod, orderField);
-		this.context.put("users", users);
-		this.setTemplateName(TemplateKeys.KARMA_SEARCH_BYPERIOD);
-	}
-	*/
-
-	/**
-	 * FIXME: The date format is not dynamic.
-	 * FIXME: "order_by" should not come from the HTML form representing the real db column name
-	 * 
-	 * Performs a search over the users votes in a specific month.
-	 * 
-	 */
-	/*
-	public void searchByMonth()
-	{
-		SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		int month = Integer.parseInt(request.getParameter("month"));
-		int year = Integer.parseInt(request.getParameter("year"));
-
-		Calendar c = Calendar.getInstance();
-		Date firstPeriod, lastPeriod;
-		firstPeriod = formater.parse("01/" + month + "/" + year+ " 00:00:00");
-		// set the Calendar with the first day of the month
-		c.setTime(firstPeriod);
-		// Now get the last day of this month.
-		lastPeriod = formater.parse(c.getActualMaximum(Calendar.DAY_OF_MONTH) + "/" + month + "/" + year +" 23:59:59");
-
-		String orderField;
-		if ("".equals(request.getParameter("order_by")) || request.getParameter("order_by") == null) {
-			orderField = "total";
-		}
-		else {
-			orderField = this.request.getParameter("order_by");
-		}
-
-		int usersPerPage = SystemGlobals.getIntValue(ConfigKeys.USERS_PER_PAGE);
-		// Load all users with your karma
-		List users = DataAccessDriver.getInstance().newKarmaDAO().getMostRatedUserByPeriod(usersPerPage, firstPeriod,
-				lastPeriod, orderField);
-		this.context.put("users", users);
-		this.setTemplateName(TemplateKeys.KARMA_SEARCH_BYMONTH);
-	}
-	*/
 }

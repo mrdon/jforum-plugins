@@ -67,7 +67,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumCommon.java,v 1.23 2007/07/31 13:52:48 rafaelsteil Exp $
+ * @version $Id: ForumCommon.java,v 1.24 2007/08/01 22:30:05 rafaelsteil Exp $
  */
 public class ForumCommon 
 {
@@ -121,7 +121,6 @@ public class ForumCommon
 			userId = us.getUserId();
 		}
 
-        // TODO at this position us may null and NPE possible
         // Do not check for unread posts if the user is not logged in
 		checkUnreadPosts = checkUnreadPosts && (userId != anonymousUserId);
 

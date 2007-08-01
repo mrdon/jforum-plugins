@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericKarmaDAO.java,v 1.11 2007/07/28 14:17:10 rafaelsteil Exp $
+ * @version $Id: GenericKarmaDAO.java,v 1.12 2007/08/01 22:30:03 rafaelsteil Exp $
  */
 public class GenericKarmaDAO implements net.jforum.dao.KarmaDAO
 {
@@ -93,8 +93,6 @@ public class GenericKarmaDAO implements net.jforum.dao.KarmaDAO
 	}
 
 	/**
-	 * TODO inplement ir delete this javadoc
-	 * 
 	 * @see net.jforum.dao.KarmaDAO#selectKarmaStatus(int)
 	 */
 	public KarmaStatus getUserKarma(int userId)

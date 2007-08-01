@@ -238,7 +238,7 @@
 
 						<#if moderator && openModeration?default(false)>
 							<td ${class2} valign="middle" align="center">
-								<input type="checkbox" <#if topic.movedId != 0>disabled="disabled"</#if> name="topic_id" value="${topic.id}" onclick="changeTrClass(this, ${topic_index});"/>
+								<input type="checkbox" <#if topic.movedId != 0 && topic.forumId != forum.id>disabled="disabled"</#if> name="topic_id" value="${topic.id}" onclick="changeTrClass(this, ${topic_index});"/>
 							</td>
 						</#if>
 					</tr>

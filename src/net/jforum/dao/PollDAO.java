@@ -87,8 +87,8 @@ public interface PollDAO {
 	 * Increments the vote count on the poll for the given poll id and option id
 	 * @param pollId the poll id that the vote is for
 	 * @param optionId the option that was selected for the poll
-	 * @param userId int TODO
-	 * @param ipAddress String TODO
+	 * @param userId int 
+	 * @param ipAddress String 
 	 */
 	public void voteOnPoll(int pollId, int optionId, int userId, String ipAddress);
 	
