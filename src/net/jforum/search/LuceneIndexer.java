@@ -61,7 +61,7 @@ import org.apache.lucene.index.Term;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneIndexer.java,v 1.4 2007/07/30 01:16:15 rafaelsteil Exp $
+ * @version $Id: LuceneIndexer.java,v 1.5 2007/08/01 18:56:57 rafaelsteil Exp $
  */
 public class LuceneIndexer
 {
@@ -114,24 +114,8 @@ public class LuceneIndexer
 	
 	public synchronized void update(Post post)
 	{
-		IndexReader reader = null;
-		
-		try {
-			reader = IndexReader.open(this.settings.directory());
-			reader.deleteDocuments(new Term(SearchFields.Keyword.POST_ID, String.valueOf(post.getId())));
-			
+		if (this.performDelete(post)) {
 			this.create(post);
-		}
-		catch (IOException e) {
-			logger.error(e.toString(), e);
-		}
-		finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				}
-				catch (Exception e) {}
-			}
 		}
 	}
 	
@@ -172,5 +156,35 @@ public class LuceneIndexer
 		for (Iterator iter = this.newDocumentAddedList.iterator(); iter.hasNext(); ) {
 			((NewDocumentAdded)iter.next()).newDocumentAdded();
 		}
+	}
+
+	public void delete(Post p)
+	{
+		this.performDelete(p);
+	}
+	
+	private boolean performDelete(Post p)
+	{
+		IndexReader reader = null;
+		boolean status = false;
+		
+		try {
+			reader = IndexReader.open(this.settings.directory());
+			reader.deleteDocuments(new Term(SearchFields.Keyword.POST_ID, String.valueOf(p.getId())));
+			status = true;
+		}
+		catch (IOException e) {
+			logger.error(e.toString(), e);
+		}
+		finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				}
+				catch (Exception e) {}
+			}
+		}
+		
+		return status;
 	}
 }

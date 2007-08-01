@@ -53,7 +53,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchFacade.java,v 1.5 2007/07/30 03:10:33 rafaelsteil Exp $
+ * @version $Id: SearchFacade.java,v 1.6 2007/08/01 18:56:57 rafaelsteil Exp $
  */
 public class SearchFacade
 {
@@ -116,5 +116,12 @@ public class SearchFacade
 	private static boolean isSearchEnabled()
 	{
 		return SystemGlobals.getBoolValue(ConfigKeys.SEARCH_INDEXING_ENABLED);
+	}
+
+	public static void delete(Post p)
+	{
+		if (isSearchEnabled()) {
+			searchManager.delete(p);
+		}
 	}
 }

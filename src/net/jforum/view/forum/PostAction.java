@@ -104,7 +104,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.179 2007/07/31 13:52:46 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.180 2007/08/01 18:56:57 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -1309,8 +1309,10 @@ public class PostAction extends Command
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 			
 			// Update the cache
-			t = tm.selectById(t.getId());
-			TopicRepository.updateTopic(t);
+			if (TopicRepository.isTopicCached(t)) {
+				t = tm.selectById(t.getId());
+				TopicRepository.updateTopic(t);
+			}
 		}
 		else {
 			// Ok, all posts were removed. Time to say goodbye
@@ -1321,6 +1323,8 @@ public class PostAction extends Command
 				+ p.getForumId()
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		}
+		
+		SearchFacade.delete(p);
 		
 		this.request.addParameter("log_original_message", p.getText());
 		ModerationHelper moderationHelper = new ModerationHelper();
