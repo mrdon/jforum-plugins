@@ -59,7 +59,8 @@ td.catbottom { border-top-width: 0px; border-left-width: 1px; border-bottom-widt
 th.thtop { border-top-width: 1px; border-left-width: 0px; border-bottom-width: 0px; border-right-width: 0px }
 th.thcornerl { border-top-width: 1px; border-left-width: 1px; border-bottom-width: 0px; border-right-width: 0px }
 th.thcornerr { border-top-width: 1px; border-left-width: 0px; border-bottom-width: 0px; border-right-width: 1px }
-.maintitle { font-weight: bold; font-size: 22px; color: #000000; line-height: 120%; font-family: "trebuchet ms",verdana, arial, helvetica, sans-serif; text-decoration: none }
+.maintitle, .boardtitle { font-weight: bold; font-size: 18px; color: #000000; line-height: 120%; font-family: "trebuchet ms",verdana, arial, helvetica, sans-serif; text-decoration: none }
+.boardtitle { font-size: 22px; }
 
 .gen, .poll { font-size: 12px }
 .genmed, .name { font-size: 11px; }

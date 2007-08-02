@@ -68,7 +68,7 @@
 					<td valign="middle" align="left" colspan="${colspan?default("0")}">
 						<span class="nav">
 						<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")} </a> 
-            			-&gt; <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name} </a></span>
+            			&raquo; <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name} </a></span>
 					</td>
 					<td valign="middle" align="right"><#assign paginationData><@pagination.doPagination "list", topic.id/></#assign>${paginationData}</td>
 				</tr>
@@ -226,7 +226,7 @@
 					<td valign="middle" align="left" colspan="${colspan?default("0")}">
 						<span class="nav">
 						<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")} </a> 
-            			-&gt; <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name} </a>
+            			&raquo; <a class="nav" href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name} </a>
 						</span>
 					</td>
 
