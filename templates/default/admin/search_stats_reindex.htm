@@ -1,29 +1,88 @@
-<style type="text/css">@import url( ${contextPath}/templates/${templateName}/admin/style.css );</style>
+<style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/style.css );</style>
 
-<table class="forumline" cellspacing="1" cellpadding="3" width="100%">
+<table class="forumline gen" cellspacing="1" cellpadding="3" width="100%">
 	<tr>
 		<th class="thhead" colspan="5">${I18n.getMessage("SearchStats.ReIndex")}</th>
 	</tr>
 
 	<tr>
-		<td class="genmed">
-			Total messages in the database: ${totalMessages}
+		<td>
+			<strong>Total messages in the database:</strong> <i>${totalMessages}</i>
 		</td>
 	</tr>
 
 	<tr>
-		<td class="genmed">
-			Index location: ${indexLocation}
+		<td>
+			<strong>Index location:</strong> <i>${indexLocation}</i>
 		</td>
 	</tr>
 
 	<tr>
-		<td class="genmed">
-			Index exists: 
-			<#if indexExists>
-				Yes. <a href="${contextPath}/jforum${extension}?module=${moduleName}&action=reconstructIndexFromScratch">Re-Index all messages.</a>
+		<td>
+			<strong>Index exists:</strong>
+			<#if !indexExists>
+				<i>No</i>. <a href="${contextPath}/jforum${extension}?module=${moduleName}&action=createIndexDirectory">Create index now.</a>
 			<#else>
-				No. <a href="${contextPath}/jforum${extension}?module=${moduleName}&action=createIndexDirectory">Create index now.</a>
+				<i>Yes</i>. 
+
+			<table border="0" class="forumline gen">
+				<tr>
+					<th colspan="2">Re-Index</th>
+				</tr>
+
+				<tr>
+					<td>
+						<input type="radio" id="reindexByDate"><label for="reindexByDate">By date</label>
+					</td>
+					<td valign="top">
+						<table border="0" class="forumline gen">
+							<tr>
+								<td>From:</td>
+								<td><input type="text">
+							</tr>
+
+							<tr>
+								<td>To:</td>
+								<td><input type="text">
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td>
+						<input type="radio" id="reindexByMessage"><label for="reindexByMessage">By Message ID</label>
+					</td>
+					<td valign="top">
+						<table border="0" class="forumline gen">
+							<tr>
+								<td>From:</td>
+								<td><input type="text">
+							</tr>
+
+							<tr>
+								<td>To:</td>
+								<td><input type="text">
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="200">
+						<input type="checkbox" id="avoidDuplicates"><label for="avoidDuplicates">Check if message exists before adding to index</label>
+					</td>
+					<td class="gensmall">
+						This avoid duplicated records, but the indexing process will take longer to complete
+					</td>
+				</tr>
+
+				<tr>
+					<td colspan="2" align="right" class="cat">
+						<input type="submit" value="Start" style="width: 100px; font-weight: bold;">
+					</td>
+				</tr>
+			</table>
 			</#if>
 		</td>
 	</tr>

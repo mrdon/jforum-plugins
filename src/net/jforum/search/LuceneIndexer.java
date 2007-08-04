@@ -61,7 +61,7 @@ import org.apache.lucene.index.Term;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneIndexer.java,v 1.5 2007/08/01 18:56:57 rafaelsteil Exp $
+ * @version $Id: LuceneIndexer.java,v 1.6 2007/08/04 00:24:25 rafaelsteil Exp $
  */
 public class LuceneIndexer
 {
@@ -158,7 +158,7 @@ public class LuceneIndexer
 		}
 	}
 
-	public void delete(Post p)
+	public synchronized void delete(Post p)
 	{
 		this.performDelete(p);
 	}
