@@ -77,7 +77,7 @@ import com.octo.captcha.image.gimpy.GimpyFactory;
 
 /**
  * @author James Yong
- * @version $Id: Captcha.java,v 1.11 2006/10/21 13:06:40 rafaelsteil Exp $
+ * @version $Id: Captcha.java,v 1.12 2007/08/05 17:11:31 andowson Exp $
  */
 public class Captcha extends ListImageCaptchaEngine
 {
@@ -126,18 +126,21 @@ public class Captcha extends ListImageCaptchaEngine
 		int maxFontSize = SystemGlobals.getIntValue(ConfigKeys.CAPTCHA_MAX_FONT_SIZE);
 
 		this.backgroundGeneratorList.add(new GradientBackgroundGenerator(new Integer(width), 
-				new Integer(height), Color.BLACK, Color.GRAY));
+				new Integer(height), Color.PINK, Color.LIGHT_GRAY));
 		this.backgroundGeneratorList.add(new GradientBackgroundGenerator(new Integer(width), 
 				new Integer(height), Color.WHITE, Color.RED));
-		this.backgroundGeneratorList.add(new FunkyBackgroundGenerator(new Integer(250), new Integer(50)));
+		this.backgroundGeneratorList.add(new GradientBackgroundGenerator(new Integer(width), 
+				new Integer(height), Color.ORANGE, Color.LIGHT_GRAY));
+		this.backgroundGeneratorList.add(new GradientBackgroundGenerator(new Integer(width), 
+				new Integer(height), Color.CYAN, Color.LIGHT_GRAY));
+		//this.backgroundGeneratorList.add(new FunkyBackgroundGenerator(new Integer(250), new Integer(50)));
 		
-		this.textPasterList.add(new RandomTextPaster(new Integer(minWords), new Integer(maxWords), Color.RED));
-		this.textPasterList.add(new RandomTextPaster(new Integer(minWords), new Integer(maxWords), Color.ORANGE));
+		this.textPasterList.add(new RandomTextPaster(new Integer(minWords), new Integer(maxWords), Color.DARK_GRAY));
 		this.textPasterList.add(new RandomTextPaster(new Integer(minWords), new Integer(maxWords), Color.BLUE));
-		this.textPasterList.add(new RandomTextPaster(new Integer(minWords), new Integer(maxWords), Color.WHITE));
 		this.textPasterList.add(new RandomTextPaster(new Integer(minWords), new Integer(maxWords), Color.GREEN));
-		this.textPasterList.add(new RandomTextPaster(new Integer(minWords), new Integer(maxWords), Color.GRAY));
-		this.textPasterList.add(new RandomTextPaster(new Integer(minWords), new Integer(maxWords), Color.YELLOW));
+		this.textPasterList.add(new RandomTextPaster(new Integer(minWords), new Integer(maxWords), Color.MAGENTA));
+		this.textPasterList.add(new RandomTextPaster(new Integer(minWords), new Integer(maxWords), Color.BLACK));
+		this.textPasterList.add(new RandomTextPaster(new Integer(minWords), new Integer(maxWords), Color.WHITE));
 
 		this.fontGeneratorList.add(new TwistedAndShearedRandomFontGenerator(new Integer(minFontSize), new Integer(maxFontSize)));
 
