@@ -44,16 +44,11 @@
 package net.jforum.view.admin;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.index.IndexReader;
-
-import freemarker.template.SimpleHash;
-import freemarker.template.Template;
 
 import net.jforum.JForumExecutionContext;
 import net.jforum.context.RequestContext;
@@ -61,6 +56,7 @@ import net.jforum.context.ResponseContext;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.LuceneDAO;
 import net.jforum.entities.Post;
+import net.jforum.exceptions.ForumException;
 import net.jforum.repository.ForumRepository;
 import net.jforum.search.LuceneIndexer;
 import net.jforum.search.LuceneReindexArgs;
@@ -70,9 +66,15 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.lucene.index.IndexReader;
+
+import freemarker.template.SimpleHash;
+import freemarker.template.Template;
+
 /**
  * @author Rafael Steil
- * @version $Id: LuceneStatsAction.java,v 1.15 2007/08/05 18:47:56 rafaelsteil Exp $
+ * @version $Id: LuceneStatsAction.java,v 1.16 2007/08/05 21:57:28 rafaelsteil Exp $
  */
 public class LuceneStatsAction extends AdminCommand
 {
@@ -81,13 +83,32 @@ public class LuceneStatsAction extends AdminCommand
 	 */
 	public void list()
 	{
-		File indexDir = new File(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH));
+		IndexReader reader = null;
 		
-		this.setTemplateName(TemplateKeys.SEARCH_STATS_LIST);
-		
-		this.context.put("indexExists", IndexReader.indexExists(indexDir));
-		this.context.put("indexLocation", indexDir.getAbsolutePath());
-		this.context.put("totalMessages", new Integer(ForumRepository.getTotalMessages()));
+		try {
+			File indexDir = new File(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH));
+			
+			this.setTemplateName(TemplateKeys.SEARCH_STATS_LIST);
+			
+			reader = IndexReader.open(indexDir);
+			
+			this.context.put("indexExists", IndexReader.indexExists(indexDir));
+			this.context.put("isLocked", IndexReader.isLocked(indexDir.getAbsolutePath()));
+			this.context.put("lastModified", new Date(IndexReader.lastModified(indexDir)));
+			this.context.put("indexLocation", indexDir.getAbsolutePath());
+			this.context.put("totalMessages", new Integer(ForumRepository.getTotalMessages()));
+			this.context.put("indexVersion", new Long(reader.getVersion()));
+			this.context.put("numberOfDocs", new Integer(reader.numDocs()));
+		}
+		catch (IOException e) {
+			throw new ForumException(e);
+		}
+		finally {
+			if (reader != null) {
+				try { reader.close(); }
+				catch (Exception e) {}
+			}
+		}
 	}
 	
 	public void createIndexDirectory() throws Exception

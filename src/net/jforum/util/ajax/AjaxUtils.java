@@ -42,24 +42,32 @@
  */
 package net.jforum.util.ajax;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import net.jforum.entities.Post;
 import net.jforum.entities.User;
+import net.jforum.exceptions.ForumException;
+import net.jforum.search.SearchFields;
 import net.jforum.util.SafeHtml;
 import net.jforum.util.mail.Spammer;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.view.forum.common.PostCommon;
+
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.TermQuery;
+
 import freemarker.template.SimpleHash;
 
 /**
  * General AJAX utility methods. 
  * 
  * @author Rafael Steil
- * @version $Id: AjaxUtils.java,v 1.12 2006/11/12 15:58:15 rafaelsteil Exp $
+ * @version $Id: AjaxUtils.java,v 1.13 2007/08/05 21:57:29 rafaelsteil Exp $
  */
 public class AjaxUtils
 {
@@ -137,6 +145,29 @@ public class AjaxUtils
 		}
 		
 		return "OK";
+	}
+	
+	public static boolean isPostIndexed(int postId)
+	{
+		boolean status = false;
+		IndexSearcher searcher = null;
+		
+		try {
+			searcher = new IndexSearcher(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH));
+			status = searcher.search(new TermQuery(
+				new Term(SearchFields.Keyword.POST_ID, String.valueOf(postId)))).length() > 0;
+		}
+		catch (IOException e) {
+			throw new ForumException(e);
+		}
+		finally {
+			if (searcher != null) {
+				try { searcher.close(); }
+				catch (Exception e) {}
+			}
+		}
+		
+		return status;
 	}
 	
 	/**

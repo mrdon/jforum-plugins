@@ -1,5 +1,8 @@
 <style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/style.css );</style>
 
+<script type="text/javascript" src="${contextPath}/dwr/interface/AjaxUtils.js?${startupTime}"></script>
+<script type="text/javascript" src="${contextPath}/dwr/engine.js?${startupTime}"></script>
+
 <script type="text/javascript">
 function writeOptions(fieldName, from, to) 
 {
@@ -54,6 +57,25 @@ function chooseByPostId(field)
 		}
 	}
 }
+
+function checkIfPostExists()
+{
+	var postId = document.getElementById("checkPostId").value;
+
+	if (!isNaN(postId * 1)) {
+		AjaxUtils.isPostIndexed(postId, checkIfPostExistsCallback);
+	}
+}
+
+function checkIfPostExistsCallback(status)
+{
+	if (status) {
+		alert("${I18n.getMessage("Yes")}");
+	}
+	else {
+		alert("${I18n.getMessage("No")}");
+	}
+}
 </script>
 
 <table border="0" class="forumline gen" width="100%">
@@ -62,20 +84,18 @@ function chooseByPostId(field)
 	</tr>
 
 	<tr>
-		<td>
-			<strong>${I18n.getMessage("SearchStats.TotalMessagesInDatabase")}:</strong> <i>${totalMessages}</i>
-		</td>
+		<td width="200"><strong>${I18n.getMessage("SearchStats.TotalMessagesInDatabase")}:</strong> </td>
+		<td><i>${totalMessages}</i></td>
 	</tr>
 
 	<tr>
-		<td>
-			<strong>${I18n.getMessage("SearchStats.IndexLocation")}:</strong> <i>${indexLocation}</i>
-		</td>
+		<td class="row3"><strong>${I18n.getMessage("SearchStats.IndexLocation")}:</strong></td>
+		<td class="row3"><i>${indexLocation}</i></td>
 	</tr>
 
 	<tr>
+		<td><strong>${I18n.getMessage("SearchStats.IndexExists")}:</strong></td>
 		<td>
-			<strong>${I18n.getMessage("SearchStats.IndexExists")}:</strong>
 			<#if !indexExists>
 				<i>${I18n.getMessage("No")}</i>. <a href="${contextPath}/jforum${extension}?module=${moduleName}&action=createIndexDirectory">>${I18n.getMessage("SearchStats.CreateIndexNow")}</a>
 			<#else>
@@ -83,6 +103,45 @@ function chooseByPostId(field)
 			</#if>
 		</td>
 	</tr>
+
+	<#if indexExists>
+		<tr>
+			<td class="row3"><strong>Last modification date:</strong></td>
+			<td class="row3"><i>${lastModified?datetime}</i></td>
+		</tr>
+
+		<tr>
+			<td><strong>Number of documents:</strong> </td>
+			<td><i>${numberOfDocs}</i></td>
+		</tr>
+
+		<tr>
+			<td class="row3"><strong>Index version:</strong> </td>
+			<td class="row3"><i>${indexVersion}</i></td>
+		</tr>
+
+		<tr>
+			<td><strong>Is locked? (write.lock)</strong> </td>
+			<td>
+				<i>
+					<#if isLocked>
+						${I18n.getMessage("Yes")}
+					<#else>
+						${I18n.getMessage("No")}
+					</#if>
+				</i>
+			</td>
+		</tr>
+
+		<tr>
+			<td class="row3"><strong>${I18n.getMessage("SearchStats.isPostIndexed")}</strong> </td>
+			<td class="gensmall row3">
+				${I18n.getMessage("SearchStats.enterPostId")}: 
+				<input type="text" id="checkPostId">
+				<input type="button" value="${I18n.getMessage("SearchStats.check")}" onClick="checkIfPostExists();">
+			</td>
+		</tr>
+	</#if>
 </table>
 
 <br/>
@@ -102,7 +161,7 @@ function chooseByPostId(field)
 				<input type="radio" id="reindexByDate" name="type" value="1" checked="checked"><label for="reindexByDate">${I18n.getMessage("SearchStats.ByDate")}</label>
 			</td>
 			<td valign="top">
-				<table border="0" class="forumline gen">
+				<table border="0" class="gen">
 					<tr>
 						<td>${I18n.getMessage("SearchStats.From")}:</td>
 						<td>
@@ -135,11 +194,11 @@ function chooseByPostId(field)
 		</tr>
 
 		<tr>
-			<td>
+			<td class="row3">
 				<input type="radio" id="reindexByMessage" name="type" value="2"><label for="reindexByMessage">${I18n.getMessage("SearchStats.ByMessageID")}</label>
 			</td>
-			<td valign="top">
-				<table border="0" class="forumline gen">
+			<td valign="top" class="row3">
+				<table border="0" class="gen">
 					<tr>
 						<td>${I18n.getMessage("SearchStats.From")}:</td>
 						<td><input type="text" name="firstPostId" onBlur="chooseByPostId(this);">
