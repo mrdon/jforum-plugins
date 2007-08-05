@@ -72,7 +72,7 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneStatsAction.java,v 1.14 2007/08/05 17:47:06 rafaelsteil Exp $
+ * @version $Id: LuceneStatsAction.java,v 1.15 2007/08/05 18:47:56 rafaelsteil Exp $
  */
 public class LuceneStatsAction extends AdminCommand
 {
@@ -81,14 +81,20 @@ public class LuceneStatsAction extends AdminCommand
 	 */
 	public void list()
 	{
-		this.setTemplateName(TemplateKeys.SEARCH_STATS_ADMIN_LIST);
+		File indexDir = new File(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH));
+		
+		this.setTemplateName(TemplateKeys.SEARCH_STATS_LIST);
+		
+		this.context.put("indexExists", IndexReader.indexExists(indexDir));
+		this.context.put("indexLocation", indexDir.getAbsolutePath());
+		this.context.put("totalMessages", new Integer(ForumRepository.getTotalMessages()));
 	}
 	
 	public void createIndexDirectory() throws Exception
 	{
 		this.settings().createIndexDirectory(
 			SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH));
-		this.reindexMain();
+		this.list();
 	}
 	
 	public void reconstructIndexFromScratch()
@@ -133,18 +139,7 @@ public class LuceneStatsAction extends AdminCommand
 		Thread thread = new Thread(indexingJob);
 		thread.start();
 		
-		this.reindexMain();
-	}
-	
-	public void reindexMain()
-	{
-		File indexDir = new File(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH));
-		
-		this.setTemplateName(TemplateKeys.SEARCH_STATS_REINDEX);
-		
-		this.context.put("indexExists", IndexReader.indexExists(indexDir));
-		this.context.put("indexLocation", indexDir.getAbsolutePath());
-		this.context.put("totalMessages", new Integer(ForumRepository.getTotalMessages()));
+		this.list();
 	}
 	
 	public void luceneNotEnabled()
