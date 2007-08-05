@@ -1,5 +1,25 @@
 <style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/style.css );</style>
 
+<script type="text/javascript">
+function writeOptions(fieldName, from, to) 
+{
+	document.write("<select name='" + fieldName + "'>");
+	document.write("<option value=''>--</option>");
+
+	for (var i = from; i <= to; i++) {
+		document.write("<option value='" + i + "'>" + i + "</option>");
+	}
+
+	document.write("</select>&nbsp;&nbsp;");
+}
+
+function writeTimeGroup(fieldNamePrefix)
+{
+	document.write("<input type='text' style='width: 35px;' maxlength='2' name='" + fieldNamePrefix + "Hour'> : ");
+	document.write("<input type='text' style='width: 35px;' maxlength='2' name='" + fieldNamePrefix + "Minute'>");
+}
+</script>
+
 <table class="forumline gen" cellspacing="1" cellpadding="3" width="100%">
 	<tr>
 		<th class="thhead" colspan="5">${I18n.getMessage("SearchStats.ReIndex")}</th>
@@ -37,13 +57,31 @@
 					<td valign="top">
 						<table border="0" class="forumline gen">
 							<tr>
-								<td>From:</td>
-								<td><input type="text">
+								<td>From: </td>
+								<td>
+									<span class="gensmall">(dd/mm/yyyy hh:mm)</span>
+
+									<script type="text/javascript">
+										writeOptions("fromDay", 1, 31);
+										writeOptions("fromMonth", 1, 12);
+										writeOptions("fromYear", 1995, new Date().getFullYear());
+										writeTimeGroup("from");
+									</script>
+								</td>
 							</tr>
 
 							<tr>
 								<td>To:</td>
-								<td><input type="text">
+								<td>
+									<span class="gensmall">(dd/mm/yyyy hh:mm)</span>
+
+									<script type="text/javascript">
+										writeOptions("toDay", 1, 31);
+										writeOptions("toMonth", 1, 12);
+										writeOptions("toYear", 1995, new Date().getFullYear());
+										writeTimeGroup("to");
+									</script>
+								</td>
 							</tr>
 						</table>
 					</td>

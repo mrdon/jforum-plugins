@@ -46,6 +46,7 @@ package net.jforum.dao.generic;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -60,14 +61,14 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericLuceneDAO.java,v 1.6 2007/07/31 01:56:22 rafaelsteil Exp $
+ * @version $Id: GenericLuceneDAO.java,v 1.7 2007/08/05 15:10:31 rafaelsteil Exp $
  */
 public class GenericLuceneDAO implements LuceneDAO
 {
 	/**
-	 * @see net.jforum.dao.LuceneDAO#getPostsToIndex(int, int)
+	 * @see net.jforum.dao.LuceneDAO#getPostsToIndex(int, int, Date, Date)
 	 */
-	public List getPostsToIndex(int from, int howMany)
+	public List getPostsToIndex(int from, int howMany, Date start, Date end)
 	{
 		List l = new ArrayList();
 		
@@ -75,10 +76,24 @@ public class GenericLuceneDAO implements LuceneDAO
 		ResultSet rs = null;
 		
 		try {
-			p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("SearchModel.getPostsToIndexForLucene"));
-			p.setInt(1, from);
-			p.setInt(2, howMany);
+			String sql = SystemGlobals.getSql("SearchModel.getPostsToIndexForLucene");
+			StringBuffer constraints = new StringBuffer(256);
+			
+			if (start != null && end != null) {
+				constraints.append(" AND p.post_time >= ? AND p.post_time <= ?");
+			}
+			
+			int position = 1;
+			p = JForumExecutionContext.getConnection().prepareStatement(sql);
+			
+			if (start != null && end != null) {
+				sql = sql.replaceAll(":CONSTRAINTS:", constraints.toString());
+				p.setTimestamp(position++, new Timestamp(start.getTime()));
+				p.setTimestamp(position++, new Timestamp(end.getTime()));
+			}
+			
+			p.setInt(position++, from);
+			p.setInt(position, howMany);
 
 			rs = p.executeQuery();
 			

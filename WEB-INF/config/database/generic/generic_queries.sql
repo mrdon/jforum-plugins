@@ -390,7 +390,7 @@ TopicModel.totalTopics = SELECT COUNT(1) FROM jforum_topics
 SearchModel.getPostsToIndexForLucene = SELECT p.post_id, p.forum_id, p.topic_id, p.user_id, p.post_time, pt.post_text, pt.post_subject \
 	FROM jforum_posts p, jforum_posts_text pt \
 	WHERE p.post_id = pt.post_id \
-	LIMIT ?, ?
+	:CONSTRAINTS: LIMIT ?, ?
 
 SearchModel.getPostsDataForLucene = SELECT p.post_id, p.forum_id, p.topic_id, p.user_id, u.username, p.enable_bbcode, p.enable_smilies, p.post_time, pt.post_subject, pt.post_text, t.topic_title \
 	FROM jforum_posts p, jforum_posts_text pt, jforum_users u, jforum_topics t \

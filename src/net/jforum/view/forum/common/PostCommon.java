@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.40 2007/04/02 17:14:43 andowson Exp $
+ * @version $Id: PostCommon.java,v 1.41 2007/08/05 15:10:31 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -240,14 +240,14 @@ public class PostCommon
 		p.setBbCodeEnabled(request.getParameter("disable_bbcode") == null);
 		p.setSmiliesEnabled(request.getParameter("disable_smilies") == null);
 		p.setSignatureEnabled(request.getParameter("attach_sig") != null);
-
+		
 		if (!isEdit) {
 			p.setUserIp(request.getRemoteAddr());
 			p.setUserId(SessionFacade.getUserSession().getUserId());
 		}
 		
 		boolean htmlEnabled = SecurityRepository.canAccess(SecurityConstants.PERM_HTML_DISABLED, 
-				request.getParameter("forum_id"));
+			request.getParameter("forum_id"));
 		p.setHtmlEnabled(htmlEnabled && request.getParameter("disable_html") == null);
 
 		if (p.isHtmlEnabled()) {

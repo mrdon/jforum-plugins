@@ -70,7 +70,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: WebRequestContext.java,v 1.5 2006/12/11 00:57:10 rafaelsteil Exp $
+ * @version $Id: WebRequestContext.java,v 1.6 2007/08/05 15:10:31 rafaelsteil Exp $
  */
 public class WebRequestContext extends HttpServletRequestWrapper implements RequestContext
 {
@@ -397,7 +397,10 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 		// If it is not call the older function.
         String ip = super.getHeader("x-forwarded-for");
         
-        if (ip != null) {
+        if (ip == null) {
+        	ip = super.getRemoteAddr();
+        }
+        else {
         	// Process the IP to keep the last IP (real ip of the computer on the net)
             StringTokenizer tokenizer = new StringTokenizer(ip, ",");
 
@@ -411,9 +414,6 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
             if (ip.equals("")) {
             	ip = null;
             }
-        }
-        else {
-        	ip = super.getRemoteAddr();
         }
         
         // If the ip is still null, we put 0.0.0.0 to avoid null values

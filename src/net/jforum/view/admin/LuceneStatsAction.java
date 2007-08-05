@@ -44,6 +44,8 @@
 package net.jforum.view.admin;
 
 import java.io.File;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
@@ -68,7 +70,7 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneStatsAction.java,v 1.9 2007/07/30 01:16:13 rafaelsteil Exp $
+ * @version $Id: LuceneStatsAction.java,v 1.10 2007/08/05 15:10:30 rafaelsteil Exp $
  */
 public class LuceneStatsAction extends AdminCommand
 {
@@ -89,11 +91,14 @@ public class LuceneStatsAction extends AdminCommand
 	
 	public void reconstructIndexFromScratch()
 	{
+		final Date start = this.buildDateFromRequest("from");
+		final Date end = this.buildDateFromRequest("to");
+		
 		Runnable indexingJob = new Runnable() {		
 			public void run()
 			{
 				LuceneDAO dao = DataAccessDriver.getInstance().newLuceneDAO();
-				int start = 0;
+				int startPosition = 0;
 				int howMany = 20;
 				boolean hasMorePosts = true;
 				
@@ -102,14 +107,14 @@ public class LuceneStatsAction extends AdminCommand
 						JForumExecutionContext ex = JForumExecutionContext.get();
 						JForumExecutionContext.set(ex);
 						
-						List l = dao.getPostsToIndex(start, howMany);
+						List l = dao.getPostsToIndex(startPosition, howMany, start, end);
 						
 						for (Iterator iter = l.iterator(); iter.hasNext(); ) {
 							Post p = (Post)iter.next();
 							SearchFacade.create(p);
 						}
 						
-						start += howMany;
+						startPosition += howMany;
 						hasMorePosts = l.size() > 0;
 					}
 					finally {
@@ -161,5 +166,28 @@ public class LuceneStatsAction extends AdminCommand
 	private LuceneSettings settings()
 	{
 		return (LuceneSettings)SystemGlobals.getObjectValue(ConfigKeys.LUCENE_SETTINGS);
+	}
+	
+	private Date buildDateFromRequest(String prefix)
+	{
+		String day = this.request.getParameter(prefix + "Day");
+		String month = this.request.getParameter(prefix + "Month");
+		String year = this.request.getParameter(prefix + "Year");
+		
+		String hour = this.request.getParameter(prefix + "Hour");
+		String minutes = this.request.getParameter(prefix + "Minutes");
+		
+		Date date = null;
+		
+		if (day != null && month != null && year != null && hour != null && minutes != null)
+		{
+			date = new GregorianCalendar(Integer.parseInt(year), 
+				Integer.parseInt(month) - 1, 
+				Integer.parseInt(year), 
+				Integer.parseInt(hour), 
+				Integer.parseInt(minutes), 0).getTime();
+		}
+		
+		return date;
 	}
 }

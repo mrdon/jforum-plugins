@@ -43,15 +43,16 @@
  */
 package net.jforum.dao;
 
+import java.util.Date;
 import java.util.List;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneDAO.java,v 1.2 2007/07/25 17:44:32 rafaelsteil Exp $
+ * @version $Id: LuceneDAO.java,v 1.3 2007/08/05 15:10:30 rafaelsteil Exp $
  */
 public interface LuceneDAO
 {
-	public List getPostsToIndex(int from, int howMany);
+	public List getPostsToIndex(int from, int howMany, Date start, Date end);
 	
 	public List getPostsData(int[] postIds);
 }
