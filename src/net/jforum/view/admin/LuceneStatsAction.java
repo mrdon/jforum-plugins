@@ -49,6 +49,7 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.index.IndexReader;
 
 import freemarker.template.SimpleHash;
@@ -71,7 +72,7 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneStatsAction.java,v 1.13 2007/08/05 17:11:08 rafaelsteil Exp $
+ * @version $Id: LuceneStatsAction.java,v 1.14 2007/08/05 17:47:06 rafaelsteil Exp $
  */
 public class LuceneStatsAction extends AdminCommand
 {
@@ -132,9 +133,7 @@ public class LuceneStatsAction extends AdminCommand
 		Thread thread = new Thread(indexingJob);
 		thread.start();
 		
-		JForumExecutionContext.setRedirect(this.request.getContextPath()
-			+ "/adminSearchStats/reindexMain"
-			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+		this.reindexMain();
 	}
 	
 	public void reindexMain()
@@ -207,7 +206,11 @@ public class LuceneStatsAction extends AdminCommand
 		
 		Date date = null;
 		
-		if (day != null && month != null && year != null && hour != null && minutes != null)
+		if (!StringUtils.isEmpty(day) 
+			&& !StringUtils.isEmpty(month) 
+			&& !StringUtils.isEmpty(year) 
+			&& !StringUtils.isEmpty(hour) 
+			&& !StringUtils.isEmpty(minutes))
 		{
 			date = new GregorianCalendar(Integer.parseInt(year), 
 				Integer.parseInt(month) - 1, 
