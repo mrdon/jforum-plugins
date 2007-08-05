@@ -129,17 +129,17 @@ function chooseByPostId(field)
 
 				<tr>
 					<td>
-						<input type="radio" id="reindexByMessage" name="type" value="2"><label for="reindexByMessage">By Post ID</label>
+						<input type="radio" id="reindexByMessage" name="type" value="2"><label for="reindexByMessage">${I18n.getMessage("SearchStats.ByMessageID")}</label>
 					</td>
 					<td valign="top">
 						<table border="0" class="forumline gen">
 							<tr>
-								<td>From:</td>
+								<td>${I18n.getMessage("SearchStats.From")}:</td>
 								<td><input type="text" name="firstPostId" onBlur="chooseByPostId(this);">
 							</tr>
 
 							<tr>
-								<td>To:</td>
+								<td>${I18n.getMessage("SearchStats.To")}:</td>
 								<td><input type="text" name="lastPostId" onBlur="chooseByPostId(this);">
 							</tr>
 						</table>
@@ -148,16 +148,16 @@ function chooseByPostId(field)
 
 				<tr>
 					<td width="200">
-						<input type="checkbox" id="avoidDuplicated" name="avoidDuplicatedRecords" value="yes" checked="checked"><label for="avoidDuplicates">Check if message exists before adding to index</label>
+						<input type="checkbox" id="avoidDuplicated" name="avoidDuplicatedRecords" value="yes" checked="checked"><label for="avoidDuplicates">${I18n.getMessage("SearchStats.CheckMessageExists")}</label>
 					</td>
 					<td class="gensmall">
-						This avoid duplicated records, but the indexing process will take longer to complete
+						${I18n.getMessage("SearchStats.Warning")}
 					</td>
 				</tr>
 
 				<tr>
 					<td colspan="2" align="right" class="cat">
-						<input type="submit" value="Start" style="width: 100px; font-weight: bold;">
+						<input type="submit" value="${I18n.getMessage("SearchStats.Start")}" style="width: 100px; font-weight: bold;">
 					</td>
 				</tr>
 			</table>
