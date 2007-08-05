@@ -62,6 +62,7 @@ import net.jforum.dao.LuceneDAO;
 import net.jforum.entities.Post;
 import net.jforum.repository.ForumRepository;
 import net.jforum.search.LuceneIndexer;
+import net.jforum.search.LuceneReindexArgs;
 import net.jforum.search.LuceneSettings;
 import net.jforum.search.SearchFacade;
 import net.jforum.util.preferences.ConfigKeys;
@@ -70,7 +71,7 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneStatsAction.java,v 1.10 2007/08/05 15:10:30 rafaelsteil Exp $
+ * @version $Id: LuceneStatsAction.java,v 1.11 2007/08/05 16:29:20 rafaelsteil Exp $
  */
 public class LuceneStatsAction extends AdminCommand
 {
@@ -91,8 +92,7 @@ public class LuceneStatsAction extends AdminCommand
 	
 	public void reconstructIndexFromScratch()
 	{
-		final Date start = this.buildDateFromRequest("from");
-		final Date end = this.buildDateFromRequest("to");
+		final LuceneReindexArgs args = this.buildReindexArgs();
 		
 		Runnable indexingJob = new Runnable() {		
 			public void run()
@@ -107,7 +107,7 @@ public class LuceneStatsAction extends AdminCommand
 						JForumExecutionContext ex = JForumExecutionContext.get();
 						JForumExecutionContext.set(ex);
 						
-						List l = dao.getPostsToIndex(startPosition, howMany, start, end);
+						List l = dao.getPostsToIndex(args, startPosition, howMany);
 						
 						for (Iterator iter = l.iterator(); iter.hasNext(); ) {
 							Post p = (Post)iter.next();
@@ -166,6 +166,27 @@ public class LuceneStatsAction extends AdminCommand
 	private LuceneSettings settings()
 	{
 		return (LuceneSettings)SystemGlobals.getObjectValue(ConfigKeys.LUCENE_SETTINGS);
+	}
+	
+	private LuceneReindexArgs buildReindexArgs()
+	{
+		Date fromDate = this.buildDateFromRequest("from");
+		Date toDate = this.buildDateFromRequest("to");
+		
+		int firstPostId = 0;
+		int lastPostId = 0;
+		
+		if (this.request.getParameter("firstPostId") != null) {
+			firstPostId = this.request.getIntParameter("firstPostId");
+		}
+		
+		if (this.request.getParameter("lastPostId") != null) {
+			lastPostId = this.request.getIntParameter("lastPostId");
+		}
+		
+		return new LuceneReindexArgs(fromDate, toDate, firstPostId, 
+			lastPostId, "yes".equals(this.request.getParameter("avoidDuplicatedRecords")), 
+			this.request.getIntParameter("type"));
 	}
 	
 	private Date buildDateFromRequest(String prefix)
