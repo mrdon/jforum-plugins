@@ -27,37 +27,37 @@ function writeTimeGroup(fieldNamePrefix)
 
 	<tr>
 		<td>
-			<strong>Total messages in the database:</strong> <i>${totalMessages}</i>
+			<strong>${I18n.getMessage("SearchStats.TotalMessagesInDatabase")}:</strong> <i>${totalMessages}</i>
 		</td>
 	</tr>
 
 	<tr>
 		<td>
-			<strong>Index location:</strong> <i>${indexLocation}</i>
+			<strong>${I18n.getMessage("SearchStats.IndexLocation")}:</strong> <i>${indexLocation}</i>
 		</td>
 	</tr>
 
 	<tr>
 		<td>
-			<strong>Index exists:</strong>
+			<strong>${I18n.getMessage("SearchStats.IndexExists")}:</strong>
 			<#if !indexExists>
-				<i>No</i>. <a href="${contextPath}/jforum${extension}?module=${moduleName}&action=createIndexDirectory">Create index now.</a>
+				<i>${I18n.getMessage("No")}</i>. <a href="${contextPath}/jforum${extension}?module=${moduleName}&action=createIndexDirectory">>${I18n.getMessage("SearchStats.CreateIndexNow")}</a>
 			<#else>
-				<i>Yes</i>. 
+				<i>${I18n.getMessage("Yes")}</i>. 
 
 			<table border="0" class="forumline gen">
 				<tr>
-					<th colspan="2">Re-Index</th>
+					<th colspan="2">${I18n.getMessage("SearchStats.ReDo")}</th>
 				</tr>
 
 				<tr>
 					<td>
-						<input type="radio" id="reindexByDate"><label for="reindexByDate">By date</label>
+						<input type="radio" id="reindexByDate"><label for="reindexByDate">${I18n.getMessage("SearchStats.ByDate")}</label>
 					</td>
 					<td valign="top">
 						<table border="0" class="forumline gen">
 							<tr>
-								<td>From: </td>
+								<td>${I18n.getMessage("SearchStats.From")}:</td>
 								<td>
 									<span class="gensmall">(dd/mm/yyyy hh:mm)</span>
 
@@ -71,7 +71,7 @@ function writeTimeGroup(fieldNamePrefix)
 							</tr>
 
 							<tr>
-								<td>To:</td>
+								<td>${I18n.getMessage("SearchStats.To")}:</td>
 								<td>
 									<span class="gensmall">(dd/mm/yyyy hh:mm)</span>
 
@@ -94,12 +94,12 @@ function writeTimeGroup(fieldNamePrefix)
 					<td valign="top">
 						<table border="0" class="forumline gen">
 							<tr>
-								<td>From:</td>
+								<td>${I18n.getMessage("SearchStats.From")}:</td>
 								<td><input type="text">
 							</tr>
 
 							<tr>
-								<td>To:</td>
+								<td>${I18n.getMessage("SearchStats.To")}:</td>
 								<td><input type="text">
 							</tr>
 						</table>
@@ -108,10 +108,10 @@ function writeTimeGroup(fieldNamePrefix)
 
 				<tr>
 					<td width="200">
-						<input type="checkbox" id="avoidDuplicates"><label for="avoidDuplicates">Check if message exists before adding to index</label>
+						<input type="checkbox" id="avoidDuplicates"><label for="avoidDuplicates">${I18n.getMessage("SearchStats.CheckMessageExists")}</label>
 					</td>
 					<td class="gensmall">
-						This avoid duplicated records, but the indexing process will take longer to complete
+						${I18n.getMessage("SearchStats.Warning")}
 					</td>
 				</tr>
 

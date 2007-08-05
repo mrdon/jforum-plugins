@@ -43,7 +43,7 @@
 				<#if results.size() == 0>
 					<tr>
 						<td class="gen">
-							No results were found. <a href="${JForumContext.encodeURL("/search/filters")}">Click here</a> to make a new search.
+							${I18n.getMessage("Search.noResults")} <a href="${JForumContext.encodeURL("/search/filters")}">${I18n.getMessage("Search.clickHere")}</a> ${I18n.getMessage("Search.newSearch")}
 						</td>
 					</tr>
 				<#else>
@@ -58,12 +58,12 @@
 									<strong>
 										<a href="${postUrl}">${post.subject}</a>
 									</strong>, 
-									posted on <a href="${JForumContext.encodeURL("/forums/list/${post.forum.id}")}">${post.forum.name}</a>, 
-									at ${post.time?datetime}, 
-									by <a href="${JForumContext.encodeURL("/user/profile/${post.userId}")}">${post.postUsername}</a>
+									${I18n.getMessage("Search.postedOn")} <a href="${JForumContext.encodeURL("/forums/list/${post.forum.id}")}">${post.forum.name}</a>, 
+									${I18n.getMessage("Search.postedAt")} ${post.time?datetime}, 
+									${I18n.getMessage("Search.postedBy")} <a href="${JForumContext.encodeURL("/user/profile/${post.userId}")}">${post.postUsername}</a>
 
 									<br/>
-									<a href="${postUrl}">View message</a>
+									<a href="${postUrl}">${I18n.getMessage("Search.viewMessage")}</a>
 								</span>
 							</td>
 						</tr>
