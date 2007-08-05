@@ -1,5 +1,11 @@
 <#include "header.htm"/>
 <script type="text/javascript">
+function checkemail(str) {
+    var filter=/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i
+    if (filter.test(str)) return true;
+    else return false;
+}
+
 function validateRegistrationForm(f)
 {
 	if (f.username.value == "") {
@@ -9,12 +15,12 @@ function validateRegistrationForm(f)
 		return false;
 	}
 	
-	if (f.email.value == "") {
-		alert("${I18n.getMessage("User.fillEmail")}");
-		f.email.focus();
-		
-		return false;
-	}
+	if (f.email.value == "" || checkemail(f.email.value) != true) {
+        alert("${I18n.getMessage("User.fillEmail")}");
+        f.email.focus();
+
+        return false;
+    }
 	
 	if (f.password.value == "") {
 		alert("${I18n.getMessage("User.fillPassword")}");
