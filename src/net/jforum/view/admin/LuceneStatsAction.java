@@ -71,7 +71,7 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneStatsAction.java,v 1.11 2007/08/05 16:29:20 rafaelsteil Exp $
+ * @version $Id: LuceneStatsAction.java,v 1.12 2007/08/05 16:30:45 rafaelsteil Exp $
  */
 public class LuceneStatsAction extends AdminCommand
 {
@@ -111,6 +111,11 @@ public class LuceneStatsAction extends AdminCommand
 						
 						for (Iterator iter = l.iterator(); iter.hasNext(); ) {
 							Post p = (Post)iter.next();
+							
+							if (args.avoidDuplicatedRecords()) {
+								SearchFacade.delete(p);
+							}
+							
 							SearchFacade.create(p);
 						}
 						

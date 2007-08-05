@@ -52,12 +52,12 @@ function writeTimeGroup(fieldNamePrefix)
 
 				<tr>
 					<td>
-						<input type="radio" id="reindexByDate"><label for="reindexByDate">${I18n.getMessage("SearchStats.ByDate")}</label>
+						<input type="radio" id="reindexByDate" name="reindexType" value="1" checked="checked"><label for="reindexByDate">${I18n.getMessage("SearchStats.ByDate")}</label>
 					</td>
 					<td valign="top">
 						<table border="0" class="forumline gen">
 							<tr>
-								<td>${I18n.getMessage("SearchStats.From")}:</td>
+								<td>From: </td>
 								<td>
 									<span class="gensmall">(dd/mm/yyyy hh:mm)</span>
 
@@ -71,7 +71,7 @@ function writeTimeGroup(fieldNamePrefix)
 							</tr>
 
 							<tr>
-								<td>${I18n.getMessage("SearchStats.To")}:</td>
+								<td>To:</td>
 								<td>
 									<span class="gensmall">(dd/mm/yyyy hh:mm)</span>
 
@@ -89,18 +89,18 @@ function writeTimeGroup(fieldNamePrefix)
 
 				<tr>
 					<td>
-						<input type="radio" id="reindexByMessage"><label for="reindexByMessage">By Message ID</label>
+						<input type="radio" id="reindexByMessage" name="reindexType" value="2"><label for="reindexByMessage">By Post ID</label>
 					</td>
 					<td valign="top">
 						<table border="0" class="forumline gen">
 							<tr>
-								<td>${I18n.getMessage("SearchStats.From")}:</td>
-								<td><input type="text">
+								<td>From:</td>
+								<td><input type="text" name="firstPostId">
 							</tr>
 
 							<tr>
-								<td>${I18n.getMessage("SearchStats.To")}:</td>
-								<td><input type="text">
+								<td>To:</td>
+								<td><input type="text" name="lastPostId">
 							</tr>
 						</table>
 					</td>
@@ -108,10 +108,10 @@ function writeTimeGroup(fieldNamePrefix)
 
 				<tr>
 					<td width="200">
-						<input type="checkbox" id="avoidDuplicates"><label for="avoidDuplicates">${I18n.getMessage("SearchStats.CheckMessageExists")}</label>
+						<input type="checkbox" id="avoidDuplicated" name="avoidDuplicatedRecords" value="yes" checked="checked"><label for="avoidDuplicates">Check if message exists before adding to index</label>
 					</td>
 					<td class="gensmall">
-						${I18n.getMessage("SearchStats.Warning")}
+						This avoid duplicated records, but the indexing process will take longer to complete
 					</td>
 				</tr>
 

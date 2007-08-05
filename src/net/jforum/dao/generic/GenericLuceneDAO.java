@@ -55,20 +55,21 @@ import net.jforum.JForumExecutionContext;
 import net.jforum.dao.LuceneDAO;
 import net.jforum.entities.Post;
 import net.jforum.exceptions.DatabaseException;
+import net.jforum.search.LuceneReindexArgs;
 import net.jforum.search.SearchPost;
 import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericLuceneDAO.java,v 1.7 2007/08/05 15:10:31 rafaelsteil Exp $
+ * @version $Id: GenericLuceneDAO.java,v 1.8 2007/08/05 16:29:21 rafaelsteil Exp $
  */
 public class GenericLuceneDAO implements LuceneDAO
 {
 	/**
-	 * @see net.jforum.dao.LuceneDAO#getPostsToIndex(int, int, Date, Date)
+	 * @see net.jforum.dao.LuceneDAO#getPostsToIndex(LuceneReindexArgs, int, int)
 	 */
-	public List getPostsToIndex(int from, int howMany, Date start, Date end)
+	public List getPostsToIndex(LuceneReindexArgs args, int rangeStart, int rangeFetchCount)
 	{
 		List l = new ArrayList();
 		
@@ -77,23 +78,28 @@ public class GenericLuceneDAO implements LuceneDAO
 		
 		try {
 			String sql = SystemGlobals.getSql("SearchModel.getPostsToIndexForLucene");
-			StringBuffer constraints = new StringBuffer(256);
 			
-			if (start != null && end != null) {
-				constraints.append(" AND p.post_time >= ? AND p.post_time <= ?");
+			if (args.filterByDate()) {
+				sql = sql.replaceAll(":CONSTRAINTS:", " AND p.post_time >= ? AND p.post_time <= ? ");
+			}
+			else if (args.filterByMessage()) {
+				sql = sql.replaceAll(":CONSTRAINTS:", " AND p.post_id >= ? AND p.post_id <= ? ");
 			}
 			
 			int position = 1;
 			p = JForumExecutionContext.getConnection().prepareStatement(sql);
 			
-			if (start != null && end != null) {
-				sql = sql.replaceAll(":CONSTRAINTS:", constraints.toString());
-				p.setTimestamp(position++, new Timestamp(start.getTime()));
-				p.setTimestamp(position++, new Timestamp(end.getTime()));
+			if (args.filterByDate()) {
+				p.setTimestamp(position++, new Timestamp(args.getFromDate().getTime()));
+				p.setTimestamp(position++, new Timestamp(args.getToDate().getTime()));
+			}
+			else if (args.filterByMessage()) {
+				p.setInt(position++, args.getFirstPostId());
+				p.setInt(position++, args.getLastPostId());
 			}
 			
-			p.setInt(position++, from);
-			p.setInt(position, howMany);
+			p.setInt(position++, rangeStart);
+			p.setInt(position, rangeFetchCount);
 
 			rs = p.executeQuery();
 			
