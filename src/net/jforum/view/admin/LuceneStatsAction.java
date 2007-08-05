@@ -71,7 +71,7 @@ import net.jforum.util.preferences.TemplateKeys;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneStatsAction.java,v 1.12 2007/08/05 16:30:45 rafaelsteil Exp $
+ * @version $Id: LuceneStatsAction.java,v 1.13 2007/08/05 17:11:08 rafaelsteil Exp $
  */
 public class LuceneStatsAction extends AdminCommand
 {
@@ -132,7 +132,9 @@ public class LuceneStatsAction extends AdminCommand
 		Thread thread = new Thread(indexingJob);
 		thread.start();
 		
-		this.reindexMain();
+		JForumExecutionContext.setRedirect(this.request.getContextPath()
+			+ "/adminSearchStats/reindexMain"
+			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 	}
 	
 	public void reindexMain()

@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericLuceneDAO.java,v 1.8 2007/08/05 16:29:21 rafaelsteil Exp $
+ * @version $Id: GenericLuceneDAO.java,v 1.9 2007/08/05 17:11:08 rafaelsteil Exp $
  */
 public class GenericLuceneDAO implements LuceneDAO
 {
@@ -78,13 +78,16 @@ public class GenericLuceneDAO implements LuceneDAO
 		
 		try {
 			String sql = SystemGlobals.getSql("SearchModel.getPostsToIndexForLucene");
+			String constraints = "";
 			
 			if (args.filterByDate()) {
-				sql = sql.replaceAll(":CONSTRAINTS:", " AND p.post_time >= ? AND p.post_time <= ? ");
+				constraints = " AND p.post_time >= ? AND p.post_time <= ? ";
 			}
 			else if (args.filterByMessage()) {
-				sql = sql.replaceAll(":CONSTRAINTS:", " AND p.post_id >= ? AND p.post_id <= ? ");
+				constraints = " AND p.post_id >= ? AND p.post_id <= ? ";
 			}
+			
+			sql = sql.replaceAll(":CONSTRAINTS:", constraints);
 			
 			int position = 1;
 			p = JForumExecutionContext.getConnection().prepareStatement(sql);
