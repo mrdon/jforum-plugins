@@ -80,48 +80,48 @@ function checkIfPostExistsCallback(status)
 
 <table border="0" class="forumline gen" width="100%">
 	<tr>
-		<th colspan="2">${I18n.getMessage("SearchStats.Title")}</th>
+		<th colspan="2">${I18n.getMessage("SearchStats.title")}</th>
 	</tr>
 
 	<tr>
-		<td width="200"><strong>${I18n.getMessage("SearchStats.TotalMessagesInDatabase")}:</strong> </td>
+		<td width="200"><strong>${I18n.getMessage("SearchStats.totalPostsInDatabase")}:</strong> </td>
 		<td><i>${totalMessages}</i></td>
 	</tr>
 
 	<tr>
-		<td class="row3"><strong>${I18n.getMessage("SearchStats.IndexLocation")}:</strong></td>
+		<td class="row3"><strong>${I18n.getMessage("SearchStats.indexLocation")}:</strong></td>
 		<td class="row3"><i>${indexLocation}</i></td>
 	</tr>
 
 	<tr>
-		<td><strong>${I18n.getMessage("SearchStats.IndexExists")}:</strong></td>
+		<td><strong>${I18n.getMessage("SearchStats.indexExists")}:</strong></td>
 		<td>
 			<#if !indexExists>
-				<i>${I18n.getMessage("No")}</i>. <a href="${contextPath}/jforum${extension}?module=${moduleName}&action=createIndexDirectory">>${I18n.getMessage("SearchStats.CreateIndexNow")}</a>
+				<i>${I18n.getMessage("No")}</i> <a href="${contextPath}/jforum${extension}?module=${moduleName}&action=createIndexDirectory">>${I18n.getMessage("SearchStats.CreateIndexNow")}</a>
 			<#else>
-				<i>${I18n.getMessage("Yes")}</i>. 
+				<i>${I18n.getMessage("Yes")}</i> 
 			</#if>
 		</td>
 	</tr>
 
 	<#if indexExists>
 		<tr>
-			<td class="row3"><strong>Last modification date:</strong></td>
+			<td class="row3"><strong>${I18n.getMessage("SearchStats.lastModified")}:</strong></td>
 			<td class="row3"><i>${lastModified?datetime}</i></td>
 		</tr>
 
 		<tr>
-			<td><strong>Number of documents:</strong> </td>
+			<td><strong>${I18n.getMessage("SearchStats.numberOfDocs")}:</strong> </td>
 			<td><i>${numberOfDocs}</i></td>
 		</tr>
 
 		<tr>
-			<td class="row3"><strong>Index version:</strong> </td>
+			<td class="row3"><strong>${I18n.getMessage("SearchStats.indexVersion")}:</strong> </td>
 			<td class="row3"><i>${indexVersion}</i></td>
 		</tr>
 
 		<tr>
-			<td><strong>Is locked? (write.lock)</strong> </td>
+			<td><strong>${I18n.getMessage("SearchStats.isLocked")}</strong> </td>
 			<td>
 				<i>
 					<#if isLocked>
@@ -153,17 +153,17 @@ function checkIfPostExistsCallback(status)
 
 	<table border="0" class="forumline gen" width="100%">
 		<tr>
-			<th colspan="2">${I18n.getMessage("SearchStats.ReDo")}</th>
+			<th colspan="2">${I18n.getMessage("SearchStats.reIndex")}</th>
 		</tr>
 
 		<tr>
 			<td>
-				<input type="radio" id="reindexByDate" name="type" value="1" checked="checked"><label for="reindexByDate">${I18n.getMessage("SearchStats.ByDate")}</label>
+				<input type="radio" id="reindexByDate" name="type" value="1" checked="checked"><label for="reindexByDate">${I18n.getMessage("SearchStats.byDate")}</label>
 			</td>
 			<td valign="top">
 				<table border="0" class="gen">
 					<tr>
-						<td>${I18n.getMessage("SearchStats.From")}:</td>
+						<td>${I18n.getMessage("SearchStats.from")}:</td>
 						<td>
 							<span class="gensmall">(dd/mm/yyyy hh:mm)</span>
 
@@ -177,7 +177,7 @@ function checkIfPostExistsCallback(status)
 					</tr>
 
 					<tr>
-						<td>${I18n.getMessage("SearchStats.To")}:</td>
+						<td>${I18n.getMessage("SearchStats.to")}:</td>
 						<td>
 							<span class="gensmall">(dd/mm/yyyy hh:mm)</span>
 
@@ -195,17 +195,17 @@ function checkIfPostExistsCallback(status)
 
 		<tr>
 			<td class="row3">
-				<input type="radio" id="reindexByMessage" name="type" value="2"><label for="reindexByMessage">${I18n.getMessage("SearchStats.ByMessageID")}</label>
+				<input type="radio" id="reindexByMessage" name="type" value="2"><label for="reindexByMessage">${I18n.getMessage("SearchStats.byMessageId")}</label>
 			</td>
 			<td valign="top" class="row3">
 				<table border="0" class="gen">
 					<tr>
-						<td>${I18n.getMessage("SearchStats.From")}:</td>
+						<td>${I18n.getMessage("SearchStats.from")}:</td>
 						<td><input type="text" name="firstPostId" onBlur="chooseByPostId(this);">
 					</tr>
 
 					<tr>
-						<td>${I18n.getMessage("SearchStats.To")}:</td>
+						<td>${I18n.getMessage("SearchStats.to")}:</td>
 						<td><input type="text" name="lastPostId" onBlur="chooseByPostId(this);">
 					</tr>
 				</table>
@@ -214,16 +214,16 @@ function checkIfPostExistsCallback(status)
 
 		<tr>
 			<td width="200">
-				<input type="checkbox" id="avoidDuplicated" name="avoidDuplicatedRecords" value="yes" checked="checked"><label for="avoidDuplicates">${I18n.getMessage("SearchStats.CheckMessageExists")}</label>
+				<input type="checkbox" id="avoidDuplicated" name="avoidDuplicatedRecords" value="yes" checked="checked"><label for="avoidDuplicates">${I18n.getMessage("SearchStats.checkMessageExists")}</label>
 			</td>
 			<td class="gensmall">
-				${I18n.getMessage("SearchStats.Warning")}
+				${I18n.getMessage("SearchStats.warning")}
 			</td>
 		</tr>
 
 		<tr>
 			<td colspan="2" align="right" class="cat">
-				<input type="submit" value="${I18n.getMessage("SearchStats.Start")}" style="width: 100px; font-weight: bold;">
+				<input type="submit" value="${I18n.getMessage("SearchStats.start")}" style="width: 100px; font-weight: bold;">
 			</td>
 		</tr>
 	</table>
