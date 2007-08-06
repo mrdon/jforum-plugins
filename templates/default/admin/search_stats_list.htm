@@ -39,6 +39,13 @@ function chooseByDate(f)
 	f.type[0].checked = true;
 }
 
+function confirmCancel(f)
+{
+	if (confirm("${I18n.getMessage("SearchStats.confirmCancel")}")) {
+		f.submit();
+	}
+}
+
 function validateReindexForm(f)
 {
 	if (f.type[0].checked) {
@@ -214,10 +221,13 @@ function checkIfPostExistsCallback(status)
 <br/>
 
 <#if indexExists>
+	<form action="${contextPath}/jforum${extension}" onSubmit="return validateReindexForm(this);">
+	<input type="hidden" name="module" value="${moduleName}">
+
 	<#if !currentlyIndexing>
-		<form action="${contextPath}/jforum${extension}" onSubmit="return validateReindexForm(this);">
-		<input type="hidden" name="module" value="${moduleName}">
 		<input type="hidden" name="action" value="reconstructIndexFromScratch">
+	<#else>
+		<input type="hidden" name="action" value="cancelIndexig">
 	</#if>
 
 	<table border="0" class="forumline gen" width="100%">
@@ -225,7 +235,7 @@ function checkIfPostExistsCallback(status)
 			<th colspan="2">${I18n.getMessage("SearchStats.reIndex")}</th>
 		</tr>
 
-		<#if !currentlyIndexing>
+		<#if currentlyIndexing>
 			<tr>
 				<td colspan="2">
 					<p>
@@ -233,7 +243,7 @@ function checkIfPostExistsCallback(status)
 					</p>
 
 					<p>
-						<li>${I18n.getMessage("SearchStats.wishToCancel")} <input type="button" value="${I18n.getMessage("SearchStats.cancelIndexing")}" style="font-weight: bold; color: red;"></li>
+						<li>${I18n.getMessage("SearchStats.wishToCancel")} <input type="button" onClick="confirmCancel(this.form);" value="${I18n.getMessage("SearchStats.cancelIndexing")}" style="font-weight: bold; color: red;"></li>
 					</p>
 				</td>
 			</tr>
@@ -327,7 +337,5 @@ function checkIfPostExistsCallback(status)
 		</#if>
 	</table>
 
-	<#if !currentlyIndexing>
-		</form>
-	</#if>
+	</form>
 </#if>

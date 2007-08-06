@@ -75,7 +75,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneStatsAction.java,v 1.20 2007/08/06 17:06:38 rafaelsteil Exp $
+ * @version $Id: LuceneStatsAction.java,v 1.21 2007/08/06 17:10:18 rafaelsteil Exp $
  */
 public class LuceneStatsAction extends AdminCommand
 {
@@ -196,6 +196,11 @@ public class LuceneStatsAction extends AdminCommand
 		Thread thread = new Thread(indexingJob);
 		thread.start();
 		
+		this.list();
+	}
+	
+	public void cancelIndexing()
+	{
 		this.list();
 	}
 	
