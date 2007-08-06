@@ -68,13 +68,14 @@ import net.jforum.util.preferences.TemplateKeys;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.search.IndexSearcher;
 
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneStatsAction.java,v 1.17 2007/08/06 15:38:01 rafaelsteil Exp $
+ * @version $Id: LuceneStatsAction.java,v 1.18 2007/08/06 16:06:17 rafaelsteil Exp $
  */
 public class LuceneStatsAction extends AdminCommand
 {
@@ -121,10 +122,10 @@ public class LuceneStatsAction extends AdminCommand
 	public void reconstructIndexFromScratch()
 	{
 		final LuceneReindexArgs args = this.buildReindexArgs();
-		String indexOperationType = this.request.getParameter("indexOperationType");
+		final boolean recreate = "recreate".equals(this.request.getParameter("indexOperationType"));
 		
 		try {
-			if ("recreate".equals(indexOperationType)) {
+			if (recreate) {
 				this.settings().createIndexDirectory(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH));
 			}
 		}
@@ -136,32 +137,52 @@ public class LuceneStatsAction extends AdminCommand
 			public void run()
 			{
 				LuceneDAO dao = DataAccessDriver.getInstance().newLuceneDAO();
+				
+				IndexSearcher searcher = null;
+				
 				int startPosition = 0;
 				int howMany = 20;
 				boolean hasMorePosts = true;
 				
-				while (hasMorePosts) {
-					try {
-						JForumExecutionContext ex = JForumExecutionContext.get();
-						JForumExecutionContext.set(ex);
-						
-						List l = dao.getPostsToIndex(args, startPosition, howMany);
-						
-						for (Iterator iter = l.iterator(); iter.hasNext(); ) {
-							Post p = (Post)iter.next();
+				try {
+					if (!recreate) {
+						searcher = new IndexSearcher(settings().directory());
+					}
+					
+					while (hasMorePosts) {
+						try {
+							JForumExecutionContext ex = JForumExecutionContext.get();
+							JForumExecutionContext.set(ex);
 							
-							if (args.avoidDuplicatedRecords()) {
-								//SearchFacade.delete(p);
+							List l = dao.getPostsToIndex(args, startPosition, howMany);
+							
+							for (Iterator iter = l.iterator(); iter.hasNext(); ) {
+								Post p = (Post)iter.next();
+								
+								if (!recreate && args.avoidDuplicatedRecords()) {
+									if (((LuceneManager)SearchFacade.manager()).luceneSearch().isPostIndexed(p.getId())) {
+										continue;
+									}
+								}
+								
+								SearchFacade.create(p);
 							}
 							
-							SearchFacade.create(p);
+							startPosition += howMany;
+							hasMorePosts = l.size() > 0;
 						}
-						
-						startPosition += howMany;
-						hasMorePosts = l.size() > 0;
+						finally {
+							JForumExecutionContext.finish();
+						}
 					}
-					finally {
-						JForumExecutionContext.finish();
+				}
+				catch (IOException e) {
+					throw new ForumException(e);
+				}
+				finally {
+					if (searcher != null) {
+						try { searcher.close(); }
+						catch (Exception e) {}
 					}
 				}
 			}
