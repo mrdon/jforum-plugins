@@ -39,6 +39,63 @@ function chooseByDate(f)
 	f.type[0].checked = true;
 }
 
+function validateReindexForm(f)
+{
+	if (f.type[0].checked) {
+		 validateDateRange(f);
+	}
+	else {
+		 validatePostIdRange(f);
+	}
+
+	return false;
+}
+
+function validatePostIdRange(f)
+{
+	if (f.firstPostId.value.length == 0
+		|| isNaN(f.firstPostId.value * 1)
+		|| f.lastPostId.value.length == 0
+		|| isNaN(f.lastPostId.value * 1)) {
+		alert("${I18n.getMessage("SearchStats.invalidPostIdRange")}");
+		return false;
+	}
+
+	return true;
+}
+
+function validateDateRange(f)
+{
+	var fromHour = f.fromHour.value * 1;
+	var fromMinutes = f.fromMinutes.value * 1
+	var toHour = f.toHour.value * 1;
+	var toMinutes = f.toMinutes.value * 1
+
+	if (f.fromDay.selectedIndex == 0 
+		|| f.fromMonth.selectedIndex == 0
+		|| f.fromYear.selectedIndex == 0
+		|| f.fromHour.value.length == 0
+		|| f.fromMinutes.value.length == 0
+		|| isNaN(fromHour)
+		|| isNaN(fromMinutes)
+		|| fromHour < 0 || fromHour > 59
+		|| fromMinutes < 0 || fromMinutes > 59
+		|| f.toDay.selectedIndex == 0 
+		|| f.toMonth.selectedIndex == 0
+		|| f.toYear.selectedIndex == 0
+		|| f.toHour.value.length == 0
+		|| f.toMinutes.value.length == 0
+		|| isNaN(toHour)
+		|| isNaN(toMinutes)
+		|| toHour < 0 || toHour > 59
+		|| toMinutes < 0 || toMinutes > 59) {
+		alert("${I18n.getMessage("SearchStats.invalidDateRange")}");
+		return false;
+	}
+
+	return true;
+}
+
 function chooseByPostId(field)
 {
 	var value = field.value;
@@ -157,7 +214,7 @@ function checkIfPostExistsCallback(status)
 <br/>
 
 <#if indexExists>
-	<form action="${contextPath}/jforum${extension}">
+	<form action="${contextPath}/jforum${extension}" onSubmit="return validateReindexForm(this);">
 	<input type="hidden" name="module" value="${moduleName}">
 	<input type="hidden" name="action" value="reconstructIndexFromScratch">
 
