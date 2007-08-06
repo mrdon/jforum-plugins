@@ -50,16 +50,18 @@ import net.jforum.exceptions.SearchException;
 
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.TermQuery;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.30 2007/07/31 01:56:24 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.31 2007/08/06 16:06:17 rafaelsteil Exp $
  */
 public class LuceneSearch implements NewDocumentAdded
 {
@@ -107,6 +109,21 @@ public class LuceneSearch implements NewDocumentAdded
 	public SearchResult newMessages(SearchArgs args)
 	{
 		return this.performSearch(args, this.newMessagesCollector, DISTINCT_TOPICS_FILTER);
+	}
+	
+	public boolean isPostIndexed(int postId)
+	{
+		boolean status = false;
+		
+		try {
+			status = this.search.search(new TermQuery(
+				new Term(SearchFields.Keyword.POST_ID, String.valueOf(postId)))).length() > 0;
+		}
+		catch (IOException e) {
+			throw new SearchException(e);
+		}
+		
+		return status;
 	}
 
 	private SearchResult performSearch(SearchArgs args, LuceneResultCollector resultCollector, Filter filter)

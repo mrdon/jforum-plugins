@@ -53,7 +53,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchFacade.java,v 1.6 2007/08/01 18:56:57 rafaelsteil Exp $
+ * @version $Id: SearchFacade.java,v 1.7 2007/08/06 16:06:17 rafaelsteil Exp $
  */
 public class SearchFacade
 {
@@ -123,5 +123,10 @@ public class SearchFacade
 		if (isSearchEnabled()) {
 			searchManager.delete(p);
 		}
+	}
+	
+	public static SearchManager manager()
+	{
+		return searchManager;
 	}
 }

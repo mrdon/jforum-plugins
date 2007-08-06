@@ -43,7 +43,7 @@
  */
 package net.jforum.search;
 
-import java.io.File;
+import java.io.IOException;
 
 import net.jforum.entities.Post;
 import net.jforum.exceptions.ForumException;
@@ -51,10 +51,11 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.index.IndexReader;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneManager.java,v 1.10 2007/08/06 15:38:01 rafaelsteil Exp $
+ * @version $Id: LuceneManager.java,v 1.11 2007/08/06 16:06:17 rafaelsteil Exp $
  */
 public class LuceneManager implements SearchManager
 {
@@ -68,8 +69,6 @@ public class LuceneManager implements SearchManager
 	public void init()
 	{
 		try {
-			this.removeLockFile();
-			
 			Analyzer analyzer = (Analyzer)Class.forName(SystemGlobals.getValue(
 				ConfigKeys.LUCENE_ANALYZER)).newInstance();
 			
@@ -77,6 +76,8 @@ public class LuceneManager implements SearchManager
 				SystemGlobals.getIntValue(ConfigKeys.LUCENE_HIGHLIGHTER_FRAGMENTS));
 			
 			this.settings.useFSDirectory(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH));
+			
+			this.removeLockFile();
 			
 			this.indexer = new LuceneIndexer(this.settings);
 			
@@ -94,13 +95,20 @@ public class LuceneManager implements SearchManager
 		}
 	}
 	
-	private void removeLockFile()
+	public LuceneSearch luceneSearch()
 	{
-		File lockFile = new File(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH) 
-			+ "/write.lock");
-		
-		if (lockFile.exists()) {
-			lockFile.delete();
+		return this.search;
+	}
+	
+	public void removeLockFile()
+	{
+		try {
+			if (IndexReader.isLocked(this.settings.directory())) {
+				IndexReader.unlock(this.settings.directory());
+			}
+		}
+		catch (IOException e) {
+			throw new ForumException(e);
 		}
 	}
 	

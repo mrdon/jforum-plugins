@@ -75,7 +75,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneStatsAction.java,v 1.18 2007/08/06 16:06:17 rafaelsteil Exp $
+ * @version $Id: LuceneStatsAction.java,v 1.19 2007/08/06 16:08:51 rafaelsteil Exp $
  */
 public class LuceneStatsAction extends AdminCommand
 {
@@ -229,11 +229,11 @@ public class LuceneStatsAction extends AdminCommand
 		int firstPostId = 0;
 		int lastPostId = 0;
 		
-		if (this.request.getParameter("firstPostId") != null) {
+		if (!StringUtils.isEmpty(this.request.getParameter("firstPostId"))) {
 			firstPostId = this.request.getIntParameter("firstPostId");
 		}
 		
-		if (this.request.getParameter("lastPostId") != null) {
+		if (!StringUtils.isEmpty(this.request.getParameter("lastPostId"))) {
 			lastPostId = this.request.getIntParameter("lastPostId");
 		}
 		

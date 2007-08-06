@@ -45,7 +45,7 @@ package net.jforum.exceptions;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumException.java,v 1.8 2006/08/24 01:07:06 rafaelsteil Exp $
+ * @version $Id: ForumException.java,v 1.9 2007/08/06 16:06:18 rafaelsteil Exp $
  */
 public class ForumException extends RuntimeException
 {
@@ -56,8 +56,7 @@ public class ForumException extends RuntimeException
 	
 	public ForumException(Throwable t)
 	{
-		super(t);
-		this.setStackTrace(t.getStackTrace());
+		this(t.toString(), t);
 	}
 	
 	public ForumException(String message, Throwable t)
