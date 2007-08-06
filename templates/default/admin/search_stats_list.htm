@@ -49,13 +49,11 @@ function confirmCancel(f)
 function validateReindexForm(f)
 {
 	if (f.type[0].checked) {
-		 validateDateRange(f);
+		return validateDateRange(f);
 	}
 	else {
-		 validatePostIdRange(f);
+		return validatePostIdRange(f);
 	}
-
-	return false;
 }
 
 function validatePostIdRange(f)
@@ -227,7 +225,7 @@ function checkIfPostExistsCallback(status)
 	<#if !currentlyIndexing>
 		<input type="hidden" name="action" value="reconstructIndexFromScratch">
 	<#else>
-		<input type="hidden" name="action" value="cancelIndexig">
+		<input type="hidden" name="action" value="cancelIndexing">
 	</#if>
 
 	<table border="0" class="forumline gen" width="100%">

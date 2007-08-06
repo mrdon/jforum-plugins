@@ -75,7 +75,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneStatsAction.java,v 1.21 2007/08/06 17:10:18 rafaelsteil Exp $
+ * @version $Id: LuceneStatsAction.java,v 1.22 2007/08/06 17:17:37 rafaelsteil Exp $
  */
 public class LuceneStatsAction extends AdminCommand
 {
@@ -150,8 +150,6 @@ public class LuceneStatsAction extends AdminCommand
 						searcher = new IndexSearcher(settings().directory());
 					}
 					
-					SystemGlobals.setValue(ConfigKeys.LUCENE_CURRENTLY_INDEXING, "1");
-					
 					while (hasMorePosts) {
 						try {
 							JForumExecutionContext ex = JForumExecutionContext.get();
@@ -160,6 +158,11 @@ public class LuceneStatsAction extends AdminCommand
 							List l = dao.getPostsToIndex(args, startPosition, howMany);
 							
 							for (Iterator iter = l.iterator(); iter.hasNext(); ) {
+								if ("0".equals(SystemGlobals.getValue(ConfigKeys.LUCENE_CURRENTLY_INDEXING))) {
+									hasMorePosts = false;
+									break;
+								}
+								
 								Post p = (Post)iter.next();
 								
 								if (!recreate && args.avoidDuplicatedRecords()) {
@@ -172,7 +175,7 @@ public class LuceneStatsAction extends AdminCommand
 							}
 							
 							startPosition += howMany;
-							hasMorePosts = l.size() > 0;
+							hasMorePosts = hasMorePosts && l.size() > 0;
 						}
 						finally {
 							JForumExecutionContext.finish();
@@ -193,6 +196,8 @@ public class LuceneStatsAction extends AdminCommand
 			}
 		};
 		
+		SystemGlobals.setValue(ConfigKeys.LUCENE_CURRENTLY_INDEXING, "1");
+		
 		Thread thread = new Thread(indexingJob);
 		thread.start();
 		
@@ -201,6 +206,7 @@ public class LuceneStatsAction extends AdminCommand
 	
 	public void cancelIndexing()
 	{
+		SystemGlobals.setValue(ConfigKeys.LUCENE_CURRENTLY_INDEXING, "0");
 		this.list();
 	}
 	
