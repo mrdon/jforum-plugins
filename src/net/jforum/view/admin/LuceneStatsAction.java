@@ -47,35 +47,28 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
-import java.util.List;
 
-import net.jforum.JForumExecutionContext;
 import net.jforum.context.RequestContext;
 import net.jforum.context.ResponseContext;
-import net.jforum.dao.DataAccessDriver;
-import net.jforum.dao.LuceneDAO;
-import net.jforum.entities.Post;
 import net.jforum.exceptions.ForumException;
 import net.jforum.repository.ForumRepository;
 import net.jforum.search.LuceneManager;
 import net.jforum.search.LuceneReindexArgs;
+import net.jforum.search.LuceneReindexer;
 import net.jforum.search.LuceneSettings;
-import net.jforum.search.SearchFacade;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.search.IndexSearcher;
 
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneStatsAction.java,v 1.22 2007/08/06 17:17:37 rafaelsteil Exp $
+ * @version $Id: LuceneStatsAction.java,v 1.23 2007/08/06 21:31:04 rafaelsteil Exp $
  */
 public class LuceneStatsAction extends AdminCommand
 {
@@ -122,84 +115,11 @@ public class LuceneStatsAction extends AdminCommand
 	
 	public void reconstructIndexFromScratch()
 	{
-		final LuceneReindexArgs args = this.buildReindexArgs();
-		final boolean recreate = "recreate".equals(this.request.getParameter("indexOperationType"));
+		LuceneReindexArgs args = this.buildReindexArgs();
+		boolean recreate = "recreate".equals(this.request.getParameter("indexOperationType"));
 		
-		try {
-			if (recreate) {
-				this.settings().createIndexDirectory(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH));
-			}
-		}
-		catch (IOException e) {
-			throw new ForumException(e);
-		}
-		
-		Runnable indexingJob = new Runnable() {		
-			public void run()
-			{
-				LuceneDAO dao = DataAccessDriver.getInstance().newLuceneDAO();
-				
-				IndexSearcher searcher = null;
-				
-				int startPosition = 0;
-				int howMany = 20;
-				boolean hasMorePosts = true;
-				
-				try {
-					if (!recreate) {
-						searcher = new IndexSearcher(settings().directory());
-					}
-					
-					while (hasMorePosts) {
-						try {
-							JForumExecutionContext ex = JForumExecutionContext.get();
-							JForumExecutionContext.set(ex);
-							
-							List l = dao.getPostsToIndex(args, startPosition, howMany);
-							
-							for (Iterator iter = l.iterator(); iter.hasNext(); ) {
-								if ("0".equals(SystemGlobals.getValue(ConfigKeys.LUCENE_CURRENTLY_INDEXING))) {
-									hasMorePosts = false;
-									break;
-								}
-								
-								Post p = (Post)iter.next();
-								
-								if (!recreate && args.avoidDuplicatedRecords()) {
-									if (((LuceneManager)SearchFacade.manager()).luceneSearch().isPostIndexed(p.getId())) {
-										continue;
-									}
-								}
-								
-								SearchFacade.create(p);
-							}
-							
-							startPosition += howMany;
-							hasMorePosts = hasMorePosts && l.size() > 0;
-						}
-						finally {
-							JForumExecutionContext.finish();
-						}
-					}
-				}
-				catch (IOException e) {
-					throw new ForumException(e);
-				}
-				finally {
-					SystemGlobals.setValue(ConfigKeys.LUCENE_CURRENTLY_INDEXING, "0");
-					
-					if (searcher != null) {
-						try { searcher.close(); }
-						catch (Exception e) {}
-					}
-				}
-			}
-		};
-		
-		SystemGlobals.setValue(ConfigKeys.LUCENE_CURRENTLY_INDEXING, "1");
-		
-		Thread thread = new Thread(indexingJob);
-		thread.start();
+		LuceneReindexer reindexer = new LuceneReindexer(this.settings(), args, recreate);
+		reindexer.startBackgroundProcess();
 		
 		this.list();
 	}

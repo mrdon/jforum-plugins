@@ -49,6 +49,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.jforum.entities.Post;
+import net.jforum.exceptions.SearchException;
 
 import org.apache.log4j.Logger;
 import org.apache.lucene.document.Document;
@@ -58,21 +59,27 @@ import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.RAMDirectory;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneIndexer.java,v 1.6 2007/08/04 00:24:25 rafaelsteil Exp $
+ * @version $Id: LuceneIndexer.java,v 1.7 2007/08/06 21:31:05 rafaelsteil Exp $
  */
 public class LuceneIndexer
 {
 	private static final Logger logger = Logger.getLogger(LuceneIndexer.class);
+	private static final Object MUTEX = new Object();
 	
 	private LuceneSettings settings;
+	private Directory ramDirectory;
+	private IndexWriter ramWriter;
 	private List newDocumentAddedList = new ArrayList();
 	
 	public LuceneIndexer(LuceneSettings settings)
 	{
 		this.settings = settings;
+		this.createRAMWriter();
 	}
 	
 	public void watchNewDocuDocumentAdded(NewDocumentAdded newDoc)
@@ -80,39 +87,90 @@ public class LuceneIndexer
 		this.newDocumentAddedList.add(newDoc);
 	}
 	
-	public synchronized void create(Post post)
+	public void batchCreate(Post post)
 	{
-		IndexWriter writer = null;
-		
-		try {
-			writer = new IndexWriter(this.settings.directory(), this.settings.analyzer());
-			
-			Document document = this.createDocument(post);
-			writer.addDocument(document);
-			
-			this.optimize(writer);
-			
-			if (logger.isDebugEnabled()) {
-				logger.debug("Indexed " + document);
+		synchronized (MUTEX) {
+			try {
+				Document document = this.createDocument(post);
+				this.ramWriter.addDocument(document);
+				this.flushRAMDirectoryIfNecessary();
 			}
-		}
-		catch (Exception e) {
-			logger.error(e.toString(), e);
-		}
-		finally {
-			if (writer != null) {
-				try {
-					writer.flush();
-					writer.close();
-					
-					this.notifyNewDocumentAdded();
-				}
-				catch (Exception e) {}
+			catch (IOException e) {
+				throw new SearchException(e);
 			}
 		}
 	}
 	
-	public synchronized void update(Post post)
+	private void createRAMWriter()
+	{
+		try {
+			this.ramDirectory = new RAMDirectory();
+			this.ramWriter = new IndexWriter(this.ramDirectory, this.settings.analyzer(), true);
+		}
+		catch (IOException e) {
+			throw new SearchException(e);
+		}
+	}
+	
+	private void flushRAMDirectoryIfNecessary()
+	{
+		if (this.ramWriter.docCount() % 1000 == 0) {
+			IndexWriter writer = null;
+			
+			try {
+				writer = new IndexWriter(this.settings.directory(), this.settings.analyzer());
+				writer.addIndexes(new Directory[] { this.ramDirectory });
+				writer.optimize();
+				
+				this.createRAMWriter();
+			}
+			catch (IOException e) {
+				
+			}
+			finally {
+				if (writer != null) {
+					try { writer.flush(); writer.close(); }
+					catch (Exception e) {}
+				}
+			}
+		}
+	}
+	
+	public void create(Post post)
+	{
+		synchronized (MUTEX) {
+			IndexWriter writer = null;
+			
+			try {
+				writer = new IndexWriter(this.settings.directory(), this.settings.analyzer());
+				
+				Document document = this.createDocument(post);
+				writer.addDocument(document);
+				
+				this.optimize(writer);
+				
+				if (logger.isDebugEnabled()) {
+					logger.debug("Indexed " + document);
+				}
+			}
+			catch (Exception e) {
+				logger.error(e.toString(), e);
+			}
+			finally {
+				if (writer != null) {
+					try {
+						writer.flush();
+						writer.close();
+						
+						this.notifyNewDocumentAdded();
+					}
+					catch (Exception e) {}
+				}
+			}
+		}
+	}
+	
+	public void update(Post post)
 	{
 		if (this.performDelete(post)) {
 			this.create(post);
@@ -158,33 +216,35 @@ public class LuceneIndexer
 		}
 	}
 
-	public synchronized void delete(Post p)
+	public void delete(Post p)
 	{
 		this.performDelete(p);
 	}
 	
 	private boolean performDelete(Post p)
 	{
-		IndexReader reader = null;
-		boolean status = false;
-		
-		try {
-			reader = IndexReader.open(this.settings.directory());
-			reader.deleteDocuments(new Term(SearchFields.Keyword.POST_ID, String.valueOf(p.getId())));
-			status = true;
-		}
-		catch (IOException e) {
-			logger.error(e.toString(), e);
-		}
-		finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				}
-				catch (Exception e) {}
+		synchronized (MUTEX) {
+			IndexReader reader = null;
+			boolean status = false;
+			
+			try {
+				reader = IndexReader.open(this.settings.directory());
+				reader.deleteDocuments(new Term(SearchFields.Keyword.POST_ID, String.valueOf(p.getId())));
+				status = true;
 			}
+			catch (IOException e) {
+				logger.error(e.toString(), e);
+			}
+			finally {
+				if (reader != null) {
+					try {
+						reader.close();
+					}
+					catch (Exception e) {}
+				}
+			}
+			
+			return status;
 		}
-		
-		return status;
 	}
 }

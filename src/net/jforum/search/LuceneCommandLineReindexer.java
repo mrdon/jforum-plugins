@@ -36,30 +36,34 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Mar 11, 2005 12:30:01 PM
+ * Created on 06/08/2007 15:27:53
+ * 
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.exceptions;
+package net.jforum.search;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchException.java,v 1.8 2007/08/06 21:31:04 rafaelsteil Exp $
+ * @version $Id: LuceneCommandLineReindexer.java,v 1.1 2007/08/06 21:31:06 rafaelsteil Exp $
  */
-public class SearchException extends RuntimeException
+public class LuceneCommandLineReindexer
 {
-	public SearchException(String message)
+	private LuceneReindexArgs args;
+	
+	public static void main(String[] args)
 	{
-		super(message);
+		LuceneCommandLineReindexer reindexer = new LuceneCommandLineReindexer();
+		reindexer.parseCmdArgs(args);
 	}
 	
-	public SearchException(Throwable t)
+	private void parseCmdArgs(String[] args)
 	{
-		this(t.toString(), t);
-	}
-	
-	public SearchException(String message, Throwable t)
-	{
-		super(message, t);
+		List l = Arrays.asList(args);
+		boolean recreate = l.contains("--recreate");
+		
 	}
 }

@@ -55,7 +55,7 @@ import org.apache.lucene.index.IndexReader;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneManager.java,v 1.11 2007/08/06 16:06:17 rafaelsteil Exp $
+ * @version $Id: LuceneManager.java,v 1.12 2007/08/06 21:31:05 rafaelsteil Exp $
  */
 public class LuceneManager implements SearchManager
 {
@@ -98,6 +98,11 @@ public class LuceneManager implements SearchManager
 	public LuceneSearch luceneSearch()
 	{
 		return this.search;
+	}
+	
+	public LuceneIndexer luceneIndexer()
+	{
+		return this.indexer;
 	}
 	
 	public void removeLockFile()
