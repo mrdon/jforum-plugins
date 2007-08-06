@@ -75,7 +75,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneStatsAction.java,v 1.19 2007/08/06 16:08:51 rafaelsteil Exp $
+ * @version $Id: LuceneStatsAction.java,v 1.20 2007/08/06 17:06:38 rafaelsteil Exp $
  */
 public class LuceneStatsAction extends AdminCommand
 {
@@ -100,6 +100,7 @@ public class LuceneStatsAction extends AdminCommand
 			this.context.put("totalMessages", new Integer(ForumRepository.getTotalMessages()));
 			this.context.put("indexVersion", new Long(reader.getVersion()));
 			this.context.put("numberOfDocs", new Integer(reader.numDocs()));
+			this.context.put("currentlyIndexing", "1".equals(SystemGlobals.getValue(ConfigKeys.LUCENE_CURRENTLY_INDEXING)));
 		}
 		catch (IOException e) {
 			throw new ForumException(e);
@@ -149,6 +150,8 @@ public class LuceneStatsAction extends AdminCommand
 						searcher = new IndexSearcher(settings().directory());
 					}
 					
+					SystemGlobals.setValue(ConfigKeys.LUCENE_CURRENTLY_INDEXING, "1");
+					
 					while (hasMorePosts) {
 						try {
 							JForumExecutionContext ex = JForumExecutionContext.get();
@@ -180,6 +183,8 @@ public class LuceneStatsAction extends AdminCommand
 					throw new ForumException(e);
 				}
 				finally {
+					SystemGlobals.setValue(ConfigKeys.LUCENE_CURRENTLY_INDEXING, "0");
+					
 					if (searcher != null) {
 						try { searcher.close(); }
 						catch (Exception e) {}
