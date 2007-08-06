@@ -59,7 +59,7 @@ import org.apache.lucene.search.Query;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearchTestCase.java,v 1.29 2007/07/31 01:56:26 rafaelsteil Exp $
+ * @version $Id: LuceneSearchTestCase.java,v 1.30 2007/08/06 23:04:51 rafaelsteil Exp $
  */
 public class LuceneSearchTestCase extends TestCase
 {
@@ -280,7 +280,7 @@ public class LuceneSearchTestCase extends TestCase
 			logInitialized = true;
 		}
 		
-		this.settings = new LuceneSettings(new StandardAnalyzer(), 1);
+		this.settings = new LuceneSettings(new StandardAnalyzer());
 		
 		this.settings.useRAMDirectory();
 		

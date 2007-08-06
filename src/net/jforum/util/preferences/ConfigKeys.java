@@ -48,7 +48,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.114 2007/08/06 17:06:39 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.115 2007/08/06 23:04:51 rafaelsteil Exp $
 */
 
 public class ConfigKeys 
@@ -289,8 +289,9 @@ public class ConfigKeys
 	public static final String LUCENE_ANALYZER = "lucene.analyzer";
 	public static final String LUCENE_INDEX_WRITE_PATH = "lucene.index.write.path";
 	public static final String LUCENE_SETTINGS = "lucene.settings";
-	public static final String LUCENE_HIGHLIGHTER_FRAGMENTS = "lucene.highligther.fragments";
 	public static final String LUCENE_CURRENTLY_INDEXING = "lucene.currently.indexing";
+	public static final String LUCENE_INDEXER_RAM_NUMDOCS = "lucene.indexer.ram.numdocs";
+	public static final String LUCENE_INDEXER_DB_FETCH_COUNT = "lucene.indexer.db.fetch.count";
     
 	private ConfigKeys() {}
 }

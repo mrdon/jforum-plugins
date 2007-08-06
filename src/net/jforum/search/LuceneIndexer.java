@@ -50,6 +50,8 @@ import java.util.List;
 
 import net.jforum.entities.Post;
 import net.jforum.exceptions.SearchException;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 import org.apache.log4j.Logger;
 import org.apache.lucene.document.Document;
@@ -64,7 +66,7 @@ import org.apache.lucene.store.RAMDirectory;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneIndexer.java,v 1.7 2007/08/06 21:31:05 rafaelsteil Exp $
+ * @version $Id: LuceneIndexer.java,v 1.8 2007/08/06 23:04:50 rafaelsteil Exp $
  */
 public class LuceneIndexer
 {
@@ -74,6 +76,7 @@ public class LuceneIndexer
 	private LuceneSettings settings;
 	private Directory ramDirectory;
 	private IndexWriter ramWriter;
+	private int ramNumDocs;
 	private List newDocumentAddedList = new ArrayList();
 	
 	public LuceneIndexer(LuceneSettings settings)
@@ -106,6 +109,7 @@ public class LuceneIndexer
 		try {
 			this.ramDirectory = new RAMDirectory();
 			this.ramWriter = new IndexWriter(this.ramDirectory, this.settings.analyzer(), true);
+			this.ramNumDocs = SystemGlobals.getIntValue(ConfigKeys.LUCENE_INDEXER_RAM_NUMDOCS);
 		}
 		catch (IOException e) {
 			throw new SearchException(e);
@@ -114,24 +118,29 @@ public class LuceneIndexer
 	
 	private void flushRAMDirectoryIfNecessary()
 	{
-		if (this.ramWriter.docCount() % 1000 == 0) {
-			IndexWriter writer = null;
+		if (this.ramWriter.docCount() % this.ramNumDocs == 0) {
+			this.flushRAMDirectory();
+		}
+	}
+	
+	public void flushRAMDirectory()
+	{
+		IndexWriter writer = null;
+		
+		try {
+			writer = new IndexWriter(this.settings.directory(), this.settings.analyzer());
+			writer.addIndexes(new Directory[] { this.ramDirectory });
+			writer.optimize();
 			
-			try {
-				writer = new IndexWriter(this.settings.directory(), this.settings.analyzer());
-				writer.addIndexes(new Directory[] { this.ramDirectory });
-				writer.optimize();
-				
-				this.createRAMWriter();
-			}
-			catch (IOException e) {
-				
-			}
-			finally {
-				if (writer != null) {
-					try { writer.flush(); writer.close(); }
-					catch (Exception e) {}
-				}
+			this.createRAMWriter();
+		}
+		catch (IOException e) {
+			
+		}
+		finally {
+			if (writer != null) {
+				try { writer.flush(); writer.close(); }
+				catch (Exception e) {}
 			}
 		}
 	}

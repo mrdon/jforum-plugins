@@ -55,7 +55,7 @@ import org.apache.lucene.index.IndexReader;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneManager.java,v 1.12 2007/08/06 21:31:05 rafaelsteil Exp $
+ * @version $Id: LuceneManager.java,v 1.13 2007/08/06 23:04:50 rafaelsteil Exp $
  */
 public class LuceneManager implements SearchManager
 {
@@ -72,8 +72,7 @@ public class LuceneManager implements SearchManager
 			Analyzer analyzer = (Analyzer)Class.forName(SystemGlobals.getValue(
 				ConfigKeys.LUCENE_ANALYZER)).newInstance();
 			
-			this.settings = new LuceneSettings(analyzer, 
-				SystemGlobals.getIntValue(ConfigKeys.LUCENE_HIGHLIGHTER_FRAGMENTS));
+			this.settings = new LuceneSettings(analyzer);
 			
 			this.settings.useFSDirectory(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH));
 			

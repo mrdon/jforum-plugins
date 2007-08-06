@@ -59,7 +59,7 @@ import org.apache.lucene.search.IndexSearcher;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneReindexer.java,v 1.1 2007/08/06 21:31:05 rafaelsteil Exp $
+ * @version $Id: LuceneReindexer.java,v 1.2 2007/08/06 23:04:50 rafaelsteil Exp $
  */
 public class LuceneReindexer
 {
@@ -92,7 +92,10 @@ public class LuceneReindexer
 		
 		Runnable indexingJob = new Runnable() {		
 			public void run() {
+				long start = System.currentTimeMillis();
 				reindex();
+				long end = System.currentTimeMillis();
+				System.out.println("*** TOTAL: " + (end - start)); 
 			}
 		};
 		
@@ -107,25 +110,30 @@ public class LuceneReindexer
 		LuceneDAO dao = DataAccessDriver.getInstance().newLuceneDAO();
 		
 		IndexSearcher searcher = null;
+		LuceneSearch luceneSearch = ((LuceneManager)SearchFacade.manager()).luceneSearch();
+		LuceneIndexer luceneIndexer = ((LuceneManager)SearchFacade.manager()).luceneIndexer();
 		
 		int startPosition = 0;
-		int howMany = 20;
-		boolean hasMorePosts = true;
+		int howMany = SystemGlobals.getIntValue(ConfigKeys.LUCENE_INDEXER_DB_FETCH_COUNT);
 		
 		try {
 			if (!recreate) {
 				searcher = new IndexSearcher(this.settings.directory());
 			}
 			
-			LuceneSearch luceneSearch = ((LuceneManager)SearchFacade.manager()).luceneSearch();
-			LuceneIndexer luceneIndexer = ((LuceneManager)SearchFacade.manager()).luceneIndexer();
+			boolean hasMorePosts = true;
 			
 			while (hasMorePosts) {
+				boolean contextFinished = false;
+				
 				try {
 					JForumExecutionContext ex = JForumExecutionContext.get();
 					JForumExecutionContext.set(ex);
 					
 					List l = dao.getPostsToIndex(args, startPosition, howMany);
+					
+					JForumExecutionContext.finish();
+					contextFinished = true;
 					
 					for (Iterator iter = l.iterator(); iter.hasNext(); ) {
 						if ("0".equals(SystemGlobals.getValue(ConfigKeys.LUCENE_CURRENTLY_INDEXING))) {
@@ -148,7 +156,9 @@ public class LuceneReindexer
 					hasMorePosts = hasMorePosts && l.size() > 0;
 				}
 				finally {
-					JForumExecutionContext.finish();
+					if (!contextFinished) {
+						JForumExecutionContext.finish();
+					}
 				}
 			}
 		}
@@ -157,6 +167,8 @@ public class LuceneReindexer
 		}
 		finally {
 			SystemGlobals.setValue(ConfigKeys.LUCENE_CURRENTLY_INDEXING, "0");
+
+			luceneIndexer.flushRAMDirectory();
 			
 			if (searcher != null) {
 				try { searcher.close(); }
