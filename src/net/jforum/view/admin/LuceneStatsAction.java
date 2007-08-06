@@ -58,7 +58,7 @@ import net.jforum.dao.LuceneDAO;
 import net.jforum.entities.Post;
 import net.jforum.exceptions.ForumException;
 import net.jforum.repository.ForumRepository;
-import net.jforum.search.LuceneIndexer;
+import net.jforum.search.LuceneManager;
 import net.jforum.search.LuceneReindexArgs;
 import net.jforum.search.LuceneSettings;
 import net.jforum.search.SearchFacade;
@@ -74,7 +74,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneStatsAction.java,v 1.16 2007/08/05 21:57:28 rafaelsteil Exp $
+ * @version $Id: LuceneStatsAction.java,v 1.17 2007/08/06 15:38:01 rafaelsteil Exp $
  */
 public class LuceneStatsAction extends AdminCommand
 {
@@ -121,6 +121,16 @@ public class LuceneStatsAction extends AdminCommand
 	public void reconstructIndexFromScratch()
 	{
 		final LuceneReindexArgs args = this.buildReindexArgs();
+		String indexOperationType = this.request.getParameter("indexOperationType");
+		
+		try {
+			if ("recreate".equals(indexOperationType)) {
+				this.settings().createIndexDirectory(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH));
+			}
+		}
+		catch (IOException e) {
+			throw new ForumException(e);
+		}
 		
 		Runnable indexingJob = new Runnable() {		
 			public void run()
@@ -141,7 +151,7 @@ public class LuceneStatsAction extends AdminCommand
 							Post p = (Post)iter.next();
 							
 							if (args.avoidDuplicatedRecords()) {
-								SearchFacade.delete(p);
+								//SearchFacade.delete(p);
 							}
 							
 							SearchFacade.create(p);
@@ -180,7 +190,7 @@ public class LuceneStatsAction extends AdminCommand
 	
 	private boolean isSearchEngineLucene()
 	{
-		return LuceneIndexer.class.getName()
+		return LuceneManager.class.getName()
 			.equals(SystemGlobals.getValue(ConfigKeys.SEARCH_INDEXER_IMPLEMENTATION))
 			|| this.settings() == null;
 	}

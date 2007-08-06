@@ -61,7 +61,6 @@ import net.jforum.util.preferences.SystemGlobals;
 import org.apache.log4j.Logger;
 
 import com.octo.captcha.component.image.backgroundgenerator.BackgroundGenerator;
-import com.octo.captcha.component.image.backgroundgenerator.FunkyBackgroundGenerator;
 import com.octo.captcha.component.image.backgroundgenerator.GradientBackgroundGenerator;
 import com.octo.captcha.component.image.fontgenerator.FontGenerator;
 import com.octo.captcha.component.image.fontgenerator.TwistedAndShearedRandomFontGenerator;
@@ -77,7 +76,7 @@ import com.octo.captcha.image.gimpy.GimpyFactory;
 
 /**
  * @author James Yong
- * @version $Id: Captcha.java,v 1.12 2007/08/05 17:11:31 andowson Exp $
+ * @version $Id: Captcha.java,v 1.13 2007/08/06 15:38:01 rafaelsteil Exp $
  */
 public class Captcha extends ListImageCaptchaEngine
 {

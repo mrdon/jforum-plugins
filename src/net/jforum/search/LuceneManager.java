@@ -54,7 +54,7 @@ import org.apache.lucene.analysis.Analyzer;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneManager.java,v 1.9 2007/08/01 18:56:57 rafaelsteil Exp $
+ * @version $Id: LuceneManager.java,v 1.10 2007/08/06 15:38:01 rafaelsteil Exp $
  */
 public class LuceneManager implements SearchManager
 {
@@ -85,6 +85,8 @@ public class LuceneManager implements SearchManager
 				new LuceneNewMessagesCollector());
 			
 			this.indexer.watchNewDocuDocumentAdded(this.search);
+			
+			SystemGlobals.setObjectValue(ConfigKeys.LUCENE_SETTINGS, this.settings);
 		}
 		
 		catch (Exception e) {
