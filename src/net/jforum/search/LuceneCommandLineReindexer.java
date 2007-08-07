@@ -43,27 +43,64 @@
  */
 package net.jforum.search;
 
-import java.util.Arrays;
-import java.util.List;
+import net.jforum.ConfigLoader;
+import net.jforum.ForumStartup;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
+
+import org.apache.log4j.xml.DOMConfigurator;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneCommandLineReindexer.java,v 1.1 2007/08/06 21:31:06 rafaelsteil Exp $
+ * @version $Id: LuceneCommandLineReindexer.java,v 1.2 2007/08/07 13:30:50 rafaelsteil Exp $
  */
 public class LuceneCommandLineReindexer
 {
-	private LuceneReindexArgs args;
+	private LuceneReindexArgs reindexerArgs;
 	
 	public static void main(String[] args)
 	{
+		System.out.println("****** INITIALIZING ");
+		
 		LuceneCommandLineReindexer reindexer = new LuceneCommandLineReindexer();
-		reindexer.parseCmdArgs(args);
+		reindexer.init(args);
+		reindexer.start();
+		
+		System.out.println("****** FINISHED ");
+	}
+	
+	private void start()
+	{
+		LuceneReindexer reindexer = new LuceneReindexer(
+			(LuceneSettings)SystemGlobals.getObjectValue(ConfigKeys.LUCENE_SETTINGS),
+			this.reindexerArgs, true);
+
+		reindexer.startProcess();
+	}
+	
+	private void init(String[] args)
+	{
+		this.parseCmdArgs(args);
+		
+		String appPath = "f:/eclipse-projects/jforum";
+		
+		DOMConfigurator.configure(appPath + "/WEB-INF/log4j.xml");
+		
+		ConfigLoader.startSystemglobals(appPath);
+		
+		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
+		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
+		
+		ConfigLoader.createLoginAuthenticator();
+		ConfigLoader.loadDaoImplementation();
+		
+		SearchFacade.init();
+		
+		ForumStartup.startDatabase();
 	}
 	
 	private void parseCmdArgs(String[] args)
 	{
-		List l = Arrays.asList(args);
-		boolean recreate = l.contains("--recreate");
-		
+		this.reindexerArgs = new LuceneReindexArgs(null, null, 1, 100, true, LuceneReindexArgs.TYPE_MESSAGE);
 	}
 }

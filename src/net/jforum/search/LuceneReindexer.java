@@ -59,7 +59,7 @@ import org.apache.lucene.search.IndexSearcher;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneReindexer.java,v 1.2 2007/08/06 23:04:50 rafaelsteil Exp $
+ * @version $Id: LuceneReindexer.java,v 1.3 2007/08/07 13:30:50 rafaelsteil Exp $
  */
 public class LuceneReindexer
 {
@@ -81,21 +81,9 @@ public class LuceneReindexer
 	
 	public void startBackgroundProcess()
 	{
-		try {
-			if (recreate) {
-				this.settings.createIndexDirectory(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH));
-			}
-		}
-		catch (IOException e) {
-			throw new ForumException(e);
-		}
-		
 		Runnable indexingJob = new Runnable() {		
 			public void run() {
-				long start = System.currentTimeMillis();
 				reindex();
-				long end = System.currentTimeMillis();
-				System.out.println("*** TOTAL: " + (end - start)); 
 			}
 		};
 		
@@ -107,6 +95,15 @@ public class LuceneReindexer
 
 	private void reindex()
 	{
+		try {
+			if (recreate) {
+				this.settings.createIndexDirectory(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH));
+			}
+		}
+		catch (IOException e) {
+			throw new ForumException(e);
+		}
+		
 		LuceneDAO dao = DataAccessDriver.getInstance().newLuceneDAO();
 		
 		IndexSearcher searcher = null;

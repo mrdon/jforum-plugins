@@ -66,7 +66,7 @@ import org.apache.lucene.store.RAMDirectory;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneIndexer.java,v 1.8 2007/08/06 23:04:50 rafaelsteil Exp $
+ * @version $Id: LuceneIndexer.java,v 1.9 2007/08/07 13:30:50 rafaelsteil Exp $
  */
 public class LuceneIndexer
 {
@@ -135,11 +135,16 @@ public class LuceneIndexer
 			this.createRAMWriter();
 		}
 		catch (IOException e) {
-			
+			throw new SearchException(e);
 		}
 		finally {
 			if (writer != null) {
-				try { writer.flush(); writer.close(); }
+				try { 
+					writer.flush(); 
+					writer.close();
+					
+					this.notifyNewDocumentAdded();
+				}
 				catch (Exception e) {}
 			}
 		}
