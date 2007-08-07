@@ -59,7 +59,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneCommandLineReindexer.java,v 1.3 2007/08/07 15:02:29 rafaelsteil Exp $
+ * @version $Id: LuceneCommandLineReindexer.java,v 1.4 2007/08/07 15:24:28 rafaelsteil Exp $
  */
 public class LuceneCommandLineReindexer
 {
@@ -224,7 +224,7 @@ public class LuceneCommandLineReindexer
 			+ " --lastPostId a_id \n"
 			+ " --fromDate dd/MM/yyyy \n"
 			+ " --toDate dd/MM/yyyy \n"
-			+ " [--recreateIndex]" 
+			+ " [--recreateIndex]\n" 
 			+ " [--avoidDuplicatedRecords]");
 		System.exit(1);
 	}
