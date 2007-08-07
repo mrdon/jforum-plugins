@@ -28,5 +28,6 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/freemarker-2.3.9.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/lucene-core-2.2.0.jar" sourcepath="E:/java/lucene-2.2.0/src/java"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/lucene-highlighter-2.2.0.jar" sourcepath="E:/java/lucene-2.2.0/contrib/highlighter/src/java"/>
+	<classpathentry kind="lib" path="lib/jargs-1.0.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>
