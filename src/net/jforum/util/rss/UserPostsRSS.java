@@ -55,7 +55,7 @@ import net.jforum.view.forum.common.ViewCommon;
  * RSS for the messages of some topic
  * 
  * @author Vladislav Malyshkin
- * @version $Id: UserPostsRSS.java,v 1.6 2006/08/20 22:47:48 rafaelsteil Exp $
+ * @version $Id: UserPostsRSS.java,v 1.7 2007/08/08 23:48:55 rafaelsteil Exp $
  */
 public class UserPostsRSS extends GenericRSS 
 {
@@ -83,7 +83,7 @@ public class UserPostsRSS extends GenericRSS
 			RSSItem item = new RSSItem();
 			item.setAuthor(p.getPostUsername());
 			item.setContentType(RSSAware.CONTENT_HTML);
-			item.setDescription(PostCommon.processText(p.getText()));
+			item.setDescription(PostCommon.processBBCodes(p.getText()));
 			item.setPublishDate(RSSUtils.formatDate(p.getTime()));
 			item.setTitle(p.getSubject());
 			item.setLink(this.forumLink 

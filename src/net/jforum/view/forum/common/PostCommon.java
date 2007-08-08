@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.41 2007/08/05 15:10:31 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.42 2007/08/08 23:48:54 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -99,28 +99,30 @@ public class PostCommon
 			ViewCommon.replaceAll(text, ">", "&gt;");
 		}
 		
-		// DO NOT remove the trailing blank space, as it would 
-		// cause some problems with the regular expressions
+		// Do not remove the trailing blank space, as it would
+		// cause some regular expressions to fail
 		ViewCommon.replaceAll(text, "\n", "<br/> ");
 		
 		p.setText(SafeHtml.avoidJavascript(text.toString()));
 
 		// Then, search for bb codes
 		if (p.isBbCodeEnabled()) {
-			p.setText(PostCommon.processText(p.getText()));
+			p.setText(processBBCodes(p.getText()));
 		}
 		
-		p.setText(alwaysProcess(p.getText(), BBCodeRepository.getBBCollection().getAlwaysProcessList()));
+		p.setText(parseDefaultRequiredBBCode(p.getText(), 
+			BBCodeRepository.getBBCollection().getAlwaysProcessList()));
 
 		// Smilies...
 		if (p.isSmiliesEnabled()) {
-			p.setText(processSmilies(new StringBuffer(p.getText()), SmiliesRepository.getSmilies()));
+			p.setText(processSmilies(new StringBuffer(p.getText()), 
+				SmiliesRepository.getSmilies()));
 		}
 		
 		return p;
 	}
 	
-	public static String alwaysProcess(String text, Collection bbList)
+	public static String parseDefaultRequiredBBCode(String text, Collection bbList)
 	{
 		for (Iterator iter = bbList.iterator(); iter.hasNext(); ) {
 			BBCode bb = (BBCode)iter.next();
@@ -130,34 +132,25 @@ public class PostCommon
 		return text;
 	}
 
-	public static String processText(String text)
+	public static String processBBCodes(String text)
 	{
-		if (text == null) {
-			return null;
-		}
-		
-		if (text.indexOf('[') == -1 || text.indexOf(']') == -1) {
+		if (text == null || text.indexOf('[') == -1 || text.indexOf(']') == -1) {
 			return text;
 		}
 
-		Iterator tmpIter = BBCodeRepository.getBBCollection().getBbList().iterator();
+		for (Iterator iter = BBCodeRepository.getBBCollection().getBbList().iterator(); iter.hasNext();) {
+			BBCode bb = (BBCode)iter.next();
 
-		while (tmpIter.hasNext()) {
-			BBCode bb = (BBCode) tmpIter.next();
-
-			// Another hack for the quotes
-			if (bb.getTagName().equals("openQuote") 
-					|| bb.getTagName().equals("openSimpleQuote")
-					|| bb.getTagName().equals("closeQuote")) {
+			if (!"code".equals(bb.getTagName())) {
 				text = text.replaceAll(bb.getRegex(), bb.getReplace());
 			}
-			else if (bb.getTagName().equals("code")) {
+			else {
 				Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
 				StringBuffer sb = new StringBuffer(text);
 
 				while (matcher.find()) {
 					StringBuffer contents = new StringBuffer(matcher.group(1));
-
+					
 					ViewCommon.replaceAll(contents, "<br/>", "\n");
 
 					// Do not allow other bb tags inside "code"
@@ -171,6 +164,9 @@ public class PostCommon
 					// XML-like tags
 					ViewCommon.replaceAll(contents, "<", "&lt;");
 					ViewCommon.replaceAll(contents, ">", "&gt;");
+					
+					ViewCommon.replaceAll(contents, "\n", "<br/>");
+					ViewCommon.replaceAll(contents, "\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
 
 					StringBuffer replace = new StringBuffer(bb.getReplace());
 					int index = replace.indexOf("$1");
@@ -188,9 +184,6 @@ public class PostCommon
 				}
 				
 				text = sb.toString();
-			}
-			else {
-				text = text.replaceAll(bb.getRegex(), bb.getReplace());
 			}
 		}
 

@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- $Id: bb_config.xml,v 1.28 2007/08/05 06:48:35 andowson Exp $ -->
+<!-- $Id: bb_config.xml,v 1.29 2007/08/08 23:48:55 rafaelsteil Exp $ -->
 <bbConfig>
 	<!-- CODE -->
 	<match name="code">
 		<regex>(?s)\[code\](.*?)\[/code\]</regex>
 		<replace>
 		<![CDATA[
-		
-		<span class="genmed"><b>Code:</b></span><br>
-		<div style="overflow: auto; width: 100%;">
-		<pre>$1</pre>
-		</div>
+		<dl class="codebox">
+			<dt>Code: <a onclick="selectCode(this); return false;" href="#">Select all</a></dt>
+			<dd>
+				<code>$1</code>
+			</dd>
+		</dl>
 		]]>
 		</replace>
 	</match>
@@ -19,7 +20,8 @@
 		<regex>(?i)\[quote\]</regex>
 		<replace>
 		<![CDATA[
-		<blockquote>
+		<blockquote class="uncited">
+			<div>
 		]]>
 		</replace>
 	</match>
@@ -28,11 +30,9 @@
 		<regex>(?i)\[quote=['"]?(.*?[^'"])['"]?\]</regex>
 		<replace>
 		<![CDATA[
-		<p></p>
-
-		<cite>$1 wrote:</cite><br>
 		<blockquote>
-		
+			<div>
+				<cite>$1 wrote:</cite>
 		]]>
 		</replace>
 	</match>
@@ -41,7 +41,7 @@
 		<regex>(?i)\[/quote\]</regex>
 		<replace>
 		<![CDATA[
-		&nbsp;
+		</div>
 		</blockquote>
 		]]>
 		</replace>
@@ -130,9 +130,9 @@
 		<replace>
 		<![CDATA[
 		<object id="mediaPlayer" width="320" height="285" 
-      classid="CLSID:22d6f312-b0f6-11d0-94ab-0080c74c7e95" 
-      codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701"
-      standby="Loading Microsoft Windows Media Player components..." type="application/x-oleobject">
+			classid="CLSID:22d6f312-b0f6-11d0-94ab-0080c74c7e95" 
+			codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701"
+			standby="Loading Microsoft Windows Media Player components..." type="application/x-oleobject">
 			<param name="fileName" value="$1" />
 			<param name="animationatStart" value="true" />
 			<param name="transparentatStart" value="true" />
@@ -156,8 +156,7 @@
 		<regex>(?i)\[rm\](.*?)\[/rm\]</regex>
 		<replace>
 		<![CDATA[
-		<object id="rvocx" classid="clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA"
-        width="320" height="240">
+		<object id="rvocx" classid="clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA" width="320" height="240">
 			<param name="src" value="$1" />
 			<param name="autostart" value="true" />
 			<param name="controls" value="ImageWindow" />
@@ -168,8 +167,7 @@
 			</embed>
         </object>
 	    <br />
-        <object id="rvocx" classid="clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA"
-          width="320" height="30" />
+        <object id="rvocx" classid="clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA" width="320" height="30" />
 			<param name="src" value="$1" />
 			<param name="autostart" value="true" />
 			<param name="controls" value="ControlPanel" />
@@ -254,7 +252,7 @@
 		<regex>(?s)(?i)\[size=['"]?(.*?[^'"])['"]?\](.*?)\[/size\]</regex>
 		<replace>
 		<![CDATA[
-		<span style="font-size: $1px; line-height: normal">$2</span>
+		<span style="font-size: $1px; line-height: normal;">$2</span>
 		]]>
 		</replace>
 	</match>

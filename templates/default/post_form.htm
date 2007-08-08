@@ -2,13 +2,17 @@
 <#assign preview = preview?default(false)/>
 <#assign logModeration = isEdit?default(false) && isModerator && user.id != post.userId/>
 
+<style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/tabs.css?${startupTime} );</style>
+
 <script type="text/javascript" src="${contextPath}/dwr/interface/AjaxUtils.js?${startupTime}"></script>
 <script type="text/javascript" src="${contextPath}/dwr/engine.js?${startupTime}"></script>
+<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/post.js?${startupTime}"></script>
+
 <script type="text/javascript">
 <#include "js/bbcode_help.js"/>
 <#include "js/utils.js"/>
 </script>
-<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/post.js?${startupTime}"></script>
+
 
 <script type="text/javascript">
 <!--
@@ -49,6 +53,18 @@ function validatePostForm(f)
 	</#if>
 	
 	return true;
+}
+
+function openFindUserWindow()
+{
+	var w = window.open("${JForumContext.encodeURL("/pm/findUser")}", "_findUser", "height=250,resizable=yes,width=400");
+	w.focus();
+}
+
+function smiliePopup()
+{
+	var w = window.open("${JForumContext.encodeURL("/posts/listSmilies")}", "smilies", "width=300, height=300, toolbars=no, scrollbars=yes");
+	w.focus();
 }
 
 -->
@@ -180,8 +196,8 @@ function validatePostForm(f)
 
 				<#if !forum?exists>
 					<tr>
-						<td class="row1" width="22%"><span class="gen"><b>${I18n.getMessage("PrivateMessage.user")}</b></span></td>
-						<td class="row2" width="78%">
+						<td class="row1" width="15%"><span class="gen"><b>${I18n.getMessage("PrivateMessage.user")}</b></span></td>
+						<td class="row2" width="85%">
 							<#if pmRecipient?exists>
 								<#assign toUsername = toUsername/>
 								<#assign toUserId = toUserId/>
@@ -197,7 +213,7 @@ function validatePostForm(f)
 							</#if>
 
 							<input class="post" size="25" name="toUsername" value="${toUsername}"/>&nbsp;
-							<input type="button" value="${I18n.getMessage("PrivateMessage.findUser")}" name="findUser" class="liteoption" onclick="window.open('${JForumContext.encodeURL("/pm/findUser")}','_findUser', 'height=250,resizable=yes,width=400');return false;" />
+							<input type="button" value="${I18n.getMessage("PrivateMessage.findUser")}" name="findUser" class="liteoption" onclick="openFindUserWindow(); return false;" />
 							<input type="hidden" name="toUserId" value="${toUserId}" />
 						</td>
 					</tr>
@@ -210,7 +226,7 @@ function validatePostForm(f)
 				</#if>
 
 				<tr>
-					<td class="row1" width="22%"><span class="gen"><b>${I18n.getMessage("PostForm.subject")}</b></span></td>
+					<td class="row1" width="15%"><span class="gen"><b>${I18n.getMessage("PostForm.subject")}</b></span></td>
 					<#if post?exists>
 						<#assign subject = post.subject?default("")?html/>
 						<#elseif pmReply?default(false)>
@@ -218,20 +234,19 @@ function validatePostForm(f)
 						<#elseif topic?exists>
 						<#assign subject = I18n.getMessage("Message.replyPrefix") + topic.title?default("")?html/>
 					</#if>
-					<td class="row2" width="78%">
+					<td class="row2" width="85%">
 						<span class="gen">
-							<input class="post" style="WIDTH: 460px" tabindex="2" maxlength="100" size="45" name="subject" value="${subject?default("")}" /> 
+							<input class="subject" tabindex="2" maxlength="100" name="subject" value="${subject?default("")}" /> 
 						</span>
 					</td>
 				</tr>
 
 				<tr>
+					<!-- Smilies -->
 					<td class="row1" valign="top">
-						<table cellspacing="0" cellpadding="1" width="100%" border="0">
-							<tr>
-								<td><span class="gen"><b>${I18n.getMessage("PostForm.body")}</b></span> </td>
-							</tr>
-							
+						<span class="gen"><b>${I18n.getMessage("PostForm.body")}</b></span>
+
+						<table cellspacing="0" cellpadding="1" border="0" align="center">
 							<tr>
 								<td valign="middle" align="center">
 									<br />
@@ -242,9 +257,6 @@ function validatePostForm(f)
 
 										<#assign count = 0/>
 										<#assign lastSmilie = ""/>
-										<!--
-										<tr valign="middle" align="center">
-										-->
 											<#list smilies as smilie>
 												<#if (count < 20)>
 													<#if lastSmilie == "" || lastSmilie.url != smilie.url>
@@ -265,15 +277,6 @@ function validatePostForm(f)
 											</#if>
 										<tr align="center">
 											<td colspan="4">
-										<script type="text/javascript">
-										<!--
-										function smiliePopup()
-										{
-											w = window.open("${JForumContext.encodeURL("/posts/listSmilies")}", "smilies", "width=300, height=300, toolbars=no, scrollbars=yes");
-											w.focus();
-										}
-										-->
-										</script>
 												<span class="nav"><a href="#" onclick="smiliePopup();return false;">${I18n.getMessage("PostForm.moreSmilies")}</a></span>
 											</td>
 										</tr>
@@ -283,74 +286,69 @@ function validatePostForm(f)
 						</table>
 					</td>
 
+					<!-- BB Codes, textarea -->
 					<td class="row2" valign="top">
-						<div class="gen"><!--<span class="gen">-->
-							<table cellspacing="0" cellpadding="2" width="470" border="0">
-								<tr valign="middle" align="center">
-									<td><span class="genmed"><input class="button" onmouseover="helpline('b')" style="FONT-WEIGHT: bold; WIDTH: 30px" accesskey="b" onclick="bbstyle(0)" type="button" value=" B " name="addbbcode0" /> </span></td>
-									<td><span class="genmed"><input class="button" onmouseover="helpline('i')" style="WIDTH: 30px; FONT-STYLE: italic" accesskey="i" onclick="bbstyle(2)" type="button" value=" i " name="addbbcode2" /> </span></td>
-									<td><span class="genmed"><input class="button" onmouseover="helpline('u')" style="WIDTH: 30px; TEXT-DECORATION: underline" accesskey="u" onclick="bbstyle(4)" type="button" value=" u " name="addbbcode4" /> </span></td>
-									<td><span class="genmed"><input class="button" onmouseover="helpline('q')" style="WIDTH: 50px" accesskey="q" onclick="bbstyle(6)" type="button" value="Quote" name="addbbcode6" /> </span></td>
-									<td><span class="genmed"><input class="button" onmouseover="helpline('c')" style="WIDTH: 40px" accesskey="c" onclick="bbstyle(8)" type="button" value="Code" name="addbbcode8" /> </span></td>
-									<td><span class="genmed"><input class="button" onmouseover="helpline('l')" style="WIDTH: 40px" accesskey="l" onclick="bbstyle(10)" type="button" value="List" name="addbbcode10" /> </span></td>
-									<td><span class="genmed"><input class="button" onmouseover="helpline('p')" style="WIDTH: 40px" accesskey="p" onclick="bbstyle(12)" type="button" value="Img" name="addbbcode12" /> </span></td>
-									<td><span class="genmed"><input class="button" onmouseover="helpline('w')" style="WIDTH: 40px" accesskey="w" onclick="bbstyle(14)" type="button" value="URL" name="addbbcode14" /> </span></td>
+						<div class="gen">
+							<table cellspacing="0" cellpadding="2" border="0" width="100%">
+								<!-- bb code -->
+								<tr valign="middle">
+									<td>
+										<input class="button" onmouseover="helpline('b')" style="FONT-WEIGHT: bold; WIDTH: 30px" accesskey="b" onclick="bbstyle(0)" type="button" value=" B " name="addbbcode0" /> 
+										<input class="button" onmouseover="helpline('i')" style="WIDTH: 30px; FONT-STYLE: italic" accesskey="i" onclick="bbstyle(2)" type="button" value=" i " name="addbbcode2" /> 
+										<input class="button" onmouseover="helpline('u')" style="WIDTH: 30px; TEXT-DECORATION: underline" accesskey="u" onclick="bbstyle(4)" type="button" value=" u " name="addbbcode4" />
+										<input class="button" onmouseover="helpline('q')" style="WIDTH: 50px" accesskey="q" onclick="bbstyle(6)" type="button" value="Quote" name="addbbcode6" /> 
+										<input class="button" onmouseover="helpline('c')" style="WIDTH: 40px" accesskey="c" onclick="bbstyle(8)" type="button" value="Code" name="addbbcode8" />
+										<input class="button" onmouseover="helpline('l')" style="WIDTH: 40px" accesskey="l" onclick="bbstyle(10)" type="button" value="List" name="addbbcode10" />
+										<input class="button" onmouseover="helpline('p')" style="WIDTH: 40px" accesskey="p" onclick="bbstyle(12)" type="button" value="Img" name="addbbcode12" />
+										<input class="button" onmouseover="helpline('w')" style="WIDTH: 40px" accesskey="w" onclick="bbstyle(14)" type="button" value="URL" name="addbbcode14" />
+									</td>
 								</tr>
 								
+								<!-- Color, Fonts -->
 								<tr>
-									<td colspan="8">
-										<table cellspacing="0" cellpadding="0" width="100%" border="0">
-											<tr>
-												<td>
-													<span class="genmed">&nbsp;${I18n.getMessage("PostForm.textColor")}: 
-													<select onmouseover="helpline('s')" onchange="bbfontstyle('[color=' + this.form.addbbcode18.options[this.form.addbbcode18.selectedIndex].value + ']', '[/color]')" name="addbbcode18"> 
-														<option class="genmed" style="COLOR: black; BACKGROUND-COLOR: #fafafa" value="#444444" selected="selected">${I18n.getMessage("PostForm.colorDefault")}</option> 
-														<option class="genmed" style="COLOR: darkred; BACKGROUND-COLOR: #fafafa" value="darkred">${I18n.getMessage("PostForm.colorDarkRed")}</option> 
-														<option class="genmed" style="COLOR: red; BACKGROUND-COLOR: #fafafa" value="red">${I18n.getMessage("PostForm.colorRed")}</option> 
-														<option class="genmed" style="COLOR: orange; BACKGROUND-COLOR: #fafafa" value="orange">${I18n.getMessage("PostForm.colorOrange")}</option> 
-														<option class="genmed" style="COLOR: brown; BACKGROUND-COLOR: #fafafa" value="brown">${I18n.getMessage("PostForm.colorBrown")}</option> 
-														<option class="genmed" style="COLOR: yellow; BACKGROUND-COLOR: #fafafa" value="yellow">${I18n.getMessage("PostForm.colorYellow")}</option> 
-														<option class="genmed" style="COLOR: green; BACKGROUND-COLOR: #fafafa" value="green">${I18n.getMessage("PostForm.colorGreen")}</option> 
-														<option class="genmed" style="COLOR: olive; BACKGROUND-COLOR: #fafafa" value="olive">${I18n.getMessage("PostForm.colorOlive")}</option> 
-														<option class="genmed" style="COLOR: cyan; BACKGROUND-COLOR: #fafafa" value="cyan">${I18n.getMessage("PostForm.colorCyan")}</option> 
-														<option class="genmed" style="COLOR: blue; BACKGROUND-COLOR: #fafafa" value="blue">${I18n.getMessage("PostForm.colorBlue")}</option> 
-														<option class="genmed" style="COLOR: darkblue; BACKGROUND-COLOR: #fafafa" value="darkblue">${I18n.getMessage("PostForm.colorDarkBlue")}</option> 
-														<option class="genmed" style="COLOR: violet; BACKGROUND-COLOR: #fafafa" value="violet">${I18n.getMessage("PostForm.colorViolet")}</option> 
-														<option class="genmed" style="COLOR: white; BACKGROUND-COLOR: #fafafa" value="white">${I18n.getMessage("PostForm.colorWhite")}</option>
-														<option class="genmed" style="COLOR: black; BACKGROUND-COLOR: #fafafa" value="black">${I18n.getMessage("PostForm.colorBlack")}</option>
-													</select> 
+									<td>
+										<span class="genmed">&nbsp;${I18n.getMessage("PostForm.textColor")}: 
+										<select onmouseover="helpline('s')" onchange="bbfontstyle('[color=' + this.form.addbbcode18.options[this.form.addbbcode18.selectedIndex].value + ']', '[/color]')" name="addbbcode18"> 
+											<option class="genmed" style="COLOR: black; BACKGROUND-COLOR: #fafafa" value="#444444" selected="selected">${I18n.getMessage("PostForm.colorDefault")}</option> 
+											<option class="genmed" style="COLOR: darkred; BACKGROUND-COLOR: #fafafa" value="darkred">${I18n.getMessage("PostForm.colorDarkRed")}</option> 
+											<option class="genmed" style="COLOR: red; BACKGROUND-COLOR: #fafafa" value="red">${I18n.getMessage("PostForm.colorRed")}</option> 
+											<option class="genmed" style="COLOR: orange; BACKGROUND-COLOR: #fafafa" value="orange">${I18n.getMessage("PostForm.colorOrange")}</option> 
+											<option class="genmed" style="COLOR: brown; BACKGROUND-COLOR: #fafafa" value="brown">${I18n.getMessage("PostForm.colorBrown")}</option> 
+											<option class="genmed" style="COLOR: yellow; BACKGROUND-COLOR: #fafafa" value="yellow">${I18n.getMessage("PostForm.colorYellow")}</option> 
+											<option class="genmed" style="COLOR: green; BACKGROUND-COLOR: #fafafa" value="green">${I18n.getMessage("PostForm.colorGreen")}</option> 
+											<option class="genmed" style="COLOR: olive; BACKGROUND-COLOR: #fafafa" value="olive">${I18n.getMessage("PostForm.colorOlive")}</option> 
+											<option class="genmed" style="COLOR: cyan; BACKGROUND-COLOR: #fafafa" value="cyan">${I18n.getMessage("PostForm.colorCyan")}</option> 
+											<option class="genmed" style="COLOR: blue; BACKGROUND-COLOR: #fafafa" value="blue">${I18n.getMessage("PostForm.colorBlue")}</option> 
+											<option class="genmed" style="COLOR: darkblue; BACKGROUND-COLOR: #fafafa" value="darkblue">${I18n.getMessage("PostForm.colorDarkBlue")}</option> 
+											<option class="genmed" style="COLOR: violet; BACKGROUND-COLOR: #fafafa" value="violet">${I18n.getMessage("PostForm.colorViolet")}</option> 
+											<option class="genmed" style="COLOR: white; BACKGROUND-COLOR: #fafafa" value="white">${I18n.getMessage("PostForm.colorWhite")}</option>
+											<option class="genmed" style="COLOR: black; BACKGROUND-COLOR: #fafafa" value="black">${I18n.getMessage("PostForm.colorBlack")}</option>
+										</select> 
 
-													&nbsp;${I18n.getMessage("PostForm.font")}:
-													<select onmouseover="helpline('f')" onchange="bbfontstyle('[size=' + this.form.addbbcode20.options[this.form.addbbcode20.selectedIndex].value + ']', '[/size]')" name="addbbcode20"> 
-														<option class="genmed" value="7">${I18n.getMessage("PostForm.fontVerySmall")}</option> 
-														<option class="genmed" value="9">${I18n.getMessage("PostForm.fontSmall")}</option> 
-														<option class="genmed" value="12" selected="selected">${I18n.getMessage("PostForm.fontNormal")}</option> 
-														<option class="genmed" value="18">${I18n.getMessage("PostForm.fontBig")}</option> 
-														<option class="genmed" value="24">${I18n.getMessage("PostForm.fontGiant")}</option>
-													</select> 
-													</span>
-												</td>
-												<td nowrap="nowrap" align="right">
-													<span class="gensmall"><a class="genmed" onmouseover="helpline('a')" href="javascript:bbstyle(-1)">${I18n.getMessage("PostForm.closeMarks")}</a></span>
-												</td>
-											</tr>
-										</table>
+										&nbsp;${I18n.getMessage("PostForm.font")}:
+										<select onmouseover="helpline('f')" onchange="bbfontstyle('[size=' + this.form.addbbcode20.options[this.form.addbbcode20.selectedIndex].value + ']', '[/size]')" name="addbbcode20"> 
+											<option class="genmed" value="7">${I18n.getMessage("PostForm.fontVerySmall")}</option> 
+											<option class="genmed" value="9">${I18n.getMessage("PostForm.fontSmall")}</option> 
+											<option class="genmed" value="12" selected="selected">${I18n.getMessage("PostForm.fontNormal")}</option> 
+											<option class="genmed" value="18">${I18n.getMessage("PostForm.fontBig")}</option> 
+											<option class="genmed" value="24">${I18n.getMessage("PostForm.fontGiant")}</option>
+										</select> 
+										</span>
+										<span class="gensmall"><a class="genmed" onmouseover="helpline('a')" href="javascript:bbstyle(-1)">${I18n.getMessage("PostForm.closeMarks")}</a></span>
 									</td>
 								</tr>
 
+								<!-- Help box -->
 								<tr>
-									<td colspan="9">
-										<span class="gensmall">
+									<td>
 										<input name="helpbox" class="helpline" style="FONT-SIZE: 10px; WIDTH: 450px" value="${I18n.getMessage("PostForm.helplineTip")}" size="45" maxlength="100" /> 
-										</span>
 									</td>
 								</tr>
 								
+								<!-- Textarea -->
 								<tr>
-									<td colspan="9" valign="top">
-										<span class="gen">
-											<textarea class="post" onkeyup="storeCaret(this);" onclick="storeCaret(this);" onselect="storeCaret(this);" style="WIDTH: 450px"  tabindex="3" name="message" rows="15"  cols="35"><#if post?exists><#if quote?exists>[quote=${quoteUser}]${post.text?html}[/quote]<#else>${post.text?html}</#if></#if></textarea> 
-										</span>
+									<td valign="top">
+										<textarea class="message" onkeyup="storeCaret(this);" onclick="storeCaret(this);" onselect="storeCaret(this);" tabindex="3" name="message" rows="20"  cols="35"><#if post?exists><#if quote?exists>[quote=${quoteUser}]${post.text?html}[/quote]<#else>${post.text?html}</#if></#if></textarea> 
 									</td>
 								</tr>
 							</table>
@@ -395,8 +393,7 @@ function validatePostForm(f)
 
 							<#if setType?default(true) && forum?exists && canCreateStickyOrAnnouncementTopics?default(false)>
 							<tr>
-								<td>&nbsp;</td>
-								<td>
+								<td colspan="2">
 									<span class="gen">${I18n.getMessage("PostForm.setTopicAs")}:
 									<input type="radio" checked="checked" value="0" id="topic_type0" name="topic_type" <#if topic?exists && topic.type == 0>checked="checked"</#if> /><label for="topic_type0">${I18n.getMessage("PostForm.setTopicAsNormal")}</label>&nbsp;&nbsp;
 									<input type="radio" value="1" id="topic_type1" name="topic_type" <#if topic?exists && topic.type == 1>checked="checked"</#if> /><label for="topic_type1">${I18n.getMessage("PostForm.setTopicAsSticky")}</label>&nbsp;&nbsp;

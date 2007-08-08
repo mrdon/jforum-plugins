@@ -43,7 +43,6 @@ PostModel.selectByUserByLimit = SELECT p.post_id, topic_id, forum_id, p.user_id,
 	AND p.user_id = ? \
 	AND p.need_moderate = 0 \
 	AND forum_id IN(:fids:) \
-	ORDER BY post_time DESC \
 	OFFSET ? LIMIT ?
 
 # ##########

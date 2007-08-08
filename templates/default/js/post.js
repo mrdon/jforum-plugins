@@ -381,4 +381,3 @@ function checkForm() {
       return true;
    }
 }
-

@@ -56,7 +56,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.25 2007/07/28 14:17:09 rafaelsteil Exp $
+ * @version $Id: ViewCommon.java,v 1.26 2007/08/08 23:48:54 rafaelsteil Exp $
  */
 public final class ViewCommon
 {
@@ -252,8 +252,8 @@ public final class ViewCommon
 			
 			u.setSignature(sb.toString());
 			
-			u.setSignature(PostCommon.alwaysProcess(u.getSignature(), BBCodeRepository.getBBCollection().getAlwaysProcessList()));
-			u.setSignature(PostCommon.processText(u.getSignature()));
+			u.setSignature(PostCommon.parseDefaultRequiredBBCode(u.getSignature(), BBCodeRepository.getBBCollection().getAlwaysProcessList()));
+			u.setSignature(PostCommon.processBBCodes(u.getSignature()));
 			u.setSignature(PostCommon.processSmilies(new StringBuffer(u.getSignature()), SmiliesRepository.getSmilies()));
 		}
 	}
