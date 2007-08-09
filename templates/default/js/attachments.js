@@ -12,16 +12,6 @@ var counter = 0;
 	template += "&nbsp;&nbsp;<a href='javascript:removeAttach(#counter#)' class='gensmall'>${I18n.getMessage("Attachments.remove")}</a></td></tr>";
 	template += "<tr><td colspan='2' width='100%' class='row3'></td></tr></table>";
 
-	function openAttachmentPanel() 
-	{
-		if (total == 0 && !ignoreStart) {
-			addAttachmentFields();
-		}
-
-		document.getElementById("tdAttachPanel").style.display = panelOpen ? 'none' : '';
-		panelOpen = !panelOpen;
-	}
-
 	function addAttachmentFields()
 	{
 		if (counter < maxAttachments) {

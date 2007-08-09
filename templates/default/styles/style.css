@@ -280,8 +280,6 @@ dl.codebox code {
 	margin: 2px 0;
 }
 
-blockquote dl.codebox code {
-	font-size: 1.0em;
-}
-
+blockquote dl.codebox code { font-size: 1.0em; }
 input.subject, textarea.message { width: 100%; }
+.postTabContents { padding-top: 25px; }
