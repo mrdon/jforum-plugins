@@ -1,4 +1,5 @@
 <style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/style.css );</style>
+<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/jquery.js?${startupTime}"></script>
 
 <style type="text/css">
 .bottomLine {
@@ -9,9 +10,6 @@
 	border-left: 1px solid #000;
 }
 </style>
-
-<script type="text/javascript" src="${contextPath}/dwr/interface/AjaxUtils.js?${startupTime}"></script>
-<script type="text/javascript" src="${contextPath}/dwr/engine.js?${startupTime}"></script>
 
 <script type="text/javascript">
 function writeOptions(fieldName, from, to) 
@@ -135,17 +133,13 @@ function checkIfPostExists()
 	var postId = document.getElementById("checkPostId").value;
 
 	if (postId.length > 0 && !isNaN(postId * 1)) {
-		AjaxUtils.isPostIndexed(postId, checkIfPostExistsCallback);
-	}
-}
-
-function checkIfPostExistsCallback(status)
-{
-	if (status) {
-		alert("${I18n.getMessage("Yes")}");
-	}
-	else {
-		alert("${I18n.getMessage("No")}");
+		$.ajax({
+			type:"POST",
+			url:"${contextPath}/jforum${extension}?module=ajax&action=isPostIndexed",
+			data:{post_id:postId},
+			dataType:"script",
+			global:false
+		});
 	}
 }
 </script>

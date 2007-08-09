@@ -8,7 +8,7 @@ var counter = 0;
 	var template = "<table width='100%'><tr><td><span class='gen'><b>${I18n.getMessage("Attachments.filename")}</b></span></td>";
 	template += "<td><input type='file' size='50' name='file_#counter#'></td></tr>";
 	template += "<tr><td><span class='gen'><b>${I18n.getMessage("Attachments.description")}</b></span></td>";
-	template += "<td><textarea rows='4' cols='40' name='comment_#counter#'></textarea>";
+	template += "<td><input type='text' name='comment_#counter#' size='50'>";
 	template += "&nbsp;&nbsp;<a href='javascript:removeAttach(#counter#)' class='gensmall'>${I18n.getMessage("Attachments.remove")}</a></td></tr>";
 	template += "<tr><td colspan='2' width='100%' class='row3'></td></tr></table>";
 
@@ -31,8 +31,7 @@ var counter = 0;
 	function removeAttach(index)
 	{
 		document.getElementById("attach_" + index).innerHTML = "<div id='attach_" + total + "'></div>";
-		//Avoid HTML Validation error by not using the minusminus shortcut
-		counter = counter - 1;
+		counter--;
 		setAddAttachButtonStatus();
 	}
 

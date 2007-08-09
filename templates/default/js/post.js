@@ -15,10 +15,6 @@
 //* Javascript substitution for correct working on explorer & mozilla browsers
 //* by RadikalQ3 (radikal AT q3 dot nu), helping to Gentoo comunity.
 
-// JForum version 1.0 by Fernando AT Boaglio dot com - 2006-09-21 - first release
-// JForum version 1.1 by Fernando AT Boaglio dot com - 2006-09-22 - small IE bugfix
-// JForum version 1.2 by Fernando AT Boaglio dot com - 2006-09-22 - small bugfix about pools
-
 // Startup variables
 var imageTag = false;
 var theSelection = false;
@@ -253,45 +249,27 @@ function storeCaret(textEl) {
 	if (textEl.createTextRange) textEl.caretPos = document.selection.createRange().duplicate();
 }
 
+// Depends of jquery.js
 function previewMessage()
 {
 	var f = document.post;
 
-	if (supportAjax()) {
-		var p = { 
-			text:f.message.value, 
-			subject:f.subject.value, 
-			htmlEnabled:!f.disable_html.checked, 
-			bbCodeEnabled:!f.disable_bbcode.checked, 
-			smiliesEnabled:!f.disable_smilies.checked 
-		};
+	var p = { 
+		text:f.message.value, 
+		subject:f.subject.value, 
+		html:!f.disable_html.checked, 
+		bbcode:!f.disable_bbcode.checked, 
+		smilies:!f.disable_smilies.checked 
+	};
 
-		AjaxUtils.previewPost(p, previewCallback);
-	}
-	else {
-		f.preview.value = "1";
-		f.submit();
-	}
+	$.ajax({
+		type:"POST",
+		url:CONTEXTPATH + "/jforum" + SERVLET_EXTENSION + "?module=ajax&action=previewPost",
+		data:p,
+		dataType:"script",
+		global:false
+	});
 }
-
-function previewCallback(post)
-{
-	document.getElementById("previewSubject").innerHTML = post.subject;
-	document.getElementById("previewMessage").innerHTML = post.text;
-
-	document.getElementById("previewTable").style.display = '';
-
-	var s = document.location.toString();
-	var index = s.indexOf("#preview");
-
-	if (index > -1) {
-		s = s.substring(0, index);
-	}
-
-	document.location = s + "#preview";
-}
-
-
 
 function incrementPollOptionCount()
 {
@@ -380,4 +358,21 @@ function checkForm() {
       //formObj.submit.disabled = true;
       return true;
    }
+}
+
+function activateTab(name, currentLi)
+{
+	$("#tabs10/ul/li").each(function() {
+		var targetName = $(this).attr("target");
+		var target = $("#" + targetName);
+
+		if (target.length && name != targetName) {
+			target.hide();
+			$(this).removeClass("current");
+		}
+	});
+
+
+	$("#" + name).show();
+	$(currentLi).parent().addClass("current");
 }

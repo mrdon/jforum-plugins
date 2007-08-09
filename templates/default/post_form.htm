@@ -3,18 +3,21 @@
 <#assign logModeration = isEdit?default(false) && isModerator && user.id != post.userId/>
 <#assign allowPoll = setType?default(true) && canCreatePolls?default(false)/>
 
+<script type="text/javascript">
+var CONTEXTPATH = "${contextPath}";
+var SERVLET_EXTENSION  = "${extension}";
+</script>
+
 <style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/tabs.css?${startupTime} );</style>
 
-<script type="text/javascript" src="${contextPath}/dwr/interface/AjaxUtils.js?${startupTime}"></script>
-<script type="text/javascript" src="${contextPath}/dwr/engine.js?${startupTime}"></script>
 <script type="text/javascript" src="${contextPath}/templates/${templateName}/js/post.js?${startupTime}"></script>
 <script type="text/javascript" src="${contextPath}/templates/${templateName}/js/jquery.js?${startupTime}"></script>
 
 <script type="text/javascript">
 <#include "js/bbcode_help.js"/>
 <#include "js/utils.js"/>
+<#include "js/attachments.js"/>
 </script>
-
 
 <script type="text/javascript">
 <!--
@@ -358,42 +361,23 @@ function smiliePopup()
 					</td>
 				</tr>
 
-<script type="text/javascript">
-function activateTab(name, currentLi)
-{
-	$("#tabs10/ul/li").each(function() {
-		var targetName = $(this).attr("target");
-		var target = $("#" + targetName);
-
-		if (target.length && name != targetName) {
-			target.hide();
-			$(this).removeClass("current");
-		}
-	});
-
-
-	$("#" + name).show();
-	$(currentLi).parent().addClass("current");
-}
-</script>
-
 				<!-- Options -->
 				<tr>
 					<td class="row1">&nbsp;</td>
 					<td class="row2">
 						<div id="tabs10">
 							<ul>
-								<li target="postOptions" class="current"><a href="#change" onClick="activateTab('postOptions', this);"><span>Options</span></a></li>
+								<li target="postOptions" class="current"><a href="javascript:void(0);" onClick="activateTab('postOptions', this);"><span>Options</span></a></li>
 
 								<#if allowPoll>
-									<li target="postPoll"><a href="#change" onClick="activateTab('postPoll', this);"><span>Poll</span></a></li>
+									<li target="postPoll"><a href="javascript:void(0);" onClick="activateTab('postPoll', this);"><span>Poll</span></a></li>
 								</#if>
-								<li target="postAttachments"><a href="#change" onClick="activateTab('postAttachments', this);"><span>Attachments</span></a></li>
+								<li target="postAttachments"><a href="javascript:void(0);" onClick="activateTab('postAttachments', this);"><span>Attachments</span></a></li>
 							</ul>
 						</div>
 
 						<!-- Post Options -->
-						<div id="postOptions" class="postTabContents">
+						<div id="postOptions" class="postTabContents" style="display: none;">
 							<#include "post_options_tab.htm"/>
 						</div>
 
@@ -406,7 +390,7 @@ function activateTab(name, currentLi)
 
 						<!-- Attachments tab -->
 						<#if attachmentsEnabled || attachments?exists>
-							<div id="postAttachments" class="postTabContents" style="display: none;">
+							<div id="postAttachments" class="postTabContents" style="display_: none;">
 								<#include "post_attachments_tab.htm"/>
 							</div>
 						</#if>
@@ -479,8 +463,6 @@ function activateTab(name, currentLi)
 
 <script type="text/javascript">
 <!--
-<#include "js/attachments.js"/>
-
 <#if attachments?exists>
 	ignoreStart = true;
 	editAttachments();

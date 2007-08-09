@@ -23,18 +23,3 @@ function addBookmark(relationType, relationId)
 	var w = window.open('${JForumContext.encodeURL("/bookmarks/insert/' + relationType + '/' + relationId + '")}', 'bookmark_add', 'width=700, height=200, scrollbars=auto, resizable=true');
 	w.focus();
 }
-
-function supportAjax()
-{
-	if (typeof(AjaxUtils) != 'undefined') {
-		if (window.ActiveXObject) {
-			var r = new ActiveXObject("Microsoft.XMLHTTP");
-			return r != undefined;
-		}
-		else if (window.XMLHttpRequest) {
-			return true;
-		}
-	}
-
-	return false;
-}

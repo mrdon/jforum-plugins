@@ -20,7 +20,6 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/ehcache-1.1.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/jboss-cache-1.2.4.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/jgroups-all-2.2.9-beta2.jar"/>
-	<classpathentry kind="lib" path="WEB-INF/lib/dwr-1.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/c3p0-0.9.1-pre9.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/mysql-connector-java-5.0.3-bin.jar"/>

@@ -36,16 +36,18 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on May 29, 2005 1:45:36 PM
+ * Created on 09/08/2007 09:31:17
+ * 
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.util.ajax;
+package net.jforum.view.forum;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import net.jforum.Command;
 import net.jforum.entities.Post;
 import net.jforum.entities.User;
 import net.jforum.search.LuceneManager;
@@ -54,16 +56,18 @@ import net.jforum.util.SafeHtml;
 import net.jforum.util.mail.Spammer;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.util.preferences.TemplateKeys;
 import net.jforum.view.forum.common.PostCommon;
+
+import org.apache.commons.lang.StringEscapeUtils;
+
 import freemarker.template.SimpleHash;
 
 /**
- * General AJAX utility methods. 
- * 
  * @author Rafael Steil
- * @version $Id: AjaxUtils.java,v 1.14 2007/08/06 16:06:17 rafaelsteil Exp $
+ * @version $Id: AjaxAction.java,v 1.1 2007/08/09 13:52:52 rafaelsteil Exp $
  */
-public class AjaxUtils
+public class AjaxAction extends Command
 {
 	/**
 	 * Sends a test message
@@ -75,7 +79,7 @@ public class AjaxUtils
 	 * @param to the recipient
 	 * @return The status message
 	 */
-	public static String sendTestMail(String sender, String host, String port, String auth, 
+	public void sendTestMail(String sender, String host, String port, String auth, 
 		String ssl, String  username, String password, String to)
 	{
 		// Save the current values
@@ -125,7 +129,7 @@ public class AjaxUtils
 			s.dispatchMessages();
 		}
 		catch (Exception e) {
-			return e.toString();
+			//TODO return e.toString();
 		}
 		finally {
 			// Restore the original values
@@ -137,28 +141,45 @@ public class AjaxUtils
 			SystemGlobals.setValue(ConfigKeys.MAIL_SMTP_SSL, originalSSL);
 			SystemGlobals.setValue(ConfigKeys.MAIL_SMTP_PORT, originalPort);
 		}
-		
-		return "OK";
 	}
 	
-	public static boolean isPostIndexed(int postId)
+	public void isPostIndexed()
 	{
-		return ((LuceneManager)SearchFacade.manager()).luceneSearch().isPostIndexed(postId);
+		int postId = this.request.getIntParameter("post_id");
+
+		this.setTemplateName(TemplateKeys.AJAX_IS_POST_INDEXED);
+		
+		LuceneManager manager = (LuceneManager)SearchFacade.manager();
+		this.context.put("isIndexed", manager.luceneSearch().isPostIndexed(postId));
+	}
+	
+	public void previewPost()
+	{
+		Post post = new Post();
+		
+		post.setText(this.request.getParameter("text"));
+		post.setSubject(this.request.getParameter("subject"));
+		post.setHtmlEnabled("true".equals(this.request.getParameter("html")));
+		post.setBbCodeEnabled("true".equals(this.request.getParameter("bbcode")));
+		post.setSmiliesEnabled("true".equals(this.request.getParameter("smilies")));
+		
+		if (post.isHtmlEnabled()) {
+			post.setText(SafeHtml.makeSafe(post.getText()));
+		}
+		
+		post = PostCommon.preparePostForDisplay(post);
+		post.setSubject(StringEscapeUtils.escapeJavaScript(post.getSubject()));
+		post.setText(StringEscapeUtils.escapeJavaScript(post.getText()));
+
+		this.setTemplateName(TemplateKeys.AJAX_PREVIEW_POST);
+		this.context.put("post", post);
 	}
 	
 	/**
-	 * Prepares a message for previwing
-	 * @param p the post to preview
-	 * @return the formatted post
+	 * @see net.jforum.Command#list()
 	 */
-	public static Post previewPost(Post p)
+	public void list()
 	{
-		if (p.isHtmlEnabled()) {
-			p.setText(SafeHtml.makeSafe(p.getText()));
-		}
-		
-		p = PostCommon.preparePostForDisplay(p);
-		
-		return p;
+		this.ignoreAction();
 	}
 }
