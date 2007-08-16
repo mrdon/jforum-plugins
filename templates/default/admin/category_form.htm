@@ -1,6 +1,6 @@
 <#setting number_format = "#"/>
 <#import "macros/group_macros.ftl" as lib>
-<STYLE type=text/css>@import url( ${contextPath}/templates/${templateName}/styles/style.css );</STYLE>
+<style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/style.css?${startupTime} );</style>
 <form action="${contextPath}/jforum${extension}" method="post" name="form" id="form" accept-charset="${encoding}" onSubmit="return checkGroups()">
 <input type="hidden" name="action" value="${action}" />
 <input type="hidden" name="module" value="${moduleName}" />
@@ -28,7 +28,7 @@ function checkGroups()
 
 	<tr>
 		<td class="row1" width="38%"><span class="gen">${I18n.getMessage("Category.Form.CategoryName")}</span></td>
-		<td class="row2"><input class="post" style="WIDTH: 200px" maxlength="100" size="25" name="category_name" value="<#if category?exists>${category.name}</#if>" /></td>
+		<td class="row2"><input type="text" class="post" style="WIDTH: 200px" maxlength="100" size="25" name="category_name" value="<#if category?exists>${category.name}</#if>" /></td>
 	</tr>
 
 	<tr>

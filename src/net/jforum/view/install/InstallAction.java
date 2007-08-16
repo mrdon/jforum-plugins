@@ -86,7 +86,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.64 2007/04/12 02:11:54 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.65 2007/08/16 01:43:41 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -123,8 +123,9 @@ public class InstallAction extends Command
 		if (lang == null) {
 			Locale locale = this.request.getLocale();
 			lang = locale.getLanguage() + "_" + locale.getCountry();
-		}	
-		if (lang == null || !I18n.languageExists(lang)) {
+		}
+		
+		if (!I18n.languageExists(lang)) {
 			return;
 		}
 		I18n.load(lang);

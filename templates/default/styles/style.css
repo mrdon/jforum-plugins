@@ -100,7 +100,6 @@ blockquote.uncited {
 }
 
 .pre-error { font-size: 1em; color: #000000; font-family: verdana, arial, helvetica, sans-serif; background-color: #fafafa; border: 0; padding-left: 0; }
-
 .copyright { font-size: 10px; color: #444444; font-family: verdana, arial, helvetica, sans-serif; letter-spacing: -1px }
 
 /* posts */
@@ -116,10 +115,27 @@ a.copyright:hover { color: #000000; text-decoration: underline; }
 input, textarea, select { border: 1px solid #ccc; font: 11px verdana, arial, helvetica, sans-serif; color: #000000; }
 textarea { width: 100%; }
 input { text-indent: 2px; }
-input.button { font-size: 11px; color: #000000; font-family: verdana, arial, helvetica, sans-serif; background-color: #fafafa; }
-input.mainoption { font-weight: bold; background-color: #fafafa; }
-input.liteoption { font-weight: normal; background-color: #fafafa; }
+
+input.button, input.mainoption, input.liteoption { 
+	font-size: 11px; 
+	color: #000000; 
+	font-family: 
+	verdana, arial, helvetica, sans-serif; 
+	background: #fafafa none repeat-x scroll center top; 
+	background-image: url(../images/button.gif);
+	cursor: pointer;
+}
+
+input.button:hover, input.mainoption:hover, input.liteoption:hover {
+	background-image: url(../images/button_hover.gif);
+}
+
 .helpline { background-color: #f7f7f8; border: 0px; font-weight: bold; font-style: italic; color: green; }
+
+input[type='text']:hover, input[type='text']:focus, 
+	input[type='password']:hover, input[type='password']:focus, 
+	textarea:focus, textarea:hover, 
+	select:hover, select:focus { border-style:inset; }
 
 .moderatortitle { font-weight: bold; font-size: 12px; color: #ffa34f; }
 .moderator { font-size: 10px; color: #006600; }
@@ -282,4 +298,5 @@ dl.codebox code {
 
 blockquote dl.codebox code { font-size: 1.0em; }
 input.subject, textarea.message { width: 100%; }
-.postTabContents { padding-top: 25px; }
+.postTabContents { padding-top: 24px; }
+.postTabContents div { background-color: #E5EDF3; }

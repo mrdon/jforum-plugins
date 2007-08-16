@@ -1,5 +1,5 @@
 <#setting number_format = "#"/>
-<style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/style.css );</style>
+<style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/style.css?${startupTime} );</style>
 
 <form action="${contextPath}/jforum${extension}" method="post" name="form" id="form" accept-charset="${encoding}">
 <input type="hidden" name="action" value="delete" />
@@ -32,7 +32,7 @@
 				</#if>
 			</td>
 
-			<td class="rowpic" align="center" width="10%">
+			<td class="catleft" align="center" width="10%">
 				<#if (counter < categories.size())>
 					<input type="button" value="${I18n.getMessage("down")}" class="mainoption" onClick="document.location = '${contextPath}/${moduleName}/down/${category.id}${extension}';">&nbsp;
 				<#else>

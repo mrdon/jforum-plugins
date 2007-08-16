@@ -5,37 +5,34 @@ var maxAttachments = ${maxAttachments?default(0)};
 var counter = 0;
 
 <#if attachmentsEnabled>
-	var template = "<table width='100%'><tr><td><span class='gen'><b>${I18n.getMessage("Attachments.filename")}</b></span></td>";
-	template += "<td><input type='file' size='50' name='file_#counter#'></td></tr>";
-	template += "<tr><td><span class='gen'><b>${I18n.getMessage("Attachments.description")}</b></span></td>";
+	var template = "<div id='attach_#counter#'><table width='100%' class='gensmall'><tr><td>${I18n.getMessage("Attachments.filename")}</td>";
+	template += "<td width='100%'><input type='file' size='50' name='file_#counter#'></td></tr>";
+	template += "<tr><td>${I18n.getMessage("Attachments.description")}</td>";
 	template += "<td><input type='text' name='comment_#counter#' size='50'>";
-	template += "&nbsp;&nbsp;<a href='javascript:removeAttach(#counter#)' class='gensmall'>${I18n.getMessage("Attachments.remove")}</a></td></tr>";
-	template += "<tr><td colspan='2' width='100%' class='row3'></td></tr></table>";
+	template += "&nbsp;&nbsp;<a href='javascript:removeAttach(#counter#)' class='gensmall'>[${I18n.getMessage("Attachments.remove")}]</a></td></tr>";
+	template += "</table><div style='border-top: 1px dashed #000;'>&nbsp;</div></div>";
 
 	function addAttachmentFields()
 	{
 		if (counter < maxAttachments) {
 			var s = template.replace(/#counter#/g, total);
-			s += "<div id='attach_#counter#'></div>";
-			s = s.replace(/#counter#/, total + 1);
-
-			
-			document.getElementById("attach_" + total).innerHTML = s;
-			document.getElementById("total_files").value = ++total;
+			$("#attachmentFields").append(s);
+			$("#total_files").val(++total);
 
 			counter++;
-			setAddAttachButtonStatus();
+
+			defineAttachmentButtonStatus();
 		}
 	}
 
 	function removeAttach(index)
 	{
-		document.getElementById("attach_" + index).innerHTML = "<div id='attach_" + total + "'></div>";
+		$("#attach_" + index).empty();
 		counter--;
-		setAddAttachButtonStatus();
+		defineAttachmentButtonStatus();
 	}
 
-	function setAddAttachButtonStatus()
+	function defineAttachmentButtonStatus()
 	{
 		var disabled = !(counter < maxAttachments);
 		document.post.add_attach.disabled = disabled;
@@ -65,7 +62,7 @@ var counter = 0;
 		</#list>
 
 		counter = data.length;
-		<#if attachmentsEnabled>setAddAttachButtonStatus();</#if>
+		<#if attachmentsEnabled>defineAttachmentButtonStatus();</#if>
 		
 		for (var i = 0; i < data.length; i++) {
 			var a = data[i];

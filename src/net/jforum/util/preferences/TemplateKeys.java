@@ -44,7 +44,7 @@ package net.jforum.util.preferences;
 
 /**
  * @author Rafael Steil
- * @version $Id: TemplateKeys.java,v 1.26 2007/08/09 13:52:50 rafaelsteil Exp $
+ * @version $Id: TemplateKeys.java,v 1.27 2007/08/16 01:39:05 rafaelsteil Exp $
  */
 public class TemplateKeys
 {
@@ -203,4 +203,5 @@ public class TemplateKeys
 	public static final String SEARCH_STATS_NOT_ENABLED = "search.stats.not.enabled";
 	public static final String AJAX_PREVIEW_POST = "ajax.preview.post";
 	public static final String AJAX_IS_POST_INDEXED = "ajax.is.post.indexed";
+	public static final String AJAX_TEST_MAIL = "ajax.test.mail";
 }

@@ -65,7 +65,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: AjaxAction.java,v 1.1 2007/08/09 13:52:52 rafaelsteil Exp $
+ * @version $Id: AjaxAction.java,v 1.2 2007/08/16 01:39:05 rafaelsteil Exp $
  */
 public class AjaxAction extends Command
 {
@@ -79,9 +79,17 @@ public class AjaxAction extends Command
 	 * @param to the recipient
 	 * @return The status message
 	 */
-	public void sendTestMail(String sender, String host, String port, String auth, 
-		String ssl, String  username, String password, String to)
+	public void sendTestMail()
 	{
+		String sender = this.request.getParameter("sender");
+		String host = this.request.getParameter("host");
+		String port = this.request.getParameter("port");
+		String auth = this.request.getParameter("auth");
+		String ssl = this.request.getParameter("ssl");
+		String username = this.request.getParameter("username");
+		String password = this.request.getParameter("password");
+		String to = this.request.getParameter("to");
+		
 		// Save the current values
 		String originalHost = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_HOST);
 		String originalAuth = SystemGlobals.getValue(ConfigKeys.MAIL_SMTP_AUTH);
@@ -99,6 +107,8 @@ public class AjaxAction extends Command
 		SystemGlobals.setValue(ConfigKeys.MAIL_SENDER, sender);
 		SystemGlobals.setValue(ConfigKeys.MAIL_SMTP_SSL, ssl);
 		SystemGlobals.setValue(ConfigKeys.MAIL_SMTP_PORT, port);
+		
+		String status = "OK";
 		
 		// Send the test mail
 		class TestSpammer extends Spammer {
@@ -129,7 +139,7 @@ public class AjaxAction extends Command
 			s.dispatchMessages();
 		}
 		catch (Exception e) {
-			//TODO return e.toString();
+			status = StringEscapeUtils.escapeJavaScript(e.toString());
 		}
 		finally {
 			// Restore the original values
@@ -141,6 +151,9 @@ public class AjaxAction extends Command
 			SystemGlobals.setValue(ConfigKeys.MAIL_SMTP_SSL, originalSSL);
 			SystemGlobals.setValue(ConfigKeys.MAIL_SMTP_PORT, originalPort);
 		}
+		
+		this.setTemplateName(TemplateKeys.AJAX_TEST_MAIL);
+		this.context.put("status", status);
 	}
 	
 	public void isPostIndexed()

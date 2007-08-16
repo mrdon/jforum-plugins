@@ -1,10 +1,9 @@
-<#setting number_format = "#"/>
+<style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/style.css?${startupTime} );</style>
+<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/jquery.js?${startupTime}"></script>
 
 <script type="text/javascript">
 <#include "../js/utils.js"/>
 </script>
-<script type="text/javascript" src="${contextPath}/dwr/interface/AjaxUtils.js?${startupTime}"></script>
-<script type="text/javascript" src="${contextPath}/dwr/engine.js?${startupTime}"></script>
 
 <script language="javascript">
 function resize()
@@ -27,43 +26,30 @@ function changeValue(field, value)
 
 function testEmail()
 {
-	if (supportAjax()) {
-		var b = document.getElementById("mailButton");
-		b.value = "${I18n.getMessage("Config.Form.SmtpTestSending")}...";
-		b.disabled = true;
+	if ($("#address").val()) {
+		$("#mailButton").val("${I18n.getMessage("Config.Form.SmtpTestSending")}...").attr("disabled", "disabled");
 
-		AjaxUtils.sendTestMail(document.getElementById("sender").value,
-			document.getElementById("host").value,
-			document.getElementById("port").value,
-			document.getElementById("auth").value,
-			document.getElementById("ssl").value,
-			document.getElementById("username").value,
-			document.getElementById("password").value,
-			document.getElementById("address").value,
-			emailStatus
-		);
-	}
-	else {
-		alert("Ajax support is not working correctly. \n Please see http://www.jforum.net/confluence/display/configuration/ajax for more information.");
-	}
-}
+		var params = {
+			sender: $("#sender").val(),
+			host: $("#host").val(),
+			port: $("#port").val(),
+			auth: $("#auth").val(),
+			ssl: $("#ssl").val(),
+			username: $("#username").val(),
+			password: $("#password").val(),
+			to: $("#address").val()
+		};
 
-function emailStatus(message)
-{
-	if (message != "OK") {
-		alert("${I18n.getMessage("Config.Form.SmtpTestFail")}: \n" + message);
+		$.ajax({
+			type:"POST",
+			url:"$contextPath/jforum${extension}?module=ajax&action=sendTestMail",
+			data:params,
+			dataType:"script",
+			global:false
+		});
 	}
-	else {
-		alert("${I18n.getMessage("Config.Form.SmtpTestSuccess")}");
-	}
-
-	var b = document.getElementById("mailButton");
-	b.value = "${I18n.getMessage("Config.Form.SmtpTest")}";
-	b.disabled = false;
 }
 </script>
-
-<STYLE type=text/css>@import url( ${contextPath}/templates/${templateName}/styles/style.css );</STYLE>
 
 <form accept-charset="${encoding}" name="form" action="${contextPath}/jforum${extension}" method="post">
 <input type="hidden" name="action" value="editSave" />
@@ -300,7 +286,7 @@ function emailStatus(message)
 	<td class='row1' width="38%"><span class='gen'><input type="text" name="p_mail.smtp.password" id="password" value="${config.getProperty("mail.smtp.password")}" /></span></td>
 </tr>
 <tr>
-	<td class='row1' width="38%"><span class='gen'><font color="#ff0000">${I18n.getMessage("Config.Form.SmtpTest")}</font></span></td>
+	<td class='row1' width="38%"><span class='gen'><font color="green">${I18n.getMessage("Config.Form.SmtpTest")}</font></span></td>
 	<td class='row1' width="38%">
 		<span class='gen'>E-mail: </span> <input type="text" id="address">&nbsp;
 		<input type="button" value="${I18n.getMessage("Config.Form.SmtpTest")}" class="mainoption" id="mailButton" onClick="testEmail();">

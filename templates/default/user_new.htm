@@ -94,7 +94,7 @@ function newCaptcha()
 		<tr>
 			<td class="row1" width="38%" valign="top"><span class="gen">${I18n.getMessage("User.captchaResponse")}: *</span></td>
 			<td class="row2">
-				<input class="post" style="WIDTH: 200px; font-weight: bold;" maxlength="25" size="25" name="captchaResponse" /> 
+				<input class="post" type="text" style="WIDTH: 200px; font-weight: bold;" maxlength="25" size="25" name="captchaResponse" /> 
 				<p><img src="${JForumContext.encodeURL("/captcha/generate/${timestamp}")}" border="0" align="top" alt="Captcha unavailable" id="captcha_img"/></p>
 				<span class="gensmall">${I18n.getMessage("User.hardCaptchaPart1")} <a href="#newCaptcha" onClick="newCaptcha()"><b>${I18n.getMessage("User.hardCaptchaPart2")}</b></a></span>
 			</td>

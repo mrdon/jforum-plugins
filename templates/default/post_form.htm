@@ -217,7 +217,7 @@ function smiliePopup()
 								<#assign toUserId = ""/>
 							</#if>
 
-							<input class="post" size="25" name="toUsername" value="${toUsername}"/>&nbsp;
+							<input type="text" class="post" size="25" name="toUsername" value="${toUsername}"/>&nbsp;
 							<input type="button" value="${I18n.getMessage("PrivateMessage.findUser")}" name="findUser" class="liteoption" onclick="openFindUserWindow(); return false;" />
 							<input type="hidden" name="toUserId" value="${toUserId}" />
 						</td>
@@ -241,7 +241,7 @@ function smiliePopup()
 					</#if>
 					<td class="row2" width="85%">
 						<span class="gen">
-							<input class="subject" tabindex="2" maxlength="100" name="subject" value="${subject?default("")}" /> 
+							<input class="subject" type="text" tabindex="2" maxlength="100" name="subject" value="${subject?default("")}" /> 
 						</span>
 					</td>
 				</tr>
@@ -377,21 +377,27 @@ function smiliePopup()
 						</div>
 
 						<!-- Post Options -->
-						<div id="postOptions" class="postTabContents" style="display: none;">
-							<#include "post_options_tab.htm"/>
+						<div id="postOptions" class="postTabContents">
+							<div>
+								<#include "post_options_tab.htm"/>
+							</div>
 						</div>
 
 						<!-- Poll tab -->
 						<#if allowPoll>
 							<div id="postPoll" class="postTabContents" style="display: none;">
-								<#include "post_poll_tab.htm"/>
+								<div>
+									<#include "post_poll_tab.htm"/>
+								</div>
 							</div>
 						</#if>
 
 						<!-- Attachments tab -->
 						<#if attachmentsEnabled || attachments?exists>
-							<div id="postAttachments" class="postTabContents" style="display_: none;">
-								<#include "post_attachments_tab.htm"/>
+							<div id="postAttachments" class="postTabContents" style="display: none; ">
+								<div>
+									<#include "post_attachments_tab.htm"/>
+								</div>
 							</div>
 						</#if>
 					</td>
@@ -414,7 +420,7 @@ function smiliePopup()
 					<tr>
 						<td class="row1" valign="middle"><span class="gen"><b>${I18n.getMessage("User.captchaResponse")}:</b></span></td>
 						<td class="row2">
-							<input class="post" style="WIDTH: 100px; font-weight: bold;" maxlength="25" size="25" name="captcha_anwser" /> 
+							<input type="text" class="post" style="width: 100px; font-weight: bold;" maxlength="25" size="25" name="captcha_anwser" /> 
 							<img src="${JForumContext.encodeURL("/captcha/generate/${timestamp}")}" border="0" align="middle" alt="Captcha unavailable" />
 						</td>
 					</tr>
