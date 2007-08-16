@@ -65,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericGroupSecurityDAO.java,v 1.13 2006/09/24 16:10:14 rafaelsteil Exp $
+ * @version $Id: GenericGroupSecurityDAO.java,v 1.14 2007/08/16 13:07:34 rafaelsteil Exp $
  */
 public class GenericGroupSecurityDAO extends AutoKeys implements GroupSecurityDAO
 {
@@ -127,7 +127,15 @@ public class GenericGroupSecurityDAO extends AutoKeys implements GroupSecurityDA
 	protected RoleCollection loadRoles(int[] groupIds)
 	{
 		String sql = SystemGlobals.getSql("PermissionControl.loadGroupRoles");
-		sql = sql.replaceAll("#IN#", SecurityCommon.groupIdAsString(groupIds));
+		String groupIdAsString = SecurityCommon.groupIdAsString(groupIds);
+		
+		if ("".equals(groupIdAsString)) {
+			// We suppose there is no "negative" group ids
+			sql = sql.replaceAll("#IN#", "-1");
+		}
+		else {
+			sql = sql.replaceAll("#IN#", groupIdAsString);
+		}
 		
 		RoleCollection roles = new RoleCollection();
 		

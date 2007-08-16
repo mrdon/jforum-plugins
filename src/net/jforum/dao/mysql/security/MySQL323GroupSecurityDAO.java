@@ -63,10 +63,10 @@ import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
- * Mysq 3.23 hacks based on Andy's work
+ * MySQL 3.23 hacks based on Andy's work
  * 
  * @author Rafael Steil
- * @version $Id: MySQL323GroupSecurityDAO.java,v 1.8 2006/09/24 16:10:13 rafaelsteil Exp $
+ * @version $Id: MySQL323GroupSecurityDAO.java,v 1.9 2007/08/16 13:07:33 rafaelsteil Exp $
  */
 public class MySQL323GroupSecurityDAO extends GenericGroupSecurityDAO
 {	
@@ -116,6 +116,15 @@ public class MySQL323GroupSecurityDAO extends GenericGroupSecurityDAO
 	private String sqlWithGroups(String queryName, String groups)
 	{
 		String sql = SystemGlobals.getSql(queryName);
+		
+		if ("".equals(groups)) {
+			// We suppose there is no "negative" group ids
+			sql = sql.replaceAll("#IN#", "-1");
+		}
+		else {
+			sql = sql.replaceAll("#IN#", groups);
+		}
+		
 		return sql.replaceAll("#IN#", groups);
 	}
 	

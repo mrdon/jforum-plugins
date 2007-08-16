@@ -62,7 +62,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Rafael Steil
- * @version $Id: SecurityCommon.java,v 1.12 2006/09/24 16:10:14 rafaelsteil Exp $
+ * @version $Id: SecurityCommon.java,v 1.13 2007/08/16 13:07:34 rafaelsteil Exp $
  */
 public class SecurityCommon
 {
@@ -203,7 +203,9 @@ public class SecurityCommon
 			sb.append(ids[i]).append(',');
 		}
 		
-		sb.append(ids[ids.length - 1]);
+		if (ids.length > 0) {
+			sb.append(ids[ids.length - 1]);			
+		}
 		
 		return sb.toString();
 	}

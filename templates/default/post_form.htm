@@ -1,6 +1,6 @@
 <#include "header.htm"/>
 <#assign preview = preview?default(false)/>
-<#assign logModeration = isEdit?default(false) && isModerator && user.id != post.userId/>
+<#assign logModeration = moderationLoggingEnabled && isEdit?default(false) && isModerator && user.id != post.userId/>
 <#assign allowPoll = setType?default(true) && canCreatePolls?default(false)/>
 
 <script type="text/javascript">

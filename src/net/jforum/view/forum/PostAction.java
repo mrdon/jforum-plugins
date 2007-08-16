@@ -104,7 +104,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.181 2007/08/01 22:30:03 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.182 2007/08/16 13:07:35 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -544,6 +544,7 @@ public class PostAction extends Command
 			SessionFacade.getUserSession().createNewCaptcha();
 		}
 		
+		this.context.put("moderationLoggingEnabled", SystemGlobals.getValue(ConfigKeys.MODERATION_LOGGING_ENABLED));
 		this.context.put("smilies", SmiliesRepository.getSmilies());
 		this.context.put("forum", forum);
 		this.context.put("action", "insertSave");
@@ -589,8 +590,7 @@ public class PostAction extends Command
 		}
 
 		boolean isModerator = SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_EDIT);
-        boolean canAccess;
-		canAccess = (isModerator || p.getUserId() == userId);
+		boolean canAccess = (isModerator || p.getUserId() == userId);
 
 		if ((userId != aId) && canAccess) {
 			Topic topic = TopicRepository.getTopic(new Topic(p.getTopicId()));
@@ -620,7 +620,7 @@ public class PostAction extends Command
 			Poll poll = null;
 			
 			if (topic.isVote() && topic.getFirstPostId() == p.getId()) {
-				//it has a poll associated with the topic
+				// It has a poll associated with the topic
 				PollDAO poolDao = DataAccessDriver.getInstance().newPollDAO();
 				poll = poolDao.selectById(topic.getVoteId());
 			}
@@ -629,6 +629,8 @@ public class PostAction extends Command
 
 			this.context.put("attachmentsEnabled", SecurityRepository.canAccess(
 					SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(p.getForumId())));
+			
+			this.context.put("moderationLoggindEnabled", SystemGlobals.getBoolValue(ConfigKeys.MODERATION_LOGGING_ENABLED));
 		
 			QuotaLimit ql = new AttachmentCommon(this.request, p.getForumId()).getQuotaLimit(userId);
 			this.context.put("maxAttachmentsSize", new Long(ql != null ? ql.getSizeInBytes() : 1));
@@ -860,7 +862,8 @@ public class PostAction extends Command
 			
 			SearchFacade.update(p);
 			
-			if (isModerator && p.getUserId() != SessionFacade.getUserSession().getUserId()) {
+			if (SystemGlobals.getBoolValue(ConfigKeys.MODERATION_LOGGING_ENABLED)
+					&& isModerator && p.getUserId() != SessionFacade.getUserSession().getUserId()) {
 				ModerationHelper helper = new ModerationHelper();
 				this.request.addParameter("log_original_message", originalMessage);
 				ModerationLog log = helper.buildModerationLogFromRequest();
