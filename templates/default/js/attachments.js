@@ -41,10 +41,10 @@ var counter = 0;
 </#if>
 
 <#if attachments?exists>
-	var templateEdit = "<table width='100%'><tr><td class='row2'><span class='gen'><b>${I18n.getMessage("Attachments.filename")}</b></span></td>";
-	templateEdit += "<td class='row2'><span class='gen'>#name#</td></tr>";
-	templateEdit += "<tr><td class='row2'><span class='gen'><b>${I18n.getMessage("Attachments.description")}</b></span></td>";
-	templateEdit += "<td class='row2'><textarea rows='4' cols='40' name='edit_comment_#id#'>#value#</textarea>";
+	var templateEdit = "<table width='100%'><tr><td class='row2 gen'>${I18n.getMessage("Attachments.filename")}</td>";
+	templateEdit += "<td class='row2 gen' width='100%'>#name#</td></tr>";
+	templateEdit += "<tr><td class='row2 gen'>${I18n.getMessage("Attachments.description")}</td>";
+	templateEdit += "<td class='row2' valign='middle'><input type='text' size='50' name='edit_comment_#id#' value='#value#'>";
 	templateEdit += "&nbsp;&nbsp;<span class='gensmall'><input type='checkbox' onclick='configureAttachDeletion(#id#, this);'>${I18n.getMessage("Attachments.remove")}</span></td></tr>";
 	templateEdit += "<tr><td colspan='2' width='100%' class='row3'></td></tr></table>";
 	
@@ -60,7 +60,7 @@ var counter = 0;
 
 			data.push(attach_${a.id});
 		</#list>
-
+		
 		counter = data.length;
 		<#if attachmentsEnabled>defineAttachmentButtonStatus();</#if>
 		
