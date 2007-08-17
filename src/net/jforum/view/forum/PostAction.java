@@ -104,7 +104,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.183 2007/08/17 15:53:29 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.184 2007/08/17 19:08:22 andowson Exp $
  */
 public class PostAction extends Command 
 {
@@ -544,7 +544,7 @@ public class PostAction extends Command
 			SessionFacade.getUserSession().createNewCaptcha();
 		}
 		
-		this.context.put("moderationLoggingEnabled", SystemGlobals.getValue(ConfigKeys.MODERATION_LOGGING_ENABLED));
+		this.context.put("moderationLoggingEnabled", SystemGlobals.getBoolValue(ConfigKeys.MODERATION_LOGGING_ENABLED));
 		this.context.put("smilies", SmiliesRepository.getSmilies());
 		this.context.put("forum", forum);
 		this.context.put("action", "insertSave");
