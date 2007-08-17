@@ -58,12 +58,9 @@
 									<strong>
 										<a href="${postUrl}">${post.subject}</a>
 									</strong>, 
-									posted on <a href="${JForumContext.encodeURL("/forums/show/${post.forum.id}")}">${post.forum.name}</a>, 
-									at ${post.time?datetime}, 
-									by <a href="${JForumContext.encodeURL("/user/profile/${post.userId}")}">${post.postUsername}</a>
-
-									<br/>
-									<a href="${postUrl}">${I18n.getMessage("Search.viewMessage")}</a>
+									${I18n.getMessage("Search.postedOn")} <a href="${JForumContext.encodeURL("/forums/show/${post.forum.id}")}">${post.forum.name}</a>, 
+									${I18n.getMessage("Search.postedAt")} ${post.time?datetime}, 
+									${I18n.getMessage("Search.postedBy")} <a href="${JForumContext.encodeURL("/user/profile/${post.userId}")}">${post.postUsername}</a>									
 								</span>
 							</td>
 						</tr>
@@ -71,6 +68,8 @@
 						<tr>
 							<td class="row1 gen">
 								${post.text}
+								<br />
+								<div align="right"><a href="${postUrl}">${I18n.getMessage("Search.viewMessage")}</a></div>
 							</td>
 						</tr>
 
