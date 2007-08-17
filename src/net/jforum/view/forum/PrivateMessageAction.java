@@ -67,7 +67,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: PrivateMessageAction.java,v 1.42 2007/04/12 02:11:53 rafaelsteil Exp $
+ * @version $Id: PrivateMessageAction.java,v 1.43 2007/08/17 15:53:28 rafaelsteil Exp $
  */
 public class PrivateMessageAction extends Command
 {
@@ -169,6 +169,7 @@ public class PrivateMessageAction extends Command
 		this.context.put("maxAttachments", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
 		this.context.put("attachmentsEnabled", false);
 		this.context.put("maxAttachmentsSize", new Integer(0));
+		this.context.put("moderationLoggingEnabled", false);
 		this.context.put("smilies", SmiliesRepository.getSmilies());
 	}
 	

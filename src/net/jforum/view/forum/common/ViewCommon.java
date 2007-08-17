@@ -46,6 +46,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import net.jforum.JForumExecutionContext;
+import net.jforum.context.RequestContext;
 import net.jforum.entities.User;
 import net.jforum.repository.BBCodeRepository;
 import net.jforum.repository.SmiliesRepository;
@@ -56,7 +57,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.26 2007/08/08 23:48:54 rafaelsteil Exp $
+ * @version $Id: ViewCommon.java,v 1.27 2007/08/17 15:53:28 rafaelsteil Exp $
  */
 public final class ViewCommon
 {
@@ -89,8 +90,10 @@ public final class ViewCommon
 	
 	public static String contextToLogin() 
 	{
-		String uri = JForumExecutionContext.getRequest().getRequestURI();
-		String query = JForumExecutionContext.getRequest().getQueryString();
+		RequestContext request = JForumExecutionContext.getRequest();
+		
+		String uri = request.getRequestURI();
+		String query = request.getQueryString();
 		String path = query == null ? uri : uri + "?" + query;
 		
 		JForumExecutionContext.getTemplateContext().put("returnPath", path);
@@ -99,7 +102,7 @@ public final class ViewCommon
 			String redirect = SystemGlobals.getValue(ConfigKeys.SSO_REDIRECT);
 			
 			if (redirect != null && redirect.trim().length() > 0) {
-				JForumExecutionContext.setRedirect(JForumExecutionContext.getRequest().getContextPath() + redirect.trim() + path);
+				JForumExecutionContext.setRedirect(request.getContextPath() + redirect.trim() + path);
 			}
 		}
 		
@@ -115,6 +118,7 @@ public final class ViewCommon
 	{
 		String s = JForumExecutionContext.getRequest().getParameter("start");
 		int start;
+		
 		if (s == null || s.trim().equals("")) {
 			start = 0;
 		}

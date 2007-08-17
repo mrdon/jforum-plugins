@@ -48,7 +48,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.116 2007/08/16 13:07:34 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.117 2007/08/17 15:53:30 rafaelsteil Exp $
 */
 
 public class ConfigKeys 
@@ -294,6 +294,9 @@ public class ConfigKeys
 	public static final String LUCENE_INDEXER_DB_FETCH_COUNT = "lucene.indexer.db.fetch.count";
 	
 	public static final String MODERATION_LOGGING_ENABLED = "moderation.logging.enabled";
+	public static final String PROXIED_CONTEXT_PATH = "proxied.context.path";
+	public static final String REDIRECT_ABSOLUTE_PATHS = "redirect.absolute.paths";
+	public static final String REDIRECT_BASE_URL = "redirect.base.url";
     
 	private ConfigKeys() {}
 }

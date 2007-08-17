@@ -77,7 +77,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.113 2007/07/27 15:42:56 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.114 2007/08/17 15:53:29 rafaelsteil Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
@@ -262,7 +262,7 @@ public class JForum extends JForumBaseServlet
 		JForumExecutionContext.finish();
 		
 		if (redirectTo != null) {
-			if(forumContext!=null && forumContext.isEncodingDisabled()) {
+			if (forumContext != null && forumContext.isEncodingDisabled()) {
 				response.sendRedirect(redirectTo);
 			} 
 			else {

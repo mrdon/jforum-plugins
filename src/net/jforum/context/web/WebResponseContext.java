@@ -47,13 +47,15 @@ import javax.servlet.http.Cookie;
 import javax.servlet.ServletOutputStream;
 
 import net.jforum.context.ResponseContext;
+import net.jforum.util.preferences.ConfigKeys;
+import net.jforum.util.preferences.SystemGlobals;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
  * @author SergeMaslyukov
- * @version $Id: WebResponseContext.java,v 1.1 2006/08/23 02:13:58 rafaelsteil Exp $
+ * @version $Id: WebResponseContext.java,v 1.2 2007/08/17 15:53:28 rafaelsteil Exp $
  */
 public class WebResponseContext implements ResponseContext
 {
@@ -91,6 +93,10 @@ public class WebResponseContext implements ResponseContext
 
 	public void sendRedirect(String location) throws IOException
 	{
+		if (SystemGlobals.getBoolValue(ConfigKeys.REDIRECT_ABSOLUTE_PATHS)) {
+			location = SystemGlobals.getValue(ConfigKeys.REDIRECT_BASE_URL) + location;
+		}
+		
 		response.sendRedirect(location);
 	}
 

@@ -401,28 +401,24 @@ function smiliePopup()
 							</div>
 						</#if>
 					</td>
-				</tr>
+				</tr
 
-				<#if logModeration>
-					<input type="hidden" name="log_type" value="2">
-
-					<tr>
-						<th class="thhead" colspan="2">${I18n.getMessage("ModerationLog.moderationLog")}</th>
-					</tr>
-
-					<tr>
-						<td align="center"><span class="gen"><b>${I18n.getMessage("ModerationLog.changeReason")}</b></span></td>
-						<td><span class="gen"><input type="text" name="log_description" size="50"></input></span></td>
-					</tr>
-				</#if>
-
-				<#if needCaptcha?default(false)>
+				<#if true || needCaptcha?default(false)>
 					<tr>
 						<td class="row1" valign="middle"><span class="gen"><b>${I18n.getMessage("User.captchaResponse")}:</b></span></td>
 						<td class="row2">
 							<input type="text" class="post" style="width: 100px; font-weight: bold;" maxlength="25" size="25" name="captcha_anwser" /> 
 							<img src="${JForumContext.encodeURL("/captcha/generate/${timestamp}")}" border="0" align="middle" alt="Captcha unavailable" />
 						</td>
+					</tr>
+				</#if>
+
+				<#if logModeration>
+					<input type="hidden" name="log_type" value="2">
+
+					<tr>
+						<td align="center" class="row1 gen"><b>${I18n.getMessage("ModerationLog.moderationLog")}</b></td>
+						<td class="row2 genmed">${I18n.getMessage("ModerationLog.changeReason")}: <input type="text" name="log_description" size="50"></input></td>
 					</tr>
 				</#if>
 

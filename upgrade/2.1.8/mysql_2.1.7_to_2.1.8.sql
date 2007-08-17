@@ -1,7 +1,7 @@
 ALTER TABLE jforum_posts ADD INDEX(need_moderate);
 ALTER TABLE jforum_topics ADD topic_moved_id INT DEFAULT 0;
 ALTER TABLE jforum_topics ADD INDEX(topic_moved_id);
-ALTER TABLE jforum_users MODIFY rank_id rank_id INT DEFAULT 1;
+ALTER TABLE jforum_users CHANGE rank_id rank_id INT DEFAULT 1;
 
 DROP TABLE jforum_search_words;
 DROP TABLE jforum_search_wordmatch;

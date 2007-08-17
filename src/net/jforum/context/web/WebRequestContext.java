@@ -55,6 +55,8 @@ import java.util.StringTokenizer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
+import org.apache.commons.lang.StringUtils;
+
 import net.jforum.UrlPattern;
 import net.jforum.UrlPatternCollection;
 import net.jforum.context.RequestContext;
@@ -70,7 +72,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: WebRequestContext.java,v 1.6 2007/08/05 15:10:31 rafaelsteil Exp $
+ * @version $Id: WebRequestContext.java,v 1.7 2007/08/17 15:53:28 rafaelsteil Exp $
  */
 public class WebRequestContext extends HttpServletRequestWrapper implements RequestContext
 {
@@ -386,6 +388,21 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 	public Object getObjectRequestParameter(String parameter)
 	{
 		return this.query.get(parameter);
+	}
+	
+	/**
+	 * @see javax.servlet.http.HttpServletRequestWrapper#getContextPath()
+	 */
+	public String getContextPath() 
+	{
+		String contextPath = super.getContextPath();
+		String proxiedContextPath = SystemGlobals.getValue(ConfigKeys.PROXIED_CONTEXT_PATH);
+		
+		if (!StringUtils.isEmpty(proxiedContextPath)) {
+			contextPath = proxiedContextPath;
+		}
+		
+		return contextPath;
 	}
 	
 	/**
