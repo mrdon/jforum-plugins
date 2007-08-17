@@ -244,10 +244,14 @@
 					</tr>
 				</#list>
 				<!-- END OF TOPICS LISTING -->
-
-				<tr>
+				
+				<tr align="center">
 					<td class="catbottom" valign="middle"  align="right" colspan="<#if moderator && openModeration?default(false)>7<#else>6</#if>" height="28">
-						&nbsp;<@presentation.moderationButtons/>						
+						<table cellspacing="0" cellpadding="0" border="0">
+							<tr>
+								<td align="center"><span class="gensmall">&nbsp;<@presentation.moderationButtons/></span></td>
+							</tr>
+						</table>
 					</td>
 				</tr>
 			</table>
