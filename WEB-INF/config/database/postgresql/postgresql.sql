@@ -77,6 +77,14 @@ TopicModel.selectByUserByLimit = SELECT t.*, p.user_id AS last_user_id, p.post_t
 		
 TopicModel.lastGeneratedTopicId = SELECT CURRVAL('jforum_topics_seq')
 
+# ############
+# SearchModel
+# ############
+SearchModel.getPostsToIndexForLucene = SELECT p.post_id, p.forum_id, p.enable_bbcode, p.enable_smilies, '' AS topic_title, p.topic_id, p.user_id, p.post_time, pt.post_text, pt.post_subject \
+	FROM jforum_posts p, jforum_posts_text pt \
+	WHERE p.post_id = pt.post_id \
+	:CONSTRAINTS: OFFSET ? LIMIT ?
+
 # #####################
 # PrivateMessagesModel
 # #####################
