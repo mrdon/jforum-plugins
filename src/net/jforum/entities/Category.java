@@ -65,14 +65,14 @@ import net.jforum.util.ForumOrderComparator;
  * can be retrieved by calling either @link #getForums(), 
  * @link #getForum(int) and related methods. 
  * 
- * <br/>
+ * <br />
  * 
  * This class also controls the access to its forums, so a call
  * to @link #getForums() will only return the forums accessible
  * to the user who make the call tho the method. 
  * 
  * @author Rafael Steil
- * @version $Id: Category.java,v 1.21 2006/08/23 02:13:46 rafaelsteil Exp $
+ * @version $Id: Category.java,v 1.22 2007/08/18 07:03:20 andowson Exp $
  */
 public class Category  implements Serializable
 {

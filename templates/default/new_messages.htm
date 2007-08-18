@@ -14,7 +14,7 @@
 						<span class="maintitle">${I18n.getMessage("Search.searchResults")}:
 							${totalRecords} <#if (totalRecords == 1)>${I18n.getMessage("Search.recordFound")}<#else>${I18n.getMessage("Search.recordsFound")}</#if>
 						</span>
-						<br/>
+						<br />
 					</td>
 				</tr>
 				<tr>
@@ -59,7 +59,7 @@
 
 							<#if topic.paginate>
 								<span class="gensmall">
-									<br/>
+									<br />
 									<@pagination.littlePostPagination topic.id, postsPerPage, topic.totalReplies/>
 								</span>
 							</#if>
@@ -75,7 +75,7 @@
 						</td>
 						<td class="row3" valign="middle" nowrap="nowrap" align="center">
 							<#if (topic.lastPostTime?length > 0)>
-								<span class="postdetails">${topic.lastPostTime}<br/>
+								<span class="postdetails">${topic.lastPostTime}<br />
 								<a href="${contextPath}/user/profile/${topic.lastPostBy.id}${extension}">${topic.lastPostBy.username}</a>
 
 								<#assign startPage = ""/>

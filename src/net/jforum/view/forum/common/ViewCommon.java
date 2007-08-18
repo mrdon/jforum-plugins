@@ -57,7 +57,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.27 2007/08/17 15:53:28 rafaelsteil Exp $
+ * @version $Id: ViewCommon.java,v 1.28 2007/08/18 07:04:07 andowson Exp $
  */
 public final class ViewCommon
 {
@@ -252,7 +252,7 @@ public final class ViewCommon
 		if (u.getSignature() != null) {
 			StringBuffer sb = new StringBuffer(u.getSignature());
 			
-			replaceAll(sb, "\n", "<br/>");
+			replaceAll(sb, "\n", "<br />");
 			
 			u.setSignature(sb.toString());
 			
