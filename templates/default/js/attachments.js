@@ -6,7 +6,7 @@ var counter = 0;
 
 <#if attachmentsEnabled>
 	var template = "<div id='attach_#counter#'><table width='100%' class='gensmall'><tr><td>${I18n.getMessage("Attachments.filename")}</td>";
-	template += "<td width='100%'><input type='file' size='50' name='file_#counter#'></td></tr>";
+	template += "<td><input type='file' size='50' name='file_#counter#'></td></tr>";
 	template += "<tr><td>${I18n.getMessage("Attachments.description")}</td>";
 	template += "<td><input type='text' name='comment_#counter#' size='50'>";
 	template += "&nbsp;&nbsp;<a href='javascript:removeAttach(#counter#)' class='gensmall'>[${I18n.getMessage("Attachments.remove")}]</a></td></tr>";
@@ -42,7 +42,7 @@ var counter = 0;
 
 <#if attachments?exists>
 	var templateEdit = "<table width='100%'><tr><td class='row2 gen'>${I18n.getMessage("Attachments.filename")}</td>";
-	templateEdit += "<td class='row2 gen' width='100%'>#name#</td></tr>";
+	templateEdit += "<td class='row2 gen'>#name#</td></tr>";
 	templateEdit += "<tr><td class='row2 gen'>${I18n.getMessage("Attachments.description")}</td>";
 	templateEdit += "<td class='row2' valign='middle'><input type='text' size='50' name='edit_comment_#id#' value='#value#'>";
 	templateEdit += "&nbsp;&nbsp;<span class='gensmall'><input type='checkbox' onclick='configureAttachDeletion(#id#, this);'>${I18n.getMessage("Attachments.remove")}</span></td></tr>";
