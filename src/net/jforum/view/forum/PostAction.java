@@ -104,7 +104,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.184 2007/08/17 19:08:22 andowson Exp $
+ * @version $Id: PostAction.java,v 1.185 2007/08/18 23:58:06 andowson Exp $
  */
 public class PostAction extends Command 
 {
@@ -1381,11 +1381,13 @@ public class PostAction extends Command
 	{
 		try
 		{
-			if ((SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED) &&
-					!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD))
-					|| (!SessionFacade.isLogged() && !SystemGlobals.getBoolValue(ConfigKeys.ATTACHMENTS_ANONYMOUS))) {
+			if (SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED) &&
+					!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD)) {
 				this.setTemplateName(TemplateKeys.POSTS_CANNOT_DOWNLOAD);
 				this.context.put("message", I18n.getMessage("Attachments.featureDisabled"));
+				return;
+			} else if (!SessionFacade.isLogged() && !SystemGlobals.getBoolValue(ConfigKeys.ATTACHMENTS_ANONYMOUS)) {
+				this.setTemplateName(ViewCommon.contextToLogin());
 				return;
 			}
 
