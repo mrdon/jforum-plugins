@@ -25,7 +25,7 @@ UserModel.addNew = INSERT INTO jforum_users (user_id, username, user_password, u
 
 UserModel.selectAllByLimit = SELECT * FROM ( \
         SELECT user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail, ROW_NUMBER() OVER(ORDER BY user_id) - 1 LINENUM  \
-        FROM jforum_users ORDER BY username \
+        FROM jforum_users ORDER BY user_id \
         ) \
         WHERE LINENUM >= ? AND LINENUM < ?
 
