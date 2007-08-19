@@ -403,7 +403,7 @@ function smiliePopup()
 					</td>
 				</tr
 
-				<#if true || needCaptcha?default(false)>
+				<#if needCaptcha?default(false)>
 					<tr>
 						<td class="row1" valign="middle"><span class="gen"><b>${I18n.getMessage("User.captchaResponse")}:</b></span></td>
 						<td class="row2">
@@ -414,11 +414,9 @@ function smiliePopup()
 				</#if>
 
 				<#if logModeration>
-					<input type="hidden" name="log_type" value="2">
-
 					<tr>
 						<td align="center" class="row1 gen"><b>${I18n.getMessage("ModerationLog.moderationLog")}</b></td>
-						<td class="row2 genmed">${I18n.getMessage("ModerationLog.changeReason")}: <input type="text" name="log_description" size="50"></input></td>
+						<td class="row2 genmed">${I18n.getMessage("ModerationLog.changeReason")}: <input type="text" name="log_description" size="50" /><input type="hidden" name="log_type" value="2" /></td>
 					</tr>
 				</#if>
 
@@ -429,8 +427,8 @@ function smiliePopup()
 					</tr>
 				</#if>
 				
-				<tr align="center">
-					<td height="28" colspan="2" class="catbottom">              
+				<tr>
+					<td align="center" height="28" colspan="2" class="catbottom">              
 						<input class="mainoption" tabindex="5" type="button" value="${I18n.getMessage("PostForm.preview")}" onclick="previewMessage();" />&nbsp;
 						<input class="mainoption" accesskey="s" tabindex="6" type="submit" value="${I18n.getMessage("PostForm.submit")}" name="post" />
 					</td>
