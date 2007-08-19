@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.44 2007/08/19 04:39:36 andowson Exp $
+ * @version $Id: PostCommon.java,v 1.45 2007/08/19 07:10:27 andowson Exp $
  */
 public class PostCommon
 {
@@ -176,7 +176,7 @@ public class PostCommon
 					}
 
 					index = sb.indexOf("[code]");
-					int lastIndex = sb.indexOf("[/code]") + "[/code]".length();
+					int lastIndex = sb.indexOf("[/code]", index) + "[/code]".length();
 
 					if (lastIndex > index) {
 						sb.replace(index, lastIndex, replace.toString());
@@ -223,7 +223,7 @@ public class PostCommon
 						replace.replace(index, index + 2, contents.toString());
 					}
 					index = sb.indexOf("[code=");
-					int lastIndex = sb.indexOf("[/code]") + "[/code]".length();
+					int lastIndex = sb.indexOf("[/code]", index) + "[/code]".length();
 
 					if (lastIndex > index) {
 						sb.replace(index, lastIndex, replace.toString());
