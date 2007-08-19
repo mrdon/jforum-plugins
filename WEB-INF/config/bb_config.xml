@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- $Id: bb_config.xml,v 1.30 2007/08/18 07:11:51 andowson Exp $ -->
+<!-- $Id: bb_config.xml,v 1.31 2007/08/19 04:40:32 andowson Exp $ -->
 <bbConfig>
 	<!-- CODE -->
 	<match name="code">
-		<regex>(?s)\[code\](.*?)\[/code\]</regex>
+		<regex>(?s)\[code\](.*?)\[/code\]</regex>		
 		<replace>
 		<![CDATA[
-		<dl class="codebox">
-			<dt>Code: <a onclick="selectCode(this); return false;" href="#">Select all</a></dt>
-			<dd>
-				<code>$1</code>
-			</dd>
-		</dl>
+        <textarea name="code" class="java" cols="60" rows="10">$1</textarea>
+		]]>
+		</replace>
+	</match>
+
+	<match name="code-highlight">
+		<regex>(?s)(?i)\[code=['"]?(.*?[^'"])['"]?\](.*?)\[/code\]</regex>
+		<replace>
+		<![CDATA[
+        <textarea name="code" class="$1" cols="60" rows="10">$2</textarea>
 		]]>
 		</replace>
 	</match>
@@ -82,7 +86,7 @@
 		<regex>(?i)\[list\](.*?)\[/list\]</regex>
 		<replace>
 		<![CDATA[
-		<li> $1
+		<li>$1</li>
 		]]>
 		</replace>
 	</match>
@@ -92,7 +96,7 @@
 		<regex>(?i)\[img\](.*?)\[/img\]</regex>
 		<replace>
 		<![CDATA[
-		<img src="$1" border="0">
+		<img src="$1" border="0" />
 		]]>
 		</replace>
 	</match>

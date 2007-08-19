@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.43 2007/08/18 07:03:50 andowson Exp $
+ * @version $Id: PostCommon.java,v 1.44 2007/08/19 04:39:36 andowson Exp $
  */
 public class PostCommon
 {
@@ -141,17 +141,17 @@ public class PostCommon
 		for (Iterator iter = BBCodeRepository.getBBCollection().getBbList().iterator(); iter.hasNext();) {
 			BBCode bb = (BBCode)iter.next();
 
-			if (!"code".equals(bb.getTagName())) {
+			if (!bb.getTagName().startsWith("code")) {
 				text = text.replaceAll(bb.getRegex(), bb.getReplace());
 			}
-			else {
+			else if ("code".equals(bb.getTagName())) {
 				Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
 				StringBuffer sb = new StringBuffer(text);
 
 				while (matcher.find()) {
 					StringBuffer contents = new StringBuffer(matcher.group(1));
 					
-					ViewCommon.replaceAll(contents, "<br />", "\n");
+					ViewCommon.replaceAll(contents, "<br /> ", "\n");
 
 					// Do not allow other bb tags inside "code"
 					ViewCommon.replaceAll(contents, "[", "&#91;");
@@ -165,7 +165,7 @@ public class PostCommon
 					ViewCommon.replaceAll(contents, "<", "&lt;");
 					ViewCommon.replaceAll(contents, ">", "&gt;");
 					
-					ViewCommon.replaceAll(contents, "\n", "<br />");
+					//ViewCommon.replaceAll(contents, "\n", "<br />");
 					ViewCommon.replaceAll(contents, "\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
 
 					StringBuffer replace = new StringBuffer(bb.getReplace());
@@ -176,6 +176,53 @@ public class PostCommon
 					}
 
 					index = sb.indexOf("[code]");
+					int lastIndex = sb.indexOf("[/code]") + "[/code]".length();
+
+					if (lastIndex > index) {
+						sb.replace(index, lastIndex, replace.toString());
+					}
+				}
+				
+				text = sb.toString();
+			} 
+			else if ("code-highlight".equals(bb.getTagName())) {
+				Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
+				StringBuffer sb = new StringBuffer(text);
+
+				while (matcher.find()) {
+					StringBuffer lang = new StringBuffer(matcher.group(1));
+					StringBuffer contents = new StringBuffer(matcher.group(2));
+					
+					ViewCommon.replaceAll(contents, "<br /> ", "\n");
+
+					// Do not allow other bb tags inside "code"
+					ViewCommon.replaceAll(contents, "[", "&#91;");
+					ViewCommon.replaceAll(contents, "]", "&#93;");
+
+					// Try to bypass smilies interpretation
+					ViewCommon.replaceAll(contents, "(", "&#40;");
+					ViewCommon.replaceAll(contents, ")", "&#41;");
+
+					// XML-like tags
+					ViewCommon.replaceAll(contents, "<", "&lt;");
+					ViewCommon.replaceAll(contents, ">", "&gt;");
+					
+					//ViewCommon.replaceAll(contents, "\n", "<br />");
+					ViewCommon.replaceAll(contents, "\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+
+					StringBuffer replace = new StringBuffer(bb.getReplace());
+					int index = replace.indexOf("$1");
+					
+					if (index > -1) {
+						replace.replace(index, index + 2, lang.toString());
+					}
+
+                    index = replace.indexOf("$2");
+					
+					if (index > -1) {
+						replace.replace(index, index + 2, contents.toString());
+					}
+					index = sb.indexOf("[code=");
 					int lastIndex = sb.indexOf("[/code]") + "[/code]".length();
 
 					if (lastIndex > index) {

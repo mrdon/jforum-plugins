@@ -8,7 +8,8 @@
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="-1" />
 <style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/style.css?${startupTime} );</style>
-<style type="text/css">@import url(${contextPath}/templates/${templateName}/styles/${language}.css?${startupTime});</style>
+<style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/${language}.css?${startupTime} );</style>
+<style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/SyntaxHighlighter.css?${startupTime} );</style>
 <title>${pageTitle?default("JForum")?html}</title>
 </head>
 <body class="${language}">
@@ -50,7 +51,7 @@ Modifications by JForum Team
 
 									<#if canAccessModerationLog?default(false)>
 										<img src="${contextPath}/templates/${templateName}/images/icon_mini_members.gif" alt="[Moderation Log]" />
-										<a id="latest" class="mainmenu" href="${JForumContext.encodeURL("/moderation/showActivityLog")}">${I18n.getMessage("ModerationLog.moderationLog")}</a> &nbsp;
+										<a id="moderationlog" class="mainmenu" href="${JForumContext.encodeURL("/moderation/showActivityLog")}">${I18n.getMessage("ModerationLog.moderationLog")}</a> &nbsp;
 									</#if>
 
 									<#if logged>
