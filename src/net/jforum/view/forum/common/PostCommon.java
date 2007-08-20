@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.45 2007/08/19 07:10:27 andowson Exp $
+ * @version $Id: PostCommon.java,v 1.46 2007/08/20 15:04:06 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -165,7 +165,6 @@ public class PostCommon
 					ViewCommon.replaceAll(contents, "<", "&lt;");
 					ViewCommon.replaceAll(contents, ">", "&gt;");
 					
-					//ViewCommon.replaceAll(contents, "\n", "<br />");
 					ViewCommon.replaceAll(contents, "\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
 
 					StringBuffer replace = new StringBuffer(bb.getReplace());
@@ -207,7 +206,6 @@ public class PostCommon
 					ViewCommon.replaceAll(contents, "<", "&lt;");
 					ViewCommon.replaceAll(contents, ">", "&gt;");
 					
-					//ViewCommon.replaceAll(contents, "\n", "<br />");
 					ViewCommon.replaceAll(contents, "\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
 
 					StringBuffer replace = new StringBuffer(bb.getReplace());

@@ -99,23 +99,25 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.185 2007/08/18 23:58:06 andowson Exp $
+ * @version $Id: PostAction.java,v 1.186 2007/08/20 15:04:06 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
-  
-    public PostAction() {}
-    
-    public PostAction(RequestContext request, SimpleHash templateContext)
-    {
-    	super.context = templateContext;
-    	super.request = request;
-    }
+	private static Logger watchLogger = Logger.getLogger("watchLogger");
+	
+	public PostAction() {
+	}
+
+	public PostAction(RequestContext request, SimpleHash templateContext) {
+		super.context = templateContext;
+		super.request = request;
+	}
 
 	public void list()
 	{
@@ -1340,6 +1342,17 @@ public class PostAction extends Command
 
 	private void watch(TopicDAO tm, int topicId, int userId)  {
 		if (!tm.isUserSubscribed(topicId, userId)) {
+			String referer = this.request.getHeader("Referer");
+			String requestUserId = this.request.getParameter("user_id");
+			
+			if (watchLogger.isDebugEnabled()) {
+				watchLogger.debug("topicId=" + topicId 
+					+ ", userId=" + userId
+					+ ", requestUserId=" + requestUserId
+					+ ", sessionUserId=" + SessionFacade.getUserSession().getUserId()
+					+ ", referer=" + referer);
+			}
+			
 			tm.subscribeUser(topicId, userId);
 		}
 	}

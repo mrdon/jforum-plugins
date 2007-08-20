@@ -55,6 +55,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
@@ -72,10 +74,12 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTopicDAO.java,v 1.27 2007/08/01 22:09:02 rafaelsteil Exp $
+ * @version $Id: GenericTopicDAO.java,v 1.28 2007/08/20 15:04:05 rafaelsteil Exp $
  */
 public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 {
+	private static Logger watchLogger = Logger.getLogger("watchLogger");
+	
 	/**
 	 * @see net.jforum.dao.TopicDAO#fixFirstLastPostId(int)
 	 */
@@ -633,7 +637,7 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 		
 		try {
 			p = JForumExecutionContext.getConnection().prepareStatement(
-					SystemGlobals.getSql("TopicModel.subscribeUser"));
+				SystemGlobals.getSql("TopicModel.subscribeUser"));
 
 			p.setInt(1, topicId);
 			
@@ -642,6 +646,10 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 				
 				p.setInt(2, userId);
 				p.executeUpdate();
+				
+				if (watchLogger.isDebugEnabled()) {
+					watchLogger.debug("Subscribing user=" + userId + ", topicId=" + topicId);
+				}
 			}
 		}
 		catch (SQLException e) {
@@ -671,16 +679,17 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 	 */
 	public boolean isUserSubscribed(int topicId, int userId)
 	{
-		PreparedStatement stmt = null;
+		PreparedStatement p = null;
 		ResultSet rs = null;
+		
 		try {
-			stmt = JForumExecutionContext.getConnection().prepareStatement(
-					SystemGlobals.getSql("TopicModel.isUserSubscribed"));
+			p = JForumExecutionContext.getConnection().prepareStatement(
+				SystemGlobals.getSql("TopicModel.isUserSubscribed"));
 
-			stmt.setInt(1, topicId);
-			stmt.setInt(2, userId);
+			p.setInt(1, topicId);
+			p.setInt(2, userId);
 
-			rs = stmt.executeQuery();
+			rs = p.executeQuery();
 
 			return rs.next() && rs.getInt(1) > 0;
 		}
@@ -688,7 +697,7 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 			throw new DatabaseException(e);
 		}
 		finally {
-			DbUtils.close(rs, stmt);
+			DbUtils.close(rs, p);
 		}
 	}
 
