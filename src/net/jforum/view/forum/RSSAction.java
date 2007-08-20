@@ -73,7 +73,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: RSSAction.java,v 1.29 2007/08/20 15:12:53 rafaelsteil Exp $
+ * @version $Id: RSSAction.java,v 1.30 2007/08/20 18:34:12 rafaelsteil Exp $
  */
 public class RSSAction extends Command 
 {
@@ -83,20 +83,23 @@ public class RSSAction extends Command
 	public void forumTopics()
 	{
 		int forumId = this.request.getIntParameter("forum_id"); 
+		
 		if (!TopicsCommon.isTopicAccessible(forumId)) {
 			JForumExecutionContext.requestBasicAuthentication();
             return;
 		}
 		
-		List topics = TopicsCommon.topicsByForum(forumId, 0);
-		Forum forum = ForumRepository.getForum(forumId);
+		List posts = DataAccessDriver.getInstance().newPostDAO().selectLatestForRSS(
+			forumId, SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE));
 		
+		Forum forum = ForumRepository.getForum(forumId);
 		String[] p = { forum.getName() };
 		
 		RSSAware rss = new TopicRSS(I18n.getMessage("RSS.ForumTopics.title", p),
-				I18n.getMessage("RSS.ForumTopics.description", p),
-				forumId, 
-				topics);
+			I18n.getMessage("RSS.ForumTopics.description", p),
+			forumId, 
+			posts);
+		
 		this.context.put("rssContents", rss.createRSS());
 	}
 	

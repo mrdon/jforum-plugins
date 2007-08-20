@@ -52,7 +52,7 @@ public class RecentTopicsRSS extends TopicRSS
 {
 	public RecentTopicsRSS(String title, String description, List topics)
 	{
-		super.topics = topics;
+		super.posts = topics;
 		this.forumLink = ViewCommon.getForumLink();
 		
 		this.rss = new RSS(title, description, SystemGlobals.getValue(ConfigKeys.ENCODING), 

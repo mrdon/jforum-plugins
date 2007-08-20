@@ -65,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericPostDAO.java,v 1.23 2007/08/01 22:30:04 rafaelsteil Exp $
+ * @version $Id: GenericPostDAO.java,v 1.24 2007/08/20 18:34:12 rafaelsteil Exp $
  */
 public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 {
@@ -473,4 +473,45 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 			DbUtils.close(rs, p);
 		}
 	}
+
+	public List selectLatestForRSS(int forumId, int limit) 
+	{
+		List l = new ArrayList();
+		
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+				SystemGlobals.getSql("PostModel.selectLatestForRSS"));
+			p.setInt(1, forumId);
+			p.setInt(2, limit);
+			
+			rs = p.executeQuery();
+			
+			while (rs.next()) {
+				Post post = new Post();
+				
+				post.setSubject(rs.getString("post_subject"));
+				post.setText(rs.getString("post_text"));
+				post.setTopicId(rs.getInt("topic_id"));
+				post.setForumId(forumId); 
+				post.setUserId(rs.getInt("user_id"));
+				post.setPostUsername(rs.getString("username"));
+				post.setTime(new Date(rs.getTimestamp("post_time").getTime()));
+				
+				l.add(post);
+			}
+			
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+		
+		return l;
+	}
 }
+

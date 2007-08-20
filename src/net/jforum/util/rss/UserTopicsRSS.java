@@ -50,7 +50,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Vladislav Malyshkin
- * @version $Id: UserTopicsRSS.java,v 1.3 2006/08/20 22:47:48 rafaelsteil Exp $
+ * @version $Id: UserTopicsRSS.java,v 1.4 2007/08/20 18:34:13 rafaelsteil Exp $
  */
 public class UserTopicsRSS extends TopicRSS
 {	
@@ -58,7 +58,7 @@ public class UserTopicsRSS extends TopicRSS
 	
 	public UserTopicsRSS(String title, String description, int userId, List topics)
 	{
-		this.topics = topics;
+		this.posts = topics;
 		this.forumLink = ViewCommon.getForumLink();
 		
 		this.rss = new RSS(title, description, 

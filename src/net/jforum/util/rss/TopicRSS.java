@@ -45,49 +45,54 @@ package net.jforum.util.rss;
 import java.util.Iterator;
 import java.util.List;
 
-import net.jforum.entities.Topic;
+import net.jforum.entities.Post;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+import net.jforum.view.forum.common.PostCommon;
 import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicRSS.java,v 1.16 2006/08/20 22:47:48 rafaelsteil Exp $
+ * @version $Id: TopicRSS.java,v 1.17 2007/08/20 18:34:13 rafaelsteil Exp $
  */
 public class TopicRSS extends GenericRSS 
 {
-	protected List topics;
+	protected List posts;
 	protected RSS rss;
 	protected String forumLink;
 	
 	TopicRSS() {}
 	
-	public TopicRSS(String title, String description, int forumId, List topics)
+	public TopicRSS(String title, String description, int forumId, List posts)
 	{
-		this.topics = topics;
+		this.posts = posts;
 		this.forumLink = ViewCommon.getForumLink();
 		
 		this.rss = new RSS(title, description, 
-				SystemGlobals.getValue(ConfigKeys.ENCODING), 
-				this.forumLink + "forums/show/" + forumId 
-				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+			SystemGlobals.getValue(ConfigKeys.ENCODING), 
+			this.forumLink + "forums/show/" + forumId 
+			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		
 		this.prepareRSS();
 	}
 	
 	protected void prepareRSS()
 	{
-		for (Iterator iter = topics.iterator(); iter.hasNext(); ) {
-			Topic t = (Topic)iter.next();
+		for (Iterator iter = posts.iterator(); iter.hasNext(); ) {
+			Post post = (Post)iter.next();
+			
+			post.setBbCodeEnabled(false);
+			post.setSmiliesEnabled(false);
 			
 			RSSItem item = new RSSItem();
-			item.setAuthor(t.getPostedBy().getUsername());
-			item.setPublishDate(RSSUtils.formatDate(t.getLastPostDate()));
-			item.setLink(this.forumLink + "posts/list/" + t.getId()
-					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
-			item.setTitle(t.getTitle());
+			
+			item.setAuthor(post.getPostUsername());
+			item.setPublishDate(RSSUtils.formatDate(post.getTime()));
+			item.setLink(this.forumLink + "posts/list/" + post.getTopicId()
+				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+			item.setTitle(post.getSubject());
 			item.setContentType(RSSAware.CONTENT_HTML);
-			item.setDescription(item.getTitle());
+			item.setDescription(PostCommon.preparePostForDisplay(post).getText());
 			
 			this.rss.addItem(item);
 		}

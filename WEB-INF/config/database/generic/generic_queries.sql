@@ -136,6 +136,17 @@ UserModel.getUsername = SELECT username FROM jforum_users WHERE user_id = ?
 # #############
 # PostModel
 # #############
+PostModel.selectLatestForRSS = SELECT p.topic_id, pt.post_subject, pt.post_text, p.post_time, p.user_id, u.username \
+	FROM jforum_topics t, jforum_posts p, jforum_posts_text pt, jforum_users u \
+	WHERE p.post_id = t.topic_first_post_id \
+	AND p.topic_id = t.topic_id \
+	AND p.user_id = u.user_id \
+	AND p.post_id = pt.post_id \
+	AND p.need_moderate = 0 \
+	AND p.forum_id = ? \
+	ORDER BY t.topic_id DESC \
+	LIMIT ?
+
 PostModel.countPreviousPosts = SELECT COUNT(p2.post_id) AS prev_posts \
 	FROM jforum_posts p, jforum_posts p2 \
 	WHERE p.post_id = ? \
@@ -351,7 +362,7 @@ TopicModel.selectRecentTopicsByLimit = SELECT t.*, p.user_id AS last_user_id, p.
 	AND p.need_moderate = 0 \
 	ORDER BY topic_last_post_id DESC \
 	LIMIT ?
-
+	
 TopicModel.selectForNewMessages = SELECT t.*, p.user_id AS last_user_id, p.post_time, p.attach AS attach \
 	FROM jforum_topics t, jforum_posts p \
 	WHERE t.topic_id IN (:topicIds:) \
