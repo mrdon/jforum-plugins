@@ -1,7 +1,7 @@
 <#include "header.htm"/>
 <table class="forumline" align="center" border="0" cellpadding="3" cellspacing="1" width="80%">
 	<tr>
-		<th class="thHead" colspan="2" height="25" valign="center">${I18n.getMessage("User.agreement.title")}</th>
+		<th class="thhead" colspan="2" height="25" valign="center">${I18n.getMessage("User.agreement.title")}</th>
 	</tr>
 				
 	<tr>
@@ -13,7 +13,7 @@
 						
 				
 	<tr align="center">
-		<td class="catBottom" colspan="2" height="28">
+		<td class="catbottom" colspan="2" height="28">
 
 			<input class="mainoption" value="${I18n.getMessage("User.agreement.accept")}" name="submit" onclick="document.location = '${contextPath}/jforum${extension}?module=user&action=acceptAgreement';" type="button">&nbsp;&nbsp;
 			<input class="mainoption" value="${I18n.getMessage("User.agreement.noAccept")}" onclick="document.location = '${JForumContext.encodeURL("/forums/list")}';" type="button">&nbsp;&nbsp;
