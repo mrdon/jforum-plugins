@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.46 2007/08/20 15:04:06 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.47 2007/08/20 15:54:00 andowson Exp $
  */
 public class PostCommon
 {
@@ -143,14 +143,19 @@ public class PostCommon
 
 			if (!bb.getTagName().startsWith("code")) {
 				text = text.replaceAll(bb.getRegex(), bb.getReplace());
-			}
-			else if ("code".equals(bb.getTagName())) {
+			} else  {
 				Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
 				StringBuffer sb = new StringBuffer(text);
 
 				while (matcher.find()) {
-					StringBuffer contents = new StringBuffer(matcher.group(1));
-					
+					StringBuffer lang = null;
+					StringBuffer contents = null;
+					if ("code".equals(bb.getTagName())) {
+					    contents = new StringBuffer(matcher.group(1));
+					} else {
+						lang = new StringBuffer(matcher.group(1));
+						contents = new StringBuffer(matcher.group(2));						
+					}					
 					ViewCommon.replaceAll(contents, "<br /> ", "\n");
 
 					// Do not allow other bb tags inside "code"
@@ -170,57 +175,24 @@ public class PostCommon
 					StringBuffer replace = new StringBuffer(bb.getReplace());
 					int index = replace.indexOf("$1");
 					
-					if (index > -1) {
-						replace.replace(index, index + 2, contents.toString());
+					if ("code".equals(bb.getTagName())) {
+						if (index > -1) {
+							replace.replace(index, index + 2, contents.toString());
+						}
+
+						index = sb.indexOf("[code]");	
 					}
+					else {
+						if (index > -1) {
+							replace.replace(index, index + 2, lang.toString());
+						}
+						index = replace.indexOf("$2");
 
-					index = sb.indexOf("[code]");
-					int lastIndex = sb.indexOf("[/code]", index) + "[/code]".length();
-
-					if (lastIndex > index) {
-						sb.replace(index, lastIndex, replace.toString());
-					}
-				}
-				
-				text = sb.toString();
-			} 
-			else if ("code-highlight".equals(bb.getTagName())) {
-				Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
-				StringBuffer sb = new StringBuffer(text);
-
-				while (matcher.find()) {
-					StringBuffer lang = new StringBuffer(matcher.group(1));
-					StringBuffer contents = new StringBuffer(matcher.group(2));
-					
-					ViewCommon.replaceAll(contents, "<br /> ", "\n");
-
-					// Do not allow other bb tags inside "code"
-					ViewCommon.replaceAll(contents, "[", "&#91;");
-					ViewCommon.replaceAll(contents, "]", "&#93;");
-
-					// Try to bypass smilies interpretation
-					ViewCommon.replaceAll(contents, "(", "&#40;");
-					ViewCommon.replaceAll(contents, ")", "&#41;");
-
-					// XML-like tags
-					ViewCommon.replaceAll(contents, "<", "&lt;");
-					ViewCommon.replaceAll(contents, ">", "&gt;");
-					
-					ViewCommon.replaceAll(contents, "\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
-
-					StringBuffer replace = new StringBuffer(bb.getReplace());
-					int index = replace.indexOf("$1");
-					
-					if (index > -1) {
-						replace.replace(index, index + 2, lang.toString());
-					}
-
-                    index = replace.indexOf("$2");
-					
-					if (index > -1) {
-						replace.replace(index, index + 2, contents.toString());
-					}
-					index = sb.indexOf("[code=");
+						if (index > -1) {
+							replace.replace(index, index + 2, contents.toString());
+						}
+						index = sb.indexOf("[code=");
+					} 
 					int lastIndex = sb.indexOf("[/code]", index) + "[/code]".length();
 
 					if (lastIndex > index) {
