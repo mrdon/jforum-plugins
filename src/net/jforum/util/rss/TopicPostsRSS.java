@@ -55,7 +55,7 @@ import net.jforum.view.forum.common.ViewCommon;
  * RSS for the messages of some topic
  * 
  * @author Rafael Steil
- * @version $Id: TopicPostsRSS.java,v 1.11 2007/08/08 23:48:55 rafaelsteil Exp $
+ * @version $Id: TopicPostsRSS.java,v 1.12 2007/08/20 20:21:58 rafaelsteil Exp $
  */
 public class TopicPostsRSS extends GenericRSS 
 {
@@ -69,9 +69,9 @@ public class TopicPostsRSS extends GenericRSS
 		
 		this.posts = posts;
 		this.rss = new RSS(title, description, 
-				SystemGlobals.getValue(ConfigKeys.ENCODING),
-				this.forumLink + "posts/list/" + topicId 
-				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+			SystemGlobals.getValue(ConfigKeys.ENCODING),
+			this.forumLink + "posts/list/" + topicId 
+			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		this.prepareRSS();
 	}
 	
@@ -80,16 +80,20 @@ public class TopicPostsRSS extends GenericRSS
 		for (Iterator iter = this.posts.iterator(); iter.hasNext(); ) {
 			Post p = (Post)iter.next();
 			
+			p.setBbCodeEnabled(false);
+			p.setHtmlEnabled(false);
+			p.setHtmlEnabled(false);
+			
 			RSSItem item = new RSSItem();
 			item.setAuthor(p.getPostUsername());
 			item.setContentType(RSSAware.CONTENT_HTML);
-			item.setDescription(PostCommon.processBBCodes(p.getText()));
+			item.setDescription(PostCommon.preparePostForDisplay(p).getText());
 			item.setPublishDate(RSSUtils.formatDate(p.getTime()));
 			item.setTitle(p.getSubject());
 			item.setLink(this.forumLink 
-					+ "posts/list/" + p.getTopicId()
-					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)
-					+ "#" + p.getId());
+				+ "posts/preList/" + p.getTopicId()
+				+ "/" + p.getId()
+				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 
 			this.rss.addItem(item);
 		}
