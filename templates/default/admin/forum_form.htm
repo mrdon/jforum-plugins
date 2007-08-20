@@ -91,6 +91,13 @@ function validateMailIntegration()
 		}
 	}
 }
+
+function limitTextArea(field, limit)
+{
+	if (field.value.length > limit) {
+		field.value = field.value.substring(0, limit);
+	}
+}
 </script>
 
 <#if edit>
@@ -128,7 +135,7 @@ function validateMailIntegration()
 
 	<tr>
 		<td class="row1"><span class="gen">${I18n.getMessage("Forums.Form.Description")}</span></td>
-		<td class="row2"><textarea name="description" cols="40" rows="6" class="post" style="width: 200px"><#if forum?exists>${forum.description?default("")}</#if></textarea></td>
+		<td class="row2"><textarea name="description" cols="40" rows="10" class="post" style="width: 100%" onKeyDown="limitTextArea(this, 255);" onKeyUp="limitTextArea(this, 255);"><#if forum?exists>${forum.description?default("")}</#if></textarea></td>
 	</tr>
 	
 	<#if !edit>
