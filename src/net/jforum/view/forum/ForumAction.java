@@ -73,7 +73,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.73 2007/07/31 15:54:07 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.74 2007/08/20 19:35:52 rafaelsteil Exp $
  */
 public class ForumAction extends Command
 {
@@ -219,7 +219,7 @@ public class ForumAction extends Command
 
 		// Pagination
 		int topicsPerPage = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
-		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
+		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POSTS_PER_PAGE);
 		int totalTopics = forum.getTotalTopics();
 
 		ViewCommon.contextToPagination(start, totalTopics, topicsPerPage);

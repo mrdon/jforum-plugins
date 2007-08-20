@@ -69,7 +69,7 @@ import net.jforum.view.forum.common.ViewCommon;
  * 
  * @author James Yong
  * @author Rafael Steil
- * @version $Id: RecentTopicsAction.java,v 1.19 2006/08/20 22:47:39 rafaelsteil Exp $
+ * @version $Id: RecentTopicsAction.java,v 1.20 2007/08/20 19:35:52 rafaelsteil Exp $
  */
 public class RecentTopicsAction extends Command 
 {
@@ -77,7 +77,7 @@ public class RecentTopicsAction extends Command
 
 	public void list()
 	{
-		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
+		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POSTS_PER_PAGE);
 
 		this.setTemplateName(TemplateKeys.RECENT_LIST);
 		
@@ -90,18 +90,17 @@ public class RecentTopicsAction extends Command
 		this.request.setAttribute("template", null);
 	}
 	
-	List topics()
+	private List topics()
 	{
-		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
-		List tmpTopics = TopicRepository.getRecentTopics();
+		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POSTS_PER_PAGE);
+		List topics = TopicRepository.getRecentTopics();
 		
 		this.forums = new ArrayList(postsPerPage);
 
-		for (Iterator iter = tmpTopics.iterator(); iter.hasNext(); ) {
+		for (Iterator iter = topics.iterator(); iter.hasNext(); ) {
 			Topic t = (Topic)iter.next();
 			
 			if (TopicsCommon.isTopicAccessible(t.getForumId())) {
-				// Get name of forum that the topic refers to
 				Forum f = ForumRepository.getForum(t.getForumId());
 				forums.add(f);
 			}
@@ -112,7 +111,7 @@ public class RecentTopicsAction extends Command
 		
 		JForumExecutionContext.getRequest().removeAttribute("template");
 		
-		return TopicsCommon.prepareTopics(tmpTopics);
+		return TopicsCommon.prepareTopics(topics);
 	}
 
 	public void showTopicsByUser() 
@@ -132,7 +131,7 @@ public class RecentTopicsAction extends Command
 		
 		int start = ViewCommon.getStartPage();
 		int topicsPerPage = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
-		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
+		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POSTS_PER_PAGE);
 		
 		this.setTemplateName(TemplateKeys.RECENT_USER_TOPICS_SHOW);
 		

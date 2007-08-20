@@ -136,7 +136,7 @@ UserModel.getUsername = SELECT username FROM jforum_users WHERE user_id = ?
 # #############
 # PostModel
 # #############
-PostModel.selectLatestForRSS = SELECT p.topic_id, pt.post_subject, pt.post_text, p.post_time, p.user_id, u.username \
+PostModel.selectLatestByForumForRSS = SELECT p.topic_id, p.topic_id, p.post_id, p.forum_id, pt.post_subject AS subject, pt.post_text, p.post_time, p.user_id, u.username \
 	FROM jforum_topics t, jforum_posts p, jforum_posts_text pt, jforum_users u \
 	WHERE p.post_id = t.topic_first_post_id \
 	AND p.topic_id = t.topic_id \
@@ -145,6 +145,16 @@ PostModel.selectLatestForRSS = SELECT p.topic_id, pt.post_subject, pt.post_text,
 	AND p.need_moderate = 0 \
 	AND p.forum_id = ? \
 	ORDER BY t.topic_id DESC \
+	LIMIT ?
+	
+PostModel.selectHotForRSS = SELECT t.topic_id, t.topic_title AS subject, p.post_id, t.forum_id, pt.post_text, p.post_time, p.user_id, u.username \
+	FROM jforum_topics t, jforum_posts p, jforum_posts_text pt, jforum_users u \
+	WHERE p.post_id = t.topic_last_post_id \
+	AND p.topic_id = t.topic_id \
+	AND p.user_id = u.user_id \
+	AND p.post_id = pt.post_id \
+	AND p.need_moderate = 0  \
+	ORDER BY topic_last_post_id DESC \
 	LIMIT ?
 
 PostModel.countPreviousPosts = SELECT COUNT(p2.post_id) AS prev_posts \

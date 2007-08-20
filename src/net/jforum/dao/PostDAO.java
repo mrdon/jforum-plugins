@@ -54,7 +54,7 @@ import net.jforum.entities.Post;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: PostDAO.java,v 1.11 2007/08/20 18:34:12 rafaelsteil Exp $
+ * @version $Id: PostDAO.java,v 1.12 2007/08/20 19:35:52 rafaelsteil Exp $
  */
 public interface PostDAO 
 {
@@ -138,5 +138,7 @@ public interface PostDAO
 	 */
 	public int countPreviousPosts(int postId) ;
 	
-	public List selectLatestForRSS(int forumId, int limit);
+	public List selectLatestByForumForRSS(int forumId, int limit);
+	
+	public List selectHotForRSS(int limit);
 }

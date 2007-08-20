@@ -65,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericPostDAO.java,v 1.24 2007/08/20 18:34:12 rafaelsteil Exp $
+ * @version $Id: GenericPostDAO.java,v 1.25 2007/08/20 19:35:53 rafaelsteil Exp $
  */
 public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 {
@@ -474,7 +474,7 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 		}
 	}
 
-	public List selectLatestForRSS(int forumId, int limit) 
+	public List selectLatestByForumForRSS(int forumId, int limit) 
 	{
 		List l = new ArrayList();
 		
@@ -483,23 +483,14 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 		
 		try {
 			p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("PostModel.selectLatestForRSS"));
+				SystemGlobals.getSql("PostModel.selectLatestByForumForRSS"));
 			p.setInt(1, forumId);
 			p.setInt(2, limit);
 			
 			rs = p.executeQuery();
 			
 			while (rs.next()) {
-				Post post = new Post();
-				
-				post.setSubject(rs.getString("post_subject"));
-				post.setText(rs.getString("post_text"));
-				post.setTopicId(rs.getInt("topic_id"));
-				post.setForumId(forumId); 
-				post.setUserId(rs.getInt("user_id"));
-				post.setPostUsername(rs.getString("username"));
-				post.setTime(new Date(rs.getTimestamp("post_time").getTime()));
-				
+				Post post = this.buildPostForRSS(rs);
 				l.add(post);
 			}
 			
@@ -512,6 +503,52 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 		}
 		
 		return l;
+	}
+	
+	public List selectHotForRSS(int limit) 
+	{
+		List l = new ArrayList();
+		
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+				SystemGlobals.getSql("PostModel.selectHotForRSS"));
+			p.setInt(1, limit);
+			
+			rs = p.executeQuery();
+			
+			while (rs.next()) {
+				Post post = this.buildPostForRSS(rs);
+				l.add(post);
+			}
+			
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+		
+		return l;
+	}
+
+	private Post buildPostForRSS(ResultSet rs) throws SQLException 
+	{
+		Post post = new Post();
+		
+		post.setId(rs.getInt("post_id"));
+		post.setSubject(rs.getString("subject"));
+		post.setText(rs.getString("post_text"));
+		post.setTopicId(rs.getInt("topic_id"));
+		post.setForumId(rs.getInt("forum_id")); 
+		post.setUserId(rs.getInt("user_id"));
+		post.setPostUsername(rs.getString("username"));
+		post.setTime(new Date(rs.getTimestamp("post_time").getTime()));
+		
+		return post;
 	}
 }
 

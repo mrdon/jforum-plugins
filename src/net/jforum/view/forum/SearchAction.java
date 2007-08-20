@@ -63,7 +63,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchAction.java,v 1.56 2007/07/30 15:39:26 rafaelsteil Exp $
+ * @version $Id: SearchAction.java,v 1.57 2007/08/20 19:35:52 rafaelsteil Exp $
  */
 public class SearchAction extends Command 
 {
@@ -111,7 +111,7 @@ public class SearchAction extends Command
 		this.context.put("fr", new ForumRepository());
 		this.context.put("pageTitle", I18n.getMessage("ForumBase.search"));
 		this.context.put("openModeration", "1".equals(this.request.getParameter("openModeration")));
-		this.context.put("postsPerPage", new Integer(SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE)));
+		this.context.put("postsPerPage", new Integer(SystemGlobals.getIntValue(ConfigKeys.POSTS_PER_PAGE)));
 		
 		ViewCommon.contextToPagination(start, searchResult.numberOfHits(), recordsPerPage);
 		TopicsCommon.topicListingBase();

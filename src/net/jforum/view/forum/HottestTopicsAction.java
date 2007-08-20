@@ -70,7 +70,7 @@ import net.jforum.view.forum.common.ViewCommon;
  * @author James Yong
  * @author Rafael Steil
  * @author Andowson Chang 
- * @version $Id: HottestTopicsAction.java,v 1.1 2007/04/02 17:14:42 andowson Exp $
+ * @version $Id: HottestTopicsAction.java,v 1.2 2007/08/20 19:35:52 rafaelsteil Exp $
  */
 public class HottestTopicsAction extends Command 
 {
@@ -78,7 +78,7 @@ public class HottestTopicsAction extends Command
 
 	public void list()
 	{
-		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
+		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POSTS_PER_PAGE);
 
 		this.setTemplateName(TemplateKeys.HOTTEST_LIST);
 		
@@ -93,7 +93,7 @@ public class HottestTopicsAction extends Command
 	
 	List topics()
 	{
-		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
+		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POSTS_PER_PAGE);
 		List tmpTopics = TopicRepository.getHottestTopics();
 		
 		this.forums = new ArrayList(postsPerPage);
@@ -133,7 +133,7 @@ public class HottestTopicsAction extends Command
 		
 		int start = ViewCommon.getStartPage();
 		int topicsPerPage = SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE);
-		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
+		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POSTS_PER_PAGE);
 		
 		this.setTemplateName(TemplateKeys.HOTTEST_USER_TOPICS_SHOW);
 		

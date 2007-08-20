@@ -105,7 +105,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.186 2007/08/20 15:04:06 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.187 2007/08/20 19:35:52 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -157,7 +157,7 @@ public class PostAction extends Command
 			return;
 		}
 
-		int count = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
+		int count = SystemGlobals.getIntValue(ConfigKeys.POSTS_PER_PAGE);
 		int start = ViewCommon.getStartPage();
 
 		PermissionControl pc = SecurityRepository.get(us.getUserId());
@@ -265,7 +265,7 @@ public class PostAction extends Command
 		PostDAO dao = DataAccessDriver.getInstance().newPostDAO();
 		
 		int count = dao.countPreviousPosts(postId);
-		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
+		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POSTS_PER_PAGE);
 		
 		int topicId = 0;
 		
@@ -340,9 +340,9 @@ public class PostAction extends Command
 			return;
 		} 
 			
-		int count = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
+		int count = SystemGlobals.getIntValue(ConfigKeys.POSTS_PER_PAGE);
 		int start = ViewCommon.getStartPage();
-		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
+		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POSTS_PER_PAGE);
 		
 		List posts = pm.selectByUserByLimit(u.getId(), start, postsPerPage);
 		int totalMessages = pm.countUserPosts(u.getId());
@@ -419,7 +419,7 @@ public class PostAction extends Command
 			return;
 		}
 
-		int count = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
+		int count = SystemGlobals.getIntValue(ConfigKeys.POSTS_PER_PAGE);
 		int start = ViewCommon.getStartPage();
 
 		Map usersMap = topicDao.topicPosters(topic.getId());
@@ -1221,7 +1221,7 @@ public class PostAction extends Command
 	}
 
 	private int startPage(Topic t, int currentStart) {
-		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
+		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POSTS_PER_PAGE);
 
 		int newStart = (t.getTotalReplies() + 1) / postsPerPage * postsPerPage;
 		
@@ -1297,7 +1297,7 @@ public class PostAction extends Command
 			int page = ViewCommon.getStartPage();
 			
 			if (page > 0) {
-				int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
+				int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POSTS_PER_PAGE);
 
 				if (totalPosts % postsPerPage == 0) {
 					page -= postsPerPage;

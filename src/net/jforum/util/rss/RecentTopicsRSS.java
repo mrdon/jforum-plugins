@@ -48,16 +48,20 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.view.forum.common.ViewCommon;
 
+/**
+ * @author Rafael Steil
+ * @version $Id: RecentTopicsRSS.java,v 1.8 2007/08/20 19:35:52 rafaelsteil Exp $
+ */
 public class RecentTopicsRSS extends TopicRSS
 {
-	public RecentTopicsRSS(String title, String description, List topics)
+	public RecentTopicsRSS(String title, String description, List posts)
 	{
-		super.posts = topics;
+		super.posts = posts;
 		this.forumLink = ViewCommon.getForumLink();
 		
 		this.rss = new RSS(title, description, SystemGlobals.getValue(ConfigKeys.ENCODING), 
-				this.forumLink + "recentTopics/list"
-				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+			this.forumLink + "recentTopics/list"
+			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		
 		super.prepareRSS();
 	}

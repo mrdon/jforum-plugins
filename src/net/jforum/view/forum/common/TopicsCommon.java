@@ -74,7 +74,7 @@ import freemarker.template.SimpleHash;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.43 2007/07/31 13:52:47 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.45 2007/08/20 19:35:54 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
@@ -130,7 +130,7 @@ public class TopicsCommon
 
 		long lastVisit = userSession.getLastVisit().getTime();
 		int hotBegin = SystemGlobals.getIntValue(ConfigKeys.HOT_TOPIC_BEGIN);
-		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
+		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POSTS_PER_PAGE);
 		
 		List newTopics = new ArrayList(topics.size());
 		Map topicsReadTime = SessionFacade.getTopicsReadTime();
@@ -143,12 +143,13 @@ public class TopicsCommon
 			Topic t = (Topic)iter.next();
 			
 			boolean read = false;
+			boolean isReadByForum = false;
 			long lastPostTime = t.getLastPostDate().getTime();
 			
-			Long currentForumTime = (Long)topicReadTimeByForum.get(new Integer(t.getForumId()));
-			boolean isReadByForum = topicReadTimeByForum != null
-				&& currentForumTime != null
-				&& lastPostTime < currentForumTime.longValue();
+			if (topicReadTimeByForum != null) {
+				Long currentForumTime = (Long)topicReadTimeByForum.get(new Integer(t.getForumId()));
+				isReadByForum = currentForumTime != null && lastPostTime < currentForumTime.longValue();
+			}
 			
 			boolean isTopicTimeOlder = !isReadByForum && lastPostTime <= lastVisit;
 			

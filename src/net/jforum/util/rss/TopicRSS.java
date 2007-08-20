@@ -53,7 +53,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: TopicRSS.java,v 1.17 2007/08/20 18:34:13 rafaelsteil Exp $
+ * @version $Id: TopicRSS.java,v 1.18 2007/08/20 19:35:52 rafaelsteil Exp $
  */
 public class TopicRSS extends GenericRSS 
 {
@@ -88,7 +88,7 @@ public class TopicRSS extends GenericRSS
 			
 			item.setAuthor(post.getPostUsername());
 			item.setPublishDate(RSSUtils.formatDate(post.getTime()));
-			item.setLink(this.forumLink + "posts/list/" + post.getTopicId()
+			item.setLink(this.forumLink + "posts/preList/" + post.getTopicId() + "/" + post.getId()
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 			item.setTitle(post.getSubject());
 			item.setContentType(RSSAware.CONTENT_HTML);

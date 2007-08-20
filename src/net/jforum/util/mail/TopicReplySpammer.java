@@ -57,7 +57,7 @@ import freemarker.template.SimpleHash;
 /**
  * Notify users of replies to existing topics
  * @author Rafael Steil
- * @version $Id: TopicReplySpammer.java,v 1.4 2007/04/12 02:11:54 rafaelsteil Exp $
+ * @version $Id: TopicReplySpammer.java,v 1.5 2007/08/20 19:35:51 rafaelsteil Exp $
  */
 public class TopicReplySpammer extends Spammer 
 {
@@ -72,7 +72,7 @@ public class TopicReplySpammer extends Spammer
 	{
 		// Make the topic url
 		StringBuffer page = new StringBuffer();
-		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE);
+		int postsPerPage = SystemGlobals.getIntValue(ConfigKeys.POSTS_PER_PAGE);
 		
 		if (topic.getTotalReplies() >= postsPerPage) {
 			page.append(((topic.getTotalReplies() / postsPerPage)) * postsPerPage).append('/');

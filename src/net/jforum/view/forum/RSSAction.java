@@ -73,7 +73,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: RSSAction.java,v 1.30 2007/08/20 18:34:12 rafaelsteil Exp $
+ * @version $Id: RSSAction.java,v 1.31 2007/08/20 19:35:52 rafaelsteil Exp $
  */
 public class RSSAction extends Command 
 {
@@ -89,7 +89,7 @@ public class RSSAction extends Command
             return;
 		}
 		
-		List posts = DataAccessDriver.getInstance().newPostDAO().selectLatestForRSS(
+		List posts = DataAccessDriver.getInstance().newPostDAO().selectLatestByForumForRSS(
 			forumId, SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE));
 		
 		Forum forum = ForumRepository.getForum(forumId);
@@ -138,9 +138,11 @@ public class RSSAction extends Command
 		String title = I18n.getMessage("RSS.RecentTopics.title", 
 			new Object[] { SystemGlobals.getValue(ConfigKeys.FORUM_NAME) });
 		String description = I18n.getMessage("RSS.RecentTopics.description");
+		
+		List posts = DataAccessDriver.getInstance().newPostDAO().selectHotForRSS(
+			SystemGlobals.getIntValue(ConfigKeys.POSTS_PER_PAGE));
 
-		RSSAware rss = new RecentTopicsRSS(title, description, 
-			new RecentTopicsAction().topics());
+		RSSAware rss = new RecentTopicsRSS(title, description, posts);
 		this.context.put("rssContents", rss.createRSS());
 	}
 
@@ -181,7 +183,7 @@ public class RSSAction extends Command
 		
 		List topics = DataAccessDriver.getInstance().newPostDAO().selectByUserByLimit(u.getId(), 
 				0, 
-				SystemGlobals.getIntValue(ConfigKeys.POST_PER_PAGE));
+				SystemGlobals.getIntValue(ConfigKeys.POSTS_PER_PAGE));
 		
 		String[] p = { u.getUsername() };
 		
