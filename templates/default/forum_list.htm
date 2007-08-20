@@ -10,9 +10,6 @@
 						<#if logged><span class="gensmall">${I18n.getMessage("ForumListing.lastVisit")}: ${lastVisit}</span><br /></#if>
 						<span class="gensmall">${I18n.getMessage("ForumListing.date")}: ${now}</span><br />
 						<span class="forumlink"><a class="forumlink" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a></span>
-						<#if rssEnabled>
-							<a href="${contextPath}/rss/forums${extension}"><img src="${contextPath}/templates/${templateName}/images/xml_button.gif" border="0" align="middle" alt="[XML]" /></a>
-						</#if>
 					</td>
 					<td class="gensmall" valign="bottom" align="right">&nbsp;
 					<#if logged>

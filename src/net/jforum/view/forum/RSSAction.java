@@ -44,7 +44,9 @@ package net.jforum.view.forum;
 
 import java.util.List;
 
-import net.jforum.*;
+import net.jforum.Command;
+import net.jforum.JForumExecutionContext;
+import net.jforum.SessionFacade;
 import net.jforum.context.RequestContext;
 import net.jforum.context.ResponseContext;
 import net.jforum.dao.DataAccessDriver;
@@ -59,38 +61,22 @@ import net.jforum.util.I18n;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
-import net.jforum.util.rss.ForumRSS;
 import net.jforum.util.rss.RSSAware;
 import net.jforum.util.rss.RecentTopicsRSS;
 import net.jforum.util.rss.TopicPostsRSS;
 import net.jforum.util.rss.TopicRSS;
 import net.jforum.util.rss.UserPostsRSS;
 import net.jforum.util.rss.UserTopicsRSS;
-import net.jforum.view.forum.common.ForumCommon;
 import net.jforum.view.forum.common.TopicsCommon;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: RSSAction.java,v 1.28 2006/08/23 02:13:53 rafaelsteil Exp $
+ * @version $Id: RSSAction.java,v 1.29 2007/08/20 15:12:53 rafaelsteil Exp $
  */
 public class RSSAction extends Command 
 {
-	/**
-	 * RSS for all forums.
-	 * Show rss syndication containing information about
-	 * all available forums
-	 */
-	public void forums()
-	{
-		String title = I18n.getMessage("RSS.Forums.title");
-		String description = I18n.getMessage("RSS.Forums.description");
-		
-		RSSAware rss = new ForumRSS(title, description, ForumCommon.getAllCategoriesAndForums(false));
-		this.context.put("rssContents", rss.createRSS());
-	}
-	
 	/**
 	 * RSS for all N first topics for some given forum
 	 */
@@ -208,7 +194,7 @@ public class RSSAction extends Command
 	 */
 	public void list()
 	{
-		this.forums();
+		
 	}
 	
 	/** 
