@@ -198,6 +198,7 @@ PostModel.selectByUserByLimit = SELECT p.post_id, topic_id, forum_id, p.user_id,
 	AND p.user_id = ? \
 	AND p.need_moderate = 0 \
 	AND forum_id IN(:fids:) \
+	ORDER BY p.post_id DESC \
 	LIMIT ?, ?
 
 PostModel.countUserPosts = SELECT COUNT(1) AS total FROM jforum_posts where user_id = ? AND forum_id IN (:fids:) AND need_moderate = 0

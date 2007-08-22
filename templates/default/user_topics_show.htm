@@ -12,14 +12,13 @@
 			<table cellspacing="0" cellpadding="2" width="100%" align="center" border="0">
 				<tr>
 					<td valign="bottom" align="left">
-						<span class="nav">
-						<a href="${JForumContext.encodeURL("/user/profile/${u.id}")}">${I18n.getMessage("UserProfile.profileFor")} ${u.username}</a> 
-						&nbsp;->&nbsp;
-						<a class="nav" href="${JForumContext.encodeURL("/recentTopics/showTopicsByUser/${u.id}")}">${I18n.getMessage("ForumListing.userTopics")} ${u.username?html}</a> [${totalRecords}]
-						<#if rssEnabled>
-							&nbsp;<a href="${contextPath}/rss/showTopicsByUser/${u.id}${extension}"><img src="${contextPath}/templates/${templateName}/images/xml_button.gif" border="0" align="middle" alt="[XML]" /></a>
-						</#if>
-						</span>
+						<#assign breadCrumb>
+							<a class="nav" href="${JForumContext.encodeURL("/forums/list")}">${I18n.getMessage("ForumListing.forumIndex")}</a> &raquo;
+							<a class="nav" href="${JForumContext.encodeURL("/user/profile/${u.id}")}">${I18n.getMessage("UserProfile.profileFor")} ${u.username}</a> 
+							&raquo;
+							<a class="nav" href="${JForumContext.encodeURL("/recentTopics/showTopicsByUser/${u.id}")}">${I18n.getMessage("ForumListing.userTopics")} ${u.username?html}</a>
+						</#assign>
+						${breadCrumb}
 					</td>
 					<td align="right">
 						<#assign paginationData>
@@ -89,14 +88,7 @@
 			<table cellspacing="0" cellpadding="2" width="100%" align="center" border="0">
 				<tr>
 					<td valign="bottom" align="left">
-						<span class="nav">
-						<a href="${JForumContext.encodeURL("/user/profile/${u.id}")}">${I18n.getMessage("UserProfile.profileFor")} ${u.username}</a> 
-						&nbsp;->&nbsp;
-						<a class="nav" href="${JForumContext.encodeURL("/recentTopics/showTopicsByUser/${u.id}")}">${I18n.getMessage("ForumListing.userTopics")?html} ${u.username?html}</a> [${totalRecords}]
-						<#if rssEnabled>
-							&nbsp;<a href="${contextPath}/rss/showTopicsByUser/${u.id}${extension}"><img src="${contextPath}/templates/${templateName}/images/xml_button.gif" border="0" align="middle" alt="[XML]" /></a>
-						</#if>
-						</span>
+						${breadCrumb}
 					</td>
 					<td align="right">${paginationData}</td>
 				</tr>

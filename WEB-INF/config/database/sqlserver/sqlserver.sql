@@ -100,7 +100,7 @@ PostModel.selectAllByTopicByLimit = SELECT * \
 	WHERE rownumber between ? and ?
 
 PostModel.selectByUserByLimit = SELECT * \
-	FROM ( SELECT ROW_NUMBER() OVER (ORDER BY post_id ASC) AS rownumber, \
+	FROM ( SELECT ROW_NUMBER() OVER (ORDER BY post_id DESC) AS rownumber, \
 	p.post_id, topic_id, forum_id, p.user_id, post_time, poster_ip, enable_bbcode, p.attach, \
 	enable_html, enable_smilies, enable_sig, post_edit_time, post_edit_count, status, pt.post_subject, pt.post_text, username, p.need_moderate \
 	FROM jforum_posts p, jforum_posts_text pt, jforum_users u \
@@ -109,7 +109,8 @@ PostModel.selectByUserByLimit = SELECT * \
 	AND p.user_id = ? \
 	AND p.need_moderate = 0 \
 	AND forum_id IN(:fids:) ) AS tmp \
-	WHERE rownumber between ? and ?
+	WHERE rownumber between ? and ? \
+	ORDER BY p.post_id DESC
 
 	
 # #############
