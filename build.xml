@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!-- ********************************************************************* -->
 <!-- Ant build script for JForum -->
-<!-- Version: $Id: build.xml,v 1.25 2007/03/18 16:56:57 rafaelsteil Exp $  -->
+<!-- Version: $Id: build.xml,v 1.26 2007/08/22 01:03:05 rafaelsteil Exp $  -->
 <!-- ********************************************************************* -->
 
 <project name="JForum" default="compile" basedir=".">
@@ -17,7 +17,7 @@
 	<property name="project.title" value="JForum API" />
 	<property name="author" value="JForum Team - http://www.jforum.net/team.jsp" />
 	<property name="copyright" value="(c) JForum Team" />
-	<property name="version" value="2.1.7-r4" />
+	<property name="version" value="2.1.8" />
 	<property name="filename" value="jforum-${version}" />
 	<property name="warfile" value="${filename}.war" />
 	<property name="javadoc.packages" value="net.jforum.*" />
