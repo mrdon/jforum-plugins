@@ -115,6 +115,13 @@ DROP TABLE jforum_banlist;
 DROP SEQUENCE jforum_banner_seq;
 DROP TABLE jforum_banner;
 
+-- jforum_moderation_log
+DROP SEQUENCE jforum_moderation_log_seq;
+DROP TABLE jforum_moderation_log;
+
+
+DROP INDEX idx_ml_user;
+DROP INDEX idx_ml_post_user;
 DROP INDEX idx_banlist_user;
 DROP INDEX idx_forums_categories_id;
 DROP INDEX idx_ug_group;

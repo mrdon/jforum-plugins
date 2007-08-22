@@ -86,7 +86,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.65 2007/08/16 01:43:41 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.66 2007/08/22 18:44:00 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -210,8 +210,8 @@ public class InstallAction extends Command
 		simpleConnection.releaseConnection(conn);
 
 		JForumExecutionContext.setRedirect(this.request.getContextPath() + "/install/install"
-				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)
-				+ "?module=install&action=finished");
+			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)
+			+ "?module=install&action=finished");
 	}
 	
 	private void removeUserConfig()
@@ -236,13 +236,14 @@ public class InstallAction extends Command
 		this.context.put("forumLink", this.getFromSession("forumLink"));
 		
 		String lang = this.getFromSession("language");
+		
 		if (lang == null) {
 			lang = "en_US";
 		}
 		
 		this.context.put("lang", lang);
 		
-		this.doFinalSteps();
+		//this.fixModulesMapping();
 		this.configureSystemGlobals();
 
 		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
@@ -251,7 +252,7 @@ public class InstallAction extends Command
         SessionFacade.remove(this.request.getSessionContext().getId());
 	}
 	
-	private void doFinalSteps()
+	private void fixModulesMapping()
 	{
 		FileInputStream fis = null;
 		FileOutputStream fos = null;
@@ -294,7 +295,7 @@ public class InstallAction extends Command
 	private void configureSystemGlobals()
 	{
 		SystemGlobals.setValue(ConfigKeys.USER_HASH_SEQUENCE, MD5.crypt(this.getFromSession("dbPassword")
-				+ System.currentTimeMillis()));
+			+ System.currentTimeMillis()));
 
 		SystemGlobals.setValue(ConfigKeys.FORUM_LINK, this.getFromSession("forumLink"));
 		SystemGlobals.setValue(ConfigKeys.HOMEPAGE_LINK, this.getFromSession("siteLink"));
@@ -390,7 +391,8 @@ public class InstallAction extends Command
 				continue;
 			}
 			
-			Statement s=null;
+			Statement s = null;
+			
             try {
                 s = conn.createStatement();
 				s.executeUpdate(query);
@@ -526,6 +528,7 @@ public class InstallAction extends Command
 		p.setProperty(ConfigKeys.DATABASE_CONNECTION_DBNAME, dbName);
 		p.setProperty(ConfigKeys.DATABASE_CONNECTION_ENCODING, encoding);
 		p.setProperty(ConfigKeys.DATABASE_CONNECTION_PORT, port);
+		p.setProperty(ConfigKeys.DATABASE_DRIVER_NAME, type);
 
 		FileOutputStream fos = null;
 		
@@ -562,7 +565,7 @@ public class InstallAction extends Command
 		String connectionType = this.getFromSession("db_connection_type");
 		String implementation;
 		
-		boolean isDs = false;
+		boolean isDatasource = false;
 		
 		if ("JDBC".equals(connectionType)) {
 			implementation = "yes".equals(this.getFromSession("usePool")) && !"hsqldb".equals(database) 
@@ -572,7 +575,7 @@ public class InstallAction extends Command
 			this.configureJDBCConnection();
 		}
 		else {
-			isDs = true;
+			isDatasource = true;
 			implementation = DATASOURCE_CONNECTION;
 			SystemGlobals.setValue(ConfigKeys.DATABASE_DATASOURCE_NAME, this.getFromSession("dbdatasource"));
 		}
@@ -594,7 +597,7 @@ public class InstallAction extends Command
 		try {
 			DBConnection s;
 			
-			if (!isDs) { 
+			if (!isDatasource) { 
 				s = new SimpleConnection();
 			}
 			else {
@@ -703,23 +706,22 @@ public class InstallAction extends Command
 	private void dropPostgresqlTables(Connection conn)
 	{
 		String[] tables = { "jforum_banlist", "jforum_banlist_seq", "jforum_categories", 
-				"jforum_categories_order_seq", "jforum_categories_seq", "jforum_config",
-				"jforum_config_seq", "jforum_forums", "jforum_forums_seq", "jforum_groups",
-				"jforum_groups_seq", "jforum_posts", "jforum_posts_seq", "jforum_posts_text",
-				"jforum_privmsgs", "jforum_privmsgs_seq", "jforum_privmsgs_text",
-				"jforum_ranks", "jforum_ranks_seq", "jforum_role_values", "jforum_roles",
-				"jforum_roles_seq", "jforum_search_results", "jforum_search_topics",
-				"jforum_search_wordmatch", "jforum_search_words", "jforum_search_words_seq", "jforum_sessions",
-				"jforum_smilies", "jforum_smilies_seq", "jforum_themes", "jforum_themes_seq",
-				"jforum_topics", "jforum_topics_seq", "jforum_topics_watch", "jforum_user_groups",
-				"jforum_users", "jforum_users_seq", "jforum_vote_desc", "jforum_vote_desc_seq",
-				"jforum_vote_results", "jforum_vote_voters", "jforum_words", "jforum_words_seq",
-				"jforum_karma_seq", "jforum_karma", "jforum_bookmarks_seq", "jforum_bookmarks", 
-				"jforum_quota_limit", "jforum_quota_limit_seq", "jforum_extension_groups_seq", 
-				"jforum_extension_groups", "jforum_extensions_seq", "jforum_extensions", 
-				"jforum_attach_seq", "jforum_attach", "jforum_attach_desc_seq", "jforum_attach_desc",
-				"jforum_attach_quota_seq", "jforum_attach_quota", "jforum_banner", "jforum_banner_seq",
-				"jforum_forums_watch" };
+			"jforum_categories_order_seq", "jforum_categories_seq", "jforum_config",
+			"jforum_config_seq", "jforum_forums", "jforum_forums_seq", "jforum_groups",
+			"jforum_groups_seq", "jforum_posts", "jforum_posts_seq", "jforum_posts_text",
+			"jforum_privmsgs", "jforum_privmsgs_seq", "jforum_privmsgs_text",
+			"jforum_ranks", "jforum_ranks_seq", "jforum_role_values", "jforum_roles",
+			"jforum_roles_seq", "jforum_sessions",
+			"jforum_smilies", "jforum_smilies_seq", "jforum_themes", "jforum_themes_seq",
+			"jforum_topics", "jforum_topics_seq", "jforum_topics_watch", "jforum_user_groups",
+			"jforum_users", "jforum_users_seq", "jforum_vote_desc", "jforum_vote_desc_seq",
+			"jforum_vote_results", "jforum_vote_voters", "jforum_words", "jforum_words_seq",
+			"jforum_karma_seq", "jforum_karma", "jforum_bookmarks_seq", "jforum_bookmarks", 
+			"jforum_quota_limit", "jforum_quota_limit_seq", "jforum_extension_groups_seq", 
+			"jforum_extension_groups", "jforum_extensions_seq", "jforum_extensions", 
+			"jforum_attach_seq", "jforum_attach", "jforum_attach_desc_seq", "jforum_attach_desc",
+			"jforum_attach_quota_seq", "jforum_attach_quota", "jforum_banner", "jforum_banner_seq",
+			"jforum_forums_watch", "jforum_moderation_log_seq", "jforum_moderation_log" };
 
 		for (int i = 0; i < tables.length; i++) {
 
@@ -765,7 +767,8 @@ public class InstallAction extends Command
 	
 	/** 
 	 * @see net.jforum.Command#process(net.jforum.context.RequestContext, net.jforum.context.ResponseContext, freemarker.template.SimpleHash) 
-     * @param request AWebContextRequest     * @param response HttpServletResponse
+     * @param request AWebContextRequest     
+     * @param response HttpServletResponse
      * @param context SimpleHash
 	 */
 	public Template process(RequestContext request,
