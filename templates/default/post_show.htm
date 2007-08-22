@@ -35,6 +35,10 @@
 -->
 </script>
 
+<#if moderator>
+	<script type="text/JavaScript" src="${JForumContext.encodeURL("/js/list/moderation")}"></script>
+</#if>
+
 <table cellspacing="0" cellpadding="10" width="100%" align="center" border="0">
 	<tr>
 		<td class="bodyline">
@@ -313,6 +317,8 @@
 					<input type="hidden" name="returnUrl" value="${JForumContext.encodeURL("/${moduleName}/${action}/${start}/${topic.id}")}" />
 					<input type="hidden" name="forum_id" value="${topic.forumId}" />
 					<input type="hidden" name="topic_id" value="${topic.id}" />
+					<input type="hidden" name="log_type" value="0"/>
+					<input type="hidden" name="log_description">
 					<input type="hidden" id="moderationTodo" />
 
 					<tr>

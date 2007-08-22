@@ -1,6 +1,6 @@
 function verifyModerationCheckedTopics()
 {
-	var f = document.form1.topic_id;
+	var f = document.formModeration.topic_id;
 	
 	if (f.length == undefined)	 {
 		if (f.checked) {
@@ -25,7 +25,7 @@ function validateModerationDelete()
 		&& askModerationReason();
 
 	if (status) {
-		document.form1.log_type.value = "1";
+		document.formModeration.log_type.value = "1";
 	}
 
 	return status;
@@ -36,7 +36,7 @@ function lockUnlock()
 	var status = verifyModerationCheckedTopics() && askModerationReason();
 	
 	if (status) {
-		document.form1.log_type.value = "3";
+		document.formModeration.log_type.value = "3";
 	}
 
 	return status;
@@ -51,7 +51,7 @@ function askModerationReason()
 		return false;
 	}
 	else {
-		document.form1.log_description.value = message;
+		document.formModeration.log_description.value = message;
 	}
 
 	return true;

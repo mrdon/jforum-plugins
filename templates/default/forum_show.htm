@@ -157,7 +157,7 @@
 			</#if>
 
 			<#if moderator>
-				<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="form1" id="form1" accept-charset="${encoding}">
+				<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="formModeration" id="formModeration" accept-charset="${encoding}">
 				<input type="hidden" name="action" value="doModeration" />
 				<input type="hidden" name="module" value="moderation" />
 				<input type="hidden" name="returnUrl" value="${JForumContext.encodeURL("/${moduleName}/${action}/${start}/${forum.id}")}" />
