@@ -54,7 +54,7 @@ import org.apache.lucene.search.Filter;
 
 /**
  * @author Rafael Steil
- * @version $Id: DistinctTopicsFilter.java,v 1.1 2007/07/31 01:56:24 rafaelsteil Exp $
+ * @version $Id: DistinctTopicsFilter.java,v 1.2 2007/08/22 13:23:34 rafaelsteil Exp $
  */
 public class DistinctTopicsFilter extends Filter
 {
@@ -67,12 +67,14 @@ public class DistinctTopicsFilter extends Filter
 		Set topics = new HashSet();
 		
 		for (int i = 0; i < reader.maxDoc(); i++) {
-			Document doc = reader.document(i);
-			String topicId = doc.get(SearchFields.Keyword.TOPIC_ID);
-			
-			if (!topics.contains(topicId)) {
-				bits.set(i);
-				topics.add(topicId);
+			if (!reader.isDeleted(i)) {
+				Document doc = reader.document(i);
+				String topicId = doc.get(SearchFields.Keyword.TOPIC_ID);
+				
+				if (!topics.contains(topicId)) {
+					bits.set(i);
+					topics.add(topicId);
+				}
 			}
 		}
 		
