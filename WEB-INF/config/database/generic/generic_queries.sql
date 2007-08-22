@@ -143,7 +143,7 @@ PostModel.selectLatestByForumForRSS = SELECT p.topic_id, p.topic_id, p.post_id, 
 	AND p.user_id = u.user_id \
 	AND p.post_id = pt.post_id \
 	AND p.need_moderate = 0 \
-	AND p.forum_id = ? \
+	AND t.forum_id = ? \
 	ORDER BY t.topic_id DESC \
 	LIMIT ?
 	

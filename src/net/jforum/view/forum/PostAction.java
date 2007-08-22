@@ -105,7 +105,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.187 2007/08/20 19:35:52 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.188 2007/08/22 12:28:39 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -729,6 +729,7 @@ public class PostAction extends Command
 		QuotaLimit ql = new AttachmentCommon(this.request, topic.getForumId()).getQuotaLimit(userId);
 		this.context.put("maxAttachmentsSize", new Long(ql != null ? ql.getSizeInBytes() : 1));
 		
+		this.context.put("moderationLoggingEnabled", SystemGlobals.getBoolValue(ConfigKeys.MODERATION_LOGGING_ENABLED));
 		this.context.put("maxAttachments", SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_MAX_POST));
 		this.context.put("isNewPost", true);
 		this.context.put("topic", topic);
