@@ -48,6 +48,7 @@ import java.util.ArrayList;
 
 import net.jforum.exceptions.SearchException;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.Term;
@@ -61,7 +62,7 @@ import org.apache.lucene.search.TermQuery;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.31 2007/08/06 16:06:17 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.32 2007/08/22 14:30:43 rafaelsteil Exp $
  */
 public class LuceneSearch implements NewDocumentAdded
 {
@@ -184,10 +185,20 @@ public class LuceneSearch implements NewDocumentAdded
 				criteria.append(" +");
 			}
 			
+			String keyword = keywords[i];
+			
+			if (keyword.indexOf('[') > -1) {
+				keyword = StringUtils.replaceChars(keyword, '[', '\0');
+			}
+			
+			if (keyword.indexOf(']') > -1) {
+				keyword = StringUtils.replaceChars(keyword, ']', '\0');
+			}
+			
 			criteria.append('(')
 			.append(SearchFields.Indexed.CONTENTS)
 			.append(':')
-			.append(keywords[i])
+			.append(keyword)
 			.append(") ");
 		}
 	}
