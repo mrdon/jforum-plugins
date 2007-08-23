@@ -86,7 +86,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.66 2007/08/22 18:44:00 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.67 2007/08/23 13:47:52 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -228,28 +228,27 @@ public class InstallAction extends Command
 		}
 	}
 	
-	public void finished()
-	{
+	public void finished() {
 		this.setTemplateName(TemplateKeys.INSTALL_FINISHED);
-		
+
 		this.context.put("clickHere", I18n.getMessage("Install.clickHere"));
 		this.context.put("forumLink", this.getFromSession("forumLink"));
-		
+
 		String lang = this.getFromSession("language");
-		
+
 		if (lang == null) {
 			lang = "en_US";
 		}
-		
+
 		this.context.put("lang", lang);
-		
-		//this.fixModulesMapping();
+
+		// this.fixModulesMapping();
 		this.configureSystemGlobals();
 
 		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
-        SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
-        
-        SessionFacade.remove(this.request.getSessionContext().getId());
+		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
+
+		SessionFacade.remove(this.request.getSessionContext().getId());
 	}
 	
 	private void fixModulesMapping()
@@ -620,6 +619,8 @@ public class InstallAction extends Command
 	private void restartSystemGlobals() 
 	{
 		String appPath = SystemGlobals.getApplicationPath();
+		
+		SystemGlobals.reset();
 		
 		SystemGlobals.initGlobals(appPath, appPath + "/WEB-INF/config/SystemGlobals.properties");
         SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));

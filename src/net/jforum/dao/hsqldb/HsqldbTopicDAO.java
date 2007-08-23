@@ -42,13 +42,19 @@
  */
 package net.jforum.dao.hsqldb;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
+import net.jforum.JForumExecutionContext;
 import net.jforum.dao.generic.GenericTopicDAO;
+import net.jforum.exceptions.DatabaseException;
+import net.jforum.util.DbUtils;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Marc Wick
- * @version $Id: HsqldbTopicDAO.java,v 1.8 2006/08/20 22:47:47 rafaelsteil Exp $
+ * @version $Id: HsqldbTopicDAO.java,v 1.9 2007/08/23 13:47:52 rafaelsteil Exp $
  */
 public class HsqldbTopicDAO extends GenericTopicDAO
 {
@@ -57,7 +63,25 @@ public class HsqldbTopicDAO extends GenericTopicDAO
 	 */
 	public List selectAllByForumByLimit(int forumId, int startFrom, int count)
 	{
-		return super.selectAllByForumByLimit(startFrom, count, forumId);
+		String sql = SystemGlobals.getSql("TopicModel.selectAllByForumByLimit");
+
+		PreparedStatement p = null;
+
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(sql);
+			p.setInt(1, startFrom);
+			p.setInt(2, count);
+			p.setInt(3, forumId);
+			p.setInt(4, forumId);
+
+			return this.fillTopicsData(p);
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(p);
+		}
 	}
 	
 	/**
@@ -65,6 +89,6 @@ public class HsqldbTopicDAO extends GenericTopicDAO
 	 */
 	public List selectByUserByLimit(int userId, int startFrom, int count) 
 	{
-		return super.selectByUserByLimit(startFrom, count, userId);
+		return super.selectByUserByLimit(count, startFrom, userId);
 	}
 }

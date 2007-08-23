@@ -2,7 +2,7 @@
 <#-- Displays the topic folder image by its status -->
 <#-- ********************************************* -->
 <#macro folderImage topic>
-	<#if topic.movedId == 0 || topic.forumId == forum.id>
+	<#if topic.movedId == 0 || (forum?exists && topic.forumId == forum.id)>
 		<#if topic.read>
 			<#if topic.status == STATUS_UNLOCKED>
 				<#if topic.type == TOPIC_ANNOUNCE>

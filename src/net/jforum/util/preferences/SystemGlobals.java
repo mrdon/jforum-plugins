@@ -70,7 +70,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author Pieter Olivier
- * @version $Id: SystemGlobals.java,v 1.31 2007/07/28 14:17:11 rafaelsteil Exp $
+ * @version $Id: SystemGlobals.java,v 1.32 2007/08/23 13:47:52 rafaelsteil Exp $
  */
 public class SystemGlobals implements VariableStore
 {
@@ -100,6 +100,15 @@ public class SystemGlobals implements VariableStore
 	{
 		globals = new SystemGlobals();
 		globals.buildSystem(appPath, defaults);
+	}
+	
+	public static void reset()
+	{
+		globals.defaults.clear();
+		globals.installation.clear();
+		additionalDefaultsList.clear();
+		queries.clear();
+		transientValues.clear();
 	}
 	
 	private void buildSystem(String appPath, String defaultConfig)
