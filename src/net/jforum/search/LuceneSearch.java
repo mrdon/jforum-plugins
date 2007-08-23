@@ -62,7 +62,7 @@ import org.apache.lucene.search.TermQuery;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.32 2007/08/22 14:30:43 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.33 2007/08/23 01:46:20 rafaelsteil Exp $
  */
 public class LuceneSearch implements NewDocumentAdded
 {
@@ -145,8 +145,8 @@ public class LuceneSearch implements NewDocumentAdded
 			}
 			
 			Hits hits = filter == null ? 
-				this.search.search(query, Sort.RELEVANCE)
-				: this.search.search(query, filter, Sort.RELEVANCE);
+				this.search.search(query, this.getSorter(args))
+				: this.search.search(query, filter, this.getSorter(args));
 
 			if (hits != null && hits.length() > 0) {
 				result = new SearchResult(resultCollector.collect(args, hits, query), hits.length());
@@ -160,6 +160,17 @@ public class LuceneSearch implements NewDocumentAdded
 		}
 		
 		return result;
+	}
+	
+	private Sort getSorter(SearchArgs args)
+	{
+		Sort sort = Sort.RELEVANCE;
+		
+		if ("time".equals(args.getOrderBy())) {
+			sort = new Sort(SearchFields.Keyword.POST_ID, "DESC".equals(args.getOrderDir()));
+		}
+
+		return sort;
 	}
 	
 	private void filterByDateRange(SearchArgs args, StringBuffer criteria)

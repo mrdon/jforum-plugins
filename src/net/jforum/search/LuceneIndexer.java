@@ -66,7 +66,7 @@ import org.apache.lucene.store.RAMDirectory;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneIndexer.java,v 1.9 2007/08/07 13:30:50 rafaelsteil Exp $
+ * @version $Id: LuceneIndexer.java,v 1.10 2007/08/23 01:50:33 rafaelsteil Exp $
  */
 public class LuceneIndexer
 {
@@ -125,27 +125,29 @@ public class LuceneIndexer
 	
 	public void flushRAMDirectory()
 	{
-		IndexWriter writer = null;
-		
-		try {
-			writer = new IndexWriter(this.settings.directory(), this.settings.analyzer());
-			writer.addIndexes(new Directory[] { this.ramDirectory });
-			writer.optimize();
+		synchronized (MUTEX) {
+			IndexWriter writer = null;
 			
-			this.createRAMWriter();
-		}
-		catch (IOException e) {
-			throw new SearchException(e);
-		}
-		finally {
-			if (writer != null) {
-				try { 
-					writer.flush(); 
-					writer.close();
-					
-					this.notifyNewDocumentAdded();
+			try {
+				writer = new IndexWriter(this.settings.directory(), this.settings.analyzer());
+				writer.addIndexes(new Directory[] { this.ramDirectory });
+				writer.optimize();
+				
+				this.createRAMWriter();
+			}
+			catch (IOException e) {
+				throw new SearchException(e);
+			}
+			finally {
+				if (writer != null) {
+					try { 
+						writer.flush(); 
+						writer.close();
+						
+						this.notifyNewDocumentAdded();
+					}
+					catch (Exception e) {}
 				}
-				catch (Exception e) {}
 			}
 		}
 	}
