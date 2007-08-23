@@ -21,6 +21,11 @@ var SERVLET_EXTENSION  = "${extension}";
 
 <script type="text/javascript">
 <!--
+function newCaptcha()
+{
+	document.getElementById("captcha_img").src = "${contextPath}/jforum${extension}?module=captcha&action=regenerate&timestamp=" + new Date().getTime();
+}
+
 function validatePostForm(f)
 {
 	<#if setType?default(true)>
@@ -405,10 +410,12 @@ function smiliePopup()
 
 				<#if needCaptcha?default(false)>
 					<tr>
-						<td class="row1" valign="middle"><span class="gen"><b>${I18n.getMessage("User.captchaResponse")}:</b></span></td>
+						<td class="row1" valign="middle"><span class="gensmall"><b>${I18n.getMessage("User.captchaResponse")}:</b></span></td>
 						<td class="row2">
 							<input type="text" class="post" style="width: 100px; font-weight: bold;" maxlength="25" size="25" name="captcha_anwser" /> 
-							<img src="${JForumContext.encodeURL("/captcha/generate/${timestamp}")}" border="0" align="middle" alt="Captcha unavailable" />
+							<img src="${JForumContext.encodeURL("/captcha/generate/${timestamp}")}" border="0" align="middle" id="captcha_img" alt="Captcha unavailable" />
+							<br />
+							<span class="gensmall">${I18n.getMessage("User.hardCaptchaPart1")} <a href="#newCaptcha" onClick="newCaptcha()"><b>${I18n.getMessage("User.hardCaptchaPart2")}</b></a></span>
 						</td>
 					</tr>
 				</#if>

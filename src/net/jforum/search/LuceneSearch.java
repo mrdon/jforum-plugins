@@ -48,7 +48,6 @@ import java.util.ArrayList;
 
 import net.jforum.exceptions.SearchException;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.Term;
@@ -62,7 +61,7 @@ import org.apache.lucene.search.TermQuery;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.34 2007/08/23 14:27:48 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.35 2007/08/23 15:08:24 rafaelsteil Exp $
  */
 public class LuceneSearch implements NewDocumentAdded
 {

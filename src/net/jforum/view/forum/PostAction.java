@@ -105,7 +105,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.188 2007/08/22 12:28:39 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.189 2007/08/23 15:08:24 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -724,7 +724,7 @@ public class PostAction extends Command
 		int userId = SessionFacade.getUserSession().getUserId();
 		
 		this.context.put("attachmentsEnabled", SecurityRepository.canAccess(
-				SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(topic.getForumId())));
+			SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(topic.getForumId())));
 		
 		QuotaLimit ql = new AttachmentCommon(this.request, topic.getForumId()).getQuotaLimit(userId);
 		this.context.put("maxAttachmentsSize", new Long(ql != null ? ql.getSizeInBytes() : 1));
@@ -737,11 +737,19 @@ public class PostAction extends Command
 		this.context.put("quoteUser", u.getUsername());
 		this.context.put("setType", false);
 		this.context.put("htmlAllowed", SecurityRepository.canAccess(SecurityConstants.PERM_HTML_DISABLED, 
-				Integer.toString(topic.getForumId())));
+			Integer.toString(topic.getForumId())));
 		this.context.put("start", this.request.getParameter("start"));
 		this.context.put("user", DataAccessDriver.getInstance().newUserDAO().selectById(userId));
 		this.context.put("pageTitle", I18n.getMessage("PostForm.reply") + " " + topic.getTitle());
 		this.context.put("smilies", SmiliesRepository.getSmilies());
+		
+		boolean needCaptcha = SystemGlobals.getBoolValue(ConfigKeys.CAPTCHA_POSTS);
+		
+		if (needCaptcha) {
+			SessionFacade.getUserSession().createNewCaptcha();
+		}
+		
+		this.context.put("needCaptcha", needCaptcha);
 	}
 
 	public void editSave()

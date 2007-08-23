@@ -72,9 +72,8 @@ TopicModel.selectAllByForumByLimit = SELECT LIMIT ? ? t.*, p.user_id AS last_use
 TopicModel.selectRecentTopicsByLimit = SELECT LIMIT 0 ? t.*, p.user_id AS last_user_id, p.post_time, p.attach AS attach \
 	FROM jforum_topics t, jforum_posts p \
 	WHERE p.post_id = t.topic_last_post_id \
-	AND t.user_id = ? \
 	AND p.need_moderate = 0 \
-	ORDER BY t.topic_last_post_id DESC \
+	ORDER BY t.topic_last_post_id DESC
 	
 TopicModel.lastGeneratedTopicId = SELECT MAX(topic_id) from jforum_topics
 
@@ -116,3 +115,11 @@ AttachmentModel.lastGeneratedAttachmentId = SELECT MAX(attach_id) FROM jforum_at
 # ################
 ModerationLog.lastGeneratedModerationLogId = SELECT MAX(log_id) FROM jforum_moderation_log
 ModerationLog.selectAll = SELECT LIMIT ? ? l.*, u.username FROM jforum_moderation_log l, jforum_users u WHERE l.user_id = u.user_id ORDER BY log_id DESC 
+
+# ############
+# SearchModel
+# ############
+SearchModel.getPostsToIndexForLucene = SELECT LIMIT ? ? p.post_id, p.forum_id, p.enable_bbcode, p.enable_smilies, '' AS topic_title, p.topic_id, p.user_id, p.post_time, pt.post_text, pt.post_subject \
+	FROM jforum_posts p, jforum_posts_text pt \
+	WHERE p.post_id = pt.post_id \
+	:CONSTRAINTS: 
