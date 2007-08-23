@@ -62,7 +62,7 @@ import org.apache.lucene.search.TermQuery;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.33 2007/08/23 01:46:20 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.34 2007/08/23 14:27:48 rafaelsteil Exp $
  */
 public class LuceneSearch implements NewDocumentAdded
 {
@@ -196,20 +196,10 @@ public class LuceneSearch implements NewDocumentAdded
 				criteria.append(" +");
 			}
 			
-			String keyword = keywords[i];
-			
-			if (keyword.indexOf('[') > -1) {
-				keyword = StringUtils.replaceChars(keyword, '[', '\0');
-			}
-			
-			if (keyword.indexOf(']') > -1) {
-				keyword = StringUtils.replaceChars(keyword, ']', '\0');
-			}
-			
 			criteria.append('(')
 			.append(SearchFields.Indexed.CONTENTS)
 			.append(':')
-			.append(keyword)
+			.append(QueryParser.escape(keywords[i]))
 			.append(") ");
 		}
 	}
