@@ -68,7 +68,7 @@ import net.jforum.view.admin.common.ModerationCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.32 2007/07/28 14:17:10 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.33 2007/08/24 23:11:36 rafaelsteil Exp $
  */
 public class ForumAction extends AdminCommand 
 {
@@ -230,15 +230,15 @@ public class ForumAction extends AdminCommand
 	{
 		String ids[] = this.request.getParameterValues("forum_id");
 		
-		ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
-		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
+		ForumDAO forumDao = DataAccessDriver.getInstance().newForumDAO();
+		TopicDAO topicDao = DataAccessDriver.getInstance().newTopicDAO();
 		
 		if (ids != null) {
 			for (int i = 0; i < ids.length; i++) {
 				int forumId = Integer.parseInt(ids[i]);
 
-				tm.deleteByForum(forumId);
-				fm.delete(forumId);
+				topicDao.deleteByForum(forumId);
+				forumDao.delete(forumId);
 				
 				Forum f = new Forum(ForumRepository.getForum(forumId));
 				ForumRepository.removeForum(f);

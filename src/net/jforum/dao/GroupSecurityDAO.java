@@ -42,18 +42,24 @@
  */
 package net.jforum.dao;
 
+import net.jforum.entities.User;
 import net.jforum.security.Role;
 import net.jforum.security.RoleCollection;
 import net.jforum.security.RoleValueCollection;
-import net.jforum.entities.User;
 
 
 /**
  * @author Rafael Steil
- * @version $Id: GroupSecurityDAO.java,v 1.1 2006/08/24 01:06:54 rafaelsteil Exp $
+ * @version $Id: GroupSecurityDAO.java,v 1.2 2007/08/24 23:11:35 rafaelsteil Exp $
  */
 public interface GroupSecurityDAO 
 {
+	/**
+	 * Deletes all roles related to a forum
+	 * @param forumId
+	 */
+	public void deleteForumRoles(int forumId);
+	
 	/**
 	 * Delete all roles from a specific group
 	 * @param groupId ID of the group
@@ -81,10 +87,10 @@ public interface GroupSecurityDAO
 	public void addRole(int id, Role role, RoleValueCollection roleValues) ;
 
 	/**
-	 * @param id int
+	 * @param groupId int
 	 * @return RoleCollection
 	 */
-	public RoleCollection loadRoles(int id) ;
+	public RoleCollection loadRoles(int groupId) ;
 
     public RoleCollection loadRolesByUserGroups(User user) ;
 }

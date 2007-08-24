@@ -45,6 +45,7 @@ package net.jforum.context.web;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -54,8 +55,6 @@ import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
-
-import org.apache.commons.lang.StringUtils;
 
 import net.jforum.UrlPattern;
 import net.jforum.UrlPatternCollection;
@@ -70,9 +69,11 @@ import net.jforum.util.legacy.commons.fileupload.servlet.ServletRequestContext;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * @author Rafael Steil
- * @version $Id: WebRequestContext.java,v 1.7 2007/08/17 15:53:28 rafaelsteil Exp $
+ * @version $Id: WebRequestContext.java,v 1.8 2007/08/24 23:11:35 rafaelsteil Exp $
  */
 public class WebRequestContext extends HttpServletRequestWrapper implements RequestContext
 {
@@ -91,7 +92,7 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 		this.query = new HashMap();
 		boolean isMultipart = false;
 		
-		String requestType = (superRequest.getMethod()).toUpperCase();
+		String requestType = superRequest.getMethod().toUpperCase();
 		String contextPath = superRequest.getContextPath();
 		String requestUri = this.extractRequestUri(superRequest.getRequestURI(), contextPath);
 		String encoding = SystemGlobals.getValue(ConfigKeys.ENCODING);
@@ -161,7 +162,7 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 			
 			for (Enumeration e = superRequest.getParameterNames(); e.hasMoreElements(); ) {
 				String name = (String)e.nextElement();
-				this.query.put(name, new String(superRequest.getParameter(name).getBytes(containerEncoding), encoding));
+				this.addParameter(name, new String(superRequest.getParameter(name).getBytes(containerEncoding), encoding));
 			}
 		}
 	}
@@ -218,10 +219,13 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 				FileItem item = (FileItem)iter.next();
 			
 				if (item.isFormField()) {
-					this.query.put(item.getFieldName(), item.getString(encoding));
+					this.addParameter(item.getFieldName(), item.getString(encoding));
 				}
 				else {
 					if (item.getSize() > 0) {
+						// We really don't want to call addParameter(), as 
+						// there should not be possible to have multiple
+						// values for a InputStream data
 						this.query.put(item.getFieldName(), item);
 					}
 				}
@@ -230,6 +234,24 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 		catch (FileUploadException e) {
 			throw new MultipartHandlingException("Error while processing multipart content: " + e);
 		}
+	}
+	
+	/**
+	 * @see javax.servlet.ServletRequestWrapper#getParameterValues(java.lang.String)
+	 */
+	public String[] getParameterValues(String name) 
+	{
+		Object value = this.getObjectParameter(name);
+		
+		if (value instanceof String) {
+			return new String[] { (String)value };
+		}
+		
+		List l = (List)value;
+		
+		return l == null
+			? super.getParameterValues(name)
+			: (String[])l.toArray(new String[0]);
 	}
 	
 	private String extractRequestUri(String requestUri, String contextPath)
@@ -309,7 +331,24 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 	 */
 	public void addParameter(String name, Object value)
 	{
-		this.query.put(name, value);
+		if (!this.query.containsKey(name)) {
+			this.query.put(name, value);
+		}
+		else {
+			Object currentValue = this.getObjectParameter(name);
+			List l;
+			
+			if (!(currentValue instanceof List)) {
+				l = new ArrayList();
+				l.add(currentValue);
+			}
+			else {
+				l = (List)currentValue;
+			}
+			
+			l.add(value);
+			this.query.put(name, l);
+		}
 	}
 	
 	/**

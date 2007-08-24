@@ -54,7 +54,7 @@ UserModel.selectAll = SELECT user_email, user_id, user_posts, user_regdate, user
 	user_website, user_viewemail FROM jforum_users ORDER BY user_id
 
 UserModel.selectAllByLimit = SELECT user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail \
-	FROM jforum_users ORDER BY user_id LIMIT ?, ?
+	FROM jforum_users ORDER BY username LIMIT ?, ?
 
 UserModel.selectAllByGroup = SELECT user_email, u.user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, \
 	user_website, user_viewemail \
@@ -429,11 +429,18 @@ TreeGroup.selectGroup = SELECT group_id, group_name FROM jforum_groups WHERE par
 # PermissionControl
 # ################
 PermissionControl.deleteAllRoleValues = DELETE FROM jforum_role_values WHERE role_id IN (SELECT role_id FROM jforum_roles WHERE group_id = ?)
-
 PermissionControl.deleteAllGroupRoles = DELETE FROM jforum_roles WHERE group_id = ?
 PermissionControl.addGroupRole = INSERT INTO jforum_roles (group_id, name) VALUES (?, ?)
 PermissionControl.addRoleValues = INSERT INTO jforum_role_values (role_id, role_value) VALUES (?, ?)
 PermissionControl.getRoleIdByName = SELECT role_id FROM jforum_roles WHERE name = ? AND group_id = ?
+
+PermissionControl.selectForumRoles = SELECT DISTINCT r.role_id FROM jforum_roles r, jforum_role_values rv \
+	WHERE r.role_id = rv.role_id \
+	AND r.name in ('perm_forum', 'perm_anonymous_post', 'perm_reply_only', 'perm_read_only_forums', 'perm_reply_without_moderation', 'perm_html_disabled', 'perm_attachments_enabled', 'perm_moderation_forums') \
+	AND rv.role_value = ?
+
+PermissionControl.deleteRoles = DELETE FROM jforum_roles WHERE role_id IN (:IDS:)
+PermissionControl.deleteRoleValues = DELETE FROM jforum_role_values WHERE role_id IN (:IDS:)
 
 PermissionControl.loadGroupRoles = SELECT r.name, '0' AS role_value FROM jforum_roles r WHERE r.group_id IN (#IN#) \
 	UNION \

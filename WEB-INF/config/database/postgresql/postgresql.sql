@@ -17,7 +17,7 @@ UserModel.selectAllByGroup = SELECT user_email, u.user_id, user_posts, user_regd
 	FROM jforum_users u, jforum_user_groups ug \
 	WHERE u.user_id = ug.user_id \
 	AND ug.group_id = ? \
-	ORDER BY user_id \
+	ORDER BY username \
 	OFFSET ? LIMIT ?
 
 # #############

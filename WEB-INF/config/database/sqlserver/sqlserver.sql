@@ -40,7 +40,7 @@ UserModel.selectById = SELECT COUNT(pm.privmsgs_to_userid) AS private_messages, 
 UserModel.lastUserRegistered = SELECT TOP 1 user_id, username FROM jforum_users ORDER BY user_regdate DESC
 UserModel.lastGeneratedUserId = SELECT IDENT_CURRENT('jforum_users') AS user_id
 UserModel.selectAllByLimit = SELECT * \
-	FROM ( SELECT ROW_NUMBER() OVER (ORDER BY user_id ASC) AS rownumber, \
+	FROM ( SELECT ROW_NUMBER() OVER (ORDER BY username ASC) AS rownumber, \
 	user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, user_from, user_website, user_viewemail \
 	FROM jforum_users ) AS tmp \
 	WHERE rownumber BETWEEN ? and ?

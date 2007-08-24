@@ -56,6 +56,7 @@ import java.util.List;
 import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.GroupSecurityDAO;
 import net.jforum.dao.TopicDAO;
 import net.jforum.entities.Forum;
 import net.jforum.entities.ForumStats;
@@ -73,7 +74,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * @author Vanessa Sabino
  * @author socialnetwork@gmail.com, adding "watch forum" methods.
  * 
- * @version $Id: GenericForumDAO.java,v 1.32 2007/08/01 22:09:02 rafaelsteil Exp $
+ * @version $Id: GenericForumDAO.java,v 1.33 2007/08/24 23:11:35 rafaelsteil Exp $
  */
 public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 {
@@ -232,6 +233,9 @@ public class GenericForumDAO extends AutoKeys implements net.jforum.dao.ForumDAO
 			p.setInt(1, forumId);
 
 			p.executeUpdate();
+			
+			GroupSecurityDAO groupSecurity = DataAccessDriver.getInstance().newGroupSecurityDAO();
+			groupSecurity.deleteForumRoles(forumId);
 		}
 		catch (SQLException e) {
 			throw new DatabaseException(e);

@@ -49,6 +49,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.jforum.JForumExecutionContext;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.GroupSecurityDAO;
 import net.jforum.entities.Group;
 import net.jforum.exceptions.DatabaseException;
 import net.jforum.util.DbUtils;
@@ -56,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericGroupDAO.java,v 1.7 2006/08/23 02:13:43 rafaelsteil Exp $
+ * @version $Id: GenericGroupDAO.java,v 1.8 2007/08/24 23:11:35 rafaelsteil Exp $
  */
 public class GenericGroupDAO implements net.jforum.dao.GroupDAO
 {
@@ -128,6 +130,9 @@ public class GenericGroupDAO implements net.jforum.dao.GroupDAO
 			p.setInt(1, groupId);
 
 			p.executeUpdate();
+			
+			GroupSecurityDAO securityDao = DataAccessDriver.getInstance().newGroupSecurityDAO();
+			securityDao.deleteAllRoles(groupId);
 		}
 		catch (SQLException e) {
 			throw new DatabaseException(e);
