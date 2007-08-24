@@ -86,7 +86,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.67 2007/08/23 13:47:52 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.68 2007/08/24 02:25:06 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -717,12 +717,12 @@ public class InstallAction extends Command
 			"jforum_topics", "jforum_topics_seq", "jforum_topics_watch", "jforum_user_groups",
 			"jforum_users", "jforum_users_seq", "jforum_vote_desc", "jforum_vote_desc_seq",
 			"jforum_vote_results", "jforum_vote_voters", "jforum_words", "jforum_words_seq",
-			"jforum_karma_seq", "jforum_karma", "jforum_bookmarks_seq", "jforum_bookmarks", 
-			"jforum_quota_limit", "jforum_quota_limit_seq", "jforum_extension_groups_seq", 
-			"jforum_extension_groups", "jforum_extensions_seq", "jforum_extensions", 
-			"jforum_attach_seq", "jforum_attach", "jforum_attach_desc_seq", "jforum_attach_desc",
-			"jforum_attach_quota_seq", "jforum_attach_quota", "jforum_banner", "jforum_banner_seq",
-			"jforum_forums_watch", "jforum_moderation_log_seq", "jforum_moderation_log" };
+			"jforum_karma", "jforum_karma_seq", "jforum_bookmarks", "jforum_bookmarks_seq", 
+			"jforum_quota_limit", "jforum_quota_limit_seq", "jforum_extension_groups", 
+			"jforum_extension_groups_seq", "jforum_extensions", "jforum_extensions_seq", 
+			"jforum_attach", "jforum_attach_seq", "jforum_attach_desc", "jforum_attach_desc_seq",
+			"jforum_attach_quota", "jforum_attach_quota_seq", "jforum_banner", "jforum_banner_seq",
+			"jforum_forums_watch", "jforum_moderation_log", "jforum_moderation_log_seq" };
 
 		for (int i = 0; i < tables.length; i++) {
 

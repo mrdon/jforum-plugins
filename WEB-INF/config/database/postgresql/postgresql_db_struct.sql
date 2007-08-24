@@ -121,7 +121,7 @@ CREATE TABLE jforum_posts (
   forum_id INTEGER NOT NULL DEFAULT 0,
   user_id INTEGER NOT NULL DEFAULT 0,
   post_time timestamp DEFAULT NULL,
-  poster_ip VARCHAR(15) DEFAULT NULL,
+  poster_ip VARCHAR(20) DEFAULT NULL,
   enable_bbcode INTEGER NOT NULL DEFAULT 1,
   enable_html INTEGER NOT NULL DEFAULT 1,
   enable_smilies INTEGER NOT NULL DEFAULT 1,
@@ -245,13 +245,15 @@ CREATE TABLE jforum_topics (
   topic_first_post_id INTEGER DEFAULT 0,
   topic_last_post_id INTEGER NOT NULL DEFAULT 0,
   moderated INTEGER DEFAULT 0,
+  topic_moved_id INTEGER DEFAULT 0,
   PRIMARY KEY  (topic_id)
 );
 CREATE INDEX idx_topics_forum ON jforum_topics(forum_id);
 CREATE INDEX idx_topics_user ON jforum_topics(user_id);
 CREATE INDEX idx_topics_fp ON jforum_topics(topic_first_post_id);
 CREATE INDEX idx_topics_lp ON jforum_topics(topic_last_post_id);
-
+CREATE INDEX idx_topics_moved ON jforum_topics(topic_moved_id);
+		
 --
 -- Table structure for table 'jforum_topics_watch'
 --

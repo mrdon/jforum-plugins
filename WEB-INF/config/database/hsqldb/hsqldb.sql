@@ -4,7 +4,7 @@
 UserModel.lastUserRegistered = SELECT TOP 1 user_id, username FROM jforum_users ORDER BY user_regdate DESC 
 
 UserModel.selectAllByLimit = SELECT LIMIT ? ? user_email, user_id, user_posts, user_regdate, username, deleted, user_karma, \
-	user_from, user_website, user_viewemail FROM jforum_users ORDER BY user_id 
+	user_from, user_website, user_viewemail FROM jforum_users ORDER BY user_id ASC
 
 UserModel.lastGeneratedUserId = SELECT MAX(user_id) from jforum_users
 

@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>default/recent_thread.htm</string>
+	<string>default/pm_read_message.htm</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -35,79 +35,105 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>default/forum_show.htm</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>134</integer>
-				<key>line</key>
-				<integer>18</integer>
-			</dict>
-			<key>columnSelection</key>
-			<false/>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>6</integer>
-				<key>line</key>
-				<integer>18</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>134</integer>
-				<key>line</key>
-				<integer>18</integer>
-			</dict>
-		</dict>
 		<key>default/hottest_thread.htm</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>122</integer>
-				<key>line</key>
-				<integer>14</integer>
-			</dict>
-			<key>columnSelection</key>
-			<false/>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>129</integer>
-				<key>line</key>
-				<integer>14</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>122</integer>
-				<key>line</key>
-				<integer>14</integer>
-			</dict>
-		</dict>
-		<key>default/recent_thread.htm</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>79</integer>
+				<integer>4</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>23</integer>
+			<integer>0</integer>
+		</dict>
+		<key>default/pm_read_message.htm</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>32</integer>
+				<key>line</key>
+				<integer>94</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>33</integer>
+		</dict>
+		<key>default/post_attachments_tab.htm</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>22</integer>
+				<key>line</key>
+				<integer>33</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>default/post_form.htm</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>60</integer>
+				<key>line</key>
+				<integer>412</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>376</integer>
+		</dict>
+		<key>default/post_show.htm</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>363</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>302</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>32</integer>
+				<key>line</key>
+				<integer>363</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>363</integer>
+			</dict>
+		</dict>
+		<key>default/user_new.htm</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>6</integer>
+				<key>line</key>
+				<integer>93</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>45</integer>
 		</dict>
 		<key>default/user_topics_show.htm</key>
 		<dict>
@@ -123,12 +149,30 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
+		<key>macros/presentation.ftl</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>6</integer>
+				<key>line</key>
+				<integer>16</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
 		<string>default/hottest_thread.htm</string>
-		<string>default/recent_thread.htm</string>
-		<string>default/forum_show.htm</string>
+		<string>macros/presentation.ftl</string>
+		<string>default/post_show.htm</string>
+		<string>default/pm_read_message.htm</string>
+		<string>default/post_attachments_tab.htm</string>
+		<string>default/post_form.htm</string>
+		<string>default/user_new.htm</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>

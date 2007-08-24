@@ -298,7 +298,7 @@ ForumModel.removeSubscriptionByForum = DELETE FROM jforum_forums_watch WHERE for
 ForumModel.notifyUsers = SELECT u.user_id, u.username, u.user_lang, u.user_email, \
 	u.user_notify_always, u.user_notify_text \
 	FROM jforum_forums_watch fw, jforum_users u \
-	WHERE (fw.user_id = u.user_id OR u.user_notify_always = 1) \
+	WHERE fw.user_id = u.user_id \
 	AND fw.forum_id = ? \
 	AND u.user_id NOT IN ( ?, ? )
 	AND u.user_notify_always IN (0, 1)
