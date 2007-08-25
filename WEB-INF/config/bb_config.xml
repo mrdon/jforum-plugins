@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- $Id: bb_config.xml,v 1.32 2007/08/19 04:50:37 andowson Exp $ -->
+<!-- $Id: bb_config.xml,v 1.33 2007/08/25 00:49:06 rafaelsteil Exp $ -->
 <bbConfig>
 	<!-- CODE -->
 	<match name="code">
@@ -207,7 +207,7 @@
 		<regex>(^|[\n ]\()(ftp\.[^ \"\t\n\r&lt;\)\[]*)</regex>
 		<replace>
 		<![CDATA[
-		$1<a href="ftp://$2" target="_blank" rel="nofollow">$2</a>
+		$1<a class="snap_shots" href="ftp://$2" target="_blank" rel="nofollow">$2</a>
 		]]>
 		</replace>
 	</match>
@@ -216,7 +216,7 @@
 		<regex>(^|[\n ])([a-z0-9&amp;\-_.]+?)@([\w\-]+\.([\w\-\.]+\.)*[\w]+)</regex>
 		<replace>
 		<![CDATA[
-		$1<a href="mailto:$2@$3">$2@$3</a>
+		$1<a class="snap_shots" href="mailto:$2@$3">$2@$3</a>
 		]]>
 		</replace>
 	</match>

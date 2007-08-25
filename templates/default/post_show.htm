@@ -2,6 +2,7 @@
 <#import "../macros/pagination.ftl" as pagination/>
 <#import "../macros/presentation.ftl" as presentation/>
 
+<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/jquery.js?${startupTime}"></script>
 <script type="text/javascript" src="${contextPath}/templates/${templateName}/js/post_show.js?${startupTime}"></script>
 <script type="text/javascript" src="${contextPath}/templates/${templateName}/js/post.js?${startupTime}"></script>
 <script type="text/javascript" src="${contextPath}/templates/${templateName}/js/pagination.js?${startupTime}"></script>
@@ -362,4 +363,7 @@
 </table>
 <a name="quick"></a>
 <#include "highligther_js.htm"/>
+
+<script type="text/javascript">limitURLSize();</script>
+
 <#include "bottom.htm"/>

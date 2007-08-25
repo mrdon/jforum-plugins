@@ -354,8 +354,6 @@ function checkForm() {
       return false;
    } else {
       bbstyle(-1);
-      //formObj.preview.disabled = true;
-      //formObj.submit.disabled = true;
       return true;
    }
 }
@@ -375,4 +373,15 @@ function activateTab(name, currentLi)
 
 	$("#" + name).show();
 	$(currentLi).parent().addClass("current");
+}
+
+function limitURLSize()
+{
+	$(".snap_shots").each(function () {
+		var value = $(this).text();
+		
+		if (value.length > 80) {
+			$(this).text(value.substring(0, 50) + "..." + value.substring(value.length - 30));
+		}
+	});
 }
