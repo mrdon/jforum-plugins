@@ -2,7 +2,10 @@
 <#import "../macros/pagination.ftl" as pagination/>
 <#import "../macros/presentation.ftl" as presentation/>
 
+<#assign canEditSomeMessage = false/>
+
 <script type="text/javascript" src="${contextPath}/templates/${templateName}/js/jquery.js?${startupTime}"></script>
+<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/jquery.jeditable.pack.js?${startupTime}"></script>
 <script type="text/javascript" src="${contextPath}/templates/${templateName}/js/post_show.js?${startupTime}"></script>
 <script type="text/javascript" src="${contextPath}/templates/${templateName}/js/post.js?${startupTime}"></script>
 <script type="text/javascript" src="${contextPath}/templates/${templateName}/js/pagination.js?${startupTime}"></script>
@@ -127,6 +130,7 @@
 					</#if>
 	
 					<#assign user = users.get(post.userId)/>
+					<#assign canEditCurrentMessage = (post.canEdit && topic.status != STATUS_LOCKED) || moderatorCanEdit/>
 					<tr>
 						<td colspan="2">
 							<#include "post_show_action_buttons_inc.htm"/>
@@ -150,7 +154,14 @@
 		
 						<!-- Message -->
 						<td class="${rowColor}" valign="top" id="post_text_${post.id}">
-							<span class="postbody">${post.text}</span>
+							<span class="postbody">
+								<#if canEditCurrentMessage>
+									<#assign canEditSomeMessage = true/>
+									<div class="edit_area" id="${post.id}">${post.text}</div>
+								<#else>
+									${post.text}
+								</#if>
+							</span>
 
 							<!-- Attachments -->
 							<#if post.hasAttachments() && (canDownloadAttachments || attachmentsEnabled)>
@@ -364,6 +375,23 @@
 <a name="quick"></a>
 <#include "highligther_js.htm"/>
 
-<script type="text/javascript">limitURLSize();</script>
+<script type="text/javascript">
+$(document).ready(function() {
+	limitURLSize();
+	<#if moderatorCanEdit || canEditSomeMessage>
+		$(".edit_area").editable("${contextPath}/jforum${extension}?module=ajax&action=savePost", {
+			submit: '${I18n.getMessage("Update")}',
+			cancel: '${I18n.getMessage("cancel")}',
+			type: 'textarea',
+			tooltip: '${I18n.getMessage("PostShow.doubleClickEdit")}',
+			rows: 10,
+			width: '100%',
+			event: 'dblclick',
+			indicator: "<img src='${contextPath}/templates/${templateName}/images/indicator.gif'>",
+			postload: '${contextPath}/jforum${extension}?module=ajax&action=loadPostContents'
+		});
+	</#if>
+});
+</script>
 
 <#include "bottom.htm"/>

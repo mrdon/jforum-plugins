@@ -105,7 +105,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.189 2007/08/23 15:08:24 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.190 2007/08/25 19:05:02 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -162,12 +162,12 @@ public class PostAction extends Command
 
 		PermissionControl pc = SecurityRepository.get(us.getUserId());
 
-		boolean canEdit = false;
+		boolean moderatorCanEdit = false;
 		if (pc.canAccess(SecurityConstants.PERM_MODERATION_POST_EDIT)) {
-			canEdit = true;
+			moderatorCanEdit = true;
 		}
 
-		List helperList = PostCommon.topicPosts(postDao, canEdit, us.getUserId(), topic.getId(), start, count);
+		List helperList = PostCommon.topicPosts(postDao, moderatorCanEdit, us.getUserId(), topic.getId(), start, count);
 		
 		// Ugly assumption:
 		// Is moderation pending for the topic?
@@ -210,15 +210,15 @@ public class PostAction extends Command
 		
 		this.setTemplateName(TemplateKeys.POSTS_LIST);
 		this.context.put("attachmentsEnabled", pc.canAccess(
-				SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(topic.getForumId())));
+			SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(topic.getForumId())));
 		this.context.put("canDownloadAttachments", pc.canAccess(
-				SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD));
+			SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD));
 		this.context.put("thumbShowBox", SystemGlobals.getBoolValue(ConfigKeys.ATTACHMENTS_IMAGES_THUMB_BOX_SHOW));
 		this.context.put("am", new AttachmentCommon(this.request, topic.getForumId()));
 		this.context.put("karmaVotes", userVotes);
 		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
 		this.context.put("canRemove", pc.canAccess(SecurityConstants.PERM_MODERATION_POST_REMOVE));
-		this.context.put("canEdit", canEdit);
+		this.context.put("moderatorCanEdit", moderatorCanEdit);
 		this.context.put("allCategories", ForumCommon.getAllCategoriesAndForums(false));
 		this.context.put("topic", topic);
 		this.context.put("poll", poll);
@@ -578,7 +578,6 @@ public class PostAction extends Command
 	private void edit(boolean preview, Post p)
 	{
 		int userId = SessionFacade.getUserSession().getUserId();
-		int aId = SystemGlobals.getIntValue(ConfigKeys.ANONYMOUS_USER_ID);
 
 		if (!preview) {
 			PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
@@ -592,9 +591,13 @@ public class PostAction extends Command
 		}
 
 		boolean isModerator = SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_EDIT);
-		boolean canAccess = (isModerator || p.getUserId() == userId);
+		boolean canEdit = SessionFacade.isLogged() && (isModerator || p.getUserId() == userId);
 
-		if ((userId != aId) && canAccess) {
+		if (!canEdit) {
+			this.setTemplateName(TemplateKeys.POSTS_EDIT_CANNOTEDIT);
+			this.context.put("message", I18n.getMessage("CannotEditPost"));
+		}
+		else {
 			Topic topic = TopicRepository.getTopic(new Topic(p.getTopicId()));
 				
 			if (topic == null) {
@@ -654,10 +657,6 @@ public class PostAction extends Command
 					SecurityRepository.canAccess(SecurityConstants.PERM_CREATE_STICKY_ANNOUNCEMENT_TOPICS));
 			this.context.put("canCreatePolls",
 					SecurityRepository.canAccess(SecurityConstants.PERM_CREATE_POLL));
-		}
-		else {
-			this.setTemplateName(TemplateKeys.POSTS_EDIT_CANNOTEDIT);
-			this.context.put("message", I18n.getMessage("CannotEditPost"));
 		}
 
 		UserDAO udao = DataAccessDriver.getInstance().newUserDAO();
@@ -758,42 +757,47 @@ public class PostAction extends Command
 		PollDAO pollDao = DataAccessDriver.getInstance().newPollDAO();
 		TopicDAO topicDao = DataAccessDriver.getInstance().newTopicDAO();
 		
+		Post post = postDao.selectById(this.request.getIntParameter("post_id"));
+		
+		if (!PostCommon.canEditPost(post)) {
+			this.cannotEdit();
+			return;
+		}
+		
 		boolean isModerator = SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_EDIT);
-
-		Post p = postDao.selectById(this.request.getIntParameter("post_id"));
 		
-		String originalMessage = p.getText();
+		String originalMessage = post.getText();
 		
-		p = PostCommon.fillPostFromRequest(p, true);
+		post = PostCommon.fillPostFromRequest(post, true);
 
 		// The user wants to preview the message before posting it?
 		if ("1".equals(this.request.getParameter("preview"))) {
 			this.context.put("preview", true);
 
-			Post postPreview = new Post(p);
+			Post postPreview = new Post(post);
 			this.context.put("postPreview", PostCommon.preparePostForDisplay(postPreview));
 
-			this.edit(true, p);
+			this.edit(true, post);
 		}
 		else {
-			AttachmentCommon attachments = new AttachmentCommon(this.request, p.getForumId());
+			AttachmentCommon attachments = new AttachmentCommon(this.request, post.getForumId());
 			
 			try {
 				attachments.preProcess();
 			}
 			catch (AttachmentException e) {
 				JForumExecutionContext.enableRollback();
-				p.setText(this.request.getParameter("message"));
+				post.setText(this.request.getParameter("message"));
 				this.context.put("errorMessage", e.getMessage());
-				this.context.put("post", p);
-				this.edit(false, p);
+				this.context.put("post", post);
+				this.edit(false, post);
 				return;
 			}
 			
-			Topic t = TopicRepository.getTopic(new Topic(p.getTopicId()));
+			Topic t = TopicRepository.getTopic(new Topic(post.getTopicId()));
 			
 			if (t == null) {
-				t = topicDao.selectById(p.getTopicId());
+				t = topicDao.selectById(post.getTopicId());
 			}
 
 			if (!TopicsCommon.isTopicAccessible(t.getForumId())) {
@@ -806,15 +810,15 @@ public class PostAction extends Command
 				return;
 			}
 
-			postDao.update(p);
+			postDao.update(post);
 			
 			// Attachments
-			attachments.editAttachments(p.getId(), p.getForumId());
-			attachments.insertAttachments(p);
+			attachments.editAttachments(post.getId(), post.getForumId());
+			attachments.insertAttachments(post);
 
 			// The first message (the one which originated the topic) was changed
-			if (t.getFirstPostId() == p.getId()) {
-				t.setTitle(p.getSubject());
+			if (t.getFirstPostId() == post.getId()) {
+				t.setTitle(post.getSubject());
 				
 				int newType = this.request.getIntParameter("topic_type");
 				boolean changeType = SecurityRepository.canAccess(SecurityConstants.PERM_CREATE_STICKY_ANNOUNCEMENT_TOPICS)
@@ -831,7 +835,7 @@ public class PostAction extends Command
 					// They added a poll
 					poll.setTopicId(t.getId());
 					
-					if (!this.ensurePollMinimumOptions(p, poll)) {
+					if (!this.ensurePollMinimumOptions(post, poll)) {
 						return;
 					}
 					
@@ -840,7 +844,7 @@ public class PostAction extends Command
 
 				} 
 				else if (poll != null) {
-					if (!this.ensurePollMinimumOptions(p, poll)) {
+					if (!this.ensurePollMinimumOptions(post, poll)) {
 						return;
 					}
 					
@@ -871,19 +875,19 @@ public class PostAction extends Command
 				}
 			}
 			
-			SearchFacade.update(p);
+			SearchFacade.update(post);
 			
 			if (SystemGlobals.getBoolValue(ConfigKeys.MODERATION_LOGGING_ENABLED)
-					&& isModerator && p.getUserId() != SessionFacade.getUserSession().getUserId()) {
+					&& isModerator && post.getUserId() != SessionFacade.getUserSession().getUserId()) {
 				ModerationHelper helper = new ModerationHelper();
 				this.request.addParameter("log_original_message", originalMessage);
 				ModerationLog log = helper.buildModerationLogFromRequest();
-				log.getPosterUser().setId(p.getUserId());
+				log.getPosterUser().setId(post.getUserId());
 				helper.saveModerationLog(log);
 			}
 
 			if (this.request.getParameter("notify") == null) {
-				topicDao.removeSubscription(p.getTopicId(), SessionFacade.getUserSession().getUserId());
+				topicDao.removeSubscription(post.getTopicId(), SessionFacade.getUserSession().getUserId());
 			}
 
 			String path = this.request.getContextPath() + "/posts/list/";
@@ -893,11 +897,11 @@ public class PostAction extends Command
 				path += start + "/";
 			}
 
-			path += p.getTopicId() + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#" + p.getId();
+			path += post.getTopicId() + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION) + "#" + post.getId();
 			JForumExecutionContext.setRedirect(path);
 			
 			if (SystemGlobals.getBoolValue(ConfigKeys.POSTS_CACHE_ENABLED)) {
-				PostRepository.update(p.getTopicId(), PostCommon.preparePostForDisplay(p));
+				PostRepository.update(post.getTopicId(), PostCommon.preparePostForDisplay(post));
 			}
 		}
 	}
@@ -1470,7 +1474,14 @@ public class PostAction extends Command
 		}
 	}
 	
-	private void topicLocked() {
+	private void cannotEdit()
+	{
+		this.setTemplateName(TemplateKeys.POSTS_EDIT_CANNOTEDIT);
+		this.context.put("message", I18n.getMessage("CannotEditPost"));
+	}
+	
+	private void topicLocked() 
+	{
 		this.setTemplateName(TemplateKeys.POSTS_TOPIC_LOCKED);
 		this.context.put("message", I18n.getMessage("PostShow.topicLocked"));
 	}
@@ -1489,7 +1500,7 @@ public class PostAction extends Command
 			}
 			else {
 				JForumExecutionContext.setRedirect(this.request.getContextPath() + "/forums/show/" + forumId
-						+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
+					+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 			}
 
 			return true;

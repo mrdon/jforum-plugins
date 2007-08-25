@@ -68,24 +68,10 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.47 2007/08/20 15:54:00 andowson Exp $
+ * @version $Id: PostCommon.java,v 1.48 2007/08/25 19:05:04 rafaelsteil Exp $
  */
 public class PostCommon
 {
-	private static PostCommon instance = new PostCommon();
-	
-	/**
-	 * Gets the instance.
-	 * This method only exists to situations where an instance is 
-	 * needed in the template context, so we don't  need to 
-	 * create a new instance every time.
-	 * @return PostCommon
-	 */
-	public static PostCommon getInstance()
-	{
-		return instance;
-	}
-	
 	public static Post preparePostForDisplay(Post p)
 	{
 		if (p.getText() == null) {
@@ -150,12 +136,15 @@ public class PostCommon
 				while (matcher.find()) {
 					StringBuffer lang = null;
 					StringBuffer contents = null;
+					
 					if ("code".equals(bb.getTagName())) {
 					    contents = new StringBuffer(matcher.group(1));
-					} else {
+					} 
+					else {
 						lang = new StringBuffer(matcher.group(1));
 						contents = new StringBuffer(matcher.group(2));						
-					}					
+					}
+					
 					ViewCommon.replaceAll(contents, "<br /> ", "\n");
 
 					// Do not allow other bb tags inside "code"
@@ -268,6 +257,13 @@ public class PostCommon
 		}
 
 		return p;
+	}
+	
+	public static boolean canEditPost(Post post)
+	{
+		return SessionFacade.isLogged()
+			&& (post.getUserId() == SessionFacade.getUserSession().getUserId()
+			|| SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_EDIT));
 	}
 
 	public static List topicPosts(PostDAO dao, boolean canEdit, int userId, int topicId, int start, int count)

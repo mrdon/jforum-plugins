@@ -15,7 +15,7 @@
 			<a href="${JForumContext.encodeURL("/posts/quote/${start}/${post.id}")}" rel="nofollow" class="icon_quote"><img src="${contextPath}/images/transp.gif" alt="" /></a>
 		</#if>
 
-		<#if ((post.canEdit && topic.status != STATUS_LOCKED) || canEdit)>
+		<#if (canEditCurrentMessage)>
 			<a href="${JForumContext.encodeURL("/jforum${extension}?module=${moduleName}&amp;action=edit&amp;post_id=${post.id}&amp;start=${start}","")}" rel="nofollow" class="icon_edit"><img src="${contextPath}/images/transp.gif" alt="" /></a>  
 		</#if>
 

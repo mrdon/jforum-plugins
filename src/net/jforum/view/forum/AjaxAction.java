@@ -48,8 +48,11 @@ import java.util.Date;
 import java.util.List;
 
 import net.jforum.Command;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.PostDAO;
 import net.jforum.entities.Post;
 import net.jforum.entities.User;
+import net.jforum.repository.PostRepository;
 import net.jforum.search.LuceneManager;
 import net.jforum.search.SearchFacade;
 import net.jforum.util.SafeHtml;
@@ -65,7 +68,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: AjaxAction.java,v 1.2 2007/08/16 01:39:05 rafaelsteil Exp $
+ * @version $Id: AjaxAction.java,v 1.3 2007/08/25 19:05:02 rafaelsteil Exp $
  */
 public class AjaxAction extends Command
 {
@@ -164,6 +167,38 @@ public class AjaxAction extends Command
 		
 		LuceneManager manager = (LuceneManager)SearchFacade.manager();
 		this.context.put("isIndexed", manager.luceneSearch().isPostIndexed(postId));
+	}
+	
+	public void loadPostContents()
+	{
+		int postId = this.request.getIntParameter("id");
+		PostDAO dao = DataAccessDriver.getInstance().newPostDAO();
+		Post post = dao.selectById(postId);
+		this.setTemplateName(TemplateKeys.AJAX_LOAD_POST);
+		this.context.put("post", post);
+	}
+	
+	public void savePost()
+	{
+		PostDAO postDao = DataAccessDriver.getInstance().newPostDAO();
+		Post post = postDao.selectById(this.request.getIntParameter("id"));
+		
+		if (!PostCommon.canEditPost(post)) {
+			post = PostCommon.preparePostForDisplay(post);
+		}
+		else {
+			post.setText(this.request.getParameter("value"));
+			postDao.update(post);
+			SearchFacade.update(post);
+			post = PostCommon.preparePostForDisplay(post);
+		}
+		
+		if (SystemGlobals.getBoolValue(ConfigKeys.POSTS_CACHE_ENABLED)) {
+			PostRepository.update(post.getTopicId(), PostCommon.preparePostForDisplay(post));
+		}
+		
+		this.setTemplateName(TemplateKeys.AJAX_LOAD_POST);
+		this.context.put("post", post);
 	}
 	
 	public void previewPost()

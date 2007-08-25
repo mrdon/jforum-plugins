@@ -73,7 +73,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.74 2007/08/20 19:35:52 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.75 2007/08/25 19:05:02 rafaelsteil Exp $
  */
 public class ForumAction extends Command
 {
@@ -194,7 +194,7 @@ public class ForumAction extends Command
 		if (canApproveMessages) {
 			ModerationDAO mdao = DataAccessDriver.getInstance().newModerationDAO();
 			topicsToApprove = mdao.topicsByForum(forumId);
-			this.context.put("postFormatter", PostCommon.getInstance());
+			this.context.put("postFormatter", new PostCommon());
 		}
 
 		this.context.put("topicsToApprove", topicsToApprove);
