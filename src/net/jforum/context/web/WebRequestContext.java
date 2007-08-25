@@ -73,7 +73,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Rafael Steil
- * @version $Id: WebRequestContext.java,v 1.8 2007/08/24 23:11:35 rafaelsteil Exp $
+ * @version $Id: WebRequestContext.java,v 1.9 2007/08/25 16:05:02 rafaelsteil Exp $
  */
 public class WebRequestContext extends HttpServletRequestWrapper implements RequestContext
 {
@@ -162,7 +162,17 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 			
 			for (Enumeration e = superRequest.getParameterNames(); e.hasMoreElements(); ) {
 				String name = (String)e.nextElement();
-				this.addParameter(name, new String(superRequest.getParameter(name).getBytes(containerEncoding), encoding));
+				
+				String[] values = superRequest.getParameterValues(name);
+				
+				if (values == null || values.length == 0) {
+					this.addParameter(name, new String(superRequest.getParameter(name).getBytes(containerEncoding), encoding));
+				}
+				else {
+					for (int i = 0; i < values.length; i++) {
+						this.addParameter(name, values[i]);
+					}
+				}
 			}
 		}
 	}
