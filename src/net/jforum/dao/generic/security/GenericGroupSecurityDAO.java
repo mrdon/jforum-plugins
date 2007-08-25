@@ -68,7 +68,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericGroupSecurityDAO.java,v 1.15 2007/08/24 23:11:36 rafaelsteil Exp $
+ * @version $Id: GenericGroupSecurityDAO.java,v 1.16 2007/08/25 00:11:29 rafaelsteil Exp $
  */
 public class GenericGroupSecurityDAO extends AutoKeys implements GroupSecurityDAO
 {
@@ -82,7 +82,7 @@ public class GenericGroupSecurityDAO extends AutoKeys implements GroupSecurityDA
 		try {
 			p = JForumExecutionContext.getConnection().prepareStatement(
 				SystemGlobals.getSql("PermissionControl.selectForumRoles"));
-			p.setInt(1, forumId);
+			p.setString(1, String.valueOf(forumId));
 			
 			rs = p.executeQuery();
 			
@@ -118,17 +118,10 @@ public class GenericGroupSecurityDAO extends AutoKeys implements GroupSecurityDA
 			
 			// Role values
 			String sql = SystemGlobals.getSql("PermissionControl.deleteRoleValues");
-			sql = StringUtils.replace(sql, ":IDS:", ids.toString());
+			sql = StringUtils.replace(sql, "#IDS#", ids.toString());
 			
 			p = JForumExecutionContext.getConnection().prepareStatement(sql);
-			p.executeUpdate();
-			DbUtils.close(p);
-			
-			// Roles
-			sql = SystemGlobals.getSql("PermissionControl.deleteRoles");
-			sql = StringUtils.replace(sql, ":IDS:", ids.toString());
-			
-			p = JForumExecutionContext.getConnection().prepareStatement(sql);
+			p.setString(1, String.valueOf(forumId));
 			p.executeUpdate();
 		}
 		catch (SQLException e) {

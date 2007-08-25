@@ -439,8 +439,7 @@ PermissionControl.selectForumRoles = SELECT DISTINCT r.role_id FROM jforum_roles
 	AND r.name in ('perm_forum', 'perm_anonymous_post', 'perm_reply_only', 'perm_read_only_forums', 'perm_reply_without_moderation', 'perm_html_disabled', 'perm_attachments_enabled', 'perm_moderation_forums') \
 	AND rv.role_value = ?
 
-PermissionControl.deleteRoles = DELETE FROM jforum_roles WHERE role_id IN (:IDS:)
-PermissionControl.deleteRoleValues = DELETE FROM jforum_role_values WHERE role_id IN (:IDS:)
+PermissionControl.deleteRoleValues = DELETE FROM jforum_role_values WHERE role_value = ? AND role_id IN (#IDS#) 
 
 PermissionControl.loadGroupRoles = SELECT r.name, '0' AS role_value FROM jforum_roles r WHERE r.group_id IN (#IN#) \
 	UNION \
