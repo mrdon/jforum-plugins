@@ -52,10 +52,11 @@ import net.jforum.util.preferences.SystemGlobals;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URI;
 
 /**
  * @author SergeMaslyukov
- * @version $Id: WebResponseContext.java,v 1.2 2007/08/17 15:53:28 rafaelsteil Exp $
+ * @version $Id: WebResponseContext.java,v 1.3 2007/08/26 17:15:20 rafaelsteil Exp $
  */
 public class WebResponseContext implements ResponseContext
 {
@@ -94,7 +95,11 @@ public class WebResponseContext implements ResponseContext
 	public void sendRedirect(String location) throws IOException
 	{
 		if (SystemGlobals.getBoolValue(ConfigKeys.REDIRECT_ABSOLUTE_PATHS)) {
-			location = SystemGlobals.getValue(ConfigKeys.REDIRECT_BASE_URL) + location;
+			URI uri = URI.create(location);
+			
+			if (!uri.isAbsolute()) {
+				location = SystemGlobals.getValue(ConfigKeys.REDIRECT_BASE_URL) + location;
+			}
 		}
 		
 		response.sendRedirect(location);
