@@ -6,7 +6,8 @@
 <meta http-equiv="Content-Type" content="${encoding}"/>
 <meta http-equiv="Content-Style-Type" content="text/css" />
 <title>${pageTitle}</title>
-<link rel="stylesheet" href="${contextPath}/templates/${templateName}/styles/style.css" type="text/css" />
+<style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/style.css?${startupTime} );</style>
+<style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/SyntaxHighlighter.css?${startupTime} );</style>
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000" link="#01336B" vlink="#01336B">
@@ -54,6 +55,6 @@
 		</tr>
 	</tbody>
 </table>
-
+<#include "highligther_js.htm"/>
 </body>
 </html>
