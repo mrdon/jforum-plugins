@@ -65,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericPostDAO.java,v 1.25 2007/08/20 19:35:53 rafaelsteil Exp $
+ * @version $Id: GenericPostDAO.java,v 1.26 2007/08/26 13:50:27 rafaelsteil Exp $
  */
 public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 {
@@ -253,6 +253,7 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 	protected void updatePostsTable(Post post)
 	{
 		PreparedStatement p = null;
+		
 		try {
 			p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql("PostModel.updatePost"));
 			p.setInt(1, post.getTopicId());
@@ -263,7 +264,8 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 			p.setInt(6, post.isSignatureEnabled() ? 1 : 0);
 			p.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
 			p.setString(8, post.getUserIp());
-			p.setInt(9, post.getId());
+			p.setInt(9, post.getEditCount() + 1);
+			p.setInt(10, post.getId());
 
 			p.executeUpdate();
 		}

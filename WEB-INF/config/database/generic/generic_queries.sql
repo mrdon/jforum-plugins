@@ -173,7 +173,7 @@ PostModel.selectById = SELECT p.post_id, topic_id, forum_id, p.user_id, post_tim
 PostModel.deletePost = DELETE FROM jforum_posts WHERE post_id = ?
 PostModel.deletePostText = DELETE FROM jforum_posts_text WHERE post_id = ?
 
-PostModel.updatePost = UPDATE jforum_posts SET topic_id = ?, forum_id = ?, enable_bbcode = ?, enable_html = ?, enable_smilies = ?, enable_sig = ?, post_edit_time = ?, post_edit_count = post_edit_count + 1, poster_ip = ? WHERE post_id = ?
+PostModel.updatePost = UPDATE jforum_posts SET topic_id = ?, forum_id = ?, enable_bbcode = ?, enable_html = ?, enable_smilies = ?, enable_sig = ?, post_edit_time = ?, post_edit_count = ?, poster_ip = ? WHERE post_id = ?
 PostModel.updatePostText = UPDATE jforum_posts_text SET post_text = ?, post_subject = ? WHERE post_id = ?
 
 PostModel.addNewPost = INSERT INTO jforum_posts (topic_id, forum_id, user_id, post_time, poster_ip, enable_bbcode, enable_html, enable_smilies, enable_sig, post_edit_time, need_moderate) \
