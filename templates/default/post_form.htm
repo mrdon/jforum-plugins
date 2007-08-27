@@ -358,7 +358,7 @@ function smiliePopup()
 								<!-- Textarea -->
 								<tr>
 									<td valign="top">
-										<textarea class="message" onkeyup="storeCaret(this);" onclick="storeCaret(this);" onselect="storeCaret(this);" tabindex="3" name="message" rows="20"  cols="35"><#if post?exists><#if quote?exists>[quote=${quoteUser}]${post.text?html}[/quote]<#else>${post.text?html}</#if></#if></textarea> 
+										<textarea class="message" onkeyup="storeCaret(this);" onclick="storeCaret(this);" onselect="storeCaret(this);" tabindex="3" name="message" rows="15"  cols="35"><#if post?exists><#if quote?exists>[quote=${quoteUser}]${post.text?html}[/quote]<#else>${post.text?html}</#if></#if></textarea> 
 									</td>
 								</tr>
 							</table>

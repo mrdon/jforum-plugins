@@ -73,7 +73,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Rafael Steil
- * @version $Id: WebRequestContext.java,v 1.9 2007/08/25 16:05:02 rafaelsteil Exp $
+ * @version $Id: WebRequestContext.java,v 1.10 2007/08/27 03:39:11 rafaelsteil Exp $
  */
 public class WebRequestContext extends HttpServletRequestWrapper implements RequestContext
 {
@@ -153,7 +153,17 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 		}
 		
 		if (!isMultipart) {
-			superRequest.setCharacterEncoding(encoding);
+			boolean isAjax = "XMLHttpRequest".equals(superRequest.getHeader("X-Requested-With"));
+			
+			if (!isAjax) {
+				superRequest.setCharacterEncoding(encoding);
+			}
+			else {
+				// Ajax requests are *usually* sent using application/x-www-form-urlencoded; charset=UTF-8.
+				// In JForum, we assume this is always true.
+				superRequest.setCharacterEncoding("UTF-8");
+			}
+			
 			String containerEncoding = SystemGlobals.getValue(ConfigKeys.DEFAULT_CONTAINER_ENCODING);
 			
 			if (isPost) { 
@@ -165,13 +175,13 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 				
 				String[] values = superRequest.getParameterValues(name);
 				
-				if (values == null || values.length == 0) {
-					this.addParameter(name, new String(superRequest.getParameter(name).getBytes(containerEncoding), encoding));
+				if (values != null && values.length > 1) {
+					for (int i = 0; i < values.length; i++) {
+						this.addParameter(name, new String(values[i].getBytes(containerEncoding), encoding));
+					}
 				}
 				else {
-					for (int i = 0; i < values.length; i++) {
-						this.addParameter(name, values[i]);
-					}
+					this.addParameter(name, new String(superRequest.getParameter(name).getBytes(containerEncoding), encoding));
 				}
 			}
 		}
