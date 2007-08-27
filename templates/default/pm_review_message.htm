@@ -1,13 +1,13 @@
-<!DOCTYPE html 
-     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="${encoding}"/>
 <meta http-equiv="Content-Style-Type" content="text/css" />
 <title>${pageTitle}</title>
 <style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/style.css?${startupTime} );</style>
-<style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/SyntaxHighlighter.css?${startupTime} );</style>
+
+<#if hasCodeBlock?default(false)>
+	<style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/SyntaxHighlighter.css?${startupTime} );</style>
+</#if>
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000" link="#01336B" vlink="#01336B">
@@ -55,6 +55,10 @@
 		</tr>
 	</tbody>
 </table>
-<#include "highligther_js.htm"/>
+
+<#if hasCodeBlock?default(false)>
+	<#include "highligther_js.htm"/>
+</#if>
+
 </body>
 </html>

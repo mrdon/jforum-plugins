@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.48 2007/08/25 19:05:04 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.49 2007/08/27 04:11:58 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -123,17 +123,22 @@ public class PostCommon
 		if (text == null || text.indexOf('[') == -1 || text.indexOf(']') == -1) {
 			return text;
 		}
+		
+		boolean hasCodeBlock = false;
 
 		for (Iterator iter = BBCodeRepository.getBBCollection().getBbList().iterator(); iter.hasNext();) {
 			BBCode bb = (BBCode)iter.next();
-
+			
 			if (!bb.getTagName().startsWith("code")) {
 				text = text.replaceAll(bb.getRegex(), bb.getReplace());
-			} else  {
+			} 
+			else  {
 				Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
 				StringBuffer sb = new StringBuffer(text);
 
 				while (matcher.find()) {
+					hasCodeBlock = true;
+					
 					StringBuffer lang = null;
 					StringBuffer contents = null;
 					
@@ -175,11 +180,13 @@ public class PostCommon
 						if (index > -1) {
 							replace.replace(index, index + 2, lang.toString());
 						}
+						
 						index = replace.indexOf("$2");
 
 						if (index > -1) {
 							replace.replace(index, index + 2, contents.toString());
 						}
+						
 						index = sb.indexOf("[code=");
 					} 
 					int lastIndex = sb.indexOf("[/code]", index) + "[/code]".length();
@@ -191,6 +198,10 @@ public class PostCommon
 				
 				text = sb.toString();
 			}
+		}
+		
+		if (hasCodeBlock) {
+			JForumExecutionContext.getTemplateContext().put("hasCodeBlock", hasCodeBlock);
 		}
 
 		return text;

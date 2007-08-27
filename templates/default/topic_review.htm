@@ -5,6 +5,10 @@
 <style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/style.css?${startupTime} );</style>
 <script type="text/javascript" src="${contextPath}/templates/${templateName}/js/jquery.js?${startupTime}"></script>
 <script type="text/javascript" src="${contextPath}/templates/${templateName}/js/post.js?${startupTime}"></script>
+
+<#if hasCodeBlock?default(false)>
+	<style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/SyntaxHighlighter.css?${startupTime} );</style>
+</#if>
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000" link="#01336B" vlink="#01336B">
@@ -60,5 +64,10 @@
 <script type="text/javascript">
 limitURLSize();
 </script>
+
+<#if hasCodeBlock?default(false)>
+	<#include "highligther_js.htm"/>
+</#if>
+
 </body>
 </html>
