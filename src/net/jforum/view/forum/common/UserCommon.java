@@ -66,7 +66,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserCommon.java,v 1.27 2007/08/27 03:39:13 rafaelsteil Exp $
+ * @version $Id: UserCommon.java,v 1.28 2007/08/27 16:41:14 andowson Exp $
  */
 public class UserCommon 
 {
@@ -182,7 +182,7 @@ public class UserCommon
 			um.update(u);
 		}
 		
-		if (!isAdmin) {
+		if (SessionFacade.getUserSession().getUserId() == userId) {
 		    SessionFacade.getUserSession().setLang(u.getLang());
 		}
 		return errors;
