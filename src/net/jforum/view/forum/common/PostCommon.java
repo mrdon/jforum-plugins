@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.49 2007/08/27 04:11:58 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.50 2007/08/27 15:57:40 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -164,8 +164,10 @@ public class PostCommon
 					ViewCommon.replaceAll(contents, "<", "&lt;");
 					ViewCommon.replaceAll(contents, ">", "&gt;");
 					
-					ViewCommon.replaceAll(contents, "\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
-
+					// Note: there is no replacing for spaces and tabs as
+					// we are relying on the Javascript SyntaxHighlighter library
+					// to do it for is. 
+					
 					StringBuffer replace = new StringBuffer(bb.getReplace());
 					int index = replace.indexOf("$1");
 					
