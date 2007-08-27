@@ -141,21 +141,6 @@ function smiliePopup()
 							<tr>
 								<td><span id="previewMessage" class="postbody"><#if postPreview?exists>${postPreview.text}</#if></span></td>
 							</tr>
-
-							<#if (user?exists && user.attachSignatureEnabled && user.signature?exists && user.signature?length > 0 && post?exists && post.isSignatureEnabled())>
-								<tr>
-									<td>
-										<hr />
-										<span class="gensmall" id="previewSignature">
-											<#if previewUser?exists>
-												${previewUser.signature}
-											<#else>
-												${user.signature}
-											</#if>
-										</span>
-									</td>
-								</tr>
-							</#if>
 						</table>
 					</td>
 				</tr>

@@ -2,6 +2,7 @@
 <#setting datetime_format = dateTimeFormat/>
 <#assign logged = logged?default(false)/>
 <#assign language = language?default("en_US")/>
+<#assign hasCodeBlock = hasCodeBlock?default(false)/>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=${encoding}" />
@@ -10,7 +11,7 @@
 <style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/style.css?${startupTime} );</style>
 <style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/${language}.css?${startupTime} );</style>
 
-<#if hasCodeBlock?default(false)>
+<#if hasCodeBlock>
 	<style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/SyntaxHighlighter.css?${startupTime} );</style>
 </#if>
 
