@@ -99,18 +99,15 @@ import net.jforum.view.forum.common.TopicsCommon;
 import net.jforum.view.forum.common.ViewCommon;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.190 2007/08/25 19:05:02 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.191 2007/08/29 19:39:02 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
-	private static Logger watchLogger = Logger.getLogger("watchLogger");
-	
 	public PostAction() {
 	}
 
@@ -1355,17 +1352,6 @@ public class PostAction extends Command
 
 	private void watch(TopicDAO tm, int topicId, int userId)  {
 		if (!tm.isUserSubscribed(topicId, userId)) {
-			String referer = this.request.getHeader("Referer");
-			String requestUserId = this.request.getParameter("user_id");
-			
-			if (watchLogger.isDebugEnabled()) {
-				watchLogger.debug("topicId=" + topicId 
-					+ ", userId=" + userId
-					+ ", requestUserId=" + requestUserId
-					+ ", sessionUserId=" + SessionFacade.getUserSession().getUserId()
-					+ ", referer=" + referer);
-			}
-			
 			tm.subscribeUser(topicId, userId);
 		}
 	}

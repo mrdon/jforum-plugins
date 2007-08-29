@@ -5,7 +5,7 @@ font, th, td, p { font-family: verdana, arial, helvetica, sans-serif; }
 a:link { color: #01336b; text-decoration: none; }
 a:active { color: #01336b }
 a:visited { color: #01336b; text-decoration: none; }
-a:hover { color: #dd6900; text-decoration: underline }
+a:hover { color: #dd6900; border-bottom: 1px dashed #01336b; }
 
 hr { border: #dfdfdf 0px solid; height: 0px }
 .bodyline { border: #cccccc 1px solid;  }

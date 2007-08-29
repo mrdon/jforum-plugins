@@ -17,11 +17,6 @@
 			<param name="ConversionPattern" value="%d %-5p [%-c{1}] - %m%n"/>
 	   </layout>
 	</appender>
-	
-	<category name="watchLogger">
-		<priority value="debug"/>
-		<appender-ref ref="jforum-stdout"/>
-	</category>
 
 	<category name="org.jgroups">
 		<priority value="info"/>

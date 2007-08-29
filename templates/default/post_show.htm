@@ -9,6 +9,11 @@
 <script type="text/javascript" src="${contextPath}/templates/${templateName}/js/post_show.js?${startupTime}"></script>
 <script type="text/javascript" src="${contextPath}/templates/${templateName}/js/post.js?${startupTime}"></script>
 <script type="text/javascript" src="${contextPath}/templates/${templateName}/js/pagination.js?${startupTime}"></script>
+
+<#if logged>
+	<script type="text/javascript" src="${contextPath}/templates/${templateName}/js/watch.js?${startupTime}"></script>
+</#if>
+
 <script type="text/javascript">
 <!--
 <#include "js/karma.js">
@@ -344,26 +349,21 @@
 
 			<table cellspacing="0" cellpadding="0" width="100%" border="0">
 				<tr>
-					<td align="left" valign="top">
+					<td align="left" valign="top" class="gensmall">
 						<#if logged>
-							<span class="gensmall">
-							<!-- Bookmarks -->
 							<#if bookmarksEnabled>
 								<a href="javascript:addBookmark(2, ${topic.id});"><img src="${contextPath}/templates/${templateName}/images/icon_bookmark.gif" align="middle"  alt="XML" />&nbsp;${I18n.getMessage("Bookmarks.addTo")}</a>
 								<br>
 							</#if>
-							
-							<!-- Watch -->
-							<#assign watch = "watch"/>
-							<#assign watchMessage = I18n.getMessage("PostShow.watch")/>
-							<#if watching>
-								<#assign watch = "unwatch"/>
+						
+							<#if !watching>
+								<#assign watchMessage = I18n.getMessage("PostShow.watch")/>
+								<a href="#watch" onClick="watchTopic('${JForumContext.encodeURL("/posts/watch/${start}/${topic.id}")}', '${I18n.getMessage("PostShow.confirmWatch")}');">
+							<#else>
 								<#assign watchMessage = I18n.getMessage("PostShow.unwatch")/>
+								<a href="${JForumContext.encodeURL("/posts/unwatch/${start}/${topic.id}")}">
 							</#if>
-							
-							<a href="${JForumContext.encodeURL("/posts/${watch}/${start}/${topic.id}")}"><img src="${contextPath}/templates/${templateName}/images/watch.gif" align="middle" alt="Watch" /></a>
-							<a href="${JForumContext.encodeURL("/posts/${watch}/${start}/${topic.id}")}">${watchMessage}</a>
-							</span>
+							<img src="${contextPath}/templates/${templateName}/images/watch.gif" align="middle" alt="Watch" />&nbsp;${watchMessage}</a>
 						</#if>
 					</td>
 					<td align="right"><@presentation.forumsComboTable/></td>
