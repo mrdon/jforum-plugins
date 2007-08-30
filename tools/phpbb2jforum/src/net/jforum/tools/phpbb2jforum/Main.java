@@ -9,11 +9,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: Main.java,v 1.3 2007/08/30 13:24:30 rafaelsteil Exp $
+ * @version $Id: Main.java,v 1.4 2007/08/30 14:59:05 rafaelsteil Exp $
  */
 public class Main
 {
@@ -43,8 +44,8 @@ public class Main
 	{
 		String baseDir = new File("").getAbsolutePath();
 		
-		SystemGlobals.initGlobals(baseDir, "/tools/phpbb2jforum/SystemGlobals.properties");
-		SystemGlobals.loadQueries(baseDir + "/tools/phpbb2jforum/" + SystemGlobals.getValue(ConfigKeys.DATABASE_QUERIES));
+		SystemGlobals.initGlobals(baseDir, "/phpbb2jforum/SystemGlobals.properties");
+		SystemGlobals.loadQueries(baseDir + "/phpbb2jforum/" + SystemGlobals.getValue(ConfigKeys.DATABASE_QUERIES));
 	}
 
 	private void runForrestRun() throws Exception
@@ -65,59 +66,70 @@ public class Main
 			return;
 		}
 		
-		System.out.println("Importing posts text. This may take a looooong time...");
+		System.out.println("Importing posts. This may take a looooong time...");
 		System.out.println("Going to process " + total + " posts...");
 
 		int counter = 0;
 
-		// changed this to be forward-only so that we don't blow the
-		// stack on large databases. performance will suffer :-(
-		Statement s = this.conn2.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-		s.setFetchSize(50);
-
-		PreparedStatement insert = this.conn.prepareStatement(SystemGlobals.getSql(ConfigKeys.QUERY_POSTS_TEXT));
-		ResultSet rs = s.executeQuery(SystemGlobals.getSql(ConfigKeys.QUERY_SELECT_POSTS_TEXT));
+		Statement s = null;
+		ResultSet rs = null;
+		PreparedStatement insert = null;
 		
-		System.out.println("Ok, here we go");
-		
-		while (rs.next()) {
-			if ((++counter % 100) == 0) {
-				System.out.println("Processed " + counter + " posts so far");
+		try {
+			s = this.conn2.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+			s.setFetchSize(50);
+	
+			insert = this.conn.prepareStatement(SystemGlobals.getSql(ConfigKeys.QUERY_POSTS_TEXT));
+			rs = s.executeQuery(SystemGlobals.getSql(ConfigKeys.QUERY_SELECT_POSTS_TEXT));
+			
+			System.out.println("Ok, here we go");
+			
+			while (rs.next()) {
+				if ((++counter % 100) == 0) {
+					System.out.println("Processed " + counter + " posts so far");
+				}
+	
+				insert.setInt(1, rs.getInt("post_id"));
+				insert.setString(2, rs.getString("post_subject"));
+				insert.setString(3, this.applyRegexToPostText(rs.getString("post_text")));
+	
+				insert.executeUpdate();
 			}
-
-			insert.setInt(1, rs.getInt("post_id"));
-			insert.setString(2, rs.getString("post_subject"));
-			insert.setString(3, this.applyRegexToPostText(rs.getString("post_text")));
-
-			insert.executeUpdate();
 		}
-
-		rs.close();
-		insert.close();
+		finally {
+			DbUtils.close(rs, insert);
+			DbUtils.close(s);
+		}
 		
 		System.out.println("Post importing done...");
 	}
 
 	private void importPrivateMessages() throws SQLException
 	{
-		System.out.println("Importing private messages text...");
+		System.out.println("Importing private messages...");
 
-		PreparedStatement insert = this.conn.prepareStatement(SystemGlobals.getSql(ConfigKeys.QUERY_PRIVMSGS_TEXT));
-		Statement s = this.conn.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-		s.setFetchSize(50);
-		
-		ResultSet rs = s.executeQuery(SystemGlobals.getSql(ConfigKeys.QUERY_SELECT_PM));
+		Statement s = null;
+		ResultSet rs = null;
+		PreparedStatement insert = null; 
 
-		while (rs.next()) {
-			insert.setInt(1, rs.getInt("privmsgs_text_id"));
-			insert.setString(2, this.applyRegexToPostText(rs.getString("privmsgs_text")));
-
-			insert.executeUpdate();
+		try {
+			insert = this.conn.prepareStatement(SystemGlobals.getSql(ConfigKeys.QUERY_PRIVMSGS_TEXT));
+			s = this.conn.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+			s.setFetchSize(50);
+			
+			rs = s.executeQuery(SystemGlobals.getSql(ConfigKeys.QUERY_SELECT_PM));
+	
+			while (rs.next()) {
+				insert.setInt(1, rs.getInt("privmsgs_text_id"));
+				insert.setString(2, this.applyRegexToPostText(rs.getString("privmsgs_text")));
+	
+				insert.executeUpdate();
+			}
 		}
-
-		insert.close();
-		s.close();
-		rs.close();
+		finally {
+			DbUtils.close(rs, insert);
+			DbUtils.close(s);
+		}
 
 		System.out.println("Private messages text imported...");
 	}
@@ -125,59 +137,65 @@ public class Main
 	private void importUsers() throws SQLException
 	{
 		System.out.println("Importing users...");
-
-		PreparedStatement insert = this.conn.prepareStatement(SystemGlobals.getSql(ConfigKeys.QUERY_USERS));
-		Statement s = this.conn.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-		s.setFetchSize(50);
-
-		ResultSet rs = s.executeQuery(SystemGlobals.getSql(ConfigKeys.QUERY_SELECT_USERS));
 		
-		while (rs.next()) {
-			insert.setInt(1, rs.getInt("user_id"));
-			insert.setString(2, rs.getString("user_active"));
-			insert.setString(3, rs.getString("username"));
-			insert.setString(4, rs.getString("user_password"));
-			insert.setString(5, rs.getString("user_regdate"));
-			insert.setString(6, rs.getString("user_level"));
-			insert.setString(7, rs.getString("user_posts"));
-			insert.setString(8, rs.getString("user_timezone"));
-			insert.setString(9, rs.getString("user_style"));
-			insert.setString(10, "");
-			insert.setString(11, rs.getString("user_dateformat"));
-			insert.setString(12, rs.getString("user_new_privmsg"));
-			insert.setString(13, rs.getString("user_unread_privmsg"));
-			insert.setString(14, rs.getString("user_last_privmsg"));
-			insert.setString(15, rs.getString("user_viewemail"));
-			insert.setString(16, rs.getString("user_attachsig"));
-			insert.setString(17, rs.getString("user_allowhtml"));
-			insert.setString(18, rs.getString("user_allowbbcode"));
-			insert.setString(19, rs.getString("user_allowsmile"));
-			insert.setString(20, rs.getString("user_allowavatar"));
-			insert.setString(21, rs.getString("user_allow_pm"));
-			insert.setString(22, rs.getString("user_notify"));
-			insert.setString(23, rs.getString("user_notify_pm"));
-			insert.setString(24, rs.getString("user_popup_pm"));
-			insert.setString(25, rs.getString("user_rank"));
-			insert.setString(26, rs.getString("user_avatar"));
-			insert.setString(27, rs.getString("user_avatar_type"));
-			insert.setString(28, rs.getString("user_email"));
-			insert.setString(29, rs.getString("user_icq"));
-			insert.setString(30, rs.getString("user_website"));
-			insert.setString(31, rs.getString("user_from"));
-			insert.setString(32, this.applyRegexToPostText(rs.getString("user_sig")));
-			insert.setString(33, rs.getString("user_aim"));
-			insert.setString(34, rs.getString("user_yim"));
-			insert.setString(35, rs.getString("user_msnm"));
-			insert.setString(36, rs.getString("user_occ"));
-			insert.setString(37, rs.getString("user_interests"));
-			insert.setString(38, rs.getString("user_allow_viewonline"));
+		ResultSet rs = null;
+		Statement s = null;
+		PreparedStatement insert = null;
 
-			insert.executeUpdate();
+		try {
+			insert = this.conn.prepareStatement(SystemGlobals.getSql(ConfigKeys.QUERY_USERS));
+			s = this.conn.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+			s.setFetchSize(50);
+			
+			rs = s.executeQuery(SystemGlobals.getSql(ConfigKeys.QUERY_SELECT_USERS));
+			
+			while (rs.next()) {
+				insert.setInt(1, rs.getInt("user_id"));
+				insert.setString(2, rs.getString("user_active"));
+				insert.setString(3, rs.getString("username"));
+				insert.setString(4, rs.getString("user_password"));
+				insert.setString(5, rs.getString("user_regdate"));
+				insert.setString(6, rs.getString("user_level"));
+				insert.setString(7, rs.getString("user_posts"));
+				insert.setString(8, rs.getString("user_timezone"));
+				insert.setString(9, rs.getString("user_style"));
+				insert.setString(10, "");
+				insert.setString(11, rs.getString("user_dateformat"));
+				insert.setString(12, rs.getString("user_new_privmsg"));
+				insert.setString(13, rs.getString("user_unread_privmsg"));
+				insert.setString(14, rs.getString("user_last_privmsg"));
+				insert.setString(15, rs.getString("user_viewemail"));
+				insert.setString(16, rs.getString("user_attachsig"));
+				insert.setString(17, rs.getString("user_allowhtml"));
+				insert.setString(18, rs.getString("user_allowbbcode"));
+				insert.setString(19, rs.getString("user_allowsmile"));
+				insert.setString(20, rs.getString("user_allowavatar"));
+				insert.setString(21, rs.getString("user_allow_pm"));
+				insert.setString(22, rs.getString("user_notify"));
+				insert.setString(23, rs.getString("user_notify_pm"));
+				insert.setString(24, rs.getString("user_popup_pm"));
+				insert.setString(25, rs.getString("user_rank"));
+				insert.setString(26, rs.getString("user_avatar"));
+				insert.setString(27, rs.getString("user_avatar_type"));
+				insert.setString(28, rs.getString("user_email"));
+				insert.setString(29, rs.getString("user_icq"));
+				insert.setString(30, rs.getString("user_website"));
+				insert.setString(31, rs.getString("user_from"));
+				insert.setString(32, this.applyRegexToPostText(rs.getString("user_sig")));
+				insert.setString(33, rs.getString("user_aim"));
+				insert.setString(34, rs.getString("user_yim"));
+				insert.setString(35, rs.getString("user_msnm"));
+				insert.setString(36, rs.getString("user_occ"));
+				insert.setString(37, rs.getString("user_interests"));
+				insert.setString(38, rs.getString("user_allow_viewonline"));
+	
+				insert.executeUpdate();
+			}
 		}
-
-		s.close();
-		insert.close();
-		rs.close();
+		finally {
+			DbUtils.close(rs, insert);
+			DbUtils.close(s);
+		}
 	}
 
 	private String applyRegexToPostText(String text)
@@ -198,16 +216,21 @@ public class Main
 	private int getTotalPosts() throws SQLException
 	{
 		int total = 0;
+		
+		Statement s = null;
+		ResultSet rs = null;
 
-		Statement s = this.conn.createStatement();
-		ResultSet rs = s.executeQuery(SystemGlobals.getSql(ConfigKeys.QUERY_TOTAL_POSTS));
-
-		if (rs.next()) {
-			total = rs.getInt(1);
+		try {
+			s = this.conn.createStatement();
+			rs = s.executeQuery(SystemGlobals.getSql(ConfigKeys.QUERY_TOTAL_POSTS));
+	
+			if (rs.next()) {
+				total = rs.getInt(1);
+			}
 		}
-
-		rs.close();
-		s.close();
+		finally {
+			DbUtils.close(rs, s);
+		}
 
 		return total;
 	}
@@ -244,9 +267,15 @@ public class Main
 		for (int i = 0; i < queries.length; i++) {
 			System.out.println("Importing " + queries[i][0] + "...");
 
-			Statement s = this.conn.createStatement();
-			s.executeUpdate(SystemGlobals.getSql(queries[i][1]));
-			s.close();
+			Statement s = null;
+			
+			try {
+				s = this.conn.createStatement();
+				s.executeUpdate(SystemGlobals.getSql(queries[i][1]));
+			}
+			finally {
+				DbUtils.close(s);
+			}
 		}
 	}
 
@@ -255,8 +284,8 @@ public class Main
 		Main program = new Main();
 
 		if (args.length != 4) {
-			System.out.println("Usage: phpbb2jforum <dbName> <dbUser> <dbPassword> <dbHost>");
-			System.out.println("Example: phpbb2jforum jforum root rootPasswd localhost\n");
+			System.out.println("Usage: phpbb2jforum <base_directory>");
+			System.out.println("Example: phpbb2jforum c:/jforum/tools \n");
 			return;
 		}
 
