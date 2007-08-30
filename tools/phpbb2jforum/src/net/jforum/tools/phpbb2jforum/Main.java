@@ -1,5 +1,6 @@
 package net.jforum.tools.phpbb2jforum;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,31 +9,28 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import net.jforum.tools.phpbb2jforum.ConfigKeys;
-import net.jforum.tools.common.SystemGlobals;
+import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: Main.java,v 1.1 2006/08/20 22:47:42 rafaelsteil Exp $
+ * @version $Id: Main.java,v 1.2 2007/08/30 13:19:34 rafaelsteil Exp $
  */
 public class Main
 {
 	private Connection conn;
-
 	private Connection conn2;
-
 	private String[][] regexps;
 
 	public Main()
 	{
 		this.regexps = new String[][] { { ConfigKeys.B_REGEX, ConfigKeys.B_REPLACE },
-				{ ConfigKeys.COLOR_REGEX, ConfigKeys.COLOR_REPLACE }, { ConfigKeys.I_REGEX, ConfigKeys.I_REPLACE },
-				{ ConfigKeys.LIST_REGEX, ConfigKeys.LIST_REPLACE },
-				{ ConfigKeys.QUOTE_REGEX, ConfigKeys.QUOTE_REPLACE },
-				{ ConfigKeys.QUOTE_USERNAME_OPEN_REGEX, ConfigKeys.QUOTE_USERNAME_OPEN_REPLACE },
-				{ ConfigKeys.QUOTE_USERNAME_CLOSE_REGEX, ConfigKeys.QUOTE_USERNAME_CLOSE_REPLACE },
-				{ ConfigKeys.U_REGEX, ConfigKeys.U_REPLACE }, { ConfigKeys.IMG_REGEX, ConfigKeys.IMG_REPLACE },
-				{ ConfigKeys.CODE_REGEX, ConfigKeys.CODE_REPLACE }, { ConfigKeys.SIZE_REGEX, ConfigKeys.SIZE_REPLACE } };
+			{ ConfigKeys.COLOR_REGEX, ConfigKeys.COLOR_REPLACE }, { ConfigKeys.I_REGEX, ConfigKeys.I_REPLACE },
+			{ ConfigKeys.LIST_REGEX, ConfigKeys.LIST_REPLACE },
+			{ ConfigKeys.QUOTE_REGEX, ConfigKeys.QUOTE_REPLACE },
+			{ ConfigKeys.QUOTE_USERNAME_OPEN_REGEX, ConfigKeys.QUOTE_USERNAME_OPEN_REPLACE },
+			{ ConfigKeys.QUOTE_USERNAME_CLOSE_REGEX, ConfigKeys.QUOTE_USERNAME_CLOSE_REPLACE },
+			{ ConfigKeys.U_REGEX, ConfigKeys.U_REPLACE }, { ConfigKeys.IMG_REGEX, ConfigKeys.IMG_REPLACE },
+			{ ConfigKeys.CODE_REGEX, ConfigKeys.CODE_REPLACE }, { ConfigKeys.SIZE_REGEX, ConfigKeys.SIZE_REPLACE } };
 	}
 
 	private Connection openConnection() throws ClassNotFoundException, SQLException
@@ -43,16 +41,10 @@ public class Main
 
 	private void init() throws IOException
 	{
-		SystemGlobals.initGlobals(Main.class.getResourceAsStream("/phpbb2jforum/SystemGlobals.properties"));
-		SystemGlobals.loadQueries(Main.class.getResourceAsStream("/phpbb2jforum/"
-				+ SystemGlobals.getValue(ConfigKeys.DATABASE_QUERIES)));
-	}
-
-	private void executeStatement(String name) throws SQLException
-	{
-		Statement s = this.conn.createStatement();
-		s.executeQuery(name);
-		s.close();
+		String baseDir = new File("").getAbsolutePath();
+		
+		SystemGlobals.initGlobals(baseDir, "/phpbb2jforum/SystemGlobals.properties");
+		SystemGlobals.loadQueries(baseDir + "/phpbb2jforum/" + SystemGlobals.getValue(ConfigKeys.DATABASE_QUERIES));
 	}
 
 	private void runForrestRun() throws Exception
@@ -66,29 +58,30 @@ public class Main
 
 	private void importPosts() throws SQLException
 	{
-		System.out.println("Importing posts text. This may take a looooong time...");
 		int total = this.getTotalPosts();
 
 		if (total == 0) {
-			System.out.println("ooopss. Seems like there are no posts to import. Skipping...");
+			System.out.println("Seems like there are no posts to import. Skipping...");
 			return;
 		}
-
+		
+		System.out.println("Importing posts text. This may take a looooong time...");
 		System.out.println("Going to process " + total + " posts...");
+
 		int counter = 0;
 
-		// Arawak:
 		// changed this to be forward-only so that we don't blow the
 		// stack on large databases. performance will suffer :-(
-		Statement s = this.conn2.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY,
-				java.sql.ResultSet.CONCUR_READ_ONLY);
-		s.setFetchSize(Integer.MIN_VALUE);
+		Statement s = this.conn2.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+		s.setFetchSize(50);
 
 		PreparedStatement insert = this.conn.prepareStatement(SystemGlobals.getSql(ConfigKeys.QUERY_POSTS_TEXT));
 		ResultSet rs = s.executeQuery(SystemGlobals.getSql(ConfigKeys.QUERY_SELECT_POSTS_TEXT));
-		System.out.println("ok, here we go");
+		
+		System.out.println("Ok, here we go");
+		
 		while (rs.next()) {
-			if ((++counter % 500) == 0) {
+			if ((++counter % 100) == 0) {
 				System.out.println("Processed " + counter + " posts so far");
 			}
 
@@ -101,6 +94,7 @@ public class Main
 
 		rs.close();
 		insert.close();
+		
 		System.out.println("Post importing done...");
 	}
 
@@ -109,7 +103,9 @@ public class Main
 		System.out.println("Importing private messages text...");
 
 		PreparedStatement insert = this.conn.prepareStatement(SystemGlobals.getSql(ConfigKeys.QUERY_PRIVMSGS_TEXT));
-		Statement s = this.conn.createStatement();
+		Statement s = this.conn.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+		s.setFetchSize(50);
+		
 		ResultSet rs = s.executeQuery(SystemGlobals.getSql(ConfigKeys.QUERY_SELECT_PM));
 
 		while (rs.next()) {
@@ -131,9 +127,11 @@ public class Main
 		System.out.println("Importing users...");
 
 		PreparedStatement insert = this.conn.prepareStatement(SystemGlobals.getSql(ConfigKeys.QUERY_USERS));
-		Statement s = this.conn.createStatement();
+		Statement s = this.conn.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+		s.setFetchSize(50);
 
 		ResultSet rs = s.executeQuery(SystemGlobals.getSql(ConfigKeys.QUERY_SELECT_USERS));
+		
 		while (rs.next()) {
 			insert.setInt(1, rs.getInt("user_id"));
 			insert.setString(2, rs.getString("user_active"));
@@ -189,8 +187,8 @@ public class Main
 				text = "";
 			}
 			else {
-				text = text.replaceAll(SystemGlobals.getValue(this.regexps[i][0]), SystemGlobals
-						.getValue(this.regexps[i][1]));
+				text = text.replaceAll(SystemGlobals.getValue(this.regexps[i][0]), 
+					SystemGlobals.getValue(this.regexps[i][1]));
 			}
 		}
 
@@ -219,10 +217,10 @@ public class Main
 		System.out.println("Cleaning tables...");
 
 		String[] queries = { ConfigKeys.QUERY_CLEAN_CATEGORIES, ConfigKeys.QUERY_CLEAN_FORUMS,
-				ConfigKeys.QUERY_CLEAN_POSTS, ConfigKeys.QUERY_CLEAN_PRIVMSGS, ConfigKeys.QUERY_CLEAN_RANKS,
-				ConfigKeys.QUERY_CLEAN_SEARCH_WORDMATCH, ConfigKeys.QUERY_CLEAN_SEARCH_WORDS,
-				ConfigKeys.QUERY_CLEAN_TOPICS, ConfigKeys.QUERY_CLEAN_TOPICS_WATCH, ConfigKeys.QUERY_CLEAN_USERS,
-				ConfigKeys.QUERY_CLEAN_WORDS, ConfigKeys.QUERY_CLEAN_POSTS_TEXT, ConfigKeys.QUERY_CLEAN_PRIVMSGS_TEXT };
+			ConfigKeys.QUERY_CLEAN_POSTS, ConfigKeys.QUERY_CLEAN_PRIVMSGS, ConfigKeys.QUERY_CLEAN_RANKS,
+			ConfigKeys.QUERY_CLEAN_SEARCH_WORDMATCH, ConfigKeys.QUERY_CLEAN_SEARCH_WORDS,
+			ConfigKeys.QUERY_CLEAN_TOPICS, ConfigKeys.QUERY_CLEAN_TOPICS_WATCH, ConfigKeys.QUERY_CLEAN_USERS,
+			ConfigKeys.QUERY_CLEAN_WORDS, ConfigKeys.QUERY_CLEAN_POSTS_TEXT, ConfigKeys.QUERY_CLEAN_PRIVMSGS_TEXT };
 
 		for (int i = 0; i < queries.length; i++) {
 			System.out.println("Cleaning " + queries[i]);
@@ -238,12 +236,10 @@ public class Main
 	private void importTables() throws SQLException
 	{
 		String[][] queries = { { "categories", ConfigKeys.QUERY_CATEGORIES }, { "forums", ConfigKeys.QUERY_FORUMS },
-				{ "private messages", ConfigKeys.QUERY_PRIVMSGS }, { "rankings", ConfigKeys.QUERY_RANKS },
-				// { "search words", ConfigKeys.QUERY_SEARCH_WORDS },
-				// { "search words match", ConfigKeys.QUERY_SEARCH_WORDMATCH },
-				{ "topics", ConfigKeys.QUERY_TOPICS }, { "topics watch", ConfigKeys.QUERY_TOPICS_WATCH },
-				{ "words", ConfigKeys.QUERY_WORDS }, { "posts", ConfigKeys.QUERY_POSTS },
-				{ "anonymous update", ConfigKeys.QUERY_UPDATE_ANONYMOUS } };
+			{ "private messages", ConfigKeys.QUERY_PRIVMSGS }, { "rankings", ConfigKeys.QUERY_RANKS },
+			{ "topics", ConfigKeys.QUERY_TOPICS }, { "topics watch", ConfigKeys.QUERY_TOPICS_WATCH },
+			{ "words", ConfigKeys.QUERY_WORDS }, { "posts", ConfigKeys.QUERY_POSTS },
+			{ "anonymous update", ConfigKeys.QUERY_UPDATE_ANONYMOUS } };
 
 		for (int i = 0; i < queries.length; i++) {
 			System.out.println("Importing " + queries[i][0] + "...");
@@ -256,8 +252,7 @@ public class Main
 
 	public static void main(String[] args)
 	{
-		Main m = new Main();
-		boolean ok = true;
+		Main program = new Main();
 
 		if (args.length != 4) {
 			System.out.println("Usage: phpbb2jforum <dbName> <dbUser> <dbPassword> <dbHost>");
@@ -266,66 +261,48 @@ public class Main
 		}
 
 		try {
-			m.init();
+			program.init();
 
-			SystemGlobals.setValue(ConfigKeys.DATABASE_JFORUM_URL, "jdbc:mysql://" + args[3] + "/" + args[0] + "?user="
-					+ args[1] + "&password=" + args[2]);
+			SystemGlobals.setValue(ConfigKeys.DATABASE_JFORUM_URL, "jdbc:mysql://" 
+				+ args[3] + "/" + args[0] + "?user="
+				+ args[1] + "&password=" + args[2]);
+			
+			// We use autoCommit = true because if something wrong
+			// happen, it's easier to just drop the database and create it again
 
-			m.conn = m.openConnection();
-			m.conn.setAutoCommit(false);
+			program.conn = program.openConnection();
+			program.conn.setAutoCommit(true);
 
-			// Arawak:
-			// we need another connection because the forward-only
+			// We need a second connection because the forward-only
 			// query we use later will block until the query is
 			// complete and so we can't write the to new table will
 			// reading from the old
-			m.conn2 = m.openConnection();
-			m.conn2.setAutoCommit(false);
+			program.conn2 = program.openConnection();
+			program.conn2.setAutoCommit(true);
 
 			long start = System.currentTimeMillis();
-			m.runForrestRun();
+			program.runForrestRun();
 			long end = System.currentTimeMillis() - start;
 
 			System.out.println("\nDone!!!");
-			System.out.println("Migration was done in about " + (end / 1000) + " seconds ");
+			System.out.println("Migration was performed in about " + (end / 1000) + " seconds ");
 		}
 		catch (Exception e) {
-			if (m.conn != null) {
-				try {
-					ok = false;
-					m.conn.rollback();
-				}
-				catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			}
-
 			e.printStackTrace();
 		}
 		finally {
-			if (m.conn != null) {
+			if (program.conn != null) {
 				try {
-					if (ok) {
-						m.conn.commit();
-					}
-
-					m.conn.close();
+					program.conn.close();
 				}
-				catch (SQLException e) {
-				}
+				catch (SQLException e) { }
 			}
-			if (m.conn2 != null) {
+			if (program.conn2 != null) {
 				try {
-					if (ok) {
-						m.conn2.commit();
-					}
-
-					m.conn2.close();
+					program.conn2.close();
 				}
-				catch (SQLException e) {
-				}
+				catch (SQLException e) { }
 			}
-
 		}
 	}
 }
