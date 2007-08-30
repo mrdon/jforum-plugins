@@ -14,7 +14,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: Main.java,v 1.4 2007/08/30 14:59:05 rafaelsteil Exp $
+ * @version $Id: Main.java,v 1.5 2007/08/30 16:32:20 rafaelsteil Exp $
  */
 public class Main
 {
@@ -239,11 +239,12 @@ public class Main
 	{
 		System.out.println("Cleaning tables...");
 
-		String[] queries = { ConfigKeys.QUERY_CLEAN_CATEGORIES, ConfigKeys.QUERY_CLEAN_FORUMS,
-			ConfigKeys.QUERY_CLEAN_POSTS, ConfigKeys.QUERY_CLEAN_PRIVMSGS, ConfigKeys.QUERY_CLEAN_RANKS,
-			ConfigKeys.QUERY_CLEAN_SEARCH_WORDMATCH, ConfigKeys.QUERY_CLEAN_SEARCH_WORDS,
-			ConfigKeys.QUERY_CLEAN_TOPICS, ConfigKeys.QUERY_CLEAN_TOPICS_WATCH, ConfigKeys.QUERY_CLEAN_USERS,
-			ConfigKeys.QUERY_CLEAN_WORDS, ConfigKeys.QUERY_CLEAN_POSTS_TEXT, ConfigKeys.QUERY_CLEAN_PRIVMSGS_TEXT };
+		String[] queries = { ConfigKeys.QUERY_CLEAN_BANLIST, ConfigKeys.QUERY_CLEAN_CATEGORIES, 
+			ConfigKeys.QUERY_CLEAN_FORUMS, ConfigKeys.QUERY_CLEAN_POSTS, ConfigKeys.QUERY_CLEAN_POSTS_TEXT, 
+			ConfigKeys.QUERY_CLEAN_PRIVMSGS, ConfigKeys.QUERY_CLEAN_PRIVMSGS_TEXT, 
+			ConfigKeys.QUERY_CLEAN_RANKS, ConfigKeys.QUERY_CLEAN_SMILIES, ConfigKeys.QUERY_CLEAN_TOPICS, 
+			ConfigKeys.QUERY_CLEAN_TOPICS_WATCH, ConfigKeys.QUERY_CLEAN_USERS, 
+			ConfigKeys.QUERY_CLEAN_VOTE_DESC, ConfigKeys.QUERY_CLEAN_VOTE_RESULTS, ConfigKeys.QUERY_CLEAN_VOTE_VOTERS  };
 
 		for (int i = 0; i < queries.length; i++) {
 			System.out.println("Cleaning " + queries[i]);
@@ -257,12 +258,11 @@ public class Main
 	}
 
 	private void importTables() throws SQLException
-	{
+	{ 
 		String[][] queries = { { "categories", ConfigKeys.QUERY_CATEGORIES }, { "forums", ConfigKeys.QUERY_FORUMS },
 			{ "private messages", ConfigKeys.QUERY_PRIVMSGS }, { "rankings", ConfigKeys.QUERY_RANKS },
 			{ "topics", ConfigKeys.QUERY_TOPICS }, { "topics watch", ConfigKeys.QUERY_TOPICS_WATCH },
-			{ "words", ConfigKeys.QUERY_WORDS }, { "posts", ConfigKeys.QUERY_POSTS },
-			{ "anonymous update", ConfigKeys.QUERY_UPDATE_ANONYMOUS } };
+			{ "posts", ConfigKeys.QUERY_POSTS }, { "anonymous update", ConfigKeys.QUERY_UPDATE_ANONYMOUS } };
 
 		for (int i = 0; i < queries.length; i++) {
 			System.out.println("Importing " + queries[i][0] + "...");
@@ -292,10 +292,6 @@ public class Main
 		try {
 			program.init();
 
-			SystemGlobals.setValue(ConfigKeys.DATABASE_JFORUM_URL, "jdbc:mysql://" 
-				+ args[3] + "/" + args[0] + "?user="
-				+ args[1] + "&password=" + args[2]);
-			
 			// We use autoCommit = true because if something wrong
 			// happen, it's easier to just drop the database and create it again
 

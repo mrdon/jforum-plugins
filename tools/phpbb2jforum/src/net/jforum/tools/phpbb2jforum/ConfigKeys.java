@@ -6,7 +6,7 @@ package net.jforum.tools.phpbb2jforum;
 * configuration keys under eclipse ;-)
 * 
 * @author Rafael Steil
-* @version $Id: ConfigKeys.java,v 1.1 2006/08/20 22:47:41 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.2 2007/08/30 16:32:20 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -22,6 +22,7 @@ public class ConfigKeys {
 	
 	public static final String DATABASE_DRIVER = "database.driver";
 	public static final String DATABASE_JFORUM_URL = "database.jforum.url";
+	public static final String DATABASE_PHPBB = "database.phpbb";
 	public static final String DATABASE_QUERIES = "database.queries";
 	public static final String DBNAME = "dbname";
 	public static final String DBUSER = "dbuser";
@@ -59,12 +60,9 @@ public class ConfigKeys {
 	public static final String QUERY_POSTS = "query.posts";
 	public static final String QUERY_POSTS_TEXT = "query.posts.text";
 	public static final String QUERY_RANKS = "query.ranks";
-	public static final String QUERY_SEARCH_WORDS = "query.search.words";
-	public static final String QUERY_SEARCH_WORDMATCH = "query.search.wordmatch";
 	public static final String QUERY_TOPICS = "query.topics";
 	public static final String QUERY_TOPICS_WATCH = "query.topics.watch";
 	public static final String QUERY_USERS = "query.users";
-	public static final String QUERY_WORDS = "query.words";
 
 	public static final String QUERY_TOTAL_POSTS = "query.totalposts";
 	public static final String QUERY_SELECT_POSTS_TEXT = "query.select.poststext";
@@ -73,6 +71,7 @@ public class ConfigKeys {
 	
 	public static final String QUERY_UPDATE_ANONYMOUS = "query.update.anonymous";
 	
+	public static final String QUERY_CLEAN_BANLIST = "query.clean.banlist";
 	public static final String QUERY_CLEAN_CATEGORIES = "query.clean.categories";
 	public static final String QUERY_CLEAN_FORUMS = "query.clean.forums";
 	public static final String QUERY_CLEAN_POSTS = "query.clean.posts";
@@ -80,10 +79,11 @@ public class ConfigKeys {
 	public static final String QUERY_CLEAN_PRIVMSGS = "query.clean.privmsgs";
 	public static final String QUERY_CLEAN_PRIVMSGS_TEXT = "query.clean.privmsgs.text";
 	public static final String QUERY_CLEAN_RANKS = "query.clean.ranks";
-	public static final String QUERY_CLEAN_SEARCH_WORDS = "query.clean.search.words";
-	public static final String QUERY_CLEAN_SEARCH_WORDMATCH = "query.clean.search.wordmatch";
+	public static final String QUERY_CLEAN_SMILIES = "query.clean.smilies";
 	public static final String QUERY_CLEAN_TOPICS = "query.clean.topics";
 	public static final String QUERY_CLEAN_TOPICS_WATCH = "query.clean.topicswatch";
 	public static final String QUERY_CLEAN_USERS = "query.clean.users";
-	public static final String QUERY_CLEAN_WORDS = "query.clean.words";
+	public static final String QUERY_CLEAN_VOTE_DESC = "query.clean.votedesc";
+	public static final String QUERY_CLEAN_VOTE_RESULTS = "query.clean.voteresults";
+	public static final String QUERY_CLEAN_VOTE_VOTERS = "query.clean.votevoters";
 }
