@@ -12,37 +12,36 @@ function validateForm(f)
 }
 </script>
 
-<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum${extension}" method="post" onSubmit="return validateForm(this);">
-<input type="hidden" name="action" value="insertSave">
-<input type="hidden" name="module" value="${moduleName}">
+<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum${extension}" method="post" onsubmit="return validateForm(this);">
+<input type="hidden" name="action" value="insertSave" />
+<input type="hidden" name="module" value="${moduleName}" />
 
-<TABLE class=forumline cellSpacing=1 cellPadding=3 width="100%" border=0><TBODY>
-<TR>
-<TH class="thhead" vAlign=center colSpan=2 height=25>${I18n.getMessage("Banlist.Form.Title")}</TH></TR>
+<table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
+	<tr>
+		<th class="thhead" valign="middle" colspan="2" height="25">${I18n.getMessage("Banlist.Form.Title")}</th>
+	</tr>
 
-<TR>
-	<TD class=gen>${I18n.getMessage("Banlist.Type")}</TD>
-	<TD class=row2>
-		<select name="type">
+	<tr>
+		<td class="gen">${I18n.getMessage("Banlist.Type")}</td>
+		<td class="row2">
+		    <select name="type">
 			<option value="email">${I18n.getMessage("Banlist.Email")}</option>
 			<option value="ip">${I18n.getMessage("Banlist.IP")}</option>
 			<option value="user">${I18n.getMessage("Banlist.UserID")}</option>
-		</select>
-	</TD>
-</TR>
+		    </select>
+		</td>
+	</tr>
 
-<TR>
-	<TD class=row1 width="38%"><SPAN class=gen>${I18n.getMessage("Banlist.Value")}</SPAN></TD>
-	<TD class=row2>
-		<input name="value" type="text">
-		<br />
-		<span class="gensmall">${I18n.getMessage("Banlist.Tip.IP")}</span>
-	</TD>
-</TR>
+	<tr>
+		<td class="row1" width="38%"><span class="gen">${I18n.getMessage("Banlist.Value")}</span></td>
+		<td class="row2"><input name="value" type="text" /> <br />
+		<span class="gensmall">${I18n.getMessage("Banlist.Tip.IP")}</span></td>
+	</tr>
 
-<TR align="center">
-<TD class="catbottom" colSpan=2 height=28>
-<INPUT class=mainoption type=submit value="${I18n.getMessage("Rank.Form.ClickToUpdate")}" name=submit>
-</TD>
-</TR></TABLE>
-</FORM>
+	<tr align="center">
+		<td class="catbottom" colspan="2" height="28">
+		    <input class="mainoption" type="submit" value="${I18n.getMessage("Rank.Form.ClickToUpdate")}" name="submit" />
+		</td>
+	</tr>
+</table>
+</form>
