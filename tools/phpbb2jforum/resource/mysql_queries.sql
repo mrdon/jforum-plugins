@@ -22,7 +22,6 @@ query.clean.votevoters = DELETE FROM jforum_vote_voters
 #
 query.totalposts = SELECT COUNT(1) AS total FROM ${phpbb}.phpbb_posts
 query.select.poststext = SELECT post_id, post_subject, post_text FROM ${phpbb}.phpbb_posts_text
-query.select.banlist = SELECT ban_userid, ban_ip, ban_email FROM ${phpbb}.phpbb_banlist
 
 query.select.users = SELECT user_id, user_active, username, user_password, user_regdate user_regdate, user_level, user_posts, user_timezone, \
 	user_style, user_lang, user_dateformat, user_new_privmsg, user_unread_privmsg, user_last_privmsg, \
@@ -38,12 +37,37 @@ query.update.anonymous = UPDATE jforum_users SET user_id = 1 WHERE user_id = -1
 #
 # Insert
 #
-query.banlist = INSERT INTO jforum_banlist (user_id, banlist_ip, banlist_email) VALUES (?, ? ?)
+query.votedesc = INSERT INTO jforum_vote_desc (vote_id, topic_id, vote_text, vote_start, vote_length) VALUES \
+	SELECT vote_id, topic_id, vote_text, FROM_UNIXTIME(vote_start), vote_length FROM ${phpbb}.phpbb_vote_desc
+		
+query.voteresults = INSERT INTO jforum_vote_results (vote_id, vote_option_id, vote_option_text, vote_result) VALUES \
+	SELECT vote_id, vote_option_id, vote_option_text, vote_result FROM ${phpbb}.phpbb_vote_results
+	
+query.votevoters = INSERT INTO jforum_vote_voters (vote_id, vote_user_id, vote_user_ip) VALUES \
+	SELECT vote_id, vote_user_id, concat( \
+		conv(substr(vote_user_ip, 1, 2), 16, 10), '.', \
+		conv(substr(vote_user_ip, 3, 2), 16, 10), '.', \
+		conv(substr(vote_user_ip, 5, 2), 16, 10), '.', \
+		conv(substr(vote_user_ip, 7, 2), 16, 10)) \
+		FROM ${phpbb}.phpbb_vote_voters
+
+query.banlist = INSERT INTO jforum_banlist (user_id, banlist_ip, banlist_email) VALUES \
+	SELECT user_id, concat( \
+		conv(substr(banlist_ip, 1, 2), 16, 10), '.', \
+		conv(substr(banlist_ip, 3, 2), 16, 10), '.', \
+		conv(substr(banlist_ip, 5, 2), 16, 10), '.', \
+		conv(substr(banlist_ip, 7, 2), 16, 10)), \
+		banlist_email FROM ${phpbb}.phpbb_banlist
 
 query.posts = INSERT INTO jforum_posts ( post_id, topic_id, forum_id, user_id, post_time, poster_ip, enable_bbcode, \
 	enable_html, enable_smilies, enable_sig ) \
-	SELECT post_id, topic_id, forum_id, poster_id, FROM_UNIXTIME(post_time), poster_ip, enable_bbcode, \
-	enable_html, enable_smilies, enable_sig \
+	SELECT post_id, topic_id, forum_id, poster_id, FROM_UNIXTIME(post_time), \
+	concat( \
+		conv(substr(poster_ip, 1, 2), 16, 10), '.', \
+		conv(substr(poster_ip, 3, 2), 16, 10), '.', \
+		conv(substr(poster_ip, 5, 2), 16, 10), '.', \
+		conv(substr(poster_ip, 7, 2), 16, 10)), \
+	enable_bbcode, enable_html, enable_smilies, enable_sig \
 	FROM ${phpbb}.phpbb_posts
 	
 query.posts.text = INSERT INTO jforum_posts_text ( post_id, post_subject, post_text ) VALUES (?, ?, ?)
@@ -58,8 +82,13 @@ query.privmsgs = INSERT INTO jforum_privmsgs ( privmsgs_id, privmsgs_type, privm
 	privmsgs_date, privmsgs_ip, privmsgs_enable_bbcode, privmsgs_enable_html, privmsgs_enable_smilies, \
 	privmsgs_attach_sig ) \
 	SELECT privmsgs_id, privmsgs_type, privmsgs_subject, privmsgs_from_userid, privmsgs_to_userid, \
-	FROM_UNIXTIME(privmsgs_date), privmsgs_ip, privmsgs_enable_bbcode, privmsgs_enable_html, privmsgs_enable_smilies, \
-	privmsgs_attach_sig \
+	FROM_UNIXTIME(privmsgs_date), \
+	concat( \
+		conv(substr(privmsgs_ip, 1, 2), 16, 10), '.', \
+		conv(substr(privmsgs_ip, 3, 2), 16, 10), '.', \
+		conv(substr(privmsgs_ip, 5, 2), 16, 10), '.', \
+		conv(substr(privmsgs_ip, 7, 2), 16, 10)), \
+	privmsgs_enable_bbcode, privmsgs_enable_html, privmsgs_enable_smilies, privmsgs_attach_sig \
 	FROM ${phpbb}.phpbb_privmsgs
 	
 query.privmsgs.text = INSERT INTO jforum_privmsgs_text ( privmsgs_id, privmsgs_text ) VALUES (?, ?)

@@ -16,7 +16,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: Main.java,v 1.6 2007/08/30 22:39:16 rafaelsteil Exp $
+ * @version $Id: Main.java,v 1.7 2007/08/30 23:18:13 rafaelsteil Exp $
  */
 public class Main
 {
@@ -58,7 +58,6 @@ public class Main
 		this.importTables();
 		this.importPrivateMessages();
 		this.importPosts();
-		this.importBanlist();
 	}
 
 	private void importPosts() throws SQLException
@@ -138,46 +137,6 @@ public class Main
 		System.out.println("Private messages text imported...");
 	}
 	
-	private void importBanlist() throws SQLException
-	{
-		System.out.println("Importing banlist...");
-		
-		Statement s = null;
-		ResultSet rs = null;
-		PreparedStatement insert = null; 
-		
-		try {
-			insert = this.conn.prepareStatement(this.getSql(ConfigKeys.QUERY_BANLIST));
-			s = this.conn.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-			s.setFetchSize(50);
-			
-			rs = s.executeQuery(this.getSql(ConfigKeys.QUERY_SELECT_BANLIST));
-	
-			while (rs.next()) {
-				insert.setInt(1, rs.getInt("ban_userid"));
-				insert.setString(2, this.decodePhpbbIp(rs.getString("ban_ip")));
-				insert.setString(3, rs.getString("ban_email"));
-	
-				insert.executeUpdate();
-			}
-		}
-		finally {
-			DbUtils.close(rs, insert);
-			DbUtils.close(s);
-		}
-		
-		System.out.println("Banlist imported...");
-	}
-	
-	private String decodePhpbbIp(String ip)
-	{
-		// IPs in PHPBB are hex encoded
-		return "" + Integer.parseInt(ip.substring(0, 2), 16)
-			+ "." + Integer.parseInt(ip.substring(2, 4), 16)
-			+ "." + Integer.parseInt(ip.substring(4, 6), 16)
-			+ "." + Integer.parseInt(ip.substring(6, 8), 16);
-	}
-
 	private void importUsers() throws SQLException
 	{
 		System.out.println("Importing users...");
@@ -306,7 +265,9 @@ public class Main
 		String[][] queries = { { "categories", ConfigKeys.QUERY_CATEGORIES }, { "forums", ConfigKeys.QUERY_FORUMS },
 			{ "private messages", ConfigKeys.QUERY_PRIVMSGS }, { "rankings", ConfigKeys.QUERY_RANKS },
 			{ "topics", ConfigKeys.QUERY_TOPICS }, { "topics watch", ConfigKeys.QUERY_TOPICS_WATCH },
-			{ "posts", ConfigKeys.QUERY_POSTS }, { "anonymous update", ConfigKeys.QUERY_UPDATE_ANONYMOUS } };
+			{ "posts", ConfigKeys.QUERY_POSTS }, { "anonymous update", ConfigKeys.QUERY_UPDATE_ANONYMOUS }, 
+			{ "banlist", ConfigKeys.QUERY_BANLIST }, { "Vote Desc", ConfigKeys.QUERY_VOTE_DESC }, 
+			{ "Vote voters", ConfigKeys.QUERY_VOTE_VOTERS }, { "Vote results", ConfigKeys.QUERY_VOTE_RESULTS} };
 
 		for (int i = 0; i < queries.length; i++) {
 			System.out.println("Importing " + queries[i][0] + "...");
