@@ -22,6 +22,7 @@ query.clean.votevoters = DELETE FROM jforum_vote_voters
 #
 query.totalposts = SELECT COUNT(1) AS total FROM ${phpbb}.phpbb_posts
 query.select.poststext = SELECT post_id, post_subject, post_text FROM ${phpbb}.phpbb_posts_text
+query.select.banlist = SELECT ban_userid, ban_ip, ban_email FROM ${phpbb}.phpbb_banlist
 
 query.select.users = SELECT user_id, user_active, username, user_password, user_regdate user_regdate, user_level, user_posts, user_timezone, \
 	user_style, user_lang, user_dateformat, user_new_privmsg, user_unread_privmsg, user_last_privmsg, \
@@ -37,6 +38,8 @@ query.update.anonymous = UPDATE jforum_users SET user_id = 1 WHERE user_id = -1
 #
 # Insert
 #
+query.banlist = INSERT INTO jforum_banlist (user_id, banlist_ip, banlist_email) VALUES (?, ? ?)
+
 query.posts = INSERT INTO jforum_posts ( post_id, topic_id, forum_id, user_id, post_time, poster_ip, enable_bbcode, \
 	enable_html, enable_smilies, enable_sig ) \
 	SELECT post_id, topic_id, forum_id, poster_id, FROM_UNIXTIME(post_time), poster_ip, enable_bbcode, \

@@ -9,12 +9,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.apache.commons.lang.StringUtils;
+
 import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: Main.java,v 1.5 2007/08/30 16:32:20 rafaelsteil Exp $
+ * @version $Id: Main.java,v 1.6 2007/08/30 22:39:16 rafaelsteil Exp $
  */
 public class Main
 {
@@ -51,10 +53,12 @@ public class Main
 	private void runForrestRun() throws Exception
 	{
 		this.cleanTables();
+		
 		this.importUsers();
 		this.importTables();
 		this.importPrivateMessages();
 		this.importPosts();
+		this.importBanlist();
 	}
 
 	private void importPosts() throws SQLException
@@ -79,8 +83,8 @@ public class Main
 			s = this.conn2.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
 			s.setFetchSize(50);
 	
-			insert = this.conn.prepareStatement(SystemGlobals.getSql(ConfigKeys.QUERY_POSTS_TEXT));
-			rs = s.executeQuery(SystemGlobals.getSql(ConfigKeys.QUERY_SELECT_POSTS_TEXT));
+			insert = this.conn.prepareStatement(this.getSql(ConfigKeys.QUERY_POSTS_TEXT));
+			rs = s.executeQuery(this.getSql(ConfigKeys.QUERY_SELECT_POSTS_TEXT));
 			
 			System.out.println("Ok, here we go");
 			
@@ -113,11 +117,11 @@ public class Main
 		PreparedStatement insert = null; 
 
 		try {
-			insert = this.conn.prepareStatement(SystemGlobals.getSql(ConfigKeys.QUERY_PRIVMSGS_TEXT));
+			insert = this.conn.prepareStatement(this.getSql(ConfigKeys.QUERY_PRIVMSGS_TEXT));
 			s = this.conn.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
 			s.setFetchSize(50);
 			
-			rs = s.executeQuery(SystemGlobals.getSql(ConfigKeys.QUERY_SELECT_PM));
+			rs = s.executeQuery(this.getSql(ConfigKeys.QUERY_SELECT_PM));
 	
 			while (rs.next()) {
 				insert.setInt(1, rs.getInt("privmsgs_text_id"));
@@ -133,6 +137,46 @@ public class Main
 
 		System.out.println("Private messages text imported...");
 	}
+	
+	private void importBanlist() throws SQLException
+	{
+		System.out.println("Importing banlist...");
+		
+		Statement s = null;
+		ResultSet rs = null;
+		PreparedStatement insert = null; 
+		
+		try {
+			insert = this.conn.prepareStatement(this.getSql(ConfigKeys.QUERY_BANLIST));
+			s = this.conn.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+			s.setFetchSize(50);
+			
+			rs = s.executeQuery(this.getSql(ConfigKeys.QUERY_SELECT_BANLIST));
+	
+			while (rs.next()) {
+				insert.setInt(1, rs.getInt("ban_userid"));
+				insert.setString(2, this.decodePhpbbIp(rs.getString("ban_ip")));
+				insert.setString(3, rs.getString("ban_email"));
+	
+				insert.executeUpdate();
+			}
+		}
+		finally {
+			DbUtils.close(rs, insert);
+			DbUtils.close(s);
+		}
+		
+		System.out.println("Banlist imported...");
+	}
+	
+	private String decodePhpbbIp(String ip)
+	{
+		// IPs in PHPBB are hex encoded
+		return "" + Integer.parseInt(ip.substring(0, 2), 16)
+			+ "." + Integer.parseInt(ip.substring(2, 4), 16)
+			+ "." + Integer.parseInt(ip.substring(4, 6), 16)
+			+ "." + Integer.parseInt(ip.substring(6, 8), 16);
+	}
 
 	private void importUsers() throws SQLException
 	{
@@ -143,11 +187,11 @@ public class Main
 		PreparedStatement insert = null;
 
 		try {
-			insert = this.conn.prepareStatement(SystemGlobals.getSql(ConfigKeys.QUERY_USERS));
+			insert = this.conn.prepareStatement(this.getSql(ConfigKeys.QUERY_USERS));
 			s = this.conn.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
 			s.setFetchSize(50);
 			
-			rs = s.executeQuery(SystemGlobals.getSql(ConfigKeys.QUERY_SELECT_USERS));
+			rs = s.executeQuery(this.getSql(ConfigKeys.QUERY_SELECT_USERS));
 			
 			while (rs.next()) {
 				insert.setInt(1, rs.getInt("user_id"));
@@ -222,7 +266,7 @@ public class Main
 
 		try {
 			s = this.conn.createStatement();
-			rs = s.executeQuery(SystemGlobals.getSql(ConfigKeys.QUERY_TOTAL_POSTS));
+			rs = s.executeQuery(this.getSql(ConfigKeys.QUERY_TOTAL_POSTS));
 	
 			if (rs.next()) {
 				total = rs.getInt(1);
@@ -250,7 +294,7 @@ public class Main
 			System.out.println("Cleaning " + queries[i]);
 
 			Statement s = this.conn.createStatement();
-			s.executeUpdate(SystemGlobals.getSql(queries[i]));
+			s.executeUpdate(this.getSql(queries[i]));
 			s.close();
 		}
 
@@ -271,12 +315,18 @@ public class Main
 			
 			try {
 				s = this.conn.createStatement();
-				s.executeUpdate(SystemGlobals.getSql(queries[i][1]));
+				s.executeUpdate(this.getSql(queries[i][1]));
 			}
 			finally {
 				DbUtils.close(s);
 			}
 		}
+	}
+	
+	private String getSql(String queryName)
+	{
+		String query = SystemGlobals.getSql(queryName);
+		return StringUtils.replace(query, "${phpbb}", SystemGlobals.getValue(ConfigKeys.DATABASE_PHPBB));
 	}
 
 	public static void main(String[] args)
