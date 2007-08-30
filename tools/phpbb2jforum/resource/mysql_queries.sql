@@ -37,13 +37,13 @@ query.update.anonymous = UPDATE jforum_users SET user_id = 1 WHERE user_id = -1
 #
 # Insert
 #
-query.votedesc = INSERT INTO jforum_vote_desc (vote_id, topic_id, vote_text, vote_start, vote_length) VALUES \
+query.votedesc = INSERT INTO jforum_vote_desc (vote_id, topic_id, vote_text, vote_start, vote_length) \
 	SELECT vote_id, topic_id, vote_text, FROM_UNIXTIME(vote_start), vote_length FROM ${phpbb}.phpbb_vote_desc
 		
-query.voteresults = INSERT INTO jforum_vote_results (vote_id, vote_option_id, vote_option_text, vote_result) VALUES \
+query.voteresults = INSERT INTO jforum_vote_results (vote_id, vote_option_id, vote_option_text, vote_result) \
 	SELECT vote_id, vote_option_id, vote_option_text, vote_result FROM ${phpbb}.phpbb_vote_results
 	
-query.votevoters = INSERT INTO jforum_vote_voters (vote_id, vote_user_id, vote_user_ip) VALUES \
+query.votevoters = INSERT INTO jforum_vote_voters (vote_id, vote_user_id, vote_user_ip) \
 	SELECT vote_id, vote_user_id, concat( \
 		conv(substr(vote_user_ip, 1, 2), 16, 10), '.', \
 		conv(substr(vote_user_ip, 3, 2), 16, 10), '.', \
@@ -51,13 +51,13 @@ query.votevoters = INSERT INTO jforum_vote_voters (vote_id, vote_user_id, vote_u
 		conv(substr(vote_user_ip, 7, 2), 16, 10)) \
 		FROM ${phpbb}.phpbb_vote_voters
 
-query.banlist = INSERT INTO jforum_banlist (user_id, banlist_ip, banlist_email) VALUES \
-	SELECT user_id, concat( \
-		conv(substr(banlist_ip, 1, 2), 16, 10), '.', \
-		conv(substr(banlist_ip, 3, 2), 16, 10), '.', \
-		conv(substr(banlist_ip, 5, 2), 16, 10), '.', \
-		conv(substr(banlist_ip, 7, 2), 16, 10)), \
-		banlist_email FROM ${phpbb}.phpbb_banlist
+query.banlist = INSERT INTO jforum_banlist (user_id, banlist_ip, banlist_email) \
+	SELECT ban_userid, concat( \
+		conv(substr(ban_ip, 1, 2), 16, 10), '.', \
+		conv(substr(ban_ip, 3, 2), 16, 10), '.', \
+		conv(substr(ban_ip, 5, 2), 16, 10), '.', \
+		conv(substr(ban_ip, 7, 2), 16, 10)), \
+		ban_email FROM ${phpbb}.phpbb_banlist
 
 query.posts = INSERT INTO jforum_posts ( post_id, topic_id, forum_id, user_id, post_time, poster_ip, enable_bbcode, \
 	enable_html, enable_smilies, enable_sig ) \
@@ -96,10 +96,10 @@ query.privmsgs.text = INSERT INTO jforum_privmsgs_text ( privmsgs_id, privmsgs_t
 query.ranks = INSERT INTO jforum_ranks ( rank_id, rank_title, rank_min, rank_special, rank_image ) \
 	SELECT rank_id, rank_title, rank_min, rank_special, rank_image FROM ${phpbb}.phpbb_ranks
 
-query.topics = INSERT INTO jforum_topics ( topic_id, forum_id, topic_title, user_id, topic_time, topic_views, \
-	topic_replies, topic_status, topic_vote, topic_type, topic_first_post_id, topic_last_post_id ) \
+query.topics = INSERT INTO jforum_topics (topic_id, forum_id, topic_title, user_id, topic_time, topic_views, \
+	topic_replies, topic_status, topic_vote_id, topic_type, topic_first_post_id, topic_last_post_id, topic_moved_id) \
 	SELECT topic_id, forum_id, topic_title, topic_poster, FROM_UNIXTIME(topic_time), topic_views, \
-	topic_replies, topic_status, topic_vote, topic_type, topic_first_post_id, topic_last_post_id \
+	topic_replies, topic_status, topic_vote, topic_type, topic_first_post_id, topic_last_post_id, topic_moved_id \
 	FROM ${phpbb}.phpbb_topics
 
 query.topics.watch = INSERT INTO jforum_topics_watch ( topic_id, user_id, is_read ) \

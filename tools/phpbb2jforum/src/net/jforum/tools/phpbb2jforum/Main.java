@@ -1,6 +1,5 @@
 package net.jforum.tools.phpbb2jforum;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,14 +8,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.apache.commons.lang.StringUtils;
-
 import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.SystemGlobals;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * @author Rafael Steil
- * @version $Id: Main.java,v 1.7 2007/08/30 23:18:13 rafaelsteil Exp $
+ * @version $Id: Main.java,v 1.8 2007/08/30 23:40:59 rafaelsteil Exp $
  */
 public class Main
 {
@@ -42,12 +41,10 @@ public class Main
 		return DriverManager.getConnection(SystemGlobals.getValue(ConfigKeys.DATABASE_JFORUM_URL));
 	}
 
-	private void init() throws IOException
+	private void init(String baseDir) throws IOException
 	{
-		String baseDir = new File("").getAbsolutePath();
-		
-		SystemGlobals.initGlobals(baseDir, "/phpbb2jforum/SystemGlobals.properties");
-		SystemGlobals.loadQueries(baseDir + "/phpbb2jforum/" + SystemGlobals.getValue(ConfigKeys.DATABASE_QUERIES));
+		SystemGlobals.initGlobals(baseDir, baseDir + "/phpbb2jforum/resource/SystemGlobals.properties");
+		SystemGlobals.loadQueries(baseDir + "/phpbb2jforum/resource/" + SystemGlobals.getValue(ConfigKeys.DATABASE_QUERIES));
 	}
 
 	private void runForrestRun() throws Exception
@@ -294,14 +291,14 @@ public class Main
 	{
 		Main program = new Main();
 
-		if (args.length != 4) {
+		if (args.length != 1) {
 			System.out.println("Usage: phpbb2jforum <base_directory>");
 			System.out.println("Example: phpbb2jforum c:/jforum/tools \n");
 			return;
 		}
 
 		try {
-			program.init();
+			program.init(args[0]);
 
 			// We use autoCommit = true because if something wrong
 			// happen, it's easier to just drop the database and create it again
