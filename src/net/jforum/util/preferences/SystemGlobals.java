@@ -70,7 +70,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author Pieter Olivier
- * @version $Id: SystemGlobals.java,v 1.32 2007/08/23 13:47:52 rafaelsteil Exp $
+ * @version $Id: SystemGlobals.java,v 1.33 2007/08/30 13:19:34 rafaelsteil Exp $
  */
 public class SystemGlobals implements VariableStore
 {
@@ -94,12 +94,12 @@ public class SystemGlobals implements VariableStore
 	/**
 	 * Initialize the global configuration
 	 * @param appPath The application path (normally the path to the webapp base dir
-	 * @param defaults The file containing system defaults (when null, defaults to <appPath>/WEB-INF/config/default.conf)
+	 * @param mainConfigurationFile The file containing system defaults (when null, defaults to <appPath>/WEB-INF/config/default.conf)
 	 */
-	public static void initGlobals(String appPath, String defaults)
+	public static void initGlobals(String appPath, String mainConfigurationFile)
 	{
 		globals = new SystemGlobals();
-		globals.buildSystem(appPath, defaults);
+		globals.buildSystem(appPath, mainConfigurationFile);
 	}
 	
 	public static void reset()
@@ -111,17 +111,17 @@ public class SystemGlobals implements VariableStore
 		transientValues.clear();
 	}
 	
-	private void buildSystem(String appPath, String defaultConfig)
+	private void buildSystem(String appPath, String mainConfigurationFile)
 	{
-		if (defaultConfig == null) {
+		if (mainConfigurationFile == null) {
 			throw new InvalidParameterException("defaultConfig could not be null");
 		}
 
-		this.defaultConfig = defaultConfig;
+		this.defaultConfig = mainConfigurationFile;
 		this.defaults = new Properties();
 
 		this.defaults.put(ConfigKeys.APPLICATION_PATH, appPath);
-		this.defaults.put(ConfigKeys.DEFAULT_CONFIG, defaultConfig);
+		this.defaults.put(ConfigKeys.DEFAULT_CONFIG, mainConfigurationFile);
 		
 		SystemGlobals.loadDefaults();
 	
@@ -229,14 +229,13 @@ public class SystemGlobals implements VariableStore
 		// our new keys. 
 		Properties p = new Properties();
 		p.putAll(globals.installation);
-		try
-		{
+		
+		try {
 			FileOutputStream out = new FileOutputStream(globals.installationConfig);
 			p.store(out, "Installation specific configuration options");
 			out.close();
 		}
-		catch (IOException e)
-		{
+		catch (IOException e) {
 			throw new ForumException(e);
 		}
 

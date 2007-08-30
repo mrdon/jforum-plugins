@@ -13,7 +13,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: Main.java,v 1.2 2007/08/30 13:19:34 rafaelsteil Exp $
+ * @version $Id: Main.java,v 1.3 2007/08/30 13:24:30 rafaelsteil Exp $
  */
 public class Main
 {
@@ -43,8 +43,8 @@ public class Main
 	{
 		String baseDir = new File("").getAbsolutePath();
 		
-		SystemGlobals.initGlobals(baseDir, "/phpbb2jforum/SystemGlobals.properties");
-		SystemGlobals.loadQueries(baseDir + "/phpbb2jforum/" + SystemGlobals.getValue(ConfigKeys.DATABASE_QUERIES));
+		SystemGlobals.initGlobals(baseDir, "/tools/phpbb2jforum/SystemGlobals.properties");
+		SystemGlobals.loadQueries(baseDir + "/tools/phpbb2jforum/" + SystemGlobals.getValue(ConfigKeys.DATABASE_QUERIES));
 	}
 
 	private void runForrestRun() throws Exception

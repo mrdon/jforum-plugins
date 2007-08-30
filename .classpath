@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" output="tools/bin" path="tools/phpbb2jforum/src"/>
+	<classpathentry kind="src" output="tools/bin" path="tools/luceneIndexer"/>
+	<classpathentry kind="src" output="tools/bin" path="tools/phpbb2jforum/resource"/>
 	<classpathentry kind="src" output="tests/bin" path="tests/core"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/activation.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/mail.jar"/>
