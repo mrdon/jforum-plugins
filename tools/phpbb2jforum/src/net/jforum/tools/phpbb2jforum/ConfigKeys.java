@@ -6,7 +6,7 @@ package net.jforum.tools.phpbb2jforum;
 * configuration keys under eclipse ;-)
 * 
 * @author Rafael Steil
-* @version $Id: ConfigKeys.java,v 1.6 2007/08/31 00:42:47 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.7 2007/08/31 01:15:13 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -96,4 +96,8 @@ public class ConfigKeys {
 	public static final String QUERY_GROUPS = "query.groups";
 	public static final String QUERY_USERGROUPS = "query.usergroups";
 	public static final String QUERY_ANONYMOUSUSER_GROUP = "quer.anonymoususer.group";
+	public static final String QUERY_ADMINGROUP = "query.admingroup";
+	public static final String QUERY_ADMINROLE = "query.adminrole";
+	public static final String QUERY_MAXGROUPID = "query.maxgroupid";
+	public static final String QUERY_ADMINUSERGROUPS = "query.adminusergroups";
 }

@@ -15,7 +15,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Rafael Steil
- * @version $Id: Main.java,v 1.10 2007/08/31 00:42:47 rafaelsteil Exp $
+ * @version $Id: Main.java,v 1.11 2007/08/31 01:15:13 rafaelsteil Exp $
  */
 public class Main
 {
@@ -55,6 +55,8 @@ public class Main
 		this.importTables();
 		this.importPrivateMessages();
 		this.importPosts();
+		
+		this.setupPermissions();
 	}
 
 	private void importPosts() throws SQLException
@@ -267,7 +269,8 @@ public class Main
 			{ "banlist", ConfigKeys.QUERY_BANLIST }, { "Vote Desc", ConfigKeys.QUERY_VOTE_DESC }, 
 			{ "Vote voters", ConfigKeys.QUERY_VOTE_VOTERS }, { "Vote results", ConfigKeys.QUERY_VOTE_RESULTS}, 
 			{ "Groups", ConfigKeys.QUERY_GROUPS }, { "User groups", ConfigKeys.QUERY_USERGROUPS }, 
-			{ "Anonymous user", ConfigKeys.QUERY_ANONYMOUSUSER_GROUP } };
+			{ "Anonymous user", ConfigKeys.QUERY_ANONYMOUSUSER_GROUP }, 
+			{ "Admin group", ConfigKeys.QUERY_ADMINGROUP }, { "Admin role", ConfigKeys.QUERY_ADMINROLE } };
 
 		for (int i = 0; i < queries.length; i++) {
 			System.out.println("Importing " + queries[i][0] + "...");
@@ -281,6 +284,31 @@ public class Main
 			finally {
 				DbUtils.close(s);
 			}
+		}
+	}
+	
+	private void setupPermissions() throws SQLException
+	{
+		Statement s = null;
+		ResultSet rs = null;
+		PreparedStatement p = null;
+		
+		try {
+			s = this.conn.createStatement();
+			rs = s.executeQuery(this.getSql(ConfigKeys.QUERY_MAXGROUPID));
+			
+			if (rs.next()) {
+				int groupId = rs.getInt(1);
+				
+				p = this.conn.prepareStatement(this.getSql(ConfigKeys.QUERY_ADMINUSERGROUPS));
+				p.setInt(1, groupId);
+				p.executeUpdate();
+				
+			}
+		}
+		finally {
+			DbUtils.close(rs, p);
+			DbUtils.close(s);
 		}
 	}
 	

@@ -35,10 +35,19 @@ query.select.users = SELECT user_id, user_active, username, user_password, user_
 
 query.select.pm = SELECT privmsgs_text_id, privmsgs_text FROM ${phpbb}.phpbb_privmsgs_text
 query.update.anonymous = UPDATE jforum_users SET user_id = 1 WHERE user_id = -1
+query.maxgroupid = SELECT MAX(group_id) FROM jforum_groups
 
 #
 # Insert
 #
+query.admingroup = INSERT INTO jforum_groups (group_name, group_description) VALUES ('JForum Admin', 'Administrators. Created by phpbb2jforum')
+
+query.adminrole = INSERT INTO jforum_roles (group_id, name) \
+	SELECT MAX(group_id), 'perm_administration' FROM jforum_groups
+		
+query.adminusergroups = INSERT INTO jforum_user_groups (group_id, user_id) \
+	SELECT ?, user_id FROM ${phpbb}.phpbb_users WHERE user_level = 1
+	
 query.groups = INSERT INTO jforum_groups (group_id, group_name, group_description) \
 	SELECT group_id, group_name, group_description FROM ${phpbb}.phpbb_groups
 	
