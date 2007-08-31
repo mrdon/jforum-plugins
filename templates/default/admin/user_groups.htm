@@ -7,19 +7,19 @@
 
 <#import "macros/group_macros.ftl" as lib>
 
-<TABLE class=forumline cellSpacing=1 cellPadding=3 width="100%" border=0>
-<TR>
-<TH class="thhead" vAlign=center colSpan=2 height=25>${groupFor}</TH></TR>
-        
-<TR>
-<TD class=row1 width="38%"><span class="gen">${I18n.getMessage("Groups.Form.GroupName")}</span></TD>
-<TD class=row2> 
-<@lib.selectFieldGroups "groups", groups, 0, true, selectedList/>
-</TD>
-</TR>
+<table class="forumline" cellSpacing="1" cellPadding="3" width="100%" border="0">
+	<tr>
+		<th class="thhead" valign="middle" colspan="2" height="25">${groupFor}</th>
+	</tr>
 
-<TR align="center">
-<TD class="catbottom" colSpan=2 height=28><INPUT class=mainoption type=submit value="${I18n.getMessage("Groups.Form.ClickToUpdate")}" name=submit></TD>
-</TR></TABLE>
-</FORM>
+	<tr>
+		<td class="row1" width="38%"><span class="gen">${I18n.getMessage("Groups.Form.GroupName")}</span></td>
+		<td class="row2"><@lib.selectFieldGroups "groups", groups, 0, true, selectedList/></td>
+	</tr>
+
+	<tr align="center">
+		<td class="catbottom" colspan="2" height="28"><input class="mainoption" type="submit" value="${I18n.getMessage("Groups.Form.ClickToUpdate")}" name="submit" /></td>
+	</tr>
+</table>
+</form>
   

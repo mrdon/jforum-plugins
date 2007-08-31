@@ -214,12 +214,12 @@ function checkIfPostExists()
 
 <#if indexExists>
 	<form action="${contextPath}/jforum${extension}" onSubmit="return validateReindexForm(this);">
-	<input type="hidden" name="module" value="${moduleName}">
+	<input type="hidden" name="module" value="${moduleName}" />
 
 	<#if !currentlyIndexing>
-		<input type="hidden" name="action" value="reconstructIndexFromScratch">
+		<input type="hidden" name="action" value="reconstructIndexFromScratch" />
 	<#else>
-		<input type="hidden" name="action" value="cancelIndexing">
+		<input type="hidden" name="action" value="cancelIndexing" />
 	</#if>
 
 	<table border="0" class="forumline gen" width="100%">
@@ -235,7 +235,7 @@ function checkIfPostExists()
 					</p>
 
 					<p>
-						<li>${I18n.getMessage("SearchStats.wishToCancel")} <input type="button" onClick="confirmCancel(this.form);" value="${I18n.getMessage("SearchStats.cancelIndexing")}" style="font-weight: bold; color: red;"></li>
+						<li>${I18n.getMessage("SearchStats.wishToCancel")} <input type="button" onclick="confirmCancel(this.form);" value="${I18n.getMessage("SearchStats.cancelIndexing")}" style="font-weight: bold; color: red;" /></li>
 					</p>
 				</td>
 			</tr>
@@ -246,7 +246,7 @@ function checkIfPostExists()
 		<#else>
 			<tr>
 				<td width="200">
-					<input type="radio" id="reindexByDate" name="type" value="1" checked="checked"><label for="reindexByDate">${I18n.getMessage("SearchStats.byDate")}</label>
+					<input type="radio" id="reindexByDate" name="type" value="1" checked="checked" /><label for="reindexByDate">${I18n.getMessage("SearchStats.byDate")}</label>
 				</td>
 				<td valign="top">
 					<table border="0" class="gen">
@@ -289,12 +289,12 @@ function checkIfPostExists()
 					<table border="0" class="gen">
 						<tr>
 							<td>${I18n.getMessage("SearchStats.from")}:</td>
-							<td><input type="text" name="firstPostId" onBlur="chooseByPostId(this);">
+							<td><input type="text" name="firstPostId" onblur="chooseByPostId(this);" />
 						</tr>
 
 						<tr>
 							<td>${I18n.getMessage("SearchStats.to")}:</td>
-							<td><input type="text" name="lastPostId" onBlur="chooseByPostId(this);">
+							<td><input type="text" name="lastPostId" onBlur="chooseByPostId(this);" />
 						</tr>
 					</table>
 				</td>
@@ -306,18 +306,18 @@ function checkIfPostExists()
 					<table class="gen" cellspacing="0" cellpadding="4">
 						<tr>
 							<td class="bottomLine">
-								<input type="checkbox" id="avoidDuplicated" name="avoidDuplicatedRecords" value="yes" checked="checked"><label for="avoidDuplicated">${I18n.getMessage("SearchStats.checkMessageExists")}</label>
+								<input type="checkbox" id="avoidDuplicated" name="avoidDuplicatedRecords" value="yes" checked="checked" /><label for="avoidDuplicated">${I18n.getMessage("SearchStats.checkMessageExists")}</label>
 							</td>
 							<td class="bottomLine leftLine gensmall">${I18n.getMessage("SearchStats.warning")}</td>
 						</tr>
 
 						<tr>
-							<td class="bottomLine"><input type="radio" name="indexOperationType" checked="checked" id="operationTypeAppend" value="append"><label for="operationTypeAppend">${I18n.getMessage("SearchStats.appendToIndex")}</label></td>
+							<td class="bottomLine"><input type="radio" name="indexOperationType" checked="checked" id="operationTypeAppend" value="append" /><label for="operationTypeAppend">${I18n.getMessage("SearchStats.appendToIndex")}</label></td>
 							<td class="bottomLine leftLine gensmall">${I18n.getMessage("SearchStats.appendToIndexDesc")}</td>
 						</tr>
 
 						<tr>
-							<td><input type="radio" name="indexOperationType" id="operationTypeRecreate" value="recreate"><label for="operationTypeRecreate">${I18n.getMessage("SearchStats.recreateIndex")}<label></td>
+							<td><input type="radio" name="indexOperationType" id="operationTypeRecreate" value="recreate" /><label for="operationTypeRecreate">${I18n.getMessage("SearchStats.recreateIndex")}<label></td>
 							<td class="leftLine gensmall">${I18n.getMessage("SearchStats.recreateIndexDesc")}</td>
 						</tr>
 					</table>
@@ -327,7 +327,7 @@ function checkIfPostExists()
 
 			<tr>
 				<td colspan="2" align="right" class="cat">
-					<input type="submit" value="${I18n.getMessage("SearchStats.start")}" style="width: 100px; font-weight: bold;">
+					<input type="submit" value="${I18n.getMessage("SearchStats.start")}" style="width: 100px; font-weight: bold;" />
 				</td>
 			</tr>
 		</#if>

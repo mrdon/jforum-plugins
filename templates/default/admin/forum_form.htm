@@ -106,12 +106,12 @@ function limitTextArea(field, limit)
 
 <table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
 	<tr>
-		<th class="thhead" valign="center" colspan="2" height="25">${I18n.getMessage("Forums.Form.Title")}</th>
+		<th class="thhead" valign="middle" colspan="2" height="25">${I18n.getMessage("Forums.Form.Title")}</th>
 	</tr>
         
 	<tr>
 		<td class="row1" width="20%"><span class="gen">${I18n.getMessage("Forums.Form.ForumName")}</span></td>
-		<td class="row2"><input type="text" class="post" style="WIDTH: 200px" maxlength="150" size="25" name="forum_name" value="<#if forum?exists>${forum.name}</#if>" /></td>
+		<td class="row2"><input type="text" class="post" style="WIDTH: 200px" maxlength="200" size="25" name="forum_name" value="<#if forum?exists>${forum.name}</#if>" /></td>
 	</tr>
 
 	<tr>

@@ -6,13 +6,13 @@
 </script>
 
 <form accept-charset="${encoding}" name="form1" action="${contextPath}/jforum${extension}" method="post">
-<input type="hidden" name="action" value="permissionsSave">
-<input type="hidden" name="module" value="${moduleName}">
-<input type="hidden" name="id" value="${group.id}">
+<input type="hidden" name="action" value="permissionsSave" />
+<input type="hidden" name="module" value="${moduleName}" />
+<input type="hidden" name="id" value="${group.id}" />
 
-<table class="forumline" cellSpacing="1" cellPadding="3" width="100%" border="0">
+<table class="forumline" cellspacing="1" cellpadding="3" width="100%" border="0">
 	<tr>
-		<th class="thhead" valign="center" colspan="3" height="25">${I18n.getMessage("PermissionControl.groupTitle")} - "<i>${group.name}</i>"</th>
+		<th class="thhead" valign="middle" colspan="3" height="25">${I18n.getMessage("PermissionControl.groupTitle")} - "<i>${group.name}</i>"</th>
 	</tr>
 
 	<tr>
@@ -21,9 +21,9 @@
 			<font color="#ff0000"><b><center>${I18n.getMessage("PermissionControl.howTo")}:</center></b></font> <br />
 			</span>
 			<span class="gensmall">
-			<li>${I18n.getMessage("PermissionControl.areRestrictive")}. 
-			<li>${I18n.getMessage("PermissionControl.allowAllDescrption")}. 
-			<li>${I18n.getMessage("PermissionControl.notTrivial")}. 
+			<li>${I18n.getMessage("PermissionControl.areRestrictive")}. </li>
+			<li>${I18n.getMessage("PermissionControl.allowAllDescrption")}. </li>
+			<li>${I18n.getMessage("PermissionControl.notTrivial")}.</li> 
 			</span>
 		</td>
 	</tr>
@@ -56,14 +56,14 @@
 					</#list>
 					</select>
 					
-					<input type="hidden" name="all${p.id}" value="${allValues}">
+					<input type="hidden" name="all${p.id}" value="${allValues}" />
 				</td>
 			</tr>
 		</#list>
 	</#list>
 
 	<tr align="center">
-		<td class="catbottom" colspan="3" height="28"><input class="mainoption" type="submit" value="${I18n.getMessage("PermissionControl.save")}" name="submit"></td>
+		<td class="catbottom" colspan="3" height="28"><input class="mainoption" type="submit" value="${I18n.getMessage("PermissionControl.save")}" name="submit" /></td>
 	</tr>
 </table>
 

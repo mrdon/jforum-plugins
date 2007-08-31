@@ -2,11 +2,12 @@
 <#import "macros/group_macros.ftl" as lib>
 <style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/style.css?${startupTime} );</style>
 
-<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum${extension}" method="post">
-<input type="hidden" name="action" value="quotaLimitSave" />
-<input type="hidden" name="module" value="${moduleName}" />
+
 
 <table width="99%" align="center" cellpadding="4" cellspacing="1" border="0" class="forumline">
+	<form accept-charset="${encoding}" name="form" action="${contextPath}/jforum${extension}" method="post">
+	<input type="hidden" name="action" value="quotaLimitSave" />
+	<input type="hidden" name="module" value="${moduleName}" />
 	<tr>
 	  <th class="thead" colspan="5" align="center" height="28">${I18n.getMessage("AdminAttachments.quotaTitle")}</th>
 	</tr>
@@ -31,7 +32,7 @@
 	<tr align="right">
 	  <td class="catbottom" colspan="5" height="29">  <input type="submit" name="submit" class="liteoption" value="${I18n.getMessage("submit")}" /></td>
 	</tr>
-</form>
+	</form>
 
 	<!-- List existing entries -->
 	<#if (quotas.size() > 0)>
@@ -78,8 +79,8 @@
 		  <td class="catbottom" colspan="5" height="29"> <input type="submit" name="submit" class="liteoption" value="${I18n.getMessage("submit")}" /></td>
 		</tr>
 	</#if>
+    </form>
 </table>
-</form>
 <br />
 
 <#macro quotaCombo n quotaId>
