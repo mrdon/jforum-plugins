@@ -36,7 +36,7 @@ INSERT INTO jforum_roles (role_id, group_id, name) VALUES (jforum_roles_seq.next
 
 -- 
 --  Users from Admin Group
--
+--
 INSERT INTO jforum_users ( user_id, username, user_password, user_regdate, user_posts ) VALUES (jforum_users_seq.nextval, 'Admin', '21232f297a57a5a743894a0e4a801fc3', SYSDATE, 1);
 INSERT INTO jforum_user_groups (group_id, user_id) VALUES (jforum_groups_seq.currval, jforum_users_seq.currval );
 
