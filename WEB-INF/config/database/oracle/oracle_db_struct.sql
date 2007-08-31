@@ -637,7 +637,7 @@ CREATE SEQUENCE jforum_moderation_log_seq
 	CACHE 200 ORDER;
 
 CREATE TABLE jforum_moderation_log (
-	log_id NUMBER(10) NOT NULL
+	log_id NUMBER(10) NOT NULL,
 	user_id NUMBER(10) NOT NULL,
 	log_description BLOB NOT NULL,
 	log_original_message BLOB,
