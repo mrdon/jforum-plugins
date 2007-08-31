@@ -4,6 +4,8 @@
 query.clean.banlist = DELETE FROM jforum_banlist
 query.clean.categories = DELETE FROM jforum_categories
 query.clean.forums = DELETE FROM jforum_forums
+query.clean.groups = DELETE FROM jforum_groups
+query.clean.usergroups = DELETE FROM jforum_user_groups
 query.clean.posts = DELETE FROM jforum_posts
 query.clean.posts.text = DELETE FROM jforum_posts_text
 query.clean.privmsgs = DELETE FROM jforum_privmsgs
@@ -37,6 +39,14 @@ query.update.anonymous = UPDATE jforum_users SET user_id = 1 WHERE user_id = -1
 #
 # Insert
 #
+query.groups = INSERT INTO jforum_groups (group_id, group_name, group_description) \
+	SELECT group_id, group_name, group_description FROM ${phpbb}.phpbb_groups
+	
+query.usergroups = INSERT INTO jforum_user_groups (group_id, user_id) \
+	SELECT group_id, user_id FROM ${phpbb}.phpbb_user_group
+	
+quer.anonymoususer.group = UPDATE jforum_user_groups SET user_id = 1 WHERE user_id = -1
+
 query.votedesc = INSERT INTO jforum_vote_desc (vote_id, topic_id, vote_text, vote_start, vote_length) \
 	SELECT vote_id, topic_id, vote_text, FROM_UNIXTIME(vote_start), vote_length FROM ${phpbb}.phpbb_vote_desc
 		

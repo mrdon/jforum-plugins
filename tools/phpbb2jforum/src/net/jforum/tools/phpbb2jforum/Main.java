@@ -15,7 +15,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Rafael Steil
- * @version $Id: Main.java,v 1.8 2007/08/30 23:40:59 rafaelsteil Exp $
+ * @version $Id: Main.java,v 1.9 2007/08/31 00:40:21 rafaelsteil Exp $
  */
 public class Main
 {
@@ -264,7 +264,9 @@ public class Main
 			{ "topics", ConfigKeys.QUERY_TOPICS }, { "topics watch", ConfigKeys.QUERY_TOPICS_WATCH },
 			{ "posts", ConfigKeys.QUERY_POSTS }, { "anonymous update", ConfigKeys.QUERY_UPDATE_ANONYMOUS }, 
 			{ "banlist", ConfigKeys.QUERY_BANLIST }, { "Vote Desc", ConfigKeys.QUERY_VOTE_DESC }, 
-			{ "Vote voters", ConfigKeys.QUERY_VOTE_VOTERS }, { "Vote results", ConfigKeys.QUERY_VOTE_RESULTS} };
+			{ "Vote voters", ConfigKeys.QUERY_VOTE_VOTERS }, { "Vote results", ConfigKeys.QUERY_VOTE_RESULTS}, 
+			{ "Groups", ConfigKeys.QUERY_GROUPS }, { "User groups", ConfigKeys.QUERY_USERGROUPS }, 
+			{ "Anonymous user", ConfigKeys.QUERY_ANONYMOUSUSER_GROUP } };
 
 		for (int i = 0; i < queries.length; i++) {
 			System.out.println("Importing " + queries[i][0] + "...");

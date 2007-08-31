@@ -6,7 +6,7 @@ package net.jforum.tools.phpbb2jforum;
 * configuration keys under eclipse ;-)
 * 
 * @author Rafael Steil
-* @version $Id: ConfigKeys.java,v 1.4 2007/08/30 23:18:13 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.5 2007/08/31 00:40:22 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -91,4 +91,7 @@ public class ConfigKeys {
 	public static final String QUERY_VOTE_DESC = "query.votedesc";
 	public static final String QUERY_VOTE_RESULTS = "query.voteresults";
 	public static final String QUERY_VOTE_VOTERS = "query.votevoters";
+	public static final String QUERY_GROUPS = "query.groups";
+	public static final String QUERY_USERGROUPS = "query.usergroups";
+	public static final String QUERY_ANONYMOUSUSER_GROUP = "quer.anonymoususer.group";
 }
