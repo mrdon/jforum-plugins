@@ -124,8 +124,8 @@ public class GenericModerationLogDAO extends AutoKeys implements ModerationLogDA
 		ModerationLog log = new ModerationLog();
 		
 		log.setId(rs.getInt("log_id"));
-		log.setDescription(rs.getString("log_description"));
-		log.setOriginalMessage(rs.getString("log_original_message"));
+		log.setDescription(this.readDesriptionFromResultSet(rs));
+		log.setOriginalMessage(this.readOriginalMessageFromResultSet(rs));
 		log.setType(rs.getInt("log_type"));
 		log.setDate(new Date(rs.getTimestamp("log_date").getTime()));
 		log.setPostId(rs.getInt("post_id"));
@@ -144,6 +144,16 @@ public class GenericModerationLogDAO extends AutoKeys implements ModerationLogDA
 		log.setPosterUser(posterUser);
 		
 		return log;
+	}
+	
+	protected String readDesriptionFromResultSet(ResultSet rs) throws SQLException
+	{
+		return rs.getString("log_description");
+	}
+	
+	protected String readOriginalMessageFromResultSet(ResultSet rs) throws SQLException
+	{
+		return rs.getString("log_original_message");
 	}
 	
 	public int totalRecords()

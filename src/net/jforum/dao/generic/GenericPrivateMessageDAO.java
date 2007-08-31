@@ -66,7 +66,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericPrivateMessageDAO.java,v 1.11 2007/02/25 13:48:33 rafaelsteil Exp $
+ * @version $Id: GenericPrivateMessageDAO.java,v 1.12 2007/08/31 22:56:40 rafaelsteil Exp $
  */
 public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao.PrivateMessageDAO
 {
@@ -78,6 +78,7 @@ public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao
 		// We should store 2 copies: one for the sendee's sent box
 		// and another for the target user's inbox.
 		PreparedStatement p = null;
+		
 		try {
 			p = this.getStatementForAutoKeys("PrivateMessageModel.add");
 
@@ -91,7 +92,7 @@ public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao
 
 			this.addPmText(pm);
 		}
-		catch (SQLException e) {
+		catch (Exception e) {
 			throw new DatabaseException(e);
 		}
 		finally {
@@ -99,10 +100,10 @@ public class GenericPrivateMessageDAO extends AutoKeys implements net.jforum.dao
 		}
 	}
 
-	protected void addPmText(PrivateMessage pm) throws SQLException
+	protected void addPmText(PrivateMessage pm) throws Exception
 	{
 		PreparedStatement text = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql("PrivateMessagesModel.addText"));
+			SystemGlobals.getSql("PrivateMessagesModel.addText"));
 
 		text.setInt(1, pm.getId());
 		text.setString(2, pm.getPost().getText());

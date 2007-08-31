@@ -84,7 +84,6 @@ import net.jforum.repository.RankingRepository;
 import net.jforum.repository.SecurityRepository;
 import net.jforum.repository.SmiliesRepository;
 import net.jforum.repository.TopicRepository;
-import net.jforum.search.SearchFacade;
 import net.jforum.security.PermissionControl;
 import net.jforum.security.SecurityConstants;
 import net.jforum.util.I18n;
@@ -104,7 +103,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.191 2007/08/29 19:39:02 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.192 2007/08/31 22:56:40 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -872,8 +871,6 @@ public class PostAction extends Command
 				}
 			}
 			
-			SearchFacade.update(post);
-			
 			if (SystemGlobals.getBoolValue(ConfigKeys.MODERATION_LOGGING_ENABLED)
 					&& isModerator && post.getUserId() != SessionFacade.getUserSession().getUserId()) {
 				ModerationHelper helper = new ModerationHelper();
@@ -1335,8 +1332,6 @@ public class PostAction extends Command
 				+ p.getForumId()
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		}
-		
-		SearchFacade.delete(p);
 		
 		this.request.addParameter("log_original_message", p.getText());
 		ModerationHelper moderationHelper = new ModerationHelper();

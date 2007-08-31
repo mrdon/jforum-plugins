@@ -65,7 +65,7 @@ import net.jforum.util.preferences.SystemGlobals;
 /**
  * @author Rafael Steil
  * @author Vanessa Sabino
- * @version $Id: GenericPostDAO.java,v 1.27 2007/08/27 04:28:52 rafaelsteil Exp $
+ * @version $Id: GenericPostDAO.java,v 1.28 2007/08/31 22:56:40 rafaelsteil Exp $
  */
 public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 {
@@ -175,6 +175,8 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 
 				text.executeUpdate();
 				post.executeUpdate();
+				
+				SearchFacade.delete(p);
 			}
 		}
 		catch (SQLException e) {
@@ -193,13 +195,15 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 	{
 		PreparedStatement p = null;
 		ResultSet rs = null;
+		
 		try {
 			p = JForumExecutionContext.getConnection()
-					.prepareStatement(SystemGlobals.getSql("PostModel.deleteByTopic"));
+				.prepareStatement(SystemGlobals.getSql("PostModel.deleteByTopic"));
 			p.setInt(1, topicId);
 			rs = p.executeQuery();
 
 			List posts = new ArrayList();
+			
 			while (rs.next()) {
 				Post post = new Post();
 				post.setId(rs.getInt("post_id"));
@@ -226,7 +230,7 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 		this.updatePostsTable(post);
 		this.updatePostsTextTable(post);
 
-		SearchFacade.create(post);
+		SearchFacade.update(post);
 	}
 
 	protected void updatePostsTextTable(Post post)
@@ -291,17 +295,17 @@ public class GenericPostDAO extends AutoKeys implements net.jforum.dao.PostDAO
 
 			return post.getId();
 		}
-		catch (SQLException e) {
+		catch (Exception e) {
 			throw new DatabaseException(e);
 		}
 	}
 
-	protected void addNewPostText(Post post) throws SQLException
+	protected void addNewPostText(Post post) throws Exception
 	{
 		PreparedStatement p = null;
 		try {
 			p = JForumExecutionContext.getConnection().prepareStatement(
-					SystemGlobals.getSql("PostModel.addNewPostText"));
+				SystemGlobals.getSql("PostModel.addNewPostText"));
 			p.setInt(1, post.getId());
 			p.setString(2, post.getText());
 			p.setString(3, post.getSubject());

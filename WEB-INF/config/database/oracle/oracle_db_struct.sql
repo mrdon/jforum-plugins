@@ -296,6 +296,7 @@ CREATE TABLE jforum_topics (
   topic_type NUMBER(10) DEFAULT 0,
   topic_first_post_id NUMBER(10) DEFAULT 0,
   topic_last_post_id NUMBER(10) DEFAULT 0 NOT NULL,
+  topic_moved_id NUMBER(10) DEFAULT 0,
   moderated NUMBER(10) DEFAULT 0,
   PRIMARY KEY (topic_id)
 );
@@ -304,6 +305,7 @@ CREATE INDEX idx_topics_forum ON jforum_topics(forum_id);
 CREATE INDEX idx_topics_user ON jforum_topics(user_id);
 CREATE INDEX idx_topics_fp ON jforum_topics(topic_first_post_id);
 CREATE INDEX idx_topics_lp ON jforum_topics(topic_last_post_id);
+CREATE INDEX idx_topics_moved ON jforum_topics(topic_moved_id);
 
 --
 -- Table structure for table 'jforum_topics_watch'

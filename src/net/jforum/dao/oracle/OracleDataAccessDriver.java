@@ -43,18 +43,29 @@
 package net.jforum.dao.oracle;
 
 import net.jforum.dao.ModerationDAO;
+import net.jforum.dao.ModerationLogDAO;
+import net.jforum.dao.generic.GenericDataAccessDriver;
 
 /**
  * @author Dmitriy Kiriy
- * @version $Id: OracleDataAccessDriver.java,v 1.9 2007/07/28 20:07:18 rafaelsteil Exp $
+ * @version $Id: OracleDataAccessDriver.java,v 1.10 2007/08/31 22:56:40 rafaelsteil Exp $
  */
-public class OracleDataAccessDriver extends net.jforum.dao.generic.GenericDataAccessDriver
+public class OracleDataAccessDriver extends GenericDataAccessDriver
 {
 	private static OraclePostDAO postDao = new OraclePostDAO();
 	private static OracleTopicDAO topicDao = new OracleTopicDAO();
 	private static OracleUserDAO userDao = new OracleUserDAO();
 	private static OraclePrivateMessageDAO pmDao = new OraclePrivateMessageDAO();
 	private static OracleModerationDAO moderationDao = new OracleModerationDAO();
+	private static OracleModerationLogDAO moderationLogDao = new OracleModerationLogDAO();
+	
+	/**
+	 * @see net.jforum.dao.generic.GenericDataAccessDriver#newModerationLogDAO()
+	 */
+	public ModerationLogDAO newModerationLogDAO() 
+	{
+		return moderationLogDao;
+	}
 	
 	/**
 	 * @see net.jforum.dao.DataAccessDriver#newModerationDAO()

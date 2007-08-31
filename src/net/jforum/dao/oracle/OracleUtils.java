@@ -57,7 +57,7 @@ import oracle.sql.BLOB;
 
 /**
  * @author Dmitriy Kiriy
- * @version $Id: OracleUtils.java,v 1.13 2007/07/28 14:17:12 rafaelsteil Exp $
+ * @version $Id: OracleUtils.java,v 1.14 2007/08/31 22:56:40 rafaelsteil Exp $
  */
 public class OracleUtils
 {
@@ -107,24 +107,25 @@ public class OracleUtils
 	 * @param value String
 	 * @throws SQLException
 	 */
-	public static void writeBlobUTF16BinaryStream(String query, int idForQuery, String value) throws SQLException
+	public static void writeBlobUTF16BinaryStream(String query, int idForQuery, String value) throws Exception
 	{
 		PreparedStatement p = null;
 		ResultSet rs = null;
+		OutputStream blobWriter = null;
+		
 		try {
 			p = JForumExecutionContext.getConnection().prepareStatement(query);
 			p.setInt(1, idForQuery);
 
 			rs = p.executeQuery();
 			rs.next();
-			Blob postText = rs.getBlob(1);
+			Blob text = rs.getBlob(1);
 
-			OutputStream blobWriter;
-			if (postText instanceof BLOB) {
-				blobWriter = ((BLOB) postText).getBinaryOutputStream();
+			if (text instanceof BLOB) {
+				blobWriter = ((BLOB) text).getBinaryOutputStream();
 			}
 			else {
-				blobWriter = postText.setBinaryStream(0);
+				blobWriter = text.setBinaryStream(0);
 			}
 
 			blobWriter.write(value.getBytes("UTF-16"));
@@ -135,6 +136,10 @@ public class OracleUtils
 			throw new DatabaseException(e);
 		}
 		finally {
+			if (blobWriter != null) {
+				blobWriter.close();
+			}
+			
 			DbUtils.close(rs, p);
 		}
 	}

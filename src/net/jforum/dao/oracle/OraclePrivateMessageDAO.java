@@ -47,19 +47,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import net.jforum.JForumExecutionContext;
+import net.jforum.dao.generic.GenericPrivateMessageDAO;
 import net.jforum.entities.PrivateMessage;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Dmitriy Kiriy
- * @version $Id: OraclePrivateMessageDAO.java,v 1.9 2006/08/20 22:47:32 rafaelsteil Exp $
+ * @version $Id: OraclePrivateMessageDAO.java,v 1.10 2007/08/31 22:56:40 rafaelsteil Exp $
  */
-public class OraclePrivateMessageDAO extends net.jforum.dao.generic.GenericPrivateMessageDAO
+public class OraclePrivateMessageDAO extends GenericPrivateMessageDAO
 {
 	/**
 	 * @see net.jforum.dao.generic.GenericPrivateMessageDAO#addPmText(net.jforum.entities.PrivateMessage)
 	 */
-	protected void addPmText(PrivateMessage pm) throws SQLException
+	protected void addPmText(PrivateMessage pm) throws Exception
     {
 		PreparedStatement p = JForumExecutionContext.getConnection().prepareStatement(
 				SystemGlobals.getSql("PrivateMessagesModel.addText"));
@@ -68,7 +69,7 @@ public class OraclePrivateMessageDAO extends net.jforum.dao.generic.GenericPriva
 		p.close();
 		
 		OracleUtils.writeBlobUTF16BinaryStream(SystemGlobals.getSql("PrivateMessagesModel.addTextField"), 
-				pm.getId(), pm.getPost().getText());
+			pm.getId(), pm.getPost().getText());
 	}
 	
 	/**

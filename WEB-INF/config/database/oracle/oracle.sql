@@ -220,9 +220,16 @@ BanlistModel.insert = INSERT INTO jforum_banlist (banlist_id, user_id, banlist_i
 # ################
 # ModerationLog
 # ################
+ModerationLog.addNew = INSERT INTO jforum_moderation_log (log_id, user_id, log_description, log_original_message, log_date, log_type, post_id, topic_id, post_user_id) VALUES (jforum_moderation_log_seq.nextval, ?, EMPTY_BLOB(), EMPTY_BLOB(), ?, ?, ?, ?, ?)
+ModerationLog.setDescription = SELECT log_description FROM jforum_moderation_log WHERE log_id = ? FOR UPDATE
+ModerationLog.setOriginalMessage = SELECT log_original_message FROM jforum_moderation_log WHERE log_id = ? FOR UPDATE
 ModerationLog.lastGeneratedModerationLogId = SELECT jforum_moderation_log_seq.currval FROM dual
+
 ModerationLog.selectAll = SELECT * FROM ( \
-	SELECT l.*, u.username, ROW_NUMBER() OVER(ORDER BY l.log_id DESC) -1 LINENUM \
-	FROM jforum_moderation_log l, jforum_users u WHERE l.user_id = u.user_id ORDER BY log_id DESC
+	SELECT l.*, u.username, u2.username AS poster_username, ROW_NUMBER() OVER(ORDER BY l.log_id DESC) -1 LINENUM \
+	FROM jforum_moderation_log l \
+    LEFT JOIN jforum_users u2 ON u2.user_id = l.post_user_id \
+    LEFT JOIN jforum_users u ON l.user_id = u.user_id \
+    ORDER BY log_id DESC \
 	) \
 	WHERE LINENUM >= ? AND LINENUM < ?
