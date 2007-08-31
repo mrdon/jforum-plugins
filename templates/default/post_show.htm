@@ -175,14 +175,14 @@
 								<#include "post_show_attachments_inc.htm"/>
 							</#if>
 
-							<#if (post.editCount > 0)>
+							<#if (post.editCount > 0) && post.editTime?exists>
 								<#if post.editCount == 1>
 									<#assign editCountMessage = "PostShow.editCountSingle"/>
 								<#else>
 									<#assign editCountMessage = "PostShow.editCountMany"/>
 								</#if>
-
-								<p><i><span class="gensmall">${I18n.getMessage(editCountMessage, [post.editCount, post.editTime?default("Unknown")])}</span></i></p>
+								
+								<p><i><span class="gensmall">${I18n.getMessage(editCountMessage, [post.editCount, post.editTime?datetime?string])}</span></i></p>
 							</#if>
 						</td>
 					</tr>
