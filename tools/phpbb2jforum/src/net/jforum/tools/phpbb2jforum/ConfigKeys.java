@@ -6,7 +6,7 @@ package net.jforum.tools.phpbb2jforum;
 * configuration keys under eclipse ;-)
 * 
 * @author Rafael Steil
-* @version $Id: ConfigKeys.java,v 1.5 2007/08/31 00:40:22 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.6 2007/08/31 00:42:47 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -74,6 +74,7 @@ public class ConfigKeys {
 	public static final String QUERY_CLEAN_BANLIST = "query.clean.banlist";
 	public static final String QUERY_CLEAN_CATEGORIES = "query.clean.categories";
 	public static final String QUERY_CLEAN_FORUMS = "query.clean.forums";
+	public static final String QUERY_CLEAN_GROUPS = "query.clean.groups";
 	public static final String QUERY_CLEAN_POSTS = "query.clean.posts";
 	public static final String QUERY_CLEAN_POSTS_TEXT = "query.clean.posts.text";
 	public static final String QUERY_CLEAN_PRIVMSGS = "query.clean.privmsgs";
@@ -83,6 +84,7 @@ public class ConfigKeys {
 	public static final String QUERY_CLEAN_TOPICS = "query.clean.topics";
 	public static final String QUERY_CLEAN_TOPICS_WATCH = "query.clean.topicswatch";
 	public static final String QUERY_CLEAN_USERS = "query.clean.users";
+	public static final String QUERY_CLEAN_USERGROUPS = "query.clean.usergroups";
 	public static final String QUERY_CLEAN_VOTE_DESC = "query.clean.votedesc";
 	public static final String QUERY_CLEAN_VOTE_RESULTS = "query.clean.voteresults";
 	public static final String QUERY_CLEAN_VOTE_VOTERS = "query.clean.votevoters";

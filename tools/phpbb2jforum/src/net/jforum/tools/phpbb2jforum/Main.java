@@ -15,7 +15,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Rafael Steil
- * @version $Id: Main.java,v 1.9 2007/08/31 00:40:21 rafaelsteil Exp $
+ * @version $Id: Main.java,v 1.10 2007/08/31 00:42:47 rafaelsteil Exp $
  */
 public class Main
 {
@@ -244,7 +244,8 @@ public class Main
 			ConfigKeys.QUERY_CLEAN_PRIVMSGS, ConfigKeys.QUERY_CLEAN_PRIVMSGS_TEXT, 
 			ConfigKeys.QUERY_CLEAN_RANKS, ConfigKeys.QUERY_CLEAN_SMILIES, ConfigKeys.QUERY_CLEAN_TOPICS, 
 			ConfigKeys.QUERY_CLEAN_TOPICS_WATCH, ConfigKeys.QUERY_CLEAN_USERS, 
-			ConfigKeys.QUERY_CLEAN_VOTE_DESC, ConfigKeys.QUERY_CLEAN_VOTE_RESULTS, ConfigKeys.QUERY_CLEAN_VOTE_VOTERS  };
+			ConfigKeys.QUERY_CLEAN_VOTE_DESC, ConfigKeys.QUERY_CLEAN_VOTE_RESULTS, 
+			ConfigKeys.QUERY_CLEAN_VOTE_VOTERS, ConfigKeys.QUERY_CLEAN_GROUPS, ConfigKeys.QUERY_CLEAN_USERGROUPS  };
 
 		for (int i = 0; i < queries.length; i++) {
 			System.out.println("Cleaning " + queries[i]);
