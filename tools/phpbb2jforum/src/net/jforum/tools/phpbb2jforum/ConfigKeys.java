@@ -6,7 +6,7 @@ package net.jforum.tools.phpbb2jforum;
 * configuration keys under eclipse ;-)
 * 
 * @author Rafael Steil
-* @version $Id: ConfigKeys.java,v 1.7 2007/08/31 01:15:13 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.8 2007/08/31 01:21:34 rafaelsteil Exp $
 */
 
 public class ConfigKeys {
@@ -24,10 +24,7 @@ public class ConfigKeys {
 	public static final String DATABASE_JFORUM_URL = "database.jforum.url";
 	public static final String DATABASE_PHPBB = "database.phpbb";
 	public static final String DATABASE_QUERIES = "database.queries";
-	public static final String DBNAME = "dbname";
-	public static final String DBUSER = "dbuser";
-	public static final String DBPASSWD = "dbpasswd";
-	public static final String DBHOST = "dbhost";
+	public static final String PHPBB_TABLE_PREFIX = "phpbb.table.prefix";
 	
 	public static final String B_REGEX = "b.regex";
 	public static final String U_REGEX = "u.regex";

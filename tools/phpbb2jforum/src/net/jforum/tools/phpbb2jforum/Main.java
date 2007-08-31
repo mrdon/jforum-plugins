@@ -15,7 +15,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Rafael Steil
- * @version $Id: Main.java,v 1.11 2007/08/31 01:15:13 rafaelsteil Exp $
+ * @version $Id: Main.java,v 1.12 2007/08/31 01:21:34 rafaelsteil Exp $
  */
 public class Main
 {
@@ -315,7 +315,11 @@ public class Main
 	private String getSql(String queryName)
 	{
 		String query = SystemGlobals.getSql(queryName);
-		return StringUtils.replace(query, "${phpbb}", SystemGlobals.getValue(ConfigKeys.DATABASE_PHPBB));
+		
+		query = StringUtils.replace(query, "${phpbb}", SystemGlobals.getValue(ConfigKeys.DATABASE_PHPBB));
+		query = StringUtils.replace(query, "${table.prefix}", SystemGlobals.getValue(ConfigKeys.PHPBB_TABLE_PREFIX));
+		
+		return query;
 	}
 
 	public static void main(String[] args)
