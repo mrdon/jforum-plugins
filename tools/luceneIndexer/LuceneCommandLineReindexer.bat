@@ -1,3 +1,3 @@
 @echo off
 set jf=..\..\
-java -Djava.ext.dirs=%jf%\lib;%jf%\web-inf\lib; -cp %jf%\web-inf\classes net.jforum.search.LuceneCommandLineReindexer %*
+java -Djava.ext.dirs=%jf%\lib;%jf%\web-inf\lib; -cp ..\bin net.jforum.tools.search.LuceneCommandLineReindexer %*

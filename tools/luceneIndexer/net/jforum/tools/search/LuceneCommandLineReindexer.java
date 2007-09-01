@@ -1,5 +1,4 @@
-package net.jforum.search;
-
+package net.jforum.tools.search;
 
 import jargs.gnu.CmdLineParser;
 
@@ -9,6 +8,10 @@ import java.util.Date;
 
 import net.jforum.ConfigLoader;
 import net.jforum.ForumStartup;
+import net.jforum.search.LuceneReindexArgs;
+import net.jforum.search.LuceneReindexer;
+import net.jforum.search.LuceneSettings;
+import net.jforum.search.SearchFacade;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -17,7 +20,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneCommandLineReindexer.java,v 1.1 2007/08/30 13:19:35 rafaelsteil Exp $
+ * @version $Id: LuceneCommandLineReindexer.java,v 1.1 2007/09/01 15:10:32 rafaelsteil Exp $
  */
 public class LuceneCommandLineReindexer
 {
