@@ -66,7 +66,7 @@ import org.apache.lucene.store.RAMDirectory;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneIndexer.java,v 1.10 2007/08/23 01:50:33 rafaelsteil Exp $
+ * @version $Id: LuceneIndexer.java,v 1.11 2007/09/01 05:46:53 rafaelsteil Exp $
  */
 public class LuceneIndexer
 {
@@ -107,6 +107,10 @@ public class LuceneIndexer
 	private void createRAMWriter()
 	{
 		try {
+			if (this.ramWriter != null) {
+				this.ramWriter.close();
+			}
+			
 			this.ramDirectory = new RAMDirectory();
 			this.ramWriter = new IndexWriter(this.ramDirectory, this.settings.analyzer(), true);
 			this.ramNumDocs = SystemGlobals.getIntValue(ConfigKeys.LUCENE_INDEXER_RAM_NUMDOCS);
@@ -118,7 +122,7 @@ public class LuceneIndexer
 	
 	private void flushRAMDirectoryIfNecessary()
 	{
-		if (this.ramWriter.docCount() % this.ramNumDocs == 0) {
+		if (this.ramWriter.docCount() >= this.ramNumDocs) {
 			this.flushRAMDirectory();
 		}
 	}
@@ -132,7 +136,7 @@ public class LuceneIndexer
 				writer = new IndexWriter(this.settings.directory(), this.settings.analyzer());
 				writer.addIndexes(new Directory[] { this.ramDirectory });
 				writer.optimize();
-				
+
 				this.createRAMWriter();
 			}
 			catch (IOException e) {

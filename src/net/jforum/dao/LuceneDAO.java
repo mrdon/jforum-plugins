@@ -43,17 +43,20 @@
  */
 package net.jforum.dao;
 
+import java.util.Date;
 import java.util.List;
-
-import net.jforum.search.LuceneReindexArgs;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneDAO.java,v 1.4 2007/08/05 16:29:20 rafaelsteil Exp $
+ * @version $Id: LuceneDAO.java,v 1.5 2007/09/01 05:46:53 rafaelsteil Exp $
  */
 public interface LuceneDAO
 {
-	public List getPostsToIndex(LuceneReindexArgs args, int rangeStart, int rangeFetchCount);
+	public List getPostsToIndex(int fromPostId, int toPostId);
 	
 	public List getPostsData(int[] postIds);
+	
+	public int firstPostIdByDate(Date date);
+	
+	public int lastPostIdByDate(Date date);
 }

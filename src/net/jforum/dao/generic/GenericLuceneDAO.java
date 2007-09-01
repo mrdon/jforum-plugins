@@ -62,14 +62,14 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericLuceneDAO.java,v 1.9 2007/08/05 17:11:08 rafaelsteil Exp $
+ * @version $Id: GenericLuceneDAO.java,v 1.10 2007/09/01 05:46:53 rafaelsteil Exp $
  */
 public class GenericLuceneDAO implements LuceneDAO
 {
 	/**
 	 * @see net.jforum.dao.LuceneDAO#getPostsToIndex(LuceneReindexArgs, int, int)
 	 */
-	public List getPostsToIndex(LuceneReindexArgs args, int rangeStart, int rangeFetchCount)
+	public List getPostsToIndex(int fromPostId, int toPostId)
 	{
 		List l = new ArrayList();
 		
@@ -77,33 +77,12 @@ public class GenericLuceneDAO implements LuceneDAO
 		ResultSet rs = null;
 		
 		try {
-			String sql = SystemGlobals.getSql("SearchModel.getPostsToIndexForLucene");
-			String constraints = "";
+			p = JForumExecutionContext.getConnection().prepareStatement(
+				SystemGlobals.getSql("SearchModel.getPostsToIndexForLucene"));
 			
-			if (args.filterByDate()) {
-				constraints = " AND p.post_time >= ? AND p.post_time <= ? ";
-			}
-			else if (args.filterByMessage()) {
-				constraints = " AND p.post_id >= ? AND p.post_id <= ? ";
-			}
+			p.setInt(1, fromPostId);
+			p.setInt(2, toPostId);
 			
-			sql = sql.replaceAll(":CONSTRAINTS:", constraints);
-			
-			int position = 1;
-			p = JForumExecutionContext.getConnection().prepareStatement(sql);
-			
-			if (args.filterByDate()) {
-				p.setTimestamp(position++, new Timestamp(args.getFromDate().getTime()));
-				p.setTimestamp(position++, new Timestamp(args.getToDate().getTime()));
-			}
-			else if (args.filterByMessage()) {
-				p.setInt(position++, args.getFirstPostId());
-				p.setInt(position++, args.getLastPostId());
-			}
-			
-			p.setInt(position++, rangeStart);
-			p.setInt(position, rangeFetchCount);
-
 			rs = p.executeQuery();
 			
 			while (rs.next()) {
@@ -118,6 +97,51 @@ public class GenericLuceneDAO implements LuceneDAO
 		}
 		
 		return l;
+	}
+	
+	/**
+	 * @see net.jforum.dao.LuceneDAO#firstPostIdByDate(java.util.Date)
+	 */
+	public int firstPostIdByDate(Date date) 
+	{
+		return this.getPostIdByDate(date, SystemGlobals.getSql("SearchModel.firstPostIdByDate"));
+	}
+	
+	/**
+	 * @see net.jforum.dao.LuceneDAO#lastPostIdByDate(java.util.Date)
+	 */
+	public int lastPostIdByDate(Date date) 
+	{
+		return this.getPostIdByDate(date, SystemGlobals.getSql("SearchModel.lastPostIdByDate"));
+	}
+	
+	private int getPostIdByDate(Date date, String query)
+	{
+		int postId = 0;
+		
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+				SystemGlobals.getSql(query));
+			
+			p.setTimestamp(1, new Timestamp(date.getTime()));
+			
+			rs = p.executeQuery();
+			
+			if (rs.next()) {
+				postId = rs.getInt(1);
+			}
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+		
+		return postId;
 	}
 	
 	/**

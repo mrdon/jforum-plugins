@@ -59,7 +59,7 @@ import org.apache.lucene.search.IndexSearcher;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneReindexer.java,v 1.3 2007/08/07 13:30:50 rafaelsteil Exp $
+ * @version $Id: LuceneReindexer.java,v 1.4 2007/09/01 05:46:53 rafaelsteil Exp $
  */
 public class LuceneReindexer
 {
@@ -110,8 +110,7 @@ public class LuceneReindexer
 		LuceneSearch luceneSearch = ((LuceneManager)SearchFacade.manager()).luceneSearch();
 		LuceneIndexer luceneIndexer = ((LuceneManager)SearchFacade.manager()).luceneIndexer();
 		
-		int startPosition = 0;
-		int howMany = SystemGlobals.getIntValue(ConfigKeys.LUCENE_INDEXER_DB_FETCH_COUNT);
+		int fetchCount = SystemGlobals.getIntValue(ConfigKeys.LUCENE_INDEXER_DB_FETCH_COUNT);
 		
 		try {
 			if (!recreate) {
@@ -119,15 +118,40 @@ public class LuceneReindexer
 			}
 			
 			boolean hasMorePosts = true;
+			long processStart = System.currentTimeMillis();
+			
+			int firstPostId = args.filterByMessage()
+				? args.getFirstPostId()
+				: dao.firstPostIdByDate(args.getFromDate());
+				
+			int lastPostId = args.filterByMessage()
+				? args.getLastPostId()
+				: dao.lastPostIdByDate(args.getToDate());
+				
+			int counter = 1;
+			int indexTotal = 0;
+			long indexRangeStart = System.currentTimeMillis();
 			
 			while (hasMorePosts) {
 				boolean contextFinished = false;
+				
+				int toPostId = firstPostId + fetchCount < lastPostId
+					? firstPostId + fetchCount
+					: lastPostId;
 				
 				try {
 					JForumExecutionContext ex = JForumExecutionContext.get();
 					JForumExecutionContext.set(ex);
 					
-					List l = dao.getPostsToIndex(args, startPosition, howMany);
+					List l = dao.getPostsToIndex(firstPostId, toPostId);
+					
+					if (counter >= 5000) {
+						long end = System.currentTimeMillis();
+						System.out.println("Indexed ~5000 documents in " 
+							+ (end - indexRangeStart) + " ms (" + indexTotal + " so far)");
+						indexRangeStart = end;
+						counter = 0;
+					}
 					
 					JForumExecutionContext.finish();
 					contextFinished = true;
@@ -147,9 +171,12 @@ public class LuceneReindexer
 						}
 						
 						luceneIndexer.batchCreate(post);
+						
+						counter++;
+						indexTotal++;
 					}
 					
-					startPosition += howMany;
+					firstPostId += fetchCount;
 					hasMorePosts = hasMorePosts && l.size() > 0;
 				}
 				finally {
@@ -158,6 +185,10 @@ public class LuceneReindexer
 					}
 				}
 			}
+			
+			long end = System.currentTimeMillis();
+			
+			System.out.println("**** Total: " + (end - processStart) + " ms");
 		}
 		catch (IOException e) {
 			throw new ForumException(e);
