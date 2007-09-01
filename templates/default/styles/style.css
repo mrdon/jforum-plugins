@@ -187,14 +187,13 @@ table.attachtable	{ font: normal 12px verdana, arial, helvetica, sans-serif; col
 .icon_profile img { background-image: url(../images/en_US/icon_profile.gif); width: 59px; height: 18px; }
 .icon_pm img { background-image: url(../images/en_US/icon_pm.gif); width: 59px; height: 18px; }
 
-
-
 /*CSS Sabrosus style pagination*/
 .pagination {
 	padding:3px;
 	margin:3px;
 	font-size: 10px;
 	font-weight: bold;
+	font-family: Arial, Times;
 }
 
 .pagination a {
