@@ -48,8 +48,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import net.jforum.ConfigLoader;
@@ -70,7 +72,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author Pieter Olivier
- * @version $Id: SystemGlobals.java,v 1.33 2007/08/30 13:19:34 rafaelsteil Exp $
+ * @version $Id: SystemGlobals.java,v 1.34 2007/09/02 14:23:15 rafaelsteil Exp $
  */
 public class SystemGlobals implements VariableStore
 {
@@ -81,6 +83,7 @@ public class SystemGlobals implements VariableStore
 
 	private Properties defaults = new Properties();
 	private Properties installation = new Properties();
+	private Map objectProperties = new HashMap();
 	private static List additionalDefaultsList = new ArrayList();
 	private static Properties queries = new Properties();
 	private static Properties transientValues = new Properties();
@@ -152,12 +155,12 @@ public class SystemGlobals implements VariableStore
 	
 	public static void setObjectValue(String field, Object value)
 	{
-		globals.installation.put(field, value);
+		globals.objectProperties.put(field, value);
 	}
 	
 	public static Object getObjectValue(String field)
 	{
-		return globals.installation.get(field);
+		return globals.objectProperties.get(field);
 	}
 
 	/**
