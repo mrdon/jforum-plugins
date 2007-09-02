@@ -29,6 +29,25 @@ UserModel.login = SELECT user_id FROM jforum_users WHERE LCASE(username) = LCASE
 # PostModel
 # #############
 PostModel.lastGeneratedPostId = SELECT max(post_id) from jforum_posts
+	
+PostModel.selectLatestByForumForRSS = SELECT LIMIT 0 ? p.topic_id, p.topic_id, p.post_id, p.forum_id, pt.post_subject AS subject, pt.post_text, p.post_time, p.user_id, u.username \
+	FROM jforum_topics t, jforum_posts p, jforum_posts_text pt, jforum_users u \
+	WHERE p.post_id = t.topic_first_post_id \
+	AND p.topic_id = t.topic_id \
+	AND p.user_id = u.user_id \
+	AND p.post_id = pt.post_id \
+	AND p.need_moderate = 0 \
+	AND t.forum_id = ? \
+	ORDER BY t.topic_id DESC
+	
+PostModel.selectHotForRSS = SELECT LIMIT 0 ? t.topic_id, t.topic_title AS subject, p.post_id, t.forum_id, pt.post_text, p.post_time, p.user_id, u.username \
+	FROM jforum_topics t, jforum_posts p, jforum_posts_text pt, jforum_users u \
+	WHERE p.post_id = t.topic_first_post_id \
+	AND p.topic_id = t.topic_id \
+	AND p.user_id = u.user_id \
+	AND p.post_id = pt.post_id \
+	AND p.need_moderate = 0  \
+	ORDER BY topic_first_post_id DESC
 
 PostModel.selectAllByTopicByLimit = SELECT LIMIT ? ? p.post_id, topic_id, forum_id, p.user_id, post_time, poster_ip, enable_bbcode, p.attach, \
 	enable_html, enable_smilies, enable_sig, post_edit_time, post_edit_count, status, pt.post_subject, pt.post_text, username, p.need_moderate \

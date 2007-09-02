@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>currentDocument</key>
-	<string>default/js/jquery.jeditable.pack.js</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -63,20 +61,6 @@
 			<key>firstVisibleLine</key>
 			<integer>259</integer>
 		</dict>
-		<key>default/js/jquery.jeditable.pack.js</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>5391</integer>
-				<key>line</key>
-				<integer>0</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
 		<key>default/post_attachments_tab.htm</key>
 		<dict>
 			<key>caret</key>
@@ -134,12 +118,6 @@
 			<integer>45</integer>
 		</dict>
 	</dict>
-	<key>openDocuments</key>
-	<array>
-		<string>default/styles/style.css</string>
-		<string>default/post_show.htm</string>
-		<string>default/js/jquery.jeditable.pack.js</string>
-	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>

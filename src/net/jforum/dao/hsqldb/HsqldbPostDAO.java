@@ -48,10 +48,18 @@ import net.jforum.dao.generic.GenericPostDAO;
 
 /**
  * @author Marc Wick
- * @version $Id: HsqldbPostDAO.java,v 1.7 2006/08/20 22:47:47 rafaelsteil Exp $
+ * @version $Id: HsqldbPostDAO.java,v 1.8 2007/09/02 15:08:05 rafaelsteil Exp $
  */
 public class HsqldbPostDAO extends GenericPostDAO
 {
+	/**
+	 * @see net.jforum.dao.generic.GenericPostDAO#selectLatestByForumForRSS(int, int)
+	 */
+	public List selectLatestByForumForRSS(int forumId, int limit) 
+	{
+		return super.selectLatestByForumForRSS(limit, forumId);
+	}
+	
 	/**
 	 * @see net.jforum.dao.PostDAO#selectAllByTopicByLimit(int, int, int)
 	 */

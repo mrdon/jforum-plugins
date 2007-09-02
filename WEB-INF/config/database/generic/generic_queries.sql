@@ -149,12 +149,12 @@ PostModel.selectLatestByForumForRSS = SELECT p.topic_id, p.topic_id, p.post_id, 
 	
 PostModel.selectHotForRSS = SELECT t.topic_id, t.topic_title AS subject, p.post_id, t.forum_id, pt.post_text, p.post_time, p.user_id, u.username \
 	FROM jforum_topics t, jforum_posts p, jforum_posts_text pt, jforum_users u \
-	WHERE p.post_id = t.topic_last_post_id \
+	WHERE p.post_id = t.topic_first_post_id \
 	AND p.topic_id = t.topic_id \
 	AND p.user_id = u.user_id \
 	AND p.post_id = pt.post_id \
 	AND p.need_moderate = 0  \
-	ORDER BY topic_last_post_id DESC \
+	ORDER BY topic_first_post_id DESC \
 	LIMIT ?
 
 PostModel.countPreviousPosts = SELECT COUNT(p2.post_id) AS prev_posts \

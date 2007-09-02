@@ -53,6 +53,33 @@ UserModel.selectAllByGroup = SELECT * FROM ( \
 # #############
 # PostModel
 # #############
+PostModel.selectLatestByForumForRSS = SELECT * FROM ( \
+		SELECT p.topic_id, p.topic_id, p.post_id, p.forum_id, pt.post_subject AS subject, pt.post_text, p.post_time, p.user_id, u.username,
+		ROW_NUMBER() OVER(ORDER BY t.topic_id DESC) - 1 LINENUM \
+		FROM jforum_topics t, jforum_posts p, jforum_posts_text pt, jforum_users u \
+		WHERE p.post_id = t.topic_first_post_id \
+		AND p.topic_id = t.topic_id \
+		AND p.user_id = u.user_id \
+		AND p.post_id = pt.post_id \
+		AND p.need_moderate = 0 \
+		AND t.forum_id = ? \
+		ORDER BY t.topic_id DESC \
+	) \
+	WHERE LINENUM <= ?
+	
+PostModel.selectHotForRSS = SELECT * FROM ( \
+		SELECT t.topic_id, t.topic_title AS subject, p.post_id, t.forum_id, pt.post_text, p.post_time, p.user_id, u.username, \
+		ROW_NUMBER() OVER(ORDER BY topic_first_post_id DESC) \
+		FROM jforum_topics t, jforum_posts p, jforum_posts_text pt, jforum_users u \
+		WHERE p.post_id = t.topic_first_post_id \
+		AND p.topic_id = t.topic_id \
+		AND p.user_id = u.user_id \
+		AND p.post_id = pt.post_id \
+		AND p.need_moderate = 0  \
+		ORDER BY topic_first_post_id DESC \
+	) \
+	WHERE LINENUM <= ?
+
 PostModel.addNewPost = INSERT INTO jforum_posts (post_id, topic_id, forum_id, user_id, post_time, poster_ip, enable_bbcode, enable_html, enable_smilies, enable_sig, post_edit_time, need_moderate) \
 	VALUES (jforum_posts_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?, SYSDATE, ?)
 
@@ -74,7 +101,6 @@ PostModel.selectAllByTopicByLimit = SELECT * FROM ( \
 	ORDER BY post_time ASC \
 ) \
 WHERE LINENUM >= ? AND LINENUM < ?
-
 
 PostModel.selectByUserByLimit = SELECT * FROM ( \
     SELECT p.post_id, topic_id, forum_id, p.user_id, post_time, poster_ip, enable_bbcode, p.attach, \

@@ -78,11 +78,6 @@ TopicModel.selectByUserByLimit = SELECT t.*, p.user_id AS last_user_id, p.post_t
 		
 TopicModel.lastGeneratedTopicId = SELECT CURRVAL('jforum_topics_seq')
 
-# ############
-# SearchModel
-# ############
-
-
 # #####################
 # PrivateMessagesModel
 # #####################
