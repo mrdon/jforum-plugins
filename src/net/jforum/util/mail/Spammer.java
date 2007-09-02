@@ -73,7 +73,7 @@ import freemarker.template.Template;
  * Dispatch emails to the world. 
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.32 2007/03/18 16:56:55 rafaelsteil Exp $
+ * @version $Id: Spammer.java,v 1.33 2007/09/02 14:37:54 andowson Exp $
  */
 public class Spammer
 {
@@ -254,7 +254,7 @@ public class Spammer
 		String charset = SystemGlobals.getValue(ConfigKeys.MAIL_CHARSET);
 		
 		if (messageFormat == MESSAGE_HTML) {
-			this.message.setContent(text, "text/html; charset=" + charset);
+			this.message.setContent(text.replaceAll("\n", "<br />"), "text/html; charset=" + charset);
 		}
 		else {
 			this.message.setText(text);
