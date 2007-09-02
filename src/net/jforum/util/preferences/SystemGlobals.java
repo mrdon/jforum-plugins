@@ -48,11 +48,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Vector;
 
 import net.jforum.ConfigLoader;
 import net.jforum.exceptions.ForumException;
@@ -72,7 +75,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Rafael Steil
  * @author Pieter Olivier
- * @version $Id: SystemGlobals.java,v 1.34 2007/09/02 14:23:15 rafaelsteil Exp $
+ * @version $Id: SystemGlobals.java,v 1.35 2007/09/02 15:51:04 andowson Exp $
  */
 public class SystemGlobals implements VariableStore
 {
@@ -230,7 +233,19 @@ public class SystemGlobals implements VariableStore
 		// for file modifications, which then reloads the
 		// configurations from the filesystem, overwriting
 		// our new keys. 
-		Properties p = new Properties();
+		class SortedProperties extends Properties{
+			public synchronized Enumeration keys() {
+				Enumeration keysEnum = super.keys();
+				Vector keyList = new Vector();
+				while(keysEnum.hasMoreElements()){
+					keyList.add(keysEnum.nextElement());
+				}
+				Collections.sort(keyList);
+				return keyList.elements();
+			}
+		}
+
+		Properties p = new SortedProperties();
 		p.putAll(globals.installation);
 		
 		try {
