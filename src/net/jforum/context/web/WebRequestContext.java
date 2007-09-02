@@ -73,7 +73,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Rafael Steil
- * @version $Id: WebRequestContext.java,v 1.10 2007/08/27 03:39:11 rafaelsteil Exp $
+ * @version $Id: WebRequestContext.java,v 1.11 2007/09/02 16:57:19 rafaelsteil Exp $
  */
 public class WebRequestContext extends HttpServletRequestWrapper implements RequestContext
 {
@@ -284,7 +284,7 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 		
 		// Remove the "jsessionid" (or similar) from the URI
 		// Probably this is not the right way to go, since we're
-		// discarting the value...
+		// discarding the value...
 		int index = requestUri.indexOf(';');
 		
 		if (index > -1) {

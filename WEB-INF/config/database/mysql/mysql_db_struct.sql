@@ -1,9 +1,3 @@
--- MySQL dump 9.07
---
--- Host: localhost    Database: jforum
----------------------------------------------------------
--- Server version	4.0.12-nt
-
 --
 -- Table structure for table 'jforum_banlist'
 --
