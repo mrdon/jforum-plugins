@@ -9,6 +9,13 @@ function validateForm(f)
 		return false;
 	}
 
+    if (isNaN(f.user_id.value)) {
+        alert("${I18n.getMessage("ActivateAccount.invalidUserId")}");
+		f.user_id.focus();
+		
+		return false;
+	}
+	
 	if (f.hash.value == "") {
 		alert("${I18n.getMessage("ActivateAccount.fillHash")}");
 		f.hash.focus();
