@@ -42,12 +42,18 @@
  */
 package net.jforum.view.forum.common;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import org.apache.commons.lang.StringUtils;
 
 import net.jforum.JForumExecutionContext;
 import net.jforum.context.RequestContext;
 import net.jforum.entities.User;
+import net.jforum.exceptions.ForumException;
 import net.jforum.repository.BBCodeRepository;
 import net.jforum.repository.SmiliesRepository;
 import net.jforum.util.preferences.ConfigKeys;
@@ -57,7 +63,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.28 2007/08/18 07:04:07 andowson Exp $
+ * @version $Id: ViewCommon.java,v 1.29 2007/09/02 16:03:47 rafaelsteil Exp $
  */
 public final class ViewCommon
 {
@@ -94,15 +100,35 @@ public final class ViewCommon
 		
 		String uri = request.getRequestURI();
 		String query = request.getQueryString();
-		String path = query == null ? uri : uri + "?" + query;
+		String returnPath = query == null ? uri : uri + "?" + query;
 		
-		JForumExecutionContext.getTemplateContext().put("returnPath", path);
+		JForumExecutionContext.getTemplateContext().put("returnPath", returnPath);
 		
 		if (ConfigKeys.TYPE_SSO.equals(SystemGlobals.getValue(ConfigKeys.AUTHENTICATION_TYPE))) {
 			String redirect = SystemGlobals.getValue(ConfigKeys.SSO_REDIRECT);
 			
-			if (redirect != null && redirect.trim().length() > 0) {
-				JForumExecutionContext.setRedirect(request.getContextPath() + redirect.trim() + path);
+			if (!StringUtils.isEmpty(redirect)) {
+				URI redirectUri = URI.create(redirect);
+				
+				if (!redirectUri.isAbsolute()) {
+					throw new ForumException("SSO redirect URL should start with a scheme");
+				}
+				
+				try {
+					returnPath = URLEncoder.encode( ViewCommon.getForumLink() + returnPath, "UTF-8");
+				}
+				catch (UnsupportedEncodingException e) {}
+				
+				if (redirect.indexOf('?') == -1) {
+					redirect += "?";
+				}
+				else {
+					redirect += "&";
+				}
+				
+				redirect += "returnUrl=" + returnPath;
+				
+				JForumExecutionContext.setRedirect(redirect);
 			}
 		}
 		
@@ -119,7 +145,7 @@ public final class ViewCommon
 		String s = JForumExecutionContext.getRequest().getParameter("start");
 		int start;
 		
-		if (s == null || s.trim().equals("")) {
+		if (StringUtils.isEmpty(s)) {
 			start = 0;
 		}
 		else {
