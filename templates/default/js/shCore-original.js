@@ -263,41 +263,23 @@ dp.sh.Highlighter.prototype.AddBit = function(str, css)
 {
 	if(str == null || str.length == 0)
 		return;
-		
+
 	var span = this.CreateElement('SPAN');
 	
+//	str = str.replace(/&/g, '&amp;');
+	str = str.replace(/ /g, '&nbsp;');
 	str = str.replace(/</g, '&lt;');
-	str = str.replace(/\n/gm, '<br>');
-	
-	var lastWasBlank = false;
-	
-	if (str.indexOf(' ') > -1) {
-		for (var i = 0; i < str.length; i++) {
-			var isBlank = str[i] == ' ';
-		
-			if (lastWasBlank && isBlank) {
-				// For each 2 consecutive blank spaces, replace it by one blank space and one &nbsp;
-				str = str.substring(0, i) + "&nbsp;" + str.substring(i + 1);
-				lastWasBlank = false;
-			}
-			else {
-				lastWasBlank = isBlank;
-			}
-		}
-		
-		// Safari appears to get confused if the last char is a regular white space
-		if (str[str.length - 1] == ' ') {
-			str = str.substring(0, str.length - 1) + "&nbsp;"
-		}
-	}
-	
+//	str = str.replace(/&lt;/g, '<');
+//	str = str.replace(/>/g, '&gt;');
+	str = str.replace(/\n/gm, '&nbsp;<br>');
+
 	// when adding a piece of code, check to see if it has line breaks in it 
 	// and if it does, wrap individual line breaks with span tags
 	if(css != null)
 	{
 		if((/br/gi).test(str))
 		{
-			var lines = str.split('<br>');
+			var lines = str.split('&nbsp;<br>');
 			
 			for(var i = 0; i < lines.length; i++)
 			{
@@ -502,7 +484,7 @@ dp.sh.Highlighter.prototype.Highlight = function(code)
 	
 	if(code == null)
 		code = '';
-		
+	
 	this.originalCode = code;
 	this.code = Chop(Unindent(code));
 	this.div = this.CreateElement('DIV');
@@ -632,12 +614,9 @@ dp.sh.HighlightAll = function(name, showGutter /* optional */, showControls /* o
 	{
 		var tags = document.getElementsByTagName(tagName);
 
-		for(var i = 0; i < tags.length; i++) {
-			var current = tags[i];
-			
-			if(!current.isProcessed && current.getAttribute('name') == name)
-				list.push(current);
-		}
+		for(var i = 0; i < tags.length; i++)
+			if(tags[i].getAttribute('name') == name)
+				list.push(tags[i]);
 	}
 
 	var elements = [];
@@ -722,6 +701,5 @@ dp.sh.HighlightAll = function(name, showGutter /* optional */, showControls /* o
 		highlighter.source = element;
 
 		element.parentNode.insertBefore(highlighter.div, element);
-		element.isProcessed = true;
 	}	
 }

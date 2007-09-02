@@ -44,7 +44,8 @@ dp.sh.Highlighter.prototype.GetMatches=function(regex,css)
 this.matches[this.matches.length]=new dp.sh.Match(match[0],match.index,css);}
 dp.sh.Highlighter.prototype.AddBit=function(str,css)
 {if(str==null||str.length==0)
-return;var span=this.CreateElement('SPAN');str=str.replace(/</g,'&lt;');str=str.replace(/\n/gm,'&nbsp;<br>');var lastWasBlank=false;if(str.indexOf(' ')>-1){for(var i=0;i<str.length;i++){var isBlank=str[i]==' ';if(lastWasBlank&&isBlank){str=str.substring(0,i)+"&nbsp;"+str.substring(i+1);lastWasBlank=false;}
+return;var span=this.CreateElement('SPAN');str=str.replace(/</g,'&lt;');str=str.replace(/\n/gm,'<br>');var lastWasBlank=false;if(str==' '){str="&nbsp;"}
+else if(str.indexOf(' ')>-1){for(var i=0;i<str.length;i++){var isBlank=str[i]==' ';if(lastWasBlank&&isBlank){str=str.substring(0,i)+"&nbsp;"+str.substring(i+1);lastWasBlank=false;}
 else{lastWasBlank=isBlank;}}
 if(str[str.length-1]==' '){str=str.substring(0,str.length-1)+"&nbsp;"}}
 if(css!=null)
