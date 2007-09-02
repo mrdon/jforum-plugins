@@ -48,13 +48,17 @@ import java.util.Date;
 import java.util.List;
 
 import net.jforum.Command;
+import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.PostDAO;
+import net.jforum.entities.ModerationLog;
 import net.jforum.entities.Post;
 import net.jforum.entities.User;
 import net.jforum.repository.PostRepository;
+import net.jforum.repository.SecurityRepository;
 import net.jforum.search.LuceneManager;
 import net.jforum.search.SearchFacade;
+import net.jforum.security.SecurityConstants;
 import net.jforum.util.SafeHtml;
 import net.jforum.util.mail.Spammer;
 import net.jforum.util.preferences.ConfigKeys;
@@ -68,7 +72,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: AjaxAction.java,v 1.3 2007/08/25 19:05:02 rafaelsteil Exp $
+ * @version $Id: AjaxAction.java,v 1.4 2007/09/02 00:18:36 rafaelsteil Exp $
  */
 public class AjaxAction extends Command
 {
@@ -183,6 +187,8 @@ public class AjaxAction extends Command
 		PostDAO postDao = DataAccessDriver.getInstance().newPostDAO();
 		Post post = postDao.selectById(this.request.getIntParameter("id"));
 		
+		String originalMessage = post.getText();
+		
 		if (!PostCommon.canEditPost(post)) {
 			post = PostCommon.preparePostForDisplay(post);
 		}
@@ -191,6 +197,22 @@ public class AjaxAction extends Command
 			postDao.update(post);
 			SearchFacade.update(post);
 			post = PostCommon.preparePostForDisplay(post);
+		}
+		
+		boolean isModerator = SecurityRepository.canAccess(SecurityConstants.PERM_MODERATION_POST_EDIT);
+		
+		if (SystemGlobals.getBoolValue(ConfigKeys.MODERATION_LOGGING_ENABLED)
+				&& isModerator && post.getUserId() != SessionFacade.getUserSession().getUserId()) {
+			ModerationHelper helper = new ModerationHelper();
+			
+			this.request.addParameter("log_original_message", originalMessage);
+			this.request.addParameter("post_id", String.valueOf(post.getId()));
+			this.request.addParameter("topic_id", String.valueOf(post.getTopicId()));
+			
+			ModerationLog log = helper.buildModerationLogFromRequest();
+			log.getPosterUser().setId(post.getUserId());
+			
+			helper.saveModerationLog(log);
 		}
 		
 		if (SystemGlobals.getBoolValue(ConfigKeys.POSTS_CACHE_ENABLED)) {

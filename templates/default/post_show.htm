@@ -388,7 +388,31 @@ $(document).ready(function() {
 			width: '100%',
 			event: 'dblclick',
 			indicator: "<img src='${contextPath}/templates/${templateName}/images/indicator.gif'>",
-			postload: '${contextPath}/jforum${extension}?module=ajax&action=loadPostContents'
+			postload: '${contextPath}/jforum${extension}?module=ajax&action=loadPostContents',
+			cssclass: 'inlineedit',
+			loadtext: '${I18n.getMessage("PostShow.loading")}...',
+			beforesubmit: function(submitdata) { 
+				var message = prompt("${I18n.getMessage("ModerationLog.changeReason")}");
+
+				if (message == null || message == "") {
+					alert("${I18n.getMessage("ModerationLog.reasonIsEmpty")}");
+					return false;
+				}
+				else {
+					submitdata["log_description"] = message;
+					submitdata["log_type"] = 2;
+				}
+
+				return true;
+			}
+		}, function(s) {
+			<#if hasCodeBlock>
+				dp.sh.HighlightAll('code');
+			<#else>
+				if (s.indexOf("name=\"code\"") > -1) {
+					document.location.reload(true);
+				}
+			</#if>
 		});
 	</#if>
 });

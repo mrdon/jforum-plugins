@@ -118,7 +118,8 @@ input { text-indent: 2px; }
 input {
        border: expression((this.type=="checkbox" || this.type=="radio") ? "none": "1px solid #ccc");
 }
-input.button, input.mainoption, input.liteoption { 
+
+input.button, input.mainoption, input.liteoption, .inlineedit input { 
 	font-size: 11px; 
 	color: #000000; 
 	font-family: 
@@ -128,7 +129,7 @@ input.button, input.mainoption, input.liteoption {
 	cursor: pointer;
 }
 
-input.button:hover, input.mainoption:hover, input.liteoption:hover {
+input.button:hover, input.mainoption:hover, input.liteoption:hover, .inlineedit input:hover {
 	background-image: url(../images/button_hover.gif);
 }
 
