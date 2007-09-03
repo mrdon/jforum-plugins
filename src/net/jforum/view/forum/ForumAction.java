@@ -73,7 +73,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumAction.java,v 1.75 2007/08/25 19:05:02 rafaelsteil Exp $
+ * @version $Id: ForumAction.java,v 1.76 2007/09/03 12:24:32 rafaelsteil Exp $
  */
 public class ForumAction extends Command
 {
@@ -88,11 +88,8 @@ public class ForumAction extends Command
 		this.context.put("topicsPerPage", new Integer(SystemGlobals.getIntValue(ConfigKeys.TOPICS_PER_PAGE)));
 		this.context.put("rssEnabled", SystemGlobals.getBoolValue(ConfigKeys.RSS_ENABLED));
 
-		this.context.put("totalMessages", I18n.getMessage("ForumListing.totalMessagesInfo", new Object[] { new Integer(
-			ForumRepository.getTotalMessages()) }));
-
-		this.context.put("totalUsers", I18n.getMessage("ForumListing.registeredUsers", 
-			new Object[] { ForumRepository .totalUsers() }));
+		this.context.put("totalMessages", new Integer(ForumRepository.getTotalMessages()));
+		this.context.put("totalRegisteredUsers", ForumRepository .totalUsers());
 		this.context.put("lastUser", ForumRepository.lastRegisteredUser());
 
 		SimpleDateFormat df = new SimpleDateFormat(SystemGlobals.getValue(ConfigKeys.DATE_TIME_FORMAT));
@@ -133,24 +130,24 @@ public class ForumAction extends Command
 
 		int registeredSize = SessionFacade.registeredSize();
 		int anonymousSize = SessionFacade.anonymousSize();
-		int totalUsers = registeredSize + anonymousSize;
+		int totalOnlineUsers = registeredSize + anonymousSize;
 
 		this.context.put("userSessions", onlineUsersList);
-		this.context.put("usersOnline", I18n.getMessage("ForumListing.numberOfUsersOnline", new Object[] {
-			new Integer(totalUsers), new Integer(registeredSize), new Integer(anonymousSize) }));
+		this.context.put("totalOnlineUsers", new Integer(totalOnlineUsers));
+		this.context.put("totalRegisteredOnlineUsers", new Integer(registeredSize));
+		this.context.put("totalAnonymousUsers", new Integer(anonymousSize));
 
 		// Most users ever online
 		MostUsersEverOnline mostUsersEverOnline = ForumRepository.getMostUsersEverOnline();
 
-		if (totalUsers > mostUsersEverOnline.getTotal()) {
-			mostUsersEverOnline.setTotal(totalUsers);
+		if (totalOnlineUsers > mostUsersEverOnline.getTotal()) {
+			mostUsersEverOnline.setTotal(totalOnlineUsers);
 			mostUsersEverOnline.setTimeInMillis(System.currentTimeMillis());
 
 			ForumRepository.updateMostUsersEverOnline(mostUsersEverOnline);
 		}
 
-		this.context.put("mostUsersEverOnline", I18n.getMessage("ForumListing.mostUsersEverOnline", new String[] {
-			Integer.toString(mostUsersEverOnline.getTotal()), mostUsersEverOnline.getDate() }));
+		this.context.put("mostUsersEverOnline", mostUsersEverOnline);
 	}
 
 	public void moderation()

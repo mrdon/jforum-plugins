@@ -103,23 +103,24 @@
 
 				<tr>
 					<td class="row1" valign="middle" align="center" rowspan="2"><img src="${contextPath}/templates/${templateName}/images/whosonline.gif" alt="[Who's Online]"/></td>
-					<td class="row1" align="left" width="100%">
-						<span class="gensmall">${totalMessages}<br />${totalUsers}<br />
-						${I18n.getMessage("ForumListing.newestUser")} <a href="${JForumContext.encodeURL("/user/profile/${lastUser.id}")}">${lastUser.username}</a></span>
+					<td class="row1 gensmall" align="left" width="100%">
+						${I18n.getMessage("ForumListing.totalMessagesInfo", [ totalMessages ])}<br />
+						${I18n.getMessage("ForumListing.registeredUsers", [ totalRegisteredUsers ])}<br />
+						${I18n.getMessage("ForumListing.newestUser")} <a href="${JForumContext.encodeURL("/user/profile/${lastUser.id}")}">${lastUser.username}</a>
 					</td>
 				</tr>
 
 				<tr>
-					<td class="row1" align="left">
+					<td class="row1 gensmall" align="left">
 						<#assign adminColor = "class='admin'"/>
 						<#assign moderatorColor = "class='moderator'"/>
 						<#assign color = ""/>
 
-						<span class="gensmall">${usersOnline}&nbsp;&nbsp;
+						${I18n.getMessage("ForumListing.numberOfUsersOnline", [ totalOnlineUsers, totalRegisteredOnlineUsers, totalAnonymousUsers ])}&nbsp;&nbsp;
 			
 						[ <span ${adminColor}>${I18n.getMessage("Administrator")}</span> ]&nbsp;[ <span ${moderatorColor}>${I18n.getMessage("Moderator")}</span> ]
 						<br />
-						${mostUsersEverOnline}									
+						$${I18n.getMessage("ForumListing.mostUsersEverOnline", [ mostUsersEverOnline.getTotal(), mostUsersEverOnline.getDate()?string ])}									
 						<br />
 						${I18n.getMessage("ForumListing.connectedUsers")}: 
 			
@@ -134,7 +135,6 @@
 
 								<a href="${JForumContext.encodeURL("/user/profile/${us.userId}")}"><span ${color}>${us.username}</span></a>&nbsp;
 						</#list>			
-						</span>		  
 					</td>
 				</tr>
 			</table>
