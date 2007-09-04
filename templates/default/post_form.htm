@@ -357,12 +357,15 @@ function smiliePopup()
 					<td class="row2">
 						<div id="tabs10">
 							<ul>
-								<li target="postOptions" class="current"><a href="javascript:void(0);" onClick="activateTab('postOptions', this);"><span>Options</span></a></li>
-
+								<#if allowPoll && attachmentsEnabled>
+								    <li target="postOptions" class="current"><a href="javascript:void(0);" onClick="activateTab('postOptions', this);"><span>Options</span></a></li>
+                                </#if>
 								<#if allowPoll>
 									<li target="postPoll"><a href="javascript:void(0);" onClick="activateTab('postPoll', this);"><span>Poll</span></a></li>
 								</#if>
-								<li target="postAttachments"><a href="javascript:void(0);" onClick="activateTab('postAttachments', this);"><span>Attachments</span></a></li>
+								<#if attachmentsEnabled>
+								    <li target="postAttachments"><a href="javascript:void(0);" onClick="activateTab('postAttachments', this);"><span>Attachments</span></a></li>
+								</#if>
 							</ul>
 						</div>
 
