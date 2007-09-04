@@ -24,3 +24,5 @@ CREATE TABLE jforum_moderation_log (
 
 CREATE INDEX idx_moderation_user ON jforum_moderation_log(user_id);
 CREATE INDEX idx_moderation_pu ON jforum_moderation_log(post_user_id);
+
+UPDATE jforum_forums SET forum_topics = (SELECT count(*) FROM jforum_topics t WHERE t.forum_id = jforum_forums.forum_id);
