@@ -53,7 +53,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumSessionListener.java,v 1.18 2006/08/20 22:47:24 rafaelsteil Exp $
+ * @version $Id: ForumSessionListener.java,v 1.19 2007/09/04 16:29:48 andowson Exp $
  */
 public class ForumSessionListener implements HttpSessionListener 
 {
@@ -84,11 +84,11 @@ public class ForumSessionListener implements HttpSessionListener
 			logger.warn(e);
 		}
 
-		UserSession us = SessionFacade.getUserSession(sessionId);
+		//UserSession us = SessionFacade.getUserSession(sessionId);
 		
-		if (us != null) {
-			SecurityRepository.remove(us.getUserId());
-		}
+		//if (us != null) {
+		//	SecurityRepository.remove(us.getUserId());
+		//}
 
 		SessionFacade.remove(sessionId);
 	}
