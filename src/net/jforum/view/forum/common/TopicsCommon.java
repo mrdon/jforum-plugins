@@ -74,7 +74,7 @@ import freemarker.template.SimpleHash;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.45 2007/08/20 19:35:54 rafaelsteil Exp $
+ * @version $Id: TopicsCommon.java,v 1.46 2007/09/04 14:57:24 andowson Exp $
  */
 public class TopicsCommon 
 {
@@ -301,7 +301,7 @@ public class TopicsCommon
 		topic.setId(topicId);
 		topic.setForumId(forumId);
 
-		topicDao.delete(topic);
+		topicDao.delete(topic, fromModeration);
 
 		if (!fromModeration) {
 			// Updates the Recent Topics if it contains this topic

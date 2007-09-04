@@ -57,7 +57,7 @@ import net.jforum.entities.User;
  * select some specific data.
  *
  * @author Rafael Steil
- * @version $Id: TopicDAO.java,v 1.16 2007/07/31 02:14:20 rafaelsteil Exp $
+ * @version $Id: TopicDAO.java,v 1.17 2007/09/04 14:57:25 andowson Exp $
  */
 public interface TopicDAO 
 {
@@ -129,15 +129,17 @@ public interface TopicDAO
 	 * Delete a Topic.
 	 * 
 	 * @param topic The Topic ID to delete
+	 * @param fromModeration boolean
 	 */
-	public void delete(Topic topic) ;
+	public void delete(Topic topic, boolean fromModeration) ;
 	
 	/**
 	 * Deletes a set of topics
 	 * @param topics The topics to delete. Each entry must be
 	 * an instance of net.jforum.entities.Topic
+	 * @param fromModeration boolean
 	 */
-	public void deleteTopics(List topics) ;
+	public void deleteTopics(List topics, boolean fromModeration) ;
 	
 	/**
 	 * Deletes all topics from a forum

@@ -71,7 +71,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationHelper.java,v 1.40 2007/07/10 01:04:31 rafaelsteil Exp $
+ * @version $Id: ModerationHelper.java,v 1.41 2007/09/04 14:57:25 andowson Exp $
  */
 public class ModerationHelper 
 {
@@ -193,7 +193,7 @@ public class ModerationHelper
 				PostRepository.clearCache(t.getId());
 			}
 			
-			tm.deleteTopics(topicsToDelete);
+			tm.deleteTopics(topicsToDelete, false);
 			
 			ForumDAO fm = DataAccessDriver.getInstance().newForumDAO();
 			TopicRepository.loadMostRecentTopics();

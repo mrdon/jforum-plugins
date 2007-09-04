@@ -74,7 +74,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTopicDAO.java,v 1.29 2007/08/20 19:35:53 rafaelsteil Exp $
+ * @version $Id: GenericTopicDAO.java,v 1.30 2007/09/04 14:57:26 andowson Exp $
  */
 public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 {
@@ -176,14 +176,14 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 	/**
 	 * @see net.jforum.dao.TopicDAO#delete(net.jforum.entities.Topic)
 	 */
-	public void delete(Topic topic)
+	public void delete(Topic topic, boolean fromModeration)
 	{
 		List l = new ArrayList();
 		l.add(topic);
-		this.deleteTopics(l);
+		this.deleteTopics(l, fromModeration);
 	}
 
-	public void deleteTopics(List topics)
+	public void deleteTopics(List topics, boolean fromModeration)
 	{
 		// Topic
 		PreparedStatement p = null;
@@ -211,7 +211,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 				p.setInt(1, topic.getId());
 				p.executeUpdate();
 
-				forumDao.decrementTotalTopics(topic.getForumId(), 1);
+				if (!fromModeration) {
+					forumDao.decrementTotalTopics(topic.getForumId(), 1);
+				}
 			}
 		}
 		catch (SQLException e) {
@@ -230,7 +232,7 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 	{
 		PreparedStatement p = null;
 		ResultSet rs = null;
-
+		
 		try {
 			p = JForumExecutionContext.getConnection().prepareStatement(
 					SystemGlobals.getSql("TopicModel.deleteByForum"));
@@ -247,7 +249,7 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 				topics.add(t);
 			}
 
-			this.deleteTopics(topics);
+			this.deleteTopics(topics, false);
 		}
 		catch (SQLException e) {
 			throw new DatabaseException(e);
