@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>default/js/shCore.js</string>
+	<string>default/js/jquery.js</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -49,6 +49,20 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
+		<key>default/forum_list.htm</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>131</integer>
+				<key>line</key>
+				<integer>122</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>77</integer>
+		</dict>
 		<key>default/forum_show.htm</key>
 		<dict>
 			<key>caret</key>
@@ -63,14 +77,14 @@
 			<key>firstVisibleLine</key>
 			<integer>259</integer>
 		</dict>
-		<key>default/js/shCore.js</key>
+		<key>default/js/jquery.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>12</integer>
+				<integer>315</integer>
 				<key>line</key>
-				<integer>16</integer>
+				<integer>10</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -136,7 +150,8 @@
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>default/js/shCore.js</string>
+		<string>default/forum_list.htm</string>
+		<string>default/js/jquery.js</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>

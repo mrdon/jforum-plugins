@@ -18,22 +18,6 @@
 	   </layout>
 	</appender>
 	
-	<appender name="lucene.log" class="org.apache.log4j.RollingFileAppender">
-		<param name="MaxFileSize"  value="1024KB"/>
-		<param name="MaxBackupIndex" value="4"/>
-
-		<param name="File" value="/tmp/lucene.log"/>
-		
-		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d %-5p [%-c{1}] - %m%n"/>
-	   </layout>
-	</appender>
-	
-	<category name="lucene">
-		<priority value="info"/>
-		<appender-ref ref="lucene.log"/>
-	</category>
-
 	<category name="org.jgroups">
 		<priority value="info"/>
 		<appender-ref ref="jforum-stdout"/>

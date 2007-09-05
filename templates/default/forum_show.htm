@@ -126,7 +126,7 @@
 									<#list topic.posts as post>
 										<#assign post = postFormatter.preparePostForDisplay(post)/>
 
-										<tr><td><span class="gensmall"><b>${I18n.getMessage("PostShow.author")}</b>: ${post.postUsername}</span></td></tr>
+										<tr><td><span class="gensmall"><b>${I18n.getMessage("PostShow.author")}</b>: <a href="${JForumContext.encodeURL("/user/profile/${post.userId}")}">${post.postUsername}</a></span></td></tr>
 										<tr><td><span class="gensmall">${post.text}</span></td></tr>
 
 										<tr>

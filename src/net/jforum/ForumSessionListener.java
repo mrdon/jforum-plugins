@@ -46,14 +46,11 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
-import net.jforum.entities.UserSession;
-import net.jforum.repository.SecurityRepository;
-
 import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: ForumSessionListener.java,v 1.19 2007/09/04 16:29:48 andowson Exp $
+ * @version $Id: ForumSessionListener.java,v 1.20 2007/09/05 04:00:30 rafaelsteil Exp $
  */
 public class ForumSessionListener implements HttpSessionListener 
 {
@@ -83,12 +80,6 @@ public class ForumSessionListener implements HttpSessionListener
 		catch (Exception e) {
 			logger.warn(e);
 		}
-
-		//UserSession us = SessionFacade.getUserSession(sessionId);
-		
-		//if (us != null) {
-		//	SecurityRepository.remove(us.getUserId());
-		//}
 
 		SessionFacade.remove(sessionId);
 	}

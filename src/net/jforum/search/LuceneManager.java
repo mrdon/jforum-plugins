@@ -50,18 +50,15 @@ import net.jforum.exceptions.ForumException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
-import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.IndexReader;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneManager.java,v 1.14 2007/08/31 17:37:34 rafaelsteil Exp $
+ * @version $Id: LuceneManager.java,v 1.15 2007/09/05 04:00:28 rafaelsteil Exp $
  */
 public class LuceneManager implements SearchManager
 {
-	private static Logger logger = Logger.getLogger("lucene");
-	
 	private LuceneSearch search;
 	private LuceneSettings settings;
 	private LuceneIndexer indexer;
@@ -124,11 +121,7 @@ public class LuceneManager implements SearchManager
 	 */
 	public void create(Post post)
 	{
-		long start = System.currentTimeMillis();
 		this.indexer.create(post);
-		long end = System.currentTimeMillis();
-		
-		logger.info("Created a message in " + (end - start) + " ms");
 	}
 	
 	/**
@@ -136,11 +129,7 @@ public class LuceneManager implements SearchManager
 	 */
 	public void update(Post post)
 	{
-		long start = System.currentTimeMillis();
 		this.indexer.update(post);
-		long end = System.currentTimeMillis();
-		
-		logger.info("Updated a message in " + (end - start) + " ms");
 	}
 
 	/**
@@ -156,11 +145,7 @@ public class LuceneManager implements SearchManager
 	 */
 	public void delete(Post p)
 	{
-		long start = System.currentTimeMillis();
 		this.indexer.delete(p);
-		long end = System.currentTimeMillis();
-		
-		logger.info("Deleted a message in " + (end - start) + " ms");
 	}
 	
 	/**

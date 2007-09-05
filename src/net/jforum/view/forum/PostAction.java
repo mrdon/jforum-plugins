@@ -103,7 +103,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.192 2007/08/31 22:56:40 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.193 2007/09/05 04:00:30 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -1245,26 +1245,22 @@ public class PostAction extends Command
 		}
 
 		// Post
-		PostDAO pm = DataAccessDriver.getInstance().newPostDAO();
-		Post p = pm.selectById(this.request.getIntParameter("post_id"));
+		PostDAO postDao = DataAccessDriver.getInstance().newPostDAO();
+		Post p = postDao.selectById(this.request.getIntParameter("post_id"));
 		
 		if (p.getId() == 0) {
 			this.postNotFound();
 			return;
 		}
 
-		TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
-		Topic t = TopicRepository.getTopic(new Topic(p.getTopicId()));
-		
-		if (t == null) {
-			t = tm.selectRaw(p.getTopicId());
-		}
+		TopicDAO topicDao = DataAccessDriver.getInstance().newTopicDAO();
+		Topic t = topicDao.selectRaw(p.getTopicId());
 
 		if (!TopicsCommon.isTopicAccessible(t.getForumId())) {
 			return;
 		}
 
-		pm.delete(p);
+		postDao.delete(p);
 		DataAccessDriver.getInstance().newUserDAO().decrementPosts(p.getUserId());
 		
 		// Karma
@@ -1275,20 +1271,20 @@ public class PostAction extends Command
 		new AttachmentCommon(this.request, p.getForumId()).deleteAttachments(p.getId(), p.getForumId());
 
 		// It was the last remaining post in the topic?
-		int totalPosts = tm.getTotalPosts(p.getTopicId());
+		int totalPosts = topicDao.getTotalPosts(p.getTopicId());
 
 		if (totalPosts > 0) {
 			// Topic
-			tm.decrementTotalReplies(p.getTopicId());
+			topicDao.decrementTotalReplies(p.getTopicId());
 
-			int maxPostId = tm.getMaxPostId(p.getTopicId());
+			int maxPostId = topicDao.getMaxPostId(p.getTopicId());
 			if (maxPostId > -1) {
-				tm.setLastPostId(p.getTopicId(), maxPostId);
+				topicDao.setLastPostId(p.getTopicId(), maxPostId);
 			}
 
-			int minPostId = tm.getMinPostId(p.getTopicId());
+			int minPostId = topicDao.getMinPostId(p.getTopicId());
 			if (minPostId > -1) {
-			  tm.setFirstPostId(p.getTopicId(), minPostId);
+			  topicDao.setFirstPostId(p.getTopicId(), minPostId);
 			}
 	        
 			// Forum
@@ -1319,7 +1315,7 @@ public class PostAction extends Command
 			
 			// Update the cache
 			if (TopicRepository.isTopicCached(t)) {
-				t = tm.selectById(t.getId());
+				t = topicDao.selectById(t.getId());
 				TopicRepository.updateTopic(t);
 			}
 		}
