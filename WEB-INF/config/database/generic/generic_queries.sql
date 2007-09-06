@@ -267,6 +267,7 @@ ForumModel.lastPostInfo = SELECT post_time, p.topic_id, t.topic_replies, post_id
 	AND t.topic_last_post_id = p.post_id \
 	AND p.forum_id = ? \
 	AND p.user_id = u.user_id
+    AND p.need_moderate = 0
 
 ForumModel.getModeratorList = SELECT g.group_id AS id, g.group_name AS name \
 	FROM jforum_groups g, jforum_roles r, jforum_role_values rv, jforum_roles r2 \
@@ -281,7 +282,7 @@ ForumModel.totalMessages = SELECT COUNT(1) as total_messages FROM jforum_posts W
 ForumModel.getMaxPostId = SELECT MAX(post_id) AS post_id FROM jforum_posts WHERE forum_id = ?
 ForumModel.moveTopics = UPDATE jforum_topics SET forum_id = ?, topic_moved_id = ? WHERE topic_id = ?
 ForumModel.checkUnreadTopics = SELECT MAX(post_time), topic_id FROM jforum_posts WHERE forum_id = ? AND post_time > ? GROUP BY topic_id
-ForumModel.latestTopicIdForfix = SELECT MAX(topic_id) AS topic_id FROM jforum_posts WHERE forum_id = ?
+ForumModel.latestTopicIdForfix = SELECT MAX(topic_id) AS topic_id FROM jforum_posts WHERE forum_id = ? AND need_moderate = 0
 ForumModel.fixLatestPostData = UPDATE jforum_topics SET topic_last_post_id = ? WHERE topic_id = ?
 ForumModel.fixForumLatestPostData = UPDATE jforum_forums SET forum_last_post_id = ? WHERE forum_id = ?
 
