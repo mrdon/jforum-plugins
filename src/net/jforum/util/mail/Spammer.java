@@ -73,7 +73,7 @@ import freemarker.template.Template;
  * Dispatch emails to the world. 
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.33 2007/09/02 14:37:54 andowson Exp $
+ * @version $Id: Spammer.java,v 1.34 2007/09/08 02:36:36 andowson Exp $
  */
 public class Spammer
 {
@@ -151,9 +151,14 @@ public class Spammer
 	                        	}
 	                        	
 	                        	Address address = new InternetAddress(user.getEmail());
-	                        	
-	                        	this.message.setRecipient(Message.RecipientType.TO, address);
-	                            transport.sendMessage(this.message, new Address[] { address });
+	                        	logger.info("Sending mail to: " + user.getEmail());
+	                        	this.message.setRecipient(Message.RecipientType.TO, address);	                            
+	                        	transport.sendMessage(this.message, new Address[] { address });
+	                        	try {
+	                            	Thread.sleep(SystemGlobals.getIntValue(ConfigKeys.MAIL_SMTP_DELAY));
+	                            } catch (InterruptedException ie) {
+	                            	logger.error("Error while Thread.sleep." + ie, ie);
+	                            }
 	                        }
 	                    }
                     }
@@ -174,9 +179,14 @@ public class Spammer
                 	}
                 	
                 	Address address = new InternetAddress(user.getEmail());
-                	
+                	logger.info("Sending mail to: " + user.getEmail());
                 	this.message.setRecipient(Message.RecipientType.TO,address);
                     Transport.send(this.message, new Address[] { address });
+                    try {
+                    	Thread.sleep(SystemGlobals.getIntValue(ConfigKeys.MAIL_SMTP_DELAY));
+                    } catch (InterruptedException ie) {
+                    	logger.error("Error while Thread.sleep." + ie, ie);
+                    }
                 }
             }
         }

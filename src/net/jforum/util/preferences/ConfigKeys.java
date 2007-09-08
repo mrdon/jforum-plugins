@@ -48,7 +48,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.118 2007/08/20 19:35:53 rafaelsteil Exp $
+* @version $Id: ConfigKeys.java,v 1.119 2007/09/08 02:36:35 andowson Exp $
 */
 
 public class ConfigKeys 
@@ -201,6 +201,7 @@ public class ConfigKeys
 	public static final String MAIL_SMTP_LOCALHOST = "mail.smtp.localhost";
 	public static final String MAIL_SMTP_USERNAME = "mail.smtp.username";
 	public static final String MAIL_SMTP_PASSWORD = "mail.smtp.password";
+	public static final String MAIL_SMTP_DELAY = "mail.smtp.delay";
 	
 	public static final String MAIL_USER_EMAIL_AUTH = "mail.user.email.auth";
 	public static final String MAIL_ACTIVATION_KEY_MESSAGE_FILE = "mail.activationKey.messageFile";

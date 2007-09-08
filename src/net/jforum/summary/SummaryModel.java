@@ -67,7 +67,7 @@ import freemarker.template.SimpleHash;
  * @see net.jforum.summary.SummaryScheduler
  * 
  * @author Franklin S. Dattein (<a href="mailto:franklin@hp.com">franklin@hp.com</a>)
- * @version $Id: SummaryModel.java,v 1.10 2006/10/09 00:54:10 rafaelsteil Exp $
+ * @version $Id: SummaryModel.java,v 1.11 2007/09/08 02:36:36 andowson Exp $
  */
 public class SummaryModel extends Spammer
 {
@@ -97,6 +97,7 @@ public class SummaryModel extends Spammer
 		SimpleHash params = new SimpleHash();
 		params.put("posts", posts);
 		params.put("url", forumLink);
+		params.put("extension", SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 
 		String subject = SystemGlobals.getValue(ConfigKeys.MAIL_SUMMARY_SUBJECT);
 		
