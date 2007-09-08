@@ -67,7 +67,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallServlet.java,v 1.27 2006/08/24 21:02:57 sergemaslyukov Exp $
+ * @version $Id: InstallServlet.java,v 1.28 2007/09/08 00:18:48 andowson Exp $
  */
 public class InstallServlet extends JForumBaseServlet
 {
@@ -122,7 +122,7 @@ public class InstallServlet extends JForumBaseServlet
 			
 			if (SystemGlobals.getBoolValue(ConfigKeys.INSTALLED)) {
 				JForumExecutionContext.setRedirect(request.getContextPath() 
-					+ "/forums/list.page");
+					+ "/forums/list" + SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 			}
 			else {		
 				// Module and Action
