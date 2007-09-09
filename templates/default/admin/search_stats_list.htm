@@ -149,64 +149,70 @@ function checkIfPostExists()
 		<th colspan="2">${I18n.getMessage("SearchStats.title")}</th>
 	</tr>
 
-	<tr>
-		<td width="200"><strong>${I18n.getMessage("SearchStats.totalPostsInDatabase")}:</strong> </td>
-		<td><i>${totalMessages}</i></td>
-	</tr>
-
-	<tr>
-		<td class="row3"><strong>${I18n.getMessage("SearchStats.indexLocation")}:</strong></td>
-		<td class="row3"><i>${indexLocation}</i></td>
-	</tr>
-
-	<tr>
-		<td><strong>${I18n.getMessage("SearchStats.indexExists")}:</strong></td>
-		<td>
-			<#if !indexExists>
-				<i>${I18n.getMessage("No")}</i> <a href="${contextPath}/jforum${extension}?module=${moduleName}&action=createIndexDirectory">>${I18n.getMessage("SearchStats.CreateIndexNow")}</a>
-			<#else>
-				<i>${I18n.getMessage("Yes")}</i> 
-			</#if>
-		</td>
-	</tr>
-
-	<#if indexExists>
+	<#if !isInformationAvailable>
 		<tr>
-			<td class="row3"><strong>${I18n.getMessage("SearchStats.lastModified")}:</strong></td>
-			<td class="row3"><i>${lastModified?datetime}</i></td>
+			<td width="200" colspan="2"><strong>${I18n.getMessage("SearchStats.informationUnavailable")}</td>
+		</tr>
+	<#else>
+		<tr>
+			<td width="200"><strong>${I18n.getMessage("SearchStats.totalPostsInDatabase")}:</strong> </td>
+			<td><i>${totalMessages}</i></td>
 		</tr>
 
 		<tr>
-			<td><strong>${I18n.getMessage("SearchStats.numberOfDocs")}:</strong> </td>
-			<td><i>${numberOfDocs}</i></td>
+			<td class="row3"><strong>${I18n.getMessage("SearchStats.indexLocation")}:</strong></td>
+			<td class="row3"><i>${indexLocation}</i></td>
 		</tr>
 
 		<tr>
-			<td class="row3"><strong>${I18n.getMessage("SearchStats.indexVersion")}:</strong> </td>
-			<td class="row3"><i>${indexVersion}</i></td>
-		</tr>
-
-		<tr>
-			<td><strong>${I18n.getMessage("SearchStats.isLocked")}</strong> </td>
+			<td><strong>${I18n.getMessage("SearchStats.indexExists")}:</strong></td>
 			<td>
-				<i>
-					<#if isLocked>
-						${I18n.getMessage("Yes")}
-					<#else>
-						${I18n.getMessage("No")}
-					</#if>
-				</i>
+				<#if !indexExists>
+					<i>${I18n.getMessage("No")}</i> <a href="${contextPath}/jforum${extension}?module=${moduleName}&action=createIndexDirectory">>${I18n.getMessage("SearchStats.CreateIndexNow")}</a>
+				<#else>
+					<i>${I18n.getMessage("Yes")}</i> 
+				</#if>
 			</td>
 		</tr>
+	
+		<#if indexExists>
+			<tr>
+				<td class="row3"><strong>${I18n.getMessage("SearchStats.lastModified")}:</strong></td>
+				<td class="row3"><i>${lastModified?datetime}</i></td>
+			</tr>
 
-		<tr>
-			<td class="row3"><strong>${I18n.getMessage("SearchStats.isPostIndexed")}</strong> </td>
-			<td class="gensmall row3">
-				${I18n.getMessage("SearchStats.enterPostId")}: 
-				<input type="text" id="checkPostId">
-				<input type="button" value="${I18n.getMessage("SearchStats.check")}" onClick="checkIfPostExists();">
-			</td>
-		</tr>
+			<tr>
+				<td><strong>${I18n.getMessage("SearchStats.numberOfDocs")}:</strong> </td>
+				<td><i>${numberOfDocs}</i></td>
+			</tr>
+
+			<tr>
+				<td class="row3"><strong>${I18n.getMessage("SearchStats.indexVersion")}:</strong> </td>
+				<td class="row3"><i>${indexVersion}</i></td>
+			</tr>
+
+			<tr>
+				<td><strong>${I18n.getMessage("SearchStats.isLocked")}</strong> </td>
+				<td>
+					<i>
+						<#if isLocked>
+							${I18n.getMessage("Yes")}
+						<#else>
+							${I18n.getMessage("No")}
+						</#if>
+					</i>
+				</td>
+			</tr>
+
+			<tr>
+				<td class="row3"><strong>${I18n.getMessage("SearchStats.isPostIndexed")}</strong> </td>
+				<td class="gensmall row3">
+					${I18n.getMessage("SearchStats.enterPostId")}: 
+					<input type="text" id="checkPostId">
+					<input type="button" value="${I18n.getMessage("SearchStats.check")}" onClick="checkIfPostExists();">
+				</td>
+			</tr>
+		</#if>
 	</#if>
 </table>
 

@@ -67,12 +67,13 @@ import net.jforum.util.preferences.TemplateKeys;
 import net.jforum.view.forum.common.PostCommon;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.lucene.document.Document;
 
 import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: AjaxAction.java,v 1.4 2007/09/02 00:18:36 rafaelsteil Exp $
+ * @version $Id: AjaxAction.java,v 1.5 2007/09/09 16:43:55 rafaelsteil Exp $
  */
 public class AjaxAction extends Command
 {
@@ -170,7 +171,9 @@ public class AjaxAction extends Command
 		this.setTemplateName(TemplateKeys.AJAX_IS_POST_INDEXED);
 		
 		LuceneManager manager = (LuceneManager)SearchFacade.manager();
-		this.context.put("isIndexed", manager.luceneSearch().isPostIndexed(postId));
+		Document doc = manager.luceneSearch().findDocumentByPostId(postId);
+		
+		this.context.put("doc", doc);
 	}
 	
 	public void loadPostContents()

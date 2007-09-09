@@ -68,7 +68,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneStatsAction.java,v 1.23 2007/08/06 21:31:04 rafaelsteil Exp $
+ * @version $Id: LuceneStatsAction.java,v 1.24 2007/09/09 16:43:55 rafaelsteil Exp $
  */
 public class LuceneStatsAction extends AdminCommand
 {
@@ -83,17 +83,27 @@ public class LuceneStatsAction extends AdminCommand
 			File indexDir = new File(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH));
 			
 			this.setTemplateName(TemplateKeys.SEARCH_STATS_LIST);
+			boolean isInformationAvailable = true;
 			
-			reader = IndexReader.open(indexDir);
+			try {
+				reader = IndexReader.open(indexDir);
+			}
+			catch (IOException e) {
+				isInformationAvailable = false;
+			}
 			
+			this.context.put("isInformationAvailable", isInformationAvailable);
 			this.context.put("indexExists", IndexReader.indexExists(indexDir));
-			this.context.put("isLocked", IndexReader.isLocked(indexDir.getAbsolutePath()));
-			this.context.put("lastModified", new Date(IndexReader.lastModified(indexDir)));
-			this.context.put("indexLocation", indexDir.getAbsolutePath());
-			this.context.put("totalMessages", new Integer(ForumRepository.getTotalMessages()));
-			this.context.put("indexVersion", new Long(reader.getVersion()));
-			this.context.put("numberOfDocs", new Integer(reader.numDocs()));
 			this.context.put("currentlyIndexing", "1".equals(SystemGlobals.getValue(ConfigKeys.LUCENE_CURRENTLY_INDEXING)));
+			
+			if (isInformationAvailable) {
+				this.context.put("isLocked", IndexReader.isLocked(indexDir.getAbsolutePath()));
+				this.context.put("lastModified", new Date(IndexReader.lastModified(indexDir)));
+				this.context.put("indexLocation", indexDir.getAbsolutePath());
+				this.context.put("totalMessages", new Integer(ForumRepository.getTotalMessages()));
+				this.context.put("indexVersion", new Long(reader.getVersion()));
+				this.context.put("numberOfDocs", new Integer(reader.numDocs()));
+			}
 		}
 		catch (IOException e) {
 			throw new ForumException(e);

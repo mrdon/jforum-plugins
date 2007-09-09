@@ -59,7 +59,7 @@ import org.apache.lucene.search.IndexSearcher;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneReindexer.java,v 1.4 2007/09/01 05:46:53 rafaelsteil Exp $
+ * @version $Id: LuceneReindexer.java,v 1.5 2007/09/09 16:43:55 rafaelsteil Exp $
  */
 public class LuceneReindexer
 {
@@ -165,7 +165,7 @@ public class LuceneReindexer
 						Post post = (Post)iter.next();
 						
 						if (!recreate && args.avoidDuplicatedRecords()) {
-							if (luceneSearch.isPostIndexed(post.getId())) {
+							if (luceneSearch.findDocumentByPostId(post.getId()) != null) {
 								continue;
 							}
 						}
