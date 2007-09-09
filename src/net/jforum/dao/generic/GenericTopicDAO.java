@@ -55,30 +55,71 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
 import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
 import net.jforum.dao.PollDAO;
 import net.jforum.dao.PostDAO;
+import net.jforum.dao.TopicDAO;
 import net.jforum.entities.KarmaStatus;
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.exceptions.DatabaseException;
 import net.jforum.repository.ForumRepository;
+import net.jforum.search.SearchArgs;
+import net.jforum.search.SearchResult;
 import net.jforum.util.DbUtils;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTopicDAO.java,v 1.30 2007/09/04 14:57:26 andowson Exp $
+ * @version $Id: GenericTopicDAO.java,v 1.31 2007/09/09 22:53:36 rafaelsteil Exp $
  */
-public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
+public class GenericTopicDAO extends AutoKeys implements TopicDAO
 {
-	private static Logger watchLogger = Logger.getLogger("watchLogger");
+	/**
+	 * @see net.jforum.dao.TopicDAO#findTopicsByDateRange(net.jforum.search.SearchArgs)
+	 */
+	public SearchResult findTopicsByDateRange(SearchArgs args) 
+	{
+		SearchResult result = null;
+		
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+				SystemGlobals.getSql("TopicModel.findTopicsByDateRange"));
+			
+			p.setTimestamp(1, new Timestamp(args.getFromDate().getTime()));
+			p.setTimestamp(2, new Timestamp(args.getToDate().getTime()));
+			
+			rs = p.executeQuery();
+			List l = new ArrayList();
+			
+			int counter = 0;
+			
+			while (rs.next()) {
+				if (counter >= args.startFrom() && counter < args.startFrom() + args.fetchCount()) {
+					l.add(new Integer(rs.getInt(1)));
+				}
+				
+				counter++;
+			}
+			
+			result = new SearchResult(this.newMessages(l), counter);
+		}
+		catch (Exception e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+		
+		return result;
+	}
 	
 	/**
 	 * @see net.jforum.dao.TopicDAO#fixFirstLastPostId(int)
@@ -648,10 +689,6 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 				
 				p.setInt(2, userId);
 				p.executeUpdate();
-				
-				if (watchLogger.isDebugEnabled()) {
-					watchLogger.debug("Subscribing user=" + userId + ", topicId=" + topicId);
-				}
 			}
 		}
 		catch (SQLException e) {
@@ -794,12 +831,9 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 		}
 	}
 	
-	/**
-	 * @see net.jforum.dao.TopicDAO#newMessages(int[])
-	 */
-	public List newMessages(int[] topicIds)
+	private List newMessages(List topicIds)
 	{
-		if (topicIds.length == 0) {
+		if (topicIds.size() == 0) {
 			return new ArrayList();
 		}
 		
@@ -809,19 +843,18 @@ public class GenericTopicDAO extends AutoKeys implements net.jforum.dao.TopicDAO
 			String sql = SystemGlobals.getSql("TopicModel.selectForNewMessages");
 			
 			StringBuffer sb = new StringBuffer();
-
-			for (int i = 0; i < topicIds.length - 1; i++) {
-				sb.append(topicIds[i]).append(',');
+			
+			for (Iterator iter = topicIds.iterator(); iter.hasNext(); ) {
+				sb.append(iter.next()).append(',');
 			}
 			
-			sb.append(topicIds[topicIds.length - 1]);
-			
+			sb.append("-1");
+
 			sql = sql.replaceAll(":topicIds:", sb.toString());
 			
 			p = JForumExecutionContext.getConnection().prepareStatement(sql);
 
-			List list = this.fillTopicsData(p);
-			return list;
+			return this.fillTopicsData(p);
 		}
 		catch (SQLException e) {
 			throw new DatabaseException(e);

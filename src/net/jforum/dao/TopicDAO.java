@@ -48,6 +48,8 @@ import java.util.Map;
 
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
+import net.jforum.search.SearchArgs;
+import net.jforum.search.SearchResult;
 
 /**
 * Model interface for {@link net.jforum.entities.Topic}.
@@ -57,7 +59,7 @@ import net.jforum.entities.User;
  * select some specific data.
  *
  * @author Rafael Steil
- * @version $Id: TopicDAO.java,v 1.17 2007/09/04 14:57:25 andowson Exp $
+ * @version $Id: TopicDAO.java,v 1.18 2007/09/09 22:53:36 rafaelsteil Exp $
  */
 public interface TopicDAO 
 {
@@ -330,5 +332,9 @@ public interface TopicDAO
 	 */
 	public Map topicPosters(int topicId) ;
 	
-	public List newMessages(int[] topicIds);
+	/**
+	 * @param args
+	 * @return
+	 */
+	public SearchResult findTopicsByDateRange(SearchArgs args);
 }

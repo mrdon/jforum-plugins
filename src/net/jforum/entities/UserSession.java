@@ -45,6 +45,7 @@ package net.jforum.entities;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import net.jforum.ControllerUtils;
 import net.jforum.JForumExecutionContext;
@@ -63,7 +64,7 @@ import com.octo.captcha.image.ImageCaptcha;
  * Stores information about user's session.
  * 
  * @author Rafael Steil
- * @version $Id: UserSession.java,v 1.35 2007/08/01 18:56:57 rafaelsteil Exp $
+ * @version $Id: UserSession.java,v 1.36 2007/09/09 22:53:36 rafaelsteil Exp $
  */
 public class UserSession implements Serializable
 {
@@ -235,8 +236,8 @@ public class UserSession implements Serializable
 	 */
 	public Date getLastVisit()
 	{
-		//return new GregorianCalendar(2005, 4, 1).getTime();
-		return this.lastVisit;
+		return new GregorianCalendar(2007, 6, 28, 15, 15, 19).getTime();
+		//return this.lastVisit;
 	}
 
 	/**

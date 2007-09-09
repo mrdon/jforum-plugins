@@ -307,6 +307,8 @@ ForumModel.notifyUsers = SELECT u.user_id, u.username, u.user_lang, u.user_email
 # #############
 # TopicModel
 # #############
+TopicModel.findTopicsByDateRange = SELECT DISTINCT topic_id FROM jforum_posts WHERE post_time >= ? AND post_time <= ?
+
 TopicModel.selectById = SELECT t.*, p.user_id AS last_user_id, p.post_time, p.attach AS attach \
 	FROM jforum_topics t, jforum_posts p \
 	WHERE t.topic_id = ? \

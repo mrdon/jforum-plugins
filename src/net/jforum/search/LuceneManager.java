@@ -55,7 +55,7 @@ import org.apache.lucene.index.IndexReader;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneManager.java,v 1.15 2007/09/05 04:00:28 rafaelsteil Exp $
+ * @version $Id: LuceneManager.java,v 1.16 2007/09/09 22:53:35 rafaelsteil Exp $
  */
 public class LuceneManager implements SearchManager
 {
@@ -81,8 +81,7 @@ public class LuceneManager implements SearchManager
 			this.indexer = new LuceneIndexer(this.settings);
 			
 			this.search = new LuceneSearch(this.settings, 
-				new LuceneContentCollector(this.settings),
-				new LuceneNewMessagesCollector());
+				new LuceneContentCollector(this.settings));
 			
 			this.indexer.watchNewDocuDocumentAdded(this.search);
 			
@@ -146,13 +145,5 @@ public class LuceneManager implements SearchManager
 	public void delete(Post p)
 	{
 		this.indexer.delete(p);
-	}
-	
-	/**
-	 * @see net.jforum.search.SearchManager#newMessages(net.jforum.search.SearchArgs)
-	 */
-	public SearchResult newMessages(SearchArgs args)
-	{
-		return this.search.newMessages(args);
 	}
 }

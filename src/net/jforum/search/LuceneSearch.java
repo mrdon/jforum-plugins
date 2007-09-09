@@ -62,25 +62,21 @@ import org.apache.lucene.search.TermQuery;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.36 2007/09/09 16:43:55 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.37 2007/09/09 22:53:35 rafaelsteil Exp $
  */
 public class LuceneSearch implements NewDocumentAdded
 {
 	private static final Logger logger = Logger.getLogger(LuceneSearch.class);
-	private static final Filter DISTINCT_TOPICS_FILTER = new DistinctTopicsFilter();
 	
 	private IndexSearcher search;
 	private LuceneSettings settings;
 	private LuceneResultCollector contentCollector;
-	private LuceneResultCollector newMessagesCollector;
 	
 	public LuceneSearch(LuceneSettings settings, 
-		LuceneResultCollector contentCollector, 
-		LuceneResultCollector newMessagesCollector)
+		LuceneResultCollector contentCollector)
 	{
 		this.settings = settings;
 		this.contentCollector = contentCollector;
-		this.newMessagesCollector = newMessagesCollector;
 		
 		this.openSearch();
 	}
@@ -105,11 +101,6 @@ public class LuceneSearch implements NewDocumentAdded
 	public SearchResult search(SearchArgs args)
 	{
 		return this.performSearch(args, this.contentCollector, null);
-	}
-	
-	public SearchResult newMessages(SearchArgs args)
-	{
-		return this.performSearch(args, this.newMessagesCollector, DISTINCT_TOPICS_FILTER);
 	}
 	
 	public Document findDocumentByPostId(int postId)
