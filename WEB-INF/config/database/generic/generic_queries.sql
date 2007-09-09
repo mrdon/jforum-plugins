@@ -266,7 +266,7 @@ ForumModel.lastPostInfo = SELECT post_time, p.topic_id, t.topic_replies, post_id
 	AND f.forum_last_post_id = t.topic_last_post_id \
 	AND t.topic_last_post_id = p.post_id \
 	AND p.forum_id = ? \
-	AND p.user_id = u.user_id
+	AND p.user_id = u.user_id \
     AND p.need_moderate = 0
 
 ForumModel.getModeratorList = SELECT g.group_id AS id, g.group_name AS name \

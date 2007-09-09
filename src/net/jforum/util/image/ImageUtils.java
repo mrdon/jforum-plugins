@@ -65,7 +65,7 @@ import net.jforum.exceptions.ForumException;
  * read from. GIF images will be saved as PNG.
  * 
  * @author Rafael Steil
- * @version $Id: ImageUtils.java,v 1.22 2007/07/28 14:17:12 rafaelsteil Exp $
+ * @version $Id: ImageUtils.java,v 1.23 2007/09/09 01:05:22 rafaelsteil Exp $
  */
 public class ImageUtils
 {
@@ -114,14 +114,14 @@ public class ImageUtils
 		int imageWidth = image.getWidth(null);
 		int imageHeight = image.getHeight(null);
 
-		float aspectRation = (float) imageWidth / imageHeight;
+		float aspectRatio = (float) imageWidth / imageHeight;
 
 		if (imageWidth > maxWidth || imageHeight > maxHeight) {
-			if ((float) largestDimension.width / largestDimension.height > aspectRation) {
-				largestDimension.width = (int) Math.ceil(largestDimension.height * aspectRation);
+			if ((float) largestDimension.width / largestDimension.height > aspectRatio) {
+				largestDimension.width = (int) Math.ceil(largestDimension.height * aspectRatio);
 			}
 			else {
-				largestDimension.height = (int) Math.ceil(largestDimension.width / aspectRation);
+				largestDimension.height = (int) Math.ceil(largestDimension.width / aspectRatio);
 			}
 
 			imageWidth = largestDimension.width;
