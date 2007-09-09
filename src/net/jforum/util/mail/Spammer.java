@@ -73,7 +73,7 @@ import freemarker.template.Template;
  * Dispatch emails to the world. 
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.34 2007/09/08 02:36:36 andowson Exp $
+ * @version $Id: Spammer.java,v 1.35 2007/09/09 22:59:23 rafaelsteil Exp $
  */
 public class Spammer
 {
@@ -132,7 +132,9 @@ public class Spammer
 	{
         try
         {
-            if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_SMTP_AUTH)) {
+            int sendDelay = SystemGlobals.getIntValue(ConfigKeys.MAIL_SMTP_DELAY);
+            
+			if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_SMTP_AUTH)) {
                 if (!StringUtils.isEmpty(username) && !StringUtils.isEmpty(password)) {
                 	boolean ssl = SystemGlobals.getBoolValue(ConfigKeys.MAIL_SMTP_SSL);
                 	
@@ -151,14 +153,20 @@ public class Spammer
 	                        	}
 	                        	
 	                        	Address address = new InternetAddress(user.getEmail());
+	                        	
 	                        	logger.info("Sending mail to: " + user.getEmail());
+	                        	
 	                        	this.message.setRecipient(Message.RecipientType.TO, address);	                            
 	                        	transport.sendMessage(this.message, new Address[] { address });
-	                        	try {
-	                            	Thread.sleep(SystemGlobals.getIntValue(ConfigKeys.MAIL_SMTP_DELAY));
-	                            } catch (InterruptedException ie) {
-	                            	logger.error("Error while Thread.sleep." + ie, ie);
-	                            }
+	                        	
+	                        	if (sendDelay > 0) {
+		                        	try {
+		                            	Thread.sleep(sendDelay);
+		                            } 
+		                        	catch (InterruptedException ie) {
+		                            	logger.error("Error while Thread.sleep." + ie, ie);
+		                            }
+	                        	}
 	                        }
 	                    }
                     }
@@ -182,10 +190,13 @@ public class Spammer
                 	logger.info("Sending mail to: " + user.getEmail());
                 	this.message.setRecipient(Message.RecipientType.TO,address);
                     Transport.send(this.message, new Address[] { address });
-                    try {
-                    	Thread.sleep(SystemGlobals.getIntValue(ConfigKeys.MAIL_SMTP_DELAY));
-                    } catch (InterruptedException ie) {
-                    	logger.error("Error while Thread.sleep." + ie, ie);
+                    
+                    if (sendDelay > 0) {
+	                    try {
+	                    	Thread.sleep(sendDelay);
+	                    } catch (InterruptedException ie) {
+	                    	logger.error("Error while Thread.sleep." + ie, ie);
+	                    }
                     }
                 }
             }
