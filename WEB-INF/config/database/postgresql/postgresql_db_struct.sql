@@ -136,6 +136,8 @@ CREATE TABLE jforum_posts (
 CREATE INDEX idx_posts_user ON jforum_posts(user_id);
 CREATE INDEX idx_posts_topic ON jforum_posts(topic_id);
 CREATE INDEX idx_posts_forum ON jforum_posts(forum_id);
+CREATE INDEX idx_posts_time ON jforum_posts(post_time);
+CREATE INDEX idx_posts_moderate ON jforum_posts(need_moderate);
 
 --
 -- Table structure for table 'jforum_posts_text'
@@ -201,6 +203,8 @@ CREATE TABLE jforum_sessions (
   session_logged_int INTEGER DEFAULT NULL
 );
 
+CREATE INDEX idx_sess_user ON jforum_sessions(session_user_id);
+
 --
 -- Table structure for table 'jforum_smilies'
 --
@@ -248,10 +252,13 @@ CREATE TABLE jforum_topics (
   topic_moved_id INTEGER DEFAULT 0,
   PRIMARY KEY  (topic_id)
 );
+
 CREATE INDEX idx_topics_forum ON jforum_topics(forum_id);
 CREATE INDEX idx_topics_user ON jforum_topics(user_id);
 CREATE INDEX idx_topics_fp ON jforum_topics(topic_first_post_id);
 CREATE INDEX idx_topics_lp ON jforum_topics(topic_last_post_id);
+CREATE INDEX idx_topics_time ON jforum_topics(topic_time);
+CREATE INDEX idx_topics_type ON jforum_topics(topic_type);
 CREATE INDEX idx_topics_moved ON jforum_topics(topic_moved_id);
 		
 --
@@ -344,6 +351,8 @@ CREATE TABLE jforum_vote_desc (
   PRIMARY KEY  (vote_id)
 );
 
+CREATE INDEX idx_vd_topic ON jforum_vote_desc(topic_id);
+
 --
 -- Table structure for table 'jforum_vote_results'
 --
@@ -355,6 +364,8 @@ CREATE TABLE jforum_vote_results (
   vote_result INTEGER NOT NULL DEFAULT 0
 );
 
+CREATE INDEX idx_vr_id ON jforum_vote_results(vote_id);
+
 --
 -- Table structure for table 'jforum_vote_voters'
 --
@@ -364,6 +375,9 @@ CREATE TABLE jforum_vote_voters (
   vote_user_id INTEGER NOT NULL DEFAULT 0,
   vote_user_ip VARCHAR(15) NOT NULL DEFAULT ''
 );
+
+CREATE INDEX idx_vv_id ON jforum_vote_voters(vote_id);
+CREATE INDEX idx_vv_user ON jforum_vote_voters(vote_user_id);
 
 --
 -- Table structure for table 'jforum_words'

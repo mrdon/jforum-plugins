@@ -10,7 +10,8 @@ CREATE TABLE jforum_banlist (
   banlist_email varchar(255),
   PRIMARY KEY  (banlist_id),
   INDEX idx_user (user_id),
-  INDEX (banlist_ip)
+  INDEX (banlist_ip),
+  INDEX (banlist_email)
 ) TYPE=InnoDB;
 
 --
@@ -138,6 +139,7 @@ CREATE TABLE jforum_posts (
   KEY (user_id),
   KEY (topic_id),
   KEY (forum_id),
+  KEY(post_time)
   INDEX (need_moderate)
 ) TYPE=InnoDB;
 
@@ -202,7 +204,7 @@ CREATE TABLE jforum_sessions (
   session_user_id INT NOT NULL default '0',
   session_start datetime default null,
   session_time bigint default '0',
-  session_ip varchar(8) NOT NULL default '',
+  session_ip varchar(15) NOT NULL default '',
   session_page int(11) NOT NULL default '0',
   session_logged_int tinyint(1) default NULL,
   INDEX idx_sessions_users (session_user_id)
@@ -349,7 +351,8 @@ CREATE TABLE jforum_vote_desc (
   vote_text varchar(255) NOT NULL default '',
   vote_start datetime NOT NULL,
   vote_length int(11) NOT NULL default '0',
-  PRIMARY KEY  (vote_id)
+  PRIMARY KEY  (vote_id),
+  INDEX(topic_id)
 ) TYPE=InnoDB;
 
 --
@@ -361,7 +364,8 @@ CREATE TABLE jforum_vote_results (
   vote_id INT NOT NULL default '0',
   vote_option_id tinyint(4) NOT NULL default '0',
   vote_option_text varchar(255) NOT NULL default '',
-  vote_result int(11) NOT NULL default '0'
+  vote_result int(11) NOT NULL default '0',
+  INDEX(vote_id)
 ) TYPE=InnoDB;
 
 --
@@ -372,7 +376,9 @@ DROP TABLE IF EXISTS jforum_vote_voters;
 CREATE TABLE jforum_vote_voters (
   vote_id INT NOT NULL default '0',
   vote_user_id INT NOT NULL default '0',
-  vote_user_ip varchar(15) NOT NULL default ''
+  vote_user_ip varchar(15) NOT NULL default '',
+  INDEX(vote_id),
+  INDEX(vote_user_id)
 ) TYPE=InnoDB;
 
 --
@@ -454,7 +460,8 @@ CREATE TABLE jforum_extensions (
 	upload_icon VARCHAR(100),
 	extension VARCHAR(10),
 	allow TINYINT(1) DEFAULT '1',
-	KEY(extension_group_id)
+	KEY(extension_group_id),
+	INDEX(extension)
 ) TYPE=InnoDB;
 
 --

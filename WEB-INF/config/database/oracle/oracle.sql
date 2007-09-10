@@ -236,6 +236,8 @@ AttachmentModel.addAttachment = INSERT INTO jforum_attach (attach_id, post_id, p
 
 AttachmentModel.addAttachmentInfo = INSERT INTO jforum_attach_desc (attach_desc_id, attach_id, physical_filename, real_filename, description, \
 	mimetype, filesize, upload_time, thumb, extension_id ) VALUES (jforum_attach_desc_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		
+AttachmentModel.setGroupQuota = INSERT INTO jforum_attach_quota (attach_quota_id, group_id, quota_limit_id) VALUES (jforum_attach_quota_seq.nextval, ?, ?)
 
 # ###############
 # BanlistModel
