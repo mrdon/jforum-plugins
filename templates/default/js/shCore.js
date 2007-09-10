@@ -1,5 +1,5 @@
 
-var dp={sh:{Toolbar:{},Utils:{},RegexLib:{},Brushes:{},Strings:{AboutDialog:'<html><head><title>About...</title></head><body class="dp-about"><table cellspacing="0"><tr><td class="copy"><p class="title">dp.SyntaxHighlighter</div><div class="para">Version: {V}</p><p><a href="http://www.dreamprojections.com/syntaxhighlighter/?ref=about" target="_blank">http://www.dreamprojections.com/syntaxhighlighter</a></p>&copy;2004-2007 Alex Gorbatchev.</td></tr><tr><td class="footer"><input type="button" class="close" value="OK" onClick="window.close()"/></td></tr></table></body></html>'},ClipboardSwf:null,Version:'1.5.1'}};dp.SyntaxHighlighter=dp.sh;dp.sh.Toolbar.Commands={ExpandSource:{label:'+ expand source',check:function(highlighter){return highlighter.collapse;},func:function(sender,highlighter)
+var dp={sh:{Toolbar:{},Utils:{},RegexLib:{},Brushes:{},Strings:{AboutDialog:'<html><body><p>dp.SyntaxHighlighter Version: {V}</p><p><a href="http://www.dreamprojections.com/syntaxhighlighter/?ref=about" target="_blank">http://www.dreamprojections.com/syntaxhighlighter</a></p><p>&copy;2004-2007 Alex Gorbatchev</p><p><input type="button" value="OK" onClick="window.close()"/></p></body></html>'},ClipboardSwf:null,Version:'1.5.1-JForum'}};dp.SyntaxHighlighter=dp.sh;dp.sh.Toolbar.Commands={ExpandSource:{label:'+ expand source',check:function(highlighter){return highlighter.collapse;},func:function(sender,highlighter)
 {sender.parentNode.removeChild(sender);highlighter.div.className=highlighter.div.className.replace('collapsed','');}},ViewSource:{label:'view plain',func:function(sender,highlighter)
 {var code=dp.sh.Utils.FixForBlogger(highlighter.originalCode).replace(/</g,'&lt;');var wnd=window.open('','_blank','width=750, height=400, location=0, resizable=1, menubar=0, scrollbars=0');wnd.document.write('<textarea style="width:99%;height:99%">'+code+'</textarea>');wnd.document.close();}},CopyToClipboard:{label:'copy to clipboard',check:function(){return window.clipboardData!=null||dp.sh.ClipboardSwf!=null;},func:function(sender,highlighter)
 {var code=dp.sh.Utils.FixForBlogger(highlighter.originalCode).replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');if(window.clipboardData)
@@ -44,13 +44,9 @@ dp.sh.Highlighter.prototype.GetMatches=function(regex,css)
 this.matches[this.matches.length]=new dp.sh.Match(match[0],match.index,css);}
 dp.sh.Highlighter.prototype.AddBit=function(str,css)
 {if(str==null||str.length==0)
-return;var span=this.CreateElement('SPAN');str=str.replace(/</g,'&lt;');str=str.replace(/\n/gm,'<br>');var lastWasBlank=false;if(str==' '){str="&nbsp;"}
-else if(str.indexOf(' ')>-1){for(var i=0;i<str.length;i++){var isBlank=str[i]==' ';if(lastWasBlank&&isBlank){str=str.substring(0,i)+"&nbsp;"+str.substring(i+1);lastWasBlank=false;}
-else{lastWasBlank=isBlank;}}
-if(str[str.length-1]==' '){str=str.substring(0,str.length-1)+"&nbsp;"}}
-if(css!=null)
+return;var span=this.CreateElement('SPAN');str=str.replace(/  /g,'&nbsp;&nbsp;');str=str.replace(/</g,'&lt;');str=str.replace(/\n/gm,'&nbsp;<br>');if(css!=null)
 {if((/br/gi).test(str))
-{var lines=str.split('<br>');for(var i=0;i<lines.length;i++)
+{var lines=str.split('&nbsp;<br>');for(var i=0;i<lines.length;i++)
 {span=this.CreateElement('SPAN');span.className=css;span.innerHTML=lines[i];this.div.appendChild(span);if(i+1<lines.length)
 this.div.appendChild(this.CreateElement('BR'));}}
 else
@@ -139,8 +135,9 @@ function GetOptionValue(name,list,defaultValue)
 if((matches=regex.exec(list[i]))!=null)
 return matches[1];return defaultValue;}
 function FindTagsByName(list,name,tagName)
-{var tags=document.getElementsByTagName(tagName);for(var i=0;i<tags.length;i++){var current=tags[i];if(!current.isProcessed&&current.getAttribute('name')==name)
-list.push(current);}}
+{var tags=document.getElementsByTagName(tagName);for(var i=0;i<tags.length;i++)
+if(tags[i].getAttribute('name')==name)
+list.push(tags[i]);}
 var elements=[];var highlighter=null;var registered={};var propertyName='innerHTML';FindTagsByName(elements,name,'pre');FindTagsByName(elements,name,'textarea');if(elements.length==0)
 return;for(var brush in dp.sh.Brushes)
 {var aliases=dp.sh.Brushes[brush].Aliases;if(aliases==null)
@@ -155,4 +152,4 @@ continue;highlighter=new dp.sh.Brushes[registered[language]]();element.style.dis
 else
 {var textNode=document.createTextNode(highlighter.Style);styleNode.appendChild(textNode);}
 headNode.appendChild(styleNode);}
-highlighter.firstLine=(firstLine==null)?parseInt(GetOptionValue('firstline',options,1)):firstLine;highlighter.Highlight(element[propertyName]);highlighter.source=element;element.parentNode.insertBefore(highlighter.div,element);element.isProcessed=true;}}
+highlighter.firstLine=(firstLine==null)?parseInt(GetOptionValue('firstline',options,1)):firstLine;highlighter.Highlight(element[propertyName]);highlighter.source=element;element.parentNode.insertBefore(highlighter.div,element);}}
