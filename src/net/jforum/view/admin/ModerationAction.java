@@ -63,7 +63,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationAction.java,v 1.26 2006/10/01 15:45:59 rafaelsteil Exp $
+ * @version $Id: ModerationAction.java,v 1.27 2007/09/10 23:07:00 rafaelsteil Exp $
  */
 public class ModerationAction extends AdminCommand
 {
@@ -99,7 +99,7 @@ public class ModerationAction extends AdminCommand
 		String[] posts = this.request.getParameterValues("post_id");
 
 		if (posts != null) {
-			TopicDAO tm = DataAccessDriver.getInstance().newTopicDAO();
+			TopicDAO topicDao = DataAccessDriver.getInstance().newTopicDAO();
 			
 			for (int i = 0; i < posts.length; i++) {
 				int postId = Integer.parseInt(posts[i]);
@@ -113,23 +113,23 @@ public class ModerationAction extends AdminCommand
 				if ("aprove".startsWith(status)) {
 					Post p = DataAccessDriver.getInstance().newPostDAO().selectById(postId);
 					
-					UserDAO udao = DataAccessDriver.getInstance().newUserDAO();
-					User u = udao.selectById(p.getUserId());
-					
 					// Check is the post is in fact waiting for moderation
 					if (!p.isModerationNeeded()) {
 						continue;
 					}
 					
+					UserDAO userDao = DataAccessDriver.getInstance().newUserDAO();
+					User u = userDao.selectById(p.getUserId());
+					
 					boolean first = false;
 					Topic t = TopicRepository.getTopic(new Topic(p.getTopicId()));
 					
 					if (t == null) {
-						t = tm.selectById(p.getTopicId());
+						t = topicDao.selectById(p.getTopicId());
 						
 						if (t.getId() == 0) {
 							first = true;
-							t = tm.selectRaw(p.getTopicId());
+							t = topicDao.selectRaw(p.getTopicId());
 						}
 					}
 					
@@ -146,19 +146,19 @@ public class ModerationAction extends AdminCommand
 					t.setLastPostDate(p.getTime());
 					t.setLastPostTime(p.getFormatedTime());
 					
-					tm.update(t);
+					topicDao.update(t);
 					
 					if (first) {
-						t = tm.selectById(t.getId());
+						t = topicDao.selectById(t.getId());
 					}
 
 					TopicsCommon.updateBoardStatus(t, postId, firstPost,
-							tm, DataAccessDriver.getInstance().newForumDAO());
+						topicDao, DataAccessDriver.getInstance().newForumDAO());
 					
 					ForumRepository.updateForumStats(t, u, p);
 					TopicsCommon.notifyUsers(t, p);
 					
-					udao.incrementPosts(p.getUserId());
+					userDao.incrementPosts(p.getUserId());
 					
 					if (SystemGlobals.getBoolValue(ConfigKeys.POSTS_CACHE_ENABLED)) {
 						PostRepository.append(p.getTopicId(), PostCommon.preparePostForDisplay(p));
@@ -176,7 +176,7 @@ public class ModerationAction extends AdminCommand
 					
 					new AttachmentCommon(this.request, post.getForumId()).deleteAttachments(postId, post.getForumId());
 					
-					int totalPosts = tm.getTotalPosts(post.getTopicId());
+					int totalPosts = topicDao.getTotalPosts(post.getTopicId());
 					
 					if (totalPosts == 0) {
 						TopicsCommon.deleteTopic(post.getTopicId(), post.getForumId(), true);

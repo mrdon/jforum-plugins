@@ -103,7 +103,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.193 2007/09/05 04:00:30 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.194 2007/09/10 23:07:00 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -1093,7 +1093,6 @@ public class PostAction extends Command
 				&& !pc.canAccess(SecurityConstants.PERM_MODERATION)
 				&& !pc.canAccess(SecurityConstants.PERM_ADMINISTRATION));
 			
-			
 			if (newTopic) {
 				t.setTime(new Date());
 				t.setTitle(this.request.getParameter("subject"));
@@ -1120,6 +1119,7 @@ public class PostAction extends Command
 
 			// add a poll
 			Poll poll = PollCommon.fillPollFromRequest();
+			
 			if (poll != null && newTopic) {
 				poll.setTopicId(t.getId());
 				
@@ -1159,7 +1159,6 @@ public class PostAction extends Command
 			attachments.insertAttachments(p);
 			
 			if (!moderate) {
-				// Sets the url to redirect to
 				StringBuffer path = new StringBuffer(512);
 				path.append(this.request.getContextPath()).append("/posts/list/");
 				
@@ -1180,8 +1179,7 @@ public class PostAction extends Command
 					TopicsCommon.notifyUsers(t, p);
 				}
 				
-				// Updates forum stats, cache and etc
-				
+				// Update forum stats, cache and etc
 				t.setTotalViews(t.getTotalViews() + 1);
 				
 				DataAccessDriver.getInstance().newUserDAO().incrementPosts(p.getUserId());

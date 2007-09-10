@@ -74,7 +74,7 @@ import freemarker.template.SimpleHash;
  * General utilities methods for topic manipulation.
  * 
  * @author Rafael Steil
- * @version $Id: TopicsCommon.java,v 1.46 2007/09/04 14:57:24 andowson Exp $
+ * @version $Id: TopicsCommon.java,v 1.47 2007/09/10 23:07:00 rafaelsteil Exp $
  */
 public class TopicsCommon 
 {
@@ -257,30 +257,32 @@ public class TopicsCommon
 	 * It will increase by 1 the number of replies of the tpoic, set the
 	 * last post id for the topic and the forum and refresh the cache. 
 	 * 
-	 * @param t Topic The topic to update
+	 * @param topic Topic The topic to update
 	 * @param lastPostId int The id of the last post
-	 * @param tm TopicDAO A TopicModel instance
-	 * @param fm ForumDAO A ForumModel instance
+	 * @param topicDao TopicDAO A TopicModel instance
+	 * @param forumDao ForumDAO A ForumModel instance
      * @param firstPost boolean
 	 */
-	public static synchronized void updateBoardStatus(Topic t, int lastPostId, boolean firstPost, TopicDAO tm, ForumDAO fm)
+	public static synchronized void updateBoardStatus(Topic topic, int lastPostId, boolean firstPost, 
+		TopicDAO topicDao, ForumDAO forumDao)
 	{
-		t.setLastPostId(lastPostId);
-		tm.update(t);
+		topic.setLastPostId(lastPostId);
+		topicDao.update(topic);
 		
-		fm.setLastPost(t.getForumId(), lastPostId);
+		forumDao.setLastPost(topic.getForumId(), lastPostId);
 		
-		if (!firstPost) {
-			tm.incrementTotalReplies(t.getId());
+		if (firstPost) {
+			forumDao.incrementTotalTopics(topic.getForumId(), 1);
 		}
 		else {
-			fm.incrementTotalTopics(t.getForumId(), 1);
+			topicDao.incrementTotalReplies(topic.getId());
 		}
 		
-		tm.incrementTotalViews(t.getId());
+		topicDao.incrementTotalViews(topic.getId());
 		
-		TopicRepository.addTopic(t);
-		TopicRepository.pushTopic(t);
+		TopicRepository.addTopic(topic);
+		TopicRepository.pushTopic(topic);
+		
 		ForumRepository.incrementTotalMessages();
 	}
 	
