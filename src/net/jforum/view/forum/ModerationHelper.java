@@ -71,7 +71,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ModerationHelper.java,v 1.42 2007/09/10 01:17:20 rafaelsteil Exp $
+ * @version $Id: ModerationHelper.java,v 1.43 2007/09/10 14:56:38 rafaelsteil Exp $
  */
 public class ModerationHelper 
 {
@@ -153,7 +153,9 @@ public class ModerationHelper
 			log.setPostId(request.getIntParameter("post_id"));
 		}
 		
-		if (request.getParameterValues("topic_id").length == 1) {
+		String[] values = request.getParameterValues("topic_id");
+		
+		if (values != null && values.length == 1) {
 			log.setTopicId(request.getIntParameter("topic_id"));
 		}
 		
