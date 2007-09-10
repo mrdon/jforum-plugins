@@ -75,7 +75,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericTopicDAO.java,v 1.31 2007/09/09 22:53:36 rafaelsteil Exp $
+ * @version $Id: GenericTopicDAO.java,v 1.32 2007/09/10 22:34:20 rafaelsteil Exp $
  */
 public class GenericTopicDAO extends AutoKeys implements TopicDAO
 {
@@ -983,7 +983,7 @@ public class GenericTopicDAO extends AutoKeys implements TopicDAO
 	    PreparedStatement p = null;
 	    try {
 	        p = JForumExecutionContext.getConnection().prepareStatement(
-	                SystemGlobals.getSql("TopicModel.selectHottestTopicsByLimit"));
+	        	SystemGlobals.getSql("TopicModel.selectHottestTopicsByLimit"));
 	        p.setInt(1, limit);
 	  
 	        List list = this.fillTopicsData(p);

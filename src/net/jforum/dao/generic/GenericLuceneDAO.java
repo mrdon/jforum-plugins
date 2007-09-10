@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericLuceneDAO.java,v 1.10 2007/09/01 05:46:53 rafaelsteil Exp $
+ * @version $Id: GenericLuceneDAO.java,v 1.11 2007/09/10 22:34:20 rafaelsteil Exp $
  */
 public class GenericLuceneDAO implements LuceneDAO
 {
@@ -204,7 +204,7 @@ public class GenericLuceneDAO implements LuceneDAO
 		p.setTopicId(rs.getInt("topic_id"));
 		p.setUserId(rs.getInt("user_id"));
 		p.setTime(new Date(rs.getTimestamp("post_time").getTime()));
-		p.setText(rs.getString("post_text"));
+		p.setText(this.readPostTextFromResultSet(rs));
 		p.setBbCodeEnabled(rs.getInt("enable_bbcode") == 1);
 		p.setSmiliesEnabled(rs.getInt("enable_smilies") == 1);
 		
@@ -217,5 +217,10 @@ public class GenericLuceneDAO implements LuceneDAO
 		p.setSubject(subject);
 		
 		return p;
+	}
+	
+	protected String readPostTextFromResultSet(ResultSet rs) throws SQLException
+	{
+		return rs.getString("post_text");
 	}
 }

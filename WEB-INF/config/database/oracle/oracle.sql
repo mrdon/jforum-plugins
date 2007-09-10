@@ -172,6 +172,16 @@ TopicModel.selectRecentTopicsByLimit = SELECT * FROM ( \
 	) \
 	WHERE LINENUM < ?
 
+TopicModel.selectHottestTopicsByLimit = SELECT * FROM (\
+	SELECT t.*, p.user_id AS last_user_id, p.post_time, p.attach AS attach, \
+	ROW_NUMBER() OVER(ORDER BY topic_views DESC) - 1 LINENUM \
+    FROM jforum_topics t, jforum_posts p \
+    WHERE p.post_id = t.topic_last_post_id \
+    AND p.need_moderate = 0 \
+    ORDER BY topic_views DESC \
+	) \
+	WHERE LINENUM < ?
+
 TopicModel.lastGeneratedTopicId = SELECT jforum_topics_seq.currval FROM DUAL
 
 TopicModel.topicPosters = SELECT user_id, username, user_karma, user_avatar, user_allowavatar, user_regdate, user_posts, user_icq, \

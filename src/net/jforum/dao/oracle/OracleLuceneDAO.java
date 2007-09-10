@@ -36,31 +36,28 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * 
- * Created on Mar 11, 2005 12:30:01 PM
+ * Created on Sep 10, 2007 6:58:20 PM
  * The JForum Project
  * http://www.jforum.net
  */
-package net.jforum.exceptions;
+package net.jforum.dao.oracle;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import net.jforum.dao.generic.GenericLuceneDAO;
 
 /**
  * @author Rafael Steil
- * @version $Id: SearchException.java,v 1.9 2007/09/10 22:34:20 rafaelsteil Exp $
+ * @version $Id: OracleLuceneDAO.java,v 1.1 2007/09/10 22:34:21 rafaelsteil Exp $
  */
-public class SearchException extends RuntimeException
+public class OracleLuceneDAO extends GenericLuceneDAO 
 {
-	public SearchException(String message)
+	/**
+	 * @see net.jforum.dao.generic.GenericLuceneDAO#readPostTextFromResultSet(java.sql.ResultSet)
+	 */
+	protected String readPostTextFromResultSet(ResultSet rs) throws SQLException 
 	{
-		super(message);
-	}
-	
-	public SearchException(Throwable t)
-	{
-		this(t.toString(), t);
-	}
-	
-	public SearchException(String message, Throwable t)
-	{
-		super(message, t);
-		this.setStackTrace(t.getStackTrace());
+		return OracleUtils.readBlobUTF16BinaryStream(rs, "post_text");
 	}
 }

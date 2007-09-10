@@ -42,22 +42,28 @@
  */
 package net.jforum.dao.oracle;
 
+import net.jforum.dao.LuceneDAO;
 import net.jforum.dao.ModerationDAO;
 import net.jforum.dao.ModerationLogDAO;
+import net.jforum.dao.PostDAO;
+import net.jforum.dao.PrivateMessageDAO;
+import net.jforum.dao.TopicDAO;
+import net.jforum.dao.UserDAO;
 import net.jforum.dao.generic.GenericDataAccessDriver;
 
 /**
  * @author Dmitriy Kiriy
- * @version $Id: OracleDataAccessDriver.java,v 1.10 2007/08/31 22:56:40 rafaelsteil Exp $
+ * @version $Id: OracleDataAccessDriver.java,v 1.11 2007/09/10 22:34:21 rafaelsteil Exp $
  */
 public class OracleDataAccessDriver extends GenericDataAccessDriver
 {
-	private static OraclePostDAO postDao = new OraclePostDAO();
-	private static OracleTopicDAO topicDao = new OracleTopicDAO();
-	private static OracleUserDAO userDao = new OracleUserDAO();
-	private static OraclePrivateMessageDAO pmDao = new OraclePrivateMessageDAO();
-	private static OracleModerationDAO moderationDao = new OracleModerationDAO();
-	private static OracleModerationLogDAO moderationLogDao = new OracleModerationLogDAO();
+	private static PostDAO postDao = new OraclePostDAO();
+	private static TopicDAO topicDao = new OracleTopicDAO();
+	private static UserDAO userDao = new OracleUserDAO();
+	private static PrivateMessageDAO pmDao = new OraclePrivateMessageDAO();
+	private static ModerationDAO moderationDao = new OracleModerationDAO();
+	private static ModerationLogDAO moderationLogDao = new OracleModerationLogDAO();
+	private static LuceneDAO luceneDao = new OracleLuceneDAO();
 	
 	/**
 	 * @see net.jforum.dao.generic.GenericDataAccessDriver#newModerationLogDAO()
@@ -78,7 +84,7 @@ public class OracleDataAccessDriver extends GenericDataAccessDriver
 	/**
 	 * @see net.jforum.dao.DataAccessDriver#newPostDAO()
 	 */
-	public net.jforum.dao.PostDAO newPostDAO()
+	public PostDAO newPostDAO()
 	{
 		return postDao;
 	}
@@ -86,7 +92,7 @@ public class OracleDataAccessDriver extends GenericDataAccessDriver
 	/** 
 	 * @see net.jforum.dao.DataAccessDriver#newTopicDAO()
 	 */
-	public net.jforum.dao.TopicDAO newTopicDAO()
+	public TopicDAO newTopicDAO()
 	{
 		return topicDao;
 	}
@@ -94,7 +100,7 @@ public class OracleDataAccessDriver extends GenericDataAccessDriver
 	/** 
 	 * @see net.jforum.dao.DataAccessDriver#newUserDAO()
 	 */
-	public net.jforum.dao.UserDAO newUserDAO()
+	public UserDAO newUserDAO()
 	{
 		return userDao;
 	}
@@ -102,8 +108,16 @@ public class OracleDataAccessDriver extends GenericDataAccessDriver
 	/**
 	 * @see net.jforum.dao.DataAccessDriver#newPrivateMessageDAO()
 	 */
-	public net.jforum.dao.PrivateMessageDAO newPrivateMessageDAO()
+	public PrivateMessageDAO newPrivateMessageDAO()
 	{
 		return pmDao;
+	}
+	
+	/**
+	 * @see net.jforum.dao.generic.GenericDataAccessDriver#newLuceneDAO()
+	 */
+	public LuceneDAO newLuceneDAO() 
+	{
+		return luceneDao;
 	}
 }
