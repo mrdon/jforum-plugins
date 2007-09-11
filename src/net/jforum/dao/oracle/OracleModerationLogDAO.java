@@ -46,6 +46,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.List;
 
 import net.jforum.dao.generic.GenericModerationLogDAO;
 import net.jforum.entities.ModerationLog;
@@ -55,7 +56,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: OracleModerationLogDAO.java,v 1.1 2007/08/31 22:56:40 rafaelsteil Exp $
+ * @version $Id: OracleModerationLogDAO.java,v 1.2 2007/09/11 04:00:45 rafaelsteil Exp $
  */
 public class OracleModerationLogDAO extends GenericModerationLogDAO 
 {
@@ -98,6 +99,14 @@ public class OracleModerationLogDAO extends GenericModerationLogDAO
 		finally {
 			DbUtils.close(p);
 		}
+	}
+	
+	/**
+	 * @see net.jforum.dao.generic.GenericModerationLogDAO#selectAll(int, int)
+	 */
+	public List selectAll(int start, int count) 
+	{
+		return super.selectAll(start, start + count);
 	}
 	
 	/**
