@@ -140,7 +140,7 @@
 		
 		<div class="menu" style="padding-left:10px; ">
 			&copy; <b>JForum Team</b><br>
-			Latest version is 2.1.7 <br>
+			Latest version is 2.1.8 <br>
 			<a href="/doc/Team" class="white">Meet the team</a> <br>
 		</div>
 		
