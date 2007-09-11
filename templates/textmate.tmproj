@@ -19,20 +19,6 @@
 	<integer>284</integer>
 	<key>metaData</key>
 	<dict>
-		<key>default/admin/forum_form.htm</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>1</integer>
-				<key>line</key>
-				<integer>26</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
 		<key>default/admin/search_stats_list.htm</key>
 		<dict>
 			<key>caret</key>

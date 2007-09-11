@@ -133,7 +133,12 @@ AttachmentModel.lastGeneratedAttachmentId = SELECT MAX(attach_id) FROM jforum_at
 # ModerationLog
 # ################
 ModerationLog.lastGeneratedModerationLogId = SELECT MAX(log_id) FROM jforum_moderation_log
-ModerationLog.selectAll = SELECT LIMIT ? ? l.*, u.username FROM jforum_moderation_log l, jforum_users u WHERE l.user_id = u.user_id ORDER BY log_id DESC 
+
+ModerationLog.selectAll = SELECT LIMIT ? ? l.*, u.username, u2.username AS poster_username \
+	FROM jforum_moderation_log l \
+	LEFT JOIN jforum_users u2 ON u2.user_id = l.post_user_id \
+	LEFT JOIN jforum_users u ON l.user_id = u.user_id \
+	ORDER BY log_id DESC 
 
 # ############
 # SearchModel

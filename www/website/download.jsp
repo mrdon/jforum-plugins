@@ -23,7 +23,7 @@
 				
 					<p>
 						If JForum helps your work, saves your time (time is money, remember?) and increase your earnings, support it. 
-						The simpler way is to make any small <a href="contribute.jsp">donation</a> via PayPal.
+						The simpler way is to make any <a href="contribute.jsp">donation</a> via PayPal.
 					</p>
 					
 					<p>

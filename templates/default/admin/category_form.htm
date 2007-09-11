@@ -8,10 +8,12 @@
 <script language="javascript">
 function checkGroups() 
 {
-	if (document.form.groups.selectedIndex == -1) {
-		alert("${I18n.getMessage("PermissionControl.atLeastOne")}");
-		return false;
-	}
+	<#if !category?exists>
+		if (document.form.groups.selectedIndex == -1) {
+			alert("${I18n.getMessage("PermissionControl.atLeastOne")}");
+			return false;
+		}
+	</#if>
 
 	return true;
 }
