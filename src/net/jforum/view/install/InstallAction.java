@@ -95,7 +95,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.69 2007/09/12 14:43:15 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.70 2007/09/12 16:11:19 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -381,11 +381,8 @@ public class InstallAction extends Command
 		logger.info("Going to create tables...");
 		String dbType = this.getFromSession("database");
 		
-		if ("postgresql".equals(dbType)) {
-			this.dropPostgresqlTables(conn);
-		}
-		else if ("oracle".equals(dbType)) {
-			this.dropOracleTables(conn);
+		if ("postgresql".equals(dbType) || "oracle".equals(dbType)) {
+			this.dropOracleOrPostgreSQLTables(dbType, conn);
 		}
 		
 		boolean status = true;
@@ -424,12 +421,13 @@ public class InstallAction extends Command
 		return status;
 	}
 	
-	private void dropOracleTables(Connection conn)
+	private void dropOracleOrPostgreSQLTables(String dbName, Connection conn)
 	{
 		Statement s = null;
+		
 		try {
 			List statements = ParseDBStructFile.parse(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
-				+ "/database/oracle/oracle_db_struct_drop.sql");
+				+ "/database/" + dbName + "/" + dbName + "_drop_tables.sql");
 			
 			for (Iterator iter = statements.iterator(); iter.hasNext(); ) {
 				try {
@@ -442,7 +440,6 @@ public class InstallAction extends Command
 					s = conn.createStatement();
 					s.executeQuery(query);
 					s.close();
-                    s=null;
                 }
 				catch (Exception e) {
 					logger.error("IGNORE: " + e.toString());
@@ -715,45 +712,6 @@ public class InstallAction extends Command
 		
 		this.context.put("canWriteToWebInf", this.canWriteToWebInf());		
 		this.context.put("moduleAction", "install_check_info.htm");
-	}
-	
-	private void dropPostgresqlTables(Connection conn)
-	{
-		String[] tables = { "jforum_banlist", "jforum_banlist_seq", "jforum_categories", 
-			"jforum_categories_order_seq", "jforum_categories_seq", "jforum_config",
-			"jforum_config_seq", "jforum_forums", "jforum_forums_seq", "jforum_groups",
-			"jforum_groups_seq", "jforum_posts", "jforum_posts_seq", "jforum_posts_text",
-			"jforum_privmsgs", "jforum_privmsgs_seq", "jforum_privmsgs_text",
-			"jforum_ranks", "jforum_ranks_seq", "jforum_role_values", "jforum_roles",
-			"jforum_roles_seq", "jforum_sessions",
-			"jforum_smilies", "jforum_smilies_seq", "jforum_themes", "jforum_themes_seq",
-			"jforum_topics", "jforum_topics_seq", "jforum_topics_watch", "jforum_user_groups",
-			"jforum_users", "jforum_users_seq", "jforum_vote_desc", "jforum_vote_desc_seq",
-			"jforum_vote_results", "jforum_vote_voters", "jforum_words", "jforum_words_seq",
-			"jforum_karma", "jforum_karma_seq", "jforum_bookmarks", "jforum_bookmarks_seq", 
-			"jforum_quota_limit", "jforum_quota_limit_seq", "jforum_extension_groups", 
-			"jforum_extension_groups_seq", "jforum_extensions", "jforum_extensions_seq", 
-			"jforum_attach", "jforum_attach_seq", "jforum_attach_desc", "jforum_attach_desc_seq",
-			"jforum_attach_quota", "jforum_attach_quota_seq", "jforum_banner", "jforum_banner_seq",
-			"jforum_forums_watch", "jforum_moderation_log", "jforum_moderation_log_seq" };
-
-		for (int i = 0; i < tables.length; i++) {
-
-			String query = new StringBuffer(tables[i].endsWith("_seq") ? "DROP SEQUENCE " : "DROP TABLE ")
-				.append(tables[i]).toString();
-			
-            Statement s=null;
-			try {
-                s = conn.createStatement();
-                s.executeUpdate(query);
-			}
-			catch (SQLException e) {
-				logger.info("IGNORE: " + e.getMessage());
-			}
-            finally {
-                DbUtils.close(s);
-            }
-        }
 	}
 	
 	private void addToSessionAndContext(String key, String value)
