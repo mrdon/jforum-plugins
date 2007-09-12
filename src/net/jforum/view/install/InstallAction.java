@@ -50,6 +50,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
@@ -65,6 +66,14 @@ import net.jforum.SessionFacade;
 import net.jforum.SimpleConnection;
 import net.jforum.context.RequestContext;
 import net.jforum.context.ResponseContext;
+import net.jforum.dao.DataAccessDriver;
+import net.jforum.dao.ForumDAO;
+import net.jforum.dao.PostDAO;
+import net.jforum.dao.TopicDAO;
+import net.jforum.entities.Forum;
+import net.jforum.entities.Post;
+import net.jforum.entities.Topic;
+import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
 import net.jforum.exceptions.ForumException;
 import net.jforum.util.DbUtils;
@@ -86,7 +95,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.68 2007/08/24 02:25:06 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.69 2007/09/12 14:43:15 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -207,6 +216,8 @@ public class InstallAction extends Command
 			return;
 		}
 		
+		this.storeSupportProjectMessage(conn);
+
 		simpleConnection.releaseConnection(conn);
 
 		JForumExecutionContext.setRedirect(this.request.getContextPath() + "/install/install"
@@ -228,7 +239,8 @@ public class InstallAction extends Command
 		}
 	}
 	
-	public void finished() {
+	public void finished() 
+	{
 		this.setTemplateName(TemplateKeys.INSTALL_FINISHED);
 
 		this.context.put("clickHere", I18n.getMessage("Install.clickHere"));
@@ -247,7 +259,7 @@ public class InstallAction extends Command
 
 		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
 		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
-
+		
 		SessionFacade.remove(this.request.getSessionContext().getId());
 	}
 	
@@ -300,6 +312,7 @@ public class InstallAction extends Command
 		SystemGlobals.setValue(ConfigKeys.HOMEPAGE_LINK, this.getFromSession("siteLink"));
 		SystemGlobals.setValue(ConfigKeys.I18N_DEFAULT, this.getFromSession("language"));
 		SystemGlobals.setValue(ConfigKeys.INSTALLED, "true");
+		
 		SystemGlobals.saveInstallation();
 		
 		this.restartSystemGlobals();
@@ -332,8 +345,7 @@ public class InstallAction extends Command
                 Statement s = conn.createStatement();
 
                 try {
-                    if (query.startsWith("UPDATE") || query.startsWith("INSERT")
-                            || query.startsWith("SET")) {
+                    if (query.startsWith("UPDATE") || query.startsWith("INSERT") || query.startsWith("SET")) {
                         s.executeUpdate(query);
                     }
                     else if (query.startsWith("SELECT")) {
@@ -636,7 +648,8 @@ public class InstallAction extends Command
 		
 		boolean status = false;
 		
-        PreparedStatement p=null;
+        PreparedStatement p = null;
+        
 		try {
             p = conn.prepareStatement("UPDATE jforum_users SET user_password = ? WHERE username = 'Admin'");
             p.setString(1, MD5.crypt(this.getFromSession("adminPassword")));
@@ -756,6 +769,111 @@ public class InstallAction extends Command
 		}
 		
 		return value;
+	}
+	
+	private void storeSupportProjectMessage(Connection connection)
+	{
+		StringBuffer message = new StringBuffer("[color=#3AA315][size=18][b]Support JForum - Help the project[/b][/size][/color]")
+			.append("<hr>")
+			.append("This project is Open Source, and maintained by at least one full time Senior Developer, [b]which costs US$ 3,000.00 / month[/b]. ")
+			.append("If it helped you, please consider helping this project - especially with some [b][url=http://www.jforum.net/contribute.jsp]donation[/url][/b].")
+			.append('\n')
+			.append('\n')
+			.append("[color=#137C9F][size=14][b]Why supporting this project is a good thing[/b][/size][/color]")
+			.append("<hr>")
+			.append("The JForum Project started four years ago as a completely free and Open Source program, initially entirely developed on my (Rafael Steil) ")
+			.append("free time. Today, with the help of some very valuable people, I can spend more time on JForum, to improve it and implement new features ")
+			.append("(lots of things, requested either on the [url=http://www.jforum.net/forums/list.page]forums[/url] or registered in the ")
+			.append("[url=http://www.jforum.net/jira]bug tracker[/url]).")
+			.append('\n')
+			.append("That's why I'm asking you to financially support this work. I love Open Source. I love to use good products without having to pay for it too. ")
+			.append("But when I see some program that is valuable to my work, that helps me making money, I think it’s a good idea to support this project.")
+			.append('\n')
+			.append('\n')
+			.append("[b]Some reasons to support open projects[/b]:")
+			.append("<ul><li>Because Open Source is cool? Yes")
+			.append("<li>To thank for a great tool? Yes")
+			.append("<li>To help the project evolve because this will help my work and my earnings? Yes</ul>")
+			.append("Also, as the project grows more and more, it would be great to, sometimes, reward some of the great people who help JForum.")
+			.append('\n')
+			.append('\n')
+			.append("So, that's what I'm asking you: if JForum helps your work, saves your time (time is money, remember?) and increase your earnings, support ")
+			.append("this project. The simpler way is to make [url=http://www.jforum.net/contribute.jsp]any donation[/url] via PayPal.")
+			.append('\n')
+			.append('\n')
+			.append("JForum has grown a lot every day, since four years ago, which is a great thing, and initially it wasn't my intention to fully work on this tool. ")
+			.append("Lately, I'm spending a lot of time on it, specially to make JForum 3 a reality, to help users, to improve the program, to research about ")
+			.append("better solutions. So, your support is very welcome!")
+			.append('\n')
+			.append('\n')
+			.append("Thanks!") 
+			.append('\n')
+			.append('\n')
+			.append(":arrow: [size=16][b][url=http://www.jforum.net/contribute.jsp]Click here[/url][/b] to go to the [i][b][url=http://www.jforum.net/contribute.jsp]")
+			.append("\"Support JForum\"[/url][/b][/i] page.[/size]")
+			.append('\n')
+			.append('\n');
+		
+		try {
+			ConfigLoader.createLoginAuthenticator();
+			ConfigLoader.loadDaoImplementation();
+			
+			SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
+			SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_DRIVER));
+			
+			SystemGlobals.setValue(ConfigKeys.SEARCH_INDEXING_ENABLED, "false");
+			
+			JForumExecutionContext ex = JForumExecutionContext.get();
+			ex.setConnection(connection);
+			JForumExecutionContext.set(ex);
+			
+			User user = new User(2);
+			
+			// Create topic
+			Topic topic = new Topic();
+			topic.setPostedBy(user);
+			topic.setTitle("Support JForum - Please read");
+			topic.setTime(new Date());
+			topic.setType(Topic.TYPE_ANNOUNCE);
+			topic.setForumId(1);
+			
+			TopicDAO topicDao = DataAccessDriver.getInstance().newTopicDAO();
+			topicDao.addNew(topic);
+			
+			// Create post
+			Post post = new Post();
+			post.setSubject(topic.getTitle());
+			post.setTime(topic.getTime());
+			post.setUserId(user.getId());
+			post.setText(message.toString());
+			post.setForumId(topic.getForumId());
+			post.setSmiliesEnabled(true);
+			post.setHtmlEnabled(true);
+			post.setBbCodeEnabled(true);
+			post.setUserIp("127.0.0.1");
+			post.setTopicId(topic.getId());
+			
+			PostDAO postDao = DataAccessDriver.getInstance().newPostDAO();
+			postDao.addNew(post);
+			
+			// Update topic
+			topic.setFirstPostId(post.getId());
+			topic.setLastPostId(post.getId());
+			
+			topicDao.update(topic);
+			
+			// Update forum stats
+			ForumDAO forumDao = DataAccessDriver.getInstance().newForumDAO();
+			forumDao.incrementTotalTopics(1, 1);
+			forumDao.setLastPost(1, post.getId());
+		}
+		finally {
+			SystemGlobals.setValue(ConfigKeys.SEARCH_INDEXING_ENABLED, "true");
+			
+			JForumExecutionContext ex = JForumExecutionContext.get();
+			ex.setConnection(null);
+			JForumExecutionContext.set(ex);
+		}
 	}
 	
 	/** 

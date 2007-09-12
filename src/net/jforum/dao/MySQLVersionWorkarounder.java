@@ -60,11 +60,11 @@ import org.apache.log4j.Logger;
  * Try to fix some database configuration problems.
  * This class will much likely do some checks only for mysql.
  * @author Rafael Steil
- * @version $Id: DatabaseWorkarounder.java,v 1.9 2007/04/12 02:11:56 rafaelsteil Exp $
+ * @version $Id: MySQLVersionWorkarounder.java,v 1.1 2007/09/12 14:43:13 rafaelsteil Exp $
  */
-public class DatabaseWorkarounder
+public class MySQLVersionWorkarounder
 {
-	private static Logger logger = Logger.getLogger(DatabaseWorkarounder.class);
+	private static Logger logger = Logger.getLogger(MySQLVersionWorkarounder.class);
     private static final String MYSQL_323_DATA_ACCESS_DRIVER = net.jforum.dao.mysql.MySQL323DataAccessDriver.class.getName();
     private static final String MYSQL_DATA_ACCESS_DRIVER = net.jforum.dao.mysql.MysqlDataAccessDriver.class.getName();
 
@@ -288,11 +288,11 @@ public class DatabaseWorkarounder
 				p.store(fos, null);
 			}
 			finally {
-                if (fos != null)
-                {
-                    fos.close();
-                }
-                fis.close();
+				if (fos != null) {
+					fos.close();
+				}
+                
+				fis.close();
 			}
 		}
 		else {

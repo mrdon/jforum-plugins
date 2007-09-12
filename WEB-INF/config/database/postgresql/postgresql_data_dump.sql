@@ -17,31 +17,6 @@ INSERT INTO jforum_user_groups (group_id, user_id) VALUES (1, 1);
 INSERT INTO jforum_user_groups (group_id, user_id) VALUES (2, 2);
 
 -- 
---  Roles
---
-INSERT INTO jforum_roles (role_id, group_id, name) VALUES (1, 1, 'perm_vote');
-INSERT INTO jforum_roles (role_id, group_id, name) VALUES (2, 1, 'perm_karma_enabled');
-INSERT INTO jforum_roles (role_id, group_id, name) VALUES (3, 1, 'perm_anonymous_post');
-INSERT INTO jforum_roles (role_id, group_id, name) VALUES (4, 1, 'perm_create_poll');
-INSERT INTO jforum_roles (role_id, group_id, name) VALUES (5, 1, 'perm_bookmarks_enabled');
-INSERT INTO jforum_roles (role_id, group_id, name) VALUES (6, 1, 'perm_attachments_download');
-
---  Admin
-INSERT INTO jforum_roles (role_id, group_id, name) VALUES (7, 2, 'perm_administration');
-INSERT INTO jforum_roles (role_id, group_id, name) VALUES (8, 2, 'perm_moderation');
-INSERT INTO jforum_roles (role_id, group_id, name) VALUES (9, 2, 'perm_moderation_post_remove');
-INSERT INTO jforum_roles (role_id, group_id, name) VALUES (10, 2, 'perm_moderation_post_edit');
-INSERT INTO jforum_roles (role_id, group_id, name) VALUES (11, 2, 'perm_moderation_topic_move');
-INSERT INTO jforum_roles (role_id, group_id, name) VALUES (12, 2, 'perm_moderation_topic_lockUnlock');
-INSERT INTO jforum_roles (role_id, group_id, name) VALUES (13, 2, 'perm_moderation_approve_messages');
-INSERT INTO jforum_roles (role_id, group_id, name) VALUES (14, 2, 'perm_create_sticky_announcement_topics');
-INSERT INTO jforum_roles (role_id, group_id, name) VALUES (15, 2, 'perm_vote');
-INSERT INTO jforum_roles (role_id, group_id, name) VALUES (16, 2, 'perm_create_poll');
-INSERT INTO jforum_roles (role_id, group_id, name) VALUES (17, 2, 'perm_karma_enabled');
-INSERT INTO jforum_roles (role_id, group_id, name) VALUES (18, 2, 'perm_bookmarks_enabled');
-INSERT INTO jforum_roles (role_id, group_id, name) VALUES (19, 2, 'perm_attachments_download');
-
--- 
 --  Smilies
 --
 INSERT INTO jforum_smilies (code, url, disk_name) VALUES (':)', '<img src=\"#CONTEXT#/images/smilies/3b63d1616c5dfcf29f8a7a031aaa7cad.gif\" />', '3b63d1616c5dfcf29f8a7a031aaa7cad.gif');
@@ -85,6 +60,31 @@ INSERT INTO jforum_forums VALUES (1,1,'Test Forum','This is a test forum',1,1,1,
 INSERT INTO jforum_topics VALUES (1,1,'Welcome to JForum',2,current_timestamp,1,0,0,0,0,1,1,0,0);
 INSERT INTO jforum_posts VALUES (1,1,1,2,current_timestamp,'127.0.0.1',1,0,1,1,null,0,1,0,0);
 INSERT INTO jforum_posts_text VALUES (1,'[b]Congratulations![/b]. You have completed the installation of JForum. \r\n\r\nTo start administering the board, login as [i]Admin / <the password you supplied in the installer>[/i] and access the [b]Admin Control Panel[/b] using the link that shows up in the bottom of the page. \r\n\r\nThere you will be able to create Categories, Forums and much more. \r\n\r\nFor more information and support, please access [url]http://www.jforum.net/community.htm[/url] and [url]http://www.jforum.net/help.htm[/url]\r\n\r\nThank you for choosing JForum.\r\n\r\nThe JForum Team.','Welcome to JForum');
+
+-- 
+--  Roles
+--
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (1, 1, 'perm_vote');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (2, 1, 'perm_karma_enabled');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (3, 1, 'perm_anonymous_post');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (4, 1, 'perm_create_poll');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (5, 1, 'perm_bookmarks_enabled');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (6, 1, 'perm_attachments_download');
+
+--  Admin
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (7, 2, 'perm_administration');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (8, 2, 'perm_moderation');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (9, 2, 'perm_moderation_post_remove');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (10, 2, 'perm_moderation_post_edit');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (11, 2, 'perm_moderation_topic_move');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (12, 2, 'perm_moderation_topic_lockUnlock');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (13, 2, 'perm_moderation_approve_messages');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (14, 2, 'perm_create_sticky_announcement_topics');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (15, 2, 'perm_vote');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (16, 2, 'perm_create_poll');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (17, 2, 'perm_karma_enabled');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (18, 2, 'perm_bookmarks_enabled');
+INSERT INTO jforum_roles (role_id, group_id, name) VALUES (19, 2, 'perm_attachments_download');
 
 --
 -- View Forum

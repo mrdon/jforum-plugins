@@ -58,7 +58,7 @@ import net.jforum.context.RequestContext;
 import net.jforum.context.ResponseContext;
 import net.jforum.context.web.WebRequestContext;
 import net.jforum.context.web.WebResponseContext;
-import net.jforum.dao.DatabaseWorkarounder;
+import net.jforum.dao.MySQLVersionWorkarounder;
 import net.jforum.entities.Banlist;
 import net.jforum.exceptions.ExceptionWriter;
 import net.jforum.exceptions.ForumStartupException;
@@ -77,7 +77,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.114 2007/08/17 15:53:29 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.115 2007/09/12 14:43:13 rafaelsteil Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
@@ -99,7 +99,7 @@ public class JForum extends JForumBaseServlet
 			conn.setAutoCommit(!SystemGlobals.getBoolValue(ConfigKeys.DATABASE_USE_TRANSACTIONS));
 			
 			// Try to fix some MySQL problems
-			DatabaseWorkarounder dw = new DatabaseWorkarounder();
+			MySQLVersionWorkarounder dw = new MySQLVersionWorkarounder();
 			dw.handleWorkarounds(conn);
 			
 			// Continues loading the forum

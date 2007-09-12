@@ -3,11 +3,11 @@
 <!-- InstanceBeginEditable name="MainContent" -->
 
 <div style="padding: 10px;">
-	<h2 style="color: rgb(58, 163, 21); font-weight: normal;">Support JForum - Help the Project</h2>
+	<div style="color: rgb(58, 163, 21); font-weight: bold; font-size: 18px;">Support JForum - Help the Project</div>
 	<div><img src="images/hr.gif" height="10" width="100%"></div>
 
 	<p>
-		This project is Open Source, and maintained by at least one full time Senior Developer, which costs US$ 3,000.00 / month. If it helped you, please consider helping 
+		This project is Open Source, and maintained by at least one full time Senior Developer, <strong>which costs US$ 3,000.00 / month</strong>. If it helped you, please consider helping 
 		this project - especially with some <strong>donation</strong>.
 	</p>
 
@@ -51,20 +51,6 @@
 		<i>(you don't need to have a PayPal account to donate to JForum)</i>
 	</p>
 
-	<p>
-		Also, there are other ways to contribute to this project:
-	</p>
-
-	<p>
-		<ul class="ul-orange">
-			<li> <strong>Tell</strong> others about it</li>
-			<li> <strong>Write</strong> something on your Site about it</li>
-			<li> Improve this <strong>Site</strong> with some specific instruction, translation to your language, documentation...</li>
-			<li> Help with translations, tutorials, suggestions, patches...</li>
-			<li> If it helped your work, please consider some small <strong>donation</strong> via Paypal </li>
-		</ul>
-	</p>
-
 	<!--
 	<div class="blue-title">PayPal</div>
 	<div><img src="images/hr.gif" height="5" width="100%"></div>
@@ -82,15 +68,23 @@
 	<div class="blue-title" style="font-size: 16px; font-weight: bold;">Why supporting this project is a good thing</div>
 	<div><img src="images/hr.gif" height="5" width="100%"></div>
 	<p>
-	The JForum Project started four years ago as a completely free and open source program, initially entirely developed on my (Rafael Steil) free time. Today, with the help of some very valuable people, I can spend more time on JForum, to improve it and implement new features (lot’s of things, requested either on the <a href="/community.jsp">forums</a> or registered in the <a href="/jira">bug tracker</a>).
+	The JForum Project started four years ago as a completely free and Open Source program, initially entirely developed on my (<a href="http://www.jforum.net/user/profile/3.page">Rafael Steil</a>) free time. Today, with the help of some very valuable people, I can spend more time on JForum, to improve it and implement new features (lots of things, requested either on the <a href="/community.jsp">forums</a> or registered in the <a href="/jira">bug tracker</a>).
 	</p>
 	
 	<p>
-	That's why I'm asking you to financially support this work. I love open source. I love to use good products without having to pay for it too. But when I see some program that is valuable to my work, that helps me making money, I think it’s a good idea to support this project.
+	That's why I'm asking you to financially support this work. I love Open Source. I love to use good products without having to pay for it too. But when I see some program that is valuable to my work, that helps me making money, I think it is a good idea to support this project.
 	</p>
 	
 	<p>
-	Reasons to support open projects: Because open source is cool? Yes. To thanks for a great tool? Yes. To help a small project created by one single developer? Yes. To help the project evolve because this will help my work and my earnings? Yes! Also, as the project grows more and more, it would be great to, sometimes, reward some of the great people who help JForum.
+		<strong>Reasons to support open projects</strong> 
+			
+		<ul class="ul-orange">	
+			<li>Because Open Source is cool? Yes.</li> 
+			<li>To thank for a great tool? Yes.</li> 
+			<li>To help the project evolve because this will help my work and my earnings? Yes.</li> 
+		</ul>
+		<br>
+		Also, as the project grows more and more, it would be great to, sometimes, reward some of the great people who help JForum.
 	</p>
 	
 	<p>
@@ -109,6 +103,20 @@
 	
 	<p>
 	And, of course, a very very special thanks for people that support this project not with money, but with work. Testers, translators, forum visitors and people that wrote about it all over the Internet. Thanks!
+	</p>
+	
+	
+
+	<div class="blue-title" style="font-size: 16px;">Other ways to contribute to this project</div>
+
+	<p>
+		<ul class="ul-orange">
+			<li> <strong>Tell</strong> others about it</li>
+			<li> <strong>Write</strong> something on your Site about it</li>
+			<li> Improve this <strong>Site</strong> with some specific instruction, translation to your language, documentation...</li>
+			<li> Help with translations, tutorials, suggestions, patches...</li>
+			<li> If it helped your work, please consider some small <strong>donation</strong> via Paypal </li>
+		</ul>
 	</p>
 
 </div>
