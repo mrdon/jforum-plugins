@@ -70,8 +70,8 @@ INSERT INTO jforum_roles (group_id, name) VALUES (1, 'perm_anonymous_post');
 INSERT INTO jforum_roles (group_id, name) VALUES (1, 'perm_create_poll');
 INSERT INTO jforum_roles (group_id, name) VALUES (1, 'perm_bookmarks_enabled');
 INSERT INTO jforum_roles (group_id, name) VALUES (1, 'perm_attachments_download');
-INSERT INTO jforum_roles (group_id, name) VALUES (1, 'perm_create_sticky_announcement_topics'); -- novo
-INSERT INTO jforum_roles (group_id, name) VALUES (1, 'perm_moderation_log'); -- novo
+INSERT INTO jforum_roles (group_id, name) VALUES (1, 'perm_create_sticky_announcement_topics');
+INSERT INTO jforum_roles (group_id, name) VALUES (1, 'perm_moderation_log');
 
 --  Admin
 INSERT INTO jforum_roles (group_id, name) VALUES (2, 'perm_administration');
@@ -156,17 +156,17 @@ INSERT INTO jforum_role_values ( role_id, role_value) VALUES ((SELECT CURRVAL('j
 --
 -- Reply without moderation
 --
-INSERT INTO jforum_roles (name, group_id) VALUES ('perm_reply_without_moderation', 1); -- novo
-INSERT INTO jforum_role_values ( role_id, role_value) VALUES ((SELECT CURRVAL('jforum_roles_seq')), '1'); -- novo
+INSERT INTO jforum_roles (name, group_id) VALUES ('perm_reply_without_moderation', 1); 
+INSERT INTO jforum_role_values ( role_id, role_value) VALUES ((SELECT CURRVAL('jforum_roles_seq')), '1'); 
 	
 INSERT INTO jforum_roles (name, group_id) VALUES ('perm_reply_without_moderation', 2); -- novo
-INSERT INTO jforum_role_values ( role_id, role_value) VALUES ((SELECT CURRVAL('jforum_roles_seq')), '1'); -- novo
+INSERT INTO jforum_role_values ( role_id, role_value) VALUES ((SELECT CURRVAL('jforum_roles_seq')), '1'); 
 	
 --
 -- Moderation of forums
 --
-INSERT INTO jforum_roles (name, group_id) VALUES ('perm_moderation_forums', 2); -- novo
-INSERT INTO jforum_role_values ( role_id, role_value) VALUES ((SELECT CURRVAL('jforum_roles_seq')), '1'); -- novo
+INSERT INTO jforum_roles (name, group_id) VALUES ('perm_moderation_forums', 2); 
+INSERT INTO jforum_role_values ( role_id, role_value) VALUES ((SELECT CURRVAL('jforum_roles_seq')), '1'); 
 
 --
 -- Update sequences

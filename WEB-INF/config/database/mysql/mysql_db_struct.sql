@@ -139,7 +139,7 @@ CREATE TABLE jforum_posts (
   KEY (user_id),
   KEY (topic_id),
   KEY (forum_id),
-  KEY(post_time)
+  KEY(post_time),
   INDEX (need_moderate)
 ) TYPE=InnoDB;
 

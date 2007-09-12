@@ -355,7 +355,7 @@ function validateForm()
 					<td class="row2"><input style="WIDTH: 200px;" type="file" name="avatar" /></td>
 				</tr>
 
-				<#if avatarAllowExternalUrl>
+				<#if admin || avatarAllowExternalUrl>
 					<tr>
 						<td class="row1"><span class="gen">${I18n.getMessage("User.avatarExternal")}:</span></td>
 						<td class="row2"><input class="post" style="WIDTH: 200px" type="text" name="avatarUrl" value="<#if u.isExternalAvatar()>${u.avatar?default("")?html}</#if>"/></td>
