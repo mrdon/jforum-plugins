@@ -58,7 +58,7 @@ import net.jforum.util.preferences.SystemGlobals;
  * a connection pool.
  * 
  * @author Rafael Steil
- * @version $Id: SimpleConnection.java,v 1.15 2006/08/23 02:24:05 rafaelsteil Exp $
+ * @version $Id: SimpleConnection.java,v 1.16 2007/09/12 23:54:21 rafaelsteil Exp $
  */
 public class SimpleConnection extends DBConnection 
 {
@@ -72,6 +72,7 @@ public class SimpleConnection extends DBConnection
 			
 			// Try to validate the connection url
 			Connection conn = this.getConnection();
+		
 			if (conn != null) {
 				this.releaseConnection(conn);
 			}
@@ -103,15 +104,12 @@ public class SimpleConnection extends DBConnection
 	 */
 	public void releaseConnection(Connection conn)
 	{
-        if (conn==null) {
-            return;
-        }
-		try {
-			conn.close();
+		if (conn != null) {
+			try {
+				conn.close();
+			}
+			catch (Exception e) { }
 		}
-		catch (Exception e) {
-            //catch error of close of connection
-        }
 	}
 	
 	/** 

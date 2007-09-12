@@ -70,11 +70,11 @@ import net.jforum.dao.DataAccessDriver;
 import net.jforum.dao.ForumDAO;
 import net.jforum.dao.PostDAO;
 import net.jforum.dao.TopicDAO;
-import net.jforum.entities.Forum;
 import net.jforum.entities.Post;
 import net.jforum.entities.Topic;
 import net.jforum.entities.User;
 import net.jforum.entities.UserSession;
+import net.jforum.exceptions.DatabaseException;
 import net.jforum.exceptions.ForumException;
 import net.jforum.util.DbUtils;
 import net.jforum.util.FileMonitor;
@@ -95,7 +95,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.70 2007/09/12 16:11:19 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.71 2007/09/12 23:54:20 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -158,14 +158,14 @@ public class InstallAction extends Command
 	
 	public void doInstall()
 	{
-		Connection conn = null;
-		
 		if (!this.checkForWritableDir()) {
 			return;
 		}
 		
 		this.removeUserConfig();
 		
+		Connection conn = null;
+
 		if (!"passed".equals(this.getFromSession("configureDatabase"))) {
 			logger.info("Going to configure the database...");
 			
@@ -184,45 +184,75 @@ public class InstallAction extends Command
 		this.addToSessionAndContext("configureDatabase", "passed");
 		
 		DBConnection simpleConnection = new SimpleConnection();
+		
 		if (conn == null) {
 			conn = simpleConnection.getConnection();
 		}
 		
-		if (!"passed".equals(this.getFromSession("createTables")) && !this.createTables(conn)) {
-			this.context.put("message", I18n.getMessage("Install.createTablesError"));
-			simpleConnection.releaseConnection(conn);
-			this.error();
-			return;
+		boolean dbError = false;
+		
+		try {
+			this.setupAutoCommit(conn);
+			
+			if (!"passed".equals(this.getFromSession("createTables")) && !this.createTables(conn)) {
+				this.context.put("message", I18n.getMessage("Install.createTablesError"));
+				dbError = true;
+				this.error();
+				return;
+			}
+			
+			// Create tables is ok
+			this.addToSessionAndContext("createTables", "passed");
+			logger.info("Table creation is ok");
+	
+	        if (!"passed".equals(this.getFromSession("importTablesData")) && !this.importTablesData(conn)) {
+				this.context.put("message", I18n.getMessage("Install.importTablesDataError"));
+				dbError = true;
+				this.error();
+				return;
+			}
+			
+			// Dump is ok
+			this.addToSessionAndContext("importTablesData", "passed");
+			
+			if (!this.updateAdminPassword(conn)) {
+				this.context.put("message", I18n.getMessage("Install.updateAdminError"));
+				dbError = true;
+				this.error();
+				return;
+			}
+			
+			this.storeSupportProjectMessage(conn);
 		}
-		
-		// Create tables is ok
-		this.addToSessionAndContext("createTables", "passed");
-		logger.info("Table creation is ok");
-
-        if (!"passed".equals(this.getFromSession("importTablesData")) && !this.importTablesData(conn)) {
-			this.context.put("message", I18n.getMessage("Install.importTablesDataError"));
-			simpleConnection.releaseConnection(conn);
-			this.error();
-			return;
+		finally {
+			if (conn != null) {
+				try {
+					if (dbError) {
+						conn.rollback();
+					}
+					else {
+						conn.commit();
+					}
+				}
+				catch (SQLException e) { }
+				
+				simpleConnection.releaseConnection(conn);
+			}
 		}
-		
-		// Dump is ok
-		this.addToSessionAndContext("importTablesData", "passed");
-		
-		if (!this.updateAdminPassword(conn)) {
-			this.context.put("message", I18n.getMessage("Install.updateAdminError"));
-			simpleConnection.releaseConnection(conn);
-			this.error();
-			return;
-		}
-		
-		this.storeSupportProjectMessage(conn);
-
-		simpleConnection.releaseConnection(conn);
 
 		JForumExecutionContext.setRedirect(this.request.getContextPath() + "/install/install"
 			+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION)
 			+ "?module=install&action=finished");
+	}
+	
+	private void setupAutoCommit(Connection conn)
+	{
+		try {
+			conn.setAutoCommit(false);
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
 	}
 	
 	private void removeUserConfig()
