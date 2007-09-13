@@ -95,7 +95,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.72 2007/09/13 04:02:28 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.73 2007/09/13 23:50:37 andowson Exp $
  */
 public class InstallAction extends Command
 {
@@ -775,7 +775,7 @@ public class InstallAction extends Command
 			.append("[url=http://www.jforum.net/jira]bug tracker[/url]).")
 			.append('\n')
 			.append("That's why I'm asking you to financially support this work. I love Open Source. I love to use good products without having to pay for it too. ")
-			.append("But when I see some program that is valuable to my work, that helps me making money, I think it’s a good idea to support this project.")
+			.append("But when I see some program that is valuable to my work, that helps me making money, I think it's a good idea to support this project.")
 			.append('\n')
 			.append('\n')
 			.append("[b]Some reasons to support open projects[/b]:")
