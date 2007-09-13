@@ -27,7 +27,7 @@
 
 			<tr>
 				<td width="15%" class="attachrow"><span class="genmed">&nbsp;${I18n.getMessage("Attachments.description")}</span></td>
-				<td width="75%" class="attachrow"><span class="genmed">${a.info.comment?default(I18n.getMessage("Attachments.noDescription"))}</span></td>
+				<td width="75%" class="attachrow"><span class="genmed">${a.info.comment?default(I18n.getMessage("Attachments.noDescription"))?html}</span></td>
 				
 			</tr>	
 
