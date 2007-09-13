@@ -68,19 +68,19 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.50 2007/08/27 15:57:40 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.51 2007/09/13 14:37:49 rafaelsteil Exp $
  */
 public class PostCommon
 {
-	public static Post preparePostForDisplay(Post p)
+	public static Post preparePostForDisplay(Post post)
 	{
-		if (p.getText() == null) {
-			return p;
+		if (post.getText() == null) {
+			return post;
 		}
 		
-		StringBuffer text = new StringBuffer(p.getText());
+		StringBuffer text = new StringBuffer(post.getText());
 		
-		if (!p.isHtmlEnabled()) {
+		if (!post.isHtmlEnabled()) {
 			ViewCommon.replaceAll(text, "<", "&lt;");
 			ViewCommon.replaceAll(text, ">", "&gt;");
 		}
@@ -89,56 +89,69 @@ public class PostCommon
 		// cause some regular expressions to fail
 		ViewCommon.replaceAll(text, "\n", "<br /> ");
 		
-		p.setText(SafeHtml.avoidJavascript(text.toString()));
-
-		// Then, search for bb codes
-		if (p.isBbCodeEnabled()) {
-			p.setText(processBBCodes(p.getText()));
-		}
+		post.setText(text.toString());
+		post.setText(SafeHtml.avoidJavascript(post.getText()));
 		
-		p.setText(parseDefaultRequiredBBCode(p.getText(), 
-			BBCodeRepository.getBBCollection().getAlwaysProcessList()));
-
-		// Smilies...
-		if (p.isSmiliesEnabled()) {
-			p.setText(processSmilies(new StringBuffer(p.getText()), 
-				SmiliesRepository.getSmilies()));
-		}
+		processText(post);
 		
-		return p;
+		return post;
 	}
 	
-	public static String parseDefaultRequiredBBCode(String text, Collection bbList)
+	private static void processText(Post post)
 	{
-		for (Iterator iter = bbList.iterator(); iter.hasNext(); ) {
-			BBCode bb = (BBCode)iter.next();
-			text = text.replaceAll(bb.getRegex(), bb.getReplace());
-		}
-		
-		return text;
-	}
-
-	public static String processBBCodes(String text)
-	{
-		if (text == null || text.indexOf('[') == -1 || text.indexOf(']') == -1) {
-			return text;
-		}
+		int codeIndex = post.getText().indexOf("[code");
+		int codeEndIndex = codeIndex > -1 ? post.getText().indexOf("[/code]") : -1;
 		
 		boolean hasCodeBlock = false;
-
+		
+		if (codeIndex == -1 || codeEndIndex == -1) {
+			post.setText(prepareTextForDisplayExceptCodeTag(post.getText().toString(), post.isBbCodeEnabled()));
+		}
+		else if (post.isBbCodeEnabled()) {
+			hasCodeBlock = true;
+			
+			int nextStartPos = 0;
+			StringBuffer result = new StringBuffer(post.getText().length());
+			
+			while (codeIndex > -1 && codeEndIndex > -1) {
+				codeEndIndex += "[/code]".length();
+				
+				String nonCodeResult = prepareTextForDisplayExceptCodeTag(post.getText().substring(nextStartPos, codeIndex), 
+					post.isBbCodeEnabled());
+				
+				String codeResult = parseCode(post.getText().substring(codeIndex, codeEndIndex));
+				
+				result.append(nonCodeResult).append(codeResult);
+				
+				nextStartPos = codeEndIndex;
+				codeIndex = post.getText().indexOf("[code", codeEndIndex);
+				codeEndIndex = codeIndex > -1 ? post.getText().indexOf("[/code]", codeIndex) : -1;
+			}
+			
+			
+			if (nextStartPos > -1) {
+				String nonCodeResult = prepareTextForDisplayExceptCodeTag(post.getText().substring(nextStartPos), 
+					post.isBbCodeEnabled());
+				
+				result.append(nonCodeResult);
+			}
+			
+			post.setText(result.toString());
+		}
+		
+		JForumExecutionContext.getTemplateContext().put("hasCodeBlock", hasCodeBlock);
+	}
+	
+	private static String parseCode(String text)
+	{
 		for (Iterator iter = BBCodeRepository.getBBCollection().getBbList().iterator(); iter.hasNext();) {
 			BBCode bb = (BBCode)iter.next();
 			
-			if (!bb.getTagName().startsWith("code")) {
-				text = text.replaceAll(bb.getRegex(), bb.getReplace());
-			} 
-			else  {
+			if (bb.getTagName().startsWith("code")) {
 				Matcher matcher = Pattern.compile(bb.getRegex()).matcher(text);
 				StringBuffer sb = new StringBuffer(text);
 
 				while (matcher.find()) {
-					hasCodeBlock = true;
-					
 					StringBuffer lang = null;
 					StringBuffer contents = null;
 					
@@ -152,21 +165,13 @@ public class PostCommon
 					
 					ViewCommon.replaceAll(contents, "<br /> ", "\n");
 
-					// Do not allow other bb tags inside "code"
-					ViewCommon.replaceAll(contents, "[", "&#91;");
-					ViewCommon.replaceAll(contents, "]", "&#93;");
-
-					// Try to bypass smilies interpretation
-					ViewCommon.replaceAll(contents, "(", "&#40;");
-					ViewCommon.replaceAll(contents, ")", "&#41;");
-
 					// XML-like tags
 					ViewCommon.replaceAll(contents, "<", "&lt;");
 					ViewCommon.replaceAll(contents, ">", "&gt;");
 					
 					// Note: there is no replacing for spaces and tabs as
 					// we are relying on the Javascript SyntaxHighlighter library
-					// to do it for is. 
+					// to do it for us
 					
 					StringBuffer replace = new StringBuffer(bb.getReplace());
 					int index = replace.indexOf("$1");
@@ -202,22 +207,54 @@ public class PostCommon
 			}
 		}
 		
-		if (hasCodeBlock) {
-			JForumExecutionContext.getTemplateContext().put("hasCodeBlock", hasCodeBlock);
+		return text;
+	}
+	
+	public static String prepareTextForDisplayExceptCodeTag(String text, boolean isBBCodeEnabled)
+	{
+		if (text == null) {
+			return text;
 		}
-
+		
+		text = processSmilies(new StringBuffer(text));
+		
+		if (isBBCodeEnabled && text.indexOf('[') > -1 && text.indexOf(']') > -1) {
+			for (Iterator iter = BBCodeRepository.getBBCollection().getBbList().iterator(); iter.hasNext();) {
+				BBCode bb = (BBCode)iter.next();
+				
+				if (!bb.getTagName().startsWith("code")) {
+					text = text.replaceAll(bb.getRegex(), bb.getReplace());
+				}
+			}
+		}
+		
+		text = parseDefaultRequiredBBCode(text);
+		
+		return text;
+	}
+	
+	public static String parseDefaultRequiredBBCode(String text)
+	{
+		Collection list = BBCodeRepository.getBBCollection().getAlwaysProcessList();
+		
+		for (Iterator iter = list.iterator(); iter.hasNext(); ) {
+			BBCode bb = (BBCode)iter.next();
+			text = text.replaceAll(bb.getRegex(), bb.getReplace());
+		}
+		
 		return text;
 	}
 
 	/**
 	 * Replace the smlies code by the respective URL.
 	 * @param text The text to process
-	 * @param smilies the relation of {@link Smilie} instances
 	 * @return the parsed text. Note that the StringBuffer you pass as parameter
 	 * will already have the right contents, as the replaces are done on the instance
 	 */
-	public static String processSmilies(StringBuffer text, List smilies)
+	public static String processSmilies(StringBuffer text)
 	{
+		List smilies = SmiliesRepository.getSmilies();
+		
 		for (Iterator iter = smilies.iterator(); iter.hasNext(); ) {
 			Smilie s = (Smilie) iter.next();
 			int pos = text.indexOf(s.getCode());
@@ -225,9 +262,9 @@ public class PostCommon
 			// The counter is used as prevention, in case
 			// the while loop turns into an always true 
 			// expression, for any reason
-			int count = 0;
+			int counter = 0;
 			
-			while (pos > -1 && count++ < 500) {
+			while (pos > -1 && counter++ < 300) {
 				text.replace(pos, pos + s.getCode().length(), s.getUrl());
 				pos = text.indexOf(s.getCode());
 			}
@@ -282,8 +319,8 @@ public class PostCommon
 	public static List topicPosts(PostDAO dao, boolean canEdit, int userId, int topicId, int start, int count)
 	{
 		boolean needPrepare = true;
+		List posts;
 		
-        List posts;
  		if (SystemGlobals.getBoolValue(ConfigKeys.POSTS_CACHE_ENABLED)) {
  			posts = PostRepository.selectAllByTopicByLimit(topicId, start, count);
  			needPrepare = false;

@@ -54,8 +54,6 @@ import net.jforum.JForumExecutionContext;
 import net.jforum.context.RequestContext;
 import net.jforum.entities.User;
 import net.jforum.exceptions.ForumException;
-import net.jforum.repository.BBCodeRepository;
-import net.jforum.repository.SmiliesRepository;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import net.jforum.util.preferences.TemplateKeys;
@@ -63,7 +61,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.29 2007/09/02 16:03:47 rafaelsteil Exp $
+ * @version $Id: ViewCommon.java,v 1.30 2007/09/13 14:37:49 rafaelsteil Exp $
  */
 public final class ViewCommon
 {
@@ -281,10 +279,7 @@ public final class ViewCommon
 			replaceAll(sb, "\n", "<br />");
 			
 			u.setSignature(sb.toString());
-			
-			u.setSignature(PostCommon.parseDefaultRequiredBBCode(u.getSignature(), BBCodeRepository.getBBCollection().getAlwaysProcessList()));
-			u.setSignature(PostCommon.processBBCodes(u.getSignature()));
-			u.setSignature(PostCommon.processSmilies(new StringBuffer(u.getSignature()), SmiliesRepository.getSmilies()));
+			u.setSignature(PostCommon.prepareTextForDisplayExceptCodeTag(u.getSignature(), true));
 		}
 	}
 }
