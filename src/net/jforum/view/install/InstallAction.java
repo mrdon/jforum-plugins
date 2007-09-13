@@ -95,7 +95,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.71 2007/09/12 23:54:20 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.72 2007/09/13 04:02:28 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -763,7 +763,7 @@ public class InstallAction extends Command
 	{
 		StringBuffer message = new StringBuffer("[color=#3AA315][size=18][b]Support JForum - Help the project[/b][/size][/color]")
 			.append("<hr>")
-			.append("This project is Open Source, and maintained by at least one full time Senior Developer, [b]which costs US$ 3,000.00 / month[/b]. ")
+			.append("This project is Open Source, and maintained by at least one full time Senior Developer, [i]which costs US$ 3,000.00 / month[/i]. ")
 			.append("If it helped you, please consider helping this project - especially with some [b][url=http://www.jforum.net/contribute.jsp]donation[/url][/b].")
 			.append('\n')
 			.append('\n')

@@ -392,16 +392,18 @@ $(document).ready(function() {
 			cssclass: 'inlineedit',
 			loadtext: '${I18n.getMessage("PostShow.loading")}...',
 			beforesubmit: function(submitdata) { 
-				var message = prompt("${I18n.getMessage("ModerationLog.changeReason")}");
+				<#if moderationLoggingEnabled>
+					var message = prompt("${I18n.getMessage("ModerationLog.changeReason")}");
 
-				if (message == null || message == "") {
-					alert("${I18n.getMessage("ModerationLog.reasonIsEmpty")}");
-					return false;
-				}
-				else {
-					submitdata["log_description"] = message;
-					submitdata["log_type"] = 2;
-				}
+					if (message == null || message == "") {
+						alert("${I18n.getMessage("ModerationLog.reasonIsEmpty")}");
+						return false;
+					}
+					else {
+						submitdata["log_description"] = message;
+						submitdata["log_type"] = 2;
+					}
+				</#if>
 
 				return true;
 			}

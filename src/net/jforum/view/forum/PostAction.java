@@ -103,7 +103,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.194 2007/09/10 23:07:00 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.195 2007/09/13 04:02:29 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -225,6 +225,7 @@ public class PostAction extends Command
 		this.context.put("karmaMin", new Integer(SystemGlobals.getValue(ConfigKeys.KARMA_MIN_POINTS)));
 		this.context.put("karmaMax", new Integer(SystemGlobals.getValue(ConfigKeys.KARMA_MAX_POINTS)));
 		this.context.put("avatarAllowExternalUrl", SystemGlobals.getBoolValue(ConfigKeys.AVATAR_ALLOW_EXTERNAL_URL));
+		this.context.put("moderationLoggingEnabled", SystemGlobals.getBoolValue(ConfigKeys.MODERATION_LOGGING_ENABLED));
 		
 		Map topicPosters = topicDao.topicPosters(topic.getId());
 		
@@ -234,14 +235,14 @@ public class PostAction extends Command
 		
 		this.context.put("users", topicPosters);
 		this.context.put("anonymousPosts", pc.canAccess(SecurityConstants.PERM_ANONYMOUS_POST, 
-				Integer.toString(topic.getForumId())));
+			Integer.toString(topic.getForumId())));
 		this.context.put("watching", topicDao.isUserSubscribed(topicId, SessionFacade.getUserSession().getUserId()));
 		this.context.put("pageTitle", topic.getTitle());
 		this.context.put("isAdmin", pc.canAccess(SecurityConstants.PERM_ADMINISTRATION));
 		this.context.put("readonly", !pc.canAccess(SecurityConstants.PERM_READ_ONLY_FORUMS, 
-				Integer.toString(topic.getForumId())));
+			Integer.toString(topic.getForumId())));
 		this.context.put("replyOnly", !pc.canAccess(SecurityConstants.PERM_REPLY_ONLY, 
-				Integer.toString(topic.getForumId())));
+			Integer.toString(topic.getForumId())));
 
 		this.context.put("isModerator", us.isModerator(topic.getForumId()));
 

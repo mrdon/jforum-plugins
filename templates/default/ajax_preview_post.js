@@ -10,3 +10,6 @@ if (index > -1) {
 }
 
 document.location = s + "#preview";
+
+dp.sh.ClipboardSwf = '${contextPath}/templates/${templateName}/js/clipboard.swf';
+dp.sh.HighlightAll('code');

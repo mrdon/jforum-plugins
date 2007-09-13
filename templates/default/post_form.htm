@@ -9,6 +9,7 @@ var SERVLET_EXTENSION  = "${extension}";
 </script>
 
 <style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/tabs.css?${startupTime} );</style>
+<style type="text/css">@import url( ${contextPath}/templates/${templateName}/styles/SyntaxHighlighter.css?${startupTime} );</style>
 
 <script type="text/javascript" src="${contextPath}/templates/${templateName}/js/jquery.js?${startupTime}"></script>
 <script type="text/javascript" src="${contextPath}/templates/${templateName}/js/post.js?${startupTime}"></script>
@@ -469,4 +470,5 @@ function smiliePopup()
 
 </form>
 
+<#include "highlighter_js.htm"/>
 <#include "bottom.htm"/>

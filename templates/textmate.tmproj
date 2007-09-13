@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>default/install_check_info.htm</string>
+	<string>default/post_form.htm</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -49,19 +49,47 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>default/install_check_info.htm</key>
+		<key>default/ajax_preview_post.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>45</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>126</integer>
+				<integer>15</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>94</integer>
+			<integer>0</integer>
+		</dict>
+		<key>default/header.htm</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>35</integer>
+				<key>line</key>
+				<integer>14</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>default/highlighter_js.htm</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>23</integer>
+				<key>line</key>
+				<integer>15</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
 		</dict>
 		<key>default/post_attachments_tab.htm</key>
 		<dict>
@@ -71,6 +99,20 @@
 				<integer>22</integer>
 				<key>line</key>
 				<integer>33</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>default/post_form.htm</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>1</integer>
+				<key>line</key>
+				<integer>39</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -108,7 +150,10 @@
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>default/install_check_info.htm</string>
+		<string>default/post_form.htm</string>
+		<string>default/ajax_preview_post.js</string>
+		<string>default/header.htm</string>
+		<string>default/highlighter_js.htm</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
