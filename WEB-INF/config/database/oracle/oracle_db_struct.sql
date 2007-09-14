@@ -197,7 +197,7 @@ CREATE TABLE jforum_privmsgs (
   privmsgs_from_userid NUMBER(10) DEFAULT 0 NOT NULL,
   privmsgs_to_userid NUMBER(10) DEFAULT 0 NOT NULL,
   privmsgs_date DATE DEFAULT SYSDATE NOT NULL,
-  privmsgs_ip VARCHAR2(8) DEFAULT ' ' NOT NULL,
+  privmsgs_ip VARCHAR2(15) DEFAULT ' ' NOT NULL,
   privmsgs_enable_bbcode NUMBER(10) DEFAULT 1 NOT NULL,
   privmsgs_enable_html NUMBER(10) DEFAULT 0 NOT NULL,
   privmsgs_enable_smilies NUMBER(10) DEFAULT 1 NOT NULL,

@@ -5,6 +5,7 @@ ALTER TABLE jforum_topics ADD topic_moved_id INT DEFAULT 0;
 CREATE INDEX idx_topics_moved ON jforum_topics(topic_moved_id);
 ALTER TABLE jforum_users ALTER COLUMN rank_id SET DEFAULT 0;
 ALTER TABLE jforum_sessions ALTER COLUMN session_ip VARCHAR(15);
+ALTER TABLE jforum_privmsgs ALTER COLUMN privmsgs_ip VARCHAR(15);
 CREATE INDEX idx_vd_topic ON jforum_vote_desc(topic_id);
 CREATE INDEX idx_vr_vote ON jforum_vote_results(vote_id);
 CREATE INDEX idx_vv_vote ON jforum_vote_voters(vote_id);
