@@ -1,4 +1,4 @@
-CREATE INDEX idx_banlis_email ON jforum_banlist(banlist_email);
+CREATE INDEX idx_banlist_email ON jforum_banlist(banlist_email);
 CREATE INDEX idx_posts_moderate ON jforum_posts(need_moderate);
 CREATE INDEX idx_posts_time ON jforum_posts(post_time);
 ALTER TABLE jforum_topics ADD topic_moved_id INT DEFAULT 0;
@@ -37,4 +37,4 @@ CREATE TABLE jforum_moderation_log (
 CREATE INDEX idx_ml_user ON jforum_moderation_log(user_id);
 CREATE INDEX idx_ml_post_user ON jforum_moderation_log(post_user_id);
 
-UPDATE jforum_forums SET forum_topics = (SELECT COUNT(*) FROM jforum_topics t WHERE t.forum_id = jforum_forums.forum_id);
+UPDATE jforum_forums SET forum_topics = (SELECT COUNT(*) FROM jforum_topics t WHERE t.forum_id = jforum_forums.forum_id AND moderated = 0);
