@@ -1,7 +1,6 @@
 --
 -- Table structure for table 'jforum_banlist'
 --
-
 DROP TABLE IF EXISTS jforum_banlist;
 CREATE TABLE jforum_banlist (
   banlist_id INT NOT NULL auto_increment,
@@ -17,7 +16,6 @@ CREATE TABLE jforum_banlist (
 --
 -- Table structure for table 'jforum_categories'
 --
-
 DROP TABLE IF EXISTS jforum_categories;
 CREATE TABLE jforum_categories (
   categories_id INT NOT NULL auto_increment,
@@ -30,7 +28,6 @@ CREATE TABLE jforum_categories (
 --
 -- Table structure for table 'jforum_config'
 --
-
 DROP TABLE IF EXISTS jforum_config;
 CREATE TABLE jforum_config (
   config_name varchar(255) NOT NULL default '',
@@ -42,7 +39,6 @@ CREATE TABLE jforum_config (
 --
 -- Table structure for table 'jforum_forums'
 --
-
 DROP TABLE IF EXISTS jforum_forums;
 CREATE TABLE jforum_forums (
   forum_id INT NOT NULL auto_increment,
@@ -72,7 +68,6 @@ CREATE TABLE jforum_forums_watch (
 --
 -- Table structure for table 'jforum_groups'
 --
-
 DROP TABLE IF EXISTS jforum_groups;
 CREATE TABLE jforum_groups (
   group_id INT NOT NULL auto_increment,
@@ -94,7 +89,6 @@ CREATE TABLE jforum_user_groups (
 --
 -- Table structure for table 'jforum_roles'
 --
-
 DROP TABLE IF EXISTS jforum_roles;
 CREATE TABLE jforum_roles (
   role_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -117,7 +111,6 @@ CREATE TABLE jforum_role_values (
 --
 -- Table structure for table 'jforum_posts'
 --
-
 DROP TABLE IF EXISTS jforum_posts;
 CREATE TABLE jforum_posts (
   post_id INT NOT NULL auto_increment,
@@ -156,7 +149,6 @@ CREATE TABLE jforum_posts_text (
 --
 -- Table structure for table 'jforum_privmsgs'
 --
-
 DROP TABLE IF EXISTS jforum_privmsgs;
 CREATE TABLE jforum_privmsgs (
   privmsgs_id INT NOT NULL auto_increment,
@@ -165,7 +157,7 @@ CREATE TABLE jforum_privmsgs (
   privmsgs_from_userid INT NOT NULL default '0',
   privmsgs_to_userid INT NOT NULL default '0',
   privmsgs_date datetime default null,
-  privmsgs_ip varchar(8) NOT NULL default '',
+  privmsgs_ip varchar(15) NOT NULL default '',
   privmsgs_enable_bbcode tinyint(1) NOT NULL default '1',
   privmsgs_enable_html tinyint(1) NOT NULL default '0',
   privmsgs_enable_smilies tinyint(1) NOT NULL default '1',
@@ -183,7 +175,6 @@ CREATE TABLE jforum_privmsgs_text (
 --
 -- Table structure for table 'jforum_ranks'
 --
-
 DROP TABLE IF EXISTS jforum_ranks;
 CREATE TABLE jforum_ranks (
   rank_id INT NOT NULL auto_increment,
@@ -197,7 +188,6 @@ CREATE TABLE jforum_ranks (
 --
 -- Table structure for table 'jforum_sessions'
 --
-
 DROP TABLE IF EXISTS jforum_sessions;
 CREATE TABLE jforum_sessions (
   session_id varchar(150) NOT NULL default '',
@@ -213,7 +203,6 @@ CREATE TABLE jforum_sessions (
 --
 -- Table structure for table 'jforum_smilies'
 --
-
 DROP TABLE IF EXISTS jforum_smilies;
 CREATE TABLE jforum_smilies (
   smilie_id INT NOT NULL auto_increment,
@@ -226,7 +215,6 @@ CREATE TABLE jforum_smilies (
 --
 -- Table structure for table 'jforum_themes'
 --
-
 DROP TABLE IF EXISTS jforum_themes;
 CREATE TABLE jforum_themes (
   themes_id INT NOT NULL auto_increment,
@@ -238,7 +226,6 @@ CREATE TABLE jforum_themes (
 --
 -- Table structure for table 'jforum_topics'
 --
-
 DROP TABLE IF EXISTS jforum_topics;
 CREATE TABLE jforum_topics (
   topic_id INT NOT NULL auto_increment,
@@ -266,7 +253,6 @@ CREATE TABLE jforum_topics (
 --
 -- Table structure for table 'jforum_topics_watch'
 --
-
 DROP TABLE IF EXISTS jforum_topics_watch;
 CREATE TABLE jforum_topics_watch (
   topic_id INT NOT NULL,
@@ -279,7 +265,6 @@ CREATE TABLE jforum_topics_watch (
 --
 -- Table structure for table 'jforum_users'
 --
-
 DROP TABLE IF EXISTS jforum_users;
 CREATE TABLE jforum_users (
   user_id INT NOT NULL auto_increment,
@@ -339,11 +324,9 @@ CREATE TABLE jforum_users (
   PRIMARY KEY  (user_id)
 ) TYPE=InnoDB;
 
-
 --
 -- Table structure for table 'jforum_vote_desc'
 --
-
 DROP TABLE IF EXISTS jforum_vote_desc;
 CREATE TABLE jforum_vote_desc (
   vote_id INT NOT NULL auto_increment,
@@ -358,7 +341,6 @@ CREATE TABLE jforum_vote_desc (
 --
 -- Table structure for table 'jforum_vote_results'
 --
-
 DROP TABLE IF EXISTS jforum_vote_results;
 CREATE TABLE jforum_vote_results (
   vote_id INT NOT NULL default '0',
@@ -371,7 +353,6 @@ CREATE TABLE jforum_vote_results (
 --
 -- Table structure for table 'jforum_vote_voters'
 --
-
 DROP TABLE IF EXISTS jforum_vote_voters;
 CREATE TABLE jforum_vote_voters (
   vote_id INT NOT NULL default '0',
@@ -384,7 +365,6 @@ CREATE TABLE jforum_vote_voters (
 --
 -- Table structure for table 'jforum_words'
 --
-
 DROP TABLE IF EXISTS jforum_words;
 CREATE TABLE jforum_words (
   word_id INT NOT NULL auto_increment,

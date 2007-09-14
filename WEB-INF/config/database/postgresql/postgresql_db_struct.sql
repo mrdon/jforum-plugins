@@ -1,14 +1,13 @@
 --
 -- Table structure for table 'jforum_banlist'
 --
-
 CREATE SEQUENCE jforum_banlist_seq;
 CREATE TABLE jforum_banlist (
   banlist_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_banlist_seq'),
   user_id INTEGER DEFAULT 0,
-  banlist_ip VARCHAR(20),
+  banlist_ip VARCHAR(15),
   banlist_email VARCHAR(255),
-  PRIMARY KEY  (banlist_id)
+  PRIMARY KEY(banlist_id)
 );
 CREATE INDEX idx_banlist_user ON jforum_banlist(user_id);
 CREATE INDEX idx_banlist_ip ON jforum_banlist(banlist_ip);
@@ -17,7 +16,6 @@ CREATE INDEX idx_banlist_email ON jforum_banlist(banlist_email);
 --
 -- Table structure for table 'jforum_categories'
 --
-
 CREATE SEQUENCE jforum_categories_seq;
 CREATE SEQUENCE jforum_categories_order_seq;
 CREATE TABLE jforum_categories (
@@ -30,7 +28,6 @@ CREATE TABLE jforum_categories (
 --
 -- Table structure for table 'jforum_config'
 --
-
 CREATE SEQUENCE jforum_config_seq;
 CREATE TABLE jforum_config (
   config_name VARCHAR(255) NOT NULL DEFAULT '',
@@ -41,7 +38,6 @@ CREATE TABLE jforum_config (
 --
 -- Table structure for table 'jforum_forums'
 --
-
 CREATE SEQUENCE jforum_forums_seq;
 CREATE TABLE jforum_forums (
   forum_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_forums_seq'),
@@ -52,7 +48,7 @@ CREATE TABLE jforum_forums (
   forum_topics INTEGER NOT NULL DEFAULT 0,
   forum_last_post_id INTEGER NOT NULL DEFAULT 0,
   moderated INTEGER DEFAULT 0,
-  PRIMARY KEY  (forum_id)
+  PRIMARY KEY(forum_id)
 );
 CREATE INDEX idx_forums_categories_id ON jforum_forums(categories_id);
 
@@ -70,20 +66,19 @@ CREATE INDEX idx_fw_user ON jforum_forums_watch(user_id);
 --
 -- Table structure for table 'jforum_groups'
 --
-
 CREATE SEQUENCE jforum_groups_seq;
 CREATE TABLE jforum_groups (
   group_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_groups_seq'),
   group_name VARCHAR(40) NOT NULL DEFAULT '',
   group_description VARCHAR(255) DEFAULT NULL,
   parent_id INTEGER DEFAULT 0,
-  PRIMARY KEY  (group_id)
+  PRIMARY KEY(group_id)
 );
 
 
 CREATE TABLE jforum_user_groups (
-	group_id INT NOT NULL,
-	user_id INT NOT NULL
+	group_id INTEGER NOT NULL,
+	user_id INTEGER NOT NULL
 );
 CREATE INDEX idx_ug_group ON jforum_user_groups(group_id);
 CREATE INDEX idx_ug_user ON jforum_user_groups(user_id);
@@ -91,10 +86,9 @@ CREATE INDEX idx_ug_user ON jforum_user_groups(user_id);
 --
 -- Table structure for table 'jforum_roles'
 --
-
 CREATE SEQUENCE jforum_roles_seq;
 CREATE TABLE jforum_roles (
-  role_id INT NOT NULL PRIMARY KEY DEFAULT NEXTVAL('jforum_roles_seq'),
+  role_id INTEGER NOT NULL PRIMARY KEY DEFAULT NEXTVAL('jforum_roles_seq'),
   group_id INTEGER DEFAULT 0,
   name VARCHAR(255) NOT NULL
 );
@@ -105,7 +99,7 @@ CREATE INDEX idx_roles_name ON jforum_roles(name);
 -- Table structure for table 'jforum_role_values'
 --
 CREATE TABLE jforum_role_values (
-  role_id INT NOT NULL,
+  role_id INTEGER NOT NULL,
   role_value VARCHAR(255)
 );
 CREATE INDEX idx_rv_role ON jforum_role_values(role_id);
@@ -113,7 +107,6 @@ CREATE INDEX idx_rv_role ON jforum_role_values(role_id);
 --
 -- Table structure for table 'jforum_posts'
 --
-
 CREATE SEQUENCE jforum_posts_seq;
 CREATE TABLE jforum_posts (
   post_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_posts_seq'),
@@ -121,7 +114,7 @@ CREATE TABLE jforum_posts (
   forum_id INTEGER NOT NULL DEFAULT 0,
   user_id INTEGER NOT NULL DEFAULT 0,
   post_time timestamp DEFAULT NULL,
-  poster_ip VARCHAR(20) DEFAULT NULL,
+  poster_ip VARCHAR(15) DEFAULT NULL,
   enable_bbcode INTEGER NOT NULL DEFAULT 1,
   enable_html INTEGER NOT NULL DEFAULT 1,
   enable_smilies INTEGER NOT NULL DEFAULT 1,
@@ -131,7 +124,7 @@ CREATE TABLE jforum_posts (
   status INTEGER DEFAULT 1,
   attach INTEGER DEFAULT 0,
   need_moderate INTEGER DEFAULT 0,
-  PRIMARY KEY  (post_id)
+  PRIMARY KEY(post_id)
 );
 CREATE INDEX idx_posts_user ON jforum_posts(user_id);
 CREATE INDEX idx_posts_topic ON jforum_posts(topic_id);
@@ -152,7 +145,6 @@ CREATE TABLE jforum_posts_text (
 --
 -- Table structure for table 'jforum_privmsgs'
 --
-
 CREATE SEQUENCE jforum_privmsgs_seq;
 CREATE TABLE jforum_privmsgs (
   privmsgs_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_privmsgs_seq'),
@@ -161,12 +153,12 @@ CREATE TABLE jforum_privmsgs (
   privmsgs_from_userid INTEGER NOT NULL DEFAULT 0,
   privmsgs_to_userid INTEGER NOT NULL DEFAULT 0,
   privmsgs_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  privmsgs_ip VARCHAR(8) NOT NULL DEFAULT '',
+  privmsgs_ip VARCHAR(15) NOT NULL DEFAULT '',
   privmsgs_enable_bbcode INTEGER NOT NULL DEFAULT 1,
   privmsgs_enable_html INTEGER NOT NULL DEFAULT 0,
   privmsgs_enable_smilies INTEGER NOT NULL DEFAULT 1,
   privmsgs_attach_sig INTEGER NOT NULL DEFAULT 1,
-  PRIMARY KEY  (privmsgs_id)
+  PRIMARY KEY(privmsgs_id)
 );
 
 CREATE TABLE jforum_privmsgs_text (
@@ -178,7 +170,6 @@ CREATE INDEX idx_pm_text_id ON jforum_privmsgs_text (privmsgs_id);
 --
 -- Table structure for table 'jforum_ranks'
 --
-
 CREATE SEQUENCE jforum_ranks_seq;
 CREATE TABLE jforum_ranks (
   rank_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_ranks_seq'),
@@ -186,19 +177,18 @@ CREATE TABLE jforum_ranks (
   rank_min INTEGER NOT NULL DEFAULT 0,
   rank_special INTEGER DEFAULT NULL,
   rank_image VARCHAR(255) DEFAULT NULL,
-  PRIMARY KEY  (rank_id)
+  PRIMARY KEY(rank_id)
 );
 
 --
 -- Table structure for table 'jforum_sessions'
 --
-
 CREATE TABLE jforum_sessions (
   session_id VARCHAR(150) NOT NULL DEFAULT '',
   session_user_id INTEGER NOT NULL DEFAULT 0,
   session_start timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  session_time int NOT NULL DEFAULT 0,
-  session_ip VARCHAR(8) NOT NULL DEFAULT '',
+  session_time INTEGER NOT NULL DEFAULT 0,
+  session_ip VARCHAR(15) NOT NULL DEFAULT '',
   session_page INTEGER NOT NULL DEFAULT 0,
   session_logged_int INTEGER DEFAULT NULL
 );
@@ -208,32 +198,29 @@ CREATE INDEX idx_sess_user ON jforum_sessions(session_user_id);
 --
 -- Table structure for table 'jforum_smilies'
 --
-
 CREATE SEQUENCE jforum_smilies_seq;
 CREATE TABLE jforum_smilies (
   smilie_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_smilies_seq'),
   code VARCHAR(50) NOT NULL DEFAULT '',
   url VARCHAR(100) DEFAULT NULL,
   disk_name VARCHAR(255),
-  PRIMARY KEY  (smilie_id)
+  PRIMARY KEY(smilie_id)
 );
 
 --
 -- Table structure for table 'jforum_themes'
 --
-
 CREATE SEQUENCE jforum_themes_seq;
 CREATE TABLE jforum_themes (
   themes_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_themes_seq'),
   template_name VARCHAR(30) NOT NULL DEFAULT '',
   style_name VARCHAR(30) NOT NULL DEFAULT '',
-  PRIMARY KEY  (themes_id)
+  PRIMARY KEY(themes_id)
 );
 
 --
 -- Table structure for table 'jforum_topics'
 --
-
 CREATE SEQUENCE jforum_topics_seq;
 CREATE TABLE jforum_topics (
   topic_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_topics_seq'),
@@ -250,7 +237,7 @@ CREATE TABLE jforum_topics (
   topic_last_post_id INTEGER NOT NULL DEFAULT 0,
   moderated INTEGER DEFAULT 0,
   topic_moved_id INTEGER DEFAULT 0,
-  PRIMARY KEY  (topic_id)
+  PRIMARY KEY(topic_id)
 );
 
 CREATE INDEX idx_topics_forum ON jforum_topics(forum_id);
@@ -264,7 +251,6 @@ CREATE INDEX idx_topics_moved ON jforum_topics(topic_moved_id);
 --
 -- Table structure for table 'jforum_topics_watch'
 --
-
 CREATE TABLE jforum_topics_watch (
   topic_id INTEGER NOT NULL DEFAULT 0,
   user_id INTEGER NOT NULL DEFAULT 0,
@@ -276,14 +262,13 @@ CREATE INDEX idx_tw_user ON jforum_topics_watch(user_id);
 --
 -- Table structure for table 'jforum_users'
 --
-
 CREATE SEQUENCE jforum_users_seq;
 CREATE TABLE jforum_users (
   user_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_users_seq'),
   user_active INTEGER DEFAULT NULL,
   username VARCHAR(50) NOT NULL DEFAULT '',
   user_password VARCHAR(32) NOT NULL DEFAULT '',
-  user_session_time int NOT NULL DEFAULT 0,
+  user_session_time INTEGER NOT NULL DEFAULT 0,
   user_session_page INTEGER NOT NULL DEFAULT 0,
   user_lastvisit timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   user_regdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -333,14 +318,12 @@ CREATE TABLE jforum_users (
   user_authhash VARCHAR(32),
   user_notify_always INTEGER DEFAULT 0,
   user_notify_text INTEGER DEFAULT 0,
-  PRIMARY KEY  (user_id)
+  PRIMARY KEY(user_id)
 );
-
 
 --
 -- Table structure for table 'jforum_vote_desc'
 --
-
 CREATE SEQUENCE jforum_vote_desc_seq;
 CREATE TABLE jforum_vote_desc (
   vote_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_vote_desc_seq'),
@@ -348,7 +331,7 @@ CREATE TABLE jforum_vote_desc (
   vote_text VARCHAR(255) NOT NULL DEFAULT '',
   vote_start TIMESTAMP NOT NULL,
   vote_length INTEGER NOT NULL DEFAULT 0,
-  PRIMARY KEY  (vote_id)
+  PRIMARY KEY(vote_id)
 );
 
 CREATE INDEX idx_vd_topic ON jforum_vote_desc(topic_id);
@@ -356,7 +339,6 @@ CREATE INDEX idx_vd_topic ON jforum_vote_desc(topic_id);
 --
 -- Table structure for table 'jforum_vote_results'
 --
-
 CREATE TABLE jforum_vote_results (
   vote_id INTEGER NOT NULL DEFAULT 0,
   vote_option_id INTEGER NOT NULL DEFAULT 0,
@@ -369,7 +351,6 @@ CREATE INDEX idx_vr_id ON jforum_vote_results(vote_id);
 --
 -- Table structure for table 'jforum_vote_voters'
 --
-
 CREATE TABLE jforum_vote_voters (
   vote_id INTEGER NOT NULL DEFAULT 0,
   vote_user_id INTEGER NOT NULL DEFAULT 0,
@@ -382,13 +363,12 @@ CREATE INDEX idx_vv_user ON jforum_vote_voters(vote_user_id);
 --
 -- Table structure for table 'jforum_words'
 --
-
 CREATE SEQUENCE jforum_words_seq;
 CREATE TABLE jforum_words (
   word_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_words_seq'),
   word VARCHAR(100) NOT NULL DEFAULT '',
   replacement VARCHAR(100) NOT NULL DEFAULT '',
-  PRIMARY KEY  (word_id)
+  PRIMARY KEY(word_id)
 );
 
 --
@@ -432,6 +412,7 @@ CREATE INDEX idx_bok_rel ON jforum_bookmarks(relation_id);
 -- 
 -- Table structure for table 'jforum_quota_limit'
 --
+
 CREATE SEQUENCE jforum_quota_limit_seq;
 CREATE TABLE jforum_quota_limit (
 	quota_limit_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_quota_limit_seq'),
@@ -444,6 +425,7 @@ CREATE TABLE jforum_quota_limit (
 --
 -- Table structure for table 'jforum_extension_groups'
 --
+
 CREATE SEQUENCE jforum_extension_groups_seq;
 CREATE TABLE jforum_extension_groups (
 	extension_group_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_extension_groups_seq'),
@@ -457,6 +439,7 @@ CREATE TABLE jforum_extension_groups (
 -- 
 -- Table structure for table 'jforum_extensions'
 --
+
 CREATE SEQUENCE jforum_extensions_seq;
 CREATE TABLE jforum_extensions (
 	extension_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_extensions_seq'),
@@ -474,6 +457,7 @@ CREATE INDEX idx_ext_ext ON jforum_extensions(extension);
 --
 -- Table structure for table 'jforum_attach'
 --
+
 CREATE SEQUENCE jforum_attach_seq;
 CREATE TABLE jforum_attach (
 	attach_id INTEGER NOT NULL DEFAULT NEXTVAL('jforum_attach_seq'),
@@ -490,6 +474,7 @@ CREATE INDEX idx_att_user ON jforum_attach(user_id);
 -- 
 -- Table structure for table 'jforum_attach_desc'
 --
+
 CREATE SEQUENCE jforum_attach_desc_seq;
 CREATE TABLE jforum_attach_desc (
 	attach_desc_id INTEGER NOT NULL PRIMARY KEY DEFAULT NEXTVAL('jforum_attach_desc_seq'),
