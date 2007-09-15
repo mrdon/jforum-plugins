@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.51 2007/09/13 14:37:49 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.52 2007/09/15 00:25:38 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -139,7 +139,9 @@ public class PostCommon
 			post.setText(result.toString());
 		}
 		
-		JForumExecutionContext.getTemplateContext().put("hasCodeBlock", hasCodeBlock);
+		if (hasCodeBlock) {
+			JForumExecutionContext.getTemplateContext().put("hasCodeBlock", hasCodeBlock);
+		}
 	}
 	
 	private static String parseCode(String text)
