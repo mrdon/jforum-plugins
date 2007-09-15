@@ -95,7 +95,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.73 2007/09/13 23:50:37 andowson Exp $
+ * @version $Id: InstallAction.java,v 1.74 2007/09/15 09:25:11 andowson Exp $
  */
 public class InstallAction extends Command
 {
@@ -192,7 +192,7 @@ public class InstallAction extends Command
 		boolean dbError = false;
 		
 		try {
-			this.setupAutoCommit(conn);
+			//this.setupAutoCommit(conn);
 			
 			if (!"passed".equals(this.getFromSession("createTables")) && !this.createTables(conn)) {
 				this.context.put("message", I18n.getMessage("Install.createTablesError"));
@@ -204,7 +204,7 @@ public class InstallAction extends Command
 			// Create tables is ok
 			this.addToSessionAndContext("createTables", "passed");
 			logger.info("Table creation is ok");
-	
+			this.setupAutoCommit(conn); 
 	        if (!"passed".equals(this.getFromSession("importTablesData")) && !this.importTablesData(conn)) {
 				this.context.put("message", I18n.getMessage("Install.importTablesDataError"));
 				dbError = true;
@@ -408,47 +408,57 @@ public class InstallAction extends Command
 	
 	private boolean createTables(Connection conn)
 	{
+           
 		logger.info("Going to create tables...");
 		String dbType = this.getFromSession("database");
-		
+
 		if ("postgresql".equals(dbType) || "oracle".equals(dbType)) {
+			// This should be in a separate transaction block; otherwise, an empty database will fail.
 			this.dropOracleOrPostgreSQLTables(dbType, conn);
 		}
-		
-		boolean status = true;
-		
-		List statements = ParseDBStructFile.parse(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
-			+ "/database/"
-			+ dbType
-			+ "/" + dbType + "_db_struct.sql");
-			
-		for (Iterator iter = statements.iterator(); iter.hasNext(); ) {
-			String query = (String)iter.next();
-			
-			if (query == null || "".equals(query.trim())) {
-				continue;
-			}
-			
-			Statement s = null;
-			
-            try {
-                s = conn.createStatement();
-				s.executeUpdate(query);
-			}
-			catch (SQLException ex) {
-				status = false;
+		try { 
+			boolean status = true;
+			boolean autoCommit = conn.getAutoCommit();
+			conn.setAutoCommit(false);
 
-				logger.error("Error executing query: " + query + ": " + ex, ex);
-				this.context.put("exceptionMessage", ex.getMessage() + "\n" + query);
-				
-				break;
+			List statements = ParseDBStructFile.parse(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
+					+ "/database/"
+					+ dbType
+					+ "/" + dbType + "_db_struct.sql");
+
+
+			for (Iterator iter = statements.iterator(); iter.hasNext(); ) {
+				String query = (String)iter.next();
+
+				if (query == null || "".equals(query.trim())) {
+					continue;
+				}
+
+				Statement s = null;
+
+				try {
+					s = conn.createStatement();
+					s.executeUpdate(query);
+				}
+				catch (SQLException ex) {
+					status = false;
+
+					logger.error("Error executing query: " + query + ": " + ex, ex);
+					this.context.put("exceptionMessage", ex.getMessage() + "\n" + query);
+
+					break;
+				}
+				finally {
+					DbUtils.close(s);
+				}
 			}
-			finally {
-                DbUtils.close(s);
-			}
+			conn.setAutoCommit(autoCommit);
+			return status;
 		}
-		
-		return status;
+		catch (Exception e)
+		{
+			throw new ForumException(e);
+		}
 	}
 	
 	private void dropOracleOrPostgreSQLTables(String dbName, Connection conn)
@@ -456,9 +466,13 @@ public class InstallAction extends Command
 		Statement s = null;
 		
 		try {
+			boolean autoCommit = conn.getAutoCommit();
+			conn.setAutoCommit(false);
+			
 			List statements = ParseDBStructFile.parse(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR)
 				+ "/database/" + dbName + "/" + dbName + "_drop_tables.sql");
 			
+			this.setupAutoCommit(conn);
 			for (Iterator iter = statements.iterator(); iter.hasNext(); ) {
 				try {
 					String query = (String)iter.next();
@@ -468,13 +482,14 @@ public class InstallAction extends Command
 					}
 					
 					s = conn.createStatement();
-					s.executeQuery(query);
+					s.executeUpdate(query);
 					s.close();
                 }
 				catch (Exception e) {
 					logger.error("IGNORE: " + e.toString());
 				}
 			}
+			conn.setAutoCommit(autoCommit);
 		}
 		catch (Exception e) {
 			logger.error(e.toString(), e);
