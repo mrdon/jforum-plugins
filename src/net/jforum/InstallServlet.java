@@ -67,7 +67,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallServlet.java,v 1.28 2007/09/08 00:18:48 andowson Exp $
+ * @version $Id: InstallServlet.java,v 1.29 2007/09/15 08:25:14 andowson Exp $
  */
 public class InstallServlet extends JForumBaseServlet
 {
@@ -119,6 +119,7 @@ public class InstallServlet extends JForumBaseServlet
 			context.put("encoding", encoding);
 			context.put("extension", SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 			context.put("JForumContext", forumContext);
+			context.put("version", SystemGlobals.getValue(ConfigKeys.VERSION));
 			
 			if (SystemGlobals.getBoolValue(ConfigKeys.INSTALLED)) {
 				JForumExecutionContext.setRedirect(request.getContextPath() 
