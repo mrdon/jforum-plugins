@@ -10,7 +10,7 @@ DROP SEQUENCE jforum_forums_seq;
 DROP TABLE jforum_groups;
 DROP SEQUENCE jforum_groups_seq;
 DROP TABLE jforum_posts;
-DROP SEQUENCE forum_posts_seq;
+DROP SEQUENCE jforum_posts_seq;
 DROP TABLE jforum_posts_text;
 DROP TABLE jforum_privmsgs;
 DROP SEQUENCE jforum_privmsgs_seq;
