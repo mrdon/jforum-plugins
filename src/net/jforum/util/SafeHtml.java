@@ -66,7 +66,7 @@ import org.htmlparser.nodes.TextNode;
  * <li>http://quickwired.com/kallahar/smallprojects/php_xss_filter_function.php
  * <br>
  * @author Rafael Steil
- * @version $Id: SafeHtml.java,v 1.22 2007/07/28 14:17:11 rafaelsteil Exp $
+ * @version $Id: SafeHtml.java,v 1.23 2007/09/16 13:57:11 andowson Exp $
  */
 public class SafeHtml 
 {
@@ -119,8 +119,8 @@ public class SafeHtml
 				if (text.indexOf('>') > -1 || text.indexOf('<') > -1) {
 					StringBuffer tmp = new StringBuffer(text);
 					
-					ViewCommon.replaceAll(tmp, "<", "&lt");
-					ViewCommon.replaceAll(tmp, ">", "&gt");
+					ViewCommon.replaceAll(tmp, "<", "&lt;");
+					ViewCommon.replaceAll(tmp, ">", "&gt;");
 					ViewCommon.replaceAll(tmp, "\"", "&quot;");
 					
 					node.setText(tmp.toString());
