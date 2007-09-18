@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.52 2007/09/15 00:25:38 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.53 2007/09/18 11:05:27 andowson Exp $
  */
 public class PostCommon
 {
@@ -105,7 +105,7 @@ public class PostCommon
 		boolean hasCodeBlock = false;
 		
 		if (codeIndex == -1 || codeEndIndex == -1) {
-			post.setText(prepareTextForDisplayExceptCodeTag(post.getText().toString(), post.isBbCodeEnabled()));
+			post.setText(prepareTextForDisplayExceptCodeTag(post.getText().toString(), post.isBbCodeEnabled(), post.isSmiliesEnabled()));
 		}
 		else if (post.isBbCodeEnabled()) {
 			hasCodeBlock = true;
@@ -117,7 +117,7 @@ public class PostCommon
 				codeEndIndex += "[/code]".length();
 				
 				String nonCodeResult = prepareTextForDisplayExceptCodeTag(post.getText().substring(nextStartPos, codeIndex), 
-					post.isBbCodeEnabled());
+					post.isBbCodeEnabled(), post.isSmiliesEnabled());
 				
 				String codeResult = parseCode(post.getText().substring(codeIndex, codeEndIndex));
 				
@@ -131,7 +131,7 @@ public class PostCommon
 			
 			if (nextStartPos > -1) {
 				String nonCodeResult = prepareTextForDisplayExceptCodeTag(post.getText().substring(nextStartPos), 
-					post.isBbCodeEnabled());
+					post.isBbCodeEnabled(), post.isSmiliesEnabled());
 				
 				result.append(nonCodeResult);
 			}
@@ -212,13 +212,15 @@ public class PostCommon
 		return text;
 	}
 	
-	public static String prepareTextForDisplayExceptCodeTag(String text, boolean isBBCodeEnabled)
+	public static String prepareTextForDisplayExceptCodeTag(String text, boolean isBBCodeEnabled, boolean isSmilesEnabled)
 	{
 		if (text == null) {
 			return text;
 		}
 		
-		text = processSmilies(new StringBuffer(text));
+		if (isSmilesEnabled) {
+			text = processSmilies(new StringBuffer(text));
+		}
 		
 		if (isBBCodeEnabled && text.indexOf('[') > -1 && text.indexOf(']') > -1) {
 			for (Iterator iter = BBCodeRepository.getBBCollection().getBbList().iterator(); iter.hasNext();) {

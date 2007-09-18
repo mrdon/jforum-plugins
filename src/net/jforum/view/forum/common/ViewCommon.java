@@ -61,7 +61,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.30 2007/09/13 14:37:49 rafaelsteil Exp $
+ * @version $Id: ViewCommon.java,v 1.31 2007/09/18 11:05:27 andowson Exp $
  */
 public final class ViewCommon
 {
@@ -279,7 +279,7 @@ public final class ViewCommon
 			replaceAll(sb, "\n", "<br />");
 			
 			u.setSignature(sb.toString());
-			u.setSignature(PostCommon.prepareTextForDisplayExceptCodeTag(u.getSignature(), true));
+			u.setSignature(PostCommon.prepareTextForDisplayExceptCodeTag(u.getSignature(), true, true));
 		}
 	}
 }
