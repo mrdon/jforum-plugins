@@ -76,10 +76,10 @@
 						</#if>
 						</td>
 				</tr>
-				<#if (u.location?exists && u.location?length > 0)>
+				<#if (u.from?exists && u.from?length > 0)>
 				<tr>
 					<td valign="middle" nowrap="nowrap" align="right"><span class="gen">${I18n.getMessage("UserProfile.from")}:&nbsp;</span></td>
-					<td><b><span class="gen">${u.location}</span></b></td>
+					<td><b><span class="gen">${u.from}</span></b></td>
 				</tr>
 				</#if>
             
