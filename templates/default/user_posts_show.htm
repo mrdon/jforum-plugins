@@ -71,7 +71,7 @@
 									<td>
 										<span class="gen">
 											<a href="${JForumContext.encodeURL("/forums/show/${forum.id}")}">${forum.name?html}</a> 
-											&raquo; <a href="${JForumContext.encodeURL("/posts/list/${post.topicId}")}">${topic.title?default("Empty")}</a>
+											&raquo; <a href="${JForumContext.encodeURL("/posts/list/${post.topicId}")}">${topic.title?default("Empty")?html}</a>
 											&raquo; <a href="${JForumContext.encodeURL("/posts/preList/${post.topicId}/${post.id}${extension}#${post.id}", "")}">${I18n.getMessage("PostShow.goToMessage")}</a>
 										</span>
 									</td>

@@ -44,7 +44,7 @@
 					<td class="row1" valign="middle" align="center" width="20"><@presentation.folderImage topic/></td>
 					<td class="row1" width="100%">
 						<span class="topictitle">
-						<a href="${JForumContext.encodeURL("/posts/list/${topic.id}")}"><#if (topic.title?length == 0)>No Subject<#else>${topic.title}</#if></a>
+						<a href="${JForumContext.encodeURL("/posts/list/${topic.id}")}"><#if (topic.title?length == 0)>No Subject<#else>${topic.title?html}</#if></a>
 						</span>
 
 						<#if topic.paginate>

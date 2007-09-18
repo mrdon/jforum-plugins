@@ -206,7 +206,7 @@
 							<#if (topic.title?length == 0)>
 								No Subject
 							<#else>
-								${topic.title}
+								${topic.title?html}
 							</#if>
 							</a>
 							</span>

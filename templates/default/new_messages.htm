@@ -55,7 +55,7 @@
 							<a href="${contextPath}/forums/show/${forum.id}${extension}">${forum.name}</a>
 						</td>
 						<td class="row1">
-							<a href="${contextPath}/posts/list/${topic.id}${extension}" class="topictitle"><#if (topic.title?length == 0)>No Subject<#else>${topic.title}</#if></a>
+							<a href="${contextPath}/posts/list/${topic.id}${extension}" class="topictitle"><#if (topic.title?length == 0)>No Subject<#else>${topic.title?html}</#if></a>
 
 							<#if topic.paginate>
 								<span class="gensmall">

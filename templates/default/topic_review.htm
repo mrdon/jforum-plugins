@@ -40,7 +40,7 @@
 						<td width="100%">
 							<img src="${contextPath}/templates/${templateName}/images/icon_minipost.gif" width="12" height="9" border="0" alt="Post" />
 							<span class="postdetails">${post.formatedTime}
-							<span class="gen">&nbsp;</span>&nbsp;&nbsp;&nbsp;${I18n.getMessage("PostShow.subject")}: ${post.subject?default("")} </span>
+							<span class="gen">&nbsp;</span>&nbsp;&nbsp;&nbsp;${I18n.getMessage("PostShow.subject")}: ${post.subject?default("")?html} </span>
 						</td>
 					</tr>
 					<tr>
