@@ -101,11 +101,11 @@
 									<input type="hidden" name="poll_id" value="${poll.id}" />
 									<input type="hidden" name="topic_id" value="${topic.id}" />
 									<div class="poll">
-										<span class="strong">${poll.label}</span>
+										<span class="strong">${poll.label?html}</span>
 										<table class="poll">
 										<#list poll.options as option>
 											<tr>
-												<td><input type="radio" name="poll_option" value="${option.id}">${option.text}</input></td>
+												<td><input type="radio" name="poll_option" value="${option.id}">${option.text?html}</input></td>
 											</tr>
 										</#list>
 										</table>
@@ -204,18 +204,6 @@
 					</tr>
 				</#list>
 				<!-- END OF POST LISTING -->
-
-				<script type="text/javascript">
-				var elements = document.getElementsByTagName("pre");
-
-				for (var i = 0; i < elements.length; i++) {
-					var current = elements[i];
-
-					if (current.bbCodeId == "pre-code" && current.clientWidth == 0) {
-						current.style.width = document.body.clientWidth - 250 + "px";
-					}
-				}
-				</script>
 		
 				<tr align="center">
 					<td class="catbottom" colspan="2" height="28">
@@ -378,6 +366,7 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	limitURLSize();
+
 	<#if moderatorCanEdit || canEditSomeMessage>
 		$(".edit_area").editable("${contextPath}/jforum${extension}?module=ajax&action=savePost", {
 			submit: '${I18n.getMessage("Update")}',

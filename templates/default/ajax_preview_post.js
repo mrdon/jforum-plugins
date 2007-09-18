@@ -1,4 +1,4 @@
-$("#previewSubject").html("${post.subject}");
+$("#previewSubject").html("${post.subject?html}");
 $("#previewMessage").html("${post.text}");
 $("#previewTable").show();
 

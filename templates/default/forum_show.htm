@@ -111,9 +111,9 @@
 						<tr class="${rowColor}">
 							<td width="90%">
 								<#if (topic.topicReplies > 0)>
-									<a href="${JForumContext.encodeURL("/posts/list/${topic.topicId}")}" class="gen">${topic.topicTitle}</a>
+									<a href="${JForumContext.encodeURL("/posts/list/${topic.topicId}")}" class="gen">${topic.topicTitle?html}</a>
 								<#else>
-									<span class="gen">${topic.topicTitle}</span>
+									<span class="gen">${topic.topicTitle?html}</span>
 								</#if>
 							</td>
 							<td align="center"><span class="gen"><a href="javascript:viewPending(${topic.topicId});"><b>${I18n.getMessage("Moderation.Admin.view")}</b></a></span></td>

@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.53 2007/09/18 11:05:27 andowson Exp $
+ * @version $Id: PostCommon.java,v 1.54 2007/09/18 16:47:45 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -289,7 +289,7 @@ public class PostCommon
 	{
 		RequestContext request = JForumExecutionContext.getRequest();
 		
-		p.setSubject(SafeHtml.makeSafe(request.getParameter("subject")));
+		p.setSubject(request.getParameter("subject"));
 		p.setBbCodeEnabled(request.getParameter("disable_bbcode") == null);
 		p.setSmiliesEnabled(request.getParameter("disable_smilies") == null);
 		p.setSignatureEnabled(request.getParameter("attach_sig") != null);

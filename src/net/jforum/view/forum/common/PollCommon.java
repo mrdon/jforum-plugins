@@ -48,11 +48,10 @@ import net.jforum.JForumExecutionContext;
 import net.jforum.context.RequestContext;
 import net.jforum.entities.Poll;
 import net.jforum.entities.PollOption;
-import net.jforum.util.SafeHtml;
 
 /**
  * @author David Almilli
- * @version $Id: PollCommon.java,v 1.9 2007/02/25 13:48:34 rafaelsteil Exp $
+ * @version $Id: PollCommon.java,v 1.10 2007/09/18 16:47:45 rafaelsteil Exp $
  */
 public class PollCommon
 {
@@ -61,7 +60,7 @@ public class PollCommon
 	public static Poll fillPollFromRequest() 
 	{
 		RequestContext request = JForumExecutionContext.getRequest();
-		String label = SafeHtml.makeSafe(request.getParameter("poll_label"));
+		String label = request.getParameter("poll_label");
 
 		if (label == null || label.length() == 0) {
 			return null;
@@ -74,7 +73,7 @@ public class PollCommon
 		int count = request.getIntParameter("poll_option_count");
 
 		for (int i = 0; i <= count; i++) {
-			String option = SafeHtml.makeSafe(request.getParameter("poll_option_" + i));
+			String option = request.getParameter("poll_option_" + i);
 			
 			if (option == null) {
 				continue;

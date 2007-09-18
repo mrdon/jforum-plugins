@@ -133,7 +133,7 @@ function smiliePopup()
 				<tr>
 					<td class="row1">
 						<img src="${contextPath}/templates/${templateName}/images/icon_minipost.gif" alt="Post" />
-						<span class="postdetails" id="previewSubject"> ${I18n.getMessage("PostForm.subject")}: <#if postPreview?exists>${postPreview.subject}</#if></span>
+						<span class="postdetails" id="previewSubject"> ${I18n.getMessage("PostForm.subject")}: <#if postPreview?exists>${postPreview.subject?html}</#if></span>
 					</td>
 				</tr>
 				<tr>
@@ -172,9 +172,9 @@ function smiliePopup()
 						<#if forum?exists>
 							<#if (topic?exists && topic.id > -1)>
 							    <#if isEdit>
-							    	${I18n.getMessage("PostForm.edit")} "${topic.title}"
+							    	${I18n.getMessage("PostForm.edit")} "${topic.title?html}"
 							    <#else>
-									${I18n.getMessage("PostForm.reply")} "${topic.title}"
+									${I18n.getMessage("PostForm.reply")} "${topic.title?html}"
 								</#if>
 							<#else>
 								${I18n.getMessage("PostForm.title")}
@@ -337,7 +337,7 @@ function smiliePopup()
 								<!-- Help box -->
 								<tr>
 									<td>
-										<input name="helpbox" class="helpline" style="FONT-SIZE: 10px; WIDTH: 450px" value="${I18n.getMessage("PostForm.helplineTip")}" size="45" maxlength="100" /> 
+										<input name="helpbox" class="helpline" readonly="readonly" style="FONT-SIZE: 10px; WIDTH: 100%" value="${I18n.getMessage("PostForm.helplineTip")}" size="45" maxlength="100" /> 
 									</td>
 								</tr>
 								

@@ -4,17 +4,12 @@
 		<tr>
 			<td class="bodyline">
 				<script type="text/javascript">
-				<!--
-				//
-				// Should really check the browser to stop this whining ...
-				//
 				function select_switch(status) 
 				{
 					for (i = 0; i < document.privmsg_list.length; i++) {
 						document.privmsg_list.elements[i].checked = status;
 					}
 				}
-				-->
 				</script>
 
 				<table cellspacing="0" cellpadding="0" width="100%" align="center" border="0">
@@ -117,7 +112,7 @@
 										<img src="${contextPath}/templates/${templateName}/images/folder.gif" alt="Folder" />
 									</#if>
 								</td>
-								<td class="row1" valign="middle" width="55%"><span class="topictitle">&nbsp;<a class="topictitle" href="${JForumContext.encodeURL("/pm/read/${pm.id}")}">${pm.post.subject}</a></span></td>
+								<td class="row1" valign="middle" width="55%"><span class="topictitle">&nbsp;<a class="topictitle" href="${JForumContext.encodeURL("/pm/read/${pm.id}")}">${pm.post.subject?html}</a></span></td>
 								<td class="row1" valign="middle" align="center" width="20%">
 									<#if inbox?default(false)>
 									<span class="name">&nbsp;<a class="name" href="${JForumContext.encodeURL("/user/profile/${pm.fromUser.id}")}">${pm.fromUser.username}</a></span>

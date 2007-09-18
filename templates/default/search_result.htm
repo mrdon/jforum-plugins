@@ -56,7 +56,7 @@
 									<img class="icon_folder" src="${contextPath}/images/transp.gif" alt=""/>
 
 									<strong>
-										<a href="${postUrl}">${post.subject}</a>
+										<a href="${postUrl}">${post.subject?html}</a>
 									</strong>, 
 									${I18n.getMessage("Search.postedOn")} <a href="${JForumContext.encodeURL("/forums/show/${post.forum.id}")}">${post.forum.name}</a>, 
 									${I18n.getMessage("Search.postedAt")} ${post.time?datetime}, 
