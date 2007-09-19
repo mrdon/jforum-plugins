@@ -66,7 +66,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserCommon.java,v 1.28 2007/08/27 16:41:14 andowson Exp $
+ * @version $Id: UserCommon.java,v 1.29 2007/09/19 14:08:57 rafaelsteil Exp $
  */
 public class UserCommon 
 {
@@ -100,16 +100,18 @@ public class UserCommon
 			}
 		}
 		
+		SafeHtml safeHtml = new SafeHtml();
+		
 		u.setId(userId);
-		u.setIcq(SafeHtml.makeSafe(request.getParameter("icq")));
-		u.setAim(SafeHtml.makeSafe(request.getParameter("aim")));
-		u.setMsnm(SafeHtml.makeSafe(request.getParameter("msn")));
-		u.setYim(SafeHtml.makeSafe(request.getParameter("yim")));
-		u.setFrom(SafeHtml.makeSafe(request.getParameter("location")));
-		u.setOccupation(SafeHtml.makeSafe(request.getParameter("occupation")));
-		u.setInterests(SafeHtml.makeSafe(request.getParameter("interests")));
-		u.setBiography(SafeHtml.makeSafe(request.getParameter("biography")));
-		u.setSignature(SafeHtml.makeSafe(request.getParameter("signature")));
+		u.setIcq(safeHtml.makeSafe(request.getParameter("icq")));
+		u.setAim(safeHtml.makeSafe(request.getParameter("aim")));
+		u.setMsnm(safeHtml.makeSafe(request.getParameter("msn")));
+		u.setYim(safeHtml.makeSafe(request.getParameter("yim")));
+		u.setFrom(safeHtml.makeSafe(request.getParameter("location")));
+		u.setOccupation(safeHtml.makeSafe(request.getParameter("occupation")));
+		u.setInterests(safeHtml.makeSafe(request.getParameter("interests")));
+		u.setBiography(safeHtml.makeSafe(request.getParameter("biography")));
+		u.setSignature(safeHtml.makeSafe(request.getParameter("signature")));
 		u.setViewEmailEnabled(request.getParameter("viewemail").equals("1"));
 		u.setViewOnlineEnabled(request.getParameter("hideonline").equals("0"));
 		u.setNotifyPrivateMessagesEnabled(request.getParameter("notifypm").equals("1"));
@@ -122,7 +124,7 @@ public class UserCommon
 		u.setNotifyAlways("1".equals(request.getParameter("notify_always")));
 		u.setNotifyText("1".equals(request.getParameter("notify_text")));
 		
-		String website = SafeHtml.makeSafe(request.getParameter("website"));
+		String website = safeHtml.makeSafe(request.getParameter("website"));
 		if (!StringUtils.isEmpty(website) && !website.toLowerCase().startsWith("http://")) {
 			website = "http://" + website;
 		}
@@ -138,7 +140,7 @@ public class UserCommon
 			}
 			
 			if (isAdmin || u.getPassword().equals(currentPassword)) {
-				u.setEmail(SafeHtml.makeSafe(request.getParameter("email")));
+				u.setEmail(safeHtml.makeSafe(request.getParameter("email")));
 				
 				String newPassword = request.getParameter("new_password");
 

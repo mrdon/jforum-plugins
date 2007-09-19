@@ -66,7 +66,7 @@ import org.htmlparser.nodes.TextNode;
  * <li>http://quickwired.com/kallahar/smallprojects/php_xss_filter_function.php
  * <br>
  * @author Rafael Steil
- * @version $Id: SafeHtml.java,v 1.24 2007/09/19 12:30:36 rafaelsteil Exp $
+ * @version $Id: SafeHtml.java,v 1.25 2007/09/19 14:08:57 rafaelsteil Exp $
  */
 public class SafeHtml 
 {
@@ -84,8 +84,6 @@ public class SafeHtml
 		splitAndTrim(ConfigKeys.HTML_LINKS_ALLOW_PROTOCOLS, allowedProtocols);
 	}
 	
-	public SafeHtml() {}
-	
 	private static void splitAndTrim(String s, Set data)
 	{
 		String s1 = SystemGlobals.getValue(s);
@@ -101,51 +99,103 @@ public class SafeHtml
 		}
 	}
 	
-	private String processAllNodes(String contents, boolean onlyEvaluateJs) throws Exception
+	/**
+	 * Given an input, analyze each HTML tag and remove unsecure attributes from them. 
+	 * @param contents The content to verify
+	 * @return the content, secure. 
+	 */
+	public String ensureAllAttributesAreSafe(String contents) 
 	{
 		StringBuffer sb = new StringBuffer(contents.length());
 		
-		Lexer lexer = new Lexer(contents);
-		Node node;
-		
-		while ((node = lexer.nextNode()) != null) {
-			boolean isTextNode = node instanceof TextNode;
+		try {
+			Lexer lexer = new Lexer(contents);
+			Node node;
 			
-			if (isTextNode) {
-				// Text nodes are raw data, so we just
-				// strip off all possible html content
-				String text = node.toHtml();
-				
-				if (text.indexOf('>') > -1 || text.indexOf('<') > -1) {
-					StringBuffer tmp = new StringBuffer(text);
+			while ((node = lexer.nextNode()) != null) {
+				if (node instanceof Tag) {
+					Tag tag = (Tag)node;
 					
-					ViewCommon.replaceAll(tmp, "<", "&lt;");
-					ViewCommon.replaceAll(tmp, ">", "&gt;");
-					ViewCommon.replaceAll(tmp, "\"", "&quot;");
+					this.checkAndValidateAttributes(tag, false);
 					
-					node.setText(tmp.toString());
+					sb.append(tag.toHtml());
+				}
+				else {
+					sb.append(node.toHtml());
 				}
 			}
-			else if (onlyEvaluateJs && node instanceof Tag) {
-				this.checkAndValidateAttributes((Tag)node, true);
-			}
-			
-			if (isTextNode || onlyEvaluateJs || (node instanceof Tag && this.isTagWelcome(node))) {
-				sb.append(node.toHtml());
-			}
-			else {
-				StringBuffer tmp = new StringBuffer(node.toHtml());
-				
-				ViewCommon.replaceAll(tmp, "<", "&lt;");
-				ViewCommon.replaceAll(tmp, ">", "&gt;");
-				
-				sb.append(tmp.toString());
-			}
+		}
+		catch (Exception e) {
+			throw new ForumException("Problems while parsing HTML: " + e, e);
 		}
 		
 		return sb.toString();
 	}
 	
+	/**
+	 * Given an input, makes it safe for HTML displaying. 
+	 * Removes any not allowed HTML tag or attribute, as well
+	 * unwanted Javascript statements inside the tags. 
+	 * @param contents the input to analyze
+	 * @return the modified and safe string
+	 */
+	public String makeSafe(String contents)
+	{
+		if (contents == null || contents.length() == 0) {
+			return contents;
+		}
+		
+		StringBuffer sb = new StringBuffer(contents.length());
+		
+		try {
+			Lexer lexer = new Lexer(contents);
+			Node node;
+			
+			while ((node = lexer.nextNode()) != null) {
+				boolean isTextNode = node instanceof TextNode;
+				
+				if (isTextNode) {
+					// Text nodes are raw data, so we just
+					// strip off all possible html content
+					String text = node.toHtml();
+					
+					if (text.indexOf('>') > -1 || text.indexOf('<') > -1) {
+						StringBuffer tmp = new StringBuffer(text);
+						
+						ViewCommon.replaceAll(tmp, "<", "&lt;");
+						ViewCommon.replaceAll(tmp, ">", "&gt;");
+						ViewCommon.replaceAll(tmp, "\"", "&quot;");
+						
+						node.setText(tmp.toString());
+					}
+				}
+				
+				if (isTextNode || (node instanceof Tag && this.isTagWelcome(node))) {
+					sb.append(node.toHtml());
+				}
+				else {
+					StringBuffer tmp = new StringBuffer(node.toHtml());
+					
+					ViewCommon.replaceAll(tmp, "<", "&lt;");
+					ViewCommon.replaceAll(tmp, ">", "&gt;");
+					
+					sb.append(tmp.toString());
+				}
+			}
+		}
+		catch (Exception e) {
+			throw new ForumException("Error while parsing HTML: " + e, e);
+		}
+		
+		return sb.toString();
+	}
+	
+	/**
+	 * Returns true if a given tag is allowed. 
+	 * Also, it checks and removes any unwanted attribute the tag may contain. 
+	 * @param node The tag node to analyze
+	 * @return true if it is a valid tag. 
+	 */
 	private boolean isTagWelcome(Node node)
 	{
 		Tag tag = (Tag)node;
@@ -159,6 +209,12 @@ public class SafeHtml
 		return true;
 	}
 	
+	/**
+	 * Given a tag, check its attributes, removing those unwanted or not secure 
+	 * @param tag The tag to analyze
+	 * @param checkIfAttributeIsWelcome true if the attribute name should be matched
+	 * against the list of welcome attributes, set in the main configuration file. 
+	 */
 	private void checkAndValidateAttributes(Tag tag, boolean checkIfAttributeIsWelcome)
 	{
 		Vector newAttributes = new Vector();
@@ -242,29 +298,11 @@ public class SafeHtml
 		return true;
 	}
 	
-	private String ensureAllAttributesAreSafe(String contents) throws Exception 
-	{
-		StringBuffer sb = new StringBuffer(contents.length());
-		
-		Lexer lexer = new Lexer(contents);
-		Node node;
-		
-		while ((node = lexer.nextNode()) != null) {
-			if (!(node instanceof TextNode) && node instanceof Tag) {
-				Tag tag = (Tag)node;
-				
-				this.checkAndValidateAttributes(tag, false);
-				
-				sb.append(tag.toHtml());
-			}
-			else {
-				sb.append(node.toHtml());
-			}
-		}
-		
-		return sb.toString();
-	}
-	
+	/**
+	 * Checks if a given address is valid
+	 * @param href The address to check
+	 * @return true if it is valid
+	 */
 	private boolean isHrefValid(String href) 
 	{
 		if (SystemGlobals.getBoolValue(ConfigKeys.HTML_LINKS_ALLOW_RELATIVE)
@@ -282,51 +320,5 @@ public class SafeHtml
 		}
 		
 		return false;
-	}
-	
-	public static String X(String contents)
-	{
-		try {
-			return new SafeHtml().ensureAllAttributesAreSafe(contents);
-		}
-		catch (Exception e) {
-			throw new ForumException("Problems while parsing HTML: " + e, e);
-		}
-	}
-	
-	/**
-	 * Given a string input, tries to avoid all javascript input
-	 * @param contents
-	 * @return the filtered data
-	 */
-	public static String avoidJavascript(String contents)
-	{
-		try {
-			return new SafeHtml().processAllNodes(contents, true);
-		}
-		catch (Exception e) {
-			throw new ForumException("Problems while parsing HTML: " + e, e);
-		}
-	}
-
-	/**
-	 * Parers a text and removes all unwanted tags and javascript code
-	 * @param contents the contents to parse
-	 * @return the filtered data
-	 */
-	public static String makeSafe(String contents)
-	{
-		if (contents == null || contents.trim().length() == 0) {
-			return contents;
-		}
-		
-		try {
-			contents = new SafeHtml().processAllNodes(contents, false);
-		}
-		catch (Exception e) {
-			throw new ForumException("Problems while parsing HTML: " + e, e);
-		}
-		
-		return contents;
 	}
 }

@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.55 2007/09/19 05:43:21 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.56 2007/09/19 14:08:57 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -90,7 +90,7 @@ public class PostCommon
 		ViewCommon.replaceAll(text, "\n", "<br /> ");
 		
 		post.setText(text.toString());
-		post.setText(SafeHtml.avoidJavascript(post.getText()));
+		post.setText(new SafeHtml().makeSafe(post.getText()));
 		
 		processText(post);
 		
@@ -305,7 +305,7 @@ public class PostCommon
 		p.setHtmlEnabled(htmlEnabled && request.getParameter("disable_html") == null);
 
 		if (p.isHtmlEnabled()) {
-			p.setText(SafeHtml.makeSafe(request.getParameter("message")));
+			p.setText(new SafeHtml().makeSafe(request.getParameter("message")));
 		}
 		else {
 			p.setText(request.getParameter("message"));

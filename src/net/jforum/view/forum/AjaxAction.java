@@ -73,7 +73,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: AjaxAction.java,v 1.5 2007/09/09 16:43:55 rafaelsteil Exp $
+ * @version $Id: AjaxAction.java,v 1.6 2007/09/19 14:08:57 rafaelsteil Exp $
  */
 public class AjaxAction extends Command
 {
@@ -237,7 +237,7 @@ public class AjaxAction extends Command
 		post.setSmiliesEnabled("true".equals(this.request.getParameter("smilies")));
 		
 		if (post.isHtmlEnabled()) {
-			post.setText(SafeHtml.makeSafe(post.getText()));
+			post.setText(new SafeHtml().makeSafe(post.getText()));
 		}
 		
 		post = PostCommon.preparePostForDisplay(post);
