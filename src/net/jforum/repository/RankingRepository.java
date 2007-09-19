@@ -54,7 +54,7 @@ import net.jforum.exceptions.RankingLoadException;
 
 /**
  * @author Rafael Steil
- * @version $Id: RankingRepository.java,v 1.13 2007/03/24 23:46:15 rafaelsteil Exp $
+ * @version $Id: RankingRepository.java,v 1.15 2007/09/19 02:51:11 rafaelsteil Exp $
  */
 public class RankingRepository implements Cacheable
 {
@@ -92,10 +92,25 @@ public class RankingRepository implements Cacheable
 	 * returned according to the range to which this total belongs to. 
 	 * @return String with the ranking title. 
 	 */	
-	public static String getRankTitle(int total) 
+	public static String getRankTitle(int rankId, int total) 
+	{
+		String title = null;
+		
+		if (rankId > 0) {
+			title = getRankTitleById(rankId);
+		}
+		
+		if (title == null) {
+			title = getRankTitleByPosts(total);
+		}
+		
+		return title;
+	}
+	
+	private static String getRankTitleByPosts(int total)
 	{
 		Ranking lastRank = new Ranking();
-
+		
 		List entries = (List)cache.get(FQN, ENTRIES);
 		
 		for (Iterator iter = entries.iterator(); iter.hasNext(); ) {
@@ -114,7 +129,7 @@ public class RankingRepository implements Cacheable
 		return lastRank.getTitle();
 	}
 
-	public static String getRankTitleById(int rankId)
+	private static String getRankTitleById(int rankId)
 	{
 		Ranking r = new Ranking();
 		r.setId(rankId);
@@ -122,13 +137,8 @@ public class RankingRepository implements Cacheable
 		List l = (List)cache.get(FQN, ENTRIES);
 		int index = l.indexOf(r);
 		
-		if (index > -1) {
-			r = (Ranking)l.get(index);
-		}
-		else {
-			r.setTitle("");
-		}
-		
-		return r.getTitle();
+		return index > -1
+			? ((Ranking)l.get(index)).getTitle()
+			: null;
 	}
 }

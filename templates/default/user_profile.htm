@@ -35,13 +35,7 @@
 				</#if>
 			</#if>
 			<span class="postdetails">
-				${I18n.getMessage("PostShow.ranking")}: 
-				
-				<#if (u.rankId > 0)>
-					${rank.getRankTitleById(u.rankId, u.totalPosts)}
-				<#else>
-					${rank.getRankTitle(u.totalPosts)}
-				</#if>
+				${I18n.getMessage("PostShow.ranking")}: ${rank.getRankTitle(u.rankId, u.totalPosts)}
 			
 				<#if karmaEnabled>
 					<br />${I18n.getMessage("Karma.karma")}: <script type="text/javascript">writeStars(${u.karma.karmaPoints}, ${u.id});</script>
