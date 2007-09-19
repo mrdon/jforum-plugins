@@ -95,7 +95,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.74 2007/09/15 09:25:11 andowson Exp $
+ * @version $Id: InstallAction.java,v 1.75 2007/09/19 23:59:48 andowson Exp $
  */
 public class InstallAction extends Command
 {
@@ -676,12 +676,7 @@ public class InstallAction extends Command
 		
 		SystemGlobals.reset();
 		
-		SystemGlobals.initGlobals(appPath, appPath + "/WEB-INF/config/SystemGlobals.properties");
-        SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.DATABASE_DRIVER_CONFIG));
-        
-        if (new File(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG)).exists()) {
-            SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG));
-        }
+		ConfigLoader.startSystemglobals(appPath);
 	}
 	
 	private boolean updateAdminPassword(Connection conn)

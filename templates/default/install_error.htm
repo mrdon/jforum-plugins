@@ -29,7 +29,7 @@ td.cathead,td.catsides,td.catleft,td.catright,td.catbottom { background-image: u
 							<span class="maintitle">JForum ${version} ${I18n.getMessage("Install.installation")}<br/>
 							<font color="#ff0000">${I18n.getMessage("Install.stepError")}</font>
 							</span>
-							<br/><br/>
+							<br /><br />
 							<span class="gen">
 							<font color="#ff0000"><b>${I18n.getMessage("Install.forHelpAccess")} <a href="http://www.jforum.net/install.htm">http://www.jforum.net/install.htm</a></b></font>
 							</span>
@@ -52,13 +52,13 @@ td.cathead,td.catsides,td.catleft,td.catright,td.catbottom { background-image: u
 						<td class="row2">
 							<p>
 							<img src="${contextPath}/images/smilies/d6741711aa045b812616853b5507fd2a.gif" border="0" align="middle"> 
-							<span class="gen">${message}</span><br/>
+							<span class="gen">${message}</span><br />
 							</p>
 
 							<#if exceptionMessage?exists>
 							<p align="center">
 							<span class="gensmall">
-							<b>Error raised: </b><br>
+							<b>${I18n.getMessage("Install.errorRaised")}: </b><br>
 							<textarea readonly rows="6" cols="100" wrap="virtual">${exceptionMessage}</textarea>
 							</span>
 							</p>
