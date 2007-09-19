@@ -1,44 +1,26 @@
 // bbCode control by
 // subBlue design
 // www.subBlue.com
-
-
-// JavaScript enhanced version of bbcode insertion tags
-// Better insertion tags in the textarea field
-// Tested on:
-//   - Internet Explorer 6.0
-//   - Mozilla 1.7 (Windows version)
-//   - Mozilla 1.7 (Linux-Gentoo version)
-// Enhancements:
-// Don't loose the text scroll position when insert a code
-
-//* Javascript substitution for correct working on explorer & mozilla browsers
-//* by RadikalQ3 (radikal AT q3 dot nu), helping to Gentoo comunity.
-
-// Startup variables
 var imageTag = false;
 var theSelection = false;
 var pollOptionCount = -1;
 
-// Check for Browser & Platform for PC & IE specific bits
-// More details from: http://www.mozilla.org/docs/web-developer/sniffer/browser_type${extension}
 var clientPC = navigator.userAgent.toLowerCase(); // Get client info
 var clientVer = parseInt(navigator.appVersion); // Get browser version
 
 var is_ie = ((clientPC.indexOf("msie") != -1) && (clientPC.indexOf("opera") == -1));
 var is_nav  = ((clientPC.indexOf('mozilla')!=-1) && (clientPC.indexOf('spoofer')==-1)
-                && (clientPC.indexOf('compatible') == -1) && (clientPC.indexOf('opera')==-1)
-                && (clientPC.indexOf('webtv')==-1) && (clientPC.indexOf('hotjava')==-1));
+	&& (clientPC.indexOf('compatible') == -1) && (clientPC.indexOf('opera')==-1)
+	&& (clientPC.indexOf('webtv')==-1) && (clientPC.indexOf('hotjava')==-1));
 
 var is_win   = ((clientPC.indexOf("win")!=-1) || (clientPC.indexOf("16bit") != -1));
 var is_mac    = (clientPC.indexOf("mac")!=-1);
 
-
 // Define the bbCode tags
 bbcode = new Array();
-bbtags = new Array('[b]','[/b]','[i]','[/i]','[u]','[/u]','[quote]','[/quote]','[code]','[/code]','[list]','[/list]','[img]','[/img]','[url]','[/url]');
+bbtags = new Array('[b]','[/b]','[i]','[/i]','[u]','[/u]','[quote]','[/quote]','[code]','[/code]','[list]','[/list]',
+	'[img]','[/img]','[url]','[/url]', '[google]', '[/google]', '[youtube]', '[/youtube]', '[flash]', '[/flash]', '[wmv]', '[/wmv]');
 imageTag = false;
-
 
 var openBBtags = new Array();
 

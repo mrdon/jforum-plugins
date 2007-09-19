@@ -10,3 +10,7 @@ w_help = "${I18n.getMessage("PostForm.helplineInsertUrl")}: [url]http://url[/url
 a_help = "${I18n.getMessage("PostForm.helplineCloseAllMarks")}";
 s_help = "${I18n.getMessage("PostForm.helplineColor")}: [color=red]${I18n.getMessage("PostForm.helplineText")}[/color]  ${I18n.getMessage("PostForm.helplineColorTip")} color=#FF0000";
 f_help = "${I18n.getMessage("PostForm.helplineFont")}: [size=x-small]${I18n.getMessage("PostForm.helplineSmallText")}[/size]";
+g_help = "Google: [google]${I18n.getMessage("PostForm.helplineGoogle")}[/google]";
+y_help = "Youtube: [youtube]${I18n.getMessage("PostForm.helplineYoutube")}[/youtube]";
+k_help = "Flash: [flash]${I18n.getMessage("PostForm.helplineFlash")}[/flash]";
+v_help = "WMV: [wmv]${I18n.getMessage("PostForm.helplineWmv")}[/wmv]";
