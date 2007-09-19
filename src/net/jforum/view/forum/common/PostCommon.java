@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.56 2007/09/19 14:08:57 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.57 2007/09/19 14:35:12 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -89,10 +89,14 @@ public class PostCommon
 		// cause some regular expressions to fail
 		ViewCommon.replaceAll(text, "\n", "<br /> ");
 		
+		SafeHtml safeHtml = new SafeHtml();
+		
 		post.setText(text.toString());
-		post.setText(new SafeHtml().makeSafe(post.getText()));
+		post.setText(safeHtml.makeSafe(post.getText()));
 		
 		processText(post);
+		
+		post.setText(safeHtml.ensureAllAttributesAreSafe(post.getText()));
 		
 		return post;
 	}
