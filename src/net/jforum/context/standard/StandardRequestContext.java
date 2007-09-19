@@ -55,7 +55,7 @@ import net.jforum.context.SessionContext;
 /**
  * Request context non-dependent of HTTP 
  * @author Rafael Steil
- * @version $Id: StandardRequestContext.java,v 1.4 2007/08/01 22:30:05 rafaelsteil Exp $
+ * @version $Id: StandardRequestContext.java,v 1.5 2007/09/19 05:43:22 rafaelsteil Exp $
  */
 public class StandardRequestContext implements RequestContext
 {
@@ -78,6 +78,14 @@ public class StandardRequestContext implements RequestContext
 		}
 		
 		this.data.put(name, value);
+	}
+	
+	/**
+	 * @see net.jforum.context.RequestContext#replaceParameter(java.lang.String, java.lang.Object)
+	 */
+	public void replaceParameter(String name, Object value) 
+	{
+		this.addParameter(name, value);
 	}
 
 	/**

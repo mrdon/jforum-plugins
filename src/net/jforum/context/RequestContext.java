@@ -389,14 +389,27 @@ public interface RequestContext
 
 	/**
 	 * Adds a new parameter to the request.
+	 * If there is already one parameter which name is equals to the 
+	 * value of the "name" parameter, a set of values associated to that
+	 * name will be generated, thus requiring a call to getParameterValues()
+	 * to retrieve them all. 
 	 * 
-	 * If you want to have one more, or to modify an existing one parameter, you should use this
-	 * method to the job.
+	 * If you want to <strong>replace</strong> a possible existing value, 
+	 * use {@link #replaceParameter(String, Object)}
 	 * 
 	 * @param name Parameter name
 	 * @param value Parameter value
 	 */
 	public void addParameter(String name, Object value);
+	
+	/**
+	 * Replace or add a parameter. If it does not exist, it is added to the list, 
+	 * otherwise the existing value will be replaced by the new value. 
+	 * 
+	 * @param name
+	 * @param value
+	 */
+	public void replaceParameter(String name, Object value);
 
 	/**
 	 * Gets some request parameter as <code>Object</code>. This method may be used when you have

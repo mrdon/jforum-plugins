@@ -55,7 +55,7 @@ import freemarker.template.Configuration;
  * General utilities for the test cases.
  * 
  * @author Rafael Steil
- * @version $Id: TestCaseUtils.java,v 1.22 2006/09/09 20:46:25 rafaelsteil Exp $
+ * @version $Id: TestCaseUtils.java,v 1.23 2007/09/19 05:43:23 rafaelsteil Exp $
  */
 public class TestCaseUtils
 {
@@ -96,7 +96,7 @@ public class TestCaseUtils
 	{
 		if (utils.rootDir == null) {
 			utils.rootDir = utils.getClass().getResource("/").getPath();
-			utils.rootDir = utils.rootDir.substring(0, utils.rootDir.length() - "/WEB-INF/classes".length());
+			utils.rootDir = utils.rootDir.substring(0, utils.rootDir.length() - "/tests/bin".length());
 		}
 		
 		return utils.rootDir;
@@ -106,7 +106,7 @@ public class TestCaseUtils
 	{
 		getRootDir();
 		SystemGlobals.initGlobals(this.rootDir, this.rootDir
-				+ "/WEB-INF/config/SystemGlobals.properties");
+			+ "/WEB-INF/config/SystemGlobals.properties");
 		
 		if (new File(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG)).exists()) {
         	SystemGlobals.loadAdditionalDefaults(SystemGlobals.getValue(ConfigKeys.INSTALLATION_CONFIG));
@@ -115,7 +115,7 @@ public class TestCaseUtils
 		// Configure the template engine
         Configuration templateCfg = new Configuration();
         templateCfg.setDirectoryForTemplateLoading(new File(SystemGlobals.getApplicationPath()
-                + "/templates"));
+        	+ "/templates"));
         templateCfg.setTemplateUpdateDelay(0);
         JForumExecutionContext.setTemplateConfig(templateCfg);
 

@@ -73,7 +73,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Rafael Steil
- * @version $Id: WebRequestContext.java,v 1.11 2007/09/02 16:57:19 rafaelsteil Exp $
+ * @version $Id: WebRequestContext.java,v 1.12 2007/09/19 05:43:23 rafaelsteil Exp $
  */
 public class WebRequestContext extends HttpServletRequestWrapper implements RequestContext
 {
@@ -340,15 +340,6 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 		return this.query.get(parameter);
 	}
 	
-	/**
-	 * Adds a new parameter to the request.
-	 * 
-	 * If you want to have one more, or to modify an existing one parameter,
-	 * you should use this method to the job. 
-	 * 
-	 * @param name Parameter name
-	 * @param value Parameter value
-	 */
 	public void addParameter(String name, Object value)
 	{
 		if (!this.query.containsKey(name)) {
@@ -369,6 +360,11 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 			l.add(value);
 			this.query.put(name, l);
 		}
+	}
+	
+	public void replaceParameter(String name, Object value)
+	{
+		this.query.put(name, value);
 	}
 	
 	/**
