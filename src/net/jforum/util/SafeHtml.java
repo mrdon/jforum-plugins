@@ -66,7 +66,7 @@ import org.htmlparser.nodes.TextNode;
  * <li>http://quickwired.com/kallahar/smallprojects/php_xss_filter_function.php
  * <br>
  * @author Rafael Steil
- * @version $Id: SafeHtml.java,v 1.23 2007/09/16 13:57:11 andowson Exp $
+ * @version $Id: SafeHtml.java,v 1.24 2007/09/19 12:30:36 rafaelsteil Exp $
  */
 public class SafeHtml 
 {
@@ -103,7 +103,7 @@ public class SafeHtml
 	
 	private String processAllNodes(String contents, boolean onlyEvaluateJs) throws Exception
 	{
-		StringBuffer sb = new StringBuffer(512);
+		StringBuffer sb = new StringBuffer(contents.length());
 		
 		Lexer lexer = new Lexer(contents);
 		Node node;
@@ -127,7 +127,7 @@ public class SafeHtml
 				}
 			}
 			else if (onlyEvaluateJs && node instanceof Tag) {
-				this.checkAndValidateAttributes((Tag)node);
+				this.checkAndValidateAttributes((Tag)node, true);
 			}
 			
 			if (isTextNode || onlyEvaluateJs || (node instanceof Tag && this.isTagWelcome(node))) {
@@ -154,12 +154,12 @@ public class SafeHtml
 			return false;
 		}
 		
-		this.checkAndValidateAttributes(tag);
+		this.checkAndValidateAttributes(tag, true);
 		
 		return true;
 	}
 	
-	private void checkAndValidateAttributes(Tag tag)
+	private void checkAndValidateAttributes(Tag tag, boolean checkIfAttributeIsWelcome)
 	{
 		Vector newAttributes = new Vector();
 		
@@ -168,7 +168,10 @@ public class SafeHtml
 
 			String name = a.getName();
 			
-			if (name != null) {
+			if (name == null) {
+				newAttributes.add(a);
+			}
+			else {
 				name = name.toUpperCase();
 				
 				if (a.getValue() == null) {
@@ -176,29 +179,14 @@ public class SafeHtml
 					continue;
 				}
 				
-				if (!welcomeAttributes.contains(name) 
-					|| (name.length() >= 2 && name.charAt(0) == 'O' && name.charAt(1) == 'N')) {
-					continue;
-				}
-				
 				String value = a.getValue().toLowerCase();
 				
-				if (value.indexOf('\n') > -1 || value.indexOf('\r') > -1 
-					|| value.indexOf('\0') > -1) {
+				if (checkIfAttributeIsWelcome && !this.isAttributeWelcome(name)) {
 					continue;
 				}
 				
-				if (("HREF".equals(name) || "SRC".equals(name))) {
-					if (!this.isHrefValid(value)) {
-						continue;
-					}
-				}
-				else if ("STYLE".equals(name)) {
-					// It is much more a try to not allow constructions
-					// like style="background-color: url(javascript:xxxx)" than anything else
-					if (value.indexOf('(') > -1) {
-						continue;
-					}
+				if (!this.isAttributeSafe(name, value)) {
+					continue;
 				}
 					
 				if (a.getValue().indexOf("&#") > -1) {
@@ -207,12 +195,74 @@ public class SafeHtml
 				
 				newAttributes.add(a);
 			}
-			else {
-				newAttributes.add(a);
-			}
 		}
 		
 		tag.setAttributesEx(newAttributes);
+	}
+	
+	/**
+	 * Check if the given attribute name is in the list of allowed attributes
+	 * @param name the attribute name
+	 * @return true if it is an allowed attribute name
+	 */
+	private boolean isAttributeWelcome(String name)
+	{
+		return welcomeAttributes.contains(name);
+	}
+
+	/**
+	 * Check if the attribute is safe, checking either its name and value. 
+	 * @param name the attribute name
+	 * @param value the attribute value
+	 * @return true if it is a safe attribute
+	 */
+	private boolean isAttributeSafe(String name, String value)
+	{
+		if (name.length() >= 2 && name.charAt(0) == 'O' && name.charAt(1) == 'N') {
+			return false;
+		}
+		
+		if (value.indexOf('\n') > -1 || value.indexOf('\r') > -1 || value.indexOf('\0') > -1) {
+			return false;
+		}
+			
+		if (("HREF".equals(name) || "SRC".equals(name))) {
+			if (!this.isHrefValid(value)) {
+				return false;
+			}
+		}
+		else if ("STYLE".equals(name)) {
+			// It is much more a try to not allow constructions
+			// like style="background-color: url(javascript:xxxx)" than anything else
+			if (value.indexOf('(') > -1) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	private String ensureAllAttributesAreSafe(String contents) throws Exception 
+	{
+		StringBuffer sb = new StringBuffer(contents.length());
+		
+		Lexer lexer = new Lexer(contents);
+		Node node;
+		
+		while ((node = lexer.nextNode()) != null) {
+			if (!(node instanceof TextNode) && node instanceof Tag) {
+				Tag tag = (Tag)node;
+				
+				this.checkAndValidateAttributes(tag, false);
+				
+				sb.append(tag.toHtml());
+			}
+			else {
+				sb.append(node.toHtml());
+			}
+		}
+		
+		return sb.toString();
 	}
 	
 	private boolean isHrefValid(String href) 
@@ -232,6 +282,16 @@ public class SafeHtml
 		}
 		
 		return false;
+	}
+	
+	public static String X(String contents)
+	{
+		try {
+			return new SafeHtml().ensureAllAttributesAreSafe(contents);
+		}
+		catch (Exception e) {
+			throw new ForumException("Problems while parsing HTML: " + e, e);
+		}
 	}
 	
 	/**

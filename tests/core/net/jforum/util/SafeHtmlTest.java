@@ -7,7 +7,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: SafeHtmlTest.java,v 1.10 2006/03/03 20:55:51 rafaelsteil Exp $
+ * @version $Id: SafeHtmlTest.java,v 1.11 2007/09/19 12:30:35 rafaelsteil Exp $
  */
 public class SafeHtmlTest extends TestCase
 {
@@ -49,6 +49,26 @@ public class SafeHtmlTest extends TestCase
 		sb.append("<b>heeelooo, nurse</b>");
 		sb.append("<b >1, 2, 3</b>");
 		this.expected = sb.toString();
+	}
+	
+	public void testJavascriptInsideURLTagExpectItToBeRemoved()
+	{
+		String input = "<a class=\"snap_shots\" rel=\"nofollow\" target=\"_new\" onmouseover=\"javascript:alert('test2');\" href=\"before\">test</a>";
+		String expected = "<a class=\"snap_shots\" rel=\"nofollow\" target=\"_new\"  >test</a>";
+		
+		String result = SafeHtml.X(input);
+		
+		assertEquals(expected, result);
+	}
+	
+	public void testJavascriptInsideImageTagExpectItToBeRemoved()
+	{
+		String input = "<img border=\"0\" onmouseover=\"javascript:alert('buuuh!!!');\"\"\" src=\"javascript:alert('hi from an alert!');\"/>";
+		String expected = "<img border=\"0\" \"\" />";
+		
+		String result = SafeHtml.X(input);
+		
+		assertEquals(expected, result);
 	}
 	
 	public void testIframe() 
