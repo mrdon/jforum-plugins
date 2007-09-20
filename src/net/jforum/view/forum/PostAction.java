@@ -103,7 +103,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.196 2007/09/20 16:07:10 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.197 2007/09/20 16:47:27 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -1410,7 +1410,7 @@ public class PostAction extends Command
 		boolean attachmentsEnabled = SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED, forumId);
 		boolean attachmentsDownload = SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD, forumId);
 		
-		if (!attachmentsEnabled || (!attachmentsEnabled && !attachmentsDownload)) {
+		if (!attachmentsEnabled && !attachmentsDownload) {
 			this.setTemplateName(TemplateKeys.POSTS_CANNOT_DOWNLOAD);
 			this.context.put("message", I18n.getMessage("Attachments.featureDisabled"));
 			return;
