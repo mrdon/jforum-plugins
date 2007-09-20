@@ -73,7 +73,7 @@ import freemarker.template.Template;
  * Dispatch emails to the world. 
  * 
  * @author Rafael Steil
- * @version $Id: Spammer.java,v 1.35 2007/09/09 22:59:23 rafaelsteil Exp $
+ * @version $Id: Spammer.java,v 1.36 2007/09/20 16:07:08 rafaelsteil Exp $
  */
 public class Spammer
 {
@@ -154,7 +154,7 @@ public class Spammer
 	                        	
 	                        	Address address = new InternetAddress(user.getEmail());
 	                        	
-	                        	logger.info("Sending mail to: " + user.getEmail());
+	                        	logger.debug("Sending mail to: " + user.getEmail());
 	                        	
 	                        	this.message.setRecipient(Message.RecipientType.TO, address);	                            
 	                        	transport.sendMessage(this.message, new Address[] { address });
@@ -187,7 +187,7 @@ public class Spammer
                 	}
                 	
                 	Address address = new InternetAddress(user.getEmail());
-                	logger.info("Sending mail to: " + user.getEmail());
+                	logger.debug("Sending mail to: " + user.getEmail());
                 	this.message.setRecipient(Message.RecipientType.TO,address);
                     Transport.send(this.message, new Address[] { address });
                     

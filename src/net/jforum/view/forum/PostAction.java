@@ -103,7 +103,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.195 2007/09/13 04:02:29 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.196 2007/09/20 16:07:10 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -1328,7 +1328,7 @@ public class PostAction extends Command
 				+ SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION));
 		}
 		
-		this.request.addParameter("log_original_message", p.getText());
+		this.request.addOrReplaceParameter("log_original_message", p.getText());
 		ModerationHelper moderationHelper = new ModerationHelper();
 		ModerationLog moderationLog = moderationHelper.buildModerationLogFromRequest();
 		moderationLog.getPosterUser().setId(p.getUserId());
@@ -1340,13 +1340,15 @@ public class PostAction extends Command
 		ForumRepository.reloadForum(p.getForumId());
 	}
 
-	private void watch(TopicDAO tm, int topicId, int userId)  {
+	private void watch(TopicDAO tm, int topicId, int userId)  
+	{
 		if (!tm.isUserSubscribed(topicId, userId)) {
 			tm.subscribeUser(topicId, userId);
 		}
 	}
 
-	public void watch()  {
+	public void watch()  
+	{
 		int topicId = this.request.getIntParameter("topic_id");
 		int userId = SessionFacade.getUserSession().getUserId();
 
@@ -1354,8 +1356,12 @@ public class PostAction extends Command
 		this.list();
 	}
 
-	public void unwatch()  {
-		if (SessionFacade.isLogged()) {
+	public void unwatch()  
+	{
+		if (!SessionFacade.isLogged()) {
+			this.setTemplateName(ViewCommon.contextToLogin());
+		}
+		else {
 			int topicId = this.request.getIntParameter("topic_id");
 			int userId = SessionFacade.getUserSession().getUserId();
 			int start = ViewCommon.getStartPage();
@@ -1374,45 +1380,61 @@ public class PostAction extends Command
 			this.context.put("pageTitle", I18n.getMessage("PostShow.unwatch"));
 			this.context.put("message", I18n.getMessage("ForumBase.unwatched", new String[] { returnPath }));
 		}
-		else {
-			this.setTemplateName(ViewCommon.contextToLogin());
-		}
 	}
 	
 	public void downloadAttach()
 	{
-		try
-		{
-			if (SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED) &&
-					!SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD)) {
-				this.setTemplateName(TemplateKeys.POSTS_CANNOT_DOWNLOAD);
-				this.context.put("message", I18n.getMessage("Attachments.featureDisabled"));
-				return;
-			} else if (!SessionFacade.isLogged() && !SystemGlobals.getBoolValue(ConfigKeys.ATTACHMENTS_ANONYMOUS)) {
+		int id = this.request.getIntParameter("attach_id");
+		
+		if (!SessionFacade.isLogged() && !SystemGlobals.getBoolValue(ConfigKeys.ATTACHMENTS_ANONYMOUS)) {
+			String referer = this.request.getHeader("Referer");
+			
+			if (referer != null) {
+				this.setTemplateName(ViewCommon.contextToLogin(referer));
+			}
+			else {
 				this.setTemplateName(ViewCommon.contextToLogin());
-				return;
 			}
+			
+			return;
+		}
+		
+		AttachmentDAO am = DataAccessDriver.getInstance().newAttachmentDAO();
+		Attachment a = am.selectAttachmentById(id);
+		
+		PostDAO postDao = DataAccessDriver.getInstance().newPostDAO();
+		Post post = postDao.selectById(a.getPostId());
+		
+		String forumId = Integer.toString(post.getForumId());
+		
+		boolean attachmentsEnabled = SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_ENABLED, forumId);
+		boolean attachmentsDownload = SecurityRepository.canAccess(SecurityConstants.PERM_ATTACHMENTS_DOWNLOAD, forumId);
+		
+		if (!attachmentsEnabled || (!attachmentsEnabled && !attachmentsDownload)) {
+			this.setTemplateName(TemplateKeys.POSTS_CANNOT_DOWNLOAD);
+			this.context.put("message", I18n.getMessage("Attachments.featureDisabled"));
+			return;
+		}
+		
+		String filename = SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR)
+			+ "/"
+			+ a.getInfo().getPhysicalFilename();
 
-			int id = this.request.getIntParameter("attach_id");
+		if (!new File(filename).exists()) {
+			this.setTemplateName(TemplateKeys.POSTS_ATTACH_NOTFOUND);
+			this.context.put("message", I18n.getMessage("Attachments.notFound"));
+			return;
+		}
+		
+		FileInputStream fis = null;
+		OutputStream os = null;
 
-			AttachmentDAO am = DataAccessDriver.getInstance().newAttachmentDAO();
-			Attachment a = am.selectAttachmentById(id);
-
-			String filename = SystemGlobals.getValue(ConfigKeys.ATTACHMENTS_STORE_DIR)
-				+ "/"
-				+ a.getInfo().getPhysicalFilename();
-
-			if (!new File(filename).exists()) {
-				this.setTemplateName(TemplateKeys.POSTS_ATTACH_NOTFOUND);
-				this.context.put("message", I18n.getMessage("Attachments.notFound"));
-				return;
-			}
-
+		try {
 			a.getInfo().setDownloadCount(a.getInfo().getDownloadCount() + 1);
 			am.updateAttachment(a);
 
-			FileInputStream fis = new FileInputStream(filename);
-			OutputStream os = response.getOutputStream();
+			fis = new FileInputStream(filename);
+			os = response.getOutputStream();
 
 			if (am.isPhysicalDownloadMode(a.getInfo().getExtension().getExtensionGroupId())) {
 				this.response.setContentType("application/octet-stream");
@@ -1439,14 +1461,22 @@ public class PostAction extends Command
 				os.write(b, 0, c);
 			}
 
-			fis.close();
-			os.close();
-
+			
 			JForumExecutionContext.enableCustomContent(true);
 		}
-		catch (IOException e)
-		{
+		catch (IOException e) {
 			throw new ForumException(e);
+		}
+		finally {
+			if (fis != null) {
+				try { fis.close(); }
+				catch (Exception e) {}
+			}
+			
+			if (os != null) {
+				try { os.close(); }
+				catch (Exception e) {}
+			}
 		}
 	}
 	
@@ -1485,7 +1515,8 @@ public class PostAction extends Command
 		return false;
 	}
 	
-	private boolean anonymousPost(int forumId)  {
+	private boolean anonymousPost(int forumId)  
+	{
 		// Check if anonymous posts are allowed
 		if (!SessionFacade.isLogged()
 				&& !SecurityRepository.canAccess(SecurityConstants.PERM_ANONYMOUS_POST, Integer.toString(forumId))) {

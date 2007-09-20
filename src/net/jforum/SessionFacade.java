@@ -61,7 +61,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: SessionFacade.java,v 1.39 2007/07/31 13:52:47 rafaelsteil Exp $
+ * @version $Id: SessionFacade.java,v 1.40 2007/09/20 16:07:10 rafaelsteil Exp $
  */
 public class SessionFacade implements Cacheable
 {
@@ -199,7 +199,7 @@ public class SessionFacade implements Cacheable
 			return;
 		}
 		
-		logger.info("Removing session " + sessionId);
+		logger.debug("Removing session " + sessionId);
 		
 		synchronized (FQN) {
 			UserSession us = getUserSession(sessionId);

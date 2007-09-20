@@ -395,7 +395,7 @@ public interface RequestContext
 	 * to retrieve them all. 
 	 * 
 	 * If you want to <strong>replace</strong> a possible existing value, 
-	 * use {@link #replaceParameter(String, Object)}
+	 * use {@link #addOrReplaceParameter(String, Object)}
 	 * 
 	 * @param name Parameter name
 	 * @param value Parameter value
@@ -409,7 +409,7 @@ public interface RequestContext
 	 * @param name
 	 * @param value
 	 */
-	public void replaceParameter(String name, Object value);
+	public void addOrReplaceParameter(String name, Object value);
 
 	/**
 	 * Gets some request parameter as <code>Object</code>. This method may be used when you have

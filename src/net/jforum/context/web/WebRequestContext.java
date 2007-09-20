@@ -73,7 +73,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Rafael Steil
- * @version $Id: WebRequestContext.java,v 1.12 2007/09/19 05:43:23 rafaelsteil Exp $
+ * @version $Id: WebRequestContext.java,v 1.13 2007/09/20 16:07:09 rafaelsteil Exp $
  */
 public class WebRequestContext extends HttpServletRequestWrapper implements RequestContext
 {
@@ -362,7 +362,7 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 		}
 	}
 	
-	public void replaceParameter(String name, Object value)
+	public void addOrReplaceParameter(String name, Object value)
 	{
 		this.query.put(name, value);
 	}

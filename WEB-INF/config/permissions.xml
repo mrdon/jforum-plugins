@@ -106,9 +106,8 @@
 			<sql ref="forums"/>
 		</permission>
 
-		<permission id="perm_attachments_download" title="Allow download of existing Attachments" type="single">
-			<option value="deny" description="No"/>
-			<option value="allow" description="Yes"/>
+		<permission id="perm_attachments_download" title="Allow download of existing Attachments. &lt;br&gt;&lt;i&gt;If the previous role is allowed for the same forum, then downloads will automatically be allowed, no matter what is chosen here.&lt;i&gt; " type="multiple">
+			<sql ref="forums"/>
 		</permission>
 	</section>
 

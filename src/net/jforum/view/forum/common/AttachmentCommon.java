@@ -80,7 +80,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: AttachmentCommon.java,v 1.35 2007/09/19 05:43:21 rafaelsteil Exp $
+ * @version $Id: AttachmentCommon.java,v 1.36 2007/09/20 16:07:08 rafaelsteil Exp $
  */
 public class AttachmentCommon
 {
@@ -414,7 +414,7 @@ public class AttachmentCommon
 			attachIds.append(a.getId()).append(',');
 		}
 		
-		this.request.replaceParameter("delete_attach", attachIds.toString());
+		this.request.addOrReplaceParameter("delete_attach", attachIds.toString());
 		this.editAttachments(postId, forumId);
 	}
 }

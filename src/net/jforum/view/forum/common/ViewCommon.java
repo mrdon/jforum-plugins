@@ -61,7 +61,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: ViewCommon.java,v 1.31 2007/09/18 11:05:27 andowson Exp $
+ * @version $Id: ViewCommon.java,v 1.32 2007/09/20 16:07:08 rafaelsteil Exp $
  */
 public final class ViewCommon
 {
@@ -92,6 +92,10 @@ public final class ViewCommon
 		context.put("start", new Integer(start));
 	}
 	
+	/**
+	 * Prepares the template context to show the login page, using the current URI as return path.
+	 * @return TemplateKeys.USER_LOGIN
+	 */
 	public static String contextToLogin() 
 	{
 		RequestContext request = JForumExecutionContext.getRequest();
@@ -100,6 +104,16 @@ public final class ViewCommon
 		String query = request.getQueryString();
 		String returnPath = query == null ? uri : uri + "?" + query;
 		
+		return contextToLogin(returnPath);
+	}
+	
+	/**
+	 * Prepares the template context to show the login page, using "returnPath" as return path
+	 * @param returnPath the URI to use as return path
+	 * @return TemplateKeys.USER_LOGIN
+	 */
+	public static String contextToLogin(String returnPath)
+	{
 		JForumExecutionContext.getTemplateContext().put("returnPath", returnPath);
 		
 		if (ConfigKeys.TYPE_SSO.equals(SystemGlobals.getValue(ConfigKeys.AUTHENTICATION_TYPE))) {
