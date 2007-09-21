@@ -59,6 +59,7 @@ import net.jforum.exceptions.DatabaseException;
 import net.jforum.exceptions.ForumException;
 import net.jforum.util.DbUtils;
 import net.jforum.util.FormSelectedData;
+import net.jforum.util.I18n;
 import net.jforum.util.preferences.SystemGlobals;
 
 import org.xml.sax.Attributes;
@@ -71,7 +72,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * Manipulates XML permission control file definition 
  * 
  * @author Rafael Steil
- * @version $Id: XMLPermissionControl.java,v 1.17 2007/07/28 14:17:12 rafaelsteil Exp $
+ * @version $Id: XMLPermissionControl.java,v 1.18 2007/09/21 03:47:41 rafaelsteil Exp $
  */
 public class XMLPermissionControl extends DefaultHandler 
 {
@@ -186,16 +187,18 @@ public class XMLPermissionControl extends DefaultHandler
 		throws SAXException 
 	{
 		if (tag.equals("section")) {
-			this.section = new PermissionSection(atts.getValue("title"), atts.getValue("id"));
+			String title = I18n.getMessage(atts.getValue("title"));
+			this.section = new PermissionSection(title, atts.getValue("id"));
 		}
 		else if (tag.equals("permission")) {
-			this.permissionName = atts.getValue("title");
+			String title = I18n.getMessage(atts.getValue("title"));
+			
+			this.permissionName = title;
 			this.permissionId = atts.getValue("id");
 			this.permissionType = atts.getValue("type");
 			this.alreadySelected = false;
 		}
 		else if (tag.equals("sql")) {
-
 			String refName = atts.getValue("refName");
 			
 			// If refName is present, then we have a template query
@@ -204,7 +207,8 @@ public class XMLPermissionControl extends DefaultHandler
                 PreparedStatement p = null;
                 
 				try {
-					p = JForumExecutionContext.getConnection().prepareStatement(SystemGlobals.getSql(atts.getValue("queryName")));
+					p = JForumExecutionContext.getConnection().prepareStatement(
+						SystemGlobals.getSql(atts.getValue("queryName")));
 					rs = p.executeQuery();
 					
 					String valueField = atts.getValue("valueField");
@@ -259,7 +263,8 @@ public class XMLPermissionControl extends DefaultHandler
 				throw new UnsupportedOperationException("'option' tag with 'multiple' attribute support not yet implemented");
 			}
 			
-			this.permissionData.add(new FormSelectedData(atts.getValue("description"), atts.getValue("value"), selected));
+			this.permissionData.add(new FormSelectedData(
+				I18n.getMessage(atts.getValue("description")), atts.getValue("value"), selected));
 		}
 	}
 }

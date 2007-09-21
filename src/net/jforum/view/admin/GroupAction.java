@@ -42,7 +42,6 @@
  */
 package net.jforum.view.admin;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +64,7 @@ import net.jforum.util.preferences.TemplateKeys;
  * ViewHelper class for group administration.
  * 
  * @author Rafael Steil
- * @version $Id: GroupAction.java,v 1.23 2007/08/05 06:51:30 andowson Exp $
+ * @version $Id: GroupAction.java,v 1.24 2007/09/21 03:47:40 rafaelsteil Exp $
  */
 public class GroupAction extends AdminCommand 
 {
@@ -177,10 +176,7 @@ public class GroupAction extends AdminCommand
 		PermissionControl pc = new PermissionControl();
 		pc.setRoles(DataAccessDriver.getInstance().newGroupSecurityDAO().loadRoles(id));
 		
-		String xmlconfig = SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/permissions_" + SystemGlobals.getValue(ConfigKeys.I18N_DEFAULT) + ".xml"; 
-		if (!new File(xmlconfig).exists()) { 
-			xmlconfig = SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/permissions.xml"; 
-		} 
+		String xmlconfig = SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/permissions.xml"; 
 		List sections = new XMLPermissionControl(pc).loadConfigurations(xmlconfig); 
 		
 		GroupDAO gm = DataAccessDriver.getInstance().newGroupDAO();

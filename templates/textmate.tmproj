@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>default/js/post.js</string>
+	<string>default/post_form.htm</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -49,49 +49,19 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>default/js/post.js</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>6</integer>
-				<key>line</key>
-				<integer>20</integer>
-			</dict>
-			<key>columnSelection</key>
-			<false/>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>20</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>6</integer>
-				<key>line</key>
-				<integer>20</integer>
-			</dict>
-		</dict>
 		<key>default/post_form.htm</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>188</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>328</integer>
+				<integer>365</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>291</integer>
+			<integer>329</integer>
 		</dict>
 		<key>default/styles/style.css</key>
 		<dict>
@@ -125,7 +95,6 @@
 	<key>openDocuments</key>
 	<array>
 		<string>default/post_form.htm</string>
-		<string>default/js/post.js</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
