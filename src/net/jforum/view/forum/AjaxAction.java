@@ -67,16 +67,19 @@ import net.jforum.util.preferences.TemplateKeys;
 import net.jforum.view.forum.common.PostCommon;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.log4j.Logger;
 import org.apache.lucene.document.Document;
 
 import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: AjaxAction.java,v 1.6 2007/09/19 14:08:57 rafaelsteil Exp $
+ * @version $Id: AjaxAction.java,v 1.7 2007/09/21 15:54:31 rafaelsteil Exp $
  */
 public class AjaxAction extends Command
 {
+	private static Logger logger = Logger.getLogger(AjaxAction.class);
+	
 	/**
 	 * Sends a test message
 	 * @param sender The sender's email address
@@ -148,6 +151,7 @@ public class AjaxAction extends Command
 		}
 		catch (Exception e) {
 			status = StringEscapeUtils.escapeJavaScript(e.toString());
+			logger.error(e.toString(), e);
 		}
 		finally {
 			// Restore the original values

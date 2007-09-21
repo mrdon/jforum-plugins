@@ -48,7 +48,7 @@ package net.jforum.util.preferences;
 * configuration keys under eclipse ;-)
 * 
 * @author Pieter Olivier
-* @version $Id: ConfigKeys.java,v 1.119 2007/09/08 02:36:35 andowson Exp $
+* @version $Id: ConfigKeys.java,v 1.120 2007/09/21 15:54:30 rafaelsteil Exp $
 */
 
 public class ConfigKeys 
@@ -299,5 +299,7 @@ public class ConfigKeys
 	public static final String REDIRECT_ABSOLUTE_PATHS = "redirect.absolute.paths";
 	public static final String REDIRECT_BASE_URL = "redirect.base.url";
     
+	public static final String FREEMARKER_EXTRA_TEMPLATE_PATH = "freemarker.extra.template.path";
+
 	private ConfigKeys() {}
 }

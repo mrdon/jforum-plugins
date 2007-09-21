@@ -58,14 +58,18 @@ import net.jforum.util.bbcode.BBCodeHandler;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
+import freemarker.cache.FileTemplateLoader;
+import freemarker.cache.MultiTemplateLoader;
+import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 
 /**
  * @author Rafael Steil
- * @version $Id: JForumBaseServlet.java,v 1.23 2007/07/27 15:42:56 rafaelsteil Exp $
+ * @version $Id: JForumBaseServlet.java,v 1.24 2007/09/21 15:54:31 rafaelsteil Exp $
  */
 public class JForumBaseServlet extends HttpServlet
 {
@@ -110,10 +114,27 @@ public class JForumBaseServlet extends HttpServlet
 
 			// Configure the template engine
 			Configuration templateCfg = new Configuration();
-			templateCfg.setDirectoryForTemplateLoading(new File(SystemGlobals.getApplicationPath() + "/templates"));
 			templateCfg.setTemplateUpdateDelay(2);
 			templateCfg.setSetting("number_format", "#");
 			templateCfg.setSharedVariable("startupTime", new Long(new Date().getTime()));
+
+			// Create the default template loader
+			String defaultPath = SystemGlobals.getApplicationPath() + "/templates";
+			FileTemplateLoader defaultLoader = new FileTemplateLoader(new File(defaultPath));
+
+			String extraTemplatePath = SystemGlobals.getValue(ConfigKeys.FREEMARKER_EXTRA_TEMPLATE_PATH);
+			
+			if (StringUtils.isNotBlank(extraTemplatePath)) {
+				// An extra template path is configured, we need a MultiTemplateLoader
+				FileTemplateLoader extraLoader = new FileTemplateLoader(new File(extraTemplatePath));
+				TemplateLoader[] loaders = new TemplateLoader[] { extraLoader, defaultLoader };
+				MultiTemplateLoader multiLoader = new MultiTemplateLoader(loaders);
+				templateCfg.setTemplateLoader(multiLoader);
+			} 
+			else {
+				// An extra template path is not configured, we only need the default loader
+				templateCfg.setTemplateLoader(defaultLoader);
+			}
 
 			ModulesRepository.init(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR));
 
