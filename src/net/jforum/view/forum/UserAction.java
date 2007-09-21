@@ -84,7 +84,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.93 2007/07/31 13:52:47 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.94 2007/09/21 17:26:09 rafaelsteil Exp $
  */
 public class UserAction extends Command 
 {
@@ -259,7 +259,7 @@ public class UserAction extends Command
 		}
 
 		User u = new User();
-		UserDAO um = DataAccessDriver.getInstance().newUserDAO();
+		UserDAO dao = DataAccessDriver.getInstance().newUserDAO();
 
 		String username = this.request.getParameter("username");
 		String password = this.request.getParameter("password");
@@ -287,12 +287,12 @@ public class UserAction extends Command
 			error = true;
 		}
 
-		if (!error && um.isUsernameRegistered(username)) {
+		if (!error && dao.isUsernameRegistered(username)) {
 			this.context.put("error", I18n.getMessage("UsernameExists"));
 			error = true;
 		}
 		
-		if (!error && um.findByEmail(email) != null) {
+		if (!error && dao.findByEmail(email) != null) {
 			this.context.put("error", I18n.getMessage("User.emailExists", new String[] { email }));
 			error = true;
 		}
@@ -311,13 +311,15 @@ public class UserAction extends Command
 		u.setPassword(MD5.crypt(password));
 		u.setEmail(email);
 
-		if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_USER_EMAIL_AUTH)) {
+		boolean requiresMailActivation = SystemGlobals.getBoolValue(ConfigKeys.MAIL_USER_EMAIL_AUTH);
+		
+		if (requiresMailActivation) {
 			u.setActivationKey(MD5.crypt(username + System.currentTimeMillis()));
 		}
 
-		int newUserId = um.addNew(u);
+		int newUserId = dao.addNew(u);
 
-		if (SystemGlobals.getBoolValue(ConfigKeys.MAIL_USER_EMAIL_AUTH)) {
+		if (requiresMailActivation) {
 			Executor.execute(new EmailSenderTask(new ActivationKeySpammer(u)));
 
 			this.setTemplateName(TemplateKeys.USER_INSERT_ACTIVATE_MAIL);
@@ -330,6 +332,10 @@ public class UserAction extends Command
 		}
 		else {
 			this.logNewRegisteredUserIn(newUserId, u);
+		}
+		
+		if (!requiresMailActivation) {
+			dao.writeUserActive(newUserId);
 		}
 	}
 

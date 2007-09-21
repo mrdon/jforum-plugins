@@ -44,6 +44,8 @@ ConfigModel.update = UPDATE jforum_config SET config_value = ? WHERE config_name
 # ##########
 # UserModel
 # ##########
+UserModel.pendingActivations = SELECT user_id, username, user_regdate FROM jforum_users WHERE user_actkey IS NOT NULL
+
 UserModel.selectById = SELECT COUNT(pm.privmsgs_to_userid) AS private_messages, u.* \
 	FROM jforum_users u \
 	LEFT JOIN jforum_privmsgs pm ON pm.privmsgs_type = 1 AND pm.privmsgs_to_userid = u.user_id \

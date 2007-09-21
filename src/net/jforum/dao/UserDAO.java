@@ -54,7 +54,7 @@ import net.jforum.entities.User;
  * select some specific data.
  * 
  * @author Rafael Steil
- * @version $Id: UserDAO.java,v 1.9 2006/08/28 23:22:27 rafaelsteil Exp $
+ * @version $Id: UserDAO.java,v 1.10 2007/09/21 17:26:08 rafaelsteil Exp $
  */
 public interface UserDAO 
 {
@@ -370,6 +370,12 @@ public interface UserDAO
 	 * @return String
 	 */
 	public String getUserAuthHash(int userId) ;
+	
+	/**
+	 * Returns a list of users that haven't yet activated their accounts
+	 * @return
+	 */
+	public List pendingActivations();
 
 	/**
 	 * Finds a user by its email address

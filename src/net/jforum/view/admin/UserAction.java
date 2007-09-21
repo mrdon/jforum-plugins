@@ -63,11 +63,10 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.33 2006/12/15 12:46:11 lazee Exp $
+ * @version $Id: UserAction.java,v 1.35 2007/09/21 17:29:30 rafaelsteil Exp $
  */
 public class UserAction extends AdminCommand 
 {
-	// Listing
 	public void list()
 	{
 		int start = this.preparePagination(DataAccessDriver.getInstance().newUserDAO().getTotalUsers());
@@ -75,6 +74,31 @@ public class UserAction extends AdminCommand
 		
 		this.context.put("users", DataAccessDriver.getInstance().newUserDAO().selectAll(start ,usersPerPage));
 		this.commonData();
+	}
+	
+	public void pendingActivations()
+	{
+		UserDAO dao = DataAccessDriver.getInstance().newUserDAO();
+		List users = dao.pendingActivations();
+		
+		this.setTemplateName(TemplateKeys.USER_ADMIN_PENDING_ACTIVATIONS);
+		this.context.put("users", users);
+	}
+	
+	public void activateAccount()
+	{
+		String[] ids = this.request.getParameterValues("user_id");
+		
+		if (ids != null) {
+			UserDAO dao = DataAccessDriver.getInstance().newUserDAO();
+			
+			for (int i = 0; i < ids.length; i++) {
+				int userId = Integer.parseInt(ids[i]);
+				dao.writeUserActive(userId);
+			}
+		}
+		
+		this.pendingActivations();
 	}
 	
 	private int preparePagination(int totalUsers)

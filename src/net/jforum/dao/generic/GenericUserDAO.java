@@ -66,7 +66,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericUserDAO.java,v 1.28 2007/08/01 22:30:03 rafaelsteil Exp $
+ * @version $Id: GenericUserDAO.java,v 1.29 2007/09/21 17:26:09 rafaelsteil Exp $
  */
 public class GenericUserDAO extends AutoKeys implements UserDAO
 {
@@ -82,6 +82,42 @@ public class GenericUserDAO extends AutoKeys implements UserDAO
 		}
 		
 		loginAuthenticator.setUserModel(this);
+	}
+	
+	/**
+	 * @see net.jforum.dao.UserDAO#pendingActivations()
+	 */
+	public List pendingActivations() 
+	{
+		PreparedStatement p = null;
+		ResultSet rs = null;
+		
+		List l = new ArrayList();
+		
+		try {
+			p = JForumExecutionContext.getConnection().prepareStatement(
+				SystemGlobals.getSql("UserModel.pendingActivations"));
+
+			rs = p.executeQuery();
+
+			while (rs.next()) {
+				User user = new User();
+				
+				user.setId(rs.getInt("user_id"));
+				user.setUsername(rs.getString("username"));
+				user.setRegistrationDate(new Date(rs.getTimestamp("user_regdate").getTime()));
+				
+				l.add(user);
+			}
+		}
+		catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		finally {
+			DbUtils.close(rs, p);
+		}
+		
+		return l;
 	}
 
 	/**

@@ -52,7 +52,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author James Young
- * @version $Id: ActivationKeySpammer.java,v 1.11 2006/10/22 16:43:34 rafaelsteil Exp $
+ * @version $Id: ActivationKeySpammer.java,v 1.12 2007/09/21 17:26:09 rafaelsteil Exp $
  */
 public class ActivationKeySpammer extends Spammer
 {
@@ -72,7 +72,7 @@ public class ActivationKeySpammer extends Spammer
 		
 		String manualUrl = new StringBuffer()
 			.append(forumLink)
-			.append("user/activateManual/") 
+			.append("user/activateManual") 
 			.append(SystemGlobals.getValue(ConfigKeys.SERVLET_EXTENSION))
 			.toString();
 		
