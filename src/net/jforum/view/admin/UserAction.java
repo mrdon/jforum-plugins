@@ -63,7 +63,7 @@ import net.jforum.view.forum.common.ViewCommon;
 
 /**
  * @author Rafael Steil
- * @version $Id: UserAction.java,v 1.35 2007/09/21 17:29:30 rafaelsteil Exp $
+ * @version $Id: UserAction.java,v 1.34 2007/09/21 17:26:11 rafaelsteil Exp $
  */
 public class UserAction extends AdminCommand 
 {
@@ -83,22 +83,6 @@ public class UserAction extends AdminCommand
 		
 		this.setTemplateName(TemplateKeys.USER_ADMIN_PENDING_ACTIVATIONS);
 		this.context.put("users", users);
-	}
-	
-	public void activateAccount()
-	{
-		String[] ids = this.request.getParameterValues("user_id");
-		
-		if (ids != null) {
-			UserDAO dao = DataAccessDriver.getInstance().newUserDAO();
-			
-			for (int i = 0; i < ids.length; i++) {
-				int userId = Integer.parseInt(ids[i]);
-				dao.writeUserActive(userId);
-			}
-		}
-		
-		this.pendingActivations();
 	}
 	
 	private int preparePagination(int totalUsers)
