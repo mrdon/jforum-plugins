@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.58 2007/09/24 03:26:47 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.59 2007/09/24 03:29:17 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -108,7 +108,7 @@ public class PostCommon
 		
 		boolean hasCodeBlock = false;
 		
-		if (codeIndex == -1 || codeEndIndex == -1) {
+		if (codeIndex == -1 || codeEndIndex == -1 || codeEndIndex < codeIndex) {
 			post.setText(prepareTextForDisplayExceptCodeTag(post.getText().toString(),
 				post.isBbCodeEnabled(), post.isSmiliesEnabled()));
 		}
