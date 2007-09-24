@@ -68,7 +68,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostCommon.java,v 1.57 2007/09/19 14:35:12 rafaelsteil Exp $
+ * @version $Id: PostCommon.java,v 1.58 2007/09/24 03:26:47 rafaelsteil Exp $
  */
 public class PostCommon
 {
@@ -118,7 +118,7 @@ public class PostCommon
 			int nextStartPos = 0;
 			StringBuffer result = new StringBuffer(post.getText().length());
 			
-			while (codeIndex > -1 && codeEndIndex > -1) {
+			while (codeIndex > -1 && codeEndIndex > -1 && codeEndIndex > codeIndex) {
 				codeEndIndex += "[/code]".length();
 				
 				String nonCodeResult = prepareTextForDisplayExceptCodeTag(post.getText().substring(nextStartPos, codeIndex), 
