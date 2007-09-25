@@ -73,7 +73,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Rafael Steil
- * @version $Id: WebRequestContext.java,v 1.13 2007/09/20 16:07:09 rafaelsteil Exp $
+ * @version $Id: WebRequestContext.java,v 1.14 2007/09/25 23:38:48 rafaelsteil Exp $
  */
 public class WebRequestContext extends HttpServletRequestWrapper implements RequestContext
 {
@@ -106,43 +106,7 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 		
 		if (isGet && isQueryStringEmpty && requestUri.endsWith(servletExtension)) {
 			superRequest.setCharacterEncoding(encoding); 
-			
-			requestUri = requestUri.substring(0, requestUri.length() - servletExtension.length());
-			String[] urlModel = requestUri.split("/");
-			
-			int moduleIndex = 1;
-			int actionIndex = 2;
-			int baseLen = 3;
-			
-			UrlPattern url = null;
-			
-			if (urlModel.length >= baseLen) {
-				// <moduleName>.<actionName>.<numberOfParameters>
-				StringBuffer sb = new StringBuffer(64)
-					.append(urlModel[moduleIndex])
-					.append('.')
-					.append(urlModel[actionIndex])
-					.append('.')
-					.append(urlModel.length - baseLen);
-				
-				url = UrlPatternCollection.findPattern(sb.toString());
-			}
-
-			if (url != null) {
-				// We have parameters? 
-				if (url.getSize() >= urlModel.length - baseLen) {
-					for (int i = 0; i < url.getSize(); i++) {
-						this.addParameter(url.getVars()[i], urlModel[i + baseLen]);
-					}
-				}
-				
-				this.addParameter("module", urlModel[moduleIndex]);
-				this.addParameter("action", urlModel[actionIndex]);
-			}
-			else {
-				this.addParameter("module", null);
-				this.addParameter("action", null);
-			}
+			this.parseFriendlyURL(requestUri, servletExtension);
 		}
 		else if (isPost) {
 			isMultipart = ServletFileUpload.isMultipartContent(new ServletRequestContext(superRequest));
@@ -160,7 +124,7 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 			}
 			else {
 				// Ajax requests are *usually* sent using application/x-www-form-urlencoded; charset=UTF-8.
-				// In JForum, we assume this is always true.
+				// In JForum, we assume this as always true.
 				superRequest.setCharacterEncoding("UTF-8");
 			}
 			
@@ -184,6 +148,59 @@ public class WebRequestContext extends HttpServletRequestWrapper implements Requ
 					this.addParameter(name, new String(superRequest.getParameter(name).getBytes(containerEncoding), encoding));
 				}
 			}
+			
+			if (this.getModule() == null && this.getAction() == null) {
+				int index = requestUri.indexOf('?');
+				
+				if (index > -1) {
+					requestUri = requestUri.substring(0, index);
+				}
+				
+				this.parseFriendlyURL(requestUri, servletExtension);
+			}
+		}
+	}
+
+	/**
+	 * @param requestUri
+	 * @param servletExtension
+	 */
+	private void parseFriendlyURL(String requestUri, String servletExtension) 
+	{
+		requestUri = requestUri.substring(0, requestUri.length() - servletExtension.length());
+		String[] urlModel = requestUri.split("/");
+		
+		int moduleIndex = 1;
+		int actionIndex = 2;
+		int baseLen = 3;
+		
+		UrlPattern url = null;
+		
+		if (urlModel.length >= baseLen) {
+			// <moduleName>.<actionName>.<numberOfParameters>
+			StringBuffer sb = new StringBuffer(64)
+				.append(urlModel[moduleIndex])
+				.append('.')
+				.append(urlModel[actionIndex])
+				.append('.')
+				.append(urlModel.length - baseLen);
+			
+			url = UrlPatternCollection.findPattern(sb.toString());
+		}
+
+		if (url != null) {
+			if (url.getSize() >= urlModel.length - baseLen) {
+				for (int i = 0; i < url.getSize(); i++) {
+					this.addParameter(url.getVars()[i], urlModel[i + baseLen]);
+				}
+			}
+			
+			this.addParameter("module", urlModel[moduleIndex]);
+			this.addParameter("action", urlModel[actionIndex]);
+		}
+		else {
+			this.addParameter("module", null);
+			this.addParameter("action", null);
 		}
 	}
 
