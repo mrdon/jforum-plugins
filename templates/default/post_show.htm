@@ -277,6 +277,9 @@
 						return false;
 					}
 					
+					$("#icon_saving").css("display", "inline");
+					$("#btnSubmit").attr("disabled", "disabled").val("${I18n.getMessage("PostForm.saving")}...");
+					
 					return true;
 				}
 				-->
@@ -304,8 +307,9 @@
 							</td>
 						</tr>
 						<tr style="display: none;" id="trQuickSubmit">
-							<td align="center">
-								<input type="submit" value="${I18n.getMessage("PostForm.submit")}" class="mainoption" />
+							<td align="center" valign="center">
+								<input type="submit" id="btnSubmit" value="${I18n.getMessage("PostForm.submit")}" class="mainoption" />
+								<img src="${contextPath}/images/transp.gif" id="icon_saving">
 							</td>
 						</tr>
 					</table>

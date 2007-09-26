@@ -63,6 +63,10 @@ function validatePostForm(f)
 	}
 	</#if>
 	
+	$("#icon_saving").css("display", "inline");
+	$("#btnPreview").attr("disabled", "disabled");
+	$("#btnSubmit").attr("disabled", "disabled").val("${I18n.getMessage("PostForm.saving")}...");
+	
 	return true;
 }
 
@@ -427,9 +431,10 @@ function smiliePopup()
 				</#if>
 				
 				<tr>
-					<td align="center" height="28" colspan="2" class="catbottom">              
-						<input class="mainoption" tabindex="5" type="button" value="${I18n.getMessage("PostForm.preview")}" onclick="previewMessage();" />&nbsp;
-						<input class="mainoption" accesskey="s" tabindex="6" type="submit" value="${I18n.getMessage("PostForm.submit")}" name="post" />
+					<td align="center" height="28" colspan="2" class="catbottom">
+						<input class="mainoption" id="btnPreview" tabindex="5" type="button" value="${I18n.getMessage("PostForm.preview")}" onclick="previewMessage();" />&nbsp;
+						<input class="mainoption" id="btnSubmit" accesskey="s" tabindex="6" type="submit" value="${I18n.getMessage("PostForm.submit")}" name="post" />
+						<img src="${contextPath}/images/transp.gif" id="icon_saving">
 					</td>
 				</tr>
 			</table>

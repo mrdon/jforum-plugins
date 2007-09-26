@@ -160,6 +160,7 @@ table.attachtable	{ font: normal 12px verdana, arial, helvetica, sans-serif; col
 	padding-left:17px;
 }
 
+#icon_saving { background-image: url(../images/indicator.gif); width: 16px; height: 16px; display: none;}
 .icon_folder_announce { background-image: url(../images/folder_announce.gif); width: 19px; height: 18px; display: inline; }
 .icon_folder_sticky { background-image: url(../images/folder_sticky.gif); width: 19px; height: 18px; display: inline; }
 .icon_folder_hot { background-image: url(../images/folder_hot.gif); width: 19px; height: 18px; display: inline; }
@@ -250,52 +251,6 @@ table.attachtable	{ font: normal 12px verdana, arial, helvetica, sans-serif; col
 
 #goToBox .form input {
 	font-weight: bold;
-}
-
-
-dl.codebox {
-	background-color:#FFFFFF;
-	border-color:#C9D2D8;
-	margin: 10px;
-	padding: 3px;
-	font-size: 1em;
-}
-
-dl.codebox dd {
-	margin: 0px;
-}
-
-dl.codebox {
-	background-color:#FFFFFF;
-	border:1px solid #D8D8D8;
-	font-size:1em;
-	padding:3px;
-}
-
-dl.codebox dt {
-	border-bottom-color:#CCCCCC;
-}
-
-dl.codebox dt {
-	border-bottom:1px solid #CCCCCC;
-	display:block;
-	font-size:0.8em;
-	font-weight:bold;
-	margin-bottom:3px;
-	text-transform:uppercase;
-}
-
-dl.codebox code {
-	color:#2E8B57;
-	overflow: auto;
-	display: block;
-	height: auto;
-	max-height: 200px;
-	white-space: normal;
-	padding-top: 5px;
-	font: 0.9em Monaco, "Andale Mono","Courier New", Courier, mono;
-	line-height: 1.3em;
-	margin: 2px 0;
 }
 
 blockquote dl.codebox code { font-size: 1.0em; }
