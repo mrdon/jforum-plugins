@@ -1,5 +1,13 @@
 <jsp:include page="header.jsp"/>
 
+<style type="text/css">
+#downloadContainer {
+	background:#FAFFF3 none repeat scroll 0% 50%;
+	margin-bottom:10px;
+	padding:5px;
+}
+</style>
+
 <!-- InstanceBeginEditable name="MainContent" -->
 <div style="padding-top:10px;">
 	<table border="0" cellspacing="0" cellpadding="0">
@@ -8,17 +16,20 @@
 			  <div style="padding:0px 10px">
 					<img src="images/bt_downloadnow.gif">
 					<div><img src="images/hr.gif" width="100%" height="10"></div>
-					<p>Thank you for downloading JForum. Don't forget to check out the <a href="install.jsp" class="blue">installation instructions</a>. </p>
-					<p>We would love to hear from you. Leave a <a href="community.jsp" class="blue">feedback</a> when possible. </p>
+					<!--
 					
+					-->
 					
 					<!-- Before download -->
 					<div class="blue-title" style="font-size: 16px; font-weight: bold;">Before you download...</div>
-					<div><img src="images/hr.gif" width="100%" height="10"></div>
 
 					<p>
-						Before proceeding to the download area, please take a moment to read this. JForum is an Open Source project, 
-						maintained by at least one full time Senior Developer, <strong>which costs US$ 3,000.00 / month</strong>. 
+						...please take a moment to read this. 
+					</p>
+					
+					<p>
+						JForum is an Open Source project, 
+						maintained by at least one full time Senior Developer, <i>which costs US$ 3,000.00 / month</i>.
 					</p>
 				
 					<p>
@@ -26,32 +37,46 @@
 						The simpler way is to make any <a href="contribute.jsp">donation</a> via PayPal.
 					</p>
 					
-					<p>
-						Please consider helping this project.
-					</p>
-					
-					<p>
-					JForum has grown a lot every day, since four years ago, which is a great thing, and initially it wasn't my intention to fully work on this tool. Lately, I'm spending a lot of time on it, specially to make JForum 3 a reality, to help users, to improve the program, to research about better solutions. So, your support is very welcome!
-					</p>
-
-					<p>
-					Thanks! Rafael Steil - JForum Project Leader. 
-					</p>
-					
-					<p>
-						<a href="contribute.jsp"><span style="font-size: 14px;">Support JForum. Make a donation</span></a>.
-					</p>
+					<div><img src="images/hr.gif" width="100%" height="10"></div>
 					
 					<p>
 						<ul class="ul-orange">
-							<li> <a href="#download" onClick="document.getElementById('downloadContainer').style.display = '';">Continue with the download</a></li>
+							<li><strong>Please consider helping this project.</strong></li>
 						</ul>
+						
+						<br />
+						
+						<jsp:include page="donate_now.inc.jsp"/>
 					</p>
 					
-					<div id="downloadContainer" style="display: none;">
+					<div><img src="images/hr.gif" width="100%" height="10"></div>
+					
+					<p>
+						JForum has grown a lot every day, since four years ago, which is a great thing, and initially it wasn't my intention to fully work on this tool. Lately, I'm spending a lot of time on it, specially to make JForum 3 a reality, to help users, to improve the program, to research about better solutions. So, your support is very welcome!
+					</p>
+
+					<p>
+						Thank you. Rafael Steil - JForum Project Leader. 
+					</p>
+					
+					<p>
+						<a href="contribute.jsp">Click here</a> for more information about <a href="contribute.jsp">supporting JForum</a>.
+					</p>
+					
+					<div><img src="images/hr.gif" width="100%" height="10"></div>
+					
+					<p>
+						<div class="blue-title" style="font-size: 16px; font-weight: bold;">Download</div>
+					</p>
+					
+					<p>
+						Don't forget to check out the <a href="install.jsp" class="blue">installation instructions</a>. 
+						We would love to hear from you. Leave a <a href="community.jsp" class="blue">feedback</a> when possible. 
+					</p>
+					
+					<div id="downloadContainer">
 						<!-- License -->
-						<div style="padding-top:10px"><img src="images/bt_license.gif"></div>
-						<div><img src="images/hr.gif" width="100%" height="10"></div>
+						<div class="blue-title" style="font-size: 16px;">License agreement</div>
 						
 						<p>
 							The current version of JForum is the result of years of work of many people, who have
@@ -67,8 +92,7 @@
 							Although, you are required to maintain full credits to the project, and we sincerely ask you to link back to us whenever possible. 
 						</p>
 						
-						<div style="padding-top:10px"><img src="images/bt_files.gif"></div>
-						<div><img src="images/hr.gif" width="100%" height="10"></div>
+						<div class="blue-title" style="font-size: 16px;">Files</div>
 						<p><img src="images/orange_arrow.jpg" width="8" height="6">&nbsp;<a href="/downloads/JForum-2.1.8.zip" class="blue">Download JForum binaries </a></p>
 						<p><img src="images/orange_arrow.jpg" width="8" height="6">&nbsp;<a href="/downloads/JForum-2.1.8-src.zip" class="blue">Download the source code </a></p>
 					</div>
