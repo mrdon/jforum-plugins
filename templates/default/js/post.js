@@ -342,7 +342,7 @@ function checkForm() {
 
 function activateTab(name, currentLi)
 {
-	$("#tabs10/ul/li").each(function() {
+	$("#tabs10 > ul > li").each(function() {
 		var targetName = $(this).attr("target");
 		var target = $("#" + targetName);
 

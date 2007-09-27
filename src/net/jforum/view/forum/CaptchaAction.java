@@ -49,21 +49,18 @@ import net.jforum.util.Captcha;
 
 /**
  * @author Rafael Steil
- * @version $Id: CaptchaAction.java,v 1.8 2006/10/21 13:06:40 rafaelsteil Exp $
+ * @version $Id: CaptchaAction.java,v 1.9 2007/09/27 04:47:19 rafaelsteil Exp $
  */
 public class CaptchaAction extends Command
 {
 	public void generate()
 	{
+		SessionFacade.getUserSession().createNewCaptcha();
+		
 		JForumExecutionContext.enableCustomContent(true);
 		JForumExecutionContext.setContentType("image/jpg");
+		
 		Captcha.getInstance().writeCaptchaImage();
-	}
-	
-	public void regenerate() 
-	{
-		SessionFacade.getUserSession().createNewCaptcha();
-		this.generate();
 	}
 	
 	/**

@@ -241,82 +241,95 @@
 
 					<td valign="middle" align="right">${paginationData}</td>
 				</tr>
+			</table>
+			
+			<table width="100%" align="center">
 				
 				<#if (logged || anonymousPosts) && topic.status != STATUS_LOCKED && !readonly>
-				<tr>
-					<td colspan="3">
-				<script type="text/javascript">
-				<!--
-				var quick = false;
-
-				function activateQuickReply()
-				{
-					quick = !quick;
-
-					document.getElementById("trQuickBody").style.display = (quick ? "" : "none");
-					document.getElementById("trQuickSubmit").style.display = (quick ? "" : "none");
-
-					if (quick) {
-						var url = document.location.toString();
-						var index = url.indexOf("#");
-
-						if (index > -1) {
-							url = url.substr(0, index);
-						}
-
-						document.location = url + "#quick";
+					<tr>
+						<td colspan="3">
+					<script type="text/javascript">
+					function newCaptcha()
+					{
+						document.getElementById("captcha_img").src = "${contextPath}/jforum${extension}?module=captcha&action=generate&timestamp=" + new Date().getTime();
 					}
-				}
+					
+					function activateQuickReply()
+					{
+						$("#captcha_img").attr("src", "${JForumContext.encodeURL("/captcha/generate/${timestamp}")}");
+						$("#quickReply").slideToggle('slow', function() {
+							window.scrollBy(0, 1000);
+						});
+					}
 
-				function validatePostForm(f)
-				{
-					if (f.message.value.replace(/^\s*|\s*$/g, "").length == 0) {
-						alert("${I18n.getMessage("PostForm.textEmpty")}");
-						f.message.focus();
+					function validatePostForm(f)
+					{
+						if (f.message.value.replace(/^\s*|\s*$/g, "").length == 0) {
+							alert("${I18n.getMessage("PostForm.textEmpty")}");
+							f.message.focus();
 						
-						return false;
+							return false;
+						}
+					
+						$("#icon_saving").css("display", "inline");
+						$("#btnSubmit").attr("disabled", "disabled").val("${I18n.getMessage("PostForm.saving")}...");
+					
+						return true;
 					}
-					
-					$("#icon_saving").css("display", "inline");
-					$("#btnSubmit").attr("disabled", "disabled").val("${I18n.getMessage("PostForm.saving")}...");
-					
-					return true;
-				}
-				-->
-				</script>
+					-->
+					</script>
 
-				<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="post" id="post" onsubmit="return validatePostForm(this);" enctype="multipart/form-data" accept-charset="${encoding}">
-					<input type="hidden" name="action" value="insertSave" />
-					<input type="hidden" name="module" value="posts" />
-					<input type="hidden" name="forum_id" value="${forum.id}" />
-					<input type="hidden" name="start" value="${start?default("")}" />
-					<input type="hidden" name="topic_id" value="${topic.id}" />
-					<input type="hidden" name="disable_html" value="1" />
-					<input type="hidden" name="quick" value="1" />
-		
-					<table width="100%">
-						<tr>
-							<td align="center">
-								<img src="${contextPath}/templates/${templateName}/images/icon_mini_message.gif" align="middle" alt="Message" />
-								<span class="nav"><a href="javascript:activateQuickReply()">${I18n.getMessage("PostForm.quickReply")}</a></span>
-							</td>
-						</tr>
-						<tr style="display: none;" id="trQuickBody">
-							<td align="center">
-								<textarea class="post" style="width: 350px" name="message" rows="10" cols="35" onkeyup="enterText(this);" onclick="enterText(this);" onselect="enterText(this);" onblur="leaveText();"></textarea>
-							</td>
-						</tr>
-						<tr style="display: none;" id="trQuickSubmit">
-							<td align="center" valign="center">
-								<input type="submit" id="btnSubmit" value="${I18n.getMessage("PostForm.submit")}" class="mainoption" />
-								<img src="${contextPath}/images/transp.gif" id="icon_saving">
-							</td>
-						</tr>
-					</table>
-				</form>
+					
+					<form action="${JForumContext.encodeURL("/jforum")}" method="post" name="post" id="post" onsubmit="return validatePostForm(this);" enctype="multipart/form-data" accept-charset="${encoding}">
+						<input type="hidden" name="action" value="insertSave" />
+						<input type="hidden" name="module" value="posts" />
+						<input type="hidden" name="forum_id" value="${forum.id}" />
+						<input type="hidden" name="start" value="${start?default("")}" />
+						<input type="hidden" name="topic_id" value="${topic.id}" />
+						<input type="hidden" name="disable_html" value="1" />
+						<input type="hidden" name="quick" value="1" />
+	
+						<table width="100%">
+							<tr>
+								<td align="center">
+									<img src="${contextPath}/templates/${templateName}/images/icon_mini_message.gif" align="middle" alt="Message" />
+									<span class="nav"><a href="javascript:activateQuickReply()">${I18n.getMessage("PostForm.quickReply")}</a></span>
+								</td>
+							</tr>
+						</table>
+						
+						<p align="center" style="display: none;" id="quickReply">
+							<table>
+								<tr>
+									<td align="center">
+										<textarea class="post" style="width: 350px" name="message" rows="10" cols="35" onkeyup="enterText(this);" onclick="enterText(this);" onselect="enterText(this);" onblur="leaveText();"></textarea>
+									</td>
+								</tr>
+								<#if needCaptcha?default(false)>
+									<tr>
+										<td>
+											<img border="0" align="middle" id="captcha_img"/>
+											<br />
+											<span class="gensmall">${I18n.getMessage("User.captchaResponse")}</span>
+											<input type="text" class="post" style="width: 80px; font-weight: bold;" maxlength="25" name="captcha_anwser" /> 
+											<br />
+											<span class="gensmall">${I18n.getMessage("User.hardCaptchaPart1")} <a href="#newCaptcha" onClick="newCaptcha()"><b>${I18n.getMessage("User.hardCaptchaPart2")}</b></a></span>
+										</td>
+									</tr>
+								</#if>
+								<tr>
+									<td align="right" valign="center">
+										<input type="submit" id="btnSubmit" value="${I18n.getMessage("PostForm.submit")}" class="mainoption" />
+										<img src="${contextPath}/images/transp.gif" id="icon_saving">
+									</td>
+								</tr>
+							</table>
+						</p>
+					</form>
+					</p>
 
-					</td>
-				</tr>
+						</td>
+					</tr>
 				</#if>
 				
 				<#if isModerator || isAdmin>

@@ -24,7 +24,7 @@ var SERVLET_EXTENSION  = "${extension}";
 <!--
 function newCaptcha()
 {
-	document.getElementById("captcha_img").src = "${contextPath}/jforum${extension}?module=captcha&action=regenerate&timestamp=" + new Date().getTime();
+	document.getElementById("captcha_img").src = "${contextPath}/jforum${extension}?module=captcha&action=generate&timestamp=" + new Date().getTime();
 }
 
 function validatePostForm(f)

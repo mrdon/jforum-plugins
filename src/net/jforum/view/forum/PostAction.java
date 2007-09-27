@@ -103,7 +103,7 @@ import freemarker.template.SimpleHash;
 
 /**
  * @author Rafael Steil
- * @version $Id: PostAction.java,v 1.197 2007/09/20 16:47:27 rafaelsteil Exp $
+ * @version $Id: PostAction.java,v 1.198 2007/09/27 04:47:19 rafaelsteil Exp $
  */
 public class PostAction extends Command 
 {
@@ -226,6 +226,7 @@ public class PostAction extends Command
 		this.context.put("karmaMax", new Integer(SystemGlobals.getValue(ConfigKeys.KARMA_MAX_POINTS)));
 		this.context.put("avatarAllowExternalUrl", SystemGlobals.getBoolValue(ConfigKeys.AVATAR_ALLOW_EXTERNAL_URL));
 		this.context.put("moderationLoggingEnabled", SystemGlobals.getBoolValue(ConfigKeys.MODERATION_LOGGING_ENABLED));
+		this.context.put("needCaptcha", SystemGlobals.getBoolValue(ConfigKeys.CAPTCHA_POSTS));
 		
 		Map topicPosters = topicDao.topicPosters(topic.getId());
 		
@@ -522,10 +523,10 @@ public class PostAction extends Command
 		
 		// Attachments
 		boolean attachmentsEnabled = SecurityRepository.canAccess(
-				SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(forumId));
+			SecurityConstants.PERM_ATTACHMENTS_ENABLED, Integer.toString(forumId));
 		
 		if (attachmentsEnabled && !SessionFacade.isLogged() 
-				&& !SystemGlobals.getBoolValue(ConfigKeys.ATTACHMENTS_ANONYMOUS)) {
+			&& !SystemGlobals.getBoolValue(ConfigKeys.ATTACHMENTS_ANONYMOUS)) {
 			attachmentsEnabled = false;
 		}
 
@@ -539,10 +540,6 @@ public class PostAction extends Command
 		
 		boolean needCaptcha = SystemGlobals.getBoolValue(ConfigKeys.CAPTCHA_POSTS);
 		
-		if (needCaptcha) {
-			SessionFacade.getUserSession().createNewCaptcha();
-		}
-		
 		this.context.put("moderationLoggingEnabled", SystemGlobals.getBoolValue(ConfigKeys.MODERATION_LOGGING_ENABLED));
 		this.context.put("smilies", SmiliesRepository.getSmilies());
 		this.context.put("forum", forum);
@@ -551,11 +548,11 @@ public class PostAction extends Command
 		this.context.put("isNewPost", true);
 		this.context.put("needCaptcha", needCaptcha);
 		this.context.put("htmlAllowed",
-				SecurityRepository.canAccess(SecurityConstants.PERM_HTML_DISABLED, Integer.toString(forumId)));
+			SecurityRepository.canAccess(SecurityConstants.PERM_HTML_DISABLED, Integer.toString(forumId)));
 		this.context.put("canCreateStickyOrAnnouncementTopics",
-				SecurityRepository.canAccess(SecurityConstants.PERM_CREATE_STICKY_ANNOUNCEMENT_TOPICS));
+			SecurityRepository.canAccess(SecurityConstants.PERM_CREATE_STICKY_ANNOUNCEMENT_TOPICS));
 		this.context.put("canCreatePolls",
-				SecurityRepository.canAccess(SecurityConstants.PERM_CREATE_POLL));
+			SecurityRepository.canAccess(SecurityConstants.PERM_CREATE_POLL));
 
 		User user = DataAccessDriver.getInstance().newUserDAO().selectById(userId);
 		
