@@ -95,7 +95,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.75 2007/09/19 23:59:48 andowson Exp $
+ * @version $Id: InstallAction.java,v 1.76 2007/10/03 02:32:35 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -502,9 +502,16 @@ public class InstallAction extends Command
 	private boolean checkForWritableDir()
 	{
 		boolean canWriteToWebInf = this.canWriteToWebInf();
+		boolean canWriteToLuceneIndex = this.canWriteToLuceneIndex();
 		
-		if (!canWriteToWebInf) {
-			this.context.put("message", I18n.getMessage("Install.noWritePermission"));
+		if (!canWriteToWebInf || !canWriteToLuceneIndex) {
+			if (!canWriteToWebInf) {
+				this.context.put("message", I18n.getMessage("Install.noWritePermission"));
+			}
+			else if (!canWriteToLuceneIndex) {
+				this.context.put("message", I18n.getMessage("Install.noWritePermissionLucene"));
+			}
+			
 			this.context.put("tryAgain", true);
 			this.error();
 			return false;
@@ -516,6 +523,11 @@ public class InstallAction extends Command
 	private boolean canWriteToWebInf()
 	{
 		return new File(SystemGlobals.getValue(ConfigKeys.CONFIG_DIR) + "/modulesMapping.properties").canWrite();
+	}
+	
+	private boolean canWriteToLuceneIndex()
+	{
+		return new File(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH)).canWrite();
 	}
 	
 	private void handleDatabasePort(Properties p, String port)
