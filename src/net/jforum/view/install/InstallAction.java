@@ -95,7 +95,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.76 2007/10/03 02:32:35 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.77 2007/10/03 15:30:22 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -284,7 +284,7 @@ public class InstallAction extends Command
 
 		this.context.put("lang", lang);
 
-		// this.fixModulesMapping();
+		this.fixModulesMapping();
 		this.configureSystemGlobals();
 
 		SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
@@ -509,7 +509,8 @@ public class InstallAction extends Command
 				this.context.put("message", I18n.getMessage("Install.noWritePermission"));
 			}
 			else if (!canWriteToLuceneIndex) {
-				this.context.put("message", I18n.getMessage("Install.noWritePermissionLucene"));
+				this.context.put("message", I18n.getMessage("Install.noWritePermissionLucene", 
+					SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH)));
 			}
 			
 			this.context.put("tryAgain", true);
