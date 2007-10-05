@@ -44,11 +44,15 @@
 package net.jforum.search;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.jforum.exceptions.SearchException;
 
 import org.apache.log4j.Logger;
+import org.apache.lucene.analysis.Token;
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
@@ -62,7 +66,7 @@ import org.apache.lucene.search.TermQuery;
 
 /**
  * @author Rafael Steil
- * @version $Id: LuceneSearch.java,v 1.37 2007/09/09 22:53:35 rafaelsteil Exp $
+ * @version $Id: LuceneSearch.java,v 1.38 2007/10/05 03:22:37 rafaelsteil Exp $
  */
 public class LuceneSearch implements NewDocumentAdded
 {
@@ -188,7 +192,7 @@ public class LuceneSearch implements NewDocumentAdded
 	
 	private void filterByKeywords(SearchArgs args, StringBuffer criteria)
 	{
-		String[] keywords = args.getKeywords();
+		String[] keywords = this.analyzeKeywords(args.rawKeywords());
 		
 		for (int i = 0; i < keywords.length; i++) {
 			if (args.shouldMatchAllKeywords()) {
@@ -211,6 +215,29 @@ public class LuceneSearch implements NewDocumentAdded
 				.append(':')
 				.append(args.getForumId())
 				.append(") ");
+		}
+	}
+	
+	private String[] analyzeKeywords(String contents)
+	{
+		try {
+			TokenStream stream = this.settings.analyzer().tokenStream("contents", new StringReader(contents));
+			List tokens = new ArrayList();
+			
+			while (true) {
+				Token token = stream.next();
+				
+				if (token == null) {
+					break;
+				}
+				
+				tokens.add(token.termText());
+			}
+			
+			return (String[])tokens.toArray(new String[0]);
+		}
+		catch (IOException e) {
+			throw new SearchException(e);
 		}
 	}
 	
