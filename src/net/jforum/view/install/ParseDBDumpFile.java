@@ -50,7 +50,7 @@ import java.util.List;
 
 /**
  * @author Rafael Steil
- * @version $Id: ParseDBDumpFile.java,v 1.5 2007/04/12 02:11:54 rafaelsteil Exp $
+ * @version $Id: ParseDBDumpFile.java,v 1.6 2007/10/08 17:34:40 rafaelsteil Exp $
  */
 public class ParseDBDumpFile
 {
@@ -65,18 +65,20 @@ public class ParseDBDumpFile
 			String line = null;
 			
 			while ((line = reader.readLine()) != null) {
+				line = line.trim();
+			
 				if (line.length() == 0) {
 					continue;
 				}
 				
-				char charAt = line.charAt(0);
+				char firstChar = line.charAt(0);
 				
-				if (charAt == '-' || charAt == '#') {
+				if (firstChar == '-' || firstChar == '#') {
 					continue;
 				}
 				
-				if (line.indexOf(';') > -1) {
-					line = line.replace(';', ' ');
+				if (line.charAt(line.length() - 1) == ';') {
+					line = line.substring(0, line.length() - 1);
 				}
 				
 				statements.add(line);

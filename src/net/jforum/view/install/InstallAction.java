@@ -95,7 +95,7 @@ import freemarker.template.Template;
  * JForum Web Installer.
  * 
  * @author Rafael Steil
- * @version $Id: InstallAction.java,v 1.78 2007/10/08 17:10:19 rafaelsteil Exp $
+ * @version $Id: InstallAction.java,v 1.79 2007/10/08 17:34:40 rafaelsteil Exp $
  */
 public class InstallAction extends Command
 {
@@ -528,7 +528,13 @@ public class InstallAction extends Command
 	
 	private boolean canWriteToLuceneIndex()
 	{
-		return new File(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH)).canWrite();
+		File file = new File(SystemGlobals.getValue(ConfigKeys.LUCENE_INDEX_WRITE_PATH));
+		
+		if (!file.exists()) {
+			return file.mkdir();
+		}
+		
+		return file.canWrite();
 	}
 	
 	private void handleDatabasePort(Properties p, String port)
