@@ -7,7 +7,7 @@
 		<p>Here will be shown how to manually configure and install JForum. It is assumed that the you has some knowledge on how to install / configure a Java servlet Container ( or already has one up and running ), and the database is properly configured.</p>
 		
 		<p><i>For automated installation, check the <a class="blue" href="install.jsp">Installation & configuration - Wizard</a> section.</i></p>
-		<p>Note: These instructions are for the installation of JForum, release version 2.1.7. 
+		<p>Note: These instructions are for the installation of JForum, release version 2.1.8. 
 				Some of the steps here described may not be valid for older versions, which are no longer supported.						</p>
 		
 		<!-- Downloading -->
@@ -136,15 +136,15 @@ Also, please keep in mind that if you are upgrading JForum you need to take a lo
 	<div><img src="images/hr.gif" width="100%" height="5"></div>
 	Now it is time to run the script to populate the database tables. To do that, use the script named "&lt;DBNAME&gt;_data_dump.sql", also located at WEB-INF/config/database/&lt;DBNAME&gt;. One more time, you should have no problems with this step. If you do, please remember to inform the error message, as well the database name and version you're using.
 	
-	<div class="blue-title">Renaming files</div>
+	<div class="blue-title">General configuration</div>
 	<div><img src="images/hr.gif" width="100%" height="5"></div>
-	Now, look for a file named new_rename.htm in the root directoy. If it exists, rename it to index.htm (delete the existing index.htm first). This will make browsers to be redirected to the forum when acessing the context path's root.
-
+	The main configuration file for JForum is <i>WEB-INF/config/SystemGlobals.properties</i>. The file is well documented, and you certainly will want to change some of the settings there, like forum's URL, name, description, location of some directories and etc. 
+	
 	<div class="blue-title">Security Information and Considerations</div>
 	<div><img src="images/hr.gif" width="100%" height="5"></div>
 	<li class="style1">Remove the line "<i>install = net.jforum.view.install.InstallAction</i>" from the file WEB-INF/config/modulesMapping.properties</li>
 	<li>JForum uses a servlet mapping to invoke the pages. This mapping is *.page, and is already properly configured at WEB-INF/web.xml. If you are running JForum on a ISPs which have Apache HTTPD in front of Tomcat, you may need to contact their Technical Support and ask them to explicity enable the mapping for you. </li>
-	<li>The directory "images", "tmp" and "WEB-INF" ( e its sub-directories ) should have write permission to the user who runs the web server. You'll get nasty exceptions if there is no write permission. In the same way, if you're going to use the file attachments support, the directoy you'd chosen to store the files ("uploads" by default) should also be writable.</li>
+	<li>The directory "images", "tmp", "upload" and "WEB-INF" ( and their sub-directories ) should have write permission to the user who runs the web server. You'll get nasty exceptions if there is no write permission. In the same way, if you're going to use the file attachments support, the directoy you'd chosen to store the files ("uploads" by default) should also be writable.</li>
 	<li>The administration interface is accessible via the link Admin Control Panel, located in the bottom of the main page. You will only see this link if you are logged as Administrator. See above the default password for the admin user:
 	<br><br>
 	The username is Admin and the password is admin </li>
