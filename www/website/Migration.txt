@@ -1,68 +1,96 @@
-!!! PHPBB to JForum migration
-Migrating from a PHPBB forum to JForum is quite straightforward. Here we'll see how to to this job. 
+!!! PHPBB / PHPNuke to JForum migration
+Migrating from a PHPBB or PHPNuke forum to JForum is quite straightforward. We provide a command line tool that reads all information from a source database - PHPBB or PHPNuke - and convert it to a JForum database. 
 
-JForum-Tools' ''Phpbb2JForum'' is able to import ''most'' of the tables, as shown in the table below. __Please note that the tables with a (x) simbol are not imported by ''Phpbb2JForum'', but this doesn't  means that JForum don't have a relative table. It only means that the table's data will not be imported.__
+JForum's ''Phpbb2JForum'' is able to import ''most'' of the tables, as shown in the table below. Please note that, while there are items marked as __%%(color: red)no%%__, is doesn't  mean that JForum don't have a relative table - It only means that the table's data will not be imported by the tool. 
 
 ||Table Name||Is data Imported?||Description
-|phpbb_auth_access|(x)|JForum uses a completely different security model from PHPBB. Migration is planed for the future
-|phpbb_banlist|(x)|Currently, JForum doesn't have this feature implemented
-|phpbb_categories|(/)| 
-|phpbb_config|(x)|Configurations in JForum are complete different from PHPBB
-|phpbb_confirm|(x)| 
-|phpbb_disallow|(x)| 
-|phpbb_forum_prune|(x)|Feature not implemented yet
-|phpbb_forums|(/)| 
-|phpbb_groups|(x)|Migration planed for the future. Currently you'll need to create the groups from scratch using the Administration Panel
-|phpbb_posts|(/)| 
-|phpbb_posts_text|(/)| 
-|phpbb_privmsgs|(/)|All private messages are imported
-|phpbb_privmsgs_text|(/)| 
-|phpbb_ranks|(/)| 
-|phpbb_search_results|(x)|You should run another JForum's tool to index the database
-|phpbb_search_wordlist|(x)|Same as above
-|phpbb_search_wordmatch|(x)|Same as above
-|phpbb_sessions|(x)|Session information aren't neessary to import
-|phpbb_smilies|(/)| 
-|phpbb_themes|(x)|JForum cannot hanble PHPBB templates so far
-|phpbb_themes_name|(x)| 
-|phpbb_topics|(/)| 
-|phpbb_topics_watch|(/)| 
-|phpbb_user_group|(x)|Planned for the future
-|phpbb_users|(/)| 
-|phpbb_vote_desc|(/)| 
-|phpbb_vote_results|(/)| 
-|phpbb_vote_voters|(/)| 
-|phpbb_words|(/)| 
+|phpbb_auth_access|__%%(color: red)no%%__|JForum uses a completely different security model from PHPBB. 
+|phpbb_banlist|__%%(color: green)YES%%__|
+|phpbb_categories|__%%(color: green)YES%%__| 
+|phpbb_config|__%%(color: red)no%%__|Configurations in JForum are completely different from PHPBB
+|phpbb_confirm|__%%(color: red)no%%__| 
+|phpbb_disallow|__%%(color: red)no%%__| 
+|phpbb_forum_prune|__%%(color: red)no%%__|Feature not implemented yet
+|phpbb_forums|__%%(color: green)YES%%__| 
+|phpbb_groups|__%%(color: green)YES%%__|Groups are migrated, but not group roles ('permissions'')
+|phpbb_posts|__%%(color: green)YES%%__| 
+|phpbb_posts_text|__%%(color: green)YES%%__| 
+|phpbb_privmsgs|__%%(color: green)YES%%__|All private messages are imported
+|phpbb_privmsgs_text|__%%(color: green)YES%%__| 
+|phpbb_ranks|__%%(color: green)YES%%__| 
+|phpbb_search_results|__%%(color: red)no%%__|JForum uses [Lucene|http://lucene.apache.org] for search
+|phpbb_search_wordlist|__%%(color: red)no%%__|Same as above
+|phpbb_search_wordmatch|__%%(color: red)no%%__|Same as above
+|phpbb_sessions|__%%(color: red)no%%__|Session information is irrelevant
+|phpbb_smilies|__%%(color: green)YES%%__| 
+|phpbb_themes|__%%(color: red)no%%__|JForum uses a different template engine
+|phpbb_themes_name|__%%(color: red)no%%__| 
+|phpbb_topics|__%%(color: green)YES%%__| 
+|phpbb_topics_watch|__%%(color: green)YES%%__| 
+|phpbb_user_group|__%%(color: green)YES%%__|
+|phpbb_users|__%%(color: green)YES%%__| 
+|phpbb_vote_desc|__%%(color: green)YES%%__| 
+|phpbb_vote_results|__%%(color: green)YES%%__| 
+|phpbb_vote_voters|__%%(color: green)YES%%__| 
+|phpbb_words|__%%(color: red)no%%__|JForum currently does not implement this feature 
 
-Currently, ''Phpbb2JForum'' __does not__ import permissions / roles, so, after the import is done, you'll need to manually configure groups and associate the useres to the groups. For the future we plan to be able to migrate the security data. Also, the search tables aren't imported as well, since there is another tool which indexed the database. All other missing tables, like ''phpbb_themes'' for example, are not imported because JForum does not support yet PHPBB's templates. 
+!! Permissions / Access rights
+''Phpbb2JForum'' __does not__ import permissions / roles, so, after the importing process is finished, you'll need to manually setup access rights for each for the imported groups. The migration tool only setup Admin access for those users who also are Administrators in the PHPBB version. 
+
+!! Search - Indexing the database
 
 !! Downloading the import tool
-The current version of ''Phpbb2JForum'' has a command line interface only, although a graphical one is planned for next versions. Also, you'll need to have Java 1.4 or newer installed on your computer. 
+''Phpbb2JForum'' is a command line tool, which means you won't have a nice and fancy window :). Also, you'll need to have Java 1.4. 
 
-First, download ''Phpbb2JForum'' [here|https://jforum-tools.dev.java.net/files/documents/2106/9470/phpbb2jforum-1.0.zip], and unpack it in any directory. It is recommended you create that a specific directory for it, like ''c:\jforum_migration'' or ''/home/johndoe/jforum_migration''. 
+It comes with the main [JForum package|http://www.jforum.net/download.jsp], and it is located in the directory ''/tools/phpbb2jforum'', where you will find two files: phpbb2jforum.bat and phpbb2jforum.sh. The first is to be used in a Windows environment, while the second will work for any Unix based system - Linux, BSD, Mac OS X etc...
 
-!! Preparing the environment
-Now, you will need to have both JForum and PHPBB's tables under the same database name. In other words, ''Phpbb2JForum'' will search for phpbb's tables in the database's name passed as argument to the program ( as shown later in this doc ). So, if you're going to run JForum on a database named "jforum", all PBPBB tables should be located in this same database before the migration starts. You can achieve this by simple dumping ( using mysqldump, for example ) and restoring into the target database. 
+!! The configuration file
+Before you run the tool, it is necessary to setup some configurations, like database host and username, as well the table prefixes used in your current PHPBB installation. Open the file ''/tools/phpbb2jforum/resource/__SystemGlobals.properties__'' in any text editor, and prepare it according to the following table:
 
-The JForum's tables should be already created as well. The tables' structure are placed at ''WEB-INF/config/database/mysql/mysql_db_struct.sql''. 
+||Property||Default value||Description
+|database.jforum.url|jdbc:mysql://localhost/jforum?user=root&password=root|This is the connection string to where JForum tables are in - to where the data will be migrated
+|database.phpbb|phpbb|Name of the PHPBB database. It __must__ be located in the same MySQL server where JForum is (specified by the property ''database.jforum.url''
+|phpbb.table.prefix|phpbb_|The prefix of the PHPBB tables. Most installations will have the default value. If you are going to migrate from a PHPNuke forum, it is probably that the prefix is ''nuke_bb''
+
+Those are the only three properties you need to set. 
+
+[{Note title='Location of the PHPBB PHPNuke database and access rights'
+
+In order to properly work, JForum and PHPBB / PHPNuke databases must be in the same MySQL server (not the same database, but same server). Also, the database user should be able to access both databases, as JForum will try to execute queries in either JForum and PHPBB / PHPNuke instances, using the form "SELECT <fields> FROM <phpbb_database.tablename>".
+}]
+
+!! Create JForum database structure
+The last step before running ''Phpbb2JForum'' is to make sure that JForum's tables are created. You can do this by importing the file ''WEB-INF/config/database/mysql/mysql_db_struct.sql''. This script will create all tables for you.
 
 !! Running
 
-[{Note title='MySQL table type'
+[{Tip title='MySQL table type'
 
-If you are using MySQL, set the table type to ''MyISAM'' instead of ''InnoDB'' before running the migration tool. This will make the SQL statements run much faster. 
-After you finish with the data importing, you can set back to ''InnoDB''.
+If you are using MySQL, it is a good idea to set the table type to ''MyISAM'' instead of ''InnoDB'' before running the migration tool. This will make the SQL statements run much faster. 
+After you finish with the data importing, you can set it back to ''InnoDB''.
 }]
 
-Now, open the Prompt ( or a shell, if running some Unix like machine ) and go to the directory where the files are located. If you are running a Windows box, the program you'll run is named ''phpbb2jforum.bat''. If running Linux or other Unix like OS, the program is ''phpbb2jforum.sh'' ( please confirm if it has execute - "chmod +x" - permissions ). 
+Now, open the CMD Prompt (or a shell, if running some kind of Unix like machine) and go to the directory ''tools/phpbb2jforum''. There are two scripts, one for Windowss - ''phpbb2jforum.bat'' - and another for Unix boxes - ''phpbb2jforum.sh''. 
 
-You should pass as arguments the database name, username, password and database host, as shown above:
+As argument, you are required to inform the root directory of JForum (where you unzipped it). Example:
 
+__Windows__
 [{Highlight
-c:\jforum_migration\phpbb2jforum.bat jforum root rootPassword localhost 
+cd c:\JForum-2.1.8\tools\phpbb2jforum
+\\
+phpbb2jforum.bat c:\JForum-2.1.8
 }]
 
-in this example, ''localhost'' is the host where the database server is, ''root'' is the username, ''rootPassword'' is the password for the ''root'' user, and ''jforum'' is the database name. Press &lt;ENTER&gt; to start. Wait until the program finishes, and then you're done. 
+__Linux / Mac OS X / *Nix__
+[{Highlight
+cd /home/dev/JForum-2.1.8/tools/phpbb2jforum
+\\
+sh phpbb2jforum.sh /home/dev/JForum-2.1.8
+}]
 
-!! Permissions
-The script __does not__ migrate permissions, so you'll have to do it manually. For the start, please access http://www.jforum.net/posts/list/399.page . In this link is shown how to set the administrator's role, which you can use as start to access the Admin Panel.
+ Press &lt;ENTER&gt; to start, and wait until the program finishes.
+
+!! Permissions and first run
+As stated before, ''Phpbb2JForum'' does not migrate PHPBB roles. At most, it will try to setup Admin Access for all those users who are considered Admins in PHPBB as well (User Level equals to "1"), which is enough to access the Admin Panel and setup the board according to your needs. 
+
+If, for any reason, your PHPBB administrator user cannot see JForum's Admin Panel after the migration, please check [http://www.jforum.net/posts/list/399.page] . In this link is shown how to set the administrator's role, which you can use as start to access the Admin Panel.

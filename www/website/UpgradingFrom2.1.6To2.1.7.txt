@@ -1,11 +1,6 @@
 \\
 
-[{Warning title='Beta version'
-
-Please note that JForum 2.1.7 is still under [development |http://www.jforum.net/beta.jsp].
-}]
-
-!!! Upgrading from version 2.1.6 to 2.17 (beta)
+!!! Upgrading from version 2.1.6 to 2.17
 
 Upgrading from JForum version 2.1.6 to version 2.1.7 is very simple. All you have to do is to carefuly follow the steps here described. 
 
@@ -21,7 +16,7 @@ The database upgrade script, explained later in this page, will make some change
 First, make a backup of the database and the current directory where JForum is installed. Backup everything (templates, images etc). The suggested approach to use is to unpack JForum 2.1.7 into some work directory, made the changes there and then, when all is finished, copy it over the directory where the previous vesrion is located.
 
 [{Tip
-You'll like to take special care for ''SystemGlobals.properties'' and ''jforum-custom.conf'', as these are the main configuration files. 
+You'd like to take special care for ''SystemGlobals.properties'' and ''jforum-custom.conf'', as these are the main configuration files. Backup them and then compare and merge your current version with the new version that comes with JForum 2.1.7. 
 }]
 
 !! Upgrading the database schema

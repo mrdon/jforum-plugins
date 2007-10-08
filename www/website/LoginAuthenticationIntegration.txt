@@ -7,7 +7,7 @@ Each option below provides a solution to integrate JForum into an application en
 !! Using Single Sign-On
 You should use SSO if:
 * your users already login to a website and you want JForum to be appear as part of that site.
-* your users are authenticated for a 'user realm' which provides an implementation for the _request.getRemoteUser()_ method, e.g. tomcat security realm, JAAS etc.
+* your users are authenticated for a 'user realm' which provides an implementation for the ''request.getRemoteUser()'' method, e.g. tomcat security realm, JAAS etc.
 
 [Click here to read it|SSO]
 

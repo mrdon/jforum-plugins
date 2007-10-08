@@ -2,11 +2,11 @@
 JForum development files are hosted by [Java.net|http://java.net]. Project page is [http://jforum.dev.java.net]. Below you will find a table with the necessary information to anonymously fetch JForum from the CVS:
 
 ||Property||Value
-|__Host__|_cvs.dev.java.net_
-|__Path__| 	_/cvs_
-|__Server Type__| 	_pserver_
-|__Username__ |	_guest_
-|__Module__ |	_jforum_
+|__Host__|''cvs.dev.java.net''
+|__Path__| 	''/cvs''
+|__Server Type__| 	''pserver''
+|__Username__ |	''guest''
+|__Module__ |	''jforum''
 
 h3. Using a command line CVS client
 * cvs -d :pserver:''guest''@cvs.dev.java.net:/cvs login

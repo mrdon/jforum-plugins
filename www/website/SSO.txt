@@ -35,7 +35,7 @@ SSO manages various use case scenarios, such as user changeing id etc, using the
 |sso.default.email| used when no session attribute found| sso@user.com
 |sso.default.password| ditto |sso
 |sso.redirect| a url that points to a login page| http//mysite.com/login.jsp
-|sso.cookie.name| the name of a cookie that contains the jforum username| JforumSSO
+|cookie.name.data| the name of a cookie that contains the jforum username| JforumSSO
 |sso.cookie.path| the pathName of the cookie. for using when you specify your own cookie name if its not in the root path. | /
 
 * [How to enable the default SSO cookie or use existing login cookie for SSO|SSOcookies]
@@ -44,3 +44,19 @@ SSO manages various use case scenarios, such as user changeing id etc, using the
 
 SSO sets the email address in the forum profile to the value of _sso.default.email_ when registering a new user. If you would like to pass your users email address and password you should (+) [implement your own SSO class|implementSSO], the approach in the examples can be applied to both forms of SSO.
 
+
+!! Attention to the Admin User
+When you're using SSO to authenticate users on a different datasource (like LDAP), you lost the default "Admin" user of JForum. To fix that, you have to manually associate the user you want to be the Admin to the "Administrators" group, using the table ''jforum_user_groups''. 
+
+For example, the following set of SQL (MySQL schema) commands fetch a specific user id and associate it to the Administrators group. __Please note that the user should try to login first, in order to have his record on the jforum_users table__:
+
+[{Highlight
+
+mysql> SELECT user_id FROM jforum_users WHERE username = '''username_of_your_admin''';\\
+mysql> 5; ''(suppose it returned 5 here)''\\
+mysql> SELECT group_id FROM jforum_groups WHERE group_name = 'Administrators';\\
+mysql> 3; ''(suppose the id of the Administrators group is 3)''\\
+mysql> INSERT INTO jforum_user_groups (user_id, group_id) VALUES (5, 3);\\
+}]
+
+That should handle the sittuation.
