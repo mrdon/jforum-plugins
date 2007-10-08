@@ -93,8 +93,9 @@
 						</p>
 						
 						<div class="blue-title" style="font-size: 16px;">Files</div>
-						<p><img src="images/orange_arrow.jpg" width="8" height="6">&nbsp;<a href="/downloads/JForum-2.1.8.zip" class="blue">Download JForum binaries </a></p>
-						<p><img src="images/orange_arrow.jpg" width="8" height="6">&nbsp;<a href="/downloads/JForum-2.1.8-src.zip" class="blue">Download the source code </a></p>
+						<p><img src="images/orange_arrow.jpg" width="8" height="6">&nbsp;<a href="/download_file.jsp?type=zip" class="blue">Download JForum ZIP package </a></p>
+						<p><img src="images/orange_arrow.jpg" width="8" height="6">&nbsp;<a href="/download_file.jsp?type=war" class="blue">Download JForum WAR package </a></p>
+						<p><img src="images/orange_arrow.jpg" width="8" height="6">&nbsp;<a href="/download_file.jsp?type=src" class="blue">Download JForum source code </a></p>
 					</div>
 			</td>
 			<td width="198" valign="top"><table width="198" border="0" cellspacing="0" cellpadding="0">
