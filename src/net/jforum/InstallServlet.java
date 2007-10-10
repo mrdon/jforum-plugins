@@ -67,7 +67,7 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: InstallServlet.java,v 1.29 2007/09/15 08:25:14 andowson Exp $
+ * @version $Id: InstallServlet.java,v 1.30 2007/10/10 04:54:20 rafaelsteil Exp $
  */
 public class InstallServlet extends JForumBaseServlet
 {
@@ -151,11 +151,11 @@ public class InstallServlet extends JForumBaseServlet
 				catch (Exception e) {
 					response.setContentType("text/html; charset=" + encoding);
 					if (out != null) {
-						new ExceptionWriter().handleExceptionData(e, out);
+						new ExceptionWriter().handleExceptionData(e, out, request);
 					}
 					else {
 						new ExceptionWriter().handleExceptionData(e, 
-							new BufferedWriter(new OutputStreamWriter(response.getOutputStream())));
+							new BufferedWriter(new OutputStreamWriter(response.getOutputStream())), request);
 					}
 				}
 			}

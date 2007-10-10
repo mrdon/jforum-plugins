@@ -48,6 +48,7 @@ import java.io.Writer;
 
 import net.jforum.JForumExecutionContext;
 import net.jforum.SessionFacade;
+import net.jforum.context.RequestContext;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 
@@ -58,17 +59,21 @@ import freemarker.template.Template;
 
 /**
  * @author Rafael Steil
- * @version $Id: ExceptionWriter.java,v 1.13 2007/07/08 14:11:41 rafaelsteil Exp $
+ * @version $Id: ExceptionWriter.java,v 1.14 2007/10/10 04:54:20 rafaelsteil Exp $
  */
 public class ExceptionWriter
 {
 	private static Logger logger = Logger.getLogger(ExceptionWriter.class);
 	
-	public void handleExceptionData(Throwable t, Writer w)
+	public void handleExceptionData(Throwable t, Writer w, RequestContext request)
 	{
 		StringWriter strWriter = new StringWriter();
 		PrintWriter writer = new PrintWriter(strWriter);
-		t.printStackTrace(writer);		
+		t.printStackTrace(writer);	
+		
+		String currentUrl = this.extractCurrentUrl(request);
+		
+		writer.write(currentUrl);
 		writer.close();
 		
 		try {
@@ -116,5 +121,16 @@ public class ExceptionWriter
 			writer.close();
 			logger.error(strWriter);
 		}
+	}
+	
+	private String extractCurrentUrl(RequestContext request)
+	{
+		return request == null 
+			? ""
+			: new StringBuffer().append("\nURL is: ")
+			.append(request.getRequestURI())
+			.append('?')
+			.append(request.getQueryString())
+			.toString();
 	}
 }

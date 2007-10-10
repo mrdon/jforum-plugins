@@ -77,7 +77,7 @@ import freemarker.template.Template;
  * Front Controller.
  * 
  * @author Rafael Steil
- * @version $Id: JForum.java,v 1.115 2007/09/12 14:43:13 rafaelsteil Exp $
+ * @version $Id: JForum.java,v 1.116 2007/10/10 04:54:20 rafaelsteil Exp $
  */
 public class JForum extends JForumBaseServlet 
 {
@@ -202,7 +202,7 @@ public class JForum extends JForumBaseServlet
 			}
 		}
 		catch (Exception e) {
-			this.handleException(out, response, encoding, e);
+			this.handleException(out, response, encoding, e, request);
 		}
 		finally {
 			this.handleFinally(out, forumContext, response);
@@ -271,17 +271,18 @@ public class JForum extends JForumBaseServlet
 		}
 	}
 
-	private void handleException(Writer out, ResponseContext response, String encoding, Exception e) throws IOException
+	private void handleException(Writer out, ResponseContext response, String encoding, 
+		Exception e, RequestContext request) throws IOException
 	{
 		JForumExecutionContext.enableRollback();
 		
 		if (e.toString().indexOf("ClientAbortException") == -1) {
 			response.setContentType("text/html; charset=" + encoding);
 			if (out != null) {
-				new ExceptionWriter().handleExceptionData(e, out);
+				new ExceptionWriter().handleExceptionData(e, out, request);
 			}
 			else {
-				new ExceptionWriter().handleExceptionData(e, new BufferedWriter(new OutputStreamWriter(response.getOutputStream())));
+				new ExceptionWriter().handleExceptionData(e, new BufferedWriter(new OutputStreamWriter(response.getOutputStream())), request);
 			}
 		}
 	}
