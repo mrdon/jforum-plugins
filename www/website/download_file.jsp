@@ -9,7 +9,7 @@ static {
 	}
 }
 
-private static final String VERSION = "JForum-2.1.8";
+private static final String VERSION = "jforum-2.1.8";
 private static final String CONNECTION_URL = "jdbc:mysql://localhost/jforum?user=root&password=root";
 %>
 <%

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!-- ********************************************************************* -->
 <!-- Ant build script for JForum -->
-<!-- Version: $Id: build.xml,v 1.26 2007/08/22 01:03:05 rafaelsteil Exp $  -->
+<!-- Version: $Id: build.xml,v 1.27 2007/10/11 05:04:13 rafaelsteil Exp $  -->
 <!-- ********************************************************************* -->
 
 <project name="JForum" default="compile" basedir=".">
@@ -20,6 +20,7 @@
 	<property name="version" value="2.1.8" />
 	<property name="filename" value="jforum-${version}" />
 	<property name="warfile" value="${filename}.war" />
+	<property name="srcfile" value="${filename}-src.zip"/>
 	<property name="javadoc.packages" value="net.jforum.*" />
 
 	<property name="build.dir" location="build" />
@@ -97,18 +98,23 @@
 
 	<!-- Dist -->
 	<target name="dist" depends="compile" description="Generates the distribution file">
+		<delete file="${dist.dir}/${warfile}"/>
+		<delete file="${dist.dir}/${srcfile}"/>
+		
+		<!-- war -->
 		<war destfile="${dist.dir}/${warfile}" webxml="${web.dir}/WEB-INF/web.xml">
 			<fileset dir="${web.dir}">
-				<include name="images/avatar/*" />
-				<include name="images/smilies/*" />
-				<include name="images/transp.gif" />
+				<include name="images/**/*" />
 				<include name="templates/**/*" />
 				<include name="tmp/**/*" />
 				<include name="upgrade/**/*" />
-				<include name="upload/*" />
+				<include name="upload/**/*" />
 				<include name="*.htm" />
 				<include name="*.txt" />
 				<include name="*.jsp" />
+				<include name="tools/bin/**/*"/>
+				<exclude name="upload/**/*"/>
+				<exclude name="WEB-INF/jforumLuceneIndex/**/*"/>
 			</fileset>
 			<webinf dir="${web.dir}/WEB-INF">
 				<include name="*.xml" />
@@ -127,6 +133,19 @@
 				<attribute name="Built-Date" value="${TODAY}" />
 			</manifest>
 		</war>
+		
+		<!-- src -->
+		<zip destfile="${dist.dir}/${srcfile}" update="false">
+			<fileset dir="${web.dir}">
+				<include name="**/*"/>
+				<exclude name="upload/**/*"/>
+				<exclude name="www/"/>
+				<exclude name="build/"/>
+				<exclude name="dist/"/>
+				<exclude name="WEB-INF/jforumLuceneIndex/**/*"/>
+				<exclude name="WEB-INF/config/jforum-custom.conf"/>
+			</fileset>
+		</zip>
 	</target>
 
 	<!-- Deploy -->
