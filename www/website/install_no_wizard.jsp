@@ -24,6 +24,22 @@
 		<p>
 			You can rename the directory if you want. The next step you should do is register the JForum application within your Servlet Container, 
 			like <a href="http://jakarta.apache.org/tomcat" class="blue">Tomcat</a>. This document will use the context name "jforum", but of course you can use any name you want.						</p>
+			
+		<!-- Directory permissions -->
+		<div class="blue-title">Directory permissions</div>
+		<div><img src="images/hr.gif" width="100%" height="5"></div>
+		<p>
+			JForum expects that some directories are writable by the webserver. Before you start installing, please check if the following directories, 
+			and their sub-directories, exist and have full write permissions: 
+
+			<ul>
+				<li>upload</li>
+				<li>tmp</li>
+				<li>images</li>
+				<li>WEB-INF/config</li>
+				<li>WEB-INF/jforumLuceneIndex</li>
+			</ul>
+		</p>
 		
 		<!-- Configuring -->
 		<!-- Downloading -->

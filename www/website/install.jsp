@@ -9,7 +9,7 @@
 		(or already have one up and running), and the database is properly configured.</p>
 		
 		<p><i>For manual installation instructions, check the <a class="blue" href="install_no_wizard.jsp">Installation & configuration - Manual Install</a> section.</i></p>
-		<p>Note: These instructions are for the installation of JForum, release version 2.1.7. 
+		<p>Note: These instructions are for the installation of JForum, release version 2.1.8. 
 				Some of the steps here described may not be valid for older versions, which are no longer supported.
 		</p>
 		
@@ -30,12 +30,28 @@
 			like <a href="http://jakarta.apache.org/tomcat" class="blue">Tomcat</a>. This document will use the context name "jforum", but of course you can use any name you want.
 		</p>
 		
+		<!-- Directory permissions -->
+		<div class="blue-title">Directory permissions</div>
+		<div><img src="images/hr.gif" width="100%" height="5"></div>
+		<p>
+			JForum expects that some directories are writable by the webserver. Before you start installing, please check if the following directories, 
+			and their sub-directories, exist and have full write permissions: 
+			
+			<ul>
+				<li>upload</li>
+				<li>tmp</li>
+				<li>images</li>
+				<li>WEB-INF/config</li>
+				<li>WEB-INF/jforumLuceneIndex</li>
+			</ul>
+		</p>
+		
 		<!-- Configuring -->
 		<!-- Downloading -->
 		<div class="blue-title">Configuring</div>
 		<div><img src="images/hr.gif" width="100%" height="5"></div>
 		<p>Next, point your browser to the following address: </p>
-		<p><a href="http://localhost:8080/jforum/" class="blue">http://localhost:8080/<b>jforum/</b></a></p>
+		<p><a href="http://localhost:8080/jforum/" class="blue">http://localhost:8080/<b>jforum</b>/install.jsp</a></p>
 		<p>The bold text, "jforum", is the context's name. If you changed the context name you will need to change it here too. 
 		After the page loads, you should see the screen shown by <i>Image 1</i>:</p>
 		<p align="center">
@@ -101,8 +117,11 @@
 						<td>Database Name</td>
 						<td align="center">Yes</td>
 	
-						<td>Where the tables will be created. <b>Note that the database should already exist</b>. If you're going
-						go use HSQLDB, no extra configuration is needed, since it is created on the fly</td>
+						<td>
+							<p>Where the tables will be created. <b>Note that the database should already exist</b>.</p>
+							<p>If you're going go use HSQLDB, no extra configuration is needed, since it is created on the fly</p>
+							<p>If you are using Oracle, you probably will have to enter the SID here.</p>
+						</td>
 					</tr>
 	
 					<tr class="fields">

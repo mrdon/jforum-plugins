@@ -13,7 +13,7 @@
 <td>&nbsp;</td>
 <td align="center" class="menu">
 <div style="padding-top:5px; padding-bottom:30px;">
-<b><a href="/index.jsp" class="white">Home</a></b> | <b><a class="white" href="/download.jsp">Download</a></b> | <b><a class="white" href="/screenshots.jsp">Screenshots</a></b> | <b><a href="/community.jsp" class="white">Forum</a></b> | <b><a href="/development.jsp" class="white">Developers</a></b> <!-- | <b><a href="/contact.jsp" class="white">Contact</a></b>	-->		</div>
+<b><a href="/index.jsp" class="white">Home</a></b> | <b><a class="white" href="/download.jsp">Download</a></b> | <b><a class="white" href="/screenshots.jsp">Screenshots</a></b> | <b><a href="/community.jsp" class="white">Forum</a></b> | <b><a href="/doc" class="white">Documentation</a></b> <!-- | <b><a href="/contact.jsp" class="white">Contact</a></b>	-->		</div>
 </td>
 </tr>
 </table>
