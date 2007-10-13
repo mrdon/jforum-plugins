@@ -62,7 +62,7 @@ import net.jforum.util.preferences.SystemGlobals;
 
 /**
  * @author Rafael Steil
- * @version $Id: GenericLuceneDAO.java,v 1.11 2007/09/10 22:34:20 rafaelsteil Exp $
+ * @version $Id: GenericLuceneDAO.java,v 1.12 2007/10/13 13:46:21 rafaelsteil Exp $
  */
 public class GenericLuceneDAO implements LuceneDAO
 {
@@ -123,8 +123,7 @@ public class GenericLuceneDAO implements LuceneDAO
 		ResultSet rs = null;
 		
 		try {
-			p = JForumExecutionContext.getConnection().prepareStatement(
-				SystemGlobals.getSql(query));
+			p = JForumExecutionContext.getConnection().prepareStatement(query);
 			
 			p.setTimestamp(1, new Timestamp(date.getTime()));
 			

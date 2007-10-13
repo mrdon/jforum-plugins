@@ -8,8 +8,8 @@
 		<input name="item_name" value="JForum Project" type="hidden">
 		<input name="page_style" value="PayPal" type="hidden">
 		<input name="no_shipping" value="1" type="hidden">
-		<input name="return" value="http://www.jforum.net/donations/thankyou.jsp" type="hidden">
-		<input name="cancel_return" value="http://www.jforum.net/donations/seeyou.jsp" type="hidden">
+		<input name="return" value="http://www.jforum.net/thankyou.jsp" type="hidden">
+		<input name="cancel_return" value="http://www.jforum.net/seeyou.jsp" type="hidden">
 		<input name="currency_code" value="USD" type="hidden">
 		<input name="tax" value="0" type="hidden">
 		<input name="lc" value="US" type="hidden">
