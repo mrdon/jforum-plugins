@@ -21,6 +21,11 @@
             <attribute name="method" value="1" />
             <attribute name="URI" value="/WEB-INF/classes" />
           </containerElement>
+          <containerElement type="library" level="module">
+            <attribute name="method" value="1" />
+            <attribute name="URI" value="/WEB-INF/lib" />
+            <url>jar://$MODULE_DIR$/WEB-INF/lib/atlassian-plugins-main-2.2.3.rc1-standalone.jar!/</url>
+          </containerElement>
         </packaging>
       </configuration>
     </facet>
@@ -265,6 +270,15 @@
       <library>
         <CLASSES>
           <root url="jar://$APPLICATION_HOME_DIR$/lib/javaee.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/WEB-INF/lib/atlassian-plugins-main-2.2.3.rc1-standalone.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

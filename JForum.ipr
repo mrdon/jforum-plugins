@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project relativePaths="false" version="4">
+<project relativePaths="true" version="4">
   <component name="AntConfiguration">
     <defaultAnt bundledAnt="true" />
   </component>
@@ -129,6 +129,13 @@
     <option name="GENERATE_NO_WARNINGS" value="false" />
     <option name="IS_EMACS_ERRORS_MODE" value="true" />
     <option name="ADDITIONAL_OPTIONS_STRING" value="" />
+  </component>
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/hottopics-plugin/pom.xml" />
+      </list>
+    </option>
   </component>
   <component name="Palette2">
     <group name="Swing">
@@ -261,6 +268,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/JForum.iml" filepath="$PROJECT_DIR$/JForum.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hottopics-plugin/hottopics-plugin.iml" filepath="$PROJECT_DIR$/hottopics-plugin/hottopics-plugin.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" project-jdk-type="JavaSDK">
@@ -333,6 +341,30 @@
     </GetOptions>
   </component>
   <component name="WebServicesPlugin" addRequiredLibraries="true" />
+  <component name="libraryTable">
+    <library name="Maven: junit:junit:3.8.1">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: net.jforum:jforum-classes:2.1.8">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/net/jforum/jforum-classes/2.1.8/jforum-classes-2.1.8.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/net/jforum/jforum-classes/2.1.8/jforum-classes-2.1.8-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/net/jforum/jforum-classes/2.1.8/jforum-classes-2.1.8-sources.jar!/" />
+      </SOURCES>
+    </library>
+  </component>
   <component name="org.twdata.maven.cli.CliClientProjectComponent">
     <commands>
       <command host="localhost" port="4330" command="compile resources jar install" />
@@ -340,5 +372,8 @@
       <command host="localhost" port="4332" command="compile resources jar install" />
     </commands>
   </component>
+  <UsedPathMacros>
+    <macro name="MAVEN_REPOSITORY" />
+  </UsedPathMacros>
 </project>
 

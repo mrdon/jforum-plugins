@@ -44,22 +44,22 @@ package net.jforum.util.bbcode;
 
  import java.io.File;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
+ import java.util.*;
 
-import javax.xml.parsers.SAXParser;
+ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import net.jforum.exceptions.ForumException;
 import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
+ import net.jforum.PluginManager;
 
-import org.xml.sax.Attributes;
+ import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
+ import com.atlassian.plugin.PluginAccessor;
 
 /**
  * @author Rafael Steil
@@ -72,10 +72,8 @@ public class BBCodeHandler extends DefaultHandler implements Serializable
 	private String tagName = "";
 	private StringBuffer sb;	
 	private BBCode bb;
-	
-	public BBCodeHandler() { }
-	
-	public BBCodeHandler parse()
+
+    public BBCodeHandler parse()
 	{
 		try
 		{
@@ -114,7 +112,9 @@ public class BBCodeHandler extends DefaultHandler implements Serializable
 	
 	public Collection getBbList()
 	{
-		return this.bbMap.values();
+        List<BBCode> list = new ArrayList<BBCode>(this.bbMap.values());
+        list.addAll(PluginManager.getPluginAccessor().getEnabledModulesByClass(BBCode.class));
+		return list;
 	}
 	
 	public Collection getAlwaysProcessList()
@@ -124,7 +124,19 @@ public class BBCodeHandler extends DefaultHandler implements Serializable
 	
 	public BBCode findByName(String tagName)
 	{
-		return (BBCode)this.bbMap.get(tagName);
+		BBCode result = (BBCode)this.bbMap.get(tagName);
+        if (result == null)
+        {
+            for (BBCode bbcode : PluginManager.getPluginAccessor().getEnabledModulesByClass(BBCode.class))
+            {
+                if (tagName.equals(bbcode.getTagName()))
+                {
+                    result = bbcode;
+                    break;
+                }
+            }
+        }
+        return result;
 	}
 	
 	public void startElement(String uri, String localName, String tag, Attributes attrs)

@@ -47,6 +47,7 @@ import java.util.Date;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
 
 import net.jforum.exceptions.ForumStartupException;
@@ -66,6 +67,11 @@ import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
+import com.atlassian.plugin.osgi.container.PackageScannerConfiguration;
+import com.atlassian.plugin.osgi.container.impl.DefaultPackageScannerConfiguration;
+import com.atlassian.plugin.main.PluginsConfiguration;
+import com.atlassian.plugin.main.PluginsConfigurationBuilder;
+import com.atlassian.plugin.main.AtlassianPlugins;
 
 /**
  * @author Rafael Steil
@@ -76,8 +82,9 @@ public class JForumBaseServlet extends HttpServlet
 	private static Logger logger = Logger.getLogger(JForumBaseServlet.class);
 
 	protected boolean debug;
+    private AtlassianPlugins plugins;
 
-	protected void startApplication()
+    protected void startApplication()
 	{
 		try {
 			SystemGlobals.loadQueries(SystemGlobals.getValue(ConfigKeys.SQL_QUERIES_GENERIC));
@@ -159,5 +166,9 @@ public class JForumBaseServlet extends HttpServlet
 
 		// BB Code
 		BBCodeRepository.setBBCollection(new BBCodeHandler().parse());
+
+
 	}
+
+
 }

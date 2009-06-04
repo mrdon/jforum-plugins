@@ -42,14 +42,12 @@
  */
 package net.jforum;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.*;
 import java.sql.Connection;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -72,6 +70,11 @@ import net.jforum.util.preferences.ConfigKeys;
 import net.jforum.util.preferences.SystemGlobals;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
+import com.atlassian.plugin.main.PluginsConfiguration;
+import com.atlassian.plugin.main.PluginsConfigurationBuilder;
+import com.atlassian.plugin.main.AtlassianPlugins;
+import com.atlassian.plugin.osgi.container.impl.DefaultPackageScannerConfiguration;
+import com.atlassian.plugin.osgi.container.PackageScannerConfiguration;
 
 /**
  * Front Controller.
@@ -82,8 +85,9 @@ import freemarker.template.Template;
 public class JForum extends JForumBaseServlet 
 {
 	private static boolean isDatabaseUp;
-	
-	/**
+    private AtlassianPlugins plugins;
+
+    /**
 	 * @see javax.servlet.Servlet#init(javax.servlet.ServletConfig)
 	 */
 	public void init(ServletConfig config) throws ServletException
@@ -112,6 +116,8 @@ public class JForum extends JForumBaseServlet
 			RankingRepository.loadRanks();
 			SmiliesRepository.loadSmilies();
 			BanlistRepository.loadBanlist();
+
+            PluginManager.start(config.getServletContext());
 		}
 		catch (Throwable e) {
             e.printStackTrace();
@@ -121,7 +127,7 @@ public class JForum extends JForumBaseServlet
 			JForumExecutionContext.finish();
 		}
 	}
-	
+
 	/**
 	 * @see javax.servlet.http.HttpServlet#service(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
@@ -307,6 +313,7 @@ public class JForum extends JForumBaseServlet
 	 */
 	public void destroy() {
 		super.destroy();
+        PluginManager.stop();
 		System.out.println("Destroying JForum...");
 		
 		try {

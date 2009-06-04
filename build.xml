@@ -11,7 +11,7 @@
 	<property file="build.properties" />
 
 	<!-- Set to use JDK 1.4 -->
-	<property name="build.compiler" value="javac1.4" />
+	<property name="build.compiler" value="javac1.5" />
 
 	<property name="project.name" value="JForum" />
 	<property name="project.title" value="JForum API" />
@@ -86,8 +86,8 @@
 		       debug="true"
 		       optimize="false"
 		       deprecation="false"
-		       source="1.4"
-		       target="1.4"
+		       source="1.5"
+		       target="1.5"
 		       srcdir="${src.dir}"
 		       destdir="${classes.dir}">
 			<classpath>
