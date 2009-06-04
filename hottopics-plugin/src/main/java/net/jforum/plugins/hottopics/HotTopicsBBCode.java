@@ -1,8 +1,6 @@
-package net.jforum.plugins.search;
+package net.jforum.plugins.hottopics;
 
 import net.jforum.util.bbcode.BBCode;
-import net.jforum.search.SearchFacade;
-import net.jforum.search.SearchManager;
 import net.jforum.dao.TopicDAO;
 import net.jforum.entities.Topic;
 

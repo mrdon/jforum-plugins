@@ -367,7 +367,7 @@
   </component>
   <component name="org.twdata.maven.cli.CliClientProjectComponent">
     <commands>
-      <command host="localhost" port="4330" command="compile resources jar install" />
+      <command host="localhost" port="4330" command="compile resources jar org.apache.maven.plugins:maven-antrun-plugin:run#deploy" />
       <command host="localhost" port="4331" command="compile resources jar install" />
       <command host="localhost" port="4332" command="compile resources jar install" />
     </commands>

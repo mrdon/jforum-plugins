@@ -4,7 +4,7 @@
     </plugin-info>
 
     <bbcode key="hottopics"
-            class="net.jforum.plugins.search.HotTopicsBBCode" />
+            class="net.jforum.plugins.hottopics.HotTopicsBBCode" />
 
 
 </atlassian-plugin>
