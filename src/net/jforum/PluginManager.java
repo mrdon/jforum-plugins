@@ -48,13 +48,12 @@ public class PluginManager
             }
         };
 
-
         PluginsConfiguration config = new PluginsConfigurationBuilder()
                 .pluginDirectory(pluginsDir)
                 .packageScannerConfiguration(scannerConfig)
-                .moduleDescriptorFactory(modules)
-                .hostComponentProvider(host)
                 .hotDeployPollingFrequency(2, TimeUnit.SECONDS)
+                .hostComponentProvider(host)
+                .moduleDescriptorFactory(modules)
                 .build();
         plugins = new AtlassianPlugins(config);
 
@@ -69,5 +68,4 @@ public class PluginManager
     public static PluginAccessor getPluginAccessor() {
         return plugins != null ? plugins.getPluginAccessor() : null;
     }
-
 }

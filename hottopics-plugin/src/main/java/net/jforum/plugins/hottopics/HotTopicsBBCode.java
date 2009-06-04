@@ -22,7 +22,6 @@ public class HotTopicsBBCode extends BBCode
         this.topicDao = topicDao;
         setTagName("hot-topics");
         setRegex("(?s)\\[hot-topics\\]");
-
     }
 
     @Override

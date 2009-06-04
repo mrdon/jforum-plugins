@@ -54,28 +54,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="BBCodeHandler.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="BBCodeHandler.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/net/jforum/util/bbcode/BBCodeHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="155" column="32" selection-start="4633" selection-end="4633" vertical-scroll-proportion="0.0">
+            <state line="71" column="31" selection-start="2610" selection-end="2610" vertical-scroll-proportion="0.40328467">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="HotTopicsBBCode.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="HotTopicsBBCode.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hottopics-plugin/src/main/java/net/jforum/plugins/hottopics/HotTopicsBBCode.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="35" column="24" selection-start="858" selection-end="858" vertical-scroll-proportion="0.73462784">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BBCode.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/net/jforum/util/bbcode/BBCode.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="102" column="27" selection-start="2859" selection-end="2859" vertical-scroll-proportion="0.0">
+            <state line="35" column="14" selection-start="888" selection-end="888" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -84,7 +75,7 @@
       <file leaf-file-name="atlassian-plugin.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hottopics-plugin/src/main/resources/atlassian-plugin.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="17" selection-start="181" selection-end="181" vertical-scroll-proportion="0.0">
+            <state line="8" column="0" selection-start="261" selection-end="261" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -93,7 +84,30 @@
       <file leaf-file-name="PluginManager.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/net/jforum/PluginManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="40" column="46" selection-start="1543" selection-end="1543" vertical-scroll-proportion="0.0">
+            <state line="32" column="11" selection-start="1110" selection-end="1110" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="true" />
+                <marker date="1244092693000" expanded="true" signature="1640:1860" placeholder="{...}" />
+                <marker date="1244092693000" expanded="true" signature="1710:1850" placeholder="{...}" />
+                <marker date="1244092693000" expanded="true" signature="2336:2391" placeholder="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="JForum.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/net/jforum/JForum.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="317" column="13" selection-start="10003" selection-end="10003" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BBCodeModuleDescriptor.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/net/jforum/util/bbcode/BBCodeModuleDescriptor.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="19" column="0" selection-start="512" selection-end="512" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -103,15 +117,6 @@
         <entry file="file://$PROJECT_DIR$/hottopics-plugin/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
             <state line="40" column="19" selection-start="1586" selection-end="1586" vertical-scroll-proportion="-4.7586207">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TopicRepository.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/net/jforum/repository/TopicRepository.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="157" column="4" selection-start="4607" selection-end="4607" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -177,6 +182,136 @@
         <PATH_ELEMENT>
           <option name="myItemId" value="JForum" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="JForum" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="JForum" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="JForum" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="jforum-plugins" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="JForum" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="JForum" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="jforum-plugins" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="net" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="JForum" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="JForum" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="jforum-plugins" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="net" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="jforum" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="JForum" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="JForum" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="jforum-plugins" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="net" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="jforum" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="util" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="JForum" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="JForum" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="jforum-plugins" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="net" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="jforum" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="util" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="bbcode" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
       </PATH>
       <PATH>
@@ -649,7 +784,7 @@
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3287037" sideWeight="0.5" order="2" side_tool="false" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287037" sideWeight="0.5" order="2" side_tool="false" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39969134" sideWeight="0.5" order="4" side_tool="false" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" />
@@ -694,13 +829,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/templates/default/hottest_thread.htm">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="55" selection-start="131" selection-end="131" vertical-scroll-proportion="-1.4166666">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/default/recent_thread.htm">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="7.0833335">
@@ -764,34 +892,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hottopics-plugin/deploy.sh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="30" selection-start="30" selection-end="30" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hottopics-plugin/src/main/resources/atlassian-plugin.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="17" selection-start="181" selection-end="181" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/net/jforum/util/bbcode/BBCodeHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="155" column="32" selection-start="4633" selection-end="4633" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/net/jforum/PluginManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="40" column="46" selection-start="1543" selection-end="1543" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/hottopics-plugin/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="40" column="19" selection-start="1586" selection-end="1586" vertical-scroll-proportion="-4.7586207">
@@ -799,9 +899,49 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/hottopics-plugin/src/main/resources/atlassian-plugin.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="0" selection-start="261" selection-end="261" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/hottopics-plugin/src/main/java/net/jforum/plugins/hottopics/HotTopicsBBCode.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="24" selection-start="858" selection-end="858" vertical-scroll-proportion="0.73462784">
+        <state line="35" column="14" selection-start="888" selection-end="888" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/jforum/PluginManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="32" column="11" selection-start="1110" selection-end="1110" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <marker date="1244092693000" expanded="true" signature="1640:1860" placeholder="{...}" />
+            <marker date="1244092693000" expanded="true" signature="1710:1850" placeholder="{...}" />
+            <marker date="1244092693000" expanded="true" signature="2336:2391" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/jforum/JForum.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="317" column="13" selection-start="10003" selection-end="10003" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/jforum/util/bbcode/BBCodeModuleDescriptor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="0" selection-start="512" selection-end="512" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/jforum/util/bbcode/BBCodeHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="71" column="31" selection-start="2610" selection-end="2610" vertical-scroll-proportion="0.40328467">
           <folding />
         </state>
       </provider>

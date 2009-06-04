@@ -85,7 +85,6 @@ import com.atlassian.plugin.osgi.container.PackageScannerConfiguration;
 public class JForum extends JForumBaseServlet 
 {
 	private static boolean isDatabaseUp;
-    private AtlassianPlugins plugins;
 
     /**
 	 * @see javax.servlet.Servlet#init(javax.servlet.ServletConfig)
@@ -313,7 +312,7 @@ public class JForum extends JForumBaseServlet
 	 */
 	public void destroy() {
 		super.destroy();
-        PluginManager.stop();
+        
 		System.out.println("Destroying JForum...");
 		
 		try {
